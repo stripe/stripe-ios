@@ -10,9 +10,11 @@
 import OHHTTPStubs
 @testable import Stripe
 @testable import StripeApplePay
+@testable@_spi(STP) import StripeCore
 @testable import StripeCoreTestUtils
 @testable import StripePayments
 @testable import StripePaymentsObjcTestUtils
+@testable import StripePaymentsTestUtils
 
 class STPTestApplePayContextDelegate: NSObject, STPApplePayContextDelegate {
     func applePayContext(_ context: StripeApplePay.STPApplePayContext, didCreatePaymentMethod paymentMethod: StripePayments.STPPaymentMethod, paymentInformation: PKPayment, completion: @escaping StripeApplePay.STPIntentClientSecretCompletionBlock) {
@@ -27,12 +29,14 @@ class STPTestApplePayContextDelegate: NSObject, STPApplePayContextDelegate {
     var didCreatePaymentMethodDelegateMethod: ((_ paymentMethod: STPPaymentMethod?, _ paymentInformation: PKPayment?, _ completion: @escaping STPIntentClientSecretCompletionBlock) -> Void)?
 }
 
-class STPApplePayContextFunctionalTest: XCTestCase {
+class STPApplePayContextFunctionalTest: STPNetworkStubbingTestCase {
     var apiClient: STPApplePayContextFunctionalTestAPIClient!
     var delegate: STPTestApplePayContextDelegate!
     var context: STPApplePayContext!
+    var analyticsClient: STPAnalyticsClient!
 
     override func setUp() {
+        super.setUp()
         delegate = STPTestApplePayContextDelegate()
         let apiClient = STPApplePayContextFunctionalTestAPIClient(publishableKey: STPTestingDefaultPublishableKey)
         apiClient.setupStubs()
@@ -43,10 +47,14 @@ class STPApplePayContextFunctionalTest: XCTestCase {
         self.apiClient.applePayContext = context
         context?.apiClient = self.apiClient
         context?.authorizationController = STPTestPKPaymentAuthorizationController()
+
+        self.analyticsClient = STPAnalyticsClient()
+        context?.analyticsClient = analyticsClient
     }
 
     override func tearDown() {
         HTTPStubs.removeAllStubs()
+        super.tearDown()
     }
 
     func testCompletesManualConfirmationPaymentIntent() {
@@ -88,6 +96,8 @@ class STPApplePayContextFunctionalTest: XCTestCase {
         }
 
         waitForExpectations(timeout: STPTestingNetworkRequestTimeout, handler: nil)
+        XCTAssertEqual(analyticsClient._testLogHistory.count, 1)
+        XCTAssertEqual(analyticsClient._testLogHistory.first!["event"] as! String, "stripeios.applepaycontext.complete_payment.finished")
     }
 
     func testCompletesAutomaticConfirmationPaymentIntent() {
@@ -121,6 +131,8 @@ class STPApplePayContextFunctionalTest: XCTestCase {
         }
 
         waitForExpectations(timeout: STPTestingNetworkRequestTimeout, handler: nil)
+        XCTAssertEqual(analyticsClient._testLogHistory.count, 1)
+        XCTAssertEqual(analyticsClient._testLogHistory.first!["event"] as! String, "stripeios.applepaycontext.complete_payment.finished")
     }
 
     func testCompletesAutomaticConfirmationPaymentIntentManualCapture() {
@@ -152,6 +164,8 @@ class STPApplePayContextFunctionalTest: XCTestCase {
         }
 
         waitForExpectations(timeout: STPTestingNetworkRequestTimeout, handler: nil)
+        XCTAssertEqual(analyticsClient._testLogHistory.count, 1)
+        XCTAssertEqual(analyticsClient._testLogHistory.first!["event"] as! String, "stripeios.applepaycontext.complete_payment.finished")
     }
 
     func testCompletesSetupIntent() {
@@ -183,6 +197,29 @@ class STPApplePayContextFunctionalTest: XCTestCase {
         }
 
         waitForExpectations(timeout: STPTestingNetworkRequestTimeout, handler: nil)
+        XCTAssertEqual(analyticsClient._testLogHistory.count, 1)
+        XCTAssertEqual(analyticsClient._testLogHistory.first!["event"] as! String, "stripeios.applepaycontext.complete_payment.finished")
+    }
+
+    func testDismiss() {
+        // Dismissing before presenting...
+        context.dismiss()
+        // ...does nothing
+        XCTAssertNotNil(context.authorizationController)
+
+        // Dismissing after presentation...
+        context.presentApplePay()
+        context.dismiss()
+        // ...cleans up state
+        XCTAssertNil(context.authorizationController)
+        // ...and does not call the didComplete delegate method
+        let didCallCompletion = expectation(description: "applePayContext:didCompleteWithStatus: called")
+        didCallCompletion.isInverted = true
+        delegate?.didCompleteDelegateMethod = { _, _ in
+            didCallCompletion.fulfill()
+        }
+        waitForExpectations(timeout: 1)
+        XCTAssertEqual(analyticsClient._testLogHistory.count, 0)
     }
 
     // MARK: - Error tests
@@ -212,6 +249,9 @@ class STPApplePayContextFunctionalTest: XCTestCase {
         }
 
         waitForExpectations(timeout: STPTestingNetworkRequestTimeout, handler: nil)
+        XCTAssertEqual(analyticsClient._testLogHistory.count, 1)
+        XCTAssertEqual(analyticsClient._testLogHistory.first!["event"] as! String, "unexpected_error.applepay")
+        XCTAssertEqual(analyticsClient._testLogHistory.first!["error_message"] as! String, "Failed on retrieving payment intent")
     }
 
     func testBadSetupIntentClientSecretErrors() {
@@ -239,6 +279,9 @@ class STPApplePayContextFunctionalTest: XCTestCase {
         }
 
         waitForExpectations(timeout: STPTestingNetworkRequestTimeout, handler: nil)
+        XCTAssertEqual(analyticsClient._testLogHistory.count, 1)
+        XCTAssertEqual(analyticsClient._testLogHistory.first!["event"] as! String, "unexpected_error.applepay")
+        XCTAssertEqual(analyticsClient._testLogHistory.first!["error_message"] as! String, "Failed on retrieving setup intent")
     }
 
     // MARK: - Cancel tests
@@ -264,6 +307,9 @@ class STPApplePayContextFunctionalTest: XCTestCase {
         }
 
         waitForExpectations(timeout: STPTestingNetworkRequestTimeout, handler: nil)
+        XCTAssertEqual(analyticsClient._testLogHistory.count, 1)
+        XCTAssertEqual(analyticsClient._testLogHistory.first!["event"] as! String, "unexpected_error.applepay")
+        XCTAssertEqual(analyticsClient._testLogHistory.first!["error_message"] as! String, "Failed on payment method completion")
     }
 
     func testCancelAfterPaymentIntentConfirmsStillSucceeds() {
@@ -296,6 +342,8 @@ class STPApplePayContextFunctionalTest: XCTestCase {
         }
 
         waitForExpectations(timeout: 20.0, handler: nil) // give this a longer timeout, it tends to take a while
+        XCTAssertEqual(analyticsClient._testLogHistory.count, 1)
+        XCTAssertEqual(analyticsClient._testLogHistory.first!["event"] as! String, "stripeios.applepaycontext.complete_payment.finished")
     }
 
     func testCancelAfterSetupIntentConfirmsStillSucceeds() {
@@ -328,6 +376,8 @@ class STPApplePayContextFunctionalTest: XCTestCase {
         }
 
         waitForExpectations(timeout: 20.0, handler: nil) // give this a longer timeout, it tends to take a while
+        XCTAssertEqual(analyticsClient._testLogHistory.count, 1)
+        XCTAssertEqual(analyticsClient._testLogHistory.first!["event"] as! String, "stripeios.applepaycontext.complete_payment.finished")
     }
 
     // MARK: - Helper

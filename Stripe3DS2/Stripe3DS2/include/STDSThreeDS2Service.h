@@ -12,6 +12,7 @@
 @class STDSTransaction;
 @class STDSUICustomization;
 @class STDSWarning;
+@protocol STDSAnalyticsDelegate;
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -47,11 +48,16 @@ NS_ASSUME_NONNULL_BEGIN
                       locale:(nullable NSLocale *)locale
                   uiSettings:(nullable STDSUICustomization *)uiSettings;
 
+- (void)initializeWithConfig:(STDSConfigParameters *)config
+                      locale:(nullable NSLocale *)locale
+                  uiSettings:(nullable STDSUICustomization *)uiSettings
+           analyticsDelegate:(nonnull id<STDSAnalyticsDelegate>)analyticsDelegate;
+
 /**
  Creates and returns an instance of `STDSTransaction`.
 
  @param directoryServerID The Directory Server identifier returned in the authentication response
- @param protocolVersion 3DS protocol version according to which the transaction will be created. Uses the default value of 2.1.0 if nil
+ @param protocolVersion 3DS protocol version according to which the transaction will be created. Uses the default value of 2.2.0 if nil
 
  @exception STDSNotInitializedException Will throw an `STDSNotInitializedException` if the the `STDSThreeDS2Service` instance hasn't been initialized with a call to `initializeWithConfig:locale:uiSettings:`. @see STDSNotInitializedException
  @exception STDSInvalidInputException Will throw an `STDSInvalidInputException` if `directoryServerID` is not recognized or if the `protocolVersion` is not supported by this version of the SDK. @see STDSInvalidInputException
@@ -68,7 +74,7 @@ NS_ASSUME_NONNULL_BEGIN
  @param serverKeyID An additional authentication key used by some Directory Servers
  @param certificateString A Base64-encoded PEM or DER formatted certificate string containing the directory server's public key
  @param rootCertificateStrings An arry of base64-encoded PEM or DER formatted certificate strings containing the DS root certificate used for signature checks
- @param protocolVersion 3DS protocol version according to which the transaction will be created. Uses the default value of 2.1.0 if nil
+ @param protocolVersion 3DS protocol version according to which the transaction will be created. Uses the default value of 2.2.0 if nil
 
  @exception STDSNotInitializedException Will throw an `STDSNotInitializedException` if the the `STDSThreeDS2Service` instance hasn't been initialized with a call to `initializeWithConfig:locale:uiSettings:`. @see STDSNotInitializedException
  @exception STDSInvalidInputException Will throw an `STDSInvalidInputException` if the `protocolVersion` is not supported by this version of the SDK. @see STDSInvalidInputException

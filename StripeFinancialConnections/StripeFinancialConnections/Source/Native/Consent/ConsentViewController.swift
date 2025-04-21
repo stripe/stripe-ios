@@ -12,10 +12,18 @@ import SafariServices
 import UIKit
 
 protocol ConsentViewControllerDelegate: AnyObject {
-    func consentViewControllerDidSelectManuallyVerify(_ viewController: ConsentViewController)
     func consentViewController(
         _ viewController: ConsentViewController,
-        didConsentWithManifest manifest: FinancialConnectionsSessionManifest
+        didRequestNextPane nextPane: FinancialConnectionsSessionManifest.NextPane,
+        nextPaneOrDrawerOnSecondaryCta: String?
+    )
+    func consentViewController(
+        _ viewController: ConsentViewController,
+        didConsentWithResult result: ConsentAcquiredResult
+    )
+    func consentViewControllerDidFailAttestationVerdict(
+        _ viewController: ConsentViewController,
+        prefillDetails: WebPrefillDetails
     )
 }
 
@@ -29,8 +37,8 @@ class ConsentViewController: UIViewController {
             font: .heading(.extraLarge),
             boldFont: .heading(.extraLarge),
             linkFont: .heading(.extraLarge),
-            textColor: .textDefault,
-            alignCenter: true
+            textColor: FinancialConnectionsAppearance.Colors.textDefault,
+            alignment: .center
         )
         titleLabel.setText(
             dataSource.consent.title,
@@ -48,6 +56,7 @@ class ConsentViewController: UIViewController {
             aboveCtaText: dataSource.consent.aboveCta,
             ctaText: dataSource.consent.cta,
             belowCtaText: dataSource.consent.belowCta,
+            appearance: dataSource.manifest.appearance,
             didSelectAgree: { [weak self] in
                 self?.didSelectAgree()
             },
@@ -69,7 +78,7 @@ class ConsentViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .customBackgroundColor
+        view.backgroundColor = FinancialConnectionsAppearance.Colors.background
 
         let paneLayoutView = PaneLayoutView(
             contentView: {
@@ -141,9 +150,19 @@ class ConsentViewController: UIViewController {
             .observe(on: .main) { [weak self] result in
                 guard let self = self else { return }
                 switch result {
-                case .success(let manifest):
-                    self.delegate?.consentViewController(self, didConsentWithManifest: manifest)
+                case .success(let result):
+                    self.delegate?.consentViewController(self, didConsentWithResult: result)
                 case .failure(let error):
+                    let attestationError = self.dataSource.completeAssertionIfNeeded(
+                        possibleError: error,
+                        api: .consumerSessionLookup
+                    )
+
+                    if attestationError != nil {
+                        let prefillDetails = WebPrefillDetails(email: dataSource.email)
+                        self.delegate?.consentViewControllerDidFailAttestationVerdict(self, prefillDetails: prefillDetails)
+                    }
+
                     // we display no errors on failure
                     self.dataSource
                         .analyticsClient
@@ -162,28 +181,60 @@ class ConsentViewController: UIViewController {
             url: url,
             pane: .consent,
             analyticsClient: dataSource.analyticsClient,
-            handleStripeScheme: { urlHost in
-                if urlHost == "manual-entry" {
-                    delegate?.consentViewControllerDidSelectManuallyVerify(self)
-                } else if urlHost == "data-access-notice" {
+            handleURL: { urlHost, nextPaneOrDrawerOnSecondaryCta in
+                guard let urlHost, let address = StripeSchemeAddress(rawValue: urlHost) else {
+                    self.dataSource
+                        .analyticsClient
+                        .logUnexpectedError(
+                            FinancialConnectionsSheetError.unknown(
+                                debugDescription: "Unknown Stripe-scheme URL detected: \(urlHost ?? "nil")."
+                            ),
+                            errorName: "ConsentStripeURLError",
+                            pane: .consent
+                        )
+                    return
+                }
+
+                switch address {
+                case .manualEntry:
+                    delegate?.consentViewController(
+                        self,
+                        didRequestNextPane: .manualEntry,
+                        nextPaneOrDrawerOnSecondaryCta: nextPaneOrDrawerOnSecondaryCta
+                    )
+                case .dataAccessNotice:
                     if let dataAccessNotice = dataSource.consent.dataAccessNotice {
                         let dataAccessNoticeViewController = DataAccessNoticeViewController(
                             dataAccessNotice: dataAccessNotice,
+                            appearance: dataSource.manifest.appearance,
                             didSelectUrl: { [weak self] url in
                                 self?.didSelectURLInTextFromBackend(url)
                             }
                         )
                         dataAccessNoticeViewController.present(on: self)
                     }
-                } else if urlHost == "legal-details-notice" {
+                case .legalDatailsNotice:
                     let legalDetailsNoticeModel = dataSource.consent.legalDetailsNotice
                     let legalDetailsNoticeViewController = LegalDetailsNoticeViewController(
                         legalDetailsNotice: legalDetailsNoticeModel,
+                        appearance: dataSource.manifest.appearance,
                         didSelectUrl: { [weak self] url in
                             self?.didSelectURLInTextFromBackend(url)
                         }
                     )
                     legalDetailsNoticeViewController.present(on: self)
+                case .linkAccountPicker:
+                    delegate?.consentViewController(
+                        self,
+                        didRequestNextPane: .linkAccountPicker,
+                        nextPaneOrDrawerOnSecondaryCta: nextPaneOrDrawerOnSecondaryCta
+                    )
+                case .linkLogin:
+                    delegate?.consentViewController(
+                        self,
+                        didRequestNextPane: .networkingLinkLoginWarmup,
+                        nextPaneOrDrawerOnSecondaryCta: nextPaneOrDrawerOnSecondaryCta
+                    )
                 }
             }
         )

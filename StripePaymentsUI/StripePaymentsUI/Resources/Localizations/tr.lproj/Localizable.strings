@@ -2,6 +2,8 @@
 
 "%1$@ ending in %2$@" = "%2$@ İle Biten %1$@";
 
+"%1$@ is not accepted" = "%1$@ kabul edilmiyor";
+
 "Address line 2 (optional)" = "Adres satırı 2 (isteğe bağlı)";
 
 "Apple Pay" = "Apple Pay";
@@ -10,13 +12,9 @@
 
 "Bank Account" = "Banka Hesabı";
 
-"Billing Address" = "Fatura Adresi";
-
 "Billing address" = "Fatura adresi";
 
 "CVC" = "CVC";
-
-"CVV" = "CVV";
 
 "Card information" = "Kart bilgileri";
 
@@ -38,9 +36,13 @@
 
 "The BSB you entered is invalid." = "Girdiğiniz BSB geçersiz.";
 
+"The selected brand is not allowed" = "Seçilen markaya izin verilmiyor";
+
 "To scan your card, allow camera access in Settings." = "Kartınızı taramak için Ayarlar'da kamera erişimine izin verin.";
 
 "Your ZIP is invalid." = "Posta kodunuz geçersiz.";
+
+"Your card has expired." = "Kartınızın süresi dolmuş.";
 
 "Your card number is incomplete." = "Kart numaranız eksik.";
 

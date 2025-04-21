@@ -1,7 +1,5 @@
 "%1$@ •••• %2$@" = "%1$@ •••• %2$@";
 
-"%1$d interest-free payments of %2$@" = "%1$li platby/platieb bez úrokov vo výške %2$@";
-
 "+ Add" = "+ Pridať";
 
 "Add US bank account" = "Pridať americký bankový účet";
@@ -9,6 +7,8 @@
 "Add a card" = "Pridať kartu";
 
 "Add a payment method" = "Pridať spôsob platby";
+
+"Add bank account" = "Pridať bankový účet";
 
 "Add card" = "Pridať kartu";
 
@@ -18,11 +18,29 @@
 
 "Add your payment information" = "Pridajte svoje informácie o platbe";
 
+"Agree and continue" = "Súhlasiť a pokračovať";
+
 "Approve payment" = "Schváliť platbu";
+
+"Are you sure you want to remove this card?" = "Naozaj chcete odstrániť túto kartu?";
+
+"Are you sure you want to remove this linked account?" = "Naozaj chcete odstrániť tento prepojený účet?";
 
 "Back" = "Späť";
 
+"Bank" = "Banka";
+
 "Bank account" = "Bankový účet";
+
+"Bank account details cannot be changed." = "Informácie o bankovom účte nie je možné meniť.";
+
+"Buy now or pay later with  <img/>" = "Kúpte teraz alebo zaplaťte neskôr pomocou služby <img/>";
+
+"Buy now or pay later with Afterpay" = "Kúpte teraz alebo zaplaťte neskôr pomocou služby Afterpay";
+
+"Buy now or pay later with Cash App Afterpay" = "Kúpte teraz alebo zaplaťte neskôr pomocou aplikácie Cash App Afterpay";
+
+"Buy now or pay later with Clearpay" = "Kúpte teraz alebo zaplaťte neskôr pomocou služby Clearpay";
 
 "Buy now or pay later with Klarna" = "Kúpte teraz alebo zaplaťte neskôr pomocou služby Klarna";
 
@@ -38,11 +56,15 @@
 
 "By continuing to Revolut Pay, you allow %@ to charge your Revolut Pay account for future payments in accordance with their terms." = "Pokračovaním na službu Revolut Pay povolíte spoločnosti %@, aby z vášho účtu Revolut Pay účtovala poplatky za budúce platby v súlade s podmienkami tejto spoločnosti.";
 
+"By continuing you agree to the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Pokračovaním súhlasíte s <terms>podmienkami</terms> a <privacy>zásadami ochrany osobných údajov</privacy>.";
+
 "By continuing, you agree to authorize payments pursuant to <terms>these terms</terms>." = "Pokračovaním súhlasíte s autorizáciou platieb podľa <terms>týchto podmienok</terms>.";
 
 "By continuing, you authorize %@ to debit your Cash App account for this payment and future payments in accordance with %@'s terms, until this authorization is revoked. You can change this anytime in your Cash App Settings." = "Pokračovaním oprávňujete spoločnosť %1$@, aby zaúčtovala túto platbu a budúce platby na debet vášho účtu Cash App v súlade s podmienkami spoločnosti %2$@, až do odvolania tohto oprávnenia. Toto oprávnenie môžete kedykoľvek zmeniť v nastaveniach aplikácie Cash App.";
 
 "By joining Link, you agree to the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Pripojením k službe Link súhlasíte s <terms>podmienkami</terms> a <privacy>zásadami ochrany osobných údajov</privacy>.";
+
+"By providing your card information, you allow %@ to charge your card for future payments in accordance with their terms." = "Poskytnutím informácií o karte povolíte spoločnosti %@ účtovať na vašej karte budúce platby v súlade s ich podmienkami.";
 
 "By providing your email, you agree to create a Link account and save your payment info to Link, according to the Link <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Poskytnutím svojho e-mailu súhlasíte s vytvorením účtu Link a s uložením svojich platobných informácií do služby Link podľa <terms>podmienok</terms> a <privacy>zásad ochrany osobných údajov</privacy> služby Link.";
 
@@ -56,11 +78,23 @@
 
 "Cancel and pay another way" = "Zrušiť a zaplatiť iným spôsobom";
 
+"Card details cannot be changed." = "Informácie o karte nie je možné meniť.";
+
+"Change" = "Zmeniť";
+
+"Change email" = "Zmeniť e-mail";
+
 "Choose a payment method" = "Vyberte spôsob platby";
 
 "Close card scanner" = "Zatvoriť snímačku kariet";
 
+"Code sent" = "Kód odoslaný";
+
 "Confirm" = "Potvrdiť";
+
+"Confirm it's you" = "Potvrdenie vašej totožnosti";
+
+"Confirm payment details" = "Potvrdiť informácie o platbe";
 
 "Confirm the payment in your bank or payment app within %@ to complete the purchase." = "Dokončite nákup potvrdením platby v banke alebo platobnej aplikácii v priebehu %@.";
 
@@ -68,19 +102,43 @@
 
 "Confirm your CVC" = "Potvrďte CVC";
 
-"Confirm your CVV" = "Potvrďte CVV";
-
 "Contact information" = "Kontaktné informácie";
+
+"Default" = "Predvolené";
+
+"Default payment method" = "Predvolený spôsob platby";
 
 "EPS Bank" = "EPS Bank";
 
 "Enter address manually" = "Zadať adresu manuálne";
 
+"Enter the code sent to %@ to use your saved information." = "Zadajte kód zaslaný na telefónne číslo %@ a používajte svoje uložené údaje.";
+
 "FPX Bank" = "FPX Bank";
+
+"Failed to connect" = "Pripojenie sa nepodarilo";
+
+"Fast, secure, 1⁠-⁠click checkout" = "Rýchla, bezpečná platba jedným kliknutím";
+
+"For security, please re-enter your card’s security code." = "Z dôvodu bezpečnosti znovu zadajte bezpečnostný kód vašej karty.";
+
+"Get %@ back when you pay for the first time with your bank. <terms>See terms</terms>" = "Získajte %@ späť pri prvej platbe so svojou bankou. <terms>Pozrite si podmienky</terms>";
+
+"Get %@ back when you pay with your bank. <terms>See terms</terms>" = "Získajte %@ späť pri platbe prostredníctvom vašej banky. <terms>Pozrite si podmienky</terms>";
 
 "I understand that Stripe will be collecting Direct Debits on behalf of %@ and confirm that I am the account holder and the only person required to authorise debits from this account." = "Rozumiem, že spoločnosť Stripe bude inkasovať priame inkasá v mene spoločnosti %@ a potvrdzujem, že som majiteľom účtu a som jediná osoba, ktorá musí autorizovať inkasá z tohto účtu.";
 
 "IBAN" = "IBAN";
+
+"Log out of Link" = "Odhlásiť sa zo služby Link";
+
+"Manage SEPA debit" = "Spravovať SEPA inkaso";
+
+"Manage US bank account" = "Spravovať americký bankový účet";
+
+"Manage card" = "Spravovať kartu";
+
+"Manage cards" = "Spravovať karty";
 
 "Manage payment method" = "Spravovať spôsob platby";
 
@@ -93,6 +151,12 @@
 "New card" = "Nová karta";
 
 "New payment method" = "Nový spôsob platby";
+
+"No %@ promo" = "Bez %@ propagácie";
+
+"Not %@?" = "E-mailová adresa %@ nie je vaša?";
+
+"Only card brand can be changed." = "Je možné zmeniť len značku banky.";
 
 "Open your UPI app to approve your payment within %@" = "Otvorte si aplikáciu UPI za účelom schválenia platby v rámci %@";
 
@@ -112,15 +176,21 @@
 
 "Pay faster at %@ and thousands of businesses." = "Plaťte rýchlejšie u obchodníka %@ a tisícov ďalších spoločností.";
 
-"Pay in <num_installments/> interest-free payments of <installment_price/> with <img/>" = "Zaplaťte v <num_installments/>bezúročných splátkach čiastku <installment_price/> pomocou <img/>";
-
 "Pay over time with %@" = "Zaplatiť postupne pomocou %@";
+
+"Pay over time with Affirm" = "Zaplaťte postupne pomocou služby Affirm";
 
 "Pay with Link" = "Zaplatiť pomocou služby Link";
 
 "Pay with your bank account in just a few steps." = "Zaplaťte pomocou bankového účtu v niekoľkých jednoduchých krokoch.";
 
+"Payment" = "Platba";
+
 "Payment failed" = "Platba zlyhala";
+
+"Payment methods" = "Spôsoby platby";
+
+"Please choose a valid payment method." = "Vyberte platný spôsob platby.";
 
 "Please go back and select another payment method" = "Vráťte sa späť a vyberte iný spôsob platby";
 
@@ -132,7 +202,11 @@
 
 "Remove card?" = "Odstrániť kartu?";
 
-"Remove payment method" = "Odstrániť spôsob platby";
+"Remove linked account" = "Odstrániť prepojený účet";
+
+"Resend code" = "Znovu odoslať kód";
+
+"SEPA debit details cannot be changed." = "Informácie o SEPA inkase nie je možné meniť.";
 
 "Save" = "Uložiť";
 
@@ -142,13 +216,15 @@
 
 "Save for future payments" = "Uložiť pre budúce platby";
 
-"Save this account for future %@ payments" = "Uložiť tento účet pre budúce platby obchodníkovi %@";
+"Save payment details to %@ for future purchases" = "Uložiť údaje o platbe na %@ pre budúce nákupy";
 
-"Save this card for future %@ payments" = "Uložiť túto kartu pre budúce platby obchodníkovi %@";
+"Save this account for future %@ payments" = "Uložiť tento účet pre budúce platby obchodníkovi %@";
 
 "Save your bank account in just a few steps." = "Uložte svoj bankový účet v niekoľkých krokoch.";
 
 "Save your info for secure 1-click checkout with Link" = "Uložte svoje údaje pre bezpečnú platbu jedným kliknutím pomocou služby Link";
+
+"Save your payment information with Link, and securely check out in 1-click on Link-supported sites." = "Uložte si svoje platobné údaje pomocou služby Link a bezpečne plaťte jedným kliknutím na stránkach podporovaných službou Link.";
 
 "Saved" = "Uložené";
 
@@ -157,6 +233,10 @@
 "Select payment method" = "Vybrať spôsob platby";
 
 "Select your payment method" = "Vyberte svoj spôsob platby";
+
+"Set as default" = "Nastaviť ako predvolený spôsob";
+
+"Set as default payment method" = "Nastaviť ako predvolený spôsob platby";
 
 "Set up" = "Nastaviť";
 
@@ -170,11 +250,29 @@
 
 "Stripe will deposit $0.01 to your account in 1-2 business days. Then you’ll get an email with instructions to complete payment to %@." = "V priebehu 1 až 2 pracovných dní vloží Stripe na váš účet vklad vo výške 0,01 USD. Potom dostanete e-mail s pokynmi na dokončenie platby spoločnosti %@.";
 
+"Tap to close" = "Ťuknutím zatvorte";
+
+"Tap to expand" = "Ťuknutím rozbaľte";
+
 "The IBAN you entered is incomplete." = "Zadaný IBAN je neúplný.";
 
-"Update" = "Aktualizovať";
+"The provided verification code has expired." = "Platnosť zadaného overovacieho kódu skončila.";
 
-"Update card brand" = "Aktualizovať značku karty";
+"The provided verification code is incorrect." = "Zadaný overovací kód je nesprávny.";
+
+"This card has expired. Update your card info or choose a different payment method." = "Platnosť tejto karty vypršala. Aktualizujte údaje karty alebo zvoľte iný spôsob platby.";
+
+"This is your default" = "Toto je váš predvolený spôsob platby";
+
+"Too many attempts. Please try again in a few minutes." = "Príliš veľa pokusov. Skúste to znova o niekoľko minút.";
+
+"Unavailable for this purchase" = "Nie je k dispozícii pre tento nákup";
+
+"Update card" = "Aktualizovať kartu";
+
+"Update payment method" = "Aktualizovať spôsob platby";
+
+"Use your saved info to check out faster" = "Použite vaše uložené údaje a plaťte rýchlejšie";
 
 "View more" = "Zobraziť viac";
 

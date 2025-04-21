@@ -2,6 +2,8 @@
 
 "%1$@ ending in %2$@" = "%1$@, оканч. на %2$@";
 
+"%1$@ is not accepted" = "%1$@ не принимается";
+
 "Address line 2 (optional)" = "Адрес (строка 2) (необязательно)";
 
 "Apple Pay" = "Apple Pay";
@@ -10,13 +12,9 @@
 
 "Bank Account" = "Банковский счет";
 
-"Billing Address" = "Адрес выставления счета";
-
 "Billing address" = "Адрес для выставления счета";
 
 "CVC" = "Код CVV/CVC";
-
-"CVV" = "Код CVV/CVC";
 
 "Card information" = "Данные платежной карты";
 
@@ -38,9 +36,13 @@
 
 "The BSB you entered is invalid." = "Введенный код BSB неверен.";
 
+"The selected brand is not allowed" = "Выбранный бренд недоступен";
+
 "To scan your card, allow camera access in Settings." = "Чтобы сканировать карту, войдите в \"Настройки\" и разрешите доступ к камере.";
 
 "Your ZIP is invalid." = "Введенный почтовый индекс неверен.";
+
+"Your card has expired." = "Срок действия карты истек.";
 
 "Your card number is incomplete." = "Номер карты введен не полностью.";
 

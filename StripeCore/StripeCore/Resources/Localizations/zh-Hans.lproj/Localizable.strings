@@ -1,4 +1,10 @@
+"An error occurred. Please try again." = "出错了，请重试。";
+
+"Card brand was not updated. Please try again." = "银行卡品牌未更新，请重试。";
+
 "Close" = "关闭";
+
+"Default payment method was not updated. Please try again." = "未更新默认支付方式，请重试。";
 
 "Scan Card" = "扫描银行卡";
 

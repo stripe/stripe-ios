@@ -1,4 +1,10 @@
+"An error occurred. Please try again." = "エラーが発生しました。もう一度お試しください。";
+
+"Card brand was not updated. Please try again." = "カードブランドは更新されていません。もう一度お試しください。";
+
 "Close" = "閉じる";
+
+"Default payment method was not updated. Please try again." = "デフォルトの決済手段は更新されていません。もう一度お試しください。";
 
 "Scan Card" = "クレジットカードをスキャン";
 

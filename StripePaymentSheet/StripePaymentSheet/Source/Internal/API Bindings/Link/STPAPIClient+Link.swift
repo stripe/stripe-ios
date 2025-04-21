@@ -12,35 +12,72 @@ import Foundation
 @_spi(STP) import StripePayments
 @_spi(STP) import StripePaymentsUI
 
+// Please do not attempt to modify the Stripe SDK or call private APIs directly.
+// See the Stripe Services Agreement (https://stripe.com/legal/ssa) for more details.
 extension STPAPIClient {
     func lookupConsumerSession(
         for email: String?,
+        emailSource: EmailSource?,
+        sessionID: String,
+        cookieStore: LinkCookieStore,
+        useMobileEndpoints: Bool,
+        doNotLogConsumerFunnelEvent: Bool,
         completion: @escaping (Result<ConsumerSession.LookupResponse, Error>) -> Void
     ) {
-        let endpoint: String = "consumers/sessions/lookup"
-        var parameters: [String: Any] = [
-            "request_surface": "ios_payment_element",
-        ]
-        if let email = email {
-            parameters["email_address"] = email.lowercased()
-        }
+        Task {
+            let legacyEndpoint = "consumers/sessions/lookup"
+            let mobileEndpoint = "consumers/mobile/sessions/lookup"
 
-        guard parameters.keys.contains("email_address") || parameters.keys.contains("cookies") else {
-            // no request to make if we don't have an email or cookies
-            DispatchQueue.main.async {
-                completion(.success(
-                    ConsumerSession.LookupResponse(.noAvailableLookupParams)
-                ))
+            var parameters: [String: Any] = [
+                "request_surface": "ios_payment_element",
+                "session_id": sessionID,
+            ]
+            if doNotLogConsumerFunnelEvent {
+                parameters["do_not_log_consumer_funnel_event"] = true
             }
-            return
-        }
+            if let email, let emailSource {
+                parameters["email_address"] = email.lowercased()
+                parameters["email_source"] = emailSource.rawValue
+            } else {
+                // no request to make if we don't have an email
+                DispatchQueue.main.async {
+                    completion(.success(
+                        ConsumerSession.LookupResponse(.noAvailableLookupParams)
+                    ))
+                }
+                return
+            }
 
-        post(
-            resource: endpoint,
-            parameters: parameters,
-            ephemeralKeySecret: publishableKey
-        ) { (result: Result<ConsumerSession.LookupResponse, Error>) in
-            completion(result)
+            let requestAssertionHandle: StripeAttest.AssertionHandle? = await {
+                if useMobileEndpoints {
+                    do {
+                        let assertionHandle = try await stripeAttest.assert()
+                        parameters = parameters.merging(assertionHandle.assertion.requestFields) { (_, new) in new }
+                        return assertionHandle
+                    } catch {
+                        // If we can't get an assertion, we'll try the request anyway. It may fail.
+                    }
+                }
+                return nil
+            }()
+
+            post(
+                resource: useMobileEndpoints ? mobileEndpoint : legacyEndpoint,
+                parameters: parameters,
+                ephemeralKeySecret: publishableKey
+            ) { (result: Result<ConsumerSession.LookupResponse, Error>) in
+                Task { @MainActor in
+                    // If there's an assertion error, send it to StripeAttest
+                    if useMobileEndpoints,
+                       case .failure(let error) = result,
+                       StripeAttest.isLinkAssertionError(error: error) {
+                        await self.stripeAttest.receivedAssertionError(error)
+                    }
+                    // Mark the assertion handle as completed
+                    requestAssertionHandle?.complete()
+                    completion(result)
+                }
+            }
         }
     }
 
@@ -51,35 +88,62 @@ extension STPAPIClient {
         legalName: String?,
         countryCode: String?,
         consentAction: String?,
+        useMobileEndpoints: Bool,
         completion: @escaping (Result<ConsumerSession.SessionWithPublishableKey, Error>) -> Void
     ) {
-        let endpoint: String = "consumers/accounts/sign_up"
+        Task {
+            let legacyEndpoint = "consumers/accounts/sign_up"
+            let modernEndpoint = "consumers/mobile/sign_up"
 
-        var parameters: [String: Any] = [
-            "request_surface": "ios_payment_element",
-            "email_address": email.lowercased(),
-            "phone_number": phoneNumber,
-            "locale": locale.toLanguageTag(),
-            "country_inferring_method": "PHONE_NUMBER",
-        ]
+            var parameters: [String: Any] = [
+                "request_surface": "ios_payment_element",
+                "email_address": email.lowercased(),
+                "phone_number": phoneNumber,
+                "locale": locale.toLanguageTag(),
+                "country_inferring_method": "PHONE_NUMBER",
+            ]
 
-        if let legalName = legalName {
-            parameters["legal_name"] = legalName
-        }
+            if let legalName = legalName {
+                parameters["legal_name"] = legalName
+            }
 
-        if let countryCode = countryCode {
-            parameters["country"] = countryCode
-        }
+            if let countryCode = countryCode {
+                parameters["country"] = countryCode
+            }
 
-        if let consentAction = consentAction {
-            parameters["consent_action"] = consentAction
-        }
+            if let consentAction = consentAction {
+                parameters["consent_action"] = consentAction
+            }
 
-        post(
-            resource: endpoint,
-            parameters: parameters
-        ) { (result: Result<ConsumerSession.SessionWithPublishableKey, Error>) in
-            completion(result)
+            let requestAssertionHandle: StripeAttest.AssertionHandle? = await {
+                if useMobileEndpoints {
+                    do {
+                        let assertionHandle = try await stripeAttest.assert()
+                        parameters = parameters.merging(assertionHandle.assertion.requestFields) { (_, new) in new }
+                        return assertionHandle
+                    } catch {
+                        // If we can't get an assertion, we'll try the request anyway. It may fail.
+                    }
+                }
+                return nil
+            }()
+
+            post(
+                resource: useMobileEndpoints ? modernEndpoint : legacyEndpoint,
+                parameters: parameters
+            ) { (result: Result<ConsumerSession.SessionWithPublishableKey, Error>) in
+                Task { @MainActor in
+                    // If there's an assertion error, send it to StripeAttest
+                    if useMobileEndpoints,
+                       case .failure(let error) = result,
+                       StripeAttest.isLinkAssertionError(error: error) {
+                        await self.stripeAttest.receivedAssertionError(error)
+                    }
+                    // Mark the assertion handle as completed
+                    requestAssertionHandle?.complete()
+                    completion(result)
+                }
+            }
         }
     }
 
@@ -92,7 +156,7 @@ extension STPAPIClient {
         post(
             resource: endpoint,
             parameters: parameters,
-            ephemeralKeySecret: consumerAccountPublishableKey
+            consumerPublishableKey: consumerAccountPublishableKey
         ) { (result: Result<DetailsResponse, Error>) in
             completion(result.map { $0.redactedPaymentDetails })
         }
@@ -130,16 +194,43 @@ extension STPAPIClient {
         )
     }
 
+    func createPaymentDetails(
+        for consumerSessionClientSecret: String,
+        linkedAccountId: String,
+        consumerAccountPublishableKey: String?,
+        completion: @escaping (Result<ConsumerPaymentDetails, Error>) -> Void
+    ) {
+        let endpoint: String = "consumers/payment_details"
+
+        let parameters: [String: Any] = [
+            "credentials": ["consumer_session_client_secret": consumerSessionClientSecret],
+            "request_surface": "ios_payment_element",
+            "bank_account": [
+                "account": linkedAccountId,
+            ],
+            "type": "bank_account",
+            "is_default": true,
+        ]
+
+        makePaymentDetailsRequest(
+            endpoint: endpoint,
+            parameters: parameters,
+            consumerAccountPublishableKey: consumerAccountPublishableKey,
+            completion: completion
+        )
+    }
+
     private func makeConsumerSessionRequest(
         endpoint: String,
         parameters: [String: Any],
+        cookieStore: LinkCookieStore,
         consumerAccountPublishableKey: String?,
         completion: @escaping (Result<ConsumerSession, Error>) -> Void
     ) {
         post(
             resource: endpoint,
             parameters: parameters,
-            ephemeralKeySecret: consumerAccountPublishableKey
+            consumerPublishableKey: consumerAccountPublishableKey
         ) { (result: Result<SessionResponse, Error>) in
             completion(result.map { $0.consumerSession })
         }
@@ -199,7 +290,10 @@ extension STPAPIClient {
         for consumerSessionClientSecret: String,
         id: String,
         consumerAccountPublishableKey: String?,
+        allowRedisplay: STPPaymentMethodAllowRedisplay?,
         cvc: String?,
+        expectedPaymentMethodType: String?,
+        billingPhoneNumber: String?,
         completion: @escaping (Result<PaymentDetailsShareResponse, Error>) -> Void
     ) {
         let endpoint: String = "consumers/payment_details/share"
@@ -207,23 +301,132 @@ extension STPAPIClient {
         var parameters: [String: Any] = [
             "credentials": ["consumer_session_client_secret": consumerSessionClientSecret],
             "request_surface": "ios_payment_element",
+            "expand": ["payment_method"],
             "id": id,
         ]
 
         if let cvc = cvc {
             parameters["payment_method_options"] = ["card": ["cvc": cvc]]
         }
+        if let allowRedisplay {
+            parameters["allow_redisplay"] = allowRedisplay.stringValue
+        }
+        if let expectedPaymentMethodType {
+            parameters["expected_payment_method_type"] = expectedPaymentMethodType
+        }
+        if let billingPhoneNumber {
+            parameters["billing_phone"] = billingPhoneNumber
+        }
+
+        APIRequest<PaymentDetailsShareResponse>.post(
+            with: self,
+            endpoint: endpoint,
+            parameters: parameters
+        ) { paymentDetailsShareResponse, _, error in
+            guard let paymentDetailsShareResponse else {
+                stpAssert(error != nil)
+                completion(.failure(error ?? NSError.stp_genericConnectionError()))
+                return
+            }
+            completion(.success(paymentDetailsShareResponse))
+        }
+    }
+
+    func listPaymentDetails(
+        for consumerSessionClientSecret: String,
+        supportedPaymentDetailsTypes: [ConsumerPaymentDetails.DetailsType],
+        consumerAccountPublishableKey: String?,
+        completion: @escaping (Result<[ConsumerPaymentDetails], Error>) -> Void
+    ) {
+        let endpoint: String = "consumers/payment_details/list"
+
+        let parameters: [String: Any] = [
+            "credentials": ["consumer_session_client_secret": consumerSessionClientSecret],
+            "request_surface": "ios_payment_element",
+            "types": supportedPaymentDetailsTypes.map(\.rawValue),
+        ]
 
         post(
             resource: endpoint,
             parameters: parameters,
-            ephemeralKeySecret: nil,
+            consumerPublishableKey: consumerAccountPublishableKey
+        ) { (result: Result<DetailsListResponse, Error>) in
+            completion(result.map { $0.redactedPaymentDetails })
+        }
+    }
+
+    func deletePaymentDetails(
+        for consumerSessionClientSecret: String,
+        id: String,
+        consumerAccountPublishableKey: String?,
+        completion: @escaping (Result<Void, Error>) -> Void
+    ) {
+        let endpoint: String = "consumers/payment_details/\(id)"
+
+        let parameters: [String: Any] = [
+            "credentials": ["consumer_session_client_secret": consumerSessionClientSecret],
+            "request_surface": "ios_payment_element",
+        ]
+
+        APIRequest<STPEmptyStripeResponse>.delete(
+            with: self,
+            endpoint: endpoint,
+            additionalHeaders: authorizationHeader(using: consumerAccountPublishableKey),
+            parameters: parameters
+        ) { result in
+            completion(result.map { _ in () } )
+        }
+    }
+
+    func updatePaymentDetails(
+        for consumerSessionClientSecret: String,
+        id: String,
+        updateParams: UpdatePaymentDetailsParams,
+        consumerAccountPublishableKey: String?,
+        completion: @escaping (Result<ConsumerPaymentDetails, Error>) -> Void
+    ) {
+        let endpoint: String = "consumers/payment_details/\(id)"
+
+        var parameters: [String: Any] = [
+            "credentials": ["consumer_session_client_secret": consumerSessionClientSecret],
+            "request_surface": "ios_payment_element",
+        ]
+
+        if let details = updateParams.details, case .card(let expiryDate, let billingDetails, let preferredNetwork) = details {
+            if let expiryDate {
+                parameters["exp_month"] = expiryDate.month
+                parameters["exp_year"] = expiryDate.year
+            }
+
+            if let billingDetails = billingDetails {
+                parameters["billing_address"] = billingDetails.consumersAPIParams
+            }
+
+            if let billingEmailAddress = billingDetails?.email {
+                // This email address needs to be lowercase or the API will reject it
+                parameters["billing_email_address"] = billingEmailAddress.lowercased()
+            }
+
+            if let preferredNetwork {
+                parameters["preferred_network"] = preferredNetwork
+            }
+        }
+
+        if let isDefault = updateParams.isDefault {
+            parameters["is_default"] = isDefault
+        }
+
+        makePaymentDetailsRequest(
+            endpoint: endpoint,
+            parameters: parameters,
+            consumerAccountPublishableKey: consumerAccountPublishableKey,
             completion: completion
         )
     }
 
     func logout(
         consumerSessionClientSecret: String,
+        cookieStore: LinkCookieStore,
         consumerAccountPublishableKey: String?,
         completion: @escaping (Result<ConsumerSession, Error>) -> Void
     ) {
@@ -239,10 +442,72 @@ extension STPAPIClient {
         makeConsumerSessionRequest(
             endpoint: endpoint,
             parameters: parameters,
+            cookieStore: cookieStore,
             consumerAccountPublishableKey: consumerAccountPublishableKey,
             completion: completion
         )
     }
+
+    func startVerification(
+        for consumerSessionClientSecret: String,
+        type: ConsumerSession.VerificationSession.SessionType,
+        locale: Locale,
+        cookieStore: LinkCookieStore,
+        consumerAccountPublishableKey: String?,
+        completion: @escaping (Result<ConsumerSession, Error>) -> Void
+    ) {
+
+        let typeString: String = {
+            switch type {
+            case .sms:
+                return "SMS"
+            case .unparsable, .signup, .email:
+                assertionFailure("We don't support any verification except sms")
+                return ""
+            }
+        }()
+        let endpoint: String = "consumers/sessions/start_verification"
+
+        let parameters: [String: Any] = [
+            "credentials": ["consumer_session_client_secret": consumerSessionClientSecret],
+            "type": typeString,
+            "locale": locale.toLanguageTag(),
+        ]
+
+        makeConsumerSessionRequest(
+            endpoint: endpoint,
+            parameters: parameters,
+            cookieStore: cookieStore,
+            consumerAccountPublishableKey: consumerAccountPublishableKey,
+            completion: completion
+        )
+    }
+
+    func confirmSMSVerification(
+        for consumerSessionClientSecret: String,
+        with code: String,
+        cookieStore: LinkCookieStore,
+        consumerAccountPublishableKey: String?,
+        completion: @escaping (Result<ConsumerSession, Error>) -> Void
+    ) {
+        let endpoint: String = "consumers/sessions/confirm_verification"
+
+        let parameters: [String: Any] = [
+            "credentials": ["consumer_session_client_secret": consumerSessionClientSecret],
+            "type": "SMS",
+            "code": code,
+            "request_surface": "ios_payment_element",
+        ]
+
+        makeConsumerSessionRequest(
+            endpoint: endpoint,
+            parameters: parameters,
+            cookieStore: cookieStore,
+            consumerAccountPublishableKey: consumerAccountPublishableKey,
+            completion: completion
+        )
+    }
+
 }
 
 // TODO(ramont): Remove this after switching to modern bindings.
@@ -373,4 +638,11 @@ extension STPPaymentMethodAddress {
         }
         return .init(uniqueKeysWithValues: tupleArray)
     }
+}
+
+enum EmailSource: String {
+    case prefilledEmail = "prefilled_email"
+    case userAction = "user_action"
+    case customerObject = "customer_object"
+    case customerEmail = "customer_email"
 }

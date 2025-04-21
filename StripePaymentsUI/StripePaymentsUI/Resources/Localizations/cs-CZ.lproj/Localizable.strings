@@ -2,6 +2,8 @@
 
 "%1$@ ending in %2$@" = "%1$@ končící za %2$@";
 
+"%1$@ is not accepted" = "%1$@ se neakceptuje.";
+
 "Address line 2 (optional)" = "2. řádek adresy (volitelně)";
 
 "Apple Pay" = "Apple Pay";
@@ -10,13 +12,9 @@
 
 "Bank Account" = "Bankovní účet";
 
-"Billing Address" = "Fakturační adresa";
-
 "Billing address" = "Fakturační adresa";
 
 "CVC" = "CVC";
-
-"CVV" = "CVV";
 
 "Card information" = "Informace o kartě";
 
@@ -38,9 +36,13 @@
 
 "The BSB you entered is invalid." = "Zadaný BSB je neplatný.";
 
+"The selected brand is not allowed" = "Vybraná značka není povolena";
+
 "To scan your card, allow camera access in Settings." = "Chcete-li kartu naskenovat, povolte v Nastavení přístup k fotoaparátu.";
 
 "Your ZIP is invalid." = "PSČ je neplatné.";
+
+"Your card has expired." = "Platnost vaší karty vypršela.";
 
 "Your card number is incomplete." = "Číslo karty je neúplné.";
 

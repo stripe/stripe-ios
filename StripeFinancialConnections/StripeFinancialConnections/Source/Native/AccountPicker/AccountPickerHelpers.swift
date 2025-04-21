@@ -64,10 +64,15 @@ final class AccountPickerHelpers {
     }
 
     // exposed for testing purposes
-    static func currencyString(currency: String, balanceAmount: Int) -> String? {
+    static func currencyString(
+        currency: String,
+        balanceAmount: Int,
+        locale: Locale = .current
+    ) -> String? {
         let numberFormatter = NumberFormatter()
         numberFormatter.currencyCode = currency
         numberFormatter.numberStyle = .currency
+        numberFormatter.locale = locale
         return numberFormatter.string(
             for: NSDecimalNumber.stp_fn_decimalNumber(withAmount: balanceAmount, currency: currency)
         )

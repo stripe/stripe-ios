@@ -1,5 +1,7 @@
 "%@ (optional)" = "%@ (volitelné)";
 
+"(not accepted)" = "(nepřijímá se)";
+
 "Account number" = "Číslo účtu";
 
 "Address" = "Adresa";
@@ -83,8 +85,6 @@
 "Other" = "Jiné";
 
 "Parish" = "Obec";
-
-"Phone" = "Telefon";
 
 "Phone number" = "Telefonní číslo";
 

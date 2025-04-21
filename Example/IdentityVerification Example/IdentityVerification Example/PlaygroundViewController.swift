@@ -14,9 +14,11 @@ class PlaygroundViewController: UIViewController {
     // Constants
     let baseURL = "https://stripe-mobile-identity-verification-playground.glitch.me"
     let verifyEndpoint = "/create-verification-session"
+    let reuseEndpoint = "/reuse-verification-session"
 
     // Outlets
     @IBOutlet private weak var nativeOrWebSelector: UISegmentedControl!
+    @IBOutlet private weak var newOrReuseSelector: UISegmentedControl!
     @IBOutlet private weak var verificationTypeSelector: UISegmentedControl!
     @IBOutlet private weak var drivingLicenseSwitch: UISwitch!
     @IBOutlet private weak var passportSwitch: UISwitch!
@@ -25,8 +27,11 @@ class PlaygroundViewController: UIViewController {
     @IBOutlet private weak var requireAddressSwitch: UISwitch!
     @IBOutlet private weak var requireLiveCaptureSwitch: UISwitch!
     @IBOutlet private weak var requireSelfieSwitch: UISwitch!
+    @IBOutlet private weak var verificationTypeContainerView: UIStackView!
     @IBOutlet private weak var documentOptionsContainerView: UIStackView!
     @IBOutlet private weak var nativeComponentsOptionsContainerView: UIStackView!
+    @IBOutlet private weak var reuseVerificationIDContainerView: UIStackView!
+    @IBOutlet private weak var reuseVerificationSessionIDInput: UITextField!
 
     @IBOutlet weak var phoneOptionsContainerView: UIStackView!
     @IBOutlet private weak var verifyButton: UIButton!
@@ -48,6 +53,12 @@ class PlaygroundViewController: UIViewController {
         case web
         case link
     }
+
+    enum CreationMethod: CaseIterable {
+        case new
+        case reuse
+    }
+
     enum VerificationType: String, CaseIterable {
         case document = "document"
         case idNumber = "id_number"
@@ -70,6 +81,11 @@ class PlaygroundViewController: UIViewController {
     /// Use native SDK or web redirect
     var invocationType: InvocationType {
         return InvocationType.allCases[nativeOrWebSelector.selectedSegmentIndex]
+    }
+
+    /// Create new verification or reuse existing one
+    var creationMethod: CreationMethod {
+        return CreationMethod.allCases[newOrReuseSelector.selectedSegmentIndex]
     }
 
     /// VerificationType specified in the UI toggle
@@ -141,70 +157,81 @@ class PlaygroundViewController: UIViewController {
         // Disable the button while we make the request
         updateButtonState(isLoading: true)
 
-        // Make request to our verification endpoint
         let session = URLSession.shared
-        let url = URL(string: baseURL + verifyEndpoint)!
+        var url: URL
+        var requestDict: [String: Any]
 
-        // Forwarding VerificationSession options from the client to server to
-        // for demo purposes. In production, these are typically set by the
-        // server depending on the desired behavior.
-        var requestDict: [String: Any] = [
-            "type": verificationType.rawValue
-        ]
+        if (creationMethod == .reuse) {
+            url = URL(string: baseURL + reuseEndpoint)!
 
-        var options: [String: Any] = [:]
-
-        switch verificationType {
-        case .document:
-            options = [
-               "document": [
-                   "allowed_types": documentAllowedTypes.map { $0.rawValue },
-                   "require_id_number": requireIDNumberSwitch.isOn,
-                   "require_live_capture": requireLiveCaptureSwitch.isOn,
-                   "require_matching_selfie": requireSelfieSwitch.isOn,
-                   "require_address": requireAddressSwitch.isOn,
-               ],
+            requestDict = [
+                "verification_session":reuseVerificationSessionIDInput.text ?? ""
             ]
-            if requirePhoneNumberSwitch.isOn {
-                options["phone"] = [
-                    "require_verification": true
-                ]
-                requestDict["provided_details"] = [
-                    "phone": phoneElement.phoneNumber?.string(as: .e164)
-                ]
-            }
-        case .idNumber:
-            if requirePhoneNumberSwitch.isOn {
-                options["phone"] = [
-                    "require_verification": true
-                ]
-                requestDict["provided_details"] = [
-                    "phone": phoneElement.phoneNumber?.string(as: .e164)
-                ]
-            }
-        case .address:
-            // no-op
-            break
-        case .phone:
-            if fallbackToDocumentSwitch.isOn {
+        } else {
+            // Make request to our verification endpoint
+            url = URL(string: baseURL + verifyEndpoint)!
+
+            // Forwarding VerificationSession options from the client to server to
+            // for demo purposes. In production, these are typically set by the
+            // server depending on the desired behavior.
+            requestDict = [
+                "type": verificationType.rawValue
+            ]
+
+            var options: [String: Any] = [:]
+
+            switch verificationType {
+            case .document:
                 options = [
-                   "document": [
-                    "allowed_types": documentAllowedTypes.map { $0.rawValue },
-                    "require_id_number": requireIDNumberSwitch.isOn,
-                    "require_live_capture": requireLiveCaptureSwitch.isOn,
-                    "require_matching_selfie": requireSelfieSwitch.isOn,
-                    "require_address": requireAddressSwitch.isOn,
-                   ],
-                   "phone_otp": [
-                    "check": OtpCheckType.allCases[otpCheckSelector.selectedSegmentIndex].rawValue
-                   ],
-                   "phone_records": [
-                    "fallback": "document"
-                   ],
+                    "document": [
+                        "allowed_types": documentAllowedTypes.map { $0.rawValue },
+                        "require_id_number": requireIDNumberSwitch.isOn,
+                        "require_live_capture": requireLiveCaptureSwitch.isOn,
+                        "require_matching_selfie": requireSelfieSwitch.isOn,
+                        "require_address": requireAddressSwitch.isOn,
+                    ],
                 ]
+                if requirePhoneNumberSwitch.isOn {
+                    options["phone"] = [
+                        "require_verification": true
+                    ]
+                    requestDict["provided_details"] = [
+                        "phone": phoneElement.phoneNumber?.string(as: .e164)
+                    ]
+                }
+            case .idNumber:
+                if requirePhoneNumberSwitch.isOn {
+                    options["phone"] = [
+                        "require_verification": true
+                    ]
+                    requestDict["provided_details"] = [
+                        "phone": phoneElement.phoneNumber?.string(as: .e164)
+                    ]
+                }
+            case .address:
+                // no-op
+                break
+            case .phone:
+                if fallbackToDocumentSwitch.isOn {
+                    options = [
+                        "document": [
+                            "allowed_types": documentAllowedTypes.map { $0.rawValue },
+                            "require_id_number": requireIDNumberSwitch.isOn,
+                            "require_live_capture": requireLiveCaptureSwitch.isOn,
+                            "require_matching_selfie": requireSelfieSwitch.isOn,
+                            "require_address": requireAddressSwitch.isOn,
+                        ],
+                        "phone_otp": [
+                            "check": OtpCheckType.allCases[otpCheckSelector.selectedSegmentIndex].rawValue
+                        ],
+                        "phone_records": [
+                            "fallback": "document"
+                        ],
+                    ]
+                }
             }
+            requestDict["options"] = options
         }
-        requestDict["options"] = options
 
         let requestJson = try! JSONSerialization.data(withJSONObject: requestDict, options: [])
 
@@ -387,6 +414,32 @@ class PlaygroundViewController: UIViewController {
             nativeComponentsOptionsContainerView.isHidden = true
         case .link:
             nativeComponentsOptionsContainerView.isHidden = true
+        }
+    }
+
+    // MARK: - New or Reuse Handlers
+    @IBAction func didChangeNewOrReuse(_ sender: Any) {
+        switch creationMethod {
+        case .new:
+            verificationTypeContainerView.isHidden = false
+            documentOptionsContainerView.isHidden = false
+            phoneOptionsContainerView.isHidden = true
+            requirePhoneNumberSwitch.isOn = false
+            phoneView.isHidden = true
+            fallbackToDocumentSwitch.isOn = false
+            otpCheckContainerView.isHidden = true
+            phoneElement.clearPhoneNumber()
+            reuseVerificationIDContainerView.isHidden = true
+        case .reuse:
+            verificationTypeContainerView.isHidden = true
+            documentOptionsContainerView.isHidden = true
+            phoneOptionsContainerView.isHidden = true
+            requirePhoneNumberSwitch.isOn = false
+            phoneView.isHidden = true
+            fallbackToDocumentSwitch.isOn = false
+            otpCheckContainerView.isHidden = true
+            phoneElement.clearPhoneNumber()
+            reuseVerificationIDContainerView.isHidden = false
         }
     }
 

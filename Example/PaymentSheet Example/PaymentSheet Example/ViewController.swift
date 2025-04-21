@@ -30,13 +30,6 @@ class ViewController: UIViewController {
         }
     }
 
-    @IBSegueAction func showSwiftUICustomExampleCVCRecollection(_ coder: NSCoder) -> UIViewController? {
-        if #available(iOS 15.0, *) {
-            return UIHostingController(coder: coder, rootView: ExampleSwiftUICustomPaymentFlowCVCRecollection())
-        } else {
-            fatalError(">= iOS 15.0 required")
-        }
-    }
     @IBSegueAction func showSwiftUICustomerSheetTestPlayground(_ coder: NSCoder) -> UIViewController? {
         if #available(iOS 15.0, *) {
             return UIHostingController(coder: coder, rootView: CustomerSheetTestPlayground(settings: CustomerSheetTestPlaygroundController.settingsFromDefaults() ?? .defaultValues()))
@@ -48,4 +41,25 @@ class ViewController: UIViewController {
         return UIHostingController(coder: coder, rootView: ExampleSwiftUICustomerSheet())
     }
 
+    @IBSegueAction func showSwiftUIEmbedded(_ coder: NSCoder) -> UIViewController? {
+        if #available(iOS 15.0, *) {
+            return UIHostingController(coder: coder, rootView: MyEmbeddedCheckoutView())
+        } else {
+            fatalError(">= iOS 15.0 required")
+        }
+    }
+}
+
+extension UIViewController {
+
+    static func topMostViewController() -> UIViewController? {
+        guard let window = UIApplication.shared.keyWindow else {
+            return nil
+        }
+        var topMostViewController = window.rootViewController
+        while let presentedViewController = topMostViewController?.presentedViewController {
+            topMostViewController = presentedViewController
+        }
+        return topMostViewController
+    }
 }

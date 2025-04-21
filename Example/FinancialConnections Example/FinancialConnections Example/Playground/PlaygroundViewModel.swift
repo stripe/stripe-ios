@@ -8,11 +8,15 @@
 
 import Combine
 import Foundation
-import StripeFinancialConnections
+@_spi(STP) import StripeCore
+@_spi(STP) @_spi(v25) import StripeFinancialConnections
+@_spi(STP) import StripePayments
+@_spi(STP) import StripePaymentSheet
 import SwiftUI
 import UIKit
 
 final class PlaygroundViewModel: ObservableObject {
+    static let returnUrl = "financial-connections-example://redirect"
 
     enum SessionOutputField {
         case message
@@ -23,6 +27,26 @@ final class PlaygroundViewModel: ObservableObject {
 
     let playgroundConfiguration = PlaygroundConfiguration.shared
 
+    var integrationType: Binding<PlaygroundConfiguration.IntegrationType> {
+        Binding(
+            get: {
+                self.playgroundConfiguration.integrationType
+            },
+            set: { newValue in
+                self.playgroundConfiguration.integrationType = newValue
+
+                if newValue == .paymentElement, self.playgroundConfiguration.merchant.customId == .default {
+                    // Set to Netowrking merchant when switching to Payment Element.
+                    if let networkingMerchant = self.playgroundConfiguration.merchants.first(where: { $0.customId == .networking }) {
+                        self.playgroundConfiguration.merchant = networkingMerchant
+                    }
+                }
+
+                self.objectWillChange.send()
+            }
+        )
+    }
+
     var experience: Binding<PlaygroundConfiguration.Experience> {
         Binding(
             get: {
@@ -30,7 +54,7 @@ final class PlaygroundViewModel: ObservableObject {
             },
             set: { newValue in
                 self.playgroundConfiguration.experience = newValue
-                if newValue == .instantDebits {
+                if newValue == .instantBankPayment {
                     // Instant debits only supports the payment intent use case.
                     self.playgroundConfiguration.useCase = .paymentIntent
                 }
@@ -134,6 +158,30 @@ final class PlaygroundViewModel: ObservableObject {
         )
     }
 
+    var customerId: Binding<String> {
+        Binding(
+            get: {
+                self.playgroundConfiguration.customerId
+            },
+            set: {
+                self.playgroundConfiguration.customerId = $0
+                self.objectWillChange.send()
+            }
+        )
+    }
+
+    var relinkAuthorization: Binding<String> {
+        Binding(
+            get: {
+                self.playgroundConfiguration.relinkAuthorization
+            },
+            set: {
+                self.playgroundConfiguration.relinkAuthorization = $0
+                self.objectWillChange.send()
+            }
+        )
+    }
+
     var balancesPermission: Binding<Bool> {
         Binding(
             get: {
@@ -191,6 +239,18 @@ final class PlaygroundViewModel: ObservableObject {
         )
     }
 
+    var style: Binding<PlaygroundConfiguration.Style> {
+        Binding(
+            get: {
+                self.playgroundConfiguration.style
+            },
+            set: {
+                self.playgroundConfiguration.style = $0
+                self.objectWillChange.send()
+            }
+        )
+    }
+
     @Published var showConfigurationView = false
     private(set) lazy var playgroundConfigurationViewModel: PlaygroundManageConfigurationViewModel = {
        return PlaygroundManageConfigurationViewModel(
@@ -217,52 +277,154 @@ final class PlaygroundViewModel: ObservableObject {
     }
 
     func didSelectShow() {
-        setup()
+        let useFCLite = playgroundConfiguration.sdkType == .fcLite
+        FinancialConnectionsSDKAvailability.fcLiteFeatureEnabled = useFCLite
+        FinancialConnectionsSDKAvailability.shouldPreferFCLite = useFCLite
+
+        switch playgroundConfiguration.integrationType {
+        case .standalone:
+            if useFCLite {
+                setupFcLite()
+            } else {
+                setupStandalone()
+            }
+        case .paymentElement:
+            setupPaymentElement()
+        }
     }
 
-    private func setup() {
+    private func setupPaymentElement() {
+        func presentAlert(for error: PaymentSheetError) {
+            var title: String = "Error"
+            let message: String?
+
+            switch error {
+            case .invalidResponse:
+                message = "Invalid server response"
+            case .decodingError(let error):
+                message = "Decoding error: \(error)"
+            case .paymentSheetCanceled:
+                title = "Canceled"
+                message = nil
+            case .paymentSheetError(let error):
+                message = "Error from payment sheet: \(error)"
+            }
+
+            DispatchQueue.main.async {
+                UIAlertController.showAlert(title: title, message: message)
+            }
+        }
+
+        isLoading = true
+        CreatePaymentIntent(
+            configuration: playgroundConfiguration.configurationDictionary
+        ) { [weak self] createPaymentIntentResult in
+            guard let self else { return }
+            switch createPaymentIntentResult {
+            case .success(let paymentIntent):
+                PresentPaymentSheet(
+                    paymentIntent: paymentIntent,
+                    config: self.playgroundConfiguration,
+                    completion: { paymentSheetResult in
+                        switch paymentSheetResult {
+                        case .success:
+                            UIAlertController.showAlert(title: "Payment success")
+                        case .failure(let error):
+                            presentAlert(for: error)
+                        }
+                    }
+                )
+            case .failure(let error):
+                presentAlert(for: error)
+            }
+
+            DispatchQueue.main.async {
+                self.isLoading = false
+            }
+        }
+    }
+
+    private func setupStandalone() {
         isLoading = true
         SetupPlayground(
             configurationDictionary: playgroundConfiguration.configurationDictionary
         ) { [weak self] setupPlaygroundResponse in
             guard let self else { return }
             if let setupPlaygroundResponse = setupPlaygroundResponse {
+                var onEventEvents: [String] = []
                 PresentFinancialConnectionsSheet(
                     useCase: self.playgroundConfiguration.useCase,
+                    stripeAccount: self.playgroundConfiguration.merchant.stripeAccount,
                     setupPlaygroundResponseJSON: setupPlaygroundResponse,
+                    style: self.playgroundConfiguration.style,
                     onEvent: { event in
                         if self.liveEvents.wrappedValue == true {
                             let message = "\(event.name.rawValue); \(event.metadata.dictionary)"
                             BannerHelper.shared.showBanner(with: message, for: 3.0)
                         }
+                        onEventEvents.append(event.name.rawValue)
                     },
                     completionHandler: { [weak self] result in
                         switch result {
-                        case .completed(let session):
-                            let accounts = session.accounts.data.filter { $0.last4 != nil }
-                            let accountInfos = accounts.map { "\($0.institutionName) ....\($0.last4!)" }
+                        case .completed(let flow):
+                            switch flow {
+                            case .financialConnections(let session):
+                                let accounts = session.accounts.data.filter { $0.last4 != nil }
+                                let accountInfos = accounts.map { "\($0.institutionName) ....\($0.last4!)" }
 
-                            let sessionId = session.id
-                            let accountNames = session.accounts.data.map({ $0.displayName ?? "N/A" })
-                            let accountIds = session.accounts.data.map({ $0.id })
+                                let sessionId = session.id
+                                let accountNames = session.accounts.data.map({ $0.displayName ?? "N/A" })
+                                let accountIds = session.accounts.data.map({ $0.id })
 
-                            let sessionInfo =
-"""
-session_id=\(sessionId)
-account_names=\(accountNames)
-account_ids=\(accountIds)
-"""
+                                // WARNING: the "events" output is used for end-to-end tests so be careful modifying it
+                                let sessionInfo =
+                                """
+                                session_id=\(sessionId)
+                                account_names=\(accountNames)
+                                account_ids=\(accountIds)
+                                events=\(onEventEvents.joined(separator: ","))
+                                """
 
-                            let message = "\(accountInfos)\n\n\(sessionInfo)"
-                            self?.sessionOutput[.message] = message
-                            self?.sessionOutput[.sessionId] = sessionId
-                            self?.sessionOutput[.accountNames] = accountNames.joinedUnlessEmpty
-                            self?.sessionOutput[.accountIds] = accountIds.joinedUnlessEmpty
+                                let message = "\(accountInfos)\n\n\(sessionInfo)"
+                                self?.sessionOutput[.message] = message
+                                self?.sessionOutput[.sessionId] = sessionId
+                                self?.sessionOutput[.accountNames] = accountNames.joinedUnlessEmpty
+                                self?.sessionOutput[.accountIds] = accountIds.joinedUnlessEmpty
 
-                            UIAlertController.showAlert(
-                                title: "Success",
-                                message: message
-                            )
+                                UIAlertController.showAlert(
+                                    title: "Success",
+                                    message: message
+                                )
+                            case .instantDebits(let linkedBank):
+                                let sessionId = linkedBank.linkAccountSessionId ?? "N/a"
+                                let paymentMethodId = linkedBank.paymentMethod.id
+                                let bankAccount: String
+                                if let bankName = linkedBank.bankName, let last4 = linkedBank.last4 {
+                                    bankAccount = "\(bankName) ....\(last4)"
+                                } else {
+                                    bankAccount = "Bank details unavailable"
+                                }
+
+                                let sessionInfo =
+                                """
+                                session_id=\(sessionId)
+                                payment_method_id=\(paymentMethodId)
+                                events=\(onEventEvents.joined(separator: ","))
+                                """
+
+                                let message = "\(bankAccount)\n\n\(sessionInfo)"
+                                self?.sessionOutput[.message] = message
+                                self?.sessionOutput[.sessionId] = sessionId
+
+                                UIAlertController.showAlert(
+                                    title: "Success",
+                                    message: message
+                                )
+                            @unknown default:
+                                UIAlertController.showAlert(
+                                    message: "Unknown payment method flow"
+                                )
+                            }
                         case .canceled:
                             UIAlertController.showAlert(
                                 title: "Cancelled"
@@ -278,6 +440,10 @@ account_ids=\(accountIds)
                                     }
                                 }()
                             )
+                        @unknown default:
+                            UIAlertController.showAlert(
+                                message: "Unknown result"
+                            )
                         }
                     }
                 )
@@ -288,6 +454,125 @@ account_ids=\(accountIds)
                 )
             }
             self.isLoading = false
+        }
+    }
+
+    private func setupFcLite() {
+        isLoading = true
+        SetupPlayground(
+            configurationDictionary: playgroundConfiguration.configurationDictionary
+        ) { [weak self] setupPlaygroundResponse in
+            guard let self else { return }
+            if let setupPlaygroundResponse {
+                if let error = setupPlaygroundResponse["error"] {
+                    UIAlertController.showAlert(
+                        title: "Setup playground failed",
+                        message: error
+                    )
+                    return
+                }
+
+                guard let clientSecret = setupPlaygroundResponse["client_secret"] else {
+                    UIAlertController.showAlert(
+                        title: "Setup playground failed",
+                        message: "No client_secret in response"
+                    )
+                    return
+                }
+                guard let publishableKey = setupPlaygroundResponse["publishable_key"] else {
+                    UIAlertController.showAlert(
+                        title: "Setup playground failed",
+                        message: "No publishable_key in response"
+                    )
+                    return
+                }
+
+                STPAPIClient.shared.publishableKey = publishableKey
+                DispatchQueue.main.async {
+                    let topMostViewController = UIViewController.topMostViewController()!
+                    let fc = FinancialConnectionsLite(
+                        clientSecret: clientSecret,
+                        returnUrl: URL(string: Self.returnUrl)!
+                    )
+                    fc.present(from: topMostViewController) { [weak self] result in
+                        switch result {
+                        case .completed(let completed):
+                            switch completed {
+                            case .financialConnections(let linkedBank):
+                                let sessionId = linkedBank.sessionId
+                                let accountId = linkedBank.accountId
+                                let bankAccount: String
+                                if let bankName = linkedBank.bankName, let last4 = linkedBank.last4 {
+                                    bankAccount = "\(bankName) ....\(last4)"
+                                } else {
+                                    bankAccount = "Bank details unavailable"
+                                }
+
+                                let sessionInfo =
+                                    """
+                                    session_id=\(sessionId)
+                                    account_id=\(accountId)
+                                    """
+
+                                let message = "\(bankAccount)\n\n\(sessionInfo)"
+                                self?.sessionOutput[.message] = message
+                                self?.sessionOutput[.sessionId] = sessionId
+                                self?.sessionOutput[.accountIds] = accountId
+
+                                UIAlertController.showAlert(
+                                    title: "Success",
+                                    message: message
+                                )
+                            case .instantDebits(let linkedBank):
+                                let sessionId = linkedBank.linkAccountSessionId ?? "N/a"
+                                let paymentMethodId = linkedBank.paymentMethod.id
+                                let bankAccount: String
+                                if let bankName = linkedBank.bankName, let last4 = linkedBank.last4 {
+                                    bankAccount = "\(bankName) ....\(last4)"
+                                } else {
+                                    bankAccount = "Bank details unavailable"
+                                }
+
+                                let sessionInfo =
+                                    """
+                                    session_id=\(sessionId)
+                                    payment_method_id=\(paymentMethodId)
+                                    """
+
+                                let message = "\(bankAccount)\n\n\(sessionInfo)"
+                                self?.sessionOutput[.message] = message
+                                self?.sessionOutput[.sessionId] = sessionId
+
+                                UIAlertController.showAlert(
+                                    title: "Success",
+                                    message: message
+                                )
+                            @unknown default:
+                                UIAlertController.showAlert(
+                                    message: "Unknown payment method flow"
+                                )
+                            }
+                        case .cancelled:
+                            UIAlertController.showAlert(
+                                title: "Cancelled"
+                            )
+                        case .failed(let error):
+                            UIAlertController.showAlert(
+                                title: "Failed",
+                                message: error.localizedDescription
+                            )
+                        }
+                    }
+                }
+            } else {
+                UIAlertController.showAlert(
+                    title: "Playground App Setup Failed",
+                    message: "Try clearing 'Custom Keys' or delete & re-install the app."
+                )
+            }
+            DispatchQueue.main.async {
+                self.isLoading = false
+            }
         }
     }
 
@@ -373,9 +658,11 @@ private func SetupPlayground(
 
 private func PresentFinancialConnectionsSheet(
     useCase: PlaygroundConfiguration.UseCase,
+    stripeAccount: String?,
     setupPlaygroundResponseJSON: [String: String],
+    style: PlaygroundConfiguration.Style,
     onEvent: @escaping (FinancialConnectionsEvent) -> Void,
-    completionHandler: @escaping (FinancialConnectionsSheet.Result) -> Void
+    completionHandler: @escaping (HostControllerResult) -> Void
 ) {
     if let error = setupPlaygroundResponseJSON["error"] {
         completionHandler(
@@ -413,36 +700,144 @@ private func PresentFinancialConnectionsSheet(
     STPAPIClient.shared.publishableKey = publishableKey
 
     let isUITest = (ProcessInfo.processInfo.environment["UITesting"] != nil)
+    var configuration = FinancialConnectionsSheet.Configuration()
+    configuration.style = style.configurationValue
     let financialConnectionsSheet = FinancialConnectionsSheet(
         financialConnectionsSessionClientSecret: clientSecret,
         // disable app-to-app for UI tests
-        returnURL: isUITest ? nil : "financial-connections-example://redirect"
+        returnURL: isUITest ? nil : PlaygroundViewModel.returnUrl,
+        configuration: configuration
     )
+    financialConnectionsSheet.apiClient.stripeAccount = stripeAccount
     financialConnectionsSheet.onEvent = onEvent
     let topMostViewController = UIViewController.topMostViewController()!
     if useCase == .token {
-        financialConnectionsSheet.presentForToken(
-            from: topMostViewController,
-            completion: { result in
-                completionHandler({
-                    switch result {
-                    case .completed(result: let tuple):
-                        return .completed(session: tuple.session)
-                    case .canceled:
-                        return .canceled
-                    case .failed(error: let error):
-                        return .failed(error: error)
-                    }
-                }())
-                _ = financialConnectionsSheet  // retain the sheet
-            }
-        )
+        // For testing: Use async API for token presentation
+        Task { @MainActor in
+            let result = await financialConnectionsSheet.presentForToken(from: topMostViewController)
+            completionHandler({
+                switch result {
+                case .completed(result: let tuple):
+                    return .completed(.financialConnections(tuple.session))
+                case .canceled:
+                    return .canceled
+                case .failed(error: let error):
+                    return .failed(error: error)
+                }
+            }())
+            _ = financialConnectionsSheet  // retain the sheet
+        }
     } else {
         financialConnectionsSheet.present(
             from: topMostViewController,
-            completion: { result in
+            completion: { (result: HostControllerResult) in
                 completionHandler(result)
                 _ = financialConnectionsSheet  // retain the sheet
+            }
+        )
+    }
+}
+
+private func CreatePaymentIntent(
+    configuration: [String: Any],
+    completion: @escaping (Result<CreatePaymentIntentResponse, PaymentSheetError>) -> Void
+) {
+    let baseURL = "https://financial-connections-playground-ios.glitch.me"
+    let endpoint = "/create_payment_intent"
+    let url = URL(string: baseURL + endpoint)!
+
+    var urlRequest = URLRequest(url: url)
+    urlRequest.httpMethod = "POST"
+    urlRequest.httpBody = try! JSONSerialization.data(
+        withJSONObject: configuration,
+        options: .prettyPrinted
+    )
+    urlRequest.setValue("application/json", forHTTPHeaderField: "Accept")
+    urlRequest.setValue("application/json", forHTTPHeaderField: "Content-Type")
+
+    URLSession.shared.dataTask(
+        with: urlRequest,
+        completionHandler: { data, _, error in
+            guard error == nil, let data else {
+                completion(.failure(.invalidResponse))
+                return
+            }
+            do {
+                let decoder = JSONDecoder()
+                decoder.keyDecodingStrategy = .convertFromSnakeCase
+                let paymentIntent = try decoder.decode(CreatePaymentIntentResponse.self, from: data)
+                completion(.success(paymentIntent))
+            } catch {
+                completion(.failure(.decodingError(error)))
+            }
+        }
+    )
+    .resume()
+}
+
+struct CreatePaymentIntentResponse: Decodable {
+    let id: String
+    let clientSecret: String
+    let publishableKey: String
+    let customerId: String
+    let ephemeralKey: String
+    let amount: Int
+    let currency: String
+}
+
+enum PaymentSheetError: Error {
+    case invalidResponse
+    case decodingError(Error)
+    case paymentSheetCanceled
+    case paymentSheetError(Error)
+}
+
+private func PresentPaymentSheet(
+    paymentIntent: CreatePaymentIntentResponse,
+    config: PlaygroundConfiguration,
+    completion: @escaping (Result<String, PaymentSheetError>) -> Void
+) {
+    /// https://docs.stripe.com/payments/accept-a-payment?platform=ios&ui=payment-sheet
+    STPAPIClient.shared.publishableKey = paymentIntent.publishableKey
+
+    var configuration = PaymentSheet.Configuration()
+    configuration.merchantDisplayName = "Financial Connections Example"
+    configuration.customer = .init(
+        id: paymentIntent.customerId,
+        ephemeralKeySecret: paymentIntent.ephemeralKey
+    )
+    configuration.allowsDelayedPaymentMethods = true
+    configuration.defaultBillingDetails.email = config.email
+    configuration.defaultBillingDetails.phone = config.phone
+
+    switch config.style {
+    case .automatic: configuration.style = .automatic
+    case .alwaysLight: configuration.style = .alwaysLight
+    case .alwaysDark: configuration.style = .alwaysDark
+    }
+
+    let isUITest = (ProcessInfo.processInfo.environment["UITesting"] != nil)
+    // disable app-to-app for UI tests
+    configuration.returnURL = isUITest ? nil : PlaygroundViewModel.returnUrl
+
+    let paymentSheet = PaymentSheet(
+        paymentIntentClientSecret: paymentIntent.clientSecret,
+        configuration: configuration
+    )
+
+    DispatchQueue.main.async {
+        let topMostViewController = UIViewController.topMostViewController()!
+        paymentSheet.present(
+            from: topMostViewController,
+            completion: { paymentSheetResult in
+                switch paymentSheetResult {
+                case .completed:
+                    completion(.success("Payment completed"))
+                case .canceled:
+                    completion(.failure(.paymentSheetCanceled))
+                case .failed(let error):
+                    completion(.failure(.paymentSheetError(error)))
+                }
             }
         )
     }

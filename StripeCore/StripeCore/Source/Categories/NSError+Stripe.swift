@@ -60,6 +60,39 @@ extension NSError {
         )
     }
 
+    @objc @_spi(STP) public class func stp_cardBrandNotUpdatedError() -> NSError {
+        let userInfo = [
+            NSLocalizedDescriptionKey: self.stp_cardBrandNotUpdatedMessage()
+        ]
+        return NSError(
+            domain: STPError.stripeDomain,
+            code: STPErrorCode.apiError.rawValue,
+            userInfo: userInfo
+        )
+    }
+
+    @objc @_spi(STP) public class func stp_defaultPaymentMethodNotUpdatedError() -> NSError {
+        let userInfo = [
+            NSLocalizedDescriptionKey: self.stp_defaultPaymentMethodNotUpdatedMessage()
+        ]
+        return NSError(
+            domain: STPError.stripeDomain,
+            code: STPErrorCode.apiError.rawValue,
+            userInfo: userInfo
+        )
+    }
+
+    @objc @_spi(STP) public class func stp_genericErrorOccurredError() -> NSError {
+        let userInfo = [
+            NSLocalizedDescriptionKey: self.stp_genericErrorOccurredMessage()
+        ]
+        return NSError(
+            domain: STPError.stripeDomain,
+            code: STPErrorCode.apiError.rawValue,
+            userInfo: userInfo
+        )
+    }
+
     // TODO(davide): We'll want to move these into StripePayments, once it exists.
 
     // MARK: Strings
@@ -130,6 +163,27 @@ extension NSError {
         return STPLocalizedString(
             "The IBAN you entered is invalid.",
             "An error message displayed when the customer's iban is invalid."
+        )
+    }
+
+    @objc @_spi(STP) public class func stp_cardBrandNotUpdatedMessage() -> String {
+        return STPLocalizedString(
+            "Card brand was not updated. Please try again.",
+            "An error message displayed when updating a card brand fails."
+        )
+    }
+
+    @objc @_spi(STP) public class func stp_defaultPaymentMethodNotUpdatedMessage() -> String {
+        return STPLocalizedString(
+            "Default payment method was not updated. Please try again.",
+            "An error message displayed when setting a default payment method fails."
+        )
+    }
+
+    @objc @_spi(STP) public class func stp_genericErrorOccurredMessage() -> String {
+        return STPLocalizedString(
+            "An error occurred. Please try again.",
+            "A generic error message displayed when an error occurs."
         )
     }
 }

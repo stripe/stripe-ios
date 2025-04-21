@@ -1,4 +1,10 @@
+"An error occurred. Please try again." = "Hiba történt, próbálja újra.";
+
+"Card brand was not updated. Please try again." = "A kártyatípus frissítése nem sikerült, próbálja újra.";
+
 "Close" = "Bezárás";
+
+"Default payment method was not updated. Please try again." = "Az alapértelmezett fizetési mód nem frissült, próbálja újra.";
 
 "Scan Card" = "Kártya beolvasása";
 

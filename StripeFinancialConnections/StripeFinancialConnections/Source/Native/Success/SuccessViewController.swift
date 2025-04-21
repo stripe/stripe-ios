@@ -30,7 +30,7 @@ final class SuccessViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .customBackgroundColor
+        view.backgroundColor = FinancialConnectionsAppearance.Colors.background
         navigationItem.hidesBackButton = true
 
         let showSaveToLinkFailedNotice = (dataSource.saveToLinkWithStripeSucceeded == false)
@@ -39,15 +39,21 @@ final class SuccessViewController: UIViewController {
         view.addSubview(contentView)
 
         let bodyView = CreateBodyView(
-            subtitle: dataSource.customSuccessPaneMessage ?? CreateSubtitleText(
+            title: dataSource.customSuccessPaneCaption ?? STPLocalizedString(
+                "Success",
+                "The title of the success screen that appears when a user is done with the process of connecting their bank account to an application. Now that the bank account is connected (or linked), the user will be able to use the bank account for payments."
+            ),
+            subtitle: dataSource.customSuccessPaneSubCaption ?? CreateSubtitleText(
                 // manual entry has "0" linked accounts count
                 isLinkingOneAccount: (dataSource.linkedAccountsCount == 0 || dataSource.linkedAccountsCount == 1),
                 showSaveToLinkFailedNotice: showSaveToLinkFailedNotice
-            )
+            ),
+            appearance: dataSource.manifest.appearance
         )
         contentView.addSubview(bodyView)
 
         let footerView = SuccessFooterView(
+            appearance: dataSource.manifest.appearance,
             didSelectDone: { [weak self] footerView in
                 guard let self = self else { return }
                 // we NEVER set isLoading to `false` because
@@ -111,17 +117,16 @@ final class SuccessViewController: UIViewController {
     }
 }
 
-private func CreateBodyView(subtitle: String?) -> UIView {
+private func CreateBodyView(
+    title: String,
+    subtitle: String?,
+    appearance: FinancialConnectionsAppearance
+) -> UIView {
     let titleLabel = AttributedLabel(
         font: .heading(.extraLarge),
-        textColor: .textDefault
+        textColor: FinancialConnectionsAppearance.Colors.textDefault
     )
-    titleLabel.setText(
-        STPLocalizedString(
-            "Success",
-            "The title of the success screen that appears when a user is done with the process of connecting their bank account to an application. Now that the bank account is connected (or linked), the user will be able to use the bank account for payments."
-        )
-    )
+    titleLabel.setText(title)
     let labelVerticalStackView = UIStackView(
         arrangedSubviews: [titleLabel]
     )
@@ -134,8 +139,8 @@ private func CreateBodyView(subtitle: String?) -> UIView {
             font: .body(.medium),
             boldFont: .body(.mediumEmphasized),
             linkFont: .body(.medium),
-            textColor: .textDefault,
-            alignCenter: true
+            textColor: FinancialConnectionsAppearance.Colors.textDefault,
+            alignment: .center
         )
         subtitleLabel.setText(subtitle)
         labelVerticalStackView.addArrangedSubview(subtitleLabel)
@@ -143,7 +148,7 @@ private func CreateBodyView(subtitle: String?) -> UIView {
 
     let bodyVerticalStackView = UIStackView(
         arrangedSubviews: [
-            CreateIconView(),
+            CreateIconView(appearance: appearance),
             labelVerticalStackView,
         ]
     )
@@ -166,9 +171,9 @@ private func CreateBodyView(subtitle: String?) -> UIView {
     return bodyVerticalStackView
 }
 
-private func CreateIconView() -> UIView {
+private func CreateIconView(appearance: FinancialConnectionsAppearance) -> UIView {
     let iconContainerView = UIView()
-    iconContainerView.backgroundColor = .iconActionPrimary
+    iconContainerView.backgroundColor = appearance.colors.primary
     let iconRadius: CGFloat = 56
     iconContainerView.layer.cornerRadius = iconRadius/2
     iconContainerView.translatesAutoresizingMaskIntoConstraints = false
@@ -178,7 +183,7 @@ private func CreateIconView() -> UIView {
     ])
 
     let iconImageView = UIImageView()
-    iconImageView.image = Image.check.makeImage().withTintColor(.white)
+    iconImageView.image = Image.check.makeImage().withTintColor(appearance.colors.primaryAccent)
     iconContainerView.addSubview(iconImageView)
     iconImageView.translatesAutoresizingMaskIntoConstraints = false
     NSLayoutConstraint.activate([

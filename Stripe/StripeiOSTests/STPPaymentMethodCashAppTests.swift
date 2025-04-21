@@ -7,9 +7,10 @@
 
 @testable import Stripe
 import StripeCoreTestUtils
+import StripePaymentsTestUtils
 import XCTest
 
-class STPPaymentMethodCashAppTests: XCTestCase {
+class STPPaymentMethodCashAppTests: STPNetworkStubbingTestCase {
 
     static let cashAppPaymentIntentClientSecret = "pi_3MMa4NFY0qyl6XeW1FM3HOts_secret_b4HQ5YksK3mfe7zZaxBlWCark"
 

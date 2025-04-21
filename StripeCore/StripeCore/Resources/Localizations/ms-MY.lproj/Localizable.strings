@@ -1,4 +1,10 @@
+"An error occurred. Please try again." = "Ada ralat berlaku. Sila cuba lagi.";
+
+"Card brand was not updated. Please try again." = "Jenama kad tidak dikemaskinikan. Sila cuba lagi.";
+
 "Close" = "Tutup";
+
+"Default payment method was not updated. Please try again." = "Kaedah pembayaran tetapan asal tidak dikemaskinikan. Sila cuba lagi.";
 
 "Scan Card" = "Imbas Kad";
 
@@ -6,7 +12,7 @@
 
 "The IBAN you entered is invalid." = "IBAN yang anda masukkan tidak sah.";
 
-"There was an error processing your card -- try again in a few seconds" = "Ada ralat semasa memproses kad anda -- cuba lagi dalam masa beberapa saat";
+"There was an error processing your card -- try again in a few seconds" = "Ada ralat ketika memproses kad anda -- cuba lagi dalam masa beberapa saat";
 
 "There was an unexpected error -- try again in a few seconds" = "Ada ralat yang tidak dijangka -- cuba lagi dalam masa beberapa saat";
 

@@ -45,4 +45,29 @@ extension XCUIElement {
             timeout: 5
         ), "switch failed to change")
     }
+
+    @discardableResult
+    func waitForExistenceAndTap(
+        // standard `URLSession` timeout is 60.0
+        timeout: TimeInterval = 60.0
+    ) -> Bool {
+        if exists || waitForExistence(timeout: timeout) {
+            tapWithForce()
+            return true
+        } else {
+            return false
+        }
+    }
+
+    func tapWithForce() {
+        if isHittable {
+            tap()
+        } else {
+            // Tap the middle of the element.
+            // (Sometimes the edges of rounded buttons aren't tappable in certain web elements.)
+            let coordinate: XCUICoordinate = self.coordinate(
+                withNormalizedOffset: CGVector(dx: 0.5, dy: 0.5))
+            coordinate.tap()
+        }
+    }
 }

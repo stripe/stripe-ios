@@ -19,6 +19,54 @@ import UIKit
         case financialConnections(StripeAPI.FinancialConnectionsSession)
         case instantDebits(InstantDebitsLinkedBank)
     }
+
+    var linkAccountSessionId: String? {
+        guard case .completed(let completed) = self else { return nil }
+        switch completed {
+        case .financialConnections(let session):
+            return session.id
+        case .instantDebits(let linkedBank):
+            return linkedBank.linkAccountSessionId
+        }
+    }
+}
+
+extension HostControllerResult {
+
+    /// Updates the `HostControllerResult` from the manifest to populate any fields that aren't part of the actual API response,
+    /// but that are still necessary to produce the correct result in the host surface.
+    func updateWith(_ manifest: FinancialConnectionsSessionManifest) -> Self {
+        guard case .completed(.financialConnections(let session)) = self else {
+            return self
+        }
+
+        let instantlyVerified = !manifest.manualEntryUsesMicrodeposits
+
+        let updatedSession = StripeAPI.FinancialConnectionsSession(
+            clientSecret: session.clientSecret,
+            id: session.id,
+            accounts: session.accounts,
+            livemode: session.livemode,
+            paymentAccount: session.paymentAccount?.setInstantlyVerifiedIfNeeded(instantlyVerified),
+            bankAccountToken: session.bankAccountToken,
+            status: session.status,
+            statusDetails: session.statusDetails
+        )
+
+        return .completed(.financialConnections(updatedSession))
+    }
+}
+
+private extension StripeAPI.FinancialConnectionsSession.PaymentAccount {
+
+    func setInstantlyVerifiedIfNeeded(_ value: Bool) -> Self {
+        guard case .bankAccount(var bankAccount) = self else {
+            return self
+        }
+
+        bankAccount.instantlyVerified = value
+        return .bankAccount(bankAccount)
+    }
 }
 
 protocol HostControllerDelegate: AnyObject {
@@ -26,7 +74,8 @@ protocol HostControllerDelegate: AnyObject {
     func hostController(
         _ hostController: HostController,
         viewController: UIViewController,
-        didFinish result: HostControllerResult
+        didFinish result: HostControllerResult,
+        linkAccountSessionId: String?
     )
 
     func hostController(
@@ -39,13 +88,16 @@ class HostController {
 
     // MARK: - Properties
 
-    private let apiClient: STPAPIClient
+    private let apiClient: any FinancialConnectionsAPI
     private let clientSecret: String
     private let returnURL: String?
+    private let configuration: FinancialConnectionsSheet.Configuration
+    private let elementsSessionContext: ElementsSessionContext?
     private let analyticsClient: FinancialConnectionsAnalyticsClient
     private let analyticsClientV1: STPAnalyticsClientProtocol
 
     private var nativeFlowController: NativeFlowController?
+    private var linkAccountSessionId: String?
     lazy var hostViewController = HostViewController(
         analyticsClientV1: analyticsClientV1,
         clientSecret: clientSecret,
@@ -53,17 +105,23 @@ class HostController {
         apiClient: apiClient,
         delegate: self
     )
-    lazy var navigationController = FinancialConnectionsNavigationController(rootViewController: hostViewController)
+    lazy var navigationController: FinancialConnectionsNavigationController = {
+        let navigationController = FinancialConnectionsNavigationController(rootViewController: hostViewController)
+        configuration.style.configure(navigationController)
+        return navigationController
+    }()
 
     weak var delegate: HostControllerDelegate?
 
     // MARK: - Init
 
     init(
-        apiClient: STPAPIClient,
+        apiClient: any FinancialConnectionsAPI,
         analyticsClientV1: STPAnalyticsClientProtocol,
         clientSecret: String,
         returnURL: String?,
+        configuration: FinancialConnectionsSheet.Configuration,
+        elementsSessionContext: ElementsSessionContext?,
         publishableKey: String?,
         stripeAccount: String?
     ) {
@@ -71,9 +129,10 @@ class HostController {
         self.analyticsClientV1 = analyticsClientV1
         self.clientSecret = clientSecret
         self.returnURL = returnURL
+        self.configuration = configuration
+        self.elementsSessionContext = elementsSessionContext
         self.analyticsClient = FinancialConnectionsAnalyticsClient()
         analyticsClient.setAdditionalParameters(
-            linkAccountSessionClientSecret: clientSecret,
             publishableKey: publishableKey,
             stripeAccount: stripeAccount
         )
@@ -87,11 +146,21 @@ extension HostController: HostViewControllerDelegate {
 
     func hostViewControllerDidFinish(_ viewController: HostViewController, lastError: Error?) {
         guard let error = lastError else {
-            delegate?.hostController(self, viewController: viewController, didFinish: .canceled)
+            delegate?.hostController(
+                self,
+                viewController: viewController,
+                didFinish: .canceled,
+                linkAccountSessionId: linkAccountSessionId
+            )
             return
         }
 
-        delegate?.hostController(self, viewController: viewController, didFinish: .failed(error: error))
+        delegate?.hostController(
+            self,
+            viewController: viewController,
+            didFinish: .failed(error: error),
+            linkAccountSessionId: linkAccountSessionId
+        )
     }
 
     func hostViewController(
@@ -99,6 +168,7 @@ extension HostController: HostViewControllerDelegate {
         didFetch synchronizePayload: FinancialConnectionsSynchronize
     ) {
         delegate?.hostController(self, didReceiveEvent: FinancialConnectionsEvent(name: .open))
+        self.linkAccountSessionId = synchronizePayload.manifest.id
 
         let flowRouter = FlowRouter(
             synchronizePayload: synchronizePayload,
@@ -108,11 +178,11 @@ extension HostController: HostViewControllerDelegate {
         let flow = flowRouter.flow
         analyticsClientV1.log(
             analytic: FinancialConnectionsSheetFlowDetermined(
-                clientSecret: clientSecret,
+                linkAccountSessionId: synchronizePayload.manifest.id,
                 flow: flow,
                 killswitchActive: flowRouter.killswitchActive
             ),
-            apiClient: apiClient
+            apiClient: apiClient.backingAPIClient
         )
 
         switch flow {
@@ -135,7 +205,7 @@ extension HostController: HostViewControllerDelegate {
 
 private extension HostController {
 
-    func continueWithWebFlow(_ manifest: FinancialConnectionsSessionManifest) {
+    func continueWithWebFlow(_ manifest: FinancialConnectionsSessionManifest, prefillDetails: WebPrefillDetails? = nil) {
         delegate?.hostController(
             self,
             didReceiveEvent: FinancialConnectionsEvent(
@@ -154,7 +224,9 @@ private extension HostController {
             apiClient: apiClient,
             manifest: manifest,
             sessionFetcher: sessionFetcher,
-            returnURL: returnURL
+            returnURL: returnURL,
+            elementsSessionContext: elementsSessionContext,
+            prefillDetailsOverride: prefillDetails
         )
         webFlowViewController.delegate = self
         navigationController.setViewControllers([webFlowViewController], animated: true)
@@ -165,12 +237,15 @@ private extension HostController {
 
         let dataManager = NativeFlowAPIDataManager(
             manifest: synchronizePayload.manifest,
+            configuration: configuration,
             visualUpdate: synchronizePayload.visual,
             returnURL: returnURL,
             consentPaneModel: synchronizePayload.text?.consentPane,
+            accountPickerPane: synchronizePayload.text?.accountPickerPane,
             apiClient: apiClient,
             clientSecret: clientSecret,
-            analyticsClient: analyticsClient
+            analyticsClient: analyticsClient,
+            elementsSessionContext: elementsSessionContext
         )
         nativeFlowController = NativeFlowController(
             dataManager: dataManager,
@@ -189,7 +264,13 @@ extension HostController: FinancialConnectionsWebFlowViewControllerDelegate {
         _ viewController: FinancialConnectionsWebFlowViewController,
         didFinish result: HostControllerResult
     ) {
-        delegate?.hostController(self, viewController: viewController, didFinish: result)
+        let linkAccountSessionId = result.linkAccountSessionId ?? linkAccountSessionId
+        delegate?.hostController(
+            self,
+            viewController: viewController,
+            didFinish: result,
+            linkAccountSessionId: linkAccountSessionId
+        )
     }
 
     func webFlowViewController(
@@ -205,22 +286,19 @@ extension HostController: FinancialConnectionsWebFlowViewControllerDelegate {
 extension HostController: NativeFlowControllerDelegate {
     func nativeFlowController(
         _ nativeFlowController: NativeFlowController,
-        didFinish result: FinancialConnectionsSheet.Result
+        didFinish result: HostControllerResult
     ) {
         guard let viewController = navigationController.topViewController else {
             assertionFailure("Navigation stack is empty")
             return
         }
-        let hostControllerResult: HostControllerResult
-        switch result {
-        case .completed(let session):
-            hostControllerResult = .completed(.financialConnections(session))
-        case .canceled:
-            hostControllerResult = .canceled
-        case .failed(let error):
-            hostControllerResult = .failed(error: error)
-        }
-        delegate?.hostController(self, viewController: viewController, didFinish: hostControllerResult)
+        let linkAccountSessionId = result.linkAccountSessionId ?? linkAccountSessionId
+        delegate?.hostController(
+            self,
+            viewController: viewController,
+            didFinish: result,
+            linkAccountSessionId: linkAccountSessionId
+        )
     }
 
     func nativeFlowController(
@@ -228,6 +306,14 @@ extension HostController: NativeFlowControllerDelegate {
         didReceiveEvent event: FinancialConnectionsEvent
     ) {
         delegate?.hostController(self, didReceiveEvent: event)
+    }
+
+    func nativeFlowController(
+        _ nativeFlowController: NativeFlowController,
+        shouldLaunchWebFlow manifest: FinancialConnectionsSessionManifest,
+        prefillDetails: WebPrefillDetails
+    ) {
+        continueWithWebFlow(manifest, prefillDetails: prefillDetails)
     }
 }
 

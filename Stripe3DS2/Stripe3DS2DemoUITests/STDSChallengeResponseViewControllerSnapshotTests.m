@@ -105,7 +105,7 @@ FBSnapshotVerifyViewWithPixelOptions(view__, identifier__, FBSnapshotTestCaseDef
 - (STDSChallengeResponseViewController *)challengeResponseViewControllerForResponse:(id<STDSChallengeResponse>)response directoryServer:(STDSDirectoryServer)directoryServer {
     STDSImageLoader *imageLoader = [[STDSImageLoader alloc] initWithURLSession:NSURLSession.sharedSession];
 
-    STDSChallengeResponseViewController *vc = [[STDSChallengeResponseViewController alloc] initWithUICustomization:[STDSUICustomization defaultSettings] imageLoader:imageLoader directoryServer:directoryServer];
+    STDSChallengeResponseViewController *vc = [[STDSChallengeResponseViewController alloc] initWithUICustomization:[STDSUICustomization defaultSettings] imageLoader:imageLoader directoryServer:directoryServer analyticsDelegate:nil];
     [vc setChallengeResponse:response animated:NO];
     return vc;
 }

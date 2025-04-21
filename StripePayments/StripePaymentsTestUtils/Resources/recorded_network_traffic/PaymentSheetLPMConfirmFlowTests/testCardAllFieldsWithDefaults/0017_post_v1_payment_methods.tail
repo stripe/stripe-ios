@@ -1,0 +1,77 @@
+POST
+https:\/\/api\.stripe\.com\/v1\/payment_methods$
+200
+application/json
+access-control-allow-methods: GET,HEAD,PUT,PATCH,POST,DELETE
+content-security-policy: report-uri https://q.stripe.com/csp-report?p=v1%2Fpayment_methods; block-all-mixed-content; default-src 'none'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'
+Server: nginx
+Cache-Control: no-cache, no-store
+reporting-endpoints: coop="https://q.stripe.com/coop-report?s=payins-bapi-srv"
+Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
+cross-origin-opener-policy-report-only: same-origin; report-to="coop"
+Access-Control-Allow-Origin: *
+stripe-should-retry: false
+x-stripe-priority-routing-enabled: true
+report-to: {"group":"coop","max_age":8640,"endpoints":[{"url":"https://q.stripe.com/coop-report?s=payins-bapi-srv"}],"include_subdomains":true}
+request-id: req_RQYvEZozxhViDW
+x-stripe-routing-context-priority-tier: api-testmode
+Content-Length: 988
+Vary: Origin
+Date: Wed, 31 Jul 2024 03:31:46 GMT
+original-request: req_RQYvEZozxhViDW
+stripe-version: 2020-08-27
+idempotency-key: 5ba9dc94-fa8d-4a87-9231-714902492e9a
+access-control-expose-headers: Request-Id, Stripe-Manage-Version, Stripe-Should-Retry, X-Stripe-External-Auth-Required, X-Stripe-Privileged-Session-Required
+access-control-max-age: 300
+access-control-allow-credentials: true
+Content-Type: application/json
+x-content-type-options: nosniff
+X-Stripe-Mock-Request: allow_redisplay=unspecified&billing_details\[address]\[city]=San%20Francisco&billing_details\[address]\[country]=US&billing_details\[address]\[line1]=123%20Main%20Street&billing_details\[address]\[line2]=line%202&billing_details\[address]\[postal_code]=12345&billing_details\[address]\[state]=CA&billing_details\[email]=foo%40bar\.com&billing_details\[name]=Jane%20Doe&billing_details\[phone]=%2B13105551234&card\[cvc]=123&card\[exp_month]=12&card\[exp_year]=28&card\[number]=4242424242424242&payment_user_agent=.*&type=card
+
+{
+  "object" : "payment_method",
+  "id" : "pm_1PiTGQFY0qyl6XeWTjMcaMKz",
+  "billing_details" : {
+    "email" : "foo@bar.com",
+    "phone" : "+13105551234",
+    "name" : "Jane Doe",
+    "address" : {
+      "state" : "CA",
+      "country" : "US",
+      "line2" : "line 2",
+      "city" : "San Francisco",
+      "line1" : "123 Main Street",
+      "postal_code" : "12345"
+    }
+  },
+  "card" : {
+    "last4" : "4242",
+    "funding" : "credit",
+    "generated_from" : null,
+    "networks" : {
+      "available" : [
+        "visa"
+      ],
+      "preferred" : null
+    },
+    "brand" : "visa",
+    "checks" : {
+      "address_postal_code_check" : null,
+      "cvc_check" : null,
+      "address_line1_check" : null
+    },
+    "three_d_secure_usage" : {
+      "supported" : true
+    },
+    "wallet" : null,
+    "display_brand" : "visa",
+    "exp_month" : 12,
+    "exp_year" : 2028,
+    "country" : "US"
+  },
+  "livemode" : false,
+  "created" : 1722396706,
+  "allow_redisplay" : "unspecified",
+  "type" : "card",
+  "customer" : null
+}

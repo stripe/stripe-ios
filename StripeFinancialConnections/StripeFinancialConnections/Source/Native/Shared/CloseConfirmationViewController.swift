@@ -11,9 +11,11 @@ import UIKit
 
 final class CloseConfirmationViewController: SheetViewController {
 
+    private let appearance: FinancialConnectionsAppearance
     private let didSelectClose: () -> Void
 
-    init(didSelectClose: @escaping () -> Void) {
+    init(appearance: FinancialConnectionsAppearance, didSelectClose: @escaping () -> Void) {
+        self.appearance = appearance
         self.didSelectClose = didSelectClose
         super.init()
     }
@@ -28,7 +30,8 @@ final class CloseConfirmationViewController: SheetViewController {
             withContentView: PaneLayoutView.createContentView(
                 iconView: RoundedIconView(
                     image: .image(.panel_arrow_right),
-                    style: .circle
+                    style: .circle,
+                    appearance: appearance
                 ),
                 title: STPLocalizedString(
                     "Exit without connecting?",
@@ -68,7 +71,8 @@ final class CloseConfirmationViewController: SheetViewController {
                             }
                         )
                     }
-                )
+                ),
+                appearance: appearance
             ).footerView
         )
     }

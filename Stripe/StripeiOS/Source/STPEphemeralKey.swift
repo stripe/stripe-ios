@@ -15,7 +15,6 @@ class STPEphemeralKey: NSObject, STPAPIResponseDecodable {
     private(set) var livemode = false
     private(set) var secret: String
     private(set) var expires: Date
-    private(set) var customerID: String?
     private(set) var issuingCardID: String?
 
     /// You cannot directly instantiate an `STPEphemeralKey`. You should instead use
@@ -70,7 +69,6 @@ class STPEphemeralKey: NSObject, STPAPIResponseDecodable {
             return nil
         }
         let key = self.init(stripeID: stripeId, created: created, secret: secret, expires: expires)
-        key.customerID = customerID
         key.issuingCardID = issuingCardID
         key.stripeID = stripeId
         key.livemode = dict.stp_bool(forKey: "livemode", or: true)

@@ -2,6 +2,8 @@
 
 "%1$@ ending in %2$@" = "%1$@ que acaba en %2$@";
 
+"%1$@ is not accepted" = "No s'accepta %1$@";
+
 "Address line 2 (optional)" = "Línia de l'adreça 2 (opcional)";
 
 "Apple Pay" = "Apple Pay";
@@ -10,13 +12,9 @@
 
 "Bank Account" = "Compte bancari";
 
-"Billing Address" = "Adreça de facturació";
-
 "Billing address" = "Adreça de facturació";
 
 "CVC" = "CVC";
-
-"CVV" = "CVV";
 
 "Card information" = "Informació de targeta";
 
@@ -38,9 +36,13 @@
 
 "The BSB you entered is invalid." = "El BSB que has introduït no és vàlid.";
 
+"The selected brand is not allowed" = "La marca seleccionada no està permesa";
+
 "To scan your card, allow camera access in Settings." = "Per escanejar la teva targeta, permet l'accès a la càmera a Ajusts.";
 
 "Your ZIP is invalid." = "El teu ZIP no és vàlid.";
+
+"Your card has expired." = "La targeta ha caducat.";
 
 "Your card number is incomplete." = "El número de la teva targeta no està complet.";
 

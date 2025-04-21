@@ -12,12 +12,12 @@ import StripeCoreTestUtils
 import XCTest
 
 @testable@_spi(STP) import Stripe
-@testable@_spi(STP) import StripeCore
 @testable@_spi(STP) import StripePayments
 @testable@_spi(STP) import StripePaymentSheet
+import StripePaymentsTestUtils
 @testable@_spi(STP) import StripePaymentsUI
 
-class LinkInlineSignupViewModelTests: XCTestCase {
+class LinkInlineSignupViewModelTests: STPNetworkStubbingTestCase {
 
     // Should be ~4x the debounce time for best results.
     let accountLookupTimeout: TimeInterval = 4
@@ -170,6 +170,8 @@ extension LinkInlineSignupViewModelTests {
 
         func lookupAccount(
             withEmail email: String?,
+            emailSource: StripePaymentSheet.EmailSource,
+            doNotLogConsumerFunnelEvent: Bool,
             completion: @escaping (Result<PaymentSheetLinkAccount?, Error>) -> Void
         ) {
             if shouldFailLookup {
@@ -180,7 +182,8 @@ extension LinkInlineSignupViewModelTests {
                         PaymentSheetLinkAccount(
                             email: "user@example.com",
                             session: nil,
-                            publishableKey: nil
+                            publishableKey: nil,
+                            useMobileEndpoints: false
                         )
                     )
                 )
@@ -200,11 +203,11 @@ extension LinkInlineSignupViewModelTests {
         shouldFailLookup: Bool = false
     ) -> LinkInlineSignupViewModel {
         let linkAccount: PaymentSheetLinkAccount? = hasAccountObject
-            ? PaymentSheetLinkAccount(email: "user@example.com", session: nil, publishableKey: nil)
+            ? PaymentSheetLinkAccount(email: "user@example.com", session: nil, publishableKey: nil, useMobileEndpoints: false)
             : nil
 
         return LinkInlineSignupViewModel(
-            configuration: .init(),
+            configuration: PaymentSheet.Configuration(),
             showCheckbox: showCheckbox,
             accountService: MockAccountService(shouldFailLookup: shouldFailLookup),
             linkAccount: linkAccount,

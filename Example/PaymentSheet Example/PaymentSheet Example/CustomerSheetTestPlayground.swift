@@ -39,19 +39,16 @@ struct CustomerSheetTestPlayground: View {
                         }
                         SettingView(setting: $playgroundController.settings.customerMode)
                         SettingView(setting: customerKeyTypeBinding)
-                        TextField("CustomerId", text: customerIdBinding)
-                    }
-                    Group {
-                        if playgroundController.settings.customerKeyType == .customerSession {
-                            VStack {
-                                HStack {
-                                    Text("Customer Session Settings")
-                                        .font(.subheadline)
-                                        .bold()
-                                    Spacer()
-                                }
-                                SettingPickerView(setting: $playgroundController.settings.paymentMethodRemove)
-                                SettingPickerView(setting: $playgroundController.settings.paymentMethodAllowRedisplayFilters)
+                        HStack {
+                            TextField("CustomerId", text: customerIdBinding)
+                            if playgroundController.settings.customerKeyType == .customerSession {
+                                Spacer()
+                                Button {
+                                    playgroundController.customerSessionSettingsTapped()
+                                } label: {
+                                    Text("CSSettings")
+                                        .font(.callout.smallCaps())
+                                }.buttonStyle(.bordered)
                             }
                         }
                     }
@@ -70,6 +67,7 @@ struct CustomerSheetTestPlayground: View {
                         SettingView(setting: $playgroundController.settings.applePay)
                         SettingView(setting: $playgroundController.settings.defaultBillingAddress)
                         SettingView(setting: $playgroundController.settings.preferredNetworksEnabled)
+                        SettingView(setting: $playgroundController.settings.cardBrandAcceptance)
                         SettingView(setting: $playgroundController.settings.autoreload)
                         TextField("headerTextForSelectionScreen", text: headerTextForSelectionScreenBinding)
                         SettingView(setting: $playgroundController.settings.allowsRemovalOfLastSavedPaymentMethod)

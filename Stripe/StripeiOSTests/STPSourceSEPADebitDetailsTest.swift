@@ -44,6 +44,6 @@ class STPSourceSEPADebitDetailsTest: XCTestCase {
         XCTAssertEqual(sepaDebitDetails?.mandateReference, "NXDSYREGC9PSMKWY")
         XCTAssertEqual(sepaDebitDetails?.mandateURL, URL(string: "https://hooks.stripe.com/adapter/sepa_debit/file/src_18HgGjHNCLa1Vra6Y9TIP6tU/src_client_secret_XcBmS94nTg5o0xc9MSliSlDW"))
 
-        XCTAssertEqual(sepaDebitDetails?.allResponseFields as! NSDictionary, response as! NSDictionary)
+        XCTAssertEqual(sepaDebitDetails!.allResponseFields as NSDictionary, response! as NSDictionary)
     }
 }

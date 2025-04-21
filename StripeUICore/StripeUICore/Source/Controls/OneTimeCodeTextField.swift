@@ -77,7 +77,7 @@ import UIKit
 
     // MARK: - Private properties
 
-    private let theme: ElementsUITheme
+    private let theme: ElementsAppearance
 
     private let textStorage: TextStorage
 
@@ -135,7 +135,7 @@ import UIKit
     // MARK: -
     public init(
         configuration: Configuration = Configuration(),
-        theme: ElementsUITheme = .default
+        theme: ElementsAppearance = .default
     ) {
         self.configuration = configuration
         self.textStorage = TextStorage(capacity: configuration.numberOfDigits)
@@ -704,7 +704,7 @@ private extension OneTimeCodeTextField {
 
         private let configuration: Configuration
 
-        private let theme: ElementsUITheme
+        private let theme: ElementsAppearance
 
         private(set) lazy var borderLayer: CALayer = {
             let borderLayer = CALayer()
@@ -746,7 +746,7 @@ private extension OneTimeCodeTextField {
             return CGSize(width: UIView.noIntrinsicMetric, height: configuration.itemHeight)
         }
 
-        init(configuration: Configuration, theme: ElementsUITheme) {
+        init(configuration: Configuration, theme: ElementsAppearance) {
             self.configuration = configuration
             self.theme = theme
             super.init(frame: .zero)
@@ -799,9 +799,10 @@ private extension OneTimeCodeTextField {
         }
 
         private func updateColors() {
-            borderLayer.backgroundColor = isEnabled ? theme.colors.background.cgColor : theme.colors.disabledBackground.cgColor
-            borderLayer.borderColor = theme.colors.border.cgColor
-            caret.backgroundColor = label.textColor.cgColor
+            let backgroundColor = isEnabled ? theme.colors.componentBackground : theme.colors.disabledBackground
+            borderLayer.backgroundColor = backgroundColor.resolvedColor(with: traitCollection).cgColor
+            borderLayer.borderColor = theme.colors.border.resolvedColor(with: traitCollection).cgColor
+            caret.backgroundColor = label.textColor.resolvedColor(with: traitCollection).cgColor
             focusRing.borderColor = tintColor.cgColor
         }
 

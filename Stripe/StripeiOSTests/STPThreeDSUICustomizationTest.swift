@@ -116,14 +116,14 @@ class STPThreeDSUICustomizationTest: XCTestCase {
 
         // Other
         customization.backgroundColor = UIColor.red
-        customization.activityIndicatorViewStyle = UIActivityIndicatorView.Style.whiteLarge
+        customization.activityIndicatorViewStyle = UIActivityIndicatorView.Style.large
         customization.blurStyle = UIBlurEffect.Style.dark
 
         XCTAssertEqual(UIColor.red, customization.backgroundColor)
         XCTAssertEqual(customization.backgroundColor, customization.uiCustomization.backgroundColor)
 
         XCTAssertEqual(
-            UIActivityIndicatorView.Style.whiteLarge,
+            UIActivityIndicatorView.Style.large,
             customization.activityIndicatorViewStyle
         )
         XCTAssertEqual(

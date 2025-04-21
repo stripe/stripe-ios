@@ -151,14 +151,19 @@ final class DocumentFileUploadViewControllerTest: XCTestCase {
         // click continue button to upload back
         vc.didTapContinueButton()
         // Verify data saved and transitioned to next screen
-        guard case .success(let front) = mockSheetController.frontUploadedDocumentsResult else {
-            return XCTFail("Expected success result")
+        let e = expectation(description: "back upload result")
+        mockDocumentUploader.frontUploadPromise.observe { _ in
+            guard case .success(let front) = self.mockSheetController.frontUploadedDocumentsResult else {
+                return XCTFail("Expected success result")
+            }
+            guard case .success(let back) = self.mockSheetController.backUploadedDocumentsResult else {
+                return XCTFail("Expected success result")
+            }
+            XCTAssertEqual(front, frontFileData)
+            XCTAssertEqual(back, backFileData)
+            e.fulfill()
         }
-        guard case .success(let back) = mockSheetController.backUploadedDocumentsResult else {
-            return XCTFail("Expected success result")
-        }
-        XCTAssertEqual(front, frontFileData)
-        XCTAssertEqual(back, backFileData)
+        waitForExpectations(timeout: 1)
     }
 }
 

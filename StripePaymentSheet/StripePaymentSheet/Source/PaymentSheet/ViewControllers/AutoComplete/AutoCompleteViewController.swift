@@ -48,7 +48,7 @@ class AutoCompleteViewController: UIViewController {
             errorLabel.isHidden = latestError == nil
         }
     }
-    private var theme: ElementsUITheme {
+    private var theme: ElementsAppearance {
         return configuration.appearance.asElementsTheme
     }
 

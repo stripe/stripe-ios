@@ -1,5 +1,7 @@
 "%@ (optional)" = "%@ (valikuline)";
 
+"(not accepted)" = "(pole aktsepteeritud)";
+
 "Account number" = "Kontonumber";
 
 "Address" = "Aadress";
@@ -83,8 +85,6 @@
 "Other" = "Muu";
 
 "Parish" = "Vald";
-
-"Phone" = "Telefon";
 
 "Phone number" = "Telefoninumber";
 

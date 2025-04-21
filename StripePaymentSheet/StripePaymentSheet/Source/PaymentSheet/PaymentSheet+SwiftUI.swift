@@ -239,11 +239,11 @@ extension PaymentSheet {
                         }
                         presentPaymentSheet(on: viewController)
                     case (true, false):
-                        guard let viewController = findViewController(for: view) else {
-                            parent.presented = true
+                        guard parent.paymentSheet?.bottomSheetViewController.presentingViewController != nil else {
+                            // If PS is not presented, there's nothing to do
                             return
                         }
-                        forciblyDismissPaymentSheet(from: viewController)
+                        parent.paymentSheet?.bottomSheetViewController.didTapOrSwipeToDismiss()
                     case (true, true):
                         break
                     }
@@ -261,12 +261,6 @@ extension PaymentSheet {
                 parent.paymentSheet?.present(from: presenter) { (result: PaymentSheetResult) in
                     self.parent.presented = false
                     self.parent.onCompletion(result)
-                }
-            }
-
-            func forciblyDismissPaymentSheet(from controller: UIViewController) {
-                if let bsvc = controller.presentedViewController as? BottomSheetViewController {
-                    bsvc.didTapOrSwipeToDismiss()
                 }
             }
         }
@@ -308,11 +302,11 @@ extension PaymentSheet {
                         }
                         presentPaymentSheet(on: viewController)
                     case (true, false):
-                        guard let viewController = findViewController(for: view) else {
-                            parent.presented = true
+                        guard parent.paymentSheetFlowController?.viewController.presentingViewController != nil else {
+                            // If PSFC is not presented, there's nothing to do
                             return
                         }
-                        forciblyDismissPaymentSheet(from: viewController)
+                        parent.paymentSheetFlowController?.viewController.didTapOrSwipeToDismiss()
                     case (true, true):
                         break
                     }
@@ -338,12 +332,6 @@ extension PaymentSheet {
                         self.parent.presented = false
                         self.parent.optionsCompletion?()
                     }
-                }
-            }
-
-            func forciblyDismissPaymentSheet(from controller: UIViewController) {
-                if let bsvc = controller.presentedViewController as? BottomSheetViewController {
-                    bsvc.didTapOrSwipeToDismiss()
                 }
             }
         }

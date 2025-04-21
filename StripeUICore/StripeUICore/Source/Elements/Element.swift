@@ -16,7 +16,7 @@ import UIKit
  
  Think of this as a light-weight, specialized view controller.
  */
-@_spi(STP) public protocol Element: AnyObject {
+@_spi(STP) public protocol Element: AnyObject, CustomDebugStringConvertible {
     /// - Note: This is set by your parent.
     var delegate: ElementDelegate? { get set }
 
@@ -79,18 +79,6 @@ public extension Element {
     func presentViewController(viewController: UIViewController, completion: (() -> Void)?)
 }
 
-extension Element {
-    /// A poorly named convenience method that returns all Elements underneath this Element, including this Element.
-    public func getAllSubElements() -> [Element] {
-        switch self {
-        case let container as ContainerElement:
-            return [container] + container.elements.flatMap { $0.getAllSubElements() }
-        default:
-            return [self]
-        }
-    }
-}
-
 @_spi(STP) @frozen public enum ElementValidationState {
     case valid
     case invalid(error: ElementValidationError, shouldDisplay: Bool)
@@ -106,4 +94,10 @@ extension Element {
 
 @_spi(STP) public protocol ElementValidationError: Error {
     var localizedDescription: String { get }
+}
+
+extension Element {
+    public var debugDescription: String {
+        return "<\(type(of: self)): \(Unmanaged.passUnretained(self).toOpaque())>"
+    }
 }

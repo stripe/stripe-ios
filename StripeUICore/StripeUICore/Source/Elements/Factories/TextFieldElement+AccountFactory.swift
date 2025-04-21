@@ -46,7 +46,7 @@ import UIKit
             }
         }
 
-        public static func makeBSB(defaultValue: String?, theme: ElementsUITheme = .default) -> TextFieldElement {
+        public static func makeBSB(defaultValue: String?, theme: ElementsAppearance = .default) -> TextFieldElement {
             return TextFieldElement(configuration: BSBConfiguration(defaultValue: defaultValue), theme: theme)
         }
 
@@ -56,10 +56,11 @@ import UIKit
                                                             String.Localized.incompleteAccountNumber)
             let label = String.Localized.accountNumber
             let disallowedCharacters: CharacterSet = .stp_invertedAsciiDigit
-            let numberOfDigitsRequired = 9
+            let minimumNumberOfDigits = 4
+            let maximumNumberofDigits = 9
 
             func maxLength(for text: String) -> Int {
-                return numberOfDigitsRequired
+                return maximumNumberofDigits
             }
             let defaultValue: String?
 
@@ -67,7 +68,7 @@ import UIKit
                 if text.isEmpty {
                     return isOptional ? .valid : .invalid(Error.empty)
                 }
-                return text.count == numberOfDigitsRequired ? .valid : .invalid(AUBECSAccountNumberConfiguration.incompleteError)
+                return text.count >= minimumNumberOfDigits && text.count <= maximumNumberofDigits ? .valid : .invalid(AUBECSAccountNumberConfiguration.incompleteError)
             }
 
             func keyboardProperties(for text: String) -> TextFieldElement.KeyboardProperties {
@@ -75,7 +76,7 @@ import UIKit
             }
         }
 
-        public static func makeAUBECSAccountNumber(defaultValue: String?, theme: ElementsUITheme = .default) -> TextFieldElement {
+        public static func makeAUBECSAccountNumber(defaultValue: String?, theme: ElementsAppearance = .default) -> TextFieldElement {
             return TextFieldElement(configuration: AUBECSAccountNumberConfiguration(defaultValue: defaultValue), theme: theme)
         }
 
@@ -110,7 +111,7 @@ import UIKit
             }
         }
 
-        public static func makeSortCode(defaultValue: String?, theme: ElementsUITheme = .default) -> TextFieldElement {
+        public static func makeSortCode(defaultValue: String?, theme: ElementsAppearance = .default) -> TextFieldElement {
             return TextFieldElement(configuration: SortCodeConfiguration(defaultValue: defaultValue), theme: theme)
         }
 
@@ -138,7 +139,7 @@ import UIKit
             }
         }
 
-        public static func makeBacsAccountNumber(defaultValue: String?, theme: ElementsUITheme = .default) -> TextFieldElement {
+        public static func makeBacsAccountNumber(defaultValue: String?, theme: ElementsAppearance = .default) -> TextFieldElement {
             return TextFieldElement(configuration: BacsAccountNumberConfiguration(defaultValue: defaultValue), theme: theme)
         }
     }

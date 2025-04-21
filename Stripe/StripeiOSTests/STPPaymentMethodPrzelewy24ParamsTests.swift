@@ -9,8 +9,9 @@
 
 import StripeCore
 import StripeCoreTestUtils
+import StripePaymentsTestUtils
 
-class STPPaymentMethodPrzelewy24ParamsTests: XCTestCase {
+class STPPaymentMethodPrzelewy24ParamsTests: STPNetworkStubbingTestCase {
     func testCreatePrzelewy24PaymentMethod() {
         let client = STPAPIClient(publishableKey: STPTestingDefaultPublishableKey)
         let przelewy24Params = STPPaymentMethodPrzelewy24Params()

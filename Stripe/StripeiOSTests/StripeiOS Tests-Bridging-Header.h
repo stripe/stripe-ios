@@ -3,5 +3,3 @@
 //
 
 @import StripePaymentsObjcTestUtils;
-
-#import "STPMocks.h"

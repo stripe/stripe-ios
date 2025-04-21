@@ -17,23 +17,38 @@ struct PlaygroundView: View {
         ZStack {
             VStack {
                 Form {
-                    Section(header: Text("Experience")) {
-                        VStack(alignment: .leading, spacing: 4) {
-                            Picker("Select Experience", selection: viewModel.experience) {
-                                ForEach(PlaygroundConfiguration.Experience.allCases) {
-                                    Text($0.displayName)
-                                        .tag($0)
-                                }
+                    Section(header: Text("Integration Type")) {
+                        Picker("Integration Type", selection: viewModel.integrationType) {
+                            ForEach(PlaygroundConfiguration.IntegrationType.allCases) {
+                                Text($0.displayName)
+                                    .tag($0)
                             }
-                            .pickerStyle(.segmented)
+                        }
+                        .pickerStyle(.segmented)
+                    }
+
+                    Picker("Experience", selection: viewModel.experience) {
+                        ForEach(PlaygroundConfiguration.Experience.allCases) {
+                            Text($0.displayName)
+                                .tag($0)
+                        }
+
+                        if viewModel.integrationType.wrappedValue == .standalone && viewModel.experience.wrappedValue == .linkCardBrand {
+                            Text("'Link Card Brand' in the standalone integration will launch the Instant Bank Payment flow.")
+                                .font(.caption)
+                                .italic()
+                        } else if viewModel.integrationType.wrappedValue == .paymentElement {
+                            Text("Payment methods requested will be: `\(viewModel.experience.wrappedValue.paymentMethods)`")
+                                .font(.caption)
                         }
                     }
+                    .pickerStyle(.inline)
 
                     Section(header: Text("Select SDK Type")) {
                         VStack(alignment: .leading, spacing: 4) {
                             Picker("Select SDK Type", selection: viewModel.sdkType) {
                                 ForEach(PlaygroundConfiguration.SDKType.allCases) {
-                                    Text($0.rawValue.capitalized)
+                                    Text($0.displayName)
                                         .tag($0)
                                 }
                             }
@@ -100,6 +115,31 @@ struct PlaygroundView: View {
                         }
                     }
 
+                    Section(header: Text("Configuration")) {
+                        HStack {
+                            Text("Style")
+                                .font(.subheadline)
+                            Picker("Style", selection: viewModel.style) {
+                                ForEach(PlaygroundConfiguration.Style.allCases) {
+                                    Text($0.rawValue)
+                                        .tag($0)
+                                }
+                            }
+                            .pickerStyle(.segmented)
+                        }
+                    }
+
+                    Section(header: Text("Relink")) {
+                        TextField("Customer ID (cus_)", text: viewModel.customerId)
+                            .keyboardType(.default)
+                            .autocapitalization(.none)
+                            .accessibility(identifier: "playground-customer-id")
+
+                        TextField("Relink authorization (fcauth_)", text: viewModel.relinkAuthorization)
+                            .keyboardType(.default)
+                            .accessibility(identifier: "playground-relink-authorization")
+                    }
+
                     Section(header: Text("PERMISSIONS")) {
                         Toggle("Balances", isOn: viewModel.balancesPermission)
                             .accessibility(identifier: "playground-balances-permission")
@@ -162,6 +202,9 @@ struct PlaygroundView: View {
                         .accessibility(identifier: "playground-session-output-copy-account-ids")
                     }
                 }
+                .simultaneousGesture(
+                    DragGesture().onEnded(hideKeyboardOnDownwardsDrag)
+                )
 
                 VStack {
                     Button(action: viewModel.didSelectShow) {
@@ -190,11 +233,11 @@ struct PlaygroundView: View {
         }
         .navigationTitle("Playground")
         .navigationBarTitleDisplayMode(.inline)
-        .gesture(DragGesture().onChanged(hideKeyboard))
         .animation(.easeIn(duration: 1), value: viewModel.experience.wrappedValue)
     }
 
-    private func hideKeyboard(_ value: DragGesture.Value) {
+    private func hideKeyboardOnDownwardsDrag(_ value: DragGesture.Value) {
+        guard value.translation.height > 20 else { return }
         UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
     }
 }

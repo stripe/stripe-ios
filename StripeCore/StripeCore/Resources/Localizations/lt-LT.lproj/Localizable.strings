@@ -1,4 +1,10 @@
+"An error occurred. Please try again." = "Įvyko klaida. Bandykite dar kartą.";
+
+"Card brand was not updated. Please try again." = "Kortelės prekės ženklas neatnaujintas. Bandykite dar kartą.";
+
 "Close" = "Užverti";
+
+"Default payment method was not updated. Please try again." = "Numatytasis mokėjimo būdas neatnaujintas. Bandykite dar kartą.";
 
 "Scan Card" = "Skenuoti kortelę";
 
@@ -12,7 +18,7 @@
 
 "Try again" = "Bandyti dar kartą";
 
-"We use Stripe to verify your card details. Stripe may use and store your data according its privacy policy. <a href='https://support.stripe.com/questions/stripes-card-image-verification'><u>Learn more</u></a>" = "Naudojame „Stripe“, kad patikrintume jūsų kortelės duomenis. „Stripe“ gali naudoti ir saugoti jūsų duomenis pagal savo privatumo politiką. <a href='https://support.stripe.com/questions/stripes-card-image-verification'><u>Sužinokite daugiau</u></a>";
+"We use Stripe to verify your card details. Stripe may use and store your data according its privacy policy. <a href='https://support.stripe.com/questions/stripes-card-image-verification'><u>Learn more</u></a>" = "Naudojame \"Stripe\", kad patikrintume jūsų kortelės duomenis. \"Stripe\" gali naudoti ir saugoti jūsų duomenis pagal savo privatumo politiką. <a href='https://support.stripe.com/questions/stripes-card-image-verification'><u>Sužinokite daugiau</u></a>";
 
 "Your card has expired" = "Kortelė baigė galioti";
 

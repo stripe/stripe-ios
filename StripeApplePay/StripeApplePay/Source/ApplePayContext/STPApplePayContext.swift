@@ -106,6 +106,11 @@ public class STPApplePayContext: NSObject, PKPaymentAuthorizationControllerDeleg
     ///   You should only use this if your integration can't create a PaymentIntent or SetupIntent. It is your responsibility to ensure that you only pass this value if the payment or set up is successful. 
     @_spi(STP) public static let COMPLETE_WITHOUT_CONFIRMING_INTENT = "COMPLETE_WITHOUT_CONFIRMING_INTENT"
 
+    internal var analyticsClient: STPAnalyticsClient = .sharedClient
+    /// These indicate a programming error in STPApplePayContext. They are separate from the NSErrors vended to merchants; these errors are only reported to analytics and do not get vended to users of this class.
+    enum InternalError: Swift.Error {
+        case invalidState
+    }
     /// Initializes this class.
     /// @note This may return nil if the request is invalid e.g. the user is restricted by parental controls, or can't make payments on any of the request's supported networks
     /// @note If using Swift, using ApplePayContextDelegate is recommended over STPApplePayContextDelegate.
@@ -128,18 +133,29 @@ public class STPApplePayContext: NSObject, PKPaymentAuthorizationControllerDeleg
         }()
 
         assert(!paymentRequest.merchantIdentifier.isEmpty, "You must set `merchantIdentifier` on your payment request.")
-        guard
-            canMakePayments,
-            !paymentRequest.merchantIdentifier.isEmpty,
-            // PKPaymentAuthorizationController's docs incorrectly state:
-            // "If the user can’t make payments on any of the payment request’s supported networks, initialization fails and this method returns nil."
-            // In actuality, this initializer is non-nullable. To make sure we return nil when the request is invalid, we'll use PKPaymentAuthorizationViewController's initializer, which *is* nullable.
-            PKPaymentAuthorizationViewController(paymentRequest: paymentRequest) != nil
-        else {
+
+        // 1. Check if the device or user account supports Apple Pay
+        guard canMakePayments else {
+            print("STPApplePayContext init failed: Device or account is not configured for Apple Pay, or unsupported networks are used.")
             return nil
         }
-        authorizationController = PKPaymentAuthorizationController(paymentRequest: paymentRequest)
 
+        // 2. Check if merchantIdentifier is non-empty
+        guard !paymentRequest.merchantIdentifier.isEmpty else {
+            print("STPApplePayContext init failed: The `merchantIdentifier` on `PKPaymentRequest` is empty.")
+            return nil
+        }
+
+        // 3. Check if creating a payment authorization view controller is possible
+        // PKPaymentAuthorizationController's docs incorrectly state:
+        // "If the user can’t make payments on any of the payment request’s supported networks, initialization fails and this method returns nil."
+        // In actuality, this initializer is non-nullable. To make sure we return nil when the request is invalid, we'll use PKPaymentAuthorizationViewController's initializer, which *is* nullable.
+        guard PKPaymentAuthorizationViewController(paymentRequest: paymentRequest) != nil else {
+            print("STPApplePayContext init failed: `PKPaymentAuthorizationViewController` returned nil. The payment request might be invalid.")
+            return nil
+        }
+
+        authorizationController = PKPaymentAuthorizationController(paymentRequest: paymentRequest)
         self.delegate = delegate
 
         super.init()
@@ -149,7 +165,7 @@ public class STPApplePayContext: NSObject, PKPaymentAuthorizationControllerDeleg
     private var presentationWindow: UIWindow?
 
     /// Presents the Apple Pay sheet from the key window, starting the payment process.
-    /// @note This method should only be called once; create a new instance of STPApplePayContext every time you present Apple Pay.
+    /// - Note: This method should only be called once; create a new instance of STPApplePayContext every time you present Apple Pay.
     /// - Parameters:
     ///   - completion:               Called after the Apple Pay sheet is presented
     @available(iOSApplicationExtension, unavailable)
@@ -170,7 +186,7 @@ public class STPApplePayContext: NSObject, PKPaymentAuthorizationControllerDeleg
     }
 
     /// Presents the Apple Pay sheet from the specified window, starting the payment process.
-    /// @note This method should only be called once; create a new instance of STPApplePayContext every time you present Apple Pay.
+    /// - Note: This method should only be called once; create a new instance of STPApplePayContext every time you present Apple Pay.
     /// - Parameters:
     ///   - window:                   The UIWindow to host the Apple Pay sheet
     ///   - completion:               Called after the Apple Pay sheet is presented
@@ -221,6 +237,23 @@ public class STPApplePayContext: NSObject, PKPaymentAuthorizationControllerDeleg
     ) {
         let window = viewController.viewIfLoaded?.window
         presentApplePay(from: window, completion: completion)
+    }
+
+    /// Dismisses the Apple Pay sheet.
+    /// - Parameter completion: Called after the Apple Pay sheet is dismissed.
+    /// - Note: Does not call the `applePayContext:didCompleteWithStatus:` delegate method.
+    /// - Note: You must create a new instance of ApplePayContext after using this method.
+    @objc(dismissWithCompletion:)
+    public func dismiss(completion: STPVoidBlock? = nil) {
+        guard didPresentApplePay else {
+            return
+        }
+        authorizationController?.dismiss {
+            stpDispatchToMainThreadIfNecessary {
+                completion?()
+                self._end()
+            }
+        }
     }
 
     /// The API Client to use to make requests.
@@ -501,11 +534,12 @@ public class STPApplePayContext: NSObject, PKPaymentAuthorizationControllerDeleg
         completion: @escaping (PKPaymentAuthorizationStatus, Swift.Error?) -> Void
     ) {
         // Helper to handle annoying logic around "Do I call completion block or dismiss + call delegate?"
-        let handleFinalState: ((PaymentState, Swift.Error?) -> Void) = { state, error in
+        let handleFinalState: ((PaymentState, Swift.Error?, StripeCore.Analytic) -> Void) = { state, error, analytic in
             switch state {
             case .error:
                 self.paymentState = .error
                 self.error = error
+                self.analyticsClient.log(analytic: analytic, apiClient: self.apiClient)
                 if self.didCancelOrTimeoutWhilePending {
                     self.authorizationController?.dismiss {
                         DispatchQueue.main.async {
@@ -519,6 +553,7 @@ public class STPApplePayContext: NSObject, PKPaymentAuthorizationControllerDeleg
                 return
             case .success:
                 self.paymentState = .success
+                self.analyticsClient.log(analytic: analytic, apiClient: self.apiClient)
                 if self.didCancelOrTimeoutWhilePending {
                     self.authorizationController?.dismiss {
                         DispatchQueue.main.async {
@@ -533,7 +568,7 @@ public class STPApplePayContext: NSObject, PKPaymentAuthorizationControllerDeleg
             case .pending, .notStarted:
                 let errorAnalytic = ErrorAnalytic(event: .unexpectedApplePayError,
                                                   error: Error.invalidFinalState)
-                STPAnalyticsClient.sharedClient.log(analytic: errorAnalytic)
+                self.analyticsClient.log(analytic: errorAnalytic)
                 stpAssertionFailure("Invalid final state")
                 return
             }
@@ -543,9 +578,23 @@ public class STPApplePayContext: NSObject, PKPaymentAuthorizationControllerDeleg
         StripeAPI.PaymentMethod.create(apiClient: apiClient, payment: payment) { result in
             guard let paymentMethod = try? result.get(), self.authorizationController != nil else {
                 if case .failure(let error) = result {
-                    handleFinalState(.error, error)
+                    let errorMessage = "Failed on token creation"
+                    let errorAnalytic = ErrorAnalytic(event: .unexpectedApplePayError,
+                                                      error: error,
+                                                      additionalNonPIIParams: [
+                                                        "error_message": errorMessage
+                                                      ])
+                    handleFinalState(.error, error, errorAnalytic)
                 } else {
-                    handleFinalState(.error, nil)
+                    let errorMessage = "Failed while creating paymentMethod due to internal error"
+                    let errorAnalytic = ErrorAnalytic(event: .unexpectedApplePayError,
+                                                      error: InternalError.invalidState,
+                                                      additionalNonPIIParams: [
+                                                        "error_message": errorMessage
+                                                      ])
+
+                    self.analyticsClient.log(analytic: errorAnalytic, apiClient: self.apiClient)
+                    handleFinalState(.error, nil, errorAnalytic)
                 }
                 return
             }
@@ -556,13 +605,20 @@ public class STPApplePayContext: NSObject, PKPaymentAuthorizationControllerDeleg
                 guard let clientSecret = clientSecret, intentCreationError == nil,
                     self.authorizationController != nil
                 else {
-                    handleFinalState(.error, intentCreationError)
+                    let errorMessage = "Failed on payment method completion"
+                    let errorAnalytic = ErrorAnalytic(event: .unexpectedApplePayError,
+                                                      error: InternalError.invalidState,
+                                                      additionalNonPIIParams: [
+                                                        "error_message": errorMessage,
+                                                      ])
+                    handleFinalState(.error, intentCreationError, errorAnalytic)
                     return
                 }
 
                 guard clientSecret != STPApplePayContext.COMPLETE_WITHOUT_CONFIRMING_INTENT else {
                     self.confirmType = STPApplePayContext.ConfirmType.none
-                    handleFinalState(.success, nil)
+                    let analytic = Analytic(event: .applePayContextCompletePaymentFinished)
+                    handleFinalState(.success, nil, analytic)
                     return
                 }
 
@@ -574,10 +630,21 @@ public class STPApplePayContext: NSObject, PKPaymentAuthorizationControllerDeleg
                         guard let setupIntent = try? result.get(),
                             self.authorizationController != nil
                         else {
+                            let errorMessage = "Failed on retrieving setup intent"
                             if case .failure(let error) = result {
-                                handleFinalState(.error, error)
+                                let errorAnalytic = ErrorAnalytic(event: .unexpectedApplePayError,
+                                                                  error: error,
+                                                                  additionalNonPIIParams: [
+                                                                    "error_message": errorMessage,
+                                                                  ])
+                                handleFinalState(.error, error, errorAnalytic)
                             } else {
-                                handleFinalState(.error, nil)
+                                let errorAnalytic = ErrorAnalytic(event: .unexpectedApplePayError,
+                                                                  error: InternalError.invalidState,
+                                                                  additionalNonPIIParams: [
+                                                                    "error_message": errorMessage,
+                                                                  ])
+                                handleFinalState(.error, nil, errorAnalytic)
                             }
                             return
                         }
@@ -603,27 +670,37 @@ public class STPApplePayContext: NSObject, PKPaymentAuthorizationControllerDeleg
                                     self.authorizationController != nil,
                                     setupIntent.status == .succeeded
                                 else {
+                                    let errorMessage = "Failed on confirming setup intent"
                                     if case .failure(let error) = result {
-                                        handleFinalState(.error, error)
+                                        let errorAnalytic = ErrorAnalytic(event: .unexpectedApplePayError,
+                                                                          error: error,
+                                                                          additionalNonPIIParams: [
+                                                                            "error_message": errorMessage,
+                                                                          ])
+                                        handleFinalState(.error, error, errorAnalytic)
                                     } else {
-                                        handleFinalState(.error, nil)
+                                        let errorAnalytic = ErrorAnalytic(event: .unexpectedApplePayError,
+                                                                          error: InternalError.invalidState,
+                                                                          additionalNonPIIParams: [
+                                                                            "error_message": errorMessage,
+                                                                          ])
+                                        handleFinalState(.error, nil, errorAnalytic)
                                     }
                                     return
                                 }
-
-                                handleFinalState(.success, nil)
+                                handleFinalState(.success, nil, Analytic(event: .applePayContextCompletePaymentFinished))
                             }
                         case .succeeded:
                             self.confirmType = .server
-                            handleFinalState(.success, nil)
+                            handleFinalState(.success, nil, Analytic(event: .applePayContextCompletePaymentFinished))
                         case .canceled, .processing, .unknown, .unparsable, .none:
-                            handleFinalState(
-                                .error,
-                                Self.makeUnknownError(
-                                    message:
-                                        "The SetupIntent is in an unexpected state: \(setupIntent.status!)"
-                                )
-                            )
+                            let errorMessage = "The SetupIntent is in an unexpected state: \(setupIntent.status!)"
+                            let errorAnalytic = ErrorAnalytic(event: .unexpectedApplePayError,
+                                                              error: InternalError.invalidState,
+                                                              additionalNonPIIParams: [
+                                                                "error_message": errorMessage,
+                                                              ])
+                            handleFinalState(.error, Self.makeUnknownError(message: errorMessage), errorAnalytic)
                         }
                     }
                 } else {
@@ -636,10 +713,21 @@ public class STPApplePayContext: NSObject, PKPaymentAuthorizationControllerDeleg
                         guard let paymentIntent = try? result.get(),
                             self.authorizationController != nil
                         else {
+                            let errorMessage = "Failed on retrieving payment intent"
                             if case .failure(let error) = result {
-                                handleFinalState(.error, error)
+                                let errorAnalytic = ErrorAnalytic(event: .unexpectedApplePayError,
+                                                                  error: error,
+                                                                  additionalNonPIIParams: [
+                                                                    "error_message": errorMessage,
+                                                                  ])
+                                handleFinalState(.error, error, errorAnalytic)
                             } else {
-                                handleFinalState(.error, nil)
+                                let errorAnalytic = ErrorAnalytic(event: .unexpectedApplePayError,
+                                                                  error: InternalError.invalidState,
+                                                                  additionalNonPIIParams: [
+                                                                    "error_message": errorMessage,
+                                                                  ])
+                                handleFinalState(.error, nil, errorAnalytic)
                             }
                             return
                         }
@@ -674,26 +762,40 @@ public class STPApplePayContext: NSObject, PKPaymentAuthorizationControllerDeleg
                                     postConfirmPI.status == .succeeded
                                         || postConfirmPI.status == .requiresCapture
                                 else {
+                                    let errorMessage = "Failed on confirming payment intent"
                                     if case .failure(let error) = result {
-                                        handleFinalState(.error, error)
+                                        let errorAnalytic = ErrorAnalytic(event: .unexpectedApplePayError,
+                                                                          error: error,
+                                                                          additionalNonPIIParams: [
+                                                                            "error_message": errorMessage,
+                                                                          ])
+                                        handleFinalState(.error, error, errorAnalytic)
                                     } else {
-                                        handleFinalState(.error, nil)
+                                        let errorAnalytic = ErrorAnalytic(event: .unexpectedApplePayError,
+                                                                          error: InternalError.invalidState,
+                                                                          additionalNonPIIParams: [
+                                                                            "error_message": errorMessage,
+                                                                          ])
+                                        handleFinalState(.error, nil, errorAnalytic)
                                     }
                                     return
                                 }
-                                handleFinalState(.success, nil)
+                                handleFinalState(.success, nil, Analytic(event: .applePayContextCompletePaymentFinished))
                             }
                         } else if paymentIntent.status == .succeeded
                             || paymentIntent.status == .requiresCapture
                         {
                             self.confirmType = .server
-                            handleFinalState(.success, nil)
+                            handleFinalState(.success, nil, Analytic(event: .applePayContextCompletePaymentFinished))
                         } else {
-                            let unknownError = Self.makeUnknownError(
-                                message:
-                                    "The PaymentIntent is in an unexpected state. If you pass confirmation_method = manual when creating the PaymentIntent, also pass confirm = true.  If server-side confirmation fails, double check you are passing the error back to the client."
-                            )
-                            handleFinalState(.error, unknownError)
+                            let errorMessage = "The PaymentIntent is in an unexpected state. If you pass confirmation_method = manual when creating the PaymentIntent, also pass confirm = true.  If server-side confirmation fails, double check you are passing the error back to the client."
+                            let errorAnalytic = ErrorAnalytic(event: .unexpectedApplePayError,
+                                                              error: InternalError.invalidState,
+                                                              additionalNonPIIParams: [
+                                                                "error_message": errorMessage,
+                                                              ])
+                            let unknownError = Self.makeUnknownError(message: errorMessage)
+                            handleFinalState(.error, unknownError, errorAnalytic)
                         }
                     }
                 }
@@ -792,6 +894,15 @@ public class STPApplePayContext: NSObject, PKPaymentAuthorizationControllerDeleg
 @_spi(STP) extension STPApplePayContext: STPAnalyticsProtocol {
     @_spi(STP) public static var stp_analyticsIdentifier: String {
         return "STPApplePayContext"
+    }
+}
+
+extension STPApplePayContext {
+    struct Analytic: StripeCore.Analytic {
+        let event: StripeCore.STPAnalyticEvent
+        var params: [String: Any] {
+            return [:]
+        }
     }
 }
 

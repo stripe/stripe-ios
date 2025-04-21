@@ -53,10 +53,6 @@ class StubCustomerAdapter: CustomerAdapter {
 
 class CustomerSheetSnapshotTests: STPSnapshotTestCase {
 
-    private let backendCheckoutUrl = URL(
-        string: "https://stripe-mobile-payment-sheet-test-playground-v6.glitch.me/checkout"
-    )!
-
     private var cs: CustomerSheet!
 
     private var window: UIWindow {
@@ -564,34 +560,25 @@ class CustomerSheetSnapshotTests: STPSnapshotTestCase {
 
         cs.present(from: vc) { _ in }
 
-        // Payment sheet usually takes anywhere between 50ms-200ms (but once in a while 2-3 seconds).
+        // Customer sheet usually takes anywhere between 50ms-200ms (but once in a while 2-3 seconds).
         // to present with the expected content. When the sheet is presented, it initially shows a loading screen,
         // and when it is done loading, the loading screen is replaced with the expected content.
-        // Therefore, the following code polls every 50 milliseconds to check if the LoadingViewController
-        // has been removed.  If the LoadingViewController is not there (or we reach the maximum number of times to poll),
+        // Therefore, the following code polls every 0.1 seconds to check if the LoadingViewController
+        // has been removed. If the LoadingViewController is not there (or we reach the maximum number of times to poll),
         // we assume the content has been loaded and continue.
-        let presentingExpectation = XCTestExpectation(description: "Presenting payment sheet")
-        DispatchQueue.global(qos: .background).async {
-            var isLoading = true
-            var count = 0
-            while isLoading && count < 10 {
-                count += 1
-                DispatchQueue.main.sync {
-                    guard
-                        (self.cs.bottomSheetViewController.contentStack.first as? LoadingViewController)
-                            != nil
-                    else {
-                        isLoading = false
-                        presentingExpectation.fulfill()
-                        return
-                    }
-                }
-                if isLoading {
-                    usleep(50000)  // 50ms
+        let loadFinishedExpectation = XCTestExpectation(description: "Load finished")
+        func pollForLoadingFinished() {
+            if !(cs.bottomSheetViewController.contentStack.first is LoadingViewController) {
+                loadFinishedExpectation.fulfill()
+            } else {
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) { [weak self] in
+                    guard self != nil else { return }
+                    pollForLoadingFinished()
                 }
             }
         }
-        wait(for: [presentingExpectation], timeout: 10.0)
+        pollForLoadingFinished()
+        wait(for: [loadFinishedExpectation], timeout: 5)
 
         cs.bottomSheetViewController.presentationController!.overrideTraitCollection = UITraitCollection(
             preferredContentSizeCategory: preferredContentSizeCategory
@@ -613,7 +600,7 @@ class CustomerSheetSnapshotTests: STPSnapshotTestCase {
     }
 
     private func updatePaymentMethodDetail(data: Data, variables: [String: String]) -> Data {
-        var template = String(data: data, encoding: .utf8)!
+        var template = String(decoding: data, as: UTF8.self)
         for (templateKey, templateValue) in variables {
             let translated = template.replacingOccurrences(of: templateKey, with: templateValue)
             template = translated

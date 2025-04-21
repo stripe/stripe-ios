@@ -1,5 +1,7 @@
 "%@ (optional)" = "%@ (opțional)";
 
+"(not accepted)" = "(nu este acceptat)";
+
 "Account number" = "Număr cont";
 
 "Address" = "Adresa";
@@ -83,8 +85,6 @@
 "Other" = "Altele";
 
 "Parish" = "Parohie";
-
-"Phone" = "Număr de telefon";
 
 "Phone number" = "Număr de telefon";
 

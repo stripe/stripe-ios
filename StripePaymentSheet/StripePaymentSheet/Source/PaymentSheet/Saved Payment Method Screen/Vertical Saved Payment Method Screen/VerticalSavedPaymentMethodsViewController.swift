@@ -11,81 +11,110 @@ import Foundation
 @_spi(STP) import StripeUICore
 import UIKit
 
+@MainActor
 protocol VerticalSavedPaymentMethodsViewControllerDelegate: AnyObject {
     /// Handles the selection of a payment method from the list or the modification of the list such as the removal or update of payment methods.
     ///
     /// - Parameters:
-    ///    - viewController: The `VerticalSavedPaymentMethodsViewController` that completed it's selection
+    ///    - viewController: The `VerticalSavedPaymentMethodsViewController` that completed its selection
     ///    - selectedPaymentMethod: The selected method of payment, if any.
     ///    - latestPaymentMethods: The most recent up-to-date list of payment methods, with the selected (if any) payment method at the front of the list.
-    func didComplete(viewController: VerticalSavedPaymentMethodsViewController,
-                     with selectedPaymentMethod: STPPaymentMethod?,
-                     latestPaymentMethods: [STPPaymentMethod])
-
-    /// Notifies the delegate it should close the entire sheet it is presented in
-    func shouldClose()
+    ///    - didTapToDismiss: Whether or not the customer tapped outside the sheet to dismiss it.
+    ///    - defaultPaymentMethod: The default payment method at the time the view controller completed its selection
+    func didComplete(
+        viewController: VerticalSavedPaymentMethodsViewController,
+        with selectedPaymentMethod: STPPaymentMethod?,
+        latestPaymentMethods: [STPPaymentMethod],
+        didTapToDismiss: Bool,
+        defaultPaymentMethod: STPPaymentMethod?
+    )
 }
 
 /// A view controller that shows a list of saved payment methods in a vertical orientation
 class VerticalSavedPaymentMethodsViewController: UIViewController {
 
     // MARK: Private properties
-    private let configuration: PaymentSheet.Configuration
-    private let intent: Intent
+    private let configuration: PaymentElementConfiguration
+    private let elementsSession: STPElementsSession
     private let paymentMethodRemove: Bool
+    private let paymentMethodRemoveLast: Bool
+    private let paymentMethodSetAsDefault: Bool
+    private let paymentMethodUpdate: Bool
     private let isCBCEligible: Bool
+    private let analyticsHelper: PaymentSheetAnalyticsHelper
 
-    private var updateViewController: UpdateCardViewController?
+    private var updateViewController: UpdatePaymentMethodViewController?
+    private var defaultPaymentMethod: STPPaymentMethod?
 
     private var isEditingPaymentMethods: Bool = false {
         didSet {
             let additionalButtonTitle = isEditingPaymentMethods ? UIButton.doneButtonTitle : UIButton.editButtonTitle
             navigationBar.additionalButton.setTitle(additionalButtonTitle, for: .normal)
-            headerLabel.text = headerText
+            // Update header text unless we removed the last pm and we're getting kicked out to the main screen
+            if !paymentMethodRows.isEmpty {
+                headerLabel.text = headerText
+            }
 
             // If we are entering edit mode, put all buttons in an edit state, otherwise put back in their previous state
             if isEditingPaymentMethods {
-                paymentMethodRows.forEach { $0.state = .editing(allowsRemoval: canRemovePaymentMethods,
-                                                                allowsUpdating: $0.paymentMethod.isCoBrandedCard && isCBCEligible) }
+                paymentMethodRows.forEach {
+                    let allowsRemoval = canRemovePaymentMethods
+                    let paymentMethodType = $0.paymentMethod.type
+                    let allowsUpdating = PaymentSheet.supportedSavedPaymentMethods.contains { type in paymentMethodType == type }
+                    $0.state = .editing(allowsRemoval: allowsRemoval,
+                                        allowsUpdating: allowsUpdating)
+                }
             } else if oldValue {
                 // If we are exiting edit mode restore previous selected states
                 paymentMethodRows.forEach { $0.state = $0.previousSelectedState }
-                navigationBar.setStyle(.back(showAdditionalButton: canEdit)) // Hide edit button if needed
+                navigationBar.setStyle(navigationBarStyle())
 
                 // If we are exiting edit mode and there is only one payment method left which can't be removed, select it and dismiss
                 if paymentMethodRows.count == 1, let firstButton = paymentMethodRows.first {
                     firstButton.state = .selected
-                    completeSelection(afterDelay: 0.3)
+                    complete(afterDelay: 0.3)
                 }
             }
         }
     }
 
     private var headerText: String {
-        if isRemoveOnlyMode {
-            return .Localized.remove_payment_method
-        }
-
+        let nonCardPaymentMethods = paymentMethods.filter({ $0.type != .card })
+        let hasOnlyCards = nonCardPaymentMethods.isEmpty
         if isEditingPaymentMethods {
+            if hasOnlyCards {
+                return paymentMethods.count == 1 ?  .Localized.manage_card : .Localized.manage_cards
+            }
             return paymentMethods.count == 1 ?  .Localized.manage_payment_method : .Localized.manage_payment_methods
         }
-
-        let nonCardPaymentMethods = paymentMethods.filter({ $0.type != .card })
-        return nonCardPaymentMethods.isEmpty ? .Localized.select_card : .Localized.select_payment_method
+        return hasOnlyCards ? .Localized.select_card : .Localized.select_payment_method
     }
 
     var canRemovePaymentMethods: Bool {
         // Can remove a payment method if we have more than one payment method or if we have one payment method and `allowsRemovalOfLastSavedPaymentMethod` is true AND paymentMethodRemove is true
-        return (paymentMethodRows.count > 1 ? true : configuration.allowsRemovalOfLastSavedPaymentMethod) && paymentMethodRemove
+        return (paymentMethodRows.count > 1 ? true : paymentMethodRemoveLast) && paymentMethodRemove
     }
 
-    var canEdit: Bool {
-        // We can edit if there are removable or editable payment methods and we are not in remove only mode
-        return (canRemovePaymentMethods || (hasCoBrandedCards && isCBCEligible)) && !isRemoveOnlyMode
+    var canEditPaymentMethods: Bool {
+        return (hasCoBrandedCards && isCBCEligible) || paymentMethodUpdate
+    }
+
+    /// Indicates whether the chevron should be shown
+    /// True if any saved payment methods can be removed or edited
+    var canRemoveOrEdit: Bool {
+        let hasSupportedSavedPaymentMethods = paymentMethods.allSatisfy { PaymentSheet.supportedSavedPaymentMethods.contains($0.type) }
+        guard hasSupportedSavedPaymentMethods else {
+            fatalError("Saved payment methods contain unsupported payment methods.")
+        }
+        return paymentMethodSetAsDefault || canRemovePaymentMethods || canEditPaymentMethods
     }
 
     private var selectedPaymentMethod: STPPaymentMethod? {
         return paymentMethodRows.first { $0.isSelected }?.paymentMethod
+    }
+
+    private var previousSelectedPaymentMethod: STPPaymentMethod? {
+        return paymentMethodRows.first { $0.previousSelectedState == .selected }?.paymentMethod
     }
 
     private var paymentMethods: [STPPaymentMethod] {
@@ -97,14 +126,8 @@ class VerticalSavedPaymentMethodsViewController: UIViewController {
     }
 
     private lazy var savedPaymentMethodManager: SavedPaymentMethodManager = {
-        SavedPaymentMethodManager(configuration: configuration, intent: intent)
+        SavedPaymentMethodManager(configuration: configuration, elementsSession: elementsSession)
     }()
-
-    /// Determines if the we should operate in "Remove Only Mode". This mode is enabled under the following conditions:
-    /// - There is exactly one payment method available at init time.
-    /// - The single available payment method is not a co-branded card.
-    /// In this mode, the user can only delete the payment method; updating or selecting other payment methods is disabled.
-    let isRemoveOnlyMode: Bool
 
     // MARK: Internal properties
     weak var delegate: VerticalSavedPaymentMethodsViewControllerDelegate?
@@ -114,12 +137,9 @@ class VerticalSavedPaymentMethodsViewController: UIViewController {
     lazy var navigationBar: SheetNavigationBar = {
         let navBar = SheetNavigationBar(isTestMode: configuration.apiClient.isTestmode,
                                         appearance: configuration.appearance)
-        navBar.setStyle(.back(showAdditionalButton: canEdit))
+        navBar.setStyle(navigationBarStyle())
         navBar.delegate = self
         navBar.additionalButton.configureCommonEditButton(isEditingPaymentMethods: isEditingPaymentMethods, appearance: configuration.appearance)
-        // TODO(porter) Read color from new secondary action color from appearance
-        navBar.additionalButton.setTitleColor(configuration.appearance.colors.primary, for: .normal)
-        navBar.additionalButton.setTitleColor(configuration.appearance.colors.primary.disabledColor, for: .disabled)
         navBar.additionalButton.addTarget(self, action: #selector(didSelectEditSavedPaymentMethodsButton), for: .touchUpInside)
         return navBar
     }()
@@ -131,36 +151,57 @@ class VerticalSavedPaymentMethodsViewController: UIViewController {
     }()
 
     private lazy var stackView: UIStackView = {
-        let stackView = UIStackView(arrangedSubviews: [headerLabel] + paymentMethodRows)
+        let spacerView = UIView(frame: .zero)
+        spacerView.translatesAutoresizingMaskIntoConstraints = false
+
+        let heightConstraint = spacerView.heightAnchor.constraint(equalToConstant: 0)
+        heightConstraint.priority = UILayoutPriority(rawValue: 1)
+        heightConstraint.isActive = true
+
+        let stackView = UIStackView(arrangedSubviews: [headerLabel] + paymentMethodRows + [spacerView])
         stackView.axis = .vertical
         stackView.spacing = 12
         stackView.setCustomSpacing(16, after: headerLabel)
+        if let lastPaymentMethodRow = paymentMethodRows.last {
+            stackView.setCustomSpacing(0, after: lastPaymentMethodRow)
+        }
         return stackView
     }()
 
     private var paymentMethodRows: [SavedPaymentMethodRowButton] = []
 
-    init(configuration: PaymentSheet.Configuration,
-         selectedPaymentMethod: STPPaymentMethod?,
-         paymentMethods: [STPPaymentMethod],
-         intent: Intent) {
+    init(
+        configuration: PaymentElementConfiguration,
+        selectedPaymentMethod: STPPaymentMethod?,
+        paymentMethods: [STPPaymentMethod],
+        elementsSession: STPElementsSession,
+        analyticsHelper: PaymentSheetAnalyticsHelper,
+        defaultPaymentMethod: STPPaymentMethod?
+    ) {
         self.configuration = configuration
-        self.intent = intent
-        self.paymentMethodRemove = intent.elementsSession.allowsRemovalOfPaymentMethodsForPaymentSheet()
-        self.isCBCEligible = intent.cardBrandChoiceEligible
-        // Put in remove only mode and don't show the option to update PMs if:
-        // 1. We only have 1 payment method
-        // 2. The customer can't update the card brand 
-        self.isRemoveOnlyMode = paymentMethods.count == 1 && (!paymentMethods[0].isCoBrandedCard || !isCBCEligible)
+        self.elementsSession = elementsSession
+        self.defaultPaymentMethod = defaultPaymentMethod
+        self.paymentMethodRemove = elementsSession.allowsRemovalOfPaymentMethodsForPaymentSheet()
+        self.paymentMethodRemoveLast = elementsSession.paymentMethodRemoveLast(configuration: configuration)
+        self.paymentMethodUpdate = elementsSession.paymentMethodUpdateForPaymentSheet
+        self.paymentMethodSetAsDefault = elementsSession.paymentMethodSetAsDefaultForPaymentSheet
+        self.isCBCEligible = elementsSession.isCardBrandChoiceEligible
+        self.analyticsHelper = analyticsHelper
         super.init(nibName: nil, bundle: nil)
         self.paymentMethodRows = buildPaymentMethodRows(paymentMethods: paymentMethods)
         setInitialState(selectedPaymentMethod: selectedPaymentMethod)
     }
 
+    private func isDefaultPaymentMethod(paymentMethodId: String) -> Bool {
+        guard paymentMethodSetAsDefault, let defaultPaymentMethod else { return false }
+        return paymentMethodId == defaultPaymentMethod.stripeId
+    }
+
     private func buildPaymentMethodRows(paymentMethods: [STPPaymentMethod]) -> [SavedPaymentMethodRowButton] {
         return paymentMethods.map { paymentMethod in
             let button = SavedPaymentMethodRowButton(paymentMethod: paymentMethod,
-                                                appearance: configuration.appearance)
+                                                     appearance: configuration.appearance,
+                                                     showDefaultPMBadge: isDefaultPaymentMethod(paymentMethodId: paymentMethod.stripeId))
             button.delegate = self
             return button
         }
@@ -168,9 +209,6 @@ class VerticalSavedPaymentMethodsViewController: UIViewController {
 
     private func setInitialState(selectedPaymentMethod: STPPaymentMethod?) {
         paymentMethodRows.first { $0.paymentMethod.stripeId == selectedPaymentMethod?.stripeId }?.state = .selected
-        if isRemoveOnlyMode {
-            paymentMethodRows.first?.state = .editing(allowsRemoval: canRemovePaymentMethods, allowsUpdating: false)
-        }
     }
 
     required init?(coder: NSCoder) {
@@ -181,7 +219,22 @@ class VerticalSavedPaymentMethodsViewController: UIViewController {
         super.viewDidLoad()
         view.backgroundColor = configuration.appearance.colors.background
         configuration.style.configure(self)
+
         view.addAndPinSubview(stackView, insets: PaymentSheetUI.defaultSheetMargins)
+
+        // Add a height constraint to the view to ensure a minimum height of 200
+        let minHeightConstraint = view.heightAnchor.constraint(greaterThanOrEqualToConstant: 200 - SheetNavigationBar.height)
+        minHeightConstraint.priority = .defaultHigh
+        minHeightConstraint.isActive = true
+    }
+
+    private func navigationBarStyle() -> SheetNavigationBar.Style {
+        if let bottomSheet = self.bottomSheetController,
+           bottomSheet.contentStack.count > 1 {
+            return .back(showAdditionalButton: canRemoveOrEdit)
+        } else {
+            return .close(showAdditionalButton: canRemoveOrEdit)
+        }
     }
 
     @objc func didSelectEditSavedPaymentMethodsButton() {
@@ -193,24 +246,32 @@ class VerticalSavedPaymentMethodsViewController: UIViewController {
 
         // Detach the payment method from the customer
         savedPaymentMethodManager.detach(paymentMethod: paymentMethod)
+        analyticsHelper.logSavedPaymentMethodRemoved(paymentMethod: paymentMethod)
 
         // Remove the payment method row button
         paymentMethodRows.removeAll { $0.paymentMethod.stripeId == paymentMethod.stripeId }
         stackView.removeArrangedSubview(button, animated: true)
 
+        // Select the first payment method if nothing is selected anymore
+        // Note: this isn't necessarily the desired behavior, but the next payment method *will* be selected if you cancel out of the sheet at this point, so it's better to be consistent until we change that.
+        if selectedPaymentMethod == nil {
+            paymentMethodRows.first?.state = .selected
+        }
+
         // Update the editing state if needed
-        isEditingPaymentMethods = canEdit
+        isEditingPaymentMethods = canRemoveOrEdit
 
         // If we deleted the last payment method kick back out to the main screen
         if paymentMethodRows.isEmpty {
-            completeSelection()
+            complete(afterDelay: 0.3)
         }
     }
 
-    private func completeSelection(afterDelay: TimeInterval = 0.0) {
+    private func complete(didTapToDismiss: Bool = false, afterDelay: TimeInterval = 0.0) {
+        // Note this dispatch async gives a brief delay, even when `afterDelay` is 0
         DispatchQueue.main.asyncAfter(deadline: .now() + afterDelay) { [weak self] in
             guard let self = self else { return }
-            // Edge-case: Dismiss `UpdateViewController` if presented, this can occur if `completeSelection` is called before `UpdateViewController` is popped when we remove the last payment method via the `UpdateViewController`
+            // Edge-case: Dismiss `UpdateViewController` if presented, this can occur if `complete` is called before `UpdateViewController` is popped when we remove the last payment method via the `UpdateViewController`
             _ = self.updateViewController?.bottomSheetController?.popContentViewController()
 
             var latestPaymentMethods = self.paymentMethods
@@ -219,7 +280,13 @@ class VerticalSavedPaymentMethodsViewController: UIViewController {
                 latestPaymentMethods.remove(selectedPaymentMethod)
                 latestPaymentMethods.insert(selectedPaymentMethod, at: 0)
             }
-            self.delegate?.didComplete(viewController: self, with: self.selectedPaymentMethod, latestPaymentMethods: latestPaymentMethods)
+            self.delegate?.didComplete(
+                viewController: self,
+                with: self.selectedPaymentMethod,
+                latestPaymentMethods: latestPaymentMethods,
+                didTapToDismiss: didTapToDismiss,
+                defaultPaymentMethod: defaultPaymentMethod
+            )
         }
     }
 }
@@ -231,26 +298,27 @@ extension VerticalSavedPaymentMethodsViewController: BottomSheetContentViewContr
     }
 
     func didTapOrSwipeToDismiss() {
-        delegate?.shouldClose()
+        complete(didTapToDismiss: true)
     }
 
     var requiresFullScreen: Bool {
         return false
-    }
-
-    func didFinishAnimatingHeight() {
-        // no-op
     }
 }
 
 // MARK: - SheetNavigationBarDelegate
 extension VerticalSavedPaymentMethodsViewController: SheetNavigationBarDelegate {
     func sheetNavigationBarDidClose(_ sheetNavigationBar: SheetNavigationBar) {
-        // no-op we are in 'back' style mode
+        // 'back' closed used in:
+        //  Embedded
+        complete()
     }
 
     func sheetNavigationBarDidBack(_ sheetNavigationBar: SheetNavigationBar) {
-        completeSelection()
+        // 'back' style used in:
+        //  PS.Complete & Vertical
+        //  PS.FC & Vertical
+        complete()
     }
 }
 
@@ -258,11 +326,14 @@ extension VerticalSavedPaymentMethodsViewController: SheetNavigationBarDelegate 
 extension VerticalSavedPaymentMethodsViewController: SavedPaymentMethodRowButtonDelegate {
 
     func didSelectButton(_ button: SavedPaymentMethodRowButton, with paymentMethod: STPPaymentMethod) {
-        // Set payment method as default
-        CustomerPaymentOption.setDefaultPaymentMethod(
-            .stripeId(paymentMethod.stripeId),
-            forCustomer: configuration.customer?.id
-        )
+        analyticsHelper.logSavedPMScreenOptionSelected(option: .saved(paymentMethod: paymentMethod))
+        if !elementsSession.paymentMethodSetAsDefaultForPaymentSheet {
+            // Set local storage default
+            CustomerPaymentOption.setDefaultPaymentMethod(
+                .stripeId(paymentMethod.stripeId),
+                forCustomer: configuration.customer?.id
+            )
+        }
 
         // Deselect previous button
         paymentMethodRows.first { $0 != button && $0.isSelected }?.state = .unselected
@@ -271,51 +342,119 @@ extension VerticalSavedPaymentMethodsViewController: SavedPaymentMethodRowButton
         self.view.isUserInteractionEnabled = false
         self.navigationBar.isUserInteractionEnabled = false
 
-        // Give time for new selected row to show it has been selected before dismissing
-        // Makes UX feel a little nicer
-        self.completeSelection(afterDelay: 0.3)
-    }
-
-    func didSelectRemoveButton(_ button: SavedPaymentMethodRowButton, with paymentMethod: STPPaymentMethod) {
-        let alertController = UIAlertController.makeRemoveAlertController(paymentMethod: paymentMethod,
-                                                                          removeSavedPaymentMethodMessage: configuration.removeSavedPaymentMethodMessage) { [weak self] in
-            guard let self else { return }
-            self.remove(paymentMethod: paymentMethod)
-        }
-
-        present(alertController, animated: true, completion: nil)
+        self.complete()
     }
 
     func didSelectUpdateButton(_ button: SavedPaymentMethodRowButton, with paymentMethod: STPPaymentMethod) {
-        let updateViewController = UpdateCardViewController(paymentMethod: paymentMethod,
-                                                            removeSavedPaymentMethodMessage: configuration.removeSavedPaymentMethodMessage,
-                                                            appearance: configuration.appearance,
-                                                            hostedSurface: .paymentSheet,
-                                                            canRemoveCard: canRemovePaymentMethods,
-                                                            isTestMode: configuration.apiClient.isTestmode)
-
+        let updateConfig = UpdatePaymentMethodViewController.Configuration(paymentMethod: paymentMethod,
+                                                                           appearance: configuration.appearance,
+                                                                           billingDetailsCollectionConfiguration: configuration.billingDetailsCollectionConfiguration,
+                                                                           hostedSurface: .paymentSheet,
+                                                                           cardBrandFilter: configuration.cardBrandFilter,
+                                                                           canRemove: canRemovePaymentMethods,
+                                                                           canUpdate: paymentMethodUpdate,
+                                                                           isCBCEligible: paymentMethod.isCoBrandedCard && isCBCEligible,
+                                                                           allowsSetAsDefaultPM: paymentMethodSetAsDefault,
+                                                                           isDefault: isDefaultPaymentMethod(paymentMethodId: paymentMethod.stripeId))
+        let updateViewController = UpdatePaymentMethodViewController(removeSavedPaymentMethodMessage: configuration.removeSavedPaymentMethodMessage,
+                                                                     isTestMode: configuration.apiClient.isTestmode,
+                                                                     configuration: updateConfig)
         updateViewController.delegate = self
         self.updateViewController = updateViewController
         self.bottomSheetController?.pushContentViewController(updateViewController)
     }
 }
 
-// MARK: - UpdateCardViewControllerDelegate
-extension VerticalSavedPaymentMethodsViewController: UpdateCardViewControllerDelegate {
-    func didRemove(viewController: UpdateCardViewController, paymentMethod: STPPaymentMethod) {
-        remove(paymentMethod: paymentMethod)
-       _ = viewController.bottomSheetController?.popContentViewController()
+// MARK: - UpdatePaymentMethodViewControllerDelegate
+extension VerticalSavedPaymentMethodsViewController: UpdatePaymentMethodViewControllerDelegate {
+    func didRemove(viewController: UpdatePaymentMethodViewController, paymentMethod: STPPaymentMethod) {
+        // if it's the default pm, unset the default
+        if isDefaultPaymentMethod(paymentMethodId: paymentMethod.stripeId) {
+            defaultPaymentMethod = nil
+        }
+        // if it's the last saved pm, there's some animation jank from trying to quickly dismiss the update pm screen and the manage screen, so we wait until the update pm screen is dismissed, animate the payment method fading, and return to the main screen
+        if paymentMethodRows.count == 1 {
+            _ = viewController.bottomSheetController?.popContentViewController {
+                self.remove(paymentMethod: paymentMethod)
+            }
+        } else {
+            remove(paymentMethod: paymentMethod)
+            _ = viewController.bottomSheetController?.popContentViewController()
+        }
     }
 
-    func didUpdate(viewController: UpdateCardViewController, paymentMethod: STPPaymentMethod, updateParams: STPPaymentMethodUpdateParams) async throws {
-        // Update the payment method
-        let updatedPaymentMethod = try await savedPaymentMethodManager.update(paymentMethod: paymentMethod, with: updateParams)
+    func didUpdate(viewController: UpdatePaymentMethodViewController,
+                   paymentMethod: STPPaymentMethod) async -> UpdatePaymentMethodResult
+    {
+        var errors: [Error] = []
 
-        replace(paymentMethod: paymentMethod, with: updatedPaymentMethod)
+        // Perform update if needed
+        if let updateParams = viewController.updateParams,
+           case .card(let paymentMethodCardParams, let billingDetails) = updateParams {
+            let updateParams = STPPaymentMethodUpdateParams(card: paymentMethodCardParams, billingDetails: billingDetails)
+            let hasOnlyChangedCardBrand = viewController.hasOnlyChangedCardBrand(originalPaymentMethod: paymentMethod,
+                                                                                 updatedPaymentMethodCardParams: paymentMethodCardParams,
+                                                                                 updatedBillingDetailsParams: billingDetails)
+            if case .failure(let error) = await updateCard(paymentMethod: paymentMethod,
+                                                           updateParams: updateParams,
+                                                           hasOnlyChangedCardBrand: hasOnlyChangedCardBrand) {
+                errors.append(error)
+            }
+        }
+
+        // Update default payment method if needed
+        if viewController.shouldSetAsDefault {
+            if case .failure(let error) = await updateDefault(paymentMethod: paymentMethod) {
+                errors.append(error)
+            }
+        }
+
+        guard errors.isEmpty else {
+            return .failure(errors)
+        }
+
         _ = viewController.bottomSheetController?.popContentViewController()
+        return .success
     }
 
-    private func replace(paymentMethod: STPPaymentMethod, with updatedPaymentMethod: STPPaymentMethod) {
+    private func updateCard(paymentMethod: STPPaymentMethod, updateParams: STPPaymentMethodUpdateParams, hasOnlyChangedCardBrand: Bool) async -> Result<Void, Error> {
+        do {
+            // Update the payment method
+            let updatedPaymentMethod = try await savedPaymentMethodManager.update(paymentMethod: paymentMethod, with: updateParams)
+
+            replace(paymentMethod: paymentMethod, with: updatedPaymentMethod)
+            return .success(())
+        } catch {
+            return hasOnlyChangedCardBrand ? .failure(NSError.stp_cardBrandNotUpdatedError()) : .failure(NSError.stp_genericErrorOccurredError())
+        }
+    }
+
+    private func updateDefault(paymentMethod: STPPaymentMethod) async -> Result<Void, Error> {
+        do {
+            let previousDefaultPaymentMethod = defaultPaymentMethod
+            _ = try await savedPaymentMethodManager.setAsDefaultPaymentMethod(defaultPaymentMethodId: paymentMethod.stripeId)
+            defaultPaymentMethod = paymentMethod
+            // we just set a new default, so we replace it to add the badge and select it
+            replace(paymentMethod: paymentMethod, with: paymentMethod, selectedState: .selected)
+            // if there was a previously selected payment method, replace it to deselect it and remove the badge if it was default
+            if let previousSelectedPaymentMethod, previousSelectedPaymentMethod != defaultPaymentMethod {
+                replace(paymentMethod: previousSelectedPaymentMethod, with: previousSelectedPaymentMethod, selectedState: .unselected)
+            }
+            // if there was a previous default payment method that wasn't previously selected, replace it to remove the badge
+            if let previousDefaultPaymentMethod, previousDefaultPaymentMethod != previousSelectedPaymentMethod {
+                replace(paymentMethod: previousDefaultPaymentMethod, with: previousDefaultPaymentMethod)
+            }
+            return .success(())
+        } catch {
+            return .failure(NSError.stp_defaultPaymentMethodNotUpdatedError())
+        }
+    }
+
+    func shouldCloseSheet(_: UpdatePaymentMethodViewController) {
+        complete(didTapToDismiss: true)
+    }
+
+    private func replace(paymentMethod: STPPaymentMethod, with updatedPaymentMethod: STPPaymentMethod, selectedState: SavedPaymentMethodRowButton.State? = nil) {
         guard let oldButton = paymentMethodRows.first(where: { $0.paymentMethod.stripeId == paymentMethod.stripeId }),
               let oldButtonModelIndex = paymentMethodRows.firstIndex(of: oldButton),
               let oldButtonViewIndex = stackView.arrangedSubviews.firstIndex(of: oldButton) else {
@@ -324,10 +463,14 @@ extension VerticalSavedPaymentMethodsViewController: UpdateCardViewControllerDel
         }
 
         // Create the new button
-        let newButton = SavedPaymentMethodRowButton(paymentMethod: updatedPaymentMethod, appearance: configuration.appearance)
+        let isDefaultPaymentMethod = isDefaultPaymentMethod(paymentMethodId: updatedPaymentMethod.stripeId)
+        let newButton = SavedPaymentMethodRowButton(paymentMethod: updatedPaymentMethod,
+                                                    appearance: configuration.appearance,
+                                                    showDefaultPMBadge: isDefaultPaymentMethod,
+                                                    previousSelectedState: selectedState ?? oldButton.previousSelectedState,
+                                                    currentState: oldButton.state)
+
         newButton.delegate = self
-        newButton.previousSelectedState = oldButton.previousSelectedState
-        newButton.state = oldButton.state
 
         // Replace the old button with the new button in the model
         paymentMethodRows[oldButtonModelIndex] = newButton

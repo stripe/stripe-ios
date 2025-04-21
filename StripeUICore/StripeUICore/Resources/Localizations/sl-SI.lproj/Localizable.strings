@@ -1,5 +1,7 @@
 "%@ (optional)" = "%@ (izbirno)";
 
+"(not accepted)" = "(ni sprejeto)";
+
 "Account number" = "Številka računa";
 
 "Address" = "Naslov";
@@ -83,8 +85,6 @@
 "Other" = "Drugo";
 
 "Parish" = "Župnija";
-
-"Phone" = "Telefon";
 
 "Phone number" = "Telefonska številka";
 

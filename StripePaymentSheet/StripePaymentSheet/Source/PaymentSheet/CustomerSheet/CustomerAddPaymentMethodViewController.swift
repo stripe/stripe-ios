@@ -35,7 +35,6 @@ class CustomerAddPaymentMethodViewController: UIViewController {
         let params = IntentConfirmParams(type: selectedPaymentMethodType)
         params.setDefaultBillingDetailsIfNecessary(for: configuration)
         if let params = paymentMethodFormElement.updateParams(params: params) {
-            params.setAllowRedisplayForCustomerSheet(savePaymentMethodConsentBehavior)
             return .new(confirmParams: params)
         }
         return nil
@@ -104,7 +103,11 @@ class CustomerAddPaymentMethodViewController: UIViewController {
     }()
     private lazy var paymentMethodTypesView: PaymentMethodTypeCollectionView = {
         let view = PaymentMethodTypeCollectionView(
-            paymentMethodTypes: paymentMethodTypes, appearance: configuration.appearance, delegate: self)
+            paymentMethodTypes: paymentMethodTypes,
+            appearance: configuration.appearance,
+            incentive: nil,
+            delegate: self
+        )
         return view
     }()
     private lazy var paymentMethodDetailsContainerView: DynamicHeightContainerView = {
@@ -147,6 +150,11 @@ class CustomerAddPaymentMethodViewController: UIViewController {
         STPAnalyticsClient.sharedClient.logCSAddPaymentMethodScreenPresented()
     }
 
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        sendEventToSubviews(.viewDidAppear, from: view)
+    }
+
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .systemBackground
@@ -177,7 +185,7 @@ class CustomerAddPaymentMethodViewController: UIViewController {
         guard let usBankAccountPaymentMethodElement = self.paymentMethodFormElement as? USBankAccountPaymentMethodElement else {
             return false
         }
-        let customerHasLinkedBankAccount = usBankAccountPaymentMethodElement.getLinkedBank() != nil
+        let customerHasLinkedBankAccount = usBankAccountPaymentMethodElement.linkedBank != nil
         return customerHasLinkedBankAccount
     }
 
@@ -233,17 +241,17 @@ class CustomerAddPaymentMethodViewController: UIViewController {
             paymentMethod: type,
             previousCustomerInput: nil,
             addressSpecProvider: .shared,
-            offerSaveToLinkWhenSupported: false,
+            showLinkInlineCardSignup: false,
             linkAccount: nil,
+            accountService: nil,
             cardBrandChoiceEligible: cbcEligible,
-            supportsLinkCard: false,
             isPaymentIntent: false,
             isSettingUp: true,
-            currency: nil,
-            amount: nil,
             countryCode: nil,
-            savePaymentMethodConsentBehavior: savePaymentMethodConsentBehavior)
-            .make()
+            savePaymentMethodConsentBehavior: savePaymentMethodConsentBehavior,
+            analyticsHelper: nil,
+            paymentMethodIncentive: nil
+        ).make()
         formElement.delegate = self
         return formElement
     }
@@ -277,7 +285,14 @@ extension CustomerAddPaymentMethodViewController {
             with: name,
             email: email
         )
-        let client = STPBankAccountCollector()
+        let bankAccountCollectorStyle: STPBankAccountCollectorUserInterfaceStyle = {
+            switch configuration.style {
+            case .automatic: return .automatic
+            case .alwaysLight: return .alwaysLight
+            case .alwaysDark: return .alwaysDark
+            }
+        }()
+        let client = STPBankAccountCollector(style: bankAccountCollectorStyle)
         let errorText = STPLocalizedString(
             "Something went wrong when linking your account.\nPlease try again later.",
             "Error message when an error case happens when linking your account"
@@ -303,7 +318,7 @@ extension CustomerAddPaymentMethodViewController {
                 break
             case .completed(let completedResult):
                 if case .financialConnections(let linkedBank) = completedResult {
-                    usBankAccountPaymentMethodElement.setLinkedBank(linkedBank)
+                    usBankAccountPaymentMethodElement.linkedBank = linkedBank
                 } else {
                     self.delegate?.updateErrorLabel(for: genericError)
                 }

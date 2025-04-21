@@ -10,6 +10,7 @@ import Foundation
 import UIKit
 
 final class InstitutionCellView: UIView {
+    private let appearance: FinancialConnectionsAppearance
 
     private lazy var horizontalStackView: UIStackView = {
         let horizontalStackView = UIStackView()
@@ -38,21 +39,21 @@ final class InstitutionCellView: UIView {
     private lazy var titleLabel: AttributedLabel = {
         let titleLabel = AttributedLabel(
             font: .label(.largeEmphasized),
-            textColor: .textDefault
+            textColor: FinancialConnectionsAppearance.Colors.textDefault
         )
         return titleLabel
     }()
     private lazy var subtitleLabel: AttributedLabel = {
         let subtitleLabel = AttributedLabel(
             font: .label(.medium),
-            textColor: .textSubdued
+            textColor: FinancialConnectionsAppearance.Colors.textSubdued
         )
         return subtitleLabel
     }()
     private var iconView: UIView?
     private lazy var loadingView: ActivityIndicator = {
         let activityIndicator = ActivityIndicator(size: .medium)
-        activityIndicator.color = .iconActionPrimary
+        activityIndicator.color = appearance.colors.spinner
         activityIndicator.startAnimating()
 
         // re-size `ActivityIndicator` to a size we desire
@@ -72,8 +73,9 @@ final class InstitutionCellView: UIView {
         return activityIndicator
     }()
 
-    override init(frame: CGRect) {
-        super.init(frame: frame)
+    init(appearance: FinancialConnectionsAppearance) {
+        self.appearance = appearance
+        super.init(frame: .zero)
         backgroundColor = .clear
         addAndPinSubview(horizontalStackView)
     }

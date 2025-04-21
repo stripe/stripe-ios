@@ -13,6 +13,8 @@
 # Uncomment the line if you want fastlane to automatically update itself
 # update_fastlane
 
+require 'yaml'
+
 default_platform(:ios)
 
 DEFAULT_TEST_DEVICE = 'iPhone 12 mini'.freeze
@@ -41,7 +43,6 @@ platform :ios do
   lane :build_extras do
     Dir.chdir('..') do
       sh('rm -rf build-ci-tests')
-      sh("./ci_scripts/test.rb --build-only --scheme 'Basic Integration'")
       sh("./ci_scripts/test.rb --build-only --scheme 'CardImageVerification Example'")
       sh("./ci_scripts/test.rb --build-only --scheme 'UI Examples'")
       sh("./ci_scripts/test.rb --build-only --scheme 'Non-Card Payment Examples'")
@@ -66,6 +67,12 @@ platform :ios do
     end
   end
 
+  lane :stripeconnect_tests do
+    Dir.chdir('..') do
+      sh("./ci_scripts/test.rb --scheme StripeConnect --device '#{DEFAULT_TEST_DEVICE}' --version #{DEFAULT_TEST_VERSION} --retry-on-failure")
+    end
+  end
+
   lane :integration_all do
     Dir.chdir('..') do
       sh("./ci_scripts/test.rb --scheme 'IntegrationTester' --device '#{DEFAULT_TEST_DEVICE}' --version #{DEFAULT_TEST_VERSION} --retry-on-failure")
@@ -74,7 +81,11 @@ platform :ios do
 
   private_lane :legacy_tests do |options|
     # TODO(bmelts): would be nice to read these from modules.yaml
-    schemes = %w[StripeiOS StripePayments StripePaymentsUI StripePaymentSheet StripeCameraCore StripeCore StripeUICore StripeApplePay StripeCardScan]
+    schemes = %w[StripeiOS StripePayments StripePaymentsUI StripePaymentSheet StripeCameraCore StripeCore StripeUICore
+                 StripeApplePay StripeCardScan]
+
+    schemes << 'StripeConnect' if Gem::Version.new(options[:version]) >= Gem::Version.new('15.0')
+
     Dir.chdir('..') do
       schemes.each do |scheme|
         sh("./ci_scripts/test.rb --scheme '#{scheme}' --device '#{options[:device]}' --version #{options[:version]} --skip-snapshot-tests --retry-on-failure")
@@ -118,7 +129,13 @@ platform :ios do
 
   lane :size_report do
     Dir.chdir('..') do
-      sh("bundle exec ruby Tests/installation_tests/size_test/size_report.rb #{ENV['BITRISE_GIT_BRANCH']} master")
+      # Get the merge base between the current branch and master
+      merge_base = sh("git merge-base origin/master HEAD").strip
+  
+      # Run size_report.rb
+      sh("bundle exec ruby Tests/installation_tests/size_test/size_report.rb #{ENV['BITRISE_GIT_BRANCH']} #{merge_base}")
+  
+      # Run `emerge` too if we can for PRs
       unless ENV['EMERGE_API_TOKEN'].nil?
         archive_path = Dir.pwd + '/build/size_tests/'
         arguments = { repo_name: "#{ENV['BITRISEIO_GIT_REPOSITORY_OWNER']}/#{ENV['BITRISEIO_GIT_REPOSITORY_SLUG']}",
@@ -126,18 +143,19 @@ platform :ios do
                       tag: 'release' }
         unless ENV['BITRISE_PULL_REQUEST'].nil?
           arguments[:pr_number] = ENV['BITRISE_PULL_REQUEST']
-          arguments[:base_sha] = `git rev-parse master`.to_s
+          arguments[:base_sha] = merge_base
         end
-        emerge(file_path: archive_path + 'Stripe.xcarchive', **arguments)
-        emerge(file_path: archive_path + 'StripeApplePay.xcarchive', **arguments)
-        emerge(file_path: archive_path + 'StripeFinancialConnections.xcarchive', **arguments)
-        emerge(file_path: archive_path + 'StripeIdentity.xcarchive', **arguments)
-        emerge(file_path: archive_path + 'StripePayments.xcarchive', **arguments)
-        emerge(file_path: archive_path + 'StripePaymentsUI.xcarchive', **arguments)
-        emerge(file_path: archive_path + 'StripePaymentSheet.xcarchive', **arguments)
+  
+        modules = YAML.load_file('modules.yaml')['modules'].select { |m| m.key?('size_report') }
+  
+        modules.each do |m|
+          sdk = m['framework_name']
+          emerge(file_path: archive_path + sdk + '.xcarchive', **arguments)
+        end
       end
     end
   end
+
 
   lane :installation_cocoapods_without_frameworks_objc do
     Dir.chdir('..') do

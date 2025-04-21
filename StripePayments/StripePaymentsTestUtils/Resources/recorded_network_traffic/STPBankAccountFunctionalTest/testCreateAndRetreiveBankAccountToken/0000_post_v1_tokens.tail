@@ -1,0 +1,53 @@
+POST
+https:\/\/api\.stripe\.com\/v1\/tokens$
+200
+application/json
+access-control-allow-methods: GET,HEAD,PUT,PATCH,POST,DELETE
+content-security-policy: report-uri https://q.stripe.com/csp-report?p=v1%2Ftokens; block-all-mixed-content; default-src 'none'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'
+Server: nginx
+Cache-Control: no-cache, no-store
+reporting-endpoints: coop="https://q.stripe.com/coop-report?s=payins-bapi-srv"
+Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
+cross-origin-opener-policy-report-only: same-origin; report-to="coop"
+Access-Control-Allow-Origin: *
+stripe-should-retry: false
+x-stripe-priority-routing-enabled: true
+report-to: {"group":"coop","max_age":8640,"endpoints":[{"url":"https://q.stripe.com/coop-report?s=payins-bapi-srv"}],"include_subdomains":true}
+request-id: req_3L1cAonXXthoxa
+x-stripe-routing-context-priority-tier: api-testmode
+Content-Length: 568
+Vary: Origin
+Date: Wed, 31 Jul 2024 02:09:26 GMT
+original-request: req_3L1cAonXXthoxa
+stripe-version: 2020-08-27
+idempotency-key: 46b800e0-31b3-48c2-80e6-5e9681d2d4ca
+access-control-expose-headers: Request-Id, Stripe-Manage-Version, Stripe-Should-Retry, X-Stripe-External-Auth-Required, X-Stripe-Privileged-Session-Required
+access-control-max-age: 300
+access-control-allow-credentials: true
+Content-Type: application/json
+x-content-type-options: nosniff
+X-Stripe-Mock-Request: bank_account\[account_holder_name]=Jimmy%20bob&bank_account\[account_holder_type]=company&bank_account\[account_number]=000123456789&bank_account\[country]=US&bank_account\[routing_number]=110000000&guid=.*&muid=.*&payment_user_agent=.*&sid=.*
+
+{
+  "object" : "token",
+  "id" : "btok_1PiRykFY0qyl6XeWKFxflQEK",
+  "livemode" : false,
+  "client_ip" : "136.24.137.206",
+  "created" : 1722391766,
+  "used" : false,
+  "type" : "bank_account",
+  "bank_account" : {
+    "id" : "ba_1PiRykFY0qyl6XeWpKMcU7W1",
+    "account_holder_type" : "company",
+    "last4" : "6789",
+    "bank_name" : "STRIPE TEST BANK",
+    "account_type" : null,
+    "status" : "new",
+    "account_holder_name" : "Jimmy bob",
+    "routing_number" : "110000000",
+    "object" : "bank_account",
+    "country" : "US",
+    "currency" : "usd",
+    "name" : "Jimmy bob"
+  }
+}

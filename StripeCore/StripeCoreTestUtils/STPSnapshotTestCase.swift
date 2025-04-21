@@ -38,6 +38,9 @@ open class STPSnapshotTestCase: FBSnapshotTestCase {
         if let autoSizingHeightForWidth {
             view.autosizeHeight(width: autoSizingHeightForWidth)
         }
+        if view.hasAmbiguousLayout {
+            XCTFail("Snapshot test failed: \(view.debugDescription) has ambiguous layout. \nHorizontal: \(view.constraintsAffectingLayout(for: .horizontal)) \nVertical: \(view.constraintsAffectingLayout(for: .vertical))", file: file, line: line)
+        }
         FBSnapshotVerifyView(
             view,
             identifier: identifier,

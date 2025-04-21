@@ -4,16 +4,17 @@
 //
 
 import Foundation
+import UIKit
 
 @_spi(STP) import StripePayments
 
 enum PaymentSheetFormFactoryConfig {
-    case paymentSheet(PaymentSheet.Configuration)
+    case paymentElement(PaymentElementConfiguration)
     case customerSheet(CustomerSheet.Configuration)
 
     var hasCustomer: Bool {
         switch self {
-        case .paymentSheet(let config):
+        case .paymentElement(let config):
             return config.customer != nil
         case .customerSheet:
             return true
@@ -21,7 +22,7 @@ enum PaymentSheetFormFactoryConfig {
     }
     var merchantDisplayName: String {
         switch self {
-        case .paymentSheet(let config):
+        case .paymentElement(let config):
             return config.merchantDisplayName
         case .customerSheet(let config):
             return config.merchantDisplayName
@@ -29,7 +30,7 @@ enum PaymentSheetFormFactoryConfig {
     }
     var overrideCountry: String? {
         switch self {
-        case .paymentSheet(let config):
+        case .paymentElement(let config):
             return config.userOverrideCountry
         case .customerSheet:
             return nil
@@ -37,7 +38,7 @@ enum PaymentSheetFormFactoryConfig {
     }
     var billingDetailsCollectionConfiguration: PaymentSheet.BillingDetailsCollectionConfiguration {
         switch self {
-        case .paymentSheet(let config):
+        case .paymentElement(let config):
             return config.billingDetailsCollectionConfiguration
         case .customerSheet(let config):
             return config.billingDetailsCollectionConfiguration
@@ -45,7 +46,7 @@ enum PaymentSheetFormFactoryConfig {
     }
     var appearance: PaymentSheet.Appearance {
         switch self {
-        case .paymentSheet(let config):
+        case .paymentElement(let config):
             return config.appearance
         case .customerSheet(let config):
             return config.appearance
@@ -53,7 +54,7 @@ enum PaymentSheetFormFactoryConfig {
     }
     var defaultBillingDetails: PaymentSheet.BillingDetails {
         switch self {
-        case .paymentSheet(let config):
+        case .paymentElement(let config):
             return config.defaultBillingDetails
         case .customerSheet(let config):
             return config.defaultBillingDetails
@@ -61,7 +62,7 @@ enum PaymentSheetFormFactoryConfig {
     }
     var shippingDetails: () -> AddressViewController.AddressDetails? {
         switch self {
-        case .paymentSheet(let config):
+        case .paymentElement(let config):
             return config.shippingDetails
         case .customerSheet:
             return { return nil }
@@ -69,7 +70,7 @@ enum PaymentSheetFormFactoryConfig {
     }
     var savePaymentMethodOptInBehavior: PaymentSheet.SavePaymentMethodOptInBehavior {
         switch self {
-        case .paymentSheet(let config):
+        case .paymentElement(let config):
             return config.savePaymentMethodOptInBehavior
         case .customerSheet:
             return .automatic
@@ -78,7 +79,7 @@ enum PaymentSheetFormFactoryConfig {
 
     var preferredNetworks: [STPCardBrand]? {
         switch self {
-        case .paymentSheet(let config):
+        case .paymentElement(let config):
             return config.preferredNetworks
         case .customerSheet(let config):
             return config.preferredNetworks
@@ -87,10 +88,43 @@ enum PaymentSheetFormFactoryConfig {
 
     var isUsingBillingAddressCollection: Bool {
         switch self {
-        case .paymentSheet(let config):
+        case .paymentElement(let config):
             return config.requiresBillingDetailCollection()
         case .customerSheet(let config):
             return config.isUsingBillingAddressCollection()
         }
     }
+
+    var cardBrandFilter: CardBrandFilter {
+        switch self {
+        case .paymentElement(let config):
+            return config.cardBrandFilter
+        case .customerSheet(let config):
+            return config.cardBrandFilter
+        }
+    }
+
+    var linkPaymentMethodsOnly: Bool {
+        switch self {
+        case .paymentElement(let config):
+            return config.linkPaymentMethodsOnly
+        case .customerSheet:
+            return false
+        }
+    }
+
+    var isHorizontalMode: Bool {
+        switch self {
+        case .paymentElement(let paymentElementConfiguration):
+            switch paymentElementConfiguration.paymentMethodLayout {
+            case .horizontal:
+                return true
+            case .vertical, .automatic:
+                return false
+            }
+        case .customerSheet:
+            return true
+        }
+    }
+
 }

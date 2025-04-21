@@ -13,9 +13,10 @@ import XCTest
 import StripeCoreTestUtils
 @testable@_spi(STP) import StripePayments
 @testable@_spi(STP) import StripePaymentSheet
+import StripePaymentsTestUtils
 @testable@_spi(STP) import StripePaymentsUI
 
-class STPPaymentMethodOptionsTest: XCTestCase {
+class STPPaymentMethodOptionsTest: STPNetworkStubbingTestCase {
 
     func testUSBankAccountOptions_PaymentIntent() {
         let client = STPAPIClient(publishableKey: STPTestingDefaultPublishableKey)

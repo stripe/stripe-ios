@@ -25,10 +25,11 @@ extension PaymentSheetFormFactory {
         let element = CheckboxElement(
             theme: configuration.appearance.asElementsTheme,
             label: mandateText,
-            isSelectedByDefault: false
+            // If the previous customer input is non-nil, it means the customer checked the box (see 🍞)
+            isSelectedByDefault: previousCustomerInput != nil
         )
         return PaymentMethodElementWrapper(element) { checkbox, params in
-            // Only return params if the mandate has been accepted
+            // 🍞 Only return params if the mandate has been accepted
             return checkbox.isSelected ? params : nil
         }
     }

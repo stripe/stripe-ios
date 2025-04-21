@@ -13,10 +13,11 @@ import UIKit
 class ConsentFooterView: HitTestView {
 
     private let agreeButtonText: String
+    private let appearance: FinancialConnectionsAppearance
     private let didSelectAgree: () -> Void
 
     private lazy var agreeButton: StripeUICore.Button = {
-        let agreeButton = Button.primary()
+        let agreeButton = Button.primary(appearance: appearance)
         agreeButton.title = agreeButtonText
         agreeButton.addTarget(self, action: #selector(didSelectAgreeButton), for: .touchUpInside)
         agreeButton.translatesAutoresizingMaskIntoConstraints = false
@@ -31,20 +32,22 @@ class ConsentFooterView: HitTestView {
         aboveCtaText: String,
         ctaText: String,
         belowCtaText: String?,
+        appearance: FinancialConnectionsAppearance,
         didSelectAgree: @escaping () -> Void,
         didSelectURL: @escaping (URL) -> Void
     ) {
         self.agreeButtonText = ctaText
+        self.appearance = appearance
         self.didSelectAgree = didSelectAgree
         super.init(frame: .zero)
-        backgroundColor = .customBackgroundColor
+        backgroundColor = FinancialConnectionsAppearance.Colors.background
 
         let termsAndPrivacyPolicyLabel = AttributedTextView(
             font: .label(.small),
             boldFont: .label(.smallEmphasized),
             linkFont: .label(.small),
-            textColor: .textDefault,
-            alignCenter: true
+            textColor: FinancialConnectionsAppearance.Colors.textDefault,
+            alignment: .center
         )
         termsAndPrivacyPolicyLabel.setText(
             aboveCtaText,
@@ -72,8 +75,8 @@ class ConsentFooterView: HitTestView {
                 font: .label(.small),
                 boldFont: .label(.smallEmphasized),
                 linkFont: .label(.small),
-                textColor: .textDefault,
-                alignCenter: true
+                textColor: FinancialConnectionsAppearance.Colors.textDefault,
+                alignment: .center
             )
             manuallyVerifyLabel.setText(
                 belowCtaText,
@@ -112,6 +115,7 @@ private struct ConsentFooterViewUIViewRepresentable: UIViewRepresentable {
                 "You agree to Stripe's [Terms](https://stripe.com/legal/end-users#linked-financial-account-terms) and [Privacy Policy](https://stripe.com/privacy). [Learn more](https://stripe.com/privacy-center/legal#linking-financial-accounts)",
             ctaText: "Agree",
             belowCtaText: "[Manually verify instead](https://www.stripe.com) (takes 1-2 business days)",
+            appearance: .stripe,
             didSelectAgree: {},
             didSelectURL: { _ in }
         )

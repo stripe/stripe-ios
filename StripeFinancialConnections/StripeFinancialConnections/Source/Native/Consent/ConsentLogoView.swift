@@ -15,6 +15,7 @@ private let ellipsisViewWidth: CGFloat = 32.0
 final class ConsentLogoView: UIView {
 
     private var multipleDotView: UIView?
+    private var shadowLayers: [CALayer] = []
 
     init(merchantLogo: [String], showsAnimatedDots: Bool) {
         super.init(frame: .zero)
@@ -25,9 +26,9 @@ final class ConsentLogoView: UIView {
         if merchantLogo.count == 2 || merchantLogo.count == 3 {
             for i in 0..<merchantLogo.count {
                 let urlString = merchantLogo[i]
-                horizontalStackView.addArrangedSubview(
-                    CreateRoundedLogoView(urlString: urlString)
-                )
+                let logoView = CreateRoundedLogoView(urlString: urlString)
+                self.shadowLayers.append(logoView.layer)
+                horizontalStackView.addArrangedSubview(logoView)
 
                 let isLastLogo = (i == merchantLogo.count - 1)
                 if !isLastLogo, showsAnimatedDots {
@@ -93,29 +94,16 @@ final class ConsentLogoView: UIView {
             }
         )
     }
-}
 
-private func CreateRoundedLogoView(urlString: String) -> UIView {
-    let cornerRadius: CGFloat = 16.0
-    let shadowContainerView = UIView()
-    shadowContainerView.layer.shadowColor = UIColor.black.cgColor
-    shadowContainerView.layer.shadowOpacity = 0.18
-    shadowContainerView.layer.shadowOffset = CGSize(width: 0, height: 3)
-    shadowContainerView.layer.shadowRadius = 5
-    shadowContainerView.layer.cornerRadius = cornerRadius
-    let radius: CGFloat = 72.0
-    let imageView = UIImageView()
-    imageView.contentMode = .scaleAspectFill
-    imageView.clipsToBounds = true
-    imageView.layer.cornerRadius = cornerRadius
-    imageView.setImage(with: urlString)
-    imageView.translatesAutoresizingMaskIntoConstraints = false
-    NSLayoutConstraint.activate([
-        imageView.widthAnchor.constraint(equalToConstant: radius),
-        imageView.heightAnchor.constraint(equalToConstant: radius),
-    ])
-    shadowContainerView.addAndPinSubview(imageView)
-    return shadowContainerView
+    // CGColor's need to be manually updated when the system theme changes.
+    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+        super.traitCollectionDidChange(previousTraitCollection)
+        guard traitCollection.hasDifferentColorAppearance(comparedTo: previousTraitCollection) else { return }
+
+        for shadow in shadowLayers {
+            shadow.shadowColor = FinancialConnectionsAppearance.Colors.shadow.cgColor
+        }
+    }
 }
 
 private func CreateEllipsisView(

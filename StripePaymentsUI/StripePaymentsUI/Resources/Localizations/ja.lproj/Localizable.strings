@@ -2,6 +2,8 @@
 
 "%1$@ ending in %2$@" = "末尾が %2$@ の %1$@";
 
+"%1$@ is not accepted" = "%1$@ は受け付けられていません";
+
 "Address line 2 (optional)" = "住所 (2 行目、省略可)";
 
 "Apple Pay" = "Apple Pay";
@@ -10,13 +12,9 @@
 
 "Bank Account" = "銀行口座";
 
-"Billing Address" = "請求先住所";
-
 "Billing address" = "請求先住所";
 
 "CVC" = "セキュリティコード";
-
-"CVV" = "CVV";
 
 "Card information" = "カード情報";
 
@@ -38,9 +36,13 @@
 
 "The BSB you entered is invalid." = "入力した BSB コードが無効です。";
 
+"The selected brand is not allowed" = "選択したブランドは許可されていません";
+
 "To scan your card, allow camera access in Settings." = "カードをスキャンするには、設定でカメラへのアクセスを許可してください。";
 
 "Your ZIP is invalid." = "郵便番号が無効です。";
+
+"Your card has expired." = "カードの有効期限が切れています。";
 
 "Your card number is incomplete." = "カード番号に不備があります。";
 

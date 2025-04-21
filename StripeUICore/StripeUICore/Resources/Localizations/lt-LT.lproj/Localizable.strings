@@ -1,5 +1,7 @@
 "%@ (optional)" = "%@ (pasirenkamas)";
 
+"(not accepted)" = "(nepriimama)";
+
 "Account number" = "Sąskaitos numeris";
 
 "Address" = "Adresas";
@@ -83,8 +85,6 @@
 "Other" = "Kita";
 
 "Parish" = "Parapija";
-
-"Phone" = "Telefonas";
 
 "Phone number" = "Telefono numeris";
 

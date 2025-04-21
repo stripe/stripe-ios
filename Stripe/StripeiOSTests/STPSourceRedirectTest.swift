@@ -95,6 +95,6 @@ class STPSourceRedirectTest: XCTestCase {
         XCTAssertEqual(redirect?.status, STPSourceRedirectStatus.pending)
         XCTAssertEqual(redirect?.url, URL(string: "https://hooks.stripe.com/redirect/authenticate/src_19YlvWAHEMiOZZp1QQlOD79v?client_secret=src_client_secret_kBwCSm6Xz5MQETiJ43hUH8qv"))
 
-        XCTAssertEqual(redirect?.allResponseFields as! NSDictionary, response as! NSDictionary)
+        XCTAssertEqual(redirect!.allResponseFields as NSDictionary, response! as NSDictionary)
     }
 }

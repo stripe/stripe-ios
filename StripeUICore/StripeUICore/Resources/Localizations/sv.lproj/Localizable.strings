@@ -1,5 +1,7 @@
 "%@ (optional)" = "%@ (valfritt)";
 
+"(not accepted)" = "(accepteras inte)";
+
 "Account number" = "Kontonummer";
 
 "Address" = "Adress";
@@ -83,8 +85,6 @@
 "Other" = "Annan";
 
 "Parish" = "Parish";
-
-"Phone" = "Telefonnummer";
 
 "Phone number" = "Telefonnummer";
 

@@ -13,7 +13,7 @@ final class InstitutionTableLoadingView: UIView {
 
     init() {
         super.init(frame: UIScreen.main.bounds)
-        backgroundColor = .customBackgroundColor
+        backgroundColor = FinancialConnectionsAppearance.Colors.background
         let verticalStackView = UIStackView(
             arrangedSubviews: (0..<10).map({ _ in
                 ShimmeringInstitutionRowView()
@@ -69,7 +69,7 @@ private class ShimmeringInstitutionRowView: ShimmeringView {
 
 private func CreateRowIconView() -> UIView {
     let iconView = UIView()
-    iconView.backgroundColor = .backgroundOffset
+    iconView.backgroundColor = FinancialConnectionsAppearance.Colors.backgroundSecondary
     iconView.layer.cornerRadius = 12
     iconView.translatesAutoresizingMaskIntoConstraints = false
     NSLayoutConstraint.activate([
@@ -94,7 +94,7 @@ private func CreateRowMultipleLabelView() -> UIView {
 
 private func CreateLabelView(width: CGFloat) -> UIView {
     let labelView = UIView()
-    labelView.backgroundColor = .backgroundOffset
+    labelView.backgroundColor = FinancialConnectionsAppearance.Colors.backgroundSecondary
     labelView.layer.cornerRadius = 8
     labelView.translatesAutoresizingMaskIntoConstraints = false
     NSLayoutConstraint.activate([

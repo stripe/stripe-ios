@@ -1,0 +1,55 @@
+POST
+https:\/\/api\.stripe\.com\/v1\/payment_methods$
+200
+application/json
+access-control-allow-methods: GET,HEAD,PUT,PATCH,POST,DELETE
+content-security-policy: report-uri https://q.stripe.com/csp-report?p=v1%2Fpayment_methods; block-all-mixed-content; default-src 'none'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'
+Server: nginx
+Cache-Control: no-cache, no-store
+reporting-endpoints: coop="https://q.stripe.com/coop-report?s=payins-bapi-srv"
+Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
+cross-origin-opener-policy-report-only: same-origin; report-to="coop"
+Access-Control-Allow-Origin: *
+stripe-should-retry: false
+x-stripe-priority-routing-enabled: true
+report-to: {"group":"coop","max_age":8640,"endpoints":[{"url":"https://q.stripe.com/coop-report?s=payins-bapi-srv"}],"include_subdomains":true}
+request-id: req_GxWud5BRqsv268
+x-stripe-routing-context-priority-tier: api-testmode
+Content-Length: 471
+Vary: Origin
+Date: Wed, 31 Jul 2024 02:10:53 GMT
+original-request: req_GxWud5BRqsv268
+stripe-version: 2020-08-27
+idempotency-key: b6e9cd0a-760c-48aa-9859-5f0fba66d1ab
+access-control-expose-headers: Request-Id, Stripe-Manage-Version, Stripe-Should-Retry, X-Stripe-External-Auth-Required, X-Stripe-Privileged-Session-Required
+access-control-max-age: 300
+access-control-allow-credentials: true
+Content-Type: application/json
+x-content-type-options: nosniff
+X-Stripe-Mock-Request: allow_redisplay=unspecified&billing_details\[name]=Jenny%20Rosen&metadata\[test_key]=test_value&payment_user_agent=.*&type=eps
+
+{
+  "object" : "payment_method",
+  "id" : "pm_1PiS08FY0qyl6XeWtPPzKtig",
+  "billing_details" : {
+    "email" : null,
+    "phone" : null,
+    "name" : "Jenny Rosen",
+    "address" : {
+      "state" : null,
+      "country" : null,
+      "line2" : null,
+      "city" : null,
+      "line1" : null,
+      "postal_code" : null
+    }
+  },
+  "eps" : {
+    "bank" : null
+  },
+  "livemode" : false,
+  "created" : 1722391852,
+  "allow_redisplay" : "unspecified",
+  "type" : "eps",
+  "customer" : null
+}

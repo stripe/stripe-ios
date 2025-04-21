@@ -2,6 +2,8 @@
 
 "%1$@ ending in %2$@" = "%1$@ ending in %2$@";
 
+"%1$@ is not accepted" = "%1$@ is not accepted";
+
 "Address line 2 (optional)" = "Address line 2 (optional)";
 
 "Apple Pay" = "Apple Pay";
@@ -10,13 +12,9 @@
 
 "Bank Account" = "Bank Account";
 
-"Billing Address" = "Billing Address";
-
 "Billing address" = "Billing address";
 
 "CVC" = "CVC";
-
-"CVV" = "CVV";
 
 "Card information" = "Card information";
 
@@ -38,9 +36,13 @@
 
 "The BSB you entered is invalid." = "The BSB you entered is invalid.";
 
+"The selected brand is not allowed" = "The selected brand is not allowed";
+
 "To scan your card, allow camera access in Settings." = "To scan your card, allow camera access in Settings.";
 
 "Your ZIP is invalid." = "Your ZIP is invalid.";
+
+"Your card has expired." = "Your card has expired.";
 
 "Your card number is incomplete." = "Your card number is incomplete.";
 

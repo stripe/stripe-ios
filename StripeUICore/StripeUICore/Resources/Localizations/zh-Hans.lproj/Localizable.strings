@@ -1,5 +1,7 @@
 "%@ (optional)" = "%@（可选）";
 
+"(not accepted)" = "（未接受）";
+
 "Account number" = "账号";
 
 "Address" = "地址";
@@ -83,8 +85,6 @@
 "Other" = "其他";
 
 "Parish" = "堂区";
-
-"Phone" = "电话";
 
 "Phone number" = "手机号码";
 

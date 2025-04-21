@@ -22,7 +22,7 @@ import UIKit
             let stack = StackViewWithSeparator(arrangedSubviews: viewModel.elements)
             self.stackView = stack
             stack.drawBorder = true
-            stack.customBackgroundColor = viewModel.theme.colors.background
+            stack.customBackgroundColor = viewModel.theme.colors.componentBackground
             stack.separatorColor = viewModel.theme.colors.divider
             stack.borderColor = viewModel.theme.colors.border
             stack.borderCornerRadius = viewModel.theme.cornerRadius

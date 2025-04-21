@@ -1,7 +1,5 @@
 "%1$@ •••• %2$@" = "%1$@ •••• %2$@";
 
-"%1$d interest-free payments of %2$@" = "%1$li%2$@회 무이자 결제";
-
 "+ Add" = "+ 추가";
 
 "Add US bank account" = "미국 은행 계좌 추가";
@@ -9,6 +7,8 @@
 "Add a card" = "카드 추가";
 
 "Add a payment method" = "결제 방식 추가";
+
+"Add bank account" = "은행 계좌 추가";
 
 "Add card" = "카드 추가";
 
@@ -18,11 +18,29 @@
 
 "Add your payment information" = "결제 정보를 추가하세요.";
 
+"Agree and continue" = "동의하고 계속";
+
 "Approve payment" = "결제 승인";
+
+"Are you sure you want to remove this card?" = "이 카드를 삭제하시겠습니까?";
+
+"Are you sure you want to remove this linked account?" = "연결된 해당 계좌를 삭제하시겠습니까?";
 
 "Back" = "뒤로";
 
+"Bank" = "은행";
+
 "Bank account" = "은행 계좌";
+
+"Bank account details cannot be changed." = "은행 계좌 세부사항은 설정되면 변경할 수 없습니다.";
+
+"Buy now or pay later with  <img/>" = "<img/>(으)로 지금 구매하거나 나중에 결제";
+
+"Buy now or pay later with Afterpay" = "지금 구매하거나 Afterpay로 나중에 결제";
+
+"Buy now or pay later with Cash App Afterpay" = "지금 구매하거나 Cash App Afterpay로 나중에 결제";
+
+"Buy now or pay later with Clearpay" = "지금 구매하거나 Clearpay로 나중에 결제";
 
 "Buy now or pay later with Klarna" = "지금 구매하거나 Klarna로 나중에 결제";
 
@@ -38,11 +56,15 @@
 
 "By continuing to Revolut Pay, you allow %@ to charge your Revolut Pay account for future payments in accordance with their terms." = "Revolut Pay를 계속 사용하면 %@에서 해당 회사의 약관에 따라 향후 결제에 대해 Revolut Pay 계정에 대금을 청구할 수 있습니다.";
 
+"By continuing you agree to the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "계속하면 <terms>약관</terms>과 <privacy>개인정보정책</privacy>에 동의하는 것입니다.";
+
 "By continuing, you agree to authorize payments pursuant to <terms>these terms</terms>." = "계속하면 <terms>해당 약관</terms>에 따라 결제를 승인하는 데 동의하는 것입니다.";
 
 "By continuing, you authorize %@ to debit your Cash App account for this payment and future payments in accordance with %@'s terms, until this authorization is revoked. You can change this anytime in your Cash App Settings." = "계속하면 이 승인이 취소될 때까지 %2$@의 약관에 따라 이 결제 및 향후 결제에 대해 %1$@이(가) Cash App 계좌에서 인출하도록 승인하는 것입니다. 이는 Cash App 설정에서 언제든지 변경할 수 있습니다.";
 
 "By joining Link, you agree to the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Link에 참여하면 <terms>약관</terms> 및 <privacy>개인정보정책</privacy>에 동의하는 것입니다.";
+
+"By providing your card information, you allow %@ to charge your card for future payments in accordance with their terms." = "카드 정보를 제공하면 %@에서 향후 결제에 대해 해당 약관에 따라 귀하의 카드에 대금을 청구할 수 있습니다.";
 
 "By providing your email, you agree to create a Link account and save your payment info to Link, according to the Link <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Link의 <terms>약관</terms> 및 <privacy>개인정보처리방침</privacy>에 따라, 이메일을 제공하면 Link 계정을 생성하고 Link에 결제 정보를 저장하게 됩니다.";
 
@@ -56,11 +78,23 @@
 
 "Cancel and pay another way" = "취소 및 다른 방법으로 결제";
 
+"Card details cannot be changed." = "카드 세부사항은 설정되면 변경할 수 없습니다.";
+
+"Change" = "변경";
+
+"Change email" = "이메일 변경";
+
 "Choose a payment method" = "결제 방식 선택";
 
 "Close card scanner" = "카드 스캐너 닫기";
 
+"Code sent" = "코드 전송 완료";
+
 "Confirm" = "확인";
+
+"Confirm it's you" = "본인 확인";
+
+"Confirm payment details" = "결제 세부사항 확인";
 
 "Confirm the payment in your bank or payment app within %@ to complete the purchase." = "%@ 이내에 은행 또는 결제 앱에서 결제를 확인하여 구매를 완료하십시오.";
 
@@ -68,19 +102,43 @@
 
 "Confirm your CVC" = "CVC 확인";
 
-"Confirm your CVV" = "CVV 확인";
-
 "Contact information" = "연락처 정보";
+
+"Default" = "기본값";
+
+"Default payment method" = "기본 결제 방식";
 
 "EPS Bank" = "EPS 은행";
 
 "Enter address manually" = "주소 직접 입력";
 
+"Enter the code sent to %@ to use your saved information." = "저장된 정보를 사용하려면 %@(으)로 보낸 코드를 입력하십시오.";
+
 "FPX Bank" = "FPX 은행";
+
+"Failed to connect" = "연결 실패";
+
+"Fast, secure, 1⁠-⁠click checkout" = "빠른 보안 원클릭 체크아웃";
+
+"For security, please re-enter your card’s security code." = "보안을 위해 카드의 보안 코드를 다시 입력하십시오.";
+
+"Get %@ back when you pay for the first time with your bank. <terms>See terms</terms>" = "은행으로 처음 결제할 때 %@의 금액을 돌려받으십시오. <terms>약관 참조</terms>";
+
+"Get %@ back when you pay with your bank. <terms>See terms</terms>" = "은행으로 결제할 때 %@의 금액을 돌려받으십시오. <terms>약관 참조</terms>";
 
 "I understand that Stripe will be collecting Direct Debits on behalf of %@ and confirm that I am the account holder and the only person required to authorise debits from this account." = "%@ 님을 대신하여 Stripe에서 자동 이체를 받는 데 동의하며, 본인이 계좌의 소유자이자 이 계좌에서 인출을 승인해야 하는 유일한 사람임을 확인합니다.";
 
 "IBAN" = "IBAN";
+
+"Log out of Link" = "Link 로그아웃";
+
+"Manage SEPA debit" = "SEPA 자동 이체 관리";
+
+"Manage US bank account" = "미국 은행 계좌 관리";
+
+"Manage card" = "카드 관리";
+
+"Manage cards" = "카드 관리";
 
 "Manage payment method" = "결제 방식 관리";
 
@@ -93,6 +151,12 @@
 "New card" = "새 카드";
 
 "New payment method" = "새 결제 방식";
+
+"No %@ promo" = "%@ 프로모션 없음";
+
+"Not %@?" = "%@ 님이 아니십니까?";
+
+"Only card brand can be changed." = "카드 브랜드만 변경할 수 있습니다.";
 
 "Open your UPI app to approve your payment within %@" = "결제를 승인하려면 %@ 안에 UPI 앱을 여십시오.";
 
@@ -112,15 +176,21 @@
 
 "Pay faster at %@ and thousands of businesses." = "%@사를 비롯하여 수많은 비즈니스에서 더 빠르게 결제할 수 있습니다.";
 
-"Pay in <num_installments/> interest-free payments of <installment_price/> with <img/>" = "<img/>로 <installment_price/>의 <num_installments/>회 무이자 결제로 대금을 지급하십시오.";
-
 "Pay over time with %@" = "%@으로 할부 결제";
+
+"Pay over time with Affirm" = "Affirm으로 할부 결제";
 
 "Pay with Link" = "Link로 결제";
 
 "Pay with your bank account in just a few steps." = "몇 단계의 간단한 절차를 통해 은행 계좌로 결제하십시오.";
 
+"Payment" = "결제";
+
 "Payment failed" = "결제 실패";
+
+"Payment methods" = "결제 방식";
+
+"Please choose a valid payment method." = "유효한 결제 방식을 선택해 주십시오.";
 
 "Please go back and select another payment method" = "뒤로 돌아가서 다른 결제 방식을 선택해 주십시오.";
 
@@ -132,7 +202,11 @@
 
 "Remove card?" = "카드를 삭제하시겠습니까?";
 
-"Remove payment method" = "결제 방식 삭제";
+"Remove linked account" = "연결된 계좌 제거";
+
+"Resend code" = "코드 재전송";
+
+"SEPA debit details cannot be changed." = "SEPA 자동 이체 세부사항은 설정되면 변경할 수 없습니다.";
 
 "Save" = "저장";
 
@@ -142,13 +216,15 @@
 
 "Save for future payments" = "향후 결제에 사용하도록 저장";
 
-"Save this account for future %@ payments" = "이 계좌를 향후 %@ 결제에 사용하도록 저장";
+"Save payment details to %@ for future purchases" = "향후 구매를 위해 결제 세부사항 %@에 저장";
 
-"Save this card for future %@ payments" = "이 카드를 향후 %@ 결제에 사용하도록 저장";
+"Save this account for future %@ payments" = "이 계좌를 향후 %@ 결제에 사용하도록 저장";
 
 "Save your bank account in just a few steps." = "몇 단계의 간단한 절차를 통해 은행 계좌를 저장하십시오.";
 
 "Save your info for secure 1-click checkout with Link" = "Link로 안전한 원클릭 결제를 위해 사용자 정보 저장";
+
+"Save your payment information with Link, and securely check out in 1-click on Link-supported sites." = "Link에서 결제 정보를 저장하고 Link 지원 사이트에서 원클릭으로 안전하게 체크아웃하십시오.";
 
 "Saved" = "저장함";
 
@@ -157,6 +233,10 @@
 "Select payment method" = "결제 방식 선택";
 
 "Select your payment method" = "결제 수단을 선택하세요.";
+
+"Set as default" = "기본값으로 설정";
+
+"Set as default payment method" = "결제 방식 기본값으로 설정";
 
 "Set up" = "설정";
 
@@ -170,11 +250,29 @@
 
 "Stripe will deposit $0.01 to your account in 1-2 business days. Then you’ll get an email with instructions to complete payment to %@." = "Stripe에서 영업일 기준 1~2일 후에 계좌로 0.01$를 입금할 예정입니다. 그런 다음 %@에 대한 결제를 완료하기 위한 지침이 포함된 이메일을 전송할 것입니다.";
 
+"Tap to close" = "탭하여 닫기";
+
+"Tap to expand" = "탭하여 확장";
+
 "The IBAN you entered is incomplete." = "입력한 IBAN이 불완전합니다.";
 
-"Update" = "업데이트";
+"The provided verification code has expired." = "제공된 확인 코드가 만료되었습니다.";
 
-"Update card brand" = "카드 브랜드 업데이트";
+"The provided verification code is incorrect." = "제공된 확인 코드가 올바르지 않습니다.";
+
+"This card has expired. Update your card info or choose a different payment method." = "이 카드의 유효기간이 만료되었습니다. 카드 정보를 업데이트하거나 다른 결제 방식을 선택하십시오.";
+
+"This is your default" = "기본값입니다";
+
+"Too many attempts. Please try again in a few minutes." = "너무 많이 시도했습니다. 몇 분 후에 다시 시도해 주십시오.";
+
+"Unavailable for this purchase" = "해당 구매에는 사용 불가능";
+
+"Update card" = "카드 업데이트";
+
+"Update payment method" = "결제 방식 업데이트";
+
+"Use your saved info to check out faster" = "저장된 정보를 사용하여 더 빠르게 체크아웃";
 
 "View more" = "자세히 보기";
 

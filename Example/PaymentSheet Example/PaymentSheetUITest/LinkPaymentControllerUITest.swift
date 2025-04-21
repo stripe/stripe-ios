@@ -20,7 +20,13 @@ class LinkPaymentControllerUITest: XCTestCase {
         app.launchEnvironment = ["UITesting": "true"]
     }
 
-    func testInstantDebitsOnlyLinkPaymentController() {
+    override func tearDownWithError() throws {
+        try super.tearDownWithError()
+        app.launchEnvironment = [:]
+    }
+
+    func testWebInstantDebitsOnlyLinkPaymentController() {
+        app.launchEnvironment["FinancialConnectionsSDKAvailable"] = "false"
         app.launch()
 
         // PaymentSheet Example
@@ -80,7 +86,7 @@ class LinkPaymentControllerUITest: XCTestCase {
         app.buttons["Connect account"].tap()
 
         // "Success" pane
-        XCTAssert(app.staticTexts["Success"].waitForExistence(timeout: 10))
+        XCTAssert(app.staticTexts["Your account was connected."].waitForExistence(timeout: 10))
         // XCUITest had problems tapping the Done button in success pane,
         // so here we tap the Done button by estimating coordinates
         app.coordinate(
@@ -88,10 +94,35 @@ class LinkPaymentControllerUITest: XCTestCase {
             withNormalizedOffset: CGVector(dx: 0.5, dy: 1.0)
         )
         // we then navigate from the bottom to the "Done" button
-            .withOffset(CGVector(dx: 0, dy: -130))
-            .tap()
+        .withOffset(CGVector(dx: 0, dy: -130))
+        .tap()
 
-        sleep(1) // wait for modal to disappear before pressing Buy
+        sleep(3) // wait for modal to disappear before pressing Buy
+
+        // Back to "LinkPaymentController"
+        app.buttons["Buy"].waitForExistenceAndTap(timeout: timeout)
+        XCTAssert(app.alerts.staticTexts["Your order is confirmed!"].waitForExistence(timeout: timeout))
+    }
+
+    func testNativeInstantDebitsOnlyLinkPaymentController() {
+        app.launchEnvironment["FinancialConnectionsSDKAvailable"] = "true"
+        app.launch()
+
+        // PaymentSheet Example
+        app.staticTexts["LinkPaymentController"].tap()
+
+        // LinkPaymentController
+        let paymentMethodButton = app.buttons["SelectPaymentMethodButton"]
+        let paymentMethodButtonEnabledExpectation = expectation(
+            for: NSPredicate(format: "enabled == true"),
+            evaluatedWith: paymentMethodButton
+        )
+        wait(for: [paymentMethodButtonEnabledExpectation], timeout: 60, enforceOrder: true)
+        paymentMethodButton.tap()
+
+        PaymentSheetUITestCase.stepThroughNativeInstantDebitsFlow(app: app, emailPrefilled: false)
+
+        sleep(3) // wait for modal to disappear before pressing Buy
 
         // Back to "LinkPaymentController"
         app.buttons["Buy"].waitForExistenceAndTap(timeout: timeout)

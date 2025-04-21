@@ -3,11 +3,12 @@ Pod::Spec.new do |s|
 
     # Do not update s.version directly.
     # Instead, update the VERSION file and run ./ci_scripts/update_version.sh
-    s.version                        = '23.28.1'
+    s.version                        = '24.11.1'
 
     s.summary                        = 'Securely connect financial accounts to Stripe\'s merchant account.'
     s.license                        = { :type => 'MIT', :file => 'LICENSE' }
     s.homepage                       = 'https://stripe.com/docs/mobile/ios'
+    s.readme                         = 'StripeFinancialConnections/README.md'
     s.authors                        = { 'Stripe' => 'support+github@stripe.com' }
     s.source                         = { :git => 'https://github.com/stripe/stripe-ios.git', :tag => "#{s.version}" }
     s.frameworks                     = 'Foundation', 'WebKit', 'UIKit'

@@ -12,13 +12,16 @@ extension ConsumerSession {
     final class SessionWithPublishableKey: Decodable {
         let consumerSession: ConsumerSession
         let publishableKey: String
+        let authSessionClientSecret: String?
 
         init(
             consumerSession: ConsumerSession,
-            publishableKey: String
+            publishableKey: String,
+            authSessionClientSecret: String? = nil
         ) {
             self.consumerSession = consumerSession
             self.publishableKey = publishableKey
+            self.authSessionClientSecret = authSessionClientSecret
         }
     }
 }

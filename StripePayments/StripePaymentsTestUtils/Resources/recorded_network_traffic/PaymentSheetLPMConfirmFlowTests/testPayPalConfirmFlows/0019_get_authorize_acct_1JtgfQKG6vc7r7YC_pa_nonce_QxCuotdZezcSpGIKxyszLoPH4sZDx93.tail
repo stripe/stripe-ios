@@ -1,0 +1,20 @@
+GET
+https:\/\/pm-redirects\.stripe\.com\/authorize\/acct_1JtgfQKG6vc7r7YC\/pa_nonce_QxCuotdZezcSpGIKxyszLoPH4sZDx93\?useWebAuthSession=true&followRedirectsInSDK=true$
+302
+text/plain
+Content-Type: text/plain;charset=utf-8
+reporting-endpoints: coop="https://q.stripe.com/coop-report?s=pmredirectgw-srv"
+x-stripe-priority-routing-enabled: true
+content-security-policy: report-uri /csp-report?p=%2Fauthorize%2F%3Amerchant%2F%3Asecret_token;block-all-mixed-content;default-src 'none' 'report-sample';base-uri 'none';form-action 'none';style-src 'unsafe-inline';frame-ancestors 'self';connect-src 'self';img-src 'self' https://b.stripecdn.com
+x-wc: A
+Server: nginx
+cross-origin-opener-policy-report-only: same-origin; report-to="coop"
+report-to: {"group":"coop","max_age":8640,"endpoints":[{"url":"https://q.stripe.com/coop-report?s=pmredirectgw-srv"}],"include_subdomains":true}
+Location: https://stripe.com/payment_methods/test_payment?payment_attempt=payatt_3Q5IUnKG6vc7r7YC0hYzk72R
+Date: Wed, 02 Oct 2024 02:40:59 GMT
+Content-Length: 0
+x-stripe-routing-context-priority-tier: livemode-critical
+Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
+content-security-policy-report-only: report-uri /csp-report?p=%2F8cd07f3a%2F%2Fauthorize%2F%3Amerchant%2F%3Asecret_token;block-all-mixed-content;default-src 'none' 'report-sample';base-uri 'none';form-action 'none';frame-ancestors 'none';style-src 'self';script-src 'self';img-src 'self';
+x-stripe-inbound-proxy-type: envoy
+

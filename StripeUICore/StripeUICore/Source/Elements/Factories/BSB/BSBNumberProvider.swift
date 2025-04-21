@@ -17,9 +17,7 @@ import Foundation
 
     @_spi(STP) public static var shared: BSBNumberProvider = BSBNumberProvider()
     var bsbNumberToNameMapping: [String: String] = [:]
-    private lazy var bsbNumberUpdateQueue: DispatchQueue = {
-        DispatchQueue(label: "com.stripe.BSB.BSBNumberProvider", qos: .userInitiated)
-    }()
+    private let bsbNumberUpdateQueue = DispatchQueue(label: "com.stripe.BSB.BSBNumberProvider", qos: .userInitiated)
 
     public func loadBSBData(completion: (() -> Void)? = nil) {
         bsbNumberUpdateQueue.async {

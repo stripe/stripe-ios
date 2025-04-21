@@ -1,0 +1,41 @@
+POST
+https:\/\/api\.stripe\.com\/v1\/tokens$
+402
+application/json
+access-control-allow-methods: GET,HEAD,PUT,PATCH,POST,DELETE
+content-security-policy: report-uri https://q.stripe.com/csp-report?p=v1%2Ftokens; block-all-mixed-content; default-src 'none'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'
+Server: nginx
+Cache-Control: no-cache, no-store
+reporting-endpoints: coop="https://q.stripe.com/coop-report?s=payins-bapi-srv"
+Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
+cross-origin-opener-policy-report-only: same-origin; report-to="coop"
+Access-Control-Allow-Origin: *
+stripe-should-retry: false
+x-stripe-priority-routing-enabled: true
+report-to: {"group":"coop","max_age":8640,"endpoints":[{"url":"https://q.stripe.com/coop-report?s=payins-bapi-srv"}],"include_subdomains":true}
+request-id: req_52YRKOgULTBrEf
+x-stripe-routing-context-priority-tier: api-testmode
+Content-Length: 335
+Vary: Origin
+Date: Wed, 31 Jul 2024 02:09:40 GMT
+original-request: req_52YRKOgULTBrEf
+stripe-version: 2020-08-27
+idempotency-key: 1891d26b-069c-41f4-a1ad-abe4ec265bb1
+access-control-expose-headers: Request-Id, Stripe-Manage-Version, Stripe-Should-Retry, X-Stripe-External-Auth-Required, X-Stripe-Privileged-Session-Required
+access-control-max-age: 300
+access-control-allow-credentials: true
+Content-Type: application/json
+Content-Language: en-us
+x-content-type-options: nosniff
+X-Stripe-Mock-Request: card\[exp_month]=6&card\[exp_year]=2013&card\[number]=4242%204242%204242%204242&guid=.*&muid=.*&payment_user_agent=.*&sid=.*
+
+{
+  "error" : {
+    "code" : "invalid_expiry_year",
+    "message" : "Your card's expiration year is invalid.",
+    "param" : "exp_year",
+    "request_log_url" : "https:\/\/dashboard.stripe.com\/test\/logs\/req_52YRKOgULTBrEf?t=1722391779",
+    "type" : "card_error",
+    "doc_url" : "https:\/\/stripe.com\/docs\/error-codes\/invalid-expiry-year"
+  }
+}

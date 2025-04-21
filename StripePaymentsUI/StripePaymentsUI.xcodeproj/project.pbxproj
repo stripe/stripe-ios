@@ -47,7 +47,6 @@
 		85500DE65102C3B3106B05E4 /* STPPostalCodeInputTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65191907BE36635822515B62 /* STPPostalCodeInputTextField.swift */; };
 		8B6DAB1A75120A9938526CDB /* STPCardExpiryInputTextFieldFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1C281AD068A5A8731EE1EE8 /* STPCardExpiryInputTextFieldFormatter.swift */; };
 		8E285418BD0AC81A8E4EEFE5 /* StripePaymentsUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E8C0921DF28F5F7911653888 /* StripePaymentsUI.framework */; };
-		90B62A87017CA429BE3FFB09 /* PaymentMethodMessagingView+Configuration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 153419E931FD1C7C7241A308 /* PaymentMethodMessagingView+Configuration.swift */; };
 		92F147E82F5A7ADF9C9BC4CE /* STPPostalCodeInputTextFieldValidator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28D9DB808E41F8C09071F109 /* STPPostalCodeInputTextFieldValidator.swift */; };
 		9380DCE78E643C2B8108A5EC /* STPFloatingPlaceholderTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = E87D9A22F5475D1F8058E38D /* STPFloatingPlaceholderTextField.swift */; };
 		992E387C98107E7038353D05 /* STPAnalyticsClient+PaymentsUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5385E30F06B36FEB36D4266 /* STPAnalyticsClient+PaymentsUITests.swift */; };
@@ -63,7 +62,6 @@
 		AF55861520CD45A87A7EBA1A /* STPValidatedTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = ACA351FDB3ACA30EFB319C20 /* STPValidatedTextField.swift */; };
 		B6452F5A4B12470928CEE9BC /* STPLocalizedString.swift in Sources */ = {isa = PBXBuildFile; fileRef = D858052E551EBA77E173E794 /* STPLocalizedString.swift */; };
 		BFFAB9D8FEF4C4162555691E /* STPGenericInputPickerField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6DB0D5F6A154405D705D1F88 /* STPGenericInputPickerField.swift */; };
-		C08463DDF21144101AF317D3 /* PaymentMethodMessagingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08FDA8CB452D782F948CEB4B /* PaymentMethodMessagingView.swift */; };
 		C1C5A72015EF9A69603ABDE9 /* CardElementConfigService.swift in Sources */ = {isa = PBXBuildFile; fileRef = C08ABA2EE12ECA411162A060 /* CardElementConfigService.swift */; };
 		C805055D566F42647F79131B /* STPCountryPickerInputField.swift in Sources */ = {isa = PBXBuildFile; fileRef = A41D5DF2BA2C038B826B222F /* STPCountryPickerInputField.swift */; };
 		CA9C9105DD97D6EDF17A3478 /* STPBSBNumberValidator.swift in Sources */ = {isa = PBXBuildFile; fileRef = D66E7B7C80848F4CDFD09F27 /* STPBSBNumberValidator.swift */; };
@@ -113,9 +111,7 @@
 /* Begin PBXFileReference section */
 		01F8FDBA6B57108EB1A80833 /* StripePaymentsUI.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = StripePaymentsUI.h; sourceTree = "<group>"; };
 		037A7BAE734C79C1C7816C65 /* id */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = id; path = id.lproj/Localizable.strings; sourceTree = "<group>"; };
-		08FDA8CB452D782F948CEB4B /* PaymentMethodMessagingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentMethodMessagingView.swift; sourceTree = "<group>"; };
 		09478FB2F62490A3E4C30710 /* Project-Debug.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "Project-Debug.xcconfig"; sourceTree = "<group>"; };
-		153419E931FD1C7C7241A308 /* PaymentMethodMessagingView+Configuration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "PaymentMethodMessagingView+Configuration.swift"; sourceTree = "<group>"; };
 		15AF4C8964BDCA3C18A231BA /* pl-PL */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "pl-PL"; path = "pl-PL.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		1749604BB65B36B31E575B1B /* ru */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ru; path = ru.lproj/Localizable.strings; sourceTree = "<group>"; };
 		18F4E10018F5B614315EC505 /* lv-LV */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "lv-LV"; path = "lv-LV.lproj/Localizable.strings"; sourceTree = "<group>"; };
@@ -427,8 +423,6 @@
 		A1DBCB8A73CEA53E8B88677F /* UI Components */ = {
 			isa = PBXGroup;
 			children = (
-				08FDA8CB452D782F948CEB4B /* PaymentMethodMessagingView.swift */,
-				153419E931FD1C7C7241A308 /* PaymentMethodMessagingView+Configuration.swift */,
 				978DC21B087406C15D764B27 /* STPAUBECSDebitFormView.swift */,
 				B30F4593F849D1B9395B94FA /* STPCardFormView.swift */,
 				75BA4436655DE117219F0C47 /* STPCardFormView+SwiftUI.swift */,
@@ -725,8 +719,6 @@
 				E554E00B25258B27E60ABB08 /* STPPaymentCardTextFieldViewModel.swift in Sources */,
 				AF55861520CD45A87A7EBA1A /* STPValidatedTextField.swift in Sources */,
 				619F0D8BDEE0CD4660C7EC54 /* STPViewWithSeparator.swift in Sources */,
-				90B62A87017CA429BE3FFB09 /* PaymentMethodMessagingView+Configuration.swift in Sources */,
-				C08463DDF21144101AF317D3 /* PaymentMethodMessagingView.swift in Sources */,
 				331C6EA21D75973496B34CF3 /* STPAUBECSDebitFormView.swift in Sources */,
 				5FAAE212EE71172D6BF76165 /* STPCardFormView+SwiftUI.swift in Sources */,
 				FBA096A2BC32144CBF491DE5 /* STPCardFormView.swift in Sources */,
@@ -926,9 +918,9 @@
 /* Begin XCRemoteSwiftPackageReference section */
 		4A06DAB6985257ECC67643BD /* XCRemoteSwiftPackageReference "OHHTTPStubs" */ = {
 			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/eurias-stripe/OHHTTPStubs";
+			repositoryURL = "https://github.com/davidme-stripe/OHHTTPStubs";
 			requirement = {
-				branch = master;
+				branch = "stripe-mock";
 				kind = branch;
 			};
 		};

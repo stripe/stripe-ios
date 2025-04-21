@@ -2,6 +2,8 @@
 
 "%1$@ ending in %2$@" = "%1$@ - 尾号：%2$@";
 
+"%1$@ is not accepted" = "不接受 %1$@";
+
 "Address line 2 (optional)" = "地址第 2 行（可选）";
 
 "Apple Pay" = "Apple Pay";
@@ -10,13 +12,9 @@
 
 "Bank Account" = "银行账户";
 
-"Billing Address" = "账单地址";
-
 "Billing address" = "账单地址";
 
 "CVC" = "安全码";
-
-"CVV" = "CVV";
 
 "Card information" = "银行卡信息";
 
@@ -38,9 +36,13 @@
 
 "The BSB you entered is invalid." = "您输入的 BSB 无效。";
 
+"The selected brand is not allowed" = "不允许使用选定的品牌";
+
 "To scan your card, allow camera access in Settings." = "要扫描您的银行卡，在“设置”中启用照相机。";
 
 "Your ZIP is invalid." = "您的邮编无效。";
+
+"Your card has expired." = "您的银行卡已过期。";
 
 "Your card number is incomplete." = "您的银行卡号不完整。";
 

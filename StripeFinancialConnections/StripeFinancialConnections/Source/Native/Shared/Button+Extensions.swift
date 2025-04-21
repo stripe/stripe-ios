@@ -9,10 +9,10 @@ import Foundation
 @_spi(STP) import StripeUICore
 import UIKit
 
-extension Button {
-    static func primary() -> StripeUICore.Button {
-        let button = Button(configuration: .financialConnectionsPrimary)
-        button.layer.shadowColor = UIColor.black.cgColor
+extension StripeUICore.Button {
+    static func primary(appearance: FinancialConnectionsAppearance) -> StripeUICore.Button {
+        let button = Button(configuration: .financialConnectionsPrimary(appearance: appearance))
+        button.layer.shadowColor = FinancialConnectionsAppearance.Colors.shadow.cgColor
         button.layer.shadowRadius = 5 / UIScreen.main.nativeScale
         button.layer.shadowOpacity = 0.25
         button.layer.shadowOffset = CGSize(
@@ -30,34 +30,34 @@ extension Button {
     }
 }
 
-extension Button.Configuration {
+extension StripeUICore.Button.Configuration {
 
-    fileprivate static var financialConnectionsPrimary: Button.Configuration {
+    fileprivate static func financialConnectionsPrimary(appearance: FinancialConnectionsAppearance) -> StripeUICore.Button.Configuration {
         var primaryButtonConfiguration = Button.Configuration.primary()
         primaryButtonConfiguration.font = FinancialConnectionsFont.label(.largeEmphasized).uiFont
         primaryButtonConfiguration.cornerRadius = 12.0
         // default
-        primaryButtonConfiguration.backgroundColor = .brand500
-        primaryButtonConfiguration.foregroundColor = .white
+        primaryButtonConfiguration.backgroundColor = appearance.colors.primary
+        primaryButtonConfiguration.foregroundColor = appearance.colors.primaryAccent
         // disabled
-        primaryButtonConfiguration.disabledBackgroundColor = .brand500
-        primaryButtonConfiguration.disabledForegroundColor = .neutral0.withAlphaComponent(0.4)
+        primaryButtonConfiguration.disabledBackgroundColor = appearance.colors.primary
+        primaryButtonConfiguration.disabledForegroundColor = appearance.colors.primaryAccent.withAlphaComponent(0.4)
         // pressed
         primaryButtonConfiguration.colorTransforms.highlightedBackground = .darken(amount: 0.23)  // this tries to simulate `brand600`
         primaryButtonConfiguration.colorTransforms.highlightedForeground = nil
         return primaryButtonConfiguration
     }
 
-    fileprivate static var financialConnectionsSecondary: Button.Configuration {
+    fileprivate static var financialConnectionsSecondary: StripeUICore.Button.Configuration {
         var secondaryButtonConfiguration = Button.Configuration.secondary()
         secondaryButtonConfiguration.font = FinancialConnectionsFont.label(.largeEmphasized).uiFont
         secondaryButtonConfiguration.cornerRadius = 12.0
         // default
-        secondaryButtonConfiguration.foregroundColor = .textDefault
-        secondaryButtonConfiguration.backgroundColor = .neutral25
+        secondaryButtonConfiguration.foregroundColor = FinancialConnectionsAppearance.Colors.textDefault
+        secondaryButtonConfiguration.backgroundColor = FinancialConnectionsAppearance.Colors.backgroundSecondary
         // disabled
-        secondaryButtonConfiguration.disabledForegroundColor = .textDefault.withAlphaComponent(0.4)
-        secondaryButtonConfiguration.disabledBackgroundColor = .neutral25
+        secondaryButtonConfiguration.disabledForegroundColor = FinancialConnectionsAppearance.Colors.textDefault.withAlphaComponent(0.4)
+        secondaryButtonConfiguration.disabledBackgroundColor = FinancialConnectionsAppearance.Colors.backgroundSecondary
         // pressed
         secondaryButtonConfiguration.colorTransforms.highlightedBackground = .darken(amount: 0.04)  // this tries to simulate `neutral100`
         secondaryButtonConfiguration.colorTransforms.highlightedForeground = nil
@@ -92,3 +92,63 @@ private final class ButtonFeedbackGeneratorHandler: NSObject {
         )
     }
 }
+
+#if DEBUG
+
+import SwiftUI
+
+private struct PrimaryButtonViewRepresentable: UIViewRepresentable {
+    let appearance: FinancialConnectionsAppearance
+    let enabled: Bool
+
+    func makeUIView(context: Context) -> StripeUICore.Button {
+        let button = StripeUICore.Button.primary(appearance: appearance)
+        button.title = "primary | \(appearance == .stripe ? "stripe" : "link") | \(enabled ? "enabled" : "disabled")"
+        return button
+    }
+
+    func updateUIView(_ uiView: StripeUICore.Button, context: Context) {
+        uiView.isEnabled = enabled
+    }
+}
+
+private struct SecondaryButtonViewRepresentable: UIViewRepresentable {
+    let enabled: Bool
+
+    func makeUIView(context: Context) -> StripeUICore.Button {
+        let button = StripeUICore.Button.secondary()
+        button.title = "secondary | \(enabled ? "enabled" : "disabled")"
+        return button
+    }
+
+    func updateUIView(_ uiView: StripeUICore.Button, context: Context) {
+        uiView.isEnabled = enabled
+    }
+}
+
+struct ButtonViewRepresentable_Previews: PreviewProvider {
+    static var previews: some View {
+        VStack(spacing: 20) {
+            PrimaryButtonViewRepresentable(appearance: .stripe, enabled: true)
+                .frame(height: 64)
+                .padding()
+            PrimaryButtonViewRepresentable(appearance: .stripe, enabled: false)
+                .frame(height: 64)
+                .padding()
+            PrimaryButtonViewRepresentable(appearance: .link, enabled: true)
+                .frame(height: 64)
+                .padding()
+            PrimaryButtonViewRepresentable(appearance: .link, enabled: false)
+                .frame(height: 64)
+                .padding()
+            SecondaryButtonViewRepresentable(enabled: true)
+                .frame(height: 64)
+                .padding()
+            SecondaryButtonViewRepresentable(enabled: false)
+                .frame(height: 64)
+                .padding()
+        }
+    }
+}
+
+#endif

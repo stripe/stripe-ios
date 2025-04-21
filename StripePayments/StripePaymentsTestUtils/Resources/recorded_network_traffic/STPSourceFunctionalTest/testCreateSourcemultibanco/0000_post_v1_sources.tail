@@ -1,0 +1,80 @@
+POST
+https:\/\/api\.stripe\.com\/v1\/sources$
+200
+application/json
+access-control-allow-methods: GET,HEAD,PUT,PATCH,POST,DELETE
+content-security-policy: report-uri https://q.stripe.com/csp-report?p=v1%2Fsources; block-all-mixed-content; default-src 'none'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'
+Server: nginx
+Cache-Control: no-cache, no-store
+reporting-endpoints: coop="https://q.stripe.com/coop-report?s=mono-bapi-srv"
+Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
+cross-origin-opener-policy-report-only: same-origin; report-to="coop"
+Access-Control-Allow-Origin: *
+stripe-should-retry: false
+x-stripe-priority-routing-enabled: true
+report-to: {"group":"coop","max_age":8640,"endpoints":[{"url":"https://q.stripe.com/coop-report?s=mono-bapi-srv"}],"include_subdomains":true}
+request-id: req_wSA7SOgQnxP2zf
+x-stripe-routing-context-priority-tier: api-testmode
+Content-Length: 1520
+Vary: Origin
+Date: Wed, 31 Jul 2024 02:11:33 GMT
+original-request: req_wSA7SOgQnxP2zf
+stripe-version: 2020-08-27
+idempotency-key: ebdd0e28-385e-4ba5-93da-b93e27845226
+access-control-expose-headers: Request-Id, Stripe-Manage-Version, Stripe-Should-Retry, X-Stripe-External-Auth-Required, X-Stripe-Privileged-Session-Required
+access-control-max-age: 300
+access-control-allow-credentials: true
+Content-Type: application/json
+x-content-type-options: nosniff
+X-Stripe-Mock-Request: amount=1099&currency=eur&guid=.*&metadata\[foo]=bar&muid=.*&owner\[email]=user%40example\.com&payment_user_agent=.*&redirect\[return_url]=https%3A\/\/shop\.example\.com\/crtABC\?redirect_merchant_name%3Dxctest&sid=.*&type=multibanco
+
+{
+  "id" : "src_1PiS0mFY0qyl6XeWKViR8Jz3",
+  "livemode" : false,
+  "amount" : 1099,
+  "owner" : {
+    "address" : null,
+    "phone" : null,
+    "verified_address" : null,
+    "verified_phone" : null,
+    "verified_email" : null,
+    "verified_name" : null,
+    "email" : "user@example.com",
+    "name" : null
+  },
+  "receiver" : {
+    "refund_attributes_status" : "missing",
+    "amount_received" : 0,
+    "amount_charged" : 0,
+    "amount_returned" : 0,
+    "refund_attributes_method" : "email",
+    "address" : "999999999-12345"
+  },
+  "statement_descriptor" : null,
+  "usage" : "single_use",
+  "type" : "multibanco",
+  "redirect" : {
+    "status" : "pending",
+    "failure_reason" : null,
+    "url" : "https:\/\/hooks.stripe.com\/redirect\/authenticate\/src_1PiS0mFY0qyl6XeWKViR8Jz3?client_secret=src_client_secret_f1xarIofVJqmj6nfWFV3OPzv",
+    "return_url" : "https:\/\/shop.example.com\/crtABC?redirect_merchant_name=xctest"
+  },
+  "object" : "source",
+  "multibanco" : {
+    "entity" : "12345",
+    "reference" : "999999999",
+    "refund_account_holder_address_city" : null,
+    "refund_account_holder_address_country" : null,
+    "refund_account_holder_address_line1" : null,
+    "refund_account_holder_name" : null,
+    "refund_iban" : null,
+    "refund_account_holder_address_postal_code" : null,
+    "refund_account_holder_address_line2" : null,
+    "refund_account_holder_address_state" : null
+  },
+  "created" : 1722391892,
+  "client_secret" : "src_client_secret_f1xarIofVJqmj6nfWFV3OPzv",
+  "flow" : "receiver",
+  "currency" : "eur",
+  "status" : "pending"
+}

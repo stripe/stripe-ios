@@ -12,8 +12,6 @@
 
 "Bancontact" = "Bancontact";
 
-"Bank" = "Bank";
-
 "Boleto" = "Boleto";
 
 "Card" = "Kard";
@@ -52,7 +50,7 @@
 
 "UPI" = "UPI";
 
-"US Bank Account" = "Kont tal-bank tal-Istati Uniti tal-Amerka";
+"US bank account" = "Kont tal-bank fl-Istati Uniti tal-Amerka";
 
 "Unknown" = "Mhux magħruf";
 

@@ -28,7 +28,7 @@ final class NetworkingSaveToLinkVerificationViewController: UIViewController {
     weak var delegate: NetworkingSaveToLinkVerificationViewControllerDelegate?
 
     private lazy var loadingView: SpinnerView = {
-        return SpinnerView()
+        return SpinnerView(appearance: dataSource.manifest.appearance)
     }()
     private lazy var otpView: NetworkingOTPView = {
         let otpView = NetworkingOTPView(dataSource: dataSource.networkingOTPDataSource)
@@ -47,7 +47,7 @@ final class NetworkingSaveToLinkVerificationViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .customBackgroundColor
+        view.backgroundColor = FinancialConnectionsAppearance.Colors.background
 
         otpView.startVerification()
     }
@@ -84,7 +84,8 @@ final class NetworkingSaveToLinkVerificationViewController: UIViewController {
                             customSuccessPaneMessage: nil
                         )
                     }
-                ) : nil
+                ) : nil,
+                appearance: dataSource.manifest.appearance
             ).footerView
         )
         paneLayoutView.addTo(view: view)
@@ -219,17 +220,5 @@ extension NetworkingSaveToLinkVerificationViewController: NetworkingOTPViewDeleg
                 didReceiveTerminalError: error
             )
         }
-    }
-
-    func networkingOTPViewWillStartConsumerLookup(_ view: NetworkingOTPView) {
-        assertionFailure("we shouldn't call `lookup` for NetworkingSaveToLink")
-    }
-
-    func networkingOTPViewConsumerNotFound(_ view: NetworkingOTPView) {
-        assertionFailure("we shouldn't call `lookup` for NetworkingSaveToLink")
-    }
-
-    func networkingOTPView(_ view: NetworkingOTPView, didFailConsumerLookup error: Error) {
-        assertionFailure("we shouldn't call `lookup` for NetworkingSaveToLink")
     }
 }

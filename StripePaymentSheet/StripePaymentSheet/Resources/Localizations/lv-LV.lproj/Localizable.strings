@@ -1,7 +1,5 @@
 "%1$@ •••• %2$@" = "%1$@ •••• %2$@";
 
-"%1$d interest-free payments of %2$@" = "%1$li %2$@ bezprocentu maksājumi";
-
 "+ Add" = "+ Pievienot";
 
 "Add US bank account" = "Pievienot ASV bankas kontu";
@@ -9,6 +7,8 @@
 "Add a card" = "Pievienot karti";
 
 "Add a payment method" = "Pievienot maksājuma veidu";
+
+"Add bank account" = "Pievienot bankas kontu";
 
 "Add card" = "Pievienot karti";
 
@@ -18,11 +18,29 @@
 
 "Add your payment information" = "Pievienot maksājuma informāciju";
 
+"Agree and continue" = "Piekrist un turpināt";
+
 "Approve payment" = "Apstiprināt maksājumu";
+
+"Are you sure you want to remove this card?" = "Vai tiešām vēlaties noņemt šo karti?";
+
+"Are you sure you want to remove this linked account?" = "Vai tiešām vēlaties noņemt šo saistīto kontu?";
 
 "Back" = "Atpakaļ";
 
+"Bank" = "Banka";
+
 "Bank account" = "Bankas konts";
+
+"Bank account details cannot be changed." = "Bankas konta informāciju nevar mainīt.";
+
+"Buy now or pay later with  <img/>" = "Pērciet tagad vai maksājiet vēlāk ar <img/>";
+
+"Buy now or pay later with Afterpay" = "Pērciet tagad vai maksājiet vēlāk ar Afterpay";
+
+"Buy now or pay later with Cash App Afterpay" = "Pērciet tagad vai maksājiet vēlāk ar Cash App Afterpay";
+
+"Buy now or pay later with Clearpay" = "Pērciet tagad vai maksājiet vēlāk ar Clearpay";
 
 "Buy now or pay later with Klarna" = "Pērciet tagad vai maksājiet vēlāk ar Klarna";
 
@@ -38,11 +56,15 @@
 
 "By continuing to Revolut Pay, you allow %@ to charge your Revolut Pay account for future payments in accordance with their terms." = "Turpinot doties uz Revolut Pay, jūs atļaujat %@ saskaņā ar viņu noteikumiem iekasēt no jūsu Revolut Pay konta summas par turpmākajiem maksājumiem.";
 
+"By continuing you agree to the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Turpinot, jūs piekrītat <terms>noteikumiem</terms> un <privacy>konfidencialitātes politikai</privacy>.";
+
 "By continuing, you agree to authorize payments pursuant to <terms>these terms</terms>." = "Turpinot, jūs piekrītat autorizēt maksājumus saskaņā ar <terms>šiem noteikumiem</terms>.";
 
 "By continuing, you authorize %@ to debit your Cash App account for this payment and future payments in accordance with %@'s terms, until this authorization is revoked. You can change this anytime in your Cash App Settings." = "Turpinot, jūs atļaujat %1$@ iekasēt no jūsu Cash App konta par šo un turpmākiem maksājumiem saskaņā ar %2$@ noteikumiem, līdz šī atļauja netiek atsaukta. To varat mainīt jebkurā laikā Cash App iestatījumos.";
 
 "By joining Link, you agree to the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Pievienojoties Link, jūs piekrītat <terms>noteikumiem</terms> un <privacy>konfidencialitātes politikai</privacy>.";
+
+"By providing your card information, you allow %@ to charge your card for future payments in accordance with their terms." = "Norādot savas kartes informāciju, jūs atļaujat uzņēmumam %@ saskaņā ar viņu noteikumiem iekasēt no jūsu kartes turpmākus maksājumus.";
 
 "By providing your email, you agree to create a Link account and save your payment info to Link, according to the Link <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Norādot savu e-pastu, es piekrītu izveidot Link kontu un saglabāt savu maksājuma informāciju Link, ievērojot Link <terms>noteikumus</terms> un <privacy>Konfidencialitātes politiku</privacy>.";
 
@@ -56,11 +78,23 @@
 
 "Cancel and pay another way" = "Atcelt vai maksāt citā veidā";
 
+"Card details cannot be changed." = "Kartes informāciju nevar mainīt.";
+
+"Change" = "Mainīt";
+
+"Change email" = "Mainīt e-pastu";
+
 "Choose a payment method" = "Izvēlēties maksājuma veidu";
 
 "Close card scanner" = "Aizvērt kartes skeneri";
 
+"Code sent" = "Kods nosūtīts";
+
 "Confirm" = "Apstiprināt";
+
+"Confirm it's you" = "Apstipriniet, ka tas esat jūs";
+
+"Confirm payment details" = "Apstiprināt maksājuma informāciju";
 
 "Confirm the payment in your bank or payment app within %@ to complete the purchase." = "Apstipriniet maksājumu jūsu bankas vai maksājumu lietotnē %@, lai pabeigtu maksājumu.";
 
@@ -68,19 +102,43 @@
 
 "Confirm your CVC" = "Apstiprināt CVC";
 
-"Confirm your CVV" = "Apstiprināt CVV";
-
 "Contact information" = "Kontaktinformācija";
+
+"Default" = "Noklusējuma";
+
+"Default payment method" = "Noklusējuma maksājuma veids";
 
 "EPS Bank" = "EPS Bank";
 
 "Enter address manually" = "Ievadīt adresi manuāli";
 
+"Enter the code sent to %@ to use your saved information." = "Ievadiet kodu, kas tika nosūtīts uz %@, lai izmantotu jūsu saglabāto informāciju.";
+
 "FPX Bank" = "FPX banka";
+
+"Failed to connect" = "Neizdevās izveidot savienojumu";
+
+"Fast, secure, 1⁠-⁠click checkout" = "Ātra, droša 1 klikšķa norēķināšanās";
+
+"For security, please re-enter your card’s security code." = "Drošības nolūkos atkārtoti ievadiet kartes drošības kodu.";
+
+"Get %@ back when you pay for the first time with your bank. <terms>See terms</terms>" = "Saņemiet %@ atmaksu, maksājot pirmo reizi ar savu banku. <terms>Skatīt noteikumus</terms>";
+
+"Get %@ back when you pay with your bank. <terms>See terms</terms>" = "Saņemiet %@ atmaksu, maksājot ar savu banku. <terms>Skatīt noteikumus</terms>";
 
 "I understand that Stripe will be collecting Direct Debits on behalf of %@ and confirm that I am the account holder and the only person required to authorise debits from this account." = "Es saprotu, ka Stripe iekasēs tiešā debeta maksājumus %@ vārdā, un apstiprinu, ka esmu konta turētājs un vienīgā persona, kurai ir jāautorizē debeti no šī konta.";
 
 "IBAN" = "IBAN";
+
+"Log out of Link" = "Izrakstīties no Link";
+
+"Manage SEPA debit" = "Pārvaldīt SEPA debetu";
+
+"Manage US bank account" = "Pārvaldīt ASV bankas kontu";
+
+"Manage card" = "Pārvaldīt karti";
+
+"Manage cards" = "Pārvaldīt kartes";
 
 "Manage payment method" = "Pārvaldīt maksājuma veidu";
 
@@ -93,6 +151,12 @@
 "New card" = "Jauna karte";
 
 "New payment method" = "Jauns maksājumu veids";
+
+"No %@ promo" = "Bez %@ reklāmas";
+
+"Not %@?" = "Ne %@?";
+
+"Only card brand can be changed." = "Var mainīt tikai kartes zīmolu.";
 
 "Open your UPI app to approve your payment within %@" = "Atveriet UPI lietotni, lai apstiprinātu savu maksājumu %@";
 
@@ -112,15 +176,21 @@
 
 "Pay faster at %@ and thousands of businesses." = "Maksājiet ātrāk %@ un tūkstošiem citos uzņēmumos.";
 
-"Pay in <num_installments/> interest-free payments of <installment_price/> with <img/>" = "Maksāt ar <num_installments/> bezprocentu maksājumiem <installment_price/> ar <img/>";
-
 "Pay over time with %@" = "Maksāt pakāpeniski ar %@";
+
+"Pay over time with Affirm" = "Maksājiet pakāpeniski ar Affirm";
 
 "Pay with Link" = "Maksāt ar Link";
 
 "Pay with your bank account in just a few steps." = "Maksājiet ar savu bankas kontu, izpildot tikai dažus soļus";
 
+"Payment" = "Maksājums";
+
 "Payment failed" = "Maksājums neizdevās";
+
+"Payment methods" = "Maksājuma veidi";
+
+"Please choose a valid payment method." = "Izvēlieties derīgu maksājumu veidu.";
 
 "Please go back and select another payment method" = "Lūdzu, atgriezieties un atlasiet citu maksājuma veidu.";
 
@@ -132,7 +202,11 @@
 
 "Remove card?" = "Noņemt karti?";
 
-"Remove payment method" = "Noņemt maksājumu veidu";
+"Remove linked account" = "Noņemt piesaistītu kontu";
+
+"Resend code" = "Nosūtīt kodu vēlreiz";
+
+"SEPA debit details cannot be changed." = "SEPA debeta informāciju nevar mainīt.";
 
 "Save" = "Saglabāt";
 
@@ -142,13 +216,15 @@
 
 "Save for future payments" = "Saglabāt nākotnes maksājumiem";
 
-"Save this account for future %@ payments" = "Saglabāt šo kontu nākotnes %@ maksājumiem";
+"Save payment details to %@ for future purchases" = "Saglabāt maksājuma informāciju %@ turpmākiem pirkumiem";
 
-"Save this card for future %@ payments" = "Saglabāt šo karti %@ maksājumiem nākotnē";
+"Save this account for future %@ payments" = "Saglabāt šo kontu nākotnes %@ maksājumiem";
 
 "Save your bank account in just a few steps." = "Saglabājiet savu bankas kontu, izpildot tikai dažus soļus.";
 
 "Save your info for secure 1-click checkout with Link" = "Saglabāt jūsu informāciju, lai nodrošinātu norēķināšanos Link ar 1 klikšķi";
+
+"Save your payment information with Link, and securely check out in 1-click on Link-supported sites." = "Saglabājiet savu maksājuma informāciju ar Link un droši norēķinieties ar 1 klikšķi Link atbalstītās lapas.";
 
 "Saved" = "Saglabāts";
 
@@ -157,6 +233,10 @@
 "Select payment method" = "Atlasīt maksājuma veidu";
 
 "Select your payment method" = "Izvēlēties savu maksājuma veidu";
+
+"Set as default" = "Iestatīt kā noklusējumu";
+
+"Set as default payment method" = "Iestatīt kā noklusējuma maksājuma veidu";
 
 "Set up" = "Iestatīt";
 
@@ -170,11 +250,29 @@
 
 "Stripe will deposit $0.01 to your account in 1-2 business days. Then you’ll get an email with instructions to complete payment to %@." = "Stripe uz jūsu kontu 1-2 darbadienu laikā nosūtīs 0,01 $. Pēc tam saņemsiet e-pastu ar norādījumiem, kā pabeigt maksājumu ar %@.";
 
+"Tap to close" = "Pieskarieties, lai aizvērtu";
+
+"Tap to expand" = "Pieskarieties, lai izvērstu";
+
 "The IBAN you entered is incomplete." = "Ievadītais IBAN nav pilnīgs.";
 
-"Update" = "Atjaunināt";
+"The provided verification code has expired." = "Norādītajam verifikācijas kodam ir beidzies derīguma termiņš.";
 
-"Update card brand" = "Atjaunināt kartes zīmolu";
+"The provided verification code is incorrect." = "Norādītais verifikācijas kods nav pareizs.";
+
+"This card has expired. Update your card info or choose a different payment method." = "Šai kartei ir beidzies derīguma termiņš. Atjauniniet savu kartes informāciju vai izmantojiet citu maksājuma veidu.";
+
+"This is your default" = "Tas ir jūsu noklusējums";
+
+"Too many attempts. Please try again in a few minutes." = "Pārāk daudz mēģinājumu. Mēģiniet vēlreiz pēc dažām minūtēm.";
+
+"Unavailable for this purchase" = "Nav pieejams šim pirkumam";
+
+"Update card" = "Atjaunināt karti";
+
+"Update payment method" = "Atjaunināt maksājuma veidu";
+
+"Use your saved info to check out faster" = "Izmantojiet saglabāto informāciju, lai norēķinātos ātrāk";
 
 "View more" = "Skatīt vairāk";
 

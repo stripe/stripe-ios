@@ -148,7 +148,7 @@ import UIKit
 
     public let countryCodes: [String]
     let addressSpecProvider: AddressSpecProvider
-    let theme: ElementsUITheme
+    let theme: ElementsAppearance
     private(set) var defaults: AddressDetails
     let didTapAutocompleteButton: () -> Void
     public var didUpdate: DidUpdateAddress?
@@ -172,7 +172,7 @@ import UIKit
         defaults: AddressDetails = .empty,
         collectionMode: CollectionMode = .all(),
         additionalFields: AdditionalFields = .init(),
-        theme: ElementsUITheme = .default,
+        theme: ElementsAppearance = .default,
         presentAutoComplete: @escaping () -> Void = { }
     ) {
         let dropdownCountries = countries?.map { $0.uppercased() } ?? addressSpecProvider.countries
@@ -391,14 +391,7 @@ import UIKit
 extension AddressSectionElement: Element {
     @discardableResult
     public func beginEditing() -> Bool {
-        let firstInvalidNonDropDownElement = elements.first(where: {
-            switch $0.validationState {
-            case .valid:
-                return false
-            case .invalid:
-                return !($0 is DropdownFieldElement)
-            }
-        })
+        let firstInvalidNonDropDownElement = firstInvalidNonDropdownElement(elements: elements)
 
         // If first non-dropdown element is auto complete, don't do anything
         if firstInvalidNonDropDownElement === autoCompleteLine {
@@ -406,6 +399,24 @@ extension AddressSectionElement: Element {
         }
 
         return firstInvalidNonDropDownElement?.beginEditing() ?? false
+    }
+
+    private func firstInvalidNonDropdownElement(elements: [Element]) -> Element? {
+        for element in elements {
+            if let sectionElement = element as? SectionElement,
+               let firstInvalid = firstInvalidNonDropdownElement(elements: sectionElement.elements) {
+                return firstInvalid
+            }
+            switch element.validationState {
+            case .valid:
+                continue
+            case .invalid:
+                if !(element is DropdownFieldElement) {
+                    return element
+                }
+            }
+        }
+        return nil
     }
 }
 
@@ -428,5 +439,22 @@ extension AddressSectionElement: ElementDelegate {
             && phone.countryDropdownElement.selectedIndex != country.selectedIndex {
             phone.selectCountry(index: country.selectedIndex, shouldUpdateDefaultNumber: true)
         }
+    }
+}
+
+@_spi(STP) public extension AddressSectionElement.AddressDetails {
+    init(billingAddress: BillingAddress, phone: String?) {
+        self.init(
+            name: billingAddress.name,
+            phone: phone,
+            address: Address(
+                city: billingAddress.city,
+                country: billingAddress.countryCode,
+                line1: billingAddress.line1,
+                line2: billingAddress.line2,
+                postalCode: billingAddress.postalCode,
+                state: billingAddress.state
+            )
+        )
     }
 }

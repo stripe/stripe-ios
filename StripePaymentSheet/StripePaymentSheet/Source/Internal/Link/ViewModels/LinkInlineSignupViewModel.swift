@@ -35,7 +35,7 @@ final class LinkInlineSignupViewModel {
 
     private let country: String?
 
-    let configuration: PaymentSheet.Configuration
+    let configuration: PaymentElementConfiguration
 
     let mode: Mode
 
@@ -205,9 +205,11 @@ final class LinkInlineSignupViewModel {
 
         if linkAccount?.isRegistered ?? false {
             // User already has a Link account, they can't sign up
-            STPAnalyticsClient.sharedClient.logLinkSignupFailureAccountExists()
-            // Don't bother them again
-            UserDefaults.standard.markLinkAsUsed()
+            if !UserDefaults.standard.customerHasUsedLink {
+                STPAnalyticsClient.sharedClient.logLinkSignupFailureAccountExists()
+                // Don't bother them again
+                UserDefaults.standard.markLinkAsUsed()
+            }
             return .continueWithoutLink
         }
 
@@ -288,7 +290,7 @@ final class LinkInlineSignupViewModel {
     }
 
     init(
-        configuration: PaymentSheet.Configuration,
+        configuration: PaymentElementConfiguration,
         showCheckbox: Bool,
         accountService: LinkAccountServiceProtocol,
         linkAccount: PaymentSheetLinkAccount? = nil,
@@ -333,7 +335,11 @@ private extension LinkInlineSignupViewModel {
         accountLookupDebouncer.enqueue { [weak self] in
             self?.isLookingUpLinkAccount = true
 
-            self?.accountService.lookupAccount(withEmail: emailAddress) { result in
+            self?.accountService.lookupAccount(
+                withEmail: emailAddress,
+                emailSource: .userAction,
+                doNotLogConsumerFunnelEvent: false
+            ) { result in
                 // Check the requested email address against the current one. Handle
                 // email address changes while a lookup is in-flight.
                 guard emailAddress == self?.emailAddress else {

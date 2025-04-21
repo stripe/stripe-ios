@@ -14,7 +14,8 @@ protocol NetworkingLinkVerificationViewControllerDelegate: AnyObject {
     func networkingLinkVerificationViewController(
         _ viewController: NetworkingLinkVerificationViewController,
         didRequestNextPane nextPane: FinancialConnectionsSessionManifest.NextPane,
-        consumerSession: ConsumerSessionData?
+        consumerSession: ConsumerSessionData?,
+        preventBackNavigation: Bool
     )
     func networkingLinkVerificationViewController(
         _ viewController: NetworkingLinkVerificationViewController,
@@ -28,7 +29,7 @@ final class NetworkingLinkVerificationViewController: UIViewController {
     weak var delegate: NetworkingLinkVerificationViewControllerDelegate?
 
     private lazy var loadingView: UIView = {
-        return SpinnerView()
+        return SpinnerView(appearance: dataSource.manifest.appearance)
     }()
     private lazy var otpView: NetworkingOTPView = {
         let otpView = NetworkingOTPView(dataSource: dataSource.networkingOTPDataSource)
@@ -47,8 +48,8 @@ final class NetworkingLinkVerificationViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .customBackgroundColor
-        otpView.lookupConsumerAndStartVerification()
+        view.backgroundColor = FinancialConnectionsAppearance.Colors.background
+        otpView.startVerification()
     }
 
     private func showContent(redactedPhoneNumber: String) {
@@ -60,7 +61,7 @@ final class NetworkingLinkVerificationViewController: UIViewController {
                     "The title of a screen where users are informed that they can sign-in-to Link."
                 ),
                 subtitle: String(format: STPLocalizedString(
-                    "Enter the code sent to %@.",
+                    "Enter the code sent to %@",
                     "The subtitle/description of a screen where users are informed that they have received a One-Type-Password (OTP) to their phone. '%@' gets replaced by a redacted phone number."
                 ), AuthFlowHelpers.formatRedactedPhoneNumber(redactedPhoneNumber)),
                 contentView: otpView
@@ -80,16 +81,38 @@ final class NetworkingLinkVerificationViewController: UIViewController {
         view.bringSubviewToFront(loadingView)  // defensive programming to avoid loadingView being hiddden
     }
 
-    private func requestNextPane(_ pane: FinancialConnectionsSessionManifest.NextPane) {
-        if let consumerSession = dataSource.consumerSession {
-            delegate?.networkingLinkVerificationViewController(
-                self,
-                didRequestNextPane: pane,
-                consumerSession: consumerSession
-            )
-        } else {
-            assertionFailure("logic error: did not have consumerSession")
-            delegate?.networkingLinkVerificationViewController(self, didReceiveTerminalError: FinancialConnectionsSheetError.unknown(debugDescription: "logic error: did not have consumerSession"))
+    private func requestNextPane(_ pane: FinancialConnectionsSessionManifest.NextPane, preventBackNavigation: Bool) {
+        delegate?.networkingLinkVerificationViewController(
+            self,
+            didRequestNextPane: pane,
+            consumerSession: dataSource.consumerSession,
+            preventBackNavigation: preventBackNavigation
+        )
+    }
+
+    private func attachConsumerToLinkAccountAndSynchronize(from view: NetworkingOTPView) {
+        view.showLoadingView(true)
+
+        dataSource
+            .attachConsumerToLinkAccountAndSynchronize()
+            .observe { [weak self] result in
+                guard let self else { return }
+                self.hideOTPLoadingViewAfterDelay(view)
+
+                switch result {
+                case .success:
+                    self.requestNextPane(.linkAccountPicker, preventBackNavigation: true)
+                case .failure(let error):
+                    self.delegate?.networkingLinkVerificationViewController(self, didReceiveTerminalError: error)
+                }
+            }
+    }
+
+    private func hideOTPLoadingViewAfterDelay(_ view: NetworkingOTPView) {
+        // only hide loading view after animation
+        // to next screen has completed
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) { [weak view] in
+            view?.showLoadingView(false)
         }
     }
 }
@@ -97,39 +120,6 @@ final class NetworkingLinkVerificationViewController: UIViewController {
 // MARK: - NetworkingOTPViewDelegate
 
 extension NetworkingLinkVerificationViewController: NetworkingOTPViewDelegate {
-
-    func networkingOTPViewWillStartConsumerLookup(_ view: NetworkingOTPView) {
-        showLoadingView(true)
-    }
-
-    func networkingOTPViewConsumerNotFound(_ view: NetworkingOTPView) {
-        dataSource.analyticsClient.log(
-            eventName: "networking.verification.error",
-            parameters: [
-                "error": "ConsumerNotFoundError"
-            ],
-            pane: .networkingLinkVerification
-        )
-        delegate?.networkingLinkVerificationViewController(self, didRequestNextPane: .institutionPicker, consumerSession: nil)
-        showLoadingView(false) // started in networkingOTPViewWillStartConsumerLookup
-    }
-
-    func networkingOTPView(_ view: NetworkingOTPView, didFailConsumerLookup error: Error) {
-        dataSource.analyticsClient.logUnexpectedError(
-            error,
-            errorName: "LookupConsumerSessionError",
-            pane: .networkingLinkVerification
-        )
-        dataSource.analyticsClient.log(
-            eventName: "networking.verification.error",
-            parameters: [
-                "error": "LookupConsumerSession"
-            ],
-            pane: .networkingLinkVerification
-        )
-        delegate?.networkingLinkVerificationViewController(self, didReceiveTerminalError: error)
-        showLoadingView(false) // started in networkingOTPViewWillStartConsumerLookup
-    }
 
     func networkingOTPViewWillStartVerification(_ view: NetworkingOTPView) {
         // no-op
@@ -163,17 +153,26 @@ extension NetworkingLinkVerificationViewController: NetworkingOTPViewDelegate {
     }
 
     func networkingOTPViewDidConfirmVerification(_ view: NetworkingOTPView) {
+        if dataSource.manifest.isProductInstantDebits {
+            attachConsumerToLinkAccountAndSynchronize(from: view)
+            return
+        }
+
         view.showLoadingView(true)
         dataSource.markLinkVerified()
             .observe { [weak self] result in
                 guard let self = self else { return }
                 switch result {
                 case .success:
-                    self.dataSource.analyticsClient.log(
-                        eventName: "networking.verification.success",
-                        pane: .networkingLinkVerification
-                    )
-                    self.requestNextPane(.linkAccountPicker)
+                    if self.dataSource.manifest.isProductInstantDebits {
+                        self.attachConsumerToLinkAccountAndSynchronize(from: view)
+                    } else {
+                        self.dataSource.analyticsClient.log(
+                            eventName: "networking.verification.success",
+                            pane: .networkingLinkVerification
+                        )
+                        self.requestNextPane(.linkAccountPicker, preventBackNavigation: false)
+                    }
                 case .failure(let error):
                     self.dataSource
                         .analyticsClient
@@ -198,16 +197,10 @@ extension NetworkingLinkVerificationViewController: NetworkingOTPViewDelegate {
                     } else {
                         nextPane = .institutionPicker
                     }
-                    self.requestNextPane(nextPane)
+                    self.requestNextPane(nextPane, preventBackNavigation: false)
                 }
 
-                // only hide loading view after animation
-                // to next screen has completed
-                DispatchQueue.main.asyncAfter(
-                    deadline: .now() + 1.0
-                ) { [weak view] in
-                    view?.showLoadingView(false)
-                }
+                self.hideOTPLoadingViewAfterDelay(view)
             }
     }
 

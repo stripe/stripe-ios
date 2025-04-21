@@ -1,4 +1,10 @@
+"An error occurred. Please try again." = "Radās kļūda. Lūdzu, mēģiniet vēlreiz.";
+
+"Card brand was not updated. Please try again." = "Kartes zīmols netika atjaunināts. Lūdzu, mēģiniet vēlreiz.";
+
 "Close" = "Aizvērt";
+
+"Default payment method was not updated. Please try again." = "Noklusējuma maksājumu veids netika atjaunināts. Mēģiniet vēlreiz.";
 
 "Scan Card" = "Skenēt karti";
 

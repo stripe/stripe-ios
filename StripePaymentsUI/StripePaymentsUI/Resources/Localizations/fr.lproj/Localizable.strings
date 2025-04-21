@@ -2,6 +2,8 @@
 
 "%1$@ ending in %2$@" = "%1$@ se terminant par %2$@";
 
+"%1$@ is not accepted" = "%1$@ n'est pas accepté";
+
 "Address line 2 (optional)" = "Adresse - Ligne 2 (facultatif)";
 
 "Apple Pay" = "Apple Pay";
@@ -10,13 +12,9 @@
 
 "Bank Account" = "Compte bancaire";
 
-"Billing Address" = "Adresse de facturation";
-
 "Billing address" = "Adresse de facturation";
 
 "CVC" = "Code CVC";
-
-"CVV" = "Code CVV";
 
 "Card information" = "Informations concernant la carte bancaire";
 
@@ -38,9 +36,13 @@
 
 "The BSB you entered is invalid." = "Le numéro BSB que vous avez saisi n'est pas valide.";
 
+"The selected brand is not allowed" = "La marque sélectionnée n'est pas autorisée";
+
 "To scan your card, allow camera access in Settings." = "Pour numériser votre carte bancaire, autorisez l'accès à l'appareil photo dans vos paramètres.";
 
 "Your ZIP is invalid." = "Votre code postal n'est pas valide.";
+
+"Your card has expired." = "Votre carte a expiré.";
 
 "Your card number is incomplete." = "Votre numéro de carte bancaire est incomplet.";
 

@@ -12,5 +12,6 @@ struct Constants {
     struct Layout {
         private init() {}
         static let defaultHorizontalMargin: CGFloat = 24.0
+        static let defaultVerticalPadding: CGFloat = 16.0
     }
 }

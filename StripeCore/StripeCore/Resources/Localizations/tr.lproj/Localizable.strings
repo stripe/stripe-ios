@@ -1,4 +1,10 @@
+"An error occurred. Please try again." = "Bir hata oluştu. Lütfen tekrar deneyin.";
+
+"Card brand was not updated. Please try again." = "Kart markası güncellenmedi. Lütfen tekrar deneyin.";
+
 "Close" = "Kapat";
+
+"Default payment method was not updated. Please try again." = "Varsayılan ödeme yöntemi güncellenmedi. Lütfen tekrar deneyin.";
 
 "Scan Card" = "Kartı Tara";
 

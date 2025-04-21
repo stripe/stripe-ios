@@ -10,7 +10,7 @@ import Foundation
 @_spi(STP) import StripePayments
 
 extension STPPaymentIntentShippingDetailsParams {
-    convenience init?(paymentSheetConfiguration: PaymentSheet.Configuration) {
+    convenience init?(paymentSheetConfiguration: PaymentElementConfiguration) {
         guard let shippingDetails = paymentSheetConfiguration.shippingDetails() else {
             return nil
         }

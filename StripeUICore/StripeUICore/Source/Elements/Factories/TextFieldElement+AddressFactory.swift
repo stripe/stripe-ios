@@ -56,7 +56,7 @@ import UIKit
                 return false
             }
 
-            func accessoryView(for text: String, theme: ElementsUITheme) -> UIView? {
+            func accessoryView(for text: String, theme: ElementsAppearance) -> UIView? {
                 if case .line1Autocompletable(let didTapAutocomplete) = lineType {
                     let autocompleteIconButton = UIButton.make(type: .system, didTap: didTapAutocomplete)
                     let configuration = UIImage.SymbolConfiguration(pointSize: CGFloat(10), weight: .bold)
@@ -71,20 +71,20 @@ import UIKit
             }
         }
 
-        public static func makeLine1(defaultValue: String?, theme: ElementsUITheme) -> TextFieldElement {
+        public static func makeLine1(defaultValue: String?, theme: ElementsAppearance) -> TextFieldElement {
             return TextFieldElement(
                 configuration: LineConfiguration(lineType: .line1, defaultValue: defaultValue), theme: theme
             )
         }
 
-        static func makeLine2(defaultValue: String?, theme: ElementsUITheme) -> TextFieldElement {
+        static func makeLine2(defaultValue: String?, theme: ElementsAppearance) -> TextFieldElement {
             let line2 = TextFieldElement(
                 configuration: LineConfiguration(lineType: .line2, defaultValue: defaultValue), theme: theme
             )
             return line2
         }
 
-        public static func makeAutoCompleteLine(defaultValue: String?, theme: ElementsUITheme) -> TextFieldElement {
+        public static func makeAutoCompleteLine(defaultValue: String?, theme: ElementsAppearance) -> TextFieldElement {
             return TextFieldElement(
                 configuration: LineConfiguration(lineType: .autoComplete, defaultValue: defaultValue), theme: theme
             )

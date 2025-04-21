@@ -11,12 +11,12 @@ import StripeCoreTestUtils
 @testable@_spi(STP) import StripeCore
 @testable@_spi(STP) import StripePayments
 @testable@_spi(STP) import StripePaymentSheet
+import StripePaymentsTestUtils
 @testable@_spi(STP) import StripePaymentsUI
-
 private let kCardPaymentIntentClientSecret =
     "pi_1H5J4RFY0qyl6XeWFTpgue7g_secret_1SS59M0x65qWMaX2wEB03iwVE"
 
-class STPPaymentMethodCardTest: XCTestCase {
+class STPPaymentMethodCardTest: STPNetworkStubbingTestCase {
     private(set) var cardJSON: [AnyHashable: Any]?
 
     func _retrieveCardJSON(_ completion: @escaping ([AnyHashable: Any]?) -> Void) {

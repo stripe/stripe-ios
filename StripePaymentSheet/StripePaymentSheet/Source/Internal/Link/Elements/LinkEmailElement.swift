@@ -87,7 +87,7 @@ class LinkEmailElement: Element {
         }
     }
 
-    public init(defaultValue: String? = nil, isOptional: Bool = false, showLogo: Bool, theme: ElementsUITheme = .default) {
+    public init(defaultValue: String? = nil, isOptional: Bool = false, showLogo: Bool, theme: ElementsAppearance = .default) {
         if showLogo {
             self.infoView = LinkMoreInfoView(theme: theme)
         }

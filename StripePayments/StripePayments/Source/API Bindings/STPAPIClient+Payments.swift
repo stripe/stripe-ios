@@ -826,7 +826,6 @@ extension STPAPIClient {
         ) { paymentMethod, _, error in
             completion(paymentMethod, error)
         }
-
     }
 
     /// Creates a PaymentMethod object with the provided params object.
@@ -920,7 +919,7 @@ extension STPAPIClient {
         )
 
         var params = [
-            "app": String(data: appData ?? Data(), encoding: .utf8) ?? "",
+            "app": String(decoding: appData ?? Data(), as: UTF8.self),
             "source": sourceID,
         ]
         if let returnURLString = returnURLString {
@@ -1145,7 +1144,8 @@ extension STPAPIClient {
                         shared_lastError = error
                     }
                     if let paymentMethods = deserializer?.paymentMethods {
-                        shared_allPaymentMethods.append(contentsOf: paymentMethods)
+                        // For unknown reasons, `append(contentsOf:` here sometimes causes an EXC_BAD_INSTRUCTION if you repeatedly run tests
+                        paymentMethods.forEach { shared_allPaymentMethods.append($0) }
                     }
                     group.leave()
                 }
@@ -1153,6 +1153,11 @@ extension STPAPIClient {
         }
 
         group.notify(queue: DispatchQueue.main) {
+            // Once all parallel requests are finished, sort the array w/ newest first
+            shared_allPaymentMethods.sort { a, b in
+                guard let aCreated = a.created, let bCreated = b.created else { return true }
+                return aCreated > bCreated
+            }
             completion(shared_allPaymentMethods, shared_lastError)
         }
     }
@@ -1162,6 +1167,7 @@ extension STPAPIClient {
         _ paymentMethodID: String,
         customerId: String,
         fromCustomerUsing ephemeralKeySecret: String,
+        withCustomerSessionClientSecret customerSessionClientSecret: String,
         completion: @escaping STPErrorBlock
     ) {
         let fetchPaymentMethods: (String) async throws -> [STPPaymentMethod] = { customerId in
@@ -1180,12 +1186,12 @@ extension STPAPIClient {
         }
         let detachPaymentMethod: (String) async throws -> Void = { paymentMethodID in
             try await withCheckedThrowingContinuation { continuation in
-                let endpoint = "\(APIEndpointPaymentMethods)/\(paymentMethodID)/detach"
+                let endpoint = "\(APIEndpointElementsPaymentMethods)/\(paymentMethodID)/detach"
                 APIRequest<STPPaymentMethod>.post(
                     with: self,
                     endpoint: endpoint,
                     additionalHeaders: self.authorizationHeader(using: ephemeralKeySecret),
-                    parameters: [:]
+                    parameters: ["customer_session_client_secret": customerSessionClientSecret]
                 ) { _, _, error in
                     if let error {
                         continuation.resume(throwing: error)
@@ -1246,12 +1252,46 @@ extension STPAPIClient {
     @_spi(STP) public func detachPaymentMethodRemoveDuplicates(
         _ paymentMethodID: String,
         customerId: String,
-        fromCustomerUsing ephemeralKeySecret: String
+        fromCustomerUsing ephemeralKeySecret: String,
+        withCustomerSessionClientSecret customerSessionClientSecret: String
     ) async throws {
-        try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<Void, Error>) -> Void in
+        try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<Void, Error>) in
             detachPaymentMethodRemoveDuplicates(paymentMethodID,
                                                 customerId: customerId,
-                                                fromCustomerUsing: ephemeralKeySecret) { error in
+                                                fromCustomerUsing: ephemeralKeySecret,
+                                                withCustomerSessionClientSecret: customerSessionClientSecret) { error in
+                if let error = error {
+                    continuation.resume(throwing: error)
+                } else {
+                    continuation.resume()
+                }
+            }
+        }
+    }
+
+    @_spi(STP) public func detachPaymentMethod(
+        _ paymentMethodID: String,
+        fromCustomerUsing ephemeralKeySecret: String,
+        withCustomerSessionClientSecret customerSessionClientSecret: String,
+        completion: @escaping STPErrorBlock
+    ) {
+        let endpoint = "\(APIEndpointElementsPaymentMethods)/\(paymentMethodID)/detach"
+        APIRequest<STPPaymentMethod>.post(
+            with: self,
+            endpoint: endpoint,
+            additionalHeaders: authorizationHeader(using: ephemeralKeySecret),
+            parameters: ["customer_session_client_secret": customerSessionClientSecret]
+        ) { _, _, error in
+            completion(error)
+        }
+    }
+    @_spi(STP) public func detachPaymentMethod(
+        _ paymentMethodID: String,
+        fromCustomerUsing ephemeralKeySecret: String,
+        withCustomerSessionClientSecret customerSessionClientSecret: String
+    ) async throws {
+        try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<Void, Error>) in
+            detachPaymentMethod(paymentMethodID, fromCustomerUsing: ephemeralKeySecret, withCustomerSessionClientSecret: customerSessionClientSecret) { error in
                 if let error = error {
                     continuation.resume(throwing: error)
                 } else {
@@ -1281,7 +1321,7 @@ extension STPAPIClient {
         _ paymentMethodID: String,
         fromCustomerUsing ephemeralKeySecret: String
     ) async throws {
-        try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<Void, Error>) -> Void in
+        try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<Void, Error>) in
             detachPaymentMethod(paymentMethodID, fromCustomerUsing: ephemeralKeySecret) { error in
                 if let error = error {
                     continuation.resume(throwing: error)
@@ -1315,7 +1355,7 @@ extension STPAPIClient {
         _ paymentMethodID: String,
         customerID: String,
         ephemeralKeySecret: String) async throws {
-            try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<Void, Error>) -> Void in
+            try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<Void, Error>) in
                 attachPaymentMethod(paymentMethodID, customerID: customerID, ephemeralKeySecret: ephemeralKeySecret) { error in
                     if let error = error {
                         continuation.resume(throwing: error)
@@ -1360,6 +1400,52 @@ extension STPAPIClient {
             }
         })
     }
+
+    /// Sets a payment method as the default payment method for a customer.
+    /// - Parameters:
+    ///   - paymentMethodID: Identifier of the payment method to be set as default
+    ///   - customerID: Identifier of the customer whose default payment method is being set
+    ///   - ephemeralKey: The Customer Ephemeral Key secret to be used
+    ///   - completion: The callback to run with the returned `STPCustomer` object, or an error.
+    @_spi(STP) public func setAsDefaultPaymentMethod(
+        _ paymentMethodID: String,
+        for customerID: String,
+        using ephemeralKey: String,
+        completion: @escaping STPCustomerCompletionBlock
+    ) {
+        APIRequest<STPCustomer>.post(
+            with: self,
+            endpoint: "\(APIEndpointElementsCustomers)/\(customerID)/set_default_payment_method",
+            additionalHeaders: authorizationHeader(using: ephemeralKey),
+            parameters: [
+                "payment_method": paymentMethodID
+            ]
+        ) { customer, _, error in
+            completion(customer, error)
+        }
+    }
+
+    /// Sets a payment method as the default payment method for a customer.
+    /// - Parameters:
+    ///   - paymentMethodID: Identifier of the payment method to be set as default
+    ///   - customerID: Identifier of the customer whose default payment method is being set
+    ///   - ephemeralKey: The Customer Ephemeral Key secret to be used
+    /// - Returns: Returns the updated `STPCustomer` or throws an error if the operation failed.
+    @_spi(STP) public func setAsDefaultPaymentMethod(
+        _ paymentMethodID: String,
+        for customerID: String,
+        using ephemeralKey: String
+    ) async throws -> STPCustomer {
+        try await withCheckedThrowingContinuation({ continuation in
+            self.setAsDefaultPaymentMethod(paymentMethodID, for: customerID, using: ephemeralKey) { customer, error in
+                guard let customer = customer else {
+                    continuation.resume(throwing: error ?? NSError.stp_defaultPaymentMethodNotUpdatedError())
+                    return
+                }
+                continuation.resume(returning: customer)
+            }
+        })
+    }
 }
 
 private let APIEndpointToken = "tokens"
@@ -1368,6 +1454,8 @@ private let APIEndpointSources = "sources"
 private let APIEndpointPaymentIntents = "payment_intents"
 private let APIEndpointSetupIntents = "setup_intents"
 @_spi(STP) public let APIEndpointPaymentMethods = "payment_methods"
+private let APIEndpointElementsCustomers = "elements/customers"
+private let APIEndpointElementsPaymentMethods = "elements/payment_methods"
 private let APIEndpoint3DS2 = "3ds2"
 private let PaymentMethodDataHash = "payment_method_data"
 private let SourceDataHash = "source_data"

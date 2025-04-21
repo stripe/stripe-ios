@@ -9,8 +9,9 @@
 
 import StripeCore
 import StripeCoreTestUtils
+import StripePaymentsTestUtils
 
-class STPPaymentMethodOXXOTests: XCTestCase {
+class STPPaymentMethodOXXOTests: STPNetworkStubbingTestCase {
     private(set) var oxxoJSON: [AnyHashable: Any]?
 
     func _retrieveOXXOJSON(_ completion: @escaping ([AnyHashable: Any]?) -> Void) {

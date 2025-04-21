@@ -77,27 +77,4 @@ class NSDecimalNumberStripeTest: XCTestCase {
         }
     }
 
-    func testAmount_twoDecimal() {
-        for twoDecimalPointCurrency in twoDecimalPointCurrencies {
-            let amount = NSDecimalNumber(value: 1000.12)
-            let decimalNumber = amount.stp_amount(withCurrency: twoDecimalPointCurrency)
-            XCTAssertEqual(decimalNumber, 100012)
-        }
-    }
-
-    func testAmount_noDecimal() {
-        for noDecimalPointCurrency in noDecimalPointCurrencies {
-            let amount = NSDecimalNumber(value: 1000.12)
-            let decimalNumber = amount.stp_amount(withCurrency: noDecimalPointCurrency)
-            XCTAssertEqual(decimalNumber, 1000)
-        }
-    }
-
-    func testAmount_threeDecimal() {
-        for threeDecimalPointCurrency in threeDecimalCurrencies {
-            let amount = NSDecimalNumber(value: 1000.12)
-            let decimalNumber = amount.stp_amount(withCurrency: threeDecimalPointCurrency)
-            XCTAssertEqual(decimalNumber, 1000120)
-        }
-    }
 }

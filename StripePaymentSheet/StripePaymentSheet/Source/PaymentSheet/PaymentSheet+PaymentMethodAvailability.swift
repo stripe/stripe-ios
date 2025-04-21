@@ -23,7 +23,6 @@ extension PaymentSheet {
         .klarna, .afterpayClearpay, .affirm,
         .iDEAL, .bancontact, .sofort, .SEPADebit, .EPS, .przelewy24,
         .USBankAccount,
-        .instantDebits,
         .AUBECSDebit,
         .UPI,
         .cashApp,
@@ -33,11 +32,60 @@ extension PaymentSheet {
         .bacsDebit,
         .alipay,
         .OXXO, .zip, .revolutPay, .amazonPay, .alma, .mobilePay, .konbini, .paynow, .promptPay,
+        .sunbit,
+        .billie,
+        .satispay,
+        .crypto,
         .boleto,
         .swish,
         .twint,
         .multibanco,
     ]
+
+    /// A list of `STPPaymentMethodType` that can be saved in PaymentSheet
+    static let supportedSavedPaymentMethods: [STPPaymentMethodType] = [.card, .USBankAccount, .SEPADebit]
+
+    /// A list of `STPPaymentMethodType` that can be set as default in PaymentSheet when opted in to the "set as default" feature
+    static let supportedDefaultPaymentMethods: [STPPaymentMethodType] = [.card, .USBankAccount]
+
+    /// Canonical source of truth for whether Apple Pay is enabled
+    static func isApplePayEnabled(elementsSession: STPElementsSession, configuration: PaymentElementConfiguration) -> Bool {
+        return StripeAPI.deviceSupportsApplePay()
+            && configuration.applePay != nil
+            && elementsSession.isApplePayEnabled
+    }
+
+    /// Canonical source of truth for whether Link is enabled
+    static func isLinkEnabled(elementsSession: STPElementsSession, configuration: PaymentElementConfiguration) -> Bool {
+        guard elementsSession.supportsLink, configuration.link.shouldDisplay else {
+            return false
+        }
+
+        // Disable Link if the merchant is using card brand filtering
+        guard configuration.cardBrandAcceptance == .all else {
+           return false
+        }
+
+        guard elementsSession.isCompatible(with: configuration) else {
+            return false
+        }
+
+        return true
+    }
+
+    /// An unordered list of paymentMethodTypes that can be used with Link in PaymentSheet
+    /// - Note: This is a var because it depends on the authenticated Link user
+    ///
+    /// :nodoc:
+    internal static var supportedLinkPaymentMethods: [STPPaymentMethodType] = []
+}
+
+private extension STPElementsSession {
+    func isCompatible(with configuration: PaymentElementConfiguration) -> Bool {
+        // We can't collect billing details if we're in the web flow, so turn Link off for those cases.
+        let nativeLink = deviceCanUseNativeLink(elementsSession: self, configuration: configuration)
+        return nativeLink || !configuration.requiresBillingDetailCollection()
+    }
 }
 
 // MARK: - PaymentMethodRequirementProvider
@@ -49,23 +97,10 @@ protocol PaymentMethodRequirementProvider {
     var fulfilledRequirements: [PaymentMethodTypeRequirement] { get }
 }
 
-extension PaymentSheet.Configuration: PaymentMethodRequirementProvider {
-    var fulfilledRequirements: [PaymentMethodTypeRequirement] {
-        var reqs = [PaymentMethodTypeRequirement]()
-        if returnURL != nil { reqs.append(.returnURL) }
-        if allowsDelayedPaymentMethods { reqs.append(.userSupportsDelayedPaymentMethods) }
-        if allowsPaymentMethodsRequiringShippingAddress { reqs.append(.shippingAddress) }
-        if FinancialConnectionsSDKAvailability.isFinancialConnectionsSDKAvailable {
-            reqs.append(.financialConnectionsSDK)
-        }
-        return reqs
-    }
-}
-
 extension Intent: PaymentMethodRequirementProvider {
     var fulfilledRequirements: [PaymentMethodTypeRequirement] {
         switch self {
-        case let .paymentIntent(_, paymentIntent):
+        case let .paymentIntent(paymentIntent):
             var reqs = [PaymentMethodTypeRequirement]()
             // Shipping address
             if let shippingInfo = paymentIntent.shipping {
@@ -86,7 +121,7 @@ extension Intent: PaymentMethodRequirementProvider {
             }
 
             return reqs
-        case let .setupIntent(_, setupIntent):
+        case let .setupIntent(setupIntent):
             var reqs = [PaymentMethodTypeRequirement]()
 
             // valid us bank verification method
@@ -117,7 +152,7 @@ extension STPPaymentMethodOptions.USBankAccount.VerificationMethod {
 typealias PaymentMethodTypeRequirement = PaymentSheet.PaymentMethodTypeRequirement
 
 extension PaymentSheet {
-    enum PaymentMethodTypeRequirement: Comparable {
+    enum PaymentMethodTypeRequirement: Hashable {
 
         /// A special case that indicates the payment method is always unsupported by PaymentSheet
         case unsupported
@@ -143,6 +178,15 @@ extension PaymentSheet {
         /// Requires a valid us bank verification method
         case validUSBankVerificationMethod
 
+        /// The `us_bank_account` payment method is preventing this payment method from being shown.
+        case unexpectedUsBankAccount
+
+        /// The email collection configuration is invalid for this payment method.
+        case invalidEmailCollectionConfiguration
+
+        /// The Stripe account is not configured for bank payments.
+        case linkFundingSourcesMissingBankAccount
+
         /// A helpful description for developers to better understand requirements so they can debug why payment methods are not present
         var debugDescription: String {
             switch self {
@@ -162,9 +206,14 @@ extension PaymentSheet {
                 return "financialConnectionsSDK: The FinancialConnections SDK must be linked. See https://stripe.com/docs/payments/accept-a-payment?platform=ios&ui=payment-sheet#ios-ach"
             case .validUSBankVerificationMethod:
                 return "Requires a valid US bank verification method."
+            case .unexpectedUsBankAccount:
+                return "The list of payment method types includes 'us_bank_account', which prevents the 'Bank' tab from being displayed."
+            case .invalidEmailCollectionConfiguration:
+                return "The provided configuration must either collect an email, or a default email must be provided. See https://docs.stripe.com/payments/payment-element/control-billing-details-collection"
+            case .linkFundingSourcesMissingBankAccount:
+                return "Your account isn't set up to process Instant Bank Payments. Reach out to Stripe support."
             }
         }
-
     }
 
     enum PaymentMethodAvailabilityStatus: Equatable {
@@ -178,6 +227,7 @@ extension PaymentSheet {
         case missingRequirements(Set<PaymentMethodTypeRequirement>)
 
         var debugDescription: String {
+            let separator = "\n\t* "
             switch self {
             case .supported:
                 return "Supported by PaymentSheet."
@@ -186,7 +236,7 @@ extension PaymentSheet {
             case .unactivated:
                 return "This payment method is enabled for test mode, but is not activated for live mode. Visit the Stripe Dashboard to activate the payment method. https://support.stripe.com/questions/activate-a-new-payment-method"
             case .missingRequirements(let missingRequirements):
-                return missingRequirements.map { $0.debugDescription }.joined(separator: "\n\t* ")
+                return "\t* \(missingRequirements.map { $0.debugDescription }.joined(separator: separator))"
             }
         }
 
@@ -197,8 +247,8 @@ extension PaymentSheet {
                  (.unactivated, .unactivated):
                   return true
             case (.missingRequirements(let requirements), .missingRequirements(let otherRequirements)):
-                // don't care about the ordering
-                return requirements.sorted(by: { $0 >= $1 }) == otherRequirements.sorted(by: { $0 >= $1 })
+                // Using `==` on two sets does not consider the order of items in the set.
+                return requirements == otherRequirements
             default:
                 return false
             }

@@ -1,0 +1,29 @@
+{
+  "configurations" : [
+    {
+      "id" : "83961E64-C898-420A-8DB3-072746830EF8",
+      "name" : "Test Scheme Action",
+      "options" : {
+
+      }
+    }
+  ],
+  "defaultOptions" : {
+    "codeCoverage" : false,
+    "targetForVariableExpansion" : {
+      "containerPath" : "container:StripeConnect Example.xcodeproj",
+      "identifier" : "416E9E922C76BD4400A0B917",
+      "name" : "StripeConnect Example"
+    }
+  },
+  "testTargets" : [
+    {
+      "target" : {
+        "containerPath" : "container:StripeConnect Example.xcodeproj",
+        "identifier" : "416E9EB22C76BD4600A0B917",
+        "name" : "StripeConnect ExampleUITests"
+      }
+    }
+  ],
+  "version" : 1
+}

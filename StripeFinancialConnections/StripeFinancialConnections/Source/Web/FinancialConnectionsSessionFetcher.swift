@@ -16,14 +16,14 @@ class FinancialConnectionsSessionAPIFetcher: FinancialConnectionsSessionFetcher 
 
     // MARK: - Properties
 
-    private let api: FinancialConnectionsAPIClient
+    private let api: FinancialConnectionsAPI
     private let clientSecret: String
     private let accountFetcher: FinancialConnectionsAccountFetcher
 
     // MARK: - Init
 
     init(
-        api: FinancialConnectionsAPIClient,
+        api: FinancialConnectionsAPI,
         clientSecret: String,
         accountFetcher: FinancialConnectionsAccountFetcher
     ) {

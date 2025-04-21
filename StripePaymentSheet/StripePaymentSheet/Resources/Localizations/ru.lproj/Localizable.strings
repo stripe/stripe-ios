@@ -1,7 +1,5 @@
 "%1$@ •••• %2$@" = "%1$@ •••• %2$@";
 
-"%1$d interest-free payments of %2$@" = "%1$li беспроцентных платежей по %2$@";
-
 "+ Add" = "+ Добавить";
 
 "Add US bank account" = "Добавить банковский счет в США";
@@ -9,6 +7,8 @@
 "Add a card" = "Добавьте карту";
 
 "Add a payment method" = "Добавьте способ оплаты";
+
+"Add bank account" = "Добавить банковский счет";
 
 "Add card" = "Добавить карту";
 
@@ -18,11 +18,29 @@
 
 "Add your payment information" = "Укажите платежные данные";
 
+"Agree and continue" = "Согласиться и продолжить";
+
 "Approve payment" = "Подтвердить платеж";
+
+"Are you sure you want to remove this card?" = "Вы уверены, что хотите удалить эту карту?";
+
+"Are you sure you want to remove this linked account?" = "Вы уверены, что хотите удалить этот привязанный счет?";
 
 "Back" = "Назад";
 
+"Bank" = "Банк";
+
 "Bank account" = "Банковский счет";
+
+"Bank account details cannot be changed." = "Реквизиты банковского счета нельзя изменить.";
+
+"Buy now or pay later with  <img/>" = "Купите сейчас или оплатите позже через <img/>";
+
+"Buy now or pay later with Afterpay" = "Купите сейчас или оплатите позже через систему Afterpay";
+
+"Buy now or pay later with Cash App Afterpay" = "Купите сейчас или оплатите позже через Cash App Afterpay";
+
+"Buy now or pay later with Clearpay" = "Купите сейчас или оплатите позже через систему Clearpay";
 
 "Buy now or pay later with Klarna" = "Купите сейчас или оплатите позже через систему Klarna";
 
@@ -38,11 +56,15 @@
 
 "By continuing to Revolut Pay, you allow %@ to charge your Revolut Pay account for future payments in accordance with their terms." = "Подтверждая платеж через Revolut Pay, вы тем самым разрешаете компании %@ списывать с вашего счета Revolut Pay суммы будущих платежей согласно условиям.";
 
+"By continuing you agree to the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Продолжая, вы тем самым принимаете соответствующие <terms>Условия</terms> и <privacy>политику конфиденциальности</privacy>.";
+
 "By continuing, you agree to authorize payments pursuant to <terms>these terms</terms>." = "Продолжая, вы соглашаетесь авторизовать платежи в соответствии с <terms>этими условиями</terms>.";
 
 "By continuing, you authorize %@ to debit your Cash App account for this payment and future payments in accordance with %@'s terms, until this authorization is revoked. You can change this anytime in your Cash App Settings." = "Продолжая, вы уполномочиваете компанию %1$@ списывать с вашего счета Cash App суммы в соответствии с этим, а также будущими платежами согласно условиям компании %2$@, пока это разрешение не будет отозвано. Отозвать разрешение можно в любой момент в настройках приложения Cash App.";
 
 "By joining Link, you agree to the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Регистрируясь в Link, вы принимаете соответствующие <terms>Условия</terms> и <privacy>Политику конфиденциальности</privacy>.";
+
+"By providing your card information, you allow %@ to charge your card for future payments in accordance with their terms." = "Указывая реквизиты карты, вы разрешаете компании %@ списывать средства с карты в рамках будущих платежей в соответствии с условиями компании.";
 
 "By providing your email, you agree to create a Link account and save your payment info to Link, according to the Link <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Предоставляя свой электронный адрес, вы соглашаетесь создать учетную запись Link и сохранить свои платежные реквизиты в Link в соответствии с <terms>Условиями</terms> и <privacy>Политикой конфиденциальности</privacy>.";
 
@@ -56,11 +78,23 @@
 
 "Cancel and pay another way" = "Отменить платеж и оплатить другим способом";
 
+"Card details cannot be changed." = "Реквизиты карты нельзя изменить.";
+
+"Change" = "Изменить";
+
+"Change email" = "Изменить адрес электронной почты";
+
 "Choose a payment method" = "Выберите метод оплаты";
 
 "Close card scanner" = "Закрыть сканер карт";
 
+"Code sent" = "Код отправлен";
+
 "Confirm" = "Подтвердить";
+
+"Confirm it's you" = "Подтвердите, что это вы";
+
+"Confirm payment details" = "Подтвердить реквизиты платежа";
 
 "Confirm the payment in your bank or payment app within %@ to complete the purchase." = "Чтобы завершить оформление покупки, подтвердите платеж в своем банковском или платежном приложении в течение %@.";
 
@@ -68,19 +102,43 @@
 
 "Confirm your CVC" = "Подтвердить код CVV карты";
 
-"Confirm your CVV" = "Подтвердить код CVV карты";
-
 "Contact information" = "Контактные данные";
+
+"Default" = "По умолчанию";
+
+"Default payment method" = "Способ оплаты по умолчанию";
 
 "EPS Bank" = "Банк EPS";
 
 "Enter address manually" = "Введите адрес вручную";
 
+"Enter the code sent to %@ to use your saved information." = "Чтобы использовать ранее сохраненные данные, введите код, отправленный на %@.";
+
 "FPX Bank" = "Банк FPX";
+
+"Failed to connect" = "Не удалось подключиться";
+
+"Fast, secure, 1⁠-⁠click checkout" = "Быстрое, безопасное оформление оплаты одним щелчком";
+
+"For security, please re-enter your card’s security code." = "В целях безопасности введите заново код CVV/CVC карты.";
+
+"Get %@ back when you pay for the first time with your bank. <terms>See terms</terms>" = "Получите возврат в сумме %@, когда впервые оплатите заказ с банковского счета. <terms>См. условия</terms>";
+
+"Get %@ back when you pay with your bank. <terms>See terms</terms>" = "Получите возврат в сумме %@ при оплате с банковского счета. <terms>См. условия</terms>";
 
 "I understand that Stripe will be collecting Direct Debits on behalf of %@ and confirm that I am the account holder and the only person required to authorise debits from this account." = "Я понимаю, что Stripe будет принимать прямые дебетования от имени %@, и подтверждаю, что являюсь владельцем счета и единственным лицом, согласие которого требуется для проведения дебетований с этого счета.";
 
 "IBAN" = "IBAN";
+
+"Log out of Link" = "Выйти из Link";
+
+"Manage SEPA debit" = "Управление дебетованием SEPA";
+
+"Manage US bank account" = "Управление банковским счетом в США";
+
+"Manage card" = "Управление картой";
+
+"Manage cards" = "Управление картами";
 
 "Manage payment method" = "Управление способом оплаты";
 
@@ -93,6 +151,12 @@
 "New card" = "Новая карта";
 
 "New payment method" = "Новый способ оплаты";
+
+"No %@ promo" = "Нет промоакции %@";
+
+"Not %@?" = "Не %@?";
+
+"Only card brand can be changed." = "Изменить можно только бренд карты.";
 
 "Open your UPI app to approve your payment within %@" = "Откройте приложение UPI, чтобы подтвердить платеж, не позднее чем через %@";
 
@@ -112,15 +176,21 @@
 
 "Pay faster at %@ and thousands of businesses." = "Ускоренная оплата продавцу %@ и тысячам других предприятий.";
 
-"Pay in <num_installments/> interest-free payments of <installment_price/> with <img/>" = "Оплатить в беспроцентную рассрочку <num_installments/> выплатами по <installment_price/> через <img/>";
-
 "Pay over time with %@" = "Оплатить в рассрочку с помощью %@";
+
+"Pay over time with Affirm" = "Оплатить в рассрочку через систему Affirm";
 
 "Pay with Link" = "Оплатить с помощью Link";
 
 "Pay with your bank account in just a few steps." = "Платите с использованием своего банковского счета в несколько простых действий.";
 
+"Payment" = "Платеж";
+
 "Payment failed" = "Выполнить платеж не удалось";
+
+"Payment methods" = "Способы оплаты";
+
+"Please choose a valid payment method." = "Выберите действительный способ оплаты.";
 
 "Please go back and select another payment method" = "Вернитесь назад и выберите другой способ оплаты";
 
@@ -132,7 +202,11 @@
 
 "Remove card?" = "Удалить карту?";
 
-"Remove payment method" = "Удалить способ оплаты";
+"Remove linked account" = "Удалить привязанный счет";
+
+"Resend code" = "Послать код вторично";
+
+"SEPA debit details cannot be changed." = "Реквизиты платежа дебетованием SEPA нельзя изменить.";
 
 "Save" = "Сохранить";
 
@@ -142,13 +216,15 @@
 
 "Save for future payments" = "Сохранить данные для будущих платежей";
 
-"Save this account for future %@ payments" = "Сохранить этот счет для будущих платежей %@";
+"Save payment details to %@ for future purchases" = "Сохранить реквизиты платежа в адрес %@ для будущих покупок";
 
-"Save this card for future %@ payments" = "Сохранить данные этой карты для будущих платежей %@";
+"Save this account for future %@ payments" = "Сохранить этот счет для будущих платежей %@";
 
 "Save your bank account in just a few steps." = "Сохраните реквизиты своего банковского счета всего за несколько шагов.";
 
 "Save your info for secure 1-click checkout with Link" = "Сохраните свои данные в Link для безопасного оформления покупок нажатием одной кнопки";
+
+"Save your payment information with Link, and securely check out in 1-click on Link-supported sites." = "Сохраните платежные реквизиты в Link, чтобы безопасно оформлять заказы одним щелчком на всех сайтах, поддерживающих Link.";
 
 "Saved" = "Сохранено";
 
@@ -157,6 +233,10 @@
 "Select payment method" = "Выберите способ оплаты";
 
 "Select your payment method" = "Выберите способ оплаты";
+
+"Set as default" = "Назначить способом по умолчанию";
+
+"Set as default payment method" = "Назначить способом оплаты по умолчанию";
 
 "Set up" = "Настроить";
 
@@ -170,11 +250,29 @@
 
 "Stripe will deposit $0.01 to your account in 1-2 business days. Then you’ll get an email with instructions to complete payment to %@." = "Через 1-2 рабочих дня Stripe положит вам на счет сумму $0,01. После этого вы получите электронное письмо с инструкциями по завершению платежа в адрес %@.";
 
+"Tap to close" = "Коснитесь, чтобы закрыть";
+
+"Tap to expand" = "Коснитесь, чтобы развернуть";
+
 "The IBAN you entered is incomplete." = "Введенный код IBAN неполон.";
 
-"Update" = "Обновить";
+"The provided verification code has expired." = "Указанный код подтверждения уже недействителен.";
 
-"Update card brand" = "Изменить бренд карты";
+"The provided verification code is incorrect." = "Указанный код подтверждения недействителен.";
+
+"This card has expired. Update your card info or choose a different payment method." = "Срок действия этой карты истек. Обновите данные карты или выберите другой способ оплаты.";
+
+"This is your default" = "Это ваше значение по умолчанию";
+
+"Too many attempts. Please try again in a few minutes." = "Превышено разрешенное число попыток. Попробуйте еще раз через несколько минут.";
+
+"Unavailable for this purchase" = "Не предусмотрено для этой покупки";
+
+"Update card" = "Обновить реквизиты карты";
+
+"Update payment method" = "Обновить способ оплаты";
+
+"Use your saved info to check out faster" = "Используйте сохраненные данные для ускоренного оформления покупок";
 
 "View more" = "Показать ещё";
 

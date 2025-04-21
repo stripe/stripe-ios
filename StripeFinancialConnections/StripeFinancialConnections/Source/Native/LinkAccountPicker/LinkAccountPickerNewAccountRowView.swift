@@ -16,6 +16,7 @@ final class LinkAccountPickerNewAccountRowView: UIView {
     init(
         title: String,
         imageUrl: String?,
+        appearance: FinancialConnectionsAppearance,
         didSelect: @escaping () -> Void
     ) {
         self.didSelect = didSelect
@@ -24,7 +25,7 @@ final class LinkAccountPickerNewAccountRowView: UIView {
         let horizontalStackView = CreateHorizontalStackView()
         if let imageUrl = imageUrl {
             horizontalStackView.addArrangedSubview(
-                CreateIconView(imageUrl: imageUrl)
+                CreateIconView(imageUrl: imageUrl, appearance: appearance)
             )
         }
         horizontalStackView.addArrangedSubview(
@@ -38,7 +39,7 @@ final class LinkAccountPickerNewAccountRowView: UIView {
         addGestureRecognizer(tapGestureRecognizer)
 
         layer.cornerRadius = 12
-        layer.borderColor = UIColor.borderDefault.cgColor
+        layer.borderColor = FinancialConnectionsAppearance.Colors.borderNeutral.cgColor
         layer.borderWidth = 1
     }
 
@@ -49,38 +50,28 @@ final class LinkAccountPickerNewAccountRowView: UIView {
     @objc private func didTapView() {
         self.didSelect()
     }
+
+    // CGColor's need to be manually updated when the system theme changes.
+    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+        super.traitCollectionDidChange(previousTraitCollection)
+        guard traitCollection.hasDifferentColorAppearance(comparedTo: previousTraitCollection) else { return }
+
+        layer.borderColor = FinancialConnectionsAppearance.Colors.borderNeutral.cgColor
+    }
 }
 
-private func CreateIconView(imageUrl: String) -> UIView {
-    let roundedSquareView = UIView()
-    roundedSquareView.backgroundColor = .brand25
-    roundedSquareView.layer.cornerRadius = 12
-    let roundedSquareViewDiameter: CGFloat = 56
-    roundedSquareView.translatesAutoresizingMaskIntoConstraints = false
-    NSLayoutConstraint.activate([
-        roundedSquareView.widthAnchor.constraint(equalToConstant: roundedSquareViewDiameter),
-        roundedSquareView.heightAnchor.constraint(equalToConstant: roundedSquareViewDiameter),
-    ])
-
-    let iconImageView = UIImageView()
-    iconImageView.contentMode = .scaleAspectFit
-    iconImageView.setImage(with: imageUrl)
-    roundedSquareView.addSubview(iconImageView)
-    let iconDiameter: CGFloat = 20
-    iconImageView.translatesAutoresizingMaskIntoConstraints = false
-    NSLayoutConstraint.activate([
-        iconImageView.widthAnchor.constraint(equalToConstant: iconDiameter),
-        iconImageView.heightAnchor.constraint(equalToConstant: iconDiameter),
-        iconImageView.centerXAnchor.constraint(equalTo: roundedSquareView.centerXAnchor),
-        iconImageView.centerYAnchor.constraint(equalTo: roundedSquareView.centerYAnchor),
-    ])
-    return roundedSquareView
+private func CreateIconView(imageUrl: String, appearance: FinancialConnectionsAppearance) -> UIView {
+    RoundedIconView(
+        image: .imageUrl(imageUrl, placeholder: Image.add),
+        style: .rounded,
+        appearance: appearance
+    )
 }
 
 private func CreateTitleLabelView(title: String) -> UIView {
     let titleLabel = AttributedLabel(
         font: .label(.largeEmphasized),
-        textColor: .textDefault
+        textColor: FinancialConnectionsAppearance.Colors.textDefault
     )
     titleLabel.text = title
     titleLabel.lineBreakMode = .byCharWrapping
@@ -110,11 +101,13 @@ private struct LinkAccountPickerNewAccountRowViewUIViewRepresentable: UIViewRepr
 
     let title: String
     let imageUrl: String?
+    let appearance: FinancialConnectionsAppearance
 
     func makeUIView(context: Context) -> LinkAccountPickerNewAccountRowView {
         return LinkAccountPickerNewAccountRowView(
             title: title,
             imageUrl: imageUrl,
+            appearance: appearance,
             didSelect: {}
         )
     }
@@ -129,13 +122,22 @@ struct LinkAccountPickerNewAccountRowView_Previews: PreviewProvider {
                 VStack(spacing: 10) {
                     LinkAccountPickerNewAccountRowViewUIViewRepresentable(
                         title: "New bank account",
-                        imageUrl: "https://b.stripecdn.com/connections-statics-srv/assets/SailIcon--add-purple-3x.png"
+                        imageUrl: "https://b.stripecdn.com/connections-statics-srv/assets/SailIcon--add-purple-3x.png",
+                        appearance: .stripe
                     )
                         .frame(height: 88)
 
                     LinkAccountPickerNewAccountRowViewUIViewRepresentable(
                         title: "New bank account",
-                        imageUrl: nil
+                        imageUrl: "https://b.stripecdn.com/connections-statics-srv/assets/SailIcon--add-purple-3x.png",
+                        appearance: .link
+                    )
+                        .frame(height: 88)
+
+                    LinkAccountPickerNewAccountRowViewUIViewRepresentable(
+                        title: "New bank account",
+                        imageUrl: nil,
+                        appearance: .stripe
                     )
                         .frame(height: 88)
                 }

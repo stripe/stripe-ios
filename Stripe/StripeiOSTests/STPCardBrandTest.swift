@@ -44,6 +44,8 @@ class STPCardBrandTest: XCTestCase {
                 XCTAssertEqual(string, "Cartes Bancaires")
             case .unknown:
                 XCTAssertEqual(string, "Unknown")
+            case .none:
+                XCTAssertEqual(string, "Unknown")
             @unknown default:
                 break
             }

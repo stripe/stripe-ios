@@ -7,9 +7,10 @@
 
 @testable import Stripe
 import StripeCoreTestUtils
+import StripePaymentsTestUtils
 import XCTest
 
-class STPPaymentMethodAmazonPayTests: XCTestCase {
+class STPPaymentMethodAmazonPayTests: STPNetworkStubbingTestCase {
 
     static let amazonPayPaymentIntentClientSecret = "pi_3OmQQ0FY0qyl6XeW0H4X6eI0_secret_BerPIzUf8vFy1KXG53iYvX2Zb"
 

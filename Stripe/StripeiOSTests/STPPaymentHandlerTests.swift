@@ -41,14 +41,13 @@ class STPPaymentHandlerStubbedTests: STPNetworkStubbingTestCase {
             }
         }
         wait(for: [createPaymentIntentExpectation], timeout: 8)  // STPTestingNetworkRequestTimeout
-        guard let clientSecret = retrievedClientSecret,
-            let currentYear = Calendar.current.dateComponents([.year], from: Date()).year
+        guard let clientSecret = retrievedClientSecret
         else {
             XCTFail()
             return
         }
 
-        let expiryYear = NSNumber(value: currentYear + 2)
+        let expiryYear = NSNumber(value: 2040)
         let expiryMonth = NSNumber(1)
 
         let cardParams = STPPaymentMethodCardParams()
@@ -110,6 +109,8 @@ class STPPaymentHandlerStubbedTests: STPNetworkStubbingTestCase {
 class STPPaymentHandlerTests: APIStubbedTestCase {
 
     func testPaymentHandlerRetriesWithBackoff() {
+        let oldMaxRetries = StripeAPI.maxRetries
+        StripeAPI.maxRetries = 1
         STPPaymentHandler.sharedHandler.apiClient = stubbedAPIClient()
 
         stub { urlRequest in
@@ -129,7 +130,7 @@ class STPPaymentHandlerTests: APIStubbedTestCase {
                                 "dsReferenceNumber": "3DS_LOA_DIS_PPFU_020100_00010",
                                 "acsReferenceNumber": "3DS_LOA_ACS_PPFU_020100_00009",
                                 "threeDSServerTransID": "fc7a39de-dc41-4b65-ba76-a322769b2efc",
-                                "messageVersion": "2.1.0",
+                                "messageVersion": "2.2.0",
                                 "authenticationValue": "AABBCCDDEEFFAABBCCDDEEFFAAA=",
                                 "messageType": "pArs",
                                 "transStatus": "C",
@@ -268,6 +269,7 @@ class STPPaymentHandlerTests: APIStubbedTestCase {
 
         wait(for: [paymentHandlerExpectation, checkedStillInProgress, fetchedSetupIntentExpectation], timeout: 60)
         STPPaymentHandler.sharedHandler.apiClient = STPAPIClient.shared
+        StripeAPI.maxRetries = oldMaxRetries
     }
 }
 

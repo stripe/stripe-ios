@@ -1,7 +1,5 @@
 "%1$@ •••• %2$@" = "%1$@ •••• %2$@";
 
-"%1$d interest-free payments of %2$@" = "%1$li pembayaran bebas bunga sebesar %2$@";
-
 "+ Add" = "+ Tambahkan";
 
 "Add US bank account" = "Tambahkan rekening bank AS";
@@ -9,6 +7,8 @@
 "Add a card" = "Tambahkan sebuah kartu";
 
 "Add a payment method" = "Tambahkan metode pembayaran";
+
+"Add bank account" = "Tambahkan rekening bank";
 
 "Add card" = "Tambahkan kartu";
 
@@ -18,11 +18,29 @@
 
 "Add your payment information" = "Tambahkan informasi pembayaran Anda";
 
+"Agree and continue" = "Setuju dan lanjutkan";
+
 "Approve payment" = "Setujui pembayaran";
+
+"Are you sure you want to remove this card?" = "Anda yakin ingin menghapus kartu ini?";
+
+"Are you sure you want to remove this linked account?" = "Anda yakin ingin menghapus rekening tertaut ini?";
 
 "Back" = "Kembali";
 
+"Bank" = "Bank";
+
 "Bank account" = "Rekening bank";
+
+"Bank account details cannot be changed." = "Detail rekening bank tidak dapat diubah.";
+
+"Buy now or pay later with  <img/>" = "Beli sekarang atau bayar nanti dengan  <img/>";
+
+"Buy now or pay later with Afterpay" = "Beli sekarang atau bayar nanti dengan Afterpay";
+
+"Buy now or pay later with Cash App Afterpay" = "Beli sekarang atau bayar nanti dengan Cash App Afterpay";
+
+"Buy now or pay later with Clearpay" = "Beli sekarang atau bayar nanti dengan Clearpay";
 
 "Buy now or pay later with Klarna" = "Beli sekarang atau bayar nanti dengan Klarna";
 
@@ -38,11 +56,15 @@
 
 "By continuing to Revolut Pay, you allow %@ to charge your Revolut Pay account for future payments in accordance with their terms." = "Dengan melanjutkan ke Revolut Pay, berarti Anda mengizinkan %@ mengenakan charge untuk pembayaran mendatang pada akun Revolut Pay Anda sesuai dengan ketentuan mereka.";
 
+"By continuing you agree to the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Dengan melanjutkan, berarti Anda menyetujui <terms>Ketentuan</terms> dan <privacy>Kebijakan Privasi</privacy>.";
+
 "By continuing, you agree to authorize payments pursuant to <terms>these terms</terms>." = "Dengan melanjutkan, Anda berarti setuju untuk mengotorisasi pembayaran sesuai dengan <terms>ketentuan-ketentuan berikut</terms>.";
 
 "By continuing, you authorize %@ to debit your Cash App account for this payment and future payments in accordance with %@'s terms, until this authorization is revoked. You can change this anytime in your Cash App Settings." = "Dengan melanjutkan, berarti Anda memberi %1$@ otorisasi untuk mendebit akun Cash App Anda bagi pembayaran ini dan pembayaran mendatang sesuai dengan ketentuan %2$@, hingga otorisasi ini dicabut. Anda dapat mengubahnya kapan saja di Pengaturan Cash App.";
 
 "By joining Link, you agree to the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Dengan bergabung ke Link, Anda berarti menyetujui <terms>Ketentuan</terms> dan <privacy>Kebijakan Privasi</privacy>.";
+
+"By providing your card information, you allow %@ to charge your card for future payments in accordance with their terms." = "Dengan memberikan informasi kartu, Anda berarti mengizinkan %@ mengenakan charge pada kartu Anda untuk pembayaran mendatang sesuai dengan ketentuan mereka.";
 
 "By providing your email, you agree to create a Link account and save your payment info to Link, according to the Link <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Dengan memberikan email, berarti Anda menyetujui pembuatan akun Link serta penyimpanan informasi pembayaran pada Link, sesuai dengan <terms>Ketentuan</terms> dan <privacy>Kebijakan Privasi</privacy> Link.";
 
@@ -56,11 +78,23 @@
 
 "Cancel and pay another way" = "Batalkan dan bayar dengan cara lain";
 
+"Card details cannot be changed." = "Detail kartu tidak dapat diubah.";
+
+"Change" = "Ubah";
+
+"Change email" = "Ubah email";
+
 "Choose a payment method" = "Pilih metode pembayaran";
 
 "Close card scanner" = "Tutup pemindai kartu";
 
+"Code sent" = "Kode dikirim";
+
 "Confirm" = "Konfirmasikan";
+
+"Confirm it's you" = "Konfirmasikan diri Anda";
+
+"Confirm payment details" = "Konfirmasikan detail pembayaran";
 
 "Confirm the payment in your bank or payment app within %@ to complete the purchase." = "Konfirmasikan pembayaran di aplikasi pembayaran atau bank Anda dalam %@ untuk menyelesaikan pembelian.";
 
@@ -68,19 +102,43 @@
 
 "Confirm your CVC" = "Konfirmasikan CVC Anda";
 
-"Confirm your CVV" = "Konfirmasikan CVV Anda";
-
 "Contact information" = "Informasi kontak";
+
+"Default" = "Default";
+
+"Default payment method" = "Metode pembayaran default";
 
 "EPS Bank" = "Bank EPS";
 
 "Enter address manually" = "Masukkan alamat secara manual";
 
+"Enter the code sent to %@ to use your saved information." = "Masukkan kode yang dikirim ke %@ untuk menggunakan informasi tersimpan Anda.";
+
 "FPX Bank" = "FPX Bank";
+
+"Failed to connect" = "Gagal menghubungkan";
+
+"Fast, secure, 1⁠-⁠click checkout" = "Checkout sekali klik yang aman dan cepat";
+
+"For security, please re-enter your card’s security code." = "Untuk keamanan, masukkan lagi kode keamanan kartu Anda.";
+
+"Get %@ back when you pay for the first time with your bank. <terms>See terms</terms>" = "Dapatkan %@ kembali saat membayar pertama kalinya pada bank Anda. <terms>Lihat ketentuan</terms>";
+
+"Get %@ back when you pay with your bank. <terms>See terms</terms>" = "Dapatkan %@ kembali saat membayar pada bank Anda. <terms>Lihat ketentuan</terms>";
 
 "I understand that Stripe will be collecting Direct Debits on behalf of %@ and confirm that I am the account holder and the only person required to authorise debits from this account." = "Saya memahami bahwa Stripe akan menagih Debit Langsung atas nama %@ serta mengonfirmasikan bahwa sayalah pemilik akun dan satu-satunya orang yang diperlukan untuk mengotorisasi debit dari akun ini.";
 
 "IBAN" = "IBAN";
+
+"Log out of Link" = "Keluar dari Link";
+
+"Manage SEPA debit" = "Kelola debit SEPA";
+
+"Manage US bank account" = "Kelola rekening bank AS";
+
+"Manage card" = "Kelola kartu";
+
+"Manage cards" = "Kelola kartu";
 
 "Manage payment method" = "Kelola metode pembayaran";
 
@@ -93,6 +151,12 @@
 "New card" = "Kartu baru";
 
 "New payment method" = "Metode pembayaran baru";
+
+"No %@ promo" = "Tidak ada promo %@";
+
+"Not %@?" = "Bukan %@?";
+
+"Only card brand can be changed." = "Hanya brand kartu yang dapat diubah.";
 
 "Open your UPI app to approve your payment within %@" = "Buka aplikasi UPI Anda untuk menyetujui pembayaran di dalam %@";
 
@@ -112,15 +176,21 @@
 
 "Pay faster at %@ and thousands of businesses." = "Bayar lebih cepat di %@ dan ribuan bisnis.";
 
-"Pay in <num_installments/> interest-free payments of <installment_price/> with <img/>" = "Bayar dalam <num_installments/> angsuran bebas bunga sebesar <installment_price/> dengan <img/>";
-
 "Pay over time with %@" = "Bayar dengan jangka waktu dengan %@";
+
+"Pay over time with Affirm" = "Bayar seiring waktu dengan Affirm";
 
 "Pay with Link" = "Bayar dengan Link";
 
 "Pay with your bank account in just a few steps." = "Bayar dengan rekening bank Anda hanya dalam beberapa langkah.";
 
+"Payment" = "Pembayaran";
+
 "Payment failed" = "Pembayaran gagal";
+
+"Payment methods" = "Metode pembayaran";
+
+"Please choose a valid payment method." = "Pilihlah metode pembayaran yang valid.";
 
 "Please go back and select another payment method" = "Harap kembali dan pilih metode pembayaran lain";
 
@@ -132,7 +202,11 @@
 
 "Remove card?" = "Hapus kartu?";
 
-"Remove payment method" = "Hapus metode pembayaran";
+"Remove linked account" = "Hapus rekening tertaut";
+
+"Resend code" = "Kirim ulang kode";
+
+"SEPA debit details cannot be changed." = "Detail debit SEPA tidak dapat diubah.";
 
 "Save" = "Simpan";
 
@@ -142,13 +216,15 @@
 
 "Save for future payments" = "Simpan untuk pembayaran mendatang";
 
-"Save this account for future %@ payments" = "Simpan rekening ini untuk pembayaran %@ mendatang";
+"Save payment details to %@ for future purchases" = "Simpan detail pembayaran pada %@ untuk pembelian mendatang";
 
-"Save this card for future %@ payments" = "Simpan kartu ini untuk pembayaran %@ mendatang";
+"Save this account for future %@ payments" = "Simpan rekening ini untuk pembayaran %@ mendatang";
 
 "Save your bank account in just a few steps." = "Simpan rekening bank Anda hanya dalam beberapa langkah.";
 
 "Save your info for secure 1-click checkout with Link" = "Simpan info Anda untuk checkout aman dengan 1 klik dengan Link";
+
+"Save your payment information with Link, and securely check out in 1-click on Link-supported sites." = "Simpan informasi pembayaran Anda dengan Link, dan proses pembayaran secara aman dalam sekali klik pada situs yang didukung Link.";
 
 "Saved" = "Disimpan";
 
@@ -157,6 +233,10 @@
 "Select payment method" = "Pilih metode pembayaran";
 
 "Select your payment method" = "Pilih metode pembayaran Anda";
+
+"Set as default" = "Atur sebagai default";
+
+"Set as default payment method" = "Atur sebagai metode pembayaran default";
 
 "Set up" = "Siapkan";
 
@@ -170,11 +250,29 @@
 
 "Stripe will deposit $0.01 to your account in 1-2 business days. Then you’ll get an email with instructions to complete payment to %@." = "Stripe akan menyetorkan $0,01 ke rekening Anda dalam waktu 1–2 hari kerja. Kemudian Anda akan mendapatkan email yang berisi petunjuk untuk menyelesaikan pembayaran kepada %@.";
 
+"Tap to close" = "Sentuh untuk menutup";
+
+"Tap to expand" = "Sentuh untuk memperluas";
+
 "The IBAN you entered is incomplete." = "IBAN yang Anda masukkan tidak lengkap.";
 
-"Update" = "Perbarui";
+"The provided verification code has expired." = "Kode verifikasi yang diberikan telah kedaluwarsa.";
 
-"Update card brand" = "Perbarui brand kartu";
+"The provided verification code is incorrect." = "Kode verifikasi yang diberikan salah.";
+
+"This card has expired. Update your card info or choose a different payment method." = "Kartu ini telah kedaluwarsa. Perbarui info kartu Anda atau pilih metode pembayaran yang lain.";
+
+"This is your default" = "Ini default Anda";
+
+"Too many attempts. Please try again in a few minutes." = "Terlalu banyak percobaan. Cobalah lagi sebentar lagi.";
+
+"Unavailable for this purchase" = "Tidak tersedia untuk pembelian ini";
+
+"Update card" = "Perbarui kartu";
+
+"Update payment method" = "Perbarui metode pembayaran";
+
+"Use your saved info to check out faster" = "Gunakan info yang tersimpan untuk memproses pembayaran dengan lebih cepat";
 
 "View more" = "Lihat selengkapnya";
 

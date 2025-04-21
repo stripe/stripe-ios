@@ -12,8 +12,6 @@
 
 "Bancontact" = "Bancontact";
 
-"Bank" = "Τράπεζα";
-
 "Boleto" = "Boleto";
 
 "Card" = "Κάρτα";
@@ -52,7 +50,7 @@
 
 "UPI" = "UPI";
 
-"US Bank Account" = "Τραπεζικός λογαριασμός στις Η.Π.Α.";
+"US bank account" = "Τραπεζικός λογαριασμός στις Ηνωμένες Πολιτείες";
 
 "Unknown" = "Άγνωστο";
 

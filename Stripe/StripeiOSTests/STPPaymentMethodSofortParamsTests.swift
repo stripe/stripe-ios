@@ -9,8 +9,9 @@
 
 import StripeCore
 import StripeCoreTestUtils
+import StripePaymentsTestUtils
 
-class STPPaymentMethodSofortParamsTests: XCTestCase {
+class STPPaymentMethodSofortParamsTests: STPNetworkStubbingTestCase {
     func testCreateSofortPaymentMethod() {
         let client = STPAPIClient(publishableKey: STPTestingDefaultPublishableKey)
         let sofortParams = STPPaymentMethodSofortParams()

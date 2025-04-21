@@ -1,4 +1,10 @@
+"An error occurred. Please try again." = "Prišlo je do napake. Poskusite znova.";
+
+"Card brand was not updated. Please try again." = "Blagovna znamka kartice ni bila posodobljena. Poskusite znova.";
+
 "Close" = "Zapri";
+
+"Default payment method was not updated. Please try again." = "Privzet način plačila ni bil posodobljen. Poskusite znova.";
 
 "Scan Card" = "Optično preberi kartico";
 

@@ -61,14 +61,8 @@ class CustomerSheetTestPlaygroundController: ObservableObject {
         load()
     }
     func didTapSetToUnsupported() {
-        Task {
-            do {
-                try await _customerAdapter?.setSelectedPaymentOption(paymentOption: .link)
-                self.load()
-            } catch {
-                // no-op
-            }
-        }
+        CustomerPaymentOption.setDefaultPaymentMethod(.link, forCustomer: settings.customerId)
+        self.load()
     }
 
     func appearanceButtonTapped() {
@@ -139,6 +133,15 @@ class CustomerSheetTestPlaygroundController: ObservableObject {
         configuration.billingDetailsCollectionConfiguration.attachDefaultsToPaymentMethod = settings.attachDefaults == .on
         configuration.preferredNetworks = settings.preferredNetworksEnabled == .on ? [.visa, .cartesBancaires] : nil
         configuration.applePayEnabled = self.applePayEnabled()
+        switch settings.cardBrandAcceptance {
+        case .all:
+            configuration.cardBrandAcceptance = .all
+        case .blockAmEx:
+            configuration.cardBrandAcceptance = .disallowed(brands: [.amex])
+        case .allowVisa:
+            configuration.cardBrandAcceptance = .allowed(brands: [.visa])
+        }
+
         return configuration
     }
 
@@ -280,6 +283,13 @@ extension CustomerSheetTestPlaygroundController {
             }
         }
     }
+    func customerSessionSettingsTapped() {
+        let vc = UIHostingController(rootView: CustomerSheetCustomerSessionPlaygroundView(viewModel: settings, doneAction: { updatedSettings in
+            self.settings = updatedSettings
+            self.rootViewController.dismiss(animated: true, completion: nil)
+        }))
+        rootViewController.present(vc, animated: true, completion: nil)
+    }
 }
 
 // MARK: - Helpers
@@ -318,6 +328,8 @@ class CustomerSheetBackend {
                      "customer_key_type": settings.customerKeyType.rawValue,
                      "merchant_country_code": settings.merchantCountryCode.rawValue,
                      "customer_session_payment_method_remove": settings.paymentMethodRemove.rawValue,
+                     "customer_session_payment_method_remove_last": settings.paymentMethodRemoveLast.rawValue,
+                     "customer_session_payment_method_sync_default": settings.paymentMethodSyncDefault.rawValue,
         ] as [String: Any]
 
         if let allowRedisplayValue = settings.paymentMethodAllowRedisplayFilters.arrayValue() {

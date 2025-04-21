@@ -38,19 +38,23 @@ class PaymentMethodTypeCollectionView: UICollectionView {
     }
     let paymentMethodTypes: [PaymentSheet.PaymentMethodType]
     let appearance: PaymentSheet.Appearance
-    let isPaymentSheet: Bool
+    let currency: String?
     weak var _delegate: PaymentMethodTypeCollectionViewDelegate?
+
+    private var incentive: PaymentMethodIncentive?
 
     init(
         paymentMethodTypes: [PaymentSheet.PaymentMethodType],
         initialPaymentMethodType: PaymentSheet.PaymentMethodType? = nil,
         appearance: PaymentSheet.Appearance,
-        isPaymentSheet: Bool = false,
+        currency: String? = nil,
+        incentive: PaymentMethodIncentive?,
         delegate: PaymentMethodTypeCollectionViewDelegate
     ) {
         stpAssert(!paymentMethodTypes.isEmpty, "At least one payment method type must be provided.")
 
         self.paymentMethodTypes = paymentMethodTypes
+        self.incentive = incentive
         self._delegate = delegate
         let selectedItemIndex: Int = {
             if let initialPaymentMethodType = initialPaymentMethodType {
@@ -61,7 +65,7 @@ class PaymentMethodTypeCollectionView: UICollectionView {
         }()
         self.selected = paymentMethodTypes[selectedItemIndex]
         self.appearance = appearance
-        self.isPaymentSheet = isPaymentSheet
+        self.currency = currency
         let layout = UICollectionViewFlowLayout()
         layout.scrollDirection = .horizontal
         layout.sectionInset = UIEdgeInsets(
@@ -88,6 +92,18 @@ class PaymentMethodTypeCollectionView: UICollectionView {
 
     override var intrinsicContentSize: CGSize {
         return CGSize(width: UIView.noIntrinsicMetric, height: PaymentMethodTypeCollectionView.cellHeight)
+    }
+
+    func setIncentive(_ incentive: PaymentMethodIncentive?) {
+        guard self.incentive != incentive, let index = self.indexPathsForSelectedItems?.first else {
+            return
+        }
+
+        self.incentive = incentive
+
+        // Prevent the selected cell from being unselected following the reload
+        reloadItems(at: [index])
+        selectItem(at: index, animated: false, scrollPosition: [])
     }
 }
 
@@ -116,18 +132,16 @@ extension PaymentMethodTypeCollectionView: UICollectionViewDataSource, UICollect
             stpAssertionFailure()
             return UICollectionViewCell()
         }
-        cell.paymentMethodType = paymentMethodTypes[indexPath.item]
+        let paymentMethodType = paymentMethodTypes[indexPath.item]
+        cell.paymentMethodType = paymentMethodType
+        cell.currency = currency
+        cell.promoBadgeText = incentive?.takeIfAppliesTo(paymentMethodType)?.displayText
         cell.appearance = appearance
         return cell
     }
 
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         collectionView.scrollToItem(at: indexPath, at: .centeredHorizontally, animated: true)
-        // Only log this event when this collection view is being used by PaymentSheet
-        if isPaymentSheet {
-            STPAnalyticsClient.sharedClient.logPaymentSheetEvent(event: .paymentSheetCarouselPaymentMethodTapped,
-                                                                 paymentMethodTypeAnalyticsValue: paymentMethodTypes[indexPath.row].identifier)
-        }
         selected = paymentMethodTypes[indexPath.item]
     }
 
@@ -163,7 +177,14 @@ extension PaymentMethodTypeCollectionView: UICollectionViewDataSource, UICollect
 extension PaymentMethodTypeCollectionView {
     class PaymentTypeCell: UICollectionViewCell, EventHandler {
         static let reuseIdentifier = "PaymentTypeCell"
+        var currency: String?
         var paymentMethodType: PaymentSheet.PaymentMethodType = .stripe(.card) {
+            didSet {
+                update()
+            }
+        }
+
+        var promoBadgeText: String? {
             didSet {
                 update()
             }
@@ -189,6 +210,9 @@ extension PaymentMethodTypeCollectionView {
             let paymentMethodLogo = UIImageView()
             paymentMethodLogo.contentMode = .scaleAspectFit
             return paymentMethodLogo
+        }()
+        private lazy var promoBadge: PromoBadgeView = {
+            PromoBadgeView(appearance: appearance, tinyMode: true)
         }()
         private lazy var shadowRoundedRectangle: ShadowedRoundedRectangle = {
             return ShadowedRoundedRectangle(appearance: appearance)
@@ -218,7 +242,7 @@ extension PaymentMethodTypeCollectionView {
         override init(frame: CGRect) {
             super.init(frame: frame)
 
-            [paymentMethodLogo, label].forEach {
+            [paymentMethodLogo, label, promoBadge].forEach {
                 shadowRoundedRectangle.addSubview($0)
                 $0.translatesAutoresizingMaskIntoConstraints = false
             }
@@ -241,6 +265,9 @@ extension PaymentMethodTypeCollectionView {
                     equalTo: shadowRoundedRectangle.bottomAnchor, constant: -8),
                 label.leadingAnchor.constraint(equalTo: paymentMethodLogo.leadingAnchor),
                 label.trailingAnchor.constraint(equalTo: shadowRoundedRectangle.trailingAnchor, constant: -12), // should be -const of paymentMethodLogo leftAnchor
+
+                promoBadge.centerYAnchor.constraint(equalTo: paymentMethodLogo.centerYAnchor),
+                promoBadge.trailingAnchor.constraint(equalTo: shadowRoundedRectangle.trailingAnchor, constant: -12),
             ])
 
             contentView.layer.cornerRadius = appearance.cornerRadius
@@ -278,11 +305,12 @@ extension PaymentMethodTypeCollectionView {
 
         func handleEvent(_ event: STPEvent) {
             UIView.animate(withDuration: PaymentSheetUI.defaultAnimationDuration) {
+                let views = [self.label, self.paymentMethodLogo, self.promoBadge].compactMap { $0 }
                 switch event {
                 case .shouldDisableUserInteraction:
-                    self.label.alpha = 0.6
+                    views.forEach { $0.alpha = 0.6 }
                 case .shouldEnableUserInteraction:
-                    self.label.alpha = 1
+                    views.forEach { $0.alpha = 1 }
                 default:
                     break
                 }
@@ -298,7 +326,7 @@ extension PaymentMethodTypeCollectionView {
 
             label.font = appearance.scaledFont(for: appearance.font.base.medium, style: .footnote, maximumPointSize: 20)
             let currPaymentMethodType = self.paymentMethodType
-            let image = paymentMethodType.makeImage(forDarkBackground: appearance.colors.componentBackground.contrastingColor == .white) { [weak self] image in
+            let image = paymentMethodType.makeImage(forDarkBackground: appearance.colors.componentBackground.contrastingColor == .white, currency: currency) { [weak self] image in
                 DispatchQueue.main.async {
                     guard let self, currPaymentMethodType == self.paymentMethodType else {
                         return
@@ -313,6 +341,12 @@ extension PaymentMethodTypeCollectionView {
             // Ideally, the DownloadManager API is refactored to not return a placeholder or an image; then we can set the image to a placeholder only when the payment method type of this cell changes.
             if paymentMethodTypeOfCurrentImage != self.paymentMethodType || image.size != CGSize(width: 1, height: 1) {
                 updateImage(image)
+            }
+
+            promoBadge.isHidden = promoBadgeText == nil
+            if let promoBadgeText {
+                promoBadge.setAppearance(appearance)
+                promoBadge.setText(promoBadgeText)
             }
 
             shadowRoundedRectangle.isSelected = isSelected

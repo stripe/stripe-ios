@@ -51,6 +51,9 @@ public class STPSetupIntentConfirmParams: NSObject, NSCopying, STPFormEncodable 
     /// Provide an already created PaymentMethod's id, and it will be used to confirm the SetupIntent.
     /// @note alternative to `paymentMethodParams`
     @objc public var paymentMethodID: String?
+    /// `@YES` to set this PaymentIntent’s PaymentMethod as the associated Customer's default
+    /// This should be a boolean NSNumber, so that it can be `nil`
+    @objc @_spi(STP) public var setAsDefaultPM: NSNumber?
     /// The URL to redirect your customer back to after they authenticate or cancel
     /// their payment on the payment method’s app or site.
     /// This should probably be a URL that opens your iOS app.
@@ -105,6 +108,8 @@ public class STPSetupIntentConfirmParams: NSObject, NSCopying, STPFormEncodable 
             "paymentMethodId = \(paymentMethodID ?? "")",
             "paymentMethodParams = \(String(describing: paymentMethodParams))",
             "useStripeSDK = \(useStripeSDK ?? 0)",
+            // Set as default payment method
+            "setAsDefaultPM = \(setAsDefaultPM ?? 0)",
             // Mandate
             "mandateData = \(String(describing: mandateData))",
             // Additional params set by app
@@ -124,6 +129,7 @@ public class STPSetupIntentConfirmParams: NSObject, NSCopying, STPFormEncodable 
         copy._paymentMethodType = _paymentMethodType
         copy.paymentMethodParams = paymentMethodParams
         copy.paymentMethodID = paymentMethodID
+        copy.setAsDefaultPM = setAsDefaultPM
         copy.returnURL = returnURL
         copy.useStripeSDK = useStripeSDK
         copy.mandateData = mandateData
@@ -142,6 +148,7 @@ public class STPSetupIntentConfirmParams: NSObject, NSCopying, STPFormEncodable 
             NSStringFromSelector(#selector(getter: clientSecret)): "client_secret",
             NSStringFromSelector(#selector(getter: paymentMethodParams)): "payment_method_data",
             NSStringFromSelector(#selector(getter: paymentMethodID)): "payment_method",
+            NSStringFromSelector(#selector(getter: setAsDefaultPM)): "set_as_default_payment_method",
             NSStringFromSelector(#selector(getter: returnURL)): "return_url",
             NSStringFromSelector(#selector(getter: useStripeSDK)): "use_stripe_sdk",
             NSStringFromSelector(#selector(getter: mandateData)): "mandate_data",

@@ -9,30 +9,35 @@ import XCTest
 
 // MARK: Vertical mode tests
 class PaymentSheetVerticalUITests: PaymentSheetUITestCase {
+
+    func testCanPayWithCard() {
+        var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
+        settings.currency = .eur
+        settings.layout = .vertical
+        loadPlayground(app, settings)
+
+        app.buttons["Present PaymentSheet"].waitForExistenceAndTap()
+        app.buttons["Card"].waitForExistenceAndTap()
+
+        try! fillCardData(app)
+        app.buttons["Pay €50.99"].tap()
+        XCTAssertTrue(app.staticTexts["Success!"].waitForExistence(timeout: 10))
+    }
+
     func testFlowController_verticalMode() {
         // Sets the right paymentOption values
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
         settings.mode = .setup
         settings.customerMode = .new
         settings.currency = .eur
+        settings.customerKeyType = .customerSession
         settings.uiStyle = .flowController
         settings.layout = .vertical
         loadPlayground(app, settings)
         let paymentMethodButton = app.buttons["Payment method"]
-        XCTAssertEqual(paymentMethodButton.label, "None")
+        XCTAssertEqual(paymentMethodButton.label, "Apple Pay, apple_pay")
         paymentMethodButton.waitForExistenceAndTap()
-
         let continueButton = app.buttons["Continue"]
-        XCTAssertFalse(continueButton.isEnabled)
-        app.buttons["Apple Pay"].tap()
-        continueButton.tap()
-        XCTAssertEqual(paymentMethodButton.label, "Apple Pay, apple_pay")
-
-        // Reload - it should now default to "Apple Pay"
-        reload(app, settings: settings)
-        XCTAssertEqual(paymentMethodButton.label, "Apple Pay, apple_pay")
-        paymentMethodButton.tap()
-        XCTAssertTrue(app.buttons["Apple Pay"].isSelected)
 
         // Select Link - FC paymentOption should change to Link
         app.buttons["Link"].tap()
@@ -57,9 +62,9 @@ class PaymentSheetVerticalUITests: PaymentSheetUITestCase {
         XCTAssertFalse(continueButton.isEnabled)
         // Back out of card form
         app.buttons["Back"].tap()
-        // Link shouldn't be selected anymore
-        XCTAssertFalse(app.buttons["Link"].isSelected)
-        XCTAssertFalse(continueButton.isEnabled)
+        // Link (the previous selection) should be selected
+        XCTAssertTrue(app.buttons["Link"].isSelected)
+        XCTAssertTrue(continueButton.isEnabled)
 
         // Go back to card
         app.buttons["Card"].waitForExistenceAndTap()
@@ -67,28 +72,38 @@ class PaymentSheetVerticalUITests: PaymentSheetUITestCase {
         XCTAssertEqual(app.textFields["Card number"].value as? String, "1, Your card number is invalid.")
         app.textFields["Card number"].clearText()
         // Finish the card payment
-        try! fillCardData(app, cardNumber: "4242424242424242")
+        try! fillCardData(app, cardNumber: "4242424242424242", tapCheckboxWithText: "Save payment details to Example, Inc. for future purchases")
         continueButton.tap()
-        XCTAssertEqual(paymentMethodButton.label, "••••4242, card, 12345, US")
+        XCTAssertEqual(paymentMethodButton.label, "•••• 4242, card, 12345, US")
         app.buttons["Confirm"].tap()
         XCTAssertTrue(app.staticTexts["Success!"].waitForExistence(timeout: 10))
 
         // Reload
         reload(app, settings: settings)
         XCTAssertTrue(paymentMethodButton.waitForExistence(timeout: 10))
-        XCTAssertEqual(paymentMethodButton.label, "••••4242, card, 12345, US")
+        XCTAssertEqual(paymentMethodButton.label, "•••• 4242, card, 12345, US")
         paymentMethodButton.tap()
 
-        XCTAssertTrue(app.buttons["••••4242"].isSelected)
+        XCTAssertTrue(app.buttons["•••• 4242"].isSelected)
         XCTAssertTrue(continueButton.isEnabled)
 
         // Add a SEPA Debit PM
         app.buttons["SEPA Debit"].tap()
-        try! fillSepaData(app)
+        try! fillSepaData(app, tapCheckboxWithText: "Save this account for future Example, Inc. payments")
         continueButton.tap()
-        XCTAssertEqual(paymentMethodButton.label, "SEPA Debit, sepa_debit, 123 Main, San Francisco, CA, 94016, US")
-        app.buttons["Confirm"].tap()
+        XCTAssertEqual(paymentMethodButton.label, "SEPA Debit, sepa_debit, John Doe, test@example.com, 123 Main, San Francisco, CA, 94016, US")
+        app.buttons["Confirm"].waitForExistenceAndTap(timeout: 3.0)
         XCTAssertTrue(app.staticTexts["Success!"].waitForExistence(timeout: 10))
+        XCTAssertEqual(
+            analyticsLog.map({ $0[string: "event"]! }).filter({ $0.starts(with: "mc") }),
+            ["mc_load_started", "mc_load_succeeded", "mc_custom_init_customer_applepay", "mc_custom_sheet_newpm_show", "mc_lpms_render", "mc_carousel_payment_method_tapped", "mc_form_shown", "mc_form_interacted", "mc_form_completed", "mc_confirm_button_tapped", "mc_custom_payment_newpm_success"]
+        )
+
+        let eventsWithSelectedLPM = ["mc_carousel_payment_method_tapped", "mc_form_shown", "mc_form_interacted", "mc_form_completed", "mc_confirm_button_tapped"]
+        XCTAssertEqual(
+            analyticsLog.filter({ eventsWithSelectedLPM.contains($0[string: "event"]!) }).map({ $0[string: "selected_lpm"] }),
+            ["sepa_debit", "sepa_debit", "sepa_debit", "sepa_debit", "sepa_debit"]
+        )
 
         // Reload
         reload(app, settings: settings)
@@ -98,12 +113,22 @@ class PaymentSheetVerticalUITests: PaymentSheetUITestCase {
 
         // Switch to the saved card...
         app.buttons["View more"].waitForExistenceAndTap()
-        app.buttons["••••4242"].waitForExistenceAndTap()
+        app.buttons["•••• 4242"].waitForExistenceAndTap()
         app.buttons["Continue"].tap() // For some reason, waitForExistenceAndTap() does not tap this!
+        XCTAssertEqual(
+            analyticsLog.map({ $0[string: "event"] }),
+            ["mc_load_started", "link.account_lookup.complete", "mc_load_succeeded", "mc_custom_init_customer_applepay", "mc_custom_sheet_newpm_show", "mc_lpms_render", "mc_custom_paymentoption_savedpm_select", "mc_lpms_render", "mc_confirm_button_tapped"]
+        )
+        XCTAssertEqual(
+            analyticsLog.filter({ ["mc_custom_paymentoption_savedpm_select", "mc_confirm_button_tapped"]
+                .contains($0[string: "event"]!) }).map({ $0[string: "selected_lpm"] }),
+            ["card", "card"]
+        )
+
         // ...reload...
         reload(app, settings: settings)
         // ...and the saved card should be the default
-        XCTAssertEqual(paymentMethodButton.label, "••••4242, card, 12345, US")
+        XCTAssertEqual(paymentMethodButton.label, "•••• 4242, card, 12345, US")
     }
 
     func testUSBankAccount_verticalmode() {
@@ -157,60 +182,76 @@ class PaymentSheetVerticalUITests: PaymentSheetUITestCase {
 
     func testCanPayWithLinkWallet_verticalMode() {
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
+
+        // Using GB for web-based Link merchant account
+        settings.merchantCountryCode = .GB
         settings.mode = .payment
+        settings.layout = .vertical
         loadPlayground(app, settings)
 
-        XCTAssertTrue(app.buttons["vertical"].waitForExistenceAndTap())
         XCTAssertTrue(app.buttons["Present PaymentSheet"].waitForExistenceAndTap())
 
-        let expectation = XCTestExpectation(description: "Link sign in dialog")
-        // Listen for the system login dialog
-        addUIInterruptionMonitor(withDescription: "Link sign in system dialog") { alert in
-            // Cancel the payment
-            XCTAssertTrue(alert.buttons["Cancel"].waitForExistenceAndTap())
-            expectation.fulfill()
-            return true
-        }
-
         XCTAssertTrue(app.buttons["pay_with_link_button"].waitForExistenceAndTap())
-        DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
-            self.app.tap() // required to trigger the UI interruption monitor
-        }
-        wait(for: [expectation], timeout: 5.0)
+        // Cancel the Link sign in system dialog
+        // Note: `addUIInterruptionMonitor` is flakey so we do this hack instead
+        XCTAssertTrue(XCUIApplication(bundleIdentifier: "com.apple.springboard").buttons["Cancel"].waitForExistenceAndTap())
     }
 
     func testRemovalOfSavedPaymentMethods_verticalMode() {
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
-        settings.customerMode = .new // new customer
+        settings.customerMode = .returning
         settings.currency = .eur
+        settings.layout = .vertical
         settings.merchantCountryCode = .FR
         settings.mode = .setup
         loadPlayground(app, settings)
 
-        // Save some test cards to the customer
-        setupCards(cards: ["4000002500001001", "4242424242424242"], settings: settings)
+        // Add one more test card
+        // TODO(porter) Use the vertical mode to save cards when ready
+        setupCards(cards: ["5555555555554444"], settings: settings)
 
-        app.buttons["vertical"].waitForExistenceAndTap() // TODO(porter) Use the vertical mode to save cards when ready
+        // Exercise edge case w/ FC and 3+ PMs. Delete the selected card and tap out of the screen
+        app.buttons["flowController"].waitForExistenceAndTap()
+        app.buttons["Payment method"].waitForExistenceAndTap()
+        let firstPaymentMethod = app.buttons["•••• 4444"]
+        XCTAssertTrue(firstPaymentMethod.isSelected)
+        app.buttons["View more"].waitForExistenceAndTap()
+        XCTAssertTrue(firstPaymentMethod.isSelected)
+        app.buttons["Edit"].waitForExistenceAndTap()
+        app.buttons["chevron"].firstMatch.waitForExistenceAndTap()
+        app.buttons["Remove"].waitForExistenceAndTap()
+        app.alerts.buttons["Remove"].waitForExistenceAndTap()
+        XCTAssertFalse(firstPaymentMethod.exists)
+        app.buttons["Done"].waitForExistenceAndTap()
+        // Tap out of FlowController
+        app.tapCoordinate(at: .init(x: 200, y: 100))
+        // Sleep to allow animation to finish
+        sleep(1)
+        // The next card should be selected now
+        XCTAssertEqual(app.buttons["Payment method"].label, "•••• 1001, card, FR")
+
+        // Switch to PaymentSheet
+        app.buttons["paymentSheet"].waitForExistenceAndTap()
         app.buttons["Present PaymentSheet"].waitForExistenceAndTap()
         XCTAssertTrue(app.buttons["View more"].waitForExistenceAndTap())
         XCTAssertTrue(app.staticTexts["Select card"].waitForExistence(timeout: 5.0))
         XCTAssertTrue(app.buttons["Edit"].waitForExistenceAndTap())
 
-        // Remove one of the payment methods just added
-        app.buttons["CircularButton.Remove"].firstMatch.waitForExistenceAndTap()
+        // Remove the 4242 card
+        app.otherElements["•••• 4242"].buttons["chevron"].waitForExistenceAndTap()
+        app.buttons["Remove"].waitForExistenceAndTap()
         XCTAssertTrue(app.alerts.buttons["Remove"].waitForExistenceAndTap())
 
         // Exit edit mode, remove button should be hidden
         XCTAssertTrue(app.buttons["Done"].waitForExistenceAndTap())
-        XCTAssertFalse(app.buttons["CircularButton.Remove"].waitForExistence(timeout: 2.0))
+        XCTAssertFalse(app.buttons["chevron"].waitForExistence(timeout: 2.0))
 
         // Update the card brand on the last card
         XCTAssertTrue(app.buttons["Cartes Bancaires ending in 1 0 0 1"].waitForExistence(timeout: 1.0)) // Cartes Bancaires card should be selected now that 4242 card is removed
         XCTAssertTrue(app.buttons["Edit"].waitForExistenceAndTap())
-        app.buttons["CircularButton.Edit"].firstMatch.waitForExistenceAndTap()
 
         // Should present the update card view controller
-        XCTAssertTrue(app.staticTexts["Update card brand"].waitForExistence(timeout: 2.0))
+        XCTAssertTrue(app.staticTexts["Manage card"].waitForExistence(timeout: 2.0))
 
         // Update card brand to Visa
         XCTAssertTrue(app.textFields["Cartes Bancaires"].waitForExistenceAndTap(timeout: 5))
@@ -223,14 +264,14 @@ class PaymentSheetVerticalUITests: PaymentSheetUITestCase {
         XCTAssertTrue(app.textFields["Visa"].waitForExistence(timeout: 5))
 
         // Update the card
-        app.buttons["Update"].waitForExistenceAndTap(timeout: 5)
+        app.buttons["Save"].waitForExistenceAndTap(timeout: 5)
 
         // We should have updated to Visa
         XCTAssertTrue(app.buttons["Visa ending in 1 0 0 1"].waitForExistence(timeout: 1.0))
 
         // Reselect edit icon and delete the card from the update view controller
         app.buttons["Edit"].firstMatch.waitForExistenceAndTap()
-        app.buttons["Remove card"].waitForExistenceAndTap()
+        app.buttons["Remove"].waitForExistenceAndTap()
         XCTAssertTrue(app.alerts.buttons["Remove"].waitForExistenceAndTap())
 
         // Verify we are kicked out to the main screen after removing all saved payment methods
@@ -245,13 +286,51 @@ class PaymentSheetVerticalUITests: PaymentSheetUITestCase {
         for cardNumber in cards {
             reload(app, settings: settings)
             app.buttons["Present PaymentSheet"].tap()
-            let addCardButton = app.buttons["+ Add"]
+            let addCardButton = app.buttons["New card"]
             addCardButton.waitForExistenceAndTap()
-            try! fillCardData(app, cardNumber: cardNumber)
+            try! fillCardData(app, cardNumber: cardNumber, tapCheckboxWithText: "Save payment details to Example, Inc. for future purchases")
             app.buttons["Set up"].tap()
             let successText = app.staticTexts["Success!"]
             XCTAssertTrue(successText.waitForExistence(timeout: 10.0))
         }
+    }
+
+    func testPaymentMethodRemoveLast_verticalMode() {
+        var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
+        settings.layout = .vertical
+        settings.uiStyle = .paymentSheet
+        settings.customerMode = .new
+        settings.integrationType = .deferred_csc
+        settings.customerMode = .new
+        settings.customerKeyType = .customerSession
+        settings.paymentMethodRemoveLast = .disabled
+        settings.applePayEnabled = .off
+        settings.apmsEnabled = .off
+        settings.linkPassthroughMode = .passthrough
+        settings.requireCVCRecollection = .on
+        loadPlayground(app, settings)
+
+        app.buttons["Present PaymentSheet"].waitForExistenceAndTap()
+        app.buttons["Card"].waitForExistenceAndTap()
+        try! fillCardData(app)
+        app.switches["Save payment details to Example, Inc. for future purchases"].waitForExistenceAndTap()
+        app.buttons["Pay $50.99"].waitForExistenceAndTap()
+
+        let successText = app.staticTexts["Success!"]
+        XCTAssertTrue(successText.waitForExistence(timeout: 10.0))
+
+        // Reload w/ same customer
+        reload(app, settings: settings)
+
+        XCTAssertFalse(successText.exists)
+
+        // Present and ensure sheet is present
+        app.buttons["Present PaymentSheet"].waitForExistenceAndTap()
+        XCTAssertTrue(app.buttons["Pay $50.99"].waitForExistence(timeout: 10))
+
+        // Verify that edit control does not render
+        XCTAssertTrue(app.buttons["Edit"].waitForExistenceAndTap())
+        XCTAssertFalse(app.buttons["Remove"].exists)
     }
 
     func testCVCRecollection_verticalMode() {
@@ -263,14 +342,14 @@ class PaymentSheetVerticalUITests: PaymentSheetUITestCase {
         settings.customerMode = .new
         settings.applePayEnabled = .off
         settings.apmsEnabled = .off
-        settings.linkEnabled = .off
+        settings.linkPassthroughMode = .passthrough
         settings.requireCVCRecollection = .on
         loadPlayground(app, settings)
 
         app.buttons["Present PaymentSheet"].waitForExistenceAndTap()
         app.buttons["Card"].waitForExistenceAndTap()
         try! fillCardData(app)
-        app.switches["Save this card for future Example, Inc. payments"].waitForExistenceAndTap()
+        app.switches["Save payment details to Example, Inc. for future purchases"].waitForExistenceAndTap()
         app.buttons["Pay $50.99"].waitForExistenceAndTap()
 
         let successText = app.staticTexts["Success!"]
@@ -286,8 +365,101 @@ class PaymentSheetVerticalUITests: PaymentSheetUITestCase {
 
         XCTAssertTrue(app.staticTexts["Confirm your CVC"].waitForExistence(timeout: 1))
         // CVC field should already be selected
-        app.typeText("123")
+        app.typeText("666") // Special hardcoded value that will fail w/ cvc error
+        app.buttons["Confirm"].tap()
+        XCTAssertTrue(app.staticTexts["Your card's security code is invalid."].waitForExistence(timeout: 10))
+
+        app.textFields["CVC"].tap()
+        XCTAssertFalse(app.staticTexts["Your card's security code is invalid."].exists) // Error should be cleared
+        let deleteString = String(repeating: XCUIKeyboardKey.delete.rawValue, count: 3)
+        app.typeText(deleteString + "123")
         app.buttons["Confirm"].tap()
         XCTAssertTrue(successText.waitForExistence(timeout: 10.0))
+    }
+
+    func testPreservesFormDetails() {
+        var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
+        settings.customerMode = .new
+        settings.mode = .setup
+        settings.uiStyle = .paymentSheet
+        settings.layout = .vertical
+        loadPlayground(app, settings)
+
+        // PaymentSheet + Vertical
+        func _testVerticalPreservesFormDetails() {
+            // Typing something into the card form...
+            app.buttons["Card"].waitForExistenceAndTap()
+            let numberField = app.textFields["Card number"]
+            numberField.waitForExistenceAndTap()
+            app.typeText("4")
+            // ...and tapping to the main screen and back should preserve the card form
+            app.buttons["Back"].waitForExistenceAndTap()
+            app.buttons["Klarna"].waitForExistenceAndTap()
+            app.buttons["Back"].waitForExistenceAndTap()
+            app.buttons["Card"].waitForExistenceAndTap()
+            XCTAssertEqual(numberField.value as? String, "4, Your card number is incomplete.")
+            // Exit
+            app.buttons["Back"].waitForExistenceAndTap()
+            app.buttons["Close"].waitForExistenceAndTap()
+        }
+        app.buttons["paymentSheet"].waitForExistenceAndTap()
+        app.buttons["vertical"].waitForExistenceAndTap()
+        app.buttons["Present PaymentSheet"].waitForExistenceAndTap()
+        _testVerticalPreservesFormDetails()
+
+        // PaymentSheet.FlowController + Vertical
+        app.buttons["flowController"].waitForExistenceAndTap()
+        app.buttons["Payment method"].waitForExistenceAndTap()
+        _testVerticalPreservesFormDetails()
+    }
+
+    func testUpdate() {
+        var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
+        settings.customerMode = .new
+        settings.mode = .payment
+        settings.integrationType = .deferred_csc
+        settings.uiStyle = .flowController
+        settings.layout = .vertical
+        loadPlayground(app, settings)
+
+        // 1. Test Card is preserved across updates
+        // Selecting Card w/ deferred PaymentIntent...
+        app.buttons["Payment method"].waitForExistenceAndTap()
+        app.buttons["Card"].waitForExistenceAndTap()
+        try! fillCardData(app)
+        app.buttons["Done"].tap() // Tap done on keyboard, not sure why it doesn't auto dismiss
+        app.buttons["Continue"].waitForExistenceAndTap()
+        // ...and *updating* to a SetupIntent...
+        app.buttons["Setup"].waitForExistenceAndTap()
+        // ...(wait for it to finish updating)...
+        _ = app.buttons["Reload"].waitForExistence(timeout: 10)
+        // ...should cause Card to no longer be the selected payment method, since the customer has not yet seen the mandate...
+        XCTAssertEqual(app.buttons["Payment method"].label, "None")
+        // ...and tapping back into FC should show the card form with the details preserved...
+        app.buttons["Payment method"].waitForExistenceAndTap()
+        // ...and continuing should once again show the Card selected
+        app.buttons["Continue"].waitForExistenceAndTap() // This implicitly tests that the form is already filled out
+        XCTAssertEqual(app.buttons["Payment method"].label, "•••• 4242, card, 12345, US")
+
+        // Going back to payment...
+        app.buttons["Payment"].waitForExistenceAndTap()
+        _ = app.buttons["Reload"].waitForExistence(timeout: 10)
+        // ...should preserve the card
+        XCTAssertEqual(app.buttons["Payment method"].label, "•••• 4242, card, 12345, US")
+
+        // 2. Now test Alipay, an example of *not* restoring due to Alipay not being valid for SetupIntent:
+        // Selecting Alipay w/ deferred PaymentIntent...
+        app.buttons["Payment method"].waitForExistenceAndTap()
+        app.buttons["Back"].waitForExistenceAndTap()
+        app.buttons["Alipay"].waitForExistenceAndTap()
+        app.swipeUp() // scroll to see the Continue button
+        app.buttons["Continue"].waitForExistenceAndTap()
+        XCTAssertEqual(app.buttons["Payment method"].label, "Alipay, alipay")
+        // ...and *updating* to a SetupIntent...
+        app.buttons["Setup"].waitForExistenceAndTap()
+        // ...(wait for it to finish updating)...
+        _ = app.buttons["Reload"].waitForExistence(timeout: 10)
+        // ...should cause Alipay to no longer be the selected payment method, since it is not valid for setup.
+        XCTAssertEqual(app.buttons["Payment method"].label, "None")
     }
 }

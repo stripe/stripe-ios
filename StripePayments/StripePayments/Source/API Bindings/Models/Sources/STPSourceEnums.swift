@@ -60,8 +60,6 @@ import Foundation
     case bancontact
     /// A card source. - seealso: https://stripe.com/docs/sources/cards
     case card
-    /// A Giropay source. - seealso: https://stripe.com/docs/sources/giropay
-    case giropay
     /// An iDEAL source. - seealso: https://stripe.com/docs/sources/ideal
     @objc(STPSourceTypeiDEAL) case iDEAL
     /// A SEPA Direct Debit source. - seealso: https://stripe.com/docs/sources/sepa-debit

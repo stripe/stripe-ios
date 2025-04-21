@@ -13,7 +13,6 @@ import UIKit
 
 protocol SavedPaymentMethodRowButtonDelegate: AnyObject {
     func didSelectButton(_ button: SavedPaymentMethodRowButton, with paymentMethod: STPPaymentMethod)
-    func didSelectRemoveButton(_ button: SavedPaymentMethodRowButton, with paymentMethod: STPPaymentMethod)
     func didSelectUpdateButton(_ button: SavedPaymentMethodRowButton, with paymentMethod: STPPaymentMethod)
 }
 
@@ -26,6 +25,11 @@ final class SavedPaymentMethodRowButton: UIView {
     }
 
     // MARK: Internal properties
+
+    let paymentMethod: STPPaymentMethod
+    let showDefaultPMBadge: Bool
+    weak var delegate: SavedPaymentMethodRowButtonDelegate?
+
     var state: State = .unselected {
         didSet {
             if oldValue == .selected || oldValue == .unselected {
@@ -33,15 +37,9 @@ final class SavedPaymentMethodRowButton: UIView {
             }
 
             rowButton.isSelected = isSelected
-            rowButton.isEnabled = !isEditing
-            circleView.isHidden = !isSelected
-            updateButton.isHidden = !canUpdate
-            removeButton.isHidden = !canRemove
-            stackView.isUserInteractionEnabled = isEditing
+            chevronButton.isHidden = !isEditing
         }
     }
-
-    var previousSelectedState: State = .unselected
 
     var isSelected: Bool {
         switch state {
@@ -52,6 +50,10 @@ final class SavedPaymentMethodRowButton: UIView {
         }
     }
 
+    // MARK: - Private properties
+
+    private let appearance: PaymentSheet.Appearance
+
     private var isEditing: Bool {
         switch state {
         case .selected, .unselected:
@@ -61,77 +63,36 @@ final class SavedPaymentMethodRowButton: UIView {
         }
     }
 
-    private var canUpdate: Bool {
-        switch state {
-        case .selected, .unselected:
-            return false
-        case .editing(_, let allowsUpdating):
-            return allowsUpdating
-        }
-    }
-
-    private var canRemove: Bool {
-        switch state {
-        case .selected, .unselected:
-            return false
-        case .editing(let allowsRemoval, _):
-            return allowsRemoval
-        }
-    }
-
-    weak var delegate: SavedPaymentMethodRowButtonDelegate?
-
-    // MARK: Internal/private properties
-    let paymentMethod: STPPaymentMethod
-    private let appearance: PaymentSheet.Appearance
+    private(set) var previousSelectedState: State = .unselected
 
     // MARK: Private views
 
-    // TODO(porter) Refactor CircleIconView out of SavedPaymentMethodCollectionView once it is deleted
-    private lazy var circleView: SavedPaymentMethodCollectionView.CircleIconView = {
-        let circleView = SavedPaymentMethodCollectionView.CircleIconView(icon: .icon_checkmark,
-                                                                         fillColor: appearance.colors.primary)
-        circleView.isHidden = true
-        return circleView
+    private(set) lazy var chevronButton: RowButton.RightAccessoryButton = {
+        let chevronButton = RowButton.RightAccessoryButton(accessoryType: .update, appearance: appearance, didTap: handleUpdateButtonTapped)
+        chevronButton.isHidden = !isEditing
+        return chevronButton
     }()
 
-    private lazy var removeButton: CircularButton = {
-        let removeButton = CircularButton(style: .remove, iconColor: .white)
-        removeButton.backgroundColor = appearance.colors.danger
-        removeButton.isHidden = true
-        removeButton.addTarget(self, action: #selector(handleRemoveButtonTapped), for: .touchUpInside)
-        return removeButton
-    }()
-
-    private lazy var updateButton: CircularButton = {
-        let updateButton = CircularButton(style: .edit, iconColor: .white)
-        updateButton.backgroundColor = appearance.colors.icon
-        updateButton.isHidden = true
-        updateButton.addTarget(self, action: #selector(handleUpdateButtonTapped), for: .touchUpInside)
-        return updateButton
-    }()
-
-    private lazy var stackView: UIStackView = {
-        let stackView = UIStackView.makeRowButtonContentStackView(arrangedSubviews: [circleView, updateButton, removeButton])
-        // margins handled by the `RowButton`
-        stackView.directionalLayoutMargins = .zero
-        stackView.isUserInteractionEnabled = isEditing
-        return stackView
-    }()
-
-    private lazy var rowButton: RowButton = {
-        let button: RowButton = .makeForSavedPaymentMethod(paymentMethod: paymentMethod, appearance: appearance, rightAccessoryView: stackView) { [weak self] _ in
-            guard let self else { return }
-            state = .selected
-            delegate?.didSelectButton(self, with: paymentMethod)
-        }
+    private(set) lazy var rowButton: RowButton = {
+        let button: RowButton = .makeForSavedPaymentMethod(paymentMethod: paymentMethod, appearance: appearance, badgeText: badgeText, accessoryView: chevronButton, didTap: handleRowButtonTapped)
 
         return button
     }()
 
-    init(paymentMethod: STPPaymentMethod, appearance: PaymentSheet.Appearance) {
+    private lazy var badgeText: String? = {
+        return showDefaultPMBadge ? String.Localized.default_text : nil
+    }()
+
+    init(paymentMethod: STPPaymentMethod,
+         appearance: PaymentSheet.Appearance,
+         showDefaultPMBadge: Bool = false,
+         previousSelectedState: State = .unselected,
+         currentState: State = .unselected) {
         self.paymentMethod = paymentMethod
         self.appearance = appearance
+        self.showDefaultPMBadge = showDefaultPMBadge
+        self.previousSelectedState = previousSelectedState
+        self.state = currentState
         super.init(frame: .zero)
 
         addAndPinSubview(rowButton)
@@ -146,8 +107,12 @@ final class SavedPaymentMethodRowButton: UIView {
         delegate?.didSelectUpdateButton(self, with: paymentMethod)
     }
 
-    @objc private func handleRemoveButtonTapped() {
-        delegate?.didSelectRemoveButton(self, with: paymentMethod)
+    @objc private func handleRowButtonTapped(_: RowButton) {
+        if isEditing {
+            delegate?.didSelectUpdateButton(self, with: paymentMethod)
+        } else {
+            state = .selected
+            delegate?.didSelectButton(self, with: paymentMethod)
+        }
     }
-
 }

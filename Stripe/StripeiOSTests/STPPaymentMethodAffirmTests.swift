@@ -6,6 +6,7 @@
 //
 
 import StripeCoreTestUtils
+import StripePaymentsTestUtils
 import XCTest
 
 @testable@_spi(STP) import Stripe
@@ -14,7 +15,7 @@ import XCTest
 @testable@_spi(STP) import StripePaymentSheet
 @testable@_spi(STP) import StripePaymentsUI
 
-class STPPaymentMethodAffirmTests: XCTestCase {
+class STPPaymentMethodAffirmTests: STPNetworkStubbingTestCase {
 
     static let affirmPaymentIntentClientSecret =
         "pi_3KUFbTFY0qyl6XeW1oDBbiQk_secret_8kdpLx37oa5WMrI2xoXThCK9s"

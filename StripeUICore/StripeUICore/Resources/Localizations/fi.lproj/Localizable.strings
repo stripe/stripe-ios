@@ -1,5 +1,7 @@
 "%@ (optional)" = "%@ (valinnainen)";
 
+"(not accepted)" = "(ei hyväksytty)";
+
 "Account number" = "Tilinumero";
 
 "Address" = "Osoite";
@@ -83,8 +85,6 @@
 "Other" = "Muu";
 
 "Parish" = "Kunta";
-
-"Phone" = "Puhelin";
 
 "Phone number" = "Puhelinnumero";
 

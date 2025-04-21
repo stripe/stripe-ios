@@ -1,5 +1,7 @@
 "%@ (optional)" = "%@ (nav obligāti)";
 
+"(not accepted)" = "(netiek pieņemts)";
+
 "Account number" = "Konta numurs";
 
 "Address" = "Adrese";
@@ -83,8 +85,6 @@
 "Other" = "Cits";
 
 "Parish" = "Pagasts";
-
-"Phone" = "Tālrunis";
 
 "Phone number" = "Tālruņa numurs";
 

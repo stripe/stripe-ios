@@ -1,5 +1,7 @@
 "%@ (optional)" = "%@(opsyonal)";
 
+"(not accepted)" = "(hindi tinatanggap)";
+
 "Account number" = "Numero ng account";
 
 "Address" = "Adres";
@@ -83,8 +85,6 @@
 "Other" = "Iba Pa";
 
 "Parish" = "Parokya";
-
-"Phone" = "Telepono";
 
 "Phone number" = "Numero ng telepono";
 

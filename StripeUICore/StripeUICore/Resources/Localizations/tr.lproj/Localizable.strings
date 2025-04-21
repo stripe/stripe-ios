@@ -1,5 +1,7 @@
 "%@ (optional)" = "%@ (isteğe bağlı)";
 
+"(not accepted)" = "(kabul edilmedi)";
+
 "Account number" = "Hesap numarası";
 
 "Address" = "Adres";
@@ -83,8 +85,6 @@
 "Other" = "Diğer";
 
 "Parish" = "Dini bölge";
-
-"Phone" = "Telefon";
 
 "Phone number" = "Telefon numarası";
 

@@ -2,21 +2,19 @@
 
 "%1$@ ending in %2$@" = "%1$@, kuri baigiasi %2$@";
 
+"%1$@ is not accepted" = "\"%1$@\" nepriimamas";
+
 "Address line 2 (optional)" = "2 adreso eilutė (pasirenkama)";
 
-"Apple Pay" = "„Apple Pay“";
+"Apple Pay" = "\"Apple Pay\"";
 
 "BSB" = "BSB";
 
 "Bank Account" = "Banko sąskaita";
 
-"Billing Address" = "Sąskaitų siuntimo adresas";
-
 "Billing address" = "Atsiskaitymo adresas";
 
 "CVC" = "CVC";
-
-"CVV" = "CVV";
 
 "Card information" = "Kortelės duomenys";
 
@@ -38,9 +36,13 @@
 
 "The BSB you entered is invalid." = "Įvestas netinkamas BSB numeris.";
 
+"The selected brand is not allowed" = "Pasirinktas prekės ženklas neleidžiamas";
+
 "To scan your card, allow camera access in Settings." = "Kad nuskaitytumėte kortelę, nustatymuose suteikite prieigą fotoaparatui.";
 
 "Your ZIP is invalid." = "Jūsų pašto kodas yra netinkamas.";
+
+"Your card has expired." = "Jūsų kortelė baigė galioti.";
 
 "Your card number is incomplete." = "Neišsamus kortelės numeris.";
 

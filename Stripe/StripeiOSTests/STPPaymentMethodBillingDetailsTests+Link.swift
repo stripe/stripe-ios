@@ -5,13 +5,15 @@
 //  Created by Eduardo Urias on 2/27/23.
 //
 
+@_spi(STP) import StripeCore
+@_spi(STP) import StripePayments
 @testable import StripePaymentSheet
 import XCTest
 
 // Link mapping tests
 final class STPPaymentMethodBillingDetailsTests: XCTestCase {
     func testConsumersAPIParamsMapping() {
-        var billingDetails = STPPaymentMethodBillingDetails()
+        let billingDetails = STPPaymentMethodBillingDetails()
         billingDetails.name = "Name"
         billingDetails.email = "Email"
         billingDetails.phone = "Phone"
@@ -37,5 +39,24 @@ final class STPPaymentMethodBillingDetailsTests: XCTestCase {
         XCTAssertNil(params["city"])
         XCTAssertNil(params["state"])
         XCTAssertNil(params["country"])
+    }
+
+    func testCreateLinkBillingAddress() {
+        let billingAddress = BillingAddress(
+            name: "Name",
+            line1: "Line 1",
+            line2: "Line 2",
+            city: "City",
+            state: "State",
+            countryCode: "Country"
+        )
+        let billingDetails = STPPaymentMethodBillingDetails.init(billingAddress: billingAddress, email: "email@email.com")!
+        XCTAssertEqual(billingDetails.name, "Name")
+        XCTAssertEqual(billingDetails.address?.line1, "Line 1")
+        XCTAssertEqual(billingDetails.address?.line2, "Line 2")
+        XCTAssertEqual(billingDetails.address?.city, "City")
+        XCTAssertEqual(billingDetails.address?.state, "State")
+        XCTAssertEqual(billingDetails.address?.country, "Country")
+        XCTAssertEqual(billingDetails.email, "email@email.com")
     }
 }

@@ -43,13 +43,12 @@ import UIKit
     /// A publishable key that only contains publishable keys and not secret keys.
     ///
     /// If a secret key is found, returns "[REDACTED_LIVE_KEY]".
-    var sanitizedPublishableKey: String? {
+    @_spi(STP) public var sanitizedPublishableKey: String? {
         guard let publishableKey = publishableKey else {
             return nil
         }
 
-        return (publishableKey.isSecretKey || publishableKeyIsUserKey)
-            ? "[REDACTED_LIVE_KEY]" : publishableKey
+        return publishableKey.sanitizedKey
     }
 
     // Stored STPPaymentConfiguration: Type checking handled in STPAPIClient+Payments.swift.
@@ -89,6 +88,8 @@ import UIKit
 
     /// Determines the `Stripe-Livemode` header value when the publishable key is a user key
     @_spi(DashboardOnly) public var userKeyLiveMode = true
+
+    @_spi(STP) public lazy var stripeAttest: StripeAttest = StripeAttest(apiClient: self)
 
     // MARK: Initializers
     override public init() {
@@ -142,7 +143,7 @@ import UIKit
     // MARK: Helpers
 
     static var didShowTestmodeKeyWarning = false
-    class func validateKey(_ publishableKey: String?) {
+    @_spi(STP) public class func validateKey(_ publishableKey: String?) {
         guard NSClassFromString("XCTest") == nil else {
             return  // no asserts in unit tests
         }
@@ -228,6 +229,25 @@ import UIKit
         }
         return publishableKey.lowercased().hasPrefix("pk_test") || (publishableKeyIsUserKey && !userKeyLiveMode)
     }
+
+    /**
+     Copies the api client.
+     - Note: This should be used in cases where you need to make a request
+     using the same configuration as a given STPAPIClient , but need to make a
+     modification such as overriding beta headers or `stripeAccount`.
+     */
+    @_spi(STP) public func makeCopy() -> STPAPIClient {
+        let client = STPAPIClient()
+        client._publishableKey = _publishableKey
+        client._stored_configuration = _stored_configuration
+        client.stripeAccount = stripeAccount
+        client.appInfo = appInfo
+        client.apiURL = apiURL
+        client.urlSession = urlSession
+        client.betas = betas
+        client.userKeyLiveMode = userKeyLiveMode
+        return client
+    }
 }
 
 private let APIVersion = "2020-08-27"
@@ -240,6 +260,7 @@ extension STPAPIClient {
         resource: String,
         parameters: [String: Any],
         ephemeralKeySecret: String? = nil,
+        consumerPublishableKey: String? = nil,
         completion: @escaping (
             Result<T, Error>
         ) -> Void
@@ -248,6 +269,7 @@ extension STPAPIClient {
             method: .get,
             parameters: parameters,
             ephemeralKeySecret: ephemeralKeySecret,
+            consumerPublishableKey: consumerPublishableKey,
             resource: resource,
             completion: completion
         )
@@ -258,6 +280,7 @@ extension STPAPIClient {
         url: URL,
         parameters: [String: Any],
         ephemeralKeySecret: String? = nil,
+        consumerPublishableKey: String? = nil,
         completion: @escaping (
             Result<T, Error>
         ) -> Void
@@ -266,6 +289,7 @@ extension STPAPIClient {
             method: .get,
             parameters: parameters,
             ephemeralKeySecret: ephemeralKeySecret,
+            consumerPublishableKey: consumerPublishableKey,
             url: url,
             completion: completion
         )
@@ -277,12 +301,14 @@ extension STPAPIClient {
     @_spi(STP) public func get<T: Decodable>(
         resource: String,
         parameters: [String: Any],
-        ephemeralKeySecret: String? = nil
+        ephemeralKeySecret: String? = nil,
+        consumerPublishableKey: String? = nil
     ) -> Promise<T> {
         return request(
             method: .get,
             parameters: parameters,
             ephemeralKeySecret: ephemeralKeySecret,
+            consumerPublishableKey: consumerPublishableKey,
             resource: resource
         )
     }
@@ -292,12 +318,14 @@ extension STPAPIClient {
         resource: String,
         parameters: [String: Any],
         ephemeralKeySecret: String? = nil,
+        consumerPublishableKey: String? = nil,
         completion: @escaping (Result<T, Error>) -> Void
     ) {
         request(
             method: .post,
             parameters: parameters,
             ephemeralKeySecret: ephemeralKeySecret,
+            consumerPublishableKey: consumerPublishableKey,
             resource: resource,
             completion: completion
         )
@@ -308,12 +336,14 @@ extension STPAPIClient {
         url: URL,
         parameters: [String: Any],
         ephemeralKeySecret: String? = nil,
+        consumerPublishableKey: String? = nil,
         completion: @escaping (Result<T, Error>) -> Void
     ) {
         request(
             method: .post,
             parameters: parameters,
             ephemeralKeySecret: ephemeralKeySecret,
+            consumerPublishableKey: consumerPublishableKey,
             url: url,
             completion: completion
         )
@@ -325,12 +355,14 @@ extension STPAPIClient {
     @_spi(STP) public func post<T: Decodable>(
         resource: String,
         parameters: [String: Any],
-        ephemeralKeySecret: String? = nil
+        ephemeralKeySecret: String? = nil,
+        consumerPublishableKey: String? = nil
     ) -> Promise<T> {
         return request(
             method: .post,
             parameters: parameters,
             ephemeralKeySecret: ephemeralKeySecret,
+            consumerPublishableKey: consumerPublishableKey,
             resource: resource
         )
     }
@@ -339,6 +371,7 @@ extension STPAPIClient {
         method: HTTPMethod,
         parameters: [String: Any],
         ephemeralKeySecret: String?,
+        consumerPublishableKey: String?,
         resource: String
     ) -> Promise<T> {
         let promise = Promise<T>()
@@ -346,6 +379,7 @@ extension STPAPIClient {
             method: method,
             parameters: parameters,
             ephemeralKeySecret: ephemeralKeySecret,
+            consumerPublishableKey: consumerPublishableKey,
             resource: resource
         ) { result in
             promise.fullfill(with: result)
@@ -357,6 +391,7 @@ extension STPAPIClient {
         method: HTTPMethod,
         parameters: [String: Any],
         ephemeralKeySecret: String?,
+        consumerPublishableKey: String?,
         resource: String,
         completion: @escaping (Result<T, Error>) -> Void
     ) {
@@ -365,6 +400,7 @@ extension STPAPIClient {
             method: method,
             parameters: parameters,
             ephemeralKeySecret: ephemeralKeySecret,
+            consumerPublishableKey: consumerPublishableKey,
             url: url,
             completion: completion
         )
@@ -374,6 +410,7 @@ extension STPAPIClient {
         method: HTTPMethod,
         parameters: [String: Any],
         ephemeralKeySecret: String?,
+        consumerPublishableKey: String?,
         url: URL,
         completion: @escaping (Result<T, Error>) -> Void
     ) {
@@ -392,11 +429,22 @@ extension STPAPIClient {
                 "application/x-www-form-urlencoded",
                 forHTTPHeaderField: "Content-Type"
             )
+            #if DEBUG
+            if StripeAPIConfiguration.includeDebugParamsHeader {
+                request.setValue(URLEncoder.queryString(from: parameters), forHTTPHeaderField: "X-Stripe-Mock-Request")
+            }
+            #endif
         }
 
         request.httpMethod = method.rawValue
-        for (k, v) in authorizationHeader(using: ephemeralKeySecret) {
+        for (k, v) in authorizationHeader(using: ephemeralKeySecret ?? consumerPublishableKey) {
             request.setValue(v, forHTTPHeaderField: k)
+        }
+
+        if consumerPublishableKey != nil {
+            // If we now have a consumer publishable key, we no longer send the connected account
+            // in the header, as otherwise the request will justifiably fail.
+            request.setValue(nil, forHTTPHeaderField: "Stripe-Account")
         }
 
         self.sendRequest(request: request, completion: completion)
@@ -481,7 +529,7 @@ extension STPAPIClient {
             completionHandler: { (data, response, error) in
                 DispatchQueue.main.async {
                     completion(
-                        STPAPIClient.decodeResponse(data: data, error: error, response: response)
+                        STPAPIClient.decodeResponse(data: data, error: error, response: response, request: request)
                     )
                 }
             }
@@ -491,7 +539,8 @@ extension STPAPIClient {
     @_spi(STP) public static func decodeResponse<T: Decodable>(
         data: Data?,
         error: Error?,
-        response: URLResponse?
+        response: URLResponse?,
+        request: URLRequest? = nil
     ) -> Result<T, Error> {
         if let error = error {
             return .failure(error)
@@ -501,7 +550,15 @@ extension STPAPIClient {
         }
 
         do {
-            /// HACK: We must first check if EmptyResponses contain an error since it'll always parse successfully.
+            #if DEBUG
+            if let httpResponse = response as? HTTPURLResponse,
+               let method = request?.httpMethod,
+               let requestId = httpResponse.value(forHTTPHeaderField: "request-id"),
+               let url = httpResponse.value(forKey: "URL") as? URL {
+                print("[Stripe SDK]: \(method) \"\(url.relativePath)\" \(httpResponse.statusCode) \(requestId)")
+            }
+            #endif
+            // HACK: We must first check if EmptyResponses contain an error since it'll always parse successfully.
             if T.self == EmptyResponse.self,
                 let decodedStripeError = decodeStripeErrorResponse(data: data, response: response)
             {

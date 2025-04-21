@@ -30,16 +30,53 @@ extension LinkStubs {
     static func paymentMethods() -> [ConsumerPaymentDetails] {
         return [
             ConsumerPaymentDetails(
-                stripeID: "1"
+                stripeID: "1",
+                details: .card(card: .init(
+                    expiryYear: 30,
+                    expiryMonth: 10,
+                    brand: "visa",
+                    networks: ["visa"],
+                    last4: "1234",
+                    checks: nil)
+                ),
+                billingAddress: nil,
+                billingEmailAddress: nil,
+                isDefault: true
             ),
             ConsumerPaymentDetails(
-                stripeID: "2"
+                stripeID: "2",
+                details: .card(card: .init(
+                    expiryYear: 30,
+                    expiryMonth: 10,
+                    brand: "mastercard",
+                    networks: ["mastercard"],
+                    last4: "4321",
+                    checks: .init(cvcCheck: .fail))
+                ),
+                billingAddress: nil,
+                billingEmailAddress: nil,
+                isDefault: false
             ),
             ConsumerPaymentDetails(
-                stripeID: "3"
+                stripeID: "3",
+                details: .bankAccount(bankAccount: .init(iconCode: nil, name: "test", last4: "1234")),
+                billingAddress: nil,
+                billingEmailAddress: nil,
+                isDefault: false
             ),
             ConsumerPaymentDetails(
-                stripeID: "4"
+                stripeID: "4",
+                details: .card(card: .init(
+                    expiryYear: 20,
+                    expiryMonth: 10,
+                    brand: "discover",
+                    networks: ["discover"],
+                    last4: "1111",
+                    checks: nil)
+                ),
+                billingAddress: nil,
+                billingEmailAddress: nil,
+                isDefault: false
             ),
         ]
     }
@@ -48,7 +85,11 @@ extension LinkStubs {
         return ConsumerSession(
             clientSecret: "client_secret",
             emailAddress: "user@example.com",
-            verificationSessions: []
+            redactedFormattedPhoneNumber: "(***) *** **55",
+            unredactedPhoneNumber: "(555) 555-5555",
+            phoneNumberCountry: "US",
+            verificationSessions: [],
+            supportedPaymentDetailsTypes: [.card, .bankAccount]
         )
     }
 

@@ -1,0 +1,105 @@
+POST
+https:\/\/api\.stripe\.com\/v1\/payment_intents\/pi_3Q5BJ5FY0qyl6XeW0J51TxAT\/confirm$
+200
+application/json
+access-control-allow-methods: GET,HEAD,PUT,PATCH,POST,DELETE
+content-security-policy: report-uri https://q.stripe.com/csp-report?p=v1%2Fpayment_intents%2F%3Aintent%2Fconfirm; block-all-mixed-content; default-src 'none'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'
+Server: nginx
+Cache-Control: no-cache, no-store
+reporting-endpoints: coop="https://q.stripe.com/coop-report?s=payins-bapi-srv"
+x-wc: A
+Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
+cross-origin-opener-policy-report-only: same-origin; report-to="coop"
+Access-Control-Allow-Origin: *
+stripe-should-retry: false
+x-stripe-priority-routing-enabled: true
+report-to: {"group":"coop","max_age":8640,"endpoints":[{"url":"https://q.stripe.com/coop-report?s=payins-bapi-srv"}],"include_subdomains":true}
+request-id: req_vbr2UrMtnpBcNt
+x-stripe-routing-context-priority-tier: api-testmode
+Content-Length: 2235
+Vary: Origin
+Date: Tue, 01 Oct 2024 19:00:25 GMT
+original-request: req_vbr2UrMtnpBcNt
+stripe-version: 2020-08-27
+idempotency-key: af76adf1-2126-4ff7-bcdf-3dc30ee2dfe3
+access-control-expose-headers: Request-Id, Stripe-Manage-Version, Stripe-Should-Retry, X-Stripe-External-Auth-Required, X-Stripe-Privileged-Session-Required
+access-control-max-age: 300
+access-control-allow-credentials: true
+Content-Type: application/json
+x-content-type-options: nosniff
+X-Stripe-Mock-Request: client_secret=pi_3Q5BJ5FY0qyl6XeW0J51TxAT_secret_eGsbFjnEjkSnMaDSyEbuLBcfe&expand\[0]=payment_method&mandate_data\[customer_acceptance]\[online]\[infer_from_client]=true&mandate_data\[customer_acceptance]\[type]=online&payment_method=pm_1Q5BJ5FY0qyl6XeWxAPSjtau&return_url=https%3A\/\/foo\.com&use_stripe_sdk=true
+
+{
+  "payment_method_configuration_details" : null,
+  "canceled_at" : null,
+  "source" : null,
+  "amount" : 5050,
+  "capture_method" : "automatic",
+  "livemode" : false,
+  "shipping" : null,
+  "status" : "requires_action",
+  "object" : "payment_intent",
+  "currency" : "usd",
+  "last_payment_error" : null,
+  "amount_subtotal" : 5050,
+  "automatic_payment_methods" : null,
+  "cancellation_reason" : null,
+  "next_action" : {
+    "type" : "cashapp_handle_redirect_or_display_qr_code",
+    "cashapp_handle_redirect_or_display_qr_code" : {
+      "qr_code" : {
+        "image_url_png" : "https:\/\/qr.stripe.com\/test_YWNjdF8xRzZtMXBGWTBxeWw2WGVXLF9ReDVVeU1zemdZUWpLSnAxQ2RoS3FjeUhFSHFQVVoz0100RPTNUXKj.png",
+        "image_url_svg" : "https:\/\/qr.stripe.com\/test_YWNjdF8xRzZtMXBGWTBxeWw2WGVXLF9ReDVVeU1zemdZUWpLSnAxQ2RoS3FjeUhFSHFQVVoz0100RPTNUXKj.svg",
+        "expires_at" : 1727809245
+      },
+      "hosted_instructions_url" : "https:\/\/payments.stripe.com\/qr\/instructions\/CDQaFwoVYWNjdF8xRzZtMXBGWTBxeWw2WGVXKMmN8bcGMgb4ekNtDj46MJU9LQX75-6l3IKU-lvg2BE0SEAlQdtQ_wnJysDA5X3WAsKNEQ-PhHqmpYxAyubHyA",
+      "mobile_auth_url" : "https:\/\/pm-redirects.stripe.com\/authorize\/acct_1G6m1pFY0qyl6XeW\/pa_nonce_Qx5UUBphwSlorP7tb7I8oW6WEQAVgx8"
+    }
+  },
+  "total_details" : {
+    "amount_discount" : 0,
+    "amount_tax" : 0
+  },
+  "payment_method" : {
+    "object" : "payment_method",
+    "id" : "pm_1Q5BJ5FY0qyl6XeWxAPSjtau",
+    "billing_details" : {
+      "email" : null,
+      "phone" : null,
+      "name" : null,
+      "address" : {
+        "state" : null,
+        "country" : null,
+        "line2" : null,
+        "city" : null,
+        "line1" : null,
+        "postal_code" : null
+      }
+    },
+    "livemode" : false,
+    "created" : 1727809223,
+    "allow_redisplay" : "unspecified",
+    "type" : "cashapp",
+    "customer" : null,
+    "cashapp" : {
+      "cashtag" : null,
+      "buyer_id" : null
+    }
+  },
+  "client_secret" : "pi_3Q5BJ5FY0qyl6XeW0J51TxAT_secret_eGsbFjnEjkSnMaDSyEbuLBcfe",
+  "id" : "pi_3Q5BJ5FY0qyl6XeW0J51TxAT",
+  "confirmation_method" : "automatic",
+  "amount_details" : {
+    "tip" : {
+
+    }
+  },
+  "processing" : null,
+  "receipt_email" : null,
+  "payment_method_types" : [
+    "cashapp"
+  ],
+  "setup_future_usage" : "off_session",
+  "created" : 1727809223,
+  "description" : null
+}

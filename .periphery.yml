@@ -1,0 +1,36 @@
+# Detects dead code
+# Usage periphery scan --config .periphery.yml 2>&1 | sed 's#.*/##' | grep 'is unused' | sort > periphery_report_feature_formatted_sorted.txt
+# Install/info https://github.com/peripheryapp/periphery
+# Why are so many targets/schemes commented out? This script takes a long time to run in CI, so we skip some schemes to speed it up. Note: AllStripeFrameworks covers a lot of the commented out schemes, e.g. AllStripeFrameworks contains StripeApplePay.
+
+workspace: Stripe.xcworkspace
+
+schemes:
+  - AllStripeFrameworks
+  - StripeConnect
+
+targets:
+  - Stripe3DS2
+  - StripeApplePay
+  - StripeCameraCore
+  - StripeCardScan
+  - StripeConnect
+  - StripeCore
+  - StripeFinancialConnections
+  - StripeIdentity
+  - StripePaymentSheet
+  - StripePayments
+  - StripePaymentsUI
+  - StripeUICore
+  - StripeiOS
+
+retain_public: true
+retain_objc_accessible: false
+retain_objc_annotated: false
+
+verbose: true
+
+build_arguments:
+  - -destination
+  - 'generic/platform=iOS Simulator'
+  

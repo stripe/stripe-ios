@@ -12,9 +12,10 @@ import StripeCoreTestUtils
 @testable@_spi(STP) import StripeCore
 @testable@_spi(STP) import StripePayments
 @testable@_spi(STP) import StripePaymentSheet
+import StripePaymentsTestUtils
 @testable@_spi(STP) import StripePaymentsUI
 
-class STPPaymentMethodNetBankingTests: XCTestCase {
+class STPPaymentMethodNetBankingTests: STPNetworkStubbingTestCase {
     private(set) var netbankingJSON: [AnyHashable: Any]?
 
     func _retrieveNetBankingJSON(_ completion: @escaping ([AnyHashable: Any]?) -> Void) {

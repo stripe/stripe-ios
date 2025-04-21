@@ -1,4 +1,10 @@
+"An error occurred. Please try again." = "Tapahtui virhe. Yritä uudelleen.";
+
+"Card brand was not updated. Please try again." = "Korttimerkkiä ei päivitetty. Yritä uudelleen.";
+
 "Close" = "Sulje";
+
+"Default payment method was not updated. Please try again." = "Oletusmaksutapaa ei päivitetty. Yritä uudelleen.";
 
 "Scan Card" = "Skannaa kortti";
 

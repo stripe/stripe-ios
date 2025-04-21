@@ -2,6 +2,8 @@
 
 "%1$@ ending in %2$@" = "%1$@ kết thúc bằng %2$@";
 
+"%1$@ is not accepted" = "%1$@ không được chấp nhận";
+
 "Address line 2 (optional)" = "Dòng địa chỉ 2 (tùy chọn)";
 
 "Apple Pay" = "Apple Pay";
@@ -10,13 +12,9 @@
 
 "Bank Account" = "Tài khoản ngân hàng";
 
-"Billing Address" = "Địa chỉ thanh toán";
-
 "Billing address" = "Địa chỉ thanh toán";
 
 "CVC" = "CVC";
-
-"CVV" = "CVV";
 
 "Card information" = "Thông tin thẻ";
 
@@ -38,9 +36,13 @@
 
 "The BSB you entered is invalid." = "BSB mà bạn nhập không hợp lệ.";
 
+"The selected brand is not allowed" = "Thương hiệu đã chọn không được cho phép";
+
 "To scan your card, allow camera access in Settings." = "Để quét thẻ của bạn, hãy cho phép truy cập camera trong mục Cài đặt.";
 
 "Your ZIP is invalid." = "Mã ZIP không hợp lệ";
+
+"Your card has expired." = "Thẻ đã hết hạn.";
 
 "Your card number is incomplete." = "Số thẻ chưa đầy đủ.";
 

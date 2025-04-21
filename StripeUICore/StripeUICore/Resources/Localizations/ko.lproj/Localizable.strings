@@ -1,5 +1,7 @@
 "%@ (optional)" = "%@(선택 사항)";
 
+"(not accepted)" = "(허용되지 않음)";
+
 "Account number" = "계좌 번호";
 
 "Address" = "주소";
@@ -83,8 +85,6 @@
 "Other" = "기타";
 
 "Parish" = "교구";
-
-"Phone" = "전화번호";
 
 "Phone number" = "전화번호";
 

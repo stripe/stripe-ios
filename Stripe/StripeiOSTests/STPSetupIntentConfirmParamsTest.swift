@@ -24,6 +24,7 @@ class STPSetupIntentConfirmParamsTest: XCTestCase {
             XCTAssertEqual(params.additionalAPIParameters.count, 0)
             XCTAssertNil(params.paymentMethodID)
             XCTAssertNil(params.returnURL)
+            XCTAssertNil(params.setAsDefaultPM)
             XCTAssertNil(params.useStripeSDK)
             XCTAssertNil(params.mandateData)
         }
@@ -94,6 +95,7 @@ class STPSetupIntentConfirmParamsTest: XCTestCase {
         params.paymentMethodParams = STPPaymentMethodParams()
         params.paymentMethodID = "test_payment_method_id"
         params.returnURL = "fake://testing_only"
+        params.setAsDefaultPM = NSNumber(value: true)
         params.useStripeSDK = NSNumber(value: true)
         params.mandateData = STPMandateDataParams(
             customerAcceptance: STPMandateCustomerAcceptanceParams(
@@ -114,6 +116,7 @@ class STPSetupIntentConfirmParamsTest: XCTestCase {
         XCTAssertEqual(params.mandateData, paramsCopy.mandateData)
 
         XCTAssertEqual(params.returnURL, paramsCopy.returnURL)
+        XCTAssertEqual(params.setAsDefaultPM, paramsCopy.setAsDefaultPM)
         XCTAssertEqual(params.useStripeSDK, paramsCopy.useStripeSDK)
         XCTAssertEqual(
             params.additionalAPIParameters as NSDictionary,

@@ -1,4 +1,10 @@
+"An error occurred. Please try again." = "Si è verificato un errore. Riprova.";
+
+"Card brand was not updated. Please try again." = "Il circuito della carta non è stato aggiornato. Riprova.";
+
 "Close" = "Chiudi";
+
+"Default payment method was not updated. Please try again." = "Il metodo di pagamento predefinito non è stato aggiornato. Riprova.";
 
 "Scan Card" = "Scansiona carta";
 

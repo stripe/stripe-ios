@@ -21,14 +21,14 @@ final class PhoneCountryCodeSelectorView: UIView {
     private lazy var flagLabel: AttributedLabel = {
         let flagLabel = AttributedLabel(
             font: .label(.large),
-            textColor: .textDefault
+            textColor: FinancialConnectionsAppearance.Colors.textDefault
         )
         return flagLabel
     }()
     private lazy var countryCodeLabel: AttributedLabel = {
         let flagLabel = AttributedLabel(
             font: .label(.large),
-            textColor: .textDefault
+            textColor: FinancialConnectionsAppearance.Colors.textDefault
         )
         return flagLabel
     }()
@@ -45,11 +45,11 @@ final class PhoneCountryCodeSelectorView: UIView {
         return textField
     }()
     private lazy var keyboardToolbar: DoneButtonToolbar = {
-        var theme: ElementsUITheme = .default
+        var theme: ElementsAppearance = .default
         theme.colors = {
-            var colors = ElementsUITheme.Color()
-            colors.primary = .brand500
-            colors.secondaryText = .textSubdued
+            var colors = ElementsAppearance.Color()
+            colors.primary = appearance.colors.primary
+            colors.secondaryText = FinancialConnectionsAppearance.Colors.textSubdued
             return colors
         }()
         let keyboardToolbar = DoneButtonToolbar(
@@ -60,20 +60,23 @@ final class PhoneCountryCodeSelectorView: UIView {
         return keyboardToolbar
     }()
     private let pickerView: PhoneCountryCodePickerView
+    private let appearance: FinancialConnectionsAppearance
     var selectedCountryCode: String {
         return pickerView.selectedCountryCode
     }
 
     weak var delegate: PhoneCountryCodeSelectorViewDelegate?
 
-    init(defaultCountryCode: String?) {
+    init(defaultCountryCode: String?, appearance: FinancialConnectionsAppearance) {
         self.pickerView = PhoneCountryCodePickerView(defaultCountryCode: defaultCountryCode)
+        self.appearance = appearance
         super.init(frame: .zero)
         pickerView.delegate = self
 
-        backgroundColor = .backgroundOffset
+        backgroundColor = FinancialConnectionsAppearance.Colors.backgroundSecondary
         layer.cornerRadius = 8
         clipsToBounds = true
+        accessibilityIdentifier = "phone_country_code_selector"
 
         let horizontalStackView = UIStackView(
             arrangedSubviews: [
@@ -167,7 +170,7 @@ private struct PhoneCountryCodeSelectorViewUIViewRepresentable: UIViewRepresenta
     let defaultCountryCode: String?
 
     func makeUIView(context: Context) -> PhoneCountryCodeSelectorView {
-        PhoneCountryCodeSelectorView(defaultCountryCode: defaultCountryCode)
+        PhoneCountryCodeSelectorView(defaultCountryCode: defaultCountryCode, appearance: .stripe)
     }
 
     func updateUIView(
@@ -198,7 +201,7 @@ struct PhoneCountryCodeSelectorView_Previews: PreviewProvider {
                 Spacer()
             }
             .padding()
-            .background(Color(UIColor.customBackgroundColor))
+            .background(Color(FinancialConnectionsAppearance.Colors.background))
         }
     }
 }

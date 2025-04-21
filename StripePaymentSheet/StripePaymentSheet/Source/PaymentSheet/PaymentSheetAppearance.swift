@@ -36,9 +36,17 @@ public extension PaymentSheet {
         /// - Note: The behavior of this property is consistent with the behavior of border width on `CALayer`
         public var borderWidth: CGFloat = 1.0
 
+        /// The border width used for selected buttons and tabs in PaymentSheet
+        /// - Note: If `nil`, defaults to  `borderWidth * 1.5`
+        /// - Note: The behavior of this property is consistent with the behavior of border width on `CALayer`
+        @_spi(EmbeddedPaymentElementPrivateBeta) public var selectedBorderWidth: CGFloat?
+
         /// The shadow used for inputs and tabs in PaymentSheet
         /// - Note: Set this to `.disabled` to disable shadows
         public var shadow: Shadow = Shadow()
+
+        /// Describes the appearance of the Embedded Mobile Payment Element
+        @_spi(EmbeddedPaymentElementPrivateBeta) public var embeddedPaymentElement: EmbeddedPaymentElement = EmbeddedPaymentElement()
 
         // MARK: Fonts
 
@@ -93,6 +101,10 @@ public extension PaymentSheet {
 
             /// The border color used for inputs, tabs, and other components
             public var componentBorder: UIColor = .systemGray3
+
+            /// The border color used for selected buttons and tabs in PaymentSheet
+            /// - Note: If `nil`, defaults to  `appearance.colors.primary`
+            @_spi(EmbeddedPaymentElementPrivateBeta) public var selectedComponentBorder: UIColor?
 
             /// The color of the divider lines used inside inputs, tabs, and other components
             public var componentDivider: UIColor = .systemGray3
@@ -179,6 +191,14 @@ public extension PaymentSheet {
             /// - Note: If `nil`, defaults to either white or black depending on the color of the button
             public var textColor: UIColor?
 
+            /// The background color of the primary button when in a disabled state.
+             /// - Note: If `nil`, defaults to `backgroundColor`. If `backgroundColor` is `nil`, defaults to `appearance.colors.primary`.
+            public var disabledBackgroundColor: UIColor?
+
+            /// The text color of the primary button when in a disabled state.
+            /// - Note: If `nil`, defaults to `textColor` with an alpha value of 0.6
+             public var disabledTextColor: UIColor?
+
             /// The background color of the primary button when in a success state.
             /// - Note: Only applies to PaymentSheet. The primary button transitions to the success state when payment succeeds.
             public var successBackgroundColor: UIColor = .systemGreen
@@ -209,6 +229,94 @@ public extension PaymentSheet {
             /// The shadow of the primary button
             /// - Note: If `nil`, `appearance.shadow` will be used as the primary button shadow
             public var shadow: Shadow?
+        }
+    }
+}
+
+@_spi(EmbeddedPaymentElementPrivateBeta) public extension PaymentSheet.Appearance {
+    /// Describes the appearance of the Embedded Mobile Payment Element
+    @_spi(EmbeddedPaymentElementPrivateBeta) struct EmbeddedPaymentElement: Equatable {
+
+        /// Creates a `PaymentSheet.Appearance.EmbeddedPaymentElement` with default values
+        public init() {}
+
+        /// Describes the appearance of the row in the Embedded Mobile Payment Element
+        public var row: Row = Row()
+
+        /// Describes the appearance of the row in the Embedded Mobile Payment Element
+        public struct Row: Equatable {
+            /// The display styles of rows
+            public enum Style: CaseIterable {
+                /// A flat style with radio buttons
+                case flatWithRadio
+                /// A floating button style
+                case floatingButton
+                /// A flat style with a checkmark
+                case flatWithCheckmark
+            }
+
+            /// The display style of the row
+            public var style: Style = .flatWithRadio
+
+            /// Additional vertical insets applied to a payment method row
+            /// - Note: Increasing this value increases the height of each row
+            public var additionalInsets: CGFloat = 6.0
+
+            /// Appearance settings for the flat style
+            public var flat: Flat = Flat()
+
+            /// Appearance settings for the floating button style
+            public var floating: Floating = Floating()
+
+            /// Describes the appearance of the flat style of the Embedded Mobile Payment Element
+            public struct Flat: Equatable {
+                /// The thickness of the separator line between rows
+                public var separatorThickness: CGFloat = 1.0
+
+                /// The color of the separator line between rows
+                /// - Note: If `nil`, defaults to `appearance.colors.componentBorder`
+                public var separatorColor: UIColor?
+
+                /// The insets of the separator line between rows
+                /// - Note: If `nil`, defaults to `UIEdgeInsets(top: 0, left: 30, bottom: 0, right: 0)` for style of `flatWithRadio` and to `UIEdgeInsets.zero` for style of `floatingButton`.
+                public var separatorInsets: UIEdgeInsets?
+
+                /// Determines if the top separator is visible at the top of the Embedded Mobile Payment Element
+                public var topSeparatorEnabled: Bool = true
+
+                /// Determines if the bottom separator is visible at the bottom of the Embedded Mobile Payment Element
+                public var bottomSeparatorEnabled: Bool = true
+
+                /// Appearance settings for the radio button
+                public var radio: Radio = Radio()
+
+                /// Appearance settings for the checkmark
+                public var checkmark: Checkmark = Checkmark()
+
+                /// Describes the appearance of the radio button
+                public struct Radio: Equatable {
+                    /// The color of the radio button when selected
+                    /// - Note: If `nil`, defaults to `appearance.color.primaryColor`
+                    public var selectedColor: UIColor?
+
+                    /// The color of the radio button when unselected
+                    /// - Note: If `nil`, defaults to `appearance.colors.componentBorder`
+                    public var unselectedColor: UIColor?
+                }
+
+                /// Describes the appearance of the checkmark
+                public struct Checkmark: Equatable {
+                    /// The color of the checkmark button when selected
+                    /// - Note: If `nil`, defaults to `appearance.color.primaryColor`
+                    public var color: UIColor?
+                }
+            }
+
+            /// Describes the appearance of the floating button style payment method row
+            public struct Floating: Equatable {
+                /// The spacing between payment method rows
+                public var spacing: CGFloat = 12.0
+            }
         }
     }
 }

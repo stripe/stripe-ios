@@ -1,6 +1,7 @@
 #!/usr/bin/env ruby
 
 require_relative 'release_common'
+require_relative 'validate_version_number'
 
 # Get argument of new version number
 @version = @specified_version
@@ -56,13 +57,16 @@ end
 def create_pr
   # Create a new pull request from the branch
   pr_body = %{
-  - [ ] Verify CHANGELOG is updated with any new features or breaking changes (be thorough when reviewing commit history)
+  - [ ] Verify CHANGELOG
+    - [ ] Ensure notes for this release are not empty
+    - [ ] Release date correct?
+    - [ ] Version number looks correct?
   - [ ] Verify MIGRATING is updated (if necessary).
   - [ ] Verify the following files are updated to use the new version string:
     - [ ] Version.xcconfig
     - [ ] All *.podspec files
     - [ ] StripeAPIConfiguration+Version.swift
-  - [ ] Verify any new localized strings.
+  - [ ] Verify changes to localized strings seem sane (e.g. No major removal of langauges or large removal of strings)
   - [ ] If new directories were added, verify they have been added to the appropriate `*.podspec` "files" section.
   }
 
@@ -98,6 +102,7 @@ def propose_release
 end
 
 steps = [
+  method(:validate_version_number),
   method(:create_branch),
   method(:update_version),
   method(:update_placeholders),

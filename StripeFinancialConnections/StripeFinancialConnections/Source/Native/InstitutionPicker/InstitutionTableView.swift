@@ -34,6 +34,7 @@ final class InstitutionTableView: UIView {
 
     private let allowManualEntry: Bool
     private let institutionSearchDisabled: Bool
+    private let appearance: FinancialConnectionsAppearance
     let tableView: UITableView
     private let dataSource: UITableViewDiffableDataSource<Section, FinancialConnectionsInstitution>
     weak var delegate: InstitutionTableViewDelegate?
@@ -63,6 +64,7 @@ final class InstitutionTableView: UIView {
                 "The subtitle of a button that appears at the bottom of search results. It appears when a user is searching for their bank. The purpose of the button is to give users the option to enter their bank account numbers manually (ex. routing and account number)."
             ),
             image: .add,
+            appearance: appearance,
             didSelect: { [weak self] in
                 guard let self = self else { return }
                 FeedbackGeneratorAdapter.buttonTapped()
@@ -85,6 +87,7 @@ final class InstitutionTableView: UIView {
                 ),
                 subtitle: nil,
                 image: .search,
+                appearance: appearance,
                 didSelect: { [weak self] in
                     guard let self = self else { return }
                     FeedbackGeneratorAdapter.buttonTapped()
@@ -100,10 +103,12 @@ final class InstitutionTableView: UIView {
     init(
         frame: CGRect,
         allowManualEntry: Bool,
-        institutionSearchDisabled: Bool
+        institutionSearchDisabled: Bool,
+        appearance: FinancialConnectionsAppearance
     ) {
         self.allowManualEntry = allowManualEntry
         self.institutionSearchDisabled = institutionSearchDisabled
+        self.appearance = appearance
         let cellIdentifier = "\(InstitutionTableViewCell.self)"
         tableView = UITableView(frame: frame)
         dataSource = UITableViewDiffableDataSource(tableView: tableView) { tableView, _, institution in
@@ -115,12 +120,12 @@ final class InstitutionTableView: UIView {
                     "Unable to dequeue cell \(InstitutionTableViewCell.self) with cell identifier \(cellIdentifier)"
                 )
             }
-            cell.customize(with: institution)
+            cell.customize(with: institution, appearance: appearance)
             return cell
         }
         dataSource.defaultRowAnimation = .fade
         super.init(frame: frame)
-        tableView.backgroundColor = .customBackgroundColor
+        tableView.backgroundColor = FinancialConnectionsAppearance.Colors.background
         tableView.separatorInset = .zero
         tableView.separatorStyle = .none
         tableView.rowHeight = UITableView.automaticDimension
@@ -228,6 +233,7 @@ final class InstitutionTableView: UIView {
                 showTableFooterView(
                     true,
                     view: InstitutionNoResultsView(
+                        appearance: appearance,
                         didSelectManuallyEnterDetails: self.allowManualEntry ? { [weak self] in
                             guard let self = self else { return }
                             self.delegate?.institutionTableView(

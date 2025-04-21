@@ -2,6 +2,8 @@
 
 "%1$@ ending in %2$@" = "%1$@ – berakhiran %2$@";
 
+"%1$@ is not accepted" = "%1$@ tidak diterima";
+
 "Address line 2 (optional)" = "Alamat baris 2 (opsyenal)";
 
 "Apple Pay" = "Apple Pay";
@@ -10,13 +12,9 @@
 
 "Bank Account" = "Akaun Bank";
 
-"Billing Address" = "Alamat Pengebilan";
-
 "Billing address" = "Alamat pengebilan";
 
 "CVC" = "CVC";
-
-"CVV" = "CVV";
 
 "Card information" = "Maklumat kad";
 
@@ -38,9 +36,13 @@
 
 "The BSB you entered is invalid." = "BSB yang anda masukkan tidak sah.";
 
+"The selected brand is not allowed" = "Jenama yang dipilih tidak dibenarkan";
+
 "To scan your card, allow camera access in Settings." = "Untuk mengimbas kad anda, benarkan akses kamera dalam Tetapan.";
 
 "Your ZIP is invalid." = "Kod ZIP anda tidak sah.";
+
+"Your card has expired." = "Kad anda telah tamat tempoh.";
 
 "Your card number is incomplete." = "Nombor kad anda tidak lengkap.";
 

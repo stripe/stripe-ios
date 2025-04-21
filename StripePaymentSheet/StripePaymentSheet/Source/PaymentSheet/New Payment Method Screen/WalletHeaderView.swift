@@ -171,7 +171,7 @@ extension PaymentSheetViewController {
         private func updateSeparatorLabel() {
             separatorLabel.textColor = appearance.colors.textSecondary
             separatorLabel.separatorColor = appearance.colors.background.contrastingColor.withAlphaComponent(0.2)
-            separatorLabel.font = appearance.scaledFont(for: appearance.font.base.regular, style: .subheadline, maximumPointSize: 21)
+            separatorLabel.font = appearance.scaledFont(for: appearance.font.base.regular, style: .footnote, maximumPointSize: 21)
             separatorLabel.text = separatorText
         }
 
@@ -179,6 +179,20 @@ extension PaymentSheetViewController {
             buildAndPinStackView()
             updateSeparatorLabel()
 
+        }
+    }
+}
+
+// MARK: - EventHandler
+extension PaymentSheetViewController.WalletHeaderView: EventHandler {
+    func handleEvent(_ event: STPEvent) {
+        switch event {
+        case .shouldEnableUserInteraction:
+            alpha = 1
+        case .shouldDisableUserInteraction:
+            alpha = 0.8
+        default:
+            break
         }
     }
 }

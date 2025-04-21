@@ -1,5 +1,7 @@
 "%@ (optional)" = "%@ (tùy chọn)";
 
+"(not accepted)" = "(không được chấp nhận)";
+
 "Account number" = "Số tài khoản";
 
 "Address" = "Địa chỉ";
@@ -83,8 +85,6 @@
 "Other" = "Khác";
 
 "Parish" = "Giáo xứ";
-
-"Phone" = "Điện thoại";
 
 "Phone number" = "Số điện thoại";
 

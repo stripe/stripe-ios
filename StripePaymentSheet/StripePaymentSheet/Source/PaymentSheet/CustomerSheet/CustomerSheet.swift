@@ -21,13 +21,28 @@ internal enum InternalCustomerSheetResult {
 }
 
 public class CustomerSheet {
+    private enum IntegrationType {
+        case customerAdapter
+        case customerSession
+    }
+
     internal enum InternalError: Error {
         case expectedSetupIntent
         case invalidStateOnConfirmation
     }
+    private let integrationType: IntegrationType
     let configuration: CustomerSheet.Configuration
 
     internal typealias CustomerSheetCompletion = (CustomerSheetResult) -> Void
+
+    private var initEvent: STPAnalyticEvent {
+        switch self.integrationType {
+        case .customerAdapter:
+            STPAnalyticEvent.customerSheetInitWithCustomerAdapter
+        case .customerSession:
+            STPAnalyticEvent.customerSheetInitWithCustomerSession
+        }
+    }
 
     /// The STPPaymentHandler instance
     lazy var paymentHandler: STPPaymentHandler = {
@@ -65,6 +80,7 @@ public class CustomerSheet {
                 customer: CustomerAdapter) {
         AnalyticsHelper.shared.generateSessionID()
         STPAnalyticsClient.sharedClient.addClass(toProductUsageIfNecessary: CustomerSheet.self)
+        self.integrationType = .customerAdapter
         self.configuration = configuration
 
         self.customerAdapter = customer
@@ -82,6 +98,7 @@ public class CustomerSheet {
     public init(configuration: CustomerSheet.Configuration,
                 intentConfiguration: CustomerSheet.IntentConfiguration,
                 customerSessionClientSecretProvider: @escaping () async throws -> CustomerSessionClientSecret) {
+        self.integrationType = .customerSession
         self.configuration = configuration
         self.customerAdapter = nil
         self.customerSessionClientSecretProvider = customerSessionClientSecretProvider
@@ -112,6 +129,7 @@ public class CustomerSheet {
                         completion csCompletion: @escaping (CustomerSheetResult) -> Void
     ) {
         let loadingStartDate = Date()
+        STPAnalyticsClient.sharedClient.logPaymentSheetEvent(event: self.initEvent)
         STPAnalyticsClient.sharedClient.logPaymentSheetEvent(event: .customerSheetLoadStarted)
         // Retain self when being presented, it is not guaranteed that CustomerSheet instance
         // will be retained by caller
@@ -122,7 +140,7 @@ public class CustomerSheet {
                 // bottom sheet (i.e. Link) to be dismissed all at the same time.
                 presentingViewController.dismiss(animated: true)
             }
-            self.bottomSheetViewController.contentStack = [self.loadingViewController]
+            self.bottomSheetViewController.setViewControllers([self.loadingViewController])
             self.completion = nil
         }
         self.completion = completion
@@ -149,15 +167,29 @@ public class CustomerSheet {
             case .success((let savedPaymentMethods, let selectedPaymentMethodOption, let elementsSession)):
                 let merchantSupportedPaymentMethodTypes = customerSheetDataSource.merchantSupportedPaymentMethodTypes(elementsSession: elementsSession)
                 let paymentMethodRemove = customerSheetDataSource.paymentMethodRemove(elementsSession: elementsSession)
+                let paymentMethodUpdate = customerSheetDataSource.paymentMethodUpdate(elementsSession: elementsSession)
+                let paymentMethodSyncDefault = customerSheetDataSource.paymentMethodSyncDefault(elementsSession: elementsSession)
+                let allowsRemovalOfLastSavedPaymentMethod = CustomerSheet.allowsRemovalOfLastPaymentMethod(elementsSession: elementsSession, configuration: self.configuration)
                 self.present(from: presentingViewController,
                              savedPaymentMethods: savedPaymentMethods,
                              selectedPaymentMethodOption: selectedPaymentMethodOption,
                              merchantSupportedPaymentMethodTypes: merchantSupportedPaymentMethodTypes,
                              customerSheetDataSource: customerSheetDataSource,
                              paymentMethodRemove: paymentMethodRemove,
+                             paymentMethodUpdate: paymentMethodUpdate,
+                             paymentMethodSyncDefault: paymentMethodSyncDefault,
+                             allowsRemovalOfLastSavedPaymentMethod: allowsRemovalOfLastSavedPaymentMethod,
                              cbcEligible: elementsSession.cardBrandChoice?.eligible ?? false)
+                var params: [String: Any] = [:]
+                if elementsSession.customer?.customerSession != nil {
+                    params["sync_default_enabled"] = paymentMethodSyncDefault
+                    if paymentMethodSyncDefault {
+                        params["has_default_payment_method"] = elementsSession.customer?.defaultPaymentMethod != nil
+                    }
+                }
                 STPAnalyticsClient.sharedClient.logPaymentSheetEvent(event: .customerSheetLoadSucceeded,
-                                                                     duration: Date().timeIntervalSince(loadingStartDate))
+                                                                     duration: Date().timeIntervalSince(loadingStartDate),
+                                                                     params: params)
             case .failure(let error):
                 STPAnalyticsClient.sharedClient.logPaymentSheetEvent(event: .customerSheetLoadFailed,
                                                                      duration: Date().timeIntervalSince(loadingStartDate),
@@ -178,27 +210,31 @@ public class CustomerSheet {
                  merchantSupportedPaymentMethodTypes: [STPPaymentMethodType],
                  customerSheetDataSource: CustomerSheetDataSource,
                  paymentMethodRemove: Bool,
+                 paymentMethodUpdate: Bool,
+                 paymentMethodSyncDefault: Bool,
+                 allowsRemovalOfLastSavedPaymentMethod: Bool,
                  cbcEligible: Bool) {
         let loadSpecsPromise = Promise<Void>()
         AddressSpecProvider.shared.loadAddressSpecs {
             loadSpecsPromise.resolve(with: ())
         }
 
-        loadSpecsPromise.observe { _ in
-            DispatchQueue.main.async {
-                let isApplePayEnabled = StripeAPI.deviceSupportsApplePay() && self.configuration.applePayEnabled
-                let savedPaymentSheetVC = CustomerSavedPaymentMethodsViewController(savedPaymentMethods: savedPaymentMethods,
-                                                                                    selectedPaymentMethodOption: selectedPaymentMethodOption,
-                                                                                    merchantSupportedPaymentMethodTypes: merchantSupportedPaymentMethodTypes,
-                                                                                    configuration: self.configuration,
-                                                                                    customerSheetDataSource: customerSheetDataSource,
-                                                                                    isApplePayEnabled: isApplePayEnabled,
-                                                                                    paymentMethodRemove: paymentMethodRemove,
-                                                                                    cbcEligible: cbcEligible,
-                                                                                    csCompletion: self.csCompletion,
-                                                                                    delegate: self)
-                self.bottomSheetViewController.contentStack = [savedPaymentSheetVC]
-            }
+        loadSpecsPromise.observe(on: .main) { _ in
+            let isApplePayEnabled = StripeAPI.deviceSupportsApplePay() && self.configuration.applePayEnabled
+            let savedPaymentSheetVC = CustomerSavedPaymentMethodsViewController(savedPaymentMethods: savedPaymentMethods,
+                                                                                selectedPaymentMethodOption: selectedPaymentMethodOption,
+                                                                                merchantSupportedPaymentMethodTypes: merchantSupportedPaymentMethodTypes,
+                                                                                configuration: self.configuration,
+                                                                                customerSheetDataSource: customerSheetDataSource,
+                                                                                isApplePayEnabled: isApplePayEnabled,
+                                                                                paymentMethodRemove: paymentMethodRemove,
+                                                                                paymentMethodUpdate: paymentMethodUpdate,
+                                                                                paymentMethodSyncDefault: paymentMethodSyncDefault,
+                                                                                allowsRemovalOfLastSavedPaymentMethod: allowsRemovalOfLastSavedPaymentMethod,
+                                                                                cbcEligible: cbcEligible,
+                                                                                csCompletion: self.csCompletion,
+                                                                                delegate: self)
+            self.bottomSheetViewController.setViewControllers([savedPaymentSheetVC])
         }
     }
 
@@ -220,8 +256,20 @@ public class CustomerSheet {
     var userCompletion: ((Result<PaymentOptionSelection?, Error>) -> Void)?
 }
 
+extension CustomerSheet {
+    static func allowsRemovalOfLastPaymentMethod(elementsSession: STPElementsSession, configuration: CustomerSheet.Configuration) -> Bool {
+        if !configuration.allowsRemovalOfLastSavedPaymentMethod {
+            // Merchant has set local configuration to false, so honor it.
+            return false
+        } else {
+            // Merchant is using client side default, so defer to CustomerSession's value
+            return elementsSession.paymentMethodRemoveLastForCustomerSheet
+        }
+    }
+}
+
 extension CustomerSheet: CustomerSavedPaymentMethodsViewControllerDelegate {
-    func savedPaymentMethodsViewControllerShouldConfirm(_ intent: Intent, with paymentOption: PaymentOption, completion: @escaping (InternalCustomerSheetResult) -> Void) {
+    func savedPaymentMethodsViewControllerShouldConfirm(_ intent: Intent, elementsSession: STPElementsSession, with paymentOption: PaymentOption, completion: @escaping (InternalCustomerSheetResult) -> Void) {
         guard case .setupIntent = intent else {
             let errorAnalytic = ErrorAnalytic(event: .unexpectedCustomerSheetError,
                                               error: InternalError.expectedSetupIntent)
@@ -230,7 +278,7 @@ extension CustomerSheet: CustomerSavedPaymentMethodsViewControllerDelegate {
             completion(.failed(error: CustomerSheetError.unknown(debugDescription: "No setup intent available")))
             return
         }
-        self.confirmIntent(intent: intent, paymentOption: paymentOption) { result in
+        self.confirmIntent(intent: intent, elementsSession: elementsSession, paymentOption: paymentOption) { result in
             completion(result)
         }
     }
@@ -294,13 +342,17 @@ extension CustomerSheet {
         switch customerSheetDataSource.dataSource {
         case .customerSession(let customerSessionAdapter):
             let (elementsSession, customerSessionClientSecret) = try await customerSessionAdapter.elementsSessionWithCustomerSessionClientSecret()
-            let selectedPaymentOption = CustomerPaymentOption.defaultPaymentMethod(for: customerSessionClientSecret.customerId)
+
+            let selectedPaymentOption = CustomerPaymentOption.selectedPaymentMethod(for: customerSessionClientSecret.customerId, elementsSession: elementsSession, surface: .customerSheet)
 
             switch selectedPaymentOption {
             case .applePay:
                 return .applePay()
             case .stripeId(let paymentMethodId):
-                let paymentMethods = elementsSession.customer?.paymentMethods ?? []
+                let paymentMethods = elementsSession.customer?.paymentMethods.filter({ paymentMethod in
+                    guard let card = paymentMethod.card else { return true }
+                    return configuration.cardBrandFilter.isAccepted(cardBrand: card.preferredDisplayBrand)
+                }) ?? []
                 guard let matchingPaymentMethod = paymentMethods.first(where: { $0.stripeId == paymentMethodId }) else {
                     return nil
                 }

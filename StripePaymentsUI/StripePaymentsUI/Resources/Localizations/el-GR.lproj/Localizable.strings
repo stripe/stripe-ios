@@ -2,6 +2,8 @@
 
 "%1$@ ending in %2$@" = "%1$@ λήγει σε %2$@";
 
+"%1$@ is not accepted" = "Η επωνυμία %1$@ δεν είναι αποδεκτή";
+
 "Address line 2 (optional)" = "Γραμμή διεύθυνσης 2 (προαιρετικό)";
 
 "Apple Pay" = "Apple Pay";
@@ -10,13 +12,9 @@
 
 "Bank Account" = "Τραπεζικός λογαριασμός";
 
-"Billing Address" = "Διεύθυνση χρέωσης";
-
 "Billing address" = "Διεύθυνση χρέωσης";
 
 "CVC" = "CVC";
-
-"CVV" = "CVV";
 
 "Card information" = "Στοιχεία κάρτας";
 
@@ -38,9 +36,13 @@
 
 "The BSB you entered is invalid." = "Ο κωδικός BSB που εισάγατε δεν είναι έγκυρος.";
 
+"The selected brand is not allowed" = "Η επιλεγμένη επωνυμία δεν επιτρέπεται";
+
 "To scan your card, allow camera access in Settings." = "Για να σαρώσετε την κάρτα σας, επιτρέψτε την πρόσβαση της κάμερας από τις Ρυθμίσεις.";
 
 "Your ZIP is invalid." = "Ο ταχυδρομικός κώδικάς σας δεν είναι έγκυρος.";
+
+"Your card has expired." = "Η κάρτα σας έχει λήξει.";
 
 "Your card number is incomplete." = "Ο αριθμός της κάρτας σας είναι ελλιπής.";
 

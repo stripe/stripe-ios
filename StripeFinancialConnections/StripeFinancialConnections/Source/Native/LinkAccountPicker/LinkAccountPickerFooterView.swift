@@ -13,10 +13,11 @@ final class LinkAccountPickerFooterView: UIView {
 
     private let defaultCta: String
     private let singleAccount: Bool
+    private let appearance: FinancialConnectionsAppearance
     private let didSelectConnectAccount: () -> Void
 
     private lazy var connectAccountButton: Button = {
-        let connectAccountButton = Button.primary()
+        let connectAccountButton = Button.primary(appearance: appearance)
         connectAccountButton.title = defaultCta
         connectAccountButton.isEnabled = false // disable by default
         connectAccountButton.addTarget(self, action: #selector(didSelectLinkAccountsButton), for: .touchUpInside)
@@ -30,33 +31,34 @@ final class LinkAccountPickerFooterView: UIView {
 
     init(
         defaultCta: String,
-        isStripeDirect: Bool,
-        businessName: String?,
-        permissions: [StripeAPI.FinancialConnectionsAccount.Permissions],
+        aboveCta: String?,
         singleAccount: Bool,
+        appearance: FinancialConnectionsAppearance,
         didSelectConnectAccount: @escaping () -> Void,
         didSelectMerchantDataAccessLearnMore: @escaping (URL) -> Void
     ) {
         self.defaultCta = defaultCta
         self.singleAccount = singleAccount
+        self.appearance = appearance
         self.didSelectConnectAccount = didSelectConnectAccount
         super.init(frame: .zero)
 
-        let verticalStackView = HitTestStackView(
-            arrangedSubviews: [
-                MerchantDataAccessView(
-                    isStripeDirect: isStripeDirect,
-                    businessName: businessName,
-                    permissions: permissions,
-                    isNetworking: true,
-                    font: .label(.small),
-                    boldFont: .label(.smallEmphasized),
-                    alignCenter: true,
-                    didSelectLearnMore: didSelectMerchantDataAccessLearnMore
-                ),
-                connectAccountButton,
-            ]
-        )
+        let verticalStackView = HitTestStackView()
+        if let aboveCta {
+            let merchantDataAccessLabel = AttributedTextView(
+                font: .label(.small),
+                boldFont: .label(.smallEmphasized),
+                linkFont: .label(.small),
+                textColor: FinancialConnectionsAppearance.Colors.textDefault,
+                alignment: .center
+            )
+            merchantDataAccessLabel.setText(
+                aboveCta,
+                action: didSelectMerchantDataAccessLearnMore
+            )
+            verticalStackView.addArrangedSubview(merchantDataAccessLabel)
+        }
+        verticalStackView.addArrangedSubview(connectAccountButton)
         verticalStackView.axis = .vertical
         verticalStackView.spacing = 16
         verticalStackView.isLayoutMarginsRelativeArrangement = true

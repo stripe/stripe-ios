@@ -44,6 +44,18 @@ static NSString * const STPTestingFRPublishableKey =
 static NSString * const STPTestingTHPublishableKey =
     @"pk_test_51NpEAWBgCYKNuUnnoBpaJZQYWOO6UpLtcioKggla08zpvDDy0cjfGKZdl5BsU8Gm5ilJNCqT7laCsqvyc0LndskG00pnPnJSpD";
 
+// Test account in Germany
+// Account token: acct_1PSnNaAlz2yHYCNZ
+// Scenario link: https://admin.corp.stripe.com/scenarios?runId=scnrun*AZAoKlcYbwAAAIDN
+static NSString * const STPTestingDEPublishableKey =
+    @"pk_test_51PSnNaAlz2yHYCNZgjajit4L8Hl1rDDPPCj9XhHNZWRSi4vwHhrHIbTgstLJptPSzwQVl1HlyqhwWRs1rBJHag8W00sM0SOXIL";
+
+// Test account in Italy
+// Account token: acct_1PSnETIFbdis1OxT
+// Scenario link: https://admin.corp.stripe.com/scenarios?runId=scnrun*AZAoIbaznQAAAJ96
+static NSString * const STPTestingITPublishableKey =
+    @"pk_test_51PSnETIFbdis1OxTALF4Z8ugUQpVS06UQDVahMSmwrbEYphjNYitXtOSqMPVKfzl3jukg6gLLrtZNnPlDrRbDpMd00U0tId6iv";
+
 @interface STPTestingAPIClient : NSObject
 
 + (instancetype)sharedClient;

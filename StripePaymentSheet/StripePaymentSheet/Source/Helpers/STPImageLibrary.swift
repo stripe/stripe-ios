@@ -16,11 +16,12 @@ class PaymentSheetImageLibrary {
 
     /// An icon representing Afterpay.
     @objc
-    public class func afterpayLogo(locale: Locale = Locale.current) -> UIImage {
-        switch (locale.stp_languageCode, locale.stp_regionCode) {
-        case ("en", "GB"):
+    public class func afterpayLogo(currency: String? = nil) -> UIImage {
+        if AfterpayPriceBreakdownView.shouldUseClearpayBrand(for: currency) {
             return self.safeImageNamed("clearpay_mark", templateIfAvailable: true)
-        default:
+        } else if AfterpayPriceBreakdownView.shouldUseCashAppBrand(for: currency) {
+            return self.safeImageNamed("cash_app_afterpay_mark", templateIfAvailable: true)
+        } else {
             return self.safeImageNamed("afterpay_mark", templateIfAvailable: true)
         }
     }
@@ -78,7 +79,7 @@ class PaymentSheetImageLibrary {
 
 extension STPCardBrand {
     /// Returns a borderless image of the card brand's logo
-    func makeSavedPaymentMethodCellImage() -> UIImage {
+    func makeSavedPaymentMethodCellImage(overrideUserInterfaceStyle: UIUserInterfaceStyle?) -> UIImage {
         let image: Image
         switch self {
         case .JCB:
@@ -102,7 +103,7 @@ extension STPCardBrand {
         @unknown default:
             image = .carousel_card_unknown
         }
-        let brandImage = image.makeImage()
+        let brandImage = image.makeImage(overrideUserInterfaceStyle: overrideUserInterfaceStyle)
         // Don't allow tint colors to change the brand images.
         return brandImage.withRenderingMode(.alwaysOriginal)
     }

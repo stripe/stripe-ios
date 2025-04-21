@@ -42,7 +42,8 @@ class NoMoreAccountSessionAPIClient: EmptyFinancialConnectionsAPIClient {
             permissions: nil,
             status: .active,
             subcategory: .checking,
-            supportedPaymentMethodTypes: [.usBankAccount]
+            supportedPaymentMethodTypes: [.usBankAccount],
+            object: "financial_connections.account"
         )
         let fullList = StripeAPI.FinancialConnectionsSession.AccountList(data: [account], hasMore: false)
         return Promise(value: fullList)
@@ -77,7 +78,7 @@ class SessionFetcherTests: XCTestCase {
             accountFetcher: accountFetcher
         )
 
-        fetcher.fetchSession().observe(on: nil) { (result) in
+        fetcher.fetchSession().observe { (result) in
             switch result {
             case .success(let session):
                 XCTAssertEqual(session.accounts.data.count, 0)
@@ -96,7 +97,7 @@ class SessionFetcherTests: XCTestCase {
             accountFetcher: accountFetcher
         )
 
-        fetcher.fetchSession().observe(on: nil) { (result) in
+        fetcher.fetchSession().observe { (result) in
             switch result {
             case .success(let session):
                 XCTAssertEqual(session.accounts.data.count, 1)

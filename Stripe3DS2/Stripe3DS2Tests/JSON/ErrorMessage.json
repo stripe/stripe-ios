@@ -8,6 +8,6 @@
   "errorDetail": "billAddrCountry,billAddrPostCode,dsURL",
   "errorMessageType": "AReq",
   "messageType": "Erro",
-  "messageVersion": "2.1.0",
+  "messageVersion": "2.2.0",
   "sdkTransID": "b2385523-a66c-4907-ac3c-91848e8c0067"
 }

@@ -37,7 +37,13 @@ extension STPAnalyticsClient {
     }
 
     func logLinkSignupFailure(error: Error) {
-        self.logPaymentSheetEvent(event: .linkSignupFailure, error: error)
+        var params: [String: Any] = [:]
+        if let stripeError = error as? StripeError,
+           case .apiError(let stripeAPIError) = stripeError,
+           let message = stripeAPIError.message{
+            params["error_message"] = message
+        }
+        self.logPaymentSheetEvent(event: .linkSignupFailure, error: error, params: params)
     }
 
     func logLinkSignupFailureAccountExists() {
@@ -59,6 +65,32 @@ extension STPAnalyticsClient {
 
     func logLinkAccountLookupFailure(error: Error) {
         self.logPaymentSheetEvent(event: .linkAccountLookupFailure, error: error)
+    }
+
+    // MARK: - 2FA
+
+    func logLink2FAStart() {
+        self.logPaymentSheetEvent(event: .link2FAStart)
+    }
+
+    func logLink2FAStartFailure() {
+        self.logPaymentSheetEvent(event: .link2FAStartFailure)
+    }
+
+    func logLink2FAComplete() {
+        self.logPaymentSheetEvent(event: .link2FAComplete)
+    }
+
+    func logLink2FAFailure() {
+        self.logPaymentSheetEvent(event: .link2FAFailure)
+    }
+
+    func logLink2FACancel() {
+        self.logPaymentSheetEvent(event: .link2FACancel)
+    }
+
+    func logLinkBailedToWebFlow() {
+        self.logPaymentSheetEvent(event: .linkNativeBailed)
     }
 
     // MARK: - popup

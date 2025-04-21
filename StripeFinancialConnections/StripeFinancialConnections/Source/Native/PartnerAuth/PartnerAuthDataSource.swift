@@ -15,6 +15,7 @@ protocol PartnerAuthDataSource: AnyObject {
     var analyticsClient: FinancialConnectionsAnalyticsClient { get }
     var pendingAuthSession: FinancialConnectionsAuthSession? { get }
     var disableAuthSessionRetrieval: Bool { get }
+    var isNetworkingRelinkSession: Bool { get }
 
     func createAuthSession() -> Future<FinancialConnectionsAuthSession>
     func authorizeAuthSession(_ authSession: FinancialConnectionsAuthSession) -> Future<FinancialConnectionsAuthSession>
@@ -22,6 +23,7 @@ protocol PartnerAuthDataSource: AnyObject {
     func recordAuthSessionEvent(eventName: String, authSessionId: String)
     func clearReturnURL(authSession: FinancialConnectionsAuthSession, authURL: String) -> Future<FinancialConnectionsAuthSession>
     func retrieveAuthSession(_ authSession: FinancialConnectionsAuthSession) -> Future<FinancialConnectionsAuthSession>
+    func pollAuthSession(_ authSession: FinancialConnectionsAuthSession) -> Future<FinancialConnectionsAuthSession>
 }
 
 final class PartnerAuthDataSourceImplementation: PartnerAuthDataSource {
@@ -29,11 +31,16 @@ final class PartnerAuthDataSourceImplementation: PartnerAuthDataSource {
     let institution: FinancialConnectionsInstitution
     let manifest: FinancialConnectionsSessionManifest
     let returnURL: String?
-    private let apiClient: FinancialConnectionsAPIClient
+    private let apiClient: any FinancialConnectionsAPI
     private let clientSecret: String
+    private let relinkAuthorization: String?
     let analyticsClient: FinancialConnectionsAnalyticsClient
     var disableAuthSessionRetrieval: Bool {
         return manifest.features?["bank_connections_disable_defensive_auth_session_retrieval_on_complete"] == true
+    }
+
+    var isNetworkingRelinkSession: Bool {
+        return relinkAuthorization != nil
     }
 
     // a "pending" auth session is a session which has started
@@ -47,8 +54,9 @@ final class PartnerAuthDataSourceImplementation: PartnerAuthDataSource {
         authSession: FinancialConnectionsAuthSession?,
         institution: FinancialConnectionsInstitution,
         manifest: FinancialConnectionsSessionManifest,
+        relinkAuthorization: String?,
         returnURL: String?,
-        apiClient: FinancialConnectionsAPIClient,
+        apiClient: any FinancialConnectionsAPI,
         clientSecret: String,
         analyticsClient: FinancialConnectionsAnalyticsClient
     ) {
@@ -59,15 +67,37 @@ final class PartnerAuthDataSourceImplementation: PartnerAuthDataSource {
         self.apiClient = apiClient
         self.clientSecret = clientSecret
         self.analyticsClient = analyticsClient
+        self.relinkAuthorization = relinkAuthorization
     }
 
     func createAuthSession() -> Future<FinancialConnectionsAuthSession> {
-        return apiClient.createAuthSession(
-            clientSecret: clientSecret,
-            institutionId: institution.id
-        ).chained { [weak self] (authSession: FinancialConnectionsAuthSession) in
-            self?.pendingAuthSession = authSession
-            return Promise(value: authSession)
+        if let relinkAuthorization {
+            return apiClient.repairAuthSession(
+                clientSecret: clientSecret,
+                coreAuthorization: relinkAuthorization
+            ).chained { [weak self] (repairSession: FinancialConnectionsRepairSession) in
+                let authSession = FinancialConnectionsAuthSession(
+                    id: repairSession.id,
+                    flow: repairSession.flow,
+                    institutionSkipAccountSelection: nil,
+                    nextPane: .success,
+                    showPartnerDisclosure: nil,
+                    skipAccountSelection: nil,
+                    url: repairSession.url,
+                    isOauth: repairSession.isOauth,
+                    display: repairSession.display
+                )
+                self?.pendingAuthSession = authSession
+                return Promise(value: authSession)
+            }
+        } else {
+            return apiClient.createAuthSession(
+                clientSecret: clientSecret,
+                institutionId: institution.id
+            ).chained { [weak self] (authSession: FinancialConnectionsAuthSession) in
+                self?.pendingAuthSession = authSession
+                return Promise(value: authSession)
+            }
         }
     }
 
@@ -77,7 +107,8 @@ final class PartnerAuthDataSourceImplementation: PartnerAuthDataSource {
         apiClient
             .synchronize(
                 clientSecret: clientSecret,
-                returnURL: nil
+                returnURL: nil,
+                initialSynchronize: false
             )
             .observe { [weak self] result in
                 guard let self = self else { return }
@@ -153,11 +184,18 @@ final class PartnerAuthDataSourceImplementation: PartnerAuthDataSource {
         )
     }
 
+    func pollAuthSession(_ authSession: FinancialConnectionsAuthSession) -> Future<FinancialConnectionsAuthSession> {
+        return apiClient.retrieveAuthSessionPolling(
+            clientSecret: clientSecret,
+            authSessionId: authSession.id
+        )
+    }
+
     func recordAuthSessionEvent(
         eventName: String,
         authSessionId: String
     ) {
-        guard ShouldRecordAuthSessionEvent() else {
+        guard shouldRecordAuthSessionEvent() else {
             // on Stripe SDK Core analytics client we don't send events
             // for simulator or tests, so don't send these either...
             return
@@ -186,12 +224,12 @@ final class PartnerAuthDataSourceImplementation: PartnerAuthDataSource {
             return Promise(value: authSession)
         }
     }
-}
 
-private func ShouldRecordAuthSessionEvent() -> Bool {
-    #if targetEnvironment(simulator)
-    return false
-    #else
-    return NSClassFromString("XCTest") == nil
-    #endif
+    private func shouldRecordAuthSessionEvent() -> Bool {
+        #if targetEnvironment(simulator)
+        return false
+        #else
+        return isNetworkingRelinkSession == false && NSClassFromString("XCTest") == nil
+        #endif
+    }
 }

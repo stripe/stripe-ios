@@ -1,5 +1,7 @@
 "%@ (optional)" = "%@ (valgfritt)";
 
+"(not accepted)" = "(ikke godtatt)";
+
 "Account number" = "Kontonummer";
 
 "Address" = "Adresse";
@@ -83,8 +85,6 @@
 "Other" = "Andre";
 
 "Parish" = "Sogn";
-
-"Phone" = "Telefon";
 
 "Phone number" = "Telefonnummer";
 

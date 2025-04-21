@@ -1,3 +1,187 @@
+## x.x.x yyyy-yy-yy
+### PaymentSheet
+* [Added] Ability to update saved cards when using CustomerSessions (private preview)
+
+## 24.11.1 2025-04-14
+### PaymentSheet
+* [Added] Added support for PayNow and PromptPay to Embedded Payment Element (private preview).
+* [Fixed] Fixed theming issues in the native Link experience (private preview).
+
+## 24.11.0 2025-04-07
+### PaymentSheet
+* [Added] Added `rowSelectionBehavior` API to Embedded Payment Element (private preview).
+* [Changed] The native Link experience (private preview) is now available as a payment method even if you collect billing details via `billingDetailsCollectionConfiguration`.
+* [Changed] Updated Afterpay branding in the US to be Cash App Afterpay.
+
+## 24.10.0 2025-03-31
+### PaymentSheet
+* [Added] Added `LinkConfiguration` to allow control over Link in PaymentSheet.
+* [Fixed] Improved reliability of expiration date detection when scanning cards.
+
+## 24.9.0 2025-03-24
+### Connect (Private Preview)
+* [Fixed] Fixed an issue where Account Onboarding exit events were not being properly emitted.
+
+### PaymentSheet
+* [Fixed] Embedded Payment Element (private beta) possibly showing empty forms after calling `update()`.
+
+## 24.8.0 2025-03-17
+### PaymentSheet, CustomerSheet
+* [Added] Support for default payment methods in private beta.
+
+## 24.7.0 2025-03-03
+### Connect (Private Preview)
+* [Changed] The SDK now manages the onboarding component's presentation.
+* [Changed] The payouts component is no longer available.
+
+### PaymentSheet
+* [Fixed] Fixed an issue in Embedded Payment Element (private preview) where the row could be selected even though there's no valid payment option.
+* [Added] Support for Crypto in PaymentSheet
+* [Added] Added card brand filtering to specify allowed or blocked card brands. Learn more by visiting the [docs](https://docs.stripe.com/payments/mobile/filter-card-brands?platform=ios).
+
+### Payments
+* [Fixed] Fixed an issue that caused `STPPaymentMethodUSBankAccount.linkedAccount` to be `nil` for some merchants.
+
+## 24.6.0 2025-02-18
+* [Fixed] The SDK and example apps now compile in Xcode 16.2
+
+### Financial Connections
+* [Added] The `StripeFinancialConnections` SDK now supports dark mode, and will automatically adapt to the device's theme. [Learn more](https://docs.stripe.com/financial-connections/other-data-powered-products?platform=ios#connections-customize-ios) about configuring appearance settings.
+
+## 24.5.0 2025-02-10
+### CardScan
+* [Fixed] Fixed an issue where the UI layout was incorrect after Camera permissions were denied. ([#4487](https://github.com/stripe/stripe-ios/pull/4487)) (Thanks [@matheusbc](https://github.com/matheusbc)!)
+
+## 24.4.1 2025-01-21
+### ApplePay
+* [Added] Added a `dismiss` method to `STPApplePayContext`.
+
+### PaymentSheet
+* [Fixed] Embedded Payment Element (private beta) layout margins default to zero.
+* [Fixed] Fixed a bug in Embedded Payment Element (private beta) where it could attempt to present a view controller while already presenting.
+
+## 24.4.0 2025-01-13
+### PaymentSheet
+* [Fixed] PaymentSheet using vertical payment method layout now defaults to Apple Pay when the customer doesn't have a default saved payment method.
+
+### Identity
+* [Added] Updates example app to allow reusing VerificationSessions.
+
+## 24.3.0 2025-01-06
+### Embedded Payment Element
+* [Added] Embedded Payment Element is now in private beta.
+
+### PaymentSheet
+* [Fixed] Fixed a bug where saved payment methods could appear out of order if you have multiple types (e.g. card and bank).
+* [Fixed] Fixed a bug where deferred PaymentIntents would fail to validate when capture_method = automatic_async ([#4329](https://github.com/stripe/stripe-ios/issues/4329))
+
+
+## 24.2.0 2024-12-19
+### Connect
+* [Added] `StripeConnect` SDK to add connected account dashboard functionality to your app using [Connect embedded components](https://docs.stripe.com/connect/get-started-connect-embedded-components?platform=ios).
+
+## 24.1.3 2024-12-16
+### PaymentSheet, CustomerSheet
+* [Changed] Changed the edit and remove saved payment method flow so that tapping 'Edit' displays an icon that leads to a new update payment method screen that displays payment method details for card (last 4 digits of card number, cvc and expiry date fields), US Bank account (name, email, last 4 digits of bank acocunt), and SEPA debit (name, email, last 4 digits of IBAN).
+
+### Identity
+* [Fixed] Fixes an error with selfie verification.
+
+## 24.1.2 2024-12-05
+### PaymentSheet
+* [Fixed] Fixed an issue where FlowController returned incorrect `PaymentOptionDisplayData` for Link card brand transactions.
+
+## 24.1.1 2024-12-02
+### PaymentSheet
+* [Fixed] Fixed an animation glitch when dismissing PaymentSheet in React Native.
+* [Fixed] Fixed an issue in Instant Bank Payments that occurred when using a connected account.
+
+## 24.1.0 2024-11-25
+### Payments
+* [Added] Support for Crypto bindings.
+
+### PaymentSheet
+* [Fixed] US Bank Account now shows the correct mandate when using the `instant_or_skip` verification method.
+
+## 24.0.2 2024-11-21
+### PaymentSheet
+* [Fixed] A bug where PaymentSheet would cause layout issues when nested within certain navigation stacks.
+
+## 24.0.1 2024-11-18
+### PaymentSheet
+* [Added] Instant Bank Payments are now available when using deferred intents.
+* [Fixed] Fixed an issue with the vertical list with 3 or more saved payment methods where tapping outside the screen sometimes drops changes that were made (e.g. removal or update of PMs).
+* [Fixed] Fixed an issue where the dialog when removing a co-branded card may show the incorrect card brand.
+* [Fixed] Fixed issue preventing users to enter in 4 digit account numbers for AU Becs.
+
+## 24.0.0 2024-11-04
+### PaymentSheet
+* [Changed] The default value of `PaymentSheet.Configuration.paymentMethodLayout` has changed from `.horizontal` to `.automatic`. See [MIGRATING.md](https://github.com/stripe/stripe-ios/blob/master/MIGRATING.md) for more details.
+* [Fixed] Fixed an animation glitch when dismissing PaymentSheet in React Native.
+* [Fixed] Fixed an issue with FlowController in vertical layout where the payment method could incorrectly be preserved across a call to `update` when it's no longer valid.
+* [Fixed] Fixed a potential deadlock when `paymentOption` is accessed from Swift concurrency.
+* [Fixed] Fixed deferred intent validation to handle cloned payment methods ([#4195](https://github.com/stripe/stripe-ios/issues/4195)
+
+### Basic Integration
+* [Removed] Basic Integration has been removed. [Please use Mobile Payment Element instead](https://docs.stripe.com/payments/mobile/migrating-to-mobile-payment-element-from-basic-integration).
+
+## 23.32.0 2024-10-21
+### PaymentSheet
+* [Added] Added `PaymentSheet.Configuration.paymentMethodLayout`. Configure the layout of payment methods in the sheet using `paymentMethodLayout` to display them either horizontally, vertically, or let Stripe optimize the layout automatically.
+
+## 23.31.1 2024-10-08
+### PaymentSheet
+* [Fixed] Fixed an issue where ISK was not correctly formatted as a zero-decimal currency when using PaymentSheet or Apple Pay. (Thanks [@Thithip](https://github.com/Thithip)!)
+* [Fixed] Fixed an issue where US Bank Account forms would drop form field input when `FlowController.update` is called.
+
+## 23.31.0 2024-09-23
+### PaymentSheet
+* [Added] The ability to customize the disabled colors of the primary button with `PaymentSheetAppearance.primaryButton.disabledBackgroundColor` and `PaymentSheetAppearance.primaryButton.disabledTextColor`.
+* [Added] CVC Recollection is now in GA. For more information see our docs for [here](https://docs.stripe.com/payments/accept-a-payment?platform=ios#ios-cvc-recollection) for intent first integrations or [here](https://docs.stripe.com/payments/accept-a-payment-deferred?platform=ios&type=payment#ios-cvc-recollection) for deferred intent integrations.
+* [Fixed] Fixed an issue where checkboxes were not visible when `appearance.colors.componentBorder` was transparent.
+
+### CardScan
+* [Fixed] The 0.5x lens is now used when scanning cards, if available. (Thanks [@akhmedovgg](https://github.com/akhmedovgg)!)
+
+## 23.30.0 2024-09-09
+### PaymentSheet
+* [Added] CustomerSessions is now in private beta.
+* [Fixed] PaymentSheet now uses a border width of 1.5 instead of 0 when `PaymentSheet.Appearance.borderWidth' is 0.
+* [Fixed] The 0.5x lens is now used when scanning cards, if available. (Thanks [@akhmedovgg](https://github.com/akhmedovgg)!)
+
+## 23.29.2 2024-08-19
+### PaymentSheet
+* [Fixed] Avoid multiple calls to CVC Recollection callback for deferred intent integrations
+* [Fixed] Fixed an issue in SwiftUI where setting `isPresented=false` wouldn't dismiss the sheet.
+
+## 23.29.1 2024-08-12
+### PaymentSheet
+* [Fixed] Fixed an issue where signing up with Link and paying would vend an empty `STPPaymentMethod` object to an `IntentConfiguration` confirmHandler callback.
+* [Fixed] Fixed PaymentSheet.FlowController returning unlocalized labels for certain payment methods e.g. "AfterPay ClearPay" instead of "Afterpay" or "Clearpay" depending on locale.
+* [Added] `PaymentSheet.IntentConfiguration` now validates that its `amount` is non-zero.
+
+### PaymentsUI
+* [Fixed] Fixed an issue where STPPaymentCardTextField wouldn't call its delegate `paymentCardTextFieldDidChange` method when the preferred card network changed.
+
+## 23.29.0 2024-08-05
+### PaymentSheet
+* [Fixed] Fixed a scroll issue with native 3DS2 authentication screen when the keyboard appears.
+* [Added] When a card is saved (ie you're using a PaymentIntent + setup_future_usage or SetupIntent), legal disclaimer text now appears below the form indicating the card can be charged for future payments.
+* [Fixed] iOS 18 Compatibility with removing multiple saved payment methods
+* [Fixed] Fixed an issue where the keyboard could focus on a hidden phone number field.
+* [Added] Support for Sunbit (Private Beta) with PaymentIntents.
+* [Added] Support for Billie (Private Beta) with PaymentIntents.
+* [Fixed] Fixed an issue where saved payment method UI wouldn't respect `PaymentSheet.Configuration.style` when selected.
+* [Added] Support for Satispay (Private Beta) with PaymentIntents.
+
+### Payments
+* [Added] Support for Sunbit (Private Beta) bindings.
+* [Added] Support for Billie (Private Beta) bindings.
+* [Added] Support for Satispay (Private Beta) bindings.
+
+## 23.28.3 2024-09-03
+This release was made in error, and contains changes from 23.29.0, 23.29.1, and 23.29.2.
+
 ## 23.28.1 2024-07-16
 ### Payments
 * [Fixed] Improved reliability when paying or setting up with Cash App Pay.
@@ -10,7 +194,7 @@
 * [Added] Adds coupon support to STPApplePayContext with a new `didChangeCouponCode` delegate method (h/t @JoeyLeeMEA).
 * [Fixed] Fixed an issue where successful TWINT payments were sometimes incorrectly considered 'canceled'.
 
-## PaymentSheet
+### PaymentSheet
 * [Fixed] Fixed an issue where certain cobranded cards showed a generic card icon instead of using the other card brand.
 * [Fixed] Fixed an issue where amounts with currency=IDR were displayed as-is, instead of dropping the last two digits.
 * [Fixed] Fixed an issue where some payment method images in the horizontal scrollview could briefly flash.

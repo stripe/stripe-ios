@@ -18,12 +18,12 @@ protocol FinancialConnectionsAnalyticsClientDelegate: AnyObject {
 
 final class FinancialConnectionsAnalyticsClient {
 
-    private let analyticsClient: AnalyticsClientV2
+    private let analyticsClient: AnalyticsClientV2Protocol
     private var additionalParameters: [String: Any] = [:]
     weak var delegate: FinancialConnectionsAnalyticsClientDelegate?
 
     init(
-        analyticsClient: AnalyticsClientV2 = AnalyticsClientV2(
+        analyticsClient: AnalyticsClientV2Protocol = AnalyticsClientV2(
             clientId: "mobile-clients-linked-accounts",
             origin: "stripe-linked-accounts-ios"
         )
@@ -158,22 +158,22 @@ extension FinancialConnectionsAnalyticsClient {
     }
 
     func setAdditionalParameters(
-        linkAccountSessionClientSecret: String,
         publishableKey: String?,
         stripeAccount: String?
     ) {
-        additionalParameters["las_client_secret"] = linkAccountSessionClientSecret
         additionalParameters["key"] = publishableKey
         additionalParameters["stripe_account"] = stripeAccount
     }
 
     func setAdditionalParameters(fromManifest manifest: FinancialConnectionsSessionManifest) {
+        additionalParameters["las_id"] = manifest.id
         additionalParameters["livemode"] = manifest.livemode
         additionalParameters["product"] = manifest.product
         additionalParameters["is_stripe_direct"] = manifest.isStripeDirect
         additionalParameters["single_account"] = manifest.singleAccount
         additionalParameters["allow_manual_entry"] = manifest.allowManualEntry
         additionalParameters["account_holder_id"] = manifest.accountholderToken
+        additionalParameters["app_verification_enabled"] = manifest.appVerificationEnabled
     }
 
     static func paneFromViewController(
@@ -182,10 +182,12 @@ extension FinancialConnectionsAnalyticsClient {
         switch viewController {
         case is ConsentViewController:
             return .consent
+        case is IDConsentContentViewController:
+            return .idConsentContent
         case is InstitutionPickerViewController:
             return .institutionPicker
-        case is PartnerAuthViewController:
-            return .partnerAuth
+        case let partnerAuthViewController as PartnerAuthViewController:
+            return partnerAuthViewController.pane
         case is AccountPickerViewController:
             return .accountPicker
         case is AttachLinkedPaymentAccountViewController:
@@ -210,6 +212,8 @@ extension FinancialConnectionsAnalyticsClient {
             return .networkingSaveToLinkVerification
         case is LinkAccountPickerViewController:
             return .linkAccountPicker
+        case is LinkLoginViewController:
+            return .linkLogin
         case is ErrorViewController:
             return .unexpectedError
         default:

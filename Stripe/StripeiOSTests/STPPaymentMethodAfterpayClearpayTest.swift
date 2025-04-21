@@ -9,8 +9,9 @@
 
 import Stripe
 import StripeCoreTestUtils
+import StripePaymentsTestUtils
 
-class STPPaymentMethodAfterpayClearpayTest: XCTestCase {
+class STPPaymentMethodAfterpayClearpayTest: STPNetworkStubbingTestCase {
     var afterpayJSON: [AnyHashable: Any]?
 
     func _retrieveAfterpayJSON(_ completion: @escaping ([AnyHashable: Any]?) -> Void) {

@@ -47,7 +47,7 @@ import UIKit
     private var centeringPadding: UIEdgeInsets {
         return UIEdgeInsets(
             top: 0,
-            left: 0,
+            left: centerHorizontally ? Self.iconPadding.right : 0,
             bottom: Self.iconPadding.top,
             right: 0
         )
@@ -70,6 +70,9 @@ import UIKit
 
     /// If `true`, the view will display the CVC hint icon instead of the card brand image.
     let showCVC: Bool
+
+    /// If `true`, will center the card brand icon horizontally in the containing view
+    let centerHorizontally: Bool
 
     /// If `true`, show a CBC indicator arrow
     var isShowingCBCIndicator: Bool = false {
@@ -125,9 +128,11 @@ import UIKit
     /// Creates and returns an initialized card brand view.
     /// - Parameter showCVC: Whether or not to show the CVC hint icon instead of the card brand image.
     @_spi(STP) public init(
-        showCVC: Bool = false
+        showCVC: Bool = false,
+        centerHorizontally: Bool = false
     ) {
         self.showCVC = showCVC
+        self.centerHorizontally = centerHorizontally
         super.init(frame: .zero)
 
         addSubview(imageView)
@@ -175,6 +180,10 @@ import UIKit
         coder: NSCoder
     ) {
         fatalError("init(coder:) has not been implemented")
+    }
+
+    @_spi(STP) public func setCardBrand(_ brand: STPCardBrand) {
+        setCardBrand(.brand(brand), animated: false)
     }
 
     /// Updates the card brand, optionally animating the transition.

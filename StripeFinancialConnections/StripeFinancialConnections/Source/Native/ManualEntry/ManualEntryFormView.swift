@@ -41,7 +41,9 @@ final class ManualEntryFormView: UIView {
             placeholder: STPLocalizedString(
                 "Routing number",
                 "The title of a user-input-field that appears when a user is manually entering their bank account information. It instructs user to type the routing number."
-            )
+            ),
+            showDoneToolbar: true,
+            appearance: appearance
         )
         routingNumberTextField.textField.keyboardType = .numberPad
         routingNumberTextField.delegate = self
@@ -50,7 +52,12 @@ final class ManualEntryFormView: UIView {
     }()
     private lazy var accountNumberTextField: RoundedTextField = {
         let accountNumberTextField = RoundedTextField(
-            placeholder: STPLocalizedString("Account number", "The title of a user-input-field that appears when a user is manually entering their bank account information. It instructs user to type the account number.")
+            placeholder: STPLocalizedString(
+                "Account number",
+                "The title of a user-input-field that appears when a user is manually entering their bank account information. It instructs user to type the account number."
+            ),
+            showDoneToolbar: true,
+            appearance: appearance
         )
         accountNumberTextField.textField.keyboardType = .numberPad
         accountNumberTextField.delegate = self
@@ -62,7 +69,9 @@ final class ManualEntryFormView: UIView {
             placeholder: STPLocalizedString(
                 "Confirm account number",
                 "The title of a user-input-field that appears when a user is manually entering their bank account information. It instructs user to re-type the account number to confirm it."
-            )
+            ),
+            showDoneToolbar: true,
+            appearance: appearance
         )
         accountNumberConfirmationTextField.textField.keyboardType = .numberPad
         accountNumberConfirmationTextField.delegate = self
@@ -70,6 +79,7 @@ final class ManualEntryFormView: UIView {
         return accountNumberConfirmationTextField
     }()
 
+    private let appearance: FinancialConnectionsAppearance
     private var didEndEditingOnceRoutingNumberTextField = false
     private var didEndEditingOnceAccountNumberTextField = false
     private var didEndEditingOnceAccountNumberConfirmationTextField = false
@@ -88,7 +98,8 @@ final class ManualEntryFormView: UIView {
         return (routingNumberTextField.text, accountNumberTextField.text)
     }
 
-    init(isTestMode: Bool) {
+    init(isTestMode: Bool, appearance: FinancialConnectionsAppearance) {
+        self.appearance = appearance
         super.init(frame: .zero)
 
         let contentVerticalStackView = UIStackView()
@@ -96,6 +107,7 @@ final class ManualEntryFormView: UIView {
         if isTestMode {
             let testModeBannerView = TestModeAutofillBannerView(
                 context: .account,
+                appearance: appearance,
                 didTapAutofill: applyTestModeValues
             )
             contentVerticalStackView.addArrangedSubview(testModeBannerView)
@@ -142,9 +154,9 @@ final class ManualEntryFormView: UIView {
                 font: .label(.medium),
                 boldFont: .label(.mediumEmphasized),
                 linkFont: .label(.medium),
-                textColor: .textFeedbackCritical,
-                linkColor: .textFeedbackCritical,
-                alignCenter: true
+                textColor: FinancialConnectionsAppearance.Colors.textCritical,
+                linkColor: FinancialConnectionsAppearance.Colors.textCritical,
+                alignment: .center
             )
             errorLabel.setText(text)
             let paddingStackView = UIStackView(

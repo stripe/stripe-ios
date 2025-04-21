@@ -1,4 +1,10 @@
+"An error occurred. Please try again." = "Det uppstod ett fel. Försök igen.";
+
+"Card brand was not updated. Please try again." = "Kortmärket uppdaterades inte. Försök igen.";
+
 "Close" = "Stäng";
+
+"Default payment method was not updated. Please try again." = "Standardbetalningsmetoden uppdaterades inte. Försök igen.";
 
 "Scan Card" = "Skanna kort";
 

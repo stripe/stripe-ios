@@ -20,21 +20,24 @@ protocol ManualEntryDataSource: AnyObject {
 
 final class ManualEntryDataSourceImplementation: ManualEntryDataSource {
 
-    private let apiClient: FinancialConnectionsAPIClient
+    private let apiClient: any FinancialConnectionsAPI
     private let clientSecret: String
     let manifest: FinancialConnectionsSessionManifest
     let analyticsClient: FinancialConnectionsAnalyticsClient
+    private let consumerSessionClientSecret: String?
 
     init(
-        apiClient: FinancialConnectionsAPIClient,
+        apiClient: any FinancialConnectionsAPI,
         clientSecret: String,
         manifest: FinancialConnectionsSessionManifest,
-        analyticsClient: FinancialConnectionsAnalyticsClient
+        analyticsClient: FinancialConnectionsAnalyticsClient,
+        consumerSessionClientSecret: String?
     ) {
         self.apiClient = apiClient
         self.clientSecret = clientSecret
         self.manifest = manifest
         self.analyticsClient = analyticsClient
+        self.consumerSessionClientSecret = consumerSessionClientSecret
     }
 
     func attachBankAccountToLinkAccountSession(
@@ -44,7 +47,8 @@ final class ManualEntryDataSourceImplementation: ManualEntryDataSource {
         return apiClient.attachBankAccountToLinkAccountSession(
             clientSecret: clientSecret,
             accountNumber: accountNumber,
-            routingNumber: routingNumber
+            routingNumber: routingNumber,
+            consumerSessionClientSecret: consumerSessionClientSecret
         )
     }
 }

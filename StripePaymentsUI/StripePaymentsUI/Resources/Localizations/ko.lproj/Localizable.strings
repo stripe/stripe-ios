@@ -2,6 +2,8 @@
 
 "%1$@ ending in %2$@" = "%2$@(으)로 끝나는 %1$@";
 
+"%1$@ is not accepted" = "%1$@이(가) 허용되지 않습니다.";
+
 "Address line 2 (optional)" = "주소란 2(선택 사항)";
 
 "Apple Pay" = "Apple Pay";
@@ -10,13 +12,9 @@
 
 "Bank Account" = "은행 계좌";
 
-"Billing Address" = "청구 주소";
-
 "Billing address" = "청구 주소";
 
 "CVC" = "CVC";
-
-"CVV" = "CVV";
 
 "Card information" = "카드 정보";
 
@@ -38,9 +36,13 @@
 
 "The BSB you entered is invalid." = "입력하신 BSB가 유효하지 않습니다.";
 
+"The selected brand is not allowed" = "선택한 브랜드는 허용되지 않습니다.";
+
 "To scan your card, allow camera access in Settings." = "카드를 스캔하려면 설정에서 카메라 액세스를 허용하세요.";
 
 "Your ZIP is invalid." = "우편번호가 유효하지 않습니다.";
+
+"Your card has expired." = "카드가 만료되었습니다.";
 
 "Your card number is incomplete." = "카드 번호가 불완전합니다.";
 

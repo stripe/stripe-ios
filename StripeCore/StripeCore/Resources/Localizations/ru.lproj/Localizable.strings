@@ -1,4 +1,10 @@
+"An error occurred. Please try again." = "Возникла ошибка. Попробуйте еще раз.";
+
+"Card brand was not updated. Please try again." = "Бренд карты не был обновлен. Попробуйте еще раз.";
+
 "Close" = "Закрыть";
+
+"Default payment method was not updated. Please try again." = "Способ оплаты по умолчанию не был изменен. Попробуйте еще раз.";
 
 "Scan Card" = "Сканировать карту";
 

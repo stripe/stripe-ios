@@ -55,12 +55,12 @@ class STPPaymentCardTextFieldTest: XCTestCase {
 
         let iOS9SystemFont = UIFont.systemFont(ofSize: 18)
         textField.font = iOS9SystemFont
-        XCTAssertEqualWithAccuracy(textField.intrinsicContentSize.height, 44, accuracy: 0.1)
-        XCTAssertEqualWithAccuracy(textField.intrinsicContentSize.width, 253, accuracy: 1.0)
+        XCTAssertEqual(textField.intrinsicContentSize.height, 44, accuracy: 0.1)
+        XCTAssertEqual(textField.intrinsicContentSize.width, 253, accuracy: 1.0)
 
         textField.font = UIFont(name: "Avenir", size: 44)!
-        XCTAssertEqualWithAccuracy(textField.intrinsicContentSize.height, 62, accuracy: 0.1)
-        XCTAssertEqualWithAccuracy(textField.intrinsicContentSize.width, 472, accuracy: 0.1)
+        XCTAssertEqual(textField.intrinsicContentSize.height, 62, accuracy: 0.1)
+        XCTAssertEqual(textField.intrinsicContentSize.width, 472, accuracy: 0.1)
     }
 
     func testSetCard_numberUnknown() {
@@ -208,7 +208,7 @@ class STPPaymentCardTextFieldTest: XCTestCase {
         }
         XCTAssertEqual(sut.numberField.text, number)
         XCTAssertEqual(sut.cvcField.text!.count, Int(0))
-        XCTAssertEqual(sut.cvcField.placeholder, "CVV")
+        XCTAssertEqual(sut.cvcField.placeholder, "CVC")
         XCTAssertNil(sut.currentFirstResponderField())
         XCTAssertFalse(sut.isValid)
     }
@@ -526,7 +526,7 @@ class STPPaymentCardTextFieldTest: XCTestCase {
         let delegate = PaymentCardTextFieldBlockDelegate()
         delegate.didChange = { textField in
             // delegate reads the `cardParams` for any reason it wants
-            textField.paymentMethodParams.card
+            _ = textField.paymentMethodParams.card
         }
         let sut = STPPaymentCardTextField()
         sut.delegate = delegate
@@ -682,7 +682,7 @@ class STPPaymentCardTextFieldTest: XCTestCase {
         }
         XCTAssertEqual(sut.numberField.text, number)
         XCTAssertEqual(sut.cvcField.text!.count, Int(0))
-        XCTAssertEqual(sut.cvcField.placeholder, "CVV")
+        XCTAssertEqual(sut.cvcField.placeholder, "CVC")
         XCTAssertNil(sut.currentFirstResponderField())
         XCTAssertFalse(sut.isValid)
     }

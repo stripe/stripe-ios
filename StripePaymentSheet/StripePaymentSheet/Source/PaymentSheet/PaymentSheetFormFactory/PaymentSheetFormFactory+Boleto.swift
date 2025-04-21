@@ -20,7 +20,8 @@ extension PaymentSheetFormFactory {
         let taxIdElement = TextFieldElement(
             configuration: IDNumberTextFieldConfiguration(
                 type: .BR_CPF_CNPJ,
-                label: String.Localized.cpf_cpnj
+                label: String.Localized.cpf_cpnj,
+                defaultValue: previousCustomerInput?.paymentMethodParams.boleto?.taxID
             ),
             theme: theme
         )
@@ -33,10 +34,7 @@ extension PaymentSheetFormFactory {
             theme: theme
         )
         let addressSection = configuration.billingDetailsCollectionConfiguration.address != .never
-            ? makeBillingAddressSection(
-                collectionMode: .noCountry,
-                countries: ["BR"]
-            )
+            ? makeBillingAddressSection(countries: ["BR"])
             : nil
         let allElements: [Element?] = [contactInfoSection, taxIdSection, addressSection]
         let elements = allElements.compactMap { $0 }

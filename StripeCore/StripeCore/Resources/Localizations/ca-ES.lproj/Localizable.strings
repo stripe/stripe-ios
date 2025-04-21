@@ -1,4 +1,10 @@
+"An error occurred. Please try again." = "S'ha produït un error. Torneu-ho a provar.";
+
+"Card brand was not updated. Please try again." = "La marca de la targeta no s'ha actualitzat. Torneu-ho a provar.";
+
 "Close" = "Tanca";
+
+"Default payment method was not updated. Please try again." = "El mètode de pagament per defecte no s'ha pogut actualitzar. Torneu-ho a provar.";
 
 "Scan Card" = "Escanejar targeta";
 

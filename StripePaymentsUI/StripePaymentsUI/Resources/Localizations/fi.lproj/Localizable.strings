@@ -2,6 +2,8 @@
 
 "%1$@ ending in %2$@" = "%1$@ päättyy numeroihin %2$@";
 
+"%1$@ is not accepted" = "%1$@ ei hyväksytä";
+
 "Address line 2 (optional)" = "Osoiterivi 2 (valinnainen)";
 
 "Apple Pay" = "Apple Pay";
@@ -10,13 +12,9 @@
 
 "Bank Account" = "Pankkitili";
 
-"Billing Address" = "Laskutusosoite";
-
 "Billing address" = "Laskutusosoite";
 
 "CVC" = "CVC-tunnus";
-
-"CVV" = "CVV-koodi";
 
 "Card information" = "Kortin tiedot";
 
@@ -38,9 +36,13 @@
 
 "The BSB you entered is invalid." = "Antamasi BSB-numero on virheellinen.";
 
+"The selected brand is not allowed" = "Valittu merkki ei ole sallittu";
+
 "To scan your card, allow camera access in Settings." = "Anna kameralle käyttöoikeus, jotta voit skannata kortin.";
 
 "Your ZIP is invalid." = "Postinumero on virheellinen.";
+
+"Your card has expired." = "Korttisi on vanhentunut.";
 
 "Your card number is incomplete." = "Kortin numero on puutteellinen.";
 

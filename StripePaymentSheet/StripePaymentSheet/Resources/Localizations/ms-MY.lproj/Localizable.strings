@@ -1,7 +1,5 @@
 "%1$@ •••• %2$@" = "%1$@ •••• %2$@";
 
-"%1$d interest-free payments of %2$@" = "%1$li pembayaran tanpa faedah sebanyak %2$@";
-
 "+ Add" = "+ Tambah";
 
 "Add US bank account" = "Tambah akaun bank AS";
@@ -9,6 +7,8 @@
 "Add a card" = "Tambah kad";
 
 "Add a payment method" = "Tambah kaedah pembayaran";
+
+"Add bank account" = "Tambah akaun bank";
 
 "Add card" = "Tambah kad";
 
@@ -18,11 +18,29 @@
 
 "Add your payment information" = "Tambah maklumat pembayaran anda";
 
+"Agree and continue" = "Setuju dan teruskan";
+
 "Approve payment" = "Luluskan pembayaran";
+
+"Are you sure you want to remove this card?" = "Anda pasti ingin mengalih keluar kad ini?";
+
+"Are you sure you want to remove this linked account?" = "Anda pasti ingin mengalih keluar akaun yang dipautkan ini?";
 
 "Back" = "Undur";
 
+"Bank" = "Bank";
+
 "Bank account" = "Akaun bank";
+
+"Bank account details cannot be changed." = "Butiran akaun bank tidak boleh diubah.";
+
+"Buy now or pay later with  <img/>" = "Beli sekarang atau bayar kemudian dengan <img/>";
+
+"Buy now or pay later with Afterpay" = "Beli sekarang atau bayar kemudian dengan Afterpay";
+
+"Buy now or pay later with Cash App Afterpay" = "Beli sekarang atau bayar kemudian dengan Cash App Afterpay";
+
+"Buy now or pay later with Clearpay" = "Beli sekarang atau bayar kemudian dengan Clearpay";
 
 "Buy now or pay later with Klarna" = "Beli sekarang atau bayar kemudian dengan Klarna";
 
@@ -38,11 +56,15 @@
 
 "By continuing to Revolut Pay, you allow %@ to charge your Revolut Pay account for future payments in accordance with their terms." = "Dengan meneruskan langkah ke Revolut Pay, anda membenarkan %@ mengecaj akaun Revolut Pay anda bagi pembayaran masa hadapan menurut terma mereka.";
 
+"By continuing you agree to the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Dengan meneruskan langkah, anda bersetuju dengan <terms>Terma</terms> dan <privacy>Dasar Privasi</privacy>.";
+
 "By continuing, you agree to authorize payments pursuant to <terms>these terms</terms>." = "Dengan meneruskan langkah, anda bersetuju untuk mengizinkan pembayaran menurut <terms>terma ini</terms>";
 
 "By continuing, you authorize %@ to debit your Cash App account for this payment and future payments in accordance with %@'s terms, until this authorization is revoked. You can change this anytime in your Cash App Settings." = "Dengan meneruskan langkah, anda mengizinkan %1$@ untuk mendebitkan akaun Cash App anda bagi pembayaran ini dan pembayaran masa hadapan menurut terma %2$@, sehinggalah keizinan ini dibatalkan. Anda boleh mengubah keizinan ini pada bila-bila masa dalam Tetapan Cash App anda.";
 
 "By joining Link, you agree to the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Dengan menyertai Link, anda bersetuju dengan <terms>Terma</terms> dan <privacy>Dasar Privasi</privacy>.";
+
+"By providing your card information, you allow %@ to charge your card for future payments in accordance with their terms." = "Dengan memberikan maklumat kad anda, anda membenarkan %@ mengecaj kad anda bagi pembayaran masa hadapan menurut terma mereka.";
 
 "By providing your email, you agree to create a Link account and save your payment info to Link, according to the Link <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Dengan memberikan e-mel anda, anda bersetuju untuk mencipta akaun Link dan menyimpan maklumat pembayaran anda di Link, menurut <terms>Terma</terms> dan <privacy>Dasar Privasi</privacy> Link.";
 
@@ -56,11 +78,23 @@
 
 "Cancel and pay another way" = "Batalkan dan bayar dengan cara lain";
 
+"Card details cannot be changed." = "Butiran kad tidak boleh diubah.";
+
+"Change" = "Ubah";
+
+"Change email" = "Ubah e-mel";
+
 "Choose a payment method" = "Pilih kaedah pembayaran";
 
 "Close card scanner" = "Tutup pengimbas kad";
 
+"Code sent" = "Kod dihantar";
+
 "Confirm" = "Sahkan";
+
+"Confirm it's you" = "Sahkan andalah orangnya";
+
+"Confirm payment details" = "Sahkan butiran pembayaran";
 
 "Confirm the payment in your bank or payment app within %@ to complete the purchase." = "Sahkan pembayaran dalam aplikasi bank atau aplikasi pembayaran anda dalam %@ untuk menyelesaikan pembelian.";
 
@@ -68,19 +102,43 @@
 
 "Confirm your CVC" = "Sahkan CVC anda";
 
-"Confirm your CVV" = "Sahkan CVV anda";
-
 "Contact information" = "Maklumat hubungan";
+
+"Default" = "Tetapan Asal";
+
+"Default payment method" = "Kaedah pembayaran tetapan asal";
 
 "EPS Bank" = "Bank EPS";
 
 "Enter address manually" = "Masukkan alamat secara manual";
 
+"Enter the code sent to %@ to use your saved information." = "Masukkan kod yang dihantar ke %@ untuk menggunakan maklumat anda yang tersimpan.";
+
 "FPX Bank" = "Bank untuk FPX";
+
+"Failed to connect" = "Gagal disambungkan";
+
+"Fast, secure, 1⁠-⁠click checkout" = "Proses bayar dan keluar dengan sekali klik yang cepat dan selamat";
+
+"For security, please re-enter your card’s security code." = "Bagi tujuan keselamatan, sila masukkan semula kod keselamatan kad anda.";
+
+"Get %@ back when you pay for the first time with your bank. <terms>See terms</terms>" = "Dapatkan kembali %@ apabila anda membuat pembayaran untuk kali pertama dengan bank anda. <terms>Lihat terma</terms>";
+
+"Get %@ back when you pay with your bank. <terms>See terms</terms>" = "Dapatkan kembali %@ apabila anda membuat pembayaran dengan bank anda. <terms>Lihat terma</terms>";
 
 "I understand that Stripe will be collecting Direct Debits on behalf of %@ and confirm that I am the account holder and the only person required to authorise debits from this account." = "Saya faham bahawa Stripe akan mengutip Debit Terus bagi pihak %@ dan mengesahkan sayalah pemegang akaun dan satu-satunya individu yang diperlukan untuk mengizinkan debit daripada akaun ini.";
 
 "IBAN" = "IBAN";
+
+"Log out of Link" = "Log keluar dari Link";
+
+"Manage SEPA debit" = "Urus debit SEPA";
+
+"Manage US bank account" = "Urus akaun bank AS";
+
+"Manage card" = "Urus kad";
+
+"Manage cards" = "Urus kad";
 
 "Manage payment method" = "Urus kaedah pembayaran";
 
@@ -93,6 +151,12 @@
 "New card" = "Kad baharu";
 
 "New payment method" = "Kaedah pembayaran baharu";
+
+"No %@ promo" = "Tiada promo %@";
+
+"Not %@?" = "Bukan %@?";
+
+"Only card brand can be changed." = "Hanya jenama kad boleh diubah.";
 
 "Open your UPI app to approve your payment within %@" = "Buka aplikasi UPI untuk meluluskan pembayaran anda dalam masa %@";
 
@@ -112,15 +176,21 @@
 
 "Pay faster at %@ and thousands of businesses." = "Bayar dengan lebih cepat di %@ dan beribu-ribu perniagaan.";
 
-"Pay in <num_installments/> interest-free payments of <installment_price/> with <img/>" = "Bayar dalam <num_installments/> kali pembayaran tanpa faedah sebanyak <installment_price/> dengan <img/>";
-
 "Pay over time with %@" = "Bayar dari semasa ke semasa dengan %@";
+
+"Pay over time with Affirm" = "Bayar dari semasa ke semasa dengan Affirm";
 
 "Pay with Link" = "Bayar dengan Link";
 
 "Pay with your bank account in just a few steps." = "Bayar dengan akaun bank anda dengan hanya beberapa langkah.";
 
+"Payment" = "Pembayaran";
+
 "Payment failed" = "Pembayaran tidak berjaya";
+
+"Payment methods" = "Kaedah pembayaran";
+
+"Please choose a valid payment method." = "Sila pilih kaedah pembayaran yang sah.";
 
 "Please go back and select another payment method" = "Sila undur dan pilih kaedah pembayaran yang lain";
 
@@ -132,7 +202,11 @@
 
 "Remove card?" = "Alih keluar kad?";
 
-"Remove payment method" = "Alih keluar kaedah pembayaran";
+"Remove linked account" = "Alih keluar akaun yang dipautkan";
+
+"Resend code" = "Hantar semula kod";
+
+"SEPA debit details cannot be changed." = "Butiran debit SEPA tidak boleh diubah.";
 
 "Save" = "Simpan";
 
@@ -142,13 +216,15 @@
 
 "Save for future payments" = "Simpan untuk pembayaran masa hadapan";
 
-"Save this account for future %@ payments" = "Simpan akaun ini untuk pembayaran %@ masa hadapan";
+"Save payment details to %@ for future purchases" = "Simpan butiran pembayaran di %@ untuk pembelian yang akan datang";
 
-"Save this card for future %@ payments" = "Simpan kad ini untuk pembayaran %@ masa hadapan";
+"Save this account for future %@ payments" = "Simpan akaun ini untuk pembayaran %@ masa hadapan";
 
 "Save your bank account in just a few steps." = "Simpan akaun bank anda dengan hanya beberapa langkah.";
 
 "Save your info for secure 1-click checkout with Link" = "Simpan maklumat anda untuk proses bayar dan keluar dengan sekali klik yang selamat dengan Link";
+
+"Save your payment information with Link, and securely check out in 1-click on Link-supported sites." = "Simpan maklumat pembayaran anda dengan Link, serta bayar dan keluar dengan sekali klik secara selamat di laman yang disokong oleh Link.";
 
 "Saved" = "Disimpan";
 
@@ -157,6 +233,10 @@
 "Select payment method" = "Pilih kaedah pembayaran";
 
 "Select your payment method" = "Pilih kaedah pembayaran anda";
+
+"Set as default" = "Tetapkan sebagai tetapan asal";
+
+"Set as default payment method" = "Tetapkan sebagai kaedah pembayaran tetapan asal";
 
 "Set up" = "Sediakan";
 
@@ -170,11 +250,29 @@
 
 "Stripe will deposit $0.01 to your account in 1-2 business days. Then you’ll get an email with instructions to complete payment to %@." = "Stripe akan mendepositkan sebanyak $0.01 ke dalam akaun anda dalam masa 1–2 hari bekerja. Kemudian anda akan mendapat e-mel dengan arahan untuk menyelesaikan pembayaran kepada %@.";
 
+"Tap to close" = "Ketik untuk tutup";
+
+"Tap to expand" = "Ketik untuk kembangkan";
+
 "The IBAN you entered is incomplete." = "IBAN yang anda masukkan tidak lengkap.";
 
-"Update" = "Kemas kinikan";
+"The provided verification code has expired." = "Kod penentusahan yang diberikan telah tamat tempoh.";
 
-"Update card brand" = "Kemas kinikan jenama kad";
+"The provided verification code is incorrect." = "Kod penentusahan yang diberikan tidak betul.";
+
+"This card has expired. Update your card info or choose a different payment method." = "Kad ini telah tamat tempoh. Kemas kinikan maklumat kad anda atau pilih kaedah pembayaran yang lain.";
+
+"This is your default" = "Ini tetapan asal anda";
+
+"Too many attempts. Please try again in a few minutes." = "Terlalu banyak percubaan. Sila cuba lagi dalam beberapa minit.";
+
+"Unavailable for this purchase" = "Tidak tersedia untuk pembelian ini";
+
+"Update card" = "Kemas kinikan kad";
+
+"Update payment method" = "Kemas kinikan kaedah pembayaran";
+
+"Use your saved info to check out faster" = "Gunakan maklumat anda yang tersimpan untuk keluar dan bayar dengan lebih cepat";
 
 "View more" = "Lihat lebih banyak";
 

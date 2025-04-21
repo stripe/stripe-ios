@@ -1,4 +1,10 @@
+"An error occurred. Please try again." = "Vyskytla sa chyba. Skúste to znova.";
+
+"Card brand was not updated. Please try again." = "Značka karty nebola aktualizovaná. Skúste to znova.";
+
 "Close" = "Zatvoriť";
+
+"Default payment method was not updated. Please try again." = "Predvolený spôsob platby nebol aktualizovaný. Skúste to znova.";
 
 "Scan Card" = "Naskenovať kartu";
 

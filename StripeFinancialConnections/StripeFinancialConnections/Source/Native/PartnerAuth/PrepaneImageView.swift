@@ -13,19 +13,21 @@ import WebKit
 final class PrepaneImageView: UIView {
 
     private let centeringView: UIView
+    private var imageLayer: CALayer?
 
     init(imageURLString: String) {
         // first we load an image (or GIF) into a WebView
         let imageView = GIFImageView(gifUrlString: imageURLString)
         // the WebView is surrounded by a background that imitates the GIF presented inside of a phone
-        let phoneBackgroundView = CreatePhoneBackgroundView(imageView: imageView)
+        let (phoneBackgroundView, imageLayer) = CreatePhoneBackgroundView(imageView: imageView)
+        self.imageLayer = imageLayer
         // we center the phone+gif in the middle
         let centeringView = CreateCenteringView(centeredView: phoneBackgroundView)
         self.centeringView = centeringView
         super.init(frame: .zero)
 
         // background color of the whole view
-        centeringView.backgroundColor = .backgroundContainer
+        centeringView.backgroundColor = FinancialConnectionsAppearance.Colors.backgroundHighlighted
 
         addAndPinSubview(
             centeringView,
@@ -65,15 +67,24 @@ final class PrepaneImageView: UIView {
         maskLayer.path = path
         layer.mask = maskLayer
     }
+
+    // CGColor's need to be manually updated when the system theme changes.
+    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+        super.traitCollectionDidChange(previousTraitCollection)
+        guard traitCollection.hasDifferentColorAppearance(comparedTo: previousTraitCollection) else { return }
+
+        imageLayer?.borderColor = FinancialConnectionsAppearance.Colors.backgroundSecondary.cgColor
+        imageLayer?.shadowColor = FinancialConnectionsAppearance.Colors.borderNeutral.cgColor
+    }
 }
 
-private func CreatePhoneBackgroundView(imageView: UIView) -> UIView {
+private func CreatePhoneBackgroundView(imageView: UIView) -> (UIView, CALayer) {
     let containerView = UIView()
     let borderWidth: CGFloat = 8
     imageView.layer.borderWidth = borderWidth
-    imageView.layer.borderColor = UIColor.backgroundOffset.cgColor
+    imageView.layer.borderColor = FinancialConnectionsAppearance.Colors.backgroundSecondary.cgColor
     imageView.layer.shadowRadius = 10
-    imageView.layer.shadowColor = UIColor.borderDefault.cgColor
+    imageView.layer.shadowColor = FinancialConnectionsAppearance.Colors.borderNeutral.cgColor
     imageView.layer.shadowOpacity = 1.0
     containerView.addAndPinSubview(
         imageView,
@@ -84,7 +95,7 @@ private func CreatePhoneBackgroundView(imageView: UIView) -> UIView {
             trailing: 0
         )
     )
-    return containerView
+    return (containerView, imageView.layer)
 }
 
 private func CreateCenteringView(centeredView: UIView) -> UIView {
@@ -132,7 +143,7 @@ private final class GIFImageView: UIView, WKNavigationDelegate {
         webView.scrollView.isScrollEnabled = false
         webView.isUserInteractionEnabled = false
         webView.loadHTMLString(htmlString, baseURL: nil)
-        webView.backgroundColor = .customBackgroundColor
+        webView.backgroundColor = FinancialConnectionsAppearance.Colors.background
         addAndPinSubview(webView)
     }
 

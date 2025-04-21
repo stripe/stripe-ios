@@ -1,4 +1,10 @@
+"An error occurred. Please try again." = "Đã xảy ra lỗi. Vui lòng thử lại.";
+
+"Card brand was not updated. Please try again." = "Thương hiệu thẻ chưa được cập nhật. Vui lòng thử lại.";
+
 "Close" = "Đóng";
+
+"Default payment method was not updated. Please try again." = "Phương thức thanh toán mặc định chưa cập nhật. Vui lòng thử lại.";
 
 "Scan Card" = "Quét thẻ";
 

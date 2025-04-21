@@ -12,6 +12,7 @@ import Foundation
 @_spi(STP) import StripeUICore
 import UIKit
 protocol AddPaymentMethodViewControllerDelegate: AnyObject {
+    func getWalletHeaders() -> [String]
     func didUpdate(_ viewController: AddPaymentMethodViewController)
     func updateErrorLabel(for: Error?)
 }
@@ -33,20 +34,7 @@ class AddPaymentMethodViewController: UIViewController {
 
     // MARK: - Read-only Properties
     weak var delegate: AddPaymentMethodViewControllerDelegate?
-    lazy var paymentMethodTypes: [PaymentSheet.PaymentMethodType] = {
-        let paymentMethodTypes = PaymentSheet.PaymentMethodType.filteredPaymentMethodTypes(
-            from: intent,
-            configuration: configuration,
-            logAvailability: false
-        )
-        if paymentMethodTypes.isEmpty {
-            let errorAnalytic = ErrorAnalytic(event: .unexpectedPaymentSheetError,
-                                              error: Error.paymentMethodTypesEmpty)
-            STPAnalyticsClient.sharedClient.log(analytic: errorAnalytic)
-        }
-        stpAssert(!paymentMethodTypes.isEmpty, "At least one payment method type must be available.")
-        return paymentMethodTypes
-    }()
+    let paymentMethodTypes: [PaymentSheet.PaymentMethodType]
     var selectedPaymentMethodType: PaymentSheet.PaymentMethodType {
         paymentMethodTypesView.selected
     }
@@ -63,8 +51,10 @@ class AddPaymentMethodViewController: UIViewController {
     }
 
     private let intent: Intent
-    private let configuration: PaymentSheet.Configuration
-    private let isLinkEnabled: Bool
+    private let elementsSession: STPElementsSession
+    private let configuration: PaymentElementConfiguration
+    private let formCache: PaymentMethodFormCache
+    private let analyticsHelper: PaymentSheetAnalyticsHelper
     var previousCustomerInput: IntentConfirmParams?
 
     private var paymentMethodFormElement: PaymentMethodElement {
@@ -73,7 +63,7 @@ class AddPaymentMethodViewController: UIViewController {
 
     // MARK: - Views
     private lazy var paymentMethodFormViewController: PaymentMethodFormViewController = {
-        let pmFormVC = PaymentMethodFormViewController(type: selectedPaymentMethodType, intent: intent, previousCustomerInput: previousCustomerInput, configuration: configuration, isLinkEnabled: isLinkEnabled, headerView: nil, delegate: self)
+        let pmFormVC = PaymentMethodFormViewController(type: selectedPaymentMethodType, intent: intent, elementsSession: elementsSession, previousCustomerInput: previousCustomerInput, formCache: formCache, configuration: configuration, headerView: nil, analyticsHelper: analyticsHelper, delegate: self)
         // Only use the previous customer input in the very first load, to avoid overwriting customer input
         previousCustomerInput = nil
         return pmFormVC
@@ -83,7 +73,8 @@ class AddPaymentMethodViewController: UIViewController {
             paymentMethodTypes: paymentMethodTypes,
             initialPaymentMethodType: previousCustomerInput?.paymentMethodType,
             appearance: configuration.appearance,
-            isPaymentSheet: true,
+            currency: intent.currency,
+            incentive: elementsSession.incentive,
             delegate: self
         )
         return view
@@ -101,16 +92,28 @@ class AddPaymentMethodViewController: UIViewController {
 
     required init(
         intent: Intent,
-        configuration: PaymentSheet.Configuration,
+        elementsSession: STPElementsSession,
+        configuration: PaymentElementConfiguration,
         previousCustomerInput: IntentConfirmParams? = nil,
-        isLinkEnabled: Bool,
+        paymentMethodTypes: [PaymentSheet.PaymentMethodType],
+        formCache: PaymentMethodFormCache,
+        analyticsHelper: PaymentSheetAnalyticsHelper,
         delegate: AddPaymentMethodViewControllerDelegate? = nil
     ) {
+        if paymentMethodTypes.isEmpty {
+            let errorAnalytic = ErrorAnalytic(event: .unexpectedPaymentSheetError,
+                                              error: Error.paymentMethodTypesEmpty)
+            STPAnalyticsClient.sharedClient.log(analytic: errorAnalytic)
+        }
+        stpAssert(!paymentMethodTypes.isEmpty, "At least one payment method type must be available.")
         self.configuration = configuration
         self.intent = intent
+        self.elementsSession = elementsSession
         self.previousCustomerInput = previousCustomerInput
+        self.paymentMethodTypes = paymentMethodTypes
         self.delegate = delegate
-        self.isLinkEnabled = isLinkEnabled
+        self.formCache = formCache
+        self.analyticsHelper = analyticsHelper
         super.init(nibName: nil, bundle: nil)
     }
 
@@ -137,7 +140,24 @@ class AddPaymentMethodViewController: UIViewController {
 
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
+        logRenderLPMs()
         delegate?.didUpdate(self)
+    }
+
+    private func logRenderLPMs() {
+        // These are the cells that are visible without scrolling in the horizontal carousel
+        let visibleLPMCells: [PaymentMethodTypeCollectionView.PaymentTypeCell] = paymentMethodTypesView.visibleCells.compactMap { $0 as? PaymentMethodTypeCollectionView.PaymentTypeCell }
+        var visibleLPMs: [String] = visibleLPMCells.compactMap { $0.paymentMethodType.identifier }
+        // If there are no cells in the carousel and one payment method type, it's because the form is expanded
+        if visibleLPMCells.isEmpty, paymentMethodTypes.count == 1, let paymentMethodType = paymentMethodTypes.first {
+            visibleLPMs.append(paymentMethodType.identifier)
+        }
+        // Add wallet LPMs
+        let walletLPMs: [String] = delegate?.getWalletHeaders() ?? []
+        visibleLPMs.append(contentsOf: walletLPMs)
+        // These LPMs are not visible without without scrolling in the horizontal carousel
+        let hiddenLPMs: [String] = paymentMethodTypes.compactMap { $0.identifier }.filter { !visibleLPMs.contains($0) }
+        analyticsHelper.logRenderLPMs(visibleLPMs: visibleLPMs, hiddenLPMs: hiddenLPMs)
     }
 
     // MARK: - Private
@@ -149,7 +169,17 @@ class AddPaymentMethodViewController: UIViewController {
 
     private func updateFormElement() {
         if selectedPaymentMethodType != paymentMethodFormViewController.paymentMethodType {
-            paymentMethodFormViewController = PaymentMethodFormViewController(type: selectedPaymentMethodType, intent: intent, previousCustomerInput: previousCustomerInput, configuration: configuration, isLinkEnabled: isLinkEnabled, headerView: nil, delegate: self)
+            paymentMethodFormViewController = PaymentMethodFormViewController(
+                type: selectedPaymentMethodType,
+                intent: intent,
+                elementsSession: elementsSession,
+                previousCustomerInput: previousCustomerInput,
+                formCache: formCache,
+                configuration: configuration,
+                headerView: nil,
+                analyticsHelper: analyticsHelper,
+                delegate: self
+            )
         }
         updateUI()
     }
@@ -169,6 +199,7 @@ class AddPaymentMethodViewController: UIViewController {
 
 extension AddPaymentMethodViewController: PaymentMethodTypeCollectionViewDelegate {
     func didUpdateSelection(_ paymentMethodTypeCollectionView: PaymentMethodTypeCollectionView) {
+        analyticsHelper.logNewPaymentMethodSelected(paymentMethodTypeIdentifier: selectedPaymentMethodType.identifier)
 #if !canImport(CompositorServices)
             UISelectionFeedbackGenerator().selectionChanged()
 #endif
@@ -182,6 +213,11 @@ extension AddPaymentMethodViewController: PaymentMethodTypeCollectionViewDelegat
 extension AddPaymentMethodViewController: PaymentMethodFormViewControllerDelegate {
     func didUpdate(_ viewController: PaymentMethodFormViewController) {
         delegate?.didUpdate(self)
+
+        if let instantDebitsFormElement = viewController.form as? InstantDebitsPaymentMethodElement {
+            let incentive = instantDebitsFormElement.displayableIncentive
+            paymentMethodTypesView.setIncentive(incentive)
+        }
     }
 
     func updateErrorLabel(for error: Swift.Error?) {

@@ -1,5 +1,7 @@
 "%@ (optional)" = "%@ (mhux obbligatorja)";
 
+"(not accepted)" = "(ma tistax tintuża)";
+
 "Account number" = "In-numru tal-kont";
 
 "Address" = "Indirizz";
@@ -83,8 +85,6 @@
 "Other" = "Oħrajn";
 
 "Parish" = "Parroċċa";
-
-"Phone" = "Telefon";
 
 "Phone number" = "In-numru tal-mowbajl";
 

@@ -20,6 +20,7 @@ public enum PaymentSheetError: Error, LocalizedError {
     case unknown(debugDescription: String)
 
     // MARK: Generic errors
+    case integrationError(nonPIIDebugDescription: String)
     case missingClientSecret
     case invalidClientSecret
     case unexpectedResponseFromStripeAPI
@@ -32,6 +33,7 @@ public enum PaymentSheetError: Error, LocalizedError {
     case setupIntentClientSecretProviderNil
     /// No payment method types available error.
     case noPaymentMethodTypesAvailable(intentPaymentMethods: [STPPaymentMethodType])
+    case embeddedPaymentElementUpdateWithFormPresented
 
     // MARK: Loading errors
     case paymentIntentInTerminalState(status: STPPaymentIntentStatus)
@@ -39,6 +41,7 @@ public enum PaymentSheetError: Error, LocalizedError {
     case fetchPaymentMethodsFailure
 
     // MARK: Deferred intent errors
+    case intentConfigurationValidationFailed(message: String)
     case deferredIntentValidationFailed(message: String)
 
     // MARK: - Link errors
@@ -55,73 +58,20 @@ public enum PaymentSheetError: Error, LocalizedError {
 
     // MARK: - Confirmation errors
     case unexpectedNewPaymentMethod
+    case confirmingWithInvalidPaymentOption
+    case embeddedPaymentElementAlreadyConfirmedIntent
 
     public var errorDescription: String? {
-        return NSError.stp_unexpectedErrorMessage()
+        switch self {
+        case .confirmingWithInvalidPaymentOption:
+            return String.Localized.please_choose_a_valid_payment_method
+        default:
+            return NSError.stp_unexpectedErrorMessage()
+        }
     }
 }
 
 extension PaymentSheetError: CustomDebugStringConvertible {
-    /// A string that can safely be logged to our analytics service that does not contain any PII
-    public var safeLoggingString: String {
-        switch self {
-        case .unknown:
-            return "unknown"
-        case .missingClientSecret:
-            return "missingClientSecret"
-        case .invalidClientSecret:
-            return "invalidClientSecret"
-        case .unexpectedResponseFromStripeAPI:
-            return "unexpectedResponseFromStripeAPI"
-        case .applePayNotSupportedOrMisconfigured:
-            return "applePayNotSupportedOrMisconfigured"
-        case .alreadyPresented:
-            return "alreadyPresented"
-        case .flowControllerConfirmFailed:
-            return "flowControllerConfirmFailed"
-        case .errorHandlingNextAction:
-            return "errorHandlingNextAction"
-        case .unrecognizedHandlerStatus:
-            return "unrecognizedHandlerStatus"
-        case .accountLinkFailure:
-            return "accountLinkFailure"
-        case .setupIntentClientSecretProviderNil:
-            return "setupIntentClientSecretProviderNil"
-        case .noPaymentMethodTypesAvailable:
-            return "noPaymentMethodTypesAvailable"
-        case .paymentIntentInTerminalState:
-            return "paymentIntentInTerminalState"
-        case .setupIntentInTerminalState:
-            return "setupIntentInTerminalState"
-        case .fetchPaymentMethodsFailure:
-            return "fetchPaymentMethodsFailure"
-        case .deferredIntentValidationFailed:
-            return "deferredIntentValidationFailed"
-        case .linkSignUpNotRequired:
-            return "linkSignUpNotRequired"
-        case .linkCallVerifyNotRequired:
-            return "linkCallVerifyNotRequired"
-        case .linkingWithoutValidSession:
-            return "linkingWithoutValidSession"
-        case .savingWithoutValidLinkSession:
-            return "savingWithoutValidLinkSession"
-        case .payingWithoutValidLinkSession:
-            return "payingWithoutValidLinkSession"
-        case .deletingWithoutValidLinkSession:
-            return "deletingWithoutValidLinkSession"
-        case .updatingWithoutValidLinkSession:
-            return "updatingWithoutValidLinkSession"
-        case .linkLookupNotFound:
-            return "linkLookupNotFound"
-        case .failedToCreateLinkSession:
-            return "failedToCreateLinkSession"
-        case .linkNotAuthorized:
-            return "linkNotAuthorized"
-        case .unexpectedNewPaymentMethod:
-            return "unexpectedNewPaymentMethod"
-        }
-    }
-
     /// A description logged to a developer for debugging
     public var debugDescription: String {
         let errorMessageSuffix = {
@@ -183,6 +133,16 @@ extension PaymentSheetError: CustomDebugStringConvertible {
                 return "setupIntentClientSecretForCustomerAttach, but setupIntentClientSecretProvider is nil"
             case .unexpectedNewPaymentMethod:
                 return "New payment method should not have been created yet"
+            case .intentConfigurationValidationFailed(message: let message):
+                return message
+            case .embeddedPaymentElementAlreadyConfirmedIntent:
+                return "This instance of EmbeddedPaymentElement has already confirmed an intent successfully. Create a new instance of EmbeddedPaymentElement to confirm a new intent."
+            case .integrationError(nonPIIDebugDescription: let nonPIIDebugDescription):
+                return "There's a problem with your integration. \(nonPIIDebugDescription)"
+            case .confirmingWithInvalidPaymentOption:
+                return "`confirm` should only be called when `paymentOption` is not nil"
+            case .embeddedPaymentElementUpdateWithFormPresented:
+                return "`update` called while a form is already presented, this is not supported. `update` should only be called while a form is not presented."
             }
         }()
 

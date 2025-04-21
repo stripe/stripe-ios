@@ -10,6 +10,7 @@ import Foundation
 import UIKit
 
 final class InstitutionIconView: UIView {
+    private static let size: CGSize = .init(width: 56, height: 56)
 
     private lazy var institutionImageView: UIImageView = {
         let iconImageView = UIImageView()
@@ -18,19 +19,18 @@ final class InstitutionIconView: UIView {
 
     init() {
         super.init(frame: .zero)
-        let diameter: CGFloat = 56
         let cornerRadius: CGFloat = 12
         translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
-            widthAnchor.constraint(equalToConstant: diameter),
-            heightAnchor.constraint(equalToConstant: diameter),
+            widthAnchor.constraint(equalToConstant: Self.size.width),
+            heightAnchor.constraint(equalToConstant: Self.size.height),
         ])
 
         addAndPinSubview(institutionImageView)
         institutionImageView.layer.cornerRadius = cornerRadius
         institutionImageView.clipsToBounds = true
 
-        layer.shadowColor = UIColor.textDefault.cgColor
+        layer.shadowColor = FinancialConnectionsAppearance.Colors.shadow.cgColor
         layer.shadowOpacity = 0.3
         layer.shadowRadius = 1
         layer.shadowOffset = CGSize(
@@ -44,10 +44,34 @@ final class InstitutionIconView: UIView {
     }
 
     func setImageUrl(_ imageUrl: String?) {
+        let bankIconPlaceholder = CreateBankIconPlaceholder(size: Self.size)
         institutionImageView.setImage(
             with: imageUrl,
-            placeholder: Image.brandicon_default.makeImage()
+            placeholder: bankIconPlaceholder
         )
+    }
+}
+
+private func CreateBankIconPlaceholder(size: CGSize) -> UIImage {
+    let backgroundColor: UIColor = FinancialConnectionsAppearance.Colors.backgroundSecondary
+    let iconColor: UIColor = FinancialConnectionsAppearance.Colors.icon
+    let iconSize: CGSize = CGSize(width: 24, height: 24)
+    let icon: UIImage = Image.bank.makeImage(template: true)
+
+    let renderer = UIGraphicsImageRenderer(size: size)
+    return renderer.image { context in
+        // Draw background
+        backgroundColor.setFill()
+        context.fill(CGRect(origin: .zero, size: size))
+
+        // Draw icon
+        let iconRect = CGRect(
+            x: (size.width - iconSize.width) / 2,
+            y: (size.height - iconSize.height) / 2,
+            width: iconSize.width,
+            height: iconSize.height
+        )
+        icon.withTintColor(iconColor).draw(in: iconRect)
     }
 }
 

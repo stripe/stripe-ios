@@ -1,5 +1,7 @@
 "%@ (optional)" = "%@ (opsyenal)";
 
+"(not accepted)" = "(tidak diterima)";
+
 "Account number" = "Nombor akaun";
 
 "Address" = "Alamat";
@@ -83,8 +85,6 @@
 "Other" = "Lain-lain";
 
 "Parish" = "Kariah";
-
-"Phone" = "Telefon";
 
 "Phone number" = "Nombor telefon";
 

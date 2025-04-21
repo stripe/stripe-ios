@@ -1,5 +1,7 @@
 "%@ (optional)" = "%@ (nem kötelező)";
 
+"(not accepted)" = "(nem elfogadott)";
+
 "Account number" = "Számlaszám";
 
 "Address" = "Cím";
@@ -83,8 +85,6 @@
 "Other" = "Egyéb";
 
 "Parish" = "Egyházközség";
-
-"Phone" = "Telefon";
 
 "Phone number" = "Telefonszám";
 

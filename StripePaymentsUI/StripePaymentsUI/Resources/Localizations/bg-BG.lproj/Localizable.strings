@@ -2,6 +2,8 @@
 
 "%1$@ ending in %2$@" = "%1$@ завършващо на %2$@";
 
+"%1$@ is not accepted" = "%1$@ не се приема";
+
 "Address line 2 (optional)" = "Ред 2 на адреса (по желание)";
 
 "Apple Pay" = "Apple Pay";
@@ -10,13 +12,9 @@
 
 "Bank Account" = "Банкова сметка";
 
-"Billing Address" = "Адрес за фактуриране";
-
 "Billing address" = "Адрес за фактуриране";
 
 "CVC" = "CVC";
-
-"CVV" = "CVV";
 
 "Card information" = "Информация за картата";
 
@@ -38,9 +36,13 @@
 
 "The BSB you entered is invalid." = "BSB, който сте въвели, е невалиден.";
 
+"The selected brand is not allowed" = "Избраната марка не е разрешена";
+
 "To scan your card, allow camera access in Settings." = "За да сканирате картата си, разрешете достъп до камерата в Настройки.";
 
 "Your ZIP is invalid." = "Вашият ZIP код е невалиден.";
+
+"Your card has expired." = "Вашата карта е изтекла.";
 
 "Your card number is incomplete." = "Номерът на Вашата карта е непълен.";
 

@@ -8,8 +8,7 @@
 import Foundation
 import StripeCoreTestUtils
 import UIKit
-
-@testable@_spi(STP) import StripePaymentSheet
+@_spi(STP)@_spi(EmbeddedPaymentElementPrivateBeta) @testable import StripePaymentSheet
 
 class PaymentMethodRowButtonSnapshotTests: STPSnapshotTestCase {
 
@@ -39,6 +38,46 @@ class PaymentMethodRowButtonSnapshotTests: STPSnapshotTestCase {
     func testPaymentMethodRowButton_editing_cantRemove_canUpdate() {
         let rowButton = SavedPaymentMethodRowButton(paymentMethod: STPPaymentMethod._testCard(), appearance: .default)
         rowButton.state = .editing(allowsRemoval: false, allowsUpdating: true)
+        verify(rowButton)
+    }
+
+    func testPaymentMethodRowButton_selected_with_zero_border_width() {
+        var appearance = PaymentSheet.Appearance.default
+        appearance.borderWidth = 0
+        let rowButton = SavedPaymentMethodRowButton(paymentMethod: STPPaymentMethod._testCard(), appearance: appearance)
+        rowButton.state = .selected
+        verify(rowButton)
+    }
+    
+    func testPaymentMethodRowButton_ignoresEmbeddedConfiguration() {
+        var appearance = PaymentSheet.Appearance.default
+        appearance.embeddedPaymentElement.row.style = .flatWithCheckmark
+        let rowButton = SavedPaymentMethodRowButton(paymentMethod: STPPaymentMethod._testCard(), appearance: appearance)
+        rowButton.state = .selected
+        verify(rowButton)
+    }
+    
+    func testPaymentMethodRowButton_newPaymentMethod_unselected() {
+        let rowButton = RowButton.makeForPaymentMethodType(
+            paymentMethodType: .instantDebits,
+            hasSavedCard: false,
+            promoText: nil,
+            appearance: .default,
+            shouldAnimateOnPress: false,
+            didTap: { _ in }
+        )
+        verify(rowButton)
+    }
+    
+    func testPaymentMethodRowButton_newPaymentMethod_withPromo_unselected() {
+        let rowButton = RowButton.makeForPaymentMethodType(
+            paymentMethodType: .instantDebits,
+            hasSavedCard: false,
+            promoText: "$5",
+            appearance: .default,
+            shouldAnimateOnPress: false,
+            didTap: { _ in }
+        )
         verify(rowButton)
     }
 

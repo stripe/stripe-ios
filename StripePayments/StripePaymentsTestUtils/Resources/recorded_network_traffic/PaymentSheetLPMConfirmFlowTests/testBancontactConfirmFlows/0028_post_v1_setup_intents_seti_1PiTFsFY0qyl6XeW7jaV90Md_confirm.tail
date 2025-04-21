@@ -1,0 +1,79 @@
+POST
+https:\/\/api\.stripe\.com\/v1\/setup_intents\/seti_1PiTFsFY0qyl6XeW7jaV90Md\/confirm$
+200
+application/json
+access-control-allow-methods: GET,HEAD,PUT,PATCH,POST,DELETE
+content-security-policy: report-uri https://q.stripe.com/csp-report?p=v1%2Fsetup_intents%2F%3Aintent%2Fconfirm; block-all-mixed-content; default-src 'none'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'
+Server: nginx
+Cache-Control: no-cache, no-store
+reporting-endpoints: coop="https://q.stripe.com/coop-report?s=payins-bapi-srv"
+Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
+cross-origin-opener-policy-report-only: same-origin; report-to="coop"
+Access-Control-Allow-Origin: *
+stripe-should-retry: false
+x-stripe-priority-routing-enabled: true
+report-to: {"group":"coop","max_age":8640,"endpoints":[{"url":"https://q.stripe.com/coop-report?s=payins-bapi-srv"}],"include_subdomains":true}
+request-id: req_VcimhwcF4fxCHc
+x-stripe-routing-context-priority-tier: api-testmode
+Content-Length: 1253
+Vary: Origin
+Date: Wed, 31 Jul 2024 03:31:13 GMT
+original-request: req_VcimhwcF4fxCHc
+stripe-version: 2020-08-27
+idempotency-key: fb5958b3-d405-4741-abed-5635f04392c2
+access-control-expose-headers: Request-Id, Stripe-Manage-Version, Stripe-Should-Retry, X-Stripe-External-Auth-Required, X-Stripe-Privileged-Session-Required
+access-control-max-age: 300
+access-control-allow-credentials: true
+Content-Type: application/json
+x-content-type-options: nosniff
+X-Stripe-Mock-Request: client_secret=seti_1PiTFsFY0qyl6XeW7jaV90Md_secret_QZcUtvXa3CvJWYpIH1RITT6GRnV89cO&expand\[0]=payment_method&mandate_data\[customer_acceptance]\[online]\[infer_from_client]=true&mandate_data\[customer_acceptance]\[type]=online&payment_method_data\[allow_redisplay]=unspecified&payment_method_data\[billing_details]\[email]=f%40z\.c&payment_method_data\[billing_details]\[name]=Foo&payment_method_data\[payment_user_agent]=.*&payment_method_data\[type]=bancontact&return_url=https%3A\/\/foo\.com&use_stripe_sdk=true
+
+{
+  "id" : "seti_1PiTFsFY0qyl6XeW7jaV90Md",
+  "description" : null,
+  "next_action" : {
+    "type" : "redirect_to_url",
+    "redirect_to_url" : {
+      "return_url" : "https:\/\/foo.com",
+      "url" : "https:\/\/pm-redirects.stripe.com\/authorize\/acct_1G6m1pFY0qyl6XeW\/sa_nonce_QZcURWqpybnbeLCmqrIyhRFtAKGIDhs"
+    }
+  },
+  "livemode" : false,
+  "payment_method" : {
+    "object" : "payment_method",
+    "id" : "pm_1PiTFsFY0qyl6XeWnthXR0sW",
+    "billing_details" : {
+      "email" : "f@z.c",
+      "phone" : null,
+      "name" : "Foo",
+      "address" : {
+        "state" : null,
+        "country" : null,
+        "line2" : null,
+        "city" : null,
+        "line1" : null,
+        "postal_code" : null
+      }
+    },
+    "livemode" : false,
+    "created" : 1722396672,
+    "allow_redisplay" : "unspecified",
+    "type" : "bancontact",
+    "customer" : null,
+    "bancontact" : {
+
+    }
+  },
+  "payment_method_configuration_details" : null,
+  "usage" : "off_session",
+  "payment_method_types" : [
+    "bancontact"
+  ],
+  "object" : "setup_intent",
+  "last_setup_error" : null,
+  "created" : 1722396672,
+  "client_secret" : "seti_1PiTFsFY0qyl6XeW7jaV90Md_secret_QZcUtvXa3CvJWYpIH1RITT6GRnV89cO",
+  "automatic_payment_methods" : null,
+  "cancellation_reason" : null,
+  "status" : "requires_action"
+}

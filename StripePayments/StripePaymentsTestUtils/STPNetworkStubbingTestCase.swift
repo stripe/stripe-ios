@@ -12,16 +12,46 @@ import XCTest
 
 /// Test cases that subclass `STPNetworkStubbingTestCase` will automatically capture all network traffic when run with `recordingMode = YES` and save it to disk. When run with `recordingMode = NO`, they will use the persisted request/response pairs, and raise an exception if an unexpected HTTP request is made.
 /// ⚠️ Warning: `STPAPIClient`s created before `setUp` is called are not recorded!
+/// To write manual requests, try APIStubbedTestCase instead.
 @objc(STPNetworkStubbingTestCase) open class STPNetworkStubbingTestCase: XCTestCase {
     /// Set this to YES to record all traffic during this test. The test will then fail, to remind you to set this back to NO before pushing.
     open var recordingMode = false
 
+    /// Set this to YES to disable network mocking entirely (e.g. in a nightly test)
+    open var disableMocking = false
+
+    /// If `true` (the default), URL parameters will be recorded in requests.
+    /// Disable this if your test case sends paramters that may change (e.g. the time), as otherwise the requests may not match during playback.
+    open var strictParamsEnforcement = true
+
+    /// If `true` (the default), the recorder will always follow redirects.
+    /// Otherwise, the recorder will record the body of the HTTP redirect request.
+    /// Disable this when testing the STPPaymentHandler "UnredirectableSessionDelegate" behavior.
+    open var followRedirects = true
+
     open override func setUp() {
         super.setUp()
+
+        recordingMode = ProcessInfo.processInfo.environment["STP_RECORD_NETWORK"] != nil
+        disableMocking = ProcessInfo.processInfo.environment["STP_NO_NETWORK_MOCKS"] != nil
+
+        if disableMocking {
+            // Don't set this up
+            return
+        }
+
+        // Set some default FraudDetectionData
+        FraudDetectionData.shared.sid = "00000000-0000-0000-0000-000000000000"
+        FraudDetectionData.shared.muid = "00000000-0000-0000-0000-000000000000"
+        FraudDetectionData.shared.guid = "00000000-0000-0000-0000-000000000000"
+        FraudDetectionData.shared.sidCreationDate = Date()
 
         // Set the STPTestingAPIClient to use the sharedURLSessionConfig so that we can intercept requests from it too
         STPTestingAPIClient.shared.sessionConfig =
             StripeAPIConfiguration.sharedUrlSessionConfiguration
+
+        // Enable the Debug Params headers. We'll record these and include them in the header list.
+        StripeAPIConfiguration.includeDebugParamsHeader = true
 
         // [self name] returns a string like `-[STPMyTestCase testThing]` - this transforms it into the recorded path `recorded_network_traffic/STPMyTestCase/testThing`.
         let rawComponents = name.components(separatedBy: " ")
@@ -53,10 +83,29 @@ import XCTest
 
             // Creates filenames like `post_v1_tokens_0.tail`.
             var count = 0
+            if strictParamsEnforcement {
+                // Just record the full URL, don't try to strip out params
+                recorder?.urlRegexPatternBlock = { request, _ in
+                    // Need to escape this to fit in a regex (e.g. \? instead of ? before the query)
+                    return NSRegularExpression.escapedPattern(for: request?.url?.absoluteString ?? "")
+                }
+                recorder?.postBodyTransformBlock = { _, postBody in
+                    // Regex filter these:
+                    let escapedBody = NSRegularExpression.escapedPattern(for: postBody ?? "")
+                    // Then remove any params that may contain UUIDs or other random data
+                    return replaceNondeterministicParams(escapedBody)
+                }
+            } else {
+                recorder?.urlRegexPatternBlock = nil
+                recorder?.postBodyTransformBlock = { _, _ in
+                    return ""
+                }
+            }
+            recorder?.followRedirects = followRedirects
             recorder?.fileNamingBlock = { request, _, _ in
                 let method = request!.httpMethod?.lowercased()
                 let urlPath = request!.url?.path.replacingOccurrences(of: "/", with: "_")
-                var fileName = "\(method ?? "")\(urlPath ?? "")_\(count)"
+                var fileName = "\(String(format: "%04d", count))_\(method ?? "")\(urlPath ?? "")"
                 fileName =
                     URL(fileURLWithPath: fileName).appendingPathExtension("tail").lastPathComponent
                 count += 1
@@ -120,7 +169,8 @@ import XCTest
                 HTTPStubs.stubRequestsUsingMocktails(
                     atPath: relativePath,
                     in: bundle,
-                    error: &stubError
+                    error: &stubError,
+                    removeAfterUse: true
                 )
                 if let stubError = stubError {
                     XCTFail("Error stubbing requests: \(stubError)")
@@ -133,10 +183,43 @@ import XCTest
 
     open override func tearDown() {
         super.tearDown()
+
+        if disableMocking {
+            // No teardown needed
+            return
+        }
+
         // Additional calls to `setFileNamingBlock` will be ignored if you don't do this
         SWHttpTrafficRecorder.shared().stopRecording()
 
         // Don't accidentally keep any stubs around during the next test run
         HTTPStubs.removeAllStubs()
     }
+}
+
+// Function to filter out some common UUIDs or other request parameters that may change
+private func replaceNondeterministicParams(_ input: String) -> String {
+    let componentsToFilter = [
+        "guid=", // Fraud detection data
+        "muid=",
+        "sid=",
+        "[guid]=",
+        "[muid]=",
+        "[sid]=",
+        "app_version_key", // Current version of Xcode, for Alipay
+
+        "payment_user_agent", // Contains the SDK version number
+        "pk_token_transaction_id", // Random string
+    ]
+    var components = input.components(separatedBy: "&")
+
+    for (index, component) in components.enumerated() {
+        if componentsToFilter.first(where: { component.contains($0) }) != nil {
+            let parts = component.components(separatedBy: "=")
+            XCTAssertEqual(parts.count, 2, "Invalid portion of query string: index\(index), component: \(component)")
+            components[index] = "\(parts[0])=.*"
+        }
+    }
+
+    return components.joined(separator: "&")
 }

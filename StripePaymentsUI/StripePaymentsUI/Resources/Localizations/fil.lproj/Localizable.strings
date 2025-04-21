@@ -2,6 +2,8 @@
 
 "%1$@ ending in %2$@" = "%1$@ nagtatapos sa %2$@";
 
+"%1$@ is not accepted" = "Ang %1$@ ay hindi tinatanggap";
+
 "Address line 2 (optional)" = "Pangalawang linya ng adres";
 
 "Apple Pay" = "Apple Pay";
@@ -10,13 +12,9 @@
 
 "Bank Account" = "Account sa Bangko";
 
-"Billing Address" = "Adres para sa Billing";
-
 "Billing address" = "Adres para sa billing";
 
 "CVC" = "CVC";
-
-"CVV" = "CVV";
 
 "Card information" = "Impormasyon ng kard";
 
@@ -38,9 +36,13 @@
 
 "The BSB you entered is invalid." = "Ang BSB na ipinasok mo ay di balido.";
 
+"The selected brand is not allowed" = "Ang napiling brand ay hindi pinapayagan";
+
 "To scan your card, allow camera access in Settings." = "Upang ma-scan ang iyong kard, pahintulutan ang access ng kamera sa Settings.";
 
 "Your ZIP is invalid." = "Ang iyong ZIP ay di balido.";
+
+"Your card has expired." = "Napaso na ang iyong kard.";
 
 "Your card number is incomplete." = "Ang numero ng iyong kard ay di kumpleto.";
 

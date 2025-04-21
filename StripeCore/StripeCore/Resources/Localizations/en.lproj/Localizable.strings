@@ -1,5 +1,14 @@
+/* A generic error message displayed when an error occurs. */
+"An error occurred. Please try again." = "An error occurred. Please try again.";
+
+/* An error message displayed when updating a card brand fails. */
+"Card brand was not updated. Please try again." = "Card brand was not updated. Please try again.";
+
 /* Text for close button */
 "Close" = "Close";
+
+/* An error message displayed when setting a default payment method fails. */
+"Default payment method was not updated. Please try again." = "Default payment method was not updated. Please try again.";
 
 /* Text for button to scan a credit card */
 "Scan Card" = "Scan Card";

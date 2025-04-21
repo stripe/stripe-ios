@@ -1,4 +1,10 @@
+"An error occurred. Please try again." = "Ilmnes tõrge. Palun proovige uuesti.";
+
+"Card brand was not updated. Please try again." = "Kaardi kaubamärki ei värskendatud. Palun proovige uuesti.";
+
 "Close" = "Sule";
+
+"Default payment method was not updated. Please try again." = "Vaikemakseviisi ei värskendatud. Palun proovige uuesti.";
 
 "Scan Card" = "Skanni kaart";
 

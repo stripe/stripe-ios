@@ -1,0 +1,11 @@
+GET
+https:\/\/luxurious-alpine-devourer\.glitch\.me\/status\/429\?$
+429
+text/html
+access-control-allow-credentials: true
+Date: Wed, 31 Jul 2024 02:08:47 GMT
+Content-Type: text/html; charset=utf-8
+Content-Length: 0
+Server: gunicorn/19.2.0
+Access-Control-Allow-Origin: *
+

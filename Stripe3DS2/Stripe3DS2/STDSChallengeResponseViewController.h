@@ -13,6 +13,7 @@
 #import "STDSDirectoryServer.h"
 
 @class STDSChallengeResponseViewController;
+@protocol STDSAnalyticsDelegate;
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -66,7 +67,10 @@ NS_ASSUME_NONNULL_BEGIN
 /// Use setChallengeResponser:animated: to update this value
 @property (nonatomic, strong, readonly) id<STDSChallengeResponse> response;
 
-- (instancetype)initWithUICustomization:(STDSUICustomization * _Nullable)uiCustomization imageLoader:(STDSImageLoader *)imageLoader directoryServer:(STDSDirectoryServer)directoryServer;
+- (instancetype)initWithUICustomization:(STDSUICustomization * _Nullable)uiCustomization 
+                            imageLoader:(STDSImageLoader *)imageLoader
+                        directoryServer:(STDSDirectoryServer)directoryServer
+                      analyticsDelegate:(nullable id<STDSAnalyticsDelegate>)analyticsDelegate;
 
 /// If `setLoading` was called beforehand, this waits until the loading spinner has been shown for at least 1 second before displaying the challenge responseself.processingView.isHidden.
 - (void)setChallengeResponse:(id<STDSChallengeResponse>)response animated:(BOOL)animated;

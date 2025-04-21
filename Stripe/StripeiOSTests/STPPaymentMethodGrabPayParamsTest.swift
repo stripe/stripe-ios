@@ -9,8 +9,9 @@
 
 import StripeCore
 import StripeCoreTestUtils
+import StripePaymentsTestUtils
 
-class STPPaymentMethodGrabPayParamsTest: XCTestCase {
+class STPPaymentMethodGrabPayParamsTest: STPNetworkStubbingTestCase {
     func testCreateGrabPayPaymentMethod() {
         let client = STPAPIClient(publishableKey: STPTestingSGPublishableKey)
         let grabPayParams = STPPaymentMethodGrabPayParams()

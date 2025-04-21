@@ -1,7 +1,5 @@
 "%1$@ •••• %2$@" = "%1$@ •••• %2$@";
 
-"%1$d interest-free payments of %2$@" = "%1$li interest-free payments of %2$@";
-
 "+ Add" = "+ Add";
 
 "Add US bank account" = "Add US bank account";
@@ -9,6 +7,8 @@
 "Add a card" = "Add a card";
 
 "Add a payment method" = "Add a payment method";
+
+"Add bank account" = "Add bank account";
 
 "Add card" = "Add card";
 
@@ -18,11 +18,29 @@
 
 "Add your payment information" = "Add your payment information";
 
+"Agree and continue" = "Agree and continue";
+
 "Approve payment" = "Approve payment";
+
+"Are you sure you want to remove this card?" = "Are you sure you want to remove this card?";
+
+"Are you sure you want to remove this linked account?" = "Are you sure you want to remove this linked account?";
 
 "Back" = "Back";
 
+"Bank" = "Bank";
+
 "Bank account" = "Bank account";
+
+"Bank account details cannot be changed." = "Bank account details cannot be changed.";
+
+"Buy now or pay later with  <img/>" = "Buy now or pay later with  <img/>";
+
+"Buy now or pay later with Afterpay" = "Buy now or pay later with Afterpay";
+
+"Buy now or pay later with Cash App Afterpay" = "Buy now or pay later with Cash App Afterpay";
+
+"Buy now or pay later with Clearpay" = "Buy now or pay later with Clearpay";
 
 "Buy now or pay later with Klarna" = "Buy now or pay later with Klarna";
 
@@ -38,11 +56,15 @@
 
 "By continuing to Revolut Pay, you allow %@ to charge your Revolut Pay account for future payments in accordance with their terms." = "By continuing to Revolut Pay, you allow %@ to charge your Revolut Pay account for future payments in accordance with their terms.";
 
+"By continuing you agree to the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "By continuing, you agree to the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>.";
+
 "By continuing, you agree to authorize payments pursuant to <terms>these terms</terms>." = "By continuing, you agree to authorize payments pursuant to <terms>these terms</terms>.";
 
 "By continuing, you authorize %@ to debit your Cash App account for this payment and future payments in accordance with %@'s terms, until this authorization is revoked. You can change this anytime in your Cash App Settings." = "By continuing, you authorize %1$@ to debit your Cash App account for this payment and future payments in accordance with %2$@'s terms, until this authorization is revoked. You can change this anytime in your Cash App Settings.";
 
 "By joining Link, you agree to the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "By joining Link, you agree to the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>.";
+
+"By providing your card information, you allow %@ to charge your card for future payments in accordance with their terms." = "By providing your card information, you allow %@ to charge your card for future payments in accordance with their terms.";
 
 "By providing your email, you agree to create a Link account and save your payment info to Link, according to the Link <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "By providing your email, you agree to create a Link account and save your payment info to Link, according to the Link <terms>Terms</terms> and <privacy>Privacy Policy</privacy>.";
 
@@ -56,11 +78,23 @@
 
 "Cancel and pay another way" = "Cancel and pay another way";
 
+"Card details cannot be changed." = "Card details cannot be changed.";
+
+"Change" = "Change";
+
+"Change email" = "Change email";
+
 "Choose a payment method" = "Choose a payment method";
 
 "Close card scanner" = "Close card scanner";
 
+"Code sent" = "Code sent";
+
 "Confirm" = "Confirm";
+
+"Confirm it's you" = "Confirm it's you";
+
+"Confirm payment details" = "Confirm payment details";
 
 "Confirm the payment in your bank or payment app within %@ to complete the purchase." = "Confirm the payment in your bank or payment app within %@ to complete the purchase.";
 
@@ -68,19 +102,43 @@
 
 "Confirm your CVC" = "Confirm your CVC";
 
-"Confirm your CVV" = "Confirm your CVV";
-
 "Contact information" = "Contact information";
+
+"Default" = "Default";
+
+"Default payment method" = "Default payment method";
 
 "EPS Bank" = "EPS Bank";
 
 "Enter address manually" = "Enter address manually";
 
+"Enter the code sent to %@ to use your saved information." = "Enter the code sent to %@ to use your saved information.";
+
 "FPX Bank" = "FPX Bank";
+
+"Failed to connect" = "Failed to connect";
+
+"Fast, secure, 1⁠-⁠click checkout" = "Fast, secure, 1⁠-⁠click checkout";
+
+"For security, please re-enter your card’s security code." = "For security, please re-enter your card’s security code.";
+
+"Get %@ back when you pay for the first time with your bank. <terms>See terms</terms>" = "Get %@ back when you pay for the first time with your bank. <terms>See terms</terms>";
+
+"Get %@ back when you pay with your bank. <terms>See terms</terms>" = "Get %@ back when you pay with your bank. <terms>See terms</terms>";
 
 "I understand that Stripe will be collecting Direct Debits on behalf of %@ and confirm that I am the account holder and the only person required to authorise debits from this account." = "I understand that Stripe will be collecting Direct Debits on behalf of %@ and confirm that I am the account holder and the only person required to authorise debits from this account.";
 
 "IBAN" = "IBAN";
+
+"Log out of Link" = "Log out of Link";
+
+"Manage SEPA debit" = "Manage SEPA debit";
+
+"Manage US bank account" = "Manage US bank account";
+
+"Manage card" = "Manage card";
+
+"Manage cards" = "Manage cards";
 
 "Manage payment method" = "Manage payment method";
 
@@ -93,6 +151,12 @@
 "New card" = "New card";
 
 "New payment method" = "New payment method";
+
+"No %@ promo" = "No %@ promo";
+
+"Not %@?" = "Not %@?";
+
+"Only card brand can be changed." = "Only card brand can be changed.";
 
 "Open your UPI app to approve your payment within %@" = "Open your UPI app to approve your payment within %@";
 
@@ -112,15 +176,21 @@
 
 "Pay faster at %@ and thousands of businesses." = "Pay faster at %@ and thousands of businesses.";
 
-"Pay in <num_installments/> interest-free payments of <installment_price/> with <img/>" = "Pay in <num_installments/> interest-free payments of <installment_price/> with <img/>";
-
 "Pay over time with %@" = "Pay over time with %@";
+
+"Pay over time with Affirm" = "Pay over time with Affirm";
 
 "Pay with Link" = "Pay with Link";
 
 "Pay with your bank account in just a few steps." = "Pay with your bank account in just a few steps.";
 
+"Payment" = "Payment";
+
 "Payment failed" = "Payment failed";
+
+"Payment methods" = "Payment methods";
+
+"Please choose a valid payment method." = "Please choose a valid payment method.";
 
 "Please go back and select another payment method" = "Please go back and select another payment method";
 
@@ -132,7 +202,11 @@
 
 "Remove card?" = "Remove card?";
 
-"Remove payment method" = "Remove payment method";
+"Remove linked account" = "Remove linked account";
+
+"Resend code" = "Resend code";
+
+"SEPA debit details cannot be changed." = "SEPA debit details cannot be changed.";
 
 "Save" = "Save";
 
@@ -142,13 +216,15 @@
 
 "Save for future payments" = "Save for future payments";
 
-"Save this account for future %@ payments" = "Save this account for future %@ payments";
+"Save payment details to %@ for future purchases" = "Save payment details to %@ for future purchases";
 
-"Save this card for future %@ payments" = "Save this card for future %@ payments";
+"Save this account for future %@ payments" = "Save this account for future %@ payments";
 
 "Save your bank account in just a few steps." = "Save your bank account in just a few steps.";
 
 "Save your info for secure 1-click checkout with Link" = "Save your info for secure 1-click checkout with Link";
+
+"Save your payment information with Link, and securely check out in 1-click on Link-supported sites." = "Save your payment information with Link, and securely check out in one click on Link-supported sites.";
 
 "Saved" = "Saved";
 
@@ -157,6 +233,10 @@
 "Select payment method" = "Select payment method";
 
 "Select your payment method" = "Select your payment method";
+
+"Set as default" = "Set as default";
+
+"Set as default payment method" = "Set as default payment method";
 
 "Set up" = "Set up";
 
@@ -170,11 +250,29 @@
 
 "Stripe will deposit $0.01 to your account in 1-2 business days. Then you’ll get an email with instructions to complete payment to %@." = "Stripe will deposit $0.01 to your account in 1-2 business days. Then you’ll get an email with instructions to complete payment to %@.";
 
+"Tap to close" = "Tap to close";
+
+"Tap to expand" = "Tap to expand";
+
 "The IBAN you entered is incomplete." = "The IBAN you entered is incomplete.";
 
-"Update" = "Update";
+"The provided verification code has expired." = "The provided verification code has expired.";
 
-"Update card brand" = "Update card brand";
+"The provided verification code is incorrect." = "The provided verification code is incorrect.";
+
+"This card has expired. Update your card info or choose a different payment method." = "This card has expired. Update your card info or choose a different payment method.";
+
+"This is your default" = "This is your default";
+
+"Too many attempts. Please try again in a few minutes." = "Too many attempts. Please try again in a few minutes.";
+
+"Unavailable for this purchase" = "Unavailable for this purchase";
+
+"Update card" = "Update card";
+
+"Update payment method" = "Update payment method";
+
+"Use your saved info to check out faster" = "Use your saved info to check out faster";
 
 "View more" = "View more";
 

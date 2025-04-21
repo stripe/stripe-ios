@@ -19,12 +19,37 @@ class BankAccountInfoView: UIView {
     struct Constants {
         static let spacing: CGFloat = 12
     }
+    
+    private let appearance: PaymentSheet.Appearance
+    private let incentive: PaymentMethodIncentive?
 
-    private let theme: ElementsUITheme
-
+    private var theme: ElementsAppearance {
+        appearance.asElementsTheme
+    }
+    private lazy var accountInfoStackView: UIStackView = {
+        let stackView = UIStackView()
+        stackView.axis = .vertical
+        stackView.alignment = .leading
+        stackView.translatesAutoresizingMaskIntoConstraints = false
+        stackView.addArrangedSubview(bankNameLabel)
+        stackView.addArrangedSubview(bankAccountNumberLabel)
+        return stackView
+    }()
+    private lazy var contentStackView: UIStackView = {
+        let stackView = UIStackView()
+        stackView.axis = .horizontal
+        stackView.alignment = .center
+        stackView.spacing = Constants.spacing
+        stackView.translatesAutoresizingMaskIntoConstraints = false
+        stackView.addArrangedSubview(accountInfoStackView)
+        if let promoBadgeView {
+            stackView.addArrangedSubview(promoBadgeView)
+        }
+        return stackView
+    }()
     lazy var bankNameLabel: UILabel = {
         let label = UILabel()
-        label.font = theme.fonts.subheadline
+        label.font = theme.fonts.subheadline.medium
         label.textColor = theme.colors.bodyText
         label.numberOfLines = 1
         label.adjustsFontSizeToFitWidth = false
@@ -33,8 +58,8 @@ class BankAccountInfoView: UIView {
     }()
     lazy var bankAccountNumberLabel: UILabel = {
         let label = UILabel()
-        label.font = theme.fonts.subheadline
-        label.textColor = theme.colors.bodyText
+        label.font = theme.fonts.caption
+        label.textColor = theme.colors.secondaryText
         label.numberOfLines = 0
         return label
     }()
@@ -45,6 +70,13 @@ class BankAccountInfoView: UIView {
         imageView.clipsToBounds = true
         imageView.tintColor = .systemGray2
         return imageView
+    }()
+    
+    private lazy var promoBadgeView: PromoBadgeView? = {
+        guard let incentive else {
+            return nil
+        }
+        return PromoBadgeView(appearance: appearance, tinyMode: false, text: incentive.displayText)
     }()
 
     lazy var xIcon: UIImageView = {
@@ -69,8 +101,13 @@ class BankAccountInfoView: UIView {
         }
     }
 
-    init(frame: CGRect, theme: ElementsUITheme = .default) {
-        self.theme = theme
+    init(
+        frame: CGRect,
+        appearance: PaymentSheet.Appearance = .default,
+        incentive: PaymentMethodIncentive? = nil
+    ) {
+        self.appearance = appearance
+        self.incentive = incentive
         super.init(frame: frame)
         addViewComponents()
         addTouchCallbackForX()
@@ -82,31 +119,23 @@ class BankAccountInfoView: UIView {
 
     func addViewComponents() {
         bankIconImageView.translatesAutoresizingMaskIntoConstraints = false
-        bankNameLabel.translatesAutoresizingMaskIntoConstraints = false
-        bankAccountNumberLabel.translatesAutoresizingMaskIntoConstraints = false
         xIcon.translatesAutoresizingMaskIntoConstraints = false
         xIconTappableArea.translatesAutoresizingMaskIntoConstraints = false
 
         addSubview(bankIconImageView)
-        addSubview(bankNameLabel)
-        addSubview(bankAccountNumberLabel)
+        addSubview(contentStackView)
         xIconTappableArea.addSubview(xIcon)
         addSubview(xIconTappableArea)
 
         NSLayoutConstraint.activate([
             bankIconImageView.centerYAnchor.constraint(equalTo: centerYAnchor),
             bankIconImageView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: Constants.spacing),
-
-            bankNameLabel.leadingAnchor.constraint(equalTo: bankIconImageView.trailingAnchor, constant: Constants.spacing),
-            bankNameLabel.widthAnchor.constraint(lessThanOrEqualTo: widthAnchor, multiplier: 0.5),
-            bankNameLabel.topAnchor.constraint(equalTo: topAnchor, constant: Constants.spacing),
-            bankNameLabel.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -Constants.spacing),
-
-            bankAccountNumberLabel.leadingAnchor.constraint(equalTo: bankNameLabel.trailingAnchor, constant: Constants.spacing),
-            bankAccountNumberLabel.topAnchor.constraint(equalTo: topAnchor, constant: Constants.spacing),
-            bankAccountNumberLabel.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -Constants.spacing),
-
-            xIconTappableArea.leadingAnchor.constraint(greaterThanOrEqualTo: bankAccountNumberLabel.trailingAnchor, constant: Constants.spacing),
+            
+            contentStackView.leadingAnchor.constraint(equalTo: bankIconImageView.trailingAnchor, constant: Constants.spacing),
+            contentStackView.topAnchor.constraint(equalTo: topAnchor, constant: Constants.spacing),
+            contentStackView.trailingAnchor.constraint(lessThanOrEqualTo: xIconTappableArea.leadingAnchor),
+            contentStackView.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -Constants.spacing),
+            
             xIconTappableArea.trailingAnchor.constraint(equalTo: trailingAnchor),
             xIconTappableArea.widthAnchor.constraint(equalToConstant: 44.0),
             xIconTappableArea.topAnchor.constraint(equalTo: topAnchor),
@@ -137,11 +166,16 @@ class BankAccountInfoView: UIView {
     func setLastFourOfBank(text: String) {
         self.bankAccountNumberLabel.text = text
     }
+    
+    func setIncentiveEligible(_ eligible: Bool) {
+        promoBadgeView?.setEligible(eligible)
+    }
 
     func updateUI() {
         bankNameLabel.textColor = theme.colors.textFieldText.disabled(!isUserInteractionEnabled)
         bankAccountNumberLabel.textColor = theme.colors.textFieldText.disabled(!isUserInteractionEnabled)
         bankIconImageView.alpha = isUserInteractionEnabled ? 1.0 : 0.5
+        promoBadgeView?.alpha = isUserInteractionEnabled ? 1.0 : 0.5
         xIcon.alpha = isUserInteractionEnabled ? 1.0 : 0.5
     }
 }

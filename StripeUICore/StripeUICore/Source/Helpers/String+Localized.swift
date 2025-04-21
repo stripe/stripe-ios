@@ -77,10 +77,6 @@ import Foundation
 
     // MARK: - Phone number
 
-    static var phone: String {
-        STPLocalizedString("Phone", "Caption for Phone field on address form")
-    }
-
     static var phoneNumber: String {
         STPLocalizedString("Phone number", "Caption for Phone number field on address form")
     }
@@ -351,5 +347,12 @@ import Foundation
 
     static var remove_card: String {
         STPLocalizedString("Remove card", "Label on a button for removing a card")
+    }
+    
+    static var brand_not_accepted: String {
+        STPLocalizedString(
+            "(not accepted)",
+            "Shown in a dropdown picker next to a card brand that is not accepted by a merchant. E.g. \"Visa (not accepted)\""
+       )
     }
 }

@@ -12,8 +12,6 @@
 
 "Bancontact" = "Bancontact";
 
-"Bank" = "Bank";
-
 "Boleto" = "Boleto";
 
 "Card" = "Kad";
@@ -52,7 +50,7 @@
 
 "UPI" = "UPI";
 
-"US Bank Account" = "Akaun Bank AS";
+"US bank account" = "Akaun bank AS";
 
 "Unknown" = "Tidak diketahui";
 

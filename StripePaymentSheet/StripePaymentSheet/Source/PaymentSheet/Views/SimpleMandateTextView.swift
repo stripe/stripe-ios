@@ -12,12 +12,12 @@ import UIKit
 /// For internal SDK use only
 @objc(STP_Internal_SimpleMandateTextView)
 class SimpleMandateTextView: UIView {
-    private let theme: ElementsUITheme
+    private let theme: ElementsAppearance
     var viewDidAppear: Bool = false
     let textView: UITextView = UITextView()
     var attributedText: NSAttributedString? {
         get {
-            textView.attributedText
+            textView.attributedText.string.isEmpty ? nil : textView.attributedText
         }
         set {
             textView.attributedText = newValue
@@ -26,17 +26,17 @@ class SimpleMandateTextView: UIView {
         }
     }
 
-    convenience init(mandateText: NSAttributedString, theme: ElementsUITheme) {
+    convenience init(mandateText: NSAttributedString, theme: ElementsAppearance) {
         self.init(theme: theme)
         textView.attributedText = mandateText
     }
 
-    convenience init(mandateText: String, theme: ElementsUITheme) {
+    convenience init(mandateText: String, theme: ElementsAppearance) {
         self.init(theme: theme)
         textView.text = mandateText
     }
 
-    required init(theme: ElementsUITheme) {
+    required init(theme: ElementsAppearance) {
         self.theme = theme
         super.init(frame: .zero)
         installConstraints()
@@ -49,7 +49,7 @@ class SimpleMandateTextView: UIView {
     }
 
     fileprivate func installConstraints() {
-        addAndPinSubview(textView)
+        addAndPinSubview(textView, directionalLayoutMargins: .zero)
     }
 
     fileprivate func applyTextViewStyle() {
@@ -58,6 +58,7 @@ class SimpleMandateTextView: UIView {
         textView.font = theme.fonts.caption
         textView.backgroundColor = .clear
         textView.textColor = theme.colors.secondaryText
+        textView.adjustsFontForContentSizeCategory = true
         textView.linkTextAttributes = [.foregroundColor: theme.colors.primary]
         // These two lines remove insets that are on UITextViews by default
         textView.textContainerInset = .zero

@@ -7,9 +7,10 @@
 
 @testable import Stripe
 import StripeCoreTestUtils
+import StripePaymentsTestUtils
 import XCTest
 
-class STPPaymentMethodMultibancoTests: XCTestCase {
+class STPPaymentMethodMultibancoTests: STPNetworkStubbingTestCase {
 
     static let multibancoPaymentIntentClientSecret = "pi_3P8R5lFY0qyl6XeW0byterUo_secret_seOTE1wwZqkjBte83FjHalgsW"
 

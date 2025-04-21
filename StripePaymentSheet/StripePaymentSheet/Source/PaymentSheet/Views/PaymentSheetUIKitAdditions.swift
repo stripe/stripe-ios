@@ -64,7 +64,7 @@ extension UIViewController {
     func switchContentIfNecessary(
         to toVC: UIViewController,
         containerView: DynamicHeightContainerView,
-        resettingContentOffset: Bool = false
+        contentOffsetPercentage: CGFloat? = nil
     ) {
         if children.count > 1 {
             let from_vc_name = NSStringFromClass(children.first!.classForCoder)
@@ -85,6 +85,7 @@ extension UIViewController {
             }
 
             // Add the new one
+            toVC.beginAppearanceTransition(true, animated: true)
             self.addChild(toVC)
             toVC.view.alpha = 0
             containerView.addPinnedSubview(toVC.view)
@@ -100,11 +101,14 @@ extension UIViewController {
                     toVC.didMove(toParent: self)
                     fromVC.view.alpha = 0
                     toVC.view.alpha = 1
-                    if resettingContentOffset {
-                        self.bottomSheetController?.resetContentOffset()
+                },
+                postLayoutAnimations: {
+                    if let contentOffsetPercentage {
+                        self.bottomSheetController?.contentOffsetPercentage = contentOffsetPercentage
                     }
                 },
                 completion: { _ in
+                    toVC.endAppearanceTransition()
                     // Finish removing the old one
                     fromVC.view.removeFromSuperview()
                     fromVC.didMove(toParent: nil)
@@ -152,32 +156,5 @@ extension UIFont {
         let descriptor = UIFontDescriptor(fontAttributes: attributes)
 
         return UIFont(descriptor: descriptor, size: pointSize)
-    }
-}
-
-extension UILabel {
-    static func makeVerticalRowButtonLabel(text: String, appearance: PaymentSheet.Appearance) -> UILabel {
-        let label = UILabel()
-        label.font = appearance.scaledFont(for: appearance.font.base.medium, style: .subheadline, maximumPointSize: 25)
-        label.adjustsFontSizeToFitWidth = true
-        label.adjustsFontForContentSizeCategory = true
-        label.text = text
-        label.numberOfLines = 1
-        label.textColor = appearance.colors.componentText
-        return label
-    }
-}
-
-extension UIStackView {
-    /// Convenience DRY method that creates a stackview for use in horizontal "row button" content
-    static func makeRowButtonContentStackView(arrangedSubviews: [UIView]) -> UIStackView {
-        let margin = 12.0
-        let stackView = UIStackView(arrangedSubviews: arrangedSubviews)
-        stackView.axis = .horizontal
-        stackView.alignment = .center
-        stackView.directionalLayoutMargins = .init(top: margin, leading: margin, bottom: margin, trailing: margin)
-        stackView.spacing = margin
-        stackView.isLayoutMarginsRelativeArrangement = true
-        return stackView
     }
 }

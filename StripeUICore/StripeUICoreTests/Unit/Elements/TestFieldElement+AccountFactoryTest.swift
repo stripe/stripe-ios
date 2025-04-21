@@ -37,6 +37,11 @@ class TextFieldElementAccountFactoryTest: XCTestCase {
     func testAUBECSAccountNumberConfiguration_validAccountNumber() {
         let bsb = TextFieldElement.Account.AUBECSAccountNumberConfiguration(defaultValue: nil)
 
+        bsb.test(text: "1234", isOptional: false, matches: .valid)
+        bsb.test(text: "12345", isOptional: false, matches: .valid)
+        bsb.test(text: "123456", isOptional: false, matches: .valid)
+        bsb.test(text: "1234567", isOptional: false, matches: .valid)
+        bsb.test(text: "12345678", isOptional: false, matches: .valid)
         bsb.test(text: "000123456", isOptional: false, matches: .valid)
     }
 
@@ -52,11 +57,6 @@ class TextFieldElementAccountFactoryTest: XCTestCase {
         bsb.test(text: "0", isOptional: false, matches: .invalid(TextFieldElement.Account.AUBECSAccountNumberConfiguration.incompleteError))
         bsb.test(text: "00", isOptional: false, matches: .invalid(TextFieldElement.Account.AUBECSAccountNumberConfiguration.incompleteError))
         bsb.test(text: "000", isOptional: false, matches: .invalid(TextFieldElement.Account.AUBECSAccountNumberConfiguration.incompleteError))
-        bsb.test(text: "0001", isOptional: false, matches: .invalid(TextFieldElement.Account.AUBECSAccountNumberConfiguration.incompleteError))
-        bsb.test(text: "00012", isOptional: false, matches: .invalid(TextFieldElement.Account.AUBECSAccountNumberConfiguration.incompleteError))
-        bsb.test(text: "000123", isOptional: false, matches: .invalid(TextFieldElement.Account.AUBECSAccountNumberConfiguration.incompleteError))
-        bsb.test(text: "0001234", isOptional: false, matches: .invalid(TextFieldElement.Account.AUBECSAccountNumberConfiguration.incompleteError))
-        bsb.test(text: "00012345", isOptional: false, matches: .invalid(TextFieldElement.Account.AUBECSAccountNumberConfiguration.incompleteError))
     }
 
 }

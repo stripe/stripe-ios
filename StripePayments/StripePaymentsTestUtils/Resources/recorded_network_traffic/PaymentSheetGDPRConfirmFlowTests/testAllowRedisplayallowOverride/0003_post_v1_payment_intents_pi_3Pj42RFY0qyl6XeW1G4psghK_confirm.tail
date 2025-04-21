@@ -1,0 +1,114 @@
+POST
+https:\/\/api\.stripe\.com\/v1\/payment_intents\/pi_3Pj42RFY0qyl6XeW1G4psghK\/confirm$
+200
+application/json
+access-control-allow-methods: GET,HEAD,PUT,PATCH,POST,DELETE
+content-security-policy: report-uri https://q.stripe.com/csp-report?p=v1%2Fpayment_intents%2F%3Aintent%2Fconfirm; block-all-mixed-content; default-src 'none'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'
+Server: nginx
+Cache-Control: no-cache, no-store
+reporting-endpoints: coop="https://q.stripe.com/coop-report?s=payins-bapi-srv"
+Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
+cross-origin-opener-policy-report-only: same-origin; report-to="coop"
+Access-Control-Allow-Origin: *
+stripe-should-retry: false
+x-stripe-priority-routing-enabled: true
+report-to: {"group":"coop","max_age":8640,"endpoints":[{"url":"https://q.stripe.com/coop-report?s=payins-bapi-srv"}],"include_subdomains":true}
+request-id: req_gdh8Sd6Wb3ZhT3
+x-stripe-routing-context-priority-tier: api-testmode
+Content-Length: 1918
+Vary: Origin
+Date: Thu, 01 Aug 2024 18:47:49 GMT
+original-request: req_gdh8Sd6Wb3ZhT3
+stripe-version: 2020-08-27
+idempotency-key: d4df975d-b033-4b48-be16-ed2f90184005
+access-control-expose-headers: Request-Id, Stripe-Manage-Version, Stripe-Should-Retry, X-Stripe-External-Auth-Required, X-Stripe-Privileged-Session-Required
+access-control-max-age: 300
+access-control-allow-credentials: true
+Content-Type: application/json
+x-content-type-options: nosniff
+X-Stripe-Mock-Request: client_secret=pi_3Pj42RFY0qyl6XeW1G4psghK_secret_FbAp2w0xB2sDTpMKgJtYlOkCy&expand\[0]=payment_method&payment_method_data\[allow_redisplay]=always&payment_method_data\[billing_details]\[address]\[country]=US&payment_method_data\[billing_details]\[address]\[postal_code]=65432&payment_method_data\[card]\[cvc]=123&payment_method_data\[card]\[exp_month]=12&payment_method_data\[card]\[exp_year]=32&payment_method_data\[card]\[number]=4242424242424242&payment_method_data\[payment_user_agent]=.*&payment_method_data\[type]=card&payment_method_options\[card]\[setup_future_usage]=&return_url=https%3A\/\/foo\.com&use_stripe_sdk=true
+
+{
+  "payment_method_configuration_details" : null,
+  "canceled_at" : null,
+  "source" : null,
+  "amount" : 5050,
+  "capture_method" : "automatic",
+  "livemode" : false,
+  "shipping" : null,
+  "status" : "succeeded",
+  "object" : "payment_intent",
+  "currency" : "usd",
+  "last_payment_error" : null,
+  "amount_subtotal" : 5050,
+  "automatic_payment_methods" : null,
+  "cancellation_reason" : null,
+  "next_action" : null,
+  "total_details" : {
+    "amount_discount" : 0,
+    "amount_tax" : 0
+  },
+  "payment_method" : {
+    "object" : "payment_method",
+    "id" : "pm_1Pj42SFY0qyl6XeWv9Wlojqx",
+    "billing_details" : {
+      "email" : null,
+      "phone" : null,
+      "name" : null,
+      "address" : {
+        "state" : null,
+        "country" : "US",
+        "line2" : null,
+        "city" : null,
+        "line1" : null,
+        "postal_code" : "65432"
+      }
+    },
+    "card" : {
+      "last4" : "4242",
+      "funding" : "credit",
+      "generated_from" : null,
+      "networks" : {
+        "available" : [
+          "visa"
+        ],
+        "preferred" : null
+      },
+      "brand" : "visa",
+      "checks" : {
+        "address_postal_code_check" : null,
+        "cvc_check" : null,
+        "address_line1_check" : null
+      },
+      "three_d_secure_usage" : {
+        "supported" : true
+      },
+      "wallet" : null,
+      "display_brand" : "visa",
+      "exp_month" : 12,
+      "exp_year" : 2032,
+      "country" : "US"
+    },
+    "livemode" : false,
+    "created" : 1722538068,
+    "allow_redisplay" : "always",
+    "type" : "card",
+    "customer" : "cus_QaEVviOceX4bLh"
+  },
+  "client_secret" : "pi_3Pj42RFY0qyl6XeW1G4psghK_secret_FbAp2w0xB2sDTpMKgJtYlOkCy",
+  "id" : "pi_3Pj42RFY0qyl6XeW1G4psghK",
+  "confirmation_method" : "automatic",
+  "amount_details" : {
+    "tip" : {
+
+    }
+  },
+  "processing" : null,
+  "receipt_email" : null,
+  "payment_method_types" : [
+    "card"
+  ],
+  "setup_future_usage" : "off_session",
+  "created" : 1722538067,
+  "description" : null
+}

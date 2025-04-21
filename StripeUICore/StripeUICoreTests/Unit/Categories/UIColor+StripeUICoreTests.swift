@@ -219,4 +219,44 @@ final class UIColorStripeUICoreTests: XCTestCase {
         XCTAssertEqual(b, 0, accuracy: eps)
         XCTAssertEqual(a, 0.6, accuracy: eps)
     }
+
+    func testAdjustedForContrastDoesNotInfiniteLoop() {
+        let midGray = UIColor(white: 0.5, alpha: 1.0)
+
+        // The maximum contrast ratio to mid-gray is 5.28, ensure that this
+        // returns a color with the maximum contrast ratio that can be achieved
+        let color = midGray.adjustedForContrast(with: midGray, minimumRatio: 5.5)
+        XCTAssertLessThan(color.contrastRatio(to: midGray), 5.5)
+        XCTAssertColorsEqual(color, .white)
+    }
+
+    func testAdjustedForContrastMaximums() {
+        // Tests that
+        let whiteContrast = UIColor.white.adjustedForContrast(with: .white)
+        XCTAssertColorsNotEqual(whiteContrast, .white)
+
+        let blackContrast = UIColor.black.adjustedForContrast(with: .black)
+        XCTAssertColorsNotEqual(blackContrast, .black)
+    }
+}
+
+private extension UIColorStripeUICoreTests {
+    func XCTAssertColorsNotEqual(_ a: UIColor, _ b: UIColor, line: UInt = #line) {
+        XCTAssert(!UIColor.equivalent(a, b), "\"\(a.rgba)\" is equal to \"\(b.rgba)\"", line: line)
+    }
+    func XCTAssertColorsEqual(_ a: UIColor, _ b: UIColor, line: UInt = #line) {
+        XCTAssert(UIColor.equivalent(a, b), "\"\(a.rgba)\" is not equal to \"\(b.rgba)\"", line: line)
+    }
+}
+
+extension UIColor {
+    static func equivalent(_ lhs: UIColor, _ rhs: UIColor) -> Bool {
+        let left = lhs.rgba
+        let right = rhs.rgba
+
+        return left.red == right.red
+        && left.green == right.green
+        && left.blue == right.blue
+        && left.alpha == right.alpha
+    }
 }

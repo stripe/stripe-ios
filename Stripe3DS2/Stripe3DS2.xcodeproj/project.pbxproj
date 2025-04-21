@@ -52,6 +52,12 @@
 		2E2022723BC7A4B2DD5ECE76 /* STDSErrorMessage+Internal.m in Sources */ = {isa = PBXBuildFile; fileRef = 2CB591796654445B8434A501 /* STDSErrorMessage+Internal.m */; };
 		30632F7C730BF8D23B607CF7 /* STDSWarningTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 474F39AA3F47D84F8D54E5B7 /* STDSWarningTests.m */; };
 		30B25163BEDEB99CDD101B5F /* NSString+EmptyChecking.h in Headers */ = {isa = PBXBuildFile; fileRef = A8A77DB1C711B8696B2E5FEF /* NSString+EmptyChecking.h */; };
+		310E6B542C52C9EF006A03EC /* 150-issuer.png in Resources */ = {isa = PBXBuildFile; fileRef = 310E6B4E2C52C9EF006A03EC /* 150-issuer.png */; };
+		310E6B552C52C9EF006A03EC /* 300-issuer.png in Resources */ = {isa = PBXBuildFile; fileRef = 310E6B4F2C52C9EF006A03EC /* 300-issuer.png */; };
+		310E6B562C52C9EF006A03EC /* 150-payment.png in Resources */ = {isa = PBXBuildFile; fileRef = 310E6B502C52C9EF006A03EC /* 150-payment.png */; };
+		310E6B572C52C9EF006A03EC /* 300-payment.png in Resources */ = {isa = PBXBuildFile; fileRef = 310E6B512C52C9EF006A03EC /* 300-payment.png */; };
+		310E6B582C52C9EF006A03EC /* 450-issuer.png in Resources */ = {isa = PBXBuildFile; fileRef = 310E6B522C52C9EF006A03EC /* 450-issuer.png */; };
+		310E6B592C52C9EF006A03EC /* 450-payment.png in Resources */ = {isa = PBXBuildFile; fileRef = 310E6B532C52C9EF006A03EC /* 450-payment.png */; };
 		3192FCC841152A7E5E6F19D6 /* STDSAlreadyInitializedException.h in Headers */ = {isa = PBXBuildFile; fileRef = 1F1FD11407319293954C6D81 /* STDSAlreadyInitializedException.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		319DD1C82B0D50FF0083BA32 /* STDSVisionSupport.h in Headers */ = {isa = PBXBuildFile; fileRef = 319DD1C72B0D50F80083BA32 /* STDSVisionSupport.h */; };
 		31C636A25BF83316EE7EB57D /* STDSThreeDS2Service.h in Headers */ = {isa = PBXBuildFile; fileRef = 5EAA444FA7C82BDA4AD907BF /* STDSThreeDS2Service.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -65,6 +71,7 @@
 		3844F0E21742F43BCB32499A /* STDSDeviceInformationParameter+Private.h in Headers */ = {isa = PBXBuildFile; fileRef = 4869D6E14F01EDB960CB3065 /* STDSDeviceInformationParameter+Private.h */; };
 		390691CA0EAF81418B0C65DB /* UIView+LayoutSupport.m in Sources */ = {isa = PBXBuildFile; fileRef = 8B0F0485B7048DDAA7DA8F9B /* UIView+LayoutSupport.m */; };
 		3909D8028AC485BCCF17B48B /* STDSStackView.m in Sources */ = {isa = PBXBuildFile; fileRef = 1D6269F8B91341C387A911DB /* STDSStackView.m */; };
+		3AD384AE2C76634D009AB784 /* STDSAnalyticsDelegate.h in Headers */ = {isa = PBXBuildFile; fileRef = 3AD384AD2C76634D009AB784 /* STDSAnalyticsDelegate.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		3B430F172A3AD6AA9AFDFC04 /* STDSNavigationBarCustomization.h in Headers */ = {isa = PBXBuildFile; fileRef = E1630D876436E43547FF69CE /* STDSNavigationBarCustomization.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		3C6D16D8E7B5BC865D956A0B /* iOSSnapshotTestCase in Frameworks */ = {isa = PBXBuildFile; productRef = 0118969F6608A92583CC6C98 /* iOSSnapshotTestCase */; };
 		3C88AE37A760B91E93D423CF /* STDSException.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F030410FDABFF833CD8FE46 /* STDSException.m */; };
@@ -227,6 +234,7 @@
 		F0B9EFD359B1AB28A695CB48 /* STDSSynchronousLocationManager.h in Headers */ = {isa = PBXBuildFile; fileRef = C12AE31D386D4A193C00004B /* STDSSynchronousLocationManager.h */; };
 		F13A032A4AF15BB61EA18A8D /* STDSChallengeInformationView.h in Headers */ = {isa = PBXBuildFile; fileRef = C893FD867C964775E68AE85F /* STDSChallengeInformationView.h */; };
 		F28AD6CA8AB1A5DEE7A8F429 /* STDSDebuggerChecker.h in Headers */ = {isa = PBXBuildFile; fileRef = D122FAE093BC4F649CC6E7AB /* STDSDebuggerChecker.h */; };
+		F2D0DB032D4825C600DA26AD /* HTMLCRes.json in Resources */ = {isa = PBXBuildFile; fileRef = F2D0DB022D4825C600DA26AD /* HTMLCRes.json */; };
 		F35963DB86D90320CFA7BCB9 /* STDSExpandableInformationView.h in Headers */ = {isa = PBXBuildFile; fileRef = 939C45AE068CF4F5BEB4C138 /* STDSExpandableInformationView.h */; };
 		F4E8353A470750D9BCEA3CD8 /* CRes.json in Resources */ = {isa = PBXBuildFile; fileRef = 8C6D262891811FB3FE0C947E /* CRes.json */; };
 		F5513045A25210C524A05DF5 /* STDSSelectionCustomization.h in Headers */ = {isa = PBXBuildFile; fileRef = 7CD753D9BBFC378C1B491B00 /* STDSSelectionCustomization.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -367,6 +375,12 @@
 		2EF5AA537586EF706E4056FD /* STDSEllipticCurvePoint.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STDSEllipticCurvePoint.m; sourceTree = "<group>"; };
 		2FCABBF51CBA7F9FEF757B4C /* STDSNotInitializedException.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = STDSNotInitializedException.h; sourceTree = "<group>"; };
 		30D22985091381DFCDF077E9 /* STDSSecTypeUtilitiesTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STDSSecTypeUtilitiesTests.m; sourceTree = "<group>"; };
+		310E6B4E2C52C9EF006A03EC /* 150-issuer.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "150-issuer.png"; sourceTree = "<group>"; };
+		310E6B4F2C52C9EF006A03EC /* 300-issuer.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "300-issuer.png"; sourceTree = "<group>"; };
+		310E6B502C52C9EF006A03EC /* 150-payment.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "150-payment.png"; sourceTree = "<group>"; };
+		310E6B512C52C9EF006A03EC /* 300-payment.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "300-payment.png"; sourceTree = "<group>"; };
+		310E6B522C52C9EF006A03EC /* 450-issuer.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "450-issuer.png"; sourceTree = "<group>"; };
+		310E6B532C52C9EF006A03EC /* 450-payment.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "450-payment.png"; sourceTree = "<group>"; };
 		315AEE1534F9D9974DC1674B /* STDSChallengeResponse.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = STDSChallengeResponse.h; sourceTree = "<group>"; };
 		319DD1C72B0D50F80083BA32 /* STDSVisionSupport.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = STDSVisionSupport.h; sourceTree = "<group>"; };
 		31CDFC312BA8E58100B3DD91 /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
@@ -381,6 +395,7 @@
 		3A8CD68A006F970DDC54469A /* Project-Debug.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "Project-Debug.xcconfig"; sourceTree = "<group>"; };
 		3A9F828840A3B361842E38DE /* STDSChallengeResponseImageObject.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STDSChallengeResponseImageObject.m; sourceTree = "<group>"; };
 		3AA2E6DA60350400C5270E08 /* STDSJSONWebSignature.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = STDSJSONWebSignature.h; sourceTree = "<group>"; };
+		3AD384AD2C76634D009AB784 /* STDSAnalyticsDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = STDSAnalyticsDelegate.h; sourceTree = "<group>"; };
 		3B6B71C61CF5ADC7796441F5 /* STDSCompletionEvent.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STDSCompletionEvent.m; sourceTree = "<group>"; };
 		3B9A821F35B93898A7AC1ADF /* sl-SI */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "sl-SI"; path = "sl-SI.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		3C22D410C297E2C3AFE727A6 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
@@ -582,6 +597,7 @@
 		F112967E9FE8EE02FFFDC313 /* en-GB */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "en-GB"; path = "en-GB.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		F139E48FDEFD921FF410892F /* fi */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fi; path = fi.lproj/Localizable.strings; sourceTree = "<group>"; };
 		F2BC7014D26158AC9D74CC67 /* Stripe3DS2Tests-Debug.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "Stripe3DS2Tests-Debug.xcconfig"; sourceTree = "<group>"; };
+		F2D0DB022D4825C600DA26AD /* HTMLCRes.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = HTMLCRes.json; sourceTree = "<group>"; };
 		F363439353A6DD554FC44AC2 /* STDSOSVersionChecker.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STDSOSVersionChecker.m; sourceTree = "<group>"; };
 		F40CC91AA69F5296B0AA985C /* STDSTransaction.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = STDSTransaction.h; sourceTree = "<group>"; };
 		F4D6DB90E3D01495C1F9BFE9 /* ro-RO */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "ro-RO"; path = "ro-RO.lproj/Localizable.strings"; sourceTree = "<group>"; };
@@ -883,6 +899,12 @@
 		98160E2F8248A228E5EC73F8 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				310E6B4E2C52C9EF006A03EC /* 150-issuer.png */,
+				310E6B502C52C9EF006A03EC /* 150-payment.png */,
+				310E6B4F2C52C9EF006A03EC /* 300-issuer.png */,
+				310E6B512C52C9EF006A03EC /* 300-payment.png */,
+				310E6B522C52C9EF006A03EC /* 450-issuer.png */,
+				310E6B532C52C9EF006A03EC /* 450-payment.png */,
 				7971EB56716D5E2F59053B6D /* acs_challenge.html */,
 			);
 			path = Resources;
@@ -903,6 +925,7 @@
 			children = (
 				237977B021FE538E5E4FA35C /* ARes.json */,
 				8C6D262891811FB3FE0C947E /* CRes.json */,
+				F2D0DB022D4825C600DA26AD /* HTMLCRes.json */,
 				E12798864D5CFFB7157D4CF5 /* ErrorMessage.json */,
 			);
 			path = JSON;
@@ -970,6 +993,7 @@
 				97163B5E9598CA3A298920B9 /* STDSTextFieldCustomization.m */,
 				5EAA444FA7C82BDA4AD907BF /* STDSThreeDS2Service.h */,
 				77646CEC7EE754F47EDBDA4F /* STDSThreeDS2Service.m */,
+				3AD384AD2C76634D009AB784 /* STDSAnalyticsDelegate.h */,
 				5E6A9565E97DF2544254AA94 /* STDSThreeDSProtocolVersion.h */,
 				F40CC91AA69F5296B0AA985C /* STDSTransaction.h */,
 				5FDE2481364C454058BF2377 /* STDSTransaction.m */,
@@ -1033,6 +1057,7 @@
 				0615DD02C0B022AE207DADF0 /* STDSUICustomization.h in Headers */,
 				9F0F6085FBD892BF5F14CF86 /* STDSWarning.h in Headers */,
 				893713F4464A88FAB92BC2C6 /* Stripe3DS2.h in Headers */,
+				3AD384AE2C76634D009AB784 /* STDSAnalyticsDelegate.h in Headers */,
 				425849564519D6454DDA3424 /* NSData+JWEHelpers.h in Headers */,
 				1134F81C7D015BA5EA52BFD1 /* NSDictionary+DecodingHelpers.h in Headers */,
 				3617B07ABD719F1A5F8302FA /* NSError+Stripe3DS2.h in Headers */,
@@ -1268,6 +1293,7 @@
 				5B16918BF5F67B0F5FB1AFD5 /* ARes.json in Resources */,
 				F4E8353A470750D9BCEA3CD8 /* CRes.json in Resources */,
 				E7A72BB7CC8DE8DA7FA0DEC5 /* ErrorMessage.json in Resources */,
+				F2D0DB032D4825C600DA26AD /* HTMLCRes.json in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1293,6 +1319,12 @@
 			buildActionMask = 2147483647;
 			files = (
 				7C20B044ACFD3A50FD4AC9A8 /* acs_challenge.html in Resources */,
+				310E6B542C52C9EF006A03EC /* 150-issuer.png in Resources */,
+				310E6B592C52C9EF006A03EC /* 450-payment.png in Resources */,
+				310E6B552C52C9EF006A03EC /* 300-issuer.png in Resources */,
+				310E6B572C52C9EF006A03EC /* 300-payment.png in Resources */,
+				310E6B582C52C9EF006A03EC /* 450-issuer.png in Resources */,
+				310E6B562C52C9EF006A03EC /* 150-payment.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

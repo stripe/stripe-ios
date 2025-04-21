@@ -14,6 +14,7 @@ final class InstitutionNoResultsView: UIView {
     private let didSelectManuallyEnterDetails: (() -> Void)?
 
     init(
+        appearance: FinancialConnectionsAppearance,
         didSelectManuallyEnterDetails: (() -> Void)?
     ) {
         self.didSelectManuallyEnterDetails = didSelectManuallyEnterDetails
@@ -32,7 +33,7 @@ final class InstitutionNoResultsView: UIView {
 
         let titleLabel = AttributedLabel(
             font: .heading(.large),
-            textColor: .textDefault
+            textColor: FinancialConnectionsAppearance.Colors.textDefault
         )
         titleLabel.textAlignment = .center
         titleLabel.setText(
@@ -47,10 +48,10 @@ final class InstitutionNoResultsView: UIView {
             font: .body(.medium),
             boldFont: .body(.mediumEmphasized),
             linkFont: .body(.mediumEmphasized),
-            textColor: .textDefault,
-            linkColor: .textActionPrimaryFocused,
+            textColor: FinancialConnectionsAppearance.Colors.textDefault,
+            linkColor: appearance.colors.textAction,
             showLinkUnderline: false,
-            alignCenter: true
+            alignment: .center
         )
         subtitleLabel.accessibilityIdentifier = "institution_search_no_results_subtitle"
         if let didSelectManuallyEnterDetails = didSelectManuallyEnterDetails {
@@ -101,6 +102,7 @@ private struct InstitutionNoResultsViewUIViewRepresentable: UIViewRepresentable 
 
     func makeUIView(context: Context) -> InstitutionNoResultsView {
         InstitutionNoResultsView(
+            appearance: .stripe,
             didSelectManuallyEnterDetails: (showManualEntry ? {} : nil)
         )
     }

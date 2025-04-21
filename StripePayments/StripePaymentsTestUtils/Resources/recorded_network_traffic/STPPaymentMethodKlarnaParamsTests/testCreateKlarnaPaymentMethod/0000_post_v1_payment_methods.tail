@@ -1,0 +1,55 @@
+POST
+https:\/\/api\.stripe\.com\/v1\/payment_methods$
+200
+application/json
+access-control-allow-methods: GET,HEAD,PUT,PATCH,POST,DELETE
+content-security-policy: report-uri https://q.stripe.com/csp-report?p=v1%2Fpayment_methods; block-all-mixed-content; default-src 'none'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'
+Server: nginx
+Cache-Control: no-cache, no-store
+reporting-endpoints: coop="https://q.stripe.com/coop-report?s=payins-bapi-srv"
+Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
+cross-origin-opener-policy-report-only: same-origin; report-to="coop"
+Access-Control-Allow-Origin: *
+stripe-should-retry: false
+x-stripe-priority-routing-enabled: true
+report-to: {"group":"coop","max_age":8640,"endpoints":[{"url":"https://q.stripe.com/coop-report?s=payins-bapi-srv"}],"include_subdomains":true}
+request-id: req_cC81PPXMlYwKoJ
+x-stripe-routing-context-priority-tier: api-testmode
+Content-Length: 487
+Vary: Origin
+Date: Wed, 31 Jul 2024 02:11:02 GMT
+original-request: req_cC81PPXMlYwKoJ
+stripe-version: 2020-08-27
+idempotency-key: 665d9c31-2f5e-4be3-a192-69cbbcc6a519
+access-control-expose-headers: Request-Id, Stripe-Manage-Version, Stripe-Should-Retry, X-Stripe-External-Auth-Required, X-Stripe-Privileged-Session-Required
+access-control-max-age: 300
+access-control-allow-credentials: true
+Content-Type: application/json
+x-content-type-options: nosniff
+X-Stripe-Mock-Request: allow_redisplay=unspecified&billing_details\[address]\[city]=New%20York&billing_details\[address]\[country]=US&billing_details\[address]\[line1]=55%20John%20St&billing_details\[address]\[line2]=%233B&billing_details\[address]\[postal_code]=10002&billing_details\[address]\[state]=NY&billing_details\[email]=foo%40example\.com&billing_details\[name]=John%20Smith&payment_user_agent=.*&type=klarna
+
+{
+  "object" : "payment_method",
+  "klarna" : {
+
+  },
+  "id" : "pm_1PiS0IFY0qyl6XeWNEaOBKcj",
+  "billing_details" : {
+    "email" : "foo@example.com",
+    "phone" : null,
+    "name" : "John Smith",
+    "address" : {
+      "state" : "NY",
+      "country" : "US",
+      "line2" : "#3B",
+      "city" : "New York",
+      "line1" : "55 John St",
+      "postal_code" : "10002"
+    }
+  },
+  "livemode" : false,
+  "created" : 1722391862,
+  "allow_redisplay" : "unspecified",
+  "type" : "klarna",
+  "customer" : null
+}

@@ -6,6 +6,7 @@
 //
 
 import Foundation
+@_spi(STP) import StripeFinancialConnections
 
 /// Provides an interface to customize the playground configuration
 /// (which is stored as a JSON in NSUserDefaults).
@@ -31,16 +32,16 @@ final class PlaygroundConfiguration {
         }
     }
 
-    // MARK: - Experience
+    // MARK: - Integration Type
 
-    enum Experience: String, CaseIterable, Identifiable, Hashable {
-        case financialConnections = "financial_connections"
-        case instantDebits = "instant_debits"
+    enum IntegrationType: String, CaseIterable, Identifiable, Hashable {
+        case standalone = "standalone"
+        case paymentElement = "payment_element"
 
         var displayName: String {
             switch self {
-            case .financialConnections: "Financial Connections"
-            case .instantDebits: "Instant Debits"
+            case .standalone: "Standalone"
+            case .paymentElement: "Payment Element"
             }
         }
 
@@ -49,15 +50,61 @@ final class PlaygroundConfiguration {
         }
     }
 
+    private static let integrationTypeKey = "integration_type"
+
+    var integrationType: IntegrationType {
+        get {
+            if
+                let integrationTypeString = configurationStore[Self.integrationTypeKey] as? String,
+                let integrationType = IntegrationType(rawValue: integrationTypeString)
+            {
+                return integrationType
+            } else {
+                return .standalone
+            }
+        }
+        set {
+            configurationStore[Self.integrationTypeKey] = newValue.rawValue
+        }
+    }
+
+    // MARK: - Experience
+
+    enum Experience: String, CaseIterable, Identifiable, Hashable {
+        case financialConnections = "financial_connections"
+        case instantBankPayment = "instant_debits"
+        case linkCardBrand = "link_card_brand"
+
+        var displayName: String {
+            switch self {
+            case .financialConnections: "Financial Connections"
+            case .instantBankPayment: "Instant Bank Payment"
+            case .linkCardBrand: "Link Card Brand"
+            }
+        }
+
+        var id: String {
+            return rawValue
+        }
+
+        var paymentMethods: String {
+            switch self {
+            case .financialConnections: return "['card', 'link', 'us_bank_account']"
+            case .instantBankPayment: return "['card', 'link']"
+            case .linkCardBrand: return "['card']"
+            }
+        }
+    }
+
     private static let experienceKey = "experience"
 
     var experience: Experience {
         get {
             if
-                let sdkTypeString = configurationStore[Self.experienceKey] as? String,
-                let sdkType = Experience(rawValue: sdkTypeString)
+                let experienceString = configurationStore[Self.experienceKey] as? String,
+                let experience = Experience(rawValue: experienceString)
             {
-                return sdkType
+                return experience
             } else {
                 return .financialConnections
             }
@@ -73,9 +120,17 @@ final class PlaygroundConfiguration {
         case automatic = "automatic"
         case web = "web"
         case native = "native"
+        case fcLite = "fc_lite"
 
         var id: String {
             return rawValue
+        }
+
+        var displayName: String {
+            switch self {
+            case .automatic, .web, .native: return rawValue.capitalized
+            case .fcLite: return "FC Lite"
+            }
         }
     }
     private static let sdkTypeKey = "sdk_type"
@@ -94,7 +149,7 @@ final class PlaygroundConfiguration {
             configurationStore[Self.sdkTypeKey] = newValue.rawValue
 
             switch newValue {
-            case .automatic:
+            case .automatic, .fcLite:
                 PlaygroundUserDefaults.enableNative = nil
             case .web:
                 PlaygroundUserDefaults.enableNative = false
@@ -113,19 +168,35 @@ final class PlaygroundConfiguration {
         let displayName: String
         /// whether on the 'backend' we provide test mode keys
         let isTestModeSupported: Bool
+        /// for connect
+        let stripeAccount: String?
 
         var id: String {
             return customId.rawValue
+        }
+
+        init(
+            customId: CustomId,
+            displayName: String,
+            isTestModeSupported: Bool,
+            stripeAccount: String? = nil
+        ) {
+            self.customId = customId
+            self.displayName = displayName
+            self.isTestModeSupported = isTestModeSupported
+            self.stripeAccount = stripeAccount
         }
 
         // The id's should use underscore as "-" is not supported in Glitch
         enum CustomId: String {
             case `default` = "default"
             case networking = "networking"
+            case verified = "verified"
+            case connect = "connect"
             case customKeys = "custom_keys"
             case partnerD = "partner_d"
             case partnerF = "partner_f"
-            case partnerC = "partner_c"
+            case platformC = "platform_c"
             case bugBash = "bug_bash"
         }
     }
@@ -140,6 +211,17 @@ final class PlaygroundConfiguration {
             customId: .networking,
             displayName: "Networking",
             isTestModeSupported: true
+        ),
+        Merchant(
+            customId: .verified,
+            displayName: "Verified",
+            isTestModeSupported: true
+        ),
+        Merchant(
+            customId: .connect,
+            displayName: "Connect",
+            isTestModeSupported: true,
+            stripeAccount: "acct_1PnnD9CY58qxxwvr"
         ),
         Merchant(
             customId: .customKeys,
@@ -157,6 +239,11 @@ final class PlaygroundConfiguration {
             isTestModeSupported: false
         ),
         Merchant(
+            customId: .platformC,
+            displayName: "Platform C",
+            isTestModeSupported: true
+        ),
+        Merchant(
             customId: .bugBash,
             displayName: "Bug Bash",
             isTestModeSupported: true
@@ -164,6 +251,7 @@ final class PlaygroundConfiguration {
 
     ]
     private static let merchantCustomIdKey = "merchant"
+    private static let stripeAccountKey = "stripe_account"
     var merchant: Merchant {
         get {
             if
@@ -185,6 +273,7 @@ final class PlaygroundConfiguration {
                 testMode = false
             }
             configurationStore[Self.merchantCustomIdKey] = newValue.customId.rawValue
+            configurationStore[Self.stripeAccountKey] = newValue.stripeAccount
         }
     }
 
@@ -291,6 +380,36 @@ final class PlaygroundConfiguration {
         }
     }
 
+    // MARK: - Relink Authorization
+
+    private static let customerIdKey = "customer_id"
+    var customerId: String {
+        get {
+            if let customerId = configurationStore[Self.customerIdKey] as? String {
+                return customerId
+            } else {
+                return ""
+            }
+        }
+        set {
+            configurationStore[Self.customerIdKey] = newValue
+        }
+    }
+
+    private static let relinkAuthorizationKey = "relink_authorization"
+    var relinkAuthorization: String {
+        get {
+            if let relinkAuthorization = configurationStore[Self.relinkAuthorizationKey] as? String {
+                return relinkAuthorization
+            } else {
+                return ""
+            }
+        }
+        set {
+            configurationStore[Self.relinkAuthorizationKey] = newValue
+        }
+    }
+
     // MARK: - Permissions
 
     private static let balancesPermissionKey = "balances_permission"
@@ -359,6 +478,42 @@ final class PlaygroundConfiguration {
         }
         set {
             configurationStore[Self.liveEventsKey] = newValue
+        }
+    }
+
+    // MARK: - Experimental
+
+    enum Style: String, CaseIterable, Identifiable, Hashable {
+        case automatic = "automatic"
+        case alwaysLight = "always_light"
+        case alwaysDark = "always_dark"
+
+        var id: String {
+            return rawValue
+        }
+
+        var configurationValue: FinancialConnectionsSheet.Configuration.UserInterfaceStyle {
+            switch self {
+            case .automatic: return .automatic
+            case .alwaysLight: return .alwaysLight
+            case .alwaysDark: return .alwaysDark
+            }
+        }
+    }
+
+    private static let styleKey = "dynamic_style"
+    var style: PlaygroundConfiguration.Style {
+        get {
+            if let styleString = configurationStore[Self.styleKey] as? String,
+               let style = PlaygroundConfiguration.Style(rawValue: styleString) {
+                return style
+            } else {
+                return .automatic
+            }
+        }
+        set {
+            // Save to configuration string
+            configurationStore[Self.styleKey] = newValue.rawValue
         }
     }
 
@@ -468,6 +623,13 @@ final class PlaygroundConfiguration {
         } else {
             self.liveEvents = false
         }
+
+        if let styleString = dictionary[Self.styleKey] as? String,
+           let style = PlaygroundConfiguration.Style(rawValue: styleString) {
+            self.style = style
+        } else {
+            self.style = .automatic
+        }
     }
 }
 
@@ -512,11 +674,8 @@ final class PlaygroundConfigurationStore {
         set {
             do {
                 let configurationData = try JSONSerialization.data(withJSONObject: newValue, options: [])
-                if let configurationString = String(data: configurationData, encoding: .utf8) {
-                    Self.configurationString = configurationString
-                } else {
-                    assertionFailure("unable to convert `configurationData` to a `configurationString`")
-                }
+                let configurationString = String(decoding: configurationData, as: UTF8.self)
+                Self.configurationString = configurationString
             } catch {
                 assertionFailure("encountered an error when using `JSONSerialization.jsonObject`: \(error.localizedDescription)")
             }

@@ -601,7 +601,9 @@ open class STPPaymentCardTextField: UIControl, UIKeyInput, STPFormTextFieldDeleg
         }
         let postalCodeRequested = viewModel.postalCodeRequested
         viewModel = STPPaymentCardTextFieldViewModel(brandUpdateHandler: { [weak self] in
-            self?.updateImage(for: .number)
+            guard let self else { return }
+            self.updateImage(for: .number)
+            self.onChange()
         })
         viewModel.postalCodeRequested = postalCodeRequested
         onChange()
@@ -727,7 +729,9 @@ open class STPPaymentCardTextField: UIControl, UIKeyInput, STPFormTextFieldDeleg
 
     @objc internal lazy var viewModel: STPPaymentCardTextFieldViewModel = {
         STPPaymentCardTextFieldViewModel(brandUpdateHandler: { [weak self] in
-            self?.updateImage(for: .number)
+            guard let self else { return }
+            self.updateImage(for: .number)
+            onChange()
         })
     }()
 
@@ -2296,11 +2300,7 @@ open class STPPaymentCardTextField: UIControl, UIKeyInput, STPFormTextFieldDeleg
     }
 
     func defaultCVCPlaceholder() -> String? {
-        if viewModel.brand == .amex {
-            return String.Localized.cvv
-        } else {
-            return String.Localized.cvc
-        }
+        return String.Localized.cvc
     }
 
     func updateCVCPlaceholder() {

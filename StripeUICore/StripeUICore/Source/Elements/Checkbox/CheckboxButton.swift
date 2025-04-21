@@ -104,7 +104,7 @@ import UIKit
         }
     }
 
-    public var theme: ElementsUITheme {
+    public var theme: ElementsAppearance {
         didSet {
             checkbox.theme = theme
             updateLabels()
@@ -113,7 +113,7 @@ import UIKit
 
     // MARK: - Initializers
 
-    public init(description: String? = nil, theme: ElementsUITheme = .default) {
+    public init(description: String? = nil, theme: ElementsAppearance = .default) {
         self.theme = theme
         super.init(frame: .zero)
 
@@ -130,12 +130,12 @@ import UIKit
         addGestureRecognizer(didTapGestureRecognizer)
     }
 
-    public convenience init(text: String, description: String? = nil, theme: ElementsUITheme = .default) {
+    public convenience init(text: String, description: String? = nil, theme: ElementsAppearance = .default) {
         self.init(description: description, theme: theme)
         setText(text)
     }
 
-    public convenience init(attributedText: NSAttributedString, description: String? = nil, theme: ElementsUITheme = .default) {
+    public convenience init(attributedText: NSAttributedString, description: String? = nil, theme: ElementsAppearance = .default) {
         self.init(description: description, theme: theme)
         setAttributedText(attributedText)
     }
@@ -238,6 +238,27 @@ import UIKit
             accessibilityHint = hints.compactMap { $0 }.joined(separator: ", ")
         }
     }
+
+    func setUserInteraction(isUserInteractionEnabled: Bool) {
+        isEnabled = isUserInteractionEnabled
+        alpha = isUserInteractionEnabled ? 1.0 : 0.6
+
+    }
+}
+
+extension CheckboxButton: EventHandler {
+    public func handleEvent(_ event: STPEvent) {
+        UIView.animate(withDuration: 0.2) {
+            switch event {
+            case .shouldDisableUserInteraction:
+                self.setUserInteraction(isUserInteractionEnabled: false)
+            case .shouldEnableUserInteraction:
+                self.setUserInteraction(isUserInteractionEnabled: true)
+            default:
+                break
+            }
+        }
+    }
 }
 
 // MARK: - UITextViewDelegate
@@ -265,10 +286,10 @@ class CheckBox: UIView {
             return theme.colors.primary
         }
 
-        return theme.colors.background
+        return theme.colors.parentBackground
     }
 
-    var theme: ElementsUITheme {
+    var theme: ElementsAppearance {
         didSet {
             layer.applyShadow(shadow: theme.shadow)
             setNeedsDisplay()
@@ -279,7 +300,7 @@ class CheckBox: UIView {
         return CGSize(width: 20, height: 20)
     }
 
-    init(theme: ElementsUITheme = .default) {
+    init(theme: ElementsAppearance = .default) {
         self.theme = theme
         super.init(frame: .zero)
 
@@ -313,7 +334,12 @@ class CheckBox: UIView {
             fillColor.setFill()
         }
         borderPath.fill()
-        theme.colors.border.setStroke()
+        if theme.colors.border.rgba.alpha != 0 {
+            theme.colors.border.setStroke()
+        } else {
+            // If the border is clear, fall back to secondaryText
+            theme.colors.secondaryText.setStroke()
+        }
         borderPath.stroke()
 
         if isSelected {

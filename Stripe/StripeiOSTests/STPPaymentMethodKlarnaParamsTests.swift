@@ -8,6 +8,7 @@
 
 import Foundation
 import StripeCoreTestUtils
+import StripePaymentsTestUtils
 
 @testable@_spi(STP) import Stripe
 @testable@_spi(STP) import StripeCore
@@ -15,7 +16,7 @@ import StripeCoreTestUtils
 @testable@_spi(STP) import StripePaymentSheet
 @testable@_spi(STP) import StripePaymentsUI
 
-class STPPaymentMethodKlarnaParamsTests: XCTestCase {
+class STPPaymentMethodKlarnaParamsTests: STPNetworkStubbingTestCase {
 
     func testCreateKlarnaPaymentMethod() throws {
         let klarnaParams = STPPaymentMethodKlarnaParams()

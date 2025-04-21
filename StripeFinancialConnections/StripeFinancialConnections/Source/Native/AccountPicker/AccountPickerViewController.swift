@@ -73,10 +73,9 @@ final class AccountPickerViewController: UIViewController {
 
     private lazy var footerView: AccountPickerFooterView = {
         return AccountPickerFooterView(
-            isStripeDirect: dataSource.manifest.isStripeDirect ?? false,
-            businessName: businessName,
-            permissions: dataSource.manifest.permissions,
+            dataAccessNotice: dataSource.accountPickerPane?.dataAccessNotice,
             singleAccount: dataSource.manifest.singleAccount,
+            appearance: dataSource.manifest.appearance,
             didSelectLinkAccounts: { [weak self] in
                 guard let self = self else {
                     return
@@ -102,13 +101,14 @@ final class AccountPickerViewController: UIViewController {
                 if let dataAccessNotice = self.dataSource.dataAccessNotice {
                     let dataAccessNoticeViewController = DataAccessNoticeViewController(
                         dataAccessNotice: dataAccessNotice,
+                        appearance: self.dataSource.manifest.appearance,
                         didSelectUrl: { [weak self] url in
                             guard let self = self else { return }
                             AuthFlowHelpers.handleURLInTextFromBackend(
                                 url: url,
                                 pane: .accountPicker,
                                 analyticsClient: self.dataSource.analyticsClient,
-                                handleStripeScheme: { _ in }
+                                handleURL: { _, _ in }
                             )
                         }
                     )
@@ -135,7 +135,7 @@ final class AccountPickerViewController: UIViewController {
         super.viewDidLoad()
         // account picker ALWAYS hides the back button
         navigationItem.hidesBackButton = true
-        view.backgroundColor = .customBackgroundColor
+        view.backgroundColor = FinancialConnectionsAppearance.Colors.background
         pollAuthSessionAccounts()
     }
 
@@ -185,7 +185,21 @@ final class AccountPickerViewController: UIViewController {
                     // AND `authSession.skipAccountSelection` is true
                     let skipAccountSelection = (accountsPayload.skipAccountSelection ?? self.dataSource.authSession.skipAccountSelection ?? false)
                     if skipAccountSelection {
-                        self.dataSource.updateSelectedAccounts(accounts)
+                        let selectableAccounts = accounts.filter(\.allowSelectionNonOptional)
+                        if self.dataSource.manifest.singleAccount {
+                            if let firstEnabledAccount = selectableAccounts.first {
+                                self.dataSource.updateSelectedAccounts([firstEnabledAccount])
+                            } else {
+                                self.showNoEligibleAccountsErrorView(
+                                    numberOfIneligibleAccounts: accounts.count,
+                                    error: FinancialConnectionsSheetError.unknown(
+                                        debugDescription: "No eligible accounts found"
+                                    )
+                                )
+                            }
+                        } else {
+                            self.dataSource.updateSelectedAccounts(selectableAccounts)
+                        }
                         self.didSelectLinkAccounts(isSkipAccountSelection: true)
                     } else if
                         self.dataSource.manifest.singleAccount,
@@ -228,25 +242,10 @@ final class AccountPickerViewController: UIViewController {
                         // show "AccountLoadErrorView."
                         numberOfIneligibleAccounts > 0
                     {
-                        let errorView = AccountPickerNoAccountEligibleErrorView(
-                            institution: self.dataSource.institution,
-                            bussinessName: self.businessName,
-                            institutionSkipAccountSelection: self.dataSource.authSession.institutionSkipAccountSelection
-                                ?? false,
+                        self.showNoEligibleAccountsErrorView(
                             numberOfIneligibleAccounts: numberOfIneligibleAccounts,
-                            paymentMethodType: self.dataSource.manifest.paymentMethodType ?? .usBankAccount,
-                            didSelectAnotherBank: self.didSelectAnotherBank
+                            error: error
                         )
-                        // the user will never enter this instance of `AccountPickerViewController`
-                        // again...they can only choose manual entry or go through "ResetFlow"
-                        self.showErrorView(errorView)
-                        self.dataSource
-                            .analyticsClient
-                            .logExpectedError(
-                                error,
-                                errorName: "AccountNoneEligibleForPaymentMethodError",
-                                pane: .accountPicker
-                            )
                     } else {
                         // if we didn't get that specific error back, we don't know what's wrong. could the be
                         // aggregator, could be Stripe.
@@ -255,6 +254,29 @@ final class AccountPickerViewController: UIViewController {
                 }
                 retreivingAccountsLoadingView.removeFromSuperview()
             }
+    }
+
+    private func showNoEligibleAccountsErrorView(numberOfIneligibleAccounts: Int, error: Error) {
+        let errorView = AccountPickerNoAccountEligibleErrorView(
+            institution: self.dataSource.institution,
+            bussinessName: self.businessName,
+            institutionSkipAccountSelection: self.dataSource.authSession.institutionSkipAccountSelection
+                ?? false,
+            numberOfIneligibleAccounts: numberOfIneligibleAccounts,
+            paymentMethodType: self.dataSource.manifest.paymentMethodType ?? .usBankAccount,
+            appearance: self.dataSource.manifest.appearance,
+            didSelectAnotherBank: self.didSelectAnotherBank
+        )
+        // the user will never enter this instance of `AccountPickerViewController`
+        // again...they can only choose manual entry or go through "ResetFlow"
+        self.showErrorView(errorView)
+        self.dataSource
+            .analyticsClient
+            .logExpectedError(
+                error,
+                errorName: "AccountNoneEligibleForPaymentMethodError",
+                pane: .accountPicker
+            )
     }
 
     private func displayAccounts(
@@ -266,6 +288,7 @@ final class AccountPickerViewController: UIViewController {
             enabledAccounts: enabledAccounts,
             disabledAccounts: disabledAccounts,
             institution: dataSource.institution,
+            appearance: dataSource.manifest.appearance,
             delegate: self
         )
         self.accountPickerSelectionView = accountPickerSelectionView
@@ -328,6 +351,7 @@ final class AccountPickerViewController: UIViewController {
     private func showAccountLoadErrorView(error: Error) {
         let errorView = AccountPickerAccountLoadErrorView(
             institution: dataSource.institution,
+            appearance: dataSource.manifest.appearance,
             didSelectAnotherBank: didSelectAnotherBank,
             didSelectTryAgain: didSelectTryAgain,
             didSelectEnterBankDetailsManually: didSelectManualEntry

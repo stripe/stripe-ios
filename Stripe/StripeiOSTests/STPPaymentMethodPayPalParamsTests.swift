@@ -8,8 +8,9 @@
 //
 
 import StripeCoreTestUtils
+import StripePaymentsTestUtils
 
-class STPPaymentMethodPayPalParamsTests: XCTestCase {
+class STPPaymentMethodPayPalParamsTests: STPNetworkStubbingTestCase {
     func testCreatePayPalPaymentMethod() {
         let client = STPAPIClient(publishableKey: STPTestingDefaultPublishableKey)
         let payPalParams = STPPaymentMethodPayPalParams()

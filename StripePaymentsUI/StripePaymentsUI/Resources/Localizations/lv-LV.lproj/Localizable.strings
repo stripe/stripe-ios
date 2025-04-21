@@ -2,6 +2,8 @@
 
 "%1$@ ending in %2$@" = "%1$@, kuras numura pēdējie cipari ir %2$@";
 
+"%1$@ is not accepted" = "%1$@ netiek pieņemts";
+
 "Address line 2 (optional)" = "2. adreses rindiņa (nav obligāti)";
 
 "Apple Pay" = "Apple Pay";
@@ -10,13 +12,9 @@
 
 "Bank Account" = "Bankas konts";
 
-"Billing Address" = "Norēķinu adrese";
-
 "Billing address" = "Norēķinu adrese";
 
 "CVC" = "CVC";
-
-"CVV" = "CVV";
 
 "Card information" = "Kartes informācija";
 
@@ -38,9 +36,13 @@
 
 "The BSB you entered is invalid." = "Ievadītais BSB nav derīgs.";
 
+"The selected brand is not allowed" = "Atlasītais zīmols nav atļauts";
+
 "To scan your card, allow camera access in Settings." = "Lai noskenētu karti, Iestatījumos atļaujiet piekļuvi kamerai.";
 
 "Your ZIP is invalid." = "Pasta indekss nav derīgs.";
+
+"Your card has expired." = "Kartes derīguma termiņš ir beidzies.";
 
 "Your card number is incomplete." = "Kartes numurs nav pilnīgs.";
 

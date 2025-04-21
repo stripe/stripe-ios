@@ -19,11 +19,13 @@ final class TerminalErrorViewController: UIViewController {
 
     private let error: Error
     private let allowManualEntry: Bool
+    private let appearance: FinancialConnectionsAppearance
     weak var delegate: TerminalErrorViewControllerDelegate?
 
-    init(error: Error, allowManualEntry: Bool) {
+    init(error: Error, allowManualEntry: Bool, appearance: FinancialConnectionsAppearance) {
         self.error = error
         self.allowManualEntry = allowManualEntry
+        self.appearance = appearance
         super.init(nibName: nil, bundle: nil)
     }
 
@@ -33,11 +35,12 @@ final class TerminalErrorViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .customBackgroundColor
+        view.backgroundColor = FinancialConnectionsAppearance.Colors.background
         navigationItem.hidesBackButton = true
 
         let terminalErrorView = TerminalErrorView(
-            allowManualEntry: true,
+            allowManualEntry: allowManualEntry,
+            appearance: appearance,
             didSelectManualEntry: { [weak self] in
                 guard let self = self else { return }
                 self.delegate?.terminalErrorViewControllerDidSelectManualEntry(self)

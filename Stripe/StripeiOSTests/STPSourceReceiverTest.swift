@@ -43,6 +43,6 @@ class STPSourceReceiverTest: XCTestCase {
         XCTAssertEqual(receiver?.amountReceived, NSNumber(value: 200))
         XCTAssertEqual(receiver?.amountReturned, NSNumber(value: 100))
 
-        XCTAssertEqual(receiver?.allResponseFields as! NSDictionary, response as! NSDictionary)
+        XCTAssertEqual(receiver!.allResponseFields as NSDictionary, response! as NSDictionary)
     }
 }

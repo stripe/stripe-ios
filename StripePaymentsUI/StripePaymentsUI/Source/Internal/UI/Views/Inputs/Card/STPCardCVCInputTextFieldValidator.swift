@@ -15,7 +15,7 @@ class STPCardCVCInputTextFieldValidator: STPInputTextFieldValidator {
     override var defaultErrorMessage: String? {
         return STPLocalizedString(
             "Your card's security code is invalid.",
-            "Error message for card entry form when CVC/CVV is invalid"
+            "Error message for card entry form when CVC is invalid"
         )
     }
 

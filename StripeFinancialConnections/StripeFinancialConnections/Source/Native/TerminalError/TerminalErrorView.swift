@@ -11,6 +11,7 @@ import UIKit
 
 func TerminalErrorView(
     allowManualEntry: Bool,
+    appearance: FinancialConnectionsAppearance,
     didSelectManualEntry: @escaping () -> Void,
     didSelectClose: @escaping () -> Void
 ) -> UIView {
@@ -18,7 +19,8 @@ func TerminalErrorView(
         contentView: PaneLayoutView.createContentView(
             iconView: RoundedIconView(
                 image: .image(.warning_triangle),
-                style: .circle
+                style: .circle,
+                appearance: appearance
             ),
             title: STPLocalizedString(
                 "Something went wrong",
@@ -56,7 +58,8 @@ func TerminalErrorView(
                         }
                     )
                 }
-            }()
+            }(),
+            appearance: appearance
         ).footerView
     ).createView()
 }

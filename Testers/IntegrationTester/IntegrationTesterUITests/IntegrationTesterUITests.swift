@@ -54,12 +54,43 @@ class IntegrationTesterUICardEntryTests: IntegrationTesterUITests {
 }
 
 class IntegrationTesterUICardTests: IntegrationTesterUITests {
+
     func testStandardCustomCard3DS2() throws {
-        testAuthentication(cardNumber: "4000000000003220", confirmationBehavior: .threeDS2)
+        testOOBAuthentication(cardNumber: "4000000000003220")
+    }
+
+    let alwaysOobCard = "4000582600000094"
+    func testOOB3DS2() throws {
+        testOOBAuthentication(cardNumber: alwaysOobCard)
     }
 
     func testDeclinedCard() throws {
         testAuthentication(cardNumber: "4000000000000002", expectedResult: "declined")
+    }
+
+    let alwaysOtpCard = "4000582600000045"
+    func testOtp3DS2() throws {
+        testOtpAuthentication(cardNumber: alwaysOtpCard)
+    }
+
+    let alwaysSingleSelectCard = "4000582600000102"
+    func testSingleSelect3DS2() throws {
+        testSingleSelectAuthentication(cardNumber: alwaysSingleSelectCard)
+    }
+
+    let alwaysMultiSelectCard = "4000582600000110"
+    func testMultiSelect3DS2() throws {
+        testMultiSelectAuthentication(cardNumber: alwaysMultiSelectCard)
+    }
+
+    let hsbcCard = "4000582600000292"
+    func testHSBCHTMLIssue() throws {
+        testHSBCWebViewLinksTrigger(cardNumber: hsbcCard)
+    }
+
+    let browserFallbackCard = "4000582600000060"
+    func testBrowserFallback() throws {
+        testBrowserFallbackAuthentication(cardNumber: browserFallbackCard)
     }
 }
 
@@ -112,31 +143,19 @@ class IntegrationTesterUIPMTests: IntegrationTesterUITests {
         XCTAssertNotNil(statusView.label.range(of: "complete!"))
     }
 
-    func testAllIntegrationMethods() throws {
-        for integrationMethod in IntegrationMethod.allCases {
-            print("Testing \(integrationMethod.rawValue)")
-            switch integrationMethod {
-            case .iDEAL, .przelewy24, .bancontact, .eps, .afterpay, .sofort, .paypal:
-                testNoInputIntegrationMethod(integrationMethod, shouldConfirm: true)
-            case .alipay:
-                testAppToAppRedirect(integrationMethod)
-            case .weChatPay:
-//                testAppToAppRedirectWithoutReturnURL(integrationMethod)
-                // TODO: WeChat Pay is currently unavailable
-                break
-            case .bacsDebit, .sepaDebit:
-                testNoInputIntegrationMethod(integrationMethod, shouldConfirm: false)
-            case .card, .cardSetupIntents, .aubecsDebit, .applePay, .klarna, .fpx:
-                // Tested in method-specific functions.
-                break
-            case .grabpay:
-                // TODO: GrabPay is currently broken
-                break
-            case .oxxo:
-                // TODO: OXXO is currently broken
-                break
-            }
-        }
+    // Exercise the ASWebAuthenticationSession flow
+    func testASWebAuthUsingPaypal() throws {
+        testNoInputIntegrationMethod(.paypal, shouldConfirm: true)
+    }
+
+    // Exercise the app to app redirect flow, including Safari
+    func testAppToAppRedirectUsingAlipay() throws {
+        testAppToAppRedirect(.alipay)
+    }
+
+    // Test a standard payment method using SFSafariViewController
+    func testSFSafariViewControllerUsingBancontact() throws {
+        testNoInputIntegrationMethod(.bancontact, shouldConfirm: true)
     }
 
     func testAUBECSDebit() {
@@ -200,27 +219,6 @@ class IntegrationTesterUIPMTests: IntegrationTesterUITests {
         XCTAssertNotNil(statusView.label.range(of: "Payment complete"))
     }
 
-    func testFPX() {
-        self.popToMainMenu()
-
-        let tablesQuery = app.collectionViews
-        let rowForPaymentMethod = tablesQuery.cells.buttons["FPX"]
-        rowForPaymentMethod.scrollToAndTap(in: app)
-
-        let maybank = app.tables.staticTexts["Maybank2U"]
-        XCTAssertTrue(maybank.waitForExistence(timeout: 60.0))
-        maybank.tap()
-
-        let webViewsQuery = app.webViews
-        let completeAuth = webViewsQuery.descendants(matching: .any)["AUTHORIZE TEST PAYMENT"].firstMatch
-        XCTAssertTrue(completeAuth.waitForExistence(timeout: 60.0))
-        completeAuth.forceTapElement()
-
-        let statusView = app.staticTexts["Payment status view"]
-        XCTAssertTrue(statusView.waitForExistence(timeout: 10.0))
-        XCTAssertNotNil(statusView.label.range(of: "Payment complete"))
-    }
-
     func testKlarna() {
         self.popToMainMenu()
         let tablesQuery = app.collectionViews
@@ -234,10 +232,10 @@ class IntegrationTesterUIPMTests: IntegrationTesterUITests {
 
         // Klarna uses ASWebAuthenticationSession, tap continue to allow the web view to open:
         let springboard = XCUIApplication(bundleIdentifier: "com.apple.springboard")
-        springboard.buttons["Continue"].tap()
+        springboard.buttons["Continue"].waitForExistenceAndTap(timeout: 3)
 
         // This is where we'd fill out Klarna's forms, but we'll just cancel for now
-        app.buttons["Cancel"].tap()
+        app.buttons["Cancel"].waitForExistenceAndTap(timeout: 3)
 
         let statusView = app.staticTexts["Payment status view"]
         XCTAssertTrue(statusView.waitForExistence(timeout: 10.0))
@@ -284,12 +282,12 @@ class IntegrationTesterUITests: XCTestCase {
         numberField.tap()
         numberField.typeText(number)
         let expField = app.textFields["expiration date"]
+        _ = expField.waitForExistence(timeout: 10)
         expField.typeText("1228")
+        let cvcField = app.textFields["CVC"]
         if STPCardValidator.brand(forNumber: number) == .amex {
-            let cvcField = app.textFields["CVV"]
             cvcField.typeText("1234")
         } else {
-            let cvcField = app.textFields["CVC"]
             cvcField.typeText("123")
         }
         let postalField = app.textFields["ZIP"]
@@ -306,7 +304,7 @@ class IntegrationTesterUITests: XCTestCase {
         try! fillCardData(app, number: cardNumber)
 
         let buyButton = app.buttons["Buy"]
-        XCTAssertTrue(buyButton.waitForExistence(timeout: 10.0))
+        XCTAssertTrue(buyButton.waitForExistence(timeout: 60.0))
         buyButton.forceTapElement()
 
         switch confirmationBehavior {
@@ -327,6 +325,183 @@ class IntegrationTesterUITests: XCTestCase {
         XCTAssertNotNil(statusView.label.range(of: expectedResult))
     }
 
+    func testHSBCWebViewLinksTrigger(cardNumber: String) {
+        print("Testing \(cardNumber)")
+
+        self.popToMainMenu()
+        let tablesQuery = app.collectionViews
+
+        let cardExampleElement = tablesQuery.cells.buttons["Card"]
+        cardExampleElement.tap()
+        try! fillCardData(app, number: cardNumber)
+
+        let buyButton = app.buttons["Buy"]
+        XCTAssertTrue(buyButton.waitForExistence(timeout: 60.0))
+        buyButton.forceTapElement()
+
+        let oobChallengeScreenPredicate = NSPredicate(format: "label ==[c] 'OTP'")
+        let challengeText = app.staticTexts.matching(oobChallengeScreenPredicate).element
+        XCTAssertTrue(challengeText.waitForExistence(timeout: 10))
+        challengeText.forceTapElement()
+
+        let submitButton = app.buttons["Submit"]
+        XCTAssertTrue(submitButton.waitForExistence(timeout: 10.0))
+        submitButton.forceTapElement()
+
+        let enterCodePredicate = NSPredicate(format: "placeholderValue CONTAINS[c] 'Enter OTP here'")
+        let enterCodeText = app.textFields.matching(enterCodePredicate).element
+        XCTAssertTrue(enterCodeText.waitForExistence(timeout: 10))
+        enterCodeText.tap()
+        enterCodeText.typeText("555555")
+
+        let doneButton = app.buttons["Done"]
+        XCTAssertTrue(doneButton.waitForExistence(timeout: 10.0))
+        doneButton.forceTapElement()
+
+        let submitCodeButton = app.buttons["Submit"]
+        XCTAssertTrue(submitCodeButton.waitForExistence(timeout: 10.0))
+        submitCodeButton.forceTapElement()
+
+        let statusView = app.staticTexts["Payment status view"]
+        XCTAssertTrue(statusView.waitForExistence(timeout: 10.0))
+        XCTAssertNotNil(statusView.label.range(of: "Payment complete!"))
+    }
+
+    func testOOBAuthentication(cardNumber: String) {
+        print("Testing \(cardNumber)")
+        self.popToMainMenu()
+        let tablesQuery = app.collectionViews
+
+        let cardExampleElement = tablesQuery.cells.buttons["Card"]
+        cardExampleElement.tap()
+        try! fillCardData(app, number: cardNumber)
+
+        let buyButton = app.buttons["Buy"]
+        XCTAssertTrue(buyButton.waitForExistence(timeout: 60.0))
+        buyButton.forceTapElement()
+
+        let oobChallengeScreenPredicate = NSPredicate(format: "label CONTAINS[c] 'This is a test 3D Secure 2 authentication for a transaction, showing an out-of-band (OOB) flow. In live mode, customers may be asked to open their banking app installed on their phone to complete authentication.'")
+        let challengeText = app.staticTexts.matching(oobChallengeScreenPredicate).element
+        XCTAssertTrue(challengeText.waitForExistence(timeout: 10))
+
+        let completeAuth = app.scrollViews.otherElements.staticTexts["Complete Authentication"]
+        XCTAssertTrue(completeAuth.waitForExistence(timeout: 60.0))
+        completeAuth.tap()
+
+        let statusView = app.staticTexts["Payment status view"]
+        XCTAssertTrue(statusView.waitForExistence(timeout: 10.0))
+        XCTAssertNotNil(statusView.label.range(of: "Payment complete!"))
+    }
+
+    func testOtpAuthentication(cardNumber: String) {
+        print("Testing \(cardNumber)")
+        self.popToMainMenu()
+        let tablesQuery = app.collectionViews
+
+        let cardExampleElement = tablesQuery.cells.buttons["Card"]
+        cardExampleElement.tap()
+        try! fillCardData(app, number: cardNumber)
+
+        let buyButton = app.buttons["Buy"]
+        XCTAssertTrue(buyButton.waitForExistence(timeout: 60.0))
+        buyButton.forceTapElement()
+
+        let challengeScreenPredicate = NSPredicate(format: "label CONTAINS[c] 'This is a test 3D Secure 2 authentication, showing a sample one-time-password (OTP) flow. In live mode, customers may be asked to verify their identify by entering a code sent by their bank to their mobile phone. For this test, enter 424242 to complete authentication, or any other value to fail authentication'")
+        let challengeText = app.staticTexts.matching(challengeScreenPredicate).element
+        XCTAssertTrue(challengeText.waitForExistence(timeout: 10))
+
+        let verificationOTPTextView = app.scrollViews.otherElements.textFields["Enter your code below:"]
+        XCTAssertTrue(verificationOTPTextView.waitForExistence(timeout: 10.0))
+        verificationOTPTextView.tap()
+        verificationOTPTextView.typeText("424242")
+
+        let completeAuth = app.scrollViews.otherElements.staticTexts["Submit"]
+        XCTAssertTrue(completeAuth.waitForExistence(timeout: 60.0))
+        completeAuth.tap()
+
+        let statusView = app.staticTexts["Payment status view"]
+        XCTAssertTrue(statusView.waitForExistence(timeout: 10.0))
+        XCTAssertNotNil(statusView.label.range(of: "Payment complete!"))
+    }
+
+    func testSingleSelectAuthentication(cardNumber: String) {
+        print("Testing \(cardNumber)")
+        self.popToMainMenu()
+        let tablesQuery = app.collectionViews
+
+        let cardExampleElement = tablesQuery.cells.buttons["Card"]
+        cardExampleElement.tap()
+        try! fillCardData(app, number: cardNumber)
+
+        let buyButton = app.buttons["Buy"]
+        XCTAssertTrue(buyButton.waitForExistence(timeout: 60.0))
+        buyButton.forceTapElement()
+
+        let challengeScreenPredicate = NSPredicate(format: "label CONTAINS[c] 'This is a test 3D Secure 2 authentication for a transaction, showing a sample single-select flow. In live mode, customers may be asked to select a phone number to receive a one-time password.'")
+        let challengeText = app.staticTexts.matching(challengeScreenPredicate).element
+        XCTAssertTrue(challengeText.waitForExistence(timeout: 10))
+
+        let completeAuth = app.scrollViews.otherElements.staticTexts["Submit"]
+        XCTAssertTrue(completeAuth.waitForExistence(timeout: 60.0))
+        completeAuth.tap()
+
+        let statusView = app.staticTexts["Payment status view"]
+        XCTAssertTrue(statusView.waitForExistence(timeout: 10.0))
+        XCTAssertNotNil(statusView.label.range(of: "Payment complete!"))
+    }
+
+    func testMultiSelectAuthentication(cardNumber: String) {
+        print("Testing \(cardNumber)")
+        self.popToMainMenu()
+        let tablesQuery = app.collectionViews
+
+        let cardExampleElement = tablesQuery.cells.buttons["Card"]
+        cardExampleElement.tap()
+        try! fillCardData(app, number: cardNumber)
+
+        let buyButton = app.buttons["Buy"]
+        XCTAssertTrue(buyButton.waitForExistence(timeout: 60.0))
+        buyButton.forceTapElement()
+
+        let challengeScreenPredicate = NSPredicate(format: "label CONTAINS[c] 'This is a test 3D Secure 2 authentication for a transaction, showing a sample multi-select flow. In live mode, customers may be asked to answer a security question.'")
+        let challengeText = app.staticTexts.matching(challengeScreenPredicate).element
+        XCTAssertTrue(challengeText.waitForExistence(timeout: 10))
+
+        for button in app.buttons.matching(identifier: "Complete Authentication").allElementsBoundByIndex {
+            button.tap()
+        }
+
+        let completeAuth = app.scrollViews.otherElements.staticTexts["Submit"]
+        XCTAssertTrue(completeAuth.waitForExistence(timeout: 60.0))
+        completeAuth.tap()
+
+        let statusView = app.staticTexts["Payment status view"]
+        XCTAssertTrue(statusView.waitForExistence(timeout: 10.0))
+        XCTAssertNotNil(statusView.label.range(of: "Payment complete!"))
+    }
+
+    func testBrowserFallbackAuthentication(cardNumber: String) {
+        print("Testing \(cardNumber)")
+        self.popToMainMenu()
+        let tablesQuery = app.collectionViews
+
+        let cardExampleElement = tablesQuery.cells.buttons["Card"]
+        cardExampleElement.tap()
+        try! fillCardData(app, number: cardNumber)
+
+        let buyButton = app.buttons["Buy"]
+        XCTAssertTrue(buyButton.waitForExistence(timeout: 30.0))
+        buyButton.forceTapElement()
+
+        let completeButton = app.buttons["COMPLETE"]
+        XCTAssertTrue(completeButton.waitForExistence(timeout: 30.0))
+        completeButton.forceTapElement()
+
+        let statusView = app.staticTexts["Payment status view"]
+        XCTAssertTrue(statusView.waitForExistence(timeout: 10.0))
+        XCTAssertNotNil(statusView.label.range(of: "Payment complete!"))
+    }
+
     func testNoInputIntegrationMethod(_ integrationMethod: IntegrationMethod, shouldConfirm: Bool) {
         self.popToMainMenu()
         let tablesQuery = app.collectionViews
@@ -341,7 +516,8 @@ class IntegrationTesterUITests: XCTestCase {
         if integrationMethod == .paypal {
             // PayPal uses ASWebAuthenticationSession, tap continue:
             let springboard = XCUIApplication(bundleIdentifier: "com.apple.springboard")
-            XCTAssertTrue(springboard.waitForExistence(timeout: 10.0))
+            let continueButton = springboard.buttons["Continue"]
+            XCTAssertTrue(continueButton.waitForExistence(timeout: 10.0))
             springboard.buttons["Continue"].tap()
         }
 
@@ -370,7 +546,7 @@ class IntegrationTesterUITests: XCTestCase {
         buyButton.forceTapElement()
 
         let safari = XCUIApplication(bundleIdentifier: "com.apple.mobilesafari")
-        XCTAssertTrue(safari.wait(for: .runningForeground, timeout: 10)) // wait for Safari to open
+        XCTAssertTrue(safari.wait(for: .runningForeground, timeout: 15)) // wait for Safari to open
         let webViewsQuery = safari.webViews
         // Sometimes this is a Button, sometimes it's a StaticText. ¯\_(ツ)_/¯
         let completeAuth = webViewsQuery.descendants(matching: .any)["AUTHORIZE TEST PAYMENT"].firstMatch
@@ -378,7 +554,7 @@ class IntegrationTesterUITests: XCTestCase {
         completeAuth.forceTapElement()
 
         let safariOpenButton = safari.buttons["Open"]
-        XCTAssertTrue(safariOpenButton.waitForExistence(timeout: 5.0))
+        XCTAssertTrue(safariOpenButton.waitForExistence(timeout: 30.0))
         if safariOpenButton.exists {
             safariOpenButton.tap()
         }
@@ -420,25 +596,5 @@ class IntegrationTesterUITests: XCTestCase {
         let statusView = app.staticTexts["Payment status view"]
         XCTAssertTrue(statusView.waitForExistence(timeout: 10.0))
         XCTAssertNotNil(statusView.label.range(of: "Payment complete"))
-    }
-}
-
-// There seems to be an issue with our SwiftUI buttons - XCTest fails to scroll to the button's position.
-// Work around this by targeting a coordinate inside the button.
-// https://stackoverflow.com/questions/33422681/xcode-ui-test-ui-testing-failure-failed-to-scroll-to-visible-by-ax-action
-extension XCUIElement {
-    func forceTapElement() {
-        // Tap the middle of the element.
-        // (Sometimes the edges of rounded buttons aren't tappable in certain web elements.)
-        let coordinate: XCUICoordinate = self.coordinate(
-            withNormalizedOffset: CGVector(dx: 0.5, dy: 0.5))
-        coordinate.tap()
-    }
-
-    func scrollToAndTap(in app: XCUIApplication) {
-        while !self.exists {
-            app.swipeUp()
-        }
-        self.tap()
     }
 }

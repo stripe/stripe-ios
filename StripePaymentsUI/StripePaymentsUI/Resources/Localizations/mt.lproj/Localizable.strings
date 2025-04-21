@@ -2,6 +2,8 @@
 
 "%1$@ ending in %2$@" = "%1$@ li jispiċċa %2$@";
 
+"%1$@ is not accepted" = "%1$@ mhix aċċettata";
+
 "Address line 2 (optional)" = "Indirizz linja 2 (mhux obbligatorju)";
 
 "Apple Pay" = "Apple Pay";
@@ -10,13 +12,9 @@
 
 "Bank Account" = "Kont bankarju";
 
-"Billing Address" = "Indirizz tal-Kont";
-
 "Billing address" = "Indirizz tal-kont";
 
 "CVC" = "CVC";
-
-"CVV" = "CVV";
 
 "Card information" = "L-informazzjoni tal-kard";
 
@@ -38,9 +36,13 @@
 
 "The BSB you entered is invalid." = "Il-BSB li daħħalt mhux validu.";
 
+"The selected brand is not allowed" = "Ix-xorta ta' karta magħżula ma tistax tintuża";
+
 "To scan your card, allow camera access in Settings." = "Biex tiskennja l-kard tiegħek, ippermetti l-aċċess tal-kamera fis-Settings.";
 
 "Your ZIP is invalid." = "Il-kodiċi postali tiegħek mhux validu.";
+
+"Your card has expired." = "Il-karta tiegħek skadiet.";
 
 "Your card number is incomplete." = "In-numru tal-kard tiegħek mhux komplut.";
 

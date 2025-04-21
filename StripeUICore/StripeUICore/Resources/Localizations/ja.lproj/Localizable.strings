@@ -1,5 +1,7 @@
 "%@ (optional)" = "%@ (オプション)";
 
+"(not accepted)" = "(受け付けられません)";
+
 "Account number" = "アカウント番号";
 
 "Address" = "住所";
@@ -83,8 +85,6 @@
 "Other" = "その他";
 
 "Parish" = "郡";
-
-"Phone" = "電話番号";
 
 "Phone number" = "電話番号";
 

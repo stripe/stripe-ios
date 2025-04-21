@@ -10,7 +10,7 @@ import Foundation
 @_spi(STP) import StripePayments
 
 /// The response returned by v1/elements/sessions
-final class STPElementsSession: NSObject {
+@_spi(STP) public final class STPElementsSession: NSObject {
     #if DEBUG && targetEnvironment(simulator)
     public static let countryCodeOverride: String? = nil
     #endif
@@ -25,6 +25,12 @@ final class STPElementsSession: NSObject {
 
     /// Link-specific settings for this ElementsSession.
     let linkSettings: LinkSettings?
+
+    /// Experiment assignments and `arb_id` to allow logging exposure events.
+    let experimentsData: ExperimentsData?
+
+    /// Flags for this ElementsSession.
+    let flags: [String: Bool]
 
     /// Country code of the user.
     let countryCode: String?
@@ -43,14 +49,17 @@ final class STPElementsSession: NSObject {
     /// An ordered list of external payment methods to display
     let externalPaymentMethods: [ExternalPaymentMethod]
 
+    /// An ordered list of custom payment methods to display
+    let customPaymentMethods: [CustomPaymentMethod]
+
     let customer: ElementsCustomer?
 
     /// A flag that indicates that this instance was created as a best-effort
     let isBackupInstance: Bool
 
-    let allResponseFields: [AnyHashable: Any]
+    public let allResponseFields: [AnyHashable: Any]
 
-    private init(
+    internal init(
         allResponseFields: [AnyHashable: Any],
         sessionID: String,
         orderedPaymentMethodTypes: [STPPaymentMethodType],
@@ -58,10 +67,13 @@ final class STPElementsSession: NSObject {
         countryCode: String?,
         merchantCountryCode: String?,
         linkSettings: LinkSettings?,
+        experimentsData: ExperimentsData?,
+        flags: [String: Bool],
         paymentMethodSpecs: [[AnyHashable: Any]]?,
         cardBrandChoice: STPCardBrandChoice?,
         isApplePayEnabled: Bool,
         externalPaymentMethods: [ExternalPaymentMethod],
+        customPaymentMethods: [CustomPaymentMethod],
         customer: ElementsCustomer?,
         isBackupInstance: Bool = false
     ) {
@@ -72,10 +84,13 @@ final class STPElementsSession: NSObject {
         self.countryCode = countryCode
         self.merchantCountryCode = merchantCountryCode
         self.linkSettings = linkSettings
+        self.experimentsData = experimentsData
+        self.flags = flags
         self.paymentMethodSpecs = paymentMethodSpecs
         self.cardBrandChoice = cardBrandChoice
         self.isApplePayEnabled = isApplePayEnabled
         self.externalPaymentMethods = externalPaymentMethods
+        self.customPaymentMethods = customPaymentMethods
         self.customer = customer
         self.isBackupInstance = isBackupInstance
         super.init()
@@ -106,10 +121,13 @@ final class STPElementsSession: NSObject {
             countryCode: nil,
             merchantCountryCode: nil,
             linkSettings: nil,
+            experimentsData: nil,
+            flags: [:],
             paymentMethodSpecs: nil,
             cardBrandChoice: STPCardBrandChoice.decodedObject(fromAPIResponse: [:]),
             isApplePayEnabled: true,
             externalPaymentMethods: [],
+            customPaymentMethods: [],
             customer: nil,
             isBackupInstance: true
         )
@@ -163,6 +181,23 @@ extension STPElementsSession: STPAPIResponseDecodable {
             return epms
         }()
 
+        let customPaymentMethods: [CustomPaymentMethod] = {
+            let customPaymentMethodDataKey = "custom_payment_method_data"
+            guard response[customPaymentMethodDataKey] != nil, !(response[customPaymentMethodDataKey] is NSNull) else {
+                return []
+            }
+            guard
+                let cpmsJSON = response[customPaymentMethodDataKey] as? [[AnyHashable: Any]],
+                let cpms = CustomPaymentMethod.decoded(fromAPIResponse: cpmsJSON)
+            else {
+                // We don't want to fail the entire v1/elements/sessions request if we fail to parse custom_payment_methods_data
+                // Instead, fall back to an empty array and log an error.
+                STPAnalyticsClient.sharedClient.logPaymentSheetEvent(event: .paymentSheetElementsSessionCPMLoadFailed)
+                return []
+            }
+            return cpms
+        }()
+
         return self.init(
             allResponseFields: response,
             sessionID: sessionID,
@@ -173,26 +208,59 @@ extension STPElementsSession: STPAPIResponseDecodable {
             linkSettings: LinkSettings.decodedObject(
                 fromAPIResponse: response["link_settings"] as? [AnyHashable: Any]
             ),
+            experimentsData: ExperimentsData.decodedObject(
+                fromAPIResponse: response["experiments_data"] as? [AnyHashable: Any]
+            ),
+            flags: response["flags"] as? [String: Bool] ?? [:],
             paymentMethodSpecs: response["payment_method_specs"] as? [[AnyHashable: Any]],
             cardBrandChoice: cardBrandChoice,
             isApplePayEnabled: isApplePayEnabled,
             externalPaymentMethods: externalPaymentMethods,
+            customPaymentMethods: customPaymentMethods,
             customer: customer
         )
     }
 }
+
+// MARK: - Extensions
 extension STPElementsSession {
+    var isCardBrandChoiceEligible: Bool {
+        return cardBrandChoice?.eligible ?? false
+    }
+
     func allowsRemovalOfPaymentMethodsForPaymentSheet() -> Bool {
         var allowsRemovalOfPaymentMethods = false
         if let customerSession = customer?.customerSession {
-            if customerSession.paymentSheetComponent.enabled,
-               let features = customerSession.paymentSheetComponent.features {
+            if customerSession.mobilePaymentElementComponent.enabled,
+               let features = customerSession.mobilePaymentElementComponent.features {
                 allowsRemovalOfPaymentMethods = features.paymentMethodRemove
             }
         } else {
             allowsRemovalOfPaymentMethods = true
         }
         return allowsRemovalOfPaymentMethods
+    }
+
+    func paymentMethodRemoveLast(configuration: PaymentElementConfiguration) -> Bool{
+        if !configuration.allowsRemovalOfLastSavedPaymentMethod {
+            // Merchant has set local configuration to false, so honor it.
+            return false
+        } else {
+            // Merchant is using client side default, so defer to CustomerSession's value
+            return customer?.customerSession.mobilePaymentElementComponent.features?.paymentMethodRemoveLast ?? true
+        }
+    }
+
+    var paymentMethodSetAsDefaultForPaymentSheet: Bool {
+        return customer?.customerSession.mobilePaymentElementComponent.features?.paymentMethodSetAsDefault ?? false
+    }
+
+    var paymentMethodUpdateForPaymentSheet: Bool {
+        return customer?.customerSession.mobilePaymentElementComponent.enabled ?? false
+    }
+
+    var paymentMethodUpdateForCustomerSheet: Bool {
+        return customer?.customerSession.customerSheetComponent.enabled ?? false
     }
 
     func allowsRemovalOfPaymentMethodsForCustomerSheet() -> Bool {
@@ -207,11 +275,26 @@ extension STPElementsSession {
         }
         return allowsRemovalOfPaymentMethods
     }
+    var paymentMethodRemoveLastForCustomerSheet: Bool {
+        return customer?.customerSession.customerSheetComponent.features?.paymentMethodRemoveLast ?? true
+    }
+
+    var paymentMethodSyncDefaultForCustomerSheet: Bool {
+        return customer?.customerSession.customerSheetComponent.features?.paymentMethodSyncDefault ?? false
+    }
+
+    var isLinkCardBrand: Bool {
+        linkSettings?.linkMode == .linkCardBrand
+    }
+
+    var incentive: PaymentMethodIncentive? {
+        linkSettings?.linkConsumerIncentive.flatMap(PaymentMethodIncentive.init)
+    }
 }
 
 extension STPElementsSession {
-    func savePaymentMethodConsentBehavior() -> PaymentSheetFormFactory.SavePaymentMethodConsentBehavior {
-        guard let paymentMethodSave = customerSessionPaymentSheetPaymentMethodSave() else {
+    var savePaymentMethodConsentBehavior: PaymentSheetFormFactory.SavePaymentMethodConsentBehavior {
+        guard let paymentMethodSave = customerSessionMobilePaymentElementFeatures?.paymentMethodSave else {
             return .legacy
         }
         return paymentMethodSave
@@ -219,17 +302,25 @@ extension STPElementsSession {
         : .paymentSheetWithCustomerSessionPaymentMethodSaveDisabled
     }
 
-    /// Returns the value on CustomerSession's components.payment_sheet.features.payment_method_save
-    /// - Returns:
-    /// -   true, if the value of payment_method_save == "enabled",
-    /// -   false, if the value of payment_method_save == "disabled",
-    /// -   nil, if CustomerSession is not available (using legacy ephemeral key, or payment_sheet component is not enabled)
-    func customerSessionPaymentSheetPaymentMethodSave() -> Bool? {
+    var customerSessionMobilePaymentElementFeatures: MobilePaymentElementComponentFeature? {
         guard let customerSession = customer?.customerSession,
-              customerSession.paymentSheetComponent.enabled,
-              let features = customerSession.paymentSheetComponent.features else {
+              customerSession.mobilePaymentElementComponent.enabled else {
             return nil
         }
-        return features.paymentMethodSave
+        return customerSession.mobilePaymentElementComponent.features
+    }
+}
+
+extension STPElementsSession {
+    func savePaymentMethodConsentBehaviorForCustomerSheet() -> PaymentSheetFormFactory.SavePaymentMethodConsentBehavior {
+        return customerSessionCustomerSheet() ? .customerSheetWithCustomerSession : .legacy
+    }
+
+    func customerSessionCustomerSheet() -> Bool {
+        guard let customerSession = customer?.customerSession,
+              customerSession.customerSheetComponent.enabled else {
+            return false
+        }
+        return true
     }
 }

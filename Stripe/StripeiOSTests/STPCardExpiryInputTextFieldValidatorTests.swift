@@ -78,9 +78,9 @@ class STPCardExpiryInputTextFieldValidatorTests: XCTestCase {
         }
 
         let nineties = "01/95"
-        validator.inputValue = nonsensical
+        validator.inputValue = nineties
         if case .invalid(let errorMessage) = validator.validationState {
-            XCTAssertEqual(errorMessage, "Your card's expiration date is invalid.")
+            XCTAssertEqual(errorMessage, "Your card's expiration year is invalid.")
         } else {
             XCTFail("The 90s are over")
         }
@@ -117,12 +117,12 @@ class STPCardExpiryInputTextFieldValidatorTests: XCTestCase {
     func testExpiryStringFormatsYear() throws {
         let validator = STPCardExpiryInputTextFieldValidator()
 
-        validator.inputValue = "02/24"
+        validator.inputValue = "02/40"
 
         let expiryStrings = try XCTUnwrap(validator.expiryStrings)
 
         XCTAssertEqual(expiryStrings.month, "02")
-        XCTAssertEqual(expiryStrings.year, "2024")
+        XCTAssertEqual(expiryStrings.year, "2040")
     }
 
     func testExpiryStringDoesNotFormatYear() throws {

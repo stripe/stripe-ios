@@ -1,5 +1,7 @@
 "%@ (optional)" = "%@ (optional)";
 
+"(not accepted)" = "(not accepted)";
+
 "Account number" = "Account number";
 
 "Address" = "Address";
@@ -83,8 +85,6 @@
 "Other" = "Other";
 
 "Parish" = "Parish";
-
-"Phone" = "Phone";
 
 "Phone number" = "Phone number";
 

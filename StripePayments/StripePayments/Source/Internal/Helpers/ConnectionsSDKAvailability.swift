@@ -8,7 +8,6 @@
 
 import Foundation
 @_spi(STP) import StripeCore
-import SwiftUI
 import UIKit
 
 @_spi(STP) public struct FinancialConnectionsSDKAvailability {
@@ -16,29 +15,73 @@ import UIKit
         NSClassFromString("StripeFinancialConnections.FinancialConnectionsSDKImplementation")
         as? FinancialConnectionsSDKInterface.Type
 
-    static let isUnitOrUITest: Bool = {
+    static let FinancialConnectionsLiteImplementation: FinancialConnectionsSDKInterface.Type? =
+        NSClassFromString("StripePaymentSheet.FCLiteImplementation")
+        as? FinancialConnectionsSDKInterface.Type
+
+    @_spi(STP) public static var fcLiteKillswitchEnabled: Bool = false
+    @_spi(STP) public static var shouldPreferFCLite: Bool = false
+    // Remove this when ready to release FC Lite:
+    @_spi(STP) public static var fcLiteFeatureEnabled: Bool = false
+
+    private static var FCLiteClassIfEnabled: FinancialConnectionsSDKInterface.Type? {
+        guard fcLiteFeatureEnabled, !fcLiteKillswitchEnabled else {
+            return nil
+        }
+        return Self.FinancialConnectionsLiteImplementation
+    }
+
+    @_spi(STP) public static let analyticsValue: String = {
+        if FinancialConnectionsSDKClass != nil {
+            return "FULL"
+        } else if FCLiteClassIfEnabled != nil {
+            return "LITE"
+        } else {
+            return "NONE"
+        }
+    }()
+
+    static let isUnitTest: Bool = {
         #if targetEnvironment(simulator)
-        let useProductionSDK = ProcessInfo.processInfo.environment["USE_PRODUCTION_FINANCIAL_CONNECTIONS_SDK"] == "true"
-        return !useProductionSDK && (NSClassFromString("XCTest") != nil || ProcessInfo.processInfo.environment["UITesting"] != nil)
+        return NSClassFromString("XCTest") != nil
         #else
             return false
         #endif
     }()
 
+    static let isUITest: Bool = {
+        #if targetEnvironment(simulator)
+        return ProcessInfo.processInfo.environment["UITesting"] != nil
+        #else
+            return false
+        #endif
+    }()
+
+    // Return true for unit tests, the value of `FinancialConnectionsSDKAvailable` for UI tests,
+    // and whether or not the Financial Connections SDK is available otherwise.
+    // Falls back on FC Lite availability.
     @_spi(STP) public static var isFinancialConnectionsSDKAvailable: Bool {
-        // return true for tests
-        if isUnitOrUITest {
+        if isUnitTest {
             return true
+        } else if isUITest {
+            let financialConnectionsSDKAvailable = ProcessInfo.processInfo.environment["FinancialConnectionsSDKAvailable"] == "true"
+            return financialConnectionsSDKAvailable
+        } else {
+            return (FinancialConnectionsSDKClass != nil || FCLiteClassIfEnabled != nil)
         }
-        return FinancialConnectionsSDKClass != nil
     }
 
     static func financialConnections() -> FinancialConnectionsSDKInterface? {
-        if isUnitOrUITest {
+        let financialConnectionsStubbedResult = ProcessInfo.processInfo.environment["FinancialConnectionsStubbedResult"] == "true"
+        if isUnitTest || (isUITest && financialConnectionsStubbedResult) {
             return StubbedConnectionsSDKInterface()
         }
 
-        guard let klass = FinancialConnectionsSDKClass else {
+        let klass: FinancialConnectionsSDKInterface.Type? = shouldPreferFCLite
+            ? (FCLiteClassIfEnabled ?? FinancialConnectionsSDKClass)
+            : (FinancialConnectionsSDKClass ?? FCLiteClassIfEnabled) // Default
+
+        guard let klass else {
             return nil
         }
 
@@ -51,30 +94,26 @@ final class StubbedConnectionsSDKInterface: FinancialConnectionsSDKInterface {
         apiClient: STPAPIClient,
         clientSecret: String,
         returnURL: String?,
+        style: FinancialConnectionsStyle,
+        elementsSessionContext: ElementsSessionContext?,
         onEvent: ((FinancialConnectionsEvent) -> Void)?,
         from presentingViewController: UIViewController,
         completion: @escaping (FinancialConnectionsSDKResult) -> Void
     ) {
         DispatchQueue.main.async {
+            let stubbedBank = FinancialConnectionsLinkedBank(
+                sessionId: "las_123",
+                accountId: "fca_123",
+                displayName: "Test Bank",
+                bankName: "Test Bank",
+                last4: "1234",
+                instantlyVerified: true
+            )
             completion(
                 FinancialConnectionsSDKResult.completed(
-                    .financialConnections(StubbedFinancialConnectionsLinkedBank())
+                    .financialConnections(stubbedBank)
                 )
             )
         }
     }
-}
-
-struct StubbedFinancialConnectionsLinkedBank: FinancialConnectionsLinkedBank {
-    var sessionId: String = "las_123"
-
-    var accountId: String = "fca_123"
-
-    var displayName: String? = "Test Bank"
-
-    var bankName: String? = "Test Bank"
-
-    var last4: String? = "1234"
-
-    var instantlyVerified: Bool = true
 }

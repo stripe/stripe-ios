@@ -39,4 +39,14 @@ struct ElementsCustomer: Equatable, Hashable {
         let defaultPaymentMethod = response["default_payment_method"] as? String
         return ElementsCustomer(paymentMethods: paymentMethods, defaultPaymentMethod: defaultPaymentMethod, customerSession: customerSession)
     }
+
+    func getDefaultPaymentMethod() -> STPPaymentMethod? {
+        return paymentMethods.first { $0.stripeId == defaultPaymentMethod }
+    }
+
+    func getDefaultOrFirstPaymentMethod() -> STPPaymentMethod? {
+        // if customer has a default payment method from the elements session, return the default payment method
+        // otherwise, return the first payment method from the customer's list of saved payment methods
+        return getDefaultPaymentMethod() ?? paymentMethods.first
+    }
 }

@@ -1,4 +1,10 @@
+"An error occurred. Please try again." = "Ocorreu um erro. Tente outra vez.";
+
+"Card brand was not updated. Please try again." = "A bandeira do cartão não foi atualizada. Tente novamente.";
+
 "Close" = "Fechar";
+
+"Default payment method was not updated. Please try again." = "A forma de pagamento padrão não foi atualizada. Tente novamente.";
 
 "Scan Card" = "Digitalizar cartão";
 

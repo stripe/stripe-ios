@@ -15,27 +15,26 @@ import UIKit
  
  For internal SDK use only
  */
-@objc(STP_Internal_DropdownFieldElement)
-@_spi(STP) public class DropdownFieldElement: NSObject {
-    public typealias DidPresent = () -> Void
+@_spi(STP) public final class DropdownFieldElement {
     public typealias DidUpdateSelectedIndex = (Int) -> Void
-    public typealias DidTapClose = () -> Void
 
     public struct DropdownItem {
-        public init(pickerDisplayName: NSAttributedString, labelDisplayName: NSAttributedString, accessibilityValue: String, rawData: String, isPlaceholder: Bool = false) {
+        public init(pickerDisplayName: NSAttributedString, labelDisplayName: NSAttributedString, accessibilityValue: String, rawData: String, isPlaceholder: Bool = false, isDisabled: Bool = false) {
             self.pickerDisplayName = pickerDisplayName
             self.labelDisplayName = labelDisplayName
             self.accessibilityValue = accessibilityValue
             self.isPlaceholder = isPlaceholder
             self.rawData = rawData
+            self.isDisabled = isDisabled
         }
 
-        public init(pickerDisplayName: String, labelDisplayName: String, accessibilityValue: String, rawData: String, isPlaceholder: Bool = false) {
+        public init(pickerDisplayName: String, labelDisplayName: String, accessibilityValue: String, rawData: String, isPlaceholder: Bool = false, isDisabled: Bool = false) {
             self = .init(pickerDisplayName: NSAttributedString(string: pickerDisplayName),
                          labelDisplayName: NSAttributedString(string: labelDisplayName),
                          accessibilityValue: accessibilityValue,
                          rawData: rawData,
-                         isPlaceholder: isPlaceholder)
+                         isPlaceholder: isPlaceholder,
+                         isDisabled: isDisabled)
         }
 
         /// Item label displayed in the picker
@@ -54,6 +53,8 @@ import UIKit
 
         /// If true, this item will be styled with greyed out secondary text
         public let isPlaceholder: Bool
+
+        public let isDisabled: Bool
     }
 
     // MARK: - Public properties
@@ -70,10 +71,8 @@ import UIKit
             updatePickerField()
         }
     }
-    public var didPresent: DidPresent?
     public var didUpdate: DidUpdateSelectedIndex?
-    public var didTapClose: DidTapClose?
-    public let theme: ElementsUITheme
+    public let theme: ElementsAppearance
     public let hasPadding: Bool
 
     /// A label displayed in the dropdown field UI e.g. "Country or region" for a country dropdown
@@ -81,7 +80,7 @@ import UIKit
 #if targetEnvironment(macCatalyst) || canImport(CompositorServices)
     private(set) lazy var pickerView: UIButton = {
         let button = UIButton()
-        let action = { (action: UIAction) -> Void in
+        let action = { (action: UIAction) in
             self.selectedIndex = Int(action.identifier.rawValue) ?? 0
         }
 
@@ -102,8 +101,8 @@ import UIKit
 #else
     private(set) lazy var pickerView: UIPickerView = {
         let picker = UIPickerView()
-        picker.delegate = self
-        picker.dataSource = self
+        picker.delegate = pickerViewDelegate
+        picker.dataSource = pickerViewDelegate
         return picker
     }()
 #endif
@@ -128,6 +127,7 @@ import UIKit
     private var previouslySelectedIndex: Int
     private let disableDropdownWithSingleElement: Bool
     private let isOptional: Bool
+    lazy var pickerViewDelegate: PickerViewDelegate = { PickerViewDelegate(self) }()
 
     /**
      - Parameters:
@@ -145,24 +145,20 @@ import UIKit
         items: [DropdownItem],
         defaultIndex: Int = 0,
         label: String?,
-        theme: ElementsUITheme = .default,
+        theme: ElementsAppearance = .default,
         hasPadding: Bool = true,
         disableDropdownWithSingleElement: Bool = false,
         isOptional: Bool = false,
-        didPresent: DidPresent? = nil,
-        didUpdate: DidUpdateSelectedIndex? = nil,
-        didTapClose: DidTapClose? = nil
+        didUpdate: DidUpdateSelectedIndex? = nil
     ) {
-        assert(!items.isEmpty, "`items` must contain at least one item")
+        stpAssert(!items.filter { !$0.isDisabled }.isEmpty, "`items` must contain at least one non-disabled item; if this is a test, you might need to set AddressSpecProvider.shared.loadAddressSpecs")
 
         self.label = label
         self.theme = theme
         self.items = items
         self.disableDropdownWithSingleElement = disableDropdownWithSingleElement
         self.isOptional = isOptional
-        self.didPresent = didPresent
         self.didUpdate = didUpdate
-        self.didTapClose = didTapClose
         self.hasPadding = hasPadding
 
         // Default to defaultIndex, if in bounds
@@ -172,7 +168,6 @@ import UIKit
             self.selectedIndex = defaultIndex
         }
         self.previouslySelectedIndex = selectedIndex
-        super.init()
 
         if !items.isEmpty {
             updatePickerField()
@@ -186,7 +181,7 @@ import UIKit
 
     public func update(items: [DropdownItem]) {
         assert(!items.isEmpty, "`items` must contain at least one item")
-        // Try to re-select the same item afer updating, if not possible default to the first item in the list
+        // Try to re-select the same item after updating, if not possible default to the first item in the list
         let newSelectedIndex = items.firstIndex(where: { $0.rawData == self.items[selectedIndex].rawData }) ?? 0
 
         self.items = items
@@ -230,33 +225,56 @@ extension DropdownFieldElement: Element {
     }
 }
 
-// MARK: UIPickerViewDelegate
+// MARK: UIPickerViewDelegate & UIPickerViewDataSource
 
-extension DropdownFieldElement: UIPickerViewDelegate {
+extension DropdownFieldElement {
+    // A silly bridge class to work around the fact that UIPickerViewDelegate must be an NSObject
+    class PickerViewDelegate: NSObject, UIPickerViewDelegate, UIPickerViewDataSource {
+        weak var dropdownFieldElement: DropdownFieldElement?
+        init(_ dropdownFieldElement: DropdownFieldElement?) {
+            self.dropdownFieldElement = dropdownFieldElement
+        }
 
-    public func pickerView(_ pickerView: UIPickerView, attributedTitleForRow row: Int, forComponent component: Int) -> NSAttributedString? {
-        let item = items[row]
+        public func pickerView(_ pickerView: UIPickerView, attributedTitleForRow row: Int, forComponent component: Int) -> NSAttributedString? {
+            guard let dropdownFieldElement else { return nil }
+            let item = dropdownFieldElement.items[row]
 
-        guard item.isPlaceholder else { return item.pickerDisplayName }
+            guard item.isPlaceholder || item.isDisabled else { return item.pickerDisplayName }
 
-        // If this item is marked as a placeholder, apply placeholder text color
-        let attributes: [NSAttributedString.Key: Any] = [.foregroundColor: theme.colors.placeholderText]
-        let placeholderString = NSAttributedString(string: item.pickerDisplayName.string, attributes: attributes)
-        return placeholderString
+            // If this item is marked as a placeholder or disabled, apply placeholder text color
+            let placeholderString = NSMutableAttributedString(attributedString: item.pickerDisplayName)
+            let attributes: [NSAttributedString.Key: Any] = [.foregroundColor: dropdownFieldElement.theme.colors.placeholderText]
+            placeholderString.addAttributes(attributes, range: NSRange(location: 0, length: placeholderString.length))
+
+            return placeholderString
+        }
+
+        public func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
+            dropdownFieldElement?.pickerView(pickerView, didSelectRow: row, inComponent: component)
+        }
+
+        public func numberOfComponents(in pickerView: UIPickerView) -> Int {
+            return 1
+        }
+
+        public func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
+            return dropdownFieldElement?.items.count ?? 0
+        }
     }
 
     public func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
+        guard row < items.count else {
+            stpAssertionFailure("DropdownFieldElement selected row (\(row)) is out of bounds. Total dropdown items: \(items.count)")
+            return
+        }
+        let item = items[row]
+        // If a user selects a disable row, reset to the previous selection
+        if item.isDisabled {
+            pickerView.selectRow(selectedIndex, inComponent: 0, animated: true)
+            return
+        }
+
         selectedIndex = row
-    }
-}
-
-extension DropdownFieldElement: UIPickerViewDataSource {
-    public func numberOfComponents(in pickerView: UIPickerView) -> Int {
-        return 1
-    }
-
-    public func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
-        return items.count
     }
 }
 
@@ -264,7 +282,6 @@ extension DropdownFieldElement: UIPickerViewDataSource {
 
 extension DropdownFieldElement: PickerFieldViewDelegate {
     func didBeginEditing(_ pickerFieldView: PickerFieldView) {
-        didPresent?()
     }
 
     func didFinish(_ pickerFieldView: PickerFieldView, shouldAutoAdvance: Bool) {
@@ -285,6 +302,12 @@ extension DropdownFieldElement: PickerFieldViewDelegate {
     func didCancel(_ pickerFieldView: PickerFieldView) {
         // Reset to previously selected index when canceling
         selectedIndex = previouslySelectedIndex
-        didTapClose?()
+    }
+}
+
+// MARK: - DebugDescription
+extension DropdownFieldElement {
+    public var debugDescription: String {
+        return "<DropdownFieldElement: \(Unmanaged.passUnretained(self).toOpaque())>; label = \(label ?? "nil"); validationState = \(validationState); rawData = \(rawData)"
     }
 }

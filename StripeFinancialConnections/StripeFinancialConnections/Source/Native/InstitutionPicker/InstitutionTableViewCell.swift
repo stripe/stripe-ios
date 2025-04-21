@@ -10,16 +10,15 @@ import Foundation
 import UIKit
 
 final class InstitutionTableViewCell: UITableViewCell {
-
     private lazy var institutionIconView: InstitutionIconView = {
         return InstitutionIconView()
     }()
-    private lazy var institutionCellView: InstitutionCellView = {
-        return InstitutionCellView()
-    }()
+
+    private var institutionCellView: InstitutionCellView?
+
     private lazy var overlayView: UIView = {
         let overlayView = UIView()
-        overlayView.backgroundColor = .customBackgroundColor.withAlphaComponent(0.8)
+        overlayView.backgroundColor = FinancialConnectionsAppearance.Colors.background.withAlphaComponent(0.8)
         overlayView.alpha = 0
         return overlayView
     }()
@@ -27,7 +26,6 @@ final class InstitutionTableViewCell: UITableViewCell {
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         adjustBackgroundColor(isHighlighted: false)
-        contentView.addAndPinSubview(institutionCellView)
     }
 
     required init?(coder: NSCoder) {
@@ -40,7 +38,7 @@ final class InstitutionTableViewCell: UITableViewCell {
     }
 
     private func adjustBackgroundColor(isHighlighted: Bool) {
-        contentView.backgroundColor = isHighlighted ? .backgroundContainer : .customBackgroundColor
+        contentView.backgroundColor = isHighlighted ? FinancialConnectionsAppearance.Colors.backgroundHighlighted : FinancialConnectionsAppearance.Colors.background
         backgroundColor = contentView.backgroundColor
 
         // fix a bug where the background color of a
@@ -51,7 +49,7 @@ final class InstitutionTableViewCell: UITableViewCell {
     }
 
     func showLoadingView(_ show: Bool) {
-        institutionCellView.showLoadingView(show)
+        institutionCellView?.showLoadingView(show)
     }
 
     func showOverlayView(_ show: Bool) {
@@ -74,7 +72,8 @@ final class InstitutionTableViewCell: UITableViewCell {
 
 extension InstitutionTableViewCell {
 
-    func customize(with institution: FinancialConnectionsInstitution) {
+    func customize(with institution: FinancialConnectionsInstitution, appearance: FinancialConnectionsAppearance) {
+        let institutionCellView = InstitutionCellView(appearance: appearance)
         institutionIconView.setImageUrl(institution.icon?.default)
 
         institutionCellView.customize(
@@ -82,6 +81,12 @@ extension InstitutionTableViewCell {
             title: institution.name,
             subtitle: AuthFlowHelpers.formatUrlString(institution.url)
         )
+
+        // Ensure the cell view isn't added to superview more than once.
+        self.institutionCellView?.removeFromSuperview()
+        contentView.addAndPinSubview(institutionCellView)
+
+        self.institutionCellView = institutionCellView
     }
 }
 
@@ -94,6 +99,7 @@ private struct InstitutionTableViewCellUIViewRepresentable: UIViewRepresentable 
 
     let showLoadingView: Bool
     let showOverlayView: Bool
+    let appearance: FinancialConnectionsAppearance
 
     func makeUIView(context: Context) -> InstitutionTableViewCell {
         InstitutionTableViewCell(style: .default, reuseIdentifier: "test")
@@ -108,7 +114,8 @@ private struct InstitutionTableViewCellUIViewRepresentable: UIViewRepresentable 
                 url: "https://www.bankofamerica.com/",
                 icon: nil,
                 logo: nil
-            )
+            ),
+            appearance: appearance
         )
         uiView.showLoadingView(showLoadingView)
         uiView.showOverlayView(showOverlayView)
@@ -121,17 +128,26 @@ struct InstitutionTableViewCell_Previews: PreviewProvider {
         VStack(spacing: 20) {
             InstitutionTableViewCellUIViewRepresentable(
                 showLoadingView: false,
-                showOverlayView: false
+                showOverlayView: false,
+                appearance: .stripe
             ).frame(width: 343, height: 72)
 
             InstitutionTableViewCellUIViewRepresentable(
                 showLoadingView: true,
-                showOverlayView: false
+                showOverlayView: false,
+                appearance: .stripe
+            ).frame(width: 343, height: 72)
+
+            InstitutionTableViewCellUIViewRepresentable(
+                showLoadingView: true,
+                showOverlayView: false,
+                appearance: .link
             ).frame(width: 343, height: 72)
 
             InstitutionTableViewCellUIViewRepresentable(
                 showLoadingView: false,
-                showOverlayView: true
+                showOverlayView: true,
+                appearance: .stripe
             ).frame(width: 343, height: 72)
             Spacer()
         }

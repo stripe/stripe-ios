@@ -20,18 +20,11 @@ class STPPaymentMethodParamsTest: XCTestCase {
         let mapping = STPPaymentMethodParams.propertyNamesToFormFieldNamesMapping()
 
         for propertyName in mapping.keys {
-            guard let propertyName = propertyName as? String else {
-                continue
-            }
             XCTAssertFalse(propertyName.contains(":"))
             XCTAssert(params.responds(to: NSSelectorFromString(propertyName)))
         }
 
         for formFieldName in mapping.values {
-            guard let formFieldName = formFieldName as? String else {
-                continue
-            }
-            XCTAssert((formFieldName is NSString))
             XCTAssert(formFieldName.count > 0)
         }
 

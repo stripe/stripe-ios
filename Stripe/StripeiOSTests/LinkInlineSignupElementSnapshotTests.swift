@@ -105,6 +105,8 @@ extension LinkInlineSignupElementSnapshotTests {
     struct MockAccountService: LinkAccountServiceProtocol {
         func lookupAccount(
             withEmail email: String?,
+            emailSource: StripePaymentSheet.EmailSource,
+            doNotLogConsumerFunnelEvent: Bool,
             completion: @escaping (Result<PaymentSheetLinkAccount?, Error>) -> Void
         ) {
             completion(
@@ -112,7 +114,8 @@ extension LinkInlineSignupElementSnapshotTests {
                     PaymentSheetLinkAccount(
                         email: "user@example.com",
                         session: nil,
-                        publishableKey: nil
+                        publishableKey: nil,
+                        useMobileEndpoints: false
                     )
                 )
             )
@@ -141,7 +144,7 @@ extension LinkInlineSignupElementSnapshotTests {
         var linkAccount: PaymentSheetLinkAccount?
 
         if let linkAccountEmailAddress {
-            linkAccount = PaymentSheetLinkAccount(email: linkAccountEmailAddress, session: nil, publishableKey: nil)
+            linkAccount = PaymentSheetLinkAccount(email: linkAccountEmailAddress, session: nil, publishableKey: nil, useMobileEndpoints: false)
         }
 
         let viewModel = LinkInlineSignupViewModel(

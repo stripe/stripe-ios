@@ -13,6 +13,7 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
 
         case paymentSheet
         case flowController
+        case embedded
     }
 
     enum Mode: String, PickerEnum {
@@ -38,6 +39,7 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
         static var enumName: String { "Layout" }
         case horizontal
         case vertical
+        case automatic
     }
 
     enum IntegrationType: String, PickerEnum {
@@ -84,6 +86,30 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
         case customerSession = "customer_session"
     }
 
+    enum Amount: Int, PickerEnum {
+        static var enumName: String { "Amount" }
+
+        case _5099 = 5099
+        case _10000 = 10000
+
+        var displayName: String {
+            switch self {
+            case ._5099:
+                return "50.99"
+            case ._10000:
+                return "100.00"
+            }
+        }
+        func customDisplayName(currency: Currency) -> String {
+            switch currency {
+            case .jpy:
+                return displayName.replacingOccurrences(of: ".", with: "")
+            default:
+                return displayName
+            }
+        }
+    }
+
     enum Currency: String, PickerEnum {
         static var enumName: String { "Currency" }
 
@@ -117,6 +143,8 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
         case JP
         case BR
         case TH
+        case DE
+        case IT
     }
 
     enum APMSEnabled: String, PickerEnum {
@@ -124,6 +152,96 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
 
         case on
         case off
+    }
+
+    struct PaymentMethodOptionsSetupFutureUsage: Codable, Equatable {
+        // Supports all SFU values
+        var card: SetupFutureUsageAll
+        var usBankAccount: SetupFutureUsageAll
+        var sepaDebit: SetupFutureUsageAll
+        // Only supports off_session
+        var link: SetupFutureUsageOffSessionOnly
+        var klarna: SetupFutureUsageOffSessionOnly
+        // Does not support SFU
+        var affirm: SetupFutureUsageNone
+
+        var additionalPaymentMethodOptionsSetupFutureUsage: String?
+
+        static func defaultValues() -> PaymentMethodOptionsSetupFutureUsage {
+            return PaymentMethodOptionsSetupFutureUsage(
+                card: .unset,
+                usBankAccount: .unset,
+                sepaDebit: .unset,
+                link: .unset,
+                klarna: .unset,
+                affirm: .unset
+            )
+        }
+
+        func toDictionary() -> [String: String] {
+            var result: [String: String] = [:]
+            if card != .unset {
+                result["card"] = card.rawValue
+            }
+            if usBankAccount != .unset {
+                result["us_bank_account"] = usBankAccount.rawValue
+            }
+            if sepaDebit != .unset {
+                result["sepa_debit"] = sepaDebit.rawValue
+            }
+            if link != .unset {
+                result["link"] = link.rawValue
+            }
+            if klarna != .unset {
+                result["klarna"] = klarna.rawValue
+            }
+            if affirm != .unset {
+                result["affirm"] = affirm.rawValue
+            }
+            if let additionalPaymentMethodOptionsSetupFutureUsage {
+                // get the "key:value" strings by splitting on the comma
+                let paymentMethodOptionsSetupFutureUsage = additionalPaymentMethodOptionsSetupFutureUsage
+                    .trimmingCharacters(in: .whitespacesAndNewlines)
+                    .split(separator: ",")
+                    .map({ $0.trimmingCharacters(in: .whitespacesAndNewlines) })
+                paymentMethodOptionsSetupFutureUsage.forEach {
+                    // get the "key" and the "value"
+                    let components = $0
+                        .trimmingCharacters(in: .whitespacesAndNewlines)
+                        .split(separator: ":")
+                        .map({ $0.trimmingCharacters(in: .whitespacesAndNewlines) })
+                    if let paymentMethodType = components.first, !paymentMethodType.isEmpty,
+                       let setupFutureUsageValue = components.last, !setupFutureUsageValue.isEmpty,
+                       // picker value takes precedence over text input value if picker value is not unset
+                       result[paymentMethodType] == nil {
+                        result[paymentMethodType] = setupFutureUsageValue
+                    }
+                }
+            }
+            return result
+        }
+
+    }
+
+    enum SetupFutureUsageAll: String, PickerEnum {
+        static var enumName: String { "SetupFutureUsage" }
+        case unset
+        case off_session
+        case on_session
+        case none
+    }
+
+    enum SetupFutureUsageOffSessionOnly: String, PickerEnum {
+        static var enumName: String { "SetupFutureUsage" }
+        case unset
+        case off_session
+        case none
+    }
+
+    enum SetupFutureUsageNone: String, PickerEnum {
+        static var enumName: String { "SetupFutureUsage" }
+        case unset
+        case none
     }
 
     enum ShippingInfo: String, PickerEnum {
@@ -151,6 +269,13 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
         case checkout
     }
 
+    enum LinkDisplay: String, PickerEnum {
+        static var enumName: String { "Link display" }
+
+        case automatic
+        case never
+    }
+
     enum AllowsDelayedPMs: String, PickerEnum {
         static var enumName: String { "allowsDelayedPMs" }
 
@@ -163,8 +288,23 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
         case enabled
         case disabled
     }
+    enum AllowRedisplayOverride: String, PickerEnum {
+        static var enumName: String { "AllowRedisplayOverride" }
+
+        case always
+        case limited
+        case unspecified
+        case notSet
+    }
+
     enum PaymentMethodRemove: String, PickerEnum {
         static var enumName: String { "PaymentMethodRemove" }
+
+        case enabled
+        case disabled
+    }
+    enum PaymentMethodRemoveLast: String, PickerEnum {
+        static var enumName: String { "PaymentMethodRemoveLast" }
 
         case enabled
         case disabled
@@ -200,6 +340,12 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
         }
     }
 
+    enum PaymentMethodSetAsDefault: String, PickerEnum {
+        static let enumName: String = "PaymentMethodSetAsDefault"
+        case enabled
+        case disabled
+    }
+
     enum DefaultBillingAddress: String, PickerEnum {
         static var enumName: String { "Default billing address" }
 
@@ -210,10 +356,19 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
         case off
     }
 
-    enum LinkEnabled: String, PickerEnum {
-        static var enumName: String { "Link" }
+    enum LinkPassthroughMode: String, PickerEnum {
+        static var enumName: String { "Link passthrough mode" }
 
-        case on
+        case pm = "PaymentMethod"
+        case passthrough
+    }
+
+    enum LinkEnabledMode: String, PickerEnum {
+        static var enumName: String { "Enable Link" }
+
+        case native
+        case nativeWithAttestation = "attest"
+        case web
         case off
     }
 
@@ -265,6 +420,24 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
         case on
         case off
     }
+    enum ShakeAmbiguousViews: String, PickerEnum {
+        static var enumName: String { "Shake Ambiguous Views" }
+
+        case on
+        case off
+    }
+    enum InstantDebitsIncentives: String, PickerEnum {
+        static var enumName: String { "Instant Debits Incentives" }
+
+        case on
+        case off
+    }
+    enum FCLiteEnabled: String, PickerEnum {
+        static var enumName: String { "FCLite enabled" }
+
+        case on
+        case off
+    }
     enum ExternalPaymentMethods: String, PickerEnum {
         static let enumName: String = "External PMs"
         // Based on https://git.corp.stripe.com/stripe-internal/stripe-js-v3/blob/55d7fd10/src/externalPaymentMethods/constants.ts#L13
@@ -276,7 +449,6 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
             "external_azupay",
             "external_bank_pay",
             "external_benefit",
-            "external_billie",
             "external_bitcash",
             "external_bizum",
             "external_catch",
@@ -292,12 +464,10 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
             "external_iwocapay",
             "external_kbc",
             "external_knet",
-            "external_kriya",
             "external_laybuy",
             "external_line_pay",
             "external_merpay",
             "external_momo",
-            "external_mondu",
             "external_net_cash",
             "external_nexi_pay",
             "external_octopus",
@@ -316,9 +486,7 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
             "external_postfinance",
             "external_rakuten_pay",
             "external_samsung_pay",
-            "external_satispay",
             "external_scalapay",
-            "external_sequra",
             "external_sezzle",
             "external_shopback_paylater",
             "external_softbank_carrier_payment",
@@ -349,6 +517,13 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
         }
     }
 
+    enum CustomPaymentMethods: String, PickerEnum {
+        static let enumName: String = "CPMs"
+        case on
+        case onWithBDCC = "on w/ BDCC"
+        case off
+    }
+
     enum PreferredNetworksEnabled: String, PickerEnum {
         static let enumName: String = "Preferred Networks (CBC)"
 
@@ -376,34 +551,72 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
         case off
     }
 
+    enum DisplaysMandateTextEnabled: String, PickerEnum {
+        static let enumName: String = "displaysMandateText"
+        case on
+        case off
+    }
+
+    enum FormSheetAction: String, PickerEnum {
+        static let enumName: String = "formSheetAction"
+        case confirm
+        case `continue`
+    }
+
+    enum CardBrandAcceptance: String, PickerEnum {
+        static let enumName: String = "cardBrandAcceptance"
+        case all
+        case blockAmEx
+        case allowVisa
+    }
+
+    enum ConfigurationStyle: String, PickerEnum {
+        static let enumName: String = "Style"
+        case automatic
+        case alwaysLight
+        case alwaysDark
+    }
+
     var uiStyle: UIStyle
     var layout: Layout
     var mode: Mode
+    var style: ConfigurationStyle
     var customerKeyType: CustomerKeyType
     var integrationType: IntegrationType
     var customerMode: CustomerMode
     var currency: Currency
+    var amount: Amount
     var merchantCountryCode: MerchantCountry
     var apmsEnabled: APMSEnabled
     var supportedPaymentMethods: String?
+    var paymentMethodOptionsSetupFutureUsage: PaymentMethodOptionsSetupFutureUsage
 
     var shippingInfo: ShippingInfo
     var applePayEnabled: ApplePayEnabled
     var applePayButtonType: ApplePayButtonType
     var allowsDelayedPMs: AllowsDelayedPMs
     var paymentMethodSave: PaymentMethodSave
+    var allowRedisplayOverride: AllowRedisplayOverride
     var paymentMethodRemove: PaymentMethodRemove
+    var paymentMethodRemoveLast: PaymentMethodRemoveLast
     var paymentMethodRedisplay: PaymentMethodRedisplay
     var paymentMethodAllowRedisplayFilters: PaymentMethodAllowRedisplayFilters
+    var paymentMethodSetAsDefault: PaymentMethodSetAsDefault
     var defaultBillingAddress: DefaultBillingAddress
     var customEmail: String?
-    var linkEnabled: LinkEnabled
+    var linkPassthroughMode: LinkPassthroughMode
+    var linkEnabledMode: LinkEnabledMode
+    var linkDisplay: LinkDisplay
     var userOverrideCountry: UserOverrideCountry
     var customCtaLabel: String?
     var paymentMethodConfigurationId: String?
-    var checkoutEndpoint: String?
+    var checkoutEndpoint: String
     var autoreload: Autoreload
+    var shakeAmbiguousViews: ShakeAmbiguousViews
+    var instantDebitsIncentives: InstantDebitsIncentives
+    var fcLiteEnabled: FCLiteEnabled
     var externalPaymentMethods: ExternalPaymentMethods
+    var customPaymentMethods: CustomPaymentMethods
     var preferredNetworksEnabled: PreferredNetworksEnabled
     var requireCVCRecollection: RequireCVCRecollectionEnabled
     var allowsRemovalOfLastSavedPaymentMethod: AllowsRemovalOfLastSavedPaymentMethodEnabled
@@ -413,35 +626,50 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
     var collectEmail: BillingDetailsEmail
     var collectPhone: BillingDetailsPhone
     var collectAddress: BillingDetailsAddress
+    var formSheetAction: FormSheetAction
+    var embeddedViewDisplaysMandateText: DisplaysMandateTextEnabled
+    var cardBrandAcceptance: CardBrandAcceptance
 
     static func defaultValues() -> PaymentSheetTestPlaygroundSettings {
         return PaymentSheetTestPlaygroundSettings(
             uiStyle: .paymentSheet,
-            layout: .horizontal,
+            layout: .automatic,
             mode: .payment,
-            customerKeyType: .legacy,
+            style: .automatic,
+            customerKeyType: .customerSession,
             integrationType: .normal,
             customerMode: .guest,
             currency: .usd,
+            amount: ._5099,
             merchantCountryCode: .US,
             apmsEnabled: .on,
+            paymentMethodOptionsSetupFutureUsage: PaymentMethodOptionsSetupFutureUsage.defaultValues(),
             shippingInfo: .off,
             applePayEnabled: .on,
             applePayButtonType: .buy,
             allowsDelayedPMs: .on,
             paymentMethodSave: .enabled,
+            allowRedisplayOverride: .notSet,
             paymentMethodRemove: .enabled,
+            paymentMethodRemoveLast: .enabled,
             paymentMethodRedisplay: .enabled,
             paymentMethodAllowRedisplayFilters: .always,
+            paymentMethodSetAsDefault: .disabled,
             defaultBillingAddress: .off,
             customEmail: nil,
-            linkEnabled: .off,
+            linkPassthroughMode: .passthrough,
+            linkEnabledMode: .native,
+            linkDisplay: .automatic,
             userOverrideCountry: .off,
             customCtaLabel: nil,
             paymentMethodConfigurationId: nil,
             checkoutEndpoint: Self.defaultCheckoutEndpoint,
             autoreload: .on,
+            shakeAmbiguousViews: .off,
+            instantDebitsIncentives: .off,
+            fcLiteEnabled: .off,
             externalPaymentMethods: .off,
+            customPaymentMethods: .off,
             preferredNetworksEnabled: .off,
             requireCVCRecollection: .off,
             allowsRemovalOfLastSavedPaymentMethod: .on,
@@ -449,7 +677,10 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
             collectName: .automatic,
             collectEmail: .automatic,
             collectPhone: .automatic,
-            collectAddress: .automatic)
+            collectAddress: .automatic,
+            formSheetAction: .continue,
+            embeddedViewDisplaysMandateText: .on,
+            cardBrandAcceptance: .all)
     }
 
     static let nsUserDefaultsKey = "PaymentSheetTestPlaygroundSettings"

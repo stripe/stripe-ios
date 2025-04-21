@@ -1,4 +1,10 @@
+"An error occurred. Please try again." = "오류가 발생했습니다. 다시 시도하십시오.";
+
+"Card brand was not updated. Please try again." = "카드 브랜드가 업데이트되지 않았습니다. 다시 시도하십시오.";
+
 "Close" = "닫기";
+
+"Default payment method was not updated. Please try again." = "기본 결제 방식이 업데이트되지 않았습니다. 다시 시도하십시오.";
 
 "Scan Card" = "카드 스캔";
 

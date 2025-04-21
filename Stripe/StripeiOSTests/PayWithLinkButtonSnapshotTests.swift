@@ -69,6 +69,13 @@ class PayWithLinkButtonSnapshotTests: STPSnapshotTestCase {
         verify(sut)
     }
 
+    func testAddThenRemoveAccount() {
+        let sut = makeSUT()
+        sut.linkAccount = makeAccountStub(email: longEmailAddress, isRegistered: true)
+        sut.linkAccount = nil
+        verify(sut)
+    }
+
     func verify(
         _ sut: UIView,
         identifier: String? = nil,
@@ -86,12 +93,16 @@ extension PayWithLinkButtonSnapshotTests {
     fileprivate struct LinkAccountStub: PaymentSheetLinkAccountInfoProtocol {
         let email: String
         let isRegistered: Bool
+        var redactedPhoneNumber: String?
+        var isLoggedIn: Bool
     }
 
     fileprivate func makeAccountStub(email: String, isRegistered: Bool) -> LinkAccountStub {
         return LinkAccountStub(
             email: email,
-            isRegistered: isRegistered
+            isRegistered: isRegistered,
+            redactedPhoneNumber: "+1********55",
+            isLoggedIn: true
         )
     }
 

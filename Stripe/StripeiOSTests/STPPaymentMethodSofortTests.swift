@@ -6,6 +6,7 @@
 //  Copyright © 2020 Stripe, Inc. All rights reserved.
 //
 import StripeCoreTestUtils
+import StripePaymentsTestUtils
 
 @testable@_spi(STP) import Stripe
 @testable@_spi(STP) import StripeCore
@@ -13,7 +14,7 @@ import StripeCoreTestUtils
 @testable@_spi(STP) import StripePaymentSheet
 @testable@_spi(STP) import StripePaymentsUI
 
-class STPPaymentMethodSofortTests: XCTestCase {
+class STPPaymentMethodSofortTests: STPNetworkStubbingTestCase {
     private(set) var sofortJSON: [AnyHashable: Any]?
 
     func _retrieveSofortJSON(_ completion: @escaping ([AnyHashable: Any]?) -> Void) {

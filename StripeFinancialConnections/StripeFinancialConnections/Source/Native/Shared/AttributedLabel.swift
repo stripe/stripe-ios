@@ -69,20 +69,28 @@ final class AttributedLabel: UILabel {
         }
     }
 
-    func setText(_ text: String) {
+    func setText(_ text: String, underline: Bool = false) {
         let paragraphStyle = NSMutableParagraphStyle()
         paragraphStyle.minimumLineHeight = customFont.lineHeight
         paragraphStyle.maximumLineHeight = customFont.lineHeight
         if let customTextAlignment = customTextAlignment {
             paragraphStyle.alignment = customTextAlignment
         }
+
         let string = NSMutableAttributedString(
             string: text,
-            attributes: [
-                .paragraphStyle: paragraphStyle,
-                .font: customFont.uiFont,
-                .foregroundColor: customTextColor,
-            ]
+            attributes: {
+                var attributes: [NSAttributedString.Key: Any] = [
+                    .paragraphStyle: paragraphStyle,
+                    .font: customFont.uiFont,
+                    .foregroundColor: customTextColor,
+                ]
+                if underline {
+                    attributes[.underlineColor] = customTextColor
+                    attributes[.underlineStyle] = NSUnderlineStyle.single.rawValue
+                }
+                return attributes
+            }()
         )
         attributedText = string
     }

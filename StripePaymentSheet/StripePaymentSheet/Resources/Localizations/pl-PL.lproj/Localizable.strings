@@ -1,7 +1,5 @@
 "%1$@ •••• %2$@" = "%1$@ •••• %2$@";
 
-"%1$d interest-free payments of %2$@" = "%1$li płatności bez odsetek: %2$@";
-
 "+ Add" = "+ Dodaj";
 
 "Add US bank account" = "Dodaj rachunek bankowy w Stanach Zjednoczonych";
@@ -9,6 +7,8 @@
 "Add a card" = "Dodaj kartę";
 
 "Add a payment method" = "Dodaj metodę płatności";
+
+"Add bank account" = "Dodaj rachunek bankowy";
 
 "Add card" = "Dodaj kartę";
 
@@ -18,11 +18,29 @@
 
 "Add your payment information" = "Dodaj informacje o płatności";
 
+"Agree and continue" = "Zaakceptuj i kontynuuj";
+
 "Approve payment" = "Zatwierdź płatność";
+
+"Are you sure you want to remove this card?" = "Czy na pewno chcesz usunąć tę kartę?";
+
+"Are you sure you want to remove this linked account?" = "Czy na pewno chcesz usunąć to połączone konto?";
 
 "Back" = "Wstecz";
 
+"Bank" = "Bank";
+
 "Bank account" = "Konto bankowe";
+
+"Bank account details cannot be changed." = "Nie można zmienić szczegółów konta bankowego.";
+
+"Buy now or pay later with  <img/>" = "Kup teraz lub zapłać później za pomocą <img/>";
+
+"Buy now or pay later with Afterpay" = "Kup teraz lub zapłać później za pomocą Afterpay";
+
+"Buy now or pay later with Cash App Afterpay" = "Kup teraz lub zapłać później za pomocą Cash App Afterpay";
+
+"Buy now or pay later with Clearpay" = "Kup teraz lub zapłać później za pomocą Clearpay";
 
 "Buy now or pay later with Klarna" = "Kup teraz lub zapłać później z Klarna";
 
@@ -38,11 +56,15 @@
 
 "By continuing to Revolut Pay, you allow %@ to charge your Revolut Pay account for future payments in accordance with their terms." = "Przechodząc do Revolut Pay, zezwalasz %@ na obciążenie Twojego konta Revolut Pay przyszłymi płatnościami zgodnie z ich warunkami.";
 
+"By continuing you agree to the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Kontynuując, wyrażasz zgodę na <terms>Warunki</terms> i <privacy>Politykę prywatności</privacy>.";
+
 "By continuing, you agree to authorize payments pursuant to <terms>these terms</terms>." = "Kontynuując, wyrażasz zgodę na autoryzowanie płatności zgodnie z <terms>tymi warunkami</terms>.";
 
 "By continuing, you authorize %@ to debit your Cash App account for this payment and future payments in accordance with %@'s terms, until this authorization is revoked. You can change this anytime in your Cash App Settings." = "Kontynuując, wyrażasz zgodę na obciążenie przez %1$@ Twojego konta Cash App kwotą tej płatności oraz przyszłych płatności zgodnie z warunkami %2$@ do momentu wycofania zgody. To ustawienie można zmienić w dowolnym momencie w ustawieniach Cash App.";
 
 "By joining Link, you agree to the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Dołączając do Link, wyrażasz zgodę na <terms>Warunki</terms> i <privacy>Politykę prywatności</privacy>.";
+
+"By providing your card information, you allow %@ to charge your card for future payments in accordance with their terms." = "Poprzez podanie danych karty wyrażasz zgodę na obciążanie przez %@ Twojej karty kwotami przyszłych płatności zgodnie z obowiązującymi warunkami.";
 
 "By providing your email, you agree to create a Link account and save your payment info to Link, according to the Link <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Podając swój adres e-mail, zgadzasz się na utworzenie konta Link i zapisanie danych do płatności w Link, zgodnie z <terms>Warunkami</terms> i <privacy>Polityką prywatności</privacy> Link.";
 
@@ -56,11 +78,23 @@
 
 "Cancel and pay another way" = "Anuluj i skorzystaj z innej metody zapłaty";
 
+"Card details cannot be changed." = "Nie można zmienić szczegółów karty.";
+
+"Change" = "Zmień";
+
+"Change email" = "Zmień e-mail";
+
 "Choose a payment method" = "Wybierz metodę płatności";
 
 "Close card scanner" = "Zamknij skaner karty";
 
+"Code sent" = "Kod wysłany";
+
 "Confirm" = "Potwierdź";
+
+"Confirm it's you" = "Potwierdź, że to Ty";
+
+"Confirm payment details" = "Potwierdź szczegóły płatności";
 
 "Confirm the payment in your bank or payment app within %@ to complete the purchase." = "Potwierdź płatność w banku lub aplikacji bankowej w ciągu %@, aby sfinalizować zakup.";
 
@@ -68,19 +102,43 @@
 
 "Confirm your CVC" = "Potwierdź CVC";
 
-"Confirm your CVV" = "Potwierdź CVV";
-
 "Contact information" = "Dane kontaktowe";
+
+"Default" = "Domyślne";
+
+"Default payment method" = "Domyślna metoda płatności";
 
 "EPS Bank" = "Bank EPS";
 
 "Enter address manually" = "Wprowadź adres ręcznie";
 
+"Enter the code sent to %@ to use your saved information." = "Wprowadź kod wysłany na nr %@, aby użyć zapisanych informacji.";
+
 "FPX Bank" = "FPX Bank";
+
+"Failed to connect" = "Nie udało się połączyć";
+
+"Fast, secure, 1⁠-⁠click checkout" = "Szybka i bezpieczna finalizacja jednym kliknięciem";
+
+"For security, please re-enter your card’s security code." = "Ze względów bezpieczeństwa wprowadź ponownie kod bezpieczeństwa Twojej karty.";
+
+"Get %@ back when you pay for the first time with your bank. <terms>See terms</terms>" = "Uzyskaj zwrot %@, gdy płacisz po raz pierwszy poprzez bank. <terms>Zobacz warunki</terms>";
+
+"Get %@ back when you pay with your bank. <terms>See terms</terms>" = "Uzyskaj zwrot %@, płacąc za pośrednictwem banku. <terms>Zobacz warunki</terms>";
 
 "I understand that Stripe will be collecting Direct Debits on behalf of %@ and confirm that I am the account holder and the only person required to authorise debits from this account." = "Rozumiem, że Stripe będzie pobierać polecenia zapłaty w imieniu firmy %@ i potwierdzam, że jestem posiadaczem konta i jedyną osobą wymaganą do autoryzowania poleceń zapłaty z tego konta.";
 
 "IBAN" = "IBAN";
+
+"Log out of Link" = "Wyloguj się z Link";
+
+"Manage SEPA debit" = "Zarządzaj poleceniem zapłaty SEPA";
+
+"Manage US bank account" = "Zarządzaj amerykańskim kontem bankowym";
+
+"Manage card" = "Zarządzaj kartą";
+
+"Manage cards" = "Zarządzaj kartami";
 
 "Manage payment method" = "Zarządzaj metodą płatności";
 
@@ -93,6 +151,12 @@
 "New card" = "Nowa karta";
 
 "New payment method" = "Nowa metoda płatności";
+
+"No %@ promo" = "Bez promocji %@";
+
+"Not %@?" = "Nie jesteś %@?";
+
+"Only card brand can be changed." = "Można zmienić tylko markę karty.";
 
 "Open your UPI app to approve your payment within %@" = "Otwórz aplikację UPI, aby zatwierdzić płatność w %@";
 
@@ -112,15 +176,21 @@
 
 "Pay faster at %@ and thousands of businesses." = "Płać szybciej w %@ i tysiącach innych firm.";
 
-"Pay in <num_installments/> interest-free payments of <installment_price/> with <img/>" = "Zapłacić w <num_installments/> nieoprocentowanych ratach <installment_price/> z <img/>";
-
 "Pay over time with %@" = "Zapłać później, korzystając z %@";
+
+"Pay over time with Affirm" = "Zapłać później za pomocą Affirm";
 
 "Pay with Link" = "Zapłać za pomocą Link";
 
 "Pay with your bank account in just a few steps." = "Zapłać za pomocą konta bankowego w kilku krokach.";
 
+"Payment" = "Płatność";
+
 "Payment failed" = "Płatność się nie powiodła";
+
+"Payment methods" = "Metody płatności";
+
+"Please choose a valid payment method." = "Wybierz prawidłową metodę płatności.";
 
 "Please go back and select another payment method" = "Wróć i wybierz inną metodę płatności";
 
@@ -132,7 +202,11 @@
 
 "Remove card?" = "Usunąć kartę?";
 
-"Remove payment method" = "Usuń metodę płatności";
+"Remove linked account" = "Usuń podłączone konto";
+
+"Resend code" = "Wyślij kod ponownie";
+
+"SEPA debit details cannot be changed." = "Nie można zmienić szczegółów polecenia zapłaty SEPA.";
 
 "Save" = "Zapisz";
 
@@ -142,13 +216,15 @@
 
 "Save for future payments" = "Zapisz do przyszłych płatności";
 
-"Save this account for future %@ payments" = "Zapisz to konto do przyszłych płatności %@";
+"Save payment details to %@ for future purchases" = "Zapisz informacje o płatności dla %@ do wykorzystania przy przyszłych zakupach";
 
-"Save this card for future %@ payments" = "Zapisz dane tej karty do przyszłych płatności %@";
+"Save this account for future %@ payments" = "Zapisz to konto do przyszłych płatności %@";
 
 "Save your bank account in just a few steps." = "Zapisz konto bankowe w kilku krokach.";
 
 "Save your info for secure 1-click checkout with Link" = "Zapisz informacje do bezpiecznej finalizacji jednym kliknięciem z Link";
+
+"Save your payment information with Link, and securely check out in 1-click on Link-supported sites." = "Zapisz informacje o płatnościach w Link i bezpiecznie finalizuj transakcje jednym kliknięciem na stronach obsługiwanych przez Link.";
 
 "Saved" = "Zapisano";
 
@@ -157,6 +233,10 @@
 "Select payment method" = "Wybierz metodę płatności";
 
 "Select your payment method" = "Wybierz metodę płatności";
+
+"Set as default" = "Ustaw jako domyślną";
+
+"Set as default payment method" = "Użyj jako domyślnej metody płatności";
 
 "Set up" = "Ustaw";
 
@@ -170,11 +250,29 @@
 
 "Stripe will deposit $0.01 to your account in 1-2 business days. Then you’ll get an email with instructions to complete payment to %@." = "Stripe wpłaci 0,01 USD na Twoje konto w ciągu 1-2 dni roboczych. Następnie otrzymasz wiadomość e-mail z instrukcjami dotyczącymi zakończenia płatności na rzecz %@.";
 
+"Tap to close" = "Dotknij, aby zamknąć";
+
+"Tap to expand" = "Dotknij, aby rozwinąć";
+
 "The IBAN you entered is incomplete." = "Podany IBAN jest niepełny.";
 
-"Update" = "Aktualizuj";
+"The provided verification code has expired." = "Podany kod weryfikacyjny jest nieaktualny.";
 
-"Update card brand" = "Zaktualizuj markę karty";
+"The provided verification code is incorrect." = "Podany kod weryfikacyjny jest nieprawidłowy.";
+
+"This card has expired. Update your card info or choose a different payment method." = "Termin ważności tej karty minął. Zaktualizuj informacje o karcie lub wybierz inną metodę płatności.";
+
+"This is your default" = "To Twoje ustawienie domyślne";
+
+"Too many attempts. Please try again in a few minutes." = "Zbyt wiele prób. Spróbuj ponownie za kilka minut.";
+
+"Unavailable for this purchase" = "Niedostępne dla tego zakupu";
+
+"Update card" = "Zaktualizuj kartę";
+
+"Update payment method" = "Aktualizuj metodę płatności";
+
+"Use your saved info to check out faster" = "Użyj zapisanych danych, aby szybciej zakończyć operację.";
 
 "View more" = "Wyświetl więcej";
 

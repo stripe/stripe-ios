@@ -25,7 +25,8 @@ final class LinkAccountPickerBodyView: UIView {
 
     init(
         accountTuples: [FinancialConnectionsAccountTuple],
-        addNewAccount: FinancialConnectionsNetworkingAccountPicker.AddNewAccount
+        addNewAccount: FinancialConnectionsNetworkingAccountPicker.AddNewAccount,
+        appearance: FinancialConnectionsAppearance
     ) {
         super.init(frame: .zero)
 
@@ -36,7 +37,9 @@ final class LinkAccountPickerBodyView: UIView {
         // add account rows
         accountTuples.forEach { accountTuple in
             let accountRowView = AccountPickerRowView(
-                isDisabled: !accountTuple.accountPickerAccount.allowSelection,
+                isDisabled: !accountTuple.accountPickerAccount.allowSelection && accountTuple.accountPickerAccount.drawerOnSelection == nil,
+                isFaded: !accountTuple.accountPickerAccount.allowSelection,
+                appearance: appearance,
                 didSelect: { [weak self] in
                     guard let self = self else { return }
                     self.delegate?.linkAccountPickerBodyView(
@@ -49,7 +52,7 @@ final class LinkAccountPickerBodyView: UIView {
                 forAccount: accountTuple.partnerAccount
             )
             accountRowView.set(
-                institutionIconUrl: accountTuple.partnerAccount.institution?.icon?.default,
+                institutionIconUrl: (accountTuple.accountPickerAccount.accountIcon?.default ?? accountTuple.partnerAccount.institution?.icon?.default ?? accountTuple.accountPickerAccount.icon?.default),
                 title: rowTitles.accountName,
                 subtitle: {
                     if let caption = accountTuple.accountPickerAccount.caption {
@@ -58,6 +61,7 @@ final class LinkAccountPickerBodyView: UIView {
                         return rowTitles.accountNumbers
                     }
                 }(),
+                underlineSubtitle: accountTuple.accountPickerAccount.drawerOnSelection != nil,
                 balanceString:
                     (accountTuple.accountPickerAccount.caption == nil) ? rowTitles.balanceString : nil,
                 isSelected: false // initially nothing is selected
@@ -70,6 +74,7 @@ final class LinkAccountPickerBodyView: UIView {
         let newAccountRowView = LinkAccountPickerNewAccountRowView(
             title: addNewAccount.body,
             imageUrl: addNewAccount.icon?.default,
+            appearance: appearance,
             didSelect: { [weak self] in
                 guard let self = self else { return }
                 self.delegate?.linkAccountPickerBodyViewSelectedNewBankAccount(self)
@@ -112,7 +117,10 @@ private struct LinkAccountPickerBodyViewUIViewRepresentable: UIViewRepresentable
                         caption: nil,
                         selectionCta: nil,
                         icon: nil,
-                        selectionCtaIcon: nil
+                        selectionCtaIcon: nil,
+                        drawerOnSelection: nil,
+                        accountIcon: nil,
+                        dataAccessNotice: nil
                     ),
                     partnerAccount: FinancialConnectionsPartnerAccount(
                         id: "abc",
@@ -134,7 +142,8 @@ private struct LinkAccountPickerBodyViewUIViewRepresentable: UIViewRepresentable
                             ),
                             logo: nil
                         ),
-                        nextPaneOnSelection: .success
+                        nextPaneOnSelection: .success,
+                        authorization: nil
                     )
                 ),
                 (
@@ -146,7 +155,10 @@ private struct LinkAccountPickerBodyViewUIViewRepresentable: UIViewRepresentable
                         icon: FinancialConnectionsImage(
                             default: "https://b.stripecdn.com/connections-statics-srv/assets/SailIcon--warning-orange-3x.png"
                         ),
-                        selectionCtaIcon: nil
+                        selectionCtaIcon: nil,
+                        drawerOnSelection: nil,
+                        accountIcon: nil,
+                        dataAccessNotice: nil
                     ),
                     partnerAccount: FinancialConnectionsPartnerAccount(
                         id: "abc",
@@ -160,7 +172,8 @@ private struct LinkAccountPickerBodyViewUIViewRepresentable: UIViewRepresentable
                         allowSelectionMessage: nil,
                         status: "disabled",
                         institution: nil,
-                        nextPaneOnSelection: .success
+                        nextPaneOnSelection: .success,
+                        authorization: nil
                     )
                 ),
                 (
@@ -170,7 +183,10 @@ private struct LinkAccountPickerBodyViewUIViewRepresentable: UIViewRepresentable
                         caption: nil,
                         selectionCta: nil,
                         icon: nil,
-                        selectionCtaIcon: nil
+                        selectionCtaIcon: nil,
+                        drawerOnSelection: nil,
+                        accountIcon: nil,
+                        dataAccessNotice: nil
                     ),
                     partnerAccount: FinancialConnectionsPartnerAccount(
                         id: "abc",
@@ -184,7 +200,8 @@ private struct LinkAccountPickerBodyViewUIViewRepresentable: UIViewRepresentable
                         allowSelectionMessage: nil,
                         status: "disabled",
                         institution: nil,
-                        nextPaneOnSelection: .success
+                        nextPaneOnSelection: .success,
+                        authorization: nil
                     )
                 ),
             ],
@@ -193,7 +210,8 @@ private struct LinkAccountPickerBodyViewUIViewRepresentable: UIViewRepresentable
                 icon: FinancialConnectionsImage(
                     default: "https://b.stripecdn.com/connections-statics-srv/assets/SailIcon--add-purple-3x.png"
                 )
-            )
+            ),
+            appearance: .stripe
         )
     }
 

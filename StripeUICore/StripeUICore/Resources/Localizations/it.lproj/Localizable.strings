@@ -1,5 +1,7 @@
 "%@ (optional)" = "%@ (campo facoltativo)";
 
+"(not accepted)" = "(non accettata)";
+
 "Account number" = "Numero conto";
 
 "Address" = "Indirizzo";
@@ -83,8 +85,6 @@
 "Other" = "Altro";
 
 "Parish" = "Contea";
-
-"Phone" = "Telefono";
 
 "Phone number" = "Numero di telefono";
 

@@ -11,11 +11,11 @@ import XCTest
 @testable@_spi(STP) import StripeCore
 @testable@_spi(STP) import StripePayments
 @testable@_spi(STP) import StripePaymentSheet
+@testable@_spi(STP) import StripePaymentsTestUtils
 @testable@_spi(STP) import StripePaymentsUI
 @testable@_spi(STP) import StripeUICore
-@testable@_spi(STP) import StripePaymentsTestUtils
 
-class TextFieldElementCardTest: XCTestCase {
+class TextFieldElementCardTest: STPNetworkStubbingTestCase {
     func testPANValidation() throws {
         typealias Error = TextFieldElement.PANConfiguration.Error
         let testcases: [String: ElementValidationState] = [
@@ -87,6 +87,7 @@ class TextFieldElementCardTest: XCTestCase {
     func testBINRangeThatRequiresNetworkCallToValidate() {
         // Set a publishable key for the metadata service
         STPAPIClient.shared.publishableKey = STPTestingDefaultPublishableKey
+
         var configuration = TextFieldElement.PANConfiguration()
         let binController = STPBINController()
         configuration.binController = binController
@@ -287,10 +288,10 @@ class TextFieldElementCardTest: XCTestCase {
             "13": .invalid(error: Error.invalidMonth, shouldDisplay: true),
 
             // Test expired dates
-            "12/21": .invalid(error: Error.invalid, shouldDisplay: true),
-            "01/22": .invalid(error: Error.invalid, shouldDisplay: true),
+            "12/21": .invalid(error: Error.expired, shouldDisplay: true),
+            "01/22": .invalid(error: Error.expired, shouldDisplay: true),
             dateFormatter.string(from: lastMonth): .invalid(
-                error: Error.invalid,
+                error: Error.expired,
                 shouldDisplay: true
             ),
         ]
@@ -332,6 +333,98 @@ class TextFieldElementCardTest: XCTestCase {
             XCTAssertTrue(
                 actual == expected,
                 "Input \"\(text)\": expected \(expected) but got \(actual!)"
+            )
+        }
+    }
+
+    class STPAnalyticsClientTestDelegate: NSObject, STPAnalyticsClientDelegate {
+        let didLogBlock: (([String: Any]) -> Void)
+
+        init(didLogBlock: @escaping ([String: Any]) -> Void) {
+            self.didLogBlock = didLogBlock
+        }
+
+        func analyticsClientDidLog(analyticsClient: STPAnalyticsClient, payload: [String: Any]) {
+            didLogBlock(payload)
+        }
+    }
+
+    func testAlertsOnExpected19DigitCard() {
+        // Set a publishable key for the metadata service
+        STPAPIClient.shared.publishableKey = STPTestingDefaultPublishableKey
+
+        // Set up a CardSectionElement:
+        let cardSection = CardSectionElement(
+            collectName: false,
+            defaultValues: .init(),
+            preferredNetworks: nil,
+            cardBrandChoiceEligible: false,
+            hostedSurface: .paymentSheet,
+            theme: .default,
+            analyticsHelper: ._testValue(),
+            cardBrandFilter: .default
+        )
+        let textFieldElement = cardSection.panElement
+
+        // A 16 digit card number that should be 19 digits:
+        let unionPay19_but_16_digits_entered = "6235510000000002"
+
+        // Cache the UnionPay BIN range first:
+        let allRetrievalsAreComplete = expectation(description: "Fetch BIN Range")
+        (textFieldElement.configuration as! TextFieldElement.PANConfiguration).binController.retrieveBINRanges(forPrefix: unionPay19_but_16_digits_entered) { _ in
+            allRetrievalsAreComplete.fulfill()
+        }
+        // Wait for the fetch to complete
+        wait(for: [allRetrievalsAreComplete], timeout: 10)
+
+        // Set up a delegate to watch for the more-than-16-digits-expected log
+        let logExpectation = expectation(description: "Did log analytics event")
+        let analyticsDelegate = STPAnalyticsClientTestDelegate { payload in
+            if payload["event"] as? String == "stripeios.card_metadata.expected_extra_digits_but_user_entered_16_then_switched_fields" {
+                logExpectation.fulfill()
+            }
+        }
+        STPAnalyticsClient.sharedClient.delegate = analyticsDelegate
+
+        // Enter the card number, trigger the textDidChange event, and make sure the field isn't focused:
+        textFieldElement.textFieldView.textField.text = unionPay19_but_16_digits_entered
+        textFieldElement.textFieldView.textDidChange()
+
+        // Wait for the analytics event
+        wait(for: [logExpectation], timeout: 10)
+        // Put back the analytics delegate to avoid polluting the other test states
+        STPAnalyticsClient.sharedClient.delegate = nil
+    }
+
+    func testPANValidation_cardBrandFiltering() throws {
+        typealias Error = TextFieldElement.PANConfiguration.Error
+        let testcases: [String: ElementValidationState] = [
+            // Valid (luhn-passing) PANs
+            "4012888888881881": .valid,
+            "2223000010089800": .invalid(error: Error.disallowedBrand(brand: .mastercard), shouldDisplay: true),  // mastercard
+            "3530111333300000": .valid,
+            "4242424242424242": .valid,  // visa
+            "4000056655665556": .valid,  // visa (debit)
+            "5555555555554444": .invalid(error: Error.disallowedBrand(brand: .mastercard), shouldDisplay: true),  // mastercard
+            "2223003122003222": .invalid(error: Error.disallowedBrand(brand: .mastercard), shouldDisplay: true),  // mastercard (2-series)
+            "5200828282828210": .invalid(error: Error.disallowedBrand(brand: .mastercard), shouldDisplay: true),  // mastercard (debit)
+            "5105105105105100": .invalid(error: Error.disallowedBrand(brand: .mastercard), shouldDisplay: true),  // mastercard (prepaid)
+            "378282246310005": .invalid(error: Error.disallowedBrand(brand: .amex), shouldDisplay: true),  // amex
+            "371449635398431": .invalid(error: Error.disallowedBrand(brand: .amex), shouldDisplay: true),  // amex
+            "6011111111111117": .valid,  // discover
+            "6011000990139424": .valid,  // discover
+            "3056930009020004": .valid,  // diners club
+            "36227206271667": .valid,  // diners club (14 digit)
+            "3566002020360505": .valid,  // jcb
+            "6200000000000005": .valid,  // cup
+        ]
+
+        let configuration = TextFieldElement.PANConfiguration(cardFilter: .init(cardBrandAcceptance: .disallowed(brands: [.amex, .mastercard])))
+        for (text, expected) in testcases {
+            let actual = configuration.simulateValidationState(text)
+            XCTAssertTrue(
+                actual == expected,
+                "Input \"\(text)\": expected \(expected) but got \(actual)"
             )
         }
     }

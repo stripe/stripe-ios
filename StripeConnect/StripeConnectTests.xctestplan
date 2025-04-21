@@ -1,0 +1,40 @@
+{
+  "configurations" : [
+    {
+      "id" : "E4E61B3B-0FEC-4C2A-BE82-E8558946FFBC",
+      "name" : "Configuration 1",
+      "options" : {
+
+      }
+    }
+  ],
+  "defaultOptions" : {
+    "codeCoverage" : false,
+    "environmentVariableEntries" : [
+      {
+        "key" : "FB_REFERENCE_IMAGE_DIR",
+        "value" : "$(SOURCE_ROOT)\/..\/Tests\/ReferenceImages"
+      }
+    ],
+    "locationScenario" : {
+      "identifier" : "San Francisco, CA, USA",
+      "referenceType" : "built-in"
+    },
+    "region" : "US",
+    "targetForVariableExpansion" : {
+      "containerPath" : "container:StripeConnect.xcodeproj",
+      "identifier" : "41D17A3F2C5A73A6007C6EE6",
+      "name" : "StripeConnect"
+    }
+  },
+  "testTargets" : [
+    {
+      "target" : {
+        "containerPath" : "container:..\/StripeConnect\/StripeConnect.xcodeproj",
+        "identifier" : "41D17A492C5A73A7007C6EE6",
+        "name" : "StripeConnectTests"
+      }
+    }
+  ],
+  "version" : 1
+}

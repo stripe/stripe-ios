@@ -28,43 +28,48 @@ class BottomSheetPresentationAnimator: NSObject {
 
     private func animatePresentation(transitionContext: UIViewControllerContextTransitioning) {
         guard
-            let toVC = transitionContext.viewController(forKey: .to),
-            let fromVC = transitionContext.viewController(forKey: .from)
+            let toVC = transitionContext.viewController(forKey: .to)
         else { return }
 
-        // Calls viewWillAppear and viewWillDisappear
-        fromVC.beginAppearanceTransition(false, animated: true)
         transitionContext.containerView.layoutIfNeeded()
 
         // Move presented view offscreen (from the bottom)
         toVC.view.frame = transitionContext.finalFrame(for: toVC)
         toVC.view.frame.origin.y = transitionContext.containerView.frame.height
 
+        // Set the work to complete the transition on the BottomSheetViewController.
+        // Either we will invoke it in the presentation completion block, 
+        // or BottomSheetViewController will invoke it before transitioning to other content
+        if let bottomSheetController = toVC as? BottomSheetViewController {
+            bottomSheetController.completeBottomSheetPresentationTransition = { [weak bottomSheetController] didComplete in
+                transitionContext.completeTransition(didComplete)
+                bottomSheetController?.completeBottomSheetPresentationTransition = nil
+            }
+        }
+
         Self.animate({
             transitionContext.containerView.setNeedsLayout()
             transitionContext.containerView.layoutIfNeeded()
         }) { didComplete in
-            // Calls viewDidAppear and viewDidDisappear
-            fromVC.endAppearanceTransition()
-            transitionContext.completeTransition(didComplete)
+            // Complete transition if it hasn't already been completed
+            if let bottomSheetController = toVC as? BottomSheetViewController,
+               let completePresentationTransition = bottomSheetController.completeBottomSheetPresentationTransition {
+                completePresentationTransition(didComplete)
+            } else {
+                transitionContext.completeTransition(didComplete)
+            }
         }
     }
 
     private func animateDismissal(transitionContext: UIViewControllerContextTransitioning) {
         guard
-            let toVC = transitionContext.viewController(forKey: .to),
             let fromVC = transitionContext.viewController(forKey: .from)
         else { return }
-
-        // Calls viewWillAppear and viewWillDisappear
-        toVC.beginAppearanceTransition(true, animated: true)
 
         Self.animate({
             fromVC.view.frame.origin.y = transitionContext.containerView.frame.height
         }) { didComplete in
             fromVC.view.removeFromSuperview()
-            // Calls viewDidAppear and viewDidDisappear
-            toVC.endAppearanceTransition()
             transitionContext.completeTransition(didComplete)
         }
     }

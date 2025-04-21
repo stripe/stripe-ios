@@ -15,7 +15,7 @@ enum Image: String, ImageMaker {
 
     case add
     case back_arrow
-    case brandicon_default
+    case bank
     case cancel_circle
     case check
     case chevron_down
