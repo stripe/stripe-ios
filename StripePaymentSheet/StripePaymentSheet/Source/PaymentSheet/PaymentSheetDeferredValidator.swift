@@ -23,7 +23,7 @@ struct PaymentSheetDeferredValidator {
         guard setupFutureUsage != PaymentSheet.IntentConfiguration.SetupFutureUsage.none else {
             throw PaymentSheetError.deferredIntentValidationFailed(message: "Your PaymentSheet.IntentConfiguration setupFutureUsage (\(setupFutureUsage?.rawValue ?? "")) is invalid. You can only set it to `.onSession`, `.offSession`, or leave it `nil`.")
         }
-        // Validate that the PaymentIntent and IntentConfiguration PMO SFU values are both nil or both non-nil. Don't validate the particular non-nil values are the same (off_session vs on_session).
+        // Validate that the PaymentIntent and IntentConfiguration SFU values are both nil or both non-nil. Don't validate the particular non-nil values are the same (off_session vs on_session).
         let isPaymentIntentSFUSet = paymentIntent.setupFutureUsage != .none
         let isIntentConfigurationSFUSet = setupFutureUsage != nil
         guard isPaymentIntentSFUSet == isIntentConfigurationSFUSet else {
@@ -96,7 +96,7 @@ struct PaymentSheetDeferredValidator {
     }
 
     static func validatePaymentMethodOptions(paymentIntentPaymentMethodOptions: [String: Any]?, paymentMethodOptions: PaymentSheet.IntentConfiguration.Mode.PaymentMethodOptions?) throws {
-        // Parse the response into a dictionary [paymentMethodType: setupFutureUsage]
+        // Parse the response into a [String: String] dictionary [paymentMethodType: setupFutureUsage]
         let paymentIntentPMOSFU: [String: String] = {
             var result: [String: String] = [:]
             paymentIntentPaymentMethodOptions?.forEach { paymentMethodType, value in
@@ -107,7 +107,7 @@ struct PaymentSheetDeferredValidator {
             }
             return result
         }()
-        // Convert the intent configuration payment method options into a [String: String] dictionary
+        // Convert the intent configuration payment method options setup future usage values into a [String: String] dictionary
         let intentConfigurationPMOSFU: [String: String] = {
             var result: [String: String] = [:]
             paymentMethodOptions?.setupFutureUsageValues?.forEach { paymentMethodType, setupFutureUsage in
