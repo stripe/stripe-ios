@@ -12,7 +12,7 @@ import UIKit
 class AUBECSDebitFormViewController: UIViewController {
 
     let becsFormView = STPAUBECSDebitFormView(companyName: "Great Company Inc.")
-    
+
     override func viewDidLoad() {
         super.viewDidLoad()
         title = "BECS Debit Form"

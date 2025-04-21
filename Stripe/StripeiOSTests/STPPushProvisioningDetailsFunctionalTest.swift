@@ -10,7 +10,6 @@ import Stripe
 
 import OHHTTPStubs
 import OHHTTPStubsSwift
-@testable@_spi(STP) import Stripe
 @testable@_spi(STP) import StripeCore
 import StripeCoreTestUtils
 @testable@_spi(STP) import StripePayments

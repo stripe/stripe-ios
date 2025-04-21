@@ -262,7 +262,7 @@ struct AppearancePlaygroundView: View {
                 self.appearance.embeddedPaymentElement.row.flat.separatorInsets = UIEdgeInsets(top: 0, left: prevInsets.left, bottom: 0, right: $0)
             }
         )
-        
+
         let embeddedPaymentElementCheckmarkColorBinding = Binding(
             get: { Color(self.appearance.embeddedPaymentElement.row.flat.checkmark.color ?? self.appearance.colors.primary) },
             set: { self.appearance.embeddedPaymentElement.row.flat.checkmark.color = UIColor($0) }
@@ -376,7 +376,7 @@ struct AppearancePlaygroundView: View {
                                     Text(String(describing: $0))
                                 }
                             }
-                            
+
                             Stepper("additionalInsets: \(Int(appearance.embeddedPaymentElement.row.additionalInsets))",
                                     value: $appearance.embeddedPaymentElement.row.additionalInsets, in: 0...40)
 

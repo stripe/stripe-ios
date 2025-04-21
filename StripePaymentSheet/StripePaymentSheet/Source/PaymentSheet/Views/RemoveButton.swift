@@ -70,8 +70,7 @@ class RemoveButton: UIButton {
         if #available(iOS 15.0, *)  {
             configuration?.attributedTitle?.foregroundColor = appearance.colors.danger.disabledColor
             configuration?.background.strokeColor = appearance.colors.danger.disabledColor
-        }
-        else {
+        } else {
             setTitleColor(appearance.colors.danger.disabledColor, for: .normal)
             layer.borderColor = appearance.colors.danger.disabledColor.cgColor
         }
@@ -81,8 +80,7 @@ class RemoveButton: UIButton {
         if #available(iOS 15.0, *)  {
             configuration?.attributedTitle?.foregroundColor = appearance.colors.danger
             configuration?.background.strokeColor = appearance.colors.danger
-        }
-        else {
+        } else {
             setTitleColor(appearance.colors.danger, for: .normal)
             layer.borderColor = appearance.colors.danger.cgColor
         }

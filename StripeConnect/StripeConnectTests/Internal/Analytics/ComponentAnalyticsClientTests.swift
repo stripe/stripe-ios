@@ -99,7 +99,7 @@ class ComponentAnalyticsClientTests: XCTestCase {
         client.logComponentLoaded(loadEnd: .now)
         XCTAssertEqual(mockClient.loggedAnalyticsPayloads.count, 1)
     }
-    
+
     func testLogAccountSessionClaimed() throws {
         client.pageViewId = "1234"
 

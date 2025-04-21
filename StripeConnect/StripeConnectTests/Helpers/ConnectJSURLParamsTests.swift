@@ -28,7 +28,7 @@ class ConnectJSURLParamsTests: XCTestCase {
         XCTAssertNil(urlParams.platformIdOverride)
         XCTAssertNil(urlParams.livemodeOverride)
     }
-    
+
     func testInitFromApiClient_publicKeyOverride() {
         apiClient.publishableKey = "uk_1234"
 

@@ -24,14 +24,14 @@ class FinancialConnectionsPresenter {
         // FC needs the connected account ID to be configured on the API Client
         // Make a copy before modifying so we don't unexpectedly modify the shared API client
         financialConnectionsSheet.apiClient = componentManager.apiClient.makeCopy()
-        
+
         // FC expects a public key and not a UK. If there is a public key override we should use that.
         if let publicKeyOverride = componentManager.publicKeyOverride {
             financialConnectionsSheet.apiClient.publishableKey = publicKeyOverride
         }
-        
+
         financialConnectionsSheet.apiClient.stripeAccount = connectedAccountId
-        
+
         return financialConnectionsSheet
     }
 

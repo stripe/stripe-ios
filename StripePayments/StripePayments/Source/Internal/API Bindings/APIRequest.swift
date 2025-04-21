@@ -123,7 +123,7 @@ let JSONKeyObject = "object"
         apiClient.urlSession.stp_performDataTask(
             with: request as URLRequest,
             completionHandler: { body, response, error in
-                self.parseResponse(response, method: "DELETE" ,body: body, error: error, completion: completion)
+                self.parseResponse(response, method: "DELETE", body: body, error: error, completion: completion)
             }
         )
     }

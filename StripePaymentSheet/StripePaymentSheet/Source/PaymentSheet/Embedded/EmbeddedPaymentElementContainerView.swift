@@ -8,14 +8,14 @@ import UIKit
 
 /// The view that's vended to the merchant, containing the embedded view.  We use this to be able to swap out the embedded view with an animation when `update` is called.
 class EmbeddedPaymentElementContainerView: UIView {
-    
+
     /// Return the default size to let Auto Layout manage the height.
     /// Overriding intrinsicContentSize values and setting `invalidIntrinsicContentSize` forces SwiftUI to update layout immediately,
     /// resulting in abrupt, non-animated height changes.
     override var intrinsicContentSize: CGSize {
         return super.intrinsicContentSize
     }
-    
+
     var needsUpdateSuperviewHeight: () -> Void = {}
     private var contentView: EmbeddedPaymentMethodsView
     private var bottomAnchorConstraint: NSLayoutConstraint!

@@ -23,16 +23,6 @@ public extension StripeAPI {
             public let data: [StripeAPI.FinancialConnectionsAccount]
             /** True if this list has another page of items after this one that can be fetched. */
             public let hasMore: Bool
-
-            // MARK: - Internal Init
-
-            internal init(
-                data: [StripeAPI.FinancialConnectionsAccount],
-                hasMore: Bool
-            ) {
-                self.data = data
-                self.hasMore = hasMore
-            }
         }
 
         @_spi(STP) public enum PaymentAccount: Decodable {
@@ -44,11 +34,11 @@ public extension StripeAPI {
                 public let id: String
                 public let last4: String
                 public let routingNumber: String?
-                
+
                 /// Whether the account should be considered instantly verified. This field isn't part of the API response 
                 /// and is being set later on.
                 public var instantlyVerified: Bool = false
-                
+
                 private enum CodingKeys: String, CodingKey {
                     case bankName, id, last4, routingNumber
                 }
