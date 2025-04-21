@@ -99,6 +99,7 @@ final class PaymentSheetAnalyticsExperimentsTests: XCTestCase {
         )
         var configuration = PaymentSheet.Configuration()
         configuration.defaultBillingDetails.name = "Test Name"
+        configuration.defaultBillingDetails.email = "email"
         let linkAccount = PaymentSheetLinkAccount(
             email: "email",
             session: nil,
@@ -127,7 +128,7 @@ final class PaymentSheetAnalyticsExperimentsTests: XCTestCase {
         XCTAssertEqual(payload["dimension-link_native"] as? Bool, true)
         XCTAssertEqual(payload["dimension-link_default_opt_in"] as? String, "FULL")
         XCTAssertEqual(payload["dimension-integration_type"] as? String, "mpe_ios")
-        XCTAssertEqual(payload["dimension-dvs_provided"] as? [String], ["name"])
+        XCTAssertEqual(payload["dimension-dvs_provided"] as? String, "email name")
         XCTAssertEqual(payload["dimension-is_returning_link_user"] as? Bool, false)
         XCTAssertEqual(payload["dimension-link_displayed"] as? Bool, PaymentSheet.isLinkEnabled(elementsSession: session, configuration: configuration))
         XCTAssertEqual(payload["dimension-integration_shape"] as? String, "paymentsheet")
