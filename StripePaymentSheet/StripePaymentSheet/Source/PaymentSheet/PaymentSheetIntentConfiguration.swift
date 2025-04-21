@@ -107,7 +107,7 @@ public extension PaymentSheet {
             case onSession = "on_session"
 
             /// Use this if you do not intend to reuse this payment method and want to override the top-level setup_future_usage value for this payment method.
-            case none = "none"
+            @_spi(PaymentMethodOptionsSetupFutureUsageBeta) case none = "none"
         }
 
         /// Additional information about the payment or setup
