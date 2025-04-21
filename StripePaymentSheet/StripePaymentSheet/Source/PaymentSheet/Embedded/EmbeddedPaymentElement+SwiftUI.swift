@@ -126,6 +126,11 @@ import Combine
             return .failed(error: ViewModelError.notLoaded)
         }
 
+        // Hack: If Embedded has not been presented yet, we may not have a VC. If that's the case, populate it with the default VC for the window.
+        if embeddedPaymentElement.presentingViewController == nil {
+            embeddedPaymentElement.presentingViewController = UIWindow.visibleViewController
+        }
+        
         let result = await embeddedPaymentElement.confirm()
         return result
     }
