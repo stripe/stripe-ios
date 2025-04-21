@@ -6,6 +6,8 @@
 //
 
 import Foundation
+@_spi(STP) import StripePayments
+@_spi(PaymentMethodOptionsSetupFutureUsageBeta) import StripePaymentSheet
 
 struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
     enum UIStyle: String, PickerEnum {
@@ -226,6 +228,20 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
                 }
             }
             return result
+        }
+
+        func makePaymentMethodOptions() -> PaymentSheet.IntentConfiguration.Mode.PaymentMethodOptions {
+            let paymentMethodOptionsSetupFutureUsageDictionary: [String: String] = toDictionary()
+            let setupFutureUsageValues: [STPPaymentMethodType: PaymentSheet.IntentConfiguration.SetupFutureUsage] = {
+                var result: [STPPaymentMethodType: PaymentSheet.IntentConfiguration.SetupFutureUsage] = [:]
+                paymentMethodOptionsSetupFutureUsageDictionary.forEach { paymentMethodTypeIdentifier, setupFutureUsageString in
+                    let paymentMethodType = STPPaymentMethodType.fromIdentifier(paymentMethodTypeIdentifier)
+                    let setupFutureUsage = PaymentSheet.IntentConfiguration.SetupFutureUsage(rawValue: setupFutureUsageString)
+                    result[paymentMethodType] = setupFutureUsage
+                }
+                return result
+            }()
+            return PaymentSheet.IntentConfiguration.Mode.PaymentMethodOptions(setupFutureUsageValues: setupFutureUsageValues)
         }
 
     }

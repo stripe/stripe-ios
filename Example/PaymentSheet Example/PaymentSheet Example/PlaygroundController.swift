@@ -328,7 +328,7 @@ class PlaygroundController: ObservableObject {
         switch settings.mode {
         case .payment:
             return PaymentSheet.IntentConfiguration(
-                mode: .payment(amount: settings.amount.rawValue, currency: settings.currency.rawValue, setupFutureUsage: nil),
+                mode: .payment(amount: settings.amount.rawValue, currency: settings.currency.rawValue, setupFutureUsage: nil, paymentMethodOptions: settings.paymentMethodOptionsSetupFutureUsage.makePaymentMethodOptions()),
                 paymentMethodTypes: paymentMethodTypes,
                 paymentMethodConfigurationId: settings.paymentMethodConfigurationId,
                 confirmHandler: confirmHandler,
@@ -336,7 +336,7 @@ class PlaygroundController: ObservableObject {
             )
         case .paymentWithSetup:
             return PaymentSheet.IntentConfiguration(
-                mode: .payment(amount: settings.amount.rawValue, currency: settings.currency.rawValue, setupFutureUsage: .offSession),
+                mode: .payment(amount: settings.amount.rawValue, currency: settings.currency.rawValue, setupFutureUsage: .offSession, paymentMethodOptions: settings.paymentMethodOptionsSetupFutureUsage.makePaymentMethodOptions()),
                 paymentMethodTypes: paymentMethodTypes,
                 paymentMethodConfigurationId: settings.paymentMethodConfigurationId,
                 confirmHandler: confirmHandler,

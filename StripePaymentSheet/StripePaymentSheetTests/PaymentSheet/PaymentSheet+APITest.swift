@@ -11,7 +11,7 @@ import XCTest
 
 @testable@_spi(STP) import StripeCore
 @testable@_spi(STP) import StripePayments
-@testable@_spi(STP) @_spi(CustomerSessionBetaAccess)  import StripePaymentSheet
+@testable@_spi(STP) @_spi(CustomerSessionBetaAccess) @_spi(PaymentMethodOptionsSetupFutureUsageBeta) import StripePaymentSheet
 @testable@_spi(STP) import StripePaymentsTestUtils
 @testable@_spi(STP) import StripeUICore
 
@@ -526,7 +526,7 @@ class PaymentSheetAPITest: STPNetworkStubbingTestCase {
                 callbackExpectation.fulfill()
             }
         }
-        let intentConfig = PaymentSheet.IntentConfiguration(mode: .payment(amount: 100, currency: "USD"),
+        let intentConfig = PaymentSheet.IntentConfiguration(mode: .payment(amount: 100, currency: "USD", paymentMethodOptions: PaymentSheet.IntentConfiguration.Mode.PaymentMethodOptions(setupFutureUsageValues: [.card: .offSession])),
                                                             paymentMethodTypes: types,
                                                             confirmHandler: confirmHandler)
         PaymentSheetLoader.load(

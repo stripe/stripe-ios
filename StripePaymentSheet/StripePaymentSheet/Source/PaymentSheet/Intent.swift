@@ -78,7 +78,7 @@ enum Intent {
             return nil
         case .deferredIntent(let intentConfig):
             switch intentConfig.mode {
-            case .payment(_, let currency, _, _):
+            case .payment(_, let currency, _, _, _):
                 return currency
             case .setup(let currency, _):
                 return currency
@@ -94,7 +94,7 @@ enum Intent {
             return nil
         case .deferredIntent(let intentConfig):
             switch intentConfig.mode {
-            case .payment(let amount, _, _, _):
+            case .payment(let amount, _, _, _, _):
                 return amount
             case .setup:
                 return nil
@@ -111,7 +111,7 @@ enum Intent {
             return true
         case .deferredIntent(let intentConfig):
             switch intentConfig.mode {
-            case .payment(_, _, let setupFutureUsage, _):
+            case .payment(_, _, let setupFutureUsage, _, _):
                 return setupFutureUsage != nil
             case .setup:
                 return true
