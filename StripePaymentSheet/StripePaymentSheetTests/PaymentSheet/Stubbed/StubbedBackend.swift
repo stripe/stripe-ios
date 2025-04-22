@@ -27,7 +27,7 @@ class StubbedBackend {
             }
         )
     }
-
+    
     static func updatePaymentMethodDetail(data: Data, variables: [String: String]) -> Data {
         var template = String(data: data, encoding: .utf8)!
         for (templateKey, templateValue) in variables {
@@ -104,5 +104,7 @@ public class ClassForBundle {}
     case customers_200 = "MockFiles/customers_200"
     case consumers_lookup_200 = "MockFiles/consumers_lookup_200"
     case payment_intents_200 = "MockFiles/payment_intents_200"
+    case payment_intents_misordered_pms_200 = "MockFiles/payment_intents_misordered_pms_200"
+    case payment_intents_no_card_200 = "MockFiles/payment_intents_no_card_200"
     case setup_intents_200 = "MockFiles/setup_intents_200"
 }
