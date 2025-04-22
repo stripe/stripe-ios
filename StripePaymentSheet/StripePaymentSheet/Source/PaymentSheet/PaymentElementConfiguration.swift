@@ -90,7 +90,7 @@ extension PaymentElementConfiguration {
 
 extension PaymentSheet.Configuration: PaymentElementConfiguration {}
 extension EmbeddedPaymentElement.Configuration: PaymentElementConfiguration {
-    
+
     var paymentMethodLayout: PaymentSheet.PaymentMethodLayout {
         return .vertical
     }
