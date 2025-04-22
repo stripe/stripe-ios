@@ -37,9 +37,6 @@
 /* Placeholder text for BSB Number entry field for BECS Debit. */
 "BSB" = "BSB";
 
-/* Default label for a funding source, we fallback on this if none of the other labels match. E.g. '<Brand> Card' */
-"Card" = "Card";
-
 /* Card details entry form header title */
 "Card information" = "Card information";
 
