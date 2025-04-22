@@ -342,6 +342,7 @@ extension ConsumerPaymentDetails {
             details: details,
             billingAddress: billingAddress,
             billingEmailAddress: billingEmailAddress,
+            nickname: nickname,
             isDefault: isDefault
         )
     }

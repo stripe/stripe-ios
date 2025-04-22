@@ -27,9 +27,10 @@ extension LinkPaymentMethodPicker {
                     cardBrandView.setCardBrand(STPCard.brand(from: card.brand))
                     bankIconView.isHidden = true
                     cardBrandView.isHidden = false
-                    primaryLabel.text = paymentMethod?.paymentSheetLabel
-                    secondaryLabel.text = nil
-                    secondaryLabel.isHidden = true
+                    primaryLabel.text = paymentMethod?.nickname ?? paymentMethod?.paymentSheetLabel
+                    let hasNickname = paymentMethod?.nickname != nil
+                    secondaryLabel.text = hasNickname ? paymentMethod?.paymentSheetLabel : nil
+                    secondaryLabel.isHidden = !hasNickname
                 case .bankAccount(let bankAccount):
                     bankIconView.image = PaymentSheetImageLibrary.bankIcon(for: bankAccount.iconCode)
                     cardBrandView.isHidden = true

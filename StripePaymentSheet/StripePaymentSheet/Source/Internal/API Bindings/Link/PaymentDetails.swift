@@ -23,17 +23,21 @@ final class ConsumerPaymentDetails: Decodable {
     let details: Details
     let billingAddress: BillingAddress?
     let billingEmailAddress: String?
+    let nickname: String?
     var isDefault: Bool
 
     init(stripeID: String,
          details: Details,
          billingAddress: BillingAddress?,
          billingEmailAddress: String?,
-         isDefault: Bool) {
+         nickname: String?,
+         isDefault: Bool
+    ) {
         self.stripeID = stripeID
         self.details = details
         self.billingAddress = billingAddress
         self.billingEmailAddress = billingEmailAddress
+        self.nickname = nickname
         self.isDefault = isDefault
     }
 
@@ -41,6 +45,7 @@ final class ConsumerPaymentDetails: Decodable {
         case stripeID = "id"
         case billingAddress = "billing_address"
         case billingEmailAddress = "billing_email_address"
+        case nickname
         case isDefault
     }
 
@@ -49,6 +54,12 @@ final class ConsumerPaymentDetails: Decodable {
         self.stripeID = try container.decode(String.self, forKey: .stripeID)
         self.billingAddress = try? container.decode(BillingAddress.self, forKey: .billingAddress)
         self.billingEmailAddress = try? container.decode(String.self, forKey: .billingEmailAddress)
+        let decodedNickname = try? container.decode(String.self, forKey: .nickname)
+        if let decodedNickname, !decodedNickname.isEmpty {
+            self.nickname = decodedNickname
+        } else {
+            self.nickname = nil
+        }
         // The payment details are included in the dictionary, so we pass the whole dict to Details
         self.details = try decoder.singleValueContainer().decode(Details.self)
         self.isDefault = try container.decode(Bool.self, forKey: .isDefault)
