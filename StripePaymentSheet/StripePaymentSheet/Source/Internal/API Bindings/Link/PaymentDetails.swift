@@ -221,11 +221,7 @@ extension ConsumerPaymentDetails.Details.Card {
     }
 
     var secondaryName: String {
-        "••••\(last4)"
-    }
-
-    var secondaryName: String {
-        "••••\(last4)"
+        "•••• \(last4)"
     }
 
     func displayName(with nickname: String?) -> String? {
