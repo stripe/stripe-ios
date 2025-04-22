@@ -80,7 +80,7 @@ class PaymentSheetFormFactory {
         linkAccount: PaymentSheetLinkAccount? = nil,
         accountService: LinkAccountServiceProtocol,
         analyticsHelper: PaymentSheetAnalyticsHelper?,
-        shouldReadPaymentMethodOptionsSetupFutureUsage: Bool
+        shouldReadPaymentMethodOptionsSetupFutureUsage: Bool = false
     ) {
 
         /// Whether or not the card form should show the link inline signup checkbox

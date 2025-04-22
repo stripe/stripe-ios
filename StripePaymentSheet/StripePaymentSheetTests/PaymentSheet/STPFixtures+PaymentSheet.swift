@@ -229,10 +229,11 @@ extension Intent {
     static func _testPaymentIntent(
         paymentMethodTypes: [STPPaymentMethodType],
         setupFutureUsage: STPPaymentIntentSetupFutureUsage = .none,
+        paymentMethodOptionsSetupFutureUsage: [STPPaymentMethodType: String]? = nil,
         currency: String = "usd"
     ) -> Intent {
         let paymentMethodTypes = paymentMethodTypes.map { STPPaymentMethod.string(from: $0) ?? "unknown" }
-        let paymentIntent = STPFixtures.paymentIntent(paymentMethodTypes: paymentMethodTypes, setupFutureUsage: setupFutureUsage, currency: currency)
+        let paymentIntent = STPFixtures.paymentIntent(paymentMethodTypes: paymentMethodTypes, setupFutureUsage: setupFutureUsage, paymentMethodOptionsSetupFutureUsage: paymentMethodOptionsSetupFutureUsage, currency: currency)
         return .paymentIntent(paymentIntent)
     }
 
@@ -459,7 +460,8 @@ extension PaymentSheetFormFactory {
         paymentMethod: PaymentSheet.PaymentMethodType,
         previousCustomerInput: IntentConfirmParams? = nil,
         addressSpecProvider: AddressSpecProvider = .shared,
-        linkAccount: PaymentSheetLinkAccount? = nil
+        linkAccount: PaymentSheetLinkAccount? = nil,
+        shouldReadPaymentMethodOptionsSetupFutureUsage: Bool = false
     ) {
         self.init(
             intent: intent,
@@ -470,7 +472,8 @@ extension PaymentSheetFormFactory {
             addressSpecProvider: addressSpecProvider,
             linkAccount: linkAccount,
             accountService: LinkAccountService._testValue(),
-            analyticsHelper: ._testValue()
+            analyticsHelper: ._testValue(),
+            shouldReadPaymentMethodOptionsSetupFutureUsage: shouldReadPaymentMethodOptionsSetupFutureUsage
         )
     }
 }
