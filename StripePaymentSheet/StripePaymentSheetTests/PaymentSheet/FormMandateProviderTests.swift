@@ -7,7 +7,7 @@
 
 import Foundation
 @testable @_spi(STP) import StripeCore
-@testable @_spi(EmbeddedPaymentElementPrivateBeta) @_spi(STP) import StripePaymentSheet
+@testable @_spi(EmbeddedPaymentElementPrivateBeta) @_spi(PaymentMethodOptionsSetupFutureUsagePrivatePreview) @_spi(STP) import StripePaymentSheet
 @testable @_spi(STP) import StripeUICore
 import XCTest
 
@@ -153,6 +153,24 @@ class FormMandateProviderTests: XCTestCase {
         XCTAssertEqual(result?.string, expected)
     }
 
+    func testFormMandateProvider_cashApp_PMO_settingWithSetupFutureUsage_shouldReturnMandate() {
+        var configuration = PaymentSheet.Configuration()
+        configuration.merchantDisplayName = "Test Merchant"
+        configuration.shouldReadPaymentMethodOptionsSetupFutureUsage = true
+
+        let elementsSession = STPElementsSession._testValue(paymentMethodTypes: ["cashapp"])
+        let intentConfig = PaymentSheet.IntentConfiguration(
+            mode: .payment(amount: 1000, currency: "USD", paymentMethodOptions: PaymentSheet.IntentConfiguration.Mode.PaymentMethodOptions(setupFutureUsageValues: [.cashApp: .offSession])),
+            confirmHandler: { _, _, _ in }
+        )
+        let intent = Intent.deferredIntent(intentConfig: intentConfig)
+        let formMandateProvider = VerticalListMandateProvider(configuration: configuration, elementsSession: elementsSession, intent: intent, analyticsHelper: ._testValue())
+
+        let result = formMandateProvider.mandate(for: .stripe(.cashApp), savedPaymentMethod: nil, bottomNoticeAttributedString: nil)
+        let expected = "By continuing, you authorize Test Merchant to debit your Cash App account for this payment and future payments in accordance with Test Merchant\'s terms, until this authorization is revoked. You can change this anytime in your Cash App Settings."
+        XCTAssertEqual(result?.string, expected)
+    }
+
     func testFormMandateProvider_cashApp_settingUp_shouldNotReturnMandate() {
         var configuration = PaymentSheet.Configuration()
         configuration.merchantDisplayName = "Test Merchant"
@@ -160,6 +178,23 @@ class FormMandateProviderTests: XCTestCase {
         let elementsSession = STPElementsSession._testValue(paymentMethodTypes: ["cashapp"])
         let intentConfig = PaymentSheet.IntentConfiguration(
             mode: .payment(amount: 100, currency: "USD"),
+            confirmHandler: { _, _, _ in }
+        )
+        let intent = Intent.deferredIntent(intentConfig: intentConfig)
+        let formMandateProvider = VerticalListMandateProvider(configuration: configuration, elementsSession: elementsSession, intent: intent, analyticsHelper: ._testValue())
+
+        let result = formMandateProvider.mandate(for: .stripe(.cashApp), savedPaymentMethod: nil, bottomNoticeAttributedString: nil)
+        XCTAssertNil(result)
+    }
+
+    func testFormMandateProvider_cashApp_PMO_settingUp_shouldNotReturnMandate() {
+        var configuration = PaymentSheet.Configuration()
+        configuration.merchantDisplayName = "Test Merchant"
+        configuration.shouldReadPaymentMethodOptionsSetupFutureUsage = true
+
+        let elementsSession = STPElementsSession._testValue(paymentMethodTypes: ["cashapp"])
+        let intentConfig = PaymentSheet.IntentConfiguration(
+            mode: .payment(amount: 100, currency: "USD", setupFutureUsage: .offSession, paymentMethodOptions: PaymentSheet.IntentConfiguration.Mode.PaymentMethodOptions(setupFutureUsageValues: [.cashApp: .none])),
             confirmHandler: { _, _, _ in }
         )
         let intent = Intent.deferredIntent(intentConfig: intentConfig)

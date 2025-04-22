@@ -1774,14 +1774,15 @@ class PaymentSheetFormFactoryTest: XCTestCase {
         configuration.customer = .init(id: "id", ephemeralKeySecret: "ek")
         let analyticsClient = STPAnalyticsClient()
 
-        func makeForm(intent: Intent) -> PaymentMethodElement {
+        func makeForm(intent: Intent, shouldReadPaymentMethodOptionsSetupFutureUsage: Bool = false) -> PaymentMethodElement {
             return PaymentSheetFormFactory(
                 intent: intent,
                 elementsSession: ._testValue(intent: intent),
                 configuration: .paymentElement(configuration),
                 paymentMethod: .stripe(.card),
                 accountService: LinkAccountService._testValue(),
-                analyticsHelper: ._testValue(analyticsClient: analyticsClient)
+                analyticsHelper: ._testValue(analyticsClient: analyticsClient),
+                shouldReadPaymentMethodOptionsSetupFutureUsage: shouldReadPaymentMethodOptionsSetupFutureUsage
             ).make()
         }
         let cardForm_pi = makeForm(intent: ._testPaymentIntent(paymentMethodTypes: [.card]))
@@ -1789,6 +1790,12 @@ class PaymentSheetFormFactoryTest: XCTestCase {
 
         let cardForm_pi_sfu = makeForm(intent: ._testPaymentIntent(paymentMethodTypes: [.card], setupFutureUsage: .offSession))
         XCTAssertTrue(cardForm_pi_sfu.getMandateElement() != nil)
+
+        let cardForm_pi_pmo_sfu = makeForm(intent: ._testPaymentIntent(paymentMethodTypes: [.card], paymentMethodOptionsSetupFutureUsage: [.card: "off_session"]), shouldReadPaymentMethodOptionsSetupFutureUsage: true)
+        XCTAssertTrue(cardForm_pi_pmo_sfu.getMandateElement() != nil)
+
+        let cardForm_pi_top_level_sfu_pmo_sfu_none = makeForm(intent: ._testPaymentIntent(paymentMethodTypes: [.card], setupFutureUsage: .offSession, paymentMethodOptionsSetupFutureUsage: [.card: "none"]), shouldReadPaymentMethodOptionsSetupFutureUsage: true)
+        XCTAssertTrue(cardForm_pi_top_level_sfu_pmo_sfu_none.getMandateElement() == nil)
 
         let cardForm_si = makeForm(intent: ._testSetupIntent(paymentMethodTypes: [.card]))
         XCTAssertTrue(cardForm_si.getMandateElement() != nil)
