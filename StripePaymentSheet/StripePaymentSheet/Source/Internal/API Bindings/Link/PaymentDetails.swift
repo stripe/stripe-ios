@@ -144,6 +144,7 @@ extension ConsumerPaymentDetails.Details {
         let brand: String
         let networks: [String]
         let last4: String
+        let funding: Funding
         let checks: CardChecks?
 
         private enum CodingKeys: String, CodingKey {
@@ -152,6 +153,7 @@ extension ConsumerPaymentDetails.Details {
             case brand
             case networks
             case last4
+            case funding
             case checks
         }
 
@@ -164,12 +166,15 @@ extension ConsumerPaymentDetails.Details {
              brand: String,
              networks: [String],
              last4: String,
-             checks: CardChecks?) {
+             funding: Funding,
+             checks: CardChecks?
+        ) {
             self.expiryYear = expiryYear
             self.expiryMonth = expiryMonth
             self.brand = brand
             self.networks = networks
             self.last4 = last4
+            self.funding = funding
             self.checks = checks
         }
     }
@@ -177,6 +182,22 @@ extension ConsumerPaymentDetails.Details {
 
 // MARK: - Details.Card - Helpers
 extension ConsumerPaymentDetails.Details.Card {
+    enum Funding: String, SafeEnumCodable {
+        case credit = "CREDIT"
+        case debit = "DEBIT"
+        case prepaid = "PREPAID"
+        // Catch all
+        case unparsable = ""
+
+        var displayName: String {
+            switch self {
+            case .credit: String.Localized.Funding.credit
+            case .debit: String.Localized.Funding.debit
+            case .prepaid: String.Localized.Funding.prepaid
+            case .unparsable: String.Localized.Funding.default
+            }
+        }
+    }
 
     var shouldRecollectCardCVC: Bool {
         switch checks?.cvcCheck {
@@ -198,7 +219,26 @@ extension ConsumerPaymentDetails.Details.Card {
     var stpBrand: STPCardBrand {
         return STPCard.brand(from: brand)
     }
+    
+    var secondaryName: String {
+        "••••\(last4)"
+    }
 
+    func displayName(with nickname: String?) -> String {
+        if let nickname {
+            return nickname
+        }
+
+        guard let formattedBrandName = STPCardBrandUtilities.stringFrom(stpBrand) else {
+            return funding.displayName
+        }
+
+        return String(
+            format: String.Localized.Funding.formattedWithCardBrand,
+            formattedBrandName,
+            funding.displayName
+        )
+    }
 }
 
 // MARK: - Details.BankAccount
@@ -228,7 +268,7 @@ extension ConsumerPaymentDetails {
     var paymentSheetLabel: String {
         switch details {
         case .card(let card):
-            return "••••\(card.last4)"
+            return card.displayName(with: nickname)
         case .bankAccount(let bank):
             return "••••\(bank.last4)"
         case .unparsable:

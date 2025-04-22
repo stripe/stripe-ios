@@ -143,6 +143,43 @@ extension String.Localized {
             "String to inform a user that specific card brands are not accepted."
         )
     }
+
+    @_spi(STP) public enum Funding {
+        @_spi(STP) public static var credit: String {
+            STPLocalizedString(
+                "Credit",
+                "Label a credit funding source. E.g. '<Brand> Credit'"
+            )
+        }
+
+        @_spi(STP) public static var debit: String {
+            STPLocalizedString(
+                "Debit",
+                "Label a debit funding source. E.g. '<Brand> Debit'"
+            )
+        }
+
+        @_spi(STP) public static var prepaid: String {
+            STPLocalizedString(
+                "Prepaid",
+                "Label a prepaid funding source. E.g. '<Brand> Prepaid'"
+            )
+        }
+
+        @_spi(STP) public static var `default`: String {
+            STPLocalizedString(
+                "Card",
+                "Default label for a funding source, we fallback on this if none of the other labels match. E.g. '<Brand> Card'"
+            )
+        }
+        
+        @_spi(STP) public static var formattedWithCardBrand: String {
+            STPLocalizedString(
+                "%1$@ %2$@",
+                "Details of a saved card. '{card brand} {funding}' e.g. 'Visa Debit'"
+            )
+        }
+    }
 }
 
 @_spi(STP) public struct StripeSharedStrings {
