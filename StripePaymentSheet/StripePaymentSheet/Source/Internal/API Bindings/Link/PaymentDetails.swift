@@ -224,13 +224,13 @@ extension ConsumerPaymentDetails.Details.Card {
         "••••\(last4)"
     }
 
-    func displayName(with nickname: String?) -> String {
+    func displayName(with nickname: String?) -> String? {
         if let nickname {
             return nickname
         }
 
         guard let formattedBrandName = STPCardBrandUtilities.stringFrom(stpBrand) else {
-            return funding.displayName
+            return nil
         }
 
         return String(
@@ -268,7 +268,7 @@ extension ConsumerPaymentDetails {
     var paymentSheetLabel: String {
         switch details {
         case .card(let card):
-            return card.displayName(with: nickname)
+            return card.displayName(with: nickname) ?? card.secondaryName
         case .bankAccount(let bank):
             return "••••\(bank.last4)"
         case .unparsable:
