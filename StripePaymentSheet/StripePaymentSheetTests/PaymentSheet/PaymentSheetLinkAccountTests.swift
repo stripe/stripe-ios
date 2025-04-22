@@ -121,9 +121,18 @@ extension PaymentSheetLinkAccountTests {
     func makePaymentDetailsStub() -> ConsumerPaymentDetails {
         return ConsumerPaymentDetails(
             stripeID: "1",
-            details: .card(card: .init(expiryYear: 30, expiryMonth: 10, brand: "visa", networks: ["visa"], last4: "1234", checks: nil)),
+            details: .card(card: .init(
+                expiryYear: 30,
+                expiryMonth: 10,
+                brand: "visa",
+                networks: ["visa"],
+                last4: "1234",
+                funding: .credit,
+                checks: nil
+            )),
             billingAddress: nil,
             billingEmailAddress: nil,
+            nickname: nil,
             isDefault: false
         )
     }
