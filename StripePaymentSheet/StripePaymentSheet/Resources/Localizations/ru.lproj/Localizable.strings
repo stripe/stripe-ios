@@ -34,9 +34,11 @@
 
 "Bank account details cannot be changed." = "Реквизиты банковского счета нельзя изменить.";
 
-"Buy now or pay later with <img/>" = "Купить сейчас или оплатить позже через систему <img/>";
+"Buy now or pay later with  <img/>" = "Купите сейчас или оплатите позже через <img/>";
 
 "Buy now or pay later with Afterpay" = "Купите сейчас или оплатите позже через систему Afterpay";
+
+"Buy now or pay later with Cash App Afterpay" = "Купите сейчас или оплатите позже через Cash App Afterpay";
 
 "Buy now or pay later with Clearpay" = "Купите сейчас или оплатите позже через систему Clearpay";
 
@@ -91,6 +93,8 @@
 "Confirm" = "Подтвердить";
 
 "Confirm it's you" = "Подтвердите, что это вы";
+
+"Confirm payment details" = "Подтвердить реквизиты платежа";
 
 "Confirm the payment in your bank or payment app within %@ to complete the purchase." = "Чтобы завершить оформление покупки, подтвердите платеж в своем банковском или платежном приложении в течение %@.";
 

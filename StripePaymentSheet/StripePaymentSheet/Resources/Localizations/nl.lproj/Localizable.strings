@@ -34,9 +34,11 @@
 
 "Bank account details cannot be changed." = "Bankrekeninggegevens kunnen niet worden gewijzigd.";
 
-"Buy now or pay later with <img/>" = "Koop nu of betaal later met <img/>";
+"Buy now or pay later with  <img/>" = "Koop nu of betaal later met <img/>";
 
 "Buy now or pay later with Afterpay" = "Koop nu of betaal later met Afterpay";
+
+"Buy now or pay later with Cash App Afterpay" = "Koop nu of betaal later met Cash App Afterpay";
 
 "Buy now or pay later with Clearpay" = "Koop nu of betaal later met Clearpay";
 
@@ -91,6 +93,8 @@
 "Confirm" = "Bevestigen";
 
 "Confirm it's you" = "Bevestig dat jij het bent";
+
+"Confirm payment details" = "Betaalgegevens bevestigen";
 
 "Confirm the payment in your bank or payment app within %@ to complete the purchase." = "Bevestig de betaling via je bank of betaal-app binnen %@ om de aankoop af te ronden.";
 

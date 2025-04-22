@@ -34,9 +34,11 @@
 
 "Bank account details cannot be changed." = "Bankkontodetaljar kan ikkje endrast.";
 
-"Buy now or pay later with <img/>" = "Kjøp no eller betal seinare med <img/>";
+"Buy now or pay later with  <img/>" = "Kjøp no eller betal seinare med  <img/>";
 
 "Buy now or pay later with Afterpay" = "Kjøp no eller betal seinare med Afterpay";
+
+"Buy now or pay later with Cash App Afterpay" = "Kjøp no eller betal seinare med Cash App Afterpay";
 
 "Buy now or pay later with Clearpay" = "Kjøp no eller betal seinare med Clearpay";
 
@@ -91,6 +93,8 @@
 "Confirm" = "Stadfest";
 
 "Confirm it's you" = "Stadfest at det er deg";
+
+"Confirm payment details" = "Stadfest betalingsopplysningar";
 
 "Confirm the payment in your bank or payment app within %@ to complete the purchase." = "Stadfest betalinga i banken eller betalingsappen innan %@ for å fullføre kjøpet.";
 

@@ -26,26 +26,34 @@ struct PaymentMethodOptionsSetupFutureUsagePlaygroundView: View {
             }.padding()
             Group {
                 VStack {
-                    SettingPickerView(setting: $viewModel.paymentMethodOptionsSetupFutureUsage.card, customDisplayLabel: "Card")
-                    SettingPickerView(setting: $viewModel.paymentMethodOptionsSetupFutureUsage.usBankAccount, customDisplayLabel: "US Bank Account")
-                    SettingPickerView(setting: $viewModel.paymentMethodOptionsSetupFutureUsage.sepaDebit, customDisplayLabel: "SEPA Debit")
-                    SettingPickerView(setting: $viewModel.paymentMethodOptionsSetupFutureUsage.link, customDisplayLabel: "Link")
-                    SettingPickerView(setting: $viewModel.paymentMethodOptionsSetupFutureUsage.klarna, customDisplayLabel: "Klarna")
-                    SettingPickerView(setting: $viewModel.paymentMethodOptionsSetupFutureUsage.affirm, customDisplayLabel: "Affirm")
-                    SettingPickerView(setting: $viewModel.paymentMethodOptionsSetupFutureUsage.afterpayClearpay, customDisplayLabel: "Afterpay/Clearpay")
-                    TextField("pm_type=sfu_value (comma separated)", text: customPaymentMethodOptionsSetupFutureUsageBinding)
-                        .autocapitalization(.none)
+                    SettingView(setting: $viewModel.paymentMethodOptionsSetupFutureUsageEnabled)
+                    if viewModel.paymentMethodOptionsSetupFutureUsageEnabled == .on {
+                        VStack {
+                            SettingPickerView(setting: $viewModel.paymentMethodOptionsSetupFutureUsage.card, customDisplayLabel: "Card")
+                            if viewModel.merchantCountryCode == .US, viewModel.currency == .usd {
+                                SettingPickerView(setting: $viewModel.paymentMethodOptionsSetupFutureUsage.usBankAccount, customDisplayLabel: "US Bank Account")
+                            }
+                            if viewModel.allowsDelayedPMs == .on {
+                                SettingPickerView(setting: $viewModel.paymentMethodOptionsSetupFutureUsage.sepaDebit, customDisplayLabel: "SEPA Debit")
+                            }
+                            SettingPickerView(setting: $viewModel.paymentMethodOptionsSetupFutureUsage.link, customDisplayLabel: "Link")
+                            SettingPickerView(setting: $viewModel.paymentMethodOptionsSetupFutureUsage.klarna, customDisplayLabel: "Klarna")
+                            SettingPickerView(setting: $viewModel.paymentMethodOptionsSetupFutureUsage.affirm, customDisplayLabel: "Affirm")
+                            TextField("pm_type:sfu_value (comma separated)", text: additionalPaymentMethodOptionsSetupFutureUsageBinding)
+                                .autocapitalization(.none)
+                        }
+                    }
                 }
             }.padding()
 
         }
     }
 
-    var customPaymentMethodOptionsSetupFutureUsageBinding: Binding<String> {
+    var additionalPaymentMethodOptionsSetupFutureUsageBinding: Binding<String> {
         Binding<String> {
-            return viewModel.customPaymentMethodOptionsSetupFutureUsage ?? ""
+            return viewModel.paymentMethodOptionsSetupFutureUsage.additionalPaymentMethodOptionsSetupFutureUsage ?? ""
         } set: { newString in
-            viewModel.customPaymentMethodOptionsSetupFutureUsage = newString
+            viewModel.paymentMethodOptionsSetupFutureUsage.additionalPaymentMethodOptionsSetupFutureUsage = newString
         }
     }
 }

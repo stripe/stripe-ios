@@ -50,7 +50,10 @@ class VerticalSavedPaymentMethodsViewController: UIViewController {
         didSet {
             let additionalButtonTitle = isEditingPaymentMethods ? UIButton.doneButtonTitle : UIButton.editButtonTitle
             navigationBar.additionalButton.setTitle(additionalButtonTitle, for: .normal)
-            headerLabel.text = headerText
+            // Update header text unless we removed the last pm and we're getting kicked out to the main screen
+            if !paymentMethodRows.isEmpty {
+                headerLabel.text = headerText
+            }
 
             // If we are entering edit mode, put all buttons in an edit state, otherwise put back in their previous state
             if isEditingPaymentMethods {
@@ -180,7 +183,7 @@ class VerticalSavedPaymentMethodsViewController: UIViewController {
         self.defaultPaymentMethod = defaultPaymentMethod
         self.paymentMethodRemove = elementsSession.allowsRemovalOfPaymentMethodsForPaymentSheet()
         self.paymentMethodRemoveLast = elementsSession.paymentMethodRemoveLast(configuration: configuration)
-        self.paymentMethodUpdate = elementsSession.paymentMethodUpdateForPaymentSheet(configuration)
+        self.paymentMethodUpdate = elementsSession.paymentMethodUpdateForPaymentSheet
         self.paymentMethodSetAsDefault = elementsSession.paymentMethodSetAsDefaultForPaymentSheet
         self.isCBCEligible = elementsSession.isCardBrandChoiceEligible
         self.analyticsHelper = analyticsHelper
@@ -260,7 +263,7 @@ class VerticalSavedPaymentMethodsViewController: UIViewController {
 
         // If we deleted the last payment method kick back out to the main screen
         if paymentMethodRows.isEmpty {
-            complete()
+            complete(afterDelay: 0.3)
         }
     }
 
@@ -369,8 +372,15 @@ extension VerticalSavedPaymentMethodsViewController: UpdatePaymentMethodViewCont
         if isDefaultPaymentMethod(paymentMethodId: paymentMethod.stripeId) {
             defaultPaymentMethod = nil
         }
-        remove(paymentMethod: paymentMethod)
-       _ = viewController.bottomSheetController?.popContentViewController()
+        // if it's the last saved pm, there's some animation jank from trying to quickly dismiss the update pm screen and the manage screen, so we wait until the update pm screen is dismissed, animate the payment method fading, and return to the main screen
+        if paymentMethodRows.count == 1 {
+            _ = viewController.bottomSheetController?.popContentViewController {
+                self.remove(paymentMethod: paymentMethod)
+            }
+        } else {
+            remove(paymentMethod: paymentMethod)
+            _ = viewController.bottomSheetController?.popContentViewController()
+        }
     }
 
     func didUpdate(viewController: UpdatePaymentMethodViewController,

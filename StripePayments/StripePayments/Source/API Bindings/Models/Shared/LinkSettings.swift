@@ -22,6 +22,12 @@ import Foundation
         case ephemeral
     }
 
+    @_spi(STP) @frozen public enum LinkDefaultOptIn: String {
+        case full = "FULL"
+        case optional = "OPTIONAL"
+        case none = "NONE"
+    }
+
     @_spi(STP) public let fundingSources: Set<FundingSource>
     @_spi(STP) public let popupWebviewOption: PopupWebviewOption?
     @_spi(STP) public let passthroughModeEnabled: Bool?
@@ -31,6 +37,7 @@ import Foundation
     @_spi(STP) public let linkMode: LinkMode?
     @_spi(STP) public let linkFlags: [String: Bool]?
     @_spi(STP) public let linkConsumerIncentive: LinkConsumerIncentive?
+    @_spi(STP) public let linkDefaultOptIn: LinkDefaultOptIn?
 
     @_spi(STP) public let allResponseFields: [AnyHashable: Any]
 
@@ -44,6 +51,7 @@ import Foundation
         linkMode: LinkMode?,
         linkFlags: [String: Bool]?,
         linkConsumerIncentive: LinkConsumerIncentive?,
+        linkDefaultOptIn: LinkDefaultOptIn?,
         allResponseFields: [AnyHashable: Any]
     ) {
         self.fundingSources = fundingSources
@@ -55,6 +63,7 @@ import Foundation
         self.linkMode = linkMode
         self.linkFlags = linkFlags
         self.linkConsumerIncentive = linkConsumerIncentive
+        self.linkDefaultOptIn = linkDefaultOptIn
         self.allResponseFields = allResponseFields
     }
 
@@ -77,6 +86,7 @@ import Foundation
         let useAttestationEndpoints = response["link_mobile_use_attestation_endpoints"] as? Bool ?? false
         let suppress2FAModal = response["link_mobile_suppress_2fa_modal"] as? Bool ?? false
         let linkMode = (response["link_mode"] as? String).flatMap { LinkMode(rawValue: $0) }
+        let linkDefaultOptIn = (response["link_default_opt_in"] as? String).flatMap { LinkDefaultOptIn(rawValue: $0) }
 
         let linkIncentivesEnabled = UserDefaults.standard.bool(forKey: "FINANCIAL_CONNECTIONS_INSTANT_DEBITS_INCENTIVES")
         let linkConsumerIncentive: LinkConsumerIncentive? = if linkIncentivesEnabled {
@@ -104,6 +114,7 @@ import Foundation
             linkMode: linkMode,
             linkFlags: linkFlags,
             linkConsumerIncentive: linkConsumerIncentive,
+            linkDefaultOptIn: linkDefaultOptIn,
             allResponseFields: response
         ) as? Self
     }

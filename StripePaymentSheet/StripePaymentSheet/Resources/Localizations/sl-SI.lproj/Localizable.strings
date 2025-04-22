@@ -34,9 +34,11 @@
 
 "Bank account details cannot be changed." = "Podatkov o bančnem računu ni mogoče spremeniti.";
 
-"Buy now or pay later with <img/>" = "Kupite zdaj ali pa plačajte pozneje s storitvijo <img/>";
+"Buy now or pay later with  <img/>" = "Kupite zdaj ali pa plačajte pozneje s storitvijo <img/>";
 
 "Buy now or pay later with Afterpay" = "Kupite zdaj ali pa plačajte pozneje s storitvijo Afterpay";
+
+"Buy now or pay later with Cash App Afterpay" = "Kupite zdaj ali pa plačajte pozneje s storitvijo Cash App Afterpay";
 
 "Buy now or pay later with Clearpay" = "Kupite zdaj ali pa plačajte pozneje s storitvijo Clearpay";
 
@@ -91,6 +93,8 @@
 "Confirm" = "Potrdi";
 
 "Confirm it's you" = "Potrdite svojo identiteto";
+
+"Confirm payment details" = "Potrdite podatke o plačilu";
 
 "Confirm the payment in your bank or payment app within %@ to complete the purchase." = "Potrdite plačilo v aplikaciji banke ali aplikaciji za plačilo v %@, da zaključite nakup.";
 

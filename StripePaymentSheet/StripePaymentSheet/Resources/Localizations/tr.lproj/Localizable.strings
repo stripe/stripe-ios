@@ -34,9 +34,11 @@
 
 "Bank account details cannot be changed." = "Banka hesabı ayrıntıları değiştirilemiyor.";
 
-"Buy now or pay later with <img/>" = "Şimdi satın alın veya daha sonra <img/> ile ödeyin.";
+"Buy now or pay later with  <img/>" = "Şimdi satın alın veya daha sonra <img/> ile ödeyin.";
 
 "Buy now or pay later with Afterpay" = "Şimdi satın alın veya daha sonra Afterpay ile ödeyin";
+
+"Buy now or pay later with Cash App Afterpay" = "Şimdi satın alın veya daha sonra Cash Uygulaması Afterpay ile ödeyin";
 
 "Buy now or pay later with Clearpay" = "Şimdi satın alın veya daha sonra Clearpay ile ödeyin";
 
@@ -91,6 +93,8 @@
 "Confirm" = "Onayla";
 
 "Confirm it's you" = "Siz olduğunuzu teyit edin";
+
+"Confirm payment details" = "Ödeme bilgilerini onayla";
 
 "Confirm the payment in your bank or payment app within %@ to complete the purchase." = "%@ içinde banka veya ödeme uygulamanızla ödemeyi onaylayarak satın almayı tamamlayın.";
 

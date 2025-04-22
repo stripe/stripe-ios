@@ -34,9 +34,11 @@
 
 "Bank account details cannot be changed." = "Informácie o bankovom účte nie je možné meniť.";
 
-"Buy now or pay later with <img/>" = "Kúpte teraz alebo zaplaťte neskôr pomocou služby <img/>";
+"Buy now or pay later with  <img/>" = "Kúpte teraz alebo zaplaťte neskôr pomocou služby <img/>";
 
 "Buy now or pay later with Afterpay" = "Kúpte teraz alebo zaplaťte neskôr pomocou služby Afterpay";
+
+"Buy now or pay later with Cash App Afterpay" = "Kúpte teraz alebo zaplaťte neskôr pomocou aplikácie Cash App Afterpay";
 
 "Buy now or pay later with Clearpay" = "Kúpte teraz alebo zaplaťte neskôr pomocou služby Clearpay";
 
@@ -91,6 +93,8 @@
 "Confirm" = "Potvrdiť";
 
 "Confirm it's you" = "Potvrdenie vašej totožnosti";
+
+"Confirm payment details" = "Potvrdiť informácie o platbe";
 
 "Confirm the payment in your bank or payment app within %@ to complete the purchase." = "Dokončite nákup potvrdením platby v banke alebo platobnej aplikácii v priebehu %@.";
 

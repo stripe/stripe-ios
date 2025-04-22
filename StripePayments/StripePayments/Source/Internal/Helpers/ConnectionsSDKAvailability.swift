@@ -21,15 +21,23 @@ import UIKit
 
     @_spi(STP) public static var fcLiteKillswitchEnabled: Bool = false
     @_spi(STP) public static var shouldPreferFCLite: Bool = false
-    // Remove this when ready to release FC Lite:
-    @_spi(STP) public static var fcLiteFeatureEnabled: Bool = false
 
     private static var FCLiteClassIfEnabled: FinancialConnectionsSDKInterface.Type? {
-        guard fcLiteFeatureEnabled, !fcLiteKillswitchEnabled else {
+        guard !fcLiteKillswitchEnabled else {
             return nil
         }
         return Self.FinancialConnectionsLiteImplementation
     }
+
+    @_spi(STP) public static let analyticsValue: String = {
+        if FinancialConnectionsSDKClass != nil {
+            return "FULL"
+        } else if FCLiteClassIfEnabled != nil {
+            return "LITE"
+        } else {
+            return "NONE"
+        }
+    }()
 
     static let isUnitTest: Bool = {
         #if targetEnvironment(simulator)

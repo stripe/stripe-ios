@@ -276,7 +276,7 @@ import UIKit
             let amount: Int?
             let currency: String?
             switch intentConfiguration.mode {
-            case let .payment(amount: _amount, currency: _currency, _, _):
+            case let .payment(amount: _amount, currency: _currency, _, _, _):
                 amount = _amount
                 currency = _currency
             case let .setup(currency: _currency, _):
@@ -542,7 +542,7 @@ private extension PaymentSheet.InitializationMode {
             return nil
         case .deferredIntent(let intentConfiguration):
             switch intentConfiguration.mode {
-            case .payment(let amount, _, _, _):
+            case .payment(let amount, _, _, _, _):
                 return amount
             case .setup:
                 return nil
@@ -558,7 +558,7 @@ private extension PaymentSheet.InitializationMode {
             return nil
         case .deferredIntent(let intentConfiguration):
             switch intentConfiguration.mode {
-            case .payment(_, let currency, _, _):
+            case .payment(_, let currency, _, _, _):
                 return currency
             case .setup(let currency, _):
                 return currency

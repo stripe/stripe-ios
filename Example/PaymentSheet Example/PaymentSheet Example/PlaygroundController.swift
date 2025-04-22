@@ -14,7 +14,7 @@ import Contacts
 import PassKit
 @_spi(STP) import StripeCore
 @_spi(STP) import StripePayments
-@_spi(CustomerSessionBetaAccess) @_spi(STP) @_spi(PaymentSheetSkipConfirmation) @_spi(ExperimentalAllowsRemovalOfLastSavedPaymentMethodAPI) @_spi(EmbeddedPaymentElementPrivateBeta) @_spi(UpdatePaymentMethodBeta) @_spi(CustomPaymentMethodsBeta) import StripePaymentSheet
+@_spi(CustomerSessionBetaAccess) @_spi(STP) @_spi(PaymentSheetSkipConfirmation) @_spi(ExperimentalAllowsRemovalOfLastSavedPaymentMethodAPI) @_spi(EmbeddedPaymentElementPrivateBeta) @_spi(CustomPaymentMethodsBeta) import StripePaymentSheet
 import SwiftUI
 import UIKit
 
@@ -194,8 +194,6 @@ class PlaygroundController: ObservableObject {
             configuration.cardBrandAcceptance = .allowed(brands: [.visa])
         }
 
-        configuration.updatePaymentMethodEnabled = settings.paymentMethodUpdate == .enabled
-
         switch settings.style {
         case .automatic:
             configuration.style = .automatic
@@ -294,8 +292,6 @@ class PlaygroundController: ObservableObject {
             configuration.cardBrandAcceptance = .allowed(brands: [.visa])
         }
 
-        configuration.updatePaymentMethodEnabled = settings.paymentMethodUpdate == .enabled
-
         return configuration
     }
 
@@ -332,7 +328,7 @@ class PlaygroundController: ObservableObject {
         switch settings.mode {
         case .payment:
             return PaymentSheet.IntentConfiguration(
-                mode: .payment(amount: settings.amount.rawValue, currency: settings.currency.rawValue, setupFutureUsage: nil),
+                mode: .payment(amount: settings.amount.rawValue, currency: settings.currency.rawValue, setupFutureUsage: nil, paymentMethodOptions: settings.paymentMethodOptionsSetupFutureUsage.makePaymentMethodOptions()),
                 paymentMethodTypes: paymentMethodTypes,
                 paymentMethodConfigurationId: settings.paymentMethodConfigurationId,
                 confirmHandler: confirmHandler,
@@ -340,7 +336,7 @@ class PlaygroundController: ObservableObject {
             )
         case .paymentWithSetup:
             return PaymentSheet.IntentConfiguration(
-                mode: .payment(amount: settings.amount.rawValue, currency: settings.currency.rawValue, setupFutureUsage: .offSession),
+                mode: .payment(amount: settings.amount.rawValue, currency: settings.currency.rawValue, setupFutureUsage: .offSession, paymentMethodOptions: settings.paymentMethodOptionsSetupFutureUsage.makePaymentMethodOptions()),
                 paymentMethodTypes: paymentMethodTypes,
                 paymentMethodConfigurationId: settings.paymentMethodConfigurationId,
                 confirmHandler: confirmHandler,
@@ -380,11 +376,14 @@ class PlaygroundController: ObservableObject {
     }
 
     var customPaymentMethodConfiguration: PaymentSheet.CustomPaymentMethodConfiguration? {
+        // Obtained from https://dashboard.stripe.com/settings/custom_payment_methods
+        var customPaymentMethodType = PaymentSheet.CustomPaymentMethodConfiguration.CustomPaymentMethod(id: "cpmt_1QpIMNLu5o3P18Zpwln1Sm6I",
+                                                                                                            subtitle: "Pay with BufoPay")
         switch settings.customPaymentMethods {
         case .on:
-            // Obtained from https://dashboard.stripe.com/settings/custom_payment_methods
-            let customPaymentMethodType = PaymentSheet.CustomPaymentMethodConfiguration.CustomPaymentMethod(id: "cpmt_1QpIMNLu5o3P18Zpwln1Sm6I",
-                                                                                                                subtitle: "Pay with BufoPay")
+            return .init(customPaymentMethods: [customPaymentMethodType], customPaymentMethodConfirmHandler: handleCustomPaymentMethod(_:_:))
+        case .onWithBDCC:
+            customPaymentMethodType.disableBillingDetailCollection = false
             return .init(customPaymentMethods: [customPaymentMethodType], customPaymentMethodConfirmHandler: handleCustomPaymentMethod(_:_:))
         case .off:
             return nil
@@ -418,11 +417,13 @@ class PlaygroundController: ObservableObject {
             let exampleError = NSError(domain: "", code: 0, userInfo: [NSLocalizedDescriptionKey: "Something went wrong!"])
             completion(.failed(error: exampleError))
         })
-        if self.settings.uiStyle == .paymentSheet || self.settings.uiStyle == .embedded {
-            self.rootViewController.presentedViewController?.present(alert, animated: true)
-        } else {
-            self.rootViewController.present(alert, animated: true)
+
+        guard let topMostVC = UIViewController.topMostViewController() else {
+            print("Unable to find top most view controller")
+            return
         }
+
+        topMostVC.present(alert, animated: true)
     }
 
     var clientSecret: String?
@@ -495,7 +496,6 @@ class PlaygroundController: ObservableObject {
             UserDefaults.standard.set(enableInstantDebitsIncentives, forKey: "FINANCIAL_CONNECTIONS_INSTANT_DEBITS_INCENTIVES")
 
             let enableFcLite = newValue.fcLiteEnabled == .on
-            FinancialConnectionsSDKAvailability.fcLiteFeatureEnabled = enableFcLite
             FinancialConnectionsSDKAvailability.shouldPreferFCLite = enableFcLite
         }.store(in: &subscribers)
 
@@ -726,7 +726,9 @@ extension PlaygroundController {
         if settings.paymentMethodSave == .disabled && settings.allowRedisplayOverride != .notSet {
             body["customer_session_payment_method_save_allow_redisplay_override"] = settings.allowRedisplayOverride.rawValue
         }
-
+        if settingsToLoad.paymentMethodOptionsSetupFutureUsageEnabled == .on {
+            body["payment_method_options_setup_future_usage"] = settings.paymentMethodOptionsSetupFutureUsage.toDictionary()
+        }
         makeRequest(with: checkoutEndpoint, body: body) { data, response, error in
             // If the completed load state doesn't represent the current state, discard this result
             if settingsToLoad != self.settings {

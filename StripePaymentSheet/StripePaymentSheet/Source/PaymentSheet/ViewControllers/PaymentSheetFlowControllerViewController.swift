@@ -27,13 +27,13 @@ class PaymentSheetFlowControllerViewController: UIViewController, FlowController
     var selectedPaymentOption: PaymentOption? {
         switch mode {
         case .addingNew:
-            if let paymentOption = addPaymentMethodViewController.paymentOption {
+            if isHackyLinkButtonSelected {
+                return .link(option: .wallet)
+            } else if let paymentOption = addPaymentMethodViewController.paymentOption {
                 return paymentOption
             } else if let paymentOption = savedPaymentOptionsViewController.selectedPaymentOption {
                 // If no valid payment option from adding, fallback on any saved payment method
                 return paymentOption
-            } else if isHackyLinkButtonSelected {
-                return .link(option: .wallet)
             } else if isApplePayEnabled {
                 return .applePay
             }
@@ -62,7 +62,7 @@ class PaymentSheetFlowControllerViewController: UIViewController, FlowController
     }()
     /// Returns true if Apple Pay is not enabled and Link is enabled and there are no saved payment methods
     private var linkOnlyMode: Bool {
-        return !isApplePayEnabled && isLinkEnabled && !savedPaymentOptionsViewController.hasOptionsExcludingAdd
+        return couldShowLinkInHeader && !savedPaymentOptionsViewController.hasOptionsExcludingAdd
     }
     // Only show the wallet header when Link is the only available PM
     private var shouldShowWalletHeader: Bool {
@@ -84,6 +84,7 @@ class PaymentSheetFlowControllerViewController: UIViewController, FlowController
     private var mode: Mode
     private let isApplePayEnabled: Bool
     private let isLinkEnabled: Bool
+    private let couldShowLinkInHeader: Bool
     private var isHackyLinkButtonSelected: Bool = false
 
     private lazy var savedPaymentMethodManager: SavedPaymentMethodManager = {
@@ -137,11 +138,7 @@ class PaymentSheetFlowControllerViewController: UIViewController, FlowController
 
     private typealias WalletHeaderView = PaymentSheetViewController.WalletHeaderView
     private lazy var walletHeader: WalletHeaderView = {
-        var walletOptions: WalletHeaderView.WalletOptions = []
-
-        if linkOnlyMode {
-            walletOptions.insert(.link)
-        }
+        var walletOptions: WalletHeaderView.WalletOptions = couldShowLinkInHeader ? [.link] : []
 
         let header = WalletHeaderView(
             options: walletOptions,
@@ -169,6 +166,7 @@ class PaymentSheetFlowControllerViewController: UIViewController, FlowController
         self.elementsSession = loadResult.elementsSession
         self.isApplePayEnabled = PaymentSheet.isApplePayEnabled(elementsSession: elementsSession, configuration: configuration)
         self.isLinkEnabled = PaymentSheet.isLinkEnabled(elementsSession: elementsSession, configuration: configuration)
+        self.couldShowLinkInHeader = isLinkEnabled && !isApplePayEnabled
         self.configuration = configuration
         self.analyticsHelper = analyticsHelper
 
@@ -208,7 +206,7 @@ class PaymentSheetFlowControllerViewController: UIViewController, FlowController
                 allowsRemovalOfLastSavedPaymentMethod: elementsSession.paymentMethodRemoveLast(configuration: configuration),
                 allowsRemovalOfPaymentMethods: elementsSession.allowsRemovalOfPaymentMethodsForPaymentSheet(),
                 allowsSetAsDefaultPM: elementsSession.paymentMethodSetAsDefaultForPaymentSheet,
-                allowsUpdatePaymentMethod: elementsSession.paymentMethodUpdateForPaymentSheet(configuration)
+                allowsUpdatePaymentMethod: elementsSession.paymentMethodUpdateForPaymentSheet
             ),
             paymentSheetConfiguration: configuration,
             intent: intent,
@@ -432,6 +430,9 @@ class PaymentSheetFlowControllerViewController: UIViewController, FlowController
 
     @objc
     private func didTapContinueButton() {
+        // The user is continuing with an LPM, so we un-select Link
+        isHackyLinkButtonSelected = false
+
         if let selectedPaymentOption {
             analyticsHelper.logConfirmButtonTapped(paymentOption: selectedPaymentOption)
         } else {
@@ -450,8 +451,6 @@ class PaymentSheetFlowControllerViewController: UIViewController, FlowController
     }
 
     func didDismiss(didCancel: Bool) {
-        // When we close the window, unset the hacky Link button. This will reset the PaymentOption to nil, if needed.
-        isHackyLinkButtonSelected = false
         // If the customer was adding a new payment method and it's incomplete/invalid, return to the saved PM screen
         flowControllerDelegate?.flowControllerViewControllerShouldClose(self, didCancel: didCancel)
         if savedPaymentOptionsViewController.isRemovingPaymentMethods {
@@ -550,13 +549,14 @@ extension PaymentSheetFlowControllerViewController: SavedPaymentOptionsViewContr
 
         if !savedPaymentOptionsViewController.canEditPaymentMethods {
             savedPaymentOptionsViewController.isRemovingPaymentMethods = false
-            // calling updateUI() at this point causes an issue with the height of the add card vc
-            // if you do a subsequent presentation. Since bottom sheet height stuff is complicated,
-            // just update the nav bar which is all we need to do anyway
-            configureNavBar()
         }
-        updateButton()
-        updateBottomNotice()
+
+        // If there are no more options in the saved screen, switch to the "add" screen
+        if !savedPaymentOptionsViewController.hasPaymentOptions {
+            error = nil  // Clear any errors
+            mode = .addingNew // Switch to the "Add" screen
+        }
+        updateUI()
     }
 
     func shouldCloseSheet(_ viewController: SavedPaymentOptionsViewController) {
@@ -583,6 +583,10 @@ extension PaymentSheetFlowControllerViewController: SavedPaymentOptionsViewContr
 // MARK: - AddPaymentMethodViewControllerDelegate
 /// :nodoc:
 extension PaymentSheetFlowControllerViewController: AddPaymentMethodViewControllerDelegate {
+    func getWalletHeaders() -> [String] {
+        return linkOnlyMode ? ["link"] : []
+    }
+
     func didUpdate(_ viewController: AddPaymentMethodViewController) {
         error = nil  // clear error
         updateUI()

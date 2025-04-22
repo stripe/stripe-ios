@@ -34,9 +34,11 @@
 
 "Bank account details cannot be changed." = "Pangakonto andmeid ei saa muuta.";
 
-"Buy now or pay later with <img/>" = "Osta praegu või maksa <img/> abil hiljem";
+"Buy now or pay later with  <img/>" = "Osta kohe või maksa hiljem makseviisiga <img/>";
 
 "Buy now or pay later with Afterpay" = "Osta praegu või maksa Afterpay abil hiljem";
+
+"Buy now or pay later with Cash App Afterpay" = "Osta praegu või maksa Cash App Afterpay abil hiljem";
 
 "Buy now or pay later with Clearpay" = "Osta praegu või maksa Clearpay abil hiljem";
 
@@ -91,6 +93,8 @@
 "Confirm" = "Kinnita";
 
 "Confirm it's you" = "Kinnitage, et see olete teie";
+
+"Confirm payment details" = "Kinnitage makseandmed";
 
 "Confirm the payment in your bank or payment app within %@ to complete the purchase." = "Ostu sooritamiseks kinnitage makse oma panga- või makserakenduses %@ jooksul.";
 

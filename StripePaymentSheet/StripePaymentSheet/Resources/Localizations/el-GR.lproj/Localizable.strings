@@ -34,9 +34,11 @@
 
 "Bank account details cannot be changed." = "Δεν είναι δυνατή η αλλαγή των στοιχείων τραπεζικού λογαριασμού.";
 
-"Buy now or pay later with <img/>" = "Αγορά τώρα ή πληρωμή αργότερα με <img/>";
+"Buy now or pay later with  <img/>" = "Αγορά τώρα ή πληρωμή αργότερα με <img/>";
 
 "Buy now or pay later with Afterpay" = "Αγορά τώρα ή πληρωμή αργότερα με Afterpay";
+
+"Buy now or pay later with Cash App Afterpay" = "Αγορά τώρα ή πληρωμή αργότερα με Cash App Afterpay";
 
 "Buy now or pay later with Clearpay" = "Αγορά τώρα ή πληρωμή αργότερα με Clearpay";
 
@@ -91,6 +93,8 @@
 "Confirm" = "Επιβεβαίωση";
 
 "Confirm it's you" = "Επιβεβαιώστε ότι είστε εσείς";
+
+"Confirm payment details" = "Επιβεβαίωση στοιχείων πληρωμής";
 
 "Confirm the payment in your bank or payment app within %@ to complete the purchase." = "Επιβεβαιώστε την πληρωμή στην εφαρμογή τράπεζας ή πληρωμής σας μέσα σε %@ για να ολοκληρώσετε την αγορά.";
 
