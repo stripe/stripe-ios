@@ -6,6 +6,7 @@
 //
 
 @_spi(STP) import StripeCore
+@_spi(STP) import StripePayments
 @_spi(STP) import StripeUICore
 
 // Localized strings that are used in multiple contexts. Collected here to avoid re-translation
@@ -167,10 +168,7 @@ extension String.Localized {
         }
 
         @_spi(STP) public static var `default`: String {
-            STPLocalizedString(
-                "Card",
-                "Default label for a funding source, we fallback on this if none of the other labels match. E.g. '<Brand> Card'"
-            )
+            STPPaymentMethodType.card.displayName
         }
 
         @_spi(STP) public static var formattedWithCardBrand: String {
