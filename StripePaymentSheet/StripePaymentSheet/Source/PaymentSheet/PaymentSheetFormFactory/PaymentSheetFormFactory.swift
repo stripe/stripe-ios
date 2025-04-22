@@ -79,7 +79,8 @@ class PaymentSheetFormFactory {
         addressSpecProvider: AddressSpecProvider = .shared,
         linkAccount: PaymentSheetLinkAccount? = nil,
         accountService: LinkAccountServiceProtocol,
-        analyticsHelper: PaymentSheetAnalyticsHelper?
+        analyticsHelper: PaymentSheetAnalyticsHelper?,
+        shouldReadPaymentMethodOptionsSetupFutureUsage: Bool
     ) {
 
         /// Whether or not the card form should show the link inline signup checkbox
@@ -111,7 +112,7 @@ class PaymentSheetFormFactory {
                   accountService: accountService,
                   cardBrandChoiceEligible: elementsSession.isCardBrandChoiceEligible,
                   isPaymentIntent: intent.isPaymentIntent,
-                  isSettingUp: intent.isSettingUp,
+                  isSettingUp: shouldReadPaymentMethodOptionsSetupFutureUsage ? intent.isSetupFutureUsageSet(paymentMethodType: paymentMethod.identifier) : intent.isSettingUp,
                   countryCode: elementsSession.countryCode(overrideCountry: configuration.overrideCountry),
                   currency: intent.currency,
                   savePaymentMethodConsentBehavior: elementsSession.savePaymentMethodConsentBehavior,

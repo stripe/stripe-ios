@@ -215,6 +215,9 @@ extension PaymentSheet {
         /// Note: This is only a client-side solution.
         /// Note: Card brand filtering is not currently supported by Link.
         public var cardBrandAcceptance: PaymentSheet.CardBrandAcceptance = .all
+
+        /// If true, the payment method options setup future usage overrides the top-level setup future usage if set
+        @_spi(PaymentMethodOptionsSetupFutureUsageBeta) public var shouldReadPaymentMethodOptionsSetupFutureUsage: Bool = false
     }
 
     /// Defines the layout orientations available for displaying payment methods in PaymentSheet.

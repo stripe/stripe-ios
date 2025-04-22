@@ -118,4 +118,25 @@ enum Intent {
             }
         }
     }
+
+    /// Whether the intent has setup for future usage set for a payment method type.
+    func isSetupFutureUsageSet(paymentMethodType: String) -> Bool {
+        switch self {
+        case .paymentIntent(let paymentIntent):
+            return paymentIntent.isSetupFutureUsageSet(paymentMethodType: paymentMethodType)
+        case .setupIntent:
+            return true
+        case .deferredIntent(intentConfig: let intentConfig):
+            switch intentConfig.mode {
+            case .payment(_, _, let setupFutureUsage, _, let paymentMethodOptions):
+                // if pmo sfu is non-nil, it overrides the top level sfu
+                if let paymentMethodOptionsSetupFutureUsage = paymentMethodOptions?.setupFutureUsageValues?[STPPaymentMethodType.fromIdentifier(paymentMethodType)] {
+                    return paymentMethodOptionsSetupFutureUsage != .none
+                }
+                return setupFutureUsage != nil
+            case .setup:
+                return true
+            }
+        }
+    }
 }

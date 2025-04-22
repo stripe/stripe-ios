@@ -63,7 +63,8 @@ class VerticalListMandateProvider: MandateTextProvider {
                 previousCustomerInput: nil,
                 linkAccount: LinkAccountContext.shared.account,
                 accountService: LinkAccountService(apiClient: configuration.apiClient, elementsSession: elementsSession),
-                analyticsHelper: analyticsHelper
+                analyticsHelper: analyticsHelper,
+                shouldReadPaymentMethodOptionsSetupFutureUsage: configuration.shouldReadPaymentMethodOptionsSetupFutureUsage
             ).make()
 
             guard !form.collectsUserInput else {
