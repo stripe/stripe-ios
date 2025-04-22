@@ -219,6 +219,10 @@ extension ConsumerPaymentDetails.Details.Card {
     var stpBrand: STPCardBrand {
         return STPCard.brand(from: brand)
     }
+    
+    var secondaryName: String {
+        "••••\(last4)"
+    }
 
     var secondaryName: String {
         "••••\(last4)"
