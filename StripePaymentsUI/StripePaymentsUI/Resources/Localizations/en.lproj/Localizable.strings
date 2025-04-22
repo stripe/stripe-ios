@@ -1,3 +1,6 @@
+/* Details of a saved card. '{card brand} {funding}' e.g. 'Visa Debit' */
+"%1$@ %2$@" = "%1$@ %2$@";
+
 /* Details of a saved bank account. '{bank name} account ending in {last 4}' e.g. 'Chase account ending in 4242' */
 "%1$@ account ending in %2$@" = "%1$@ account ending in %2$@";
 
@@ -34,6 +37,9 @@
 /* Placeholder text for BSB Number entry field for BECS Debit. */
 "BSB" = "BSB";
 
+/* Default label for a funding source, we fallback on this if none of the other labels match. E.g. '<Brand> Card' */
+"Card" = "Card";
+
 /* Card details entry form header title */
 "Card information" = "Card information";
 
@@ -46,8 +52,14 @@
 /* Section title for entering your CVC. e.g. 'Confirm your CVC' */
 "Confirm your %@" = "Confirm your %@";
 
+/* Label a credit funding source. E.g. '<Brand> Credit' */
+"Credit" = "Credit";
+
 /* Label for entering CVC in text field */
 "CVC" = "CVC";
+
+/* Label a debit funding source. E.g. '<Brand> Debit' */
+"Debit" = "Debit";
 
 /* Placeholder string for email entry field. */
 "example@example.com" = "example@example.com";
@@ -66,6 +78,9 @@
 
 /* Postal code placeholder */
 "Postal Code" = "Postal Code";
+
+/* Label a prepaid funding source. E.g. '<Brand> Prepaid' */
+"Prepaid" = "Prepaid";
 
 /* Title for shipping address entry section */
 "Shipping Address" = "Shipping Address";
