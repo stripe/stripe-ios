@@ -13,7 +13,7 @@ struct LinkGlobalHoldback: LoggableExperiment {
     let arbId: String
     let group: ExperimentGroup
 
-    private let defaultValuesProvided: [String]
+    private let defaultValuesProvided: String
     private let hasSPMs: Bool
     private let integrationShape: String
     private let isReturningLinkUser: Bool
@@ -59,7 +59,7 @@ struct LinkGlobalHoldback: LoggableExperiment {
         // A non-nil consumer session represents an existing Link user.
         self.isReturningLinkUser = linkAccount?.currentSession != nil
         self.linkNative = linkAccount?.useMobileEndpoints == true
-        self.linkDefaultOptIn = elementsSession.linkSettings?.linkDefaultOptIn?.rawValue ?? "NONE"
+        self.linkDefaultOptIn = (elementsSession.linkSettings?.linkDefaultOptIn ?? .none).rawValue
         self.integrationShape = integrationShape.analyticsValue
         self.linkDisplayed = isLinkEnabled
 
@@ -73,7 +73,7 @@ struct LinkGlobalHoldback: LoggableExperiment {
         if configuration.defaultBillingDetails.phone != nil {
             defaultValuesProvided.append("phone")
         }
-        self.defaultValuesProvided = defaultValuesProvided
+        self.defaultValuesProvided = defaultValuesProvided.joined(separator: " ")
 
         // SPM is enabled when:
         // 1. Session has a valid customer
@@ -81,7 +81,7 @@ struct LinkGlobalHoldback: LoggableExperiment {
         // 3. Link is not enabled (unless an additional beta flag is enabled)
         let hasCustomer = elementsSession.customer != nil
         let paymentMethodSaveEnabled = elementsSession.customerSessionMobilePaymentElementFeatures?.paymentMethodSave == true
-        let linkEnabledOrEnableLinkSPMFlagEnabled = !isLinkEnabled || elementsSession.flags["elements_enable_link_spm"] == true
-        self.hasSPMs = hasCustomer && paymentMethodSaveEnabled && linkEnabledOrEnableLinkSPMFlagEnabled
+        let linkNotEnabledOrEnableLinkSPMFlag = !isLinkEnabled || elementsSession.flags["elements_enable_link_spm"] == true
+        self.hasSPMs = hasCustomer && paymentMethodSaveEnabled && linkNotEnabledOrEnableLinkSPMFlag
     }
 }
