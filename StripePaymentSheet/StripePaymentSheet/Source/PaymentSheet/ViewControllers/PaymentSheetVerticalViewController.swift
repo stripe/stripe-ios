@@ -827,8 +827,7 @@ extension PaymentSheetVerticalViewController: VerticalPaymentMethodListViewContr
             previousCustomerInput: nil,
             linkAccount: LinkAccountContext.shared.account,
             accountService: LinkAccountService(apiClient: configuration.apiClient, elementsSession: elementsSession),
-            analyticsHelper: analyticsHelper,
-            shouldReadPaymentMethodOptionsSetupFutureUsage: configuration.shouldReadPaymentMethodOptionsSetupFutureUsage
+            analyticsHelper: analyticsHelper
         ).make().collectsUserInput
     }
 

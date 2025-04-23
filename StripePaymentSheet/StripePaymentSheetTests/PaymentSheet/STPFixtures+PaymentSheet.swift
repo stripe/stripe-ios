@@ -460,8 +460,7 @@ extension PaymentSheetFormFactory {
         paymentMethod: PaymentSheet.PaymentMethodType,
         previousCustomerInput: IntentConfirmParams? = nil,
         addressSpecProvider: AddressSpecProvider = .shared,
-        linkAccount: PaymentSheetLinkAccount? = nil,
-        shouldReadPaymentMethodOptionsSetupFutureUsage: Bool = false
+        linkAccount: PaymentSheetLinkAccount? = nil
     ) {
         self.init(
             intent: intent,
@@ -472,8 +471,7 @@ extension PaymentSheetFormFactory {
             addressSpecProvider: addressSpecProvider,
             linkAccount: linkAccount,
             accountService: LinkAccountService._testValue(),
-            analyticsHelper: ._testValue(),
-            shouldReadPaymentMethodOptionsSetupFutureUsage: shouldReadPaymentMethodOptionsSetupFutureUsage
+            analyticsHelper: ._testValue()
         )
     }
 }

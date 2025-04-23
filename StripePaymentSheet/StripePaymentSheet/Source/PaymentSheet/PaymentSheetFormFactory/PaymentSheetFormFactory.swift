@@ -79,8 +79,7 @@ class PaymentSheetFormFactory {
         addressSpecProvider: AddressSpecProvider = .shared,
         linkAccount: PaymentSheetLinkAccount? = nil,
         accountService: LinkAccountServiceProtocol,
-        analyticsHelper: PaymentSheetAnalyticsHelper?,
-        shouldReadPaymentMethodOptionsSetupFutureUsage: Bool = false
+        analyticsHelper: PaymentSheetAnalyticsHelper?
     ) {
 
         /// Whether or not the card form should show the link inline signup checkbox
@@ -102,6 +101,14 @@ class PaymentSheetFormFactory {
 
             let isAccountNotRegisteredOrMissing = linkAccount.flatMap({ !$0.isRegistered }) ?? true
             return isAccountNotRegisteredOrMissing && !UserDefaults.standard.customerHasUsedLink
+        }()
+        let shouldReadPaymentMethodOptionsSetupFutureUsage: Bool = {
+            switch configuration {
+            case .paymentElement(let config):
+                return config.shouldReadPaymentMethodOptionsSetupFutureUsage
+            default:
+                return false
+            }
         }()
         self.init(configuration: configuration,
                   paymentMethod: paymentMethod,
