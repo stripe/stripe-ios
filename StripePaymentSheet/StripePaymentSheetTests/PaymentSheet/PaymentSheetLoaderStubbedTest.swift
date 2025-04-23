@@ -242,7 +242,7 @@ class PaymentSheetLoaderStubbedTest: APIStubbedTestCase {
         }
         wait(for: [loaded], timeout: 10)
     }
-    
+
     func testPaymentSheetLoadPaymentIntentFallbackCardPrioritization() {
         // If v1/elements/session fails to load...
         stub { urlRequest in
@@ -261,7 +261,7 @@ class PaymentSheetLoaderStubbedTest: APIStubbedTestCase {
         StubbedBackend.stubPaymentMethods(fileMock: .saved_payment_methods_200, pmType: "sepa_debit")
         StubbedBackend.stubCustomers()
         StubbedBackend.stubLookup()
-        
+
         // ...loading PaymentSheet with a customer...
         let loaded = expectation(description: "Loaded")
         let configuration = self.configuration(apiClient: stubbedAPIClient())
@@ -286,7 +286,7 @@ class PaymentSheetLoaderStubbedTest: APIStubbedTestCase {
                     Set(paymentIntent.paymentMethodTypes.map { STPPaymentMethodType(rawValue: $0.intValue) }),
                     Set(loadResult.elementsSession.orderedPaymentMethodTypes)
                 )
-                
+
                 // and with card listed first
                 XCTAssert(loadResult.elementsSession.orderedPaymentMethodTypes.first == .card)
             case .failure(let error):
@@ -295,7 +295,7 @@ class PaymentSheetLoaderStubbedTest: APIStubbedTestCase {
         }
         wait(for: [loaded], timeout: 10)
     }
-    
+
     func testPaymentSheetLoadPaymentIntentFallbackNoCard() {
         // If v1/elements/session fails to load...
         stub { urlRequest in
@@ -314,7 +314,7 @@ class PaymentSheetLoaderStubbedTest: APIStubbedTestCase {
         StubbedBackend.stubPaymentMethods(fileMock: .saved_payment_methods_200, pmType: "sepa_debit")
         StubbedBackend.stubCustomers()
         StubbedBackend.stubLookup()
-        
+
         // ...loading PaymentSheet with a customer...
         let loaded = expectation(description: "Loaded")
         let configuration = self.configuration(apiClient: stubbedAPIClient())
@@ -345,7 +345,7 @@ class PaymentSheetLoaderStubbedTest: APIStubbedTestCase {
         }
         wait(for: [loaded], timeout: 10)
     }
-    
+
     func testPaymentSheetLoadSetupIntentFallback() {
         // If v1/elements/session fails to load...
         stub { urlRequest in
