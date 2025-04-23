@@ -84,6 +84,12 @@ final class LinkPaymentMethodPicker: UIView {
         }
     }
 
+    var accountEmail: String? {
+        didSet {
+            emailView.accountEmail = accountEmail
+        }
+    }
+
     /// Calculates the maximum width required for the header labels.
     static let widthForHeaderLabels: CGFloat = {
         let font = LinkUI.font(forTextStyle: .bodyEmphasized)
