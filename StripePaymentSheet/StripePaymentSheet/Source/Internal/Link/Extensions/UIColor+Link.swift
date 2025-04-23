@@ -149,11 +149,6 @@ extension UIColor {
         dark: UIColor(red: 0.922, green: 0.922, blue: 0.961, alpha: 0.6)
     )
 
-    static let linkTertiaryText: UIColor = .dynamic(
-        light: UIColor(red: 0.639, green: 0.675, blue: 0.729, alpha: 1.0),
-        dark: UIColor(white: 1.0, alpha: 0.38)
-    )
-
 }
 
 // MARK: - Icon color

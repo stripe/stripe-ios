@@ -65,7 +65,7 @@ extension LinkPaymentMethodPicker {
 
             return stackView
         }()
-        
+
         override init(frame: CGRect) {
             super.init(frame: .zero)
             addAndPinSubview(stackView)

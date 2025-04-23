@@ -5,7 +5,6 @@
 //  Created by Mat Schmid on 4/23/25.
 //
 
-@_spi(STP) import StripeUICore
 import UIKit
 
 class LinkSeparatorView: UIView {
