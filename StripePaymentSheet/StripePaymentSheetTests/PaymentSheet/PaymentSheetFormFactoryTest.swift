@@ -10,7 +10,7 @@ import XCTest
 
 @testable@_spi(STP) import StripeCore
 @testable@_spi(STP) import StripePayments
-@testable@_spi(STP) import StripePaymentSheet
+@testable@_spi(STP) @_spi(PaymentMethodOptionsSetupFutureUsagePreview) import StripePaymentSheet
 @testable@_spi(STP) import StripePaymentsTestUtils
 @testable@_spi(STP) import StripePaymentsUI
 @testable@_spi(STP) import StripeUICore
@@ -1274,6 +1274,21 @@ class PaymentSheetFormFactoryTest: XCTestCase {
         XCTAssertFalse(factory.shouldDisplaySaveCheckbox)
     }
 
+    func testHidesCheckbox_Deferred_PI_PMO_SFU_offSession() {
+        var configuration = PaymentSheet.Configuration()
+        configuration.customer = .init(id: "id", ephemeralKeySecret: "sec")
+        configuration.shouldReadPaymentMethodOptionsSetupFutureUsage = true
+        let factory = PaymentSheetFormFactory(
+            intent: ._testDeferredIntent(paymentMethodTypes: [.card], paymentMethodOptionsSetupFutureUsage: [.card: .offSession]),
+            elementsSession: ._testValue(paymentMethodTypes: ["card"]),
+            configuration: .paymentElement(configuration),
+            paymentMethod: .stripe(.card)
+        )
+
+        XCTAssert(factory.isSettingUp)
+        XCTAssertFalse(factory.shouldDisplaySaveCheckbox)
+    }
+
     func testHidesCheckbox_PI_onSession() {
         var configuration = PaymentSheet.Configuration()
         configuration.customer = .init(id: "id", ephemeralKeySecret: "sec")
@@ -1294,6 +1309,21 @@ class PaymentSheetFormFactoryTest: XCTestCase {
         configuration.shouldReadPaymentMethodOptionsSetupFutureUsage = true
         let factory = PaymentSheetFormFactory(
             intent: ._testPaymentIntent(paymentMethodTypes: [.card], paymentMethodOptionsSetupFutureUsage: [.card: "on_session"]),
+            elementsSession: ._testValue(paymentMethodTypes: ["card"]),
+            configuration: .paymentElement(configuration),
+            paymentMethod: .stripe(.card)
+        )
+
+        XCTAssert(factory.isSettingUp)
+        XCTAssertFalse(factory.shouldDisplaySaveCheckbox)
+    }
+
+    func testHidesCheckbox_Deferred_PI_PMO_SFU_onSession() {
+        var configuration = PaymentSheet.Configuration()
+        configuration.customer = .init(id: "id", ephemeralKeySecret: "sec")
+        configuration.shouldReadPaymentMethodOptionsSetupFutureUsage = true
+        let factory = PaymentSheetFormFactory(
+            intent: ._testDeferredIntent(paymentMethodTypes: [.card], paymentMethodOptionsSetupFutureUsage: [.card: .onSession]),
             elementsSession: ._testValue(paymentMethodTypes: ["card"]),
             configuration: .paymentElement(configuration),
             paymentMethod: .stripe(.card)
@@ -1330,6 +1360,20 @@ class PaymentSheetFormFactoryTest: XCTestCase {
         XCTAssert(factory.shouldDisplaySaveCheckbox)
     }
 
+    func testShowsCheckbox_Deferred_PI_topLevel_offSession_PMO_SFU_notSettingUp_card() {
+        var configuration = PaymentSheet.Configuration()
+        configuration.customer = .init(id: "id", ephemeralKeySecret: "sec")
+        configuration.shouldReadPaymentMethodOptionsSetupFutureUsage = true
+        let factory = PaymentSheetFormFactory(
+            intent: ._testDeferredIntent(paymentMethodTypes: [.card], setupFutureUsage: .offSession, paymentMethodOptionsSetupFutureUsage: [.card: .none]),
+            elementsSession: ._testValue(paymentMethodTypes: ["card"]),
+            configuration: .paymentElement(configuration),
+            paymentMethod: .stripe(.card)
+        )
+        XCTAssertFalse(factory.isSettingUp)
+        XCTAssert(factory.shouldDisplaySaveCheckbox)
+    }
+
     func testHidesCheckbox_PI_notSettingUp_card() {
         let configuration = PaymentSheet.Configuration()
         let factory = PaymentSheetFormFactory(
@@ -1348,6 +1392,20 @@ class PaymentSheetFormFactoryTest: XCTestCase {
         configuration.shouldReadPaymentMethodOptionsSetupFutureUsage = true
         let factory = PaymentSheetFormFactory(
             intent: ._testPaymentIntent(paymentMethodTypes: [.card], setupFutureUsage: .offSession, paymentMethodOptionsSetupFutureUsage: [.card: "none"]),
+            elementsSession: ._testValue(paymentMethodTypes: ["card"]),
+            configuration: .paymentElement(configuration),
+            paymentMethod: .stripe(.card)
+        )
+
+        XCTAssertFalse(factory.isSettingUp)
+        XCTAssertFalse(factory.shouldDisplaySaveCheckbox)
+    }
+
+    func testHidesCheckbox_Deferred_PI_topLevel_offSession_PMO_SFU_notSettingUp_card() {
+        var configuration = PaymentSheet.Configuration()
+        configuration.shouldReadPaymentMethodOptionsSetupFutureUsage = true
+        let factory = PaymentSheetFormFactory(
+            intent: ._testDeferredIntent(paymentMethodTypes: [.card], setupFutureUsage: .offSession, paymentMethodOptionsSetupFutureUsage: [.card: .none]),
             elementsSession: ._testValue(paymentMethodTypes: ["card"]),
             configuration: .paymentElement(configuration),
             paymentMethod: .stripe(.card)
@@ -1799,50 +1857,14 @@ class PaymentSheetFormFactoryTest: XCTestCase {
         let cardForm_pi_top_level_sfu_pmo_sfu_none = makeForm(intent: ._testPaymentIntent(paymentMethodTypes: [.card], setupFutureUsage: .offSession, paymentMethodOptionsSetupFutureUsage: [.card: "none"]), shouldReadPaymentMethodOptionsSetupFutureUsage: true)
         XCTAssertTrue(cardForm_pi_top_level_sfu_pmo_sfu_none.getMandateElement() == nil)
 
+        let cardForm_deferred_pi_pmo_sfu = makeForm(intent: ._testDeferredIntent(paymentMethodTypes: [.card], paymentMethodOptionsSetupFutureUsage: [.card: .offSession]), shouldReadPaymentMethodOptionsSetupFutureUsage: true)
+        XCTAssertTrue(cardForm_deferred_pi_pmo_sfu.getMandateElement() != nil)
+
+        let cardForm_deferred_pi_top_level_sfu_pmo_sfu_none = makeForm(intent: ._testDeferredIntent(paymentMethodTypes: [.card], setupFutureUsage: .offSession, paymentMethodOptionsSetupFutureUsage: [.card: .none]), shouldReadPaymentMethodOptionsSetupFutureUsage: true)
+        XCTAssertTrue(cardForm_deferred_pi_top_level_sfu_pmo_sfu_none.getMandateElement() == nil)
+
         let cardForm_si = makeForm(intent: ._testSetupIntent(paymentMethodTypes: [.card]))
         XCTAssertTrue(cardForm_si.getMandateElement() != nil)
-    }
-
-    func testUSBankAccountFormContainsMandateText() {
-        let expectation = expectation(description: "Load specs")
-        AddressSpecProvider.shared.loadAddressSpecs {
-            FormSpecProvider.shared.load { _ in
-                expectation.fulfill()
-            }
-        }
-        waitForExpectations(timeout: 1)
-
-        var configuration = PaymentSheet.Configuration._testValue_MostPermissive()
-        configuration.customer = .init(id: "id", ephemeralKeySecret: "ek")
-        let analyticsClient = STPAnalyticsClient()
-
-        func makeForm(intent: Intent, shouldReadPaymentMethodOptionsSetupFutureUsage: Bool = false) -> PaymentMethodElement {
-            if shouldReadPaymentMethodOptionsSetupFutureUsage {
-                configuration.shouldReadPaymentMethodOptionsSetupFutureUsage = true
-            }
-            return PaymentSheetFormFactory(
-                intent: intent,
-                elementsSession: ._testValue(intent: intent),
-                configuration: .paymentElement(configuration),
-                paymentMethod: .stripe(.USBankAccount),
-                accountService: LinkAccountService._testValue(),
-                analyticsHelper: ._testValue(analyticsClient: analyticsClient)
-            ).make()
-        }
-        let usBankAccountForm_pi = makeForm(intent: ._testPaymentIntent(paymentMethodTypes: [.USBankAccount]))
-        XCTAssertTrue(usBankAccountForm_pi.getMandateElement() == nil)
-
-        let usBankAccountForm_pi_sfu = makeForm(intent: ._testPaymentIntent(paymentMethodTypes: [.USBankAccount], setupFutureUsage: .offSession))
-        XCTAssertTrue(usBankAccountForm_pi_sfu.getMandateElement() != nil)
-
-        let usBankAccountForm_pi_pmo_sfu = makeForm(intent: ._testPaymentIntent(paymentMethodTypes: [.USBankAccount], paymentMethodOptionsSetupFutureUsage: [.USBankAccount: "off_session"]), shouldReadPaymentMethodOptionsSetupFutureUsage: true)
-        XCTAssertTrue(usBankAccountForm_pi_pmo_sfu.getMandateElement() != nil)
-
-        let usBankAccountForm_pi_top_level_sfu_pmo_sfu_none = makeForm(intent: ._testPaymentIntent(paymentMethodTypes: [.USBankAccount], setupFutureUsage: .offSession, paymentMethodOptionsSetupFutureUsage: [.USBankAccount: "none"]), shouldReadPaymentMethodOptionsSetupFutureUsage: true)
-        XCTAssertTrue(usBankAccountForm_pi_top_level_sfu_pmo_sfu_none.getMandateElement() == nil)
-
-        let usBankAccountForm_si = makeForm(intent: ._testSetupIntent(paymentMethodTypes: [.USBankAccount]))
-        XCTAssertTrue(usBankAccountForm_si.getMandateElement() != nil)
     }
 
     func testiDEALFormContainsMandateText() {
@@ -1884,6 +1906,14 @@ class PaymentSheetFormFactoryTest: XCTestCase {
 
         let iDEALForm_pi_top_level_sfu_pmo_sfu_none = makeForm(intent: ._testPaymentIntent(paymentMethodTypes: [.iDEAL], setupFutureUsage: .offSession, paymentMethodOptionsSetupFutureUsage: [.iDEAL: "none"]), shouldReadPaymentMethodOptionsSetupFutureUsage: true)
         XCTAssertTrue(iDEALForm_pi_top_level_sfu_pmo_sfu_none.getMandateElement() == nil)
+
+        let iDEALForm_deferred_pi_pmo_sfu = makeForm(intent: ._testDeferredIntent(paymentMethodTypes: [.iDEAL], paymentMethodOptionsSetupFutureUsage: [.iDEAL: .offSession]), shouldReadPaymentMethodOptionsSetupFutureUsage: true)
+        XCTAssertTrue(iDEALForm_deferred_pi_pmo_sfu.getMandateElement() != nil)
+        // iDEAL displays SEPA mandate if setting up
+        XCTAssertEqual(iDEALForm_deferred_pi_pmo_sfu.getMandateElement()?.mandateTextView.textView.text, String(format: String.Localized.sepa_mandate_text, configuration.merchantDisplayName))
+
+        let iDEALForm_deferred_pi_top_level_sfu_pmo_sfu_none = makeForm(intent: ._testDeferredIntent(paymentMethodTypes: [.iDEAL], setupFutureUsage: .offSession, paymentMethodOptionsSetupFutureUsage: [.iDEAL: .none]), shouldReadPaymentMethodOptionsSetupFutureUsage: true)
+        XCTAssertTrue(iDEALForm_deferred_pi_top_level_sfu_pmo_sfu_none.getMandateElement() == nil)
 
         let iDEALForm_si = makeForm(intent: ._testSetupIntent(paymentMethodTypes: [.iDEAL]))
         XCTAssertTrue(iDEALForm_si.getMandateElement() != nil)
