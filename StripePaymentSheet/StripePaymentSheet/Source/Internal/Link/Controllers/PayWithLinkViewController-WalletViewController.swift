@@ -32,6 +32,7 @@ extension PayWithLinkViewController {
             paymentPicker.selectedIndex = viewModel.selectedPaymentMethodIndex
             paymentPicker.billingDetails = context.configuration.defaultBillingDetails
             paymentPicker.billingDetailsCollectionConfiguration = context.configuration.billingDetailsCollectionConfiguration
+            paymentPicker.accountEmail = linkAccount.email
             return paymentPicker
         }()
 

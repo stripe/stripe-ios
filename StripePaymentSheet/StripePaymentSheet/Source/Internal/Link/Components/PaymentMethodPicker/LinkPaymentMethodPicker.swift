@@ -79,10 +79,18 @@ final class LinkPaymentMethodPicker: UIView {
         }
     }
 
+    var accountEmail: String? {
+        didSet {
+            emailView.accountEmail = accountEmail
+        }
+    }
+
     private var needsDataReload: Bool = true
 
     private lazy var stackView: UIStackView = {
         let stackView = UIStackView(arrangedSubviews: [
+            emailView,
+            separatorView,
             headerView,
             listView,
         ])
@@ -93,6 +101,8 @@ final class LinkPaymentMethodPicker: UIView {
         return stackView
     }()
 
+    private let emailView = EmailView()
+    private let separatorView = LinkSeparatorView()
     private let headerView = Header()
 
     private lazy var listView: UIStackView = {
@@ -169,10 +179,11 @@ final class LinkPaymentMethodPicker: UIView {
             headerView.layoutIfNeeded()
         }
 
+        guard let listViewIndex = stackView.arrangedSubviews.firstIndex(of: listView) else { return }
         if headerView.isExpanded {
-            stackView.showArrangedSubview(at: 1, animated: animated)
+            stackView.showArrangedSubview(at: listViewIndex, animated: animated)
         } else {
-            stackView.hideArrangedSubview(at: 1, animated: animated)
+            stackView.hideArrangedSubview(at: listViewIndex, animated: animated)
         }
     }
 
