@@ -269,7 +269,7 @@ extension ConsumerPaymentDetails {
         case .card(let card):
             return card.displayName(with: nickname) ?? card.secondaryName
         case .bankAccount(let bank):
-            return "••••\(bank.last4)"
+            return "•••• \(bank.last4)"
         case .unparsable:
             return ""
         }
