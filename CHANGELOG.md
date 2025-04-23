@@ -51,7 +51,7 @@
 * [Added] The `StripeFinancialConnections` SDK now supports dark mode, and will automatically adapt to the device's theme. [Learn more](https://docs.stripe.com/financial-connections/other-data-powered-products?platform=ios#connections-customize-ios) about configuring appearance settings.
 
 ### CustomerSheet
-* [Added] `us_bank_account` PaymentMethod is now available in CustomerSheet
+* [Added] `sepa_debit` PaymentMethod is now available in CustomerSheet
 
 ## 24.5.0 2025-02-10
 ### CardScan
