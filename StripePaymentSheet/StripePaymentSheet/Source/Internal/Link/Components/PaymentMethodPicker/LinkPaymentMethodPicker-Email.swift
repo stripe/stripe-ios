@@ -46,7 +46,16 @@ extension LinkPaymentMethodPicker {
         // Used to center-align the user email label.
         private lazy var userEmailContainerView: UIView = {
             let view = UIView()
-            view.addAndPinSubview(userEmailLabel)
+            userEmailLabel.translatesAutoresizingMaskIntoConstraints = false
+            view.addSubview(userEmailLabel)
+            NSLayoutConstraint.activate([
+                userEmailLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+                userEmailLabel.centerYAnchor.constraint(equalTo: view.centerYAnchor),
+                userEmailLabel.leadingAnchor.constraint(greaterThanOrEqualTo: view.leadingAnchor),
+                userEmailLabel.trailingAnchor.constraint(lessThanOrEqualTo: view.trailingAnchor),
+                userEmailLabel.topAnchor.constraint(equalTo: view.topAnchor),
+                userEmailLabel.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+            ])
             return view
         }()
 

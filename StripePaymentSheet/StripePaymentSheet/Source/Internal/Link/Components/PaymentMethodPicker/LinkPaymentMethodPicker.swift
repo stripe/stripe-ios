@@ -24,6 +24,7 @@ protocol LinkPaymentMethodPickerDelegate: AnyObject {
 }
 
 protocol LinkPaymentMethodPickerDataSource: AnyObject {
+    var accountEmail: String { get }
 
     /// Returns the total number of payment methods.
     /// - Returns: Payment method count
@@ -42,7 +43,11 @@ protocol LinkPaymentMethodPickerDataSource: AnyObject {
 @objc(STP_Internal_LinkPaymentMethodPicker)
 final class LinkPaymentMethodPicker: UIView {
     weak var delegate: LinkPaymentMethodPickerDelegate?
-    weak var dataSource: LinkPaymentMethodPickerDataSource?
+    weak var dataSource: LinkPaymentMethodPickerDataSource? {
+        didSet {
+            emailView.accountEmail = dataSource?.accountEmail
+        }
+    }
 
     var selectedIndex: Int = 0 {
         didSet {
@@ -76,12 +81,6 @@ final class LinkPaymentMethodPicker: UIView {
     var billingDetails: PaymentSheet.BillingDetails? {
         didSet {
             reloadData()
-        }
-    }
-
-    var accountEmail: String? {
-        didSet {
-            emailView.accountEmail = accountEmail
         }
     }
 

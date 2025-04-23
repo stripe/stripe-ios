@@ -62,6 +62,32 @@ class LinkPaymentMethodPickerSnapshotTests: STPSnapshotTestCase {
         verify(picker)
     }
 
+    func testLongEmail() {
+        let mockDataSource = MockDataSource(
+            empty: true,
+            email: "thisemailisnotreal@example.com"
+        )
+
+        let picker = LinkPaymentMethodPicker()
+        picker.dataSource = mockDataSource
+        picker.layoutSubviews()
+
+        verify(picker)
+    }
+
+    func testLongerEmail() {
+        let mockDataSource = MockDataSource(
+            empty: true,
+            email: "thisemailisnotreal@examplecompany.com"
+        )
+
+        let picker = LinkPaymentMethodPicker()
+        picker.dataSource = mockDataSource
+        picker.layoutSubviews()
+
+        verify(picker)
+    }
+
     func verify(
         _ view: UIView,
         identifier: String? = nil,
@@ -78,12 +104,15 @@ class LinkPaymentMethodPickerSnapshotTests: STPSnapshotTestCase {
 extension LinkPaymentMethodPickerSnapshotTests {
 
     fileprivate final class MockDataSource: LinkPaymentMethodPickerDataSource {
+        let accountEmail: String
         let paymentMethods: [ConsumerPaymentDetails]
 
         init(
-            empty: Bool = false
+            empty: Bool = false,
+            email: String = "test@example.com"
         ) {
             self.paymentMethods = empty ? [] : LinkStubs.paymentMethods()
+            self.accountEmail = email
         }
 
         func numberOfPaymentMethods(in picker: LinkPaymentMethodPicker) -> Int {
