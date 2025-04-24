@@ -76,11 +76,13 @@ extension LinkCardEditElementSnapshotTests {
                     brand: "visa",
                     networks: networks,
                     last4: "4242",
+                    funding: .credit,
                     checks: nil
                 )
             ),
             billingAddress: nil,
             billingEmailAddress: nil,
+            nickname: nil,
             isDefault: isDefault
         )
 

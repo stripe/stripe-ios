@@ -381,7 +381,8 @@ class EmbeddedPaymentMethodsView: UIView {
                 self.layoutIfNeeded()
             }
         case (true, false): // Hidden -> Hidden
-            break
+            // Update mandate text on the view so the payment option we vend to the merchant has the correct mandate
+            self.mandateView.attributedText = mandateText
         }
     }
 
