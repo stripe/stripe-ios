@@ -59,8 +59,8 @@ final class PaymentSheetLinkAccountTests: APIStubbedTestCase {
             return urlRequest.url?.absoluteString.contains("consumers/payment_details/list") ?? false
         } response: { urlRequest in
             // Check to make sure we've passed the correct secret key
-            let body = String(data: urlRequest.httpBodyOrBodyStream!, encoding: .utf8)
-            if !body!.contains("unexpired_key") {
+            let body = String(decoding: urlRequest.httpBodyOrBodyStream!, as: UTF8.self)
+            if !body.contains("unexpired_key") {
                 // If it isn't the unexpired key, force a refresh by sending the correct error:
                 let errorResponse = [
                     "error":
