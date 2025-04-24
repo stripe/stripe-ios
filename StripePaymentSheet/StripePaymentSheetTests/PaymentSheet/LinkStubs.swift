@@ -37,10 +37,12 @@ extension LinkStubs {
                     brand: "visa",
                     networks: ["visa"],
                     last4: "1234",
+                    funding: .debit,
                     checks: nil)
                 ),
                 billingAddress: nil,
                 billingEmailAddress: nil,
+                nickname: nil,
                 isDefault: true
             ),
             ConsumerPaymentDetails(
@@ -51,10 +53,12 @@ extension LinkStubs {
                     brand: "mastercard",
                     networks: ["mastercard"],
                     last4: "4321",
+                    funding: .credit,
                     checks: .init(cvcCheck: .fail))
                 ),
                 billingAddress: nil,
                 billingEmailAddress: nil,
+                nickname: nil,
                 isDefault: false
             ),
             ConsumerPaymentDetails(
@@ -62,6 +66,7 @@ extension LinkStubs {
                 details: .bankAccount(bankAccount: .init(iconCode: nil, name: "test", last4: "1234")),
                 billingAddress: nil,
                 billingEmailAddress: nil,
+                nickname: nil,
                 isDefault: false
             ),
             ConsumerPaymentDetails(
@@ -72,10 +77,12 @@ extension LinkStubs {
                     brand: "discover",
                     networks: ["discover"],
                     last4: "1111",
+                    funding: .prepaid,
                     checks: nil)
                 ),
                 billingAddress: nil,
                 billingEmailAddress: nil,
+                nickname: "Patrick's card",
                 isDefault: false
             ),
         ]
