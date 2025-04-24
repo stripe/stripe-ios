@@ -66,9 +66,9 @@ final class PaymentSheetAnalyticsExperimentsTests: XCTestCase {
         XCTAssertEqual(payload["arb_id"] as? String, "arb_id")
         XCTAssertEqual(payload["experiment_retrieved"] as? String, "mock_experiment")
         XCTAssertEqual(payload["assignment_group"] as? String, ExperimentGroup.treatment.rawValue)
-        XCTAssertEqual(payload["dimension-string"] as? String, "value")
-        XCTAssertEqual(payload["dimension-bool"] as? Bool, false)
-        XCTAssertEqual(payload["dimension-array"] as? [String], ["a", "b"])
+        XCTAssertEqual(payload["dimensions-string"] as? String, "value")
+        XCTAssertEqual(payload["dimensions-bool"] as? Bool, false)
+        XCTAssertEqual(payload["dimensions-array"] as? [String], ["a", "b"])
     }
 
     func testLinkGlobalHoldback() {
@@ -124,14 +124,14 @@ final class PaymentSheetAnalyticsExperimentsTests: XCTestCase {
         XCTAssertEqual(payload["experiment_retrieved"] as? String, "link_global_holdback")
         XCTAssertEqual(payload["assignment_group"] as? String, ExperimentGroup.treatment.rawValue)
 
-        XCTAssertEqual(payload["dimension-recognition_type"] as? String, "email")
-        XCTAssertEqual(payload["dimension-link_native"] as? Bool, true)
-        XCTAssertEqual(payload["dimension-link_default_opt_in"] as? String, "FULL")
-        XCTAssertEqual(payload["dimension-integration_type"] as? String, "mpe_ios")
-        XCTAssertEqual(payload["dimension-dvs_provided"] as? String, "email name")
-        XCTAssertEqual(payload["dimension-is_returning_link_user"] as? Bool, false)
-        XCTAssertEqual(payload["dimension-link_displayed"] as? Bool, PaymentSheet.isLinkEnabled(elementsSession: session, configuration: configuration))
-        XCTAssertEqual(payload["dimension-integration_shape"] as? String, "paymentsheet")
-        XCTAssertEqual(payload["dimension-has_spms"] as? Bool, false)
+        XCTAssertEqual(payload["dimensions-recognition_type"] as? String, "email")
+        XCTAssertEqual(payload["dimensions-link_native"] as? Bool, true)
+        XCTAssertEqual(payload["dimensions-link_default_opt_in"] as? String, "FULL")
+        XCTAssertEqual(payload["dimensions-integration_type"] as? String, "mpe_ios")
+        XCTAssertEqual(payload["dimensions-dvs_provided"] as? String, "email name")
+        XCTAssertEqual(payload["dimensions-is_returning_link_user"] as? Bool, false)
+        XCTAssertEqual(payload["dimensions-link_displayed"] as? Bool, PaymentSheet.isLinkEnabled(elementsSession: session, configuration: configuration))
+        XCTAssertEqual(payload["dimensions-integration_shape"] as? String, "paymentsheet")
+        XCTAssertEqual(payload["dimensions-has_spms"] as? Bool, false)
     }
 }
