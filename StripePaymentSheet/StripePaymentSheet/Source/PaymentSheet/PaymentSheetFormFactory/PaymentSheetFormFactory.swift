@@ -110,6 +110,14 @@ class PaymentSheetFormFactory {
                 return false
             }
         }()
+        let paymentMethodType: STPPaymentMethodType = {
+            switch paymentMethod {
+            case .stripe(let paymentMethodType):
+                return paymentMethodType
+            default:
+                return .unknown
+            }
+        }()
         self.init(configuration: configuration,
                   paymentMethod: paymentMethod,
                   previousCustomerInput: previousCustomerInput,
@@ -119,7 +127,7 @@ class PaymentSheetFormFactory {
                   accountService: accountService,
                   cardBrandChoiceEligible: elementsSession.isCardBrandChoiceEligible,
                   isPaymentIntent: intent.isPaymentIntent,
-                  isSettingUp: shouldReadPaymentMethodOptionsSetupFutureUsage ? intent.isSetupFutureUsageSet(paymentMethodType: paymentMethod.identifier) : intent.isSettingUp,
+                  isSettingUp: shouldReadPaymentMethodOptionsSetupFutureUsage ? intent.isSetupFutureUsageSet(for: paymentMethodType) : intent.isSettingUp,
                   countryCode: elementsSession.countryCode(overrideCountry: configuration.overrideCountry),
                   currency: intent.currency,
                   savePaymentMethodConsentBehavior: elementsSession.savePaymentMethodConsentBehavior,

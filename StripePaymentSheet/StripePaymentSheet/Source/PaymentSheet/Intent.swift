@@ -120,17 +120,17 @@ enum Intent {
     }
 
     /// Whether the intent has setup for future usage set for a payment method type.
-    func isSetupFutureUsageSet(paymentMethodType: String) -> Bool {
+    func isSetupFutureUsageSet(for paymentMethodType: STPPaymentMethodType) -> Bool {
         switch self {
         case .paymentIntent(let paymentIntent):
-            return paymentIntent.isSetupFutureUsageSet(paymentMethodType: paymentMethodType)
+            return paymentIntent.isSetupFutureUsageSet(for: paymentMethodType)
         case .setupIntent:
             return true
         case .deferredIntent(intentConfig: let intentConfig):
             switch intentConfig.mode {
             case .payment(_, _, let setupFutureUsage, _, let paymentMethodOptions):
                 // if pmo sfu is non-nil, it overrides the top level sfu
-                if let paymentMethodOptionsSetupFutureUsage = paymentMethodOptions?.setupFutureUsageValues?[STPPaymentMethodType.fromIdentifier(paymentMethodType)] {
+                if let paymentMethodOptionsSetupFutureUsage = paymentMethodOptions?.setupFutureUsageValues?[paymentMethodType] {
                     return paymentMethodOptionsSetupFutureUsage != .none
                 }
                 return setupFutureUsage != nil
