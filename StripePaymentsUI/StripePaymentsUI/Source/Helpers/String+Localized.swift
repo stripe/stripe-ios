@@ -148,33 +148,29 @@ extension String.Localized {
     @_spi(STP) public enum Funding {
         @_spi(STP) public static var credit: String {
             STPLocalizedString(
-                "Credit",
-                "Label a credit funding source. E.g. '<Brand> Credit'"
+                "%1$@ Credit",
+                "Label a credit funding source. E.g. in english 'Visa Credit', or in german 'Visa-Kreditkarte'"
             )
         }
 
         @_spi(STP) public static var debit: String {
             STPLocalizedString(
-                "Debit",
-                "Label a debit funding source. E.g. '<Brand> Debit'"
+                "%1$@ Debit",
+                "Label a debit funding source. E.g. 'Visa Debit'"
             )
         }
 
         @_spi(STP) public static var prepaid: String {
             STPLocalizedString(
-                "Prepaid",
-                "Label a prepaid funding source. E.g. '<Brand> Prepaid'"
+                "%1$@ Prepaid",
+                "Label a prepaid funding source. E.g. 'Visa Prepaid'"
             )
         }
 
         @_spi(STP) public static var `default`: String {
-            STPPaymentMethodType.card.displayName
-        }
-
-        @_spi(STP) public static var formattedWithCardBrand: String {
             STPLocalizedString(
-                "%1$@ %2$@",
-                "Details of a saved card. '{card brand} {funding}' e.g. 'Visa Debit'"
+                "%1$@ Card",
+                "Label a default funding source, which we treat as a generic card. E.g. 'Visa Card'"
             )
         }
     }

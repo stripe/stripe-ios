@@ -189,7 +189,7 @@ extension ConsumerPaymentDetails.Details.Card {
         // Catch all
         case unparsable = ""
 
-        var displayName: String {
+        var displayNameWithBrand: String {
             switch self {
             case .credit: String.Localized.Funding.credit
             case .debit: String.Localized.Funding.debit
@@ -234,9 +234,8 @@ extension ConsumerPaymentDetails.Details.Card {
         }
 
         return String(
-            format: String.Localized.Funding.formattedWithCardBrand,
-            formattedBrandName,
-            funding.displayName
+            format: funding.displayNameWithBrand,
+            formattedBrandName
         )
     }
 }
