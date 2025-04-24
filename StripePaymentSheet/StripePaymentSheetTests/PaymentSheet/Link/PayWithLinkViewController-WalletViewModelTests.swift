@@ -101,11 +101,98 @@ class PayWithLinkViewController_WalletViewModelTests: XCTestCase {
         sut.cvc = "123"
         XCTAssertEqual(sut.confirmButtonStatus, .enabled)
     }
+
+    func test_confirmButtonStatus_whenSelectedCardIsNotSupported() throws {
+        let sut = try makeSUT(supportedPaymentDetailsTypes: [.bankAccount], linkFundingSources: ["BANK_ACCOUNT"])
+        sut.selectedPaymentMethodIndex = LinkStubs.PaymentMethodIndices.card
+        XCTAssertEqual(
+            sut.confirmButtonStatus,
+            .disabled,
+            "Button should be disabled if the current payment method is not supported"
+        )
+        sut.selectedPaymentMethodIndex = LinkStubs.PaymentMethodIndices.bankAccount
+        XCTAssertEqual(
+            sut.confirmButtonStatus,
+            .enabled,
+            "Button should be disabled if the current payment method is not supported"
+        )
+    }
+
+    func test_defaultLogic_whenDefaultCardIsNotSupported() throws {
+        let sut = try makeSUT(supportedPaymentDetailsTypes: [.bankAccount], linkFundingSources: ["BANK_ACCOUNT"])
+
+        XCTAssertEqual(
+            sut.selectedPaymentMethodIndex,
+            LinkStubs.PaymentMethodIndices.bankAccount,
+            "Selected payment method should be bank account when cards are disabled"
+        )
+    }
+
+    func test_defaultLogic_whenNotSupportedCardIsOnlyOption() throws {
+        let paymentMethods = Array(LinkStubs.paymentMethods()[0..<1])
+        let sut = try makeSUT(paymentMethods: paymentMethods,
+                              supportedPaymentDetailsTypes: [.bankAccount],
+                              linkFundingSources: ["BANK_ACCOUNT"])
+        XCTAssertEqual(
+            sut.selectedPaymentMethodIndex,
+            LinkStubs.PaymentMethodIndices.card,
+            "Selected payment method should be bank account when cards are disabled"
+        )
+    }
+
+    func test_cardBrandFiltering_passThroughEnabled() throws {
+        let sut = try makeSUT(supportedPaymentDetailsTypes: [.card],
+                              linkFundingSources: ["CARD"],
+                              cardBrandAcceptance: .disallowed(brands: [.visa]),
+                              linkPassthroughModeEnabled: true)
+        XCTAssertFalse(
+            sut.paymentMethods[LinkStubs.PaymentMethodIndices.card].isSupported,
+            "Selected payment method should be bank account when cards are disabled"
+        )
+
+        XCTAssertTrue(
+            sut.paymentMethods[LinkStubs.PaymentMethodIndices.cardWithFailingChecks].isSupported,
+            "Selected payment method should be bank account when cards are disabled"
+        )
+
+        XCTAssertEqual(
+            sut.selectedPaymentMethodIndex,
+            LinkStubs.PaymentMethodIndices.cardWithFailingChecks,
+            "Selected payment method should be bank account when cards are disabled"
+        )
+    }
+
+    func test_cardBrandFiltering_ignoredWhenPassThroughDisabled() throws {
+        let sut = try makeSUT(supportedPaymentDetailsTypes: [.card],
+                              linkFundingSources: ["CARD"],
+                              cardBrandAcceptance: .disallowed(brands: [.visa]),
+                              linkPassthroughModeEnabled: false)
+        XCTAssertTrue(
+            sut.paymentMethods[LinkStubs.PaymentMethodIndices.card].isSupported,
+            "Selected payment method should be bank account when cards are disabled"
+        )
+
+        XCTAssertTrue(
+            sut.paymentMethods[LinkStubs.PaymentMethodIndices.cardWithFailingChecks].isSupported,
+            "Selected payment method should be bank account when cards are disabled"
+        )
+
+        XCTAssertEqual(
+            sut.selectedPaymentMethodIndex,
+            LinkStubs.PaymentMethodIndices.card,
+            "Selected payment method should be bank account when cards are disabled"
+        )
+    }
 }
 
 extension PayWithLinkViewController_WalletViewModelTests {
 
-    func makeSUT() throws -> PayWithLinkViewController.WalletViewModel {
+    func makeSUT(
+        paymentMethods: [ConsumerPaymentDetails] = LinkStubs.paymentMethods(),
+        supportedPaymentDetailsTypes: Set<ConsumerPaymentDetails.DetailsType> = [.card, .bankAccount],
+        linkFundingSources: [String] = ["CARD"],
+        cardBrandAcceptance: PaymentSheet.CardBrandAcceptance = .all,
+        linkPassthroughModeEnabled: Bool? = nil) throws -> PayWithLinkViewController.WalletViewModel {
         // Link settings don't live in the PaymentIntent object itself, but in the /elements/sessions API response
         // So we construct a minimal response (see STPPaymentIntentTest.testDecodedObjectFromAPIResponseMapping) to parse them
         let paymentIntentJson = try XCTUnwrap(STPTestUtils.jsonNamed(STPTestJSONPaymentIntent))
@@ -114,7 +201,13 @@ extension PayWithLinkViewController_WalletViewModelTests {
             "payment_intent": paymentIntentJson,
             "ordered_payment_method_types": orderedPaymentJson,
         ] as [String: Any]
-        let linkSettingsJson = ["link_funding_sources": ["CARD"]]
+
+        var linkSettingsJson: [String: Any] = ["link_funding_sources": linkFundingSources]
+
+        if let linkPassthroughModeEnabled {
+            linkSettingsJson["link_passthrough_mode_enabled"] = linkPassthroughModeEnabled
+        }
+
         let response = [
             "payment_method_preference": paymentIntentResponse,
             "link_settings": linkSettingsJson,
@@ -126,24 +219,28 @@ extension PayWithLinkViewController_WalletViewModelTests {
         let paymentIntentJSON = elementsSession.allResponseFields[jsonDict: "payment_method_preference"]?[jsonDict: "payment_intent"]
         let paymentIntent = STPPaymentIntent.decodedObject(fromAPIResponse: paymentIntentJSON)!
 
+        var paymentSheetConfiguration = PaymentSheet.Configuration()
+
+        paymentSheetConfiguration.cardBrandAcceptance = cardBrandAcceptance
+
         return PayWithLinkViewController.WalletViewModel(
             // TODO(link): Fully mock `PaymentSheetLinkAccount and remove this.
             linkAccount: .init(
                 email: "user@example.com",
-                session: LinkStubs.consumerSession(),
+                session: LinkStubs.consumerSession(supportedPaymentDetailsTypes: supportedPaymentDetailsTypes),
                 publishableKey: nil,
                 useMobileEndpoints: false
             ),
             context: .init(
                 intent: .paymentIntent(paymentIntent),
                 elementsSession: elementsSession,
-                configuration: PaymentSheet.Configuration(),
+                configuration: paymentSheetConfiguration,
                 shouldOfferApplePay: false,
                 shouldFinishOnClose: false,
                 callToAction: nil,
                 analyticsHelper: ._testValue()
             ),
-            paymentMethods: LinkStubs.paymentMethods()
+            paymentMethods: paymentMethods
         )
     }
 

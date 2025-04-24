@@ -41,7 +41,9 @@ class LinkPaymentMethodPickerSnapshotTests: STPSnapshotTestCase {
     }
 
     func testUnsupportedBankAccount() {
-        let mockDataSource = MockDataSource()
+        let paymentMethods = LinkStubs.paymentMethods()
+        paymentMethods[LinkStubs.PaymentMethodIndices.bankAccount].isSupported = false
+        let mockDataSource = MockDataSource(paymentMethods: paymentMethods)
 
         let picker = LinkPaymentMethodPicker()
         picker.dataSource = mockDataSource
@@ -52,8 +54,35 @@ class LinkPaymentMethodPickerSnapshotTests: STPSnapshotTestCase {
         verify(picker)
     }
 
+    func testUnsupportedSelectedNotCollapsed() {
+        let paymentMethods = Array(LinkStubs.paymentMethods()[0..<1])
+        paymentMethods.first?.isSupported = false
+        let mockDataSource = MockDataSource(paymentMethods: paymentMethods)
+
+        let picker = LinkPaymentMethodPicker()
+        picker.dataSource = mockDataSource
+        picker.setExpanded(true, animated: false)
+        picker.layoutSubviews()
+
+        verify(picker)
+    }
+
+    func testFirstOptionUnsupported() {
+        let paymentMethods = LinkStubs.paymentMethods()
+        paymentMethods.first?.isSupported = false
+        let mockDataSource = MockDataSource(paymentMethods: paymentMethods)
+
+        let picker = LinkPaymentMethodPicker()
+        picker.selectedIndex = 1
+        picker.dataSource = mockDataSource
+        picker.setExpanded(true, animated: false)
+        picker.layoutSubviews()
+
+        verify(picker)
+    }
+
     func testEmpty() {
-        let mockDataSource = MockDataSource(empty: true)
+        let mockDataSource = MockDataSource(paymentMethods: [])
 
         let picker = LinkPaymentMethodPicker()
         picker.dataSource = mockDataSource
@@ -64,7 +93,7 @@ class LinkPaymentMethodPickerSnapshotTests: STPSnapshotTestCase {
 
     func testLongEmail() {
         let mockDataSource = MockDataSource(
-            empty: true,
+            paymentMethods: [],
             email: "thisemailislong@example.com"
         )
 
@@ -77,7 +106,7 @@ class LinkPaymentMethodPickerSnapshotTests: STPSnapshotTestCase {
 
     func testLongerEmail() {
         let mockDataSource = MockDataSource(
-            empty: true,
+            paymentMethods: [],
             email: "thisemailisnotreal@examplecompany.com"
         )
 
@@ -108,10 +137,10 @@ extension LinkPaymentMethodPickerSnapshotTests {
         let paymentMethods: [ConsumerPaymentDetails]
 
         init(
-            empty: Bool = false,
+            paymentMethods: [ConsumerPaymentDetails] = LinkStubs.paymentMethods(),
             email: String = "test@example.com"
         ) {
-            self.paymentMethods = empty ? [] : LinkStubs.paymentMethods()
+            self.paymentMethods = paymentMethods
             self.accountEmail = email
         }
 

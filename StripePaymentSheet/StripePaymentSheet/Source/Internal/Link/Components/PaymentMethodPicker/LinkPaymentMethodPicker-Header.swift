@@ -29,9 +29,14 @@ extension LinkPaymentMethodPicker {
         /// The selected payment method.
         var selectedPaymentMethod: ConsumerPaymentDetails? {
             didSet {
+                updateChevron()
                 contentView.paymentMethod = selectedPaymentMethod
                 updateAccessibilityContent()
             }
+        }
+
+        var collapsable: Bool {
+            selectedPaymentMethod?.isSupported == true
         }
 
         var isExpanded: Bool = false {
@@ -161,6 +166,7 @@ extension LinkPaymentMethodPicker {
                 chevron.transform = .identity
                 chevron.tintColor = .linkSecondaryText
             }
+            chevron.isHidden = !collapsable
         }
 
         private func updateAccessibilityContent() {

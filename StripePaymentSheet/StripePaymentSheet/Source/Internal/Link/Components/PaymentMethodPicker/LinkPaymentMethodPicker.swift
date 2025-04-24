@@ -55,6 +55,10 @@ final class LinkPaymentMethodPicker: UIView {
         }
     }
 
+    var collapsable: Bool {
+        selectedPaymentMethod?.isSupported == true
+    }
+
     var supportedPaymentMethodTypes = Set(ConsumerPaymentDetails.DetailsType.allCases) {
         didSet {
             // TODO(tillh-stripe) Update this as soon as adding bank accounts is supported
@@ -185,7 +189,7 @@ final class LinkPaymentMethodPicker: UIView {
 #endif
 
     func setExpanded(_ expanded: Bool, animated: Bool) {
-        headerView.isExpanded = expanded
+        headerView.isExpanded = collapsable ? expanded : true
 
         // Prevent double header animation
         if headerView.isExpanded {
@@ -213,6 +217,7 @@ final class LinkPaymentMethodPicker: UIView {
 private extension LinkPaymentMethodPicker {
 
     @objc func onHeaderTapped(_ sender: Header) {
+        guard collapsable || !sender.isExpanded else { return }
         setExpanded(!sender.isExpanded, animated: true)
 #if !os(visionOS)
         impactFeedbackGenerator.impactOccurred()
@@ -260,7 +265,7 @@ extension LinkPaymentMethodPicker {
 
         cell.paymentMethod = paymentMethod
         cell.isSelected = selectedIndex == index
-        cell.isSupported = supportedPaymentMethodTypes.contains(paymentMethod.type)
+        cell.isSupported = paymentMethod.isSupported
     }
 
     func showLoader(at index: Int) {
@@ -371,7 +376,8 @@ extension ConsumerPaymentDetails {
             billingAddress: billingAddress,
             billingEmailAddress: billingEmailAddress,
             nickname: nickname,
-            isDefault: isDefault
+            isDefault: isDefault,
+            isSupported: isSupported
         )
     }
 }
@@ -457,7 +463,7 @@ extension LinkPaymentMethodPicker {
 extension LinkPaymentMethodPicker: LinkPaymentMethodPickerCellDelegate {
 
     func savedPaymentPickerCellDidSelect(_ savedCardView: Cell) {
-        if let newIndex = index(for: savedCardView) {
+        if let newIndex = index(for: savedCardView), savedCardView.isSupported {
             let oldIndex = selectedIndex
             selectedIndex = newIndex
 

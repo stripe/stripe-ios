@@ -43,7 +43,8 @@ extension LinkStubs {
                 billingAddress: nil,
                 billingEmailAddress: nil,
                 nickname: nil,
-                isDefault: true
+                isDefault: true,
+                isSupported: true
             ),
             ConsumerPaymentDetails(
                 stripeID: "2",
@@ -59,7 +60,8 @@ extension LinkStubs {
                 billingAddress: nil,
                 billingEmailAddress: nil,
                 nickname: nil,
-                isDefault: false
+                isDefault: false,
+                isSupported: true
             ),
             ConsumerPaymentDetails(
                 stripeID: "3",
@@ -67,7 +69,8 @@ extension LinkStubs {
                 billingAddress: nil,
                 billingEmailAddress: nil,
                 nickname: nil,
-                isDefault: false
+                isDefault: false,
+                isSupported: true
             ),
             ConsumerPaymentDetails(
                 stripeID: "4",
@@ -83,12 +86,13 @@ extension LinkStubs {
                 billingAddress: nil,
                 billingEmailAddress: nil,
                 nickname: "Patrick's card",
-                isDefault: false
+                isDefault: false,
+                isSupported: true
             ),
         ]
     }
 
-    static func consumerSession() -> ConsumerSession {
+    static func consumerSession(supportedPaymentDetailsTypes: Set<ConsumerPaymentDetails.DetailsType> = [.card, .bankAccount]) -> ConsumerSession {
         return ConsumerSession(
             clientSecret: "client_secret",
             emailAddress: "user@example.com",
@@ -96,7 +100,7 @@ extension LinkStubs {
             unredactedPhoneNumber: "(555) 555-5555",
             phoneNumberCountry: "US",
             verificationSessions: [],
-            supportedPaymentDetailsTypes: [.card, .bankAccount]
+            supportedPaymentDetailsTypes: supportedPaymentDetailsTypes
         )
     }
 

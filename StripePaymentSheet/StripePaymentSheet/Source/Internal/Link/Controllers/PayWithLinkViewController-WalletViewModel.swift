@@ -146,10 +146,6 @@ extension PayWithLinkViewController {
         }
 
         var confirmButtonStatus: ConfirmButton.Status {
-            if selectedPaymentMethod == nil {
-                return .disabled
-            }
-
             if !selectedPaymentMethodIsSupported {
                 // Selected payment method not supported
                 return .disabled
@@ -176,11 +172,7 @@ extension PayWithLinkViewController {
         }
 
         var selectedPaymentMethodIsSupported: Bool {
-            guard let selectedPaymentMethod = selectedPaymentMethod else {
-                return false
-            }
-
-            return supportedPaymentMethodTypes.contains(selectedPaymentMethod.type)
+           selectedPaymentMethod?.isSupported == true
         }
 
         init(
@@ -191,6 +183,20 @@ extension PayWithLinkViewController {
             self.linkAccount = linkAccount
             self.context = context
             self.paymentMethods = paymentMethods
+            self.paymentMethods.forEach {
+                let paymentTypeNotSupported = !linkAccount.supportedPaymentDetailsTypes(for: context.elementsSession).contains($0.type)
+                let cardFilteringEnabled = context.elementsSession.linkCardBrandFilteringEnabled
+
+                if paymentTypeNotSupported {
+                    $0.isSupported = false
+                } else if case let .card(details) = $0.details,
+                    !context.configuration.cardBrandFilter.isAccepted(cardBrand: details.stpBrand),
+                    cardFilteringEnabled {
+                    $0.isSupported = false
+                } else {
+                    $0.isSupported = true
+                }
+            }
             self.selectedPaymentMethodIndex = Self.determineInitiallySelectedPaymentMethod(
                 context: context,
                 paymentMethods: paymentMethods
@@ -305,18 +311,25 @@ private extension PayWithLinkViewController.WalletViewModel {
         context: PayWithLinkViewController.Context,
         paymentMethods: [ConsumerPaymentDetails]
     ) -> Int {
+
+        let supportedPaymentMethods = paymentMethods.filter(\.isSupported)
+
         var indexOfLastAddedPaymentMethod: Int? {
             guard let lastAddedID = context.lastAddedPaymentDetails?.stripeID else {
                 return nil
             }
 
-            return paymentMethods.firstIndex(where: { $0.stripeID == lastAddedID })
+            return supportedPaymentMethods.firstIndex { $0.stripeID == lastAddedID }
         }
 
         var indexOfDefaultPaymentMethod: Int? {
-            return paymentMethods.firstIndex(where: { $0.isDefault })
+            paymentMethods.firstIndex { $0.isDefault && $0.isSupported }
         }
 
-        return indexOfLastAddedPaymentMethod ?? indexOfDefaultPaymentMethod ?? 0
+        var firstSupportedIndex: Int? {
+            paymentMethods.firstIndex { $0.isSupported }
+        }
+
+        return indexOfLastAddedPaymentMethod ?? indexOfDefaultPaymentMethod ?? firstSupportedIndex ?? 0
     }
 }

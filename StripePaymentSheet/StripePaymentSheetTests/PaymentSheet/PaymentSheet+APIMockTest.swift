@@ -102,7 +102,8 @@ final class PaymentSheetAPIMockTest: APIStubbedTestCase {
                     billingAddress: nil,
                     billingEmailAddress: exampleBillingEmail,
                     nickname: nil,
-                    isDefault: true
+                    isDefault: true,
+                    isSupported: true
                 ),
                 confirmationExtras: nil
             )
@@ -205,7 +206,8 @@ final class PaymentSheetAPIMockTest: APIStubbedTestCase {
                         billingAddress: nil,
                         billingEmailAddress: nil,
                         nickname: nil,
-                        isDefault: true
+                        isDefault: true,
+                        isSupported: true
                     ),
                     confirmationExtras: nil
                 )
