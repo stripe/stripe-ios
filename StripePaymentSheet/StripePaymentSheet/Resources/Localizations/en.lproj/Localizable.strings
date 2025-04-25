@@ -167,9 +167,6 @@ with the transaction. */
 /* Label for a disabled checked checkbox identifying the default payment method. */
 "Default payment method" = "Default payment method";
 
-/* Label for a row displaying the user's email. */
-"Email" = "Email";
-
 /* Text for a button that allows manual entry of an address */
 "Enter address manually" = "Enter address manually";
 
