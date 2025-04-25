@@ -562,10 +562,10 @@ extension PaymentSheet {
         case paymentIntent(STPPaymentIntent)
         case setupIntent(STPSetupIntent)
 
-        var isSetupFutureUsageSet: Bool {
+        func isSetupFutureUsageSet(paymentMethodType: STPPaymentMethodType) -> Bool {
             switch self {
             case .paymentIntent(let paymentIntent):
-                return paymentIntent.isSetupFutureUsageSet
+                return paymentIntent.isSetupFutureUsageSet(for: paymentMethodType)
             case .setupIntent:
                 return true
             }
@@ -589,8 +589,8 @@ extension PaymentSheet {
             // Did we successfully save this payment method?
             actionStatus == .succeeded,
             let customer = configuration.customer?.id,
-            intent.isSetupFutureUsageSet,
             let paymentMethod = intent.paymentMethod,
+            intent.isSetupFutureUsageSet(paymentMethodType: paymentMethod.type),
             // Can it appear in the list of saved PMs?
             PaymentSheet.supportedSavedPaymentMethods.contains(paymentMethod.type),
             // Should it write to local storage?

@@ -107,7 +107,7 @@ public extension PaymentSheet {
             case onSession = "on_session"
 
             /// Use this if you do not intend to reuse this payment method and want to override the top-level setup_future_usage value for this payment method.
-            @_spi(PaymentMethodOptionsSetupFutureUsageBeta) case none = "none"
+            @_spi(PaymentMethodOptionsSetupFutureUsagePreview) case none = "none"
         }
 
         /// Additional information about the payment or setup
@@ -116,7 +116,7 @@ public extension PaymentSheet {
             public struct PaymentMethodOptions {
                 var setupFutureUsageValues: [STPPaymentMethodType: SetupFutureUsage]?
 
-                @_spi(PaymentMethodOptionsSetupFutureUsageBeta) public init(setupFutureUsageValues: [STPPaymentMethodType: SetupFutureUsage]? = nil) {
+                @_spi(PaymentMethodOptionsSetupFutureUsagePreview) public init(setupFutureUsageValues: [STPPaymentMethodType: SetupFutureUsage]? = nil) {
                     self.setupFutureUsageValues = setupFutureUsageValues
                 }
             }
