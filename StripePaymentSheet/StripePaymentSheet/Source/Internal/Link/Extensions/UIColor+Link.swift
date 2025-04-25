@@ -156,6 +156,21 @@ extension UIColor {
 
 }
 
+// MARK: - Icon color
+
+extension UIColor {
+    static let linkIconDefault: UIColor = .dynamic(
+        light: UIColor(red: 0.216, green: 0.239, blue: 0.282, alpha: 1.0),
+        dark: UIColor(red: 0.573, green: 0.573, blue: 0.573, alpha: 1.0)
+    )
+
+    static let linkIconBackground: UIColor = .dynamic(
+        light: UIColor(red: 0.961, green: 0.965, blue: 0.973, alpha: 1.0),
+        dark: UIColor(red: 0.251, green: 0.251, blue: 0.251, alpha: 1.0)
+    )
+
+}
+
 // MARK: - Utils
 
 extension UIColor {
