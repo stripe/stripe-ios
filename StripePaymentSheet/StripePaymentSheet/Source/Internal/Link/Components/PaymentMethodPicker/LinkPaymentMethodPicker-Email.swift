@@ -5,6 +5,7 @@
 //  Created by Mat Schmid on 4/23/25.
 //
 
+@_spi(STP) import StripeCore
 @_spi(STP) import StripeUICore
 import UIKit
 
@@ -15,10 +16,6 @@ extension LinkPaymentMethodPicker {
             static let insets = NSDirectionalEdgeInsets(top: 20, leading: 20, bottom: 20, trailing: 20)
         }
 
-        enum Strings {
-            static let email = STPLocalizedString("Email", "Label for a row displaying the user's email.")
-        }
-
         var accountEmail: String? {
             didSet {
                 userEmailLabel.text = accountEmail
@@ -27,9 +24,9 @@ extension LinkPaymentMethodPicker {
 
         private let emailLabel: UILabel = {
             let label = UILabel()
+            label.text = String.Localized.email
             label.font = LinkUI.font(forTextStyle: .body)
             label.textColor = .linkSecondaryText
-            label.text = Strings.email
             label.adjustsFontForContentSizeCategory = true
             label.setContentCompressionResistancePriority(.required, for: .horizontal)
             return label
@@ -82,7 +79,7 @@ extension LinkPaymentMethodPicker {
             isAccessibilityElement = true
             accessibilityTraits = .staticText
             accessibilityLabel = userEmailLabel.text
-            accessibilityHint = Strings.email
+            accessibilityHint = String.Localized.email
         }
 
         required init?(coder: NSCoder) {
