@@ -23,17 +23,21 @@ final class ConsumerPaymentDetails: Decodable {
     let details: Details
     let billingAddress: BillingAddress?
     let billingEmailAddress: String?
+    let nickname: String?
     var isDefault: Bool
 
     init(stripeID: String,
          details: Details,
          billingAddress: BillingAddress?,
          billingEmailAddress: String?,
-         isDefault: Bool) {
+         nickname: String?,
+         isDefault: Bool
+    ) {
         self.stripeID = stripeID
         self.details = details
         self.billingAddress = billingAddress
         self.billingEmailAddress = billingEmailAddress
+        self.nickname = nickname
         self.isDefault = isDefault
     }
 
@@ -41,6 +45,7 @@ final class ConsumerPaymentDetails: Decodable {
         case stripeID = "id"
         case billingAddress = "billing_address"
         case billingEmailAddress = "billing_email_address"
+        case nickname
         case isDefault
     }
 
@@ -49,6 +54,12 @@ final class ConsumerPaymentDetails: Decodable {
         self.stripeID = try container.decode(String.self, forKey: .stripeID)
         self.billingAddress = try? container.decode(BillingAddress.self, forKey: .billingAddress)
         self.billingEmailAddress = try? container.decode(String.self, forKey: .billingEmailAddress)
+        let decodedNickname = try? container.decode(String.self, forKey: .nickname)
+        if let decodedNickname, !decodedNickname.isEmpty {
+            self.nickname = decodedNickname
+        } else {
+            self.nickname = nil
+        }
         // The payment details are included in the dictionary, so we pass the whole dict to Details
         self.details = try decoder.singleValueContainer().decode(Details.self)
         self.isDefault = try container.decode(Bool.self, forKey: .isDefault)
@@ -133,6 +144,7 @@ extension ConsumerPaymentDetails.Details {
         let brand: String
         let networks: [String]
         let last4: String
+        let funding: Funding
         let checks: CardChecks?
 
         private enum CodingKeys: String, CodingKey {
@@ -141,6 +153,7 @@ extension ConsumerPaymentDetails.Details {
             case brand
             case networks
             case last4
+            case funding
             case checks
         }
 
@@ -153,12 +166,15 @@ extension ConsumerPaymentDetails.Details {
              brand: String,
              networks: [String],
              last4: String,
-             checks: CardChecks?) {
+             funding: Funding,
+             checks: CardChecks?
+        ) {
             self.expiryYear = expiryYear
             self.expiryMonth = expiryMonth
             self.brand = brand
             self.networks = networks
             self.last4 = last4
+            self.funding = funding
             self.checks = checks
         }
     }
@@ -166,6 +182,22 @@ extension ConsumerPaymentDetails.Details {
 
 // MARK: - Details.Card - Helpers
 extension ConsumerPaymentDetails.Details.Card {
+    enum Funding: String, SafeEnumCodable {
+        case credit = "CREDIT"
+        case debit = "DEBIT"
+        case prepaid = "PREPAID"
+        // Catch all
+        case unparsable = ""
+
+        var displayNameWithBrand: String {
+            switch self {
+            case .credit: String.Localized.Funding.credit
+            case .debit: String.Localized.Funding.debit
+            case .prepaid: String.Localized.Funding.prepaid
+            case .unparsable: String.Localized.Funding.default
+            }
+        }
+    }
 
     var shouldRecollectCardCVC: Bool {
         switch checks?.cvcCheck {
@@ -188,6 +220,24 @@ extension ConsumerPaymentDetails.Details.Card {
         return STPCard.brand(from: brand)
     }
 
+    var secondaryName: String {
+        "•••• \(last4)"
+    }
+
+    func displayName(with nickname: String?) -> String? {
+        if let nickname {
+            return nickname
+        }
+
+        guard let formattedBrandName = STPCardBrandUtilities.stringFrom(stpBrand) else {
+            return nil
+        }
+
+        return String(
+            format: funding.displayNameWithBrand,
+            formattedBrandName
+        )
+    }
 }
 
 // MARK: - Details.BankAccount
@@ -217,9 +267,9 @@ extension ConsumerPaymentDetails {
     var paymentSheetLabel: String {
         switch details {
         case .card(let card):
-            return "••••\(card.last4)"
+            return card.displayName(with: nickname) ?? card.secondaryName
         case .bankAccount(let bank):
-            return "••••\(bank.last4)"
+            return "•••• \(bank.last4)"
         case .unparsable:
             return ""
         }
