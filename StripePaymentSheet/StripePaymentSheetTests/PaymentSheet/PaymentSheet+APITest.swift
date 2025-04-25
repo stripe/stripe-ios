@@ -1346,6 +1346,16 @@ class PaymentSheetAPITest: STPNetworkStubbingTestCase {
             // ...should have mandate data
             XCTAssertNotNil(params_for_pi_with_sfu.mandateData)
             XCTAssert(params_for_pi_with_sfu.mandateData != nil)
+            // Params for si
+            let params_for_si_with_sfu = PaymentSheet.makeSetupIntentParams(
+                confirmPaymentMethodType: confirmType,
+                setupIntent: STPFixtures.setupIntent(),
+                configuration: configuration
+            )
+            // ...should have mandate data
+            XCTAssertNotNil(params_for_si_with_sfu.mandateData)
+
+            configuration.shouldReadPaymentMethodOptionsSetupFutureUsage = true
             // Params for pi with PMO SFU supplied...
             let params_for_pi_with_pmo_sfu = PaymentSheet.makePaymentIntentParams(
                 confirmPaymentMethodType: confirmType,
@@ -1362,14 +1372,6 @@ class PaymentSheetAPITest: STPNetworkStubbingTestCase {
             )
             // ...shouldn't have mandate data
             XCTAssertNil(params_for_pi_with_top_level_sfu_pmo_none.mandateData)
-            // Params for si
-            let params_for_si_with_sfu = PaymentSheet.makeSetupIntentParams(
-                confirmPaymentMethodType: confirmType,
-                setupIntent: STPFixtures.setupIntent(),
-                configuration: configuration
-            )
-            // ...should have mandate data
-            XCTAssertNotNil(params_for_si_with_sfu.mandateData)
         }
     }
 
