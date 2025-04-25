@@ -80,8 +80,6 @@ extension PaymentSheet {
 
         if UIDevice.current.userInterfaceIdiom == .pad {
             payWithLinkVC.modalPresentationStyle = .formSheet
-        } else {
-            payWithLinkVC.modalPresentationStyle = .overFullScreen
         }
 
         presentingController.present(payWithLinkVC, animated: true, completion: completion)
