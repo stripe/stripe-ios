@@ -133,8 +133,7 @@ extension PaymentSheetLinkAccountTests {
             billingAddress: nil,
             billingEmailAddress: nil,
             nickname: nil,
-            isDefault: false,
-            isSupported: true
+            isDefault: false
         )
     }
 

@@ -509,6 +509,9 @@ extension PayWithLinkViewController.WalletViewController: LinkPaymentMethodPicke
         return viewModel.paymentMethods[index]
     }
 
+    func isPaymentMethodSupported(_ paymentMethod: ConsumerPaymentDetails?) -> Bool {
+        viewModel.isPaymentMethodSupported(paymentMethod: paymentMethod)
+    }
 }
 
 // MARK: - LinkPaymentMethodPickerDelegate

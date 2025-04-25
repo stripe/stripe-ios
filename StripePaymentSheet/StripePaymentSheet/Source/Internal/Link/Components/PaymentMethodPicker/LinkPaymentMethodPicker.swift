@@ -37,6 +37,8 @@ protocol LinkPaymentMethodPickerDataSource: AnyObject {
         paymentMethodAt index: Int
     ) -> ConsumerPaymentDetails
 
+    func isPaymentMethodSupported(_ paymentMethod: ConsumerPaymentDetails?) -> Bool
+
 }
 
 /// For internal SDK use only
@@ -56,7 +58,8 @@ final class LinkPaymentMethodPicker: UIView {
     }
 
     var collapsable: Bool {
-        selectedPaymentMethod?.isSupported == true
+        guard let dataSource else { return false }
+        return selectedPaymentMethod.map { dataSource.isPaymentMethodSupported($0) } ?? false
     }
 
     var supportedPaymentMethodTypes = Set(ConsumerPaymentDetails.DetailsType.allCases) {
@@ -209,7 +212,7 @@ final class LinkPaymentMethodPicker: UIView {
     }
 
     private func updateHeaderView() {
-        headerView.selectedPaymentMethod = selectedPaymentMethod
+        headerView.setSelectedPaymentMethod(selectedPaymentMethod: selectedPaymentMethod, supported: self.dataSource?.isPaymentMethodSupported(selectedPaymentMethod) ?? false)
     }
 
 }
@@ -265,7 +268,7 @@ extension LinkPaymentMethodPicker {
 
         cell.paymentMethod = paymentMethod
         cell.isSelected = selectedIndex == index
-        cell.isSupported = paymentMethod.isSupported
+        cell.isSupported = dataSource.isPaymentMethodSupported(paymentMethod)
     }
 
     func showLoader(at index: Int) {
@@ -311,7 +314,7 @@ extension LinkPaymentMethodPicker {
             subview.layer.zPosition = CGFloat(-index)
         }
 
-        headerView.selectedPaymentMethod = selectedPaymentMethod
+        headerView.setSelectedPaymentMethod(selectedPaymentMethod: selectedPaymentMethod, supported: dataSource?.isPaymentMethodSupported(selectedPaymentMethod) ?? false)
     }
 
 }
@@ -376,8 +379,7 @@ extension ConsumerPaymentDetails {
             billingAddress: billingAddress,
             billingEmailAddress: billingEmailAddress,
             nickname: nickname,
-            isDefault: isDefault,
-            isSupported: isSupported
+            isDefault: isDefault
         )
     }
 }

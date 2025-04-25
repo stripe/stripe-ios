@@ -42,8 +42,8 @@ class LinkPaymentMethodPickerSnapshotTests: STPSnapshotTestCase {
 
     func testUnsupportedBankAccount() {
         let paymentMethods = LinkStubs.paymentMethods()
-        paymentMethods[LinkStubs.PaymentMethodIndices.bankAccount].isSupported = false
         let mockDataSource = MockDataSource(paymentMethods: paymentMethods)
+        mockDataSource.set(paymentMethod: paymentMethods[LinkStubs.PaymentMethodIndices.bankAccount], supported: false)
 
         let picker = LinkPaymentMethodPicker()
         picker.dataSource = mockDataSource
@@ -56,8 +56,8 @@ class LinkPaymentMethodPickerSnapshotTests: STPSnapshotTestCase {
 
     func testUnsupportedSelectedNotCollapsed() {
         let paymentMethods = Array(LinkStubs.paymentMethods()[0..<1])
-        paymentMethods.first?.isSupported = false
         let mockDataSource = MockDataSource(paymentMethods: paymentMethods)
+        mockDataSource.set(paymentMethod: paymentMethods.first!, supported: false)
 
         let picker = LinkPaymentMethodPicker()
         picker.dataSource = mockDataSource
@@ -69,9 +69,8 @@ class LinkPaymentMethodPickerSnapshotTests: STPSnapshotTestCase {
 
     func testFirstOptionUnsupported() {
         let paymentMethods = LinkStubs.paymentMethods()
-        paymentMethods.first?.isSupported = false
         let mockDataSource = MockDataSource(paymentMethods: paymentMethods)
-
+        mockDataSource.set(paymentMethod: paymentMethods.first!, supported: false)
         let picker = LinkPaymentMethodPicker()
         picker.selectedIndex = 1
         picker.dataSource = mockDataSource
@@ -136,6 +135,8 @@ extension LinkPaymentMethodPickerSnapshotTests {
         let accountEmail: String
         let paymentMethods: [ConsumerPaymentDetails]
 
+        private var supportOverrides: [String: Bool] = [:]
+
         init(
             paymentMethods: [ConsumerPaymentDetails] = LinkStubs.paymentMethods(),
             email: String = "test@example.com"
@@ -148,11 +149,19 @@ extension LinkPaymentMethodPickerSnapshotTests {
             return paymentMethods.count
         }
 
+        func set(paymentMethod: ConsumerPaymentDetails, supported: Bool) {
+            supportOverrides[paymentMethod.stripeID] = supported
+        }
+
         func paymentPicker(
             _ picker: LinkPaymentMethodPicker,
             paymentMethodAt index: Int
         ) -> ConsumerPaymentDetails {
             return paymentMethods[index]
+        }
+
+        func isPaymentMethodSupported(_ paymentMethod: ConsumerPaymentDetails?) -> Bool {
+            supportOverrides[paymentMethod?.stripeID ?? "", default: true]
         }
     }
 

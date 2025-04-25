@@ -25,22 +25,19 @@ final class ConsumerPaymentDetails: Decodable {
     let billingEmailAddress: String?
     let nickname: String?
     var isDefault: Bool
-    var isSupported: Bool
 
     init(stripeID: String,
          details: Details,
          billingAddress: BillingAddress?,
          billingEmailAddress: String?,
          nickname: String?,
-         isDefault: Bool,
-         isSupported: Bool) {
+         isDefault: Bool) {
         self.stripeID = stripeID
         self.details = details
         self.billingAddress = billingAddress
         self.billingEmailAddress = billingEmailAddress
         self.nickname = nickname
         self.isDefault = isDefault
-        self.isSupported = isSupported
     }
 
     private enum CodingKeys: String, CodingKey {
@@ -65,7 +62,24 @@ final class ConsumerPaymentDetails: Decodable {
         // The payment details are included in the dictionary, so we pass the whole dict to Details
         self.details = try decoder.singleValueContainer().decode(Details.self)
         self.isDefault = try container.decode(Bool.self, forKey: .isDefault)
-        self.isSupported = true
+    }
+}
+
+extension ConsumerPaymentDetails {
+    func isSupported(linkAccount: PaymentSheetLinkAccount,
+                     elementsSession: STPElementsSession,
+                     cardBrandFilter: CardBrandFilter) -> Bool {
+        guard linkAccount.supportedPaymentDetailsTypes(for: elementsSession).contains(type) else {
+            return false
+        }
+
+        if case let .card(details) = details,
+           !cardBrandFilter.isAccepted(cardBrand: details.stpBrand),
+           elementsSession.linkCardBrandFilteringEnabled {
+            return false
+        }
+
+        return true
     }
 }
 

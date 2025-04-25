@@ -146,12 +146,12 @@ class PayWithLinkViewController_WalletViewModelTests: XCTestCase {
                               cardBrandAcceptance: .disallowed(brands: [.visa]),
                               linkPassthroughModeEnabled: true)
         XCTAssertFalse(
-            sut.paymentMethods[LinkStubs.PaymentMethodIndices.card].isSupported,
+            sut.isPaymentMethodSupported(paymentMethod: sut.paymentMethods[LinkStubs.PaymentMethodIndices.card]),
             "Selected payment method should be bank account when cards are disabled"
         )
 
         XCTAssertTrue(
-            sut.paymentMethods[LinkStubs.PaymentMethodIndices.cardWithFailingChecks].isSupported,
+            sut.isPaymentMethodSupported(paymentMethod: sut.paymentMethods[LinkStubs.PaymentMethodIndices.cardWithFailingChecks]),
             "Selected payment method should be bank account when cards are disabled"
         )
 
@@ -168,12 +168,12 @@ class PayWithLinkViewController_WalletViewModelTests: XCTestCase {
                               cardBrandAcceptance: .disallowed(brands: [.visa]),
                               linkPassthroughModeEnabled: false)
         XCTAssertTrue(
-            sut.paymentMethods[LinkStubs.PaymentMethodIndices.card].isSupported,
+            sut.isPaymentMethodSupported(paymentMethod: sut.paymentMethods[LinkStubs.PaymentMethodIndices.card]),
             "Selected payment method should be bank account when cards are disabled"
         )
 
         XCTAssertTrue(
-            sut.paymentMethods[LinkStubs.PaymentMethodIndices.cardWithFailingChecks].isSupported,
+            sut.isPaymentMethodSupported(paymentMethod: sut.paymentMethods[LinkStubs.PaymentMethodIndices.cardWithFailingChecks]),
             "Selected payment method should be bank account when cards are disabled"
         )
 

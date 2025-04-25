@@ -27,7 +27,7 @@ extension LinkPaymentMethodPicker {
         }
 
         /// The selected payment method.
-        var selectedPaymentMethod: ConsumerPaymentDetails? {
+        private(set) var selectedPaymentMethod: ConsumerPaymentDetails? {
             didSet {
                 updateChevron()
                 contentView.paymentMethod = selectedPaymentMethod
@@ -35,9 +35,7 @@ extension LinkPaymentMethodPicker {
             }
         }
 
-        var collapsable: Bool {
-            selectedPaymentMethod?.isSupported == true
-        }
+        private(set) var collapsable: Bool = false
 
         var isExpanded: Bool = false {
             didSet {
@@ -156,6 +154,11 @@ extension LinkPaymentMethodPicker {
 
         required init?(coder: NSCoder) {
             fatalError("init(coder:) has not been implemented")
+        }
+
+        func setSelectedPaymentMethod(selectedPaymentMethod: ConsumerPaymentDetails?, supported: Bool) {
+            self.collapsable = supported
+            self.selectedPaymentMethod = selectedPaymentMethod
         }
 
         private func updateChevron() {

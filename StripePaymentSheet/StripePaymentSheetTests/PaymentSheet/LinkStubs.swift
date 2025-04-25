@@ -43,8 +43,7 @@ extension LinkStubs {
                 billingAddress: nil,
                 billingEmailAddress: nil,
                 nickname: nil,
-                isDefault: true,
-                isSupported: true
+                isDefault: true
             ),
             ConsumerPaymentDetails(
                 stripeID: "2",
@@ -60,8 +59,7 @@ extension LinkStubs {
                 billingAddress: nil,
                 billingEmailAddress: nil,
                 nickname: nil,
-                isDefault: false,
-                isSupported: true
+                isDefault: false
             ),
             ConsumerPaymentDetails(
                 stripeID: "3",
@@ -69,8 +67,7 @@ extension LinkStubs {
                 billingAddress: nil,
                 billingEmailAddress: nil,
                 nickname: nil,
-                isDefault: false,
-                isSupported: true
+                isDefault: false
             ),
             ConsumerPaymentDetails(
                 stripeID: "4",
@@ -86,8 +83,7 @@ extension LinkStubs {
                 billingAddress: nil,
                 billingEmailAddress: nil,
                 nickname: "Patrick's card",
-                isDefault: false,
-                isSupported: true
+                isDefault: false
             ),
         ]
     }

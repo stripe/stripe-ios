@@ -83,8 +83,7 @@ extension LinkCardEditElementSnapshotTests {
             billingAddress: nil,
             billingEmailAddress: nil,
             nickname: nil,
-            isDefault: isDefault,
-            isSupported: true
+            isDefault: isDefault
         )
 
         return LinkCardEditElement(

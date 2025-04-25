@@ -172,7 +172,7 @@ extension PayWithLinkViewController {
         }
 
         var selectedPaymentMethodIsSupported: Bool {
-           selectedPaymentMethod?.isSupported == true
+            isPaymentMethodSupported(paymentMethod: selectedPaymentMethod)
         }
 
         init(
@@ -183,21 +183,8 @@ extension PayWithLinkViewController {
             self.linkAccount = linkAccount
             self.context = context
             self.paymentMethods = paymentMethods
-            self.paymentMethods.forEach {
-                let paymentTypeNotSupported = !linkAccount.supportedPaymentDetailsTypes(for: context.elementsSession).contains($0.type)
-                let cardFilteringEnabled = context.elementsSession.linkCardBrandFilteringEnabled
-
-                if paymentTypeNotSupported {
-                    $0.isSupported = false
-                } else if case let .card(details) = $0.details,
-                    !context.configuration.cardBrandFilter.isAccepted(cardBrand: details.stpBrand),
-                    cardFilteringEnabled {
-                    $0.isSupported = false
-                } else {
-                    $0.isSupported = true
-                }
-            }
             self.selectedPaymentMethodIndex = Self.determineInitiallySelectedPaymentMethod(
+                linkAccount: linkAccount,
                 context: context,
                 paymentMethods: paymentMethods
             )
@@ -301,33 +288,37 @@ extension PayWithLinkViewController {
                 completion: completion
             )
         }
-    }
 
+        func isPaymentMethodSupported(paymentMethod: ConsumerPaymentDetails?) -> Bool {
+            paymentMethod?.isSupported(linkAccount: linkAccount, elementsSession: context.elementsSession, cardBrandFilter: context.configuration.cardBrandFilter) ?? false
+        }
+    }
 }
 
 private extension PayWithLinkViewController.WalletViewModel {
 
     static func determineInitiallySelectedPaymentMethod(
+        linkAccount: PaymentSheetLinkAccount,
         context: PayWithLinkViewController.Context,
         paymentMethods: [ConsumerPaymentDetails]
     ) -> Int {
 
-        let supportedPaymentMethods = paymentMethods.filter(\.isSupported)
-
         var indexOfLastAddedPaymentMethod: Int? {
-            guard let lastAddedID = context.lastAddedPaymentDetails?.stripeID else {
+            guard let paymentDetail = context.lastAddedPaymentDetails,
+                  paymentDetail.isSupported(linkAccount: linkAccount, elementsSession: context.elementsSession, cardBrandFilter: context.configuration.cardBrandFilter)
+            else {
                 return nil
             }
 
-            return supportedPaymentMethods.firstIndex { $0.stripeID == lastAddedID }
+            return paymentMethods.firstIndex { $0.stripeID == paymentDetail.stripeID }
         }
 
         var indexOfDefaultPaymentMethod: Int? {
-            paymentMethods.firstIndex { $0.isDefault && $0.isSupported }
+            paymentMethods.firstIndex { $0.isDefault && $0.isSupported(linkAccount: linkAccount, elementsSession: context.elementsSession, cardBrandFilter: context.configuration.cardBrandFilter) }
         }
 
         var firstSupportedIndex: Int? {
-            paymentMethods.firstIndex { $0.isSupported }
+            paymentMethods.firstIndex { $0.isSupported(linkAccount: linkAccount, elementsSession: context.elementsSession, cardBrandFilter: context.configuration.cardBrandFilter) }
         }
 
         return indexOfLastAddedPaymentMethod ?? indexOfDefaultPaymentMethod ?? firstSupportedIndex ?? 0
