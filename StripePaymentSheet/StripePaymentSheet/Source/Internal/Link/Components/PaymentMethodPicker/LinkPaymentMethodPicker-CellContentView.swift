@@ -181,6 +181,7 @@ extension LinkPaymentMethodPicker {
         }
 
         // UIImages need to be manually updated when the system theme changes.
+        #if !os(visionOS)
         override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
             super.traitCollectionDidChange(previousTraitCollection)
             guard traitCollection.hasDifferentColorAppearance(comparedTo: previousTraitCollection) else {
@@ -188,6 +189,7 @@ extension LinkPaymentMethodPicker {
             }
             refreshBankIconIfNeeded()
         }
+        #endif
     }
 
 }
