@@ -46,7 +46,7 @@ final class MLModelLoader {
             let fileManager = FileManager.default
 
             // Remove any previously cached entry to avoid a failure when moving into place
-            if (fileManager.fileExists(atPath: destinationURL.path)) {
+            if fileManager.fileExists(atPath: destinationURL.path) {
                 try fileManager.removeItem(at: destinationURL)
             }
 
