@@ -23,7 +23,7 @@ final class PaymentSheetLinkAccountTests: APIStubbedTestCase {
         let sut = makeSUT()
 
         let paymentDetails = makePaymentDetailsStub()
-        let result = sut.makePaymentMethodParams(from: paymentDetails, cvc: nil, billingPhoneNumber: nil)
+        let result = sut.makePaymentMethodParams(from: paymentDetails, cvc: nil, billingPhoneNumber: nil, allowRedisplay: nil)
 
         XCTAssertEqual(result?.type, .link)
         XCTAssertEqual(result?.link?.paymentDetailsID, "1")
@@ -40,7 +40,7 @@ final class PaymentSheetLinkAccountTests: APIStubbedTestCase {
         let sut = makeSUT()
 
         let paymentDetails = makePaymentDetailsStub()
-        let result = sut.makePaymentMethodParams(from: paymentDetails, cvc: "1234", billingPhoneNumber: nil)
+        let result = sut.makePaymentMethodParams(from: paymentDetails, cvc: "1234", billingPhoneNumber: nil, allowRedisplay: nil)
 
         XCTAssertEqual(
             result?.link?.additionalAPIParameters["card"] as? [String: String],
@@ -48,6 +48,15 @@ final class PaymentSheetLinkAccountTests: APIStubbedTestCase {
                 "cvc": "1234"
             ]
         )
+    }
+
+    func testMakePaymentMethodParams_withAllowRedisplay() {
+        let sut = makeSUT()
+
+        let paymentDetails = makePaymentDetailsStub()
+        let result = sut.makePaymentMethodParams(from: paymentDetails, cvc: "1234", billingPhoneNumber: nil, allowRedisplay: .always)
+
+        XCTAssertEqual(result?.allowRedisplay, .always)
     }
 
     func testRefreshesWhenNeeded() {
