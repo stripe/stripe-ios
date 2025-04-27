@@ -28,6 +28,9 @@ public class STPConfirmPaymentMethodOptions: NSObject {
     /// Options for a US Bank Account Payment Method.
     @objc public var usBankAccountOptions: STPConfirmUSBankAccountOptions?
 
+    /// Options for a Link Payment Method.
+    @_spi(STP) @objc public var linkOptions: STPConfirmLinkOptions?
+
     /// Options for a Konbini Payment Method.
     @objc public var konbiniOptions: STPConfirmKonbiniOptions?
 
@@ -45,6 +48,7 @@ public class STPConfirmPaymentMethodOptions: NSObject {
             "wechat_pay = \(String(describing: weChatPayOptions))",
             "us_bank_account = \(String(describing: usBankAccountOptions))",
             "konbini = \(String(describing: konbiniOptions))",
+            "link = \(String(describing: linkOptions))",
         ]
         return "<\(props.joined(separator: "; "))>"
     }
@@ -61,6 +65,7 @@ extension STPConfirmPaymentMethodOptions: STPFormEncodable {
             NSStringFromSelector(#selector(getter: weChatPayOptions)): "wechat_pay",
             NSStringFromSelector(#selector(getter: usBankAccountOptions)): "us_bank_account",
             NSStringFromSelector(#selector(getter: konbiniOptions)): "konbini",
+            NSStringFromSelector(#selector(getter: linkOptions)): "link",
         ]
     }
 

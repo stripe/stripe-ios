@@ -503,7 +503,8 @@ extension PaymentSheetLinkAccount {
     func makePaymentMethodParams(
         from paymentDetails: ConsumerPaymentDetails,
         cvc: String?,
-        billingPhoneNumber: String?
+        billingPhoneNumber: String?,
+        allowRedisplay: STPPaymentMethodAllowRedisplay?
     ) -> STPPaymentMethodParams? {
         guard let currentSession = currentSession else {
             stpAssertionFailure("Cannot make payment method params without an active session.")
@@ -511,6 +512,9 @@ extension PaymentSheetLinkAccount {
         }
 
         let params = STPPaymentMethodParams(type: .link)
+        if let allowRedisplay {
+            params.allowRedisplay = allowRedisplay
+        }
         params.billingDetails = STPPaymentMethodBillingDetails(billingAddress: paymentDetails.billingAddress, email: paymentDetails.billingEmailAddress)
         params.billingDetails?.phone = billingPhoneNumber
         params.link?.paymentDetailsID = paymentDetails.stripeID

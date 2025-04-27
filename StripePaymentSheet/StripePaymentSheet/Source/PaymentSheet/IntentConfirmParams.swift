@@ -187,7 +187,13 @@ extension STPConfirmPaymentMethodOptions {
         // Something went wrong if we're trying to save and there's no Customer!
         assert(!(shouldSave && customer == nil))
 
-        guard customer != nil && paymentMethodType == .card || paymentMethodType == .USBankAccount else {
+        var allowedPaymentMethodTypes: [STPPaymentMethodType] = [.card, .USBankAccount]
+
+        if let customer, case .customerSession = customer.customerAccessProvider {
+            allowedPaymentMethodTypes.append(.link)
+        }
+
+        guard customer != nil && allowedPaymentMethodTypes.contains(paymentMethodType) else {
             return
         }
 
@@ -200,6 +206,9 @@ extension STPConfirmPaymentMethodOptions {
             // Note: the SFU value passed in the STPConfirmUSBankAccountOptions init will be overwritten by `additionalAPIParameters`. See https://jira.corp.stripe.com/browse/RUN_MOBILESDK-1737
             usBankAccountOptions = usBankAccountOptions ?? STPConfirmUSBankAccountOptions(setupFutureUsage: .none)
             usBankAccountOptions?.additionalAPIParameters["setup_future_usage"] = sfuValue
+        case .link:
+            linkOptions = linkOptions ?? STPConfirmLinkOptions()
+            linkOptions?.additionalAPIParameters["setup_future_usage"] = sfuValue
         default:
             return
         }
