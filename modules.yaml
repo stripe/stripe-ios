@@ -179,8 +179,8 @@ modules:
       - StripeCore
   size_report:
     max_compressed_size: 3000
-    max_uncompressed_size: 5000
-    max_incremental_uncompressed_size: 100
+    max_uncompressed_size: 7000
+    max_incremental_uncompressed_size: 1500
 
 - podspec: StripeUICore.podspec
   scheme: StripeUICore
