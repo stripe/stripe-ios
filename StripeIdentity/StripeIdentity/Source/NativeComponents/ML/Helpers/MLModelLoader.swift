@@ -43,7 +43,14 @@ final class MLModelLoader {
     private func cache(compiledModel: URL, downloadedFrom remoteURL: URL) -> URL? {
         let destinationURL = getCachedLocation(forRemoteURL: remoteURL)
         do {
-            try FileManager.default.moveItem(at: compiledModel, to: destinationURL)
+            let fileManager = FileManager.default
+
+            // Remove any previously cached entry to avoid a failure when moving into place
+            if fileManager.fileExists(atPath: destinationURL.path) {
+                try fileManager.removeItem(at: destinationURL)
+            }
+
+            try fileManager.moveItem(at: compiledModel, to: destinationURL)
             return destinationURL
         } catch {
             return nil
@@ -79,6 +86,9 @@ final class MLModelLoader {
             if let mlModel = try? MLModel(contentsOf: cachedModel) {
                 return returnedPromise.resolve(with: mlModel)
             }
+
+            // If the model failed to load because it was corrupted, delete the artifact
+            try? FileManager.default.removeItem(at: cachedModel)
 
             self.fileDownloader.downloadFileTemporarily(from: remoteURL).chained(on: loadPromiseCacheQueue) {
                 [weak self] tmpFileURL -> Promise<MLModel> in
