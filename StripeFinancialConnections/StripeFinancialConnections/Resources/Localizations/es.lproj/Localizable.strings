@@ -1,2 +1,181 @@
+/* Title of a screen that shows an error. The error indicates that the bank user selected is currently under maintenance. */
+"%@ is currently unavailable" = "%@ no está disponible actualmente";
+/* Title of a screen that shows an error. The error indicates that the bank user selected is currently under maintenance. */
+"%@ is undergoing maintenance" = "%@ está en mantenimiento";
+/* An error message that appears when a user is manually entering their bank account information. This error message appears when the user left the 'Account number' field blank. */
+"Account number is required." = "El número de cuenta es obligatorio.";
+/* The title of the success screen that appears when a user manually entered their bank account information. */
+"Almost there" = "Casi has terminado";
+/* The title of a button that appears at the bottom of search results. It appears when a user is searching for their bank. The purpose of the button is to give users the option to enter their bank account numbers manually (ex. routing and account number). */
+"Can't find your bank?" = "¿No encuentras tu banco?";
+/* The subtitle/description in a screen that allows a user to manually enter their bank account information. */
+"Checking and savings accounts are supported." = "Se admiten cuentas corrientes y de ahorro.";
+/* Title of a button. It acts as a back button to go back to choosing a different bank instead of the currently selected one. */
+"Choose a different bank" = "Elige otro banco";
+/* Text as part of an error message that shows up when user entered an invalid one-time-passcode (OTP). '%@' will be replaced by text with a link: 'contact us' */
+"Click “Resend code” and try again, or %@." = "Haz clic en «Vuelve a enviar el código» e inténtalo de nuevo o %@.";
+/* The title of a user-input-field that appears when a user is manually entering their bank account information. It instructs user to re-type the account number to confirm it. */
+"Confirm account number" = "Confirma el número de cuenta";
+/* An error message that appears when a user is manually entering their bank account information. This error message appears when the user left the 'Confirm account number' field blank. */
+"Confirm the account number." = "Confirma el número de cuenta.";
+/* A button that allows users to confirm the process of saving their bank account for future payments. This button appears in a screen that allows users to select which bank accounts they want to use to pay for something. */
+"Connect account" = "Conecta la cuenta";
+/* A button that allows users to confirm the process of saving their bank accounts for future payments. This button appears in a screen that allows users to select which bank accounts they want to use to pay for something. */
+"Connect accounts" = "Conecta las cuentas";
+/* The title of a button. The button presents the user an option to select another bank account. For example, we may show this button after user failed to link their primary bank account, but maybe the user can try to link their secondary bank account! */
+"Connect another account" = "Conecta otra cuenta";
+/* Title for a label of a screen telling users to tap below to continue linking process. */
+"Continue linking your account" = "Sigue vinculando tu cuenta";
+/* A button title. This button, when pressed, will automatically log-in the user with their e-mail to Link (one-click checkout provider).
+   The title of a screen where users are informed that they can sign-in-to Link. */
+"Continue with Link" = "Continúa con Link";
+/* The title of a user-input-field that appears when a user is signing up to Link (a payment service). It instructs user to type an email address. */
+"Email address" = "Dirección de correo electrónico";
+/* The title of a screen that allows a user to manually enter their bank account information. */
+"Enter bank details" = "Introduce los datos bancarios";
+/* The title of a button. The button presents the user an option to enter their bank details (account number, routing number) manually. For example, we may show this button after user failed to link their bank 'automatically' with Stripe, so we offer them the option manually link it. */
+"Enter bank details manually" = "Introduce manualmente los datos bancarios";
+/* The subtitle/description of a screen where users are informed that they have received a One-Type-Password (OTP) to their phone. '%@' gets replaced by a redacted phone number. */
+"Enter the code sent to %@" = "Introduce el código que se ha enviado al %@";
+/* The subtitle/description of a screen where users are informed that they have received a One-Type-Password (OTP) to their phone. '%@' gets replaced by a redacted phone number. */
+"Enter the code sent to %@." = "Introduce el código que se ha enviado al %@.";
+/* The subtitle/description of a screen where users are asked to enter a one-time-password (OTP) that they received in their email. '%@' is replaced with an email, for example, 'test@test.com'. */
+"Enter the code sent to %@. We periodically request this extra step to keep your account safe." = "Introduce el código que se ha enviado a %@. Solicitamos este paso adicional cada cierto tiempo para velar por la seguridad de tu cuenta.";
+/* The title of a sheet that appears when the user attempts to exit the bank linking screen. */
+"Exit without connecting?" = "¿Quieres salir sin conectar el banco?";
+/* Error message when one-time-passcode (OTP) is invalid. */
+"Hmm, that code didn’t work. Double check it and try again." = "¡Vaya!, el código no ha funcionado. Compruébalo y vuelve a intentarlo.";
+/* An error message that appears when a user is manually entering their bank account information. %d is replaced with the account number length (usually 17). */
+"Invalid bank account number: must be at most %d digits long, containing only numbers." = "Número de cuenta bancaria no válido: debe tener %li dígitos como máximo y solo números.";
+/* An error message that appears when a user is manually entering their bank account information. */
+"Invalid routing number." = "Número de ruta no válido.";
+/* The leading text in an error message that explains that the one-type-passcode (OTP) the user provided is invalid. This is leading text embedded inside of larger text: 'It looks like the verification code you provided is not valid anymore. Try again, or contact us.' */
+"It looks like the verification code you provided is not valid anymore." = "Parece que el código de verificación que has facilitado ya no es válido.";
+/* Represents the text of a button that can be clicked to learn more about some topic. Once clicked, a web-browser will be opened to give users more info. */
+"Learn more" = "Más información";
+/* The first part of a subtitle/description of a screen that shows an error. The error indicates that the bank user selected is currently under maintenance. */
+"Maintenance is scheduled to end at %@." = "Está programado que el mantenimiento termine a las %@.";
+/* The first part of a subtitle/description of a screen that shows an error. The error indicates that the bank user selected is currently under maintenance. */
+"Maintenance is scheduled to end on %@ at %@." = "Está programado que el mantenimiento termine el %1$@ a las %2$@.";
+/* The subtitle of a button that appears at the bottom of search results. It appears when a user is searching for their bank. The purpose of the button is to give users the option to enter their bank account numbers manually (ex. routing and account number). */
+"Manually enter details" = "Introduce manualmente los datos";
+/* The title of a screen that shows an error. The error appears after we failed to load users bank accounts. Here we describe to the user that the accounts they selected aren't eligible. '%@' gets replaced by the eligible type of bank accounts, i.e. checking or savings. For example, maybe user selected a credit card, but we only support debit cards. */
+"No payment accounts available" = "No hay cuentas de pago disponibles";
+/* The title of a notice that appears at the bottom of search results. It appears when a user is searching for their bank, but no results are returned. */
+"No results" = "No hay resultados";
+/* A button title. This button, when pressed, will skip logging in the user with their e-mail to Link (one-click checkout provider).
+   Title of a button that allows users to skip the current screen. */
+"Not now" = "Ahora no";
+/* The subtitle/description in a screen that allows a user to manually enter their bank account information. */
+"Only checking accounts are supported." = "Solo se admiten cuentas corrientes.";
+/* An error message that appears when a user is manually entering their bank account information. %d is replaced with the routing number length (usually 9). */
+"Please enter %d digits for your routing number." = "Escribe los %li dígitos de tu número de ruta.";
+/* The second part of a subtitle/description of a screen that shows an error. The error indicates that the bank user selected is currently under maintenance.
+   The subtitle/description of a screen that shows an error. The error appears after we failed to access users bank account. Here we instruct the user to enter their bank details manually or to try selecting another bank.
+   The subtitle/description of a screen that shows an error. The error appears after we failed to load users bank accounts. Here we instruct the user to enter their bank details manually or to try selecting another bank.
+   The subtitle/description of a screen that shows an error. The error indicates that the bank user selected is currently under maintenance. */
+"Please enter your bank details manually or select another bank." = "Introduce tus datos bancarios de forma manual o selecciona otro banco.";
+/* The second part of a subtitle/description of a screen that shows an error. The error indicates that the bank user selected is currently under maintenance.
+   The subtitle/description of a screen that shows an error. The error indicates that the bank user selected is currently under maintenance. */
+"Please select another bank or try again later." = "Selecciona otro banco o vuelve a intentarlo más tarde.";
+/* The subtitle/description of a screen that shows an error. The error appears after we failed to load users bank accounts. Here we instruct the user to select another bank or to try loading their bank accounts again. */
+"Please select another bank or try again." = "Selecciona otro banco o vuelve a intentarlo.";
+/* The subtitle/description of a screen that shows an error. The error appears after we failed to access users bank account. Here we instruct the user to try selecting another bank.
+   The subtitle/description of a screen that shows an error. The error appears after we failed to load users bank accounts. Here we instruct the user to try selecting another bank. */
+"Please select another bank." = "Selecciona otro banco.";
+/* The subtitle/description of a screen that shows an error. The error appears after user selected bank accounts, but we found that none of them are eligible to be linked. Here we instruct the user to try selecting another bank account at the same bank. */
+"Please try selecting another bank account." = "Prueba a seleccionar otra cuenta bancaria.";
+/* The subtitle/description of a screen that shows an error. The error appears after user selected bank accounts, but we found that none of them are eligible to be linked. Here we instruct the user to try selecting another bank account at a different bank. */
+"Please try selecting another bank." = "Prueba a seleccionar otro banco.";
+/* The title of the loading screen that appears when a user just logged into their bank account, and now is waiting for their bank accounts to load. Once the bank accounts are loaded, user will be able to pick the bank account they want to to use for things like payments. */
+"Retrieving accounts..." = "Recuperando cuentas...";
+/* The title of a user-input-field that appears when a user is manually entering their bank account information. It instructs user to type the routing number. */
+"Routing number" = "Número de ruta";
+/* An error message that appears when a user is manually entering their bank account information. This error message appears when the user left the 'Routing number' field blank. */
+"Routing number is required." = "El número de ruta es obligatorio.";
+/* The title of a button that appears at the bottom of a list of banks. The purpose of the button is to give users the option to search for more banks than we feature in the initial list of banks (where only the most popular ones will appear). */
+"Search for more banks" = "Busca más bancos";
+/* The title of a screen that allows users to select which bank accounts they want to use to pay for something. */
+"Select account" = "Elige una cuenta";
+/* The title of a screen that allows users to select which bank accounts they want to use to pay for something. */
+"Select accounts" = "Elige las cuentas";
+/* The title of a button. The button presents the user an option to select another bank. For example, we may show this button after user failed to link their primary bank, but maybe the user can try to link their secondary bank! */
+"Select another bank" = "Selecciona otro banco";
 /* label for iDEAL-bank selection picker */
 "Select bank" = "Seleccionar banco";
+/* Title of a screen that shows an error. The error screen appears after user has selected a bank. The error is a generic one: something wrong happened and we are not sure what. */
+"Something went wrong" = "Se ha producido un error";
+/* The submit button for a screen that allows a user to manually enter their bank account information. */
+"Submit" = "Envíalo";
+/* The title of the success screen that appears when a user is done with the process of connecting their bank account to an application. Now that the bank account is connected (or linked), the user will be able to use the bank account for payments. */
+"Success" = "Completado correctamente";
+/* The title of a screen that shows an error. The error appears after we failed to load users bank accounts. Here we describe to the user that the account they selected isn't eligible. */
+"The account you selected isn't available for payments" = "La cuenta que has seleccionado no está disponible para pagos";
+/* The title of a screen that shows an error. The error appears after we failed to load users bank accounts. Here we describe to the user that the accounts they selected aren't eligible. '%@' gets replaced by the eligible type of bank accounts, i.e. checking or savings. For example, maybe user selected a credit card, but we only support debit cards. */
+"The accounts you selected aren't available for payments" = "Las cuentas que has seleccionado no están disponibles para pagos";
+/* The title of a screen that shows an error. The error appears after we failed to load users bank accounts. Here we describe to the user that we had issues with the bank. '%@' gets replaced by the name of the bank. */
+"There was a problem accessing your %@ account" = "Se ha producido un problema al acceder a tu cuenta de %@";
+/* Text as part of an error message that shows up when user entered an invalid one-time-passcode (OTP). '%@' will be replaced by text with a link: 'contact us' */
+"Try again, or %@." = "Vuelve a intentarlo o %@.";
+/* The subtitle of a notice that appears at the bottom of search results. It appears when a user is searching for their bank, but no results are returned. */
+"Try searching another bank" = "Prueba a buscar otro banco";
+/* Part of a subtitle of a notice that appears at the bottom of search results. It appears when a user is searching for their bank, but no results are returned. The '%@' will be replaced by a tappable text that says: 'manually enter details'. */
+"Try searching another bank or %@" = "Prueba a buscar otro banco o %@.";
+/* A type of payment account. We will insert this string into other messages to explain users what payment accounts are eligible for payments. For example, we may display a message that says 'The accounts you selected aren't US checking accounts.' */
+"US checking" = "Cuenta corriente de EE. UU.";
+/* The subtitle/description of a screen where users are informed that they can sign-in-to Link. */
+"Use information you previously saved with your Link account." = "Utiliza información que guardaste anteriormente en tu cuenta de Link.";
+/* Label for a button shown to a user who is in test mode, which will give them the option to autofill mock account credentials. */
+"Use test account" = "Usa la cuenta de prueba";
+/* Label for a button shown to a user who is in test mode, which will give them the option to autofill a mock one time passcode. */
+"Use test code" = "Usa el código de prueba";
+/* The title of a screen where users are asked to enter a one-time-password (OTP) that they received in their email. */
+"Verify your email" = "Verifica tu correo electrónico";
+/* A description/subtitle that instructs the user that the bank accounts they selected are not eligible. For example, maybe the user selected credit cards, but we only accept debit cards. The '%d' is replaced by the number of ineligible accounts. The first '%@' is replaced by the name of the bank. The second '%@' is replaced by the supported payment accounts (ex. US checking). The third '%@' is replaced by the business name (Ex. Coca-Cola Inc). For example, it may read 'We found 2 Chase accounts but you can only link checking or savings to Coca-Cola Inc.' */
+"We found %d %@ accounts but you can only link %@ accounts to %@." = "Hemos encontrado %1$li cuentas de %2$@, pero solo puedes vincular cuentas de %3$@ a %4$@.";
+/* A description/subtitle that instructs the user that the bank accounts they selected are not eligible. For example, maybe the user selected credit cards, but we only accept debit cards. The '%d' is replaced by the number of ineligible accounts. The first '%@' is replaced by the name of the bank. The second '%@' is replaced by the supported payment accounts (ex. US checking). For example, it may read 'We found 2 Chase accounts but you can only link checking or savings.' */
+"We found %d %@ accounts but you can only link %@ accounts." = "Hemos encontrado %1$li cuentas de %2$@, pero solo puedes vincular cuentas de %3$@.";
+/* A description/subtitle that instructs the user that the bank account they selected is not eligible. For example, maybe the user selected a credit card, but we only accept debit cards. The first '%@' is replaced by the name of the bank. The second '%@' is replaced by the supported payment accounts (ex. US checking). The third '%@' is replaced by the business name (Ex. Coca-Cola Inc). For example, it may read 'We found 1 Chase account but you can only link checking or savings to Coca-Cola Inc.' */
+"We found 1 %@ account but you can only link %@ accounts to %@." = "Hemos encontrado 1 cuenta de %1$@, pero solo puedes vincular cuentas de %2$@ a %3$@.";
+/* A description/subtitle that instructs the user that the bank account they selected is not eligible. For example, maybe the user selected a credit card, but we only accept debit cards. The first '%@' is replaced by the name of the bank. The second '%@' is replaced by the supported payment accounts (ex. US checking). For example, it may read 'We found 1 Chase account but you can only link checking or savings.' */
+"We found 1 %@ account but you can only link %@ accounts." = "Hemos encontrado 1 cuenta de %1$@, pero solo puedes vincular cuentas de %2$@.";
+/* A button title. The user encounters it as part of a confirmation sheet when trying to exit a screen. Pressing it will exit the screen, and cancel the process of connecting the users bank account. */
+"Yes, exit" = "Sí, sal";
+/* The subtitle/description of the success screen that appears when a user manually entered their bank account information. It informs the user that their bank account information will have to be verified. */
+"You can expect micro-deposits to account ••••%@ in 1-2 days and an email with further instructions." = "Recibirás microdepósitos en la cuenta ••••%@ en un plazo de 1 a 2 días y un correo electrónico con más información.";
+/* Title for a label explaining that the linking process hasn't finished yet. */
+"You haven't finished linking your account. Press continue to finish the process." = "No has terminado de vincular tu cuenta. Continúa para finalizar el proceso.";
+/* The subtitle/description of a sheet that appears when the user attempts to exit the bank linking screen. */
+"You haven't finished linking your bank account and all progress will be lost." = "No has terminado de vincular tu cuenta bancaria y se perderá todo el progreso.";
+/* Message shown to a user who is in test mode, which will give them the option to autofill mock credentials. */
+"You're in test mode." = "Estás en modo de prueba.";
+/* The subtitle/description of a screen that shows an error. The error is generic: something wrong happened and we are not sure what. */
+"Your account can’t be connected at this time. Please enter your bank details manually or try again later." = "En este momento no se puede conectar tu cuenta. Introduce tus datos bancarios de forma manual o vuelve a intentarlo más tarde.";
+/* The subtitle/description of a screen that shows an error. The error is generic: something wrong happened and we are not sure what. */
+"Your account can’t be connected at this time. Please try again later." = "En este momento no se puede conectar tu cuenta. Vuelve a intentarlo más tarde.";
+/* The title of a screen that shows an error. The error appears after we failed to access users bank account. */
+"Your account number couldn’t be accessed at this time" = "En este momento no se puede acceder a tu número de cuenta";
+/* An error message that appears when a user is manually entering their bank account information. This error message tells the user that the account number they typed doesn't match a previously typed account number. */
+"Your account numbers don't match." = "Los números de tu cuenta no coinciden.";
+/* The subtitle/description of the success screen that appears when a user is done with the process of connecting their bank account to an application. Now that the bank account is connected, the user will be able to use the bank account for payments. */
+"Your account was connected, but couldn't be saved to Link." = "Tu cuenta se ha conectado, pero no se ha podido guardar en Link.";
+/* The subtitle/description of the success screen that appears when a user is done with the process of connecting their bank account to an application. Now that the bank account is connected (or linked), the user will be able to use the bank account for payments. */
+"Your account was connected." = "Tu cuenta se ha conectado.";
+/* The subtitle/description of the success screen that appears when a user is done with the process of connecting their bank account to an application. Now that the bank account is connected, the user will be able to use the bank account for payments. */
+"Your accounts were connected, but couldn't be saved to Link." = "Tus cuentas se han conectado, pero no se han podido guardar en Link.";
+/* The subtitle/description of the success screen that appears when a user is done with the process of connecting their bank accounts to an application. Now that the bank accounts are connected (or linked), the user will be able to use those bank accounts for payments. */
+"Your accounts were connected." = "Tus cuentas se han conectado.";
+/* The subtitle/description in a screen that allows a user to manually enter their bank account information. */
+"Your bank information will be verified via micro-deposits to your account, typically within 1-2 business days. Only checking accounts are supported." = "Tus datos bancarios se verificarán mediante microdepósitos abonados en tu cuenta, normalmente en un plazo de 1 a 2 días. Solo se admiten las cuentas corrientes.";
+/* The subtitle/description in a screen that allows a user to manually enter their bank account information. */
+"Your bank information will be verified with micro-deposits to your account. This typically takes 1-2 business days." = "Tus datos bancarios se verificarán con microdepósitos abonados en tu cuenta. Suelen tardar entre 1 y 2 días.";
+/* An error message that instructs the user to keep typing their email address in a user-input field. */
+"Your email address is invalid." = "Tu dirección de correo electrónico no es válida.";
+/* An error message that instructs the user to keep typing their phone number in a user-input field. */
+"Your mobile phone number is incomplete." = "Tu número de móvil está incompleto.";
+/* A type of payment account. We will insert this string into other messages to explain users what payment accounts are eligible for payments. For example, we may display a message that says 'The accounts you selected aren't checking or savings accounts.' */
+"checking or savings" = "cuenta corriente o de ahorros";
+/* A link/button inside of text that can be tapped to visit a support website. This link will be embedded inside of larger text: 'It looks like the verification code you provided is not valid anymore. Try again, or contact us.' */
+"contact us" = "contáctanos";
+/* Part of a subtitle of a notice that appears at the bottom of search results. It appears when a user is searching for their bank, but no results are returned. This part of the notice will be tappable. Tapping this will allow a user to manually enter their bank details (account and routing numbers). */
+"manually enter details" = "introduce manualmente los datos";

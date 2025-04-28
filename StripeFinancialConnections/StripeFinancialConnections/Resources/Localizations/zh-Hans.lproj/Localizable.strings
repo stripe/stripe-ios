@@ -1,2 +1,181 @@
+/* Title of a screen that shows an error. The error indicates that the bank user selected is currently under maintenance. */
+"%@ is currently unavailable" = "%@ 目前不可用";
+/* Title of a screen that shows an error. The error indicates that the bank user selected is currently under maintenance. */
+"%@ is undergoing maintenance" = "%@ 正在进行维护";
+/* An error message that appears when a user is manually entering their bank account information. This error message appears when the user left the 'Account number' field blank. */
+"Account number is required." = "账号为必填。";
+/* The title of the success screen that appears when a user manually entered their bank account information. */
+"Almost there" = "马上好了";
+/* The title of a button that appears at the bottom of search results. It appears when a user is searching for their bank. The purpose of the button is to give users the option to enter their bank account numbers manually (ex. routing and account number). */
+"Can't find your bank?" = "找不到您的银行？";
+/* The subtitle/description in a screen that allows a user to manually enter their bank account information. */
+"Checking and savings accounts are supported." = "支持支票账户和储蓄账户。";
+/* Title of a button. It acts as a back button to go back to choosing a different bank instead of the currently selected one. */
+"Choose a different bank" = "选择其他银行";
+/* Text as part of an error message that shows up when user entered an invalid one-time-passcode (OTP). '%@' will be replaced by text with a link: 'contact us' */
+"Click “Resend code” and try again, or %@." = "点击“重新发送验证码”并重试，或%@。";
+/* The title of a user-input-field that appears when a user is manually entering their bank account information. It instructs user to re-type the account number to confirm it. */
+"Confirm account number" = "确认账号";
+/* An error message that appears when a user is manually entering their bank account information. This error message appears when the user left the 'Confirm account number' field blank. */
+"Confirm the account number." = "确认账号。";
+/* A button that allows users to confirm the process of saving their bank account for future payments. This button appears in a screen that allows users to select which bank accounts they want to use to pay for something. */
+"Connect account" = "Connect 账户";
+/* A button that allows users to confirm the process of saving their bank accounts for future payments. This button appears in a screen that allows users to select which bank accounts they want to use to pay for something. */
+"Connect accounts" = "Connect 子账户";
+/* The title of a button. The button presents the user an option to select another bank account. For example, we may show this button after user failed to link their primary bank account, but maybe the user can try to link their secondary bank account! */
+"Connect another account" = "连接另一账户";
+/* Title for a label of a screen telling users to tap below to continue linking process. */
+"Continue linking your account" = "继续关联您的账户";
+/* A button title. This button, when pressed, will automatically log-in the user with their e-mail to Link (one-click checkout provider).
+   The title of a screen where users are informed that they can sign-in-to Link. */
+"Continue with Link" = "继续使用 Link";
+/* The title of a user-input-field that appears when a user is signing up to Link (a payment service). It instructs user to type an email address. */
+"Email address" = "邮件地址";
+/* The title of a screen that allows a user to manually enter their bank account information. */
+"Enter bank details" = "输入银行信息";
+/* The title of a button. The button presents the user an option to enter their bank details (account number, routing number) manually. For example, we may show this button after user failed to link their bank 'automatically' with Stripe, so we offer them the option manually link it. */
+"Enter bank details manually" = "手动输入银行信息";
+/* The subtitle/description of a screen where users are informed that they have received a One-Type-Password (OTP) to their phone. '%@' gets replaced by a redacted phone number. */
+"Enter the code sent to %@" = "请输入发送至 %@ 的验证码";
+/* The subtitle/description of a screen where users are informed that they have received a One-Type-Password (OTP) to their phone. '%@' gets replaced by a redacted phone number. */
+"Enter the code sent to %@." = "请输入发送至 %@ 的验证码。";
+/* The subtitle/description of a screen where users are asked to enter a one-time-password (OTP) that they received in their email. '%@' is replaced with an email, for example, 'test@test.com'. */
+"Enter the code sent to %@. We periodically request this extra step to keep your account safe." = "请输入发送至 %@ 的验证码。我们会定期要求进行这个额外步骤，以保持您的账户安全。";
+/* The title of a sheet that appears when the user attempts to exit the bank linking screen. */
+"Exit without connecting?" = "退出而不关联？";
+/* Error message when one-time-passcode (OTP) is invalid. */
+"Hmm, that code didn’t work. Double check it and try again." = "呃，这个验证码无效。请再次检查并重试。";
+/* An error message that appears when a user is manually entering their bank account information. %d is replaced with the account number length (usually 17). */
+"Invalid bank account number: must be at most %d digits long, containing only numbers." = "银行账号无效：最多为 %li 位，且只能包含数字。";
+/* An error message that appears when a user is manually entering their bank account information. */
+"Invalid routing number." = "路径号码无效。";
+/* The leading text in an error message that explains that the one-type-passcode (OTP) the user provided is invalid. This is leading text embedded inside of larger text: 'It looks like the verification code you provided is not valid anymore. Try again, or contact us.' */
+"It looks like the verification code you provided is not valid anymore." = "您提供的验证码似乎已失效。";
+/* Represents the text of a button that can be clicked to learn more about some topic. Once clicked, a web-browser will be opened to give users more info. */
+"Learn more" = "了解更多";
+/* The first part of a subtitle/description of a screen that shows an error. The error indicates that the bank user selected is currently under maintenance. */
+"Maintenance is scheduled to end at %@." = "维护预计于 %@ 结束。";
+/* The first part of a subtitle/description of a screen that shows an error. The error indicates that the bank user selected is currently under maintenance. */
+"Maintenance is scheduled to end on %@ at %@." = "维护计划于 %1$@ %2$@ 结束。";
+/* The subtitle of a button that appears at the bottom of search results. It appears when a user is searching for their bank. The purpose of the button is to give users the option to enter their bank account numbers manually (ex. routing and account number). */
+"Manually enter details" = "手动输入详情";
+/* The title of a screen that shows an error. The error appears after we failed to load users bank accounts. Here we describe to the user that the accounts they selected aren't eligible. '%@' gets replaced by the eligible type of bank accounts, i.e. checking or savings. For example, maybe user selected a credit card, but we only support debit cards. */
+"No payment accounts available" = "没有可用的支付账户";
+/* The title of a notice that appears at the bottom of search results. It appears when a user is searching for their bank, but no results are returned. */
+"No results" = "没有结果";
+/* A button title. This button, when pressed, will skip logging in the user with their e-mail to Link (one-click checkout provider).
+   Title of a button that allows users to skip the current screen. */
+"Not now" = "现在不";
+/* The subtitle/description in a screen that allows a user to manually enter their bank account information. */
+"Only checking accounts are supported." = "仅支持支票账户。";
+/* An error message that appears when a user is manually entering their bank account information. %d is replaced with the routing number length (usually 9). */
+"Please enter %d digits for your routing number." = "请输入您的 %li 位数路径号码。";
+/* The second part of a subtitle/description of a screen that shows an error. The error indicates that the bank user selected is currently under maintenance.
+   The subtitle/description of a screen that shows an error. The error appears after we failed to access users bank account. Here we instruct the user to enter their bank details manually or to try selecting another bank.
+   The subtitle/description of a screen that shows an error. The error appears after we failed to load users bank accounts. Here we instruct the user to enter their bank details manually or to try selecting another bank.
+   The subtitle/description of a screen that shows an error. The error indicates that the bank user selected is currently under maintenance. */
+"Please enter your bank details manually or select another bank." = "请手动输入您的银行信息，或选择另一银行。";
+/* The second part of a subtitle/description of a screen that shows an error. The error indicates that the bank user selected is currently under maintenance.
+   The subtitle/description of a screen that shows an error. The error indicates that the bank user selected is currently under maintenance. */
+"Please select another bank or try again later." = "请选择另一银行，或稍后再试。";
+/* The subtitle/description of a screen that shows an error. The error appears after we failed to load users bank accounts. Here we instruct the user to select another bank or to try loading their bank accounts again. */
+"Please select another bank or try again." = "请选择另一银行，或重试。";
+/* The subtitle/description of a screen that shows an error. The error appears after we failed to access users bank account. Here we instruct the user to try selecting another bank.
+   The subtitle/description of a screen that shows an error. The error appears after we failed to load users bank accounts. Here we instruct the user to try selecting another bank. */
+"Please select another bank." = "请选择另一银行。";
+/* The subtitle/description of a screen that shows an error. The error appears after user selected bank accounts, but we found that none of them are eligible to be linked. Here we instruct the user to try selecting another bank account at the same bank. */
+"Please try selecting another bank account." = "请尝试选择另一银行账户。";
+/* The subtitle/description of a screen that shows an error. The error appears after user selected bank accounts, but we found that none of them are eligible to be linked. Here we instruct the user to try selecting another bank account at a different bank. */
+"Please try selecting another bank." = "请尝试选择另一银行。";
+/* The title of the loading screen that appears when a user just logged into their bank account, and now is waiting for their bank accounts to load. Once the bank accounts are loaded, user will be able to pick the bank account they want to to use for things like payments. */
+"Retrieving accounts..." = "正在检索账户...";
+/* The title of a user-input-field that appears when a user is manually entering their bank account information. It instructs user to type the routing number. */
+"Routing number" = "路径号码";
+/* An error message that appears when a user is manually entering their bank account information. This error message appears when the user left the 'Routing number' field blank. */
+"Routing number is required." = "路径号码为必填。";
+/* The title of a button that appears at the bottom of a list of banks. The purpose of the button is to give users the option to search for more banks than we feature in the initial list of banks (where only the most popular ones will appear). */
+"Search for more banks" = "搜索更多银行";
+/* The title of a screen that allows users to select which bank accounts they want to use to pay for something. */
+"Select account" = "选择账户";
+/* The title of a screen that allows users to select which bank accounts they want to use to pay for something. */
+"Select accounts" = "选择账户";
+/* The title of a button. The button presents the user an option to select another bank. For example, we may show this button after user failed to link their primary bank, but maybe the user can try to link their secondary bank! */
+"Select another bank" = "选择另一银行";
 /* label for iDEAL-bank selection picker */
 "Select bank" = "选择银行";
+/* Title of a screen that shows an error. The error screen appears after user has selected a bank. The error is a generic one: something wrong happened and we are not sure what. */
+"Something went wrong" = "出错了";
+/* The submit button for a screen that allows a user to manually enter their bank account information. */
+"Submit" = "提交";
+/* The title of the success screen that appears when a user is done with the process of connecting their bank account to an application. Now that the bank account is connected (or linked), the user will be able to use the bank account for payments. */
+"Success" = "成功";
+/* The title of a screen that shows an error. The error appears after we failed to load users bank accounts. Here we describe to the user that the account they selected isn't eligible. */
+"The account you selected isn't available for payments" = "不能用您选择的账户完成付款";
+/* The title of a screen that shows an error. The error appears after we failed to load users bank accounts. Here we describe to the user that the accounts they selected aren't eligible. '%@' gets replaced by the eligible type of bank accounts, i.e. checking or savings. For example, maybe user selected a credit card, but we only support debit cards. */
+"The accounts you selected aren't available for payments" = "不能用您选择的账户完成付款";
+/* The title of a screen that shows an error. The error appears after we failed to load users bank accounts. Here we describe to the user that we had issues with the bank. '%@' gets replaced by the name of the bank. */
+"There was a problem accessing your %@ account" = "访问您的 %@ 账户时遇到了问题";
+/* Text as part of an error message that shows up when user entered an invalid one-time-passcode (OTP). '%@' will be replaced by text with a link: 'contact us' */
+"Try again, or %@." = "请重试，或%@。";
+/* The subtitle of a notice that appears at the bottom of search results. It appears when a user is searching for their bank, but no results are returned. */
+"Try searching another bank" = "尝试搜索另一银行";
+/* Part of a subtitle of a notice that appears at the bottom of search results. It appears when a user is searching for their bank, but no results are returned. The '%@' will be replaced by a tappable text that says: 'manually enter details'. */
+"Try searching another bank or %@" = "尝试搜索另一银行或%@";
+/* A type of payment account. We will insert this string into other messages to explain users what payment accounts are eligible for payments. For example, we may display a message that says 'The accounts you selected aren't US checking accounts.' */
+"US checking" = "美国支票账户";
+/* The subtitle/description of a screen where users are informed that they can sign-in-to Link. */
+"Use information you previously saved with your Link account." = "使用您之前在 Link 账户中保存的信息。";
+/* Label for a button shown to a user who is in test mode, which will give them the option to autofill mock account credentials. */
+"Use test account" = "使用测试账户";
+/* Label for a button shown to a user who is in test mode, which will give them the option to autofill a mock one time passcode. */
+"Use test code" = "使用测试代码";
+/* The title of a screen where users are asked to enter a one-time-password (OTP) that they received in their email. */
+"Verify your email" = "验证邮件地址";
+/* A description/subtitle that instructs the user that the bank accounts they selected are not eligible. For example, maybe the user selected credit cards, but we only accept debit cards. The '%d' is replaced by the number of ineligible accounts. The first '%@' is replaced by the name of the bank. The second '%@' is replaced by the supported payment accounts (ex. US checking). The third '%@' is replaced by the business name (Ex. Coca-Cola Inc). For example, it may read 'We found 2 Chase accounts but you can only link checking or savings to Coca-Cola Inc.' */
+"We found %d %@ accounts but you can only link %@ accounts to %@." = "我们找到了 %1$li 个 %2$@ 账户，但您只能向 %4$@ 关联 %3$@ 个账户。";
+/* A description/subtitle that instructs the user that the bank accounts they selected are not eligible. For example, maybe the user selected credit cards, but we only accept debit cards. The '%d' is replaced by the number of ineligible accounts. The first '%@' is replaced by the name of the bank. The second '%@' is replaced by the supported payment accounts (ex. US checking). For example, it may read 'We found 2 Chase accounts but you can only link checking or savings.' */
+"We found %d %@ accounts but you can only link %@ accounts." = "我们找到了 %1$li 个 %2$@ 账户，但您只能关联 %3$@ 个账户。";
+/* A description/subtitle that instructs the user that the bank account they selected is not eligible. For example, maybe the user selected a credit card, but we only accept debit cards. The first '%@' is replaced by the name of the bank. The second '%@' is replaced by the supported payment accounts (ex. US checking). The third '%@' is replaced by the business name (Ex. Coca-Cola Inc). For example, it may read 'We found 1 Chase account but you can only link checking or savings to Coca-Cola Inc.' */
+"We found 1 %@ account but you can only link %@ accounts to %@." = "我们找到了 1 个 %1$@ 账户，但您只能向 %3$@ 关联 %2$@ 个账户。";
+/* A description/subtitle that instructs the user that the bank account they selected is not eligible. For example, maybe the user selected a credit card, but we only accept debit cards. The first '%@' is replaced by the name of the bank. The second '%@' is replaced by the supported payment accounts (ex. US checking). For example, it may read 'We found 1 Chase account but you can only link checking or savings.' */
+"We found 1 %@ account but you can only link %@ accounts." = "我们找到了 1 个 %1$@ 账户，但您只能关联 %2$@ 个账户。";
+/* A button title. The user encounters it as part of a confirmation sheet when trying to exit a screen. Pressing it will exit the screen, and cancel the process of connecting the users bank account. */
+"Yes, exit" = "是，退出";
+/* The subtitle/description of the success screen that appears when a user manually entered their bank account information. It informs the user that their bank account information will have to be verified. */
+"You can expect micro-deposits to account ••••%@ in 1-2 days and an email with further instructions." = "预计 1-2 天内会向您的账户 ••••%@ 存入微额存款，同时会给您邮件发送进一步说明。";
+/* Title for a label explaining that the linking process hasn't finished yet. */
+"You haven't finished linking your account. Press continue to finish the process." = "您尚未完成账户关联。点击继续以完成该过程。";
+/* The subtitle/description of a sheet that appears when the user attempts to exit the bank linking screen. */
+"You haven't finished linking your bank account and all progress will be lost." = "您尚未完成账户关联，所有进度将丢失。";
+/* Message shown to a user who is in test mode, which will give them the option to autofill mock credentials. */
+"You're in test mode." = "您处于测试模式。";
+/* The subtitle/description of a screen that shows an error. The error is generic: something wrong happened and we are not sure what. */
+"Your account can’t be connected at this time. Please enter your bank details manually or try again later." = "目前无法关联您的账户。请手动输入您的银行信息，或稍后再试。";
+/* The subtitle/description of a screen that shows an error. The error is generic: something wrong happened and we are not sure what. */
+"Your account can’t be connected at this time. Please try again later." = "目前无法关联您的账户。请稍后再试。";
+/* The title of a screen that shows an error. The error appears after we failed to access users bank account. */
+"Your account number couldn’t be accessed at this time" = "目前无法访问您的账户";
+/* An error message that appears when a user is manually entering their bank account information. This error message tells the user that the account number they typed doesn't match a previously typed account number. */
+"Your account numbers don't match." = "您的账号不匹配。";
+/* The subtitle/description of the success screen that appears when a user is done with the process of connecting their bank account to an application. Now that the bank account is connected, the user will be able to use the bank account for payments. */
+"Your account was connected, but couldn't be saved to Link." = "您的账户已关联至，但无法保存到 Link。";
+/* The subtitle/description of the success screen that appears when a user is done with the process of connecting their bank account to an application. Now that the bank account is connected (or linked), the user will be able to use the bank account for payments. */
+"Your account was connected." = "您的账户已关联。";
+/* The subtitle/description of the success screen that appears when a user is done with the process of connecting their bank account to an application. Now that the bank account is connected, the user will be able to use the bank account for payments. */
+"Your accounts were connected, but couldn't be saved to Link." = "您的账户已关联，但无法保存到 Link。";
+/* The subtitle/description of the success screen that appears when a user is done with the process of connecting their bank accounts to an application. Now that the bank accounts are connected (or linked), the user will be able to use those bank accounts for payments. */
+"Your accounts were connected." = "您的账户已关联。";
+/* The subtitle/description in a screen that allows a user to manually enter their bank account information. */
+"Your bank information will be verified via micro-deposits to your account, typically within 1-2 business days. Only checking accounts are supported." = "将通过向您的账户发送微存款来验证您的银行信息，通常需要 1-2 个工作日。仅支持支票账户。";
+/* The subtitle/description in a screen that allows a user to manually enter their bank account information. */
+"Your bank information will be verified with micro-deposits to your account. This typically takes 1-2 business days." = "将通过向您的账户发送微存款来验证您的银行信息，通常需要 1-2 个工作日。";
+/* An error message that instructs the user to keep typing their email address in a user-input field. */
+"Your email address is invalid." = "您的邮件地址无效。";
+/* An error message that instructs the user to keep typing their phone number in a user-input field. */
+"Your mobile phone number is incomplete." = "您的手机号码不完整。";
+/* A type of payment account. We will insert this string into other messages to explain users what payment accounts are eligible for payments. For example, we may display a message that says 'The accounts you selected aren't checking or savings accounts.' */
+"checking or savings" = "支票或储蓄";
+/* A link/button inside of text that can be tapped to visit a support website. This link will be embedded inside of larger text: 'It looks like the verification code you provided is not valid anymore. Try again, or contact us.' */
+"contact us" = "联系我们";
+/* Part of a subtitle of a notice that appears at the bottom of search results. It appears when a user is searching for their bank, but no results are returned. This part of the notice will be tappable. Tapping this will allow a user to manually enter their bank details (account and routing numbers). */
+"manually enter details" = "手动输入详情";
