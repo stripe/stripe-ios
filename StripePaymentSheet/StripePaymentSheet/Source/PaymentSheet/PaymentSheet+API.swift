@@ -669,7 +669,7 @@ extension PaymentSheet {
                 params.setAsDefaultPM = NSNumber(value: shouldSetAsDefaultPM)
             }
             let requiresMandateData: [STPPaymentMethodType] = [.payPal, .cashApp, .revolutPay, .amazonPay, .klarna]
-            let isSetupFutureUsageOffSession = configuration.shouldReadPaymentMethodOptionsSetupFutureUsage ? paymentIntent.setupFutureUsage(for: paymentMethodType) == "off_session" : paymentIntent.setupFutureUsage == .offSession
+            let isSetupFutureUsageOffSession = configuration.shouldReadPaymentMethodOptionsSetupFutureUsage ? paymentIntent.paymentMethodOptions?.setupFutureUsage(for: paymentMethodType) == "off_session" : paymentIntent.setupFutureUsage == .offSession
             if requiresMandateData.contains(paymentMethodType) && isSetupFutureUsageOffSession
             {
                 params.mandateData = .makeWithInferredValues()
