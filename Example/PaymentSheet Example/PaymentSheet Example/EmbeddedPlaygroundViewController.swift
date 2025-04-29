@@ -5,17 +5,17 @@
 //  Created by Nick Porter on 9/4/24.
 //
 
+import Combine
 import Foundation
  @_spi(STP) @_spi(ExperimentalAllowsRemovalOfLastSavedPaymentMethodAPI) import StripePaymentSheet
-import UIKit
-import Combine
 import SwiftUI
+import UIKit
 
 class EmbeddedPlaygroundViewController: UIViewController {
     private var hostingController: UIHostingController<AnyView>?
     private var cancellables = Set<AnyCancellable>()
     private weak var playgroundController: PlaygroundController?
-    
+
     var isLoading: Bool = false {
         didSet {
             if isLoading {
@@ -72,7 +72,7 @@ class EmbeddedPlaygroundViewController: UIViewController {
         checkoutButton.addTarget(self, action: #selector(pay), for: .touchUpInside)
         return checkoutButton
     }()
-    
+
     private lazy var clearPaymentOptionButton: UIButton = {
         let resetButton = UIButton(type: .system)
         resetButton.backgroundColor = .systemGray5
@@ -98,7 +98,7 @@ class EmbeddedPlaygroundViewController: UIViewController {
         self.configuration = configuration
         self.intentConfig = intentConfig
         self.playgroundController = playgroundController
-        
+
         super.init(nibName: nil, bundle: nil)
     }
 
@@ -146,7 +146,7 @@ class EmbeddedPlaygroundViewController: UIViewController {
         embeddedPaymentElement.presentingViewController = self
         self.embeddedPaymentElement = embeddedPaymentElement
         self.embeddedPaymentElement?.presentingViewController = self
-        
+
         // Scroll view contains our content
         let scrollView = UIScrollView()
         scrollView.translatesAutoresizingMaskIntoConstraints = false
@@ -158,7 +158,7 @@ class EmbeddedPlaygroundViewController: UIViewController {
             embeddedPaymentElement.view,
             paymentOptionView,
             checkoutButton,
-            clearPaymentOptionButton
+            clearPaymentOptionButton,
         ])
         stackView.axis = .vertical
         stackView.translatesAutoresizingMaskIntoConstraints = false
@@ -183,7 +183,7 @@ class EmbeddedPlaygroundViewController: UIViewController {
             scrollView.contentLayoutGuide.trailingAnchor.constraint(equalTo: stackView.trailingAnchor),
             scrollView.contentLayoutGuide.widthAnchor.constraint(equalTo: view.widthAnchor),
             checkoutButton.heightAnchor.constraint(equalToConstant: 45),
-            clearPaymentOptionButton.heightAnchor.constraint(equalToConstant: 45)
+            clearPaymentOptionButton.heightAnchor.constraint(equalToConstant: 45),
         ])
         paymentOptionView.configure(with: embeddedPaymentElement.paymentOption, showMandate: !configuration.embeddedViewDisplaysMandateText)
     }
@@ -215,7 +215,7 @@ class EmbeddedPlaygroundViewController: UIViewController {
         settingsViewContainer.addArrangedSubview(hostingController.view)
         hostingController.didMove(toParent: self)
     }
-    
+
     private func observePlaygroundController() {
         guard let playgroundController else { return }
         playgroundController.objectWillChange
@@ -236,7 +236,7 @@ class EmbeddedPlaygroundViewController: UIViewController {
             self.isLoading = true
             let result = await embeddedPaymentElement.confirm()
             self.isLoading = false
-            
+
             switch result {
             case .completed, .failed:
                 playgroundController?.lastPaymentResult = result
