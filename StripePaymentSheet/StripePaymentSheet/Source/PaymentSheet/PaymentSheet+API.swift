@@ -319,7 +319,7 @@ extension PaymentSheet {
                     paymentIntentParams.paymentMethodParams = paymentMethodParams
                     paymentIntentParams.returnURL = configuration.returnURL
                     let paymentOptions = paymentIntentParams.paymentMethodOptions ?? STPConfirmPaymentMethodOptions()
-                    paymentOptions.setSetupFutureUsageIfNecessary(shouldSave, paymentMethodType: paymentMethodParams.type, customer: configuration.customer)
+                    paymentOptions.setSetupFutureUsageIfNecessary(shouldSave, paymentIntent: paymentIntent, paymentMethodType: paymentMethodParams.type, customer: configuration.customer)
                     paymentIntentParams.paymentMethodOptions = paymentOptions
                     paymentIntentParams.shipping = makeShippingParams(for: paymentIntent, configuration: configuration)
                     paymentHandler.confirmPayment(
@@ -382,7 +382,7 @@ extension PaymentSheet {
                     paymentIntentParams.returnURL = configuration.returnURL
                     paymentIntentParams.shipping = makeShippingParams(for: paymentIntent, configuration: configuration)
                     let paymentOptions = paymentIntentParams.paymentMethodOptions ?? STPConfirmPaymentMethodOptions()
-                    paymentOptions.setSetupFutureUsageIfNecessary(shouldSave, paymentMethodType: paymentMethod.type, customer: configuration.customer)
+                    paymentOptions.setSetupFutureUsageIfNecessary(shouldSave, paymentIntent: paymentIntent, paymentMethodType: paymentMethod.type, customer: configuration.customer)
                     paymentIntentParams.paymentMethodOptions = paymentOptions
                     paymentIntentParams.mandateData = mandateData
                     paymentHandler.confirmPayment(
@@ -676,7 +676,7 @@ extension PaymentSheet {
         }
 
         let paymentOptions = params.paymentMethodOptions ?? STPConfirmPaymentMethodOptions()
-        paymentOptions.setSetupFutureUsageIfNecessary(shouldSave, paymentMethodType: paymentMethodType, customer: configuration.customer)
+        paymentOptions.setSetupFutureUsageIfNecessary(shouldSave, paymentIntent: paymentIntent, paymentMethodType: paymentMethodType, customer: configuration.customer)
         if let mandateData = mandateData {
             params.mandateData = mandateData
         }

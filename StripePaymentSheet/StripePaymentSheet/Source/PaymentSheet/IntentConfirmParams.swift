@@ -180,6 +180,7 @@ extension STPConfirmPaymentMethodOptions {
      */
     func setSetupFutureUsageIfNecessary(
         _ shouldSave: Bool,
+        paymentIntent: STPPaymentIntent? = nil,
         paymentMethodType: STPPaymentMethodType,
         customer: PaymentSheet.CustomerConfiguration?
     ) {
@@ -192,7 +193,16 @@ extension STPConfirmPaymentMethodOptions {
         // Note: The API officially only allows the values "off_session", "on_session", and "none".
         // Passing "none" *overrides* the top-level setup_future_usage and is not what we want, b/c this code is called even when we don't display the "save" checkbox (e.g. when the PI top-level setup_future_usage is already set).
         // Instead, we pass an empty string to 'unset' this value. This makes the PaymentIntent *inherit* the top-level setup_future_usage.
-        let sfuValue = shouldSave ? "off_session" : ""
+        let existingSFUValue = paymentIntent?.paymentMethodOptions?.setupFutureUsage(for: paymentMethodType)
+        let sfuValue: String? = {
+            guard let paymentIntent else {
+                return shouldSave ? "off_session" : ""
+            }
+            if paymentIntent.isSetupFutureUsageSet(for: paymentMethodType) {
+                return existingSFUValue
+            }
+            return shouldSave ? "off_session" : existingSFUValue
+        }()
         switch paymentMethodType {
         case .card:
             cardOptions = cardOptions ?? STPConfirmCardOptions()
