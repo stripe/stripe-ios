@@ -143,9 +143,9 @@ public class STPPaymentIntent: NSObject {
         let paymentMethodOptionsSetupFutureUsage = paymentMethodOptions?.setupFutureUsage(for: paymentMethodType)
         // if pmo sfu is non-nil, it overrides the top level sfu
         if let paymentMethodOptionsSetupFutureUsage {
-            return paymentMethodOptionsSetupFutureUsage != "none"
+            return paymentMethodOptionsSetupFutureUsage
         }
-        return setupFutureUsage != .none
+        return setupFutureUsage.stringValue
     }
 
     /// :nodoc:
