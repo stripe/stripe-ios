@@ -191,7 +191,7 @@ extension STPConfirmPaymentMethodOptions {
             return
         }
 
-        let sfuValue = shouldSave ? "off_session" : currentSetupFutureUsage
+        let sfuValue = shouldSave ? "off_session" : currentSetupFutureUsage ?? ""
         switch paymentMethodType {
         case .card:
             cardOptions = cardOptions ?? STPConfirmCardOptions()
