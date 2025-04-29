@@ -988,7 +988,7 @@ extension PaymentSheet_LPM_ConfirmFlowTests: PaymentMethodFormViewControllerDele
 // MARK: - IntentConfirmParams
 
 extension PaymentSheet_LPM_ConfirmFlowTests {
-    func testIntentConfirmParamsEquatable() async throws {
+    func testIntentConfirmParamsEquatable() {
         let lhs = IntentConfirmParams(type: .stripe(.card))
         let rhs = IntentConfirmParams(type: .stripe(.card))
         // When lhs has an obscure difference w/ rhs...

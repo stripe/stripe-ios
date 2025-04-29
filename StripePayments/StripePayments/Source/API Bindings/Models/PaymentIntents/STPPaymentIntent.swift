@@ -140,18 +140,12 @@ public class STPPaymentIntent: NSObject {
 
     /// Whether the payment intent has setup for future usage set for a payment method type.
     @_spi(STP) public func isSetupFutureUsageSet(for paymentMethodType: STPPaymentMethodType) -> Bool {
-        let paymentMethodOptionsSetupFutureUsage = paymentMethodOptionsSetupFutureUsage(for: paymentMethodType.identifier)
+        let paymentMethodOptionsSetupFutureUsage = paymentMethodOptions?.setupFutureUsage(for: paymentMethodType)
         // if pmo sfu is non-nil, it overrides the top level sfu
         if let paymentMethodOptionsSetupFutureUsage {
             return paymentMethodOptionsSetupFutureUsage != "none"
         }
         return setupFutureUsage != .none
-    }
-
-    private func paymentMethodOptionsSetupFutureUsage(for paymentMethodTypeIdentifier: String) -> String? {
-        let paymentMethodOptionsForType: [String: Any]? = paymentMethodOptions?.allResponseFields[paymentMethodTypeIdentifier] as? [String: Any]
-        let pmoSetupFutureUsage: String? = paymentMethodOptionsForType?["setup_future_usage"] as? String
-        return pmoSetupFutureUsage
     }
 
     /// :nodoc:
