@@ -306,26 +306,44 @@ class CustomerSavedPaymentMethodsViewController: UIViewController {
             actionButtonStatus = .spinnerWithInteractionDisabled
         }
 
-        self.actionButton.update(
-            state: actionButtonStatus,
-            style: .stripe,
-            callToAction: callToAction,
-            animated: animated,
-            completion: nil
-        )
-
-        let updateButtonVisibility = {
-            self.actionButton.setHiddenIfNecessary(!showActionButton)
-        }
-        if animated {
-            animateHeightChange(updateButtonVisibility)
+        // if animating out, add fade animation and delay the button update until after animation
+        if !showActionButton {
+            animateHeightChange({
+                self.actionButton.setHiddenIfNecessary(true)
+                self.actionButton.alpha = 0.0
+            }, completion: { _ in
+                self.actionButton.alpha = 1.0
+                self.actionButton.update(
+                    state: actionButtonStatus,
+                    style: .stripe,
+                    callToAction: callToAction,
+                    animated: animated,
+                    completion: nil
+                )
+            })
         } else {
-            updateButtonVisibility()
+            // if animating out, first update the button
+            self.actionButton.update(
+                state: actionButtonStatus,
+                style: .stripe,
+                callToAction: callToAction,
+                animated: animated,
+                completion: nil
+            )
+            let updateButtonVisibility = {
+                self.actionButton.setHiddenIfNecessary(!showActionButton)
+            }
+            if animated {
+                animateHeightChange(updateButtonVisibility)
+            } else {
+                updateButtonVisibility()
+            }
         }
 
         // Notice
         updateBottomNotice()
     }
+
     private func contentViewControllerFor(mode: Mode) -> UIViewController {
         if mode == .addingNewWithSetupIntent || mode == .addingNewPaymentMethodAttachToCustomer {
             return addPaymentMethodViewController
