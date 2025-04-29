@@ -52,3 +52,7 @@ LANGUAGES = %w[
 LOCALIZATION_DIRECTORIES = YAML.load_file('modules.yaml')['modules'].map do |m|
   m['localization_dir']
 end.compact.freeze
+
+LOKALISE_FILENAMES = LOCALIZATION_DIRECTORIES.map do |d|
+  "#{d}/Resources/Localizations/%LANG_ISO%.lproj/Localizable.strings"
+end.compact.freeze
