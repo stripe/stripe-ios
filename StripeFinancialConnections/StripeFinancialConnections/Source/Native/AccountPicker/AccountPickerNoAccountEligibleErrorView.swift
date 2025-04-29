@@ -30,19 +30,6 @@ final class AccountPickerNoAccountEligibleErrorView: UIView {
 
         // Financial Connections support credit cards, but not in all flows
         // (ex. ACH only supports checking/savings).
-        let supportedAccountTypes: String = {
-            if paymentMethodType == .link {
-                return STPLocalizedString(
-                    "US checking",
-                    "A type of payment account. We will insert this string into other messages to explain users what payment accounts are eligible for payments. For example, we may display a message that says 'The accounts you selected aren't US checking accounts.'"
-                )
-            } else {
-                return STPLocalizedString(
-                    "checking or savings",
-                    "A type of payment account. We will insert this string into other messages to explain users what payment accounts are eligible for payments. For example, we may display a message that says 'The accounts you selected aren't checking or savings accounts.'"
-                )
-            }
-        }()
         let subtitleFirstSentence: String = {
             if let bussinessName = bussinessName {
                 if numberOfIneligibleAccounts == 1 {
