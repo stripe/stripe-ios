@@ -308,19 +308,24 @@ class CustomerSavedPaymentMethodsViewController: UIViewController {
 
         // if animating out, add fade animation and delay the button update until after animation
         if !showActionButton {
-            animateHeightChange({
+            let updateButtonVisibility = {
                 self.actionButton.setHiddenIfNecessary(true)
                 self.actionButton.alpha = 0.0
-            }, completion: { _ in
-                self.actionButton.alpha = 1.0
-                self.actionButton.update(
-                    state: actionButtonStatus,
-                    style: .stripe,
-                    callToAction: callToAction,
-                    animated: animated,
-                    completion: nil
-                )
-            })
+            }
+            if animated {
+                animateHeightChange(updateButtonVisibility, completion: { _ in
+                    self.actionButton.alpha = 1.0
+                    self.actionButton.update(
+                        state: actionButtonStatus,
+                        style: .stripe,
+                        callToAction: callToAction,
+                        animated: animated,
+                        completion: nil
+                    )
+                })
+            } else {
+                self.actionButton.setHiddenIfNecessary(true)
+            }
         } else {
             // if animating out, first update the button
             self.actionButton.update(
