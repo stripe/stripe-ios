@@ -11,7 +11,7 @@ import StripeCoreTestUtils
 @testable@_spi(STP) import StripeUICore
 import XCTest
 
-@_spi(EmbeddedPaymentElementPrivateBeta) @_spi(STP) @testable import StripePaymentSheet
+ @_spi(STP) @testable import StripePaymentSheet
 
 @MainActor
 // https://jira.corp.stripe.com/browse/MOBILESDK-2607 Make these STPNetworkStubbingTestCase; blocked on getting them to record image requests

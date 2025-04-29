@@ -7,7 +7,7 @@
 
 @_spi(STP) import StripeCoreTestUtils
 @_spi(STP) import StripePayments
-@_spi(STP)  @_spi(EmbeddedPaymentElementPrivateBeta) @testable import StripePaymentSheet
+@_spi(STP)   @testable import StripePaymentSheet
 @_spi(STP) import StripeUICore
 @_spi(STP) import StripeCore
 import XCTest

@@ -1,3 +1,7 @@
+## x.x.x x-x-x
+### PaymentSheet
+* [Added] Embedded Payment Element is now generally available. Learn more by visiting the [docs](https://docs.stripe.com/payments/mobile/embedded).
+
 ## 24.12.0 2025-04-21
 ### PaymentSheet
 * [Added] Bank payments are now available in the PaymentSheet without requiring a dependency on `StripeFinancialConnections`.

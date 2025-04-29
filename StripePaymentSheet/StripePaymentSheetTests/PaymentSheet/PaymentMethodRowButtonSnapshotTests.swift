@@ -8,7 +8,7 @@
 import Foundation
 import StripeCoreTestUtils
 import UIKit
-@_spi(STP)@_spi(EmbeddedPaymentElementPrivateBeta) @testable import StripePaymentSheet
+@_spi(STP) @testable import StripePaymentSheet
 
 class PaymentMethodRowButtonSnapshotTests: STPSnapshotTestCase {
 

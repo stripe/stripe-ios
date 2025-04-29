@@ -12,7 +12,7 @@
 import UIKit
 
 /// An object that manages a view that displays payment methods and completes a checkout.
-@_spi(EmbeddedPaymentElementPrivateBeta)
+
 @MainActor
 public final class EmbeddedPaymentElement {
 
@@ -447,7 +447,7 @@ extension EmbeddedPaymentElement {
 
 // MARK: - Typealiases
 
-@_spi(EmbeddedPaymentElementPrivateBeta) public typealias EmbeddedPaymentElementResult = PaymentSheetResult
+public typealias EmbeddedPaymentElementResult = PaymentSheetResult
 extension EmbeddedPaymentElement {
     public typealias IntentConfiguration = PaymentSheet.IntentConfiguration
     public typealias UserInterfaceStyle = PaymentSheet.UserInterfaceStyle
