@@ -46,41 +46,75 @@ final class AccountPickerNoAccountEligibleErrorView: UIView {
         let subtitleFirstSentence: String = {
             if let bussinessName = bussinessName {
                 if numberOfIneligibleAccounts == 1 {
-                    let localizedString = STPLocalizedString(
-                        "We found 1 %@ account but you can only link %@ accounts to %@.",
-                        "A description/subtitle that instructs the user that the bank account they selected is not eligible. For example, maybe the user selected a credit card, but we only accept debit cards. The first '%@' is replaced by the name of the bank. The second '%@' is replaced by the supported payment accounts (ex. US checking). The third '%@' is replaced by the business name (Ex. Coca-Cola Inc). For example, it may read 'We found 1 Chase account but you can only link checking or savings to Coca-Cola Inc.'"
-                    )
-                    return String(format: localizedString, institution.name, supportedAccountTypes, bussinessName)
+                    let localizedString: String = {
+                        if paymentMethodType == .link {
+                            return STPLocalizedString(
+                                "We found 1 %@ account but you can only link US checking accounts to %@.",
+                                "A description/subtitle that instructs the user that the bank account they selected is not eligible. For example, maybe the user selected a credit card, but we only accept debit cards. The first '%@' is replaced by the name of the bank. The second '%@' is replaced by the supported payment accounts (ex. US checking). The third '%@' is replaced by the business name (Ex. Coca-Cola Inc). For example, it may read 'We found 1 Chase account but you can only link checking or savings to Coca-Cola Inc.'"
+                            )
+                        } else {
+                            return STPLocalizedString(
+                                "We found 1 %@ account but you can only link checking or savings accounts to %@.",
+                                "A description/subtitle that instructs the user that the bank account they selected is not eligible. For example, maybe the user selected a credit card, but we only accept debit cards. The first '%@' is replaced by the name of the bank. The second '%@' is replaced by the supported payment accounts (ex. US checking). The third '%@' is replaced by the business name (Ex. Coca-Cola Inc). For example, it may read 'We found 1 Chase account but you can only link checking or savings to Coca-Cola Inc.'"
+                            )
+                        }
+                    }()
+                    return String(format: localizedString, institution.name, bussinessName)
                 } else {
-                    let localizedString = STPLocalizedString(
-                        "We found %d %@ accounts but you can only link %@ accounts to %@.",
-                        "A description/subtitle that instructs the user that the bank accounts they selected are not eligible. For example, maybe the user selected credit cards, but we only accept debit cards. The '%d' is replaced by the number of ineligible accounts. The first '%@' is replaced by the name of the bank. The second '%@' is replaced by the supported payment accounts (ex. US checking). The third '%@' is replaced by the business name (Ex. Coca-Cola Inc). For example, it may read 'We found 2 Chase accounts but you can only link checking or savings to Coca-Cola Inc.'"
-                    )
+                    let localizedString: String = {
+                        if paymentMethodType == .link {
+                            return STPLocalizedString(
+                                "We found %d %@ accounts but you can only link US checking accounts to %@.",
+                                "A description/subtitle that instructs the user that the bank accounts they selected are not eligible. For example, maybe the user selected credit cards, but we only accept debit cards. The '%d' is replaced by the number of ineligible accounts. The first '%@' is replaced by the name of the bank. The second '%@' is replaced by the supported payment accounts (ex. US checking). The third '%@' is replaced by the business name (Ex. Coca-Cola Inc). For example, it may read 'We found 2 Chase accounts but you can only link checking or savings to Coca-Cola Inc.'"
+                            )
+                        } else {
+                            return STPLocalizedString(
+                                "We found %d %@ accounts but you can only link checking or savings accounts to %@.",
+                                "A description/subtitle that instructs the user that the bank accounts they selected are not eligible. For example, maybe the user selected credit cards, but we only accept debit cards. The '%d' is replaced by the number of ineligible accounts. The first '%@' is replaced by the name of the bank. The second '%@' is replaced by the supported payment accounts (ex. US checking). The third '%@' is replaced by the business name (Ex. Coca-Cola Inc). For example, it may read 'We found 2 Chase accounts but you can only link checking or savings to Coca-Cola Inc.'"
+                            )
+                        }
+                    }()
                     return String(
                         format: localizedString,
                         numberOfIneligibleAccounts,
                         institution.name,
-                        supportedAccountTypes,
                         bussinessName
                     )
                 }
             } else {
                 if numberOfIneligibleAccounts == 1 {
-                    let localizedString = STPLocalizedString(
-                        "We found 1 %@ account but you can only link %@ accounts.",
-                        "A description/subtitle that instructs the user that the bank account they selected is not eligible. For example, maybe the user selected a credit card, but we only accept debit cards. The first '%@' is replaced by the name of the bank. The second '%@' is replaced by the supported payment accounts (ex. US checking). For example, it may read 'We found 1 Chase account but you can only link checking or savings.'"
-                    )
-                    return String(format: localizedString, institution.name, supportedAccountTypes)
+                    let localizedString: String = {
+                        if paymentMethodType == .link {
+                            return STPLocalizedString(
+                                "We found 1 %@ account but you can only link US checking accounts.",
+                                "A description/subtitle that instructs the user that the bank account they selected is not eligible. For example, maybe the user selected a credit card, but we only accept debit cards. The first '%@' is replaced by the name of the bank. The second '%@' is replaced by the supported payment accounts (ex. US checking). For example, it may read 'We found 1 Chase account but you can only link checking or savings.'"
+                            )
+                        } else {
+                            return STPLocalizedString(
+                                "We found 1 %@ account but you can only link checking or savings accounts.",
+                                "A description/subtitle that instructs the user that the bank account they selected is not eligible. For example, maybe the user selected a credit card, but we only accept debit cards. The first '%@' is replaced by the name of the bank. The second '%@' is replaced by the supported payment accounts (ex. US checking). For example, it may read 'We found 1 Chase account but you can only link checking or savings.'"
+                            )
+                        }
+                    }()
+                    return String(format: localizedString, institution.name)
                 } else {
-                    let localizedString = STPLocalizedString(
-                        "We found %d %@ accounts but you can only link %@ accounts.",
-                        "A description/subtitle that instructs the user that the bank accounts they selected are not eligible. For example, maybe the user selected credit cards, but we only accept debit cards. The '%d' is replaced by the number of ineligible accounts. The first '%@' is replaced by the name of the bank. The second '%@' is replaced by the supported payment accounts (ex. US checking). For example, it may read 'We found 2 Chase accounts but you can only link checking or savings.'"
-                    )
+                    let localizedString: String = {
+                        if paymentMethodType == .link {
+                            STPLocalizedString(
+                                "We found %d %@ accounts but you can only link US checking accounts.",
+                                "A description/subtitle that instructs the user that the bank accounts they selected are not eligible. For example, maybe the user selected credit cards, but we only accept debit cards. The '%d' is replaced by the number of ineligible accounts. The first '%@' is replaced by the name of the bank. The second '%@' is replaced by the supported payment accounts (ex. US checking). For example, it may read 'We found 2 Chase accounts but you can only link checking or savings.'"
+                            )
+                        } else {
+                            STPLocalizedString(
+                                "We found %d %@ accounts but you can only link checking or savings accounts.",
+                                "A description/subtitle that instructs the user that the bank accounts they selected are not eligible. For example, maybe the user selected credit cards, but we only accept debit cards. The '%d' is replaced by the number of ineligible accounts. The first '%@' is replaced by the name of the bank. The second '%@' is replaced by the supported payment accounts (ex. US checking). For example, it may read 'We found 2 Chase accounts but you can only link checking or savings.'"
+                            )
+                        }
+                    }()
                     return String(
                         format: localizedString,
                         numberOfIneligibleAccounts,
-                        institution.name,
-                        supportedAccountTypes
+                        institution.name
                     )
                 }
             }
@@ -110,14 +144,14 @@ final class AccountPickerNoAccountEligibleErrorView: UIView {
                     if institutionSkipAccountSelection {
                         if numberOfIneligibleAccounts == 1 {
                             return STPLocalizedString(
-                                    "The account you selected isn't available for payments",
-                                    "The title of a screen that shows an error. The error appears after we failed to load users bank accounts. Here we describe to the user that the account they selected isn't eligible."
-                                )
+                                "The account you selected isn't available for payments",
+                                "The title of a screen that shows an error. The error appears after we failed to load users bank accounts. Here we describe to the user that the account they selected isn't eligible."
+                            )
                         } else {
                             return STPLocalizedString(
-                                    "The accounts you selected aren't available for payments",
-                                    "The title of a screen that shows an error. The error appears after we failed to load users bank accounts. Here we describe to the user that the accounts they selected aren't eligible. '%@' gets replaced by the eligible type of bank accounts, i.e. checking or savings. For example, maybe user selected a credit card, but we only support debit cards."
-                                )
+                                "The accounts you selected aren't available for payments",
+                                "The title of a screen that shows an error. The error appears after we failed to load users bank accounts. Here we describe to the user that the accounts they selected aren't eligible. '%@' gets replaced by the eligible type of bank accounts, i.e. checking or savings. For example, maybe user selected a credit card, but we only support debit cards."
+                            )
                         }
                     } else {
                         return STPLocalizedString(
