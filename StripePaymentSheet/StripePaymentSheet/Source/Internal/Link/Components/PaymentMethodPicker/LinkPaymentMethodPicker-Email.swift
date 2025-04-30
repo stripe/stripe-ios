@@ -34,7 +34,7 @@ extension LinkPaymentMethodPicker {
 
         private let userEmailLabel: UILabel = {
             let label = UILabel()
-            label.font = LinkUI.font(forTextStyle: .body)
+            label.font = LinkUI.font(forTextStyle: .bodyEmphasized)
             label.textColor = .linkPrimaryText
             label.textAlignment = .center
             return label

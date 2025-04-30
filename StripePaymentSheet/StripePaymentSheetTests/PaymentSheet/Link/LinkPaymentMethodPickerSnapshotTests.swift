@@ -65,7 +65,7 @@ class LinkPaymentMethodPickerSnapshotTests: STPSnapshotTestCase {
     func testLongEmail() {
         let mockDataSource = MockDataSource(
             empty: true,
-            email: "thisemailisnotreal@example.com"
+            email: "thisemailislong@example.com"
         )
 
         let picker = LinkPaymentMethodPicker()
