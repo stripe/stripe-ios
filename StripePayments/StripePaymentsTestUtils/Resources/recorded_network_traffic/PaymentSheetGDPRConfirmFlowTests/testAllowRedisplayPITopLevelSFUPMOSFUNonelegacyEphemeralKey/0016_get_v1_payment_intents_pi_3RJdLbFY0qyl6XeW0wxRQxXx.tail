@@ -1,29 +1,25 @@
-POST
-https:\/\/api\.stripe\.com\/v1\/payment_intents\/pi_3RJHruFY0qyl6XeW0IhvR6Ro\/confirm$
+GET
+https:\/\/api\.stripe\.com\/v1\/payment_intents\/pi_3RJdLbFY0qyl6XeW0wxRQxXx\?client_secret=pi_3RJdLbFY0qyl6XeW0wxRQxXx_secret_vkGsuYGyftynWyhEAbBnNTIc8&expand%5B0%5D=payment_method$
 200
 application/json
-access-control-allow-methods: GET, HEAD, PUT, PATCH, POST, DELETE
-content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=L5oG-W3-zxIDSJg_qqM4G_DIOQ1msNJ0lrja9OJR-GyUhn_Y03P7pUQRquMImVVJPq4ETdiQoE-Aru6i
-Server: nginx
-Cache-Control: no-cache, no-store
-x-wc: ABGHI
-Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
+Content-Type: application/json
 Access-Control-Allow-Origin: *
-stripe-should-retry: false
 x-stripe-priority-routing-enabled: true
-x-stripe-routing-context-priority-tier: api-testmode
-request-id: req_sfpPFsLtPWq3Wr
-Content-Length: 2084
-Vary: Origin
-Date: Tue, 29 Apr 2025 17:22:56 GMT
-original-request: req_sfpPFsLtPWq3Wr
-stripe-version: 2020-08-27
-idempotency-key: 901f0c30-6d34-4c45-8568-0e33446aa2cc
+content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=2hyWtXT78lnjWwZxj95KaWrPsxGKysXuBiqeVdO2HCrCsotk-3nsgjwW5-QqPY_BuPLslx3mwF6pRR2c
+x-wc: ABGHI
+access-control-allow-methods: GET, HEAD, PUT, PATCH, POST, DELETE
+Server: nginx
 access-control-expose-headers: Request-Id, Stripe-Manage-Version, Stripe-Should-Retry, X-Stripe-External-Auth-Required, X-Stripe-Privileged-Session-Required
 access-control-max-age: 300
+Cache-Control: no-cache, no-store
+Date: Wed, 30 Apr 2025 16:19:00 GMT
+stripe-version: 2020-08-27
 access-control-allow-credentials: true
-Content-Type: application/json
-X-Stripe-Mock-Request: client_secret=pi_3RJHruFY0qyl6XeW0IhvR6Ro_secret_9L7s57UOAcTRfq8Kex79e2gHP&expand\[0]=payment_method&payment_method=pm_1RJHruFY0qyl6XeWtt6s7qUP&payment_method_options\[card]\[setup_future_usage]=none&return_url=https%3A\/\/foo\.com&use_stripe_sdk=true
+Content-Length: 2107
+x-stripe-routing-context-priority-tier: api-testmode
+Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
+Vary: Origin
+request-id: req_tggxzvoo3GPYEu
 
 {
   "payment_method_configuration_details" : null,
@@ -35,7 +31,7 @@ X-Stripe-Mock-Request: client_secret=pi_3RJHruFY0qyl6XeW0IhvR6Ro_secret_9L7s57UO
   "shipping" : null,
   "payment_method_options" : {
     "card" : {
-      "setup_future_usage" : "none"
+      "setup_future_usage" : "off_session"
     }
   },
   "object" : "payment_intent",
@@ -48,7 +44,7 @@ X-Stripe-Mock-Request: client_secret=pi_3RJHruFY0qyl6XeW0IhvR6Ro_secret_9L7s57UO
   "status" : "succeeded",
   "payment_method" : {
     "object" : "payment_method",
-    "id" : "pm_1RJHruFY0qyl6XeWtt6s7qUP",
+    "id" : "pm_1RJdLaFY0qyl6XeWERAF9RJa",
     "billing_details" : {
       "email" : null,
       "phone" : null,
@@ -90,18 +86,18 @@ X-Stripe-Mock-Request: client_secret=pi_3RJHruFY0qyl6XeW0IhvR6Ro_secret_9L7s57UO
       "country" : "US"
     },
     "livemode" : false,
-    "created" : 1745947374,
+    "created" : 1746029938,
     "allow_redisplay" : "unspecified",
     "type" : "card",
-    "customer" : null
+    "customer" : "cus_SE5WKwhdLVdcNX"
   },
-  "client_secret" : "pi_3RJHruFY0qyl6XeW0IhvR6Ro_secret_9L7s57UOAcTRfq8Kex79e2gHP",
+  "client_secret" : "pi_3RJdLbFY0qyl6XeW0wxRQxXx_secret_vkGsuYGyftynWyhEAbBnNTIc8",
   "total_details" : {
     "amount_discount" : 0,
     "amount_tip" : null,
     "amount_tax" : 0
   },
-  "id" : "pi_3RJHruFY0qyl6XeW0IhvR6Ro",
+  "id" : "pi_3RJdLbFY0qyl6XeW0wxRQxXx",
   "confirmation_method" : "automatic",
   "amount_details" : {
     "tip" : {
@@ -114,6 +110,6 @@ X-Stripe-Mock-Request: client_secret=pi_3RJHruFY0qyl6XeW0IhvR6Ro_secret_9L7s57UO
     "card"
   ],
   "setup_future_usage" : "off_session",
-  "created" : 1745947374,
+  "created" : 1746029939,
   "description" : null
 }

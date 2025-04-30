@@ -395,16 +395,16 @@ final class PaymentSheet_GDPR_ConfirmFlowTests: STPNetworkStubbingTestCase {
     }
 
     func testAllowRedisplay_PITopLevelSFUPMOSFUNone_legacyEphemeralKey() async throws {
-//        try await _testAndAssert(intentKind: .paymentIntentTopLevelSFUPMOSFUNone_intentFirst_csc,
-//                                 elementsSession: ._testCardValue(),
-//                                 checkbox: .checked,
-//                                 shouldReadPaymentMethodOptionsSetupFutureUsage: true,
-//                                 expectedAllowRedisplay: .attached(.unspecified))
-//        try await _testAndAssert(intentKind: .paymentIntentTopLevelSFUPMOSFUNone_deferredIntent_csc,
-//                                 elementsSession: ._testCardValue(),
-//                                 checkbox: .checked,
-//                                 shouldReadPaymentMethodOptionsSetupFutureUsage: true,
-//                                 expectedAllowRedisplay: .attached(.unspecified))
+        try await _testAndAssert(intentKind: .paymentIntentTopLevelSFUPMOSFUNone_intentFirst_csc,
+                                 elementsSession: ._testCardValue(),
+                                 checkbox: .checked,
+                                 shouldReadPaymentMethodOptionsSetupFutureUsage: true,
+                                 expectedAllowRedisplay: .attached(.unspecified))
+        try await _testAndAssert(intentKind: .paymentIntentTopLevelSFUPMOSFUNone_deferredIntent_csc,
+                                 elementsSession: ._testCardValue(),
+                                 checkbox: .checked,
+                                 shouldReadPaymentMethodOptionsSetupFutureUsage: true,
+                                 expectedAllowRedisplay: .attached(.unspecified))
         try await _testAndAssert(intentKind: .paymentIntentTopLevelSFUPMOSFUNone_deferredIntent_ssc,
                                  elementsSession: ._testCardValue(),
                                  checkbox: .checked,
@@ -530,7 +530,7 @@ final class PaymentSheet_GDPR_ConfirmFlowTests: STPNetworkStubbingTestCase {
         elementsSession: STPElementsSession,
         customerId: String,
         currency: String,
-        shouldReadPaymentMethodOptionsSetupFutureUsage: Bool = false,
+        shouldReadPaymentMethodOptionsSetupFutureUsage: Bool,
         apiClient: STPAPIClient,
         paymentMethodType: PaymentSheet.PaymentMethodType,
         merchantCountry: MerchantCountry,
