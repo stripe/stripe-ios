@@ -1,3 +1,11 @@
+"%1$@ Card" = "Karta %1$@";
+
+"%1$@ Credit" = "Kreditná karta %1$@";
+
+"%1$@ Debit" = "Debetná karta %1$@";
+
+"%1$@ Prepaid" = "Predplatená platba %1$@";
+
 "%1$@ account ending in %2$@" = "%1$@ účet končiaci na %2$@";
 
 "%1$@ ending in %2$@" = "Karta %1$@ s poslednými štyrmi číslami %2$@";
