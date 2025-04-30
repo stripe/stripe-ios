@@ -81,6 +81,7 @@ extension PaymentSheet {
         if UIDevice.current.userInterfaceIdiom == .pad {
             payWithLinkVC.modalPresentationStyle = .formSheet
         }
+        payWithLinkVC.isModalInPresentation = true
 
         presentingController.present(payWithLinkVC, animated: true, completion: completion)
     }
