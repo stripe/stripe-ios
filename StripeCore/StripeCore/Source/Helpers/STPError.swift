@@ -182,7 +182,7 @@ extension NSError {
         }
 
         // localized description
-        userInfo[NSLocalizedDescriptionKey] = if errorType == "card_error" {
+        userInfo[NSLocalizedDescriptionKey] = if errorType == "card_error", let stripeErrorMessage {
             // see https://stripe.com/docs/api/errors#errors-message
             stripeErrorMessage
         } else if let localizedMessage = Utils.localizedMessage(fromAPIErrorCode: stripeErrorCode ?? "", declineCode: declineCode as? String) {
