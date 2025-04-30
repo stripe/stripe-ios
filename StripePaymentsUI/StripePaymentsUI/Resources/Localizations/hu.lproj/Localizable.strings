@@ -1,3 +1,11 @@
+"%1$@ Card" = "%1$@Kártya";
+
+"%1$@ Credit" = "%1$@Hitel";
+
+"%1$@ Debit" = "%1$@Betéti";
+
+"%1$@ Prepaid" = "%1$@Előre fizetett";
+
 "%1$@ account ending in %2$@" = "%2$@ végződésű számla %1$@";
 
 "%1$@ ending in %2$@" = "%1$@ végződése %2$@";
