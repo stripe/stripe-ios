@@ -16,6 +16,11 @@ protocol LinkPaymentMethodPickerDelegate: AnyObject {
 
     func paymentMethodPicker(
         _ picker: LinkPaymentMethodPicker,
+        headerTapped expanded: Bool
+    )
+
+    func paymentMethodPicker(
+        _ picker: LinkPaymentMethodPicker,
         showMenuForItemAt index: Int,
         sourceRect: CGRect
     )
@@ -189,6 +194,7 @@ private extension LinkPaymentMethodPicker {
 #if !os(visionOS)
         impactFeedbackGenerator.impactOccurred()
 #endif
+        delegate?.paymentMethodPicker(self, headerTapped: sender.isExpanded)
     }
 
     @objc func onAddPaymentButtonTapped(_ sender: AddButton) {

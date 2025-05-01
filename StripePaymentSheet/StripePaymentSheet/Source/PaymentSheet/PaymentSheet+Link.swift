@@ -80,6 +80,15 @@ extension PaymentSheet {
 
         if UIDevice.current.userInterfaceIdiom == .pad {
             payWithLinkVC.modalPresentationStyle = .formSheet
+        } else {
+            if #available(iOS 15.0, *) {
+                if let sheetController = payWithLinkVC.sheetPresentationController {
+                    payWithLinkVC.modalPresentationStyle = .pageSheet
+                    sheetController.detents = [.medium(), .large()]
+                    sheetController.prefersScrollingExpandsWhenScrolledToEdge = true
+                    sheetController.prefersEdgeAttachedInCompactHeight = true
+                }
+            }
         }
         payWithLinkVC.isModalInPresentation = true
 
