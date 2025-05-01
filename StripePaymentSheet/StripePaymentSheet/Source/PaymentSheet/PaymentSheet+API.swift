@@ -519,7 +519,17 @@ extension PaymentSheet {
                     switch result {
                     case .success:
                         STPAnalyticsClient.sharedClient.logLinkSignupComplete()
-                        let linkPaymentMethodType: STPPaymentMethodType = elementsSession.linkPassthroughModeEnabled ? .card : .link
+                        let linkPaymentMethodType: STPPaymentMethodType = {
+                            guard elementsSession.linkPassthroughModeEnabled else {
+                                return .link
+                            }
+                            switch intentConfirmParams.paymentMethodType {
+                            case .stripe(let paymentMethodType):
+                                return paymentMethodType
+                            default:
+                                return .unknown
+                            }
+                        }()
                         // Set allow_redisplay on params
                         intentConfirmParams.setAllowRedisplay(
                             mobilePaymentElementFeatures: elementsSession.customerSessionMobilePaymentElementFeatures,
