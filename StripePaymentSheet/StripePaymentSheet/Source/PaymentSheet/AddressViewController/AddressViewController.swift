@@ -343,16 +343,16 @@ extension AddressViewController {
 }
 
 // MARK: - ElementDelegate
-@_spi(STP) extension AddressViewController: ElementDelegate {
-    @_spi(STP) public func didUpdate(element: Element) {
-        guard let addressSection = addressSection else { assertionFailure(); return }
-        self.latestError = nil // clear error on new input
-        let enabled = addressSection.validationState.isValid
-        button.update(state: enabled ? .enabled : .disabled, animated: true)
-        expandAddressSectionIfNeeded()
-    }
+ @_spi(STP) extension AddressViewController: ElementDelegate {
+     @_spi(STP) public func didUpdate(element: Element) {
+         guard let addressSection = addressSection else { assertionFailure(); return }
+         self.latestError = nil // clear error on new input
+         let enabled = addressSection.validationState.isValid
+         button.update(state: enabled ? .enabled : .disabled, animated: true)
+         expandAddressSectionIfNeeded()
+     }
 
-    @_spi(STP) public func continueToNextField(element: Element) {
+     @_spi(STP) public func continueToNextField(element: Element) {
         // no-op
     }
 }
