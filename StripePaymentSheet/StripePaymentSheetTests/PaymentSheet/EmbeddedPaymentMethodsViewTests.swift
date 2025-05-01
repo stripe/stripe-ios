@@ -5,7 +5,7 @@
 //  Created by Nick Porter on 10/4/24.
 //
 
- @testable import StripePaymentSheet
+@testable import StripePaymentSheet
 import XCTest
 
 @MainActor

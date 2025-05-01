@@ -5,7 +5,7 @@
 //  Created by Yuki Tokuhiro on 9/25/24.
 //
 
- import StripePaymentSheet
+import StripePaymentSheet
 import UIKit
 
 // View the backend code here: https://glitch.com/edit/#!/stripe-mobile-payment-sheet-custom-deferred

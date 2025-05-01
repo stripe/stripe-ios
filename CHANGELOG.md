@@ -6,7 +6,6 @@
 ### Identity
 * [Fixed] Fixed an issue where identity verification may fail due to stale model cache.
 
-
 ## 24.12.0 2025-04-21
 ### PaymentSheet
 * [Added] Bank payments are now available in the PaymentSheet without requiring a dependency on `StripeFinancialConnections`.

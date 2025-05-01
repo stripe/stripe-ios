@@ -7,7 +7,7 @@
 
 import StripeCoreTestUtils
 @testable import StripePayments
- @testable import StripePaymentSheet
+@testable import StripePaymentSheet
 @testable import StripePaymentsTestUtils
 @testable import StripeUICore
 import SwiftUI

@@ -8,7 +8,7 @@
 @_spi(STP) import StripeCore
 @_spi(STP) import StripeCoreTestUtils
 @_spi(STP) import StripePayments
-@_spi(STP)   @testable import StripePaymentSheet
+@_spi(STP) @testable import StripePaymentSheet
 @_spi(STP) import StripeUICore
 import XCTest
 
