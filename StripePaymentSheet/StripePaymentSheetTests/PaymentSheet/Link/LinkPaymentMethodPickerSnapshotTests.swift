@@ -25,7 +25,8 @@ class LinkPaymentMethodPickerSnapshotTests: STPSnapshotTestCase {
 
         verify(picker, identifier: "First Option")
 
-        picker.selectedIndex = 1
+        mockDataSource.selectedIndex = 1
+        picker.reloadData()
         verify(picker, identifier: "Second Option")
     }
 
@@ -72,7 +73,7 @@ class LinkPaymentMethodPickerSnapshotTests: STPSnapshotTestCase {
         let mockDataSource = MockDataSource(paymentMethods: paymentMethods)
         mockDataSource.set(paymentMethod: paymentMethods.first!, supported: false)
         let picker = LinkPaymentMethodPicker()
-        picker.selectedIndex = 1
+        mockDataSource.selectedIndex = 1
         picker.dataSource = mockDataSource
         picker.setExpanded(true, animated: false)
         picker.layoutSubviews()
@@ -132,7 +133,11 @@ class LinkPaymentMethodPickerSnapshotTests: STPSnapshotTestCase {
 extension LinkPaymentMethodPickerSnapshotTests {
 
     fileprivate final class MockDataSource: LinkPaymentMethodPickerDataSource {
+
         let accountEmail: String
+
+        var selectedIndex: Int = 0
+
         let paymentMethods: [ConsumerPaymentDetails]
 
         private var supportOverrides: [String: Bool] = [:]
