@@ -2,6 +2,11 @@
 ### PaymentSheet
 * [Added] Embedded Payment Element is now generally available. Learn more by visiting the [docs](https://docs.stripe.com/payments/mobile/embedded).
 
+## 24.12.1 2025-04-30
+### Identity
+* [Fixed] Fixed an issue where identity verification may fail due to stale model cache.
+
+
 ## 24.12.0 2025-04-21
 ### PaymentSheet
 * [Added] Bank payments are now available in the PaymentSheet without requiring a dependency on `StripeFinancialConnections`.
