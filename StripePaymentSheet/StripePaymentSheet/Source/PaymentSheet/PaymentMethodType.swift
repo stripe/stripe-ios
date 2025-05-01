@@ -309,12 +309,7 @@ extension PaymentSheet {
                         return [.userSupportsDelayedPaymentMethods]
                     case .bacsDebit:
                         return [.returnURL, .userSupportsDelayedPaymentMethods]
-                    case .cardPresent, .blik, .weChatPay, .grabPay, .FPX, .giropay, .przelewy24, .EPS,
-                        .netBanking, .OXXO, .afterpayClearpay, .UPI, .link, .affirm, .paynow, .zip, .alma,
-                        .mobilePay, .unknown, .alipay, .konbini, .promptPay, .swish, .twint, .multibanco,
-                        .sunbit, .billie, .satispay, .crypto:
-                        return [.unsupportedForSetup]
-                    @unknown default:
+                    default:
                         return [.unsupportedForSetup]
                     }
                 }()
