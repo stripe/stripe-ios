@@ -84,6 +84,12 @@ extension STPPaymentMethod {
             return PaymentSheetImageLibrary.bankIcon(
                 for: PaymentSheetImageLibrary.bankIconCode(for: usBankAccount?.bankName)
             )
+        case .link:
+            if let linkPaymentDetails {
+                return STPImageLibrary.cardBrandImage(for: linkPaymentDetails.brand)
+            } else {
+                return Image.link_logo.makeImage()
+            }
         default:
             // If there's no image specific to this PaymentMethod (eg card network logo, bank logo), default to the PaymentMethod type's icon
             // TODO: This only looks at client-side assets! 
@@ -107,7 +113,11 @@ extension STPPaymentMethod {
         case .SEPADebit:
             return Image.carousel_sepa.makeImage(overrideUserInterfaceStyle: overrideUserInterfaceStyle).withRenderingMode(.alwaysOriginal)
         case .link:
-            return Image.link_logo.makeImage(overrideUserInterfaceStyle: overrideUserInterfaceStyle).withRenderingMode(.alwaysOriginal)
+            if let linkPaymentDetails {
+                return linkPaymentDetails.brand.makeSavedPaymentMethodCellImage(overrideUserInterfaceStyle: overrideUserInterfaceStyle)
+            } else {
+                return Image.link_logo.makeImage(overrideUserInterfaceStyle: overrideUserInterfaceStyle).withRenderingMode(.alwaysOriginal)
+            }
         default:
             assertionFailure("\(type) not supported for saved PMs")
             return makeIcon()
@@ -125,6 +135,9 @@ extension STPPaymentMethod {
             ).rounded(radius: 3)
         case .SEPADebit:
             return Image.pm_type_sepa.makeImage().withRenderingMode(.alwaysOriginal)
+        case .link:
+            let cardBrand = linkPaymentDetails?.brand ?? .unknown
+            return STPImageLibrary.unpaddedCardBrandImage(for: cardBrand)
         default:
             assertionFailure("\(type) not supported for saved PMs")
             return makeIcon()

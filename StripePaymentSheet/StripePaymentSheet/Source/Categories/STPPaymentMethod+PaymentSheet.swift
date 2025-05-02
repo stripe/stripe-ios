@@ -23,7 +23,11 @@ extension STPPaymentMethod {
             // The missing space is not an oversight, but on purpose
             return "••••\(usBankAccount?.last4 ?? "")"
         default:
-            return type.displayName
+            if let linkPaymentDetails {
+                return "•••• \(linkPaymentDetails.last4)"
+            } else {
+                return type.displayName
+            }
         }
     }
 
