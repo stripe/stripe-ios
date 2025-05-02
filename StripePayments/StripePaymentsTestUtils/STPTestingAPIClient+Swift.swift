@@ -23,6 +23,7 @@ extension STPTestingAPIClient {
         shouldSavePM: Bool = false,
         customerID: String? = nil,
         confirm: Bool = false,
+        paymentMethodOptions: [String: Any]? = nil,
         otherParams: [String: Any] = [:],
         completion: @escaping (Result<(String), Error>) -> Void
     ) {
@@ -34,8 +35,15 @@ extension STPTestingAPIClient {
         if let paymentMethodID {
             params["payment_method"] = paymentMethodID
         }
+        if let paymentMethodOptions {
+            params["payment_method_options"] = paymentMethodOptions
+        }
         if shouldSavePM {
-            params["payment_method_options"] = ["card": ["setup_future_usage": "off_session"]]
+            var existingPaymentMethodOptions: [String: Any] = params["payment_method_options"] as? [String: Any] ?? [:]
+            var cardPaymentMethodOptions: [String: Any] = existingPaymentMethodOptions["card"] as? [String: Any] ?? [:]
+            cardPaymentMethodOptions["setup_future_usage"] = "off_session"
+            existingPaymentMethodOptions["card"] = cardPaymentMethodOptions
+            params["payment_method_options"] = existingPaymentMethodOptions
         }
         if let customerID {
             params["customer"] = customerID
@@ -66,6 +74,7 @@ extension STPTestingAPIClient {
         shouldSavePM: Bool = false,
         customerID: String? = nil,
         confirm: Bool = false,
+        paymentMethodOptions: [String: Any]? = nil,
         otherParams: [String: Any] = [:]
     ) async throws -> String {
         try await withCheckedThrowingContinuation { continuation in
@@ -78,6 +87,7 @@ extension STPTestingAPIClient {
                 shouldSavePM: shouldSavePM,
                 customerID: customerID,
                 confirm: confirm,
+                paymentMethodOptions: paymentMethodOptions,
                 otherParams: otherParams
             ) { result in
                 continuation.resume(with: result)

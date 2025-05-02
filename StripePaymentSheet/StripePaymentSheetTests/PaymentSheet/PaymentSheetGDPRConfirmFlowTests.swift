@@ -9,7 +9,7 @@ import XCTest
 import SafariServices
 @testable@_spi(STP) import StripeCore
 @testable@_spi(STP) import StripePayments
-@testable@_spi(STP) @_spi(CustomerSessionBetaAccess) import StripePaymentSheet
+@testable@_spi(STP) @_spi(CustomerSessionBetaAccess) @_spi(PaymentMethodOptionsSetupFutureUsagePreview) import StripePaymentSheet
 @testable@_spi(STP) import StripePaymentsTestUtils
 @testable@_spi(STP) import StripeUICore
 
@@ -23,6 +23,14 @@ final class PaymentSheet_GDPR_ConfirmFlowTests: STPNetworkStubbingTestCase {
         case paymentIntentSFU_intentFirst_csc
         case paymentIntentSFU_deferredIntent_csc
         case paymentIntentSFU_deferredIntent_ssc
+
+        case paymentIntentPMOSFU_intentFirst_csc
+        case paymentIntentPMOSFU_deferredIntent_csc
+        case paymentIntentPMOSFU_deferredIntent_ssc
+
+        case paymentIntentTopLevelSFUPMOSFUNone_intentFirst_csc
+        case paymentIntentTopLevelSFUPMOSFUNone_deferredIntent_csc
+        case paymentIntentTopLevelSFUPMOSFUNone_deferredIntent_ssc
 
         case setupIntent_intentFirst_csc
         case setupIntent_deferredIntent_csc
@@ -169,6 +177,114 @@ final class PaymentSheet_GDPR_ConfirmFlowTests: STPNetworkStubbingTestCase {
 
     }
 
+    func testAllowRedisplay_PIPMOSFU_intentFirst_csc() async throws {
+        try await _testAndAssert(intentKind: .paymentIntentPMOSFU_intentFirst_csc,
+                                 elementsSession: elementsSession(paymentMethodSave: true),
+                                 checkbox: .checked,
+                                 shouldReadPaymentMethodOptionsSetupFutureUsage: true,
+                                 expectedAllowRedisplay: .attached(.always))
+        try await _testAndAssert(intentKind: .paymentIntentPMOSFU_intentFirst_csc,
+                                 elementsSession: elementsSession(paymentMethodSave: true),
+                                 checkbox: .unchecked,
+                                 shouldReadPaymentMethodOptionsSetupFutureUsage: true,
+                                 expectedAllowRedisplay: .attached(.limited))
+        try await _testAndAssert(intentKind: .paymentIntentPMOSFU_intentFirst_csc,
+                                 elementsSession: elementsSession(paymentMethodSave: false),
+                                 checkbox: .hidden,
+                                 shouldReadPaymentMethodOptionsSetupFutureUsage: true,
+                                 expectedAllowRedisplay: .attached(.limited))
+    }
+
+    func testAllowRedisplay_PIPMOSFU_deferredIntent_csc() async throws {
+        try await _testAndAssert(intentKind: .paymentIntentPMOSFU_deferredIntent_csc,
+                                 elementsSession: elementsSession(paymentMethodSave: true),
+                                 checkbox: .checked,
+                                 shouldReadPaymentMethodOptionsSetupFutureUsage: true,
+                                 expectedAllowRedisplay: .attached(.always))
+        try await _testAndAssert(intentKind: .paymentIntentPMOSFU_deferredIntent_csc,
+                                 elementsSession: elementsSession(paymentMethodSave: true),
+                                 checkbox: .unchecked,
+                                 shouldReadPaymentMethodOptionsSetupFutureUsage: true,
+                                 expectedAllowRedisplay: .attached(.limited))
+        try await _testAndAssert(intentKind: .paymentIntentPMOSFU_deferredIntent_csc,
+                                 elementsSession: elementsSession(paymentMethodSave: false),
+                                 checkbox: .hidden,
+                                 shouldReadPaymentMethodOptionsSetupFutureUsage: true,
+                                 expectedAllowRedisplay: .attached(.limited))
+    }
+
+    func testAllowRedisplay_PIPMOSFU_deferredIntent_ssc() async throws {
+        try await _testAndAssert(intentKind: .paymentIntentPMOSFU_deferredIntent_ssc,
+                                 elementsSession: elementsSession(paymentMethodSave: true),
+                                 checkbox: .checked,
+                                 shouldReadPaymentMethodOptionsSetupFutureUsage: true,
+                                 expectedAllowRedisplay: .attached(.always))
+        try await _testAndAssert(intentKind: .paymentIntentPMOSFU_deferredIntent_ssc,
+                                 elementsSession: elementsSession(paymentMethodSave: true),
+                                 checkbox: .unchecked,
+                                 shouldReadPaymentMethodOptionsSetupFutureUsage: true,
+                                 expectedAllowRedisplay: .attached(.limited))
+        try await _testAndAssert(intentKind: .paymentIntentPMOSFU_deferredIntent_ssc,
+                                 elementsSession: elementsSession(paymentMethodSave: false),
+                                 checkbox: .hidden,
+                                 shouldReadPaymentMethodOptionsSetupFutureUsage: true,
+                                 expectedAllowRedisplay: .attached(.limited))
+    }
+
+    func testAllowRedisplay_PITopLevelSFUPMOSFUNone_intentFirst_csc() async throws {
+        try await _testAndAssert(intentKind: .paymentIntentTopLevelSFUPMOSFUNone_intentFirst_csc,
+                                 elementsSession: elementsSession(paymentMethodSave: true),
+                                 checkbox: .checked,
+                                 shouldReadPaymentMethodOptionsSetupFutureUsage: true,
+                                 expectedAllowRedisplay: .attached(.always))
+        try await _testAndAssert(intentKind: .paymentIntentTopLevelSFUPMOSFUNone_intentFirst_csc,
+                                 elementsSession: elementsSession(paymentMethodSave: true),
+                                 checkbox: .unchecked,
+                                 shouldReadPaymentMethodOptionsSetupFutureUsage: true,
+                                 expectedAllowRedisplay: .unattached)
+        try await _testAndAssert(intentKind: .paymentIntentTopLevelSFUPMOSFUNone_intentFirst_csc,
+                                 elementsSession: elementsSession(paymentMethodSave: false),
+                                 checkbox: .hidden,
+                                 shouldReadPaymentMethodOptionsSetupFutureUsage: true,
+                                 expectedAllowRedisplay: .unattached)
+    }
+
+    func testAllowRedisplay_PITopLevelSFUPMOSFUNone_deferredIntent_csc() async throws {
+        try await _testAndAssert(intentKind: .paymentIntentTopLevelSFUPMOSFUNone_deferredIntent_csc,
+                                 elementsSession: elementsSession(paymentMethodSave: true),
+                                 checkbox: .checked,
+                                 shouldReadPaymentMethodOptionsSetupFutureUsage: true,
+                                 expectedAllowRedisplay: .attached(.always))
+        try await _testAndAssert(intentKind: .paymentIntentTopLevelSFUPMOSFUNone_deferredIntent_csc,
+                                 elementsSession: elementsSession(paymentMethodSave: true),
+                                 checkbox: .unchecked,
+                                 shouldReadPaymentMethodOptionsSetupFutureUsage: true,
+                                 expectedAllowRedisplay: .unattached)
+        try await _testAndAssert(intentKind: .paymentIntentTopLevelSFUPMOSFUNone_deferredIntent_csc,
+                                 elementsSession: elementsSession(paymentMethodSave: false),
+                                 checkbox: .hidden,
+                                 shouldReadPaymentMethodOptionsSetupFutureUsage: true,
+                                 expectedAllowRedisplay: .unattached)
+    }
+
+    func testAllowRedisplay_PITopLevelSFUPMOSFUNone_deferredIntent_ssc() async throws {
+        try await _testAndAssert(intentKind: .paymentIntentTopLevelSFUPMOSFUNone_deferredIntent_ssc,
+                                 elementsSession: elementsSession(paymentMethodSave: true),
+                                 checkbox: .checked,
+                                 shouldReadPaymentMethodOptionsSetupFutureUsage: true,
+                                 expectedAllowRedisplay: .attached(.always))
+        try await _testAndAssert(intentKind: .paymentIntentTopLevelSFUPMOSFUNone_deferredIntent_ssc,
+                                 elementsSession: elementsSession(paymentMethodSave: true),
+                                 checkbox: .unchecked,
+                                 shouldReadPaymentMethodOptionsSetupFutureUsage: true,
+                                 expectedAllowRedisplay: .unattached)
+        try await _testAndAssert(intentKind: .paymentIntentTopLevelSFUPMOSFUNone_deferredIntent_ssc,
+                                 elementsSession: elementsSession(paymentMethodSave: false),
+                                 checkbox: .hidden,
+                                 shouldReadPaymentMethodOptionsSetupFutureUsage: true,
+                                 expectedAllowRedisplay: .unattached)
+    }
+
     func testAllowRedisplay_SI_intentFirst_csc() async throws {
         try await _testAndAssert(intentKind: .setupIntent_intentFirst_csc,
                                  elementsSession: elementsSession(paymentMethodSave: true),
@@ -260,6 +376,58 @@ final class PaymentSheet_GDPR_ConfirmFlowTests: STPNetworkStubbingTestCase {
                                  expectedAllowRedisplay: .attached(.unspecified))
     }
 
+    func testAllowRedisplay_PIPMOSFU_legacyEphemeralKey() async throws {
+        try await _testAndAssert(intentKind: .paymentIntentPMOSFU_intentFirst_csc,
+                elementsSession: ._testCardValue(),
+                checkbox: .hidden,
+                shouldReadPaymentMethodOptionsSetupFutureUsage: true,
+                expectedAllowRedisplay: .attached(.unspecified))
+        try await _testAndAssert(intentKind: .paymentIntentPMOSFU_deferredIntent_csc,
+                elementsSession: ._testCardValue(),
+                checkbox: .hidden,
+                shouldReadPaymentMethodOptionsSetupFutureUsage: true,
+                expectedAllowRedisplay: .attached(.unspecified))
+        try await _testAndAssert(intentKind: .paymentIntentPMOSFU_deferredIntent_ssc,
+                elementsSession: ._testCardValue(),
+                checkbox: .hidden,
+                shouldReadPaymentMethodOptionsSetupFutureUsage: true,
+                expectedAllowRedisplay: .attached(.unspecified))
+    }
+
+    func testAllowRedisplay_PITopLevelSFUPMOSFUNone_legacyEphemeralKey() async throws {
+        try await _testAndAssert(intentKind: .paymentIntentTopLevelSFUPMOSFUNone_intentFirst_csc,
+                                 elementsSession: ._testCardValue(),
+                                 checkbox: .checked,
+                                 shouldReadPaymentMethodOptionsSetupFutureUsage: true,
+                                 expectedAllowRedisplay: .attached(.unspecified))
+        try await _testAndAssert(intentKind: .paymentIntentTopLevelSFUPMOSFUNone_deferredIntent_csc,
+                                 elementsSession: ._testCardValue(),
+                                 checkbox: .checked,
+                                 shouldReadPaymentMethodOptionsSetupFutureUsage: true,
+                                 expectedAllowRedisplay: .attached(.unspecified))
+        try await _testAndAssert(intentKind: .paymentIntentTopLevelSFUPMOSFUNone_deferredIntent_ssc,
+                                 elementsSession: ._testCardValue(),
+                                 checkbox: .checked,
+                                 shouldReadPaymentMethodOptionsSetupFutureUsage: true,
+                                 expectedAllowRedisplay: .attached(.unspecified))
+
+        try await _testAndAssert(intentKind: .paymentIntentTopLevelSFUPMOSFUNone_intentFirst_csc,
+                                 elementsSession: ._testCardValue(),
+                                 checkbox: .unchecked,
+                                 shouldReadPaymentMethodOptionsSetupFutureUsage: true,
+                                 expectedAllowRedisplay: .unattached)
+        try await _testAndAssert(intentKind: .paymentIntentTopLevelSFUPMOSFUNone_deferredIntent_csc,
+                                 elementsSession: ._testCardValue(),
+                                 checkbox: .unchecked,
+                                 shouldReadPaymentMethodOptionsSetupFutureUsage: true,
+                                 expectedAllowRedisplay: .unattached)
+        try await _testAndAssert(intentKind: .paymentIntentTopLevelSFUPMOSFUNone_deferredIntent_ssc,
+                                 elementsSession: ._testCardValue(),
+                                 checkbox: .unchecked,
+                                 shouldReadPaymentMethodOptionsSetupFutureUsage: true,
+                                 expectedAllowRedisplay: .unattached)
+    }
+
     func testAllowRedisplay_paymentIntentSI_legacyEphemeralKey() async throws {
         try await _testAndAssert(intentKind: .paymentIntentSFU_intentFirst_csc,
                                  elementsSession: ._testCardValue(),
@@ -309,6 +477,7 @@ final class PaymentSheet_GDPR_ConfirmFlowTests: STPNetworkStubbingTestCase {
                         currency: String = "USD",
                         merchantCountry: MerchantCountry = .US,
                         checkbox: CheckboxBehavior,
+                        shouldReadPaymentMethodOptionsSetupFutureUsage: Bool = false,
                         expectedAllowRedisplay: ExpectedAllowRedisplay) async throws {
         let apiClient = STPAPIClient(publishableKey: merchantCountry.publishableKey)
         let newCustomer = try await STPTestingAPIClient.shared().fetchCustomerAndEphemeralKey(customerID: nil,
@@ -328,6 +497,7 @@ final class PaymentSheet_GDPR_ConfirmFlowTests: STPNetworkStubbingTestCase {
                                elementsSession: elementsSession,
                                customerId: newCustomer.customer,
                                currency: currency,
+                               shouldReadPaymentMethodOptionsSetupFutureUsage: shouldReadPaymentMethodOptionsSetupFutureUsage,
                                apiClient: apiClient,
                                paymentMethodType: .stripe(.card),
                                merchantCountry: merchantCountry) { form in
@@ -360,6 +530,7 @@ final class PaymentSheet_GDPR_ConfirmFlowTests: STPNetworkStubbingTestCase {
         elementsSession: STPElementsSession,
         customerId: String,
         currency: String,
+        shouldReadPaymentMethodOptionsSetupFutureUsage: Bool,
         apiClient: STPAPIClient,
         paymentMethodType: PaymentSheet.PaymentMethodType,
         merchantCountry: MerchantCountry,
@@ -371,6 +542,7 @@ final class PaymentSheet_GDPR_ConfirmFlowTests: STPNetworkStubbingTestCase {
             config.returnURL = "https://foo.com"
             config.apiClient = apiClient
             config.customer = PaymentSheet.CustomerConfiguration(id: customerId, customerSessionClientSecret: "cuss_123")
+            config.shouldReadPaymentMethodOptionsSetupFutureUsage = shouldReadPaymentMethodOptionsSetupFutureUsage
             return config
         }()
 
@@ -435,7 +607,7 @@ final class PaymentSheet_GDPR_ConfirmFlowTests: STPNetworkStubbingTestCase {
         var confirmedPaymentMethodId: String
         switch intentKind {
         case .paymentIntent_intentFirst_csc, .paymentIntent_deferredIntent_csc, .paymentIntent_deferredIntent_ssc,
-                .paymentIntentSFU_intentFirst_csc, .paymentIntentSFU_deferredIntent_csc, .paymentIntentSFU_deferredIntent_ssc:
+                .paymentIntentSFU_intentFirst_csc, .paymentIntentSFU_deferredIntent_csc, .paymentIntentSFU_deferredIntent_ssc, .paymentIntentPMOSFU_intentFirst_csc, .paymentIntentPMOSFU_deferredIntent_csc, .paymentIntentPMOSFU_deferredIntent_ssc, .paymentIntentTopLevelSFUPMOSFUNone_intentFirst_csc, .paymentIntentTopLevelSFUPMOSFUNone_deferredIntent_csc, .paymentIntentTopLevelSFUPMOSFUNone_deferredIntent_ssc:
             let updatedPaymentIntent = try await apiClient.retrievePaymentIntent(clientSecret: clientSecret)
             guard let pmId = updatedPaymentIntent.paymentMethodId else {
                 XCTFail("No payment method attached to confirmed Intent")
@@ -603,6 +775,100 @@ extension PaymentSheet_GDPR_ConfirmFlowTests {
             }
             return .deferredIntent(intentConfig: deferredSSC)
 
+        // MARK: - Payment Intent + PMO SFU
+        case .paymentIntentPMOSFU_intentFirst_csc:
+            let paymentIntent = try await {
+                let clientSecret = try await STPTestingAPIClient.shared.fetchPaymentIntent(
+                    types: paymentMethodTypes,
+                    currency: currency,
+                    merchantCountry: merchantCountry.rawValue,
+                    customerID: customerID,
+                    paymentMethodOptions: ["card": ["setup_future_usage": "off_session"]]
+                )
+                clientSecretCallback(clientSecret)
+                return try await apiClient.retrievePaymentIntent(clientSecret: clientSecret)
+            }()
+            return .paymentIntent(paymentIntent)
+        case .paymentIntentPMOSFU_deferredIntent_csc:
+            let deferredCSC = PaymentSheet.IntentConfiguration(mode: .payment(amount: 1099, currency: currency, paymentMethodOptions: PaymentSheet.IntentConfiguration.Mode.PaymentMethodOptions(setupFutureUsageValues: [.card: .offSession]))) { _, _ in
+                let clientSecret = try await STPTestingAPIClient.shared.fetchPaymentIntent(
+                    types: paymentMethodTypes,
+                    currency: currency,
+                    merchantCountry: merchantCountry.rawValue,
+                    customerID: customerID,
+                    paymentMethodOptions: ["card": ["setup_future_usage": "off_session"]]
+                )
+                clientSecretCallback(clientSecret)
+                return clientSecret
+            }
+            return .deferredIntent(intentConfig: deferredCSC)
+        case .paymentIntentPMOSFU_deferredIntent_ssc:
+            let deferredSSC = PaymentSheet.IntentConfiguration(mode: .payment(amount: 1099, currency: currency, paymentMethodOptions: PaymentSheet.IntentConfiguration.Mode.PaymentMethodOptions(setupFutureUsageValues: [.card: .offSession]))) { paymentMethod, shouldSavePM in
+                let clientSecret = try await STPTestingAPIClient.shared.fetchPaymentIntent(
+                    types: paymentMethodTypes,
+                    currency: currency,
+                    merchantCountry: merchantCountry.rawValue,
+                    paymentMethodID: paymentMethod.stripeId,
+                    shouldSavePM: shouldSavePM,
+                    customerID: customerID,
+                    confirm: true,
+                    paymentMethodOptions: ["card": ["setup_future_usage": "off_session"]],
+                    otherParams: self.paramsForServerSideConfirmation
+                )
+                clientSecretCallback(clientSecret)
+                return clientSecret
+            }
+            return .deferredIntent(intentConfig: deferredSSC)
+        // MARK: - Payment Intent + SFU + PMO SFU none
+        case .paymentIntentTopLevelSFUPMOSFUNone_intentFirst_csc:
+            let paymentIntent = try await {
+                let clientSecret = try await STPTestingAPIClient.shared.fetchPaymentIntent(
+                    types: paymentMethodTypes,
+                    currency: currency,
+                    merchantCountry: merchantCountry.rawValue,
+                    customerID: customerID,
+                    paymentMethodOptions: ["card": ["setup_future_usage": "none"]],
+                    otherParams: ["setup_future_usage": "off_session"]
+                )
+                clientSecretCallback(clientSecret)
+                return try await apiClient.retrievePaymentIntent(clientSecret: clientSecret)
+            }()
+            return .paymentIntent(paymentIntent)
+        case .paymentIntentTopLevelSFUPMOSFUNone_deferredIntent_csc:
+            let deferredCSC = PaymentSheet.IntentConfiguration(mode: .payment(amount: 1099, currency: currency, setupFutureUsage: .offSession, paymentMethodOptions: PaymentSheet.IntentConfiguration.Mode.PaymentMethodOptions(setupFutureUsageValues: [.card: .none]))) { _, _ in
+                let clientSecret = try await STPTestingAPIClient.shared.fetchPaymentIntent(
+                    types: paymentMethodTypes,
+                    currency: currency,
+                    merchantCountry: merchantCountry.rawValue,
+                    customerID: customerID,
+                    paymentMethodOptions: ["card": ["setup_future_usage": "none"]],
+                    otherParams: ["setup_future_usage": "off_session"]
+                )
+                clientSecretCallback(clientSecret)
+                return clientSecret
+            }
+            return .deferredIntent(intentConfig: deferredCSC)
+        case .paymentIntentTopLevelSFUPMOSFUNone_deferredIntent_ssc:
+            let deferredSSC = PaymentSheet.IntentConfiguration(mode: .payment(amount: 1099, currency: currency, setupFutureUsage: .offSession, paymentMethodOptions: PaymentSheet.IntentConfiguration.Mode.PaymentMethodOptions(setupFutureUsageValues: [.card: .none]))) { paymentMethod, shouldSavePM in
+                let otherParams = [
+                    "setup_future_usage": "off_session",
+                ].merging(self.paramsForServerSideConfirmation) { _, b in b }
+
+                let clientSecret = try await STPTestingAPIClient.shared.fetchPaymentIntent(
+                    types: paymentMethodTypes,
+                    currency: currency,
+                    merchantCountry: merchantCountry.rawValue,
+                    paymentMethodID: paymentMethod.stripeId,
+                    shouldSavePM: shouldSavePM,
+                    customerID: customerID,
+                    confirm: true,
+                    paymentMethodOptions: ["card": ["setup_future_usage": "none"]],
+                    otherParams: otherParams
+                )
+                clientSecretCallback(clientSecret)
+                return clientSecret
+            }
+            return .deferredIntent(intentConfig: deferredSSC)
         // MARK: - Setup Intent
         case .setupIntent_intentFirst_csc:
             let setupIntent = try await {
