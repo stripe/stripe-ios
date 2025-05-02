@@ -7,8 +7,8 @@
 
 import Foundation
 import StripeCoreTestUtils
+@_spi(STP) @testable import StripePaymentSheet
 import UIKit
-@_spi(STP)@_spi(EmbeddedPaymentElementPrivateBeta) @testable import StripePaymentSheet
 
 class PaymentMethodRowButtonSnapshotTests: STPSnapshotTestCase {
 
@@ -48,7 +48,7 @@ class PaymentMethodRowButtonSnapshotTests: STPSnapshotTestCase {
         rowButton.state = .selected
         verify(rowButton)
     }
-    
+
     func testPaymentMethodRowButton_ignoresEmbeddedConfiguration() {
         var appearance = PaymentSheet.Appearance.default
         appearance.embeddedPaymentElement.row.style = .flatWithCheckmark
@@ -56,7 +56,7 @@ class PaymentMethodRowButtonSnapshotTests: STPSnapshotTestCase {
         rowButton.state = .selected
         verify(rowButton)
     }
-    
+
     func testPaymentMethodRowButton_newPaymentMethod_unselected() {
         let rowButton = RowButton.makeForPaymentMethodType(
             paymentMethodType: .instantDebits,
@@ -68,7 +68,7 @@ class PaymentMethodRowButtonSnapshotTests: STPSnapshotTestCase {
         )
         verify(rowButton)
     }
-    
+
     func testPaymentMethodRowButton_newPaymentMethod_withPromo_unselected() {
         let rowButton = RowButton.makeForPaymentMethodType(
             paymentMethodType: .instantDebits,

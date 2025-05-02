@@ -11,7 +11,7 @@ import SwiftUI
 
 /// A view model that manages an `EmbeddedPaymentElement`.
 @MainActor
-@_spi(EmbeddedPaymentElementPrivateBeta) public final class EmbeddedPaymentElementViewModel: ObservableObject {
+public final class EmbeddedPaymentElementViewModel: ObservableObject {
     enum ViewModelError: Error, CustomDebugStringConvertible {
         /// The `EmbeddedPaymentElementViewModel` has not been loaded. Call `load()` before attempting this operation.
         case notLoaded
@@ -174,7 +174,7 @@ extension EmbeddedPaymentElementViewModel: EmbeddedPaymentElementDelegate {
 }
 
 /// A SwiftUI view that displays payment methods. It can present a sheet to collect more details or display saved payment methods.
-@_spi(EmbeddedPaymentElementPrivateBeta) public struct EmbeddedPaymentElementView: View {
+public struct EmbeddedPaymentElementView: View {
     @ObservedObject private var viewModel: EmbeddedPaymentElementViewModel
 
     /// Initializes a new instance of `EmbeddedPaymentElementView`.
