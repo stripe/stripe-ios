@@ -373,6 +373,15 @@ extension PayWithLinkViewController {
             coordinator?.cancel()
         }
 
+        private func setBottomSheetExpanded(_ expanded: Bool) {
+            if #available(iOS 15.0, *) {
+                guard let sheetPresentationController else { return }
+                sheetPresentationController.animateChanges {
+                    sheetPresentationController.selectedDetentIdentifier = expanded ? .large : .medium
+                }
+            }
+        }
+
     }
 
 }
@@ -510,11 +519,15 @@ extension PayWithLinkViewController.WalletViewController: LinkPaymentMethodPicke
 // MARK: - LinkPaymentMethodPickerDelegate
 
 extension PayWithLinkViewController.WalletViewController: LinkPaymentMethodPickerDelegate {
+    func paymentMethodPicker(_ picker: LinkPaymentMethodPicker, headerTapped expanded: Bool) {
+        setBottomSheetExpanded(expanded)
+    }
 
     func paymentMethodPickerDidChange(_ pickerView: LinkPaymentMethodPicker) {
         viewModel.selectedPaymentMethodIndex = pickerView.selectedIndex
         if viewModel.selectedPaymentMethodIsSupported {
             pickerView.setExpanded(false, animated: true)
+            setBottomSheetExpanded(false)
         }
     }
 

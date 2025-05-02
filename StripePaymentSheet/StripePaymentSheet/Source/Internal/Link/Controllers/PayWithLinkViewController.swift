@@ -22,7 +22,10 @@ protocol PayWithLinkViewControllerDelegate: AnyObject {
         completion: @escaping (PaymentSheetResult, STPAnalyticsClient.DeferredIntentConfirmationType?) -> Void
     )
 
-    func payWithLinkViewControllerDidCancel(_ payWithLinkViewController: PayWithLinkViewController)
+    func payWithLinkViewControllerDidCancel(
+        _ payWithLinkViewController: PayWithLinkViewController,
+        presentingViewController: UIViewController?
+    )
 
     func payWithLinkViewControllerDidFinish(
         _ payWithLinkViewController: PayWithLinkViewController,
@@ -102,6 +105,7 @@ final class PayWithLinkViewController: UINavigationController {
     }
 
     private var context: Context
+    private weak var presentingController: UIViewController?
     private var accountContext: LinkAccountContext = .shared
 
     private var linkAccount: PaymentSheetLinkAccount? {
@@ -128,7 +132,8 @@ final class PayWithLinkViewController: UINavigationController {
         shouldOfferApplePay: Bool = false,
         shouldFinishOnClose: Bool = false,
         callToAction: ConfirmButton.CallToActionType? = nil,
-        analyticsHelper: PaymentSheetAnalyticsHelper
+        analyticsHelper: PaymentSheetAnalyticsHelper,
+        presentingController: UIViewController
     ) {
         self.init(
             context: Context(
@@ -139,12 +144,14 @@ final class PayWithLinkViewController: UINavigationController {
                 shouldFinishOnClose: shouldFinishOnClose,
                 callToAction: callToAction,
                 analyticsHelper: analyticsHelper
-            )
+            ),
+            presentingController: presentingController
         )
     }
 
-    private init(context: Context) {
+    private init(context: Context, presentingController: UIViewController) {
         self.context = context
+        self.presentingController = presentingController
         super.init(nibName: nil, bundle: nil)
 
         // Show loader
@@ -371,7 +378,7 @@ extension PayWithLinkViewController: PayWithLinkCoordinating {
     }
 
     func cancel() {
-        payWithLinkDelegate?.payWithLinkViewControllerDidCancel(self)
+        payWithLinkDelegate?.payWithLinkViewControllerDidCancel(self, presentingViewController: presentingViewController)
     }
 
     func accountUpdated(_ linkAccount: PaymentSheetLinkAccount) {
