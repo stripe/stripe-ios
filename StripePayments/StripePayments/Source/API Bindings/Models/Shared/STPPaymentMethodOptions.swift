@@ -42,6 +42,11 @@ import UIKit
         ) as? Self
     }
 
+    @_spi(STP) public func setupFutureUsage(for paymentMethodType: STPPaymentMethodType) -> String? {
+        let paymentMethodOptionsForPaymentMethodType: [String: Any]? = allResponseFields[paymentMethodType.identifier] as? [String: Any]
+        return paymentMethodOptionsForPaymentMethodType?["setup_future_usage"] as? String
+    }
+
 }
 // MARK: - card
 

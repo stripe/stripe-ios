@@ -293,7 +293,7 @@ extension PaymentSheet {
             let requirements: [PaymentMethodTypeRequirement]
 
             // We have different requirements depending on whether or not the intent is setting up the payment method for future use
-            if intent.isSettingUp {
+            if configuration.shouldReadPaymentMethodOptionsSetupFutureUsage ? intent.isSetupFutureUsageSet(for: paymentMethod) : intent.isSettingUp {
                 requirements = {
                     switch paymentMethod {
                     case .card:
