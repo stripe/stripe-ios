@@ -29,6 +29,7 @@ extension LinkPaymentMethodPicker {
             label.textColor = .linkSecondaryText
             label.adjustsFontForContentSizeCategory = true
             label.setContentCompressionResistancePriority(.required, for: .horizontal)
+            label.translatesAutoresizingMaskIntoConstraints = false
             return label
         }()
 
@@ -36,38 +37,26 @@ extension LinkPaymentMethodPicker {
             let label = UILabel()
             label.font = LinkUI.font(forTextStyle: .bodyEmphasized)
             label.textColor = .linkPrimaryText
-            label.textAlignment = .center
+            label.setContentHuggingPriority(.defaultLow, for: .horizontal)
             return label
-        }()
-
-        // Used to center-align the user email label.
-        private lazy var userEmailContainerView: UIView = {
-            let view = UIView()
-            userEmailLabel.translatesAutoresizingMaskIntoConstraints = false
-            view.addSubview(userEmailLabel)
-            NSLayoutConstraint.activate([
-                userEmailLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-                userEmailLabel.centerYAnchor.constraint(equalTo: view.centerYAnchor),
-                userEmailLabel.leadingAnchor.constraint(greaterThanOrEqualTo: view.leadingAnchor),
-                userEmailLabel.trailingAnchor.constraint(lessThanOrEqualTo: view.trailingAnchor),
-                userEmailLabel.topAnchor.constraint(equalTo: view.topAnchor),
-                userEmailLabel.bottomAnchor.constraint(equalTo: view.bottomAnchor),
-            ])
-            return view
         }()
 
         private lazy var stackView: UIStackView = {
             let stackView = UIStackView(arrangedSubviews: [
                 emailLabel,
-                userEmailContainerView,
+                userEmailLabel,
             ])
 
             stackView.axis = .horizontal
             stackView.spacing = Constants.contentSpacing
             stackView.distribution = .fill
-            stackView.alignment = .center
+            stackView.alignment = .leading
             stackView.directionalLayoutMargins = Constants.insets
             stackView.isLayoutMarginsRelativeArrangement = true
+
+            NSLayoutConstraint.activate([
+                emailLabel.widthAnchor.constraint(equalToConstant: LinkPaymentMethodPicker.widthForHeaderLabels)
+            ])
 
             return stackView
         }()

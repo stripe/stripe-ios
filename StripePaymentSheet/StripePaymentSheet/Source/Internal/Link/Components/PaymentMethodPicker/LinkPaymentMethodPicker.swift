@@ -84,6 +84,24 @@ final class LinkPaymentMethodPicker: UIView {
         }
     }
 
+    /// Calculates the maximum width required for the header labels.
+    static let widthForHeaderLabels: CGFloat = {
+        let font = LinkUI.font(forTextStyle: .bodyEmphasized)
+        func sizeOf(string: String) -> CGSize {
+            (string as NSString).size(withAttributes: [.font: font])
+        }
+
+        // LinkPaymentMethodPicker.EmailView.emailLabel
+        let emailLabel = String.Localized.email
+        let emailLabelSize = sizeOf(string: emailLabel)
+
+        // LinkPaymentMethodPicker.Header.payWithLabel
+        let paymentLabel = Header.Strings.payment
+        let paymentLabelSize = sizeOf(string: paymentLabel)
+
+        return max(emailLabelSize.width, paymentLabelSize.width)
+    }()
+
     private var needsDataReload: Bool = true
 
     private lazy var stackView: UIStackView = {
