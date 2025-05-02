@@ -27,7 +27,6 @@ extern NSString *const STPTestJSONSourceAlipay;
 extern NSString *const STPTestJSONSourceBancontact;
 extern NSString *const STPTestJSONSourceCard;
 extern NSString *const STPTestJSONSourceEPS;
-extern NSString *const STPTestJSONSourceGiropay;
 extern NSString *const STPTestJSONSourceiDEAL;
 extern NSString *const STPTestJSONSourceMultibanco;
 extern NSString *const STPTestJSONSourceP24;

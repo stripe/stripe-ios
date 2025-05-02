@@ -32,7 +32,6 @@ struct IntegrationView: View {
              .paypal:
             PaymentMethodView(integrationMethod: integrationMethod)
         case .oxxo,
-             .giropay,
              .bancontact,
              .eps,
              .grabpay,

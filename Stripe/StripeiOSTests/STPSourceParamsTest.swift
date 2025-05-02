@@ -34,9 +34,6 @@ class STPSourceParamsTest: XCTestCase {
         sourceParams.rawTypeString = "card"
         XCTAssertEqual(sourceParams.type, .card)
 
-        sourceParams.rawTypeString = "giropay"
-        XCTAssertEqual(sourceParams.type, .giropay)
-
         sourceParams.rawTypeString = "ideal"
         XCTAssertEqual(sourceParams.type, .iDEAL)
 
@@ -80,9 +77,6 @@ class STPSourceParamsTest: XCTestCase {
 
         sourceParams.type = .card
         XCTAssertEqual(sourceParams.rawTypeString, "card")
-
-        sourceParams.type = .giropay
-        XCTAssertEqual(sourceParams.rawTypeString, "giropay")
 
         sourceParams.type = .iDEAL
         XCTAssertEqual(sourceParams.rawTypeString, "ideal")

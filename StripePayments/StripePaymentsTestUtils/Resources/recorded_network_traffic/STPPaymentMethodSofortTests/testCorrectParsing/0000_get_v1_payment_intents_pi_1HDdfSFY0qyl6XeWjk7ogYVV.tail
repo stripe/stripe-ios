@@ -81,8 +81,7 @@ x-content-type-options: nosniff
   "receipt_email" : null,
   "payment_method_types" : [
     "card",
-    "sofort",
-    "giropay"
+    "sofort"
   ],
   "setup_future_usage" : null,
   "created" : 1596837842,

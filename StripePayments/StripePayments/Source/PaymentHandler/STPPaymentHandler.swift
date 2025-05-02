@@ -710,7 +710,6 @@ public class STPPaymentHandler: NSObject {
             .iDEAL,
             .FPX,
             .cardPresent,
-            .giropay,
             .EPS,
             .payPal,
             .przelewy24,

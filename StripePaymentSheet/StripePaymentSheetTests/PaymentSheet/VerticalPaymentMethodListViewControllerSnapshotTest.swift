@@ -35,7 +35,6 @@ final class VerticalPaymentMethodListViewControllerSnapshotTest: STPSnapshotTest
         .cashApp,
         .card,
         .EPS,
-        .giropay,
         .iDEAL,
         .klarna,
         .konbini,
