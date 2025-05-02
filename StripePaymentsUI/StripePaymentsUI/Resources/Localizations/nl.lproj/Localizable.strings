@@ -1,3 +1,11 @@
+"%1$@ Card" = "%1$@ betaalkaart";
+
+"%1$@ Credit" = "%1$@ creditcard";
+
+"%1$@ Debit" = "%1$@ debitcard";
+
+"%1$@ Prepaid" = "%1$@ prepaid";
+
 "%1$@ account ending in %2$@" = "%1$@-rekening die eindigt op %2$@";
 
 "%1$@ ending in %2$@" = "%1$@ eindigend op %2$@";

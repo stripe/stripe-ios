@@ -1,3 +1,11 @@
+"%1$@ Card" = "%1$@ Thẻ";
+
+"%1$@ Credit" = "%1$@ Ghi có";
+
+"%1$@ Debit" = "%1$@ Ghi nợ";
+
+"%1$@ Prepaid" = "%1$@ Trả trước";
+
 "%1$@ account ending in %2$@" = "Tài khoản %1$@ kết thúc bằng %2$@";
 
 "%1$@ ending in %2$@" = "%1$@ kết thúc bằng %2$@";

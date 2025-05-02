@@ -1,3 +1,11 @@
+"%1$@ Card" = "%1$@ kaart";
+
+"%1$@ Credit" = "%1$@ krediit";
+
+"%1$@ Debit" = "%1$@ deebet";
+
+"%1$@ Prepaid" = "%1$@ ettemakstud";
+
 "%1$@ account ending in %2$@" = "%1$@ konto lõpuga %2$@";
 
 "%1$@ ending in %2$@" = "%1$@, lõpeb nr-ga %2$@";
