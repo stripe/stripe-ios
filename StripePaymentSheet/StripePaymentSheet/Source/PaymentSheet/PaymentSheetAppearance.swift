@@ -104,7 +104,7 @@ public extension PaymentSheet {
 
             /// The border color used for selected buttons and tabs in PaymentSheet
             /// - Note: If `nil`, defaults to  `appearance.colors.primary`
-             public var selectedComponentBorder: UIColor?
+            public var selectedComponentBorder: UIColor?
 
             /// The color of the divider lines used inside inputs, tabs, and other components
             public var componentDivider: UIColor = .systemGray3
@@ -233,9 +233,9 @@ public extension PaymentSheet {
     }
 }
 
- public extension PaymentSheet.Appearance {
+public extension PaymentSheet.Appearance {
     /// Describes the appearance of the Embedded Mobile Payment Element
-     struct EmbeddedPaymentElement: Equatable {
+    struct EmbeddedPaymentElement: Equatable {
 
         /// Creates a `PaymentSheet.Appearance.EmbeddedPaymentElement` with default values
         public init() {}
