@@ -57,10 +57,13 @@ final class STPApplePayContext_PaymentSheetTest: XCTestCase {
     }
 
     func testCreatePaymentRequest_PaymentIntentWithPMOSetupFutureUsage() {
+        var config = PaymentSheet.Configuration._testValue_MostPermissive()
+        config.applePay = applePayConfiguration
+        config.shouldReadPaymentMethodOptionsSetupFutureUsage = true
         let intent = Intent._testPaymentIntent(paymentMethodTypes: [.card], paymentMethodOptionsSetupFutureUsage: [.card: "off_session"])
         let deferredIntent = Intent.deferredIntent(intentConfig: .init(mode: .payment(amount: 2345, currency: "USD", paymentMethodOptions: PaymentSheet.IntentConfiguration.Mode.PaymentMethodOptions(setupFutureUsageValues: [.card: .offSession])), confirmHandler: dummyDeferredConfirmHandler))
         for intent in [intent, deferredIntent] {
-            let sut = STPApplePayContext.createPaymentRequest(intent: intent, configuration: configuration, applePay: applePayConfiguration)
+            let sut = STPApplePayContext.createPaymentRequest(intent: intent, configuration: config, applePay: applePayConfiguration)
             XCTAssertEqual(sut.paymentSummaryItems[0].amount, 23.45)
             XCTAssertEqual(sut.paymentSummaryItems[0].type, .final)
             XCTAssertEqual(sut.currencyCode, "USD")
@@ -75,10 +78,13 @@ final class STPApplePayContext_PaymentSheetTest: XCTestCase {
     }
 
     func testCreatePaymentRequest_PaymentIntentWithTopLevelSetupFutureUsagePMOSetupFutureUsageNone() {
+        var config = PaymentSheet.Configuration._testValue_MostPermissive()
+        config.applePay = applePayConfiguration
+        config.shouldReadPaymentMethodOptionsSetupFutureUsage = true
         let intent = Intent._testPaymentIntent(paymentMethodTypes: [.card], setupFutureUsage: .offSession, paymentMethodOptionsSetupFutureUsage: [.card: "none"])
         let deferredIntent = Intent.deferredIntent(intentConfig: .init(mode: .payment(amount: 2345, currency: "USD", setupFutureUsage: .offSession, paymentMethodOptions: PaymentSheet.IntentConfiguration.Mode.PaymentMethodOptions(setupFutureUsageValues: [.card: .none])), confirmHandler: dummyDeferredConfirmHandler))
         for intent in [intent, deferredIntent] {
-            let sut = STPApplePayContext.createPaymentRequest(intent: intent, configuration: configuration, applePay: applePayConfiguration)
+            let sut = STPApplePayContext.createPaymentRequest(intent: intent, configuration: config, applePay: applePayConfiguration)
             XCTAssertEqual(sut.paymentSummaryItems[0].amount, 23.45)
             XCTAssertEqual(sut.paymentSummaryItems[0].type, .final)
             XCTAssertEqual(sut.currencyCode, "USD")
