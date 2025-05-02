@@ -73,7 +73,8 @@ extension PaymentSheet {
             configuration: configuration,
             shouldOfferApplePay: shouldOfferApplePay,
             shouldFinishOnClose: shouldFinishOnClose,
-            analyticsHelper: self.analyticsHelper
+            analyticsHelper: self.analyticsHelper,
+            presentingController: presentingController
         )
 
         payWithLinkVC.payWithLinkDelegate = self
@@ -92,7 +93,9 @@ extension PaymentSheet {
         }
         payWithLinkVC.isModalInPresentation = true
 
-        presentingController.present(payWithLinkVC, animated: true, completion: completion)
+        bottomSheetViewController.dismiss(animated: true) {
+            presentingController.present(payWithLinkVC, animated: true, completion: completion)
+        }
     }
 
     func verifyLinkSessionIfNeeded(
@@ -155,11 +158,21 @@ extension PaymentSheet: PayWithLinkViewControllerDelegate {
             self.analyticsHelper.logPayment(paymentOption: paymentOption, result: result, deferredIntentConfirmationType: confirmationType)
 
             completion(result, confirmationType)
+            payWithLinkViewController.dismiss(animated: true)
         }
     }
 
-    func payWithLinkViewControllerDidCancel(_ payWithLinkViewController: PayWithLinkViewController) {
-        payWithLinkViewController.dismiss(animated: true)
+    func payWithLinkViewControllerDidCancel(
+        _ payWithLinkViewController: PayWithLinkViewController,
+        presentingViewController: UIViewController?
+    ) {
+        payWithLinkViewController.dismiss(animated: true) { [weak self] in
+            guard let self else { return }
+            presentingViewController?.presentAsBottomSheet(
+                bottomSheetViewController,
+                appearance: self.configuration.appearance
+            )
+        }
     }
 
     func payWithLinkViewControllerDidFinish(

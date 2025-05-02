@@ -50,8 +50,13 @@ final class PayWithNativeLinkController {
         self.selfRetainer = self
         self.completion = completion
 
-        let payWithLinkViewController = PayWithLinkViewController(intent: intent,
-                                                                  elementsSession: elementsSession, configuration: configuration, analyticsHelper: analyticsHelper)
+        let payWithLinkViewController = PayWithLinkViewController(
+            intent: intent,
+            elementsSession: elementsSession,
+            configuration: configuration,
+            analyticsHelper: analyticsHelper,
+            presentingController: presentingController
+        )
         payWithLinkViewController.payWithLinkDelegate = self
         payWithLinkViewController.modalPresentationStyle = UIDevice.current.userInterfaceIdiom == .pad
             ? .formSheet
@@ -85,7 +90,7 @@ extension PayWithNativeLinkController: PayWithLinkViewControllerDelegate {
         )
     }
 
-    func payWithLinkViewControllerDidCancel(_ payWithLinkViewController: PayWithLinkViewController) {
+    func payWithLinkViewControllerDidCancel(_ payWithLinkViewController: PayWithLinkViewController, presentingViewController: UIViewController?) {
         payWithLinkViewController.dismiss(animated: true)
         completion?(.canceled, nil)
         selfRetainer = nil
