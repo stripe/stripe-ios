@@ -96,7 +96,7 @@ final class PayWithLinkViewController: UINavigationController {
             self.configuration = configuration
             self.shouldOfferApplePay = shouldOfferApplePay
             self.shouldFinishOnClose = shouldFinishOnClose
-            self.callToAction = callToAction ?? intent.callToAction
+            self.callToAction = callToAction ?? .makeDefaultTypeForLink(intent: intent)
             self.analyticsHelper = analyticsHelper
         }
     }

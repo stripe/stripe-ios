@@ -63,9 +63,11 @@ extension PayWithLinkViewController {
             return paymentMethods[selectedPaymentMethodIndex]
         }
 
-        /// Whether or not the view should show the instant debit mandate text.
-        var shouldShowInstantDebitMandate: Bool {
+        /// Whether or not the view should show the mandate text.
+        var shouldShowMandate: Bool {
             switch selectedPaymentMethod?.details {
+            case .card:
+                return context.intent.isSettingUp
             case .bankAccount:
                 // Instant debit mandate should be shown when paying with bank account.
                 return true

@@ -1,5 +1,5 @@
 //
-//  LinkInstantDebitMandateView.swift
+//  LinkMandateView.swift
 //  StripePaymentSheet
 //
 //  Created by Ramon Torres on 2/17/22.
@@ -11,20 +11,20 @@
 @_spi(STP) import StripeUICore
 import UIKit
 
-protocol LinkInstantDebitMandateViewDelegate: AnyObject {
+protocol LinkMandateViewDelegate: AnyObject {
     /// Called when the user taps on a link.
     ///
     /// - Parameters:
     ///   - mandateView: The view that the user interacted with.
     ///   - url: URL of the link.
-    func instantDebitMandateView(_ mandateView: LinkInstantDebitMandateView, didTapOnLinkWithURL url: URL)
+    func mandateView(_ mandateView: LinkMandateView, didTapOnLinkWithURL url: URL)
 }
 
 // TODO(ramont): extract common code with `LinkLegalTermsView`.
 
 /// For internal SDK use only
-@objc(STP_Internal_LinkInstantDebitMandateViewDelegate)
-final class LinkInstantDebitMandateView: UIView {
+@objc(STP_Internal_LinkMandateViewDelegate)
+final class LinkMandateView: UIView {
     struct Constants {
         static let lineHeight: CGFloat = 1.5
     }
@@ -33,29 +33,22 @@ final class LinkInstantDebitMandateView: UIView {
         "terms": URL(string: "https://link.com/terms/ach-authorization")!
     ]
 
-    weak var delegate: LinkInstantDebitMandateViewDelegate?
+    weak var delegate: LinkMandateViewDelegate?
+    let intent: Intent
 
     private lazy var textView: UITextView = {
         let textView = UITextView()
-        textView.isScrollEnabled = false
-        textView.isEditable = false
-        textView.backgroundColor = .clear
-        textView.attributedText = formattedLegalText()
-        textView.textColor = .linkSecondaryText
-        textView.textAlignment = .center
-        textView.textContainerInset = .zero
-        textView.textContainer.lineFragmentPadding = 0
+        textView.attributedText = formattedLegalTextForBank()
         textView.delegate = self
-        textView.clipsToBounds = false
-        textView.adjustsFontForContentSizeCategory = true
-        textView.linkTextAttributes = [
-            .foregroundColor: UIColor.linkBrandDark
-        ]
-        textView.font = LinkUI.font(forTextStyle: .caption)
+        textView.applyStyle()
         return textView
     }()
 
-    init(delegate: LinkInstantDebitMandateViewDelegate? = nil) {
+    init(
+        intent: Intent,
+        delegate: LinkMandateViewDelegate? = nil
+    ) {
+        self.intent = intent
         super.init(frame: .zero)
         self.delegate = delegate
         addAndPinSubview(textView)
@@ -65,12 +58,37 @@ final class LinkInstantDebitMandateView: UIView {
         fatalError("init(coder:) has not been implemented")
     }
 
-    private func formattedLegalText() -> NSAttributedString {
+    func update(
+        for type: ConsumerPaymentDetails.DetailsType,
+        merchant: String
+    ) {
+        switch type {
+        case .card:
+            textView.attributedText = intent.isSettingUp ? formattedLegalTextForCard(with: merchant) : nil
+        case .bankAccount:
+            textView.attributedText = formattedLegalTextForBank()
+        default:
+            break
+        }
+
+        textView.applyStyle()
+    }
+
+    private func formattedLegalTextForBank() -> NSAttributedString {
         let string = String.Localized.bank_continue_mandate_text
-
         let formattedString = STPStringUtils.applyLinksToString(template: string, links: links)
+        return formattedLegalText(formattedString)
+    }
 
+    private func formattedLegalTextForCard(with merchant: String) -> NSAttributedString {
+        let string = String(format: .Localized.by_providing_your_card_information_text, merchant)
+        let formattedString = NSMutableAttributedString(string: string)
+        return formattedLegalText(formattedString)
+    }
+
+    private func formattedLegalText(_ formattedString: NSMutableAttributedString) -> NSAttributedString {
         let paragraphStyle = NSMutableParagraphStyle()
+        paragraphStyle.alignment = .center
         paragraphStyle.lineSpacing = LinkUI.lineSpacing(
             fromRelativeHeight: Constants.lineHeight,
             textStyle: .caption
@@ -80,10 +98,9 @@ final class LinkInstantDebitMandateView: UIView {
 
         return formattedString
     }
-
 }
 
-extension LinkInstantDebitMandateView: UITextViewDelegate {
+extension LinkMandateView: UITextViewDelegate {
 
     #if !os(visionOS)
     func textView(
@@ -93,11 +110,30 @@ extension LinkInstantDebitMandateView: UITextViewDelegate {
         interaction: UITextItemInteraction
     ) -> Bool {
         if interaction == .invokeDefaultAction {
-            delegate?.instantDebitMandateView(self, didTapOnLinkWithURL: URL)
+            delegate?.mandateView(self, didTapOnLinkWithURL: URL)
         }
 
         return false
     }
     #endif
 
+}
+
+private extension UITextView {
+
+    func applyStyle() {
+        isScrollEnabled = false
+        isEditable = false
+        backgroundColor = .clear
+        textColor = .linkSecondaryText
+        textAlignment = .center
+        textContainerInset = .zero
+        textContainer.lineFragmentPadding = 0
+        clipsToBounds = false
+        adjustsFontForContentSizeCategory = true
+        linkTextAttributes = [
+            .foregroundColor: UIColor.linkBrandDark
+        ]
+        font = LinkUI.font(forTextStyle: .caption)
+    }
 }
