@@ -72,6 +72,8 @@ class RowButton: UIView, EventHandler {
     // When true, this `RowButton` is being used in the embedded payment element, otherwise it is in use in PaymentSheet
     let isEmbedded: Bool
 
+    var linkConfirmOption: PaymentSheet.LinkConfirmOption?
+
     // MARK: Initializers
 
     init(
@@ -115,10 +117,32 @@ class RowButton: UIView, EventHandler {
         accessibilityHelperView.accessibilityLabel = text
         accessibilityHelperView.isAccessibilityElement = true
         updateAccessibilityTraits()
+
+        if type == .link {
+            LinkAccountContext.shared.addObserver(self, selector: #selector(onAccountChange(_:)))
+        }
+    }
+
+    @objc
+    func onAccountChange(_ notification: Notification) {
+        DispatchQueue.main.async { [weak self] in
+            guard let self else { return }
+            let linkAccount = notification.object as? PaymentSheetLinkAccount
+            self.sublabel.text = self.linkConfirmOption?.paymentSheetLabel ?? linkAccount?.email ?? String.Localized.link_subtitle_text
+
+            if linkAccount == nil {
+                // The user logged out
+                self.linkConfirmOption = nil
+            }
+        }
     }
 
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+
+    deinit {
+        LinkAccountContext.shared.removeObserver(self)
     }
 
     // MARK: Overrides
@@ -501,10 +525,37 @@ extension RowButton {
         return RowButton.create(appearance: appearance, type: .applePay, imageView: imageView, text: String.Localized.apple_pay, isEmbedded: isEmbedded, didTap: didTap)
     }
 
-    static func makeForLink(appearance: PaymentSheet.Appearance, isEmbedded: Bool = false, didTap: @escaping DidTapClosure) -> RowButton {
+    static func makeForLink(
+        appearance: PaymentSheet.Appearance,
+        isEmbedded: Bool = false,
+        didTapChange: @escaping () -> Void = {},
+        didTap: @escaping DidTapClosure
+    ) -> RowButton {
         let imageView = UIImageView(image: Image.link_icon.makeImage())
         imageView.contentMode = .scaleAspectFit
+
+        let accessoryView = RightAccessoryButton(
+            accessoryType: .change,
+            appearance: appearance,
+            didTap: didTapChange
+        )
+        accessoryView.isHidden = true
+
+//        let linkAccount = LinkAccountContext.shared.account
+//        let subtext = linkAccount?.email ?? .Localized.link_subtitle_text
+
         let button = RowButton.create(appearance: appearance, type: .link, imageView: imageView, text: STPPaymentMethodType.link.displayName, subtext: .Localized.link_subtitle_text, isEmbedded: isEmbedded, didTap: didTap)
+
+//        let button = RowButton.create(
+//            appearance: appearance,
+//            type: .link,
+//            imageView: imageView,
+//            text: STPPaymentMethodType.link.displayName,
+//            subtext: subtext,
+//            accessoryView: accessoryView,
+//            isEmbedded: isEmbedded,
+//            didTap: didTap
+//        )
         button.accessibilityHelperView.accessibilityLabel = String.Localized.pay_with_link
         return button
     }

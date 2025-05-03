@@ -65,6 +65,7 @@ extension EmbeddedPaymentElement {
             initialSelectedRowChangeButtonState: previousSelectedRowChangeButtonState,
             paymentMethodTypes: loadResult.paymentMethodTypes,
             savedPaymentMethod: loadResult.savedPaymentMethods.first,
+            configuration: configuration,
             appearance: configuration.appearance,
             shouldShowApplePay: shouldShowApplePay,
             shouldShowLink: shouldShowLink,
@@ -76,7 +77,9 @@ extension EmbeddedPaymentElement {
             currency: loadResult.intent.currency,
             incentive: loadResult.elementsSession.incentive,
             analyticsHelper: analyticsHelper,
-            delegate: delegate
+            delegate: delegate,
+            elementsSession: loadResult.elementsSession,
+            intent: loadResult.intent
         )
     }
 

@@ -38,6 +38,7 @@ class EmbeddedPaymentMethodsView: UIView {
         return super.intrinsicContentSize
     }
 
+    private let configuration: PaymentElementConfiguration
     private let appearance: PaymentSheet.Appearance
     private let customer: PaymentSheet.CustomerConfiguration?
     private let currency: String?
@@ -78,6 +79,8 @@ class EmbeddedPaymentMethodsView: UIView {
     private let mandateProvider: MandateTextProvider
     private let shouldShowMandate: Bool
     private let analyticsHelper: PaymentSheetAnalyticsHelper
+    private let intent: Intent
+    private let elementsSession: STPElementsSession
     private let incentive: PaymentMethodIncentive?
     /// A bit hacky; this is the mandate text for the given payment method, *regardless* of whether it is shown in the view.
     /// It'd be better if the source of truth of mandate text was not the view and instead an independent `func mandateText(...) -> NSAttributedString` function, but this is hard b/c US Bank Account doesn't show mandate in certain states.
@@ -111,6 +114,7 @@ class EmbeddedPaymentMethodsView: UIView {
         initialSelectedRowChangeButtonState: (shouldShowChangeButton: Bool, sublabel: String?)?,
         paymentMethodTypes: [PaymentSheet.PaymentMethodType],
         savedPaymentMethod: STPPaymentMethod?,
+        configuration: PaymentElementConfiguration,
         appearance: PaymentSheet.Appearance,
         shouldShowApplePay: Bool,
         shouldShowLink: Bool,
@@ -122,8 +126,13 @@ class EmbeddedPaymentMethodsView: UIView {
         currency: String? = nil,
         incentive: PaymentMethodIncentive? = nil,
         analyticsHelper: PaymentSheetAnalyticsHelper,
-        delegate: EmbeddedPaymentMethodsViewDelegate? = nil
+        delegate: EmbeddedPaymentMethodsViewDelegate? = nil,
+        elementsSession: STPElementsSession,
+        intent: Intent
     ) {
+        self.intent = intent
+        self.elementsSession = elementsSession
+        self.configuration = configuration
         self.appearance = appearance
         self.mandateProvider = mandateProvider
         self.shouldShowMandate = shouldShowMandate
@@ -164,9 +173,20 @@ class EmbeddedPaymentMethodsView: UIView {
         }
 
         if shouldShowLink {
-            let linkRowButton = RowButton.makeForLink(appearance: appearance, isEmbedded: true) { [weak self] rowButton in
+            let linkRowButton = RowButton.makeForLink(
+                appearance: appearance,
+                isEmbedded: true,
+                didTapChange: showLink
+            ) { [weak self] rowButton in
                 CustomerPaymentOption.setDefaultPaymentMethod(.link, forCustomer: customer?.id)
                 self?.didTap(rowButton: rowButton)
+
+                let useNativeLink = deviceCanUseNativeLink(elementsSession: elementsSession, configuration: configuration)
+                if PaymentSheet.LinkFeatureFlags.enableLinkEmbeddedChanges, useNativeLink, rowButton.linkConfirmOption == nil {
+                    // Only show the Link UI if we don't already have a selection;
+                    // in that case, we display a 'Change' button as the right accessory view.
+                    self?.showLink()
+                }
             }
             rowButtons.append(linkRowButton)
         }
@@ -285,6 +305,28 @@ class EmbeddedPaymentMethodsView: UIView {
         }
     }
 
+    func showLink() {
+        let linkRowButton = rowButtons.first(where: { $0.type == .link })
+        let confirmOption = linkRowButton?.linkConfirmOption
+
+        var selectedPaymentDetailsID: String?
+        if case .withPaymentDetails(_, let details, _, _) = confirmOption {
+            selectedPaymentDetailsID = details.stripeID
+        }
+
+        let presentingViewController = findViewController()
+        presentingViewController?.presentNativeLink(
+            selectedPaymentDetailsID: selectedPaymentDetailsID,
+            configuration: configuration,
+            intent: intent,
+            elementsSession: elementsSession,
+            analyticsHelper: analyticsHelper,
+            callback: { [weak self] confirmOption, shouldReturnToPaymentSheet in
+                self?.updateLinkRow(with: confirmOption, resetPaymentSelection: shouldReturnToPaymentSheet)
+            }
+        )
+    }
+
     // MARK: Tap handling
     func didTap(rowButton: RowButton) {
         self.selectedRowButton = rowButton
@@ -303,12 +345,37 @@ class EmbeddedPaymentMethodsView: UIView {
         }
 
         var sublabel = String.Localized.link_subtitle_text
-
-        if let linkAccount, linkAccount.isRegistered {
+        if let confirmOption = linkRowButton.linkConfirmOption {
+            sublabel = confirmOption.paymentSheetLabel
+        } else if let linkAccount, linkAccount.isRegistered {
             sublabel = linkAccount.email
         }
 
         linkRowButton.setSublabel(text: sublabel, animated: animated)
+    }
+
+    func updateLinkRow(
+        with confirmOption: PaymentSheet.LinkConfirmOption?,
+        resetPaymentSelection: Bool
+    ) {
+        guard let linkRowButton = rowButtons.first(where: { $0.type == .link }) else {
+            return
+        }
+
+        if let confirmOption {
+            linkRowButton.linkConfirmOption = confirmOption
+            linkRowButton.accessoryView?.isHidden = false
+        }
+
+        if resetPaymentSelection {
+            linkRowButton.linkConfirmOption = nil
+            linkRowButton.accessoryView?.isHidden = true
+        }
+
+        let sublabel = linkRowButton.linkConfirmOption?.paymentSheetLabel ?? .Localized.link_subtitle_text
+        if sublabel != linkRowButton.sublabel.text {
+            linkRowButton.setSublabel(text: sublabel)
+        }
     }
 
     func updateSavedPaymentMethodRow(_ savedPaymentMethods: [STPPaymentMethod],
@@ -548,6 +615,18 @@ extension RowButton {
         self.layoutIfNeeded()
         if shouldClearSublabel {
             setSublabel(text: nil)
+        }
+    }
+}
+
+private extension UIView {
+    func findViewController() -> UIViewController? {
+        if let nextResponder = self.next as? UIViewController {
+            return nextResponder
+        } else if let nextResponder = self.next as? UIView {
+            return nextResponder.findViewController()
+        } else {
+            return nil
         }
     }
 }
