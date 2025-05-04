@@ -18,6 +18,7 @@ import PassKit
     /// PKPaymentRequest or the address fragment provided by the last call to paymentAuthorizationController:
     /// didSelectShippingContact:completion:.
     /// You must invoke the completion block with an updated array of PKPaymentSummaryItem objects.
+    @MainActor @preconcurrency
     @objc(applePayContext:didSelectShippingMethod:handler:)
     optional func applePayContext(
         _ context: STPApplePayContext,
@@ -29,6 +30,7 @@ import PassKit
     /// address and must invoke the completion block with an updated array of PKPaymentSummaryItem objects.
     /// @note To maintain privacy, the shipping information is anonymized. For example, in the United States it only includes the city, state, and zip code. This provides enough information to calculate shipping costs, without revealing sensitive information until the user actually approves the purchase.
     /// Receive full shipping information in the paymentInformation passed to `applePayContext:didCreatePaymentMethod:paymentInformation:completion:`
+    @MainActor @preconcurrency
     @objc optional func applePayContext(
         _ context: STPApplePayContext,
         didSelectShippingContact contact: PKContact,
@@ -38,6 +40,7 @@ import PassKit
     /// Called when the user has entered or updated a coupon code. You should validate the
     /// coupon and must invoke the completion block with a PKPaymentRequestCouponCodeUpdate object.
     @available(iOS 15.0, *)
+    @MainActor @preconcurrency
     @objc optional func applePayContext(
         _ context: STPApplePayContext,
         didChangeCouponCode couponCode: String,
@@ -51,6 +54,7 @@ import PassKit
     /// See https://developer.apple.com/documentation/passkit/pkpaymentauthorizationresult for all configuration options.
     /// This method is optional. If you implement this, you must call the handler block with the PKPaymentAuthorizationResult on the main queue.
     /// WARNING: If you do not call the completion handler, your app will hang until the Apple Pay sheet times out.
+    @MainActor @preconcurrency
     @objc optional func applePayContext(
         _ context: STPApplePayContext,
         willCompleteWithResult authorizationResult: PKPaymentAuthorizationResult,
@@ -68,6 +72,7 @@ public protocol ApplePayContextDelegate: _stpinternal_STPApplePayContextDelegate
     ///   - paymentInformation:      The underlying PKPayment created by Apple Pay.
     /// If you create the PaymentIntent with confirmation_method=manual, you can collect shipping information using its `shippingContact` and `shippingMethod` properties.
     ///   - completion:                        Call this with the PaymentIntent or SetupIntent client secret, or the error that occurred creating the PaymentIntent or SetupIntent.
+    @MainActor @preconcurrency
     func applePayContext(
         _ context: STPApplePayContext,
         didCreatePaymentMethod paymentMethod: StripeAPI.PaymentMethod,
@@ -80,6 +85,7 @@ public protocol ApplePayContextDelegate: _stpinternal_STPApplePayContextDelegate
     /// - Parameters:
     ///   - status: The status of the payment
     ///   - error: The error that occurred, if any.
+    @MainActor @preconcurrency
     func applePayContext(
         _ context: STPApplePayContext,
         didCompleteWith status: STPApplePayContext.PaymentStatus,
