@@ -16,7 +16,7 @@ class CVCReconfirmationViewController: UIViewController {
     let onCancel: ((CVCReconfirmationViewController) -> Void)
 
     // MARK: - Views
-    lazy var navigationBar: SheetNavigationBar = {
+    lazy var sheetNavigationBar: SheetNavigationBar? = {
         let navBar = SheetNavigationBar(isTestMode: configuration.apiClient.isTestmode,
                                         appearance: configuration.appearance)
         navBar.delegate = self
@@ -84,7 +84,7 @@ class CVCReconfirmationViewController: UIViewController {
     // MARK: - UIViewController
     override func viewDidLoad() {
         super.viewDidLoad()
-        navigationBar.setStyle(.close(showAdditionalButton: false))
+        sheetNavigationBar?.setStyle(.close(showAdditionalButton: false))
         self.view.backgroundColor = configuration.appearance.colors.background
         // One stack view contains all our subviews
         let stackView = UIStackView(arrangedSubviews: [

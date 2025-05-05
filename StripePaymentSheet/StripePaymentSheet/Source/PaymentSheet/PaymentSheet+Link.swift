@@ -77,13 +77,11 @@ extension PaymentSheet {
         )
 
         payWithLinkVC.payWithLinkDelegate = self
-
-        if UIDevice.current.userInterfaceIdiom == .pad {
-            payWithLinkVC.modalPresentationStyle = .formSheet
-        }
-        payWithLinkVC.isModalInPresentation = true
-
-        presentingController.present(payWithLinkVC, animated: true, completion: completion)
+        presentingController.presentAsBottomSheet(
+            payWithLinkVC.bottomSheetViewController,
+            appearance: configuration.appearance,
+            completion: completion
+        )
     }
 
     func verifyLinkSessionIfNeeded(

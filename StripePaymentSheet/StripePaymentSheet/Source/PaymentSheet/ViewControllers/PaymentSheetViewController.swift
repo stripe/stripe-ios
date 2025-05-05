@@ -80,7 +80,7 @@ class PaymentSheetViewController: UIViewController, PaymentSheetViewControllerPr
     }()
 
     private let savedPaymentOptionsViewController: SavedPaymentOptionsViewController
-    internal lazy var navigationBar: SheetNavigationBar = {
+    internal lazy var sheetNavigationBar: SheetNavigationBar? = {
         let navBar = SheetNavigationBar(
             isTestMode: configuration.apiClient.isTestmode,
             appearance: configuration.appearance
@@ -258,7 +258,7 @@ class PaymentSheetViewController: UIViewController, PaymentSheetViewControllerPr
     // MARK: Private Methods
 
     private func configureNavBar() {
-        navigationBar.setStyle(
+        sheetNavigationBar?.setStyle(
             {
                 switch mode {
                 case .selectingSaved:
@@ -266,7 +266,7 @@ class PaymentSheetViewController: UIViewController, PaymentSheetViewControllerPr
                         self.configureEditSavedPaymentMethodsButton()
                         return .close(showAdditionalButton: true)
                     } else {
-                        self.navigationBar.additionalButton.removeTarget(
+                        self.sheetNavigationBar?.additionalButton.removeTarget(
                             self,
                             action: #selector(didSelectEditSavedPaymentMethodsButton),
                             for: .touchUpInside
@@ -274,7 +274,7 @@ class PaymentSheetViewController: UIViewController, PaymentSheetViewControllerPr
                         return .close(showAdditionalButton: false)
                     }
                 case .addingNew:
-                    self.navigationBar.additionalButton.removeTarget(
+                    self.sheetNavigationBar?.additionalButton.removeTarget(
                         self,
                         action: #selector(didSelectEditSavedPaymentMethodsButton),
                         for: .touchUpInside
@@ -298,7 +298,7 @@ class PaymentSheetViewController: UIViewController, PaymentSheetViewControllerPr
         }
         view.isUserInteractionEnabled = shouldEnableUserInteraction
         isDismissable = !isPaymentInFlight
-        navigationBar.isUserInteractionEnabled = !isPaymentInFlight
+        sheetNavigationBar?.isUserInteractionEnabled = !isPaymentInFlight
 
         // Update our views (starting from the top of the screen):
         configureNavBar()
@@ -603,8 +603,8 @@ extension PaymentSheetViewController: SavedPaymentOptionsViewControllerDelegate 
         } else {
             buyButton.update(state: buyButtonEnabledForSavedPayments())
         }
-        navigationBar.additionalButton.configureCommonEditButton(isEditingPaymentMethods: savedPaymentOptionsViewController.isRemovingPaymentMethods, appearance: configuration.appearance)
-        navigationBar.additionalButton.addTarget(
+        sheetNavigationBar?.additionalButton.configureCommonEditButton(isEditingPaymentMethods: savedPaymentOptionsViewController.isRemovingPaymentMethods, appearance: configuration.appearance)
+        sheetNavigationBar?.additionalButton.addTarget(
             self,
             action: #selector(didSelectEditSavedPaymentMethodsButton),
             for: .touchUpInside
