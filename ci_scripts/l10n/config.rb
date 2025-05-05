@@ -42,6 +42,7 @@ LANGUAGES = %w[
   sk-SK
   sl-SI
   sv
+  th
   tr
   vi
   zh-Hans

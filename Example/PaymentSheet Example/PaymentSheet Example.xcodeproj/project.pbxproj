@@ -152,6 +152,8 @@
 		0F208CB855923E7FD7BB0DC3 /* PaymentSheetLocalizationScreenshotGenerator-Debug.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "PaymentSheetLocalizationScreenshotGenerator-Debug.xcconfig"; sourceTree = "<group>"; };
 		0F4C1FBB3402C074F4F21E29 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		1261A6BDCDB7E81D08F137F0 /* PaymentSheetTestPlaygroundSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentSheetTestPlaygroundSettings.swift; sourceTree = "<group>"; };
+		1405897B2DC90B2C00DF2EAA /* th */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = th; path = th.lproj/LaunchScreen.strings; sourceTree = "<group>"; };
+		1405897C2DC90B2C00DF2EAA /* th */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = th; path = th.lproj/Main.strings; sourceTree = "<group>"; };
 		16547B41C80B97FC2EFD0798 /* StripeFinancialConnections.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = StripeFinancialConnections.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		179D026BA4F5F12EA9EB6F6F /* ExampleCustomDeferredCheckoutViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExampleCustomDeferredCheckoutViewController.swift; sourceTree = "<group>"; };
 		1B294B57F4692E283110E205 /* CustomerSheetUITest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomerSheetUITest.swift; sourceTree = "<group>"; };
@@ -618,6 +620,7 @@
 				"zh-HK",
 				"zh-Hans",
 				"zh-Hant",
+				th,
 			);
 			mainGroup = C9D5B927CC2F83061D0651E5;
 			packageReferences = (
@@ -792,6 +795,7 @@
 				4A52C114362A90EF8A5BBA1A /* zh-Hans */,
 				9D47127A1AAC9FAC41819950 /* zh-Hant */,
 				B33D2066D7BA7984CABC23A5 /* zh-HK */,
+				1405897B2DC90B2C00DF2EAA /* th */,
 			);
 			name = LaunchScreen.storyboard;
 			sourceTree = "<group>";
@@ -840,6 +844,7 @@
 				9B26EE02630FA57C9321F8C9 /* zh-Hans */,
 				5E4DD63AD5E9B8153E04EF7C /* zh-Hant */,
 				1BD9252F1B15953FED102F56 /* zh-HK */,
+				1405897C2DC90B2C00DF2EAA /* th */,
 			);
 			name = Main.storyboard;
 			sourceTree = "<group>";

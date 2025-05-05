@@ -1296,6 +1296,7 @@
 				"zh-HK",
 				"zh-Hans",
 				"zh-Hant",
+				"th",
 			);
 			mainGroup = E4802964A9471C082CE01BA9;
 			packageReferences = (

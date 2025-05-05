@@ -331,6 +331,7 @@
 		110A0200099F462B576F2ED4 /* VerificationPageDataName.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VerificationPageDataName.swift; sourceTree = "<group>"; };
 		111A55FA39B400E6E87A5175 /* IdentityMLModelLoaderMock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IdentityMLModelLoaderMock.swift; sourceTree = "<group>"; };
 		12F4C291ACBB73ED95504131 /* PhoneOtpViewControllerTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhoneOtpViewControllerTest.swift; sourceTree = "<group>"; };
+		1405894E2DC8579A00DF2EAA /* th */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = th; path = th.lproj/Localizable.strings; sourceTree = "<group>"; };
 		14244B002D9F37B56BE8D4F4 /* VerificationPageDataFace.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VerificationPageDataFace.swift; sourceTree = "<group>"; };
 		149453E1854C9566CC8D8484 /* ImageScanner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageScanner.swift; sourceTree = "<group>"; };
 		14C231755842F322A25160ED /* StripeCameraCoreTestUtils.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = StripeCameraCoreTestUtils.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -1476,6 +1477,7 @@
 				"zh-HK",
 				"zh-Hans",
 				"zh-Hant",
+				th,
 			);
 			mainGroup = C30D6A52DEFD4953D1003B59;
 			packageReferences = (
@@ -1839,6 +1841,7 @@
 				598A711C4A2B8988EFBEEF77 /* zh-Hans */,
 				E3A5A9765EF649A580A0519F /* zh-Hant */,
 				B634C1568CBC56B3E33CE3E2 /* zh-HK */,
+				1405894E2DC8579A00DF2EAA /* th */,
 			);
 			name = Localizable.strings;
 			sourceTree = "<group>";
