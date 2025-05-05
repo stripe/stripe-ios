@@ -1,3 +1,11 @@
+"%1$@ Card" = "Kad %1$@";
+
+"%1$@ Credit" = "Kredit %1$@";
+
+"%1$@ Debit" = "Debit %1$@";
+
+"%1$@ Prepaid" = "Prabayar %1$@";
+
 "%1$@ account ending in %2$@" = "akaun %1$@ yang berakhir dengan %2$@";
 
 "%1$@ ending in %2$@" = "%1$@ – berakhiran %2$@";
