@@ -8,7 +8,7 @@ import SwiftUI
 
 struct FruitStorePaymentButtonView: View {
     var text: String
-    
+
     var body: some View {
         HStack {
             Text(text).fontWeight(.bold)
@@ -24,7 +24,7 @@ struct FruitStorePaymentButtonView: View {
 
 struct FruitBuyButtonView: View {
     var fruit: Fruit
-    
+
     var body: some View {
         HStack {
             Text("\(fruit.emoji)")
@@ -39,7 +39,6 @@ struct FruitBuyButtonView: View {
         .accessibility(identifier: "Buy \(fruit.emoji)")
     }
 }
-
 
 struct BuyFruitButtonView: View {
     var body: some View {
@@ -56,7 +55,7 @@ struct BuyFruitButtonView: View {
 
 struct ProButtonView: View {
     let enabled: Bool
-    
+
     var body: some View {
         if enabled {
             Text("PRO")
@@ -77,7 +76,6 @@ struct ProButtonView: View {
         }
     }
 }
-
 
 struct BuyCoinsButtonView: View {
     var body: some View {
@@ -103,8 +101,6 @@ struct LogoutButtonView: View {
             .cornerRadius(3.0)
     }
 }
-
-
 
 struct Button_Previews: PreviewProvider {
     static var previews: some View {

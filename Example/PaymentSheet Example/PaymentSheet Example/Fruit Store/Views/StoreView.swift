@@ -11,8 +11,8 @@ struct StoreView: View {
 
     let forSale = [Fruit(emoji: "🍊"),
                    Fruit(emoji: "🍒"),
-                   Fruit(emoji: "🍉")]
-    
+                   Fruit(emoji: "🍉"), ]
+
     var body: some View {
         VStack(alignment: .leading) {
             Text("The fruit stand")
@@ -69,7 +69,6 @@ struct StoreView_Previews: PreviewProvider {
                 }
             }
 
-            
             ZStack {
                 BackgroundColor.ignoresSafeArea()
                 VStack {

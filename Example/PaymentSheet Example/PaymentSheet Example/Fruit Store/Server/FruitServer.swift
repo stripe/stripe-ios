@@ -2,10 +2,10 @@
 //  FruitServer.swift
 //  FruitStore
 
-import Foundation
 import AuthenticationServices
+import Foundation
 
-fileprivate let BackendAPIURL = URL(string: "https://fruitstore-backend.herokuapp.com")!
+private let BackendAPIURL = URL(string: "https://fruitstore-backend.herokuapp.com")!
 
 class FruitServer: Server {
     // The cached session token
@@ -25,7 +25,7 @@ class FruitServer: Server {
             completion(.failure(.other))
             return
         }
-        
+
         let params = ["user_id": appleIDCredential.user, "token": identityTokenString]
         callServer(endpoint: "apple_login", method: "POST", params: params) { result in
             guard let sessionToken = result["session_token"] as? String else {
@@ -53,7 +53,7 @@ class FruitServer: Server {
             completion(.failure(.tokenMissing))
             return
         }
-        
+
         let params = ["session_token": sessionToken]
         callServer(endpoint: "customer", method: "GET", params: params) { result in
             guard let customer = Customer(result) else {
@@ -69,7 +69,7 @@ class FruitServer: Server {
             completion(.failure(.tokenMissing))
             return
         }
-        
+
         let params = ["session_token": sessionToken, "fruit": fruit.emoji]
         callServer(endpoint: "buy", method: "POST", params: params) { result in
             if let error = result["error"] as? String {
@@ -92,7 +92,7 @@ class FruitServer: Server {
             completion(.failure(.tokenMissing))
             return
         }
-        
+
         let params = ["session_token": sessionToken]
         callServer(endpoint: "refill_url", method: "GET", params: params) { result in
             guard let urlString = result["url"] as? String,
@@ -108,31 +108,31 @@ class FruitServer: Server {
         sessionToken = nil
     }
 
-    private func callServer(endpoint: String, method: String, params: [String : Any] = [:], completion: @escaping ([String : Any]) -> Void) {
+    private func callServer(endpoint: String, method: String, params: [String: Any] = [:], completion: @escaping ([String: Any]) -> Void) {
         var request = URLRequest(url: BackendAPIURL.appendingPathComponent(endpoint))
         request.httpMethod = method
-        
+
 //        if request.httpMethod == "POST" {
 //            request.httpBody = try! JSONSerialization.data(withJSONObject: params, options: .prettyPrinted)
 //            request.addValue("application/json", forHTTPHeaderField: "Content-Type")
 //            request.addValue("application/json", forHTTPHeaderField: "Accept")
 //        } else {
             var urlComponents = URLComponents(url: request.url!, resolvingAgainstBaseURL: false)!
-            urlComponents.queryItems = params.map({ URLQueryItem(name: $0, value: $1 as? String)})
+            urlComponents.queryItems = params.map({ URLQueryItem(name: $0, value: $1 as? String) })
             request.url = urlComponents.url
 //        }
-        
-        let task = URLSession.shared.dataTask(with: request, completionHandler: { (data, response, error) in
+
+        let task = URLSession.shared.dataTask(with: request, completionHandler: { (data, _, error) in
           guard let unwrappedData = data,
-                let json = try? JSONSerialization.jsonObject(with: unwrappedData, options: []) as? [String : Any] else {
+                let json = try? JSONSerialization.jsonObject(with: unwrappedData, options: []) as? [String: Any] else {
             if let data = data {
-                print("\(String(decoding: data, as: UTF8.self))")
-            } else {
-                print("\(error ?? NSError())")
+                print("\(String(data: data, encoding: .utf8))")
+            } else if let error {
+                print(error)
             }
             return
           }
-          
+
           DispatchQueue.main.async {
               if let error = json["error"] as? String {
                   if error == "Session is invalid." {
@@ -144,7 +144,7 @@ class FruitServer: Server {
         })
         task.resume()
     }
-    
+
 }
 
 protocol Server {
@@ -161,7 +161,7 @@ enum ServerError: Error {
     case tokenMissing
     case serverError(error: String)
     case other
-    
+
     var localizedDescription: String {
         switch self {
         case .insufficientFunds(let amount):

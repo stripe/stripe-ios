@@ -4,8 +4,8 @@
 //
 
 import Foundation
-import SwiftUI
 import StoreKit
+import SwiftUI
 
 @available(iOS 14.0, *)
 struct CustomerView: View {
@@ -13,7 +13,7 @@ struct CustomerView: View {
     @EnvironmentObject var model: FruitModel
     @State private var animationState = false
     @State private var proEnabled = false
-    
+
     var body: some View {
         VStack {
             HStack(alignment: .top) {
@@ -58,7 +58,7 @@ struct FruitBowlView: View {
     @EnvironmentObject var model: FruitModel
     @State private var animationState = false
     @State private var proEnabled = false
-    
+
     var body: some View {
         VStack(alignment: .leading) {
             Text("Your fruit bowl")
@@ -112,7 +112,7 @@ struct FruitBowlView: View {
 
 fileprivate extension Customer {
     var purchasedString: String? {
-        let emojiString = purchased.map({$0.emoji}).joined()
+        let emojiString = purchased.map({ $0.emoji }).joined()
         return emojiString.isEmpty ? nil : emojiString
     }
 }
@@ -124,7 +124,7 @@ struct CustomerView_Previews: PreviewProvider {
             ZStack {
             BackgroundColor
                 .ignoresSafeArea()
-            CustomerView(customer: Customer(name: "Katie Bell", wallet: 85, purchased: [Fruit(emoji: "🍒"), Fruit(emoji: "🍊"), Fruit(emoji: "🍊"), Fruit(emoji: "🍊"), Fruit(emoji: "🍊"), Fruit(emoji: "🍊"), Fruit(emoji: "🍊"), Fruit(emoji: "🍊"), Fruit(emoji: "🍊"), Fruit(emoji: "🍊"), Fruit(emoji: "🍊"), Fruit(emoji: "🍊"), Fruit(emoji: "🍊"), Fruit(emoji: "🍊"),  Fruit(emoji: "🍊"),  Fruit(emoji: "🍊"),  Fruit(emoji: "🍊"),  Fruit(emoji: "🍊"),  Fruit(emoji: "🍊"),  Fruit(emoji: "🍊"),  Fruit(emoji: "🍊"),  Fruit(emoji: "🍊"),  Fruit(emoji: "🍊"), Fruit(emoji: "🍒"), Fruit(emoji: "🍊"), Fruit(emoji: "🍊"), Fruit(emoji: "🍊"), Fruit(emoji: "🍊"), Fruit(emoji: "🍊"), Fruit(emoji: "🍊"), Fruit(emoji: "🍊"), Fruit(emoji: "🍊"), Fruit(emoji: "🍊"), Fruit(emoji: "🍊"), Fruit(emoji: "🍊"), Fruit(emoji: "🍊"), Fruit(emoji: "🍊"),  Fruit(emoji: "🍊"),  Fruit(emoji: "🍊"),  Fruit(emoji: "🍊"),  Fruit(emoji: "🍊"),  Fruit(emoji: "🍊"),  Fruit(emoji: "🍊"),  Fruit(emoji: "🍊"),  Fruit(emoji: "🍊"),  Fruit(emoji: "🍊"), Fruit(emoji: "🍒"), Fruit(emoji: "🍊"), Fruit(emoji: "🍊"), Fruit(emoji: "🍊"), Fruit(emoji: "🍊"), Fruit(emoji: "🍊"), Fruit(emoji: "🍊"), Fruit(emoji: "🍊"), Fruit(emoji: "🍊"), Fruit(emoji: "🍊"), Fruit(emoji: "🍊"), Fruit(emoji: "🍊"), Fruit(emoji: "🍊"), Fruit(emoji: "🍊"),  Fruit(emoji: "🍊"),  Fruit(emoji: "🍊"),  Fruit(emoji: "🍊"),  Fruit(emoji: "🍊"),  Fruit(emoji: "🍊"),  Fruit(emoji: "🍊"),  Fruit(emoji: "🍊"),  Fruit(emoji: "🍊"),  Fruit(emoji: "🍊")], hasProSubscription: false))
+            CustomerView(customer: Customer(name: "Katie Bell", wallet: 85, purchased: [Fruit(emoji: "🍒"), Fruit(emoji: "🍊"), Fruit(emoji: "🍊"), Fruit(emoji: "🍊"), Fruit(emoji: "🍊"), Fruit(emoji: "🍊"), Fruit(emoji: "🍊"), Fruit(emoji: "🍊"), Fruit(emoji: "🍊"), Fruit(emoji: "🍊"), Fruit(emoji: "🍊"), Fruit(emoji: "🍊"), Fruit(emoji: "🍊"), Fruit(emoji: "🍊"), Fruit(emoji: "🍊"), Fruit(emoji: "🍊"), Fruit(emoji: "🍊"), Fruit(emoji: "🍊"), Fruit(emoji: "🍊"), Fruit(emoji: "🍊"), Fruit(emoji: "🍊"), Fruit(emoji: "🍊"), Fruit(emoji: "🍊"), Fruit(emoji: "🍒"), Fruit(emoji: "🍊"), Fruit(emoji: "🍊"), Fruit(emoji: "🍊"), Fruit(emoji: "🍊"), Fruit(emoji: "🍊"), Fruit(emoji: "🍊"), Fruit(emoji: "🍊"), Fruit(emoji: "🍊"), Fruit(emoji: "🍊"), Fruit(emoji: "🍊"), Fruit(emoji: "🍊"), Fruit(emoji: "🍊"), Fruit(emoji: "🍊"), Fruit(emoji: "🍊"), Fruit(emoji: "🍊"), Fruit(emoji: "🍊"), Fruit(emoji: "🍊"), Fruit(emoji: "🍊"), Fruit(emoji: "🍊"), Fruit(emoji: "🍊"), Fruit(emoji: "🍊"), Fruit(emoji: "🍊"), Fruit(emoji: "🍒"), Fruit(emoji: "🍊"), Fruit(emoji: "🍊"), Fruit(emoji: "🍊"), Fruit(emoji: "🍊"), Fruit(emoji: "🍊"), Fruit(emoji: "🍊"), Fruit(emoji: "🍊"), Fruit(emoji: "🍊"), Fruit(emoji: "🍊"), Fruit(emoji: "🍊"), Fruit(emoji: "🍊"), Fruit(emoji: "🍊"), Fruit(emoji: "🍊"), Fruit(emoji: "🍊"), Fruit(emoji: "🍊"), Fruit(emoji: "🍊"), Fruit(emoji: "🍊"), Fruit(emoji: "🍊"), Fruit(emoji: "🍊"), Fruit(emoji: "🍊"), Fruit(emoji: "🍊"), Fruit(emoji: "🍊")], hasProSubscription: false))
                 .environmentObject(FruitModel())
             }
             ZStack {

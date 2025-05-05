@@ -3,33 +3,33 @@
 //  FruitStore
 //
 
+import AuthenticationServices
 import Foundation
 import UIKit
-import AuthenticationServices
 
 class FruitModel: ObservableObject {
     /// The current customer's details
     @Published var customer: Customer? = .fetchFromUserDefaults()
     /// Whether a request is in progress
     @Published var loading = false
-    
+
     /// The last time the cached Customer was updated.
     var lastUpdated: Date = .distantPast
-    
+
     /// The last error communicating with the server, if any.
     @Published var lastError: ServerError?
-    
+
     /// The FruitStore server
     let server: Server = MockServer()
-    
+
     // MARK: Authentication
-    
+
     /// Login using credentials from a Sign in with Apple button.
     func login(_ authorization: ASAuthorization) {
         if let appleIDCredential = authorization.credential as? ASAuthorizationAppleIDCredential {
             server.fetchSessionToken(with: appleIDCredential) { result in
                 switch result {
-                case .success(_): break
+                case .success: break
                 case .failure(let error):
                     self.lastError = error
                 }
@@ -39,7 +39,7 @@ class FruitModel: ObservableObject {
             // Error
         }
     }
-    
+
     /// Login with a temporary account.
     /// In a real app, you should not allow the user to make purchases unless you
     /// have some way of identifying the user after the app has been deleted. Otherwise,
@@ -47,23 +47,23 @@ class FruitModel: ObservableObject {
     func loginGuest() {
         server.fetchGuestSessionToken { result in
             switch result {
-            case .success(_): break
+            case .success: break
             case .failure(let error):
                 self.lastError = error
             }
             self.updateFromServer(force: true)
         }
     }
-    
+
     /// Delete the user's stored cache and credentials.
     func logout() {
         customer?.clearUserDefaults()
         customer = nil
         server.logout()
     }
-    
+
     // MARK: User inventory management
-    
+
     /// Update the customer model from the server. This will only update
     /// a maximum of once every 60 seconds unless `force` is true.
     func updateFromServer(force: Bool) {
@@ -91,7 +91,7 @@ class FruitModel: ObservableObject {
             }
         }
     }
-    
+
     /// Attempt to buy a fruit.
     func buy(_ fruit: Fruit) {
         self.loading = true
@@ -108,7 +108,7 @@ class FruitModel: ObservableObject {
             self.loading = false
         }
     }
-    
+
     /// Open a Checkout page to refill the user's coin balance.
     func openRefillPage() {
         server.getRefillURL { result in
@@ -119,14 +119,14 @@ class FruitModel: ObservableObject {
                 self.lastError = error
             }
         }
-        
+
         /// TODO: Remove me!
         /// If we're using the MockServer, we'll want to simulate a coin refill immediately.
         if let server = self.server as? MockServer {
             server.refillCoins()
         }
     }
-    
+
     /// Called by the URL handler when we receive a deep link from Checkout
     /// back to our app.
     func didCompleteRefill(url: URL) {
@@ -142,16 +142,16 @@ class FruitModel: ObservableObject {
         //
         // See https://stripe.com/docs/payments/checkout/fulfill-orders#handle-the-event
         // for more details.
-        
+
         updateFromServer(force: true)
     }
-    
+
 }
 
 /// A purchasable fruit.
 struct Fruit: Codable {
     var emoji: String
-    
+
     var name: String {
         // TODO: Don't hardcode these.
         switch emoji {
@@ -177,7 +177,7 @@ struct Customer {
     var purchased: [Fruit]
     /// Whether the customer has an active Pro subscription.
     var hasProSubscription: Bool
-    
+
     init(name: String,
          wallet: Int,
          purchased: [Fruit],
@@ -187,7 +187,7 @@ struct Customer {
         self.purchased = purchased
         self.hasProSubscription = hasProSubscription
     }
-    
+
     init?(_ params: [String: Any]) {
         guard let balance = params["balance"] as? Int,
         let fruit = params["fruits"] as? [String] else {
@@ -195,11 +195,11 @@ struct Customer {
         }
         self.name = params["name"] as? String ?? "Katie Bell"
         self.wallet = balance
-        self.purchased = fruit.map({Fruit(emoji: $0)})
+        self.purchased = fruit.map({ Fruit(emoji: $0) })
         // Always true until we add subscription support to the demo
         self.hasProSubscription = true
     }
-    
+
     static let NameKey = "name"
     static let WalletKey = "wallet"
     static let PurchasedKey = "purchased"
@@ -216,7 +216,7 @@ extension Customer {
         defaults.set(try? PropertyListEncoder().encode(purchased), forKey: Self.PurchasedKey)
         defaults.set(hasProSubscription, forKey: Self.HasProSubscriptionKey)
     }
-    
+
     /// Clears the Customer from the UserDefaults cache.
     func clearUserDefaults() {
         let defaults = UserDefaults.standard
@@ -225,7 +225,7 @@ extension Customer {
         defaults.set(nil, forKey: Self.PurchasedKey)
         defaults.set(nil, forKey: Self.HasProSubscriptionKey)
     }
-    
+
     /// Initializes a Customer from the UserDefaults cache if available.
     static func fetchFromUserDefaults() -> Customer? {
         let defaults = UserDefaults.standard
@@ -238,5 +238,5 @@ extension Customer {
         }
         return nil
     }
-    
+
 }

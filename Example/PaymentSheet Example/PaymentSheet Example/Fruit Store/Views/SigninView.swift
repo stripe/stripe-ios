@@ -3,16 +3,16 @@
 //  FruitStore
 // 
 
+import AuthenticationServices
 import Foundation
 import SwiftUI
-import AuthenticationServices
 
 @available(iOS 14.0, *)
 struct SigninView: View {
     @EnvironmentObject var model: FruitModel
     @State var errorAlertPresented = false
     @State var loginError: String?
-    
+
     var body: some View {
         VStack {
             VStack {

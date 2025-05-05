@@ -14,7 +14,7 @@ let SecondaryButtonColor = Color(.sRGB, red: 199/255, green: 69/255, blue: 28/25
 struct AppView: View {
     @StateObject var model = FruitModel()
     @Environment(\.scenePhase) var scenePhase
-    
+
     var body: some View {
         ZStack {
             BackgroundColor
@@ -50,7 +50,7 @@ struct AppView: View {
 
 struct ErrorView: View {
     let error: ServerError
-    
+
     var body: some View {
         Text("⚠️ \(error.localizedDescription)")
             .bold()
