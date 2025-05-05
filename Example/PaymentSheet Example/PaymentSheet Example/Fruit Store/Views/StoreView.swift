@@ -51,8 +51,7 @@ struct StoreView: View {
     }
 }
 
-
-
+@available(iOS 15.0, *)
 struct StoreView_Previews: PreviewProvider {
     static var previews: some View {
         Group {

@@ -7,6 +7,7 @@ import Foundation
 import SwiftUI
 import StoreKit
 
+@available(iOS 14.0, *)
 struct RefillView: View {
     @EnvironmentObject var model: FruitModel
 
@@ -16,7 +17,7 @@ struct RefillView: View {
             Button {
                 model.openRefillPage()
             } label: {
-                ExamplePaymentButtonView(text: "Buy 100 coins 💰")
+                FruitStorePaymentButtonView(text: "Buy 100 coins 💰")
                     .padding()
             }.onOpenURL { url in
                 model.didCompleteRefill(url: url)

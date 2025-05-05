@@ -7,6 +7,7 @@ import Foundation
 import SwiftUI
 import StoreKit
 
+@available(iOS 14.0, *)
 struct CustomerView: View {
     let customer: Customer
     @EnvironmentObject var model: FruitModel
@@ -116,6 +117,7 @@ fileprivate extension Customer {
     }
 }
 
+@available(iOS 14.0, *)
 struct CustomerView_Previews: PreviewProvider {
     static var previews: some View {
         Group {

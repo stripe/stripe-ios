@@ -6,7 +6,7 @@
 import Foundation
 import SwiftUI
 
-struct ExamplePaymentButtonView: View {
+struct FruitStorePaymentButtonView: View {
     var text: String
     
     var body: some View {

@@ -10,6 +10,7 @@ let ForegroundColor = Color(.sRGB, red: 231/255, green: 91/255, blue: 47/255, op
 let TextColor = Color(.sRGB, red: 60/255, green: 66/255, blue: 87/255, opacity: 1.0)
 let SecondaryButtonColor = Color(.sRGB, red: 199/255, green: 69/255, blue: 28/255, opacity: 1.0)
 
+@available(iOS 14.0, *)
 struct AppView: View {
     @StateObject var model = FruitModel()
     @Environment(\.scenePhase) var scenePhase
@@ -59,7 +60,7 @@ struct ErrorView: View {
     }
 }
 
-
+@available(iOS 14.0, *)
 struct AppView_Previews: PreviewProvider {
     static var previews: some View {
         Group {
