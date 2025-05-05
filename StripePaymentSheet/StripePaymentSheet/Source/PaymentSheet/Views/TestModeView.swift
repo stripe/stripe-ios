@@ -48,6 +48,6 @@ class TestModeView: UIView {
     }
 
     override var intrinsicContentSize: CGSize {
-        return .init(width: 82, height: 23)
+        return .init(width: 41, height: 23)
     }
 }
