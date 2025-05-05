@@ -184,7 +184,6 @@ extension PayWithLinkViewController {
             self.context = context
             self.paymentMethods = paymentMethods
             self.selectedPaymentMethodIndex = Self.determineInitiallySelectedPaymentMethod(
-                linkAccount: linkAccount,
                 context: context,
                 paymentMethods: paymentMethods
             )
@@ -201,7 +200,6 @@ extension PayWithLinkViewController {
 
                     var defaultPaymentMethodIndex: Int {
                         Self.determineInitiallySelectedPaymentMethod(
-                            linkAccount: linkAccount,
                             context: context,
                             paymentMethods: paymentMethods)
                     }
@@ -316,29 +314,21 @@ extension PayWithLinkViewController {
 private extension PayWithLinkViewController.WalletViewModel {
 
     static func determineInitiallySelectedPaymentMethod(
-        linkAccount: PaymentSheetLinkAccount,
         context: PayWithLinkViewController.Context,
         paymentMethods: [ConsumerPaymentDetails]
     ) -> Int {
-
         var indexOfLastAddedPaymentMethod: Int? {
-            guard let paymentDetail = context.lastAddedPaymentDetails,
-                  paymentDetail.isSupported(linkAccount: linkAccount, elementsSession: context.elementsSession, cardBrandFilter: context.configuration.cardBrandFilter)
-            else {
+            guard let lastAddedID = context.lastAddedPaymentDetails?.stripeID else {
                 return nil
             }
 
-            return paymentMethods.firstIndex { $0.stripeID == paymentDetail.stripeID }
+            return paymentMethods.firstIndex(where: { $0.stripeID == lastAddedID })
         }
 
         var indexOfDefaultPaymentMethod: Int? {
-            paymentMethods.firstIndex { $0.isDefault && $0.isSupported(linkAccount: linkAccount, elementsSession: context.elementsSession, cardBrandFilter: context.configuration.cardBrandFilter) }
+            return paymentMethods.firstIndex(where: { $0.isDefault })
         }
 
-        var firstSupportedIndex: Int? {
-            paymentMethods.firstIndex { $0.isSupported(linkAccount: linkAccount, elementsSession: context.elementsSession, cardBrandFilter: context.configuration.cardBrandFilter) }
-        }
-
-        return indexOfLastAddedPaymentMethod ?? indexOfDefaultPaymentMethod ?? firstSupportedIndex ?? 0
+        return indexOfLastAddedPaymentMethod ?? indexOfDefaultPaymentMethod ?? 0
     }
 }

@@ -118,12 +118,12 @@ class PayWithLinkViewController_WalletViewModelTests: XCTestCase {
         )
     }
 
-    func test_defaultLogic_whenDefaultCardIsNotSupported() throws {
+    func test_defaultLogic_whenDefaultCardIsNotSupportedItShouldStillBeSelected() throws {
         let sut = try makeSUT(supportedPaymentDetailsTypes: [.bankAccount], linkFundingSources: ["BANK_ACCOUNT"])
 
         XCTAssertEqual(
             sut.selectedPaymentMethodIndex,
-            LinkStubs.PaymentMethodIndices.bankAccount,
+            LinkStubs.PaymentMethodIndices.card,
             "Selected payment method should be bank account when cards are disabled"
         )
     }
@@ -157,7 +157,7 @@ class PayWithLinkViewController_WalletViewModelTests: XCTestCase {
 
         XCTAssertEqual(
             sut.selectedPaymentMethodIndex,
-            LinkStubs.PaymentMethodIndices.cardWithFailingChecks,
+            LinkStubs.PaymentMethodIndices.card,
             "Selected payment method should be bank account when cards are disabled"
         )
     }
