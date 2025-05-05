@@ -1,6 +1,7 @@
-## x.x.x x-x-x
+## 24.13.1 2025-05-05
 ### PaymentSheet
-* [Fixed] Updated the "TEST MODE" badge to say "TEST", due to the upcoming release of [Sandboxes](https://docs.stripe.com/sandboxes). 
+* [Fixed] Updated the "TEST MODE" badge to say "TEST", due to the upcoming release of [Sandboxes](https://docs.stripe.com/sandboxes).
+* [Added] Added support for Thai language.
 
 ## 24.13.0 2025-05-05
 ### PaymentSheet
