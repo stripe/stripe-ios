@@ -15,7 +15,7 @@ final class AccountPickerNoAccountEligibleErrorView: UIView {
 
     init(
         institution: FinancialConnectionsInstitution,
-        bussinessName: String?,
+        businessName: String?,
         institutionSkipAccountSelection: Bool,
         numberOfIneligibleAccounts: Int,
         paymentMethodType: FinancialConnectionsPaymentMethodType,
@@ -46,7 +46,7 @@ final class AccountPickerNoAccountEligibleErrorView: UIView {
                             )
                         }
                     }()
-                    return String(format: localizedString, institution.name, bussinessName)
+                    return String(format: localizedString, institution.name, businessName)
                 } else {
                     let localizedString: String = {
                         if paymentMethodType == .link {
@@ -65,7 +65,7 @@ final class AccountPickerNoAccountEligibleErrorView: UIView {
                         format: localizedString,
                         numberOfIneligibleAccounts,
                         institution.name,
-                        bussinessName
+                        businessName
                     )
                 }
             } else {
@@ -196,7 +196,7 @@ private struct AccountPickerNoAccountEligibleErrorViewUIViewRepresentable: UIVie
                 icon: nil,
                 logo: nil
             ),
-            bussinessName: businessName,
+            businessName: businessName,
             institutionSkipAccountSelection: institutionSkipAccountSelection,
             numberOfIneligibleAccounts: numberOfIneligibleAccounts,
             paymentMethodType: paymentMethodType,
