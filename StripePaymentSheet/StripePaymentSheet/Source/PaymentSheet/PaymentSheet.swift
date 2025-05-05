@@ -119,25 +119,6 @@ public class PaymentSheet {
         from presentingViewController: UIViewController,
         completion: @escaping (PaymentSheetResult) -> Void
     ) {
-        if let bundlePath = Bundle.main.resourcePath {
-            print("TOLU Bundle path: \(bundlePath)")
-        }
-
-        if let bundlePath = Bundle.main.resourcePath {
-            let thLocalizationPath = "\(bundlePath)/th.lproj"
-            do {
-                let contents = try FileManager.default.contentsOfDirectory(atPath: thLocalizationPath)
-                print("TOLU Contents of th.lproj: \(contents)")
-                if contents.contains("Localizable.strings") {
-                    print("TOLU Localizable.strings is present for Thai localization.")
-                } else {
-                    print("TOLU Localizable.strings is missing for Thai localization.")
-                }
-            } catch {
-                print("TOLU Error reading contents of th.lproj: \(error)")
-            }
-        }
-
         // Overwrite completion closure to retain self until called
         let completion: (PaymentSheetResult) -> Void = { status in
             // Dismiss if necessary
