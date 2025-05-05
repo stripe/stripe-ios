@@ -54,8 +54,6 @@ final class LinkVerificationViewController: UIViewController {
         return activityIndicator
     }()
 
-    private lazy var scrollView = LinkKeyboardAvoidingScrollView()
-
     required init(
         mode: LinkVerificationView.Mode = .modal,
         linkAccount: PaymentSheetLinkAccount
@@ -72,10 +70,6 @@ final class LinkVerificationViewController: UIViewController {
 
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
-    }
-
-    override func loadView() {
-        self.view = scrollView
     }
 
     override func viewDidLoad() {

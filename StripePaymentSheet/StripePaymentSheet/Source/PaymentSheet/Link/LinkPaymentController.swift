@@ -30,8 +30,7 @@ import UIKit
         let loadingViewController = LoadingViewController(
             delegate: self,
             appearance: PaymentSheet.Appearance.default,
-            isTestMode: configuration.apiClient.isTestmode,
-            loadingViewHeight: 244
+            isTestMode: configuration.apiClient.isTestmode
         )
         return loadingViewController
     }()
