@@ -31,7 +31,7 @@ final class AccountPickerNoAccountEligibleErrorView: UIView {
         // Financial Connections support credit cards, but not in all flows
         // (ex. ACH only supports checking/savings).
         let subtitleFirstSentence: String = {
-            if let bussinessName = bussinessName {
+            if let businessName {
                 if numberOfIneligibleAccounts == 1 {
                     let localizedString: String = {
                         if paymentMethodType == .link {
