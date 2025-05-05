@@ -38,7 +38,10 @@ extension PayWithLinkViewController {
             return paymentPicker
         }()
 
-        private lazy var instantDebitMandateView = LinkInstantDebitMandateView(delegate: self)
+        private lazy var mandateView = LinkMandateView(
+            isSettingUp: context.intent.isSettingUp,
+            delegate: self
+        )
 
         private lazy var confirmButton = ConfirmButton.makeLinkButton(
             callToAction: viewModel.confirmButtonCallToAction,
@@ -110,7 +113,7 @@ extension PayWithLinkViewController {
         private lazy var paymentPickerContainerView: UIStackView = {
             let stackView = UIStackView(arrangedSubviews: [
                 paymentPicker,
-                instantDebitMandateView,
+                mandateView,
                 expiredCardNoticeView,
             ])
             stackView.axis = .vertical
@@ -197,9 +200,13 @@ extension PayWithLinkViewController {
                 cardDetailsRecollectionSection.view.endEditing(true)
             }
 
+            if let paymentMethod = viewModel.selectedPaymentMethod {
+                mandateView.update(for: paymentMethod.type, merchant: context.configuration.merchantDisplayName)
+            }
+
             paymentPickerContainerView.toggleArrangedSubview(
-                instantDebitMandateView,
-                shouldShow: viewModel.shouldShowInstantDebitMandate,
+                mandateView,
+                shouldShow: viewModel.shouldShowMandate,
                 animated: animated
             )
 
@@ -631,9 +638,9 @@ extension PayWithLinkViewController.WalletViewController: LinkPaymentMethodPicke
 
 // MARK: - LinkInstantDebitMandateViewDelegate
 
-extension PayWithLinkViewController.WalletViewController: LinkInstantDebitMandateViewDelegate {
+extension PayWithLinkViewController.WalletViewController: LinkMandateViewDelegate {
 
-    func instantDebitMandateView(_ mandateView: LinkInstantDebitMandateView, didTapOnLinkWithURL url: URL) {
+    func mandateView(_ mandateView: LinkMandateView, didTapOnLinkWithURL url: URL) {
         let safariVC = SFSafariViewController(url: url)
         #if !os(visionOS)
         safariVC.dismissButtonStyle = .close

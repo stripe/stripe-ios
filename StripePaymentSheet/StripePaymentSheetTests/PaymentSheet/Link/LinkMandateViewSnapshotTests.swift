@@ -1,5 +1,5 @@
 //
-//  LinkInstantDebitMandateViewSnapshotTests.swift
+//  LinkMandateViewSnapshotTests.swift
 //  StripeiOS Tests
 //
 //  Created by Ramon Torres on 2/17/22.
@@ -15,10 +15,15 @@ import UIKit
 @testable@_spi(STP) import StripePaymentsUI
 @testable@_spi(STP) import StripeUICore
 
-class LinkInstantDebitMandateViewSnapshotTests: STPSnapshotTestCase {
+class LinkMandateViewSnapshotTests: STPSnapshotTestCase {
 
     func testDefault() {
-        let sut = makeSUT()
+        let sut = makeSUT(isSettingUp: false)
+        verify(sut)
+    }
+
+    func testCardInSetupMode() {
+        let sut = makeSUT(isSettingUp: true)
         verify(sut)
     }
 
@@ -36,7 +41,7 @@ class LinkInstantDebitMandateViewSnapshotTests: STPSnapshotTestCase {
 
 // MARK: - Helpers
 
-extension LinkInstantDebitMandateViewSnapshotTests {
+extension LinkMandateViewSnapshotTests {
 
     func verify(
         _ view: UIView,
@@ -54,7 +59,7 @@ extension LinkInstantDebitMandateViewSnapshotTests {
         line: UInt = #line
     ) {
         STPLocalizationUtils.overrideLanguage(to: language)
-        let sut = makeSUT()
+        let sut = makeSUT(isSettingUp: false)
         STPLocalizationUtils.overrideLanguage(to: nil)
         verify(sut, identifier: language, file: file, line: line)
     }
@@ -63,10 +68,10 @@ extension LinkInstantDebitMandateViewSnapshotTests {
 
 // MARK: - Factory
 
-extension LinkInstantDebitMandateViewSnapshotTests {
+extension LinkMandateViewSnapshotTests {
 
-    func makeSUT() -> LinkInstantDebitMandateView {
-        return LinkInstantDebitMandateView()
+    func makeSUT(isSettingUp: Bool) -> LinkMandateView {
+        return LinkMandateView(isSettingUp: isSettingUp, delegate: nil)
     }
 
 }
