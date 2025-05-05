@@ -64,23 +64,23 @@ class PayWithLinkViewController_WalletViewModelTests: XCTestCase {
 
         // Card
         sut.selectedPaymentMethodIndex = LinkStubs.PaymentMethodIndices.card
-        XCTAssertFalse(sut.shouldShowMandate)
+        XCTAssertNil(sut.mandate)
 
         // Bank account
         sut.selectedPaymentMethodIndex = LinkStubs.PaymentMethodIndices.bankAccount
-        XCTAssertTrue(sut.shouldShowMandate)
+        XCTAssertEqual(sut.mandate?.string, "By continuing, you agree to authorize payments pursuant to these terms.")
     }
-    
+
     func test_showCorrectMandateForSetup() throws {
-        let sut = try makeSUT()
+        let sut = try makeSUT(isSettingUp: true)
 
         // Card
         sut.selectedPaymentMethodIndex = LinkStubs.PaymentMethodIndices.card
-        XCTAssertTrue(sut.shouldShowMandate)
+        XCTAssertEqual(sut.mandate?.string, "By providing your card information, you allow StripePaymentSheetTestHostApp to charge your card for future payments in accordance with their terms.")
 
         // Bank account
         sut.selectedPaymentMethodIndex = LinkStubs.PaymentMethodIndices.bankAccount
-        XCTAssertTrue(sut.shouldShowMandate)
+        XCTAssertEqual(sut.mandate?.string, "By continuing, you agree to authorize payments pursuant to these terms.")
     }
 
     func test_confirmButtonStatus_shouldHandleNoSelection() throws {
@@ -263,7 +263,7 @@ extension PayWithLinkViewController_WalletViewModelTests {
         )
         let paymentIntentJSON = elementsSession.allResponseFields[jsonDict: "payment_method_preference"]?[jsonDict: "payment_intent"]
         let paymentIntent = STPPaymentIntent.decodedObject(fromAPIResponse: paymentIntentJSON)!
-        
+
         return (Intent.paymentIntent(paymentIntent), elementsSession)
     }
     
@@ -275,7 +275,7 @@ extension PayWithLinkViewController_WalletViewModelTests {
         // So we construct a minimal response (see STPPaymentIntentTest.testDecodedObjectFromAPIResponseMapping) to parse them
         let setupIntentJson = try XCTUnwrap(STPTestUtils.jsonNamed(STPTestJSONSetupIntent))
         let orderedSetupJson = ["card", "link"]
-        let paymentIntentResponse = [
+        let setupIntentResponse = [
             "setup_intent": setupIntentJson,
             "ordered_payment_method_types": orderedSetupJson,
         ] as [String: Any]
@@ -287,7 +287,7 @@ extension PayWithLinkViewController_WalletViewModelTests {
         }
         
         let response = [
-            "payment_method_preference": setupIntentJson,
+            "payment_method_preference": setupIntentResponse,
             "link_settings": linkSettingsJson,
             "session_id": "abc123",
         ] as [String: Any]
@@ -296,7 +296,7 @@ extension PayWithLinkViewController_WalletViewModelTests {
         )
         let setupIntentJSON = elementsSession.allResponseFields[jsonDict: "payment_method_preference"]?[jsonDict: "setup_intent"]
         let setupIntent = STPSetupIntent.decodedObject(fromAPIResponse: setupIntentJSON)!
-        
+
         return (Intent.setupIntent(setupIntent), elementsSession)
     }
 }

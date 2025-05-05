@@ -200,8 +200,8 @@ extension PayWithLinkViewController {
                 cardDetailsRecollectionSection.view.endEditing(true)
             }
 
-            if let paymentMethod = viewModel.selectedPaymentMethod {
-                mandateView.update(for: paymentMethod.type, merchant: context.configuration.merchantDisplayName)
+            if let mandate = viewModel.mandate {
+                mandateView.setText(mandate)
             }
 
             paymentPickerContainerView.toggleArrangedSubview(
