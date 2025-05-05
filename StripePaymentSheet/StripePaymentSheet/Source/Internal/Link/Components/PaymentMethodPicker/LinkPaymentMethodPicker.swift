@@ -24,6 +24,7 @@ protocol LinkPaymentMethodPickerDelegate: AnyObject {
 }
 
 protocol LinkPaymentMethodPickerDataSource: AnyObject {
+    var accountEmail: String { get }
 
     /// Returns the total number of payment methods.
     /// - Returns: Payment method count
@@ -42,7 +43,11 @@ protocol LinkPaymentMethodPickerDataSource: AnyObject {
 @objc(STP_Internal_LinkPaymentMethodPicker)
 final class LinkPaymentMethodPicker: UIView {
     weak var delegate: LinkPaymentMethodPickerDelegate?
-    weak var dataSource: LinkPaymentMethodPickerDataSource?
+    weak var dataSource: LinkPaymentMethodPickerDataSource? {
+        didSet {
+            emailView.accountEmail = dataSource?.accountEmail
+        }
+    }
 
     var selectedIndex: Int = 0 {
         didSet {
@@ -79,10 +84,30 @@ final class LinkPaymentMethodPicker: UIView {
         }
     }
 
+    /// Calculates the maximum width required for the header labels.
+    static let widthForHeaderLabels: CGFloat = {
+        let font = LinkUI.font(forTextStyle: .bodyEmphasized)
+        func sizeOf(string: String) -> CGSize {
+            (string as NSString).size(withAttributes: [.font: font])
+        }
+
+        // LinkPaymentMethodPicker.EmailView.emailLabel
+        let emailLabel = String.Localized.email
+        let emailLabelSize = sizeOf(string: emailLabel)
+
+        // LinkPaymentMethodPicker.Header.payWithLabel
+        let paymentLabel = Header.Strings.payment
+        let paymentLabelSize = sizeOf(string: paymentLabel)
+
+        return max(emailLabelSize.width, paymentLabelSize.width)
+    }()
+
     private var needsDataReload: Bool = true
 
     private lazy var stackView: UIStackView = {
         let stackView = UIStackView(arrangedSubviews: [
+            emailView,
+            separatorView,
             headerView,
             listView,
         ])
@@ -93,6 +118,8 @@ final class LinkPaymentMethodPicker: UIView {
         return stackView
     }()
 
+    private let emailView = EmailView()
+    private let separatorView = LinkSeparatorView()
     private let headerView = Header()
 
     private lazy var listView: UIStackView = {
@@ -169,10 +196,11 @@ final class LinkPaymentMethodPicker: UIView {
             headerView.layoutIfNeeded()
         }
 
+        guard let listViewIndex = stackView.arrangedSubviews.firstIndex(of: listView) else { return }
         if headerView.isExpanded {
-            stackView.showArrangedSubview(at: 1, animated: animated)
+            stackView.showArrangedSubview(at: listViewIndex, animated: animated)
         } else {
-            stackView.hideArrangedSubview(at: 1, animated: animated)
+            stackView.hideArrangedSubview(at: listViewIndex, animated: animated)
         }
     }
 

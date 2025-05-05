@@ -19,6 +19,13 @@ extension LinkPaymentMethodPicker {
             static let expandedInsets = NSDirectionalEdgeInsets(top: 20, leading: 20, bottom: 4, trailing: 20)
         }
 
+        enum Strings {
+            static let payment = STPLocalizedString(
+                "Payment",
+                "Label for a section displaying payment details."
+            )
+        }
+
         /// The selected payment method.
         var selectedPaymentMethod: ConsumerPaymentDetails? {
             didSet {
@@ -49,8 +56,9 @@ extension LinkPaymentMethodPicker {
             let label = UILabel()
             label.font = LinkUI.font(forTextStyle: .body)
             label.textColor = .linkSecondaryText
-            label.text = STPLocalizedString("Payment", "Label for a section displaying payment details.")
+            label.text = Strings.payment
             label.adjustsFontForContentSizeCategory = true
+            label.translatesAutoresizingMaskIntoConstraints = false
             return label
         }()
 
@@ -96,6 +104,10 @@ extension LinkPaymentMethodPicker {
             stackView.alignment = .center
             stackView.setCustomSpacing(Constants.contentSpacing, after: payWithLabel)
             stackView.translatesAutoresizingMaskIntoConstraints = false
+
+            NSLayoutConstraint.activate([
+                payWithLabel.widthAnchor.constraint(equalToConstant: LinkPaymentMethodPicker.widthForHeaderLabels)
+            ])
 
             return stackView
         }()

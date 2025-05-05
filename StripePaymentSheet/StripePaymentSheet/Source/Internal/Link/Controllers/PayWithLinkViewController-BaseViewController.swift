@@ -20,9 +20,7 @@ extension PayWithLinkViewController {
         let context: Context
 
         var preferredContentMargins: NSDirectionalEdgeInsets {
-            return customNavigationBar.isLarge
-                ? LinkUI.contentMarginsWithLargeNav
-                : LinkUI.contentMargins
+            LinkUI.contentMargins
         }
 
         private(set) lazy var customNavigationBar: LinkNavigationBar = {

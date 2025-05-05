@@ -24,6 +24,10 @@ extension PayWithLinkViewController {
 
         let viewModel: WalletViewModel
 
+        var accountEmail: String {
+            linkAccount.email
+        }
+
         private lazy var paymentPicker: LinkPaymentMethodPicker = {
             let paymentPicker = LinkPaymentMethodPicker()
             paymentPicker.delegate = self
