@@ -57,7 +57,7 @@ extension PayWithLinkViewController {
         private lazy var cancelButton: Button = {
             let button = Button(
                 configuration: viewModel.cancelButtonConfiguration,
-                title: String.Localized.pay_another_way
+                title: viewModel.context.secondaryButtonLabel
             )
             button.addTarget(self, action: #selector(cancelButtonTapped(_:)), for: .touchUpInside)
             return button
