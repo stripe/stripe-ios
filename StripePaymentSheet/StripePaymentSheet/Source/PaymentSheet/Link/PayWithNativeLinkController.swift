@@ -53,9 +53,10 @@ final class PayWithNativeLinkController {
         let payWithLinkViewController = PayWithLinkViewController(intent: intent,
                                                                   elementsSession: elementsSession, configuration: configuration, analyticsHelper: analyticsHelper)
         payWithLinkViewController.payWithLinkDelegate = self
-        payWithLinkViewController.modalPresentationStyle = UIDevice.current.userInterfaceIdiom == .pad
-            ? .formSheet
-            : .overFullScreen
+        if UIDevice.current.userInterfaceIdiom == .pad {
+            payWithLinkViewController.modalPresentationStyle = .formSheet
+        }
+        payWithLinkViewController.isModalInPresentation = true
 
         presentingController.present(payWithLinkViewController, animated: true)
     }
