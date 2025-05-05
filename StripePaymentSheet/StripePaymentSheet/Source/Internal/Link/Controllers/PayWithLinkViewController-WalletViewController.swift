@@ -38,10 +38,7 @@ extension PayWithLinkViewController {
             return paymentPicker
         }()
 
-        private lazy var mandateView = LinkMandateView(
-            isSettingUp: context.intent.isSettingUp,
-            delegate: self
-        )
+        private lazy var mandateView = LinkMandateView(delegate: self)
 
         private lazy var confirmButton = ConfirmButton.makeLinkButton(
             callToAction: viewModel.confirmButtonCallToAction,

@@ -6,7 +6,6 @@
 //  Copyright © 2022 Stripe, Inc. All rights reserved.
 //
 
-@_spi(STP) import StripeCore
 @_spi(STP) import StripePaymentsUI
 @_spi(STP) import StripeUICore
 import UIKit
@@ -29,12 +28,7 @@ final class LinkMandateView: UIView {
         static let lineHeight: CGFloat = 1.5
     }
 
-    private let links: [String: URL] = [
-        "terms": URL(string: "https://link.com/terms/ach-authorization")!
-    ]
-
     weak var delegate: LinkMandateViewDelegate?
-    private let isSettingUp: Bool
 
     private lazy var textView: UITextView = {
         let textView = UITextView()
@@ -43,11 +37,7 @@ final class LinkMandateView: UIView {
         return textView
     }()
 
-    init(
-        isSettingUp: Bool,
-        delegate: LinkMandateViewDelegate? = nil
-    ) {
-        self.isSettingUp = isSettingUp
+    init(delegate: LinkMandateViewDelegate? = nil) {
         super.init(frame: .zero)
         self.delegate = delegate
         addAndPinSubview(textView)
