@@ -19,8 +19,6 @@ struct RefillView: View {
             } label: {
                 FruitStorePaymentButtonView(text: "Buy 100 coins 💰")
                     .padding()
-            }.onOpenURL { url in
-                model.didCompleteRefill(url: url)
             }
         } else {
             Text("Payments are disabled on this device.")

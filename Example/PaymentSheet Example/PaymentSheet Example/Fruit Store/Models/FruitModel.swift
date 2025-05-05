@@ -22,6 +22,10 @@ class FruitModel: ObservableObject {
     /// The FruitStore server
     let server: Server = MockServer()
 
+    init() {
+        NotificationCenter.default.addObserver(self, selector: #selector(didCompleteRefill), name: Notification.Name("returnFromCheckout"), object: nil)
+    }
+
     // MARK: Authentication
 
     /// Login using credentials from a Sign in with Apple button.
@@ -129,20 +133,8 @@ class FruitModel: ObservableObject {
 
     /// Called by the URL handler when we receive a deep link from Checkout
     /// back to our app.
-    func didCompleteRefill(url: URL) {
-        // After the customer pays, Checkout will send a `checkout.session.completed` to
-        // your server's webhook. Checkout will wait up to 10 seconds for your backend to
-        // acknowledge the event before redirecting the user to your `success_url`, which
-        // should be a Universal Link to your app.
-        //
-        // In scenarios where your endpoint is down or the event isn’t acknowledged properly,
-        // the customer could be redirected to the `success_url` before you have updated
-        // your customer object with the new purchase. In this situation, you may want to
-        // retry this update call until the customer object is up to date.
-        //
-        // See https://stripe.com/docs/payments/checkout/fulfill-orders#handle-the-event
-        // for more details.
-
+    @objc
+    func didCompleteRefill() {
         updateFromServer(force: true)
     }
 

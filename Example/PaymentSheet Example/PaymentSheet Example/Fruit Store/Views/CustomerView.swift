@@ -42,8 +42,6 @@ struct CustomerView: View {
                         model.openRefillPage()
                     } label: {
                         BuyCoinsButtonView()
-                    }.onOpenURL { url in
-                        model.didCompleteRefill(url: url)
                     }
                 }
             }
