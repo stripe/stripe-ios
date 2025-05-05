@@ -1,3 +1,7 @@
+## x.x.x x-x-x
+### PaymentSheet
+* [Fixed] Updated the "TEST MODE" badge to say "TEST", due to the upcoming release of [Sandboxes](https://docs.stripe.com/sandboxes). 
+
 ## 24.13.0 2025-05-05
 ### PaymentSheet
 * [Added] Embedded Payment Element is now generally available. Learn more by visiting the [docs](https://docs.stripe.com/payments/mobile/embedded).
