@@ -149,7 +149,7 @@ class PollingViewController: UIViewController {
 
     // MARK: Navigation bar
 
-    internal lazy var navigationBar: SheetNavigationBar = {
+    internal lazy var sheetNavigationBar: SheetNavigationBar? = {
         let navBar = SheetNavigationBar(isTestMode: false,
                                         appearance: appearance)
         navBar.delegate = self
@@ -280,7 +280,7 @@ class PollingViewController: UIViewController {
             self.cancelButton.isHidden = true
             self.titleLabel.text = .Localized.payment_failed
             self.instructionLabel.text = .Localized.please_go_back
-            self.navigationBar.setStyle(.back(showAdditionalButton: false))
+            self.sheetNavigationBar?.setStyle(.back(showAdditionalButton: false))
             self.intentPoller.suspendPolling()
             self.oneSecondTimer?.invalidate()
 

@@ -18,7 +18,7 @@ protocol LoadingViewControllerDelegate: AnyObject {
 /// For internal SDK use only
 @objc(STP_Internal_LoadingViewController)
 class LoadingViewController: UIViewController, BottomSheetContentViewController {
-    lazy var navigationBar: SheetNavigationBar = {
+    lazy var sheetNavigationBar: SheetNavigationBar? = {
         let navigationBar = SheetNavigationBar(isTestMode: isTestMode,
                                                appearance: appearance)
         navigationBar.delegate = self

@@ -13,7 +13,7 @@ import UIKit
 class SepaMandateViewController: UIViewController, BottomSheetContentViewController {
     let requiresFullScreen: Bool = false
 
-    lazy var navigationBar: SheetNavigationBar = {
+    lazy var sheetNavigationBar: SheetNavigationBar? = {
         let navBar = SheetNavigationBar(isTestMode: configuration.apiClient.isTestmode, appearance: configuration.appearance)
         navBar.delegate = self
         return navBar

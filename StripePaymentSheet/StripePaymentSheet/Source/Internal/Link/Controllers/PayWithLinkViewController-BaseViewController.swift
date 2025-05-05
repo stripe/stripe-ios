@@ -15,6 +15,7 @@ extension PayWithLinkViewController {
     /// For internal SDK use only
     @objc(STP_Internal_PayWithLinkBaseViewController)
     class BaseViewController: UIViewController {
+
         weak var coordinator: PayWithLinkCoordinating?
 
         let context: Context
@@ -121,4 +122,17 @@ extension PayWithLinkViewController {
         }
     }
 
+}
+
+extension PayWithLinkViewController.BaseViewController: BottomSheetContentViewController {
+    var sheetNavigationBar: SheetNavigationBar? { nil }
+    var requiresFullScreen: Bool { false }
+
+    func didTapOrSwipeToDismiss() {
+        if context.shouldFinishOnClose {
+            coordinator?.finish(withResult: .canceled, deferredIntentConfirmationType: nil)
+        } else {
+            coordinator?.cancel()
+        }
+    }
 }
