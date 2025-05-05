@@ -1,4 +1,4 @@
-## x.x.x x-x-x
+## 24.13.0 2025-05-05
 ### PaymentSheet
 * [Added] Embedded Payment Element is now generally available. Learn more by visiting the [docs](https://docs.stripe.com/payments/mobile/embedded).
 
