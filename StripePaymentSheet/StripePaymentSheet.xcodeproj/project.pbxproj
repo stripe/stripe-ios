@@ -476,6 +476,7 @@
 		11E117C348836EF631BD2DB8 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
 		135B7354260E0E7CADCF3426 /* PaymentSheetAddressTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentSheetAddressTests.swift; sourceTree = "<group>"; };
 		13FB3274557B85BA4C9FA6C0 /* LinkLegalTermsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LinkLegalTermsView.swift; sourceTree = "<group>"; };
+		1405894F2DC857E100DF2EAA /* th */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = th; path = th.lproj/Localizable.strings; sourceTree = "<group>"; };
 		15854DCE06F859BB426E9C9A /* StripePaymentsTestUtils.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = StripePaymentsTestUtils.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		169C7CCB7A003FEDEA598095 /* StripeCoreTestUtils.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = StripeCoreTestUtils.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		1ADE49E72DD5EDA448D12D88 /* PollingViewTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PollingViewTests.swift; sourceTree = "<group>"; };
@@ -2060,6 +2061,7 @@
 				"zh-HK",
 				"zh-Hans",
 				"zh-Hant",
+				th,
 			);
 			mainGroup = AEBF7882CCDBB20F4DF60861;
 			packageReferences = (
@@ -2558,6 +2560,7 @@
 				6CDF0F248F60A38FE4977428 /* zh-Hans */,
 				102C5FA371A7917110E8B27F /* zh-Hant */,
 				5EFCD0B8D104E175C9EFF7A0 /* zh-HK */,
+				1405894F2DC857E100DF2EAA /* th */,
 			);
 			name = Localizable.strings;
 			sourceTree = "<group>";
