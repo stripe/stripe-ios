@@ -3,6 +3,16 @@
     {
       "filename" : "Frame 1903.svg",
       "idiom" : "universal"
+    },
+    {
+      "appearances" : [
+        {
+          "appearance" : "luminosity",
+          "value" : "dark"
+        }
+      ],
+      "filename" : "icon_add_bordered_dark.svg",
+      "idiom" : "universal"
     }
   ],
   "info" : {
