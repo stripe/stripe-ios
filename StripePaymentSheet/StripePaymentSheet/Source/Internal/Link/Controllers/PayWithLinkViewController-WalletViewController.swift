@@ -521,8 +521,8 @@ extension PayWithLinkViewController.WalletViewController: LinkPaymentMethodPicke
 extension PayWithLinkViewController.WalletViewController: LinkPaymentMethodPickerDelegate {
 
     func paymentMethodPicker(_ pickerView: LinkPaymentMethodPicker, didSelectIndex index: Int) {
+        viewModel.selectedPaymentMethodIndex = index
         if viewModel.selectedPaymentMethodIsSupported {
-            viewModel.selectedPaymentMethodIndex = index
             pickerView.setExpanded(false, animated: true)
         }
         pickerView.reloadData()

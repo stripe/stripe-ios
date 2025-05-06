@@ -35,6 +35,8 @@ extension LinkPaymentMethodPicker {
             }
         }
 
+        // Indicates whether the header should appear collapsable or not.
+        // The header is collapsable when the currently selected payment method is supported.
         private(set) var collapsable: Bool = false
 
         var isExpanded: Bool = false {
