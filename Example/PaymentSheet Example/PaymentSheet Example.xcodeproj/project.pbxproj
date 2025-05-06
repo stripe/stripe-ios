@@ -51,6 +51,15 @@
 		973DA944730BD761CE479F8E /* QRView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 575345B1A7F6EBD12A1A5F9C /* QRView.swift */; };
 		9F126696AD86BF2E861B5CC5 /* StripeFinancialConnections.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 16547B41C80B97FC2EFD0798 /* StripeFinancialConnections.framework */; };
 		A0037CC8E331CFF5CEE2D580 /* ExampleSwiftUICustomPaymentFlow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 447A394B34A55D5B1CD5C0C1 /* ExampleSwiftUICustomPaymentFlow.swift */; };
+		A0317DE12DC97162003EF979 /* Buttons.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0317DDA2DC97162003EF979 /* Buttons.swift */; };
+		A0317DE22DC97162003EF979 /* StoreView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0317DDE2DC97162003EF979 /* StoreView.swift */; };
+		A0317DE32DC97162003EF979 /* SigninView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0317DDB2DC97162003EF979 /* SigninView.swift */; };
+		A0317DE42DC97162003EF979 /* RefillView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0317DDF2DC97162003EF979 /* RefillView.swift */; };
+		A0317DE52DC97162003EF979 /* FruitModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0317DD82DC97162003EF979 /* FruitModel.swift */; };
+		A0317DE62DC97162003EF979 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0317DDC2DC97162003EF979 /* ContentView.swift */; };
+		A0317DE72DC97162003EF979 /* FruitServer.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0317DD52DC97162003EF979 /* FruitServer.swift */; };
+		A0317DE82DC97162003EF979 /* CustomerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0317DDD2DC97162003EF979 /* CustomerView.swift */; };
+		A0317DE92DC97162003EF979 /* MockServer.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0317DD62DC97162003EF979 /* MockServer.swift */; };
 		A071C07B6FFACC5DEFC6AA01 /* ExampleSwiftUIViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = D20765908089ACB79B556592 /* ExampleSwiftUIViews.swift */; };
 		A262D76C3319002A2F6EE395 /* CustomerSheetTestPlaygroundSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C2A8BAE3842A0E892D06BB9 /* CustomerSheetTestPlaygroundSettings.swift */; };
 		A3884C372DA701A700CAE78E /* PaymentMethodOptionsSetupFutureUsagePlaygroundView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3884C362DA701A700CAE78E /* PaymentMethodOptionsSetupFutureUsagePlaygroundView.swift */; };
@@ -243,6 +252,15 @@
 		9D55109311453F8D8F44A144 /* pl-PL */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "pl-PL"; path = "pl-PL.lproj/Main.strings"; sourceTree = "<group>"; };
 		9D6F8659F31E23DF549E5057 /* el-GR */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "el-GR"; path = "el-GR.lproj/Main.strings"; sourceTree = "<group>"; };
 		9F9C96D25ED549D6255FC274 /* StripeUICore.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = StripeUICore.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		A0317DD52DC97162003EF979 /* FruitServer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FruitServer.swift; sourceTree = "<group>"; };
+		A0317DD62DC97162003EF979 /* MockServer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockServer.swift; sourceTree = "<group>"; };
+		A0317DD82DC97162003EF979 /* FruitModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FruitModel.swift; sourceTree = "<group>"; };
+		A0317DDA2DC97162003EF979 /* Buttons.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Buttons.swift; sourceTree = "<group>"; };
+		A0317DDB2DC97162003EF979 /* SigninView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SigninView.swift; sourceTree = "<group>"; };
+		A0317DDC2DC97162003EF979 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		A0317DDD2DC97162003EF979 /* CustomerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomerView.swift; sourceTree = "<group>"; };
+		A0317DDE2DC97162003EF979 /* StoreView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StoreView.swift; sourceTree = "<group>"; };
+		A0317DDF2DC97162003EF979 /* RefillView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RefillView.swift; sourceTree = "<group>"; };
 		A10301FB96F08B8ADF93B2DB /* lv-LV */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "lv-LV"; path = "lv-LV.lproj/LaunchScreen.strings"; sourceTree = "<group>"; };
 		A10F554509B65711F00BE91C /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/LaunchScreen.strings; sourceTree = "<group>"; };
 		A1D77C5D868315EAB494325C /* lv-LV */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "lv-LV"; path = "lv-LV.lproj/Main.strings"; sourceTree = "<group>"; };
@@ -408,6 +426,46 @@
 			path = PaymentSheetLocalizationScreenshotGenerator;
 			sourceTree = "<group>";
 		};
+		A0317DD22DC97158003EF979 /* Fruit Store */ = {
+			isa = PBXGroup;
+			children = (
+				A0317DD72DC97162003EF979 /* Server */,
+				A0317DD92DC97162003EF979 /* Models */,
+				A0317DE02DC97162003EF979 /* Views */,
+			);
+			path = "Fruit Store";
+			sourceTree = "<group>";
+		};
+		A0317DD72DC97162003EF979 /* Server */ = {
+			isa = PBXGroup;
+			children = (
+				A0317DD52DC97162003EF979 /* FruitServer.swift */,
+				A0317DD62DC97162003EF979 /* MockServer.swift */,
+			);
+			path = Server;
+			sourceTree = "<group>";
+		};
+		A0317DD92DC97162003EF979 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				A0317DD82DC97162003EF979 /* FruitModel.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		A0317DE02DC97162003EF979 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				A0317DDA2DC97162003EF979 /* Buttons.swift */,
+				A0317DDB2DC97162003EF979 /* SigninView.swift */,
+				A0317DDC2DC97162003EF979 /* ContentView.swift */,
+				A0317DDD2DC97162003EF979 /* CustomerView.swift */,
+				A0317DDE2DC97162003EF979 /* StoreView.swift */,
+				A0317DDF2DC97162003EF979 /* RefillView.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
 		ACF2A07E6D470CDF889DE14C /* Project */ = {
 			isa = PBXGroup;
 			children = (
@@ -451,6 +509,7 @@
 		C4BE75A2EECEF0AC9EC24CD8 /* PaymentSheet Example */ = {
 			isa = PBXGroup;
 			children = (
+				A0317DD22DC97158003EF979 /* Fruit Store */,
 				31CDFC2B2BA36F5B00B3DD91 /* PrivacyInfo.xcprivacy */,
 				132709C10C0114D239ED3FE9 /* Resources */,
 				05E317C6C8459B147C041D93 /* AppDelegate.swift */,
@@ -716,6 +775,15 @@
 				EB3C76C2A5704F94F0414BEF /* ExampleCheckoutViewController.swift in Sources */,
 				D235E82A7173E8051BC5A261 /* ExampleCustomCheckoutViewController.swift in Sources */,
 				3266C6EB6B045F613228C895 /* ExampleCustomDeferredCheckoutViewController.swift in Sources */,
+				A0317DE12DC97162003EF979 /* Buttons.swift in Sources */,
+				A0317DE22DC97162003EF979 /* StoreView.swift in Sources */,
+				A0317DE32DC97162003EF979 /* SigninView.swift in Sources */,
+				A0317DE42DC97162003EF979 /* RefillView.swift in Sources */,
+				A0317DE52DC97162003EF979 /* FruitModel.swift in Sources */,
+				A0317DE62DC97162003EF979 /* ContentView.swift in Sources */,
+				A0317DE72DC97162003EF979 /* FruitServer.swift in Sources */,
+				A0317DE82DC97162003EF979 /* CustomerView.swift in Sources */,
+				A0317DE92DC97162003EF979 /* MockServer.swift in Sources */,
 				61FB6BC72C88C8BF00F8E074 /* EmbeddedPlaygroundViewController.swift in Sources */,
 				56EF0879D7EAC041B147680C /* ExampleLinkPaymentCheckoutViewController.swift in Sources */,
 				A0037CC8E331CFF5CEE2D580 /* ExampleSwiftUICustomPaymentFlow.swift in Sources */,
