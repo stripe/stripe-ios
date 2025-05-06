@@ -17,7 +17,9 @@ extension LinkPaymentMethodPicker {
             static let iconSize: CGSize = .init(width: 24, height: 24)
         }
 
-        private let iconView: UIImageView = UIImageView(image: Image.icon_add_bordered.makeImage(template: false))
+        private let lightModeIcon = Image.icon_add_bordered.makeImage(template: false)
+        private let darkModeIcon = Image.icon_add_bordered_dark.makeImage(template: false)
+        private let iconView = UIImageView()
 
         private lazy var textLabel: UILabel = {
             let label = UILabel()
@@ -65,6 +67,8 @@ extension LinkPaymentMethodPicker {
         }
 
         private func setupUI() {
+            setIcon()
+
             let stackView = UIStackView(arrangedSubviews: [iconView, textLabel])
             stackView.spacing = Cell.Constants.contentSpacing
             stackView.alignment = .center
@@ -94,6 +98,27 @@ extension LinkPaymentMethodPicker {
             }
         }
 
+        private func setIcon() {
+            switch traitCollection.userInterfaceStyle {
+            case .dark:
+                iconView.image = darkModeIcon
+            case .light, .unspecified:
+                iconView.image = lightModeIcon
+            @unknown default:
+                iconView.image = lightModeIcon
+            }
+        }
+
+        // UIImages need to be manually updated when the system theme changes.
+        #if !os(visionOS)
+        override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+            super.traitCollectionDidChange(previousTraitCollection)
+            guard traitCollection.hasDifferentColorAppearance(comparedTo: previousTraitCollection) else {
+                return
+            }
+            setIcon()
+        }
+        #endif
     }
 
 }
