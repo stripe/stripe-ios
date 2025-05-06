@@ -4,7 +4,7 @@
 <dict>
 	<key>com.apple.developer.associated-domains</key>
 	<array>
-		<string>applinks:vaulted-well-elderberry.glitch.me?mode=developer</string>
+		<string>applinks:vaulted-well-elderberry.glitch.me</string>
 	</array>
 	<key>com.apple.developer.devicecheck.appattest-environment</key>
 	<string>development</string>
