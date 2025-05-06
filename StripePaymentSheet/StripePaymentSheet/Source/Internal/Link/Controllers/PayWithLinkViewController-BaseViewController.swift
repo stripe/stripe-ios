@@ -44,7 +44,7 @@ extension PayWithLinkViewController {
             return navigationBar
         }()
 
-        private(set) lazy var contentView = UIView()
+        private(set) lazy var contentView = DynamicHeightContainerView()
 
         init(context: Context) {
             self.context = context
@@ -76,6 +76,13 @@ extension PayWithLinkViewController {
                 contentView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
                 contentView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
             ])
+        }
+
+        override func viewDidLayoutSubviews() {
+            super.viewDidLayoutSubviews()
+
+            let contentHeight = contentView.frame.height
+            preferredContentSize = CGSize(width: view.bounds.width, height: contentHeight)
         }
 
         override func present(

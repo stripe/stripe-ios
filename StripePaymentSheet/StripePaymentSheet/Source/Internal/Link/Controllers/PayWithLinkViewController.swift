@@ -127,7 +127,7 @@ final class PayWithLinkViewController: UINavigationController {
 
     lazy var bottomSheetViewController: BottomSheetViewController = {
         BottomSheetViewController(
-            contentViewController: self,
+            contentViewController: loadingViewController,
             appearance: context.configuration.appearance,
             isTestMode: context.configuration.apiClient.isTestmode,
             didCancelNative3DS2: {}
