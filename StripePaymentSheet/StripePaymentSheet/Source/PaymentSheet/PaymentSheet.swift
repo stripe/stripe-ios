@@ -275,6 +275,8 @@ public class PaymentSheet {
         return vc
     }()
 
+    var payWithLinkBottomSheet: BottomSheetViewController?
+
     let analyticsHelper: PaymentSheetAnalyticsHelper
 }
 

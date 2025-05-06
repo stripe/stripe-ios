@@ -77,9 +77,12 @@ extension PaymentSheet {
         )
 
         payWithLinkVC.payWithLinkDelegate = self
+
+        let bottomSheet = payWithLinkVC.bottomSheetViewController
+        self.payWithLinkBottomSheet = bottomSheet
         presentingController.presentAsBottomSheet(
-            payWithLinkVC.bottomSheetViewController,
-            appearance: configuration.appearance,
+            bottomSheet,
+            appearance: self.configuration.appearance,
             completion: completion
         )
     }
@@ -143,6 +146,7 @@ extension PaymentSheet: PayWithLinkViewControllerDelegate {
             }
             self.analyticsHelper.logPayment(paymentOption: paymentOption, result: result, deferredIntentConfirmationType: confirmationType)
 
+            self.payWithLinkBottomSheet = nil
             completion(result, confirmationType)
         }
     }
