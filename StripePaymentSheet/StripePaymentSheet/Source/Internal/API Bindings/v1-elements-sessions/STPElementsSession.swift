@@ -235,6 +235,10 @@ extension STPElementsSession {
         return cardBrandChoice?.eligible ?? false
     }
 
+    var enableLinkInSPM: Bool {
+        flags["elements_enable_link_spm"] ?? false
+    }
+
     func allowsRemovalOfPaymentMethodsForPaymentSheet() -> Bool {
         var allowsRemovalOfPaymentMethods = false
         if let customerSession = customer?.customerSession {

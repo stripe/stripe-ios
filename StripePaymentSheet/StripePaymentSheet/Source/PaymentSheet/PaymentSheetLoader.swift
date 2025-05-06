@@ -378,11 +378,15 @@ final class PaymentSheetLoader {
               !ephemeralKey.isEmpty else {
             return []
         }
+
+        // We don't support Link payment methods with customer ephemeral keys
+        let types = PaymentSheet.supportedSavedPaymentMethods.filter { $0 != .link }
+
         return try await withCheckedThrowingContinuation { continuation in
             configuration.apiClient.listPaymentMethods(
                 forCustomer: customerID,
                 using: ephemeralKey,
-                types: PaymentSheet.supportedSavedPaymentMethods,
+                types: types,
                 limit: 100
             ) { paymentMethods, error in
                 guard var paymentMethods, error == nil else {
