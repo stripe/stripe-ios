@@ -61,6 +61,7 @@ class PayWithLinkViewController_WalletViewModelTests: XCTestCase {
 
     func test_showCorrectMandateForPayment() throws {
         let sut = try makeSUT(isSettingUp: false)
+        XCTAssertFalse(sut.context.intent.isSettingUp)
 
         // Card
         sut.selectedPaymentMethodIndex = LinkStubs.PaymentMethodIndices.card
@@ -73,6 +74,7 @@ class PayWithLinkViewController_WalletViewModelTests: XCTestCase {
 
     func test_showCorrectMandateForSetup() throws {
         let sut = try makeSUT(isSettingUp: true)
+        XCTAssertTrue(sut.context.intent.isSettingUp)
 
         // Card
         sut.selectedPaymentMethodIndex = LinkStubs.PaymentMethodIndices.card
