@@ -106,25 +106,8 @@ class PayWithLinkViewController_WalletViewModelTests: XCTestCase {
 extension PayWithLinkViewController_WalletViewModelTests {
 
     func makeSUT() throws -> PayWithLinkViewController.WalletViewModel {
-        // Link settings don't live in the PaymentIntent object itself, but in the /elements/sessions API response
-        // So we construct a minimal response (see STPPaymentIntentTest.testDecodedObjectFromAPIResponseMapping) to parse them
-        let paymentIntentJson = try XCTUnwrap(STPTestUtils.jsonNamed(STPTestJSONPaymentIntent))
-        let orderedPaymentJson = ["card", "link"]
-        let paymentIntentResponse = [
-            "payment_intent": paymentIntentJson,
-            "ordered_payment_method_types": orderedPaymentJson,
-        ] as [String: Any]
-        let linkSettingsJson = ["link_funding_sources": ["CARD"]]
-        let response = [
-            "payment_method_preference": paymentIntentResponse,
-            "link_settings": linkSettingsJson,
-            "session_id": "abc123",
-        ] as [String: Any]
-        let elementsSession = try XCTUnwrap(
-            STPElementsSession.decodedObject(fromAPIResponse: response)
-        )
-        let paymentIntentJSON = elementsSession.allResponseFields[jsonDict: "payment_method_preference"]?[jsonDict: "payment_intent"]
-        let paymentIntent = STPPaymentIntent.decodedObject(fromAPIResponse: paymentIntentJSON)!
+        let elementsSession = try PayWithLinkTestHelpers.makeMockElementSession()
+        let paymentIntent = try PayWithLinkTestHelpers.makeMockPaymentIntent(elementsSession: elementsSession)
 
         return PayWithLinkViewController.WalletViewModel(
             // TODO(link): Fully mock `PaymentSheetLinkAccount and remove this.
