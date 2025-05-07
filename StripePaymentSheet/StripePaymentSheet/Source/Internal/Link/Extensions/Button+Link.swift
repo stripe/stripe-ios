@@ -42,7 +42,7 @@ extension Button.Configuration {
     static func linkPlain() -> Self {
         var configuration: Button.Configuration = .plain()
         configuration.font = LinkUI.font(forTextStyle: .body)
-        configuration.foregroundColor = .linkBrandDark
+        configuration.foregroundColor = .linkBrandDarker
         configuration.disabledForegroundColor = nil
         configuration.colorTransforms.highlightedForeground = .setAlpha(amount: 0.4)
         configuration.colorTransforms.disabledForeground = .setAlpha(amount: 0.3)
