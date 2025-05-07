@@ -26,6 +26,13 @@ extension String.Localized {
         )
     }
 
+    static var continue_another_way: String {
+        STPLocalizedString(
+            "Continue another way",
+            "Label of a button that when tapped allows the user to select a different form of payment."
+        )
+    }
+
     static func pay_faster_at_$merchant_and_thousands_of_merchants(merchantDisplayName: String) -> String {
         String(
             format: STPLocalizedString(

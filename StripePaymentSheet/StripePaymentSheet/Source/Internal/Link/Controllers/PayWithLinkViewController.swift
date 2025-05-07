@@ -73,6 +73,14 @@ final class PayWithLinkViewController: UINavigationController {
         var lastAddedPaymentDetails: ConsumerPaymentDetails?
         var analyticsHelper: PaymentSheetAnalyticsHelper
 
+        var secondaryButtonLabel: String {
+            if intent.isSettingUp {
+                String.Localized.continue_another_way
+            } else {
+                String.Localized.pay_another_way
+            }
+        }
+
         /// Creates a new Context object.
         /// - Parameters:
         ///   - intent: Intent.
@@ -96,7 +104,7 @@ final class PayWithLinkViewController: UINavigationController {
             self.configuration = configuration
             self.shouldOfferApplePay = shouldOfferApplePay
             self.shouldFinishOnClose = shouldFinishOnClose
-            self.callToAction = callToAction ?? intent.callToAction
+            self.callToAction = callToAction ?? .makeDefaultTypeForLink(intent: intent)
             self.analyticsHelper = analyticsHelper
         }
     }
