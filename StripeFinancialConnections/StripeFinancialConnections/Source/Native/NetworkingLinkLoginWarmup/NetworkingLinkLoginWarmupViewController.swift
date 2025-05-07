@@ -46,10 +46,7 @@ final class NetworkingLinkLoginWarmupViewController: SheetViewController {
     private lazy var warmupFooterView: NetworkingLinkLoginWarmupFooterView = {
         let secondaryButtonTitle: String
         if dataSource.manifest.isProductInstantDebits {
-            secondaryButtonTitle = STPLocalizedString(
-                "Cancel",
-                "A button title. This button, when pressed, will simply dismiss the warmup pane, as it is required to continue with Link in the Instant Debits flow."
-            )
+            secondaryButtonTitle = String.Localized.cancel
         } else {
             secondaryButtonTitle = STPLocalizedString(
                 "Not now",

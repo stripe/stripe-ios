@@ -6,6 +6,7 @@
 //
 
 import Foundation
+@_spi(STP) import StripeCore
 @_spi(STP) import StripeUICore
 import UIKit
 
@@ -46,7 +47,7 @@ final class CloseConfirmationViewController: SheetViewController {
             ),
             footerView: PaneLayoutView.createFooterView(
                 primaryButtonConfiguration: PaneLayoutView.ButtonConfiguration(
-                    title: "Cancel", // TODO: when Financial Connections starts supporting localization, change this to `String.Localized.cancel`
+                    title: String.Localized.cancel,
                     action: { [weak self] in
                         self?.dismiss(animated: true)
                     }
