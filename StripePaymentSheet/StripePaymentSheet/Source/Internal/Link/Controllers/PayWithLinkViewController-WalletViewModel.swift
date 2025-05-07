@@ -63,15 +63,28 @@ extension PayWithLinkViewController {
             return paymentMethods[selectedPaymentMethodIndex]
         }
 
-        /// Whether or not the view should show the instant debit mandate text.
-        var shouldShowInstantDebitMandate: Bool {
+        /// The mandate text to show.
+        var mandate: NSMutableAttributedString? {
             switch selectedPaymentMethod?.details {
+            case .card:
+                guard context.intent.isSettingUp else { return nil }
+                let string = String(format: .Localized.by_providing_your_card_information_text, context.configuration.merchantDisplayName)
+                return NSMutableAttributedString(string: string)
             case .bankAccount:
                 // Instant debit mandate should be shown when paying with bank account.
-                return true
+                let string = String.Localized.bank_continue_mandate_text
+                return STPStringUtils.applyLinksToString(
+                    template: string,
+                    links: ["terms": URL(string: "https://link.com/terms/ach-authorization")!]
+                )
             default:
-                return false
+                return nil
             }
+        }
+
+        /// Whether or not the view should show the mandate text.
+        var shouldShowMandate: Bool {
+            mandate != nil
         }
 
         var noticeText: String? {
