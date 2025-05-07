@@ -18,6 +18,10 @@ extension STPElementsSession {
         linkSettings?.passthroughModeEnabled ?? false
     }
 
+    var linkCardBrandFilteringEnabled: Bool {
+        linkPassthroughModeEnabled
+    }
+
     var supportsLinkCard: Bool {
         supportsLink && (linkFundingSources?.contains(.card) ?? false) || linkPassthroughModeEnabled
     }

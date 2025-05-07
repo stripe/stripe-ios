@@ -33,7 +33,6 @@ extension PayWithLinkViewController {
             paymentPicker.delegate = self
             paymentPicker.dataSource = self
             paymentPicker.supportedPaymentMethodTypes = viewModel.supportedPaymentMethodTypes
-            paymentPicker.selectedIndex = viewModel.selectedPaymentMethodIndex
             paymentPicker.billingDetails = context.configuration.defaultBillingDetails
             paymentPicker.billingDetailsCollectionConfiguration = context.configuration.billingDetailsCollectionConfiguration
             return paymentPicker
@@ -500,6 +499,9 @@ extension PayWithLinkViewController.WalletViewController: PayWithLinkWalletViewM
 // MARK: - LinkPaymentMethodPickerDataSource
 
 extension PayWithLinkViewController.WalletViewController: LinkPaymentMethodPickerDataSource {
+    var selectedIndex: Int {
+        viewModel.selectedPaymentMethodIndex
+    }
 
     func numberOfPaymentMethods(in picker: LinkPaymentMethodPicker) -> Int {
         return viewModel.paymentMethods.count
@@ -509,17 +511,21 @@ extension PayWithLinkViewController.WalletViewController: LinkPaymentMethodPicke
         return viewModel.paymentMethods[index]
     }
 
+    func isPaymentMethodSupported(_ paymentMethod: ConsumerPaymentDetails?) -> Bool {
+        viewModel.isPaymentMethodSupported(paymentMethod: paymentMethod)
+    }
 }
 
 // MARK: - LinkPaymentMethodPickerDelegate
 
 extension PayWithLinkViewController.WalletViewController: LinkPaymentMethodPickerDelegate {
 
-    func paymentMethodPickerDidChange(_ pickerView: LinkPaymentMethodPicker) {
-        viewModel.selectedPaymentMethodIndex = pickerView.selectedIndex
+    func paymentMethodPicker(_ pickerView: LinkPaymentMethodPicker, didSelectIndex index: Int) {
+        viewModel.selectedPaymentMethodIndex = index
         if viewModel.selectedPaymentMethodIsSupported {
             pickerView.setExpanded(false, animated: true)
         }
+        pickerView.reloadData()
     }
 
     func paymentMethodPicker(
@@ -646,10 +652,8 @@ extension PayWithLinkViewController.WalletViewController: UpdatePaymentViewContr
         paymentMethod: ConsumerPaymentDetails,
         confirmationExtras: LinkConfirmationExtras?
     ) {
-        if let index = viewModel.updatePaymentMethod(paymentMethod) {
-            self.paymentPicker.selectedIndex = index
-            self.paymentPicker.reloadData()
-        }
+        viewModel.updatePaymentMethod(paymentMethod)
+        self.paymentPicker.reloadData()
 
         if let confirmationExtras {
             // The update screen was only opened to collect missing billing details. Now that we have them,

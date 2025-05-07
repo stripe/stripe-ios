@@ -146,10 +146,6 @@ extension PayWithLinkViewController {
         }
 
         var confirmButtonStatus: ConfirmButton.Status {
-            if selectedPaymentMethod == nil {
-                return .disabled
-            }
-
             if !selectedPaymentMethodIsSupported {
                 // Selected payment method not supported
                 return .disabled
@@ -176,11 +172,7 @@ extension PayWithLinkViewController {
         }
 
         var selectedPaymentMethodIsSupported: Bool {
-            guard let selectedPaymentMethod = selectedPaymentMethod else {
-                return false
-            }
-
-            return supportedPaymentMethodTypes.contains(selectedPaymentMethod.type)
+            isPaymentMethodSupported(paymentMethod: selectedPaymentMethod)
         }
 
         init(
@@ -203,7 +195,22 @@ extension PayWithLinkViewController {
             linkAccount.deletePaymentDetails(id: paymentMethod.stripeID) { [self] result in
                 switch result {
                 case .success:
+                    let previouslySelectedPaymentMethod = self.selectedPaymentMethod
                     paymentMethods.remove(at: index)
+
+                    var defaultPaymentMethodIndex: Int {
+                        Self.determineInitiallySelectedPaymentMethod(
+                            context: context,
+                            paymentMethods: paymentMethods)
+                    }
+
+                    var updatedPaymentMethodIndex: Int? {
+                        paymentMethods.firstIndex(where: {
+                            $0.stripeID == previouslySelectedPaymentMethod?.stripeID
+                        })
+                    }
+
+                    selectedPaymentMethodIndex = updatedPaymentMethodIndex ?? defaultPaymentMethodIndex
                     delegate?.viewModelDidChange(self)
                 case .failure:
                     break
@@ -264,9 +271,9 @@ extension PayWithLinkViewController {
             }
         }
 
-        func updatePaymentMethod(_ paymentMethod: ConsumerPaymentDetails) -> Int? {
+        func updatePaymentMethod(_ paymentMethod: ConsumerPaymentDetails) {
             guard let index = paymentMethods.firstIndex(where: { $0.stripeID == paymentMethod.stripeID }) else {
-                return nil
+                return
             }
 
             if paymentMethod.isDefault {
@@ -275,9 +282,11 @@ extension PayWithLinkViewController {
 
             paymentMethods[index] = paymentMethod
 
-            delegate?.viewModelDidChange(self)
+            if isPaymentMethodSupported(paymentMethod: paymentMethod) {
+                selectedPaymentMethodIndex = index
+            }
 
-            return index
+            delegate?.viewModelDidChange(self)
         }
 
         func updateExpiryDate(completion: @escaping (Result<ConsumerPaymentDetails, Error>) -> Void) {
@@ -295,8 +304,11 @@ extension PayWithLinkViewController {
                 completion: completion
             )
         }
-    }
 
+        func isPaymentMethodSupported(paymentMethod: ConsumerPaymentDetails?) -> Bool {
+            paymentMethod?.isSupported(linkAccount: linkAccount, elementsSession: context.elementsSession, cardBrandFilter: context.configuration.cardBrandFilter) ?? false
+        }
+    }
 }
 
 private extension PayWithLinkViewController.WalletViewModel {
