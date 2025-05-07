@@ -209,7 +209,9 @@ extension PayWithLinkViewController_WalletViewModelTests {
         linkPassthroughModeEnabled: Bool? = nil,
         isSettingUp: Bool = false
     ) throws -> PayWithLinkViewController.WalletViewModel {
-        let (intent, elementsSession) = try isSettingUp ? makeSetupIntentAndElementsSession() : makePaymentIntentAndElementsSession()
+        let (intent, elementsSession) = try isSettingUp
+            ? makeSetupIntentAndElementsSession(linkFundingSources: linkFundingSources, linkPassthroughModeEnabled: linkPassthroughModeEnabled)
+            : makePaymentIntentAndElementsSession(linkFundingSources: linkFundingSources, linkPassthroughModeEnabled: linkPassthroughModeEnabled)
 
         var paymentSheetConfiguration = PaymentSheet.Configuration()
 
@@ -235,7 +237,7 @@ extension PayWithLinkViewController_WalletViewModelTests {
             paymentMethods: paymentMethods
         )
     }
-    
+
     private func makePaymentIntentAndElementsSession(
         linkFundingSources: [String] = ["CARD"],
         linkPassthroughModeEnabled: Bool? = nil
@@ -268,7 +270,7 @@ extension PayWithLinkViewController_WalletViewModelTests {
 
         return (Intent.paymentIntent(paymentIntent), elementsSession)
     }
-    
+
     private func makeSetupIntentAndElementsSession(
         linkFundingSources: [String] = ["CARD"],
         linkPassthroughModeEnabled: Bool? = nil
@@ -281,13 +283,13 @@ extension PayWithLinkViewController_WalletViewModelTests {
             "setup_intent": setupIntentJson,
             "ordered_payment_method_types": orderedSetupJson,
         ] as [String: Any]
-        
+
         var linkSettingsJson: [String: Any] = ["link_funding_sources": linkFundingSources]
-        
+
         if let linkPassthroughModeEnabled {
             linkSettingsJson["link_passthrough_mode_enabled"] = linkPassthroughModeEnabled
         }
-        
+
         let response = [
             "payment_method_preference": setupIntentResponse,
             "link_settings": linkSettingsJson,
