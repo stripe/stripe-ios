@@ -331,7 +331,7 @@ class PlaygroundController: ObservableObject {
 
         switch settings.mode {
         case .payment:
-            // TODO: Return an IntentConfiguration that only sets up cards for future usage
+            // TODO: Return an IntentConfiguration that sets up cards, Klarna, and Amazon Pay for future usage
             return PaymentSheet.IntentConfiguration(
                 mode: .payment(amount: settings.amount.rawValue, currency: settings.currency.rawValue, setupFutureUsage: nil),
                 paymentMethodTypes: paymentMethodTypes,
