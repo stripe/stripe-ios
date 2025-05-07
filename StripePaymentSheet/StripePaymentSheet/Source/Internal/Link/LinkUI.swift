@@ -25,6 +25,8 @@ enum LinkUI {
 
     // MARK: - Corner radii
 
+    static let largeCornerRadius: CGFloat = 24
+
     static let cornerRadius: CGFloat = 12
 
     static let mediumCornerRadius: CGFloat = 8

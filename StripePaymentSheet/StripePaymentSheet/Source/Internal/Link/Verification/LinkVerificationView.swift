@@ -80,8 +80,15 @@ final class LinkVerificationView: UIView {
     }()
 
     private(set) lazy var codeField: OneTimeCodeTextField = {
-        let codeField = OneTimeCodeTextField(configuration: .init(numberOfDigits: 6),
-                                             theme: LinkUI.appearance.asElementsTheme)
+        let codeField = OneTimeCodeTextField(
+            configuration: .init(
+                numberOfDigits: 6,
+                enableDigitGrouping: false,
+                itemCornerRadius: LinkUI.cornerRadius,
+                itemHeight: 56
+            ),
+            theme: LinkUI.appearance.asElementsTheme
+        )
         codeField.addTarget(self, action: #selector(oneTimeCodeFieldChanged(_:)), for: .valueChanged)
         return codeField
     }()
@@ -104,10 +111,11 @@ final class LinkVerificationView: UIView {
     }()
 
     private lazy var resendCodeButton: Button = {
-        let button = Button(configuration: .linkBordered(), title: STPLocalizedString(
+        let button = Button(configuration: .linkPlain(), title: STPLocalizedString(
             "Resend code",
             "Label for a button that re-sends the a login code when tapped"
         ))
+        button.configuration.font = LinkUI.font(forTextStyle: .bodyEmphasized)
         button.addTarget(self, action: #selector(resendCodeTapped(_:)), for: .touchUpInside)
         return button
     }()
@@ -172,8 +180,8 @@ private extension LinkVerificationView {
                 headingLabel,
                 bodyLabel,
                 codeFieldContainer,
-                logoutView,
                 resendCodeButton,
+                logoutView,
             ]
         }
     }
@@ -190,7 +198,8 @@ private extension LinkVerificationView {
         // Spacing
         stackView.setCustomSpacing(Constants.edgeMargin, after: header)
         stackView.setCustomSpacing(LinkUI.extraLargeContentSpacing, after: bodyLabel)
-        stackView.setCustomSpacing(LinkUI.largeContentSpacing, after: codeFieldContainer)
+        stackView.setCustomSpacing(LinkUI.extraLargeContentSpacing, after: codeFieldContainer)
+        stackView.setCustomSpacing(LinkUI.largeContentSpacing, after: resendCodeButton)
 
         addSubview(stackView)
 
@@ -247,9 +256,9 @@ extension LinkVerificationView.Mode {
 
     var bodyFont: UIFont {
         switch self {
-        case .modal, .inlineLogin:
+        case .modal:
             return LinkUI.font(forTextStyle: .detail)
-        case .embedded:
+        case .inlineLogin, .embedded:
             return LinkUI.font(forTextStyle: .body)
         }
     }
