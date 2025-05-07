@@ -15,6 +15,7 @@ extension PayWithLinkViewController {
     /// For internal SDK use only
     @objc(STP_Internal_PayWithLinkBaseViewController)
     class BaseViewController: UIViewController {
+
         weak var coordinator: PayWithLinkCoordinating?
 
         let context: Context
@@ -43,7 +44,7 @@ extension PayWithLinkViewController {
             return navigationBar
         }()
 
-        private(set) lazy var contentView = UIView()
+        private(set) lazy var contentView = DynamicHeightContainerView()
 
         init(context: Context) {
             self.context = context
@@ -75,6 +76,13 @@ extension PayWithLinkViewController {
                 contentView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
                 contentView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
             ])
+        }
+
+        override func viewDidLayoutSubviews() {
+            super.viewDidLayoutSubviews()
+
+            let contentHeight = contentView.frame.height
+            preferredContentSize = CGSize(width: view.bounds.width, height: contentHeight)
         }
 
         override func present(
@@ -121,4 +129,17 @@ extension PayWithLinkViewController {
         }
     }
 
+}
+
+extension PayWithLinkViewController.BaseViewController: BottomSheetContentViewController {
+    var sheetNavigationBar: SheetNavigationBar? { nil }
+    var requiresFullScreen: Bool { false }
+
+    func didTapOrSwipeToDismiss() {
+        if context.shouldFinishOnClose {
+            coordinator?.finish(withResult: .canceled, deferredIntentConfirmationType: nil)
+        } else {
+            coordinator?.cancel()
+        }
+    }
 }

@@ -15,8 +15,8 @@ import UIKit
 
 protocol BottomSheetContentViewController: UIViewController {
 
-    /// - Note: Implementing `navigationBar` as a computed variable will result in undefined behavior.
-    var navigationBar: SheetNavigationBar { get }
+    /// - Note: Implementing `sheetNavigationBar` as a computed variable will result in undefined behavior.
+    var sheetNavigationBar: SheetNavigationBar? { get }
     var requiresFullScreen: Bool { get }
     func didTapOrSwipeToDismiss()
 }
@@ -121,7 +121,9 @@ class BottomSheetViewController: UIViewController, BottomSheetPresentable {
         addChild(contentViewController)
         contentViewController.didMove(toParent: self)
         contentContainerView.addArrangedSubview(contentViewController.view)
-        navigationBarContainerView.addArrangedSubview(contentViewController.navigationBar)
+        if let navigationBar = contentViewController.sheetNavigationBar {
+            navigationBarContainerView.addArrangedSubview(navigationBar)
+        }
         self.view.backgroundColor = appearance.colors.background
     }
 
@@ -220,8 +222,10 @@ class BottomSheetViewController: UIViewController, BottomSheetPresentable {
         contentContainerView.layoutIfNeeded()
         scrollView.layoutIfNeeded()
         scrollView.updateConstraintsIfNeeded()
-        oldContentViewController.navigationBar.removeFromSuperview()
-        navigationBarContainerView.addArrangedSubview(newContentViewController.navigationBar)
+        oldContentViewController.sheetNavigationBar?.removeFromSuperview()
+        if let navigationBar = newContentViewController.sheetNavigationBar {
+            navigationBarContainerView.addArrangedSubview(navigationBar)
+        }
         navigationBarContainerView.layoutIfNeeded()
         // Layout is mostly completed at this point. The new height is the navigation bar + content
         let newHeight = newContentViewController.view.bounds.size.height + navigationBarContainerView.bounds.size.height
@@ -468,9 +472,9 @@ extension BottomSheetViewController: UIAdaptivePresentationControllerDelegate {
 extension BottomSheetViewController: UIScrollViewDelegate {
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
         if scrollView.contentOffset.y > 0 {
-            contentViewController.navigationBar.setShadowHidden(false)
+            contentViewController.sheetNavigationBar?.setShadowHidden(false)
         } else {
-            contentViewController.navigationBar.setShadowHidden(true)
+            contentViewController.sheetNavigationBar?.setShadowHidden(true)
         }
     }
 }
