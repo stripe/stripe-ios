@@ -293,12 +293,11 @@ extension PayWithLinkViewController_WalletViewModelTests {
             linkSettingsJson["link_passthrough_mode_enabled"] = linkPassthroughModeEnabled
         }
 
-        var response = [
+        let response = [
             "payment_method_preference": paymentIntentResponse,
             "link_settings": linkSettingsJson,
             "session_id": "abc123",
         ] as [String: Any]
-
         let elementsSession = try XCTUnwrap(
             STPElementsSession.decodedObject(fromAPIResponse: response)
         )
