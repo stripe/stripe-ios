@@ -72,6 +72,34 @@ class PayWithLinkViewController_WalletViewModelTests: XCTestCase {
         XCTAssertEqual(sut.mandate?.string, "By continuing, you agree to authorize payments pursuant to these terms.")
     }
 
+    func test_showCorrectMandateForPaymentWithLinkPMOSFUPaymentMethodMode() throws {
+        let sut = try makeSUT(linkPassthroughModeEnabled: false, isSettingUp: false, linkPMOSFU: true)
+        XCTAssertFalse(sut.context.intent.isSettingUp)
+        XCTAssertTrue(sut.context.intent.isSetupFutureUsageSet(for: .link))
+
+        // Card
+        sut.selectedPaymentMethodIndex = LinkStubs.PaymentMethodIndices.card
+        XCTAssertEqual(sut.mandate?.string, "By providing your card information, you allow StripePaymentSheetTestHostApp to charge your card for future payments in accordance with their terms.")
+
+        // Bank account
+        sut.selectedPaymentMethodIndex = LinkStubs.PaymentMethodIndices.bankAccount
+        XCTAssertEqual(sut.mandate?.string, "By continuing, you agree to authorize payments pursuant to these terms.")
+    }
+
+    func test_showCorrectMandateForPaymentWithLinkPMOSFUPassthroughMode() throws {
+        let sut = try makeSUT(linkPassthroughModeEnabled: true, isSettingUp: false, linkPMOSFU: true)
+        XCTAssertFalse(sut.context.intent.isSettingUp)
+        XCTAssertTrue(sut.context.intent.isSetupFutureUsageSet(for: .card))
+
+        // Card
+        sut.selectedPaymentMethodIndex = LinkStubs.PaymentMethodIndices.card
+        XCTAssertEqual(sut.mandate?.string, "By providing your card information, you allow StripePaymentSheetTestHostApp to charge your card for future payments in accordance with their terms.")
+
+        // Bank account
+        sut.selectedPaymentMethodIndex = LinkStubs.PaymentMethodIndices.bankAccount
+        XCTAssertEqual(sut.mandate?.string, "By continuing, you agree to authorize payments pursuant to these terms.")
+    }
+
     func test_showCorrectMandateForSetup() throws {
         let sut = try makeSUT(isSettingUp: true)
         XCTAssertTrue(sut.context.intent.isSettingUp)
@@ -207,13 +235,17 @@ extension PayWithLinkViewController_WalletViewModelTests {
         linkFundingSources: [String] = ["CARD"],
         cardBrandAcceptance: PaymentSheet.CardBrandAcceptance = .all,
         linkPassthroughModeEnabled: Bool? = nil,
-        isSettingUp: Bool = false
+        isSettingUp: Bool = false,
+        linkPMOSFU: Bool? = nil
     ) throws -> PayWithLinkViewController.WalletViewModel {
         let (intent, elementsSession) = try isSettingUp
-            ? makeSetupIntentAndElementsSession(linkFundingSources: linkFundingSources, linkPassthroughModeEnabled: linkPassthroughModeEnabled)
-            : makePaymentIntentAndElementsSession(linkFundingSources: linkFundingSources, linkPassthroughModeEnabled: linkPassthroughModeEnabled)
+        ? makeSetupIntentAndElementsSession(linkFundingSources: linkFundingSources, linkPassthroughModeEnabled: linkPassthroughModeEnabled)
+            : makePaymentIntentAndElementsSession(linkFundingSources: linkFundingSources, linkPassthroughModeEnabled: linkPassthroughModeEnabled, linkPMOSFU: linkPMOSFU)
 
         var paymentSheetConfiguration = PaymentSheet.Configuration()
+        if let linkPMOSFU {
+            paymentSheetConfiguration.shouldReadPaymentMethodOptionsSetupFutureUsage = true
+        }
 
         paymentSheetConfiguration.cardBrandAcceptance = cardBrandAcceptance
 
@@ -240,11 +272,15 @@ extension PayWithLinkViewController_WalletViewModelTests {
 
     private func makePaymentIntentAndElementsSession(
         linkFundingSources: [String] = ["CARD"],
-        linkPassthroughModeEnabled: Bool? = nil
+        linkPassthroughModeEnabled: Bool? = nil,
+        linkPMOSFU: Bool? = nil
     ) throws -> (Intent, STPElementsSession) {
         // Link settings don't live in the PaymentIntent object itself, but in the /elements/sessions API response
         // So we construct a minimal response (see STPPaymentIntentTest.testDecodedObjectFromAPIResponseMapping) to parse them
-        let paymentIntentJson = try XCTUnwrap(STPTestUtils.jsonNamed(STPTestJSONPaymentIntent))
+        var paymentIntentJson = try XCTUnwrap(STPTestUtils.jsonNamed(STPTestJSONPaymentIntent))
+        if let linkPMOSFU {
+            paymentIntentJson["payment_method_options"] = [(linkPassthroughModeEnabled ?? false ? "card" : "link"): ["setup_future_usage": "off_session"]]
+        }
         let orderedPaymentJson = ["card", "link"]
         let paymentIntentResponse = [
             "payment_intent": paymentIntentJson,
@@ -257,11 +293,12 @@ extension PayWithLinkViewController_WalletViewModelTests {
             linkSettingsJson["link_passthrough_mode_enabled"] = linkPassthroughModeEnabled
         }
 
-        let response = [
+        var response = [
             "payment_method_preference": paymentIntentResponse,
             "link_settings": linkSettingsJson,
             "session_id": "abc123",
         ] as [String: Any]
+
         let elementsSession = try XCTUnwrap(
             STPElementsSession.decodedObject(fromAPIResponse: response)
         )
