@@ -111,7 +111,7 @@ class PaymentSheetFormFactory {
             }
         }()
         let paymentMethodType: STPPaymentMethodType = {
-            if let _ = linkAccount, !elementsSession.linkPassthroughModeEnabled {
+            if linkAccount != nil, !elementsSession.linkPassthroughModeEnabled {
                 return .link
             }
             switch paymentMethod {
