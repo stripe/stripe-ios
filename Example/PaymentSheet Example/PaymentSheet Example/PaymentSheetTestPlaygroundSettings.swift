@@ -713,7 +713,7 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
             formSheetAction: .continue,
             embeddedViewDisplaysMandateText: .on,
             cardBrandAcceptance: .all,
-            linkInSPMs: .on
+            linkInSPMs: .off
         )
     }
 
