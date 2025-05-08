@@ -111,6 +111,9 @@ class PaymentSheetFormFactory {
             }
         }()
         let paymentMethodType: STPPaymentMethodType = {
+            if let _ = linkAccount, !elementsSession.linkPassthroughModeEnabled {
+                return .link
+            }
             switch paymentMethod {
             case .stripe(let paymentMethodType):
                 return paymentMethodType

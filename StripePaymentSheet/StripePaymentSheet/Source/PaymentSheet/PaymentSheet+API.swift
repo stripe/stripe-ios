@@ -319,7 +319,7 @@ extension PaymentSheet {
                     paymentIntentParams.paymentMethodParams = paymentMethodParams
                     paymentIntentParams.returnURL = configuration.returnURL
                     let paymentOptions = paymentIntentParams.paymentMethodOptions ?? STPConfirmPaymentMethodOptions()
-                    let paymentMethodType = paymentMethodParams.type
+                    let paymentMethodType = elementsSession.linkPassthroughModeEnabled ? paymentMethodParams.type : .link
                     let currentSetupFutureUsage = configuration.shouldReadPaymentMethodOptionsSetupFutureUsage ? paymentIntent.paymentMethodOptions?.setupFutureUsage(for: paymentMethodType) : nil
                     paymentOptions.setSetupFutureUsageIfNecessary(shouldSave, currentSetupFutureUsage: currentSetupFutureUsage, paymentMethodType: paymentMethodType, customer: configuration.customer)
                     paymentIntentParams.paymentMethodOptions = paymentOptions
@@ -384,7 +384,7 @@ extension PaymentSheet {
                     paymentIntentParams.returnURL = configuration.returnURL
                     paymentIntentParams.shipping = makeShippingParams(for: paymentIntent, configuration: configuration)
                     let paymentOptions = paymentIntentParams.paymentMethodOptions ?? STPConfirmPaymentMethodOptions()
-                    let paymentMethodType = paymentMethod.type
+                    let paymentMethodType = elementsSession.linkPassthroughModeEnabled ? paymentMethod.type : .link
                     let currentSetupFutureUsage = configuration.shouldReadPaymentMethodOptionsSetupFutureUsage ? paymentIntent.paymentMethodOptions?.setupFutureUsage(for: paymentMethodType) : nil
                     paymentOptions.setSetupFutureUsageIfNecessary(shouldSave, currentSetupFutureUsage: currentSetupFutureUsage, paymentMethodType: paymentMethodType, customer: configuration.customer)
                     paymentIntentParams.paymentMethodOptions = paymentOptions
