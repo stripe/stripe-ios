@@ -117,6 +117,9 @@ public class STPPaymentMethod: NSObject, STPAPIResponseDecodable {
     )
     @objc private(set) public var metadata: [String: String]?
 
+    /// The payment details of a PaymentMethod that was created using Link.
+    @_spi(STP) public var linkPaymentDetails: LinkPaymentDetails?
+
     /// :nodoc:
     @objc private(set) public var allResponseFields: [AnyHashable: Any] = [:]
 

@@ -119,6 +119,7 @@
 		CAF857D45689FBEF17627E80 /* BundleLocatorProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 937066801E91C99C50192364 /* BundleLocatorProtocol.swift */; };
 		CB0E9DC82CB9C79E00E083D1 /* LinkBankPaymentMethod.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB0E9DC72CB9C79E00E083D1 /* LinkBankPaymentMethod.swift */; };
 		CB1FB2383FAEE0194C39E4DE /* OHHTTPStubsSwift in Frameworks */ = {isa = PBXBuildFile; productRef = E86AC7DD5F4DE2780E0AC425 /* OHHTTPStubsSwift */; };
+		CB791C7A2DBD83410066F26C /* FeatureFlags.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB791C792DBD83410066F26C /* FeatureFlags.swift */; };
 		CB80352A2D31BA79008F0556 /* AvailableIncentives.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB8035292D31BA79008F0556 /* AvailableIncentives.swift */; };
 		CB80352C2D31BAC7008F0556 /* LinkConsumerIncentive.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB80352B2D31BAC7008F0556 /* LinkConsumerIncentive.swift */; };
 		CB8A47A5FD057112CB607DE9 /* MockData.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5334916D2A4F927645C2569 /* MockData.swift */; };
@@ -346,6 +347,7 @@
 		C666CC926642D7AA76E75B5B /* StripeCoreTestUtils.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = StripeCoreTestUtils.h; sourceTree = "<group>"; };
 		CB0E9DC72CB9C79E00E083D1 /* LinkBankPaymentMethod.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LinkBankPaymentMethod.swift; sourceTree = "<group>"; };
 		CB2721EE8E075E700FF3E58A /* StripeiOS-Release.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "StripeiOS-Release.xcconfig"; sourceTree = "<group>"; };
+		CB791C792DBD83410066F26C /* FeatureFlags.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeatureFlags.swift; sourceTree = "<group>"; };
 		CB8035292D31BA79008F0556 /* AvailableIncentives.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AvailableIncentives.swift; sourceTree = "<group>"; };
 		CB80352B2D31BAC7008F0556 /* LinkConsumerIncentive.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LinkConsumerIncentive.swift; sourceTree = "<group>"; };
 		CC70CDF482E22A29B11466F7 /* STPAPIClient+EmptyResponseTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "STPAPIClient+EmptyResponseTest.swift"; sourceTree = "<group>"; };
@@ -687,6 +689,7 @@
 				B8B76840742D2CAF2931355A /* URLSession+Retry.swift */,
 				4910B9272C3D8F3F00B030D4 /* Result+Extensions.swift */,
 				49E8CE292CD146CE0009DFBB /* KeyedEncodingContainer+Extensions.swift */,
+				CB791C792DBD83410066F26C /* FeatureFlags.swift */,
 			);
 			path = Helpers;
 			sourceTree = "<group>";
@@ -1072,6 +1075,7 @@
 				2AA9B01C8A2D2BADC4619629 /* NSCharacterSet+StripeCore.swift in Sources */,
 				C5BF4B8AE85FF72EC6382EC0 /* NSError+Stripe.swift in Sources */,
 				B67F2CA22BAB8B690011E34A /* AnalyticLoggableErrorV2.swift in Sources */,
+				CB791C7A2DBD83410066F26C /* FeatureFlags.swift in Sources */,
 				D144C3A657E5C16975CB2191 /* NSError+StripeCore.swift in Sources */,
 				9843D9B7D886C373C7AC71E4 /* NSMutableURLRequest+Stripe.swift in Sources */,
 				310E6B5C2C580C06006A03EC /* StripeAttest.swift in Sources */,
