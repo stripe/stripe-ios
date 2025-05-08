@@ -188,7 +188,7 @@ final class PayWithLinkWebController: NSObject, ASWebAuthenticationPresentationC
                 let paymentOption = PaymentOption.link(option: PaymentSheet.LinkConfirmOption.withPaymentMethod(paymentMethod: pm))
 
                 STPAnalyticsClient.sharedClient.logLinkPopupSuccess(sessionType: self.context.elementsSession.linkPopupWebviewOption)
-                UserDefaults.standard.markLinkAsUsed()
+//                UserDefaults.standard.markLinkAsUsed()
                 self.payWithLinkDelegate?.payWithLinkWebControllerDidComplete(self, intent: self.context.intent, elementsSession: self.context.elementsSession, with: paymentOption)
             case .logout:
                 // Delete the account information

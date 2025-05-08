@@ -208,7 +208,7 @@ final class LinkInlineSignupViewModel {
             if !UserDefaults.standard.customerHasUsedLink {
                 STPAnalyticsClient.sharedClient.logLinkSignupFailureAccountExists()
                 // Don't bother them again
-                UserDefaults.standard.markLinkAsUsed()
+//                UserDefaults.standard.markLinkAsUsed()
             }
             return .continueWithoutLink
         }
