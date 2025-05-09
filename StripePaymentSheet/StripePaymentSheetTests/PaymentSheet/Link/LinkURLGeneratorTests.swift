@@ -7,7 +7,7 @@ import Foundation
 
 @_spi(STP) @testable import StripeCore
 @_spi(STP) @testable import StripePayments
-@_spi(STP) @testable import StripePaymentSheet
+@_spi(STP) @_spi(PaymentMethodOptionsSetupFutureUsagePreview) @testable import StripePaymentSheet
 
 import OHHTTPStubs
 import OHHTTPStubsSwift
@@ -70,6 +70,134 @@ class LinkURLGeneratorTests: XCTestCase {
                                            intentMode: .payment,
                                            setupFutureUsage: false,
                                            linkFundingSources: [])
+
+        XCTAssertEqual(params, expectedParams)
+    }
+
+    func testURLParamsPaymentMethodOptionsSetupFutureUsage() {
+        var config = PaymentSheet.Configuration()
+        config.shouldReadPaymentMethodOptionsSetupFutureUsage = true
+        let intentConfig = PaymentSheet.IntentConfiguration(mode: .payment(amount: 100, currency: "USD", paymentMethodOptions: PaymentSheet.IntentConfiguration.Mode.PaymentMethodOptions(setupFutureUsageValues: [.link: .offSession]))) { _, _, _ in
+            // Nothing
+        }
+        config.apiClient.publishableKey = "pk_123"
+        let intent = Intent.deferredIntent(intentConfig: intentConfig)
+
+        // Create a session ID
+        AnalyticsHelper.shared.generateSessionID()
+        let sessionID = AnalyticsHelper.shared.sessionID!
+
+        let params = try! LinkURLGenerator.linkParams(configuration: config, intent: intent, elementsSession: .linkElementsSession)
+
+        let expectedParams = LinkURLParams(paymentObject: .link_payment_method,
+                                           publishableKey: config.apiClient.publishableKey!,
+                                           paymentUserAgent: PaymentsSDKVariant.paymentUserAgent,
+                                           merchantInfo: LinkURLParams.MerchantInfo(businessName: "StripePaymentSheetTestHostApp", country: "US"),
+                                           customerInfo: LinkURLParams.CustomerInfo(country: "US", email: nil),
+                                           paymentInfo: LinkURLParams.PaymentInfo(currency: "USD", amount: 100),
+                                           experiments: [:],
+                                           flags: ["link_passthrough_mode_enabled": false],
+                                           loggerMetadata: ["mobile_session_id": sessionID],
+                                           locale: Locale.init(identifier: "en_US").toLanguageTag(),
+                                           intentMode: .payment,
+                                           setupFutureUsage: true,
+                                           linkFundingSources: [.card])
+
+        XCTAssertEqual(params, expectedParams)
+    }
+
+    func testURLParamsPaymentMethodOptionsSetupFutureUsage_passthrough() {
+        var config = PaymentSheet.Configuration()
+        config.shouldReadPaymentMethodOptionsSetupFutureUsage = true
+        let intentConfig = PaymentSheet.IntentConfiguration(mode: .payment(amount: 100, currency: "USD", paymentMethodOptions: PaymentSheet.IntentConfiguration.Mode.PaymentMethodOptions(setupFutureUsageValues: [.card: .offSession]))) { _, _, _ in
+            // Nothing
+        }
+        config.apiClient.publishableKey = "pk_123"
+        let intent = Intent.deferredIntent(intentConfig: intentConfig)
+
+        // Create a session ID
+        AnalyticsHelper.shared.generateSessionID()
+        let sessionID = AnalyticsHelper.shared.sessionID!
+
+        let params = try! LinkURLGenerator.linkParams(configuration: config, intent: intent, elementsSession: .linkPassthroughElementsSession)
+
+        let expectedParams = LinkURLParams(paymentObject: .card_payment_method,
+                                           publishableKey: config.apiClient.publishableKey!,
+                                           paymentUserAgent: PaymentsSDKVariant.paymentUserAgent,
+                                           merchantInfo: LinkURLParams.MerchantInfo(businessName: "StripePaymentSheetTestHostApp", country: "US"),
+                                           customerInfo: LinkURLParams.CustomerInfo(country: "US", email: nil),
+                                           paymentInfo: LinkURLParams.PaymentInfo(currency: "USD", amount: 100),
+                                           experiments: [:],
+                                           flags: ["link_passthrough_mode_enabled": true],
+                                           loggerMetadata: ["mobile_session_id": sessionID],
+                                           locale: Locale.init(identifier: "en_US").toLanguageTag(),
+                                           intentMode: .payment,
+                                           setupFutureUsage: true,
+                                           linkFundingSources: [.card])
+
+        XCTAssertEqual(params, expectedParams)
+    }
+
+    func testURLParamsTopLevelSFUPaymentMethodOptionsSetupFutureUsageNone() {
+        var config = PaymentSheet.Configuration()
+        config.shouldReadPaymentMethodOptionsSetupFutureUsage = true
+        let intentConfig = PaymentSheet.IntentConfiguration(mode: .payment(amount: 100, currency: "USD", setupFutureUsage: .offSession, paymentMethodOptions: PaymentSheet.IntentConfiguration.Mode.PaymentMethodOptions(setupFutureUsageValues: [.link: .none]))) { _, _, _ in
+            // Nothing
+        }
+        config.apiClient.publishableKey = "pk_123"
+        let intent = Intent.deferredIntent(intentConfig: intentConfig)
+
+        // Create a session ID
+        AnalyticsHelper.shared.generateSessionID()
+        let sessionID = AnalyticsHelper.shared.sessionID!
+
+        let params = try! LinkURLGenerator.linkParams(configuration: config, intent: intent, elementsSession: .linkElementsSession)
+
+        let expectedParams = LinkURLParams(paymentObject: .link_payment_method,
+                                           publishableKey: config.apiClient.publishableKey!,
+                                           paymentUserAgent: PaymentsSDKVariant.paymentUserAgent,
+                                           merchantInfo: LinkURLParams.MerchantInfo(businessName: "StripePaymentSheetTestHostApp", country: "US"),
+                                           customerInfo: LinkURLParams.CustomerInfo(country: "US", email: nil),
+                                           paymentInfo: LinkURLParams.PaymentInfo(currency: "USD", amount: 100),
+                                           experiments: [:],
+                                           flags: ["link_passthrough_mode_enabled": false],
+                                           loggerMetadata: ["mobile_session_id": sessionID],
+                                           locale: Locale.init(identifier: "en_US").toLanguageTag(),
+                                           intentMode: .payment,
+                                           setupFutureUsage: false,
+                                           linkFundingSources: [.card])
+
+        XCTAssertEqual(params, expectedParams)
+    }
+
+    func testURLParamsTopLevelSFUPaymentMethodOptionsSetupFutureUsageNone_passthrough() {
+        var config = PaymentSheet.Configuration()
+        config.shouldReadPaymentMethodOptionsSetupFutureUsage = true
+        let intentConfig = PaymentSheet.IntentConfiguration(mode: .payment(amount: 100, currency: "USD", setupFutureUsage: .offSession, paymentMethodOptions: PaymentSheet.IntentConfiguration.Mode.PaymentMethodOptions(setupFutureUsageValues: [.card: .none]))) { _, _, _ in
+            // Nothing
+        }
+        config.apiClient.publishableKey = "pk_123"
+        let intent = Intent.deferredIntent(intentConfig: intentConfig)
+
+        // Create a session ID
+        AnalyticsHelper.shared.generateSessionID()
+        let sessionID = AnalyticsHelper.shared.sessionID!
+
+        let params = try! LinkURLGenerator.linkParams(configuration: config, intent: intent, elementsSession: .linkPassthroughElementsSession)
+
+        let expectedParams = LinkURLParams(paymentObject: .card_payment_method,
+                                           publishableKey: config.apiClient.publishableKey!,
+                                           paymentUserAgent: PaymentsSDKVariant.paymentUserAgent,
+                                           merchantInfo: LinkURLParams.MerchantInfo(businessName: "StripePaymentSheetTestHostApp", country: "US"),
+                                           customerInfo: LinkURLParams.CustomerInfo(country: "US", email: nil),
+                                           paymentInfo: LinkURLParams.PaymentInfo(currency: "USD", amount: 100),
+                                           experiments: [:],
+                                           flags: ["link_passthrough_mode_enabled": true],
+                                           loggerMetadata: ["mobile_session_id": sessionID],
+                                           locale: Locale.init(identifier: "en_US").toLanguageTag(),
+                                           intentMode: .payment,
+                                           setupFutureUsage: false,
+                                           linkFundingSources: [.card])
 
         XCTAssertEqual(params, expectedParams)
     }
@@ -202,6 +330,18 @@ extension STPElementsSession {
                                                                 "supported_cobranded_networks": ["cartes_bancaires": true],
                                                                ],
                                           "merchant_country": "FR",
+        ]
+        return STPElementsSession.decodedObject(fromAPIResponse: apiResponse)!
+    }
+
+    static var linkElementsSession: STPElementsSession {
+        let apiResponse: [String: Any] = ["payment_method_preference": ["ordered_payment_method_types": ["123"],
+                                                                        "country_code": "US", ] as [String: Any],
+                                          "session_id": "123",
+                                          "apple_pay_preference": "enabled",
+                                          "link_settings": ["link_funding_sources": ["CARD"],
+                                                            "link_passthrough_mode_enabled": false,
+                                                           ],
         ]
         return STPElementsSession.decodedObject(fromAPIResponse: apiResponse)!
     }

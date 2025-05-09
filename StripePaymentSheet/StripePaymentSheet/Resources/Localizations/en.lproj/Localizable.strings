@@ -158,6 +158,9 @@ with the transaction. */
 /* Title for the contact information section */
 "Contact information" = "Contact information";
 
+/* Label of a button that when tapped allows the user to select a different form of payment. */
+"Continue another way" = "Continue another way";
+
 /* Label for CPF/CPNJ (Brazil tax ID) field */
 "CPF/CPNJ" = "CPF/CPNJ";
 

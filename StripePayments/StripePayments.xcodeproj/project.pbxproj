@@ -391,6 +391,7 @@
 		1168126130A35B9E449C6E91 /* STPTestingAPIClient+Swift.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "STPTestingAPIClient+Swift.swift"; sourceTree = "<group>"; };
 		11A528DF98B54E7ACFFED8EE /* STPPaymentMethodSofort.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = STPPaymentMethodSofort.swift; sourceTree = "<group>"; };
 		138E9C6A4E3D71B397A1C61B /* STPPaymentMethodRevolutPayParams.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = STPPaymentMethodRevolutPayParams.swift; sourceTree = "<group>"; };
+		1405894A2DC8568000DF2EAA /* th */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = th; path = th.lproj/Localizable.strings; sourceTree = "<group>"; };
 		14358A02B8BB13A20E0047DB /* StripePayments.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = StripePayments.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		146903A461196F8C4B791B24 /* en-GB */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "en-GB"; path = "en-GB.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		161E1414061B7E2B7C36AE9C /* STPPaymentMethodFPX.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = STPPaymentMethodFPX.swift; sourceTree = "<group>"; };
@@ -1536,6 +1537,7 @@
 				"zh-HK",
 				"zh-Hans",
 				"zh-Hant",
+				th,
 			);
 			mainGroup = ACE94104BD164C4A6D5087B0;
 			packageReferences = (
@@ -1986,6 +1988,7 @@
 				BC7FFDAB7B63D040B3B35B48 /* zh-Hans */,
 				ABBEF7D66C69E2A3DEBE6177 /* zh-Hant */,
 				CA58DFEBD2F9ADE14301B770 /* zh-HK */,
+				1405894A2DC8568000DF2EAA /* th */,
 			);
 			name = Localizable.strings;
 			sourceTree = "<group>";

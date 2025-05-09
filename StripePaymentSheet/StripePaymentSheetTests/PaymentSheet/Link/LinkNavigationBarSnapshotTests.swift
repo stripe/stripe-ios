@@ -24,24 +24,6 @@ class LinkNavigationBarSnapshotTests: STPSnapshotTestCase {
         verify(sut, identifier: "BackButton")
     }
 
-    func testWithEmailAddress() {
-        let sut = makeSUT()
-        sut.linkAccount = makeAccountStub(email: "user@example.com")
-        verify(sut)
-
-        sut.showBackButton = true
-        verify(sut, identifier: "BackButton")
-    }
-
-    func testWithLongEmailAddress() {
-        let sut = makeSUT()
-        sut.linkAccount = makeAccountStub(email: "a.very.very.long.customer.name@example.com")
-        verify(sut)
-
-        sut.showBackButton = true
-        verify(sut, identifier: "BackButton")
-    }
-
     func verify(
         _ sut: UIView,
         identifier: String? = nil,
@@ -68,9 +50,9 @@ extension LinkNavigationBarSnapshotTests {
         let isLoggedIn: Bool
     }
 
-    fileprivate func makeAccountStub(email: String) -> LinkAccountStub {
+    fileprivate func makeAccountStub() -> LinkAccountStub {
         return LinkAccountStub(
-            email: email,
+            email: "test@example.com",
             redactedPhoneNumber: "+1********55",
             isRegistered: true,
             isLoggedIn: true

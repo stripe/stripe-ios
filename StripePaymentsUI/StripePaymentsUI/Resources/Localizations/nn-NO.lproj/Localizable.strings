@@ -1,3 +1,11 @@
+"%1$@ Card" = "%1$@-kort";
+
+"%1$@ Credit" = "%1$@-kreditt";
+
+"%1$@ Debit" = "%1$@-debet";
+
+"%1$@ Prepaid" = "%1$@-førehandsbetalt";
+
 "%1$@ account ending in %2$@" = "%1$@ konto som sluttar på %2$@";
 
 "%1$@ ending in %2$@" = "%1$@ sluttar på %2$@";

@@ -1,3 +1,11 @@
+"%1$@ Card" = "%1$@ Card";
+
+"%1$@ Credit" = "%1$@ Credit";
+
+"%1$@ Debit" = "%1$@ Debit";
+
+"%1$@ Prepaid" = "%1$@ Preplătit";
+
 "%1$@ account ending in %2$@" = "Contul la %1$@ care se termină în %2$@";
 
 "%1$@ ending in %2$@" = "%1$@ se termină în %2$@";

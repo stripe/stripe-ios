@@ -18,11 +18,9 @@ import UIKit
 final class LinkNavigationBar: UIView {
     struct Constants {
         static let buttonSize: CGSize = .init(width: 60, height: 44)
-        static let labelMargin: CGFloat = 20
-        static let maxFontSize: CGFloat = 18
+        static let logoSize: CGSize = .init(width: 72, height: 24)
         static let logoVerticalOffset: CGFloat = 14
         static let defaultHeight: CGFloat = 44
-        static let largeHeight: CGFloat = 66
     }
 
     var linkAccount: PaymentSheetLinkAccountInfoProtocol? {
@@ -36,18 +34,6 @@ final class LinkNavigationBar: UIView {
             if showBackButton != oldValue {
                 update()
             }
-        }
-    }
-
-    var isLarge: Bool {
-        // The nav bar is considered large as long as we need to display the email label.
-        return showEmailLabel
-    }
-
-    private var showEmailLabel: Bool = false {
-        didSet {
-            emailLabel.isHidden = !showEmailLabel
-            invalidateIntrinsicContentSize()
         }
     }
 
@@ -86,25 +72,10 @@ final class LinkNavigationBar: UIView {
         return imageView
     }()
 
-    private let emailLabel: UILabel = {
-        let label = UILabel()
-        label.font = LinkUI.font(forTextStyle: .body, maximumPointSize: Constants.maxFontSize)
-        label.textColor = .linkTertiaryText
-        label.textAlignment = .center
-        label.lineBreakMode = .byTruncatingMiddle
-        label.adjustsFontForContentSizeCategory = true
-        label.translatesAutoresizingMaskIntoConstraints = false
-        label.isHidden = true
-        return label
-    }()
-
     override var intrinsicContentSize: CGSize {
-        let baseHeight: CGFloat = isLarge
-            ? Constants.largeHeight
-            : Constants.defaultHeight
-        return CGSize(
+        CGSize(
             width: UIView.noIntrinsicMetric,
-            height: baseHeight + safeAreaInsets.top + safeAreaInsets.bottom
+            height: Constants.defaultHeight + safeAreaInsets.top + safeAreaInsets.bottom
         )
     }
 
@@ -118,7 +89,6 @@ final class LinkNavigationBar: UIView {
         backgroundColor = .linkBackground
 
         addSubview(logoView)
-        addSubview(emailLabel)
         addSubview(backButton)
         addSubview(closeButton)
         addSubview(menuButton)
@@ -126,34 +96,31 @@ final class LinkNavigationBar: UIView {
         NSLayoutConstraint.activate([
             // Back button
             backButton.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor),
+            backButton.bottomAnchor.constraint(equalTo: safeAreaLayoutGuide.bottomAnchor),
             backButton.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor),
             backButton.widthAnchor.constraint(equalToConstant: Constants.buttonSize.width),
             backButton.heightAnchor.constraint(equalToConstant: Constants.buttonSize.height),
+            backButton.centerYAnchor.constraint(equalTo: logoView.centerYAnchor),
             // Close button
             closeButton.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor),
+            closeButton.bottomAnchor.constraint(equalTo: safeAreaLayoutGuide.bottomAnchor),
             closeButton.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor),
             closeButton.widthAnchor.constraint(equalToConstant: Constants.buttonSize.width),
             closeButton.heightAnchor.constraint(equalToConstant: Constants.buttonSize.height),
+            closeButton.centerYAnchor.constraint(equalTo: logoView.centerYAnchor),
             // Logo
             logoView.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor, constant: Constants.logoVerticalOffset),
+            logoView.heightAnchor.constraint(equalToConstant: Constants.logoSize.height),
+            logoView.widthAnchor.constraint(equalToConstant: Constants.logoSize.width),
             logoView.centerXAnchor.constraint(equalTo: safeAreaLayoutGuide.centerXAnchor),
             logoView.bottomAnchor.constraint(lessThanOrEqualTo: layoutMarginsGuide.bottomAnchor),
-            // Email label
-            emailLabel.centerXAnchor.constraint(equalTo: safeAreaLayoutGuide.centerXAnchor),
-            emailLabel.bottomAnchor.constraint(equalTo: bottomAnchor),
-            emailLabel.leadingAnchor.constraint(
-                greaterThanOrEqualTo: safeAreaLayoutGuide.leadingAnchor,
-                constant: Constants.labelMargin
-            ),
-            emailLabel.trailingAnchor.constraint(
-                lessThanOrEqualTo: safeAreaLayoutGuide.trailingAnchor,
-                constant: Constants.labelMargin
-            ),
             // Menu button
             menuButton.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor),
+            menuButton.bottomAnchor.constraint(equalTo: safeAreaLayoutGuide.bottomAnchor),
             menuButton.trailingAnchor.constraint(equalTo: safeAreaLayoutGuide.trailingAnchor),
             menuButton.widthAnchor.constraint(equalToConstant: Constants.buttonSize.width),
             menuButton.heightAnchor.constraint(equalToConstant: Constants.buttonSize.height),
+            menuButton.centerYAnchor.constraint(equalTo: logoView.centerYAnchor),
         ])
 
         update()
@@ -170,9 +137,6 @@ final class LinkNavigationBar: UIView {
 
     private func update() {
         let isLoggedIn = linkAccount?.isLoggedIn ?? false
-
-        emailLabel.text = linkAccount?.email
-        showEmailLabel = isLoggedIn && !showBackButton
 
         // Back and close button are mutually exclusive.
         backButton.isHidden = !showBackButton

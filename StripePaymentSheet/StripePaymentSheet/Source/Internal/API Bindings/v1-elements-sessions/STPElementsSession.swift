@@ -113,10 +113,15 @@ import Foundation
 
     /// Returns a "best effort" STPElementsSessions object to be used as a last resort fallback if the endpoint failed to return a response or we failed to parse it.
     static func makeBackupElementsSession(allResponseFields: [AnyHashable: Any], paymentMethodTypes: [STPPaymentMethodType]) -> STPElementsSession {
+        var sortedPaymentMethodTypes = paymentMethodTypes
+        // .remove returns the removed value if it exists
+        if sortedPaymentMethodTypes.remove(.card) != nil {
+            sortedPaymentMethodTypes.insert(.card, at: 0)
+        }
         return STPElementsSession(
             allResponseFields: allResponseFields,
             sessionID: UUID().uuidString,
-            orderedPaymentMethodTypes: paymentMethodTypes,
+            orderedPaymentMethodTypes: sortedPaymentMethodTypes,
             unactivatedPaymentMethodTypes: [],
             countryCode: nil,
             merchantCountryCode: nil,
