@@ -23,6 +23,9 @@ extension UpdatePaymentMethodViewController {
         let isDefault: Bool
 
         var shouldShowSaveButton: Bool {
+            guard paymentMethod.type != .link else {
+                return false
+            }
             return canUpdateCardBrand || canSetAsDefaultPM || canUpdate
         }
 
@@ -57,6 +60,8 @@ extension UpdatePaymentMethodViewController {
                 return .Localized.manage_us_bank_account
             case .SEPADebit:
                 return .Localized.manage_sepa_debit
+            case .link:
+                return .Localized.manage_card
             default:
                 assertionFailure("Updating payment method has not been implemented for \(paymentMethod.type)")
                 return nil
@@ -74,6 +79,8 @@ extension UpdatePaymentMethodViewController {
                 return .Localized.bank_account_details_cannot_be_changed
             case .SEPADebit:
                 return .Localized.sepa_debit_details_cannot_be_changed
+            case .link:
+                return .Localized.card_details_cannot_be_changed
             default:
                 assertionFailure("Updating payment method has not been implemented for \(paymentMethod.type)")
                 return nil

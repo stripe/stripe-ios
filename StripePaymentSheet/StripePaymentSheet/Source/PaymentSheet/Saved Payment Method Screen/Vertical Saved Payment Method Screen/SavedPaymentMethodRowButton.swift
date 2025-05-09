@@ -74,7 +74,7 @@ final class SavedPaymentMethodRowButton: UIView {
     }()
 
     private(set) lazy var rowButton: RowButton = {
-        let button: RowButton = .makeForSavedPaymentMethod(paymentMethod: paymentMethod, appearance: appearance, badgeText: badgeText, accessoryView: chevronButton, didTap: handleRowButtonTapped)
+        let button: RowButton = .makeForSavedPaymentMethod(paymentMethod: paymentMethod, appearance: appearance, badgeText: badgeText, accessoryView: chevronButton, showIconForLinkPaymentMethods: true, didTap: handleRowButtonTapped)
 
         return button
     }()

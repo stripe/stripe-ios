@@ -43,7 +43,7 @@ extension PaymentSheet {
     ]
 
     /// A list of `STPPaymentMethodType` that can be saved in PaymentSheet
-    static let supportedSavedPaymentMethods: [STPPaymentMethodType] = [.card, .USBankAccount, .SEPADebit]
+    static let supportedSavedPaymentMethods: [STPPaymentMethodType] = [.card, .USBankAccount, .SEPADebit, .link]
 
     /// A list of `STPPaymentMethodType` that can be set as default in PaymentSheet when opted in to the "set as default" feature
     static let supportedDefaultPaymentMethods: [STPPaymentMethodType] = [.card, .USBankAccount]
