@@ -124,8 +124,9 @@ class CustomerSavedPaymentMethodsViewController: UIViewController {
         return DynamicHeightContainerView()
     }()
     private lazy var actionButton: ConfirmButton = {
+        // The CTA does not animate in well, so we leave it empty until it's time to display the button
         let button = ConfirmButton(
-            callToAction: self.defaultCallToAction(),
+            callToAction: .custom(title: ""),
             applePayButtonType: .plain,
             appearance: configuration.appearance,
             didTap: { [weak self] in
@@ -315,10 +316,11 @@ class CustomerSavedPaymentMethodsViewController: UIViewController {
             if animated {
                 animateHeightChange(updateButtonVisibility, completion: { _ in
                     self.actionButton.alpha = 1.0
+                    // The CTA does not animate in well, so we leave it empty while the button is hidden
                     self.actionButton.update(
                         state: actionButtonStatus,
                         style: .stripe,
-                        callToAction: callToAction,
+                        callToAction: .custom(title: ""),
                         animated: animated,
                         completion: nil
                     )
@@ -327,7 +329,7 @@ class CustomerSavedPaymentMethodsViewController: UIViewController {
                 self.actionButton.setHiddenIfNecessary(true)
             }
         } else {
-            // if animating out, first update the button
+            // if animating in, first update the button, adding appropriate CTA
             self.actionButton.update(
                 state: actionButtonStatus,
                 style: .stripe,
