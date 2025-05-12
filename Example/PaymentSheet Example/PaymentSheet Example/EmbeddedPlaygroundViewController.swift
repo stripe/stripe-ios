@@ -160,7 +160,7 @@ class EmbeddedPlaygroundViewController: UIViewController {
         scrollView.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(scrollView)
 
-        // If we are using the default row selection behavior, we include the payment element inline, otherwise we show a button to open show the payment element in a sheet
+        // If we are using the default row selection behavior, we include the payment element inline, otherwise we show a button to open the payment element in a sheet
         let paymentElementView = switch configuration.rowSelectionBehavior {
         case .immediateAction:
             paymentMethodButton
@@ -178,7 +178,6 @@ class EmbeddedPlaygroundViewController: UIViewController {
             checkoutButton,
             clearPaymentOptionButton,
         ])
-
         stackView.axis = .vertical
         stackView.translatesAutoresizingMaskIntoConstraints = false
         stackView.isLayoutMarginsRelativeArrangement = true
@@ -189,6 +188,7 @@ class EmbeddedPlaygroundViewController: UIViewController {
 #if DEBUG
         stackView.addArrangedSubview(testHeightChangeButton)
 #endif
+
         NSLayoutConstraint.activate([
             scrollView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
             scrollView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
