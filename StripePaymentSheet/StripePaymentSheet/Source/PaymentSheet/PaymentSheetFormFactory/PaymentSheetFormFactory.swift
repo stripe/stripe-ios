@@ -78,7 +78,6 @@ class PaymentSheetFormFactory {
         previousCustomerInput: IntentConfirmParams? = nil,
         addressSpecProvider: AddressSpecProvider = .shared,
         linkAccount: PaymentSheetLinkAccount? = nil,
-        isLink: Bool = false,
         accountService: LinkAccountServiceProtocol,
         analyticsHelper: PaymentSheetAnalyticsHelper?
     ) {
@@ -112,7 +111,7 @@ class PaymentSheetFormFactory {
             }
         }()
         let paymentMethodType: STPPaymentMethodType = {
-            if linkAccount != nil, isLink, !elementsSession.linkPassthroughModeEnabled {
+            if linkAccount != nil, configuration.linkPaymentMethodsOnly, !elementsSession.linkPassthroughModeEnabled {
                 return .link
             }
             switch paymentMethod {
