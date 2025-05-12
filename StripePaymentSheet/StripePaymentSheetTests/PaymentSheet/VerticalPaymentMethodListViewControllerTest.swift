@@ -89,7 +89,7 @@ final class VerticalPaymentMethodListViewControllerTest: XCTestCase {
         let savedPaymentMethods = [
             STPPaymentMethod._testSEPA(),
         ]
-        // Given a list view with a saved card...
+        // Given a list view without a saved card...
         let sut = VerticalPaymentMethodListViewController(
             initialSelection: .saved(
                 paymentMethod: savedPaymentMethods.first!
@@ -107,7 +107,7 @@ final class VerticalPaymentMethodListViewControllerTest: XCTestCase {
             delegate: self
         )
 
-        // The card button should say "New card"
+        // The card button should say "Card"
         _ = sut.getRowButton(accessibilityIdentifier: "Card") // will crash if not found
     }
 
