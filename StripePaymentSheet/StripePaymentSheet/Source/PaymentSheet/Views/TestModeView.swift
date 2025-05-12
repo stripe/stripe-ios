@@ -23,7 +23,7 @@ class TestModeView: UIView {
 
     private lazy var testLabel: UILabel = {
         let label = UILabel()
-        label.text = "TEST MODE"
+        label.text = "TEST"
         label.textColor = UIColor.testModeTextColor
         label.textAlignment = .center
         label.adjustsFontForContentSizeCategory = true
@@ -48,6 +48,6 @@ class TestModeView: UIView {
     }
 
     override var intrinsicContentSize: CGSize {
-        return .init(width: 82, height: 23)
+        return .init(width: 41, height: 23)
     }
 }

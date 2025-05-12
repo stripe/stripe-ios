@@ -231,6 +231,10 @@ public class PaymentSheet {
 
     // MARK: - Internal Properties
 
+    /// Decides whether Link payment methods should be shown in the list of saved payment methods.
+    /// Only enable this in the PaymentSheet playground.
+    @_spi(STP) public static var enableLinkInSPM: Bool = false
+
     /// The initialization mode this instance was initialized with
     let mode: InitializationMode
 

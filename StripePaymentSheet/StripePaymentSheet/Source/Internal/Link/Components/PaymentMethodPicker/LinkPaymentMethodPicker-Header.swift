@@ -19,13 +19,25 @@ extension LinkPaymentMethodPicker {
             static let expandedInsets = NSDirectionalEdgeInsets(top: 20, leading: 20, bottom: 4, trailing: 20)
         }
 
+        enum Strings {
+            static let payment = STPLocalizedString(
+                "Payment",
+                "Label for a section displaying payment details."
+            )
+        }
+
         /// The selected payment method.
-        var selectedPaymentMethod: ConsumerPaymentDetails? {
+        private(set) var selectedPaymentMethod: ConsumerPaymentDetails? {
             didSet {
+                updateChevron()
                 contentView.paymentMethod = selectedPaymentMethod
                 updateAccessibilityContent()
             }
         }
+
+        // Indicates whether the header should appear collapsable or not.
+        // The header is collapsable when the currently selected payment method is supported.
+        private(set) var collapsable: Bool = false
 
         var isExpanded: Bool = false {
             didSet {
@@ -49,8 +61,9 @@ extension LinkPaymentMethodPicker {
             let label = UILabel()
             label.font = LinkUI.font(forTextStyle: .body)
             label.textColor = .linkSecondaryText
-            label.text = STPLocalizedString("Payment", "Label for a section displaying payment details.")
+            label.text = Strings.payment
             label.adjustsFontForContentSizeCategory = true
+            label.translatesAutoresizingMaskIntoConstraints = false
             return label
         }()
 
@@ -97,6 +110,10 @@ extension LinkPaymentMethodPicker {
             stackView.setCustomSpacing(Constants.contentSpacing, after: payWithLabel)
             stackView.translatesAutoresizingMaskIntoConstraints = false
 
+            NSLayoutConstraint.activate([
+                payWithLabel.widthAnchor.constraint(equalToConstant: LinkPaymentMethodPicker.widthForHeaderLabels)
+            ])
+
             return stackView
         }()
 
@@ -141,6 +158,11 @@ extension LinkPaymentMethodPicker {
             fatalError("init(coder:) has not been implemented")
         }
 
+        func setSelectedPaymentMethod(selectedPaymentMethod: ConsumerPaymentDetails?, supported: Bool) {
+            self.collapsable = supported
+            self.selectedPaymentMethod = selectedPaymentMethod
+        }
+
         private func updateChevron() {
             if isExpanded {
                 chevron.transform = CGAffineTransform(rotationAngle: .pi)
@@ -149,6 +171,7 @@ extension LinkPaymentMethodPicker {
                 chevron.transform = .identity
                 chevron.tintColor = .linkSecondaryText
             }
+            chevron.isHidden = !collapsable
         }
 
         private func updateAccessibilityContent() {

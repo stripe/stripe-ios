@@ -73,6 +73,21 @@ class PaymentSheetImageLibrary {
         }
         return icon
     }
+
+    class func bankInstitutionIcon(for bank: String?) -> UIImage? {
+        guard let bank else {
+            return nil
+        }
+        let icon = safeImageNamed("bank_icon_\(bank.lowercased())")
+        if icon.size == .zero {
+            return nil
+        }
+        return icon
+    }
+
+    class func linkBankIcon() -> UIImage {
+        STPImageLibrary.linkBankIcon()
+    }
 }
 
 // MARK: - v2 Images

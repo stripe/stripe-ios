@@ -33,6 +33,9 @@ class BottomSheetViewController: UIViewController, BottomSheetPresentable {
     lazy var scrollView: UIScrollView = {
         let scrollView = UIScrollView()
         scrollView.automaticallyAdjustsScrollIndicatorInsets = false
+        #if !os(visionOS)
+        scrollView.keyboardDismissMode = .onDrag
+        #endif
         scrollView.delegate = self
         return scrollView
     }()

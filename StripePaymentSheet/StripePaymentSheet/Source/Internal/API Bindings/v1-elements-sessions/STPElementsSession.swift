@@ -113,10 +113,15 @@ import Foundation
 
     /// Returns a "best effort" STPElementsSessions object to be used as a last resort fallback if the endpoint failed to return a response or we failed to parse it.
     static func makeBackupElementsSession(allResponseFields: [AnyHashable: Any], paymentMethodTypes: [STPPaymentMethodType]) -> STPElementsSession {
+        var sortedPaymentMethodTypes = paymentMethodTypes
+        // .remove returns the removed value if it exists
+        if sortedPaymentMethodTypes.remove(.card) != nil {
+            sortedPaymentMethodTypes.insert(.card, at: 0)
+        }
         return STPElementsSession(
             allResponseFields: allResponseFields,
             sessionID: UUID().uuidString,
-            orderedPaymentMethodTypes: paymentMethodTypes,
+            orderedPaymentMethodTypes: sortedPaymentMethodTypes,
             unactivatedPaymentMethodTypes: [],
             countryCode: nil,
             merchantCountryCode: nil,
@@ -151,13 +156,15 @@ extension STPElementsSession: STPAPIResponseDecodable {
         let cardBrandChoice = STPCardBrandChoice.decodedObject(fromAPIResponse: response["card_brand_choice"] as? [AnyHashable: Any])
         let applePayPreference = response["apple_pay_preference"] as? String
         let isApplePayEnabled = applePayPreference != "disabled"
+        let flags = response["flags"] as? [String: Bool] ?? [:]
         let customer: ElementsCustomer? = {
             let customerDataKey = "customer"
             guard response[customerDataKey] != nil, !(response[customerDataKey] is NSNull) else {
                 return nil
             }
+            let enableLinkInSPM = flags["elements_enable_link_spm"] ?? false
             guard let customerJSON = response[customerDataKey] as? [AnyHashable: Any],
-                  let decoded = ElementsCustomer.decoded(fromAPIResponse: customerJSON) else {
+                  let decoded = ElementsCustomer.decoded(fromAPIResponse: customerJSON, enableLinkInSPM: enableLinkInSPM) else {
                 STPAnalyticsClient.sharedClient.logPaymentSheetEvent(event: .paymentSheetElementsSessionCustomerDeserializeFailed)
                 return nil
             }
@@ -211,7 +218,7 @@ extension STPElementsSession: STPAPIResponseDecodable {
             experimentsData: ExperimentsData.decodedObject(
                 fromAPIResponse: response["experiments_data"] as? [AnyHashable: Any]
             ),
-            flags: response["flags"] as? [String: Bool] ?? [:],
+            flags: flags,
             paymentMethodSpecs: response["payment_method_specs"] as? [[AnyHashable: Any]],
             cardBrandChoice: cardBrandChoice,
             isApplePayEnabled: isApplePayEnabled,
@@ -226,6 +233,10 @@ extension STPElementsSession: STPAPIResponseDecodable {
 extension STPElementsSession {
     var isCardBrandChoiceEligible: Bool {
         return cardBrandChoice?.eligible ?? false
+    }
+
+    var enableLinkInSPM: Bool {
+        flags["elements_enable_link_spm"] ?? false
     }
 
     func allowsRemovalOfPaymentMethodsForPaymentSheet() -> Bool {

@@ -138,16 +138,19 @@ public class STPPaymentIntent: NSObject {
     /// Payment-method-specific configuration for this PaymentIntent.
     @_spi(STP) public let paymentMethodOptions: STPPaymentMethodOptions?
 
-    /// Whether the payment intent has setup for future usage set.
-    @_spi(STP) public var isSetupFutureUsageSet: Bool {
-        let setupFutureUsageInResponse = (paymentMethodOptions?.allResponseFields.values.contains(where: {
-            if let value = $0 as? [String: Any] {
-                return value["setup_future_usage"] != nil
-            }
-            return false
-        }) ?? false)
+    /// Whether the payment intent has setup for future usage set for a payment method type.
+    @_spi(STP) public func isSetupFutureUsageSet(for paymentMethodType: STPPaymentMethodType) -> Bool {
+        let setupFutureUsageForPaymentMethodType: String? = setupFutureUsage(for: paymentMethodType)
+        return setupFutureUsageForPaymentMethodType != nil && setupFutureUsageForPaymentMethodType != "none"
+    }
 
-        return setupFutureUsage != .none || setupFutureUsageInResponse
+    @_spi(STP) public func setupFutureUsage(for paymentMethodType: STPPaymentMethodType) -> String? {
+        let paymentMethodOptionsSetupFutureUsage = paymentMethodOptions?.setupFutureUsage(for: paymentMethodType)
+        // if pmo sfu is non-nil, it overrides the top level sfu
+        if let paymentMethodOptionsSetupFutureUsage {
+            return paymentMethodOptionsSetupFutureUsage
+        }
+        return setupFutureUsage.stringValue
     }
 
     /// :nodoc:

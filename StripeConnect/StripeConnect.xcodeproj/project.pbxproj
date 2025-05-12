@@ -172,6 +172,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		1405894C2DC8571600DF2EAA /* th */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = th; path = th.lproj/Localizable.strings; sourceTree = "<group>"; };
 		41054E422C989AAD00383C09 /* Font+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Font+Extension.swift"; sourceTree = "<group>"; };
 		410D0FC92C6CFE27009B0E26 /* OnLoadErrorMessageHandlerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnLoadErrorMessageHandlerTests.swift; sourceTree = "<group>"; };
 		410D0FCB2C6CFFDB009B0E26 /* AccountSessionClaimedMessageHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountSessionClaimedMessageHandler.swift; sourceTree = "<group>"; };
@@ -961,6 +962,7 @@
 				"zh-Hans",
 				"zh-Hant",
 				"zh-HK",
+				th,
 			);
 			mainGroup = 41D17A362C5A73A6007C6EE6;
 			packageReferences = (
@@ -1205,6 +1207,7 @@
 				41249D162D6E6F0800BB9948 /* Localizable.strings */,
 				41249D172D6E6F0800BB9948 /* Localizable.strings */,
 				41249D182D6E6F0800BB9948 /* Localizable.strings */,
+				1405894C2DC8571600DF2EAA /* th */,
 			);
 			name = Localizable.strings;
 			sourceTree = "<group>";

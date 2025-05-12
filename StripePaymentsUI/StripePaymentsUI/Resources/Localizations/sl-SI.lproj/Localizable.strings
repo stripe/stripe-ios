@@ -1,3 +1,11 @@
+"%1$@ Card" = "Kartica %1$@";
+
+"%1$@ Credit" = "Kreditna kartica %1$@";
+
+"%1$@ Debit" = "Debetna kartica %1$@";
+
+"%1$@ Prepaid" = "Predplačniška kartica %1$@";
+
 "%1$@ account ending in %2$@" = "Račun za %1$@, ki se konča s števkami %2$@";
 
 "%1$@ ending in %2$@" = "%1$@, ki se konča s/z %2$@";
