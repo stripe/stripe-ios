@@ -12,7 +12,8 @@ import UIKit
 @_spi(STP) import StripeUICore
 
 protocol LinkPaymentMethodPickerDelegate: AnyObject {
-    func paymentMethodPickerDidChange(_ picker: LinkPaymentMethodPicker)
+
+    func paymentMethodPicker(_ picker: LinkPaymentMethodPicker, didSelectIndex index: Int)
 
     func paymentMethodPicker(
         _ picker: LinkPaymentMethodPicker,
@@ -37,6 +38,9 @@ protocol LinkPaymentMethodPickerDataSource: AnyObject {
         paymentMethodAt index: Int
     ) -> ConsumerPaymentDetails
 
+    func isPaymentMethodSupported(_ paymentMethod: ConsumerPaymentDetails?) -> Bool
+
+    var selectedIndex: Int { get }
 }
 
 /// For internal SDK use only
@@ -49,10 +53,13 @@ final class LinkPaymentMethodPicker: UIView {
         }
     }
 
-    var selectedIndex: Int = 0 {
-        didSet {
-            updateHeaderView()
-        }
+    var selectedIndex: Int {
+        dataSource?.selectedIndex ?? 0
+    }
+
+    var collapsable: Bool {
+        guard let dataSource else { return false }
+        return selectedPaymentMethod.map { dataSource.isPaymentMethodSupported($0) } ?? false
     }
 
     var supportedPaymentMethodTypes = Set(ConsumerPaymentDetails.DetailsType.allCases) {
@@ -185,7 +192,7 @@ final class LinkPaymentMethodPicker: UIView {
 #endif
 
     func setExpanded(_ expanded: Bool, animated: Bool) {
-        headerView.isExpanded = expanded
+        headerView.isExpanded = collapsable ? expanded : true
 
         // Prevent double header animation
         if headerView.isExpanded {
@@ -203,16 +210,12 @@ final class LinkPaymentMethodPicker: UIView {
             stackView.hideArrangedSubview(at: listViewIndex, animated: animated)
         }
     }
-
-    private func updateHeaderView() {
-        headerView.selectedPaymentMethod = selectedPaymentMethod
-    }
-
 }
 
 private extension LinkPaymentMethodPicker {
 
     @objc func onHeaderTapped(_ sender: Header) {
+        guard collapsable || !sender.isExpanded else { return }
         setExpanded(!sender.isExpanded, animated: true)
 #if !os(visionOS)
         impactFeedbackGenerator.impactOccurred()
@@ -260,7 +263,7 @@ extension LinkPaymentMethodPicker {
 
         cell.paymentMethod = paymentMethod
         cell.isSelected = selectedIndex == index
-        cell.isSupported = supportedPaymentMethodTypes.contains(paymentMethod.type)
+        cell.isSupported = dataSource.isPaymentMethodSupported(paymentMethod)
     }
 
     func showLoader(at index: Int) {
@@ -306,7 +309,7 @@ extension LinkPaymentMethodPicker {
             subview.layer.zPosition = CGFloat(-index)
         }
 
-        headerView.selectedPaymentMethod = selectedPaymentMethod
+        headerView.setSelectedPaymentMethod(selectedPaymentMethod: selectedPaymentMethod, supported: dataSource?.isPaymentMethodSupported(selectedPaymentMethod) ?? false)
     }
 
 }
@@ -436,17 +439,8 @@ extension LinkPaymentMethodPicker {
         isUserInteractionEnabled = false
 
         listView.removeArrangedSubview(at: index, animated: true) {
-            let count = self.dataSource?.numberOfPaymentMethods(in: self) ?? 0
-
-            if index < self.selectedIndex {
-                self.selectedIndex = max(self.selectedIndex - 1, 0)
-            }
-
-            self.selectedIndex = max(min(self.selectedIndex, count - 1), 0)
-
-            self.reloadData()
-            self.delegate?.paymentMethodPickerDidChange(self)
             self.isUserInteractionEnabled = true
+            self.reloadData()
         }
     }
 
@@ -457,18 +451,12 @@ extension LinkPaymentMethodPicker {
 extension LinkPaymentMethodPicker: LinkPaymentMethodPickerCellDelegate {
 
     func savedPaymentPickerCellDidSelect(_ savedCardView: Cell) {
-        if let newIndex = index(for: savedCardView) {
-            let oldIndex = selectedIndex
-            selectedIndex = newIndex
-
-            reloadCell(at: oldIndex)
-            reloadCell(at: newIndex)
-
+        if let newIndex = index(for: savedCardView), savedCardView.isSupported {
 #if !os(visionOS)
             selectionFeedbackGenerator.selectionChanged()
 #endif
 
-            delegate?.paymentMethodPickerDidChange(self)
+            delegate?.paymentMethodPicker(self, didSelectIndex: newIndex)
         }
     }
 

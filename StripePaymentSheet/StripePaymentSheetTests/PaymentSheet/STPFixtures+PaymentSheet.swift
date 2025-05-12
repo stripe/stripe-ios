@@ -383,6 +383,27 @@ extension STPPaymentMethod {
             ] as [String: Any],
         ])!
     }
+
+    static func _testLink() -> STPPaymentMethod {
+        let paymentMethod = STPPaymentMethod.decodedObject(fromAPIResponse: [
+            "id": "pm_123",
+            "type": "link",
+            "sepa_debit": [
+                "last4": "1234",
+            ],
+            "billing_details": [
+                "name": "Sam Stripe",
+                "email": "sam@stripe.com",
+            ] as [String: Any],
+        ])!
+        paymentMethod.linkPaymentDetails = .init(
+            expMonth: 12,
+            expYear: 2030,
+            last4: "4242",
+            brand: .visa
+        )
+        return paymentMethod
+    }
 }
 
 extension PaymentSheet.Appearance {

@@ -89,16 +89,9 @@ final class PaymentSheetDeferredValidatorTests: XCTestCase {
                                                                         intentConfiguration: intentConfig,
                                                                         paymentMethod: STPPaymentMethod._testCard(),
                                                                         isFlowController: false))
-        // payment intent pmo nil and intent config pmo non-nil
-        pi = STPFixtures.makePaymentIntent(amount: 100, currency: "USD")
-        intentConfig = PaymentSheet.IntentConfiguration(mode: .payment(amount: 100, currency: "USD", paymentMethodOptions: PaymentSheet.IntentConfiguration.Mode.PaymentMethodOptions(setupFutureUsageValues: [.USBankAccount: .offSession, .card: .offSession])), confirmHandler: confirmHandler)
-        XCTAssertThrowsError(try PaymentSheetDeferredValidator.validate(paymentIntent: pi,
-                                                                        intentConfiguration: intentConfig,
-                                                                        paymentMethod: STPPaymentMethod._testCard(),
-                                                                        isFlowController: false))
         // intent config pmo nil but intent pmo is non-nil
-        pi = STPFixtures.makePaymentIntent(amount: 100, currency: "USD")
-        intentConfig = PaymentSheet.IntentConfiguration(mode: .payment(amount: 100, currency: "USD", paymentMethodOptions: PaymentSheet.IntentConfiguration.Mode.PaymentMethodOptions(setupFutureUsageValues: [.card: .none])), confirmHandler: confirmHandler)
+        pi = STPFixtures.makePaymentIntent(amount: 100, currency: "USD", paymentMethodOptions: STPPaymentMethodOptions(usBankAccount: nil, card: nil, allResponseFields: ["card": ["setup_future_usage": "off_session"]]))
+        intentConfig = PaymentSheet.IntentConfiguration(mode: .payment(amount: 100, currency: "USD"), confirmHandler: confirmHandler)
         XCTAssertThrowsError(try PaymentSheetDeferredValidator.validate(paymentIntent: pi,
                                                                         intentConfiguration: intentConfig,
                                                                         paymentMethod: STPPaymentMethod._testCard(),
@@ -123,6 +116,13 @@ final class PaymentSheetDeferredValidatorTests: XCTestCase {
         // pi pmo non-nil but not sfu-related
         pi = STPFixtures.makePaymentIntent(amount: 100, currency: "USD", paymentMethodOptions: STPPaymentMethodOptions(usBankAccount: nil, card: .init(requireCvcRecollection: true, allResponseFields: ["require_cvc_recollection": true]), allResponseFields: ["card": ["require_cvc_recollection": true]]))
         intentConfig = PaymentSheet.IntentConfiguration(mode: .payment(amount: 100, currency: "USD"), confirmHandler: confirmHandler)
+        XCTAssertNoThrow(try PaymentSheetDeferredValidator.validate(paymentIntent: pi,
+                                                                        intentConfiguration: intentConfig,
+                                                                        paymentMethod: STPPaymentMethod._testCard(),
+                                                                        isFlowController: false))
+        // pi sepa_debit got filtered out, but sepa_debit pmo sfu set on the IntentConfiguration
+        pi = STPFixtures.makePaymentIntent(amount: 100, currency: "USD", paymentMethodOptions: STPPaymentMethodOptions(usBankAccount: nil, card: nil, allResponseFields: ["card": ["setup_future_usage": "off_session"], "us_bank_account": ["setup_future_usage": "off_session"]]))
+        intentConfig = PaymentSheet.IntentConfiguration(mode: .payment(amount: 100, currency: "USD", paymentMethodOptions: PaymentSheet.IntentConfiguration.Mode.PaymentMethodOptions(setupFutureUsageValues: [.USBankAccount: .offSession, .card: .offSession, .SEPADebit: .offSession])), confirmHandler: confirmHandler)
         XCTAssertNoThrow(try PaymentSheetDeferredValidator.validate(paymentIntent: pi,
                                                                         intentConfiguration: intentConfig,
                                                                         paymentMethod: STPPaymentMethod._testCard(),

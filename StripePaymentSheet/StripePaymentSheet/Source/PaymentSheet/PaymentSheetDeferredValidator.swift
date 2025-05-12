@@ -115,15 +115,16 @@ struct PaymentSheetDeferredValidator {
             }
             return result
         }()
-        // Validate that the PaymentIntent and IntentConfiguration PMO SFU values match. Don't validate the particular values are the same (off_session vs on_session) but if none, check that both are none.
-        let doesPMOSFUMatch = Set(paymentIntentPMOSFU.keys) == Set(intentConfigurationPMOSFU.keys) && intentConfigurationPMOSFU.allSatisfy { paymentMethodType, setupFutureUsage in
+        // Validate that the IntentConfiguration and PaymentIntent PMO SFU values match for all values present in the PaymentIntent. Don't validate the particular values are the same (off_session vs on_session) but if none, check that both are none.
+        // Some values set in the IntentConfiguration could be filtered out on the PaymentIntent if the payment methods are not applicable, so we only check the ones present in the PaymentIntent.
+        let doesPMOSFUMatch = paymentIntentPMOSFU.allSatisfy { paymentMethodType, setupFutureUsage in
                 if setupFutureUsage == "none" {
-                    return paymentIntentPMOSFU[paymentMethodType] == "none"
+                    return intentConfigurationPMOSFU[paymentMethodType] == "none"
                 }
-                if paymentIntentPMOSFU[paymentMethodType] == "none" {
+                if intentConfigurationPMOSFU[paymentMethodType] == "none" {
                     return setupFutureUsage == "none"
                 }
-                return paymentIntentPMOSFU[paymentMethodType] != nil
+                return intentConfigurationPMOSFU[paymentMethodType] != nil
             }
         guard doesPMOSFUMatch else {
             throw PaymentSheetError.deferredIntentValidationFailed(message: "Your PaymentIntent paymentMethodOptions setupFutureUsage (\(paymentIntentPMOSFU)) does not match the PaymentSheet.IntentConfiguration paymentMethodOptions setupFutureUsage (\(intentConfigurationPMOSFU)).")

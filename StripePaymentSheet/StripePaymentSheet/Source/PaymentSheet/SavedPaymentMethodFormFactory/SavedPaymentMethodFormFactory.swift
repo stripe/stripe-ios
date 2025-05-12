@@ -14,6 +14,8 @@ class SavedPaymentMethodFormFactory {
             return makeUSBankAccount(configuration: configuration)
         case .SEPADebit:
             return makeSEPADebit(configuration: configuration)
+        case .link:
+            return makeLink(configuration: configuration)
         default:
             fatalError("Cannot make payment method form for payment method type \(configuration.paymentMethod.type).")
         }
