@@ -186,7 +186,11 @@ final class PaymentSheetAnalyticsHelperTest: XCTestCase {
             // Load started -> succeeded
             sut.logLoadStarted()
             sut.logLoadSucceeded(
-                intent: ._testValue(),
+                intent: ._testPaymentIntent(
+                    paymentMethodTypes: [.card],
+                    setupFutureUsage: .offSession,
+                    paymentMethodOptionsSetupFutureUsage: [.card: "none"]
+                ),
                 elementsSession: ._testDefaultCardValue(defaultPaymentMethod: STPPaymentMethod._testCard().stripeId, paymentMethods: [testCardJSON, testUSBankAccountJSON]),
                 defaultPaymentMethod: .saved(paymentMethod: STPPaymentMethod._testCard()),
                 orderedPaymentMethodTypes: [.stripe(.card), .stripe(.USBankAccount)]
@@ -205,6 +209,8 @@ final class PaymentSheetAnalyticsHelperTest: XCTestCase {
             XCTAssertEqual(loadSucceededPayload["set_as_default_enabled"] as? Bool, true)
             XCTAssertEqual(loadSucceededPayload["has_default_payment_method"] as? Bool, true)
             XCTAssertEqual(loadSucceededPayload["fc_sdk_availability"] as? String, "LITE")
+            XCTAssertEqual(loadSucceededPayload["setup_future_usage"] as? String, "off_session")
+            XCTAssertEqual(loadSucceededPayload["payment_method_options_setup_future_usage"] as? [String: String], ["card": "none"])
         }
     }
 
