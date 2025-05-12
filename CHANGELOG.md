@@ -1,3 +1,7 @@
+## ##.##.# ####-##-##
+### PaymentSheet
+* [Added] Support for payment method options setup future usage in private preview.
+
 ## 24.13.1 2025-05-05
 ### PaymentSheet
 * [Fixed] Updated the "TEST MODE" badge to say "TEST", due to the upcoming release of [Sandboxes](https://docs.stripe.com/sandboxes).
