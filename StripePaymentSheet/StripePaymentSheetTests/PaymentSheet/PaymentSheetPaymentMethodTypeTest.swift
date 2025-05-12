@@ -152,7 +152,6 @@ class PaymentSheetPaymentMethodTypeTest: XCTestCase {
     func testSupportsAdding_inSupportedList_urlConfiguredRequiredDelayedRequired() {
         var configuration = makeConfiguration(hasReturnURL: true)
         configuration.allowsDelayedPaymentMethods = true
-        configuration.shouldReadPaymentMethodOptionsSetupFutureUsage = true
         XCTAssertEqual(
             PaymentSheet.PaymentMethodType.supportsAdding(
                 paymentMethod: .iDEAL,
@@ -167,7 +166,6 @@ class PaymentSheetPaymentMethodTypeTest: XCTestCase {
     /// Returns true, iDEAL in `supportedPaymentMethods` and URL requirement is met but delayed payment method support requirement for setting up is not met
     func testSupportsAdding_inSupportedList_urlConfiguredRequiredDelayedRequiredButNotProvided() {
         var configuration = makeConfiguration(hasReturnURL: true)
-        configuration.shouldReadPaymentMethodOptionsSetupFutureUsage = true
         XCTAssertEqual(
             PaymentSheet.PaymentMethodType.supportsAdding(
                 paymentMethod: .iDEAL,
@@ -182,7 +180,6 @@ class PaymentSheetPaymentMethodTypeTest: XCTestCase {
     /// Returns true, iDEAL in `supportedPaymentMethods` and URL requirement and not setting up requirement are met
     func testSupportsAdding_inSupportedList_urlConfiguredRequiredDelayedNotRequired() {
         var configuration = makeConfiguration(hasReturnURL: true)
-        configuration.shouldReadPaymentMethodOptionsSetupFutureUsage = true
         XCTAssertEqual(
             PaymentSheet.PaymentMethodType.supportsAdding(
                 paymentMethod: .iDEAL,

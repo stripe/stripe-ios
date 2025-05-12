@@ -194,8 +194,6 @@ class PlaygroundController: ObservableObject {
             configuration.cardBrandAcceptance = .allowed(brands: [.visa])
         }
 
-        configuration.shouldReadPaymentMethodOptionsSetupFutureUsage = settings.paymentMethodOptionsSetupFutureUsageEnabled == .on
-
         switch settings.style {
         case .automatic:
             configuration.style = .automatic
@@ -293,8 +291,6 @@ class PlaygroundController: ObservableObject {
         case .allowVisa:
             configuration.cardBrandAcceptance = .allowed(brands: [.visa])
         }
-
-        configuration.shouldReadPaymentMethodOptionsSetupFutureUsage = settings.paymentMethodOptionsSetupFutureUsageEnabled == .on
 
         return configuration
     }
