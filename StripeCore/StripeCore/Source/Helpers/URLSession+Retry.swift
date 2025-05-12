@@ -18,6 +18,7 @@ extension URLSession {
         let task = dataTask(with: request) { (data, response, error) in
             if let httpResponse = response as? HTTPURLResponse,
                 httpResponse.statusCode == 429,
+                requestConfiguration?.retryOn429 ?? true,
                 retryCount > 0
             {
                 // Add some backoff time with a little bit of jitter:
