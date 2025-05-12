@@ -52,7 +52,7 @@ let JSONKeyObject = "object"
         endpoint: String,
         additionalHeaders: [String: String] = [:],
         parameters: [String: Any],
-        requestConfiguration: STPRequestConfiguration? = nil,
+        requestConfiguration: STPRequestConfiguration? = nil
     ) async throws -> (ResponseType) {
         return try await withCheckedThrowingContinuation { continuation in
             post(with: apiClient, endpoint: endpoint, additionalHeaders: additionalHeaders, parameters: parameters, requestConfiguration: requestConfiguration) { responseObject, _, error in
