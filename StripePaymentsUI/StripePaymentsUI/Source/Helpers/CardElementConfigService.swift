@@ -75,7 +75,7 @@ class CardElementConfigService {
             parameters["on_behalf_of"] = onBehalfOf
         }
 
-        apiClient.get(url: CardElementConfigEndpoint, parameters: parameters, ephemeralKeySecret: nil, completion: resultHandler)
+        apiClient.get(url: CardElementConfigEndpoint, parameters: parameters, requestConfiguration: nil, ephemeralKeySecret: nil, completion: resultHandler)
 
         // No answer yet, so we don't know if the user is CBC-eligible
         return false
