@@ -186,6 +186,7 @@ struct PaymentSheetTestPlayground: View {
                             }
                             SettingView(setting: $playgroundController.settings.formSheetAction)
                             SettingView(setting: $playgroundController.settings.embeddedViewDisplaysMandateText)
+                            SettingView(setting: $playgroundController.settings.rowSelectionBehavior)
                         }
                     }
 

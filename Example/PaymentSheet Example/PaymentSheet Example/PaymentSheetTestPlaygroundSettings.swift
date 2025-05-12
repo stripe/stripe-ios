@@ -586,6 +586,12 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
         case `continue`
     }
 
+    enum RowSelectionBehavior: String, PickerEnum {
+        static let enumName: String = "rowSelectionBehavior"
+        case `default`
+        case immediateAction
+    }
+
     enum CardBrandAcceptance: String, PickerEnum {
         static let enumName: String = "cardBrandAcceptance"
         case all
@@ -652,6 +658,7 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
     var collectAddress: BillingDetailsAddress
     var formSheetAction: FormSheetAction
     var embeddedViewDisplaysMandateText: DisplaysMandateTextEnabled
+    var rowSelectionBehavior: RowSelectionBehavior
     var cardBrandAcceptance: CardBrandAcceptance
 
     static func defaultValues() -> PaymentSheetTestPlaygroundSettings {
@@ -705,6 +712,7 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
             collectAddress: .automatic,
             formSheetAction: .continue,
             embeddedViewDisplaysMandateText: .on,
+            rowSelectionBehavior: .default,
             cardBrandAcceptance: .all)
     }
 
