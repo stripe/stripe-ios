@@ -200,6 +200,14 @@ final class UpdatePaymentMethodViewControllerSnapshotTests: STPSnapshotTestCase 
         _test_UpdatePaymentMethodViewController(paymentMethodType: .card, darkMode: false, isCBCEligible: true, cardBrandFilter: cardBrandFilter)
     }
 
+    func test_UpdatePaymentMethodViewControllerLink_lightMode() {
+        _test_UpdatePaymentMethodViewController(paymentMethodType: .link, darkMode: false)
+    }
+
+    func test_UpdatePaymentMethodViewControllerLink_darkMode() {
+        _test_UpdatePaymentMethodViewController(paymentMethodType: .link, darkMode: true)
+    }
+
     func _test_UpdatePaymentMethodViewController(paymentMethodType: STPPaymentMethodType,
                                                  darkMode: Bool,
                                                  isEmbeddedSingle: Bool = false,
@@ -228,6 +236,8 @@ final class UpdatePaymentMethodViewControllerSnapshotTests: STPSnapshotTestCase 
                 return STPPaymentMethod._testUSBankAccount()
             case .SEPADebit:
                 return STPPaymentMethod._testSEPA()
+            case .link:
+                return STPPaymentMethod._testLink()
             default:
                 fatalError("Updating payment method has not been implemented for type \(paymentMethodType)")
             }

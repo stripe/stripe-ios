@@ -559,17 +559,23 @@ extension STPPaymentMethod {
                 return []
             case .USBankAccount, .SEPADebit:
                 return [.userSupportsDelayedPaymentMethods]
+            case .link:
+                return isLinkPaymentMethod ? [] : [.unsupportedForReuse]
             default:
                 return [.unsupportedForReuse]
             }
         }()
+        var supportedPaymentMethods = PaymentSheet.supportedPaymentMethods
+        if elementsSession.enableLinkInSPM && PaymentSheet.enableLinkInSPM {
+            supportedPaymentMethods.append(.link)
+        }
         return PaymentSheet.PaymentMethodType.configurationSupports(
             paymentMethod: type,
             requirements: requirements,
             configuration: configuration,
             intent: intent,
             elementsSession: elementsSession,
-            supportedPaymentMethods: PaymentSheet.supportedPaymentMethods
+            supportedPaymentMethods: supportedPaymentMethods
         ) == .supported
     }
 }

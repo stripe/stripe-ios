@@ -167,10 +167,9 @@ class StripeErrorTest: XCTestCase {
         let error = NSError.stp_error(fromStripeResponse: response)!
         XCTAssertEqual(error.domain, STPError.stripeDomain)
         XCTAssertEqual(error.code, STPErrorCode.invalidRequestError.rawValue)
-        // Error type is not `card_error`, so `NSLocalizedDescription` will be a generic error.
         XCTAssertEqual(
             error.userInfo[NSLocalizedDescriptionKey] as! String,
-            NSError.stp_unexpectedErrorMessage()
+            NSError.stp_cardErrorInvalidNumberUserMessage()
         )
         XCTAssertEqual(
             error.userInfo[STPError.cardErrorCodeKey] as! String,
