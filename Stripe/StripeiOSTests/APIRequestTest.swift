@@ -302,7 +302,7 @@ class APIRequestTest: STPNetworkStubbingTestCase {
         var inProgress = true
 
         let e = expectation(description: "Request completed")
-        APIRequest<AnyAPIResponse>.getWith(apiClient, endpoint: "status/429", parameters: [:]) {
+        APIRequest<AnyAPIResponse>.getWith(apiClient, endpoint: "status/429", parameters: [:], requestConfiguration: STPRequestConfiguration(retryOn429: false)) {
             (_, response, _) in
             XCTAssertEqual(response?.statusCode, 429)
             e.fulfill()
