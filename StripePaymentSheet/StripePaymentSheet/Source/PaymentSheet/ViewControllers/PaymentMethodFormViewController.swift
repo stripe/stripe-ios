@@ -22,6 +22,7 @@ class PaymentMethodFormViewController: UIViewController {
     let paymentMethodType: PaymentSheet.PaymentMethodType
     let configuration: PaymentElementConfiguration
     let analyticsHelper: PaymentSheetAnalyticsHelper
+    let isLink: Bool
     weak var delegate: PaymentMethodFormViewControllerDelegate?
     var paymentOption: PaymentOption? {
         let params = IntentConfirmParams(type: paymentMethodType)
@@ -95,6 +96,7 @@ class PaymentMethodFormViewController: UIViewController {
         configuration: PaymentElementConfiguration,
         headerView: UIView?,
         analyticsHelper: PaymentSheetAnalyticsHelper,
+        isLink: Bool = false,
         delegate: PaymentMethodFormViewControllerDelegate
     ) {
         self.paymentMethodType = type
@@ -114,12 +116,14 @@ class PaymentMethodFormViewController: UIViewController {
                 paymentMethod: paymentMethodType,
                 previousCustomerInput: previousCustomerInput,
                 linkAccount: LinkAccountContext.shared.account,
+                isLink: isLink,
                 accountService: LinkAccountService(apiClient: configuration.apiClient, elementsSession: elementsSession),
                 analyticsHelper: analyticsHelper
             ).make()
             self.formCache[type] = form
         }
         self.analyticsHelper = analyticsHelper
+        self.isLink = isLink
         super.init(nibName: nil, bundle: nil)
     }
 

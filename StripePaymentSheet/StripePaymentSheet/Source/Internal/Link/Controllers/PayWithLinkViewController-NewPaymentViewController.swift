@@ -96,6 +96,7 @@ extension PayWithLinkViewController {
                 paymentMethodTypes: [.stripe(.card)],
                 formCache: .init(), // We don't want to share a form cache with the containing PaymentSheet
                 analyticsHelper: context.analyticsHelper,
+                isLink: true,
                 delegate: self
             )
         }()
