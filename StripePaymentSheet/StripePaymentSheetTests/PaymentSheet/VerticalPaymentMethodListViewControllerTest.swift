@@ -82,7 +82,7 @@ final class VerticalPaymentMethodListViewControllerTest: XCTestCase {
         )
 
         // The card button should say "New card"
-        _ = sut.getRowButton(accessibilityIdentifier: "New card") // will crash if not found
+        XCTAssert(sut.rowButtons.contains { $0.accessibilityIdentifier == "New card" })
     }
 
     func testNoSavedCardCopy() {
@@ -108,7 +108,7 @@ final class VerticalPaymentMethodListViewControllerTest: XCTestCase {
         )
 
         // The card button should say "Card"
-        _ = sut.getRowButton(accessibilityIdentifier: "Card") // will crash if not found
+        XCTAssert(sut.rowButtons.contains { $0.accessibilityIdentifier == "Card" })
     }
 
     func testApplePayAndLinkOrdering() {
