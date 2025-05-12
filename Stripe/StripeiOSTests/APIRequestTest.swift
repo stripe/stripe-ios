@@ -295,7 +295,7 @@ class APIRequestTest: STPNetworkStubbingTestCase {
         wait(for: [e], timeout: 5.0)
         StripeAPI.maxRetries = oldMaxRetries
     }
-    
+
     func test429NoBackoffWhenConfigurationDisabled() {
         let oldMaxRetries = StripeAPI.maxRetries
         StripeAPI.maxRetries = 2

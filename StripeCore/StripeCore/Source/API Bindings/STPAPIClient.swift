@@ -291,10 +291,10 @@ extension STPAPIClient {
         request(
             method: .get,
             parameters: parameters,
-            requestConfiguration: requestConfiguration,
             ephemeralKeySecret: ephemeralKeySecret,
             consumerPublishableKey: consumerPublishableKey,
             url: url,
+            requestConfiguration: requestConfiguration,
             completion: completion
         )
     }
@@ -351,10 +351,10 @@ extension STPAPIClient {
         request(
             method: .post,
             parameters: parameters,
-            requestConfiguration: requestConfiguration,
             ephemeralKeySecret: ephemeralKeySecret,
             consumerPublishableKey: consumerPublishableKey,
             url: url,
+            requestConfiguration: requestConfiguration,
             completion: completion
         )
     }
@@ -417,6 +417,7 @@ extension STPAPIClient {
             ephemeralKeySecret: ephemeralKeySecret,
             consumerPublishableKey: consumerPublishableKey,
             url: url,
+            requestConfiguration: requestConfiguration,
             completion: completion
         )
     }
@@ -424,10 +425,10 @@ extension STPAPIClient {
     func request<T: Decodable>(
         method: HTTPMethod,
         parameters: [String: Any],
-        requestConfiguration: STPRequestConfiguration? = nil,
         ephemeralKeySecret: String?,
         consumerPublishableKey: String?,
         url: URL,
+        requestConfiguration: STPRequestConfiguration? = nil,
         completion: @escaping (Result<T, Error>) -> Void
     ) {
         var request = configuredRequest(for: url)
