@@ -1830,6 +1830,7 @@ class PaymentSheetFormFactoryTest: XCTestCase {
 
         var configuration = PaymentSheet.Configuration._testValue_MostPermissive()
         configuration.customer = .init(id: "id", ephemeralKeySecret: "ek")
+        configuration.linkPaymentMethodsOnly = true
         let analyticsClient = STPAnalyticsClient()
 
         func makeForm(intent: Intent, shouldReadPaymentMethodOptionsSetupFutureUsage: Bool = false) -> PaymentMethodElement {
