@@ -43,7 +43,7 @@ extension PaymentSheet {
     ]
 
     /// A list of `STPPaymentMethodType` that can be saved in PaymentSheet
-    static let supportedSavedPaymentMethods: [STPPaymentMethodType] = [.card, .USBankAccount, .SEPADebit]
+    static let supportedSavedPaymentMethods: [STPPaymentMethodType] = [.card, .USBankAccount, .SEPADebit, .link]
 
     /// A list of `STPPaymentMethodType` that can be set as default in PaymentSheet when opted in to the "set as default" feature
     static let supportedDefaultPaymentMethods: [STPPaymentMethodType] = [.card, .USBankAccount]
@@ -61,8 +61,8 @@ extension PaymentSheet {
             return false
         }
 
-        // Disable Link if the merchant is using card brand filtering
-        guard configuration.cardBrandAcceptance == .all else {
+        // Disable Link web if the merchant is using card brand filtering
+        guard configuration.cardBrandAcceptance == .all || deviceCanUseNativeLink(elementsSession: elementsSession, configuration: configuration) else {
            return false
         }
 

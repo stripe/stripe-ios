@@ -31,8 +31,7 @@ final class ConsumerPaymentDetails: Decodable {
          billingAddress: BillingAddress?,
          billingEmailAddress: String?,
          nickname: String?,
-         isDefault: Bool
-    ) {
+         isDefault: Bool) {
         self.stripeID = stripeID
         self.details = details
         self.billingAddress = billingAddress
@@ -63,6 +62,24 @@ final class ConsumerPaymentDetails: Decodable {
         // The payment details are included in the dictionary, so we pass the whole dict to Details
         self.details = try decoder.singleValueContainer().decode(Details.self)
         self.isDefault = try container.decode(Bool.self, forKey: .isDefault)
+    }
+}
+
+extension ConsumerPaymentDetails {
+    func isSupported(linkAccount: PaymentSheetLinkAccount,
+                     elementsSession: STPElementsSession,
+                     cardBrandFilter: CardBrandFilter) -> Bool {
+        guard linkAccount.supportedPaymentDetailsTypes(for: elementsSession).contains(type) else {
+            return false
+        }
+
+        if case let .card(details) = details,
+           !cardBrandFilter.isAccepted(cardBrand: details.stpBrand),
+           elementsSession.linkCardBrandFilteringEnabled {
+            return false
+        }
+
+        return true
     }
 }
 

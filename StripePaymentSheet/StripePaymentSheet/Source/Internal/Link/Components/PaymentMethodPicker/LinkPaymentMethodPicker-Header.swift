@@ -27,12 +27,17 @@ extension LinkPaymentMethodPicker {
         }
 
         /// The selected payment method.
-        var selectedPaymentMethod: ConsumerPaymentDetails? {
+        private(set) var selectedPaymentMethod: ConsumerPaymentDetails? {
             didSet {
+                updateChevron()
                 contentView.paymentMethod = selectedPaymentMethod
                 updateAccessibilityContent()
             }
         }
+
+        // Indicates whether the header should appear collapsable or not.
+        // The header is collapsable when the currently selected payment method is supported.
+        private(set) var collapsable: Bool = false
 
         var isExpanded: Bool = false {
             didSet {
@@ -153,6 +158,11 @@ extension LinkPaymentMethodPicker {
             fatalError("init(coder:) has not been implemented")
         }
 
+        func setSelectedPaymentMethod(selectedPaymentMethod: ConsumerPaymentDetails?, supported: Bool) {
+            self.collapsable = supported
+            self.selectedPaymentMethod = selectedPaymentMethod
+        }
+
         private func updateChevron() {
             if isExpanded {
                 chevron.transform = CGAffineTransform(rotationAngle: .pi)
@@ -161,6 +171,7 @@ extension LinkPaymentMethodPicker {
                 chevron.transform = .identity
                 chevron.tintColor = .linkSecondaryText
             }
+            chevron.isHidden = !collapsable
         }
 
         private func updateAccessibilityContent() {

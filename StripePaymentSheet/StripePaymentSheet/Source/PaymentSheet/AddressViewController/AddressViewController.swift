@@ -84,7 +84,11 @@ public class AddressViewController: UIViewController {
         return header
     }()
     lazy var scrollView: UIScrollView = {
-        return UIScrollView()
+        let scrollView = UIScrollView()
+        #if !os(visionOS)
+        scrollView.keyboardDismissMode = .onDrag
+        #endif
+        return scrollView
     }()
     lazy var errorLabel: UILabel = {
         let label = ElementsUI.makeErrorLabel(theme: configuration.appearance.asElementsTheme)
@@ -183,10 +187,6 @@ public class AddressViewController: UIViewController {
             didLogAddressShow = true
         }
         addressSection?.beginEditing()
-    }
-
-    public override func viewWillDisappear(_ animated: Bool) {
-        super.viewWillDisappear(animated)
     }
 }
 

@@ -48,7 +48,7 @@ extension PayWithLinkViewController {
 
         private lazy var cancelButton: Button = {
             let buttonTitle = isAddingFirstPaymentMethod
-                ? String.Localized.pay_another_way
+                ? context.secondaryButtonLabel
                 : String.Localized.cancel
 
             let configuration: Button.Configuration = shouldShowApplePayButton
@@ -104,6 +104,7 @@ extension PayWithLinkViewController {
             var configuration = context.configuration
             configuration.linkPaymentMethodsOnly = true
             configuration.appearance = LinkUI.appearance
+            configuration.cardBrandAcceptance = context.elementsSession.linkCardBrandFilteringEnabled ? configuration.cardBrandAcceptance : .all
 
             let effectiveBillingDetails = configuration.effectiveBillingDetails(for: linkAccount)
             configuration.defaultBillingDetails = effectiveBillingDetails
