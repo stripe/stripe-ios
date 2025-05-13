@@ -110,8 +110,11 @@ extension LinkPaymentMethodPicker {
             stackView.setCustomSpacing(Constants.contentSpacing, after: payWithLabel)
             stackView.translatesAutoresizingMaskIntoConstraints = false
 
+            let payWithLabelWidth = payWithLabel.widthAnchor.constraint(equalToConstant: LinkPaymentMethodPicker.widthForHeaderLabels)
+            payWithLabelWidth.priority = .defaultLow
+
             NSLayoutConstraint.activate([
-                payWithLabel.widthAnchor.constraint(equalToConstant: LinkPaymentMethodPicker.widthForHeaderLabels)
+                payWithLabelWidth,
             ])
 
             return stackView

@@ -685,6 +685,23 @@ extension PayWithLinkViewController.WalletViewController: LinkPaymentMethodPicke
         actions(for: index, includeCancelAction: false)
     }
 
+    func didTapOnAccountMenuItem(_ picker: LinkPaymentMethodPicker) {
+        let actionSheet = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
+        actionSheet.addAction(UIAlertAction(
+            title: STPLocalizedString("Log out of Link", "Title of the logout action."),
+            style: .destructive,
+            handler: { [weak self] _ in
+                self?.coordinator?.logout(cancel: true)
+            }
+        ))
+        actionSheet.addAction(UIAlertAction(title: String.Localized.cancel, style: .cancel))
+
+        // iPad support
+        actionSheet.popoverPresentationController?.sourceView = picker
+        actionSheet.popoverPresentationController?.sourceRect = picker.bounds
+
+        present(actionSheet, animated: true)
+    }
 }
 
 // MARK: - LinkInstantDebitMandateViewDelegate

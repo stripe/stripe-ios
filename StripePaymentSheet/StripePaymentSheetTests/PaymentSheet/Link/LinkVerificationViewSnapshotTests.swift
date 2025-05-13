@@ -55,7 +55,6 @@ extension LinkVerificationViewSnapshotTests {
         let email: String
         let redactedPhoneNumber: String?
         let isRegistered: Bool
-        let isLoggedIn: Bool
     }
 
     func makeSUT(mode: LinkVerificationView.Mode) -> LinkVerificationView {
@@ -64,8 +63,7 @@ extension LinkVerificationViewSnapshotTests {
             linkAccount: LinkAccountStub(
                 email: "user@example.com",
                 redactedPhoneNumber: "+1********55",
-                isRegistered: true,
-                isLoggedIn: false
+                isRegistered: true
             )
         )
 
