@@ -921,7 +921,7 @@ extension STPAPIClient {
         )
 
         var params = [
-            "app": String(decoding: appData ?? Data(), as: UTF8.self),
+            "app": String(data: appData ?? Data(), encoding: .utf8) ?? "",
             "source": sourceID,
         ]
         if let returnURLString = returnURLString {
