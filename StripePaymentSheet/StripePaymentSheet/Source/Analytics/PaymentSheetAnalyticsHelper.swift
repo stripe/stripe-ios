@@ -153,6 +153,7 @@ final class PaymentSheetAnalyticsHelper {
             guard let loadingStartDate else { return 0 }
             return Date().timeIntervalSince(loadingStartDate)
         }()
+
         log(
             event: .paymentSheetLoadSucceeded,
             duration: duration,
