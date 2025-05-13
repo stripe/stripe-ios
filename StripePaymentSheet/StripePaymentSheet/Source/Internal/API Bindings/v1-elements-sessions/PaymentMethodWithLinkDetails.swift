@@ -29,9 +29,16 @@ class PaymentMethodWithLinkDetails: NSObject, STPAPIResponseDecodable {
             return nil
         }
 
+        let linkDetailsJson = response["link_payment_details"] as? [AnyHashable: Any]
+
+        if isUnsupportedLinkPaymentDetailsType(linkDetailsJson) {
+            // This is a Link payment method, but we don't support the type yet. We can't render them, so hide them.
+            return nil
+        }
+
         var linkDetails: ConsumerPaymentDetails?
 
-        if let linkDetailsJson = response["link_payment_details"] as? [AnyHashable: Any] {
+        if let linkDetailsJson {
             let decoder = JSONDecoder()
             decoder.keyDecodingStrategy = .convertFromSnakeCase
 
@@ -45,5 +52,14 @@ class PaymentMethodWithLinkDetails: NSObject, STPAPIResponseDecodable {
             linkDetails: linkDetails,
             allResponseFields: response
         )
+    }
+
+    private static func isUnsupportedLinkPaymentDetailsType(_ json: [AnyHashable: Any]?) -> Bool {
+        guard let json else {
+            // Not a Link payment method, so we're fine
+            return false
+        }
+
+        return json["type"] as? String != "CARD"
     }
 }
