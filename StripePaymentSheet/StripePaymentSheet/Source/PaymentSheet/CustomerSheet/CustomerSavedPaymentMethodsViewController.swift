@@ -93,7 +93,7 @@ class CustomerSavedPaymentMethodsViewController: UIViewController {
     let merchantSupportedPaymentMethodTypes: [STPPaymentMethodType]
 
     // MARK: - Views
-    internal lazy var sheetNavigationBar: SheetNavigationBar? = {
+    internal lazy var   sheetNavigationBar: SheetNavigationBar? = {
         let navBar = SheetNavigationBar(isTestMode: configuration.apiClient.isTestmode,
                                         appearance: configuration.appearance)
         navBar.delegate = self

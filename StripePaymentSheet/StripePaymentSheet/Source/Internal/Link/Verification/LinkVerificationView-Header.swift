@@ -16,6 +16,7 @@ extension LinkVerificationView {
     final class Header: UIView {
         struct Constants {
             static let logoHeight: CGFloat = 24
+            
         }
 
         private let logoView: UIImageView = {

@@ -28,7 +28,8 @@ extension PayWithLinkViewController {
             NSLayoutConstraint.activate([
                 activityIndicator.centerXAnchor.constraint(equalTo: view.centerXAnchor),
                 activityIndicator.centerYAnchor.constraint(equalTo: view.centerYAnchor),
-                containerView.heightAnchor.constraint(equalToConstant: 80),
+                containerView.heightAnchor.constraint(equalToConstant: 400),
+                containerView.heightAnchor.constraint(equalTo: self.view.heightAnchor)
             ])
         }
 

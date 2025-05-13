@@ -41,6 +41,38 @@ final class PayWithNativeLinkController {
         present(from: viewController, completion: completion)
     }
 
+    func presentAsBottomSheet(from presentingController: UIViewController,
+                              shouldOfferApplePay: Bool,
+                              shouldFinishOnClose: Bool,
+                              completion: @escaping PaymentSheetResultCompletionBlock) {
+        self.selfRetainer = self
+
+
+        let payWithLinkVC = PayWithLinkViewController(
+            intent: intent,
+            elementsSession: elementsSession,
+            configuration: configuration,
+            shouldOfferApplePay: shouldOfferApplePay,
+            shouldFinishOnClose: shouldFinishOnClose,
+            analyticsHelper: self.analyticsHelper
+        )
+
+        payWithLinkVC.payWithLinkDelegate = self
+
+
+        presentingController.presentAsBottomSheet(
+            payWithLinkVC.bottomSheetViewController,
+            appearance: self.configuration.appearance,
+            completion: {}
+        )
+        payWithLinkVC.load()
+
+        self.completion =  { status, result in
+            payWithLinkVC.bottomSheetViewController.dismiss(animated: true)
+            completion(status, result)
+        }
+    }
+
     func present(
         from presentingController: UIViewController,
         completion: @escaping PaymentSheetResultCompletionBlock

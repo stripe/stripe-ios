@@ -12,6 +12,7 @@ import UIKit
 @_spi(STP) import StripePayments
 @_spi(STP) import StripeUICore
 
+
 protocol PayWithLinkViewControllerDelegate: AnyObject {
 
     func payWithLinkViewControllerDidConfirm(
@@ -54,6 +55,11 @@ protocol PayWithLinkCoordinating: AnyObject {
 /// For internal SDK use only
 @objc(STP_Internal_PayWithLinkViewController)
 final class PayWithLinkViewController: UINavigationController {
+
+    protocol PayWithLinkNavigation: AnyObject {
+        func pushViewController(_ viewController: UIViewController, animated: Bool)
+        func setRootViewController(_ viewController: BaseViewController, animated: Bool)
+    }
 
     enum LinkAccountError: Error {
         case noLinkAccount
@@ -134,7 +140,8 @@ final class PayWithLinkViewController: UINavigationController {
     }()
 
     lazy var bottomSheetViewController: BottomSheetViewController = {
-        BottomSheetViewController(
+        loadingViewController.view.layoutIfNeeded()
+        return BottomSheetViewController(
             contentViewController: loadingViewController,
             appearance: context.configuration.appearance,
             isTestMode: context.configuration.apiClient.isTestmode,
@@ -179,8 +186,8 @@ final class PayWithLinkViewController: UINavigationController {
         fatalError("init(coder:) has not been implemented")
     }
 
-    override func viewDidLoad() {
-        super.viewDidLoad()
+
+     func load() {
         view.accessibilityIdentifier = "Stripe.Link.PayWithLinkViewController"
         view.tintColor = .linkBrand
 
@@ -230,21 +237,26 @@ final class PayWithLinkViewController: UINavigationController {
     override func pushViewController(_ viewController: UIViewController, animated: Bool) {
         if let viewController = viewController as? BaseViewController {
             viewController.coordinator = self
-            viewController.customNavigationBar.linkAccount = linkAccount
-            viewController.customNavigationBar.showBackButton = !viewControllers.isEmpty
+//            viewController.customNavigationBar.linkAccount = linkAccount
+//            viewController.customNavigationBar.showBackButton = !viewControllers.isEmpty
             bottomSheetViewController.pushContentViewController(viewController)
-        } else {
-            super.pushViewController(viewController, animated: animated)
         }
+//        } else {
+//            super.pushViewController(viewController, animated: animated)
+//        }
 
     }
+
 
     private func updateUI() {
         guard let linkAccount = linkAccount else {
             if !(rootViewController is SignUpViewController) {
-                setRootViewController(
-                    SignUpViewController(linkAccount: nil, context: context)
-                )
+                DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 0.1, execute: {
+                    self.setRootViewController(
+                        SignUpViewController(linkAccount: nil, context: self.context)
+                    )
+                })
+
             }
             return
         }
@@ -259,7 +271,9 @@ final class PayWithLinkViewController: UINavigationController {
         case .requiresVerification:
             setRootViewController(VerifyAccountViewController(linkAccount: linkAccount, context: context))
         case .verified:
-            loadAndPresentWallet()
+            DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 0.1, execute: {
+                self.loadAndPresentWallet()
+            })
         }
     }
 
@@ -307,7 +321,8 @@ private extension PayWithLinkViewController {
                     let walletViewController = WalletViewController(
                         linkAccount: linkAccount,
                         context: self.context,
-                        paymentMethods: paymentDetails
+                        paymentMethods: paymentDetails,
+                        navigationDelegate: self
                     )
 
                     self.setRootViewController(walletViewController)
@@ -331,7 +346,7 @@ private extension PayWithLinkViewController {
 
 // MARK: - Navigation
 
-private extension PayWithLinkViewController {
+extension PayWithLinkViewController: PayWithLinkViewController.PayWithLinkNavigation {
 
     var rootViewController: UIViewController? {
         return viewControllers.first
@@ -339,9 +354,12 @@ private extension PayWithLinkViewController {
 
     func setRootViewController(_ viewController: BaseViewController, animated: Bool = true) {
         viewController.coordinator = self
-        viewController.customNavigationBar.linkAccount = linkAccount
-        viewController.customNavigationBar.showBackButton = false
+//        viewController.customNavigationBar.linkAccount = linkAccount
+//        viewController.customNavigationBar.showBackButton = false
+        viewController.view.translatesAutoresizingMaskIntoConstraints = false
+//        viewController.view.heightAnchor.constraint(equalToConstant: 400).isActive = true
         bottomSheetViewController.setViewControllers([viewController])
+//        super.setViewControllers([viewController], animated: true)
     }
 
 }

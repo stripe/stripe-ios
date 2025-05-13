@@ -111,7 +111,7 @@ extension PayWithLinkViewController {
             stackView.setCustomSpacing(LinkUI.extraLargeContentSpacing, after: legalTermsView)
             stackView.isLayoutMarginsRelativeArrangement = true
             stackView.directionalLayoutMargins = LinkUI.contentMargins
-
+            stackView.translatesAutoresizingMaskIntoConstraints = false
             return stackView
         }()
 
@@ -135,16 +135,37 @@ extension PayWithLinkViewController {
         override func viewDidLoad() {
             super.viewDidLoad()
 
-            let scrollView = LinkKeyboardAvoidingScrollView(contentView: stackView)
-            #if !os(visionOS)
-            scrollView.keyboardDismissMode = .interactive
-            #endif
+//            let scrollView = LinkKeyboardAvoidingScrollView(contentView: stackView)
+//            #if !os(visionOS)
+//            scrollView.keyboardDismissMode = .interactive
+//            #endif
 
-            contentView.addAndPinSubview(scrollView)
+//            contentView.addSubview(scrollView)
+
+            
+//            contentView.addSubview(stackView)
+//            contentView.topAnchor.constraint(equalTo: stackView.topAnchor).isActive = true
+//            contentView.leadingAnchor.constraint(equalTo: stackView.leadingAnchor).isActive = true
+//            contentView.trailingAnchor.constraint(equalTo: stackView.trailingAnchor).isActive = true
+//            contentView.bottomAnchor.constraint(equalTo: stackView.bottomAnchor).isActive = true
+
+//            contentView.addAndPinSubview(stackView)
+
+//            contentView.addAndPinSubview(stackView)
+
+            contentView.addSubview(stackView)
+
+            contentView.topAnchor.constraint(equalTo: stackView.topAnchor).isActive = true
+            contentView.leadingAnchor.constraint(equalTo: stackView.leadingAnchor).isActive = true
+            contentView.trailingAnchor.constraint(equalTo: stackView.trailingAnchor).isActive = true
+            contentView.bottomAnchor.constraint(greaterThanOrEqualTo: stackView.bottomAnchor).isActive = true
+            contentView.heightAnchor.constraint(greaterThanOrEqualToConstant: 300).isActive = true
 
             setupBindings()
             updateUI()
         }
+
+        override var requiresFullScreen: Bool { true }
 
         override func viewDidAppear(_ animated: Bool) {
             super.viewDidAppear(animated)

@@ -149,13 +149,16 @@ extension PayWithLinkViewController {
         private let feedbackGenerator = UINotificationFeedbackGenerator()
         #endif
 
+        private weak var navigationDelegate: PayWithLinkViewController.PayWithLinkNavigation?
         init(
             linkAccount: PaymentSheetLinkAccount,
             context: Context,
-            paymentMethods: [ConsumerPaymentDetails]
+            paymentMethods: [ConsumerPaymentDetails],
+            navigationDelegate: PayWithLinkViewController.PayWithLinkNavigation
         ) {
             self.linkAccount = linkAccount
             self.viewModel = WalletViewModel(linkAccount: linkAccount, context: context, paymentMethods: paymentMethods)
+            self.navigationDelegate = navigationDelegate
             super.init(context: context)
         }
 
@@ -178,12 +181,12 @@ extension PayWithLinkViewController {
 
             containerView.addArrangedSubview(cancelButton)
 
-            let scrollView = LinkKeyboardAvoidingScrollView(contentView: containerView)
-            #if !os(visionOS)
-            scrollView.keyboardDismissMode = .interactive
-            #endif
+//            let scrollView = LinkKeyboardAvoidingScrollView(contentView: containerView)
+//            #if !os(visionOS)
+//            scrollView.keyboardDismissMode = .interactive
+//            #endif
 
-            contentView.addAndPinSubview(scrollView)
+            contentView.addAndPinSubview(containerView)
 
             // If the initially selected payment method is not supported, we should automatically
             // expand the payment picker to hint the user to pick another payment method.
@@ -449,7 +452,8 @@ private extension PayWithLinkViewController.WalletViewController {
         )
         updatePaymentMethodVC.delegate = self
 
-        navigationController?.pushViewController(updatePaymentMethodVC, animated: true)
+        navigationDelegate?.pushViewController(updatePaymentMethodVC, animated: true)
+//        navigationController?.pushViewController(updatePaymentMethodVC, animated: true)
     }
 
     func collectRemainingBillingDetailsAndConfirm(for paymentMethod: ConsumerPaymentDetails) {
@@ -461,7 +465,8 @@ private extension PayWithLinkViewController.WalletViewController {
         )
         updatePaymentMethodVC.delegate = self
 
-        navigationController?.pushViewController(updatePaymentMethodVC, animated: true)
+        navigationDelegate?.pushViewController(updatePaymentMethodVC, animated: true)
+//        navigationController?.pushViewController(updatePaymentMethodVC, animated: true)
     }
 }
 
@@ -627,7 +632,9 @@ extension PayWithLinkViewController.WalletViewController: LinkPaymentMethodPicke
                 isAddingFirstPaymentMethod: false
             )
 
-            navigationController?.pushViewController(newPaymentVC, animated: true)
+            navigationDelegate?.pushViewController(newPaymentVC, animated: true)
+
+//            navigationController?.pushViewController(newPaymentVC, animated: true)
         }
     }
 

@@ -78,13 +78,19 @@ extension PaymentSheet {
 
         payWithLinkVC.payWithLinkDelegate = self
 
+//        payWithLinkVC.load()
         let bottomSheet = payWithLinkVC.bottomSheetViewController
         self.payWithLinkBottomSheet = bottomSheet
+
+
         presentingController.presentAsBottomSheet(
             bottomSheet,
             appearance: self.configuration.appearance,
-            completion: completion
+            completion: {
+
+            }
         )
+        payWithLinkVC.load()
     }
 
     func verifyLinkSessionIfNeeded(
@@ -152,7 +158,8 @@ extension PaymentSheet: PayWithLinkViewControllerDelegate {
     }
 
     func payWithLinkViewControllerDidCancel(_ payWithLinkViewController: PayWithLinkViewController) {
-        payWithLinkViewController.dismiss(animated: true)
+        payWithLinkBottomSheet?.dismiss(animated: true)
+//        payWithLinkViewController.dismiss(animated: true)
     }
 
     func payWithLinkViewControllerDidFinish(
