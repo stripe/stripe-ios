@@ -326,7 +326,7 @@ private extension ConnectComponentWebViewController {
             analyticsClient.logComponentLoaded(loadEnd: .now)
             // Keeps the spinner around for 100ms which is just enough on most devices to smooth the transition to the web spinner
             // Any longer, and the spinner begins to conflict with the embedded loading state
-            UIView.animate(withDuration: 1, animations: {
+            UIView.animate(withDuration: 0.1, animations: {
                 activityIndicator.alpha = 0.0
             }, completion: { _ in
                 activityIndicator.stopAnimating()
