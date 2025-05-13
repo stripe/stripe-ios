@@ -183,6 +183,7 @@ extension STPElementsSession {
 
     static func _testValue(
         intent: Intent,
+        isLinkPassthroughModeEnabled: Bool? = nil,
         linkMode: LinkMode? = nil,
         linkFundingSources: Set<LinkSettings.FundingSource> = [],
         defaultPaymentMethod: String? = nil,
@@ -217,6 +218,7 @@ extension STPElementsSession {
         return STPElementsSession._testValue(
             paymentMethodTypes: paymentMethodTypes,
             customerSessionData: customerSessionData,
+            isLinkPassthroughModeEnabled: isLinkPassthroughModeEnabled,
             linkMode: linkMode,
             linkFundingSources: linkFundingSources,
             defaultPaymentMethod: defaultPaymentMethod,
