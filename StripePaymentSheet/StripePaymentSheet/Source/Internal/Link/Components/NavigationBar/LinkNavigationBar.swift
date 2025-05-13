@@ -23,12 +23,6 @@ final class LinkNavigationBar: UIView {
         static let defaultHeight: CGFloat = 44
     }
 
-    var linkAccount: PaymentSheetLinkAccountInfoProtocol? {
-        didSet {
-            update()
-        }
-    }
-
     var showBackButton: Bool = false {
         didSet {
             if showBackButton != oldValue {
@@ -51,14 +45,6 @@ final class LinkNavigationBar: UIView {
         button.setImage(Image.icon_cancel.makeImage(), for: .normal)
         button.translatesAutoresizingMaskIntoConstraints = false
         button.accessibilityLabel = String.Localized.close
-        return button
-    }()
-
-    let menuButton: UIButton = {
-        let button = UIButton(type: .system)
-        button.setImage(Image.icon_menu_horizontal.makeImage(), for: .normal)
-        button.translatesAutoresizingMaskIntoConstraints = false
-        button.accessibilityLabel = String.Localized.show_menu
         return button
     }()
 
@@ -91,7 +77,6 @@ final class LinkNavigationBar: UIView {
         addSubview(logoView)
         addSubview(backButton)
         addSubview(closeButton)
-        addSubview(menuButton)
 
         NSLayoutConstraint.activate([
             // Back button
@@ -114,13 +99,6 @@ final class LinkNavigationBar: UIView {
             logoView.widthAnchor.constraint(equalToConstant: Constants.logoSize.width),
             logoView.centerXAnchor.constraint(equalTo: safeAreaLayoutGuide.centerXAnchor),
             logoView.bottomAnchor.constraint(lessThanOrEqualTo: layoutMarginsGuide.bottomAnchor),
-            // Menu button
-            menuButton.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor),
-            menuButton.bottomAnchor.constraint(equalTo: safeAreaLayoutGuide.bottomAnchor),
-            menuButton.trailingAnchor.constraint(equalTo: safeAreaLayoutGuide.trailingAnchor),
-            menuButton.widthAnchor.constraint(equalToConstant: Constants.buttonSize.width),
-            menuButton.heightAnchor.constraint(equalToConstant: Constants.buttonSize.height),
-            menuButton.centerYAnchor.constraint(equalTo: logoView.centerYAnchor),
         ])
 
         update()
@@ -136,16 +114,11 @@ final class LinkNavigationBar: UIView {
     }
 
     private func update() {
-        let isLoggedIn = linkAccount?.isLoggedIn ?? false
-
         // Back and close button are mutually exclusive.
         backButton.isHidden = !showBackButton
         closeButton.isHidden = showBackButton
 
         // Hide the logo if showing the back button.
         logoView.isHidden = showBackButton
-
-        // Menu should be hidden if not logged in or we are currently showing the back button.
-        menuButton.isHidden = !isLoggedIn || showBackButton
     }
 }

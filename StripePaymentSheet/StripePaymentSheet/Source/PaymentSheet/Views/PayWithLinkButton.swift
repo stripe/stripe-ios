@@ -33,7 +33,6 @@ final class PayWithLinkButton: UIControl {
         let email: String
         let redactedPhoneNumber: String?
         let isRegistered: Bool
-        let isLoggedIn: Bool
     }
 
     /// Link account of the current user.
@@ -468,8 +467,7 @@ private func makeAccountStub(email: String, isRegistered: Bool, lastPM: LinkPMDi
     return PayWithLinkButton.LinkAccountStub(
         email: email,
         redactedPhoneNumber: nil,
-        isRegistered: isRegistered,
-        isLoggedIn: false
+        isRegistered: isRegistered
     )
 }
 
