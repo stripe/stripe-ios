@@ -364,6 +364,13 @@ final class LinkInlineSignupViewModel {
     }
 }
 
+enum LinkEmailHelper {
+    static func canLookupEmail(_ email: String?) -> Bool {
+        let isHideMyEmailDomain = email?.hasSuffix("@privaterelay.appleid.com") == true
+        return isHideMyEmailDomain == false
+    }
+}
+
 private extension LinkInlineSignupViewModel {
 
     func notifyUpdate() {
