@@ -6,6 +6,7 @@
 //
 
 import Foundation
+@testable @_spi(STP) import StripeCore
 @testable import StripePayments
 @testable @_spi(STP) import StripePaymentSheet
 import StripePaymentsTestUtils
