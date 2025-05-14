@@ -4,10 +4,10 @@
 ////
 ////  Created by Yuki Tokuhiro on 10/16/24.
 ////
-//import UIKit
+// import UIKit
 //
 ///// The view that's vended to the merchant, containing the embedded view.  We use this to be able to swap out the embedded view with an animation when `update` is called.
-//class ExpressCheckoutElementContainerView: UIView {
+// class ExpressCheckoutElementContainerView: UIView {
 //    // TODO: we probably don't need all this resizing stuff, we have a fixed size?
 //    /// Return the default size to let Auto Layout manage the height.
 //    /// Overriding intrinsicContentSize values and setting `invalidIntrinsicContentSize` forces SwiftUI to update layout immediately,
@@ -92,4 +92,4 @@
 //            oldContentView.removeFromSuperview()
 //        }
 //    }
-//}
+// }

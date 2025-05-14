@@ -3,36 +3,36 @@
 //  StripePaymentSheet
 //
 
-import SwiftUI
+import PassKit
 import StripeCore
 @_spi(STP) import StripeUICore
-import PassKit
+import SwiftUI
 import UIKit
 
 @available(iOS 16.0, *)
 @_spi(STP) public struct ExpressCheckoutView: View {
     let flowController: PaymentSheet.FlowController
-    
+
     @State private var showingApplePay: Bool
     @State private var showingLink: Bool
-    
+
     init(showingApplePay: Bool = false, showingLink: Bool = false, flowController: PaymentSheet.FlowController) {
         self.flowController = flowController
         self.showingApplePay = showingApplePay
         self.showingLink = showingLink
     }
-    
+
     @_spi(STP) public init(flowController: PaymentSheet.FlowController) {
         let isApplePayEnabled = PaymentSheet.isApplePayEnabled(elementsSession: flowController.elementsSession, configuration: flowController.configuration)
         let isLinkEnabled = PaymentSheet.isLinkEnabled(elementsSession: flowController.elementsSession, configuration: flowController.configuration)
         self.init(showingApplePay: isApplePayEnabled, showingLink: isLinkEnabled, flowController: flowController)
     }
-    
+
     @_spi(STP) public var body: some View {
         if showingApplePay || showingLink {
             VStack(spacing: 8) {
                 if showingApplePay {
-                    ApplePayButton { 
+                    ApplePayButton {
                         Task {
                             checkoutTapped(.applePay)
                         }
@@ -49,12 +49,12 @@ import UIKit
             .frame(maxWidth: .infinity)
         }
     }
-    
+
     enum ExpressType {
         case link
         case applePay
     }
-    
+
     func checkoutTapped(_ expressType: ExpressType) {
         // Handle checkout action
 
@@ -72,7 +72,7 @@ import UIKit
                 paymentOption: .applePay,
                 paymentHandler: flowController.paymentHandler,
                 analyticsHelper: flowController.analyticsHelper
-            ) { result, _ in
+            ) { _, _ in
                 // Do something with result?
             }
             break
@@ -80,12 +80,12 @@ import UIKit
         flowController.confirm(from: UIViewController()) { _ in
             // handle result
             // probably this block should be passed in by the initializer
-            
+
         }
     }
 }
 
-fileprivate class WindowAuthenticationContext: NSObject, STPAuthenticationContext {
+private class WindowAuthenticationContext: NSObject, STPAuthenticationContext {
     public func authenticationPresentingViewController() -> UIViewController {
         UIWindow.visibleViewController ?? UIViewController()
     }
@@ -94,7 +94,7 @@ fileprivate class WindowAuthenticationContext: NSObject, STPAuthenticationContex
 @available(iOS 16.0, *)
 private struct ApplePayButton: View {
     let action: () -> Void
-    
+
     var body: some View {
         PayWithApplePayButton(.plain, action: action)
             .frame(maxWidth: .infinity)
@@ -106,7 +106,7 @@ private struct ApplePayButton: View {
 @available(iOS 16.0, *)
 private struct LinkButton: View {
     let action: () -> Void
-    
+
     var body: some View {
         Button(action: action) {
             HStack(spacing: 4) {
