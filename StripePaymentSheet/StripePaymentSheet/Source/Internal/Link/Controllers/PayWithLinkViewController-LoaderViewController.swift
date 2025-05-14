@@ -18,18 +18,14 @@ extension PayWithLinkViewController {
 
         override func viewDidLoad() {
             super.viewDidLoad()
-            activityIndicator.translatesAutoresizingMaskIntoConstraints = false
 
-            let containerView = UIView()
-            containerView.translatesAutoresizingMaskIntoConstraints = false
-            containerView.addSubview(activityIndicator)
-            view.addSubview(containerView)
+            activityIndicator.translatesAutoresizingMaskIntoConstraints = false
+            view.addSubview(activityIndicator)
 
             NSLayoutConstraint.activate([
                 activityIndicator.centerXAnchor.constraint(equalTo: view.centerXAnchor),
                 activityIndicator.centerYAnchor.constraint(equalTo: view.centerYAnchor),
-                containerView.heightAnchor.constraint(equalToConstant: 400),
-                containerView.heightAnchor.constraint(equalTo: self.view.heightAnchor)
+                self.view.heightAnchor.constraint(equalToConstant: 400),
             ])
         }
 

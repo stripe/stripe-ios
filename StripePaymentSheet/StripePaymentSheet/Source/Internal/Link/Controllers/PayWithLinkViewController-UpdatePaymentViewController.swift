@@ -135,21 +135,14 @@ extension PayWithLinkViewController {
             stackView.directionalLayoutMargins = LinkUI.contentMargins
             stackView.translatesAutoresizingMaskIntoConstraints = false
             contentView.addSubview(stackView)
-            contentView.topAnchor.constraint(equalTo: stackView.topAnchor).isActive = true
-            contentView.leadingAnchor.constraint(equalTo: stackView.leadingAnchor).isActive = true
-            contentView.trailingAnchor.constraint(equalTo: stackView.trailingAnchor).isActive = true
-            contentView.bottomAnchor.constraint(greaterThanOrEqualTo: stackView.bottomAnchor).isActive = true
-//            contentView.heightAnchor.constraint(greaterThanOrEqualToConstant: 300).isActive = true
 
-//            let scrollView = LinkKeyboardAvoidingScrollView(contentView: stackView)
-//            #if !os(visionOS)
-//            scrollView.keyboardDismissMode = .interactive
-//            #endif
-//
-//            contentView.addAndPinSubview(scrollView)
+            NSLayoutConstraint.activate([
+                contentView.topAnchor.constraint(equalTo: stackView.topAnchor),
+                contentView.leadingAnchor.constraint(equalTo: stackView.leadingAnchor),
+                contentView.trailingAnchor.constraint(equalTo: stackView.trailingAnchor),
+                contentView.bottomAnchor.constraint(greaterThanOrEqualTo: stackView.bottomAnchor),
+            ])
 
-            sheetNavigationBar?.setStyle(.back(showAdditionalButton: false))
-            sheetNavigationBar?.delegate = self
             if !paymentMethod.isDefault || isBillingDetailsUpdateFlow {
                 thisIsYourDefaultLabel.isHidden = true
                 stackView.setCustomSpacing(LinkUI.largeContentSpacing, after: cardEditElement.view)
@@ -241,14 +234,3 @@ extension PayWithLinkViewController.UpdatePaymentViewController: ElementDelegate
     }
 
 }
-
-extension PayWithLinkViewController.UpdatePaymentViewController: SheetNavigationBarDelegate {
-    func sheetNavigationBarDidClose(_ sheetNavigationBar: SheetNavigationBar) {
-
-    }
-    
-    func sheetNavigationBarDidBack(_ sheetNavigationBar: SheetNavigationBar) {
-        _ = bottomSheetController?.popContentViewController()
-    }
-}
-

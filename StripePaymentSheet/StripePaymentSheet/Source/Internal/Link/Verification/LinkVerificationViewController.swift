@@ -74,10 +74,6 @@ final class LinkVerificationViewController: UIViewController {
         fatalError("init(coder:) has not been implemented")
     }
 
-//    override func loadView() {
-//        self.view = scrollView
-//    }
-
     override func viewDidLoad() {
         super.viewDidLoad()
 

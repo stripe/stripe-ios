@@ -76,7 +76,7 @@ final class UpdatePaymentMethodViewController: UIViewController {
     }
 
     // MARK: Navigation bar
-    lazy var sheetNavigationBar: SheetNavigationBar? = {
+    internal lazy var navigationBar: SheetNavigationBar = {
         let navBar = SheetNavigationBar(isTestMode: isTestMode,
                                         appearance: configuration.appearance)
         navBar.delegate = self
@@ -361,7 +361,6 @@ extension UpdatePaymentMethodViewController {
 
 // MARK: BottomSheetContentViewController
 extension UpdatePaymentMethodViewController: BottomSheetContentViewController {
-    
 
     func didTapOrSwipeToDismiss() {
         guard view.isUserInteractionEnabled else {

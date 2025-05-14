@@ -42,20 +42,14 @@ extension PayWithLinkViewController {
             super.viewDidLoad()
 
             verificationVC.view.translatesAutoresizingMaskIntoConstraints = false
-            contentView.topAnchor.constraint(equalTo: verificationVC.view.topAnchor).isActive = true
-            contentView.leadingAnchor.constraint(equalTo: verificationVC.view.leadingAnchor).isActive = true
-            contentView.trailingAnchor.constraint(equalTo: verificationVC.view.trailingAnchor).isActive = true
-            contentView.bottomAnchor.constraint(greaterThanOrEqualTo: verificationVC.view.bottomAnchor).isActive = true
-            contentView.heightAnchor.constraint(greaterThanOrEqualToConstant: 300).isActive = true
 
-//            contentView.addAndPinSubview(verificationVC.view)
-
-//            NSLayoutConstraint.activate([
-//                contentView.topAnchor.constraint(equalTo: verificationVC.view.topAnchor),
-//                verificationVC.view.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
-//                verificationVC.view.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
-//                contentView.bottomAnchor.constraint(greaterThanOrEqualTo: verificationVC.view.bottomAnchor),
-//            ])
+            NSLayoutConstraint.activate([
+                contentView.topAnchor.constraint(equalTo: verificationVC.view.topAnchor),
+                contentView.leadingAnchor.constraint(equalTo: verificationVC.view.leadingAnchor),
+                contentView.trailingAnchor.constraint(equalTo: verificationVC.view.trailingAnchor),
+                contentView.bottomAnchor.constraint(greaterThanOrEqualTo: verificationVC.view.bottomAnchor),
+                contentView.heightAnchor.constraint(greaterThanOrEqualToConstant: 300),
+            ])
         }
 
         override func onCloseButtonTapped(_ sender: UIButton) {

@@ -109,7 +109,7 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
 
     // MARK: - UI properties
 
-    lazy var sheetNavigationBar: SheetNavigationBar? = {
+    lazy var navigationBar: SheetNavigationBar = {
         let navBar = SheetNavigationBar(
             isTestMode: configuration.apiClient.isTestmode,
             appearance: configuration.appearance
@@ -201,7 +201,7 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
                 let formVC = makeFormVC(paymentMethodType: confirmParams.paymentMethodType)
                 self.paymentMethodFormViewController = formVC
                 add(childViewController: formVC, containerView: paymentContainerView)
-                sheetNavigationBar?.setStyle(.back(showAdditionalButton: false))
+                navigationBar.setStyle(.back(showAdditionalButton: false))
             } else {
                 // Otherwise, show the list of PMs
                 add(childViewController: paymentMethodListViewController, containerView: paymentContainerView)
@@ -504,7 +504,7 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
                 )
             }
             view.isUserInteractionEnabled = isUserInteractionEnabled
-            sheetNavigationBar?.isUserInteractionEnabled = isUserInteractionEnabled
+            navigationBar.isUserInteractionEnabled = isUserInteractionEnabled
         }
     }
 
@@ -543,10 +543,9 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
                     let nsError = error as NSError
                     let isCVCError = nsError.domain == STPError.stripeDomain && nsError.userInfo[STPError.errorParameterKey] as? String == "cvc"
                     if isRecollectingCVC,
-                       !isCVCError,
-                       let sheetNavigationBar {
+                       !isCVCError {
                         // If we're recollecting CVC, pop back to the main list unless the error is for the cvc field
-                        sheetNavigationBarDidBack(sheetNavigationBar)
+                        sheetNavigationBarDidBack(navigationBar)
                     }
 
                     // Update state
@@ -609,7 +608,7 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
             isRecollectingCVC = true
             paymentMethodListContentOffsetPercentage = bottomSheetController?.contentOffsetPercentage
             switchContentIfNecessary(to: cvcRecollectionViewController, containerView: paymentContainerView)
-            sheetNavigationBar?.setStyle(.back(showAdditionalButton: false))
+            navigationBar.setStyle(.back(showAdditionalButton: false))
             error = nil
             updateUI()
             return
@@ -737,7 +736,7 @@ extension PaymentSheetVerticalViewController: VerticalPaymentMethodListViewContr
                 self.paymentMethodFormViewController = pmFormVC
                 paymentMethodListContentOffsetPercentage = bottomSheetController?.contentOffsetPercentage
                 switchContentIfNecessary(to: pmFormVC, containerView: paymentContainerView, contentOffsetPercentage: 0)
-                sheetNavigationBar?.setStyle(.back(showAdditionalButton: false))
+                navigationBar.setStyle(.back(showAdditionalButton: false))
             }
         }
         updateUI()
@@ -861,7 +860,7 @@ extension PaymentSheetVerticalViewController: SheetNavigationBarDelegate {
         }
         isRecollectingCVC = false
         switchContentIfNecessary(to: paymentMethodListViewController, containerView: paymentContainerView, contentOffsetPercentage: paymentMethodListContentOffsetPercentage)
-        sheetNavigationBar.setStyle(.close(showAdditionalButton: false))
+        navigationBar.setStyle(.close(showAdditionalButton: false))
         updateUI()
     }
 }

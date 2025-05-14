@@ -93,7 +93,7 @@ class CustomerSavedPaymentMethodsViewController: UIViewController {
     let merchantSupportedPaymentMethodTypes: [STPPaymentMethodType]
 
     // MARK: - Views
-    internal lazy var   sheetNavigationBar: SheetNavigationBar? = {
+    internal lazy var navigationBar: SheetNavigationBar = {
         let navBar = SheetNavigationBar(isTestMode: configuration.apiClient.isTestmode,
                                         appearance: configuration.appearance)
         navBar.delegate = self
@@ -246,7 +246,7 @@ class CustomerSavedPaymentMethodsViewController: UIViewController {
         }
         view.isUserInteractionEnabled = shouldEnableUserInteraction
         isDismissable = !processingInFlight
-        sheetNavigationBar?.isUserInteractionEnabled = !processingInFlight
+        navigationBar.isUserInteractionEnabled = !processingInFlight
 
         // Update our views (starting from the top of the screen):
         configureNavBar()
@@ -334,7 +334,7 @@ class CustomerSavedPaymentMethodsViewController: UIViewController {
     }
 
     private func configureNavBar() {
-        sheetNavigationBar?.setStyle(
+        navigationBar.setStyle(
             {
                 switch mode {
                 case .selectingSaved:
@@ -342,13 +342,13 @@ class CustomerSavedPaymentMethodsViewController: UIViewController {
                         self.configureEditSavedPaymentMethodsButton()
                         return .close(showAdditionalButton: true)
                     } else {
-                        self.sheetNavigationBar?.additionalButton.removeTarget(
+                        self.navigationBar.additionalButton.removeTarget(
                             self, action: #selector(didSelectEditSavedPaymentMethodsButton),
                             for: .touchUpInside)
                         return .close(showAdditionalButton: false)
                     }
                 case .addingNewWithSetupIntent, .addingNewPaymentMethodAttachToCustomer:
-                    self.sheetNavigationBar?.additionalButton.removeTarget(
+                    self.navigationBar.additionalButton.removeTarget(
                         self, action: #selector(didSelectEditSavedPaymentMethodsButton),
                         for: .touchUpInside)
                     return shouldShowPaymentMethodCarousel ? .back(showAdditionalButton: false) : .close(showAdditionalButton: false)
@@ -707,8 +707,8 @@ class CustomerSavedPaymentMethodsViewController: UIViewController {
                 self.updateBottomNotice()
             }
         }
-        sheetNavigationBar?.additionalButton.configureCommonEditButton(isEditingPaymentMethods: savedPaymentOptionsViewController.isRemovingPaymentMethods, appearance: configuration.appearance)
-        sheetNavigationBar?.additionalButton.addTarget(
+        navigationBar.additionalButton.configureCommonEditButton(isEditingPaymentMethods: savedPaymentOptionsViewController.isRemovingPaymentMethods, appearance: configuration.appearance)
+        navigationBar.additionalButton.addTarget(
             self, action: #selector(didSelectEditSavedPaymentMethodsButton), for: .touchUpInside)
     }
 

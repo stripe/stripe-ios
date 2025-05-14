@@ -12,7 +12,6 @@ import UIKit
 @_spi(STP) import StripePayments
 @_spi(STP) import StripeUICore
 
-
 protocol PayWithLinkViewControllerDelegate: AnyObject {
 
     func payWithLinkViewControllerDidConfirm(
@@ -54,12 +53,7 @@ protocol PayWithLinkCoordinating: AnyObject {
 /// Instantiate and present this controller when the user chooses to pay with Link.
 /// For internal SDK use only
 @objc(STP_Internal_PayWithLinkViewController)
-final class PayWithLinkViewController: UINavigationController {
-
-    protocol PayWithLinkNavigation: AnyObject {
-        func pushViewController(_ viewController: UIViewController, animated: Bool)
-        func setRootViewController(_ viewController: BaseViewController, animated: Bool)
-    }
+final class PayWithLinkViewController: BottomSheetViewController {
 
     enum LinkAccountError: Error {
         case noLinkAccount
@@ -125,35 +119,11 @@ final class PayWithLinkViewController: UINavigationController {
 
     weak var payWithLinkDelegate: PayWithLinkViewControllerDelegate?
 
-    private var isShowingLoader: Bool {
-        guard let rootViewController = viewControllers.first else {
-            return false
-        }
-
-        return rootViewController is LoaderViewController
-    }
-
     private var isBailingToWebFlow: Bool = false
-
-    private lazy var loadingViewController: LoaderViewController = {
-        LoaderViewController(context: context)
-    }()
-
-    lazy var bottomSheetViewController: BottomSheetViewController = {
-        loadingViewController.view.layoutIfNeeded()
-        return BottomSheetViewController(
-            contentViewController: loadingViewController,
-            appearance: context.configuration.appearance,
-            isTestMode: context.configuration.apiClient.isTestmode,
-            didCancelNative3DS2: {}
-        )
-    }()
-
-    // Strong reference to prevent deallocation.
-    private static var activeInstance: PayWithLinkViewController?
 
     convenience init(
         intent: Intent,
+        linkAccount: PaymentSheetLinkAccount?,
         elementsSession: STPElementsSession,
         configuration: PaymentElementConfiguration,
         shouldOfferApplePay: Bool = false,
@@ -170,39 +140,37 @@ final class PayWithLinkViewController: UINavigationController {
                 shouldFinishOnClose: shouldFinishOnClose,
                 callToAction: callToAction,
                 analyticsHelper: analyticsHelper
-            )
+            ),
+            linkAccount: linkAccount
         )
     }
 
-    private init(context: Context) {
+    private init(context: Context, linkAccount: PaymentSheetLinkAccount?) {
         self.context = context
-        super.init(nibName: nil, bundle: nil)
-
-        // Show loader
-        setRootViewController(loadingViewController, animated: false)
+        let initialVC: BaseViewController = linkAccount != nil ? LoaderViewController(context: context) : SignUpViewController(linkAccount: nil, context: context)
+        super.init(contentViewController: initialVC, appearance: context.configuration.appearance, isTestMode: false, didCancelNative3DS2: {})
+        initialVC.coordinator = self
+        initialVC.navigationBar.delegate = self
+        self.linkAccount = linkAccount
     }
 
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
+    
+    required init(contentViewController: BottomSheetContentViewController, appearance: PaymentSheet.Appearance, isTestMode: Bool, didCancelNative3DS2: @escaping () -> Void) {
+        fatalError("init(contentViewController:appearance:isTestMode:didCancelNative3DS2:) has not been implemented")
+    }
 
-
-     func load() {
+    override func viewDidLoad() {
+        super.viewDidLoad()
         view.accessibilityIdentifier = "Stripe.Link.PayWithLinkViewController"
-        view.tintColor = .linkBrand
 
-        Self.activeInstance = self
-
-        // Hide the default navigation bar.
-        setNavigationBarHidden(true, animated: false)
-
-        // Apply the preferred user interface style.
         context.configuration.style.configure(self)
 
         updateSupportedPaymentMethods()
         updateUI()
 
-        // Prewarm attestation if needed
         Task {
             // Attempt to attest
             let canAttest = await context.configuration.apiClient.stripeAttest.prepareAttestation()
@@ -214,10 +182,6 @@ final class PayWithLinkViewController: UINavigationController {
                 return
             }
         }
-        // The internal delegate of the interactive pop gesture disables
-        // the gesture when the navigation bar is hidden. Use a custom delegate
-        // to restore the functionality.
-        interactivePopGestureRecognizer?.delegate = self
 
         LinkAccountContext.shared.addObserver(self, selector: #selector(onAccountChange(_:)))
     }
@@ -234,29 +198,32 @@ final class PayWithLinkViewController: UINavigationController {
         }
     }
 
-    override func pushViewController(_ viewController: UIViewController, animated: Bool) {
-        if let viewController = viewController as? BaseViewController {
+    override func pushContentViewController(_ contentViewController: any BottomSheetContentViewController) {
+        super.pushContentViewController(contentViewController)
+        if let viewController = contentViewController as? BaseViewController {
             viewController.coordinator = self
-//            viewController.customNavigationBar.linkAccount = linkAccount
-//            viewController.customNavigationBar.showBackButton = !viewControllers.isEmpty
-            bottomSheetViewController.pushContentViewController(viewController)
+            if contentStack.count > 1 {
+                viewController.navigationBar.setStyle(.back(showAdditionalButton: false))
+            }
+            viewController.navigationBar.delegate = self
         }
-//        } else {
-//            super.pushViewController(viewController, animated: animated)
-//        }
-
     }
 
+    override func setViewControllers(_ viewControllers: [any BottomSheetContentViewController]) {
+        super.setViewControllers(viewControllers)
+        for viewController in viewControllers {
+            guard let viewController = viewController as? BaseViewController else { continue }
+            viewController.coordinator = self
+            viewController.navigationBar.delegate = self
+        }
+    }
 
     private func updateUI() {
         guard let linkAccount = linkAccount else {
             if !(rootViewController is SignUpViewController) {
-                DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 0.1, execute: {
-                    self.setRootViewController(
-                        SignUpViewController(linkAccount: nil, context: self.context)
-                    )
-                })
-
+                self.setViewControllers(
+                    [SignUpViewController(linkAccount: nil, context: self.context)]
+                )
             }
             return
         }
@@ -264,27 +231,16 @@ final class PayWithLinkViewController: UINavigationController {
         switch linkAccount.sessionState {
         case .requiresSignUp:
             if !(rootViewController is SignUpViewController) {
-                setRootViewController(
-                    SignUpViewController(linkAccount: linkAccount, context: context)
+                setViewControllers(
+                    [SignUpViewController(linkAccount: linkAccount, context: context)]
                 )
             }
         case .requiresVerification:
-            setRootViewController(VerifyAccountViewController(linkAccount: linkAccount, context: context))
+            setViewControllers([VerifyAccountViewController(linkAccount: linkAccount, context: context)])
         case .verified:
-            DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 0.1, execute: {
-                self.loadAndPresentWallet()
-            })
+            loadAndPresentWallet()
         }
     }
-
-}
-
-extension PayWithLinkViewController: UIGestureRecognizerDelegate {
-
-    func gestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool {
-        return viewControllers.count > 1
-    }
-
 }
 
 // MARK: - Utils
@@ -292,8 +248,9 @@ extension PayWithLinkViewController: UIGestureRecognizerDelegate {
 private extension PayWithLinkViewController {
 
     func loadAndPresentWallet() {
-        let shouldAnimate = !(rootViewController is WalletViewController)
-        setRootViewController(LoaderViewController(context: context), animated: shouldAnimate)
+        if rootViewController as? LoaderViewController == nil {
+            setViewControllers([LoaderViewController(context: context)])
+        }
 
         guard let linkAccount else {
             stpAssertionFailure(LinkAccountError.noLinkAccount.localizedDescription)
@@ -316,16 +273,15 @@ private extension PayWithLinkViewController {
                         isAddingFirstPaymentMethod: true
                     )
 
-                    self.setRootViewController(addPaymentMethodVC)
+                    self.setViewControllers([addPaymentMethodVC])
                 } else {
                     let walletViewController = WalletViewController(
                         linkAccount: linkAccount,
                         context: self.context,
-                        paymentMethods: paymentDetails,
-                        navigationDelegate: self
+                        paymentMethods: paymentDetails
                     )
 
-                    self.setRootViewController(walletViewController)
+                    self.setViewControllers([walletViewController])
                 }
             case .failure(let error):
                 self.payWithLinkDelegate?.payWithLinkViewControllerDidFinish(
@@ -346,22 +302,25 @@ private extension PayWithLinkViewController {
 
 // MARK: - Navigation
 
-extension PayWithLinkViewController: PayWithLinkViewController.PayWithLinkNavigation {
+extension PayWithLinkViewController {
+    func pushViewController(_ viewController: UIViewController, animated: Bool) {
+
+    }
+    
 
     var rootViewController: UIViewController? {
-        return viewControllers.first
+        return contentStack.first
+    }
+}
+
+extension PayWithLinkViewController: SheetNavigationBarDelegate {
+    func sheetNavigationBarDidClose(_ sheetNavigationBar: SheetNavigationBar) {
+        payWithLinkDelegate?.payWithLinkViewControllerDidCancel(self)
     }
 
-    func setRootViewController(_ viewController: BaseViewController, animated: Bool = true) {
-        viewController.coordinator = self
-//        viewController.customNavigationBar.linkAccount = linkAccount
-//        viewController.customNavigationBar.showBackButton = false
-        viewController.view.translatesAutoresizingMaskIntoConstraints = false
-//        viewController.view.heightAnchor.constraint(equalToConstant: 400).isActive = true
-        bottomSheetViewController.setViewControllers([viewController])
-//        super.setViewControllers([viewController], animated: true)
+    func sheetNavigationBarDidBack(_ sheetNavigationBar: SheetNavigationBar) {
+        _ = self.popContentViewController()
     }
-
 }
 
 // MARK: - Coordinating
@@ -473,14 +432,6 @@ extension PayWithLinkViewController: PayWithLinkCoordinating {
 
 }
 
-extension PayWithLinkViewController: STPAuthenticationContext {
-
-    func authenticationPresentingViewController() -> UIViewController {
-        return self
-    }
-
-}
-
 extension PayWithLinkViewController: PaymentSheetLinkAccountDelegate {
     func refreshLinkSession(completion: @escaping (Result<ConsumerSession, any Error>) -> Void) {
         // Tell the LinkAccountService to lookup again
@@ -525,15 +476,6 @@ extension PayWithLinkViewController: PaymentSheetLinkAccountDelegate {
 
     }
 
-}
-
-extension PayWithLinkViewController: BottomSheetContentViewController {
-    var sheetNavigationBar: SheetNavigationBar? { nil }
-    var requiresFullScreen: Bool { false }
-
-    func didTapOrSwipeToDismiss() {
-        cancel()
-    }
 }
 
 // Used to get deterministic ordering

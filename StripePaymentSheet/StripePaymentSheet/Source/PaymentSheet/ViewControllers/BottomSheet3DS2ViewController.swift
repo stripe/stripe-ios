@@ -21,7 +21,7 @@ class BottomSheet3DS2ViewController: UIViewController {
 
     weak var delegate: BottomSheet3DS2ViewControllerDelegate?
 
-    lazy var sheetNavigationBar: SheetNavigationBar? = {
+    lazy var navigationBar: SheetNavigationBar = {
         let navBar = SheetNavigationBar(isTestMode: isTestMode,
                                         appearance: appearance)
         navBar.setStyle(.back(showAdditionalButton: false))

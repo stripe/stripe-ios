@@ -15,9 +15,8 @@ import UIKit
 
 protocol BottomSheetContentViewController: UIViewController {
 
-
-    /// - Note: Implementing `sheetNavigationBar` as a computed variable will result in undefined behavior.
-    var sheetNavigationBar: SheetNavigationBar? { get }
+    /// - Note: Implementing `navigationBar` as a computed variable will result in undefined behavior.
+    var navigationBar: SheetNavigationBar { get }
     var requiresFullScreen: Bool { get }
     func didTapOrSwipeToDismiss()
 }
@@ -125,9 +124,7 @@ class BottomSheetViewController: UIViewController, BottomSheetPresentable {
         addChild(contentViewController)
         contentViewController.didMove(toParent: self)
         contentContainerView.addArrangedSubview(contentViewController.view)
-        if let navigationBar = contentViewController.sheetNavigationBar {
-            navigationBarContainerView.addArrangedSubview(navigationBar)
-        }
+        navigationBarContainerView.addArrangedSubview(contentViewController.navigationBar)
         self.view.backgroundColor = appearance.colors.background
     }
 
@@ -188,7 +185,6 @@ class BottomSheetViewController: UIViewController, BottomSheetPresentable {
         }
         let oldContentViewController = contentViewController
         contentViewController = newContentViewController
-        self.view.layoutIfNeeded()
         // Handle edge case where BottomSheetPresentationAnimator is mid-presentation
         // We need to finish *that* transition before starting this one.
         completeBottomSheetPresentationTransition?(true)
@@ -226,10 +222,8 @@ class BottomSheetViewController: UIViewController, BottomSheetPresentable {
         contentContainerView.layoutIfNeeded()
         scrollView.layoutIfNeeded()
         scrollView.updateConstraintsIfNeeded()
-        oldContentViewController.sheetNavigationBar?.removeFromSuperview()
-        if let navigationBar = newContentViewController.sheetNavigationBar {
-            navigationBarContainerView.addArrangedSubview(navigationBar)
-        }
+        oldContentViewController.navigationBar.removeFromSuperview()
+        navigationBarContainerView.addArrangedSubview(newContentViewController.navigationBar)
         navigationBarContainerView.layoutIfNeeded()
         // Layout is mostly completed at this point. The new height is the navigation bar + content
         let newHeight = newContentViewController.view.bounds.size.height + navigationBarContainerView.bounds.size.height
@@ -476,9 +470,9 @@ extension BottomSheetViewController: UIAdaptivePresentationControllerDelegate {
 extension BottomSheetViewController: UIScrollViewDelegate {
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
         if scrollView.contentOffset.y > 0 {
-            contentViewController.sheetNavigationBar?.setShadowHidden(false)
+            contentViewController.navigationBar.setShadowHidden(false)
         } else {
-            contentViewController.sheetNavigationBar?.setShadowHidden(true)
+            contentViewController.navigationBar.setShadowHidden(true)
         }
     }
 }

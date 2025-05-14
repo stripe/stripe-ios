@@ -54,7 +54,7 @@ class PaymentSheetFlowControllerViewController: UIViewController, FlowController
         }
     }
     weak var flowControllerDelegate: FlowControllerViewControllerDelegate?
-    lazy var sheetNavigationBar: SheetNavigationBar? = {
+    lazy var navigationBar: SheetNavigationBar = {
         let navBar = SheetNavigationBar(isTestMode: configuration.apiClient.isTestmode,
                                         appearance: configuration.appearance)
         navBar.delegate = self
@@ -285,7 +285,7 @@ class PaymentSheetFlowControllerViewController: UIViewController, FlowController
     // MARK: - Private Methods
 
     private func configureNavBar() {
-        sheetNavigationBar?.setStyle(
+        navigationBar.setStyle(
             {
                 switch mode {
                 case .selectingSaved:
@@ -293,13 +293,13 @@ class PaymentSheetFlowControllerViewController: UIViewController, FlowController
                         self.configureEditSavedPaymentMethodsButton()
                         return .close(showAdditionalButton: true)
                     } else {
-                        self.sheetNavigationBar?.additionalButton.removeTarget(
+                        self.navigationBar.additionalButton.removeTarget(
                             self, action: #selector(didSelectEditSavedPaymentMethodsButton),
                             for: .touchUpInside)
                         return .close(showAdditionalButton: false)
                     }
                 case .addingNew:
-                    self.sheetNavigationBar?.additionalButton.removeTarget(
+                    self.navigationBar.additionalButton.removeTarget(
                         self, action: #selector(didSelectEditSavedPaymentMethodsButton),
                         for: .touchUpInside)
                     return savedPaymentOptionsViewController.hasPaymentOptions
@@ -567,8 +567,8 @@ extension PaymentSheetFlowControllerViewController: SavedPaymentOptionsViewContr
 
     // MARK: Helpers
     func configureEditSavedPaymentMethodsButton() {
-        sheetNavigationBar?.additionalButton.configureCommonEditButton(isEditingPaymentMethods: savedPaymentOptionsViewController.isRemovingPaymentMethods, appearance: configuration.appearance)
-        sheetNavigationBar?.additionalButton.addTarget(
+        navigationBar.additionalButton.configureCommonEditButton(isEditingPaymentMethods: savedPaymentOptionsViewController.isRemovingPaymentMethods, appearance: configuration.appearance)
+        navigationBar.additionalButton.addTarget(
             self, action: #selector(didSelectEditSavedPaymentMethodsButton), for: .touchUpInside)
     }
 

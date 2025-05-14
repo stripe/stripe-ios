@@ -135,32 +135,15 @@ extension PayWithLinkViewController {
         override func viewDidLoad() {
             super.viewDidLoad()
 
-//            let scrollView = LinkKeyboardAvoidingScrollView(contentView: stackView)
-//            #if !os(visionOS)
-//            scrollView.keyboardDismissMode = .interactive
-//            #endif
-
-//            contentView.addSubview(scrollView)
-
-            
-//            contentView.addSubview(stackView)
-//            contentView.topAnchor.constraint(equalTo: stackView.topAnchor).isActive = true
-//            contentView.leadingAnchor.constraint(equalTo: stackView.leadingAnchor).isActive = true
-//            contentView.trailingAnchor.constraint(equalTo: stackView.trailingAnchor).isActive = true
-//            contentView.bottomAnchor.constraint(equalTo: stackView.bottomAnchor).isActive = true
-
-//            contentView.addAndPinSubview(stackView)
-
-//            contentView.addAndPinSubview(stackView)
-
             contentView.addSubview(stackView)
 
-            contentView.topAnchor.constraint(equalTo: stackView.topAnchor).isActive = true
-            contentView.leadingAnchor.constraint(equalTo: stackView.leadingAnchor).isActive = true
-            contentView.trailingAnchor.constraint(equalTo: stackView.trailingAnchor).isActive = true
-            contentView.bottomAnchor.constraint(greaterThanOrEqualTo: stackView.bottomAnchor).isActive = true
-            contentView.heightAnchor.constraint(greaterThanOrEqualToConstant: 300).isActive = true
-
+            NSLayoutConstraint.activate([
+                contentView.topAnchor.constraint(equalTo: stackView.topAnchor),
+                contentView.leadingAnchor.constraint(equalTo: stackView.leadingAnchor),
+                contentView.trailingAnchor.constraint(equalTo: stackView.trailingAnchor),
+                contentView.bottomAnchor.constraint(greaterThanOrEqualTo: stackView.bottomAnchor),
+                contentView.heightAnchor.constraint(greaterThanOrEqualToConstant: 300),
+            ])
             setupBindings()
             updateUI()
         }
