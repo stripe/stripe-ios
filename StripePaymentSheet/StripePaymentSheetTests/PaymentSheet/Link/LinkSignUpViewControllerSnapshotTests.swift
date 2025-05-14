@@ -42,18 +42,18 @@ final class LinkSignUpViewControllerSnapshotTests: STPSnapshotTestCase {
 extension LinkSignUpViewControllerSnapshotTests {
 
     func makeSUT(email: String?) throws -> PayWithLinkViewController.SignUpViewController {
-        let elementsSession = try PayWithLinkTestHelpers.makeMockElementSession()
-        let paymentIntent = try PayWithLinkTestHelpers.makeMockPaymentIntent(elementsSession: elementsSession)
+        let (paymentIntent, elementsSession) = try PayWithLinkTestHelpers.makePaymentIntentAndElementsSession()
+        let session = email == nil ? LinkStubs.consumerSession(supportedPaymentDetailsTypes: [.card]) : nil
 
         return PayWithLinkViewController.SignUpViewController(
             linkAccount: .init(
                 email: email ?? "",
-                session: nil,
+                session: session,
                 publishableKey: nil,
                 useMobileEndpoints: false
             ),
             context: .init(
-                intent: .paymentIntent(paymentIntent),
+                intent: paymentIntent,
                 elementsSession: elementsSession,
                 configuration: PaymentSheet.Configuration(),
                 shouldOfferApplePay: false,
