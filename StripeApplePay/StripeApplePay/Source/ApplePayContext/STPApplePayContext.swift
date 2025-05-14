@@ -494,6 +494,8 @@ public class STPApplePayContext: NSObject, PKPaymentAuthorizationControllerDeleg
         // Note: This method is called if the user cancels (taps outside the sheet) or Apple Pay times out (empirically 30 seconds)
         switch paymentState {
         case .notStarted:
+            let analytic = Analytic(event: .applePayContextCanceledPayment)
+            self.analyticsClient.log(analytic: analytic, apiClient: self.apiClient)
             controller.dismiss {
                 stpDispatchToMainThreadIfNecessary {
                     self.callDidCompleteDelegate(status: .userCancellation, error: nil)
