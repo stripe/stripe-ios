@@ -189,8 +189,31 @@ extension PaymentSheet {
                 return nil
             }
 
-            return viewController.selectedPaymentOption
+            return linkPaymentOption ?? viewController.selectedPaymentOption
         }
+
+        private var canPresentLinkInPlaceOfFlowController: Bool {
+            guard PaymentSheet.LinkFeatureFlags.enableLinkFlowControllerChanges else {
+                // Only allow if the feature flag is enabled
+                return false
+            }
+            guard let linkAccount = LinkAccountContext.shared.account, linkAccount.sessionState == .verified else {
+                // We have a verified Link user
+                return false
+            }
+            guard case .link(let confirmOption) = _paymentOption, case .withPaymentDetails = confirmOption else {
+                // Currently selected payment method is a Link payment method
+                return false
+            }
+            guard deviceCanUseNativeLink(elementsSession: elementsSession, configuration: configuration) else {
+                // We only allow this with native Link
+                return false
+            }
+            return true
+        }
+
+        // The Link payment option that was selected by the user
+        private var linkPaymentOption: PaymentOption?
 
         // Stores the state of the most recent call to the update API
         private var latestUpdateContext: UpdateContext?
@@ -349,6 +372,11 @@ extension PaymentSheet {
             }
             presentPaymentOptionsCompletion = wrappedCompletion
 
+            if canPresentLinkInPlaceOfFlowController {
+                presentNativeLinkInPlaceOfFlowController(from: presentingViewController)
+                return
+            }
+
             let showPaymentOptions: () -> Void = { [weak self] in
                 guard let self = self else { return }
 
@@ -366,6 +394,17 @@ extension PaymentSheet {
             }
 
             showPaymentOptions()
+        }
+
+        private func presentNativeLinkInPlaceOfFlowController(from presentingViewController: UIViewController) {
+            presentingViewController.presentNativeLinkInsteadOfFlowController(
+                selectedPaymentDetailsID: _paymentOption?.linkPaymentDetailsID,
+                intent: intent,
+                elementsSession: elementsSession,
+                configuration: configuration,
+                analyticsHelper: analyticsHelper,
+                delegate: self
+            )
         }
 
         /// Completes the payment or setup.
@@ -569,6 +608,84 @@ extension PaymentSheet.FlowController: FlowControllerViewControllerDelegate {
     }
 }
 
+// MARK: - PayWithLinkViewControllerDelegate
+extension PaymentSheet.FlowController: PayWithLinkViewControllerDelegate {
+
+    func payWithLinkViewControllerDidConfirm(
+        _ payWithLinkViewController: PayWithLinkViewController,
+        intent: Intent,
+        elementsSession: STPElementsSession,
+        with paymentOption: PaymentOption,
+        completion: @escaping (PaymentSheetResult, StripeCore.STPAnalyticsClient.DeferredIntentConfirmationType?) -> Void
+    ) {
+        dismissLinkViewController(payWithLinkViewController)
+    }
+
+    func payWithLinkViewControllerDidCancel(
+        _ payWithLinkViewController: PayWithLinkViewController,
+        shouldReturnToPaymentSheet: Bool
+    ) {
+        guard shouldReturnToPaymentSheet else {
+            dismissLinkViewController(payWithLinkViewController)
+            return
+        }
+
+        self.linkPaymentOption = nil
+
+        guard let presentingViewController = payWithLinkViewController.presentingViewController else {
+            return
+        }
+
+        payWithLinkViewController.dismiss(animated: true) {
+            // Set the PaymentSheetViewController as the content of our bottom sheet
+            let bottomSheetVC = Self.makeBottomSheetViewController(
+                self.viewController,
+                configuration: self.configuration,
+                didCancelNative3DS2: { [weak self] in
+                    self?.paymentHandler.cancel3DS2ChallengeFlow()
+                }
+            )
+
+            presentingViewController.presentAsBottomSheet(bottomSheetVC, appearance: self.configuration.appearance)
+            self.isPresented = true
+        }
+    }
+
+    func payWithLinkViewControllerDidFinish(
+        _ payWithLinkViewController: PayWithLinkViewController,
+        result: PaymentSheetResult,
+        deferredIntentConfirmationType: StripeCore.STPAnalyticsClient.DeferredIntentConfirmationType?
+    ) {
+        dismissLinkViewController(payWithLinkViewController)
+    }
+
+    func payWithLinkViewControllerDidFinish(
+        _ payWithLinkViewController: PayWithLinkViewController,
+        paymentDetails: ConsumerPaymentDetails
+    ) {
+        guard let account = LinkAccountContext.shared.account else {
+            return
+        }
+
+        self.linkPaymentOption = .link(
+            option: .withPaymentDetails(
+                account: account,
+                paymentDetails: paymentDetails,
+                confirmationExtras: nil
+            )
+        )
+
+        dismissLinkViewController(payWithLinkViewController)
+    }
+
+    private func dismissLinkViewController(_ viewController: PayWithLinkViewController) {
+        viewController.dismiss(animated: true) {
+            self.presentPaymentOptionsCompletion?()
+            self.isPresented = false
+        }
+    }
+}
+
 // MARK: - STPAnalyticsProtocol
 /// :nodoc:
 @_spi(STP) extension PaymentSheet.FlowController: STPAnalyticsProtocol {
@@ -619,4 +736,16 @@ internal protocol FlowControllerViewControllerProtocol: BottomSheetContentViewCo
     /// Note that, unlike selectedPaymentOption, this is non-nil even if the PM form is invalid.
     var selectedPaymentMethodType: PaymentSheet.PaymentMethodType? { get }
     var flowControllerDelegate: FlowControllerViewControllerDelegate? { get set }
+}
+
+extension PaymentOption {
+    var linkPaymentDetailsID: String? {
+        var selectedPaymentDetailsID: String?
+        if case .link(let option) = self {
+            if case .withPaymentDetails(_, let paymentDetails, _) = option {
+                selectedPaymentDetailsID = paymentDetails.stripeID
+            }
+        }
+        return selectedPaymentDetailsID
+    }
 }

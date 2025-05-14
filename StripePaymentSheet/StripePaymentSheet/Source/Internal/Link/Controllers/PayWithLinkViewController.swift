@@ -22,7 +22,10 @@ protocol PayWithLinkViewControllerDelegate: AnyObject {
         completion: @escaping (PaymentSheetResult, STPAnalyticsClient.DeferredIntentConfirmationType?) -> Void
     )
 
-    func payWithLinkViewControllerDidCancel(_ payWithLinkViewController: PayWithLinkViewController)
+    func payWithLinkViewControllerDidCancel(
+        _ payWithLinkViewController: PayWithLinkViewController,
+        shouldReturnToPaymentSheet: Bool
+    )
 
     func payWithLinkViewControllerDidFinish(
         _ payWithLinkViewController: PayWithLinkViewController,
@@ -30,6 +33,10 @@ protocol PayWithLinkViewControllerDelegate: AnyObject {
         deferredIntentConfirmationType: STPAnalyticsClient.DeferredIntentConfirmationType?
     )
 
+    func payWithLinkViewControllerDidFinish(
+        _ payWithLinkViewController: PayWithLinkViewController,
+        paymentDetails: ConsumerPaymentDetails
+    )
 }
 
 protocol PayWithLinkCoordinating: AnyObject {
@@ -41,9 +48,10 @@ protocol PayWithLinkCoordinating: AnyObject {
     )
     func confirmWithApplePay()
     func startInstantDebits(completion: @escaping (Result<ConsumerPaymentDetails, Error>) -> Void)
-    func cancel()
+    func cancel(shouldReturnToPaymentSheet: Bool)
     func accountUpdated(_ linkAccount: PaymentSheetLinkAccount)
     func finish(withResult result: PaymentSheetResult, deferredIntentConfirmationType: STPAnalyticsClient.DeferredIntentConfirmationType?)
+    func handlePaymentDetailsSelected(_ paymentDetails: ConsumerPaymentDetails)
     func logout(cancel: Bool)
     func bailToWebFlow()
 }
@@ -69,16 +77,21 @@ final class PayWithLinkViewController: UINavigationController {
         let configuration: PaymentElementConfiguration
         let shouldOfferApplePay: Bool
         let shouldFinishOnClose: Bool
+        let initiallySelectedPaymentDetailsID: String?
         let callToAction: ConfirmButton.CallToActionType
         var lastAddedPaymentDetails: ConsumerPaymentDetails?
         var analyticsHelper: PaymentSheetAnalyticsHelper
 
         var secondaryButtonLabel: String {
-            if intent.isSettingUp {
+            if intent.isSettingUp || launchedFromFlowController {
                 String.Localized.continue_another_way
             } else {
                 String.Localized.pay_another_way
             }
+        }
+
+        var launchedFromFlowController: Bool {
+            initiallySelectedPaymentDetailsID != nil
         }
 
         /// Creates a new Context object.
@@ -88,6 +101,7 @@ final class PayWithLinkViewController: UINavigationController {
         ///   - configuration: PaymentSheet configuration.
         ///   - shouldOfferApplePay: Whether or not to show Apple Pay as a payment option.
         ///   - shouldFinishOnClose: Whether or not Link should finish with `.canceled` result instead of returning to Payment Sheet when the close button is tapped.
+        ///   - initiallySelectedPaymentDetailsID: The ID of an initially selected payment method, usually set when opened instead of FlowController.
         ///   - callToAction: A custom CTA to display on the confirm button. If `nil`, will display `intent`'s default CTA.
         ///   - analyticsHelper: An instance of `AnalyticsHelper` to use for logging.
         init(
@@ -96,6 +110,7 @@ final class PayWithLinkViewController: UINavigationController {
             configuration: PaymentElementConfiguration,
             shouldOfferApplePay: Bool,
             shouldFinishOnClose: Bool,
+            initiallySelectedPaymentDetailsID: String?,
             callToAction: ConfirmButton.CallToActionType?,
             analyticsHelper: PaymentSheetAnalyticsHelper
         ) {
@@ -104,6 +119,7 @@ final class PayWithLinkViewController: UINavigationController {
             self.configuration = configuration
             self.shouldOfferApplePay = shouldOfferApplePay
             self.shouldFinishOnClose = shouldFinishOnClose
+            self.initiallySelectedPaymentDetailsID = initiallySelectedPaymentDetailsID
             self.callToAction = callToAction ?? .makeDefaultTypeForLink(intent: intent)
             self.analyticsHelper = analyticsHelper
         }
@@ -135,6 +151,7 @@ final class PayWithLinkViewController: UINavigationController {
         configuration: PaymentElementConfiguration,
         shouldOfferApplePay: Bool = false,
         shouldFinishOnClose: Bool = false,
+        initiallySelectedPaymentDetailsID: String? = nil,
         callToAction: ConfirmButton.CallToActionType? = nil,
         analyticsHelper: PaymentSheetAnalyticsHelper
     ) {
@@ -145,6 +162,7 @@ final class PayWithLinkViewController: UINavigationController {
                 configuration: configuration,
                 shouldOfferApplePay: shouldOfferApplePay,
                 shouldFinishOnClose: shouldFinishOnClose,
+                initiallySelectedPaymentDetailsID: initiallySelectedPaymentDetailsID,
                 callToAction: callToAction,
                 analyticsHelper: analyticsHelper
             )
@@ -332,6 +350,10 @@ private extension PayWithLinkViewController {
 // MARK: - Coordinating
 
 extension PayWithLinkViewController: PayWithLinkCoordinating {
+    func handlePaymentDetailsSelected(_ paymentDetails: ConsumerPaymentDetails) {
+        payWithLinkDelegate?.payWithLinkViewControllerDidFinish(self, paymentDetails: paymentDetails)
+    }
+
     func startInstantDebits(completion: @escaping (Result<ConsumerPaymentDetails, any Error>) -> Void) {
         // TODO(link): Not yet implemented.
     }
@@ -378,8 +400,8 @@ extension PayWithLinkViewController: PayWithLinkCoordinating {
         }
     }
 
-    func cancel() {
-        payWithLinkDelegate?.payWithLinkViewControllerDidCancel(self)
+    func cancel(shouldReturnToPaymentSheet: Bool) {
+        payWithLinkDelegate?.payWithLinkViewControllerDidCancel(self, shouldReturnToPaymentSheet: shouldReturnToPaymentSheet)
     }
 
     func accountUpdated(_ linkAccount: PaymentSheetLinkAccount) {
@@ -398,7 +420,7 @@ extension PayWithLinkViewController: PayWithLinkCoordinating {
         linkAccount = nil
 
         if cancel {
-            self.cancel()
+            self.cancel(shouldReturnToPaymentSheet: true)
         } else {
             updateUI()
         }

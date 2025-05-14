@@ -566,7 +566,7 @@ extension STPPaymentMethod {
             }
         }()
         var supportedPaymentMethods = PaymentSheet.supportedPaymentMethods
-        if elementsSession.enableLinkInSPM && PaymentSheet.enableLinkInSPM {
+        if elementsSession.enableLinkInSPM && PaymentSheet.LinkFeatureFlags.enableLinkInSPM {
             supportedPaymentMethods.append(.link)
         }
         return PaymentSheet.PaymentMethodType.configurationSupports(

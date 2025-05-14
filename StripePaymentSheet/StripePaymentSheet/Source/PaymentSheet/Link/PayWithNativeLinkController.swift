@@ -66,6 +66,13 @@ final class PayWithNativeLinkController {
 @available(iOSApplicationExtension, unavailable)
 @available(macCatalystApplicationExtension, unavailable)
 extension PayWithNativeLinkController: PayWithLinkViewControllerDelegate {
+    func payWithLinkViewControllerDidFinish(
+        _ payWithLinkViewController: PayWithLinkViewController,
+        paymentDetails: ConsumerPaymentDetails
+    ) {
+        payWithLinkViewController.dismiss(animated: true)
+        assertionFailure("PayWithLinkViewController should not call this method.")
+    }
 
     func payWithLinkViewControllerDidConfirm(
         _ payWithLinkViewController: PayWithLinkViewController,
@@ -86,7 +93,7 @@ extension PayWithNativeLinkController: PayWithLinkViewControllerDelegate {
         )
     }
 
-    func payWithLinkViewControllerDidCancel(_ payWithLinkViewController: PayWithLinkViewController) {
+    func payWithLinkViewControllerDidCancel(_ payWithLinkViewController: PayWithLinkViewController, shouldReturnToPaymentSheet: Bool) {
         payWithLinkViewController.dismiss(animated: true)
         completion?(.canceled, nil)
         selfRetainer = nil

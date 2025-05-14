@@ -122,6 +122,13 @@ extension PaymentSheet {
 @available(iOSApplicationExtension, unavailable)
 @available(macCatalystApplicationExtension, unavailable)
 extension PaymentSheet: PayWithLinkViewControllerDelegate {
+    func payWithLinkViewControllerDidFinish(
+        _ payWithLinkViewController: PayWithLinkViewController,
+        paymentDetails: ConsumerPaymentDetails
+    ) {
+        payWithLinkViewController.dismiss(animated: true)
+        assertionFailure("PaymentSheet should not call this method.")
+    }
 
     func payWithLinkViewControllerDidConfirm(
         _ payWithLinkViewController: PayWithLinkViewController,
@@ -149,7 +156,7 @@ extension PaymentSheet: PayWithLinkViewControllerDelegate {
         }
     }
 
-    func payWithLinkViewControllerDidCancel(_ payWithLinkViewController: PayWithLinkViewController) {
+    func payWithLinkViewControllerDidCancel(_ payWithLinkViewController: PayWithLinkViewController, shouldReturnToPaymentSheet: Bool) {
         payWithLinkViewController.dismiss(animated: true)
     }
 
@@ -187,4 +194,20 @@ func deviceCanUseNativeLink(elementsSession: STPElementsSession, configuration: 
     }
 
     return configuration.apiClient.stripeAttest.isSupported
+}
+
+// MARK: - Link features
+
+extension PaymentSheet {
+
+    @_spi(STP) public enum LinkFeatureFlags {
+
+        /// Decides whether Link payment methods should be shown in the list of saved payment methods.
+        /// Only enable this in the PaymentSheet playground.
+        @_spi(STP) public static var enableLinkInSPM: Bool = false
+
+        /// Decides whether Link shows more actively in FlowController.
+        /// Only enable this in the PaymentSheet playground.
+        @_spi(STP) public static var enableLinkFlowControllerChanges: Bool = false
+    }
 }

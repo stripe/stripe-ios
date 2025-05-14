@@ -48,10 +48,14 @@ extension PayWithLinkViewController {
                 return
             }
 
-            let confirmationExtras = LinkConfirmationExtras(
-                billingPhoneNumber: self.makeEffectiveBillingDetails().phone
-            )
-            self.confirm(confirmationExtras: confirmationExtras)
+            if context.launchedFromFlowController, let paymentMethod = viewModel.selectedPaymentMethod {
+                self.coordinator?.handlePaymentDetailsSelected(paymentMethod)
+            } else {
+                let confirmationExtras = LinkConfirmationExtras(
+                    billingPhoneNumber: self.makeEffectiveBillingDetails().phone
+                )
+                self.confirm(confirmationExtras: confirmationExtras)
+            }
         }
 
         private lazy var cancelButton: Button = {
@@ -188,6 +192,11 @@ extension PayWithLinkViewController {
             // If the initially selected payment method is not supported, we should automatically
             // expand the payment picker to hint the user to pick another payment method.
             if !viewModel.selectedPaymentMethodIsSupported {
+                paymentPicker.setExpanded(true, animated: false)
+            }
+
+            if context.launchedFromFlowController {
+                // Automatically expand, since the user is likely here to change the payment method
                 paymentPicker.setExpanded(true, animated: false)
             }
         }
@@ -377,7 +386,7 @@ extension PayWithLinkViewController {
 
         @objc
         func cancelButtonTapped(_ sender: Button) {
-            coordinator?.cancel()
+            coordinator?.cancel(shouldReturnToPaymentSheet: true)
         }
 
     }
