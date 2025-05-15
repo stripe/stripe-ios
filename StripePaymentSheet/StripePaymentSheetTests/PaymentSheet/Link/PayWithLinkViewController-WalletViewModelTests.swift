@@ -250,9 +250,6 @@ extension PayWithLinkViewController_WalletViewModelTests {
         )
 
         var paymentSheetConfiguration = PaymentSheet.Configuration()
-        if linkPMOSFU != nil {
-            paymentSheetConfiguration.shouldReadPaymentMethodOptionsSetupFutureUsage = true
-        }
 
         paymentSheetConfiguration.cardBrandAcceptance = cardBrandAcceptance
 
