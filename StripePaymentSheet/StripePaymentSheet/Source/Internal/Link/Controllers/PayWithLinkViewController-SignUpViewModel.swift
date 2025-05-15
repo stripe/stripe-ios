@@ -108,8 +108,16 @@ extension PayWithLinkViewController {
             return shouldShowPhoneNumberField
         }
 
-        var shouldShowSignUpButton: Bool {
-            return shouldShowPhoneNumberField
+        var signUpButtonTitle: String {
+            shouldShowPhoneNumberField
+                ? STPLocalizedString(
+                    "Agree and continue",
+                    "Title for a button that when tapped creates a Link account for the user."
+                )
+                : STPLocalizedString(
+                    "Log in or sign up",
+                    "Title for a button that indicates a user can log in or sign up."
+                )
         }
 
         var shouldEnableSignUpButton: Bool {

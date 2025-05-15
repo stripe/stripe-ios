@@ -84,10 +84,7 @@ extension PayWithLinkViewController {
         private lazy var signUpButton: Button = {
             let button = Button(
                 configuration: .linkPrimary(),
-                title: STPLocalizedString(
-                    "Agree and continue",
-                    "Title for a button that when tapped creates a Link account for the user."
-                )
+                title: viewModel.signUpButtonTitle
             )
             button.addTarget(self, action: #selector(didTapSignUpButton(_:)), for: .touchUpInside)
             button.adjustsFontForContentSizeCategory = true
@@ -95,7 +92,7 @@ extension PayWithLinkViewController {
             return button
         }()
 
-        private lazy var stackView: UIStackView = {
+        private(set) lazy var stackView: UIStackView = {
             let stackView = UIStackView(arrangedSubviews: [
                 titleLabel,
                 subtitleLabel,
@@ -171,7 +168,7 @@ extension PayWithLinkViewController {
             nameElement.delegate = self
         }
 
-        private func updateUI(animated: Bool = false) {
+        func updateUI(animated: Bool = false) {
             if viewModel.isLookingUpLinkAccount {
                 emailElement.startAnimating()
             } else {
@@ -208,12 +205,7 @@ extension PayWithLinkViewController {
             )
 
             // Signup button
-            stackView.toggleArrangedSubview(
-                signUpButton,
-                shouldShow: viewModel.shouldShowSignUpButton,
-                animated: animated
-            )
-
+            signUpButton.title = viewModel.signUpButtonTitle
             signUpButton.isEnabled = viewModel.shouldEnableSignUpButton
         }
 
