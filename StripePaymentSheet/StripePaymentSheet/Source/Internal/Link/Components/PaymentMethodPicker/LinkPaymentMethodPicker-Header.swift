@@ -50,7 +50,7 @@ extension LinkPaymentMethodPicker {
         override var isHighlighted: Bool {
             didSet {
                 if isHighlighted && !isExpanded {
-                    backgroundColor = .linkControlHighlight
+                    backgroundColor = .linkIconCritical
                 } else {
                     backgroundColor = .clear
                 }
@@ -60,7 +60,7 @@ extension LinkPaymentMethodPicker {
         private let payWithLabel: UILabel = {
             let label = UILabel()
             label.font = LinkUI.font(forTextStyle: .body)
-            label.textColor = .linkSecondaryText
+            label.textColor = .linkTextTertiary
             label.text = Strings.payment
             label.adjustsFontForContentSizeCategory = true
             label.translatesAutoresizingMaskIntoConstraints = false
@@ -69,8 +69,8 @@ extension LinkPaymentMethodPicker {
 
         private let headingLabel: UILabel = {
             let label = UILabel()
-            label.font = LinkUI.font(forTextStyle: .bodyEmphasized)
-            label.textColor = .linkPrimaryText
+            label.font = LinkUI.font(forTextStyle: .body)
+            label.textColor = .linkTextTertiary
             label.text = STPLocalizedString(
                 "Payment methods",
                 "Title for a section listing one or more payment methods."
@@ -169,11 +169,10 @@ extension LinkPaymentMethodPicker {
         private func updateChevron() {
             if isExpanded {
                 chevron.transform = CGAffineTransform(rotationAngle: .pi)
-                chevron.tintColor = .linkPrimaryText
             } else {
                 chevron.transform = .identity
-                chevron.tintColor = .linkSecondaryText
             }
+            chevron.tintColor = .linkIconTertiary
             chevron.isHidden = !collapsable
         }
 

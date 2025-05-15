@@ -46,7 +46,7 @@ final class LinkMandateView: UIView {
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
+
     func setText(_ text: NSMutableAttributedString) {
         textView.attributedText = formattedLegalText(text)
         textView.applyStyle()
@@ -91,14 +91,14 @@ private extension UITextView {
         isScrollEnabled = false
         isEditable = false
         backgroundColor = .clear
-        textColor = .linkSecondaryText
+        textColor = .linkTextSecondary
         textAlignment = .center
         textContainerInset = .zero
         textContainer.lineFragmentPadding = 0
         clipsToBounds = false
         adjustsFontForContentSizeCategory = true
         linkTextAttributes = [
-            .foregroundColor: UIColor.linkBrandDark
+            .foregroundColor: UIColor.linkTextBrand
         ]
         font = LinkUI.font(forTextStyle: .caption)
     }

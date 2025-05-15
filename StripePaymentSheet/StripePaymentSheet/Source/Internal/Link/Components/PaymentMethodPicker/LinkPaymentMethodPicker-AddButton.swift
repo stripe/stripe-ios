@@ -86,7 +86,7 @@ extension LinkPaymentMethodPicker {
             if isHighlighted {
                 iconView.alpha = 0.7
                 textLabel.alpha = 0.7
-                backgroundColor = .linkControlHighlight
+                backgroundColor = .linkSurfaceTertiary
             } else {
                 iconView.alpha = 1
                 textLabel.alpha = 1
