@@ -62,7 +62,7 @@ import UIKit
             // TODO: Launch into new Link ECE flow
             break
         case .applePay:
-            // Launch into Apple Pay
+            // Launch directly into Apple Pay and confirm the payment
             PaymentSheet.confirm(
                 configuration: flowController.configuration,
                 authenticationContext: WindowAuthenticationContext(),
@@ -74,11 +74,6 @@ import UIKit
             ) { result, _ in
                 confirmHandler(result)
             }
-        }
-        flowController.confirm(from: UIViewController()) { _ in
-            // handle result
-            // probably this block should be passed in by the initializer
-
         }
     }
 
