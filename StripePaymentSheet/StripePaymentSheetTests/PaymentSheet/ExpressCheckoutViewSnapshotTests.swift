@@ -18,7 +18,8 @@ class ExpressCheckoutViewSnapshotTests: STPSnapshotTestCase {
         let expressCheckoutView = ExpressCheckoutView(
             showingApplePay: true,
             showingLink: true,
-            flowController: flowController
+            flowController: flowController,
+            confirmHandler: { _ in }
         )
         let vc = UIHostingController(rootView: expressCheckoutView)
 
