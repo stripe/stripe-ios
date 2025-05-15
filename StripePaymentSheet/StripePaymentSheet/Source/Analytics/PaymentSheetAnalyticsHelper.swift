@@ -446,10 +446,10 @@ final class PaymentSheetAnalyticsHelper {
             switch intentConfig.mode {
             case .payment( _, _, let setupFutureUsage, _, _):
                 return setupFutureUsage?.rawValue
-            case .setup(_, _):
+            case .setup:
                 return nil
             }
-        case .setupIntent(_):
+        case .setupIntent:
             return nil
         }
     }
@@ -485,10 +485,10 @@ final class PaymentSheetAnalyticsHelper {
                     return result
                 }()
                 return intentConfigurationPMOSFU
-            case .setup(_, _):
+            case .setup:
                 return nil
             }
-        case .setupIntent(_):
+        case .setupIntent:
             return nil
         }
     }
