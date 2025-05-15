@@ -42,7 +42,6 @@ protocol PaymentElementConfiguration: PaymentMethodRequirementProvider {
     var disableWalletPaymentMethodFiltering: Bool { get set }
     var linkPaymentMethodsOnly: Bool { get set }
     var paymentMethodLayout: PaymentSheet.PaymentMethodLayout { get }
-    var shouldReadPaymentMethodOptionsSetupFutureUsage: Bool { get set }
 }
 
 extension PaymentElementConfiguration {

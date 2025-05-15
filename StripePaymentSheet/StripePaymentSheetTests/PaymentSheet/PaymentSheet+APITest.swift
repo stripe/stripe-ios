@@ -1363,7 +1363,6 @@ class PaymentSheetAPITest: STPNetworkStubbingTestCase {
             // ...should have mandate data
             XCTAssertNotNil(params_for_si_with_sfu.mandateData)
 
-            configuration.shouldReadPaymentMethodOptionsSetupFutureUsage = true
             // Params for pi with PMO SFU supplied...
             let params_for_pi_with_pmo_sfu = PaymentSheet.makePaymentIntentParams(
                 confirmPaymentMethodType: confirmType,
