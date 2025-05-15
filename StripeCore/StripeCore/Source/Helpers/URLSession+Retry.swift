@@ -9,6 +9,7 @@
 import Foundation
 
 extension URLSession {
+
     @_spi(STP) public func stp_performDataTask(
         with request: URLRequest,
         completionHandler: @escaping (Data?, URLResponse?, Error?) -> Void,
@@ -19,6 +20,9 @@ extension URLSession {
                 httpResponse.statusCode == 429,
                 retryCount > 0
             {
+                let analytic = GenericAnalytic(event: .stripeApiTooManyRequests,
+                                               params: ["retries_remaining": retryCount])
+                STPAnalyticsClient.sharedClient.log(analytic: analytic)
                 // Add some backoff time with a little bit of jitter:
                 let delayTime = TimeInterval(
                     pow(Double(1 + StripeAPI.maxRetries - retryCount), Double(2))
