@@ -261,7 +261,6 @@ class APIRequestTest: STPNetworkStubbingTestCase {
             (_, response, _) in
             XCTAssertEqual(response?.statusCode, 429)
             inProgress = false
-            e.fulfill()
             var payload = STPAnalyticsClient.sharedClient._testLogHistory[0]
             XCTAssertEqual(payload["event"] as? String, "stripeapi.too_many_requests")
             XCTAssertEqual(payload["retries_remaining"] as! Int, 2)
@@ -271,6 +270,7 @@ class APIRequestTest: STPNetworkStubbingTestCase {
             payload = STPAnalyticsClient.sharedClient._testLogHistory[2]
             XCTAssertEqual(payload["event"] as? String, "stripeapi.too_many_requests")
             XCTAssertEqual(payload["retries_remaining"] as! Int, 0)
+            e.fulfill()
         }
 
         let checkedStillInProgress = expectation(
@@ -296,6 +296,9 @@ class APIRequestTest: STPNetworkStubbingTestCase {
         APIRequest<AnyAPIResponse>.getWith(apiClient, endpoint: "status/429", parameters: [:]) {
             (_, response, _) in
             XCTAssertEqual(response?.statusCode, 429)
+            let payload = STPAnalyticsClient.sharedClient._testLogHistory[0]
+            XCTAssertEqual(payload["event"] as? String, "stripeapi.too_many_requests")
+            XCTAssertEqual(payload["retries_remaining"] as! Int, 0)
             e.fulfill()
         }
 
