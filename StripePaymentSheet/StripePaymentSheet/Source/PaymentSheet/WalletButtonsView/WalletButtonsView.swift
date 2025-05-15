@@ -4,7 +4,6 @@
 //
 
 import PassKit
-import StripeCore
 @_spi(STP) import StripeUICore
 import SwiftUI
 import UIKit
