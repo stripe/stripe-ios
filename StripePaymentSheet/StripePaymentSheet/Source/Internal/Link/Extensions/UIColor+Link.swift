@@ -80,13 +80,21 @@ extension UIColor {
      *
      */
     static let linkToastForeground: UIColor = neutral0
-    static let linkToastBackground: UIColor = UIColor(hex: 0x30303D)
+    static let linkToastBackground: UIColor = brand900
 }
 
 private extension UIColor {
     // MARK: - Raw Colors
 
-    static let neutral900: UIColor = UIColor(hex: 0x171717)
+    /**
+     * Workaround:
+     *
+     * When migrating from RGB to their equivalent HEX colors, there were some very minor differences with the
+     * new HEX colors. We decided to keep the original RGB colors for some of the more widely-used Link colors
+     * (i.e. those used in `PayWithLinkButton`).
+     */
+
+    static let neutral900: UIColor = UIColor(red: 0, green: 0.12, blue: 0.06, alpha: 1.0) // #171717
     static let neutral800: UIColor = UIColor(hex: 0x262626)
     static let neutral700: UIColor = UIColor(hex: 0x404040)
     static let neutral500: UIColor = UIColor(hex: 0x707070)
@@ -95,9 +103,10 @@ private extension UIColor {
     static let neutral200: UIColor = UIColor(hex: 0xE5E5E5)
     static let neutral100: UIColor = UIColor(hex: 0xF5F5F5)
     static let neutral0: UIColor = UIColor(hex: 0xFFFFFF)
+    static let brand900: UIColor = UIColor(hex: 0x30303D)
     static let brand600: UIColor = UIColor(hex: 0x006635)
-    static let brand400: UIColor = UIColor(hex: 0x00A355)
-    static let brand200: UIColor = UIColor(hex: 0x00D670)
+    static let brand400: UIColor = UIColor(red: 0, green: 0.64, blue: 0.33, alpha: 1.0) // #00A355
+    static let brand200: UIColor = UIColor(red: 0, green: 0.84, blue: 0.44, alpha: 1.0) // #00D670
     static let critical600: UIColor = UIColor(hex: 0xC0123C)
     static let critical500: UIColor = UIColor(hex: 0xE61947)
 }
