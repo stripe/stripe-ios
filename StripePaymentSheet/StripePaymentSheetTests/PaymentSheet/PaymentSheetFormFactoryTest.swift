@@ -1862,7 +1862,10 @@ class PaymentSheetFormFactoryTest: XCTestCase {
         configuration.customer = .init(id: "id", ephemeralKeySecret: "ek")
         let analyticsClient = STPAnalyticsClient()
 
-        func makeForm(intent: Intent) -> PaymentMethodElement {
+        func makeForm(intent: Intent, shouldReadPaymentMethodOptionsSetupFutureUsage: Bool = false) -> PaymentMethodElement {
+            if shouldReadPaymentMethodOptionsSetupFutureUsage {
+                configuration.shouldReadPaymentMethodOptionsSetupFutureUsage = true
+            }
             return PaymentSheetFormFactory(
                 intent: intent,
                 elementsSession: ._testValue(intent: intent, isLinkPassthroughModeEnabled: true),
