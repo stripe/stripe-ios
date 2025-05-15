@@ -13,6 +13,9 @@ import UIKit
 protocol LinkPaymentMethodPickerCellDelegate: AnyObject {
     func savedPaymentPickerCellDidSelect(_ cell: LinkPaymentMethodPicker.Cell)
     func savedPaymentPickerCell(_ cell: LinkPaymentMethodPicker.Cell, didTapMenuButton button: UIButton)
+    func savedPaymentPickerCellMenuActions(
+        for cell: LinkPaymentMethodPicker.Cell
+    ) -> [PayWithLinkViewController.WalletViewController.Action]?
 }
 
 extension LinkPaymentMethodPicker {
@@ -125,7 +128,13 @@ extension LinkPaymentMethodPicker {
             directionalLayoutMargins = Constants.margins
 
             setupUI()
-            addGestureRecognizer(UILongPressGestureRecognizer(target: self, action: #selector(onCellLongPressed)))
+
+            if #available(iOS 14.0, *) {
+                let interaction = UIContextMenuInteraction(delegate: self)
+                addInteraction(interaction)
+            } else {
+                addGestureRecognizer(UILongPressGestureRecognizer(target: self, action: #selector(onCellLongPressed)))
+            }
         }
 
         required init?(coder: NSCoder) {
@@ -275,4 +284,29 @@ extension LinkPaymentMethodPicker {
 
     }
 
+}
+
+extension LinkPaymentMethodPicker.Cell {
+    override func contextMenuInteraction(
+        _ interaction: UIContextMenuInteraction,
+        configurationForMenuAtLocation location: CGPoint
+    ) -> UIContextMenuConfiguration? {
+        guard let actions = delegate?.savedPaymentPickerCellMenuActions(for: self) else { return nil }
+
+        let actionsProvider: UIContextMenuActionProvider = { _ in
+            var menuActions: [UIAction] = []
+            for action in actions {
+                menuActions.append(
+                    UIAction(
+                        title: action.title,
+                        attributes: action.contextMenuAttribute,
+                        handler: { _ in action.action()
+                    })
+                )
+            }
+            return UIMenu(children: menuActions)
+        }
+
+        return UIContextMenuConfiguration(actionProvider: actionsProvider)
+    }
 }

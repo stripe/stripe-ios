@@ -17,6 +17,11 @@ protocol LinkPaymentMethodPickerDelegate: AnyObject {
 
     func paymentMethodPicker(
         _ picker: LinkPaymentMethodPicker,
+        menuActionsForItemAt index: Int
+    ) -> [PayWithLinkViewController.WalletViewController.Action]
+
+    func paymentMethodPicker(
+        _ picker: LinkPaymentMethodPicker,
         showMenuForItemAt index: Int,
         sourceRect: CGRect
     )
@@ -471,4 +476,8 @@ extension LinkPaymentMethodPicker: LinkPaymentMethodPickerCellDelegate {
         delegate?.paymentMethodPicker(self, showMenuForItemAt: index, sourceRect: sourceRect)
     }
 
+    func savedPaymentPickerCellMenuActions(for cell: Cell) -> [PayWithLinkViewController.WalletViewController.Action]? {
+        guard let index = index(for: cell) else { return nil }
+        return delegate?.paymentMethodPicker(self, menuActionsForItemAt: index)
+    }
 }
