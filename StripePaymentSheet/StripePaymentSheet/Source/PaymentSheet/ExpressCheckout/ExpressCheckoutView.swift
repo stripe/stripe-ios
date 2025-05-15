@@ -12,20 +12,21 @@ import UIKit
 @available(iOS 16.0, *)
 @_spi(STP) public struct ExpressCheckoutView: View {
     let flowController: PaymentSheet.FlowController
-
+    let confirmHandler: (PaymentSheetResult) -> Void
     @State private var showingApplePay: Bool
     @State private var showingLink: Bool
 
-    init(showingApplePay: Bool = false, showingLink: Bool = false, flowController: PaymentSheet.FlowController) {
+    init(showingApplePay: Bool = false, showingLink: Bool = false, flowController: PaymentSheet.FlowController, confirmHandler: @escaping (PaymentSheetResult) -> Void) {
         self.flowController = flowController
         self.showingApplePay = showingApplePay
         self.showingLink = showingLink
+        self.confirmHandler = confirmHandler
     }
 
-    @_spi(STP) public init(flowController: PaymentSheet.FlowController) {
+    @_spi(STP) public init(flowController: PaymentSheet.FlowController, confirmHandler: @escaping (PaymentSheetResult) -> Void) {
         let isApplePayEnabled = PaymentSheet.isApplePayEnabled(elementsSession: flowController.elementsSession, configuration: flowController.configuration)
         let isLinkEnabled = PaymentSheet.isLinkEnabled(elementsSession: flowController.elementsSession, configuration: flowController.configuration)
-        self.init(showingApplePay: isApplePayEnabled, showingLink: isLinkEnabled, flowController: flowController)
+        self.init(showingApplePay: isApplePayEnabled, showingLink: isLinkEnabled, flowController: flowController, confirmHandler: confirmHandler)
     }
 
     @_spi(STP) public var body: some View {
@@ -56,8 +57,6 @@ import UIKit
     }
 
     func checkoutTapped(_ expressType: ExpressType) {
-        // Handle checkout action
-
         switch expressType {
         case .link:
             // TODO: Launch into new Link ECE flow
@@ -72,15 +71,45 @@ import UIKit
                 paymentOption: .applePay,
                 paymentHandler: flowController.paymentHandler,
                 analyticsHelper: flowController.analyticsHelper
-            ) { _, _ in
-                // Do something with result?
+            ) { result, _ in
+                confirmHandler(result)
             }
-            break
         }
         flowController.confirm(from: UIViewController()) { _ in
             // handle result
             // probably this block should be passed in by the initializer
 
+        }
+    }
+
+    private struct ApplePayButton: View {
+        let action: () -> Void
+
+        var body: some View {
+            PayWithApplePayButton(.plain, action: action)
+                .frame(maxWidth: .infinity)
+                .frame(height: 44)
+                .cornerRadius(100)
+        }
+    }
+
+    private struct LinkButton: View {
+        let action: () -> Void
+
+        var body: some View {
+            Button(action: action) {
+                HStack(spacing: 4) {
+                    SwiftUI.Image(uiImage: Image.link_logo_bw.makeImage(template: false))
+                        .resizable()
+                        .scaledToFit()
+                        .frame(height: 18)
+                }
+                .frame(maxWidth: .infinity)
+                .frame(height: 44)
+                .background(Color(uiColor: .linkBrand))
+                .foregroundColor(.black)
+                .cornerRadius(100)
+            }
         }
     }
 }
@@ -91,40 +120,6 @@ private class WindowAuthenticationContext: NSObject, STPAuthenticationContext {
     }
 }
 
-@available(iOS 16.0, *)
-private struct ApplePayButton: View {
-    let action: () -> Void
-
-    var body: some View {
-        PayWithApplePayButton(.plain, action: action)
-            .frame(maxWidth: .infinity)
-            .frame(height: 44)
-            .cornerRadius(100)
-    }
-}
-
-@available(iOS 16.0, *)
-private struct LinkButton: View {
-    let action: () -> Void
-
-    var body: some View {
-        Button(action: action) {
-            HStack(spacing: 4) {
-                SwiftUI.Image(uiImage: Image.link_logo_bw.makeImage(template: false))
-                    .resizable()
-                    .scaledToFit()
-                    .frame(height: 18)
-            }
-            .frame(maxWidth: .infinity)
-            .frame(height: 44)
-            .background(Color(uiColor: .linkBrand))
-            .foregroundColor(.black)
-            .cornerRadius(100)
-        }
-    }
-
-}
-
 #if DEBUG
 @available(iOS 16.0, *)
 struct ExpressCheckoutView_Previews: PreviewProvider {
@@ -132,7 +127,9 @@ struct ExpressCheckoutView_Previews: PreviewProvider {
         ExpressCheckoutView(
             showingApplePay: true,
             showingLink: true,
-            flowController: PaymentSheet.FlowController._mockFlowController()
+            flowController: PaymentSheet.FlowController._mockFlowController(),
+            confirmHandler: { _ in
+            }
         )
         .previewLayout(.sizeThatFits)
         .padding()
