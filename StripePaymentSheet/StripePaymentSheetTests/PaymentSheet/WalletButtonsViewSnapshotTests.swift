@@ -1,5 +1,5 @@
 //
-//  BacsDDMandateViewSnapshotTests.swift
+//  WalletButtonsViewSnapshotTests.swift
 //  StripePaymentSheetTests
 //
 
@@ -10,18 +10,18 @@ import SwiftUI
 import UIKit
 
 @MainActor
-class ExpressCheckoutViewSnapshotTests: STPSnapshotTestCase {
+class WalletButtonsViewSnapshotTests: STPSnapshotTestCase {
 
     @available(iOS 16.0, *)
-    func testExpressCheckoutView() {
+    func testWalletButtonsView() {
         let flowController = PaymentSheet.FlowController(configuration: ._testValue_MostPermissive(), loadResult: ._testValue(paymentMethodTypes: [], savedPaymentMethods: []), analyticsHelper: ._testValue())
-        let expressCheckoutView = ExpressCheckoutView(
+        let WalletButtonsView = WalletButtonsView(
             showingApplePay: true,
             showingLink: true,
             flowController: flowController,
             confirmHandler: { _ in }
         )
-        let vc = UIHostingController(rootView: expressCheckoutView)
+        let vc = UIHostingController(rootView: WalletButtonsView)
 
         // Need to host the SwiftUI view in a window for iOSSnapshotTestCase to work:
         let window = UIWindow(frame: CGRect(x: 0, y: 0, width: 428, height: 926))

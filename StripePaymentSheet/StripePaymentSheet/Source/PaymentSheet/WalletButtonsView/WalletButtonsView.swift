@@ -1,5 +1,5 @@
 //
-//  ExpressCheckoutView.swift
+//  WalletButtonsView.swift
 //  StripePaymentSheet
 //
 
@@ -10,7 +10,7 @@ import SwiftUI
 import UIKit
 
 @available(iOS 16.0, *)
-@_spi(STP) public struct ExpressCheckoutView: View {
+@_spi(STP) public struct WalletButtonsView: View {
     let flowController: PaymentSheet.FlowController
     let confirmHandler: (PaymentSheetResult) -> Void
     @State private var showingApplePay: Bool
@@ -121,9 +121,9 @@ private class WindowAuthenticationContext: NSObject, STPAuthenticationContext {
 
 #if DEBUG
 @available(iOS 16.0, *)
-struct ExpressCheckoutView_Previews: PreviewProvider {
+struct WalletButtonsView_Previews: PreviewProvider {
     static var previews: some View {
-        ExpressCheckoutView(
+        WalletButtonsView(
             showingApplePay: true,
             showingLink: true,
             flowController: PaymentSheet.FlowController._mockFlowController(),
