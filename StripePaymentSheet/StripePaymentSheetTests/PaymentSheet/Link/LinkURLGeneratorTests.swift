@@ -76,7 +76,6 @@ class LinkURLGeneratorTests: XCTestCase {
 
     func testURLParamsPaymentMethodOptionsSetupFutureUsage() {
         var config = PaymentSheet.Configuration()
-        config.shouldReadPaymentMethodOptionsSetupFutureUsage = true
         let intentConfig = PaymentSheet.IntentConfiguration(mode: .payment(amount: 100, currency: "USD", paymentMethodOptions: PaymentSheet.IntentConfiguration.Mode.PaymentMethodOptions(setupFutureUsageValues: [.link: .offSession]))) { _, _, _ in
             // Nothing
         }
@@ -108,7 +107,6 @@ class LinkURLGeneratorTests: XCTestCase {
 
     func testURLParamsPaymentMethodOptionsSetupFutureUsage_passthrough() {
         var config = PaymentSheet.Configuration()
-        config.shouldReadPaymentMethodOptionsSetupFutureUsage = true
         let intentConfig = PaymentSheet.IntentConfiguration(mode: .payment(amount: 100, currency: "USD", paymentMethodOptions: PaymentSheet.IntentConfiguration.Mode.PaymentMethodOptions(setupFutureUsageValues: [.card: .offSession]))) { _, _, _ in
             // Nothing
         }
@@ -140,7 +138,6 @@ class LinkURLGeneratorTests: XCTestCase {
 
     func testURLParamsTopLevelSFUPaymentMethodOptionsSetupFutureUsageNone() {
         var config = PaymentSheet.Configuration()
-        config.shouldReadPaymentMethodOptionsSetupFutureUsage = true
         let intentConfig = PaymentSheet.IntentConfiguration(mode: .payment(amount: 100, currency: "USD", setupFutureUsage: .offSession, paymentMethodOptions: PaymentSheet.IntentConfiguration.Mode.PaymentMethodOptions(setupFutureUsageValues: [.link: .none]))) { _, _, _ in
             // Nothing
         }
@@ -172,7 +169,6 @@ class LinkURLGeneratorTests: XCTestCase {
 
     func testURLParamsTopLevelSFUPaymentMethodOptionsSetupFutureUsageNone_passthrough() {
         var config = PaymentSheet.Configuration()
-        config.shouldReadPaymentMethodOptionsSetupFutureUsage = true
         let intentConfig = PaymentSheet.IntentConfiguration(mode: .payment(amount: 100, currency: "USD", setupFutureUsage: .offSession, paymentMethodOptions: PaymentSheet.IntentConfiguration.Mode.PaymentMethodOptions(setupFutureUsageValues: [.card: .none]))) { _, _, _ in
             // Nothing
         }

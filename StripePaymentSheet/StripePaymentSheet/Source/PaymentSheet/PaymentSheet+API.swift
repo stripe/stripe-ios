@@ -189,7 +189,7 @@ extension PaymentSheet {
             // Set allow_redisplay on params
             confirmParams.setAllowRedisplay(
                 mobilePaymentElementFeatures: elementsSession.customerSessionMobilePaymentElementFeatures,
-                isSettingUp: configuration.shouldReadPaymentMethodOptionsSetupFutureUsage ? intent.isSetupFutureUsageSet(for: paymentMethodType) : intent.isSettingUp
+                isSettingUp: intent.isSetupFutureUsageSet(for: paymentMethodType)
             )
             switch intent {
             // MARK: ↪ PaymentIntent
@@ -320,7 +320,7 @@ extension PaymentSheet {
                     paymentIntentParams.returnURL = configuration.returnURL
                     let paymentOptions = paymentIntentParams.paymentMethodOptions ?? STPConfirmPaymentMethodOptions()
                     let paymentMethodType = paymentMethodParams.type
-                    let currentSetupFutureUsage = configuration.shouldReadPaymentMethodOptionsSetupFutureUsage ? paymentIntent.paymentMethodOptions?.setupFutureUsage(for: paymentMethodType) : nil
+                    let currentSetupFutureUsage = paymentIntent.paymentMethodOptions?.setupFutureUsage(for: paymentMethodType)
                     paymentOptions.setSetupFutureUsageIfNecessary(shouldSave, currentSetupFutureUsage: currentSetupFutureUsage, paymentMethodType: paymentMethodType, customer: configuration.customer)
                     paymentIntentParams.paymentMethodOptions = paymentOptions
                     paymentIntentParams.shipping = makeShippingParams(for: paymentIntent, configuration: configuration)
@@ -385,7 +385,7 @@ extension PaymentSheet {
                     paymentIntentParams.shipping = makeShippingParams(for: paymentIntent, configuration: configuration)
                     let paymentOptions = paymentIntentParams.paymentMethodOptions ?? STPConfirmPaymentMethodOptions()
                     let paymentMethodType = paymentMethod.type
-                    let currentSetupFutureUsage = configuration.shouldReadPaymentMethodOptionsSetupFutureUsage ? paymentIntent.paymentMethodOptions?.setupFutureUsage(for: paymentMethodType) : nil
+                    let currentSetupFutureUsage = paymentIntent.paymentMethodOptions?.setupFutureUsage(for: paymentMethodType)
                     paymentOptions.setSetupFutureUsageIfNecessary(shouldSave, currentSetupFutureUsage: currentSetupFutureUsage, paymentMethodType: paymentMethodType, customer: configuration.customer)
                     paymentIntentParams.paymentMethodOptions = paymentOptions
                     paymentIntentParams.mandateData = mandateData
@@ -523,7 +523,7 @@ extension PaymentSheet {
                         // Set allow_redisplay on params
                         intentConfirmParams.setAllowRedisplay(
                             mobilePaymentElementFeatures: elementsSession.customerSessionMobilePaymentElementFeatures,
-                            isSettingUp: configuration.shouldReadPaymentMethodOptionsSetupFutureUsage ? intent.isSetupFutureUsageSet(for: linkPaymentMethodType) :  intent.isSettingUp
+                            isSettingUp: intent.isSetupFutureUsageSet(for: linkPaymentMethodType)
                         )
                         createPaymentDetailsAndConfirm(linkAccount, intentConfirmParams.paymentMethodParams, intentConfirmParams.saveForFutureUseCheckboxState == .selected)
                     case .failure(let error as NSError):
@@ -673,7 +673,7 @@ extension PaymentSheet {
                 params.setAsDefaultPM = NSNumber(value: shouldSetAsDefaultPM)
             }
             let requiresMandateData: [STPPaymentMethodType] = [.payPal, .cashApp, .revolutPay, .amazonPay, .klarna]
-            let isSetupFutureUsageOffSession = configuration.shouldReadPaymentMethodOptionsSetupFutureUsage ? paymentIntent.setupFutureUsage(for: paymentMethodType) == "off_session" : paymentIntent.setupFutureUsage == .offSession
+            let isSetupFutureUsageOffSession = paymentIntent.setupFutureUsage(for: paymentMethodType) == "off_session"
             if requiresMandateData.contains(paymentMethodType) && isSetupFutureUsageOffSession
             {
                 params.mandateData = .makeWithInferredValues()
@@ -681,7 +681,7 @@ extension PaymentSheet {
         }
 
         let paymentOptions = params.paymentMethodOptions ?? STPConfirmPaymentMethodOptions()
-        let currentSetupFutureUsage = configuration.shouldReadPaymentMethodOptionsSetupFutureUsage ? paymentIntent.paymentMethodOptions?.setupFutureUsage(for: paymentMethodType) : nil
+        let currentSetupFutureUsage = paymentIntent.paymentMethodOptions?.setupFutureUsage(for: paymentMethodType)
         paymentOptions.setSetupFutureUsageIfNecessary(shouldSave, currentSetupFutureUsage: currentSetupFutureUsage, paymentMethodType: paymentMethodType, customer: configuration.customer)
         if let mandateData = mandateData {
             params.mandateData = mandateData

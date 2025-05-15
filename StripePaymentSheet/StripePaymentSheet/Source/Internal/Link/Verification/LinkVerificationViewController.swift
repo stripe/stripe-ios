@@ -101,7 +101,7 @@ final class LinkVerificationViewController: UIViewController {
 
         if mode.requiresModalPresentation {
             view.layer.masksToBounds = true
-            view.layer.cornerRadius = LinkUI.cornerRadius
+            view.layer.cornerRadius = LinkUI.largeCornerRadius
         }
     }
 

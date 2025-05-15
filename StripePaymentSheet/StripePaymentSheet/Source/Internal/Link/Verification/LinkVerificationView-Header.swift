@@ -48,7 +48,7 @@ extension LinkVerificationView {
 
             NSLayoutConstraint.activate([
                 // Logo
-                logoView.centerXAnchor.constraint(equalTo: centerXAnchor),
+                logoView.leadingAnchor.constraint(equalTo: leadingAnchor),
                 logoView.centerYAnchor.constraint(equalTo: centerYAnchor),
                 logoView.heightAnchor.constraint(equalToConstant: Constants.logoHeight),
 

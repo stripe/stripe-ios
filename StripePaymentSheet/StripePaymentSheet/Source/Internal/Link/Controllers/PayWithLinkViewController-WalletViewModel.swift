@@ -67,7 +67,7 @@ extension PayWithLinkViewController {
         var mandate: NSMutableAttributedString? {
             switch selectedPaymentMethod?.details {
             case .card:
-                guard context.intent.isSettingUp else { return nil }
+                guard context.intent.isSetupFutureUsageSet(for: context.elementsSession.linkPassthroughModeEnabled ? .card : .link) else { return nil }
                 let string = String(format: .Localized.by_providing_your_card_information_text, context.configuration.merchantDisplayName)
                 return NSMutableAttributedString(string: string)
             case .bankAccount:

@@ -26,6 +26,9 @@ extension UIColor {
     /// Use it as accent color on small UI elements or text links.
     static let linkBrandDark: UIColor = UIColor(red: 0.020, green: 0.659, blue: 0.498, alpha: 1.0)
 
+    /// Even darker version of the brand color.
+    static let linkBrandDarker: UIColor = UIColor(red: 0/255, green: 102/255, blue: 53/255, alpha: 1.0)
+
     /// Main background color.
     static let linkBackground: UIColor = .dynamic(
         light: .white,
