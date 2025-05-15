@@ -9,7 +9,6 @@
 import Foundation
 
 extension URLSession {
-
     @_spi(STP) public func stp_performDataTask(
         with request: URLRequest,
         completionHandler: @escaping (Data?, URLResponse?, Error?) -> Void,
