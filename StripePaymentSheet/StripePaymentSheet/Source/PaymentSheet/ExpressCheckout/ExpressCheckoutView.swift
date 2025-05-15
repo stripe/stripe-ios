@@ -16,14 +16,18 @@ import UIKit
     @State private var showingApplePay: Bool
     @State private var showingLink: Bool
 
-    init(showingApplePay: Bool = false, showingLink: Bool = false, flowController: PaymentSheet.FlowController, confirmHandler: @escaping (PaymentSheetResult) -> Void) {
-        self.flowController = flowController
-        self.showingApplePay = showingApplePay
-        self.showingLink = showingLink
+    init(showingApplePay: Bool = false,
+         showingLink: Bool = false,
+         flowController: PaymentSheet.FlowController,
+         confirmHandler: @escaping (PaymentSheetResult) -> Void) {
         self.confirmHandler = confirmHandler
+        self.flowController = flowController
+        _showingApplePay = State(initialValue: showingApplePay)
+        _showingLink = State(initialValue: showingLink)
     }
 
-    @_spi(STP) public init(flowController: PaymentSheet.FlowController, confirmHandler: @escaping (PaymentSheetResult) -> Void) {
+    @_spi(STP) public init(flowController: PaymentSheet.FlowController,
+                           confirmHandler: @escaping (PaymentSheetResult) -> Void) {
         let isApplePayEnabled = PaymentSheet.isApplePayEnabled(elementsSession: flowController.elementsSession, configuration: flowController.configuration)
         let isLinkEnabled = PaymentSheet.isLinkEnabled(elementsSession: flowController.elementsSession, configuration: flowController.configuration)
         self.init(showingApplePay: isApplePayEnabled, showingLink: isLinkEnabled, flowController: flowController, confirmHandler: confirmHandler)
