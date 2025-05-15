@@ -24,7 +24,7 @@ extension PayWithLinkViewController {
         private let titleLabel: UILabel = {
             let label = UILabel()
             label.font = LinkUI.font(forTextStyle: .title)
-            label.textColor = .linkPrimaryText
+            label.textColor = .linkTextPrimary
             label.adjustsFontForContentSizeCategory = true
             label.numberOfLines = 0
             label.textAlignment = .center
@@ -38,7 +38,7 @@ extension PayWithLinkViewController {
         private lazy var subtitleLabel: UILabel = {
             let label = UILabel()
             label.font = LinkUI.font(forTextStyle: .body)
-            label.textColor = .linkSecondaryText
+            label.textColor = .linkTextSecondary
             label.adjustsFontForContentSizeCategory = true
             label.numberOfLines = 0
             label.textAlignment = .center
@@ -70,7 +70,7 @@ extension PayWithLinkViewController {
 
         private lazy var legalTermsView: LinkLegalTermsView = {
             let legalTermsView = LinkLegalTermsView(textAlignment: .center, isStandalone: true)
-            legalTermsView.tintColor = .linkBrandDark
+            legalTermsView.tintColor = .linkTextBrand
             legalTermsView.delegate = self
             return legalTermsView
         }()

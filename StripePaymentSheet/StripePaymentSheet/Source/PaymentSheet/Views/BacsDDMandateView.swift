@@ -10,8 +10,8 @@ import SwiftUI
 import UIKit
 
 // Reusing these colors from Link:
-private let headerColor = Color(UIColor.linkPrimaryText)
-private let secondaryTextColor = Color(UIColor.linkSecondaryText)
+private let headerColor = Color(UIColor.linkTextPrimary)
+private let secondaryTextColor = Color(UIColor.linkTextSecondary)
 
 private var borderColor = Color(.dynamic(
     light: UIColor(red: 0.878, green: 0.902, blue: 0.922, alpha: 1),

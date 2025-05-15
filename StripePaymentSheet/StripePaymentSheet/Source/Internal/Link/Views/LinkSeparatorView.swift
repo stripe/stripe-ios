@@ -8,7 +8,7 @@
 import UIKit
 
 class LinkSeparatorView: UIView {
-    private let separatorHeight: CGFloat = 1
+    private let separatorHeight: CGFloat = 0.5
 
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -21,7 +21,7 @@ class LinkSeparatorView: UIView {
     }
 
     private func setupView() {
-        backgroundColor = .linkControlBorder
+        backgroundColor = .linkBorderDefault
         translatesAutoresizingMaskIntoConstraints = false
     }
 

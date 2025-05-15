@@ -180,7 +180,7 @@ extension LinkToast.ToastType {
     var iconColor: UIColor {
         switch self {
         case .success:
-            return .linkBrand
+            return .linkIconBrand
         }
     }
 

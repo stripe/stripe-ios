@@ -141,7 +141,7 @@ extension PayWithLinkViewController {
             super.viewDidLoad()
             addChild(addPaymentMethodVC)
 
-            view.backgroundColor = .linkBackground
+            view.backgroundColor = .linkSurfacePrimary
 
             addPaymentMethodVC.view.backgroundColor = .clear
             errorLabel.isHidden = true

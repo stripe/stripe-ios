@@ -18,9 +18,9 @@ extension Button.Configuration {
         configuration.cornerRadius = LinkUI.cornerRadius
 
         // Colors
-        configuration.foregroundColor = .linkPrimaryButtonForeground
-        configuration.backgroundColor = .linkBrand
-        configuration.disabledBackgroundColor = .linkBrand
+        configuration.foregroundColor = .linkContentOnPrimaryButton
+        configuration.backgroundColor = .linkIconBrand
+        configuration.disabledBackgroundColor = .linkIconBrand
 
         configuration.colorTransforms.disabledForeground = .setAlpha(amount: 0.5)
         configuration.colorTransforms.highlightedForeground = .darken(amount: 0.2)
@@ -32,9 +32,9 @@ extension Button.Configuration {
         var configuration: Button.Configuration = .linkPrimary()
 
         // Colors
-        configuration.foregroundColor = .linkSecondaryButtonForeground
-        configuration.backgroundColor = .linkSecondaryButtonBackground
-        configuration.disabledBackgroundColor = .linkSecondaryButtonBackground
+        configuration.foregroundColor = .linkTextPrimary
+        configuration.backgroundColor = .linkButtonSecondary
+        configuration.disabledBackgroundColor = .linkButtonSecondary
 
         return configuration
     }
@@ -42,7 +42,7 @@ extension Button.Configuration {
     static func linkPlain() -> Self {
         var configuration: Button.Configuration = .plain()
         configuration.font = LinkUI.font(forTextStyle: .body)
-        configuration.foregroundColor = .linkBrandDarker
+        configuration.foregroundColor = .linkTextBrand
         configuration.disabledForegroundColor = nil
         configuration.colorTransforms.highlightedForeground = .setAlpha(amount: 0.4)
         configuration.colorTransforms.disabledForeground = .setAlpha(amount: 0.3)
