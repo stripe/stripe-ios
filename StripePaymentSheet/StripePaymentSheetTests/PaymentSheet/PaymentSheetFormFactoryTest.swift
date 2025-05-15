@@ -1821,10 +1821,7 @@ class PaymentSheetFormFactoryTest: XCTestCase {
         configuration.linkPaymentMethodsOnly = true
         let analyticsClient = STPAnalyticsClient()
 
-        func makeForm(intent: Intent, shouldReadPaymentMethodOptionsSetupFutureUsage: Bool = false) -> PaymentMethodElement {
-            if shouldReadPaymentMethodOptionsSetupFutureUsage {
-                configuration.shouldReadPaymentMethodOptionsSetupFutureUsage = true
-            }
+        func makeForm(intent: Intent) -> PaymentMethodElement {
             return PaymentSheetFormFactory(
                 intent: intent,
                 elementsSession: ._testValue(intent: intent, isLinkPassthroughModeEnabled: false),
@@ -1836,16 +1833,16 @@ class PaymentSheetFormFactoryTest: XCTestCase {
             ).make()
         }
         // Below tests show that only link's PMO SFU is being checked and not card
-        let linkForm_pi_pmo_sfu_card_none = makeForm(intent: ._testPaymentIntent(paymentMethodTypes: [.link, .card], paymentMethodOptionsSetupFutureUsage: [.link: "off_session", .card: "none"]), shouldReadPaymentMethodOptionsSetupFutureUsage: true)
+        let linkForm_pi_pmo_sfu_card_none = makeForm(intent: ._testPaymentIntent(paymentMethodTypes: [.link, .card], paymentMethodOptionsSetupFutureUsage: [.link: "off_session", .card: "none"]))
         XCTAssertTrue(linkForm_pi_pmo_sfu_card_none.getMandateElement() != nil)
 
-        let linkForm_pi_top_level_sfu_pmo_sfu_none_card_unset = makeForm(intent: ._testPaymentIntent(paymentMethodTypes: [.link, .card], setupFutureUsage: .offSession, paymentMethodOptionsSetupFutureUsage: [.link: "none"]), shouldReadPaymentMethodOptionsSetupFutureUsage: true)
+        let linkForm_pi_top_level_sfu_pmo_sfu_none_card_unset = makeForm(intent: ._testPaymentIntent(paymentMethodTypes: [.link, .card], setupFutureUsage: .offSession, paymentMethodOptionsSetupFutureUsage: [.link: "none"]))
         XCTAssertTrue(linkForm_pi_top_level_sfu_pmo_sfu_none_card_unset.getMandateElement() == nil)
 
-        let linkForm_deferred_pi_pmo_sfu_card_none = makeForm(intent: ._testDeferredIntent(paymentMethodTypes: [.link, .card], paymentMethodOptionsSetupFutureUsage: [.link: .offSession, .card: .none]), shouldReadPaymentMethodOptionsSetupFutureUsage: true)
+        let linkForm_deferred_pi_pmo_sfu_card_none = makeForm(intent: ._testDeferredIntent(paymentMethodTypes: [.link, .card], paymentMethodOptionsSetupFutureUsage: [.link: .offSession, .card: .none]))
         XCTAssertTrue(linkForm_deferred_pi_pmo_sfu_card_none.getMandateElement() != nil)
 
-        let linkForm_deferred_pi_top_level_sfu_pmo_sfu_none_card_sfu = makeForm(intent: ._testDeferredIntent(paymentMethodTypes: [.link, .card], setupFutureUsage: .offSession, paymentMethodOptionsSetupFutureUsage: [.link: .none, .card: .offSession]), shouldReadPaymentMethodOptionsSetupFutureUsage: true)
+        let linkForm_deferred_pi_top_level_sfu_pmo_sfu_none_card_sfu = makeForm(intent: ._testDeferredIntent(paymentMethodTypes: [.link, .card], setupFutureUsage: .offSession, paymentMethodOptionsSetupFutureUsage: [.link: .none, .card: .offSession]))
         XCTAssertTrue(linkForm_deferred_pi_top_level_sfu_pmo_sfu_none_card_sfu.getMandateElement() == nil)
     }
 
@@ -1862,10 +1859,7 @@ class PaymentSheetFormFactoryTest: XCTestCase {
         configuration.customer = .init(id: "id", ephemeralKeySecret: "ek")
         let analyticsClient = STPAnalyticsClient()
 
-        func makeForm(intent: Intent, shouldReadPaymentMethodOptionsSetupFutureUsage: Bool = false) -> PaymentMethodElement {
-            if shouldReadPaymentMethodOptionsSetupFutureUsage {
-                configuration.shouldReadPaymentMethodOptionsSetupFutureUsage = true
-            }
+        func makeForm(intent: Intent) -> PaymentMethodElement {
             return PaymentSheetFormFactory(
                 intent: intent,
                 elementsSession: ._testValue(intent: intent, isLinkPassthroughModeEnabled: true),
@@ -1877,16 +1871,16 @@ class PaymentSheetFormFactoryTest: XCTestCase {
             ).make()
         }
         // Below tests show that only cards's PMO SFU is being checked and not link
-        let cardForm_pi_pmo_sfu_link_none = makeForm(intent: ._testPaymentIntent(paymentMethodTypes: [.link, .card], paymentMethodOptionsSetupFutureUsage: [.card: "off_session", .link: "none"]), shouldReadPaymentMethodOptionsSetupFutureUsage: true)
+        let cardForm_pi_pmo_sfu_link_none = makeForm(intent: ._testPaymentIntent(paymentMethodTypes: [.link, .card], paymentMethodOptionsSetupFutureUsage: [.card: "off_session", .link: "none"]))
         XCTAssertTrue(cardForm_pi_pmo_sfu_link_none.getMandateElement() != nil)
 
-        let cardForm_pi_top_level_sfu_pmo_sfu_none_link_unset = makeForm(intent: ._testPaymentIntent(paymentMethodTypes: [.link, .card], setupFutureUsage: .offSession, paymentMethodOptionsSetupFutureUsage: [.card: "none"]), shouldReadPaymentMethodOptionsSetupFutureUsage: true)
+        let cardForm_pi_top_level_sfu_pmo_sfu_none_link_unset = makeForm(intent: ._testPaymentIntent(paymentMethodTypes: [.link, .card], setupFutureUsage: .offSession, paymentMethodOptionsSetupFutureUsage: [.card: "none"]))
         XCTAssertTrue(cardForm_pi_top_level_sfu_pmo_sfu_none_link_unset.getMandateElement() == nil)
 
-        let cardForm_deferred_pi_pmo_sfu_link_none = makeForm(intent: ._testDeferredIntent(paymentMethodTypes: [.link, .card], paymentMethodOptionsSetupFutureUsage: [.card: .offSession, .link: .none]), shouldReadPaymentMethodOptionsSetupFutureUsage: true)
+        let cardForm_deferred_pi_pmo_sfu_link_none = makeForm(intent: ._testDeferredIntent(paymentMethodTypes: [.link, .card], paymentMethodOptionsSetupFutureUsage: [.card: .offSession, .link: .none]))
         XCTAssertTrue(cardForm_deferred_pi_pmo_sfu_link_none.getMandateElement() != nil)
 
-        let cardForm_deferred_pi_top_level_sfu_pmo_sfu_none_link_sfu = makeForm(intent: ._testDeferredIntent(paymentMethodTypes: [.link, .card], setupFutureUsage: .offSession, paymentMethodOptionsSetupFutureUsage: [.card: .none, .link: .offSession]), shouldReadPaymentMethodOptionsSetupFutureUsage: true)
+        let cardForm_deferred_pi_top_level_sfu_pmo_sfu_none_link_sfu = makeForm(intent: ._testDeferredIntent(paymentMethodTypes: [.link, .card], setupFutureUsage: .offSession, paymentMethodOptionsSetupFutureUsage: [.card: .none, .link: .offSession]))
         XCTAssertTrue(cardForm_deferred_pi_top_level_sfu_pmo_sfu_none_link_sfu.getMandateElement() == nil)
     }
 
