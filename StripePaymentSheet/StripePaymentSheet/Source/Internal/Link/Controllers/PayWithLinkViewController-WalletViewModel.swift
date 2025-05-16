@@ -284,6 +284,11 @@ extension PayWithLinkViewController {
             }
         }
 
+        func updatePaymentMethods(_ paymentMethods: [ConsumerPaymentDetails]) {
+            self.paymentMethods = paymentMethods
+            delegate?.viewModelDidChange(self)
+        }
+
         func updatePaymentMethod(_ paymentMethod: ConsumerPaymentDetails) {
             guard let index = paymentMethods.firstIndex(where: { $0.stripeID == paymentMethod.stripeID }) else {
                 return
