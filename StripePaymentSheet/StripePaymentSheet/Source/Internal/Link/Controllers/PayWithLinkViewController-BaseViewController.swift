@@ -23,26 +23,6 @@ extension PayWithLinkViewController {
             LinkUI.contentMargins
         }
 
-        private(set) lazy var customNavigationBar: LinkNavigationBar = {
-            let navigationBar = LinkNavigationBar()
-            navigationBar.backButton.addTarget(
-                self,
-                action: #selector(onBackButtonTapped(_:)),
-                for: .touchUpInside
-            )
-            navigationBar.closeButton.addTarget(
-                self,
-                action: #selector(onCloseButtonTapped(_:)),
-                for: .touchUpInside
-            )
-            navigationBar.menuButton.addTarget(
-                self,
-                action: #selector(onMenuButtonTapped(_:)),
-                for: .touchUpInside
-            )
-            return navigationBar
-        }()
-
         private(set) lazy var contentView = UIView()
 
         init(context: Context) {
@@ -58,19 +38,11 @@ extension PayWithLinkViewController {
             super.viewDidLoad()
             view.backgroundColor = .linkBackground
 
-            customNavigationBar.translatesAutoresizingMaskIntoConstraints = false
-            view.addSubview(customNavigationBar)
-
             contentView.translatesAutoresizingMaskIntoConstraints = false
             view.addSubview(contentView)
 
             NSLayoutConstraint.activate([
-                // Navigation bar
-                customNavigationBar.topAnchor.constraint(equalTo: view.topAnchor),
-                customNavigationBar.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-                customNavigationBar.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-                // Content view
-                contentView.topAnchor.constraint(equalTo: customNavigationBar.bottomAnchor),
+                contentView.topAnchor.constraint(equalTo: view.topAnchor),
                 contentView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
                 contentView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
                 contentView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
@@ -119,6 +91,20 @@ extension PayWithLinkViewController {
 
             present(actionSheet, animated: true)
         }
+
+        var requiresFullScreen: Bool { false }
+
+        lazy var navigationBar: SheetNavigationBar = { LinkSheetNavigationBar(isTestMode: false, appearance: .init()) }()
     }
 
+}
+
+extension PayWithLinkViewController.BaseViewController: BottomSheetContentViewController {
+    func didTapOrSwipeToDismiss() {
+        if context.shouldFinishOnClose {
+            coordinator?.finish(withResult: .canceled, deferredIntentConfirmationType: nil)
+        } else {
+            coordinator?.cancel()
+        }
+    }
 }

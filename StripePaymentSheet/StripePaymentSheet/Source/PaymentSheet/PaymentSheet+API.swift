@@ -506,8 +506,12 @@ extension PaymentSheet {
             case .wallet:
                 let useNativeLink = deviceCanUseNativeLink(elementsSession: elementsSession, configuration: configuration)
                 if useNativeLink {
-                    let linkController = PayWithNativeLinkController(intent: intent, elementsSession: elementsSession, configuration: configuration, analyticsHelper: analyticsHelper)
-                    linkController.present(on: authenticationContext.authenticationPresentingViewController(), completion: completion)
+                    let linkController = PayWithNativeLinkController(intent: intent, elementsSession: elementsSession, configuration: configuration, logPayment: true, analyticsHelper: analyticsHelper)
+                    linkController.presentAsBottomSheet(from: authenticationContext.authenticationPresentingViewController(), shouldOfferApplePay: false, shouldFinishOnClose: false, completion: { result, confirmationType, didFinish in
+                        if didFinish {
+                            completion(result, confirmationType)
+                        }
+                    })
                 } else {
                     let linkController = PayWithLinkController(intent: intent, elementsSession: elementsSession, configuration: configuration, analyticsHelper: analyticsHelper)
                     linkController.present(from: authenticationContext.authenticationPresentingViewController(),

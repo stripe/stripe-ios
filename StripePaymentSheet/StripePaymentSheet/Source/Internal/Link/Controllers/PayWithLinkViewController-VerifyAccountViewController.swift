@@ -28,11 +28,28 @@ extension PayWithLinkViewController {
             super.init(context: context)
 
             addChild(verificationVC)
-            contentView.addAndPinSubview(verificationVC.view, insets: .zero)
+
+            contentView.addSubview(verificationVC.view)
         }
+
+        override var requiresFullScreen: Bool { true }
 
         required init?(coder: NSCoder) {
             fatalError("init(coder:) has not been implemented")
+        }
+
+        override func viewDidLoad() {
+            super.viewDidLoad()
+
+            verificationVC.view.translatesAutoresizingMaskIntoConstraints = false
+
+            NSLayoutConstraint.activate([
+                contentView.topAnchor.constraint(equalTo: verificationVC.view.topAnchor),
+                contentView.leadingAnchor.constraint(equalTo: verificationVC.view.leadingAnchor),
+                contentView.trailingAnchor.constraint(equalTo: verificationVC.view.trailingAnchor),
+                contentView.bottomAnchor.constraint(greaterThanOrEqualTo: verificationVC.view.bottomAnchor),
+                contentView.heightAnchor.constraint(greaterThanOrEqualToConstant: 300),
+            ])
         }
 
         override func onCloseButtonTapped(_ sender: UIButton) {

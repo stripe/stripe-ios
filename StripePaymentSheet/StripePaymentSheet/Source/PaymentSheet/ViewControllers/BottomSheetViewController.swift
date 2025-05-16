@@ -185,7 +185,6 @@ class BottomSheetViewController: UIViewController, BottomSheetPresentable {
         }
         let oldContentViewController = contentViewController
         contentViewController = newContentViewController
-
         // Handle edge case where BottomSheetPresentationAnimator is mid-presentation
         // We need to finish *that* transition before starting this one.
         completeBottomSheetPresentationTransition?(true)
