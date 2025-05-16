@@ -780,6 +780,20 @@ extension STPPaymentMethod {
                 ),
                 message: String(format: formattedMessage, brandString, last4)
             )
+        case .link:
+            let brandString = STPCardBrandUtilities.stringFrom(linkPaymentDetails?.brand ?? .unknown) ?? ""
+            let last4 = linkPaymentDetails?.last4 ?? ""
+            let formattedMessage = STPLocalizedString(
+                "%1$@ •••• %2$@",
+                "Content for alert popup prompting to confirm removing a saved card. {card brand} •••• {last 4} e.g. 'Visa •••• 3155'"
+            )
+            return (
+                title: STPLocalizedString(
+                    "Remove card?",
+                    "Title for confirmation alert to remove a card"
+                ),
+                message: String(format: formattedMessage, brandString, last4)
+            )
         case .SEPADebit:
             let last4 = sepaDebit?.last4 ?? ""
             let formattedMessage = String.Localized.bank_account_xxxx
