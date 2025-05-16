@@ -220,11 +220,17 @@ extension ConsumerSession {
     func createLinkAccountSession(
         with apiClient: STPAPIClient = STPAPIClient.shared,
         consumerAccountPublishableKey: String?,
+        consentAcquired: Bool? = nil,
+        linkMode: LinkMode? = nil,
+        intentToken: String? = nil,
         completion: @escaping (Result<LinkAccountSession, Error>) -> Void
     ) {
         apiClient.createLinkAccountSession(
             for: clientSecret,
             consumerAccountPublishableKey: consumerAccountPublishableKey,
+            consentAcquired: consentAcquired,
+            linkMode: linkMode,
+            intentToken: intentToken,
             completion: completion)
     }
 
