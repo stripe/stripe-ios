@@ -116,33 +116,16 @@ enum Intent {
         }
     }
 
-    var paymentMethodOptionsSetupFutureUsageStringDictionary: [String: String]? {
+    var isPaymentMethodOptionsSetupFutureUsageSet: Bool? {
         switch self {
-        case .paymentIntent(let intent):
-            let paymentIntentPaymentMethodOptions: [String: Any]? = intent.paymentMethodOptions?.allResponseFields as? [String: Any]
-            // Parse the response into a [String: String] dictionary [paymentMethodType: setupFutureUsage]
-            let paymentIntentPMOSFU: [String: String] = {
-                var result: [String: String] = [:]
-                paymentIntentPaymentMethodOptions?.forEach { paymentMethodType, value in
-                    let dictionary = value as? [String: Any] ?? [:]
-                    if let setupFutureUsage = dictionary["setup_future_usage"] as? String {
-                        result[paymentMethodType] = setupFutureUsage
-                    }
-                }
-                return result
-            }()
-            return paymentIntentPMOSFU
+        case .paymentIntent(let paymentIntent):
+            return paymentIntent.paymentMethodOptions?.isSetupFutureUsageSet ?? false
         case .deferredIntent(let intentConfig):
-            if case .payment( _, _, _, _, let paymentMethodOptions) = intentConfig.mode {
-                // Convert the intent configuration payment method options setup future usage values into a [String: String] dictionary
-                let intentConfigurationPMOSFU: [String: String] = {
-                    var result: [String: String] = [:]
-                    paymentMethodOptions?.setupFutureUsageValues?.forEach { paymentMethodType, setupFutureUsage in
-                        result[paymentMethodType.identifier] = setupFutureUsage.rawValue
-                    }
-                    return result
-                }()
-                return intentConfigurationPMOSFU
+            if case .payment(_, _, _, _, let paymentMethodOptions) = intentConfig.mode {
+                guard let setupFutureUsageValues = paymentMethodOptions?.setupFutureUsageValues else {
+                    return false
+                }
+                return !setupFutureUsageValues.isEmpty
             }
             return nil
         default:
