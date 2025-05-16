@@ -113,7 +113,6 @@ enum Intent {
             return nil
         default:
             return nil
-        }
     }
 
     var isPaymentMethodOptionsSetupFutureUsageSet: Bool? {
