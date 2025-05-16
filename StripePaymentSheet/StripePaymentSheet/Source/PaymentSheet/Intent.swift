@@ -106,8 +106,8 @@ enum Intent {
         switch self {
         case .paymentIntent(let paymentIntent):
             return paymentIntent.setupFutureUsage.stringValue
-        case .deferredIntent(let config):
-            if case .payment(_, _, let setupFutureUsage, _, _) = config.mode {
+        case .deferredIntent(let intentConfig):
+            if case .payment(_, _, let setupFutureUsage, _, _) = intentConfig.mode {
                 return setupFutureUsage?.rawValue
             }
             return nil
