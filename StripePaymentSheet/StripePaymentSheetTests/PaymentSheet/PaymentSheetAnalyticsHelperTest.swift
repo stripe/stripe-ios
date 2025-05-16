@@ -282,7 +282,7 @@ final class PaymentSheetAnalyticsHelperTest: XCTestCase {
         XCTAssertEqual(loadSucceededPayload["setup_future_usage"] as? String, "on_session")
         XCTAssertEqual(loadSucceededPayload["payment_method_options_setup_future_usage"] as? Bool, false)
         analyticsClient._testLogHistory.removeAll()
-        
+
         // Load started -> succeeded
         sut.logLoadStarted()
         sut.logLoadSucceeded(
