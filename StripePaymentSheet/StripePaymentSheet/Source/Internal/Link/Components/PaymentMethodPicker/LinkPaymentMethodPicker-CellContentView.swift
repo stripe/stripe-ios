@@ -143,34 +143,7 @@ extension LinkPaymentMethodPicker {
             if let institutionIcon = PaymentSheetImageLibrary.bankInstitutionIcon(for: bankName) {
                 return institutionIcon
             }
-            return createGenericBankIcon()
-        }
-
-        private func createGenericBankIcon() -> UIImage {
-            let icon = PaymentSheetImageLibrary.linkBankIcon()
-            let iconColor: UIColor = .linkIconDefault
-            let backgroundColor: UIColor = .linkIconBackground
-
-            let iconSize: CGSize = .init(width: 16, height: 16)
-            let backgroundSize: CGSize = .init(width: 24, height: 24)
-            let cornerRadius: CGFloat = 3.0
-
-            let renderer = UIGraphicsImageRenderer(size: backgroundSize)
-            return renderer.image { _ in
-                let rect = CGRect(origin: .zero, size: backgroundSize)
-                let path = UIBezierPath(roundedRect: rect, cornerRadius: cornerRadius)
-
-                backgroundColor.setFill()
-                path.fill()
-
-                let iconRect = CGRect(
-                    x: (backgroundSize.width - iconSize.width) / 2,
-                    y: (backgroundSize.height - iconSize.height) / 2,
-                    width: iconSize.width,
-                    height: iconSize.height
-                )
-                icon.withTintColor(iconColor).draw(in: iconRect)
-            }
+            return LinkIconGenerator.bankIcon()
         }
 
         private func refreshBankIconIfNeeded() {

@@ -85,6 +85,10 @@ class PaymentSheetImageLibrary {
         return icon
     }
 
+    class func linkCardIcon() -> UIImage {
+        Image.carousel_card_unknown.makeImage(template: true)
+    }
+
     class func linkBankIcon() -> UIImage {
         STPImageLibrary.linkBankIcon()
     }

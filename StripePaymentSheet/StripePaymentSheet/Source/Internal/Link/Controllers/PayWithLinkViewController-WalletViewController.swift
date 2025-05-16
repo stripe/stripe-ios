@@ -621,16 +621,17 @@ extension PayWithLinkViewController.WalletViewController: LinkPaymentMethodPicke
                 self.updateUI(animated: false)
             }
         } else {
-            let newPaymentVC = PayWithLinkViewController.NewPaymentViewController(
-                linkAccount: linkAccount,
-                context: context,
-                isAddingFirstPaymentMethod: false
-            )
-
-            navigationController?.pushViewController(newPaymentVC, animated: true)
+//            let newPaymentVC = PayWithLinkViewController.NewPaymentViewController(
+//                linkAccount: linkAccount,
+//                context: context,
+//                isAddingFirstPaymentMethod: false
+//            )
+//
+//            navigationController?.pushViewController(newPaymentVC, animated: true)
+            let paymentMethodPickerVC = PayWithLinkViewController.PaymentTypeViewController(context: context)
+            navigationController?.pushViewController(paymentMethodPickerVC, animated: true)
         }
     }
-
 }
 
 // MARK: - LinkInstantDebitMandateViewDelegate
