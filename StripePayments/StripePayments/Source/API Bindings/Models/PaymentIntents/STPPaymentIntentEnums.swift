@@ -76,7 +76,7 @@ import Foundation
         self = map[key] ?? .unknown
     }
 
-    var stringValue: String? {
+    @_spi(STP) public var stringValue: String? {
         switch self {
         case .onSession:
             return "on_session"
