@@ -57,8 +57,8 @@ struct ElementsCustomer: Equatable, Hashable {
             if enableLinkInSPM {
                 if let paymentMethodWithLinkDetails = PaymentMethodWithLinkDetails.decodedObject(fromAPIResponse: json) {
                     let paymentMethod = paymentMethodWithLinkDetails.paymentMethod
-                    if let cardDetails = paymentMethodWithLinkDetails.linkDetails?.cardDetails {
-                        paymentMethod.setLinkPaymentDetails(from: cardDetails)
+                    if let linkDetails = paymentMethodWithLinkDetails.linkDetails {
+                        paymentMethod.setLinkPaymentDetails(from: linkDetails)
                     }
                     paymentMethods.append(paymentMethod)
                 }
@@ -106,12 +106,15 @@ private extension ConsumerPaymentDetails {
 
 private extension STPPaymentMethod {
 
-    func setLinkPaymentDetails(from cardDetails: ConsumerPaymentDetails.Details.Card) {
-        self.linkPaymentDetails = LinkPaymentDetails(
-            expMonth: cardDetails.expiryMonth,
-            expYear: cardDetails.expiryYear,
-            last4: cardDetails.last4,
-            brand: cardDetails.stpBrand
-        )
+    func setLinkPaymentDetails(from paymentDetails: ConsumerPaymentDetails) {
+        self.linkPaymentDetails = paymentDetails.cardDetails.flatMap { cardDetails in
+            LinkPaymentDetails(
+                displayName: cardDetails.displayName(with: paymentDetails.nickname),
+                expMonth: cardDetails.expiryMonth,
+                expYear: cardDetails.expiryYear,
+                last4: cardDetails.last4,
+                brand: cardDetails.stpBrand
+            )
+        }
     }
 }
