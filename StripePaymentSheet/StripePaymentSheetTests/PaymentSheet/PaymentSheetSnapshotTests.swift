@@ -54,12 +54,14 @@ class PaymentSheetSnapshotTests: STPSnapshotTestCase {
             APIStubbedTestCase.stubAllOutgoingRequests()
         }
         stubAllImageRequests()
+        PaymentSheet.resetCustomer()
     }
 
     public override func tearDown() {
         super.tearDown()
         HTTPStubs.removeAllStubs()
         configuration = PaymentSheet.Configuration()
+        PaymentSheet.resetCustomer()
     }
 
     private func stubbedAPIClient() -> STPAPIClient {
