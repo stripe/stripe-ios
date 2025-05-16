@@ -614,7 +614,7 @@ extension PaymentSheetFormFactory {
 
         isSaving.value =
             shouldDisplaySaveCheckbox
-            ? configuration.savePaymentMethodOptInBehavior.isSelectedByDefault : isSettingUp
+            ? (configuration.savePaymentMethodOptInBehavior.isSelectedByDefault || isSettingUp) : isSettingUp
 
         let phoneElement = configuration.billingDetailsCollectionConfiguration.phone == .always ? makePhone() : nil
         let addressElement = configuration.billingDetailsCollectionConfiguration.address == .full
@@ -635,6 +635,7 @@ extension PaymentSheetFormFactory {
             saveCheckboxElement: shouldDisplaySaveCheckbox ? saveCheckbox : nil,
             defaultCheckboxElement: defaultCheckbox,
             savingAccount: isSaving,
+            isSettingUp: isSettingUp,
             merchantName: merchantName,
             initialLinkedBank: previousCustomerInput?.financialConnectionsLinkedBank,
             appearance: configuration.appearance
