@@ -42,6 +42,15 @@ import UIKit
         ) as? Self
     }
 
+    @_spi(STP) public var isSetupFutureUsageSet: Bool {
+        return allResponseFields.values.contains { value in
+            if let dictionary = value as? [String: Any] {
+                return dictionary.keys.contains("setup_future_usage")
+            }
+            return false
+        }
+    }
+
     @_spi(STP) public func setupFutureUsage(for paymentMethodType: STPPaymentMethodType) -> String? {
         let paymentMethodOptionsForPaymentMethodType: [String: Any]? = allResponseFields[paymentMethodType.identifier] as? [String: Any]
         return paymentMethodOptionsForPaymentMethodType?["setup_future_usage"] as? String
