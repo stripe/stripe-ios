@@ -102,6 +102,54 @@ enum Intent {
         }
     }
 
+    var setupFutureUsageString: String? {
+        switch self {
+        case .paymentIntent(let paymentIntent):
+            return paymentIntent.setupFutureUsage.stringValue
+        case .deferredIntent(let config):
+            if case .payment(_, _, let setupFutureUsage, _, _) = config.mode {
+                return setupFutureUsage?.rawValue
+            }
+            return nil
+        default:
+            return nil
+        }
+    }
+
+    var paymentMethodOptionsSetupFutureUsageStringDictionary: [String: String]? {
+        switch self {
+        case .paymentIntent(let intent):
+            let paymentIntentPaymentMethodOptions: [String: Any]? = intent.paymentMethodOptions?.allResponseFields as? [String: Any]
+            // Parse the response into a [String: String] dictionary [paymentMethodType: setupFutureUsage]
+            let paymentIntentPMOSFU: [String: String] = {
+                var result: [String: String] = [:]
+                paymentIntentPaymentMethodOptions?.forEach { paymentMethodType, value in
+                    let dictionary = value as? [String: Any] ?? [:]
+                    if let setupFutureUsage = dictionary["setup_future_usage"] as? String {
+                        result[paymentMethodType] = setupFutureUsage
+                    }
+                }
+                return result
+            }()
+            return paymentIntentPMOSFU
+        case .deferredIntent(let intentConfig):
+            if case .payment( _, _, _, _, let paymentMethodOptions) = intentConfig.mode {
+                // Convert the intent configuration payment method options setup future usage values into a [String: String] dictionary
+                let intentConfigurationPMOSFU: [String: String] = {
+                    var result: [String: String] = [:]
+                    paymentMethodOptions?.setupFutureUsageValues?.forEach { paymentMethodType, setupFutureUsage in
+                        result[paymentMethodType.identifier] = setupFutureUsage.rawValue
+                    }
+                    return result
+                }()
+                return intentConfigurationPMOSFU
+            }
+            return nil
+        default:
+            return nil
+        }
+    }
+    
     /// True if this is a PaymentIntent with sfu not equal to none or a SetupIntent
     var isSettingUp: Bool {
         switch self {

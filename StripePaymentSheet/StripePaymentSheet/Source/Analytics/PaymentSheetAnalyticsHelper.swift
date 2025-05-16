@@ -417,8 +417,8 @@ final class PaymentSheetAnalyticsHelper {
         additionalParams["selected_lpm"] = selectedLPM
         additionalParams["link_context"] = linkContext
         additionalParams["link_ui"] = linkUI
-        additionalParams["setup_future_usage"] = setupFutureUsage(for: intent)
-        additionalParams["payment_method_options_setup_future_usage"] = paymentMethodOptionsSetupFutureUsage(for: intent)
+        additionalParams["setup_future_usage"] = intent?.setupFutureUsageString
+        additionalParams["payment_method_options_setup_future_usage"] = intent?.paymentMethodOptionsSetupFutureUsageStringDictionary
 
         if event.shouldLogFcSdkAvailability {
             additionalParams["fc_sdk_availability"] = FinancialConnectionsSDKAvailability.analyticsValue
@@ -433,64 +433,6 @@ final class PaymentSheetAnalyticsHelper {
         }
         let analytic = PaymentSheetAnalytic(event: event, additionalParams: additionalParams)
         analyticsClient.log(analytic: analytic, apiClient: configuration.apiClient)
-    }
-
-    private func setupFutureUsage(for intent: Intent?) -> String? {
-        guard let intent else {
-            return nil
-        }
-        switch intent {
-        case .paymentIntent(let intent):
-            return intent.setupFutureUsage.stringValue
-        case .deferredIntent(let intentConfig):
-            switch intentConfig.mode {
-            case .payment( _, _, let setupFutureUsage, _, _):
-                return setupFutureUsage?.rawValue
-            case .setup:
-                return nil
-            }
-        case .setupIntent:
-            return nil
-        }
-    }
-
-    private func paymentMethodOptionsSetupFutureUsage(for intent: Intent?) -> [String: String]? {
-        guard let intent else {
-            return nil
-        }
-        switch intent {
-        case .paymentIntent(let intent):
-            let paymentIntentPaymentMethodOptions: [String: Any]? = intent.paymentMethodOptions?.allResponseFields as? [String: Any]
-            // Parse the response into a [String: String] dictionary [paymentMethodType: setupFutureUsage]
-            let paymentIntentPMOSFU: [String: String] = {
-                var result: [String: String] = [:]
-                paymentIntentPaymentMethodOptions?.forEach { paymentMethodType, value in
-                    let dictionary = value as? [String: Any] ?? [:]
-                    if let setupFutureUsage = dictionary["setup_future_usage"] as? String {
-                        result[paymentMethodType] = setupFutureUsage
-                    }
-                }
-                return result
-            }()
-            return paymentIntentPMOSFU
-        case .deferredIntent(let intentConfig):
-            switch intentConfig.mode {
-            case .payment( _, _, _, _, let paymentMethodOptions):
-                // Convert the intent configuration payment method options setup future usage values into a [String: String] dictionary
-                let intentConfigurationPMOSFU: [String: String] = {
-                    var result: [String: String] = [:]
-                    paymentMethodOptions?.setupFutureUsageValues?.forEach { paymentMethodType, setupFutureUsage in
-                        result[paymentMethodType.identifier] = setupFutureUsage.rawValue
-                    }
-                    return result
-                }()
-                return intentConfigurationPMOSFU
-            case .setup:
-                return nil
-            }
-        case .setupIntent:
-            return nil
-        }
     }
 }
 

@@ -143,6 +143,7 @@ final class PaymentSheetAnalyticsHelperTest: XCTestCase {
             (.flowController, "flowcontroller"),
         ]
 
+        var shouldSetOffSession = true
         for (shape, shapeString) in integrationShapes {
             let sut = PaymentSheetAnalyticsHelper(integrationShape: shape, configuration: PaymentSheet.Configuration(), analyticsClient: analyticsClient)
 
@@ -188,8 +189,8 @@ final class PaymentSheetAnalyticsHelperTest: XCTestCase {
             sut.logLoadSucceeded(
                 intent: ._testPaymentIntent(
                     paymentMethodTypes: [.card],
-                    setupFutureUsage: .offSession,
-                    paymentMethodOptionsSetupFutureUsage: [.card: "none"]
+                    setupFutureUsage: shouldSetOffSession ? .offSession : .onSession,
+                    paymentMethodOptionsSetupFutureUsage: [.card: "none", .USBankAccount: "on_session", .cashApp: "off_session"]
                 ),
                 elementsSession: ._testDefaultCardValue(defaultPaymentMethod: STPPaymentMethod._testCard().stripeId, paymentMethods: [testCardJSON, testUSBankAccountJSON]),
                 defaultPaymentMethod: .saved(paymentMethod: STPPaymentMethod._testCard()),
@@ -209,8 +210,8 @@ final class PaymentSheetAnalyticsHelperTest: XCTestCase {
             XCTAssertEqual(loadSucceededPayload["set_as_default_enabled"] as? Bool, true)
             XCTAssertEqual(loadSucceededPayload["has_default_payment_method"] as? Bool, true)
             XCTAssertEqual(loadSucceededPayload["fc_sdk_availability"] as? String, "LITE")
-            XCTAssertEqual(loadSucceededPayload["setup_future_usage"] as? String, "off_session")
-            XCTAssertEqual(loadSucceededPayload["payment_method_options_setup_future_usage"] as? [String: String], ["card": "none"])
+            XCTAssertEqual(loadSucceededPayload["setup_future_usage"] as? String, shouldSetOffSession ? "off_session" : "on_session")
+            XCTAssertEqual(loadSucceededPayload["payment_method_options_setup_future_usage"] as? [String: String], ["card": "none", "us_bank_account": "on_session", "cashapp": "off_session"])
         }
     }
 
