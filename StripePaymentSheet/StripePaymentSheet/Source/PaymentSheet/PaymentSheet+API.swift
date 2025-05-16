@@ -546,13 +546,14 @@ extension PaymentSheet {
                 confirmWithPaymentMethod(paymentMethod, nil, false)
             case .withPaymentDetails(let linkAccount, let paymentDetails, let confirmationExtras):
                 let shouldSave = false // always false, as we don't show a save-to-merchant checkbox in Link VC
+                let allowRedisplay = computeAllowRedisplayForLinkUI(elementsSession: elementsSession, intent: intent)
 
                 if elementsSession.linkPassthroughModeEnabled {
                     // allowRedisplay is nil since we are not saving a payment method.
                     linkAccount.sharePaymentDetails(
                         id: paymentDetails.stripeID,
                         cvc: paymentDetails.cvc,
-                        allowRedisplay: nil,
+                        allowRedisplay: allowRedisplay,
                         expectedPaymentMethodType: paymentDetails.expectedPaymentMethodTypeForPassthroughMode(elementsSession),
                         billingPhoneNumber: confirmationExtras?.billingPhoneNumber
                     ) { result in
@@ -565,7 +566,7 @@ extension PaymentSheet {
                         }
                     }
                 } else {
-                    confirmWithPaymentDetails(linkAccount, paymentDetails, paymentDetails.cvc, confirmationExtras?.billingPhoneNumber, shouldSave, nil)
+                    confirmWithPaymentDetails(linkAccount, paymentDetails, paymentDetails.cvc, confirmationExtras?.billingPhoneNumber, shouldSave, allowRedisplay)
                 }
             }
         case let .external(externalPaymentOption, billingDetails):
@@ -749,6 +750,42 @@ extension PaymentSheet {
         }
         params.returnURL = configuration.returnURL
         return params
+    }
+
+    private static func computeAllowRedisplayForLinkUI(
+        elementsSession: STPElementsSession,
+        intent: Intent
+    ) -> STPPaymentMethodAllowRedisplay? {
+        guard let mobilePaymentElementFeatures = elementsSession.customerSessionMobilePaymentElementFeatures else {
+            return nil
+        }
+
+        var allowRedisplay: STPPaymentMethodAllowRedisplay?
+        let paymentMethodSave = mobilePaymentElementFeatures.paymentMethodSave
+        let allowRedisplayOverride = mobilePaymentElementFeatures.paymentMethodSaveAllowRedisplayOverride
+
+        let paymentMethodType: STPPaymentMethodType = elementsSession.linkPassthroughModeEnabled
+            ? .card // paymentDetails.expectedPaymentMethodTypeForPassthroughMode(elementsSession)
+            : .link
+
+        let isSettingUp = intent.isSetupFutureUsageSet(for: paymentMethodType)
+
+        if paymentMethodSave {
+            if isSettingUp {
+                allowRedisplay = .limited
+            } else {
+                allowRedisplay = .unspecified
+            }
+        } else {
+            if isSettingUp {
+                allowRedisplay = allowRedisplayOverride ?? .limited
+            } else {
+                // PaymentMethod won't be attached to customer
+                allowRedisplay = .unspecified
+            }
+        }
+
+        return allowRedisplay
     }
 }
 
