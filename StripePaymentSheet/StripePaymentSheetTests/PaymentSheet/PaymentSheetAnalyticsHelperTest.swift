@@ -260,6 +260,7 @@ final class PaymentSheetAnalyticsHelperTest: XCTestCase {
             defaultPaymentMethod: .saved(paymentMethod: STPPaymentMethod._testCard()),
             orderedPaymentMethodTypes: [.stripe(.card), .stripe(.USBankAccount)]
         )
+        // PI with SFU and PMO SFU
         var loadSucceededPayload = analyticsClient._testLogHistory[1]
         XCTAssertEqual(loadSucceededPayload["event"] as? String, "mc_load_succeeded")
         XCTAssertEqual(loadSucceededPayload["setup_future_usage"] as? String, "off_session")
@@ -277,6 +278,7 @@ final class PaymentSheetAnalyticsHelperTest: XCTestCase {
             defaultPaymentMethod: .saved(paymentMethod: STPPaymentMethod._testCard()),
             orderedPaymentMethodTypes: [.stripe(.card), .stripe(.USBankAccount)]
         )
+        // PI with SFU and no PMO SFU
         loadSucceededPayload = analyticsClient._testLogHistory[1]
         XCTAssertEqual(loadSucceededPayload["event"] as? String, "mc_load_succeeded")
         XCTAssertEqual(loadSucceededPayload["setup_future_usage"] as? String, "on_session")
@@ -295,6 +297,7 @@ final class PaymentSheetAnalyticsHelperTest: XCTestCase {
             defaultPaymentMethod: .saved(paymentMethod: STPPaymentMethod._testCard()),
             orderedPaymentMethodTypes: [.stripe(.card), .stripe(.USBankAccount)]
         )
+        // Deferred PI with SFU and PMO SFU
         loadSucceededPayload = analyticsClient._testLogHistory[1]
         XCTAssertEqual(loadSucceededPayload["event"] as? String, "mc_load_succeeded")
         XCTAssertEqual(loadSucceededPayload["setup_future_usage"] as? String, "off_session")
@@ -312,6 +315,7 @@ final class PaymentSheetAnalyticsHelperTest: XCTestCase {
             defaultPaymentMethod: .saved(paymentMethod: STPPaymentMethod._testCard()),
             orderedPaymentMethodTypes: [.stripe(.card), .stripe(.USBankAccount)]
         )
+        // Deferred PI with SFU and no PMO SFU
         loadSucceededPayload = analyticsClient._testLogHistory[1]
         XCTAssertEqual(loadSucceededPayload["event"] as? String, "mc_load_succeeded")
         XCTAssertEqual(loadSucceededPayload["setup_future_usage"] as? String, "on_session")
@@ -326,6 +330,7 @@ final class PaymentSheetAnalyticsHelperTest: XCTestCase {
             defaultPaymentMethod: .saved(paymentMethod: STPPaymentMethod._testCard()),
             orderedPaymentMethodTypes: [.stripe(.card), .stripe(.USBankAccount)]
         )
+        // SI
         loadSucceededPayload = analyticsClient._testLogHistory[1]
         XCTAssertEqual(loadSucceededPayload["event"] as? String, "mc_load_succeeded")
         XCTAssertNil(loadSucceededPayload["setup_future_usage"])
