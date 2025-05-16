@@ -47,15 +47,13 @@ extension LinkNavigationBarSnapshotTests {
         let email: String
         let redactedPhoneNumber: String?
         let isRegistered: Bool
-        let isLoggedIn: Bool
     }
 
     fileprivate func makeAccountStub() -> LinkAccountStub {
         return LinkAccountStub(
             email: "test@example.com",
             redactedPhoneNumber: "+1********55",
-            isRegistered: true,
-            isLoggedIn: true
+            isRegistered: true
         )
     }
 

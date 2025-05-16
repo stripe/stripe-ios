@@ -6,8 +6,6 @@
 //  Copyright © 2021 Stripe, Inc. All rights reserved.
 //
 
-@_spi(STP) import StripeCore
-@_spi(STP) import StripeUICore
 import UIKit
 
 extension PayWithLinkViewController {
@@ -33,11 +31,6 @@ extension PayWithLinkViewController {
             navigationBar.closeButton.addTarget(
                 self,
                 action: #selector(onCloseButtonTapped(_:)),
-                for: .touchUpInside
-            )
-            navigationBar.menuButton.addTarget(
-                self,
-                action: #selector(onMenuButtonTapped(_:)),
                 for: .touchUpInside
             )
             return navigationBar
@@ -99,25 +92,6 @@ extension PayWithLinkViewController {
             } else {
                 coordinator?.cancel()
             }
-        }
-
-        @objc
-        func onMenuButtonTapped(_ sender: UIButton) {
-            let actionSheet = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
-            actionSheet.addAction(UIAlertAction(
-                title: STPLocalizedString("Log out of Link", "Title of the logout action."),
-                style: .destructive,
-                handler: { [weak self] _ in
-                    self?.coordinator?.logout(cancel: true)
-                }
-            ))
-            actionSheet.addAction(UIAlertAction(title: String.Localized.cancel, style: .cancel))
-
-            // iPad support
-            actionSheet.popoverPresentationController?.sourceView = sender
-            actionSheet.popoverPresentationController?.sourceRect = sender.bounds
-
-            present(actionSheet, animated: true)
         }
     }
 
