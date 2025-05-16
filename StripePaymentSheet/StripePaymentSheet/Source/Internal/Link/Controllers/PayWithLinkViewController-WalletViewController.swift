@@ -660,27 +660,10 @@ extension PayWithLinkViewController.WalletViewController: LinkPaymentMethodPicke
     }
 
     func paymentDetailsPickerDidTapOnAddPayment(_ pickerView: LinkPaymentMethodPicker) {
-        if context.elementsSession.onlySupportsLinkBank {
-            // If this business is bank-only, bypass the new payment method flow and go straight to connections
-            confirmButton.update(state: .processing)
-            pickerView.setAddPaymentMethodButtonEnabled(false)
-            coordinator?.startInstantDebits { [weak self] result in
-                guard let self = self else { return }
-                switch result {
-                case .success(let paymentDetails):
-                    self.didUpdate(paymentMethod: paymentDetails, confirmationExtras: nil)
-                case .failure(let error):
-                    switch error {
-                    case InstantDebitsOnlyAuthenticationSessionManager.Error.canceled:
-                        break
-                    default:
-                        self.updateErrorLabel(for: error)
-                    }
-                }
-                self.paymentPicker.setAddPaymentMethodButtonEnabled(true)
-                self.updateUI(animated: false)
-            }
-        } else {
+        let supportedPaymentDetailsTypes = linkAccount.supportedPaymentDetailsTypes(for: context.elementsSession)
+
+        let bankAndCard = [ConsumerPaymentDetails.DetailsType.bankAccount, .card]
+        if bankAndCard.allSatisfy(supportedPaymentDetailsTypes.contains) {
             let alertController = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
 
             let addBankAction = UIAlertAction(
@@ -709,14 +692,16 @@ extension PayWithLinkViewController.WalletViewController: LinkPaymentMethodPicke
             alertController.addAction(cancelAction)
 
             present(alertController, animated: true)
+        } else if supportedPaymentDetailsTypes.contains(.bankAccount) {
+            addBankAccount()
+        } else if supportedPaymentDetailsTypes.contains(.card) {
+            addCard()
         }
     }
 
     private func addBankAccount() {
         coordinator?.startFinancialConnections { [weak self] _ in
-            guard let self = self else { return }
-            self.paymentPicker.setAddPaymentMethodButtonEnabled(true)
-            self.updateUI(animated: false)
+            self?.reloadPaymentDetails()
         }
     }
 

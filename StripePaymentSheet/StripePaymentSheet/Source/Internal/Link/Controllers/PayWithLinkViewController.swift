@@ -361,11 +361,14 @@ extension PayWithLinkViewController: PayWithLinkCoordinating {
             }
         }
 
-        sessionProvider { sessionResult in
+        sessionProvider { [weak self] sessionResult in
             switch sessionResult {
             case .success(let session):
                 session.createLinkAccountSession(
-                    consumerAccountPublishableKey: linkAccount.publishableKey
+                    consumerAccountPublishableKey: linkAccount.publishableKey,
+                    consentAcquired: true,
+                    linkMode: .linkPaymentMethod,
+                    intentToken: self?.context.intent.stripeId
                 ) { [session, weak self] linkAccountSessionResult in
                     switch linkAccountSessionResult {
                     case .success(let linkAccountSession):
@@ -391,28 +394,21 @@ extension PayWithLinkViewController: PayWithLinkCoordinating {
         consumerSession: ConsumerSession,
         completion: @escaping (PaymentSheetResult) -> Void
     ) {
-        let bankAccountCollector = STPBankAccountCollector(apiClient: context.configuration.apiClient)
-        bankAccountCollector.collectBankAccountForDeferredIntent(
-            sessionId: linkAccountSession.stripeID,
+        guard let financialConnectionsAPI = FinancialConnectionsSDKAvailability.financialConnections() else {
+            let error = PaymentSheetError.unknown(debugDescription: "Financial Connections is not available.")
+            completion(.failed(error: error))
+            return
+        }
+
+        financialConnectionsAPI.presentFinancialConnectionsSheet(
+            apiClient: context.configuration.apiClient,
+            clientSecret: linkAccountSession.clientSecret,
             returnURL: nil,
-            onEvent: nil,
-            amount: nil,
-            currency: nil,
-            onBehalfOf: nil,
+            style: .automatic,
             elementsSessionContext: nil,
+            onEvent: nil,
             from: self,
-            financialConnectionsCompletion: { (result, _, possibleError) in
-                if let error = possibleError {
-                    completion(.failed(error: error))
-                    return
-                }
-
-                guard let result else {
-                    let error = PaymentSheetError.unknown(debugDescription: "No Financial Connections result")
-                    completion(.failed(error: error))
-                    return
-                }
-
+            completion: { result in
                 switch result {
                 case .completed(let financialConnectionsResult):
                     switch financialConnectionsResult {
