@@ -546,7 +546,18 @@ extension RowButton {
             return imageView
         }()
 
-        let button = RowButton.create(appearance: appearance, type: .saved(paymentMethod: paymentMethod), imageView: imageView, text: paymentMethod.paymentSheetLabel, subtext: subtext, badgeText: badgeText, linkIcon: linkIcon, accessoryView: accessoryView, isEmbedded: isEmbedded, didTap: didTap)
+        let button = RowButton.create(
+            appearance: appearance,
+            type: .saved(paymentMethod: paymentMethod),
+            imageView: imageView,
+            text: paymentMethod.paymentSheetLabel,
+            subtext: paymentMethod.linkPaymentDetails?.sublabel ?? subtext,
+            badgeText: badgeText,
+            linkIcon: linkIcon,
+            accessoryView: accessoryView,
+            isEmbedded: isEmbedded,
+            didTap: didTap
+        )
         button.accessibilityHelperView.accessibilityLabel = {
             if let badgeText {
                 if let accessibilityLabel = paymentMethod.paymentSheetAccessibilityLabel {
