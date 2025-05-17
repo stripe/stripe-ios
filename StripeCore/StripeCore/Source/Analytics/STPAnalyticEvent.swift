@@ -273,6 +273,9 @@ import Foundation
     // MARK: - Misc. errors
     case stripePaymentSheetDownloadManagerError = "stripepaymentsheet.downloadmanager.error"
 
+    // MARK: - 429: Too many requests
+    case stripeApiTooManyRequests = "stripeapi.too_many_requests"
+
     // MARK: - Refresh Endpoint
     case refreshPaymentIntentStarted = "stripeios.refresh_payment_intent_started"
     case refreshSetupIntentStarted = "stripeios.refresh_setup_intent_started"

@@ -16,26 +16,31 @@ extension URLSession {
     ) {
         let task = dataTask(with: request) { (data, response, error) in
             if let httpResponse = response as? HTTPURLResponse,
-                httpResponse.statusCode == 429,
-                retryCount > 0
+               httpResponse.statusCode == 429
             {
-                // Add some backoff time with a little bit of jitter:
-                let delayTime = TimeInterval(
-                    pow(Double(1 + StripeAPI.maxRetries - retryCount), Double(2))
-                        + .random(in: 0..<0.5)
-                )
-
-                let fireDate = Date() + delayTime
-                self.delegateQueue.schedule(after: .init(fireDate)) {
-                    self.stp_performDataTask(
-                        with: request,
-                        completionHandler: completionHandler,
-                        retryCount: retryCount - 1
+                // Log 429
+                let analytic = GenericAnalytic(event: .stripeApiTooManyRequests,
+                                               params: ["retries_remaining": retryCount])
+                STPAnalyticsClient.sharedClient.log(analytic: analytic)
+                if retryCount > 0 {
+                    // Add some backoff time with a little bit of jitter:
+                    let delayTime = TimeInterval(
+                        pow(Double(1 + StripeAPI.maxRetries - retryCount), Double(2))
+                            + .random(in: 0..<0.5)
                     )
+
+                    let fireDate = Date() + delayTime
+                    self.delegateQueue.schedule(after: .init(fireDate)) {
+                        self.stp_performDataTask(
+                            with: request,
+                            completionHandler: completionHandler,
+                            retryCount: retryCount - 1
+                        )
+                    }
+                    return
                 }
-            } else {
-                completionHandler(data, response, error)
             }
+            completionHandler(data, response, error)
         }
         task.resume()
     }
