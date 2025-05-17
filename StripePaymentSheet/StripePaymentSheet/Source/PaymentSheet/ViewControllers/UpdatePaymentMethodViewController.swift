@@ -76,7 +76,7 @@ final class UpdatePaymentMethodViewController: UIViewController {
     }
 
     // MARK: Navigation bar
-    internal lazy var navigationBar: SheetNavigationBar = {
+    internal lazy var sheetNavigationBar: SheetNavigationBar? = {
         let navBar = SheetNavigationBar(isTestMode: isTestMode,
                                         appearance: configuration.appearance)
         navBar.delegate = self

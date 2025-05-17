@@ -129,6 +129,22 @@ final class PayWithLinkViewController: UINavigationController {
 
     private var isBailingToWebFlow: Bool = false
 
+    private lazy var loadingViewController: LoaderViewController = {
+        LoaderViewController(context: context)
+    }()
+
+    lazy var bottomSheetViewController: BottomSheetViewController = {
+        BottomSheetViewController(
+            contentViewController: loadingViewController,
+            appearance: context.configuration.appearance,
+            isTestMode: context.configuration.apiClient.isTestmode,
+            didCancelNative3DS2: {}
+        )
+    }()
+
+    // Strong reference to prevent deallocation.
+    private static var activeInstance: PayWithLinkViewController?
+
     convenience init(
         intent: Intent,
         elementsSession: STPElementsSession,
@@ -156,7 +172,7 @@ final class PayWithLinkViewController: UINavigationController {
         super.init(nibName: nil, bundle: nil)
 
         // Show loader
-        setRootViewController(LoaderViewController(context: context), animated: false)
+        setRootViewController(loadingViewController, animated: false)
     }
 
     required init?(coder: NSCoder) {
@@ -167,6 +183,8 @@ final class PayWithLinkViewController: UINavigationController {
         super.viewDidLoad()
         view.accessibilityIdentifier = "Stripe.Link.PayWithLinkViewController"
         view.tintColor = .linkBrand
+
+        Self.activeInstance = self
 
         // Hide the default navigation bar.
         setNavigationBarHidden(true, animated: false)
@@ -214,9 +232,11 @@ final class PayWithLinkViewController: UINavigationController {
             viewController.coordinator = self
             viewController.customNavigationBar.linkAccount = linkAccount
             viewController.customNavigationBar.showBackButton = !viewControllers.isEmpty
+            bottomSheetViewController.pushContentViewController(viewController)
+        } else {
+            super.pushViewController(viewController, animated: animated)
         }
 
-        super.pushViewController(viewController, animated: animated)
     }
 
     private func updateUI() {
@@ -317,14 +337,11 @@ private extension PayWithLinkViewController {
         return viewControllers.first
     }
 
-    func setRootViewController(_ viewController: UIViewController, animated: Bool = true) {
-        if let viewController = viewController as? BaseViewController {
-            viewController.coordinator = self
-            viewController.customNavigationBar.linkAccount = linkAccount
-            viewController.customNavigationBar.showBackButton = false
-        }
-
-        setViewControllers([viewController], animated: isShowingLoader ? false : animated)
+    func setRootViewController(_ viewController: BaseViewController, animated: Bool = true) {
+        viewController.coordinator = self
+        viewController.customNavigationBar.linkAccount = linkAccount
+        viewController.customNavigationBar.showBackButton = false
+        bottomSheetViewController.setViewControllers([viewController])
     }
 
 }
@@ -490,6 +507,15 @@ extension PayWithLinkViewController: PaymentSheetLinkAccountDelegate {
 
     }
 
+}
+
+extension PayWithLinkViewController: BottomSheetContentViewController {
+    var sheetNavigationBar: SheetNavigationBar? { nil }
+    var requiresFullScreen: Bool { false }
+
+    func didTapOrSwipeToDismiss() {
+        cancel()
+    }
 }
 
 // Used to get deterministic ordering

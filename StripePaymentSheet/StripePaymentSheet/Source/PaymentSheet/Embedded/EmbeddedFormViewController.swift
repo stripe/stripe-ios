@@ -66,7 +66,7 @@ class EmbeddedFormViewController: UIViewController {
                 )
             }
             view.isUserInteractionEnabled = isUserInteractionEnabled
-            navigationBar.isUserInteractionEnabled = isUserInteractionEnabled
+            sheetNavigationBar?.isUserInteractionEnabled = isUserInteractionEnabled
         }
     }
 
@@ -95,7 +95,7 @@ class EmbeddedFormViewController: UIViewController {
 
     // MARK: - UI properties
 
-    lazy var navigationBar: SheetNavigationBar = {
+    lazy var sheetNavigationBar: SheetNavigationBar? = {
         let navBar = SheetNavigationBar(
             isTestMode: configuration.apiClient.isTestmode,
             appearance: configuration.appearance

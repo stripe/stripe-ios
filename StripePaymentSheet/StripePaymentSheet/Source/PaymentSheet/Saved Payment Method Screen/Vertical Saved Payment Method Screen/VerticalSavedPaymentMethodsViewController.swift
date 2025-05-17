@@ -49,7 +49,7 @@ class VerticalSavedPaymentMethodsViewController: UIViewController {
     private var isEditingPaymentMethods: Bool = false {
         didSet {
             let additionalButtonTitle = isEditingPaymentMethods ? UIButton.doneButtonTitle : UIButton.editButtonTitle
-            navigationBar.additionalButton.setTitle(additionalButtonTitle, for: .normal)
+            sheetNavigationBar?.additionalButton.setTitle(additionalButtonTitle, for: .normal)
             // Update header text unless we removed the last pm and we're getting kicked out to the main screen
             if !paymentMethodRows.isEmpty {
                 headerLabel.text = headerText
@@ -67,7 +67,7 @@ class VerticalSavedPaymentMethodsViewController: UIViewController {
             } else if oldValue {
                 // If we are exiting edit mode restore previous selected states
                 paymentMethodRows.forEach { $0.state = $0.previousSelectedState }
-                navigationBar.setStyle(navigationBarStyle())
+                sheetNavigationBar?.setStyle(navigationBarStyle())
 
                 // If we are exiting edit mode and there is only one payment method left which can't be removed, select it and dismiss
                 if paymentMethodRows.count == 1, let firstButton = paymentMethodRows.first {
@@ -134,7 +134,7 @@ class VerticalSavedPaymentMethodsViewController: UIViewController {
 
     // MARK: - UI properties
 
-    lazy var navigationBar: SheetNavigationBar = {
+    lazy var sheetNavigationBar: SheetNavigationBar? = {
         let navBar = SheetNavigationBar(isTestMode: configuration.apiClient.isTestmode,
                                         appearance: configuration.appearance)
         navBar.setStyle(navigationBarStyle())
@@ -340,7 +340,7 @@ extension VerticalSavedPaymentMethodsViewController: SavedPaymentMethodRowButton
 
         // Disable interaction to prevent double selecting or entering edit mode since we will be dismissing soon
         self.view.isUserInteractionEnabled = false
-        self.navigationBar.isUserInteractionEnabled = false
+        self.sheetNavigationBar?.isUserInteractionEnabled = false
 
         self.complete()
     }

@@ -78,12 +78,13 @@ extension PaymentSheet {
 
         payWithLinkVC.payWithLinkDelegate = self
 
-        if UIDevice.current.userInterfaceIdiom == .pad {
-            payWithLinkVC.modalPresentationStyle = .formSheet
-        }
-        payWithLinkVC.isModalInPresentation = true
-
-        presentingController.present(payWithLinkVC, animated: true, completion: completion)
+        let bottomSheet = payWithLinkVC.bottomSheetViewController
+        self.payWithLinkBottomSheet = bottomSheet
+        presentingController.presentAsBottomSheet(
+            bottomSheet,
+            appearance: self.configuration.appearance,
+            completion: completion
+        )
     }
 
     func verifyLinkSessionIfNeeded(
@@ -145,6 +146,7 @@ extension PaymentSheet: PayWithLinkViewControllerDelegate {
             }
             self.analyticsHelper.logPayment(paymentOption: paymentOption, result: result, deferredIntentConfirmationType: confirmationType)
 
+            self.payWithLinkBottomSheet = nil
             completion(result, confirmationType)
         }
     }
