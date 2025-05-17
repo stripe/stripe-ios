@@ -266,16 +266,22 @@ extension STPAPIClient {
     func createLinkAccountSession(
         for consumerSessionClientSecret: String,
         consumerAccountPublishableKey: String?,
+        consentAcquired: Bool? = nil,
+        linkMode: LinkMode? = nil,
+        intentToken: String? = nil,
         completion: @escaping (Result<LinkAccountSession, Error>) -> Void
     ) {
         let endpoint: String = "consumers/link_account_sessions"
 
-        let parameters: [String: Any] = [
+        var parameters: [String: Any] = [
             "credentials": [
                 "consumer_session_client_secret": consumerSessionClientSecret,
             ],
             "request_surface": "ios_payment_element",
         ]
+        parameters["consent_acquired"] = consentAcquired
+        parameters["link_mode"] = linkMode?.rawValue
+        parameters["intent_token"] = intentToken
 
         APIRequest<LinkAccountSession>.post(
             with: self,
