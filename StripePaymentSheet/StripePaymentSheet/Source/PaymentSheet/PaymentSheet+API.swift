@@ -438,9 +438,15 @@ extension PaymentSheet {
                     ConsumerPaymentDetails,
                     String?, // cvc
                     String?, // phone number
-                    Bool
-                ) -> Void = { linkAccount, paymentDetails, cvc, billingPhoneNumber, shouldSave in
-                    guard let paymentMethodParams = linkAccount.makePaymentMethodParams(from: paymentDetails, cvc: cvc, billingPhoneNumber: billingPhoneNumber) else {
+                    Bool,
+                    STPPaymentMethodAllowRedisplay?
+                ) -> Void = { linkAccount, paymentDetails, cvc, billingPhoneNumber, shouldSave, allowRedisplay in
+                    guard let paymentMethodParams = linkAccount.makePaymentMethodParams(
+                        from: paymentDetails,
+                        cvc: cvc,
+                        billingPhoneNumber: billingPhoneNumber,
+                        allowRedisplay: allowRedisplay
+                    ) else {
                         let error = PaymentSheetError.payingWithoutValidLinkSession
                         completion(.failed(error: error), nil)
                         return
@@ -492,7 +498,7 @@ extension PaymentSheet {
                                 }
                             } else {
                                 // If not passthrough mode, confirm details directly
-                                confirmWithPaymentDetails(linkAccount, paymentDetails, paymentMethodParams.card?.cvc, billingPhoneNumber, shouldSave)
+                                confirmWithPaymentDetails(linkAccount, paymentDetails, paymentMethodParams.card?.cvc, billingPhoneNumber, shouldSave, paymentMethodParams.allowRedisplay)
                             }
                         case .failure(let error):
                             STPAnalyticsClient.sharedClient.logLinkCreatePaymentDetailsFailure(error: error)
@@ -529,6 +535,10 @@ extension PaymentSheet {
                     case .failure(let error as NSError):
                         STPAnalyticsClient.sharedClient.logLinkSignupFailure(error: error)
                         // Attempt to confirm directly with params as a fallback.
+                        intentConfirmParams.setAllowRedisplay(
+                            mobilePaymentElementFeatures: elementsSession.customerSessionMobilePaymentElementFeatures,
+                            isSettingUp: intent.isSetupFutureUsageSet(for: intentConfirmParams.paymentMethodParams.type)
+                        )
                         confirmWithPaymentMethodParams(intentConfirmParams.paymentMethodParams, linkAccount, intentConfirmParams.saveForFutureUseCheckboxState == .selected)
                     }
                 }
@@ -555,7 +565,7 @@ extension PaymentSheet {
                         }
                     }
                 } else {
-                    confirmWithPaymentDetails(linkAccount, paymentDetails, paymentDetails.cvc, confirmationExtras?.billingPhoneNumber, shouldSave)
+                    confirmWithPaymentDetails(linkAccount, paymentDetails, paymentDetails.cvc, confirmationExtras?.billingPhoneNumber, shouldSave, nil)
                 }
             }
         case let .external(externalPaymentOption, billingDetails):
