@@ -99,14 +99,14 @@ private extension LinkNoticeView.NoticeType {
     var backgroundColor: UIColor {
         switch self {
         case .error:
-            return .linkDangerBackground
+            return .linkSurfacePrimary
         }
     }
 
     var foregroundColor: UIColor {
         switch self {
         case .error:
-            return .linkDangerForeground
+            return .linkTextCritical
         }
     }
 

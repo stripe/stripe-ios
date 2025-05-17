@@ -58,8 +58,8 @@ extension LinkVerificationView {
                 closeButton.bottomAnchor.constraint(equalTo: bottomAnchor),
             ])
 
-            tintColor = .linkNavTint
-            logoView.tintColor = .linkNavLogo
+            tintColor = .linkSurfacePrimary
+            logoView.tintColor = .linkTextPrimary
         }
 
         required init?(coder: NSCoder) {

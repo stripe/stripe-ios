@@ -81,7 +81,7 @@ final class LinkVerificationViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        view.tintColor = .linkBrand
+        view.tintColor = .linkIconBrand
         view.backgroundColor = .systemBackground
 
         view.addSubview(verificationView)

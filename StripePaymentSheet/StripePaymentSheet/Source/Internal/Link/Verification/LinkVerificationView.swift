@@ -62,7 +62,7 @@ final class LinkVerificationView: UIView {
         label.numberOfLines = 0
         label.textAlignment = .center
         label.font = LinkUI.font(forTextStyle: .title)
-        label.textColor = .linkPrimaryText
+        label.textColor = .linkTextPrimary
         label.text = mode.headingText
         label.adjustsFontForContentSizeCategory = true
         return label
@@ -73,7 +73,7 @@ final class LinkVerificationView: UIView {
         label.numberOfLines = 0
         label.textAlignment = .center
         label.font = mode.bodyFont
-        label.textColor = .linkSecondaryText
+        label.textColor = .linkTextSecondary
         label.text = mode.bodyText(redactedPhoneNumber: linkAccount.redactedPhoneNumber ?? "")
         label.adjustsFontForContentSizeCategory = true
         return label
@@ -85,10 +85,12 @@ final class LinkVerificationView: UIView {
                 numberOfDigits: 6,
                 enableDigitGrouping: false,
                 itemCornerRadius: LinkUI.cornerRadius,
-                itemHeight: 56
+                itemHeight: 56,
+                itemFocusRingThickness: LinkUI.borderWidth
             ),
             theme: LinkUI.appearance.asElementsTheme
         )
+        codeField.tintColor = LinkUI.appearance.colors.selectedComponentBorder
         codeField.addTarget(self, action: #selector(oneTimeCodeFieldChanged(_:)), for: .valueChanged)
         return codeField
     }()

@@ -34,7 +34,7 @@ extension PayWithLinkViewController {
         private lazy var titleLabel: UILabel = {
             let label = UILabel()
             label.font = LinkUI.font(forTextStyle: .title)
-            label.textColor = .linkPrimaryText
+            label.textColor = .linkTextPrimary
             label.adjustsFontForContentSizeCategory = true
             label.numberOfLines = 0
             label.textAlignment = .center
@@ -49,7 +49,7 @@ extension PayWithLinkViewController {
         private lazy var thisIsYourDefaultLabel: UILabel = {
             let label = UILabel()
             label.font = LinkUI.font(forTextStyle: .bodyEmphasized)
-            label.textColor = .linkSecondaryText
+            label.textColor = .linkTextSecondary
             label.adjustsFontForContentSizeCategory = true
             label.numberOfLines = 0
             label.textAlignment = .center
@@ -115,7 +115,7 @@ extension PayWithLinkViewController {
         override func viewDidLoad() {
             super.viewDidLoad()
             self.cardEditElement.delegate = self
-            view.backgroundColor = .linkBackground
+            view.backgroundColor = .linkSurfacePrimary
             view.directionalLayoutMargins = LinkUI.contentMargins
             errorLabel.isHidden = true
 

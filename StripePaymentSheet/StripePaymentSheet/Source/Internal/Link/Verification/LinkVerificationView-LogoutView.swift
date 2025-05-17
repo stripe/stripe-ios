@@ -19,7 +19,7 @@ extension LinkVerificationView {
             let label = UILabel()
             label.font = LinkUI.font(forTextStyle: .body)
             label.adjustsFontForContentSizeCategory = true
-            label.textColor = .linkSecondaryText
+            label.textColor = .linkTextTertiary
             label.lineBreakMode = .byTruncatingMiddle
             label.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
             label.text = linkAccount.email

@@ -69,7 +69,7 @@ extension LinkVerificationViewSnapshotTests {
             )
         )
 
-        sut.tintColor = .linkBrand
+        sut.tintColor = .linkIconBrand
 
         return sut
     }
