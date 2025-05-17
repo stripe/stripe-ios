@@ -133,7 +133,12 @@ class VerticalPaymentMethodListViewController: UIViewController {
         let link: RowButton? = {
             guard shouldShowLink else { return nil }
             let selection = RowButtonType.link
-            let rowButton = RowButton.makeForLink(appearance: appearance) { [weak self] in
+            let account = LinkAccountContext.shared.account
+
+            let rowButton = RowButton.makeForLink(
+                appearance: appearance,
+                customSubtitle: account?.email
+            ) { [weak self] in
                 self?.didTap(rowButton: $0, selection: .link)
             }
             if initialSelection == selection {

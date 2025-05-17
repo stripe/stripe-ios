@@ -27,7 +27,7 @@ struct ElementsCustomer: Equatable, Hashable {
 
         let paymentMethods = Self.parsePaymentMethods(
             from: response,
-            enableLinkInSPM: enableLinkInSPM && PaymentSheet.enableLinkInSPM
+            enableLinkInSPM: enableLinkInSPM && PaymentSheet.LinkFeatureFlags.enableLinkInSPM
         )
 
         // Required fields

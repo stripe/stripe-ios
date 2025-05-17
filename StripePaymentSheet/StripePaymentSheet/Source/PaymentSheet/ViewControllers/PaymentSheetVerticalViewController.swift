@@ -18,7 +18,9 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
         case noPaymentOptionOnBuyButtonTap
     }
     var selectedPaymentOption: PaymentSheet.PaymentOption? {
-        if isLinkWalletButtonSelected {
+        if let linkConfirmOption {
+            return .link(option: linkConfirmOption)
+        } else if isLinkWalletButtonSelected {
             return .link(option: .wallet)
         } else if let paymentMethodListViewController, children.contains(paymentMethodListViewController) {
             // If we're showing the list, use its selection:
@@ -56,6 +58,7 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
     }
     // Edge-case, only set to true when Link is selected via wallet in flow controller
     var isLinkWalletButtonSelected: Bool = false
+    private var linkConfirmOption: PaymentSheet.LinkConfirmOption?
     /// The type of the Stripe payment method that's currently selected in the UI for new and saved PMs. Returns nil Apple Pay and .stripe(.link) for Link.
     /// Note that, unlike selectedPaymentOption, this is non-nil even if the PM form is invalid.
     var selectedPaymentMethodType: PaymentSheet.PaymentMethodType? {
@@ -173,6 +176,24 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
         regenerateUI()
         // Only use the previous customer input for the first form shown
         self.previousPaymentOption = nil
+    }
+
+    private func fetchLinkPaymentMethodAndClose(linkAccount: PaymentSheetLinkAccount) {
+        linkAccount.fetchDefaultPaymentDetails(elementsSession: elementsSession) { [weak self] paymentMethod in
+            guard let self else {
+                return
+            }
+
+            if let paymentMethod {
+                self.linkConfirmOption = .withPaymentDetails(
+                    account: linkAccount,
+                    paymentDetails: paymentMethod,
+                    confirmationExtras: nil
+                )
+            }
+
+            self.flowControllerDelegate?.flowControllerViewControllerShouldClose(self, didCancel: false)
+        }
     }
 
     /// Regenerates the main content - either the PM list or the PM form and updates all UI elements (pay button, error, mandate)
@@ -458,6 +479,33 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
         ])
     }
 
+    fileprivate var canPresentLinkOnPrimaryButton: Bool {
+        guard case .link = selectedPaymentOption else {
+            return false
+        }
+        let usesNative = deviceCanUseNativeLink(elementsSession: elementsSession, configuration: configuration)
+        return PaymentSheet.LinkFeatureFlags.enableLinkFlowControllerChanges && isFlowController && usesNative
+    }
+
+    fileprivate var canPresentLinkOnWalletButton: Bool {
+        let usesNative = deviceCanUseNativeLink(elementsSession: elementsSession, configuration: configuration)
+        return PaymentSheet.LinkFeatureFlags.enableLinkFlowControllerChanges && isFlowController && usesNative
+    }
+
+    private func presentLinkInFlowController() {
+        presentNativeLink(
+            selectedPaymentDetailsID: nil,
+            configuration: configuration,
+            intent: intent,
+            elementsSession: elementsSession,
+            analyticsHelper: analyticsHelper,
+            delegate: self,
+            verificationCompletion: { linkAccount in
+                self.fetchLinkPaymentMethodAndClose(linkAccount: linkAccount)
+            }
+        )
+    }
+
     var didSendLogShow: Bool = false
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
@@ -472,6 +520,7 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
         super.viewDidAppear(animated)
         logRenderLPMs()
         isLinkWalletButtonSelected = false
+        linkConfirmOption = nil
     }
 
     private func logRenderLPMs() {
@@ -589,6 +638,11 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
 
         // Send analytic when primary button is tapped
         analyticsHelper.logConfirmButtonTapped(paymentOption: selectedPaymentOption)
+
+        if canPresentLinkOnPrimaryButton {
+            presentLinkInFlowController()
+            return
+        }
 
         // If FlowController, simply close the sheet
         if isFlowController {
@@ -978,9 +1032,13 @@ extension PaymentSheetVerticalViewController: WalletHeaderViewDelegate {
 
     func walletHeaderViewPayWithLinkTapped(_ header: PaymentSheetViewController.WalletHeaderView) {
         guard !isFlowController else {
-            // If flow controller, note that the button was tapped and dismiss
-            isLinkWalletButtonSelected = true
-            flowControllerDelegate?.flowControllerViewControllerShouldClose(self, didCancel: false)
+            if canPresentLinkOnWalletButton {
+                presentLinkInFlowController()
+            } else {
+                // If flow controller, note that the button was tapped and dismiss
+                isLinkWalletButtonSelected = true
+                flowControllerDelegate?.flowControllerViewControllerShouldClose(self, didCancel: false)
+            }
             return
         }
 
@@ -998,5 +1056,41 @@ extension PaymentSheetVerticalViewController: ElementDelegate {
     func didUpdate(element: Element) {
         self.error = nil
         updateUI()
+    }
+}
+
+// MARK: - PayWithLinkViewControllerDelegate
+extension PaymentSheetVerticalViewController: PayWithLinkViewControllerDelegate {
+    func payWithLinkViewControllerDidConfirm(
+        _ payWithLinkViewController: PayWithLinkViewController,
+        intent: Intent,
+        elementsSession: STPElementsSession,
+        with paymentOption: PaymentOption,
+        completion: @escaping (PaymentSheetResult, StripeCore.STPAnalyticsClient.DeferredIntentConfirmationType?) -> Void
+    ) {
+        payWithLinkViewController.dismiss(animated: true)
+        print("PayWithLinkViewController did confirm")
+    }
+
+    func payWithLinkViewControllerDidCancel(_ payWithLinkViewController: PayWithLinkViewController, shouldReturnToPaymentSheet: Bool) {
+        payWithLinkViewController.dismiss(animated: true)
+        print("PayWithLinkViewController did cancel")
+    }
+
+    func payWithLinkViewControllerDidFinish(
+        _ payWithLinkViewController: PayWithLinkViewController,
+        result: PaymentSheetResult,
+        deferredIntentConfirmationType: StripeCore.STPAnalyticsClient.DeferredIntentConfirmationType?
+    ) {
+        payWithLinkViewController.dismiss(animated: true)
+        print("PayWithLinkViewController did finish")
+    }
+
+    func payWithLinkViewControllerDidFinish(
+        _ payWithLinkViewController: PayWithLinkViewController,
+        paymentDetails: ConsumerPaymentDetails
+    ) {
+        payWithLinkViewController.dismiss(animated: true)
+        print("PayWithLinkViewController did finish with payment details")
     }
 }
