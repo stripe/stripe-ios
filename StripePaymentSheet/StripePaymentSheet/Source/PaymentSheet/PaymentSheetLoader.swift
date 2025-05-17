@@ -149,6 +149,9 @@ final class PaymentSheetLoader {
                     analyticsHelper.startTimeMeasurement(.checkout)
                 }
 
+                // Initialize telemetry. Don't wait for this to finish to call completion.
+                STPTelemetryClient.shared.sendTelemetryData()
+
                 // Call completion
                 let loadResult = LoadResult(
                     intent: intent,
