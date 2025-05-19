@@ -12,40 +12,57 @@ import UIKit
 @_spi(STP) public struct WalletButtonsView: View {
     let flowController: PaymentSheet.FlowController
     let confirmHandler: (PaymentSheetResult) -> Void
-    @State private var showingApplePay: Bool
-    @State private var showingLink: Bool
+    let orderedWallets: [ExpressType]
 
-    init(showingApplePay: Bool = false,
-         showingLink: Bool = false,
-         flowController: PaymentSheet.FlowController,
+    init(flowController: PaymentSheet.FlowController,
          confirmHandler: @escaping (PaymentSheetResult) -> Void) {
         self.confirmHandler = confirmHandler
         self.flowController = flowController
-        _showingApplePay = State(initialValue: showingApplePay)
-        _showingLink = State(initialValue: showingLink)
+        
+        // Determine available wallets and their order from elementsSession
+        var wallets: [ExpressType] = []
+        for type in flowController.elementsSession.orderedPaymentMethodTypesAndWallets {
+            switch type {
+            case "link":
+                // Also check PaymentSheet local availability logic
+                if PaymentSheet.isLinkEnabled(elementsSession: flowController.elementsSession, configuration: flowController.configuration) {
+                    wallets.append(.link)
+                }
+            case "apple_pay":
+                if PaymentSheet.isApplePayEnabled(elementsSession: flowController.elementsSession, configuration: flowController.configuration) {
+                    wallets.append(.applePay)
+                }
+            default:
+                break
+            }
+        }
+        self.orderedWallets = wallets
     }
-
-    @_spi(STP) public init(flowController: PaymentSheet.FlowController,
-                           confirmHandler: @escaping (PaymentSheetResult) -> Void) {
-        let isApplePayEnabled = PaymentSheet.isApplePayEnabled(elementsSession: flowController.elementsSession, configuration: flowController.configuration)
-        let isLinkEnabled = PaymentSheet.isLinkEnabled(elementsSession: flowController.elementsSession, configuration: flowController.configuration)
-        self.init(showingApplePay: isApplePayEnabled, showingLink: isLinkEnabled, flowController: flowController, confirmHandler: confirmHandler)
+    
+    init(flowController: PaymentSheet.FlowController,
+         confirmHandler: @escaping (PaymentSheetResult) -> Void,
+         orderedWallets: [ExpressType]) {
+        self.confirmHandler = confirmHandler
+        self.flowController = flowController
+        self.orderedWallets = orderedWallets
     }
 
     @_spi(STP) public var body: some View {
-        if showingApplePay || showingLink {
+        if !orderedWallets.isEmpty {
             VStack(spacing: 8) {
-                if showingApplePay {
-                    ApplePayButton {
-                        Task {
-                            checkoutTapped(.applePay)
+                ForEach(orderedWallets, id: \.self) { wallet in
+                    switch wallet {
+                    case .applePay:
+                        ApplePayButton {
+                            Task {
+                                checkoutTapped(.applePay)
+                            }
                         }
-                    }
-                }
-                if showingLink {
-                    LinkButton {
-                        Task {
-                            checkoutTapped(.link)
+                    case .link:
+                        LinkButton {
+                            Task {
+                                checkoutTapped(.link)
+                            }
                         }
                     }
                 }
@@ -123,11 +140,9 @@ private class WindowAuthenticationContext: NSObject, STPAuthenticationContext {
 struct WalletButtonsView_Previews: PreviewProvider {
     static var previews: some View {
         WalletButtonsView(
-            showingApplePay: true,
-            showingLink: true,
             flowController: PaymentSheet.FlowController._mockFlowController(),
-            confirmHandler: { _ in
-            }
+            confirmHandler: { _ in },
+            orderedWallets: [.applePay, .link]
         )
         .previewLayout(.sizeThatFits)
         .padding()
@@ -137,7 +152,7 @@ struct WalletButtonsView_Previews: PreviewProvider {
 fileprivate extension PaymentSheet.FlowController {
     static func _mockFlowController() -> PaymentSheet.FlowController {
         let psConfig = PaymentSheet.Configuration()
-        let elementsSession = STPElementsSession(allResponseFields: [:], sessionID: "", orderedPaymentMethodTypes: [], unactivatedPaymentMethodTypes: [], countryCode: nil, merchantCountryCode: nil, linkSettings: nil, experimentsData: nil, flags: [:], paymentMethodSpecs: nil, cardBrandChoice: nil, isApplePayEnabled: true, externalPaymentMethods: [], customPaymentMethods: [], customer: nil)
+        let elementsSession = STPElementsSession(allResponseFields: [:], sessionID: "", orderedPaymentMethodTypes: [], orderedPaymentMethodTypesAndWallets: ["card", "link", "apple_pay"], unactivatedPaymentMethodTypes: [], countryCode: nil, merchantCountryCode: nil, linkSettings: nil, experimentsData: nil, flags: [:], paymentMethodSpecs: nil, cardBrandChoice: nil, isApplePayEnabled: true, externalPaymentMethods: [], customPaymentMethods: [], customer: nil)
         let intentConfig = PaymentSheet.IntentConfiguration(mode: .payment(amount: 10, currency: "USD", setupFutureUsage: nil, captureMethod: .automatic, paymentMethodOptions: nil)) { _, _, _ in }
         let intent = Intent.deferredIntent(intentConfig: intentConfig)
         let loadResult = PaymentSheetLoader.LoadResult(intent: intent, elementsSession: elementsSession, savedPaymentMethods: [], paymentMethodTypes: [])

@@ -20,6 +20,9 @@ import Foundation
     /// The ordered payment method preference for this ElementsSession.
     let orderedPaymentMethodTypes: [STPPaymentMethodType]
 
+    /// The ordered payment method and wallet types for this ElementsSession.
+    let orderedPaymentMethodTypesAndWallets: [String]
+
     /// A list of payment method types that are not activated in live mode, but activated in test mode.
     let unactivatedPaymentMethodTypes: [STPPaymentMethodType]
 
@@ -63,6 +66,7 @@ import Foundation
         allResponseFields: [AnyHashable: Any],
         sessionID: String,
         orderedPaymentMethodTypes: [STPPaymentMethodType],
+        orderedPaymentMethodTypesAndWallets: [String],
         unactivatedPaymentMethodTypes: [STPPaymentMethodType],
         countryCode: String?,
         merchantCountryCode: String?,
@@ -80,6 +84,7 @@ import Foundation
         self.allResponseFields = allResponseFields
         self.sessionID = sessionID
         self.orderedPaymentMethodTypes = orderedPaymentMethodTypes
+        self.orderedPaymentMethodTypesAndWallets = orderedPaymentMethodTypesAndWallets
         self.unactivatedPaymentMethodTypes = unactivatedPaymentMethodTypes
         self.countryCode = countryCode
         self.merchantCountryCode = merchantCountryCode
@@ -122,6 +127,7 @@ import Foundation
             allResponseFields: allResponseFields,
             sessionID: UUID().uuidString,
             orderedPaymentMethodTypes: sortedPaymentMethodTypes,
+            orderedPaymentMethodTypesAndWallets: [],
             unactivatedPaymentMethodTypes: [],
             countryCode: nil,
             merchantCountryCode: nil,
@@ -151,6 +157,8 @@ extension STPElementsSession: STPAPIResponseDecodable {
             return nil
         }
 
+        let orderedPaymentMethodTypesAndWallets = paymentMethodPrefDict["ordered_payment_method_types_and_wallets"] as? [String] ?? []
+        
         // Optional fields:
         let unactivatedPaymentMethodTypeStrings = response["unactivated_payment_method_types"] as? [String] ?? []
         let cardBrandChoice = STPCardBrandChoice.decodedObject(fromAPIResponse: response["card_brand_choice"] as? [AnyHashable: Any])
@@ -209,6 +217,7 @@ extension STPElementsSession: STPAPIResponseDecodable {
             allResponseFields: response,
             sessionID: sessionID,
             orderedPaymentMethodTypes: paymentMethodTypeStrings.map({ STPPaymentMethod.type(from: $0) }),
+            orderedPaymentMethodTypesAndWallets: orderedPaymentMethodTypesAndWallets,
             unactivatedPaymentMethodTypes: unactivatedPaymentMethodTypeStrings.map({ STPPaymentMethod.type(from: $0) }),
             countryCode: paymentMethodPrefDict["country_code"] as? String,
             merchantCountryCode: response["merchant_country"] as? String,

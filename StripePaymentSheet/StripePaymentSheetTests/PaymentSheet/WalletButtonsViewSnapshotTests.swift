@@ -16,10 +16,9 @@ class WalletButtonsViewSnapshotTests: STPSnapshotTestCase {
     func testWalletButtonsView() {
         let flowController = PaymentSheet.FlowController(configuration: ._testValue_MostPermissive(), loadResult: ._testValue(paymentMethodTypes: [], savedPaymentMethods: []), analyticsHelper: ._testValue())
         let WalletButtonsView = WalletButtonsView(
-            showingApplePay: true,
-            showingLink: true,
             flowController: flowController,
-            confirmHandler: { _ in }
+            confirmHandler: { _ in },
+            orderedWallets: [.applePay, .link]
         )
         let vc = UIHostingController(rootView: WalletButtonsView)
 

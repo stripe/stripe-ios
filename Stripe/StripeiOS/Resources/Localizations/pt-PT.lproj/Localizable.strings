@@ -1,0 +1,125 @@
+/* Text for an error that is shown when a user selects a shipping address that
+is not supported by the merchant */
+"%1$@ does not support shipping to %2$@" = "%1$@ não suporta o envio para %2$@";
+/* Bank name when bank is offline for maintenance. */
+"%@ - Offline" = "%@ - Offline";
+/* Text for a button that, when tapped, displays another screen where the customer can enter card details */
+"+ Add card" = "+ Adicionar cartão";
+/* Source type brand name */
+"3D Secure" = "3D Secure";
+/* Title for address entry section */
+"ACCOUNT HOLDER ADDRESS" = "ENDEREÇO DO TITULAR DE CONTA";
+/* This is a Payment Method type brand name so shouldn&apos;t be translated unless it has a different name in a given localization. */
+"AU BECS Debit" = "Débito AU BECS";
+/* part of {Account} ending in {last4} */
+"Account" = "Conta";
+/* Caption for Name field on bank info form */
+"Account Holder Name" = "Nome do titular de conta";
+/* Button to add a new credit card. */
+"Add New Card…" = "Adicionar Novo Cartão...";
+/* Title for Add a Card view */
+"Add a Card" = "Adicionar um cartão";
+/* Title for SEPA Debit Account form */
+"Add a Direct Debit Account" = "Adicionar uma conta de débito direto";
+/* Payment Method type brand name */
+"AfterpayClearpay" = "AfterpayClearpay";
+/* Payment Method type brand name */
+"AfterpayClearpay_copy" = "AfterpayClearpay";
+/* Caption for Apartment/Address line 2 field on address form */
+"Apt." = "Apt.";
+/* Title for bank picker section */
+"BANK" = "BANCO";
+/* Title for bank account information form */
+"BANK ACCOUNT INFORMATION" = "INFORMAÇÕES DE CONTA BANCÁRIA";
+/* Title for billing address entry section */
+"BILLING ADDRESS" = "ENDEREÇO DE FATURAÇÃO";
+/* SEPA legal authorization text – must use official translations. */
+"By providing your IBAN and confirming this payment, you are authorizing %@ and Stripe, our payment service provider, to send instructions to your bank to debit your account and your bank to debit your account in accordance with those instructions. You are entitled to a refund from your bank under the terms and conditions of your agreement with your bank. A refund must be claimed within 8 weeks starting from the date on which your account was debited." = "Ao fornecer o seu IBAN e confirmar este pagamento, está a autorizar %@ e a Stripe, o nosso prestador de serviços de pagamentos, a enviar instruções ao seu banco para debitar a sua conta em conformidade com estas instruções. Tem o direito a um reembolso do seu banco ao abrigo dos termos e condições do seu contrato com o seu banco. Deve ser pedido um reembolso dentro de 8 semanas a partir da data em que a sua conta foi debitada.";
+/* Legal text shown when using AUBECS. */
+"By providing your bank account details and confirming this payment, you agree to this Direct Debit Request and the <terms>Direct Debit Request service agreement</terms>, and authorise Stripe Payments Australia Pty Ltd ACN 160 180 343 Direct Debit User ID number 507156 (“Stripe”) to debit your account through the Bulk Electronic Clearing System (BECS) on behalf of %@ (the \"Merchant\") for any amounts separately communicated to you by the Merchant. You certify that you are either an account holder or an authorised signatory on the account listed above." = "Ao fornecer os seus dados de conta bancária e ao confirmar este pagamento, declara que concorda com este Pedido de Débito Direto e com o <terms>contrato de serviços de Pedido de Débito Direto</terms> e autoriza a Stripe Payments Australia Pty Ltd ACN 160 180 343, número de ID de Utilizador de Débito Direto 507156 (“Stripe”) a debitar a sua conta através do Sistema BECS (Bulk Electronic Clearing System) em nome de %@ (o \"Comerciante\") em quaisquer montantes comunicados separadamente a si pelo Comerciante. Certifica ainda que é um titular da conta ou um signatário autorizado da conta acima indicada.";
+/* Title for card number entry field */
+"CARD" = "CARTÃO";
+/* Title for contact info form */
+"CONTACT" = "CONTACTO";
+/* Title for country picker section */
+"COUNTRY" = "PAÍS";
+/* Details of a saved card */
+"Card ending in %@" = "Cartão que termina em %@";
+/* Title for contact info form */
+"Contact" = "Contacto";
+/* Title for delivery address entry section */
+"DELIVERY ADDRESS" = "ENDEREÇO DE ENTREGA";
+/* Title for delivery info form */
+"Delivery" = "Entrega";
+/* Title for delivery address entry section */
+"Delivery Address" = "Endereço de entrega";
+/* Label for free shipping method */
+"Free" = "Gratuito";
+/* Source type brand name */
+"Giropay" = "Giropay";
+/* Shipping form error message */
+"Invalid Shipping Address" = "Endereço de envio inválido";
+/* Title for screen when data is still loading from the network. */
+"Loading…" = "A carregar...";
+/* Title for payment options section */
+"MORE OPTIONS" = "MAIS OPÇÕES";
+/* Source type brand name */
+"Multibanco" = "Multibanco";
+/* Label for button to add a new credit or debit card */
+"New Card" = "Novo cartão";
+/* Label for button to add a new SEPA Direct Debit account */
+"New Direct Debit Account" = "Nova conta de débito direto";
+/* Accessibility label for button to add a new SEPA Direct Debit account */
+"New SEPA Direct Debit Account" = "Nova conta de débito direto SEPA";
+/* Button to move to the next text entry field */
+"Next" = "Seguinte";
+/* Button to pay with a Bank Account (using FPX). */
+"Online Banking (FPX)" = "Serviços bancários online (FPX)";
+/* Source type brand name */
+"P24" = "P24";
+/* Label preceding the selected payment method. */
+"Pay with" = "Pagar com";
+/* Title for Payment Method screen */
+"Payment Method" = "Método de Pagamento";
+/* Short string for postal code (text used in non-US countries). Please keep to 8 characters or less if possible. */
+"Postal" = "C.P.";
+/* Content for alert popup prompting to confirm removing saved payment method. */
+"Remove %@" = "Remover %@";
+/* part of {SEPA Account} ending in {last4} */
+"SEPA Account" = "Conta SEPA";
+/* Source type brand name */
+"SEPA Direct Debit" = "Débito direto SEPA";
+/* Title for shipping address entry section */
+"SHIPPING ADDRESS" = "ENDEREÇO DE ENVIO";
+/* Label for shipping method form */
+"SHIPPING METHOD" = "MÉTODO DE ENVIO";
+/* Source type brand name */
+"SOFORT" = "SOFORT";
+/* The label of a switch indicating whether to save the user's card for future payment */
+"Save this card for future Stripe payments" = "Guardar este cartão para pagamentos Stripe futuros";
+/* Label prompting the user to select one of the saved payment methods from a list. */
+"Select a saved payment" = "Selecionar um pagamento guardado";
+/* Title for shipping info form */
+"Shipping" = "Envio";
+/* Label for shipping method form */
+"Shipping Method" = "Método de envio";
+/* Error message when an error case happens when linking your account */
+"Something went wrong when linking your account.\nPlease try again later." = "Ocorreu um problema ao associar a sua conta.\nTente novamente mais tarde.";
+/* An error message displayed when the IBAN country code is not supported. */
+"The IBAN you entered is invalid, \"%@\" is not a supported country code." = "O IBAN que introduziu é inválido, \"%@\" não é um código de país suportado.";
+/* Error when the seleted payment method is not available (eg attempted to use 3D Secure on a card that does not support it). */
+"The selected payment method is not available." = "O método de pagamento selecionado não está disponível.";
+/* A text notice shown when the user selects an expired card. */
+"This card has expired. Update it to keep using it or use a different payment." = "Este cartão expirou. Atualize-o para continuar a utilizá-lo ou utilize um pagamento diferente.";
+/* Button to fill shipping address from billing address. */
+"Use Billing" = "Utilizar endereço de faturação";
+/* Button to fill billing address from delivery address. */
+"Use Delivery" = "Utilizar endereço de entrega";
+/* Button to fill billing address from shipping address. */
+"Use Shipping" = "Utilizar endereço de envio";
+/* You&apos;ll be taken to {bank name} to finish your purchase. */
+"You'll be taken to %@ to finish your purchase." = "Será direcionado para %@ para concluir a sua compra.";
+/* An error message. */
+"Your IBAN should start with a two-letter country code._copy" = "O seu IBAN deve começar por um código de duas letras correspondente ao país.";
+/* Caption for Zip Code field on address form (only shown when country is United States only) */
+"ZIP Code" = "C.P.";
