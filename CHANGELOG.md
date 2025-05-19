@@ -1,6 +1,6 @@
 ## 24.14.0 2025-05-19
 ### PaymentSheet
-* [Added] Support for payment method options setup future usage in private preview.
+* [Added] Support for payment method options setup future usage in public preview.
 
 ## 24.13.1 2025-05-05
 ### PaymentSheet
