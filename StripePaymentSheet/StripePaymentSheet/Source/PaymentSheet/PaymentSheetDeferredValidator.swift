@@ -116,7 +116,7 @@ struct PaymentSheetDeferredValidator {
             }
             return result
         }()
-        // Validate that the IntentConfiguration and PaymentIntent PMO SFU values match for all values present in the PaymentIntent. Don't validate the particular values are the same (off_session vs on_session) but if none, check that both are none.
+        // Validate that the IntentConfiguration and PaymentIntent PMO SFU values match for all paymentMethodTypes present on the PaymentIntent. Don't validate the particular values are the same (off_session vs on_session) but if none, check that both are none.
         // Some values set in the IntentConfiguration could be filtered out on the PaymentIntent if the payment methods are not applicable, so we only check the ones present in the PaymentIntent.
         let doesPMOSFUMatch = paymentIntent.paymentMethodTypes.allSatisfy { paymentMethodTypeNSNumber in
             let paymentMethodType: String = STPPaymentMethodType.fromNSNumber(paymentMethodTypeNSNumber).identifier
