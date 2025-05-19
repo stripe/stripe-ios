@@ -546,13 +546,14 @@ extension PaymentSheet {
                 confirmWithPaymentMethod(paymentMethod, nil, false)
             case .withPaymentDetails(let linkAccount, let paymentDetails, let confirmationExtras):
                 let shouldSave = false // always false, as we don't show a save-to-merchant checkbox in Link VC
+                let allowRedisplay = computeAllowRedisplayForLinkUI(paymentDetails: paymentDetails, elementsSession: elementsSession, intent: intent)
 
                 if elementsSession.linkPassthroughModeEnabled {
                     // allowRedisplay is nil since we are not saving a payment method.
                     linkAccount.sharePaymentDetails(
                         id: paymentDetails.stripeID,
                         cvc: paymentDetails.cvc,
-                        allowRedisplay: nil,
+                        allowRedisplay: allowRedisplay,
                         expectedPaymentMethodType: paymentDetails.expectedPaymentMethodTypeForPassthroughMode(elementsSession),
                         billingPhoneNumber: confirmationExtras?.billingPhoneNumber
                     ) { result in
@@ -565,7 +566,7 @@ extension PaymentSheet {
                         }
                     }
                 } else {
-                    confirmWithPaymentDetails(linkAccount, paymentDetails, paymentDetails.cvc, confirmationExtras?.billingPhoneNumber, shouldSave, nil)
+                    confirmWithPaymentDetails(linkAccount, paymentDetails, paymentDetails.cvc, confirmationExtras?.billingPhoneNumber, shouldSave, allowRedisplay)
                 }
             }
         case let .external(externalPaymentOption, billingDetails):
@@ -750,6 +751,55 @@ extension PaymentSheet {
         params.returnURL = configuration.returnURL
         return params
     }
+
+    private static func computeAllowRedisplayForLinkUI(
+        paymentDetails: ConsumerPaymentDetails,
+        elementsSession: STPElementsSession,
+        intent: Intent
+    ) -> STPPaymentMethodAllowRedisplay? {
+        guard PaymentSheet.enableLinkInSPM, let mobilePaymentElementFeatures = elementsSession.customerSessionMobilePaymentElementFeatures else {
+            return nil
+        }
+
+        var allowRedisplay: STPPaymentMethodAllowRedisplay?
+        let paymentMethodSave = mobilePaymentElementFeatures.paymentMethodSave
+        let allowRedisplayOverride = mobilePaymentElementFeatures.paymentMethodSaveAllowRedisplayOverride
+
+        var paymentMethodType: STPPaymentMethodType = .unknown
+
+        if elementsSession.linkPassthroughModeEnabled {
+            let expectedPaymentMethodType = paymentDetails.expectedPaymentMethodTypeForPassthroughMode(elementsSession)
+
+            if expectedPaymentMethodType == "bank_account" {
+                // We don't support non-US bank accounts today.
+                let bankAccountCountry = paymentDetails.bankAccountDetails?.country
+                paymentMethodType = bankAccountCountry == "COUNTRY_US" ? .USBankAccount : .unknown
+            } else if expectedPaymentMethodType == "card" {
+                paymentMethodType = .card
+            }
+        } else {
+            paymentMethodType = .link
+        }
+
+        let isSettingUp = intent.isSetupFutureUsageSet(for: paymentMethodType)
+
+        if paymentMethodSave {
+            if isSettingUp {
+                allowRedisplay = .limited
+            } else {
+                allowRedisplay = .unspecified
+            }
+        } else {
+            if isSettingUp {
+                allowRedisplay = allowRedisplayOverride ?? .limited
+            } else {
+                // PaymentMethod won't be attached to customer
+                allowRedisplay = .unspecified
+            }
+        }
+
+        return allowRedisplay
+    }
 }
 
 /// A helper method to compare shipping details
@@ -773,6 +823,15 @@ private func isEqual(_ lhs: STPPaymentIntentShippingDetails?, _ rhs: STPPaymentI
 }
 
 private extension ConsumerPaymentDetails {
+
+    var bankAccountDetails: ConsumerPaymentDetails.Details.BankAccount? {
+        switch details {
+        case .bankAccount(let bankAccount):
+            return bankAccount
+        case .card, .unparsable:
+            return nil
+        }
+    }
 
     func expectedPaymentMethodTypeForPassthroughMode(
         _ elementsSession: STPElementsSession
