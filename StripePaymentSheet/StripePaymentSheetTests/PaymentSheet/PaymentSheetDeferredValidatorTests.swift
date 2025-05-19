@@ -104,6 +104,14 @@ final class PaymentSheetDeferredValidatorTests: XCTestCase {
                                                                         intentConfiguration: intentConfig,
                                                                         paymentMethod: STPPaymentMethod._testCard(),
                                                                         isFlowController: false))
+
+        // intent pmo has something that intent config pmo doesn't AND that payment type is on the intent
+        pi = STPFixtures.makePaymentIntent(amount: 100, currency: "USD", paymentMethodTypes: [.card], paymentMethodOptions: STPPaymentMethodOptions(usBankAccount: nil, card: nil, allResponseFields: ["card": ["setup_future_usage": "off_session"]]))
+        intentConfig = PaymentSheet.IntentConfiguration(mode: .payment(amount: 100, currency: "USD"), confirmHandler: confirmHandler)
+        XCTAssertThrowsError(try PaymentSheetDeferredValidator.validate(paymentIntent: pi,
+                                                                        intentConfiguration: intentConfig,
+                                                                        paymentMethod: STPPaymentMethod._testCard(),
+                                                                        isFlowController: false))
     }
 
     func testPaymentIntentConfigurationPaymentMethodOptionsSetupFutureUsage() throws {
@@ -130,6 +138,14 @@ final class PaymentSheetDeferredValidatorTests: XCTestCase {
                                                                         isFlowController: false))
         // pi sepa_debit got filtered out, but sepa_debit pmo sfu set on the IntentConfiguration
         pi = STPFixtures.makePaymentIntent(amount: 100, currency: "USD", paymentMethodTypes: [.card, .USBankAccount], paymentMethodOptions: STPPaymentMethodOptions(usBankAccount: nil, card: nil, allResponseFields: ["card": ["setup_future_usage": "off_session"], "us_bank_account": ["setup_future_usage": "off_session"]]))
+        intentConfig = PaymentSheet.IntentConfiguration(mode: .payment(amount: 100, currency: "USD", paymentMethodOptions: PaymentSheet.IntentConfiguration.Mode.PaymentMethodOptions(setupFutureUsageValues: [.USBankAccount: .offSession, .card: .offSession, .SEPADebit: .offSession])), confirmHandler: confirmHandler)
+        XCTAssertNoThrow(try PaymentSheetDeferredValidator.validate(paymentIntent: pi,
+                                                                        intentConfiguration: intentConfig,
+                                                                        paymentMethod: STPPaymentMethod._testCard(),
+                                                                        isFlowController: false))
+
+        // intent pmo and intent config pmo have things that don't match, but for the payment method types on the intent, they do
+        pi = STPFixtures.makePaymentIntent(amount: 100, currency: "USD", paymentMethodTypes: [.card, .USBankAccount], paymentMethodOptions: STPPaymentMethodOptions(usBankAccount: nil, card: nil, allResponseFields: ["card": ["setup_future_usage": "off_session"], "us_bank_account": ["setup_future_usage": "off_session", "cashapp": "on_session"]]))
         intentConfig = PaymentSheet.IntentConfiguration(mode: .payment(amount: 100, currency: "USD", paymentMethodOptions: PaymentSheet.IntentConfiguration.Mode.PaymentMethodOptions(setupFutureUsageValues: [.USBankAccount: .offSession, .card: .offSession, .SEPADebit: .offSession])), confirmHandler: confirmHandler)
         XCTAssertNoThrow(try PaymentSheetDeferredValidator.validate(paymentIntent: pi,
                                                                         intentConfiguration: intentConfig,
