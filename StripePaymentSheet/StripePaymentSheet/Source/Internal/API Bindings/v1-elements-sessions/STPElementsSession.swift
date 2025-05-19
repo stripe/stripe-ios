@@ -158,7 +158,7 @@ extension STPElementsSession: STPAPIResponseDecodable {
         }
 
         let orderedPaymentMethodTypesAndWallets = paymentMethodPrefDict["ordered_payment_method_types_and_wallets"] as? [String] ?? []
-        
+
         // Optional fields:
         let unactivatedPaymentMethodTypeStrings = response["unactivated_payment_method_types"] as? [String] ?? []
         let cardBrandChoice = STPCardBrandChoice.decodedObject(fromAPIResponse: response["card_brand_choice"] as? [AnyHashable: Any])

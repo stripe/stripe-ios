@@ -6,8 +6,8 @@
 import Foundation
 
 @_spi(STP) @testable import StripePaymentSheet
-import XCTest
 import SwiftUI
+import XCTest
 
 @available(iOS 16.0, *)
 class WalletButtonsViewTests: XCTestCase {
@@ -31,7 +31,7 @@ class WalletButtonsViewTests: XCTestCase {
             customPaymentMethods: [],
             customer: nil
         )
-        
+
         // Create mock flow controller
         var psConfig = PaymentSheet.Configuration()
         psConfig.applePay = .init(merchantId: "test_merchant_id", merchantCountryCode: "US")
@@ -40,14 +40,14 @@ class WalletButtonsViewTests: XCTestCase {
         let loadResult = PaymentSheetLoader.LoadResult(intent: intent, elementsSession: elementsSession, savedPaymentMethods: [], paymentMethodTypes: [])
         let analyticsHelper = PaymentSheetAnalyticsHelper(integrationShape: .complete, configuration: psConfig)
         let flowController = PaymentSheet.FlowController(configuration: psConfig, loadResult: loadResult, analyticsHelper: analyticsHelper)
-        
+
         // Initialize wallet buttons view
         let view = WalletButtonsView(flowController: flowController) { _ in }
-        
+
         // Verify ordered wallets contains both Link and Apple Pay in correct order
         XCTAssertEqual(view.orderedWallets, [.link, .applePay])
     }
-    
+
     func testWalletButtonsWithLinkAndApplePayButApplePayDisabled() {
         // Create mock elements session with Link and Apple Pay
         let elementsSession = STPElementsSession(
@@ -68,7 +68,7 @@ class WalletButtonsViewTests: XCTestCase {
             customPaymentMethods: [],
             customer: nil
         )
-        
+
         // Create mock flow controller
         var psConfig = PaymentSheet.Configuration()
         // Don't set up Apple Pay
@@ -77,14 +77,14 @@ class WalletButtonsViewTests: XCTestCase {
         let loadResult = PaymentSheetLoader.LoadResult(intent: intent, elementsSession: elementsSession, savedPaymentMethods: [], paymentMethodTypes: [])
         let analyticsHelper = PaymentSheetAnalyticsHelper(integrationShape: .complete, configuration: psConfig)
         let flowController = PaymentSheet.FlowController(configuration: psConfig, loadResult: loadResult, analyticsHelper: analyticsHelper)
-        
+
         // Initialize wallet buttons view
         let view = WalletButtonsView(flowController: flowController) { _ in }
-        
+
         // Verify ordered wallets contains only Link
         XCTAssertEqual(view.orderedWallets, [.link])
     }
-    
+
     func testWalletButtonsWithNoSupportedPMs() {
         // Create mock elements session with Link and Apple Pay
         let elementsSession = STPElementsSession(
@@ -105,7 +105,7 @@ class WalletButtonsViewTests: XCTestCase {
             customPaymentMethods: [],
             customer: nil
         )
-        
+
         // Create mock flow controller
         var psConfig = PaymentSheet.Configuration()
         // Don't set up Apple Pay
@@ -114,10 +114,10 @@ class WalletButtonsViewTests: XCTestCase {
         let loadResult = PaymentSheetLoader.LoadResult(intent: intent, elementsSession: elementsSession, savedPaymentMethods: [], paymentMethodTypes: [])
         let analyticsHelper = PaymentSheetAnalyticsHelper(integrationShape: .complete, configuration: psConfig)
         let flowController = PaymentSheet.FlowController(configuration: psConfig, loadResult: loadResult, analyticsHelper: analyticsHelper)
-        
+
         // Initialize wallet buttons view
         let view = WalletButtonsView(flowController: flowController) { _ in }
-        
+
         // Verify ordered wallets is empty
         XCTAssertEqual(view.orderedWallets, [])
     }

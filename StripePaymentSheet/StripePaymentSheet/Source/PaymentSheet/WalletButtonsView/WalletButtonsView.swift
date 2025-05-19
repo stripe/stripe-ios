@@ -18,7 +18,7 @@ import UIKit
          confirmHandler: @escaping (PaymentSheetResult) -> Void) {
         self.confirmHandler = confirmHandler
         self.flowController = flowController
-        
+
         // Determine available wallets and their order from elementsSession
         var wallets: [ExpressType] = []
         for type in flowController.elementsSession.orderedPaymentMethodTypesAndWallets {
@@ -38,7 +38,7 @@ import UIKit
         }
         self.orderedWallets = wallets
     }
-    
+
     init(flowController: PaymentSheet.FlowController,
          confirmHandler: @escaping (PaymentSheetResult) -> Void,
          orderedWallets: [ExpressType]) {
