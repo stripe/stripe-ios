@@ -74,10 +74,10 @@ final class PayWithLinkViewController: UINavigationController {
         var analyticsHelper: PaymentSheetAnalyticsHelper
 
         var secondaryButtonLabel: String {
-            if intent.isSettingUp {
-                String.Localized.continue_another_way
-            } else {
+            if intent.isPaymentIntent {
                 String.Localized.pay_another_way
+            } else {
+                String.Localized.continue_another_way
             }
         }
 
