@@ -64,6 +64,8 @@
 
 "By joining Link, you agree to the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Link liitudes nõustute <terms>tingimuste</terms> ja <privacy>privaatsuseeskirjadega</privacy>.";
 
+"By providing your bank account details and confirming this payment, you agree to this Direct Debit Request and the <terms>Direct Debit Request service agreement</terms>, and authorise Stripe Payments Australia Pty Ltd ACN 160 180 343 Direct Debit User ID number 507156 (“Stripe”) to debit your account through the Bulk Electronic Clearing System (BECS) on behalf of %@ (the \"Merchant\") for any amounts separately communicated to you by the Merchant. You certify that you are either an account holder or an authorised signatory on the account listed above." = "Esitades oma pangakonto andmed ja kinnitades selle makse, nõustute käesoleva otsekorralduse taotluse ja <terms>otsekorralduse taotluse teenuselepinguga</terms> ning volitate ettevõtet Stripe Payments Australia Pty Ltd ACN 160 180 343, otsekorralduse kasutaja ID number 507156 („Stripe“), debiteerima teenuse Bulk Electronic Clearing System (BECS) kaudu %@ („kaupleja“) nimel teie kontot mis tahes kaupleja poolt teile eraldi teada antud summade ulatuses. Te kinnitate, et olete ülalnimetatud konto omanik või volitatud allkirjaõiguslik isik.";
+
 "By providing your card information, you allow %@ to charge your card for future payments in accordance with their terms." = "Kaarditeavet esitades, lubate ettevõttel %@ oma kaarti tulevasteks makseteks nende kehtestatud tingimustel debiteerida.";
 
 "By providing your email, you agree to create a Link account and save your payment info to Link, according to the Link <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Oma e-posti aadressi esitamisega nõustute looma Linki konto ja salvestama oma makseteabe Linki, mille suhtes kehtivad Linki <terms>tingimused</terms> ja <privacy>privaatsuseeskirjad</privacy>.";
@@ -81,8 +83,6 @@
 "Card details cannot be changed." = "Kaardi andmeid ei saa muuta.";
 
 "Change" = "Muuda";
-
-"Change email" = "Muuda e-posti aadressi";
 
 "Choose a payment method" = "Valige makseviis";
 
@@ -103,6 +103,8 @@
 "Confirm your CVC" = "Kinnita CVC";
 
 "Contact information" = "Kontaktandmed";
+
+"Continue another way" = "Jätka muul viisil";
 
 "Default" = "Vaikimisi";
 
@@ -153,8 +155,6 @@
 "New payment method" = "Uus makseviis";
 
 "No %@ promo" = "%@ soodustus ei kehti";
-
-"Not %@?" = "Pole %@?";
 
 "Only card brand can be changed." = "Muuta saab ainult kaardi tootemarki.";
 
@@ -246,6 +246,8 @@
 
 "Simple, secure one-click payments" = "Lihtsad turvalised maksed ühe hiireklõpsuga";
 
+"Something went wrong when linking your account.\nPlease try again later." = "Teie konto linkimisel läks midagi valesti.\nProovige hiljem uuesti.";
+
 "Stripe will deposit $0.01 to your account in 1-2 business days. Then you'll get an email with instructions to finish saving your bank account with %@." = "Stripe deponeerib teie pangakontole 0,01 dollarit 1–2 tööpäeva jooksul. Seejärel saate meili juhistega oma pangakonto %@ salvestamiseks.";
 
 "Stripe will deposit $0.01 to your account in 1-2 business days. Then you’ll get an email with instructions to complete payment to %@." = "Stripe deponeerib teie pangakontole 0,01 dollarit 1–2 tööpäeva jooksul. Seejärel saate meili juhistega makse sooritamiseks ettevõttele %@.";
@@ -255,6 +257,8 @@
 "Tap to expand" = "Puudutage laiendamiseks";
 
 "The IBAN you entered is incomplete." = "Sisestatud IBAN on puudulik.";
+
+"The IBAN you entered is invalid, \"%@\" is not a supported country code." = "Sisestatud IBAN on kehtetu, \"%@\" ei ole toetatud riigikood.";
 
 "The provided verification code has expired." = "Esitatud tuvastuskood on aegunud.";
 
