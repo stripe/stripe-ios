@@ -50,7 +50,7 @@ extension UIColor {
      *   so we need to keep them fixed until we migrate to the updated primary color styling.
      */
     /// Content color on primary button
-    static let linkContentOnPrimaryButton: UIColor = neutral900
+    static let linkContentOnPrimaryButton: UIColor = UIColor(red: 0, green: 0.12, blue: 0.06, alpha: 1.0)
     /// Separator color on primary button
     static let linkSeparatorOnPrimaryButton: UIColor = brand400
 
