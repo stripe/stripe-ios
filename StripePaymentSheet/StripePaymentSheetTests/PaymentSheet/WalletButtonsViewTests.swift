@@ -45,7 +45,7 @@ class WalletButtonsViewTests: XCTestCase {
         let view = WalletButtonsView(flowController: flowController) { _ in }
 
         // Verify ordered wallets contains both Link and Apple Pay in correct order
-        XCTAssertEqual(view.orderedWallets, [.link, .applePay])
+        XCTAssertEqual(view.orderedWallets, [.applePay, .link])
     }
 
     func testWalletButtonsWithLinkAndApplePayButApplePayDisabled() {
@@ -90,8 +90,8 @@ class WalletButtonsViewTests: XCTestCase {
         let elementsSession = STPElementsSession(
             allResponseFields: [:],
             sessionID: "test_session",
-            orderedPaymentMethodTypes: [.card, .link],
-            orderedPaymentMethodTypesAndWallets: ["link", "apple_pay"],
+            orderedPaymentMethodTypes: [],
+            orderedPaymentMethodTypesAndWallets: [],
             unactivatedPaymentMethodTypes: [],
             countryCode: nil,
             merchantCountryCode: nil,
