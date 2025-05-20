@@ -33,7 +33,7 @@ import UIKit
                     wallets.append(.applePay)
                 }
             default:
-                break
+                continue
             }
         }
         self.orderedWallets = wallets
@@ -42,8 +42,8 @@ import UIKit
     init(flowController: PaymentSheet.FlowController,
          confirmHandler: @escaping (PaymentSheetResult) -> Void,
          orderedWallets: [ExpressType]) {
-        self.confirmHandler = confirmHandler
         self.flowController = flowController
+        self.confirmHandler = confirmHandler
         self.orderedWallets = orderedWallets
     }
 

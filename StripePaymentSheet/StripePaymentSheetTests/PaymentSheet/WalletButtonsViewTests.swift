@@ -91,7 +91,7 @@ class WalletButtonsViewTests: XCTestCase {
             allResponseFields: [:],
             sessionID: "test_session",
             orderedPaymentMethodTypes: [],
-            orderedPaymentMethodTypesAndWallets: [],
+            orderedPaymentMethodTypesAndWallets: ["google_pay"], // inexplicably, the server only sends us google pay
             unactivatedPaymentMethodTypes: [],
             countryCode: nil,
             merchantCountryCode: nil,
@@ -118,7 +118,7 @@ class WalletButtonsViewTests: XCTestCase {
         // Initialize wallet buttons view
         let view = WalletButtonsView(flowController: flowController) { _ in }
 
-        // Verify ordered wallets is empty
+        // Verify ordered wallets is empty, as there are no supported PMs
         XCTAssertEqual(view.orderedWallets, [])
     }
 }
