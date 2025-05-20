@@ -49,7 +49,7 @@ extension PayWithLinkViewController {
 
         override func viewDidLoad() {
             super.viewDidLoad()
-            view.backgroundColor = .linkBackground
+            view.backgroundColor = .linkSurfacePrimary
 
             customNavigationBar.translatesAutoresizingMaskIntoConstraints = false
             view.addSubview(customNavigationBar)
