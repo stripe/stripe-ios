@@ -62,8 +62,17 @@ import UIKit
     func checkoutTapped(_ expressType: ExpressType) {
         switch expressType {
         case .link:
-            // TODO: Launch into new Link ECE flow
-            break
+            PaymentSheet.confirm(
+                configuration: flowController.configuration,
+                authenticationContext: WindowAuthenticationContext(),
+                intent: flowController.intent,
+                elementsSession: flowController.elementsSession,
+                paymentOption: .link(option: .wallet),
+                paymentHandler: flowController.paymentHandler,
+                analyticsHelper: flowController.analyticsHelper
+            ) { result, _ in
+                confirmHandler(result)
+            }
         case .applePay:
             // Launch directly into Apple Pay and confirm the payment
             PaymentSheet.confirm(
