@@ -102,12 +102,11 @@
 		31CC9B802CB5F69600E84A38 /* LinkToastSnapshotTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31CC9B752CB5F69600E84A38 /* LinkToastSnapshotTests.swift */; };
 		31CC9B822CB5F69600E84A38 /* LinkURLGeneratorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31CC9B762CB5F69600E84A38 /* LinkURLGeneratorTests.swift */; };
 		31CC9B852CB5F69600E84A38 /* LinkBadgeViewSnapshotTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31CC9B6D2CB5F69600E84A38 /* LinkBadgeViewSnapshotTest.swift */; };
-		31CC9B972CB5F74A00E84A38 /* LinkNavigationBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31CC9B882CB5F74A00E84A38 /* LinkNavigationBar.swift */; };
+		31CC9B972CB5F74A00E84A38 /* LinkSheetNavigationBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31CC9B882CB5F74A00E84A38 /* LinkSheetNavigationBar.swift */; };
 		31CC9B982CB5F74A00E84A38 /* LinkNoticeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31CC9B8A2CB5F74A00E84A38 /* LinkNoticeView.swift */; };
 		31CC9B9A2CB5F74A00E84A38 /* LinkToast.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31CC9B932CB5F74A00E84A38 /* LinkToast.swift */; };
 		31CC9B9C2CB5F74A00E84A38 /* LinkBadgeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31CC9B862CB5F74A00E84A38 /* LinkBadgeView.swift */; };
 		31CC9BA12CB5F93100E84A38 /* Button+Link.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31CC9BA02CB5F93100E84A38 /* Button+Link.swift */; };
-		31CC9BA42CB5F9D400E84A38 /* LinkKeyboardAvoidingScrollView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31CC9BA32CB5F9D400E84A38 /* LinkKeyboardAvoidingScrollView.swift */; };
 		31CC9BA52CB5F9D400E84A38 /* LinkMandateView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31CC9BA22CB5F9D400E84A38 /* LinkMandateView.swift */; };
 		31CC9BA72CB610A300E84A38 /* ConfirmButton+Link.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31CC9BA62CB610A300E84A38 /* ConfirmButton+Link.swift */; };
 		31CDFC362BA8E66200B3DD91 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = 31CDFC352BA8E66200B3DD91 /* PrivacyInfo.xcprivacy */; };
@@ -563,12 +562,11 @@
 		31CC9B752CB5F69600E84A38 /* LinkToastSnapshotTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LinkToastSnapshotTests.swift; sourceTree = "<group>"; };
 		31CC9B762CB5F69600E84A38 /* LinkURLGeneratorTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LinkURLGeneratorTests.swift; sourceTree = "<group>"; };
 		31CC9B862CB5F74A00E84A38 /* LinkBadgeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LinkBadgeView.swift; sourceTree = "<group>"; };
-		31CC9B882CB5F74A00E84A38 /* LinkNavigationBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LinkNavigationBar.swift; sourceTree = "<group>"; };
+		31CC9B882CB5F74A00E84A38 /* LinkSheetNavigationBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LinkSheetNavigationBar.swift; sourceTree = "<group>"; };
 		31CC9B8A2CB5F74A00E84A38 /* LinkNoticeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LinkNoticeView.swift; sourceTree = "<group>"; };
 		31CC9B932CB5F74A00E84A38 /* LinkToast.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LinkToast.swift; sourceTree = "<group>"; };
 		31CC9BA02CB5F93100E84A38 /* Button+Link.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Button+Link.swift"; sourceTree = "<group>"; };
 		31CC9BA22CB5F9D400E84A38 /* LinkMandateView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LinkMandateView.swift; sourceTree = "<group>"; };
-		31CC9BA32CB5F9D400E84A38 /* LinkKeyboardAvoidingScrollView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LinkKeyboardAvoidingScrollView.swift; sourceTree = "<group>"; };
 		31CC9BA62CB610A300E84A38 /* ConfirmButton+Link.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ConfirmButton+Link.swift"; sourceTree = "<group>"; };
 		31CDFC352BA8E66200B3DD91 /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
 		32332E0DB0AE12377EBDDEF1 /* PaymentSheetIntentConfiguration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentSheetIntentConfiguration.swift; sourceTree = "<group>"; };
@@ -1056,7 +1054,7 @@
 		31CC9B892CB5F74A00E84A38 /* NavigationBar */ = {
 			isa = PBXGroup;
 			children = (
-				31CC9B882CB5F74A00E84A38 /* LinkNavigationBar.swift */,
+				31CC9B882CB5F74A00E84A38 /* LinkSheetNavigationBar.swift */,
 			);
 			path = NavigationBar;
 			sourceTree = "<group>";
@@ -1440,7 +1438,6 @@
 		843180340B5C7406A1117541 /* Views */ = {
 			isa = PBXGroup;
 			children = (
-				31CC9BA32CB5F9D400E84A38 /* LinkKeyboardAvoidingScrollView.swift */,
 				13FB3274557B85BA4C9FA6C0 /* LinkLegalTermsView.swift */,
 				31CC9BA22CB5F9D400E84A38 /* LinkMandateView.swift */,
 				E5240ECFD40B8605939C4E09 /* LinkMoreInfoView.swift */,
@@ -2258,7 +2255,7 @@
 				6180A5CB2C8249D2009D1536 /* UIStackView+Separator.swift in Sources */,
 				49909A162D8AF9760031EC33 /* FinancialConnectionsLite.swift in Sources */,
 				B63B2CF52BFBEEAD003810F3 /* PaymentMethodFormViewController.swift in Sources */,
-				31CC9B972CB5F74A00E84A38 /* LinkNavigationBar.swift in Sources */,
+				31CC9B972CB5F74A00E84A38 /* LinkSheetNavigationBar.swift in Sources */,
 				31CC9B982CB5F74A00E84A38 /* LinkNoticeView.swift in Sources */,
 				315673E72CD3024F00BA08BC /* PaymentSheet+Link.swift in Sources */,
 				31CC9B9A2CB5F74A00E84A38 /* LinkToast.swift in Sources */,
@@ -2364,7 +2361,6 @@
 				49909A372D8B5AA30031EC33 /* FCLiteModalPresentationWrapper.swift in Sources */,
 				AB8E1556F008083257A99E91 /* CustomerSheetError.swift in Sources */,
 				B67D01B62C46FE9900ED8172 /* CVCReconfirmationVerticalViewController.swift in Sources */,
-				31CC9BA42CB5F9D400E84A38 /* LinkKeyboardAvoidingScrollView.swift in Sources */,
 				31CC9BA52CB5F9D400E84A38 /* LinkMandateView.swift in Sources */,
 				47B19F96CCEA290541E3B988 /* CardSectionElement.swift in Sources */,
 				04FEA90F2D0CB9D1C2029D21 /* CardSectionWithScannerView.swift in Sources */,

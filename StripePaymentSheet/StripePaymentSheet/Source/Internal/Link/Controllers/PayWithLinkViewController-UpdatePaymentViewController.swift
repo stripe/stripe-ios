@@ -133,13 +133,15 @@ extension PayWithLinkViewController {
             stackView.setCustomSpacing(LinkUI.extraLargeContentSpacing, after: titleLabel)
             stackView.isLayoutMarginsRelativeArrangement = true
             stackView.directionalLayoutMargins = LinkUI.contentMargins
+            stackView.translatesAutoresizingMaskIntoConstraints = false
+            contentView.addSubview(stackView)
 
-            let scrollView = LinkKeyboardAvoidingScrollView(contentView: stackView)
-            #if !os(visionOS)
-            scrollView.keyboardDismissMode = .interactive
-            #endif
-
-            contentView.addAndPinSubview(scrollView)
+            NSLayoutConstraint.activate([
+                contentView.topAnchor.constraint(equalTo: stackView.topAnchor),
+                contentView.leadingAnchor.constraint(equalTo: stackView.leadingAnchor),
+                contentView.trailingAnchor.constraint(equalTo: stackView.trailingAnchor),
+                contentView.bottomAnchor.constraint(greaterThanOrEqualTo: stackView.bottomAnchor),
+            ])
 
             if !paymentMethod.isDefault || isBillingDetailsUpdateFlow {
                 thisIsYourDefaultLabel.isHidden = true
@@ -197,7 +199,7 @@ extension PayWithLinkViewController {
                             paymentMethod: updatedPaymentDetails,
                             confirmationExtras: confirmationExtras
                         )
-                        self.navigationController?.popViewController(animated: true)
+                        _ = self.bottomSheetController?.popContentViewController()
                     }
                 case .failure(let error):
                     self.updateErrorLabel(for: error)
@@ -208,7 +210,7 @@ extension PayWithLinkViewController {
         }
 
         @objc func didSelectCancel() {
-            self.navigationController?.popViewController(animated: true)
+            _ = self.bottomSheetController?.popContentViewController()
         }
 
         func updateErrorLabel(for error: Error?) {

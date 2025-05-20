@@ -20,8 +20,9 @@ class LinkNavigationBarSnapshotTests: STPSnapshotTestCase {
         let sut = makeSUT()
         verify(sut)
 
-        sut.showBackButton = true
-        verify(sut, identifier: "BackButton")
+        let backSut = makeSUT()
+        backSut.setStyle(.back(showAdditionalButton: false))
+        verify(backSut, identifier: "BackButton")
     }
 
     func verify(
@@ -57,7 +58,7 @@ extension LinkNavigationBarSnapshotTests {
         )
     }
 
-    fileprivate func makeSUT() -> LinkNavigationBar {
-        return LinkNavigationBar()
+    fileprivate func makeSUT() -> LinkSheetNavigationBar {
+        LinkSheetNavigationBar(isTestMode: false, appearance: .init())
     }
 }

@@ -160,21 +160,9 @@ extension PayWithLinkViewController {
             stackView.setCustomSpacing(LinkUI.extraLargeContentSpacing, after: addPaymentMethodVC.view)
             stackView.translatesAutoresizingMaskIntoConstraints = false
 
-            let scrollView = LinkKeyboardAvoidingScrollView()
-            #if !os(visionOS)
-            scrollView.keyboardDismissMode = .interactive
-            #endif
-            scrollView.addSubview(stackView)
-
-            contentView.addAndPinSubview(scrollView)
+            contentView.addAndPinSubviewToSafeArea(stackView)
 
             NSLayoutConstraint.activate([
-                stackView.topAnchor.constraint(equalTo: scrollView.topAnchor, constant: preferredContentMargins.top),
-                stackView.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor, constant: -preferredContentMargins.bottom),
-                stackView.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor),
-                stackView.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor),
-                stackView.widthAnchor.constraint(equalTo: scrollView.widthAnchor),
-
                 titleLabel.leadingAnchor.constraint(
                     equalTo: stackView.safeAreaLayoutGuide.leadingAnchor,
                     constant: preferredContentMargins.leading),
@@ -316,12 +304,10 @@ extension PayWithLinkViewController {
             if isAddingFirstPaymentMethod {
                 coordinator?.cancel()
             } else {
-                navigationController?.popViewController(animated: true)
+                _ = bottomSheetController?.popContentViewController()
             }
         }
-
     }
-
 }
 
 extension PayWithLinkViewController.NewPaymentViewController: AddPaymentMethodViewControllerDelegate {
