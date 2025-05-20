@@ -113,7 +113,7 @@ import UIKit
                 }
                 .frame(maxWidth: .infinity)
                 .frame(height: 44)
-                .background(Color(uiColor: .linkBrand))
+                .background(Color(uiColor: .linkIconBrand))
                 .foregroundColor(.black)
                 .cornerRadius(100)
             }

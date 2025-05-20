@@ -381,7 +381,7 @@ extension SavedPaymentMethodCollectionView {
                         shadowRoundedRectangle.accessibilityIdentifier = label.text
                         shadowRoundedRectangle.accessibilityLabel = label.text
                         paymentMethodLogo.image = PaymentOption.link(option: .wallet).makeSavedPaymentMethodCellImage(overrideUserInterfaceStyle: overrideUserInterfaceStyle)
-                        paymentMethodLogo.tintColor = UIColor.linkNavLogo.resolvedContrastingColor(
+                        paymentMethodLogo.tintColor = UIColor.linkIconBrand.resolvedContrastingColor(
                             forBackgroundColor: appearance.colors.componentBackground
                         )
                     case .add:

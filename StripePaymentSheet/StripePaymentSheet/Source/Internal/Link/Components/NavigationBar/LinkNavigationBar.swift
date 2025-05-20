@@ -50,7 +50,7 @@ final class LinkNavigationBar: UIView {
 
     private let logoView: UIImageView = {
         let imageView = UIImageView(image: Image.link_logo.makeImage(template: false))
-        imageView.tintColor = .linkNavLogo
+        imageView.tintColor = .linkIconBrand
         imageView.isAccessibilityElement = true
         imageView.accessibilityTraits = .header
         imageView.accessibilityLabel = STPPaymentMethodType.link.displayName
@@ -71,8 +71,8 @@ final class LinkNavigationBar: UIView {
         setContentHuggingPriority(.defaultHigh, for: .vertical)
         setContentHuggingPriority(.defaultLow, for: .horizontal)
 
-        tintColor = .linkNavTint
-        backgroundColor = .linkBackground
+        tintColor = .linkIconSecondary
+        backgroundColor = .linkSurfacePrimary
 
         addSubview(logoView)
         addSubview(backButton)

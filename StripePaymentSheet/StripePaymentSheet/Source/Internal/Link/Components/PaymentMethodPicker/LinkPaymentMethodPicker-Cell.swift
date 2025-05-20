@@ -27,7 +27,7 @@ extension LinkPaymentMethodPicker {
             static let contentIndentation: CGFloat = 34
             static let menuSpacing: CGFloat = 8
             static let menuButtonSize: CGSize = .init(width: 24, height: 24)
-            static let separatorHeight: CGFloat = 1
+            static let separatorHeight: CGFloat = 0.5
             static let iconViewSize: CGSize = .init(width: 14, height: 20)
             static let disabledContentAlpha: CGFloat = 0.5
         }
@@ -83,7 +83,7 @@ extension LinkPaymentMethodPicker {
             let iconView = UIImageView()
             iconView.contentMode = .scaleAspectFit
             iconView.image = Image.icon_link_error.makeImage(template: true)
-            iconView.tintColor = .linkDangerForeground
+            iconView.tintColor = .linkIconCritical
             return iconView
         }()
 
@@ -95,6 +95,7 @@ extension LinkPaymentMethodPicker {
         private lazy var menuButton: UIButton = {
             let button = UIButton(type: .system)
             button.setImage(Image.icon_menu.makeImage(), for: .normal)
+            button.tintColor = .linkIconTertiary
             button.addTarget(self, action: #selector(onMenuButtonTapped(_:)), for: .touchUpInside)
             button.translatesAutoresizingMaskIntoConstraints = false
             return button
@@ -116,7 +117,7 @@ extension LinkPaymentMethodPicker {
 
         private let separator: UIView = {
             let separator = UIView()
-            separator.backgroundColor = .linkControlBorder
+            separator.backgroundColor = .linkBorderDefault
             separator.translatesAutoresizingMaskIntoConstraints = false
             return separator
         }()
@@ -231,7 +232,7 @@ extension LinkPaymentMethodPicker {
         override func layoutSubviews() {
             super.layoutSubviews()
             radioButton.isOn = isSelected
-            backgroundColor = isHighlighted ? .linkControlHighlight : .clear
+            backgroundColor = isHighlighted ? .linkSurfaceTertiary : .clear
         }
 
         private func updateAccessibilityContent() {

@@ -166,7 +166,7 @@ final class PayWithLinkViewController: UINavigationController {
     override func viewDidLoad() {
         super.viewDidLoad()
         view.accessibilityIdentifier = "Stripe.Link.PayWithLinkViewController"
-        view.tintColor = .linkBrand
+        view.tintColor = .linkIconBrand
 
         // Hide the default navigation bar.
         setNavigationBarHidden(true, animated: false)

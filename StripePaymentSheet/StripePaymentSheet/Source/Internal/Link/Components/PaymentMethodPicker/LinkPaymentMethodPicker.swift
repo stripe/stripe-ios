@@ -170,12 +170,11 @@ final class LinkPaymentMethodPicker: UIView {
         accessibilityIdentifier = "Stripe.Link.PaymentMethodPicker"
 
         layer.cornerRadius = 16
-        layer.borderWidth = 1
-        layer.borderColor = UIColor.linkControlBorder.cgColor
-        tintColor = .linkBrand
-        backgroundColor = .linkControlBackground
+        layer.borderColor = UIColor.linkBorderDefault.cgColor
+        tintColor = .linkIconBrand
+        backgroundColor = .linkSurfaceSecondary
 
-        addPaymentMethodButton.tintColor = .linkBrand500
+        addPaymentMethodButton.tintColor = .linkTextBrand
 
         headerView.addTarget(self, action: #selector(onHeaderTapped(_:)), for: .touchUpInside)
         headerView.layer.zPosition = 1
@@ -195,7 +194,7 @@ final class LinkPaymentMethodPicker: UIView {
 #if !os(visionOS)
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
         super.traitCollectionDidChange(previousTraitCollection)
-        layer.borderColor = UIColor.linkControlBorder.cgColor
+        layer.borderColor = UIColor.linkBorderDefault.cgColor
     }
 #endif
 

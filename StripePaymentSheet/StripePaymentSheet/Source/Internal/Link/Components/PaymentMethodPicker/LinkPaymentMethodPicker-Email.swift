@@ -40,7 +40,7 @@ extension LinkPaymentMethodPicker {
             let label = UILabel()
             label.text = String.Localized.email
             label.font = LinkUI.font(forTextStyle: .body)
-            label.textColor = .linkSecondaryText
+            label.textColor = .linkTextTertiary
             label.adjustsFontForContentSizeCategory = true
             label.setContentCompressionResistancePriority(.required, for: .horizontal)
             label.translatesAutoresizingMaskIntoConstraints = false
@@ -50,7 +50,7 @@ extension LinkPaymentMethodPicker {
         private let userEmailLabel: UILabel = {
             let label = UILabel()
             label.font = LinkUI.font(forTextStyle: .bodyEmphasized)
-            label.textColor = .linkPrimaryText
+            label.textColor = .linkTextPrimary
             label.setContentHuggingPriority(.defaultLow, for: .horizontal)
             return label
         }()
@@ -58,6 +58,7 @@ extension LinkPaymentMethodPicker {
         let menuButton: UIButton = {
             let button = UIButton(type: .system)
             button.setImage(Image.icon_menu.makeImage(), for: .normal)
+            button.tintColor = .linkIconTertiary
             button.accessibilityLabel = String.Localized.show_menu
             button.translatesAutoresizingMaskIntoConstraints = false
             NSLayoutConstraint.activate([
