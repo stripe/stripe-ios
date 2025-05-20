@@ -19,6 +19,18 @@ struct ConsumerSessionData: Decodable {
         verificationSessions.contains(where: { $0.state == .verified })
         || verificationSessions.contains(where: { $0.type == .signUp })
     }
+
+    init(
+        clientSecret: String,
+        emailAddress: String,
+        redactedFormattedPhoneNumber: String,
+        verificationSessions: [VerificationSession]
+    ) {
+        self.clientSecret = clientSecret
+        self.emailAddress = emailAddress
+        self.redactedFormattedPhoneNumber = redactedFormattedPhoneNumber
+        self.verificationSessions = verificationSessions
+    }
 }
 
 struct VerificationSession: Decodable {

@@ -122,6 +122,9 @@ final public class FinancialConnectionsSheet {
     /// Any additional Elements context useful for the Financial Connections SDK.
     @_spi(STP) public var elementsSessionContext: StripeCore.ElementsSessionContext?
 
+    /// A existing consumer, if avaialble.
+    @_spi(STP) public var existingConsumer: StripeCore.FinancialConnectionsConsumer?
+
     /// Analytics client to use for logging analytics
     @_spi(STP) public let analyticsClient: STPAnalyticsClientProtocol
 
@@ -298,7 +301,26 @@ final public class FinancialConnectionsSheet {
             }
         }
 
-        let financialConnectionsApiClient: any FinancialConnectionsAPI = FinancialConnectionsAsyncAPIClient(apiClient: apiClient)
+        var financialConnectionsApiClient: any FinancialConnectionsAPI = FinancialConnectionsAsyncAPIClient(apiClient: apiClient)
+
+        if let existingConsumer {
+            let verificationSessions = existingConsumer.verificationSessions.map { verificationSession in
+                VerificationSession(
+                    type: .init(rawValue: verificationSession.type.rawValue) ?? .unparsable,
+                    state: .init(rawValue: verificationSession.state.rawValue) ?? .unparsable
+                )
+            }
+            let consumerSession = ConsumerSessionData(
+                clientSecret: existingConsumer.clientSecret,
+                emailAddress: existingConsumer.emailAddress,
+                redactedFormattedPhoneNumber: existingConsumer.redactedFormattedPhoneNumber,
+                verificationSessions: verificationSessions
+            )
+            financialConnectionsApiClient.isLinkWithStripe = true
+            financialConnectionsApiClient.consumerSession = consumerSession
+            financialConnectionsApiClient.consumerPublishableKey = existingConsumer.publishableKey
+        }
+
         hostController = HostController(
             apiClient: financialConnectionsApiClient,
             analyticsClientV1: analyticsClient,

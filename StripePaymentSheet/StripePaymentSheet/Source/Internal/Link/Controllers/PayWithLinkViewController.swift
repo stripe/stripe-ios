@@ -399,11 +399,26 @@ extension PayWithLinkViewController: PayWithLinkCoordinating {
             completion(.failed(error: error))
             return
         }
+        
+        let verificationSessions = consumerSession.verificationSessions.map { verificationSession in
+            StripeCore.VerificationSession(
+                type: .init(rawValue: verificationSession.type.rawValue) ?? .unparsable,
+                state: .init(rawValue: verificationSession.state.rawValue)  ?? .unparsable
+            )
+        }
+        let consumer = StripeCore.FinancialConnectionsConsumer(
+            publishableKey: linkAccount.publishableKey,
+            clientSecret: consumerSession.clientSecret,
+            emailAddress: consumerSession.emailAddress,
+            redactedFormattedPhoneNumber: consumerSession.redactedFormattedPhoneNumber,
+            verificationSessions: verificationSessions
+        )
 
         financialConnectionsAPI.presentFinancialConnectionsSheet(
             apiClient: context.configuration.apiClient,
             clientSecret: linkAccountSession.clientSecret,
             returnURL: nil,
+            existingConsumer: consumer,
             style: .automatic,
             elementsSessionContext: nil,
             onEvent: nil,
@@ -425,8 +440,8 @@ extension PayWithLinkViewController: PayWithLinkCoordinating {
                                 }
                             }
                         )
-                    case .instantDebits:
-                        fallthrough
+                    case .instantDebits(let linkedBank):
+                        dump(linkedBank)
                     @unknown default:
                         let error = PaymentSheetError.unknown(debugDescription: "Unknown Financial Connections result")
                         completion(.failed(error: error))

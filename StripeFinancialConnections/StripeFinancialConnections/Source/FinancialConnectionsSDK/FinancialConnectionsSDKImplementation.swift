@@ -20,6 +20,7 @@ public class FinancialConnectionsSDKImplementation: FinancialConnectionsSDKInter
         apiClient: STPAPIClient,
         clientSecret: String,
         returnURL: String?,
+        existingConsumer: FinancialConnectionsConsumer?,
         style: FinancialConnectionsStyle,
         elementsSessionContext: ElementsSessionContext?,
         onEvent: ((StripeCore.FinancialConnectionsEvent) -> Void)?,
@@ -39,6 +40,7 @@ public class FinancialConnectionsSDKImplementation: FinancialConnectionsSDKInter
             configuration: configuration
         )
         financialConnectionsSheet.apiClient = apiClient
+        financialConnectionsSheet.existingConsumer = existingConsumer
         financialConnectionsSheet.elementsSessionContext = elementsSessionContext
         financialConnectionsSheet.onEvent = onEvent
 
