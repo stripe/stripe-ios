@@ -133,23 +133,6 @@ enum Intent {
         }
     }
 
-    /// True if this is a PaymentIntent with sfu not equal to none or a SetupIntent
-    var isSettingUp: Bool {
-        switch self {
-        case .paymentIntent(let paymentIntent):
-            return paymentIntent.setupFutureUsage != .none
-        case .setupIntent:
-            return true
-        case .deferredIntent(let intentConfig):
-            switch intentConfig.mode {
-            case .payment(_, _, let setupFutureUsage, _, _):
-                return setupFutureUsage != nil
-            case .setup:
-                return true
-            }
-        }
-    }
-
     /// Whether the intent has setup for future usage set for a payment method type.
     func isSetupFutureUsageSet(for paymentMethodType: STPPaymentMethodType) -> Bool {
         switch self {
