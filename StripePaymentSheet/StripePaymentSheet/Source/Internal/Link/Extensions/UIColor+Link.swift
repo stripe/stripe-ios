@@ -7,31 +7,40 @@
 //
 @_spi(STP) import StripeUICore
 import UIKit
+
 // MARK: - Custom colors
+
 extension UIColor {
+
     // MARK: - Semantic Colors
+
     // Surface colors
     static let linkSurfacePrimary: UIColor = dynamic(light: neutral0, dark: neutral900)
     static let linkSurfaceSecondary: UIColor = dynamic(light: neutral100, dark: neutral800)
     static let linkSurfaceTertiary: UIColor = dynamic(light: neutral200, dark: neutral700)
+
     // Border colors
     static let linkBorderDefault: UIColor = dynamic(light: neutral300, dark: neutral900)
     static let linkBorderSelected: UIColor = dynamic(light: neutral900, dark: brand200)
+
     // Button colors
     static let linkButtonBrand: UIColor = brand200
     static let linkButtonSecondary: UIColor = dynamic(light: neutral100, dark: neutral700)
+
     // Text colors
     static let linkTextPrimary: UIColor = dynamic(light: neutral900, dark: neutral0)
     static let linkTextSecondary: UIColor = dynamic(light: neutral700, dark: neutral300)
     static let linkTextTertiary: UIColor = neutral500
     static let linkTextBrand: UIColor = dynamic(light: brand600, dark: brand200)
     static let linkTextCritical: UIColor = critical600
+
     // Icon colors
     static let linkIconPrimary: UIColor = dynamic(light: neutral900, dark: neutral100)
     static let linkIconSecondary: UIColor = dynamic(light: neutral700, dark: neutral500)
     static let linkIconTertiary: UIColor = neutral500
     static let linkIconBrand: UIColor = brand200
     static let linkIconCritical: UIColor = critical500
+
     /**
      * Workaround:
      *
@@ -44,6 +53,7 @@ extension UIColor {
     static let linkContentOnPrimaryButton: UIColor = neutral900
     /// Separator color on primary button
     static let linkSeparatorOnPrimaryButton: UIColor = brand400
+
     /**
      * Workaround:
      *
@@ -52,6 +62,7 @@ extension UIColor {
      *
      */
     static let linkRadioButtonUnselectedColor: UIColor = .dynamic(light: linkBorderDefault, dark: neutral700)
+
     /**
      * Workaround:
      *
@@ -59,6 +70,7 @@ extension UIColor {
      *
      */
     static let linkBadgeNeutralForegroundColor: UIColor = dynamic(light: linkTextTertiary, dark: neutral400)
+
     /**
      * Workaround:
      *
@@ -69,6 +81,7 @@ extension UIColor {
     static let linkToastBackground: UIColor = brand900
 }
 private extension UIColor {
+
     // MARK: - Raw Colors
     /**
      * Workaround:
@@ -77,7 +90,8 @@ private extension UIColor {
      * new HEX colors. We decided to keep the original RGB colors for some of the more widely-used Link colors
      * (i.e. those used in `PayWithLinkButton`).
      */
-    static let neutral900: UIColor = UIColor(red: 0, green: 0.12, blue: 0.06, alpha: 1.0) // #171717
+
+    static let neutral900: UIColor = UIColor(red: 0.11, green: 0.11, blue: 0.118, alpha: 1.0) // #171717
     static let neutral800: UIColor = UIColor(hex: 0x262626)
     static let neutral700: UIColor = UIColor(hex: 0x404040)
     static let neutral500: UIColor = UIColor(hex: 0x707070)
@@ -93,8 +107,11 @@ private extension UIColor {
     static let critical600: UIColor = UIColor(hex: 0xC0123C)
     static let critical500: UIColor = UIColor(hex: 0xE61947)
 }
+
 // MARK: - Utils
+
 extension UIColor {
+
     /// Helper to initialize UIColor with a hex value
     convenience init(hex: UInt) {
         let red = CGFloat((hex >> 16) & 0xFF) / 255.0
@@ -102,6 +119,7 @@ extension UIColor {
         let blue = CGFloat(hex & 0xFF) / 255.0
         self.init(red: red, green: green, blue: blue, alpha: 1.0)
     }
+
     /// Returns the version of the current color that offers the highest contrast when
     /// compared against the given background color and traits.
     ///
@@ -138,6 +156,7 @@ extension UIColor {
             ])
         )
         #endif
+
         let resolvedBackgroundColor = backgroundColor.resolvedColor(with: traitCollection)
         let contrastToLightMode = resolvedBackgroundColor.contrastRatio(to: resolvedLightModeColor)
         let contrastToDarkMode = resolvedBackgroundColor.contrastRatio(to: resolvedDarkModeColor)
