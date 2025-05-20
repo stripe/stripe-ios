@@ -27,6 +27,8 @@ protocol LinkPaymentMethodPickerDelegate: AnyObject {
     )
 
     func paymentDetailsPickerDidTapOnAddPayment(_ picker: LinkPaymentMethodPicker)
+
+    func didTapOnAccountMenuItem(_ picker: LinkPaymentMethodPicker)
 }
 
 protocol LinkPaymentMethodPickerDataSource: AnyObject {
@@ -182,6 +184,7 @@ final class LinkPaymentMethodPicker: UIView {
         listView.layer.zPosition = 0
 
         addPaymentMethodButton.addTarget(self, action: #selector(onAddPaymentButtonTapped(_:)), for: .touchUpInside)
+        emailView.menuButton.addTarget(self, action: #selector(didTapOnAccountMenuItem), for: .touchUpInside)
     }
 
     override func layoutSubviews() {
@@ -229,6 +232,10 @@ private extension LinkPaymentMethodPicker {
 
     @objc func onAddPaymentButtonTapped(_ sender: AddButton) {
         delegate?.paymentDetailsPickerDidTapOnAddPayment(self)
+    }
+
+    @objc func didTapOnAccountMenuItem(_ sender: AddButton) {
+        delegate?.didTapOnAccountMenuItem(self)
     }
 
 }

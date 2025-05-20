@@ -212,7 +212,6 @@ final class PayWithLinkViewController: UINavigationController {
     override func pushViewController(_ viewController: UIViewController, animated: Bool) {
         if let viewController = viewController as? BaseViewController {
             viewController.coordinator = self
-            viewController.customNavigationBar.linkAccount = linkAccount
             viewController.customNavigationBar.showBackButton = !viewControllers.isEmpty
         }
 
@@ -320,7 +319,6 @@ private extension PayWithLinkViewController {
     func setRootViewController(_ viewController: UIViewController, animated: Bool = true) {
         if let viewController = viewController as? BaseViewController {
             viewController.coordinator = self
-            viewController.customNavigationBar.linkAccount = linkAccount
             viewController.customNavigationBar.showBackButton = false
         }
 
