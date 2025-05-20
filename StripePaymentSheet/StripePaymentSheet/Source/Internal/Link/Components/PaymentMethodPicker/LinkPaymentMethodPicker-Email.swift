@@ -58,6 +58,7 @@ extension LinkPaymentMethodPicker {
         let menuButton: UIButton = {
             let button = UIButton(type: .system)
             button.setImage(Image.icon_menu.makeImage(), for: .normal)
+            button.tintColor = .linkIconTertiary
             button.accessibilityLabel = String.Localized.show_menu
             button.translatesAutoresizingMaskIntoConstraints = false
             NSLayoutConstraint.activate([
