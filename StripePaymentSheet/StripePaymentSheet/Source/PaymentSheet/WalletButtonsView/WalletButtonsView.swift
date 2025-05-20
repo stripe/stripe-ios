@@ -14,7 +14,7 @@ import UIKit
     let confirmHandler: (PaymentSheetResult) -> Void
     let orderedWallets: [ExpressType]
 
-    init(flowController: PaymentSheet.FlowController,
+    @_spi(STP) public init(flowController: PaymentSheet.FlowController,
          confirmHandler: @escaping (PaymentSheetResult) -> Void) {
         self.confirmHandler = confirmHandler
         self.flowController = flowController
