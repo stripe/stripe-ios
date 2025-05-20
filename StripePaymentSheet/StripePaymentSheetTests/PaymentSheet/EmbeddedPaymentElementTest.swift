@@ -196,7 +196,7 @@ class EmbeddedPaymentElementTest: XCTestCase {
         // ...should cancel the 1st update
         XCTAssertEqual(updateResult, .canceled)
         XCTAssertEqual(updateResult2, .succeeded)
-        XCTAssertTrue(sut.intent.isSettingUp)
+        XCTAssertFalse(sut.intent.isPaymentIntent)
     }
 
     func testConfirmHandlesInflightUpdateThatSucceeds() async throws {
