@@ -12,7 +12,7 @@ extension PayWithLinkViewController {
 
     /// For internal SDK use only
     @objc(STP_Internal_PayWithLinkBaseViewController)
-    class BaseViewController: UIViewController {
+    class BaseViewController: UIViewController, BottomSheetContentViewController {
         weak var coordinator: PayWithLinkCoordinating?
 
         let context: Context
@@ -20,21 +20,6 @@ extension PayWithLinkViewController {
         var preferredContentMargins: NSDirectionalEdgeInsets {
             LinkUI.contentMargins
         }
-
-        private(set) lazy var customNavigationBar: LinkNavigationBar = {
-            let navigationBar = LinkNavigationBar()
-            navigationBar.backButton.addTarget(
-                self,
-                action: #selector(onBackButtonTapped(_:)),
-                for: .touchUpInside
-            )
-            navigationBar.closeButton.addTarget(
-                self,
-                action: #selector(onCloseButtonTapped(_:)),
-                for: .touchUpInside
-            )
-            return navigationBar
-        }()
 
         private(set) lazy var contentView = UIView()
 
@@ -51,19 +36,11 @@ extension PayWithLinkViewController {
             super.viewDidLoad()
             view.backgroundColor = .linkSurfacePrimary
 
-            customNavigationBar.translatesAutoresizingMaskIntoConstraints = false
-            view.addSubview(customNavigationBar)
-
             contentView.translatesAutoresizingMaskIntoConstraints = false
             view.addSubview(contentView)
 
             NSLayoutConstraint.activate([
-                // Navigation bar
-                customNavigationBar.topAnchor.constraint(equalTo: view.topAnchor),
-                customNavigationBar.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-                customNavigationBar.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-                // Content view
-                contentView.topAnchor.constraint(equalTo: customNavigationBar.bottomAnchor),
+                contentView.topAnchor.constraint(equalTo: view.topAnchor),
                 contentView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
                 contentView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
                 contentView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
@@ -80,13 +57,12 @@ extension PayWithLinkViewController {
             super.present(viewControllerToPresent, animated: flag, completion: completion)
         }
 
-        @objc
-        func onBackButtonTapped(_ sender: UIButton) {
-            navigationController?.popViewController(animated: true)
-        }
+        var requiresFullScreen: Bool { false }
 
-        @objc
-        func onCloseButtonTapped(_ sender: UIButton) {
+        lazy var navigationBar: SheetNavigationBar = { LinkSheetNavigationBar(isTestMode: false, appearance: .init()) }()
+
+        func didTapOrSwipeToDismiss() {
+            guard context.isDismissible else { return }
             if context.shouldFinishOnClose {
                 coordinator?.finish(withResult: .canceled, deferredIntentConfirmationType: nil)
             } else {
@@ -94,5 +70,4 @@ extension PayWithLinkViewController {
             }
         }
     }
-
 }

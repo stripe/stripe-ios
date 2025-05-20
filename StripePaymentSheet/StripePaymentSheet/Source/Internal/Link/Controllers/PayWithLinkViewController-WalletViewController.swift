@@ -178,12 +178,7 @@ extension PayWithLinkViewController {
 
             containerView.addArrangedSubview(cancelButton)
 
-            let scrollView = LinkKeyboardAvoidingScrollView(contentView: containerView)
-            #if !os(visionOS)
-            scrollView.keyboardDismissMode = .interactive
-            #endif
-
-            contentView.addAndPinSubview(scrollView)
+            contentView.addAndPinSubview(containerView)
 
             // If the initially selected payment method is not supported, we should automatically
             // expand the payment picker to hint the user to pick another payment method.
@@ -543,7 +538,7 @@ private extension PayWithLinkViewController.WalletViewController {
         )
         updatePaymentMethodVC.delegate = self
 
-        navigationController?.pushViewController(updatePaymentMethodVC, animated: true)
+        bottomSheetController?.pushContentViewController(updatePaymentMethodVC)
     }
 
     func collectRemainingBillingDetailsAndConfirm(for paymentMethod: ConsumerPaymentDetails) {
@@ -555,7 +550,7 @@ private extension PayWithLinkViewController.WalletViewController {
         )
         updatePaymentMethodVC.delegate = self
 
-        navigationController?.pushViewController(updatePaymentMethodVC, animated: true)
+        bottomSheetController?.pushContentViewController(updatePaymentMethodVC)
     }
 }
 
@@ -677,7 +672,7 @@ extension PayWithLinkViewController.WalletViewController: LinkPaymentMethodPicke
                 isAddingFirstPaymentMethod: false
             )
 
-            navigationController?.pushViewController(newPaymentVC, animated: true)
+            bottomSheetController?.pushContentViewController(newPaymentVC)
         }
     }
 
