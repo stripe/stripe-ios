@@ -13,6 +13,11 @@ import UIKit
 @_spi(STP) import StripeUICore
 
 /// For internal SDK use only
+final class SessionResponse: Decodable {
+    let authSessionClientSecret: String?
+    let consumerSession: ConsumerSession
+}
+
 final class ConsumerSession: Decodable {
     let clientSecret: String
     let emailAddress: String
@@ -207,7 +212,7 @@ extension ConsumerSession {
         with apiClient: STPAPIClient = STPAPIClient.shared,
         cookieStore: LinkCookieStore = LinkSecureCookieStore.shared,
         consumerAccountPublishableKey: String?,
-        completion: @escaping (Result<ConsumerSession, Error>) -> Void
+        completion: @escaping (Result<SessionResponse, Error>) -> Void
     ) {
         apiClient.confirmSMSVerification(
             for: clientSecret,

@@ -27,6 +27,7 @@ final class FinancialConnectionsAsyncAPIClient {
     var isLinkWithStripe: Bool = false
     var consumerPublishableKey: String?
     var consumerSession: ConsumerSessionData?
+    var verificationSessionClientSecret: String?
 
     private lazy var logger = FinancialConnectionsAPIClientLogger()
 
@@ -207,6 +208,14 @@ extension FinancialConnectionsAsyncAPIClient {
             "client_secret": clientSecret,
             "locale": Locale.current.toLanguageTag(),
         ]
+        parameters["key"] = consumerPublishableKey
+
+        if let verificationSessionClientSecret {
+            let cookies: [String: Any] = [
+                "verification_session_client_secrets": [verificationSessionClientSecret]
+            ]
+            parameters["cookies"] = cookies
+        }
 
         var mobileParameters: [String: Any] = [
             "fullscreen": true,

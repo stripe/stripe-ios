@@ -494,7 +494,7 @@ extension STPAPIClient {
         with code: String,
         cookieStore: LinkCookieStore,
         consumerAccountPublishableKey: String?,
-        completion: @escaping (Result<ConsumerSession, Error>) -> Void
+        completion: @escaping (Result<SessionResponse, Error>) -> Void
     ) {
         let endpoint: String = "consumers/sessions/confirm_verification"
 
@@ -505,11 +505,10 @@ extension STPAPIClient {
             "request_surface": "ios_payment_element",
         ]
 
-        makeConsumerSessionRequest(
-            endpoint: endpoint,
+        post(
+            resource: endpoint,
             parameters: parameters,
-            cookieStore: cookieStore,
-            consumerAccountPublishableKey: consumerAccountPublishableKey,
+            consumerPublishableKey: consumerAccountPublishableKey,
             completion: completion
         )
     }
@@ -575,11 +574,6 @@ private extension STPAPIClient {
 
     struct DetailsListResponse: Decodable {
         let redactedPaymentDetails: [ConsumerPaymentDetails]
-    }
-
-    struct SessionResponse: Decodable {
-        let authSessionClientSecret: String?
-        let consumerSession: ConsumerSession
     }
 }
 

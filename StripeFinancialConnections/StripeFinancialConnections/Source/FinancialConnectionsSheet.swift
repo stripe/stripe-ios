@@ -318,6 +318,7 @@ final public class FinancialConnectionsSheet {
             )
             financialConnectionsApiClient.isLinkWithStripe = true
             financialConnectionsApiClient.consumerSession = consumerSession
+            financialConnectionsApiClient.verificationSessionClientSecret = existingConsumer.verificationSessionClientSecret
             financialConnectionsApiClient.consumerPublishableKey = existingConsumer.publishableKey
         }
 

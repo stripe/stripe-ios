@@ -13,19 +13,22 @@ import Foundation
     @_spi(STP) public let emailAddress: String
     @_spi(STP) public let redactedFormattedPhoneNumber: String
     @_spi(STP) public let verificationSessions: [VerificationSession]
-    
+    @_spi(STP) public let verificationSessionClientSecret: String?
+
     @_spi(STP) public init(
         publishableKey: String?,
         clientSecret: String,
         emailAddress: String,
         redactedFormattedPhoneNumber: String,
-        verificationSessions: [VerificationSession]
+        verificationSessions: [VerificationSession],
+        verificationSessionClientSecret: String?
     ) {
         self.publishableKey = publishableKey
         self.clientSecret = clientSecret
         self.emailAddress = emailAddress
         self.redactedFormattedPhoneNumber = redactedFormattedPhoneNumber
         self.verificationSessions = verificationSessions
+        self.verificationSessionClientSecret = verificationSessionClientSecret
     }
 }
 

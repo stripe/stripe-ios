@@ -399,7 +399,7 @@ extension PayWithLinkViewController: PayWithLinkCoordinating {
             completion(.failed(error: error))
             return
         }
-        
+
         let verificationSessions = consumerSession.verificationSessions.map { verificationSession in
             StripeCore.VerificationSession(
                 type: .init(rawValue: verificationSession.type.rawValue) ?? .unparsable,
@@ -411,7 +411,8 @@ extension PayWithLinkViewController: PayWithLinkCoordinating {
             clientSecret: consumerSession.clientSecret,
             emailAddress: consumerSession.emailAddress,
             redactedFormattedPhoneNumber: consumerSession.redactedFormattedPhoneNumber,
-            verificationSessions: verificationSessions
+            verificationSessions: verificationSessions,
+            verificationSessionClientSecret: linkAccount.verificationSessionClientSecret
         )
 
         financialConnectionsAPI.presentFinancialConnectionsSheet(
