@@ -1,14 +1,14 @@
 //
-//  LinkGlobalHoldback.swift
+//  LinkABTest.swift
 //  StripePaymentSheet
 //
-//  Created by Mat Schmid on 2025-04-02.
+//  Created by Mat Schmid on 5/21/25.
 //
 
 import Foundation
 
-struct LinkGlobalHoldback: LoggableExperiment {
-    private static let experimentName = "link_global_holdback"
+struct LinkABTest: LoggableExperiment {
+    private static let experimentName = "link_ab_test"
     private let baseExperiment: BaseLinkExperiment
 
     let name: String = experimentName
