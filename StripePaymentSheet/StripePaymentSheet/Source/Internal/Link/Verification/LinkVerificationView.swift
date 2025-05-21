@@ -175,7 +175,7 @@ private extension LinkVerificationView {
                 headingLabel,
                 bodyLabel,
                 codeFieldContainer,
-                resendCodeButton,
+//                resendCodeButton,
             ]
         case .embedded:
             return [
@@ -208,7 +208,7 @@ private extension LinkVerificationView {
         var constraints: [NSLayoutConstraint] = [
             // Stack view
             stackView.topAnchor.constraint(equalTo: layoutMarginsGuide.topAnchor),
-            stackView.bottomAnchor.constraint(equalTo: layoutMarginsGuide.bottomAnchor),
+//            stackView.bottomAnchor.constraint(equalTo: layoutMarginsGuide.bottomAnchor),
             stackView.leadingAnchor.constraint(equalTo: layoutMarginsGuide.leadingAnchor),
             stackView.trailingAnchor.constraint(equalTo: layoutMarginsGuide.trailingAnchor),
 
@@ -245,7 +245,7 @@ extension LinkVerificationView.Mode {
         switch self {
         case .modal:
             return STPLocalizedString(
-                "Use your saved info to check out faster",
+                "Use your saved information",
                 "Two factor authentication screen heading"
             )
         case .inlineLogin, .embedded:
@@ -267,7 +267,7 @@ extension LinkVerificationView.Mode {
 
     func bodyText(redactedPhoneNumber: String) -> String {
         let format = STPLocalizedString(
-            "Enter the code sent to %@ to use your saved information.",
+            "Enter the code sent to %@",
             "Instructs the user to enter the code sent to their phone number in order to login to Link"
         )
         return String(format: format, redactedPhoneNumber)

@@ -19,9 +19,10 @@ struct ExampleWalletButtonsView: View {
                 }
             }.onAppear {
                 model.preparePaymentSheet()
-            }
+            }.padding()
         } else {
             Text("Use >= iOS 16.0")
+                .padding()
         }
     }
 }
@@ -54,6 +55,7 @@ class ExampleWalletButtonsModel: ObservableObject {
 
                 // MARK: Create a PaymentSheet instance
                 var configuration = PaymentSheet.Configuration()
+                configuration.defaultBillingDetails = .init(email: "email@email.com")
                 configuration.merchantDisplayName = "Example, Inc."
                 configuration.applePay = .init(
                     merchantId: "merchant.com.stripe.umbrella.test", // Be sure to use your own merchant ID here!
