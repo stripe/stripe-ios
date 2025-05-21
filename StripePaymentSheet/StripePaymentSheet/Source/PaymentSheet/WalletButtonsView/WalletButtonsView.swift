@@ -50,6 +50,7 @@ import UIKit
             }
 
             LinkInlineOTP(account: linkAccount, delegate: viewDelegate)
+                .fixedSize(horizontal: false, vertical: true)
                 .overlay(
                     RoundedRectangle(cornerRadius: 12)
                         .stroke(Color(.linkBorderDefault), lineWidth: 1)
@@ -248,6 +249,7 @@ private class WalletButtonsViewDelegate: NSObject, ObservableObject, LinkVerific
 //    }
 }
 
+@available(iOS 16.0, *)
 private struct LinkInlineOTP: UIViewRepresentable {
 
     let account: PaymentSheetLinkAccount
@@ -258,15 +260,15 @@ private struct LinkInlineOTP: UIViewRepresentable {
         view.delegate = delegate
         view.translatesAutoresizingMaskIntoConstraints = false
 
-        // Set content hugging priority to ensure it doesn't expand
-        view.setContentHuggingPriority(.required, for: .vertical)
-        view.setContentCompressionResistancePriority(.required, for: .vertical)
-
         return view
     }
 
     func updateUIView(_ uiView: LinkVerificationView, context: Context) {
 //        uiView.attributedText = text
+    }
+
+    func sizeThatFits(_ proposal: ProposedViewSize, uiView: LinkVerificationView, context: Context) -> CGSize? {
+        uiView.systemLayoutSizeFitting(UIView.layoutFittingCompressedSize)
     }
 }
 

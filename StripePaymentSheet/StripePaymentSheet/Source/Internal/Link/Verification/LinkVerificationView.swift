@@ -208,7 +208,7 @@ private extension LinkVerificationView {
         var constraints: [NSLayoutConstraint] = [
             // Stack view
             stackView.topAnchor.constraint(equalTo: layoutMarginsGuide.topAnchor),
-//            stackView.bottomAnchor.constraint(equalTo: layoutMarginsGuide.bottomAnchor),
+            stackView.bottomAnchor.constraint(equalTo: layoutMarginsGuide.bottomAnchor),
             stackView.leadingAnchor.constraint(equalTo: layoutMarginsGuide.leadingAnchor),
             stackView.trailingAnchor.constraint(equalTo: layoutMarginsGuide.trailingAnchor),
 
