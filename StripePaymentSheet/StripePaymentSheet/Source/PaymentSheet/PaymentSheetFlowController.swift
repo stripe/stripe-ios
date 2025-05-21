@@ -183,6 +183,14 @@ extension PaymentSheet {
         var viewController: FlowControllerViewControllerProtocol
         private var presentPaymentOptionsCompletion: (() -> Void)?
 
+        // If a WalletButtonsView is currently visible
+        var walletButtonsShownExternally: Bool = false {
+            didSet {
+                // Update payment method options
+                self.updateForWalletButtonsView()
+            }
+        }
+        
         /// The desired, valid (ie passed client-side checks) payment option from the underlying payment options VC.
         private var _paymentOption: PaymentOption? {
             guard viewController.error == nil else {
@@ -223,7 +231,7 @@ extension PaymentSheet {
             self.configuration = configuration
             self.analyticsHelper = analyticsHelper
             self.analyticsHelper.logInitialized()
-            self.viewController = Self.makeViewController(configuration: configuration, loadResult: loadResult, analyticsHelper: analyticsHelper)
+            self.viewController = Self.makeViewController(configuration: configuration, loadResult: loadResult, analyticsHelper: analyticsHelper, walletButtonsShownExternally: self.walletButtonsShownExternally)
             self.viewController.flowControllerDelegate = self
         }
 
@@ -486,6 +494,7 @@ extension PaymentSheet {
                         configuration: self.configuration,
                         loadResult: loadResult,
                         analyticsHelper: analyticsHelper,
+                        walletButtonsShownExternally: walletButtonsShownExternally,
                         previousPaymentOption: self._paymentOption
                     )
                     self.viewController.flowControllerDelegate = self
@@ -501,6 +510,22 @@ extension PaymentSheet {
                     completion(error)
                 }
             }
+        }
+        
+        func updateForWalletButtonsView() {
+            // Recreate the view controller
+            self.viewController = Self.makeViewController(
+                configuration: self.configuration,
+                loadResult: self.viewController.loadResult,
+                analyticsHelper: analyticsHelper,
+                walletButtonsShownExternally: self.walletButtonsShownExternally,
+                previousPaymentOption: self._paymentOption
+            )
+            self.viewController.flowControllerDelegate = self
+
+            // Synchronously pre-load image into cache
+            // Accessing paymentOption has the side-effect of ensuring its `image` property is loaded (e.g. from the internet instead of disk) before we call the completion handler.
+            _ = self.paymentOption
         }
 
         // MARK: Internal helper methods
@@ -524,6 +549,7 @@ extension PaymentSheet {
             configuration: Configuration,
             loadResult: PaymentSheetLoader.LoadResult,
             analyticsHelper: PaymentSheetAnalyticsHelper,
+            walletButtonsShownExternally: Bool,
             previousPaymentOption: PaymentOption? = nil
         ) -> FlowControllerViewControllerProtocol {
             switch configuration.paymentMethodLayout {
@@ -540,6 +566,7 @@ extension PaymentSheet {
                     loadResult: loadResult,
                     isFlowController: true,
                     analyticsHelper: analyticsHelper,
+                    walletButtonsShownExternally: walletButtonsShownExternally,
                     previousPaymentOption: previousPaymentOption
                 )
             }
@@ -615,6 +642,7 @@ internal protocol FlowControllerViewControllerProtocol: BottomSheetContentViewCo
     var intent: Intent { get }
     var elementsSession: STPElementsSession { get }
     var selectedPaymentOption: PaymentOption? { get }
+    var loadResult: PaymentSheetLoader.LoadResult { get }
     /// The type of the Stripe payment method that's currently selected in the UI for new and saved PMs. Returns nil Apple Pay and .stripe(.link) for Link.
     /// Note that, unlike selectedPaymentOption, this is non-nil even if the PM form is invalid.
     var selectedPaymentMethodType: PaymentSheet.PaymentMethodType? { get }
