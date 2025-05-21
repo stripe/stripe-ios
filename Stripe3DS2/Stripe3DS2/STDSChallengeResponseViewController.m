@@ -558,7 +558,7 @@ static NSString * const kHTMLStringLoadingURL = @"about:blank";
 }
 
 - (nullable id<STDSChallengeResponseSelectionInfo>)whitelistResponse {
-    if (self.response.whitelistingInfoText == nil) {
+    if (self.response.whitelistingInfoText == nil || self.response.whitelistingInfoText.length == 0) {
         return nil;
     } else {
         return self.whitelistView.selectedResponse;
