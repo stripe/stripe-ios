@@ -9,7 +9,6 @@ import Foundation
 @_spi(STP) import StripePayments
 
 struct BaseLinkExperiment {
-    let arbId: String
     let group: ExperimentGroup
 
     let defaultValuesProvided: String
@@ -36,14 +35,11 @@ struct BaseLinkExperiment {
 
     init(
         experimentName: String,
-        arbId: String,
         elementsSession: STPElementsSession,
         configuration: PaymentElementConfiguration,
         linkAccount: PaymentSheetLinkAccount?,
         integrationShape: PaymentSheetAnalyticsHelper.IntegrationShape
     ) {
-        self.arbId = arbId
-
         let isLinkEnabled = PaymentSheet.isLinkEnabled(
             elementsSession: elementsSession,
             configuration: configuration
