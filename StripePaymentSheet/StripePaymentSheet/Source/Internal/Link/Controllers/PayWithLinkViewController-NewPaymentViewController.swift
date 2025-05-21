@@ -302,7 +302,7 @@ extension PayWithLinkViewController {
         @objc
         func cancelButtonTapped(_ sender: Button) {
             if isAddingFirstPaymentMethod {
-                coordinator?.cancel()
+                coordinator?.cancel(shouldReturnToPaymentSheet: false)
             } else {
                 _ = bottomSheetController?.popContentViewController()
             }

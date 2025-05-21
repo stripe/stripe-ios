@@ -1,0 +1,80 @@
+//
+//  LinkFlowControllerHelpers.swift
+//  StripePaymentSheet
+//
+//  Created by Till Hellmund on 5/14/25.
+//
+
+import UIKit
+
+extension UIViewController {
+
+    func presentNativeLink(
+        selectedPaymentDetailsID: String?,
+        configuration: PaymentElementConfiguration,
+        intent: Intent,
+        elementsSession: STPElementsSession,
+        analyticsHelper: PaymentSheetAnalyticsHelper,
+        verificationRejected: @escaping () -> Void,
+        callback: @escaping (PaymentSheet.LinkConfirmOption?, Bool) -> Void
+    ) {
+        let linkAccount = LinkAccountContext.shared.account
+
+        if let linkAccount, linkAccount.sessionState == .requiresVerification {
+            let verificationController = LinkVerificationController(
+                mode: .inlineLogin,
+                linkAccount: linkAccount,
+                configuration: configuration
+            )
+
+            verificationController.present(from: bottomSheetController ?? self) { [weak self] result in
+                guard let self, case .completed = result else {
+                    verificationRejected()
+                    return
+                }
+
+                self.presentNativeLink(
+                    selectedPaymentDetailsID: selectedPaymentDetailsID,
+                    intent: intent,
+                    elementsSession: elementsSession,
+                    configuration: configuration,
+                    analyticsHelper: analyticsHelper,
+                    callback: callback
+                )
+            }
+        } else {
+            presentNativeLink(
+                selectedPaymentDetailsID: selectedPaymentDetailsID,
+                intent: intent,
+                elementsSession: elementsSession,
+                configuration: configuration,
+                analyticsHelper: analyticsHelper,
+                callback: callback
+            )
+        }
+    }
+
+    private func presentNativeLink(
+        selectedPaymentDetailsID: String?,
+        intent: Intent,
+        elementsSession: STPElementsSession,
+        configuration: PaymentElementConfiguration,
+        analyticsHelper: PaymentSheetAnalyticsHelper,
+        callback: @escaping (PaymentSheet.LinkConfirmOption?, Bool) -> Void
+    ) {
+        let payWithLinkController = PayWithNativeLinkController(
+            mode: .paymentMethodSelection,
+            intent: intent,
+            elementsSession: elementsSession,
+            configuration: configuration,
+            logPayment: false,
+            analyticsHelper: analyticsHelper
+        )
+
+        payWithLinkController.presentForPaymentMethodSelection(
+            from: self,
+            initiallySelectedPaymentDetailsID: selectedPaymentDetailsID,
+            completion: callback
+        )
+    }
+}
