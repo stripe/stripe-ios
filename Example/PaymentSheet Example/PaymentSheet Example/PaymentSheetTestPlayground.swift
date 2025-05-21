@@ -13,6 +13,7 @@ struct PaymentSheetTestPlayground: View {
     @StateObject var playgroundController: PlaygroundController
     @StateObject var analyticsLogObserver: AnalyticsLogObserver = .shared
     @State var showingQRSheet = false
+    @State var showingAddressSheet = false
 
     init(settings: PaymentSheetTestPlaygroundSettings) {
         _playgroundController = StateObject(wrappedValue: PlaygroundController(settings: settings))
@@ -327,7 +328,8 @@ struct PaymentSheetButtons: View {
     @State private var embeddedIsPresented: Bool = false
     @State private var psFCOptionsIsPresented: Bool = false
     @State private var psFCIsConfirming: Bool = false
-
+    @State var showingAddressSheet = false
+    
     func reloadPlaygroundController() {
         playgroundController.load(reinitializeControllers: true)
     }
@@ -378,10 +380,27 @@ struct PaymentSheetButtons: View {
                             .paymentSheet(isPresented: $psIsPresented, paymentSheet: ps, onCompletion: playgroundController.onPSCompletion)
                             Spacer()
                             Button {
-                                playgroundController.didTapShippingAddressButton()
+                                showingAddressSheet = true
                             } label: {
                                 Text("\(playgroundController.addressDetails?.localizedDescription ?? "Address")")
                                     .accessibility(identifier: "Address")
+                            }
+                            .sheet(isPresented: $showingAddressSheet) {
+                                if #available(iOS 16.0, *) {
+                                    NavigationStack {
+                                        AddressViewControllerRepresentable(
+                                            addressViewController: playgroundController.addressViewController!,
+                                            onCompletion: { address in
+                                                playgroundController.addressDetails = address
+                                                showingAddressSheet = false
+                                            }
+                                        )
+                                        .ignoresSafeArea(.keyboard)
+                                        .navigationTitle("Shipping Address")
+                                    }
+                                } else {
+                                    // Fallback on earlier versions
+                                }
                             }
                         }
                         .padding()
@@ -408,10 +427,28 @@ struct PaymentSheetButtons: View {
                             .disabled(playgroundController.paymentSheetFlowController == nil)
                             .padding()
                             Button {
-                                playgroundController.didTapShippingAddressButton()
+                                showingAddressSheet = true
                             } label: {
                                 Text("\(playgroundController.addressDetails?.localizedDescription ?? "Address")")
                                     .accessibility(identifier: "Address")
+                            }
+                            .sheet(isPresented: $showingAddressSheet) {
+                                if #available(iOS 16.0, *) {
+                                    NavigationStack {
+                                        AddressViewControllerRepresentable(
+                                            addressViewController: playgroundController.addressViewController!,
+                                            onCompletion: { address in
+                                                playgroundController.addressDetails = address
+                                                showingAddressSheet = false
+                                            }
+                                        )
+                                        .ignoresSafeArea(.keyboard)
+                                        .navigationTitle("Shipping Address")
+                                        .navigationBarTitleDisplayMode(.inline)
+                                    }
+                                } else {
+                                    // Fallback on earlier versions
+                                }
                             }
                             .disabled(playgroundController.paymentSheetFlowController == nil)
                             .padding()
@@ -449,10 +486,28 @@ struct PaymentSheetButtons: View {
                             }
                             Spacer()
                             Button {
-                                playgroundController.didTapShippingAddressButton()
+                                showingAddressSheet = true
                             } label: {
                                 Text("\(playgroundController.addressDetails?.localizedDescription ?? "Address")")
                                     .accessibility(identifier: "Address")
+                            }
+                            .sheet(isPresented: $showingAddressSheet) {
+                                if #available(iOS 16.0, *) {
+                                    NavigationStack {
+                                        AddressViewControllerRepresentable(
+                                            addressViewController: playgroundController.addressViewController!,
+                                            onCompletion: { address in
+                                                playgroundController.addressDetails = address
+                                                showingAddressSheet = false
+                                            }
+                                        )
+                                        .ignoresSafeArea(.keyboard)
+                                        .navigationTitle("Shipping Address")
+                                        .navigationBarTitleDisplayMode(.inline)
+                                    }
+                                } else {
+                                    // Fallback on earlier versions
+                                }
                             }
                         }
                         .padding()
@@ -619,5 +674,35 @@ struct SettingPickerView<S: PickerEnum>: View {
 struct PaymentSheetTestPlayground_Previews: PreviewProvider {
     static var previews: some View {
         PaymentSheetTestPlayground(settings: .defaultValues())
+    }
+}
+
+struct AddressViewControllerRepresentable: UIViewControllerRepresentable {
+    let addressViewController: AddressViewController
+    let onCompletion: (AddressViewController.AddressDetails?) -> Void
+    
+    func makeUIViewController(context: Context) -> AddressViewController {
+        addressViewController.delegate = context.coordinator
+        return addressViewController
+    }
+    
+    func updateUIViewController(_ uiViewController: AddressViewController, context: Context) {
+        // No updates needed
+    }
+    
+    func makeCoordinator() -> Coordinator {
+        Coordinator(onCompletion: onCompletion)
+    }
+    
+    class Coordinator: NSObject, AddressViewControllerDelegate {
+        let onCompletion: (AddressViewController.AddressDetails?) -> Void
+        
+        init(onCompletion: @escaping (AddressViewController.AddressDetails?) -> Void) {
+            self.onCompletion = onCompletion
+        }
+        
+        func addressViewControllerDidFinish(_ addressViewController: AddressViewController, with address: AddressViewController.AddressDetails?) {
+            onCompletion(address)
+        }
     }
 }
