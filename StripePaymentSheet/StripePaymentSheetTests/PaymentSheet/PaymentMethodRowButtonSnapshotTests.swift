@@ -84,7 +84,14 @@ class PaymentMethodRowButtonSnapshotTests: STPSnapshotTestCase {
 
     func testPaymentMethodRowButton_newPaymentMethod_linkType_unselected() {
         var card = STPPaymentMethod._testCard()
-        card.linkPaymentDetails = .init(expMonth: 12, expYear: 2030, last4: "4242", brand: .visa)
+        card.linkPaymentDetails = .card(
+            LinkPaymentDetails.Card(
+                expMonth: 12,
+                expYear: 2030,
+                last4: "4242",
+                brand: .visa
+            )
+        )
         let rowButton = SavedPaymentMethodRowButton(paymentMethod: card, appearance: .default)
         verify(rowButton)
     }

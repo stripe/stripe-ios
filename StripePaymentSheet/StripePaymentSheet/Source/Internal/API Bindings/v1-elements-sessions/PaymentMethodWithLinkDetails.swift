@@ -56,9 +56,9 @@ class PaymentMethodWithLinkDetails: NSObject, STPAPIResponseDecodable {
 private extension ConsumerPaymentDetails.DetailsType {
     var isUnsupportedAsSavedPaymentMethod: Bool {
         switch self {
-        case .card:
+        case .card, .bankAccount:
             false
-        case .bankAccount, .unparsable:
+        case .unparsable:
             true
         }
     }

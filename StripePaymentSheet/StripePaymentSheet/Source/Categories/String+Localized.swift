@@ -93,6 +93,13 @@ extension String.Localized {
         STPLocalizedString("Back", "Text for back button")
     }
 
+    static var manage_bank_account: String {
+        STPLocalizedString(
+            "Manage bank account",
+            "Title shown above a view containing the customer's bank account that they can delete"
+        )
+    }
+
     static var manage_us_bank_account: String {
         STPLocalizedString(
             "Manage US bank account",
