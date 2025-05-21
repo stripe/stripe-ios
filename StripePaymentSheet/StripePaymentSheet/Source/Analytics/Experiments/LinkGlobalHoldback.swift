@@ -13,10 +13,13 @@ struct LinkGlobalHoldback: LoggableExperiment {
 
     let name: String = experimentName
     let arbId: String
-    let group: ExperimentGroup
+
+    var group: ExperimentGroup {
+        baseExperiment.group
+    }
 
     var dimensions: [String: Any] {
-        return baseExperiment.dimensionsDictionary
+        baseExperiment.dimensionsDictionary
     }
 
     init(
@@ -28,15 +31,13 @@ struct LinkGlobalHoldback: LoggableExperiment {
     ) {
         let baseExperiment = BaseLinkExperiment(
             experimentName: Self.experimentName,
-            arbId: arbId,
             elementsSession: elementsSession,
             configuration: configuration,
             linkAccount: linkAccount,
             integrationShape: integrationShape
         )
 
-        self.baseExperiment = baseExperiment
         self.arbId = arbId
-        self.group = baseExperiment.group
+        self.baseExperiment = baseExperiment
     }
 }
