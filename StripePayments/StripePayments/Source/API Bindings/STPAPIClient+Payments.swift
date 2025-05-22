@@ -714,12 +714,13 @@ extension STPAPIClient {
 
         let endpoint = setupIntentEndpoint(from: setupIntentParams.clientSecret) + "/confirm"
         var params = STPFormEncoder.dictionary(forObject: setupIntentParams)
-        STPTelemetryClient.shared.addTelemetryFields(toParams: &params)
         if var sourceParamsDict = params[SourceDataHash] as? [String: Any] {
+            STPTelemetryClient.shared.addTelemetryFields(toParams: &params)
             sourceParamsDict = Self.paramsAddingPaymentUserAgent(sourceParamsDict)
             params[SourceDataHash] = sourceParamsDict
         }
         if var paymentMethodParamsDict = params[PaymentMethodDataHash] as? [String: Any] {
+            STPTelemetryClient.shared.addTelemetryFields(toParams: &params)
             paymentMethodParamsDict = Self.paramsAddingPaymentUserAgent(paymentMethodParamsDict)
             params[PaymentMethodDataHash] = paymentMethodParamsDict
         }
