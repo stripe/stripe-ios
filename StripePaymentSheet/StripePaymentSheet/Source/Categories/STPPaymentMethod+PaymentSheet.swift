@@ -23,14 +23,7 @@ extension STPPaymentMethod {
             // The missing space is not an oversight, but on purpose
             return "••••\(usBankAccount?.last4 ?? "")"
         case .link:
-            switch linkPaymentDetails {
-            case .card(let cardDetails):
-                return "•••• \(cardDetails.last4)"
-            case .bankAccount(let bankDetails):
-                return "••••\(bankDetails.last4)"
-            default:
-                return type.displayName
-            }
+            return linkPaymentDetails?.label ?? type.displayName
         default:
             return type.displayName
         }
