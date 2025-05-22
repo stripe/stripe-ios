@@ -108,12 +108,12 @@ class ExampleWalletButtonsModel: ObservableObject {
             })
         task.resume()
     }
-    
+
     func onOptionsCompletion() {
         // Tell our observer to refresh
         objectWillChange.send()
     }
-    
+
     func onCompletion(result: PaymentSheetResult) {
         self.paymentResult = result
 

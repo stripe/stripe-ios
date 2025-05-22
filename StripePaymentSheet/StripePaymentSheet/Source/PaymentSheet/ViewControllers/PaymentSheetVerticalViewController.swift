@@ -151,7 +151,7 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
         loadResult: PaymentSheetLoader.LoadResult,
         isFlowController: Bool,
         analyticsHelper: PaymentSheetAnalyticsHelper,
-        walletButtonsShownExternally: Bool,
+        walletButtonsShownExternally: Bool = false,
         previousPaymentOption: PaymentOption? = nil
     ) {
         // Only call loadResult.intent.cvcRecollectionEnabled once per load
@@ -373,7 +373,7 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
            let paymentMethodType = loadResult.paymentMethodTypes.first {
             return .new(paymentMethodType: paymentMethodType)
         }
-        
+
         return nil
     }
 

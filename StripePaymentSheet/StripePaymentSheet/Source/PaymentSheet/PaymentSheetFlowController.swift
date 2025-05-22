@@ -190,7 +190,7 @@ extension PaymentSheet {
                 self.updateForWalletButtonsView()
             }
         }
-        
+
         /// The desired, valid (ie passed client-side checks) payment option from the underlying payment options VC.
         private var _paymentOption: PaymentOption? {
             guard viewController.error == nil else {
@@ -511,7 +511,7 @@ extension PaymentSheet {
                 }
             }
         }
-        
+
         func updateForWalletButtonsView() {
             // Recreate the view controller
             self.viewController = Self.makeViewController(
