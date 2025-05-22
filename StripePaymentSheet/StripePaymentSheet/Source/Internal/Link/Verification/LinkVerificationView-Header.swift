@@ -30,6 +30,7 @@ extension LinkVerificationView {
         let closeButton: UIButton = {
             let button = UIButton(type: .system)
             button.setImage(Image.icon_cancel.makeImage(template: true), for: .normal)
+            button.tintColor = .linkIconSecondary
             button.translatesAutoresizingMaskIntoConstraints = false
             button.accessibilityLabel = String.Localized.close
             button.accessibilityIdentifier = "LinkVerificationCloseButton"
@@ -48,7 +49,7 @@ extension LinkVerificationView {
 
             NSLayoutConstraint.activate([
                 // Logo
-                logoView.centerXAnchor.constraint(equalTo: centerXAnchor),
+                logoView.leadingAnchor.constraint(equalTo: leadingAnchor),
                 logoView.centerYAnchor.constraint(equalTo: centerYAnchor),
                 logoView.heightAnchor.constraint(equalToConstant: Constants.logoHeight),
 
@@ -58,8 +59,8 @@ extension LinkVerificationView {
                 closeButton.bottomAnchor.constraint(equalTo: bottomAnchor),
             ])
 
-            tintColor = .linkNavTint
-            logoView.tintColor = .linkNavLogo
+            tintColor = .linkSurfacePrimary
+            logoView.tintColor = .linkTextPrimary
         }
 
         required init?(coder: NSCoder) {

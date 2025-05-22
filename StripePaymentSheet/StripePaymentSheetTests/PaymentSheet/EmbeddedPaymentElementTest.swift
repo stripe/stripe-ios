@@ -7,11 +7,10 @@
 
 @testable@_spi(STP) import StripeCore
 import StripeCoreTestUtils
+@_spi(STP) @testable import StripePaymentSheet
 @testable@_spi(STP) import StripePaymentsTestUtils
 @testable@_spi(STP) import StripeUICore
 import XCTest
-
-@_spi(EmbeddedPaymentElementPrivateBeta) @_spi(STP) @testable import StripePaymentSheet
 
 @MainActor
 // https://jira.corp.stripe.com/browse/MOBILESDK-2607 Make these STPNetworkStubbingTestCase; blocked on getting them to record image requests
@@ -197,7 +196,7 @@ class EmbeddedPaymentElementTest: XCTestCase {
         // ...should cancel the 1st update
         XCTAssertEqual(updateResult, .canceled)
         XCTAssertEqual(updateResult2, .succeeded)
-        XCTAssertTrue(sut.intent.isSettingUp)
+        XCTAssertFalse(sut.intent.isPaymentIntent)
     }
 
     func testConfirmHandlesInflightUpdateThatSucceeds() async throws {

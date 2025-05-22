@@ -33,6 +33,9 @@ class BottomSheetViewController: UIViewController, BottomSheetPresentable {
     lazy var scrollView: UIScrollView = {
         let scrollView = UIScrollView()
         scrollView.automaticallyAdjustsScrollIndicatorInsets = false
+        #if !os(visionOS)
+        scrollView.keyboardDismissMode = .onDrag
+        #endif
         scrollView.delegate = self
         return scrollView
     }()
@@ -182,7 +185,6 @@ class BottomSheetViewController: UIViewController, BottomSheetPresentable {
         }
         let oldContentViewController = contentViewController
         contentViewController = newContentViewController
-
         // Handle edge case where BottomSheetPresentationAnimator is mid-presentation
         // We need to finish *that* transition before starting this one.
         completeBottomSheetPresentationTransition?(true)

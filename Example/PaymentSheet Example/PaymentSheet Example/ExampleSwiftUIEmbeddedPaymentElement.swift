@@ -6,7 +6,7 @@
 //
 // This is an example integration using Embedded Payment Element in SwiftUI
 
-@_spi(EmbeddedPaymentElementPrivateBeta) import StripePaymentSheet
+import StripePaymentSheet
 import SwiftUI
 
 // MARK: - BackendViewModel

@@ -26,6 +26,13 @@ extension String.Localized {
         )
     }
 
+    static var continue_another_way: String {
+        STPLocalizedString(
+            "Continue another way",
+            "Label of a button that when tapped allows the user to select a different form of payment."
+        )
+    }
+
     static func pay_faster_at_$merchant_and_thousands_of_merchants(merchantDisplayName: String) -> String {
         String(
             format: STPLocalizedString(
@@ -84,6 +91,13 @@ extension String.Localized {
 
     static var back: String {
         STPLocalizedString("Back", "Text for back button")
+    }
+
+    static var manage_bank_account: String {
+        STPLocalizedString(
+            "Manage bank account",
+            "Title shown above a view containing the customer's bank account that they can delete"
+        )
     }
 
     static var manage_us_bank_account: String {
@@ -407,6 +421,13 @@ extension String.Localized {
         STPLocalizedString(
             "Add US bank account",
             "Title shown above a view allowing the customer to add a US bank account."
+        )
+    }
+
+    static var buy_now_or_pay_later_with_cash_app_afterpay: String {
+        STPLocalizedString(
+            "Buy now or pay later with Cash App Afterpay",
+            "Subtitle shown on a button allowing a user to select to pay with Afterpay."
         )
     }
 

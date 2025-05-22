@@ -57,6 +57,7 @@ struct PaymentSheetTestPlayground: View {
         SettingView(setting: $playgroundController.settings.shakeAmbiguousViews)
         SettingView(setting: $playgroundController.settings.instantDebitsIncentives)
         SettingView(setting: $playgroundController.settings.fcLiteEnabled)
+        SettingView(setting: $playgroundController.settings.linkInSPMs)
     }
 
     var body: some View {
@@ -111,6 +112,21 @@ struct PaymentSheetTestPlayground: View {
                         if playgroundController.settings.apmsEnabled == .off {
                             TextField("Supported Payment Methods (comma separated)", text: supportedPaymentMethodsBinding)
                                 .autocapitalization(.none)
+                        }
+                    }
+                    Group {
+                        VStack {
+                            HStack {
+                                Text("Payment Method Options")
+                                    .font(.subheadline)
+                                Spacer()
+                                Button {
+                                    playgroundController.paymentMethodOptionsSetupFutureUsageSettingsTapped()
+                                } label: {
+                                    Text("SetupFutureUsage")
+                                        .font(.callout.smallCaps())
+                                }.buttonStyle(.bordered)
+                            }
                         }
                     }
                     Group {
@@ -579,11 +595,12 @@ struct SettingView<S: PickerEnum>: View {
 struct SettingPickerView<S: PickerEnum>: View {
     var setting: Binding<S>
     var disabledSettings: [S] = []
+    var customDisplayLabel: String?
     var customDisplayName: ((S) -> String)?
 
     var body: some View {
         HStack {
-            Text(S.enumName).font(.subheadline)
+            Text(customDisplayLabel ?? S.enumName).font(.subheadline)
             Spacer()
             Picker(S.enumName, selection: setting) {
                 ForEach(S.allCases.filter({ !disabledSettings.contains($0) }), id: \.self) { t in

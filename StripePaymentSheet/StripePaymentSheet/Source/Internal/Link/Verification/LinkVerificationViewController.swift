@@ -54,8 +54,6 @@ final class LinkVerificationViewController: UIViewController {
         return activityIndicator
     }()
 
-    private lazy var scrollView = LinkKeyboardAvoidingScrollView()
-
     required init(
         mode: LinkVerificationView.Mode = .modal,
         linkAccount: PaymentSheetLinkAccount
@@ -74,14 +72,10 @@ final class LinkVerificationViewController: UIViewController {
         fatalError("init(coder:) has not been implemented")
     }
 
-    override func loadView() {
-        self.view = scrollView
-    }
-
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        view.tintColor = .linkBrand
+        view.tintColor = .linkIconBrand
         view.backgroundColor = .systemBackground
 
         view.addSubview(verificationView)
@@ -101,7 +95,7 @@ final class LinkVerificationViewController: UIViewController {
 
         if mode.requiresModalPresentation {
             view.layer.masksToBounds = true
-            view.layer.cornerRadius = LinkUI.cornerRadius
+            view.layer.cornerRadius = LinkUI.largeCornerRadius
         }
     }
 

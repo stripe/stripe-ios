@@ -1,3 +1,11 @@
+"%1$@ Card" = "Karta %1$@";
+
+"%1$@ Credit" = "Karta kredytowa %1$@";
+
+"%1$@ Debit" = "Karta debetowa %1$@";
+
+"%1$@ Prepaid" = "Karta przedpłacona %1$@";
+
 "%1$@ account ending in %2$@" = "%1$@ konto kończące się %2$@";
 
 "%1$@ ending in %2$@" = "%1$@ kończy się %2$@";

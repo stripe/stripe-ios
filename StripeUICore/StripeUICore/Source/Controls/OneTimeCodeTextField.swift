@@ -36,13 +36,17 @@ import UIKit
         /// The height of each digit item.
         let itemHeight: CGFloat
 
+        /// The width of the focused ring's border.
+        let itemFocusRingThickness: CGFloat
+
         public init(
             numberOfDigits: Int = 6,
             itemSpacing: CGFloat = 6,
             enableDigitGrouping: Bool = true,
             font: UIFont = .systemFont(ofSize: 20),
             itemCornerRadius: CGFloat = 8,
-            itemHeight: CGFloat = 60
+            itemHeight: CGFloat = 60,
+            itemFocusRingThickness: CGFloat = 2
         ) {
             self.numberOfDigits = numberOfDigits
             self.itemSpacing = itemSpacing
@@ -50,6 +54,7 @@ import UIKit
             self.font = font
             self.itemCornerRadius = itemCornerRadius
             self.itemHeight = itemHeight
+            self.itemFocusRingThickness = itemFocusRingThickness
         }
     }
 
@@ -92,6 +97,7 @@ import UIKit
         return DigitView(
             configuration: DigitView.Configuration(
                 cornerRadius: configuration.itemCornerRadius,
+                focusRingThickness: configuration.itemFocusRingThickness,
                 font: configuration.font,
                 itemHeight: configuration.itemHeight
             ),
@@ -666,18 +672,22 @@ private extension OneTimeCodeTextField {
     final class DigitView: UIView {
 
         struct Configuration {
-            let borderWidth: CGFloat = 1
+            let borderWidth: CGFloat
             let cornerRadius: CGFloat
-            let focusRingThickness: CGFloat = 2
+            let focusRingThickness: CGFloat
             let font: UIFont
             let itemHeight: CGFloat
 
             init(
+                borderWidth: CGFloat = 1,
                 cornerRadius: CGFloat,
+                focusRingThickness: CGFloat = 2,
                 font: UIFont,
                 itemHeight: CGFloat
             ) {
+                self.borderWidth = borderWidth
                 self.cornerRadius = cornerRadius
+                self.focusRingThickness = focusRingThickness
                 self.font = font
                 self.itemHeight = itemHeight
             }
@@ -799,9 +809,10 @@ private extension OneTimeCodeTextField {
         }
 
         private func updateColors() {
-            borderLayer.backgroundColor = isEnabled ? theme.colors.componentBackground.cgColor : theme.colors.disabledBackground.cgColor
-            borderLayer.borderColor = theme.colors.border.cgColor
-            caret.backgroundColor = label.textColor.cgColor
+            let backgroundColor = isEnabled ? theme.colors.componentBackground : theme.colors.disabledBackground
+            borderLayer.backgroundColor = backgroundColor.resolvedColor(with: traitCollection).cgColor
+            borderLayer.borderColor = theme.colors.border.resolvedColor(with: traitCollection).cgColor
+            caret.backgroundColor = label.textColor.resolvedColor(with: traitCollection).cgColor
             focusRing.borderColor = tintColor.cgColor
         }
 

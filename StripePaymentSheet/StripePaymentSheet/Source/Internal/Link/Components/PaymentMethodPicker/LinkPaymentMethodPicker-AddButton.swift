@@ -13,11 +13,6 @@ import UIKit
 extension LinkPaymentMethodPicker {
 
     final class AddButton: UIControl {
-        struct Constants {
-            static let iconSize: CGSize = .init(width: 24, height: 24)
-        }
-
-        private let iconView: UIImageView = UIImageView(image: Image.icon_add_bordered.makeImage(template: false))
 
         private lazy var textLabel: UILabel = {
             let label = UILabel()
@@ -26,6 +21,7 @@ extension LinkPaymentMethodPicker {
             label.textColor = tintColor
             label.font = LinkUI.font(forTextStyle: .bodyEmphasized)
             label.adjustsFontForContentSizeCategory = true
+            label.translatesAutoresizingMaskIntoConstraints = false
             return label
         }()
 
@@ -65,30 +61,21 @@ extension LinkPaymentMethodPicker {
         }
 
         private func setupUI() {
-            let stackView = UIStackView(arrangedSubviews: [iconView, textLabel])
-            stackView.spacing = Cell.Constants.contentSpacing
-            stackView.alignment = .center
-            stackView.translatesAutoresizingMaskIntoConstraints = false
-
-            addSubview(stackView)
+            addSubview(textLabel)
 
             NSLayoutConstraint.activate([
-                iconView.widthAnchor.constraint(equalToConstant: Constants.iconSize.width),
-                iconView.heightAnchor.constraint(equalToConstant: Constants.iconSize.height),
-                stackView.topAnchor.constraint(equalTo: layoutMarginsGuide.topAnchor),
-                stackView.bottomAnchor.constraint(equalTo: layoutMarginsGuide.bottomAnchor),
-                stackView.leadingAnchor.constraint(equalTo: layoutMarginsGuide.leadingAnchor),
-                stackView.trailingAnchor.constraint(equalTo: layoutMarginsGuide.trailingAnchor),
+                textLabel.topAnchor.constraint(equalTo: layoutMarginsGuide.topAnchor),
+                textLabel.bottomAnchor.constraint(equalTo: layoutMarginsGuide.bottomAnchor),
+                textLabel.leadingAnchor.constraint(equalTo: layoutMarginsGuide.leadingAnchor),
+                textLabel.trailingAnchor.constraint(equalTo: layoutMarginsGuide.trailingAnchor),
             ])
         }
 
         private func update() {
             if isHighlighted {
-                iconView.alpha = 0.7
                 textLabel.alpha = 0.7
-                backgroundColor = .linkControlHighlight
+                backgroundColor = .linkSurfaceTertiary
             } else {
-                iconView.alpha = 1
                 textLabel.alpha = 1
                 backgroundColor = .clear
             }

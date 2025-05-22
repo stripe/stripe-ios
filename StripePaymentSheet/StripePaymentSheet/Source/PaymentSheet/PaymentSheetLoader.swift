@@ -96,6 +96,15 @@ final class PaymentSheetLoader {
                 let linkAccount = try? await lookupLinkAccount(elementsSession: elementsSession, configuration: configuration)
                 LinkAccountContext.shared.account = linkAccount
 
+                if let linkGlobalHoldbackExperiment = LinkGlobalHoldback(
+                    session: elementsSession,
+                    configuration: configuration,
+                    linkAccount: linkAccount,
+                    integrationShape: analyticsHelper.integrationShape
+                ) {
+                    analyticsHelper.logExposure(experiment: linkGlobalHoldbackExperiment)
+                }
+
                 // Filter out payment methods that the PI/SI or PaymentSheet doesn't support
                 let filteredSavedPaymentMethods = try await savedPaymentMethods
                     .filter { elementsSession.orderedPaymentMethodTypes.contains($0.type) }
@@ -196,15 +205,41 @@ final class PaymentSheetLoader {
     }
 
     static func lookupLinkAccount(elementsSession: STPElementsSession, configuration: PaymentElementConfiguration) async throws -> PaymentSheetLinkAccount? {
-        // Only lookup the consumer account if Link is supported
-        guard PaymentSheet.isLinkEnabled(elementsSession: elementsSession, configuration: configuration) else {
+        // Lookup Link account if Link is enabled or the holdback killswitch is not enabled.
+        // Note: When the holdback experiment is over, we can ignore the killswitch and only lookup when Link is enabled.
+        let isLinkEnabled = PaymentSheet.isLinkEnabled(elementsSession: elementsSession, configuration: configuration)
+        let isLookupForHoldbackEnabled = elementsSession.flags["elements_disable_link_global_holdback_lookup"] != true
+
+        guard isLinkEnabled || isLookupForHoldbackEnabled else {
             return nil
         }
 
+        // Don't log this as a lookup on the backend side if Link is not enabled.
+        // As in, this will be true when this lookup is only happening to gather dimensions for the holdback experiment.
+        // Note: When the holdback experiment is over, we can remove this parameter from the lookup call.
+        let doNotLogConsumerFunnelEvent = !isLinkEnabled
+
+        // This lookup call will only happen if we have access to a user's email:
+        return try await _lookupLinkAccount(
+            elementsSession: elementsSession,
+            configuration: configuration,
+            doNotLogConsumerFunnelEvent: doNotLogConsumerFunnelEvent
+        )
+    }
+
+    private static func _lookupLinkAccount(
+        elementsSession: STPElementsSession,
+        configuration: PaymentElementConfiguration,
+        doNotLogConsumerFunnelEvent: Bool
+    ) async throws -> PaymentSheetLinkAccount? {
         let linkAccountService = LinkAccountService(apiClient: configuration.apiClient, elementsSession: elementsSession)
         func lookUpConsumerSession(email: String?, emailSource: EmailSource) async throws -> PaymentSheetLinkAccount? {
             return try await withCheckedThrowingContinuation { continuation in
-                linkAccountService.lookupAccount(withEmail: email, emailSource: emailSource) { result in
+                linkAccountService.lookupAccount(
+                    withEmail: email,
+                    emailSource: emailSource,
+                    doNotLogConsumerFunnelEvent: doNotLogConsumerFunnelEvent
+                ) { result in
                     switch result {
                     case .success(let linkAccount):
                         continuation.resume(with: .success(linkAccount))
@@ -343,11 +378,15 @@ final class PaymentSheetLoader {
               !ephemeralKey.isEmpty else {
             return []
         }
+
+        // We don't support Link payment methods with customer ephemeral keys
+        let types = PaymentSheet.supportedSavedPaymentMethods.filter { $0 != .link }
+
         return try await withCheckedThrowingContinuation { continuation in
             configuration.apiClient.listPaymentMethods(
                 forCustomer: customerID,
                 using: ephemeralKey,
-                types: PaymentSheet.supportedSavedPaymentMethods,
+                types: types,
                 limit: 100
             ) { paymentMethods, error in
                 guard var paymentMethods, error == nil else {

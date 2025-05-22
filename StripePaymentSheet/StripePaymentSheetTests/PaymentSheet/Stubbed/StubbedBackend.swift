@@ -58,6 +58,23 @@ class StubbedBackend {
             return HTTPStubsResponse(data: mockResponseData, statusCode: 200, headers: nil)
         }
     }
+    static func stubCustomers(fileMock: FileMock = .customers_200) {
+        stub { urlRequest in
+            urlRequest.url?.absoluteString.contains("/v1/customers") ?? false
+        } response: { _ in
+            let mockResponseData = try! fileMock.data()
+            return HTTPStubsResponse(data: mockResponseData, statusCode: 200, headers: nil)
+        }
+    }
+
+    static func stubLookup(fileMock: FileMock = .consumers_lookup_200) {
+        stub { urlRequest in
+            urlRequest.url?.absoluteString.contains("/v1/consumers/sessions/lookup") ?? false
+        } response: { _ in
+            let mockResponseData = try! fileMock.data()
+            return HTTPStubsResponse(data: mockResponseData, statusCode: 200, headers: nil)
+        }
+    }
 }
 
 public class ClassForBundle {}
@@ -71,6 +88,8 @@ public class ClassForBundle {}
     case saved_payment_methods_withSepa_200 = "MockFiles/saved_payment_methods_withSepa_200"
 
     case elementsSessionsPaymentMethod_200 = "MockFiles/elements_sessions_paymentMethod_200"
+    case elementsSessionsPaymentMethod_GB_200 = "MockFiles/elements_sessions_paymentMethod_GB_200"
+    case elementsSessionsPaymentMethod_IT_200 = "MockFiles/elements_sessions_paymentMethod_IT_200"
     case elementsSessions_customerSessionsMobilePaymentElement_200 = "MockFiles/elements_sessions_customerSessionMobilePaymentElement_200"
     case elementsSessions_customerSessionsMobilePaymentElement_setupIntent_200 = "MockFiles/elements_sessions_customerSessionMobilePaymentElement_setupIntent_200"
     case elementsSessions_customerSessionsCustomerSheet_200 = "MockFiles/elements_sessions_customerSessionCustomerSheet_200"
@@ -85,5 +104,7 @@ public class ClassForBundle {}
     case customers_200 = "MockFiles/customers_200"
     case consumers_lookup_200 = "MockFiles/consumers_lookup_200"
     case payment_intents_200 = "MockFiles/payment_intents_200"
+    case payment_intents_misordered_pms_200 = "MockFiles/payment_intents_misordered_pms_200"
+    case payment_intents_no_card_200 = "MockFiles/payment_intents_no_card_200"
     case setup_intents_200 = "MockFiles/setup_intents_200"
 }

@@ -39,14 +39,14 @@ public extension PaymentSheet {
         /// The border width used for selected buttons and tabs in PaymentSheet
         /// - Note: If `nil`, defaults to  `borderWidth * 1.5`
         /// - Note: The behavior of this property is consistent with the behavior of border width on `CALayer`
-        @_spi(EmbeddedPaymentElementPrivateBeta) public var selectedBorderWidth: CGFloat?
+        public var selectedBorderWidth: CGFloat?
 
         /// The shadow used for inputs and tabs in PaymentSheet
         /// - Note: Set this to `.disabled` to disable shadows
         public var shadow: Shadow = Shadow()
 
         /// Describes the appearance of the Embedded Mobile Payment Element
-        @_spi(EmbeddedPaymentElementPrivateBeta) public var embeddedPaymentElement: EmbeddedPaymentElement = EmbeddedPaymentElement()
+        public var embeddedPaymentElement: EmbeddedPaymentElement = EmbeddedPaymentElement()
 
         // MARK: Fonts
 
@@ -104,7 +104,7 @@ public extension PaymentSheet {
 
             /// The border color used for selected buttons and tabs in PaymentSheet
             /// - Note: If `nil`, defaults to  `appearance.colors.primary`
-            @_spi(EmbeddedPaymentElementPrivateBeta) public var selectedComponentBorder: UIColor?
+            public var selectedComponentBorder: UIColor?
 
             /// The color of the divider lines used inside inputs, tabs, and other components
             public var componentDivider: UIColor = .systemGray3
@@ -233,9 +233,9 @@ public extension PaymentSheet {
     }
 }
 
-@_spi(EmbeddedPaymentElementPrivateBeta) public extension PaymentSheet.Appearance {
+public extension PaymentSheet.Appearance {
     /// Describes the appearance of the Embedded Mobile Payment Element
-    @_spi(EmbeddedPaymentElementPrivateBeta) struct EmbeddedPaymentElement: Equatable {
+    struct EmbeddedPaymentElement: Equatable {
 
         /// Creates a `PaymentSheet.Appearance.EmbeddedPaymentElement` with default values
         public init() {}

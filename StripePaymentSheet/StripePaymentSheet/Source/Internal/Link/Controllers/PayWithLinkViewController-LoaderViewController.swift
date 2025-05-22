@@ -25,6 +25,7 @@ extension PayWithLinkViewController {
             NSLayoutConstraint.activate([
                 activityIndicator.centerXAnchor.constraint(equalTo: view.centerXAnchor),
                 activityIndicator.centerYAnchor.constraint(equalTo: view.centerYAnchor),
+                self.view.heightAnchor.constraint(equalToConstant: LoadingViewController.Constants.defaultLoadingViewHeight),
             ])
         }
 

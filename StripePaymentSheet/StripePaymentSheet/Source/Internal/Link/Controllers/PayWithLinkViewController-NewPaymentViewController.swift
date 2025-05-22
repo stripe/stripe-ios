@@ -48,7 +48,7 @@ extension PayWithLinkViewController {
 
         private lazy var cancelButton: Button = {
             let buttonTitle = isAddingFirstPaymentMethod
-                ? String.Localized.pay_another_way
+                ? context.secondaryButtonLabel
                 : String.Localized.cancel
 
             let configuration: Button.Configuration = shouldShowApplePayButton
@@ -104,6 +104,7 @@ extension PayWithLinkViewController {
             var configuration = context.configuration
             configuration.linkPaymentMethodsOnly = true
             configuration.appearance = LinkUI.appearance
+            configuration.cardBrandAcceptance = context.elementsSession.linkCardBrandFilteringEnabled ? configuration.cardBrandAcceptance : .all
 
             let effectiveBillingDetails = configuration.effectiveBillingDetails(for: linkAccount)
             configuration.defaultBillingDetails = effectiveBillingDetails
@@ -140,7 +141,7 @@ extension PayWithLinkViewController {
             super.viewDidLoad()
             addChild(addPaymentMethodVC)
 
-            view.backgroundColor = .linkBackground
+            view.backgroundColor = .linkSurfacePrimary
 
             addPaymentMethodVC.view.backgroundColor = .clear
             errorLabel.isHidden = true
@@ -159,21 +160,9 @@ extension PayWithLinkViewController {
             stackView.setCustomSpacing(LinkUI.extraLargeContentSpacing, after: addPaymentMethodVC.view)
             stackView.translatesAutoresizingMaskIntoConstraints = false
 
-            let scrollView = LinkKeyboardAvoidingScrollView()
-            #if !os(visionOS)
-            scrollView.keyboardDismissMode = .interactive
-            #endif
-            scrollView.addSubview(stackView)
-
-            contentView.addAndPinSubview(scrollView)
+            contentView.addAndPinSubviewToSafeArea(stackView)
 
             NSLayoutConstraint.activate([
-                stackView.topAnchor.constraint(equalTo: scrollView.topAnchor, constant: preferredContentMargins.top),
-                stackView.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor, constant: -preferredContentMargins.bottom),
-                stackView.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor),
-                stackView.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor),
-                stackView.widthAnchor.constraint(equalTo: scrollView.widthAnchor),
-
                 titleLabel.leadingAnchor.constraint(
                     equalTo: stackView.safeAreaLayoutGuide.leadingAnchor,
                     constant: preferredContentMargins.leading),
@@ -315,15 +304,16 @@ extension PayWithLinkViewController {
             if isAddingFirstPaymentMethod {
                 coordinator?.cancel()
             } else {
-                navigationController?.popViewController(animated: true)
+                _ = bottomSheetController?.popContentViewController()
             }
         }
-
     }
-
 }
 
 extension PayWithLinkViewController.NewPaymentViewController: AddPaymentMethodViewControllerDelegate {
+    func getWalletHeaders() -> [String] {
+        return []
+    }
 
     func didUpdate(_ viewController: AddPaymentMethodViewController) {
         if viewController.selectedPaymentMethodType == .instantDebits {

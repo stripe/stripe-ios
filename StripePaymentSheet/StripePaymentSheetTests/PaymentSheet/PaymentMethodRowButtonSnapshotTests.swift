@@ -7,8 +7,9 @@
 
 import Foundation
 import StripeCoreTestUtils
+@_spi(STP) import StripePayments
+@_spi(STP) @testable import StripePaymentSheet
 import UIKit
-@_spi(STP)@_spi(EmbeddedPaymentElementPrivateBeta) @testable import StripePaymentSheet
 
 class PaymentMethodRowButtonSnapshotTests: STPSnapshotTestCase {
 
@@ -48,7 +49,7 @@ class PaymentMethodRowButtonSnapshotTests: STPSnapshotTestCase {
         rowButton.state = .selected
         verify(rowButton)
     }
-    
+
     func testPaymentMethodRowButton_ignoresEmbeddedConfiguration() {
         var appearance = PaymentSheet.Appearance.default
         appearance.embeddedPaymentElement.row.style = .flatWithCheckmark
@@ -56,7 +57,7 @@ class PaymentMethodRowButtonSnapshotTests: STPSnapshotTestCase {
         rowButton.state = .selected
         verify(rowButton)
     }
-    
+
     func testPaymentMethodRowButton_newPaymentMethod_unselected() {
         let rowButton = RowButton.makeForPaymentMethodType(
             paymentMethodType: .instantDebits,
@@ -68,7 +69,7 @@ class PaymentMethodRowButtonSnapshotTests: STPSnapshotTestCase {
         )
         verify(rowButton)
     }
-    
+
     func testPaymentMethodRowButton_newPaymentMethod_withPromo_unselected() {
         let rowButton = RowButton.makeForPaymentMethodType(
             paymentMethodType: .instantDebits,
@@ -78,6 +79,20 @@ class PaymentMethodRowButtonSnapshotTests: STPSnapshotTestCase {
             shouldAnimateOnPress: false,
             didTap: { _ in }
         )
+        verify(rowButton)
+    }
+
+    func testPaymentMethodRowButton_newPaymentMethod_linkType_unselected() {
+        var card = STPPaymentMethod._testCard()
+        card.linkPaymentDetails = .card(
+            LinkPaymentDetails.Card(
+                expMonth: 12,
+                expYear: 2030,
+                last4: "4242",
+                brand: .visa
+            )
+        )
+        let rowButton = SavedPaymentMethodRowButton(paymentMethod: card, appearance: .default)
         verify(rowButton)
     }
 

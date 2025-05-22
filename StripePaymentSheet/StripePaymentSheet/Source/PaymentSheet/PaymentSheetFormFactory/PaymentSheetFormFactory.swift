@@ -34,6 +34,7 @@ class PaymentSheetFormFactory {
     let isPaymentIntent: Bool
     let isSettingUp: Bool
     let countryCode: String?
+    let currency: String?
     let cardBrandChoiceEligible: Bool
     let savePaymentMethodConsentBehavior: SavePaymentMethodConsentBehavior
     let allowsSetAsDefaultPM: Bool
@@ -101,6 +102,17 @@ class PaymentSheetFormFactory {
             let isAccountNotRegisteredOrMissing = linkAccount.flatMap({ !$0.isRegistered }) ?? true
             return isAccountNotRegisteredOrMissing && !UserDefaults.standard.customerHasUsedLink
         }()
+        let paymentMethodType: STPPaymentMethodType = {
+            if linkAccount != nil, configuration.linkPaymentMethodsOnly, !elementsSession.linkPassthroughModeEnabled {
+                return .link
+            }
+            switch paymentMethod {
+            case .stripe(let paymentMethodType):
+                return paymentMethodType
+            default:
+                return .unknown
+            }
+        }()
         self.init(configuration: configuration,
                   paymentMethod: paymentMethod,
                   previousCustomerInput: previousCustomerInput,
@@ -110,8 +122,9 @@ class PaymentSheetFormFactory {
                   accountService: accountService,
                   cardBrandChoiceEligible: elementsSession.isCardBrandChoiceEligible,
                   isPaymentIntent: intent.isPaymentIntent,
-                  isSettingUp: intent.isSettingUp,
+                  isSettingUp: intent.isSetupFutureUsageSet(for: paymentMethodType),
                   countryCode: elementsSession.countryCode(overrideCountry: configuration.overrideCountry),
+                  currency: intent.currency,
                   savePaymentMethodConsentBehavior: elementsSession.savePaymentMethodConsentBehavior,
                   allowsSetAsDefaultPM: elementsSession.paymentMethodSetAsDefaultForPaymentSheet,
                   isFirstSavedPaymentMethod: elementsSession.customer?.paymentMethods.isEmpty ?? true,
@@ -131,6 +144,7 @@ class PaymentSheetFormFactory {
         isPaymentIntent: Bool,
         isSettingUp: Bool,
         countryCode: String?,
+        currency: String? = nil,
         savePaymentMethodConsentBehavior: SavePaymentMethodConsentBehavior,
         allowsSetAsDefaultPM: Bool = false,
         isFirstSavedPaymentMethod: Bool = true,
@@ -152,6 +166,7 @@ class PaymentSheetFormFactory {
         self.isPaymentIntent = isPaymentIntent
         self.isSettingUp = isSettingUp
         self.countryCode = countryCode
+        self.currency = currency
         self.cardBrandChoiceEligible = cardBrandChoiceEligible
         self.savePaymentMethodConsentBehavior = savePaymentMethodConsentBehavior
         self.allowsSetAsDefaultPM = allowsSetAsDefaultPM
@@ -599,7 +614,7 @@ extension PaymentSheetFormFactory {
 
         isSaving.value =
             shouldDisplaySaveCheckbox
-            ? configuration.savePaymentMethodOptInBehavior.isSelectedByDefault : isSettingUp
+            ? (configuration.savePaymentMethodOptInBehavior.isSelectedByDefault || isSettingUp) : isSettingUp
 
         let phoneElement = configuration.billingDetailsCollectionConfiguration.phone == .always ? makePhone() : nil
         let addressElement = configuration.billingDetailsCollectionConfiguration.address == .full
@@ -620,6 +635,7 @@ extension PaymentSheetFormFactory {
             saveCheckboxElement: shouldDisplaySaveCheckbox ? saveCheckbox : nil,
             defaultCheckboxElement: defaultCheckbox,
             savingAccount: isSaving,
+            isSettingUp: isSettingUp,
             merchantName: merchantName,
             initialLinkedBank: previousCustomerInput?.financialConnectionsLinkedBank,
             appearance: configuration.appearance
@@ -725,7 +741,7 @@ extension PaymentSheetFormFactory {
     }
 
     func makeAfterpayClearpayHeader() -> SubtitleElement {
-        return SubtitleElement(view: AfterpayPriceBreakdownView(theme: theme), isHorizontalMode: configuration.isHorizontalMode)
+        return SubtitleElement(view: AfterpayPriceBreakdownView(currency: currency, theme: theme), isHorizontalMode: configuration.isHorizontalMode)
     }
 
     func makeKlarnaCountry(apiPath: String? = nil) -> PaymentMethodElement? {

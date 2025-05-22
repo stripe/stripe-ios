@@ -73,7 +73,7 @@ extension PaymentSheet {
         /// If the image is immediately available, the updateHandler will not be called.
         /// If the image is not immediately available, the updateHandler will be called if we are able
         /// to download the image.
-        func makeImage(forDarkBackground: Bool = false, updateHandler: DownloadManager.UpdateImageHandler?) -> UIImage {
+        func makeImage(forDarkBackground: Bool = false, currency: String? = nil, updateHandler: DownloadManager.UpdateImageHandler?) -> UIImage {
             // TODO(RUN_MOBILESDK-3167): Make this return a dynamic UIImage
             // TODO: Refactor this out of PaymentMethodType. Users shouldn't have to convert STPPaymentMethodType to PaymentMethodType in order to get its image.
             switch self {
@@ -86,7 +86,7 @@ extension PaymentSheet {
                 )
             case .stripe(let paymentMethodType):
                 // Get the client-side asset first
-                let localImage = paymentMethodType.makeImage(forDarkBackground: forDarkBackground)
+                let localImage = paymentMethodType.makeImage(forDarkBackground: forDarkBackground, currency: currency)
                 // Next, try to download the image from the spec if possible
                 if
                     FormSpecProvider.shared.isLoaded,
@@ -293,7 +293,7 @@ extension PaymentSheet {
             let requirements: [PaymentMethodTypeRequirement]
 
             // We have different requirements depending on whether or not the intent is setting up the payment method for future use
-            if intent.isSettingUp {
+            if intent.isSetupFutureUsageSet(for: paymentMethod) {
                 requirements = {
                     switch paymentMethod {
                     case .card:
@@ -559,17 +559,23 @@ extension STPPaymentMethod {
                 return []
             case .USBankAccount, .SEPADebit:
                 return [.userSupportsDelayedPaymentMethods]
+            case .link:
+                return isLinkPaymentMethod ? [] : [.unsupportedForReuse]
             default:
                 return [.unsupportedForReuse]
             }
         }()
+        var supportedPaymentMethods = PaymentSheet.supportedPaymentMethods
+        if elementsSession.enableLinkInSPM && PaymentSheet.enableLinkInSPM {
+            supportedPaymentMethods.append(.link)
+        }
         return PaymentSheet.PaymentMethodType.configurationSupports(
             paymentMethod: type,
             requirements: requirements,
             configuration: configuration,
             intent: intent,
             elementsSession: elementsSession,
-            supportedPaymentMethods: PaymentSheet.supportedPaymentMethods
+            supportedPaymentMethods: supportedPaymentMethods
         ) == .supported
     }
 }

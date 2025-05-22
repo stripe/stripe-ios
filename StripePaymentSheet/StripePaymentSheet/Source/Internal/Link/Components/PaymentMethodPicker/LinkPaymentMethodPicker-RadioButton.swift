@@ -23,7 +23,7 @@ extension LinkPaymentMethodPicker {
             }
         }
 
-        public var borderColor: UIColor = .linkControlBorder {
+        public var borderColor: UIColor = .linkRadioButtonUnselectedColor {
             didSet {
                 applyStyling()
             }

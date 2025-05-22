@@ -65,98 +65,27 @@ extension PaymentSheet {
         elementsSession: STPElementsSession,
         shouldOfferApplePay: Bool,
         shouldFinishOnClose: Bool,
-        completion: (() -> Void)?
+        onClose: (() -> Void)? = nil
     ) {
-        let payWithLinkVC = PayWithLinkViewController(
-            intent: intent,
-            elementsSession: elementsSession,
-            configuration: configuration,
-            shouldOfferApplePay: shouldOfferApplePay,
-            shouldFinishOnClose: shouldFinishOnClose,
-            analyticsHelper: self.analyticsHelper
-        )
+        let payWithNativeLink = PayWithNativeLinkController(intent: intent, elementsSession: elementsSession, configuration: configuration, analyticsHelper: analyticsHelper)
 
-        payWithLinkVC.payWithLinkDelegate = self
-
-        if UIDevice.current.userInterfaceIdiom == .pad {
-            payWithLinkVC.modalPresentationStyle = .formSheet
-        } else {
-            payWithLinkVC.modalPresentationStyle = .overFullScreen
-        }
-
-        presentingController.present(payWithLinkVC, animated: true, completion: completion)
-    }
-
-    func verifyLinkSessionIfNeeded(
-        with paymentOption: PaymentOption,
-        intent: Intent,
-        completion: ((Bool) -> Void)? = nil
-    ) {
-        guard
-            case .link(let linkOption) = paymentOption,
-            let linkAccount = linkOption.account,
-            linkAccount.sessionState == .requiresVerification
-        else {
-            // No verification required
-            completion?(true)
-            return
-        }
-
-        let verificationController = LinkVerificationController(mode: .inlineLogin, linkAccount: linkAccount)
-        verificationController.present(from: bottomSheetViewController) { [weak self] result in
-            self?.bottomSheetViewController.dismiss(animated: true, completion: nil)
-            switch result {
-            case .completed:
-                completion?(true)
-            case .canceled, .failed:
-                completion?(false)
+        payWithNativeLink.presentAsBottomSheet(from: presentingController, shouldOfferApplePay: shouldOfferApplePay, shouldFinishOnClose: shouldFinishOnClose, completion: { result, _, didFinish in
+            if case let .failed(error) = result {
+                self.mostRecentError = error
             }
-        }
-    }
 
+            if didFinish {
+                self.completion?(result)
+            }
+
+            onClose?()
+        })
+    }
 }
 
 @available(iOSApplicationExtension, unavailable)
 @available(macCatalystApplicationExtension, unavailable)
-extension PaymentSheet: PayWithLinkViewControllerDelegate {
-
-    func payWithLinkViewControllerDidConfirm(
-        _ payWithLinkViewController: PayWithLinkViewController,
-        intent: Intent,
-        elementsSession: STPElementsSession,
-        with paymentOption: PaymentOption,
-        completion: @escaping (PaymentSheetResult, StripeCore.STPAnalyticsClient.DeferredIntentConfirmationType?) -> Void
-    ) {
-        PaymentSheet.confirm(
-            configuration: self.configuration,
-            authenticationContext: self.bottomSheetViewController,
-            intent: intent,
-            elementsSession: elementsSession,
-            paymentOption: paymentOption,
-            paymentHandler: self.paymentHandler,
-            integrationShape: .complete,
-            analyticsHelper: analyticsHelper)
-        { result, confirmationType in
-            if case let .failed(error) = result {
-                self.mostRecentError = error
-            }
-            self.analyticsHelper.logPayment(paymentOption: paymentOption, result: result, deferredIntentConfirmationType: confirmationType)
-
-            completion(result, confirmationType)
-        }
-    }
-
-    func payWithLinkViewControllerDidCancel(_ payWithLinkViewController: PayWithLinkViewController) {
-        payWithLinkViewController.dismiss(animated: true)
-    }
-
-    func payWithLinkViewControllerDidFinish(
-        _ payWithLinkViewController: PayWithLinkViewController,
-        result: PaymentSheetResult,
-        deferredIntentConfirmationType: StripeCore.STPAnalyticsClient.DeferredIntentConfirmationType?
-    ) {
-        completion?(result)
-    }
+extension PaymentSheet {
 
     private func findPaymentSheetViewController() -> PaymentSheetViewControllerProtocol? {
         for vc in bottomSheetViewController.contentStack {

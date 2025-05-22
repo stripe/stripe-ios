@@ -1,7 +1,36 @@
-## x.x.x x-x-x
+## 24.14.0 2025-05-19
+### PaymentSheet
+* [Added] Support for payment method options setup future usage in public preview.
+
+## 24.13.1 2025-05-05
+### PaymentSheet
+* [Fixed] Updated the "TEST MODE" badge to say "TEST", due to the upcoming release of [Sandboxes](https://docs.stripe.com/sandboxes).
+* [Added] Added support for Thai language.
+
+## 24.13.0 2025-05-05
+### PaymentSheet
+* [Added] Embedded Payment Element is now generally available. Learn more by visiting the [docs](https://docs.stripe.com/payments/mobile/embedded).
+
+## 24.12.1 2025-04-30
+### Identity
+* [Fixed] Fixed an issue where identity verification may fail due to stale model cache.
+
+## 24.12.0 2025-04-21
+### PaymentSheet
+* [Added] Bank payments are now available in the PaymentSheet without requiring a dependency on `StripeFinancialConnections`.
+* [Added] Ability to update saved cards when using CustomerSessions (private preview)
+* [Added] Added payment method options setup future usage to deferred API.
+
+## 24.11.1 2025-04-14
+### PaymentSheet
+* [Added] Added support for PayNow and PromptPay to Embedded Payment Element (private preview).
+* [Fixed] Fixed theming issues in the native Link experience (private preview).
+
+## 24.11.0 2025-04-07
 ### PaymentSheet
 * [Added] Added `rowSelectionBehavior` API to Embedded Payment Element (private preview).
 * [Changed] The native Link experience (private preview) is now available as a payment method even if you collect billing details via `billingDetailsCollectionConfiguration`.
+* [Changed] Updated Afterpay branding in the US to be Cash App Afterpay.
 
 ## 24.10.0 2025-03-31
 ### PaymentSheet
@@ -37,6 +66,9 @@
 
 ### Financial Connections
 * [Added] The `StripeFinancialConnections` SDK now supports dark mode, and will automatically adapt to the device's theme. [Learn more](https://docs.stripe.com/financial-connections/other-data-powered-products?platform=ios#connections-customize-ios) about configuring appearance settings.
+
+### CustomerSheet
+* [Added] `sepa_debit` PaymentMethod is now available in CustomerSheet
 
 ## 24.5.0 2025-02-10
 ### CardScan

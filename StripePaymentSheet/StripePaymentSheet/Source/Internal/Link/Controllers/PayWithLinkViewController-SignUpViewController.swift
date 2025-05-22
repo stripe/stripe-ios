@@ -24,7 +24,7 @@ extension PayWithLinkViewController {
         private let titleLabel: UILabel = {
             let label = UILabel()
             label.font = LinkUI.font(forTextStyle: .title)
-            label.textColor = .linkPrimaryText
+            label.textColor = .linkTextPrimary
             label.adjustsFontForContentSizeCategory = true
             label.numberOfLines = 0
             label.textAlignment = .center
@@ -38,7 +38,7 @@ extension PayWithLinkViewController {
         private lazy var subtitleLabel: UILabel = {
             let label = UILabel()
             label.font = LinkUI.font(forTextStyle: .body)
-            label.textColor = .linkSecondaryText
+            label.textColor = .linkTextSecondary
             label.adjustsFontForContentSizeCategory = true
             label.numberOfLines = 0
             label.textAlignment = .center
@@ -70,7 +70,7 @@ extension PayWithLinkViewController {
 
         private lazy var legalTermsView: LinkLegalTermsView = {
             let legalTermsView = LinkLegalTermsView(textAlignment: .center, isStandalone: true)
-            legalTermsView.tintColor = .linkBrandDark
+            legalTermsView.tintColor = .linkTextBrand
             legalTermsView.delegate = self
             return legalTermsView
         }()
@@ -84,10 +84,7 @@ extension PayWithLinkViewController {
         private lazy var signUpButton: Button = {
             let button = Button(
                 configuration: .linkPrimary(),
-                title: STPLocalizedString(
-                    "Agree and continue",
-                    "Title for a button that when tapped creates a Link account for the user."
-                )
+                title: viewModel.signUpButtonTitle
             )
             button.addTarget(self, action: #selector(didTapSignUpButton(_:)), for: .touchUpInside)
             button.adjustsFontForContentSizeCategory = true
@@ -95,7 +92,7 @@ extension PayWithLinkViewController {
             return button
         }()
 
-        private lazy var stackView: UIStackView = {
+        private(set) lazy var stackView: UIStackView = {
             let stackView = UIStackView(arrangedSubviews: [
                 titleLabel,
                 subtitleLabel,
@@ -114,7 +111,7 @@ extension PayWithLinkViewController {
             stackView.setCustomSpacing(LinkUI.extraLargeContentSpacing, after: legalTermsView)
             stackView.isLayoutMarginsRelativeArrangement = true
             stackView.directionalLayoutMargins = LinkUI.contentMargins
-
+            stackView.translatesAutoresizingMaskIntoConstraints = false
             return stackView
         }()
 
@@ -138,16 +135,20 @@ extension PayWithLinkViewController {
         override func viewDidLoad() {
             super.viewDidLoad()
 
-            let scrollView = LinkKeyboardAvoidingScrollView(contentView: stackView)
-            #if !os(visionOS)
-            scrollView.keyboardDismissMode = .interactive
-            #endif
+            contentView.addSubview(stackView)
 
-            contentView.addAndPinSubview(scrollView)
-
+            NSLayoutConstraint.activate([
+                contentView.topAnchor.constraint(equalTo: stackView.topAnchor),
+                contentView.leadingAnchor.constraint(equalTo: stackView.leadingAnchor),
+                contentView.trailingAnchor.constraint(equalTo: stackView.trailingAnchor),
+                contentView.bottomAnchor.constraint(greaterThanOrEqualTo: stackView.bottomAnchor),
+                contentView.heightAnchor.constraint(greaterThanOrEqualToConstant: 300),
+            ])
             setupBindings()
             updateUI()
         }
+
+        override var requiresFullScreen: Bool { true }
 
         override func viewDidAppear(_ animated: Bool) {
             super.viewDidAppear(animated)
@@ -171,7 +172,7 @@ extension PayWithLinkViewController {
             nameElement.delegate = self
         }
 
-        private func updateUI(animated: Bool = false) {
+        func updateUI(animated: Bool = false) {
             if viewModel.isLookingUpLinkAccount {
                 emailElement.startAnimating()
             } else {
@@ -208,12 +209,7 @@ extension PayWithLinkViewController {
             )
 
             // Signup button
-            stackView.toggleArrangedSubview(
-                signUpButton,
-                shouldShow: viewModel.shouldShowSignUpButton,
-                animated: animated
-            )
-
+            signUpButton.title = viewModel.signUpButtonTitle
             signUpButton.isEnabled = viewModel.shouldEnableSignUpButton
         }
 

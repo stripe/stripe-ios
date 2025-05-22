@@ -23,11 +23,12 @@ source ci_scripts/localization_vars.sh
 # This is the custom status ID for our project with which the localizers mark completed translations
 FINAL_STATUS_ID=587
 
-lokalise2 --token $API_TOKEN \
+lokalise2 --token "$API_TOKEN" \
           --project-id $PROJECT_ID \
           file download \
           --format strings \
-          --filter-langs $LANGUAGES \
+          --filter-langs "$LANGUAGES" \
+          --filter-filenames "$LOKALISE_FILENAMES" \
           --custom-translation-status-ids $FINAL_STATUS_ID \
           --export-sort "a_z" \
           --directory-prefix . \

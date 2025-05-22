@@ -50,6 +50,8 @@ class ConnectComponentWebViewController: ConnectWebViewController {
 
     let componentType: ComponentType
 
+    let bundleIdProvider: () -> String?
+
     init<InitProps: Encodable>(
         componentManager: EmbeddedComponentManager,
         componentType: ComponentType,
@@ -61,7 +63,8 @@ class ConnectComponentWebViewController: ConnectWebViewController {
         notificationCenter: NotificationCenter = NotificationCenter.default,
         webLocale: Locale = Locale.autoupdatingCurrent,
         authenticatedWebViewManager: AuthenticatedWebViewManager = .init(),
-        financialConnectionsPresenter: FinancialConnectionsPresenter = .init()
+        financialConnectionsPresenter: FinancialConnectionsPresenter = .init(),
+        bundleIdProvider: @escaping () -> String? = Bundle.stp_applicationBundleId
     ) {
         self.componentManager = componentManager
         self.notificationCenter = notificationCenter
@@ -70,6 +73,7 @@ class ConnectComponentWebViewController: ConnectWebViewController {
         self.didFailLoadWithError = didFailLoadWithError
         self.financialConnectionsPresenter = financialConnectionsPresenter
         self.componentType = componentType
+        self.bundleIdProvider = bundleIdProvider
 
         let config = WKWebViewConfiguration()
 
@@ -130,7 +134,9 @@ class ConnectComponentWebViewController: ConnectWebViewController {
                      notificationCenter: NotificationCenter = NotificationCenter.default,
                      webLocale: Locale = Locale.autoupdatingCurrent,
                      authenticatedWebViewManager: AuthenticatedWebViewManager = .init(),
-                     financialConnectionsPresenter: FinancialConnectionsPresenter = .init()) {
+                     financialConnectionsPresenter: FinancialConnectionsPresenter = .init(),
+                     bundleIdProvider: @escaping () -> String? = Bundle.stp_applicationBundleId
+    ) {
         self.init(componentManager: componentManager,
                   componentType: componentType,
                   loadContent: loadContent,
@@ -140,7 +146,8 @@ class ConnectComponentWebViewController: ConnectWebViewController {
                   notificationCenter: notificationCenter,
                   webLocale: webLocale,
                   authenticatedWebViewManager: authenticatedWebViewManager,
-                  financialConnectionsPresenter: financialConnectionsPresenter)
+                  financialConnectionsPresenter: financialConnectionsPresenter,
+                  bundleIdProvider: bundleIdProvider)
     }
 
     required init?(coder: NSCoder) {
@@ -317,7 +324,9 @@ private extension ConnectComponentWebViewController {
         addMessageHandler(setterMessageHandler)
         addMessageHandler(OnLoaderStartMessageHandler { [analyticsClient, activityIndicator] _ in
             analyticsClient.logComponentLoaded(loadEnd: .now)
-            UIView.animate(withDuration: 1.0, animations: {
+            // Keeps the spinner around for 100ms which is just enough on most devices to smooth the transition to the web spinner
+            // Any longer, and the spinner begins to conflict with the embedded loading state
+            UIView.animate(withDuration: 0.1, animations: {
                 activityIndicator.alpha = 0.0
             }, completion: { _ in
                 activityIndicator.stopAnimating()
@@ -334,6 +343,9 @@ private extension ConnectComponentWebViewController {
             return .init(locale: webLocale.toLanguageTag(),
                          appearance: .init(appearance: componentManager.appearance, traitCollection: self.traitCollection),
                          fonts: componentManager.fonts.map({ .init(customFontSource: $0) }))
+        }))
+        addMessageHandler(FetchAppInfoMessageHandler.init(didReceiveMessage: { [weak self] _ in
+            return .init(applicationId: self?.bundleIdProvider() ?? "")
         }))
         addMessageHandler(FetchInitComponentPropsMessageHandler(fetchInitProps))
         addMessageHandler(OnLoadErrorMessageHandler { [weak self, analyticsClient] value in

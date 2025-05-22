@@ -67,7 +67,7 @@ final class LinkLegalTermsView: UIView {
         textView.isEditable = false
         textView.backgroundColor = .clear
         textView.attributedText = formattedLegalText()
-        textView.textColor = .linkSecondaryText
+        textView.textColor = .linkTextTertiary
         textView.textContainerInset = .zero
         textView.textContainer.lineFragmentPadding = 0
         textView.delegate = self

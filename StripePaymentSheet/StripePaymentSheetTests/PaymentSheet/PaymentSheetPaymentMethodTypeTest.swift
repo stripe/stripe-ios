@@ -148,6 +148,49 @@ class PaymentSheetPaymentMethodTypeTest: XCTestCase {
         )
     }
 
+    /// Returns true, iDEAL in `supportedPaymentMethods` and URL and delayed payment method support requirements for setting up are met
+    func testSupportsAdding_inSupportedList_urlConfiguredRequiredDelayedRequired() {
+        var configuration = makeConfiguration(hasReturnURL: true)
+        configuration.allowsDelayedPaymentMethods = true
+        XCTAssertEqual(
+            PaymentSheet.PaymentMethodType.supportsAdding(
+                paymentMethod: .iDEAL,
+                configuration: configuration,
+                intent: ._testPaymentIntent(paymentMethodTypes: [.iDEAL], paymentMethodOptionsSetupFutureUsage: [.iDEAL: "off_session"]), elementsSession: ._testValue(paymentMethodTypes: ["iDEAL"]),
+                supportedPaymentMethods: [.iDEAL]
+            ),
+            .supported
+        )
+    }
+
+    /// Returns true, iDEAL in `supportedPaymentMethods` and URL requirement is met but delayed payment method support requirement for setting up is not met
+    func testSupportsAdding_inSupportedList_urlConfiguredRequiredDelayedRequiredButNotProvided() {
+        var configuration = makeConfiguration(hasReturnURL: true)
+        XCTAssertEqual(
+            PaymentSheet.PaymentMethodType.supportsAdding(
+                paymentMethod: .iDEAL,
+                configuration: configuration,
+                intent: ._testPaymentIntent(paymentMethodTypes: [.iDEAL], paymentMethodOptionsSetupFutureUsage: [.iDEAL: "off_session"]), elementsSession: ._testValue(paymentMethodTypes: ["iDEAL"]),
+                supportedPaymentMethods: [.iDEAL]
+            ),
+            .missingRequirements([.userSupportsDelayedPaymentMethods])
+        )
+    }
+
+    /// Returns true, iDEAL in `supportedPaymentMethods` and URL requirement and not setting up requirement are met
+    func testSupportsAdding_inSupportedList_urlConfiguredRequiredDelayedNotRequired() {
+        var configuration = makeConfiguration(hasReturnURL: true)
+        XCTAssertEqual(
+            PaymentSheet.PaymentMethodType.supportsAdding(
+                paymentMethod: .iDEAL,
+                configuration: configuration,
+                intent: ._testPaymentIntent(paymentMethodTypes: [.iDEAL], setupFutureUsage: .offSession, paymentMethodOptionsSetupFutureUsage: [.iDEAL: "none"]), elementsSession: ._testValue(paymentMethodTypes: ["iDEAL"]),
+                supportedPaymentMethods: [.iDEAL]
+            ),
+            .supported
+        )
+    }
+
     // MARK: - SEPA family
 
     let sepaFamily: [STPPaymentMethodType] = [.SEPADebit, .iDEAL, .bancontact, .sofort]

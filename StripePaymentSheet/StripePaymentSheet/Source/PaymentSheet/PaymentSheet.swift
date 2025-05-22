@@ -178,14 +178,18 @@ public class PaymentSheet {
                     self.bottomSheetViewController.setViewControllers([paymentSheetVC])
                 }
                 if let linkAccount = LinkAccountContext.shared.account, loadResult.elementsSession.shouldShowLink2FABeforePaymentSheet(for: linkAccount) {
-                    let verificationController = LinkVerificationController(mode: .inlineLogin, linkAccount: linkAccount)
+                    let verificationController = LinkVerificationController(
+                        mode: .inlineLogin,
+                        linkAccount: linkAccount,
+                        configuration: self.configuration
+                    )
+
                     verificationController.present(from: self.bottomSheetViewController) { result in
                         switch result {
                         case .completed:
-                            self.presentPayWithNativeLinkController(from: self.bottomSheetViewController, intent: loadResult.intent, elementsSession: loadResult.elementsSession, shouldOfferApplePay: self.configuration.isApplePayEnabled, shouldFinishOnClose: false) {
-                                // To prevent a flash of PaymentSheet content, don't present it until after the LinkController presentation animation has completed
+                            self.presentPayWithNativeLinkController(from: self.bottomSheetViewController, intent: loadResult.intent, elementsSession: loadResult.elementsSession, shouldOfferApplePay: self.configuration.isApplePayEnabled, shouldFinishOnClose: false, onClose: {
                                 presentPaymentSheet()
-                            }
+                            })
                         case .canceled:
                             presentPaymentSheet()
                         case .failed:
@@ -227,6 +231,10 @@ public class PaymentSheet {
 
     // MARK: - Internal Properties
 
+    /// Decides whether Link payment methods should be shown in the list of saved payment methods.
+    /// Only enable this in the PaymentSheet playground.
+    @_spi(STP) public static var enableLinkInSPM: Bool = false
+
     /// The initialization mode this instance was initialized with
     let mode: InitializationMode
 
@@ -237,8 +245,7 @@ public class PaymentSheet {
     lazy var loadingViewController = LoadingViewController(
         delegate: self,
         appearance: configuration.appearance,
-        isTestMode: configuration.apiClient.isTestmode,
-        loadingViewHeight: 244
+        isTestMode: configuration.apiClient.isTestmode
     )
 
     /// The STPPaymentHandler instance
@@ -339,14 +346,7 @@ extension PaymentSheet: PaymentSheetViewControllerDelegate {
     func paymentSheetViewControllerDidSelectPayWithLink(_ paymentSheetViewController: PaymentSheetViewControllerProtocol) {
         let useNativeLink = deviceCanUseNativeLink(elementsSession: paymentSheetViewController.elementsSession, configuration: configuration)
         if useNativeLink {
-            self.presentPayWithNativeLinkController(
-                from: paymentSheetViewController,
-                intent: paymentSheetViewController.intent,
-                elementsSession: paymentSheetViewController.elementsSession,
-                shouldOfferApplePay: false,
-                shouldFinishOnClose: false,
-                completion: nil
-            )
+            presentPayWithNativeLinkController(from: paymentSheetViewController, intent: paymentSheetViewController.intent, elementsSession: paymentSheetViewController.elementsSession, shouldOfferApplePay: false, shouldFinishOnClose: false)
         } else {
             self.presentPayWithLinkController(
                 from: paymentSheetViewController,

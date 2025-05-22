@@ -39,6 +39,7 @@ class ConfirmButton: UIView {
         case pay(amount: Int, currency: String)
         case add(paymentMethodType: PaymentSheet.PaymentMethodType)
         case `continue`
+        case continueWithLock
         case setup
         case custom(title: String)
         case customWithLock(title: String)
@@ -51,10 +52,26 @@ class ConfirmButton: UIView {
                 return .setup
             case .deferredIntent(let intentConfig):
                 switch intentConfig.mode {
-                case .payment(let amount, let currency, _, _):
+                case .payment(let amount, let currency, _, _, _):
                     return .pay(amount: amount, currency: currency)
                 case .setup:
                     return .setup
+                }
+            }
+        }
+
+        static func makeDefaultTypeForLink(intent: Intent) -> CallToActionType {
+            switch intent {
+            case .paymentIntent(let paymentIntent):
+                return .pay(amount: paymentIntent.amount, currency: paymentIntent.currency)
+            case .setupIntent:
+                return .continueWithLock
+            case .deferredIntent(let intentConfig):
+                switch intentConfig.mode {
+                case .payment(let amount, let currency, _, _, _):
+                    return .pay(amount: amount, currency: currency)
+                case .setup:
+                    return .continueWithLock
                 }
             }
         }
@@ -401,7 +418,7 @@ class ConfirmButton: UIView {
                         } else {
                             return String.Localized.continue
                         }
-                    case .continue:
+                    case .continue, .continueWithLock:
                         return String.Localized.continue
                     case let .pay(amount, currency):
                         let localizedAmount = String.localizedAmountDisplayString(
@@ -439,7 +456,7 @@ class ConfirmButton: UIView {
             case .custom, .continue:
                 lockIcon.isHidden = true
                 addIcon.isHidden = true
-            case .customWithLock:
+            case .customWithLock, .continueWithLock:
                 lockIcon.isHidden = false
                 addIcon.isHidden = true
             case .pay, .setup:

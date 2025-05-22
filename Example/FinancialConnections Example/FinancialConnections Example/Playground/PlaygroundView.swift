@@ -201,10 +201,6 @@ struct PlaygroundView: View {
                         .disabled(viewModel.sessionOutput[.accountIds] == nil)
                         .accessibility(identifier: "playground-session-output-copy-account-ids")
                     }
-
-                    Section(header: Text("Experimental")) {
-                        Toggle("Use async API client", isOn: viewModel.useAsyncAPIClient)
-                    }
                 }
                 .simultaneousGesture(
                     DragGesture().onEnded(hideKeyboardOnDownwardsDrag)

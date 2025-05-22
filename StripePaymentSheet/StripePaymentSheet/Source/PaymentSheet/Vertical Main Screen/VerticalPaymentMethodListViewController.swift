@@ -23,12 +23,13 @@ class VerticalPaymentMethodListViewController: UIViewController {
     private(set) var currentSelection: RowButtonType?
     let stackView = UIStackView()
     let appearance: PaymentSheet.Appearance
+    let currency: String?
     private(set) var incentive: PaymentMethodIncentive?
     weak var delegate: VerticalPaymentMethodListViewControllerDelegate?
 
     // Properties moved from initializer captures
     private var overrideHeaderView: UIView?
-    private var savedPaymentMethod: STPPaymentMethod?
+    private var savedPaymentMethods: [STPPaymentMethod]
     private var initialSelection: RowButtonType?
     private var savedPaymentMethodAccessoryType: RowButton.RightAccessoryButton.AccessoryType?
     private var shouldShowApplePay: Bool
@@ -41,7 +42,7 @@ class VerticalPaymentMethodListViewController: UIViewController {
 
     init(
         initialSelection: RowButtonType?,
-        savedPaymentMethod: STPPaymentMethod?,
+        savedPaymentMethods: [STPPaymentMethod],
         paymentMethodTypes: [PaymentSheet.PaymentMethodType],
         shouldShowApplePay: Bool,
         shouldShowLink: Bool,
@@ -54,10 +55,11 @@ class VerticalPaymentMethodListViewController: UIViewController {
         delegate: VerticalPaymentMethodListViewControllerDelegate
     ) {
         self.appearance = appearance
+        self.currency = currency
         self.incentive = incentive
         self.delegate = delegate
         self.overrideHeaderView = overrideHeaderView
-        self.savedPaymentMethod = savedPaymentMethod
+        self.savedPaymentMethods = savedPaymentMethods
         self.initialSelection = initialSelection
         self.savedPaymentMethodAccessoryType = savedPaymentMethodAccessoryType
         self.shouldShowApplePay = shouldShowApplePay
@@ -85,8 +87,8 @@ class VerticalPaymentMethodListViewController: UIViewController {
         // Create stack view views after super.init so that we can reference `self`
         var views = [UIView]()
         // Saved payment method:
-        if let savedPaymentMethod {
-            let selection = RowButtonType.saved(paymentMethod: savedPaymentMethod)
+        if let firstSavedPaymentMethod = savedPaymentMethods.first {
+            let selection = RowButtonType.saved(paymentMethod: firstSavedPaymentMethod)
             let accessoryButton: RowButton.RightAccessoryButton? = {
                 if let savedPaymentMethodAccessoryType {
                     return RowButton.RightAccessoryButton(accessoryType: savedPaymentMethodAccessoryType, appearance: appearance, didTap: didTapAccessoryButton)
@@ -95,7 +97,12 @@ class VerticalPaymentMethodListViewController: UIViewController {
                 }
             }()
 
-            let savedPaymentMethodButton = RowButton.makeForSavedPaymentMethod(paymentMethod: savedPaymentMethod, appearance: appearance, accessoryView: accessoryButton) { [weak self] in
+            let savedPaymentMethodButton = RowButton.makeForSavedPaymentMethod(
+                paymentMethod: firstSavedPaymentMethod,
+                appearance: appearance,
+                accessoryView: accessoryButton,
+                showIconForLinkPaymentMethods: false
+            ) { [weak self] in
                 self?.didTap(rowButton: $0, selection: selection)
             }
             if initialSelection == selection {
@@ -143,7 +150,8 @@ class VerticalPaymentMethodListViewController: UIViewController {
             let selection = RowButtonType.new(paymentMethodType: paymentMethodType)
             let rowButton = RowButton.makeForPaymentMethodType(
                 paymentMethodType: paymentMethodType,
-                hasSavedCard: savedPaymentMethod?.type == .card, // TODO(RUN_MOBILESDK-3708)
+                currency: currency,
+                hasSavedCard: savedPaymentMethods.contains { $0.type == .card },
                 promoText: incentive?.takeIfAppliesTo(paymentMethodType)?.displayText,
                 appearance: appearance,
                 // Enable press animation if tapping this transitions the screen to a form instead of becoming selected

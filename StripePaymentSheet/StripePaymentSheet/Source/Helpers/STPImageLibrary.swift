@@ -16,9 +16,11 @@ class PaymentSheetImageLibrary {
 
     /// An icon representing Afterpay.
     @objc
-    public class func afterpayLogo(locale: Locale = Locale.current) -> UIImage {
-        if AfterpayPriceBreakdownView.shouldUseClearpayBrand(for: locale) {
+    public class func afterpayLogo(currency: String? = nil) -> UIImage {
+        if AfterpayPriceBreakdownView.shouldUseClearpayBrand(for: currency) {
             return self.safeImageNamed("clearpay_mark", templateIfAvailable: true)
+        } else if AfterpayPriceBreakdownView.shouldUseCashAppBrand(for: currency) {
+            return self.safeImageNamed("cash_app_afterpay_mark", templateIfAvailable: true)
         } else {
             return self.safeImageNamed("afterpay_mark", templateIfAvailable: true)
         }
@@ -70,6 +72,21 @@ class PaymentSheetImageLibrary {
             return STPImageLibrary.bankIcon() // use generic
         }
         return icon
+    }
+
+    class func bankInstitutionIcon(for bank: String?) -> UIImage? {
+        guard let bank else {
+            return nil
+        }
+        let icon = safeImageNamed("bank_icon_\(bank.lowercased())")
+        if icon.size == .zero {
+            return nil
+        }
+        return icon
+    }
+
+    class func linkBankIcon() -> UIImage {
+        STPImageLibrary.linkBankIcon()
     }
 }
 

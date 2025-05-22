@@ -8,7 +8,7 @@ import XCTest
 
 @testable@_spi(STP) import StripeCore
 @testable@_spi(STP) import StripePayments
-@testable@_spi(STP) import StripePaymentSheet
+@testable@_spi(STP) @_spi(CustomerSessionBetaAccess) import StripePaymentSheet
 @testable@_spi(STP) import StripePaymentsTestUtils
 @testable@_spi(STP) import StripeUICore
 
@@ -94,11 +94,14 @@ final class PaymentSheetAPIMockTest: APIStubbedTestCase {
                             .init(expiryYear: 2055,
                                   expiryMonth: 12,
                                   brand: "visa",
+                                  networks: ["visa"],
                                   last4: "1234",
+                                  funding: .credit,
                                   checks: nil)
                     ),
                     billingAddress: nil,
                     billingEmailAddress: exampleBillingEmail,
+                    nickname: nil,
                     isDefault: true
                 ),
                 confirmationExtras: nil
@@ -190,14 +193,84 @@ final class PaymentSheetAPIMockTest: APIStubbedTestCase {
                         useMobileEndpoints: false),
                     paymentDetails: .init(
                         stripeID: "pd1",
-                        details: .card(card: .init(expiryYear: 2055, expiryMonth: 12, brand: "visa", last4: "1234", checks: nil)),
+                        details: .card(card: .init(
+                            expiryYear: 2055,
+                            expiryMonth: 12,
+                            brand: "visa",
+                            networks: ["visa"],
+                            last4: "1234",
+                            funding: .credit,
+                            checks: nil
+                        )),
                         billingAddress: nil,
                         billingEmailAddress: nil,
+                        nickname: nil,
                         isDefault: true
                     ),
                     confirmationExtras: nil
                 )
             ),
+            paymentHandler: paymentHandler,
+            analyticsHelper: ._testValue(),
+            completion: { _, _ in
+                exp.fulfill()
+            }
+        )
+
+        waitForExpectations(timeout: 10)
+    }
+
+    func testLinkInlineSignupInPaymentMethodModePassesCorrectAllowRedisplay() {
+        stubLinkSignup()
+        stubLinkCreatePaymentDetails()
+        stubConfirmPaymentExpecting(isPaymentIntent: true, type: "link", setupFutureUsage: "off_session", allowRedisplay: "always")
+        stubLinkLogout(consumerSessionClientSecret: "pscs_abc123")
+
+        let exp = expectation(description: "confirm completed")
+
+        var configuration = MockParams.configuration(pk: MockParams.publicKey)
+        configuration.customer = .init(id: "cus_123", customerSessionClientSecret: "cuss_123")
+
+        let paymentHandler = STPPaymentHandler(apiClient: configuration.apiClient)
+        let elementsSession = STPElementsSession.linkElementsSessionWithCustomerSession
+
+        var paymentIntentJSON = MockJson.paymentIntent
+        paymentIntentJSON["payment_method_types"] = ["card", "link"]
+
+        let paymentIntent = STPPaymentIntent.decodedObject(fromAPIResponse: paymentIntentJSON)!
+
+        let confirmParams = IntentConfirmParams(type: .stripe(.card))
+        confirmParams.paymentMethodParams.card = STPPaymentMethodCardParams()
+        confirmParams.paymentMethodParams.card?.number = "4242424242424242"
+        confirmParams.paymentMethodParams.card?.expMonth = NSNumber(value: 12)
+        confirmParams.paymentMethodParams.card?.expYear = 2040
+        confirmParams.paymentMethodParams.card?.cvc = "123"
+
+        // User selected to save the payment method
+        confirmParams.saveForFutureUseCheckboxState = .selected
+
+        // We're in payment method mode, so the PaymentOption is Link
+        let paymentOption: PaymentOption = .link(
+            option: .signUp(
+                account: .init(
+                    email: "email@email.com",
+                    session: nil,
+                    publishableKey: "pk_123",
+                    useMobileEndpoints: false
+                ),
+                phoneNumber: PhoneNumber(number: "5555555555", countryCode: "US")!,
+                consentAction: .implied_v0_0,
+                legalName: nil,
+                intentConfirmParams: confirmParams
+            )
+        )
+
+        PaymentSheet.confirm(
+            configuration: configuration,
+            authenticationContext: self,
+            intent: .paymentIntent(paymentIntent),
+            elementsSession: elementsSession,
+            paymentOption: paymentOption,
             paymentHandler: paymentHandler,
             analyticsHelper: ._testValue(),
             completion: { _, _ in
@@ -238,6 +311,35 @@ private extension PaymentSheetAPIMockTest {
 
             // Payment Method Options
             assertParam(params, named: "payment_method_options[card][setup_future_usage]", is: setupFutureUsage, line: line)
+
+            defer { exp.fulfill() }
+            var json = isPaymentIntent ? MockJson.paymentIntent : MockJson.setupIntent
+            json["status"] = "succeeded"
+
+            return HTTPStubsResponse(jsonObject: json, statusCode: 200, headers: nil)
+        }
+    }
+
+    func stubConfirmPaymentExpecting(
+        isPaymentIntent: Bool,
+        type: String,
+        setupFutureUsage: String? = nil,
+        allowRedisplay: String? = nil,
+        line: UInt = #line
+    ) {
+        let exp = expectation(description: "confirm payment requested")
+
+        stub { urlRequest in
+            guard let pathComponents = urlRequest.url?.pathComponents else { return false }
+            return pathComponents.last == "confirm"
+        } response: { [self] request in
+            let params = bodyParams(from: request, line: line)
+
+            assertParam(params, named: "payment_method_data[type]", is: type, line: line)
+            assertParam(params, named: "payment_method_data[allow_redisplay]", is: allowRedisplay, line: line)
+
+            // Payment Method Options
+            assertParam(params, named: "payment_method_options[link][setup_future_usage]", is: setupFutureUsage, line: line)
 
             defer { exp.fulfill() }
             var json = isPaymentIntent ? MockJson.paymentIntent : MockJson.setupIntent
@@ -290,6 +392,119 @@ private extension PaymentSheetAPIMockTest {
             defer { exp.fulfill() }
 
             return HTTPStubsResponse(jsonObject: [], statusCode: 200, headers: nil)
+        }
+    }
+
+    func stubLinkSignup(
+        line: UInt = #line
+    ) {
+        let exp = expectation(description: "Link signup")
+
+        stub { urlRequest in
+            guard let pathComponents = urlRequest.url?.pathComponents else { return false }
+            return pathComponents.last == "sign_up"
+        } response: {_ in
+            defer { exp.fulfill() }
+
+            let responseJSON = """
+              {
+                "publishable_key" : "pk_123",
+                "consumer_session": {
+                  "client_secret": "pscs_abc123",
+                  "email_address": "foo@bar.com",
+                  "redacted_formatted_phone_number": "(***) *** **12",
+                  "verification_sessions": [
+                    {
+                      "state" : "STARTED",
+                      "type" : "SIGNUP"
+                    }
+                  ],
+                  "support_paymnet_details_types": ["CARD"],
+                }
+              }
+            """
+
+            let response = try! JSONSerialization.jsonObject(
+                with: responseJSON.data(using: .utf8)!,
+                options: []
+            ) as! [AnyHashable: Any]
+
+            return HTTPStubsResponse(jsonObject: response, statusCode: 200, headers: nil)
+        }
+    }
+
+    func stubLinkCreatePaymentDetails(
+        line: UInt = #line
+    ) {
+        let exp = expectation(description: "Link signup")
+
+        stub { urlRequest in
+            guard let pathComponents = urlRequest.url?.pathComponents else { return false }
+            return pathComponents.last == "payment_details"
+        } response: { [self] _ in
+            defer { exp.fulfill() }
+
+            let responseJSON = """
+              {
+                "redacted_payment_details" : {
+                  "card_details" : {
+                    "brand_enum" : "visa",
+                    "checks" : {
+                      "address_postal_code_check" : "STATE_INVALID",
+                      "cvc_check" : "STATE_INVALID",
+                      "address_line1_check" : "STATE_INVALID"
+                    },
+                    "country" : "COUNTRY_US",
+                    "exp_month" : 12,
+                    "funding" : "CREDIT",
+                    "preferred_network" : null,
+                    "program_details" : {
+                      "card_art_network_id" : "",
+                      "height" : 0,
+                      "program_name" : "",
+                      "width" : 0,
+                      "background_color" : "",
+                      "foreground_color" : "",
+                      "card_art_url" : ""
+                    },
+                    "brand" : "VISA",
+                    "last4" : "4242",
+                    "networks" : [
+                      "VISA"
+                    ],
+                    "exp_year" : 2030
+                  },
+                  "is_default" : false,
+                  "id" : "csmrpd_test_61QrpvXKaugSBvBsB41C40Oy4de1NQS8",
+                  "backup_ids" : [
+
+                  ],
+                  "is_us_debit_prepaid_or_bank_payment" : false,
+                  "billing_address" : {
+                    "line_1" : null,
+                    "line_2" : null,
+                    "locality" : null,
+                    "postal_code" : "55555",
+                    "sorting_code" : null,
+                    "country_code" : "US",
+                    "dependent_locality" : null,
+                    "administrative_area" : null,
+                    "name" : "Payments SDK CI"
+                  },
+                  "nickname" : "",
+                  "bank_account_details" : null,
+                  "type" : "CARD",
+                  "billing_email_address" : "mobile-payments-sdk-ci+874e9b29-df47-4a14-be39-be257a89dccb@stripe.com"
+                }
+              }
+            """
+
+            let response = try! JSONSerialization.jsonObject(
+                with: responseJSON.data(using: .utf8)!,
+                options: []
+            ) as! [AnyHashable: Any]
+
+            return HTTPStubsResponse(jsonObject: response, statusCode: 200, headers: nil)
         }
     }
 

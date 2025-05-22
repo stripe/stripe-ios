@@ -106,6 +106,7 @@ extension LinkInlineSignupElementSnapshotTests {
         func lookupAccount(
             withEmail email: String?,
             emailSource: StripePaymentSheet.EmailSource,
+            doNotLogConsumerFunnelEvent: Bool,
             completion: @escaping (Result<PaymentSheetLinkAccount?, Error>) -> Void
         ) {
             completion(

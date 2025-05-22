@@ -12,7 +12,6 @@
 import UIKit
 
 /// An object that manages a view that displays payment methods and completes a checkout.
-@_spi(EmbeddedPaymentElementPrivateBeta)
 @MainActor
 public final class EmbeddedPaymentElement {
 
@@ -54,7 +53,7 @@ public final class EmbeddedPaymentElement {
         guard let _paymentOption else {
             return nil
         }
-        return .init(paymentOption: _paymentOption, mandateText: embeddedPaymentMethodsView.mandateText)
+        return .init(paymentOption: _paymentOption, mandateText: embeddedPaymentMethodsView.mandateText, currency: intent.currency)
     }
 
     /// An asynchronous failable initializer
@@ -242,7 +241,7 @@ public final class EmbeddedPaymentElement {
             assertionFailure("`confirm` should only be called when `paymentOption` is not nil")
             return .failed(error: PaymentSheetError.confirmingWithInvalidPaymentOption)
         }
-        let authContext = STPAuthenticationContextWrapper(presentingViewController: presentingViewController)
+        let authContext = STPAuthenticationContextWrapper(presentingViewController: presentingViewController, appearance: configuration.appearance)
         let confirmResult = await _confirm(paymentOption: paymentOption, authContext: authContext).result
         if confirmResult.isCanceledOrFailed {
             clearPaymentOptionIfNeeded()
@@ -447,7 +446,7 @@ extension EmbeddedPaymentElement {
 
 // MARK: - Typealiases
 
-@_spi(EmbeddedPaymentElementPrivateBeta) public typealias EmbeddedPaymentElementResult = PaymentSheetResult
+public typealias EmbeddedPaymentElementResult = PaymentSheetResult
 extension EmbeddedPaymentElement {
     public typealias IntentConfiguration = PaymentSheet.IntentConfiguration
     public typealias UserInterfaceStyle = PaymentSheet.UserInterfaceStyle
@@ -459,7 +458,7 @@ extension EmbeddedPaymentElement {
     public typealias Address = PaymentSheet.Address
     public typealias BillingDetailsCollectionConfiguration = PaymentSheet.BillingDetailsCollectionConfiguration
     public typealias ExternalPaymentMethodConfiguration = PaymentSheet.ExternalPaymentMethodConfiguration
-    public typealias CustomPaymentMethodConfiguration = PaymentSheet.CustomPaymentMethodConfiguration
+    @_spi(CustomPaymentMethodsBeta) public typealias CustomPaymentMethodConfiguration = PaymentSheet.CustomPaymentMethodConfiguration
 }
 
 // MARK: - EmbeddedPaymentElement.PaymentOptionDisplayData

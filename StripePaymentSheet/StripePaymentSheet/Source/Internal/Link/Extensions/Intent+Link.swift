@@ -18,6 +18,10 @@ extension STPElementsSession {
         linkSettings?.passthroughModeEnabled ?? false
     }
 
+    var linkCardBrandFilteringEnabled: Bool {
+        linkPassthroughModeEnabled
+    }
+
     var supportsLinkCard: Bool {
         supportsLink && (linkFundingSources?.contains(.card) ?? false) || linkPassthroughModeEnabled
     }
@@ -69,7 +73,7 @@ extension Intent {
             return .setup
         case .deferredIntent(let intentConfig):
             switch intentConfig.mode {
-            case .payment(let amount, let currency, _, _):
+            case .payment(let amount, let currency, _, _, _):
                 return .pay(amount: amount, currency: currency)
             case .setup:
                 return .setup

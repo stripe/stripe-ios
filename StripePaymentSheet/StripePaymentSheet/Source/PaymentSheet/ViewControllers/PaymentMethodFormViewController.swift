@@ -422,7 +422,7 @@ extension PaymentMethodFormViewController {
             let amount: Int?
             let currency: String?
             switch intentConfig.mode {
-            case let .payment(amount: _amount, currency: _currency, _, _):
+            case let .payment(amount: _amount, currency: _currency, _, _, _):
                 amount = _amount
                 currency = _currency
             case let .setup(currency: _currency, _):
@@ -523,7 +523,7 @@ extension PaymentMethodFormViewController {
             let amount: Int?
             let currency: String?
             switch intentConfig.mode {
-            case let .payment(amount: _amount, currency: _currency, _, _):
+            case let .payment(amount: _amount, currency: _currency, _, _, _):
                 amount = _amount
                 currency = _currency
             case let .setup(currency: _currency, _):

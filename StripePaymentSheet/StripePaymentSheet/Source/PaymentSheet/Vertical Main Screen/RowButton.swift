@@ -31,6 +31,8 @@ class RowButton: UIView, EventHandler {
     let defaultBadgeLabel: UILabel?
     /// The view indicating any incentives associated with this payment method
     let promoBadge: PromoBadgeView?
+    /// The view inidicating that the payment method is coming from the user's Link account
+    let linkIcon: UIImageView?
 
     // MARK: State
 
@@ -82,6 +84,7 @@ class RowButton: UIView, EventHandler {
         subtext: String? = nil,
         badgeText: String? = nil,
         promoBadge: PromoBadgeView? = nil,
+        linkIcon: UIImageView?,
         accessoryView: UIView? = nil,
         shouldAnimateOnPress: Bool = false,
         isEmbedded: Bool = false,
@@ -98,6 +101,7 @@ class RowButton: UIView, EventHandler {
         self.accessoryView = accessoryView
         self.defaultBadgeLabel = RowButton.makeRowButtonDefaultBadgeLabel(badgeText: badgeText, appearance: appearance)
         self.promoBadge = promoBadge
+        self.linkIcon = linkIcon
 
         super.init(frame: .zero)
         addAndPinSubview(accessibilityHelperView)
@@ -286,6 +290,7 @@ extension RowButton {
                        subtext: String? = nil,
                        badgeText: String? = nil,
                        promoBadge: PromoBadgeView? = nil,
+                       linkIcon: UIImageView? = nil,
                        accessoryView: UIView? = nil,
                        shouldAnimateOnPress: Bool = false,
                        isEmbedded: Bool = false,
@@ -300,6 +305,7 @@ extension RowButton {
                   subtext: subtext,
                   badgeText: badgeText,
                   promoBadge: promoBadge,
+                  linkIcon: linkIcon,
                   accessoryView: accessoryView,
                   shouldAnimateOnPress: shouldAnimateOnPress,
                   isEmbedded: isEmbedded,
@@ -318,6 +324,7 @@ extension RowButton {
                   subtext: subtext,
                   badgeText: badgeText,
                   promoBadge: promoBadge,
+                  linkIcon: linkIcon,
                   accessoryView: accessoryView,
                   shouldAnimateOnPress: shouldAnimateOnPress,
                   isEmbedded: isEmbedded,
@@ -332,6 +339,7 @@ extension RowButton {
                   subtext: subtext,
                   badgeText: badgeText,
                   promoBadge: promoBadge,
+                  linkIcon: linkIcon,
                   accessoryView: accessoryView,
                   shouldAnimateOnPress: shouldAnimateOnPress,
                   isEmbedded: isEmbedded,
@@ -346,6 +354,7 @@ extension RowButton {
                   subtext: subtext,
                   badgeText: badgeText,
                   promoBadge: promoBadge,
+                  linkIcon: linkIcon,
                   accessoryView: accessoryView,
                   shouldAnimateOnPress: shouldAnimateOnPress,
                   isEmbedded: isEmbedded,
@@ -424,6 +433,7 @@ extension RowButton {
 
     static func makeForPaymentMethodType(
         paymentMethodType: PaymentSheet.PaymentMethodType,
+        currency: String? = nil,
         hasSavedCard: Bool,
         accessoryView: UIView? = nil,
         promoText: String? = nil,
@@ -433,7 +443,7 @@ extension RowButton {
         isEmbedded: Bool = false,
         didTap: @escaping DidTapClosure
     ) -> RowButton {
-        let imageView = PaymentMethodTypeImageView(paymentMethodType: paymentMethodType, contrastMatchingColor: appearance.colors.componentText)
+        let imageView = PaymentMethodTypeImageView(paymentMethodType: paymentMethodType, contrastMatchingColor: appearance.colors.componentText, currency: currency)
         imageView.contentMode = .scaleAspectFit
 
         // Special case "New card" vs "Card" title
@@ -448,8 +458,10 @@ extension RowButton {
             case .stripe(.klarna):
                 return String.Localized.buy_now_or_pay_later_with_klarna
             case .stripe(.afterpayClearpay):
-                if AfterpayPriceBreakdownView.shouldUseClearpayBrand(for: Locale.current) {
+                if AfterpayPriceBreakdownView.shouldUseClearpayBrand(for: currency) {
                     return String.Localized.buy_now_or_pay_later_with_clearpay
+                } else if AfterpayPriceBreakdownView.shouldUseCashAppBrand(for: currency) {
+                    return String.Localized.buy_now_or_pay_later_with_cash_app_afterpay
                 } else {
                     return String.Localized.buy_now_or_pay_later_with_afterpay
                 }
@@ -472,6 +484,18 @@ extension RowButton {
             )
         }()
 
+        let linkIcon: UIImageView? = {
+            guard paymentMethodType == .stripe(.link) else { return nil }
+            let theme = ElementsAppearance.default
+            let imageView: UIImageView
+            imageView = DynamicImageView(dynamicImage: Image.link_logo_knockout.makeImage(template: false), pairedColor: theme.colors.componentBackground)
+            imageView.translatesAutoresizingMaskIntoConstraints = false
+            imageView.contentMode = .scaleAspectFit
+            imageView.isAccessibilityElement = true
+            imageView.accessibilityLabel = STPPaymentMethodType.link.displayName
+            return imageView
+        }()
+
         return RowButton.create(
             appearance: appearance,
             type: .new(paymentMethodType: paymentMethodType),
@@ -479,6 +503,7 @@ extension RowButton {
             text: text,
             subtext: subtext,
             promoBadge: promoBadge,
+            linkIcon: linkIcon,
             accessoryView: accessoryView,
             shouldAnimateOnPress: shouldAnimateOnPress,
             isEmbedded: isEmbedded,
@@ -502,10 +527,26 @@ extension RowButton {
         return button
     }
 
-    static func makeForSavedPaymentMethod(paymentMethod: STPPaymentMethod, appearance: PaymentSheet.Appearance, subtext: String? = nil, badgeText: String? = nil, accessoryView: UIView? = nil, isEmbedded: Bool = false, didTap: @escaping DidTapClosure) -> RowButton {
+    static func makeForSavedPaymentMethod(paymentMethod: STPPaymentMethod, appearance: PaymentSheet.Appearance, subtext: String? = nil, badgeText: String? = nil, accessoryView: UIView? = nil, isEmbedded: Bool = false, showIconForLinkPaymentMethods: Bool = false, didTap: @escaping DidTapClosure) -> RowButton {
         let imageView = UIImageView(image: paymentMethod.makeSavedPaymentMethodRowImage())
         imageView.contentMode = .scaleAspectFit
-        let button = RowButton.create(appearance: appearance, type: .saved(paymentMethod: paymentMethod), imageView: imageView, text: paymentMethod.paymentSheetLabel, subtext: subtext, badgeText: badgeText, accessoryView: accessoryView, isEmbedded: isEmbedded, didTap: didTap)
+
+        let linkIcon: UIImageView? = {
+            guard showIconForLinkPaymentMethods, paymentMethod.isLinkPaymentMethod else {
+                return nil
+            }
+
+            let theme = ElementsAppearance.default
+            let imageView: UIImageView
+            imageView = DynamicImageView(dynamicImage: Image.link_logo_knockout.makeImage(template: false), pairedColor: theme.colors.componentBackground)
+            imageView.translatesAutoresizingMaskIntoConstraints = false
+            imageView.contentMode = .scaleAspectFit
+            imageView.isAccessibilityElement = true
+            imageView.accessibilityLabel = STPPaymentMethodType.link.displayName
+            return imageView
+        }()
+
+        let button = RowButton.create(appearance: appearance, type: .saved(paymentMethod: paymentMethod), imageView: imageView, text: paymentMethod.paymentSheetLabel, subtext: subtext, badgeText: badgeText, linkIcon: linkIcon, accessoryView: accessoryView, isEmbedded: isEmbedded, didTap: didTap)
         button.accessibilityHelperView.accessibilityLabel = {
             if let badgeText {
                 if let accessibilityLabel = paymentMethod.paymentSheetAccessibilityLabel {

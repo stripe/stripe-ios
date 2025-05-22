@@ -7,6 +7,7 @@
 
 import Foundation
 @_spi(STP) import StripeCore
+@_spi(STP) import StripePayments
 import UIKit
 
 extension UpdatePaymentMethodViewController {
@@ -23,6 +24,9 @@ extension UpdatePaymentMethodViewController {
         let isDefault: Bool
 
         var shouldShowSaveButton: Bool {
+            guard paymentMethod.type != .link else {
+                return false
+            }
             return canUpdateCardBrand || canSetAsDefaultPM || canUpdate
         }
 
@@ -57,6 +61,8 @@ extension UpdatePaymentMethodViewController {
                 return .Localized.manage_us_bank_account
             case .SEPADebit:
                 return .Localized.manage_sepa_debit
+            case .link:
+                return paymentMethod.linkPaymentDetails?.header
             default:
                 assertionFailure("Updating payment method has not been implemented for \(paymentMethod.type)")
                 return nil
@@ -74,6 +80,8 @@ extension UpdatePaymentMethodViewController {
                 return .Localized.bank_account_details_cannot_be_changed
             case .SEPADebit:
                 return .Localized.sepa_debit_details_cannot_be_changed
+            case .link:
+                return paymentMethod.linkPaymentDetails?.footnote
             default:
                 assertionFailure("Updating payment method has not been implemented for \(paymentMethod.type)")
                 return nil
@@ -94,6 +102,31 @@ extension UpdatePaymentMethodViewController {
             self.isCBCEligible = isCBCEligible
             self.isSetAsDefaultPMEnabled = allowsSetAsDefaultPM
             self.isDefault = isDefault
+        }
+    }
+}
+
+private extension LinkPaymentDetails {
+
+    var header: String? {
+        switch self {
+        case .card:
+            return .Localized.manage_card
+        case .bankAccount:
+            return .Localized.manage_bank_account
+        default:
+            return nil
+        }
+    }
+
+    var footnote: String? {
+        switch self {
+        case .card:
+            return .Localized.card_details_cannot_be_changed
+        case .bankAccount:
+            return .Localized.bank_account_details_cannot_be_changed
+        default:
+            return nil
         }
     }
 }

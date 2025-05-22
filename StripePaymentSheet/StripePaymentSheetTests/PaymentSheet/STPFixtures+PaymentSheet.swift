@@ -7,8 +7,9 @@
 
 import Foundation
 @_spi(STP) @testable import StripeCore
+@_spi(STP) import StripeCoreTestUtils
 @_spi(STP) import StripePayments
-@_spi(STP) @_spi(EmbeddedPaymentElementPrivateBeta) @testable import StripePaymentSheet
+@_spi(STP) @_spi(PaymentMethodOptionsSetupFutureUsagePreview) @testable import StripePaymentSheet
 import StripePaymentsTestUtils
 @_spi(STP) import StripeUICore
 
@@ -47,6 +48,7 @@ extension STPElementsSession {
         countryCode: String? = nil,
         merchantCountryCode: String? = nil,
         linkSettings: LinkSettings? = nil,
+        experimentsData: ExperimentsData? = nil,
         flags: [String: Bool] = [:],
         paymentMethodSpecs: [[AnyHashable: Any]]? = nil,
         cardBrandChoice: STPCardBrandChoice? = nil,
@@ -60,10 +62,12 @@ extension STPElementsSession {
             allResponseFields: [:],
             sessionID: "test_123",
             orderedPaymentMethodTypes: orderedPaymentMethodTypes,
+            orderedPaymentMethodTypesAndWallets: [],
             unactivatedPaymentMethodTypes: unactivatedPaymentMethodTypes,
             countryCode: countryCode,
             merchantCountryCode: merchantCountryCode,
             linkSettings: linkSettings,
+            experimentsData: experimentsData,
             flags: flags,
             paymentMethodSpecs: paymentMethodSpecs,
             cardBrandChoice: cardBrandChoice,
@@ -180,6 +184,7 @@ extension STPElementsSession {
 
     static func _testValue(
         intent: Intent,
+        isLinkPassthroughModeEnabled: Bool? = nil,
         linkMode: LinkMode? = nil,
         linkFundingSources: Set<LinkSettings.FundingSource> = [],
         defaultPaymentMethod: String? = nil,
@@ -214,6 +219,7 @@ extension STPElementsSession {
         return STPElementsSession._testValue(
             paymentMethodTypes: paymentMethodTypes,
             customerSessionData: customerSessionData,
+            isLinkPassthroughModeEnabled: isLinkPassthroughModeEnabled,
             linkMode: linkMode,
             linkFundingSources: linkFundingSources,
             defaultPaymentMethod: defaultPaymentMethod,
@@ -226,10 +232,11 @@ extension Intent {
     static func _testPaymentIntent(
         paymentMethodTypes: [STPPaymentMethodType],
         setupFutureUsage: STPPaymentIntentSetupFutureUsage = .none,
+        paymentMethodOptionsSetupFutureUsage: [STPPaymentMethodType: String]? = nil,
         currency: String = "usd"
     ) -> Intent {
         let paymentMethodTypes = paymentMethodTypes.map { STPPaymentMethod.string(from: $0) ?? "unknown" }
-        let paymentIntent = STPFixtures.paymentIntent(paymentMethodTypes: paymentMethodTypes, setupFutureUsage: setupFutureUsage, currency: currency)
+        let paymentIntent = STPFixtures.paymentIntent(paymentMethodTypes: paymentMethodTypes, setupFutureUsage: setupFutureUsage, paymentMethodOptionsSetupFutureUsage: paymentMethodOptionsSetupFutureUsage, currency: currency)
         return .paymentIntent(paymentIntent)
     }
 
@@ -245,8 +252,12 @@ extension Intent {
         return .setupIntent(setupIntent)
     }
 
-    static func _testDeferredIntent(paymentMethodTypes: [STPPaymentMethodType], setupFutureUsage: PaymentSheet.IntentConfiguration.SetupFutureUsage? = nil) -> Intent {
-        return .deferredIntent(intentConfig: .init(mode: .payment(amount: 1010, currency: "USD", setupFutureUsage: setupFutureUsage), confirmHandler: { _, _, _ in }))
+    static func _testDeferredIntent(
+        paymentMethodTypes: [STPPaymentMethodType],
+        setupFutureUsage: PaymentSheet.IntentConfiguration.SetupFutureUsage? = nil,
+        paymentMethodOptionsSetupFutureUsage: [STPPaymentMethodType: PaymentSheet.IntentConfiguration.SetupFutureUsage]? = nil
+    ) -> Intent {
+        return .deferredIntent(intentConfig: .init(mode: .payment(amount: 1010, currency: "USD", setupFutureUsage: setupFutureUsage, paymentMethodOptions: PaymentSheet.IntentConfiguration.Mode.PaymentMethodOptions(setupFutureUsageValues: paymentMethodOptionsSetupFutureUsage)), confirmHandler: { _, _, _ in }))
     }
 }
 
@@ -375,6 +386,29 @@ extension STPPaymentMethod {
             ] as [String: Any],
         ])!
     }
+
+    static func _testLink() -> STPPaymentMethod {
+        let paymentMethod = STPPaymentMethod.decodedObject(fromAPIResponse: [
+            "id": "pm_123",
+            "type": "link",
+            "sepa_debit": [
+                "last4": "1234",
+            ],
+            "billing_details": [
+                "name": "Sam Stripe",
+                "email": "sam@stripe.com",
+            ] as [String: Any],
+        ])!
+        paymentMethod.linkPaymentDetails = .card(
+            LinkPaymentDetails.Card(
+                expMonth: 12,
+                expYear: 2030,
+                last4: "4242",
+                brand: .visa
+            )
+        )
+        return paymentMethod
+    }
 }
 
 extension PaymentSheet.Appearance {
@@ -433,8 +467,18 @@ extension PaymentSheetLoader.LoadResult {
 }
 
 extension PaymentSheetAnalyticsHelper {
-    static func _testValue(analyticsClient: STPAnalyticsClient = .sharedClient) -> Self {
-        return .init(integrationShape: .complete, configuration: PaymentSheet.Configuration(), analyticsClient: analyticsClient)
+    static func _testValue(
+        integrationShape: PaymentSheetAnalyticsHelper.IntegrationShape = .complete,
+        configuration: PaymentSheet.Configuration = .init(),
+        analyticsClient: STPAnalyticsClient = STPTestingAnalyticsClient(),
+        analyticsClientV2: AnalyticsClientV2Protocol = MockAnalyticsClientV2()
+    ) -> Self {
+        return .init(
+            integrationShape: integrationShape,
+            configuration: configuration,
+            analyticsClient: analyticsClient,
+            analyticsClientV2: analyticsClientV2
+        )
     }
 }
 

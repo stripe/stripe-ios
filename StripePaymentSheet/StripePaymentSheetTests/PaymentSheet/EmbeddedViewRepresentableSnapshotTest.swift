@@ -5,13 +5,13 @@
 //  Created by Nick Porter on 1/31/25.
 //
 
-import XCTest
-import SwiftUI
 import StripeCoreTestUtils
 @testable import StripePayments
+@testable import StripePaymentSheet
 @testable import StripePaymentsTestUtils
-@_spi(EmbeddedPaymentElementPrivateBeta) @testable import StripePaymentSheet
 @testable import StripeUICore
+import SwiftUI
+import XCTest
 
 @MainActor
 class EmbeddedViewRepresentableSnapshotTest: STPSnapshotTestCase {
@@ -19,7 +19,7 @@ class EmbeddedViewRepresentableSnapshotTest: STPSnapshotTestCase {
     func testEmbeddedPaymentElementView() async throws {
         let intentConfig = EmbeddedPaymentElement.IntentConfiguration(
             mode: .payment(amount: 1000, currency: "USD"),
-            paymentMethodTypes: ["card", "cashapp", "us_bank_account","link", "apple_pay", "afterpay_clearpay"]
+            paymentMethodTypes: ["card", "cashapp", "us_bank_account", "link", "apple_pay", "afterpay_clearpay"]
         ) { _, _, _ in
             // In these tests, we don't call confirm, so pass an empty handler.
         }

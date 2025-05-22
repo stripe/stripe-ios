@@ -206,6 +206,7 @@
 		06A516593E48DCFD5D98D702 /* Decimal+StripeCore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Decimal+StripeCore.swift"; sourceTree = "<group>"; };
 		0ACE2C3A8889C655E58EEA67 /* nb */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = nb; path = nb.lproj/Localizable.strings; sourceTree = "<group>"; };
 		0B6C28853EF0316366FB8DC4 /* STPAnalyticEvent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = STPAnalyticEvent.swift; sourceTree = "<group>"; };
+		1405894D2DC8575100DF2EAA /* th */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = th; path = th.lproj/Localizable.strings; sourceTree = "<group>"; };
 		160FD8F504CCAC864C27AA62 /* ko */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ko; path = ko.lproj/Localizable.strings; sourceTree = "<group>"; };
 		1678E0A16D46DA2B4D3B3ECD /* UIImage+StripeCoreTestingUtils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIImage+StripeCoreTestingUtils.swift"; sourceTree = "<group>"; };
 		181E67908573FC358CCED4BF /* bg-BG */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "bg-BG"; path = "bg-BG.lproj/Localizable.strings"; sourceTree = "<group>"; };
@@ -961,6 +962,7 @@
 				"zh-HK",
 				"zh-Hans",
 				"zh-Hant",
+				th,
 			);
 			mainGroup = 705ECC4F6AE12F0021C3726D;
 			packageReferences = (
@@ -1211,6 +1213,7 @@
 				AA435F92864CA975753865DF /* zh-Hans */,
 				AF1FC608B88ACEA4C7438866 /* zh-Hant */,
 				6EEB07003465364DBAFA7DEB /* zh-HK */,
+				1405894D2DC8575100DF2EAA /* th */,
 			);
 			name = Localizable.strings;
 			sourceTree = "<group>";

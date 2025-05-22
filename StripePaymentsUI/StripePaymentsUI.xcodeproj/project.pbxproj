@@ -112,6 +112,7 @@
 		01F8FDBA6B57108EB1A80833 /* StripePaymentsUI.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = StripePaymentsUI.h; sourceTree = "<group>"; };
 		037A7BAE734C79C1C7816C65 /* id */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = id; path = id.lproj/Localizable.strings; sourceTree = "<group>"; };
 		09478FB2F62490A3E4C30710 /* Project-Debug.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "Project-Debug.xcconfig"; sourceTree = "<group>"; };
+		140589492DC855D000DF2EAA /* th */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = th; path = th.lproj/Localizable.strings; sourceTree = "<group>"; };
 		15AF4C8964BDCA3C18A231BA /* pl-PL */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "pl-PL"; path = "pl-PL.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		1749604BB65B36B31E575B1B /* ru */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ru; path = ru.lproj/Localizable.strings; sourceTree = "<group>"; };
 		18F4E10018F5B614315EC505 /* lv-LV */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "lv-LV"; path = "lv-LV.lproj/Localizable.strings"; sourceTree = "<group>"; };
@@ -630,6 +631,7 @@
 				"zh-HK",
 				"zh-Hans",
 				"zh-Hant",
+				th,
 			);
 			mainGroup = BE7250EEEC959E5598AFB9FA;
 			packageReferences = (
@@ -798,6 +800,7 @@
 				29B0AD21FF2C4E8B326DBF98 /* zh-Hans */,
 				7678EF919ADE594434B5296C /* zh-Hant */,
 				7A914C7345F934E7DFE6F88C /* zh-HK */,
+				140589492DC855D000DF2EAA /* th */,
 			);
 			name = Localizable.strings;
 			sourceTree = "<group>";

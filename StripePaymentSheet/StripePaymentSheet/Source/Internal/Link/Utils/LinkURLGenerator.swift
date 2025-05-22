@@ -100,7 +100,7 @@ class LinkURLGenerator {
 
         let flags = elementsSession.linkFlags.merging(elementsSession.flags) { (current, _) in current }
         let linkFundingSources = elementsSession.linkFundingSources?.toSortedArray() ?? []
-
+        let linkPaymentMethodType: STPPaymentMethodType = elementsSession.linkPassthroughModeEnabled ? .card : .link
         return LinkURLParams(paymentObject: paymentObjectType,
                              publishableKey: publishableKey,
                              stripeAccount: configuration.apiClient.stripeAccount,
@@ -113,7 +113,7 @@ class LinkURLGenerator {
                              loggerMetadata: loggerMetadata,
                              locale: Locale.current.toLanguageTag(),
                              intentMode: intentMode,
-                             setupFutureUsage: intent.isSettingUp,
+                             setupFutureUsage: intent.isSetupFutureUsageSet(for: linkPaymentMethodType),
                              cardBrandChoice: cardBrandChoiceInfo,
                              linkFundingSources: linkFundingSources)
     }

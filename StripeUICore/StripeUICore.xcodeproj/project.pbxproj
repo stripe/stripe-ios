@@ -165,6 +165,7 @@
 		0ED24D748AEB8B1E0BA1FBAD /* hu */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = hu; path = hu.lproj/Localizable.strings; sourceTree = "<group>"; };
 		11C37DE7B064DC9E3F7E55CD /* ko */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ko; path = ko.lproj/Localizable.strings; sourceTree = "<group>"; };
 		12973742CA1AA39D3B84F072 /* UIViewController+StripeUICore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIViewController+StripeUICore.swift"; sourceTree = "<group>"; };
+		140589502DC8583600DF2EAA /* th */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = th; path = th.lproj/Localizable.strings; sourceTree = "<group>"; };
 		18C5B42A6D5AF223F0CFB23F /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/Localizable.strings; sourceTree = "<group>"; };
 		1A50D68D24D1DE0459ED9529 /* nl */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = nl; path = nl.lproj/Localizable.strings; sourceTree = "<group>"; };
 		20209CDCC3856CE548DA4D25 /* Image.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Image.swift; sourceTree = "<group>"; };
@@ -835,6 +836,7 @@
 				"zh-HK",
 				"zh-Hans",
 				"zh-Hant",
+				th,
 			);
 			mainGroup = 89921F2BD8A1893F01033619;
 			packageReferences = (
@@ -1045,6 +1047,7 @@
 				81A4AE07CB9049B6D8C8D7D2 /* zh-Hans */,
 				9559041BED6315C71F796A5F /* zh-Hant */,
 				70B4BE2ACC46DF88949121CD /* zh-HK */,
+				140589502DC8583600DF2EAA /* th */,
 			);
 			name = Localizable.strings;
 			sourceTree = "<group>";

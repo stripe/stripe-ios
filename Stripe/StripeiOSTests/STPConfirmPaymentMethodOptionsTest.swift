@@ -27,6 +27,7 @@ class STPConfirmPaymentMethodOptionsTest: XCTestCase {
             "weChatPayOptions": "wechat_pay",
             "usBankAccountOptions": "us_bank_account",
             "konbiniOptions": "konbini",
+            "linkOptions": "link",
         ]
 
         XCTAssertEqual(propertyToFieldMap, expected)

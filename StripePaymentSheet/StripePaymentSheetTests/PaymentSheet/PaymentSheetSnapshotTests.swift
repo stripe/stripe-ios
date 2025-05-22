@@ -54,12 +54,14 @@ class PaymentSheetSnapshotTests: STPSnapshotTestCase {
             APIStubbedTestCase.stubAllOutgoingRequests()
         }
         stubAllImageRequests()
+        PaymentSheet.resetCustomer()
     }
 
     public override func tearDown() {
         super.tearDown()
         HTTPStubs.removeAllStubs()
         configuration = PaymentSheet.Configuration()
+        PaymentSheet.resetCustomer()
     }
 
     private func stubbedAPIClient() -> STPAPIClient {
@@ -597,6 +599,7 @@ class PaymentSheetSnapshotTests: STPSnapshotTestCase {
         )
         stubPaymentMethods(fileMock: .saved_payment_methods_200)
         stubCustomers()
+        stubConsumerSession()
 
         preparePaymentSheet(
             override_payment_methods_types: ["affirm"],
@@ -608,6 +611,32 @@ class PaymentSheetSnapshotTests: STPSnapshotTestCase {
     }
 
     func testPaymentSheet_LPM_AfterpayClearpay_only() {
+        stubSessions(
+            fileMock: .elementsSessionsPaymentMethod_GB_200,
+            responseCallback: { data in
+                return self.updatePaymentMethodDetail(
+                    data: data,
+                    variables: [
+                        "<paymentMethods>": "\"afterpay_clearpay\"",
+                        "<currency>": "\"gbp\"",
+                    ]
+                )
+            }
+        )
+        stubPaymentMethods(fileMock: .saved_payment_methods_200)
+        stubCustomers()
+        stubConsumerSession()
+
+        preparePaymentSheet(
+            override_payment_methods_types: ["afterpay_clearpay"],
+            automaticPaymentMethods: false,
+            useLink: false
+        )
+        presentPaymentSheet(darkMode: false)
+        verify(paymentSheet.bottomSheetViewController.view!)
+    }
+
+    func testPaymentSheet_LPM_CashAppAfterpay_only() {
         stubSessions(
             fileMock: .elementsSessionsPaymentMethod_200,
             responseCallback: { data in
@@ -622,6 +651,33 @@ class PaymentSheetSnapshotTests: STPSnapshotTestCase {
         )
         stubPaymentMethods(fileMock: .saved_payment_methods_200)
         stubCustomers()
+        stubConsumerSession()
+
+        preparePaymentSheet(
+            override_payment_methods_types: ["afterpay_clearpay"],
+            automaticPaymentMethods: false,
+            useLink: false
+        )
+        presentPaymentSheet(darkMode: false)
+        verify(paymentSheet.bottomSheetViewController.view!)
+    }
+
+    func testPaymentSheet_LPM_Afterpay_only() {
+        stubSessions(
+            fileMock: .elementsSessionsPaymentMethod_IT_200,
+            responseCallback: { data in
+                return self.updatePaymentMethodDetail(
+                    data: data,
+                    variables: [
+                        "<paymentMethods>": "\"afterpay_clearpay\"",
+                        "<currency>": "\"eur\"",
+                    ]
+                )
+            }
+        )
+        stubPaymentMethods(fileMock: .saved_payment_methods_200)
+        stubCustomers()
+        stubConsumerSession()
 
         preparePaymentSheet(
             override_payment_methods_types: ["afterpay_clearpay"],
@@ -647,6 +703,7 @@ class PaymentSheetSnapshotTests: STPSnapshotTestCase {
         )
         stubPaymentMethods(fileMock: .saved_payment_methods_200)
         stubCustomers()
+        stubConsumerSession()
 
         preparePaymentSheet(
             override_payment_methods_types: ["klarna"],
@@ -672,6 +729,7 @@ class PaymentSheetSnapshotTests: STPSnapshotTestCase {
         )
         stubPaymentMethods(fileMock: .saved_payment_methods_200)
         stubCustomers()
+        stubConsumerSession()
 
         preparePaymentSheet(
             override_payment_methods_types: ["cashapp"],
@@ -697,6 +755,7 @@ class PaymentSheetSnapshotTests: STPSnapshotTestCase {
         )
         stubPaymentMethods(fileMock: .saved_payment_methods_200)
         stubCustomers()
+        stubConsumerSession()
 
         preparePaymentSheet(
             override_payment_methods_types: ["cashapp"],
@@ -723,6 +782,7 @@ class PaymentSheetSnapshotTests: STPSnapshotTestCase {
         )
         stubPaymentMethods(fileMock: .saved_payment_methods_200)
         stubCustomers()
+        stubConsumerSession()
 
         preparePaymentSheet(
             currency: "eur",
@@ -746,6 +806,8 @@ class PaymentSheetSnapshotTests: STPSnapshotTestCase {
                 )
             }
         )
+        stubCustomers()
+        stubConsumerSession()
         let intentConfig = PaymentSheet.IntentConfiguration(mode: .setup(currency: "eur", setupFutureUsage: .offSession),
                                                             paymentMethodTypes: ["ideal"],
                                                             confirmHandler: confirmHandler(_:_:_:),
@@ -775,6 +837,7 @@ class PaymentSheetSnapshotTests: STPSnapshotTestCase {
         )
         stubPaymentMethods(fileMock: .saved_payment_methods_200)
         stubCustomers()
+        stubConsumerSession()
 
         preparePaymentSheet(
             currency: "eur",
@@ -801,6 +864,7 @@ class PaymentSheetSnapshotTests: STPSnapshotTestCase {
         )
         stubPaymentMethods(fileMock: .saved_payment_methods_200)
         stubCustomers()
+        stubConsumerSession()
 
         preparePaymentSheet(
             currency: "eur",
@@ -825,6 +889,8 @@ class PaymentSheetSnapshotTests: STPSnapshotTestCase {
                 )
             }
         )
+        stubCustomers()
+        stubConsumerSession()
         let intentConfig = PaymentSheet.IntentConfiguration(mode: .setup(currency: "eur", setupFutureUsage: .offSession),
                                                             paymentMethodTypes: ["sofort"],
                                                             confirmHandler: confirmHandler(_:_:_:),
@@ -853,6 +919,8 @@ class PaymentSheetSnapshotTests: STPSnapshotTestCase {
                 )
             }
         )
+        stubCustomers()
+        stubConsumerSession()
         preparePaymentSheet(
             currency: "eur",
             override_payment_methods_types: ["sepa_debit"],
@@ -876,6 +944,8 @@ class PaymentSheetSnapshotTests: STPSnapshotTestCase {
                 )
             }
         )
+        stubCustomers()
+        stubConsumerSession()
         let intentConfig = PaymentSheet.IntentConfiguration(mode: .setup(currency: "eur", setupFutureUsage: .offSession),
                                                             paymentMethodTypes: ["sepa_debit"],
                                                             confirmHandler: confirmHandler(_:_:_:),
@@ -906,6 +976,7 @@ class PaymentSheetSnapshotTests: STPSnapshotTestCase {
         )
         stubPaymentMethods(fileMock: .saved_payment_methods_200)
         stubCustomers()
+        stubConsumerSession()
 
         preparePaymentSheet(
             currency: "eur",
@@ -932,6 +1003,7 @@ class PaymentSheetSnapshotTests: STPSnapshotTestCase {
         )
         stubPaymentMethods(fileMock: .saved_payment_methods_200)
         stubCustomers()
+        stubConsumerSession()
 
         preparePaymentSheet(
             currency: "eur",
@@ -958,6 +1030,7 @@ class PaymentSheetSnapshotTests: STPSnapshotTestCase {
         )
         stubPaymentMethods(fileMock: .saved_payment_methods_200)
         stubCustomers()
+        stubConsumerSession()
 
         preparePaymentSheet(
             currency: "eur",
@@ -984,6 +1057,7 @@ class PaymentSheetSnapshotTests: STPSnapshotTestCase {
         )
         stubPaymentMethods(stubRequestCallback: nil, fileMock: .saved_payment_methods_200)
         stubCustomers()
+        stubConsumerSession()
 
         preparePaymentSheet(
             currency: "eur",
@@ -1010,6 +1084,7 @@ class PaymentSheetSnapshotTests: STPSnapshotTestCase {
         )
         stubPaymentMethods(stubRequestCallback: nil, fileMock: .saved_payment_methods_200)
         stubCustomers()
+        stubConsumerSession()
 
         preparePaymentSheet(
             currency: "aud",
@@ -1036,6 +1111,7 @@ class PaymentSheetSnapshotTests: STPSnapshotTestCase {
         )
         stubPaymentMethods(stubRequestCallback: nil, fileMock: .saved_payment_methods_200)
         stubCustomers()
+        stubConsumerSession()
 
         preparePaymentSheet(
             currency: "gbp",
@@ -1090,6 +1166,7 @@ class PaymentSheetSnapshotTests: STPSnapshotTestCase {
         )
         stubPaymentMethods(stubRequestCallback: nil, fileMock: .saved_payment_methods_200)
         stubCustomers()
+        stubConsumerSession()
 
         preparePaymentSheet(
             currency: "inr",
@@ -1364,6 +1441,7 @@ class PaymentSheetSnapshotTests: STPSnapshotTestCase {
         stubSessions(fileMock: .elementsSessionsPaymentMethod_savedPM_200)
         stubPaymentMethods(fileMock: .saved_payment_methods_200)
         stubCustomers()
+        stubConsumerSession()
     }
 
     private func stubReturningCustomerResponse() {
@@ -1390,6 +1468,7 @@ class PaymentSheetSnapshotTests: STPSnapshotTestCase {
             fileMock: .saved_payment_methods_200
         )
         stubCustomers()
+        stubConsumerSession()
     }
 
     func confirmHandler(_ paymentMethod: STPPaymentMethod,

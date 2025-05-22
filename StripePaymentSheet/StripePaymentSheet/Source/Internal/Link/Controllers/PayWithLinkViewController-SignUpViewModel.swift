@@ -108,8 +108,16 @@ extension PayWithLinkViewController {
             return shouldShowPhoneNumberField
         }
 
-        var shouldShowSignUpButton: Bool {
-            return shouldShowPhoneNumberField
+        var signUpButtonTitle: String {
+            shouldShowPhoneNumberField
+                ? STPLocalizedString(
+                    "Agree and continue",
+                    "Title for a button that when tapped creates a Link account for the user."
+                )
+                : STPLocalizedString(
+                    "Log in or sign up",
+                    "Title for a button that indicates a user can log in or sign up."
+                )
         }
 
         var shouldEnableSignUpButton: Bool {
@@ -199,7 +207,11 @@ private extension PayWithLinkViewController.SignUpViewModel {
         accountLookupDebouncer.enqueue { [weak self] in
             self?.isLookingUpLinkAccount = true
 
-            self?.accountService.lookupAccount(withEmail: emailAddress, emailSource: .userAction) { result in
+            self?.accountService.lookupAccount(
+                withEmail: emailAddress,
+                emailSource: .userAction,
+                doNotLogConsumerFunnelEvent: false
+            ) { result in
                 guard let self = self else { return }
 
                 // Check the requested email address against the current one. Handle
