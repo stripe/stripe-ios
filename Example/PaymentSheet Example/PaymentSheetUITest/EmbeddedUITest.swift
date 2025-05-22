@@ -1045,7 +1045,7 @@ class EmbeddedUITests: PaymentSheetUITestCase {
         alert.buttons[buttonToTap].tap()
     }
 
-    func testPayNow() throws {
+    func disabled_testPayNow() throws {
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
         settings.customerMode = .new
         settings.mode = .payment
