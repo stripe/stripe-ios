@@ -66,7 +66,7 @@ extension PayWithLinkViewController {
             if context.shouldFinishOnClose {
                 coordinator?.finish(withResult: .canceled, deferredIntentConfirmationType: nil)
             } else {
-                coordinator?.cancel()
+                coordinator?.cancel(shouldReturnToPaymentSheet: false)
             }
         }
     }

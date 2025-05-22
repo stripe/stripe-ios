@@ -86,6 +86,7 @@ class PaymentMethodRowButtonSnapshotTests: STPSnapshotTestCase {
         var card = STPPaymentMethod._testCard()
         card.linkPaymentDetails = .card(
             LinkPaymentDetails.Card(
+                id: "csmr_123",
                 expMonth: 12,
                 expYear: 2030,
                 last4: "4242",
