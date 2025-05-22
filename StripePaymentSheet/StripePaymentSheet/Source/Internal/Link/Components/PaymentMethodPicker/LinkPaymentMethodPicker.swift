@@ -73,6 +73,7 @@ final class LinkPaymentMethodPicker: UIView {
         didSet {
             // TODO(tillh-stripe) Update this as soon as adding bank accounts is supported
             addPaymentMethodButton.isHidden = !supportedPaymentMethodTypes.contains(.card)
+            reloadData()
         }
     }
 

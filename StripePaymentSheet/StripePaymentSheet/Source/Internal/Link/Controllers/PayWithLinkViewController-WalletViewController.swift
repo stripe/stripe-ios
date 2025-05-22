@@ -232,18 +232,17 @@ extension PayWithLinkViewController {
             containerView.toggleArrangedSubview(errorLabel, shouldShow: error != nil, animated: true)
         }
 
-        func reloadPaymentDetails() {
+        func reloadPaymentDetails(completion: (() -> Void)?) {
             let supportedPaymentDetailsTypes = linkAccount
                 .supportedPaymentDetailsTypes(for: context.elementsSession)
                 .toSortedArray()
 
             // Fire and forget; ignore any errors that might happen here.
-            confirmButton.update(state: .processing)
             linkAccount.listPaymentDetails(supportedTypes: supportedPaymentDetailsTypes) { [weak self] result in
-                self?.confirmButton.update(state: .enabled)
                 if case .success(let paymentDetails) = result {
                     self?.viewModel.updatePaymentMethods(paymentDetails)
                 }
+                completion?()
             }
         }
 
@@ -700,8 +699,11 @@ extension PayWithLinkViewController.WalletViewController: LinkPaymentMethodPicke
     }
 
     private func addBankAccount() {
+        confirmButton.update(state: .spinnerWithInteractionDisabled)
         coordinator?.startFinancialConnections { [weak self] _ in
-            self?.reloadPaymentDetails()
+            self?.reloadPaymentDetails {
+                self?.confirmButton.update(state: .enabled)
+            }
         }
     }
 

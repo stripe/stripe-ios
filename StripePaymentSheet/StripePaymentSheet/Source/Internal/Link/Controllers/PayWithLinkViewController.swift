@@ -418,7 +418,7 @@ extension PayWithLinkViewController: PayWithLinkCoordinating {
         financialConnectionsAPI.presentFinancialConnectionsSheet(
             apiClient: context.configuration.apiClient,
             clientSecret: linkAccountSession.clientSecret,
-            returnURL: nil,
+            returnURL: "payments-example://stripe-redirect",
             existingConsumer: consumer,
             style: .automatic,
             elementsSessionContext: nil,
@@ -427,6 +427,7 @@ extension PayWithLinkViewController: PayWithLinkCoordinating {
             completion: { result in
                 switch result {
                 case .completed(let financialConnectionsResult):
+                    print("**** completed")
                     switch financialConnectionsResult {
                     case .financialConnections(let linkedBank):
                         consumerSession.createPaymentDetails(
@@ -448,6 +449,7 @@ extension PayWithLinkViewController: PayWithLinkCoordinating {
                         completion(.failed(error: error))
                     }
                 case .cancelled:
+                    print("**** canceled")
                     completion(.canceled)
                 case .failed(let error):
                     completion(.failed(error: error))

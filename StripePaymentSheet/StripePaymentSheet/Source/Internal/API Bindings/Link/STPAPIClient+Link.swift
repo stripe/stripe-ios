@@ -279,9 +279,9 @@ extension STPAPIClient {
             ],
             "request_surface": "ios_payment_element",
         ]
-        parameters["consent_acquired"] = consentAcquired
+//        parameters["consent_acquired"] = consentAcquired
         parameters["link_mode"] = linkMode?.rawValue
-        parameters["intent_token"] = intentToken
+//        parameters["intent_token"] = intentToken
 
         APIRequest<LinkAccountSession>.post(
             with: self,

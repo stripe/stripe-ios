@@ -166,7 +166,7 @@ extension FinancialConnectionsWebFlowViewController {
 
         let updatedHostedAuthUrl = HostedAuthUrlBuilder.build(
             baseHostedAuthUrl: hostedAuthUrl,
-            isInstantDebits: manifest.isProductInstantDebits,
+            isInstantDebits: false,// manifest.isProductInstantDebits,
             elementsSessionContext: elementsSessionContext,
             prefillDetailsOverride: prefillDetailsOverride,
             additionalQueryParameters: additionalQueryParameters
