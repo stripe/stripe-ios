@@ -62,6 +62,7 @@ extension STPElementsSession {
             allResponseFields: [:],
             sessionID: "test_123",
             orderedPaymentMethodTypes: orderedPaymentMethodTypes,
+            orderedPaymentMethodTypesAndWallets: [],
             unactivatedPaymentMethodTypes: unactivatedPaymentMethodTypes,
             countryCode: countryCode,
             merchantCountryCode: merchantCountryCode,
