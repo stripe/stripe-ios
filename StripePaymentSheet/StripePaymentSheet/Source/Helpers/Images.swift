@@ -60,7 +60,6 @@ enum Image: String, CaseIterable, ImageMaker {
     // Link
     case back_button = "back_button"
     case icon_cancel = "icon_cancel"
-    case icon_add_bordered = "icon_add_bordered"
     case icon_link_success = "icon_link_success"
     case icon_link_error = "icon_link_error"
     case link_logo = "link_logo"
@@ -89,7 +88,7 @@ enum Image: String, CaseIterable, ImageMaker {
 
     // Mandates
     case bacsdd_logo = "bacsdd_logo"
-    
+
     // Embedded payment element
     case embedded_check = "icon_check"
 }

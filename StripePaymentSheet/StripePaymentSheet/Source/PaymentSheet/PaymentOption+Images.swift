@@ -85,20 +85,29 @@ extension STPPaymentMethod {
                 for: PaymentSheetImageLibrary.bankIconCode(for: usBankAccount?.bankName)
             )
         case .link:
-            if let linkPaymentDetails {
-                return STPImageLibrary.cardBrandImage(for: linkPaymentDetails.brand)
-            } else {
-                return Image.link_logo.makeImage()
+            switch linkPaymentDetails {
+            case .card(let cardDetails):
+                return STPImageLibrary.unpaddedCardBrandImage(for: cardDetails.brand)
+            case .bankAccount(let bankDetails):
+                return PaymentSheetImageLibrary.bankIcon(
+                    for: PaymentSheetImageLibrary.bankIconCode(for: bankDetails.bankName)
+                )
+            default:
+                return makeFallbackIcon()
             }
         default:
-            // If there's no image specific to this PaymentMethod (eg card network logo, bank logo), default to the PaymentMethod type's icon
-            // TODO: This only looks at client-side assets! 
-            let image = type.makeImage()
-            if image == nil {
-                assertionFailure()
-            }
-            return image ?? UIImage()
+            return makeFallbackIcon()
         }
+    }
+
+    private func makeFallbackIcon() -> UIImage {
+        // If there's no image specific to this PaymentMethod (eg card network logo, bank logo), default to the PaymentMethod type's icon
+        // TODO: This only looks at client-side assets!
+        let image = type.makeImage()
+        if image == nil {
+            assertionFailure()
+        }
+        return image ?? UIImage()
     }
 
     /// Returns an image to display inside a cell representing the given payment option in the saved PM collection view
@@ -113,10 +122,16 @@ extension STPPaymentMethod {
         case .SEPADebit:
             return Image.carousel_sepa.makeImage(overrideUserInterfaceStyle: overrideUserInterfaceStyle).withRenderingMode(.alwaysOriginal)
         case .link:
-            if let linkPaymentDetails {
-                return linkPaymentDetails.brand.makeSavedPaymentMethodCellImage(overrideUserInterfaceStyle: overrideUserInterfaceStyle)
-            } else {
-                return Image.link_logo.makeImage(overrideUserInterfaceStyle: overrideUserInterfaceStyle).withRenderingMode(.alwaysOriginal)
+            switch linkPaymentDetails {
+            case .card(let cardDetails):
+                return STPImageLibrary.unpaddedCardBrandImage(for: cardDetails.brand)
+            case .bankAccount(let bankDetails):
+                return PaymentSheetImageLibrary.bankIcon(
+                    for: PaymentSheetImageLibrary.bankIconCode(for: bankDetails.bankName)
+                )
+            default:
+                assertionFailure("\(type) not supported for saved PMs")
+                return makeIcon()
             }
         default:
             assertionFailure("\(type) not supported for saved PMs")
@@ -136,8 +151,17 @@ extension STPPaymentMethod {
         case .SEPADebit:
             return Image.pm_type_sepa.makeImage().withRenderingMode(.alwaysOriginal)
         case .link:
-            let cardBrand = linkPaymentDetails?.brand ?? .unknown
-            return STPImageLibrary.unpaddedCardBrandImage(for: cardBrand)
+            switch linkPaymentDetails {
+            case .card(let cardDetails):
+                return STPImageLibrary.unpaddedCardBrandImage(for: cardDetails.brand)
+            case .bankAccount(let bankDetails):
+                return PaymentSheetImageLibrary.bankIcon(
+                    for: PaymentSheetImageLibrary.bankIconCode(for: bankDetails.bankName)
+                ).rounded(radius: 3)
+            default:
+                assertionFailure("\(type) not supported for saved PMs")
+                return makeIcon()
+            }
         default:
             assertionFailure("\(type) not supported for saved PMs")
             return makeIcon()

@@ -62,6 +62,7 @@ extension STPElementsSession {
             allResponseFields: [:],
             sessionID: "test_123",
             orderedPaymentMethodTypes: orderedPaymentMethodTypes,
+            orderedPaymentMethodTypesAndWallets: [],
             unactivatedPaymentMethodTypes: unactivatedPaymentMethodTypes,
             countryCode: countryCode,
             merchantCountryCode: merchantCountryCode,
@@ -398,11 +399,13 @@ extension STPPaymentMethod {
                 "email": "sam@stripe.com",
             ] as [String: Any],
         ])!
-        paymentMethod.linkPaymentDetails = .init(
-            expMonth: 12,
-            expYear: 2030,
-            last4: "4242",
-            brand: .visa
+        paymentMethod.linkPaymentDetails = .card(
+            LinkPaymentDetails.Card(
+                expMonth: 12,
+                expYear: 2030,
+                last4: "4242",
+                brand: .visa
+            )
         )
         return paymentMethod
     }

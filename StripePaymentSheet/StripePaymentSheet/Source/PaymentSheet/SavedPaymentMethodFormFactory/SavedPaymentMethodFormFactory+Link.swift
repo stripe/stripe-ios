@@ -16,13 +16,25 @@ extension SavedPaymentMethodFormFactory {
 
     /// Creates a read-only form for viewing a Link payment method. No changes other than deleting the payment method are possible.
     func makeLink(configuration: UpdatePaymentMethodViewController.Configuration) -> PaymentMethodElement {
-        let cardDetails = configuration.paymentMethod.linkPaymentDetails
+        switch configuration.paymentMethod.linkPaymentDetails {
+        case .card(let cardDetails):
+            return makeLinkCard(cardDetails: cardDetails, configuration: configuration)
+        case .bankAccount(let bankDetails):
+            return makeLinkBankAccount(bankAccount: bankDetails, configuration: configuration)
+        default:
+            fatalError("Cannot make payment method form for Link payment method.")
+        }
+    }
 
+    private func makeLinkCard(
+        cardDetails: LinkPaymentDetails.Card,
+        configuration: UpdatePaymentMethodViewController.Configuration
+    ) -> PaymentMethodElement {
         let panElement: TextFieldElement = {
             let panElementConfig = TextFieldElement.LastFourConfiguration(
-                lastFour: cardDetails?.last4 ?? "",
+                lastFour: cardDetails.last4,
                 editConfiguration: .readOnly,
-                cardBrand: cardDetails?.brand ?? .unknown,
+                cardBrand: cardDetails.brand,
                 cardBrandDropDown: nil
             )
 
@@ -31,8 +43,7 @@ extension SavedPaymentMethodFormFactory {
         }()
 
         let expiryDateElement: Element = {
-            let expiryDate = CardExpiryDate(month: cardDetails?.expMonth ?? 0,
-                                            year: cardDetails?.expYear ?? 0)
+            let expiryDate = CardExpiryDate(month: cardDetails.expMonth, year: cardDetails.expYear)
             let expirationDateConfig = TextFieldElement.ExpiryDateConfiguration(defaultValue: expiryDate.displayString,
                                                                                 editConfiguration: .readOnly)
             let expirationField = expirationDateConfig.makeElement(theme: configuration.appearance.asElementsTheme)
@@ -49,7 +60,7 @@ extension SavedPaymentMethodFormFactory {
         }()
 
         let cvcElement: TextFieldElement = {
-            return TextFieldElement.CensoredCVCConfiguration(brand: cardDetails?.brand ?? .unknown).makeElement(theme: configuration.appearance.asElementsTheme)
+            return TextFieldElement.CensoredCVCConfiguration(brand: cardDetails.brand).makeElement(theme: configuration.appearance.asElementsTheme)
         }()
 
         let cardSection: SectionElement = {
@@ -62,5 +73,23 @@ extension SavedPaymentMethodFormFactory {
                                   theme: configuration.appearance.asElementsTheme)
         }()
         return FormElement(elements: [cardSection], theme: configuration.appearance.asElementsTheme)
+    }
+
+    private func makeLinkBankAccount(
+        bankAccount: LinkPaymentDetails.BankDetails,
+        configuration: UpdatePaymentMethodViewController.Configuration
+    ) -> PaymentMethodElement {
+        let bankAccountElement: SectionElement = {
+            let usBankTextFieldElement = TextFieldElement.USBankNumberConfiguration(
+                bankName: bankAccount.bankName,
+                lastFour: bankAccount.last4
+            ).makeElement(theme: configuration.appearance.asElementsTheme)
+            return SectionElement(elements: [usBankTextFieldElement], theme: configuration.appearance.asElementsTheme)
+        }()
+
+        return FormElement(
+            elements: [bankAccountElement],
+            theme: configuration.appearance.asElementsTheme
+        )
     }
 }

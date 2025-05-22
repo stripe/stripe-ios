@@ -50,7 +50,7 @@ extension LinkPaymentMethodPicker {
         override var isHighlighted: Bool {
             didSet {
                 if isHighlighted && !isExpanded {
-                    backgroundColor = .linkIconCritical
+                    backgroundColor = .linkSurfaceTertiary
                 } else {
                     backgroundColor = .clear
                 }

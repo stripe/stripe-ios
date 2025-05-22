@@ -22,12 +22,17 @@ extension STPPaymentMethod {
         case .USBankAccount:
             // The missing space is not an oversight, but on purpose
             return "••••\(usBankAccount?.last4 ?? "")"
-        default:
-            if let linkPaymentDetails {
-                return "•••• \(linkPaymentDetails.last4)"
-            } else {
+        case .link:
+            switch linkPaymentDetails {
+            case .card(let cardDetails):
+                return "•••• \(cardDetails.last4)"
+            case .bankAccount(let bankDetails):
+                return "••••\(bankDetails.last4)"
+            default:
                 return type.displayName
             }
+        default:
+            return type.displayName
         }
     }
 
@@ -37,19 +42,31 @@ extension STPPaymentMethod {
             guard let card = self.card else {
                 return nil
             }
-            let brand = STPCardBrandUtilities.stringFrom(card.preferredDisplayBrand) ?? ""
-            let last4 = card.last4 ?? ""
-            let last4Spaced = last4.map { String($0) }.joined(separator: " ")
-            let localized = String.Localized.card_brand_ending_in_last_4
-            return String(format: localized, brand, last4Spaced)
+            return makeCardAccessibilityLabel(cardBrand: card.preferredDisplayBrand, last4: card.last4 ?? "")
         case .USBankAccount:
             guard let usBankAccount = self.usBankAccount else {
                 return nil
             }
             return String(format: String.Localized.bank_name_account_ending_in_last_4, usBankAccount.bankName, usBankAccount.last4)
+        case .link:
+            switch linkPaymentDetails {
+            case .card(let cardDetails):
+                return makeCardAccessibilityLabel(cardBrand: cardDetails.brand, last4: cardDetails.last4)
+            case .bankAccount(let bankDetails):
+                return String(format: String.Localized.bank_name_account_ending_in_last_4, bankDetails.bankName, bankDetails.last4)
+            default:
+                return nil
+            }
         default:
             return nil
         }
+    }
+
+    private func makeCardAccessibilityLabel(cardBrand: STPCardBrand, last4: String) -> String {
+        let brand = STPCardBrandUtilities.stringFrom(cardBrand) ?? ""
+        let last4Spaced = last4.map { String($0) }.joined(separator: " ")
+        let localized = String.Localized.card_brand_ending_in_last_4
+        return String(format: localized, brand, last4Spaced)
     }
 
     func paymentOptionLabel(confirmParams: IntentConfirmParams?) -> String {
