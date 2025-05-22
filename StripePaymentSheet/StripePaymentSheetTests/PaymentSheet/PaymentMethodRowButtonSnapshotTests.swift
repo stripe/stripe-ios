@@ -82,6 +82,23 @@ class PaymentMethodRowButtonSnapshotTests: STPSnapshotTestCase {
         verify(rowButton)
     }
 
+    func testPaymentMethodRowButton_link_existingUser_unselected() {
+        let rowButton = RowButton.makeForLink(
+            appearance: .default,
+            email: "email@email.com",
+            didTap: { _ in }
+        )
+        verify(rowButton)
+    }
+
+    func testPaymentMethodRowButton_link_newUser_unselected() {
+        let rowButton = RowButton.makeForLink(
+            appearance: .default,
+            didTap: { _ in }
+        )
+        verify(rowButton)
+    }
+
     func testPaymentMethodRowButton_newPaymentMethod_linkType_unselected() {
         var card = STPPaymentMethod._testCard()
         card.linkPaymentDetails = .card(
