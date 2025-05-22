@@ -49,7 +49,7 @@ import Foundation
     public var label: String {
         switch self {
         case .card(let cardDetails):
-            return cardDetails.displayName ?? "•••• \(cardDetails.last4)"
+            return cardDetails.displayName ?? formattedLast4
         case .bankAccount(let bankAccountDetails):
             return bankAccountDetails.bankName
         }
@@ -58,9 +58,9 @@ import Foundation
     public var sublabel: String? {
         switch self {
         case .card(let cardDetails):
-            return cardDetails.displayName != nil ? "•••• \(cardDetails.last4)" : nil
-        case .bankAccount(let bankAccountDetails):
-            return "••••\(bankAccountDetails.last4)"
+            return cardDetails.displayName != nil ? formattedLast4 : nil
+        case .bankAccount:
+            return formattedLast4
         }
     }
 
