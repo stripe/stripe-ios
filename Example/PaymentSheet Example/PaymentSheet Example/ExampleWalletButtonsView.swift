@@ -8,17 +8,46 @@ import SwiftUI
 
 struct ExampleWalletButtonsView: View {
     @ObservedObject var model = ExampleWalletButtonsModel()
+    @State var isConfirmingPayment = false
     var body: some View {
         if #available(iOS 16.0, *) {
             VStack {
                 if let flowController = model.paymentSheetFlowController {
-                    WalletButtonsView(flowController: flowController) { _ in
+                    if flowController.paymentOption == nil {
+                        WalletButtonsView(flowController: flowController) { _ in
+                        }
                     }
+                    PaymentSheet.FlowController.PaymentOptionsButton(
+                        paymentSheetFlowController: flowController,
+                        onSheetDismissed: model.onOptionsCompletion
+                    ) {
+                        ExamplePaymentOptionView(
+                            paymentOptionDisplayData: flowController.paymentOption)
+                    }
+                    Button(action: {
+                        // If you need to update the PaymentIntent's amount, you should do it here and
+                        // set the `isConfirmingPayment` binding after your update completes.
+                        isConfirmingPayment = true
+                    }) {
+                        if isConfirmingPayment {
+                            ExampleLoadingView()
+                        } else {
+                            ExamplePaymentButtonView()
+                        }
+                    }.paymentConfirmationSheet(
+                        isConfirming: $isConfirmingPayment,
+                        paymentSheetFlowController: flowController,
+                        onCompletion: model.onCompletion
+                    )
+                    .disabled(flowController.paymentOption == nil || isConfirmingPayment)
                 } else {
                     ExampleLoadingView()
                 }
             }.onAppear {
                 model.preparePaymentSheet()
+            }
+            if let result = model.paymentResult {
+                ExamplePaymentStatusView(result: result)
             }
         } else {
             Text("Use >= iOS 16.0")
@@ -62,6 +91,7 @@ class ExampleWalletButtonsModel: ObservableObject {
                 configuration.customer = .init(
                     id: customerId, ephemeralKeySecret: customerEphemeralKeySecret)
                 configuration.returnURL = "payments-example://stripe-redirect"
+                configuration.willUseWalletButtonsView = true
                 PaymentSheet.FlowController.create(
                     paymentIntentClientSecret: paymentIntentClientSecret,
                     configuration: configuration
@@ -77,5 +107,21 @@ class ExampleWalletButtonsModel: ObservableObject {
                 }
             })
         task.resume()
+    }
+
+    func onOptionsCompletion() {
+        // Tell our observer to refresh
+        objectWillChange.send()
+    }
+
+    func onCompletion(result: PaymentSheetResult) {
+        self.paymentResult = result
+
+        // MARK: Demo cleanup
+        if case .completed = result {
+            // A PaymentIntent can't be reused after a successful payment. Prepare a new one for the demo.
+            self.paymentSheetFlowController = nil
+            preparePaymentSheet()
+        }
     }
 }
