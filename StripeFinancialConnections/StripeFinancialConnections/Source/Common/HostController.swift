@@ -18,6 +18,7 @@ import UIKit
     @_spi(STP) public enum Completed {
         case financialConnections(StripeAPI.FinancialConnectionsSession)
         case instantDebits(InstantDebitsLinkedBank)
+        case linkedAccount(id: String)
     }
 
     var linkAccountSessionId: String? {
@@ -27,6 +28,8 @@ import UIKit
             return session.id
         case .instantDebits(let linkedBank):
             return linkedBank.linkAccountSessionId
+        case .linkedAccount(let id):
+            return id
         }
     }
 }
