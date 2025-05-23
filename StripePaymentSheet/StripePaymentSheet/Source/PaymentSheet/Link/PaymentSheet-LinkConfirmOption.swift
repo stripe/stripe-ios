@@ -34,7 +34,8 @@ extension PaymentSheet {
         case withPaymentDetails(
             account: PaymentSheetLinkAccount,
             paymentDetails: ConsumerPaymentDetails,
-            confirmationExtras: LinkConfirmationExtras?
+            confirmationExtras: LinkConfirmationExtras?,
+            shippingAddress: PaymentSheet.Address?
         )
     }
 
@@ -52,7 +53,7 @@ extension PaymentSheet.LinkConfirmOption {
             return account
         case .withPaymentMethod:
             return nil
-        case .withPaymentDetails(let account, _, _):
+        case .withPaymentDetails(let account, _, _, _):
             return account
         }
     }
@@ -65,7 +66,7 @@ extension PaymentSheet.LinkConfirmOption {
             return intentConfirmParams.paymentMethodParams.paymentSheetLabel
         case .withPaymentMethod(let paymentMethod):
             return paymentMethod.paymentSheetLabel
-        case .withPaymentDetails(_, let paymentDetails, _):
+        case .withPaymentDetails(_, let paymentDetails, _, _):
             return paymentDetails.paymentSheetLabel
         }
     }
@@ -79,6 +80,15 @@ extension PaymentSheet.LinkConfirmOption {
         }
     }
 
+    var shippingAddress: PaymentSheet.Address? {
+        switch self {
+        case let .withPaymentDetails(_, _, _, shippingAddress):
+            return shippingAddress
+        case .wallet, .withPaymentMethod, .signUp:
+            return nil
+        }
+    }
+
     var billingDetails: STPPaymentMethodBillingDetails? {
         switch self {
         case .wallet:
@@ -87,7 +97,7 @@ extension PaymentSheet.LinkConfirmOption {
             return intentConfirmParams.paymentMethodParams.billingDetails
         case .withPaymentMethod(let paymentMethod):
             return paymentMethod.billingDetails
-        case .withPaymentDetails(_, let paymentDetails, _):
+        case .withPaymentDetails(_, let paymentDetails, _, _):
             return STPPaymentMethodBillingDetails(billingAddress: paymentDetails.billingAddress, email: paymentDetails.billingEmailAddress)
         }
     }
