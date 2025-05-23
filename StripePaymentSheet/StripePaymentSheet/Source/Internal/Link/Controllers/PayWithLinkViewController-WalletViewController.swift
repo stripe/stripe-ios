@@ -701,7 +701,12 @@ extension PayWithLinkViewController.WalletViewController: LinkPaymentMethodPicke
 
     private func addBankAccount() {
         confirmButton.update(state: .spinnerWithInteractionDisabled)
-        coordinator?.startFinancialConnections { [weak self] _ in
+        coordinator?.startFinancialConnections { [weak self] result in
+            guard case .completed = result else {
+                self?.confirmButton.update(state: .enabled)
+                return
+            }
+
             self?.reloadPaymentDetails {
                 self?.confirmButton.update(state: .enabled)
             }
@@ -738,8 +743,6 @@ extension PayWithLinkViewController.WalletViewController: LinkPaymentMethodPicke
         actionSheet.popoverPresentationController?.sourceRect = picker.bounds
 
         present(actionSheet, animated: true)
-            
-        }
     }
 }
 
