@@ -694,7 +694,7 @@ extension PayWithLinkViewController.WalletViewController: LinkPaymentMethodPicke
             present(alertController, animated: true)
         } else if supportedPaymentDetailsTypes.contains(.bankAccount) {
             addBankAccount()
-        } else if supportedPaymentDetailsTypes.contains(.card) {
+        } else {
             addCard()
         }
     }

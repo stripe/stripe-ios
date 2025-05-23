@@ -30,6 +30,7 @@ import UIKit
             returnUrl: returnUrl
         )
         fcLite.elementsSessionContext = elementsSessionContext
+        fcLite.existingConsumer = existingConsumer
         fcLite.present(from: presentingViewController, completion: completion)
     }
 }
