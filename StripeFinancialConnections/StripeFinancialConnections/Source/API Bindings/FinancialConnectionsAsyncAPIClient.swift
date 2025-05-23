@@ -25,9 +25,22 @@ final class FinancialConnectionsAsyncAPIClient {
     let backingAPIClient: STPAPIClient
 
     var isLinkWithStripe: Bool = false
-    var consumerPublishableKey: String?
-    var consumerSession: ConsumerSessionData?
-    var verificationSessionClientSecret: String?
+
+    // Note: The consumer properties shouldn't get set the nil when we previously had a value.
+    var consumerPublishableKey: String? {
+        didSet {
+            if consumerPublishableKey == nil && oldValue != nil {
+                consumerPublishableKey = oldValue
+            }
+        }
+    }
+    var consumerSession: ConsumerSessionData? {
+        didSet {
+            if consumerSession == nil && oldValue != nil {
+                consumerSession = oldValue
+            }
+        }
+    }
 
     private lazy var logger = FinancialConnectionsAPIClientLogger()
 
@@ -256,7 +269,7 @@ extension FinancialConnectionsAsyncAPIClient {
     }
 
     func fetchFeaturedInstitutions(clientSecret: String) async throws -> FinancialConnectionsInstitutionList {
-        try await get(
+        return try await get(
             endpoint: .featuredInstitutions,
             parameters: ["client_secret": clientSecret]
         )

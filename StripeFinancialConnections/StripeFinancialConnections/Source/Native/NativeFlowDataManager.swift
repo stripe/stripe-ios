@@ -103,14 +103,21 @@ class NativeFlowAPIDataManager: NativeFlowDataManager {
     var customSuccessPaneSubCaption: String?
     var pendingRelinkAuthorization: String?
 
+    // Note: The consumer properties shouldn't get set the nil when we previously had a value.
     var consumerSession: ConsumerSessionData? {
         didSet {
+            if consumerSession == nil && oldValue != nil {
+                consumerSession = oldValue
+            }
             apiClient.consumerSession = consumerSession
         }
     }
 
     var consumerPublishableKey: String? {
         didSet {
+            if consumerPublishableKey == nil && oldValue != nil {
+                consumerPublishableKey = oldValue
+            }
             apiClient.consumerPublishableKey = consumerPublishableKey
         }
     }
@@ -141,6 +148,9 @@ class NativeFlowAPIDataManager: NativeFlowDataManager {
         self.authSession = manifest.activeAuthSession
         // If the server returns active institution use that, otherwise resort to initial institution.
         self.institution = manifest.activeInstitution ?? manifest.initialInstitution
+        // Use consumer properties from the API client, if available.
+        self.consumerSession = apiClient.consumerSession
+        self.consumerPublishableKey = apiClient.consumerPublishableKey
         didUpdateManifest()
     }
 

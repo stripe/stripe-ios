@@ -431,7 +431,7 @@ extension PayWithLinkViewController: PayWithLinkCoordinating {
         financialConnectionsAPI.presentFinancialConnectionsSheet(
             apiClient: context.configuration.apiClient,
             clientSecret: linkAccountSession.clientSecret,
-            returnURL: "payments-example://stripe-redirect",
+            returnURL: context.configuration.returnURL,
             existingConsumer: consumer,
             style: .automatic,
             elementsSessionContext: nil,
@@ -445,8 +445,9 @@ extension PayWithLinkViewController: PayWithLinkCoordinating {
                         createPaymentDetails(linkedAccountId: id)
                     case .financialConnections(let linkedBank):
                         createPaymentDetails(linkedAccountId: linkedBank.accountId)
-                    case .instantDebits:
-                        fallthrough
+                    case .instantDebits(let linkedBank):
+                        guard let linkedAccountId = linkedBank.linkAccountId else { fallthrough }
+                        createPaymentDetails(linkedAccountId: linkedAccountId)
                     @unknown default:
                         let error = PaymentSheetError.unknown(debugDescription: "Unexpected Financial Connections result")
                         completion(.failed(error: error))
