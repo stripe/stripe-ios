@@ -284,8 +284,18 @@ extension PayWithLinkViewController {
             }
         }
 
+        // Updates the list of payment methods, and selects the newly added payment method, if supported.
         func updatePaymentMethods(_ paymentMethods: [ConsumerPaymentDetails]) {
+            let existingIDs = Set(self.paymentMethods.map { $0.stripeID })
+            let newPaymentMethod = paymentMethods.first { !existingIDs.contains($0.stripeID) }
+
             self.paymentMethods = paymentMethods
+
+            if let newPaymentMethod, isPaymentMethodSupported(paymentMethod: newPaymentMethod),
+               let newIndex = paymentMethods.firstIndex(where: { $0.stripeID == newPaymentMethod.stripeID }) {
+                selectedPaymentMethodIndex = newIndex
+            }
+
             delegate?.viewModelDidChange(self)
         }
 
