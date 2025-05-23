@@ -221,6 +221,10 @@ class PlaygroundController: ObservableObject {
         var configuration = EmbeddedPaymentElement.Configuration()
         configuration.formSheetAction = formSheetAction
         configuration.embeddedViewDisplaysMandateText = settings.embeddedViewDisplaysMandateText == .on
+        configuration.rowSelectionBehavior = settings.rowSelectionBehavior == .default ? .default : .immediateAction { [weak self] in
+            self?.embeddedPlaygroundViewController?.dismiss(animated: true)
+            self?.embeddedPlaygroundViewController?.updatePaymentOptionView()
+        }
         configuration.externalPaymentMethodConfiguration = externalPaymentMethodConfiguration
         configuration.customPaymentMethodConfiguration = customPaymentMethodConfiguration
         switch settings.externalPaymentMethods {
@@ -908,8 +912,8 @@ extension PlaygroundController {
                 let json = try? JSONSerialization.jsonObject(with: data, options: []) as? [String: Any]
             else {
                 if let data = data,
-                   (response as? HTTPURLResponse)?.statusCode == 400 {
-                    let errorMessage = String(decoding: data, as: UTF8.self)
+                   (response as? HTTPURLResponse)?.statusCode == 400,
+                   let errorMessage = String(data: data, encoding: .utf8) {
                     // read the error message
                     intentCreationCallback(.failure(ConfirmHandlerError.confirmError(errorMessage)))
                 } else {
