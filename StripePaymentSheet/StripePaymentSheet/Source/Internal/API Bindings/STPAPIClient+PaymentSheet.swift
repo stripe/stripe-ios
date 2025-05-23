@@ -28,6 +28,8 @@ extension STPAPIClient {
         }
         if case .customerSession(let clientSecret) = customerAccessProvider {
             parameters["customer_session_client_secret"] = clientSecret
+        } else if case .legacyCustomerEphemeralKey(let ephemeralKey) = customerAccessProvider {
+            parameters["legacy_customer_ephemeral_key"] = ephemeralKey
         }
         if let clientDefaultPaymentMethod {
             parameters["client_default_payment_method"] = clientDefaultPaymentMethod
