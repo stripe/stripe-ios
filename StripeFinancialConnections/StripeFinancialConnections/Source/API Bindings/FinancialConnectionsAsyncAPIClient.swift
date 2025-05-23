@@ -26,7 +26,8 @@ final class FinancialConnectionsAsyncAPIClient {
 
     var isLinkWithStripe: Bool = false
 
-    // Note: The consumer properties shouldn't get set the nil when we previously had a value.
+    // Note: These properties maintain their last non-nil value. Once set to a value,
+    // these properties can only be changed to another non-nil value.
     var consumerPublishableKey: String? {
         didSet {
             if consumerPublishableKey == nil && oldValue != nil {
@@ -269,7 +270,7 @@ extension FinancialConnectionsAsyncAPIClient {
     }
 
     func fetchFeaturedInstitutions(clientSecret: String) async throws -> FinancialConnectionsInstitutionList {
-        return try await get(
+        try await get(
             endpoint: .featuredInstitutions,
             parameters: ["client_secret": clientSecret]
         )

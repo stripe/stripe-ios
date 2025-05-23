@@ -103,7 +103,9 @@ class NativeFlowAPIDataManager: NativeFlowDataManager {
     var customSuccessPaneSubCaption: String?
     var pendingRelinkAuthorization: String?
 
-    // Note: The consumer properties shouldn't get set the nil when we previously had a value.
+    // Note: These properties maintain their last non-nil value. Once set to a value,
+    // these properties can only be changed to another non-nil value.
+    // They also propagate their new values to the API client.
     var consumerSession: ConsumerSessionData? {
         didSet {
             if consumerSession == nil && oldValue != nil {
@@ -112,7 +114,6 @@ class NativeFlowAPIDataManager: NativeFlowDataManager {
             apiClient.consumerSession = consumerSession
         }
     }
-
     var consumerPublishableKey: String? {
         didSet {
             if consumerPublishableKey == nil && oldValue != nil {

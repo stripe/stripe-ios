@@ -222,8 +222,8 @@ class PaymentSheetLinkAccount: PaymentSheetLinkAccountInfoProtocol {
             consumerAccountPublishableKey: publishableKey
         ) { [weak self] result in
             switch result {
-            case .success(let consumerSession):
-                self?.currentSession = consumerSession
+            case .success(let verifiedSession):
+                self?.currentSession = verifiedSession
                 completion(.success(()))
             case .failure(let error):
                 completion(.failure(error))

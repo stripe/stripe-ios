@@ -90,6 +90,8 @@ class FCLiteContainerViewController: UIViewController {
                     completion(.completed(.instantDebits(linkedBank)))
                 } else if let linkedAccountId = returnUrl.extractValue(forKey: "linked_account") {
                     completion(.completed(.linkedAccount(id: linkedAccountId)))
+                } else {
+                    completion(.failed(error: FCLiteError.linkedBankUnavailable))
                 }
             } else {
                 await fetchSessionAndComplete()
