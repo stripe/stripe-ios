@@ -12,12 +12,6 @@ import UIKit
 @_spi(STP) import StripePayments
 @_spi(STP) import StripeUICore
 
-/// For internal SDK use only
-final class SessionResponse: Decodable {
-    let authSessionClientSecret: String?
-    let consumerSession: ConsumerSession
-}
-
 final class ConsumerSession: Decodable {
     let clientSecret: String
     let emailAddress: String
