@@ -25,8 +25,23 @@ final class FinancialConnectionsAsyncAPIClient {
     let backingAPIClient: STPAPIClient
 
     var isLinkWithStripe: Bool = false
-    var consumerPublishableKey: String?
-    var consumerSession: ConsumerSessionData?
+
+    // Note: These properties maintain their last non-nil value. Once set to a value,
+    // these properties can only be changed to another non-nil value.
+    var consumerPublishableKey: String? {
+        didSet {
+            if consumerPublishableKey == nil && oldValue != nil {
+                consumerPublishableKey = oldValue
+            }
+        }
+    }
+    var consumerSession: ConsumerSessionData? {
+        didSet {
+            if consumerSession == nil && oldValue != nil {
+                consumerSession = oldValue
+            }
+        }
+    }
 
     private lazy var logger = FinancialConnectionsAPIClientLogger()
 

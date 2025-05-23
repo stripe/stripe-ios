@@ -12,6 +12,7 @@ import Foundation
     @_spi(STP) public static func build(
         baseHostedAuthUrl: URL,
         isInstantDebits: Bool,
+        hasExistingAccountholderToken: Bool,
         elementsSessionContext: ElementsSessionContext?,
         prefillDetailsOverride: PrefillData? = nil,
         additionalQueryParameters: String? = nil
@@ -22,7 +23,9 @@ import Foundation
             parameters.append(additionalQueryParameters)
         }
 
-        if isInstantDebits {
+        // Only add additional instant debits parameters if there isn't an existing accountholder.
+        // This is for the linked account flow, which uses instant debits, but shouldn't create the payment method.
+        if isInstantDebits, !hasExistingAccountholderToken {
             parameters.append("return_payment_method=true")
             parameters.append("expand_payment_method=true")
 

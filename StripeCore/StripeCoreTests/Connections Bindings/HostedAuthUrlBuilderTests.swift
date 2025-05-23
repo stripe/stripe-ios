@@ -18,6 +18,7 @@ class HostedAuthUrlBuilderTests: XCTestCase {
         let result = HostedAuthUrlBuilder.build(
             baseHostedAuthUrl: baseUrl,
             isInstantDebits: false,
+            hasExistingAccountholderToken: false,
             elementsSessionContext: nil
         )
 
@@ -29,6 +30,7 @@ class HostedAuthUrlBuilderTests: XCTestCase {
         let result = HostedAuthUrlBuilder.build(
             baseHostedAuthUrl: baseUrl,
             isInstantDebits: false,
+            hasExistingAccountholderToken: false,
             elementsSessionContext: nil,
             additionalQueryParameters: "custom=value&another=param"
         )
@@ -42,6 +44,7 @@ class HostedAuthUrlBuilderTests: XCTestCase {
         let result = HostedAuthUrlBuilder.build(
             baseHostedAuthUrl: baseUrl,
             isInstantDebits: false,
+            hasExistingAccountholderToken: false,
             elementsSessionContext: nil,
             additionalQueryParameters: ""
         )
@@ -52,10 +55,24 @@ class HostedAuthUrlBuilderTests: XCTestCase {
 
     // MARK: - Instant Debits Tests
 
+    func testInstantDebitsParametersNotAddedWhenHasExistingAccountholderToken() {
+        let result = HostedAuthUrlBuilder.build(
+            baseHostedAuthUrl: baseUrl,
+            isInstantDebits: true,
+            hasExistingAccountholderToken: true,
+            elementsSessionContext: nil
+        )
+
+        XCTAssertFalse(result.absoluteString.contains("return_payment_method=true"))
+        XCTAssertFalse(result.absoluteString.contains("expand_payment_method=true"))
+        XCTAssertTrue(result.absoluteString.contains("launched_by=ios_sdk"))
+    }
+
     func testInstantDebitsBasicParameters() {
         let result = HostedAuthUrlBuilder.build(
             baseHostedAuthUrl: baseUrl,
             isInstantDebits: true,
+            hasExistingAccountholderToken: false,
             elementsSessionContext: nil
         )
 
@@ -74,6 +91,7 @@ class HostedAuthUrlBuilderTests: XCTestCase {
         let result = HostedAuthUrlBuilder.build(
             baseHostedAuthUrl: baseUrl,
             isInstantDebits: true,
+            hasExistingAccountholderToken: false,
             elementsSessionContext: context
         )
 
@@ -87,6 +105,7 @@ class HostedAuthUrlBuilderTests: XCTestCase {
         let result = HostedAuthUrlBuilder.build(
             baseHostedAuthUrl: baseUrl,
             isInstantDebits: true,
+            hasExistingAccountholderToken: false,
             elementsSessionContext: context
         )
 
@@ -117,6 +136,7 @@ class HostedAuthUrlBuilderTests: XCTestCase {
         let result = HostedAuthUrlBuilder.build(
             baseHostedAuthUrl: baseUrl,
             isInstantDebits: true,
+            hasExistingAccountholderToken: false,
             elementsSessionContext: context
         )
 
@@ -153,6 +173,7 @@ class HostedAuthUrlBuilderTests: XCTestCase {
         let result = HostedAuthUrlBuilder.build(
             baseHostedAuthUrl: baseUrl,
             isInstantDebits: true,
+            hasExistingAccountholderToken: false,
             elementsSessionContext: context
         )
 
@@ -177,6 +198,7 @@ class HostedAuthUrlBuilderTests: XCTestCase {
         let result = HostedAuthUrlBuilder.build(
             baseHostedAuthUrl: baseUrl,
             isInstantDebits: false,
+            hasExistingAccountholderToken: false,
             elementsSessionContext: context
         )
 
@@ -204,6 +226,7 @@ class HostedAuthUrlBuilderTests: XCTestCase {
         let result = HostedAuthUrlBuilder.build(
             baseHostedAuthUrl: baseUrl,
             isInstantDebits: false,
+            hasExistingAccountholderToken: false,
             elementsSessionContext: context,
             prefillDetailsOverride: overridePrefill
         )
@@ -224,6 +247,7 @@ class HostedAuthUrlBuilderTests: XCTestCase {
         let result = HostedAuthUrlBuilder.build(
             baseHostedAuthUrl: baseUrl,
             isInstantDebits: false,
+            hasExistingAccountholderToken: false,
             elementsSessionContext: nil,
             prefillDetailsOverride: prefillDetails
         )
@@ -241,6 +265,7 @@ class HostedAuthUrlBuilderTests: XCTestCase {
         let result = HostedAuthUrlBuilder.build(
             baseHostedAuthUrl: baseUrlWithAmpersand,
             isInstantDebits: false,
+            hasExistingAccountholderToken: false,
             elementsSessionContext: nil
         )
 
@@ -258,6 +283,7 @@ class HostedAuthUrlBuilderTests: XCTestCase {
         let result = HostedAuthUrlBuilder.build(
             baseHostedAuthUrl: baseUrl,
             isInstantDebits: false,
+            hasExistingAccountholderToken: false,
             elementsSessionContext: nil,
             prefillDetailsOverride: prefillDetails
         )

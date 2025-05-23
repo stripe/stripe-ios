@@ -589,6 +589,7 @@ extension NativeFlowController {
                     last4: bankAccountDetails?.last4,
                     linkMode: linkMode,
                     incentiveEligible: paymentMethodWithIncentiveEligibility.incentiveEligible,
+                    linkAccountId: bankAccountId,
                     linkAccountSessionId: self?.dataManager.manifest.id
                 )
                 completion(.success(linkedBank))

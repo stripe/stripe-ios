@@ -13,6 +13,7 @@ import Foundation
     public let last4: String?
     public let linkMode: LinkMode?
     public let incentiveEligible: Bool
+    public let linkAccountId: String?
     public let linkAccountSessionId: String?
 
     public init(
@@ -21,6 +22,7 @@ import Foundation
         last4: String?,
         linkMode: LinkMode?,
         incentiveEligible: Bool,
+        linkAccountId: String? = nil,
         linkAccountSessionId: String?
     ) {
         self.paymentMethod = paymentMethod
@@ -28,6 +30,7 @@ import Foundation
         self.last4 = last4
         self.linkMode = linkMode
         self.incentiveEligible = incentiveEligible
+        self.linkAccountId = linkAccountId
         self.linkAccountSessionId = linkAccountSessionId
     }
 }
