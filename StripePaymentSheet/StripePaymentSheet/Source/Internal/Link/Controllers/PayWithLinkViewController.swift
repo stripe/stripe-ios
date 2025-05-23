@@ -366,7 +366,6 @@ extension PayWithLinkViewController: PayWithLinkCoordinating {
             case .success(let session):
                 session.createLinkAccountSession(
                     consumerAccountPublishableKey: linkAccount.publishableKey,
-                    consentAcquired: true,
                     linkMode: .linkPaymentMethod,
                     intentToken: self?.context.intent.stripeId
                 ) { [session, weak self] linkAccountSessionResult in
@@ -411,9 +410,23 @@ extension PayWithLinkViewController: PayWithLinkCoordinating {
             clientSecret: consumerSession.clientSecret,
             emailAddress: consumerSession.emailAddress,
             redactedFormattedPhoneNumber: consumerSession.redactedFormattedPhoneNumber,
-            verificationSessions: verificationSessions,
-            verificationSessionClientSecret: linkAccount.verificationSessionClientSecret
+            verificationSessions: verificationSessions
         )
+
+        func createPaymentDetails(linkedAccountId: String) {
+            consumerSession.createPaymentDetails(
+                linkedAccountId: linkedAccountId,
+                consumerAccountPublishableKey: linkAccount.publishableKey,
+                completion: { paymentDetailsResult in
+                    switch paymentDetailsResult {
+                    case .success:
+                        completion(.completed)
+                    case .failure(let error):
+                        completion(.failed(error: error))
+                    }
+                }
+            )
+        }
 
         financialConnectionsAPI.presentFinancialConnectionsSheet(
             apiClient: context.configuration.apiClient,
@@ -427,29 +440,18 @@ extension PayWithLinkViewController: PayWithLinkCoordinating {
             completion: { result in
                 switch result {
                 case .completed(let financialConnectionsResult):
-                    print("**** completed")
                     switch financialConnectionsResult {
+                    case .linkedAccount(let id):
+                        createPaymentDetails(linkedAccountId: id)
                     case .financialConnections(let linkedBank):
-                        consumerSession.createPaymentDetails(
-                            linkedAccountId: linkedBank.accountId,
-                            consumerAccountPublishableKey: linkAccount.publishableKey,
-                            completion: { paymentDetailsResult in
-                                switch paymentDetailsResult {
-                                case .success:
-                                    completion(.completed)
-                                case .failure(let error):
-                                    completion(.failed(error: error))
-                                }
-                            }
-                        )
-                    case .instantDebits(let linkedBank):
-                        dump(linkedBank)
+                        createPaymentDetails(linkedAccountId: linkedBank.accountId)
+                    case .instantDebits:
+                        fallthrough
                     @unknown default:
-                        let error = PaymentSheetError.unknown(debugDescription: "Unknown Financial Connections result")
+                        let error = PaymentSheetError.unknown(debugDescription: "Unexpected Financial Connections result")
                         completion(.failed(error: error))
                     }
                 case .cancelled:
-                    print("**** canceled")
                     completion(.canceled)
                 case .failed(let error):
                     completion(.failed(error: error))

@@ -235,6 +235,19 @@ final public class FinancialConnectionsSheet {
                                     .unknown(debugDescription: "\(errorDescription)\n\n\(sessionInfo)")
                             )
                         )
+                    case .linkedAccount(let id):
+                        let errorDescription = "Linked Account flow is not currently supported via this interface."
+                        let sessionInfo =
+                        """
+                        linkedAccountId=\(id)
+                        """
+
+                        completion(
+                            .failed(
+                                error: FinancialConnectionsSheetError
+                                    .unknown(debugDescription: "\(errorDescription)\n\n\(sessionInfo)")
+                            )
+                        )
                     }
                 case .canceled:
                     completion(.canceled)
@@ -318,7 +331,6 @@ final public class FinancialConnectionsSheet {
             )
             financialConnectionsApiClient.isLinkWithStripe = true
             financialConnectionsApiClient.consumerSession = consumerSession
-            financialConnectionsApiClient.verificationSessionClientSecret = existingConsumer.verificationSessionClientSecret
             financialConnectionsApiClient.consumerPublishableKey = existingConsumer.publishableKey
         }
 

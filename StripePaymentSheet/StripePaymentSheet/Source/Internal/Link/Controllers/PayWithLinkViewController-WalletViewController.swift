@@ -196,6 +196,7 @@ extension PayWithLinkViewController {
                 mandateView.setText(mandate)
             }
 
+            paymentPicker.reloadData()
             paymentPickerContainerView.toggleArrangedSubview(
                 mandateView,
                 shouldShow: viewModel.shouldShowMandate,

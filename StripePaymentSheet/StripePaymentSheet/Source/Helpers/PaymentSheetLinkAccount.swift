@@ -92,7 +92,6 @@ class PaymentSheetLinkAccount: PaymentSheetLinkAccountInfoProtocol {
         return currentSession?.hasVerifiedSMSSession ?? false
     }
 
-    private(set) var verificationSessionClientSecret: String?
     private(set) var currentSession: ConsumerSession?
 
     init(
@@ -223,9 +222,8 @@ class PaymentSheetLinkAccount: PaymentSheetLinkAccountInfoProtocol {
             consumerAccountPublishableKey: publishableKey
         ) { [weak self] result in
             switch result {
-            case .success(let session):
-                self?.verificationSessionClientSecret = session.authSessionClientSecret
-                self?.currentSession = session.consumerSession
+            case .success(let consumerSession):
+                self?.currentSession = consumerSession
                 completion(.success(()))
             case .failure(let error):
                 completion(.failure(error))

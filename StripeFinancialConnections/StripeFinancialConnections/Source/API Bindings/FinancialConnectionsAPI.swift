@@ -19,7 +19,6 @@ protocol FinancialConnectionsAPI {
     var isLinkWithStripe: Bool { get set }
     var consumerPublishableKey: String? { get set }
     var consumerSession: ConsumerSessionData? { get set }
-    var verificationSessionClientSecret: String? { get set }
 
     func completeAssertion(
         possibleError: Error?,

@@ -207,27 +207,18 @@ extension FinancialConnectionsAsyncAPIClient {
             "expand": ["manifest.active_auth_session"],
             "client_secret": clientSecret,
             "locale": Locale.current.toLanguageTag(),
-            "emit_events": true,
         ]
-//        parameters["key"] = consumerPublishableKey
-
-//        if let verificationSessionClientSecret {
-//            let cookies: [String: Any] = [
-//                "verification_session_client_secrets": [verificationSessionClientSecret]
-//            ]
-//            parameters["cookies"] = cookies
-//        }
 
         var mobileParameters: [String: Any] = [
             "fullscreen": true,
             "hide_close_button": true,
-//            "forced_authflow_version": "v3",
+            "forced_authflow_version": "v3",
         ]
         mobileParameters["app_return_url"] = returnURL
 
         if initialSynchronize {
             let attestationIsSupported = backingAPIClient.stripeAttest.isSupported
-            mobileParameters["supports_app_verification"] = true// attestationIsSupported
+            mobileParameters["supports_app_verification"] = attestationIsSupported
             mobileParameters["verified_app_id"] = Bundle.main.bundleIdentifier
             if !attestationIsSupported {
                 logger.log(.attestationInitFailed, pane: .consent)

@@ -266,7 +266,6 @@ extension STPAPIClient {
     func createLinkAccountSession(
         for consumerSessionClientSecret: String,
         consumerAccountPublishableKey: String?,
-        consentAcquired: Bool? = nil,
         linkMode: LinkMode? = nil,
         intentToken: String? = nil,
         completion: @escaping (Result<LinkAccountSession, Error>) -> Void
@@ -279,9 +278,8 @@ extension STPAPIClient {
             ],
             "request_surface": "ios_payment_element",
         ]
-//        parameters["consent_acquired"] = consentAcquired
         parameters["link_mode"] = linkMode?.rawValue
-//        parameters["intent_token"] = intentToken
+        parameters["intent_token"] = intentToken
 
         APIRequest<LinkAccountSession>.post(
             with: self,
@@ -494,7 +492,7 @@ extension STPAPIClient {
         with code: String,
         cookieStore: LinkCookieStore,
         consumerAccountPublishableKey: String?,
-        completion: @escaping (Result<SessionResponse, Error>) -> Void
+        completion: @escaping (Result<ConsumerSession, Error>) -> Void
     ) {
         let endpoint: String = "consumers/sessions/confirm_verification"
 
@@ -505,10 +503,11 @@ extension STPAPIClient {
             "request_surface": "ios_payment_element",
         ]
 
-        post(
-            resource: endpoint,
+        makeConsumerSessionRequest(
+            endpoint: endpoint,
             parameters: parameters,
-            consumerPublishableKey: consumerAccountPublishableKey,
+            cookieStore: cookieStore,
+            consumerAccountPublishableKey: consumerAccountPublishableKey,
             completion: completion
         )
     }
@@ -574,6 +573,11 @@ private extension STPAPIClient {
 
     struct DetailsListResponse: Decodable {
         let redactedPaymentDetails: [ConsumerPaymentDetails]
+    }
+
+    struct SessionResponse: Decodable {
+        let authSessionClientSecret: String?
+        let consumerSession: ConsumerSession
     }
 }
 
