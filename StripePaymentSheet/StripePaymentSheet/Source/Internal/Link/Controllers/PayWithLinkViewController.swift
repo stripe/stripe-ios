@@ -40,6 +40,7 @@ protocol PayWithLinkCoordinating: AnyObject {
         completion: @escaping (PaymentSheetResult, STPAnalyticsClient.DeferredIntentConfirmationType?) -> Void
     )
     func confirmWithApplePay()
+    func startFinancialConnections(completion: @escaping (PaymentSheetResult) -> Void)
     func startInstantDebits(completion: @escaping (Result<ConsumerPaymentDetails, Error>) -> Void)
     func cancel()
     func accountUpdated(_ linkAccount: PaymentSheetLinkAccount)
@@ -344,6 +345,122 @@ extension PayWithLinkViewController: SheetNavigationBarDelegate {
 // MARK: - Coordinating
 
 extension PayWithLinkViewController: PayWithLinkCoordinating {
+    func startFinancialConnections(completion: @escaping (PaymentSheetResult) -> Void) {
+        guard let linkAccount else {
+            let error = PaymentSheetError.unknown(debugDescription: "No Link account found")
+            completion(.failed(error: error))
+            return
+        }
+
+        // Provides either the existing session or fetches a new session.
+        let sessionProvider: (@escaping (Result<ConsumerSession, Error>) -> Void) -> Void = { completion in
+            if let existingSession = linkAccount.currentSession {
+                completion(.success(existingSession))
+            } else {
+                self.refreshLinkSession(completion: completion)
+            }
+        }
+
+        sessionProvider { [weak self] sessionResult in
+            switch sessionResult {
+            case .success(let session):
+                session.createLinkAccountSession(
+                    consumerAccountPublishableKey: linkAccount.publishableKey,
+                    linkMode: .linkPaymentMethod,
+                    intentToken: self?.context.intent.stripeId
+                ) { [session, weak self] linkAccountSessionResult in
+                    switch linkAccountSessionResult {
+                    case .success(let linkAccountSession):
+                        self?.launchFinancialConnections(
+                            with: linkAccountSession,
+                            linkAccount: linkAccount,
+                            consumerSession: session,
+                            completion: completion
+                        )
+                    case .failure(let error):
+                        completion(.failed(error: error))
+                    }
+                }
+            case .failure(let error):
+                completion(.failed(error: error))
+            }
+        }
+    }
+
+    private func launchFinancialConnections(
+        with linkAccountSession: LinkAccountSession,
+        linkAccount: PaymentSheetLinkAccount,
+        consumerSession: ConsumerSession,
+        completion: @escaping (PaymentSheetResult) -> Void
+    ) {
+        guard let financialConnectionsAPI = FinancialConnectionsSDKAvailability.financialConnections() else {
+            let error = PaymentSheetError.unknown(debugDescription: "Financial Connections is not available.")
+            completion(.failed(error: error))
+            return
+        }
+
+        let verificationSessions = consumerSession.verificationSessions.map { verificationSession in
+            StripeCore.VerificationSession(
+                type: .init(rawValue: verificationSession.type.rawValue) ?? .unparsable,
+                state: .init(rawValue: verificationSession.state.rawValue)  ?? .unparsable
+            )
+        }
+        let consumer = StripeCore.FinancialConnectionsConsumer(
+            publishableKey: linkAccount.publishableKey,
+            clientSecret: consumerSession.clientSecret,
+            emailAddress: consumerSession.emailAddress,
+            redactedFormattedPhoneNumber: consumerSession.redactedFormattedPhoneNumber,
+            verificationSessions: verificationSessions
+        )
+
+        func createPaymentDetails(linkedAccountId: String) {
+            consumerSession.createPaymentDetails(
+                linkedAccountId: linkedAccountId,
+                consumerAccountPublishableKey: linkAccount.publishableKey,
+                completion: { paymentDetailsResult in
+                    switch paymentDetailsResult {
+                    case .success:
+                        completion(.completed)
+                    case .failure(let error):
+                        completion(.failed(error: error))
+                    }
+                }
+            )
+        }
+
+        financialConnectionsAPI.presentFinancialConnectionsSheet(
+            apiClient: context.configuration.apiClient,
+            clientSecret: linkAccountSession.clientSecret,
+            returnURL: context.configuration.returnURL,
+            existingConsumer: consumer,
+            style: .automatic,
+            elementsSessionContext: nil,
+            onEvent: nil,
+            from: self,
+            completion: { result in
+                switch result {
+                case .completed(let financialConnectionsResult):
+                    switch financialConnectionsResult {
+                    case .linkedAccount(let id):
+                        createPaymentDetails(linkedAccountId: id)
+                    case .financialConnections(let linkedBank):
+                        createPaymentDetails(linkedAccountId: linkedBank.accountId)
+                    case .instantDebits(let linkedBank):
+                        guard let linkedAccountId = linkedBank.linkAccountId else { fallthrough }
+                        createPaymentDetails(linkedAccountId: linkedAccountId)
+                    @unknown default:
+                        let error = PaymentSheetError.unknown(debugDescription: "Unexpected Financial Connections result")
+                        completion(.failed(error: error))
+                    }
+                case .cancelled:
+                    completion(.canceled)
+                case .failed(let error):
+                    completion(.failed(error: error))
+                }
+            }
+        )
+    }
+
     func startInstantDebits(completion: @escaping (Result<ConsumerPaymentDetails, any Error>) -> Void) {
         // TODO(link): Not yet implemented.
     }
@@ -498,7 +615,7 @@ extension PayWithLinkViewController: PaymentSheetLinkAccountDelegate {
 }
 
 // Used to get deterministic ordering
-private extension Set where Element == ConsumerPaymentDetails.DetailsType {
+extension Set where Element == ConsumerPaymentDetails.DetailsType {
     func toSortedArray() -> [ConsumerPaymentDetails.DetailsType] {
         return self.sorted { lhs, rhs in
             lhs.rawValue.localizedCaseInsensitiveCompare(rhs.rawValue) == .orderedAscending
