@@ -86,7 +86,7 @@ extension PaymentSheet {
         var linkUIAnalyticsValue: String? {
             if case .link(let option) = self {
                 switch option {
-                case .withPaymentDetails(let account, _, _):
+                case .withPaymentDetails(let account, _, _, _):
                     if account.hasCompletedSMSVerification {
                         // This was a returning user who logged in
                         return "native-returning"
@@ -131,6 +131,8 @@ extension PaymentSheet {
             /// The billing details associated with the customer's desired payment method
             public let billingDetails: PaymentSheet.BillingDetails?
 
+            public let shippingAddress: Address?
+
             /// A string representation of the customer's desired payment method
             /// - If this is a Stripe payment method, see https://stripe.com/docs/api/payment_methods/object#payment_method_object-type for possible values.
             /// - If this is an external payment method, see https://stripe.com/docs/payments/external-payment-methods?platform=ios#available-external-payment-methods for possible values.
@@ -144,22 +146,27 @@ extension PaymentSheet {
                     label = String.Localized.apple_pay
                     paymentMethodType = "apple_pay"
                     billingDetails = nil
+                    shippingAddress = nil
                 case .saved(let paymentMethod, let confirmParams):
                     label = paymentMethod.paymentOptionLabel(confirmParams: confirmParams)
                     paymentMethodType = paymentMethod.type.identifier
                     billingDetails = paymentMethod.billingDetails?.toPaymentSheetBillingDetails()
+                    shippingAddress = nil
                 case .new(let confirmParams):
                     label = confirmParams.paymentSheetLabel
                     paymentMethodType = confirmParams.paymentMethodType.identifier
                     billingDetails = confirmParams.paymentMethodParams.billingDetails?.toPaymentSheetBillingDetails()
+                    shippingAddress = nil
                 case .link(let option):
                     label = option.paymentSheetLabel
                     paymentMethodType = option.paymentMethodType
                     billingDetails = option.billingDetails?.toPaymentSheetBillingDetails()
+                    shippingAddress = option.shippingAddress
                 case .external(let paymentMethod, let stpBillingDetails):
                     label = paymentMethod.displayText
                     paymentMethodType = paymentMethod.type
                     billingDetails = stpBillingDetails.toPaymentSheetBillingDetails()
+                    shippingAddress = nil
                 }
             }
         }
@@ -181,6 +188,7 @@ extension PaymentSheet {
         var elementsSession: STPElementsSession { viewController.elementsSession }
         lazy var paymentHandler: STPPaymentHandler = { STPPaymentHandler(apiClient: configuration.apiClient) }()
         var viewController: FlowControllerViewControllerProtocol
+
         private var presentPaymentOptionsCompletion: (() -> Void)?
 
         // If a WalletButtonsView is currently visible

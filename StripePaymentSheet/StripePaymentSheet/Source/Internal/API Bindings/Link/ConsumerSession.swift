@@ -245,6 +245,17 @@ extension ConsumerSession {
             completion: completion)
     }
 
+    func listShippingAddress(
+        with apiClient: STPAPIClient = STPAPIClient.shared,
+        consumerAccountPublishableKey: String?,
+        completion: @escaping (Result<ShippingAddressesResponse, Error>) -> Void
+    ) {
+        apiClient.listShippingAddress(
+            for: clientSecret,
+            consumerAccountPublishableKey: consumerAccountPublishableKey,
+            completion: completion)
+    }
+
     func deletePaymentDetails(
         with apiClient: STPAPIClient = STPAPIClient.shared,
         id: String,

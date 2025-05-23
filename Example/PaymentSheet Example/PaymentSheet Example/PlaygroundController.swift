@@ -589,6 +589,9 @@ class PlaygroundController: ObservableObject {
     // Completion
 
     func onOptionsCompletion() {
+        if let shippingAddress = self.paymentSheetFlowController?.paymentOption?.shippingAddress {
+            self.addressViewController = .init(configuration: .init(defaultValues: .init(address: shippingAddress, name: self.paymentSheetFlowController?.paymentOption?.billingDetails?.name)), delegate: self)
+        }
         // Tell our observer to refresh
         objectWillChange.send()
     }
