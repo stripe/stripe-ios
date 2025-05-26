@@ -39,6 +39,8 @@ import UIKit
     let textFieldElement: TextFieldElement
 
     var infoView: UIView?
+    private let selectionBehavior: SelectionBehavior
+    private let theme: ElementsAppearance
 
     // MARK: - Public properties
     public var phoneNumber: PhoneNumber? {
@@ -76,10 +78,13 @@ import UIKit
         defaultPhoneNumber: String? = nil,
         isOptional: Bool = false,
         infoView: UIView? = nil,
+        selectionBehavior: SelectionBehavior = .default,
         locale: Locale = .current,
         theme: ElementsAppearance = .default
     ) {
         self.infoView = infoView
+        self.selectionBehavior = selectionBehavior
+        self.theme = theme
         let defaults = Self.deriveDefaults(countryCode: defaultCountryCode, phoneNumber: defaultPhoneNumber)
         let allowedCountryCodes = allowedCountryCodes ?? PhoneNumber.Metadata.allMetadata.map { $0.regionCode }
         let countryDropdownElement = DropdownFieldElement.makeCountryCode(
@@ -112,6 +117,36 @@ import UIKit
         textFieldElement.setText("")
     }
 
+    private func updateBorder(for element: Element) {
+        guard case .highlightBorder(let configuration) = selectionBehavior else {
+            return
+        }
+
+        let isEditing: Bool = {
+            switch element {
+            case let textField as TextFieldElement:
+                return textField.isEditing
+            case let dropdown as DropdownFieldElement:
+                return dropdown.isEditing
+            default:
+                return false
+            }
+        }()
+
+        let borderChanges = {
+            if isEditing {
+                self.view.layer.borderWidth = configuration.width
+                self.view.layer.borderColor = configuration.color
+            } else {
+                self.view.layer.borderWidth = self.theme.borderWidth
+                self.view.layer.borderColor = self.theme.colors.border.cgColor
+            }
+        }
+
+        configuration.animator.addAnimations(borderChanges)
+        configuration.animator.startAnimation()
+    }
+
     // MARK: - Element protocol
     public let collectsUserInput: Bool = true
     public func beginEditing() -> Bool {
@@ -136,6 +171,7 @@ import UIKit
                 }
             }
         }
+        updateBorder(for: element)
         delegate?.didUpdate(element: self)
     }
 

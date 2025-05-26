@@ -26,6 +26,7 @@ extension AddressSectionElement {
                 accessoryView: configuration.accessoryView(for: text, theme: theme),
                 shouldShowClearButton: configuration.shouldShowClearButton,
                 editConfiguration: configuration.editConfiguration,
+                selectionBehavior: configuration.selectionBehavior,
                 theme: theme
             )
             let textFieldView = TextFieldView(viewModel: viewModel, delegate: self)

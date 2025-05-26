@@ -30,7 +30,14 @@ import UIKit
     public private(set) lazy var text: String = {
         sanitize(text: configuration.defaultValue ?? "")
     }()
-    public private(set) var isEditing: Bool = false
+    public private(set) var isEditing: Bool = false {
+        didSet {
+            delegate?.didUpdate(element: self)
+        }
+    }
+    public var isFirstResponder: Bool {
+        textFieldView.isFirstResponder
+    }
     private(set) var didReceiveAutofill: Bool = false
     public var validationState: ElementValidationState {
         return .init(
@@ -75,6 +82,7 @@ import UIKit
         let accessoryView: UIView?
         let shouldShowClearButton: Bool
         let editConfiguration: EditConfiguration
+        let selectionBehavior: SelectionBehavior
         let theme: ElementsAppearance
     }
 
@@ -96,6 +104,7 @@ import UIKit
             accessoryView: configuration.accessoryView(for: text, theme: theme),
             shouldShowClearButton: configuration.shouldShowClearButton,
             editConfiguration: configuration.editConfiguration,
+            selectionBehavior: configuration.selectionBehavior,
             theme: theme
         )
     }
@@ -124,6 +133,25 @@ import UIKit
     func sanitize(text: String) -> String {
         let sanitizedText = text.stp_stringByRemovingCharacters(from: configuration.disallowedCharacters)
         return String(sanitizedText.prefix(configuration.maxLength(for: sanitizedText)))
+    }
+
+    private func updateBorder(for element: TextFieldElement) {
+        guard case .highlightBorder(let highlightConfiguration) = configuration.selectionBehavior else {
+            return
+        }
+
+        let borderChanges = {
+            if element.isFirstResponder {
+                self.view.layer.borderWidth = highlightConfiguration.width
+                self.view.layer.borderColor = highlightConfiguration.color
+            } else {
+                self.view.layer.borderWidth = self.theme.borderWidth
+                self.view.layer.borderColor = self.theme.colors.border.cgColor
+            }
+        }
+
+        highlightConfiguration.animator.addAnimations(borderChanges)
+        highlightConfiguration.animator.startAnimation()
     }
 }
 
@@ -173,6 +201,7 @@ extension TextFieldElement: TextFieldViewDelegate {
         didReceiveAutofill = view.didReceiveAutofill
 
         // Glue: Update the view and our delegate
+        updateBorder(for: self)
         view.updateUI(with: viewModel)
         delegate?.didUpdate(element: self)
     }

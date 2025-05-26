@@ -38,6 +38,7 @@
 		39E61B5E6A88E5AF1922EE62 /* TextFieldFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34178B51599FDCB0D0D7475A /* TextFieldFormatter.swift */; };
 		4755A24604B396D5A25058CD /* StripeUICore.h in Headers */ = {isa = PBXBuildFile; fileRef = CB8A9F7B4B2E8AA5A7E4FE98 /* StripeUICore.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		48D3B7C2983A8A25C6599119 /* OneTimeCodeTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC2BFFB32C50AB4EECA90326 /* OneTimeCodeTextField.swift */; };
+		490BD1782DDF985A0075CD35 /* SelectedBorderConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 490BD1772DDF985A0075CD35 /* SelectedBorderConfiguration.swift */; };
 		4A5EADAF2F6514299BA4B8D8 /* FormElement.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB1FE2B6BCD6FC77117A2521 /* FormElement.swift */; };
 		4B05CF7F485F0AED498DAE49 /* OneTimeCodeTextField-TextStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 815DB8DE48AE3CE1609C8316 /* OneTimeCodeTextField-TextStorage.swift */; };
 		4B414F0A0E46D914C89B3741 /* StaticElement.swift in Sources */ = {isa = PBXBuildFile; fileRef = 583B93BE0152CDF7383A37E7 /* StaticElement.swift */; };
@@ -189,6 +190,7 @@
 		4893E4B43FEFCE920D432F0C /* ContainerElement.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContainerElement.swift; sourceTree = "<group>"; };
 		48C9A13C4663EA8ACA6EA2E5 /* UIColor+StripeUICoreTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIColor+StripeUICoreTests.swift"; sourceTree = "<group>"; };
 		48E2652D09C1A4EBBDE2FB61 /* DateFieldElementSnapshotTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateFieldElementSnapshotTest.swift; sourceTree = "<group>"; };
+		490BD1772DDF985A0075CD35 /* SelectedBorderConfiguration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectedBorderConfiguration.swift; sourceTree = "<group>"; };
 		4B66D666BB3EA733B92A60AA /* AddressSectionElement+DummyAddressLine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AddressSectionElement+DummyAddressLine.swift"; sourceTree = "<group>"; };
 		4CBAE2B07C5575F19470464D /* StripeiOS-Release.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "StripeiOS-Release.xcconfig"; sourceTree = "<group>"; };
 		4D4BD46908791D2E4150C4DC /* TextFieldElement+Factory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TextFieldElement+Factory.swift"; sourceTree = "<group>"; };
@@ -530,6 +532,7 @@
 				0D558F65E4C23971C94BAD3E /* String+Localized.swift */,
 				BA1688A2CE2037846F8E3937 /* String+RegionCodeProvider.swift */,
 				E68363D1C6BB6468AC1DDA4C /* StripeUICoreBundleLocator.swift */,
+				490BD1772DDF985A0075CD35 /* SelectedBorderConfiguration.swift */,
 			);
 			path = Helpers;
 			sourceTree = "<group>";
@@ -914,6 +917,7 @@
 				824858D45F9D952BBDF822E2 /* CALayer+StripeUICore.swift in Sources */,
 				AA8F938C3A8B7BC7F11B5048 /* Enums+CustomStringConvertible.swift in Sources */,
 				2F1D03471202E25FD7682148 /* Locale+StripeUICore.swift in Sources */,
+				490BD1782DDF985A0075CD35 /* SelectedBorderConfiguration.swift in Sources */,
 				BC40443B2A2F7130351589A7 /* NSAttributedString+StripeUICore.swift in Sources */,
 				DA6550F1FFA1376DB656D6E0 /* NSDirectionalEdgeInsets+StripeUICore.swift in Sources */,
 				67FCE4493235656689E915F6 /* UIBarButtonItem+StripeUICore.swift in Sources */,

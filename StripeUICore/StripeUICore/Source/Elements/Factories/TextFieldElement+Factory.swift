@@ -23,6 +23,7 @@ import UIKit
         public let label: String
         public let isOptional: Bool
         public let editConfiguration: EditConfiguration
+        public let selectionBehavior: SelectionBehavior
         private var textContentType: UITextContentType {
             switch type {
             case .given:
@@ -35,7 +36,14 @@ import UIKit
         }
 
         /// - Parameter label: If `nil`, defaults to a string on the `type` e.g. "Name"
-        public init(type: NameType = .full, defaultValue: String?, label: String? = nil, isOptional: Bool = false, editConfiguration: EditConfiguration = .editable) {
+        public init(
+            type: NameType = .full,
+            defaultValue: String?,
+            label: String? = nil,
+            isOptional: Bool = false,
+            editConfiguration: EditConfiguration = .editable,
+            selectionBehavior: SelectionBehavior = .default
+        ) {
             self.type = type
             self.defaultValue = defaultValue
             if let label = label {
@@ -45,6 +53,7 @@ import UIKit
             }
             self.isOptional = isOptional
             self.editConfiguration = editConfiguration
+            self.selectionBehavior = selectionBehavior
         }
 
         public func keyboardProperties(for text: String) -> TextFieldElement.KeyboardProperties {
@@ -76,15 +85,22 @@ import UIKit
         public let defaultValue: String?
         public let isOptional: Bool
         public let editConfiguration: EditConfiguration
+        public let selectionBehavior: SelectionBehavior
         public let disallowedCharacters: CharacterSet = .whitespacesAndNewlines
         let invalidError = Error.invalid(
             localizedDescription: String.Localized.invalid_email
         )
 
-        public init(defaultValue: String? = nil, isOptional: Bool = false, editConfiguration: EditConfiguration = .editable) {
+        public init(
+            defaultValue: String? = nil,
+            isOptional: Bool = false,
+            editConfiguration: EditConfiguration = .editable,
+            selectionBehavior: SelectionBehavior = .default
+        ) {
             self.defaultValue = defaultValue
             self.isOptional = isOptional
             self.editConfiguration = editConfiguration
+            self.selectionBehavior = selectionBehavior
         }
 
         public func validate(text: String, isOptional: Bool) -> ValidationState {
@@ -103,9 +119,20 @@ import UIKit
         }
     }
 
-    static func makeEmail(defaultValue: String?, isOptional: Bool = false, theme: ElementsAppearance = .default) -> TextFieldElement {
-        return TextFieldElement(configuration: EmailConfiguration(defaultValue: defaultValue,
-                                                                  isOptional: isOptional), theme: theme)
+    static func makeEmail(
+        defaultValue: String?,
+        isOptional: Bool = false,
+        selectionBehavior: SelectionBehavior = .default,
+        theme: ElementsAppearance = .default
+    ) -> TextFieldElement {
+        return TextFieldElement(
+            configuration: EmailConfiguration(
+                defaultValue: defaultValue,
+                isOptional: isOptional,
+                selectionBehavior: selectionBehavior
+            ),
+            theme: theme
+        )
     }
 
     // MARK: VPA

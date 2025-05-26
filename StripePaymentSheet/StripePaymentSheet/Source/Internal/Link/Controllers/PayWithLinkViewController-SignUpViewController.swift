@@ -46,27 +46,37 @@ extension PayWithLinkViewController {
             return label
         }()
 
-        private lazy var emailElement = LinkEmailElement(defaultValue: viewModel.emailAddress, showLogo: false, theme: LinkUI.appearance.asElementsTheme)
+        private let theme: ElementsAppearance = LinkUI.appearance.asElementsTheme
+        private let selectionBehavior = SelectionBehavior.highlightBorder(configuration: LinkUI.highlightBorderConfiguration)
+
+        private lazy var emailElement = LinkEmailElement(
+            defaultValue: viewModel.emailAddress,
+            showLogo: false,
+            selectionBehavior: selectionBehavior,
+            theme: theme
+        )
 
         private lazy var phoneNumberElement = PhoneNumberElement(
             defaultCountryCode: context.configuration.defaultBillingDetails.address.country,
             defaultPhoneNumber: context.configuration.defaultBillingDetails.phone,
-            theme: LinkUI.appearance.asElementsTheme
+            selectionBehavior: selectionBehavior,
+            theme: theme
         )
 
         private lazy var nameElement = TextFieldElement(
             configuration: TextFieldElement.NameConfiguration(
                 type: .full,
-                defaultValue: viewModel.legalName
+                defaultValue: viewModel.legalName,
+                selectionBehavior: selectionBehavior
             ),
-            theme: LinkUI.appearance.asElementsTheme
+            theme: theme
         )
 
-        private lazy var emailSection = SectionElement(elements: [emailElement], theme: LinkUI.appearance.asElementsTheme)
+        private lazy var emailSection = SectionElement(elements: [emailElement], theme: theme)
 
-        private lazy var phoneNumberSection = SectionElement(elements: [phoneNumberElement], theme: LinkUI.appearance.asElementsTheme)
+        private lazy var phoneNumberSection = SectionElement(elements: [phoneNumberElement], theme: theme)
 
-        private lazy var nameSection = SectionElement(elements: [nameElement], theme: LinkUI.appearance.asElementsTheme)
+        private lazy var nameSection = SectionElement(elements: [nameElement], theme: theme)
 
         private lazy var legalTermsView: LinkLegalTermsView = {
             let legalTermsView = LinkLegalTermsView(textAlignment: .center, isStandalone: true)

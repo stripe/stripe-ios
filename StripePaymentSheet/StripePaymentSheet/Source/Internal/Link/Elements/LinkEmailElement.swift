@@ -24,6 +24,8 @@ class LinkEmailElement: Element {
     }()
 
     private var infoView: LinkMoreInfoView?
+    private let selectionBehavior: SelectionBehavior
+    private let theme: ElementsAppearance
 
     private lazy var stackView: UIStackView = {
         let stackView = UIStackView(arrangedSubviews: [emailAddressElement.view, activityIndicator])
@@ -87,10 +89,19 @@ class LinkEmailElement: Element {
         }
     }
 
-    public init(defaultValue: String? = nil, isOptional: Bool = false, showLogo: Bool, theme: ElementsAppearance = .default) {
+    public init(
+        defaultValue: String? = nil,
+        isOptional: Bool = false,
+        showLogo: Bool,
+        selectionBehavior: SelectionBehavior = .default,
+        theme: ElementsAppearance = .default
+    ) {
         if showLogo {
             self.infoView = LinkMoreInfoView(theme: theme)
         }
+        self.selectionBehavior = selectionBehavior
+        self.theme = theme
+
         emailAddressElement = TextFieldElement.makeEmail(defaultValue: defaultValue,
                                                          isOptional: isOptional,
                                                          theme: theme)
@@ -101,10 +112,30 @@ class LinkEmailElement: Element {
     func beginEditing() -> Bool {
         return emailAddressElement.beginEditing()
     }
+
+    private func updateBorder(for element: Element) {
+        guard case .highlightBorder(let configuration) = selectionBehavior else {
+            return
+        }
+
+        let borderChanges = {
+            if let textElement = element as? TextFieldElement, textElement.isEditing {
+                self.view.layer.borderWidth = configuration.width
+                self.view.layer.borderColor = configuration.color
+            } else {
+                self.view.layer.borderWidth = self.theme.borderWidth
+                self.view.layer.borderColor = self.theme.colors.border.cgColor
+            }
+        }
+
+        configuration.animator.addAnimations(borderChanges)
+        configuration.animator.startAnimation()
+    }
 }
 
 extension LinkEmailElement: ElementDelegate {
     func didUpdate(element: Element) {
+        updateBorder(for: element)
         delegate?.didUpdate(element: self)
     }
 

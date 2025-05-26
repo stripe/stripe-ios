@@ -35,7 +35,13 @@ enum LinkUI {
 
     // MARK: - Border
 
-    static let borderWidth: CGFloat = 1.5
+    static let borderWidth: CGFloat = 1.0
+
+    static let highlightBorderConfiguration: HighlightBorderConfiguration = HighlightBorderConfiguration(
+        width: borderWidth,
+        color: UIColor.linkBorderSelected.cgColor,
+        animator: animator
+    )
 
     // MARK: - Margins
 
@@ -56,6 +62,19 @@ enum LinkUI {
     static let smallContentSpacing: CGFloat = 8
 
     static let tinyContentSpacing: CGFloat = 4
+
+    // MARK: - Animations
+
+    static let animator: UIViewPropertyAnimator = {
+        let params = UISpringTimingParameters(
+            mass: 1.0,
+            dampingRatio: 0.93,
+            frequencyResponse: 0.22
+        )
+        let animator = UIViewPropertyAnimator(duration: 0, timingParameters: params)
+        animator.isInterruptible = true
+        return animator
+    }()
 }
 
 // MARK: Development flags

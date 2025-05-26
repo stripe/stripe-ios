@@ -37,6 +37,9 @@ class TextFieldView: UIView {
     var isEditing: Bool {
         return textField.isEditing
     }
+    override var isFirstResponder: Bool {
+        return textField.isFirstResponder
+    }
     override var isUserInteractionEnabled: Bool {
         didSet {
             textField.isUserInteractionEnabled = isUserInteractionEnabled
@@ -246,7 +249,9 @@ class TextFieldView: UIView {
             errorIconView.alpha = 1
             textField.accessibilityValue = viewModel.attributedText.string + ", " + error.localizedDescription
         } else {
-            layer.borderColor = viewModel.theme.colors.border.cgColor
+            if case .default = viewModel.selectionBehavior {
+                layer.borderColor = viewModel.theme.colors.border.cgColor
+            }
             textField.textColor = viewModel.theme.colors.textFieldText.disabled(!isUserInteractionEnabled || !viewModel.editConfiguration.isEditable)
             errorIconView.alpha = 0
             textField.accessibilityValue = viewModel.attributedText.string

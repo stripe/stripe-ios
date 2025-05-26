@@ -40,6 +40,8 @@ import UIKit
      */
     var editConfiguration: EditConfiguration { get }
 
+    var selectionBehavior: SelectionBehavior { get }
+
     /**
      Validate the text.
      
@@ -109,6 +111,10 @@ public extension TextFieldElementConfiguration {
 
     var editConfiguration: EditConfiguration {
         return .editable
+    }
+
+    var selectionBehavior: SelectionBehavior {
+        return .default
     }
 
     func makeDisplayText(for text: String) -> NSAttributedString {
