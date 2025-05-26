@@ -9,7 +9,7 @@ import Foundation
 
 struct LinkGlobalHoldback: LoggableExperiment {
     private static let experimentName = "link_global_holdback"
-    private let baseExperiment: BaseLinkExperiment
+    private let baseExperiment: BaseLinkHoldbackExperiment
 
     let name: String = experimentName
     let arbId: String
@@ -29,7 +29,7 @@ struct LinkGlobalHoldback: LoggableExperiment {
         linkAccount: PaymentSheetLinkAccount?,
         integrationShape: PaymentSheetAnalyticsHelper.IntegrationShape
     ) {
-        let baseExperiment = BaseLinkExperiment(
+        let baseExperiment = BaseLinkHoldbackExperiment(
             experimentName: Self.experimentName,
             elementsSession: elementsSession,
             configuration: configuration,

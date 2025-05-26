@@ -1,5 +1,5 @@
 //
-//  BaseLinkExperiment.swift
+//  BaseLinkHoldbackExperiment.swift
 //  StripePaymentSheet
 //
 //  Created by Mat Schmid on 5/21/25.
@@ -8,7 +8,7 @@
 import Foundation
 @_spi(STP) import StripePayments
 
-struct BaseLinkExperiment {
+struct BaseLinkHoldbackExperiment {
     let group: ExperimentGroup
 
     let defaultValuesProvided: String
