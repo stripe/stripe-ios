@@ -122,7 +122,7 @@ final public class FinancialConnectionsSheet {
     /// Any additional Elements context useful for the Financial Connections SDK.
     @_spi(STP) public var elementsSessionContext: StripeCore.ElementsSessionContext?
 
-    /// A existing consumer, if avaialble.
+    /// An existing consumer, if available.
     @_spi(STP) public var existingConsumer: StripeCore.FinancialConnectionsConsumer?
 
     /// Analytics client to use for logging analytics
