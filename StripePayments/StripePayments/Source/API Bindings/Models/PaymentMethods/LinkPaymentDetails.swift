@@ -51,7 +51,7 @@ import Foundation
             self.last4 = last4
         }
     }
-    
+
     @_spi(STP) public var id: String {
         switch self {
         case .card(let card):

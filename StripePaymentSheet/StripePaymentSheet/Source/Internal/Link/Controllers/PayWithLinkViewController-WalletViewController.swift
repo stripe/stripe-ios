@@ -51,12 +51,7 @@ extension PayWithLinkViewController {
             let confirmationExtras = LinkConfirmationExtras(
                 billingPhoneNumber: self.makeEffectiveBillingDetails().phone
             )
-
-            if context.launchedFromFlowController, let paymentMethod = viewModel.selectedPaymentMethod {
-                self.coordinator?.handlePaymentDetailsSelected(paymentMethod, confirmationExtras: confirmationExtras)
-            } else {
-                self.confirm(confirmationExtras: confirmationExtras)
-            }
+            self.confirm(confirmationExtras: confirmationExtras)
         }
 
         private lazy var cancelButton: Button = {

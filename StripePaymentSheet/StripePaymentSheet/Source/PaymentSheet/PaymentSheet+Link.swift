@@ -98,56 +98,6 @@ extension PaymentSheet {
     }
 }
 
-// MARK: - PayWithLinkViewControllerDelegate
-
-extension PaymentSheet: PayWithLinkViewControllerDelegate {
-    func payWithLinkViewControllerDidFinish(
-        _ payWithLinkViewController: PayWithLinkViewController,
-        confirmOption: PaymentSheet.LinkConfirmOption
-    ) {
-        payWithLinkViewController.dismiss(animated: true)
-        assertionFailure("PaymentSheet should not call this method.")
-    }
-
-    func payWithLinkViewControllerDidConfirm(
-        _ payWithLinkViewController: PayWithLinkViewController,
-        intent: Intent,
-        elementsSession: STPElementsSession,
-        with paymentOption: PaymentOption,
-        completion: @escaping (PaymentSheetResult, StripeCore.STPAnalyticsClient.DeferredIntentConfirmationType?) -> Void
-    ) {
-        PaymentSheet.confirm(
-            configuration: self.configuration,
-            authenticationContext: self.bottomSheetViewController,
-            intent: intent,
-            elementsSession: elementsSession,
-            paymentOption: paymentOption,
-            paymentHandler: self.paymentHandler,
-            integrationShape: .complete,
-            analyticsHelper: analyticsHelper)
-        { result, confirmationType in
-            if case let .failed(error) = result {
-                self.mostRecentError = error
-            }
-            self.analyticsHelper.logPayment(paymentOption: paymentOption, result: result, deferredIntentConfirmationType: confirmationType)
-
-            completion(result, confirmationType)
-        }
-    }
-
-    func payWithLinkViewControllerDidCancel(_ payWithLinkViewController: PayWithLinkViewController, shouldReturnToPaymentSheet: Bool) {
-        payWithLinkViewController.dismiss(animated: true)
-    }
-
-    func payWithLinkViewControllerDidFinish(
-        _ payWithLinkViewController: PayWithLinkViewController,
-        result: PaymentSheetResult,
-        deferredIntentConfirmationType: StripeCore.STPAnalyticsClient.DeferredIntentConfirmationType?
-    ) {
-        completion?(result)
-    }
-}
-
 // MARK: - Native Link helpers
 
 /// Check if native Link is available on this device
