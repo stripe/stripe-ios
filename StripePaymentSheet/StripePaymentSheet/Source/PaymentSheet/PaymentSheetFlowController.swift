@@ -211,23 +211,7 @@ extension PaymentSheet {
                 return false
             }
 
-            return currentLinkPaymentMethod != nil
-        }
-
-        private var currentLinkPaymentMethod: String? {
-            switch _paymentOption {
-            case .saved(let paymentMethod, _):
-                return paymentMethod.linkPaymentDetails?.id // TODO: or just false?
-            case .link(let confirmOption):
-                switch confirmOption {
-                case .wallet, .signUp, .withPaymentMethod:
-                    return nil
-                case .withPaymentDetails(_, let paymentDetails, _):
-                    return paymentDetails.stripeID
-                }
-            case .applePay, .new, .external, nil:
-                return nil
-            }
+            return _paymentOption?.canLaunchLink ?? false
         }
 
         // Stores the state of the most recent call to the update API
@@ -406,7 +390,7 @@ extension PaymentSheet {
             if canPresentLinkInPlaceOfFlowController {
                 presentNativeLinkInPlaceOfFlowController(
                     from: presentingViewController,
-                    selectedPaymentDetailsID: currentLinkPaymentMethod,
+                    selectedPaymentDetailsID: _paymentOption?.currentLinkPaymentMethod,
                     returnToPaymentSheet: showPaymentOptions
                 )
                 return
@@ -716,13 +700,35 @@ internal protocol FlowControllerViewControllerProtocol: BottomSheetContentViewCo
 }
 
 extension PaymentOption {
-    var linkPaymentDetailsID: String? {
-        var selectedPaymentDetailsID: String?
-        if case .link(let option) = self {
-            if case .withPaymentDetails(_, let paymentDetails, _) = option {
-                selectedPaymentDetailsID = paymentDetails.stripeID
+    var canLaunchLink: Bool {
+        switch self {
+        case .saved(let paymentMethod, _):
+            return paymentMethod.isLinkPaymentMethod
+        case .link(let confirmOption):
+            switch confirmOption {
+            case .signUp, .withPaymentMethod:
+                return false
+            case .wallet, .withPaymentDetails:
+                return true
             }
+        case .applePay, .new, .external:
+            return false
         }
-        return selectedPaymentDetailsID
+    }
+
+    var currentLinkPaymentMethod: String? {
+        switch self {
+        case .saved(let paymentMethod, _):
+            return paymentMethod.linkPaymentDetails?.id
+        case .link(let confirmOption):
+            switch confirmOption {
+            case .wallet, .signUp, .withPaymentMethod:
+                return nil
+            case .withPaymentDetails(_, let paymentDetails, _):
+                return paymentDetails.stripeID
+            }
+        case .applePay, .new, .external:
+            return nil
+        }
     }
 }

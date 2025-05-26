@@ -293,20 +293,16 @@ class PaymentSheetFlowControllerViewController: UIViewController, FlowController
 
     private func presentLink() {
         presentNativeLink(
-            selectedPaymentDetailsID: selectedPaymentOption?.linkPaymentDetailsID,
+            selectedPaymentDetailsID: selectedPaymentOption?.currentLinkPaymentMethod,
             configuration: configuration,
             intent: intent,
             elementsSession: elementsSession,
-            analyticsHelper: analyticsHelper,
-            verificationRejected: {
-                print("Link verification rejected")
-            }
-        ) { result, _ in
-            if let result {
-                print(result)
-            }
+            analyticsHelper: analyticsHelper
+        ) { [weak self] confirmOption, _ in
+            guard let self else { return }
+            self.linkConfirmOption = confirmOption
+            self.flowControllerDelegate?.flowControllerViewControllerShouldClose(self, didCancel: false)
         }
-        // delegate: self
     }
 
     override func viewWillAppear(_ animated: Bool) {

@@ -32,12 +32,12 @@ final class PayWithNativeLinkController {
             shouldReturnToPaymentSheet: Bool = false
         )
 
-        var shouldFinish: Bool {
+        var shouldShowPaymentSheetAgain: Bool {
             switch self {
             case .full(let result, _, _):
-                return !result.isCanceledOrFailed
+                return result.isCanceledOrFailed
             case .paymentMethodSelection(let confirmOption, _):
-                return confirmOption != nil
+                return confirmOption == nil
             }
         }
     }
@@ -155,7 +155,7 @@ final class PayWithNativeLinkController {
                 payWithLinkVC.dismiss(animated: true)
                 completion(completionResult)
 
-                if completionResult.shouldFinish {
+                guard completionResult.shouldShowPaymentSheetAgain else {
                     return
                 }
                 // Handle representing the previous bottom sheet

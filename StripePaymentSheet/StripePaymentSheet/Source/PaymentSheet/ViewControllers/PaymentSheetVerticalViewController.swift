@@ -488,12 +488,8 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
             intent: intent,
             elementsSession: elementsSession,
             analyticsHelper: analyticsHelper,
-            verificationRejected: {
-                print("Link verification rejected")
-            },
             callback: { [weak self] confirmOption, _ in
                 guard let self else { return }
-
                 self.linkConfirmOption = confirmOption
                 self.flowControllerDelegate?.flowControllerViewControllerShouldClose(self, didCancel: false)
             }

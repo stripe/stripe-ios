@@ -15,7 +15,7 @@ extension UIViewController {
         intent: Intent,
         elementsSession: STPElementsSession,
         analyticsHelper: PaymentSheetAnalyticsHelper,
-        verificationRejected: @escaping () -> Void,
+        verificationRejected: (() -> Void)? = nil,
         callback: @escaping (PaymentSheet.LinkConfirmOption?, Bool) -> Void
     ) {
         let linkAccount = LinkAccountContext.shared.account
@@ -29,7 +29,7 @@ extension UIViewController {
 
             verificationController.present(from: bottomSheetController ?? self) { [weak self] result in
                 guard let self, case .completed = result else {
-                    verificationRejected()
+                    verificationRejected?()
                     return
                 }
 
