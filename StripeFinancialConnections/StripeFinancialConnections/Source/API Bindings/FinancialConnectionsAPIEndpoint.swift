@@ -64,9 +64,9 @@ enum FinancialConnectionsAPIEndpoint: String {
              .authSessionsCancel, .authSessionsRetrieve, .authSessionsOAuthResults,
              .authSessionsAuthorized, .authSessionsAccounts, .authSessionsSelectedAccounts,
              .authSessionsEvents, .networkedAccounts, .shareNetworkedAccount, .paymentDetails,
-             .authSessionsRepair:
+             .authSessionsRepair, .consentAcquired:
             return true
-        case .listAccounts, .sessionReceipt, .consentAcquired, .disableNetworking,
+        case .listAccounts, .sessionReceipt, .disableNetworking,
              .linkStepUpAuthenticationVerified, .linkVerified, .saveAccountsToLink,
              .consumerSessions, .pollAccountNumbers, .startVerification, .confirmVerification,
              .linkAccountsSignUp, .attachLinkConsumerToLinkAccountSession,
