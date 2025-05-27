@@ -85,16 +85,7 @@ extension STPPaymentMethod {
                 for: PaymentSheetImageLibrary.bankIconCode(for: usBankAccount?.bankName)
             )
         case .link:
-            switch linkPaymentDetails {
-            case .card(let cardDetails):
-                return STPImageLibrary.unpaddedCardBrandImage(for: cardDetails.brand)
-            case .bankAccount(let bankDetails):
-                return PaymentSheetImageLibrary.bankIcon(
-                    for: PaymentSheetImageLibrary.bankIconCode(for: bankDetails.bankName)
-                )
-            default:
-                return makeFallbackIcon()
-            }
+            return Image.link_icon.makeImage()
         default:
             return makeFallbackIcon()
         }
@@ -122,17 +113,7 @@ extension STPPaymentMethod {
         case .SEPADebit:
             return Image.carousel_sepa.makeImage(overrideUserInterfaceStyle: overrideUserInterfaceStyle).withRenderingMode(.alwaysOriginal)
         case .link:
-            switch linkPaymentDetails {
-            case .card(let cardDetails):
-                return STPImageLibrary.unpaddedCardBrandImage(for: cardDetails.brand)
-            case .bankAccount(let bankDetails):
-                return PaymentSheetImageLibrary.bankIcon(
-                    for: PaymentSheetImageLibrary.bankIconCode(for: bankDetails.bankName)
-                )
-            default:
-                assertionFailure("\(type) not supported for saved PMs")
-                return makeIcon()
-            }
+            return Image.link_logo.makeImage()
         default:
             assertionFailure("\(type) not supported for saved PMs")
             return makeIcon()
@@ -151,17 +132,7 @@ extension STPPaymentMethod {
         case .SEPADebit:
             return Image.pm_type_sepa.makeImage().withRenderingMode(.alwaysOriginal)
         case .link:
-            switch linkPaymentDetails {
-            case .card(let cardDetails):
-                return STPImageLibrary.unpaddedCardBrandImage(for: cardDetails.brand)
-            case .bankAccount(let bankDetails):
-                return PaymentSheetImageLibrary.bankIcon(
-                    for: PaymentSheetImageLibrary.bankIconCode(for: bankDetails.bankName)
-                ).rounded(radius: 3)
-            default:
-                assertionFailure("\(type) not supported for saved PMs")
-                return makeIcon()
-            }
+            return Image.link_icon.makeImage()
         default:
             assertionFailure("\(type) not supported for saved PMs")
             return makeIcon()
