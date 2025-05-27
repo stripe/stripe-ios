@@ -701,14 +701,17 @@ internal protocol FlowControllerViewControllerProtocol: BottomSheetContentViewCo
 
 extension PaymentOption {
     var canLaunchLink: Bool {
+        let hasLinkAccount = LinkAccountContext.shared.account != nil
         switch self {
         case .saved(let paymentMethod, _):
-            return paymentMethod.isLinkPaymentMethod
+            return paymentMethod.isLinkPaymentMethod && hasLinkAccount
         case .link(let confirmOption):
             switch confirmOption {
             case .signUp, .withPaymentMethod:
                 return false
-            case .wallet, .withPaymentDetails:
+            case .wallet:
+                return hasLinkAccount
+            case .withPaymentDetails:
                 return true
             }
         case .applePay, .new, .external:
