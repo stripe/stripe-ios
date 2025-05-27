@@ -23,6 +23,8 @@ struct FCLiteAPIClient {
         }
     }
 
+    var consumerPublishableKey: String?
+
     private let backingAPIClient: STPAPIClient
 
     init(backingAPIClient: STPAPIClient) {
@@ -37,6 +39,7 @@ struct FCLiteAPIClient {
             backingAPIClient.get(
                 resource: endpoint.path,
                 parameters: parameters,
+                consumerPublishableKey: consumerPublishableKey,
                 completion: { (result: Result<T, Error>) in
                     switch result {
                     case .success(let response):
@@ -57,6 +60,7 @@ struct FCLiteAPIClient {
             backingAPIClient.post(
                 resource: endpoint.path,
                 parameters: parameters,
+                consumerPublishableKey: consumerPublishableKey,
                 completion: { (result: Result<T, Error>) in
                     switch result {
                     case .success(let response):
