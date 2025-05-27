@@ -14,7 +14,7 @@ class LinkEmailElement: Element {
 
     weak var delegate: ElementDelegate?
 
-    private let emailAddressElement: TextFieldElement
+    let emailAddressElement: TextFieldElement
 
     private let activityIndicator: ActivityIndicator = {
         // TODO: Consider adding the activity indicator to TextFieldView
