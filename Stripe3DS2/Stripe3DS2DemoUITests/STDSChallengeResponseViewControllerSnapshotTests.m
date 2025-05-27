@@ -25,6 +25,12 @@ FBSnapshotVerifyViewWithPixelOptions(view__, identifier__, FBSnapshotTestCaseDef
 
 @end
 
+@interface STDSChallengeResponseViewController (Testing)
+
+- (nullable id<STDSChallengeResponseSelectionInfo>)whitelistResponse;
+
+@end
+
 @implementation STDSChallengeResponseViewControllerSnapshotTests
 
 - (void)setUp {
@@ -41,6 +47,7 @@ FBSnapshotVerifyViewWithPixelOptions(view__, identifier__, FBSnapshotTestCaseDef
     [self waitForChallengeResponseTimer];
 
     XCTAssertNil([challengeResponseViewController whitelistResponse]);
+
     STPSnapshotVerifyView(challengeResponseViewController.view, @"TextChallengeResponse");
 }
 
