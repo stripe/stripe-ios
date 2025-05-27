@@ -169,8 +169,7 @@ public class PaymentSheet {
                                 configuration: self.configuration,
                                 loadResult: loadResult,
                                 isFlowController: false,
-                                analyticsHelper: self.analyticsHelper,
-                                walletButtonsShownExternally: false
+                                analyticsHelper: self.analyticsHelper
                             )
                             verticalVC.paymentSheetDelegate = self
                             return verticalVC
