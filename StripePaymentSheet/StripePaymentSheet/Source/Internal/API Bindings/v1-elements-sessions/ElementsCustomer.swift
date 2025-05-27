@@ -98,7 +98,7 @@ private extension STPPaymentMethod {
     func setLinkPaymentDetails(from paymentDetails: ConsumerPaymentDetails) {
         switch paymentDetails.details {
         case .card(let cardDetails):
-            let linkCardDetails = LinkPaymentDetails.Card(from: cardDetails)
+            let linkCardDetails = LinkPaymentDetails.Card(from: cardDetails, nickname: paymentDetails.nickname)
             self.linkPaymentDetails = .card(linkCardDetails)
         case .bankAccount(let bankDetails):
             let bankAccount = LinkPaymentDetails.BankDetails(from: bankDetails)
@@ -112,7 +112,6 @@ private extension STPPaymentMethod {
 private extension LinkPaymentDetails.BankDetails {
     init(from bankDetails: ConsumerPaymentDetails.Details.BankAccount) {
         self = .init(
-            bankIconCode: bankDetails.iconCode,
             bankName: bankDetails.name,
             last4: bankDetails.last4
         )
@@ -120,8 +119,9 @@ private extension LinkPaymentDetails.BankDetails {
 }
 
 private extension LinkPaymentDetails.Card {
-    init(from cardDetails: ConsumerPaymentDetails.Details.Card) {
+    init(from cardDetails: ConsumerPaymentDetails.Details.Card, nickname: String?) {
         self = .init(
+            displayName: cardDetails.displayName(with: nickname),
             expMonth: cardDetails.expiryMonth,
             expYear: cardDetails.expiryYear,
             last4: cardDetails.last4,

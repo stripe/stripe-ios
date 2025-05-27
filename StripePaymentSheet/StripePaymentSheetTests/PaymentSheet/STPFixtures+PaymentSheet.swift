@@ -62,6 +62,7 @@ extension STPElementsSession {
             allResponseFields: [:],
             sessionID: "test_123",
             orderedPaymentMethodTypes: orderedPaymentMethodTypes,
+            orderedPaymentMethodTypesAndWallets: [],
             unactivatedPaymentMethodTypes: unactivatedPaymentMethodTypes,
             countryCode: countryCode,
             merchantCountryCode: merchantCountryCode,
@@ -400,6 +401,7 @@ extension STPPaymentMethod {
         ])!
         paymentMethod.linkPaymentDetails = .card(
             LinkPaymentDetails.Card(
+                displayName: nil,
                 expMonth: 12,
                 expYear: 2030,
                 last4: "4242",
