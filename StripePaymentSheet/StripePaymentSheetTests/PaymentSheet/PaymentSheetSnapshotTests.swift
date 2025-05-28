@@ -198,6 +198,7 @@ class PaymentSheetSnapshotTests: STPSnapshotTestCase {
             offset: CGSize(width: 0, height: 2),
             radius: 6
         )
+        appearance.primaryButton.height = 72
 
         preparePaymentSheet(appearance: appearance)
         presentPaymentSheet(darkMode: false)
