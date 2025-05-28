@@ -23,6 +23,14 @@ enum Intent {
     case setupIntent(STPSetupIntent)
     case deferredIntent(intentConfig: PaymentSheet.IntentConfiguration)
 
+    var stripeId: String? {
+        switch self {
+        case .paymentIntent(let intent): intent.stripeId
+        case .setupIntent(let intent): intent.stripeID
+        case .deferredIntent: nil
+        }
+    }
+
     var isPaymentIntent: Bool {
         switch self {
         case .paymentIntent:

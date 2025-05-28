@@ -133,4 +133,28 @@ class STPAPIClient_PaymentSheetTest: XCTestCase {
         XCTAssertNil(parameters["customer_session_client_secret"])
         XCTAssertNil(parameters["client_default_payment_method"])
     }
+
+    func testElementsSessionParameters_sendsLegacyCustomerEphemeralKey() throws {
+        let parameters = STPAPIClient(publishableKey: "pk_test").makeElementsSessionsParams(
+            mode: .paymentIntentClientSecret("pi_123_secret_456"),
+            epmConfiguration: nil,
+            cpmConfiguration: nil,
+            clientDefaultPaymentMethod: nil,
+            customerAccessProvider: .legacyCustomerEphemeralKey("ek_123")
+        )
+        XCTAssertEqual(parameters["legacy_customer_ephemeral_key"] as? String, "ek_123")
+        XCTAssertNil(parameters["customer_session_client_secret"])
+    }
+
+    func testElementsSessionParameters_sendsNoLegacyCustomerEphemeralKey() throws {
+        let parameters = STPAPIClient(publishableKey: "pk_test").makeElementsSessionsParams(
+            mode: .paymentIntentClientSecret("pi_123_secret_456"),
+            epmConfiguration: nil,
+            cpmConfiguration: nil,
+            clientDefaultPaymentMethod: nil,
+            customerAccessProvider: nil
+        )
+        XCTAssertNil(parameters["legacy_customer_ephemeral_key"])
+        XCTAssertNil(parameters["customer_session_client_secret"])
+    }
 }

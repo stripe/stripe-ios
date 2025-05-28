@@ -203,7 +203,7 @@ NS_ASSUME_NONNULL_BEGIN
     [self.navigationController dismissViewControllerAnimated:YES completion:nil];
 }
 
-- (void)challengeResponseViewController:(nonnull STDSChallengeResponseViewController *)viewController didSubmitInput:(nonnull NSString *)userInput whitelistSelection:(nonnull id<STDSChallengeResponseSelectionInfo>)whitelistSelection {
+- (void)challengeResponseViewController:(nonnull STDSChallengeResponseViewController *)viewController didSubmitInput:(nonnull NSString *)userInput whitelistSelection:(nullable id<STDSChallengeResponseSelectionInfo>)whitelistSelection {
     [viewController setLoading];
     NSUInteger delay = self.shouldLoadSlowly ? 5 : 0;
     self.shouldLoadSlowly = NO;
@@ -212,7 +212,7 @@ NS_ASSUME_NONNULL_BEGIN
     });
 }
 
-- (void)challengeResponseViewController:(nonnull STDSChallengeResponseViewController *)viewController didSubmitSelection:(nonnull NSArray<id<STDSChallengeResponseSelectionInfo>> *)selection whitelistSelection:(nonnull id<STDSChallengeResponseSelectionInfo>)whitelistSelection {
+- (void)challengeResponseViewController:(nonnull STDSChallengeResponseViewController *)viewController didSubmitSelection:(nonnull NSArray<id<STDSChallengeResponseSelectionInfo>> *)selection whitelistSelection:(nullable id<STDSChallengeResponseSelectionInfo>)whitelistSelection {
     [viewController setLoading];
     [viewController setChallengeResponse:[STDSChallengeResponseObject textChallengeResponseWithWhitelist:YES resendCode:YES] animated:YES];
 }
@@ -222,7 +222,7 @@ NS_ASSUME_NONNULL_BEGIN
     [self.navigationController dismissViewControllerAnimated:YES completion:nil];
 }
 
-- (void)challengeResponseViewControllerDidOOBContinue:(nonnull STDSChallengeResponseViewController *)viewController whitelistSelection:(nonnull id<STDSChallengeResponseSelectionInfo>)whitelistSelection {
+- (void)challengeResponseViewControllerDidOOBContinue:(nonnull STDSChallengeResponseViewController *)viewController whitelistSelection:(nullable id<STDSChallengeResponseSelectionInfo>)whitelistSelection {
     [viewController setLoading];
     [viewController setChallengeResponse:[STDSChallengeResponseObject singleSelectChallengeResponse] animated:YES];
 }
