@@ -18,7 +18,9 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
         case noPaymentOptionOnBuyButtonTap
     }
     var selectedPaymentOption: PaymentSheet.PaymentOption? {
-        if isLinkWalletButtonSelected {
+        if let linkConfirmOption {
+            return .link(option: linkConfirmOption)
+        } else if isLinkWalletButtonSelected {
             return .link(option: .wallet)
         } else if let paymentMethodListViewController, children.contains(paymentMethodListViewController) {
             // If we're showing the list, use its selection:
@@ -56,6 +58,7 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
     }
     // Edge-case, only set to true when Link is selected via wallet in flow controller
     var isLinkWalletButtonSelected: Bool = false
+    var linkConfirmOption: PaymentSheet.LinkConfirmOption?
     /// The type of the Stripe payment method that's currently selected in the UI for new and saved PMs. Returns nil Apple Pay and .stripe(.link) for Link.
     /// Note that, unlike selectedPaymentOption, this is non-nil even if the PM form is invalid.
     var selectedPaymentMethodType: PaymentSheet.PaymentMethodType? {
@@ -465,6 +468,34 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
         ])
     }
 
+    private var canPresentLinkOnPrimaryButton: Bool {
+        guard case .link = selectedPaymentOption else {
+            return false
+        }
+        let usesNative = deviceCanUseNativeLink(elementsSession: elementsSession, configuration: configuration)
+        return PaymentSheet.LinkFeatureFlags.enableLinkFlowControllerChanges && isFlowController && usesNative
+    }
+
+    private var canPresentLinkOnWalletButton: Bool {
+        let usesNative = deviceCanUseNativeLink(elementsSession: elementsSession, configuration: configuration)
+        return PaymentSheet.LinkFeatureFlags.enableLinkFlowControllerChanges && isFlowController && usesNative
+    }
+
+    private func presentLinkInFlowController() {
+        presentNativeLink(
+            selectedPaymentDetailsID: nil,
+            configuration: configuration,
+            intent: intent,
+            elementsSession: elementsSession,
+            analyticsHelper: analyticsHelper,
+            callback: { [weak self] confirmOption, _ in
+                guard let self else { return }
+                self.linkConfirmOption = confirmOption
+                self.flowControllerDelegate?.flowControllerViewControllerShouldClose(self, didCancel: false)
+            }
+        )
+    }
+
     var didSendLogShow: Bool = false
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
@@ -479,6 +510,7 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
         super.viewDidAppear(animated)
         logRenderLPMs()
         isLinkWalletButtonSelected = false
+        linkConfirmOption = nil
     }
 
     private func logRenderLPMs() {
@@ -596,6 +628,11 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
 
         // Send analytic when primary button is tapped
         analyticsHelper.logConfirmButtonTapped(paymentOption: selectedPaymentOption)
+
+        if canPresentLinkOnPrimaryButton {
+            presentLinkInFlowController()
+            return
+        }
 
         // If FlowController, simply close the sheet
         if isFlowController {
@@ -985,9 +1022,13 @@ extension PaymentSheetVerticalViewController: WalletHeaderViewDelegate {
 
     func walletHeaderViewPayWithLinkTapped(_ header: PaymentSheetViewController.WalletHeaderView) {
         guard !isFlowController else {
-            // If flow controller, note that the button was tapped and dismiss
-            isLinkWalletButtonSelected = true
-            flowControllerDelegate?.flowControllerViewControllerShouldClose(self, didCancel: false)
+            if canPresentLinkOnWalletButton {
+                presentLinkInFlowController()
+            } else {
+                // If flow controller, note that the button was tapped and dismiss
+                isLinkWalletButtonSelected = true
+                flowControllerDelegate?.flowControllerViewControllerShouldClose(self, didCancel: false)
+            }
             return
         }
 
