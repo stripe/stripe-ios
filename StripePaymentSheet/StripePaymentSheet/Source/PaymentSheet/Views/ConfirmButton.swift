@@ -268,19 +268,9 @@ class ConfirmButton: UIView {
         private let appearance: PaymentSheet.Appearance
 
         override var intrinsicContentSize: CGSize {
-            if let customHeight = appearance.primaryButton.height {
-                return CGSize(
-                    width: UIView.noIntrinsicMetric,
-                    height: customHeight
-                )
-            }
-            let height = Self.minimumLabelHeight
-                + directionalLayoutMargins.top
-                + directionalLayoutMargins.bottom
-
             return CGSize(
                 width: UIView.noIntrinsicMetric,
-                height: max(height, Self.minimumButtonHeight)
+                height: appearance.primaryButton.height
             )
         }
 

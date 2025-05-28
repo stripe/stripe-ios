@@ -223,7 +223,7 @@ struct AppearancePlaygroundView: View {
         )
 
         let primaryButtonHeightBinding = Binding(
-            get: { self.appearance.primaryButton.height ?? 44 },
+            get: { self.appearance.primaryButton.height },
             set: { self.appearance.primaryButton.height = $0 }
         )
 

@@ -231,8 +231,7 @@ public extension PaymentSheet {
             public var shadow: Shadow?
 
             /// The height of the primary button
-            /// - Note: If `nil`, the default height is 44pt
-            public var height: CGFloat?
+            public var height: CGFloat = 44
 
         }
     }

@@ -22,19 +22,9 @@ class RemoveButton: UIButton {
     private static let minimumButtonHeight: CGFloat = 44
 
     override var intrinsicContentSize: CGSize {
-        if let customHeight = appearance.primaryButton.height {
-            return CGSize(
-                width: UIView.noIntrinsicMetric,
-                height: customHeight
-            )
-        }
-        let height = Self.minimumLabelHeight
-            + directionalLayoutMargins.top
-            + directionalLayoutMargins.bottom
-
         return CGSize(
             width: UIView.noIntrinsicMetric,
-            height: max(height, Self.minimumButtonHeight)
+            height: appearance.primaryButton.height
         )
     }
 
