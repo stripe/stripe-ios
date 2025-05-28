@@ -443,10 +443,10 @@ extension EmbeddedPaymentElement: EmbeddedFormViewControllerDelegate {
             }
         }
         embeddedFormViewController.dismiss(animated: true)
+        informDelegateIfPaymentOptionUpdated()
         if case .immediateAction(let didSelectPaymentOption) = configuration.rowSelectionBehavior {
             didSelectPaymentOption()
         }
-        informDelegateIfPaymentOptionUpdated()
     }
 
     func getChangeButtonState(for type: RowButtonType) -> (shouldShowChangeButton: Bool, sublabel: String?) {
