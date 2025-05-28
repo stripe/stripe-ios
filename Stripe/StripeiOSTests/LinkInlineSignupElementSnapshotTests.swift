@@ -134,7 +134,8 @@ extension LinkInlineSignupElementSnapshotTests {
         country: String = "US",
         preFillName: String? = nil,
         preFillPhone: String? = nil,
-        showCheckbox: Bool = true
+        showCheckbox: Bool = true,
+        allowsDefaultOptIn: Bool = false
     ) -> LinkInlineSignupElement {
         var configuration = PaymentSheet.Configuration()
         configuration.merchantDisplayName = "[Merchant]"
@@ -151,6 +152,7 @@ extension LinkInlineSignupElementSnapshotTests {
             configuration: configuration,
             showCheckbox: showCheckbox,
             accountService: MockAccountService(),
+            allowsDefaultOptIn: allowsDefaultOptIn,
             linkAccount: linkAccount,
             country: country
         )
