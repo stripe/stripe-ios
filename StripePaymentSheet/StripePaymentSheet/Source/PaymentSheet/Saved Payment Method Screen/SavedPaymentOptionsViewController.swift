@@ -767,19 +767,19 @@ extension STPPaymentMethod {
     var removalMessage: (title: String, message: String) {
         switch type {
         case .card:
-            let brandString = STPCardBrandUtilities.stringFrom(card?.preferredDisplayBrand ?? .unknown) ?? ""
-            let last4 = card?.last4 ?? ""
-            let formattedMessage = STPLocalizedString(
-                "%1$@ •••• %2$@",
-                "Content for alert popup prompting to confirm removing a saved card. {card brand} •••• {last 4} e.g. 'Visa •••• 3155'"
+            return makeCardRemovalMessage(
+                brand: card?.preferredDisplayBrand ?? .unknown,
+                last4: card?.last4 ?? ""
             )
-            return (
-                title: STPLocalizedString(
-                    "Remove card?",
-                    "Title for confirmation alert to remove a card"
-                ),
-                message: String(format: formattedMessage, brandString, last4)
-            )
+        case .link:
+            switch linkPaymentDetails {
+            case .card(let cardDetails):
+                return makeCardRemovalMessage(brand: cardDetails.brand, last4: cardDetails.last4)
+            case .bankAccount(let bankDetails):
+                return makeBankAccountRemovalMessage(last4: bankDetails.last4)
+            default:
+                return makeInvalidRemovalMessage()
+            }
         case .SEPADebit:
             let last4 = sepaDebit?.last4 ?? ""
             let formattedMessage = String.Localized.bank_account_xxxx
@@ -788,20 +788,42 @@ extension STPPaymentMethod {
                 message: String(format: formattedMessage, last4)
             )
         case .USBankAccount:
-            let last4 = usBankAccount?.last4 ?? ""
-            let formattedMessage = String.Localized.bank_account_xxxx
-            return (
-                title: String.Localized.removeBankAccount,
-                message: String(format: formattedMessage, last4)
-            )
+            return makeBankAccountRemovalMessage(last4: usBankAccount?.last4 ?? "")
         default:
-            let errorAnalytic = ErrorAnalytic(event: .unexpectedPaymentSheetError,
-                                              error: Error.removalMessageUndefined,
-                                              additionalNonPIIParams: ["payment_method_type": type.identifier])
-            STPAnalyticsClient.sharedClient.log(analytic: errorAnalytic)
-            stpAssertionFailure()
-            return (title: "", message: "")
+            return makeInvalidRemovalMessage()
         }
+    }
+
+    private func makeCardRemovalMessage(brand: STPCardBrand, last4: String) -> (title: String, message: String) {
+        let brandString = STPCardBrandUtilities.stringFrom(brand) ?? ""
+        let formattedMessage = STPLocalizedString(
+            "%1$@ •••• %2$@",
+            "Content for alert popup prompting to confirm removing a saved card. {card brand} •••• {last 4} e.g. 'Visa •••• 3155'"
+        )
+        return (
+            title: STPLocalizedString(
+                "Remove card?",
+                "Title for confirmation alert to remove a card"
+            ),
+            message: String(format: formattedMessage, brandString, last4)
+        )
+    }
+
+    private func makeBankAccountRemovalMessage(last4: String) -> (title: String, message: String) {
+        let formattedMessage = String.Localized.bank_account_xxxx
+        return (
+            title: String.Localized.removeBankAccount,
+            message: String(format: formattedMessage, last4)
+        )
+    }
+
+    private func makeInvalidRemovalMessage() -> (title: String, message: String) {
+        let errorAnalytic = ErrorAnalytic(event: .unexpectedPaymentSheetError,
+                                          error: Error.removalMessageUndefined,
+                                          additionalNonPIIParams: ["payment_method_type": type.identifier])
+        STPAnalyticsClient.sharedClient.log(analytic: errorAnalytic)
+        stpAssertionFailure()
+        return (title: "", message: "")
     }
 }
 

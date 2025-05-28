@@ -194,8 +194,6 @@ class PlaygroundController: ObservableObject {
             configuration.cardBrandAcceptance = .allowed(brands: [.visa])
         }
 
-        configuration.shouldReadPaymentMethodOptionsSetupFutureUsage = settings.paymentMethodOptionsSetupFutureUsageEnabled == .on
-
         switch settings.style {
         case .automatic:
             configuration.style = .automatic
@@ -223,6 +221,10 @@ class PlaygroundController: ObservableObject {
         var configuration = EmbeddedPaymentElement.Configuration()
         configuration.formSheetAction = formSheetAction
         configuration.embeddedViewDisplaysMandateText = settings.embeddedViewDisplaysMandateText == .on
+        configuration.rowSelectionBehavior = settings.rowSelectionBehavior == .default ? .default : .immediateAction { [weak self] in
+            self?.embeddedPlaygroundViewController?.dismiss(animated: true)
+            self?.embeddedPlaygroundViewController?.updatePaymentOptionView()
+        }
         configuration.externalPaymentMethodConfiguration = externalPaymentMethodConfiguration
         configuration.customPaymentMethodConfiguration = customPaymentMethodConfiguration
         switch settings.externalPaymentMethods {
@@ -293,8 +295,6 @@ class PlaygroundController: ObservableObject {
         case .allowVisa:
             configuration.cardBrandAcceptance = .allowed(brands: [.visa])
         }
-
-        configuration.shouldReadPaymentMethodOptionsSetupFutureUsage = settings.paymentMethodOptionsSetupFutureUsageEnabled == .on
 
         return configuration
     }
@@ -697,6 +697,7 @@ extension PlaygroundController {
             "customer_session_payment_method_remove_last": settings.paymentMethodRemoveLast.rawValue,
             "customer_session_payment_method_redisplay": settings.paymentMethodRedisplay.rawValue,
             "customer_session_payment_method_set_as_default": settings.paymentMethodSetAsDefault.rawValue,
+            "payment_method_options_setup_future_usage": settings.paymentMethodOptionsSetupFutureUsage.toDictionary(),
             //            "set_shipping_address": true // Uncomment to make server vend PI with shipping address populated
         ] as [String: Any]
         if settingsToLoad.apmsEnabled == .off, let supportedPaymentMethods = settingsToLoad.supportedPaymentMethods, !supportedPaymentMethods.isEmpty {
@@ -710,9 +711,6 @@ extension PlaygroundController {
         }
         if settings.paymentMethodSave == .disabled && settings.allowRedisplayOverride != .notSet {
             body["customer_session_payment_method_save_allow_redisplay_override"] = settings.allowRedisplayOverride.rawValue
-        }
-        if settingsToLoad.paymentMethodOptionsSetupFutureUsageEnabled == .on {
-            body["payment_method_options_setup_future_usage"] = settings.paymentMethodOptionsSetupFutureUsage.toDictionary()
         }
         makeRequest(with: checkoutEndpoint, body: body) { data, response, error in
             // If the completed load state doesn't represent the current state, discard this result
@@ -914,8 +912,8 @@ extension PlaygroundController {
                 let json = try? JSONSerialization.jsonObject(with: data, options: []) as? [String: Any]
             else {
                 if let data = data,
-                   (response as? HTTPURLResponse)?.statusCode == 400 {
-                    let errorMessage = String(decoding: data, as: UTF8.self)
+                   (response as? HTTPURLResponse)?.statusCode == 400,
+                   let errorMessage = String(data: data, encoding: .utf8) {
                     // read the error message
                     intentCreationCallback(.failure(ConfirmHandlerError.confirmError(errorMessage)))
                 } else {

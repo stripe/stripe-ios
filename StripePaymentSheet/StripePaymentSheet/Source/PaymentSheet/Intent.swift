@@ -23,6 +23,14 @@ enum Intent {
     case setupIntent(STPSetupIntent)
     case deferredIntent(intentConfig: PaymentSheet.IntentConfiguration)
 
+    var stripeId: String? {
+        switch self {
+        case .paymentIntent(let intent): intent.stripeId
+        case .setupIntent(let intent): intent.stripeID
+        case .deferredIntent: nil
+        }
+    }
+
     var isPaymentIntent: Bool {
         switch self {
         case .paymentIntent:
@@ -102,20 +110,34 @@ enum Intent {
         }
     }
 
-    /// True if this is a PaymentIntent with sfu not equal to none or a SetupIntent
-    var isSettingUp: Bool {
+    var setupFutureUsageString: String? {
         switch self {
         case .paymentIntent(let paymentIntent):
-            return paymentIntent.setupFutureUsage != .none
-        case .setupIntent:
-            return true
+            return paymentIntent.setupFutureUsage.stringValue
         case .deferredIntent(let intentConfig):
-            switch intentConfig.mode {
-            case .payment(_, _, let setupFutureUsage, _, _):
-                return setupFutureUsage != nil
-            case .setup:
-                return true
+            if case .payment(_, _, let setupFutureUsage, _, _) = intentConfig.mode {
+                return setupFutureUsage?.rawValue
             }
+            return nil
+        default:
+            return nil
+        }
+    }
+
+    var isPaymentMethodOptionsSetupFutureUsageSet: Bool? {
+        switch self {
+        case .paymentIntent(let paymentIntent):
+            return paymentIntent.paymentMethodOptions?.isSetupFutureUsageSet ?? false
+        case .deferredIntent(let intentConfig):
+            if case .payment(_, _, _, _, let paymentMethodOptions) = intentConfig.mode {
+                guard let setupFutureUsageValues = paymentMethodOptions?.setupFutureUsageValues else {
+                    return false
+                }
+                return !setupFutureUsageValues.isEmpty
+            }
+            return nil
+        default:
+            return nil
         }
     }
 

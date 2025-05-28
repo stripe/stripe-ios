@@ -3320,14 +3320,26 @@ extension PaymentSheetUITestCase {
         let paymentMandateText = "By continuing, you agree to authorize payments pursuant to these terms."
         let setupMandateText = "By saving your bank account for Example, Inc. you agree to authorize payments pursuant to these terms."
 
-        // Save the payment method
-        XCTAssertTrue(app.textViews[paymentMandateText].waitForExistence(timeout: 5))
-        let saveThisAccountToggle = app.switches["Save this account for future Example, Inc. payments"]
-        XCTAssertFalse(saveThisAccountToggle.isSelected)
-        saveThisAccountToggle.tap()
+        switch mode {
+        case .payment:
+            // Save the payment method
+            XCTAssertTrue(app.textViews[paymentMandateText].waitForExistence(timeout: 5))
+            let saveThisAccountToggle = app.switches["Save this account for future Example, Inc. payments"]
+            XCTAssertFalse(saveThisAccountToggle.isSelected)
+            saveThisAccountToggle.tap()
 
-        // Tapping the checkbox changes the mandate
-        XCTAssertTrue(app.textViews[setupMandateText].waitForExistence(timeout: 5))
+            // Tapping the checkbox changes the mandate
+            XCTAssertTrue(app.textViews[setupMandateText].waitForExistence(timeout: 5))
+        default:
+            // Since the payment method is being set up, it always shows the setup mandate
+            XCTAssertTrue(app.textViews[setupMandateText].waitForExistence(timeout: 5))
+            let saveThisAccountToggle = app.switches["Save this account for future Example, Inc. payments"]
+            XCTAssertFalse(saveThisAccountToggle.isSelected)
+            saveThisAccountToggle.tap()
+
+            // Tapping the checkbox doesn't change the mandate
+            XCTAssertTrue(app.textViews[setupMandateText].waitForExistence(timeout: 5))
+        }
 
         // Confirm
         let confirmButtonText = mode == .payment ? "Pay $50.99" : "Set up"

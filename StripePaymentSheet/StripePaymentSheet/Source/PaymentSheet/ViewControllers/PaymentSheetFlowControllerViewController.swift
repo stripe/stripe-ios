@@ -21,6 +21,7 @@ class PaymentSheetFlowControllerViewController: UIViewController, FlowController
     let configuration: PaymentSheet.Configuration
     let formCache: PaymentMethodFormCache = .init()
     let analyticsHelper: PaymentSheetAnalyticsHelper
+    let loadResult: PaymentSheetLoader.LoadResult
     var savedPaymentMethods: [STPPaymentMethod] {
         return savedPaymentOptionsViewController.savedPaymentMethods
     }
@@ -162,6 +163,7 @@ class PaymentSheetFlowControllerViewController: UIViewController, FlowController
         analyticsHelper: PaymentSheetAnalyticsHelper,
         previousPaymentOption: PaymentOption? = nil
     ) {
+        self.loadResult = loadResult
         self.intent = loadResult.intent
         self.elementsSession = loadResult.elementsSession
         self.isApplePayEnabled = PaymentSheet.isApplePayEnabled(elementsSession: elementsSession, configuration: configuration)

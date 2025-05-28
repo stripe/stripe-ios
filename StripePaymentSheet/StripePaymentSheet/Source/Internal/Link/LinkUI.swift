@@ -25,11 +25,17 @@ enum LinkUI {
 
     // MARK: - Corner radii
 
+    static let largeCornerRadius: CGFloat = 24
+
     static let cornerRadius: CGFloat = 12
 
     static let mediumCornerRadius: CGFloat = 8
 
     static let smallCornerRadius: CGFloat = 4
+
+    // MARK: - Border
+
+    static let borderWidth: CGFloat = 1.5
 
     // MARK: - Margins
 
@@ -149,24 +155,27 @@ extension LinkUI {
     static let appearance: PaymentSheet.Appearance = {
         var appearance = PaymentSheet.Appearance.default
         appearance.cornerRadius = LinkUI.mediumCornerRadius
-        appearance.colors.primary = .linkBrandDark
-        appearance.colors.background = .linkBackground
+        appearance.colors.primary = .linkBorderSelected
+        appearance.colors.background = .linkSurfacePrimary
 
         // Text
-        appearance.colors.text = .linkPrimaryText
-        appearance.colors.textSecondary = .linkSecondaryText
+        appearance.colors.text = .linkTextPrimary
+        appearance.colors.textSecondary = .linkTextSecondary
 
         // Components
-        appearance.colors.componentText = .linkPrimaryText
-        appearance.colors.componentPlaceholderText = .linkSecondaryText
-        appearance.colors.componentBackground = .linkControlBackground
-        appearance.colors.componentBorder = .linkControlBorder
-        appearance.colors.componentDivider = .linkSeparator
+        appearance.colors.componentBorder = .linkSurfacePrimary
+        appearance.colors.componentText = .linkTextPrimary
+        appearance.colors.componentPlaceholderText = .linkTextSecondary
+        appearance.colors.componentBackground = .linkSurfaceSecondary
+        appearance.colors.componentBorder = .linkSurfaceSecondary
+        appearance.colors.componentDivider = .linkBorderDefault
+        appearance.colors.selectedComponentBorder = .linkBorderSelected
+        appearance.shadow = .disabled
 
         // Primary button
-        appearance.primaryButton.textColor = .linkPrimaryButtonForeground
-        appearance.primaryButton.backgroundColor = .linkBrand
-        appearance.primaryButton.successBackgroundColor = .linkBrand
+        appearance.primaryButton.textColor = .linkContentOnPrimaryButton
+        appearance.primaryButton.backgroundColor = .linkButtonBrand
+        appearance.primaryButton.successBackgroundColor = .linkButtonBrand
         appearance.primaryButton.borderWidth = 0
         appearance.primaryButton.cornerRadius = LinkUI.cornerRadius
         appearance.primaryButton.font = LinkUI.font(forTextStyle: .bodyEmphasized)

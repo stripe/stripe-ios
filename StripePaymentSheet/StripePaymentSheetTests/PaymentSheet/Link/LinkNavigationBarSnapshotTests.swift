@@ -20,8 +20,9 @@ class LinkNavigationBarSnapshotTests: STPSnapshotTestCase {
         let sut = makeSUT()
         verify(sut)
 
-        sut.showBackButton = true
-        verify(sut, identifier: "BackButton")
+        let backSut = makeSUT()
+        backSut.setStyle(.back(showAdditionalButton: false))
+        verify(backSut, identifier: "BackButton")
     }
 
     func verify(
@@ -47,19 +48,17 @@ extension LinkNavigationBarSnapshotTests {
         let email: String
         let redactedPhoneNumber: String?
         let isRegistered: Bool
-        let isLoggedIn: Bool
     }
 
     fileprivate func makeAccountStub() -> LinkAccountStub {
         return LinkAccountStub(
             email: "test@example.com",
             redactedPhoneNumber: "+1********55",
-            isRegistered: true,
-            isLoggedIn: true
+            isRegistered: true
         )
     }
 
-    fileprivate func makeSUT() -> LinkNavigationBar {
-        return LinkNavigationBar()
+    fileprivate func makeSUT() -> LinkSheetNavigationBar {
+        LinkSheetNavigationBar(isTestMode: false, appearance: .init())
     }
 }

@@ -299,7 +299,7 @@ extension SavedPaymentMethodCollectionView {
         }
 
         func attributedTextForLabel(paymentMethod: STPPaymentMethod) -> NSAttributedString? {
-            if case .USBankAccount = paymentMethod.type {
+            func makeBankAccountLabel(with text: String) -> NSAttributedString {
                 let iconImage = PaymentSheetImageLibrary.bankIcon(for: nil).withTintColor(appearance.colors.text)
                 let iconImageAttachment = NSTextAttachment()
                 // Inspiration from:
@@ -320,33 +320,16 @@ extension SavedPaymentMethodCollectionView {
 
                 result.append(NSAttributedString(attachment: iconImageAttachment))
                 result.append(NSAttributedString(attachment: padding))
-                result.append(NSAttributedString(string: paymentMethod.paymentSheetLabel))
+                result.append(NSAttributedString(string: text))
                 return result
             }
 
-            if paymentMethod.isLinkPaymentMethod {
-                let iconImage = Image.link_icon.makeImage(template: false)
-                let iconImageAttachment = NSTextAttachment()
-                // Inspiration from:
-                // https://stackoverflow.com/questions/26105803/center-nstextattachment-image-next-to-single-line-uilabel/45161058#45161058
-                let ratio = 0.85
-                let iconHeight = iconImage.size.height * ratio
-                let iconWidth = iconImage.size.width * ratio
+            if case .USBankAccount = paymentMethod.type {
+                return makeBankAccountLabel(with: paymentMethod.paymentSheetLabel)
+            }
 
-                iconImageAttachment.bounds = CGRect(x: 0,
-                                                    y: (label.font.capHeight - iconHeight).rounded() / 2,
-                                                    width: iconWidth,
-                                                    height: iconHeight)
-                iconImageAttachment.image = iconImage
-                let result = NSMutableAttributedString(string: "")
-
-                let padding = NSTextAttachment()
-                padding.bounds = CGRect(x: 0, y: 0, width: 5, height: 0)
-
-                result.append(NSAttributedString(attachment: iconImageAttachment))
-                result.append(NSAttributedString(attachment: padding))
-                result.append(NSAttributedString(string: paymentMethod.paymentSheetLabel))
-                return result
+            if let linkPaymentDetails = paymentMethod.linkPaymentDetails, case .bankAccount = linkPaymentDetails {
+                return makeBankAccountLabel(with: linkPaymentDetails.formattedLast4)
             }
 
             return nil
@@ -361,6 +344,8 @@ extension SavedPaymentMethodCollectionView {
                     case .saved(let paymentMethod):
                         if let attributedText = attributedTextForLabel(paymentMethod: paymentMethod) {
                             label.attributedText = attributedText
+                        } else if let linkPaymentDetails = paymentMethod.linkPaymentDetails {
+                            label.text = linkPaymentDetails.formattedLast4
                         } else {
                             label.text = paymentMethod.paymentSheetLabel
                         }
@@ -381,7 +366,7 @@ extension SavedPaymentMethodCollectionView {
                         shadowRoundedRectangle.accessibilityIdentifier = label.text
                         shadowRoundedRectangle.accessibilityLabel = label.text
                         paymentMethodLogo.image = PaymentOption.link(option: .wallet).makeSavedPaymentMethodCellImage(overrideUserInterfaceStyle: overrideUserInterfaceStyle)
-                        paymentMethodLogo.tintColor = UIColor.linkNavLogo.resolvedContrastingColor(
+                        paymentMethodLogo.tintColor = UIColor.linkIconBrand.resolvedContrastingColor(
                             forBackgroundColor: appearance.colors.componentBackground
                         )
                     case .add:

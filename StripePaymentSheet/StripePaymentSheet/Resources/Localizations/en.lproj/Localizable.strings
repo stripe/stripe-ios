@@ -43,7 +43,8 @@
 /* Text for back button */
 "Back" = "Back";
 
-/* A label used in various UIs, including a button that represents a payment method type 'Bank' - where a user can pay with their bank account instead of, say, a credit card. */
+/* A label used in various UIs, including a button that represents a payment method type 'Bank' - where a user can pay with their bank account instead of, say, a credit card.
+   Label shown in the payment type picker describing a bank payment */
 "Bank" = "Bank";
 
 /* Title for collected bank account information */
@@ -124,9 +125,6 @@
 /* Label for a button that lets you change the details of a payment method */
 "Change" = "Change";
 
-/* Title for a button that allows the user to use a different email in the signup flow. */
-"Change email" = "Change email";
-
 /* TODO */
 "Choose a payment method" = "Choose a payment method";
 
@@ -163,6 +161,9 @@ with the transaction. */
 
 /* Label for CPF/CPNJ (Brazil tax ID) field */
 "CPF/CPNJ" = "CPF/CPNJ";
+
+/* Label shown in the payment type picker describing a card payment */
+"Debit or credit card" = "Debit or credit card";
 
 /* Label for identifying the default payment method. */
 "Default" = "Default";
@@ -207,8 +208,14 @@ re-entering the security code (CVV/CVC). */
 /* iDEAL bank section title for iDEAL form entry. */
 "iDEAL Bank" = "iDEAL Bank";
 
+/* Title for a button that indicates a user can log in or sign up. */
+"Log in or sign up" = "Log in or sign up";
+
 /* Title of the logout action. */
 "Log out of Link" = "Log out of Link";
+
+/* Title shown above a view containing the customer's bank account that they can delete */
+"Manage bank account" = "Manage bank account";
 
 /* Title shown above a view containing the customer's card that they can delete or update */
 "Manage card" = "Manage card";
@@ -243,8 +250,8 @@ re-entering the security code (CVV/CVC). */
 /* Label for when the user is not eligible for a promo. */
 "No %@ promo" = "No %@ promo";
 
-/* Text of a label for confirming an email address. E.g., 'Not user@example.com?' */
-"Not %@?" = "Not %@?";
+/* Title for a button that allows the user to use a different email in the signup flow. */
+"Not you?" = "Not you?";
 
 /* Text on a screen for updating a cobranded card that indicates only card brand can be changed. */
 "Only card brand can be changed." = "Only card brand can be changed.";

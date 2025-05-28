@@ -12,8 +12,9 @@ import UIKit
 extension LinkPaymentMethodPicker {
     final class EmailView: UIView {
         enum Constants {
+            static let buttonSize: CGSize = .init(width: 12, height: 16)
             static let contentSpacing: CGFloat = 16
-            static let insets = NSDirectionalEdgeInsets(top: 20, leading: 20, bottom: 20, trailing: 20)
+            static let insets = NSDirectionalEdgeInsets(top: 20, leading: 20, bottom: 20, trailing: 26)
         }
 
         var accountEmail: String? {
@@ -22,11 +23,24 @@ extension LinkPaymentMethodPicker {
             }
         }
 
+        private var menuButtonFrame: CGRect {
+            let originalFrame = menuButton.convert(menuButton.bounds, to: self)
+
+            let targetSize = CGSize(width: 44, height: 44)
+
+            return CGRect(
+                x: originalFrame.midX - (targetSize.width / 2),
+                y: originalFrame.midY - (targetSize.height / 2),
+                width: targetSize.width,
+                height: targetSize.height
+            )
+        }
+
         private let emailLabel: UILabel = {
             let label = UILabel()
             label.text = String.Localized.email
             label.font = LinkUI.font(forTextStyle: .body)
-            label.textColor = .linkSecondaryText
+            label.textColor = .linkTextTertiary
             label.adjustsFontForContentSizeCategory = true
             label.setContentCompressionResistancePriority(.required, for: .horizontal)
             label.translatesAutoresizingMaskIntoConstraints = false
@@ -36,15 +50,29 @@ extension LinkPaymentMethodPicker {
         private let userEmailLabel: UILabel = {
             let label = UILabel()
             label.font = LinkUI.font(forTextStyle: .bodyEmphasized)
-            label.textColor = .linkPrimaryText
+            label.textColor = .linkTextPrimary
             label.setContentHuggingPriority(.defaultLow, for: .horizontal)
             return label
+        }()
+
+        let menuButton: UIButton = {
+            let button = UIButton(type: .system)
+            button.setImage(Image.icon_menu.makeImage(), for: .normal)
+            button.tintColor = .linkIconTertiary
+            button.accessibilityLabel = String.Localized.show_menu
+            button.translatesAutoresizingMaskIntoConstraints = false
+            NSLayoutConstraint.activate([
+                button.widthAnchor.constraint(equalToConstant: Constants.buttonSize.width),
+                button.heightAnchor.constraint(equalToConstant: Constants.buttonSize.height),
+            ])
+            return button
         }()
 
         private lazy var stackView: UIStackView = {
             let stackView = UIStackView(arrangedSubviews: [
                 emailLabel,
                 userEmailLabel,
+                menuButton,
             ])
 
             stackView.axis = .horizontal
@@ -54,9 +82,12 @@ extension LinkPaymentMethodPicker {
             stackView.directionalLayoutMargins = Constants.insets
             stackView.isLayoutMarginsRelativeArrangement = true
 
-            NSLayoutConstraint.activate([
-                emailLabel.widthAnchor.constraint(equalToConstant: LinkPaymentMethodPicker.widthForHeaderLabels)
-            ])
+            let widthAnchor = emailLabel.widthAnchor.constraint(equalToConstant: LinkPaymentMethodPicker.widthForHeaderLabels)
+
+            // Keep this low priority so that it can break if the user email gets too big.
+            widthAnchor.priority = .defaultLow
+
+            widthAnchor.isActive = true
 
             return stackView
         }()
@@ -73,6 +104,14 @@ extension LinkPaymentMethodPicker {
 
         required init?(coder: NSCoder) {
             fatalError("init(coder:) has not been implemented")
+        }
+
+        override func hitTest(_ point: CGPoint, with event: UIEvent?) -> UIView? {
+            if menuButtonFrame.contains(point) {
+                return menuButton
+            }
+
+            return bounds.contains(point) ? self : nil
         }
     }
 }

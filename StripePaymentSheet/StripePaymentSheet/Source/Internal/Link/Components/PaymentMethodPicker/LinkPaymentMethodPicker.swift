@@ -17,11 +17,18 @@ protocol LinkPaymentMethodPickerDelegate: AnyObject {
 
     func paymentMethodPicker(
         _ picker: LinkPaymentMethodPicker,
+        menuActionsForItemAt index: Int
+    ) -> [PayWithLinkViewController.WalletViewController.Action]
+
+    func paymentMethodPicker(
+        _ picker: LinkPaymentMethodPicker,
         showMenuForItemAt index: Int,
         sourceRect: CGRect
     )
 
     func paymentDetailsPickerDidTapOnAddPayment(_ picker: LinkPaymentMethodPicker)
+
+    func didTapOnAccountMenuItem(_ picker: LinkPaymentMethodPicker)
 }
 
 protocol LinkPaymentMethodPickerDataSource: AnyObject {
@@ -62,12 +69,7 @@ final class LinkPaymentMethodPicker: UIView {
         return selectedPaymentMethod.map { dataSource.isPaymentMethodSupported($0) } ?? false
     }
 
-    var supportedPaymentMethodTypes = Set(ConsumerPaymentDetails.DetailsType.allCases) {
-        didSet {
-            // TODO(tillh-stripe) Update this as soon as adding bank accounts is supported
-            addPaymentMethodButton.isHidden = !supportedPaymentMethodTypes.contains(.card)
-        }
-    }
+    var supportedPaymentMethodTypes = Set(ConsumerPaymentDetails.DetailsType.allCases)
 
     var selectedPaymentMethod: ConsumerPaymentDetails? {
         let count = dataSource?.numberOfPaymentMethods(in: self) ?? 0
@@ -163,12 +165,11 @@ final class LinkPaymentMethodPicker: UIView {
         accessibilityIdentifier = "Stripe.Link.PaymentMethodPicker"
 
         layer.cornerRadius = 16
-        layer.borderWidth = 1
-        layer.borderColor = UIColor.linkControlBorder.cgColor
-        tintColor = .linkBrand
-        backgroundColor = .linkControlBackground
+        layer.borderColor = UIColor.linkBorderDefault.cgColor
+        tintColor = .linkIconBrand
+        backgroundColor = .linkSurfaceSecondary
 
-        addPaymentMethodButton.tintColor = .linkBrand500
+        addPaymentMethodButton.tintColor = .linkTextBrand
 
         headerView.addTarget(self, action: #selector(onHeaderTapped(_:)), for: .touchUpInside)
         headerView.layer.zPosition = 1
@@ -177,6 +178,7 @@ final class LinkPaymentMethodPicker: UIView {
         listView.layer.zPosition = 0
 
         addPaymentMethodButton.addTarget(self, action: #selector(onAddPaymentButtonTapped(_:)), for: .touchUpInside)
+        emailView.menuButton.addTarget(self, action: #selector(didTapOnAccountMenuItem), for: .touchUpInside)
     }
 
     override func layoutSubviews() {
@@ -187,7 +189,7 @@ final class LinkPaymentMethodPicker: UIView {
 #if !os(visionOS)
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
         super.traitCollectionDidChange(previousTraitCollection)
-        layer.borderColor = UIColor.linkControlBorder.cgColor
+        layer.borderColor = UIColor.linkBorderDefault.cgColor
     }
 #endif
 
@@ -224,6 +226,10 @@ private extension LinkPaymentMethodPicker {
 
     @objc func onAddPaymentButtonTapped(_ sender: AddButton) {
         delegate?.paymentDetailsPickerDidTapOnAddPayment(self)
+    }
+
+    @objc func didTapOnAccountMenuItem(_ sender: AddButton) {
+        delegate?.didTapOnAccountMenuItem(self)
     }
 
 }
@@ -282,10 +288,6 @@ extension LinkPaymentMethodPicker {
         }
 
         cell.isLoading = false
-    }
-
-    func setAddPaymentMethodButtonEnabled(_ enabled: Bool) {
-        addPaymentMethodButton.isEnabled = enabled
     }
 
     private func reloadDataIfNeeded() {
@@ -471,4 +473,8 @@ extension LinkPaymentMethodPicker: LinkPaymentMethodPickerCellDelegate {
         delegate?.paymentMethodPicker(self, showMenuForItemAt: index, sourceRect: sourceRect)
     }
 
+    func savedPaymentPickerCellMenuActions(for cell: Cell) -> [PayWithLinkViewController.WalletViewController.Action]? {
+        guard let index = index(for: cell) else { return nil }
+        return delegate?.paymentMethodPicker(self, menuActionsForItemAt: index)
+    }
 }

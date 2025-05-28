@@ -74,7 +74,6 @@ final class RowButtonFloating: RowButton {
                                                                  defaultBadgeLabel,
                                                                  UIView.makeSpacerView(),
                                                                  promoBadge,
-                                                                 linkIcon,
                                                                  accessoryView, ].compactMap { $0 })
         horizontalStackView.spacing = 8
         [imageView, horizontalStackView].compactMap { $0 }
@@ -110,13 +109,6 @@ final class RowButtonFloating: RowButton {
             horizontalStackView.topAnchor.constraint(equalTo: topAnchor, constant: insets),
             horizontalStackView.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -insets),
         ])
-
-        if let linkIcon {
-            NSLayoutConstraint.activate([
-                linkIcon.heightAnchor.constraint(equalToConstant: 14),
-                linkIcon.widthAnchor.constraint(equalToConstant: 42),
-            ])
-        }
     }
 
     override func handleEvent(_ event: STPEvent) {

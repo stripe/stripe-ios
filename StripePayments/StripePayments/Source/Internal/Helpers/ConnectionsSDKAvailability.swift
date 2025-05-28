@@ -69,7 +69,7 @@ import UIKit
         }
     }
 
-    static func financialConnections() -> FinancialConnectionsSDKInterface? {
+    @_spi(STP) public static func financialConnections() -> FinancialConnectionsSDKInterface? {
         let financialConnectionsStubbedResult = ProcessInfo.processInfo.environment["FinancialConnectionsStubbedResult"] == "true"
         if isUnitTest || (isUITest && financialConnectionsStubbedResult) {
             return StubbedConnectionsSDKInterface()
@@ -92,6 +92,7 @@ final class StubbedConnectionsSDKInterface: FinancialConnectionsSDKInterface {
         apiClient: STPAPIClient,
         clientSecret: String,
         returnURL: String?,
+        existingConsumer: FinancialConnectionsConsumer?,
         style: FinancialConnectionsStyle,
         elementsSessionContext: ElementsSessionContext?,
         onEvent: ((FinancialConnectionsEvent) -> Void)?,

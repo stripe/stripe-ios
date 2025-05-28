@@ -76,7 +76,6 @@ class LinkURLGeneratorTests: XCTestCase {
 
     func testURLParamsPaymentMethodOptionsSetupFutureUsage() {
         var config = PaymentSheet.Configuration()
-        config.shouldReadPaymentMethodOptionsSetupFutureUsage = true
         let intentConfig = PaymentSheet.IntentConfiguration(mode: .payment(amount: 100, currency: "USD", paymentMethodOptions: PaymentSheet.IntentConfiguration.Mode.PaymentMethodOptions(setupFutureUsageValues: [.link: .offSession]))) { _, _, _ in
             // Nothing
         }
@@ -108,7 +107,6 @@ class LinkURLGeneratorTests: XCTestCase {
 
     func testURLParamsPaymentMethodOptionsSetupFutureUsage_passthrough() {
         var config = PaymentSheet.Configuration()
-        config.shouldReadPaymentMethodOptionsSetupFutureUsage = true
         let intentConfig = PaymentSheet.IntentConfiguration(mode: .payment(amount: 100, currency: "USD", paymentMethodOptions: PaymentSheet.IntentConfiguration.Mode.PaymentMethodOptions(setupFutureUsageValues: [.card: .offSession]))) { _, _, _ in
             // Nothing
         }
@@ -140,7 +138,6 @@ class LinkURLGeneratorTests: XCTestCase {
 
     func testURLParamsTopLevelSFUPaymentMethodOptionsSetupFutureUsageNone() {
         var config = PaymentSheet.Configuration()
-        config.shouldReadPaymentMethodOptionsSetupFutureUsage = true
         let intentConfig = PaymentSheet.IntentConfiguration(mode: .payment(amount: 100, currency: "USD", setupFutureUsage: .offSession, paymentMethodOptions: PaymentSheet.IntentConfiguration.Mode.PaymentMethodOptions(setupFutureUsageValues: [.link: .none]))) { _, _, _ in
             // Nothing
         }
@@ -172,7 +169,6 @@ class LinkURLGeneratorTests: XCTestCase {
 
     func testURLParamsTopLevelSFUPaymentMethodOptionsSetupFutureUsageNone_passthrough() {
         var config = PaymentSheet.Configuration()
-        config.shouldReadPaymentMethodOptionsSetupFutureUsage = true
         let intentConfig = PaymentSheet.IntentConfiguration(mode: .payment(amount: 100, currency: "USD", setupFutureUsage: .offSession, paymentMethodOptions: PaymentSheet.IntentConfiguration.Mode.PaymentMethodOptions(setupFutureUsageValues: [.card: .none]))) { _, _, _ in
             // Nothing
         }
@@ -343,6 +339,46 @@ extension STPElementsSession {
                                                             "link_passthrough_mode_enabled": false,
                                                            ],
         ]
+
+        return STPElementsSession.decodedObject(fromAPIResponse: apiResponse)!
+    }
+
+    static var linkElementsSessionWithCustomerSession: STPElementsSession {
+        let apiResponse: [String: Any] = [
+            "payment_method_preference": [
+                "ordered_payment_method_types": ["card", "link"],
+                "country_code": "US",
+            ],
+            "session_id": "123",
+            "apple_pay_preference": "enabled",
+            "link_settings": [
+                "link_funding_sources": ["CARD"],
+                "link_passthrough_mode_enabled": false,
+            ],
+            "customer": [
+                "customer_session": [
+                    "id": "cuss_123",
+                    "customer": "cus_123",
+                    "api_key": "ek_123",
+                    "api_key_expiry": 1716580929,
+                    "livemode": false,
+                    "components": [
+                        "mobile_payment_element": [
+                            "enabled": true,
+                            "features": [
+                              "payment_method_save": "enabled",
+                              "payment_method_remove": "enabled",
+                            ],
+                        ],
+                        "customer_sheet": [
+                          "enabled": false
+                        ],
+                    ],
+                ],
+                "payment_methods": [],
+            ],
+        ]
+
         return STPElementsSession.decodedObject(fromAPIResponse: apiResponse)!
     }
 

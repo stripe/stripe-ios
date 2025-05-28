@@ -15,7 +15,6 @@ protocol PaymentSheetLinkAccountInfoProtocol {
     var email: String { get }
     var redactedPhoneNumber: String? { get }
     var isRegistered: Bool { get }
-    var isLoggedIn: Bool { get }
 }
 
 struct LinkPMDisplayDetails {
@@ -73,10 +72,6 @@ class PaymentSheetLinkAccount: PaymentSheetLinkAccountInfoProtocol {
 
     var isRegistered: Bool {
         return currentSession != nil
-    }
-
-    var isLoggedIn: Bool {
-        return sessionState == .verified
     }
 
     var sessionState: SessionState {
@@ -503,7 +498,8 @@ extension PaymentSheetLinkAccount {
     func makePaymentMethodParams(
         from paymentDetails: ConsumerPaymentDetails,
         cvc: String?,
-        billingPhoneNumber: String?
+        billingPhoneNumber: String?,
+        allowRedisplay: STPPaymentMethodAllowRedisplay?
     ) -> STPPaymentMethodParams? {
         guard let currentSession = currentSession else {
             stpAssertionFailure("Cannot make payment method params without an active session.")
@@ -511,6 +507,9 @@ extension PaymentSheetLinkAccount {
         }
 
         let params = STPPaymentMethodParams(type: .link)
+        if let allowRedisplay {
+            params.allowRedisplay = allowRedisplay
+        }
         params.billingDetails = STPPaymentMethodBillingDetails(billingAddress: paymentDetails.billingAddress, email: paymentDetails.billingEmailAddress)
         params.billingDetails?.phone = billingPhoneNumber
         params.link?.paymentDetailsID = paymentDetails.stripeID

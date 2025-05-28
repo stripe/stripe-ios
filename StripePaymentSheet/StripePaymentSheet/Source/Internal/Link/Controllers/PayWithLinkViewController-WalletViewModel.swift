@@ -67,7 +67,7 @@ extension PayWithLinkViewController {
         var mandate: NSMutableAttributedString? {
             switch selectedPaymentMethod?.details {
             case .card:
-                guard context.intent.isSettingUp else { return nil }
+                guard context.intent.isSetupFutureUsageSet(for: context.elementsSession.linkPassthroughModeEnabled ? .card : .link) else { return nil }
                 let string = String(format: .Localized.by_providing_your_card_information_text, context.configuration.merchantDisplayName)
                 return NSMutableAttributedString(string: string)
             case .bankAccount:
@@ -282,6 +282,21 @@ extension PayWithLinkViewController {
 
                 completion(result)
             }
+        }
+
+        // Updates the list of payment methods, and selects the newly added payment method, if supported.
+        func updatePaymentMethods(_ paymentMethods: [ConsumerPaymentDetails]) {
+            let existingIDs = Set(self.paymentMethods.map { $0.stripeID })
+            let newPaymentMethod = paymentMethods.first { !existingIDs.contains($0.stripeID) }
+
+            self.paymentMethods = paymentMethods
+
+            if let newPaymentMethod, isPaymentMethodSupported(paymentMethod: newPaymentMethod),
+               let newIndex = paymentMethods.firstIndex(where: { $0.stripeID == newPaymentMethod.stripeID }) {
+                selectedPaymentMethodIndex = newIndex
+            }
+
+            delegate?.viewModelDidChange(self)
         }
 
         func updatePaymentMethod(_ paymentMethod: ConsumerPaymentDetails) {

@@ -1045,14 +1045,12 @@ class PaymentSheetAPITest: STPNetworkStubbingTestCase {
             switch result {
             case .success(let sut):
                 // ...the vc's intent should match the initial intent config...
-                XCTAssertFalse(sut.intent.isSettingUp)
                 XCTAssertTrue(sut.intent.isPaymentIntent)
                 // ...and updating the intent config should succeed...
                 intentConfig.mode = .setup(currency: nil, setupFutureUsage: .offSession)
                 sut.update(intentConfiguration: intentConfig) { error in
                     XCTAssertNil(error)
                     XCTAssertNil(sut.paymentOption)
-                    XCTAssertTrue(sut.intent.isSettingUp)
                     XCTAssertFalse(sut.intent.isPaymentIntent)
                     firstUpdateExpectation.fulfill()
 
@@ -1061,7 +1059,6 @@ class PaymentSheetAPITest: STPNetworkStubbingTestCase {
                     sut.update(intentConfiguration: intentConfig) { error in
                         XCTAssertNil(error)
                         XCTAssertNil(sut.paymentOption)
-                        XCTAssertFalse(sut.intent.isSettingUp)
                         XCTAssertTrue(sut.intent.isPaymentIntent)
 
                         // Sanity check that the analytics...
@@ -1363,7 +1360,6 @@ class PaymentSheetAPITest: STPNetworkStubbingTestCase {
             // ...should have mandate data
             XCTAssertNotNil(params_for_si_with_sfu.mandateData)
 
-            configuration.shouldReadPaymentMethodOptionsSetupFutureUsage = true
             // Params for pi with PMO SFU supplied...
             let params_for_pi_with_pmo_sfu = PaymentSheet.makePaymentIntentParams(
                 confirmPaymentMethodType: confirmType,

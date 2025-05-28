@@ -102,15 +102,10 @@ class PaymentSheetFormFactory {
             let isAccountNotRegisteredOrMissing = linkAccount.flatMap({ !$0.isRegistered }) ?? true
             return isAccountNotRegisteredOrMissing && !UserDefaults.standard.customerHasUsedLink
         }()
-        let shouldReadPaymentMethodOptionsSetupFutureUsage: Bool = {
-            switch configuration {
-            case .paymentElement(let config):
-                return config.shouldReadPaymentMethodOptionsSetupFutureUsage
-            default:
-                return false
-            }
-        }()
         let paymentMethodType: STPPaymentMethodType = {
+            if linkAccount != nil, configuration.linkPaymentMethodsOnly, !elementsSession.linkPassthroughModeEnabled {
+                return .link
+            }
             switch paymentMethod {
             case .stripe(let paymentMethodType):
                 return paymentMethodType
@@ -127,7 +122,7 @@ class PaymentSheetFormFactory {
                   accountService: accountService,
                   cardBrandChoiceEligible: elementsSession.isCardBrandChoiceEligible,
                   isPaymentIntent: intent.isPaymentIntent,
-                  isSettingUp: shouldReadPaymentMethodOptionsSetupFutureUsage ? intent.isSetupFutureUsageSet(for: paymentMethodType) : intent.isSettingUp,
+                  isSettingUp: intent.isSetupFutureUsageSet(for: paymentMethodType),
                   countryCode: elementsSession.countryCode(overrideCountry: configuration.overrideCountry),
                   currency: intent.currency,
                   savePaymentMethodConsentBehavior: elementsSession.savePaymentMethodConsentBehavior,
@@ -619,7 +614,7 @@ extension PaymentSheetFormFactory {
 
         isSaving.value =
             shouldDisplaySaveCheckbox
-            ? configuration.savePaymentMethodOptInBehavior.isSelectedByDefault : isSettingUp
+            ? (configuration.savePaymentMethodOptInBehavior.isSelectedByDefault || isSettingUp) : isSettingUp
 
         let phoneElement = configuration.billingDetailsCollectionConfiguration.phone == .always ? makePhone() : nil
         let addressElement = configuration.billingDetailsCollectionConfiguration.address == .full
@@ -640,6 +635,7 @@ extension PaymentSheetFormFactory {
             saveCheckboxElement: shouldDisplaySaveCheckbox ? saveCheckbox : nil,
             defaultCheckboxElement: defaultCheckbox,
             savingAccount: isSaving,
+            isSettingUp: isSettingUp,
             merchantName: merchantName,
             initialLinkedBank: previousCustomerInput?.financialConnectionsLinkedBank,
             appearance: configuration.appearance

@@ -40,10 +40,26 @@ class PaymentMethodWithLinkDetails: NSObject, STPAPIResponseDecodable {
             }
         }
 
+        if let linkDetails, linkDetails.type.isUnsupportedAsSavedPaymentMethod {
+            // This is a Link payment method, but we don't support the type yet. We can't render them, so hide them.
+            return nil
+        }
+
         return self.init(
             paymentMethod: paymentMethod,
             linkDetails: linkDetails,
             allResponseFields: response
         )
+    }
+}
+
+private extension ConsumerPaymentDetails.DetailsType {
+    var isUnsupportedAsSavedPaymentMethod: Bool {
+        switch self {
+        case .card, .bankAccount:
+            false
+        case .unparsable:
+            true
+        }
     }
 }

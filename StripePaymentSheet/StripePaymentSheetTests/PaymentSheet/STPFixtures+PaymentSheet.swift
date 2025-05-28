@@ -62,6 +62,7 @@ extension STPElementsSession {
             allResponseFields: [:],
             sessionID: "test_123",
             orderedPaymentMethodTypes: orderedPaymentMethodTypes,
+            orderedPaymentMethodTypesAndWallets: [],
             unactivatedPaymentMethodTypes: unactivatedPaymentMethodTypes,
             countryCode: countryCode,
             merchantCountryCode: merchantCountryCode,
@@ -183,6 +184,7 @@ extension STPElementsSession {
 
     static func _testValue(
         intent: Intent,
+        isLinkPassthroughModeEnabled: Bool? = nil,
         linkMode: LinkMode? = nil,
         linkFundingSources: Set<LinkSettings.FundingSource> = [],
         defaultPaymentMethod: String? = nil,
@@ -217,6 +219,7 @@ extension STPElementsSession {
         return STPElementsSession._testValue(
             paymentMethodTypes: paymentMethodTypes,
             customerSessionData: customerSessionData,
+            isLinkPassthroughModeEnabled: isLinkPassthroughModeEnabled,
             linkMode: linkMode,
             linkFundingSources: linkFundingSources,
             defaultPaymentMethod: defaultPaymentMethod,
@@ -396,11 +399,14 @@ extension STPPaymentMethod {
                 "email": "sam@stripe.com",
             ] as [String: Any],
         ])!
-        paymentMethod.linkPaymentDetails = .init(
-            expMonth: 12,
-            expYear: 2030,
-            last4: "4242",
-            brand: .visa
+        paymentMethod.linkPaymentDetails = .card(
+            LinkPaymentDetails.Card(
+                displayName: nil,
+                expMonth: 12,
+                expYear: 2030,
+                last4: "4242",
+                brand: .visa
+            )
         )
         return paymentMethod
     }

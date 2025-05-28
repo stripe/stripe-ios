@@ -57,8 +57,8 @@ struct ElementsCustomer: Equatable, Hashable {
             if enableLinkInSPM {
                 if let paymentMethodWithLinkDetails = PaymentMethodWithLinkDetails.decodedObject(fromAPIResponse: json) {
                     let paymentMethod = paymentMethodWithLinkDetails.paymentMethod
-                    if let cardDetails = paymentMethodWithLinkDetails.linkDetails?.cardDetails {
-                        paymentMethod.setLinkPaymentDetails(from: cardDetails)
+                    if let linkDetails = paymentMethodWithLinkDetails.linkDetails {
+                        paymentMethod.setLinkPaymentDetails(from: linkDetails)
                     }
                     paymentMethods.append(paymentMethod)
                 }
@@ -93,21 +93,35 @@ struct ElementsCustomer: Equatable, Hashable {
     }
 }
 
-private extension ConsumerPaymentDetails {
+private extension STPPaymentMethod {
 
-    var cardDetails: ConsumerPaymentDetails.Details.Card? {
-        guard case .card(let cardDetails) = details else {
-            return nil
+    func setLinkPaymentDetails(from paymentDetails: ConsumerPaymentDetails) {
+        switch paymentDetails.details {
+        case .card(let cardDetails):
+            let linkCardDetails = LinkPaymentDetails.Card(from: cardDetails, nickname: paymentDetails.nickname)
+            self.linkPaymentDetails = .card(linkCardDetails)
+        case .bankAccount(let bankDetails):
+            let bankAccount = LinkPaymentDetails.BankDetails(from: bankDetails)
+            self.linkPaymentDetails = .bankAccount(bankAccount)
+        case .unparsable:
+            break
         }
-
-        return cardDetails
     }
 }
 
-private extension STPPaymentMethod {
+private extension LinkPaymentDetails.BankDetails {
+    init(from bankDetails: ConsumerPaymentDetails.Details.BankAccount) {
+        self = .init(
+            bankName: bankDetails.name,
+            last4: bankDetails.last4
+        )
+    }
+}
 
-    func setLinkPaymentDetails(from cardDetails: ConsumerPaymentDetails.Details.Card) {
-        self.linkPaymentDetails = LinkPaymentDetails(
+private extension LinkPaymentDetails.Card {
+    init(from cardDetails: ConsumerPaymentDetails.Details.Card, nickname: String?) {
+        self = .init(
+            displayName: cardDetails.displayName(with: nickname),
             expMonth: cardDetails.expiryMonth,
             expYear: cardDetails.expiryYear,
             last4: cardDetails.last4,
