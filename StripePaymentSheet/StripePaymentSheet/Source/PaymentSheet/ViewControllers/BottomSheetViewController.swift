@@ -250,11 +250,10 @@ class BottomSheetViewController: UIViewController, BottomSheetPresentable {
             oldViewImage.alpha = 0
         }
 
-        let shouldAddSafeAreaInset = newHeight < oldHeight
         animateHeightChange(forceAnimation: true, {
             // Fade new content in
             self.contentViewController.view.alpha = 1
-            self.manualHeightConstraint.constant = shouldAddSafeAreaInset ? newHeight + self.view.safeAreaInsets.bottom : newHeight
+            self.manualHeightConstraint.constant = newHeight
         }, completion: {_ in
             self.contentViewController.didMove(toParent: self)
             self.contentViewController.endAppearanceTransition()
@@ -349,6 +348,7 @@ class BottomSheetViewController: UIViewController, BottomSheetPresentable {
 
         contentContainerView.translatesAutoresizingMaskIntoConstraints = false
         contentContainerView.isLayoutMarginsRelativeArrangement = true
+        contentContainerView.insetsLayoutMarginsFromSafeArea = false
         contentContainerView.directionalLayoutMargins = NSDirectionalEdgeInsets(
             top: appearance.formInsets.top,
             leading: appearance.formInsets.left,
