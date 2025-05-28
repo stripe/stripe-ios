@@ -197,12 +197,17 @@ class BottomSheetViewController: UIViewController, BottomSheetPresentable {
         // Without this, the inner ScrollView tends to animate from the center
         // instead of remaining pinned to the top.
 
-        // First, get the old height of the content + navigation bar + safe area.
-        manualHeightConstraint.constant = oldContentViewController.view.frame.size.height + navigationBarContainerView.bounds.size.height
+        // First, get the old height of the content + navigation bar + safe area + layout margins.
+        let oldHeight = oldContentViewController.view.bounds.size.height + 
+            navigationBarContainerView.bounds.size.height +
+            contentContainerView.directionalLayoutMargins.top +
+            contentContainerView.directionalLayoutMargins.bottom
+        manualHeightConstraint.constant = oldHeight
 
         // Take a snapshot of the old content and add it to our container - we'll fade it out
         let oldView = oldContentViewController.view!
         let oldViewImage = oldView.snapshotView(afterScreenUpdates: false) ?? UIView()
+        oldViewImage.frame = oldView.frame // keep the old content position so it doesn't cause animation jank
         contentContainerView.addSubview(oldViewImage)
 
         // Remove the old VC
@@ -225,8 +230,12 @@ class BottomSheetViewController: UIViewController, BottomSheetPresentable {
         oldContentViewController.navigationBar.removeFromSuperview()
         navigationBarContainerView.addArrangedSubview(newContentViewController.navigationBar)
         navigationBarContainerView.layoutIfNeeded()
-        // Layout is mostly completed at this point. The new height is the navigation bar + content
-        let newHeight = newContentViewController.view.bounds.size.height + navigationBarContainerView.bounds.size.height
+
+        // Layout is mostly completed at this point. The new height is the navigation bar + content + layout margins
+        let newHeight = newContentViewController.view.bounds.size.height +
+            navigationBarContainerView.bounds.size.height +
+            contentContainerView.directionalLayoutMargins.top +
+            contentContainerView.directionalLayoutMargins.bottom
 
         // Force the old height, then force a layout pass
         if modalPresentationStyle == .custom { // Only if we're using the custom presentation style (e.g. pinned to the bottom)
@@ -234,17 +243,19 @@ class BottomSheetViewController: UIViewController, BottomSheetPresentable {
         }
         rootParent.presentationController?.containerView?.layoutIfNeeded()
         newContentViewController.view.alpha = 0
+
         // Now animate to the correct height.
         UIView.animate(withDuration: 0.2) {
             // Fade old content snapshot out
             oldViewImage.alpha = 0
         }
+
+        let shouldAddSafeAreaInset = newHeight < oldHeight
         animateHeightChange(forceAnimation: true, {
             // Fade new content in
             self.contentViewController.view.alpha = 1
-            self.manualHeightConstraint.constant = newHeight
+            self.manualHeightConstraint.constant = shouldAddSafeAreaInset ? newHeight + self.view.safeAreaInsets.bottom : newHeight
         }, completion: {_ in
-            // If you are implementing your own container view controller, it must call the didMove(toParent:) method of the child view controller after the transition to the new controller is complete or, if there is no transition, immediately after calling the addChild(_:) method.
             self.contentViewController.didMove(toParent: self)
             self.contentViewController.endAppearanceTransition()
 
@@ -337,7 +348,13 @@ class BottomSheetViewController: UIViewController, BottomSheetPresentable {
         ])
 
         contentContainerView.translatesAutoresizingMaskIntoConstraints = false
-        contentContainerView.directionalLayoutMargins = PaymentSheetUI.defaultSheetMargins
+        contentContainerView.isLayoutMarginsRelativeArrangement = true
+        contentContainerView.directionalLayoutMargins = NSDirectionalEdgeInsets(
+            top: appearance.formInsets.top,
+            leading: appearance.formInsets.left,
+            bottom: appearance.formInsets.bottom,
+            trailing: appearance.formInsets.right
+        )
         scrollView.addSubview(contentContainerView)
 
         // Give the scroll view a desired height
