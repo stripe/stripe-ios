@@ -35,7 +35,7 @@ extension PaymentSheet {
             account: PaymentSheetLinkAccount,
             paymentDetails: ConsumerPaymentDetails,
             confirmationExtras: LinkConfirmationExtras?,
-            shippingAddress: PaymentSheet.ShippingAddress?
+            shippingAddress: ShippingAddressesResponse.ShippingAddress?
         )
     }
 
@@ -80,10 +80,15 @@ extension PaymentSheet.LinkConfirmOption {
         }
     }
 
-    var shippingAddress: PaymentSheet.ShippingAddress? {
+    var shippingAddress: AddressViewController.Configuration.DefaultAddressDetails? {
         switch self {
-        case let .withPaymentDetails(_, _, _, shippingAddress):
-            return shippingAddress
+        case let .withPaymentDetails(linkAccount, _, _, shippingAddress):
+            guard let shippingAddress else { return nil }
+            return .init(
+                address: shippingAddress.toPaymentSheetAddress(),
+                name: shippingAddress.address.name,
+                phone: linkAccount.currentSession?.unredactedPhoneNumberWithPrefix
+            )
         case .wallet, .withPaymentMethod, .signUp:
             return nil
         }

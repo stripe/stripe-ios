@@ -415,7 +415,7 @@ extension PayWithLinkViewController: PayWithLinkCoordinating {
             account: linkAccount,
             paymentDetails: paymentDetails,
             confirmationExtras: confirmationExtras,
-            shippingAddress: defaultShippingAddress?.toPaymentSheetShippingAddress()
+            shippingAddress: defaultShippingAddress
         )
 
         payWithLinkDelegate?.payWithLinkViewControllerDidFinish(self, confirmOption: confirmOption)
@@ -558,7 +558,7 @@ extension PayWithLinkViewController: PayWithLinkCoordinating {
                     account: linkAccount,
                     paymentDetails: paymentDetails,
                     confirmationExtras: confirmationExtras,
-                    shippingAddress: defaultShippingAddress?.toPaymentSheetShippingAddress()
+                    shippingAddress: defaultShippingAddress
                 )
             )
         ) { [weak self] result, confirmationType in

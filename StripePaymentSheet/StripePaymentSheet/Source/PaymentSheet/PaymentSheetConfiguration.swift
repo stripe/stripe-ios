@@ -430,15 +430,6 @@ extension PaymentSheet {
         }
     }
 
-    /// Shipping address and name of a customer
-    @_spi(STP) public struct ShippingAddress: Equatable {
-        /// The customer's billing address
-        @_spi(STP) public var address: Address = Address()
-
-        /// The customer's name
-        @_spi(STP) public var name: String?
-    }
-
     /// Billing details of a customer
     public struct BillingDetails: Equatable {
         /// The customer's billing address
