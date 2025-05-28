@@ -313,46 +313,65 @@ private extension PayWithLinkViewController {
             .supportedPaymentDetailsTypes(for: context.elementsSession)
             .toSortedArray()
 
-
         Task { @MainActor in
-            // Start async operation for both shipping address and payment details
-            async let shippingAddressTask = context.launchedFromFlowController ? linkAccount.listShippingAddress() : nil
-            async let paymentDetailsTask = linkAccount.listPaymentDetails(supportedTypes: supportedPaymentDetailsTypes)
+            async let paymentDetailsResult = linkAccount.listPaymentDetails(
+                supportedTypes: supportedPaymentDetailsTypes
+            )
 
-            // Wait for shipping address response before displaying payment details
-            do {
-                shippingAddressResponse = try await shippingAddressTask
-            } catch {
-                // TODO: Report error
-            }
+            async let shippingAddressResult = fetchShippingAddress(
+                using: linkAccount,
+                shouldFetch: context.launchedFromFlowController
+            )
 
             do {
-                let paymentDetails = try await paymentDetailsTask
-                if paymentDetails.isEmpty {
-                    let addPaymentMethodVC = NewPaymentViewController(
-                        linkAccount: linkAccount,
-                        context: self.context,
-                        isAddingFirstPaymentMethod: true
-                    )
+                let paymentDetails = try await paymentDetailsResult
 
-                    self.setViewControllers([addPaymentMethodVC])
-                } else {
-                    let walletViewController = WalletViewController(
-                        linkAccount: linkAccount,
-                        context: self.context,
-                        paymentMethods: paymentDetails
-                    )
+                // Ignore any errors that might happen here.
+                shippingAddressResponse = try? await shippingAddressResult
 
-                    self.setViewControllers([walletViewController])
-                }
+                presentAppropriateViewController(
+                    with: linkAccount,
+                    paymentDetails: paymentDetails
+                )
             } catch {
-                self.payWithLinkDelegate?.payWithLinkViewControllerDidFinish(
+                payWithLinkDelegate?.payWithLinkViewControllerDidFinish(
                     self,
                     result: PaymentSheetResult.failed(error: error),
                     deferredIntentConfirmationType: nil
                 )
             }
         }
+    }
+
+    private func fetchShippingAddress(
+        using account: PaymentSheetLinkAccount,
+        shouldFetch: Bool
+    ) async throws -> ShippingAddressesResponse? {
+        guard shouldFetch else { return nil }
+        return try await account.listShippingAddress()
+    }
+
+    private func presentAppropriateViewController(
+        with linkAccount: PaymentSheetLinkAccount,
+        paymentDetails: [ConsumerPaymentDetails]
+    ) {
+        let viewController: BottomSheetContentViewController
+        if paymentDetails.isEmpty {
+            let addPaymentMethodVC = NewPaymentViewController(
+                linkAccount: linkAccount,
+                context: context,
+                isAddingFirstPaymentMethod: true
+            )
+            viewController = addPaymentMethodVC
+        } else {
+            let walletViewController = WalletViewController(
+                linkAccount: linkAccount,
+                context: context,
+                paymentMethods: paymentDetails
+            )
+            viewController = walletViewController
+        }
+        setViewControllers([viewController])
     }
 
     func updateSupportedPaymentMethods() {
@@ -396,7 +415,7 @@ extension PayWithLinkViewController: PayWithLinkCoordinating {
             account: linkAccount,
             paymentDetails: paymentDetails,
             confirmationExtras: confirmationExtras,
-            shippingAddress: defaultShippingAddress?.toPaymentSheetAddress()
+            shippingAddress: defaultShippingAddress?.toPaymentSheetShippingAddress()
         )
 
         payWithLinkDelegate?.payWithLinkViewControllerDidFinish(self, confirmOption: confirmOption)
@@ -539,7 +558,7 @@ extension PayWithLinkViewController: PayWithLinkCoordinating {
                     account: linkAccount,
                     paymentDetails: paymentDetails,
                     confirmationExtras: confirmationExtras,
-                    shippingAddress: defaultShippingAddress?.toPaymentSheetAddress()
+                    shippingAddress: defaultShippingAddress?.toPaymentSheetShippingAddress()
                 )
             )
         ) { [weak self] result, confirmationType in

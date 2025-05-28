@@ -367,7 +367,7 @@ extension STPAPIClient {
         let endPoint = "consumers/shipping_addresses/list"
         let parameters: [String: Any] = [
             "credentials": ["consumer_session_client_secret": consumerSessionClientSecret],
-            "request_surface": "ios_payment_element"
+            "request_surface": "ios_payment_element",
         ]
         post(
             resource: endPoint,

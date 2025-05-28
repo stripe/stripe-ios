@@ -131,7 +131,8 @@ extension PaymentSheet {
             /// The billing details associated with the customer's desired payment method
             public let billingDetails: PaymentSheet.BillingDetails?
 
-            public let shippingAddress: Address?
+            /// The shipping address associated with the current customer.
+            @_spi(STP) public let shippingAddress: ShippingAddress?
 
             /// A string representation of the customer's desired payment method
             /// - If this is a Stripe payment method, see https://stripe.com/docs/api/payment_methods/object#payment_method_object-type for possible values.

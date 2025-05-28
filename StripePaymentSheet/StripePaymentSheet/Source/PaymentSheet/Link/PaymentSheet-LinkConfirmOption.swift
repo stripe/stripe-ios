@@ -35,7 +35,7 @@ extension PaymentSheet {
             account: PaymentSheetLinkAccount,
             paymentDetails: ConsumerPaymentDetails,
             confirmationExtras: LinkConfirmationExtras?,
-            shippingAddress: PaymentSheet.Address?
+            shippingAddress: PaymentSheet.ShippingAddress?
         )
     }
 
@@ -80,7 +80,7 @@ extension PaymentSheet.LinkConfirmOption {
         }
     }
 
-    var shippingAddress: PaymentSheet.Address? {
+    var shippingAddress: PaymentSheet.ShippingAddress? {
         switch self {
         case let .withPaymentDetails(_, _, _, shippingAddress):
             return shippingAddress

@@ -52,14 +52,17 @@ struct ShippingAddressesResponse: Decodable {
 }
 
 extension ShippingAddressesResponse.ShippingAddress {
-    func toPaymentSheetAddress() -> PaymentSheet.Address {
+    func toPaymentSheetShippingAddress() -> PaymentSheet.ShippingAddress {
         .init(
-            city: self.address.locality,
-            country: self.address.countryCode,
-            line1: self.address.line1,
-            line2: self.address.line2,
-            postalCode: self.address.postalCode,
-            state: self.address.administrativeArea
+            address: .init(
+                city: address.locality,
+                country: address.countryCode,
+                line1: address.line1,
+                line2: address.line2,
+                postalCode: address.postalCode,
+                state: address.administrativeArea
+            ),
+            name: address.name
         )
     }
 }
