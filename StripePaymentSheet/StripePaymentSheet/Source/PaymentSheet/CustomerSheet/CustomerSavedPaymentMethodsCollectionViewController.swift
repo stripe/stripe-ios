@@ -227,9 +227,7 @@ class CustomerSavedPaymentMethodsCollectionViewController: UIViewController {
         let mandateView = SimpleMandateTextView(mandateText: mandateText, theme: appearance.asElementsTheme)
         let margins = NSDirectionalEdgeInsets.insets(
             top: 8,
-            leading: PaymentSheetUI.defaultMargins.leading,
-            bottom: 0,
-            trailing: PaymentSheetUI.defaultMargins.trailing
+            bottom: 0
         )
         view.addAndPinSubview(mandateView, directionalLayoutMargins: margins)
         return view

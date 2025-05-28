@@ -49,7 +49,7 @@ public extension PaymentSheet {
         public var embeddedPaymentElement: EmbeddedPaymentElement = EmbeddedPaymentElement()
 
         /// Describes the padding used for all forms
-        public var formInsets: UIEdgeInsets = UIEdgeInsets(top: 24 + PaymentSheetUI.defaultSheetMargins.top, left: 24 + PaymentSheetUI.defaultSheetMargins.leading, bottom: 50 + PaymentSheetUI.defaultSheetMargins.bottom, right: PaymentSheetUI.defaultSheetMargins.trailing)
+        public var formInsets: UIEdgeInsets = UIEdgeInsets(top: PaymentSheetUI.defaultSheetMargins.top, left: PaymentSheetUI.defaultSheetMargins.leading, bottom: PaymentSheetUI.defaultSheetMargins.bottom, right: PaymentSheetUI.defaultSheetMargins.trailing)
 
         // MARK: Fonts
 
