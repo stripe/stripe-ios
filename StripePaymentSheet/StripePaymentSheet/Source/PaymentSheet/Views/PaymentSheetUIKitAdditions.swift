@@ -25,8 +25,6 @@ enum PaymentSheetUI {
     static let navBarPadding = defaultPadding
 #endif
 
-    static let defaultMargins: NSDirectionalEdgeInsets = .insets(
-        leading: defaultPadding, trailing: defaultPadding)
     static let defaultSheetMargins: NSDirectionalEdgeInsets = .insets(
         leading: defaultPadding, bottom: 40, trailing: defaultPadding)
     static let minimumTapSize: CGSize = CGSize(width: 44, height: 44)
