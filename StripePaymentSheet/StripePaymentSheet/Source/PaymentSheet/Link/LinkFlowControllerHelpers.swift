@@ -16,7 +16,7 @@ extension UIViewController {
         elementsSession: STPElementsSession,
         analyticsHelper: PaymentSheetAnalyticsHelper,
         verificationRejected: (() -> Void)? = nil,
-        callback: @escaping (PaymentSheet.LinkConfirmOption?, Bool) -> Void
+        callback: @escaping (_ confirmOption: PaymentSheet.LinkConfirmOption?, _ shouldReturnToPaymentSheet: Bool) -> Void
     ) {
         let linkAccount = LinkAccountContext.shared.account
 
@@ -60,7 +60,7 @@ extension UIViewController {
         elementsSession: STPElementsSession,
         configuration: PaymentElementConfiguration,
         analyticsHelper: PaymentSheetAnalyticsHelper,
-        callback: @escaping (PaymentSheet.LinkConfirmOption?, Bool) -> Void
+        callback: @escaping (_ confirmOption: PaymentSheet.LinkConfirmOption?, _ shouldReturnToPaymentSheet: Bool) -> Void
     ) {
         let payWithLinkController = PayWithNativeLinkController(
             mode: .paymentMethodSelection,

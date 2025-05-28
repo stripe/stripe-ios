@@ -96,7 +96,7 @@ final class PayWithNativeLinkController {
     func presentForPaymentMethodSelection(
         from presentingController: UIViewController,
         initiallySelectedPaymentDetailsID: String?,
-        completion: @escaping (PaymentSheet.LinkConfirmOption?, Bool) -> Void
+        completion: @escaping (_ confirmOption: PaymentSheet.LinkConfirmOption?, _ shouldReturnToPaymentSheet: Bool) -> Void
     ) {
         presentAsBottomSheetInternal(
             from: presentingController,
