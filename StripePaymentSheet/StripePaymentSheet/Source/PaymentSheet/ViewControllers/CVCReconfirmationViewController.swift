@@ -70,7 +70,7 @@ class CVCReconfirmationViewController: UIViewController {
         intent: Intent,
         configuration: PaymentElementConfiguration,
         onCompletion: @escaping ((CVCReconfirmationViewController, IntentConfirmParams?) -> Void),
-        onCancel: @escaping((CVCReconfirmationViewController) -> Void)
+        onCancel: @escaping ((CVCReconfirmationViewController) -> Void)
     ) {
         self.paymentMethod = paymentMethod
         self.configuration = configuration
