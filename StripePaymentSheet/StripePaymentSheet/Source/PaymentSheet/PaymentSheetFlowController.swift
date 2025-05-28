@@ -210,16 +210,9 @@ extension PaymentSheet {
         }
 
         private var canPresentLinkInPlaceOfFlowController: Bool {
-            guard PaymentSheet.LinkFeatureFlags.enableLinkFlowControllerChanges else {
-                // Only allow if the feature flag is enabled
+            guard elementsSession.enableFlowControllerRUX(for: configuration) else {
                 return false
             }
-
-            guard deviceCanUseNativeLink(elementsSession: elementsSession, configuration: configuration) else {
-                // We only allow this with native Link
-                return false
-            }
-
             return _paymentOption?.canLaunchLink ?? false
         }
 

@@ -5,7 +5,17 @@
 //  Created by Till Hellmund on 5/14/25.
 //
 
+@_spi(STP) import StripePayments
 import UIKit
+
+extension STPElementsSession {
+
+    func enableFlowControllerRUX(for configuration: PaymentElementConfiguration) -> Bool {
+        let usesNative = deviceCanUseNativeLink(elementsSession: self, configuration: configuration)
+        let disableFlowControllerRUX = linkSettings?.disableFlowControllerRUX ?? false
+        return PaymentSheet.LinkFeatureFlags.enableLinkFlowControllerChanges && !disableFlowControllerRUX && usesNative
+    }
+}
 
 extension UIViewController {
 
