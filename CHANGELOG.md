@@ -1,3 +1,7 @@
+## XX.XX.X XXXX-XX-XX
+### PaymentSheet
+* [Added] The ability to customize the height of the primary button with `PaymentSheetAppearance.primaryButton.height`.
+
 ## 24.14.0 2025-05-19
 ### PaymentSheet
 * [Added] Support for payment method options setup future usage in public preview.
