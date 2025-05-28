@@ -230,6 +230,11 @@ extension PayWithLinkViewController {
                         billingPhoneNumber: confirmParams.paymentMethodParams.billingDetails?.phone
                     )
 
+                    guard !context.launchedFromFlowController else {
+                        coordinator?.handlePaymentDetailsSelected(paymentDetails, confirmationExtras: confirmationExtras)
+                        return
+                    }
+
                     self.coordinator?.confirm(
                         with: self.linkAccount,
                         paymentDetails: paymentDetails,
