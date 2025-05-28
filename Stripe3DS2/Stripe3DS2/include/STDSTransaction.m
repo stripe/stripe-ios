@@ -510,21 +510,21 @@ NS_ASSUME_NONNULL_BEGIN
 
 #pragma mark - STDSChallengeResponseViewController
 
-- (void)challengeResponseViewController:(nonnull STDSChallengeResponseViewController *)viewController didSubmitInput:(nonnull NSString *)userInput whitelistSelection:(nonnull id<STDSChallengeResponseSelectionInfo>)whitelistSelection {
+- (void)challengeResponseViewController:(nonnull STDSChallengeResponseViewController *)viewController didSubmitInput:(nonnull NSString *)userInput whitelistSelection:(nullable id<STDSChallengeResponseSelectionInfo>)whitelistSelection {
     self.challengeRequestParameters = [self.challengeRequestParameters nextChallengeRequestParametersByIncrementCounter];
     self.challengeRequestParameters.challengeDataEntry = userInput;
     self.challengeRequestParameters.whitelistingDataEntry = whitelistSelection.name;
     [self _makeChallengeRequest:self.challengeRequestParameters didCancel:NO];
 }
 
-- (void)challengeResponseViewController:(nonnull STDSChallengeResponseViewController *)viewController didSubmitSelection:(nonnull NSArray<id<STDSChallengeResponseSelectionInfo>> *)selection whitelistSelection:(nonnull id<STDSChallengeResponseSelectionInfo>)whitelistSelection {
+- (void)challengeResponseViewController:(nonnull STDSChallengeResponseViewController *)viewController didSubmitSelection:(nonnull NSArray<id<STDSChallengeResponseSelectionInfo>> *)selection whitelistSelection:(nullable id<STDSChallengeResponseSelectionInfo>)whitelistSelection {
     self.challengeRequestParameters = [self.challengeRequestParameters nextChallengeRequestParametersByIncrementCounter];
     self.challengeRequestParameters.challengeDataEntry = [self _csvForChallengeResponseSelectionInfo:selection];
     self.challengeRequestParameters.whitelistingDataEntry = whitelistSelection.name;
     [self _makeChallengeRequest:self.challengeRequestParameters didCancel:NO];
 }
 
-- (void)challengeResponseViewControllerDidOOBContinue:(nonnull STDSChallengeResponseViewController *)viewController whitelistSelection:(nonnull id<STDSChallengeResponseSelectionInfo>)whitelistSelection {
+- (void)challengeResponseViewControllerDidOOBContinue:(nonnull STDSChallengeResponseViewController *)viewController whitelistSelection:(nullable id<STDSChallengeResponseSelectionInfo>)whitelistSelection {
     self.challengeRequestParameters = [self.challengeRequestParameters nextChallengeRequestParametersByIncrementCounter];
     self.challengeRequestParameters.oobContinue = @(YES);
     self.challengeRequestParameters.whitelistingDataEntry = whitelistSelection.name;
