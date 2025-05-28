@@ -81,7 +81,7 @@ class AddPaymentMethodViewController: UIViewController {
     }()
     private lazy var paymentMethodDetailsContainerView: DynamicHeightContainerView = {
         let view = DynamicHeightContainerView(pinnedDirection: .bottom)
-        view.directionalLayoutMargins = PaymentSheetUI.defaultMargins
+//        view.directionalLayoutMargins = PaymentSheetUI.defaultMargins
         return view
     }()
 
@@ -129,6 +129,8 @@ class AddPaymentMethodViewController: UIViewController {
         stackView.axis = .vertical
         stackView.spacing = 16
         stackView.translatesAutoresizingMaskIntoConstraints = false
+        stackView.directionalLayoutMargins = .insets(top: configuration.appearance.formInsets.top, leading: configuration.appearance.formInsets.left, bottom: 0, trailing: configuration.appearance.formInsets.right)
+        stackView.isLayoutMarginsRelativeArrangement = true
         view.addAndPinSubview(stackView)
         if paymentMethodTypes == [.stripe(.card)] {
             paymentMethodTypesView.isHidden = true

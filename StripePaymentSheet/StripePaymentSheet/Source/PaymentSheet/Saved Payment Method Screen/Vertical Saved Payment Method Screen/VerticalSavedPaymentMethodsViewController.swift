@@ -220,7 +220,7 @@ class VerticalSavedPaymentMethodsViewController: UIViewController {
         view.backgroundColor = configuration.appearance.colors.background
         configuration.style.configure(self)
 
-        view.addAndPinSubview(stackView, insets: PaymentSheetUI.defaultSheetMargins)
+        view.addAndPinSubview(stackView, insets: .insets(top: configuration.appearance.formInsets.top, leading: configuration.appearance.formInsets.left, bottom: configuration.appearance.formInsets.bottom, trailing: configuration.appearance.formInsets.right))
 
         // Add a height constraint to the view to ensure a minimum height of 200
         let minHeightConstraint = view.heightAnchor.constraint(greaterThanOrEqualToConstant: 200 - SheetNavigationBar.height)

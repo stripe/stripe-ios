@@ -58,7 +58,7 @@ class AutoCompleteViewController: UIViewController {
     }()
     lazy var formStackView: UIStackView = {
         let stackView = UIStackView(arrangedSubviews: [formView])
-        stackView.directionalLayoutMargins = .insets(top: configuration.appearance.formInsets.top + PaymentSheetUI.defaultMargins.top, leading: configuration.appearance.formInsets.left + PaymentSheetUI.defaultMargins.leading, trailing: configuration.appearance.formInsets.right + PaymentSheetUI.defaultMargins.trailing)
+        stackView.directionalLayoutMargins = .insets(top: configuration.appearance.formInsets.top, leading: configuration.appearance.formInsets.left, bottom: 0, trailing: configuration.appearance.formInsets.right)
         stackView.isLayoutMarginsRelativeArrangement = true
         stackView.axis = .vertical
 
@@ -79,9 +79,14 @@ class AutoCompleteViewController: UIViewController {
     }()
     lazy var manualEntryButton: UIButton = {
         let button = UIButton.makeManualEntryButton(appearance: configuration.appearance)
-        button.directionalLayoutMargins = .insets(bottom: configuration.appearance.formInsets.bottom)
         button.addTarget(self, action: #selector(manualEntryButtonTapped), for: .touchUpInside)
         return button
+    }()
+    lazy var manualEntryButtonStackView: UIStackView = {
+        let stack = UIStackView(arrangedSubviews: [manualEntryButton])
+        stack.directionalLayoutMargins = .insets(top: 0, leading: configuration.appearance.formInsets.left, bottom: configuration.appearance.formInsets.bottom, trailing: configuration.appearance.formInsets.right)
+        stack.isLayoutMarginsRelativeArrangement = true
+        return stack
     }()
     lazy var separatorView: UIView = {
        let view = UIView()
@@ -91,7 +96,6 @@ class AutoCompleteViewController: UIViewController {
     }()
     lazy var errorLabel: UILabel = {
         let label = ElementsUI.makeErrorLabel(theme: theme)
-        label.directionalLayoutMargins = .insets(leading: configuration.appearance.formInsets.left, trailing: configuration.appearance.formInsets.right)
         label.isHidden = true
         return label
     }()
@@ -136,19 +140,19 @@ class AutoCompleteViewController: UIViewController {
         super.viewDidLoad()
         view.backgroundColor = configuration.appearance.colors.background
 
-        let stackView = UIStackView(arrangedSubviews: [formStackView, errorLabel, separatorView, tableView, manualEntryButton])
+        let stackView = UIStackView(arrangedSubviews: [formStackView, errorLabel, separatorView, tableView, manualEntryButtonStackView])
         stackView.spacing = PaymentSheetUI.defaultPadding
         stackView.axis = .vertical
         stackView.setCustomSpacing(24, after: formStackView) // hardcoded from figma value
         stackView.setCustomSpacing(0, after: separatorView)
         stackView.setCustomSpacing(0, after: tableView)
         stackView.translatesAutoresizingMaskIntoConstraints = false
+        stackView.isLayoutMarginsRelativeArrangement = true
         view.addSubview(stackView)
 
         stackViewBottomConstraint = stackView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor)
         NSLayoutConstraint.activate([
             stackViewBottomConstraint,
-
             stackView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
             stackView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
             stackView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),

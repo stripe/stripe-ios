@@ -88,7 +88,7 @@ class PollingViewController: UIViewController {
                                                        titleLabel,
                                                        instructionLabel,
                                                        cancelButton, ])
-        stackView.directionalLayoutMargins = PaymentSheetUI.defaultMargins
+        stackView.directionalLayoutMargins = .insets(top: 0, leading: appearance.formInsets.left, bottom: 0, trailing: appearance.formInsets.right)
         stackView.isLayoutMarginsRelativeArrangement = true
         stackView.axis = .vertical
         // hard coded spacing values from figma

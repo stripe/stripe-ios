@@ -215,6 +215,8 @@ class CustomerSavedPaymentMethodsCollectionViewController: UIViewController {
 
     private lazy var stackView: UIStackView = {
         let stackView = UIStackView(arrangedSubviews: [collectionView, sepaMandateView])
+        stackView.directionalLayoutMargins = .insets(leading: appearance.formInsets.left, trailing: appearance.formInsets.right)
+        stackView.isLayoutMarginsRelativeArrangement = true
         stackView.axis = .vertical
         return stackView
     }()
@@ -225,9 +227,7 @@ class CustomerSavedPaymentMethodsCollectionViewController: UIViewController {
         let mandateView = SimpleMandateTextView(mandateText: mandateText, theme: appearance.asElementsTheme)
         let margins = NSDirectionalEdgeInsets.insets(
             top: 8,
-            leading: PaymentSheetUI.defaultMargins.leading,
-            bottom: 0,
-            trailing: PaymentSheetUI.defaultMargins.trailing
+            bottom: 0
         )
         view.addAndPinSubview(mandateView, directionalLayoutMargins: margins)
         return view

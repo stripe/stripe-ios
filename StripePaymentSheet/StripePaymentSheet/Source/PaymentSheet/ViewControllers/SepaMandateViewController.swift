@@ -61,7 +61,7 @@ class SepaMandateViewController: UIViewController, BottomSheetContentViewControl
         stackView.axis = .vertical
         stackView.spacing = PaymentSheetUI.defaultPadding
 
-        view.addAndPinSubviewToSafeArea(stackView, insets: PaymentSheetUI.defaultSheetMargins)
+        view.addAndPinSubviewToSafeArea(stackView, insets: .insets(top: configuration.appearance.formInsets.top, leading: configuration.appearance.formInsets.left, bottom: configuration.appearance.formInsets.bottom, trailing: configuration.appearance.formInsets.right))
     }
 
     func didTapOrSwipeToDismiss() {

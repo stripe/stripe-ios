@@ -68,9 +68,9 @@ class PaymentMethodTypeCollectionView: UICollectionView {
         self.currency = currency
         let layout = UICollectionViewFlowLayout()
         layout.scrollDirection = .horizontal
-        layout.sectionInset = UIEdgeInsets(
-            top: 0, left: PaymentSheetUI.defaultPadding, bottom: 0,
-            right: PaymentSheetUI.defaultPadding)
+//        layout.sectionInset = UIEdgeInsets(
+//            top: 0, left: appearance.formInsets.left, bottom: 0,
+//            right: appearance.formInsets.right)
         layout.minimumInteritemSpacing = PaymentMethodTypeCollectionView.minInteritemSpacing
         super.init(frame: .zero, collectionViewLayout: layout)
         self.dataSource = self
