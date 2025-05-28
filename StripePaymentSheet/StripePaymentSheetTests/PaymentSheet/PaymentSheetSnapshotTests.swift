@@ -1496,6 +1496,7 @@ fileprivate extension PaymentSheet.Appearance {
             offset: CGSize(width: 0, height: 2),
             radius: 4
         )
+        appearance.formInsets = UIEdgeInsets(top: 20, left: 25, bottom: 15, right: 10)
 
         // Customize the colors
         var colors = PaymentSheet.Appearance.Colors()
