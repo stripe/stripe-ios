@@ -68,7 +68,9 @@ final class UpdatePaymentMethodViewControllerSnapshotTests: STPSnapshotTestCase 
     }
 
     func test_UpdatePaymentMethodViewControllerAppearance() {
-        _test_UpdatePaymentMethodViewController(paymentMethodType: .card, darkMode: false, appearance: ._testMSPaintTheme, isCBCEligible: true)
+        var appearance: PaymentSheet.Appearance = ._testMSPaintTheme
+        appearance.primaryButton.height = 72
+        _test_UpdatePaymentMethodViewController(paymentMethodType: .card, darkMode: false, appearance: appearance, isCBCEligible: true)
     }
 
     // Due to limitations of snapshot tests, the snapshot recorded applies a border radius to all corners in SectionContainerView
