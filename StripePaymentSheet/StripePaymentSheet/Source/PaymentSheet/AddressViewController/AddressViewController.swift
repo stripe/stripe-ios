@@ -286,7 +286,6 @@ extension AddressViewController {
         [scrollView, stackView, button].forEach {
             $0.translatesAutoresizingMaskIntoConstraints = false
         }
-
         view.addSubview(scrollView)
         scrollView.addSubview(stackView)
         scrollView.addSubview(button)

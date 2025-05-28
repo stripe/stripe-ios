@@ -243,18 +243,17 @@ class BottomSheetViewController: UIViewController, BottomSheetPresentable {
         }
         rootParent.presentationController?.containerView?.layoutIfNeeded()
         newContentViewController.view.alpha = 0
-
         // Now animate to the correct height.
         UIView.animate(withDuration: 0.2) {
             // Fade old content snapshot out
             oldViewImage.alpha = 0
         }
-
         animateHeightChange(forceAnimation: true, {
             // Fade new content in
             self.contentViewController.view.alpha = 1
             self.manualHeightConstraint.constant = newHeight
         }, completion: {_ in
+            // If you are implementing your own container view controller, it must call the didMove(toParent:) method of the child view controller after the transition to the new controller is complete or, if there is no transition, immediately after calling the addChild(_:) method.
             self.contentViewController.didMove(toParent: self)
             self.contentViewController.endAppearanceTransition()
 
