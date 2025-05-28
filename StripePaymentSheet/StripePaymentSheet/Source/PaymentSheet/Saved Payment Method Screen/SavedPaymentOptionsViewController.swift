@@ -295,8 +295,6 @@ class SavedPaymentOptionsViewController: UIViewController {
     private lazy var stackView: UIStackView = {
         let stackView = UIStackView(arrangedSubviews: [collectionView, cvcRecollectionContainerView, sepaMandateView])
         stackView.axis = .vertical
-        stackView.directionalLayoutMargins = .insets(top: 0, leading: appearance.formInsets.left, bottom: 0, trailing: appearance.formInsets.right)
-        stackView.isLayoutMarginsRelativeArrangement = true
         stackView.toggleArrangedSubview(cvcRecollectionContainerView, shouldShow: false, animated: false)
         return stackView
     }()
@@ -307,7 +305,9 @@ class SavedPaymentOptionsViewController: UIViewController {
         let mandateView = SimpleMandateTextView(mandateText: mandateText, theme: appearance.asElementsTheme)
         let margins = NSDirectionalEdgeInsets.insets(
             top: 8,
-            bottom: 0
+            leading: appearance.formInsets.left,
+            bottom: 0,
+            trailing: appearance.formInsets.right
         )
         view.addAndPinSubview(mandateView, directionalLayoutMargins: margins)
         return view
@@ -319,6 +319,7 @@ class SavedPaymentOptionsViewController: UIViewController {
 
     private lazy var cvcRecollectionContainerView: DynamicHeightContainerView = {
         let view = DynamicHeightContainerView(pinnedDirection: .top)
+        view.directionalLayoutMargins = .insets(top: 0, leading: appearance.formInsets.left, bottom: 0, trailing: appearance.formInsets.right)
         view.addPinnedSubview(cvcFormElementView)
         view.updateHeight()
         return view
