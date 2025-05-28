@@ -401,6 +401,7 @@ extension STPPaymentMethod {
         ])!
         paymentMethod.linkPaymentDetails = .card(
             LinkPaymentDetails.Card(
+                id: "csmr_123",
                 displayName: nil,
                 expMonth: 12,
                 expYear: 2030,

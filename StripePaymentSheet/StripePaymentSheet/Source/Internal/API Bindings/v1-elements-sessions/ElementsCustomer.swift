@@ -27,7 +27,7 @@ struct ElementsCustomer: Equatable, Hashable {
 
         let paymentMethods = Self.parsePaymentMethods(
             from: response,
-            enableLinkInSPM: enableLinkInSPM && PaymentSheet.enableLinkInSPM
+            enableLinkInSPM: enableLinkInSPM && PaymentSheet.LinkFeatureFlags.enableLinkInSPM
         )
 
         // Required fields
@@ -98,10 +98,10 @@ private extension STPPaymentMethod {
     func setLinkPaymentDetails(from paymentDetails: ConsumerPaymentDetails) {
         switch paymentDetails.details {
         case .card(let cardDetails):
-            let linkCardDetails = LinkPaymentDetails.Card(from: cardDetails, nickname: paymentDetails.nickname)
+            let linkCardDetails = LinkPaymentDetails.Card(from: cardDetails, nickname: paymentDetails.nickname, paymentDetailsID: paymentDetails.stripeID)
             self.linkPaymentDetails = .card(linkCardDetails)
         case .bankAccount(let bankDetails):
-            let bankAccount = LinkPaymentDetails.BankDetails(from: bankDetails)
+            let bankAccount = LinkPaymentDetails.BankDetails(from: bankDetails, paymentDetailsID: paymentDetails.stripeID)
             self.linkPaymentDetails = .bankAccount(bankAccount)
         case .unparsable:
             break
@@ -110,8 +110,9 @@ private extension STPPaymentMethod {
 }
 
 private extension LinkPaymentDetails.BankDetails {
-    init(from bankDetails: ConsumerPaymentDetails.Details.BankAccount) {
+    init(from bankDetails: ConsumerPaymentDetails.Details.BankAccount, paymentDetailsID: String) {
         self = .init(
+            id: paymentDetailsID,
             bankName: bankDetails.name,
             last4: bankDetails.last4
         )
@@ -119,8 +120,9 @@ private extension LinkPaymentDetails.BankDetails {
 }
 
 private extension LinkPaymentDetails.Card {
-    init(from cardDetails: ConsumerPaymentDetails.Details.Card, nickname: String?) {
+    init(from cardDetails: ConsumerPaymentDetails.Details.Card, nickname: String?, paymentDetailsID: String) {
         self = .init(
+            id: paymentDetailsID,
             displayName: cardDetails.displayName(with: nickname),
             expMonth: cardDetails.expiryMonth,
             expYear: cardDetails.expiryYear,
