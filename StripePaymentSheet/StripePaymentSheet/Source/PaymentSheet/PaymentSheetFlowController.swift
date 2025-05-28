@@ -736,7 +736,7 @@ extension PaymentOption {
             switch confirmOption {
             case .wallet, .signUp, .withPaymentMethod:
                 return nil
-            case .withPaymentDetails(_, let paymentDetails, _):
+            case .withPaymentDetails(_, let paymentDetails, _, _):
                 return paymentDetails.stripeID
             }
         case .applePay, .new, .external:
