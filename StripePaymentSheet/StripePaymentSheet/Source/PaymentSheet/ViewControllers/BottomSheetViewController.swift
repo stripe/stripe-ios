@@ -198,7 +198,7 @@ class BottomSheetViewController: UIViewController, BottomSheetPresentable {
         // instead of remaining pinned to the top.
 
         // First, get the old height of the content + navigation bar + safe area + layout margins.
-        let oldHeight = oldContentViewController.view.bounds.size.height + 
+        let oldHeight = oldContentViewController.view.bounds.size.height +
             navigationBarContainerView.bounds.size.height +
             contentContainerView.directionalLayoutMargins.top +
             contentContainerView.directionalLayoutMargins.bottom
