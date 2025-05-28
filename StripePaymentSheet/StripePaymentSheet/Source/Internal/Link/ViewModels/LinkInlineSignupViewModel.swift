@@ -203,7 +203,8 @@ final class LinkInlineSignupViewModel {
 
             return !linkAccount.isRegistered
         case .checkboxWithDefaultOptIn:
-            return saveCheckboxChecked && (!defaultOptInInfoWasPrefilled || didUncheckDefaultOptIn)
+            let isExistingConsumer = linkAccount?.isRegistered ?? false
+            return saveCheckboxChecked && (!defaultOptInInfoWasPrefilled || didUncheckDefaultOptIn) && !isExistingConsumer
         case .textFieldsOnlyPhoneFirst:
             return true
         }
