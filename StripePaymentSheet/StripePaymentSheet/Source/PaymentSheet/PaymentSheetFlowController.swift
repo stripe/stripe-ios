@@ -200,6 +200,20 @@ extension PaymentSheet {
             return viewController.selectedPaymentOption
         }
 
+        private var canPresentLinkInPlaceOfFlowController: Bool {
+            guard PaymentSheet.LinkFeatureFlags.enableLinkFlowControllerChanges else {
+                // Only allow if the feature flag is enabled
+                return false
+            }
+
+            guard deviceCanUseNativeLink(elementsSession: elementsSession, configuration: configuration) else {
+                // We only allow this with native Link
+                return false
+            }
+
+            return _paymentOption?.canLaunchLink ?? false
+        }
+
         // Stores the state of the most recent call to the update API
         private var latestUpdateContext: UpdateContext?
 
@@ -373,7 +387,46 @@ extension PaymentSheet {
                 self.isPresented = true
             }
 
+            if canPresentLinkInPlaceOfFlowController {
+                presentNativeLinkInPlaceOfFlowController(
+                    from: presentingViewController,
+                    selectedPaymentDetailsID: _paymentOption?.currentLinkPaymentMethod,
+                    returnToPaymentSheet: showPaymentOptions
+                )
+                return
+            }
+
             showPaymentOptions()
+        }
+
+        private func presentNativeLinkInPlaceOfFlowController(
+            from presentingViewController: UIViewController,
+            selectedPaymentDetailsID: String? = nil,
+            returnToPaymentSheet: @escaping () -> Void
+        ) {
+            presentingViewController.presentNativeLink(
+                selectedPaymentDetailsID: selectedPaymentDetailsID,
+                configuration: configuration,
+                intent: intent,
+                elementsSession: elementsSession,
+                analyticsHelper: analyticsHelper,
+                verificationRejected: returnToPaymentSheet
+            ) { [weak self] confirmOption, shouldReturnToPaymentSheet in
+                guard let self else { return }
+
+                if let confirmOption {
+                    self.viewController.linkConfirmOption = confirmOption
+                }
+
+                if shouldReturnToPaymentSheet {
+                    self.viewController.linkConfirmOption = nil
+                    returnToPaymentSheet()
+                    return
+                }
+
+                self.presentPaymentOptionsCompletion?()
+                self.isPresented = false
+            }
         }
 
         /// Completes the payment or setup.
@@ -637,10 +690,48 @@ internal protocol FlowControllerViewControllerProtocol: BottomSheetContentViewCo
     var error: Error? { get }
     var intent: Intent { get }
     var elementsSession: STPElementsSession { get }
+    var linkConfirmOption: PaymentSheet.LinkConfirmOption? { get set }
     var selectedPaymentOption: PaymentOption? { get }
     var loadResult: PaymentSheetLoader.LoadResult { get }
     /// The type of the Stripe payment method that's currently selected in the UI for new and saved PMs. Returns nil Apple Pay and .stripe(.link) for Link.
     /// Note that, unlike selectedPaymentOption, this is non-nil even if the PM form is invalid.
     var selectedPaymentMethodType: PaymentSheet.PaymentMethodType? { get }
     var flowControllerDelegate: FlowControllerViewControllerDelegate? { get set }
+}
+
+extension PaymentOption {
+    var canLaunchLink: Bool {
+        let hasLinkAccount = LinkAccountContext.shared.account?.isRegistered ?? false
+        switch self {
+        case .saved(let paymentMethod, _):
+            return paymentMethod.isLinkPaymentMethod && hasLinkAccount
+        case .link(let confirmOption):
+            switch confirmOption {
+            case .signUp, .withPaymentMethod:
+                return false
+            case .wallet:
+                return hasLinkAccount
+            case .withPaymentDetails:
+                return true
+            }
+        case .applePay, .new, .external:
+            return false
+        }
+    }
+
+    var currentLinkPaymentMethod: String? {
+        switch self {
+        case .saved(let paymentMethod, _):
+            return paymentMethod.linkPaymentDetails?.id
+        case .link(let confirmOption):
+            switch confirmOption {
+            case .wallet, .signUp, .withPaymentMethod:
+                return nil
+            case .withPaymentDetails(_, let paymentDetails, _):
+                return paymentDetails.stripeID
+            }
+        case .applePay, .new, .external:
+            return nil
+        }
+    }
 }

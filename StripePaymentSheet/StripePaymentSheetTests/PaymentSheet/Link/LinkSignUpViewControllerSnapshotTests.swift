@@ -58,6 +58,7 @@ extension LinkSignUpViewControllerSnapshotTests {
                 configuration: PaymentSheet.Configuration(),
                 shouldOfferApplePay: false,
                 shouldFinishOnClose: false,
+                initiallySelectedPaymentDetailsID: nil,
                 callToAction: nil,
                 analyticsHelper: ._testValue()
             )

@@ -265,6 +265,7 @@ extension PayWithLinkViewController_WalletViewModelTests {
                 configuration: paymentSheetConfiguration,
                 shouldOfferApplePay: false,
                 shouldFinishOnClose: false,
+                initiallySelectedPaymentDetailsID: nil,
                 callToAction: nil,
                 analyticsHelper: ._testValue()
             ),

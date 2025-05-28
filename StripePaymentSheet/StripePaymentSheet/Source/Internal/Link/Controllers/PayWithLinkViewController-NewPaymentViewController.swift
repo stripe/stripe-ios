@@ -230,6 +230,11 @@ extension PayWithLinkViewController {
                         billingPhoneNumber: confirmParams.paymentMethodParams.billingDetails?.phone
                     )
 
+                    guard !context.launchedFromFlowController else {
+                        coordinator?.handlePaymentDetailsSelected(paymentDetails, confirmationExtras: confirmationExtras)
+                        return
+                    }
+
                     self.coordinator?.confirm(
                         with: self.linkAccount,
                         paymentDetails: paymentDetails,
@@ -302,7 +307,7 @@ extension PayWithLinkViewController {
         @objc
         func cancelButtonTapped(_ sender: Button) {
             if isAddingFirstPaymentMethod {
-                coordinator?.cancel()
+                coordinator?.cancel(shouldReturnToPaymentSheet: false)
             } else {
                 _ = bottomSheetController?.popContentViewController()
             }

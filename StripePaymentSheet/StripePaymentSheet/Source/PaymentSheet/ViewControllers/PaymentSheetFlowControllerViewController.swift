@@ -28,7 +28,9 @@ class PaymentSheetFlowControllerViewController: UIViewController, FlowController
     var selectedPaymentOption: PaymentOption? {
         switch mode {
         case .addingNew:
-            if isHackyLinkButtonSelected {
+            if let linkConfirmOption {
+                return .link(option: linkConfirmOption)
+            } else if isHackyLinkButtonSelected {
                 return .link(option: .wallet)
             } else if let paymentOption = addPaymentMethodViewController.paymentOption {
                 return paymentOption
@@ -40,7 +42,11 @@ class PaymentSheetFlowControllerViewController: UIViewController, FlowController
             }
             return nil
         case .selectingSaved:
-            return savedPaymentOptionsViewController.selectedPaymentOption
+            if let linkConfirmOption {
+                return .link(option: linkConfirmOption)
+            } else {
+                return savedPaymentOptionsViewController.selectedPaymentOption
+            }
         }
     }
 
@@ -87,6 +93,7 @@ class PaymentSheetFlowControllerViewController: UIViewController, FlowController
     private let isLinkEnabled: Bool
     private let couldShowLinkInHeader: Bool
     private var isHackyLinkButtonSelected: Bool = false
+    var linkConfirmOption: PaymentSheet.LinkConfirmOption?
 
     private lazy var savedPaymentMethodManager: SavedPaymentMethodManager = {
         return SavedPaymentMethodManager(configuration: configuration, elementsSession: elementsSession)
@@ -279,6 +286,25 @@ class PaymentSheetFlowControllerViewController: UIViewController, FlowController
         updateUI()
     }
 
+    private var canPresentLinkOnWalletButton: Bool {
+        let usesNative = deviceCanUseNativeLink(elementsSession: elementsSession, configuration: configuration)
+        return PaymentSheet.LinkFeatureFlags.enableLinkFlowControllerChanges && usesNative
+    }
+
+    private func presentLink() {
+        presentNativeLink(
+            selectedPaymentDetailsID: selectedPaymentOption?.currentLinkPaymentMethod,
+            configuration: configuration,
+            intent: intent,
+            elementsSession: elementsSession,
+            analyticsHelper: analyticsHelper
+        ) { [weak self] confirmOption, _ in
+            guard let self else { return }
+            self.linkConfirmOption = confirmOption
+            self.flowControllerDelegate?.flowControllerViewControllerShouldClose(self, didCancel: false)
+        }
+    }
+
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         analyticsHelper.logShow(showingSavedPMList: mode == .selectingSaved)
@@ -440,6 +466,7 @@ class PaymentSheetFlowControllerViewController: UIViewController, FlowController
         } else {
             stpAssertionFailure("didTapContinueButton called w/o a payment option")
         }
+
         switch mode {
         case .selectingSaved:
             self.flowControllerDelegate?.flowControllerViewControllerShouldClose(self, didCancel: false)
@@ -640,8 +667,14 @@ extension PaymentSheetFlowControllerViewController: WalletHeaderViewDelegate {
     func walletHeaderViewPayWithLinkTapped(_ header: PaymentSheetViewController.WalletHeaderView) {
         // Link should be the selected payment option, as the Link header button is only available in `linkOnlyMode`
         mode = .addingNew
-        didDismiss(didCancel: false)
-        isHackyLinkButtonSelected = true
+
+        if canPresentLinkOnWalletButton {
+            presentLink()
+        } else {
+            didDismiss(didCancel: false)
+            isHackyLinkButtonSelected = true
+        }
+
         updateUI()
     }
 }

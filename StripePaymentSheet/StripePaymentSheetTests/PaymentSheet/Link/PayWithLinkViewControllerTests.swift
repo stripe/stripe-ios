@@ -43,7 +43,13 @@ class PayWithLinkViewControllerTests: XCTestCase {
         window.rootViewController = hostVC
         window.makeKeyAndVisible()
 
-        let payWithNativeLinkController = PayWithNativeLinkController(intent: ._testValue(), elementsSession: ._testValue(intent: ._testValue()), configuration: config, analyticsHelper: ._testValue())
+        let payWithNativeLinkController = PayWithNativeLinkController(
+            mode: .full,
+            intent: ._testValue(),
+            elementsSession: ._testValue(intent: ._testValue()),
+            configuration: config,
+            analyticsHelper: ._testValue()
+        )
 
         // Now make the fake PayWithLinkViewController and present it
         let vc = PayWithLinkViewController(intent: ._testValue(), linkAccount: nil, elementsSession: ._testValue(intent: ._testValue()), configuration: config, analyticsHelper: ._testValue())
