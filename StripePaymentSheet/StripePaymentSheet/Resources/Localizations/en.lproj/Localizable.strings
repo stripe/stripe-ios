@@ -43,7 +43,8 @@
 /* Text for back button */
 "Back" = "Back";
 
-/* A label used in various UIs, including a button that represents a payment method type 'Bank' - where a user can pay with their bank account instead of, say, a credit card. */
+/* A label used in various UIs, including a button that represents a payment method type 'Bank' - where a user can pay with their bank account instead of, say, a credit card.
+   Label shown in the payment type picker describing a bank payment */
 "Bank" = "Bank";
 
 /* Title for collected bank account information */
@@ -160,6 +161,9 @@ with the transaction. */
 
 /* Label for CPF/CPNJ (Brazil tax ID) field */
 "CPF/CPNJ" = "CPF/CPNJ";
+
+/* Label shown in the payment type picker describing a card payment */
+"Debit or credit card" = "Debit or credit card";
 
 /* Label for identifying the default payment method. */
 "Default" = "Default";
