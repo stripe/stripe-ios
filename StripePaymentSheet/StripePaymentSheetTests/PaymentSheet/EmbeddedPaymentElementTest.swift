@@ -923,6 +923,31 @@ class EmbeddedPaymentElementTest: XCTestCase {
             "Payment option should have been cleared after a canceled/failed confirmation.")
     }
 
+    func testPaymentOptionDelegateFiresBeforeImmediateAction() async throws {
+        let immediateActionExpectation = expectation(description: "immediateAction fired")
+        var config = configuration
+        config.rowSelectionBehavior = .immediateAction(didSelectPaymentOption: {
+            // This closure must execute *after* the delegate sets `didCallDelegate`
+            XCTAssertTrue(self.delegateDidUpdatePaymentOptionCalled,
+                          "embeddedPaymentElementDidUpdatePaymentOption should be invoked before immediateAction")
+            immediateActionExpectation.fulfill()
+        })
+
+        let sut = try await EmbeddedPaymentElement.create(
+            intentConfiguration: paymentIntentConfig,
+            configuration: config
+        )
+        sut.delegate = self
+
+        // Tap a row that has no form
+        sut.embeddedPaymentMethodsView.didTap(
+            rowButton: sut.embeddedPaymentMethodsView
+                .getRowButton(accessibilityIdentifier: "Cash App Pay")
+        )
+
+        await fulfillment(of: [immediateActionExpectation])
+    }
+
 }
 
 enum TestError: Error {

@@ -68,6 +68,12 @@ import UIKit
                 }
             }
             .frame(maxWidth: .infinity)
+            .onAppear {
+                flowController.walletButtonsShownExternally = true
+            }
+            .onDisappear {
+                flowController.walletButtonsShownExternally = false
+            }
         }
     }
 

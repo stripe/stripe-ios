@@ -196,6 +196,7 @@ extension PayWithLinkViewController {
                 mandateView.setText(mandate)
             }
 
+            paymentPicker.reloadData()
             paymentPickerContainerView.toggleArrangedSubview(
                 mandateView,
                 shouldShow: viewModel.shouldShowMandate,
@@ -230,6 +231,20 @@ extension PayWithLinkViewController {
         func updateErrorLabel(for error: Error?) {
             errorLabel.text = error?.nonGenericDescription
             containerView.toggleArrangedSubview(errorLabel, shouldShow: error != nil, animated: true)
+        }
+
+        func reloadPaymentDetails(completion: (() -> Void)?) {
+            let supportedPaymentDetailsTypes = linkAccount
+                .supportedPaymentDetailsTypes(for: context.elementsSession)
+                .toSortedArray()
+
+            // Fire and forget; ignore any errors that might happen here.
+            linkAccount.listPaymentDetails(supportedTypes: supportedPaymentDetailsTypes) { [weak self] result in
+                if case .success(let paymentDetails) = result {
+                    self?.viewModel.updatePaymentMethods(paymentDetails)
+                }
+                completion?()
+            }
         }
 
         func confirm(confirmationExtras: LinkConfirmationExtras = LinkConfirmationExtras()) {
@@ -645,35 +660,67 @@ extension PayWithLinkViewController.WalletViewController: LinkPaymentMethodPicke
     }
 
     func paymentDetailsPickerDidTapOnAddPayment(_ pickerView: LinkPaymentMethodPicker) {
-        if context.elementsSession.onlySupportsLinkBank {
-            // If this business is bank-only, bypass the new payment method flow and go straight to connections
-            confirmButton.update(state: .processing)
-            pickerView.setAddPaymentMethodButtonEnabled(false)
-            coordinator?.startInstantDebits { [weak self] result in
-                guard let self = self else { return }
-                switch result {
-                case .success(let paymentDetails):
-                    self.didUpdate(paymentMethod: paymentDetails, confirmationExtras: nil)
-                case .failure(let error):
-                    switch error {
-                    case InstantDebitsOnlyAuthenticationSessionManager.Error.canceled:
-                        break
-                    default:
-                        self.updateErrorLabel(for: error)
-                    }
-                }
-                self.paymentPicker.setAddPaymentMethodButtonEnabled(true)
-                self.updateUI(animated: false)
-            }
-        } else {
-            let newPaymentVC = PayWithLinkViewController.NewPaymentViewController(
-                linkAccount: linkAccount,
-                context: context,
-                isAddingFirstPaymentMethod: false
-            )
+        let supportedPaymentDetailsTypes = linkAccount.supportedPaymentDetailsTypes(for: context.elementsSession)
 
-            bottomSheetController?.pushContentViewController(newPaymentVC)
+        let bankAndCard = [ConsumerPaymentDetails.DetailsType.bankAccount, .card]
+        if bankAndCard.allSatisfy(supportedPaymentDetailsTypes.contains) {
+            let alertController = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
+
+            let addBankAction = UIAlertAction(
+                title: STPLocalizedString(
+                    "Bank",
+                    "Label shown in the payment type picker describing a bank payment"
+                ),
+                style: .default
+            ) { [weak self] _ in
+                self?.addBankAccount()
+            }
+            alertController.addAction(addBankAction)
+
+            let addCardAction = UIAlertAction(
+                title: STPLocalizedString(
+                    "Debit or credit card",
+                    "Label shown in the payment type picker describing a card payment"
+                ),
+                style: .default
+            ) { [weak self] _ in
+                self?.addCard()
+            }
+            alertController.addAction(addCardAction)
+
+            let cancelAction = UIAlertAction(title: String.Localized.cancel, style: .cancel)
+            alertController.addAction(cancelAction)
+
+            present(alertController, animated: true)
+        } else if supportedPaymentDetailsTypes.contains(.bankAccount) {
+            addBankAccount()
+        } else {
+            addCard()
         }
+    }
+
+    private func addBankAccount() {
+        confirmButton.update(state: .spinnerWithInteractionDisabled)
+        coordinator?.startFinancialConnections { [weak self] result in
+            guard case .completed = result else {
+                self?.confirmButton.update(state: .enabled)
+                return
+            }
+
+            self?.reloadPaymentDetails {
+                self?.confirmButton.update(state: .enabled)
+            }
+        }
+    }
+
+    private func addCard() {
+        let newPaymentVC = PayWithLinkViewController.NewPaymentViewController(
+            linkAccount: linkAccount,
+            context: context,
+            isAddingFirstPaymentMethod: false
+        )
+
+        bottomSheetController?.pushContentViewController(newPaymentVC)
     }
 
     func paymentMethodPicker(_ picker: LinkPaymentMethodPicker, menuActionsForItemAt index: Int) -> [Action] {
