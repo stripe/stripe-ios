@@ -112,7 +112,8 @@ class CustomerAddPaymentMethodViewController: UIViewController {
     }()
     private lazy var paymentMethodDetailsContainerView: DynamicHeightContainerView = {
         let view = DynamicHeightContainerView(pinnedDirection: .bottom)
-        view.directionalLayoutMargins = PaymentSheetUI.defaultMargins
+        let isCarouselHidden = paymentMethodTypes == [.stripe(.card)]
+        view.directionalLayoutMargins = .insets(top: isCarouselHidden ? configuration.appearance.formInsets.top : 0, leading: configuration.appearance.formInsets.left, bottom: 0, trailing: configuration.appearance.formInsets.right)
         view.addPinnedSubview(paymentMethodDetailsView)
         view.updateHeight()
         return view
@@ -166,8 +167,6 @@ class CustomerAddPaymentMethodViewController: UIViewController {
         stackView.axis = .vertical
         stackView.spacing = 16
         stackView.translatesAutoresizingMaskIntoConstraints = false
-        stackView.directionalLayoutMargins = .insets(top: configuration.appearance.formInsets.top, leading: configuration.appearance.formInsets.left, bottom: 0, trailing: configuration.appearance.formInsets.right)
-        stackView.isLayoutMarginsRelativeArrangement = true
         view.addSubview(stackView)
         NSLayoutConstraint.activate([
             stackView.topAnchor.constraint(equalTo: view.topAnchor),
