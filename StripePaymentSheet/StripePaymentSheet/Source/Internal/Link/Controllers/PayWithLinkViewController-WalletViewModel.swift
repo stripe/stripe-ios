@@ -357,6 +357,14 @@ private extension PayWithLinkViewController.WalletViewModel {
             return paymentMethods.firstIndex(where: { $0.isDefault })
         }
 
-        return indexOfLastAddedPaymentMethod ?? indexOfDefaultPaymentMethod ?? 0
+        var indexOfPreviouslySelectedPaymentMethod: Int? {
+            guard let previouslySelectedID = context.initiallySelectedPaymentDetailsID else {
+                return nil
+            }
+
+            return paymentMethods.firstIndex(where: { $0.stripeID == previouslySelectedID })
+        }
+
+        return indexOfLastAddedPaymentMethod ?? indexOfPreviouslySelectedPaymentMethod ?? indexOfDefaultPaymentMethod ?? 0
     }
 }

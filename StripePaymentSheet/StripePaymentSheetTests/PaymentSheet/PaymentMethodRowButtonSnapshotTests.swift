@@ -83,10 +83,11 @@ class PaymentMethodRowButtonSnapshotTests: STPSnapshotTestCase {
     }
 
     func testPaymentMethodRowButton_newPaymentMethod_linkType_unselected() {
-        PaymentSheet.enableLinkInSPM = true
+        PaymentSheet.LinkFeatureFlags.enableLinkInSPM = true
         var card = STPPaymentMethod._testLink()
         card.linkPaymentDetails = .card(
             LinkPaymentDetails.Card(
+                id: "csmr_123",
                 displayName: "Visa Credit",
                 expMonth: 12,
                 expYear: 2030,
@@ -96,7 +97,7 @@ class PaymentMethodRowButtonSnapshotTests: STPSnapshotTestCase {
         )
         let rowButton = SavedPaymentMethodRowButton(paymentMethod: card, appearance: .default)
         verify(rowButton)
-        PaymentSheet.enableLinkInSPM = false
+        PaymentSheet.LinkFeatureFlags.enableLinkInSPM = false
     }
 
     func verify(
