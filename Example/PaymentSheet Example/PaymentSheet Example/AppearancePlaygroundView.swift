@@ -369,7 +369,7 @@ struct AppearancePlaygroundView: View {
                             }
                         }
                         HStack {
-                            Text(String(format: "height: \(appearance.primaryButton.height ?? 44)"))
+                            Text(String(format: "height: \(appearance.primaryButton.height)"))
                             Slider(value: primaryButtonHeightBinding, in: 20...100, step: 1)
                         }
                     } label: {
