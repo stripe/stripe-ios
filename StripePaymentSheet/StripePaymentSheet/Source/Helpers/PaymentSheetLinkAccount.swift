@@ -296,6 +296,21 @@ class PaymentSheetLinkAccount: PaymentSheetLinkAccountInfoProtocol {
     }
 
     func listPaymentDetails(
+        supportedTypes: [ConsumerPaymentDetails.DetailsType]
+    ) async throws -> [ConsumerPaymentDetails] {
+        return try await withCheckedThrowingContinuation { continuation in
+            listPaymentDetails(supportedTypes: supportedTypes) { result in
+                switch result {
+                case .success(let details):
+                    continuation.resume(returning: details)
+                case .failure(let error):
+                    continuation.resume(throwing: error)
+                }
+            }
+        }
+    }
+
+    func listPaymentDetails(
         supportedTypes: [ConsumerPaymentDetails.DetailsType],
         completion: @escaping (Result<[ConsumerPaymentDetails], Error>) -> Void
     ) {
@@ -312,6 +327,33 @@ class PaymentSheetLinkAccount: PaymentSheetLinkAccountInfoProtocol {
                 consumerAccountPublishableKey: self.publishableKey,
                 completion: completionRetryingOnAuthErrors
             )
+        }
+    }
+
+    func listShippingAddress() async throws -> ShippingAddressesResponse {
+        return try await withCheckedThrowingContinuation { continuation in
+            listShippingAddress { result in
+                switch result {
+                case .success(let response):
+                    continuation.resume(returning: response)
+                case .failure(let error):
+                    continuation.resume(throwing: error)
+                }
+            }
+        }
+    }
+
+    func listShippingAddress(
+        completion: @escaping (Result<ShippingAddressesResponse, Error>) -> Void
+    ) {
+        retryingOnAuthError(completion: completion) { completionRetryingOnAuthErrors in
+            guard let session = self.currentSession else {
+                stpAssertionFailure()
+                completion(.failure(PaymentSheetError.unknown(debugDescription: "Paying with Link without valid session")))
+                return
+            }
+
+            session.listShippingAddress(with: self.apiClient, consumerAccountPublishableKey: self.publishableKey, completion: completionRetryingOnAuthErrors)
         }
     }
 

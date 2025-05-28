@@ -589,6 +589,15 @@ class PlaygroundController: ObservableObject {
     // Completion
 
     func onOptionsCompletion() {
+        if let shippingAddress = self.paymentSheetFlowController?.paymentOption?.shippingAddress {
+            self.addressViewController = .init(
+                configuration: .init(
+                    defaultValues: shippingAddress,
+                    additionalFields: .init(phone: .optional)
+                ),
+                delegate: self
+            )
+        }
         // Tell our observer to refresh
         objectWillChange.send()
     }
@@ -912,9 +921,8 @@ extension PlaygroundController {
                 let data = data,
                 let json = try? JSONSerialization.jsonObject(with: data, options: []) as? [String: Any]
             else {
-                if let data = data,
-                   (response as? HTTPURLResponse)?.statusCode == 400,
-                   let errorMessage = String(data: data, encoding: .utf8) {
+                if let data, (response as? HTTPURLResponse)?.statusCode == 400 {
+                    let errorMessage = String(decoding: data, as: UTF8.self)
                     // read the error message
                     intentCreationCallback(.failure(ConfirmHandlerError.confirmError(errorMessage)))
                 } else {
