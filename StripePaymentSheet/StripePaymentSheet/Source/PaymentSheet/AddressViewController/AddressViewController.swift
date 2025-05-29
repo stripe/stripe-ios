@@ -304,7 +304,7 @@ extension AddressViewController {
 
             button.leadingAnchor.constraint(equalTo: scrollView.contentLayoutGuide.leadingAnchor, constant: configuration.appearance.formInsets.left),
             button.trailingAnchor.constraint(equalTo: scrollView.contentLayoutGuide.trailingAnchor, constant: -configuration.appearance.formInsets.right),
-            button.bottomAnchor.constraint(equalTo: scrollView.contentLayoutGuide.bottomAnchor, constant: configuration.appearance.formInsets.bottom),
+            button.bottomAnchor.constraint(equalTo: scrollView.contentLayoutGuide.bottomAnchor, constant: -configuration.appearance.formInsets.bottom),
             button.heightAnchor.constraint(equalToConstant: 44),
         ])
     }
