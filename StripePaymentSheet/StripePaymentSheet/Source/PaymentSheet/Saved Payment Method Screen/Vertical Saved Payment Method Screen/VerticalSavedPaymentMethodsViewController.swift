@@ -7,6 +7,7 @@
 
 import Foundation
 @_spi(STP) import StripeCore
+@_spi(STP) import StripePayments
 @_spi(STP) import StripePaymentsUI
 @_spi(STP) import StripeUICore
 import UIKit
@@ -79,7 +80,7 @@ class VerticalSavedPaymentMethodsViewController: UIViewController {
     }
 
     private var headerText: String {
-        let nonCardPaymentMethods = paymentMethods.filter({ $0.type != .card })
+        let nonCardPaymentMethods = paymentMethods.filter(\.isNotCard)
         let hasOnlyCards = nonCardPaymentMethods.isEmpty
         if isEditingPaymentMethods {
             if hasOnlyCards {
@@ -480,4 +481,26 @@ extension VerticalSavedPaymentMethodsViewController: UpdatePaymentMethodViewCont
         stackView.insertArrangedSubview(newButton, at: oldButtonViewIndex)
     }
 
+}
+
+private extension STPPaymentMethod {
+    var isNotCard: Bool {
+        guard let linkPaymentDetails else {
+            return type != .card
+        }
+        return linkPaymentDetails.isNotCard
+    }
+}
+
+private extension LinkPaymentDetails {
+    var isNotCard: Bool {
+        switch self {
+        case .card:
+            return false
+        case .bankAccount:
+            return true
+        default:
+            return true
+        }
+    }
 }
