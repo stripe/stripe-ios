@@ -112,6 +112,8 @@ class CustomerAddPaymentMethodViewController: UIViewController {
     }()
     private lazy var paymentMethodDetailsContainerView: DynamicHeightContainerView = {
         let view = DynamicHeightContainerView(pinnedDirection: .bottom)
+        // if the carousel is hidden, then we have a singular card form that needs to apply top padding
+        // otherwise, the superview will handle the top padding
         let isCarouselHidden = paymentMethodTypes == [.stripe(.card)]
         view.directionalLayoutMargins = .insets(top: isCarouselHidden ? configuration.appearance.formInsets.top : 0, leading: configuration.appearance.formInsets.left, bottom: 0, trailing: configuration.appearance.formInsets.right)
         view.addPinnedSubview(paymentMethodDetailsView)

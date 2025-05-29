@@ -82,12 +82,6 @@ class AutoCompleteViewController: UIViewController {
         button.addTarget(self, action: #selector(manualEntryButtonTapped), for: .touchUpInside)
         return button
     }()
-    lazy var manualEntryButtonStackView: UIStackView = {
-        let stack = UIStackView(arrangedSubviews: [manualEntryButton])
-        stack.directionalLayoutMargins = .insets(top: 0, leading: configuration.appearance.formInsets.left, bottom: configuration.appearance.formInsets.bottom, trailing: configuration.appearance.formInsets.right)
-        stack.isLayoutMarginsRelativeArrangement = true
-        return stack
-    }()
     lazy var separatorView: UIView = {
        let view = UIView()
         view.backgroundColor = configuration.appearance.colors.componentDivider
@@ -140,24 +134,25 @@ class AutoCompleteViewController: UIViewController {
         super.viewDidLoad()
         view.backgroundColor = configuration.appearance.colors.background
 
-        let stackView = UIStackView(arrangedSubviews: [formStackView, errorLabel, separatorView, tableView, manualEntryButtonStackView])
+        let stackView = UIStackView(arrangedSubviews: [formStackView, errorLabel, separatorView, tableView, manualEntryButton])
         stackView.spacing = PaymentSheetUI.defaultPadding
         stackView.axis = .vertical
         stackView.setCustomSpacing(24, after: formStackView) // hardcoded from figma value
         stackView.setCustomSpacing(0, after: separatorView)
         stackView.setCustomSpacing(0, after: tableView)
         stackView.translatesAutoresizingMaskIntoConstraints = false
-        stackView.isLayoutMarginsRelativeArrangement = true
         view.addSubview(stackView)
 
         stackViewBottomConstraint = stackView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor)
         NSLayoutConstraint.activate([
             stackViewBottomConstraint,
+
             stackView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
             stackView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
             stackView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
             separatorView.heightAnchor.constraint(equalToConstant: 0.33),
             manualEntryButton.heightAnchor.constraint(equalToConstant: manualEntryButton.frame.size.height),
+            manualEntryButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -configuration.appearance.formInsets.bottom),
         ])
 
     }
