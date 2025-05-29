@@ -34,7 +34,8 @@ extension PaymentSheet {
         case withPaymentDetails(
             account: PaymentSheetLinkAccount,
             paymentDetails: ConsumerPaymentDetails,
-            confirmationExtras: LinkConfirmationExtras?
+            confirmationExtras: LinkConfirmationExtras?,
+            shippingAddress: ShippingAddressesResponse.ShippingAddress?
         )
     }
 
@@ -52,7 +53,7 @@ extension PaymentSheet.LinkConfirmOption {
             return account
         case .withPaymentMethod:
             return nil
-        case .withPaymentDetails(let account, _, _):
+        case .withPaymentDetails(let account, _, _, _):
             return account
         }
     }
@@ -65,7 +66,7 @@ extension PaymentSheet.LinkConfirmOption {
             return intentConfirmParams.paymentMethodParams.paymentSheetLabel
         case .withPaymentMethod(let paymentMethod):
             return paymentMethod.paymentSheetLabel
-        case .withPaymentDetails(_, let paymentDetails, _):
+        case .withPaymentDetails(_, let paymentDetails, _, _):
             return paymentDetails.paymentSheetLabel
         }
     }
@@ -79,6 +80,20 @@ extension PaymentSheet.LinkConfirmOption {
         }
     }
 
+    var shippingAddress: AddressViewController.Configuration.DefaultAddressDetails? {
+        switch self {
+        case let .withPaymentDetails(linkAccount, _, _, shippingAddress):
+            guard let shippingAddress else { return nil }
+            return .init(
+                address: shippingAddress.toPaymentSheetAddress(),
+                name: shippingAddress.address.name,
+                phone: linkAccount.currentSession?.unredactedPhoneNumberWithPrefix
+            )
+        case .wallet, .withPaymentMethod, .signUp:
+            return nil
+        }
+    }
+
     var billingDetails: STPPaymentMethodBillingDetails? {
         switch self {
         case .wallet:
@@ -87,7 +102,7 @@ extension PaymentSheet.LinkConfirmOption {
             return intentConfirmParams.paymentMethodParams.billingDetails
         case .withPaymentMethod(let paymentMethod):
             return paymentMethod.billingDetails
-        case .withPaymentDetails(_, let paymentDetails, _):
+        case .withPaymentDetails(_, let paymentDetails, _, _):
             return STPPaymentMethodBillingDetails(billingAddress: paymentDetails.billingAddress, email: paymentDetails.billingEmailAddress)
         }
     }

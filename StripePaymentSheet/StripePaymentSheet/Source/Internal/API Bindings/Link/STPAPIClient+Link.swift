@@ -359,6 +359,25 @@ extension STPAPIClient {
         }
     }
 
+    func listShippingAddress(
+        for consumerSessionClientSecret: String,
+        consumerAccountPublishableKey: String?,
+        completion: @escaping (Result<ShippingAddressesResponse, Error>) -> Void
+    ) {
+        let endPoint = "consumers/shipping_addresses/list"
+        let parameters: [String: Any] = [
+            "credentials": ["consumer_session_client_secret": consumerSessionClientSecret],
+            "request_surface": "ios_payment_element",
+        ]
+        post(
+            resource: endPoint,
+            parameters: parameters,
+            consumerPublishableKey: consumerAccountPublishableKey
+        ) { (result: Result<ShippingAddressesResponse, Error>) in
+            completion(result)
+        }
+    }
+
     func deletePaymentDetails(
         for consumerSessionClientSecret: String,
         id: String,

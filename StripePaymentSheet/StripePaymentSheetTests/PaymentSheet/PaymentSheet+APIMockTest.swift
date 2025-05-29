@@ -104,7 +104,8 @@ final class PaymentSheetAPIMockTest: APIStubbedTestCase {
                     nickname: nil,
                     isDefault: true
                 ),
-                confirmationExtras: nil
+                confirmationExtras: nil,
+                shippingAddress: nil
             )
             )
         }
@@ -207,7 +208,8 @@ final class PaymentSheetAPIMockTest: APIStubbedTestCase {
                         nickname: nil,
                         isDefault: true
                     ),
-                    confirmationExtras: nil
+                    confirmationExtras: nil,
+                    shippingAddress: nil
                 )
             ),
             paymentHandler: paymentHandler,
@@ -441,7 +443,7 @@ private extension PaymentSheetAPIMockTest {
         stub { urlRequest in
             guard let pathComponents = urlRequest.url?.pathComponents else { return false }
             return pathComponents.last == "payment_details"
-        } response: { [self] _ in
+        } response: { _ in
             defer { exp.fulfill() }
 
             let responseJSON = """
