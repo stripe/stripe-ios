@@ -78,6 +78,7 @@ final class PaymentSheetAnalyticsExperimentsTests: XCTestCase {
             passthroughModeEnabled: true,
             disableSignup: nil,
             suppress2FAModal: nil,
+            disableFlowControllerRUX: nil,
             useAttestationEndpoints: true,
             linkMode: .passthrough,
             linkFlags: nil,
