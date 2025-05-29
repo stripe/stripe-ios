@@ -49,7 +49,6 @@ public extension PaymentSheet {
         public var embeddedPaymentElement: EmbeddedPaymentElement = EmbeddedPaymentElement()
 
         /// Describes the padding used for all forms
-        /// - Note: These insets are remapped internally from left/right to leading/trailing
         public var formInsets: UIEdgeInsets = UIEdgeInsets(
             top: PaymentSheetUI.defaultSheetMargins.top,
             left: PaymentSheetUI.defaultSheetMargins.leading,
