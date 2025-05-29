@@ -151,7 +151,7 @@ class AutoCompleteViewController: UIViewController {
             stackView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
             separatorView.heightAnchor.constraint(equalToConstant: 0.33),
             manualEntryButton.heightAnchor.constraint(equalToConstant: manualEntryButton.frame.size.height),
-            manualEntryButton.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -configuration.appearance.formInsets.bottom)
+            manualEntryButton.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -configuration.appearance.formInsets.bottom),
         ])
 
     }
