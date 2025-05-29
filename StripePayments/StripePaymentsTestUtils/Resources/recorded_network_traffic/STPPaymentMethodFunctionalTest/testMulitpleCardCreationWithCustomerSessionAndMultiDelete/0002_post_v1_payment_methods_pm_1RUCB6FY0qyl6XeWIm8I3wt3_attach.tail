@@ -1,9 +1,9 @@
 POST
-https:\/\/api\.stripe\.com\/v1\/elements\/payment_methods\/pm_1RUBkiFY0qyl6XeWJdBHG6Wx\/detach$
+https:\/\/api\.stripe\.com\/v1\/payment_methods\/pm_1RUCB6FY0qyl6XeWIm8I3wt3\/attach$
 200
 application/json
 access-control-allow-methods: GET, HEAD, PUT, PATCH, POST, DELETE
-content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=Gdbioha_u5aZUyPImHot5-4CBOTPOrs5pqpUt-dtqk3hPfvDFdbej67c0dcoc_ZaAeAl6daTzgTvyf_0
+content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=SvHnISzPJWjew9gYbhCf8hBIfvTEVmvVhNkDi3hsVMEfPQQuNiZ3Ui9NjlsFTYQ7l4b0c8a4yvJx1k1c
 Server: nginx
 Cache-Control: no-cache, no-store
 x-wc: ABGHI
@@ -12,22 +12,22 @@ Access-Control-Allow-Origin: *
 stripe-should-retry: false
 x-stripe-priority-routing-enabled: true
 x-stripe-routing-context-priority-tier: api-testmode
-request-id: req_Zp9W5W0WyG17iL
-Content-Length: 1029
+request-id: req_8eZce7Nr8GypTo
+Content-Length: 1045
 Vary: Origin
-Date: Thu, 29 May 2025 19:04:34 GMT
-original-request: req_Zp9W5W0WyG17iL
+Date: Thu, 29 May 2025 19:31:49 GMT
+original-request: req_8eZce7Nr8GypTo
 stripe-version: 2020-08-27
-idempotency-key: 437b394b-d9ee-4f4d-a45c-89dd0b868f9f
+idempotency-key: 78b6c58f-6131-418b-8379-f21b487980b4
 access-control-expose-headers: Request-Id, Stripe-Manage-Version, Stripe-Should-Retry, X-Stripe-External-Auth-Required, X-Stripe-Privileged-Session-Required
 access-control-max-age: 300
 access-control-allow-credentials: true
 Content-Type: application/json
-X-Stripe-Mock-Request: customer_session_client_secret=cuss_secret_SOzkWQjKQRXxShDK7UDUtSqX57JTvvmuW8iYzZF4DI0emVy
+X-Stripe-Mock-Request: customer=cus_SP0BSI55EAi7F9
 
 {
   "object" : "payment_method",
-  "id" : "pm_1RUBkiFY0qyl6XeWJdBHG6Wx",
+  "id" : "pm_1RUCB6FY0qyl6XeWIm8I3wt3",
   "billing_details" : {
     "email" : null,
     "phone" : null,
@@ -70,8 +70,8 @@ X-Stripe-Mock-Request: customer_session_client_secret=cuss_secret_SOzkWQjKQRXxSh
     "country" : "US"
   },
   "livemode" : false,
-  "created" : 1748545472,
+  "created" : 1748547108,
   "allow_redisplay" : "unspecified",
   "type" : "card",
-  "customer" : null
+  "customer" : "cus_SP0BSI55EAi7F9"
 }

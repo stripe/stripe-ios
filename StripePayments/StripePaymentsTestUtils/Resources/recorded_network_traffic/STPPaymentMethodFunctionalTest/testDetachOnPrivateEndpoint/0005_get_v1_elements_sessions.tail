@@ -1,25 +1,25 @@
 GET
-https:\/\/api\.stripe\.com\/v1\/elements\/sessions\?customer_session_client_secret=cuss_secret_SOzjkMQOcQuisaCKRpbIJGDmqpkCCEvAOKPx7sifCz50ScX&deferred_intent%5Bamount%5D=5000&deferred_intent%5Bcapture_method%5D=automatic&deferred_intent%5Bcurrency%5D=eur&deferred_intent%5Bmode%5D=payment&deferred_intent%5Bsetup_future_usage%5D=off_session&key=pk_test_51JtgfQKG6vc7r7YCU0qQNOkDaaHrEgeHgGKrJMNfuWwaKgXMLzPUA1f8ZlCNPonIROLOnzpUnJK1C1xFH3M3Mz8X00Q6O4GfUt&locale=en-US&mobile_app_id=com\.apple\.dt\.xctest\.tool&mobile_session_id=5a7b4e8d-1ca4-4bbb-996f-a6bf3fc04eee&type=deferred_intent$
+https:\/\/api\.stripe\.com\/v1\/elements\/sessions\?customer_session_client_secret=cuss_secret_SP0Bv65Tm2bryBmWSbengNAI2FpfpVwCkFUPXIpUqaTpiZX&deferred_intent%5Bamount%5D=5000&deferred_intent%5Bcapture_method%5D=automatic&deferred_intent%5Bcurrency%5D=eur&deferred_intent%5Bmode%5D=payment&deferred_intent%5Bsetup_future_usage%5D=off_session&key=pk_test_51JtgfQKG6vc7r7YCU0qQNOkDaaHrEgeHgGKrJMNfuWwaKgXMLzPUA1f8ZlCNPonIROLOnzpUnJK1C1xFH3M3Mz8X00Q6O4GfUt&locale=en-US&mobile_app_id=com\.apple\.dt\.xctest\.tool&mobile_session_id=session-123&type=deferred_intent$
 200
 application/json
 Content-Type: application/json
 Access-Control-Allow-Origin: *
 x-stripe-priority-routing-enabled: true
-content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=7CYs4EqkrfuAv3k1p-eoclnVyd036UXoccdeRAu7TrClGhyAckjQnJNUvM-xEB3xAs13GfK_T_RV4Heh
+content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=Vnk98ARVYszAzxjiIyJkamc4YvQ1z81iKYOvgVnXqTnlCqPt02jPD8zvj23IKoB-z43wVENtYO9S5-jk
 x-wc: ABGHI
 access-control-allow-methods: GET, HEAD, PUT, PATCH, POST, DELETE
 Server: nginx
 access-control-expose-headers: Request-Id, Stripe-Manage-Version, Stripe-Should-Retry, X-Stripe-External-Auth-Required, X-Stripe-Privileged-Session-Required
 access-control-max-age: 300
 Cache-Control: no-cache, no-store
-Date: Thu, 29 May 2025 19:04:03 GMT
+Date: Thu, 29 May 2025 19:32:08 GMT
 stripe-version: 2020-08-27
 access-control-allow-credentials: true
 Content-Length: 22357
 x-stripe-routing-context-priority-tier: api-testmode
 Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
 Vary: Origin
-request-id: req_6az15RK6d5Zja3
+request-id: req_eZPkXfzRrB9j8P
 
 {
   "payment_method_preference" : {
@@ -123,10 +123,10 @@ request-id: req_6az15RK6d5Zja3
     "elements_spm_set_as_default" : false
   },
   "merchant_logo_url" : null,
-  "session_id" : "elements_session_1FICLMdQwOO",
+  "session_id" : "elements_session_1LftcwuqCAq",
   "card_installments_enabled" : false,
   "account_id" : "acct_1JtgfQKG6vc7r7YC",
-  "config_id" : "a6ad2ee1-6221-427f-9433-fede021db70f",
+  "config_id" : "05034f34-d6ed-4ca6-8e52-5090a166a6a6",
   "merchant_currency" : "eur",
   "merchant_id" : "acct_1JtgfQKG6vc7r7YC",
   "sepa_debit_info" : {
@@ -157,7 +157,7 @@ request-id: req_6az15RK6d5Zja3
     "paypal_merchant_id" : "AGPH92J9HME62"
   },
   "experiments_data" : {
-    "arb_id" : "ab41279c-0875-4903-ad01-178a7f155abe",
+    "arb_id" : "fa8fec16-3c61-49ac-96e4-9c3536536d11",
     "experiment_metadata" : {
       "seed" : "d0302f90f849ccae032c5048d6cd5aa9545f6f0d4292fa3160c062ebaa19cf78",
       "semi_dominant_payment_methods" : [
@@ -605,7 +605,7 @@ request-id: req_6az15RK6d5Zja3
           },
           "branch_code" : ""
         },
-        "id" : "pm_1RUBkEKG6vc7r7YCSydWZ7M3",
+        "id" : "pm_1RUCBOKG6vc7r7YCQN0b8mNf",
         "billing_details" : {
           "email" : "email@email.com",
           "phone" : "555-555-5555",
@@ -621,10 +621,10 @@ request-id: req_6az15RK6d5Zja3
           }
         },
         "livemode" : false,
-        "created" : 1748545442,
+        "created" : 1748547126,
         "allow_redisplay" : "unspecified",
         "type" : "sepa_debit",
-        "customer" : "cus_SOzjoW8GDhjKgM"
+        "customer" : "cus_SP0Bh34UMrGofm"
       }
     ],
     "payment_methods_with_link_details" : [
@@ -642,7 +642,7 @@ request-id: req_6az15RK6d5Zja3
             },
             "branch_code" : ""
           },
-          "id" : "pm_1RUBkEKG6vc7r7YCSydWZ7M3",
+          "id" : "pm_1RUCBOKG6vc7r7YCQN0b8mNf",
           "billing_details" : {
             "email" : "email@email.com",
             "phone" : "555-555-5555",
@@ -658,10 +658,10 @@ request-id: req_6az15RK6d5Zja3
             }
           },
           "livemode" : false,
-          "created" : 1748545442,
+          "created" : 1748547126,
           "allow_redisplay" : "unspecified",
           "type" : "sepa_debit",
-          "customer" : "cus_SOzjoW8GDhjKgM"
+          "customer" : "cus_SP0Bh34UMrGofm"
         },
         "is_link_origin" : false,
         "link_payment_details" : null
@@ -670,8 +670,8 @@ request-id: req_6az15RK6d5Zja3
     "default_payment_method" : null,
     "customer_session" : {
       "object" : "customer_session",
-      "api_key_expiry" : 1748547243,
-      "id" : "cuss_1RUBkFKG6vc7r7YCbOGjs7uJ",
+      "api_key_expiry" : 1748548927,
+      "id" : "cuss_1RUCBPKG6vc7r7YCaq83fKMk",
       "livemode" : false,
       "components" : {
         "customer_sheet" : {
@@ -705,8 +705,8 @@ request-id: req_6az15RK6d5Zja3
           "enabled" : false
         }
       },
-      "customer" : "cus_SOzjoW8GDhjKgM",
-      "api_key" : "ek_test_YWNjdF8xSnRnZlFLRzZ2YzdyN1lDLGtyd0pncFJtZmxQYk9wYzNXVlBDVlpqZjU1N2xXWnQ_00iWMZYhGP"
+      "customer" : "cus_SP0Bh34UMrGofm",
+      "api_key" : "ek_test_YWNjdF8xSnRnZlFLRzZ2YzdyN1lDLGxWMm1vbzNqZ2ZVUVNrbWpERGtxbEJGYTdxenhnOEk_00GPJXlLor"
     }
   },
   "klarna_express_config" : {
