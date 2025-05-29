@@ -1,6 +1,10 @@
 ## XX.XX.X XXXX-XX-XX
 ### PaymentSheet
+<<<<<<< HEAD
 * [Added] The ability to customize the height of the primary button with `PaymentSheetAppearance.primaryButton.height`.
+=======
+* [Added] The ability to customize form insets with `PaymentSheetAppearance.formInsets`.
+>>>>>>> master
 
 ## 24.14.0 2025-05-19
 ### PaymentSheet

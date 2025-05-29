@@ -255,7 +255,7 @@ class PaymentSheetFlowControllerViewController: UIViewController, FlowController
             bottomNoticeTextField,
         ])
         stackView.bringSubviewToFront(headerLabel)
-        stackView.directionalLayoutMargins = PaymentSheetUI.defaultMargins
+        stackView.directionalLayoutMargins = configuration.appearance.topFormInsets
         stackView.isLayoutMarginsRelativeArrangement = true
         stackView.spacing = PaymentSheetUI.defaultPadding
         stackView.axis = .vertical
@@ -266,8 +266,8 @@ class PaymentSheetFlowControllerViewController: UIViewController, FlowController
 
         // Hack: Payment container needs to extend to the edges, so we'll 'cancel out' the layout margins with negative padding
         paymentContainerView.directionalLayoutMargins = .insets(
-            leading: -PaymentSheetUI.defaultSheetMargins.leading,
-            trailing: -PaymentSheetUI.defaultSheetMargins.trailing
+            leading: -configuration.appearance.formInsets.left,
+            trailing: -configuration.appearance.formInsets.right
         )
 
         NSLayoutConstraint.activate([
@@ -275,7 +275,7 @@ class PaymentSheetFlowControllerViewController: UIViewController, FlowController
             stackView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             stackView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             stackView.bottomAnchor.constraint(
-                equalTo: view.bottomAnchor, constant: -PaymentSheetUI.defaultSheetMargins.bottom),
+                equalTo: view.bottomAnchor, constant: -configuration.appearance.formInsets.bottom),
         ])
 
         // Automatically switch into the adding new mode when Link is the only available payment method

@@ -337,7 +337,7 @@ class BottomSheetViewController: UIViewController, BottomSheetPresentable {
         ])
 
         contentContainerView.translatesAutoresizingMaskIntoConstraints = false
-        contentContainerView.directionalLayoutMargins = PaymentSheetUI.defaultSheetMargins
+        contentContainerView.directionalLayoutMargins = appearance.allFormInsets
         scrollView.addSubview(contentContainerView)
 
         // Give the scroll view a desired height
