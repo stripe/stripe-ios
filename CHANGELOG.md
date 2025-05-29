@@ -1,7 +1,7 @@
 ## XX.XX.X XXXX-XX-XX
 
 ### Connect
-* [CHANGED]Removed `PrivateBetaConnect` annotation and all usages. Connect SDK is now GA.
+* [CHANGED] Removed `PrivateBetaConnect` annotation and all usages. Connect SDK is now GA.
 
 ### PaymentSheet
 * [Added] The ability to customize form insets with `PaymentSheetAppearance.formInsets`.
