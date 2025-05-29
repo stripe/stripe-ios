@@ -278,6 +278,7 @@ class PaymentSheetLinkAccount: PaymentSheetLinkAccountInfoProtocol {
 
     func createPaymentDetails(
         linkedAccountId: String,
+        isDefault: Bool,
         completion: @escaping (Result<ConsumerPaymentDetails, Error>) -> Void
     ) {
         retryingOnAuthError(completion: completion) { completionRetryingOnAuthErrors in
@@ -290,6 +291,7 @@ class PaymentSheetLinkAccount: PaymentSheetLinkAccountInfoProtocol {
             session.createPaymentDetails(
                 linkedAccountId: linkedAccountId,
                 consumerAccountPublishableKey: self.publishableKey,
+                isDefault: isDefault,
                 completion: completionRetryingOnAuthErrors
             )
         }
