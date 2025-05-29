@@ -469,16 +469,20 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
     }
 
     private var canPresentLinkOnPrimaryButton: Bool {
+        guard elementsSession.enableFlowControllerRUX(for: configuration) else {
+            return false
+        }
         guard case .link = selectedPaymentOption else {
             return false
         }
-        let usesNative = deviceCanUseNativeLink(elementsSession: elementsSession, configuration: configuration)
-        return PaymentSheet.LinkFeatureFlags.enableLinkFlowControllerChanges && isFlowController && usesNative
+        return isFlowController
     }
 
     private var canPresentLinkOnWalletButton: Bool {
-        let usesNative = deviceCanUseNativeLink(elementsSession: elementsSession, configuration: configuration)
-        return PaymentSheet.LinkFeatureFlags.enableLinkFlowControllerChanges && isFlowController && usesNative
+        guard elementsSession.enableFlowControllerRUX(for: configuration) else {
+            return false
+        }
+        return isFlowController
     }
 
     private func presentLinkInFlowController() {

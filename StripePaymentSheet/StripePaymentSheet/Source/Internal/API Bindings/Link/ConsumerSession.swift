@@ -176,12 +176,14 @@ extension ConsumerSession {
         linkedAccountId: String,
         with apiClient: STPAPIClient = STPAPIClient.shared,
         consumerAccountPublishableKey: String?,
+        isDefault: Bool,
         completion: @escaping (Result<ConsumerPaymentDetails, Error>) -> Void
     ) {
         apiClient.createPaymentDetails(
             for: clientSecret,
             linkedAccountId: linkedAccountId,
             consumerAccountPublishableKey: consumerAccountPublishableKey,
+            isDefault: isDefault,
             completion: completion)
     }
 
@@ -241,6 +243,17 @@ extension ConsumerSession {
         apiClient.listPaymentDetails(
             for: clientSecret,
             supportedPaymentDetailsTypes: supportedPaymentDetailsTypes,
+            consumerAccountPublishableKey: consumerAccountPublishableKey,
+            completion: completion)
+    }
+
+    func listShippingAddress(
+        with apiClient: STPAPIClient = STPAPIClient.shared,
+        consumerAccountPublishableKey: String?,
+        completion: @escaping (Result<ShippingAddressesResponse, Error>) -> Void
+    ) {
+        apiClient.listShippingAddress(
+            for: clientSecret,
             consumerAccountPublishableKey: consumerAccountPublishableKey,
             completion: completion)
     }
