@@ -319,7 +319,7 @@ class ConfirmButton: UIView {
         }()
         let spinnerSize = CGSize(width: 20, height: 20)
         lazy var spinner: CheckProgressView = {
-            return CheckProgressView(frame: CGRect(origin: .zero, size: spinnerSize.applying(CGAffineTransform(scaleX: appearance.font.sizeScaleFactor, y: appearance.font.sizeScaleFactor))))
+            return CheckProgressView(frame: CGRect(origin: .zero, size: spinnerSize.applying(CGAffineTransform(scaleX: scaleFactor, y: scaleFactor))))
         }()
         lazy var addIcon: UIImageView = {
             let image = Image.icon_plus.makeImage(template: true)
@@ -327,6 +327,13 @@ class ConfirmButton: UIView {
             icon.setContentCompressionResistancePriority(.required, for: .horizontal)
             return icon
         }()
+        var scaleFactor: CGFloat {
+            guard let primaryButtonFont = appearance.primaryButton.font else {
+                return appearance.font.sizeScaleFactor
+            }
+            // scale by primary button text, not the overall
+            return primaryButtonFont.pointSize/UIFont.labelFontSize
+        }
         var foregroundColor: UIColor = .white {
             didSet {
                 foregroundColorDidChange()
@@ -361,8 +368,8 @@ class ConfirmButton: UIView {
                 // Add icon
                 addIcon.leadingAnchor.constraint(equalTo: layoutMarginsGuide.leadingAnchor),
                 addIcon.centerYAnchor.constraint(equalTo: centerYAnchor),
-                addIcon.widthAnchor.constraint(equalToConstant: addIcon.intrinsicContentSize.width.scaled(by: appearance.font.sizeScaleFactor)),
-                addIcon.heightAnchor.constraint(equalToConstant: addIcon.intrinsicContentSize.height.scaled(by: appearance.font.sizeScaleFactor)),
+                addIcon.widthAnchor.constraint(equalToConstant: addIcon.intrinsicContentSize.width.scaled(by: scaleFactor)),
+                addIcon.heightAnchor.constraint(equalToConstant: addIcon.intrinsicContentSize.height.scaled(by: scaleFactor)),
 
                 // Label
                 titleLabelCenterXConstraint,
@@ -373,14 +380,14 @@ class ConfirmButton: UIView {
                 lockIcon.leadingAnchor.constraint(greaterThanOrEqualTo: titleLabel.trailingAnchor, constant: 8),
                 lockIcon.trailingAnchor.constraint(equalTo: layoutMarginsGuide.trailingAnchor),
                 lockIcon.centerYAnchor.constraint(equalTo: centerYAnchor),
-                lockIcon.widthAnchor.constraint(equalToConstant: lockIcon.intrinsicContentSize.width.scaled(by: appearance.font.sizeScaleFactor)),
-                lockIcon.heightAnchor.constraint(equalToConstant: lockIcon.intrinsicContentSize.height.scaled(by: appearance.font.sizeScaleFactor)),
+                lockIcon.widthAnchor.constraint(equalToConstant: lockIcon.intrinsicContentSize.width.scaled(by: scaleFactor)),
+                lockIcon.heightAnchor.constraint(equalToConstant: lockIcon.intrinsicContentSize.height.scaled(by: scaleFactor)),
 
                 // Spinner
                 spinnerCenteredToLockConstraint,
                 spinner.centerYAnchor.constraint(equalTo: lockIcon.centerYAnchor),
-                spinner.widthAnchor.constraint(equalToConstant: spinnerSize.width.scaled(by: appearance.font.sizeScaleFactor)),
-                spinner.heightAnchor.constraint(equalToConstant: spinnerSize.height.scaled(by: appearance.font.sizeScaleFactor)),
+                spinner.widthAnchor.constraint(equalToConstant: spinnerSize.width.scaled(by: scaleFactor)),
+                spinner.heightAnchor.constraint(equalToConstant: spinnerSize.height.scaled(by: scaleFactor)),
             ])
             layer.borderColor = appearance.primaryButton.borderColor.cgColor
             overriddenForegroundColor = appearance.primaryButton.textColor
