@@ -445,8 +445,13 @@ extension PaymentSheet.Appearance {
         colors.icon = .green
         colors.danger = .purple
 
+        // Customize the primary button
+        var primaryButton = PaymentSheet.Appearance.PrimaryButton()
+        primaryButton.cornerRadius = 8
+
         appearance.font = font
         appearance.colors = colors
+        appearance.primaryButton = primaryButton
 
         return appearance
     }
