@@ -104,7 +104,7 @@ class AccountOnboardingControllerTests: XCTestCase {
     private class AccountOnboardingControllerDelegatePassThrough: AccountOnboardingControllerDelegate {
 
         var accountOnboardingDidFailLoadWithError: ((_ accountOnboarding: AccountOnboardingController, _ error: Error) -> Void)?
-        
+
         var accountOnboardingDidExit: ((_ accountOnboarding: AccountOnboardingController)->Void)? = nil
 
 
@@ -112,7 +112,7 @@ class AccountOnboardingControllerTests: XCTestCase {
                                didFailLoadWithError error: Error) {
             accountOnboardingDidFailLoadWithError?(accountOnboarding, error)
         }
-        
+
         func accountOnboardingDidExit(_ accountOnboarding: AccountOnboardingController) {
             accountOnboardingDidExit?(accountOnboarding)
         }
