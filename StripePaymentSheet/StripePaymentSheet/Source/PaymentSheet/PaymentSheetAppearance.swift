@@ -239,8 +239,13 @@ public extension PaymentSheet {
             public var shadow: Shadow?
 
             /// The height of the primary button
-            public var height: CGFloat = 44
-
+            public var height: CGFloat = 44 {
+                willSet {
+                    if newValue <= 0.0 {
+                        assertionFailure("height must be a value greater than zero")
+                    }
+                }
+            }
         }
     }
 }
