@@ -88,7 +88,7 @@ class PollingViewController: UIViewController {
                                                        titleLabel,
                                                        instructionLabel,
                                                        cancelButton, ])
-        stackView.directionalLayoutMargins = .insets(top: appearance.formInsets.top, leading: appearance.formInsets.left, bottom: appearance.formInsets.bottom, trailing: appearance.formInsets.right)
+        stackView.directionalLayoutMargins = appearance.allFormInsets
         stackView.isLayoutMarginsRelativeArrangement = true
         stackView.axis = .vertical
         // hard coded spacing values from figma

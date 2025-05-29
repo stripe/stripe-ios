@@ -115,7 +115,11 @@ class CustomerAddPaymentMethodViewController: UIViewController {
         // if the carousel is hidden, then we have a singular card form that needs to apply top padding
         // otherwise, the superview will handle the top padding
         let isCarouselHidden = paymentMethodTypes == [.stripe(.card)]
-        view.directionalLayoutMargins = .insets(top: isCarouselHidden ? configuration.appearance.formInsets.top : 0, leading: configuration.appearance.formInsets.left, bottom: 0, trailing: configuration.appearance.formInsets.right)
+        view.directionalLayoutMargins = .insets(
+            top: isCarouselHidden ? configuration.appearance.formInsets.top : 0,
+            leading: configuration.appearance.formInsets.left,
+            trailing: configuration.appearance.formInsets.right
+        )
         view.addPinnedSubview(paymentMethodDetailsView)
         view.updateHeight()
         return view

@@ -447,7 +447,7 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
             stackView.addArrangedSubview(view)
         }
         stackView.spacing = 20
-        stackView.directionalLayoutMargins = .insets(top: configuration.appearance.formInsets.top, leading: configuration.appearance.formInsets.left, bottom: 0, trailing: configuration.appearance.formInsets.right)
+        stackView.directionalLayoutMargins = configuration.appearance.topFormInsets
         stackView.isLayoutMarginsRelativeArrangement = true
         stackView.axis = .vertical
         stackView.sendSubviewToBack(mandateView)

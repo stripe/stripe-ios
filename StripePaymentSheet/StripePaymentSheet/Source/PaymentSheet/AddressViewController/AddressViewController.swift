@@ -278,7 +278,7 @@ extension AddressViewController {
         initAddressSection()
 
         let stackView = UIStackView(arrangedSubviews: [headerLabel, formElement.view, errorLabel])
-        stackView.directionalLayoutMargins = .insets(top: configuration.appearance.formInsets.top, leading: configuration.appearance.formInsets.left, bottom: 0, trailing: configuration.appearance.formInsets.right)
+        stackView.directionalLayoutMargins = configuration.appearance.allFormInsets
         stackView.isLayoutMarginsRelativeArrangement = true
         stackView.spacing = PaymentSheetUI.defaultPadding
         stackView.axis = .vertical

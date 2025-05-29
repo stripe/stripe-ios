@@ -337,7 +337,7 @@ class BottomSheetViewController: UIViewController, BottomSheetPresentable {
         ])
 
         contentContainerView.translatesAutoresizingMaskIntoConstraints = false
-        contentContainerView.directionalLayoutMargins = .insets(top: appearance.formInsets.top, leading: appearance.formInsets.left, bottom: appearance.formInsets.bottom, trailing: appearance.formInsets.right)
+        contentContainerView.directionalLayoutMargins = appearance.allFormInsets
         scrollView.addSubview(contentContainerView)
 
         // Give the scroll view a desired height

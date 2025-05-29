@@ -323,3 +323,15 @@ public extension PaymentSheet.Appearance {
         }
     }
 }
+
+extension PaymentSheet.Appearance {
+    var allFormInsets: NSDirectionalEdgeInsets {
+        return .insets(top: formInsets.top, leading: formInsets.left, bottom: formInsets.bottom, trailing: formInsets.right)
+    }
+    var topFormInsets: NSDirectionalEdgeInsets {
+        return .insets(top: formInsets.top, leading: formInsets.left, trailing: formInsets.right)
+    }
+    var horizontalFormInsets: NSDirectionalEdgeInsets {
+        return .insets(leading: formInsets.left, trailing: formInsets.right)
+    }
+}

@@ -93,7 +93,7 @@ class CVCReconfirmationViewController: UIViewController {
             confirmButton,
         ])
         stackView.bringSubviewToFront(headerLabel)
-        stackView.directionalLayoutMargins = .insets(top: configuration.appearance.formInsets.top, leading: configuration.appearance.formInsets.left, bottom: 0, trailing: configuration.appearance.formInsets.right)
+        stackView.directionalLayoutMargins = configuration.appearance.topFormInsets
         stackView.isLayoutMarginsRelativeArrangement = true
         stackView.spacing = 10
         stackView.axis = .vertical
@@ -105,7 +105,12 @@ class CVCReconfirmationViewController: UIViewController {
         }
 
         // Get our margins in order
-        view.directionalLayoutMargins = .insets(top: configuration.appearance.formInsets.top, leading: configuration.appearance.formInsets.left, bottom: configuration.appearance.formInsets.bottom, trailing: configuration.appearance.formInsets.right)
+        view.directionalLayoutMargins = .insets(
+            top: configuration.appearance.formInsets.top,
+            leading: configuration.appearance.formInsets.left,
+            bottom: configuration.appearance.formInsets.bottom,
+            trailing: configuration.appearance.formInsets.right
+        )
 
         NSLayoutConstraint.activate([
             stackView.topAnchor.constraint(equalTo: view.topAnchor),

@@ -255,7 +255,7 @@ class PaymentSheetFlowControllerViewController: UIViewController, FlowController
             bottomNoticeTextField,
         ])
         stackView.bringSubviewToFront(headerLabel)
-        stackView.directionalLayoutMargins = .insets(top: configuration.appearance.formInsets.top, leading: configuration.appearance.formInsets.left, bottom: 0, trailing: configuration.appearance.formInsets.right)
+        stackView.directionalLayoutMargins = configuration.appearance.topFormInsets
         stackView.isLayoutMarginsRelativeArrangement = true
         stackView.spacing = PaymentSheetUI.defaultPadding
         stackView.axis = .vertical

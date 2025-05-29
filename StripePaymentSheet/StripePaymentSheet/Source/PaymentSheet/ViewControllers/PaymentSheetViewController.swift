@@ -210,7 +210,7 @@ class PaymentSheetViewController: UIViewController, PaymentSheetViewControllerPr
         let stackView = UIStackView(arrangedSubviews: [
             headerLabel, walletHeader, paymentContainerView, errorLabel, buyButton, bottomNoticeTextField,
         ])
-        stackView.directionalLayoutMargins = .insets(top: configuration.appearance.formInsets.top, leading: configuration.appearance.formInsets.left, bottom: 0, trailing: configuration.appearance.formInsets.right)
+        stackView.directionalLayoutMargins = configuration.appearance.topFormInsets
         stackView.isLayoutMarginsRelativeArrangement = true
         stackView.spacing = PaymentSheetUI.defaultPadding
         stackView.axis = .vertical
