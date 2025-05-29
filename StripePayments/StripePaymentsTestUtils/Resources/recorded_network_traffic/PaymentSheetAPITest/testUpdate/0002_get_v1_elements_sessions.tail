@@ -1,25 +1,25 @@
 GET
-https:\/\/api\.stripe\.com\/v1\/elements\/sessions\?deferred_intent%5Bamount%5D=100&deferred_intent%5Bcapture_method%5D=automatic&deferred_intent%5Bcurrency%5D=USD&deferred_intent%5Bmode%5D=payment&key=pk_test_ErsyMEOTudSjQR8hh0VrQr5X008sBXGOu6&locale=en-US&mobile_app_id=com\.stripe\.StripeiOSTestHostApp&mobile_session_id=62238a75-8367-486e-aae4-0bbe527ccd93&type=deferred_intent$
+https:\/\/api\.stripe\.com\/v1\/elements\/sessions\?deferred_intent%5Bamount%5D=100&deferred_intent%5Bcapture_method%5D=automatic&deferred_intent%5Bcurrency%5D=USD&deferred_intent%5Bmode%5D=payment&key=pk_test_ErsyMEOTudSjQR8hh0VrQr5X008sBXGOu6&locale=en-US&mobile_app_id=com\.stripe\.StripeiOSTestHostApp&mobile_session_id=test-123&type=deferred_intent$
 200
 application/json
 Content-Type: application/json
 Access-Control-Allow-Origin: *
 x-stripe-priority-routing-enabled: true
-content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=ki1ksuoJkAZqHIuu3ER0nn934sJumdXbI5GROqVc1jE7sYfnEYwh15kPQWhyWHAS3QrDauPhn3eXf4qp
+content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=DAur5v0v8HJEh3vESknv4VVtT7y5D9wQDF_3V01wSpZff-oNz-vBil3lNLv14yO5fNRHWAF7l3JFyV5s
 x-wc: ABGHI
 access-control-allow-methods: GET, HEAD, PUT, PATCH, POST, DELETE
 Server: nginx
 access-control-expose-headers: Request-Id, Stripe-Manage-Version, Stripe-Should-Retry, X-Stripe-External-Auth-Required, X-Stripe-Privileged-Session-Required
 access-control-max-age: 300
 Cache-Control: no-cache, no-store
-Date: Thu, 29 May 2025 20:43:15 GMT
+Date: Thu, 29 May 2025 21:48:28 GMT
 stripe-version: 2020-08-27
 access-control-allow-credentials: true
 Content-Length: 12508
 x-stripe-routing-context-priority-tier: api-testmode
 Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
 Vary: Origin
-request-id: req_LcdUfaopZHB2nB
+request-id: req_IQlSJ5eJ0YC9BM
 
 {
   "payment_method_preference" : {
@@ -122,10 +122,10 @@ request-id: req_LcdUfaopZHB2nB
     "elements_spm_set_as_default" : true
   },
   "merchant_logo_url" : null,
-  "session_id" : "elements_session_1c33jNnDySe",
+  "session_id" : "elements_session_1HfUf84eo2c",
   "card_installments_enabled" : false,
   "account_id" : "acct_1G6m1pFY0qyl6XeW",
-  "config_id" : "d004a657-4443-4318-a052-f9a7339007ea",
+  "config_id" : "89ec2f79-cfab-4017-80ce-e34eac75d53a",
   "merchant_currency" : "usd",
   "merchant_id" : "acct_1G6m1pFY0qyl6XeW",
   "card_brand_choice" : {
@@ -152,7 +152,7 @@ request-id: req_LcdUfaopZHB2nB
     "paypal_merchant_id" : null
   },
   "experiments_data" : {
-    "arb_id" : "ec16dbff-6e85-4d9f-bdd1-af0c4d77fdef",
+    "arb_id" : "cc40bdae-fb84-4c3b-a93b-fc9c70a24d6f",
     "experiment_metadata" : {
       "seed" : "fd2ad84f290a659fabef6fdf888d758e8dfb43c82cd2538e959085d6fd530d92",
       "semi_dominant_payment_methods" : [
@@ -356,8 +356,8 @@ request-id: req_LcdUfaopZHB2nB
     "apple_pay",
     "crypto",
     "cashapp",
-    "amazon_pay",
     "google_pay",
+    "amazon_pay",
     "us_bank_account"
   ],
   "customer_error" : null
