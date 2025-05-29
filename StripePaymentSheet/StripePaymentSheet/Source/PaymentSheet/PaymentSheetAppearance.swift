@@ -331,7 +331,4 @@ extension PaymentSheet.Appearance {
     var topFormInsets: NSDirectionalEdgeInsets {
         return .insets(top: formInsets.top, leading: formInsets.left, trailing: formInsets.right)
     }
-    var horizontalFormInsets: NSDirectionalEdgeInsets {
-        return .insets(leading: formInsets.left, trailing: formInsets.right)
-    }
 }

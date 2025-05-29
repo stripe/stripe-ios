@@ -319,7 +319,7 @@ class SavedPaymentOptionsViewController: UIViewController {
 
     private lazy var cvcRecollectionContainerView: DynamicHeightContainerView = {
         let view = DynamicHeightContainerView(pinnedDirection: .top)
-        view.directionalLayoutMargins = appearance.horizontalFormInsets
+        view.directionalLayoutMargins = .insets(leading: appearance.formInsets.left, trailing: appearance.formInsets.right)
         view.addPinnedSubview(cvcFormElementView)
         view.updateHeight()
         return view
