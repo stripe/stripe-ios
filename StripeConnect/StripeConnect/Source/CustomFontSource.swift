@@ -7,7 +7,6 @@
 
 import UIKit
 
-@_spi(PrivateBetaConnect)
 @_documentation(visibility: public)
 @available(iOS 15, *)
 extension EmbeddedComponentManager {

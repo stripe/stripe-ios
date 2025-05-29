@@ -4,7 +4,7 @@
 //
 //  Created by Chris Mays on 12/18/24.
 //
-@_spi(PrivateBetaConnect) @_spi(DashboardOnly) @testable import StripeConnect
+@_spi(DashboardOnly) @testable import StripeConnect
 @testable import StripeFinancialConnections
 
 import UIKit

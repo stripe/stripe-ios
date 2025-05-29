@@ -8,8 +8,6 @@
 import Foundation
 
 /// Collection options for account onboarding
-/// - Important: Include  `@_spi(PrivateBetaConnect)` on import to gain access to this API.
-@_spi(PrivateBetaConnect)
 @_documentation(visibility: public)
 public struct AccountCollectionOptions: Equatable, Codable {
 

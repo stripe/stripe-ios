@@ -10,10 +10,8 @@ import JavaScriptCore
 import UIKit
 
 /// Manages Connect embedded components
-/// - Important: Include  `@_spi(PrivateBetaConnect)` on import to gain access to this API.
 /// - Note: Connect embedded components are only available in private preview.
 /// - Seealso: [Step by step integration guide](  https://docs.stripe.com/connect/get-started-connect-embedded-components?platform=ios)
-@_spi(PrivateBetaConnect)
 @_documentation(visibility: public)
 @available(iOS 15, *)
 public final class EmbeddedComponentManager {

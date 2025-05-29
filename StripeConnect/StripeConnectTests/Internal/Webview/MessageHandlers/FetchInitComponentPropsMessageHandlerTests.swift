@@ -5,7 +5,7 @@
 //  Created by Mel Ludowise on 9/27/24.
 //
 
-@_spi(PrivateBetaConnect) @testable import StripeConnect
+@testable import StripeConnect
 import XCTest
 
 class FetchInitComponentPropsMessageHandlerTests: ScriptWebTestBase {

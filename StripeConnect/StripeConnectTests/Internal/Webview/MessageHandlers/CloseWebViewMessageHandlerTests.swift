@@ -5,7 +5,7 @@
 //  Created by Chris Mays on 2/12/25.
 //
 
-@_spi(PrivateBetaConnect) @testable import StripeConnect
+@testable import StripeConnect
 import XCTest
 
 class CloseWebViewMessageHandlerTests: ScriptWebTestBase {

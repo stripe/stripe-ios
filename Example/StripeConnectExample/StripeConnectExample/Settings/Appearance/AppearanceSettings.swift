@@ -5,7 +5,7 @@
 //  Created by Chris Mays on 9/5/24.
 //
 
-@_spi(PrivateBetaConnect) import StripeConnect
+import StripeConnect
 import SwiftUI
 
 struct AppearanceSettings: View {
