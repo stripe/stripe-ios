@@ -1,25 +1,25 @@
 GET
-https:\/\/api\.stripe\.com\/v1\/elements\/sessions\?client_default_payment_method=pm_1RUBc8FY0qyl6XeWKBJLWefA&customer_session_client_secret=cuss_secret_SOzboWtBfKoCHOyi8ZIbRX56vEpMtuVATdYcZKJDY6j0S4o&deferred_intent%5Bamount%5D=5000&deferred_intent%5Bcapture_method%5D=automatic&deferred_intent%5Bcurrency%5D=usd&deferred_intent%5Bmode%5D=payment&deferred_intent%5Bsetup_future_usage%5D=off_session&key=pk_test_ErsyMEOTudSjQR8hh0VrQr5X008sBXGOu6&locale=en-US&mobile_app_id=com\.apple\.dt\.xctest\.tool&type=deferred_intent$
+https:\/\/api\.stripe\.com\/v1\/elements\/sessions\?client_default_payment_method=pm_1RUBkiFY0qyl6XeWJdBHG6Wx&customer_session_client_secret=cuss_secret_SOzkWQjKQRXxShDK7UDUtSqX57JTvvmuW8iYzZF4DI0emVy&deferred_intent%5Bamount%5D=5000&deferred_intent%5Bcapture_method%5D=automatic&deferred_intent%5Bcurrency%5D=usd&deferred_intent%5Bmode%5D=payment&deferred_intent%5Bsetup_future_usage%5D=off_session&key=pk_test_ErsyMEOTudSjQR8hh0VrQr5X008sBXGOu6&locale=en-US&mobile_app_id=com\.apple\.dt\.xctest\.tool&mobile_session_id=3f7f27f2-490c-4166-90f2-32afe8695850&type=deferred_intent$
 200
 application/json
 Content-Type: application/json
 Access-Control-Allow-Origin: *
 x-stripe-priority-routing-enabled: true
-content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=VbaHOGeeWGhZQqeYO5z-zNpYxCZHCgF85zB2Yviqt-Seod6vwep_xjoZ3uwHto8UOfEk1vQI2K8wjs4R
+content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=Niu3nT6tBX2TGgEaMg0d6OjXiuTeB4_RnsQpiuJ4gqoZph2jTf8b_Vgi9kavL5p3hrv6V6R9fEM18nNo
 x-wc: ABGHI
 access-control-allow-methods: GET, HEAD, PUT, PATCH, POST, DELETE
 Server: nginx
 access-control-expose-headers: Request-Id, Stripe-Manage-Version, Stripe-Should-Retry, X-Stripe-External-Auth-Required, X-Stripe-Privileged-Session-Required
 access-control-max-age: 300
 Cache-Control: no-cache, no-store
-Date: Thu, 29 May 2025 18:55:41 GMT
+Date: Thu, 29 May 2025 19:04:33 GMT
 stripe-version: 2020-08-27
 access-control-allow-credentials: true
 Content-Length: 15500
 x-stripe-routing-context-priority-tier: api-testmode
 Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
 Vary: Origin
-request-id: req_CQOAMC0AD6h7mT
+request-id: req_SYoMJwD6IFakk3
 
 {
   "payment_method_preference" : {
@@ -121,10 +121,10 @@ request-id: req_CQOAMC0AD6h7mT
     "elements_spm_set_as_default" : true
   },
   "merchant_logo_url" : null,
-  "session_id" : "elements_session_1yeZ89ylFGI",
+  "session_id" : "elements_session_1B0yFvxwwOc",
   "card_installments_enabled" : false,
   "account_id" : "acct_1G6m1pFY0qyl6XeW",
-  "config_id" : "d2ada136-0c93-4180-ad26-dc77c89a7de4",
+  "config_id" : "e0e27cff-d67b-453f-b714-c5b2e3207224",
   "merchant_currency" : "usd",
   "merchant_id" : "acct_1G6m1pFY0qyl6XeW",
   "card_brand_choice" : {
@@ -151,7 +151,7 @@ request-id: req_CQOAMC0AD6h7mT
     "paypal_merchant_id" : null
   },
   "experiments_data" : {
-    "arb_id" : "495f70c6-a899-42f0-9263-f63d5bf08df6",
+    "arb_id" : "0fcec559-f36a-4687-9aec-06dd8eaa6a5a",
     "experiment_metadata" : {
       "seed" : "d0bd021446f9aa4e3303c578b696ad41eb591f4ec6df08ca03d52ed94ba7f8bf",
       "semi_dominant_payment_methods" : [
@@ -318,7 +318,7 @@ request-id: req_CQOAMC0AD6h7mT
     "payment_methods" : [
       {
         "object" : "payment_method",
-        "id" : "pm_1RUBc8FY0qyl6XeWKBJLWefA",
+        "id" : "pm_1RUBkiFY0qyl6XeWJdBHG6Wx",
         "billing_details" : {
           "email" : null,
           "phone" : null,
@@ -360,17 +360,17 @@ request-id: req_CQOAMC0AD6h7mT
           "country" : "US"
         },
         "livemode" : false,
-        "created" : 1748544940,
+        "created" : 1748545472,
         "allow_redisplay" : "unspecified",
         "type" : "card",
-        "customer" : "cus_SOzbHjBlzResiy"
+        "customer" : "cus_SOzkmLefGtUCmX"
       }
     ],
     "payment_methods_with_link_details" : [
       {
         "payment_method" : {
           "object" : "payment_method",
-          "id" : "pm_1RUBc8FY0qyl6XeWKBJLWefA",
+          "id" : "pm_1RUBkiFY0qyl6XeWJdBHG6Wx",
           "billing_details" : {
             "email" : null,
             "phone" : null,
@@ -412,20 +412,20 @@ request-id: req_CQOAMC0AD6h7mT
             "country" : "US"
           },
           "livemode" : false,
-          "created" : 1748544940,
+          "created" : 1748545472,
           "allow_redisplay" : "unspecified",
           "type" : "card",
-          "customer" : "cus_SOzbHjBlzResiy"
+          "customer" : "cus_SOzkmLefGtUCmX"
         },
         "is_link_origin" : false,
         "link_payment_details" : null
       }
     ],
-    "default_payment_method" : "pm_1RUBc8FY0qyl6XeWKBJLWefA",
+    "default_payment_method" : "pm_1RUBkiFY0qyl6XeWJdBHG6Wx",
     "customer_session" : {
       "object" : "customer_session",
-      "api_key_expiry" : 1748546741,
-      "id" : "cuss_1RUBc9FY0qyl6XeWjTgza3UH",
+      "api_key_expiry" : 1748547273,
+      "id" : "cuss_1RUBkjFY0qyl6XeW1BrhYbns",
       "livemode" : false,
       "components" : {
         "customer_sheet" : {
@@ -459,8 +459,8 @@ request-id: req_CQOAMC0AD6h7mT
           "enabled" : false
         }
       },
-      "customer" : "cus_SOzbHjBlzResiy",
-      "api_key" : "ek_test_YWNjdF8xRzZtMXBGWTBxeWw2WGVXLGZPQzcxd0Z1d0ladFJwblFYNmtORllhM0VVWTcwbG0_00IuoASXmn"
+      "customer" : "cus_SOzkmLefGtUCmX",
+      "api_key" : "ek_test_YWNjdF8xRzZtMXBGWTBxeWw2WGVXLGlncEJGQTZ2azZ2dU1zUEFpYlFkbzE0ZGZkNlliRmY_00JjI4auMa"
     }
   },
   "klarna_express_config" : {
@@ -471,8 +471,8 @@ request-id: req_CQOAMC0AD6h7mT
     "card",
     "apple_pay",
     "cashapp",
-    "google_pay",
     "amazon_pay",
+    "google_pay",
     "us_bank_account"
   ],
   "customer_error" : null

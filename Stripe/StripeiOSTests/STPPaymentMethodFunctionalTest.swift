@@ -117,6 +117,9 @@ class STPPaymentMethodFunctionalTest: STPNetworkStubbingTestCase {
     }
 
     func testMulitpleCardCreationWithCustomerSessionAndMultiDelete() async throws {
+        // Create a session ID
+        AnalyticsHelper.shared.generateSessionID()
+
         let client = STPAPIClient(publishableKey: STPTestingDefaultPublishableKey)
 
         // Create a new customer and new key
@@ -184,6 +187,8 @@ class STPPaymentMethodFunctionalTest: STPNetworkStubbingTestCase {
     }
 
     func testDetachOnPrivateEndpoint() async throws {
+        // Create a session ID
+        AnalyticsHelper.shared.generateSessionID()
         let client = STPAPIClient(publishableKey: STPTestingFRPublishableKey)
         var sepaPaymentMethod: STPPaymentMethod?
         let expectation = self.expectation(description: "Payment Method create")
