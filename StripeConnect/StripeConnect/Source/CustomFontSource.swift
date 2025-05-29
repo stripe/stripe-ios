@@ -7,7 +7,6 @@
 
 import UIKit
 
-@_documentation(visibility: public)
 @available(iOS 15, *)
 extension EmbeddedComponentManager {
 
@@ -16,7 +15,6 @@ extension EmbeddedComponentManager {
      `EmbeddedComponentManager`.
      - Seealso: [Customizing the look of connect embedded components](https://docs.stripe.com/connect/get-started-connect-embedded-components?platform=ios#customize-the-look-of-connect-embedded-components) and [Adding custom fonts to your app](     https://developer.apple.com/documentation/uikit/text_display_and_fonts/adding_a_custom_font_to_your_app)
      */
-    @_documentation(visibility: public)
     public struct CustomFontSource {
         let family: String
         let style: String?
@@ -34,7 +32,6 @@ extension EmbeddedComponentManager {
          
          - Throws: Error if the font couldn't be loaded from the given URL
          */
-        @_documentation(visibility: public)
         public init(font: UIFont, fileUrl: URL) throws {
             guard fileUrl.isFileURL else {
                 throw FontLoadError.notFileURL

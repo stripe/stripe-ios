@@ -8,7 +8,6 @@
 import UIKit
 
 /// Delegate of an `AccountOnboardingController`
-@_documentation(visibility: public)
 @available(iOS 15, *)
 public protocol AccountOnboardingControllerDelegate: AnyObject {
     /**
@@ -18,8 +17,7 @@ public protocol AccountOnboardingControllerDelegate: AnyObject {
      - Parameters:
      - accountOnboarding: The account onboarding controller associated with this onboarding experience
      */
-    @_documentation(visibility: public)
-    func accountOnboardingDidExit(_ accountOnboarding: AccountOnboardingController)
+        func accountOnboardingDidExit(_ accountOnboarding: AccountOnboardingController)
 
     /**
      Triggered when an error occurs loading the account onboarding component
@@ -27,14 +25,12 @@ public protocol AccountOnboardingControllerDelegate: AnyObject {
      - accountOnboarding: The account onboarding component that errored when loading
      - error: The error that occurred when loading the component
      */
-    @_documentation(visibility: public)
-    func accountOnboarding(_ accountOnboarding: AccountOnboardingController,
+        func accountOnboarding(_ accountOnboarding: AccountOnboardingController,
                            didFailLoadWithError error: Error)
 
 }
 
 @available(iOS 15, *)
-@_documentation(visibility: public)
 public extension AccountOnboardingControllerDelegate {
     // Add default implementation of delegate methods to make them optional
     func accountOnboardingDidExit(_ accountOnboarding: AccountOnboardingController) { }
@@ -45,7 +41,6 @@ public extension AccountOnboardingControllerDelegate {
 
 /// A view controller representing an account-onboarding component
 /// - Seealso: [Account onboarding component documentation](https://docs.stripe.com/connect/supported-embedded-components/account-onboarding?platform=ios)
-@_documentation(visibility: public)
 @available(iOS 15, *)
 public final class AccountOnboardingController {
     struct Props: Encodable {
@@ -72,12 +67,10 @@ public final class AccountOnboardingController {
     var retainedSelf: AccountOnboardingController?
 
     /// Delegate that receives callbacks for this component
-    @_documentation(visibility: public)
-    public weak var delegate: AccountOnboardingControllerDelegate?
+        public weak var delegate: AccountOnboardingControllerDelegate?
 
     /// Sets the title for the onboarding experience
-    @_documentation(visibility: public)
-    public var title: String? {
+        public var title: String? {
         get {
             webVC.title
         }
@@ -112,8 +105,7 @@ public final class AccountOnboardingController {
     }
 
     /// Presents the onboarding experience.
-    @_documentation(visibility: public)
-    public func present(from viewController: UIViewController, animated: Bool = true) {
+        public func present(from viewController: UIViewController, animated: Bool = true) {
         let navController = UINavigationController(rootViewController: webVC)
         navController.navigationBar.prefersLargeTitles = false
         navController.modalPresentationStyle = .fullScreen

@@ -12,7 +12,6 @@ import UIKit
 /// Manages Connect embedded components
 /// - Note: Connect embedded components are only available in private preview.
 /// - Seealso: [Step by step integration guide](  https://docs.stripe.com/connect/get-started-connect-embedded-components?platform=ios)
-@_documentation(visibility: public)
 @available(iOS 15, *)
 public final class EmbeddedComponentManager {
     let apiClient: STPAPIClient
@@ -70,8 +69,7 @@ public final class EmbeddedComponentManager {
      delegate access to. This function is also used to retrieve a client secret function to
      refresh the session when it expires.
      */
-    @_documentation(visibility: public)
-    public init(apiClient: STPAPIClient = STPAPIClient.shared,
+        public init(apiClient: STPAPIClient = STPAPIClient.shared,
                 appearance: EmbeddedComponentManager.Appearance = .default,
                 fonts: [EmbeddedComponentManager.CustomFontSource] = [],
                 fetchClientSecret: @escaping () async -> String?) {
@@ -86,8 +84,7 @@ public final class EmbeddedComponentManager {
 
     /// Updates the appearance of components created from this EmbeddedComponentManager
     /// - Seealso: [Customizing the look of Connect embedded components](https://docs.stripe.com/connect/get-started-connect-embedded-components?platform=ios#customize-the-look-of-connect-embedded-components)
-    @_documentation(visibility: public)
-    public func update(appearance: Appearance) {
+        public func update(appearance: Appearance) {
         self.appearance = appearance
         for item in childWebViews.allObjects {
             item.updateAppearance(appearance: appearance)
@@ -114,8 +111,7 @@ public final class EmbeddedComponentManager {
        - skipTermsOfServiceCollection: If true, embedded onboarding skips terms of service collection and you must [collect terms acceptance yourself](https://docs.stripe.com/connect/updating-service-agreements#indicating-acceptance).
        - collectionOptions: Specifies the requirements that Stripe collects from connected accounts
      */
-    @_documentation(visibility: public)
-    public func createAccountOnboardingController(
+        public func createAccountOnboardingController(
         fullTermsOfServiceUrl: URL? = nil,
         recipientTermsOfServiceUrl: URL? = nil,
         privacyPolicyUrl: URL? = nil,
