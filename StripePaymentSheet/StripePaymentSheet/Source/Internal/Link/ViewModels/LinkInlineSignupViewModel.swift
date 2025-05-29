@@ -77,7 +77,7 @@ final class LinkInlineSignupViewModel {
     }
     var phoneNumberWasPrefilled: Bool = false
     var emailWasPrefilled: Bool = false
-    var didUncheckDefaultOptIn: Bool = false
+    var didAskToChangeSignupData: Bool = false
 
     private var defaultOptInInfoWasPrefilled: Bool {
         emailWasPrefilled && phoneNumberWasPrefilled
@@ -94,7 +94,7 @@ final class LinkInlineSignupViewModel {
                 return .checkbox_v0
             }
         case .checkboxWithDefaultOptIn:
-            if !didUncheckDefaultOptIn {
+            if !didAskToChangeSignupData {
                 return .prechecked_opt_in_box_prefilled_all
             } else if phoneNumberWasPrefilled && emailWasPrefilled {
                 return .checkbox_v0_1
@@ -168,7 +168,7 @@ final class LinkInlineSignupViewModel {
         case .checkbox:
             return saveCheckboxChecked
         case .checkboxWithDefaultOptIn:
-            return saveCheckboxChecked && (!defaultOptInInfoWasPrefilled || didUncheckDefaultOptIn)
+            return saveCheckboxChecked && (!defaultOptInInfoWasPrefilled || didAskToChangeSignupData)
         case .textFieldsOnlyEmailFirst:
             return true
         case .textFieldsOnlyPhoneFirst:
@@ -204,7 +204,7 @@ final class LinkInlineSignupViewModel {
             return !linkAccount.isRegistered
         case .checkboxWithDefaultOptIn:
             let isExistingConsumer = linkAccount?.isRegistered ?? false
-            return saveCheckboxChecked && (!defaultOptInInfoWasPrefilled || didUncheckDefaultOptIn) && !isExistingConsumer
+            return saveCheckboxChecked && (!defaultOptInInfoWasPrefilled || didAskToChangeSignupData) && !isExistingConsumer
         case .textFieldsOnlyPhoneFirst:
             return true
         }
@@ -225,7 +225,7 @@ final class LinkInlineSignupViewModel {
         guard mode == .checkboxWithDefaultOptIn else {
             return false
         }
-        return saveCheckboxChecked && defaultOptInInfoWasPrefilled && !didUncheckDefaultOptIn
+        return saveCheckboxChecked && defaultOptInInfoWasPrefilled && !didAskToChangeSignupData
     }
 
     var action: Action? {
@@ -353,7 +353,7 @@ final class LinkInlineSignupViewModel {
             emailWasPrefilled = true
         }
         if showCheckbox {
-            let allowsDefaultOptIn = PaymentSheet.LinkFeatureFlags.enableLinkDefaultOptIn && allowsDefaultOptIn && country == "US"
+            let allowsDefaultOptIn = PaymentSheet.LinkFeatureFlags.enableLinkDefaultOptIn && allowsDefaultOptIn // && country == "US"
             self.mode = allowsDefaultOptIn ? .checkboxWithDefaultOptIn : .checkbox
         } else {
             // If we don't show a checkbox *and* we have a prefilled email, show the phone field first.

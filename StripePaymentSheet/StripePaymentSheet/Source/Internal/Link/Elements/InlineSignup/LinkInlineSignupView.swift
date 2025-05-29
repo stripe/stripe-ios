@@ -309,7 +309,7 @@ extension LinkInlineSignupView: LinkInlineSignupViewModelDelegate {
 extension LinkInlineSignupView: LinkDefaultOptInViewDelegate {
 
     func linkDefaultOptInViewDidSelectChange(_ view: LinkDefaultOptInView) {
-        viewModel.didUncheckDefaultOptIn = true
+        viewModel.didAskToChangeSignupData = true
         updateUI(animated: true)
     }
 }
@@ -341,11 +341,24 @@ extension LinkInlineSignupView: EventHandler {
             switch event {
             case .shouldDisableUserInteraction:
                 self.checkboxElement.setUserInteraction(isUserInteractionEnabled: false)
+                self.defaultOptInElement?.setUserInteraction(isUserInteractionEnabled: false)
             case .shouldEnableUserInteraction:
                 self.checkboxElement.setUserInteraction(isUserInteractionEnabled: true)
+                self.defaultOptInElement?.setUserInteraction(isUserInteractionEnabled: true)
             default:
                 break
             }
+        }
+    }
+}
+
+private extension Element {
+    func setUserInteraction(isUserInteractionEnabled: Bool) {
+        view.isUserInteractionEnabled = false
+        if isUserInteractionEnabled {
+            view.alpha = 1.0
+        } else {
+            view.alpha = 0.6
         }
     }
 }

@@ -36,23 +36,32 @@ class LinkDefaultOptInView: UIView {
         let contentStackView = UIStackView(arrangedSubviews: [emailLabel, phoneLabel])
         contentStackView.axis = .vertical
         contentStackView.isLayoutMarginsRelativeArrangement = true
+        contentStackView.translatesAutoresizingMaskIntoConstraints = false
         contentStackView.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
+        contentStackView.setContentHuggingPriority(.defaultLow, for: .horizontal)
 
-        let changeButton = UILabel()
+        let changeButton = UIButton(type: .system)
         changeButton.translatesAutoresizingMaskIntoConstraints = false
-        changeButton.isUserInteractionEnabled = true
-        changeButton.text = .Localized.change
-        changeButton.textColor = theme.colors.primary
-        changeButton.font = theme.fonts.footnote
+        changeButton.setTitle(.Localized.change, for: .normal)
+        changeButton.titleLabel?.font = theme.fonts.footnote
+        changeButton.setTitleColor(theme.colors.primary, for: .normal)
+        changeButton.addTarget(self, action: #selector(onChangeClick), for: .touchUpInside)
+        changeButton.setContentHuggingPriority(.required, for: .horizontal)
+        changeButton.setContentCompressionResistancePriority(.required, for: .horizontal)
 
-        let tapRecognizer = UITapGestureRecognizer(target: self, action: #selector(self.onChangeClick))
-        changeButton.addGestureRecognizer(tapRecognizer)
-        let stackView = UIStackView(arrangedSubviews: [contentStackView, changeButton])
-        stackView.axis = .horizontal
-        stackView.spacing = 8
-        stackView.distribution = .fill
+        addSubview(contentStackView)
+        addSubview(changeButton)
 
-        addAndPinSubview(stackView, insets: .insets(amount: 12))
+        NSLayoutConstraint.activate([
+            contentStackView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 12),
+            contentStackView.topAnchor.constraint(equalTo: topAnchor, constant: 12),
+            contentStackView.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -12),
+
+            changeButton.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -12),
+            changeButton.centerYAnchor.constraint(equalTo: centerYAnchor),
+
+            contentStackView.trailingAnchor.constraint(equalTo: changeButton.leadingAnchor, constant: -12),
+        ])
     }
 
     required init?(coder: NSCoder) {

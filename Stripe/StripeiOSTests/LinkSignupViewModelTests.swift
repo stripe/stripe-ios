@@ -215,7 +215,7 @@ class LinkInlineSignupViewModelTests: STPNetworkStubbingTestCase {
         XCTAssertTrue(sut.shouldShowDefaultOptInView)
         XCTAssertFalse(sut.shouldShowEmailField)
         XCTAssertFalse(sut.shouldShowPhoneField)
-        sut.didUncheckDefaultOptIn = true
+        sut.didAskToChangeSignupData = true
         XCTAssertFalse(sut.shouldShowDefaultOptInView)
         XCTAssertTrue(sut.shouldShowEmailField)
         XCTAssertTrue(sut.shouldShowPhoneField)
