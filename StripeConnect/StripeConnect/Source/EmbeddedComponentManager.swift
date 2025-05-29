@@ -47,9 +47,9 @@ public final class EmbeddedComponentManager {
                   appearance: appearance,
                   fonts: fonts,
                   fetchClientSecret: {
-            stpAssertionFailure("Client secret should not be fetched when using a dashboard initializer")
-            return nil
-        })
+                    stpAssertionFailure("Client secret should not be fetched when using a dashboard initializer")
+                    return nil
+                  })
         self.publicKeyOverride = publicKeyOverride
         if let baseURLOverride {
             baseURL = baseURLOverride
@@ -60,16 +60,16 @@ public final class EmbeddedComponentManager {
      Initializes an EmbeddedComponentManager instance.
 
      - Parameters:
-       - apiClient: The APIClient instance used to make requests to Stripe.
-       - appearance: Customizes the look of Connect embedded components.
-       - fonts: An array of custom fonts embedded in your app binary for use by any embedded
-       components created from this EmbeddedComponentManager and referenced in `appearance`.
-       - fetchClientSecret: ​​The closure that retrieves the [client secret](https://docs.stripe.com/api/account_sessions/object#account_session_object-client_secret)
+     - apiClient: The APIClient instance used to make requests to Stripe.
+     - appearance: Customizes the look of Connect embedded components.
+     - fonts: An array of custom fonts embedded in your app binary for use by any embedded
+     components created from this EmbeddedComponentManager and referenced in `appearance`.
+     - fetchClientSecret: ​​The closure that retrieves the [client secret](https://docs.stripe.com/api/account_sessions/object#account_session_object-client_secret)
      returned by `/v1/account_sessions`. This tells the `EmbeddedComponentManager` which account to
      delegate access to. This function is also used to retrieve a client secret function to
      refresh the session when it expires.
      */
-        public init(apiClient: STPAPIClient = STPAPIClient.shared,
+    public init(apiClient: STPAPIClient = STPAPIClient.shared,
                 appearance: EmbeddedComponentManager.Appearance = .default,
                 fonts: [EmbeddedComponentManager.CustomFontSource] = [],
                 fetchClientSecret: @escaping () async -> String?) {
@@ -84,7 +84,7 @@ public final class EmbeddedComponentManager {
 
     /// Updates the appearance of components created from this EmbeddedComponentManager
     /// - Seealso: [Customizing the look of Connect embedded components](https://docs.stripe.com/connect/get-started-connect-embedded-components?platform=ios#customize-the-look-of-connect-embedded-components)
-        public func update(appearance: Appearance) {
+    public func update(appearance: Appearance) {
         self.appearance = appearance
         for item in childWebViews.allObjects {
             item.updateAppearance(appearance: appearance)
@@ -105,13 +105,13 @@ public final class EmbeddedComponentManager {
      - Seealso: [Account onboarding component documentation](https://docs.stripe.com/connect/supported-embedded-components/account-onboarding?platform=ios)
 
      - Parameters:
-       - fullTermsOfServiceUrl: URL to your [full terms of service agreement](https://docs.stripe.com/connect/service-agreement-types#full).
-       - recipientTermsOfServiceUrl: URL to your [recipient terms of service](https://docs.stripe.com/connect/service-agreement-types#recipient) agreement.
-       - privacyPolicyUrl: Absolute URL to your privacy policy.
-       - skipTermsOfServiceCollection: If true, embedded onboarding skips terms of service collection and you must [collect terms acceptance yourself](https://docs.stripe.com/connect/updating-service-agreements#indicating-acceptance).
-       - collectionOptions: Specifies the requirements that Stripe collects from connected accounts
+     - fullTermsOfServiceUrl: URL to your [full terms of service agreement](https://docs.stripe.com/connect/service-agreement-types#full).
+     - recipientTermsOfServiceUrl: URL to your [recipient terms of service](https://docs.stripe.com/connect/service-agreement-types#recipient) agreement.
+     - privacyPolicyUrl: Absolute URL to your privacy policy.
+     - skipTermsOfServiceCollection: If true, embedded onboarding skips terms of service collection and you must [collect terms acceptance yourself](https://docs.stripe.com/connect/updating-service-agreements#indicating-acceptance).
+     - collectionOptions: Specifies the requirements that Stripe collects from connected accounts
      */
-        public func createAccountOnboardingController(
+    public func createAccountOnboardingController(
         fullTermsOfServiceUrl: URL? = nil,
         recipientTermsOfServiceUrl: URL? = nil,
         privacyPolicyUrl: URL? = nil,
@@ -125,9 +125,9 @@ public final class EmbeddedComponentManager {
             skipTermsOfServiceCollection: skipTermsOfServiceCollection,
             collectionOptions: collectionOptions
         ),
-              componentManager: self,
-              loadContent: shouldLoadContent,
-              analyticsClientFactory: analyticsClientFactory)
+        componentManager: self,
+        loadContent: shouldLoadContent,
+        analyticsClientFactory: analyticsClientFactory)
     }
 
     @_spi(DashboardOnly)

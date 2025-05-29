@@ -21,7 +21,7 @@ class CloseWebViewMessageHandlerTests: ScriptWebTestBase {
         webView.addMessageHandler(messageHandler: messageHandler)
 
         try await webView.evaluateMessage(name: "closeWebView",
-                                  json: """
+                                          json: """
                                   {}
                                   """)
         await fulfillment(of: [expectation], timeout: TestHelpers.defaultTimeout)

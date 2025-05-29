@@ -17,7 +17,7 @@ public protocol AccountOnboardingControllerDelegate: AnyObject {
      - Parameters:
      - accountOnboarding: The account onboarding controller associated with this onboarding experience
      */
-        func accountOnboardingDidExit(_ accountOnboarding: AccountOnboardingController)
+    func accountOnboardingDidExit(_ accountOnboarding: AccountOnboardingController)
 
     /**
      Triggered when an error occurs loading the account onboarding component
@@ -25,7 +25,7 @@ public protocol AccountOnboardingControllerDelegate: AnyObject {
      - accountOnboarding: The account onboarding component that errored when loading
      - error: The error that occurred when loading the component
      */
-        func accountOnboarding(_ accountOnboarding: AccountOnboardingController,
+    func accountOnboarding(_ accountOnboarding: AccountOnboardingController,
                            didFailLoadWithError error: Error)
 
 }
@@ -67,10 +67,10 @@ public final class AccountOnboardingController {
     var retainedSelf: AccountOnboardingController?
 
     /// Delegate that receives callbacks for this component
-        public weak var delegate: AccountOnboardingControllerDelegate?
+    public weak var delegate: AccountOnboardingControllerDelegate?
 
     /// Sets the title for the onboarding experience
-        public var title: String? {
+    public var title: String? {
         get {
             webVC.title
         }
@@ -105,7 +105,7 @@ public final class AccountOnboardingController {
     }
 
     /// Presents the onboarding experience.
-        public func present(from viewController: UIViewController, animated: Bool = true) {
+    public func present(from viewController: UIViewController, animated: Bool = true) {
         let navController = UINavigationController(rootViewController: webVC)
         navController.navigationBar.prefersLargeTitles = false
         navController.modalPresentationStyle = .fullScreen

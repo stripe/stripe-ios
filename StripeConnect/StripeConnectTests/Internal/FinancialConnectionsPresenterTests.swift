@@ -23,7 +23,7 @@ class FinancialConnectionsPresenterTests: XCTestCase {
         let componentManager = EmbeddedComponentManager(apiClient: .init(publishableKey: publishableKey),
                                                         appearance: .default,
                                                         fonts: [],
-                                                        fetchClientSecret: {return nil})
+                                                        fetchClientSecret: { return nil })
 
         let sheet = presenter.makeSheet(componentManager: componentManager, clientSecret: clientSecret, connectedAccountId: connectedAccountId, from: .init())
 
@@ -46,9 +46,7 @@ class FinancialConnectionsPresenterTests: XCTestCase {
 
         let sheet = presenter.makeSheet(componentManager: componentManager, clientSecret: clientSecret, connectedAccountId: connectedAccountId, from: .init())
 
-
         XCTAssertEqual(sheet.apiClient.publishableKey, publishableKey)
         XCTAssertEqual(sheet.apiClient.stripeAccount, connectedAccountId)
     }
 }
-

@@ -56,8 +56,8 @@ class AccountOnboardingControllerTests: XCTestCase {
         )
 
         try await controller.webVC.webView.evaluateMessageWithReply(name: "fetchInitComponentProps",
-                                                            json: "{}",
-                                                            expectedResponse: """
+                                                                    json: "{}",
+                                                                    expectedResponse: """
             {"setCollectionOptions":{"fields":"eventually_due","futureRequirements":"include"},"setFullTermsOfServiceUrl":"https:\\/\\/fullTermsOfServiceUrl.com","setPrivacyPolicyUrl":"https:\\/\\/privacyPolicyUrl.com","setRecipientTermsOfServiceUrl":"https:\\/\\/recipientTermsOfServiceUrl.com","setSkipTermsOfServiceCollection":true}
             """)
     }
@@ -105,8 +105,7 @@ class AccountOnboardingControllerTests: XCTestCase {
 
         var accountOnboardingDidFailLoadWithError: ((_ accountOnboarding: AccountOnboardingController, _ error: Error) -> Void)?
 
-        var accountOnboardingDidExit: ((_ accountOnboarding: AccountOnboardingController)->Void)? = nil
-
+        var accountOnboardingDidExit: ((_ accountOnboarding: AccountOnboardingController) -> Void)?
 
         func accountOnboarding(_ accountOnboarding: AccountOnboardingController,
                                didFailLoadWithError error: Error) {

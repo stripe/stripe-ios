@@ -33,8 +33,8 @@ struct AppearanceSettings: View {
                         OptionListRow(title: appearanceInfo.displayName,
                                       selected: selectedAppearance.id == appearanceInfo.id,
                                       onSelected: {
-                            selectedAppearance = appearanceInfo
-                        })
+                                        selectedAppearance = appearanceInfo
+                                      })
                     }
                 } header: {
                     Text("Select a preset")

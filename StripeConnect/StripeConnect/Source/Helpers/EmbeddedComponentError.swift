@@ -9,7 +9,7 @@ import Foundation
 
 /// An error that can occur loading a Connect embedded component
 public struct EmbeddedComponentError: Error, CustomDebugStringConvertible {
-        public enum ErrorType: String {
+    public enum ErrorType: String {
         /// Failure to connect to Stripe's API
         case apiConnectionError = "api_connection_error"
         /// Failure to perform the authentication flow within Connect Embedded Components
@@ -26,12 +26,12 @@ public struct EmbeddedComponentError: Error, CustomDebugStringConvertible {
     }
 
     /// The type of error
-        public let type: ErrorType
+    public let type: ErrorType
 
     /// A non localized description of the error.
     let description: String
 
-        public var debugDescription: String {
+    public var debugDescription: String {
         String("\(type.rawValue): \(description)")
     }
 }

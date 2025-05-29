@@ -24,12 +24,12 @@ extension EmbeddedComponentManager {
         /**
          Initializes a CustomFontSource from a base font and its original file URL
          - Parameters:
-           - font: A custom font embedded into your app's binary
-           - fileUrl: The local file URL corresponding to the custom font
+         - font: A custom font embedded into your app's binary
+         - fileUrl: The local file URL corresponding to the custom font
 
          - Note: The font's size does not impact the appearance of the component.
          To adjust the font sizes used in components, use `EmbeddedComponentManager.Appearance`
-         
+
          - Throws: Error if the font couldn't be loaded from the given URL
          */
         public init(font: UIFont, fileUrl: URL) throws {
