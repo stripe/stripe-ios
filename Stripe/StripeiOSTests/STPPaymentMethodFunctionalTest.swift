@@ -8,8 +8,8 @@
 //
 
 import Stripe
-import StripeCoreTestUtils
 @_spi(STP) import StripeCore
+import StripeCoreTestUtils
 @_spi(STP) import StripePayments
 @testable @_spi(STP) @_spi(CustomerSessionBetaAccess) import StripePaymentSheet
 @testable import StripePaymentsTestUtils
