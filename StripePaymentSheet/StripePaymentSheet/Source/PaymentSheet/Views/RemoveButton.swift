@@ -18,8 +18,6 @@ import UIKit
 @objc(STP_Internal_RemoveButton)
 class RemoveButton: UIButton {
     private let appearance: PaymentSheet.Appearance
-    private static let minimumLabelHeight: CGFloat = 24
-    private static let minimumButtonHeight: CGFloat = 44
 
     override var intrinsicContentSize: CGSize {
         return CGSize(

@@ -262,8 +262,6 @@ class ConfirmButton: UIView {
             return appearance.primaryButton.successBackgroundColor
         }
 
-        private static let minimumLabelHeight: CGFloat = 24
-        private static let minimumButtonHeight: CGFloat = 44
         private var status: Status = .enabled
         private let appearance: PaymentSheet.Appearance
 
