@@ -198,6 +198,7 @@ extension STPAPIClient {
         for consumerSessionClientSecret: String,
         linkedAccountId: String,
         consumerAccountPublishableKey: String?,
+        isDefault: Bool,
         completion: @escaping (Result<ConsumerPaymentDetails, Error>) -> Void
     ) {
         let endpoint: String = "consumers/payment_details"
@@ -209,7 +210,7 @@ extension STPAPIClient {
                 "account": linkedAccountId,
             ],
             "type": "bank_account",
-            "is_default": true,
+            "is_default": isDefault,
         ]
 
         makePaymentDetailsRequest(

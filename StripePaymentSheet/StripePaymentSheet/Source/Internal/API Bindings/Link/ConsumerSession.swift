@@ -176,12 +176,14 @@ extension ConsumerSession {
         linkedAccountId: String,
         with apiClient: STPAPIClient = STPAPIClient.shared,
         consumerAccountPublishableKey: String?,
+        isDefault: Bool,
         completion: @escaping (Result<ConsumerPaymentDetails, Error>) -> Void
     ) {
         apiClient.createPaymentDetails(
             for: clientSecret,
             linkedAccountId: linkedAccountId,
             consumerAccountPublishableKey: consumerAccountPublishableKey,
+            isDefault: isDefault,
             completion: completion)
     }
 

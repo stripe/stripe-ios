@@ -490,9 +490,9 @@ extension PayWithLinkViewController: PayWithLinkCoordinating {
         )
 
         func createPaymentDetails(linkedAccountId: String) {
-            consumerSession.createPaymentDetails(
+            linkAccount.createPaymentDetails(
                 linkedAccountId: linkedAccountId,
-                consumerAccountPublishableKey: linkAccount.publishableKey,
+                isDefault: false,
                 completion: { paymentDetailsResult in
                     switch paymentDetailsResult {
                     case .success:
