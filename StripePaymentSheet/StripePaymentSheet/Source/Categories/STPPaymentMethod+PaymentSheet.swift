@@ -15,7 +15,7 @@ extension STPPaymentMethod {
     var paymentSheetLabel: String {
         switch type {
         case .card:
-            return "•••• \(card?.last4 ?? "")"
+            return linkPaymentDetails?.label ?? "•••• \(card?.last4 ?? "")"
         case .SEPADebit:
             // The missing space is not an oversight, but on purpose
             return "••••\(sepaDebit?.last4 ?? "")"
@@ -35,7 +35,7 @@ extension STPPaymentMethod {
             guard let card = self.card else {
                 return nil
             }
-            return makeCardAccessibilityLabel(cardBrand: card.preferredDisplayBrand, last4: card.last4 ?? "")
+            return linkPaymentDetails?.paymentSheetAccessibilityLabel ?? Self.makeCardAccessibilityLabel(cardBrand: card.preferredDisplayBrand, last4: card.last4 ?? "")
         case .USBankAccount:
             guard let usBankAccount = self.usBankAccount else {
                 return nil
@@ -44,7 +44,7 @@ extension STPPaymentMethod {
         case .link:
             switch linkPaymentDetails {
             case .card(let cardDetails):
-                return makeCardAccessibilityLabel(cardBrand: cardDetails.brand, last4: cardDetails.last4)
+                return Self.makeCardAccessibilityLabel(cardBrand: cardDetails.brand, last4: cardDetails.last4)
             case .bankAccount(let bankDetails):
                 return String(format: String.Localized.bank_name_account_ending_in_last_4, bankDetails.bankName, bankDetails.last4)
             default:
@@ -55,7 +55,7 @@ extension STPPaymentMethod {
         }
     }
 
-    private func makeCardAccessibilityLabel(cardBrand: STPCardBrand, last4: String) -> String {
+    fileprivate static func makeCardAccessibilityLabel(cardBrand: STPCardBrand, last4: String) -> String {
         let brand = STPCardBrandUtilities.stringFrom(cardBrand) ?? ""
         let last4Spaced = last4.map { String($0) }.joined(separator: " ")
         let localized = String.Localized.card_brand_ending_in_last_4
@@ -103,5 +103,18 @@ extension STPPaymentMethod {
         let updatedPostalCode = self.billingDetails?.address?.postalCode != updatedParams.address?.postalCode
 
         return updatedLine1 || updatedLine2 || updatedCity || updatedState || updatedCountry || updatedPostalCode
+    }
+}
+
+private extension LinkPaymentDetails {
+    var paymentSheetAccessibilityLabel: String? {
+        switch self {
+        case .card(let cardDetails):
+            return STPPaymentMethod.makeCardAccessibilityLabel(cardBrand: cardDetails.brand, last4: cardDetails.last4)
+        case .bankAccount(let bankDetails):
+            return String(format: String.Localized.bank_name_account_ending_in_last_4, bankDetails.bankName, bankDetails.last4)
+        default:
+            return nil
+        }
     }
 }

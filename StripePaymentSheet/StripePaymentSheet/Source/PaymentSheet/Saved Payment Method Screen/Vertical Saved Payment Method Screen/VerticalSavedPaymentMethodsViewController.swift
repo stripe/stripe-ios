@@ -79,7 +79,7 @@ class VerticalSavedPaymentMethodsViewController: UIViewController {
     }
 
     private var headerText: String {
-        let nonCardPaymentMethods = paymentMethods.filter({ $0.type != .card })
+        let nonCardPaymentMethods = paymentMethods.filter({ $0.type != .card || $0.isLinkPaymentMethod })
         let hasOnlyCards = nonCardPaymentMethods.isEmpty
         if isEditingPaymentMethods {
             if hasOnlyCards {
