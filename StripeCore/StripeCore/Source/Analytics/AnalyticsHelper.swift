@@ -29,10 +29,6 @@ import Foundation
         sessionID = uuid.uuidString.lowercased()
     }
 
-    @_spi(STP) public func setTestSessionID() {
-        sessionID = "session-123"
-    }
-
     @_spi(STP) public func startTimeMeasurement(_ measurement: TimeMeasurement) {
         startTimes[measurement] = timeProvider()
     }
