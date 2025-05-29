@@ -74,7 +74,6 @@ class AutoCompleteViewController: UIViewController {
         tableView.backgroundColor = configuration.appearance.colors.background
         tableView.separatorColor = configuration.appearance.colors.componentDivider
         tableView.tableFooterView = UIView()
-        tableView.contentInset = UIEdgeInsets(top: 0, left: configuration.appearance.formInsets.left, bottom: 0, right: configuration.appearance.formInsets.right)
         return tableView
     }()
     lazy var manualEntryButton: UIButton = {
@@ -152,7 +151,6 @@ class AutoCompleteViewController: UIViewController {
             stackView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
             separatorView.heightAnchor.constraint(equalToConstant: 0.33),
             manualEntryButton.heightAnchor.constraint(equalToConstant: manualEntryButton.frame.size.height),
-            manualEntryButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -configuration.appearance.formInsets.bottom),
         ])
 
     }
@@ -260,6 +258,15 @@ extension AutoCompleteViewController: UITableViewDelegate, UITableViewDataSource
                                                                             appearance: configuration.appearance,
                                                                             isSubtitle: true)
         cell.indentationWidth = 5 // hardcoded value to align with searchbar textfield
+        
+        // Set the contentView's layout margins to match formInsets
+        cell.contentView.directionalLayoutMargins = NSDirectionalEdgeInsets(
+            top: 0,
+            leading: configuration.appearance.formInsets.left,
+            bottom: 0,
+            trailing: configuration.appearance.formInsets.right
+        )
+        cell.contentView.preservesSuperviewLayoutMargins = false
 
         return cell
     }
