@@ -319,7 +319,7 @@ class ConfirmButton: UIView {
         }()
         let spinnerSize = CGSize(width: 20, height: 20)
         lazy var spinner: CheckProgressView = {
-            return CheckProgressView(frame: CGRect(origin: .zero, size: spinnerSize.applying(CGAffineTransform(scaleX:  appearance.font.sizeScaleFactor, y: appearance.font.sizeScaleFactor))))
+            return CheckProgressView(frame: CGRect(origin: .zero, size: spinnerSize.applying(CGAffineTransform(scaleX: appearance.font.sizeScaleFactor, y: appearance.font.sizeScaleFactor))))
         }()
         lazy var addIcon: UIImageView = {
             let image = Image.icon_plus.makeImage(template: true)
