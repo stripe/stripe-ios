@@ -1,39 +1,37 @@
 POST
-https:\/\/api\.stripe\.com\/v1\/payment_methods\/pm_1R2KkgFY0qyl6XeWZjOqvaWf\/attach$
+https:\/\/api\.stripe\.com\/v1\/payment_methods\/pm_1RUBc8FY0qyl6XeWKBJLWefA\/attach$
 200
 application/json
 access-control-allow-methods: GET, HEAD, PUT, PATCH, POST, DELETE
-content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=00sM1aKKYwVzYMu1Ayk1638kjMCFtJLkBRvTc67ccreki2MOf5EXks-56lpGIb_eJldHOm5IUUOud-_s
+content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=Iso7I527Qgv6HEZ6eAHP_zXpxyB8rOeckn0S-9RQzMBf24fM4lpKY5e7yLe3eCSXFQ9LAq-uz6fVT5NR
 Server: nginx
 Cache-Control: no-cache, no-store
-reporting-endpoints: coop="https://q.stripe.com/coop-report"
-x-wc: AB
+x-wc: ABGHI
 Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
-cross-origin-opener-policy-report-only: same-origin; report-to="coop"
 Access-Control-Allow-Origin: *
 stripe-should-retry: false
 x-stripe-priority-routing-enabled: true
-report-to: {"group":"coop","max_age":8640,"endpoints":[{"url":"https://q.stripe.com/coop-report"}],"include_subdomains":true}
-request-id: req_CCXMTYdKbyhRk8
 x-stripe-routing-context-priority-tier: api-testmode
-Content-Length: 1025
+request-id: req_LxhfTxZ7X5aJQc
+Content-Length: 1045
 Vary: Origin
-Date: Thu, 13 Mar 2025 23:01:23 GMT
-original-request: req_CCXMTYdKbyhRk8
+Date: Thu, 29 May 2025 18:55:41 GMT
+original-request: req_LxhfTxZ7X5aJQc
 stripe-version: 2020-08-27
-idempotency-key: 0dfdf63b-b4dd-435a-90ac-8f6797e24b84
+idempotency-key: 8427e369-1f60-4136-b3f4-9d8450708341
 access-control-expose-headers: Request-Id, Stripe-Manage-Version, Stripe-Should-Retry, X-Stripe-External-Auth-Required, X-Stripe-Privileged-Session-Required
 access-control-max-age: 300
 access-control-allow-credentials: true
 Content-Type: application/json
-X-Stripe-Mock-Request: customer=cus_RwDB8PFlom0XOq
+X-Stripe-Mock-Request: customer=cus_SOzbHjBlzResiy
 
 {
   "object" : "payment_method",
-  "id" : "pm_1R2KkgFY0qyl6XeWZjOqvaWf",
+  "id" : "pm_1RUBc8FY0qyl6XeWKBJLWefA",
   "billing_details" : {
     "email" : null,
     "phone" : null,
+    "tax_id" : null,
     "name" : null,
     "address" : {
       "state" : null,
@@ -72,8 +70,8 @@ X-Stripe-Mock-Request: customer=cus_RwDB8PFlom0XOq
     "country" : "US"
   },
   "livemode" : false,
-  "created" : 1741906882,
+  "created" : 1748544940,
   "allow_redisplay" : "unspecified",
   "type" : "card",
-  "customer" : "cus_RwDB8PFlom0XOq"
+  "customer" : "cus_SOzbHjBlzResiy"
 }
