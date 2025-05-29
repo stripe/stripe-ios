@@ -33,6 +33,7 @@ import Foundation
     @_spi(STP) public let passthroughModeEnabled: Bool?
     @_spi(STP) public let disableSignup: Bool?
     @_spi(STP) public let suppress2FAModal: Bool?
+    @_spi(STP) public let disableFlowControllerRUX: Bool?
     @_spi(STP) public let useAttestationEndpoints: Bool?
     @_spi(STP) public let linkMode: LinkMode?
     @_spi(STP) public let linkFlags: [String: Bool]?
@@ -47,6 +48,7 @@ import Foundation
         passthroughModeEnabled: Bool?,
         disableSignup: Bool?,
         suppress2FAModal: Bool?,
+        disableFlowControllerRUX: Bool?,
         useAttestationEndpoints: Bool?,
         linkMode: LinkMode?,
         linkFlags: [String: Bool]?,
@@ -59,6 +61,7 @@ import Foundation
         self.passthroughModeEnabled = passthroughModeEnabled
         self.disableSignup = disableSignup
         self.suppress2FAModal = suppress2FAModal
+        self.disableFlowControllerRUX = disableFlowControllerRUX
         self.useAttestationEndpoints = useAttestationEndpoints
         self.linkMode = linkMode
         self.linkFlags = linkFlags
@@ -83,6 +86,7 @@ import Foundation
         let webviewOption = PopupWebviewOption(rawValue: response["link_popup_webview_option"] as? String ?? "")
         let passthroughModeEnabled = response["link_passthrough_mode_enabled"] as? Bool ?? false
         let disableSignup = response["link_mobile_disable_signup"] as? Bool ?? false
+        let disableFlowControllerRUX = response["link_mobile_disable_rux_in_flow_controller"] as? Bool ?? false
         let useAttestationEndpoints = response["link_mobile_use_attestation_endpoints"] as? Bool ?? false
         let suppress2FAModal = response["link_mobile_suppress_2fa_modal"] as? Bool ?? false
         let linkMode = (response["link_mode"] as? String).flatMap { LinkMode(rawValue: $0) }
@@ -110,6 +114,7 @@ import Foundation
             passthroughModeEnabled: passthroughModeEnabled,
             disableSignup: disableSignup,
             suppress2FAModal: suppress2FAModal,
+            disableFlowControllerRUX: disableFlowControllerRUX,
             useAttestationEndpoints: useAttestationEndpoints,
             linkMode: linkMode,
             linkFlags: linkFlags,

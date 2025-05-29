@@ -546,7 +546,7 @@ extension PaymentSheet {
                 }
             case .withPaymentMethod(let paymentMethod):
                 confirmWithPaymentMethod(paymentMethod, nil, false)
-            case .withPaymentDetails(let linkAccount, let paymentDetails, let confirmationExtras):
+            case .withPaymentDetails(let linkAccount, let paymentDetails, let confirmationExtras, _):
                 let shouldSave = false // always false, as we don't show a save-to-merchant checkbox in Link VC
 
                 if elementsSession.linkPassthroughModeEnabled {

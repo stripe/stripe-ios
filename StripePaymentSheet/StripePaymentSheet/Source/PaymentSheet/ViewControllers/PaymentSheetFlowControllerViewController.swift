@@ -287,8 +287,7 @@ class PaymentSheetFlowControllerViewController: UIViewController, FlowController
     }
 
     private var canPresentLinkOnWalletButton: Bool {
-        let usesNative = deviceCanUseNativeLink(elementsSession: elementsSession, configuration: configuration)
-        return PaymentSheet.LinkFeatureFlags.enableLinkFlowControllerChanges && usesNative
+        elementsSession.enableFlowControllerRUX(for: configuration)
     }
 
     private func presentLink() {

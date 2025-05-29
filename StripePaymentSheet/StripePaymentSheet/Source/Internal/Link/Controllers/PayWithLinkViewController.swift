@@ -138,6 +138,14 @@ final class PayWithLinkViewController: BottomSheetViewController {
 
     weak var payWithLinkDelegate: PayWithLinkViewControllerDelegate?
 
+    var shippingAddressResponse: ShippingAddressesResponse?
+
+    var defaultShippingAddress: ShippingAddressesResponse.ShippingAddress? {
+        shippingAddressResponse?.shippingAddresses.first {
+            $0.isDefault ?? false
+        } ?? shippingAddressResponse?.shippingAddresses.first
+    }
+
     private var isBailingToWebFlow: Bool = false
 
     convenience init(
@@ -305,36 +313,65 @@ private extension PayWithLinkViewController {
             .supportedPaymentDetailsTypes(for: context.elementsSession)
             .toSortedArray()
 
-        linkAccount.listPaymentDetails(
-            supportedTypes: supportedPaymentDetailsTypes
-        ) { result in
-            switch result {
-            case .success(let paymentDetails):
-                if paymentDetails.isEmpty {
-                    let addPaymentMethodVC = NewPaymentViewController(
-                        linkAccount: linkAccount,
-                        context: self.context,
-                        isAddingFirstPaymentMethod: true
-                    )
+        Task { @MainActor in
+            async let paymentDetailsResult = linkAccount.listPaymentDetails(
+                supportedTypes: supportedPaymentDetailsTypes
+            )
 
-                    self.setViewControllers([addPaymentMethodVC])
-                } else {
-                    let walletViewController = WalletViewController(
-                        linkAccount: linkAccount,
-                        context: self.context,
-                        paymentMethods: paymentDetails
-                    )
+            async let shippingAddressResult = fetchShippingAddress(
+                using: linkAccount,
+                shouldFetch: context.launchedFromFlowController
+            )
 
-                    self.setViewControllers([walletViewController])
-                }
-            case .failure(let error):
-                self.payWithLinkDelegate?.payWithLinkViewControllerDidFinish(
+            do {
+                let paymentDetails = try await paymentDetailsResult
+
+                // Ignore any errors that might happen here.
+                shippingAddressResponse = try? await shippingAddressResult
+
+                presentAppropriateViewController(
+                    with: linkAccount,
+                    paymentDetails: paymentDetails
+                )
+            } catch {
+                payWithLinkDelegate?.payWithLinkViewControllerDidFinish(
                     self,
                     result: PaymentSheetResult.failed(error: error),
                     deferredIntentConfirmationType: nil
                 )
             }
         }
+    }
+
+    private func fetchShippingAddress(
+        using account: PaymentSheetLinkAccount,
+        shouldFetch: Bool
+    ) async throws -> ShippingAddressesResponse? {
+        guard shouldFetch else { return nil }
+        return try await account.listShippingAddress()
+    }
+
+    private func presentAppropriateViewController(
+        with linkAccount: PaymentSheetLinkAccount,
+        paymentDetails: [ConsumerPaymentDetails]
+    ) {
+        let viewController: BottomSheetContentViewController
+        if paymentDetails.isEmpty {
+            let addPaymentMethodVC = NewPaymentViewController(
+                linkAccount: linkAccount,
+                context: context,
+                isAddingFirstPaymentMethod: true
+            )
+            viewController = addPaymentMethodVC
+        } else {
+            let walletViewController = WalletViewController(
+                linkAccount: linkAccount,
+                context: context,
+                paymentMethods: paymentDetails
+            )
+            viewController = walletViewController
+        }
+        setViewControllers([viewController])
     }
 
     func updateSupportedPaymentMethods() {
@@ -377,8 +414,10 @@ extension PayWithLinkViewController: PayWithLinkCoordinating {
         let confirmOption = PaymentSheet.LinkConfirmOption.withPaymentDetails(
             account: linkAccount,
             paymentDetails: paymentDetails,
-            confirmationExtras: confirmationExtras
+            confirmationExtras: confirmationExtras,
+            shippingAddress: defaultShippingAddress
         )
+
         payWithLinkDelegate?.payWithLinkViewControllerDidFinish(self, confirmOption: confirmOption)
     }
 
@@ -451,9 +490,9 @@ extension PayWithLinkViewController: PayWithLinkCoordinating {
         )
 
         func createPaymentDetails(linkedAccountId: String) {
-            consumerSession.createPaymentDetails(
+            linkAccount.createPaymentDetails(
                 linkedAccountId: linkedAccountId,
-                consumerAccountPublishableKey: linkAccount.publishableKey,
+                isDefault: false,
                 completion: { paymentDetailsResult in
                     switch paymentDetailsResult {
                     case .success:
@@ -518,7 +557,8 @@ extension PayWithLinkViewController: PayWithLinkCoordinating {
                 option: .withPaymentDetails(
                     account: linkAccount,
                     paymentDetails: paymentDetails,
-                    confirmationExtras: confirmationExtras
+                    confirmationExtras: confirmationExtras,
+                    shippingAddress: defaultShippingAddress
                 )
             )
         ) { [weak self] result, confirmationType in
