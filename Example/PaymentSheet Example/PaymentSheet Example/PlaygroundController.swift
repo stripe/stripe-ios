@@ -589,10 +589,10 @@ class PlaygroundController: ObservableObject {
     // Completion
 
     func onOptionsCompletion() {
-        if let shippingAddress = self.paymentSheetFlowController?.paymentOption?.shippingAddress {
+        if let shippingDetails = self.paymentSheetFlowController?.paymentOption?.shippingDetails {
             self.addressViewController = .init(
                 configuration: .init(
-                    defaultValues: shippingAddress,
+                    defaultValues: shippingDetails,
                     additionalFields: .init(phone: .optional)
                 ),
                 delegate: self

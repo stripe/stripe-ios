@@ -131,8 +131,8 @@ extension PaymentSheet {
             /// The billing details associated with the customer's desired payment method
             public let billingDetails: PaymentSheet.BillingDetails?
 
-            /// The shipping address associated with the current customer.
-            @_spi(STP) public let shippingAddress: AddressViewController.Configuration.DefaultAddressDetails?
+            /// The shipping details associated with the current customer.
+            @_spi(STP) public let shippingDetails: AddressViewController.Configuration.DefaultAddressDetails?
 
             /// A string representation of the customer's desired payment method
             /// - If this is a Stripe payment method, see https://stripe.com/docs/api/payment_methods/object#payment_method_object-type for possible values.
@@ -147,27 +147,27 @@ extension PaymentSheet {
                     label = String.Localized.apple_pay
                     paymentMethodType = "apple_pay"
                     billingDetails = nil
-                    shippingAddress = nil
+                    shippingDetails = nil
                 case .saved(let paymentMethod, let confirmParams):
                     label = paymentMethod.paymentOptionLabel(confirmParams: confirmParams)
                     paymentMethodType = paymentMethod.type.identifier
                     billingDetails = paymentMethod.billingDetails?.toPaymentSheetBillingDetails()
-                    shippingAddress = nil
+                    shippingDetails = nil
                 case .new(let confirmParams):
                     label = confirmParams.paymentSheetLabel
                     paymentMethodType = confirmParams.paymentMethodType.identifier
                     billingDetails = confirmParams.paymentMethodParams.billingDetails?.toPaymentSheetBillingDetails()
-                    shippingAddress = nil
+                    shippingDetails = nil
                 case .link(let option):
                     label = option.paymentSheetLabel
                     paymentMethodType = option.paymentMethodType
                     billingDetails = option.billingDetails?.toPaymentSheetBillingDetails()
-                    shippingAddress = option.shippingAddress
+                    shippingDetails = option.shippingAddress
                 case .external(let paymentMethod, let stpBillingDetails):
                     label = paymentMethod.displayText
                     paymentMethodType = paymentMethod.type
                     billingDetails = stpBillingDetails.toPaymentSheetBillingDetails()
-                    shippingAddress = nil
+                    shippingDetails = nil
                 }
             }
         }
