@@ -94,14 +94,12 @@ final class LinkInlineSignupViewModel {
                 return .checkbox_v0
             }
         case .checkboxWithDefaultOptIn:
-            if !didAskToChangeSignupData {
+            if phoneNumberWasPrefilled && emailWasPrefilled {
                 return .prechecked_opt_in_box_prefilled_all
-            } else if phoneNumberWasPrefilled && emailWasPrefilled {
-                return .checkbox_v0_1
-            } else if emailWasPrefilled {
-                return .checkbox_v0_0
+            } else if phoneNumberWasPrefilled || emailWasPrefilled {
+                return .prechecked_opt_in_box_prefilled_some
             } else {
-                return .checkbox_v0
+                return .prechecked_opt_in_box_prefilled_none
             }
         case .textFieldsOnlyEmailFirst:
             return .implied_v0

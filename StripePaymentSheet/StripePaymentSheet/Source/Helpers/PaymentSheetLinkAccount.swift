@@ -51,6 +51,12 @@ class PaymentSheetLinkAccount: PaymentSheetLinkAccountInfoProtocol {
 
         // Checkbox pre-checked, w/ email & phone prefilled
         case prechecked_opt_in_box_prefilled_all = "prechecked_opt_in_box_prefilled_all"
+
+        // Checkbox pre-checked, some fields prefilled
+        case prechecked_opt_in_box_prefilled_some = "prechecked_opt_in_box_prefilled_some"
+
+        // Checkbox pre-checked, no fields prefilled
+        case prechecked_opt_in_box_prefilled_none = "prechecked_opt_in_box_prefilled_none"
     }
 
     // Dependencies
