@@ -351,7 +351,7 @@ final class LinkInlineSignupViewModel {
             emailWasPrefilled = true
         }
         if showCheckbox {
-            let allowsDefaultOptIn = PaymentSheet.LinkFeatureFlags.enableLinkDefaultOptIn && allowsDefaultOptIn // && country == "US"
+            let allowsDefaultOptIn = PaymentSheet.LinkFeatureFlags.enableLinkDefaultOptIn && allowsDefaultOptIn && country == "US"
             self.mode = allowsDefaultOptIn ? .checkboxWithDefaultOptIn : .checkbox
         } else {
             // If we don't show a checkbox *and* we have a prefilled email, show the phone field first.
