@@ -161,17 +161,6 @@ class PaymentSheetSnapshotTests: STPSnapshotTestCase {
         verify(paymentSheet.bottomSheetViewController.view!)
     }
 
-    func testPaymentSheetCustomHeaderFont() {
-        stubNewCustomerResponse()
-
-        var appearance = PaymentSheet.Appearance()
-        appearance.font.header = UIFont(name: "AvenirNext-Bold", size: 28)!
-
-        preparePaymentSheet(appearance: appearance)
-        presentPaymentSheet(darkMode: false)
-        verify(paymentSheet.bottomSheetViewController.view!)
-    }
-
     func testPaymentSheetColors() {
         stubNewCustomerResponse()
 
@@ -320,17 +309,52 @@ class PaymentSheetSnapshotTests: STPSnapshotTestCase {
         verify(paymentSheet.bottomSheetViewController.view!)
     }
 
-    func testPaymentSheetCustomHeaderFontReturningCustomer() {
+    func testPaymentSheetCustomFonts() {
         stubReturningCustomerResponse()
 
         var appearance = PaymentSheet.Appearance()
-        appearance.font.header = UIFont(name: "AvenirNext-Bold", size: 28)!
+        appearance.font.custom.headline = UIFont(name: "AvenirNext-Bold", size: 22)!
+        appearance.font.custom.subheadline = UIFont(name: "AvenirNext-Regular", size: 16)!
+        appearance.font.custom.subheadlineBold = UIFont(name: "AvenirNext-DemiBold", size: 16)!
+        appearance.font.custom.sectionHeader = UIFont(name: "AvenirNext-Medium", size: 13)!
+        appearance.font.custom.caption = UIFont(name: "AvenirNext-Regular", size: 12)!
+        appearance.font.custom.footnote = UIFont(name: "AvenirNext-Regular", size: 13)!
+        appearance.font.custom.footnoteEmphasis = UIFont(name: "AvenirNext-Medium", size: 13)!
 
         preparePaymentSheet(
             customer: "snapshot",
             appearance: appearance,
             applePayEnabled: false
         )
+        presentPaymentSheet(darkMode: false)
+        verify(paymentSheet.bottomSheetViewController.view!)
+    }
+
+    func testPaymentSheetMixedCustomFonts() {
+        stubReturningCustomerResponse()
+
+        var appearance = PaymentSheet.Appearance()
+        // Mix custom fonts with default behavior
+        appearance.font.custom.headline = UIFont(name: "AvenirNext-Bold", size: 24)!
+        appearance.font.custom.sectionHeader = UIFont(name: "ChalkboardSE-Light", size: 14)!
+        // Leave other fonts as default
+
+        preparePaymentSheet(
+            customer: "snapshot",
+            appearance: appearance,
+            applePayEnabled: false
+        )
+        presentPaymentSheet(darkMode: false)
+        verify(paymentSheet.bottomSheetViewController.view!)
+    }
+
+    func testPaymentSheetNewCustomHeadlineFont() {
+        stubNewCustomerResponse()
+
+        var appearance = PaymentSheet.Appearance()
+        appearance.font.custom.headline = UIFont(name: "AvenirNext-Bold", size: 24)!
+
+        preparePaymentSheet(appearance: appearance)
         presentPaymentSheet(darkMode: false)
         verify(paymentSheet.bottomSheetViewController.view!)
     }
@@ -1203,6 +1227,24 @@ class PaymentSheetSnapshotTests: STPSnapshotTestCase {
         presentPaymentSheet(darkMode: false)
         verify(paymentSheet.bottomSheetViewController.view!)
 
+    }
+
+    func testPaymentSheetCustomFontsWithSizeScaleFactor() {
+        stubReturningCustomerResponse()
+
+        var appearance = PaymentSheet.Appearance()
+        appearance.font.sizeScaleFactor = 1.3
+        appearance.font.custom.headline = UIFont(name: "AvenirNext-Bold", size: 20)! // This should not be scaled
+        appearance.font.custom.subheadline = UIFont(name: "AvenirNext-Regular", size: 14)! // This should not be scaled
+        // Other fonts should be scaled by sizeScaleFactor
+
+        preparePaymentSheet(
+            customer: "snapshot",
+            appearance: appearance,
+            applePayEnabled: false
+        )
+        presentPaymentSheet(darkMode: false)
+        verify(paymentSheet.bottomSheetViewController.view!)
     }
 
     private func updatePaymentMethodDetail(data: Data, variables: [String: String]) -> Data {

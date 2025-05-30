@@ -80,10 +80,44 @@ public extension PaymentSheet {
             /// - Note: The size and weight of the font is ignored. To adjust font sizes, see `sizeScaleFactor`.
             public var base: UIFont = UIFont.systemFont(ofSize: UIFont.labelFontSize, weight: .regular)
 
-            /// The font used for headers in PaymentSheet (e.g., "Add card", "Select payment method").
-            /// - Note: If `nil`, defaults to `base.bold` with `.title3` text style
-            /// - Note: The `sizeScaleFactor` is still applied to this font
-            public var header: UIFont?
+            /// Custom font configuration for specific text styles
+            /// - Note: When set, these fonts override the default font calculations for their respective text styles
+            public var custom: Custom = Custom()
+
+            /// Describes custom fonts for specific text styles in PaymentSheet
+            public struct Custom: Equatable {
+
+                /// Creates a `PaymentSheet.Appearance.Font.Custom` with default values
+                public init() {}
+
+                /// The font used for headlines (e.g., "Add your payment information")
+                /// - Note: If `nil`, uses the calculated font based on `base` and `sizeScaleFactor`
+                public var headline: UIFont?
+
+                /// The font used for subheadline text
+                /// - Note: If `nil`, uses the calculated font based on `base` and `sizeScaleFactor`
+                public var subheadline: UIFont?
+
+                /// The font used for bold subheadline text
+                /// - Note: If `nil`, uses the calculated font based on `base` and `sizeScaleFactor`
+                public var subheadlineBold: UIFont?
+
+                /// The font used for section headers
+                /// - Note: If `nil`, uses the calculated font based on `base` and `sizeScaleFactor`
+                public var sectionHeader: UIFont?
+
+                /// The font used for caption text
+                /// - Note: If `nil`, uses the calculated font based on `base` and `sizeScaleFactor`
+                public var caption: UIFont?
+
+                /// The font used for footnote text
+                /// - Note: If `nil`, uses the calculated font based on `base` and `sizeScaleFactor`
+                public var footnote: UIFont?
+
+                /// The font used for emphasized footnote text
+                /// - Note: If `nil`, uses the calculated font based on `base` and `sizeScaleFactor`
+                public var footnoteEmphasis: UIFont?
+            }
         }
 
         // MARK: Colors
