@@ -302,8 +302,8 @@ extension AddressViewController {
             stackView.trailingAnchor.constraint(equalTo: scrollView.contentLayoutGuide.trailingAnchor),
             stackView.bottomAnchor.constraint(equalTo: button.topAnchor, constant: -PaymentSheetUI.defaultPadding),
 
-            button.leadingAnchor.constraint(equalTo: scrollView.contentLayoutGuide.leadingAnchor, constant: configuration.appearance.formInsets.left),
-            button.trailingAnchor.constraint(equalTo: scrollView.contentLayoutGuide.trailingAnchor, constant: -configuration.appearance.formInsets.right),
+            button.leadingAnchor.constraint(equalTo: scrollView.contentLayoutGuide.leadingAnchor, constant: configuration.appearance.formInsets.leading),
+            button.trailingAnchor.constraint(equalTo: scrollView.contentLayoutGuide.trailingAnchor, constant: -configuration.appearance.formInsets.trailing),
             button.bottomAnchor.constraint(equalTo: scrollView.contentLayoutGuide.bottomAnchor, constant: -configuration.appearance.formInsets.bottom),
             button.heightAnchor.constraint(equalToConstant: 44),
         ])

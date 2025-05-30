@@ -29,8 +29,8 @@ class SavedPaymentMethodCollectionView: UICollectionView {
         let layout = UICollectionViewFlowLayout()
         layout.scrollDirection = .horizontal
         layout.sectionInset = UIEdgeInsets(
-            top: -6, left: appearance.formInsets.left, bottom: 0,
-            right: appearance.formInsets.right)
+            top: -6, left: appearance.formInsets.leading, bottom: 0,
+            right: appearance.formInsets.trailing)
         self.needsVerticalPaddingForBadge = needsVerticalPaddingForBadge
         layout.itemSize = cellSize
         layout.minimumInteritemSpacing = 12
