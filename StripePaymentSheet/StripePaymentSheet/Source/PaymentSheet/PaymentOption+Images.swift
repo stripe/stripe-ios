@@ -35,7 +35,7 @@ extension PaymentOption {
             case .signUp(_, _, _, _, let confirmParams):
                 return confirmParams.makeIcon(currency: currency, updateImageHandler: updateImageHandler)
             case .wallet, .withPaymentMethod, .withPaymentDetails:
-                return Image.link_logo.makeImage()
+                return Image.link_icon.makeImage()
             }
         case .external(let paymentMethod, _):
             return PaymentSheet.PaymentMethodType.external(paymentMethod).makeImage(
@@ -79,7 +79,9 @@ extension STPPaymentMethod {
     func makeIcon() -> UIImage {
         switch type {
         case .card:
-            return STPImageLibrary.cardBrandImage(for: calculateCardBrandToDisplay())
+            return isLinkPaymentMethod
+                ? Image.link_icon.makeImage()
+                : STPImageLibrary.cardBrandImage(for: calculateCardBrandToDisplay())
         case .USBankAccount:
             return PaymentSheetImageLibrary.bankIcon(
                 for: PaymentSheetImageLibrary.bankIconCode(for: usBankAccount?.bankName)
@@ -105,7 +107,9 @@ extension STPPaymentMethod {
     func makeSavedPaymentMethodCellImage(overrideUserInterfaceStyle: UIUserInterfaceStyle?) -> UIImage {
         switch type {
         case .card:
-            return calculateCardBrandToDisplay().makeSavedPaymentMethodCellImage(overrideUserInterfaceStyle: overrideUserInterfaceStyle)
+            return isLinkPaymentMethod
+                ? Image.link_logo.makeImage()
+                : calculateCardBrandToDisplay().makeSavedPaymentMethodCellImage(overrideUserInterfaceStyle: overrideUserInterfaceStyle)
         case .USBankAccount:
             return PaymentSheetImageLibrary.bankIcon(
                 for: PaymentSheetImageLibrary.bankIconCode(for: usBankAccount?.bankName)
@@ -124,7 +128,9 @@ extension STPPaymentMethod {
     func makeSavedPaymentMethodRowImage() -> UIImage {
         switch type {
         case .card:
-            return STPImageLibrary.unpaddedCardBrandImage(for: calculateCardBrandToDisplay())
+            return isLinkPaymentMethod
+                ? Image.link_icon.makeImage()
+                : STPImageLibrary.unpaddedCardBrandImage(for: calculateCardBrandToDisplay())
         case .USBankAccount:
             return PaymentSheetImageLibrary.bankIcon(
                 for: PaymentSheetImageLibrary.bankIconCode(for: usBankAccount?.bankName)

@@ -24,7 +24,7 @@ extension UpdatePaymentMethodViewController {
         let isDefault: Bool
 
         var shouldShowSaveButton: Bool {
-            guard paymentMethod.type != .link else {
+            guard !paymentMethod.isLinkPaymentMethod else {
                 return false
             }
             return canUpdateCardBrand || canSetAsDefaultPM || canUpdate
@@ -56,7 +56,7 @@ extension UpdatePaymentMethodViewController {
         var header: String? {
             switch paymentMethod.type {
             case .card:
-                return .Localized.manage_card
+                return paymentMethod.linkPaymentDetails?.header ?? .Localized.manage_card
             case .USBankAccount:
                 return .Localized.manage_us_bank_account
             case .SEPADebit:
@@ -74,6 +74,9 @@ extension UpdatePaymentMethodViewController {
             case .card:
                 if canUpdate {
                     return nil
+                }
+                if paymentMethod.isLinkPaymentMethod {
+                    return paymentMethod.linkPaymentDetails?.footnote
                 }
                 return canUpdateCardBrand ? .Localized.only_card_brand_can_be_changed : .Localized.card_details_cannot_be_changed
             case .USBankAccount:
