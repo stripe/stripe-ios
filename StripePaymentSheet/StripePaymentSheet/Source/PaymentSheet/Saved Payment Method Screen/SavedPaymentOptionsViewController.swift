@@ -305,9 +305,9 @@ class SavedPaymentOptionsViewController: UIViewController {
         let mandateView = SimpleMandateTextView(mandateText: mandateText, theme: appearance.asElementsTheme)
         let margins = NSDirectionalEdgeInsets.insets(
             top: 8,
-            leading: appearance.formInsets.left,
+            leading: appearance.formInsets.leading,
             bottom: 0,
-            trailing: appearance.formInsets.right
+            trailing: appearance.formInsets.trailing
         )
         view.addAndPinSubview(mandateView, directionalLayoutMargins: margins)
         return view
@@ -319,7 +319,7 @@ class SavedPaymentOptionsViewController: UIViewController {
 
     private lazy var cvcRecollectionContainerView: DynamicHeightContainerView = {
         let view = DynamicHeightContainerView(pinnedDirection: .top)
-        view.directionalLayoutMargins = .insets(leading: appearance.formInsets.left, trailing: appearance.formInsets.right)
+        view.directionalLayoutMargins = .insets(leading: appearance.formInsets.leading, trailing: appearance.formInsets.trailing)
         view.addPinnedSubview(cvcFormElementView)
         view.updateHeight()
         return view

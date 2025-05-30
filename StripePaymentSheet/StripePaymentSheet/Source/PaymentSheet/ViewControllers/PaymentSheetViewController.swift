@@ -220,8 +220,8 @@ class PaymentSheetViewController: UIViewController, PaymentSheetViewControllerPr
 
         // Hack: Payment container needs to extend to the edges, so we'll 'cancel out' the layout margins with negative padding
         paymentContainerView.directionalLayoutMargins = .insets(
-            leading: -configuration.appearance.formInsets.left,
-            trailing: -configuration.appearance.formInsets.right
+            leading: -configuration.appearance.formInsets.leading,
+            trailing: -configuration.appearance.formInsets.trailing
         )
 
         [stackView].forEach {

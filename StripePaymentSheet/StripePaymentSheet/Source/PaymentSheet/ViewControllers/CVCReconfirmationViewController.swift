@@ -105,7 +105,7 @@ class CVCReconfirmationViewController: UIViewController {
         }
 
         // Get our margins in order
-        view.directionalLayoutMargins = configuration.appearance.allFormInsets
+        view.directionalLayoutMargins = configuration.appearance.formInsets
 
         NSLayoutConstraint.activate([
             stackView.topAnchor.constraint(equalTo: view.topAnchor),

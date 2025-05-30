@@ -126,8 +126,8 @@ struct AppearancePlaygroundView: View {
         )
 
         let formInsetsLeftBinding = Binding(
-            get: { self.appearance.formInsets.left },
-            set: { self.appearance.formInsets.left = $0 }
+            get: { self.appearance.formInsets.leading },
+            set: { self.appearance.formInsets.leading = $0 }
         )
 
         let formInsetsBottomBinding = Binding(
@@ -136,8 +136,8 @@ struct AppearancePlaygroundView: View {
         )
 
         let formInsetsRightBinding = Binding(
-            get: { self.appearance.formInsets.right },
-            set: { self.appearance.formInsets.right = $0 }
+            get: { self.appearance.formInsets.trailing },
+            set: { self.appearance.formInsets.trailing = $0 }
         )
 
         let sizeScaleFactorBinding = Binding(
@@ -338,11 +338,11 @@ struct AppearancePlaygroundView: View {
                         Text("formInsets")
                         Stepper("top: \(Int(appearance.formInsets.top))",
                                 value: formInsetsTopBinding, in: 0...100)
-                        Stepper("left: \(Int(appearance.formInsets.left))",
+                        Stepper("left: \(Int(appearance.formInsets.leading))",
                                 value: formInsetsLeftBinding, in: 0...100)
                         Stepper("bottom: \(Int(appearance.formInsets.bottom))",
                                 value: formInsetsBottomBinding, in: 0...100)
-                        Stepper("right: \(Int(appearance.formInsets.right))",
+                        Stepper("right: \(Int(appearance.formInsets.trailing))",
                                 value: formInsetsRightBinding, in: 0...100)
                     }
                 }

@@ -208,8 +208,8 @@ class CustomerSavedPaymentMethodsViewController: UIViewController {
         stackView.setCustomSpacing(0, after: actionButton)
 
         paymentContainerView.directionalLayoutMargins = .insets(
-            leading: -configuration.appearance.formInsets.left,
-            trailing: -configuration.appearance.formInsets.right
+            leading: -configuration.appearance.formInsets.leading,
+            trailing: -configuration.appearance.formInsets.trailing
         )
         [stackView].forEach {
             $0.translatesAutoresizingMaskIntoConstraints = false
