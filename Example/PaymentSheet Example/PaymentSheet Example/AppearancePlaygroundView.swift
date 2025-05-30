@@ -150,6 +150,17 @@ struct AppearancePlaygroundView: View {
             set: { self.appearance.font.base = UIFont(name: $0, size: 12.0)! }
         )
 
+        let headerFontBinding = Binding(
+            get: { self.appearance.font.header?.fontDescriptor.postscriptName ?? "Default (base.bold)" },
+            set: { 
+                if $0 == "Default (base.bold)" {
+                    self.appearance.font.header = nil
+                } else {
+                    self.appearance.font.header = UIFont(name: $0, size: 20.0)! // Default header size
+                }
+            }
+        )
+
         // MARK: Primary button bindings
 
         let primaryButtonBackgroundColorBinding = Binding(
@@ -352,6 +363,12 @@ struct AppearancePlaygroundView: View {
                         Slider(value: sizeScaleFactorBinding, in: 0...2, step: 0.05)
                     }
                     Picker("Regular", selection: regularFontBinding) {
+                        ForEach(regularFonts, id: \.self) {
+                            Text($0).font(Font(UIFont(name: $0, size: UIFont.labelFontSize)! as CTFont))
+                        }
+                    }
+                    Picker("Header", selection: headerFontBinding) {
+                        Text("Default (base.bold)").tag("Default (base.bold)")
                         ForEach(regularFonts, id: \.self) {
                             Text($0).font(Font(UIFont(name: $0, size: UIFont.labelFontSize)! as CTFont))
                         }

@@ -79,6 +79,11 @@ public extension PaymentSheet {
             /// The font family of this font is used throughout PaymentSheet. PaymentSheet uses this font at multiple weights (e.g., regular, medium, semibold) if they exist.
             /// - Note: The size and weight of the font is ignored. To adjust font sizes, see `sizeScaleFactor`.
             public var base: UIFont = UIFont.systemFont(ofSize: UIFont.labelFontSize, weight: .regular)
+
+            /// The font used for headers in PaymentSheet (e.g., "Add card", "Select payment method").
+            /// - Note: If `nil`, defaults to `base.bold` with `.title3` text style
+            /// - Note: The `sizeScaleFactor` is still applied to this font
+            public var header: UIFont?
         }
 
         // MARK: Colors

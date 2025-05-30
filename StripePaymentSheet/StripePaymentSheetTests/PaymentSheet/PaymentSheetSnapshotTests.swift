@@ -161,6 +161,17 @@ class PaymentSheetSnapshotTests: STPSnapshotTestCase {
         verify(paymentSheet.bottomSheetViewController.view!)
     }
 
+    func testPaymentSheetCustomHeaderFont() {
+        stubNewCustomerResponse()
+
+        var appearance = PaymentSheet.Appearance()
+        appearance.font.header = UIFont(name: "AvenirNext-Bold", size: 28)!
+
+        preparePaymentSheet(appearance: appearance)
+        presentPaymentSheet(darkMode: false)
+        verify(paymentSheet.bottomSheetViewController.view!)
+    }
+
     func testPaymentSheetColors() {
         stubNewCustomerResponse()
 
@@ -299,6 +310,21 @@ class PaymentSheetSnapshotTests: STPSnapshotTestCase {
         var appearance = PaymentSheet.Appearance()
         appearance.font.sizeScaleFactor = 1.15
         appearance.font.base = UIFont(name: "AvenirNext-Regular", size: UIFont.labelFontSize)!
+
+        preparePaymentSheet(
+            customer: "snapshot",
+            appearance: appearance,
+            applePayEnabled: false
+        )
+        presentPaymentSheet(darkMode: false)
+        verify(paymentSheet.bottomSheetViewController.view!)
+    }
+
+    func testPaymentSheetCustomHeaderFontReturningCustomer() {
+        stubReturningCustomerResponse()
+
+        var appearance = PaymentSheet.Appearance()
+        appearance.font.header = UIFont(name: "AvenirNext-Bold", size: 28)!
 
         preparePaymentSheet(
             customer: "snapshot",

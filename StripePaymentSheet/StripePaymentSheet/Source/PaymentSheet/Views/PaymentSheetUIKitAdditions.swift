@@ -39,7 +39,14 @@ enum PaymentSheetUI {
         let header = UILabel()
         header.textColor = appearance.colors.text
         header.numberOfLines = 2
-        header.font = appearance.scaledFont(for: appearance.font.base.bold, style: .title3, maximumPointSize: 35)
+        
+        // Use custom header font if provided, otherwise fall back to base.bold with .title3 style
+        if let customHeaderFont = appearance.font.header {
+            header.font = appearance.scaledFont(for: customHeaderFont, style: .title3, maximumPointSize: 35)
+        } else {
+            header.font = appearance.scaledFont(for: appearance.font.base.bold, style: .title3, maximumPointSize: 35)
+        }
+        
         header.accessibilityTraits = [.header]
         header.adjustsFontSizeToFitWidth = true
         header.adjustsFontForContentSizeCategory = true
