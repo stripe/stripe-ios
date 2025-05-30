@@ -19,6 +19,8 @@ import Foundation
 
     private var startTimes: [TimeMeasurement: Date] = [:]
 
+    @_spi(STP) public var shouldGenerateTestSessionID: Bool = false
+
     init(timeProvider: @escaping () -> Date = Date.init) {
         self.timeProvider = timeProvider
     }
@@ -26,7 +28,7 @@ import Foundation
     @_spi(STP) public func generateSessionID() {
         let uuid = UUID()
         // Convert the UUID to lowercase to comply with RFC 4122 and ITU-T X.667.
-        sessionID = uuid.uuidString.lowercased()
+        sessionID = shouldGenerateTestSessionID ? "test-123" : uuid.uuidString.lowercased()
     }
 
     @_spi(STP) public func startTimeMeasurement(_ measurement: TimeMeasurement) {
