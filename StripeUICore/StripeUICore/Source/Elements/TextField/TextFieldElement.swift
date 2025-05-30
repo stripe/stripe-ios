@@ -30,7 +30,11 @@ import UIKit
     public private(set) lazy var text: String = {
         sanitize(text: configuration.defaultValue ?? "")
     }()
-    public private(set) var isEditing: Bool = false
+    public private(set) var isEditing: Bool = false {
+        didSet {
+            delegate?.didUpdate(element: self)
+        }
+    }
     private(set) var didReceiveAutofill: Bool = false
     public var validationState: ElementValidationState {
         return .init(

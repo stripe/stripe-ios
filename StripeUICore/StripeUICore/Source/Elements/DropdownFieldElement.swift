@@ -71,6 +71,11 @@ import UIKit
             updatePickerField()
         }
     }
+    public private(set) var isEditing: Bool = false {
+        didSet {
+            delegate?.didUpdate(element: self)
+        }
+    }
     public var didUpdate: DidUpdateSelectedIndex?
     public let theme: ElementsAppearance
     public let hasPadding: Bool
@@ -282,9 +287,11 @@ extension DropdownFieldElement {
 
 extension DropdownFieldElement: PickerFieldViewDelegate {
     func didBeginEditing(_ pickerFieldView: PickerFieldView) {
+        isEditing = true
     }
 
     func didFinish(_ pickerFieldView: PickerFieldView, shouldAutoAdvance: Bool) {
+        isEditing = false
         if previouslySelectedIndex != selectedIndex {
             didUpdate?(selectedIndex)
         }
