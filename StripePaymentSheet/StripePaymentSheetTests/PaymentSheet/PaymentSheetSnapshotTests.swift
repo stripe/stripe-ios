@@ -349,12 +349,12 @@ class PaymentSheetSnapshotTests: STPSnapshotTestCase {
     }
 
     func testPaymentSheetNewCustomHeadlineFont() {
-        stubNewCustomerResponse()
+        stubReturningCustomerResponse()
 
         var appearance = PaymentSheet.Appearance()
-        appearance.font.custom.headline = UIFont(name: "AvenirNext-Bold", size: 24)!
+        appearance.font.custom.headline = UIFont(name: "AvenirNext-Bold", size: 128)!
 
-        preparePaymentSheet(appearance: appearance)
+        preparePaymentSheet(customer: "snapshot", appearance: appearance, applePayEnabled: false)
         presentPaymentSheet(darkMode: false)
         verify(paymentSheet.bottomSheetViewController.view!)
     }
