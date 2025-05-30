@@ -58,7 +58,7 @@ extension PaymentSheet.LinkConfirmOption {
         }
     }
 
-    var paymentSheetLabel: String {
+    var paymentOptionLabel: String {
         switch self {
         case .wallet:
             return STPPaymentMethodType.link.displayName
@@ -67,7 +67,7 @@ extension PaymentSheet.LinkConfirmOption {
         case .withPaymentMethod(let paymentMethod):
             return paymentMethod.paymentSheetLabel
         case .withPaymentDetails(_, let paymentDetails, _, _):
-            return paymentDetails.paymentSheetLabel
+            return paymentDetails.paymentOptionLabel
         }
     }
 

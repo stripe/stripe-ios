@@ -292,6 +292,34 @@ extension ConsumerPaymentDetails {
         }
     }
 
+    var paymentOptionLabel: String {
+        let label = {
+            switch details {
+            case .card(let card):
+                return card.displayName(with: nickname) ?? card.secondaryName
+            case .bankAccount(let bank):
+                return bank.name
+            case .unparsable:
+                return ""
+            }
+        }()
+
+        let sublabel = {
+            switch details {
+            case .card(let card):
+                let hasDisplayName = card.displayName(with: nickname) != nil
+                return hasDisplayName ? card.secondaryName : nil
+            case .bankAccount(let bank):
+                return "••••\(bank.last4)"
+            case .unparsable:
+                return ""
+            }
+        }()
+
+        let components = [label, sublabel].compactMap { $0 }
+        return components.joined(separator: " ")
+    }
+
     var cvc: String? {
         switch details {
         case .card(let card):
