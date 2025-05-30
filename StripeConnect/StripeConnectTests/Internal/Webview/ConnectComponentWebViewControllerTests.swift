@@ -7,7 +7,7 @@
 
 import Foundation
 import SafariServices
-@_spi(DashboardOnly) @_spi(PrivateBetaConnect) @_spi(STP) @testable import StripeConnect
+@_spi(DashboardOnly) @_spi(STP) @testable import StripeConnect
 @_spi(STP) import StripeCore
 @testable @_spi(STP) import StripeFinancialConnections
 import WebKit
@@ -95,8 +95,8 @@ class ConnectComponentWebViewControllerTests: XCTestCase {
         var appearance = EmbeddedComponentManager.Appearance()
         appearance.spacingUnit = 5
         let expectation = try webVC.webView.expectationForMessageReceived(sender: UpdateConnectInstanceSender(payload: .init(
-            locale: "fr-FR",
-            appearance: .init(appearance: appearance, traitCollection: UITraitCollection()))
+                                                                                                                locale: "fr-FR",
+                                                                                                                appearance: .init(appearance: appearance, traitCollection: UITraitCollection()))
         ))
         componentManager.update(appearance: appearance)
 
@@ -497,7 +497,7 @@ class ConnectComponentWebViewControllerTests: XCTestCase {
         XCTAssertEqual(event.metadata.url, "https://stripe.com")
     }
 
-   // MARK: - Process Termination
+    // MARK: - Process Termination
 
     @MainActor
     func testProcessTermination() async throws {
@@ -518,7 +518,7 @@ class ConnectComponentWebViewControllerTests: XCTestCase {
         XCTAssertEqual(loggedError.code, 1)
     }
 
-   // MARK: - openFinancialConnections
+    // MARK: - openFinancialConnections
 
     func testOpenFinancialConnections_success() throws {
         let componentManager = componentManagerAssertingOnFetch()
@@ -635,9 +635,9 @@ private extension ConnectComponentWebViewControllerTests {
                                  appearance: appearance,
                                  fonts: fonts,
                                  fetchClientSecret: {
-            XCTFail("Client secret should not be retrieved in this test")
-            return ""
-        })
+                                    XCTFail("Client secret should not be retrieved in this test")
+                                    return ""
+                                 })
     }
 }
 

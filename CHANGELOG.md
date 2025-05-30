@@ -1,4 +1,8 @@
 ## XX.XX.X XXXX-XX-XX
+
+### Connect
+* [CHANGED] Removed `PrivateBetaConnect` annotation and all usages. [Connect SDK](https://docs.stripe.com/connect/get-started-connect-embedded-components?platform=ios) is now GA.
+
 ### PaymentSheet
 * [Added] The ability to customize form insets with `PaymentSheetAppearance.formInsets`.
 
