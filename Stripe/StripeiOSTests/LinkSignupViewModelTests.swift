@@ -163,52 +163,35 @@ class LinkInlineSignupViewModelTests: STPNetworkStubbingTestCase {
     }
 
     func test_defaultOptIn_allowed_for_eligible_merchant() {
-        PaymentSheet.LinkFeatureFlags.enableLinkDefaultOptIn = true
         let sut = makeSUT(country: "US", showCheckbox: true, allowsDefaultOptIn: true)
         XCTAssertEqual(sut.mode, .checkboxWithDefaultOptIn)
-        PaymentSheet.LinkFeatureFlags.enableLinkDefaultOptIn = false
-    }
-
-    func test_defaultOptIn_not_allowed_if_feature_flag_off() {
-        PaymentSheet.LinkFeatureFlags.enableLinkDefaultOptIn = false
-        let sut = makeSUT(country: "US", showCheckbox: true, allowsDefaultOptIn: true)
-        XCTAssertNotEqual(sut.mode, .checkboxWithDefaultOptIn)
     }
 
     func test_defaultOptIn_not_allowed_for_ineligible_merchant() {
-        PaymentSheet.LinkFeatureFlags.enableLinkDefaultOptIn = true
         let sut = makeSUT(country: "US", showCheckbox: true, allowsDefaultOptIn: false)
         XCTAssertNotEqual(sut.mode, .checkboxWithDefaultOptIn)
-        PaymentSheet.LinkFeatureFlags.enableLinkDefaultOptIn = false
     }
 
     func test_defaultOptIn_not_allowed_outside_US() {
-        PaymentSheet.LinkFeatureFlags.enableLinkDefaultOptIn = true
         let sut = makeSUT(country: "CA", showCheckbox: true, allowsDefaultOptIn: true)
         XCTAssertNotEqual(sut.mode, .checkboxWithDefaultOptIn)
-        PaymentSheet.LinkFeatureFlags.enableLinkDefaultOptIn = false
     }
 
     func test_defaultOptIn_not_allowed_if_showing_checkbox() {
-        PaymentSheet.LinkFeatureFlags.enableLinkDefaultOptIn = true
         let sut = makeSUT(country: "US", showCheckbox: false, allowsDefaultOptIn: true)
         XCTAssertNotEqual(sut.mode, .checkboxWithDefaultOptIn)
-        PaymentSheet.LinkFeatureFlags.enableLinkDefaultOptIn = false
     }
 
     func test_defaultOptIn_shows_readonly_view_if_completely_prefilled() {
-        PaymentSheet.LinkFeatureFlags.enableLinkDefaultOptIn = true
         let sut = makeSUT(country: "US", showCheckbox: true, allowsDefaultOptIn: true)
         sut.emailWasPrefilled = true
         sut.phoneNumberWasPrefilled = true
         XCTAssertTrue(sut.shouldShowDefaultOptInView)
         XCTAssertFalse(sut.shouldShowEmailField)
         XCTAssertFalse(sut.shouldShowPhoneField)
-        PaymentSheet.LinkFeatureFlags.enableLinkDefaultOptIn = false
     }
 
     func test_defaultOptIn_shows_fields_if_user_asked_to_change_signup_data() {
-        PaymentSheet.LinkFeatureFlags.enableLinkDefaultOptIn = true
         let sut = makeSUT(country: "US", showCheckbox: true, allowsDefaultOptIn: true)
         sut.emailWasPrefilled = true
         sut.phoneNumberWasPrefilled = true
@@ -219,18 +202,15 @@ class LinkInlineSignupViewModelTests: STPNetworkStubbingTestCase {
         XCTAssertFalse(sut.shouldShowDefaultOptInView)
         XCTAssertTrue(sut.shouldShowEmailField)
         XCTAssertTrue(sut.shouldShowPhoneField)
-        PaymentSheet.LinkFeatureFlags.enableLinkDefaultOptIn = false
     }
 
     func test_defaultOptIn_shows_fields_if_not_completely_prefilled() {
-        PaymentSheet.LinkFeatureFlags.enableLinkDefaultOptIn = true
         let sut = makeSUT(country: "US", showCheckbox: true, allowsDefaultOptIn: true)
         sut.emailWasPrefilled = true
         sut.phoneNumberWasPrefilled = false
         XCTAssertFalse(sut.shouldShowDefaultOptInView)
         XCTAssertTrue(sut.shouldShowEmailField)
         XCTAssertTrue(sut.shouldShowPhoneField)
-        PaymentSheet.LinkFeatureFlags.enableLinkDefaultOptIn = false
     }
 }
 

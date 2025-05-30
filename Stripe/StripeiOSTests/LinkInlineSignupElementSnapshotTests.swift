@@ -53,7 +53,6 @@ class LinkInlineSignupElementSnapshotTests: STPSnapshotTestCase {
     // MARK: Default opt-in
 
     func testDefaultOptIn_fully_preFilled() {
-        PaymentSheet.LinkFeatureFlags.enableLinkDefaultOptIn = true
         let sut = makeSUT(
             saveCheckboxChecked: true,
             linkAccountEmailAddress: "user@example.com",
@@ -61,11 +60,9 @@ class LinkInlineSignupElementSnapshotTests: STPSnapshotTestCase {
             allowsDefaultOptIn: true
         )
         verify(sut)
-        PaymentSheet.LinkFeatureFlags.enableLinkDefaultOptIn = false
     }
 
     func testDefaultOptIn_fully_preFilled_longEmail() {
-        PaymentSheet.LinkFeatureFlags.enableLinkDefaultOptIn = true
         let sut = makeSUT(
             saveCheckboxChecked: true,
             linkAccountEmailAddress: "user_with_a_super_long_email_address@example.com",
@@ -73,18 +70,15 @@ class LinkInlineSignupElementSnapshotTests: STPSnapshotTestCase {
             allowsDefaultOptIn: true
         )
         verify(sut)
-        PaymentSheet.LinkFeatureFlags.enableLinkDefaultOptIn = false
     }
 
     func testDefaultOptIn_partially_preFilled() {
-        PaymentSheet.LinkFeatureFlags.enableLinkDefaultOptIn = true
         let sut = makeSUT(
             saveCheckboxChecked: true,
             preFillPhone: "+13105551234",
             allowsDefaultOptIn: true
         )
         verify(sut)
-        PaymentSheet.LinkFeatureFlags.enableLinkDefaultOptIn = false
     }
 
     // MARK: Textfield only mode
