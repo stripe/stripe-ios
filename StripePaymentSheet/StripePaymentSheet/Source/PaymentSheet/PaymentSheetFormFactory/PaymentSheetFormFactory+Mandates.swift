@@ -50,9 +50,11 @@ extension PaymentSheetFormFactory {
     }
 
     func makeKlarnaMandate() -> SimpleMandateElement {
+        let doesMerchantNameEndWithPeriod = configuration.merchantDisplayName.last == "."
+        let endOfSentenceMerchantName = doesMerchantNameEndWithPeriod ? String(configuration.merchantDisplayName.dropLast()) : configuration.merchantDisplayName
         let mandateText = String(format: String.Localized.klarna_mandate_text,
                                  configuration.merchantDisplayName,
-                                 configuration.merchantDisplayName)
+                                 endOfSentenceMerchantName)
         return makeMandate(mandateText: mandateText)
     }
 
