@@ -333,4 +333,3 @@ extension PaymentSheet.Appearance {
         return .insets(top: formInsets.top, leading: formInsets.leading, trailing: formInsets.trailing)
     }
 }
-
