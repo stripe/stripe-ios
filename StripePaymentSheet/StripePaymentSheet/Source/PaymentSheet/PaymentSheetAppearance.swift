@@ -48,6 +48,10 @@ public extension PaymentSheet {
         /// Describes the appearance of the Embedded Mobile Payment Element
         public var embeddedPaymentElement: EmbeddedPaymentElement = EmbeddedPaymentElement()
 
+        /// The insets used for all text fields in PaymentSheet
+        /// - Note: Controls the internal padding within text fields for more manual control over text field spacing
+        public var textFieldInsets: NSDirectionalEdgeInsets = NSDirectionalEdgeInsets(top: 4, leading: 11, bottom: 4, trailing: 11)
+
         /// Describes the padding used for all forms
         public var formInsets: NSDirectionalEdgeInsets = PaymentSheetUI.defaultSheetMargins
 

@@ -17,6 +17,9 @@ import UIKit
     public lazy var elements: [Element] = { [countryDropdownElement, textFieldElement] }()
     private(set) public var lastUpdatedElement: Element?
     public var delegate: ElementDelegate?
+    
+    private let theme: ElementsAppearance
+    
     public lazy var view: UIView = {
         countryDropdownElement.view.directionalLayoutMargins.trailing = 0
         let hStackView = UIStackView(arrangedSubviews: elements.map { $0.view })
@@ -29,7 +32,7 @@ import UIKit
                 top: 0,
                 leading: 0,
                 bottom: 0,
-                trailing: ElementsUI.contentViewInsets.trailing
+                trailing: theme.textFieldInsets.trailing
             )
         }
         return hStackView
@@ -81,6 +84,7 @@ import UIKit
         theme: ElementsAppearance = .default
     ) {
         self.infoView = infoView
+        self.theme = theme
         let defaults = Self.deriveDefaults(countryCode: defaultCountryCode, phoneNumber: defaultPhoneNumber)
         let allowedCountryCodes = allowedCountryCodes ?? PhoneNumber.Metadata.allMetadata.map { $0.regionCode }
         let countryDropdownElement = DropdownFieldElement.makeCountryCode(

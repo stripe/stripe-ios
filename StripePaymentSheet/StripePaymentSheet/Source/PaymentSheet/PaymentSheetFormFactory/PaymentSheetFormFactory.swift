@@ -1046,6 +1046,7 @@ extension PaymentSheet.Appearance {
         theme.borderWidth = borderWidth
         theme.cornerRadius = cornerRadius
         theme.shadow = shadow.asElementThemeShadow
+        theme.textFieldInsets = textFieldInsets
 
         var fonts = ElementsAppearance.Font()
         fonts.subheadline = scaledFont(for: font.base.regular, style: .subheadline, maximumPointSize: 20)

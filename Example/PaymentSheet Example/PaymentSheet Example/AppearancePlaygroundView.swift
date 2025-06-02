@@ -140,6 +140,26 @@ struct AppearancePlaygroundView: View {
             set: { self.appearance.formInsets.trailing = $0 }
         )
 
+        let textFieldInsetsTopBinding = Binding(
+            get: { self.appearance.textFieldInsets.top },
+            set: { self.appearance.textFieldInsets.top = $0 }
+        )
+
+        let textFieldInsetsLeftBinding = Binding(
+            get: { self.appearance.textFieldInsets.leading },
+            set: { self.appearance.textFieldInsets.leading = $0 }
+        )
+
+        let textFieldInsetsBottomBinding = Binding(
+            get: { self.appearance.textFieldInsets.bottom },
+            set: { self.appearance.textFieldInsets.bottom = $0 }
+        )
+
+        let textFieldInsetsRightBinding = Binding(
+            get: { self.appearance.textFieldInsets.trailing },
+            set: { self.appearance.textFieldInsets.trailing = $0 }
+        )
+
         let sizeScaleFactorBinding = Binding(
             get: { self.appearance.font.sizeScaleFactor },
             set: { self.appearance.font.sizeScaleFactor = $0 }
@@ -344,6 +364,17 @@ struct AppearancePlaygroundView: View {
                                 value: formInsetsBottomBinding, in: 0...100)
                         Stepper("right: \(Int(appearance.formInsets.trailing))",
                                 value: formInsetsRightBinding, in: 0...100)
+                    }
+                    VStack {
+                        Text("textFieldInsets")
+                        Stepper("top: \(Int(appearance.textFieldInsets.top))",
+                                value: textFieldInsetsTopBinding, in: 0...50)
+                        Stepper("left: \(Int(appearance.textFieldInsets.leading))",
+                                value: textFieldInsetsLeftBinding, in: 0...50)
+                        Stepper("bottom: \(Int(appearance.textFieldInsets.bottom))",
+                                value: textFieldInsetsBottomBinding, in: 0...50)
+                        Stepper("right: \(Int(appearance.textFieldInsets.trailing))",
+                                value: textFieldInsetsRightBinding, in: 0...50)
                     }
                 }
                 Section(header: Text("Fonts")) {
