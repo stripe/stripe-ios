@@ -114,7 +114,7 @@
 
 "Take Photo" = "拍照";
 
-"The images of your identity document have not been saved. Do you want to leave?" = "尚未保存您的身份證件的照片。想要離開嗎？";
+"The images of your identity document have not been saved. Do you want to leave?" = "尚未儲存您的身份證件的照片。想要離開嗎？";
 
 "There was an error accessing the camera." = "訪問相機時發生了錯誤。";
 
@@ -124,7 +124,7 @@
 
 "Unable to establish a connection." = "無法建立連接。";
 
-"Unsaved changes" = "未保存的更改";
+"Unsaved changes" = "未儲存的更改";
 
 "Upload" = "上載";
 
@@ -146,7 +146,7 @@
 
 "You can either try again or upload an image from your device." = "您可以重試或從設備上載一張照片。";
 
-"Your selfie images have not been saved. Do you want to leave?" = "尚未保存您的自拍照。想要離開嗎？";
+"Your selfie images have not been saved. Do you want to leave?" = "尚未儲存您的自拍照。想要離開嗎？";
 
 "driver's license" = "駕駛執照";
 

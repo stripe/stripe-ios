@@ -68,13 +68,13 @@
 
 "By providing your card information, you allow %@ to charge your card for future payments in accordance with their terms." = "提供您的金融卡資訊，即表示您允許 %@ 按照他們的條款從您的金融卡扣取未來款項。";
 
-"By providing your email, you agree to create a Link account and save your payment info to Link, according to the Link <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "提供您的電郵地址，即表示您同意按照 Link <terms>條款</terms>和<privacy>私隱政策</privacy>建立 Link 帳戶並將您的支付資訊保存到 Link。";
+"By providing your email, you agree to create a Link account and save your payment info to Link, according to the Link <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "提供您的電郵地址，即表示您同意按照 Link <terms>條款</terms>和<privacy>私隱政策</privacy>建立 Link 帳戶並將您的支付資訊儲存到 Link。";
 
 "By providing your payment information and confirming this payment, you authorise (A) %@ and Stripe, our payment service provider, to send instructions to your bank to debit your account and (B) your bank to debit your account in accordance with those instructions. As part of your rights, you are entitled to a refund from your bank under the terms and conditions of your agreement with your bank. A refund must be claimed within 8 weeks starting from the date on which your account was debited. Your rights are explained in a statement that you can obtain from your bank. You agree to receive notifications for future debits up to 2 days before they occur." = "提供您的支付方式並確認該付款即表示您授權 (A) %@ 與我們的支付服務商 Stripe 向您的銀行發送對您的帳戶進行扣款的指令以及 (B) 您的銀行按照這些指令對您的帳戶進行扣款。根據您與您的銀行協議的條款和條件，您有權從您的銀行得到退款。退款必須在 8 周內申請，從您的帳戶被扣款之日起算。您的權利在結單上有解釋，可從您的銀行獲取。您同意提前 2 天接收後續扣款的通知。";
 
-"By providing your phone number, you agree to create a Link account and save your payment info to Link, according to the Link <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "提供您的手機號碼，即表示您同意按照 Link <terms>條款</terms>和<privacy>私隱政策</privacy>建立 Link 帳戶並將您的支付資訊保存到 Link。";
+"By providing your phone number, you agree to create a Link account and save your payment info to Link, according to the Link <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "提供您的手機號碼，即表示您同意按照 Link <terms>條款</terms>和<privacy>私隱政策</privacy>建立 Link 帳戶並將您的支付資訊儲存到 Link。";
 
-"By saving your bank account for %@ you agree to authorize payments pursuant to <terms>these terms</terms>." = "保存您的 %@ 銀行帳戶即表示您同意按照<terms>這些條款</terms>授權付款。";
+"By saving your bank account for %@ you agree to authorize payments pursuant to <terms>these terms</terms>." = "儲存您的 %@ 銀行帳戶即表示您同意按照<terms>這些條款</terms>授權付款。";
 
 "CPF/CPNJ" = "CPF/CPNJ";
 
@@ -106,6 +106,8 @@
 
 "Continue another way" = "用另一方式繼續";
 
+"Debit or credit card" = "簽帳卡或信用卡";
+
 "Default" = "預設";
 
 "Default payment method" = "預設支付方式";
@@ -114,7 +116,7 @@
 
 "Enter address manually" = "手動輸入地址";
 
-"Enter the code sent to %@ to use your saved information." = "輸入發送到 %@ 的驗證碼來使用您保存的資訊。";
+"Enter the code sent to %@ to use your saved information." = "輸入發送到 %@ 的驗證碼來使用您儲存的資訊。";
 
 "FPX Bank" = "FPX Bank";
 
@@ -132,11 +134,15 @@
 
 "IBAN" = "IBAN";
 
+"Log in or sign up" = "登入或註冊";
+
 "Log out of Link" = "退出 Link";
 
 "Manage SEPA debit" = "管理 SEPA 借記";
 
 "Manage US bank account" = "管理美國銀行帳戶";
+
+"Manage bank account" = "管理銀行帳戶";
 
 "Manage card" = "管理金融卡";
 
@@ -155,6 +161,8 @@
 "New payment method" = "新支付方式";
 
 "No %@ promo" = "無 %@ 促銷";
+
+"Not you?" = "不是您本人？";
 
 "Only card brand can be changed." = "只可更改金融卡品牌。";
 
@@ -208,25 +216,25 @@
 
 "SEPA debit details cannot be changed." = "無法更改 SEPA 借記詳情。";
 
-"Save" = "保存";
+"Save" = "儲存";
 
-"Save a new payment method" = "保存新的支付方式";
+"Save a new payment method" = "儲存新的支付方式";
 
-"Save address" = "保存地址";
+"Save address" = "儲存地址";
 
-"Save for future payments" = "保存以用於未來的付款";
+"Save for future payments" = "儲存以用於未來的付款";
 
-"Save payment details to %@ for future purchases" = "將支付資訊保存到 %@ 以備將來購物使用";
+"Save payment details to %@ for future purchases" = "將支付資訊儲存到 %@ 以備將來購物使用";
 
-"Save this account for future %@ payments" = "保存該帳戶，方便未來向 %@ 付款";
+"Save this account for future %@ payments" = "儲存該帳戶，方便未來向 %@ 付款";
 
-"Save your bank account in just a few steps." = "幾步保存您的銀行帳戶。";
+"Save your bank account in just a few steps." = "幾步儲存您的銀行帳戶。";
 
-"Save your info for secure 1-click checkout with Link" = "保存您的資訊，用 Link 安全地一鍵結帳";
+"Save your info for secure 1-click checkout with Link" = "儲存您的資訊，用 Link 安全地一鍵結帳";
 
-"Save your payment information with Link, and securely check out in 1-click on Link-supported sites." = "用 Link 保存您的支付資訊，並在支援 Link 的網站上一鍵安全結帳。";
+"Save your payment information with Link, and securely check out in 1-click on Link-supported sites." = "用 Link 儲存您的支付資訊，並在支援 Link 的網站上一鍵安全結帳。";
 
-"Saved" = "已保存";
+"Saved" = "已儲存";
 
 "Select card" = "選擇金融卡";
 
@@ -248,7 +256,7 @@
 
 "Something went wrong when linking your account.\nPlease try again later." = "關聯您的帳戶時發生了錯誤。\n請稍後重試。";
 
-"Stripe will deposit $0.01 to your account in 1-2 business days. Then you'll get an email with instructions to finish saving your bank account with %@." = "Stripe 會在 1-2 個工作日向您的帳戶存入 0.01 美元。然後您會收到一封包含說明的電子郵件，指導您用 %@ 保存您的銀行帳戶。";
+"Stripe will deposit $0.01 to your account in 1-2 business days. Then you'll get an email with instructions to finish saving your bank account with %@." = "Stripe 會在 1-2 個工作日向您的帳戶存入 0.01 美元。然後您會收到一封包含說明的電子郵件，指導您用 %@ 儲存您的銀行帳戶。";
 
 "Stripe will deposit $0.01 to your account in 1-2 business days. Then you’ll get an email with instructions to complete payment to %@." = "Stripe 會在 1-2 個工作日向您的帳戶存入 0.01 美元。然後您會收到一封郵件，指導您完成向 %@ 的付款。";
 
@@ -276,7 +284,7 @@
 
 "Update payment method" = "更新支付方式";
 
-"Use your saved info to check out faster" = "用您保存的資訊，更快結帳";
+"Use your saved info to check out faster" = "用您儲存的資訊，更快結帳";
 
 "View more" = "檢視更多";
 
