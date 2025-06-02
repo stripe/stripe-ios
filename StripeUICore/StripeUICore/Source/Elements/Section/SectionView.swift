@@ -70,4 +70,34 @@ final class SectionView: UIView {
             errorOrSubLabel.isHidden = true
         }
     }
+
+    func updateBorder(for element: Element) {
+        guard case .highlightBorder(let configuration) = viewModel.selectionBehavior else {
+            return
+        }
+
+        let isEditing: Bool = {
+            switch element {
+            case let textField as TextFieldElement:
+                return textField.isEditing
+            case let dropdown as DropdownFieldElement:
+                return dropdown.isEditing
+            default:
+                return false
+            }
+        }()
+
+        let borderChanges = {
+            if isEditing {
+                self.containerView.layer.borderWidth = configuration.width
+                self.containerView.layer.borderColor = configuration.color
+            } else {
+                self.containerView.layer.borderWidth = self.viewModel.theme.borderWidth
+                self.containerView.layer.borderColor = self.viewModel.theme.colors.border.cgColor
+            }
+        }
+
+        configuration.animator.addAnimations(borderChanges)
+        configuration.animator.startAnimation()
+    }
 }
