@@ -111,25 +111,21 @@ extension UpdatePaymentMethodViewController {
 
 private extension LinkPaymentDetails {
 
-    var header: String? {
+    var header: String {
         switch self {
         case .card:
             return .Localized.manage_card
         case .bankAccount:
             return .Localized.manage_bank_account
-        @unknown default:
-            return nil
         }
     }
 
-    var footnote: String? {
+    var footnote: String {
         switch self {
         case .card:
             return .Localized.card_details_cannot_be_changed
         case .bankAccount:
             return .Localized.bank_account_details_cannot_be_changed
-        @unknown default:
-            return nil
         }
     }
 }

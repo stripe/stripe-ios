@@ -499,8 +499,6 @@ private extension LinkPaymentDetails {
             return false
         case .bankAccount:
             return true
-        @unknown default:
-            return true
         }
     }
 }
