@@ -659,6 +659,7 @@ fileprivate extension PaymentSheet.Appearance {
         colors.componentBackground = .yellow
         colors.componentBorder = .systemRed
         colors.componentDivider = .black
+        colors.componentDividerWidth = 3.0
         colors.text = .red
         colors.textSecondary = .orange
         colors.componentText = .red

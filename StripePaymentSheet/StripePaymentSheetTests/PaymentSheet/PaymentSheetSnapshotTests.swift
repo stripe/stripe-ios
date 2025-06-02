@@ -170,6 +170,7 @@ class PaymentSheetSnapshotTests: STPSnapshotTestCase {
         appearance.colors.componentBackground = .black
         appearance.colors.componentBorder = .yellow
         appearance.colors.componentDivider = .green
+        appearance.colors.componentDividerWidth = 3.0
         appearance.colors.text = .blue
         appearance.colors.textSecondary = .purple
         appearance.colors.componentText = .cyan
@@ -220,6 +221,18 @@ class PaymentSheetSnapshotTests: STPSnapshotTestCase {
 
         var appearance = PaymentSheet.Appearance()
         appearance.borderWidth = 2.0
+
+        preparePaymentSheet(appearance: appearance)
+        presentPaymentSheet(darkMode: false)
+        verify(paymentSheet.bottomSheetViewController.view!)
+    }
+
+    func testPaymentSheetComponentDividerWidth() {
+        stubNewCustomerResponse()
+
+        var appearance = PaymentSheet.Appearance()
+        appearance.colors.componentDividerWidth = 4.0
+        appearance.colors.componentDivider = .systemRed
 
         preparePaymentSheet(appearance: appearance)
         presentPaymentSheet(darkMode: false)
@@ -318,6 +331,7 @@ class PaymentSheetSnapshotTests: STPSnapshotTestCase {
         appearance.colors.componentBackground = .black
         appearance.colors.componentBorder = .yellow
         appearance.colors.componentDivider = .green
+        appearance.colors.componentDividerWidth = 3.0
         appearance.colors.text = .blue
         appearance.colors.textSecondary = .purple
         appearance.colors.componentText = .cyan
@@ -1504,7 +1518,8 @@ fileprivate extension PaymentSheet.Appearance {
         colors.background = .cyan
         colors.componentBackground = .yellow
         colors.componentBorder = .systemRed
-        colors.componentDivider = .black
+        colors.componentDivider = .green
+        colors.componentDividerWidth = 3.0
         colors.text = .red
         colors.textSecondary = .orange
         colors.componentText = .red

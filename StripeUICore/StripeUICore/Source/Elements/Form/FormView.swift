@@ -26,7 +26,7 @@ import UIKit
             stack.separatorColor = viewModel.theme.colors.divider
             stack.borderColor = viewModel.theme.colors.border
             stack.borderCornerRadius = viewModel.theme.cornerRadius
-            stack.spacing = viewModel.theme.borderWidth
+            stack.spacing = viewModel.theme.dividerWidth
             stack.hideShadow = true
             stack.layer.applyShadow(shadow: viewModel.theme.shadow)
             stack.axis = .vertical

@@ -87,6 +87,7 @@ import UIKit
     public var colors = Color()
 
     public var borderWidth = ElementsUI.fieldBorderWidth
+    public var dividerWidth = ElementsUI.fieldBorderWidth
     public var cornerRadius = ElementsUI.defaultCornerRadius
     public var shadow: Shadow? = Shadow()
 

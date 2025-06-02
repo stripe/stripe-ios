@@ -50,6 +50,11 @@ struct AppearancePlaygroundView: View {
             set: { self.appearance.colors.componentDivider = UIColor($0) }
         )
 
+        let componentDividerWidthBinding = Binding(
+            get: { self.appearance.colors.componentDividerWidth },
+            set: { self.appearance.colors.componentDividerWidth = $0 }
+        )
+
         let textColorBinding = Binding(
             get: { Color(self.appearance.colors.text) },
             set: { self.appearance.colors.text = UIColor($0) }
@@ -300,6 +305,7 @@ struct AppearancePlaygroundView: View {
                         ColorPicker("componentBorder", selection: componentBorderColorBinding)
                         ColorPicker("selectedComponentBorder", selection: selectedComponentBorderColorBinding)
                         ColorPicker("componentDivider", selection: componentDividerColorBinding)
+                        Stepper(String(format: "componentDividerWidth: %.1f", appearance.colors.componentDividerWidth), value: componentDividerWidthBinding, in: 0.0...5.0, step: 0.5)
                         ColorPicker("text", selection: textColorBinding)
                         ColorPicker("textSecondary", selection: textSecondaryColorBinding)
                         ColorPicker("componentText", selection: componentBackgroundTextColorBinding)
