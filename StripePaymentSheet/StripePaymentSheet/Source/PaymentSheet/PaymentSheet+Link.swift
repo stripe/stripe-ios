@@ -124,9 +124,5 @@ extension PaymentSheet {
         /// Decides whether Link shows more actively in FlowController.
         /// Only enable this in the PaymentSheet playground.
         @_spi(STP) public static var enableLinkFlowControllerChanges: Bool = false
-
-        /// Decides whether Link default opt-in should be available.
-        /// Only enable this in the PaymentSheet playground.
-        @_spi(STP) public static var enableLinkDefaultOptIn: Bool = false
     }
 }

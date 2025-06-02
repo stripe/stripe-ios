@@ -58,7 +58,6 @@ struct PaymentSheetTestPlayground: View {
         SettingView(setting: $playgroundController.settings.instantDebitsIncentives)
         SettingView(setting: $playgroundController.settings.fcLiteEnabled)
         SettingView(setting: $playgroundController.settings.linkFlowControllerChanges)
-        SettingView(setting: $playgroundController.settings.linkDefaultOptIn)
     }
 
     var body: some View {
