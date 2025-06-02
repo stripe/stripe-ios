@@ -449,6 +449,7 @@ extension PaymentSheet.Appearance {
 
         // Customize the primary button
         var primaryButton = PaymentSheet.Appearance.PrimaryButton()
+        primaryButton.height = 50
         primaryButton.cornerRadius = 8
 
         appearance.font = font

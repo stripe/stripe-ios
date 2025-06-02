@@ -106,6 +106,8 @@
 
 "Continue another way" = "Продолжить другим способом";
 
+"Debit or credit card" = "Дебетовая или кредитная карта";
+
 "Default" = "По умолчанию";
 
 "Default payment method" = "Способ оплаты по умолчанию";
@@ -132,11 +134,15 @@
 
 "IBAN" = "IBAN";
 
+"Log in or sign up" = "Войдите или зарегистрируйтесь";
+
 "Log out of Link" = "Выйти из Link";
 
 "Manage SEPA debit" = "Управление дебетованием SEPA";
 
 "Manage US bank account" = "Управление банковским счетом в США";
+
+"Manage bank account" = "Управление банковским счетом";
 
 "Manage card" = "Управление картой";
 
@@ -155,6 +161,8 @@
 "New payment method" = "Новый способ оплаты";
 
 "No %@ promo" = "Нет промоакции %@";
+
+"Not you?" = "Это не вы?";
 
 "Only card brand can be changed." = "Изменить можно только бренд карты.";
 

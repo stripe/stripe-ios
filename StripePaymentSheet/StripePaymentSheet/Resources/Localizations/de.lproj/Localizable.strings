@@ -106,6 +106,8 @@
 
 "Continue another way" = "Andere Zahlungsmethode";
 
+"Debit or credit card" = "Debit- oder Kreditkarte";
+
 "Default" = "Standard";
 
 "Default payment method" = "Standard-Zahlungsmethode";
@@ -132,11 +134,15 @@
 
 "IBAN" = "IBAN";
 
+"Log in or sign up" = "Anmelden oder registrieren";
+
 "Log out of Link" = "Von Link abmelden";
 
 "Manage SEPA debit" = "SEPA-Lastschrift verwalten";
 
 "Manage US bank account" = "US-Bankkonto verwalten";
+
+"Manage bank account" = "Bankkonto verwalten";
 
 "Manage card" = "Karte verwalten";
 
@@ -155,6 +161,8 @@
 "New payment method" = "Neue Zahlungsmethode";
 
 "No %@ promo" = "Keine %@-Aktionsangebote";
+
+"Not you?" = "Das sind nicht Sie?";
 
 "Only card brand can be changed." = "Nur die Kartenmarke kann geändert werden.";
 
