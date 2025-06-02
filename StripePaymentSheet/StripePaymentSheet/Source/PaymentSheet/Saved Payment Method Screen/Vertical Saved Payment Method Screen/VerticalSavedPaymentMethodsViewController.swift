@@ -499,7 +499,7 @@ private extension LinkPaymentDetails {
             return false
         case .bankAccount:
             return true
-        default:
+        @unknown default:
             return true
         }
     }

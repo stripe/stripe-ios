@@ -117,7 +117,7 @@ private extension LinkPaymentDetails {
             return .Localized.manage_card
         case .bankAccount:
             return .Localized.manage_bank_account
-        default:
+        @unknown default:
             return nil
         }
     }
@@ -128,7 +128,7 @@ private extension LinkPaymentDetails {
             return .Localized.card_details_cannot_be_changed
         case .bankAccount:
             return .Localized.bank_account_details_cannot_be_changed
-        default:
+        @unknown default:
             return nil
         }
     }

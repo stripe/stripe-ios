@@ -856,7 +856,7 @@ private extension LinkPaymentDetails {
             return makeCardRemovalMessage(brand: cardDetails.brand, last4: cardDetails.last4)
         case .bankAccount(let bankDetails):
             return makeBankAccountRemovalMessage(last4: bankDetails.last4)
-        default:
+        @unknown default:
             return nil
         }
     }
