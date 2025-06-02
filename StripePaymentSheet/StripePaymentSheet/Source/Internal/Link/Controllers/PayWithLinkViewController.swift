@@ -197,7 +197,6 @@ final class PayWithLinkViewController: BottomSheetViewController {
         super.viewDidLoad()
 
         view.accessibilityIdentifier = "Stripe.Link.PayWithLinkViewController"
-        view.tintColor = .linkIconBrand
 
         context.configuration.style.configure(self)
 
