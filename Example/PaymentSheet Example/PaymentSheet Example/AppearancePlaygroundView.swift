@@ -242,6 +242,11 @@ struct AppearancePlaygroundView: View {
             }
         )
 
+        let primaryButtonHeightBinding = Binding(
+            get: { self.appearance.primaryButton.height },
+            set: { self.appearance.primaryButton.height = $0 }
+        )
+
         let embeddedPaymentElementFlatSeparatorColorBinding = Binding(
             get: { Color(self.appearance.embeddedPaymentElement.row.flat.separatorColor ?? appearance.colors.componentBorder) },
             set: {
@@ -393,6 +398,10 @@ struct AppearancePlaygroundView: View {
                                 Text(String(format: "radius: %.1f", appearance.primaryButton.shadow?.radius ?? PaymentSheet.Appearance.Shadow().radius))
                                 Slider(value: primaryButtonShadowRadiusBinding, in: 0...10, step: 0.5)
                             }
+                        }
+                        HStack {
+                            Text(String(format: "height: \(appearance.primaryButton.height)"))
+                            Slider(value: primaryButtonHeightBinding, in: 20...100, step: 1)
                         }
                     } label: {
                         Text("Primary Button")

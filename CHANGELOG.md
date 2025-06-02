@@ -4,6 +4,7 @@
 * [CHANGED] Removed `PrivateBetaConnect` annotation and all usages. [Connect SDK](https://docs.stripe.com/connect/get-started-connect-embedded-components?platform=ios) is now GA.
 
 ### PaymentSheet
+* [Added] The ability to customize the height of the primary button with `PaymentSheetAppearance.primaryButton.height`.
 * [Added] The ability to customize form insets with `PaymentSheetAppearance.formInsets`.
 
 ## 24.14.0 2025-05-19
