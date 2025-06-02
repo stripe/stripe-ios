@@ -7,7 +7,6 @@
 //
 
 import Foundation
-import UIKit
 
 /// A client for making connections to the Stripe API.
 @objc public class STPAPIClient: NSObject {
@@ -88,9 +87,9 @@ import UIKit
 
     /// Determines the `Stripe-Livemode` header value when the publishable key is a user key
     @_spi(DashboardOnly) public var userKeyLiveMode = true
-
+#if !os(macOS)
     @_spi(STP) public lazy var stripeAttest: StripeAttest = StripeAttest(apiClient: self)
-
+    #endif
     // MARK: Initializers
     override public init() {
         sourcePollers = [:]
@@ -175,7 +174,11 @@ import UIKit
             "lang": "objective-c",
             "bindings_version": STPSDKVersion,
         ]
+#if !os(macOS)
         let version = UIDevice.current.systemVersion
+        #else
+        let version = "macOS"
+        #endif
         if version != "" {
             details["os_version"] = version
         }
@@ -189,6 +192,7 @@ import UIKit
             return identifier + String(UnicodeScalar(UInt8(value)))
         }
         details["type"] = deviceType
+#if !os(macOS)
         let model = UIDevice.current.localizedModel
         if model != "" {
             details["model"] = model
@@ -197,6 +201,7 @@ import UIKit
         if let vendorIdentifier = UIDevice.current.identifierForVendor?.uuidString {
             details["vendor_identifier"] = vendorIdentifier
         }
+        #endif
         if let appInfo = appInfo {
             details["name"] = appInfo.name
             details["partner_id"] = appInfo.partnerId

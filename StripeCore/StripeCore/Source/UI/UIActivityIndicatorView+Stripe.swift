@@ -6,8 +6,7 @@
 //  Copyright © 2021 Stripe, Inc. All rights reserved.
 //
 
-import UIKit
-
+#if !os(macOS)
 @_spi(STP) extension UIActivityIndicatorView {
     #if DEBUG
         /// Disables animation for `stp_startAnimatingAndShow`.
@@ -33,3 +32,4 @@ import UIKit
         stopAnimating()
     }
 }
+#endif

@@ -4,9 +4,9 @@
 //
 //  Copyright © 2022 HCaptcha. All rights reserved.
 //
-
+#if !os(macOS)
 import Foundation
-import UIKit
+
 
 /**
  * The protocol for a contractor which can handle/open URLs in an external viewer/browser
@@ -37,3 +37,4 @@ internal class HCapchaAppURLOpener: HCaptchaURLOpener {
         UIApplication.shared.open(url, options: [:], completionHandler: nil)
     }
 }
+#endif

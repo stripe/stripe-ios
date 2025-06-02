@@ -163,7 +163,7 @@ import PassKit
         let paymentRequest = PKPaymentRequest()
         paymentRequest.merchantIdentifier = merchantIdentifier
         paymentRequest.supportedNetworks = self.supportedPKPaymentNetworks()
-        #if canImport(CompositorServices)
+        #if canImport(CompositorServices) || os(macOS)
         paymentRequest.merchantCapabilities = .threeDSecure
         #else
         paymentRequest.merchantCapabilities = .capability3DS

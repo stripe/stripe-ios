@@ -5,9 +5,9 @@
 //  Created by Yuki Tokuhiro on 6/17/19.
 //  Copyright © 2019 Stripe, Inc. All rights reserved.
 //
-
+#if !os(macOS)
 import Foundation
-import UIKit
+
 
 #if canImport(Stripe3DS2)
     import Stripe3DS2
@@ -99,3 +99,4 @@ public class STPThreeDSNavigationBarCustomization: NSObject {
         }
     }
 }
+#endif

@@ -7,7 +7,11 @@
 //
 
 import Foundation
+#if canImport(UIKit) && !os(macOS)
 import UIKit
+#elseif canImport(AppKit) && os(macOS)
+import AppKit
+#endif
 
 extension StripeFile.Purpose {
     /// See max purpose sizes https://stripe.com/docs/file-upload.
@@ -39,6 +43,7 @@ extension STPAPIClient {
 
     @_spi(STP) public static let defaultImageFileName = "image"
 
+#if canImport(UIKit) && !os(macOS)
     func data(
         forUploadedImage image: UIImage,
         compressionQuality: CGFloat,
@@ -204,7 +209,7 @@ extension STPAPIClient {
             fileName: fileName,
             ownedBy: ownedBy,
             ephemeralKeySecret: ephemeralKeySecret
-        ).chained { Promise(value: $0.file) }
+        ).transformed { $0.file }
     }
 
     @_spi(STP) public func uploadImageAndGetMetrics(
@@ -228,6 +233,152 @@ extension STPAPIClient {
         }
         return promise
     }
+#elseif canImport(AppKit) && os(macOS)
+    func data(
+        forUploadedImage image: NSImage,
+        compressionQuality: CGFloat,
+        purpose: String
+    ) -> Data {
+        // Get maxBytes if file purpose is known to the client
+        let maxBytes = StripeFile.Purpose(rawValue: purpose)?.maxBytes
+        return image.jpegDataAndDimensions(
+            maxBytes: maxBytes,
+            compressionQuality: compressionQuality
+        ).imageData
+    }
+
+    /// Uses the Stripe file upload API to upload a JPEG encoded image.
+    @_spi(STP) public func uploadImage(
+        _ image: NSImage,
+        compressionQuality: CGFloat = NSImage.defaultCompressionQuality,
+        purpose: String,
+        fileName: String = defaultImageFileName,
+        ownedBy: String? = nil,
+        ephemeralKeySecret: String? = nil,
+        completion: @escaping (Result<StripeFile, Error>) -> Void
+    ) {
+        uploadImageAndGetMetrics(
+            image,
+            compressionQuality: compressionQuality,
+            purpose: purpose,
+            fileName: fileName,
+            ownedBy: ownedBy,
+            ephemeralKeySecret: ephemeralKeySecret
+        ) { result in
+            completion(result.map { $0.file })
+        }
+    }
+
+    @_spi(STP) public func uploadImageAndGetMetrics(
+        _ image: NSImage,
+        compressionQuality: CGFloat = NSImage.defaultCompressionQuality,
+        purpose: String,
+        fileName: String = defaultImageFileName,
+        ownedBy: String? = nil,
+        ephemeralKeySecret: String? = nil,
+        completion: @escaping (Result<FileAndUploadMetrics, Error>) -> Void
+    ) {
+        let purposePart = STPMultipartFormDataPart()
+        purposePart.name = "purpose"
+        // `unparsable` is not a valid purpose
+        if purpose != StripeFile.Purpose.unparsable.rawValue,
+            let purposeData = purpose.data(using: .utf8)
+        {
+            purposePart.data = purposeData
+        }
+
+        let imagePart = STPMultipartFormDataPart()
+        imagePart.name = "file"
+        imagePart.filename = "\(fileName).jpg"
+        imagePart.contentType = "image/jpeg"
+        imagePart.data = self.data(
+            forUploadedImage: image,
+            compressionQuality: compressionQuality,
+            purpose: purpose
+        )
+
+        let ownedByPart: STPMultipartFormDataPart? = ownedBy?.data(using: .utf8).map { ownedByData in
+            let part = STPMultipartFormDataPart()
+            part.name = "owned_by"
+            part.data = ownedByData
+            return part
+        }
+
+        let boundary = STPMultipartFormDataEncoder.generateBoundary()
+        let parts = [purposePart, ownedByPart, imagePart].compactMap { $0 }
+        let data = STPMultipartFormDataEncoder.multipartFormData(
+            for: parts,
+            boundary: boundary
+        )
+
+        var request = configuredRequest(
+            for: URL(string: FileUploadURL)!,
+            using: ephemeralKeySecret
+        )
+        request.httpMethod = HTTPMethod.post.rawValue
+        request.stp_setMultipartForm(data, boundary: boundary)
+
+        let requestStartTime = Date()
+        sendRequest(
+            request: request,
+            completion: { (result: Result<StripeFile, Error>) in
+                let timeToUpload = Date().timeIntervalSince(requestStartTime)
+                completion(
+                    result.map {
+                        (
+                            file: $0,
+                            metrics: .init(
+                                timeToUpload: timeToUpload,
+                                fileSizeBytes: imagePart.data?.count ?? 0
+                            )
+                        )
+                    }
+                )
+            }
+        )
+    }
+
+    /// Uses the Stripe file upload API to upload a JPEG encoded image.
+    @_spi(STP) public func uploadImage(
+        _ image: NSImage,
+        compressionQuality: CGFloat = NSImage.defaultCompressionQuality,
+        purpose: String,
+        fileName: String = defaultImageFileName,
+        ownedBy: String? = nil,
+        ephemeralKeySecret: String? = nil
+    ) -> Future<StripeFile> {
+        return uploadImageAndGetMetrics(
+            image,
+            compressionQuality: compressionQuality,
+            purpose: purpose,
+            fileName: fileName,
+            ownedBy: ownedBy,
+            ephemeralKeySecret: ephemeralKeySecret
+        ).transformed { $0.file }
+    }
+
+    @_spi(STP) public func uploadImageAndGetMetrics(
+        _ image: NSImage,
+        compressionQuality: CGFloat = NSImage.defaultCompressionQuality,
+        purpose: String,
+        fileName: String = defaultImageFileName,
+        ownedBy: String? = nil,
+        ephemeralKeySecret: String? = nil
+    ) -> Future<FileAndUploadMetrics> {
+        let promise = Promise<FileAndUploadMetrics>()
+        uploadImageAndGetMetrics(
+            image,
+            compressionQuality: compressionQuality,
+            purpose: purpose,
+            fileName: fileName,
+            ownedBy: ownedBy,
+            ephemeralKeySecret: ephemeralKeySecret
+        ) { result in
+            promise.fullfill(with: result)
+        }
+        return promise
+    }
+#endif
 
 }
 

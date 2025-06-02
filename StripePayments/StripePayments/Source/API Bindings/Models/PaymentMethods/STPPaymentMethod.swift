@@ -8,7 +8,7 @@
 
 import Foundation
 @_spi(STP) import StripeCore
-import UIKit
+
 
 /// PaymentMethod objects represent your customer's payment instruments. They can be used with PaymentIntents to collect payments.
 /// - seealso: https://stripe.com/docs/api/payment_methods

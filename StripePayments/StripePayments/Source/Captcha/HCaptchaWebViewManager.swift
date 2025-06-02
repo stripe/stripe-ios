@@ -1,6 +1,7 @@
 //
 //  HCaptchaWebViewManager.swift
 //  HCaptcha
+#if !os(macOS)
 
 import Foundation
 import WebKit
@@ -392,3 +393,4 @@ fileprivate extension HCaptchaWebViewManager {
         executeJS(command: command, didLoad: self.didFinishLoading)
     }
 }
+#endif

@@ -5,14 +5,20 @@
 //  Created by Mel Ludowise on 8/30/24.
 //
 
+@_spi(STP) import StripeUICore
+
+#if canImport(UIKit) && !os(macOS)
 import UIKit
+#elseif canImport(AppKit) && os(macOS)
+import AppKit
+#endif
 
 /**
  Show details of a given payment and allow users to manage disputes and perform refunds.
  */
 @_spi(DashboardOnly)
 @available(iOS 15, *)
-public class PaymentDetailsViewController: UIViewController {
+public class PaymentDetailsViewController: StripeViewController {
     private(set) var webVC: ConnectComponentWebViewController!
 
     public weak var delegate: PaymentDetailsViewControllerDelegate?

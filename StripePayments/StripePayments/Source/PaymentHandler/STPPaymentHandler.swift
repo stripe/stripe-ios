@@ -9,7 +9,12 @@
 import AuthenticationServices
 import Foundation
 import PassKit
+#if !os(macOS)
 import SafariServices
+import UIKit
+#else
+import AppKit
+#endif
 @_spi(STP) import StripeCore
 
 #if canImport(Stripe3DS2)
@@ -110,7 +115,9 @@ public class STPPaymentHandler: NSObject {
     /// YES from when a public method is first called until its associated completion handler is called.
     /// This property guards against simultaneous usage of this class; only one "next action" can be handled at a time.
     private static var inProgress = false
+#if !os(macOS)
     private var safariViewController: SFSafariViewController?
+#endif
     private var asWebAuthenticationSession: ASWebAuthenticationSession?
 
     /// Set this to true if you want a specific test to run the _canPresent code
@@ -1079,6 +1086,7 @@ public class STPPaymentHandler: NSObject {
                     currentAction.complete(with: STPPaymentHandlerActionStatus.failed, error: _error(for: .unexpectedErrorCode, loggingSafeErrorMessage: "Unexpected useStripeSDK type"))
 
                 case .threeDS2Fingerprint:
+                    #if !os(macOS)
                     guard let threeDSService = currentAction.threeDS2Service else {
                         currentAction.complete(
                             with: STPPaymentHandlerActionStatus.failed,
@@ -1252,7 +1260,9 @@ public class STPPaymentHandler: NSObject {
                             )
                         }
                     }
-
+                    #else
+                    assert(false, "Not supported on macOS")
+                    #endif
                 case .threeDS2Redirect:
                     guard let redirectURL = useStripeSDK.redirectURL else {
                         currentAction.complete(with: .failed, error: self._error(for: .unexpectedErrorCode, loggingSafeErrorMessage: "Next action type is threeDS2Redirect but missing redirect URL."))
@@ -1593,6 +1603,7 @@ public class STPPaymentHandler: NSObject {
         }
     }
 
+#if !os(macOS)
     @objc func _handleWillForegroundNotification() {
         NotificationCenter.default.removeObserver(
             self,
@@ -1602,7 +1613,7 @@ public class STPPaymentHandler: NSObject {
         STPURLCallbackHandler.shared().unregisterListener(self)
         _retrieveAndCheckIntentForCurrentAction()
     }
-
+    #endif
     @_spi(STP) public func _handleRedirect(to url: URL, withReturn returnURL: URL?, useWebAuthSession: Bool) {
         _handleRedirect(to: url, fallbackURL: url, return: returnURL, useWebAuthSession: useWebAuthSession)
     }
@@ -1625,7 +1636,7 @@ public class STPPaymentHandler: NSObject {
             intentID: currentAction.intentStripeID,
             usesWebAuthSession: false
         )
-
+#if !os(macOS)
         // Setting universalLinksOnly to false will allow iOS to open https:// urls in an external browser, hopefully Safari.
         // The links are expected to be either universal links or Stripe owned URLs.
         // In the case that it is a stripe owned URL, the URL is expected to redirect our financial partners, at which point Safari can
@@ -1646,6 +1657,7 @@ public class STPPaymentHandler: NSObject {
                 )
             }
         )
+        #endif
     }
 
     /// Handles redirection to URLs using a native URL or a fallback URL and updates the current action.
@@ -1655,8 +1667,8 @@ public class STPPaymentHandler: NSObject {
     ///     - fallbackURL: A secondary URL to be attempted if the native URL is not available.
     ///     - returnURL: The URL to be registered with the `STPURLCallbackHandler`.
     ///     - useWebAuthSession: Use ASWebAuthenticationSession instead of SFSafariViewController.
-    ///     - completion: A completion block invoked after the URL redirection is handled. The SFSafariViewController used is provided as an argument, if it was used for the redirect.
-    func _handleRedirect(to nativeURL: URL?, fallbackURL: URL?, return returnURL: URL?, useWebAuthSession: Bool, completion: ((SFSafariViewController?) -> Void)? = nil) {
+    ///     - completion: A completion block invoked after the URL redirection is handled. On iOS, receives SFSafariViewController if used. On macOS, receives nil.
+    func _handleRedirect(to nativeURL: URL?, fallbackURL: URL?, return returnURL: URL?, useWebAuthSession: Bool, completion: ((Any?) -> Void)? = nil) {
         if let _redirectShim, let url = nativeURL ?? fallbackURL {
             _redirectShim(url, returnURL, true)
         }
@@ -1679,6 +1691,11 @@ public class STPPaymentHandler: NSObject {
         if let returnURL {
             STPURLCallbackHandler.shared().register(self, for: returnURL)
         }
+
+        // On macOS, always use ASWebAuthenticationSession
+        #if os(macOS)
+        let useWebAuthSession = true
+        #endif
 
         analyticsClient.logURLRedirectNextAction(
             with: currentAction.apiClient._stored_configuration,
@@ -1717,10 +1734,14 @@ public class STPPaymentHandler: NSObject {
                                 to: #selector(STPAuthenticationContext.authenticationContextWillDismiss(_:))
                             ) {
                                 // This isn't great, but UIViewController is non-nil in the protocol. Maybe it's better to still call it, even if the VC isn't useful?
+#if !os(macOS)
                                 context.authenticationContextWillDismiss?(UIViewController())
+                                #endif
                             }
                             // This isn't great, but UIViewController is non-nil in the protocol. Maybe it's better to still call it, even if the VC isn't useful?
+#if !os(macOS)
                             self.callContextDidDismissIfNeeded(context, UIViewController())
+                            #endif
                             STPURLCallbackHandler.shared().unregisterListener(self)
                             self.analyticsClient.logURLRedirectNextActionCompleted(
                                 with: currentAction.apiClient._stored_configuration,
@@ -1741,6 +1762,7 @@ public class STPPaymentHandler: NSObject {
                             asWebAuthenticationSession.start()
                         }
                     } else {
+                        #if !os(macOS)
                         let safariViewController = SFSafariViewController(url: fallbackURL)
                         safariViewController.modalPresentationStyle = .overFullScreen
 #if !canImport(CompositorServices)
@@ -1756,6 +1778,35 @@ public class STPPaymentHandler: NSObject {
                         presentingViewController.present(safariViewController, animated: true, completion: {
                             completion?(safariViewController)
                         })
+                        #else
+                        // On macOS, fall back to ASWebAuthenticationSession
+                        let asWebAuthenticationSession = ASWebAuthenticationSession(url: fallbackURL, callbackURLScheme: "stripesdk", completionHandler: { _, _ in
+                            if context.responds(
+                                to: #selector(STPAuthenticationContext.authenticationContextWillDismiss(_:))
+                            ) {
+                                context.authenticationContextWillDismiss?(NSViewController())
+                            }
+                            self.callContextDidDismissIfNeeded(context, NSViewController())
+                            STPURLCallbackHandler.shared().unregisterListener(self)
+                            self.analyticsClient.logURLRedirectNextActionCompleted(
+                                with: currentAction.apiClient._stored_configuration,
+                                intentID: currentAction.intentStripeID,
+                                usesWebAuthSession: true
+                            )
+                            self._retrieveAndCheckIntentForCurrentAction()
+                            self.asWebAuthenticationSession = nil
+                        })
+                        asWebAuthenticationSession.prefersEphemeralWebBrowserSession = false
+                        asWebAuthenticationSession.presentationContextProvider = currentAction
+                        self.asWebAuthenticationSession = asWebAuthenticationSession
+                        if context.responds(to: #selector(STPAuthenticationContext.prepare(forPresentation:))) {
+                            context.prepare?(forPresentation: {
+                                asWebAuthenticationSession.start()
+                            })
+                        } else {
+                            asWebAuthenticationSession.start()
+                        }
+                        #endif
                     }
                 } else {
                     currentAction.complete(
@@ -1773,6 +1824,7 @@ public class STPPaymentHandler: NSObject {
 
         // Redirect to an app
         // We don't want universal links to open up Safari, but we do want to allow custom URL schemes
+#if !os(macOS)
         var options: [UIApplication.OpenExternalURLOptionsKey: Any] = [:]
         #if !targetEnvironment(macCatalyst)
         if let scheme = url?.scheme, scheme == "http" || scheme == "https" {
@@ -1787,9 +1839,10 @@ public class STPPaymentHandler: NSObject {
             options[UIApplication.OpenExternalURLOptionsKey.universalLinksOnly] = false
             url = nativeURL ?? fallbackURL
         }
-
+        #endif
         // We don't check canOpenURL before opening the URL because that requires users to pre-register the custom URL schemes
         if let url = url {
+#if !os(macOS)
             UIApplication.shared.open(
                 url,
                 options: options,
@@ -1808,6 +1861,7 @@ public class STPPaymentHandler: NSObject {
                     }
                 }
             )
+#endif
         } else {
             presentSFViewControllerBlock()
         }
@@ -1836,19 +1890,24 @@ public class STPPaymentHandler: NSObject {
         var loggingSafeErrorMessage: String?
 
         // Is it in the window hierarchy?
-        if presentingViewController.viewIfLoaded?.window == nil {
-            canPresent = false
-            loggingSafeErrorMessage =
-                "authenticationPresentingViewController is not in the window hierarchy. You should probably return the top-most view controller instead."
+        if #available(macOS 14.0, *) {
+//            if presentingViewController.viewIfLoaded?.window == nil {
+//                canPresent = false
+//                loggingSafeErrorMessage =
+//                "authenticationPresentingViewController is not in the window hierarchy. You should probably return the top-most view controller instead."
+//            }
+        } else {
+            // Fallback on earlier versions
         }
 
         // Is it already presenting something?
+#if !os(macOS)
         if presentingViewController.presentedViewController != nil {
             canPresent = false
             loggingSafeErrorMessage =
                 "authenticationPresentingViewController is already presenting. You should probably dismiss the presented view controller in `prepareAuthenticationContextForPresentation`."
         }
-
+        #endif
         if !canPresent {
             error = _error(
                 for: .requiresAuthenticationContextErrorCode,
@@ -2031,6 +2090,7 @@ public class STPPaymentHandler: NSObject {
             }
         }
 
+#if !os(macOS)
         currentAction.apiClient.complete3DS2Authentication(
             forSource: threeDSSourceID,
             publishableKeyOverride: useStripeSDK.publishableKeyOverride
@@ -2058,6 +2118,7 @@ public class STPPaymentHandler: NSObject {
                 }
             }
         }
+        #endif
     }
 
     func retrieveOrRefreshPaymentIntent(currentAction: STPPaymentHandlerPaymentIntentActionParams,
@@ -2180,6 +2241,7 @@ public class STPPaymentHandler: NSObject {
         return STPPaymentHandlerError(code: errorCode, loggingSafeUserInfo: userInfo) as NSError
     }
 
+    #if !os(macOS)
     func callContextDidDismissIfNeeded(_ context: (any STPAuthenticationContext)?, _ viewController: UIViewController?) {
         guard let context, let viewController else { return }
 
@@ -2190,6 +2252,20 @@ public class STPPaymentHandler: NSObject {
             context.authenticationContextDidDismiss?(viewController)
         }
     }
+    #else
+    func callContextDidDismissIfNeeded(_ context: (any STPAuthenticationContext)?, _ viewController: Any?) {
+        // On macOS, we don't have UIViewController, so we just call with nil or a placeholder
+        guard let context else { return }
+
+        if context.responds(
+            to: #selector(STPAuthenticationContext.authenticationContextDidDismiss(_:))
+        )
+        {
+            // Create a dummy NSViewController for the protocol
+            context.authenticationContextDidDismiss?(NSViewController())
+        }
+    }
+    #endif
 }
 
 /// STPPaymentHandler errors (i.e. errors that are created by the STPPaymentHandler class and have a corresponding STPPaymentHandlerErrorCode) used to be NSErrors.
@@ -2214,7 +2290,7 @@ struct STPPaymentHandlerError: Error, CustomNSError, AnalyticLoggableError {
     }
 }
 
-#if !canImport(CompositorServices)
+#if !canImport(CompositorServices) && !os(macOS)
 extension STPPaymentHandler: SFSafariViewControllerDelegate {
     // MARK: - SFSafariViewControllerDelegate
     /// :nodoc:
@@ -2247,7 +2323,7 @@ extension STPPaymentHandler: SFSafariViewControllerDelegate {
     /// :nodoc:
     @_spi(STP) public func handleURLCallback(_ url: URL) -> Bool {
         if currentAction?.nextAction()?.redirectToURL?.useWebAuthSession ?? false {
-            // Don't handle the URL — If a user clicks the URL in ASWebAuthenticationSession, ASWebAuthenticationSession will handle it internally.
+            // Don't handle the URL — If a user clicks the URL in ASWebAuthenticationSession, ASWebAuthenticationSession will handle it internally.
             // If we're returning from another app via a URL while ASWebAuthenticationSession is open, it's likely that the PM initiated a redirect to another app
             // (such as a banking app) and is waiting for a response from that app.
             return false
@@ -2256,27 +2332,40 @@ extension STPPaymentHandler: SFSafariViewControllerDelegate {
         let context = currentAction?.authenticationContext
         if context?.responds(
             to: #selector(STPAuthenticationContext.authenticationContextWillDismiss(_:))
-        ) ?? false,
-            let safariViewController = safariViewController
-        {
-            context?.authenticationContextWillDismiss?(safariViewController)
+        ) ?? false {
+            #if !os(macOS)
+            if let safariViewController = safariViewController {
+                context?.authenticationContextWillDismiss?(safariViewController)
+            }
+            #else
+            // On macOS, we use ASWebAuthenticationSession, so provide a dummy view controller
+            context?.authenticationContextWillDismiss?(NSViewController())
+            #endif
         }
 
+#if !os(macOS)
         NotificationCenter.default.removeObserver(
             self,
             name: UIApplication.willEnterForegroundNotification,
             object: nil
         )
+        #endif
         STPURLCallbackHandler.shared().unregisterListener(self)
+        #if !os(macOS)
         safariViewController?.dismiss(animated: true) {
             self.callContextDidDismissIfNeeded(context, self.safariViewController)
             self.safariViewController = nil
         }
+        #else
+        // On macOS, we don't have a safariViewController to dismiss
+        self.callContextDidDismissIfNeeded(context, nil)
+        #endif
         _retrieveAndCheckIntentForCurrentAction()
         return true
     }
 }
 
+#if !os(macOS)
 extension STPPaymentHandler {
     // MARK: - STPChallengeStatusReceiver
     /// :nodoc:
@@ -2512,10 +2601,19 @@ extension STPPaymentHandler {
         transaction.cancelChallengeFlow()
     }
 }
+#endif
 
 /// Internal authentication context for PaymentSheet magic
 @_spi(STP) public protocol PaymentSheetAuthenticationContext: STPAuthenticationContext {
+    #if !os(macOS)
     func present(_ authenticationViewController: UIViewController, completion: @escaping () -> Void)
     func dismiss(_ authenticationViewController: UIViewController, completion: (() -> Void)?)
-    func presentPollingVCForAction(action: STPPaymentHandlerPaymentIntentActionParams, type: STPPaymentMethodType, safariViewController: SFSafariViewController?)
+    /// Presents a polling view controller for the given action type. On iOS, safariViewController is SFSafariViewController if used. On macOS, safariViewController is nil.
+    func presentPollingVCForAction(action: STPPaymentHandlerPaymentIntentActionParams, type: STPPaymentMethodType, safariViewController: Any?)
+    #else
+    func present(_ authenticationViewController: NSViewController, completion: @escaping () -> Void)
+    func dismiss(_ authenticationViewController: NSViewController, completion: (() -> Void)?)
+    /// Presents a polling view controller for the given action type. On iOS, safariViewController is SFSafariViewController if used. On macOS, safariViewController is nil.
+    func presentPollingVCForAction(action: STPPaymentHandlerPaymentIntentActionParams, type: STPPaymentMethodType, safariViewController: Any?)
+    #endif
 }

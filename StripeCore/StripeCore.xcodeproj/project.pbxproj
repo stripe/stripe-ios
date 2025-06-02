@@ -1257,8 +1257,9 @@
 				INFOPLIST_FILE = StripeCore/Info.plist;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.stripe.stripe-core";
 				PRODUCT_NAME = StripeCore;
+				REGISTER_APP_GROUPS = YES;
 				SDKROOT = iphoneos;
-				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator xros xrsimulator";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx xros xrsimulator";
 				SUPPORTS_MACCATALYST = YES;
 				TARGETED_DEVICE_FAMILY = "1,2,7";
 			};
@@ -1289,8 +1290,9 @@
 				INFOPLIST_FILE = StripeCore/Info.plist;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.stripe.stripe-core";
 				PRODUCT_NAME = StripeCore;
+				REGISTER_APP_GROUPS = YES;
 				SDKROOT = iphoneos;
-				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator xros xrsimulator";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx xros xrsimulator";
 				SUPPORTS_MACCATALYST = YES;
 				TARGETED_DEVICE_FAMILY = "1,2,7";
 			};

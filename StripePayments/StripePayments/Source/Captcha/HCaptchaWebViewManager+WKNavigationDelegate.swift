@@ -4,6 +4,7 @@
 //
 //  Copyright © 2024 HCaptcha. All rights reserved.
 //
+#if !os(macOS)
 
 import Foundation
 import WebKit
@@ -43,3 +44,4 @@ extension HCaptchaWebViewManager: WKNavigationDelegate {
         didFinishLoading = false
     }
 }
+#endif

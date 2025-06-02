@@ -6,7 +6,7 @@
 //  Copyright © 2022 Stripe, Inc. All rights reserved.
 //
 
-import UIKit
+
 
 @_spi(STP) public class STPPaymentMethodOptions: NSObject, STPAPIResponseDecodable {
 

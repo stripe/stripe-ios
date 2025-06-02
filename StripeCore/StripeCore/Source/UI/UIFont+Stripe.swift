@@ -7,8 +7,7 @@
 //
 
 import Foundation
-import UIKit
-
+#if !os(macOS)
 @_spi(STP) extension UIFont {
     /// The default size category used to compute font size prior to scaling it.
     ///
@@ -86,3 +85,4 @@ import UIKit
         return metrics.scaledFont(for: font)
     }
 }
+#endif

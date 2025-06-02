@@ -6,6 +6,8 @@
 import DeviceCheck
 import Foundation
 
+#if !os(macOS)
+
 @_spi(STP) public protocol AppAttestService {
     nonisolated var isSupported: Bool { get }
     func generateKey() async throws -> String
@@ -60,3 +62,5 @@ import Foundation
        return data.range(of: appAttestDevelopData) != nil
    }
 }
+
+#endif

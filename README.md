@@ -1,4 +1,4 @@
-# Stripe iOS SDK
+# Stripe iOS & macOS SDK
 
 [![CocoaPods](https://img.shields.io/cocoapods/v/Stripe.svg?style=flat)](http://cocoapods.org/?q=author%3Astripe%20name%3Astripe)
 [![Carthage compatible](https://img.shields.io/badge/Carthage-compatible-4BC51D.svg?style=flat)](https://github.com/Carthage/Carthage)
@@ -8,7 +8,7 @@
 > [!TIP]
 > Want to chat live with Stripe engineers? Join us on our [Discord server](https://stripe.com/go/developer-chat).
 
-The Stripe iOS SDK makes it quick and easy to build an excellent payment experience in your iOS app. We provide powerful and customizable UI screens and elements that can be used out-of-the-box to collect your users' payment details. We also expose the low-level APIs that power those UIs so that you can build fully custom experiences.
+The Stripe iOS & macOS SDK makes it quick and easy to build an excellent payment experience in your iOS and macOS apps. We provide powerful and customizable UI screens and elements that can be used out-of-the-box to collect your users' payment details. We also expose the low-level APIs that power those UIs so that you can build fully custom experiences.
 
 Get started with our [📚 integration guides](https://stripe.com/docs/payments/accept-a-payment?platform=ios) and [example projects](#Examples), or [📘 browse the SDK reference](https://stripe.dev/stripe-ios/docs/index.html).
 
@@ -45,7 +45,7 @@ Table of contents
 
 <img src="https://user-images.githubusercontent.com/89988962/153276097-9b3369a0-e732-45c4-96ec-ff9d48ad0fb6.png" alt="PaymentSheet" align="center"/>
 
-**Stripe API**: [StripePayments](StripePayments/README.md) provides [low-level APIs](https://stripe.dev/stripe-ios/docs/Classes/STPAPIClient.html) that correspond to objects and methods in the Stripe API. You can build your own entirely custom UI on top of this layer, while still taking advantage of utilities like [STPCardValidator](https://stripe.dev/stripe-ios/docs/Classes/STPCardValidator.html) to validate your user’s input.
+**Stripe API**: [StripePayments](StripePayments/README.md) provides [low-level APIs](https://stripe.dev/stripe-ios/docs/Classes/STPAPIClient.html) that correspond to objects and methods in the Stripe API. You can build your own entirely custom UI on top of this layer, while still taking advantage of utilities like [STPCardValidator](https://stripe.dev/stripe-ios/docs/Classes/STPCardValidator.html) to validate your user's input.
 
 **Card scanning**: We support card scanning on iOS 13 and higher. See our [Card scanning](#Card-scanning) section.
 
@@ -111,7 +111,7 @@ If you're reading this on GitHub.com, please make sure you are looking at the [t
 
 ## Requirements
 
-The Stripe iOS SDK requires Xcode 15 or later and is compatible with apps targeting iOS 13 or above. We support Catalyst on macOS 11 or later.
+The Stripe iOS & macOS SDK requires Xcode 15 or later and is compatible with apps targeting iOS 13 or above and macOS 11 or above. We support both UIKit on iOS and native AppKit on macOS, as well as Catalyst on macOS 11 or later.
 
 For iOS 12 support, please use [v22.8.4](https://github.com/stripe/stripe-ios/tree/v22.8.4). For iOS 11 support, please use [v21.13.0](https://github.com/stripe/stripe-ios/tree/v21.13.0). For iOS 10, please use [v19.4.0](https://github.com/stripe/stripe-ios/tree/v19.4.0). If you need to support iOS 9, use [v17.0.2](https://github.com/stripe/stripe-ios/tree/v17.0.2).
 

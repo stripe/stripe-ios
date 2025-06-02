@@ -8,36 +8,54 @@
 
 import Foundation
 import SafariServices
-import UIKit
+
 
 /// `STPAuthenticationContext` provides information required to present authentication challenges
 /// to a user.
 @objc public protocol STPAuthenticationContext: NSObjectProtocol {
+#if !os(macOS)
     /// The Stripe SDK will modally present additional view controllers on top
     /// of the `authenticationPresentingViewController` when required for user
     /// authentication, like in the Challenge Flow for 3DS2 transactions.
     func authenticationPresentingViewController() -> UIViewController
+#else
+    func authenticationPresentingViewController() -> NSViewController
+#endif
 
     /// This method is called before presenting a UIViewController for authentication.
     /// @note `STPPaymentHandler` will not proceed until `completion` is called.
     @objc(prepareAuthenticationContextForPresentation:) optional func prepare(
         forPresentation completion: @escaping STPVoidBlock
     )
+#if !os(macOS)
     /// This method is called before presenting an SFSafariViewController for web-based authentication.
     /// Implement this method to configure the `SFSafariViewController` instance, e.g. `viewController.preferredBarTintColor = MyBarTintColor`
     /// @note Setting the `delegate` property has no effect.
     @objc optional func configureSafariViewController(_ viewController: SFSafariViewController)
+#endif
     /// This method is called when an authentication UIViewController is about to be dismissed.
     /// Implement this method to prepare your UI for the authentication view controller to be dismissed. For example,
     /// if you requested authentication while displaying an STPBankSelectionViewController, you may want to hide
     /// it to return the user to your desired view controller.
+#if !os(macOS)
     @objc(authenticationContextWillDismissViewController:)
     optional func authenticationContextWillDismiss(_ viewController: UIViewController)
+#else
+    @objc(authenticationContextWillDismissViewController:)
+    optional func authenticationContextWillDismiss(_ viewController: NSViewController)
+#endif
     /// This method is called when an authentication UIViewController has been dismissed.
     /// Implement this method to have your UI respond to the authentication view controller to being dismissed. For example,
     /// if you requested authentication while displaying an STPBankSelectionViewController, you may want to hide
     /// it to return the user to your desired view controller.
+#if !os(macOS)
     @_spi(STP)
     @objc(authenticationContextDidDismissViewController:)
     optional func authenticationContextDidDismiss(_ viewController: UIViewController)
+    #else
+    @_spi(STP)
+    @objc(authenticationContextDidDismissViewController:)
+    optional func authenticationContextDidDismiss(_ viewController: NSViewController)
+
+    #endif
 }

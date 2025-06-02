@@ -7,7 +7,7 @@
 //
 
 import Foundation
-import UIKit
+
 
 /// Objects conforming to this protocol can be attached to a Stripe Customer object
 /// as a payment source.

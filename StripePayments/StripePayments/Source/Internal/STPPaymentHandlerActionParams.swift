@@ -15,8 +15,10 @@ import Foundation
 #endif
 
 @_spi(STP) public protocol STPPaymentHandlerActionParams: NSObject, ASWebAuthenticationPresentationContextProviding {
+#if !os(macOS)
     var threeDS2Service: STDSThreeDS2Service? { get }
     var threeDS2Transaction: STDSTransaction? { get set }
+    #endif
     var authenticationContext: STPAuthenticationContext { get }
     var apiClient: STPAPIClient { get }
     var threeDSCustomizationSettings: STPThreeDSCustomizationSettings { get }
@@ -38,12 +40,13 @@ public class STPPaymentHandlerPaymentIntentActionParams: NSObject, STPPaymentHan
         STPPaymentHandlerActionPaymentIntentCompletionBlock
     @_spi(STP) public let returnURLString: String?
     @_spi(STP) public var paymentIntent: STPPaymentIntent
+#if !os(macOS)
     @_spi(STP) public var threeDS2Transaction: STDSTransaction?
-
+    #endif
     @_spi(STP) public var intentStripeID: String {
         return paymentIntent.stripeId
     }
-
+#if !os(macOS)
     private var _threeDS2Service: STDSThreeDS2Service?
 
     @_spi(STP) public var threeDS2Service: STDSThreeDS2Service? {
@@ -77,7 +80,7 @@ public class STPPaymentHandlerPaymentIntentActionParams: NSObject, STPPaymentHan
 
         return _threeDS2Service
     }
-
+    #endif
     init(
         apiClient: STPAPIClient,
         authenticationContext: STPAuthenticationContext,
@@ -118,12 +121,14 @@ internal class STPPaymentHandlerSetupIntentActionParams: NSObject, STPPaymentHan
     let setupIntentCompletion: STPPaymentHandlerActionSetupIntentCompletionBlock
     let returnURLString: String?
     var setupIntent: STPSetupIntent
+#if !os(macOS)
     var threeDS2Transaction: STDSTransaction?
+    #endif
 
     var intentStripeID: String {
         return setupIntent.stripeID
     }
-
+#if !os(macOS)
     private var _threeDS2Service: STDSThreeDS2Service?
 
     var threeDS2Service: STDSThreeDS2Service? {
@@ -157,7 +162,7 @@ internal class STPPaymentHandlerSetupIntentActionParams: NSObject, STPPaymentHan
 
         return _threeDS2Service
     }
-
+    #endif
     init(
         apiClient: STPAPIClient,
         authenticationContext: STPAuthenticationContext,

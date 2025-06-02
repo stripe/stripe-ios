@@ -5,10 +5,11 @@
 //  Created by Ben Guo on 1/26/17.
 //  Copyright © 2017 Stripe, Inc. All rights reserved.
 //
+#if !os(macOS)
 
 import Foundation
 @_spi(STP) import StripeCore
-import UIKit
+
 
 class STPSourcePoller: NSObject {
     required init(
@@ -230,3 +231,4 @@ private let MaxPollInterval: TimeInterval = 24
 private let MaxTimeout: TimeInterval = 60 * 5
 // Stop polling after 5 consecutive non-200 responses
 private let MaxRetries: Int = 5
+#endif

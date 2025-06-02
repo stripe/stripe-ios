@@ -5,7 +5,8 @@ let package = Package(
     name: "Stripe",
     defaultLocalization: "en",
     platforms: [
-        .iOS(.v13)
+        .iOS(.v14),
+        .macOS(.v13)
     ],
     products: [
         .library(
@@ -119,7 +120,7 @@ let package = Package(
         ),
         .target(
             name: "StripePayments",
-            dependencies: ["StripeCore", "Stripe3DS2"],
+            dependencies: ["StripeCore"],
             path: "StripePayments/StripePayments",
             exclude: ["Info.plist"],
             resources: [

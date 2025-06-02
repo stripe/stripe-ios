@@ -5,6 +5,7 @@
 //  Created by Brian Dorfman on 4/25/17.
 //  Copyright © 2017 Stripe, Inc. All rights reserved.
 //
+#if canImport(UIKit) && !os(macOS)
 import AVFoundation
 import UIKit
 
@@ -160,3 +161,5 @@ extension Array where Element: UIImage {
         return nil
     }
 }
+
+#endif

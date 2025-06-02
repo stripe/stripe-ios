@@ -172,6 +172,7 @@ modules:
 - podspec: StripeFinancialConnections.podspec
   scheme: StripeFinancialConnections
   framework_name: StripeFinancialConnections
+  supports_catalyst: true
   docs:
     output: docs/stripefinancialconnections
     readme: StripeFinancialConnections/README.md
@@ -193,7 +194,7 @@ modules:
   scheme: StripeConnect
   framework_name: StripeConnect
   localization_dir: StripeConnect/StripeConnect
-  supports_catalyst: false
+  supports_catalyst: true
   docs:
     output: docs/stripeconnect
     readme: StripeConnect/README.md

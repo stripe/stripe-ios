@@ -6,7 +6,7 @@
 //  Copyright © 2021 Stripe, Inc. All rights reserved.
 //
 
-import UIKit
+@_exported import Foundation
 
 /// For internal SDK use only
 @objc(STP_Internal_LinkAccountSession)

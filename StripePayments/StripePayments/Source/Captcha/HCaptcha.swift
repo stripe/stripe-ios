@@ -5,9 +5,9 @@
 //  Created by Flávio Caetano on 22/03/17.
 //  Copyright © 2018 HCaptcha. All rights reserved.
 //
-
+#if !os(macOS)
 import JavaScriptCore
-import UIKit
+
 import WebKit
 
 /**
@@ -269,3 +269,5 @@ class HCaptcha: NSObject {
         try self.init(apiKey: apiKey, baseURL: baseURL, locale: locale, size: size, rqdata: nil)
     }
 }
+
+#endif

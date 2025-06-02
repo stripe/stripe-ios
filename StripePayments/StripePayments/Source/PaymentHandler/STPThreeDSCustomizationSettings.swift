@@ -7,7 +7,7 @@
 //
 
 import Foundation
-import UIKit
+
 
 #if canImport(Stripe3DS2)
     import Stripe3DS2
@@ -29,6 +29,7 @@ public class STPThreeDSCustomizationSettings: NSObject {
         return STPThreeDSCustomizationSettings()
     }
 
+#if !os(macOS)
     /// `uiCustomization` can be used to provide custom UI settings for the authentication
     /// challenge screens presented during a Three Domain Secure authentication. For more information see
     /// our guide on supporting 3DS2 in your iOS application.
@@ -37,6 +38,7 @@ public class STPThreeDSCustomizationSettings: NSObject {
     /// make to your `STPThreeDSUICustomization` instance.
     /// Defaults to `STPThreeDSUICustomization.defaultSettings()`.
     @objc public var uiCustomization = STPThreeDSUICustomization.defaultSettings()
+    #endif
     /// `authenticationTimeout` is the total time allowed for a user to complete a 3DS2 authentication
     /// interaction, in minutes.  This value *must* be at least 5 minutes.
     /// Defaults to 10 minutes.

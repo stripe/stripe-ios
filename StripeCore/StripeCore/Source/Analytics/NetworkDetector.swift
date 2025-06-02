@@ -11,6 +11,7 @@ import CoreTelephony
 import Foundation
 import SystemConfiguration
 
+#if !os(macOS)
 /// A class which can detect the current network type of the device
 class NetworkDetector {
 
@@ -57,3 +58,4 @@ class NetworkDetector {
     }
 
 }
+#endif

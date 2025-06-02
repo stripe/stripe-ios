@@ -6,7 +6,8 @@
 import CryptoKit
 import DeviceCheck
 import Foundation
-import UIKit
+
+#if !os(macOS)
 
 @_spi(STP) public actor StripeAttest {
     /// Initialize a new StripeAttest object with the specified STPAPIClient.
@@ -444,3 +445,5 @@ extension StripeAttest {
         }
     }
 }
+
+#endif

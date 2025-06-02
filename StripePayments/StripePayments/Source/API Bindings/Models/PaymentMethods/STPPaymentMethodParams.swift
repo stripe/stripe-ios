@@ -7,7 +7,7 @@
 //
 
 import Foundation
-import UIKit
+
 
 /// An object representing parameters used to create a PaymentMethod object.
 /// @note To create a PaymentMethod from an Apple Pay PKPaymentToken, see `STPAPIClient createPaymentMethodWithPayment:completion:`

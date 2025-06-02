@@ -6,8 +6,7 @@
 //  Copyright © 2022 Stripe, Inc. All rights reserved.
 //
 
-import UIKit
-
+#if !os(macOS)
 @_spi(STP) public protocol FinancialConnectionsSDKInterface {
     init()
     func presentFinancialConnectionsSheet(
@@ -22,3 +21,4 @@ import UIKit
         completion: @escaping (FinancialConnectionsSDKResult) -> Void
     )
 }
+#endif

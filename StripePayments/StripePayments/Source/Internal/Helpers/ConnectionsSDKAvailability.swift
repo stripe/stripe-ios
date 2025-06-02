@@ -8,7 +8,8 @@
 
 import Foundation
 @_spi(STP) import StripeCore
-import UIKit
+
+#if !os(macOS)
 
 @_spi(STP) public struct FinancialConnectionsSDKAvailability {
     static let FinancialConnectionsSDKClass: FinancialConnectionsSDKInterface.Type? =
@@ -116,3 +117,4 @@ final class StubbedConnectionsSDKInterface: FinancialConnectionsSDKInterface {
         }
     }
 }
+#endif

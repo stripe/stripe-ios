@@ -5,6 +5,7 @@
 //  Created by Charles Scalesse on 11/30/16.
 //  Copyright © 2016 Stripe, Inc. All rights reserved.
 //
+#if !os(macOS)
 
 import Foundation
 @_spi(STP) import StripeCore
@@ -137,3 +138,4 @@ public class STPFile: NSObject, STPAPIResponseDecodable {
         return file
     }
 }
+#endif

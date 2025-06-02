@@ -5,6 +5,7 @@
 //  Created by David Estes on 2/1/21.
 //  Copyright © 2021 Stripe, Inc. All rights reserved.
 //
+#if !os(macOS)
 
 import SafariServices
 import SwiftUI
@@ -144,3 +145,4 @@ struct ConfirmPaymentPresentationModifier<ParamsType, CompletionBlockType>: View
         )
     }
 }
+#endif

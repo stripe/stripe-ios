@@ -5,6 +5,7 @@
 //  Created by Flávio Caetano on 06/03/17.
 //  Copyright © 2018 HCaptcha. All rights reserved.
 //
+#if !os(macOS)
 
 import Foundation
 
@@ -53,3 +54,4 @@ class HCaptchaResult: NSObject {
         return ""
     }
 }
+#endif

@@ -5,6 +5,7 @@
 //  Created by Brian Dorfman on 3/29/17.
 //  Copyright © 2017 Stripe, Inc. All rights reserved.
 //
+#if !os(macOS)
 
 import Foundation
 import SafariServices
@@ -623,4 +624,5 @@ extension STPRedirectContext: SFSafariViewControllerDelegate {
         })
     }
 }
+#endif
 #endif

@@ -7,7 +7,12 @@
 
 @_spi(STP) import StripeCore
 @_spi(STP) import StripeUICore
+
+#if canImport(UIKit) && !os(macOS)
 import UIKit
+#elseif canImport(AppKit) && os(macOS)
+import AppKit
+#endif
 
 @available(iOS 15, *)
 extension EmbeddedComponentManager {
@@ -15,7 +20,7 @@ extension EmbeddedComponentManager {
     /// - seealso: [Appearance option documentation](https://docs.stripe.com/connect/embedded-appearance-options)
     public struct Appearance {
         public enum TextTransform {
-            /// The text doesn’t have a transform.
+            /// The text doesn't have a transform.
             case none
             /// Displays the text in all uppercase characters.
             case uppercase
@@ -64,7 +69,11 @@ extension EmbeddedComponentManager {
                 /// The displayed fonts are automatically scaled when the component's size category is updated.
                 public var fontSize: CGFloat?
                 /// The font weight for this typography style.
+                #if canImport(UIKit) && !os(macOS)
                 public var weight: UIFont.Weight?
+                #elseif canImport(AppKit) && os(macOS)
+                public var weight: NSFont.Weight?
+                #endif
                 /// The text transform for this typography style.
                 public var textTransform: TextTransform?
 
@@ -80,7 +89,7 @@ extension EmbeddedComponentManager {
             /// - Note: Custom fonts included in your app's binary must be specified using a
             ///   `CustomFontSource` when initializing the `EmbeddedComponentManager` before
             ///   referencing them in the appearance's `typography.font` property.
-            public var font: UIFont?
+            public var font: StripeFont?
             /// The unscaled baseline font size set on the embedded component root.
             /// This scales the value of other font size variables and is automatically scaled
             /// when the component's size category is updated.
@@ -111,57 +120,58 @@ extension EmbeddedComponentManager {
         }
 
         /// Describes the colors used in embedded components.
-        /// - Note: If UIColors using dynamicProviders are specified, the appearance will automatically
-        ///   update when the component's UITraitCollection is updated (e.g. dark mode)
+        /// - Note: If StripeColors using dynamicProviders are specified, the appearance will automatically
+        ///   update when the component's trait collection is updated (e.g. dark mode)
         /// - Seealso: [Supporting Dark Mode in your app](https://developer.apple.com/documentation/uikit/appearance_customization/supporting_dark_mode_in_your_interface)
         public struct Colors {
             /// The primary color used throughout embedded components.
             /// Set this to your primary brand color.
             /// The alpha component is ignored.
-            public var primary: UIColor?
+            public var primary: StripeColor?
             /// The color used for regular text.
-            public var text: UIColor?
+            public var text: StripeColor?
             /// The color used to indicate errors or destructive actions.
             /// The alpha component is ignored.
-            public var danger: UIColor?
+            public var danger: StripeColor?
             /// The background color for embedded components, including overlays,
             /// tooltips, and popovers. The alpha component is ignored.
-            public var background: UIColor?
+            public var background: StripeColor?
             /// The color used for secondary text.
-            public var secondaryText: UIColor?
+            public var secondaryText: StripeColor?
             /// The color used for borders throughout the component.
-            public var border: UIColor?
+            public var border: StripeColor?
             /// The color used for primary actions and links.
             /// The alpha component is ignored.
-            public var actionPrimaryText: UIColor?
+            public var actionPrimaryText: StripeColor?
             /// The color used for secondary actions and links.
             /// The alpha component is ignored.
-            public var actionSecondaryText: UIColor?
+            public var actionSecondaryText: StripeColor?
             /// The background color used when highlighting information,
             /// like the selected row on a table or particular piece of UI.
             /// The alpha component is ignored.
-            public var offsetBackground: UIColor?
+            public var offsetBackground: StripeColor?
             /// The background color used for form items.
             /// The alpha component is ignored.
-            public var formBackground: UIColor?
+            public var formBackground: StripeColor?
             /// The color used to highlight form items when focused.
-            public var formHighlightBorder: UIColor?
+            public var formHighlightBorder: StripeColor?
             /// The color used for to fill in form items like checkboxes,
             /// radio buttons and switches. The alpha component is ignored.
-            public var formAccent: UIColor?
+            public var formAccent: StripeColor?
 
             /// Creates a `EmbeddedComponentManager.Appearance.Colors` with default values
             public init() {}
 
             /// The computed background color
-            var resolvedBackground: UIColor {
+            var resolvedBackground: StripeColor {
                 // Defaults to white if none is set
                 background ?? .white
             }
 
             /// The computed loading indicator color
-            var loadingIndicatorColor: UIColor {
-                .init { traitCollection in
+            var loadingIndicatorColor: StripeColor {
+                #if canImport(UIKit) && !os(macOS)
+                return StripeColor { traitCollection in
                     let background = resolvedBackground.resolvedColor(with: traitCollection)
 
                     // Use the secondary text color if it was set
@@ -174,6 +184,13 @@ extension EmbeddedComponentManager {
                     // Lighten or darken the background to get enough contrast
                     return background.adjustedForContrast(with: background)
                 }
+                #elseif canImport(AppKit) && os(macOS)
+                // AppKit color handling - simplified for now
+                if let secondaryText {
+                    return secondaryText
+                }
+                return resolvedBackground
+                #endif
             }
         }
 
@@ -181,13 +198,13 @@ extension EmbeddedComponentManager {
         public struct Button {
             /// The color used as a background for this button type.
             /// The alpha component is ignored.
-            public var colorBackground: UIColor?
+            public var colorBackground: StripeColor?
             /// The border color used for this button type.
             /// The alpha component is ignored.
-            public var colorBorder: UIColor?
+            public var colorBorder: StripeColor?
             /// The text color used for this button type.
             /// The alpha component is ignored.
-            public var colorText: UIColor?
+            public var colorText: StripeColor?
 
             /// Creates a `EmbeddedComponentManager.Appearance.Button` with default values
             public init() { }
@@ -197,11 +214,11 @@ extension EmbeddedComponentManager {
         public struct Badge {
             /// The background color for this badge type.
             /// The alpha component is ignored.
-            public var colorBackground: UIColor?
+            public var colorBackground: StripeColor?
             /// The border color for this badge type.
-            public var colorBorder: UIColor?
+            public var colorBorder: StripeColor?
             /// The text color for this badge type. The alpha component is ignored.
-            public var colorText: UIColor?
+            public var colorText: StripeColor?
 
             /// Creates a `EmbeddedComponentManager.Appearance.Badge` with default values
             public init() {}

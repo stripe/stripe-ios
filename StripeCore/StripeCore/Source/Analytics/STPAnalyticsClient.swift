@@ -7,7 +7,6 @@
 //
 
 import Foundation
-import UIKit
 
 @_spi(STP) public protocol STPAnalyticsProtocol {
     static var stp_analyticsIdentifier: String { get }
@@ -142,17 +141,23 @@ extension STPAnalyticsClient {
         var payload: [String: Any] = [:]
         payload["bindings_version"] = StripeAPIConfiguration.STPSDKVersion
         payload["analytics_ua"] = "analytics.stripeios-1.0"
+#if !os(macOS)
         let version = UIDevice.current.systemVersion
         if !version.isEmpty {
             payload["os_version"] = version
         }
+        #else
+        let version = "Mac"
+        #endif
         if let deviceType = STPDeviceUtils.deviceType {
             payload["device_type"] = deviceType
         }
         payload["app_name"] = Bundle.stp_applicationName() ?? ""
         payload["app_version"] = Bundle.stp_applicationVersion() ?? ""
         payload["plugin_type"] = PluginDetector.shared.pluginType?.rawValue
+#if !os(macOS)
         payload["network_type"] = NetworkDetector.getConnectionType()
+        #endif
         payload["install"] = InstallMethod.current.rawValue
         payload["publishable_key"] = apiClient.sanitizedPublishableKey ?? "unknown"
         payload["session_id"] = AnalyticsHelper.shared.sessionID

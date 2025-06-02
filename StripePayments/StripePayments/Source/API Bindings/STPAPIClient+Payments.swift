@@ -9,7 +9,7 @@
 import Foundation
 import PassKit
 @_spi(STP) import StripeCore
-import UIKit
+
 
 #if canImport(Stripe3DS2)
     import Stripe3DS2
@@ -127,10 +127,11 @@ extension STPAPIClient {
 }
 
 // MARK: Upload
-
+#if !os(macOS)
 /// STPAPIClient extensions to upload files.
 extension STPAPIClient {
 
+    
     /// Uses the Stripe file upload API to upload an image. This can be used for
     /// identity verification and evidence disputes.
     /// - Parameters:
@@ -202,7 +203,7 @@ extension StripeFile {
         )
     }
 }
-
+#endif
 // MARK: Credit Cards
 
 /// STPAPIClient extensions to create Stripe tokens from credit or debit cards.
@@ -312,7 +313,7 @@ extension STPAPIClient {
             completion: completion
         )
     }
-
+#if !os(macOS)
     /// Starts polling the Source object with the given ID. For payment methods that require
     /// additional customer action (e.g. authorizing a payment with their bank), polling
     /// allows you to determine if the action was successful. Polling will stop and the
@@ -360,6 +361,7 @@ extension STPAPIClient {
             }
         })
     }
+    #endif
 }
 
 // MARK: Payment Intents
@@ -893,7 +895,7 @@ extension STPAPIClient {
         })
     }
 }
-
+#if !os(macOS)
 // MARK: - ThreeDS2
 extension STPAPIClient {
     /// Kicks off 3DS2 authentication.
@@ -954,7 +956,7 @@ extension STPAPIClient {
         }
     }
 }
-
+#endif
 // MARK: - US Bank Account
 extension STPAPIClient {
 

@@ -5,6 +5,7 @@
 //  Copyright © 2022 Stripe, Inc. All rights reserved.
 //
 
+#if canImport(UIKit) && !os(macOS)
 import UIKit
 
 extension UIViewController {
@@ -57,3 +58,5 @@ extension UIViewController {
         return nil
     }
 }
+
+#endif

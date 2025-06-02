@@ -77,6 +77,7 @@ extension STPCardFundingType: CustomStringConvertible {
         }
     }
 }
+#if !os(macOS)
 
 /// :nodoc:
 extension STPCollectBankAccountError: CustomStringConvertible {
@@ -91,7 +92,7 @@ extension STPCollectBankAccountError: CustomStringConvertible {
         }
     }
 }
-
+#endif
 /// :nodoc:
 extension STPConnectAccountBusinessType: CustomStringConvertible {
     public var description: String {
@@ -151,6 +152,7 @@ extension STPFPXBankBrand: CustomStringConvertible {
         }
     }
 }
+#if !os(macOS)
 
 /// :nodoc:
 extension STPFilePurpose: CustomStringConvertible {
@@ -165,7 +167,7 @@ extension STPFilePurpose: CustomStringConvertible {
         }
     }
 }
-
+#endif
 /// :nodoc:
 extension STPIntentActionType: CustomStringConvertible {
     public var description: String {
@@ -597,6 +599,7 @@ extension STPPinStatus: CustomStringConvertible {
         }
     }
 }
+#if !os(macOS)
 
 /// :nodoc:
 extension STPRedirectContextError: CustomStringConvertible {
@@ -623,6 +626,7 @@ extension STPRedirectContextState: CustomStringConvertible {
         }
     }
 }
+#endif
 
 /// :nodoc:
 extension STPSetupIntentLastSetupErrorType: CustomStringConvertible {
@@ -826,6 +830,7 @@ extension STPSourceVerificationStatus: CustomStringConvertible {
     }
 }
 
+#if !os(macOS)
 /// :nodoc:
 extension STPThreeDSButtonTitleStyle: CustomStringConvertible {
     public var description: String {
@@ -859,7 +864,7 @@ extension STPThreeDSCustomizationButtonType: CustomStringConvertible {
         }
     }
 }
-
+#endif
 /// :nodoc:
 extension STPTokenType: CustomStringConvertible {
     public var description: String {

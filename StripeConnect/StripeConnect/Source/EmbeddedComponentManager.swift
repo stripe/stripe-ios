@@ -7,7 +7,13 @@
 
 import JavaScriptCore
 @_spi(STP) import StripeCore
+@_spi(STP) import StripeUICore
+
+#if canImport(UIKit) && !os(macOS)
 import UIKit
+#elseif canImport(AppKit) && os(macOS)
+import AppKit
+#endif
 
 /// Manages Connect embedded components
 /// - Note: Connect embedded components are only available in private preview.

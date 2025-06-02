@@ -68,11 +68,14 @@ public typealias STPPaymentMethodCompletionBlock = (STPPaymentMethod?, Error?) -
 ///   - error: The error returned from the response, or nil if none occurs. - seealso: StripeError.h for possible values.
 public typealias STPPaymentMethodsCompletionBlock = ([STPPaymentMethod]?, Error?) -> Void
 
+#if !os(macOS)
 /// A callback to be run with a file response from the Stripe API.
 /// - Parameters:
 ///   - file: The Stripe file from the response. Will be nil if an error occurs. - seealso: STPFile
 ///   - error: The error returned from the response, or nil if none occurs. - seealso: StripeError.h for possible values.
 public typealias STPFileCompletionBlock = (STPFile?, Error?) -> Void
+#endif
+
 /// A callback to be run with a customer response from the Stripe API.
 /// - Parameters:
 ///   - customer:     The Stripe customer from the response, or nil if an error occurred. - seealso: STPCustomer

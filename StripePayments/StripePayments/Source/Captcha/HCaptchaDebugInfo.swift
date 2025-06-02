@@ -4,11 +4,12 @@
 //
 //  Copyright © 2024 HCaptcha. All rights reserved.
 //
+#if !os(macOS)
 
 import CryptoKit
 import Foundation
 import ObjectiveC.runtime
-import UIKit
+
 
 extension String {
     func jsSanitize() -> String {
@@ -98,3 +99,4 @@ class HCaptchaDebugInfo {
         ]
     }
 }
+#endif

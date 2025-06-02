@@ -2,10 +2,16 @@
 //  AccountOnboardingController.swift
 //  StripeConnect
 //
-//  Created by Chris Mays on 9/17/24.
+//  Created by Mel Ludowise on 4/30/24.
 //
 
+@_spi(STP) import StripeUICore
+
+#if canImport(UIKit) && !os(macOS)
 import UIKit
+#elseif canImport(AppKit) && os(macOS)
+import AppKit
+#endif
 
 /// Delegate of an `AccountOnboardingController`
 @available(iOS 15, *)
@@ -105,7 +111,8 @@ public final class AccountOnboardingController {
     }
 
     /// Presents the onboarding experience.
-    public func present(from viewController: UIViewController, animated: Bool = true) {
+    public func present(from viewController: StripeViewController, animated: Bool = true) {
+        #if canImport(UIKit) && !os(macOS)
         let navController = UINavigationController(rootViewController: webVC)
         navController.navigationBar.prefersLargeTitles = false
         navController.modalPresentationStyle = .fullScreen
@@ -124,6 +131,39 @@ public final class AccountOnboardingController {
 
         webVC.navigationItem.rightBarButtonItem = closeButton
         viewController.present(navController, animated: animated)
+        #elseif canImport(AppKit) && os(macOS)
+        // AppKit implementation - present as a sheet or new window
+        if let window = viewController.view.window {
+            let windowController = NSWindowController()
+            let contentWindow = NSWindow(
+                contentRect: NSRect(x: 0, y: 0, width: 800, height: 600),
+                styleMask: [.titled, .closable, .resizable],
+                backing: .buffered,
+                defer: false
+            )
+            contentWindow.contentViewController = webVC
+            contentWindow.title = webVC.title ?? "Account Onboarding"
+            windowController.window = contentWindow
+            
+            window.beginSheet(contentWindow) { _ in
+                // Handle sheet completion
+            }
+        } else {
+            // Fallback: create new window
+            let windowController = NSWindowController()
+            let contentWindow = NSWindow(
+                contentRect: NSRect(x: 0, y: 0, width: 800, height: 600),
+                styleMask: [.titled, .closable, .resizable],
+                backing: .buffered,
+                defer: false
+            )
+            contentWindow.contentViewController = webVC
+            contentWindow.title = webVC.title ?? "Account Onboarding"
+            windowController.window = contentWindow
+            windowController.showWindow(nil)
+        }
+        #endif
+        
         retainedSelf = self
         webVC.onDismiss = { [weak self] in
             guard let self else { return }
@@ -135,11 +175,11 @@ public final class AccountOnboardingController {
     /// Dismisses the currently presented onboarding experience.
     /// No-Ops if not presented.
     func dismiss(animated: Bool = true) {
-        webVC.dismiss(animated: animated)
+        webVC.stripeDismiss(animated: animated)
     }
 
     @objc
-    func closeButtonTapped(_ sender: UIBarButtonItem) {
+    func closeButtonTapped(_ sender: Any) {
         Task { @MainActor in
             do {
                 try await self.webVC.sendMessageAsync(MobileInputReceivedSender())

@@ -7,7 +7,6 @@
 //
 
 import Foundation
-import UIKit
 
 private let TelemetryURL = URL(string: "https://m.stripe.com/6")!
 
@@ -117,7 +116,7 @@ private let TelemetryURL = URL(string: "https://m.stripe.com/6")!
         }
         return model ?? "Unknown"
     }()
-
+#if !os(macOS)
     private var osVersion = UIDevice.current.systemVersion
 
     private var screenSize: String {
@@ -132,7 +131,10 @@ private let TelemetryURL = URL(string: "https://m.stripe.com/6")!
         return String(format: "%.0fw_%.0fh_%.0fr", width, height, scale)
         #endif
     }
-
+    #else
+    private var osVersion = "Test"
+    private var screenSize: String = "macOS"
+    #endif
     private var timeZoneOffset: String {
         let timeZone = NSTimeZone.local as NSTimeZone
         let hoursFromGMT = Double(timeZone.secondsFromGMT) / (60 * 60)

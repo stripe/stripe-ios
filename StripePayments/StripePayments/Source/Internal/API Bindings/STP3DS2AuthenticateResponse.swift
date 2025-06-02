@@ -23,8 +23,10 @@ enum STP3DS2AuthenticateResponseState: Int {
 
 class STP3DS2AuthenticateResponse: NSObject, STPAPIResponseDecodable {
     private(set) var allResponseFields: [AnyHashable: Any] = [:]
+#if !os(macOS)
     /// The Authentication Response received from the Access Control Server
     private(set) var authenticationResponse: STDSAuthenticationResponse?
+#endif
     /// When the 3DS2 Authenticate Response was created.
     private(set) var created: Date?
     /// Whether or not this Authenticate Response was created in livemode.
@@ -49,7 +51,7 @@ class STP3DS2AuthenticateResponse: NSObject, STPAPIResponseDecodable {
         let fallbackURL = dict.stp_url(forKey: "fallback_redirect_url")
 
         let authenticationResponseJSON = dict.stp_dictionary(forKey: "ares")
-
+#if !os(macOS)
         var authenticationResponse: STDSAuthenticationResponse?
         if let authenticationResponseJSON = authenticationResponseJSON {
             authenticationResponse = STDSAuthenticationResponseFromJSON(authenticationResponseJSON)
@@ -58,7 +60,7 @@ class STP3DS2AuthenticateResponse: NSObject, STPAPIResponseDecodable {
             // we need at least one of ares or fallback_redirect_url
             return nil
         }
-
+#endif
         let stateString = dict.stp_string(forKey: "state")
         var state: STP3DS2AuthenticateResponseState = .unknown
         if stateString == "succeeded" {
@@ -68,7 +70,9 @@ class STP3DS2AuthenticateResponse: NSObject, STPAPIResponseDecodable {
         }
 
         let authResponse = self.init()
+#if !os(macOS)
         authResponse.authenticationResponse = authenticationResponse
+        #endif
         authResponse.state = state
         authResponse.created = dict.stp_date(forKey: "created")
         authResponse.livemode = dict.stp_bool(forKey: "livemode", or: true)

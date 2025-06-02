@@ -5,9 +5,10 @@
 //  Created by Flávio Caetano on 22/03/17.
 //  Copyright © 2018 HCaptcha. All rights reserved.
 //
+#if !os(macOS)
 
 import JavaScriptCore
-import UIKit
+
 import WebKit
 
 /** Widget display mode
@@ -305,3 +306,4 @@ private extension HCaptchaConfig {
         return url
     }
 }
+#endif

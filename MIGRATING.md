@@ -322,3 +322,145 @@ To validate `STPCard` properties individually, you should use the following:
 These methods follow the validation method convention used by [key-value validation](http://developer.apple.com/library/mac/#documentation/cocoa/conceptual/KeyValueCoding/Articles/Validation.html).  So, you can use these methods by invoking them directly, or by calling `[card validateValue:forKey:error]` for a property on the `STPCard` object.
 
 When using these validation methods, you will want to set the property on your card object when a property does validate before validating the next property.  This allows the methods to use existing properties on the card correctly to validate a new property.  For example, validating `5` for the `expMonth` property will return YES if no `expYear` is set.  But if `expYear` is set and you try to set `expMonth` to 5 and the combination of `expMonth` and `expYear` is in the past, `5` will not validate.  The order in which you call the validate methods does not matter for this though.
+
+```
+
+# Migrating to newer versions
+
+## Migrating to native macOS AppKit support (v24.14.0+)
+
+Starting with version 24.14.0, the Stripe SDK now supports native macOS AppKit applications in addition to iOS and macOS Catalyst apps.
+
+### What's New
+
+- **Native AppKit Support**: The SDK now works natively with AppKit components like `NSViewController`, `NSView`, `NSWindow`, etc.
+- **Platform Abstraction Layer**: Unified APIs that work across both iOS (UIKit) and macOS (AppKit)
+- **Automatic Framework Detection**: The SDK automatically uses the appropriate UI framework based on the target platform
+- **Native macOS Presentation**: Uses `NSWindow` sheet presentation instead of custom bottom sheets on macOS
+
+### Migration Steps
+
+#### 1. Update Platform Support
+
+If you're adding macOS support to an existing iOS app:
+
+**Package.swift:**
+```swift
+platforms: [
+    .iOS(.v13),
+    .macOS(.v11)  // Add macOS support
+]
+```
+
+**Podfile:**
+```ruby
+# Add macOS platform
+platform :osx, '11.0'
+
+target 'YourMacApp' do
+  pod 'Stripe', '~> 24.14.0'
+end
+```
+
+#### 2. Update Imports
+
+For cross-platform code, you can now use the platform abstraction layer:
+
+```swift
+// Before (iOS only)
+import UIKit
+
+// After (cross-platform)
+@_spi(STP) import StripeUICore  // Provides StripeViewController, StripeView, etc.
+```
+
+#### 3. Update View Controller Code
+
+**Before (iOS only):**
+```swift
+class PaymentViewController: UIViewController {
+    func presentPayment() {
+        present(paymentSheet, animated: true)
+    }
+}
+```
+
+**After (cross-platform):**
+```swift
+class PaymentViewController: StripeViewController {
+    func presentPayment() {
+        stripePresent(paymentSheet, animated: true)
+    }
+}
+```
+
+#### 4. Platform-Specific Code
+
+For platform-specific implementations:
+
+```swift
+#if canImport(UIKit) && !os(macOS)
+import UIKit
+// iOS-specific code
+#elseif canImport(AppKit) && os(macOS)
+import AppKit
+// macOS-specific code
+#endif
+```
+
+### Key Differences
+
+#### Modal Presentation
+- **iOS**: Custom bottom sheet with gesture dismissal
+- **macOS**: Native sheet presentation using `NSWindow.beginSheet`
+
+#### Navigation
+- **iOS**: `UINavigationController` for navigation stacks
+- **macOS**: View controller containment with custom navigation
+
+#### Styling
+- **iOS**: Uses `UIColor.systemBackground`, `UIFont.systemFont`
+- **macOS**: Uses `NSColor.controlBackgroundColor`, `NSFont.systemFont`
+
+### Breaking Changes
+
+- **Catalyst-only apps**: No breaking changes, existing Catalyst apps continue to work
+- **New macOS apps**: Use the new AppKit-native APIs for better integration
+- **Cross-platform apps**: Consider using the platform abstraction layer for shared code
+
+### Example: Creating a Cross-Platform Payment View
+
+```swift
+import StripePaymentSheet
+@_spi(STP) import StripeUICore
+
+class PaymentViewController: StripeViewController {
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        setupUI()
+    }
+    
+    private func setupUI() {
+        stripeView.stripeBackgroundColor = .stripeSystemBackground
+        
+        let button = StripeButton()
+        button.setTitle("Pay Now", for: .normal)
+        button.addTarget(self, action: #selector(payButtonTapped), for: .touchUpInside)
+        
+        stripeView.addSubview(button)
+        // Add constraints...
+    }
+    
+    @objc private func payButtonTapped() {
+        // Present payment sheet using cross-platform API
+        stripePresent(paymentSheet, animated: true)
+    }
+}
+```
+
+For more examples, see the [AppKit Example](Example/AppKit%20Example/) project.
+
+---
+
+// ... existing code ...

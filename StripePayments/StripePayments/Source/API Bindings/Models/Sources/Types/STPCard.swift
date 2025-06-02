@@ -7,7 +7,7 @@
 //
 
 import Foundation
-import UIKit
+
 
 /// The various funding sources for a payment card.
 @objc

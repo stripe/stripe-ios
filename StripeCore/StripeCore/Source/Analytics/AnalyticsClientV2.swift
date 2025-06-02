@@ -7,7 +7,6 @@
 //
 
 import Foundation
-import UIKit
 
 /// Dependency-injectable protocol for `AnalyticsClientV2`.
 @_spi(STP) public protocol AnalyticsClientV2Protocol {
@@ -125,7 +124,11 @@ extension AnalyticsClientV2Protocol {
         payload["created"] = Date().timeIntervalSince1970
 
         // Common payload
+#if !os(macOS)
         let version = UIDevice.current.systemVersion
+        #else
+        let version = "mac"
+        #endif
         if !version.isEmpty {
             payload["os_version"] = version
         }
@@ -141,9 +144,11 @@ extension AnalyticsClientV2Protocol {
             "install": InstallMethod.current.rawValue,
             "app_bundle_id": Bundle.stp_applicationBundleId() ?? "",
         ]
+#if !os(macOS)
         if let deviceId = UIDevice.current.identifierForVendor?.uuidString {
             payload["device_id"] = deviceId
         }
+        #endif
 
         return payload
     }

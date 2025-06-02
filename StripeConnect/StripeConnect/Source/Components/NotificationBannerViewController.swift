@@ -1,15 +1,23 @@
 //
 //  NotificationBannerViewController.swift
-//  StripeConnectTests
+//  StripeConnect
 //
-//  Created by Mel Ludowise on 9/25/24.
+//  Created by Mel Ludowise on 10/11/24.
 //
 
+@_spi(STP) import StripeUICore
+
+#if canImport(UIKit) && !os(macOS)
 import UIKit
+#elseif canImport(AppKit) && os(macOS)
+import AppKit
+#endif
 
-@_spi(DashboardOnly)
+/**
+ A banner that displays embedded components like notifications and prompts.
+ */
 @available(iOS 15, *)
-public class NotificationBannerViewController: UIViewController {
+public class NotificationBannerViewController: StripeViewController {
 
     struct Props: Encodable {
         let collectionOptions: AccountCollectionOptions
