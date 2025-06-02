@@ -55,6 +55,7 @@ protocol PayWithLinkCoordinating: AnyObject {
     func handlePaymentDetailsSelected(_ paymentDetails: ConsumerPaymentDetails, confirmationExtras: LinkConfirmationExtras)
     func logout(cancel: Bool)
     func bailToWebFlow()
+    func allowSheetDismissal(_ enable: Bool)
 }
 
 /// A view controller for paying with Link.
@@ -546,8 +547,7 @@ extension PayWithLinkViewController: PayWithLinkCoordinating {
         confirmationExtras: LinkConfirmationExtras?,
         completion: @escaping (PaymentSheetResult, STPAnalyticsClient.DeferredIntentConfirmationType?) -> Void
     ) {
-        view.isUserInteractionEnabled = false
-        context.isDismissible = false
+        allowSheetDismissal(false)
         payWithLinkDelegate?.payWithLinkViewControllerDidConfirm(
             self,
             intent: context.intent,
@@ -561,10 +561,16 @@ extension PayWithLinkViewController: PayWithLinkCoordinating {
                 )
             )
         ) { [weak self] result, confirmationType in
-            self?.view.isUserInteractionEnabled = true
-            self?.context.isDismissible = true
+            if result.isCanceledOrFailed {
+                self?.allowSheetDismissal(true)
+            }
             completion(result, confirmationType)
         }
+    }
+
+    func allowSheetDismissal(_ enable: Bool) {
+        view.isUserInteractionEnabled = enable
+        context.isDismissible = enable
     }
 
     func confirmWithApplePay() {

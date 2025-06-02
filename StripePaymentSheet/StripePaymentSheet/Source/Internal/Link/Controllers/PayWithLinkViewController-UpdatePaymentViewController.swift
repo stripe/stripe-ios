@@ -176,9 +176,15 @@ extension PayWithLinkViewController {
                 )
             )
 
+            coordinator?.allowSheetDismissal(false)
+
             linkAccount.updatePaymentDetails(id: paymentMethod.stripeID, updateParams: updateParams) { [weak self] result in
                 guard let self else {
                     return
+                }
+
+                defer {
+                    self.coordinator?.allowSheetDismissal(true)
                 }
 
                 switch result {
