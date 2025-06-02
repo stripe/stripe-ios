@@ -8,7 +8,6 @@
 
 import Foundation
 
-
 /// The various funding sources for a payment card.
 @objc
 public enum STPCardFundingType: Int {

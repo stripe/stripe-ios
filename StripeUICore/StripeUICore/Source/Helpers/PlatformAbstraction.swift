@@ -75,23 +75,23 @@ import AppKit
             subview.topAnchor.constraint(equalTo: topAnchor),
             subview.leadingAnchor.constraint(equalTo: leadingAnchor),
             subview.trailingAnchor.constraint(equalTo: trailingAnchor),
-            subview.bottomAnchor.constraint(equalTo: bottomAnchor)
+            subview.bottomAnchor.constraint(equalTo: bottomAnchor),
         ])
     }
-    
+
     func stripeAddSubview(_ subview: StripeView) {
         addSubview(subview)
     }
-    
+
     func stripeRemoveFromSuperview() {
         removeFromSuperview()
     }
-    
+
     var stripeBackgroundColor: StripeColor? {
         get { backgroundColor }
         set { backgroundColor = newValue }
     }
-    
+
     #elseif canImport(AppKit) && os(macOS)
     func addAndPinSubview(_ subview: StripeView) {
         subview.translatesAutoresizingMaskIntoConstraints = false
@@ -100,24 +100,24 @@ import AppKit
             subview.topAnchor.constraint(equalTo: topAnchor),
             subview.leadingAnchor.constraint(equalTo: leadingAnchor),
             subview.trailingAnchor.constraint(equalTo: trailingAnchor),
-            subview.bottomAnchor.constraint(equalTo: bottomAnchor)
+            subview.bottomAnchor.constraint(equalTo: bottomAnchor),
         ])
     }
-    
+
     func stripeAddSubview(_ subview: StripeView) {
         addSubview(subview)
     }
-    
+
     func stripeRemoveFromSuperview() {
         removeFromSuperview()
     }
-    
+
     var stripeBackgroundColor: StripeColor? {
-        get { 
+        get {
             guard let cgColor = layer?.backgroundColor else { return nil }
             return NSColor(cgColor: cgColor)
         }
-        set { 
+        set {
             wantsLayer = true
             layer?.backgroundColor = newValue?.cgColor
         }
@@ -128,18 +128,18 @@ import AppKit
 @_spi(STP) public extension StripeViewController {
     #if canImport(UIKit) && !os(macOS)
     var stripeView: StripeView { return view }
-    
+
     func stripePresent(_ viewController: StripeViewController, animated: Bool = true, completion: (() -> Void)? = nil) {
         present(viewController, animated: animated, completion: completion)
     }
-    
+
     func stripeDismiss(animated: Bool = true, completion: (() -> Void)? = nil) {
         dismiss(animated: animated, completion: completion)
     }
-    
+
     #elseif canImport(AppKit) && os(macOS)
     var stripeView: StripeView { return view }
-    
+
     func stripePresent(_ viewController: StripeViewController, animated: Bool = true, completion: (() -> Void)? = nil) {
         // AppKit modal presentation
         if let window = view.window {
@@ -154,7 +154,7 @@ import AppKit
             completion?()
         }
     }
-    
+
     func stripeDismiss(animated: Bool = true, completion: (() -> Void)? = nil) {
         if let window = view.window, let sheetParent = window.sheetParent {
             sheetParent.endSheet(window)
@@ -176,7 +176,7 @@ import AppKit
             return .white
         }
     }
-    
+
     static var stripeLabel: StripeColor {
         if #available(iOS 13.0, *) {
             return .label
@@ -184,7 +184,7 @@ import AppKit
             return .black
         }
     }
-    
+
     #elseif canImport(AppKit) && os(macOS)
     static var stripeSystemBackground: StripeColor {
         if #available(macOS 10.14, *) {
@@ -193,7 +193,7 @@ import AppKit
             return .white
         }
     }
-    
+
     static var stripeLabel: StripeColor {
         if #available(macOS 10.14, *) {
             return .labelColor
@@ -208,7 +208,7 @@ import AppKit
 @_spi(STP) public extension StripeApplication {
     #if canImport(UIKit) && !os(macOS)
     static var stripeShared: StripeApplication { return .shared }
-    
+
     var stripeKeyWindow: StripeWindow? {
         if #available(iOS 13.0, *) {
             return connectedScenes
@@ -220,12 +220,12 @@ import AppKit
             return keyWindow
         }
     }
-    
+
     #elseif canImport(AppKit) && os(macOS)
     static var stripeShared: StripeApplication { return .shared }
-    
+
     var stripeKeyWindow: StripeWindow? {
         return keyWindow
     }
     #endif
-} 
+}

@@ -7,7 +7,6 @@
 #if !os(macOS)
 import Foundation
 
-
 /**
  * The protocol for a contractor which can handle/open URLs in an external viewer/browser
  */

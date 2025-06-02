@@ -6,8 +6,6 @@
 //  Copyright © 2022 Stripe, Inc. All rights reserved.
 //
 
-
-
 @_spi(STP) public class STPPaymentMethodOptions: NSObject, STPAPIResponseDecodable {
 
     @_spi(STP) public let usBankAccount: USBankAccount?

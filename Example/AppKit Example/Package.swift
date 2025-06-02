@@ -10,7 +10,7 @@ let package = Package(
         .executable(
             name: "StripeAppKitExample",
             targets: ["StripeAppKitExample"]
-        )
+        ),
     ],
     dependencies: [
         .package(path: "../..") // Reference to the main Stripe SDK
@@ -20,10 +20,10 @@ let package = Package(
             name: "StripeAppKitExample",
             dependencies: [
                 .product(name: "StripePaymentSheet", package: "stripe-ios-mac"),
-                .product(name: "StripeUICore", package: "stripe-ios-mac")
+                .product(name: "StripeUICore", package: "stripe-ios-mac"),
             ],
             path: ".",
             sources: ["AppKitExampleApp.swift"]
-        )
+        ),
     ]
-) 
+)

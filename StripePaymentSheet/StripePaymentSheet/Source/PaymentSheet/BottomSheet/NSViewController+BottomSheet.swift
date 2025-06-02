@@ -30,9 +30,9 @@ protocol SheetPresentable: NSViewController {
 /// AppKit-compatible sheet presentation delegate
 @objc(STPSheetTransitioningDelegate)
 class SheetTransitioningDelegate: NSObject {
-    
+
     static var appearance: PaymentSheet.Appearance = PaymentSheet.Appearance.default
-    
+
     /**
      Returns an instance of the delegate, retained for the duration of presentation
      */
@@ -45,7 +45,7 @@ class SheetTransitioningDelegate: NSObject {
 /// For internal SDK use only
 @objc(STP_Internal_SheetViewController)
 class SheetViewController: NSViewController {
-    
+
     struct Constants {
         static let keyboardAvoidanceEdgePadding: CGFloat = 16
     }
@@ -95,45 +95,45 @@ class SheetViewController: NSViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+
         view.wantsLayer = true
         view.layer?.backgroundColor = NSColor.controlBackgroundColor.cgColor
-        
+
         // Set up the scroll view
         view.addSubview(scrollView)
         scrollView.translatesAutoresizingMaskIntoConstraints = false
-        
+
         NSLayoutConstraint.activate([
             scrollView.topAnchor.constraint(equalTo: view.topAnchor),
             scrollView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             scrollView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            scrollView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
+            scrollView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
         ])
-        
+
         // Create document view for scroll view
         let documentView = NSView()
         scrollView.documentView = documentView
-        
+
         // Add content container to document view
         documentView.addSubview(contentContainerView)
         contentContainerView.translatesAutoresizingMaskIntoConstraints = false
-        
+
         NSLayoutConstraint.activate([
             contentContainerView.topAnchor.constraint(equalTo: documentView.topAnchor),
             contentContainerView.leadingAnchor.constraint(equalTo: documentView.leadingAnchor),
             contentContainerView.trailingAnchor.constraint(equalTo: documentView.trailingAnchor),
             contentContainerView.bottomAnchor.constraint(equalTo: documentView.bottomAnchor),
-            contentContainerView.widthAnchor.constraint(equalTo: scrollView.widthAnchor)
+            contentContainerView.widthAnchor.constraint(equalTo: scrollView.widthAnchor),
         ])
     }
 
     private func updateContent(to contentViewController: SheetContentViewController) {
         // Remove existing content
         contentContainerView.arrangedSubviews.forEach { $0.removeFromSuperview() }
-        
+
         // Add navigation bar if present
         contentContainerView.addArrangedSubview(contentViewController.navigationBar)
-        
+
         // Add the content view controller
         addChild(contentViewController)
         contentContainerView.addArrangedSubview(contentViewController.view)
@@ -154,4 +154,4 @@ extension SheetViewController: SheetPresentable {
     }
 }
 
-#endif 
+#endif

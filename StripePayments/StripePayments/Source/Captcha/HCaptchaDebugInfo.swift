@@ -10,7 +10,6 @@ import CryptoKit
 import Foundation
 import ObjectiveC.runtime
 
-
 extension String {
     func jsSanitize() -> String {
         return self.replacingOccurrences(of: ".", with: "_")

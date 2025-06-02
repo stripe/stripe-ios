@@ -6,8 +6,6 @@
 //  Copyright © 2022 Stripe, Inc. All rights reserved.
 //
 
-
-
 // MARK: - STPPaymentMethodUSBankAccount
 /// A US Bank Account Payment Method (ACH)
 /// - seealso: https://stripe.com/docs/api/payment_methods/object#payment_method_object-us_bank_account

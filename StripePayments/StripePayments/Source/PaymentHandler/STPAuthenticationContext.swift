@@ -9,7 +9,6 @@
 import Foundation
 import SafariServices
 
-
 /// `STPAuthenticationContext` provides information required to present authentication challenges
 /// to a user.
 @objc public protocol STPAuthenticationContext: NSObjectProtocol {

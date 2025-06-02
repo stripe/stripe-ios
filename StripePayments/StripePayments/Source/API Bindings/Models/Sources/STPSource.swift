@@ -8,7 +8,6 @@
 
 import Foundation
 
-
 /// Representation of a customer's payment instrument created with the Stripe API. - seealso: https://stripe.com/docs/api#sources
 public class STPSource: NSObject, STPAPIResponseDecodable, STPSourceProtocol {
 

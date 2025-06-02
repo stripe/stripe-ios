@@ -54,7 +54,7 @@ import UIKit
             // Recurse for any presented controllers
             return presented.findTopMostPresentedViewController()
         }
-        
+
         return self
     }
 }
@@ -95,7 +95,7 @@ import AppKit
             // Recurse for any presented controllers
             return presented.findTopMostPresentedViewController()
         }
-        
+
         return self
     }
 }

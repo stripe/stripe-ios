@@ -144,7 +144,7 @@ public final class AccountOnboardingController {
             contentWindow.contentViewController = webVC
             contentWindow.title = webVC.title ?? "Account Onboarding"
             windowController.window = contentWindow
-            
+
             window.beginSheet(contentWindow) { _ in
                 // Handle sheet completion
             }
@@ -163,7 +163,7 @@ public final class AccountOnboardingController {
             windowController.showWindow(nil)
         }
         #endif
-        
+
         retainedSelf = self
         webVC.onDismiss = { [weak self] in
             guard let self else { return }

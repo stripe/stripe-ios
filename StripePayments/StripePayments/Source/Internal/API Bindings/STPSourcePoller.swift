@@ -10,7 +10,6 @@
 import Foundation
 @_spi(STP) import StripeCore
 
-
 class STPSourcePoller: NSObject {
     required init(
         apiClient: STPAPIClient,

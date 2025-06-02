@@ -10,7 +10,6 @@ import Foundation
 import PassKit
 @_spi(STP) import StripeCore
 
-
 #if canImport(Stripe3DS2)
     import Stripe3DS2
 #endif
@@ -131,7 +130,6 @@ extension STPAPIClient {
 /// STPAPIClient extensions to upload files.
 extension STPAPIClient {
 
-    
     /// Uses the Stripe file upload API to upload an image. This can be used for
     /// identity verification and evidence disputes.
     /// - Parameters:

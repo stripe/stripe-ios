@@ -70,7 +70,7 @@ extension NSImage {
             width: CGFloat(floor(size.width * scale)),
             height: CGFloat(floor(size.height * scale))
         )
-        
+
         guard let bitmapRep = NSBitmapImageRep(
             bitmapDataPlanes: nil,
             pixelsWide: Int(newImageSize.width),
@@ -85,13 +85,13 @@ extension NSImage {
         ) else {
             return nil
         }
-        
+
         bitmapRep.size = newImageSize
         NSGraphicsContext.saveGraphicsState()
         NSGraphicsContext.current = NSGraphicsContext(bitmapImageRep: bitmapRep)
         draw(in: NSRect(origin: .zero, size: newImageSize))
         NSGraphicsContext.restoreGraphicsState()
-        
+
         let newImage = NSImage(size: newImageSize)
         newImage.addRepresentation(bitmapRep)
         return newImage
@@ -101,7 +101,7 @@ extension NSImage {
         guard let cgImage = self.cgImage(forProposedRect: nil, context: nil, hints: nil) else {
             return nil
         }
-        
+
         let bitmapRep = NSBitmapImageRep(cgImage: cgImage)
         return bitmapRep.representation(using: .jpeg, properties: [.compressionFactor: compressionQuality])
     }
@@ -190,4 +190,4 @@ extension Array where Element: NSImage {
     }
 }
 
-#endif 
+#endif

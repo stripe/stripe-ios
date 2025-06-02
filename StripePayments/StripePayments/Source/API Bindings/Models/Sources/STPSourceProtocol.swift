@@ -8,7 +8,6 @@
 
 import Foundation
 
-
 /// Objects conforming to this protocol can be attached to a Stripe Customer object
 /// as a payment source.
 /// - seealso: https://stripe.com/docs/api#customer_object-sources

@@ -6,8 +6,6 @@
 //  Copyright © 2022 Stripe, Inc. All rights reserved.
 //
 
-
-
 @objc public enum STPMicrodepositType: Int {
 
     /// This is an unknown type that's been added since the SDK

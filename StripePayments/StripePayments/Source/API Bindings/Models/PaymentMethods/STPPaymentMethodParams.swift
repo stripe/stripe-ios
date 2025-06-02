@@ -8,7 +8,6 @@
 
 import Foundation
 
-
 /// An object representing parameters used to create a PaymentMethod object.
 /// @note To create a PaymentMethod from an Apple Pay PKPaymentToken, see `STPAPIClient createPaymentMethodWithPayment:completion:`
 /// - seealso: https://stripe.com/docs/api/payment_methods/create
