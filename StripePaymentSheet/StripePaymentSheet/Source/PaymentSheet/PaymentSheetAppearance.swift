@@ -48,6 +48,10 @@ public extension PaymentSheet {
         /// Describes the appearance of the Embedded Mobile Payment Element
         public var embeddedPaymentElement: EmbeddedPaymentElement = EmbeddedPaymentElement()
 
+        /// The corner radius used for the bottom sheet container (applies only to the top corners)
+        /// - Note: The behavior of this property is consistent with the behavior of corner radius on `CALayer`
+        public var bottomSheetCornerRadius: CGFloat = 12.0
+
         /// Describes the padding used for all forms
         public var formInsets: NSDirectionalEdgeInsets = PaymentSheetUI.defaultSheetMargins
 
@@ -329,3 +333,4 @@ extension PaymentSheet.Appearance {
         return .insets(top: formInsets.top, leading: formInsets.leading, trailing: formInsets.trailing)
     }
 }
+
