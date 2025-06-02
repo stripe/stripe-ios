@@ -1283,7 +1283,7 @@ class PaymentSheetSnapshotTests: STPSnapshotTestCase {
 
         var appearance = PaymentSheet.Appearance()
         appearance.textFieldInsets = NSDirectionalEdgeInsets(top: 25, leading: 35, bottom: 25, trailing: 35)
-        
+
         // Add contrasting colors to make the insets more visible
         appearance.colors.componentBackground = .lightGray
         appearance.colors.componentBorder = .red
@@ -1300,7 +1300,7 @@ class PaymentSheetSnapshotTests: STPSnapshotTestCase {
 
         var appearance = PaymentSheet.Appearance()
         appearance.textFieldInsets = NSDirectionalEdgeInsets(top: 20, leading: 30, bottom: 20, trailing: 30)
-        
+
         // Add shadow to test interaction with text field insets
         appearance.shadow = PaymentSheet.Appearance.Shadow(
             color: .systemBlue,
