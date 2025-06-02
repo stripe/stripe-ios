@@ -1,29 +1,25 @@
 GET
-https:\/\/api\.stripe\.com\/v1\/payment_intents\/pi_3QcrvwFY0qyl6XeW1l9U6tAr\?client_secret=pi_3QcrvwFY0qyl6XeW1l9U6tAr_secret_lgAxf0iqSOD019UYzXRv7WLQH&expand%5B0%5D=payment_method$
+https:\/\/api\.stripe\.com\/v1\/payment_intents\/pi_3RVf2WFY0qyl6XeW1eC7o1eH\?client_secret=pi_3RVf2WFY0qyl6XeW1eC7o1eH_secret_qi6ohIMlFUgZw8XvdtAzwyDfg&expand%5B0%5D=payment_method$
 200
 application/json
-access-control-allow-methods: GET, HEAD, PUT, PATCH, POST, DELETE
-content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; upgrade-insecure-requests; report-uri /csp-violation https://q.stripe.com/csp-violation?q=1msrHjH7nVl42tTYgOLVN1zwWcuqeNFQXqLyMTRbq1hOsY6VHo6aegtWjAHHqwTJfHjCBMPGww%3D%3D
-Server: nginx
-Cache-Control: no-cache, no-store
-reporting-endpoints: coop="https://q.stripe.com/coop-report"
-x-wc: AB
-Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
-cross-origin-opener-policy-report-only: same-origin; report-to="coop"
+Content-Type: application/json
 Access-Control-Allow-Origin: *
-x-stripe-routing-context-priority-tier: api-testmode
 x-stripe-priority-routing-enabled: true
-report-to: {"group":"coop","max_age":8640,"endpoints":[{"url":"https://q.stripe.com/coop-report"}],"include_subdomains":true}
-request-id: req_mmn6YAWJcxhIvY
-Content-Length: 1642
-Vary: Origin
-Date: Thu, 02 Jan 2025 17:11:45 GMT
-stripe-version: 2020-08-27
+content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=xgE75rREzjcEkYUkaVmWf7Pc8XbHfwwOm13dWL0J_MI5ASC5zTMYhUKz3uEDBtXfyUFQLgC3F2-sFsJo
+x-wc: ABGHI
+access-control-allow-methods: GET, HEAD, PUT, PATCH, POST, DELETE
+Server: nginx
 access-control-expose-headers: Request-Id, Stripe-Manage-Version, Stripe-Should-Retry, X-Stripe-External-Auth-Required, X-Stripe-Privileged-Session-Required
 access-control-max-age: 300
+Cache-Control: no-cache, no-store
+Date: Mon, 02 Jun 2025 20:33:01 GMT
+stripe-version: 2020-08-27
 access-control-allow-credentials: true
-Content-Type: application/json
-x-content-type-options: nosniff
+Content-Length: 1688
+x-stripe-routing-context-priority-tier: api-testmode
+Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
+Vary: Origin
+request-id: req_OgpWQW9fgSJvjA
 
 {
   "payment_method_configuration_details" : null,
@@ -43,6 +39,7 @@ x-content-type-options: nosniff
   "next_action" : null,
   "total_details" : {
     "amount_discount" : 0,
+    "amount_tip" : null,
     "amount_tax" : 0
   },
   "payment_method" : {
@@ -58,10 +55,11 @@ x-content-type-options: nosniff
       },
       "branch_code" : ""
     },
-    "id" : "pm_1QcrvwFY0qyl6XeWuPHsAxAh",
+    "id" : "pm_1RVf2VFY0qyl6XeWUMFS4oAk",
     "billing_details" : {
       "email" : "test@example.com",
       "phone" : null,
+      "tax_id" : null,
       "name" : "SEPA Test Customer",
       "address" : {
         "state" : null,
@@ -73,13 +71,13 @@ x-content-type-options: nosniff
       }
     },
     "livemode" : false,
-    "created" : 1735837904,
+    "created" : 1748896379,
     "allow_redisplay" : "unspecified",
     "type" : "sepa_debit",
     "customer" : null
   },
-  "client_secret" : "pi_3QcrvwFY0qyl6XeW1l9U6tAr_secret_lgAxf0iqSOD019UYzXRv7WLQH",
-  "id" : "pi_3QcrvwFY0qyl6XeW1l9U6tAr",
+  "client_secret" : "pi_3RVf2WFY0qyl6XeW1eC7o1eH_secret_qi6ohIMlFUgZw8XvdtAzwyDfg",
+  "id" : "pi_3RVf2WFY0qyl6XeW1eC7o1eH",
   "confirmation_method" : "automatic",
   "amount_details" : {
     "tip" : {
@@ -92,6 +90,6 @@ x-content-type-options: nosniff
     "sepa_debit"
   ],
   "setup_future_usage" : null,
-  "created" : 1735837904,
+  "created" : 1748896380,
   "description" : null
 }

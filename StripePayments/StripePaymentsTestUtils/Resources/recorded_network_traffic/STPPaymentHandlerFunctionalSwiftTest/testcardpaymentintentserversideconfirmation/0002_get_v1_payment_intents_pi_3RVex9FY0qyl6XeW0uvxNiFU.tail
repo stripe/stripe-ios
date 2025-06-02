@@ -1,29 +1,25 @@
 GET
-https:\/\/api\.stripe\.com\/v1\/payment_intents\/pi_3QcrvrFY0qyl6XeW1i6CMHMt\?client_secret=pi_3QcrvrFY0qyl6XeW1i6CMHMt_secret_3reTvglG9qr59zAlloaCFmjZb&expand%5B0%5D=payment_method$
+https:\/\/api\.stripe\.com\/v1\/payment_intents\/pi_3RVex9FY0qyl6XeW0uvxNiFU\?client_secret=pi_3RVex9FY0qyl6XeW0uvxNiFU_secret_9Hfqj2rtbFzOts9So7nmwcr6f&expand%5B0%5D=payment_method$
 200
 application/json
-access-control-allow-methods: GET, HEAD, PUT, PATCH, POST, DELETE
-content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; upgrade-insecure-requests; report-uri /csp-violation https://q.stripe.com/csp-violation?q=xLC2QQ5bFiAzls-k67IapSYxin4yYva6FtPiYB18ACHCFAD8YHkoI4xVKmqKf24b8261tVllUA%3D%3D
-Server: nginx
-Cache-Control: no-cache, no-store
-reporting-endpoints: coop="https://q.stripe.com/coop-report"
-x-wc: AB
-Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
-cross-origin-opener-policy-report-only: same-origin; report-to="coop"
+Content-Type: application/json
 Access-Control-Allow-Origin: *
-x-stripe-routing-context-priority-tier: api-testmode
 x-stripe-priority-routing-enabled: true
-report-to: {"group":"coop","max_age":8640,"endpoints":[{"url":"https://q.stripe.com/coop-report"}],"include_subdomains":true}
-request-id: req_kikDqRPWyUpKnu
-Content-Length: 1933
-Vary: Origin
-Date: Thu, 02 Jan 2025 17:11:40 GMT
-stripe-version: 2020-08-27
+content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=m7Ya9Xs-h7LxVhAfPdaoWSH04PVtDSWdnl4i-pFAVx5lrWD08RYVH8OO2bL8bbx4rpR0yE6k9Q_jfAnB
+x-wc: ABGHI
+access-control-allow-methods: GET, HEAD, PUT, PATCH, POST, DELETE
+Server: nginx
 access-control-expose-headers: Request-Id, Stripe-Manage-Version, Stripe-Should-Retry, X-Stripe-External-Auth-Required, X-Stripe-Privileged-Session-Required
 access-control-max-age: 300
+Cache-Control: no-cache, no-store
+Date: Mon, 02 Jun 2025 20:27:28 GMT
+stripe-version: 2020-08-27
 access-control-allow-credentials: true
-Content-Type: application/json
-x-content-type-options: nosniff
+Content-Length: 1979
+x-stripe-routing-context-priority-tier: api-testmode
+Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
+Vary: Origin
+request-id: req_M115vdivsbZSF8
 
 {
   "payment_method_configuration_details" : null,
@@ -43,14 +39,16 @@ x-content-type-options: nosniff
   "next_action" : null,
   "total_details" : {
     "amount_discount" : 0,
+    "amount_tip" : null,
     "amount_tax" : 0
   },
   "payment_method" : {
     "object" : "payment_method",
-    "id" : "pm_1QcrvqFY0qyl6XeW11bmkVWR",
+    "id" : "pm_1RVex8FY0qyl6XeWFF22vYCK",
     "billing_details" : {
       "email" : null,
       "phone" : null,
+      "tax_id" : null,
       "name" : null,
       "address" : {
         "state" : null,
@@ -88,13 +86,13 @@ x-content-type-options: nosniff
       "country" : "US"
     },
     "livemode" : false,
-    "created" : 1735837899,
+    "created" : 1748896047,
     "allow_redisplay" : "unspecified",
     "type" : "card",
     "customer" : null
   },
-  "client_secret" : "pi_3QcrvrFY0qyl6XeW1i6CMHMt_secret_3reTvglG9qr59zAlloaCFmjZb",
-  "id" : "pi_3QcrvrFY0qyl6XeW1i6CMHMt",
+  "client_secret" : "pi_3RVex9FY0qyl6XeW0uvxNiFU_secret_9Hfqj2rtbFzOts9So7nmwcr6f",
+  "id" : "pi_3RVex9FY0qyl6XeW0uvxNiFU",
   "confirmation_method" : "automatic",
   "amount_details" : {
     "tip" : {
@@ -107,6 +105,6 @@ x-content-type-options: nosniff
     "card"
   ],
   "setup_future_usage" : null,
-  "created" : 1735837899,
+  "created" : 1748896047,
   "description" : null
 }
