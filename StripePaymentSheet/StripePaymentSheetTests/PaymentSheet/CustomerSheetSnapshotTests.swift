@@ -91,6 +91,15 @@ class CustomerSheetSnapshotTests: STPSnapshotTestCase {
         verify(cs.bottomSheetViewController.view!)
     }
 
+    func testNoSavedPMsCustomSectionSpacing() {
+        stubSessions(paymentMethods: "\"card\"")
+        var appearance = PaymentSheet.Appearance()
+        appearance.sectionSpacing = 40.0
+        prepareCS(configuration: configuration(appearance: appearance))
+        presentCS(darkMode: false)
+        verify(cs.bottomSheetViewController.view!)
+    }
+
     func testOnlyApplePay() {
         stubSessions(paymentMethods: "\"card\"")
         prepareCS(configuration: configuration(applePayEnabled: true))

@@ -429,6 +429,21 @@ class PaymentSheetSnapshotTests: STPSnapshotTestCase {
         verify(paymentSheet.bottomSheetViewController.view!)
     }
 
+    func testPaymentSheetCustomSectionSpacing() {
+        stubReturningCustomerResponse()
+
+        var appearance = PaymentSheet.Appearance()
+        appearance.sectionSpacing = 40.0
+
+        preparePaymentSheet(
+            customer: "snapshot",
+            appearance: appearance,
+            applePayEnabled: false
+        )
+        presentPaymentSheet(darkMode: false)
+        verify(paymentSheet.bottomSheetViewController.view!)
+    }
+
     func testPaymentSheetCVCRecollection() {
         stubReturningCustomerResponse()
 
