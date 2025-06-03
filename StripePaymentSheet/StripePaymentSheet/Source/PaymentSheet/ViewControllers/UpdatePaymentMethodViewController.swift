@@ -192,7 +192,7 @@ final class UpdatePaymentMethodViewController: UIViewController {
         // disable swipe to dismiss
         isModalInPresentation = true
         self.view.backgroundColor = configuration.appearance.colors.background
-        view.addAndPinSubview(formStackView, insets: PaymentSheetUI.defaultSheetMargins)
+        view.addAndPinSubview(formStackView, insets: configuration.appearance.formInsets)
     }
 
     override func viewDidAppear(_ animated: Bool) {

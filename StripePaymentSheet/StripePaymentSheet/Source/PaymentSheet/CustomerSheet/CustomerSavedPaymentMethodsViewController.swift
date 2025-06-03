@@ -199,7 +199,7 @@ class CustomerSavedPaymentMethodsViewController: UIViewController {
             actionButton,
             bottomNoticeTextField,
         ])
-        stackView.directionalLayoutMargins = PaymentSheetUI.defaultMargins
+        stackView.directionalLayoutMargins = configuration.appearance.topFormInsets
         stackView.isLayoutMarginsRelativeArrangement = true
         stackView.spacing = PaymentSheetUI.defaultPadding
         stackView.axis = .vertical
@@ -208,8 +208,8 @@ class CustomerSavedPaymentMethodsViewController: UIViewController {
         stackView.setCustomSpacing(0, after: actionButton)
 
         paymentContainerView.directionalLayoutMargins = .insets(
-            leading: -PaymentSheetUI.defaultSheetMargins.leading,
-            trailing: -PaymentSheetUI.defaultSheetMargins.trailing
+            leading: -configuration.appearance.formInsets.leading,
+            trailing: -configuration.appearance.formInsets.trailing
         )
         [stackView].forEach {
             $0.translatesAutoresizingMaskIntoConstraints = false
@@ -221,7 +221,7 @@ class CustomerSavedPaymentMethodsViewController: UIViewController {
             stackView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             stackView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             stackView.bottomAnchor.constraint(
-                equalTo: view.bottomAnchor, constant: -PaymentSheetUI.defaultSheetMargins.bottom),
+                equalTo: view.bottomAnchor, constant: -configuration.appearance.formInsets.bottom),
         ])
 
         updateUI(animated: false)

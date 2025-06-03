@@ -72,12 +72,14 @@ final class PaymentSheetAnalyticsExperimentsTests: XCTestCase {
     }
 
     func testLinkGlobalHoldback() {
+        let arbId = "arb_id_123"
         let linkSettings: LinkSettings = .init(
             fundingSources: [],
             popupWebviewOption: nil,
             passthroughModeEnabled: true,
             disableSignup: nil,
             suppress2FAModal: nil,
+            disableFlowControllerRUX: nil,
             useAttestationEndpoints: true,
             linkMode: .passthrough,
             linkFlags: nil,
@@ -86,7 +88,7 @@ final class PaymentSheetAnalyticsExperimentsTests: XCTestCase {
             allResponseFields: [:]
         )
         let experimentsData = ExperimentsData(
-            arbId: "arb_id_123",
+            arbId: arbId,
             experimentAssignments: [
                 "link_global_holdback": .treatment
             ],
@@ -106,21 +108,21 @@ final class PaymentSheetAnalyticsExperimentsTests: XCTestCase {
             publishableKey: nil,
             useMobileEndpoints: true
         )
-        guard let experiment = LinkGlobalHoldback(
+
+        let experiment = LinkGlobalHoldback(
+            arbId: arbId,
             session: session,
             configuration: configuration,
             linkAccount: linkAccount,
             integrationShape: .complete
-        ) else {
-            return XCTFail("Initializing a `LinkGlobalHoldback` should not fail here.")
-        }
-
+        )
         analyticsClient.logExposure(experiment: experiment)
+
         guard let payload = analyticsClientV2.loggedAnalyticPayloads(withEventName: PaymentSheetAnalyticsHelper.eventName).first else {
             return XCTFail("Expected event logged with name \(PaymentSheetAnalyticsHelper.eventName)")
         }
 
-        XCTAssertEqual(payload["arb_id"] as? String, "arb_id_123")
+        XCTAssertEqual(payload["arb_id"] as? String, arbId)
         XCTAssertEqual(payload["experiment_retrieved"] as? String, "link_global_holdback")
         XCTAssertEqual(payload["assignment_group"] as? String, ExperimentGroup.treatment.rawValue)
 
@@ -132,6 +134,71 @@ final class PaymentSheetAnalyticsExperimentsTests: XCTestCase {
         XCTAssertEqual(payload["dimensions-is_returning_link_user"] as? Bool, false)
         XCTAssertEqual(payload["dimensions-link_displayed"] as? Bool, PaymentSheet.isLinkEnabled(elementsSession: session, configuration: configuration))
         XCTAssertEqual(payload["dimensions-integration_shape"] as? String, "paymentsheet")
+        XCTAssertEqual(payload["dimensions-has_spms"] as? Bool, false)
+    }
+
+    func testLinkABTest() {
+        let arbId = "arb_id_321"
+        let linkSettings: LinkSettings = .init(
+            fundingSources: [],
+            popupWebviewOption: nil,
+            passthroughModeEnabled: true,
+            disableSignup: nil,
+            suppress2FAModal: nil,
+            disableFlowControllerRUX: nil,
+            useAttestationEndpoints: true,
+            linkMode: .passthrough,
+            linkFlags: nil,
+            linkConsumerIncentive: nil,
+            linkDefaultOptIn: .optional,
+            allResponseFields: [:]
+        )
+        let experimentsData = ExperimentsData(
+            arbId: arbId,
+            experimentAssignments: [
+                "link_ab_test": .holdback
+            ],
+            allResponseFields: [:]
+        )
+        let session = STPElementsSession._testValue(
+            linkSettings: linkSettings,
+            experimentsData: experimentsData,
+            customer: nil
+        )
+        var configuration = PaymentSheet.Configuration()
+        configuration.defaultBillingDetails.phone = "(707) 707-7070"
+        let linkAccount = PaymentSheetLinkAccount(
+            email: "email",
+            session: LinkStubs.consumerSession(),
+            publishableKey: nil,
+            useMobileEndpoints: true
+        )
+
+        let experiment = LinkABTest(
+            arbId: arbId,
+            session: session,
+            configuration: configuration,
+            linkAccount: linkAccount,
+            integrationShape: .flowController
+        )
+        analyticsClient.logExposure(experiment: experiment)
+
+        guard let payload = analyticsClientV2.loggedAnalyticPayloads(withEventName: PaymentSheetAnalyticsHelper.eventName).first else {
+            return XCTFail("Expected event logged with name \(PaymentSheetAnalyticsHelper.eventName)")
+        }
+
+        XCTAssertEqual(payload["arb_id"] as? String, arbId)
+        XCTAssertEqual(payload["experiment_retrieved"] as? String, "link_ab_test")
+        XCTAssertEqual(payload["assignment_group"] as? String, ExperimentGroup.holdback.rawValue)
+
+        XCTAssertEqual(payload["dimensions-recognition_type"] as? String, "email")
+        XCTAssertEqual(payload["dimensions-link_native"] as? Bool, true)
+        XCTAssertEqual(payload["dimensions-link_default_opt_in"] as? String, "OPTIONAL")
+        XCTAssertEqual(payload["dimensions-integration_type"] as? String, "mpe_ios")
+        XCTAssertEqual(payload["dimensions-dvs_provided"] as? String, "phone")
+        XCTAssertEqual(payload["dimensions-is_returning_link_user"] as? Bool, true)
+        XCTAssertEqual(payload["dimensions-link_displayed"] as? Bool, PaymentSheet.isLinkEnabled(elementsSession: session, configuration: configuration))
+        XCTAssertEqual(payload["dimensions-integration_shape"] as? String, "flowcontroller")
         XCTAssertEqual(payload["dimensions-has_spms"] as? Bool, false)
     }
 }

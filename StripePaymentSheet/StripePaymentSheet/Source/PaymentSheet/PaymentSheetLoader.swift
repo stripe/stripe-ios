@@ -96,13 +96,31 @@ final class PaymentSheetLoader {
                 let linkAccount = try? await lookupLinkAccount(elementsSession: elementsSession, configuration: configuration)
                 LinkAccountContext.shared.account = linkAccount
 
-                if let linkGlobalHoldbackExperiment = LinkGlobalHoldback(
-                    session: elementsSession,
-                    configuration: configuration,
-                    linkAccount: linkAccount,
-                    integrationShape: analyticsHelper.integrationShape
-                ) {
+                // Log experiment exposures
+                if let arbId = elementsSession.experimentsData?.arbId {
+                    let linkGlobalHoldbackExperiment = LinkGlobalHoldback(
+                        arbId: arbId,
+                        session: elementsSession,
+                        configuration: configuration,
+                        linkAccount: linkAccount,
+                        integrationShape: analyticsHelper.integrationShape
+                    )
                     analyticsHelper.logExposure(experiment: linkGlobalHoldbackExperiment)
+
+                    // Only log Link AB Test if Link is enabled
+                    if PaymentSheet.isLinkEnabled(
+                        elementsSession: elementsSession,
+                        configuration: configuration
+                    ) {
+                        let linkAbTestExperiment = LinkABTest(
+                            arbId: arbId,
+                            session: elementsSession,
+                            configuration: configuration,
+                            linkAccount: linkAccount,
+                            integrationShape: analyticsHelper.integrationShape
+                        )
+                        analyticsHelper.logExposure(experiment: linkAbTestExperiment)
+                    }
                 }
 
                 // Filter out payment methods that the PI/SI or PaymentSheet doesn't support

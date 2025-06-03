@@ -502,7 +502,7 @@ class PlaygroundController: ObservableObject {
             let enableFcLite = newValue.fcLiteEnabled == .on
             FinancialConnectionsSDKAvailability.shouldPreferFCLite = enableFcLite
 
-            PaymentSheet.enableLinkInSPM = newValue.linkInSPMs == .on
+            PaymentSheet.LinkFeatureFlags.enableLinkFlowControllerChanges = newValue.linkFlowControllerChanges == .on
         }.store(in: &subscribers)
 
         // Listen for analytics
@@ -588,6 +588,15 @@ class PlaygroundController: ObservableObject {
     // Completion
 
     func onOptionsCompletion() {
+        if let shippingDetails = self.paymentSheetFlowController?.paymentOption?.shippingDetails {
+            self.addressViewController = .init(
+                configuration: .init(
+                    defaultValues: shippingDetails,
+                    additionalFields: .init(phone: .optional)
+                ),
+                delegate: self
+            )
+        }
         // Tell our observer to refresh
         objectWillChange.send()
     }
@@ -911,9 +920,8 @@ extension PlaygroundController {
                 let data = data,
                 let json = try? JSONSerialization.jsonObject(with: data, options: []) as? [String: Any]
             else {
-                if let data = data,
-                   (response as? HTTPURLResponse)?.statusCode == 400,
-                   let errorMessage = String(data: data, encoding: .utf8) {
+                if let data, (response as? HTTPURLResponse)?.statusCode == 400 {
+                    let errorMessage = String(decoding: data, as: UTF8.self)
                     // read the error message
                     intentCreationCallback(.failure(ConfirmHandlerError.confirmError(errorMessage)))
                 } else {

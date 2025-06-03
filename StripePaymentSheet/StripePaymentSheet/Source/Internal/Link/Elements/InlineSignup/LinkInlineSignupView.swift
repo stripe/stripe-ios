@@ -29,6 +29,7 @@ final class LinkInlineSignupView: UIView {
     let borderColor: UIColor
 
     private(set) lazy var checkboxElement = CheckboxElement(
+        mode: viewModel.mode,
         merchantName: viewModel.configuration.merchantDisplayName,
         appearance: viewModel.configuration.appearance,
         borderColor: borderColor
@@ -37,7 +38,7 @@ final class LinkInlineSignupView: UIView {
     private(set) lazy var emailElement: LinkEmailElement = {
         let element = LinkEmailElement(defaultValue: viewModel.emailAddress,
                                        isOptional: viewModel.isEmailOptional,
-                                       showLogo: viewModel.mode != .textFieldsOnlyPhoneFirst,
+                                       showLogo: viewModel.showLogoInEmailField,
                                        theme: theme)
         element.indicatorTintColor = theme.colors.primary
         return element
@@ -52,7 +53,7 @@ final class LinkInlineSignupView: UIView {
         // Don't allow a default phone number in textFieldsOnly mode.
         // Otherwise, we'd imply consumer consent when it hasn't occurred.
         switch viewModel.mode {
-        case .checkbox:
+        case .checkbox, .checkboxWithDefaultOptIn:
             return PhoneNumberElement(
                 defaultCountryCode: viewModel.configuration.defaultBillingDetails.address.country,
                 defaultPhoneNumber: viewModel.configuration.defaultBillingDetails.phone,
@@ -83,6 +84,7 @@ final class LinkInlineSignupView: UIView {
         let legalView = LinkLegalTermsView(textAlignment: .left,
                                            mode: viewModel.mode,
                                            delegate: self)
+
         legalView.font = theme.fonts.caption
         legalView.textColor = theme.colors.secondaryText
         legalView.tintColor = theme.colors.primary
@@ -96,15 +98,40 @@ final class LinkInlineSignupView: UIView {
         return SectionElement(elements: [emailSection, phoneNumberSection, nameElement], theme: theme)
     }()
 
+    private lazy var defaultOptInElement: Element? = {
+        guard let email = viewModel.emailAddress, let number = viewModel.configuration.defaultBillingDetails.phone else {
+            return nil
+        }
+
+        let phoneNumber = PhoneNumber.fromE164(number) ?? PhoneNumber(number: number, countryCode: viewModel.configuration.defaultBillingDetails.address.country)
+
+        guard let phoneNumber else {
+            return nil
+        }
+
+        let defaultOptInView = LinkDefaultOptInView(
+            email: email,
+            phoneNumber: phoneNumber,
+            theme: theme
+        )
+        defaultOptInView.delegate = self
+
+        let defaultOptInElement = StaticElement(view: defaultOptInView)
+        return SectionElement(elements: [defaultOptInElement], theme: theme)
+    }()
+
     private lazy var formElement: FormElement = {
         var elements: [Element] = []
-        if viewModel.mode == .textFieldsOnlyPhoneFirst {
-            elements.insert(contentsOf: [phoneNumberSection, emailSection, nameSection], at: 0)
-        } else if viewModel.mode == .textFieldsOnlyEmailFirst {
-            elements.insert(contentsOf: [emailSection, phoneNumberSection, nameSection], at: 0)
-        } else if viewModel.mode == .checkbox {
-            elements.insert(contentsOf: [checkboxElement], at: 0)
-            elements.insert(contentsOf: [combinedEmailNameSection], at: 1)
+
+        switch viewModel.mode {
+        case .checkbox:
+            elements.append(contentsOf: [checkboxElement, combinedEmailNameSection])
+        case .checkboxWithDefaultOptIn:
+            elements.append(contentsOf: [checkboxElement, defaultOptInElement, combinedEmailNameSection].compactMap { $0 })
+        case .textFieldsOnlyEmailFirst:
+            elements.append(contentsOf: [emailSection, phoneNumberSection, nameSection])
+        case .textFieldsOnlyPhoneFirst:
+            elements.append(contentsOf: [phoneNumberSection, emailSection, nameSection])
         }
 
         let style: FormElement.Style = viewModel.showCheckbox ? .plain : .bordered
@@ -177,13 +204,19 @@ final class LinkInlineSignupView: UIView {
         if viewModel.mode == .checkbox {
             formElement.toggleChild(combinedEmailNameSection, show: viewModel.shouldShowEmailField, animated: animated)
         }
+        if viewModel.mode == .checkboxWithDefaultOptIn {
+            if let defaultOptInElement {
+                formElement.toggleChild(defaultOptInElement, show: viewModel.shouldShowDefaultOptInView, animated: animated)
+            }
+            formElement.toggleChild(combinedEmailNameSection, show: viewModel.shouldShowEmailField, animated: animated)
+        }
         formElement.toggleChild(emailSection, show: viewModel.shouldShowEmailField, animated: animated)
         formElement.toggleChild(phoneNumberSection, show: viewModel.shouldShowPhoneField, animated: animated)
         formElement.toggleChild(nameSection, show: viewModel.shouldShowNameField, animated: animated)
         formElement.toggleChild(legalTermsElement, show: viewModel.shouldShowLegalTerms, animated: animated)
 
         switch viewModel.mode {
-        case .checkbox:
+        case .checkbox, .checkboxWithDefaultOptIn:
             // 2-way binding
             checkboxElement.isChecked = viewModel.saveCheckboxChecked
         case .textFieldsOnlyEmailFirst, .textFieldsOnlyPhoneFirst:
@@ -194,7 +227,15 @@ final class LinkInlineSignupView: UIView {
 
     private func updateAppearance() {
         backgroundColor = viewModel.configuration.appearance.colors.background
-        layer.cornerRadius = viewModel.configuration.appearance.cornerRadius
+
+        var cornerRadius = viewModel.configuration.appearance.cornerRadius
+        if !viewModel.bordered {
+            // If we're not bordered, the content is right at the border of the view.
+            // Remove corner radius so that we don't cut off anything.
+            cornerRadius = 0
+        }
+        layer.cornerRadius = cornerRadius
+
         // If the borders are hidden give Link a default 1.0 border that contrasts with the background color
         if viewModel.configuration.appearance.borderWidth == 0.0 ||
             viewModel.configuration.appearance.colors.componentBorder.rgba.alpha == 0.0 {
@@ -265,6 +306,14 @@ extension LinkInlineSignupView: LinkInlineSignupViewModelDelegate {
 
 }
 
+extension LinkInlineSignupView: LinkDefaultOptInViewDelegate {
+
+    func linkDefaultOptInViewDidSelectChange(_ view: LinkDefaultOptInView) {
+        viewModel.didAskToChangeSignupData = true
+        updateUI(animated: true)
+    }
+}
+
 extension LinkInlineSignupView: LinkLegalTermsViewDelegate {
 
     func legalTermsView(_ legalTermsView: LinkLegalTermsView, didTapOnLinkWithURL url: URL) -> Bool {
@@ -292,11 +341,24 @@ extension LinkInlineSignupView: EventHandler {
             switch event {
             case .shouldDisableUserInteraction:
                 self.checkboxElement.setUserInteraction(isUserInteractionEnabled: false)
+                self.defaultOptInElement?.setUserInteraction(isUserInteractionEnabled: false)
             case .shouldEnableUserInteraction:
                 self.checkboxElement.setUserInteraction(isUserInteractionEnabled: true)
+                self.defaultOptInElement?.setUserInteraction(isUserInteractionEnabled: true)
             default:
                 break
             }
+        }
+    }
+}
+
+private extension Element {
+    func setUserInteraction(isUserInteractionEnabled: Bool) {
+        view.isUserInteractionEnabled = false
+        if isUserInteractionEnabled {
+            view.alpha = 1.0
+        } else {
+            view.alpha = 0.6
         }
     }
 }

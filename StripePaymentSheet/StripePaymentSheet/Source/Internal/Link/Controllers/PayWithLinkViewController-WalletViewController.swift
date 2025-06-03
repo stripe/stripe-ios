@@ -185,6 +185,11 @@ extension PayWithLinkViewController {
             if !viewModel.selectedPaymentMethodIsSupported {
                 paymentPicker.setExpanded(true, animated: false)
             }
+
+            if context.initiallySelectedPaymentDetailsID != nil {
+                // Automatically expand, since the user is likely here to change the payment method
+                paymentPicker.setExpanded(true, animated: false)
+            }
         }
 
         func updateUI(animated: Bool) {
@@ -265,7 +270,11 @@ extension PayWithLinkViewController {
                     }
                 }
 
-                confirm(for: context.intent, with: paymentDetails, confirmationExtras: confirmationExtras)
+                if context.launchedFromFlowController, let paymentMethod = viewModel.selectedPaymentMethod {
+                    coordinator?.handlePaymentDetailsSelected(paymentMethod, confirmationExtras: confirmationExtras)
+                } else {
+                    confirm(for: context.intent, with: paymentDetails, confirmationExtras: confirmationExtras)
+                }
             }
 
             if viewModel.shouldRecollectCardExpiryDate {
@@ -387,7 +396,7 @@ extension PayWithLinkViewController {
 
         @objc
         func cancelButtonTapped(_ sender: Button) {
-            coordinator?.cancel()
+            coordinator?.cancel(shouldReturnToPaymentSheet: true)
         }
 
     }

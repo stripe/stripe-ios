@@ -6,7 +6,7 @@
 //
 
 import Foundation
-@_spi(PrivateBetaConnect) import StripeConnect
+import StripeConnect
 import UIKit
 
 extension AppSettings {
@@ -116,128 +116,128 @@ extension AppearanceInfo {
 
         appearance.colors.primary = .init {
             $0.userInterfaceStyle == .dark
-            ? .init(hex: 0xEBF0F4)
-            : .init(hex: 0x0969DA)
+                ? .init(hex: 0xEBF0F4)
+                : .init(hex: 0x0969DA)
         }
         appearance.colors.text = .init {
             $0.userInterfaceStyle == .dark
-            ? .init(hex: 0xffffff)
-            : .init(hex: 0x24292f)
+                ? .init(hex: 0xffffff)
+                : .init(hex: 0x24292f)
         }
         appearance.colors.background = .init {
             $0.userInterfaceStyle == .dark
-            ? .init(hex: 0x272626)
-            : .init(hex: 0xffffff)
+                ? .init(hex: 0x272626)
+                : .init(hex: 0xffffff)
         }
         appearance.buttonPrimary.colorBackground = .init {
             $0.userInterfaceStyle == .dark
-            ? .init(hex: 0x077EDF)
-            : .init(hex: 0x0969da)
+                ? .init(hex: 0x077EDF)
+                : .init(hex: 0x0969da)
         }
         appearance.buttonPrimary.colorBorder = .init {
             $0.userInterfaceStyle == .dark
-            ? .init(hex: 0x077EDF)
-            : .init(red: 27 / 255, green: 31 / 255, blue: 36 / 255, alpha: 0.15)
+                ? .init(hex: 0x077EDF)
+                : .init(red: 27 / 255, green: 31 / 255, blue: 36 / 255, alpha: 0.15)
         }
         appearance.buttonPrimary.colorText = .init {
             $0.userInterfaceStyle == .dark
-            ? .init(hex: 0xffffff)
-            : .init(hex: 0xffffff)
+                ? .init(hex: 0xffffff)
+                : .init(hex: 0xffffff)
         }
         appearance.buttonSecondary.colorBackground = .init {
             $0.userInterfaceStyle == .dark
-            ? .init(hex: 0x3D4042)
-            : .init(hex: 0xf6f8fa)
+                ? .init(hex: 0x3D4042)
+                : .init(hex: 0xf6f8fa)
         }
         appearance.buttonSecondary.colorBorder = .init {
             $0.userInterfaceStyle == .dark
-            ? .init(hex: 0x89969F)
-            : .init(red: 27 / 255, green: 31 / 255, blue: 36 / 255, alpha: 0.15)
+                ? .init(hex: 0x89969F)
+                : .init(red: 27 / 255, green: 31 / 255, blue: 36 / 255, alpha: 0.15)
         }
         appearance.buttonSecondary.colorText = .init {
             $0.userInterfaceStyle == .dark
-            ? .init(hex: 0xffffff)
-            : .init(hex: 0x24292f)
+                ? .init(hex: 0xffffff)
+                : .init(hex: 0x24292f)
         }
         appearance.colors.border = .init {
             $0.userInterfaceStyle == .dark
-            ? .init(hex: 0x3D3D3D)
-            : .init(hex: 0xD7D7D7)
+                ? .init(hex: 0x3D3D3D)
+                : .init(hex: 0xD7D7D7)
         }
         appearance.colors.secondaryText = .init {
             $0.userInterfaceStyle == .dark
-            ? .init(hex: 0xF4F3F3)
-            : .init(hex: 0x57606a)
+                ? .init(hex: 0xF4F3F3)
+                : .init(hex: 0x57606a)
         }
         appearance.colors.actionPrimaryText = .init {
             $0.userInterfaceStyle == .dark
-            ? .init(hex: 0xEBF0F4)
-            : .init(hex: 0x0969da)
+                ? .init(hex: 0xEBF0F4)
+                : .init(hex: 0x0969da)
         }
         appearance.colors.actionSecondaryText = .init {
             $0.userInterfaceStyle == .dark
-            ? .init(hex: 0xF7F7F7)
-            : .init(hex: 0x6e7781)
+                ? .init(hex: 0xF7F7F7)
+                : .init(hex: 0x6e7781)
         }
         appearance.colors.formAccent = .init {
             $0.userInterfaceStyle == .dark
-            ? .init(hex: 0xEbF0F4)
-            : .init(hex: 0x0969DA)
+                ? .init(hex: 0xEbF0F4)
+                : .init(hex: 0x0969DA)
         }
         appearance.colors.formHighlightBorder = .init {
             $0.userInterfaceStyle == .dark
-            ? .init(hex: 0x363636)
-            : .init(hex: 0x0969DA)
+                ? .init(hex: 0x363636)
+                : .init(hex: 0x0969DA)
         }
         appearance.colors.danger = .init {
             $0.userInterfaceStyle == .dark
-            ? .init(hex: 0xDF1B41)
-            : .init(hex: 0xb35900)
+                ? .init(hex: 0xDF1B41)
+                : .init(hex: 0xb35900)
         }
         appearance.badgeNeutral.colorBorder = .init {
             $0.userInterfaceStyle == .dark
-            ? .init(hex: 0x7D7F87)
-            : .init(hex: 0x8c959f)
+                ? .init(hex: 0x7D7F87)
+                : .init(hex: 0x8c959f)
         }
         appearance.badgeNeutral.colorText = .init {
             $0.userInterfaceStyle == .dark
-            ? .init(hex: 0xD1D3DC)
-            : .init(hex: 0x6e7781)
+                ? .init(hex: 0xD1D3DC)
+                : .init(hex: 0x6e7781)
         }
         appearance.badgeSuccess.colorBorder = .init {
             $0.userInterfaceStyle == .dark
-            ? .init(hex: 0x7A8C7B)
-            : .init(hex: 0x218bff)
+                ? .init(hex: 0x7A8C7B)
+                : .init(hex: 0x218bff)
         }
         appearance.badgeSuccess.colorText = .init {
             $0.userInterfaceStyle == .dark
-            ? .init(hex: 0xCFE3D0)
-            : .init(hex: 0x0969DA)
+                ? .init(hex: 0xCFE3D0)
+                : .init(hex: 0x0969DA)
         }
         appearance.badgeWarning.colorBorder = .init {
             $0.userInterfaceStyle == .dark
-            ? .init(hex: 0x794A00)
-            : .init(hex: 0xd4a72c)
+                ? .init(hex: 0x794A00)
+                : .init(hex: 0xd4a72c)
         }
         appearance.badgeWarning.colorText = .init {
             $0.userInterfaceStyle == .dark
-            ? .init(hex: 0xE7A288)
-            : .init(hex: 0xbf8700)
+                ? .init(hex: 0xE7A288)
+                : .init(hex: 0xbf8700)
         }
         appearance.badgeDanger.colorBorder = .init {
             $0.userInterfaceStyle == .dark
-            ? .init(hex: 0x6F2341)
-            : .init(hex: 0xdd7815)
+                ? .init(hex: 0x6F2341)
+                : .init(hex: 0xdd7815)
         }
         appearance.badgeDanger.colorText = .init {
             $0.userInterfaceStyle == .dark
-            ? .init(hex: 0xEC93AF)
-            : .init(hex: 0xb35900)
+                ? .init(hex: 0xEC93AF)
+                : .init(hex: 0xb35900)
         }
         appearance.colors.offsetBackground = .init {
             $0.userInterfaceStyle == .dark
-            ? .init(hex: 0x171717)
-            : .init(hex: 0xF8F8F8)
+                ? .init(hex: 0x171717)
+                : .init(hex: 0xF8F8F8)
         }
 
         return .init(displayName: "Dynamic colors", appearance: appearance)

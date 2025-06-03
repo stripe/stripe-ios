@@ -120,6 +120,26 @@ struct AppearancePlaygroundView: View {
             set: { self.appearance.shadow.radius = $0 }
         )
 
+        let formInsetsTopBinding = Binding(
+            get: { self.appearance.formInsets.top },
+            set: { self.appearance.formInsets.top = $0 }
+        )
+
+        let formInsetsLeftBinding = Binding(
+            get: { self.appearance.formInsets.leading },
+            set: { self.appearance.formInsets.leading = $0 }
+        )
+
+        let formInsetsBottomBinding = Binding(
+            get: { self.appearance.formInsets.bottom },
+            set: { self.appearance.formInsets.bottom = $0 }
+        )
+
+        let formInsetsRightBinding = Binding(
+            get: { self.appearance.formInsets.trailing },
+            set: { self.appearance.formInsets.trailing = $0 }
+        )
+
         let sizeScaleFactorBinding = Binding(
             get: { self.appearance.font.sizeScaleFactor },
             set: { self.appearance.font.sizeScaleFactor = $0 }
@@ -222,6 +242,11 @@ struct AppearancePlaygroundView: View {
             }
         )
 
+        let primaryButtonHeightBinding = Binding(
+            get: { self.appearance.primaryButton.height },
+            set: { self.appearance.primaryButton.height = $0 }
+        )
+
         let embeddedPaymentElementFlatSeparatorColorBinding = Binding(
             get: { Color(self.appearance.embeddedPaymentElement.row.flat.separatorColor ?? appearance.colors.componentBorder) },
             set: {
@@ -314,6 +339,17 @@ struct AppearancePlaygroundView: View {
                             Slider(value: componentShadowRadiusBinding, in: 0...10, step: 0.5)
                         }
                     }
+                    VStack {
+                        Text("formInsets")
+                        Stepper("top: \(Int(appearance.formInsets.top))",
+                                value: formInsetsTopBinding, in: 0...100)
+                        Stepper("left: \(Int(appearance.formInsets.leading))",
+                                value: formInsetsLeftBinding, in: 0...100)
+                        Stepper("bottom: \(Int(appearance.formInsets.bottom))",
+                                value: formInsetsBottomBinding, in: 0...100)
+                        Stepper("right: \(Int(appearance.formInsets.trailing))",
+                                value: formInsetsRightBinding, in: 0...100)
+                    }
                 }
                 Section(header: Text("Fonts")) {
                     VStack {
@@ -362,6 +398,10 @@ struct AppearancePlaygroundView: View {
                                 Text(String(format: "radius: %.1f", appearance.primaryButton.shadow?.radius ?? PaymentSheet.Appearance.Shadow().radius))
                                 Slider(value: primaryButtonShadowRadiusBinding, in: 0...10, step: 0.5)
                             }
+                        }
+                        HStack {
+                            Text(String(format: "height: \(appearance.primaryButton.height)"))
+                            Slider(value: primaryButtonHeightBinding, in: 20...100, step: 1)
                         }
                     } label: {
                         Text("Primary Button")

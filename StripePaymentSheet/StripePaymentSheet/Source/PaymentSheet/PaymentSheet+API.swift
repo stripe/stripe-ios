@@ -512,7 +512,7 @@ extension PaymentSheet {
             case .wallet:
                 let useNativeLink = deviceCanUseNativeLink(elementsSession: elementsSession, configuration: configuration)
                 if useNativeLink {
-                    let linkController = PayWithNativeLinkController(intent: intent, elementsSession: elementsSession, configuration: configuration, logPayment: true, analyticsHelper: analyticsHelper)
+                    let linkController = PayWithNativeLinkController(mode: .full, intent: intent, elementsSession: elementsSession, configuration: configuration, logPayment: true, analyticsHelper: analyticsHelper)
                     linkController.presentAsBottomSheet(from: authenticationContext.authenticationPresentingViewController(), shouldOfferApplePay: false, shouldFinishOnClose: false, completion: { result, confirmationType, _ in
                         completion(result, confirmationType)
                     })
@@ -546,7 +546,7 @@ extension PaymentSheet {
                 }
             case .withPaymentMethod(let paymentMethod):
                 confirmWithPaymentMethod(paymentMethod, nil, false)
-            case .withPaymentDetails(let linkAccount, let paymentDetails, let confirmationExtras):
+            case .withPaymentDetails(let linkAccount, let paymentDetails, let confirmationExtras, _):
                 let shouldSave = false // always false, as we don't show a save-to-merchant checkbox in Link VC
 
                 if elementsSession.linkPassthroughModeEnabled {

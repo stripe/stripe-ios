@@ -278,7 +278,7 @@ extension AddressViewController {
         initAddressSection()
 
         let stackView = UIStackView(arrangedSubviews: [headerLabel, formElement.view, errorLabel])
-        stackView.directionalLayoutMargins = PaymentSheetUI.defaultMargins
+        stackView.directionalLayoutMargins = configuration.appearance.topFormInsets
         stackView.isLayoutMarginsRelativeArrangement = true
         stackView.spacing = PaymentSheetUI.defaultPadding
         stackView.axis = .vertical
@@ -302,10 +302,9 @@ extension AddressViewController {
             stackView.trailingAnchor.constraint(equalTo: scrollView.contentLayoutGuide.trailingAnchor),
             stackView.bottomAnchor.constraint(equalTo: button.topAnchor, constant: -PaymentSheetUI.defaultPadding),
 
-            button.leadingAnchor.constraint(equalTo: scrollView.contentLayoutGuide.leadingAnchor, constant: PaymentSheetUI.defaultSheetMargins.leading),
-            button.trailingAnchor.constraint(equalTo: scrollView.contentLayoutGuide.trailingAnchor, constant: -PaymentSheetUI.defaultSheetMargins.leading),
-            button.bottomAnchor.constraint(equalTo: scrollView.contentLayoutGuide.bottomAnchor, constant: -PaymentSheetUI.defaultSheetMargins.bottom),
-            button.heightAnchor.constraint(equalToConstant: 44),
+            button.leadingAnchor.constraint(equalTo: scrollView.contentLayoutGuide.leadingAnchor, constant: configuration.appearance.formInsets.leading),
+            button.trailingAnchor.constraint(equalTo: scrollView.contentLayoutGuide.trailingAnchor, constant: -configuration.appearance.formInsets.trailing),
+            button.bottomAnchor.constraint(equalTo: scrollView.contentLayoutGuide.bottomAnchor, constant: -configuration.appearance.formInsets.bottom),
         ])
     }
 

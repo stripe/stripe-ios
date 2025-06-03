@@ -161,6 +161,57 @@ class LinkInlineSignupViewModelTests: STPNetworkStubbingTestCase {
         let sut = makeSUT(country: "US", showCheckbox: false, hasAccountObject: true)
         XCTAssertEqual(sut.consentAction, .implied_v0_0)
     }
+
+    func test_defaultOptIn_allowed_for_eligible_merchant() {
+        let sut = makeSUT(country: "US", showCheckbox: true, allowsDefaultOptIn: true)
+        XCTAssertEqual(sut.mode, .checkboxWithDefaultOptIn)
+    }
+
+    func test_defaultOptIn_not_allowed_for_ineligible_merchant() {
+        let sut = makeSUT(country: "US", showCheckbox: true, allowsDefaultOptIn: false)
+        XCTAssertNotEqual(sut.mode, .checkboxWithDefaultOptIn)
+    }
+
+    func test_defaultOptIn_not_allowed_outside_US() {
+        let sut = makeSUT(country: "CA", showCheckbox: true, allowsDefaultOptIn: true)
+        XCTAssertNotEqual(sut.mode, .checkboxWithDefaultOptIn)
+    }
+
+    func test_defaultOptIn_not_allowed_if_showing_checkbox() {
+        let sut = makeSUT(country: "US", showCheckbox: false, allowsDefaultOptIn: true)
+        XCTAssertNotEqual(sut.mode, .checkboxWithDefaultOptIn)
+    }
+
+    func test_defaultOptIn_shows_readonly_view_if_completely_prefilled() {
+        let sut = makeSUT(country: "US", showCheckbox: true, allowsDefaultOptIn: true)
+        sut.emailWasPrefilled = true
+        sut.phoneNumberWasPrefilled = true
+        XCTAssertTrue(sut.shouldShowDefaultOptInView)
+        XCTAssertFalse(sut.shouldShowEmailField)
+        XCTAssertFalse(sut.shouldShowPhoneField)
+    }
+
+    func test_defaultOptIn_shows_fields_if_user_asked_to_change_signup_data() {
+        let sut = makeSUT(country: "US", showCheckbox: true, allowsDefaultOptIn: true)
+        sut.emailWasPrefilled = true
+        sut.phoneNumberWasPrefilled = true
+        XCTAssertTrue(sut.shouldShowDefaultOptInView)
+        XCTAssertFalse(sut.shouldShowEmailField)
+        XCTAssertFalse(sut.shouldShowPhoneField)
+        sut.didAskToChangeSignupData = true
+        XCTAssertFalse(sut.shouldShowDefaultOptInView)
+        XCTAssertTrue(sut.shouldShowEmailField)
+        XCTAssertTrue(sut.shouldShowPhoneField)
+    }
+
+    func test_defaultOptIn_shows_fields_if_not_completely_prefilled() {
+        let sut = makeSUT(country: "US", showCheckbox: true, allowsDefaultOptIn: true)
+        sut.emailWasPrefilled = true
+        sut.phoneNumberWasPrefilled = false
+        XCTAssertFalse(sut.shouldShowDefaultOptInView)
+        XCTAssertTrue(sut.shouldShowEmailField)
+        XCTAssertTrue(sut.shouldShowPhoneField)
+    }
 }
 
 extension LinkInlineSignupViewModelTests {
@@ -200,7 +251,8 @@ extension LinkInlineSignupViewModelTests {
         country: String,
         showCheckbox: Bool,
         hasAccountObject: Bool = false,
-        shouldFailLookup: Bool = false
+        shouldFailLookup: Bool = false,
+        allowsDefaultOptIn: Bool = false
     ) -> LinkInlineSignupViewModel {
         let linkAccount: PaymentSheetLinkAccount? = hasAccountObject
             ? PaymentSheetLinkAccount(email: "user@example.com", session: nil, publishableKey: nil, useMobileEndpoints: false)
@@ -210,6 +262,7 @@ extension LinkInlineSignupViewModelTests {
             configuration: PaymentSheet.Configuration(),
             showCheckbox: showCheckbox,
             accountService: MockAccountService(shouldFailLookup: shouldFailLookup),
+            allowsDefaultOptIn: allowsDefaultOptIn,
             linkAccount: linkAccount,
             country: country
         )

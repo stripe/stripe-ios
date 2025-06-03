@@ -18,17 +18,11 @@ import UIKit
 @objc(STP_Internal_RemoveButton)
 class RemoveButton: UIButton {
     private let appearance: PaymentSheet.Appearance
-    private static let minimumLabelHeight: CGFloat = 24
-    private static let minimumButtonHeight: CGFloat = 44
 
     override var intrinsicContentSize: CGSize {
-        let height = Self.minimumLabelHeight
-            + directionalLayoutMargins.top
-            + directionalLayoutMargins.bottom
-
         return CGSize(
             width: UIView.noIntrinsicMetric,
-            height: max(height, Self.minimumButtonHeight)
+            height: appearance.primaryButton.height
         )
     }
 
@@ -45,7 +39,7 @@ class RemoveButton: UIButton {
         if #available(iOS 15.0, *) {
             var config = UIButton.Configuration.bordered()
             config.baseBackgroundColor = .clear
-            config.background.cornerRadius = appearance.cornerRadius
+            config.background.cornerRadius = appearance.primaryButton.cornerRadius ?? appearance.cornerRadius
             config.background.strokeWidth = appearance.selectedBorderWidth ?? appearance.borderWidth * 1.5
             config.background.strokeColor = appearance.colors.danger
             config.titleAlignment = .center
@@ -56,7 +50,7 @@ class RemoveButton: UIButton {
             setTitleColor(appearance.colors.danger.disabledColor, for: .highlighted)
             layer.borderColor = appearance.colors.danger.cgColor
             layer.borderWidth = appearance.selectedBorderWidth ?? appearance.borderWidth * 1.5
-            layer.cornerRadius = appearance.cornerRadius
+            layer.cornerRadius = appearance.primaryButton.cornerRadius ?? appearance.cornerRadius
             setTitle(title, for: .normal)
             titleLabel?.textAlignment = .center
             titleLabel?.font = font
@@ -70,8 +64,7 @@ class RemoveButton: UIButton {
         if #available(iOS 15.0, *)  {
             configuration?.attributedTitle?.foregroundColor = appearance.colors.danger.disabledColor
             configuration?.background.strokeColor = appearance.colors.danger.disabledColor
-        }
-        else {
+        } else {
             setTitleColor(appearance.colors.danger.disabledColor, for: .normal)
             layer.borderColor = appearance.colors.danger.disabledColor.cgColor
         }
@@ -81,8 +74,7 @@ class RemoveButton: UIButton {
         if #available(iOS 15.0, *)  {
             configuration?.attributedTitle?.foregroundColor = appearance.colors.danger
             configuration?.background.strokeColor = appearance.colors.danger
-        }
-        else {
+        } else {
             setTitleColor(appearance.colors.danger, for: .normal)
             layer.borderColor = appearance.colors.danger.cgColor
         }

@@ -50,6 +50,37 @@ class LinkInlineSignupElementSnapshotTests: STPSnapshotTestCase {
         verify(sut)
     }
 
+    // MARK: Default opt-in
+
+    func testDefaultOptIn_fully_preFilled() {
+        let sut = makeSUT(
+            saveCheckboxChecked: true,
+            linkAccountEmailAddress: "user@example.com",
+            preFillPhone: "+13105551234",
+            allowsDefaultOptIn: true
+        )
+        verify(sut)
+    }
+
+    func testDefaultOptIn_fully_preFilled_longEmail() {
+        let sut = makeSUT(
+            saveCheckboxChecked: true,
+            linkAccountEmailAddress: "user_with_a_super_long_email_address@example.com",
+            preFillPhone: "+13105551234",
+            allowsDefaultOptIn: true
+        )
+        verify(sut)
+    }
+
+    func testDefaultOptIn_partially_preFilled() {
+        let sut = makeSUT(
+            saveCheckboxChecked: true,
+            preFillPhone: "+13105551234",
+            allowsDefaultOptIn: true
+        )
+        verify(sut)
+    }
+
     // MARK: Textfield only mode
 
     func testDefaultState_textFieldsOnly() {
@@ -134,7 +165,8 @@ extension LinkInlineSignupElementSnapshotTests {
         country: String = "US",
         preFillName: String? = nil,
         preFillPhone: String? = nil,
-        showCheckbox: Bool = true
+        showCheckbox: Bool = true,
+        allowsDefaultOptIn: Bool = false
     ) -> LinkInlineSignupElement {
         var configuration = PaymentSheet.Configuration()
         configuration.merchantDisplayName = "[Merchant]"
@@ -151,6 +183,7 @@ extension LinkInlineSignupElementSnapshotTests {
             configuration: configuration,
             showCheckbox: showCheckbox,
             accountService: MockAccountService(),
+            allowsDefaultOptIn: allowsDefaultOptIn,
             linkAccount: linkAccount,
             country: country
         )

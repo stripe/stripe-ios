@@ -28,7 +28,9 @@ class PaymentSheetFlowControllerViewController: UIViewController, FlowController
     var selectedPaymentOption: PaymentOption? {
         switch mode {
         case .addingNew:
-            if isHackyLinkButtonSelected {
+            if let linkConfirmOption {
+                return .link(option: linkConfirmOption)
+            } else if isHackyLinkButtonSelected {
                 return .link(option: .wallet)
             } else if let paymentOption = addPaymentMethodViewController.paymentOption {
                 return paymentOption
@@ -40,7 +42,11 @@ class PaymentSheetFlowControllerViewController: UIViewController, FlowController
             }
             return nil
         case .selectingSaved:
-            return savedPaymentOptionsViewController.selectedPaymentOption
+            if let linkConfirmOption {
+                return .link(option: linkConfirmOption)
+            } else {
+                return savedPaymentOptionsViewController.selectedPaymentOption
+            }
         }
     }
 
@@ -87,6 +93,7 @@ class PaymentSheetFlowControllerViewController: UIViewController, FlowController
     private let isLinkEnabled: Bool
     private let couldShowLinkInHeader: Bool
     private var isHackyLinkButtonSelected: Bool = false
+    var linkConfirmOption: PaymentSheet.LinkConfirmOption?
 
     private lazy var savedPaymentMethodManager: SavedPaymentMethodManager = {
         return SavedPaymentMethodManager(configuration: configuration, elementsSession: elementsSession)
@@ -248,7 +255,7 @@ class PaymentSheetFlowControllerViewController: UIViewController, FlowController
             bottomNoticeTextField,
         ])
         stackView.bringSubviewToFront(headerLabel)
-        stackView.directionalLayoutMargins = PaymentSheetUI.defaultMargins
+        stackView.directionalLayoutMargins = configuration.appearance.topFormInsets
         stackView.isLayoutMarginsRelativeArrangement = true
         stackView.spacing = PaymentSheetUI.defaultPadding
         stackView.axis = .vertical
@@ -259,8 +266,8 @@ class PaymentSheetFlowControllerViewController: UIViewController, FlowController
 
         // Hack: Payment container needs to extend to the edges, so we'll 'cancel out' the layout margins with negative padding
         paymentContainerView.directionalLayoutMargins = .insets(
-            leading: -PaymentSheetUI.defaultSheetMargins.leading,
-            trailing: -PaymentSheetUI.defaultSheetMargins.trailing
+            leading: -configuration.appearance.formInsets.leading,
+            trailing: -configuration.appearance.formInsets.trailing
         )
 
         NSLayoutConstraint.activate([
@@ -268,7 +275,7 @@ class PaymentSheetFlowControllerViewController: UIViewController, FlowController
             stackView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             stackView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             stackView.bottomAnchor.constraint(
-                equalTo: view.bottomAnchor, constant: -PaymentSheetUI.defaultSheetMargins.bottom),
+                equalTo: view.bottomAnchor, constant: -configuration.appearance.formInsets.bottom),
         ])
 
         // Automatically switch into the adding new mode when Link is the only available payment method
@@ -277,6 +284,24 @@ class PaymentSheetFlowControllerViewController: UIViewController, FlowController
         }
 
         updateUI()
+    }
+
+    private var canPresentLinkOnWalletButton: Bool {
+        elementsSession.enableFlowControllerRUX(for: configuration)
+    }
+
+    private func presentLink() {
+        presentNativeLink(
+            selectedPaymentDetailsID: selectedPaymentOption?.currentLinkPaymentMethod,
+            configuration: configuration,
+            intent: intent,
+            elementsSession: elementsSession,
+            analyticsHelper: analyticsHelper
+        ) { [weak self] confirmOption, _ in
+            guard let self else { return }
+            self.linkConfirmOption = confirmOption
+            self.flowControllerDelegate?.flowControllerViewControllerShouldClose(self, didCancel: false)
+        }
     }
 
     override func viewWillAppear(_ animated: Bool) {
@@ -440,6 +465,7 @@ class PaymentSheetFlowControllerViewController: UIViewController, FlowController
         } else {
             stpAssertionFailure("didTapContinueButton called w/o a payment option")
         }
+
         switch mode {
         case .selectingSaved:
             self.flowControllerDelegate?.flowControllerViewControllerShouldClose(self, didCancel: false)
@@ -640,8 +666,14 @@ extension PaymentSheetFlowControllerViewController: WalletHeaderViewDelegate {
     func walletHeaderViewPayWithLinkTapped(_ header: PaymentSheetViewController.WalletHeaderView) {
         // Link should be the selected payment option, as the Link header button is only available in `linkOnlyMode`
         mode = .addingNew
-        didDismiss(didCancel: false)
-        isHackyLinkButtonSelected = true
+
+        if canPresentLinkOnWalletButton {
+            presentLink()
+        } else {
+            didDismiss(didCancel: false)
+            isHackyLinkButtonSelected = true
+        }
+
         updateUI()
     }
 }

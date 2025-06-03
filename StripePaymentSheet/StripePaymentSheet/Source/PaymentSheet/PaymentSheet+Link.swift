@@ -67,7 +67,7 @@ extension PaymentSheet {
         shouldFinishOnClose: Bool,
         onClose: (() -> Void)? = nil
     ) {
-        let payWithNativeLink = PayWithNativeLinkController(intent: intent, elementsSession: elementsSession, configuration: configuration, analyticsHelper: analyticsHelper)
+        let payWithNativeLink = PayWithNativeLinkController(mode: .full, intent: intent, elementsSession: elementsSession, configuration: configuration, analyticsHelper: analyticsHelper)
 
         payWithNativeLink.presentAsBottomSheet(from: presentingController, shouldOfferApplePay: shouldOfferApplePay, shouldFinishOnClose: shouldFinishOnClose, completion: { result, _, didFinish in
             if case let .failed(error) = result {
@@ -113,4 +113,16 @@ func deviceCanUseNativeLink(elementsSession: STPElementsSession, configuration: 
     }
 
     return configuration.apiClient.stripeAttest.isSupported
+}
+
+// MARK: - Link features
+
+extension PaymentSheet {
+
+    @_spi(STP) public enum LinkFeatureFlags {
+
+        /// Decides whether Link shows more actively in FlowController.
+        /// Only enable this in the PaymentSheet playground.
+        @_spi(STP) public static var enableLinkFlowControllerChanges: Bool = false
+    }
 }

@@ -58,7 +58,7 @@ class AutoCompleteViewController: UIViewController {
     }()
     lazy var formStackView: UIStackView = {
         let stackView = UIStackView(arrangedSubviews: [formView])
-        stackView.directionalLayoutMargins = PaymentSheetUI.defaultMargins
+        stackView.directionalLayoutMargins = configuration.appearance.topFormInsets
         stackView.isLayoutMarginsRelativeArrangement = true
         stackView.axis = .vertical
 
@@ -258,6 +258,11 @@ extension AutoCompleteViewController: UITableViewDelegate, UITableViewDataSource
                                                                             appearance: configuration.appearance,
                                                                             isSubtitle: true)
         cell.indentationWidth = 5 // hardcoded value to align with searchbar textfield
+
+        cell.contentView.directionalLayoutMargins = .insets(
+            leading: configuration.appearance.formInsets.leading - 5, // adjust for the indentation
+            trailing: configuration.appearance.formInsets.trailing)
+        cell.contentView.preservesSuperviewLayoutMargins = false
 
         return cell
     }

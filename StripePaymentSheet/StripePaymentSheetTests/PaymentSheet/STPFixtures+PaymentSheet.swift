@@ -401,6 +401,7 @@ extension STPPaymentMethod {
         ])!
         paymentMethod.linkPaymentDetails = .card(
             LinkPaymentDetails.Card(
+                id: "csmr_123",
                 displayName: nil,
                 expMonth: 12,
                 expYear: 2030,
@@ -429,6 +430,7 @@ extension PaymentSheet.Appearance {
             offset: CGSize(width: 0, height: 2),
             radius: 4
         )
+        appearance.formInsets = NSDirectionalEdgeInsets(top: 30, leading: 50, bottom: 70, trailing: 10)
 
         // Customize the colors
         var colors = PaymentSheet.Appearance.Colors()
@@ -444,8 +446,14 @@ extension PaymentSheet.Appearance {
         colors.icon = .green
         colors.danger = .purple
 
+        // Customize the primary button
+        var primaryButton = PaymentSheet.Appearance.PrimaryButton()
+        primaryButton.height = 50
+        primaryButton.cornerRadius = 8
+
         appearance.font = font
         appearance.colors = colors
+        appearance.primaryButton = primaryButton
 
         return appearance
     }

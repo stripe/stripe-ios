@@ -210,7 +210,7 @@ class PaymentSheetViewController: UIViewController, PaymentSheetViewControllerPr
         let stackView = UIStackView(arrangedSubviews: [
             headerLabel, walletHeader, paymentContainerView, errorLabel, buyButton, bottomNoticeTextField,
         ])
-        stackView.directionalLayoutMargins = PaymentSheetUI.defaultMargins
+        stackView.directionalLayoutMargins = configuration.appearance.topFormInsets
         stackView.isLayoutMarginsRelativeArrangement = true
         stackView.spacing = PaymentSheetUI.defaultPadding
         stackView.axis = .vertical
@@ -220,8 +220,8 @@ class PaymentSheetViewController: UIViewController, PaymentSheetViewControllerPr
 
         // Hack: Payment container needs to extend to the edges, so we'll 'cancel out' the layout margins with negative padding
         paymentContainerView.directionalLayoutMargins = .insets(
-            leading: -PaymentSheetUI.defaultSheetMargins.leading,
-            trailing: -PaymentSheetUI.defaultSheetMargins.trailing
+            leading: -configuration.appearance.formInsets.leading,
+            trailing: -configuration.appearance.formInsets.trailing
         )
 
         [stackView].forEach {
@@ -235,7 +235,7 @@ class PaymentSheetViewController: UIViewController, PaymentSheetViewControllerPr
             stackView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             stackView.bottomAnchor.constraint(
                 equalTo: view.bottomAnchor,
-                constant: -PaymentSheetUI.defaultSheetMargins.bottom
+                constant: -configuration.appearance.formInsets.bottom
             ),
         ])
 

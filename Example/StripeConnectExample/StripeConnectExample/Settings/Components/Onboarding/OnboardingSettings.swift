@@ -6,7 +6,7 @@
 //
 
 import Foundation
-@_spi(PrivateBetaConnect) import StripeConnect
+import StripeConnect
 
 struct OnboardingSettings: Equatable {
     var fullTermsOfServiceString: String = ""

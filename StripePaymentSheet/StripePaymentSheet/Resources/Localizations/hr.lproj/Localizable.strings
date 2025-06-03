@@ -106,6 +106,8 @@
 
 "Continue another way" = "Nastavite na drugi način";
 
+"Debit or credit card" = "Debitna ili kreditna kartica";
+
 "Default" = "Zadano";
 
 "Default payment method" = "Zadani način plaćanja";
@@ -132,11 +134,15 @@
 
 "IBAN" = "IBAN";
 
+"Log in or sign up" = "Prijavite se ili registrirajte";
+
 "Log out of Link" = "Odjavite se s Linka";
 
 "Manage SEPA debit" = "Upravljajte SEPA terećenjem";
 
 "Manage US bank account" = "Upravljajte bankovnim računom u SAD-u";
+
+"Manage bank account" = "Upravljajte bankovnim računom";
 
 "Manage card" = "Upravljajte karticom";
 
@@ -155,6 +161,8 @@
 "New payment method" = "Novi način plaćanja";
 
 "No %@ promo" = "Nema %@ promotivnih pronuda";
+
+"Not you?" = "To niste vi?";
 
 "Only card brand can be changed." = "Samo se marka kartice može promijeniti.";
 
