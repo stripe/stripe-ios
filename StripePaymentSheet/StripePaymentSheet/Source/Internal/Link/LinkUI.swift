@@ -43,6 +43,17 @@ enum LinkUI {
         animator: animator
     )
 
+    // MARK: - Buttons
+
+    private static let minimumLabelHeight: CGFloat = 24
+
+    private static let minimumButtonHeight: CGFloat = 44
+
+    static func primaryButtonHeight(margins: NSDirectionalEdgeInsets) -> CGFloat {
+        let height = LinkUI.minimumLabelHeight + margins.top + margins.bottom
+        return max(height, minimumButtonHeight)
+    }
+
     // MARK: - Margins
 
     static let buttonMargins: NSDirectionalEdgeInsets = .insets(amount: 16)

@@ -10,9 +10,6 @@ import UIKit
 
 extension ConfirmButton {
 
-    private static let minimumLabelHeight: CGFloat = 24
-    private static let minimumButtonHeight: CGFloat = 44
-
     static func makeLinkButton(
         callToAction: CallToActionType,
         compact: Bool = false,
@@ -20,12 +17,8 @@ extension ConfirmButton {
     ) -> ConfirmButton {
         let directionalLayoutMargins = compact ? LinkUI.compactButtonMargins : LinkUI.buttonMargins
 
-        let height = Self.minimumLabelHeight
-            + directionalLayoutMargins.top
-            + directionalLayoutMargins.bottom
-
         var appearance = LinkUI.appearance
-        appearance.primaryButton.height = max(height, Self.minimumButtonHeight)
+        appearance.primaryButton.height = LinkUI.primaryButtonHeight(margins: directionalLayoutMargins)
 
         let button = ConfirmButton(
             callToAction: callToAction,
