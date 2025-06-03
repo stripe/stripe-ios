@@ -79,7 +79,7 @@ class EmbeddedUITests: PaymentSheetUITestCase {
         app.buttons["Alipay"].waitForExistenceAndTap()
         XCTAssertEqual(app.staticTexts["Payment method"].label, "Alipay")
 
-        let aliPayAnalytics = analyticsLog.compactMap({ $0[string: "event"] }).prefix(7)
+        let aliPayAnalytics = analyticsLog.compactMap({ $0[string: "event"] }).prefix(8)
         XCTAssertEqual(
             aliPayAnalytics,
             // fraud detection telemetry should not be sent in tests, so it should report an API failure
