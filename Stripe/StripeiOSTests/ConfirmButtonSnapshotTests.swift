@@ -68,7 +68,7 @@ class ConfirmButtonSnapshotTests: STPSnapshotTestCase {
 
         verify(confirmButton)
     }
-    
+
     // Tests that `primaryButton` disabled color is correct for the default theme
     func testConfirmButtonDefaultDisabledColor() {
         let confirmButton = ConfirmButton(
@@ -81,7 +81,7 @@ class ConfirmButtonSnapshotTests: STPSnapshotTestCase {
 
         verify(confirmButton)
     }
-    
+
     // Tests that `primaryButton` disabled color matches the primary color when no background color or diabled color set
     func testConfirmButtonDisabledColorWhenSetPrimaryColorAndNoSetBackgroundColorOrDisabledColor() {
         var appearance = PaymentSheet.Appearance.default
@@ -89,7 +89,6 @@ class ConfirmButtonSnapshotTests: STPSnapshotTestCase {
         button.disabledTextColor = .green.withAlphaComponent(0.6)
         appearance.primaryButton = button
         appearance.colors.primary = .yellow
-        
 
         let confirmButton = ConfirmButton(
             state: .disabled,
@@ -101,7 +100,7 @@ class ConfirmButtonSnapshotTests: STPSnapshotTestCase {
 
         verify(confirmButton)
     }
-    
+
     // Tests that `primaryButton` disabled color matches the background color when background color is set but disabled color is not
     func testConfirmButtonDisabledColorWhenSetBackgroundColorAndNoSetDisabledColor() {
         var appearance = PaymentSheet.Appearance.default
@@ -109,7 +108,6 @@ class ConfirmButtonSnapshotTests: STPSnapshotTestCase {
         button.backgroundColor = .yellow
         button.disabledTextColor = .green.withAlphaComponent(0.6)
         appearance.primaryButton = button
-        
 
         let confirmButton = ConfirmButton(
             state: .disabled,
@@ -121,7 +119,7 @@ class ConfirmButtonSnapshotTests: STPSnapshotTestCase {
 
         verify(confirmButton)
     }
-    
+
     // Tests that `primaryButton` disabled color matches the disabled color when disabled color, background color, and primary color are set
     func testConfirmButtonDisabledColorWhenSetDisabledBackgroundAndPrimaryColors() {
         var appearance = PaymentSheet.Appearance.default
@@ -131,7 +129,6 @@ class ConfirmButtonSnapshotTests: STPSnapshotTestCase {
         button.disabledTextColor = .green.withAlphaComponent(0.6)
         appearance.primaryButton = button
         appearance.colors.primary = .yellow
-        
 
         let confirmButton = ConfirmButton(
             state: .disabled,
@@ -192,6 +189,19 @@ class ConfirmButtonSnapshotTests: STPSnapshotTestCase {
             didTap: {}
         )
 
+        verify(confirmButton)
+    }
+
+    // Tests that `primaryButton` used in Link has the correct height
+    func testConfirmButtonInLinkUI() {
+        var appearance = PaymentSheet.Appearance.default
+        // This should not have any effect when rendered in Link
+        appearance.primaryButton.height = 30
+
+        let confirmButton = ConfirmButton.makeLinkButton(
+            callToAction: .continue,
+            didTap: {}
+        )
         verify(confirmButton)
     }
 
