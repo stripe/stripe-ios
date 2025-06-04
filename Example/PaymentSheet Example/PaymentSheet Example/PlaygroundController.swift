@@ -45,16 +45,26 @@ class PlaygroundController: ObservableObject {
         if #available(iOS 16.0, *), settings.applePayEnabled == .onWithDetails {
             let customHandlers = PaymentSheet.ApplePayConfiguration.Handlers(
                 paymentRequestHandler: { request in
-                    let billing = PKRecurringPaymentSummaryItem(label: "My Subscription", amount: NSDecimalNumber(string: "59.99"))
-                    billing.startDate = Date()
-                    billing.endDate = Date().addingTimeInterval(60 * 60 * 24 * 365)
-                    billing.intervalUnit = .month
+//                    let billing = PKRecurringPaymentSummaryItem(label: "My Subscription", amount: NSDecimalNumber(string: "59.99"))
+//                    billing.startDate = Date()
+//                    billing.endDate = Date().addingTimeInterval(60 * 60 * 24 * 365)
+//                    billing.intervalUnit = .month
 
-                    request.recurringPaymentRequest = PKRecurringPaymentRequest(paymentDescription: "Recurring",
-                                                                                regularBilling: billing,
-                                                                                managementURL: URL(string: "https://my-backend.example.com/customer-portal")!)
-                    request.recurringPaymentRequest?.billingAgreement = "You're going to be billed $59.99 every month for some period of time."
-                    request.paymentSummaryItems = [billing]
+//                    request.recurringPaymentRequest = PKRecurringPaymentRequest(paymentDescription: "Recurring",
+//                                                                                regularBilling: billing,
+//                                                                                managementURL: URL(string: "https://my-backend.example.com/customer-portal")!)
+//                    request.recurringPaymentRequest?.billingAgreement = "You're going to be billed $59.99 every month for some period of time."
+//                    request.paymentSummaryItems = [billing]
+
+                    let freeShipping = PKShippingMethod(label: "Free Shipping", amount: NSDecimalNumber(string: "0"))
+                    freeShipping.identifier = "freeshipping"
+                    freeShipping.detail = "Arrives in 6-8 weeks"
+
+                    let expressShipping = PKShippingMethod(label: "Express Shipping", amount: NSDecimalNumber(string: "10.00"))
+                    expressShipping.identifier = "expressshipping"
+                    expressShipping.detail = "Arrives in 2-3 days"
+                    request.shippingMethods = [freeShipping, expressShipping]
+
                     return request
                 },
                 authorizationResultHandler: { result, completion in
@@ -67,8 +77,45 @@ class PlaygroundController: ObservableObject {
                         webServiceURL: URL(string: "https://my-backend.example.com/apple-order-tracking-backend")!,
                         authenticationToken: "abc123")
                     completion(result)
-                }
-            )
+                },
+                shippingUpdateHandler: { shippingMethod, completion in
+                    // Create a new summary items array - this will contain product cost + shipping
+                    var summaryItems = [PKPaymentSummaryItem]()
+
+                    // Add your base product cost (example - you'll use your actual items)
+                    let productCost = PKPaymentSummaryItem(label: "Product", amount: NSDecimalNumber(value: 50.99))
+                    summaryItems.append(productCost)
+
+                    // Different handling based on shipping method
+                    if shippingMethod.identifier == "freeshipping" {
+                        // Free shipping has no additional cost
+                        let shippingCost = PKPaymentSummaryItem(label: "Shipping", amount: NSDecimalNumber(value: 0.00))
+                        summaryItems.append(shippingCost)
+
+                        // Total
+                        let total = PKPaymentSummaryItem(label: "Your Company Name", amount: productCost.amount)
+                        summaryItems.append(total)
+
+                    } else if shippingMethod.identifier == "expressshipping" {
+                        // Express shipping has an additional cost
+                        let expressShippingCost = NSDecimalNumber(value: 10.00)
+                        let shippingCost = PKPaymentSummaryItem(label: "Express Shipping", amount: expressShippingCost)
+                        summaryItems.append(shippingCost)
+
+                        // Total (product + shipping)
+                        let totalAmount = productCost.amount.adding(expressShippingCost)
+                        let total = PKPaymentSummaryItem(label: "Your Company Name", amount: totalAmount)
+                        summaryItems.append(total)
+                    }
+
+                    // Create the update object with the new summary items
+                    let update = PKPaymentRequestShippingMethodUpdate(
+                        paymentSummaryItems: summaryItems
+                    )
+
+                    // Call the handler with the update
+                    completion(update)
+                })
             return PaymentSheet.ApplePayConfiguration(
                 merchantId: "merchant.com.stripe.umbrella.test",
                 merchantCountryCode: "US",
