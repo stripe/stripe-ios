@@ -10,9 +10,16 @@ import UIKit
 
 @available(iOS 16.0, *)
 @_spi(STP) public struct WalletButtonsView: View {
+    enum ExpressType {
+        case link
+        case applePay
+    }
+
     let flowController: PaymentSheet.FlowController
     let confirmHandler: (PaymentSheetResult) -> Void
     let orderedWallets: [ExpressType]
+
+    @State private var linkButtonMode: LinkExpressCheckout.Mode = .button
 
     @_spi(STP) public init(flowController: PaymentSheet.FlowController,
                            confirmHandler: @escaping (PaymentSheetResult) -> Void) {
@@ -59,7 +66,7 @@ import UIKit
                             }
                         }
                     case .link:
-                        LinkButton {
+                        LinkExpressCheckout(mode: $linkButtonMode, email: "mats@stripe.com") {
                             Task {
                                 checkoutTapped(.link)
                             }
@@ -70,6 +77,9 @@ import UIKit
             .frame(maxWidth: .infinity)
             .onAppear {
                 flowController.walletButtonsShownExternally = true
+                Task {
+                    await simulateLookup()
+                }
             }
             .onDisappear {
                 flowController.walletButtonsShownExternally = false
@@ -77,9 +87,11 @@ import UIKit
         }
     }
 
-    enum ExpressType {
-        case link
-        case applePay
+    private func simulateLookup() async {
+        try? await Task.sleep(for: .seconds(2))
+        withAnimation(.spring(response: 0.4, dampingFraction: 0.9)) {
+            linkButtonMode = .inlineVerification
+        }
     }
 
     func checkoutTapped(_ expressType: ExpressType) {
@@ -129,7 +141,7 @@ import UIKit
         var body: some View {
             Button(action: action) {
                 HStack(spacing: 4) {
-                    SwiftUI.Image(uiImage: Image.link_logo_bw.makeImage(template: false))
+                SwiftUI.Image(uiImage: Image.link_logo_bw.makeImage(template: false))
                         .resizable()
                         .scaledToFit()
                         .frame(height: 18)

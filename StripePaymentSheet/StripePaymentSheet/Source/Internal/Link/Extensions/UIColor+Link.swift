@@ -18,6 +18,7 @@ extension UIColor {
     static let linkSurfacePrimary: UIColor = dynamic(light: neutral0, dark: neutral900)
     static let linkSurfaceSecondary: UIColor = dynamic(light: neutral100, dark: neutral800)
     static let linkSurfaceTertiary: UIColor = dynamic(light: neutral200, dark: neutral700)
+    static let linkBrandBackground: UIColor = brand50
 
     // Border colors
     static let linkBorderDefault: UIColor = dynamic(light: neutral300, dark: neutral900)
@@ -104,6 +105,7 @@ private extension UIColor {
     static let brand600: UIColor = UIColor(hex: 0x006635)
     static let brand400: UIColor = UIColor(red: 0, green: 0.64, blue: 0.33, alpha: 1.0) // #00A355
     static let brand200: UIColor = UIColor(red: 0, green: 0.84, blue: 0.44, alpha: 1.0) // #00D670
+    static let brand50: UIColor = UIColor(hex: 0xE6FFED)
     static let critical600: UIColor = UIColor(hex: 0xC0123C)
     static let critical500: UIColor = UIColor(hex: 0xE61947)
 }
