@@ -262,7 +262,7 @@ class EmbeddedPaymentMethodsView: UIView {
         LinkAccountContext.shared.addObserver(self, selector: #selector(onLinkAccountChange(_:)))
 
         if let linkAccount = LinkAccountContext.shared.account, linkAccount.isRegistered {
-            updateLinkRow(for: linkAccount)
+            updateLinkRow(for: linkAccount, animated: false)
         }
     }
 
@@ -297,13 +297,18 @@ class EmbeddedPaymentMethodsView: UIView {
         delegate?.embeddedPaymentMethodsViewDidTapViewMoreSavedPaymentMethods(selectedSavedPaymentMethod: selectedRowButton?.type.savedPaymentMethod)
     }
 
-    func updateLinkRow(for linkAccount: PaymentSheetLinkAccount?) {
+    func updateLinkRow(for linkAccount: PaymentSheetLinkAccount?, animated: Bool = true) {
         guard let linkRowButton else {
             return
         }
 
-        let sublabel = linkAccount?.email ?? .Localized.link_subtitle_text
-        linkRowButton.setSublabel(text: sublabel)
+        var sublabel = String.Localized.link_subtitle_text
+
+        if let linkAccount, linkAccount.isRegistered {
+            sublabel = linkAccount.email
+        }
+
+        linkRowButton.setSublabel(text: sublabel, animated: animated)
     }
 
     func updateSavedPaymentMethodRow(_ savedPaymentMethods: [STPPaymentMethod],
