@@ -1,1 +1,0 @@
-../PaymentSheet Example/PaymentSheetTestPlaygroundSettings.swift
