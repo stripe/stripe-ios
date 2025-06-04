@@ -321,6 +321,7 @@ class EmbeddedPaymentMethodsView: UIView {
             intent: intent,
             elementsSession: elementsSession,
             analyticsHelper: analyticsHelper,
+            verificationRejected: resetSelectionToLastSelection,
             callback: { [weak self] confirmOption, shouldReturnToPaymentSheet in
                 self?.updateLinkRow(with: confirmOption, resetPaymentSelection: shouldReturnToPaymentSheet)
             }
@@ -370,6 +371,7 @@ class EmbeddedPaymentMethodsView: UIView {
         if resetPaymentSelection {
             linkRowButton.linkConfirmOption = nil
             linkRowButton.accessoryView?.isHidden = true
+            resetSelectionToLastSelection()
         }
 
         let sublabel = linkRowButton.linkConfirmOption?.paymentSheetLabel ?? .Localized.link_subtitle_text

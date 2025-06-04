@@ -541,21 +541,7 @@ extension RowButton {
         )
         accessoryView.isHidden = true
 
-//        let linkAccount = LinkAccountContext.shared.account
-//        let subtext = linkAccount?.email ?? .Localized.link_subtitle_text
-
-        let button = RowButton.create(appearance: appearance, type: .link, imageView: imageView, text: STPPaymentMethodType.link.displayName, subtext: .Localized.link_subtitle_text, isEmbedded: isEmbedded, didTap: didTap)
-
-//        let button = RowButton.create(
-//            appearance: appearance,
-//            type: .link,
-//            imageView: imageView,
-//            text: STPPaymentMethodType.link.displayName,
-//            subtext: subtext,
-//            accessoryView: accessoryView,
-//            isEmbedded: isEmbedded,
-//            didTap: didTap
-//        )
+        let button = RowButton.create(appearance: appearance, type: .link, imageView: imageView, text: STPPaymentMethodType.link.displayName, subtext: .Localized.link_subtitle_text, accessoryView: accessoryView, isEmbedded: isEmbedded, didTap: didTap)
         button.accessibilityHelperView.accessibilityLabel = String.Localized.pay_with_link
         return button
     }
