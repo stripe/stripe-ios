@@ -4,11 +4,12 @@
 //
 
 import PassKit
+@_spi(STP) import StripePayments
 @_spi(STP) import StripeUICore
 import SwiftUI
 import UIKit
 
-@available(iOS 16.0, *)
+@available(iOS 17.0, *)
 @_spi(STP) public struct WalletButtonsView: View {
     enum ExpressType {
         case link
@@ -19,7 +20,7 @@ import UIKit
     let confirmHandler: (PaymentSheetResult) -> Void
     let orderedWallets: [ExpressType]
 
-    @State private var linkButtonMode: LinkExpressCheckout.Mode = .button
+    @State private var viewModel: WalletViewModel
 
     @_spi(STP) public init(flowController: PaymentSheet.FlowController,
                            confirmHandler: @escaping (PaymentSheetResult) -> Void) {
@@ -44,6 +45,7 @@ import UIKit
             }
         }
         self.orderedWallets = wallets
+        self.viewModel = WalletViewModel(from: flowController)
     }
 
     init(flowController: PaymentSheet.FlowController,
@@ -52,6 +54,7 @@ import UIKit
         self.flowController = flowController
         self.confirmHandler = confirmHandler
         self.orderedWallets = orderedWallets
+        self.viewModel = WalletViewModel(from: flowController)
     }
 
     @_spi(STP) public var body: some View {
@@ -66,11 +69,30 @@ import UIKit
                             }
                         }
                     case .link:
-                        LinkExpressCheckout(mode: $linkButtonMode, email: "mats@stripe.com") {
-                            Task {
-                                checkoutTapped(.link)
+                        LinkExpressCheckout(
+                            mode: $viewModel.linkButtonMode,
+                            session: $viewModel.session,
+                            textFieldController: $viewModel.textFieldController,
+                            verificationAction: { code in
+                                Task {
+                                    await confirmVerificationCode(code)
+                                }
+                            },
+                            resendCodeAction: {
+                                Task {
+                                    await sendOTP()
+                                }
+                            },
+                            checkoutAction: {
+                                Task {
+                                    if viewModel.session != nil {
+                                        viewModel.linkButtonMode = .inlineVerification
+                                    } else {
+                                        checkoutTapped(.link)
+                                    }
+                                }
                             }
-                        }
+                        )
                     }
                 }
             }
@@ -78,7 +100,7 @@ import UIKit
             .onAppear {
                 flowController.walletButtonsShownExternally = true
                 Task {
-                    await simulateLookup()
+                    await lookupConsumer()
                 }
             }
             .onDisappear {
@@ -87,9 +109,52 @@ import UIKit
         }
     }
 
-    private func simulateLookup() async {
-        try? await Task.sleep(for: .seconds(2))
-        linkButtonMode = .inlineVerification
+    private func lookupConsumer() async {
+        guard let email = viewModel.email else { return }
+
+        // Ignore any lookups that fail or don't find an existing Link consumer.
+        guard let session = try? await viewModel.lookup(email: email) else { return }
+        viewModel.session = session.consumerSession
+        viewModel.consumerPublishableKey = session.publishableKey
+
+        // Send an OTP and switch to the inline verification mode.
+        await sendOTP()
+        viewModel.linkButtonMode = .inlineVerification
+    }
+
+    private func sendOTP() async {
+        guard let session = try? await viewModel.startVerification() else { return }
+        viewModel.session = session
+    }
+
+    private func confirmVerificationCode(_ code: String) async {
+        if code != "000000" {
+            viewModel.textFieldController.performInvalidCodeAnimation()
+            return
+        }
+
+        do {
+            let session = try await viewModel.confirmVerification(code: code)
+            viewModel.session = session
+
+            guard let email = viewModel.email else {
+                throw WalletViewModel.ViewModelError.consumerNotFound
+            }
+
+            // Create the Link account object, and set it on the context.
+            let linkAccount = PaymentSheetLinkAccount(
+                email: email,
+                session: viewModel.session,
+                publishableKey: viewModel.consumerPublishableKey,
+                useMobileEndpoints: viewModel.useMobileEndpoints
+            )
+            LinkAccountContext.shared.account = linkAccount
+            checkoutTapped(.link)
+
+            viewModel.linkButtonMode = .button
+        } catch {
+            viewModel.textFieldController.performInvalidCodeAnimation()
+        }
     }
 
     func checkoutTapped(_ expressType: ExpressType) {
@@ -161,7 +226,7 @@ private class WindowAuthenticationContext: NSObject, STPAuthenticationContext {
 }
 
 #if DEBUG
-@available(iOS 16.0, *)
+@available(iOS 17.0, *)
 struct WalletButtonsView_Previews: PreviewProvider {
     static var previews: some View {
         WalletButtonsView(
@@ -176,7 +241,8 @@ struct WalletButtonsView_Previews: PreviewProvider {
 
 fileprivate extension PaymentSheet.FlowController {
     static func _mockFlowController() -> PaymentSheet.FlowController {
-        let psConfig = PaymentSheet.Configuration()
+        var psConfig = PaymentSheet.Configuration()
+        psConfig.defaultBillingDetails.email = "mats@stripe.com"
         let elementsSession = STPElementsSession(allResponseFields: [:], sessionID: "", orderedPaymentMethodTypes: [], orderedPaymentMethodTypesAndWallets: ["card", "link", "apple_pay"], unactivatedPaymentMethodTypes: [], countryCode: nil, merchantCountryCode: nil, linkSettings: nil, experimentsData: nil, flags: [:], paymentMethodSpecs: nil, cardBrandChoice: nil, isApplePayEnabled: true, externalPaymentMethods: [], customPaymentMethods: [], customer: nil)
         let intentConfig = PaymentSheet.IntentConfiguration(mode: .payment(amount: 10, currency: "USD", setupFutureUsage: nil, captureMethod: .automatic, paymentMethodOptions: nil)) { _, _, _ in }
         let intent = Intent.deferredIntent(intentConfig: intentConfig)

@@ -1,56 +1,11 @@
 //
-//  InlineVerificationView.swift
+//  ShimmerEffect.swift
 //  StripePaymentSheet
 //
 //  Created by Mat Schmid on 6/4/25.
 //
 
 import SwiftUI
-
-@available(iOS 16.0, *)
-struct InlineVerificationView: View {
-    let email: String
-    var onDismiss: () -> Void
-
-    var body: some View {
-        VStack(spacing: 0) {
-            HStack(alignment: .center) {
-                Text("Email")
-                    .font(.body)
-                    .foregroundColor(Color(uiColor: .linkTextBrand))
-
-                Spacer(minLength: 22.0)
-
-                ShimmerEffect(color: Color(uiColor: .linkTextBrand)) { gradient in
-                    Text(email)
-                        .font(.headline)
-                        .foregroundStyle(gradient)
-                }
-
-                Button(action: onDismiss) {
-                    SwiftUI.Image(systemName: "xmark")
-                        .foregroundColor(.gray)
-                }
-            }
-            .padding()
-            .background(Color(uiColor: .linkBrandBackground))
-            .frame(height: 56)
-
-            Rectangle()
-                .fill(Color(uiColor: .linkBorderDefault))
-                .frame(height: 0.5)
-
-            OneTimeCodeView(onResend: {})
-                .tint(Color(uiColor: .linkBorderSelected))
-                .padding(.vertical, 8)
-        }
-        .clipShape(RoundedRectangle(cornerRadius: 22.0))
-        .overlay(
-            RoundedRectangle(cornerRadius: 22.0)
-                .stroke(Color(uiColor: .linkBorderDefault), lineWidth: 0.5)
-        )
-    }
-}
 
 @available(iOS 16.0, *)
 struct ShimmerEffect<Content: View>: View {
@@ -124,17 +79,5 @@ struct ShimmerEffect<Content: View>: View {
                 phase = -1
             }
         }
-    }
-}
-
-@available(iOS 16.0, *)
-struct InlineVerificationView_Previews: PreviewProvider {
-    static var previews: some View {
-        InlineVerificationView(
-            email: "mats@stripe.com",
-            onDismiss: {}
-        )
-        .padding()
-        .previewLayout(.sizeThatFits)
     }
 }

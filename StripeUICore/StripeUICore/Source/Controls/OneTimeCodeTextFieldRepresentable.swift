@@ -7,9 +7,29 @@
 
 import SwiftUI
 
+// Controller to hold reference to the underlying UIView
+@_spi(STP) public final class OneTimeCodeTextFieldController {
+    private weak var textField: OneTimeCodeTextField?
+
+    @_spi(STP) public init() {}
+
+    fileprivate func setTextField(_ textField: OneTimeCodeTextField) {
+        self.textField = textField
+    }
+
+    @_spi(STP) public func clearCode() {
+        textField?.value = ""
+    }
+
+    @_spi(STP) public func performInvalidCodeAnimation() {
+        textField?.performInvalidCodeAnimation()
+    }
+}
+
 @_spi(STP) public struct OneTimeCodeTextFieldRepresentable: UIViewRepresentable {
     @Binding var text: String
     var configuration: OneTimeCodeTextField.Configuration
+    var controller: OneTimeCodeTextFieldController?
     var theme: ElementsAppearance
     var isEnabled: Bool = true
     var onComplete: ((String) -> Void)?
@@ -17,12 +37,14 @@ import SwiftUI
     @_spi(STP) public init(
         text: Binding<String>,
         configuration: OneTimeCodeTextField.Configuration = OneTimeCodeTextField.Configuration(),
+        controller: OneTimeCodeTextFieldController?,
         theme: ElementsAppearance = .default,
         isEnabled: Bool = true,
         onComplete: ((String) -> Void)? = nil
     ) {
         self._text = text
         self.configuration = configuration
+        self.controller = controller
         self.theme = theme
         self.isEnabled = isEnabled
         self.onComplete = onComplete
@@ -36,6 +58,7 @@ import SwiftUI
             action: #selector(Coordinator.textFieldDidChange(_:)),
             for: .valueChanged
         )
+        controller?.setTextField(textField)
         return textField
     }
 

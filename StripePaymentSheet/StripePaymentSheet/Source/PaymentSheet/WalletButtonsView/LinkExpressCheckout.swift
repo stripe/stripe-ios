@@ -19,30 +19,37 @@ struct LinkExpressCheckout: View {
     }
 
     @Binding private var mode: Mode
+    @Binding private var session: ConsumerSession?
+    @Binding private var textFieldController: OneTimeCodeTextFieldController
     @Namespace private var headerNS
 
-    let email: String
+    let verificationAction: (String) -> Void
+    let resendCodeAction: () -> Void
     let checkoutAction: () -> Void
 
     init(
         mode: Binding<Mode>,
-        email: String,
+        session: Binding<ConsumerSession?>,
+        textFieldController: Binding<OneTimeCodeTextFieldController>,
+        verificationAction: @escaping (String) -> Void,
+        resendCodeAction: @escaping () -> Void,
         checkoutAction: @escaping () -> Void
     ) {
         self._mode = mode
-        self.email = email
+        self._session = session
+        self._textFieldController = textFieldController
+        self.verificationAction = verificationAction
+        self.resendCodeAction = resendCodeAction
         self.checkoutAction = checkoutAction
     }
 
     var body: some View {
         VStack(spacing: 0) {
             if mode == .button {
-                ExpressCheckoutButton {
-                    checkoutAction()
-                }
-                .matchedGeometryEffect(id: "header", in: headerNS)
-            } else {
-                InlineVerificationHeader(email: email) {
+                ExpressCheckoutButton(action: checkoutAction)
+                    .matchedGeometryEffect(id: "header", in: headerNS)
+            } else if let session {
+                InlineVerificationHeader(email: session.emailAddress) {
                     mode = .button
                 }
                 .matchedGeometryEffect(id: "header", in: headerNS)
@@ -52,10 +59,15 @@ struct LinkExpressCheckout: View {
                     .background(Color(uiColor: .linkBorderDefault))
                     .transition(.opacity)
 
-                OneTimeCodeView(onResend: {})
-                    .tint(Color(uiColor: .linkBorderSelected))
-                    .padding(.vertical, 8)
-                    .transition(.move(edge: .top).combined(with: .opacity))
+                OneTimeCodeView(
+                    session: $session,
+                    textFieldController: $textFieldController,
+                    onComplete: verificationAction,
+                    onResend: resendCodeAction
+                )
+                .tint(Color(uiColor: .linkBorderSelected))
+                .padding(.vertical, 8)
+                .transition(.move(edge: .top).combined(with: .opacity))
             }
         }
         .clipShape(RoundedRectangle(cornerRadius: LinkExpressCheckout.cornerRadius, style: .continuous))
@@ -64,13 +76,6 @@ struct LinkExpressCheckout: View {
                 .stroke(Color(uiColor: .linkBorderDefault), lineWidth: mode == .inlineVerification ? 0.5 : 0)
         )
         .animation(.spring(response: 0.4, dampingFraction: 0.9), value: mode)
-    }
-
-    func setMode(_ newMode: Mode) {
-        guard mode != newMode else { return }
-        withAnimation(.spring(response: 0.4, dampingFraction: 0.9)) {
-            self.mode = newMode
-        }
     }
 }
 
@@ -129,7 +134,10 @@ private struct InlineVerificationHeader: View {
     @Previewable @State var linkButtonMode: LinkExpressCheckout.Mode = .button
     LinkExpressCheckout(
         mode: $linkButtonMode,
-        email: "mats@stripe.com",
+        session: .constant(nil),
+        textFieldController: .constant(.init()),
+        verificationAction: { _ in },
+        resendCodeAction: {},
         checkoutAction: {
             linkButtonMode = .inlineVerification
         }

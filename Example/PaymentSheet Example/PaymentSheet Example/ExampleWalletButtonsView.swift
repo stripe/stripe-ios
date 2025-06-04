@@ -10,12 +10,12 @@ struct ExampleWalletButtonsView: View {
     @ObservedObject var model = ExampleWalletButtonsModel()
     @State var isConfirmingPayment = false
     var body: some View {
-        if #available(iOS 16.0, *) {
+        if #available(iOS 17.0, *) {
             VStack {
                 if let flowController = model.paymentSheetFlowController {
                     if flowController.paymentOption == nil {
-                        WalletButtonsView(flowController: flowController) { _ in
-                        }
+                        WalletButtonsView(flowController: flowController) { _ in }
+                        .padding()
                     }
                     PaymentSheet.FlowController.PaymentOptionsButton(
                         paymentSheetFlowController: flowController,
@@ -83,6 +83,7 @@ class ExampleWalletButtonsModel: ObservableObject {
 
                 // MARK: Create a PaymentSheet instance
                 var configuration = PaymentSheet.Configuration()
+                configuration.defaultBillingDetails.email = "mats@stripe.com"
                 configuration.merchantDisplayName = "Example, Inc."
                 configuration.applePay = .init(
                     merchantId: "merchant.com.stripe.umbrella.test", // Be sure to use your own merchant ID here!

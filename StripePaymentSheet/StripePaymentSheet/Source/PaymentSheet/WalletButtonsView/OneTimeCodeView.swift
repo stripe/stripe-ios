@@ -11,15 +11,29 @@ import SwiftUI
 @available(iOS 16.0, *)
 struct OneTimeCodeView: View {
     @State private var code: String = ""
-    @State private var isVerifying: Bool = false
 
-    var onResend: () -> Void
+    @Binding private var session: ConsumerSession?
+    @Binding private var textFieldController: OneTimeCodeTextFieldController
+    private var onComplete: (String) -> Void
+    private var onResend: () -> Void
+
+    init(
+        session: Binding<ConsumerSession?>,
+        textFieldController: Binding<OneTimeCodeTextFieldController>,
+        onComplete: @escaping (String) -> Void,
+        onResend: @escaping () -> Void
+    ) {
+        self._session = session
+        self._textFieldController = textFieldController
+        self.onComplete = onComplete
+        self.onResend = onResend
+    }
 
     var body: some View {
         VStack(spacing: 16) {
             Text("Enter Verification Code")
                 .font(.headline)
-            Text("Enter the code sent to (•••) ••• ••23 to use your saved information.")
+            Text("Enter the code sent to \(session?.redactedFormattedPhoneNumber ?? "you") to use your saved information.")
                 .font(.body)
                 .multilineTextAlignment(.center)
 
@@ -33,11 +47,9 @@ struct OneTimeCodeView: View {
                     itemCornerRadius: 10,
                     itemHeight: 56
                 ),
+                controller: textFieldController,
                 theme: .default,
-                isEnabled: !isVerifying,
-                onComplete: { completedCode in
-                    verifyCode(completedCode)
-                }
+                onComplete: onComplete
             )
             .frame(height: 60)
 
@@ -46,25 +58,17 @@ struct OneTimeCodeView: View {
                     .font(.headline)
                     .foregroundColor(Color(uiColor: .linkTextBrand))
             }
-
-            if #available(iOS 14.0, *), isVerifying {
-                ProgressView()
-            }
         }
         .padding()
-    }
-
-    private func verifyCode(_ code: String) {
-        isVerifying = true
-        // Simulate verification process
-        DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
-            isVerifying = false
-            // Handle verification result
-        }
     }
 }
 
 @available(iOS 16.0, *)
 #Preview {
-    OneTimeCodeView(onResend: {})
+    OneTimeCodeView(
+        session: .constant(nil),
+        textFieldController: .constant(.init()),
+        onComplete: { _ in },
+        onResend: {}
+    )
 }
