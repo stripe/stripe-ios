@@ -56,15 +56,8 @@ class PlaygroundController: ObservableObject {
 //                    request.recurringPaymentRequest?.billingAgreement = "You're going to be billed $59.99 every month for some period of time."
 //                    request.paymentSummaryItems = [billing]
 
-                    let freeShipping = PKShippingMethod(label: "Free Shipping", amount: NSDecimalNumber(string: "0"))
-                    freeShipping.identifier = "freeshipping"
-                    freeShipping.detail = "Arrives in 6-8 weeks"
-
-                    let expressShipping = PKShippingMethod(label: "Express Shipping", amount: NSDecimalNumber(string: "10.00"))
-                    expressShipping.identifier = "expressshipping"
-                    expressShipping.detail = "Arrives in 2-3 days"
-                    request.shippingMethods = [freeShipping, expressShipping]
-
+                    request.shippingMethods = self.shippingMethods()
+                    request.requiredShippingContactFields = [.name, .postalAddress]
                     return request
                 },
                 authorizationResultHandler: { result, completion in
@@ -79,41 +72,61 @@ class PlaygroundController: ObservableObject {
                     completion(result)
                 },
                 shippingMethodUpdateHandler: { shippingMethod, completion in
-                    // Create a new summary items array - this will contain product cost + shipping
-                    var summaryItems = [PKPaymentSummaryItem]()
+                    // Get tax rate from somewhere (either stored from last contact update or default)
+                    let taxRate = self.currentTaxRate ?? 0.05  // Default 5%
+                    let taxName = self.currentTaxName ?? "Sales Tax (5%)"
 
-                    // Add your base product cost (example - you'll use your actual items)
-                    let productCost = PKPaymentSummaryItem(label: "Product", amount: NSDecimalNumber(value: 50.99))
-                    summaryItems.append(productCost)
+                    // Calculate final amounts based on selected shipping method
+                    let summaryItems = self.createSummaryItems(
+                        shippingMethod: shippingMethod,
+                        taxRate: taxRate,
+                        taxName: taxName
+                    )
 
-                    // Different handling based on shipping method
-                    if shippingMethod.identifier == "freeshipping" {
-                        // Free shipping has no additional cost
-                        let shippingCost = PKPaymentSummaryItem(label: "Shipping", amount: NSDecimalNumber(value: 0.00))
-                        summaryItems.append(shippingCost)
-
-                        // Total
-                        let total = PKPaymentSummaryItem(label: "Example, Inc.", amount: productCost.amount)
-                        summaryItems.append(total)
-
-                    } else if shippingMethod.identifier == "expressshipping" {
-                        // Express shipping has an additional cost
-                        let expressShippingCost = NSDecimalNumber(value: 10.00)
-                        let shippingCost = PKPaymentSummaryItem(label: "Express Shipping", amount: expressShippingCost)
-                        summaryItems.append(shippingCost)
-
-                        // Total (product + shipping)
-                        let totalAmount = productCost.amount.adding(expressShippingCost)
-                        let total = PKPaymentSummaryItem(label: "Example, Inc.", amount: totalAmount)
-                        summaryItems.append(total)
-                    }
-
-                    // Create the update object with the new summary items
+                    // Create the update
                     let update = PKPaymentRequestShippingMethodUpdate(
                         paymentSummaryItems: summaryItems
                     )
 
                     // Call the handler with the update
+                    completion(update)
+                },
+                shippingContactUpdateHandler: { contact, completion in
+                    // Determine tax rate based on zip code
+                    var taxRate = 0.05  // Default 5% tax rate
+                    var taxName = "Sales Tax (5%)"
+
+                    if let postalCode = contact.postalAddress?.postalCode, postalCode == "92618" {
+                        taxRate = 0.10  // 10% tax for 92618
+                        taxName = "Sales Tax (10%)"
+                    }
+
+                    // Store the tax rate for use in shipping method handler
+                    self.currentTaxRate = taxRate
+                    self.currentTaxName = taxName
+
+                    // Get available shipping methods
+                    let availableShippingMethods = self.shippingMethods()
+
+                    // Calculate final amounts based on the default shipping method
+                    // Assuming free shipping is the default (first in the array)
+                    let defaultShippingMethod = availableShippingMethods.first!
+
+                    // Create summary items
+                    let summaryItems = self.createSummaryItems(
+                        shippingMethod: defaultShippingMethod,
+                        taxRate: taxRate,
+                        taxName: taxName
+                    )
+
+                    // Create the update
+                    let update = PKPaymentRequestShippingContactUpdate(
+                        errors: nil,
+                        paymentSummaryItems: summaryItems,
+                        shippingMethods: availableShippingMethods
+                    )
+
+                    // Return the update
                     completion(update)
                 })
             return PaymentSheet.ApplePayConfiguration(
@@ -132,6 +145,72 @@ class PlaygroundController: ObservableObject {
             return nil
         }
     }
+
+    private var currentTaxRate: Double?
+    private var currentTaxName: String?
+    // Helper function for creating consistent summary items used by both handlers
+    func createSummaryItems(shippingMethod: PKShippingMethod, taxRate: Double, taxName: String) -> [PKPaymentSummaryItem] {
+        let baseProductPrice = NSDecimalNumber(string: "50.99")
+        // Create summary items
+        var summaryItems = [PKPaymentSummaryItem]()
+
+        // Base product price is always the same
+        summaryItems.append(PKPaymentSummaryItem(
+            label: "Product",
+            amount: baseProductPrice
+        ))
+
+        // Shipping cost from the selected method
+        summaryItems.append(PKPaymentSummaryItem(
+            label: shippingMethod.label,
+            amount: shippingMethod.amount
+        ))
+
+        // Calculate subtotal for tax calculation
+        let subtotal = baseProductPrice.adding(shippingMethod.amount)
+
+        // Calculate tax with the appropriate rate and round to 2 decimal places
+        let taxDecimal = NSDecimalNumber(value: taxRate)
+        let taxAmount = roundToTwoDecimalPlaces(subtotal.multiplying(by: taxDecimal))
+        summaryItems.append(PKPaymentSummaryItem(
+            label: taxName,
+            amount: taxAmount
+        ))
+
+        // Calculate the final total and round to 2 decimal places
+        let totalAmount = roundToTwoDecimalPlaces(subtotal.adding(taxAmount))
+        summaryItems.append(PKPaymentSummaryItem(
+            label: "Example, Inc.",
+            amount: totalAmount
+        ))
+
+        return summaryItems
+    }
+    // Helper function to round NSDecimalNumber to exactly 2 decimal places
+    func roundToTwoDecimalPlaces(_ amount: NSDecimalNumber) -> NSDecimalNumber {
+        let handler = NSDecimalNumberHandler(
+            roundingMode: .plain,
+            scale: 2,
+            raiseOnExactness: false,
+            raiseOnOverflow: false,
+            raiseOnUnderflow: false,
+            raiseOnDivideByZero: true
+        )
+
+        return amount.rounding(accordingToBehavior: handler)
+    }
+
+    func shippingMethods() -> [PKShippingMethod] {
+        let freeShipping = PKShippingMethod(label: "Free Shipping", amount: NSDecimalNumber(string: "0"))
+        freeShipping.identifier = "freeshipping"
+        freeShipping.detail = "Arrives in 6-8 weeks"
+
+        let expressShipping = PKShippingMethod(label: "Express Shipping", amount: NSDecimalNumber(string: "10.00"))
+        expressShipping.identifier = "expressshipping"
+        expressShipping.detail = "Arrives in 2-3 days"
+        return [freeShipping, expressShipping]
+    }
+
     var linkConfiguration: PaymentSheet.LinkConfiguration {
         switch settings.linkDisplay {
         case .automatic:
