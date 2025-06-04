@@ -21,7 +21,7 @@ private class ApplePayContextClosureDelegate: NSObject, ApplePayContextDelegate 
     var selfRetainer: ApplePayContextClosureDelegate?
     let authorizationResultHandler:
     ((PKPaymentAuthorizationResult, @escaping ((PKPaymentAuthorizationResult) -> Void)) -> Void)?
-    let shippingUpdateHandler:
+    let shippingMethodUpdateHandler:
     ((PKShippingMethod, @escaping ((PKPaymentRequestShippingMethodUpdate) -> Void)) -> Void)?
 
     let intent: Intent
@@ -31,14 +31,14 @@ private class ApplePayContextClosureDelegate: NSObject, ApplePayContextDelegate 
         authorizationResultHandler: (
             (PKPaymentAuthorizationResult, @escaping ((PKPaymentAuthorizationResult) -> Void)) -> Void
         )?,
-        shippingUpdateHandler: (
+        shippingMethodUpdateHandler: (
             (PKShippingMethod, @escaping ((PKPaymentRequestShippingMethodUpdate) -> Void)) -> Void
         )?,
         completion: @escaping PaymentSheetResultCompletionBlock
     ) {
         self.completion = completion
         self.authorizationResultHandler = authorizationResultHandler
-        self.shippingUpdateHandler = shippingUpdateHandler
+        self.shippingMethodUpdateHandler = shippingMethodUpdateHandler
         self.intent = intent
         super.init()
         self.selfRetainer = self
@@ -126,8 +126,8 @@ private class ApplePayContextClosureDelegate: NSObject, ApplePayContextDelegate 
         _ context: STPApplePayContext,
         didSelect shippingMethod: PKShippingMethod,
         handler: @escaping (PKPaymentRequestShippingMethodUpdate) -> Void) {
-            if let shippingUpdateHandler {
-                shippingUpdateHandler(shippingMethod) { result in
+            if let shippingMethodUpdateHandler {
+                shippingMethodUpdateHandler(shippingMethod) { result in
                     handler(result)
                 }
             } else {
@@ -157,7 +157,7 @@ extension STPApplePayContext {
         let delegate = ApplePayContextClosureDelegate(
             intent: intent,
             authorizationResultHandler: configuration.applePay?.customHandlers?.authorizationResultHandler,
-            shippingUpdateHandler: configuration.applePay?.customHandlers?.shippingUpdateHandler,
+            shippingMethodUpdateHandler: configuration.applePay?.customHandlers?.shippingMethodUpdateHandler,
             completion: completion
         )
         if let applePayContext = STPApplePayContext(paymentRequest: paymentRequest, delegate: delegate) {
