@@ -128,11 +128,6 @@ import UIKit
     }
 
     private func confirmVerificationCode(_ code: String) async {
-        if code != "000000" {
-            viewModel.textFieldController.performInvalidCodeAnimation()
-            return
-        }
-
         do {
             let session = try await viewModel.confirmVerification(code: code)
             viewModel.session = session
@@ -204,7 +199,7 @@ import UIKit
         var body: some View {
             Button(action: action) {
                 HStack(spacing: 4) {
-                SwiftUI.Image(uiImage: Image.link_logo_bw.makeImage(template: false))
+                    SwiftUI.Image(uiImage: Image.link_logo_bw.makeImage(template: false))
                         .resizable()
                         .scaledToFit()
                         .frame(height: 18)
