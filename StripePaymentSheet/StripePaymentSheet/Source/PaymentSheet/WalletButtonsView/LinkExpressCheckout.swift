@@ -43,9 +43,7 @@ struct LinkExpressCheckout: View {
                 .matchedGeometryEffect(id: "header", in: headerNS)
             } else {
                 InlineVerificationHeader(email: email) {
-                    withAnimation(.spring(response: 0.4, dampingFraction: 0.9)) {
-                        mode = .button
-                    }
+                    mode = .button
                 }
                 .matchedGeometryEffect(id: "header", in: headerNS)
 
@@ -65,8 +63,7 @@ struct LinkExpressCheckout: View {
             RoundedRectangle(cornerRadius: LinkExpressCheckout.cornerRadius, style: .continuous)
                 .stroke(Color(uiColor: .linkBorderDefault), lineWidth: mode == .inlineVerification ? 0.5 : 0)
         )
-        // Make sure the animation happens inside the rounded rect
-        .clipped()
+        .animation(.spring(response: 0.4, dampingFraction: 0.9), value: mode)
     }
 
     func setMode(_ newMode: Mode) {
@@ -127,12 +124,15 @@ private struct InlineVerificationHeader: View {
     }
 }
 
-@available(iOS 16.0, *)
+@available(iOS 17.0, *)
 #Preview {
+    @Previewable @State var linkButtonMode: LinkExpressCheckout.Mode = .button
     LinkExpressCheckout(
-        mode: .constant(.button),
+        mode: $linkButtonMode,
         email: "mats@stripe.com",
-        checkoutAction: {}
+        checkoutAction: {
+            linkButtonMode = .inlineVerification
+        }
     )
     .padding()
 }

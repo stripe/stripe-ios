@@ -89,9 +89,7 @@ import UIKit
 
     private func simulateLookup() async {
         try? await Task.sleep(for: .seconds(2))
-        withAnimation(.spring(response: 0.4, dampingFraction: 0.9)) {
-            linkButtonMode = .inlineVerification
-        }
+        linkButtonMode = .inlineVerification
     }
 
     func checkoutTapped(_ expressType: ExpressType) {
