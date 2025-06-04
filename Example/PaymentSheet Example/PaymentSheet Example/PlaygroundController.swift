@@ -78,7 +78,7 @@ class PlaygroundController: ObservableObject {
                         authenticationToken: "abc123")
                     completion(result)
                 },
-                shippingUpdateHandler: { shippingMethod, completion in
+                shippingMethodUpdateHandler: { shippingMethod, completion in
                     // Create a new summary items array - this will contain product cost + shipping
                     var summaryItems = [PKPaymentSummaryItem]()
 
@@ -93,7 +93,7 @@ class PlaygroundController: ObservableObject {
                         summaryItems.append(shippingCost)
 
                         // Total
-                        let total = PKPaymentSummaryItem(label: "Your Company Name", amount: productCost.amount)
+                        let total = PKPaymentSummaryItem(label: "Example, Inc.", amount: productCost.amount)
                         summaryItems.append(total)
 
                     } else if shippingMethod.identifier == "expressshipping" {
@@ -104,7 +104,7 @@ class PlaygroundController: ObservableObject {
 
                         // Total (product + shipping)
                         let totalAmount = productCost.amount.adding(expressShippingCost)
-                        let total = PKPaymentSummaryItem(label: "Your Company Name", amount: totalAmount)
+                        let total = PKPaymentSummaryItem(label: "Example, Inc.", amount: totalAmount)
                         summaryItems.append(total)
                     }
 

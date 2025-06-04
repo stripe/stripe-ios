@@ -331,20 +331,20 @@ extension PaymentSheet {
             public let authorizationResultHandler:
             ((PKPaymentAuthorizationResult, @escaping ((PKPaymentAuthorizationResult) -> Void)) -> Void)?
 
-            /// Optionally get shipping updates if you've configured shipping options
+            /// Optionally get shipping method updates if you've configured shipping method options
             /// This closure will be called each time a user selects a new shipping option
             /// - Parameter $0: The PKShippingMethod that was selected by the user
             /// - Parameter $1: A completion handler. You must call this handler with a PKPaymentRequestShippingMethodUpdate on the main queue
             /// with your updates
             /// For example:
             /// ```
-            /// .shippingUpdateHandler = { result, completion in
+            /// .shippingMethodUpdateHandler = { result, completion in
             ///     let updates = PKPaymentRequestShippingMethodUpdate()
             ///     completion(updates)
             /// }
             /// ```
             /// WARNING: If you do not call the completion handler, your app will hang until the Apple Pay sheet times out.
-            public let shippingUpdateHandler:
+            public let shippingMethodUpdateHandler:
             ((PKShippingMethod, @escaping ((PKPaymentRequestShippingMethodUpdate) -> Void)) -> Void)?
 
             /// Initializes the ApplePayConfiguration Handlers.
@@ -353,13 +353,13 @@ extension PaymentSheet {
                 authorizationResultHandler: (
                     (PKPaymentAuthorizationResult, @escaping ((PKPaymentAuthorizationResult) -> Void)) -> Void
                 )? = nil,
-                shippingUpdateHandler: (
+                shippingMethodUpdateHandler: (
                     (PKShippingMethod, @escaping ((PKPaymentRequestShippingMethodUpdate) -> Void)) -> Void
                 )? = nil
             ) {
                 self.paymentRequestHandler = paymentRequestHandler
                 self.authorizationResultHandler = authorizationResultHandler
-                self.shippingUpdateHandler = shippingUpdateHandler
+                self.shippingMethodUpdateHandler = shippingMethodUpdateHandler
             }
         }
 
