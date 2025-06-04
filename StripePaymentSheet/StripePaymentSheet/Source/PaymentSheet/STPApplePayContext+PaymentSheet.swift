@@ -23,6 +23,8 @@ private class ApplePayContextClosureDelegate: NSObject, ApplePayContextDelegate 
     ((PKPaymentAuthorizationResult, @escaping ((PKPaymentAuthorizationResult) -> Void)) -> Void)?
     let shippingMethodUpdateHandler:
     ((PKShippingMethod, @escaping ((PKPaymentRequestShippingMethodUpdate) -> Void)) -> Void)?
+    let shippingContactUpdateHandler:
+    ((PKContact, @escaping ((PKPaymentRequestShippingContactUpdate) -> Void)) -> Void)?
 
     let intent: Intent
 
@@ -34,11 +36,15 @@ private class ApplePayContextClosureDelegate: NSObject, ApplePayContextDelegate 
         shippingMethodUpdateHandler: (
             (PKShippingMethod, @escaping ((PKPaymentRequestShippingMethodUpdate) -> Void)) -> Void
         )?,
+        shippingContactUpdateHandler: (
+            (PKContact, @escaping ((PKPaymentRequestShippingContactUpdate) -> Void)) -> Void
+        )?,
         completion: @escaping PaymentSheetResultCompletionBlock
     ) {
         self.completion = completion
         self.authorizationResultHandler = authorizationResultHandler
         self.shippingMethodUpdateHandler = shippingMethodUpdateHandler
+        self.shippingContactUpdateHandler = shippingContactUpdateHandler
         self.intent = intent
         super.init()
         self.selfRetainer = self
@@ -134,6 +140,19 @@ private class ApplePayContextClosureDelegate: NSObject, ApplePayContextDelegate 
                 handler(PKPaymentRequestShippingMethodUpdate())
             }
         }
+
+    func applePayContext(
+        _ context: STPApplePayContext,
+        didSelectShippingContact shippingContact: PKContact,
+        handler: @escaping (PKPaymentRequestShippingContactUpdate) -> Void) {
+            if let shippingContactUpdateHandler {
+                shippingContactUpdateHandler(shippingContact) { result in
+                    handler(result)
+                }
+            } else {
+                handler(PKPaymentRequestShippingContactUpdate())
+            }
+        }
 }
 
 extension STPApplePayContext {
@@ -158,6 +177,7 @@ extension STPApplePayContext {
             intent: intent,
             authorizationResultHandler: configuration.applePay?.customHandlers?.authorizationResultHandler,
             shippingMethodUpdateHandler: configuration.applePay?.customHandlers?.shippingMethodUpdateHandler,
+            shippingContactUpdateHandler: configuration.applePay?.customHandlers?.shippingContactUpdateHandler,
             completion: completion
         )
         if let applePayContext = STPApplePayContext(paymentRequest: paymentRequest, delegate: delegate) {
