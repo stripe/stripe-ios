@@ -547,7 +547,6 @@ extension PayWithLinkViewController: PayWithLinkCoordinating {
         confirmationExtras: LinkConfirmationExtras?,
         completion: @escaping (PaymentSheetResult, STPAnalyticsClient.DeferredIntentConfirmationType?) -> Void
     ) {
-        allowSheetDismissal(false)
         payWithLinkDelegate?.payWithLinkViewControllerDidConfirm(
             self,
             intent: context.intent,
@@ -559,13 +558,9 @@ extension PayWithLinkViewController: PayWithLinkCoordinating {
                     confirmationExtras: confirmationExtras,
                     shippingAddress: defaultShippingAddress
                 )
-            )
-        ) { [weak self] result, confirmationType in
-            if result.isCanceledOrFailed {
-                self?.allowSheetDismissal(true)
-            }
-            completion(result, confirmationType)
-        }
+            ),
+            completion: completion
+        )
     }
 
     func allowSheetDismissal(_ enable: Bool) {

@@ -212,6 +212,7 @@ extension PayWithLinkViewController {
             feedbackGenerator.prepare()
             #endif
             confirmButton.update(state: .processing)
+            coordinator?.allowSheetDismissal(false)
 
             linkAccount.createPaymentDetails(with: confirmParams.paymentMethodParams) { [weak self] result in
                 guard let self = self else {
@@ -256,6 +257,7 @@ extension PayWithLinkViewController {
                         self?.feedbackGenerator.notificationOccurred(.success)
                         #endif
                         self?.confirmButton.update(state: state, animated: true) {
+                            self?.coordinator?.allowSheetDismissal(true)
                             if state == .succeeded {
                                 self?.coordinator?.finish(withResult: result, deferredIntentConfirmationType: deferredIntentConfirmationType)
                             }
@@ -267,6 +269,7 @@ extension PayWithLinkViewController {
                     #endif
                     self.confirmButton.update(state: .enabled, animated: true)
                     self.updateErrorLabel(for: error)
+                    self.coordinator?.allowSheetDismissal(true)
                 }
             }
         }
