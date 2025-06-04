@@ -935,6 +935,7 @@
 				CODE_SIGN_ENTITLEMENTS = "PaymentSheet Example/PaymentSheet Example.entitlements";
 				DEVELOPMENT_TEAM = Y28TH9SHX7;
 				INFOPLIST_FILE = "PaymentSheet Example/Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 16.6;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.stripe.PaymentSheet-Example";
 				PRODUCT_NAME = PaymentSheetExample;
 				SDKROOT = iphoneos;
@@ -958,6 +959,7 @@
 				CODE_SIGN_ENTITLEMENTS = "PaymentSheet Example/PaymentSheet Example.entitlements";
 				DEVELOPMENT_TEAM = Y28TH9SHX7;
 				INFOPLIST_FILE = "PaymentSheet Example/Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 16.6;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.stripe.PaymentSheet-Example";
 				PRODUCT_NAME = PaymentSheetExample;
 				SDKROOT = iphoneos;

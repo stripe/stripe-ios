@@ -168,6 +168,7 @@ struct MyEmbeddedCheckoutView: View {
     @State var isConfirming = false
     @State private var isSubscribing: Bool = false
     @State private var loadFailed = false
+    @State private var showEmbeddedPaymentMethodsView = false
 
     @Environment(\.dismiss) private var dismiss
 
@@ -176,7 +177,35 @@ struct MyEmbeddedCheckoutView: View {
         ScrollView {
             if embeddedViewModel.isLoaded {
                 // Embedded Payment Element
-                EmbeddedPaymentElementView(viewModel: embeddedViewModel)
+//                EmbeddedPaymentElementView(viewModel: embeddedViewModel)
+
+                Button(action: {
+                    showEmbeddedPaymentMethodsView.toggle()
+                }) {
+                    if let paymentOption = embeddedViewModel.paymentOption {
+                        HStack {
+                            Image(uiImage: paymentOption.image)
+                                .resizable()
+                                .aspectRatio(contentMode: .fit)
+                                .frame(height: 30)
+                            Text(paymentOption.label)
+                        }
+                    } else {
+                        Text("Select a payment method")
+                            .lineLimit(nil)
+                    }
+                }
+                .padding()
+                .lineLimit(1)
+                .minimumScaleFactor(0.5)
+                .foregroundColor(.white)
+                .frame(width: 200, height: 50)
+                .background(.gray.opacity(0.7))
+                .cornerRadius(6)
+                .accessibility(identifier: "Embedded payment method button")
+                .fullScreenCover(isPresented: $showEmbeddedPaymentMethodsView) {
+                    EmbeddedPaymentMethodsView(embeddedViewModel: embeddedViewModel)
+                }
 
                 // Display the selected payment option
                 // A real integration probably wouldn't show the selected payment option on the same screen as the embedded payment element. We display it as an example.
@@ -366,6 +395,42 @@ struct MyEmbeddedCheckoutView: View {
             return ""
         }
     }
+}
+
+struct EmbeddedPaymentMethodsView: View {
+    @ObservedObject var embeddedViewModel: EmbeddedPaymentElementViewModel
+    @State private var loadFailed = true
+    @Environment(\.dismiss) var dismiss
+    var body: some View {
+        VStack {
+            ScrollView {
+                if embeddedViewModel.isLoaded {
+                    Text("Select a payment method:")
+                        .font(.headline)
+                    EmbeddedPaymentElementView(viewModel: embeddedViewModel)
+                        .padding([.leading, .trailing], 20)
+                        .padding([.top, .bottom], 10)
+                }
+            }
+            Spacer()
+            Divider()
+            Button(action: {
+                dismiss()
+            }) {
+                Text("Continue")
+                    .frame(minWidth: 200, maxWidth: .infinity)
+            }
+            .padding(10)
+            .foregroundColor(.white)
+            .disabled(embeddedViewModel.paymentOption == nil)
+            .background(Color.gray.opacity(0.5))
+            .cornerRadius(6)
+            .accessibility(identifier: "Embedded continue button")
+        }
+        .padding([.leading, .trailing], 20)
+        .padding([.top, .bottom], 20)
+    }
+
 }
 
 extension Int {
