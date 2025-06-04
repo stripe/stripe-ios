@@ -15,15 +15,18 @@ extension ConfirmButton {
         compact: Bool = false,
         didTap: @escaping () -> Void
     ) -> ConfirmButton {
+        let directionalLayoutMargins = compact ? LinkUI.compactButtonMargins : LinkUI.buttonMargins
+
+        var appearance = LinkUI.appearance
+        appearance.primaryButton.height = LinkUI.primaryButtonHeight(margins: directionalLayoutMargins)
+
         let button = ConfirmButton(
             callToAction: callToAction,
-            appearance: LinkUI.appearance,
+            appearance: appearance,
             didTap: didTap
         )
 
-        button.directionalLayoutMargins = compact
-            ? LinkUI.compactButtonMargins
-            : LinkUI.buttonMargins
+        button.directionalLayoutMargins = directionalLayoutMargins
 
         return button
     }
