@@ -183,10 +183,6 @@ extension PayWithLinkViewController {
                     return
                 }
 
-                defer {
-                    self.coordinator?.allowSheetDismissal(true)
-                }
-
                 switch result {
                 case .success(let updatedPaymentDetails):
                     // Updates to CVC only get applied when the intent is confirmed so we manually add them here
@@ -201,6 +197,7 @@ extension PayWithLinkViewController {
                     }
 
                     self.updateButton.update(state: .succeeded, style: nil, callToAction: nil, animated: true) {
+                        self.coordinator?.allowSheetDismissal(true)
                         self.delegate?.didUpdate(
                             paymentMethod: updatedPaymentDetails,
                             confirmationExtras: confirmationExtras
@@ -211,6 +208,7 @@ extension PayWithLinkViewController {
                     self.updateErrorLabel(for: error)
                     self.cardEditElement.view.isUserInteractionEnabled = true
                     self.updateButton.update(state: .enabled)
+                    coordinator?.allowSheetDismissal(true)
                 }
             }
         }
