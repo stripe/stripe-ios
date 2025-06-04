@@ -71,6 +71,9 @@ class EmbeddedPaymentMethodsView: UIView {
             }
         }
     }
+    private var linkRowButton: RowButton? {
+        rowButtons.first(where: { $0.type == .link })
+    }
 
     private let mandateProvider: MandateTextProvider
     private let shouldShowMandate: Bool
@@ -243,6 +246,26 @@ class EmbeddedPaymentMethodsView: UIView {
         }
     }
 
+    override func didMoveToWindow() {
+        super.didMoveToWindow()
+
+        if window != nil {
+            if linkRowButton != nil {
+                initializeLinkAccountObserver()
+            }
+        } else {
+            LinkAccountContext.shared.removeObserver(self)
+        }
+    }
+
+    private func initializeLinkAccountObserver() {
+        LinkAccountContext.shared.addObserver(self, selector: #selector(onLinkAccountChange(_:)))
+
+        if let linkAccount = LinkAccountContext.shared.account, linkAccount.isRegistered {
+            updateLinkRow(for: linkAccount)
+        }
+    }
+
     // MARK: Internal functions
 
     /// If the customer cancels out of a form, restore the last selected payment method row
@@ -252,6 +275,14 @@ class EmbeddedPaymentMethodsView: UIView {
 
     func resetSelection() {
         selectedRowButton = nil
+    }
+
+    @objc
+    func onLinkAccountChange(_ notification: Notification) {
+        DispatchQueue.main.async { [weak self] in
+            let linkAccount = notification.object as? PaymentSheetLinkAccount
+            self?.updateLinkRow(for: linkAccount)
+        }
     }
 
     // MARK: Tap handling
@@ -264,6 +295,15 @@ class EmbeddedPaymentMethodsView: UIView {
 
     func didTapViewMoreSavedPaymentMethods() {
         delegate?.embeddedPaymentMethodsViewDidTapViewMoreSavedPaymentMethods(selectedSavedPaymentMethod: selectedRowButton?.type.savedPaymentMethod)
+    }
+
+    func updateLinkRow(for linkAccount: PaymentSheetLinkAccount?) {
+        guard let linkRowButton else {
+            return
+        }
+
+        let sublabel = linkAccount?.email ?? .Localized.link_subtitle_text
+        linkRowButton.setSublabel(text: sublabel)
     }
 
     func updateSavedPaymentMethodRow(_ savedPaymentMethods: [STPPaymentMethod],
