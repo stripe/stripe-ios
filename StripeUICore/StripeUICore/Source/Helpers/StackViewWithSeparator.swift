@@ -36,19 +36,11 @@ import UIKit
         }
     }
 
-    /// The width of the visual divider line drawn between elements
-    /// This is separate from spacing which controls layout
-    public var separatorWidth: CGFloat = 1.0 {
-        didSet {
-            separatorLayer.lineWidth = separatorWidth
-            setNeedsLayout()
-        }
-    }
-
     /// Commonly referred to as `borderWidth`
     public override var spacing: CGFloat {
         didSet {
             backgroundView.layer.borderWidth = spacing
+            separatorLayer.lineWidth = spacing
             layoutMargins = UIEdgeInsets(
                 top: spacing, left: spacing, bottom: spacing, right: spacing)
         }
@@ -153,7 +145,7 @@ import UIKit
         separatorLayer.strokeColor = separatorColor.cgColor
 
         let path = UIBezierPath()
-        path.lineWidth = separatorWidth
+        path.lineWidth = spacing
 
         if spacing > 0 {
             // inter-view separators
