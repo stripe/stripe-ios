@@ -238,6 +238,7 @@ public extension PaymentSheet {
             public var shadow: Shadow?
 
             /// The height of the primary button
+            @_spi(AppearanceAPIAdditionsPreview)
             public var height: CGFloat = 44 {
                 willSet {
                     if newValue <= 0.0 {
