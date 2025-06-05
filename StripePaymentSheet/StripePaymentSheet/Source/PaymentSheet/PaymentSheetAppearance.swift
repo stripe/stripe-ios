@@ -114,7 +114,7 @@ public extension PaymentSheet {
 
             /// The width of the divider lines used inside inputs, tabs, and other components
             /// - Note: The behavior of this property is consistent with the behavior of border width on `CALayer`
-            public var componentDividerWidth: CGFloat = 1.0
+            @_spi(AppearanceAPIAdditionsPreview) public var componentDividerWidth: CGFloat = 1.0
 
             /// The default text color used in PaymentSheet, appearing over the background color
             public var text: UIColor = .label
