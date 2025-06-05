@@ -124,5 +124,9 @@ extension PaymentSheet {
         /// Decides whether Link shows more actively in FlowController.
         /// Only enable this in the PaymentSheet playground.
         @_spi(STP) public static var enableLinkFlowControllerChanges: Bool = false
+
+        /// Decides whether Link shows more actively in Embedded.
+        /// Only enable this in the PaymentSheet playground.
+        @_spi(STP) public static var enableLinkEmbeddedChanges: Bool = false
     }
 }

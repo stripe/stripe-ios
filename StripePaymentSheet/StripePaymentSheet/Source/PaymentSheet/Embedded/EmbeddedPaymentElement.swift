@@ -328,7 +328,11 @@ public final class EmbeddedPaymentElement {
         case .applePay:
             return .applePay
         case .link:
-            return .link(option: .wallet)
+            if let linkConfirmOption = embeddedPaymentMethodsView.selectedRowButton?.linkConfirmOption {
+                return .link(option: linkConfirmOption)
+            } else {
+                return .link(option: .wallet)
+            }
         case let .new(paymentMethodType: paymentMethodType):
             let params = IntentConfirmParams(type: paymentMethodType)
             params.setDefaultBillingDetailsIfNecessary(for: configuration)

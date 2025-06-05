@@ -26,6 +26,9 @@ protocol EmbeddedPaymentMethodsViewDelegate: AnyObject {
     /// - Parameter paymentMethodType: A `PaymentSheet.PaymentMethodType`
     /// - Returns: True if the button for this payment method type should animate when tapped
     func shouldAnimateOnPress(_ paymentMethodType: PaymentSheet.PaymentMethodType) -> Bool
+
+    /// Called whenever the user taps the 'Change' button in the Link row
+    func embeddedPaymentMethodsViewDidTapChangeLinkPaymentMethod()
 }
 
 /// The view for an embedded payment element
@@ -164,7 +167,11 @@ class EmbeddedPaymentMethodsView: UIView {
         }
 
         if shouldShowLink {
-            let linkRowButton = RowButton.makeForLink(appearance: appearance, isEmbedded: true) { [weak self] rowButton in
+            let linkRowButton = RowButton.makeForLink(
+                appearance: appearance,
+                isEmbedded: true,
+                didTapChange: didTapChangeLinkPaymentMethod
+            ) { [weak self] rowButton in
                 CustomerPaymentOption.setDefaultPaymentMethod(.link, forCustomer: customer?.id)
                 self?.didTap(rowButton: rowButton)
             }
@@ -297,18 +304,48 @@ class EmbeddedPaymentMethodsView: UIView {
         delegate?.embeddedPaymentMethodsViewDidTapViewMoreSavedPaymentMethods(selectedSavedPaymentMethod: selectedRowButton?.type.savedPaymentMethod)
     }
 
+    func didTapChangeLinkPaymentMethod() {
+        delegate?.embeddedPaymentMethodsViewDidTapChangeLinkPaymentMethod()
+    }
+
     func updateLinkRow(for linkAccount: PaymentSheetLinkAccount?, animated: Bool = true) {
         guard let linkRowButton else {
             return
         }
 
         var sublabel = String.Localized.link_subtitle_text
-
-        if let linkAccount, linkAccount.isRegistered {
+        if let confirmOption = linkRowButton.linkConfirmOption {
+            sublabel = confirmOption.paymentSheetLabel
+        } else if let linkAccount, linkAccount.isRegistered {
             sublabel = linkAccount.email
         }
 
         linkRowButton.setSublabel(text: sublabel, animated: animated)
+    }
+
+    func updateLinkRow(
+        with confirmOption: PaymentSheet.LinkConfirmOption?,
+        resetPaymentSelection: Bool
+    ) {
+        guard let linkRowButton = rowButtons.first(where: { $0.type == .link }) else {
+            return
+        }
+
+        if let confirmOption {
+            linkRowButton.linkConfirmOption = confirmOption
+            linkRowButton.accessoryView?.isHidden = false
+        }
+
+        if resetPaymentSelection {
+            linkRowButton.linkConfirmOption = nil
+            linkRowButton.accessoryView?.isHidden = true
+            resetSelectionToLastSelection()
+        }
+
+        let sublabel = linkRowButton.linkConfirmOption?.paymentSheetLabel ?? .Localized.link_subtitle_text
+        if sublabel != linkRowButton.sublabel.text {
+            linkRowButton.setSublabel(text: sublabel)
+        }
     }
 
     func updateSavedPaymentMethodRow(_ savedPaymentMethods: [STPPaymentMethod],
