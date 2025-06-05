@@ -187,5 +187,6 @@ public struct EmbeddedPaymentElementView: View {
     public var body: some View {
         EmbeddedViewRepresentable(viewModel: viewModel)
             .frame(height: viewModel.height)
+            .onAppear { viewModel.objectWillChange.send() } // Re-trigger SwiftUI’s update cycle to ensure correct ViewController is set as presentingViewcontroller
     }
 }
