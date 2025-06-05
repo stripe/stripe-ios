@@ -48,7 +48,11 @@ extension PayWithLinkViewController {
             return label
         }()
 
-        private lazy var emailElement = LinkEmailElement(defaultValue: viewModel.emailAddress, showLogo: false, theme: theme)
+        private lazy var emailElement = {
+            let element = LinkEmailElement(defaultValue: viewModel.emailAddress, showLogo: false, theme: theme)
+            element.indicatorTintColor = .linkIconBrand
+            return element
+        }()
 
         private lazy var phoneNumberElement = PhoneNumberElement(
             defaultCountryCode: context.configuration.defaultBillingDetails.address.country,
@@ -231,6 +235,8 @@ extension PayWithLinkViewController {
         func didTapSignUpButton(_ sender: Button) {
             signUpButton.isLoading = true
 
+            coordinator?.allowSheetDismissal(false)
+
             viewModel.signUp { [weak self] result in
                 guard let self else {
                     return
@@ -249,6 +255,7 @@ extension PayWithLinkViewController {
                 }
 
                 self.signUpButton.isLoading = false
+                coordinator?.allowSheetDismissal(true)
             }
         }
 

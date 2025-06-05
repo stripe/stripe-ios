@@ -301,6 +301,19 @@ class LinkURLGeneratorTests: XCTestCase {
 
         XCTAssertEqual(params, expectedParams)
     }
+
+    func testIgnoresApplePrivateRelayEmails() {
+        var config = PaymentSheet.Configuration()
+        let intentConfig = PaymentSheet.IntentConfiguration(mode: .payment(amount: 100, currency: "EUR")) { _, _, _ in
+            // Nothing
+        }
+        config.apiClient.publishableKey = "pk_123"
+        config.defaultBillingDetails.email = "hide_my_email@privaterelay.appleid.com"
+        let intent = Intent.deferredIntent(intentConfig: intentConfig)
+
+        let params = try! LinkURLGenerator.linkParams(configuration: config, intent: intent, elementsSession: .linkPassthroughWithBankElementsSession)
+        XCTAssertNil(params.customerInfo.email)
+    }
 }
 
 extension STPElementsSession {

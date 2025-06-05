@@ -768,7 +768,7 @@ extension STPPaymentMethod {
         switch type {
         case .card:
             if let linkPaymentDetails {
-                return linkPaymentDetails.removalMessage ?? makeInvalidRemovalMessage()
+                return linkPaymentDetails.removalMessage
             } else {
                 return makeCardRemovalMessage(
                     brand: card?.preferredDisplayBrand ?? .unknown,
@@ -850,14 +850,12 @@ extension STPPaymentMethod {
 
 private extension LinkPaymentDetails {
 
-    var removalMessage: (title: String, message: String)? {
+    var removalMessage: (title: String, message: String) {
         switch self {
         case .card(let cardDetails):
             return makeCardRemovalMessage(brand: cardDetails.brand, last4: cardDetails.last4)
         case .bankAccount(let bankDetails):
             return makeBankAccountRemovalMessage(last4: bankDetails.last4)
-        default:
-            return nil
         }
     }
 }

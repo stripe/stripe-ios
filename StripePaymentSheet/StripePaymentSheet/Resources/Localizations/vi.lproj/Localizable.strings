@@ -106,6 +106,8 @@
 
 "Continue another way" = "Tiếp tục theo cách khác";
 
+"Debit or credit card" = "Thẻ ghi nợ hoặc thẻ tín dụng";
+
 "Default" = "Mặc định";
 
 "Default payment method" = "Phương thức thanh toán mặc định";
@@ -132,11 +134,15 @@
 
 "IBAN" = "IBAN";
 
+"Log in or sign up" = "Đăng nhập hoặc đăng ký";
+
 "Log out of Link" = "Đăng xuất khỏi Link";
 
 "Manage SEPA debit" = "Quản lý Ghi nợ SEPA";
 
 "Manage US bank account" = "Quản lý tài khoản ngân hàng Hoa Kỳ";
+
+"Manage bank account" = "Quản lý tài khoản ngân hàng";
 
 "Manage card" = "Quản lý thẻ";
 
@@ -155,6 +161,8 @@
 "New payment method" = "Phương thức thanh toán mới";
 
 "No %@ promo" = "Không có khuyến mại %@";
+
+"Not you?" = "Đây không phải là bạn?";
 
 "Only card brand can be changed." = "Chỉ có thể thay đổi thương hiệu thẻ.";
 
