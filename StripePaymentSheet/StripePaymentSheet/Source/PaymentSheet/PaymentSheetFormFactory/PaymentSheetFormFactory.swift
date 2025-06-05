@@ -1044,7 +1044,7 @@ extension PaymentSheet.Appearance {
         colors.danger = self.colors.danger
 
         theme.borderWidth = borderWidth
-        theme.dividerWidth = self.colors.componentDividerWidth
+        theme.dividerWidth = self.colors.componentDividerWidth ?? borderWidth
         theme.cornerRadius = cornerRadius
         theme.shadow = shadow.asElementThemeShadow
 
