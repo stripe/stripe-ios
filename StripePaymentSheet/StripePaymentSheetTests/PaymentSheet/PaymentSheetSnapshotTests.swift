@@ -170,7 +170,6 @@ class PaymentSheetSnapshotTests: STPSnapshotTestCase {
         appearance.colors.componentBackground = .black
         appearance.colors.componentBorder = .yellow
         appearance.colors.componentDivider = .green
-        appearance.colors.componentDividerWidth = 3.0
         appearance.colors.text = .blue
         appearance.colors.textSecondary = .purple
         appearance.colors.componentText = .cyan
@@ -331,7 +330,6 @@ class PaymentSheetSnapshotTests: STPSnapshotTestCase {
         appearance.colors.componentBackground = .black
         appearance.colors.componentBorder = .yellow
         appearance.colors.componentDivider = .green
-        appearance.colors.componentDividerWidth = 3.0
         appearance.colors.text = .blue
         appearance.colors.textSecondary = .purple
         appearance.colors.componentText = .cyan
@@ -1518,8 +1516,7 @@ fileprivate extension PaymentSheet.Appearance {
         colors.background = .cyan
         colors.componentBackground = .yellow
         colors.componentBorder = .systemRed
-        colors.componentDivider = .green
-        colors.componentDividerWidth = 3.0
+        colors.componentDivider = .black
         colors.text = .red
         colors.textSecondary = .orange
         colors.componentText = .red
