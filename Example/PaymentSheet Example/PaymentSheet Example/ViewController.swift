@@ -51,7 +51,7 @@ class ViewController: UIViewController {
     }
     @IBSegueAction func showWalletButtonsView(_ coder: NSCoder) -> UIViewController? {
         if #available(iOS 15.0, *) {
-            return UIHostingController(coder: coder, rootView: ExampleWalletButtonsView())
+            return UIHostingController(coder: coder, rootView: ExampleWalletButtonsContainerView())
         } else {
             fatalError(">= iOS 15.0 required")
         }

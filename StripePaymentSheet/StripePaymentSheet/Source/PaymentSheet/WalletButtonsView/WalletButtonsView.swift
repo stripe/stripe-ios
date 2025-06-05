@@ -8,12 +8,23 @@ import SwiftUI
 
 @available(iOS 16.0, *)
 @_spi(STP) public struct WalletButtonsView: View {
+    enum ExpressType: Hashable {
+        case applePay
+        case link
+        case linkInlineVerification(PaymentSheetLinkAccount)
+    }
+
+    @_spi(STP) public enum Confirmation {
+        case paymentSheetResult(PaymentSheetResult)
+        case flowControllerUpdated(PaymentSheet.FlowController)
+    }
+
     let flowController: PaymentSheet.FlowController
-    let confirmHandler: (PaymentSheetResult) -> Void
+    let confirmHandler: (Confirmation) -> Void
     let orderedWallets: [ExpressType]
 
     @_spi(STP) public init(flowController: PaymentSheet.FlowController,
-                           confirmHandler: @escaping (PaymentSheetResult) -> Void) {
+                           confirmHandler: @escaping (Confirmation) -> Void) {
         self.confirmHandler = confirmHandler
         self.flowController = flowController
 
@@ -23,8 +34,26 @@ import SwiftUI
             switch type {
             case "link":
                 // Also check PaymentSheet local availability logic
-                if PaymentSheet.isLinkEnabled(elementsSession: flowController.elementsSession, configuration: flowController.configuration) {
-                    wallets.append(.link)
+                if PaymentSheet.isLinkEnabled(
+                    elementsSession: flowController.elementsSession,
+                    configuration: flowController.configuration
+                ) {
+                    let canUseLinkInlineVerification: Bool = {
+                        let featureFlagEnabled = PaymentSheet.LinkFeatureFlags.enableLinkInlineVerification
+                        let canUseNativeLink = deviceCanUseNativeLink(
+                            elementsSession: flowController.elementsSession,
+                            configuration: flowController.configuration
+                        )
+                        return featureFlagEnabled && canUseNativeLink
+                    }()
+
+                    if canUseLinkInlineVerification,
+                       let linkAccount = LinkAccountContext.shared.account,
+                       linkAccount.isRegistered {
+                        wallets.append(.linkInlineVerification(linkAccount))
+                    } else {
+                        wallets.append(.link)
+                    }
                 }
             case "apple_pay":
                 if PaymentSheet.isApplePayEnabled(elementsSession: flowController.elementsSession, configuration: flowController.configuration) {
@@ -38,7 +67,7 @@ import SwiftUI
     }
 
     init(flowController: PaymentSheet.FlowController,
-         confirmHandler: @escaping (PaymentSheetResult) -> Void,
+         confirmHandler: @escaping (Confirmation) -> Void,
          orderedWallets: [ExpressType]) {
         self.flowController = flowController
         self.confirmHandler = confirmHandler
@@ -49,19 +78,23 @@ import SwiftUI
         if !orderedWallets.isEmpty {
             VStack(spacing: 8) {
                 ForEach(orderedWallets, id: \.self) { wallet in
+                    let completion: () -> Void = {
+                        Task {
+                            checkoutTapped(wallet)
+                        }
+                    }
+
                     switch wallet {
                     case .applePay:
-                        ApplePayButton {
-                            Task {
-                                checkoutTapped(.applePay)
-                            }
-                        }
+                        ApplePayButton(action: completion)
                     case .link:
-                        LinkButton {
-                            Task {
-                                checkoutTapped(.link)
-                            }
-                        }
+                        LinkButton(action: completion)
+                    case .linkInlineVerification(let account):
+                        LinkInlineVerificationView(
+                            account: account,
+                            appearance: flowController.configuration.appearance,
+                            onComplete: completion
+                        )
                     }
                 }
             }
@@ -73,11 +106,6 @@ import SwiftUI
                 flowController.walletButtonsShownExternally = false
             }
         }
-    }
-
-    enum ExpressType {
-        case link
-        case applePay
     }
 
     func checkoutTapped(_ expressType: ExpressType) {
@@ -92,7 +120,7 @@ import SwiftUI
                 paymentHandler: flowController.paymentHandler,
                 analyticsHelper: flowController.analyticsHelper
             ) { result, _ in
-                confirmHandler(result)
+                confirmHandler(.paymentSheetResult(result))
             }
         case .applePay:
             // Launch directly into Apple Pay and confirm the payment
@@ -105,8 +133,29 @@ import SwiftUI
                 paymentHandler: flowController.paymentHandler,
                 analyticsHelper: flowController.analyticsHelper
             ) { result, _ in
-                confirmHandler(result)
+                confirmHandler(.paymentSheetResult(result))
             }
+        case .linkInlineVerification:
+            // TODO: Ensure this case is only available when `deviceCanUseNativeLink`.
+            let linkController = PayWithNativeLinkController(
+                mode: .paymentMethodSelection,
+                intent: flowController.intent,
+                elementsSession: flowController.elementsSession,
+                configuration: flowController.configuration,
+                analyticsHelper: flowController.analyticsHelper
+            )
+            linkController.presentForPaymentMethodSelection(
+                from: WindowAuthenticationContext().authenticationPresentingViewController(),
+                initiallySelectedPaymentDetailsID: nil,
+                completion: { confirmOptions, _ in
+                    guard let confirmOptions else {
+                        // TODO: Handle failure / cancel.
+                        return
+                    }
+                    flowController.viewController.linkConfirmOption = confirmOptions
+                    confirmHandler(.flowControllerUpdated(flowController))
+                }
+            )
         }
     }
 
@@ -125,6 +174,12 @@ import SwiftUI
 private class WindowAuthenticationContext: NSObject, STPAuthenticationContext {
     public func authenticationPresentingViewController() -> UIViewController {
         UIWindow.visibleViewController ?? UIViewController()
+    }
+}
+
+extension PaymentSheetLinkAccount: Hashable {
+    func hash(into hasher: inout Hasher) {
+        hasher.combine(ObjectIdentifier(self))
     }
 }
 

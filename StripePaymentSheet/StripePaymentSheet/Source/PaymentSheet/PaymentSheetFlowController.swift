@@ -584,6 +584,7 @@ extension PaymentSheet {
         }
 
         func updateForWalletButtonsView() {
+            let previousLinkConfirmOption = viewController.linkConfirmOption
             // Recreate the view controller
             self.viewController = Self.makeViewController(
                 configuration: self.configuration,
@@ -592,6 +593,7 @@ extension PaymentSheet {
                 walletButtonsShownExternally: self.walletButtonsShownExternally,
                 previousPaymentOption: self.internalPaymentOption
             )
+            self.viewController.linkConfirmOption = previousLinkConfirmOption
             self.viewController.flowControllerDelegate = self
             updatePaymentOption()
         }
