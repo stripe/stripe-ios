@@ -191,6 +191,7 @@ extension PaymentSheet {
         var viewController: FlowControllerViewControllerProtocol
 
         private var presentPaymentOptionsCompletion: (() -> Void)?
+        private var didDismissLinkVerificationDialog: Bool = false
 
         // If a WalletButtonsView is currently visible
         var walletButtonsShownExternally: Bool = false {
@@ -213,6 +214,14 @@ extension PaymentSheet {
             guard elementsSession.enableFlowControllerRUX(for: configuration) else {
                 return false
             }
+
+            let currentSession = LinkAccountContext.shared.account?.currentSession
+
+            if currentSession?.hasStartedSMSVerification == true && didDismissLinkVerificationDialog {
+                // We asked the user to sign in once, and they declined.
+                return false
+            }
+
             return _paymentOption?.canLaunchLink ?? false
         }
 
@@ -406,14 +415,12 @@ extension PaymentSheet {
             selectedPaymentDetailsID: String? = nil,
             returnToPaymentSheet: @escaping () -> Void
         ) {
-            presentingViewController.presentNativeLink(
-                selectedPaymentDetailsID: selectedPaymentDetailsID,
-                configuration: configuration,
-                intent: intent,
-                elementsSession: elementsSession,
-                analyticsHelper: analyticsHelper,
-                verificationRejected: returnToPaymentSheet
-            ) { [weak self] confirmOption, shouldReturnToPaymentSheet in
+            let verificationDismissed: () -> Void = { [weak self] in
+                self?.didDismissLinkVerificationDialog = true
+                returnToPaymentSheet()
+            }
+
+            let completionCallback: (PaymentSheet.LinkConfirmOption?, Bool) -> Void = { [weak self] confirmOption, shouldReturnToPaymentSheet in
                 guard let self else { return }
 
                 if let confirmOption {
@@ -429,6 +436,16 @@ extension PaymentSheet {
                 self.presentPaymentOptionsCompletion?()
                 self.isPresented = false
             }
+
+            presentingViewController.presentNativeLink(
+                selectedPaymentDetailsID: selectedPaymentDetailsID,
+                configuration: configuration,
+                intent: intent,
+                elementsSession: elementsSession,
+                analyticsHelper: analyticsHelper,
+                verificationDismissed: verificationDismissed,
+                callback: completionCallback
+            )
         }
 
         /// Completes the payment or setup.
