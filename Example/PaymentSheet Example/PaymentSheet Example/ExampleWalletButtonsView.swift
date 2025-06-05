@@ -3,19 +3,57 @@
 //  PaymentSheet Example
 //
 
+@_spi(STP) import StripePayments
 @_spi(STP) import StripePaymentSheet
 import SwiftUI
 
+struct ExampleWalletButtonsContainerView: View {
+    @State private var email: String = ""
+    @State private var linkInlineVerificationEnabled: Bool = PaymentSheet.LinkFeatureFlags.enableLinkInlineVerification
+
+    var body: some View {
+        if #available(iOS 16.0, *) {
+            Form {
+                Section("WalletButtonsView Configuration") {
+                    TextField("Email", text: $email)
+                        .textContentType(.emailAddress)
+                        .textInputAutocapitalization(.never)
+
+                    Toggle("Enable inline verification", isOn: $linkInlineVerificationEnabled)
+                        .onChange(of: linkInlineVerificationEnabled) { newValue in
+                            PaymentSheet.LinkFeatureFlags.enableLinkInlineVerification = newValue
+                        }
+
+                    NavigationLink("Launch") {
+                        ExampleWalletButtonsView(email: email)
+                    }
+                }
+            }
+        } else {
+            Text("Use >= iOS 16.0")
+        }
+    }
+}
+
 struct ExampleWalletButtonsView: View {
-    @ObservedObject var model = ExampleWalletButtonsModel()
+    @ObservedObject var model: ExampleWalletButtonsModel
     @State var isConfirmingPayment = false
+
+    init(email: String) {
+        self.model = ExampleWalletButtonsModel(email: email)
+    }
+
     var body: some View {
         if #available(iOS 16.0, *) {
             VStack {
                 if let flowController = model.paymentSheetFlowController {
                     if flowController.paymentOption == nil {
-                        WalletButtonsView(flowController: flowController) { _ in
+                        WalletButtonsView(flowController: flowController) { result in
+                            if case .flowControllerUpdated(let updatedFlowController) = result {
+                                self.model.paymentSheetFlowController = updatedFlowController
+                            }
                         }
+                        .padding()
                     }
                     PaymentSheet.FlowController.PaymentOptionsButton(
                         paymentSheetFlowController: flowController,
@@ -43,7 +81,8 @@ struct ExampleWalletButtonsView: View {
                 } else {
                     ExampleLoadingView()
                 }
-            }.onAppear {
+            }
+            .onAppear {
                 model.preparePaymentSheet()
             }
             if let result = model.paymentResult {
@@ -56,9 +95,15 @@ struct ExampleWalletButtonsView: View {
 }
 
 class ExampleWalletButtonsModel: ObservableObject {
+    let email: String
+
     let backendCheckoutUrl = URL(string: "https://stripe-mobile-payment-sheet.glitch.me/checkout")!
     @Published var paymentSheetFlowController: PaymentSheet.FlowController?
     @Published var paymentResult: PaymentSheetResult?
+
+    init(email: String) {
+        self.email = email
+    }
 
     func preparePaymentSheet() {
         // MARK: Fetch the PaymentIntent and Customer information from the backend
@@ -83,6 +128,7 @@ class ExampleWalletButtonsModel: ObservableObject {
 
                 // MARK: Create a PaymentSheet instance
                 var configuration = PaymentSheet.Configuration()
+                configuration.defaultBillingDetails.email = self.email
                 configuration.merchantDisplayName = "Example, Inc."
                 configuration.applePay = .init(
                     merchantId: "merchant.com.stripe.umbrella.test", // Be sure to use your own merchant ID here!
