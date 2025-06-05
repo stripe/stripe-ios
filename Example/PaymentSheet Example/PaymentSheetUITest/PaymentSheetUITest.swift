@@ -2795,11 +2795,11 @@ class PaymentSheetLinkUITests: PaymentSheetUITestCase {
 
     // MARK: Link bank payments
 
-    func disabled_testLinkCardBrand() {
+    func testLinkCardBrand() {
         _testInstantDebits(mode: .payment, useLinkCardBrand: true)
     }
 
-    func disabled_testLinkCardBrand_flowController() {
+    func testLinkCardBrand_flowController() {
         _testInstantDebits(mode: .payment, useLinkCardBrand: true, uiStyle: .flowController)
     }
 
@@ -2809,7 +2809,7 @@ class PaymentSheetLinkUITests: PaymentSheetUITestCase {
         testBankPaymentInNativeLink(passthroughMode: false)
     }
 
-    func disabled_testBankPaymentInNativeLinkInPassthroughMode() {
+    func testBankPaymentInNativeLinkInPassthroughMode() {
         testBankPaymentInNativeLink(passthroughMode: true)
     }
 
