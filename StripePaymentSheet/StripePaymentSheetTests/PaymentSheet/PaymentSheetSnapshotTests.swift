@@ -191,7 +191,7 @@ class PaymentSheetSnapshotTests: STPSnapshotTestCase {
         appearance.primaryButton.cornerRadius = 0.0
         appearance.primaryButton.borderColor = .cyan
         appearance.primaryButton.borderWidth = 2.0
-        appearance.primaryButton.font = UIFont(name: "AvenirNext-Regular", size: UIFont.labelFontSize)!
+        appearance.primaryButton.font = UIFont(name: "AvenirNext-Regular", size: 50)!
         appearance.primaryButton.shadow = PaymentSheet.Appearance.Shadow(
             color: .yellow,
             opacity: 0.5,
@@ -1564,7 +1564,7 @@ fileprivate extension PaymentSheet.Appearance {
             offset: CGSize(width: 0, height: 2),
             radius: 4
         )
-        appearance.formInsets = UIEdgeInsets(top: 30, left: 50, bottom: 70, right: 10)
+        appearance.formInsets = NSDirectionalEdgeInsets(top: 30, leading: 50, bottom: 70, trailing: 10)
 
         // Customize the colors
         var colors = PaymentSheet.Appearance.Colors()

@@ -176,6 +176,8 @@ extension PayWithLinkViewController {
                 )
             )
 
+            coordinator?.allowSheetDismissal(false)
+
             linkAccount.updatePaymentDetails(id: paymentMethod.stripeID, updateParams: updateParams) { [weak self] result in
                 guard let self else {
                     return
@@ -195,6 +197,7 @@ extension PayWithLinkViewController {
                     }
 
                     self.updateButton.update(state: .succeeded, style: nil, callToAction: nil, animated: true) {
+                        self.coordinator?.allowSheetDismissal(true)
                         self.delegate?.didUpdate(
                             paymentMethod: updatedPaymentDetails,
                             confirmationExtras: confirmationExtras
@@ -205,6 +208,7 @@ extension PayWithLinkViewController {
                     self.updateErrorLabel(for: error)
                     self.cardEditElement.view.isUserInteractionEnabled = true
                     self.updateButton.update(state: .enabled)
+                    coordinator?.allowSheetDismissal(true)
                 }
             }
         }

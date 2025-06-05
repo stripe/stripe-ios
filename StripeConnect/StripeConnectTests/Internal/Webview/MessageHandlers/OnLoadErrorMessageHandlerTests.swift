@@ -4,7 +4,7 @@
 //
 //  Created by Chris Mays on 8/14/24.
 //
-@_spi(PrivateBetaConnect) @testable import StripeConnect
+@testable import StripeConnect
 import XCTest
 
 class OnLoadErrorMessageHandlerTests: ScriptWebTestBase {

@@ -109,6 +109,11 @@ final class LinkLegalTermsView: UIView {
                     "By joining Link, you agree to the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>.",
                     "Legal text shown when creating a Link account."
                 )
+            case .checkboxWithDefaultOptIn:
+                return STPLocalizedString(
+                    "By providing phone number and email, you agree to create a Link account subject to the Link <terms>Terms</terms> and <privacy>Privacy Policy</privacy>.",
+                    "Legal text shown when creating a Link account."
+                )
             case .textFieldsOnlyEmailFirst:
                 return STPLocalizedString(
                     "By providing your email, you agree to create a Link account and save your payment info to Link, according to the Link <terms>Terms</terms> and <privacy>Privacy Policy</privacy>.",
@@ -121,16 +126,44 @@ final class LinkLegalTermsView: UIView {
                 )
             }
         }()
+
+        let leadingIcon: NSTextAttachment? = {
+            guard mode == .checkboxWithDefaultOptIn else {
+                return nil
+            }
+            let iconImage = Image.link_logo_knockout.makeImage(template: false)
+            let iconImageAttachment = NSTextAttachment()
+
+            let font = LinkUI.font(forTextStyle: .caption)
+            let targetHeight = font.capHeight * 1.3
+            let aspectRatio = iconImage.size.width / iconImage.size.height
+            let targetWidth = targetHeight * aspectRatio
+
+            iconImageAttachment.bounds = CGRect(
+                x: 0,
+                y: (font.capHeight - targetHeight).rounded() / 2,
+                width: targetWidth,
+                height: targetHeight
+            )
+            iconImageAttachment.image = iconImage
+            return iconImageAttachment
+        }()
+
         let formattedString = STPStringUtils.applyLinksToString(template: string, links: links)
         let paragraphStyle = NSMutableParagraphStyle()
         paragraphStyle.lineSpacing = LinkUI.lineSpacing(
             fromRelativeHeight: Constants.lineHeight,
             textStyle: .caption
         )
-
         formattedString.addAttributes([.paragraphStyle: paragraphStyle], range: formattedString.extent)
 
-        return formattedString
+        let result = NSMutableAttributedString(string: "")
+        if let leadingIcon {
+            result.append(NSAttributedString(attachment: leadingIcon))
+            result.append(NSAttributedString(string: " • "))
+        }
+        result.append(formattedString)
+        return result
     }
 
 }

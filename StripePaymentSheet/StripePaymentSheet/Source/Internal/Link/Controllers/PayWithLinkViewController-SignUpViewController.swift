@@ -20,6 +20,8 @@ extension PayWithLinkViewController {
     final class SignUpViewController: BaseViewController {
 
         private let viewModel: SignUpViewModel
+        private let selectionBehavior = SelectionBehavior.highlightBorder(configuration: LinkUI.highlightBorderConfiguration)
+        private let theme = LinkUI.appearance.asElementsTheme
 
         private let titleLabel: UILabel = {
             let label = UILabel()
@@ -46,12 +48,16 @@ extension PayWithLinkViewController {
             return label
         }()
 
-        private lazy var emailElement = LinkEmailElement(defaultValue: viewModel.emailAddress, showLogo: false, theme: LinkUI.appearance.asElementsTheme)
+        private lazy var emailElement = {
+            let element = LinkEmailElement(defaultValue: viewModel.emailAddress, showLogo: false, theme: theme)
+            element.indicatorTintColor = .linkIconBrand
+            return element
+        }()
 
         private lazy var phoneNumberElement = PhoneNumberElement(
             defaultCountryCode: context.configuration.defaultBillingDetails.address.country,
             defaultPhoneNumber: context.configuration.defaultBillingDetails.phone,
-            theme: LinkUI.appearance.asElementsTheme
+            theme: theme
         )
 
         private lazy var nameElement = TextFieldElement(
@@ -59,14 +65,26 @@ extension PayWithLinkViewController {
                 type: .full,
                 defaultValue: viewModel.legalName
             ),
-            theme: LinkUI.appearance.asElementsTheme
+            theme: theme
         )
 
-        private lazy var emailSection = SectionElement(elements: [emailElement], theme: LinkUI.appearance.asElementsTheme)
+        private lazy var emailSection = SectionElement(
+            elements: [emailElement],
+            selectionBehavior: selectionBehavior,
+            theme: theme
+        )
 
-        private lazy var phoneNumberSection = SectionElement(elements: [phoneNumberElement], theme: LinkUI.appearance.asElementsTheme)
+        private lazy var phoneNumberSection = SectionElement(
+            elements: [phoneNumberElement],
+            selectionBehavior: selectionBehavior,
+            theme: theme
+        )
 
-        private lazy var nameSection = SectionElement(elements: [nameElement], theme: LinkUI.appearance.asElementsTheme)
+        private lazy var nameSection = SectionElement(
+            elements: [nameElement],
+            selectionBehavior: selectionBehavior,
+            theme: theme
+        )
 
         private lazy var legalTermsView: LinkLegalTermsView = {
             let legalTermsView = LinkLegalTermsView(textAlignment: .center, isStandalone: true)
@@ -76,7 +94,7 @@ extension PayWithLinkViewController {
         }()
 
         private lazy var errorLabel: UILabel = {
-            let label = ElementsUI.makeErrorLabel(theme: LinkUI.appearance.asElementsTheme)
+            let label = ElementsUI.makeErrorLabel(theme: theme)
             label.isHidden = true
             return label
         }()
@@ -217,6 +235,8 @@ extension PayWithLinkViewController {
         func didTapSignUpButton(_ sender: Button) {
             signUpButton.isLoading = true
 
+            coordinator?.allowSheetDismissal(false)
+
             viewModel.signUp { [weak self] result in
                 guard let self else {
                     return
@@ -235,6 +255,7 @@ extension PayWithLinkViewController {
                 }
 
                 self.signUpButton.isLoading = false
+                coordinator?.allowSheetDismissal(true)
             }
         }
 
@@ -269,6 +290,15 @@ extension PayWithLinkViewController.SignUpViewController: PayWithLinkSignUpViewM
 extension PayWithLinkViewController.SignUpViewController: ElementDelegate {
 
     func didUpdate(element: Element) {
+        // Forward delegate updates to the respective SectionElement
+        if element === emailElement {
+            emailSection.didUpdate(element: emailElement.emailAddressElement)
+        } else if element === phoneNumberElement {
+            phoneNumberSection.didUpdate(element: phoneNumberElement.lastUpdatedElement ?? element)
+        } else if element === nameElement {
+            nameSection.didUpdate(element: nameElement)
+        }
+
         switch emailElement.validationState {
         case .valid:
             viewModel.emailAddress = emailElement.emailAddressString

@@ -305,9 +305,9 @@ class SavedPaymentOptionsViewController: UIViewController {
         let mandateView = SimpleMandateTextView(mandateText: mandateText, theme: appearance.asElementsTheme)
         let margins = NSDirectionalEdgeInsets.insets(
             top: 8,
-            leading: appearance.formInsets.left,
+            leading: appearance.formInsets.leading,
             bottom: 0,
-            trailing: appearance.formInsets.right
+            trailing: appearance.formInsets.trailing
         )
         view.addAndPinSubview(mandateView, directionalLayoutMargins: margins)
         return view
@@ -319,7 +319,7 @@ class SavedPaymentOptionsViewController: UIViewController {
 
     private lazy var cvcRecollectionContainerView: DynamicHeightContainerView = {
         let view = DynamicHeightContainerView(pinnedDirection: .top)
-        view.directionalLayoutMargins = .insets(leading: appearance.formInsets.left, trailing: appearance.formInsets.right)
+        view.directionalLayoutMargins = .insets(leading: appearance.formInsets.leading, trailing: appearance.formInsets.trailing)
         view.addPinnedSubview(cvcFormElementView)
         view.updateHeight()
         return view
@@ -767,19 +767,16 @@ extension STPPaymentMethod {
     var removalMessage: (title: String, message: String) {
         switch type {
         case .card:
-            return makeCardRemovalMessage(
-                brand: card?.preferredDisplayBrand ?? .unknown,
-                last4: card?.last4 ?? ""
-            )
-        case .link:
-            switch linkPaymentDetails {
-            case .card(let cardDetails):
-                return makeCardRemovalMessage(brand: cardDetails.brand, last4: cardDetails.last4)
-            case .bankAccount(let bankDetails):
-                return makeBankAccountRemovalMessage(last4: bankDetails.last4)
-            default:
-                return makeInvalidRemovalMessage()
+            if let linkPaymentDetails {
+                return linkPaymentDetails.removalMessage
+            } else {
+                return makeCardRemovalMessage(
+                    brand: card?.preferredDisplayBrand ?? .unknown,
+                    last4: card?.last4 ?? ""
+                )
             }
+        case .link:
+            return linkPaymentDetails?.removalMessage ?? makeInvalidRemovalMessage()
         case .SEPADebit:
             let last4 = sepaDebit?.last4 ?? ""
             let formattedMessage = String.Localized.bank_account_xxxx
@@ -792,29 +789,6 @@ extension STPPaymentMethod {
         default:
             return makeInvalidRemovalMessage()
         }
-    }
-
-    private func makeCardRemovalMessage(brand: STPCardBrand, last4: String) -> (title: String, message: String) {
-        let brandString = STPCardBrandUtilities.stringFrom(brand) ?? ""
-        let formattedMessage = STPLocalizedString(
-            "%1$@ •••• %2$@",
-            "Content for alert popup prompting to confirm removing a saved card. {card brand} •••• {last 4} e.g. 'Visa •••• 3155'"
-        )
-        return (
-            title: STPLocalizedString(
-                "Remove card?",
-                "Title for confirmation alert to remove a card"
-            ),
-            message: String(format: formattedMessage, brandString, last4)
-        )
-    }
-
-    private func makeBankAccountRemovalMessage(last4: String) -> (title: String, message: String) {
-        let formattedMessage = String.Localized.bank_account_xxxx
-        return (
-            title: String.Localized.removeBankAccount,
-            message: String(format: formattedMessage, last4)
-        )
     }
 
     private func makeInvalidRemovalMessage() -> (title: String, message: String) {
@@ -872,4 +846,39 @@ extension STPPaymentMethod {
         guard let availableNetworks = card?.networks?.available else { return false }
         return availableNetworks.count > 1
     }
+}
+
+private extension LinkPaymentDetails {
+
+    var removalMessage: (title: String, message: String) {
+        switch self {
+        case .card(let cardDetails):
+            return makeCardRemovalMessage(brand: cardDetails.brand, last4: cardDetails.last4)
+        case .bankAccount(let bankDetails):
+            return makeBankAccountRemovalMessage(last4: bankDetails.last4)
+        }
+    }
+}
+
+private func makeCardRemovalMessage(brand: STPCardBrand, last4: String) -> (title: String, message: String) {
+    let brandString = STPCardBrandUtilities.stringFrom(brand) ?? ""
+    let formattedMessage = STPLocalizedString(
+        "%1$@ •••• %2$@",
+        "Content for alert popup prompting to confirm removing a saved card. {card brand} •••• {last 4} e.g. 'Visa •••• 3155'"
+    )
+    return (
+        title: STPLocalizedString(
+            "Remove card?",
+            "Title for confirmation alert to remove a card"
+        ),
+        message: String(format: formattedMessage, brandString, last4)
+    )
+}
+
+private func makeBankAccountRemovalMessage(last4: String) -> (title: String, message: String) {
+    let formattedMessage = String.Localized.bank_account_xxxx
+    return (
+        title: String.Localized.removeBankAccount,
+        message: String(format: formattedMessage, last4)
+    )
 }

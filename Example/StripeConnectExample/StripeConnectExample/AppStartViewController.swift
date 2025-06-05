@@ -5,7 +5,7 @@
 //  Created by Chris Mays on 8/21/24.
 //
 
-@_spi(PrivateBetaConnect) import StripeConnect
+import StripeConnect
 import SwiftUI
 import UIKit
 

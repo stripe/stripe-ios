@@ -6,7 +6,7 @@
 //
 
 import Foundation
-@_spi(PrivateBetaConnect) @testable import StripeConnect
+@testable import StripeConnect
 
 extension AppearanceWrapper {
     public static let `default`: AppearanceWrapper = .init(appearance: .default, traitCollection: .init())

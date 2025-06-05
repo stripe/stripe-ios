@@ -83,7 +83,6 @@ class PaymentMethodRowButtonSnapshotTests: STPSnapshotTestCase {
     }
 
     func testPaymentMethodRowButton_newPaymentMethod_linkType_unselected() {
-        PaymentSheet.LinkFeatureFlags.enableLinkInSPM = true
         var card = STPPaymentMethod._testLink()
         card.linkPaymentDetails = .card(
             LinkPaymentDetails.Card(
@@ -97,7 +96,19 @@ class PaymentMethodRowButtonSnapshotTests: STPSnapshotTestCase {
         )
         let rowButton = SavedPaymentMethodRowButton(paymentMethod: card, appearance: .default)
         verify(rowButton)
-        PaymentSheet.LinkFeatureFlags.enableLinkInSPM = false
+    }
+
+    func testPaymentMethodRowButton_newPaymentMethod_linkCardBrandType_unselected() {
+        var card = STPPaymentMethod._testCard()
+        card.linkPaymentDetails = .bankAccount(
+            LinkPaymentDetails.BankDetails(
+                id: "csmr_123",
+                bankName: "Stripe Bank",
+                last4: "4242"
+            )
+        )
+        let rowButton = SavedPaymentMethodRowButton(paymentMethod: card, appearance: .default)
+        verify(rowButton)
     }
 
     func verify(

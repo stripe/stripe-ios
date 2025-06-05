@@ -430,7 +430,7 @@ extension PaymentSheet.Appearance {
             offset: CGSize(width: 0, height: 2),
             radius: 4
         )
-        appearance.formInsets = UIEdgeInsets(top: 30, left: 50, bottom: 70, right: 10)
+        appearance.formInsets = NSDirectionalEdgeInsets(top: 30, leading: 50, bottom: 70, trailing: 10)
 
         // Customize the colors
         var colors = PaymentSheet.Appearance.Colors()
@@ -448,6 +448,7 @@ extension PaymentSheet.Appearance {
 
         // Customize the primary button
         var primaryButton = PaymentSheet.Appearance.PrimaryButton()
+        primaryButton.height = 50
         primaryButton.cornerRadius = 8
 
         appearance.font = font

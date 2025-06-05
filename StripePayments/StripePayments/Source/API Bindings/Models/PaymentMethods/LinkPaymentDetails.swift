@@ -7,7 +7,7 @@
 
 import Foundation
 
-@_spi(STP) public enum LinkPaymentDetails {
+@_spi(STP) @frozen public enum LinkPaymentDetails {
     case card(Card)
     case bankAccount(BankDetails)
 

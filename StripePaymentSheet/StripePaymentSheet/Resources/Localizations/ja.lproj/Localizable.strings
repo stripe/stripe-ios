@@ -106,6 +106,8 @@
 
 "Continue another way" = "別の方法で続行";
 
+"Debit or credit card" = "デビットカードまたはクレジットカード";
+
 "Default" = "デフォルト";
 
 "Default payment method" = "デフォルトの決済手段";
@@ -132,11 +134,15 @@
 
 "IBAN" = "IBAN";
 
+"Log in or sign up" = "ログイン / 登録";
+
 "Log out of Link" = "Link からログアウト";
 
 "Manage SEPA debit" = "SEPA デビットの管理";
 
 "Manage US bank account" = "アメリカの銀行口座の管理";
+
+"Manage bank account" = "銀行口座の管理";
 
 "Manage card" = "カードの管理";
 
@@ -155,6 +161,8 @@
 "New payment method" = "新しい決済手段";
 
 "No %@ promo" = "%@ のプロモーションはありません";
+
+"Not you?" = "ご本人ではありませんか？";
 
 "Only card brand can be changed." = "カードブランドのみ変更できます。";
 

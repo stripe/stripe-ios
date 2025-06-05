@@ -49,12 +49,7 @@ public extension PaymentSheet {
         public var embeddedPaymentElement: EmbeddedPaymentElement = EmbeddedPaymentElement()
 
         /// Describes the padding used for all forms
-        public var formInsets: UIEdgeInsets = UIEdgeInsets(
-            top: PaymentSheetUI.defaultSheetMargins.top,
-            left: PaymentSheetUI.defaultSheetMargins.leading,
-            bottom: PaymentSheetUI.defaultSheetMargins.bottom,
-            right: PaymentSheetUI.defaultSheetMargins.trailing
-        )
+        public var formInsets: NSDirectionalEdgeInsets = PaymentSheetUI.defaultSheetMargins
 
         // MARK: Fonts
 
@@ -276,6 +271,15 @@ public extension PaymentSheet {
             /// The shadow of the primary button
             /// - Note: If `nil`, `appearance.shadow` will be used as the primary button shadow
             public var shadow: Shadow?
+
+            /// The height of the primary button
+            public var height: CGFloat = 44 {
+                willSet {
+                    if newValue <= 0.0 {
+                        assertionFailure("height must be a value greater than zero")
+                    }
+                }
+            }
         }
     }
 }
@@ -325,7 +329,7 @@ public extension PaymentSheet.Appearance {
                 public var separatorColor: UIColor?
 
                 /// The insets of the separator line between rows
-                /// - Note: If `nil`, defaults to `UIEdgeInsets(top: 0, left: 30, bottom: 0, right: 0)` for style of `flatWithRadio` and to `UIEdgeInsets.zero` for style of `floatingButton`.
+                /// - Note: If `nil`, defaults to `UIEdgeInsets(top: 0, left: 30, bottom: 0, right: 0)` for style of `flatWithRadio` and to `UIEdgeInsets.zero` for style of `flatWithCheckmark`.
                 public var separatorInsets: UIEdgeInsets?
 
                 /// Determines if the top separator is visible at the top of the Embedded Mobile Payment Element
@@ -369,10 +373,7 @@ public extension PaymentSheet.Appearance {
 }
 
 extension PaymentSheet.Appearance {
-    var allFormInsets: NSDirectionalEdgeInsets {
-        return .insets(top: formInsets.top, leading: formInsets.left, bottom: formInsets.bottom, trailing: formInsets.right)
-    }
     var topFormInsets: NSDirectionalEdgeInsets {
-        return .insets(top: formInsets.top, leading: formInsets.left, trailing: formInsets.right)
+        return .insets(top: formInsets.top, leading: formInsets.leading, trailing: formInsets.trailing)
     }
 }
