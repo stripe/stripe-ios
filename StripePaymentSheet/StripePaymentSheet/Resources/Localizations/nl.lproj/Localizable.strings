@@ -106,6 +106,8 @@
 
 "Continue another way" = "Op een andere manier doorgaan";
 
+"Debit or credit card" = "Debitcard of creditcard";
+
 "Default" = "Standaard";
 
 "Default payment method" = "Standaardbetaalmethode";
@@ -132,11 +134,15 @@
 
 "IBAN" = "IBAN";
 
+"Log in or sign up" = "Aanmelden of registreren";
+
 "Log out of Link" = "Afmelden bij Link";
 
 "Manage SEPA debit" = "SEPA-incasso beheren";
 
 "Manage US bank account" = "Amerikaanse bankrekening beheren";
+
+"Manage bank account" = "Bankrekening beheren";
 
 "Manage card" = "Betaalkaart beheren";
 
@@ -155,6 +161,8 @@
 "New payment method" = "Nieuwe betaalmethode";
 
 "No %@ promo" = "Geen %@-promo";
+
+"Not you?" = "Ben jij dit niet?";
 
 "Only card brand can be changed." = "Alleen het merk van de betaalkaart kan worden gewijzigd.";
 
