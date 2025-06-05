@@ -233,6 +233,9 @@ extension SectionContainerView {
             stackView.axis = .horizontal
             stackView.drawBorder = false
             stackView.distribution = .fillEqually
+            // For horizontal layout, use consistent spacing while allowing custom visual divider width
+            stackView.spacing = theme.borderWidth
+            stackView.separatorWidth = theme.dividerWidth
             addAndPinSubview(stackView)
         }
         required init?(coder: NSCoder) { fatalError("init(coder:) has not been implemented") }
@@ -245,6 +248,7 @@ private func buildStackView(views: [UIView], theme: ElementsAppearance = .defaul
     let stackView = StackViewWithSeparator(arrangedSubviews: views)
     stackView.axis = .vertical
     stackView.spacing = theme.dividerWidth
+    stackView.separatorWidth = theme.dividerWidth
     stackView.separatorColor = theme.colors.divider
     stackView.borderColor = theme.colors.border
     stackView.borderCornerRadius = theme.cornerRadius
