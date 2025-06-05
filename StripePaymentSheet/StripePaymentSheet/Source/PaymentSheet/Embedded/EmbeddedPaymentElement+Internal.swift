@@ -65,7 +65,6 @@ extension EmbeddedPaymentElement {
             initialSelectedRowChangeButtonState: previousSelectedRowChangeButtonState,
             paymentMethodTypes: loadResult.paymentMethodTypes,
             savedPaymentMethod: loadResult.savedPaymentMethods.first,
-            configuration: configuration,
             appearance: configuration.appearance,
             shouldShowApplePay: shouldShowApplePay,
             shouldShowLink: shouldShowLink,
@@ -77,9 +76,7 @@ extension EmbeddedPaymentElement {
             currency: loadResult.intent.currency,
             incentive: loadResult.elementsSession.incentive,
             analyticsHelper: analyticsHelper,
-            delegate: delegate,
-            elementsSession: loadResult.elementsSession,
-            intent: loadResult.intent
+            delegate: delegate
         )
     }
 
@@ -154,6 +151,11 @@ extension EmbeddedPaymentElement: EmbeddedPaymentMethodsViewDelegate {
     }
 
     func embeddedPaymentMethodsViewDidTapPaymentMethodRow() {
+        if canPresentNativeLink {
+            presentNativeLink()
+            return
+        }
+
         guard let selectedFormViewController else {
             // If the current selection has no form VC, simply alert the merchant of the selection if they are using immediateAction
             if case .immediateAction(let didSelectPaymentOption) = configuration.rowSelectionBehavior {
@@ -167,6 +169,46 @@ extension EmbeddedPaymentElement: EmbeddedPaymentMethodsViewDelegate {
         assert(presentingViewController != nil, "Presenting view controller not found, set EmbeddedPaymentElement.presentingViewController.")
         stpAssert(selectedFormViewController.delegate != nil)
         presentingViewController?.presentAsBottomSheet(bottomSheet, appearance: configuration.appearance)
+    }
+
+    private var canPresentNativeLink: Bool {
+        guard let rowButton = embeddedPaymentMethodsView.selectedRowButton, rowButton.type == .link else {
+            return false
+        }
+        let useNativeLink = deviceCanUseNativeLink(elementsSession: elementsSession, configuration: configuration)
+        let hasSelection = rowButton.linkConfirmOption != nil
+        return useNativeLink && !hasSelection && PaymentSheet.LinkFeatureFlags.enableLinkEmbeddedChanges
+    }
+
+    private func presentNativeLink() {
+        guard let rowButton = embeddedPaymentMethodsView.selectedRowButton else {
+            return
+        }
+
+        let confirmOption = rowButton.linkConfirmOption
+
+        var selectedPaymentDetailsID: String?
+        if case .withPaymentDetails(_, let details, _, _) = confirmOption {
+            selectedPaymentDetailsID = details.stripeID
+        }
+
+        let verificationRejected: () -> Void = { [weak self] in
+            self?.embeddedPaymentMethodsView.resetSelectionToLastSelection()
+        }
+
+        presentingViewController?.presentNativeLink(
+            selectedPaymentDetailsID: selectedPaymentDetailsID,
+            configuration: configuration,
+            intent: intent,
+            elementsSession: elementsSession,
+            analyticsHelper: analyticsHelper,
+            verificationRejected: verificationRejected
+        ) { [weak self] confirmOption, shouldReturnToPaymentSheet in
+            self?.embeddedPaymentMethodsView.updateLinkRow(
+                with: confirmOption,
+                resetPaymentSelection: shouldReturnToPaymentSheet
+            )
+        }
     }
 
     func embeddedPaymentMethodsViewDidTapViewMoreSavedPaymentMethods(selectedSavedPaymentMethod: STPPaymentMethod?) {
@@ -220,6 +262,10 @@ extension EmbeddedPaymentElement: EmbeddedPaymentMethodsViewDelegate {
 
         // Show an animation on the label if the payment method shows a form
         return formViewController.collectsUserInput
+    }
+
+    func embeddedPaymentMethodsViewDidTapChangeLinkPaymentMethod() {
+        presentNativeLink()
     }
 }
 

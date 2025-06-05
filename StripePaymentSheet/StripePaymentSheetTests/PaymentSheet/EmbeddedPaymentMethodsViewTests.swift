@@ -183,4 +183,7 @@ private class MockEmbeddedPaymentMethodsViewDelegate: EmbeddedPaymentMethodsView
     func shouldAnimateOnPress(_ paymentMethodType: PaymentSheet.PaymentMethodType) -> Bool {
         return false
     }
+
+    func embeddedPaymentMethodsViewDidTapChangeLinkPaymentMethod() {
+    }
 }
