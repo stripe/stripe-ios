@@ -237,6 +237,15 @@ public extension PaymentSheet {
             /// The shadow of the primary button
             /// - Note: If `nil`, `appearance.shadow` will be used as the primary button shadow
             public var shadow: Shadow?
+
+            /// The height of the primary button
+            public var height: CGFloat = 44 {
+                willSet {
+                    if newValue <= 0.0 {
+                        assertionFailure("height must be a value greater than zero")
+                    }
+                }
+            }
         }
     }
 }
@@ -286,7 +295,7 @@ public extension PaymentSheet.Appearance {
                 public var separatorColor: UIColor?
 
                 /// The insets of the separator line between rows
-                /// - Note: If `nil`, defaults to `UIEdgeInsets(top: 0, left: 30, bottom: 0, right: 0)` for style of `flatWithRadio` and to `UIEdgeInsets.zero` for style of `floatingButton`.
+                /// - Note: If `nil`, defaults to `UIEdgeInsets(top: 0, left: 30, bottom: 0, right: 0)` for style of `flatWithRadio` and to `UIEdgeInsets.zero` for style of `flatWithCheckmark`.
                 public var separatorInsets: UIEdgeInsets?
 
                 /// Determines if the top separator is visible at the top of the Embedded Mobile Payment Element

@@ -105,14 +105,12 @@ extension STPPaymentMethod {
 }
 
 private extension LinkPaymentDetails {
-    var paymentSheetAccessibilityLabel: String? {
+    var paymentSheetAccessibilityLabel: String {
         switch self {
         case .card(let cardDetails):
             return makeCardAccessibilityLabel(cardBrand: cardDetails.brand, last4: cardDetails.last4)
         case .bankAccount(let bankDetails):
             return String(format: String.Localized.bank_name_account_ending_in_last_4, bankDetails.bankName, bankDetails.last4)
-        default:
-            return nil
         }
     }
 }

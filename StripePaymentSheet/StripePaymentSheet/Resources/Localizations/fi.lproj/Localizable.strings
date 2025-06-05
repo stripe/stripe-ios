@@ -106,6 +106,8 @@
 
 "Continue another way" = "Jatka toisella tavalla";
 
+"Debit or credit card" = "Pankki- tai luottokortti";
+
 "Default" = "Oletus";
 
 "Default payment method" = "Oletusmaksutapa";
@@ -132,11 +134,15 @@
 
 "IBAN" = "IBAN";
 
+"Log in or sign up" = "Kirjaudu sisään tai rekisteröidy";
+
 "Log out of Link" = "Kirjaudu ulos Link-palvelusta";
 
 "Manage SEPA debit" = "Hallinnoi SEPA-pankkiveloitusta";
 
 "Manage US bank account" = "Hallinnoi yhdysvaltalaista pankkitiliä";
+
+"Manage bank account" = "Hallinnoi pankkitiliä";
 
 "Manage card" = "Hallinnoi korttia";
 
@@ -155,6 +161,8 @@
 "New payment method" = "Uusi maksutapa";
 
 "No %@ promo" = "Ei kampanjaa %@";
+
+"Not you?" = "Onko kyseessä joku muu?";
 
 "Only card brand can be changed." = "Vain kortin brändi voidaan vaihtaa.";
 
