@@ -15,7 +15,6 @@ class LinkEmailElement: Element {
     weak var delegate: ElementDelegate?
 
     let emailAddressElement: TextFieldElement
-    private let theme: ElementsAppearance
 
     private let activityIndicator: ActivityIndicator = {
         // TODO: Consider adding the activity indicator to TextFieldView
@@ -25,7 +24,30 @@ class LinkEmailElement: Element {
     }()
 
     private var infoView: LinkMoreInfoView?
-    private var stackView: UIStackView!
+
+    private lazy var stackView: UIStackView = {
+        let stackView = UIStackView(arrangedSubviews: [emailAddressElement.view, activityIndicator])
+        if let infoView = infoView {
+            stackView.addArrangedSubview(infoView)
+        }
+        stackView.spacing = 0
+        stackView.axis = .horizontal
+        stackView.alignment = .center
+        stackView.isLayoutMarginsRelativeArrangement = true
+        stackView.directionalLayoutMargins = .insets(
+            top: 0,
+            leading: 0,
+            bottom: 0,
+            trailing: ElementsUI.contentViewInsets.trailing
+        )
+        if let infoView = infoView {
+            NSLayoutConstraint.activate([
+                activityIndicator.trailingAnchor.constraint(equalTo: infoView.leadingAnchor, constant: -ElementsUI.contentViewInsets.trailing),
+                infoView.widthAnchor.constraint(equalToConstant: LinkMoreInfoView.Constants.logoWidth),
+            ])
+        }
+        return stackView
+    }()
 
     var view: UIView {
         return stackView
@@ -66,7 +88,6 @@ class LinkEmailElement: Element {
     }
 
     public init(defaultValue: String? = nil, isOptional: Bool = false, showLogo: Bool, theme: ElementsAppearance = .default) {
-        self.theme = theme
         if showLogo {
             self.infoView = LinkMoreInfoView(theme: theme)
         }
@@ -74,26 +95,6 @@ class LinkEmailElement: Element {
                                                          isOptional: isOptional,
                                                          theme: theme)
         emailAddressElement.delegate = self
-        stackView = UIStackView(arrangedSubviews: [emailAddressElement.view, activityIndicator])
-        if let infoView = infoView {
-            stackView.addArrangedSubview(infoView)
-        }
-        stackView.spacing = 0
-        stackView.axis = .horizontal
-        stackView.alignment = .center
-        stackView.isLayoutMarginsRelativeArrangement = true
-        stackView.directionalLayoutMargins = .insets(
-            top: 0,
-            leading: 0,
-            bottom: 0,
-            trailing: theme.textFieldInsets.trailing
-        )
-        if let infoView = infoView {
-            NSLayoutConstraint.activate([
-                activityIndicator.trailingAnchor.constraint(equalTo: infoView.leadingAnchor, constant: -theme.textFieldInsets.trailing),
-                infoView.widthAnchor.constraint(equalToConstant: LinkMoreInfoView.Constants.logoWidth),
-            ])
-        }
     }
 
     @discardableResult
