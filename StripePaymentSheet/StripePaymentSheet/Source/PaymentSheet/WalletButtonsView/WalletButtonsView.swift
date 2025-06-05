@@ -10,12 +10,23 @@ import UIKit
 
 @available(iOS 16.0, *)
 @_spi(STP) public struct WalletButtonsView: View {
+    static let buttonHeight: CGFloat = 44.0
+    static let cornerRadius: CGFloat = buttonHeight / 2.0
+
     let flowController: PaymentSheet.FlowController
     let confirmHandler: (PaymentSheetResult) -> Void
     let orderedWallets: [ExpressType]
 
+    // Add state variables for Link consumer detection
+    @State private var linkConsumerFound: Bool = false
+    @State private var linkConsumerEmail: String?
+
+    // Track the frame of the Link button for our animation
+    @State private var linkButtonFrame: CGRect = .zero
+
     @_spi(STP) public init(flowController: PaymentSheet.FlowController,
                            confirmHandler: @escaping (PaymentSheetResult) -> Void) {
+        // Existing initialization code...
         self.confirmHandler = confirmHandler
         self.flowController = flowController
 
@@ -59,21 +70,65 @@ import UIKit
                             }
                         }
                     case .link:
-                        LinkButton {
-                            Task {
-                                checkoutTapped(.link)
+                        if linkConsumerFound, let linkConsumerEmail {
+                            // Show the email verification view with matching dimensions initially
+                            EmailVerificationView(
+                                email: linkConsumerEmail,
+                                onDismiss: {
+                                    withAnimation(.spring(response: 0.3, dampingFraction: 0.8)) {
+                                        linkConsumerFound = false
+                                    }
+                                }
+                            )
+                            .clipShape(RoundedRectangle(cornerRadius: linkConsumerFound ? 16 : WalletButtonsView.cornerRadius))
+                            .frame(height: linkConsumerFound ? nil : WalletButtonsView.buttonHeight)
+                            .transition(.asymmetric(
+                                insertion: .identity.animation(.spring(response: 0.5, dampingFraction: 0.8, blendDuration: 0.3)),
+                                removal: .identity.animation(.spring(response: 0.3, dampingFraction: 0.8))
+                            ))
+                        } else {
+                            LinkButton {
+                                Task {
+                                    checkoutTapped(.link)
+                                }
                             }
+                            // Use GeometryReader to get the frame of the Link button
+                            .background(
+                                GeometryReader { geometry -> Color in
+                                    DispatchQueue.main.async {
+                                        linkButtonFrame = geometry.frame(in: .global)
+                                    }
+                                    return Color.clear
+                                }
+                            )
                         }
                     }
                 }
             }
             .frame(maxWidth: .infinity)
+            .animation(.spring(response: 0.4, dampingFraction: 0.8), value: linkConsumerFound)
             .onAppear {
                 flowController.walletButtonsShownExternally = true
+                Task {
+                    await checkLinkConsumer()
+                }
             }
             .onDisappear {
                 flowController.walletButtonsShownExternally = false
             }
+        }
+    }
+
+    // Simulate a Link consumer lookup
+    private func checkLinkConsumer() async {
+        // Simulating a network delay of 2 seconds
+        try? await Task.sleep(for: .seconds(2))
+
+        // Simulate a successful lookup
+        linkConsumerEmail = "mats@stripe.com"
+
+        withAnimation(.spring(response: 0.5, dampingFraction: 0.8, blendDuration: 0.3)) {
+            linkConsumerFound = true
         }
     }
 
@@ -118,8 +173,8 @@ import UIKit
         var body: some View {
             PayWithApplePayButton(.plain, action: action)
                 .frame(maxWidth: .infinity)
-                .frame(height: 44)
-                .cornerRadius(100)
+                .frame(height: WalletButtonsView.buttonHeight)
+                .cornerRadius(WalletButtonsView.cornerRadius)
         }
     }
 
@@ -135,10 +190,10 @@ import UIKit
                         .frame(height: 18)
                 }
                 .frame(maxWidth: .infinity)
-                .frame(height: 44)
+                .frame(height: WalletButtonsView.buttonHeight)
                 .background(Color(uiColor: .linkIconBrand))
                 .foregroundColor(.black)
-                .cornerRadius(100)
+                .cornerRadius(WalletButtonsView.cornerRadius)
             }
         }
     }
