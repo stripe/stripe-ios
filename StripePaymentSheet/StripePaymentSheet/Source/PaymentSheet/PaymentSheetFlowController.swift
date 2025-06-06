@@ -6,6 +6,7 @@
 //  Copyright © 2020 Stripe, Inc. All rights reserved.
 //
 
+import Combine
 import Foundation
 import SafariServices
 @_spi(STP) import StripeCore
@@ -13,7 +14,6 @@ import SafariServices
 @_spi(STP) import StripePaymentsUI
 @_spi(STP) import StripeUICore
 import UIKit
-import Combine
 
 typealias PaymentOption = PaymentSheet.PaymentOption
 
@@ -243,7 +243,7 @@ extension PaymentSheet {
         let analyticsHelper: PaymentSheetAnalyticsHelper
 
         // MARK: - Private methods
-        
+
         /// Updates the published paymentOption property based on current state
         private func updatePaymentOption() {
             if let selectedOption = selectedPaymentOption {
@@ -671,7 +671,7 @@ extension PaymentSheet.FlowController: FlowControllerViewControllerDelegate {
             self.isPresented = false
         }
     }
-    
+
     func flowControllerViewControllerDidUpdatePaymentOption(
         _ flowControllerViewController: FlowControllerViewControllerProtocol
     ) {
