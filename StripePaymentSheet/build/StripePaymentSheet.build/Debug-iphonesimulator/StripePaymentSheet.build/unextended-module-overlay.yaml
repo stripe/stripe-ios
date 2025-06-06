@@ -1,0 +1,23 @@
+{
+  "version": 0,
+  "use-external-names": false,
+  "case-sensitive": false,
+  "roots": [{
+    "type": "directory",
+    "name": "/Users/davidestes/stripe/stripe-ios-forest-published-flowcontroller/StripePaymentSheet/build/Debug-iphonesimulator/StripePaymentSheet.framework/Modules",
+    "contents": [{
+      "type": "file",
+      "name": "module.modulemap",
+      "external-contents": "/Users/davidestes/stripe/stripe-ios-forest-published-flowcontroller/StripePaymentSheet/build/StripePaymentSheet.build/Debug-iphonesimulator/StripePaymentSheet.build/unextended-module.modulemap",
+    }]
+    },
+    {
+    "type": "directory",
+    "name": "/Users/davidestes/stripe/stripe-ios-forest-published-flowcontroller/StripePaymentSheet/build/Debug-iphonesimulator/StripePaymentSheet.framework/Headers",
+    "contents": [{
+      "type": "file",
+      "name": "StripePaymentSheet-Swift.h",
+      "external-contents": "/Users/davidestes/stripe/stripe-ios-forest-published-flowcontroller/StripePaymentSheet/build/StripePaymentSheet.build/Debug-iphonesimulator/StripePaymentSheet.build/unextended-interface-header.h",
+    }]
+  }]
+}

@@ -226,6 +226,19 @@ class PaymentSheetSnapshotTests: STPSnapshotTestCase {
         verify(paymentSheet.bottomSheetViewController.view!)
     }
 
+    func testPaymentSheetBorderWidthHalf() {
+        stubNewCustomerResponse()
+
+        var appearance = PaymentSheet.Appearance()
+        appearance.borderWidth = 0.5
+        appearance.colors.componentBorder = .init(white: 0.05, alpha: 1.0)
+        appearance.colors.componentBorder = .init(white: 0.05, alpha: 1.0)
+
+        preparePaymentSheet(appearance: appearance)
+        presentPaymentSheet(darkMode: false)
+        verify(paymentSheet.bottomSheetViewController.view!)
+    }
+
     func testPaymentSheetCustom() {
         stubReturningCustomerResponse()
 

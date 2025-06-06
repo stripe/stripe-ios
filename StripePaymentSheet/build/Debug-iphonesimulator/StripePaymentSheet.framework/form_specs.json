@@ -1,0 +1,1174 @@
+[
+    {
+        "type": "afterpay_clearpay",
+        "async": false,
+        "fields": [
+            {
+                "type": "afterpay_header"
+            },
+            {
+                "type": "name",
+                "api_path": {
+                    "v1": "billing_details[name]"
+                }
+            },
+            {
+                "type": "email",
+                "api_path": {
+                    "v1": "billing_details[email]"
+                }
+            },
+            {
+                "type": "placeholder",
+                "for": "phone"
+            },
+            {
+                "type": "billing_address",
+                "allowed_country_codes": null
+            }
+        ],
+        "next_action_spec": {
+            "confirm_response_status_specs": {
+                "requires_action": {
+                    "type": "redirect_to_url"
+                }
+            },
+            "post_confirm_handling_pi_status_specs": {
+                "succeeded": {
+                    "type": "finished"
+                },
+                "requires_action": {
+                    "type": "canceled"
+                }
+            }
+        }
+    },
+    {
+        "type": "affirm",
+        "async": false,
+        "fields": [
+            {
+                "type": "affirm_header"
+            }
+        ],
+        "next_action_spec": {
+            "confirm_response_status_specs": {
+                "requires_action": {
+                    "type": "redirect_to_url"
+                }
+            },
+            "post_confirm_handling_pi_status_specs": {
+                "succeeded": {
+                    "type": "finished"
+                },
+                "requires_action": {
+                    "type": "canceled"
+                }
+            }
+        }
+    },
+    {
+        "type": "klarna",
+        "async": false,
+        "fields": [
+            {
+                "type": "klarna_header"
+            },
+            {
+                "type": "placeholder",
+                "for": "name"
+            },
+            {
+                "type": "email",
+                "api_path": {
+                    "v1": "billing_details[email]"
+                }
+            },
+            {
+                "type": "placeholder",
+                "for": "phone"
+            },
+            {
+                "type": "klarna_country",
+                "api_path": {
+                    "v1": "billing_details[address][country]"
+                }
+            },
+            {
+                "type": "placeholder",
+                "for": "billing_address_without_country"
+            }
+        ],
+        "next_action_spec": {
+            "confirm_response_status_specs": {
+                "requires_action": {
+                    "type": "redirect_to_url"
+                }
+            },
+            "post_confirm_handling_pi_status_specs": {
+                "succeeded": {
+                    "type": "finished"
+                },
+                "requires_action": {
+                    "type": "canceled"
+                }
+            }
+        }
+    },
+    {
+        "type": "ideal",
+        "async": false,
+        "fields": [
+            {
+                "type": "name",
+                "api_path": {
+                    "v1": "billing_details[name]"
+                }
+            },
+            {
+                "type": "placeholder",
+                "for": "email"
+            },
+            {
+                "type": "placeholder",
+                "for": "phone"
+            },
+            {
+                "type": "selector",
+                "translation_id": "upe.labels.ideal.bank",
+                "items": [
+                    {
+                      "display_text": "ABN Amro",
+                      "api_value": "abn_amro"
+                    },
+                    {
+                      "display_text": "ASN Bank",
+                      "api_value": "asn_bank"
+                    },
+                    {
+                      "display_text": "bunq B.V.",
+                      "api_value": "bunq"
+                    },
+                    {
+                      "display_text": "ING Bank",
+                      "api_value": "ing"
+                    },
+                    {
+                      "display_text": "Knab",
+                      "api_value": "knab"
+                    },
+                    {
+                      "display_text": "N26",
+                      "api_value": "n26"
+                    },
+                    {
+                      "display_text": "Rabobank",
+                      "api_value": "rabobank"
+                    },
+                    {
+                      "display_text": "RegioBank",
+                      "api_value": "regiobank"
+                    },
+                    {
+                      "display_text": "Revolut",
+                      "api_value": "revolut"
+                    },
+                    {
+                      "display_text": "SNS Bank",
+                      "api_value": "sns_bank"
+                    },
+                    {
+                      "display_text": "Triodos Bank",
+                      "api_value": "triodos_bank"
+                    },
+                    {
+                      "display_text": "Van Lanschot",
+                      "api_value": "van_lanschot"
+                    },
+                    {
+                      "display_text": "Yoursafe",
+                      "api_value": "yoursafe"
+                    }
+                ],
+                "api_path": {
+                    "v1": "ideal[bank]"
+                }
+            },
+            {
+                "type": "placeholder",
+                "for": "billing_address"
+            }
+        ],
+        "next_action_spec": {
+            "confirm_response_status_specs": {
+                "requires_action": {
+                    "type": "redirect_to_url"
+                }
+            },
+            "post_confirm_handling_pi_status_specs": {
+                "succeeded": {
+                    "type": "finished"
+                },
+                "requires_action": {
+                    "type": "canceled"
+                }
+            }
+        }
+    },
+    {
+        "type": "sofort",
+        "async": true,
+        "fields": [
+            {
+                "type": "placeholder",
+                "for": "name"
+            },
+            {
+                "type": "placeholder",
+                "for": "email"
+            },
+            {
+                "type": "placeholder",
+                "for": "phone"
+            },
+            {
+                "type": "country",
+                "allowed_country_codes": [
+                    "AT",
+                    "BE",
+                    "DE",
+                    "ES",
+                    "IT",
+                    "NL"
+                ],
+                "api_path": {
+                    "v1": "sofort[country]"
+                }
+            },
+            {
+                "type": "placeholder",
+                "for": "billing_address_without_country"
+            }
+        ],
+        "next_action_spec": {
+            "confirm_response_status_specs": {
+                "requires_action": {
+                    "type": "redirect_to_url"
+                }
+            },
+            "post_confirm_handling_pi_status_specs": {
+                "succeeded": {
+                    "type": "finished"
+                },
+                "processing": {
+                    "type": "finished"
+                },
+                "requires_action": {
+                    "type": "canceled"
+                }
+            }
+        }
+    },
+    {
+        "type": "bancontact",
+        "async": false,
+        "fields": [
+            {
+                "type": "name",
+                "api_path": {
+                    "v1": "billing_details[name]"
+                }
+            }
+        ],
+        "next_action_spec": {
+            "confirm_response_status_specs": {
+                "requires_action": {
+                    "type": "redirect_to_url"
+                }
+            },
+            "post_confirm_handling_pi_status_specs": {
+                "succeeded": {
+                    "type": "finished"
+                },
+                "requires_action": {
+                    "type": "canceled"
+                }
+            }
+        }
+    },
+    {
+        "type": "sepa_debit",
+        "async": true,
+        "fields": [
+            {
+                "type": "name",
+                "api_path": {
+                    "v1": "billing_details[name]"
+                }
+            },
+            {
+                "type": "email",
+                "api_path": {
+                    "v1": "billing_details[email]"
+                }
+            },
+            {
+                "type": "placeholder",
+                "for": "phone"
+            },
+            {
+                "type": "iban",
+                "api_path": {
+                    "v1": "sepa_debit[iban]"
+                }
+            },
+            {
+                "type": "billing_address",
+                "allowed_country_codes": null
+            },
+            {
+                "type": "sepa_mandate"
+            }
+        ],
+        "next_action_spec": {
+            "confirm_response_status_specs": {
+                "processing": {
+                    "type": "finished"
+                },
+                "succeeded": {
+                    "type": "finished"
+                }
+            }
+        }
+    },
+    {
+        "type": "eps",
+        "async": false,
+        "fields": [
+            {
+                "type": "name",
+                "api_path": {
+                    "v1": "billing_details[name]"
+                }
+            },
+            {
+                "type": "placeholder",
+                "for": "email"
+            },
+            {
+                "type": "placeholder",
+                "for": "phone"
+            },
+            {
+                "type": "selector",
+                "translation_id": "upe.labels.eps.bank",
+                "items": [
+                    {
+                        "display_text": "Ärzte- und Apothekerbank",
+                        "api_value": "arzte_und_apotheker_bank"
+                    },
+                    {
+                        "display_text": "Austrian Anadi Bank AG",
+                        "api_value": "austrian_anadi_bank_ag"
+                    },
+                    {
+                        "display_text": "Bank Austria",
+                        "api_value": "bank_austria"
+                    },
+                    {
+                        "display_text": "Bankhaus Carl Spängler & Co.AG",
+                        "api_value": "bankhaus_carl_spangler"
+                    },
+                    {
+                        "display_text": "Bankhaus Schelhammer & Schattera AG",
+                        "api_value": "bankhaus_schelhammer_und_schattera_ag"
+                    },
+                    {
+                        "display_text": "BAWAG P.S.K. AG",
+                        "api_value": "bawag_psk_ag"
+                    },
+                    {
+                        "display_text": "BKS Bank AG",
+                        "api_value": "bks_bank_ag"
+                    },
+                    {
+                        "display_text": "Brüll Kallmus Bank AG",
+                        "api_value": "brull_kallmus_bank_ag"
+                    },
+                    {
+                        "display_text": "BTV VIER LÄNDER BANK",
+                        "api_value": "btv_vier_lander_bank"
+                    },
+                    {
+                        "display_text": "Capital Bank Grawe Gruppe AG",
+                        "api_value": "capital_bank_grawe_gruppe_ag"
+                    },
+                    {
+                        "display_text": "Dolomitenbank",
+                        "api_value": "dolomitenbank"
+                    },
+                    {
+                        "display_text": "Easybank AG",
+                        "api_value": "easybank_ag"
+                    },
+                    {
+                        "display_text": "Erste Bank und Sparkassen",
+                        "api_value": "erste_bank_und_sparkassen"
+                    },
+                    {
+                        "display_text": "Hypo Alpe-Adria-Bank International AG",
+                        "api_value": "hypo_alpeadriabank_international_ag"
+                    },
+                    {
+                        "display_text": "HYPO NOE LB für Niederösterreich u. Wien",
+                        "api_value": "hypo_noe_lb_fur_niederosterreich_u_wien"
+                    },
+                    {
+                        "display_text": "HYPO Oberösterreich,Salzburg,Steiermark",
+                        "api_value": "hypo_oberosterreich_salzburg_steiermark"
+                    },
+                    {
+                        "display_text": "Hypo Tirol Bank AG",
+                        "api_value": "hypo_tirol_bank_ag"
+                    },
+                    {
+                        "display_text": "Hypo Vorarlberg Bank AG",
+                        "api_value": "hypo_vorarlberg_bank_ag"
+                    },
+                    {
+                        "display_text": "HYPO-BANK BURGENLAND Aktiengesellschaft",
+                        "api_value": "hypo_bank_burgenland_aktiengesellschaft"
+                    },
+                    {
+                        "display_text": "Marchfelder Bank",
+                        "api_value": "marchfelder_bank"
+                    },
+                    {
+                        "display_text": "Oberbank AG",
+                        "api_value": "oberbank_ag"
+                    },
+                    {
+                        "display_text": "Raiffeisen Bankengruppe Österreich",
+                        "api_value": "raiffeisen_bankengruppe_osterreich"
+                    },
+                    {
+                        "display_text": "Schoellerbank AG",
+                        "api_value": "schoellerbank_ag"
+                    },
+                    {
+                        "display_text": "Sparda-Bank Wien",
+                        "api_value": "sparda_bank_wien"
+                    },
+                    {
+                        "display_text": "Volksbank Gruppe",
+                        "api_value": "volksbank_gruppe"
+                    },
+                    {
+                        "display_text": "Volkskreditbank AG",
+                        "api_value": "volkskreditbank_ag"
+                    },
+                    {
+                        "display_text": "VR-Bank Braunau",
+                        "api_value": "vr_bank_braunau"
+                    }
+                ],
+                "api_path": {
+                    "v1": "eps[bank]"
+                }
+            },
+            {
+                "type": "placeholder",
+                "for": "billing_address"
+            }
+        ],
+        "next_action_spec": {
+            "confirm_response_status_specs": {
+                "requires_action": {
+                    "type": "redirect_to_url"
+                }
+            },
+            "post_confirm_handling_pi_status_specs": {
+                "succeeded": {
+                    "type": "finished"
+                },
+                "requires_action": {
+                    "type": "canceled"
+                }
+            }
+        }
+    },
+    {
+        "type": "giropay",
+        "async": false,
+        "fields": [
+            {
+                "type": "name",
+                "api_path": {
+                    "v1": "billing_details[name]"
+                }
+            }
+        ],
+        "next_action_spec": {
+            "confirm_response_status_specs": {
+                "requires_action": {
+                    "type": "redirect_to_url"
+                }
+            },
+            "post_confirm_handling_pi_status_specs": {
+                "succeeded": {
+                    "type": "finished"
+                },
+                "requires_action": {
+                    "type": "canceled"
+                }
+            }
+        }
+    },
+    {
+        "type": "p24",
+        "async": false,
+        "fields": [
+            {
+                "type": "name",
+                "api_path": {
+                    "v1": "billing_details[name]"
+                }
+            },
+            {
+                "type": "email",
+                "api_path": {
+                    "v1": "billing_details[email]"
+                }
+            },
+            {
+                "type": "placeholder",
+                "for": "phone"
+            },
+            {
+                "type": "selector",
+                "translation_id": "upe.labels.p24.bank",
+                "items": [
+                    {
+                        "display_text": "Alior Bank",
+                        "api_value": "alior_bank"
+                    },
+                    {
+                        "display_text": "Bank Millenium",
+                        "api_value": "bank_millennium"
+                    },
+                    {
+                        "display_text": "Bank Nowy BFG S.A.",
+                        "api_value": "bank_nowy_bfg_sa"
+                    },
+                    {
+                        "display_text": "Bank PEKAO S.A",
+                        "api_value": "bank_pekao_sa"
+                    },
+                    {
+                        "display_text": "Bank spółdzielczy",
+                        "api_value": "banki_spbdzielcze"
+                    },
+                    {
+                        "display_text": "BLIK",
+                        "api_value": "blik"
+                    },
+                    {
+                        "display_text": "BNP Paribas",
+                        "api_value": "bnp_paribas"
+                    },
+                    {
+                        "display_text": "BOZ",
+                        "api_value": "boz"
+                    },
+                    {
+                        "display_text": "CitiHandlowy",
+                        "api_value": "citi_handlowy"
+                    },
+                    {
+                        "display_text": "Credit Agricole",
+                        "api_value": "credit_agricole"
+                    },
+                    {
+                        "display_text": "e-Transfer Pocztowy24",
+                        "api_value": "etransfer_pocztowy24"
+                    },
+                    {
+                        "display_text": "Getin Bank",
+                        "api_value": "getin_bank"
+                    },
+                    {
+                        "display_text": "IdeaBank",
+                        "api_value": "ideabank"
+                    },
+                    {
+                        "display_text": "ING",
+                        "api_value": "ing"
+                    },
+                    {
+                        "display_text": "inteligo",
+                        "api_value": "inteligo"
+                    },
+                    {
+                        "display_text": "mBank",
+                        "api_value": "mbank_mtransfer"
+                    },
+                    {
+                        "display_text": "Nest Przelew",
+                        "api_value": "nest_przelew"
+                    },
+                    {
+                        "display_text": "Noble Pay",
+                        "api_value": "noble_pay"
+                    },
+                    {
+                        "display_text": "Płać z iPKO (PKO BP)",
+                        "api_value": "pbac_z_ipko"
+                    },
+                    {
+                        "display_text": "Plus Bank",
+                        "api_value": "plus_bank"
+                    },
+                    {
+                        "display_text": "Santander",
+                        "api_value": "santander_przelew24"
+                    },
+                    {
+                        "display_text": "Toyota Bank",
+                        "api_value": "toyota_bank"
+                    },
+                    {
+                        "display_text": "Volkswagen Bank",
+                        "api_value": "volkswagen_bank"
+                    }
+                ],
+                "api_path": {
+                    "v1": "p24[bank]"
+                }
+            },
+            {
+                "type": "placeholder",
+                "for": "billing_address"
+            }
+        ],
+        "next_action_spec": {
+            "confirm_response_status_specs": {
+                "requires_action": {
+                    "type": "redirect_to_url"
+                }
+            },
+            "post_confirm_handling_pi_status_specs": {
+                "succeeded": {
+                    "type": "finished"
+                },
+                "requires_action": {
+                    "type": "canceled"
+                }
+            }
+        }
+    },
+    {
+        "type": "paypal",
+        "async": false,
+        "fields": [],
+        "next_action_spec": {
+            "confirm_response_status_specs": {
+                "requires_action": {
+                    "type": "redirect_to_url"
+                }
+            },
+            "post_confirm_handling_pi_status_specs": {
+                "succeeded": {
+                    "type": "finished"
+                },
+                "requires_action": {
+                    "type": "canceled"
+                }
+            }
+        }
+    },
+    {
+        "type": "au_becs_debit",
+        "async": true,
+        "fields": [
+            {
+                "type": "name",
+                "api_path": {
+                    "v1": "billing_details[name]"
+                },
+                "translation_id": "upe.labels.name.onAccount"
+            },
+            {
+                "type": "email",
+                "api_path": {
+                    "v1": "billing_details[email]"
+                }
+            },
+            {
+                "type": "placeholder",
+                "for": "phone"
+            },
+            {
+                "type": "au_becs_bsb_number",
+                "api_path": {
+                    "v1": "au_becs_debit[bsb_number]"
+                }
+            },
+            {
+                "type": "au_becs_account_number",
+                "api_path": {
+                    "v1": "au_becs_debit[account_number]"
+                }
+            },
+            {
+                "type": "placeholder",
+                "for": "billing_address"
+            },
+            {
+                "type": "au_becs_mandate"
+            }
+        ],
+        "next_action_spec": {
+            "confirm_response_status_specs": {
+                "processing": {
+                    "type": "finished"
+                },
+                "succeeded": {
+                    "type": "finished"
+                }
+            }
+        }
+    },
+    {
+        "type": "revolut_pay",
+        "async": false,
+        "fields": [
+        ],
+        "next_action_spec": {
+            "confirm_response_status_specs": {
+                "requires_action": {
+                    "type": "redirect_to_url"
+                }
+            },
+            "post_confirm_handling_pi_status_specs": {
+                "succeeded": {
+                    "type": "finished"
+                },
+                "requires_action": {
+                    "type": "canceled"
+                }
+            }
+        }
+    },
+    {
+        "type": "amazon_pay",
+        "async": false,
+        "selector_icon": {
+            "light_theme_png": "https://js.stripe.com/v3/fingerprinted/img/payment-methods/icon-pm-amazonpay_light-5694f2030b236ad5410b5b7e52bb538c.png",
+            "light_theme_svg": "https://js.stripe.com/v3/fingerprinted/img/payment-methods/icon-pm-amazonpay_light-f932bc37514fd6dd1f66006767287085.svg",
+            "dark_theme_png": "https://js.stripe.com/v3/fingerprinted/img/payment-methods/icon-pm-amazonpay_dark-9e42e4498e0bee515c423ef66010852f.png",
+            "dark_theme_svg": "https://js.stripe.com/v3/fingerprinted/img/payment-methods/icon-pm-amazonpay_dark-d3ef2eeefed43cea1f969c3a2a4118d8.svg"
+            },
+        "fields": []
+    },
+    {
+        "type": "alma",
+        "async": false,
+        "selector_icon": {
+          "light_theme_png": "https://js.stripe.com/v3/fingerprinted/img/payment-methods/icon-pm-alma_dark-9adee7a095478e23c76054e7fcb4c275.png",
+          "light_theme_svg": "https://js.stripe.com/v3/fingerprinted/img/payment-methods/icon-pm-alma_dark-e4cbf3b2cec6b09cb0fd10d404fbbf44.svg",
+          "dark_theme_png": "https://js.stripe.com/v3/fingerprinted/img/payment-methods/icon-pm-alma_light-41fe66ba84194788e98548aa6e749c79.png",
+          "dark_theme_svg": "https://js.stripe.com/v3/fingerprinted/img/payment-methods/icon-pm-alma_light-74fb7ea51cccf2e1dd530f308bed9c60.svg"
+        },
+        "fields": [
+        ],
+        "next_action_spec": {
+          "confirm_response_status_specs": {
+                "requires_action": {
+                    "type": "redirect_to_url"
+                }
+            },
+            "post_confirm_handling_pi_status_specs": {
+                "succeeded": {
+                    "type": "finished"
+                },
+                "requires_action": {
+                    "type": "canceled"
+                }
+            }
+        }
+    },
+    {
+        "type": "sunbit",
+        "async": false,
+        "selector_icon": {
+            "light_theme_png": "https://js.stripe.com/v3/fingerprinted/img/payment-methods/icon-pm-sunbit-942781207fa04c8c6244490ed648c86d.png",
+            "dark_theme_png": "https://js.stripe.com/v3/fingerprinted/img/payment-methods/icon-pm-sunbit_dark-5c93adf3d043d1510fcdd449afa032de.png",
+            "light_theme_svg": "https://js.stripe.com/v3/fingerprinted/img/payment-methods/icon-pm-sunbit-2ebac8e19b555f2081c16591e8fe4d4a.svg",
+            "dark_theme_svg": "https://js.stripe.com/v3/fingerprinted/img/payment-methods/icon-pm-sunbit_dark-031a417a99538497bc892f11a15dd1cb.svg"
+        },
+        "fields": [
+        ],
+        "next_action_spec": {
+            "confirm_response_status_specs": {
+                "requires_action": {
+                    "type": "redirect_to_url"
+                }
+            },
+            "post_confirm_handling_pi_status_specs": {
+                "succeeded": {
+                    "type": "finished"
+                },
+                "requires_action": {
+                    "type": "canceled"
+                }
+            }
+        }
+    },
+    {
+        "type": "billie",
+        "async": false,
+        "selector_icon": {
+            "light_theme_png": "https://js.stripe.com/v3/fingerprinted/img/payment-methods/icon-pm-billie-e8200232ef6c1a997eb8705685917dcd.png",
+            "dark_theme_png": "https://js.stripe.com/v3/fingerprinted/img/payment-methods/icon-pm-billie_dark-81eb72c63b66f9e68b15287526918836.png",
+            "light_theme_svg": "https://js.stripe.com/v3/fingerprinted/img/payment-methods/icon-pm-billie-12c7376f5623c109996ff8cd2f6d7a05.svg",
+            "dark_theme_svg": "https://js.stripe.com/v3/fingerprinted/img/payment-methods/icon-pm-billie_dark-6c8ac5db6e80d5c186b280da0ccd0a5b.svg"
+        },
+        "fields": [
+        ],
+        "next_action_spec": {
+            "confirm_response_status_specs": {
+                "requires_action": {
+                    "type": "redirect_to_url"
+                }
+          },
+            "post_confirm_handling_pi_status_specs": {
+                "succeeded": {
+                    "type": "finished"
+                },
+                "requires_action": {
+                    "type": "canceled"
+                }
+            }
+        }
+    },
+    {
+        "type": "satispay",
+        "async": false,
+        "selector_icon": {
+            "light_theme_png": "https://js.stripe.com/v3/fingerprinted/img/payment-methods/icon-pm-satispay-97b6153a7a1e191ffdfda3ca9162343f.png",
+            "dark_theme_png": "https://js.stripe.com/v3/fingerprinted/img/payment-methods/icon-pm-satispay_dark-ab245f01010002d6ff7755323c1613a2.png",
+            "light_theme_svg": "https://js.stripe.com/v3/fingerprinted/img/payment-methods/icon-pm-satispay-eca5006db20571e80caec1509c680c27.svg",
+            "dark_theme_svg": "https://js.stripe.com/v3/fingerprinted/img/payment-methods/icon-pm-satispay_dark-c01fc432e3c7b334f0204d011879bb1a.svg"
+        },
+        "fields": [
+        ],
+        "next_action_spec": {
+            "confirm_response_status_specs": {
+                "requires_action": {
+                    "type": "redirect_to_url"
+                }
+            },
+            "post_confirm_handling_pi_status_specs": {
+                "succeeded": {
+                    "type": "finished"
+                },
+                "requires_action": {
+                    "type": "canceled"
+                }
+            }
+        }
+    },
+    {
+        "type": "crypto",
+        "async": false,
+        "selector_icon": {
+            "light_theme_png": "https://js.stripe.com/v3/fingerprinted/img/payment-methods/icon-pm-crypto@3x-94c06c199e78e6d9ff9290210912bd5e.png",
+            "light_theme_svg": "https://js.stripe.com/v3/fingerprinted/img/payment-methods/icon-pm-crypto-15fd4ffeafd1b13e40688c8a06d79ba4.svg",
+            "dark_theme_png": "https://js.stripe.com/v3/fingerprinted/img/payment-methods/icon-pm-crypto_dark@3x-8f7b0e91b45cb56de550af37d41aac1d.png",
+            "dark_theme_svg": "https://js.stripe.com/v3/fingerprinted/img/payment-methods/icon-pm-crypto_dark-f19bb5c5400c6cde94dd53b7f1ce7217.svg"
+        },
+        "fields": [
+        ],
+        "next_action_spec": {
+            "confirm_response_status_specs": {
+                "requires_action": {
+                    "type": "redirect_to_url"
+                }
+          },
+            "post_confirm_handling_pi_status_specs": {
+                "succeeded": {
+                    "type": "finished"
+                },
+                "requires_action": {
+                    "type": "canceled"
+                }
+            }
+        }
+    },
+    {
+        "type": "mobilepay",
+        "async": false,
+        "fields": [],
+        "next_action_spec": {
+            "confirm_response_status_specs": {
+                "requires_action": {
+                    "type": "redirect_to_url",
+                    "native_mobile_redirect_strategy" : "follow_redirects"
+                }
+            },
+            "post_confirm_handling_pi_status_specs": {
+                "succeeded": {
+                    "type": "finished"
+                },
+                "requires_action": {
+                    "type": "canceled"
+                }
+            }
+        }
+    },
+    {
+        "type": "zip",
+        "async": false,
+        "fields": [],
+        "next_action_spec": {
+            "confirm_response_status_specs": {
+                "requires_action": {
+                    "type": "redirect_to_url"
+                }
+            },
+            "post_confirm_handling_pi_status_specs": {
+                "succeeded": {
+                    "type": "finished"
+                },
+                "requires_action": {
+                    "type": "canceled"
+                }
+            }
+        }
+    },
+    {
+        "type": "card",
+        "async": false,
+        "fields": [
+        ]
+    },
+    {
+        "type": "cashapp",
+        "async": false,
+        "fields": [],
+        "selector_icon": {
+            "light_theme_png": "https://js.stripe.com/v3/fingerprinted/img/payment-methods/icon-pm-cashapp@3x-a89c5d8d0651cae2a511bb49a6be1cfc.png",
+            "light_theme_svg": "https://js.stripe.com/v3/fingerprinted/img/payment-methods/icon-pm-cashapp-981164a833e417d28a8ac2684fda2324.svg"
+        }
+    },
+    {
+      "type": "grabpay",
+      "async": false,
+      "selector_icon": {
+        "light_theme_png": "https://js.stripe.com/v3/fingerprinted/img/payment-methods/icon-pm-grabpay@3x-e54da1d788668a5909e4801d5c243198.png",
+        "light_theme_svg": "https://js.stripe.com/v3/fingerprinted/img/payment-methods/icon-pm-grabpay-97ee78fdbbf1890bdf19986e997e685d.svg"
+      },
+      "fields": []
+    },
+    {
+      "type": "fpx",
+      "async": false,
+      "selector_icon": {
+        "light_theme_png": "https://js.stripe.com/v3/fingerprinted/img/payment-methods/icon-pm-fpx@3x-305453711338125d9cb4f86ff866ba6a.png",
+        "light_theme_svg": "https://js.stripe.com/v3/fingerprinted/img/payment-methods/icon-pm-fpx.svg"
+      },
+      "fields": [
+        {
+          "type": "selector",
+          "translation_id": "upe.labels.fpx.bank",
+        "items": [
+          {
+            "display_text": "Affin Bank",
+            "api_value": "affin_bank"
+          },
+          {
+            "display_text": "Alliance Bank",
+            "api_value": "alliance_bank"
+          },
+          {
+            "display_text": "AmBank",
+            "api_value": "ambank"
+          },
+          {
+            "display_text": "Bank Islam",
+            "api_value": "bank_islam"
+          },
+          {
+            "display_text": "Bank Muamalat",
+            "api_value": "bank_muamalat"
+          },
+          {
+            "display_text": "Bank Rakyat",
+            "api_value": "bank_rakyat"
+          },
+          {
+            "display_text": "BSN",
+            "api_value": "bsn"
+          },
+          {
+            "display_text": "CIMB Clicks",
+            "api_value": "cimb"
+          },
+          {
+            "display_text": "Hong Leong Bank",
+            "api_value": "hong_leong_bank"
+          },
+          {
+            "display_text": "HSBC BANK",
+            "api_value": "hsbc"
+          },
+          {
+            "display_text": "KFH",
+            "api_value": "kfh"
+          },
+          {
+            "display_text": "Maybank2E",
+            "api_value": "maybank2e"
+          },
+          {
+            "display_text": "Maybank2U",
+            "api_value": "maybank2u"
+          },
+          {
+            "display_text": "OCBC Bank",
+            "api_value": "ocbc"
+          },
+          {
+            "display_text": "Public Bank",
+            "api_value": "public_bank"
+          },
+          {
+            "display_text": "RHB Bank",
+            "api_value": "rhb"
+          },
+          {
+            "display_text": "Standard Chartered",
+            "api_value": "standard_chartered"
+          },
+          {
+            "display_text": "UOB Bank",
+            "api_value": "uob"
+          }
+        ],
+          "api_path": {
+            "v1": "fpx[bank]"
+          }
+        },
+        {
+          "type": "placeholder",
+          "for": "billing_address"
+        }
+      ],
+      "next_action_spec": {
+        "confirm_response_status_specs": {
+          "requires_action": {
+            "type": "redirect_to_url"
+          }
+        },
+        "post_confirm_handling_pi_status_specs": {
+          "succeeded": {
+            "type": "finished"
+          },
+          "requires_action": {
+            "type": "canceled"
+          }
+        }
+      }
+    },
+    {
+      "type": "alipay",
+      "async": false,
+      "fields": []
+    },
+    {
+      "type": "paynow",
+      "async": false,
+      "selector_icon": {
+        "light_theme_png": "https://js.stripe.com/v3/fingerprinted/img/payment-methods/icon-pm-paynow@3x-06fb143923e8492b0d3fe379ad6692a9.png",
+        "light_theme_svg": "https://js.stripe.com/v3/fingerprinted/img/payment-methods/icon-pm-paynow-b25acf96aac928b13e6206afb8982444.svg",
+        "dark_theme_png": "https://js.stripe.com/v3/fingerprinted/img/payment-methods/icon-pm-paynow_dark@3x-d49fe128abf7fe78fdfa939c445ca2cc.png",
+        "dark_theme_svg": "https://js.stripe.com/v3/fingerprinted/img/payment-methods/icon-pm-paynow_dark-d700c844535c608fd5fd4048f6a21146.svg"
+      },
+      "fields": []
+    },
+    {
+      "type": "promptpay",
+      "async": false,
+      "selector_icon": {
+        "light_theme_png": "https://js.stripe.com/v3/fingerprinted/img/payment-methods/promptpay.png",
+        "light_theme_svg": "https://js.stripe.com/v3/fingerprinted/img/payment-methods/icon-pm-promptpay-8bc83c76f38f2a4d3a5f64b6229450dd.svg",
+        "dark_theme_svg": "https://js.stripe.com/v3/fingerprinted/img/payment-methods/icon-pm-promptpay_dark-dfd2904083152023d89a8300f04a666f.svg"
+      },
+      "fields": [
+        {
+          "type": "placeholder",
+          "for": "name"
+        },
+        {
+          "type": "email",
+          "api_path": {
+            "v1": "billing_details[email]"
+          }
+        },
+        {
+          "type": "placeholder",
+          "for": "phone"
+        },
+        {
+          "type": "placeholder",
+          "for": "billing_address"
+        }
+      ]
+    },
+    {
+      "type": "twint",
+      "async": false,
+      "selector_icon": {
+        "light_theme_png": "https://js.stripe.com/v3/fingerprinted/img/payment-methods/icon-pm-twint@3x-0d33d2bf7c7037878c2a42232362accb.png",
+        "light_theme_svg": "https://js.stripe.com/v3/fingerprinted/img/payment-methods/icon-pm-twint-d86f6ccc22b739319ca4de7c83842de0.svg"
+      },
+      "fields": [
+      ],
+      "next_action_spec": {
+        "confirm_response_status_specs": {
+          "requires_action": {
+            "type": "redirect_to_url"
+          }
+        },
+        "post_confirm_handling_pi_status_specs": {
+          "succeeded": {
+            "type": "finished"
+          },
+          "processing": {
+            "type": "finished"
+          },
+          "requires_action": {
+            "type": "canceled"
+          }
+        }
+      }
+    },
+    {
+      "type": "multibanco",
+      "async": true,
+      "selector_icon": {
+        "light_theme_png": "https://js.stripe.com/v3/fingerprinted/img/payment-methods/icon-pm-multibanco@3x-ac6cc40479db7fa84dbb390ab85789cd.png",
+        "light_theme_svg": "https://js.stripe.com/v3/fingerprinted/img/payment-methods/icon-pm-multibanco-5823a780cf3b97484956dbb93b9ce30e.svg",
+        "dark_theme_png": "https://js.stripe.com/v3/fingerprinted/img/payment-methods/icon-pm-multibanco_dark@3x-787e2e370aeae073b45e0e02ad1a9e5c.png",
+        "dark_theme_svg": "https://js.stripe.com/v3/fingerprinted/img/payment-methods/icon-pm-multibanco_dark-2679e8b2bc32d66da57e66cac769d628.svg"
+      },
+      "fields": [
+        {
+          "type": "email",
+          "api_path": {
+            "v1": "billing_details[email]"
+          }
+        }
+      ]
+    }
+]

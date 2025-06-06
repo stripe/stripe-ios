@@ -788,6 +788,7 @@ extension PaymentSheetVerticalViewController: VerticalPaymentMethodListViewContr
             }
         }
         updateUI()
+        flowControllerDelegate?.flowControllerViewControllerDidUpdatePaymentOption(self)
     }
 
     func didTapSavedPaymentMethodAccessoryButton() {
@@ -910,6 +911,7 @@ extension PaymentSheetVerticalViewController: SheetNavigationBarDelegate {
         switchContentIfNecessary(to: paymentMethodListViewController, containerView: paymentContainerView, contentOffsetPercentage: paymentMethodListContentOffsetPercentage)
         navigationBar.setStyle(.close(showAdditionalButton: false))
         updateUI()
+        flowControllerDelegate?.flowControllerViewControllerDidUpdatePaymentOption(self)
     }
 }
 
@@ -930,6 +932,7 @@ extension PaymentSheetVerticalViewController: UpdatePaymentMethodViewControllerD
 
         // Update UI
         regenerateUI()
+        flowControllerDelegate?.flowControllerViewControllerDidUpdatePaymentOption(self)
         _ = viewController.bottomSheetController?.popContentViewController()
     }
 
@@ -964,6 +967,7 @@ extension PaymentSheetVerticalViewController: UpdatePaymentMethodViewControllerD
 
         // Update UI
         regenerateUI()
+        flowControllerDelegate?.flowControllerViewControllerDidUpdatePaymentOption(self)
         _ = viewController.bottomSheetController?.popContentViewController()
         return .success
     }
@@ -1003,6 +1007,7 @@ extension PaymentSheetVerticalViewController: PaymentMethodFormViewControllerDel
     func didUpdate(_ viewController: PaymentMethodFormViewController) {
         error = nil  // clear error
         updateUI()
+        flowControllerDelegate?.flowControllerViewControllerDidUpdatePaymentOption(self)
         if viewController.paymentOption != nil {
             analyticsHelper.logFormCompleted(paymentMethodTypeIdentifier: viewController.paymentMethodType.identifier)
         }

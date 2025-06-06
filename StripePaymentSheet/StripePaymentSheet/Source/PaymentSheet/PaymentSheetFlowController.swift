@@ -13,6 +13,7 @@ import SafariServices
 @_spi(STP) import StripePaymentsUI
 @_spi(STP) import StripeUICore
 import UIKit
+import Combine
 
 typealias PaymentOption = PaymentSheet.PaymentOption
 
@@ -119,7 +120,7 @@ extension PaymentSheet {
     }
 
     /// A class that presents the individual steps of a payment flow
-    public class FlowController {
+    public class FlowController: ObservableObject {
         // MARK: - Public properties
         /// Contains details about a payment method that can be displayed to the customer
         public struct PaymentOptionDisplayData {
@@ -177,12 +178,7 @@ extension PaymentSheet {
 
         /// Contains information about the customer's desired payment option.
         /// You can use this to e.g. display the payment option in your UI.
-        public var paymentOption: PaymentOptionDisplayData? {
-            if let selectedPaymentOption = _paymentOption {
-                return PaymentOptionDisplayData(paymentOption: selectedPaymentOption, currency: intent.currency)
-            }
-            return nil
-        }
+        @Published public private(set) var paymentOption: PaymentOptionDisplayData?
 
         // MARK: - Private properties
         var intent: Intent { viewController.intent }
@@ -202,7 +198,7 @@ extension PaymentSheet {
         }
 
         /// The desired, valid (ie passed client-side checks) payment option from the underlying payment options VC.
-        private var _paymentOption: PaymentOption? {
+        private var selectedPaymentOption: PaymentOption? {
             guard viewController.error == nil else {
                 return nil
             }
@@ -222,7 +218,7 @@ extension PaymentSheet {
                 return false
             }
 
-            return _paymentOption?.canLaunchLink ?? false
+            return selectedPaymentOption?.canLaunchLink ?? false
         }
 
         // Stores the state of the most recent call to the update API
@@ -246,6 +242,17 @@ extension PaymentSheet {
         private(set) var didPresentAndContinue: Bool = false
         let analyticsHelper: PaymentSheetAnalyticsHelper
 
+        // MARK: - Private methods
+        
+        /// Updates the published paymentOption property based on current state
+        private func updatePaymentOption() {
+            if let selectedOption = selectedPaymentOption {
+                paymentOption = PaymentOptionDisplayData(paymentOption: selectedOption, currency: intent.currency)
+            } else {
+                paymentOption = nil
+            }
+        }
+
         // MARK: - Initializer (Internal)
 
         required init(
@@ -258,6 +265,7 @@ extension PaymentSheet {
             self.analyticsHelper.logInitialized()
             self.viewController = Self.makeViewController(configuration: configuration, loadResult: loadResult, analyticsHelper: analyticsHelper, walletButtonsShownExternally: self.walletButtonsShownExternally)
             self.viewController.flowControllerDelegate = self
+            updatePaymentOption()
         }
 
         // MARK: - Public methods
@@ -343,8 +351,7 @@ extension PaymentSheet {
                     )
 
                     // Synchronously pre-load image into cache.
-                    // Accessing flowController.paymentOption has the side-effect of ensuring its `image` property is loaded (e.g. from the internet instead of disk) before we call the completion handler.
-                    _ = flowController.paymentOption
+                    // The paymentOption property is now updated in the initializer, ensuring its `image` property is loaded (e.g. from the internet instead of disk) before we call the completion handler.
                     completion(.success(flowController))
                 case .failure(let error):
                     completion(.failure(error))
@@ -401,7 +408,7 @@ extension PaymentSheet {
             if canPresentLinkInPlaceOfFlowController {
                 presentNativeLinkInPlaceOfFlowController(
                     from: presentingViewController,
-                    selectedPaymentDetailsID: _paymentOption?.currentLinkPaymentMethod,
+                    selectedPaymentDetailsID: selectedPaymentOption?.currentLinkPaymentMethod,
                     returnToPaymentSheet: showPaymentOptions
                 )
                 return
@@ -472,7 +479,7 @@ extension PaymentSheet {
                 break
             }
 
-            guard let paymentOption = _paymentOption else {
+            guard let paymentOption = selectedPaymentOption else {
                 assertionFailure("`confirm` should only be called when `paymentOption` is not nil")
                 completion(.failed(error: PaymentSheetError.confirmingWithInvalidPaymentOption))
                 return
@@ -532,7 +539,7 @@ extension PaymentSheet {
         /// This ensures the appropriate payment methods are displayed, etc.
         /// - Parameter intentConfiguration: An updated IntentConfiguration
         /// - Parameter completion: Called when the update completes with an optional error. Your implementation should get the customer's updated payment option by using the `paymentOption` property and update your UI. If an error occurred, retry.
-        /// - Note: Don't call `confirm` or `present` until the update succeeds. Don’t call this method while PaymentSheet is being presented. 
+        /// - Note: Don't call `confirm` or `present` until the update succeeds. Don't call this method while PaymentSheet is being presented. 
         public func update(intentConfiguration: IntentConfiguration, completion: @escaping (Error?) -> Void) {
             assert(Thread.isMainThread, "PaymentSheet.FlowController.update must be called from the main thread.")
             assert(!isPresented, "PaymentSheet.FlowController.update must be when PaymentSheet is not presented.")
@@ -567,13 +574,12 @@ extension PaymentSheet {
                         loadResult: loadResult,
                         analyticsHelper: analyticsHelper,
                         walletButtonsShownExternally: walletButtonsShownExternally,
-                        previousPaymentOption: self._paymentOption
+                        previousPaymentOption: self.selectedPaymentOption
                     )
                     self.viewController.flowControllerDelegate = self
 
-                    // Synchronously pre-load image into cache
-                    // Accessing paymentOption has the side-effect of ensuring its `image` property is loaded (e.g. from the internet instead of disk) before we call the completion handler.
-                    _ = self.paymentOption
+                    // Update the published property
+                    self.updatePaymentOption()
 
                     self.latestUpdateContext?.status = .completed
                     completion(nil)
@@ -591,9 +597,10 @@ extension PaymentSheet {
                 loadResult: self.viewController.loadResult,
                 analyticsHelper: analyticsHelper,
                 walletButtonsShownExternally: self.walletButtonsShownExternally,
-                previousPaymentOption: self._paymentOption
+                previousPaymentOption: self.selectedPaymentOption
             )
             self.viewController.flowControllerDelegate = self
+            updatePaymentOption()
         }
 
         // MARK: Internal helper methods
@@ -647,6 +654,8 @@ extension PaymentSheet {
 protocol FlowControllerViewControllerDelegate: AnyObject {
     func flowControllerViewControllerShouldClose(
         _ PaymentSheetFlowControllerViewController: FlowControllerViewControllerProtocol, didCancel: Bool)
+    func flowControllerViewControllerDidUpdatePaymentOption(
+        _ PaymentSheetFlowControllerViewController: FlowControllerViewControllerProtocol)
 }
 
 extension PaymentSheet.FlowController: FlowControllerViewControllerDelegate {
@@ -661,6 +670,12 @@ extension PaymentSheet.FlowController: FlowControllerViewControllerDelegate {
             self.presentPaymentOptionsCompletion?()
             self.isPresented = false
         }
+    }
+    
+    func flowControllerViewControllerDidUpdatePaymentOption(
+        _ flowControllerViewController: FlowControllerViewControllerProtocol
+    ) {
+        updatePaymentOption()
     }
 }
 

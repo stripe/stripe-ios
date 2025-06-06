@@ -1,3 +1,6 @@
+@testable @_spi(STP) import StripePayments
+@testable @_spi(STP) import StripeCore
+import StripePaymentsTestUtils
 //
 //  PaymentSheetFlowControllerViewControllerSnapshotTests.swift
 //  StripePaymentSheetTests

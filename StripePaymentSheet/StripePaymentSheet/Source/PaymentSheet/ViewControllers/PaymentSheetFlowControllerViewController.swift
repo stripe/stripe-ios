@@ -556,8 +556,10 @@ extension PaymentSheetFlowControllerViewController: SavedPaymentOptionsViewContr
             mode = .addingNew
             error = nil // Clear any errors
             updateUI()
+            flowControllerDelegate?.flowControllerViewControllerDidUpdatePaymentOption(self)
         case .applePay, .link, .saved:
             updateUI()
+            flowControllerDelegate?.flowControllerViewControllerDidUpdatePaymentOption(self)
             if isDismissable, !(selectedPaymentMethodType?.requiresMandateDisplayForSavedSelection ?? false) {
                 flowControllerDelegate?.flowControllerViewControllerShouldClose(self, didCancel: false)
             }
@@ -585,6 +587,7 @@ extension PaymentSheetFlowControllerViewController: SavedPaymentOptionsViewContr
             mode = .addingNew // Switch to the "Add" screen
         }
         updateUI()
+        flowControllerDelegate?.flowControllerViewControllerDidUpdatePaymentOption(self)
     }
 
     func shouldCloseSheet(_ viewController: SavedPaymentOptionsViewController) {
@@ -618,6 +621,7 @@ extension PaymentSheetFlowControllerViewController: AddPaymentMethodViewControll
     func didUpdate(_ viewController: AddPaymentMethodViewController) {
         error = nil  // clear error
         updateUI()
+        flowControllerDelegate?.flowControllerViewControllerDidUpdatePaymentOption(self)
         if viewController.paymentOption != nil {
             analyticsHelper.logFormCompleted(paymentMethodTypeIdentifier: viewController.selectedPaymentMethodType.identifier)
         }
@@ -641,6 +645,7 @@ extension PaymentSheetFlowControllerViewController: SheetNavigationBarDelegate {
             error = nil
             mode = .selectingSaved
             updateUI()
+            flowControllerDelegate?.flowControllerViewControllerDidUpdatePaymentOption(self)
         default:
             let errorAnalytic = ErrorAnalytic(event: .unexpectedFlowControllerViewControllerError,
                                               error: PaymentSheetFlowControllerViewControllerError.sheetNavigationBarDidBack,

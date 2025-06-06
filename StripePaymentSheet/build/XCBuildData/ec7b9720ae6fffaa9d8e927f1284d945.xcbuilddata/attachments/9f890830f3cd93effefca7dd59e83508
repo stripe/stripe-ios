@@ -1,0 +1,10 @@
+framework module StripePaymentSheet {
+  umbrella header "StripePaymentSheet.h"
+  export *
+
+  module * { export * }
+}
+
+module StripePaymentSheet.__Swift {
+  exclude header "StripePaymentSheet-Swift.h"
+}
