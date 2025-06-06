@@ -13,7 +13,7 @@ import UIKit
 import XCTest
 
 @_spi(STP)@testable import StripeCore
-@testable import StripePaymentSheet
+@_spi(AppearanceAPIAdditionsPreview) @testable import StripePaymentSheet
 @_spi(STP)@testable import StripeUICore
 
 class PaymentSheetSnapshotTests: STPSnapshotTestCase {
@@ -419,6 +419,21 @@ class PaymentSheetSnapshotTests: STPSnapshotTestCase {
 
         var appearance = PaymentSheet.Appearance()
         appearance.borderWidth = 2.0
+
+        preparePaymentSheet(
+            customer: "snapshot",
+            appearance: appearance,
+            applePayEnabled: false
+        )
+        presentPaymentSheet(darkMode: false)
+        verify(paymentSheet.bottomSheetViewController.view!)
+    }
+
+    func testPaymentSheetCustomSectionSpacing() {
+        stubReturningCustomerResponse()
+
+        var appearance = PaymentSheet.Appearance()
+        appearance.sectionSpacing = 40.0
 
         preparePaymentSheet(
             customer: "snapshot",

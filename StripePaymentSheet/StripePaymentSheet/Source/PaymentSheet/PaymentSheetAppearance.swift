@@ -51,6 +51,11 @@ public extension PaymentSheet {
         /// Describes the padding used for all forms
         public var formInsets: NSDirectionalEdgeInsets = PaymentSheetUI.defaultSheetMargins
 
+        /// Controls the vertical spacing between distinct sections in the form (e.g., between payment fields and billing address).
+        /// - Note: This spacing is applied between different conceptual sections of the form, not between individual input fields within a section.
+        @_spi(AppearanceAPIAdditionsPreview)
+        public var sectionSpacing: CGFloat = 12.0
+
         // MARK: Fonts
 
         /// Describes the appearance of fonts in PaymentSheet
