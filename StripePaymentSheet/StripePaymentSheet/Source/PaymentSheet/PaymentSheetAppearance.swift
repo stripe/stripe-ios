@@ -77,41 +77,41 @@ public extension PaymentSheet {
 
             /// Custom font configuration for specific text styles
             /// - Note: When set, these fonts override the default font calculations for their respective text styles
-            public var custom: Custom = Custom()
+            @_spi(AppearanceAPIAdditionsPreview) public var custom: Custom = Custom()
 
             /// Describes custom fonts for specific text styles in PaymentSheet
-            public struct Custom: Equatable {
+            @_spi(AppearanceAPIAdditionsPreview) public struct Custom: Equatable {
 
                 /// Creates a `PaymentSheet.Appearance.Font.Custom` with default values
-                public init() {}
+                @_spi(AppearanceAPIAdditionsPreview) public init() {}
 
                 /// The font used for headlines (e.g., "Add your payment information")
                 /// - Note: If `nil`, uses the calculated font based on `base` and `sizeScaleFactor`
-                public var headline: UIFont?
+                @_spi(AppearanceAPIAdditionsPreview) public var headline: UIFont?
 
                 /// The font used for subheadline text
                 /// - Note: If `nil`, uses the calculated font based on `base` and `sizeScaleFactor`
-                public var subheadline: UIFont?
+                @_spi(AppearanceAPIAdditionsPreview) public var subheadline: UIFont?
 
                 /// The font used for bold subheadline text
                 /// - Note: If `nil`, uses the calculated font based on `base` and `sizeScaleFactor`
-                public var subheadlineBold: UIFont?
+                @_spi(AppearanceAPIAdditionsPreview) public var subheadlineBold: UIFont?
 
                 /// The font used for section headers
                 /// - Note: If `nil`, uses the calculated font based on `base` and `sizeScaleFactor`
-                public var sectionHeader: UIFont?
+                @_spi(AppearanceAPIAdditionsPreview) public var sectionHeader: UIFont?
 
                 /// The font used for caption text
                 /// - Note: If `nil`, uses the calculated font based on `base` and `sizeScaleFactor`
-                public var caption: UIFont?
+                @_spi(AppearanceAPIAdditionsPreview) public var caption: UIFont?
 
                 /// The font used for footnote text
                 /// - Note: If `nil`, uses the calculated font based on `base` and `sizeScaleFactor`
-                public var footnote: UIFont?
+                @_spi(AppearanceAPIAdditionsPreview) public var footnote: UIFont?
 
                 /// The font used for emphasized footnote text
                 /// - Note: If `nil`, uses the calculated font based on `base` and `sizeScaleFactor`
-                public var footnoteEmphasis: UIFont?
+                @_spi(AppearanceAPIAdditionsPreview) public var footnoteEmphasis: UIFont?
             }
         }
 
