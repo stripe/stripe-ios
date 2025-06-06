@@ -137,10 +137,10 @@ final class PickerFieldView: UIView {
         self.theme = theme
         self.isOptional = isOptional
         super.init(frame: .zero)
-        addAndPinSubview(hStackView, directionalLayoutMargins: hasPadding ? ElementsUI.contentViewInsets : .zero)
+        addAndPinSubview(hStackView, directionalLayoutMargins: hasPadding ? theme.textFieldInsets : .zero)
 //      On Catalyst/visionOS, add the picker view as a subview instead of an input view.
         #if targetEnvironment(macCatalyst) || canImport(CompositorServices)
-        addAndPinSubview(pickerView, directionalLayoutMargins: ElementsUI.contentViewInsets)
+        addAndPinSubview(pickerView, directionalLayoutMargins: theme.textFieldInsets)
         #endif
         layer.borderColor = theme.colors.border.cgColor
         isUserInteractionEnabled = true
