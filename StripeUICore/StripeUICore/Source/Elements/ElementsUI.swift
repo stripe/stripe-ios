@@ -90,6 +90,9 @@ import UIKit
     public var cornerRadius = ElementsUI.defaultCornerRadius
     public var shadow: Shadow? = Shadow()
 
+    /// The spacing between sections in forms
+    public var sectionSpacing = ElementsUI.formSpacing
+
     public struct Font {
         public init() {}
 
