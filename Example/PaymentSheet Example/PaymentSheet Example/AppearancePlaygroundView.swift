@@ -170,6 +170,19 @@ struct AppearancePlaygroundView: View {
             set: { self.appearance.font.base = UIFont(name: $0, size: 12.0)! }
         )
 
+        // MARK: Custom font bindings
+
+        let customHeadlineFontBinding = Binding(
+            get: { self.appearance.font.custom.headline?.fontDescriptor.postscriptName ?? "System Default" },
+            set: {
+                if $0 == "System Default" {
+                    self.appearance.font.custom.headline = nil
+                } else {
+                    self.appearance.font.custom.headline = UIFont(name: $0, size: 20.0)!
+                }
+            }
+        )
+
         // MARK: Primary button bindings
 
         let primaryButtonBackgroundColorBinding = Binding(
@@ -314,6 +327,7 @@ struct AppearancePlaygroundView: View {
         )
 
         let regularFonts = ["AvenirNext-Regular", "PingFangHK-Regular", "ChalkboardSE-Light"]
+        let customFontOptions = ["System Default"] + regularFonts
 
         NavigationView {
             List {
@@ -392,6 +406,20 @@ struct AppearancePlaygroundView: View {
                         ForEach(regularFonts, id: \.self) {
                             Text($0).font(Font(UIFont(name: $0, size: UIFont.labelFontSize)! as CTFont))
                         }
+                    }
+
+                    DisclosureGroup {
+                        Picker("headline", selection: customHeadlineFontBinding) {
+                            ForEach(customFontOptions, id: \.self) { font in
+                                if font == "System Default" {
+                                    Text(font)
+                                } else {
+                                    Text(font).font(Font(UIFont(name: font, size: UIFont.labelFontSize)! as CTFont))
+                                }
+                            }
+                        }
+                    } label: {
+                        Text("Custom Fonts")
                     }
                 }
 

@@ -84,6 +84,21 @@ public extension PaymentSheet {
             /// The font family of this font is used throughout PaymentSheet. PaymentSheet uses this font at multiple weights (e.g., regular, medium, semibold) if they exist.
             /// - Note: The size and weight of the font is ignored. To adjust font sizes, see `sizeScaleFactor`.
             public var base: UIFont = UIFont.systemFont(ofSize: UIFont.labelFontSize, weight: .regular)
+
+            /// Custom font configuration for specific text styles
+            /// - Note: When set, these fonts override the default font calculations for their respective text styles
+            @_spi(AppearanceAPIAdditionsPreview) public var custom: Custom = Custom()
+
+            /// Describes custom fonts for specific text styles in PaymentSheet
+            @_spi(AppearanceAPIAdditionsPreview) public struct Custom: Equatable {
+
+                /// Creates a `PaymentSheet.Appearance.Font.Custom` with default values
+                @_spi(AppearanceAPIAdditionsPreview) public init() {}
+
+                /// The font used for headlines (e.g., "Add your payment information")
+                /// - Note: If `nil`, uses the calculated font based on `base` and `sizeScaleFactor`
+                @_spi(AppearanceAPIAdditionsPreview) public var headline: UIFont?
+            }
         }
 
         // MARK: Colors
