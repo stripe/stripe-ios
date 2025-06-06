@@ -1,0 +1,46 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+# Building the Project
+
+## Standard Build Command
+
+To test compiling the project, always use this build command:
+
+```bash
+xcodebuild -workspace Stripe.xcworkspace -scheme "StripePaymentSheet" -destination "id=DEVICE_ID_FROM_USER_SETTINGS,arch=arm64" -quiet
+```
+
+This command:
+- Uses the main `Stripe.xcworkspace` workspace
+- Builds the `StripePaymentSheet` scheme (feel free to replace this with a different scheme if needed)
+- Targets a simulator device using device ID from user settings with arm64 architecture
+- Uses `-quiet` flag to reduce verbose output
+
+Use this command consistently to ensure reliable compilation testing across the project. To access `DEVICE_ID_FROM_USER_SETTINGS`, get the variable from the `~/.stripe-ios-config` file.
+
+## Recording and Running Snapshot Tests
+
+### Recording Snapshot Tests
+
+Use the `AllStripeFrameworks-RecordMode` scheme to record snapshot tests (they'll fail as they do the recording):
+
+```bash
+xcodebuild -workspace Stripe.xcworkspace -scheme "AllStripeFrameworks-RecordMode" -destination "id=DEVICE_ID_FROM_USER_SETTINGS,arch=arm64" -only-testing:StripePaymentSheetTests/PaymentSheetSnapshotTests test -quiet
+```
+
+### Running Snapshot Tests
+
+Then use `AllStripeFrameworks` to run them to confirm that they pass:
+
+```bash
+xcodebuild -workspace Stripe.xcworkspace -scheme "AllStripeFrameworks" -destination "id=DEVICE_ID_FROM_USER_SETTINGS,arch=arm64" -only-testing:StripePaymentSheetTests/PaymentSheetSnapshotTests test -quiet
+```
+
+### Important Notes
+
+- Always specify the specific impacted test suite to run (e.g. `-only-testing:StripePaymentSheetTests/PaymentSheetSnapshotTests`) instead of running the full test suite
+- Replace the test suite name with the appropriate one for your changes
+- The recording step will show failures - this is expected behavior as it's creating the reference images
