@@ -95,8 +95,8 @@ extension PaymentSheet {
         /// Configuration related to Link
         public var link: LinkConfiguration = LinkConfiguration()
 
-        /// Configuration related to ShopPay
-        public var shopPay: ShopPayConfiguration?
+        /// Configuration related to WalletConfiguration
+        public var walletConfiguration: WalletConfiguration?
 
         /// The color of the Buy or Add button. Defaults to `.systemBlue` when `nil`.
         public var primaryButtonColor: UIColor? {
@@ -430,14 +430,43 @@ extension PaymentSheet {
         }
     }
 
-    /// Configuration related to Shop Pay. Note that this is only applicable when instantiating WalletButtonsView
-    public struct ShopPayConfiguration {
+    /// Configuration related to Wallets. Currently this only applies to ApplePay and ShopPay w/ WalletButtonsView
+    public struct WalletConfiguration {
         public struct Handlers {
+
+            /// Optionally get shipping method updates if you've configured shipping method options
+            /// This closure will be called each time a user selects a new shipping option
+            /// - Parameter $0: The SelectedShippingRate that was selected by the user
+            /// - Parameter $1: A completion handler. You must call this handler with a PaymentRequestShippingRateUpdate on the main queue
+            /// with your updates
+            /// For example:
+            /// ```
+            /// .shippingMethodUpdateHandler = { result, completion in
+            ///     let updates = PaymentRequestShippingRateUpdate()
+            ///     completion(updates)
+            /// }
+            /// ```
+            /// WARNING: If you do not call the completion handler, your app will hang until the Apple Pay sheet times out.
             public let shippingMethodUpdateHandler:
             ((SelectedShippingRate, @escaping ((PaymentRequestShippingRateUpdate) -> Void)) -> Void)?
+
+            /// Optionally get shipping contact updates if you've configured shipping contact options
+            /// This closure will be called each time a user selects a new shipping option
+            /// - Parameter $0: The SelectedPartialAddress that was selected by the user
+            /// - Parameter $1: A completion handler. You must call this handler with a PaymentRequestShippingContactUpdate on the main queue
+            /// with your updates
+            /// For example:
+            /// ```
+            /// .shippingContactUpdateHandler = { result, completion in
+            ///     let updates = PaymentRequestShippingContactUpdate()
+            ///     completion(updates)
+            /// }
+            /// ```
+            /// WARNING: If you do not call the completion handler, your app will hang until the Apple Pay sheet times out.
             public let shippingContactUpdateHandler:
             ((SelectedPartialAddress, @escaping ((PaymentRequestShippingContactUpdate) -> Void)) -> Void)?
 
+            /// Initializes the handlers.
             public init(
                 shippingMethodUpdateHandler:
                 ((SelectedShippingRate, @escaping ((PaymentRequestShippingRateUpdate) -> Void)) -> Void)? = nil,
@@ -448,7 +477,7 @@ extension PaymentSheet {
                 self.shippingContactUpdateHandler = shippingContactUpdateHandler
             }
         }
-        // Types that are selected within the WalletUI
+        /// Types that are selected within the WalletUI
         public struct SelectedShippingRate {
             let name: String
             let rate: String
