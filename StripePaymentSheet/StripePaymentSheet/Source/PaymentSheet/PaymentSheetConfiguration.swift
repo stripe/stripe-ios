@@ -95,6 +95,9 @@ extension PaymentSheet {
         /// Configuration related to Link
         public var link: LinkConfiguration = LinkConfiguration()
 
+        /// Configuration related to ShopPay
+        public var shopPay: ShopPayConfiguration?
+
         /// The color of the Buy or Add button. Defaults to `.systemBlue` when `nil`.
         public var primaryButtonColor: UIColor? {
             get {
@@ -424,6 +427,82 @@ extension PaymentSheet {
             display: Display = .automatic
         ) {
             self.display = display
+        }
+    }
+
+    /// Configuration related to Shop Pay. Note that this is only applicable when instantiating WalletButtonsView
+    public struct ShopPayConfiguration {
+        public struct Handlers {
+            public let shippingMethodUpdateHandler:
+            ((SelectedShippingRate, @escaping ((PaymentRequestShippingRateUpdate) -> Void)) -> Void)?
+            public let shippingContactUpdateHandler:
+            ((SelectedPartialAddress, @escaping ((PaymentRequestShippingContactUpdate) -> Void)) -> Void)?
+
+            public init(
+                shippingMethodUpdateHandler:
+                ((SelectedShippingRate, @escaping ((PaymentRequestShippingRateUpdate) -> Void)) -> Void)? = nil,
+                shippingContactUpdateHandler:
+                ((SelectedPartialAddress, @escaping ((PaymentRequestShippingContactUpdate) -> Void)) -> Void)? = nil
+            ) {
+                self.shippingMethodUpdateHandler = shippingMethodUpdateHandler
+                self.shippingContactUpdateHandler = shippingContactUpdateHandler
+            }
+        }
+        // Types that are selected within the WalletUI
+        public struct SelectedShippingRate {
+            let name: String
+            let rate: String
+        }
+        public struct SelectedPartialAddress {
+            let city: String
+            let state: String
+            let postalCode: String
+            let country: String
+        }
+
+        // Type to convey changes to the Wallet
+        public struct PaymentRequestShippingRateUpdate {
+            let lineItems: [LineItem]
+            let shippingRates: [ShippingRate]
+        }
+
+        // Type to convey changes to the Wallet
+        public struct PaymentRequestShippingContactUpdate {
+            let lineItems: [LineItem]
+            let shippingRates: [ShippingRate]
+        }
+        public struct LineItem {
+            let name: String
+            let amount: Int
+        }
+
+        public struct ShippingRate {
+            let id: String
+            let amount: Int
+            let displayName: String
+            let deliveryEstimate: DeliveryEstimate?
+        }
+
+        public struct DeliveryEstimate {
+            struct DeliveryEstimateUnit {
+                enum TimeUnit {
+                    case hour
+                    case day
+                    case business_day
+                    case week
+                    case month
+                }
+                let unit: TimeUnit
+                let value: Int
+            }
+            let maximum: DeliveryEstimateUnit
+            let minimum: DeliveryEstimateUnit
+        }
+        public let customHandlers: Handlers?
+        public init(
+            customHandlers: Handlers? = nil
+        ) {
+            self.customHandlers = customHandlers
         }
     }
 
