@@ -309,6 +309,17 @@ class PaymentSheetSnapshotTests: STPSnapshotTestCase {
         verify(paymentSheet.bottomSheetViewController.view!)
     }
 
+    func testPaymentSheetNewCustomHeadlineFont() {
+        stubReturningCustomerResponse()
+
+        var appearance = PaymentSheet.Appearance()
+        appearance.font.custom.headline = UIFont(name: "AvenirNext-Bold", size: 128)!
+
+        preparePaymentSheet(customer: "snapshot", appearance: appearance, applePayEnabled: false)
+        presentPaymentSheet(darkMode: false)
+        verify(paymentSheet.bottomSheetViewController.view!)
+    }
+
     func testPaymentSheetCustomColors() {
         stubReturningCustomerResponse()
 
@@ -1192,6 +1203,23 @@ class PaymentSheetSnapshotTests: STPSnapshotTestCase {
         presentPaymentSheet(darkMode: false)
         verify(paymentSheet.bottomSheetViewController.view!)
 
+    }
+
+    func testPaymentSheetCustomFontsWithSizeScaleFactor() {
+        stubReturningCustomerResponse()
+
+        var appearance = PaymentSheet.Appearance()
+        appearance.font.sizeScaleFactor = 1.3
+        appearance.font.custom.headline = UIFont(name: "AvenirNext-Bold", size: 8)! // This should not be scaled
+        // Other fonts should be scaled by sizeScaleFactor
+
+        preparePaymentSheet(
+            customer: "snapshot",
+            appearance: appearance,
+            applePayEnabled: false
+        )
+        presentPaymentSheet(darkMode: false)
+        verify(paymentSheet.bottomSheetViewController.view!)
     }
 
     private func updatePaymentMethodDetail(data: Data, variables: [String: String]) -> Data {
