@@ -1048,12 +1048,12 @@ extension PaymentSheet.Appearance {
         theme.shadow = shadow.asElementThemeShadow
 
         var fonts = ElementsAppearance.Font()
-        fonts.subheadline = self.font.custom.subheadline ?? scaledFont(for: font.base.regular, style: .subheadline, maximumPointSize: 20)
-        fonts.subheadlineBold = self.font.custom.subheadlineBold ?? scaledFont(for: font.base.bold, style: .subheadline, maximumPointSize: 20)
-        fonts.sectionHeader = self.font.custom.sectionHeader ?? scaledFont(for: font.base.medium, style: .footnote, maximumPointSize: 18)
-        fonts.caption = self.font.custom.caption ?? scaledFont(for: font.base.regular, style: .caption1, maximumPointSize: 20)
-        fonts.footnote = self.font.custom.footnote ?? scaledFont(for: font.base.regular, style: .footnote, maximumPointSize: 20)
-        fonts.footnoteEmphasis = self.font.custom.footnoteEmphasis ?? scaledFont(for: font.base.medium, style: .footnote, maximumPointSize: 20)
+        fonts.subheadline = scaledFont(for: font.base.regular, style: .subheadline, maximumPointSize: 20)
+        fonts.subheadlineBold = scaledFont(for: font.base.bold, style: .subheadline, maximumPointSize: 20)
+        fonts.sectionHeader = scaledFont(for: font.base.medium, style: .footnote, maximumPointSize: 18)
+        fonts.caption = scaledFont(for: font.base.regular, style: .caption1, maximumPointSize: 20)
+        fonts.footnote = scaledFont(for: font.base.regular, style: .footnote, maximumPointSize: 20)
+        fonts.footnoteEmphasis = scaledFont(for: font.base.medium, style: .footnote, maximumPointSize: 20)
 
         theme.colors = colors
         theme.fonts = fonts

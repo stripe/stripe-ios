@@ -163,72 +163,6 @@ struct AppearancePlaygroundView: View {
             }
         )
 
-        let customSubheadlineFontBinding = Binding(
-            get: { self.appearance.font.custom.subheadline?.fontDescriptor.postscriptName ?? "System Default" },
-            set: {
-                if $0 == "System Default" {
-                    self.appearance.font.custom.subheadline = nil
-                } else {
-                    self.appearance.font.custom.subheadline = UIFont(name: $0, size: 16.0)!
-                }
-            }
-        )
-
-        let customSubheadlineBoldFontBinding = Binding(
-            get: { self.appearance.font.custom.subheadlineBold?.fontDescriptor.postscriptName ?? "System Default" },
-            set: {
-                if $0 == "System Default" {
-                    self.appearance.font.custom.subheadlineBold = nil
-                } else {
-                    self.appearance.font.custom.subheadlineBold = UIFont(name: $0, size: 16.0)!
-                }
-            }
-        )
-
-        let customSectionHeaderFontBinding = Binding(
-            get: { self.appearance.font.custom.sectionHeader?.fontDescriptor.postscriptName ?? "System Default" },
-            set: {
-                if $0 == "System Default" {
-                    self.appearance.font.custom.sectionHeader = nil
-                } else {
-                    self.appearance.font.custom.sectionHeader = UIFont(name: $0, size: 13.0)!
-                }
-            }
-        )
-
-        let customCaptionFontBinding = Binding(
-            get: { self.appearance.font.custom.caption?.fontDescriptor.postscriptName ?? "System Default" },
-            set: {
-                if $0 == "System Default" {
-                    self.appearance.font.custom.caption = nil
-                } else {
-                    self.appearance.font.custom.caption = UIFont(name: $0, size: 12.0)!
-                }
-            }
-        )
-
-        let customFootnoteFontBinding = Binding(
-            get: { self.appearance.font.custom.footnote?.fontDescriptor.postscriptName ?? "System Default" },
-            set: {
-                if $0 == "System Default" {
-                    self.appearance.font.custom.footnote = nil
-                } else {
-                    self.appearance.font.custom.footnote = UIFont(name: $0, size: 13.0)!
-                }
-            }
-        )
-
-        let customFootnoteEmphasisFontBinding = Binding(
-            get: { self.appearance.font.custom.footnoteEmphasis?.fontDescriptor.postscriptName ?? "System Default" },
-            set: {
-                if $0 == "System Default" {
-                    self.appearance.font.custom.footnoteEmphasis = nil
-                } else {
-                    self.appearance.font.custom.footnoteEmphasis = UIFont(name: $0, size: 13.0)!
-                }
-            }
-        )
-
         // MARK: Primary button bindings
 
         let primaryButtonBackgroundColorBinding = Binding(
@@ -444,60 +378,6 @@ struct AppearancePlaygroundView: View {
 
                     DisclosureGroup {
                         Picker("headline", selection: customHeadlineFontBinding) {
-                            ForEach(customFontOptions, id: \.self) { font in
-                                if font == "System Default" {
-                                    Text(font)
-                                } else {
-                                    Text(font).font(Font(UIFont(name: font, size: UIFont.labelFontSize)! as CTFont))
-                                }
-                            }
-                        }
-                        Picker("subheadline", selection: customSubheadlineFontBinding) {
-                            ForEach(customFontOptions, id: \.self) { font in
-                                if font == "System Default" {
-                                    Text(font)
-                                } else {
-                                    Text(font).font(Font(UIFont(name: font, size: UIFont.labelFontSize)! as CTFont))
-                                }
-                            }
-                        }
-                        Picker("subheadlineBold", selection: customSubheadlineBoldFontBinding) {
-                            ForEach(customFontOptions, id: \.self) { font in
-                                if font == "System Default" {
-                                    Text(font)
-                                } else {
-                                    Text(font).font(Font(UIFont(name: font, size: UIFont.labelFontSize)! as CTFont))
-                                }
-                            }
-                        }
-                        Picker("sectionHeader", selection: customSectionHeaderFontBinding) {
-                            ForEach(customFontOptions, id: \.self) { font in
-                                if font == "System Default" {
-                                    Text(font)
-                                } else {
-                                    Text(font).font(Font(UIFont(name: font, size: UIFont.labelFontSize)! as CTFont))
-                                }
-                            }
-                        }
-                        Picker("caption", selection: customCaptionFontBinding) {
-                            ForEach(customFontOptions, id: \.self) { font in
-                                if font == "System Default" {
-                                    Text(font)
-                                } else {
-                                    Text(font).font(Font(UIFont(name: font, size: UIFont.labelFontSize)! as CTFont))
-                                }
-                            }
-                        }
-                        Picker("footnote", selection: customFootnoteFontBinding) {
-                            ForEach(customFontOptions, id: \.self) { font in
-                                if font == "System Default" {
-                                    Text(font)
-                                } else {
-                                    Text(font).font(Font(UIFont(name: font, size: UIFont.labelFontSize)! as CTFont))
-                                }
-                            }
-                        }
-                        Picker("footnoteEmphasis", selection: customFootnoteEmphasisFontBinding) {
                             ForEach(customFontOptions, id: \.self) { font in
                                 if font == "System Default" {
                                     Text(font)

@@ -88,30 +88,6 @@ public extension PaymentSheet {
                 /// The font used for headlines (e.g., "Add your payment information")
                 /// - Note: If `nil`, uses the calculated font based on `base` and `sizeScaleFactor`
                 @_spi(AppearanceAPIAdditionsPreview) public var headline: UIFont?
-
-                /// The font used for subheadline text
-                /// - Note: If `nil`, uses the calculated font based on `base` and `sizeScaleFactor`
-                @_spi(AppearanceAPIAdditionsPreview) public var subheadline: UIFont?
-
-                /// The font used for bold subheadline text
-                /// - Note: If `nil`, uses the calculated font based on `base` and `sizeScaleFactor`
-                @_spi(AppearanceAPIAdditionsPreview) public var subheadlineBold: UIFont?
-
-                /// The font used for section headers
-                /// - Note: If `nil`, uses the calculated font based on `base` and `sizeScaleFactor`
-                @_spi(AppearanceAPIAdditionsPreview) public var sectionHeader: UIFont?
-
-                /// The font used for caption text
-                /// - Note: If `nil`, uses the calculated font based on `base` and `sizeScaleFactor`
-                @_spi(AppearanceAPIAdditionsPreview) public var caption: UIFont?
-
-                /// The font used for footnote text
-                /// - Note: If `nil`, uses the calculated font based on `base` and `sizeScaleFactor`
-                @_spi(AppearanceAPIAdditionsPreview) public var footnote: UIFont?
-
-                /// The font used for emphasized footnote text
-                /// - Note: If `nil`, uses the calculated font based on `base` and `sizeScaleFactor`
-                @_spi(AppearanceAPIAdditionsPreview) public var footnoteEmphasis: UIFont?
             }
         }
 
