@@ -217,6 +217,11 @@ class EmbeddedPaymentMethodsView: UIView {
         fatalError("init(coder:) has not been implemented")
     }
 
+    deinit {
+        // Just to make sure no observer stays around
+        LinkAccountContext.shared.removeObserver(self)
+    }
+
     private func logRenderLPMs() {
         // The user has to scroll through all the payment method options before checking out, so all of the lpms are visible
         let visibleLPMs: [String] = rowButtons.filter { !$0.type.isSaved }.compactMap { $0.type.analyticsIdentifier }
