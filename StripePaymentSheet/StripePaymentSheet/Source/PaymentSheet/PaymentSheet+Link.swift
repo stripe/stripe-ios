@@ -124,5 +124,8 @@ extension PaymentSheet {
         /// Decides whether Link shows more actively in FlowController.
         /// Only enable this in the PaymentSheet playground.
         @_spi(STP) public static var enableLinkFlowControllerChanges: Bool = false
+
+        /// Decides whether Link inline verification is shown in the `WalletButtonsView`.
+        @_spi(STP) public static var enableLinkInlineVerification: Bool = false
     }
 }
