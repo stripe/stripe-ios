@@ -89,6 +89,7 @@ import UIKit
     public var borderWidth = ElementsUI.fieldBorderWidth
     public var cornerRadius = ElementsUI.defaultCornerRadius
     public var shadow: Shadow? = Shadow()
+    public var textFieldInsets = ElementsUI.contentViewInsets
 
     /// The spacing between sections in forms
     public var sectionSpacing = ElementsUI.formSpacing
