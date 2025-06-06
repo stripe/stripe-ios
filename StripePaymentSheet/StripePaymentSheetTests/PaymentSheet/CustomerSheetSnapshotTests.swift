@@ -11,7 +11,7 @@ import XCTest
 
 @_spi(STP)@testable import StripeCore
 @_spi(STP) @testable import StripePayments
-@_spi(STP) @testable import StripePaymentSheet
+@_spi(AppearanceAPIAdditionsPreview) @_spi(STP) @testable import StripePaymentSheet
 @_spi(STP) @testable import StripePaymentsUI
 @_spi(STP)@testable import StripeUICore
 
@@ -87,6 +87,15 @@ class CustomerSheetSnapshotTests: STPSnapshotTestCase {
     func testNoSavedPMsCustomAppearance() {
         stubSessions(paymentMethods: "\"card\"")
         prepareCS(configuration: configuration(appearance: .snapshotTestTheme))
+        presentCS(darkMode: false)
+        verify(cs.bottomSheetViewController.view!)
+    }
+
+    func testNoSavedPMsCustomSectionSpacing() {
+        stubSessions(paymentMethods: "\"card\"")
+        var appearance = PaymentSheet.Appearance()
+        appearance.sectionSpacing = 40.0
+        prepareCS(configuration: configuration(appearance: appearance))
         presentCS(darkMode: false)
         verify(cs.bottomSheetViewController.view!)
     }

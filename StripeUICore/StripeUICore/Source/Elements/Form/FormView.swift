@@ -34,7 +34,7 @@ import UIKit
             let stack = UIStackView(arrangedSubviews: viewModel.elements)
             self.stackView = stack
             stack.axis = .vertical
-            stack.spacing = ElementsUI.formSpacing
+            stack.spacing = viewModel.theme.sectionSpacing
         }
         for (view, spacing) in viewModel.customSpacing {
             self.stackView.setCustomSpacing(spacing, after: view)

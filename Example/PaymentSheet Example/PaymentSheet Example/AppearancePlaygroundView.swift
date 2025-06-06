@@ -340,6 +340,7 @@ struct AppearancePlaygroundView: View {
                     Stepper(String(format: "cornerRadius: %.1f", appearance.cornerRadius), value: cornerRadiusBinding, in: 0...30)
                     Stepper(String(format: "borderWidth: %.1f", appearance.borderWidth), value: borderWidthBinding, in: 0.0...2.0, step: 0.5)
                     Stepper(String(format: "selectedBorderWidth: %.1f", appearance.selectedBorderWidth ?? appearance.borderWidth * 1.5), value: selectedBorderWidthBinding, in: 0.0...2.0, step: 0.5)
+                    Stepper(String(format: "sectionSpacing: %.1f", appearance.sectionSpacing), value: $appearance.sectionSpacing, in: 0...50, step: 1.0)
                     VStack {
                         Text("componentShadow")
                         ColorPicker("color", selection: componentShadowColorBinding)

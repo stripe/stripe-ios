@@ -91,6 +91,9 @@ import UIKit
     public var shadow: Shadow? = Shadow()
     public var textFieldInsets = ElementsUI.contentViewInsets
 
+    /// The spacing between sections in forms
+    public var sectionSpacing = ElementsUI.formSpacing
+
     public struct Font {
         public init() {}
 

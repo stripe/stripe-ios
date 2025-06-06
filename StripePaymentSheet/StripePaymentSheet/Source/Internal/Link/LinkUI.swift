@@ -35,13 +35,24 @@ enum LinkUI {
 
     // MARK: - Border
 
-    static let borderWidth: CGFloat = 1.5
+    static let borderWidth: CGFloat = 1.0
 
     static let highlightBorderConfiguration = HighlightBorderConfiguration(
         width: borderWidth,
         color: UIColor.linkBorderSelected.cgColor,
         animator: animator
     )
+
+    // MARK: - Buttons
+
+    private static let minimumLabelHeight: CGFloat = 24
+
+    private static let minimumButtonHeight: CGFloat = 44
+
+    static func primaryButtonHeight(margins: NSDirectionalEdgeInsets) -> CGFloat {
+        let height = LinkUI.minimumLabelHeight + margins.top + margins.bottom
+        return max(height, minimumButtonHeight)
+    }
 
     // MARK: - Margins
 
