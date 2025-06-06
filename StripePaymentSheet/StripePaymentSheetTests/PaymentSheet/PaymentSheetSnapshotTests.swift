@@ -1354,7 +1354,7 @@ class PaymentSheetSnapshotTests: STPSnapshotTestCase {
     }
 
     func testPaymentSheetCustomTextFieldInsetsWithThemedAppearance() {
-        stubReturningCustomerResponse()
+        stubNewCustomerResponse()
 
         var appearance = PaymentSheet.Appearance.snapshotTestTheme
         // Override textFieldInsets in the themed appearance
