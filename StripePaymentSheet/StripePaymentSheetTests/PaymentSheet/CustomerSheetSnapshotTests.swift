@@ -11,7 +11,7 @@ import XCTest
 
 @_spi(STP)@testable import StripeCore
 @_spi(STP) @testable import StripePayments
-@_spi(STP) @testable import StripePaymentSheet
+@_spi(AppearanceAPIAdditionsPreview) @_spi(STP) @testable import StripePaymentSheet
 @_spi(STP) @testable import StripePaymentsUI
 @_spi(STP)@testable import StripeUICore
 

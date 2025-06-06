@@ -48,7 +48,7 @@ public extension PaymentSheet {
         /// Describes the appearance of the Embedded Mobile Payment Element
         public var embeddedPaymentElement: EmbeddedPaymentElement = EmbeddedPaymentElement()
 
-        /// The corner radius used for the bottom sheet container (applies only to the top corners)
+        /// The corner radius used for Mobile Payment Element sheets
         /// - Note: The behavior of this property is consistent with the behavior of corner radius on `CALayer`
         @_spi(AppearanceAPIAdditionsPreview)
         public var sheetCornerRadius: CGFloat = 12.0
