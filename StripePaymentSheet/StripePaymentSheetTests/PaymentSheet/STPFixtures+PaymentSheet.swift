@@ -9,7 +9,7 @@ import Foundation
 @_spi(STP) @testable import StripeCore
 @_spi(STP) import StripeCoreTestUtils
 @_spi(STP) import StripePayments
-@_spi(STP) @_spi(AppearanceAPIAdditionsPreview) @testable import StripePaymentSheet
+@_spi(STP) @_spi(PaymentMethodOptionsSetupFutureUsagePreview) @_spi(AppearanceAPIAdditionsPreview) @testable import StripePaymentSheet
 import StripePaymentsTestUtils
 @_spi(STP) import StripeUICore
 
