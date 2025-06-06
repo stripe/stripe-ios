@@ -305,6 +305,8 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
                 return .applePay
             case .link:
                 return .link
+            case .shopPay:
+                return nil
             case .external(paymentMethod: let paymentMethod, billingDetails: _):
                 return .new(paymentMethodType: .external(paymentMethod))
             case .saved(paymentMethod: let paymentMethod, confirmParams: _):

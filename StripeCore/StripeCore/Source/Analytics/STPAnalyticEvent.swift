@@ -101,21 +101,25 @@ import Foundation
     case mcPaymentCustomSavedPMSuccess = "mc_custom_payment_savedpm_success"
     case mcPaymentCustomApplePaySuccess = "mc_custom_payment_applepay_success"
     case mcPaymentCustomLinkSuccess = "mc_custom_payment_link_success"
+    case mcPaymentCustomOtherSuccess = "mc_custom_payment_other_success"
 
     case mcPaymentCompleteNewPMSuccess = "mc_complete_payment_newpm_success"
     case mcPaymentCompleteSavedPMSuccess = "mc_complete_payment_savedpm_success"
     case mcPaymentCompleteApplePaySuccess = "mc_complete_payment_applepay_success"
     case mcPaymentCompleteLinkSuccess = "mc_complete_payment_link_success"
+    case mcPaymentCompleteOtherSuccess = "mc_complete_payment_other_success"
 
     case mcPaymentCustomNewPMFailure = "mc_custom_payment_newpm_failure"
     case mcPaymentCustomSavedPMFailure = "mc_custom_payment_savedpm_failure"
     case mcPaymentCustomApplePayFailure = "mc_custom_payment_applepay_failure"
     case mcPaymentCustomLinkFailure = "mc_custom_payment_link_failure"
+    case mcPaymentCustomOtherFailure = "mc_custom_payment_other_failure"
 
     case mcPaymentCompleteNewPMFailure = "mc_complete_payment_newpm_failure"
     case mcPaymentCompleteSavedPMFailure = "mc_complete_payment_savedpm_failure"
     case mcPaymentCompleteApplePayFailure = "mc_complete_payment_applepay_failure"
     case mcPaymentCompleteLinkFailure = "mc_complete_payment_link_failure"
+    case mcPaymentCompleteOtherFailure = "mc_complete_payment_other_failure"
 
     case mcPaymentEmbeddedSuccess = "mc_embedded_payment_success"
     case mcPaymentEmbeddedFailure = "mc_embedded_payment_failure"

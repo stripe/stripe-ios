@@ -185,7 +185,7 @@ class PaymentSheetFlowControllerViewController: UIViewController, FlowController
         // - Only restored if the previous input resulted in a completed form i.e. partial or invalid input is still discarded
         let previousConfirmParams: IntentConfirmParams? = {
             switch previousPaymentOption {
-            case .applePay, .saved, .link, nil:
+            case .applePay, .saved, .link, .shopPay, nil:
                 return nil
             case .new(confirmParams: let params):
                 return params

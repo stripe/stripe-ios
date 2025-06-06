@@ -158,6 +158,8 @@ public final class EmbeddedPaymentElement {
                 switch previousPaymentOption {
                 case .none:
                     return true
+                case .shopPay:
+                    return false
                 case .applePay:
                     return PaymentSheet.isApplePayEnabled(elementsSession: loadResult.elementsSession, configuration: configuration)
                 case .link:

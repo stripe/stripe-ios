@@ -335,6 +335,8 @@ final class PaymentSheetAnalyticsHelper {
                     return success ? .mcPaymentCustomApplePaySuccess : .mcPaymentCustomApplePayFailure
                 case .link:
                     return success ? .mcPaymentCustomLinkSuccess : .mcPaymentCustomLinkFailure
+                case .shopPay:
+                    return success ? .mcPaymentCustomOtherSuccess : .mcPaymentCustomOtherFailure
                 }
             case .complete:
                 switch paymentOption {
@@ -346,6 +348,8 @@ final class PaymentSheetAnalyticsHelper {
                     return success ? .mcPaymentCompleteApplePaySuccess : .mcPaymentCompleteApplePayFailure
                 case .link:
                     return success ? .mcPaymentCompleteLinkSuccess : .mcPaymentCompleteLinkFailure
+                case .shopPay:
+                    return success ? .mcPaymentCompleteOtherSuccess : .mcPaymentCompleteOtherFailure
                 }
             case .embedded:
                 return success ? .mcPaymentEmbeddedSuccess : .mcPaymentEmbeddedFailure

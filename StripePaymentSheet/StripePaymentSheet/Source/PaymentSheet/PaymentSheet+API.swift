@@ -570,6 +570,8 @@ extension PaymentSheet {
                     confirmWithPaymentDetails(linkAccount, paymentDetails, paymentDetails.cvc, confirmationExtras?.billingPhoneNumber, shouldSave, nil)
                 }
             }
+        case .shopPay:
+            print("confirm somehow!")
         case let .external(externalPaymentOption, billingDetails):
             DispatchQueue.main.async {
                 // Call confirmHandler so that the merchant completes the payment

@@ -37,6 +37,9 @@ extension PaymentOption {
             case .wallet, .withPaymentMethod, .withPaymentDetails:
                 return Image.link_icon.makeImage()
             }
+        case .shopPay:
+            // TODO
+            return Image.link_icon.makeImage()
         case .external(let paymentMethod, _):
             return PaymentSheet.PaymentMethodType.external(paymentMethod).makeImage(
                 forDarkBackground: traitCollection?.isDarkMode ?? false,
@@ -57,6 +60,9 @@ extension PaymentOption {
             assertionFailure("This shouldn't be called - we don't show new PMs in the saved PM collection view")
             return UIImage()
         case .link:
+            return Image.link_logo.makeImage()
+        case .shopPay:
+            // TODO:
             return Image.link_logo.makeImage()
         case .external:
             assertionFailure("This shouldn't be called - we don't show EPMs in the saved PM collection view")

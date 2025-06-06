@@ -31,6 +31,8 @@ import UIKit
             case "apple_pay":
                 if PaymentSheet.isApplePayEnabled(elementsSession: flowController.elementsSession, configuration: flowController.configuration) {
                     wallets.append(.applePay)
+                    // Force shopPay now
+                    wallets.append(.shopPay)
                 }
             default:
                 continue
@@ -64,6 +66,12 @@ import UIKit
                                 checkoutTapped(.link)
                             }
                         }
+                    case .shopPay:
+                        ShopPayButton {
+                            Task {
+                                checkoutTapped(.shopPay)
+                            }
+                        }
                     }
                 }
             }
@@ -80,6 +88,7 @@ import UIKit
     enum ExpressType {
         case link
         case applePay
+        case shopPay
     }
 
     func checkoutTapped(_ expressType: ExpressType) {
@@ -104,6 +113,19 @@ import UIKit
                 intent: flowController.intent,
                 elementsSession: flowController.elementsSession,
                 paymentOption: .applePay,
+                paymentHandler: flowController.paymentHandler,
+                analyticsHelper: flowController.analyticsHelper
+            ) { result, _ in
+                confirmHandler(result)
+            }
+        case .shopPay:
+            // Launch directly into Apple Pay and confirm the payment
+            PaymentSheet.confirm(
+                configuration: flowController.configuration,
+                authenticationContext: WindowAuthenticationContext(),
+                intent: flowController.intent,
+                elementsSession: flowController.elementsSession,
+                paymentOption: .shopPay,
                 paymentHandler: flowController.paymentHandler,
                 analyticsHelper: flowController.analyticsHelper
             ) { result, _ in
@@ -140,6 +162,23 @@ import UIKit
                 .foregroundColor(.black)
                 .cornerRadius(100)
             }
+        }
+    }
+    private struct ShopPayButton: View {
+        let action: () -> Void
+
+        var body: some View {
+            Button(action: action) {
+                SwiftUI.Image(uiImage: Image.carousel_card_unknown.makeImage(template: false))
+                    .resizable()
+                    .scaledToFit()
+                    .frame(height: 18)
+            }
+            .frame(maxWidth: .infinity)
+            .frame(height: 44)
+            .background(Color(uiColor: .blue))
+            .foregroundColor(.black)
+            .cornerRadius(100)
         }
     }
 }

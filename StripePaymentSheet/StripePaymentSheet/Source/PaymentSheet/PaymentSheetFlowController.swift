@@ -23,6 +23,7 @@ extension PaymentSheet {
         case saved(paymentMethod: STPPaymentMethod, confirmParams: IntentConfirmParams?)
         case new(confirmParams: IntentConfirmParams)
         case link(option: LinkConfirmOption)
+        case shopPay
         case external(paymentMethod: ExternalPaymentOption, billingDetails: STPPaymentMethodBillingDetails)
 
         var paymentMethodTypeAnalyticsValue: String {
@@ -35,6 +36,8 @@ extension PaymentSheet {
                 return confirmParams.paymentMethodType.identifier
             case .link(let confirmationOption):
                 return confirmationOption.paymentMethodType
+            case .shopPay:
+                return "shoppay"
             case .external(let paymentMethod, _):
                 return paymentMethod.type
             }
@@ -42,7 +45,7 @@ extension PaymentSheet {
 
         var savedPaymentMethod: STPPaymentMethod? {
             switch self {
-            case .applePay, .link, .new, .external:
+            case .applePay, .link, .new, .external, .shopPay:
                 return nil
             case .saved(let paymentMethod, _):
                 return paymentMethod
@@ -55,7 +58,7 @@ extension PaymentSheet {
                 return .stripe(paymentMethod.type)
             case let .new(confirmParams: intentConfirmParams):
                 return intentConfirmParams.paymentMethodType
-            case .applePay, .link:
+            case .applePay, .link, .shopPay:
                 return nil
             case let .external(paymentMethod: paymentMethod, _):
                 return .external(paymentMethod)
@@ -163,6 +166,11 @@ extension PaymentSheet {
                     paymentMethodType = option.paymentMethodType
                     billingDetails = option.billingDetails?.toPaymentSheetBillingDetails()
                     shippingDetails = option.shippingAddress
+                case .shopPay:
+                    label = "ShopPay"
+                    paymentMethodType = "shop_pay"
+                    billingDetails = nil
+                    shippingDetails = nil
                 case .external(let paymentMethod, let stpBillingDetails):
                     label = paymentMethod.displayText
                     paymentMethodType = paymentMethod.type
@@ -716,7 +724,7 @@ extension PaymentOption {
             case .withPaymentDetails:
                 return true
             }
-        case .applePay, .new, .external:
+        case .applePay, .new, .external, .shopPay:
             return false
         }
     }
@@ -732,7 +740,7 @@ extension PaymentOption {
             case .withPaymentDetails(_, let paymentDetails, _, _):
                 return paymentDetails.stripeID
             }
-        case .applePay, .new, .external:
+        case .applePay, .new, .external, .shopPay:
             return nil
         }
     }
