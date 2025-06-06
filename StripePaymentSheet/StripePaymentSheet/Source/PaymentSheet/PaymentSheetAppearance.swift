@@ -51,7 +51,7 @@ public extension PaymentSheet {
         /// The corner radius used for the bottom sheet container (applies only to the top corners)
         /// - Note: The behavior of this property is consistent with the behavior of corner radius on `CALayer`
         @_spi(AppearanceAPIAdditionsPreview)
-        public var bottomSheetCornerRadius: CGFloat = 12.0
+        public var sheetCornerRadius: CGFloat = 12.0
 
         /// Describes the padding used for all forms
         public var formInsets: NSDirectionalEdgeInsets = PaymentSheetUI.defaultSheetMargins

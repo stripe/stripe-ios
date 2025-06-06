@@ -424,7 +424,7 @@ extension PaymentSheet.Appearance {
 
         appearance.cornerRadius = 0.0
         appearance.borderWidth = 2.0
-        appearance.bottomSheetCornerRadius = 16.0
+        appearance.sheetCornerRadius = 16.0
         appearance.shadow = PaymentSheet.Appearance.Shadow(
             color: .orange,
             opacity: 0.5,
