@@ -20,6 +20,9 @@ class VerticalPaymentMethodListViewController: UIViewController {
     var rowButtons: [RowButton] {
         return stackView.arrangedSubviews.compactMap { $0 as? RowButton }
     }
+    private var linkRowButton: RowButton? {
+        rowButtons.first(where: { $0.type == .link })
+    }
     private(set) var currentSelection: RowButtonType?
     let stackView = UIStackView()
     let appearance: PaymentSheet.Appearance
@@ -182,6 +185,39 @@ class VerticalPaymentMethodListViewController: UIViewController {
         stackView.spacing = 12.0
         view = stackView
         view.backgroundColor = appearance.colors.background
+
+        if linkRowButton != nil {
+            initializeLinkAccountObserver()
+        }
+    }
+
+    deinit {
+        LinkAccountContext.shared.removeObserver(self)
+    }
+
+    private func initializeLinkAccountObserver() {
+        LinkAccountContext.shared.addObserver(self, selector: #selector(onLinkAccountChange(_:)))
+
+        if let linkAccount = LinkAccountContext.shared.account, linkAccount.isRegistered {
+            updateLinkRow(for: linkAccount)
+        }
+    }
+
+    @objc
+    func onLinkAccountChange(_ notification: Notification) {
+        DispatchQueue.main.async { [weak self] in
+            let linkAccount = notification.object as? PaymentSheetLinkAccount
+            self?.updateLinkRow(for: linkAccount)
+        }
+    }
+
+    private func updateLinkRow(for linkAccount: PaymentSheetLinkAccount?) {
+        guard let linkRowButton else {
+            return
+        }
+
+        let sublabel = linkAccount?.email ?? .Localized.link_subtitle_text
+        linkRowButton.setSublabel(text: sublabel)
     }
 
     // MARK: - Helpers

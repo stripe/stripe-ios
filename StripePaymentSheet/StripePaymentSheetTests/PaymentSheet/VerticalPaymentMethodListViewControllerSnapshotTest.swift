@@ -75,4 +75,24 @@ final class VerticalPaymentMethodListViewControllerSnapshotTest: STPSnapshotTest
         window.addAndPinSubview(sut.view, insets: .zero)
         STPSnapshotVerifyView(window, autoSizingHeightForWidth: 375)
     }
+
+    func testReturningLinkConsumer() {
+        LinkAccountContext.shared.account = PaymentSheetLinkAccount._testValue(email: "foo@bar.com")
+        let sut = VerticalPaymentMethodListViewController(initialSelection: .new(paymentMethodType: .stripe(.link)), savedPaymentMethods: [], paymentMethodTypes: [.stripe(.card), .stripe(.cashApp)], shouldShowApplePay: true, shouldShowLink: true, savedPaymentMethodAccessoryType: .edit, overrideHeaderView: nil, appearance: .default, currency: "USD", amount: 1099, incentive: nil, delegate: self)
+        let window = UIWindow()
+        window.isHidden = false
+        window.addAndPinSubview(sut.view, insets: .zero)
+        STPSnapshotVerifyView(window, autoSizingHeightForWidth: 375)
+        LinkAccountContext.shared.account = nil
+    }
+
+    func testUnknownLinkConsumer() {
+        LinkAccountContext.shared.account = PaymentSheetLinkAccount._testValue(email: "foo@bar.com", isRegistered: false)
+        let sut = VerticalPaymentMethodListViewController(initialSelection: .new(paymentMethodType: .stripe(.link)), savedPaymentMethods: [], paymentMethodTypes: [.stripe(.card), .stripe(.cashApp)], shouldShowApplePay: true, shouldShowLink: true, savedPaymentMethodAccessoryType: .edit, overrideHeaderView: nil, appearance: .default, currency: "USD", amount: 1099, incentive: nil, delegate: self)
+        let window = UIWindow()
+        window.isHidden = false
+        window.addAndPinSubview(sut.view, insets: .zero)
+        STPSnapshotVerifyView(window, autoSizingHeightForWidth: 375)
+        LinkAccountContext.shared.account = nil
+    }
 }
