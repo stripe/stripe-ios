@@ -512,6 +512,28 @@ class CustomerSheetSnapshotTests: STPSnapshotTestCase {
         verify(cs.bottomSheetViewController.view!)
     }
 
+    func testCustomSheetCornerRadius() {
+        stubSessions(paymentMethods: "\"card\"")
+        let customerAdapter = StubCustomerAdapter()
+        customerAdapter.paymentMethods = [stubbedPaymentMethod()]
+        var appearance = PaymentSheet.Appearance()
+        appearance.sheetCornerRadius = 0.0
+        prepareCS(configuration: configuration(applePayEnabled: true, appearance: appearance), customerAdapter: customerAdapter)
+        presentCS(darkMode: false)
+        verify(cs.bottomSheetViewController.view!)
+    }
+
+    func testCustomSheetCornerRadiusLarge() {
+        stubSessions(paymentMethods: "\"card\"")
+        let customerAdapter = StubCustomerAdapter()
+        customerAdapter.paymentMethods = [stubbedPaymentMethod()]
+        var appearance = PaymentSheet.Appearance()
+        appearance.sheetCornerRadius = 24.0
+        prepareCS(configuration: configuration(applePayEnabled: true, appearance: appearance), customerAdapter: customerAdapter)
+        presentCS(darkMode: false)
+        verify(cs.bottomSheetViewController.view!)
+    }
+
     private func billingDetails() -> PaymentSheet.BillingDetails {
         return .init(
             address: .init(
@@ -653,6 +675,7 @@ fileprivate extension PaymentSheet.Appearance {
 
         appearance.cornerRadius = 0.0
         appearance.borderWidth = 2.0
+        appearance.sheetCornerRadius = 20.0
         appearance.shadow = PaymentSheet.Appearance.Shadow(
             color: .orange,
             opacity: 0.5,
