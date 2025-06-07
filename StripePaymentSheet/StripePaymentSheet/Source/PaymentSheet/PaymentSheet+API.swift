@@ -571,7 +571,10 @@ extension PaymentSheet {
                 }
             }
         case .shopPay:
-            print("confirm somehow!")
+            handleShopPay(configuration: configuration,
+                          authorizationContext: authenticationContext) { result in
+                completion(result, nil)
+            }
         case let .external(externalPaymentOption, billingDetails):
             DispatchQueue.main.async {
                 // Call confirmHandler so that the merchant completes the payment
