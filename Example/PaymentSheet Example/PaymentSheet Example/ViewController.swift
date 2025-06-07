@@ -11,13 +11,6 @@ import SwiftUI
 import UIKit
 
 class ViewController: UIViewController {
-    @IBSegueAction func showFruitStore(_ coder: NSCoder) -> UIViewController? {
-        if #available(iOS 15.0, *) {
-            return UIHostingController(coder: coder, rootView: AppView())
-        } else {
-            fatalError(">= iOS 15.0 required")
-        }
-    }
 
     @IBAction func myUnwindAction(unwindSegue: UIStoryboardSegue) {
 

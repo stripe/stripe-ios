@@ -89,16 +89,6 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         guard (scene as? UIWindowScene) != nil else { return }
     }
 
-    func scene(_ scene: UIScene, continue userActivity: NSUserActivity) {
-        guard let url = userActivity.webpageURL else {
-            return
-        }
-
-        if url.lastPathComponent.contains("cool_test_page_bought_coins") {
-            NotificationCenter.default.post(name: Notification.Name("returnFromCheckout"), object: nil)
-        }
-    }
-
     func sceneDidDisconnect(_ scene: UIScene) {
         // Called as the scene is being released by the system.
         // This occurs shortly after the scene enters the background, or when its session is discarded.
