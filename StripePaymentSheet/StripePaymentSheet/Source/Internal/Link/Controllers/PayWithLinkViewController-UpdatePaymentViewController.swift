@@ -66,13 +66,6 @@ extension PayWithLinkViewController {
             self?.updateCard()
         }
 
-        private lazy var cancelButton: Button = {
-            let button = Button(configuration: .linkPlain(), title: String.Localized.cancel)
-            button.addTarget(self, action: #selector(didSelectCancel), for: .touchUpInside)
-            button.adjustsFontForContentSizeCategory = true
-            return button
-        }()
-
         private lazy var errorLabel: UILabel = {
             return ElementsUI.makeErrorLabel(theme: LinkUI.appearance.asElementsTheme)
         }()
@@ -125,7 +118,6 @@ extension PayWithLinkViewController {
                 errorLabel,
                 thisIsYourDefaultLabel,
                 updateButton,
-                cancelButton,
             ])
 
             stackView.axis = .vertical
@@ -211,10 +203,6 @@ extension PayWithLinkViewController {
                     coordinator?.allowSheetDismissal(true)
                 }
             }
-        }
-
-        @objc func didSelectCancel() {
-            _ = self.bottomSheetController?.popContentViewController()
         }
 
         func updateErrorLabel(for error: Error?) {
