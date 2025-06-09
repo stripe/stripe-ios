@@ -351,6 +351,20 @@ extension RowButton {
                   isEmbedded: isEmbedded,
                   didTap: didTap
               )
+          case .flatWithChevron:
+              return RowButtonFlatWithChevron(
+                  appearance: appearance,
+                  type: type,
+                  imageView: imageView,
+                  text: text,
+                  subtext: subtext,
+                  badgeText: badgeText,
+                  promoBadge: promoBadge,
+                  accessoryView: accessoryView,
+                  shouldAnimateOnPress: shouldAnimateOnPress,
+                  isEmbedded: isEmbedded,
+                  didTap: didTap
+              )
           }
       }
 
@@ -375,7 +389,7 @@ extension RowButton {
             }
 
             switch appearance.embeddedPaymentElement.row.style {
-            case .flatWithRadio, .flatWithCheckmark:
+            case .flatWithRadio, .flatWithCheckmark, .flatWithChevron:
                 return appearance.colors.text
             case .floatingButton:
                 return appearance.colors.componentText
@@ -400,7 +414,7 @@ extension RowButton {
             }
 
             switch appearance.embeddedPaymentElement.row.style {
-            case .flatWithRadio, .flatWithCheckmark:
+            case .flatWithRadio, .flatWithCheckmark, .flatWithChevron:
                 return appearance.colors.textSecondary
             case .floatingButton:
                 return appearance.colors.componentPlaceholderText

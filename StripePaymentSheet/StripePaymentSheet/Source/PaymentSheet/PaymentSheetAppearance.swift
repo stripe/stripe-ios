@@ -265,6 +265,9 @@ public extension PaymentSheet.Appearance {
                 case floatingButton
                 /// A flat style with a checkmark
                 case flatWithCheckmark
+                /// A flat style with a chevron
+                /// Note that EmbeddedPaymentElement.Configuration.RowSelectionBehavior must be set to `immediateAction` to use this style.
+                case flatWithChevron
             }
 
             /// The display style of the row
@@ -290,7 +293,7 @@ public extension PaymentSheet.Appearance {
                 public var separatorColor: UIColor?
 
                 /// The insets of the separator line between rows
-                /// - Note: If `nil`, defaults to `UIEdgeInsets(top: 0, left: 30, bottom: 0, right: 0)` for style of `flatWithRadio` and to `UIEdgeInsets.zero` for style of `floatingButton`.
+                /// - Note: If `nil`, defaults to `UIEdgeInsets(top: 0, left: 30, bottom: 0, right: 0)` for style of `flatWithRadio` and to `UIEdgeInsets.zero` for styles of `floatingButton`, `flatWithCheckmark` and `flatWithChevron`.
                 public var separatorInsets: UIEdgeInsets?
 
                 /// Determines if the top separator is visible at the top of the Embedded Mobile Payment Element
@@ -304,6 +307,9 @@ public extension PaymentSheet.Appearance {
 
                 /// Appearance settings for the checkmark
                 public var checkmark: Checkmark = Checkmark()
+
+                /// Appearance settings for the chevron
+                public var chevron: Chevron = Chevron()
 
                 /// Describes the appearance of the radio button
                 public struct Radio: Equatable {
@@ -320,6 +326,14 @@ public extension PaymentSheet.Appearance {
                 public struct Checkmark: Equatable {
                     /// The color of the checkmark button when selected
                     /// - Note: If `nil`, defaults to `appearance.color.primaryColor`
+                    public var color: UIColor?
+                }
+
+                /// Describes the appearance of the chevron
+                /// Note that EmbeddedPaymentElement.Configuration.RowSelectionBehavior must be set to `immediateAction` to use this style.
+                public struct Chevron: Equatable {
+                    /// The color of the chevron icon
+                    /// - Note: If `nil`, defaults to `appearance.embeddedPaymentElement.row.flat.separatorColor`
                     public var color: UIColor?
                 }
             }

@@ -562,11 +562,16 @@ extension EmbeddedPaymentElement {
     }
 
     static func validateRowSelectionConfiguration(configuration: Configuration) throws {
-        if case .immediateAction = configuration.rowSelectionBehavior,
-           case .confirm = configuration.formSheetAction {
-            // Fail init if the merchant is using immediateAction and confirm form sheet action along w/ either a Customer or Apple Pay configuration
-            guard configuration.applePay == nil && configuration.customer == nil else {
+        switch configuration.rowSelectionBehavior {
+        case .immediateAction:
+            if case .confirm = configuration.formSheetAction, (configuration.applePay != nil || configuration.customer != nil) {
+                // Fail init if the merchant is using immediateAction and confirm form sheet action along w/ either a Customer or Apple Pay configuration
                 throw PaymentSheetError.integrationError(nonPIIDebugDescription: "Using .immediateAction with .confirm form sheet action is not supported when Apple Pay or a customer configuration is provided. Use .default row selection behavior or disable Apple Pay and saved payment methods.")
+            }
+        default:
+            if case .flatWithChevron = configuration.appearance.embeddedPaymentElement.row.style {
+                // Fail init if the merchant is using the flatWithChevron style without the immediateAction behavior since flatWithChevron does not provide a selected state
+                throw PaymentSheetError.integrationError(nonPIIDebugDescription: "Using .flatWithChevron row style without .immediateAction row selection behavior is not supported. Use a different style or enable .immediateAction.")
             }
         }
     }
