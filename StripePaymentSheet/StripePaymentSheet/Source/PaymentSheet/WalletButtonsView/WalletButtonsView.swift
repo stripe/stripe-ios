@@ -21,49 +21,13 @@ import SwiftUI
 
     let flowController: PaymentSheet.FlowController
     let confirmHandler: (Confirmation) -> Void
-    let orderedWallets: [ExpressType]
+    @State var orderedWallets: [ExpressType]
 
     @_spi(STP) public init(flowController: PaymentSheet.FlowController,
                            confirmHandler: @escaping (Confirmation) -> Void) {
         self.confirmHandler = confirmHandler
         self.flowController = flowController
-
-        // Determine available wallets and their order from elementsSession
-        var wallets: [ExpressType] = []
-        for type in flowController.elementsSession.orderedPaymentMethodTypesAndWallets {
-            switch type {
-            case "link":
-                // Also check PaymentSheet local availability logic
-                if PaymentSheet.isLinkEnabled(
-                    elementsSession: flowController.elementsSession,
-                    configuration: flowController.configuration
-                ) {
-                    let canUseLinkInlineVerification: Bool = {
-                        let featureFlagEnabled = PaymentSheet.LinkFeatureFlags.enableLinkInlineVerification
-                        let canUseNativeLink = deviceCanUseNativeLink(
-                            elementsSession: flowController.elementsSession,
-                            configuration: flowController.configuration
-                        )
-                        return featureFlagEnabled && canUseNativeLink
-                    }()
-
-                    if canUseLinkInlineVerification,
-                       let linkAccount = LinkAccountContext.shared.account,
-                       linkAccount.isRegistered {
-                        wallets.append(.linkInlineVerification(linkAccount))
-                    } else {
-                        wallets.append(.link)
-                    }
-                }
-            case "apple_pay":
-                if PaymentSheet.isApplePayEnabled(elementsSession: flowController.elementsSession, configuration: flowController.configuration) {
-                    wallets.append(.applePay)
-                }
-            default:
-                continue
-            }
-        }
-        self.orderedWallets = wallets
+        self.orderedWallets = WalletButtonsView.determineAvailableWallets(for: flowController)
     }
 
     init(flowController: PaymentSheet.FlowController,
@@ -99,6 +63,7 @@ import SwiftUI
                 }
             }
             .frame(maxWidth: .infinity)
+            .animation(.easeInOut, value: orderedWallets)
             .onAppear {
                 flowController.walletButtonsShownExternally = true
             }
@@ -108,20 +73,47 @@ import SwiftUI
         }
     }
 
+    private static func determineAvailableWallets(for flowController: PaymentSheet.FlowController) -> [ExpressType] {
+        // Determine available wallets and their order from elementsSession
+        var wallets: [ExpressType] = []
+        for type in flowController.elementsSession.orderedPaymentMethodTypesAndWallets {
+            switch type {
+            case "link":
+                // Also check PaymentSheet local availability logic
+                if PaymentSheet.isLinkEnabled(
+                    elementsSession: flowController.elementsSession,
+                    configuration: flowController.configuration
+                ) {
+                    let canUseLinkInlineVerification: Bool = {
+                        let featureFlagEnabled = PaymentSheet.LinkFeatureFlags.enableLinkInlineVerification
+                        let canUseNativeLink = deviceCanUseNativeLink(
+                            elementsSession: flowController.elementsSession,
+                            configuration: flowController.configuration
+                        )
+                        return featureFlagEnabled && canUseNativeLink
+                    }()
+
+                    if canUseLinkInlineVerification,
+                       let linkAccount = LinkAccountContext.shared.account,
+                       linkAccount.sessionState == .requiresVerification {
+                        wallets.append(.linkInlineVerification(linkAccount))
+                    } else {
+                        wallets.append(.link)
+                    }
+                }
+            case "apple_pay":
+                if PaymentSheet.isApplePayEnabled(elementsSession: flowController.elementsSession, configuration: flowController.configuration) {
+                    wallets.append(.applePay)
+                }
+            default:
+                continue
+            }
+        }
+        return wallets
+    }
+
     func checkoutTapped(_ expressType: ExpressType) {
         switch expressType {
-        case .link:
-            PaymentSheet.confirm(
-                configuration: flowController.configuration,
-                authenticationContext: WindowAuthenticationContext(),
-                intent: flowController.intent,
-                elementsSession: flowController.elementsSession,
-                paymentOption: .link(option: .wallet),
-                paymentHandler: flowController.paymentHandler,
-                analyticsHelper: flowController.analyticsHelper
-            ) { result, _ in
-                confirmHandler(.paymentSheetResult(result))
-            }
         case .applePay:
             // Launch directly into Apple Pay and confirm the payment
             PaymentSheet.confirm(
@@ -135,8 +127,7 @@ import SwiftUI
             ) { result, _ in
                 confirmHandler(.paymentSheetResult(result))
             }
-        case .linkInlineVerification:
-            // TODO: Ensure this case is only available when `deviceCanUseNativeLink`.
+        case .link, .linkInlineVerification:
             let linkController = PayWithNativeLinkController(
                 mode: .paymentMethodSelection,
                 intent: flowController.intent,
@@ -149,7 +140,7 @@ import SwiftUI
                 initiallySelectedPaymentDetailsID: nil,
                 completion: { confirmOptions, _ in
                     guard let confirmOptions else {
-                        // TODO: Handle failure / cancel.
+                        self.orderedWallets = WalletButtonsView.determineAvailableWallets(for: flowController)
                         return
                     }
                     flowController.viewController.linkConfirmOption = confirmOptions

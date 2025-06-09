@@ -98,7 +98,6 @@ struct LinkInlineVerificationView: View {
 
     private func onResend() {
         viewModel.loadingOtpView = true
-
         Task {
             try? await viewModel.startVerification()
             viewModel.code = ""
