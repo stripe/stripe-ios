@@ -28,20 +28,10 @@ extension Button.Configuration {
         return configuration
     }
 
-    static func linkSecondary() -> Self {
-        var configuration: Button.Configuration = .linkPrimary()
-
-        // Colors
-        configuration.foregroundColor = .linkTextPrimary
-        configuration.backgroundColor = .linkButtonSecondary
-        configuration.disabledBackgroundColor = .linkButtonSecondary
-
-        return configuration
-    }
-
     static func linkPlain() -> Self {
         var configuration: Button.Configuration = .plain()
-        configuration.font = LinkUI.font(forTextStyle: .body)
+        configuration.insets = LinkUI.buttonMargins
+        configuration.font = LinkUI.font(forTextStyle: .bodyEmphasized)
         configuration.foregroundColor = .linkTextBrand
         configuration.disabledForegroundColor = nil
         configuration.colorTransforms.highlightedForeground = .setAlpha(amount: 0.4)

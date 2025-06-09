@@ -15,7 +15,7 @@ import UIKit
 @objc(STP_Internal_LinkSheetNavigationBar)
 class LinkSheetNavigationBar: SheetNavigationBar {
     override class var height: CGFloat {
-        return 60
+        return 70
     }
     private let logoView: UIImageView = {
         let imageView = UIImageView(image: Image.link_logo.makeImage(template: false))

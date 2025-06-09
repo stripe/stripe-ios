@@ -51,11 +51,7 @@ extension PayWithLinkViewController {
                 ? context.secondaryButtonLabel
                 : String.Localized.cancel
 
-            let configuration: Button.Configuration = shouldShowApplePayButton
-                ? .linkPlain()
-                : .linkSecondary()
-
-            let button = Button(configuration: configuration, title: buttonTitle)
+            let button = Button(configuration: .linkPlain(), title: buttonTitle)
             button.addTarget(self, action: #selector(cancelButtonTapped(_:)), for: .touchUpInside)
             return button
         }()
