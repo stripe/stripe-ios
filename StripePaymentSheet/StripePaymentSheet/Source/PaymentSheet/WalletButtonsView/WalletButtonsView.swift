@@ -27,8 +27,9 @@ import SwiftUI
                            confirmHandler: @escaping (Confirmation) -> Void) {
         self.confirmHandler = confirmHandler
         self.flowController = flowController
+
         let wallets = WalletButtonsView.determineAvailableWallets(for: flowController)
-        self.orderedWallets = wallets
+        self._orderedWallets = State(initialValue: wallets)
     }
 
     init(flowController: PaymentSheet.FlowController,
@@ -36,7 +37,7 @@ import SwiftUI
          orderedWallets: [ExpressType]) {
         self.flowController = flowController
         self.confirmHandler = confirmHandler
-        self.orderedWallets = orderedWallets
+        self._orderedWallets = State(initialValue: orderedWallets)
     }
 
     @_spi(STP) public var body: some View {
