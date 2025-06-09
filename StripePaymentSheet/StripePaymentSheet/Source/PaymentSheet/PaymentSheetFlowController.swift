@@ -584,16 +584,15 @@ extension PaymentSheet {
         }
 
         func updateForWalletButtonsView() {
-            let previousLinkConfirmOption = viewController.linkConfirmOption
             // Recreate the view controller
             self.viewController = Self.makeViewController(
                 configuration: self.configuration,
                 loadResult: self.viewController.loadResult,
                 analyticsHelper: analyticsHelper,
                 walletButtonsShownExternally: self.walletButtonsShownExternally,
-                previousPaymentOption: self.internalPaymentOption
+                previousLinkConfirmOption: self.viewController.linkConfirmOption,
+                previousPaymentOption: self._paymentOption
             )
-            self.viewController.linkConfirmOption = previousLinkConfirmOption
             self.viewController.flowControllerDelegate = self
             updatePaymentOption()
         }
@@ -646,18 +645,20 @@ extension PaymentSheet {
             loadResult: PaymentSheetLoader.LoadResult,
             analyticsHelper: PaymentSheetAnalyticsHelper,
             walletButtonsShownExternally: Bool,
+            previousLinkConfirmOption: LinkConfirmOption? = nil,
             previousPaymentOption: PaymentOption? = nil
         ) -> FlowControllerViewControllerProtocol {
+            let controller: FlowControllerViewControllerProtocol
             switch configuration.paymentMethodLayout {
             case .horizontal:
-                return PaymentSheetFlowControllerViewController(
+                controller = PaymentSheetFlowControllerViewController(
                     configuration: configuration,
                     loadResult: loadResult,
                     analyticsHelper: analyticsHelper,
                     previousPaymentOption: previousPaymentOption
                 )
             case .vertical, .automatic:
-                return PaymentSheetVerticalViewController(
+                controller = PaymentSheetVerticalViewController(
                     configuration: configuration,
                     loadResult: loadResult,
                     isFlowController: true,
@@ -666,6 +667,8 @@ extension PaymentSheet {
                     previousPaymentOption: previousPaymentOption
                 )
             }
+            controller.linkConfirmOption = previousLinkConfirmOption
+            return controller
         }
     }
 }
