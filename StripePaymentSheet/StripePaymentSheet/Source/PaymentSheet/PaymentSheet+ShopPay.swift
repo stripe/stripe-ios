@@ -14,7 +14,7 @@ extension PaymentSheet {
     static func handleShopPay(configuration: PaymentElementConfiguration,
                               authorizationContext: STPAuthenticationContext,
                               completion: @escaping (PaymentSheetResult) -> Void) {
-        if #available(iOS 14.0, *) {
+        if #available(iOS 16.4, *) {
             Task { @MainActor in
                 let shopPayWebViewController = ShopPayWebViewController(authenticationContext: authorizationContext)
                 //            shopPayWebviewModel.setupWebView()

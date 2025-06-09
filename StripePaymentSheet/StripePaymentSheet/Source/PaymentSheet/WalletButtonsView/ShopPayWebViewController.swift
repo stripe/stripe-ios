@@ -9,85 +9,117 @@
 import UIKit
 import WebKit
 
-@available(iOS 14.0, *)
+@available(iOS 16.4, *)
 class ShopPayWebViewController: UIViewController {
     let authenticationContext: STPAuthenticationContext
 
     private var webView: WKWebView!
     private var popupWebView: WKWebView!
+    private var popupWindow: UIWindow?
+    private var button: UIButton
+
 
     init(authenticationContext: STPAuthenticationContext) {
         self.authenticationContext = authenticationContext
-//        super.init()
+        self.button = UIButton(frame: CGRect(x: 0, y: 0, width: 300, height: 100))
         super.init(nibName: nil, bundle: nil)
-
     }
 
     required init?(coder: NSCoder) {
-//        super.init(coder: coder)
         fatalError("init(coder:) has not been implemented")
     }
 
     override func loadView() {
         // Create main view
-        view = UIView()
-        view.backgroundColor = .systemBackground
+//        view = UIView()
+//        view.backgroundColor = .systemBackground
 
         setupWebView()
-
+        view = webView
+        self.button.addTarget(self, action: #selector(didTapNativeButton), for: .touchUpInside)
+        self.button.backgroundColor = .blue
+        self.view.addSubview(button)
         // Add the tiny 1x1 webview as a hidden subview
-        view.addSubview(webView)
+//        view.addSubview(webView)
     }
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        
+        setupNavigationBar()
+        
+        // Add a label to show this is a hidden webview
+        loadStripeCheckout()
+    }
+    
+    
     func loadStripeCheckout() {
-        guard let url = URL(string: "https://zenith-spicy-dinosaur.glitch.me/checkout/") else {
+//        let oldURL = "https://zenith-spicy-dinosaur.glitch.me/checkout/"
+//        let confTokensDemo = "https://confirmation-tokens.glitch.me/checkout/"
+        let confTokensDemo = "https://inquisitive-seasoned-fountain-apayqa.glitch.me/checkout/"
+        guard let url = URL(string: confTokensDemo) else {
             print("❌ Invalid URL")
             return
         }
 
-        print("🌐 Loading Stripe checkout: \(url)")
+//        print("🌐 Loading Stripe checkout: \(url)")
         let request = URLRequest(url: url)
         webView.load(request)
+//      webView.loadHTMLString(ShopPayStaticHTMLPage.htmlString, baseURL: nil)
     }
-    override func viewDidLoad() {
-        super.viewDidLoad()
-//        setupNavigationBar()
 
-        // Add a label to show this is a hidden webview
-        let label = UILabel()
-        label.text = "Hidden WebView Bridge\n\nThe 1x1 pixel WebView is running invisibly.\nCheck console for bridge messages."
-        label.textAlignment = .center
-        label.numberOfLines = 0
-        label.font = UIFont.systemFont(ofSize: 16)
-        label.textColor = .secondaryLabel
-        label.translatesAutoresizingMaskIntoConstraints = false
-
-        view.addSubview(label)
-        NSLayoutConstraint.activate([
-            label.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            label.centerYAnchor.constraint(equalTo: view.centerYAnchor),
-            label.leadingAnchor.constraint(greaterThanOrEqualTo: view.leadingAnchor, constant: 20),
-            label.trailingAnchor.constraint(lessThanOrEqualTo: view.trailingAnchor, constant: -20),
-        ])
-
-        loadStripeCheckout()
+    private func setupNavigationBar() {
+        title = "Stripe Checkout Bridge"
+        
+        // Add refresh button
+        navigationItem.rightBarButtonItem = UIBarButtonItem(
+            barButtonSystemItem: .refresh,
+            target: self,
+            action: #selector(refreshWebView)
+        )
+        
+        // Add back/forward buttons if needed
+        navigationItem.leftBarButtonItems = [
+            UIBarButtonItem(title: "Back", style: .plain, target: self, action: #selector(goBack)),
+            UIBarButtonItem(title: "Forward", style: .plain, target: self, action: #selector(goForward))
+        ]
     }
-    func setupWebView() {
+    
+    @objc private func refreshWebView() {
+        webView.reload()
+    }
+    
+    @objc private func goBack() {
+        if webView.canGoBack {
+            webView.goBack()
+        }
+    }
+    
+    @objc private func goForward() {
+        if webView.canGoForward {
+            webView.goForward()
+        }
+    }
+
+    
+    private func setupWebView() {
         let configuration = WKWebViewConfiguration()
-
+        
         // Enable JavaScript
         configuration.defaultWebpagePreferences.allowsContentJavaScript = true
-
+        configuration.preferences.javaScriptCanOpenWindowsAutomatically = true
+//        configuration.defaultWebpagePreferences.javaScriptCanOpenWindowsAutomatically = true
+        
         // Setup message handlers for the bridge
         let contentController = WKUserContentController()
-
+        
         // Add message handlers for different types of messages
         contentController.add(self, name: "stripeMessage")
         contentController.add(self, name: "consoleLog")
         contentController.add(self, name: "ready")
         contentController.add(self, name: "error")
-
+        
         configuration.userContentController = contentController
-
+        
         // Inject JavaScript to capture messages and set up the bridge
         let bridgeScript = """
         // Override console.log to capture messages
@@ -106,12 +138,12 @@ class ShopPayWebViewController: UIViewController {
                 }
                 originalLog.apply(console, arguments);
             };
-
+            
             const originalError = console.error;
             console.error = function(...args) {
                 try {
                     window.webkit.messageHandlers.consoleLog.postMessage({
-                        level: 'error',
+                        level: 'error', 
                         message: args.map(arg => typeof arg === 'object' ? JSON.stringify(arg) : String(arg)).join(' '),
                         origin: window.location.origin,
                         url: window.location.href
@@ -121,7 +153,7 @@ class ShopPayWebViewController: UIViewController {
                 }
                 originalError.apply(console, arguments);
             };
-
+            
             const originalWarn = console.warn;
             console.warn = function(...args) {
                 try {
@@ -137,7 +169,7 @@ class ShopPayWebViewController: UIViewController {
                 originalWarn.apply(console, arguments);
             };
         })();
-
+        
         // Capture postMessage calls for the current frame only
         (function() {
             const originalPostMessage = window.postMessage;
@@ -157,7 +189,7 @@ class ShopPayWebViewController: UIViewController {
                 return originalPostMessage.call(window, message, targetOrigin);
             };
         })();
-
+        
         // Listen for message events (this captures both incoming and outgoing messages)
         window.addEventListener('message', function(event) {
             try {
@@ -176,7 +208,7 @@ class ShopPayWebViewController: UIViewController {
                 } catch(e) {
                     sourceInfo = 'cross-origin';
                 }
-
+                
                 window.webkit.messageHandlers.stripeMessage.postMessage({
                     type: 'messageEvent',
                     data: event.data,
@@ -190,7 +222,7 @@ class ShopPayWebViewController: UIViewController {
                 // Ignore errors if webkit handlers not available
             }
         });
-
+        
         // Enhanced detection for Stripe-specific communications
         (function() {
             // Override the parent.postMessage safely by detecting when it's called
@@ -209,7 +241,7 @@ class ShopPayWebViewController: UIViewController {
                 }
                 return originalSend.apply(this, args);
             };
-
+            
             // Monitor fetch requests
             if (window.fetch) {
                 const originalFetch = window.fetch;
@@ -230,18 +262,32 @@ class ShopPayWebViewController: UIViewController {
             }
         })();
 
-        // Function to simulate click on shop-pay-payment-request-button in iframes
-        function findAndClickShopPayButton() {
+
+        function findAndClickAmazonPayButton() {
             function searchInFrame(frameWindow, depth = 0) {
                 if (depth > 5) return false; // Prevent infinite recursion
-
+                
                 try {
-                    const button = frameWindow.document.querySelector('shop-pay-payment-request-button');
+                    // Look for the Amazon Pay button by class or id
+                    const button = frameWindow.document.querySelector('.amazonpay-button-parent-container-checkout') || 
+                                  frameWindow.document.querySelector('#stripe-falcon-button');
+                    
                     if (button) {
-                        console.log('Found shop-pay-payment-request-button at depth', depth);
+                        console.log('Found Amazon Pay button at depth', depth);
+                        
+                        // Log details about the button to help with debugging
+                        console.log('Button details:', {
+                            id: button.id,
+                            className: button.className,
+                            role: button.getAttribute('role'),
+                            ariaLabel: button.getAttribute('aria-label'),
+                            isRendered: button.getAttribute('rendered'),
+                            isVisible: button.style.display !== 'none' && button.offsetParent !== null
+                        });
+                        
                         // Try multiple click simulation methods
                         button.click();
-
+                        
                         // Also dispatch synthetic click events
                         const clickEvent = new MouseEvent('click', {
                             bubbles: true,
@@ -249,60 +295,117 @@ class ShopPayWebViewController: UIViewController {
                             view: frameWindow
                         });
                         button.dispatchEvent(clickEvent);
-
+                        
                         // Try triggering any onclick handlers
                         if (button.onclick) {
                             button.onclick();
                         }
-
+                        
+                        // Look for potential shadow DOM (used by some custom elements)
+                        if (button.shadowRoot) {
+                            console.log('Button has shadow root, attempting to click inside shadow DOM');
+                            const shadowButton = button.shadowRoot.querySelector('button, [role="button"]');
+                            if (shadowButton) {
+                                shadowButton.click();
+                            }
+                        }
+                        
+                        // Attempt to find a button inside the container (common pattern)
+                        const nestedButton = button.querySelector('button, [role="button"]');
+                        if (nestedButton) {
+                            console.log('Found nested button element, clicking it');
+                            nestedButton.click();
+                        }
+                        
                         window.webkit.messageHandlers.stripeMessage.postMessage({
-                            type: 'shopPayButtonClicked',
+                            type: 'amazonPayButtonClicked',
                             depth: depth,
                             timestamp: Date.now(),
                             buttonFound: true,
+                            buttonId: button.id,
+                            buttonClass: button.className,
                             origin: frameWindow.location.origin
                         });
-
+                        
                         return true;
                     }
-
+                    
+                    // If button not found directly, search for elements with "amazon" in their attributes
+                    const possibleAmazonElements = frameWindow.document.querySelectorAll('[id*="amazon"],[class*="amazon"],[aria-label*="Amazon"]');
+                    if (possibleAmazonElements.length > 0) {
+                        console.log(`Found ${possibleAmazonElements.length} potential Amazon Pay elements`);
+                        for (const element of possibleAmazonElements) {
+                            console.log('Potential Amazon element:', element.tagName, {
+                                id: element.id, 
+                                class: element.className,
+                                role: element.getAttribute('role')
+                            });
+                            
+                            // Try clicking this element too
+                            try {
+                                element.click();
+                                console.log('Clicked potential Amazon element');
+                            } catch (e) {
+                                console.log('Failed to click potential element:', e.message);
+                            }
+                        }
+                    }
+                    
                     // Search in child iframes
                     const iframes = frameWindow.document.querySelectorAll('iframe');
+                    console.log(`Searching through ${iframes.length} iframes at depth ${depth}`);
+                    
                     for (let iframe of iframes) {
                         try {
                             if (searchInFrame(iframe.contentWindow, depth + 1)) {
                                 return true;
                             }
                         } catch(e) {
-                            // Cross-origin iframe, skip
-                            console.log('Cross-origin iframe at depth', depth + 1);
+                            console.log('Cross-origin iframe at depth', depth + 1, ':', e.message);
                         }
                     }
                 } catch(e) {
                     console.log('Error searching frame at depth', depth, ':', e.message);
                 }
-
+                
                 return false;
             }
-
+            
+            // Additional diagnostics before starting search
+            console.log('Page URL:', window.location.href);
+            console.log('Document ready state:', document.readyState);
+            
+            // Log all iframes on the page for debugging
+            const allIframes = document.querySelectorAll('iframe');
+            console.log(`Top level has ${allIframes.length} iframes`);
+            allIframes.forEach((iframe, i) => {
+                console.log(`Iframe ${i} src:`, iframe.src || 'no src', 'id:', iframe.id || 'no id');
+            });
+            
             const found = searchInFrame(window);
-
+            
             if (!found) {
+                // Log HTML structure to help with debugging
+                console.log('Button not found. Document structure:');
+                console.log(document.body.innerHTML);
+                
                 window.webkit.messageHandlers.stripeMessage.postMessage({
-                    type: 'shopPayButtonSearch',
+                    type: 'amazonPayButtonSearch',
                     buttonFound: false,
                     timestamp: Date.now(),
-                    message: 'shop-pay-payment-request-button not found in any accessible iframe'
+                    message: 'Amazon Pay button not found in any accessible iframe',
+                    documentBodyHTML: document.body.innerHTML.substring(0, 1000) // First 1000 chars for diagnosis
                 });
             }
         }
 
-        // Wait 1 second after page load, then try to find and click the shop pay button
+        // The button might need more time to render, so wait longer
         setTimeout(() => {
-            console.log('Searching for shop-pay-payment-request-button...');
-            findAndClickShopPayButton();
-        }, 1000);
+            console.log('Searching for Amazon Pay button...');
+            findAndClickAmazonPayButton();
+        }, 2000); // Wait 2 seconds
 
+        
         // Notify that the bridge is ready
         try {
             window.webkit.messageHandlers.ready.postMessage({
@@ -317,27 +420,126 @@ class ShopPayWebViewController: UIViewController {
             // Ignore errors if webkit handlers not available
         }
         """
-
+        
         let script = WKUserScript(source: bridgeScript, injectionTime: .atDocumentEnd, forMainFrameOnly: false)
         contentController.addUserScript(script)
-
-        // Create a tiny 1x1 pixel webview positioned at origin
-        webView = WKWebView(frame: CGRect(x: 0, y: 0, width: 1, height: 1), configuration: configuration)
+        
+        webView = WKWebView(frame: .zero, configuration: configuration)
         webView.navigationDelegate = self
         webView.uiDelegate = self
-// Requires ios 16.4
-//        webView.isInspectable = true
-        webView.isHidden = false // Keep it technically visible but tiny
-        webView.alpha = 0.01 // Make it nearly transparent
-
+        webView.isInspectable = true
+        
         // Set Safari user agent to prevent hiding of Express Checkout Element
         // This makes Stripe think we're running in Safari instead of WKWebView
         webView.customUserAgent = "Mozilla/5.0 (iPhone; CPU iPhone OS 18_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.1.1 Mobile/15E148 Safari/604.1"
     }
+    
+    func executeJavaScript(_ script: String, completion: ((Any?, Error?) -> Void)? = nil) {
+        webView.evaluateJavaScript(script) { result, error in
+            if let error = error {
+                print("❌ JavaScript execution error: \(error.localizedDescription)")
+            } else if let result = result {
+                print("✅ JavaScript execution result: \(result)")
+            }
+            completion?(result, error)
+        }
+    }
+    
+    struct ShippingDetails: Encodable {
+        let name: String
+        let shippingMethod: String
+    }
+    func sendExampleShippingDetails() {
+        let shippingOptions = [
+            ShippingDetails(name: "Standard Shipping", shippingMethod: "standard"),
+            ShippingDetails(name: "Express Shipping", shippingMethod: "express"),
+            ShippingDetails(name: "Next Day Delivery", shippingMethod: "next-day")
+        ]
+        
+        sendShippingDetailsToJavaScript(shippingOptions) { success, error in
+            if success {
+                print("JavaScript successfully received shipping options")
+            } else if let error = error {
+                print("Failed to send shipping options: \(error.localizedDescription)")
+            }
+        }
+    }
+    func sendShippingDetailsToJavaScript(_ shippingDetails: [ShippingDetails], completion: ((Bool, Error?) -> Void)? = nil) {
+        do {
+            // Convert the array to JSON data
+            let jsonData = try JSONEncoder().encode(shippingDetails)
+            
+            // Convert JSON data to a string that can be used in JavaScript
+            if let jsonString = String(data: jsonData, encoding: .utf8) {
+                // Escape any quotes to avoid breaking the JavaScript string
+                let escapedJsonString = jsonString.replacingOccurrences(of: "\"", with: "\\\"")
+                
+                // Create the JavaScript code that will process this data
+                let jsCode = """
+                (function() {
+                    try {
+                        // Parse the JSON string back to a JavaScript object
+                        const shippingDetails = JSON.parse("\(escapedJsonString)");
+                        
+                        // Log the received data
+                        console.log("📦 Received shipping details from iOS:", shippingDetails);
+                        
+                        // Store it in a global variable for access by other scripts
+                        window.nativeShippingDetails = shippingDetails;
+                        
+                        // Dispatch an event to notify any listeners
+                        const event = new CustomEvent('shippingDetailsReceived', { 
+                            detail: { 
+                                shippingDetails: shippingDetails,
+                                timestamp: Date.now()
+                            }
+                        });
+                        document.dispatchEvent(event);
+                        
+                        // Process each shipping item (example)
+                        shippingDetails.forEach(item => {
+                            console.log(`Processing shipping option: ${item.name} with method ${item.shippingMethod}`);
+                            // Your JavaScript code to handle each shipping detail
+                        });
+                        
+                        return true; // Success indicator
+                    } catch (error) {
+                        console.error("Error processing shipping details:", error);
+                        return false; // Error indicator
+                    }
+                })();
+                """
+                
+                // Execute the JavaScript
+                executeJavaScript(jsCode) { result, error in
+                    if let error = error {
+                        print("❌ Error sending shipping details to JavaScript: \(error.localizedDescription)")
+                        completion?(false, error)
+                    } else if let success = result as? Bool, success {
+                        print("✅ Successfully sent shipping details to JavaScript")
+                        completion?(true, nil)
+                    } else {
+                        print("⚠️ Unexpected result when sending shipping details: \(String(describing: result))")
+                        completion?(false, NSError(domain: "ShippingDetailsError", code: -1, userInfo: [NSLocalizedDescriptionKey: "Failed to process shipping details in JavaScript"]))
+                    }
+                }
+            } else {
+                let error = NSError(domain: "ShippingDetailsError", code: -1, userInfo: [NSLocalizedDescriptionKey: "Failed to convert JSON data to string"])
+                print("❌ \(error.localizedDescription)")
+                completion?(false, error)
+            }
+        } catch {
+            print("❌ Error encoding shipping details: \(error.localizedDescription)")
+            completion?(false, error)
+        }
+    }
+
+
 }
 
 // MARK: - WKScriptMessageHandler
-@available(iOS 14.0, *)
+@available(iOS 16.4, *)
+
 extension ShopPayWebViewController: WKScriptMessageHandler {
     func userContentController(_ userContentController: WKUserContentController, didReceive message: WKScriptMessage) {
         let messageBody = message.body
@@ -379,6 +581,7 @@ extension ShopPayWebViewController: WKScriptMessageHandler {
                     }
                 }
                 printMessageDetails(readyDict)
+//                executeNativeCommandToJavaScript()
             }
 
         case "error":
@@ -428,10 +631,57 @@ extension ShopPayWebViewController: WKScriptMessageHandler {
         default: return "📝"
         }
     }
+    @objc
+    func didTapNativeButton() {
+//        executeNativeCommandToJavaScript()
+        sendExampleShippingDetails()
+    }
+    
+    // Add this method to execute commands once the bridge is ready
+    private func executeNativeCommandToJavaScript() {
+        print("🚀 Native iOS sending command to JavaScript...")
+        
+        // Example command: log a message
+        let logCommand = """
+        console.log("Hello from native iOS! Bridge is connected and working.");
+        """
+        
+        // Example command: execute a function in the webpage
+        let executeFunction = """
+        (function() {
+            console.log("Executing native command from iOS...");
+            
+            // Create and dispatch a custom event that your web app can listen for
+            const nativeEvent = new CustomEvent('nativeCommand', {
+                detail: {
+                    command: 'initialize',
+                    timestamp: \(Date().timeIntervalSince1970),
+                    source: 'iOS-Native'
+                }
+            });
+            document.dispatchEvent(nativeEvent);
+            
+            return "Command executed successfully";
+        })();
+        """
+        
+        // Execute the commands
+        executeJavaScript(logCommand)
+        
+        // Execute with a slight delay to ensure the first command completes
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) { [weak self] in
+            self?.executeJavaScript(executeFunction) { result, error in
+                if let result = result {
+                    print("🔄 Command execution feedback: \(result)")
+                }
+            }
+        }
+    }
+
 }
 
 // MARK: - WKNavigationDelegate
-@available(iOS 14.0, *)
+@available(iOS 16.4, *)
 extension ShopPayWebViewController: WKNavigationDelegate {
     func webView(_ webView: WKWebView, didStartProvisionalNavigation navigation: WKNavigation!) {
         print("🚀 Navigation started: \(webView.url?.absoluteString ?? "unknown")")
@@ -452,7 +702,7 @@ extension ShopPayWebViewController: WKNavigationDelegate {
 }
 
 // MARK: - WKUIDelegate (Popup Handling)
-@available(iOS 14.0, *)
+@available(iOS 16.4, *)
 extension ShopPayWebViewController: WKUIDelegate {
     func webView(_ webView: WKWebView, createWebViewWith configuration: WKWebViewConfiguration, for navigationAction: WKNavigationAction, windowFeatures: WKWindowFeatures) -> WKWebView? {
 
@@ -462,24 +712,23 @@ extension ShopPayWebViewController: WKUIDelegate {
         popupWebView = WKWebView(frame: .zero, configuration: configuration)
         popupWebView?.navigationDelegate = self
         popupWebView?.uiDelegate = self
-
+        
         // Set the same Safari user agent for popups
         popupWebView?.customUserAgent = "Mozilla/5.0 (iPhone; CPU iPhone OS 18_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.1.1 Mobile/15E148 Safari/604.1"
-        /*
+        
         // Create popup window
-        if #available(iOS 13.0, *) {
             if let windowScene = view.window?.windowScene {
                 popupWindow = UIWindow(windowScene: windowScene)
             }
-        } else {
-            popupWindow = UIWindow(frame: UIScreen.main.bounds)
-        }*/
+//        } else {
+//            popupWindow = UIWindow(frame: UIScreen.main.bounds)
+//        }
 
         let popupViewController = UIViewController()
         popupViewController.view = popupWebView
         popupViewController.title = "Stripe Popup"
 
-//        let navController = UINavigationController(rootViewController: popupViewController)
+        let navController = UINavigationController(rootViewController: popupViewController)
 
         // Add close button to popup
         popupViewController.navigationItem.leftBarButtonItem = UIBarButtonItem(
@@ -488,16 +737,16 @@ extension ShopPayWebViewController: WKUIDelegate {
             action: #selector(closePopup)
         )
 
-//        popupWindow?.rootViewController = navController
-//        popupWindow?.makeKeyAndVisible()
-
+        popupWindow?.rootViewController = navController
+        popupWindow?.makeKeyAndVisible()
+        
         return popupWebView
     }
 
     @objc private func closePopup() {
-//        popupWindow?.isHidden = true
-//        popupWindow = nil
-//        popupWebView = nil
+        popupWindow?.isHidden = true
+        popupWindow = nil
+        popupWebView = nil
     }
 
     func webViewDidClose(_ webView: WKWebView) {
