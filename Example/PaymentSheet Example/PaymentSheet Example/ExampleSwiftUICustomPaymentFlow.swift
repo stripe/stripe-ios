@@ -60,6 +60,9 @@ struct FlowControllerView: View {
             onCompletion: onCompletion
         )
         .disabled(flowController.paymentOption == nil || isConfirmingPayment)
+        if let paymentOption = flowController.paymentOption {
+            Text("Published payment option: \(paymentOption.label)")
+        }
     }
 }
 
