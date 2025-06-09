@@ -14,14 +14,8 @@ final class RowButtonFlatWithChevron: RowButton {
     // MARK: - Subviews
     private lazy var chevronView: UIImageView = {
         let chevronImageView = UIImageView(image: Image.icon_chevron_right.makeImage(template: true))
-        // prioritize chevron color > separator color > component border color
-        if let chevronColor = appearance.embeddedPaymentElement.row.flat.chevron.color {
-            chevronImageView.tintColor = chevronColor
-        } else if let separatorColor = appearance.embeddedPaymentElement.row.flat.separatorColor {
-            chevronImageView.tintColor = separatorColor
-        } else {
-            chevronImageView.tintColor = appearance.colors.componentBorder
-        }
+
+        chevronImageView.tintColor = appearance.embeddedPaymentElement.row.flat.chevron.color
         chevronImageView.contentMode = .scaleAspectFit
         chevronImageView.translatesAutoresizingMaskIntoConstraints = false
         return chevronImageView

@@ -333,8 +333,7 @@ public extension PaymentSheet.Appearance {
                 /// Note that EmbeddedPaymentElement.Configuration.RowSelectionBehavior must be set to `immediateAction` to use this style.
                 public struct Chevron: Equatable {
                     /// The color of the chevron icon
-                    /// - Note: If `nil`, defaults to `appearance.embeddedPaymentElement.row.flat.separatorColor`
-                    public var color: UIColor?
+                    public var color: UIColor = .systemGray
                 }
             }
 

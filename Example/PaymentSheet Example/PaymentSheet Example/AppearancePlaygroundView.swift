@@ -294,7 +294,7 @@ struct AppearancePlaygroundView: View {
         )
 
         let embeddedPaymentElementChevronColorBinding = Binding(
-            get: { Color(self.appearance.embeddedPaymentElement.row.flat.chevron.color ?? self.appearance.embeddedPaymentElement.row.flat.separatorColor ?? self.appearance.colors.componentBorder ) },
+            get: { Color(self.appearance.embeddedPaymentElement.row.flat.chevron.color) },
             set: { self.appearance.embeddedPaymentElement.row.flat.chevron.color = UIColor($0) }
         )
 
