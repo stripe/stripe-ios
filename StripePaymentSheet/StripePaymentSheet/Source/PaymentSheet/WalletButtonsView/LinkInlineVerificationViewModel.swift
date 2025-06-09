@@ -14,7 +14,7 @@ class LinkInlineVerificationViewModel: ObservableObject {
     let appearance: PaymentSheet.Appearance
 
     @Published var code: String = ""
-    @Published var loadingOtpView: Bool = false
+    @Published var loading: Bool = false
 
     init(account: PaymentSheetLinkAccount, appearance: PaymentSheet.Appearance) {
         self.account = account

@@ -22,6 +22,7 @@ struct ExampleWalletButtonsContainerView: View {
                     Toggle("Enable inline verification", isOn: $linkInlineVerificationEnabled)
                         .onChange(of: linkInlineVerificationEnabled) { newValue in
                             PaymentSheet.LinkFeatureFlags.enableLinkInlineVerification = newValue
+                            PaymentSheet.LinkFeatureFlags.enableLinkFlowControllerChanges = newValue
                         }
 
                     NavigationLink("Launch") {

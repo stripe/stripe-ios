@@ -41,7 +41,7 @@ struct LinkInlineVerificationView: View {
                 .fixedSize(horizontal: false, vertical: true)
 
             Group {
-                if viewModel.loadingOtpView {
+                if viewModel.loading {
                     LinkProgressIndicatorView()
                 } else {
                     OneTimeCodeTextFieldRepresentable(
@@ -49,7 +49,7 @@ struct LinkInlineVerificationView: View {
                         configuration: .init(
                             enableDigitGrouping: false,
                             font: LinkUI.font(forTextStyle: .title),
-                            itemCornerRadius: LinkUI.cornerRadius
+                            itemCornerRadius: viewModel.appearance.cornerRadius
                         ),
                         controller: viewModel.textFieldController,
                         theme: viewModel.appearance.asElementsTheme,
@@ -70,38 +70,37 @@ struct LinkInlineVerificationView: View {
                     .font(Font(viewModel.appearance.asElementsTheme.fonts.subheadline.bold))
                     .foregroundColor(Color(uiColor: .linkTextPrimary))
             }
-            .disabled(viewModel.loadingOtpView)
-            .opacity(viewModel.loadingOtpView ? 0.5 : 1.0)
+            .disabled(viewModel.loading)
+            .opacity(viewModel.loading ? 0.5 : 1.0)
         }
         .padding(.vertical)
-        .animation(.easeInOut, value: viewModel.loadingOtpView)
+        .animation(.easeInOut, value: viewModel.loading)
         .onAppear {
             Task {
                 try? await viewModel.startVerification()
-                viewModel.loadingOtpView = false
             }
         }
     }
 
     private func onOtpComplete(_ code: String) async {
-        viewModel.loadingOtpView = true
+        viewModel.loading = true
         do {
             try await viewModel.confirmVerification(code: code)
-            viewModel.loadingOtpView = false
+            viewModel.loading = false
             onComplete()
         } catch {
             viewModel.textFieldController.performInvalidCodeAnimation()
             viewModel.code = ""
-            viewModel.loadingOtpView = false
+            viewModel.loading = false
         }
     }
 
     private func onResend() {
-        viewModel.loadingOtpView = true
+        viewModel.loading = true
         Task {
             try? await viewModel.startVerification()
             viewModel.code = ""
-            viewModel.loadingOtpView = false
+            viewModel.loading = false
         }
     }
 }
