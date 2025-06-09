@@ -1,0 +1,94 @@
+POST
+https:\/\/api\.stripe\.com\/v1\/payment_intents\/pi_3RW1v5JQVROkWvqT2QDPdwNQ\/confirm$
+200
+application/json
+access-control-allow-methods: GET, HEAD, PUT, PATCH, POST, DELETE
+content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=6XqmjT5KS2e9WKoesp3AEsMZ_LSO6GXfMvhb9YA6fhBQUWMsDRXXiLt53B8H41N1Ylgf7sXqzF6H27jl
+Server: nginx
+Cache-Control: no-cache, no-store
+x-wc: ABGHI
+Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
+Access-Control-Allow-Origin: *
+stripe-should-retry: false
+x-stripe-priority-routing-enabled: true
+x-stripe-routing-context-priority-tier: api-testmode
+request-id: req_sOAPTdXL8YbRHz
+Content-Length: 1892
+Vary: Origin
+Date: Tue, 03 Jun 2025 20:58:52 GMT
+original-request: req_sOAPTdXL8YbRHz
+stripe-version: 2020-08-27
+idempotency-key: c220b856-9d6e-4904-a1c9-0ed983ee0aef
+access-control-expose-headers: Request-Id, Stripe-Manage-Version, Stripe-Should-Retry, X-Stripe-External-Auth-Required, X-Stripe-Privileged-Session-Required
+access-control-max-age: 300
+access-control-allow-credentials: true
+Content-Type: application/json
+X-Stripe-Mock-Request: client_secret=pi_3RW1v5JQVROkWvqT2QDPdwNQ_secret_0dkGg9sOeJJ1d44tJtITcvIzE&expand\[0]=payment_method&payment_method_data\[allow_redisplay]=unspecified&payment_method_data\[billing_details]\[address]\[city]=City&payment_method_data\[billing_details]\[address]\[country]=BR&payment_method_data\[billing_details]\[address]\[line1]=123%20fake%20st&payment_method_data\[billing_details]\[address]\[line2]=&payment_method_data\[billing_details]\[address]\[postal_code]=11111111&payment_method_data\[billing_details]\[address]\[state]=AC&payment_method_data\[billing_details]\[email]=foo%40bar\.com&payment_method_data\[billing_details]\[name]=Jane%20Doe&payment_method_data\[boleto]\[tax_id]=00000000000&payment_method_data\[guid]=.*&payment_method_data\[muid]=.*&payment_method_data\[payment_user_agent]=.*&payment_method_data\[sid]=.*&payment_method_data\[type]=boleto&return_url=https%3A\/\/foo\.com&use_stripe_sdk=true
+
+{
+  "payment_method_configuration_details" : null,
+  "canceled_at" : null,
+  "source" : null,
+  "amount" : 5050,
+  "capture_method" : "automatic",
+  "livemode" : false,
+  "shipping" : null,
+  "status" : "requires_action",
+  "object" : "payment_intent",
+  "currency" : "brl",
+  "last_payment_error" : null,
+  "automatic_payment_methods" : null,
+  "cancellation_reason" : null,
+  "next_action" : {
+    "boleto_display_details" : {
+      "expires_at" : 1748984512,
+      "number" : "01010101010101010101010101010101010101010101010",
+      "pdf" : "https:\/\/payments.stripe.com\/boleto\/voucher\/test_YWNjdF8xSllGRmpKUVZST2tXdnFULF9TUXRpMHFhMGo4VjNXNzZxUGJJS05EMGlvUkhrcktE0100ROPJMCuR\/pdf",
+      "hosted_voucher_url" : "https:\/\/payments.stripe.com\/boleto\/voucher\/test_YWNjdF8xSllGRmpKUVZST2tXdnFULF9TUXRpMHFhMGo4VjNXNzZxUGJJS05EMGlvUkhrcktE0100ROPJMCuR"
+    },
+    "type" : "boleto_display_details"
+  },
+  "payment_method" : {
+    "object" : "payment_method",
+    "boleto" : {
+      "fingerprint" : "48wcl030Axz32v7b",
+      "tax_id" : "00000000000"
+    },
+    "id" : "pm_1RW1v6JQVROkWvqTysLnaYVJ",
+    "billing_details" : {
+      "email" : "foo@bar.com",
+      "phone" : null,
+      "tax_id" : null,
+      "name" : "Jane Doe",
+      "address" : {
+        "state" : "AC",
+        "country" : "BR",
+        "line2" : "",
+        "city" : "City",
+        "line1" : "123 fake st",
+        "postal_code" : "11111111"
+      }
+    },
+    "livemode" : false,
+    "created" : 1748984332,
+    "allow_redisplay" : "unspecified",
+    "type" : "boleto",
+    "customer" : null
+  },
+  "client_secret" : "pi_3RW1v5JQVROkWvqT2QDPdwNQ_secret_0dkGg9sOeJJ1d44tJtITcvIzE",
+  "id" : "pi_3RW1v5JQVROkWvqT2QDPdwNQ",
+  "confirmation_method" : "automatic",
+  "amount_details" : {
+    "tip" : {
+
+    }
+  },
+  "processing" : null,
+  "receipt_email" : null,
+  "payment_method_types" : [
+    "boleto"
+  ],
+  "setup_future_usage" : null,
+  "created" : 1748984331,
+  "description" : null
+}

@@ -48,6 +48,11 @@ public extension PaymentSheet {
         /// Describes the appearance of the Embedded Mobile Payment Element
         public var embeddedPaymentElement: EmbeddedPaymentElement = EmbeddedPaymentElement()
 
+        /// The corner radius used for Mobile Payment Element sheets
+        /// - Note: The behavior of this property is consistent with the behavior of corner radius on `CALayer`
+        @_spi(AppearanceAPIAdditionsPreview)
+        public var sheetCornerRadius: CGFloat = 12.0
+
         /// The insets used for all text fields in PaymentSheet
         /// - Note: Controls the internal padding within text fields for more manual control over text field spacing
         @_spi(AppearanceAPIAdditionsPreview)

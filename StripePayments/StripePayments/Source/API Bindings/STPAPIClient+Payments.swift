@@ -537,6 +537,7 @@ extension STPAPIClient {
             params[SourceDataHash] = sourceParamsDict
         }
         if var paymentMethodParamsDict = params[PaymentMethodDataHash] as? [String: Any] {
+            STPTelemetryClient.shared.addTelemetryFields(toParams: &paymentMethodParamsDict)
             paymentMethodParamsDict = Self.paramsAddingPaymentUserAgent(paymentMethodParamsDict)
             params[PaymentMethodDataHash] = paymentMethodParamsDict
         }
@@ -719,6 +720,7 @@ extension STPAPIClient {
             params[SourceDataHash] = sourceParamsDict
         }
         if var paymentMethodParamsDict = params[PaymentMethodDataHash] as? [String: Any] {
+            STPTelemetryClient.shared.addTelemetryFields(toParams: &paymentMethodParamsDict)
             paymentMethodParamsDict = Self.paramsAddingPaymentUserAgent(paymentMethodParamsDict)
             params[PaymentMethodDataHash] = paymentMethodParamsDict
         }
@@ -819,6 +821,7 @@ extension STPAPIClient {
         )
         var parameters = STPFormEncoder.dictionary(forObject: paymentMethodParams)
         parameters = Self.paramsAddingPaymentUserAgent(parameters, additionalValues: additionalPaymentUserAgentValues)
+        STPTelemetryClient.shared.addTelemetryFields(toParams: &parameters)
         APIRequest<STPPaymentMethod>.post(
             with: self,
             endpoint: APIEndpointPaymentMethods,
@@ -919,7 +922,7 @@ extension STPAPIClient {
         )
 
         var params = [
-            "app": String(decoding: appData ?? Data(), as: UTF8.self),
+            "app": String(data: appData ?? Data(), encoding: .utf8) ?? "",
             "source": sourceID,
         ]
         if let returnURLString = returnURLString {
