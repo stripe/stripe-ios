@@ -564,7 +564,7 @@ extension EmbeddedPaymentElement {
     static func validateRowSelectionConfiguration(configuration: Configuration) throws {
         switch configuration.rowSelectionBehavior {
         case .immediateAction:
-            if case .confirm = configuration.formSheetAction, (configuration.applePay != nil || configuration.customer != nil) {
+            if case .confirm = configuration.formSheetAction, configuration.applePay != nil || configuration.customer != nil {
                 // Fail init if the merchant is using immediateAction and confirm form sheet action along w/ either a Customer or Apple Pay configuration
                 throw PaymentSheetError.integrationError(nonPIIDebugDescription: "Using .immediateAction with .confirm form sheet action is not supported when Apple Pay or a customer configuration is provided. Use .default row selection behavior or disable Apple Pay and saved payment methods.")
             }
