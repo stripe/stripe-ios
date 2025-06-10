@@ -141,8 +141,8 @@ extension PaymentSheet {
             /// - If this is Apple Pay, the value is "apple_pay"
             public let paymentMethodType: String
 
-            init(paymentOption: PaymentOption, currency: String?) {
-                image = paymentOption.makeIcon(currency: currency, updateImageHandler: nil)
+            init(paymentOption: PaymentOption, currency: String?, iconStyle: PaymentSheet.Appearance.IconStyle) {
+                image = paymentOption.makeIcon(currency: currency, iconStyle: iconStyle, updateImageHandler: nil)
                 switch paymentOption {
                 case .applePay:
                     label = String.Localized.apple_pay
@@ -600,7 +600,7 @@ extension PaymentSheet {
         internal func updatePaymentOption() {
             if Thread.isMainThread {
                 if let selectedPaymentOption = internalPaymentOption {
-                    paymentOption = PaymentOptionDisplayData(paymentOption: selectedPaymentOption, currency: intent.currency)
+                    paymentOption = PaymentOptionDisplayData(paymentOption: selectedPaymentOption, currency: intent.currency, iconStyle: configuration.appearance.iconStyle)
                 } else {
                     paymentOption = nil
                 }
@@ -608,7 +608,7 @@ extension PaymentSheet {
                 DispatchQueue.main.async { [weak self] in
                     guard let self = self else { return }
                     if let selectedPaymentOption = self.internalPaymentOption {
-                        self.paymentOption = PaymentOptionDisplayData(paymentOption: selectedPaymentOption, currency: self.intent.currency)
+                        self.paymentOption = PaymentOptionDisplayData(paymentOption: selectedPaymentOption, currency: self.intent.currency, iconStyle: configuration.appearance.iconStyle)
                     } else {
                         self.paymentOption = nil
                     }
