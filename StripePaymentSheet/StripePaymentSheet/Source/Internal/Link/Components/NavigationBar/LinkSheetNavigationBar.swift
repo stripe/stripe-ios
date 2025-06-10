@@ -15,9 +15,6 @@ import UIKit
 /// For internal SDK use only
 @objc(STP_Internal_LinkSheetNavigationBar)
 class LinkSheetNavigationBar: SheetNavigationBar {
-    override class var height: CGFloat {
-        return 70
-    }
     private let logoView: UIImageView = {
         let imageView = UIImageView(image: Image.link_logo.makeImage(template: false))
         imageView.tintColor = .linkIconBrand
@@ -39,6 +36,10 @@ class LinkSheetNavigationBar: SheetNavigationBar {
             logoView.centerYAnchor.constraint(equalTo: centerYAnchor),
             logoView.heightAnchor.constraint(equalToConstant: 24),
         ])
+    }
+
+    override var intrinsicContentSize: CGSize {
+        return CGSize(width: UIView.noIntrinsicMetric, height: LinkUI.navigationBarHeight)
     }
 
     override func setStyle(_ style: SheetNavigationBar.Style) {

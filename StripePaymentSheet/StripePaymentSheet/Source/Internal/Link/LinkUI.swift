@@ -74,6 +74,10 @@ enum LinkUI {
 
     static let tinyContentSpacing: CGFloat = 4
 
+    // MARK: - Navigation bar
+
+    static let navigationBarHeight: CGFloat = 70
+
     // MARK: - Animations
 
     static let animator: UIViewPropertyAnimator = {
