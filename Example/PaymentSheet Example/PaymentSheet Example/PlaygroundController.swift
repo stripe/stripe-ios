@@ -74,7 +74,7 @@ class PlaygroundController: ObservableObject {
                 buttonType: buttonType,
                 customHandlers: customHandlers)
         }
-        
+
         if #available(iOS 16.0, *), settings.applePayEnabled == .onWithShipping {
             let customHandlers = PaymentSheet.ApplePayConfiguration.Handlers(
                 paymentRequestHandler: { request in
