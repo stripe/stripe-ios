@@ -375,7 +375,7 @@ extension PaymentSheet {
                 self.shippingMethodUpdateHandler = nil
                 self.shippingContactUpdateHandler = nil
             }
-            
+
             /// Initializes the ApplePayConfiguration w/ ShippingMethod & ShippingContact update handlers
             @_spi(STP) public init(
                 paymentRequestHandler: ((PKPaymentRequest) -> PKPaymentRequest)? = nil,
