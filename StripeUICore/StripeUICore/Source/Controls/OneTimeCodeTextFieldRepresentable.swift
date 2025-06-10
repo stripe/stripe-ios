@@ -23,12 +23,12 @@ import SwiftUI
 }
 
 @_spi(STP) public struct OneTimeCodeTextFieldRepresentable: UIViewRepresentable {
-    @Binding var text: String
-    var configuration: OneTimeCodeTextField.Configuration
-    var controller: OneTimeCodeTextFieldController?
-    var theme: ElementsAppearance
-    var isEnabled: Bool = true
-    var onComplete: ((String) -> Void)?
+    @Binding private var text: String
+    private var configuration: OneTimeCodeTextField.Configuration
+    private var controller: OneTimeCodeTextFieldController?
+    private var theme: ElementsAppearance
+    private var isEnabled: Bool = true
+    private var onComplete: ((String) -> Void)?
 
     @_spi(STP) public init(
         text: Binding<String>,
