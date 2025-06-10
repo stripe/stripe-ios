@@ -672,12 +672,17 @@ extension PayWithLinkViewController.WalletViewController: LinkPaymentMethodPicke
         present(alertController, animated: true)
     }
 
-    func paymentDetailsPickerDidTapOnAddPayment(_ pickerView: LinkPaymentMethodPicker) {
+    func paymentDetailsPickerDidTapOnAddPayment(
+        _ pickerView: LinkPaymentMethodPicker,
+        sourceRect: CGRect
+    ) {
         let supportedPaymentDetailsTypes = linkAccount.supportedPaymentDetailsTypes(for: context.elementsSession)
 
         let bankAndCard = [ConsumerPaymentDetails.DetailsType.bankAccount, .card]
         if bankAndCard.allSatisfy(supportedPaymentDetailsTypes.contains) {
             let alertController = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
+            alertController.popoverPresentationController?.sourceView = pickerView
+            alertController.popoverPresentationController?.sourceRect = sourceRect
 
             let addBankAction = UIAlertAction(
                 title: STPLocalizedString(
