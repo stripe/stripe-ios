@@ -26,6 +26,12 @@ final class SectionView: UIView {
     }()
 
     let viewModel: SectionViewModel
+    private var isHighlighted = false
+
+    // MARK: - Border properties
+    private var borderLayer = CAShapeLayer()
+    private var currentBorderWidth: CGFloat = 0
+    private var currentBorderColor: CGColor?
 
     // MARK: - Initializers
 
@@ -40,11 +46,48 @@ final class SectionView: UIView {
         stack.setCustomSpacing(8, after: containerView)
         addAndPinSubview(stack)
 
+        // Setup border layer
+        setupBorderLayer()
+
         update(with: viewModel)
     }
 
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+
+    // MARK: - Border handling with UIBezierPath
+
+    private func setupBorderLayer() {
+        containerView.layer.borderWidth = 0
+
+        borderLayer.fillColor = nil
+        borderLayer.lineCap = .round
+        borderLayer.lineJoin = .round
+
+        containerView.layer.addSublayer(borderLayer)
+        applyDefaultBorder()
+    }
+
+    private func updateBorderPath() {
+        // Use a bezier path for borders for smoother corners.
+        DispatchQueue.main.async {
+            let bounds = self.containerView.bounds
+            let cornerRadius = self.containerView.layer.cornerRadius
+
+            let inset = self.currentBorderWidth / 2.0
+            let borderRect = bounds.insetBy(dx: inset, dy: inset)
+
+            let bezierPath = UIBezierPath(roundedRect: borderRect, cornerRadius: cornerRadius)
+            self.borderLayer.path = bezierPath.cgPath
+            self.borderLayer.lineWidth = self.currentBorderWidth
+            self.borderLayer.frame = bounds
+        }
+    }
+
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        updateBorderPath()
     }
 
     // MARK: - Private methods
@@ -86,18 +129,48 @@ final class SectionView: UIView {
                 return false
             }
         }()
+        self.isHighlighted = isEditing
 
         let borderChanges = {
             if isEditing {
-                self.containerView.layer.borderWidth = configuration.width
-                self.containerView.layer.borderColor = configuration.color
+                self.applyHighlightedBorder(with: configuration)
             } else {
-                self.containerView.layer.borderWidth = self.viewModel.theme.borderWidth
-                self.containerView.layer.borderColor = self.viewModel.theme.colors.border.cgColor
+                self.applyDefaultBorder()
             }
         }
 
         configuration.animator.addAnimations(borderChanges)
         configuration.animator.startAnimation()
     }
+
+    private func applyDefaultBorder() {
+        currentBorderWidth = viewModel.theme.borderWidth
+        currentBorderColor = viewModel.theme.colors.border.cgColor
+
+        borderLayer.strokeColor = currentBorderColor
+        updateBorderPath()
+    }
+
+    private func applyHighlightedBorder(with configuration: HighlightBorderConfiguration) {
+        currentBorderWidth = configuration.width
+        currentBorderColor = configuration.color.cgColor
+
+        borderLayer.strokeColor = currentBorderColor
+        updateBorderPath()
+    }
+
+#if !canImport(CompositorServices)
+    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+        super.traitCollectionDidChange(previousTraitCollection)
+
+        if isHighlighted, case .highlightBorder(let configuration) = viewModel.selectionBehavior {
+            currentBorderColor = configuration.color.cgColor
+        } else {
+            currentBorderColor = viewModel.theme.colors.border.cgColor
+        }
+
+        borderLayer.strokeColor = currentBorderColor
+        updateBorderPath()
+    }
+#endif
 }

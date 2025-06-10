@@ -152,6 +152,7 @@ extension PayWithLinkViewController {
 
         override func viewDidLoad() {
             super.viewDidLoad()
+            view.tintColor = .linkTextPrimary
 
             contentView.addSubview(stackView)
 
