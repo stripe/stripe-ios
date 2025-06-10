@@ -77,8 +77,8 @@ struct WalletButtonsFlowControllerView: View {
 
     var body: some View {
         if flowController.paymentOption == nil {
-            WalletButtonsView(flowController: flowController) { _ in
-            }
+            WalletButtonsView(flowController: flowController) { _ in }
+                .padding(.horizontal)
         }
         PaymentSheet.FlowController.PaymentOptionsButton(
             paymentSheetFlowController: flowController,

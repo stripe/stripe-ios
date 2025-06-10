@@ -14,17 +14,12 @@ import SwiftUI
         case linkInlineVerification(PaymentSheetLinkAccount)
     }
 
-    @_spi(STP) public enum Confirmation {
-        case paymentSheetResult(PaymentSheetResult)
-        case flowControllerUpdated(PaymentSheet.FlowController)
-    }
-
     let flowController: PaymentSheet.FlowController
-    let confirmHandler: (Confirmation) -> Void
+    let confirmHandler: (PaymentSheetResult) -> Void
     @State var orderedWallets: [ExpressType]
 
     @_spi(STP) public init(flowController: PaymentSheet.FlowController,
-                           confirmHandler: @escaping (Confirmation) -> Void) {
+                           confirmHandler: @escaping (PaymentSheetResult) -> Void) {
         self.confirmHandler = confirmHandler
         self.flowController = flowController
 
@@ -33,7 +28,7 @@ import SwiftUI
     }
 
     init(flowController: PaymentSheet.FlowController,
-         confirmHandler: @escaping (Confirmation) -> Void,
+         confirmHandler: @escaping (PaymentSheetResult) -> Void,
          orderedWallets: [ExpressType]) {
         self.flowController = flowController
         self.confirmHandler = confirmHandler
@@ -127,7 +122,7 @@ import SwiftUI
                 paymentHandler: flowController.paymentHandler,
                 analyticsHelper: flowController.analyticsHelper
             ) { result, _ in
-                confirmHandler(.paymentSheetResult(result))
+                confirmHandler(result)
             }
         case .link, .linkInlineVerification:
             let linkController = PayWithNativeLinkController(
@@ -146,7 +141,7 @@ import SwiftUI
                         return
                     }
                     flowController.viewController.linkConfirmOption = confirmOptions
-                    confirmHandler(.flowControllerUpdated(flowController))
+                    flowController.updatePaymentOption()
                 }
             )
         }

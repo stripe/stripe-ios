@@ -591,7 +591,7 @@ extension PaymentSheet {
                 analyticsHelper: analyticsHelper,
                 walletButtonsShownExternally: self.walletButtonsShownExternally,
                 previousLinkConfirmOption: self.viewController.linkConfirmOption,
-                previousPaymentOption: self._paymentOption
+                previousPaymentOption: self.internalPaymentOption
             )
             self.viewController.flowControllerDelegate = self
             updatePaymentOption()

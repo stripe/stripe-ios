@@ -117,18 +117,23 @@ enum Stubs {
         supportedPaymentDetailsTypes: [.card]
     )
 
-    static let linkAccount: PaymentSheetLinkAccount = .init(
-        email: "jane.diaz@gmail.com",
-        session: Self.consumerSession,
-        publishableKey: "pk_test_123",
-        useMobileEndpoints: true
-    )
+    static func linkAccount(
+        email: String = "jane.diaz@gmail.com",
+        isRegistered: Bool = true
+    ) -> PaymentSheetLinkAccount {
+        .init(
+            email: email,
+            session: isRegistered ? Self.consumerSession : nil,
+            publishableKey: "pk_test_123",
+            useMobileEndpoints: true
+        )
+    }
 }
 
 @available(iOS 16.0, *)
 #Preview {
     LinkInlineVerificationView(
-        account: Stubs.linkAccount,
+        account: Stubs.linkAccount(),
         appearance: .default,
         onComplete: { }
     )
