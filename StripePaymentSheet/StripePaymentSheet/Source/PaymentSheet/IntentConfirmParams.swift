@@ -50,7 +50,7 @@ final class IntentConfirmParams {
 
     func makeIcon(currency: String?, iconStyle: PaymentSheet.Appearance.IconStyle, updateImageHandler: DownloadManager.UpdateImageHandler?) -> UIImage {
         if let bankName = (financialConnectionsLinkedBank?.bankName ?? instantDebitsLinkedBank?.bankName) {
-            return PaymentSheetImageLibrary.bankIcon(for: PaymentSheetImageLibrary.bankIconCode(for: bankName))
+            return PaymentSheetImageLibrary.bankIcon(for: PaymentSheetImageLibrary.bankIconCode(for: bankName), iconStyle: iconStyle)
         } else {
             return paymentMethodParams.makeIcon(currency: currency, iconStyle: iconStyle, updateHandler: updateImageHandler)
         }

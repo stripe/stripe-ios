@@ -25,9 +25,9 @@ extension PaymentOption {
             return Image.apple_pay_mark.makeImage().withRenderingMode(.alwaysOriginal)
         case .saved(let paymentMethod, let paymentOption):
             if let linkedBank = paymentOption?.instantDebitsLinkedBank {
-                return PaymentSheetImageLibrary.bankIcon(for: PaymentSheetImageLibrary.bankIconCode(for: linkedBank.bankName))
+                return PaymentSheetImageLibrary.bankIcon(for: PaymentSheetImageLibrary.bankIconCode(for: linkedBank.bankName), iconStyle: iconStyle)
             } else {
-                return paymentMethod.makeIcon()
+                return paymentMethod.makeIcon(iconStyle: iconStyle)
             }
         case .new(let confirmParams):
             return confirmParams.makeIcon(currency: currency, iconStyle: iconStyle, updateImageHandler: updateImageHandler)
@@ -49,12 +49,12 @@ extension PaymentOption {
     }
 
     /// Returns an image to display inside a cell representing the given payment option in the saved PM collection view
-    func makeSavedPaymentMethodCellImage(overrideUserInterfaceStyle: UIUserInterfaceStyle) -> UIImage {
+    func makeSavedPaymentMethodCellImage(overrideUserInterfaceStyle: UIUserInterfaceStyle, iconStyle: PaymentSheet.Appearance.IconStyle) -> UIImage {
         switch self {
         case .applePay:
             return Image.carousel_applepay.makeImage(template: false, overrideUserInterfaceStyle: overrideUserInterfaceStyle)
         case .saved(let paymentMethod, _):
-            return paymentMethod.makeSavedPaymentMethodCellImage(overrideUserInterfaceStyle: overrideUserInterfaceStyle)
+            return paymentMethod.makeSavedPaymentMethodCellImage(overrideUserInterfaceStyle: overrideUserInterfaceStyle, iconStyle: iconStyle)
         case .new:
             assertionFailure("This shouldn't be called - we don't show new PMs in the saved PM collection view")
             return UIImage()
@@ -78,7 +78,7 @@ extension STPPaymentMethod {
         } ?? .unknown
     }
 
-    func makeIcon() -> UIImage {
+    func makeIcon(iconStyle: PaymentSheet.Appearance.IconStyle = .filled) -> UIImage {
         switch type {
         case .card:
             return isLinkPaymentMethod
@@ -86,7 +86,7 @@ extension STPPaymentMethod {
                 : STPImageLibrary.cardBrandImage(for: calculateCardBrandToDisplay())
         case .USBankAccount:
             return PaymentSheetImageLibrary.bankIcon(
-                for: PaymentSheetImageLibrary.bankIconCode(for: usBankAccount?.bankName)
+                for: PaymentSheetImageLibrary.bankIconCode(for: usBankAccount?.bankName), iconStyle: iconStyle
             )
         case .link:
             return Image.link_icon.makeImage()
@@ -106,7 +106,7 @@ extension STPPaymentMethod {
     }
 
     /// Returns an image to display inside a cell representing the given payment option in the saved PM collection view
-    func makeSavedPaymentMethodCellImage(overrideUserInterfaceStyle: UIUserInterfaceStyle?) -> UIImage {
+    func makeSavedPaymentMethodCellImage(overrideUserInterfaceStyle: UIUserInterfaceStyle?, iconStyle: PaymentSheet.Appearance.IconStyle) -> UIImage {
         switch type {
         case .card:
             return isLinkPaymentMethod
@@ -114,7 +114,7 @@ extension STPPaymentMethod {
                 : calculateCardBrandToDisplay().makeSavedPaymentMethodCellImage(overrideUserInterfaceStyle: overrideUserInterfaceStyle)
         case .USBankAccount:
             return PaymentSheetImageLibrary.bankIcon(
-                for: PaymentSheetImageLibrary.bankIconCode(for: usBankAccount?.bankName)
+                for: PaymentSheetImageLibrary.bankIconCode(for: usBankAccount?.bankName), iconStyle: iconStyle
             )
         case .SEPADebit:
             return Image.carousel_sepa.makeImage(overrideUserInterfaceStyle: overrideUserInterfaceStyle).withRenderingMode(.alwaysOriginal)
@@ -127,7 +127,7 @@ extension STPPaymentMethod {
     }
 
     /// Returns an image to display inside a row representing the given payment option in the saved PM row view
-    func makeSavedPaymentMethodRowImage() -> UIImage {
+    func makeSavedPaymentMethodRowImage(iconStyle: PaymentSheet.Appearance.IconStyle) -> UIImage {
         switch type {
         case .card:
             return isLinkPaymentMethod
@@ -135,7 +135,7 @@ extension STPPaymentMethod {
                 : STPImageLibrary.unpaddedCardBrandImage(for: calculateCardBrandToDisplay())
         case .USBankAccount:
             return PaymentSheetImageLibrary.bankIcon(
-                for: PaymentSheetImageLibrary.bankIconCode(for: usBankAccount?.bankName)
+                for: PaymentSheetImageLibrary.bankIconCode(for: usBankAccount?.bankName), iconStyle: iconStyle
             ).rounded(radius: 3)
         case .SEPADebit:
             return Image.pm_type_sepa.makeImage().withRenderingMode(.alwaysOriginal)

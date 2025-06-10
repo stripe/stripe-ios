@@ -300,7 +300,7 @@ extension SavedPaymentMethodCollectionView {
 
         func attributedTextForLabel(paymentMethod: STPPaymentMethod) -> NSAttributedString? {
             func makeBankAccountLabel(with text: String) -> NSAttributedString {
-                let iconImage = PaymentSheetImageLibrary.bankIcon(for: nil).withTintColor(appearance.colors.text)
+                let iconImage = PaymentSheetImageLibrary.bankIcon(for: nil, iconStyle: appearance.iconStyle).withTintColor(appearance.colors.text)
                 let iconImageAttachment = NSTextAttachment()
                 // Inspiration from:
                 // https://stackoverflow.com/questions/26105803/center-nstextattachment-image-next-to-single-line-uilabel/45161058#45161058
@@ -352,20 +352,20 @@ extension SavedPaymentMethodCollectionView {
                         accessibilityIdentifier = label.text
                         shadowRoundedRectangle.accessibilityIdentifier = label.text
                         shadowRoundedRectangle.accessibilityLabel = paymentMethod.paymentSheetAccessibilityLabel
-                        paymentMethodLogo.image = paymentMethod.makeSavedPaymentMethodCellImage(overrideUserInterfaceStyle: overrideUserInterfaceStyle)
+                        paymentMethodLogo.image = paymentMethod.makeSavedPaymentMethodCellImage(overrideUserInterfaceStyle: overrideUserInterfaceStyle, iconStyle: appearance.iconStyle)
                     case .applePay:
                         // TODO (cleanup) - get this from PaymentOptionDisplayData?
                         label.text = String.Localized.apple_pay
                         accessibilityIdentifier = label.text
                         shadowRoundedRectangle.accessibilityIdentifier = label.text
                         shadowRoundedRectangle.accessibilityLabel = label.text
-                        paymentMethodLogo.image = PaymentOption.applePay.makeSavedPaymentMethodCellImage(overrideUserInterfaceStyle: overrideUserInterfaceStyle)
+                        paymentMethodLogo.image = PaymentOption.applePay.makeSavedPaymentMethodCellImage(overrideUserInterfaceStyle: overrideUserInterfaceStyle, iconStyle: appearance.iconStyle)
                     case .link:
                         label.text = STPPaymentMethodType.link.displayName
                         accessibilityIdentifier = label.text
                         shadowRoundedRectangle.accessibilityIdentifier = label.text
                         shadowRoundedRectangle.accessibilityLabel = label.text
-                        paymentMethodLogo.image = PaymentOption.link(option: .wallet).makeSavedPaymentMethodCellImage(overrideUserInterfaceStyle: overrideUserInterfaceStyle)
+                        paymentMethodLogo.image = PaymentOption.link(option: .wallet).makeSavedPaymentMethodCellImage(overrideUserInterfaceStyle: overrideUserInterfaceStyle, iconStyle: appearance.iconStyle)
                         paymentMethodLogo.tintColor = UIColor.linkIconBrand.resolvedContrastingColor(
                             forBackgroundColor: appearance.colors.componentBackground
                         )
@@ -437,7 +437,7 @@ extension SavedPaymentMethodCollectionView {
                     }
                 }()
             }
-            
+
             accessoryButton.backgroundColor = appearance.colors.primary
             accessoryButton.iconColor = appearance.colors.primary.contrastingColor
             accessoryButton.iconStyle = appearance.iconStyle

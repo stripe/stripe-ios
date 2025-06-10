@@ -69,7 +69,7 @@ public extension PaymentSheet {
         /// The visual style for icons displayed in PaymentSheet
         @_spi(AppearanceAPIAdditionsPreview)
         public var iconStyle: IconStyle = .filled
-        
+
         // MARK: Fonts
 
         /// Describes the appearance of fonts in PaymentSheet
@@ -365,7 +365,7 @@ public extension PaymentSheet.Appearance {
             }
         }
     }
-    
+
     /// Defines the visual style of icons in PaymentSheet
     @_spi(AppearanceAPIAdditionsPreview)
     enum IconStyle: CaseIterable {

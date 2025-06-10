@@ -22,7 +22,12 @@ extension UIButton {
         let scanButton = UIButton(type: .system)
         scanButton.titleLabel?.adjustsFontSizeToFitWidth = true
         scanButton.setTitle(String.Localized.scan_card, for: .normal)
-        scanButton.setImage(UIImage(systemName: "camera.fill", withConfiguration: iconConfig), for: .normal)
+        switch theme.iconStyle {
+        case .filled:
+            scanButton.setImage(UIImage(systemName: "camera.fill", withConfiguration: iconConfig), for: .normal)
+        case .outlined:
+            scanButton.setImage(UIImage(systemName: "camera", withConfiguration: iconConfig), for: .normal)
+        }
         scanButton.setContentSpacing(4, withEdgeInsets: .zero)
         scanButton.tintColor = theme.colors.primary
         scanButton.titleLabel?.font = theme.fonts.sectionHeader
