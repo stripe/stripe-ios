@@ -67,7 +67,8 @@ class PlaygroundController: ObservableObject {
                         webServiceURL: URL(string: "https://my-backend.example.com/apple-order-tracking-backend")!,
                         authenticationToken: "abc123")
                     completion(result)
-                })
+                }
+            )
             return PaymentSheet.ApplePayConfiguration(
                 merchantId: "merchant.com.stripe.umbrella.test",
                 merchantCountryCode: "US",
