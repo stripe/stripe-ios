@@ -58,9 +58,9 @@ class PlaygroundController: ObservableObject {
                     return request
                 },
                 authorizationResultHandler: { result, completion in
-                    //                  Hardcoded order details:
-                    //                  In a real app, you should fetch these details from your service and call the completion() block on
-                    //                  the main queue.
+                    // Hardcoded order details:
+                    // In a real app, you should fetch these details from your service and call the completion() block on
+                    // the main queue.
                     result.orderDetails = PKPaymentOrderDetails(
                         orderTypeIdentifier: "com.myapp.order",
                         orderIdentifier: "ABC123-AAAA-1111",
@@ -84,9 +84,9 @@ class PlaygroundController: ObservableObject {
                     return request
                 },
                 authorizationResultHandler: { result, completion in
-                    //                  Hardcoded order details:
-                    //                  In a real app, you should fetch these details from your service and call the completion() block on
-                    //                  the main queue.
+                    // Hardcoded order details:
+                    // In a real app, you should fetch these details from your service and call the completion() block on
+                    // the main queue.
                     result.orderDetails = PKPaymentOrderDetails(
                         orderTypeIdentifier: "com.myapp.order",
                         orderIdentifier: "ABC123-AAAA-1111",
