@@ -95,7 +95,7 @@ extension SavedPaymentMethodCollectionView {
             return ShadowedRoundedRectangle(appearance: appearance)
         }()
         lazy var accessoryButton: CircularButton = {
-            let button = CircularButton(style: .edit)
+            let button = CircularButton(style: .edit, iconStyle: appearance.iconStyle)
             button.backgroundColor = appearance.colors.primary
             button.iconColor = appearance.colors.primary.contrastingColor
             button.isAccessibilityElement = true
@@ -437,6 +437,10 @@ extension SavedPaymentMethodCollectionView {
                     }
                 }()
             }
+            
+            accessoryButton.backgroundColor = appearance.colors.primary
+            accessoryButton.iconColor = appearance.colors.primary.contrastingColor
+            accessoryButton.iconStyle = appearance.iconStyle
         }
 
         private func activateDefaultBadgeConstraints() {
