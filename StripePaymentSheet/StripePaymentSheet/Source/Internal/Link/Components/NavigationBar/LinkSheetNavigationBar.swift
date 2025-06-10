@@ -54,61 +54,64 @@ class LinkSheetNavigationBar: SheetNavigationBar {
     }
 
     override func createBackButton() -> UIButton {
-        let button = SheetNavigationButton(type: .custom)
-
-        // Create circular background
-        button.backgroundColor = .linkSurfaceSecondary
-        button.layer.cornerRadius = 15 // Half of the desired 30px diameter
-
-        // Set up the image with 14px size
-        let closeImage = Image.icon_chevron_left_standalone.makeImage(template: true)
-        let resizedImage = closeImage.withConfiguration(
-            closeImage.configuration?.applying(
-                UIImage.SymbolConfiguration(pointSize: 14)
-            ) ?? UIImage.SymbolConfiguration(pointSize: 14)
+        return createButton(
+            with: Image.icon_chevron_left_standalone.makeImage(template: true),
+            accessibilityLabel: String.Localized.back,
+            accessibilityIdentifier: "UIButton.Back"
         )
-
-        button.setImage(resizedImage, for: .normal)
-        button.tintColor = appearance.colors.icon
-        button.accessibilityLabel = String.Localized.back
-        button.accessibilityIdentifier = "UIButton.Back"
-
-        // Set fixed size for the button
-        button.translatesAutoresizingMaskIntoConstraints = false
-        NSLayoutConstraint.activate([
-            button.widthAnchor.constraint(equalToConstant: 30),
-            button.heightAnchor.constraint(equalToConstant: 30),
-        ])
-
-        return button
     }
 
     override func createCloseButton() -> UIButton {
+        return createButton(
+            with: Image.icon_x_standalone.makeImage(template: true),
+            accessibilityLabel: String.Localized.close,
+            accessibilityIdentifier: "UIButton.Close"
+        )
+    }
+
+    private func createButton(
+        with image: UIImage,
+        accessibilityLabel: String,
+        accessibilityIdentifier: String
+    ) -> UIButton {
         let button = SheetNavigationButton(type: .custom)
 
         // Create circular background
         button.backgroundColor = .linkSurfaceSecondary
-        button.layer.cornerRadius = 15 // Half of the desired 30px diameter
+        button.layer.cornerRadius = 16 // Half of the desired 32px diameter
 
-        // Set up the image with 14px size
-        let closeImage = Image.icon_x_standalone.makeImage(template: true)
-        let resizedImage = closeImage.withConfiguration(
-            closeImage.configuration?.applying(
-                UIImage.SymbolConfiguration(pointSize: 14)
-            ) ?? UIImage.SymbolConfiguration(pointSize: 14)
+        // Set up the image with 12px size
+        let resizedImage = image.withConfiguration(
+            image.configuration?.applying(
+                UIImage.SymbolConfiguration(pointSize: 12)
+            ) ?? UIImage.SymbolConfiguration(pointSize: 12)
         )
 
         button.setImage(resizedImage, for: .normal)
         button.tintColor = appearance.colors.icon
-        button.accessibilityLabel = String.Localized.close
-        button.accessibilityIdentifier = "UIButton.Close"
+        button.contentMode = .scaleAspectFit
+        button.accessibilityLabel = accessibilityLabel
+        button.accessibilityIdentifier = accessibilityIdentifier
 
         // Set fixed size for the button
         button.translatesAutoresizingMaskIntoConstraints = false
+
+        // Constrain the button size
         NSLayoutConstraint.activate([
-            button.widthAnchor.constraint(equalToConstant: 30),
-            button.heightAnchor.constraint(equalToConstant: 30),
+            button.widthAnchor.constraint(equalToConstant: 32),
+            button.heightAnchor.constraint(equalToConstant: 32),
         ])
+
+        // Constrain the image view size
+        if let imageView = button.imageView {
+            imageView.translatesAutoresizingMaskIntoConstraints = false
+            NSLayoutConstraint.activate([
+                imageView.widthAnchor.constraint(equalToConstant: 12),
+                imageView.heightAnchor.constraint(equalToConstant: 12),
+                imageView.centerXAnchor.constraint(equalTo: button.centerXAnchor),
+                imageView.centerYAnchor.constraint(equalTo: button.centerYAnchor),
+            ])
+        }
 
         return button
     }
