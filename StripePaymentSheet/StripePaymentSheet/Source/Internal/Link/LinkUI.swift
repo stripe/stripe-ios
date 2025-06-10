@@ -123,7 +123,7 @@ extension LinkUI {
     ) -> UIFont {
         switch textStyle {
         case .title:
-            return UIFont.systemFont(ofSize: 24, weight: .bold).scaled(
+            return UIFont.systemFont(ofSize: 24, weight: .semibold).scaled(
                 withTextStyle: .headline,
                 maximumPointSize: maximumPointSize,
                 compatibleWith: traitCollection
