@@ -368,7 +368,7 @@ extension PaymentSheet {
                 paymentRequestHandler: ((PKPaymentRequest) -> PKPaymentRequest)? = nil,
                 authorizationResultHandler: (
                     (PKPaymentAuthorizationResult, @escaping ((PKPaymentAuthorizationResult) -> Void)) -> Void
-                )? = nil,
+                )? = nil
             ) {
                 self.paymentRequestHandler = paymentRequestHandler
                 self.authorizationResultHandler = authorizationResultHandler
