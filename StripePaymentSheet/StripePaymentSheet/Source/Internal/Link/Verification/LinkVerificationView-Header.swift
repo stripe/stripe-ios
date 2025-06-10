@@ -28,17 +28,16 @@ extension LinkVerificationView {
         }()
 
         let closeButton: UIButton = {
-            let button = UIButton(type: .system)
-            button.setImage(Image.icon_cancel.makeImage(template: true), for: .normal)
-            button.tintColor = .linkIconSecondary
-            button.translatesAutoresizingMaskIntoConstraints = false
-            button.accessibilityLabel = String.Localized.close
-            button.accessibilityIdentifier = "LinkVerificationCloseButton"
-            return button
+            LinkSheetNavigationBar.createButton(
+                with: Image.icon_x_standalone.makeImage(template: true),
+                accessibilityLabel: String.Localized.close,
+                accessibilityIdentifier: "LinkVerificationCloseButton",
+                appearance: LinkUI.appearance
+            )
         }()
 
         override var intrinsicContentSize: CGSize {
-            return CGSize(width: 72, height: 24)
+            return CGSize(width: 72, height: 32)
         }
 
         init() {
