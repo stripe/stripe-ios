@@ -92,7 +92,8 @@ extension PaymentSheet {
                     FormSpecProvider.shared.isLoaded,
                     let spec = FormSpecProvider.shared.formSpec(for: identifier),
                     let selectorIcon = spec.selectorIcon,
-                    var imageUrl = URL(string: selectorIcon.lightThemePng)
+                    var imageUrl = URL(string: selectorIcon.lightThemePng),
+                    paymentMethodType != .crypto // special case, don't use remote URL for crypto so we can use the local image based on iconStyle
                 {
                     if forDarkBackground,
                        let darkImageString = selectorIcon.darkThemePng,
@@ -120,7 +121,7 @@ extension PaymentSheet {
                     return DownloadManager.sharedManager.imagePlaceHolder()
                 }
             case .instantDebits, .linkCardBrand:
-                return Image.pm_type_us_bank.makeImage(overrideUserInterfaceStyle: forDarkBackground ? .dark : .light)
+                return STPPaymentMethodType.USBankAccount.makeImage(forDarkBackground: forDarkBackground, iconStyle: iconStyle) ?? UIImage()
             }
         }
 

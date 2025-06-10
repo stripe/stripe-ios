@@ -208,7 +208,12 @@ extension STPPaymentMethodType {
             case .AUBECSDebit:
                 return .pm_type_aubecsdebit
             case .USBankAccount:
-                return .pm_type_us_bank
+                switch iconStyle {
+                case .filled:
+                    return .pm_type_us_bank
+                case .outlined:
+                    return .pm_type_us_bank_outlined
+                }
             case .UPI:
                 return .pm_type_upi
             case .cashApp:
@@ -218,7 +223,12 @@ extension STPPaymentMethodType {
             case .blik:
                 return .pm_type_blik
             case .bacsDebit:
-                return .pm_type_us_bank
+                switch iconStyle {
+                case .filled:
+                    return .pm_type_us_bank
+                case .outlined:
+                    return .pm_type_us_bank_outlined
+                }
             case .alipay:
                 return .pm_type_alipay
             case .OXXO:
@@ -229,6 +239,13 @@ extension STPPaymentMethodType {
                 return .pm_type_boleto
             case .swish:
                 return .pm_type_swish
+            case .crypto:
+                switch iconStyle {
+                case .filled:
+                    return .pm_type_crypto
+                case .outlined:
+                    return .pm_type_crypto_outlined
+                }
             default:
                 return nil
             }
