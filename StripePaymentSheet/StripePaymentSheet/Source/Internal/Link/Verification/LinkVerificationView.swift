@@ -115,7 +115,7 @@ final class LinkVerificationView: UIView {
     }()
 
     private lazy var resendCodeButton: Button = {
-        let button = Button(configuration: .linkPlain(), title: STPLocalizedString(
+        let button = Button(configuration: .linkInline(), title: STPLocalizedString(
             "Resend code",
             "Label for a button that re-sends the a login code when tapped"
         ))
