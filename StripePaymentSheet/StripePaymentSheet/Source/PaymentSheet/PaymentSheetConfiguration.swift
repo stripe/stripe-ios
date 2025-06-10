@@ -344,7 +344,7 @@ extension PaymentSheet {
             /// }
             /// ```
             /// WARNING: If you do not call the completion handler, your app will hang until the Apple Pay sheet times out.
-            public let shippingMethodUpdateHandler:
+            @_spi(STP) public let shippingMethodUpdateHandler:
             ((PKShippingMethod, @escaping ((PKPaymentRequestShippingMethodUpdate) -> Void)) -> Void)?
 
             /// Optionally get shipping contact updates if you've configured shipping contact options
@@ -360,11 +360,24 @@ extension PaymentSheet {
             /// }
             /// ```
             /// WARNING: If you do not call the completion handler, your app will hang until the Apple Pay sheet times out.
-            public let shippingContactUpdateHandler:
+            @_spi(STP) public let shippingContactUpdateHandler:
             ((PKContact, @escaping ((PKPaymentRequestShippingContactUpdate) -> Void)) -> Void)?
 
             /// Initializes the ApplePayConfiguration Handlers.
             public init(
+                paymentRequestHandler: ((PKPaymentRequest) -> PKPaymentRequest)? = nil,
+                authorizationResultHandler: (
+                    (PKPaymentAuthorizationResult, @escaping ((PKPaymentAuthorizationResult) -> Void)) -> Void
+                )? = nil,
+            ) {
+                self.paymentRequestHandler = paymentRequestHandler
+                self.authorizationResultHandler = authorizationResultHandler
+                self.shippingMethodUpdateHandler = nil
+                self.shippingContactUpdateHandler = nil
+            }
+            
+            /// Initializes the ApplePayConfiguration w/ ShippingMethod & ShippingContact update handlers
+            @_spi(STP) public init(
                 paymentRequestHandler: ((PKPaymentRequest) -> PKPaymentRequest)? = nil,
                 authorizationResultHandler: (
                     (PKPaymentAuthorizationResult, @escaping ((PKPaymentAuthorizationResult) -> Void)) -> Void
