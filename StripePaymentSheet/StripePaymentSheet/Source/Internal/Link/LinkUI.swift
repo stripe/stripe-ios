@@ -37,6 +37,8 @@ enum LinkUI {
 
     static let borderWidth: CGFloat = 1.5
 
+    static let focusedBorderWidth: CGFloat = 1.5
+
     static let highlightBorderConfiguration = HighlightBorderConfiguration(
         width: borderWidth,
         color: .linkBorderSelected,

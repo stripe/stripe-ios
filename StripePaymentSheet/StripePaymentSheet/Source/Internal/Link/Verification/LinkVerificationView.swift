@@ -87,7 +87,8 @@ final class LinkVerificationView: UIView {
                 font: LinkUI.font(forTextStyle: .title),
                 itemCornerRadius: LinkUI.cornerRadius,
                 itemHeight: 56,
-                itemFocusRingThickness: LinkUI.borderWidth
+                itemFocusRingThickness: LinkUI.focusedBorderWidth,
+                itemFocusBackgroundColor: LinkUI.appearance.colors.background
             ),
             theme: LinkUI.appearance.asElementsTheme
         )
