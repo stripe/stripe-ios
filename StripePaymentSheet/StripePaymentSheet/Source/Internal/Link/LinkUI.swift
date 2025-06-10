@@ -184,13 +184,16 @@ extension LinkUI {
 
     static let appearance: PaymentSheet.Appearance = {
         var appearance = PaymentSheet.Appearance.default
-        appearance.cornerRadius = LinkUI.mediumCornerRadius
+        appearance.cornerRadius = LinkUI.cornerRadius
         appearance.colors.primary = .linkBorderSelected
         appearance.colors.background = .linkSurfacePrimary
 
         // Text
         appearance.colors.text = .linkTextPrimary
         appearance.colors.textSecondary = .linkTextSecondary
+
+        // Insets
+        appearance.textFieldInsets = NSDirectionalEdgeInsets(top: 8, leading: 16, bottom: 8, trailing: 16)
 
         // Components
         appearance.colors.componentBorder = .linkSurfacePrimary
