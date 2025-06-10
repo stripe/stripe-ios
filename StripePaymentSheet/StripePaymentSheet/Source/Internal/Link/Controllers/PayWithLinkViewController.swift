@@ -147,6 +147,10 @@ final class PayWithLinkViewController: BottomSheetViewController {
         } ?? shippingAddressResponse?.shippingAddresses.first
     }
 
+    override var sheetCornerRadius: CGFloat? {
+        24
+    }
+
     private var isBailingToWebFlow: Bool = false
 
     convenience init(
