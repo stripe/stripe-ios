@@ -66,6 +66,10 @@ public extension PaymentSheet {
         @_spi(AppearanceAPIAdditionsPreview)
         public var sectionSpacing: CGFloat = 12.0
 
+        /// The visual style for icons displayed in PaymentSheet
+        @_spi(AppearanceAPIAdditionsPreview)
+        public var iconStyle: IconStyle = .filled
+        
         // MARK: Fonts
 
         /// Describes the appearance of fonts in PaymentSheet
@@ -360,6 +364,15 @@ public extension PaymentSheet.Appearance {
                 public var spacing: CGFloat = 12.0
             }
         }
+    }
+    
+    /// Defines the visual style of icons in PaymentSheet
+    @_spi(AppearanceAPIAdditionsPreview)
+    enum IconStyle: CaseIterable {
+        /// Display icons with a filled appearance
+        case filled
+        /// Display icons with an outlined appearance
+        case outlined
     }
 }
 
