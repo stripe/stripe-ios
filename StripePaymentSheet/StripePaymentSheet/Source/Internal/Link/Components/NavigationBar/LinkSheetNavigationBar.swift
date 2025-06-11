@@ -80,10 +80,12 @@ class LinkSheetNavigationBar: SheetNavigationBar {
         appearance: PaymentSheet.Appearance
     ) -> UIButton {
         let button = SheetNavigationButton(type: .custom)
+        let size = LinkUI.navigationBarButtonSize
+        let contentSize = LinkUI.navigationBarButtonContentSize
 
         // Create circular background
         button.backgroundColor = .linkSurfaceSecondary
-        button.layer.cornerRadius = 16 // Half of the desired 32px diameter
+        button.layer.cornerRadius = size / 2
 
         button.setImage(image, for: .normal)
         button.tintColor = appearance.colors.icon
@@ -96,16 +98,16 @@ class LinkSheetNavigationBar: SheetNavigationBar {
 
         // Constrain the button size
         NSLayoutConstraint.activate([
-            button.widthAnchor.constraint(equalToConstant: 32),
-            button.heightAnchor.constraint(equalToConstant: 32),
+            button.widthAnchor.constraint(equalToConstant: size),
+            button.heightAnchor.constraint(equalToConstant: size),
         ])
 
         // Constrain the image view size
         if let imageView = button.imageView {
             imageView.translatesAutoresizingMaskIntoConstraints = false
             NSLayoutConstraint.activate([
-                imageView.widthAnchor.constraint(equalToConstant: 12),
-                imageView.heightAnchor.constraint(equalToConstant: 12),
+                imageView.widthAnchor.constraint(equalToConstant: contentSize),
+                imageView.heightAnchor.constraint(equalToConstant: contentSize),
                 imageView.centerXAnchor.constraint(equalTo: button.centerXAnchor),
                 imageView.centerYAnchor.constraint(equalTo: button.centerYAnchor),
             ])

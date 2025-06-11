@@ -78,6 +78,10 @@ enum LinkUI {
 
     static let navigationBarHeight: CGFloat = 70
 
+    static let navigationBarButtonSize: CGFloat = 32
+
+    static let navigationBarButtonContentSize: CGFloat = 12
+
     // MARK: - Animations
 
     static let animator: UIViewPropertyAnimator = {

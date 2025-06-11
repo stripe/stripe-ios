@@ -148,7 +148,7 @@ final class PayWithLinkViewController: BottomSheetViewController {
     }
 
     override var sheetCornerRadius: CGFloat? {
-        24
+        LinkUI.largeCornerRadius
     }
 
     private var isBailingToWebFlow: Bool = false
