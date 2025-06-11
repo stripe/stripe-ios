@@ -16,7 +16,6 @@ extension PayWithLinkViewController {
         weak var coordinator: PayWithLinkCoordinating?
 
         let context: Context
-        let navigationTitle: String?
 
         var preferredContentMargins: NSDirectionalEdgeInsets {
             LinkUI.contentMargins
@@ -24,9 +23,8 @@ extension PayWithLinkViewController {
 
         private(set) lazy var contentView = UIView()
 
-        init(context: Context, navigationTitle: String? = nil) {
+        init(context: Context) {
             self.context = context
-            self.navigationTitle = navigationTitle
             super.init(nibName: nil, bundle: nil)
         }
 

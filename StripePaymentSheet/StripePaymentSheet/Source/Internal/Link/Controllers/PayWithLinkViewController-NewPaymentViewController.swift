@@ -28,6 +28,16 @@ extension PayWithLinkViewController {
             return ElementsUI.makeErrorLabel(theme: LinkUI.appearance.asElementsTheme)
         }()
 
+        private let titleLabel: UILabel = {
+            let label = UILabel()
+            label.font = LinkUI.font(forTextStyle: .title)
+            label.adjustsFontForContentSizeCategory = true
+            label.numberOfLines = 0
+            label.textAlignment = .center
+            label.text = String.Localized.add_a_payment_method
+            return label
+        }()
+
         private lazy var confirmButton: ConfirmButton = .makeLinkButton(
             callToAction: context.callToAction,
             // Use a compact button if we are also displaying the Apple Pay button.
@@ -142,15 +152,12 @@ extension PayWithLinkViewController {
                 buttonContainer,
             ])
 
-            if !isAddingFirstPaymentMethod {
-                navigationBar.setTitle(.Localized.add_a_payment_method)
-            }
-
             stackView.axis = .vertical
             stackView.spacing = LinkUI.contentSpacing
             stackView.isLayoutMarginsRelativeArrangement = true
             stackView.directionalLayoutMargins = LinkUI.contentMargins
             stackView.alignment = .center
+            stackView.setCustomSpacing(LinkUI.extraLargeContentSpacing, after: titleLabel)
             stackView.setCustomSpacing(LinkUI.extraLargeContentSpacing, after: addPaymentMethodVC.view)
             stackView.translatesAutoresizingMaskIntoConstraints = false
 
@@ -174,6 +181,19 @@ extension PayWithLinkViewController {
                     equalTo: stackView.safeAreaLayoutGuide.trailingAnchor,
                     constant: -LinkUI.contentMargins.trailing),
             ])
+
+            if !isAddingFirstPaymentMethod {
+                stackView.insertArrangedSubview(titleLabel, at: 0)
+
+                NSLayoutConstraint.activate([
+                    titleLabel.leadingAnchor.constraint(
+                        equalTo: stackView.safeAreaLayoutGuide.leadingAnchor,
+                        constant: preferredContentMargins.leading),
+                    titleLabel.trailingAnchor.constraint(
+                        equalTo: stackView.safeAreaLayoutGuide.trailingAnchor,
+                        constant: -preferredContentMargins.trailing),
+                ])
+            }
 
             didUpdate(addPaymentMethodVC)
         }

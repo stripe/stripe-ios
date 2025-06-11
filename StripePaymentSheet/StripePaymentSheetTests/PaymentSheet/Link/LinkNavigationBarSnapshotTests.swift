@@ -23,11 +23,6 @@ class LinkNavigationBarSnapshotTests: STPSnapshotTestCase {
         let backSut = makeSUT()
         backSut.setStyle(.back(showAdditionalButton: false))
         verify(backSut, identifier: "BackButton")
-
-        let titleSut = makeSUT()
-        titleSut.setStyle(.back(showAdditionalButton: false))
-        titleSut.setTitle("Add a payment method")
-        verify(titleSut, identifier: "BackButtonWithTitle")
     }
 
     func verify(
