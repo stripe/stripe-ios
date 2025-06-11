@@ -175,7 +175,7 @@ extension STPPaymentMethodType {
         }
     }
 
-    func makeImage(forDarkBackground: Bool = false, currency: String? = nil, iconStyle: PaymentSheet.Appearance.IconStyle) -> UIImage? {
+    func makeImage(forDarkBackground: Bool = false, currency: String? = nil, iconStyle: PaymentSheet.Appearance.IconStyle = .filled) -> UIImage? {
         let image: Image? = {
             switch self {
             case .card:

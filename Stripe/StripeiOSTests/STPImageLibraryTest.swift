@@ -11,7 +11,7 @@ import XCTest
 @testable@_spi(STP) import Stripe
 @testable@_spi(STP) import StripeCore
 @testable@_spi(STP) import StripePayments
-@testable@_spi(STP) import StripePaymentSheet
+@testable@_spi(STP) @_spi(AppearanceAPIAdditionsPreview) import StripePaymentSheet
 @testable@_spi(STP) import StripePaymentsUI
 @testable@_spi(STP) import StripeUICore
 
@@ -168,7 +168,7 @@ class STPImageLibraryTestSwift: XCTestCase {
     func testBankIconCodeImagesExist() {
         for iconCode in PaymentSheetImageLibrary.BankIconCodeRegexes.keys {
             XCTAssertNotNil(
-                PaymentSheetImageLibrary.bankIcon(for: iconCode),
+                PaymentSheetImageLibrary.bankIcon(for: iconCode, iconStyle: .filled),
                 "Missing image for \(iconCode)"
             )
         }
