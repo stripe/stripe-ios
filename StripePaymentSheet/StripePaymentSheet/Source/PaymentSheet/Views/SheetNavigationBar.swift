@@ -21,89 +21,133 @@ protocol SheetNavigationBarDelegate: AnyObject {
 class SheetNavigationBar: UIView {
     static let height: CGFloat = 48
     weak var delegate: SheetNavigationBarDelegate?
-    fileprivate lazy var leftItemsStackView: UIStackView = {
+
+    // MARK: - Views
+    private lazy var leftStack: UIStackView = {
         let stack = UIStackView(arrangedSubviews: [dummyView, closeButtonLeft, backButton, testModeView])
         stack.spacing = PaymentSheetUI.defaultPadding
         stack.setCustomSpacing(PaymentSheetUI.navBarPadding, after: dummyView)
         stack.alignment = .center
+        stack.translatesAutoresizingMaskIntoConstraints = false
         return stack
     }()
-    // Used for allowing larger tap area to the left of closeButtonLeft
-    fileprivate lazy var dummyView: UIView = {
-        let dummyView = UIView(frame: .zero)
-        return dummyView
-    }()
-    internal lazy var closeButtonLeft: UIButton = {
-        createCloseButton()
+
+    private lazy var rightStack: UIStackView = {
+        let stack = UIStackView(arrangedSubviews: [closeButtonRight, additionalButton])
+        stack.alignment = .center
+        stack.translatesAutoresizingMaskIntoConstraints = false
+        return stack
     }()
 
-    internal lazy var closeButtonRight: UIButton = {
-        createCloseButton()
+    private lazy var title: UILabel = {
+        let label = UILabel()
+        label.font = appearance.scaledFont(for: appearance.font.base.medium, style: .body, maximumPointSize: 20)
+        label.isHidden = true
+        label.textAlignment = .center
+        label.lineBreakMode = .byTruncatingTail
+        label.numberOfLines = 1
+        label.translatesAutoresizingMaskIntoConstraints = false
+        return label
     }()
 
-    fileprivate lazy var backButton: UIButton = {
-        createBackButton()
-    }()
-
+    fileprivate lazy var dummyView = UIView(frame: .zero)
+    internal lazy var closeButtonLeft: UIButton = { createCloseButton() }()
+    internal lazy var closeButtonRight: UIButton = { createCloseButton() }()
+    fileprivate lazy var backButton: UIButton = { createBackButton() }()
     lazy var additionalButton: UIButton = {
         let button = UIButton()
         button.setTitleColor(appearance.colors.primary, for: .normal)
         button.setTitleColor(appearance.colors.primary.disabledColor, for: .disabled)
         button.titleLabel?.font = appearance.scaledFont(for: appearance.font.base.bold, style: .footnote, maximumPointSize: 20)
-
         return button
     }()
 
     let testModeView = TestModeView()
     let appearance: PaymentSheet.Appearance
 
-    override var isUserInteractionEnabled: Bool {
-        didSet {
-            // Explicitly disable buttons to update their appearance
-            closeButtonLeft.isEnabled = isUserInteractionEnabled
-            closeButtonRight.isEnabled = isUserInteractionEnabled
-            backButton.isEnabled = isUserInteractionEnabled
-            additionalButton.isEnabled = isUserInteractionEnabled
-        }
-    }
-
+    // MARK: - Init
     init(isTestMode: Bool, appearance: PaymentSheet.Appearance) {
-        testModeView.isHidden = !isTestMode
         self.appearance = appearance
         super.init(frame: .zero)
-        #if !canImport(CompositorServices)
+        testModeView.isHidden = !isTestMode
+
+#if !canImport(CompositorServices)
         backgroundColor = appearance.colors.background.withAlphaComponent(0.9)
-        #endif
-        [leftItemsStackView, closeButtonRight, additionalButton].forEach {
-            $0.translatesAutoresizingMaskIntoConstraints = false
-            addSubview($0)
-        }
+#endif
 
-        NSLayoutConstraint.activate([
-            leftItemsStackView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 0),
-            leftItemsStackView.centerYAnchor.constraint(equalTo: centerYAnchor),
-            leftItemsStackView.trailingAnchor.constraint(lessThanOrEqualTo: closeButtonRight.leadingAnchor),
-            leftItemsStackView.trailingAnchor.constraint(lessThanOrEqualTo: additionalButton.leadingAnchor),
-            leftItemsStackView.heightAnchor.constraint(equalTo: heightAnchor),
-
-            additionalButton.trailingAnchor.constraint(
-                equalTo: trailingAnchor, constant: -PaymentSheetUI.navBarPadding),
-            additionalButton.centerYAnchor.constraint(equalTo: centerYAnchor),
-
-            closeButtonRight.trailingAnchor.constraint(
-                equalTo: trailingAnchor, constant: -PaymentSheetUI.navBarPadding),
-            closeButtonRight.centerYAnchor.constraint(equalTo: centerYAnchor),
-        ])
-
-        closeButtonLeft.addTarget(self, action: #selector(didTapCloseButton), for: .touchUpInside)
-        closeButtonRight.addTarget(self, action: #selector(didTapCloseButton), for: .touchUpInside)
-        backButton.addTarget(self, action: #selector(didTapBackButton), for: .touchUpInside)
-
+        setupViews()
+        setupActions()
         setStyle(.close(showAdditionalButton: false))
     }
 
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+
+    // MARK: - Setup
+    private func setupViews() {
+        [leftStack, rightStack, title].forEach { addSubview($0) }
+
+        NSLayoutConstraint.activate([
+            // Left stack - pin to left edge
+            leftStack.leadingAnchor.constraint(equalTo: leadingAnchor),
+            leftStack.centerYAnchor.constraint(equalTo: centerYAnchor),
+
+            // Right stack - pin to right edge
+            rightStack.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -PaymentSheetUI.navBarPadding),
+            rightStack.centerYAnchor.constraint(equalTo: centerYAnchor),
+
+            // Title - center in available space with minimum spacing from buttons
+            title.centerYAnchor.constraint(equalTo: centerYAnchor),
+            title.centerXAnchor.constraint(equalTo: centerXAnchor),
+            title.leadingAnchor.constraint(greaterThanOrEqualTo: leftStack.trailingAnchor, constant: PaymentSheetUI.defaultPadding),
+            title.trailingAnchor.constraint(lessThanOrEqualTo: rightStack.leadingAnchor, constant: -PaymentSheetUI.defaultPadding),
+
+            // Overall height
+            //                heightAnchor.constraint(equalToConstant: Self.height)
+        ])
+
+        // Set proper content hugging and compression resistance
+        leftStack.setContentHuggingPriority(.required, for: .horizontal)
+        rightStack.setContentHuggingPriority(.required, for: .horizontal)
+
+        title.setContentHuggingPriority(.required, for: .horizontal)
+        title.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
+    }
+
+//    private func setupViews() {
+//        [leftStack, rightStack, title].forEach { addSubview($0) }
+//        
+//        NSLayoutConstraint.activate([
+//            // Left stack
+//            leftStack.leadingAnchor.constraint(equalTo: leadingAnchor),
+//            leftStack.centerYAnchor.constraint(equalTo: centerYAnchor),
+//            
+//            // Right stack
+//            rightStack.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -PaymentSheetUI.navBarPadding),
+//            rightStack.centerYAnchor.constraint(equalTo: centerYAnchor),
+//            
+//            // Title
+//            title.centerYAnchor.constraint(equalTo: centerYAnchor),
+//            title.leadingAnchor.constraint(equalTo: leftStack.trailingAnchor, constant: PaymentSheetUI.defaultPadding),
+//            title.trailingAnchor.constraint(equalTo: rightStack.leadingAnchor, constant: -PaymentSheetUI.defaultPadding),
+//            
+//            // Overall height
+////            heightAnchor.constraint(equalToConstant: Self.height)
+//        ])
+//        
+//        // Set proper content hugging and compression resistance
+//        leftStack.setContentHuggingPriority(.required, for: .horizontal)
+//        rightStack.setContentHuggingPriority(.required, for: .horizontal)
+//        
+//        title.setContentHuggingPriority(.defaultLow, for: .horizontal)
+//        title.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
+//    }
+
+    private func setupActions() {
+        closeButtonLeft.addTarget(self, action: #selector(didTapCloseButton), for: .touchUpInside)
+        closeButtonRight.addTarget(self, action: #selector(didTapCloseButton), for: .touchUpInside)
+        backButton.addTarget(self, action: #selector(didTapBackButton), for: .touchUpInside)
     }
 
     override var intrinsicContentSize: CGSize {
@@ -134,18 +178,11 @@ class SheetNavigationBar: UIView {
             closeButtonLeft.isHidden = true
             closeButtonRight.isHidden = true
             additionalButton.isHidden = !showAdditionalButton
-            if showAdditionalButton {
-                bringSubviewToFront(additionalButton)
-            }
             backButton.isHidden = false
-            bringSubviewToFront(backButton)
         case .close(let showAdditionalButton):
             closeButtonLeft.isHidden = !showAdditionalButton
             closeButtonRight.isHidden = showAdditionalButton
             additionalButton.isHidden = !showAdditionalButton
-            if showAdditionalButton {
-                bringSubviewToFront(additionalButton)
-            }
             backButton.isHidden = true
         case .none:
             closeButtonLeft.isHidden = true
@@ -153,6 +190,11 @@ class SheetNavigationBar: UIView {
             additionalButton.isHidden = true
             backButton.isHidden = true
         }
+    }
+
+    func setTitle(_ title: String?) {
+        self.title.text = title
+        self.title.isHidden = title == nil
     }
 
     func setShadowHidden(_ isHidden: Bool) {

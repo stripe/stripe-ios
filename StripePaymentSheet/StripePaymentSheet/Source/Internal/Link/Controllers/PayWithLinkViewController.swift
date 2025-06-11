@@ -251,6 +251,7 @@ final class PayWithLinkViewController: BottomSheetViewController {
             viewController.coordinator = self
             if contentStack.count > 1 {
                 viewController.navigationBar.setStyle(.back(showAdditionalButton: false))
+                viewController.navigationBar.setTitle(viewController.navigationTitle)
             }
             viewController.navigationBar.delegate = self
         }
