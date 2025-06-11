@@ -20,13 +20,13 @@ class ButtonLinkSnapshotTests: STPSnapshotTestCase {
         verify(sut)
     }
 
-    func testSecondary() {
-        let sut = makeSUT(configuration: .linkSecondary(), title: "Secondary Button")
+    func testPlain() {
+        let sut = makeSUT(configuration: .linkPlain(), title: "Plain Button")
         verify(sut)
     }
 
-    func testPlain() {
-        let sut = makeSUT(configuration: .linkPlain(), title: "Plain Button")
+    func testInline() {
+        let sut = makeSUT(configuration: .linkInline(), title: "Inline Button")
         verify(sut)
     }
 

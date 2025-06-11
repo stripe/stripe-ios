@@ -46,20 +46,6 @@ extension PayWithLinkViewController {
             self?.confirm()
         }
 
-        private lazy var cancelButton: Button = {
-            let buttonTitle = isAddingFirstPaymentMethod
-                ? context.secondaryButtonLabel
-                : String.Localized.cancel
-
-            let configuration: Button.Configuration = shouldShowApplePayButton
-                ? .linkPlain()
-                : .linkSecondary()
-
-            let button = Button(configuration: configuration, title: buttonTitle)
-            button.addTarget(self, action: #selector(cancelButtonTapped(_:)), for: .touchUpInside)
-            return button
-        }()
-
         private lazy var separator = SeparatorLabel(text: String.Localized.or)
 
         private lazy var applePayButton: PKPaymentButton = {
@@ -84,7 +70,6 @@ extension PayWithLinkViewController {
                 vStack.addArrangedSubview(applePayButton)
             }
 
-            vStack.addArrangedSubview(cancelButton)
             return vStack
         }()
 
@@ -312,15 +297,6 @@ extension PayWithLinkViewController {
         @objc
         func applePayButtonTapped(_ sender: PKPaymentButton) {
             coordinator?.confirmWithApplePay()
-        }
-
-        @objc
-        func cancelButtonTapped(_ sender: Button) {
-            if isAddingFirstPaymentMethod {
-                coordinator?.cancel(shouldReturnToPaymentSheet: false)
-            } else {
-                _ = bottomSheetController?.popContentViewController()
-            }
         }
     }
 }
