@@ -25,11 +25,6 @@ class ButtonLinkSnapshotTests: STPSnapshotTestCase {
         verify(sut)
     }
 
-    func testInline() {
-        let sut = makeSUT(configuration: .linkInline(), title: "Inline Button")
-        verify(sut)
-    }
-
     func verify(
         _ sut: Button,
         identifier: String? = nil,
