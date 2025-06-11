@@ -31,21 +31,6 @@ extension PayWithLinkViewController {
         /// If that is the case, we will immediately confirm the intent after updating the payment method.
         let isBillingDetailsUpdateFlow: Bool
 
-        private lazy var titleLabel: UILabel = {
-            let label = UILabel()
-            label.font = LinkUI.font(forTextStyle: .title)
-            label.textColor = .linkTextPrimary
-            label.adjustsFontForContentSizeCategory = true
-            label.numberOfLines = 0
-            label.textAlignment = .center
-            label.text = if isBillingDetailsUpdateFlow {
-                String.Localized.confirm_payment_details
-            } else {
-                String.Localized.update_card
-            }
-            return label
-        }()
-
         private lazy var thisIsYourDefaultLabel: UILabel = {
             let label = UILabel()
             label.font = LinkUI.font(forTextStyle: .bodyEmphasized)
@@ -105,7 +90,10 @@ extension PayWithLinkViewController {
             self.configuration.linkPaymentMethodsOnly = true
             self.paymentMethod = paymentMethod
             self.isBillingDetailsUpdateFlow = isBillingDetailsUpdateFlow
-            super.init(context: context)
+            super.init(
+                context: context,
+                navigationTitle: isBillingDetailsUpdateFlow ? .Localized.confirm_payment_details : .Localized.update_card
+            )
         }
 
         required init?(coder: NSCoder) {
@@ -120,7 +108,6 @@ extension PayWithLinkViewController {
             errorLabel.isHidden = true
 
             let stackView = UIStackView(arrangedSubviews: [
-                titleLabel,
                 cardEditElement.view,
                 errorLabel,
                 thisIsYourDefaultLabel,
@@ -130,7 +117,6 @@ extension PayWithLinkViewController {
 
             stackView.axis = .vertical
             stackView.spacing = LinkUI.contentSpacing
-            stackView.setCustomSpacing(LinkUI.extraLargeContentSpacing, after: titleLabel)
             stackView.isLayoutMarginsRelativeArrangement = true
             stackView.directionalLayoutMargins = LinkUI.contentMargins
             stackView.translatesAutoresizingMaskIntoConstraints = false

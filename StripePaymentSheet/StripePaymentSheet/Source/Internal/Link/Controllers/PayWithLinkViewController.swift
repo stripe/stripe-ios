@@ -147,6 +147,10 @@ final class PayWithLinkViewController: BottomSheetViewController {
         } ?? shippingAddressResponse?.shippingAddresses.first
     }
 
+    override var sheetCornerRadius: CGFloat? {
+        24
+    }
+
     private var isBailingToWebFlow: Bool = false
 
     convenience init(
@@ -241,6 +245,7 @@ final class PayWithLinkViewController: BottomSheetViewController {
             viewController.coordinator = self
             if contentStack.count > 1 {
                 viewController.navigationBar.setStyle(.back(showAdditionalButton: false))
+                viewController.navigationBar.setTitle(viewController.navigationTitle)
             }
             viewController.navigationBar.delegate = self
         }

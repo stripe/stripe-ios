@@ -33,31 +33,23 @@ class SheetNavigationBar: UIView {
         let dummyView = UIView(frame: .zero)
         return dummyView
     }()
-    fileprivate lazy var closeButtonLeft: UIButton = {
-        let button = SheetNavigationButton(type: .custom)
-        button.setImage(Image.icon_x_standalone.makeImage(template: true), for: .normal)
-        button.tintColor = appearance.colors.icon
-        button.accessibilityLabel = String.Localized.close
-        button.accessibilityIdentifier = "UIButton.Close"
-        return button
+    internal lazy var closeButtonLeft: UIButton = {
+        createCloseButton()
     }()
 
-    fileprivate lazy var closeButtonRight: UIButton = {
-        let button = SheetNavigationButton(type: .custom)
-        button.setImage(Image.icon_x_standalone.makeImage(template: true), for: .normal)
-        button.tintColor = appearance.colors.icon
-        button.accessibilityLabel = String.Localized.close
-        button.accessibilityIdentifier = "UIButton.Close"
-        return button
+    internal lazy var closeButtonRight: UIButton = {
+        createCloseButton()
     }()
 
     fileprivate lazy var backButton: UIButton = {
-        let button = SheetNavigationButton(type: .custom)
-        button.setImage(Image.icon_chevron_left_standalone.makeImage(template: true), for: .normal)
-        button.tintColor = appearance.colors.icon
-        button.accessibilityLabel = String.Localized.back
-        button.accessibilityIdentifier = "UIButton.Back"
-        return button
+        createBackButton()
+    }()
+
+    private lazy var title: UILabel = {
+        let label = UILabel()
+        label.font = appearance.scaledFont(for: appearance.font.base.medium, style: .body, maximumPointSize: 20)
+        label.isHidden = true
+        return label
     }()
 
     lazy var additionalButton: UIButton = {
@@ -89,7 +81,7 @@ class SheetNavigationBar: UIView {
         #if !canImport(CompositorServices)
         backgroundColor = appearance.colors.background.withAlphaComponent(0.9)
         #endif
-        [leftItemsStackView, closeButtonRight, additionalButton].forEach {
+        [leftItemsStackView, title, closeButtonRight, additionalButton].forEach {
             $0.translatesAutoresizingMaskIntoConstraints = false
             addSubview($0)
         }
@@ -108,6 +100,9 @@ class SheetNavigationBar: UIView {
             closeButtonRight.trailingAnchor.constraint(
                 equalTo: trailingAnchor, constant: -PaymentSheetUI.navBarPadding),
             closeButtonRight.centerYAnchor.constraint(equalTo: centerYAnchor),
+
+            title.centerXAnchor.constraint(equalTo: centerXAnchor),
+            title.centerYAnchor.constraint(equalTo: centerYAnchor),
         ])
 
         closeButtonLeft.addTarget(self, action: #selector(didTapCloseButton), for: .touchUpInside)
@@ -170,11 +165,34 @@ class SheetNavigationBar: UIView {
         }
     }
 
+    func setTitle(_ title: String?) {
+        self.title.text = title
+        self.title.isHidden = title == nil
+    }
+
     func setShadowHidden(_ isHidden: Bool) {
         layer.shadowPath = CGPath(rect: bounds, transform: nil)
         layer.shadowOpacity = isHidden ? 0 : 0.1
         layer.shadowColor = UIColor.black.cgColor
         layer.shadowOffset = CGSize(width: 0, height: 2)
+    }
+
+    func createBackButton() -> UIButton {
+        let button = SheetNavigationButton(type: .custom)
+        button.setImage(Image.icon_chevron_left_standalone.makeImage(template: true), for: .normal)
+        button.tintColor = appearance.colors.icon
+        button.accessibilityLabel = String.Localized.back
+        button.accessibilityIdentifier = "UIButton.Back"
+        return button
+    }
+
+    func createCloseButton() -> UIButton {
+        let button = SheetNavigationButton(type: .custom)
+        button.setImage(Image.icon_x_standalone.makeImage(template: true), for: .normal)
+        button.tintColor = appearance.colors.icon
+        button.accessibilityLabel = String.Localized.close
+        button.accessibilityIdentifier = "UIButton.Close"
+        return button
     }
 }
 
