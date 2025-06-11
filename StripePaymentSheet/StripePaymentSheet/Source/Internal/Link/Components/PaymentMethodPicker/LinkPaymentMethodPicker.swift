@@ -31,7 +31,10 @@ protocol LinkPaymentMethodPickerDelegate: AnyObject {
         sourceRect: CGRect
     )
 
-    func didTapOnAccountMenuItem(_ picker: LinkPaymentMethodPicker)
+    func didTapOnAccountMenuItem(
+        _ picker: LinkPaymentMethodPicker,
+        sourceRect: CGRect
+    )
 }
 
 protocol LinkPaymentMethodPickerDataSource: AnyObject {
@@ -233,7 +236,8 @@ private extension LinkPaymentMethodPicker {
     }
 
     @objc func didTapOnAccountMenuItem(_ sender: AddButton) {
-        delegate?.didTapOnAccountMenuItem(self)
+        let sourceRect = sender.convert(sender.bounds, to: self)
+        delegate?.didTapOnAccountMenuItem(self, sourceRect: sourceRect)
     }
 
 }
