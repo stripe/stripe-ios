@@ -54,9 +54,12 @@ extension PayWithLinkViewController {
             self.confirm(confirmationExtras: confirmationExtras)
         }
 
-        private lazy var cancelButton: Button = {
+        private lazy var cancelButton: Button? = {
+            guard let cancelButtonConfiguration = viewModel.cancelButtonConfiguration else {
+                return nil
+            }
             let button = Button(
-                configuration: viewModel.cancelButtonConfiguration,
+                configuration: cancelButtonConfiguration,
                 title: viewModel.context.secondaryButtonLabel
             )
             button.addTarget(self, action: #selector(cancelButtonTapped(_:)), for: .touchUpInside)
@@ -176,7 +179,9 @@ extension PayWithLinkViewController {
                 containerView.addArrangedSubview(applePayButton)
             }
 
-            containerView.addArrangedSubview(cancelButton)
+            if let cancelButton {
+                containerView.addArrangedSubview(cancelButton)
+            }
 
             contentView.addAndPinSubview(containerView)
 

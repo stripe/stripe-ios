@@ -135,6 +135,7 @@ import SwiftUI
             linkController.presentForPaymentMethodSelection(
                 from: WindowAuthenticationContext().authenticationPresentingViewController(),
                 initiallySelectedPaymentDetailsID: nil,
+                shouldShowSecondaryCta: false,
                 completion: { confirmOptions, _ in
                     guard let confirmOptions else {
                         self.orderedWallets = WalletButtonsView.determineAvailableWallets(for: flowController)
