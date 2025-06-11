@@ -15,7 +15,7 @@ import UIKit
 class CircularButton: UIControl {
     private let radius: CGFloat = 10
     private let shadowOpacity: Float = 0.5
-    private var style: Style
+    private let style: Style
     var iconStyle: PaymentSheet.Appearance.IconStyle {
         didSet {
             // No-op when changing icon style for other styles
