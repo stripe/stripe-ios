@@ -771,12 +771,11 @@ class EmbeddedPaymentElementTest: XCTestCase {
         config.rowSelectionBehavior = .immediateAction(didSelectPaymentOption: {})
 
         // When we create an EmbeddedPaymentElement
-        let _ = try await EmbeddedPaymentElement.create(
+        _ = try await EmbeddedPaymentElement.create(
             intentConfiguration: paymentIntentConfig,
             configuration: config
         )
     }
-
 
     func testCancelingFormResetsPaymentOption() async throws {
         // Create our EmbeddedPaymentElement
