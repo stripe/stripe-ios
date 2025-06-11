@@ -4,9 +4,7 @@
 //
 
 import PassKit
-@_spi(STP) import StripeUICore
 import SwiftUI
-import UIKit
 
 @available(iOS 16.0, *)
 @_spi(STP) public struct WalletButtonsView: View {
@@ -120,26 +118,6 @@ import UIKit
                 .frame(maxWidth: .infinity)
                 .frame(height: 44)
                 .cornerRadius(100)
-        }
-    }
-
-    private struct LinkButton: View {
-        let action: () -> Void
-
-        var body: some View {
-            Button(action: action) {
-                HStack(spacing: 4) {
-                    SwiftUI.Image(uiImage: Image.link_logo_bw.makeImage(template: false))
-                        .resizable()
-                        .scaledToFit()
-                        .frame(height: 18)
-                }
-                .frame(maxWidth: .infinity)
-                .frame(height: 44)
-                .background(Color(uiColor: .linkIconBrand))
-                .foregroundColor(.black)
-                .cornerRadius(100)
-            }
         }
     }
 }
