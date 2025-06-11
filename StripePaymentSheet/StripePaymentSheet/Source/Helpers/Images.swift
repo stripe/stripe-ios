@@ -67,6 +67,9 @@ enum Image: String, CaseIterable, ImageMaker {
     case link_logo_knockout = "link_logo_knockout"
     case link_icon = "link_icon"
 
+    // ShopPay
+    case shoppay_logo_bw = "shoppay_logo_bw"
+
     // Carousel
     case carousel_applepay
     case carousel_card_amex
