@@ -14,10 +14,10 @@ import UIKit
 
 @_spi(STP) public struct HighlightBorderConfiguration {
     @_spi(STP) public let width: CGFloat
-    @_spi(STP) public let color: CGColor
+    @_spi(STP) public let color: UIColor
     @_spi(STP) public let animator: UIViewPropertyAnimator
 
-    @_spi(STP) public init(width: CGFloat, color: CGColor, animator: UIViewPropertyAnimator) {
+    @_spi(STP) public init(width: CGFloat, color: UIColor, animator: UIViewPropertyAnimator) {
         self.width = width
         self.color = color
         self.animator = animator

@@ -35,11 +35,11 @@ enum LinkUI {
 
     // MARK: - Border
 
-    static let borderWidth: CGFloat = 1.0
+    static let borderWidth: CGFloat = 1.5
 
     static let highlightBorderConfiguration = HighlightBorderConfiguration(
         width: borderWidth,
-        color: UIColor.linkBorderSelected.cgColor,
+        color: .linkBorderSelected,
         animator: animator
     )
 
