@@ -15,10 +15,17 @@ import UIKit
 class CircularButton: UIControl {
     private let radius: CGFloat = 10
     private let shadowOpacity: Float = 0.5
-    private let style: Style
+    private var style: Style
     var iconStyle: PaymentSheet.Appearance.IconStyle {
         didSet {
-            self.set(style: style, with: imageView.tintColor)
+            // No-op when changing icon style for other styles
+            guard style == .edit else { return }
+            switch iconStyle {
+            case .filled:
+                imageView.image = Image.icon_edit.makeImage(template: true)
+            case .outlined:
+                imageView.image = Image.icon_edit_outlined.makeImage(template: true)
+            }
         }
     }
     var iconColor: UIColor {
