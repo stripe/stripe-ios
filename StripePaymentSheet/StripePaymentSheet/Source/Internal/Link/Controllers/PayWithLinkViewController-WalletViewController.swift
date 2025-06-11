@@ -62,7 +62,6 @@ extension PayWithLinkViewController {
                 configuration: cancelButtonConfiguration,
                 title: viewModel.context.secondaryButtonLabel
             )
-            button.configuration.insets = viewModel.shouldUseCompactConfirmButton ? LinkUI.compactButtonMargins : LinkUI.buttonMargins
             button.addTarget(self, action: #selector(cancelButtonTapped(_:)), for: .touchUpInside)
             return button
         }()
