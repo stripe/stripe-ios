@@ -37,6 +37,7 @@
 		6B03B12F2CDA890700F95A9D /* XCUITest+PaymentSheetTestUtilities.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B03B12E2CDA88F900F95A9D /* XCUITest+PaymentSheetTestUtilities.swift */; };
 		6B1E84072DDBA5E300C75BB4 /* ExampleWalletButtonsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B1E84062DDBA5E300C75BB4 /* ExampleWalletButtonsView.swift */; };
 		6BCB57EA2D81FB15000C4117 /* CustomerSheetCustomerSessionPlaygroundView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6BCB57E92D81FB13000C4117 /* CustomerSheetCustomerSessionPlaygroundView.swift */; };
+		6BE115002DF8A6150024AC26 /* PlaygroundController+ApplePay.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6BE114FF2DF8A6150024AC26 /* PlaygroundController+ApplePay.swift */; };
 		6BFE613D2D407C420094DFE2 /* CustomerSessionPlaygroundView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6BFE613C2D407C3B0094DFE2 /* CustomerSessionPlaygroundView.swift */; };
 		75D1997DA514F6DB82FF1CFC /* StripePaymentSheet.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 240DDF52B887E788853A838B /* StripePaymentSheet.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		79E8C77C99A25E38F96747F1 /* PaymentSheetTestPlaygroundSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1261A6BDCDB7E81D08F137F0 /* PaymentSheetTestPlaygroundSettings.swift */; };
@@ -214,6 +215,7 @@
 		6B03B12E2CDA88F900F95A9D /* XCUITest+PaymentSheetTestUtilities.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "XCUITest+PaymentSheetTestUtilities.swift"; sourceTree = "<group>"; };
 		6B1E84062DDBA5E300C75BB4 /* ExampleWalletButtonsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExampleWalletButtonsView.swift; sourceTree = "<group>"; };
 		6BCB57E92D81FB13000C4117 /* CustomerSheetCustomerSessionPlaygroundView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomerSheetCustomerSessionPlaygroundView.swift; sourceTree = "<group>"; };
+		6BE114FF2DF8A6150024AC26 /* PlaygroundController+ApplePay.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "PlaygroundController+ApplePay.swift"; sourceTree = "<group>"; };
 		6BFE613C2D407C3B0094DFE2 /* CustomerSessionPlaygroundView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomerSessionPlaygroundView.swift; sourceTree = "<group>"; };
 		6CD01636EA3B4C6F84E9CC86 /* PaymentSheetUITest-Release.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "PaymentSheetUITest-Release.xcconfig"; sourceTree = "<group>"; };
 		6E4F3FA49534E745C5EDC1C0 /* da */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = da; path = da.lproj/LaunchScreen.strings; sourceTree = "<group>"; };
@@ -484,6 +486,7 @@
 				27BA81F620FAB6E5505E0B32 /* PaymentSheetTestPlayground.swift */,
 				1261A6BDCDB7E81D08F137F0 /* PaymentSheetTestPlaygroundSettings.swift */,
 				7F0C0324B4075DED17688123 /* PlaygroundController.swift */,
+				6BE114FF2DF8A6150024AC26 /* PlaygroundController+ApplePay.swift */,
 				575345B1A7F6EBD12A1A5F9C /* QRView.swift */,
 				53AAAA316E1DA1C44D30D7B0 /* SceneDelegate.swift */,
 				31AB49B62C9E72DB007E74E7 /* UIView+PaymentSheetDebugging.swift */,
@@ -727,6 +730,7 @@
 				A0037CC8E331CFF5CEE2D580 /* ExampleSwiftUICustomPaymentFlow.swift in Sources */,
 				27233E85B0B6E1114E9AF6E8 /* ExampleSwiftUICustomerSheet.swift in Sources */,
 				432E82C3F5EC56E89D257563 /* ExampleSwiftUIPaymentSheet.swift in Sources */,
+				6BE115002DF8A6150024AC26 /* PlaygroundController+ApplePay.swift in Sources */,
 				A071C07B6FFACC5DEFC6AA01 /* ExampleSwiftUIViews.swift in Sources */,
 				17D626E890FD11B84654C846 /* PaymentSheetTestPlayground.swift in Sources */,
 				79E8C77C99A25E38F96747F1 /* PaymentSheetTestPlaygroundSettings.swift in Sources */,
