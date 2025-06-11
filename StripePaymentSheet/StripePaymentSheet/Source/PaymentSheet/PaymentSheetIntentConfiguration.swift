@@ -45,7 +45,7 @@ public extension PaymentSheet {
         @_spi(FacilitatedPaymentSession) public struct SellerDetails {
             public let networkId: String
             public let externalId: String
-            
+
             public init(networkId: String, externalId: String) {
                 self.networkId = networkId
                 self.externalId = externalId

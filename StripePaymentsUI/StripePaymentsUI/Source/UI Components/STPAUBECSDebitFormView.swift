@@ -516,7 +516,7 @@ public class STPAUBECSDebitFormView: STPMultiFormTextField, STPMultiFormFieldDel
 
     // MARK: - UITextViewDelegate
     /// :nodoc:
-//#if !canImport(CompositorServices)
+// #if !canImport(CompositorServices)
 //    @objc
 //    public func textView(
 //        _ textView: UITextView,
@@ -526,7 +526,7 @@ public class STPAUBECSDebitFormView: STPMultiFormTextField, STPMultiFormFieldDel
 //    ) -> Bool {
 //        return true
 //    }
-//#endif
+// #endif
 
     // MARK: - STPFormTextFieldContainer (Overrides)
     /// :nodoc:
