@@ -34,6 +34,24 @@ public extension PaymentSheet {
             _ intentCreationCallback: @escaping ((Result<String, Error>) -> Void)
         ) -> Void
 
+        /// Called when the customer confirms payment in a facilitated payment session.
+        @_spi(FacilitatedPaymentSession) public typealias FacilitatedPaymentSessionConfirmHandler = (
+            _ paymentMethod: STPPaymentMethod,
+            _ shouldSavePaymentMethod: Bool,
+            _ intentCreationCallback: @escaping ((Result<String, Error>) -> Void)
+        ) -> Void
+
+        /// Seller details for facilitated payment sessions
+        @_spi(FacilitatedPaymentSession) public struct SellerDetails {
+            public let networkId: String
+            public let externalId: String
+            
+            public init(networkId: String, externalId: String) {
+                self.networkId = networkId
+                self.externalId = externalId
+            }
+        }
+
         /// Creates a `PaymentSheet.IntentConfiguration` with the given values
         /// - Parameters:
         ///   - mode: The mode of this intent, either payment or setup
@@ -54,6 +72,33 @@ public extension PaymentSheet {
             self.paymentMethodConfigurationId = paymentMethodConfigurationId
             self.confirmHandler = confirmHandler
             self.requireCVCRecollection = requireCVCRecollection
+            self.sellerDetails = nil
+            validate()
+        }
+
+        /// Creates a `PaymentSheet.IntentConfiguration` for facilitated payment sessions
+        /// - Parameters:
+        ///   - mode: The mode of this intent, either payment or setup
+        ///   - sellerDetails: Seller details for the facilitated payment session
+        ///   - paymentMethodTypes: The payment method types for the intent
+        ///   - onBehalfOf: The account (if any) for which the funds of the intent are intended
+        ///   - paymentMethodConfigurationId: Configuration ID (if any) for the selected payment method configuration
+        ///   - confirmHandler: A handler called with payment details when the user taps the primary button (e.g. the "Pay" or "Continue" button).
+        ///   - requireCVCRecollection: If true, PaymentSheet recollects CVC for saved cards before confirmation (PaymentIntent only)
+        @_spi(FacilitatedPaymentSession) public init(facilitatedPaymentSessionWithMode mode: Mode,
+                    sellerDetails: SellerDetails?,
+                    paymentMethodTypes: [String]? = nil,
+                    onBehalfOf: String? = nil,
+                    paymentMethodConfigurationId: String? = nil,
+                    confirmHandler: @escaping FacilitatedPaymentSessionConfirmHandler,
+                    requireCVCRecollection: Bool = false) {
+            self.mode = mode
+            self.paymentMethodTypes = paymentMethodTypes
+            self.onBehalfOf = onBehalfOf
+            self.paymentMethodConfigurationId = paymentMethodConfigurationId
+            self.confirmHandler = confirmHandler
+            self.requireCVCRecollection = requireCVCRecollection
+            self.sellerDetails = sellerDetails
             validate()
         }
 
@@ -82,13 +127,16 @@ public extension PaymentSheet {
         ///  - Note: Server-side confirmation is not supported.
         public var requireCVCRecollection: Bool
 
+        /// Seller details for facilitated payment sessions
+        @_spi(FacilitatedPaymentSession) public var sellerDetails: SellerDetails?
+
         /// Controls when the funds will be captured. 
         /// - Seealso: https://stripe.com/docs/api/payment_intents/create#create_payment_intent-capture_method
         public enum CaptureMethod: String {
             /// (Default) Stripe automatically captures funds when the customer authorizes the payment.
             case automatic = "automatic"
 
-            /// Place a hold on the funds when the customer authorizes the payment, but don’t capture the funds until later. (Not all payment methods support this.)
+            /// Place a hold on the funds when the customer authorizes the payment, but don't capture the funds until later. (Not all payment methods support this.)
             case manual = "manual"
 
             /// Asynchronously capture funds when the customer authorizes the payment.
@@ -97,7 +145,7 @@ public extension PaymentSheet {
             case automaticAsync = "automatic_async"
         }
 
-        /// Indicates that you intend to make future payments with this PaymentIntent’s payment method.
+        /// Indicates that you intend to make future payments with this PaymentIntent's payment method.
         /// - Seealso: https://stripe.com/docs/api/payment_intents/create#create_payment_intent-setup_future_usage
         public enum SetupFutureUsage: String {
             /// Use off_session if your customer may or may not be present in your checkout flow.
@@ -179,6 +227,7 @@ public extension PaymentSheet {
             }
             // TODO
             self.requireCVCRecollection = false
+            self.sellerDetails = nil
         }
 
         @discardableResult
