@@ -162,7 +162,7 @@ final class LinkCardEditElement: Element {
             cardBrandDropDown: cardBrandDropdownElement?.element
         )
 
-        return panElementConfig.makeElement(theme: configuration.appearance.asElementsTheme)
+        return panElementConfig.makeElement(theme: LinkUI.appearance.asElementsTheme)
     }()
 
     private lazy var cvcElement: TextFieldElement = {
