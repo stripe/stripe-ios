@@ -7,7 +7,7 @@
 
 import StripeCoreTestUtils
 @_spi(STP) @testable import StripePayments
-@_spi(CustomPaymentMethodsBeta) @testable import StripePaymentSheet
+@_spi(CustomPaymentMethodsBeta) @_spi(AppearanceAPIAdditionsPreview) @testable import StripePaymentSheet
 @testable import StripePaymentsTestUtils
 @_spi(STP) @testable import StripeUICore
 import XCTest
@@ -1084,6 +1084,23 @@ class EmbeddedPaymentMethodsViewSnapshotTests: STPSnapshotTestCase {
         window.addAndPinSubview(embeddedView, insets: .zero)
         verify(window)
         LinkAccountContext.shared.account = nil
+    }
+
+    func testEmbeddedPaymentMethodsView_iconStyleOutlined() {
+        var appearance: PaymentSheet.Appearance = .default
+        appearance.iconStyle = .outlined
+
+        let embeddedView = EmbeddedPaymentMethodsView(initialSelection: nil,
+                                                      paymentMethodTypes: [.stripe(.card), .stripe(.cashApp), .stripe(.USBankAccount)],
+                                                      savedPaymentMethod: nil,
+                                                      appearance: appearance,
+                                                      shouldShowApplePay: true,
+                                                      shouldShowLink: true,
+                                                      savedPaymentMethodAccessoryType: .none,
+                                                      mandateProvider: MockMandateProvider(),
+                                                      savedPaymentMethods: [._testCard(), ._testUSBankAccount()])
+
+        verify(embeddedView)
     }
 
     func verify(
