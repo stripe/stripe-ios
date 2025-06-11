@@ -30,8 +30,7 @@ class BottomSheetViewController: UIViewController, BottomSheetPresentable {
     }
 
     var sheetCornerRadius: CGFloat? {
-        // No custom corner radius
-        return nil
+        BottomSheetTransitioningDelegate.appearance.sheetCornerRadius
     }
 
     // MARK: - Views

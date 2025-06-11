@@ -120,10 +120,7 @@ extension PayWithLinkViewController {
         ) {
             self.linkAccount = linkAccount
             self.isAddingFirstPaymentMethod = isAddingFirstPaymentMethod
-            super.init(
-                context: context,
-                navigationTitle: String.Localized.add_a_payment_method
-            )
+            super.init(context: context)
         }
 
         required init?(coder: NSCoder) {

@@ -28,9 +28,7 @@ extension LinkVerificationView {
         }()
 
         let closeButton: UIButton = {
-            LinkSheetNavigationBar.createButton(
-                with: Image.icon_x_standalone.makeImage(template: true),
-                accessibilityLabel: String.Localized.close,
+            LinkSheetNavigationBar.createCloseButton(
                 accessibilityIdentifier: "LinkVerificationCloseButton",
                 appearance: LinkUI.appearance
             )

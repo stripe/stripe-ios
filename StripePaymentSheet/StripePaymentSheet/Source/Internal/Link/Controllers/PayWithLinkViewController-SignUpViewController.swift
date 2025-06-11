@@ -157,7 +157,7 @@ extension PayWithLinkViewController {
             contentView.addSubview(stackView)
 
             NSLayoutConstraint.activate([
-                contentView.topAnchor.constraint(equalTo: stackView.topAnchor, constant: -40),
+                contentView.topAnchor.constraint(equalTo: stackView.topAnchor, constant: -LinkUI.extraLargeContentSpacing),
                 contentView.leadingAnchor.constraint(equalTo: stackView.leadingAnchor),
                 contentView.trailingAnchor.constraint(equalTo: stackView.trailingAnchor),
                 contentView.bottomAnchor.constraint(greaterThanOrEqualTo: stackView.bottomAnchor),

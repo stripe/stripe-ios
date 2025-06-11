@@ -65,15 +65,25 @@ class LinkSheetNavigationBar: SheetNavigationBar {
     }
 
     override func createCloseButton() -> UIButton {
-        return Self.createButton(
-            with: Image.icon_x_standalone.makeImage(template: true),
-            accessibilityLabel: String.Localized.close,
+        return Self.createCloseButton(
             accessibilityIdentifier: "UIButton.Close",
             appearance: appearance
         )
     }
 
-    static func createButton(
+    static func createCloseButton(
+        accessibilityIdentifier: String,
+        appearance: PaymentSheet.Appearance
+    ) -> UIButton {
+        return createButton(
+            with: Image.icon_x_standalone.makeImage(template: true),
+            accessibilityLabel: String.Localized.close,
+            accessibilityIdentifier: accessibilityIdentifier,
+            appearance: appearance
+        )
+    }
+
+    private static func createButton(
         with image: UIImage,
         accessibilityLabel: String,
         accessibilityIdentifier: String,
