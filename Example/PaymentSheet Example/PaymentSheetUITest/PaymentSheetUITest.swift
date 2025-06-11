@@ -362,6 +362,8 @@ class PaymentSheetStandardUITests: PaymentSheetUITestCase {
         settings.applePayEnabled = .off
         settings.apmsEnabled = .off
         settings.supportedPaymentMethods = "link,card"
+        // Use a non-US merchant because the US merchant is gated into Link RUX in FlowController
+        settings.merchantCountryCode = .FR
         loadPlayground(app, settings)
 
         let paymentMethodButton = app.buttons["Payment method"]
