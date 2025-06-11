@@ -745,8 +745,14 @@ extension PayWithLinkViewController.WalletViewController: LinkPaymentMethodPicke
         actions(for: index, includeCancelAction: false)
     }
 
-    func didTapOnAccountMenuItem(_ picker: LinkPaymentMethodPicker) {
+    func didTapOnAccountMenuItem(
+        _ picker: LinkPaymentMethodPicker,
+        sourceRect: CGRect
+    ) {
         let actionSheet = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
+        actionSheet.popoverPresentationController?.sourceView = picker
+        actionSheet.popoverPresentationController?.sourceRect = sourceRect
+
         actionSheet.addAction(UIAlertAction(
             title: STPLocalizedString("Log out of Link", "Title of the logout action."),
             style: .destructive,
@@ -755,10 +761,6 @@ extension PayWithLinkViewController.WalletViewController: LinkPaymentMethodPicke
             }
         ))
         actionSheet.addAction(UIAlertAction(title: String.Localized.cancel, style: .cancel))
-
-        // iPad support
-        actionSheet.popoverPresentationController?.sourceView = picker
-        actionSheet.popoverPresentationController?.sourceRect = picker.bounds
 
         present(actionSheet, animated: true)
     }
