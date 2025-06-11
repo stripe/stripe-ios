@@ -218,9 +218,17 @@ class BottomSheetViewController: UIViewController, BottomSheetPresentable {
         newContentViewController.beginAppearanceTransition(true, animated: true)
         // When your custom container calls the addChild(_:) method, it automatically calls the willMove(toParent:) method of the view controller to be added as a child before adding it.
         addChild(newContentViewController)
+
+        // Force layout and apply safe area insets before animation
+        newContentViewController.view.frame = contentContainerView.bounds
+        newContentViewController.view.layoutIfNeeded()
+
         contentContainerView.addArrangedSubview(self.contentViewController.view)
         if let presentationController = rootParent.presentationController as? BottomSheetPresentationController {
             presentationController.forceFullHeight = newContentViewController.requiresFullScreen
+
+            // Force layout pass to apply safe area insets
+            presentationController.containerView?.layoutIfNeeded()
         }
 
         contentContainerView.layoutIfNeeded()
