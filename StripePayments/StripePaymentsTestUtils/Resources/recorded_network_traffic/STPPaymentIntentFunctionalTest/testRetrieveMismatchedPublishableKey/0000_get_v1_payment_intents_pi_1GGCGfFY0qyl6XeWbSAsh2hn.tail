@@ -2,36 +2,32 @@ GET
 https:\/\/api\.stripe\.com\/v1\/payment_intents\/pi_1GGCGfFY0qyl6XeWbSAsh2hn\?client_secret=pi_1GGCGfFY0qyl6XeWbSAsh2hn_secret_jbhwsI0DGWhKreJs3CCrluUGe$
 404
 application/json
-access-control-allow-methods: GET, HEAD, PUT, PATCH, POST, DELETE
-content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; upgrade-insecure-requests; report-uri /csp-violation https://q.stripe.com/csp-violation?q=BRoDtD2TnYLyyUYn0LZhd736aafsQ8sbm1p1-3T1TQIw7eRx8Cs5dCXMH8Ki8B_ix8Otya0U1w%3D%3D
-Server: nginx
-Cache-Control: no-cache, no-store
-reporting-endpoints: coop="https://q.stripe.com/coop-report"
-x-wc: AB
-Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
-cross-origin-opener-policy-report-only: same-origin; report-to="coop"
+Content-Type: application/json
 Access-Control-Allow-Origin: *
-x-stripe-routing-context-priority-tier: api-testmode
 x-stripe-priority-routing-enabled: true
-report-to: {"group":"coop","max_age":8640,"endpoints":[{"url":"https://q.stripe.com/coop-report"}],"include_subdomains":true}
-request-id: req_rDQHMpJ1DTXSdr
-Content-Length: 352
-Vary: Origin
-Date: Thu, 02 Jan 2025 17:12:31 GMT
-stripe-version: 2020-08-27
+content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=LCP0a9PKGcJ3J0VskxPdYW5VsIBkmw_02BPwpEWYxbtJybZz2ZhwHo8A4hoEDIq6qhZTu8gZYf4_GfsI
+x-wc: ABGHI
+access-control-allow-methods: GET, HEAD, PUT, PATCH, POST, DELETE
+Server: nginx
 access-control-expose-headers: Request-Id, Stripe-Manage-Version, Stripe-Should-Retry, X-Stripe-External-Auth-Required, X-Stripe-Privileged-Session-Required
 access-control-max-age: 300
-access-control-allow-credentials: true
-Content-Type: application/json
 Content-Language: en-us
-x-content-type-options: nosniff
+Cache-Control: no-cache, no-store
+Date: Tue, 03 Jun 2025 14:53:28 GMT
+stripe-version: 2020-08-27
+access-control-allow-credentials: true
+Content-Length: 352
+x-stripe-routing-context-priority-tier: api-testmode
+Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
+Vary: Origin
+request-id: req_zmo6SfPUrTRRtw
 
 {
   "error" : {
     "code" : "resource_missing",
     "message" : "No such payment_intent: 'pi_1GGCGfFY0qyl6XeWbSAsh2hn'",
     "param" : "intent",
-    "request_log_url" : "https:\/\/dashboard.stripe.com\/test\/logs\/req_rDQHMpJ1DTXSdr?t=1735837951",
+    "request_log_url" : "https:\/\/dashboard.stripe.com\/test\/logs\/req_zmo6SfPUrTRRtw?t=1748962408",
     "type" : "invalid_request_error",
     "doc_url" : "https:\/\/stripe.com\/docs\/error-codes\/resource-missing"
   }

@@ -6,7 +6,7 @@
 //  Copyright © 2022 stripe-ios. All rights reserved.
 //
 
-import StripePaymentSheet
+@_spi(AppearanceAPIAdditionsPreview) import StripePaymentSheet
 import SwiftUI
 
 @available(iOS 14.0, *)
@@ -85,6 +85,11 @@ struct AppearancePlaygroundView: View {
             set: { self.appearance.cornerRadius = $0 }
         )
 
+        let sheetCornerRadiusBinding = Binding(
+            get: { self.appearance.sheetCornerRadius },
+            set: { self.appearance.sheetCornerRadius = $0 }
+        )
+
         let borderWidthBinding = Binding(
             get: { self.appearance.borderWidth },
             set: { self.appearance.borderWidth = $0 }
@@ -140,6 +145,26 @@ struct AppearancePlaygroundView: View {
             set: { self.appearance.formInsets.trailing = $0 }
         )
 
+        let textFieldInsetsTopBinding = Binding(
+            get: { self.appearance.textFieldInsets.top },
+            set: { self.appearance.textFieldInsets.top = $0 }
+        )
+
+        let textFieldInsetsLeftBinding = Binding(
+            get: { self.appearance.textFieldInsets.leading },
+            set: { self.appearance.textFieldInsets.leading = $0 }
+        )
+
+        let textFieldInsetsBottomBinding = Binding(
+            get: { self.appearance.textFieldInsets.bottom },
+            set: { self.appearance.textFieldInsets.bottom = $0 }
+        )
+
+        let textFieldInsetsRightBinding = Binding(
+            get: { self.appearance.textFieldInsets.trailing },
+            set: { self.appearance.textFieldInsets.trailing = $0 }
+        )
+
         let sizeScaleFactorBinding = Binding(
             get: { self.appearance.font.sizeScaleFactor },
             set: { self.appearance.font.sizeScaleFactor = $0 }
@@ -148,6 +173,19 @@ struct AppearancePlaygroundView: View {
         let regularFontBinding = Binding(
             get: { self.appearance.font.base.fontDescriptor.postscriptName },
             set: { self.appearance.font.base = UIFont(name: $0, size: 12.0)! }
+        )
+
+        // MARK: Custom font bindings
+
+        let customHeadlineFontBinding = Binding(
+            get: { self.appearance.font.custom.headline?.fontDescriptor.postscriptName ?? "System Default" },
+            set: {
+                if $0 == "System Default" {
+                    self.appearance.font.custom.headline = nil
+                } else {
+                    self.appearance.font.custom.headline = UIFont(name: $0, size: 20.0)!
+                }
+            }
         )
 
         // MARK: Primary button bindings
@@ -299,6 +337,7 @@ struct AppearancePlaygroundView: View {
         )
 
         let regularFonts = ["AvenirNext-Regular", "PingFangHK-Regular", "ChalkboardSE-Light"]
+        let customFontOptions = ["System Default"] + regularFonts
 
         NavigationView {
             List {
@@ -323,8 +362,10 @@ struct AppearancePlaygroundView: View {
 
                 Section(header: Text("Miscellaneous")) {
                     Stepper(String(format: "cornerRadius: %.1f", appearance.cornerRadius), value: cornerRadiusBinding, in: 0...30)
+                    Stepper(String(format: "sheetCornerRadius: %.1f", appearance.sheetCornerRadius), value: sheetCornerRadiusBinding, in: 0...30)
                     Stepper(String(format: "borderWidth: %.1f", appearance.borderWidth), value: borderWidthBinding, in: 0.0...2.0, step: 0.5)
                     Stepper(String(format: "selectedBorderWidth: %.1f", appearance.selectedBorderWidth ?? appearance.borderWidth * 1.5), value: selectedBorderWidthBinding, in: 0.0...2.0, step: 0.5)
+                    Stepper(String(format: "sectionSpacing: %.1f", appearance.sectionSpacing), value: $appearance.sectionSpacing, in: 0...50, step: 1.0)
                     VStack {
                         Text("componentShadow")
                         ColorPicker("color", selection: componentShadowColorBinding)
@@ -355,6 +396,17 @@ struct AppearancePlaygroundView: View {
                         Stepper("right: \(Int(appearance.formInsets.trailing))",
                                 value: formInsetsRightBinding, in: 0...100)
                     }
+                    VStack {
+                        Text("textFieldInsets")
+                        Stepper("top: \(Int(appearance.textFieldInsets.top))",
+                                value: textFieldInsetsTopBinding, in: 0...50)
+                        Stepper("left: \(Int(appearance.textFieldInsets.leading))",
+                                value: textFieldInsetsLeftBinding, in: 0...50)
+                        Stepper("bottom: \(Int(appearance.textFieldInsets.bottom))",
+                                value: textFieldInsetsBottomBinding, in: 0...50)
+                        Stepper("right: \(Int(appearance.textFieldInsets.trailing))",
+                                value: textFieldInsetsRightBinding, in: 0...50)
+                    }
                 }
                 Section(header: Text("Fonts")) {
                     VStack {
@@ -365,6 +417,20 @@ struct AppearancePlaygroundView: View {
                         ForEach(regularFonts, id: \.self) {
                             Text($0).font(Font(UIFont(name: $0, size: UIFont.labelFontSize)! as CTFont))
                         }
+                    }
+
+                    DisclosureGroup {
+                        Picker("headline", selection: customHeadlineFontBinding) {
+                            ForEach(customFontOptions, id: \.self) { font in
+                                if font == "System Default" {
+                                    Text(font)
+                                } else {
+                                    Text(font).font(Font(UIFont(name: font, size: UIFont.labelFontSize)! as CTFont))
+                                }
+                            }
+                        }
+                    } label: {
+                        Text("Custom Fonts")
                     }
                 }
 

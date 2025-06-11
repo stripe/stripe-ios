@@ -13,7 +13,7 @@ import UIKit
 import XCTest
 
 @_spi(STP)@testable import StripeCore
-@testable import StripePaymentSheet
+@_spi(AppearanceAPIAdditionsPreview) @testable import StripePaymentSheet
 @_spi(STP)@testable import StripeUICore
 
 class PaymentSheetSnapshotTests: STPSnapshotTestCase {
@@ -226,6 +226,17 @@ class PaymentSheetSnapshotTests: STPSnapshotTestCase {
         verify(paymentSheet.bottomSheetViewController.view!)
     }
 
+    func testPaymentSheetTextFieldInsets() {
+        stubNewCustomerResponse()
+
+        var appearance = PaymentSheet.Appearance()
+        appearance.textFieldInsets = NSDirectionalEdgeInsets(top: 20, leading: 30, bottom: 20, trailing: 30)
+
+        preparePaymentSheet(appearance: appearance)
+        presentPaymentSheet(darkMode: false)
+        verify(paymentSheet.bottomSheetViewController.view!)
+    }
+
     func testPaymentSheetCustom() {
         stubReturningCustomerResponse()
 
@@ -305,6 +316,17 @@ class PaymentSheetSnapshotTests: STPSnapshotTestCase {
             appearance: appearance,
             applePayEnabled: false
         )
+        presentPaymentSheet(darkMode: false)
+        verify(paymentSheet.bottomSheetViewController.view!)
+    }
+
+    func testPaymentSheetNewCustomHeadlineFont() {
+        stubReturningCustomerResponse()
+
+        var appearance = PaymentSheet.Appearance()
+        appearance.font.custom.headline = UIFont(name: "AvenirNext-Bold", size: 128)!
+
+        preparePaymentSheet(customer: "snapshot", appearance: appearance, applePayEnabled: false)
         presentPaymentSheet(darkMode: false)
         verify(paymentSheet.bottomSheetViewController.view!)
     }
@@ -419,6 +441,51 @@ class PaymentSheetSnapshotTests: STPSnapshotTestCase {
 
         var appearance = PaymentSheet.Appearance()
         appearance.borderWidth = 2.0
+
+        preparePaymentSheet(
+            customer: "snapshot",
+            appearance: appearance,
+            applePayEnabled: false
+        )
+        presentPaymentSheet(darkMode: false)
+        verify(paymentSheet.bottomSheetViewController.view!)
+    }
+
+    func testPaymentSheetCustomSheetCornerRadius() {
+        stubReturningCustomerResponse()
+
+        var appearance = PaymentSheet.Appearance()
+        appearance.sheetCornerRadius = 0.0
+
+        preparePaymentSheet(
+            customer: "snapshot",
+            appearance: appearance,
+            applePayEnabled: false
+        )
+        presentPaymentSheet(darkMode: false)
+        verify(paymentSheet.bottomSheetViewController.view!)
+    }
+
+    func testPaymentSheetCustomSheetCornerRadiusLarge() {
+        stubReturningCustomerResponse()
+
+        var appearance = PaymentSheet.Appearance()
+        appearance.sheetCornerRadius = 24.0
+
+        preparePaymentSheet(
+            customer: "snapshot",
+            appearance: appearance,
+            applePayEnabled: false
+        )
+        presentPaymentSheet(darkMode: false)
+        verify(paymentSheet.bottomSheetViewController.view!)
+    }
+
+    func testPaymentSheetCustomSectionSpacing() {
+        stubReturningCustomerResponse()
+
+        var appearance = PaymentSheet.Appearance()
+        appearance.sectionSpacing = 40.0
 
         preparePaymentSheet(
             customer: "snapshot",
@@ -1179,6 +1246,176 @@ class PaymentSheetSnapshotTests: STPSnapshotTestCase {
 
     }
 
+    func testPaymentSheetCustomTextFieldInsets() {
+        stubReturningCustomerResponse()
+
+        var appearance = PaymentSheet.Appearance()
+        appearance.textFieldInsets = NSDirectionalEdgeInsets(top: 20, leading: 30, bottom: 20, trailing: 30)
+
+        preparePaymentSheet(
+            customer: "snapshot",
+            appearance: appearance,
+            applePayEnabled: false
+        )
+        presentPaymentSheet(darkMode: false)
+        verify(paymentSheet.bottomSheetViewController.view!)
+    }
+
+    func testPaymentSheetTextFieldInsetsZero() {
+        stubNewCustomerResponse()
+
+        var appearance = PaymentSheet.Appearance()
+        appearance.textFieldInsets = NSDirectionalEdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0)
+
+        preparePaymentSheet(appearance: appearance)
+        presentPaymentSheet(darkMode: false)
+        verify(paymentSheet.bottomSheetViewController.view!)
+    }
+
+    func testPaymentSheetTextFieldInsetsAsymmetric() {
+        stubNewCustomerResponse()
+
+        var appearance = PaymentSheet.Appearance()
+        // Test asymmetric insets: large top, small leading, medium bottom, large trailing
+        appearance.textFieldInsets = NSDirectionalEdgeInsets(top: 25, leading: 5, bottom: 15, trailing: 40)
+
+        preparePaymentSheet(appearance: appearance)
+        presentPaymentSheet(darkMode: false)
+        verify(paymentSheet.bottomSheetViewController.view!)
+    }
+
+    func testPaymentSheetTextFieldInsetsLarge() {
+        stubNewCustomerResponse()
+
+        var appearance = PaymentSheet.Appearance()
+        // Test large insets to ensure they work properly
+        appearance.textFieldInsets = NSDirectionalEdgeInsets(top: 50, leading: 60, bottom: 50, trailing: 60)
+
+        preparePaymentSheet(appearance: appearance)
+        presentPaymentSheet(darkMode: false)
+        verify(paymentSheet.bottomSheetViewController.view!)
+    }
+
+    func testPaymentSheetCustomTextFieldInsetsAsymmetric() {
+        stubReturningCustomerResponse()
+
+        var appearance = PaymentSheet.Appearance()
+        // Test asymmetric insets with returning customer
+        appearance.textFieldInsets = NSDirectionalEdgeInsets(top: 10, leading: 25, bottom: 35, trailing: 15)
+
+        preparePaymentSheet(
+            customer: "snapshot",
+            appearance: appearance,
+            applePayEnabled: false
+        )
+        presentPaymentSheet(darkMode: false)
+        verify(paymentSheet.bottomSheetViewController.view!)
+    }
+
+    func testPaymentSheetTextFieldInsetsDarkMode() {
+        stubNewCustomerResponse()
+
+        var appearance = PaymentSheet.Appearance()
+        appearance.textFieldInsets = NSDirectionalEdgeInsets(top: 20, leading: 30, bottom: 20, trailing: 30)
+
+        preparePaymentSheet(appearance: appearance)
+        presentPaymentSheet(darkMode: true)
+        verify(paymentSheet.bottomSheetViewController.view!)
+    }
+
+    func testPaymentSheetTextFieldInsetsDynamicType() {
+        stubNewCustomerResponse()
+
+        var appearance = PaymentSheet.Appearance()
+        appearance.textFieldInsets = NSDirectionalEdgeInsets(top: 20, leading: 30, bottom: 20, trailing: 30)
+
+        preparePaymentSheet(appearance: appearance)
+        presentPaymentSheet(darkMode: false, preferredContentSizeCategory: .extraExtraLarge)
+        verify(paymentSheet.bottomSheetViewController.view!)
+    }
+
+    func testPaymentSheetTextFieldInsetsWithColors() {
+        stubNewCustomerResponse()
+
+        var appearance = PaymentSheet.Appearance()
+        appearance.textFieldInsets = NSDirectionalEdgeInsets(top: 25, leading: 35, bottom: 25, trailing: 35)
+
+        // Add contrasting colors to make the insets more visible
+        appearance.colors.componentBackground = .lightGray
+        appearance.colors.componentBorder = .red
+        appearance.colors.background = .white
+        appearance.borderWidth = 2.0
+
+        preparePaymentSheet(appearance: appearance)
+        presentPaymentSheet(darkMode: false)
+        verify(paymentSheet.bottomSheetViewController.view!)
+    }
+
+    func testPaymentSheetTextFieldInsetsWithShadow() {
+        stubNewCustomerResponse()
+
+        var appearance = PaymentSheet.Appearance()
+        appearance.textFieldInsets = NSDirectionalEdgeInsets(top: 20, leading: 30, bottom: 20, trailing: 30)
+
+        // Add shadow to test interaction with text field insets
+        appearance.shadow = PaymentSheet.Appearance.Shadow(
+            color: .systemBlue,
+            opacity: 0.5,
+            offset: CGSize(width: 2, height: 2),
+            radius: 4
+        )
+
+        preparePaymentSheet(appearance: appearance)
+        presentPaymentSheet(darkMode: false)
+        verify(paymentSheet.bottomSheetViewController.view!)
+    }
+
+    func testPaymentSheetTextFieldInsetsWithFormInsets() {
+        stubNewCustomerResponse()
+
+        var appearance = PaymentSheet.Appearance()
+        appearance.textFieldInsets = NSDirectionalEdgeInsets(top: 15, leading: 20, bottom: 15, trailing: 20)
+        // Test interaction with form insets
+        appearance.formInsets = NSDirectionalEdgeInsets(top: 20, leading: 25, bottom: 20, trailing: 25)
+
+        preparePaymentSheet(appearance: appearance)
+        presentPaymentSheet(darkMode: false)
+        verify(paymentSheet.bottomSheetViewController.view!)
+    }
+
+    func testPaymentSheetCustomTextFieldInsetsWithThemedAppearance() {
+        stubNewCustomerResponse()
+
+        var appearance = PaymentSheet.Appearance.snapshotTestTheme
+        // Override textFieldInsets in the themed appearance
+        appearance.textFieldInsets = NSDirectionalEdgeInsets(top: 18, leading: 25, bottom: 18, trailing: 25)
+
+        preparePaymentSheet(
+            customer: "snapshot",
+            appearance: appearance,
+            applePayEnabled: false
+        )
+        presentPaymentSheet(darkMode: false)
+        verify(paymentSheet.bottomSheetViewController.view!)
+    }
+
+    func testPaymentSheetCustomFontsWithSizeScaleFactor() {
+        stubReturningCustomerResponse()
+
+        var appearance = PaymentSheet.Appearance()
+        appearance.font.sizeScaleFactor = 1.3
+        appearance.font.custom.headline = UIFont(name: "AvenirNext-Bold", size: 8)! // This should not be scaled
+        // Other fonts should be scaled by sizeScaleFactor
+
+        preparePaymentSheet(
+            customer: "snapshot",
+            appearance: appearance,
+            applePayEnabled: false
+        )
+        presentPaymentSheet(darkMode: false)
+        verify(paymentSheet.bottomSheetViewController.view!)
+    }
+
     private func updatePaymentMethodDetail(data: Data, variables: [String: String]) -> Data {
         var template = String(decoding: data, as: UTF8.self)
         for (templateKey, templateValue) in variables {
@@ -1490,6 +1727,7 @@ fileprivate extension PaymentSheet.Appearance {
 
         appearance.cornerRadius = 0.0
         appearance.borderWidth = 2.0
+        appearance.sheetCornerRadius = 20.0
         appearance.shadow = PaymentSheet.Appearance.Shadow(
             color: .orange,
             opacity: 0.5,

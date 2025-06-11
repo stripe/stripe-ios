@@ -356,6 +356,7 @@ extension PayWithLinkViewController {
             with paymentDetails: ConsumerPaymentDetails,
             confirmationExtras: LinkConfirmationExtras?
         ) {
+            coordinator?.allowSheetDismissal(false)
             view.endEditing(true)
 
             #if !os(visionOS)
@@ -375,16 +376,19 @@ extension PayWithLinkViewController {
                     self?.feedbackGenerator.notificationOccurred(.success)
                     #endif
                     self?.confirmButton.update(state: .succeeded, animated: true) {
+                        self?.coordinator?.allowSheetDismissal(true)
                         self?.coordinator?.finish(withResult: result, deferredIntentConfirmationType: deferredIntentConfirmationType)
                     }
                 case .canceled:
                     self?.confirmButton.update(state: .enabled)
+                    self?.coordinator?.allowSheetDismissal(true)
                 case .failed(let error):
                     #if !os(visionOS)
                     self?.feedbackGenerator.notificationOccurred(.error)
                     #endif
                     self?.updateErrorLabel(for: error)
                     self?.confirmButton.update(state: .enabled)
+                    self?.coordinator?.allowSheetDismissal(true)
                 }
             }
         }
@@ -668,12 +672,17 @@ extension PayWithLinkViewController.WalletViewController: LinkPaymentMethodPicke
         present(alertController, animated: true)
     }
 
-    func paymentDetailsPickerDidTapOnAddPayment(_ pickerView: LinkPaymentMethodPicker) {
+    func paymentDetailsPickerDidTapOnAddPayment(
+        _ pickerView: LinkPaymentMethodPicker,
+        sourceRect: CGRect
+    ) {
         let supportedPaymentDetailsTypes = linkAccount.supportedPaymentDetailsTypes(for: context.elementsSession)
 
         let bankAndCard = [ConsumerPaymentDetails.DetailsType.bankAccount, .card]
         if bankAndCard.allSatisfy(supportedPaymentDetailsTypes.contains) {
             let alertController = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
+            alertController.popoverPresentationController?.sourceView = pickerView
+            alertController.popoverPresentationController?.sourceRect = sourceRect
 
             let addBankAction = UIAlertAction(
                 title: STPLocalizedString(
@@ -736,8 +745,14 @@ extension PayWithLinkViewController.WalletViewController: LinkPaymentMethodPicke
         actions(for: index, includeCancelAction: false)
     }
 
-    func didTapOnAccountMenuItem(_ picker: LinkPaymentMethodPicker) {
+    func didTapOnAccountMenuItem(
+        _ picker: LinkPaymentMethodPicker,
+        sourceRect: CGRect
+    ) {
         let actionSheet = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
+        actionSheet.popoverPresentationController?.sourceView = picker
+        actionSheet.popoverPresentationController?.sourceRect = sourceRect
+
         actionSheet.addAction(UIAlertAction(
             title: STPLocalizedString("Log out of Link", "Title of the logout action."),
             style: .destructive,
@@ -746,10 +761,6 @@ extension PayWithLinkViewController.WalletViewController: LinkPaymentMethodPicke
             }
         ))
         actionSheet.addAction(UIAlertAction(title: String.Localized.cancel, style: .cancel))
-
-        // iPad support
-        actionSheet.popoverPresentationController?.sourceView = picker
-        actionSheet.popoverPresentationController?.sourceRect = picker.bounds
 
         present(actionSheet, animated: true)
     }

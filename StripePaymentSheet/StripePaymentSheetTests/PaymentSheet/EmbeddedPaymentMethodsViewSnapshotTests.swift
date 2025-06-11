@@ -1309,6 +1309,48 @@ class EmbeddedPaymentMethodsViewSnapshotTests: STPSnapshotTestCase {
         verify(embeddedView)
     }
 
+    func testEmbeddedPaymentMethodsView_withReturningLinkConsumer() {
+        LinkAccountContext.shared.account = PaymentSheetLinkAccount._testValue(email: "foo@bar.com")
+        let embeddedView = EmbeddedPaymentMethodsView(
+            initialSelection: nil,
+            paymentMethodTypes: [.stripe(.card), .stripe(.cashApp)],
+            savedPaymentMethod: nil,
+            appearance: .default,
+            shouldShowApplePay: true,
+            shouldShowLink: true,
+            savedPaymentMethodAccessoryType: .none,
+            mandateProvider: MockMandateProvider(),
+            savedPaymentMethods: []
+        )
+        let window = UIWindow()
+        window.backgroundColor = .systemBackground
+        window.isHidden = false
+        window.addAndPinSubview(embeddedView, insets: .zero)
+        verify(window)
+        LinkAccountContext.shared.account = nil
+    }
+
+    func testEmbeddedPaymentMethodsView_withUnknownLinkConsumer() {
+        LinkAccountContext.shared.account = PaymentSheetLinkAccount._testValue(email: "foo@bar.com", isRegistered: false)
+        let embeddedView = EmbeddedPaymentMethodsView(
+            initialSelection: nil,
+            paymentMethodTypes: [.stripe(.card), .stripe(.cashApp)],
+            savedPaymentMethod: nil,
+            appearance: .default,
+            shouldShowApplePay: true,
+            shouldShowLink: true,
+            savedPaymentMethodAccessoryType: .none,
+            mandateProvider: MockMandateProvider(),
+            savedPaymentMethods: []
+        )
+        let window = UIWindow()
+        window.backgroundColor = .systemBackground
+        window.isHidden = false
+        window.addAndPinSubview(embeddedView, insets: .zero)
+        verify(window)
+        LinkAccountContext.shared.account = nil
+    }
+
     func verify(
         _ view: UIView,
         identifier: String? = nil,
@@ -1317,6 +1359,31 @@ class EmbeddedPaymentMethodsViewSnapshotTests: STPSnapshotTestCase {
     ) {
         view.autosizeHeight(width: 300)
         STPSnapshotVerifyView(view, identifier: identifier, file: file, line: line)
+    }
+}
+
+extension PaymentSheetLinkAccount {
+    static func _testValue(email: String, isRegistered: Bool = true) -> PaymentSheetLinkAccount {
+        var session: ConsumerSession?
+        if isRegistered {
+            session = ConsumerSession(
+                clientSecret: "client_secret",
+                emailAddress: email,
+                redactedFormattedPhoneNumber: "+1********55",
+                unredactedPhoneNumber: nil,
+                phoneNumberCountry: nil,
+                verificationSessions: [
+                    .init(type: .sms, state: .verified)
+                ],
+                supportedPaymentDetailsTypes: [.card]
+            )
+        }
+        return .init(
+            email: email,
+            session: session,
+            publishableKey: "pk_123",
+            useMobileEndpoints: true
+        )
     }
 }
 

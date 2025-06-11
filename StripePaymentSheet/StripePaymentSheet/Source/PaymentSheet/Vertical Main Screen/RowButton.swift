@@ -168,9 +168,13 @@ class RowButton: UIView, EventHandler {
         stpAssertionFailure("RowButton init not called from subclass, use RowButton.create() instead of RowButton(...).")
     }
 
-    func setSublabel(text: String?) {
+    func setSublabel(text: String?, animated: Bool = true) {
+        guard text != sublabel.text else {
+            return
+        }
+        let duration = animated ? 0.2 : 0
         guard let text else {
-            UIView.animate(withDuration: 0.2) { [self] in
+            UIView.animate(withDuration: duration) { [self] in
                 self.sublabel.text = nil
                 self.sublabel.isHidden = true
                 self.setNeedsLayout()
@@ -180,10 +184,10 @@ class RowButton: UIView, EventHandler {
         }
         self.sublabel.text = text
         self.sublabel.alpha = 0
-        UIView.animate(withDuration: 0.2) { [self] in
+        UIView.animate(withDuration: duration) { [self] in
             self.sublabel.isHidden = text.isEmpty
         }
-        UIView.animate(withDuration: 0.1, delay: 0.1) { [self] in
+        UIView.animate(withDuration: duration / 2, delay: duration / 2) { [self] in
             self.sublabel.alpha = 1
         }
     }

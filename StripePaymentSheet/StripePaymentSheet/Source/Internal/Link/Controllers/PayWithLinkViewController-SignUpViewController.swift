@@ -152,6 +152,7 @@ extension PayWithLinkViewController {
 
         override func viewDidLoad() {
             super.viewDidLoad()
+            view.tintColor = .linkTextPrimary
 
             contentView.addSubview(stackView)
 
@@ -235,6 +236,8 @@ extension PayWithLinkViewController {
         func didTapSignUpButton(_ sender: Button) {
             signUpButton.isLoading = true
 
+            coordinator?.allowSheetDismissal(false)
+
             viewModel.signUp { [weak self] result in
                 guard let self else {
                     return
@@ -253,6 +256,7 @@ extension PayWithLinkViewController {
                 }
 
                 self.signUpButton.isLoading = false
+                coordinator?.allowSheetDismissal(true)
             }
         }
 
