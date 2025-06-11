@@ -45,7 +45,6 @@ final class SectionView: UIView {
 
         setupBorderLayer()
         update(with: viewModel)
-        applyDefaultBorder()
     }
 
     required init?(coder: NSCoder) {
