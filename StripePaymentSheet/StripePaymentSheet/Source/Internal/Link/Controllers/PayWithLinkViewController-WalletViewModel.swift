@@ -128,7 +128,8 @@ extension PayWithLinkViewController {
             return shouldShowApplePayButton
         }
 
-        var cancelButtonConfiguration: Button.Configuration {
+        var cancelButtonConfiguration: Button.Configuration? {
+            guard context.shouldShowSecondaryCta else { return nil }
             return shouldShowApplePayButton ? .linkPlain() : .linkSecondary()
         }
 
