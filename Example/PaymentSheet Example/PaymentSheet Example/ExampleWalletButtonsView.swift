@@ -149,6 +149,7 @@ class ExampleWalletButtonsModel: ObservableObject {
                     merchantId: "merchant.com.stripe.umbrella.test", // Be sure to use your own merchant ID here!
                     merchantCountryCode: "US"
                 )
+                configuration.shopPay = self.shopPayConfiguration
                 configuration.customer = .init(
                     id: customerId, ephemeralKeySecret: customerEphemeralKeySecret)
                 configuration.returnURL = "payments-example://stripe-redirect"
@@ -179,5 +180,109 @@ class ExampleWalletButtonsModel: ObservableObject {
             self.paymentSheetFlowController = nil
             preparePaymentSheet()
         }
+    }
+    var shopPayConfiguration: PaymentSheet.ShopPayConfiguration {
+        let singleBusinessDay = PaymentSheet.ShopPayConfiguration.DeliveryEstimate.DeliveryEstimateUnit(value: 1, unit: .business_day)
+        let fiveBusinessDays = PaymentSheet.ShopPayConfiguration.DeliveryEstimate.DeliveryEstimateUnit(value: 5, unit: .business_day)
+        let sevenBusinessDays = PaymentSheet.ShopPayConfiguration.DeliveryEstimate.DeliveryEstimateUnit(value: 7, unit: .business_day)
+
+        let handlers = PaymentSheet.ShopPayConfiguration.Handlers(
+            shippingMethodUpdateHandler: { shippingRateSelected, completion in
+                // Process the selected shipping method
+                // For example, you might recalculate totals based on the shipping rate
+                let selectedRate = shippingRateSelected.shippingRate
+                print("User selected shipping rate: \(selectedRate.displayName) with cost \(selectedRate.amount)")
+
+                // Create the update with the new line items and available shipping rates
+                let update = PaymentSheet.ShopPayConfiguration.ShippingRateUpdate(
+                    lineItems: [.init(name: "Subtotal", amount: 200),
+                                .init(name: "Tax", amount: 200),
+                                .init(name: "Shipping", amount: selectedRate.amount), ],
+                    shippingRates: [
+                        PaymentSheet.ShopPayConfiguration.ShippingRate(
+                            id: "standard",
+                            amount: 500,
+                            displayName: "Standard Shipping",
+                            deliveryEstimate: PaymentSheet.ShopPayConfiguration.DeliveryEstimate(
+                                minimum: .init(value: 3, unit: .business_day),
+                                maximum: .init(value: 5, unit: .business_day)
+                            )
+                        ),
+                        PaymentSheet.ShopPayConfiguration.ShippingRate(
+                            id: "express",
+                            amount: 1000,
+                            displayName: "Express Shipping",
+                            deliveryEstimate: .init(
+                                minimum: .init(value: 1, unit: .business_day),
+                                maximum: .init(value: 2, unit: .business_day)
+                            )
+                        ),
+                    ]
+                )
+
+                // Return the update to the Shop Pay UI
+                completion(update)
+            },
+            shippingContactUpdateHandler: { shippingContactSelected, completion in
+                // Process the selected shipping contact information
+                let name = shippingContactSelected.name
+                let address = shippingContactSelected.address
+
+                print("User selected shipping to: \(name) in \(address.city), \(address.state)")
+                // Check if we can ship to this location
+                let canShipToLocation = self.isValidShippingLocation(address)
+
+                if canShipToLocation {
+                    // Create available shipping rates based on the location
+                    let shippingRates = self.getShippingRatesForLocation(address)
+
+                    // Return the update with new line items and shipping rates
+                    let update = PaymentSheet.ShopPayConfiguration.ShippingContactUpdate(
+                        lineItems: [.init(name: "Subtotal", amount: 200),
+                                    .init(name: "Tax", amount: 200),
+                                    .init(name: "Shipping", amount: shippingRates.first!.amount), ],
+                        shippingRates: shippingRates
+                    )
+
+                    completion(update)
+                } else {
+                    // If we can't ship to this location, pass nil to reject it
+                    completion(nil)
+                }
+            }
+        )
+
+        return PaymentSheet.ShopPayConfiguration(shippingAddressRequired: true,
+                                                 lineItems: [.init(name: "product 1", amount: 1099)],
+                                                 shippingRates: [.init(id: "id1", amount: 1099, displayName: "Overnight", deliveryEstimate: .init(minimum: singleBusinessDay, maximum: singleBusinessDay)),
+                                                                 .init(id: "id2", amount: 0, displayName: "Free", deliveryEstimate: .init(minimum: fiveBusinessDays, maximum: sevenBusinessDays)),
+                                                                ],
+                                                 shopId: "shop_1234",
+                                                 handlers: handlers)
+    }
+    func isValidShippingLocation(_ address: PaymentSheet.ShopPayConfiguration.PartialAddress) -> Bool {
+        return true
+    }
+    func getShippingRatesForLocation(_ address: PaymentSheet.ShopPayConfiguration.PartialAddress) -> [PaymentSheet.ShopPayConfiguration.ShippingRate] {
+        return [
+            PaymentSheet.ShopPayConfiguration.ShippingRate(
+                id: "standard",
+                amount: 500,
+                displayName: "Standard Shipping",
+                deliveryEstimate: .init(
+                    minimum: .init(value: 3, unit: .business_day),
+                    maximum: .init(value: 5, unit: .business_day)
+                )
+            ),
+            PaymentSheet.ShopPayConfiguration.ShippingRate(
+                id: "express",
+                amount: 1000,
+                displayName: "Express Shipping",
+                deliveryEstimate: .init(
+                    minimum: .init(value: 1, unit: .business_day),
+                    maximum: .init(value: 2, unit: .business_day)
+                )
+            ),
+        ]
     }
 }
