@@ -33,31 +33,16 @@ class SheetNavigationBar: UIView {
         let dummyView = UIView(frame: .zero)
         return dummyView
     }()
-    fileprivate lazy var closeButtonLeft: UIButton = {
-        let button = SheetNavigationButton(type: .custom)
-        button.setImage(Image.icon_x_standalone.makeImage(template: true), for: .normal)
-        button.tintColor = appearance.colors.icon
-        button.accessibilityLabel = String.Localized.close
-        button.accessibilityIdentifier = "UIButton.Close"
-        return button
+    internal lazy var closeButtonLeft: UIButton = {
+        createCloseButton()
     }()
 
-    fileprivate lazy var closeButtonRight: UIButton = {
-        let button = SheetNavigationButton(type: .custom)
-        button.setImage(Image.icon_x_standalone.makeImage(template: true), for: .normal)
-        button.tintColor = appearance.colors.icon
-        button.accessibilityLabel = String.Localized.close
-        button.accessibilityIdentifier = "UIButton.Close"
-        return button
+    internal lazy var closeButtonRight: UIButton = {
+        createCloseButton()
     }()
 
     fileprivate lazy var backButton: UIButton = {
-        let button = SheetNavigationButton(type: .custom)
-        button.setImage(Image.icon_chevron_left_standalone.makeImage(template: true), for: .normal)
-        button.tintColor = appearance.colors.icon
-        button.accessibilityLabel = String.Localized.back
-        button.accessibilityIdentifier = "UIButton.Back"
-        return button
+        createBackButton()
     }()
 
     lazy var additionalButton: UIButton = {
@@ -175,6 +160,24 @@ class SheetNavigationBar: UIView {
         layer.shadowOpacity = isHidden ? 0 : 0.1
         layer.shadowColor = UIColor.black.cgColor
         layer.shadowOffset = CGSize(width: 0, height: 2)
+    }
+
+    func createBackButton() -> UIButton {
+        let button = SheetNavigationButton(type: .custom)
+        button.setImage(Image.icon_chevron_left_standalone.makeImage(template: true), for: .normal)
+        button.tintColor = appearance.colors.icon
+        button.accessibilityLabel = String.Localized.back
+        button.accessibilityIdentifier = "UIButton.Back"
+        return button
+    }
+
+    func createCloseButton() -> UIButton {
+        let button = SheetNavigationButton(type: .custom)
+        button.setImage(Image.icon_x_standalone.makeImage(template: true), for: .normal)
+        button.tintColor = appearance.colors.icon
+        button.accessibilityLabel = String.Localized.close
+        button.accessibilityIdentifier = "UIButton.Close"
+        return button
     }
 }
 

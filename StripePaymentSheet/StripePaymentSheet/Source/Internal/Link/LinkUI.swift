@@ -60,7 +60,7 @@ enum LinkUI {
 
     static let compactButtonMargins: NSDirectionalEdgeInsets = .insets(top: 12, leading: 16, bottom: 12, trailing: 16)
 
-    static let contentMargins: NSDirectionalEdgeInsets = .insets(top: 22, leading: 20, bottom: 20, trailing: 20)
+    static let contentMargins: NSDirectionalEdgeInsets = .insets(top: 2, leading: 20, bottom: 20, trailing: 20)
 
     // MARK: - Content spacing
 
@@ -73,6 +73,14 @@ enum LinkUI {
     static let smallContentSpacing: CGFloat = 8
 
     static let tinyContentSpacing: CGFloat = 4
+
+    // MARK: - Navigation bar
+
+    static let navigationBarHeight: CGFloat = 70
+
+    static let navigationBarButtonSize: CGFloat = 32
+
+    static let navigationBarButtonContentSize: CGFloat = 12
 
     // MARK: - Animations
 
