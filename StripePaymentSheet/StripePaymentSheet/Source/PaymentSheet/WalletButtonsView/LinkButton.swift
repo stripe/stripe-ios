@@ -58,30 +58,6 @@ struct LinkButton: View {
 }
 
 #if DEBUG
-private enum Stubs {
-    static let consumerSession: ConsumerSession = .init(
-        clientSecret: "cs_123",
-        emailAddress: "jane.diaz@gmail.com",
-        redactedFormattedPhoneNumber: "(•••) ••• ••70",
-        unredactedPhoneNumber: "+17070707070",
-        phoneNumberCountry: "US",
-        verificationSessions: [],
-        supportedPaymentDetailsTypes: [.card]
-    )
-
-    static func linkAccount(
-        email: String = "jane.diaz@gmail.com",
-        isRegistered: Bool = true
-    ) -> PaymentSheetLinkAccount {
-        .init(
-            email: email,
-            session: isRegistered ? Self.consumerSession : nil,
-            publishableKey: "pk_test_123",
-            useMobileEndpoints: true
-        )
-    }
-}
-
 @available(iOS 16.0, *)
 private struct LinkButtonPreview: View {
     private let viewModel = LinkButtonViewModel()
