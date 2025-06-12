@@ -9,7 +9,7 @@ import Foundation
 @_spi(STP) import StripeUICore
 import UIKit
 
-/// A `RowButton` subclass that presents a flat layout featuring a chevron. No no selected state is available for this style.
+/// A `RowButton` subclass that presents a flat layout featuring a chevron. No selected state is available for this style.
 final class RowButtonFlatWithChevron: RowButton {
     // MARK: - Subviews
     private lazy var chevronView: UIImageView = {
