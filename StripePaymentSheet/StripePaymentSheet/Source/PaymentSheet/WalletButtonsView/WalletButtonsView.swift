@@ -111,6 +111,7 @@ import SwiftUI
                 }
             case "shop_pay":
                 wallets.append(.shopPay)
+
             default:
                 continue
             }
