@@ -16,6 +16,7 @@ extension PayWithLinkViewController {
         weak var coordinator: PayWithLinkCoordinating?
 
         let context: Context
+        let navigationTitle: String?
 
         var preferredContentMargins: NSDirectionalEdgeInsets {
             LinkUI.contentMargins
@@ -23,8 +24,9 @@ extension PayWithLinkViewController {
 
         private(set) lazy var contentView = UIView()
 
-        init(context: Context) {
+        init(context: Context, title: String? = nil) {
             self.context = context
+            self.navigationTitle = title
             super.init(nibName: nil, bundle: nil)
         }
 
@@ -59,7 +61,13 @@ extension PayWithLinkViewController {
 
         var requiresFullScreen: Bool { false }
 
-        lazy var navigationBar: SheetNavigationBar = { LinkSheetNavigationBar(isTestMode: false, appearance: .init()) }()
+        lazy var navigationBar: SheetNavigationBar = {
+            LinkSheetNavigationBar(
+                title: navigationTitle,
+                isTestMode: false,
+                appearance: .init()
+            )
+        }()
 
         func didTapOrSwipeToDismiss() {
             guard context.isDismissible else { return }

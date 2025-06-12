@@ -25,8 +25,12 @@ class LinkSheetNavigationBar: SheetNavigationBar {
         return imageView
     }()
 
-    override init(isTestMode: Bool, appearance: PaymentSheet.Appearance) {
-        super.init(isTestMode: isTestMode, appearance: appearance)
+    override init(
+        title: String? = nil,
+        isTestMode: Bool,
+        appearance: PaymentSheet.Appearance
+    ) {
+        super.init(title: title, isTestMode: isTestMode, appearance: appearance)
 
         logoView.translatesAutoresizingMaskIntoConstraints = false
         addSubview(logoView)
