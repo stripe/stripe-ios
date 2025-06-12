@@ -12,6 +12,7 @@ import SwiftUI
         case applePay
         case link
         case linkInlineVerification(PaymentSheetLinkAccount)
+        case shopPay
     }
 
     let flowController: PaymentSheet.FlowController
@@ -56,6 +57,12 @@ import SwiftUI
                             appearance: flowController.configuration.appearance,
                             onComplete: completion
                         )
+                    case .shopPay:
+                        ShopPayButton {
+                            Task {
+                                checkoutTapped(.shopPay)
+                            }
+                        }
                     }
                 }
             }
@@ -102,6 +109,8 @@ import SwiftUI
                 if PaymentSheet.isApplePayEnabled(elementsSession: flowController.elementsSession, configuration: flowController.configuration) {
                     wallets.append(.applePay)
                 }
+            case "shop_pay":
+                wallets.append(.shopPay)
             default:
                 continue
             }
@@ -145,6 +154,9 @@ import SwiftUI
                     flowController.updatePaymentOption()
                 }
             )
+        case .shopPay:
+            // TODO
+            print("TODO")
         }
     }
 
