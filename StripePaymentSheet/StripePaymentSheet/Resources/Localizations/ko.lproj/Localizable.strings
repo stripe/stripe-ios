@@ -106,6 +106,8 @@
 
 "Continue another way" = "다른 방식으로 계속";
 
+"Debit or credit card" = "직불 또는 신용 카드";
+
 "Default" = "기본값";
 
 "Default payment method" = "기본 결제 방식";
@@ -132,11 +134,15 @@
 
 "IBAN" = "IBAN";
 
+"Log in or sign up" = "로그인 또는 등록";
+
 "Log out of Link" = "Link 로그아웃";
 
 "Manage SEPA debit" = "SEPA 자동 이체 관리";
 
 "Manage US bank account" = "미국 은행 계좌 관리";
+
+"Manage bank account" = "은행 계좌 관리";
 
 "Manage card" = "카드 관리";
 
@@ -155,6 +161,8 @@
 "New payment method" = "새 결제 방식";
 
 "No %@ promo" = "%@ 프로모션 없음";
+
+"Not you?" = "본인이 아닙니까?";
 
 "Only card brand can be changed." = "카드 브랜드만 변경할 수 있습니다.";
 

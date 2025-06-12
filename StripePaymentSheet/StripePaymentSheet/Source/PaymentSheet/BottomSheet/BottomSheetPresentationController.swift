@@ -165,7 +165,7 @@ extension BottomSheetPresentationController {
 
     private func addRoundedCorners(to view: UIView) {
         view.layer.maskedCorners =  [.layerMinXMinYCorner, .layerMaxXMinYCorner]
-        view.layer.cornerRadius = 12
+        view.layer.cornerRadius = presentable?.sheetCornerRadius ?? BottomSheetTransitioningDelegate.appearance.sheetCornerRadius
         view.layer.masksToBounds = true
     }
 }

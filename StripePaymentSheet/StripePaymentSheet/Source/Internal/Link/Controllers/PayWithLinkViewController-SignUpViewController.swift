@@ -48,7 +48,11 @@ extension PayWithLinkViewController {
             return label
         }()
 
-        private lazy var emailElement = LinkEmailElement(defaultValue: viewModel.emailAddress, showLogo: false, theme: theme)
+        private lazy var emailElement = {
+            let element = LinkEmailElement(defaultValue: viewModel.emailAddress, showLogo: false, theme: theme)
+            element.indicatorTintColor = .linkIconBrand
+            return element
+        }()
 
         private lazy var phoneNumberElement = PhoneNumberElement(
             defaultCountryCode: context.configuration.defaultBillingDetails.address.country,
@@ -148,11 +152,12 @@ extension PayWithLinkViewController {
 
         override func viewDidLoad() {
             super.viewDidLoad()
+            view.tintColor = .linkTextPrimary
 
             contentView.addSubview(stackView)
 
             NSLayoutConstraint.activate([
-                contentView.topAnchor.constraint(equalTo: stackView.topAnchor),
+                contentView.topAnchor.constraint(equalTo: stackView.topAnchor, constant: -LinkUI.extraLargeContentSpacing),
                 contentView.leadingAnchor.constraint(equalTo: stackView.leadingAnchor),
                 contentView.trailingAnchor.constraint(equalTo: stackView.trailingAnchor),
                 contentView.bottomAnchor.constraint(greaterThanOrEqualTo: stackView.bottomAnchor),
@@ -231,6 +236,8 @@ extension PayWithLinkViewController {
         func didTapSignUpButton(_ sender: Button) {
             signUpButton.isLoading = true
 
+            coordinator?.allowSheetDismissal(false)
+
             viewModel.signUp { [weak self] result in
                 guard let self else {
                     return
@@ -249,6 +256,7 @@ extension PayWithLinkViewController {
                 }
 
                 self.signUpButton.isLoading = false
+                coordinator?.allowSheetDismissal(true)
             }
         }
 

@@ -1,4 +1,10 @@
-## XX.XX.X XXXX-XX-XX
+## x.x.x x-x-x
+
+### PaymentSheet
+* [Fixed] A bug where the EmbeddedPaymentElement failed to display forms when tapped in SwiftUI.
+* [Changed] `paymentOption` on `PaymentSheet.FlowController` is now annotated with `@Published` for better ergonomics in SwiftUI.
+
+## 24.15.0 2025-06-02
 
 ### Connect
 * [CHANGED] Removed `PrivateBetaConnect` annotation and all usages. [Connect SDK](https://docs.stripe.com/connect/get-started-connect-embedded-components?platform=ios) is now GA.

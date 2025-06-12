@@ -11,7 +11,7 @@ import XCTest
 
 @_spi(STP)@testable import StripeCore
 @_spi(STP) @testable import StripePayments
-@_spi(STP) @testable import StripePaymentSheet
+@_spi(AppearanceAPIAdditionsPreview) @_spi(STP) @testable import StripePaymentSheet
 @_spi(STP) @testable import StripePaymentsUI
 @_spi(STP)@testable import StripeUICore
 
@@ -87,6 +87,15 @@ class CustomerSheetSnapshotTests: STPSnapshotTestCase {
     func testNoSavedPMsCustomAppearance() {
         stubSessions(paymentMethods: "\"card\"")
         prepareCS(configuration: configuration(appearance: .snapshotTestTheme))
+        presentCS(darkMode: false)
+        verify(cs.bottomSheetViewController.view!)
+    }
+
+    func testNoSavedPMsCustomSectionSpacing() {
+        stubSessions(paymentMethods: "\"card\"")
+        var appearance = PaymentSheet.Appearance()
+        appearance.sectionSpacing = 40.0
+        prepareCS(configuration: configuration(appearance: appearance))
         presentCS(darkMode: false)
         verify(cs.bottomSheetViewController.view!)
     }
@@ -503,6 +512,28 @@ class CustomerSheetSnapshotTests: STPSnapshotTestCase {
         verify(cs.bottomSheetViewController.view!)
     }
 
+    func testCustomSheetCornerRadius() {
+        stubSessions(paymentMethods: "\"card\"")
+        let customerAdapter = StubCustomerAdapter()
+        customerAdapter.paymentMethods = [stubbedPaymentMethod()]
+        var appearance = PaymentSheet.Appearance()
+        appearance.sheetCornerRadius = 0.0
+        prepareCS(configuration: configuration(applePayEnabled: true, appearance: appearance), customerAdapter: customerAdapter)
+        presentCS(darkMode: false)
+        verify(cs.bottomSheetViewController.view!)
+    }
+
+    func testCustomSheetCornerRadiusLarge() {
+        stubSessions(paymentMethods: "\"card\"")
+        let customerAdapter = StubCustomerAdapter()
+        customerAdapter.paymentMethods = [stubbedPaymentMethod()]
+        var appearance = PaymentSheet.Appearance()
+        appearance.sheetCornerRadius = 24.0
+        prepareCS(configuration: configuration(applePayEnabled: true, appearance: appearance), customerAdapter: customerAdapter)
+        presentCS(darkMode: false)
+        verify(cs.bottomSheetViewController.view!)
+    }
+
     private func billingDetails() -> PaymentSheet.BillingDetails {
         return .init(
             address: .init(
@@ -644,6 +675,7 @@ fileprivate extension PaymentSheet.Appearance {
 
         appearance.cornerRadius = 0.0
         appearance.borderWidth = 2.0
+        appearance.sheetCornerRadius = 20.0
         appearance.shadow = PaymentSheet.Appearance.Shadow(
             color: .orange,
             opacity: 0.5,

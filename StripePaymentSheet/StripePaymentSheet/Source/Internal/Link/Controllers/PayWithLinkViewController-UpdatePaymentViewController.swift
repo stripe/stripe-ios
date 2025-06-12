@@ -66,13 +66,6 @@ extension PayWithLinkViewController {
             self?.updateCard()
         }
 
-        private lazy var cancelButton: Button = {
-            let button = Button(configuration: .linkSecondary(), title: String.Localized.cancel)
-            button.addTarget(self, action: #selector(didSelectCancel), for: .touchUpInside)
-            button.adjustsFontForContentSizeCategory = true
-            return button
-        }()
-
         private lazy var errorLabel: UILabel = {
             return ElementsUI.makeErrorLabel(theme: LinkUI.appearance.asElementsTheme)
         }()
@@ -125,7 +118,6 @@ extension PayWithLinkViewController {
                 errorLabel,
                 thisIsYourDefaultLabel,
                 updateButton,
-                cancelButton,
             ])
 
             stackView.axis = .vertical
@@ -176,6 +168,8 @@ extension PayWithLinkViewController {
                 )
             )
 
+            coordinator?.allowSheetDismissal(false)
+
             linkAccount.updatePaymentDetails(id: paymentMethod.stripeID, updateParams: updateParams) { [weak self] result in
                 guard let self else {
                     return
@@ -195,6 +189,7 @@ extension PayWithLinkViewController {
                     }
 
                     self.updateButton.update(state: .succeeded, style: nil, callToAction: nil, animated: true) {
+                        self.coordinator?.allowSheetDismissal(true)
                         self.delegate?.didUpdate(
                             paymentMethod: updatedPaymentDetails,
                             confirmationExtras: confirmationExtras
@@ -205,12 +200,9 @@ extension PayWithLinkViewController {
                     self.updateErrorLabel(for: error)
                     self.cardEditElement.view.isUserInteractionEnabled = true
                     self.updateButton.update(state: .enabled)
+                    coordinator?.allowSheetDismissal(true)
                 }
             }
-        }
-
-        @objc func didSelectCancel() {
-            _ = self.bottomSheetController?.popContentViewController()
         }
 
         func updateErrorLabel(for error: Error?) {

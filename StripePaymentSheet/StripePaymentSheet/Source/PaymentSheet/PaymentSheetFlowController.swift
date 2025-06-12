@@ -6,6 +6,7 @@
 //  Copyright © 2020 Stripe, Inc. All rights reserved.
 //
 
+import Combine
 import Foundation
 import SafariServices
 @_spi(STP) import StripeCore
@@ -119,7 +120,7 @@ extension PaymentSheet {
     }
 
     /// A class that presents the individual steps of a payment flow
-    public class FlowController {
+    public class FlowController: ObservableObject {
         // MARK: - Public properties
         /// Contains details about a payment method that can be displayed to the customer
         public struct PaymentOptionDisplayData {
@@ -177,12 +178,7 @@ extension PaymentSheet {
 
         /// Contains information about the customer's desired payment option.
         /// You can use this to e.g. display the payment option in your UI.
-        public var paymentOption: PaymentOptionDisplayData? {
-            if let selectedPaymentOption = _paymentOption {
-                return PaymentOptionDisplayData(paymentOption: selectedPaymentOption, currency: intent.currency)
-            }
-            return nil
-        }
+        @Published public private(set) var paymentOption: PaymentOptionDisplayData?
 
         // MARK: - Private properties
         var intent: Intent { viewController.intent }
@@ -191,6 +187,7 @@ extension PaymentSheet {
         var viewController: FlowControllerViewControllerProtocol
 
         private var presentPaymentOptionsCompletion: (() -> Void)?
+        private var didDismissLinkVerificationDialog: Bool = false
 
         // If a WalletButtonsView is currently visible
         var walletButtonsShownExternally: Bool = false {
@@ -201,7 +198,7 @@ extension PaymentSheet {
         }
 
         /// The desired, valid (ie passed client-side checks) payment option from the underlying payment options VC.
-        private var _paymentOption: PaymentOption? {
+        private var internalPaymentOption: PaymentOption? {
             guard viewController.error == nil else {
                 return nil
             }
@@ -213,7 +210,15 @@ extension PaymentSheet {
             guard elementsSession.enableFlowControllerRUX(for: configuration) else {
                 return false
             }
-            return _paymentOption?.canLaunchLink ?? false
+
+            let currentSession = LinkAccountContext.shared.account?.currentSession
+
+            if currentSession?.hasStartedSMSVerification == true && didDismissLinkVerificationDialog {
+                // We asked the user to sign in once, and they declined.
+                return false
+            }
+
+            return internalPaymentOption?.canLaunchLink ?? false
         }
 
         // Stores the state of the most recent call to the update API
@@ -249,6 +254,7 @@ extension PaymentSheet {
             self.analyticsHelper.logInitialized()
             self.viewController = Self.makeViewController(configuration: configuration, loadResult: loadResult, analyticsHelper: analyticsHelper, walletButtonsShownExternally: self.walletButtonsShownExternally)
             self.viewController.flowControllerDelegate = self
+            updatePaymentOption()
         }
 
         // MARK: - Public methods
@@ -392,7 +398,7 @@ extension PaymentSheet {
             if canPresentLinkInPlaceOfFlowController {
                 presentNativeLinkInPlaceOfFlowController(
                     from: presentingViewController,
-                    selectedPaymentDetailsID: _paymentOption?.currentLinkPaymentMethod,
+                    selectedPaymentDetailsID: internalPaymentOption?.currentLinkPaymentMethod,
                     returnToPaymentSheet: showPaymentOptions
                 )
                 return
@@ -406,22 +412,22 @@ extension PaymentSheet {
             selectedPaymentDetailsID: String? = nil,
             returnToPaymentSheet: @escaping () -> Void
         ) {
-            presentingViewController.presentNativeLink(
-                selectedPaymentDetailsID: selectedPaymentDetailsID,
-                configuration: configuration,
-                intent: intent,
-                elementsSession: elementsSession,
-                analyticsHelper: analyticsHelper,
-                verificationRejected: returnToPaymentSheet
-            ) { [weak self] confirmOption, shouldReturnToPaymentSheet in
+            let verificationDismissed: () -> Void = { [weak self] in
+                self?.didDismissLinkVerificationDialog = true
+                returnToPaymentSheet()
+            }
+
+            let completionCallback: (PaymentSheet.LinkConfirmOption?, Bool) -> Void = { [weak self] confirmOption, shouldReturnToPaymentSheet in
                 guard let self else { return }
 
                 if let confirmOption {
                     self.viewController.linkConfirmOption = confirmOption
+                    self.updatePaymentOption()
                 }
 
                 if shouldReturnToPaymentSheet {
                     self.viewController.linkConfirmOption = nil
+                    self.updatePaymentOption()
                     returnToPaymentSheet()
                     return
                 }
@@ -429,6 +435,16 @@ extension PaymentSheet {
                 self.presentPaymentOptionsCompletion?()
                 self.isPresented = false
             }
+
+            presentingViewController.presentNativeLink(
+                selectedPaymentDetailsID: selectedPaymentDetailsID,
+                configuration: configuration,
+                intent: intent,
+                elementsSession: elementsSession,
+                analyticsHelper: analyticsHelper,
+                verificationDismissed: verificationDismissed,
+                callback: completionCallback
+            )
         }
 
         /// Completes the payment or setup.
@@ -455,7 +471,7 @@ extension PaymentSheet {
                 break
             }
 
-            guard let paymentOption = _paymentOption else {
+            guard let paymentOption = internalPaymentOption else {
                 assertionFailure("`confirm` should only be called when `paymentOption` is not nil")
                 completion(.failed(error: PaymentSheetError.confirmingWithInvalidPaymentOption))
                 return
@@ -550,13 +566,13 @@ extension PaymentSheet {
                         loadResult: loadResult,
                         analyticsHelper: analyticsHelper,
                         walletButtonsShownExternally: walletButtonsShownExternally,
-                        previousPaymentOption: self._paymentOption
+                        previousPaymentOption: self.internalPaymentOption
                     )
                     self.viewController.flowControllerDelegate = self
 
-                    // Synchronously pre-load image into cache
-                    // Accessing paymentOption has the side-effect of ensuring its `image` property is loaded (e.g. from the internet instead of disk) before we call the completion handler.
-                    _ = self.paymentOption
+                    // Update the payment option and synchronously pre-load image into cache
+                    self.updatePaymentOption()
+                    self.preloadPaymentOptionImage()
 
                     self.latestUpdateContext?.status = .completed
                     completion(nil)
@@ -574,9 +590,37 @@ extension PaymentSheet {
                 loadResult: self.viewController.loadResult,
                 analyticsHelper: analyticsHelper,
                 walletButtonsShownExternally: self.walletButtonsShownExternally,
-                previousPaymentOption: self._paymentOption
+                previousLinkConfirmOption: self.viewController.linkConfirmOption,
+                previousPaymentOption: self.internalPaymentOption
             )
             self.viewController.flowControllerDelegate = self
+            updatePaymentOption()
+        }
+
+        /// Updates the published paymentOption property based on the current state
+        internal func updatePaymentOption() {
+            if Thread.isMainThread {
+                if let selectedPaymentOption = internalPaymentOption {
+                    paymentOption = PaymentOptionDisplayData(paymentOption: selectedPaymentOption, currency: intent.currency)
+                } else {
+                    paymentOption = nil
+                }
+            } else {
+                DispatchQueue.main.async { [weak self] in
+                    guard let self = self else { return }
+                    if let selectedPaymentOption = self.internalPaymentOption {
+                        self.paymentOption = PaymentOptionDisplayData(paymentOption: selectedPaymentOption, currency: self.intent.currency)
+                    } else {
+                        self.paymentOption = nil
+                    }
+                }
+            }
+        }
+
+        /// Preloads the payment option image into cache
+        private func preloadPaymentOptionImage() {
+            // Accessing paymentOption has the side-effect of ensuring its `image` property is loaded (e.g. from the internet instead of disk)
+            _ = paymentOption?.image
         }
 
         // MARK: Internal helper methods
@@ -601,18 +645,20 @@ extension PaymentSheet {
             loadResult: PaymentSheetLoader.LoadResult,
             analyticsHelper: PaymentSheetAnalyticsHelper,
             walletButtonsShownExternally: Bool,
+            previousLinkConfirmOption: LinkConfirmOption? = nil,
             previousPaymentOption: PaymentOption? = nil
         ) -> FlowControllerViewControllerProtocol {
+            let controller: FlowControllerViewControllerProtocol
             switch configuration.paymentMethodLayout {
             case .horizontal:
-                return PaymentSheetFlowControllerViewController(
+                controller = PaymentSheetFlowControllerViewController(
                     configuration: configuration,
                     loadResult: loadResult,
                     analyticsHelper: analyticsHelper,
                     previousPaymentOption: previousPaymentOption
                 )
             case .vertical, .automatic:
-                return PaymentSheetVerticalViewController(
+                controller = PaymentSheetVerticalViewController(
                     configuration: configuration,
                     loadResult: loadResult,
                     isFlowController: true,
@@ -621,6 +667,8 @@ extension PaymentSheet {
                     previousPaymentOption: previousPaymentOption
                 )
             }
+            controller.linkConfirmOption = previousLinkConfirmOption
+            return controller
         }
     }
 }
@@ -642,6 +690,7 @@ extension PaymentSheet.FlowController: FlowControllerViewControllerDelegate {
         }
         flowControllerViewController.dismiss(animated: true) {
             self.presentPaymentOptionsCompletion?()
+            self.updatePaymentOption()
             self.isPresented = false
         }
     }

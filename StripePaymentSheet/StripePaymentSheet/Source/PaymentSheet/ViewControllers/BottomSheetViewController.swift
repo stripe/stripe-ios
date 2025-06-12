@@ -29,6 +29,10 @@ class BottomSheetViewController: UIViewController, BottomSheetPresentable {
         static let keyboardAvoidanceEdgePadding: CGFloat = 16
     }
 
+    var sheetCornerRadius: CGFloat? {
+        BottomSheetTransitioningDelegate.appearance.sheetCornerRadius
+    }
+
     // MARK: - Views
     lazy var scrollView: UIScrollView = {
         let scrollView = UIScrollView()

@@ -46,20 +46,6 @@ extension PayWithLinkViewController {
             self?.confirm()
         }
 
-        private lazy var cancelButton: Button = {
-            let buttonTitle = isAddingFirstPaymentMethod
-                ? context.secondaryButtonLabel
-                : String.Localized.cancel
-
-            let configuration: Button.Configuration = shouldShowApplePayButton
-                ? .linkPlain()
-                : .linkSecondary()
-
-            let button = Button(configuration: configuration, title: buttonTitle)
-            button.addTarget(self, action: #selector(cancelButtonTapped(_:)), for: .touchUpInside)
-            return button
-        }()
-
         private lazy var separator = SeparatorLabel(text: String.Localized.or)
 
         private lazy var applePayButton: PKPaymentButton = {
@@ -84,7 +70,6 @@ extension PayWithLinkViewController {
                 vStack.addArrangedSubview(applePayButton)
             }
 
-            vStack.addArrangedSubview(cancelButton)
             return vStack
         }()
 
@@ -147,7 +132,6 @@ extension PayWithLinkViewController {
             errorLabel.isHidden = true
 
             let stackView = UIStackView(arrangedSubviews: [
-                titleLabel,
                 addPaymentMethodVC.view,
                 errorLabel,
                 buttonContainer,
@@ -155,6 +139,8 @@ extension PayWithLinkViewController {
 
             stackView.axis = .vertical
             stackView.spacing = LinkUI.contentSpacing
+            stackView.isLayoutMarginsRelativeArrangement = true
+            stackView.directionalLayoutMargins = LinkUI.contentMargins
             stackView.alignment = .center
             stackView.setCustomSpacing(LinkUI.extraLargeContentSpacing, after: titleLabel)
             stackView.setCustomSpacing(LinkUI.extraLargeContentSpacing, after: addPaymentMethodVC.view)
@@ -163,13 +149,6 @@ extension PayWithLinkViewController {
             contentView.addAndPinSubviewToSafeArea(stackView)
 
             NSLayoutConstraint.activate([
-                titleLabel.leadingAnchor.constraint(
-                    equalTo: stackView.safeAreaLayoutGuide.leadingAnchor,
-                    constant: preferredContentMargins.leading),
-                titleLabel.trailingAnchor.constraint(
-                    equalTo: stackView.safeAreaLayoutGuide.trailingAnchor,
-                    constant: -preferredContentMargins.trailing),
-
                 errorLabel.leadingAnchor.constraint(
                     equalTo: stackView.safeAreaLayoutGuide.leadingAnchor,
                     constant: preferredContentMargins.leading),
@@ -187,6 +166,19 @@ extension PayWithLinkViewController {
                     equalTo: stackView.safeAreaLayoutGuide.trailingAnchor,
                     constant: -LinkUI.contentMargins.trailing),
             ])
+
+            if !isAddingFirstPaymentMethod {
+                stackView.insertArrangedSubview(titleLabel, at: 0)
+
+                NSLayoutConstraint.activate([
+                    titleLabel.leadingAnchor.constraint(
+                        equalTo: stackView.safeAreaLayoutGuide.leadingAnchor,
+                        constant: preferredContentMargins.leading),
+                    titleLabel.trailingAnchor.constraint(
+                        equalTo: stackView.safeAreaLayoutGuide.trailingAnchor,
+                        constant: -preferredContentMargins.trailing),
+                ])
+            }
 
             didUpdate(addPaymentMethodVC)
         }
@@ -212,6 +204,7 @@ extension PayWithLinkViewController {
             feedbackGenerator.prepare()
             #endif
             confirmButton.update(state: .processing)
+            coordinator?.allowSheetDismissal(false)
 
             linkAccount.createPaymentDetails(with: confirmParams.paymentMethodParams) { [weak self] result in
                 guard let self = self else {
@@ -256,6 +249,7 @@ extension PayWithLinkViewController {
                         self?.feedbackGenerator.notificationOccurred(.success)
                         #endif
                         self?.confirmButton.update(state: state, animated: true) {
+                            self?.coordinator?.allowSheetDismissal(true)
                             if state == .succeeded {
                                 self?.coordinator?.finish(withResult: result, deferredIntentConfirmationType: deferredIntentConfirmationType)
                             }
@@ -267,6 +261,7 @@ extension PayWithLinkViewController {
                     #endif
                     self.confirmButton.update(state: .enabled, animated: true)
                     self.updateErrorLabel(for: error)
+                    self.coordinator?.allowSheetDismissal(true)
                 }
             }
         }
@@ -302,15 +297,6 @@ extension PayWithLinkViewController {
         @objc
         func applePayButtonTapped(_ sender: PKPaymentButton) {
             coordinator?.confirmWithApplePay()
-        }
-
-        @objc
-        func cancelButtonTapped(_ sender: Button) {
-            if isAddingFirstPaymentMethod {
-                coordinator?.cancel(shouldReturnToPaymentSheet: false)
-            } else {
-                _ = bottomSheetController?.popContentViewController()
-            }
         }
     }
 }

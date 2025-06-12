@@ -223,6 +223,16 @@ class PayWithLinkViewController_WalletViewModelTests: XCTestCase {
             "Selected payment method should be bank account when cards are disabled"
         )
     }
+
+    func testShouldShowSecondaryButtonEnabled() throws {
+        let sut = try makeSUT(shouldShowSecondaryCta: true)
+        XCTAssertNotNil(sut.cancelButtonConfiguration)
+    }
+
+    func testShouldShowSecondaryButtonDisabled() throws {
+        let sut = try makeSUT(shouldShowSecondaryCta: false)
+        XCTAssertNil(sut.cancelButtonConfiguration)
+    }
 }
 
 extension PayWithLinkViewController_WalletViewModelTests {
@@ -234,7 +244,8 @@ extension PayWithLinkViewController_WalletViewModelTests {
         cardBrandAcceptance: PaymentSheet.CardBrandAcceptance = .all,
         linkPassthroughModeEnabled: Bool? = nil,
         isSettingUp: Bool = false,
-        linkPMOSFU: Bool? = nil
+        linkPMOSFU: Bool? = nil,
+        shouldShowSecondaryCta: Bool = true
     ) throws -> PayWithLinkViewController.WalletViewModel {
         let (intent, elementsSession) = try isSettingUp
         ? PayWithLinkTestHelpers.makeSetupIntentAndElementsSession(
@@ -265,6 +276,7 @@ extension PayWithLinkViewController_WalletViewModelTests {
                 configuration: paymentSheetConfiguration,
                 shouldOfferApplePay: false,
                 shouldFinishOnClose: false,
+                shouldShowSecondaryCta: shouldShowSecondaryCta,
                 initiallySelectedPaymentDetailsID: nil,
                 callToAction: nil,
                 analyticsHelper: ._testValue()

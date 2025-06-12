@@ -106,6 +106,8 @@
 
 "Continue another way" = "ดำเนินการต่อด้วยวิธีอื่น";
 
+"Debit or credit card" = "บัตรเดบิตหรือบัตรเครดิต";
+
 "Default" = "ค่าเริ่มต้น";
 
 "Default payment method" = "วิธีการชำระเงินตามค่าเริ่มต้น";
@@ -132,11 +134,15 @@
 
 "IBAN" = "IBAN";
 
+"Log in or sign up" = "เข้าสู่ระบบหรือลงทะเบียน";
+
 "Log out of Link" = "ออกจากระบบ Link";
 
 "Manage SEPA debit" = "จัดการการหักบัญชีอัตโนมัติแบบ SEPA";
 
 "Manage US bank account" = "จัดการบัญชีธนาคารในสหรัฐอเมริกา";
+
+"Manage bank account" = "จัดการบัญชีธนาคาร";
 
 "Manage card" = "จัดการบัตร";
 
@@ -155,6 +161,8 @@
 "New payment method" = "วิธีการชำระเงินใหม่";
 
 "No %@ promo" = "ไม่มีโปรโมชัน %@";
+
+"Not you?" = "หากไม่ใช่คุณ";
 
 "Only card brand can be changed." = "เปลี่ยนได้เฉพาะแบรนด์บัตรเท่านั้น";
 
