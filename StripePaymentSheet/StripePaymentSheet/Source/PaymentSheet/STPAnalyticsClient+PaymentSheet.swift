@@ -155,6 +155,8 @@ extension PaymentSheet.Appearance.EmbeddedPaymentElement.Row.Style {
             return "floating_button"
         case .flatWithCheckmark:
             return "flat_with_checkmark"
+        case .flatWithChevron:
+            return "flat_with_chevron"
         }
     }
 }

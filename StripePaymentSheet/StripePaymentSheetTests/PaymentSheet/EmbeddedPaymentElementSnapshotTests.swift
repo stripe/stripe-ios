@@ -82,6 +82,10 @@ class EmbeddedPaymentElementSnapshotTests: STPSnapshotTestCase, EmbeddedPaymentE
         await _testShowsChangeButton(rowStyle: .flatWithCheckmark)
     }
 
+    func testShowsChangeButton_flatChevron() async throws {
+        await _testShowsChangeButton(rowStyle: .flatWithChevron)
+    }
+
     func _testShowsChangeButton(rowStyle: PaymentSheet.Appearance.EmbeddedPaymentElement.Row.Style) async {
         var configuration = configuration
         configuration.appearance.embeddedPaymentElement.row.style = rowStyle

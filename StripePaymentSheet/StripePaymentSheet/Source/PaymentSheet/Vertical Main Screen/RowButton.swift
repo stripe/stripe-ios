@@ -46,8 +46,9 @@ class RowButton: UIView, EventHandler {
         }
     }
 
-    var isFlatWithCheckmarkStyle: Bool {
-        return appearance.embeddedPaymentElement.row.style == .flatWithCheckmark && isEmbedded
+    var isFlatWithCheckmarkOrChevronStyle: Bool {
+        let rowStyle = appearance.embeddedPaymentElement.row.style
+        return (rowStyle == .flatWithCheckmark || rowStyle == .flatWithChevron) && isEmbedded
     }
 
     var hasSubtext: Bool {
@@ -245,8 +246,8 @@ class RowButton: UIView, EventHandler {
 
     func makeSameHeightAsOtherRowButtonsIfNecessary() {
         // To make all RowButtons the same height, set our height to the tallest variant (a RowButton w/ text and subtext)
-        // Don't do this if we are flat_with_checkmark style and have an accessory view - this row button is allowed to be taller than the rest
-        if isFlatWithCheckmarkStyle && isDisplayingAccessoryView {
+        // Don't do this if we are flat_with_checkmark or flat_with_chevron style and have an accessory view - this row button is allowed to be taller than the rest
+        if isFlatWithCheckmarkOrChevronStyle && isDisplayingAccessoryView {
             heightConstraint?.isActive = false
             return
         }
@@ -355,6 +356,20 @@ extension RowButton {
                   isEmbedded: isEmbedded,
                   didTap: didTap
               )
+          case .flatWithChevron:
+              return RowButtonFlatWithChevron(
+                  appearance: appearance,
+                  type: type,
+                  imageView: imageView,
+                  text: text,
+                  subtext: subtext,
+                  badgeText: badgeText,
+                  promoBadge: promoBadge,
+                  accessoryView: accessoryView,
+                  shouldAnimateOnPress: shouldAnimateOnPress,
+                  isEmbedded: isEmbedded,
+                  didTap: didTap
+              )
           }
       }
 
@@ -379,7 +394,7 @@ extension RowButton {
             }
 
             switch appearance.embeddedPaymentElement.row.style {
-            case .flatWithRadio, .flatWithCheckmark:
+            case .flatWithRadio, .flatWithCheckmark, .flatWithChevron:
                 return appearance.colors.text
             case .floatingButton:
                 return appearance.colors.componentText
@@ -404,7 +419,7 @@ extension RowButton {
             }
 
             switch appearance.embeddedPaymentElement.row.style {
-            case .flatWithRadio, .flatWithCheckmark:
+            case .flatWithRadio, .flatWithCheckmark, .flatWithChevron:
                 return appearance.colors.textSecondary
             case .floatingButton:
                 return appearance.colors.componentPlaceholderText

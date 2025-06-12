@@ -3,6 +3,7 @@
 ### PaymentSheet
 * [Fixed] A bug where the EmbeddedPaymentElement failed to display forms when tapped in SwiftUI.
 * [Changed] `paymentOption` on `PaymentSheet.FlowController` is now annotated with `@Published` for better ergonomics in SwiftUI.
+* [Added] A new `flatWIthChevron` Embedded Payment Element row style.
 
 ## 24.15.0 2025-06-02
 

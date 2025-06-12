@@ -518,7 +518,7 @@ extension PaymentSheet.Appearance.EmbeddedPaymentElement.Row.Style {
         switch self {
         case .flatWithRadio:
             return UIEdgeInsets(top: 0, left: 30, bottom: 0, right: 0)
-        case .floatingButton, .flatWithCheckmark:
+        case .floatingButton, .flatWithCheckmark, .flatWithChevron:
             return .zero
         }
     }

@@ -331,6 +331,11 @@ struct AppearancePlaygroundView: View {
             set: { self.appearance.embeddedPaymentElement.row.flat.checkmark.color = UIColor($0) }
         )
 
+        let embeddedPaymentElementChevronColorBinding = Binding(
+            get: { Color(self.appearance.embeddedPaymentElement.row.flat.chevron.color) },
+            set: { self.appearance.embeddedPaymentElement.row.flat.chevron.color = UIColor($0) }
+        )
+
         let regularFonts = ["AvenirNext-Regular", "PingFangHK-Regular", "ChalkboardSE-Light"]
         let customFontOptions = ["System Default"] + regularFonts
 
@@ -519,6 +524,11 @@ struct AppearancePlaygroundView: View {
                                 ColorPicker("checkmarkColor", selection: embeddedPaymentElementCheckmarkColorBinding)
                             } label: {
                                 Text("FlatWithCheckmark")
+                            }
+                            DisclosureGroup {
+                                ColorPicker("chevronColor", selection: embeddedPaymentElementChevronColorBinding)
+                            } label: {
+                                Text("FlatWithChevron")
                             }
                         } label: {
                             Text("Row")

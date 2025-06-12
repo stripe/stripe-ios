@@ -742,6 +742,41 @@ class EmbeddedPaymentElementTest: XCTestCase {
         }
     }
 
+    func testCreateFails_whenFlatWithChevronWithDefaultRowSelectionBehavior() async throws {
+        // Given an appearance with row.style = .flatWithChevron and a config with rowSelectionBehavior = .default
+        var config = configuration
+        config.appearance.embeddedPaymentElement.row.style = .flatWithChevron
+
+        // When we create an EmbeddedPaymentElement
+        do {
+            _ = try await EmbeddedPaymentElement.create(
+                intentConfiguration: paymentIntentConfig,
+                configuration: config
+            )
+            XCTFail("Expected error to be thrown but received none.")
+        } catch {
+            // Then we expected a PaymentSheetError indicating the unsupported configuration
+            guard let paymentSheetError = error as? PaymentSheetError else {
+                XCTFail("Unexpected error type: \(error)")
+                return
+            }
+            XCTAssertTrue(paymentSheetError.debugDescription.contains("flatWithChevron row style without .immediateAction row selection behavior is not supported"))
+        }
+    }
+
+    func testCreateSucceds_whenFlatWithChevronWithImmediateActionRowSelectionBehavior() async throws {
+        // Given an appearance with row.style = .flatWithChevron and a config with rowSelectionBehavior = .immediateAction
+        var config = configuration
+        config.appearance.embeddedPaymentElement.row.style = .flatWithChevron
+        config.rowSelectionBehavior = .immediateAction(didSelectPaymentOption: {})
+
+        // When we create an EmbeddedPaymentElement
+        _ = try await EmbeddedPaymentElement.create(
+            intentConfiguration: paymentIntentConfig,
+            configuration: config
+        )
+    }
+
     func testCancelingFormResetsPaymentOption() async throws {
         // Create our EmbeddedPaymentElement
         let sut = try await EmbeddedPaymentElement.create(
