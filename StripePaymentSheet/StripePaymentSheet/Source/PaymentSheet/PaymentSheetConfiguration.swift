@@ -552,7 +552,8 @@ extension PaymentSheet {
             }
         }
 
-        /// Type used to describe DeliveryEstimates for shipping
+        /// Type used to describe DeliveryEstimates for shipping. This maps to the ECE API shape:
+        /// https://docs.stripe.com/js/elements_object/create_express_checkout_element#express_checkout_element_create-options-shippingRates-deliveryEstimate
         public struct DeliveryEstimate {
             public struct DeliveryEstimateUnit {
                 public enum TimeUnit {
