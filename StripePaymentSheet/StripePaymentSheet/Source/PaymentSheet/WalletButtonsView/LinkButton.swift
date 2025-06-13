@@ -11,19 +11,19 @@ import SwiftUI
 @available(iOS 16.0, *)
 struct LinkButton: View {
     private enum Constants {
-        static let buttonHeight: CGFloat = 44
         static let contentHeight: CGFloat = 18
         static let separatorWidth: CGFloat = 1
         static let contentSpacing: CGFloat = 10
-        static let cornerRadius = buttonHeight / 2
         static let emailFont: UIFont = .systemFont(ofSize: 15, weight: .medium)
             .scaled(withTextStyle: .callout, maximumPointSize: 16)
     }
 
     @StateObject private var viewModel: LinkButtonViewModel
     private let action: () -> Void
+    private let height: CGFloat
 
-    init(viewModel: LinkButtonViewModel = LinkButtonViewModel(), action: @escaping () -> Void) {
+    init(height: CGFloat = 44, viewModel: LinkButtonViewModel = LinkButtonViewModel(), action: @escaping () -> Void) {
+        self.height = height
         self._viewModel = StateObject(wrappedValue: viewModel)
         self.action = action
     }
@@ -49,10 +49,10 @@ struct LinkButton: View {
             }
             .padding(.horizontal, LinkUI.contentSpacing)
             .frame(maxWidth: .infinity)
-            .frame(height: Constants.buttonHeight)
+            .frame(height: height)
             .background(Color(uiColor: .linkIconBrand))
             .foregroundColor(Color(uiColor: .linkTextPrimary))
-            .cornerRadius(Constants.cornerRadius)
+            .cornerRadius(height / 2)
         }
     }
 }
