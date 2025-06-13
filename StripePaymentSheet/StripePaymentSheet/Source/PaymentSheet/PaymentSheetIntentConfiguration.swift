@@ -53,8 +53,35 @@ public extension PaymentSheet {
             self.onBehalfOf = onBehalfOf
             self.paymentMethodConfigurationId = paymentMethodConfigurationId
             self.confirmHandler = confirmHandler
+            self.facilitatedConfirmHandler = { _, _ in
+                assertionFailure("Unexpected execution to facilitatedConfirmHandler")
+            }
             self.requireCVCRecollection = requireCVCRecollection
             validate()
+        }
+
+        public typealias FacilitatedPaymentSessionConfirmHandler = (
+            _ paymentMethod: STPPaymentMethod,
+            _ shippingAddress: STPAddress?
+        ) -> Void
+
+        @_spi(FacilitatedPaymentSession) public init(facilitatedPaymentSessionWithMode mode: Mode,
+                    sellerDetails: SellerDetails?,
+                    paymentMethodTypes: [String]? = nil,
+                    onBehalfOf: String? = nil,
+                    paymentMethodConfigurationId: String? = nil,
+                    confirmHandler: @escaping FacilitatedPaymentSessionConfirmHandler,
+                    requireCVCRecollection: Bool = false) {
+            self.mode = mode
+            self.sellerDetails = sellerDetails
+            self.paymentMethodTypes = paymentMethodTypes
+            self.onBehalfOf = onBehalfOf
+            self.paymentMethodConfigurationId = paymentMethodConfigurationId
+            self.confirmHandler = { _, _, _ in
+                assertionFailure("Unexpected execution to confirmationHandler")
+            }
+            self.facilitatedConfirmHandler = confirmHandler
+            self.requireCVCRecollection = requireCVCRecollection
         }
 
         /// Information about the payment (PaymentIntent) or setup (SetupIntent).
@@ -69,6 +96,9 @@ public extension PaymentSheet {
         /// See the documentation for `ConfirmHandler` for more details.
         public var confirmHandler: ConfirmHandler
 
+        /// Called when the customer confirms payment for facilitated payment's
+        public var facilitatedConfirmHandler: FacilitatedPaymentSessionConfirmHandler
+
         /// The account (if any) for which the funds of the intent are intended.
         /// - Seealso: https://stripe.com/docs/api/payment_intents/object#payment_intent_object-on_behalf_of
         public var onBehalfOf: String?
@@ -76,6 +106,9 @@ public extension PaymentSheet {
         /// Optional configuration ID for the selected payment method configuration.
         /// See https://stripe.com/docs/payments/multiple-payment-method-configs for more information.
         public var paymentMethodConfigurationId: String?
+
+        /// Optional configuration for sellerDetails
+        @_spi(FacilitatedPaymentSession) public var sellerDetails: SellerDetails?
 
         /// If true, PaymentSheet recollects CVC for saved cards before confirmation (PaymentIntents only)
         ///  - Seealso: https://docs.stripe.com/payments/accept-a-payment-deferred?platform=ios&type=payment#ios-cvc-recollection
@@ -147,6 +180,12 @@ public extension PaymentSheet {
                 /// - Seealso: https://stripe.com/docs/api/setup_intents/create#create_setup_intent-usage
                 setupFutureUsage: SetupFutureUsage = .offSession
             )
+        }
+
+        /// Details about a seller
+        public struct SellerDetails {
+            public let networkId: String
+            public let externalId: String
         }
 
         // MARK: - Internal
