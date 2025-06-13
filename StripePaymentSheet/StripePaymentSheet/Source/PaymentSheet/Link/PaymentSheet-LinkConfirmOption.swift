@@ -60,14 +60,12 @@ extension PaymentSheet.LinkConfirmOption {
 
     var paymentSheetLabel: String {
         switch self {
-        case .wallet:
+        case .wallet, .withPaymentDetails:
             return STPPaymentMethodType.link.displayName
         case .signUp(_, _, _, _, let intentConfirmParams):
             return intentConfirmParams.paymentMethodParams.paymentSheetLabel
         case .withPaymentMethod(let paymentMethod):
             return paymentMethod.paymentSheetLabel
-        case .withPaymentDetails(_, let paymentDetails, _, _):
-            return paymentDetails.paymentSheetLabel
         }
     }
 
