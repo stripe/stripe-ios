@@ -161,8 +161,17 @@ import SwiftUI
     }
 
     private struct ApplePayButton: View {
+        private enum Constants {
+            static let defaultButtonHeight: CGFloat = 44
+        }
+        
         let height: CGFloat
         let action: () -> Void
+        
+        init(height: CGFloat = Constants.defaultButtonHeight, action: @escaping () -> Void) {
+            self.height = height
+            self.action = action
+        }
 
         var body: some View {
             PayWithApplePayButton(.plain, action: action)
