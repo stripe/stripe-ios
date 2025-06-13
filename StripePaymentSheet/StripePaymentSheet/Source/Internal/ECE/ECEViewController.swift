@@ -1,11 +1,6 @@
 //
 //  ECEViewController.swift
-//  WebViewBridge2
-//
-//  Created by David Estes on 5/30/25.
-//
-//  Updated to use WKScriptMessageHandlerWithReply (iOS 14+)
-//  This provides native async/await support without manual request ID management
+//  StripePaymentSheet
 //
 
 @_spi(STP) import StripeCore
@@ -25,24 +20,15 @@ protocol ExpressCheckoutWebviewDelegate: AnyObject {
 
 // Custom errors for Express Checkout operations
 enum ExpressCheckoutError: LocalizedError {
-    case invalidShippingAddress(details: String)
     case invalidShippingRate(rateId: String)
-    case shippingServiceFailure(underlying: Error)
     case missingRequiredField(field: String)
-    case paymentConfirmationFailed(reason: String)
 
     var errorDescription: String? {
         switch self {
-        case .invalidShippingAddress(let details):
-            return "Invalid shipping address: \(details)"
         case .invalidShippingRate(let rateId):
             return "Invalid shipping rate: \(rateId)"
-        case .shippingServiceFailure(let error):
-            return "Shipping service error: \(error.localizedDescription)"
         case .missingRequiredField(let field):
             return "Missing required field: \(field)"
-        case .paymentConfirmationFailed(let reason):
-            return "Payment confirmation failed: \(reason)"
         }
     }
 }
