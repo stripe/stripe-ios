@@ -35,8 +35,17 @@ enum ExpressCheckoutError: LocalizedError {
 
 @available(iOS 16.0, *)
 class ECEViewController: UIViewController {
-    // TODO: update this key to use STPAPIClient once the bridge is ready on the other test account!
-    let apiKey = "pk_test_51RUTiSAs6uch2mqQune4yYMgnaPTI8z7AuCS9CPb5zaDQuUsje3qsRZKwgjDND3DTwvKVz6aSWYFy36FVA7iyn7h00QbaV5A9S"
+    let apiClient: STPAPIClient
+
+    init(apiClient: STPAPIClient) {
+        self.apiClient = apiClient
+        super.init(nibName: nil, bundle: nil)
+    }
+
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+
     private var webView: WKWebView!
     private var popupWebView: WKWebView?
 
@@ -97,7 +106,7 @@ class ECEViewController: UIViewController {
         // Inject JavaScript to capture messages and set up the bridge
         let bridgeScript = """
         function getStripePublishableKey() {
-          return "\(apiKey)";
+          return "\(apiClient.publishableKey ?? "")";
         }
 
         window.NATIVE_AMOUNT_TOTAL = \(expressCheckoutWebviewDelegate?.amountForECEView(self) ?? 0);
@@ -320,7 +329,6 @@ struct BridgeError: Error {
 
 @available(iOS 16.0, *)
 extension ECEViewController: WKScriptMessageHandlerWithReply {
-
     func userContentController(_ userContentController: WKUserContentController, didReceive message: WKScriptMessage, replyHandler: @escaping (Any?, String?) -> Void) {
         Task {
             do {

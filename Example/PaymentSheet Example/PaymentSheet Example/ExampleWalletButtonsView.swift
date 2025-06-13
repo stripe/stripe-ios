@@ -155,7 +155,10 @@ class ExampleWalletButtonsModel: ObservableObject {
                 configuration.returnURL = "payments-example://stripe-redirect"
                 configuration.willUseWalletButtonsView = true
                 PaymentSheet.FlowController.create(
-                    paymentIntentClientSecret: paymentIntentClientSecret,
+                    intentConfiguration: .init(mode: .payment(amount: 1000, currency: "USD", setupFutureUsage: nil, captureMethod: .automatic, paymentMethodOptions: nil), paymentMethodTypes: ["card", "link", "shop_pay"], confirmHandler: { paymentMethod, _, intentCreationCallback in
+                        print(paymentMethod)
+                        intentCreationCallback(.success(paymentIntentClientSecret))
+                    }),
                     configuration: configuration
                 ) { [weak self] result in
                     switch result {

@@ -26,7 +26,7 @@ import WebKit
         self.flowController = flowController
 
         let wallets = WalletButtonsView.determineAvailableWallets(for: flowController)
-        self._orderedWallets = State(initialValue: wallets + [.shopPay]) // TODO: Do not ship with Shop Pay hardcoded!
+        self._orderedWallets = State(initialValue: wallets)
     }
 
     init(flowController: PaymentSheet.FlowController,

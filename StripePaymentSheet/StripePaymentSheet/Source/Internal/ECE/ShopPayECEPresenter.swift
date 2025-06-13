@@ -31,7 +31,7 @@ class ShopPayECEPresenter: NSObject {
     confirmHandler: @escaping (PaymentSheetResult) -> Void) {
         self.presentingViewController = viewController
 
-         let eceVC = ECEViewController()
+        let eceVC = ECEViewController(apiClient: flowController.configuration.apiClient)
          eceVC.expressCheckoutWebviewDelegate = self
          self.eceViewController = eceVC
         let navController = UINavigationController(rootViewController: eceVC)
