@@ -459,7 +459,7 @@ extension PaymentSheet {
             ///     completion(updates)
             /// }
             /// ```
-            /// WARNING: If you do not call the completion handler, your app will hang until the Apple Pay sheet times out.
+            /// WARNING: If you do not call the completion handler, your app will hang until the Shop Pay sheet times out.
             public let shippingMethodUpdateHandler:
             ((ShippingRateSelected, @escaping ((ShippingRateUpdate?) -> Void)) -> Void)?
 
@@ -475,7 +475,7 @@ extension PaymentSheet {
             ///     completion(updates)
             /// }
             /// ```
-            /// WARNING: If you do not call the completion handler, your app will hang until the Apple Pay sheet times out.
+            /// WARNING: If you do not call the completion handler, your app will hang until the Shop Pay sheet times out.
             public let shippingContactUpdateHandler:
             ((ShippingContactSelected, @escaping ((ShippingContactUpdate?) -> Void)) -> Void)?
 

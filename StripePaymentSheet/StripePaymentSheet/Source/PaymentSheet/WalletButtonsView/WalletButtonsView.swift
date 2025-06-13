@@ -185,7 +185,7 @@ import WebKit
     }
 }
 
-private class WindowAuthenticationContext: NSObject, STPAuthenticationContext {
+class WindowAuthenticationContext: NSObject, STPAuthenticationContext {
     public func authenticationPresentingViewController() -> UIViewController {
         UIWindow.visibleViewController ?? UIViewController()
     }
@@ -223,4 +223,3 @@ fileprivate extension PaymentSheet.FlowController {
     }
 }
 #endif
-

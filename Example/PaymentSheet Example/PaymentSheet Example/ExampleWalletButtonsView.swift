@@ -254,8 +254,8 @@ class ExampleWalletButtonsModel: ObservableObject {
 
         return PaymentSheet.ShopPayConfiguration(shippingAddressRequired: true,
                                                  lineItems: [.init(name: "Golden Potato", amount: 500), .init(name: "Silver Potato", amount: 345), .init(name: "Tax", amount: 200)],
-                                                 shippingRates: [.init(id: "1day", amount: 1099, displayName: "Overnight", deliveryEstimate: .init(minimum: singleBusinessDay, maximum: singleBusinessDay)),
-                                                                 .init(id: "free", amount: 0, displayName: "Free", deliveryEstimate: .init(minimum: fiveBusinessDays, maximum: sevenBusinessDays)),
+                                                 shippingRates: [.init(id: "express", amount: 1099, displayName: "Overnight", deliveryEstimate: .init(minimum: singleBusinessDay, maximum: singleBusinessDay)),
+                                                                 .init(id: "standard", amount: 0, displayName: "Free", deliveryEstimate: .init(minimum: fiveBusinessDays, maximum: sevenBusinessDays)),
                                                                 ],
                                                  shopId: "shop_1234",
                                                  handlers: handlers)

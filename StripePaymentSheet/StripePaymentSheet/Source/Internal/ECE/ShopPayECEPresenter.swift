@@ -5,11 +5,13 @@
 
 import Foundation
 import WebKit
+@_spi(STP) import StripeCore
+@_spi(STP) import StripePayments
 
 // MARK: - ShopPayECEPresenter
 /// Handles presenting Shop Pay via the ECE WebView
 @available(iOS 16.0, *)
-private class ShopPayECEPresenter: NSObject {
+class ShopPayECEPresenter: NSObject {
     private let flowController: PaymentSheet.FlowController
     private let shopPayConfiguration: PaymentSheet.ShopPayConfiguration
     private var confirmHandler: ((PaymentSheetResult) -> Void)?
@@ -29,16 +31,10 @@ private class ShopPayECEPresenter: NSObject {
     confirmHandler: @escaping (PaymentSheetResult) -> Void) {
         self.presentingViewController = viewController
 
-         // Create ECE view controller
          let eceVC = ECEViewController()
          eceVC.expressCheckoutWebviewDelegate = self
          self.eceViewController = eceVC
-
-         // Configure ECE for Shop Pay
-         configureECEForShopPay(eceVC)
-
-         // Present as a navigation controller
-         let navController = UINavigationController(rootViewController: eceVC)
+        let navController = UINavigationController(rootViewController: eceVC)
          navController.modalPresentationStyle = .pageSheet
          viewController.present(navController, animated: true)
         // retain self while presented
@@ -47,23 +43,23 @@ private class ShopPayECEPresenter: NSObject {
             self.confirmHandler = nil
         }
     }
-
-     private func configureECEForShopPay(_ eceViewController: ECEViewController) {
-         // Configure the ECE view controller with Shop Pay specific settings
-         // This will be handled by the ECE WebView when it loads
-     }
-
+    
     private func dismissECE(completion: (() -> Void)? = nil) {
         presentingViewController?.dismiss(animated: true, completion: completion)
     }
 }
 
-
 // MARK: - ExpressCheckoutWebviewDelegate
 @available(iOS 16.0, *)
 extension ShopPayECEPresenter: ExpressCheckoutWebviewDelegate {
+    func amountForECEView(_ eceView: ECEViewController) -> Int {
+        let itemsTotal = shopPayConfiguration.lineItems.reduce(0) { $0 + $1.amount }
+        // add default shipping amount if available
+        let defaultShippingAmount = shopPayConfiguration.shippingRates.first?.amount ?? 0
+        return itemsTotal + defaultShippingAmount
+    }
 
-    func webView(_ webView: WKWebView, didReceiveShippingAddressChange shippingAddress: [String: Any]) async throws -> [String: Any] {
+    func eceView(_ eceView: ECEViewController, didReceiveShippingAddressChange shippingAddress: [String: Any]) async throws -> [String: Any] {
         // Convert the webview shipping address to our format
         guard let name = shippingAddress["firstName"] as? String,
               let city = shippingAddress["city"] as? String,
@@ -138,7 +134,7 @@ extension ShopPayECEPresenter: ExpressCheckoutWebviewDelegate {
         }
     }
 
-    func webView(_ webView: WKWebView, didReceiveShippingRateChange shippingRate: [String: Any]) async throws -> [String: Any] {
+    func eceView(_ eceView: ECEViewController, didReceiveShippingRateChange shippingRate: [String: Any]) async throws -> [String: Any] {
         guard let rateId = shippingRate["id"] as? String,
               let selectedRate = shopPayConfiguration.shippingRates.first(where: { $0.id == rateId }) else {
             throw ExpressCheckoutError.invalidShippingRate(rateId: shippingRate["id"] as? String ?? "unknown")
@@ -201,7 +197,7 @@ extension ShopPayECEPresenter: ExpressCheckoutWebviewDelegate {
         }
     }
 
-    func webView(_ webView: WKWebView, didReceiveECEClick event: [String: Any]) async throws -> [String: Any] {
+    func eceView(_ eceView: ECEViewController, didReceiveECEClick event: [String: Any]) async throws -> [String: Any] {
         // Build the configuration for Shop Pay
         var config: [String: Any] = [
             "lineItems": shopPayConfiguration.lineItems.map { ["name": $0.name, "amount": $0.amount] },
@@ -232,7 +228,7 @@ extension ShopPayECEPresenter: ExpressCheckoutWebviewDelegate {
         return config
     }
 
-    func webView(_ webView: WKWebView, didReceiveECEConfirmation paymentDetails: [String: Any]) async throws -> [String: Any] {
+    func eceView(_ eceView: ECEViewController, didReceiveECEConfirmation paymentDetails: [String: Any]) async throws -> [String: Any] {
         // Extract payment details
         guard let billingDetails = paymentDetails["billingDetails"] as? [String: Any] else {
             throw ExpressCheckoutError.missingRequiredField(field: "billingDetails")
@@ -257,23 +253,23 @@ extension ShopPayECEPresenter: ExpressCheckoutWebviewDelegate {
         // Create payment option
         let confirmParams = IntentConfirmParams(type: .stripe(.unknown))
         confirmParams.paymentMethodParams.billingDetails = paymentMethodParams.billingDetails
-        let paymentOption = PaymentOption.new(confirmParams: confirmParams)
+        
+        // TODO: Create a payment method here from the data (using STPAPIClient) once the API is available
+        // For now, use a mock STPPaymentMethod instead
+        let paymentMethod = STPPaymentMethod(stripeId: "pm_123abc", type: .unknown)
 
-        // Dismiss ECE and confirm payment
-        dismissECE { [weak self] in
-            guard let self = self else { return }
-
-            // Confirm the payment through PaymentSheet
-            PaymentSheet.confirm(
-                configuration: self.flowController.configuration,
-                authenticationContext: WindowAuthenticationContext(),
-                intent: self.flowController.intent,
-                elementsSession: self.flowController.elementsSession,
-                paymentOption: paymentOption,
-                paymentHandler: self.flowController.paymentHandler,
-                analyticsHelper: self.flowController.analyticsHelper
-            ) { result, _ in
-                self.confirmHandler?(result)
+        // Dismiss ECE and return the payment method ID on the main thread
+        Task { @MainActor in
+            
+            dismissECE { [weak self] in
+                guard let self = self else { return }
+                
+                guard case .deferredIntent(let intentConfig) = self.flowController.intent else  {
+                    stpAssertionFailure("Integration Error: Shop Pay ECE flow requires a deferred intent.")
+                    return
+                }
+                // TODO: Replace this to use the new facilitatedPaymentSession confirmation handler when ready
+                intentConfig.confirmHandler(paymentMethod, false, { _ in })
             }
         }
 
