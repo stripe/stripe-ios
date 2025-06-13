@@ -70,6 +70,12 @@ public extension PaymentSheet {
         @_spi(AppearanceAPIAdditionsPreview)
         public var iconStyle: IconStyle = .filled
 
+        /// The vertical insets for floating payment method rows in non-embedded integrations
+        /// - Note: Increasing this value increases the height of each floating payment method row
+        /// - Note: This only applies to non-embedded integrations (i.e., regular PaymentSheet)
+        @_spi(AppearanceAPIAdditionsPreview)
+        public var floatingRowInsets: CGFloat = 4.0
+
         // MARK: Fonts
 
         /// Describes the appearance of fonts in PaymentSheet

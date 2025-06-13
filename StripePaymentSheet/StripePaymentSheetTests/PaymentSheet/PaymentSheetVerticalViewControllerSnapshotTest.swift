@@ -7,7 +7,7 @@
 
 @_spi(STP) import StripeCore
 import StripeCoreTestUtils
-@_spi(STP) @testable import StripePaymentSheet
+@_spi(STP) @_spi(AppearanceAPIAdditionsPreview) @testable import StripePaymentSheet
 @_spi(STP) import StripeUICore
 import XCTest
 
@@ -377,6 +377,46 @@ final class PaymentSheetVerticalViewControllerSnapshotTest: STPSnapshotTestCase 
         let sut = PaymentSheetVerticalViewController(configuration: ._testValue_MostPermissive(isApplePayEnabled: true), loadResult: loadResult, isFlowController: false, analyticsHelper: ._testValue(), previousPaymentOption: nil)
         sut.isUserInteractionEnabled = false
         self.verify(sut)
+    }
+
+    func testFloatingRowInsetsSmall() {
+        // Test with smaller floating row insets (2.0 instead of default 4.0)
+        var appearance = PaymentSheet.Appearance()
+        appearance.floatingRowInsets = 2.0
+        
+        var configuration = PaymentSheet.Configuration._testValue_MostPermissive()
+        configuration.appearance = appearance
+        configuration.applePay = nil // Disable Apple Pay to focus on payment method rows
+        
+        let loadResult = PaymentSheetLoader.LoadResult(
+            intent: ._testPaymentIntent(paymentMethodTypes: [.card, .cashApp, .afterpayClearpay]),
+            elementsSession: ._testValue(paymentMethodTypes: ["card", "cashapp", "afterpay_clearpay"]),
+            savedPaymentMethods: [],
+            paymentMethodTypes: [.stripe(.card), .stripe(.cashApp), .stripe(.afterpayClearpay)]
+        )
+        
+        let sut = PaymentSheetVerticalViewController(configuration: configuration, loadResult: loadResult, isFlowController: true, analyticsHelper: ._testValue(), previousPaymentOption: nil)
+        verify(sut)
+    }
+
+    func testFloatingRowInsetsLarge() {
+        // Test with larger floating row insets (8.0 instead of default 4.0)
+        var appearance = PaymentSheet.Appearance()
+        appearance.floatingRowInsets = 20.0
+        
+        var configuration = PaymentSheet.Configuration._testValue_MostPermissive()
+        configuration.appearance = appearance
+        configuration.applePay = nil // Disable Apple Pay to focus on payment method rows
+        
+        let loadResult = PaymentSheetLoader.LoadResult(
+            intent: ._testPaymentIntent(paymentMethodTypes: [.card, .cashApp, .afterpayClearpay]),
+            elementsSession: ._testValue(paymentMethodTypes: ["card", "cashapp", "afterpay_clearpay"]),
+            savedPaymentMethods: [],
+            paymentMethodTypes: [.stripe(.card), .stripe(.cashApp), .stripe(.afterpayClearpay)]
+        )
+        
+        let sut = PaymentSheetVerticalViewController(configuration: configuration, loadResult: loadResult, isFlowController: true, analyticsHelper: ._testValue(), previousPaymentOption: nil)
+        verify(sut)
     }
 
     var mockConfirmResult: StripePaymentSheet.PaymentSheetResult = .canceled
