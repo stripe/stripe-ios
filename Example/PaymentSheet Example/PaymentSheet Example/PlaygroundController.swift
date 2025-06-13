@@ -552,8 +552,6 @@ class PlaygroundController: ObservableObject {
 
             let enableFcLite = newValue.fcLiteEnabled == .on
             FinancialConnectionsSDKAvailability.shouldPreferFCLite = enableFcLite
-
-            PaymentSheet.LinkFeatureFlags.enableLinkFlowControllerChanges = newValue.linkFlowControllerChanges == .on
         }.store(in: &subscribers)
 
         // Listen for analytics

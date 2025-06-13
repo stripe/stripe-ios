@@ -39,10 +39,10 @@ class PaymentSheetVerticalUITests: PaymentSheetUITestCase {
         paymentMethodButton.waitForExistenceAndTap()
         let continueButton = app.buttons["Continue"]
 
-        // Select Link - FC paymentOption should change to Link
-        app.buttons["Link"].tap()
+        // Select Cash App Pay - FC paymentOption should change to it
+        app.buttons["Cash App Pay"].tap()
         continueButton.tap()
-        XCTAssertEqual(paymentMethodButton.label, "Link, link")
+        XCTAssertEqual(paymentMethodButton.label, "Cash App Pay, cashapp")
 
         // Go back in, select Card
         paymentMethodButton.tap()
@@ -62,8 +62,8 @@ class PaymentSheetVerticalUITests: PaymentSheetUITestCase {
         XCTAssertFalse(continueButton.isEnabled)
         // Back out of card form
         app.buttons["Back"].tap()
-        // Link (the previous selection) should be selected
-        XCTAssertTrue(app.buttons["Link"].isSelected)
+        // Cash App Pay (the previous selection) should be selected
+        XCTAssertTrue(app.buttons["Cash App Pay"].isSelected)
         XCTAssertTrue(continueButton.isEnabled)
 
         // Go back to card

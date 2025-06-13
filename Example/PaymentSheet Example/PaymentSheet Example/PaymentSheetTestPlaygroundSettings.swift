@@ -593,12 +593,6 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
         case allowVisa
     }
 
-    enum LinkFlowControllerChanges: String, PickerEnum {
-        static let enumName: String = "Link FlowController RUX"
-        case on
-        case off
-    }
-
     enum ConfigurationStyle: String, PickerEnum {
         static let enumName: String = "Style"
         case automatic
@@ -659,7 +653,6 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
     var embeddedViewDisplaysMandateText: DisplaysMandateTextEnabled
     var rowSelectionBehavior: RowSelectionBehavior
     var cardBrandAcceptance: CardBrandAcceptance
-    var linkFlowControllerChanges: LinkFlowControllerChanges
 
     static func defaultValues() -> PaymentSheetTestPlaygroundSettings {
         return PaymentSheetTestPlaygroundSettings(
@@ -712,8 +705,7 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
             formSheetAction: .continue,
             embeddedViewDisplaysMandateText: .on,
             rowSelectionBehavior: .default,
-            cardBrandAcceptance: .all,
-            linkFlowControllerChanges: .off
+            cardBrandAcceptance: .all
         )
     }
 
