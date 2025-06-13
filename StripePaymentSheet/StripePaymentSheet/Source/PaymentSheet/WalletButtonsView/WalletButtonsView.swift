@@ -26,7 +26,7 @@ import WebKit
         self.flowController = flowController
 
         let wallets = WalletButtonsView.determineAvailableWallets(for: flowController)
-        self._orderedWallets = State(initialValue: wallets + [.shopPay])
+        self._orderedWallets = State(initialValue: wallets)
     }
 
     init(flowController: PaymentSheet.FlowController,
@@ -34,7 +34,7 @@ import WebKit
          orderedWallets: [ExpressType]) {
         self.flowController = flowController
         self.confirmHandler = confirmHandler
-        self._orderedWallets = State(initialValue: orderedWallets + [.shopPay])
+        self._orderedWallets = State(initialValue: orderedWallets)
     }
 
     @_spi(STP) public var body: some View {

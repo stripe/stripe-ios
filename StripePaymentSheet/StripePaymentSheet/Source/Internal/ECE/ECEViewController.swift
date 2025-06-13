@@ -52,7 +52,6 @@ class ECEViewController: UIViewController {
 
     private var webView: WKWebView!
     private var popupWebView: WKWebView?
-    private var popupWindow: UIWindow?
 
     // Delegate for Express Checkout Element events
     weak var expressCheckoutWebviewDelegate: ExpressCheckoutWebviewDelegate?
@@ -116,7 +115,7 @@ class ECEViewController: UIViewController {
 
         // Inject JavaScript to capture messages and set up the bridge
         let bridgeScript = """
-        
+
         function getStripePublishableKey() {
         // TODO: Update this key once the bridge is ready
           return "pk_test_51RUTiSAs6uch2mqQune4yYMgnaPTI8z7AuCS9CPb5zaDQuUsje3qsRZKwgjDND3DTwvKVz6aSWYFy36FVA7iyn7h00QbaV5A9S";
@@ -452,10 +451,11 @@ extension ECEViewController: WKUIDelegate {
         print("🪟 Popup requested for URL: \(navigationAction.request.url?.absoluteString ?? "unknown")")
 
         // Use the provided configuration directly (this fixes the configuration error)
-        // Create popup with full screen bounds (unlike the 1x1 main webview)
-        popupWebView = WKWebView(frame: UIScreen.main.bounds, configuration: configuration)
+        // Create popup with full screen bounds
+        popupWebView = WKWebView(frame: view.bounds, configuration: configuration)
         popupWebView?.navigationDelegate = self
         popupWebView?.uiDelegate = self
+        popupWebView?.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         #if DEBUG
         if #available(iOS 16.4, *) {
             popupWebView?.isInspectable = true
@@ -465,40 +465,37 @@ extension ECEViewController: WKUIDelegate {
         // Set the same Safari user agent for popups
         popupWebView?.customUserAgent = Self.FakeSafariUserAgent
 
-        // Create popup window
-        if let windowScene = view.window?.windowScene {
-            popupWindow = UIWindow(windowScene: windowScene)
+        // Add the popup webview as a fullscreen overlay
+        if let popupWebView = popupWebView {
+            view.addSubview(popupWebView)
+
+            // Add a close button overlay
+            let closeButton = UIButton(type: .custom)
+            closeButton.setImage(UIImage(systemName: "xmark.circle.fill"), for: .normal)
+            closeButton.tintColor = .systemGray
+            closeButton.backgroundColor = .systemBackground.withAlphaComponent(0.9)
+            closeButton.layer.cornerRadius = 20
+            closeButton.translatesAutoresizingMaskIntoConstraints = false
+            closeButton.addTarget(self, action: #selector(closePopup), for: .touchUpInside)
+
+            popupWebView.addSubview(closeButton)
+
+            NSLayoutConstraint.activate([
+                closeButton.topAnchor.constraint(equalTo: popupWebView.safeAreaLayoutGuide.topAnchor, constant: 16),
+                closeButton.trailingAnchor.constraint(equalTo: popupWebView.trailingAnchor, constant: -16),
+                closeButton.widthAnchor.constraint(equalToConstant: 40),
+                closeButton.heightAnchor.constraint(equalToConstant: 40),
+            ])
+
+            // Store reference to close button so we can remove it later
+            closeButton.tag = 999
         }
-
-        let popupViewController = UIViewController()
-        popupViewController.view = popupWebView
-        popupViewController.title = "Checkout"
-
-        let navController = UINavigationController(rootViewController: popupViewController)
-
-        // Add close button to popup
-        popupViewController.navigationItem.leftBarButtonItem = UIBarButtonItem(
-            barButtonSystemItem: .done,
-            target: self,
-            action: #selector(closePopup)
-        )
-
-        // Add refresh button to popup
-        popupViewController.navigationItem.rightBarButtonItem = UIBarButtonItem(
-            barButtonSystemItem: .refresh,
-            target: self,
-            action: #selector(refreshPopup)
-        )
-
-        popupWindow?.rootViewController = navController
-        popupWindow?.makeKeyAndVisible()
 
         return popupWebView
     }
 
     @objc private func closePopup() {
-        popupWindow?.isHidden = true
-        popupWindow = nil
+        popupWebView?.removeFromSuperview()
         popupWebView = nil
     }
 

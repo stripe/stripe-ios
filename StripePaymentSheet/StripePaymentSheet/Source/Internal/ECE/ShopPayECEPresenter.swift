@@ -4,9 +4,9 @@
 //
 
 import Foundation
-import WebKit
 @_spi(STP) import StripeCore
 @_spi(STP) import StripePayments
+import WebKit
 
 // MARK: - ShopPayECEPresenter
 /// Handles presenting Shop Pay via the ECE WebView
@@ -43,7 +43,7 @@ class ShopPayECEPresenter: NSObject {
             self.confirmHandler = nil
         }
     }
-    
+
     private func dismissECE(completion: (() -> Void)? = nil) {
         presentingViewController?.dismiss(animated: true, completion: completion)
     }
@@ -253,17 +253,17 @@ extension ShopPayECEPresenter: ExpressCheckoutWebviewDelegate {
         // Create payment option
         let confirmParams = IntentConfirmParams(type: .stripe(.unknown))
         confirmParams.paymentMethodParams.billingDetails = paymentMethodParams.billingDetails
-        
+
         // TODO: Create a payment method here from the data (using STPAPIClient) once the API is available
         // For now, use a mock STPPaymentMethod instead
         let paymentMethod = STPPaymentMethod(stripeId: "pm_123abc", type: .unknown)
 
         // Dismiss ECE and return the payment method ID on the main thread
         Task { @MainActor in
-            
+
             dismissECE { [weak self] in
                 guard let self = self else { return }
-                
+
                 guard case .deferredIntent(let intentConfig) = self.flowController.intent else  {
                     stpAssertionFailure("Integration Error: Shop Pay ECE flow requires a deferred intent.")
                     return

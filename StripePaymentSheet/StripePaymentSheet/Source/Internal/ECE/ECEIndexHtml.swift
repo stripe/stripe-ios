@@ -20,24 +20,6 @@ let ECEHTML = """
       return JSON.stringify(hash, 0, 2);
     }
 
-    var ELEMENTS_OPTIONS = JSON.parse("{}");
-    var AMOUNT_TOTAL = 0;
-    async function getItems() {
-      if (window.NATIVE_AMOUNT_TOTAL !== undefined) {
-        AMOUNT_TOTAL = window.NATIVE_AMOUNT_TOTAL;
-        ELEMENTS_OPTIONS = {
-          ...ELEMENTS_OPTIONS,
-          mode: "payment",
-          amount: AMOUNT_TOTAL,
-          currency: "usd",
-          payment_method_types: ["card", "link", "shop_pay"],
-        };
-        return Promise.resolve();
-      } else {
-        console.log("Amount not found");
-      }
-    }
-
     var ECE_OPTIONS = JSON.parse(`
       {
         "layout": {
@@ -49,8 +31,14 @@ let ECEHTML = """
     `);
 
     function initializeStripeElements() {
+        var options = {
+          mode: "payment",
+          amount: window.NATIVE_AMOUNT_TOTAL,
+          currency: "usd",
+          payment_method_types: ["card", "link", "shop_pay"],
+        };
 
-      console.log("Initializing stripe elements with options", ELEMENTS_OPTIONS);
+      console.log("Initializing stripe elements with options", options);
 
       let stripe, elements, expressCheckoutElement;
 
@@ -64,12 +52,11 @@ let ECEHTML = """
       }
 
       try {
-        elements = stripe.elements(ELEMENTS_OPTIONS);
+        elements = stripe.elements(options);
         console.log("Created Elements");
       } catch (error) {
-        console.error("Error creating Elements with options:", ELEMENTS_OPTIONS, error);
+        console.error("Error creating Elements with options:", options, error);
         console.log(`❌ Failed to create Elements: ${error.message}`);
-        console.log(`Elements options were: ${JSON.stringify(ELEMENTS_OPTIONS)}`);
         throw error;
       }
 
@@ -82,12 +69,11 @@ let ECEHTML = """
       } catch (error) {
         console.error("Error creating Express Checkout Element:", error);
         console.log(`❌ Failed to create Express Checkout Element: ${error.message}`);
-        console.log(`ECE options were: ${JSON.stringify(ECE_OPTIONS)}`);
         throw error;
       }
-      var mode = ELEMENTS_OPTIONS["mode"];
-      var captureMethod = ELEMENTS_OPTIONS["captureMethod"]
-        ? ELEMENTS_OPTIONS["captureMethod"]
+      var mode = options["mode"];
+      var captureMethod = options["captureMethod"]
+        ? options["captureMethod"]
         : "automatic";
         console.log("Ready to mount");
       expressCheckoutElement.mount("#express-checkout-element");
@@ -206,7 +192,6 @@ let ECEHTML = """
       expressCheckoutElement.on("shippingratechange", async function (event) {
         console.log(`Selected Shipping Rate:\n${hashToString(event.shippingRate)}`);
         console.log("Shipping rate change event:", event);
-        console.log("Current AMOUNT_TOTAL:", AMOUNT_TOTAL);
 
         try {
           // Check if native API is available
@@ -324,22 +309,14 @@ let ECEHTML = """
 
     // Function to initialize everything - called from Swift
     function initializeApp() {
-      getItems()
-        .then(() => {
-          console.log("getItems");
-          try {
-            initializeStripeElements();
-          } catch (error) {
-            console.error("Error initializing Stripe Elements:", error);
-            console.log(`❌ Failed to initialize Stripe Elements: ${error.message}`);
-            // Re-throw to maintain error propagation if needed
-            throw error;
-          }
-        })
-        .catch((error) => {
-          console.error("Error in initializeApp:", error);
-          console.log(`❌ Failed to initialize app: ${error.message}`);
-        });
+      try {
+        initializeStripeElements();
+      } catch (error) {
+        console.error("Error initializing Stripe Elements:", error);
+        console.log(`❌ Failed to initialize Stripe Elements: ${error.message}`);
+        // Re-throw to maintain error propagation if needed
+        throw error;
+      }
     }
     console.log("In native app, waiting for Swift to call initializeApp()");
     </script>
