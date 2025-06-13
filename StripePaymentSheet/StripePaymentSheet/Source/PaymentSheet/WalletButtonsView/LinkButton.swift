@@ -24,7 +24,7 @@ struct LinkButton: View {
     private let action: () -> Void
     private let height: CGFloat
 
-    init(height: CGFloat = 44, viewModel: LinkButtonViewModel = LinkButtonViewModel(), action: @escaping () -> Void) {
+    init(height: CGFloat = Constants.defaultButtonHeight, viewModel: LinkButtonViewModel = LinkButtonViewModel(), action: @escaping () -> Void) {
         self.height = height
         self._viewModel = StateObject(wrappedValue: viewModel)
         self.action = action
