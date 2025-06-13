@@ -119,8 +119,8 @@ let ECEHTML = """
         } catch (error) {
           console.error("ECE click error:", error);
 
-          // On error, throw to let Stripe handle it
-          throw error;
+          // On error, reject the click
+          event.reject();
         }
       });
 

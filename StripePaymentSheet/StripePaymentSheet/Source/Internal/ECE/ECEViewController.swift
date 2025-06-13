@@ -342,7 +342,6 @@ extension ECEViewController: WKScriptMessageHandlerWithReply {
 
     func handleMessage(message: WKScriptMessage) async throws -> Any? {
         let messageBody = message.body
-        let timestamp = DateFormatter.logFormatter.string(from: Date())
         guard let expressCheckoutDelegate = expressCheckoutWebviewDelegate else {
             throw BridgeError("ExpressCheckoutWebviewDelegate not set")
         }
@@ -352,7 +351,6 @@ extension ECEViewController: WKScriptMessageHandlerWithReply {
 
         switch message.name {
         case "calculateShipping":
-            print("🚚 [\(timestamp)] Calculate Shipping Request:")
             if let shippingAddress = messageDict["shippingAddress"] as? [String: Any] {
                 return try await expressCheckoutDelegate.eceView(self, didReceiveShippingAddressChange: shippingAddress)
             } else {
@@ -360,7 +358,6 @@ extension ECEViewController: WKScriptMessageHandlerWithReply {
             }
 
         case "calculateShippingRateChange":
-            print("📦 [\(timestamp)] Calculate Shipping Rate Change Request:")
             if let shippingRate = messageDict["shippingRate"] as? [String: Any] {
                 return try await expressCheckoutDelegate.eceView(self, didReceiveShippingRateChange: shippingRate)
             } else {
@@ -368,7 +365,6 @@ extension ECEViewController: WKScriptMessageHandlerWithReply {
             }
 
         case "confirmPayment":
-            print("💳 [\(timestamp)] Confirm Payment Request (iOS 14+ Reply):")
             if let paymentDetails = messageDict["paymentDetails"] as? [String: Any] {
                 return try await expressCheckoutDelegate.eceView(self, didReceiveECEConfirmation: paymentDetails)
             } else {
@@ -376,7 +372,6 @@ extension ECEViewController: WKScriptMessageHandlerWithReply {
             }
 
         case "handleECEClick":
-            print("👆 [\(timestamp)] ECE Click Event:")
             if let eventData = messageDict["eventData"] as? [String: Any] {
                 return try await expressCheckoutDelegate.eceView(self, didReceiveECEClick: eventData)
             } else {
@@ -393,28 +388,28 @@ extension ECEViewController: WKScriptMessageHandlerWithReply {
 @available(iOS 16.0, *)
 extension ECEViewController: WKNavigationDelegate {
     func webView(_ webView: WKWebView, didStartProvisionalNavigation navigation: WKNavigation!) {
-        print("🚀 Navigation started: \(webView.url?.absoluteString ?? "unknown")")
+        print("Navigation started: \(webView.url?.absoluteString ?? "unknown")")
     }
 
     func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
-        print("✅ Navigation finished: \(webView.url?.absoluteString ?? "unknown")")
+        print("Navigation finished: \(webView.url?.absoluteString ?? "unknown")")
 
         // If this is the main page load, initialize the app with our native data
         if webView.url?.absoluteString.contains("pay.stripe.com") == true {
             // Call the JavaScript initializeApp() function now that native data is injected
             webView.evaluateJavaScript("initializeApp()") { _, error in
                 if let error = error {
-                    print("❌ Failed to call initializeApp(): \(error)")
+                    print("Failed to call initializeApp(): \(error)")
                     // Bail with error
                 } else {
-                    print("✅ Successfully called initializeApp()")
+                    print("Successfully called initializeApp()")
                 }
             }
         }
     }
 
     func webView(_ webView: WKWebView, didFail navigation: WKNavigation!, withError error: Error) {
-        print("❌ Navigation failed: \(error.localizedDescription)")
+        print("Navigation failed: \(error.localizedDescription)")
     }
 
     func webView(_ webView: WKWebView, decidePolicyFor navigationAction: WKNavigationAction, decisionHandler: @escaping (WKNavigationActionPolicy) -> Void) {
@@ -427,7 +422,7 @@ extension ECEViewController: WKNavigationDelegate {
 extension ECEViewController: WKUIDelegate {
     func webView(_ webView: WKWebView, createWebViewWith configuration: WKWebViewConfiguration, for navigationAction: WKNavigationAction, windowFeatures: WKWindowFeatures) -> WKWebView? {
 
-        print("🪟 Popup requested for URL: \(navigationAction.request.url?.absoluteString ?? "unknown")")
+        print("Popup requested for URL: \(navigationAction.request.url?.absoluteString ?? "unknown")")
 
         // Use the provided configuration directly (this fixes the configuration error)
         // Create popup with full screen bounds
