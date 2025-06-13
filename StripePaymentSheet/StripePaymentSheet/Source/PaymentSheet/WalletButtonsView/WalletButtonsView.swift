@@ -164,10 +164,10 @@ import SwiftUI
         private enum Constants {
             static let defaultButtonHeight: CGFloat = 44
         }
-        
+
         let height: CGFloat
         let action: () -> Void
-        
+
         init(height: CGFloat = Constants.defaultButtonHeight, action: @escaping () -> Void) {
             self.height = height
             self.action = action
