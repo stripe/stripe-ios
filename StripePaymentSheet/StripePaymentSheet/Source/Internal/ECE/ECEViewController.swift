@@ -79,20 +79,14 @@ class ECEViewController: UIViewController {
     private func setupWebView() {
         let configuration = WKWebViewConfiguration()
 
-        // Enable JavaScript
         configuration.defaultWebpagePreferences.allowsContentJavaScript = true
         configuration.preferences.javaScriptCanOpenWindowsAutomatically = true
 
         // Setup message handlers for the bridge
         let contentController = WKUserContentController()
-
-        // Add message handlers for different types of messages
-        // Use regular handlers for one-way messages
         contentController.add(self, name: "ready")
         contentController.add(self, name: "error")
         contentController.add(self, name: "consoleLog")
-
-        // Use reply handlers for request/response messages (iOS 14+)
         contentController.addScriptMessageHandler(self, contentWorld: .page, name: "calculateShipping")
         contentController.addScriptMessageHandler(self, contentWorld: .page, name: "calculateShippingRateChange")
         contentController.addScriptMessageHandler(self, contentWorld: .page, name: "confirmPayment")
@@ -323,7 +317,7 @@ struct BridgeError: Error {
         self.localizedDescription = localizedDescription
     }
 }
-// MARK: - WKScriptMessageHandlerWithReply (iOS 14+)
+
 @available(iOS 16.0, *)
 extension ECEViewController: WKScriptMessageHandlerWithReply {
 
