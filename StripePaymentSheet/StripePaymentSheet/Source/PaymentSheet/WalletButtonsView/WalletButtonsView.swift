@@ -177,7 +177,7 @@ import SwiftUI
             PayWithApplePayButton(.plain, action: action)
                 .frame(maxWidth: .infinity)
                 .frame(height: height)
-                .cornerRadius(100)
+                .cornerRadius(height / 2)
         }
     }
 }
