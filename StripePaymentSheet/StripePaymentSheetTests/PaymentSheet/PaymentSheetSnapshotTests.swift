@@ -1416,6 +1416,37 @@ class PaymentSheetSnapshotTests: STPSnapshotTestCase {
         verify(paymentSheet.bottomSheetViewController.view!)
     }
 
+    func testPaymentSheetIconStyleOutlined() {
+         stubNewCustomerResponse()
+
+         var appearance = PaymentSheet.Appearance()
+         appearance.iconStyle = .outlined
+
+         preparePaymentSheet(
+             customer: "snapshot",
+             appearance: appearance,
+             applePayEnabled: false
+         )
+         presentPaymentSheet(darkMode: false)
+         verify(paymentSheet.bottomSheetViewController.view!)
+     }
+
+    func testPaymentSheetIconStyleOutlined_vertical() {
+        configuration.paymentMethodLayout = .vertical
+        stubNewCustomerResponse()
+
+        var appearance = PaymentSheet.Appearance()
+        appearance.iconStyle = .outlined
+
+         preparePaymentSheet(
+             customer: "snapshot",
+             appearance: appearance,
+             applePayEnabled: false
+         )
+         presentPaymentSheet(darkMode: false)
+         verify(paymentSheet.bottomSheetViewController.view!)
+     }
+
     private func updatePaymentMethodDetail(data: Data, variables: [String: String]) -> Data {
         var template = String(decoding: data, as: UTF8.self)
         for (templateKey, templateValue) in variables {

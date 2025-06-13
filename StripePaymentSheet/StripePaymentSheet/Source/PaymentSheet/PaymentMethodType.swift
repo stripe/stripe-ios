@@ -73,7 +73,7 @@ extension PaymentSheet {
         /// If the image is immediately available, the updateHandler will not be called.
         /// If the image is not immediately available, the updateHandler will be called if we are able
         /// to download the image.
-        func makeImage(forDarkBackground: Bool = false, currency: String? = nil, updateHandler: DownloadManager.UpdateImageHandler?) -> UIImage {
+        func makeImage(forDarkBackground: Bool = false, currency: String? = nil, iconStyle: PaymentSheet.Appearance.IconStyle = .filled, updateHandler: DownloadManager.UpdateImageHandler?) -> UIImage {
             // TODO(RUN_MOBILESDK-3167): Make this return a dynamic UIImage
             // TODO: Refactor this out of PaymentMethodType. Users shouldn't have to convert STPPaymentMethodType to PaymentMethodType in order to get its image.
             switch self {
@@ -86,13 +86,14 @@ extension PaymentSheet {
                 )
             case .stripe(let paymentMethodType):
                 // Get the client-side asset first
-                let localImage = paymentMethodType.makeImage(forDarkBackground: forDarkBackground, currency: currency)
+                let localImage = paymentMethodType.makeImage(forDarkBackground: forDarkBackground, currency: currency, iconStyle: iconStyle)
                 // Next, try to download the image from the spec if possible
                 if
                     FormSpecProvider.shared.isLoaded,
                     let spec = FormSpecProvider.shared.formSpec(for: identifier),
                     let selectorIcon = spec.selectorIcon,
-                    var imageUrl = URL(string: selectorIcon.lightThemePng)
+                    var imageUrl = URL(string: selectorIcon.lightThemePng),
+                    paymentMethodType != .crypto // special case, don't use remote URL for crypto so we can use the local image based on iconStyle
                 {
                     if forDarkBackground,
                        let darkImageString = selectorIcon.darkThemePng,
@@ -120,7 +121,7 @@ extension PaymentSheet {
                     return DownloadManager.sharedManager.imagePlaceHolder()
                 }
             case .instantDebits, .linkCardBrand:
-                return Image.pm_type_us_bank.makeImage(overrideUserInterfaceStyle: forDarkBackground ? .dark : .light)
+                return STPPaymentMethodType.USBankAccount.makeImage(forDarkBackground: forDarkBackground, iconStyle: iconStyle) ?? UIImage()
             }
         }
 

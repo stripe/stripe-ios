@@ -534,6 +534,19 @@ class CustomerSheetSnapshotTests: STPSnapshotTestCase {
         verify(cs.bottomSheetViewController.view!)
     }
 
+    func testCustomerSheetIconStyleOutlined() {
+        stubSessions(paymentMethods: "\"us_bank_account\"")
+        let customerAdapter = StubCustomerAdapter()
+        customerAdapter.paymentMethods = [STPPaymentMethod._testUSBankAccount()]
+
+        var configuration = configuration(applePayEnabled: false)
+        configuration.appearance.iconStyle = .outlined
+
+        prepareCS(configuration: configuration, customerAdapter: customerAdapter)
+        presentCS(darkMode: false)
+        verify(cs.bottomSheetViewController.view!)
+    }
+
     private func billingDetails() -> PaymentSheet.BillingDetails {
         return .init(
             address: .init(
