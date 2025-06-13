@@ -20,7 +20,7 @@ final class RowButtonFloating: RowButton {
     /// The vertical top and bottom padding to be used. Floating uses different values for insets based on if it is used in embedded or vertical mode
     private var insets: CGFloat {
         guard isEmbedded else {
-            return appearance.floatingRowInsets // Configurable insets for non-embedded mode
+            return appearance.verticalModeRowInsets // Configurable insets for vertical mode
         }
 
         return appearance.embeddedPaymentElement.row.additionalInsets
