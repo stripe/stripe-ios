@@ -189,8 +189,7 @@ class ECEViewController: UIViewController {
         let script = WKUserScript(source: bridgeScript, injectionTime: .atDocumentEnd, forMainFrameOnly: false)
         contentController.addUserScript(script)
 
-        // Create a tiny 1x1 pixel webview positioned at origin
-        // It's 500x500 for now for debugging
+        // TODO: It's 500x500 for now for debugging, but set this to 1x1 before release
         webView = WKWebView(frame: CGRect(x: 0, y: 0, width: 500, height: 500), configuration: configuration)
         webView.navigationDelegate = self
         webView.uiDelegate = self
@@ -199,8 +198,8 @@ class ECEViewController: UIViewController {
             webView.isInspectable = true
         }
         #endif
-        webView.isHidden = false // Keep it technically visible but tiny
-        webView.alpha = 1.00 // Make it nearly transparent // don't do this for now
+        webView.isHidden = false // Should not be hidden, so that we actually render it
+        webView.alpha = 1.00 // TODO: Set this to 0.01 (or 0.00 if we can get away with it without Safari optimizing it out?)
 
         webView.customUserAgent = Self.FakeSafariUserAgent
     }
@@ -208,7 +207,7 @@ class ECEViewController: UIViewController {
     private func setupNavigationBar() {
         title = "Checkout"
 
-        // Add refresh button, back, and forward for debugging. Let's get rid of these before ship
+        // Add refresh button, back, and forward for debugging. TODO: Get rid of these before ship
         navigationItem.rightBarButtonItem = UIBarButtonItem(
             barButtonSystemItem: .refresh,
             target: self,
@@ -246,18 +245,17 @@ class ECEViewController: UIViewController {
 extension ECEViewController: WKScriptMessageHandler {
     func userContentController(_ userContentController: WKUserContentController, didReceive message: WKScriptMessage) {
         let messageBody = message.body
-        let timestamp = DateFormatter.logFormatter.string(from: Date())
 
         switch message.name {
         case "ready":
-            print("✅ [\(timestamp)] Bridge Ready")
+            log("✅ Bridge Ready")
 
         case "error":
-            print("❌ [\(timestamp)] Bridge Error:")
+            log("❌ Bridge Error:")
             if let errorDict = messageBody as? [String: Any] {
                 printMessageDetails(errorDict)
             } else {
-                print("   Error: \(messageBody)")
+                log("   Error: \(messageBody)")
             }
 
         case "consoleLog":
@@ -265,44 +263,44 @@ extension ECEViewController: WKScriptMessageHandler {
                let level = logDict["level"] as? String,
                let logMessage = logDict["message"] as? String {
                 let emoji = logEmojiForLevel(level)
-                print("\(emoji) [\(timestamp)] JS Console.\(level): \(logMessage)")
+                log("\(emoji) JS Console.\(level): \(logMessage)")
 
                 // Optionally print stack trace for errors
                 if level == "error", let stackTrace = logDict["stackTrace"] as? String {
                     let lines = stackTrace.split(separator: "\n").prefix(5) // Show first 5 lines of stack
                     for line in lines {
-                        print("     \(line)")
+                        log("     \(line)")
                     }
                 }
             }
 
         default:
-            print("🔍 [\(timestamp)] Unknown message type '\(message.name)': \(messageBody)")
+            log("🔍 Unknown message type '\(message.name)': \(messageBody)")
         }
     }
 
     private func printMessageDetails(_ messageDict: [String: Any]) {
         for (key, value) in messageDict.sorted(by: { $0.key < $1.key }) {
             if let nestedDict = value as? [String: Any] {
-                print("   \(key):")
+                log("   \(key):")
                 for (nestedKey, nestedValue) in nestedDict.sorted(by: { $0.key < $1.key }) {
                     if let stringValue = nestedValue as? String, stringValue.count > 200 {
-                        print("     \(nestedKey): \(String(stringValue.prefix(200)))...")
+                        log("     \(nestedKey): \(String(stringValue.prefix(200)))...")
                     } else {
-                        print("     \(nestedKey): \(nestedValue)")
+                        log("     \(nestedKey): \(nestedValue)")
                     }
                 }
             } else if let array = value as? [Any] {
-                print("   \(key): [\(array.count) items]")
+                log("   \(key): [\(array.count) items]")
                 if array.count <= 5 {
                     for (index, item) in array.enumerated() {
-                        print("     [\(index)]: \(item)")
+                        log("     [\(index)]: \(item)")
                     }
                 }
             } else if let stringValue = value as? String, stringValue.count > 200 {
-                print("   \(key): \(String(stringValue.prefix(200)))...")
+                log("   \(key): \(String(stringValue.prefix(200)))...")
             } else {
-                print("   \(key): \(value)")
+                log("   \(key): \(value)")
             }
         }
     }
@@ -388,28 +386,28 @@ extension ECEViewController: WKScriptMessageHandlerWithReply {
 @available(iOS 16.0, *)
 extension ECEViewController: WKNavigationDelegate {
     func webView(_ webView: WKWebView, didStartProvisionalNavigation navigation: WKNavigation!) {
-        print("Navigation started: \(webView.url?.absoluteString ?? "unknown")")
+        log("Navigation started: \(webView.url?.absoluteString ?? "unknown")")
     }
 
     func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
-        print("Navigation finished: \(webView.url?.absoluteString ?? "unknown")")
+        log("Navigation finished: \(webView.url?.absoluteString ?? "unknown")")
 
         // If this is the main page load, initialize the app with our native data
         if webView.url?.absoluteString.contains("pay.stripe.com") == true {
             // Call the JavaScript initializeApp() function now that native data is injected
             webView.evaluateJavaScript("initializeApp()") { _, error in
                 if let error = error {
-                    print("Failed to call initializeApp(): \(error)")
+                    log("Failed to call initializeApp(): \(error)")
                     // Bail with error
                 } else {
-                    print("Successfully called initializeApp()")
+                    log("Successfully called initializeApp()")
                 }
             }
         }
     }
 
     func webView(_ webView: WKWebView, didFail navigation: WKNavigation!, withError error: Error) {
-        print("Navigation failed: \(error.localizedDescription)")
+        log("Navigation failed: \(error.localizedDescription)")
     }
 
     func webView(_ webView: WKWebView, decidePolicyFor navigationAction: WKNavigationAction, decisionHandler: @escaping (WKNavigationActionPolicy) -> Void) {
@@ -422,7 +420,7 @@ extension ECEViewController: WKNavigationDelegate {
 extension ECEViewController: WKUIDelegate {
     func webView(_ webView: WKWebView, createWebViewWith configuration: WKWebViewConfiguration, for navigationAction: WKNavigationAction, windowFeatures: WKWindowFeatures) -> WKWebView? {
 
-        print("Popup requested for URL: \(navigationAction.request.url?.absoluteString ?? "unknown")")
+        log("Popup requested for URL: \(navigationAction.request.url?.absoluteString ?? "unknown")")
 
         // Use the provided configuration directly (this fixes the configuration error)
         // Create popup with full screen bounds
@@ -518,11 +516,17 @@ extension ECEViewController: WKUIDelegate {
     }
 }
 
-// MARK: - DateFormatter Extension
-extension DateFormatter {
+fileprivate extension DateFormatter {
     static let logFormatter: DateFormatter = {
         let formatter = DateFormatter()
         formatter.dateFormat = "HH:mm:ss.SSS"
         return formatter
     }()
+}
+
+private func log(_ message: String) {
+    let timestamp = DateFormatter.logFormatter.string(from: Date())
+    #if DEBUG
+    print("[\(timestamp)] \(message)")
+    #endif
 }

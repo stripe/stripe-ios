@@ -44,7 +44,6 @@ let ECEHTML = """
 
       try {
         stripe = window.Stripe(getStripePublishableKey(), {});
-        console.log("Created Stripe");
       } catch (error) {
         console.error("Error creating Stripe instance:", error);
         console.log(`❌ Failed to create Stripe instance: ${error.message}`);
@@ -53,7 +52,6 @@ let ECEHTML = """
 
       try {
         elements = stripe.elements(options);
-        console.log("Created Elements");
       } catch (error) {
         console.error("Error creating Elements with options:", options, error);
         console.log(`❌ Failed to create Elements: ${error.message}`);
@@ -65,7 +63,6 @@ let ECEHTML = """
           "expressCheckout",
           ECE_OPTIONS
         );
-        console.log("Created ECE");
       } catch (error) {
         console.error("Error creating Express Checkout Element:", error);
         console.log(`❌ Failed to create Express Checkout Element: ${error.message}`);
@@ -77,10 +74,8 @@ let ECEHTML = """
         : "automatic";
         console.log("Ready to mount");
       expressCheckoutElement.mount("#express-checkout-element");
-      console.log("expressCheckoutElement", expressCheckoutElement);
       //When expressCheckoutElement is mounted, ready event tries to show the available payment methods
       expressCheckoutElement.on("ready", ({ availablePaymentMethods }) => {
-        console.log("ready event triggered1");
         const expressCheckoutDiv = document.getElementById(
           "express-checkout-element"
         );
@@ -93,10 +88,7 @@ let ECEHTML = """
 
       expressCheckoutElement.on("click", async function (event) {
         console.log(`Click received with event:\n${hashToString(event)}`);
-
         try {
-          console.log("Using Native ECE Click Handler...");
-
           // Extract only serializable data from the event
           // The event object contains functions (resolve, complete) that can't be cloned
           // for message passing, so we only send the data we need
@@ -105,16 +97,10 @@ let ECEHTML = """
             expressPaymentType: event.expressPaymentType
           };
 
-          // Call native API to handle the click
-          // The native handler will provide all configuration like:
-          // - billingAddressRequired, emailRequired, phoneNumberRequired
-          // - shippingAddressRequired, allowedShippingCountries
-          // - business name, line items, etc.
           const resolvePayload = await window.NativeStripeECE.handleClick(eventData);
 
-          console.log(`Native ECE Response:\n${hashToString(resolvePayload)}`);
+          console.log(`Bridge response:\n${hashToString(resolvePayload)}`);
 
-          // Resolve the event with the payload from native
           event.resolve(resolvePayload);
         } catch (error) {
           console.error("ECE click error:", error);
@@ -147,14 +133,9 @@ let ECEHTML = """
         };
 
         try {
-          // Check if native API is available
-          if (window.NativeStripeECE && window.NativeStripeECE.calculateShipping) {
-            console.log("Using Native Shipping API...");
-
-            // Call native API
             const response = await window.NativeStripeECE.calculateShipping(shippingAddress);
 
-            console.log(`Native API Response:\n${hashToString(response)}`);
+            console.log(`Bridge Response:\n${hashToString(response)}`);
 
             // Check if merchant rejected the address
             if (response.merchantDecision === "rejected") {
@@ -172,13 +153,6 @@ let ECEHTML = """
               shippingRates: response.shippingRates,
               lineItems: response.lineItems
             });
-
-          } else {
-            // Resolve with an error
-            console.log("Native Shipping API not available");
-            event.reject();
-          }
-
         } catch (error) {
           console.log(`Error calculating shipping: ${error.message}`);
           console.error("Shipping calculation error:", error);
@@ -193,17 +167,9 @@ let ECEHTML = """
         console.log("Shipping rate change event:", event);
 
         try {
-          // Check if native API is available
-          console.log("Checking for native rate API...");
-          console.log("window.NativeStripeECE:", window.NativeStripeECE);
-          console.log("calculateShippingRateChange function:", window.NativeStripeECE?.calculateShippingRateChange);
-
-          if (window.NativeStripeECE && window.NativeStripeECE.calculateShippingRateChange) {
-            console.log("Using Native Shipping Rate API...");
-
             const response = await window.NativeStripeECE.calculateShippingRateChange(event.shippingRate);
 
-            console.log(`Native Rate API Response:\n${hashToString(response)}`);
+            console.log(`Bridge response:\n${hashToString(response)}`);
 
             // Check if merchant rejected the rate
             if (response.merchantDecision === "rejected") {
@@ -213,9 +179,6 @@ let ECEHTML = """
             }
 
             event.resolve();
-
-          }
-
         } catch (error) {
           console.log(`Error validating shipping rate: ${error.message}`);
           console.error("Shipping rate validation error:", error);
@@ -247,10 +210,6 @@ let ECEHTML = """
         }
 
         try {
-          // Check if native API is available
-          if (window.NativeStripeECE && window.NativeStripeECE.confirmPayment) {
-            console.log("Using Native Payment API...");
-
             // Prepare payment details for native processing
             const paymentDetails = {
               billingDetails: event.billingDetails,
@@ -261,41 +220,9 @@ let ECEHTML = """
               //paymentMethod: paymentMethod,
             };
 
-            // Call native API to create and confirm payment
             const response = await window.NativeStripeECE.confirmPayment(paymentDetails);
 
             console.log(`Native Payment API Response:\n${hashToString(response)}`);
-
-            // Use the response from native API
-            const { clientSecret, paymentIntentId } = response;
-
-            if (mode === "payment") {
-              const confirmedPI = await stripe.confirmPayment({
-                elements,
-                clientSecret,
-                confirmParams: {
-                  return_url: "https://amazon.com",
-                  expand: ["payment_method"],
-                },
-                redirect: "always",
-              });
-              console.log(`confirmPayment result:\n${hashToString(confirmedPI)}`);
-            } else if (mode === "setup") {
-              await stripe.confirmSetup({
-                elements,
-                clientSecret,
-                confirmParams: {
-                  return_url: "https://amazon.com",
-                  expand: ["payment_method"],
-                },
-                redirect: "if_required",
-              });
-            } else {
-              console.log(`Invalid mode onConfirm ${mode}.`);
-            }
-
-          }
-
         } catch (error) {
           console.log(`Error confirming payment: ${error.message}`);
           console.error("Payment confirmation error:", error);
@@ -315,7 +242,7 @@ let ECEHTML = """
         throw error;
       }
     }
-    console.log("In native app, waiting for Swift to call initializeApp()");
+    console.log("Waiting for bridge to call initializeApp()");
     </script>
   </body>
 </html>
