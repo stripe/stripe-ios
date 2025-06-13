@@ -201,7 +201,12 @@ extension LinkUI {
         appearance.colors.textSecondary = .linkTextSecondary
 
         // Insets
-        appearance.textFieldInsets = NSDirectionalEdgeInsets(top: 8, leading: 16, bottom: 8, trailing: 16)
+        appearance.textFieldInsets = NSDirectionalEdgeInsets(
+            top: LinkUI.smallContentSpacing,
+            leading: LinkUI.contentSpacing,
+            bottom: LinkUI.smallContentSpacing,
+            trailing: LinkUI.contentSpacing
+        )
 
         // Components
         appearance.colors.componentBorder = .linkSurfacePrimary

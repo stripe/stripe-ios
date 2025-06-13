@@ -49,7 +49,8 @@ struct LinkInlineVerificationView: View {
                         configuration: .init(
                             enableDigitGrouping: false,
                             font: LinkUI.font(forTextStyle: .title),
-                            itemCornerRadius: viewModel.appearance.cornerRadius
+                            itemCornerRadius: viewModel.appearance.cornerRadius,
+                            itemFocusBackgroundColor: viewModel.appearance.colors.background
                         ),
                         controller: viewModel.textFieldController,
                         theme: viewModel.appearance.asElementsTheme,
