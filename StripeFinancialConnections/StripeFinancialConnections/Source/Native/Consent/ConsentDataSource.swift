@@ -115,6 +115,6 @@ final class ConsentDataSourceImplementation: ConsentDataSource {
 
 private extension FinancialConnectionsSessionManifest {
     var shouldLookupConsumerSession: Bool {
-        isLinkWithStripe == true && accountholderCustomerEmailAddress == nil
+        accountholderCustomerEmailAddress == nil
     }
 }
