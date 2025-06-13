@@ -129,7 +129,7 @@ extension LinkUI {
     ) -> UIFont {
         switch textStyle {
         case .title:
-            return UIFont.systemFont(ofSize: 24, weight: .bold).scaled(
+            return UIFont.systemFont(ofSize: 24, weight: .semibold).scaled(
                 withTextStyle: .headline,
                 maximumPointSize: maximumPointSize,
                 compatibleWith: traitCollection
@@ -192,13 +192,21 @@ extension LinkUI {
 
     static let appearance: PaymentSheet.Appearance = {
         var appearance = PaymentSheet.Appearance.default
-        appearance.cornerRadius = LinkUI.mediumCornerRadius
+        appearance.cornerRadius = LinkUI.cornerRadius
         appearance.colors.primary = .linkBorderSelected
         appearance.colors.background = .linkSurfacePrimary
 
         // Text
         appearance.colors.text = .linkTextPrimary
         appearance.colors.textSecondary = .linkTextSecondary
+
+        // Insets
+        appearance.textFieldInsets = NSDirectionalEdgeInsets(
+            top: LinkUI.smallContentSpacing,
+            leading: LinkUI.contentSpacing,
+            bottom: LinkUI.smallContentSpacing,
+            trailing: LinkUI.contentSpacing
+        )
 
         // Components
         appearance.colors.componentBorder = .linkSurfacePrimary

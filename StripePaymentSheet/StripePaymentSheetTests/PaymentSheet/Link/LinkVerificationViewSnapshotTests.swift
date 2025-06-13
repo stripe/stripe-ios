@@ -13,6 +13,7 @@ import UIKit
 @testable@_spi(STP) import StripePayments
 @testable@_spi(STP) import StripePaymentSheet
 @testable@_spi(STP) import StripePaymentsUI
+@testable@_spi(STP) import StripeUICore
 
 class LinkVerificationViewSnapshotTests: STPSnapshotTestCase {
 
@@ -34,6 +35,12 @@ class LinkVerificationViewSnapshotTests: STPSnapshotTestCase {
 
     func testEmbedded() {
         let sut = makeSUT(mode: .embedded)
+        verify(sut)
+    }
+
+    func testEmbeddedWithInput() {
+        let sut = makeSUT(mode: .embedded)
+        sut.codeField.value = "1234"
         verify(sut)
     }
 
@@ -62,7 +69,7 @@ extension LinkVerificationViewSnapshotTests {
             mode: mode,
             linkAccount: LinkAccountStub(
                 email: "user@example.com",
-                redactedPhoneNumber: "+1********55",
+                redactedPhoneNumber: "(•••) ••• ••55",
                 isRegistered: true
             )
         )
