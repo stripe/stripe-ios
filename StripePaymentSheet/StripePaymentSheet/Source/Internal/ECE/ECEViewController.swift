@@ -49,7 +49,8 @@ enum ExpressCheckoutError: LocalizedError {
 
 @available(iOS 16.0, *)
 class ECEViewController: UIViewController {
-
+    // TODO: update this key to use STPAPIClient once the bridge is ready on the other test account!
+    let apiKey = "pk_test_51RUTiSAs6uch2mqQune4yYMgnaPTI8z7AuCS9CPb5zaDQuUsje3qsRZKwgjDND3DTwvKVz6aSWYFy36FVA7iyn7h00QbaV5A9S"
     private var webView: WKWebView!
     private var popupWebView: WKWebView?
 
@@ -115,40 +116,31 @@ class ECEViewController: UIViewController {
 
         // Inject JavaScript to capture messages and set up the bridge
         let bridgeScript = """
-
         function getStripePublishableKey() {
-        // TODO: Update this key once the bridge is ready
-          return "pk_test_51RUTiSAs6uch2mqQune4yYMgnaPTI8z7AuCS9CPb5zaDQuUsje3qsRZKwgjDND3DTwvKVz6aSWYFy36FVA7iyn7h00QbaV5A9S";
+          return "\(apiKey)";
         }
 
         window.NATIVE_AMOUNT_TOTAL = \(expressCheckoutWebviewDelegate?.amountForECEView(self) ?? 0);
 
-        window.NativeShipping = {
+        window.NativeStripeECE = {
+            handleClick: async function(eventData) {
+                return await window.webkit.messageHandlers.handleECEClick.postMessage({
+                    eventData: eventData
+                });
+            },
             calculateShipping: async function(shippingAddress) {
                 return await window.webkit.messageHandlers.calculateShipping.postMessage({
                     shippingAddress: shippingAddress
                 });
             },
-
             calculateShippingRateChange: async function(shippingRate) {
                 return await window.webkit.messageHandlers.calculateShippingRateChange.postMessage({
                     shippingRate: shippingRate
                 });
-            }
-        };
-
-        window.NativePayment = {
+            },
             confirmPayment: async function(paymentDetails) {
                 return await window.webkit.messageHandlers.confirmPayment.postMessage({
                     paymentDetails: paymentDetails
-                });
-            }
-        };
-
-        window.NativeECE = {
-            handleClick: async function(eventData) {
-                return await window.webkit.messageHandlers.handleECEClick.postMessage({
-                    eventData: eventData
                 });
             }
         };
@@ -269,8 +261,7 @@ extension ECEViewController: WKScriptMessageHandler {
 
         switch message.name {
         case "ready":
-            print("✅ [\(timestamp)] Bridge Ready:")
-            // TODO: Some timer here to make sure we get ready in time or log an error
+            print("✅ [\(timestamp)] Bridge Ready")
 
         case "error":
             print("❌ [\(timestamp)] Bridge Error:")
@@ -551,128 +542,4 @@ extension DateFormatter {
         formatter.dateFormat = "HH:mm:ss.SSS"
         return formatter
     }()
-}
-
-// MARK: - Payment Methods
-@available(iOS 16.0, *)
-extension ECEViewController {
-
-    // Handle payment confirmation with reply handler (iOS 14+)
-    private func handlePaymentConfirmationWithReply(paymentDetails: [String: Any], replyHandler: @escaping (Any?, String?) -> Void) async {
-        print("💳 Processing payment confirmation...")
-
-        // If delegate is set, let it handle the ECE confirmation
-        if let delegate = expressCheckoutWebviewDelegate {
-            do {
-                let response = try await delegate.eceView(self, didReceiveECEConfirmation: paymentDetails)
-                replyHandler(response, nil)
-            } catch {
-                print("❌ ECE confirmation failed: \(error)")
-                replyHandler(nil, error.localizedDescription)
-            }
-        } else {
-            // Fallback to direct payment intent creation if no delegate
-            await handleDirectPaymentConfirmation(paymentDetails: paymentDetails, replyHandler: replyHandler)
-        }
-    }
-
-    // Direct payment confirmation without delegate
-    @available(iOS 16.0, *)
-    private func handleDirectPaymentConfirmation(paymentDetails: [String: Any], replyHandler: @escaping (Any?, String?) -> Void) async {
-        // Extract payment details
-//        let billingDetails = paymentDetails["billingDetails"] as? [String: Any]
-//        let shippingAddress = paymentDetails["shippingAddress"] as? [String: Any]
-        let shippingRate = paymentDetails["shippingRate"] as? [String: Any]
-        let selectedShippingId = shippingRate?["id"] as? String
-        let mode = paymentDetails["mode"] as? String ?? "payment"
-        let captureMethod = paymentDetails["captureMethod"] as? String ?? "automatic"
-//        let paymentMethod = paymentDetails["paymentMethod"] as? [String: Any]
-//        let createPaymentMethodEnabled = paymentDetails["createPaymentMethodEnabled"] as? Bool ?? false
-
-        // Create payment intent
-        do {
-            let paymentData = try await createPaymentIntent(
-                mode: mode,
-                captureMethod: captureMethod,
-                selectedShippingId: selectedShippingId
-            )
-
-            guard let clientSecret = paymentData["secret"] as? String,
-                  let paymentIntentId = paymentData["paymentIntentId"] as? String else {
-                replyHandler(nil, "Invalid payment intent response")
-                return
-            }
-
-            print("✅ PaymentIntent created: \(paymentIntentId)")
-
-            // Return the response directly via reply handler
-            let response: [String: Any] = [
-                "clientSecret": clientSecret,
-                "paymentIntentId": paymentIntentId,
-                "mode": mode,
-                "requiresAction": false,
-                "status": "requires_confirmation",
-            ]
-
-            replyHandler(response, nil)
-
-            // Get payment intent details after a short delay
-            Task {
-                try? await Task.sleep(nanoseconds: 2_000_000_000) // 2 seconds
-                await getPaymentIntentDetails(paymentIntentId: paymentIntentId)
-            }
-
-        } catch {
-            print("❌ Failed to create payment intent: \(error)")
-            replyHandler(nil, error.localizedDescription)
-        }
-    }
-
-    // Create payment intent by calling the Glitch endpoint - now async
-    private func createPaymentIntent(
-        mode: String,
-        captureMethod: String,
-        selectedShippingId: String?
-    ) async throws -> [String: Any] {
-        let url = URL(string: "https://unexpected-dune-list.glitch.me/secret")!
-        var request = URLRequest(url: url)
-        request.httpMethod = "POST"
-        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
-
-        let body: [String: Any] = [
-            "mode": mode,
-            "captureMethod": captureMethod,
-            "selectedShippingId": selectedShippingId ?? NSNull(),
-        ]
-
-        request.httpBody = try JSONSerialization.data(withJSONObject: body)
-
-        let (data, _) = try await URLSession.shared.data(for: request)
-
-        guard let json = try? JSONSerialization.jsonObject(with: data) as? [String: Any] else {
-            throw ExpressCheckoutError.paymentConfirmationFailed(reason: "Invalid server response")
-        }
-
-        return json
-    }
-
-    // Get payment intent details - now async
-    private func getPaymentIntentDetails(paymentIntentId: String) async {
-        let url = URL(string: "https://unexpected-dune-list.glitch.me/intent/\(paymentIntentId)")!
-
-        do {
-            let (data, _) = try await URLSession.shared.data(from: url)
-
-            guard let json = try? JSONSerialization.jsonObject(with: data) as? [String: Any] else {
-                print("❌ Invalid payment intent response")
-                return
-            }
-
-            print("📋 PaymentIntent details:")
-            printMessageDetails(json)
-        } catch {
-            print("❌ Failed to get payment intent details: \(error)")
-        }
-    }
-
 }

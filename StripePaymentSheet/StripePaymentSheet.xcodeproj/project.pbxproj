@@ -52,8 +52,6 @@
 		2E4C37C73AD202C8A3DD2E4E /* LoadingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51FF291A25EA43D4D100983B /* LoadingViewController.swift */; };
 		2EC9C94DD8D62E4F4EFC8AB8 /* IntentStatusPollerTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 990304EF35A0EE37DCE20D5B /* IntentStatusPollerTest.swift */; };
 		31005B5A2DD4F99F00639F13 /* WalletButtonsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31005B592DD4F99B00639F13 /* WalletButtonsView.swift */; };
-		310B6D962DFBB323009CA85D /* ShippingModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 310B6D942DFBB323009CA85D /* ShippingModels.swift */; };
-		310B6D972DFBB323009CA85D /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 310B6D932DFBB323009CA85D /* SceneDelegate.swift */; };
 		310B6D982DFBB323009CA85D /* ECEViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 310B6D952DFBB323009CA85D /* ECEViewController.swift */; };
 		310B6D9C2DFBD456009CA85D /* ECEIndexHtml.swift in Sources */ = {isa = PBXBuildFile; fileRef = 310B6D9B2DFBD456009CA85D /* ECEIndexHtml.swift */; };
 		310B6DBC2DFBE40D009CA85D /* ShopPayECEPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 310B6DBB2DFBE40D009CA85D /* ShopPayECEPresenter.swift */; };
@@ -529,8 +527,6 @@
 		2E2B99961C09E31383C9FCE9 /* mt */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = mt; path = mt.lproj/Localizable.strings; sourceTree = "<group>"; };
 		2E42F31D392C0AED757D6239 /* StripePaymentSheet.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = StripePaymentSheet.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		31005B592DD4F99B00639F13 /* WalletButtonsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalletButtonsView.swift; sourceTree = "<group>"; };
-		310B6D932DFBB323009CA85D /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
-		310B6D942DFBB323009CA85D /* ShippingModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShippingModels.swift; sourceTree = "<group>"; };
 		310B6D952DFBB323009CA85D /* ECEViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ECEViewController.swift; sourceTree = "<group>"; };
 		310B6D9B2DFBD456009CA85D /* ECEIndexHtml.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ECEIndexHtml.swift; sourceTree = "<group>"; };
 		310B6DBB2DFBE40D009CA85D /* ShopPayECEPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShopPayECEPresenter.swift; sourceTree = "<group>"; };
@@ -1056,8 +1052,6 @@
 		310B6D922DFBB31B009CA85D /* ECE */ = {
 			isa = PBXGroup;
 			children = (
-				310B6D932DFBB323009CA85D /* SceneDelegate.swift */,
-				310B6D942DFBB323009CA85D /* ShippingModels.swift */,
 				310B6D952DFBB323009CA85D /* ECEViewController.swift */,
 				310B6D9B2DFBD456009CA85D /* ECEIndexHtml.swift */,
 				310B6DBB2DFBE40D009CA85D /* ShopPayECEPresenter.swift */,
@@ -2585,8 +2579,6 @@
 				2A45D3B00BEE9A8D5909CCB1 /* SheetNavigationBar.swift in Sources */,
 				18A5870973D314A946B92748 /* SheetNavigationButton.swift in Sources */,
 				70FEF1703F45F8A90F687E51 /* SimpleMandateTextView.swift in Sources */,
-				310B6D962DFBB323009CA85D /* ShippingModels.swift in Sources */,
-				310B6D972DFBB323009CA85D /* SceneDelegate.swift in Sources */,
 				310B6D982DFBB323009CA85D /* ECEViewController.swift in Sources */,
 				429A68EA92C4101C9BC88269 /* TestModeView.swift in Sources */,
 			);

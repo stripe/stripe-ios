@@ -110,14 +110,13 @@ let ECEHTML = """
           // - billingAddressRequired, emailRequired, phoneNumberRequired
           // - shippingAddressRequired, allowedShippingCountries
           // - business name, line items, etc.
-          const resolvePayload = await window.NativeECE.handleClick(eventData);
+          const resolvePayload = await window.NativeStripeECE.handleClick(eventData);
 
           console.log(`Native ECE Response:\n${hashToString(resolvePayload)}`);
 
           // Resolve the event with the payload from native
           event.resolve(resolvePayload);
         } catch (error) {
-          console.log(`Error handling ECE click: ${error.message}`);
           console.error("ECE click error:", error);
 
           // On error, throw to let Stripe handle it
@@ -149,11 +148,11 @@ let ECEHTML = """
 
         try {
           // Check if native API is available
-          if (window.NativeShipping && window.NativeShipping.calculateShipping) {
+          if (window.NativeStripeECE && window.NativeStripeECE.calculateShipping) {
             console.log("Using Native Shipping API...");
 
             // Call native API
-            const response = await window.NativeShipping.calculateShipping(shippingAddress);
+            const response = await window.NativeStripeECE.calculateShipping(shippingAddress);
 
             console.log(`Native API Response:\n${hashToString(response)}`);
 
@@ -196,13 +195,13 @@ let ECEHTML = """
         try {
           // Check if native API is available
           console.log("Checking for native rate API...");
-          console.log("window.NativeShipping:", window.NativeShipping);
-          console.log("calculateShippingRateChange function:", window.NativeShipping?.calculateShippingRateChange);
+          console.log("window.NativeStripeECE:", window.NativeStripeECE);
+          console.log("calculateShippingRateChange function:", window.NativeStripeECE?.calculateShippingRateChange);
 
-          if (window.NativeShipping && window.NativeShipping.calculateShippingRateChange) {
+          if (window.NativeStripeECE && window.NativeStripeECE.calculateShippingRateChange) {
             console.log("Using Native Shipping Rate API...");
 
-            const response = await window.NativeShipping.calculateShippingRateChange(event.shippingRate);
+            const response = await window.NativeStripeECE.calculateShippingRateChange(event.shippingRate);
 
             console.log(`Native Rate API Response:\n${hashToString(response)}`);
 
@@ -247,11 +246,9 @@ let ECEHTML = """
           return;
         }
 
-        //var paymentMethod = await stripe.createPaymentMethod({ elements });
-
         try {
           // Check if native API is available
-          if (window.NativePayment && window.NativePayment.confirmPayment) {
+          if (window.NativeStripeECE && window.NativeStripeECE.confirmPayment) {
             console.log("Using Native Payment API...");
 
             // Prepare payment details for native processing
@@ -265,7 +262,7 @@ let ECEHTML = """
             };
 
             // Call native API to create and confirm payment
-            const response = await window.NativePayment.confirmPayment(paymentDetails);
+            const response = await window.NativeStripeECE.confirmPayment(paymentDetails);
 
             console.log(`Native Payment API Response:\n${hashToString(response)}`);
 
