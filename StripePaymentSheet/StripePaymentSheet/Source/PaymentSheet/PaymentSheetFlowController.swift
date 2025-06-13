@@ -141,31 +141,53 @@ extension PaymentSheet {
             /// - If this is Apple Pay, the value is "apple_pay"
             public let paymentMethodType: String
 
+            /// An expanded label containing additional information about the payment option.
+            @_spi(ExtendedLabelingInPaymentOptionPreview) public let labels: Labels
+
+            /// A type that holds additional display data
+            @_spi(ExtendedLabelingInPaymentOptionPreview) public struct Labels {
+                /// Primary label for the payment option. This will primarily describe
+                /// the type of the payment option being used. For cards, this could
+                /// be `Mastercard`, 'Visa'. For other payment methods, this is typically the
+                /// payment method name.
+                public let label: String
+
+                /// Secondary optional label for the payment option. This will primarily
+                /// describe any expanded details about the payment option such as the last
+                /// four digits of a card or bank account.
+                public let sublabel: String?
+            }
+
             init(paymentOption: PaymentOption, currency: String?, iconStyle: PaymentSheet.Appearance.IconStyle) {
                 image = paymentOption.makeIcon(currency: currency, iconStyle: iconStyle, updateImageHandler: nil)
                 switch paymentOption {
                 case .applePay:
                     label = String.Localized.apple_pay
+                    labels = Labels(label: String.Localized.apple_pay, sublabel: nil)
                     paymentMethodType = "apple_pay"
                     billingDetails = nil
                     shippingDetails = nil
                 case .saved(let paymentMethod, let confirmParams):
                     label = paymentMethod.paymentOptionLabel(confirmParams: confirmParams)
+                    labels = Labels(label: paymentMethod.expandedPaymentSheetLabel, sublabel: paymentMethod.paymentSheetSublabel)
                     paymentMethodType = paymentMethod.type.identifier
                     billingDetails = paymentMethod.billingDetails?.toPaymentSheetBillingDetails()
                     shippingDetails = nil
                 case .new(let confirmParams):
                     label = confirmParams.paymentSheetLabel
+                    labels = Labels(label: confirmParams.expandedPaymentSheetLabel, sublabel: confirmParams.paymentSheetSublabel)
                     paymentMethodType = confirmParams.paymentMethodType.identifier
                     billingDetails = confirmParams.paymentMethodParams.billingDetails?.toPaymentSheetBillingDetails()
                     shippingDetails = nil
                 case .link(let option):
                     label = option.paymentSheetLabel
+                    labels = Labels(label: "Link", sublabel: option.paymentSheetLabel)
                     paymentMethodType = option.paymentMethodType
                     billingDetails = option.billingDetails?.toPaymentSheetBillingDetails()
                     shippingDetails = option.shippingAddress
                 case .external(let paymentMethod, let stpBillingDetails):
                     label = paymentMethod.displayText
+                    labels = Labels(label: paymentMethod.displayText, sublabel: nil)
                     paymentMethodType = paymentMethod.type
                     billingDetails = stpBillingDetails.toPaymentSheetBillingDetails()
                     shippingDetails = nil

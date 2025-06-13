@@ -68,6 +68,51 @@ extension STPPaymentMethod {
         }
     }
 
+    var expandedPaymentSheetLabel: String {
+        switch type {
+        case .card:
+            if let linkPaymentDetails {
+                // Link card brand - use the brand from link details
+                switch linkPaymentDetails {
+                case .card(let cardDetails):
+                    return STPCardBrandUtilities.stringFrom(cardDetails.brand) ?? "Unknown"
+                case .bankAccount(let bankDetails):
+                    return bankDetails.bankName
+                }
+            } else if let card {
+                return STPCardBrandUtilities.stringFrom(card.preferredDisplayBrand) ?? "Unknown"
+            } else {
+                return "Unknown"
+            }
+        case .USBankAccount:
+            return usBankAccount?.bankName ?? type.displayName
+        case .link:
+            switch linkPaymentDetails {
+            case .card(let cardDetails):
+                return STPCardBrandUtilities.stringFrom(cardDetails.brand) ?? "Link"
+            case .bankAccount(let bankDetails):
+                return bankDetails.bankName
+            default:
+                return "Link"
+            }
+        default:
+            return type.displayName
+        }
+    }
+
+    var paymentSheetSublabel: String? {
+        switch type {
+        case .card:
+            return paymentSheetLabel
+        case .USBankAccount:
+            return paymentSheetLabel
+        case .link:
+            return paymentSheetLabel // TODO(porter)
+        default:
+            return nil
+        }
+    }
+
     func hasUpdatedCardParams(_ updatedParams: STPPaymentMethodCardParams?) -> Bool {
         guard let currCard = self.card,
               let updatedParams = updatedParams else {

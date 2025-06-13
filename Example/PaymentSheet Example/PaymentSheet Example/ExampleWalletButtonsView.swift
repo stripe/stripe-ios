@@ -4,7 +4,7 @@
 //
 
 @_spi(STP) import StripePayments
-@_spi(STP) import StripePaymentSheet
+@_spi(STP) @_spi(ExtendedLabelingInPaymentOptionPreview) import StripePaymentSheet
 import SwiftUI
 
 struct ExampleWalletButtonsContainerView: View {
@@ -104,7 +104,13 @@ struct WalletButtonsFlowControllerView: View {
         )
         .disabled(flowController.paymentOption == nil || isConfirmingPayment)
         if let paymentOption = flowController.paymentOption {
-            Text("Published payment option: \(paymentOption.label)")
+            VStack {
+                Text("Payment option label: \(paymentOption.label)")
+                Text("Payment option labels.label: \(paymentOption.labels.label)")
+                if let sublabel = paymentOption.labels.sublabel {
+                    Text("Payment option labels.sublabel: \(sublabel)")
+                }
+            }
         }
     }
 }

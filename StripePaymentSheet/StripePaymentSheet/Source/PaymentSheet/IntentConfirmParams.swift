@@ -45,6 +45,50 @@ final class IntentConfirmParams {
         }
     }
 
+    var expandedPaymentSheetLabel: String {
+        switch paymentMethodType {
+        case .stripe(let stpPaymentMethodType):
+            switch stpPaymentMethodType {
+            case .card:
+                let brand = STPCardValidator.brand(for: paymentMethodParams.card)
+                return STPCardBrandUtilities.stringFrom(brand) ?? "Unknown"
+            case .USBankAccount:
+                // Use linked bank name if available, otherwise fallback to generic display name for bank
+                return financialConnectionsLinkedBank?.displayName ?? STPPaymentMethodType.USBankAccount.displayName
+            default:
+                // For all other payment method types just use the default label
+                return paymentSheetLabel
+            }
+        case .external:
+            return paymentSheetLabel
+        case .instantDebits:
+            // Use linked bank name if available
+            return instantDebitsLinkedBank?.bankName ?? paymentSheetLabel
+        case .linkCardBrand:
+            return "Link"
+        }
+    }
+
+    var paymentSheetSublabel: String? {
+        switch paymentMethodType {
+        case .stripe(let stpPaymentMethodType):
+            switch stpPaymentMethodType {
+            case .card:
+                return paymentSheetLabel
+            case .USBankAccount:
+                return paymentSheetLabel
+            default:
+                return nil
+            }
+        case .external:
+            return nil
+        case .instantDebits:
+            return "TODO link instant debits"
+        case .linkCardBrand:
+            return "Link"
+        }
+    }
+
     /// True if the customer opts to save their payment method as their default payment method.
     var setAsDefaultPM: Bool?
 
