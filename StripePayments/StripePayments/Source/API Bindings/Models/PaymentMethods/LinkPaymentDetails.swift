@@ -79,6 +79,11 @@ import Foundation
         }
     }
 
+    @_spi(STP) public var combinedLabel: String {
+        let components = [label, sublabel].compactMap { $0 }
+        return components.joined(separator: " ")
+    }
+
     @_spi(STP) public var formattedLast4: String {
         switch self {
         case .card(let cardDetails):
