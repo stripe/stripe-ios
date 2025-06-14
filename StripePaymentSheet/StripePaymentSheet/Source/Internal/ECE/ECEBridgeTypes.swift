@@ -11,7 +11,7 @@ import Foundation
 struct ECEShippingAddressChangeEvent: Codable {
     /// The name of the recipient
     let name: String?
-    
+
     /// The shipping address of the recipient
     /// Note: To maintain privacy, browsers might anonymize the shipping address
     let address: ECEPartialAddress
@@ -22,22 +22,22 @@ struct ECEShippingAddressChangeEvent: Codable {
 struct ECEPartialAddress: Codable {
     /// Array of address lines
     let addressLine: [String]?
-    
+
     /// City name
     let city: String?
-    
+
     /// State or province
     let state: String?
-    
+
     /// Postal or ZIP code
     let postalCode: String?
-    
+
     /// Two-letter country code
     let country: String?
-    
+
     /// Phone number
     let phone: String?
-    
+
     /// Organization or company name
     let organization: String?
 }
@@ -50,7 +50,7 @@ struct ECEFullAddress: Codable {
     let state: String?
     let postalCode: String?
     let country: String?
-    
+
     private enum CodingKeys: String, CodingKey {
         case line1
         case line2
@@ -67,13 +67,13 @@ struct ECEFullAddress: Codable {
 struct ECEShippingRate: Codable {
     /// Unique identifier for the object
     let id: String
-    
+
     /// The amount to charge for shipping
     let amount: Int
-    
+
     /// The name of the shipping rate, displayed to the customer
     let displayName: String
-    
+
     /// The estimated range for how long shipping takes
     /// Can be either a string or a structured object
     let deliveryEstimate: ECEDeliveryEstimate?
@@ -83,7 +83,7 @@ struct ECEShippingRate: Codable {
 enum ECEDeliveryEstimate: Codable {
     case string(String)
     case structured(ECEStructuredDeliveryEstimate)
-    
+
     init(from decoder: Decoder) throws {
         let container = try decoder.singleValueContainer()
         if let stringValue = try? container.decode(String.self) {
@@ -97,7 +97,7 @@ enum ECEDeliveryEstimate: Codable {
             )
         }
     }
-    
+
     func encode(to encoder: Encoder) throws {
         var container = encoder.singleValueContainer()
         switch self {
@@ -114,7 +114,7 @@ struct ECEStructuredDeliveryEstimate: Codable {
     /// The upper bound of the estimated range
     /// If nil, represents no upper bound (infinite)
     let maximum: ECEDeliveryEstimateUnit?
-    
+
     /// The lower bound of the estimated range
     /// If nil, represents no lower bound
     let minimum: ECEDeliveryEstimateUnit?
@@ -124,10 +124,10 @@ struct ECEStructuredDeliveryEstimate: Codable {
 struct ECEDeliveryEstimateUnit: Codable {
     /// The unit of time
     let unit: DeliveryTimeUnit
-    
+
     /// Must be greater than 0
     let value: Int
-    
+
     enum DeliveryTimeUnit: String, Codable {
         case hour
         case day
@@ -143,7 +143,7 @@ struct ECEDeliveryEstimateUnit: Codable {
 struct ECELineItem: Codable {
     /// The name of the line item surfaced to the customer
     let name: String
-    
+
     /// The amount in the currency's subunit (e.g., cents, yen, etc.)
     let amount: Int
 }
@@ -154,13 +154,13 @@ struct ECELineItem: Codable {
 struct ECEBillingDetails: Codable {
     /// The name of the customer
     let name: String?
-    
+
     /// The email address of the customer
     let email: String?
-    
+
     /// The phone number of the customer
     let phone: String?
-    
+
     /// The billing address of the customer
     /// Note: When using PayPal, only country code may be available
     let address: ECEFullAddress?
@@ -172,10 +172,10 @@ struct ECEBillingDetails: Codable {
 struct ECEClickConfiguration: Codable {
     /// Line items to display in the payment interface
     let lineItems: [ECELineItem]
-    
+
     /// Available shipping rates
     let shippingRates: [ECEShippingRate]?
-    
+
     /// Apple Pay specific options
     let applePay: ECEApplePayOptions?
 }
@@ -191,13 +191,13 @@ struct ECEApplePayOptions: Codable {
 struct ECEShippingUpdateResponse: Codable {
     /// Updated line items
     let lineItems: [ECELineItem]?
-    
+
     /// Updated shipping rates
     let shippingRates: [ECEShippingRate]?
-    
+
     /// Apple Pay specific options
     let applePay: ECEApplePayOptions?
-    
+
     /// Updated total amount (optional, used to update the payment sheet)
     let totalAmount: Int?
 }
@@ -213,10 +213,10 @@ struct ECEPaymentConfirmationResponse: Codable {
 struct ECEConfirmEventData: Codable {
     /// Billing details of the customer
     let billingDetails: ECEBillingDetails?
-    
+
     /// Shipping address information
     let shippingAddress: ECEShippingAddressData?
-    
+
     /// Selected shipping rate
     let shippingRate: ECEShippingRate?
 }
@@ -225,7 +225,7 @@ struct ECEConfirmEventData: Codable {
 struct ECEShippingAddressData: Codable {
     /// The name of the recipient
     let name: String?
-    
+
     /// The full shipping address
     let address: ECEFullAddress?
 }
@@ -248,7 +248,7 @@ enum ECEBridgeError: LocalizedError {
     case decodingError(String)
     case encodingError(String)
     case invalidMessageFormat
-    
+
     var errorDescription: String? {
         switch self {
         case .decodingError(let details):
@@ -274,7 +274,7 @@ extension ECEBridgeTypes {
             throw ECEBridgeError.decodingError(error.localizedDescription)
         }
     }
-    
+
     /// Safely encode a Codable type into a dictionary
     static func encode<T: Codable>(_ value: T) throws -> [String: Any] {
         do {
@@ -291,4 +291,4 @@ extension ECEBridgeTypes {
 }
 
 // Type alias for the helper methods
-typealias ECEBridgeTypes = Never 
+typealias ECEBridgeTypes = Never

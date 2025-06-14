@@ -325,37 +325,6 @@ extension ShopPayECEPresenter: ExpressCheckoutWebviewDelegate {
         }
     }
 
-    private func formatDeliveryEstimate(_ estimate: PaymentSheet.ShopPayConfiguration.DeliveryEstimate) -> String {
-        let minUnit = formatTimeUnit(estimate.minimum)
-        let maxUnit = formatTimeUnit(estimate.maximum)
-
-        if estimate.minimum.value == estimate.maximum.value && estimate.minimum.unit == estimate.maximum.unit {
-            return minUnit
-        } else {
-            return "\(minUnit) - \(maxUnit)"
-        }
-    }
-
-    private func formatTimeUnit(_ unit: PaymentSheet.ShopPayConfiguration.DeliveryEstimate.DeliveryEstimateUnit) -> String {
-        let value = unit.value
-        let unitString: String
-
-        switch unit.unit {
-        case .hour:
-            unitString = value == 1 ? "Hour" : "Hours"
-        case .day:
-            unitString = value == 1 ? "Day" : "Days"
-        case .business_day:
-            unitString = value == 1 ? "Business Day" : "Business Days"
-        case .week:
-            unitString = value == 1 ? "Week" : "Weeks"
-        case .month:
-            unitString = value == 1 ? "Month" : "Months"
-        }
-
-        return "\(value) \(unitString)"
-    }
-
     private func calculateTotal(lineItems: [PaymentSheet.ShopPayConfiguration.LineItem], shippingRates: [PaymentSheet.ShopPayConfiguration.ShippingRate]) -> Int {
         let itemsTotal = lineItems.reduce(0) { $0 + $1.amount }
         let defaultShippingAmount = shippingRates.first?.amount ?? 0
