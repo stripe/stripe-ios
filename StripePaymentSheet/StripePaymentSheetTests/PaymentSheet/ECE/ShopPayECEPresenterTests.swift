@@ -540,9 +540,6 @@ class ShopPayECEPresenterTests: XCTestCase {
 enum ShopPayECEPresenterTestHelper {
     // Helper to access private formatDeliveryEstimate method
     static func formatDeliveryEstimate(_ presenter: ShopPayECEPresenter, _ estimate: PaymentSheet.ShopPayConfiguration.DeliveryEstimate) -> String {
-        // Use reflection to call private method
-        _ = Mirror(reflecting: presenter)
-
         // As a workaround since we can't access private methods, we'll recreate the logic
         let minUnit = formatTimeUnit(estimate.minimum)
         let maxUnit = formatTimeUnit(estimate.maximum)
