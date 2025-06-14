@@ -9,6 +9,7 @@
 import WebKit
 import XCTest
 
+#if !canImport(CompositorServices)
 @available(iOS 16.0, *)
 @MainActor
 class ECEViewControllerTests: XCTestCase {
@@ -239,3 +240,4 @@ class ECEViewControllerTests: XCTestCase {
         XCTAssertNotNil(closeButton)
     }
 }
+#endif

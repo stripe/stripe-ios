@@ -11,6 +11,7 @@ import StripeCoreTestUtils
 import WebKit
 import XCTest
 
+#if !canImport(CompositorServices)
 @available(iOS 16.0, *)
 class ECEViewControllerSnapshotTests: STPSnapshotTestCase {
 
@@ -164,3 +165,4 @@ class ECEViewControllerSnapshotTests: STPSnapshotTestCase {
         STPSnapshotVerifyView(navigationController.view)
     }
 }
+#endif

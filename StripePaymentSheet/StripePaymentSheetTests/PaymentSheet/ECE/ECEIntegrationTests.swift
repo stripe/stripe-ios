@@ -9,6 +9,7 @@
 import WebKit
 import XCTest
 
+#if !canImport(CompositorServices)
 @available(iOS 16.0, *)
 @MainActor
 class ECEIntegrationTests: XCTestCase {
@@ -637,3 +638,4 @@ extension ECEIntegrationTests {
         }
     }
 }
+#endif
