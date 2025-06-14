@@ -28,7 +28,7 @@ class ShopPayECEPresenter: NSObject, UIAdaptivePresentationControllerDelegate {
     }
 
     func present(from viewController: UIViewController,
-    confirmHandler: @escaping (PaymentSheetResult) -> Void) {
+                 confirmHandler: @escaping (PaymentSheetResult) -> Void) {
         self.presentingViewController = viewController
 
         let eceVC = ECEViewController(apiClient: flowController.configuration.apiClient)

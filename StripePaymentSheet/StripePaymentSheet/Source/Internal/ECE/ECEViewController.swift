@@ -6,7 +6,7 @@
 @_spi(STP) import StripeCore
 @_spi(STP) import StripeUICore
 import UIKit
-import WebKit
+@preconcurrency import WebKit
 
 // Protocol for handling Express Checkout Element events
 @available(iOS 16.0, *)

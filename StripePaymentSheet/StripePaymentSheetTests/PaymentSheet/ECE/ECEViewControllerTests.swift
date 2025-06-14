@@ -10,6 +10,7 @@ import WebKit
 import XCTest
 
 @available(iOS 16.0, *)
+@MainActor
 class ECEViewControllerTests: XCTestCase {
 
     var sut: ECEViewController!
