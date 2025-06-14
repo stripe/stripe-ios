@@ -22,7 +22,6 @@ class ECEViewControllerSnapshotTests: STPSnapshotTestCase {
 
     override func setUp() {
         super.setUp()
-//        recordMode = true
 
         mockAPIClient = STPAPIClient(publishableKey: "pk_test_123")
         mockDelegate = MockExpressCheckoutWebviewDelegate()
@@ -159,7 +158,7 @@ class ECEViewControllerSnapshotTests: STPSnapshotTestCase {
         window.addSubview(navigationController.view)
         window.makeKeyAndVisible()
 
-        // The loading spinner should be visible initially
+        // The loading spinner should be visible initially (once the WebView is 1x1)
 
         // Then
         STPSnapshotVerifyView(navigationController.view)

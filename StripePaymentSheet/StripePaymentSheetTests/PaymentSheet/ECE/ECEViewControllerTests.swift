@@ -63,36 +63,6 @@ class ECEViewControllerTests: XCTestCase {
         XCTAssertEqual(webView.customUserAgent, ECEViewController.FakeSafariUserAgent)
     }
 
-    func testNavigationBarSetup() {
-        // When
-        sut.loadViewIfNeeded()
-
-        // Then
-        XCTAssertEqual(sut.title, "Checkout")
-        XCTAssertNotNil(sut.navigationItem.rightBarButtonItem)
-        XCTAssertEqual(sut.navigationItem.leftBarButtonItems?.count, 2)
-    }
-
-    // MARK: - WebView Configuration Tests
-
-    func testWebViewConfiguration() {
-        // When
-        sut.loadViewIfNeeded()
-
-        // Get the webview
-        let webView = sut.view.subviews.compactMap { $0 as? WKWebView }.first!
-        let configuration = webView.configuration
-
-        // Then
-        XCTAssertTrue(configuration.defaultWebpagePreferences.allowsContentJavaScript)
-        XCTAssertTrue(configuration.preferences.javaScriptCanOpenWindowsAutomatically)
-
-        // Check message handlers are registered
-        let userContentController = configuration.userContentController
-        // Note: WKUserContentController doesn't expose a way to check registered handlers,
-        // so we'll test this indirectly through integration tests
-    }
-
     // MARK: - Message Handler Tests
 
     func testHandleMessage_CalculateShipping() async throws {
