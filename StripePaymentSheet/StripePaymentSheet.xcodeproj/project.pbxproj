@@ -55,7 +55,6 @@
 		310B6D982DFBB323009CA85D /* ECEViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 310B6D952DFBB323009CA85D /* ECEViewController.swift */; };
 		310B6D9C2DFBD456009CA85D /* ECEIndexHtml.swift in Sources */ = {isa = PBXBuildFile; fileRef = 310B6D9B2DFBD456009CA85D /* ECEIndexHtml.swift */; };
 		310B6DBC2DFBE40D009CA85D /* ShopPayECEPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 310B6DBB2DFBE40D009CA85D /* ShopPayECEPresenter.swift */; };
-		310B6DC52DFC9745009CA85D /* README_TESTING_STRATEGY.md in Resources */ = {isa = PBXBuildFile; fileRef = 310B6DC22DFC9745009CA85D /* README_TESTING_STRATEGY.md */; };
 		310B6DC62DFC9745009CA85D /* ECEIntegrationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 310B6DBE2DFC9745009CA85D /* ECEIntegrationTests.swift */; };
 		310B6DC72DFC9745009CA85D /* ECEViewControllerSnapshotTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 310B6DC02DFC9745009CA85D /* ECEViewControllerSnapshotTests.swift */; };
 		310B6DC82DFC9745009CA85D /* ECEViewControllerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 310B6DC12DFC9745009CA85D /* ECEViewControllerTests.swift */; };
@@ -540,7 +539,6 @@
 		310B6DBF2DFC9745009CA85D /* ECETestHelpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ECETestHelpers.swift; sourceTree = "<group>"; };
 		310B6DC02DFC9745009CA85D /* ECEViewControllerSnapshotTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ECEViewControllerSnapshotTests.swift; sourceTree = "<group>"; };
 		310B6DC12DFC9745009CA85D /* ECEViewControllerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ECEViewControllerTests.swift; sourceTree = "<group>"; };
-		310B6DC22DFC9745009CA85D /* README_TESTING_STRATEGY.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README_TESTING_STRATEGY.md; sourceTree = "<group>"; };
 		310B6DC32DFC9745009CA85D /* ShopPayECEPresenterTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShopPayECEPresenterTests.swift; sourceTree = "<group>"; };
 		312AE7082D2C87EA0091E5AF /* PayWithLinkViewControllerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PayWithLinkViewControllerTests.swift; sourceTree = "<group>"; };
 		31316BD62CEC00EF0000016F /* PaymentSheet+APIMockTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "PaymentSheet+APIMockTest.swift"; sourceTree = "<group>"; };
@@ -1078,7 +1076,6 @@
 				310B6DBF2DFC9745009CA85D /* ECETestHelpers.swift */,
 				310B6DC02DFC9745009CA85D /* ECEViewControllerSnapshotTests.swift */,
 				310B6DC12DFC9745009CA85D /* ECEViewControllerTests.swift */,
-				310B6DC22DFC9745009CA85D /* README_TESTING_STRATEGY.md */,
 				310B6DC32DFC9745009CA85D /* ShopPayECEPresenterTests.swift */,
 			);
 			path = ECE;
@@ -2202,7 +2199,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				310B6DC52DFC9745009CA85D /* README_TESTING_STRATEGY.md in Resources */,
 				74E6A1F5A9D91201C47F723D /* MockFiles in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

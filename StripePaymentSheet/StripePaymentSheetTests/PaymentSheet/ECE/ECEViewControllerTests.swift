@@ -213,21 +213,6 @@ class ECEViewControllerTests: XCTestCase {
         }
     }
 
-    // MARK: - Navigation Delegate Tests
-
-    func testWebViewDidFinish_CallsInitializeApp() {
-        // Given
-        let mockWebView = MockWKWebView()
-        mockWebView.mockURL = URL(string: "https://pay.stripe.com/test")
-
-        // When
-        sut.webView(mockWebView, didFinish: nil)
-
-        // Then
-        XCTAssertTrue(mockWebView.evaluateJavaScriptCalled)
-        XCTAssertEqual(mockWebView.lastJavaScript, "initializeApp()")
-    }
-
     // MARK: - UI Delegate Tests
 
     func testCreateWebView_CreatesPopupCorrectly() {

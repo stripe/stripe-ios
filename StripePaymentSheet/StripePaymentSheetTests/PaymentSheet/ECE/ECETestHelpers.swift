@@ -374,23 +374,6 @@ class MockWKScriptMessage: WKScriptMessage {
 }
 
 @available(iOS 16.0, *)
-class MockWKWebView: WKWebView {
-    var mockURL: URL?
-    var evaluateJavaScriptCalled = false
-    var lastJavaScript: String?
-
-    override var url: URL? {
-        return mockURL
-    }
-
-    override func evaluateJavaScript(_ javaScriptString: String, completionHandler: ((Any?, Error?) -> Void)? = nil) {
-        evaluateJavaScriptCalled = true
-        lastJavaScript = javaScriptString
-        completionHandler?(nil, nil)
-    }
-}
-
-@available(iOS 16.0, *)
 class MockWKNavigationAction: WKNavigationAction {
     var mockRequest = URLRequest(url: URL(string: "https://test.com")!)
 

@@ -11,6 +11,7 @@ import UIKit
 import XCTest
 
 @available(iOS 16.0, *)
+@MainActor
 class ShopPayECEPresenterTests: XCTestCase {
 
     var sut: ShopPayECEPresenter!
