@@ -295,7 +295,7 @@ extension RowButton {
                        shouldAnimateOnPress: Bool = false,
                        isEmbedded: Bool = false,
                        didTap: @escaping DidTapClosure) -> RowButton {
-          // When not using embedded, always use floating style with 4.0 insets
+          // When not using embedded, always use floating style
           if !isEmbedded {
               return RowButtonFloating(
                   appearance: appearance,
