@@ -11,7 +11,7 @@ import WebKit
 // MARK: - ShopPayECEPresenter
 /// Handles presenting Shop Pay via the ECE WebView
 @available(iOS 16.0, *)
-class ShopPayECEPresenter: NSObject {
+class ShopPayECEPresenter: NSObject, UIAdaptivePresentationControllerDelegate {
     private let flowController: PaymentSheet.FlowController
     private let shopPayConfiguration: PaymentSheet.ShopPayConfiguration
     private var confirmHandler: ((PaymentSheetResult) -> Void)?
@@ -37,11 +37,17 @@ class ShopPayECEPresenter: NSObject {
         let navController = UINavigationController(rootViewController: eceVC)
          navController.modalPresentationStyle = .pageSheet
          viewController.present(navController, animated: true)
+        eceVC.presentationController?.delegate = self
         // retain self while presented
         self.confirmHandler = { result in
             confirmHandler(result)
             self.confirmHandler = nil
         }
+    }
+    
+    // If the sheet is pulled down
+    func presentationControllerDidDismiss(_ presentationController: UIPresentationController) {
+        self.confirmHandler?(.canceled)
     }
 
     private func dismissECE(completion: (() -> Void)? = nil) {
@@ -269,7 +275,10 @@ extension ShopPayECEPresenter: ExpressCheckoutWebviewDelegate {
                     return
                 }
                 // TODO: Replace this to use the new facilitatedPaymentSession confirmation handler when ready
+                // Call the intent config confirm handler first
                 intentConfig.confirmHandler(paymentMethod, false, { _ in })
+                // And then the PaymentSheet presentation handler
+                self.confirmHandler?(.completed)
             }
         }
 

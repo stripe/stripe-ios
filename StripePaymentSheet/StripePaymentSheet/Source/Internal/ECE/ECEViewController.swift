@@ -317,11 +317,15 @@ extension ECEViewController: WKScriptMessageHandler {
     }
 }
 
-struct BridgeError: Error {
-    public var localizedDescription: String
+struct BridgeError: LocalizedError {
+    var description: String
 
-    init(_ localizedDescription: String) {
-        self.localizedDescription = localizedDescription
+    var errorDescription: String? {
+        return description
+    }
+    
+    init(_ description: String) {
+        self.description = description
     }
 }
 

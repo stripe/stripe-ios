@@ -3,38 +3,39 @@
 //  StripePaymentSheetTests
 //
 
-import XCTest
-import WebKit
 @testable @_spi(STP) import StripeCore
 @testable @_spi(STP) import StripePayments
 @testable @_spi(STP) import StripePaymentSheet
+import WebKit
+import XCTest
 
 @available(iOS 16.0, *)
+@MainActor
 class ECEIntegrationTests: XCTestCase {
     
     var apiClient: STPAPIClient!
-    var flowController: PaymentSheet.FlowController!
+    var mockConfiguration: PaymentSheet.Configuration!
     var shopPayConfiguration: PaymentSheet.ShopPayConfiguration!
     var presenter: ShopPayECEPresenter!
     var presentingViewController: UIViewController!
-    
+    var loadResult: PaymentSheetLoader.LoadResult!
+    var analyticsHelper: PaymentSheetAnalyticsHelper!
+
     override func setUp() {
         super.setUp()
-        
+
         apiClient = STPAPIClient(publishableKey: "pk_test_123")
-        
-        // Setup PaymentSheet configuration
-        var configuration = PaymentSheet.Configuration()
-        configuration.apiClient = apiClient
-        configuration.merchantDisplayName = "Test Merchant"
-        
-        // Create mock flow controller
-        flowController = MockPaymentSheetFlowController(configuration: configuration)
-        
+
+                // Setup PaymentSheet configuration
+        mockConfiguration = PaymentSheet.Configuration()
+        mockConfiguration.apiClient = apiClient
+        mockConfiguration.merchantDisplayName = "Test Merchant"
+
         // Setup Shop Pay configuration
         shopPayConfiguration = PaymentSheet.ShopPayConfiguration(
-            shopId: "test_shop_123",
-            shopName: "Test Shop",
+            billingAddressRequired: true,
+            emailRequired: true,
+            shippingAddressRequired: true,
             lineItems: [
                 PaymentSheet.ShopPayConfiguration.LineItem(name: "Test Product", amount: 2000),
                 PaymentSheet.ShopPayConfiguration.LineItem(name: "Another Product", amount: 1500)
@@ -42,66 +43,93 @@ class ECEIntegrationTests: XCTestCase {
             shippingRates: [
                 PaymentSheet.ShopPayConfiguration.ShippingRate(
                     id: "standard",
-                    displayName: "Standard Shipping",
                     amount: 1000,
+                    displayName: "Standard Shipping",
                     deliveryEstimate: PaymentSheet.ShopPayConfiguration.DeliveryEstimate(
                         minimum: PaymentSheet.ShopPayConfiguration.DeliveryEstimate.DeliveryEstimateUnit(value: 3, unit: .business_day),
                         maximum: PaymentSheet.ShopPayConfiguration.DeliveryEstimate.DeliveryEstimateUnit(value: 5, unit: .business_day)
                     )
                 )
             ],
-            allowedShippingCountries: ["US", "CA"],
-            billingAddressRequired: true,
-            emailRequired: true,
-            shippingAddressRequired: true
+            shopId: "test_shop_123",
+            allowedShippingCountries: ["US", "CA"]
+        )
+
+        // Create a real flow controller
+        mockConfiguration.shopPay = shopPayConfiguration
+        let intentConfig = PaymentSheet.IntentConfiguration(
+            mode: .payment(amount: 1000, currency: "USD"),
+            confirmHandler: { _, _, completion in
+                completion(.success("pm_123"))
+            }
+        )
+        let intent = Intent.deferredIntent(intentConfig: intentConfig)
+        let elementsSession = STPElementsSession.emptyElementsSession
+        loadResult = PaymentSheetLoader.LoadResult(
+            intent: intent,
+            elementsSession: elementsSession,
+            savedPaymentMethods: [],
+            paymentMethodTypes: []
+        )
+        analyticsHelper = PaymentSheetAnalyticsHelper(
+            integrationShape: .flowController,
+            configuration: mockConfiguration
+        )
+        
+        let flowController = PaymentSheet.FlowController(
+            configuration: mockConfiguration,
+            loadResult: loadResult,
+            analyticsHelper: analyticsHelper
         )
         
         presenter = ShopPayECEPresenter(
             flowController: flowController,
             configuration: shopPayConfiguration
         )
-        
+
         presentingViewController = UIViewController()
     }
-    
+
     override func tearDown() {
         apiClient = nil
-        flowController = nil
+        mockConfiguration = nil
         shopPayConfiguration = nil
         presenter = nil
         presentingViewController = nil
+        loadResult = nil
+        analyticsHelper = nil
         super.tearDown()
     }
-    
+
     // MARK: - End-to-End Flow Tests
-    
+
     func testCompleteShopPayFlow() async throws {
         // Given
         let expectation = expectation(description: "Shop Pay flow completes")
         var receivedResult: PaymentSheetResult?
-        
+
         // Create a window to present from
         let window = UIWindow(frame: UIScreen.main.bounds)
         window.rootViewController = presentingViewController
         window.makeKeyAndVisible()
-        
+
         // When
         presenter.present(from: presentingViewController) { result in
             receivedResult = result
             expectation.fulfill()
         }
-        
+
         // Wait for presentation
         try await Task.sleep(nanoseconds: 500_000_000) // 0.5 seconds
-        
+
         // Verify ECE view controller was presented
         let navController = presentingViewController.presentedViewController as? UINavigationController
         XCTAssertNotNil(navController)
-        
+
         let eceViewController = navController?.viewControllers.first as? ECEViewController
         XCTAssertNotNil(eceViewController)
         XCTAssertNotNil(eceViewController?.expressCheckoutWebviewDelegate)
-        
+
         // Simulate shipping address change
         let shippingAddress = [
             "firstName": "John",
@@ -109,165 +137,188 @@ class ECEIntegrationTests: XCTestCase {
             "city": "San Francisco",
             "provinceCode": "CA",
             "postalCode": "94103",
-            "countryCode": "US"
+            "countryCode": "US",
         ]
-        
+
         let shippingResponse = try await presenter.eceView(
             eceViewController!,
             didReceiveShippingAddressChange: shippingAddress
         )
-        
+
         XCTAssertEqual(shippingResponse["merchantDecision"] as? String, "accepted")
         XCTAssertEqual(shippingResponse["totalAmount"] as? Int, 4500) // 3500 items + 1000 shipping
-        
+
         // Simulate shipping rate selection
         let shippingRate = ["id": "standard"]
         let rateResponse = try await presenter.eceView(
             eceViewController!,
             didReceiveShippingRateChange: shippingRate
         )
-        
+
         XCTAssertEqual(rateResponse["merchantDecision"] as? String, "accepted")
-        
+
         // Simulate payment confirmation
         let paymentDetails = [
             "billingDetails": [
                 "email": "john.doe@example.com",
                 "phone": "+14155551234",
-                "name": "John Doe"
+                "name": "John Doe",
             ],
             "shippingAddress": shippingAddress,
-            "shippingRate": shippingRate
+            "shippingRate": shippingRate,
         ]
-        
+
         let confirmResponse = try await presenter.eceView(
             eceViewController!,
             didReceiveECEConfirmation: paymentDetails
         )
-        
+
         XCTAssertEqual(confirmResponse["status"] as? String, "success")
-        
+
         // Wait for dismissal and completion
         await fulfillment(of: [expectation], timeout: 2.0)
-        
+
         // Verify result
         XCTAssertNotNil(receivedResult)
         // Note: In real implementation, this would be .completed with payment details
         // For now with mocks, it's likely .canceled
     }
-    
+
     func testShippingAddressValidation() async throws {
         // Given
         let eceViewController = ECEViewController(apiClient: apiClient)
         eceViewController.expressCheckoutWebviewDelegate = presenter
-        
+
         var validationCallCount = 0
-        shopPayConfiguration.handlers = PaymentSheet.ShopPayConfiguration.Handlers(
-            shippingContactUpdateHandler: { contact, completion in
-                validationCallCount += 1
-                
-                // Reject addresses outside of US/CA
-                if contact.address.country != "US" && contact.address.country != "CA" {
-                    completion(nil) // Reject
-                } else {
-                    // Accept with updated rates based on country
-                    let shippingRate = contact.address.country == "US" ? 1000 : 1500
-                    let update = PaymentSheet.ShopPayConfiguration.ShippingUpdate(
-                        lineItems: self.shopPayConfiguration.lineItems,
-                        shippingRates: [
-                            PaymentSheet.ShopPayConfiguration.ShippingRate(
-                                id: "country_rate",
-                                displayName: "Country-specific Rate",
-                                amount: shippingRate
-                            )
-                        ]
-                    )
-                    completion(update)
+        
+        // Create new configuration with handlers
+        let configWithHandlers = PaymentSheet.ShopPayConfiguration(
+            billingAddressRequired: shopPayConfiguration.billingAddressRequired,
+            emailRequired: shopPayConfiguration.emailRequired,
+            shippingAddressRequired: shopPayConfiguration.shippingAddressRequired,
+            lineItems: shopPayConfiguration.lineItems,
+            shippingRates: shopPayConfiguration.shippingRates,
+            shopId: shopPayConfiguration.shopId,
+            allowedShippingCountries: shopPayConfiguration.allowedShippingCountries,
+            handlers: PaymentSheet.ShopPayConfiguration.Handlers(
+                shippingMethodUpdateHandler: nil,
+                shippingContactUpdateHandler: { contact, completion in
+                    validationCallCount += 1
+
+                    // Reject addresses outside of US/CA
+                    if contact.address.country != "US" && contact.address.country != "CA" {
+                        completion(nil) // Reject
+                    } else {
+                        // Accept with updated rates based on country
+                        let shippingRate = contact.address.country == "US" ? 1000 : 1500
+                        let update = PaymentSheet.ShopPayConfiguration.ShippingContactUpdate(
+                            lineItems: self.shopPayConfiguration.lineItems,
+                            shippingRates: [
+                                PaymentSheet.ShopPayConfiguration.ShippingRate(
+                                    id: "country_rate",
+                                    amount: shippingRate,
+                                    displayName: "Country-specific Rate",
+                                    deliveryEstimate: nil
+                                ),
+                            ]
+                        )
+                        completion(update)
+                    }
                 }
-            }
+            )
+        )
+        
+        // Update mockConfiguration with the new shopPay config
+        mockConfiguration.shopPay = configWithHandlers
+        
+        // Create flow controller with updated configuration
+        let flowController = PaymentSheet.FlowController(
+            configuration: mockConfiguration,
+            loadResult: loadResult,
+            analyticsHelper: analyticsHelper
         )
         
         presenter = ShopPayECEPresenter(
             flowController: flowController,
-            configuration: shopPayConfiguration
+            configuration: configWithHandlers
         )
         eceViewController.expressCheckoutWebviewDelegate = presenter
-        
+
         // Test valid US address
         let usAddress = [
             "firstName": "Test",
             "city": "New York",
             "provinceCode": "NY",
             "postalCode": "10001",
-            "countryCode": "US"
+            "countryCode": "US",
         ]
-        
+
         let usResponse = try await presenter.eceView(
             eceViewController,
             didReceiveShippingAddressChange: usAddress
         )
-        
+
         XCTAssertEqual(usResponse["merchantDecision"] as? String, "accepted")
         let usRates = usResponse["shippingRates"] as? [[String: Any]]
         XCTAssertEqual(usRates?.first?["amount"] as? Int, 1000)
-        
+
         // Test valid CA address
         let caAddress = [
             "firstName": "Test",
             "city": "Toronto",
             "provinceCode": "ON",
             "postalCode": "M5V 3A9",
-            "countryCode": "CA"
+            "countryCode": "CA",
         ]
-        
+
         let caResponse = try await presenter.eceView(
             eceViewController,
             didReceiveShippingAddressChange: caAddress
         )
-        
+
         XCTAssertEqual(caResponse["merchantDecision"] as? String, "accepted")
         let caRates = caResponse["shippingRates"] as? [[String: Any]]
         XCTAssertEqual(caRates?.first?["amount"] as? Int, 1500)
-        
+
         // Test invalid country
         let invalidAddress = [
             "firstName": "Test",
             "city": "London",
             "provinceCode": "LDN",
             "postalCode": "SW1A 1AA",
-            "countryCode": "GB"
+            "countryCode": "GB",
         ]
-        
+
         let invalidResponse = try await presenter.eceView(
             eceViewController,
             didReceiveShippingAddressChange: invalidAddress
         )
-        
+
         XCTAssertEqual(invalidResponse["merchantDecision"] as? String, "rejected")
         XCTAssertEqual(validationCallCount, 3)
     }
-    
+
     func testWebViewMessageHandling() async throws {
         // Given
         let eceViewController = ECEViewController(apiClient: apiClient)
         eceViewController.expressCheckoutWebviewDelegate = presenter
         eceViewController.loadViewIfNeeded()
-        
+
         // Test various message types
         let testCases: [(name: String, body: [String: Any], expectedError: Bool)] = [
             // Valid messages
             ("calculateShipping", ["shippingAddress": ["firstName": "Test", "city": "SF", "provinceCode": "CA", "postalCode": "94103", "countryCode": "US"]], false),
             ("calculateShippingRateChange", ["shippingRate": ["id": "standard"]], false),
             ("handleECEClick", ["eventData": ["walletType": "shop_pay"]], false),
-            
+
             // Invalid messages
             ("calculateShipping", [:], true), // Missing shippingAddress
             ("unknownMessage", [:], true), // Unknown message type
         ]
-        
+
         for testCase in testCases {
             let message = MockWKScriptMessage(name: testCase.name, body: testCase.body)
-            
+
             do {
                 let response = try await eceViewController.handleMessage(message: message)
                 if testCase.expectedError {
@@ -282,52 +333,273 @@ class ECEIntegrationTests: XCTestCase {
             }
         }
     }
-    
+
     func testAmountCalculation() {
         // Given
         let eceViewController = ECEViewController(apiClient: apiClient)
-        
+
         // Test with different configurations
-        
+
         // Configuration 1: Multiple items with shipping
         let amount1 = presenter.amountForECEView(eceViewController)
         XCTAssertEqual(amount1, 4500) // 2000 + 1500 + 1000
-        
+
         // Configuration 2: No shipping rates
         let configNoShipping = PaymentSheet.ShopPayConfiguration(
-            shopId: "test",
-            shopName: "Test",
+            shippingAddressRequired: false,
             lineItems: [
                 PaymentSheet.ShopPayConfiguration.LineItem(name: "Item", amount: 5000)
             ],
             shippingRates: [],
-            shippingAddressRequired: false
+            shopId: "test"
+        )
+        // Create flow controller for no shipping config
+        var config2 = mockConfiguration
+        config2?.shopPay = configNoShipping
+        let flowController2 = PaymentSheet.FlowController(
+            configuration: config2!,
+            loadResult: loadResult,
+            analyticsHelper: analyticsHelper
         )
         let presenterNoShipping = ShopPayECEPresenter(
-            flowController: flowController,
+            flowController: flowController2,
             configuration: configNoShipping
         )
         let amount2 = presenterNoShipping.amountForECEView(eceViewController)
         XCTAssertEqual(amount2, 5000) // Just the item
-        
+
         // Configuration 3: Multiple shipping rates (should use first)
         let configMultiShipping = PaymentSheet.ShopPayConfiguration(
-            shopId: "test",
-            shopName: "Test",
+            shippingAddressRequired: true,
             lineItems: [
                 PaymentSheet.ShopPayConfiguration.LineItem(name: "Item", amount: 1000)
             ],
             shippingRates: [
-                PaymentSheet.ShopPayConfiguration.ShippingRate(id: "cheap", displayName: "Cheap", amount: 500),
-                PaymentSheet.ShopPayConfiguration.ShippingRate(id: "expensive", displayName: "Expensive", amount: 2000)
-            ]
+                PaymentSheet.ShopPayConfiguration.ShippingRate(id: "cheap", amount: 500, displayName: "Cheap", deliveryEstimate: nil),
+                PaymentSheet.ShopPayConfiguration.ShippingRate(id: "expensive", amount: 2000, displayName: "Expensive", deliveryEstimate: nil),
+            ],
+            shopId: "test"
+        )
+        // Create flow controller for multi shipping config
+        var config3 = mockConfiguration
+        config3?.shopPay = configMultiShipping
+        let flowController3 = PaymentSheet.FlowController(
+            configuration: config3!,
+            loadResult: loadResult,
+            analyticsHelper: analyticsHelper
         )
         let presenterMultiShipping = ShopPayECEPresenter(
-            flowController: flowController,
+            flowController: flowController3,
             configuration: configMultiShipping
         )
         let amount3 = presenterMultiShipping.amountForECEView(eceViewController)
         XCTAssertEqual(amount3, 1500) // 1000 + 500 (first shipping rate)
+    }
+
+    func testShippingAddressChangeHandler_MultipleCalls() async throws {
+        // Given
+        let apiClient = STPAPIClient(publishableKey: "pk_test_123")
+        let eceViewController = ECEViewController(apiClient: apiClient)
+        
+        // Create flow controller with dynamic shipping configuration
+        let expectation = expectation(description: "Handler should be called")
+        expectation.expectedFulfillmentCount = 2 // Expect 2 calls
+        
+        var callCount = 0
+        
+        // Create new configuration with handlers
+        shopPayConfiguration = PaymentSheet.ShopPayConfiguration(
+            billingAddressRequired: true,
+            emailRequired: true,
+            shippingAddressRequired: true,
+            lineItems: shopPayConfiguration.lineItems,
+            shippingRates: shopPayConfiguration.shippingRates,
+            shopId: shopPayConfiguration.shopId,
+            allowedShippingCountries: shopPayConfiguration.allowedShippingCountries,
+            handlers: PaymentSheet.ShopPayConfiguration.Handlers(
+                shippingMethodUpdateHandler: nil,
+                shippingContactUpdateHandler: { contact, completion in
+                    callCount += 1
+                    expectation.fulfill()
+                    
+                    // Different response based on call count
+                    if callCount == 1 {
+                        // First call - return basic rates
+                        let update = PaymentSheet.ShopPayConfiguration.ShippingContactUpdate(
+                            lineItems: [.init(name: "Item", amount: 1000)],
+                            shippingRates: [
+                                PaymentSheet.ShopPayConfiguration.ShippingRate(
+                                    id: "standard\(callCount)",
+                                    amount: 500,
+                                    displayName: "Standard",
+                                    deliveryEstimate: nil
+                                )
+                            ]
+                        )
+                        completion(update)
+                    } else {
+                        // Second call - return different rates based on location
+                        let shippingRate = contact.address.state == "CA" ? 700 : 1000
+                        let update = PaymentSheet.ShopPayConfiguration.ShippingContactUpdate(
+                            lineItems: [.init(name: "Item", amount: 1000)],
+                            shippingRates: [
+                                PaymentSheet.ShopPayConfiguration.ShippingRate(
+                                    id: "express\(callCount)",
+                                    amount: shippingRate,
+                                    displayName: "Express",
+                                    deliveryEstimate: nil
+                                )
+                            ]
+                        )
+                        completion(update)
+                    }
+                }
+            )
+        )
+        
+        // Update mockConfiguration with the new shopPay config
+        mockConfiguration.shopPay = shopPayConfiguration
+        
+        // Create flow controller with updated configuration
+        let flowController = PaymentSheet.FlowController(
+            configuration: mockConfiguration,
+            loadResult: loadResult,
+            analyticsHelper: analyticsHelper
+        )
+        
+        let presenter = ShopPayECEPresenter(
+            flowController: flowController,
+            configuration: shopPayConfiguration
+        )
+        
+        eceViewController.expressCheckoutWebviewDelegate = presenter
+        
+        // When - First address change
+        let firstAddress = [
+            "firstName": "John",
+            "city": "San Francisco",
+            "provinceCode": "CA",
+            "postalCode": "94103",
+            "countryCode": "US"
+        ]
+        
+        _ = try await eceViewController.userContentController(
+            WKUserContentController(),
+            didReceive: MockWKScriptMessage(
+                name: "calculateShipping",
+                body: ["shippingAddress": firstAddress]
+            ), replyHandler: { _, _ in
+            }
+        )
+        
+        // Second address change
+        let secondAddress = [
+            "firstName": "Jane",
+            "city": "New York",
+            "provinceCode": "NY",
+            "postalCode": "10001",
+            "countryCode": "US"
+        ]
+        
+        _ = try await eceViewController.userContentController(
+            WKUserContentController(),
+            didReceive: MockWKScriptMessage(
+                name: "calculateShipping",
+                body: ["shippingAddress": secondAddress]
+            ), replyHandler: { _, _ in
+            }
+        )
+        
+        // Then
+        await fulfillment(of: [expectation], timeout: 2.0)
+        XCTAssertEqual(callCount, 2)
+    }
+    
+    // MARK: - Amount Calculation Tests
+    
+    func testAmountCalculation_WithDifferentShippingRates() async throws {
+        // Given - Configuration 1: Standard with shipping
+        let configWithShipping = shopPayConfiguration
+        
+        // Configuration 2: No shipping rates
+        let configNoShipping = PaymentSheet.ShopPayConfiguration(
+            shippingAddressRequired: false,
+            lineItems: [
+                PaymentSheet.ShopPayConfiguration.LineItem(name: "Item", amount: 5000)
+            ],
+            shippingRates: [],
+            shopId: "test"
+        )
+        
+        // Create flow controller for no shipping config
+        var config2 = mockConfiguration!
+        config2.shopPay = configNoShipping
+        let flowController2 = PaymentSheet.FlowController(
+            configuration: config2,
+            loadResult: PaymentSheetLoader.LoadResult(
+                intent: loadResult.intent,
+                elementsSession: loadResult.elementsSession,
+                savedPaymentMethods: [],
+                paymentMethodTypes: []
+            ),
+            analyticsHelper: PaymentSheetAnalyticsHelper(
+                integrationShape: .flowController,
+                configuration: config2
+            )
+        )
+        let presenterNoShipping = ShopPayECEPresenter(
+            flowController: flowController2,
+            configuration: configNoShipping
+        )
+        
+        // Configuration 3: Multiple shipping rates (should use first)
+        let configMultiShipping = PaymentSheet.ShopPayConfiguration(
+            shippingAddressRequired: true,
+            lineItems: [
+                PaymentSheet.ShopPayConfiguration.LineItem(name: "Item", amount: 1000)
+            ],
+            shippingRates: [
+                PaymentSheet.ShopPayConfiguration.ShippingRate(id: "cheap", amount: 500, displayName: "Cheap", deliveryEstimate: nil),
+                PaymentSheet.ShopPayConfiguration.ShippingRate(id: "expensive", amount: 2000, displayName: "Expensive", deliveryEstimate: nil),
+            ],
+            shopId: "test"
+        )
+        
+        // Create flow controller for multi shipping config
+        var config3 = mockConfiguration!
+        config3.shopPay = configMultiShipping
+        let flowController3 = PaymentSheet.FlowController(
+            configuration: config3,
+            loadResult: PaymentSheetLoader.LoadResult(
+                intent: loadResult.intent,
+                elementsSession: loadResult.elementsSession,
+                savedPaymentMethods: [],
+                paymentMethodTypes: []
+            ),
+            analyticsHelper: PaymentSheetAnalyticsHelper(
+                integrationShape: .flowController,
+                configuration: config3
+            )
+        )
+        let presenterMultiShipping = ShopPayECEPresenter(
+            flowController: flowController3,
+            configuration: configMultiShipping
+        )
+        
+        let mockECEVC = ECEViewController(apiClient: apiClient)
+        
+        // When/Then
+        // Test 1: With standard shipping
+        let amount1 = presenter.amountForECEView(mockECEVC)
+        XCTAssertEqual(amount1, 4500) // 2000 + 1500 (items) + 1000 (shipping)
+        
+        // Test 2: No shipping
+        let amount2 = presenterNoShipping.amountForECEView(mockECEVC)
+        XCTAssertEqual(amount2, 5000) // 5000 (item only)
+        
+        // Test 3: Multiple shipping (uses first)
+        let amount3 = presenterMultiShipping.amountForECEView(mockECEVC)
+        XCTAssertEqual(amount3, 1500) // 1000 (item) + 500 (first shipping rate)
     }
 }
 
@@ -335,24 +607,24 @@ class ECEIntegrationTests: XCTestCase {
 
 @available(iOS 16.0, *)
 extension ECEIntegrationTests {
-    
+
     func testMessageHandlingPerformance() {
         // Given
         let eceViewController = ECEViewController(apiClient: apiClient)
         eceViewController.expressCheckoutWebviewDelegate = presenter
-        
+
         let shippingAddress = [
             "firstName": "Test",
             "city": "San Francisco",
             "provinceCode": "CA",
             "postalCode": "94103",
-            "countryCode": "US"
+            "countryCode": "US",
         ]
-        
+
         measure {
             // When
             let expectation = expectation(description: "Message handled")
-            
+
             Task {
                 _ = try await presenter.eceView(
                     eceViewController,
@@ -360,8 +632,8 @@ extension ECEIntegrationTests {
                 )
                 expectation.fulfill()
             }
-            
+
             wait(for: [expectation], timeout: 1.0)
         }
     }
-} 
+}
