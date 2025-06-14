@@ -12,7 +12,7 @@ import XCTest
 @available(iOS 16.0, *)
 @MainActor
 class ECEIntegrationTests: XCTestCase {
-    
+
     var apiClient: STPAPIClient!
     var mockConfiguration: PaymentSheet.Configuration!
     var shopPayConfiguration: PaymentSheet.ShopPayConfiguration!
@@ -38,7 +38,7 @@ class ECEIntegrationTests: XCTestCase {
             shippingAddressRequired: true,
             lineItems: [
                 PaymentSheet.ShopPayConfiguration.LineItem(name: "Test Product", amount: 2000),
-                PaymentSheet.ShopPayConfiguration.LineItem(name: "Another Product", amount: 1500)
+                PaymentSheet.ShopPayConfiguration.LineItem(name: "Another Product", amount: 1500),
             ],
             shippingRates: [
                 PaymentSheet.ShopPayConfiguration.ShippingRate(
@@ -49,7 +49,7 @@ class ECEIntegrationTests: XCTestCase {
                         minimum: PaymentSheet.ShopPayConfiguration.DeliveryEstimate.DeliveryEstimateUnit(value: 3, unit: .business_day),
                         maximum: PaymentSheet.ShopPayConfiguration.DeliveryEstimate.DeliveryEstimateUnit(value: 5, unit: .business_day)
                     )
-                )
+                ),
             ],
             shopId: "test_shop_123",
             allowedShippingCountries: ["US", "CA"]
@@ -75,13 +75,13 @@ class ECEIntegrationTests: XCTestCase {
             integrationShape: .flowController,
             configuration: mockConfiguration
         )
-        
+
         let flowController = PaymentSheet.FlowController(
             configuration: mockConfiguration,
             loadResult: loadResult,
             analyticsHelper: analyticsHelper
         )
-        
+
         presenter = ShopPayECEPresenter(
             flowController: flowController,
             configuration: shopPayConfiguration
@@ -190,7 +190,7 @@ class ECEIntegrationTests: XCTestCase {
         eceViewController.expressCheckoutWebviewDelegate = presenter
 
         var validationCallCount = 0
-        
+
         // Create new configuration with handlers
         let configWithHandlers = PaymentSheet.ShopPayConfiguration(
             billingAddressRequired: shopPayConfiguration.billingAddressRequired,
@@ -227,17 +227,17 @@ class ECEIntegrationTests: XCTestCase {
                 }
             )
         )
-        
+
         // Update mockConfiguration with the new shopPay config
         mockConfiguration.shopPay = configWithHandlers
-        
+
         // Create flow controller with updated configuration
         let flowController = PaymentSheet.FlowController(
             configuration: mockConfiguration,
             loadResult: loadResult,
             analyticsHelper: analyticsHelper
         )
-        
+
         presenter = ShopPayECEPresenter(
             flowController: flowController,
             configuration: configWithHandlers
@@ -400,13 +400,13 @@ class ECEIntegrationTests: XCTestCase {
         // Given
         let apiClient = STPAPIClient(publishableKey: "pk_test_123")
         let eceViewController = ECEViewController(apiClient: apiClient)
-        
+
         // Create flow controller with dynamic shipping configuration
         let expectation = expectation(description: "Handler should be called")
         expectation.expectedFulfillmentCount = 2 // Expect 2 calls
-        
+
         var callCount = 0
-        
+
         // Create new configuration with handlers
         shopPayConfiguration = PaymentSheet.ShopPayConfiguration(
             billingAddressRequired: true,
@@ -421,7 +421,7 @@ class ECEIntegrationTests: XCTestCase {
                 shippingContactUpdateHandler: { contact, completion in
                     callCount += 1
                     expectation.fulfill()
-                    
+
                     // Different response based on call count
                     if callCount == 1 {
                         // First call - return basic rates
@@ -433,7 +433,7 @@ class ECEIntegrationTests: XCTestCase {
                                     amount: 500,
                                     displayName: "Standard",
                                     deliveryEstimate: nil
-                                )
+                                ),
                             ]
                         )
                         completion(update)
@@ -448,7 +448,7 @@ class ECEIntegrationTests: XCTestCase {
                                     amount: shippingRate,
                                     displayName: "Express",
                                     deliveryEstimate: nil
-                                )
+                                ),
                             ]
                         )
                         completion(update)
@@ -456,33 +456,33 @@ class ECEIntegrationTests: XCTestCase {
                 }
             )
         )
-        
+
         // Update mockConfiguration with the new shopPay config
         mockConfiguration.shopPay = shopPayConfiguration
-        
+
         // Create flow controller with updated configuration
         let flowController = PaymentSheet.FlowController(
             configuration: mockConfiguration,
             loadResult: loadResult,
             analyticsHelper: analyticsHelper
         )
-        
+
         let presenter = ShopPayECEPresenter(
             flowController: flowController,
             configuration: shopPayConfiguration
         )
-        
+
         eceViewController.expressCheckoutWebviewDelegate = presenter
-        
+
         // When - First address change
         let firstAddress = [
             "firstName": "John",
             "city": "San Francisco",
             "provinceCode": "CA",
             "postalCode": "94103",
-            "countryCode": "US"
+            "countryCode": "US",
         ]
-        
+
         _ = try await eceViewController.userContentController(
             WKUserContentController(),
             didReceive: MockWKScriptMessage(
@@ -491,16 +491,16 @@ class ECEIntegrationTests: XCTestCase {
             ), replyHandler: { _, _ in
             }
         )
-        
+
         // Second address change
         let secondAddress = [
             "firstName": "Jane",
             "city": "New York",
             "provinceCode": "NY",
             "postalCode": "10001",
-            "countryCode": "US"
+            "countryCode": "US",
         ]
-        
+
         _ = try await eceViewController.userContentController(
             WKUserContentController(),
             didReceive: MockWKScriptMessage(
@@ -509,18 +509,18 @@ class ECEIntegrationTests: XCTestCase {
             ), replyHandler: { _, _ in
             }
         )
-        
+
         // Then
         await fulfillment(of: [expectation], timeout: 2.0)
         XCTAssertEqual(callCount, 2)
     }
-    
+
     // MARK: - Amount Calculation Tests
-    
+
     func testAmountCalculation_WithDifferentShippingRates() async throws {
         // Given - Configuration 1: Standard with shipping
         let configWithShipping = shopPayConfiguration
-        
+
         // Configuration 2: No shipping rates
         let configNoShipping = PaymentSheet.ShopPayConfiguration(
             shippingAddressRequired: false,
@@ -530,7 +530,7 @@ class ECEIntegrationTests: XCTestCase {
             shippingRates: [],
             shopId: "test"
         )
-        
+
         // Create flow controller for no shipping config
         var config2 = mockConfiguration!
         config2.shopPay = configNoShipping
@@ -551,7 +551,7 @@ class ECEIntegrationTests: XCTestCase {
             flowController: flowController2,
             configuration: configNoShipping
         )
-        
+
         // Configuration 3: Multiple shipping rates (should use first)
         let configMultiShipping = PaymentSheet.ShopPayConfiguration(
             shippingAddressRequired: true,
@@ -564,7 +564,7 @@ class ECEIntegrationTests: XCTestCase {
             ],
             shopId: "test"
         )
-        
+
         // Create flow controller for multi shipping config
         var config3 = mockConfiguration!
         config3.shopPay = configMultiShipping
@@ -585,18 +585,18 @@ class ECEIntegrationTests: XCTestCase {
             flowController: flowController3,
             configuration: configMultiShipping
         )
-        
+
         let mockECEVC = ECEViewController(apiClient: apiClient)
-        
+
         // When/Then
         // Test 1: With standard shipping
         let amount1 = presenter.amountForECEView(mockECEVC)
         XCTAssertEqual(amount1, 4500) // 2000 + 1500 (items) + 1000 (shipping)
-        
+
         // Test 2: No shipping
         let amount2 = presenterNoShipping.amountForECEView(mockECEVC)
         XCTAssertEqual(amount2, 5000) // 5000 (item only)
-        
+
         // Test 3: Multiple shipping (uses first)
         let amount3 = presenterMultiShipping.amountForECEView(mockECEVC)
         XCTAssertEqual(amount3, 1500) // 1000 (item) + 500 (first shipping rate)

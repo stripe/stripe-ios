@@ -87,7 +87,6 @@ class ECEViewControllerSnapshotTests: STPSnapshotTestCase {
         window.addSubview(navigationController.view)
         window.makeKeyAndVisible()
 
-
         UIApplication.shared.windows.forEach { window in
             window.overrideUserInterfaceStyle = .light
         }

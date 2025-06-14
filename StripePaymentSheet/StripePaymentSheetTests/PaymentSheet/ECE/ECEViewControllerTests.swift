@@ -174,7 +174,7 @@ class ECEViewControllerTests: XCTestCase {
         XCTAssertEqual(responseDict?["status"] as? String, "success")
 
         XCTAssertTrue(mockDelegate.didReceiveECEConfirmationCalled)
-        
+
         let lastBillingDetails = mockDelegate.lastPaymentDetails?["billingDetails"] as? [String: Any]
         XCTAssertEqual(lastBillingDetails?["email"] as? String, "test@example.com")
     }

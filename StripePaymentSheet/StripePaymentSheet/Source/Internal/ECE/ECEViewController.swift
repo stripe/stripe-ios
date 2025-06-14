@@ -323,7 +323,7 @@ struct BridgeError: LocalizedError {
     var errorDescription: String? {
         return description
     }
-    
+
     init(_ description: String) {
         self.description = description
     }

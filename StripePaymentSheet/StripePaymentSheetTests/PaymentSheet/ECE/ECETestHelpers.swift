@@ -4,11 +4,11 @@
 //
 
 import Foundation
-import XCTest
 @testable @_spi(STP) import StripeCore
 @testable @_spi(STP) import StripePayments
 @testable @_spi(STP) import StripePaymentSheet
 import WebKit
+import XCTest
 
 // MARK: - Test Data Factories
 
@@ -313,39 +313,39 @@ class MockExpressCheckoutWebviewDelegate: ExpressCheckoutWebviewDelegate {
     var shippingRateResponse: [String: Any] = [:]
     var clickEventResponse: [String: Any] = [:]
     var confirmationResponse: [String: Any] = [:]
-    
+
     var didReceiveShippingAddressChangeCalled = false
     var didReceiveShippingRateChangeCalled = false
     var didReceiveECEClickCalled = false
     var didReceiveECEConfirmationCalled = false
-    
+
     var lastShippingAddress: [String: Any]?
     var lastShippingRate: [String: Any]?
     var lastClickEvent: [String: Any]?
     var lastPaymentDetails: [String: Any]?
-    
+
     func amountForECEView(_ eceView: ECEViewController) -> Int {
         return amountToReturn
     }
-    
+
     func eceView(_ eceView: ECEViewController, didReceiveShippingAddressChange shippingAddress: [String: Any]) async throws -> [String: Any] {
         didReceiveShippingAddressChangeCalled = true
         lastShippingAddress = shippingAddress
         return shippingAddressResponse
     }
-    
+
     func eceView(_ eceView: ECEViewController, didReceiveShippingRateChange shippingRate: [String: Any]) async throws -> [String: Any] {
         didReceiveShippingRateChangeCalled = true
         lastShippingRate = shippingRate
         return shippingRateResponse
     }
-    
+
     func eceView(_ eceView: ECEViewController, didReceiveECEClick event: [String: Any]) async throws -> [String: Any] {
         didReceiveECEClickCalled = true
         lastClickEvent = event
         return clickEventResponse
     }
-    
+
     func eceView(_ eceView: ECEViewController, didReceiveECEConfirmation paymentDetails: [String: Any]) async throws -> [String: Any] {
         didReceiveECEConfirmationCalled = true
         lastPaymentDetails = paymentDetails
@@ -357,17 +357,17 @@ class MockExpressCheckoutWebviewDelegate: ExpressCheckoutWebviewDelegate {
 class MockWKScriptMessage: WKScriptMessage {
     private let _name: String
     private let _body: Any
-    
+
     init(name: String, body: Any) {
         self._name = name
         self._body = body
         super.init()
     }
-    
+
     override var name: String {
         return _name
     }
-    
+
     override var body: Any {
         return _body
     }
@@ -378,11 +378,11 @@ class MockWKWebView: WKWebView {
     var mockURL: URL?
     var evaluateJavaScriptCalled = false
     var lastJavaScript: String?
-    
+
     override var url: URL? {
         return mockURL
     }
-    
+
     override func evaluateJavaScript(_ javaScriptString: String, completionHandler: ((Any?, Error?) -> Void)? = nil) {
         evaluateJavaScriptCalled = true
         lastJavaScript = javaScriptString
@@ -393,7 +393,7 @@ class MockWKWebView: WKWebView {
 @available(iOS 16.0, *)
 class MockWKNavigationAction: WKNavigationAction {
     var mockRequest = URLRequest(url: URL(string: "https://test.com")!)
-    
+
     override var request: URLRequest {
         return mockRequest
     }
@@ -403,7 +403,7 @@ class MockWKNavigationAction: WKNavigationAction {
 class MockPaymentSheetFlowController {
     let configuration: PaymentSheet.Configuration
     let intent: Intent
-    
+
     init(configuration: PaymentSheet.Configuration) {
         self.configuration = configuration
         self.intent = .deferredIntent(intentConfig: PaymentSheet.IntentConfiguration(

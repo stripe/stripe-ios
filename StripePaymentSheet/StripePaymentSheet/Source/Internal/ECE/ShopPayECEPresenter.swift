@@ -44,7 +44,7 @@ class ShopPayECEPresenter: NSObject, UIAdaptivePresentationControllerDelegate {
             self.confirmHandler = nil
         }
     }
-    
+
     // If the sheet is pulled down
     func presentationControllerDidDismiss(_ presentationController: UIPresentationController) {
         self.confirmHandler?(.canceled)
