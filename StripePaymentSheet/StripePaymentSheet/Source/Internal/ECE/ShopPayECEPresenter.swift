@@ -66,88 +66,89 @@ extension ShopPayECEPresenter: ExpressCheckoutWebviewDelegate {
     }
 
     func eceView(_ eceView: ECEViewController, didReceiveShippingAddressChange shippingAddress: [String: Any]) async throws -> [String: Any] {
-        // Convert the webview shipping address to our format
-        guard let name = shippingAddress["firstName"] as? String,
-              let city = shippingAddress["city"] as? String,
-              let state = shippingAddress["provinceCode"] as? String,
-              let postalCode = shippingAddress["postalCode"] as? String,
-              let country = shippingAddress["countryCode"] as? String else {
-            throw ExpressCheckoutError.missingRequiredField(field: "shipping address")
-        }
+        // Decode the shipping address using typed struct
+        let event = try ECEBridgeTypes.decode(ECEShippingAddressChangeEvent.self, from: shippingAddress)
+
+        // Extract address components
+        let address = event.address
 
         let selectedAddress = PaymentSheet.ShopPayConfiguration.PartialAddress(
-            city: city,
-            state: state,
-            postalCode: postalCode,
-            country: country
+            city: address.city ?? "",
+            state: address.state ?? "",
+            postalCode: address.postalCode ?? "",
+            country: address.country ?? ""
         )
 
         let selectedContact = PaymentSheet.ShopPayConfiguration.ShippingContactSelected(
-            name: name,
+            name: event.name ?? "",
             address: selectedAddress
         )
 
         // Call the merchant's handler if available
         if let handler = shopPayConfiguration.handlers?.shippingContactUpdateHandler {
-            return await withCheckedContinuation { continuation in
+            return try await withCheckedThrowingContinuation { continuation in
                 handler(selectedContact) { update in
                     if let update = update {
-                        // Convert update to webview format
-                        let response: [String: Any] = [
-                            "merchantDecision": "accepted",
-                            "lineItems": update.lineItems.map { ["name": $0.name, "amount": $0.amount] },
-                            "shippingRates": update.shippingRates.map { rate in
-                                var rateDict: [String: Any] = [
-                                    "id": rate.id,
-                                    "displayName": rate.displayName,
-                                    "amount": rate.amount,
-                                ]
-                                if let deliveryEstimate = rate.deliveryEstimate {
-                                    rateDict["deliveryEstimate"] = self.formatDeliveryEstimate(deliveryEstimate)
-                                }
-                                return rateDict
+                        // Create typed response
+                        let response = ECEShippingUpdateResponse(
+                            lineItems: update.lineItems.map { ECELineItem(name: $0.name, amount: $0.amount) },
+                            shippingRates: update.shippingRates.map { rate in
+                                ECEShippingRate(
+                                    id: rate.id,
+                                    amount: rate.amount,
+                                    displayName: rate.displayName,
+                                    deliveryEstimate: rate.deliveryEstimate.map { self.convertDeliveryEstimate($0) }
+                                )
                             },
-                            "totalAmount": self.calculateTotal(lineItems: update.lineItems, shippingRates: update.shippingRates),
-                        ]
-                        continuation.resume(returning: response)
+                            applePay: nil,
+                            totalAmount: self.calculateTotal(lineItems: update.lineItems, shippingRates: update.shippingRates)
+                        )
+
+                        // Convert to dictionary for JavaScript
+                        do {
+                            let responseDict = try ECEBridgeTypes.encode(response)
+                            continuation.resume(returning: responseDict)
+                        } catch {
+                            continuation.resume(throwing: error)
+                        }
                     } else {
                         // Merchant rejected the address
                         continuation.resume(returning: [
-                            "merchantDecision": "rejected",
-                            "error": "Cannot ship to this address",
+                            "error": "Cannot ship to this address"
                         ])
                     }
                 }
             }
         } else {
             // No handler, accept with default values
-            return [
-                "merchantDecision": "accepted",
-                "lineItems": shopPayConfiguration.lineItems.map { ["name": $0.name, "amount": $0.amount] },
-                "shippingRates": shopPayConfiguration.shippingRates.map { rate in
-                    var rateDict: [String: Any] = [
-                        "id": rate.id,
-                        "displayName": rate.displayName,
-                        "amount": rate.amount,
-                    ]
-                    if let deliveryEstimate = rate.deliveryEstimate {
-                        rateDict["deliveryEstimate"] = formatDeliveryEstimate(deliveryEstimate)
-                    }
-                    return rateDict
+            let response = ECEShippingUpdateResponse(
+                lineItems: shopPayConfiguration.lineItems.map { ECELineItem(name: $0.name, amount: $0.amount) },
+                shippingRates: shopPayConfiguration.shippingRates.map { rate in
+                    ECEShippingRate(
+                        id: rate.id,
+                        amount: rate.amount,
+                        displayName: rate.displayName,
+                        deliveryEstimate: rate.deliveryEstimate.map { convertDeliveryEstimate($0) }
+                    )
                 },
-                "totalAmount": calculateTotal(lineItems: shopPayConfiguration.lineItems, shippingRates: shopPayConfiguration.shippingRates),
-            ]
+                applePay: nil,
+                totalAmount: calculateTotal(lineItems: shopPayConfiguration.lineItems, shippingRates: shopPayConfiguration.shippingRates)
+            )
+
+            return try ECEBridgeTypes.encode(response)
         }
     }
 
     func eceView(_ eceView: ECEViewController, didReceiveShippingRateChange shippingRate: [String: Any]) async throws -> [String: Any] {
-        guard let rateId = shippingRate["id"] as? String,
-              let selectedRate = shopPayConfiguration.shippingRates.first(where: { $0.id == rateId }) else {
-            throw ExpressCheckoutError.invalidShippingRate(rateId: shippingRate["id"] as? String ?? "unknown")
+        // Decode the shipping rate
+        let selectedRate = try ECEBridgeTypes.decode(ECEShippingRate.self, from: shippingRate)
+
+        guard let matchingRate = shopPayConfiguration.shippingRates.first(where: { $0.id == selectedRate.id }) else {
+            throw ExpressCheckoutError.invalidShippingRate(rateId: selectedRate.id)
         }
 
         let rateSelected = PaymentSheet.ShopPayConfiguration.ShippingRateSelected(
-            shippingRate: selectedRate
+            shippingRate: matchingRate
         )
 
         // Call the merchant's handler if available
@@ -155,88 +156,91 @@ extension ShopPayECEPresenter: ExpressCheckoutWebviewDelegate {
             return await withCheckedContinuation { continuation in
                 handler(rateSelected) { update in
                     if let update = update {
-                        // Convert update to webview format
-                        let response: [String: Any] = [
-                            "merchantDecision": "accepted",
-                            "lineItems": update.lineItems.map { ["name": $0.name, "amount": $0.amount] },
-                            "shippingRates": update.shippingRates.map { rate in
-                                var rateDict: [String: Any] = [
-                                    "id": rate.id,
-                                    "displayName": rate.displayName,
-                                    "amount": rate.amount,
-                                ]
-                                if let deliveryEstimate = rate.deliveryEstimate {
-                                    rateDict["deliveryEstimate"] = self.formatDeliveryEstimate(deliveryEstimate)
-                                }
-                                return rateDict
+                        // Create typed response
+                        let response = ECEShippingUpdateResponse(
+                            lineItems: update.lineItems.map { ECELineItem(name: $0.name, amount: $0.amount) },
+                            shippingRates: update.shippingRates.map { rate in
+                                ECEShippingRate(
+                                    id: rate.id,
+                                    amount: rate.amount,
+                                    displayName: rate.displayName,
+                                    deliveryEstimate: rate.deliveryEstimate.map { self.convertDeliveryEstimate($0) }
+                                )
                             },
-                            "totalAmount": self.calculateTotal(lineItems: update.lineItems, selectedShippingRate: selectedRate),
-                        ]
-                        continuation.resume(returning: response)
+                            applePay: nil,
+                            totalAmount: self.calculateTotal(lineItems: update.lineItems, selectedShippingRate: matchingRate)
+                        )
+
+                        // Convert to dictionary for JavaScript
+                        do {
+                            let responseDict = try ECEBridgeTypes.encode(response)
+                            continuation.resume(returning: responseDict)
+                        } catch {
+                            continuation.resume(returning: ["error": error.localizedDescription])
+                        }
                     } else {
                         // Merchant rejected the rate
                         continuation.resume(returning: [
-                            "merchantDecision": "rejected",
-                            "error": "Invalid shipping rate",
+                            "error": "Invalid shipping rate"
                         ])
                     }
                 }
             }
         } else {
-            // No handler, return current configuration with updated total
-            return [
-                "merchantDecision": "accepted",
-                "lineItems": shopPayConfiguration.lineItems.map { ["name": $0.name, "amount": $0.amount] },
-                "shippingRates": shopPayConfiguration.shippingRates.map { rate in
-                    var rateDict: [String: Any] = [
-                        "id": rate.id,
-                        "displayName": rate.displayName,
-                        "amount": rate.amount,
-                    ]
-                    if let deliveryEstimate = rate.deliveryEstimate {
-                        rateDict["deliveryEstimate"] = formatDeliveryEstimate(deliveryEstimate)
-                    }
-                    return rateDict
+            // No handler, return current configuration
+            let response = ECEShippingUpdateResponse(
+                lineItems: shopPayConfiguration.lineItems.map { ECELineItem(name: $0.name, amount: $0.amount) },
+                shippingRates: shopPayConfiguration.shippingRates.map { rate in
+                    ECEShippingRate(
+                        id: rate.id,
+                        amount: rate.amount,
+                        displayName: rate.displayName,
+                        deliveryEstimate: rate.deliveryEstimate.map { convertDeliveryEstimate($0) }
+                    )
                 },
-                "totalAmount": calculateTotal(lineItems: shopPayConfiguration.lineItems, selectedShippingRate: selectedRate),
-            ]
+                applePay: nil,
+                totalAmount: calculateTotal(lineItems: shopPayConfiguration.lineItems, selectedShippingRate: matchingRate)
+            )
+
+            return try ECEBridgeTypes.encode(response)
         }
     }
 
     func eceView(_ eceView: ECEViewController, didReceiveECEClick event: [String: Any]) async throws -> [String: Any] {
         // Build the configuration for Shop Pay
-        var config: [String: Any] = [
-            "lineItems": shopPayConfiguration.lineItems.map { ["name": $0.name, "amount": $0.amount] },
-            "billingAddressRequired": shopPayConfiguration.billingAddressRequired,
-            "emailRequired": shopPayConfiguration.emailRequired,
-            "phoneNumberRequired": true, // Shop Pay always requires phone
-            "shippingAddressRequired": shopPayConfiguration.shippingAddressRequired,
-            "business": ["name": flowController.configuration.merchantDisplayName],
-            "allowedShippingCountries": shopPayConfiguration.allowedShippingCountries,
-            "shopId": shopPayConfiguration.shopId,
-        ]
+        let clickConfig = ECEClickConfiguration(
+            lineItems: shopPayConfiguration.lineItems.map { ECELineItem(name: $0.name, amount: $0.amount) },
+            shippingRates: shopPayConfiguration.shippingAddressRequired ? shopPayConfiguration.shippingRates.map { rate in
+                ECEShippingRate(
+                    id: rate.id,
+                    amount: rate.amount,
+                    displayName: rate.displayName,
+                    deliveryEstimate: rate.deliveryEstimate.map { convertDeliveryEstimate($0) }
+                )
+            } : nil,
+            applePay: nil
+        )
 
-        // Add shipping rates if shipping is required
-        if shopPayConfiguration.shippingAddressRequired {
-            config["shippingRates"] = shopPayConfiguration.shippingRates.map { rate in
-                var rateDict: [String: Any] = [
-                    "id": rate.id,
-                    "displayName": rate.displayName,
-                    "amount": rate.amount,
-                ]
-                if let deliveryEstimate = rate.deliveryEstimate {
-                    rateDict["deliveryEstimate"] = formatDeliveryEstimate(deliveryEstimate)
-                }
-                return rateDict
-            }
-        }
+        // Convert to dictionary and add Shop Pay specific fields
+        var response = try ECEBridgeTypes.encode(clickConfig)
 
-        return config
+        // Add Shop Pay specific configuration
+        response["billingAddressRequired"] = shopPayConfiguration.billingAddressRequired
+        response["emailRequired"] = shopPayConfiguration.emailRequired
+        response["phoneNumberRequired"] = true // Shop Pay always requires phone
+        response["shippingAddressRequired"] = shopPayConfiguration.shippingAddressRequired
+        response["business"] = ["name": flowController.configuration.merchantDisplayName]
+        response["allowedShippingCountries"] = shopPayConfiguration.allowedShippingCountries
+        response["shopId"] = shopPayConfiguration.shopId
+
+        return response
     }
 
     func eceView(_ eceView: ECEViewController, didReceiveECEConfirmation paymentDetails: [String: Any]) async throws -> [String: Any] {
-        // Extract payment details
-        guard let billingDetails = paymentDetails["billingDetails"] as? [String: Any] else {
+        // Decode the confirmation data
+        let confirmData = try ECEBridgeTypes.decode(ECEConfirmEventData.self, from: paymentDetails)
+
+        guard let billingDetails = confirmData.billingDetails else {
             throw ExpressCheckoutError.missingRequiredField(field: "billingDetails")
         }
 
@@ -246,13 +250,13 @@ extension ShopPayECEPresenter: ExpressCheckoutWebviewDelegate {
         paymentMethodParams.billingDetails = STPPaymentMethodBillingDetails()
 
         // Add billing details
-        if let email = billingDetails["email"] as? String {
+        if let email = billingDetails.email {
             paymentMethodParams.billingDetails?.email = email
         }
-        if let phone = billingDetails["phone"] as? String {
+        if let phone = billingDetails.phone {
             paymentMethodParams.billingDetails?.phone = phone
         }
-        if let name = billingDetails["name"] as? String {
+        if let name = billingDetails.name {
             paymentMethodParams.billingDetails?.name = name
         }
 
@@ -290,6 +294,36 @@ extension ShopPayECEPresenter: ExpressCheckoutWebviewDelegate {
     }
 
     // MARK: - Helper Functions
+
+    private func convertDeliveryEstimate(_ estimate: PaymentSheet.ShopPayConfiguration.DeliveryEstimate) -> ECEDeliveryEstimate {
+        // Convert to structured format
+        let structured = ECEStructuredDeliveryEstimate(
+            maximum: ECEDeliveryEstimateUnit(
+                unit: convertDeliveryUnit(estimate.maximum.unit),
+                value: estimate.maximum.value
+            ),
+            minimum: ECEDeliveryEstimateUnit(
+                unit: convertDeliveryUnit(estimate.minimum.unit),
+                value: estimate.minimum.value
+            )
+        )
+        return .structured(structured)
+    }
+
+    private func convertDeliveryUnit(_ unit: PaymentSheet.ShopPayConfiguration.DeliveryEstimate.DeliveryEstimateUnit.TimeUnit) -> ECEDeliveryEstimateUnit.DeliveryTimeUnit {
+        switch unit {
+        case .hour:
+            return .hour
+        case .day:
+            return .day
+        case .business_day:
+            return .businessDay
+        case .week:
+            return .week
+        case .month:
+            return .month
+        }
+    }
 
     private func formatDeliveryEstimate(_ estimate: PaymentSheet.ShopPayConfiguration.DeliveryEstimate) -> String {
         let minUnit = formatTimeUnit(estimate.minimum)

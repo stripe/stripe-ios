@@ -50,25 +50,23 @@ enum ECETestData {
     }
 
     static func validShippingAddress(
-        firstName: String = "John",
-        lastName: String = "Doe",
+        name: String = "John Doe",
         city: String = "San Francisco",
         state: String = "CA",
         postalCode: String = "94103",
         country: String = "US"
     ) -> [String: Any] {
         return [
-            "firstName": firstName,
-            "lastName": lastName,
-            "address1": "123 Main St",
-            "address2": "Apt 4B",
-            "city": city,
-            "provinceCode": state,
-            "postalCode": postalCode,
-            "countryCode": country,
-            "companyName": "Test Company",
-            "phone": "+14155551234",
-            "email": "test@example.com",
+            "name": name,
+            "address": [
+                "addressLine": ["123 Main St", "Apt 4B"],
+                "city": city,
+                "state": state,
+                "postalCode": postalCode,
+                "country": country,
+                "organization": "Test Company",
+                "phone": "+14155551234",
+            ],
         ]
     }
 
@@ -86,8 +84,8 @@ enum ECETestData {
                 "line2": "Apt 4B",
                 "city": "San Francisco",
                 "state": "CA",
-                "postalCode": "94103",
-                "countryCode": "US",
+                "postal_code": "94103",
+                "country": "US",
             ],
         ]
     }
@@ -159,14 +157,18 @@ struct ECEAssertions {
 
     static func assertValidShippingResponse(
         _ response: [String: Any],
-        expectedDecision: String = "accepted",
+        hasError: Bool = false,
         expectedItemCount: Int? = nil,
         expectedRateCount: Int? = nil,
         expectedTotal: Int? = nil,
         file: StaticString = #file,
         line: UInt = #line
     ) {
-        XCTAssertEqual(response["merchantDecision"] as? String, expectedDecision, file: file, line: line)
+        if hasError {
+            XCTAssertNotNil(response["error"], "Expected error in response", file: file, line: line)
+        } else {
+            XCTAssertNil(response["error"], "Unexpected error in response", file: file, line: line)
+        }
 
         if let expectedItemCount = expectedItemCount {
             let lineItems = response["lineItems"] as? [[String: Any]]
@@ -309,10 +311,30 @@ extension WKWebView {
 @available(iOS 16.0, *)
 class MockExpressCheckoutWebviewDelegate: ExpressCheckoutWebviewDelegate {
     var amountToReturn = 1000
-    var shippingAddressResponse: [String: Any] = [:]
-    var shippingRateResponse: [String: Any] = [:]
-    var clickEventResponse: [String: Any] = [:]
-    var confirmationResponse: [String: Any] = [:]
+    var shippingAddressResponse: [String: Any] = [
+        "lineItems": [],
+        "shippingRates": [],
+        "totalAmount": 1000,
+    ]
+    var shippingRateResponse: [String: Any] = [
+        "lineItems": [],
+        "shippingRates": [],
+        "totalAmount": 1000,
+    ]
+    var clickEventResponse: [String: Any] = [
+        "lineItems": [],
+        "billingAddressRequired": true,
+        "emailRequired": true,
+        "phoneNumberRequired": true,
+        "shippingAddressRequired": true,
+        "business": ["name": "Test Business"],
+        "allowedShippingCountries": ["US"],
+        "shopId": "test_shop",
+    ]
+    var confirmationResponse: [String: Any] = [
+        "status": "success",
+        "requiresAction": false,
+    ]
 
     var didReceiveShippingAddressChangeCalled = false
     var didReceiveShippingRateChangeCalled = false

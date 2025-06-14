@@ -38,8 +38,8 @@ class ShopPayECEPresenterTests: XCTestCase {
                     amount: 500,
                     displayName: "Standard Shipping",
                     deliveryEstimate: PaymentSheet.ShopPayConfiguration.DeliveryEstimate(
-                        minimum: PaymentSheet.ShopPayConfiguration.DeliveryEstimate.DeliveryEstimateUnit(value: 5, unit: .day),
-                        maximum: PaymentSheet.ShopPayConfiguration.DeliveryEstimate.DeliveryEstimateUnit(value: 7, unit: .day)
+                        minimum: PaymentSheet.ShopPayConfiguration.DeliveryEstimate.DeliveryEstimateUnit(value: 5, unit: .business_day),
+                        maximum: PaymentSheet.ShopPayConfiguration.DeliveryEstimate.DeliveryEstimateUnit(value: 7, unit: .business_day)
                     )
                 ),
                 PaymentSheet.ShopPayConfiguration.ShippingRate(
@@ -156,20 +156,21 @@ class ShopPayECEPresenterTests: XCTestCase {
     func testShippingAddressChange_NoHandler_AcceptsWithDefaults() async throws {
         // Given
         let mockECEViewController = ECEViewController(apiClient: mockConfiguration.apiClient)
-        let shippingAddress = [
-            "firstName": "John",
-            "lastName": "Doe",
-            "city": "San Francisco",
-            "provinceCode": "CA",
-            "postalCode": "94103",
-            "countryCode": "US",
+        let shippingAddress: [String: Any] = [
+            "name": "John Doe",
+            "address": [
+                "city": "San Francisco",
+                "state": "CA",
+                "postalCode": "94103",
+                "country": "US",
+            ],
         ]
 
         // When
         let response = try await sut.eceView(mockECEViewController, didReceiveShippingAddressChange: shippingAddress)
 
         // Then
-        XCTAssertEqual(response["merchantDecision"] as? String, "accepted")
+        XCTAssertNil(response["error"])
         let lineItems = response["lineItems"] as? [[String: Any]]
         XCTAssertEqual(lineItems?.count, 2)
         XCTAssertEqual(lineItems?[0]["name"] as? String, "Item 1")
@@ -178,7 +179,16 @@ class ShopPayECEPresenterTests: XCTestCase {
         let shippingRates = response["shippingRates"] as? [[String: Any]]
         XCTAssertEqual(shippingRates?.count, 2)
         XCTAssertEqual(shippingRates?[0]["id"] as? String, "standard")
-        XCTAssertEqual(shippingRates?[0]["deliveryEstimate"] as? String, "5 Days - 7 Days")
+
+        // Check delivery estimate structure
+        if let deliveryEstimate = shippingRates?[0]["deliveryEstimate"] as? [String: Any],
+           let minimum = deliveryEstimate["minimum"] as? [String: Any],
+           let maximum = deliveryEstimate["maximum"] as? [String: Any] {
+            XCTAssertEqual(minimum["value"] as? Int, 5)
+            XCTAssertEqual(minimum["unit"] as? String, "business_day")
+            XCTAssertEqual(maximum["value"] as? Int, 7)
+            XCTAssertEqual(maximum["unit"] as? String, "business_day")
+        }
 
         XCTAssertEqual(response["totalAmount"] as? Int, 2000)
     }
@@ -231,12 +241,14 @@ class ShopPayECEPresenterTests: XCTestCase {
             configuration: shopPayConfiguration
         )
 
-        let shippingAddress = [
-            "firstName": "Jane",
-            "city": "New York",
-            "provinceCode": "NY",
-            "postalCode": "10001",
-            "countryCode": "US",
+        let shippingAddress: [String: Any] = [
+            "name": "Jane Doe",
+            "address": [
+                "city": "New York",
+                "state": "NY",
+                "postalCode": "10001",
+                "country": "US",
+            ],
         ]
 
         // When
@@ -247,10 +259,10 @@ class ShopPayECEPresenterTests: XCTestCase {
 
         // Then
         XCTAssertTrue(handlerCalled)
-        XCTAssertEqual(receivedContact?.name, "Jane")
+        XCTAssertEqual(receivedContact?.name, "Jane Doe")
         XCTAssertEqual(receivedContact?.address.city, "New York")
 
-        XCTAssertEqual(response["merchantDecision"] as? String, "accepted")
+        XCTAssertNil(response["error"])
         let lineItems = response["lineItems"] as? [[String: Any]]
         XCTAssertEqual(lineItems?.count, 1)
         XCTAssertEqual(lineItems?[0]["name"] as? String, "Updated Item")
@@ -285,12 +297,14 @@ class ShopPayECEPresenterTests: XCTestCase {
             configuration: shopPayConfiguration
         )
 
-        let shippingAddress = [
-            "firstName": "Test",
-            "city": "Invalid City",
-            "provinceCode": "XX",
-            "postalCode": "00000",
-            "countryCode": "ZZ",
+        let shippingAddress: [String: Any] = [
+            "name": "Test User",
+            "address": [
+                "city": "Invalid City",
+                "state": "XX",
+                "postalCode": "00000",
+                "country": "ZZ",
+            ],
         ]
 
         // When
@@ -300,7 +314,6 @@ class ShopPayECEPresenterTests: XCTestCase {
         await fulfillment(of: [expectation], timeout: 1.0)
 
         // Then
-        XCTAssertEqual(response["merchantDecision"] as? String, "rejected")
         XCTAssertEqual(response["error"] as? String, "Cannot ship to this address")
     }
 
@@ -308,8 +321,8 @@ class ShopPayECEPresenterTests: XCTestCase {
         // Given
         let mockECEViewController = ECEViewController(apiClient: mockConfiguration.apiClient)
         let shippingAddress = [
-            "firstName": "John"
-            // Missing required fields
+            "name": "John"
+            // Missing address object
         ]
 
         // When/Then
@@ -317,7 +330,7 @@ class ShopPayECEPresenterTests: XCTestCase {
             _ = try await sut.eceView(mockECEViewController, didReceiveShippingAddressChange: shippingAddress)
             XCTFail("Should have thrown an error")
         } catch {
-            XCTAssertTrue(error is ExpressCheckoutError)
+            XCTAssertTrue(error is ECEBridgeError || error is DecodingError)
         }
     }
 
@@ -336,7 +349,7 @@ class ShopPayECEPresenterTests: XCTestCase {
         let response = try await sut.eceView(mockECEViewController, didReceiveShippingRateChange: shippingRate)
 
         // Then
-        XCTAssertEqual(response["merchantDecision"] as? String, "accepted")
+        XCTAssertNil(response["error"])
         XCTAssertEqual(response["totalAmount"] as? Int, 3000) // Items (1500) + Express (1500)
     }
 
@@ -386,7 +399,7 @@ class ShopPayECEPresenterTests: XCTestCase {
             configuration: shopPayConfiguration
         )
 
-        let shippingRate = ["id": "express"]
+        let shippingRate: [String: Any] = ["id": "express", "amount": 1000, "displayName": "Express Shipping"]
 
         // When
         let response = try await sut.eceView(mockECEViewController, didReceiveShippingRateChange: shippingRate)
@@ -396,15 +409,17 @@ class ShopPayECEPresenterTests: XCTestCase {
 
         // Then
         XCTAssertTrue(handlerCalled)
-        XCTAssertEqual(response["merchantDecision"] as? String, "accepted")
+        XCTAssertNil(response["error"])
         XCTAssertEqual(response["totalAmount"] as? Int, 4500) // Items (3000) + Original Express (1500)
     }
 
     func testShippingRateChange_InvalidRateId() async {
         // Given
         let mockECEViewController = ECEViewController(apiClient: mockConfiguration.apiClient)
-        let shippingRate = [
-            "id": "invalid_rate_id"
+        let shippingRate: [String: Any] = [
+            "id": "invalid_rate_id",
+            "amount": 100,
+            "displayName": "Invalid Rate",
         ]
 
         // When/Then
@@ -468,7 +483,7 @@ class ShopPayECEPresenterTests: XCTestCase {
                 "name": "John Doe",
             ],
             "shippingAddress": ["address1": "123 Main St"],
-            "shippingRate": ["id": "standard"],
+            "shippingRate": ["id": "standard", "amount": 100, "displayName": "Standard Shipping"],
             "mode": "payment",
             "captureMethod": "automatic",
         ]

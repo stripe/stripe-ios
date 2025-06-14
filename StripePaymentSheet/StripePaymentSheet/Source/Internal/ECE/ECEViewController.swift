@@ -135,13 +135,9 @@ class ECEViewController: UIViewController {
         };
 
         // Notify that the bridge is ready
-        try {
-            window.webkit.messageHandlers.ready.postMessage({
-                type: 'bridgeReady'
-            });
-        } catch(e) {
-            // Ignore errors if webkit handlers not available
-        }
+        window.webkit.messageHandlers.ready.postMessage({
+            type: 'bridgeReady'
+        });
         """
 
         // Intercept console logs

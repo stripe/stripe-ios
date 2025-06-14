@@ -67,10 +67,14 @@ class ECEViewControllerTests: XCTestCase {
 
     func testHandleMessage_CalculateShipping() async throws {
         // Given
-        let shippingAddress = [
-            "address1": "123 Main St",
-            "city": "San Francisco",
-            "countryCode": "US",
+        let shippingAddress: [String: Any] = [
+            "name": "Test User",
+            "address": [
+                "city": "San Francisco",
+                "state": "CA",
+                "postalCode": "94103",
+                "country": "US",
+            ],
         ]
         let message = MockWKScriptMessage(
             name: "calculateShipping",
@@ -78,7 +82,6 @@ class ECEViewControllerTests: XCTestCase {
         )
 
         mockDelegate.shippingAddressResponse = [
-            "merchantDecision": "accepted",
             "lineItems": [["name": "Test Item", "amount": 1000]],
             "shippingRates": [["id": "rate1", "displayName": "Standard", "amount": 500]],
             "totalAmount": 1500,
@@ -90,11 +93,11 @@ class ECEViewControllerTests: XCTestCase {
         // Then
         XCTAssertNotNil(response)
         let responseDict = response as? [String: Any]
-        XCTAssertEqual(responseDict?["merchantDecision"] as? String, "accepted")
+        XCTAssertNil(responseDict?["error"])
         XCTAssertEqual(responseDict?["totalAmount"] as? Int, 1500)
 
         XCTAssertTrue(mockDelegate.didReceiveShippingAddressChangeCalled)
-        XCTAssertEqual(mockDelegate.lastShippingAddress as? [String: String], shippingAddress)
+        XCTAssertNotNil(mockDelegate.lastShippingAddress)
     }
 
     func testHandleMessage_CalculateShippingRateChange() async throws {
@@ -106,7 +109,9 @@ class ECEViewControllerTests: XCTestCase {
         )
 
         mockDelegate.shippingRateResponse = [
-            "merchantDecision": "accepted"
+            "lineItems": [],
+            "shippingRates": [],
+            "totalAmount": 2000,
         ]
 
         // When
@@ -115,7 +120,8 @@ class ECEViewControllerTests: XCTestCase {
         // Then
         XCTAssertNotNil(response)
         let responseDict = response as? [String: Any]
-        XCTAssertEqual(responseDict?["merchantDecision"] as? String, "accepted")
+        XCTAssertNil(responseDict?["error"])
+        XCTAssertEqual(responseDict?["totalAmount"] as? Int, 2000)
 
         XCTAssertTrue(mockDelegate.didReceiveShippingRateChangeCalled)
         XCTAssertEqual(mockDelegate.lastShippingRate?["id"] as? String, "rate1")

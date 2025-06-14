@@ -132,13 +132,14 @@ class ECEIntegrationTests: XCTestCase {
         XCTAssertNotNil(eceViewController?.expressCheckoutWebviewDelegate)
 
         // Simulate shipping address change
-        let shippingAddress = [
-            "firstName": "John",
-            "lastName": "Doe",
-            "city": "San Francisco",
-            "provinceCode": "CA",
-            "postalCode": "94103",
-            "countryCode": "US",
+        let shippingAddress: [String: Any] = [
+            "name": "John Doe",
+            "address": [
+                "city": "San Francisco",
+                "state": "CA",
+                "postalCode": "94103",
+                "country": "US",
+            ],
         ]
 
         let shippingResponse = try await presenter.eceView(
@@ -146,17 +147,17 @@ class ECEIntegrationTests: XCTestCase {
             didReceiveShippingAddressChange: shippingAddress
         )
 
-        XCTAssertEqual(shippingResponse["merchantDecision"] as? String, "accepted")
+        XCTAssertNil(shippingResponse["error"])
         XCTAssertEqual(shippingResponse["totalAmount"] as? Int, 4500) // 3500 items + 1000 shipping
 
         // Simulate shipping rate selection
-        let shippingRate = ["id": "standard"]
+        let shippingRate: [String: Any] = ["id": "standard", "amount": 1000, "displayName": "Standard Shipping"]
         let rateResponse = try await presenter.eceView(
             eceViewController!,
             didReceiveShippingRateChange: shippingRate
         )
 
-        XCTAssertEqual(rateResponse["merchantDecision"] as? String, "accepted")
+        XCTAssertNil(rateResponse["error"])
 
         // Simulate payment confirmation
         let paymentDetails = [
@@ -246,12 +247,14 @@ class ECEIntegrationTests: XCTestCase {
         eceViewController.expressCheckoutWebviewDelegate = presenter
 
         // Test valid US address
-        let usAddress = [
-            "firstName": "Test",
-            "city": "New York",
-            "provinceCode": "NY",
-            "postalCode": "10001",
-            "countryCode": "US",
+        let usAddress: [String: Any] = [
+            "name": "Test User",
+            "address": [
+                "city": "New York",
+                "state": "NY",
+                "postalCode": "10001",
+                "country": "US",
+            ],
         ]
 
         let usResponse = try await presenter.eceView(
@@ -259,17 +262,19 @@ class ECEIntegrationTests: XCTestCase {
             didReceiveShippingAddressChange: usAddress
         )
 
-        XCTAssertEqual(usResponse["merchantDecision"] as? String, "accepted")
+        XCTAssertNil(usResponse["error"])
         let usRates = usResponse["shippingRates"] as? [[String: Any]]
         XCTAssertEqual(usRates?.first?["amount"] as? Int, 1000)
 
         // Test valid CA address
-        let caAddress = [
-            "firstName": "Test",
-            "city": "Toronto",
-            "provinceCode": "ON",
-            "postalCode": "M5V 3A9",
-            "countryCode": "CA",
+        let caAddress: [String: Any] = [
+            "name": "Test User",
+            "address": [
+                "city": "Toronto",
+                "state": "ON",
+                "postalCode": "M5V 3A9",
+                "country": "CA",
+            ],
         ]
 
         let caResponse = try await presenter.eceView(
@@ -277,17 +282,19 @@ class ECEIntegrationTests: XCTestCase {
             didReceiveShippingAddressChange: caAddress
         )
 
-        XCTAssertEqual(caResponse["merchantDecision"] as? String, "accepted")
+        XCTAssertNil(caResponse["error"])
         let caRates = caResponse["shippingRates"] as? [[String: Any]]
         XCTAssertEqual(caRates?.first?["amount"] as? Int, 1500)
 
         // Test invalid country
-        let invalidAddress = [
-            "firstName": "Test",
-            "city": "London",
-            "provinceCode": "LDN",
-            "postalCode": "SW1A 1AA",
-            "countryCode": "GB",
+        let invalidAddress: [String: Any] = [
+            "name": "Test User",
+            "address": [
+                "city": "London",
+                "state": "LDN",
+                "postalCode": "SW1A 1AA",
+                "country": "GB",
+            ],
         ]
 
         let invalidResponse = try await presenter.eceView(
@@ -295,7 +302,7 @@ class ECEIntegrationTests: XCTestCase {
             didReceiveShippingAddressChange: invalidAddress
         )
 
-        XCTAssertEqual(invalidResponse["merchantDecision"] as? String, "rejected")
+        XCTAssertNotNil(invalidResponse["error"])
         XCTAssertEqual(validationCallCount, 3)
     }
 
@@ -308,8 +315,8 @@ class ECEIntegrationTests: XCTestCase {
         // Test various message types
         let testCases: [(name: String, body: [String: Any], expectedError: Bool)] = [
             // Valid messages
-            ("calculateShipping", ["shippingAddress": ["firstName": "Test", "city": "SF", "provinceCode": "CA", "postalCode": "94103", "countryCode": "US"]], false),
-            ("calculateShippingRateChange", ["shippingRate": ["id": "standard"]], false),
+            ("calculateShipping", ["shippingAddress": ["name": "Test", "address": ["city": "SF", "state": "CA", "postalCode": "94103", "country": "US"]]], false),
+            ("calculateShippingRateChange", ["shippingRate": ["id": "standard", "amount": 1000, "displayName": "Standard"]], false),
             ("handleECEClick", ["eventData": ["walletType": "shop_pay"]], false),
 
             // Invalid messages
@@ -476,12 +483,14 @@ class ECEIntegrationTests: XCTestCase {
         eceViewController.expressCheckoutWebviewDelegate = presenter
 
         // When - First address change
-        let firstAddress = [
-            "firstName": "John",
-            "city": "San Francisco",
-            "provinceCode": "CA",
-            "postalCode": "94103",
-            "countryCode": "US",
+        let firstAddress: [String: Any] = [
+            "name": "John Doe",
+            "address": [
+                "city": "San Francisco",
+                "state": "CA",
+                "postalCode": "94103",
+                "country": "US",
+            ],
         ]
 
         _ = try await eceViewController.userContentController(
@@ -494,12 +503,14 @@ class ECEIntegrationTests: XCTestCase {
         )
 
         // Second address change
-        let secondAddress = [
-            "firstName": "Jane",
-            "city": "New York",
-            "provinceCode": "NY",
-            "postalCode": "10001",
-            "countryCode": "US",
+        let secondAddress: [String: Any] = [
+            "name": "Jane Doe",
+            "address": [
+                "city": "New York",
+                "state": "NY",
+                "postalCode": "10001",
+                "country": "US",
+            ],
         ]
 
         _ = try await eceViewController.userContentController(
@@ -614,12 +625,14 @@ extension ECEIntegrationTests {
         let eceViewController = ECEViewController(apiClient: apiClient)
         eceViewController.expressCheckoutWebviewDelegate = presenter
 
-        let shippingAddress = [
-            "firstName": "Test",
-            "city": "San Francisco",
-            "provinceCode": "CA",
-            "postalCode": "94103",
-            "countryCode": "US",
+        let shippingAddress: [String: Any] = [
+            "name": "Test User",
+            "address": [
+                "city": "San Francisco",
+                "state": "CA",
+                "postalCode": "94103",
+                "country": "US",
+            ],
         ]
 
         measure {

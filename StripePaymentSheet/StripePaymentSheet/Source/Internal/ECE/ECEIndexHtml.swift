@@ -117,41 +117,30 @@ let ECEHTML = """
           )}`
         );
 
-        // Transform address to match native API format
-        const shippingAddress = {
-          address1: event.address.addressLine ? event.address.addressLine[0] : "",
-          address2: event.address.addressLine && event.address.addressLine[1] ? event.address.addressLine[1] : "",
-          city: event.address.city || "",
-          companyName: event.address.organization || "",
-          countryCode: event.address.country || "US",
-          email: "", // Not provided by Stripe ECE
-          firstName: event.name ? event.name.split(' ')[0] : "",
-          lastName: event.name ? event.name.split(' ').slice(1).join(' ') : "",
-          phone: event.address.phone || "",
-          postalCode: event.address.postalCode || "",
-          provinceCode: event.address.state || ""
-        };
-
         try {
-            const response = await window.NativeStripeECE.calculateShipping(shippingAddress);
+            const response = await window.NativeStripeECE.calculateShipping({
+              name: event.name,
+              address: event.address
+            });
 
             console.log(`Bridge Response:\n${hashToString(response)}`);
 
             // Check if merchant rejected the address
-            if (response.merchantDecision === "rejected") {
+            if (response.error) {
               console.log(`Shipping rejected: ${response.error}`);
               event.reject();
               return;
             }
 
-            // Update the total amount from the response
+            // Update the total amount from the response if provided
             if (response.totalAmount) {
               elements.update({ amount: response.totalAmount });
             }
 
             event.resolve({
               shippingRates: response.shippingRates,
-              lineItems: response.lineItems
+              lineItems: response.lineItems,
+              applePay: response.applePay
             });
         } catch (error) {
           console.log(`Error calculating shipping: ${error.message}`);
@@ -172,13 +161,22 @@ let ECEHTML = """
             console.log(`Bridge response:\n${hashToString(response)}`);
 
             // Check if merchant rejected the rate
-            if (response.merchantDecision === "rejected") {
-              console.log(`Shipping rate rejected: ${response.error || "Invalid shipping rate"}`);
+            if (response.error) {
+              console.log(`Shipping rate rejected: ${response.error}`);
               event.reject();
               return;
             }
 
-            event.resolve();
+            // Update the total amount from the response if provided
+            if (response.totalAmount) {
+              elements.update({ amount: response.totalAmount });
+            }
+
+            event.resolve({
+              lineItems: response.lineItems,
+              shippingRates: response.shippingRates,
+              applePay: response.applePay
+            });
         } catch (error) {
           console.log(`Error validating shipping rate: ${error.message}`);
           console.error("Shipping rate validation error:", error);
