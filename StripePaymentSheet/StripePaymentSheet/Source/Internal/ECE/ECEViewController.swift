@@ -224,7 +224,11 @@ class ECEViewController: UIViewController {
     }
 
     @objc private func refreshWebView() {
-        webView.reload()
+        if let popupWebView {
+            popupWebView.reload()
+        } else {
+            webView.reload()
+        }
     }
 
     @objc private func goBack() {
@@ -473,10 +477,6 @@ extension ECEViewController: WKUIDelegate {
     @objc private func closePopup() {
         popupWebView?.removeFromSuperview()
         popupWebView = nil
-    }
-
-    @objc private func refreshPopup() {
-        popupWebView?.reload()
     }
 
     func webViewDidClose(_ webView: WKWebView) {
