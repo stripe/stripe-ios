@@ -62,10 +62,9 @@ final class IntentConfirmParams {
         case .external:
             return paymentSheetLabel
         case .instantDebits:
-            // Use linked bank name if available
-            return instantDebitsLinkedBank?.bankName ?? paymentSheetLabel
+            return STPPaymentMethodType.link.displayName
         case .linkCardBrand:
-            return "Link"
+            return STPPaymentMethodType.link.displayName
         }
     }
 
@@ -82,10 +81,12 @@ final class IntentConfirmParams {
             }
         case .external:
             return nil
-        case .instantDebits:
-            return "TODO link instant debits"
-        case .linkCardBrand:
-            return "Link"
+        case .instantDebits, .linkCardBrand:
+            if let linkedBank = instantDebitsLinkedBank {
+                let last4 = "•••• \(linkedBank.last4 ?? "")"
+                return "\(linkedBank.bankName ?? String.Localized.bank)\(last4)"
+            }
+            return nil
         }
     }
 

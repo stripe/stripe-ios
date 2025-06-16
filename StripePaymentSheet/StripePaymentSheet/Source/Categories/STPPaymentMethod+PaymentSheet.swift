@@ -71,14 +71,8 @@ extension STPPaymentMethod {
     var expandedPaymentSheetLabel: String {
         switch type {
         case .card:
-            if let linkPaymentDetails {
-                // Link card brand - use the brand from link details
-                switch linkPaymentDetails {
-                case .card(let cardDetails):
-                    return STPCardBrandUtilities.stringFrom(cardDetails.brand) ?? "Unknown"
-                case .bankAccount(let bankDetails):
-                    return bankDetails.bankName
-                }
+            if linkPaymentDetails != nil {
+                return STPPaymentMethodType.link.displayName
             } else if let card {
                 return STPCardBrandUtilities.stringFrom(card.preferredDisplayBrand) ?? "Unknown"
             } else {
@@ -86,15 +80,6 @@ extension STPPaymentMethod {
             }
         case .USBankAccount:
             return usBankAccount?.bankName ?? type.displayName
-        case .link:
-            switch linkPaymentDetails {
-            case .card(let cardDetails):
-                return STPCardBrandUtilities.stringFrom(cardDetails.brand) ?? "Link"
-            case .bankAccount(let bankDetails):
-                return bankDetails.bankName
-            default:
-                return "Link"
-            }
         default:
             return type.displayName
         }
@@ -107,9 +92,27 @@ extension STPPaymentMethod {
         case .USBankAccount:
             return paymentSheetLabel
         case .link:
-            return paymentSheetLabel // TODO(porter)
+            return linkPaymentDetailsFormattedString
         default:
             return nil
+        }
+    }
+
+    private var linkPaymentDetailsFormattedString: String? {
+        guard let linkPaymentDetails = linkPaymentDetails else {
+            return nil
+        }
+
+        switch linkPaymentDetails {
+        case .card(let cardDetails):
+            if let displayName = cardDetails.displayName {
+                return "\(displayName) •••• \(cardDetails.last4)"
+            } else {
+                return "•••• \(cardDetails.last4)"
+            }
+        case .bankAccount(let bankDetails):
+            let last4 = "•••• \(bankDetails.last4)"
+            return "\(bankDetails.bankName) \(last4)"
         }
     }
 
