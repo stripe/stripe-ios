@@ -70,6 +70,20 @@ public extension PaymentSheet {
         @_spi(AppearanceAPIAdditionsPreview)
         public var iconStyle: IconStyle = .filled
 
+        /// The vertical padding for floating payment method rows in vertical (non-embedded) mode
+        /// - Note: Increasing this value increases the height of each floating payment method row
+        /// - Note: This only applies to non-embedded integrations (i.e., regular PaymentSheet)
+        @_spi(AppearanceAPIAdditionsPreview)
+        public var verticalModeRowPadding: CGFloat = 4.0 {
+            didSet {
+                guard verticalModeRowPadding >= 0.0 else {
+                    assertionFailure("verticalModeRowPadding must be a non-negative value")
+                    verticalModeRowPadding = 0.0
+                    return
+                }
+            }
+        }
+
         // MARK: Fonts
 
         /// Describes the appearance of fonts in PaymentSheet
