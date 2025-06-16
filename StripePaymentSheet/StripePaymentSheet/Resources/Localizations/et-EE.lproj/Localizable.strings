@@ -64,6 +64,8 @@
 
 "By joining Link, you agree to the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Link liitudes nõustute <terms>tingimuste</terms> ja <privacy>privaatsuseeskirjadega</privacy>.";
 
+"By providing phone number and email, you agree to create a Link account subject to the Link <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Telefoninumbri ja e-posti aadressi esitamisega nõustute Linki konto loomisega vastavalt Linki <terms>tingimustele</terms> ja <privacy>privaatsuseeskirjadele</privacy>.";
+
 "By providing your bank account details and confirming this payment, you agree to this Direct Debit Request and the <terms>Direct Debit Request service agreement</terms>, and authorise Stripe Payments Australia Pty Ltd ACN 160 180 343 Direct Debit User ID number 507156 (“Stripe”) to debit your account through the Bulk Electronic Clearing System (BECS) on behalf of %@ (the \"Merchant\") for any amounts separately communicated to you by the Merchant. You certify that you are either an account holder or an authorised signatory on the account listed above." = "Esitades oma pangakonto andmed ja kinnitades selle makse, nõustute käesoleva otsekorralduse taotluse ja <terms>otsekorralduse taotluse teenuselepinguga</terms> ning volitate ettevõtet Stripe Payments Australia Pty Ltd ACN 160 180 343, otsekorralduse kasutaja ID number 507156 („Stripe“), debiteerima teenuse Bulk Electronic Clearing System (BECS) kaudu %@ („kaupleja“) nimel teie kontot mis tahes kaupleja poolt teile eraldi teada antud summade ulatuses. Te kinnitate, et olete ülalnimetatud konto omanik või volitatud allkirjaõiguslik isik.";
 
 "By providing your card information, you allow %@ to charge your card for future payments in accordance with their terms." = "Kaarditeavet esitades, lubate ettevõttel %@ oma kaarti tulevasteks makseteks nende kehtestatud tingimustel debiteerida.";
@@ -223,6 +225,8 @@
 "Save address" = "Salvesta aadress";
 
 "Save for future payments" = "Salvestage tulevasteks makseteks";
+
+"Save my info for faster checkout with Link" = "Salvesta minu andmed kiiremaks makse lõpuleviimiseks Linkiga";
 
 "Save payment details to %@ for future purchases" = "Salvesta makseandmed %@ tulevaste ostude jaoks";
 

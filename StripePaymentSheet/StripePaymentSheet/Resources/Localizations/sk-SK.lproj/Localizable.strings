@@ -64,6 +64,8 @@
 
 "By joining Link, you agree to the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Pripojením k službe Link súhlasíte s <terms>podmienkami</terms> a <privacy>zásadami ochrany osobných údajov</privacy>.";
 
+"By providing phone number and email, you agree to create a Link account subject to the Link <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Poskytnutím telefónneho čísla a e-mailu súhlasíte s vytvorením účtu Link, ktoré podlieha <terms>podmienkam</terms> a <privacy>zásadám ochrany osobných údajov</privacy> služby Link.";
+
 "By providing your bank account details and confirming this payment, you agree to this Direct Debit Request and the <terms>Direct Debit Request service agreement</terms>, and authorise Stripe Payments Australia Pty Ltd ACN 160 180 343 Direct Debit User ID number 507156 (“Stripe”) to debit your account through the Bulk Electronic Clearing System (BECS) on behalf of %@ (the \"Merchant\") for any amounts separately communicated to you by the Merchant. You certify that you are either an account holder or an authorised signatory on the account listed above." = "Poskytnutím podrobností o svojom bankovom účte a potvrdením tejto platby súhlasíte s touto požiadavkou na inkaso a <terms>zmluvou o službách požiadaviek na inkaso</terms> a autorizujete spoločnosť Stripe Payments Australia Pty Ltd ACN 160 180 343 ID používateľa inkasa 507156 („Stripe“) na inkaso vášho účtu prostredníctvom systému Bulk Electronic Clearing System (BECS) v mene %@ (ďalej len „obchodník“) pre všetky sumy, ktoré vám boli oznámené osobitne obchodníkom. Potvrdzujete, že ste buď majiteľom účtu alebo autorizovaným signatárom na vyššie uvedenom účte.";
 
 "By providing your card information, you allow %@ to charge your card for future payments in accordance with their terms." = "Poskytnutím informácií o karte povolíte spoločnosti %@ účtovať na vašej karte budúce platby v súlade s ich podmienkami.";
@@ -223,6 +225,8 @@
 "Save address" = "Uložiť adresu";
 
 "Save for future payments" = "Uložiť pre budúce platby";
+
+"Save my info for faster checkout with Link" = "Uložiť moje údaje pre rýchlejšiu platbu so službou Link";
 
 "Save payment details to %@ for future purchases" = "Uložiť údaje o platbe na %@ pre budúce nákupy";
 

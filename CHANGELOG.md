@@ -1,4 +1,4 @@
-## x.x.x x-x-x
+## 24.16.0 2025-06-16
 
 ### PaymentSheet
 * [Fixed] A bug where the EmbeddedPaymentElement failed to display forms when tapped in SwiftUI.
