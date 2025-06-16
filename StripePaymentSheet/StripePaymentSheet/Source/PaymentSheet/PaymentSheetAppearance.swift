@@ -70,15 +70,15 @@ public extension PaymentSheet {
         @_spi(AppearanceAPIAdditionsPreview)
         public var iconStyle: IconStyle = .filled
 
-        /// The vertical insets for floating payment method rows in vertical (non-embedded) mode
+        /// The vertical padding for floating payment method rows in vertical (non-embedded) mode
         /// - Note: Increasing this value increases the height of each floating payment method row
         /// - Note: This only applies to non-embedded integrations (i.e., regular PaymentSheet)
         @_spi(AppearanceAPIAdditionsPreview)
-        public var verticalModeRowInsets: CGFloat = 4.0 {
+        public var verticalModeRowPadding: CGFloat = 4.0 {
             didSet {
-                guard verticalModeRowInsets >= 0.0 else {
-                    assertionFailure("verticalModeRowInsets must be a non-negative value")
-                    verticalModeRowInsets = 0.0
+                guard verticalModeRowPadding >= 0.0 else {
+                    assertionFailure("verticalModeRowPadding must be a non-negative value")
+                    verticalModeRowPadding = 0.0
                     return
                 }
             }
