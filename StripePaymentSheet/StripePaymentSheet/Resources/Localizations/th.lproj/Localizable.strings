@@ -64,6 +64,8 @@
 
 "By joining Link, you agree to the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "การเข้าร่วม Link หมายถึงคุณยอมรับ<terms>ข้อกำหนด</terms>และ<privacy>นโยบายความเป็นส่วนตัว</privacy>";
 
+"By providing phone number and email, you agree to create a Link account subject to the Link <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "การให้หมายเลขโทรศัพท์และอีเมลหมายความว่าคุณยินยอมที่จะสร้างบัญชี Link ที่อยู่ภายใต้<terms>ข้อกำหนด</terms>และ<privacy>นโยบายความเป็นส่วนตัว</privacy>ของ Link";
+
 "By providing your bank account details and confirming this payment, you agree to this Direct Debit Request and the <terms>Direct Debit Request service agreement</terms>, and authorise Stripe Payments Australia Pty Ltd ACN 160 180 343 Direct Debit User ID number 507156 (“Stripe”) to debit your account through the Bulk Electronic Clearing System (BECS) on behalf of %@ (the \"Merchant\") for any amounts separately communicated to you by the Merchant. You certify that you are either an account holder or an authorised signatory on the account listed above." = "การระบุรายละเอียดบัญชีธนาคารและการยืนยันการชำระเงินนี้หมายความว่าคุณยอมรับ<terms>ข้อตกลงในการให้บริการการขอหักบัญชีอัตโนมัติ</terms> และอนุญาตให้ Stripe Payments Australia Pty Ltd ACN 160 180 343 Direct Debit User ID หมายเลข 507156 (\"Stripe\") หักเงินจากบัญชีของคุณผ่าน Bulk Electronic Clearing System (BECS) ในนามของ %@ (\"ผู้ค้า\") สำหรับจำนวนเงินใดก็ตามที่ผู้ค้าได้แจ้งคุณไว้ต่างหาก และคุณรับรองว่าตนเองเป็นเจ้าของบัญชีหรือผู้มีอำนาจลงนามในบัญชีที่ระบุข้างต้น";
 
 "By providing your card information, you allow %@ to charge your card for future payments in accordance with their terms." = "การให้ข้อมูลบัตร หมายความว่าคุณอนุญาตให้ %@ เรียกเก็บเงินจากบัตรสำหรับการชำระเงินในอนาคตตามเงื่อนไขของผู้ค้ารายดังกล่าว";
@@ -223,6 +225,8 @@
 "Save address" = "บันทึกที่อยู่";
 
 "Save for future payments" = "บันทึกไว้เพื่อชำระเงินในอนาคต";
+
+"Save my info for faster checkout with Link" = "บันทึกข้อมูลของฉันเพื่อให้ชำระเงินด้วย Link ได้รวดเร็วขึ้น";
 
 "Save payment details to %@ for future purchases" = "บันทึกรายละเอียดการชำระเงินไปยัง %@ เพื่อการซื้อในอนาคต";
 

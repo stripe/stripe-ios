@@ -64,6 +64,8 @@
 
 "By joining Link, you agree to the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Jungdamiesi prie Link sutinkate su <terms>Sąlygomis</terms> ir <privacy>Privatumo politika</privacy>.";
 
+"By providing phone number and email, you agree to create a Link account subject to the Link <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Pateikdami telefono numerį ir el. pašto adresą sutinkate susikurti „Link“ paskyrą pagal „Link“ <terms>sąlygas</terms> ir <privacy>privatumo politiką</privacy>.";
+
 "By providing your bank account details and confirming this payment, you agree to this Direct Debit Request and the <terms>Direct Debit Request service agreement</terms>, and authorise Stripe Payments Australia Pty Ltd ACN 160 180 343 Direct Debit User ID number 507156 (“Stripe”) to debit your account through the Bulk Electronic Clearing System (BECS) on behalf of %@ (the \"Merchant\") for any amounts separately communicated to you by the Merchant. You certify that you are either an account holder or an authorised signatory on the account listed above." = "Pateikdami savo banko sąskaitos duomenis ir patvirtindami šį mokėjimą jūs sutinkate su šia tiesioginio debeto užklausa ir <terms>paslaugų sutartimi</terms> bei įgaliojate „Stripe Payments Australia Pty Ltd‟, ACN 160 180 343, tiesioginio debeto naudotojo ID 507156 (toliau – „Stripe‟), taikant masinę elektroninę tarpuskaitos sistemą (BECS), %@ vardu (toliau – „Prekybininkas‟), nurašyti nuo jūsų sąskaitos prekybininkų nurodytas sumas. Jūs patvirtinate, kad esate sąskaitos savininkas arba įgaliotasis asmuo.";
 
 "By providing your card information, you allow %@ to charge your card for future payments in accordance with their terms." = "Pateikdami kortelės duomenis sutinkate, kad \"%@\" nuskaičiuotų nuo jūsų kortelės būsimus mokėjimus pagal jų sąlygas.";
@@ -223,6 +225,8 @@
 "Save address" = "išsaugoti adresą";
 
 "Save for future payments" = "Išsaugokite vėlesniems mokėjimams";
+
+"Save my info for faster checkout with Link" = "Išsaugoti mano informaciją greitesniam atsiskaitymui su „Link“";
 
 "Save payment details to %@ for future purchases" = "Išsaugoti mokėjimo duomenis \"%@” būsimiems pirkimams";
 
