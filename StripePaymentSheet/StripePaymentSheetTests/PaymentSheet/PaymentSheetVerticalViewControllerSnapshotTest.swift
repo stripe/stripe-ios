@@ -379,10 +379,10 @@ final class PaymentSheetVerticalViewControllerSnapshotTest: STPSnapshotTestCase 
         self.verify(sut)
     }
 
-    func testVerticalModeRowInsetsSmall() {
+    func testverticalModeRowPaddingSmall() {
         // Test with smaller vertical mode row insets (2.0 instead of default 4.0)
         var appearance = PaymentSheet.Appearance()
-        appearance.verticalModeRowInsets = 2.0
+        appearance.verticalModeRowPadding = 2.0
 
         var configuration = PaymentSheet.Configuration._testValue_MostPermissive()
         configuration.appearance = appearance
@@ -399,10 +399,10 @@ final class PaymentSheetVerticalViewControllerSnapshotTest: STPSnapshotTestCase 
         verify(sut)
     }
 
-    func testVerticalModeRowInsetsLarge() {
+    func testverticalModeRowPaddingLarge() {
         // Test with larger vertical mode row insets (20.0 instead of default 4.0)
         var appearance = PaymentSheet.Appearance()
-        appearance.verticalModeRowInsets = 20.0
+        appearance.verticalModeRowPadding = 20.0
 
         var configuration = PaymentSheet.Configuration._testValue_MostPermissive()
         configuration.appearance = appearance
