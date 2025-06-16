@@ -11,48 +11,73 @@ import SwiftUI
 @available(iOS 16.0, *)
 struct LinkButton: View {
     private enum Constants {
-        static let buttonHeight: CGFloat = 44
-        static let contentHeight: CGFloat = 18
-        static let separatorWidth: CGFloat = 1
-        static let contentSpacing: CGFloat = 10
-        static let cornerRadius = buttonHeight / 2
-        static let emailFont: UIFont = .systemFont(ofSize: 15, weight: .medium)
-            .scaled(withTextStyle: .callout, maximumPointSize: 16)
+        static let defaultButtonHeight: CGFloat = 44
+        static let baseContentHeight: CGFloat = 18
+        static let baseSeparatorWidth: CGFloat = 1
+        static let baseContentSpacing: CGFloat = 10
+        static let baseFontSize: CGFloat = 15
+        static let minScaleFactor: CGFloat = 0.7
+        static let maxScaleFactor: CGFloat = 1.5
     }
 
     @StateObject private var viewModel: LinkButtonViewModel
     private let action: () -> Void
+    private let height: CGFloat
 
-    init(viewModel: LinkButtonViewModel = LinkButtonViewModel(), action: @escaping () -> Void) {
+    init(height: CGFloat = Constants.defaultButtonHeight, viewModel: LinkButtonViewModel = LinkButtonViewModel(), action: @escaping () -> Void) {
+        self.height = height
         self._viewModel = StateObject(wrappedValue: viewModel)
         self.action = action
     }
 
+    private var scaleFactor: CGFloat {
+        let factor = height / Constants.defaultButtonHeight
+        return min(max(factor, Constants.minScaleFactor), Constants.maxScaleFactor)
+    }
+
+    private var scaledContentHeight: CGFloat {
+        Constants.baseContentHeight * scaleFactor
+    }
+
+    private var scaledSeparatorWidth: CGFloat {
+        max(Constants.baseSeparatorWidth * scaleFactor, 0.5) // Ensure separator is always visible
+    }
+
+    private var scaledContentSpacing: CGFloat {
+        Constants.baseContentSpacing * scaleFactor
+    }
+
+    private var scaledFont: UIFont {
+        let scaledSize = Constants.baseFontSize * scaleFactor
+        return UIFont.systemFont(ofSize: scaledSize, weight: .medium)
+            .scaled(withTextStyle: .callout, maximumPointSize: max(scaledSize, 12))
+    }
+
     var body: some View {
         Button(action: action) {
-            HStack(spacing: Constants.contentSpacing) {
+            HStack(spacing: scaledContentSpacing) {
                 SwiftUI.Image(uiImage: Image.link_logo_bw.makeImage(template: false))
                     .resizable()
                     .scaledToFit()
-                    .frame(height: Constants.contentHeight)
+                    .frame(height: scaledContentHeight)
 
                 if let account = viewModel.account {
                     Rectangle()
                         .fill(Color(uiColor: .linkSeparatorOnPrimaryButton))
-                        .frame(width: Constants.separatorWidth, height: Constants.contentHeight)
+                        .frame(width: scaledSeparatorWidth, height: scaledContentHeight)
 
                     Text(account.email)
-                        .font(Font(Constants.emailFont))
+                        .font(Font(scaledFont))
                         .lineLimit(1)
                         .truncationMode(.tail)
                 }
             }
             .padding(.horizontal, LinkUI.contentSpacing)
             .frame(maxWidth: .infinity)
-            .frame(height: Constants.buttonHeight)
+            .frame(height: height)
             .background(Color(uiColor: .linkIconBrand))
             .foregroundColor(Color(uiColor: .linkTextPrimary))
-            .cornerRadius(Constants.cornerRadius)
+            .cornerRadius(height / 2)
         }
     }
 }

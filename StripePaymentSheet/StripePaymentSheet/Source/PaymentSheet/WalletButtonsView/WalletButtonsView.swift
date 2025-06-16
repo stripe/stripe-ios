@@ -48,9 +48,9 @@ import SwiftUI
 
                     switch wallet {
                     case .applePay:
-                        ApplePayButton(action: completion)
+                        ApplePayButton(height: flowController.configuration.appearance.primaryButton.height, action: completion)
                     case .link:
-                        LinkButton(action: completion)
+                        LinkButton(height: flowController.configuration.appearance.primaryButton.height, action: completion)
                     case .linkInlineVerification(let account):
                         LinkInlineVerificationView(
                             account: account,
@@ -161,13 +161,23 @@ import SwiftUI
     }
 
     private struct ApplePayButton: View {
+        private enum Constants {
+            static let defaultButtonHeight: CGFloat = 44
+        }
+
+        let height: CGFloat
         let action: () -> Void
+
+        init(height: CGFloat = Constants.defaultButtonHeight, action: @escaping () -> Void) {
+            self.height = height
+            self.action = action
+        }
 
         var body: some View {
             PayWithApplePayButton(.plain, action: action)
                 .frame(maxWidth: .infinity)
-                .frame(height: 44)
-                .cornerRadius(100)
+                .frame(height: height)
+                .cornerRadius(height / 2)
         }
     }
 }
