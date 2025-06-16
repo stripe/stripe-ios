@@ -25,6 +25,30 @@ class LinkSheetNavigationBar: SheetNavigationBar {
         return imageView
     }()
 
+    private lazy var titleLabel: UILabel = {
+        let label = UILabel()
+        label.font = appearance.scaledFont(for: appearance.font.base.medium, style: .headline, maximumPointSize: 20)
+        label.textColor = appearance.colors.text
+        label.textAlignment = .center
+        label.numberOfLines = 1
+        label.translatesAutoresizingMaskIntoConstraints = false
+        return label
+    }()
+
+    var title: String? {
+        didSet {
+            titleLabel.text = title
+            titleLabel.isHidden = title == nil || title?.isEmpty == true
+        }
+    }
+
+    override var leftmostElement: UIView {
+        if !logoView.isHidden {
+            return logoView
+        }
+        return super.leftmostElement
+    }
+
     override init(isTestMode: Bool, appearance: PaymentSheet.Appearance) {
         super.init(isTestMode: isTestMode, appearance: appearance)
 
@@ -36,6 +60,21 @@ class LinkSheetNavigationBar: SheetNavigationBar {
             logoView.centerYAnchor.constraint(equalTo: centerYAnchor),
             logoView.heightAnchor.constraint(equalToConstant: 24),
         ])
+
+        addSubview(titleLabel)
+        NSLayoutConstraint.activate([
+            titleLabel.centerYAnchor.constraint(equalTo: centerYAnchor),
+            titleLabel.centerXAnchor.constraint(equalTo: centerXAnchor),
+            titleLabel.leadingAnchor.constraint(
+                greaterThanOrEqualTo: leftmostElement.trailingAnchor,
+                constant: LinkUI.contentSpacing
+            ),
+            titleLabel.trailingAnchor.constraint(
+                lessThanOrEqualTo: rightmostElement.leadingAnchor,
+                constant: -LinkUI.contentSpacing
+            ),
+        ])
+        titleLabel.isHidden = true
     }
 
     override var intrinsicContentSize: CGSize {
