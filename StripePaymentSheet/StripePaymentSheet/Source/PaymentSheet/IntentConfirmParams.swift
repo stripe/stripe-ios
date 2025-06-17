@@ -84,7 +84,7 @@ final class IntentConfirmParams {
         case .instantDebits, .linkCardBrand:
             if let linkedBank = instantDebitsLinkedBank {
                 let last4 = "••••\(linkedBank.last4 ?? "")"
-                return "\(linkedBank.bankName ?? String.Localized.bank)\(last4)"
+                return "\(linkedBank.bankName ?? String.Localized.bank) \(last4)"
             }
             return nil
         }
