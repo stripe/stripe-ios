@@ -88,7 +88,7 @@ extension STPPaymentMethod {
     var paymentSheetSublabel: String? {
         switch type {
         case .card:
-            return paymentSheetLabel
+            return linkPaymentDetailsFormattedString ?? paymentSheetLabel
         case .USBankAccount:
             return paymentSheetLabel
         case .link:
