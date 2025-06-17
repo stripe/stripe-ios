@@ -374,8 +374,10 @@ extension PaymentSheet {
 
             // Overwrite completion closure to retain self until called
             let wrappedCompletion: () -> Void = {
-                completion?()
-                self.presentPaymentOptionsCompletion = nil
+                self.updatePaymentOption { // ensure the payment option property is always updated before dismissing
+                    completion?()
+                    self.presentPaymentOptionsCompletion = nil
+                }
             }
             presentPaymentOptionsCompletion = wrappedCompletion
 
@@ -598,13 +600,14 @@ extension PaymentSheet {
         }
 
         /// Updates the published paymentOption property based on the current state
-        internal func updatePaymentOption() {
+        internal func updatePaymentOption(completion: (() -> Void)? = nil) {
             if Thread.isMainThread {
                 if let selectedPaymentOption = internalPaymentOption {
                     paymentOption = PaymentOptionDisplayData(paymentOption: selectedPaymentOption, currency: intent.currency, iconStyle: configuration.appearance.iconStyle)
                 } else {
                     paymentOption = nil
                 }
+                completion?()
             } else {
                 DispatchQueue.main.async { [weak self] in
                     guard let self = self else { return }
@@ -613,6 +616,7 @@ extension PaymentSheet {
                     } else {
                         self.paymentOption = nil
                     }
+                    completion?()
                 }
             }
         }
