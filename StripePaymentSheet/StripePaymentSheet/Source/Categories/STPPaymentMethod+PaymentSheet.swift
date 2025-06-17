@@ -99,7 +99,7 @@ extension STPPaymentMethod {
     }
 
     private var linkPaymentDetailsFormattedString: String? {
-        guard let linkPaymentDetails = linkPaymentDetails else {
+        guard let linkPaymentDetails else {
             return nil
         }
 
