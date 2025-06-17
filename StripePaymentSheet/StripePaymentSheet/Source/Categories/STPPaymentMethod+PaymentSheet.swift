@@ -74,9 +74,9 @@ extension STPPaymentMethod {
             if isLinkPaymentMethod {
                 return STPPaymentMethodType.link.displayName
             } else if let card {
-                return STPCardBrandUtilities.stringFrom(card.preferredDisplayBrand) ?? "Unknown"
+                return STPCardBrandUtilities.stringFrom(card.preferredDisplayBrand) ?? STPPaymentMethodType.card.displayName
             } else {
-                return "Unknown"
+                return STPPaymentMethodType.card.displayName
             }
         case .USBankAccount:
             return usBankAccount?.bankName ?? type.displayName
@@ -103,17 +103,8 @@ extension STPPaymentMethod {
             return nil
         }
 
-        switch linkPaymentDetails {
-        case .card(let cardDetails):
-            if let displayName = cardDetails.displayName {
-                return "\(displayName) •••• \(cardDetails.last4)"
-            } else {
-                return "•••• \(cardDetails.last4)"
-            }
-        case .bankAccount(let bankDetails):
-            let last4 = "•••• \(bankDetails.last4)"
-            return "\(bankDetails.bankName) \(last4)"
-        }
+        let components = [linkPaymentDetails.label, linkPaymentDetails.sublabel].compactMap { $0 }
+        return components.joined(separator: " ")
     }
 
     func hasUpdatedCardParams(_ updatedParams: STPPaymentMethodCardParams?) -> Bool {

@@ -51,7 +51,7 @@ final class IntentConfirmParams {
             switch stpPaymentMethodType {
             case .card:
                 let brand = STPCardValidator.brand(for: paymentMethodParams.card)
-                return STPCardBrandUtilities.stringFrom(brand) ?? "Unknown"
+                return STPCardBrandUtilities.stringFrom(brand) ?? STPPaymentMethodType.card.displayName
             case .USBankAccount:
                 // Use linked bank name if available, otherwise fallback to generic display name for bank
                 return financialConnectionsLinkedBank?.displayName ?? STPPaymentMethodType.USBankAccount.displayName

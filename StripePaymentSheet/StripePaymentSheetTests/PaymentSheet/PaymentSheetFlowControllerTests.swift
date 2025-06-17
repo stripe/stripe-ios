@@ -7,6 +7,7 @@
 
 @testable import StripeCore
 @testable @_spi(STP) import StripePayments
+@testable @_spi(STP) import StripePaymentsTestUtils
 @testable @_spi(AppearanceAPIAdditionsPreview) @_spi(STP) import StripePaymentSheet
 import XCTest
 
@@ -162,5 +163,77 @@ class PaymentSheetFlowControllerTests: XCTestCase {
         // Test labels for saved Link card - should show Link display name as label and detailed info as sublabel
         XCTAssertEqual(displayData.labels.label, STPPaymentMethodType.link.displayName)
         XCTAssertEqual(displayData.labels.sublabel, "•••• 4242")
+    }
+
+    func testPaymentOptionDisplayData_SavedLinkPaymentMethodLabels() {
+        // Create a saved Link payment method using test helper
+        let paymentMethod = STPPaymentMethod._testLink()
+
+        let paymentOption = PaymentSheet.PaymentOption.saved(paymentMethod: paymentMethod, confirmParams: nil)
+        let displayData = PaymentSheet.FlowController.PaymentOptionDisplayData(
+            paymentOption: paymentOption,
+            currency: "usd",
+            iconStyle: .filled
+        )
+
+        // Test labels for saved Link payment method - display name is nil on fixture so should show "Link"
+        XCTAssertEqual(displayData.labels.label, "Link")
+        XCTAssertEqual(displayData.labels.sublabel, "•••• 4242")
+    }
+
+    func testPaymentOptionDisplayData_LinkWithPaymentDetailsLabels() {
+        // Create a Link account for the withPaymentDetails option
+        let linkAccount = PaymentSheetLinkAccount(
+            email: "user@example.com",
+            session: ConsumerSession(
+                clientSecret: "client_secret",
+                emailAddress: "user@example.com",
+                redactedFormattedPhoneNumber: "+1********55",
+                unredactedPhoneNumber: nil,
+                phoneNumberCountry: "US",
+                verificationSessions: [
+                    .init(type: .sms, state: .verified)
+                ],
+                supportedPaymentDetailsTypes: [.card]
+            ),
+            publishableKey: "pk_test_123",
+            useMobileEndpoints: false
+        )
+
+        // Create payment details for a Visa card
+        let paymentDetails = ConsumerPaymentDetails(
+            stripeID: "pd_123",
+            details: .card(card: .init(
+                expiryYear: 30,
+                expiryMonth: 12,
+                brand: "visa",
+                networks: ["visa"],
+                last4: "4242",
+                funding: .credit,
+                checks: nil
+            )),
+            billingAddress: nil,
+            billingEmailAddress: nil,
+            nickname: nil,
+            isDefault: false
+        )
+
+        let linkOption = PaymentSheet.LinkConfirmOption.withPaymentDetails(
+            account: linkAccount,
+            paymentDetails: paymentDetails,
+            confirmationExtras: nil,
+            shippingAddress: nil
+        )
+
+        let paymentOption = PaymentSheet.PaymentOption.link(option: linkOption)
+        let displayData = PaymentSheet.FlowController.PaymentOptionDisplayData(
+            paymentOption: paymentOption,
+            currency: "usd",
+            iconStyle: .filled
+        )
+
+        // Test labels for Link with payment details - should show "Link" as label and card details as sublabel
+        XCTAssertEqual(displayData.labels.label, "Link")
+        XCTAssertEqual(displayData.labels.sublabel, "Visa Credit")
     }
 }
