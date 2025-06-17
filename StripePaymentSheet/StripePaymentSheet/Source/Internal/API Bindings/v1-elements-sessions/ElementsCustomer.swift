@@ -13,6 +13,7 @@ struct ElementsCustomer: Equatable, Hashable {
 
     let paymentMethods: [STPPaymentMethod]
     let defaultPaymentMethod: String?
+    let email: String?
     let customerSession: CustomerSession
 
     /// Helper method to decode the `v1/elements/sessions` response's `customer` hash.
@@ -40,9 +41,11 @@ struct ElementsCustomer: Equatable, Hashable {
 
         // Optional
         let defaultPaymentMethod = response["default_payment_method"] as? String
+        let email = response["email"] as? String
         return ElementsCustomer(
             paymentMethods: paymentMethods,
             defaultPaymentMethod: defaultPaymentMethod,
+            email: email,
             customerSession: customerSession
         )
     }

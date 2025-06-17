@@ -29,19 +29,28 @@ class ShopPayECEPresenter: NSObject, UIAdaptivePresentationControllerDelegate {
 
     func present(from viewController: UIViewController,
                  confirmHandler: @escaping (PaymentSheetResult) -> Void) {
-        self.presentingViewController = viewController
+        Task { @MainActor in
+            do {
+                let checkoutUrl = try await getShopPayCheckoutURL()
+                print("checkoutUrl is: \(checkoutUrl)")
+            } catch {
+                confirmHandler(.failed(error: error))
+            }
 
-        let eceVC = ECEViewController(apiClient: flowController.configuration.apiClient)
-         eceVC.expressCheckoutWebviewDelegate = self
-         self.eceViewController = eceVC
-        let navController = UINavigationController(rootViewController: eceVC)
-         navController.modalPresentationStyle = .pageSheet
-         viewController.present(navController, animated: true)
-        eceVC.presentationController?.delegate = self
-        // retain self while presented
-        self.confirmHandler = { result in
-            confirmHandler(result)
-            self.confirmHandler = nil
+            self.presentingViewController = viewController
+
+            let eceVC = ECEViewController(apiClient: flowController.configuration.apiClient)
+            eceVC.expressCheckoutWebviewDelegate = self
+            self.eceViewController = eceVC
+            let navController = UINavigationController(rootViewController: eceVC)
+            navController.modalPresentationStyle = .pageSheet
+            viewController.present(navController, animated: true)
+            eceVC.presentationController?.delegate = self
+            // retain self while presented
+            self.confirmHandler = { result in
+                confirmHandler(result)
+                self.confirmHandler = nil
+            }
         }
     }
 
@@ -53,6 +62,25 @@ class ShopPayECEPresenter: NSObject, UIAdaptivePresentationControllerDelegate {
     private func dismissECE(completion: (() -> Void)? = nil) {
         presentingViewController?.dismiss(animated: true, completion: completion)
     }
+
+    func getShopPayCheckoutURL() async throws -> String {
+        guard let email = flowController.elementsSession.customer?.email,
+              let shopPayId = flowController.configuration.shopPay?.shopId else {
+            throw ECEPresenterError.invalidParam
+        }
+
+        let session = try await flowController.configuration.apiClient.fetchECESession(email: email,
+                                                                                       shopPayId: shopPayId)
+        guard let shopPayCheckoutURL = session.shopPay?.checkoutUrl else {
+            throw ECEPresenterError.unableToGetShopURL
+        }
+        return shopPayCheckoutURL
+    }
+}
+
+enum ECEPresenterError: Error {
+    case invalidParam
+    case unableToGetShopURL
 }
 
 // MARK: - ExpressCheckoutWebviewDelegate

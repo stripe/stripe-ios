@@ -243,6 +243,8 @@
 		6A529F76ECB33C9154314C1F /* STPAnalyticsClient+LUXE.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83B5AAA4347A6918EC267210 /* STPAnalyticsClient+LUXE.swift */; };
 		6A5997192BC88E28002A44CB /* InstantDebitsPaymentMethodElement.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A5997182BC88E28002A44CB /* InstantDebitsPaymentMethodElement.swift */; };
 		6B0E5AE72C08F4B5008AAFBE /* IntentConfirmParamsTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B0E5AE62C08F4B5008AAFBE /* IntentConfirmParamsTest.swift */; };
+		6B1079A52E01CC38004F7FF9 /* STPElementsECESessions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B1079A42E01CC38004F7FF9 /* STPElementsECESessions.swift */; };
+		6B1079A72E01CC90004F7FF9 /* ShopPay.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B1079A62E01CC90004F7FF9 /* ShopPay.swift */; };
 		6B28A6B62BE9494500B47DBF /* CustomerSheetDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B28A6B52BE9494500B47DBF /* CustomerSheetDataSource.swift */; };
 		6B28A6B92BE9712500B47DBF /* CustomerSessionAdapter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B28A6B82BE9712500B47DBF /* CustomerSessionAdapter.swift */; };
 		6B31B9B82B9019730064E210 /* ElementsCustomer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B31B9B72B9019730064E210 /* ElementsCustomer.swift */; };
@@ -729,6 +731,8 @@
 		6A065CEE8A7BCE60FC9D50BF /* el-GR */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "el-GR"; path = "el-GR.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		6A5997182BC88E28002A44CB /* InstantDebitsPaymentMethodElement.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InstantDebitsPaymentMethodElement.swift; sourceTree = "<group>"; };
 		6B0E5AE62C08F4B5008AAFBE /* IntentConfirmParamsTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IntentConfirmParamsTest.swift; sourceTree = "<group>"; };
+		6B1079A42E01CC38004F7FF9 /* STPElementsECESessions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = STPElementsECESessions.swift; sourceTree = "<group>"; };
+		6B1079A62E01CC90004F7FF9 /* ShopPay.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShopPay.swift; sourceTree = "<group>"; };
 		6B28A6B52BE9494500B47DBF /* CustomerSheetDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomerSheetDataSource.swift; sourceTree = "<group>"; };
 		6B28A6B82BE9712500B47DBF /* CustomerSessionAdapter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomerSessionAdapter.swift; sourceTree = "<group>"; };
 		6B31B9B72B9019730064E210 /* ElementsCustomer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ElementsCustomer.swift; sourceTree = "<group>"; };
@@ -1035,6 +1039,8 @@
 				6B31B9B92B90FCE60064E210 /* CustomerSession.swift */,
 				4926B9E12D9C66250049A43E /* ExperimentData.swift */,
 				CBECCB372DB1BA4100EF0875 /* PaymentMethodWithLinkDetails.swift */,
+				6B1079A42E01CC38004F7FF9 /* STPElementsECESessions.swift */,
+				6B1079A62E01CC90004F7FF9 /* ShopPay.swift */,
 			);
 			path = "v1-elements-sessions";
 			sourceTree = "<group>";
@@ -2489,6 +2495,7 @@
 				615C2C502CBDBA61003F0173 /* EmbeddedFormViewController.swift in Sources */,
 				BB73C2D2DB79BFC0A3186711 /* LinkPaymentController.swift in Sources */,
 				88BA38BE8949815F4DB79509 /* PayWithLinkController.swift in Sources */,
+				6B1079A72E01CC90004F7FF9 /* ShopPay.swift in Sources */,
 				6B28A6B62BE9494500B47DBF /* CustomerSheetDataSource.swift in Sources */,
 				3147CEEE2CC1D3700067B5E4 /* PayWithLinkViewController-WalletViewModel.swift in Sources */,
 				3147CEEF2CC1D3700067B5E4 /* PayWithLinkViewController-NewPaymentViewController.swift in Sources */,
@@ -2553,6 +2560,7 @@
 				3147CED92CC1BF860067B5E4 /* LinkVerificationController.swift in Sources */,
 				3147CEDA2CC1BF860067B5E4 /* LinkVerificationViewController-PresentationController.swift in Sources */,
 				3147CEDB2CC1BF860067B5E4 /* LinkVerificationView.swift in Sources */,
+				6B1079A52E01CC38004F7FF9 /* STPElementsECESessions.swift in Sources */,
 				A3B2F2B42CEE882D00C0E88C /* SavedPaymentMethodFormFactory.swift in Sources */,
 				3147CEDC2CC1BF860067B5E4 /* LinkVerificationView-Header.swift in Sources */,
 				3147CEDD2CC1BF860067B5E4 /* LinkVerificationView-LogoutView.swift in Sources */,

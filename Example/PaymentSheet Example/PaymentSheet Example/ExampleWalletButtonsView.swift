@@ -4,7 +4,7 @@
 //
 
 @_spi(STP) import StripePayments
-@_spi(STP) import StripePaymentSheet
+@_spi(STP) @_spi(CustomerSessionBetaAccess) import StripePaymentSheet
 import SwiftUI
 
 struct ExampleWalletButtonsContainerView: View {
@@ -59,6 +59,10 @@ struct ExampleWalletButtonsView: View {
             .onAppear {
                 model.preparePaymentSheet()
             }
+            .onDisappear {
+                model.paymentSheetFlowController = nil
+                model.paymentResult = nil
+            }
             if let result = model.paymentResult {
                 ExamplePaymentStatusView(result: result)
             }
@@ -111,7 +115,9 @@ struct WalletButtonsFlowControllerView: View {
 class ExampleWalletButtonsModel: ObservableObject {
     let email: String
 
-    let backendCheckoutUrl = URL(string: "https://stripe-mobile-payment-sheet.glitch.me/checkout")!
+//    let backendCheckoutUrl = URL(string: "https://stp-mobile-playground-backend-v7.stripedemos.com/checkout")!
+    let backendCheckoutUrl = URL(string: "http://127.0.0.1:8081/checkout")!
+
     @Published var paymentSheetFlowController: PaymentSheet.FlowController?
     @Published var paymentResult: PaymentSheetResult?
 
@@ -121,17 +127,34 @@ class ExampleWalletButtonsModel: ObservableObject {
 
     func preparePaymentSheet() {
         // MARK: Fetch the PaymentIntent and Customer information from the backend
+        let body = [
+            "mode": "payment",
+            "merchant_country_code": "US",
+            "amount": "5000",
+            "currency": "usd",
+            "customer": "new",
+            "customer_key_type": "customer_session",
+            "customer_session_component_name": "mobile_payment_element",
+            "customer_session_payment_method_save": "enabled",
+            "customer_session_payment_method_remove": "enabled",
+            "customer_session_payment_method_remove_last": "enabled",
+            "customer_session_payment_method_redisplay": "enabled",
+        ] as [String: Any]
+        let json = try! JSONSerialization.data(withJSONObject: body, options: [])
+
         var request = URLRequest(url: backendCheckoutUrl)
         request.httpMethod = "POST"
+        request.httpBody = json
+        request.setValue("application/json", forHTTPHeaderField: "Content-type")
         let task = URLSession.shared.dataTask(
             with: request,
             completionHandler: { (data, _, error) in
                 guard let data = data,
                     let json = try? JSONSerialization.jsonObject(with: data, options: [])
                         as? [String: Any],
-                    let customerId = json["customer"] as? String,
-                    let customerEphemeralKeySecret = json["ephemeralKey"] as? String,
-                    let paymentIntentClientSecret = json["paymentIntent"] as? String,
+                    let customerId = json["customerId"] as? String,
+                    let customerSessionClientSecret = json["customerSessionClientSecret"] as? String,
+                    let paymentIntentClientSecret = json["intentClientSecret"] as? String,
                     let publishableKey = json["publishableKey"] as? String
                 else {
                     // Handle error
@@ -149,8 +172,7 @@ class ExampleWalletButtonsModel: ObservableObject {
                     merchantCountryCode: "US"
                 )
                 configuration.shopPay = self.shopPayConfiguration
-                configuration.customer = .init(
-                    id: customerId, ephemeralKeySecret: customerEphemeralKeySecret)
+                configuration.customer = .init(id: customerId, customerSessionClientSecret: customerSessionClientSecret)
                 configuration.returnURL = "payments-example://stripe-redirect"
                 configuration.willUseWalletButtonsView = true
                 PaymentSheet.FlowController.create(
@@ -259,7 +281,7 @@ class ExampleWalletButtonsModel: ObservableObject {
                                                  shippingRates: [.init(id: "express", amount: 1099, displayName: "Overnight", deliveryEstimate: .init(minimum: singleBusinessDay, maximum: singleBusinessDay)),
                                                                  .init(id: "standard", amount: 0, displayName: "Free", deliveryEstimate: .init(minimum: fiveBusinessDays, maximum: sevenBusinessDays)),
                                                                 ],
-                                                 shopId: "shop_1234",
+                                                 shopId: "shop_id_123",
                                                  handlers: handlers)
     }
     func isValidShippingLocation(_ address: PaymentSheet.ShopPayConfiguration.PartialAddress) -> Bool {

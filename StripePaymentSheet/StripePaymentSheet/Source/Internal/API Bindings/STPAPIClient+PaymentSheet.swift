@@ -207,5 +207,33 @@ extension STPAPIClient {
         return parameters
     }
 }
-
+// MARK: - Express Checkout Element
+extension STPAPIClient {
+    func fetchECESession(email: String,
+                         shopPayId: String) async throws -> STPElementsECESessions {
+        let parameters = makeElementsSessionsECEParams(email: email, shopPayId: shopPayId)
+        return try await APIRequest<STPElementsECESessions>.post(with:
+            self,
+            endpoint: APIEndpointElementsECESessions,
+            parameters: parameters
+        )
+    }
+    func makeElementsSessionsECEParams(email: String,
+                                       shopPayId: String) -> [String: Any] {
+        var parameters: [String: Any] = [:]
+        parameters["payment_method_type"] = "shop_pay"
+        parameters["type_specific_data"] = {
+            var typeSpecificData = [String: Any]()
+            typeSpecificData["shop_pay"] =  {
+                var shopPay = [String: Any]()
+                shopPay["shop_id"] = shopPayId
+                shopPay["login_hint"] = email
+                return shopPay
+            }()
+            return typeSpecificData
+        }()
+        return parameters
+    }
+}
 private let APIEndpointElementsSessions = "elements/sessions"
+private let APIEndpointElementsECESessions = "elements/express_checkout_element/session"
