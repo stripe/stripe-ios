@@ -13,6 +13,35 @@ import XCTest
 
 class PaymentSheetFlowControllerTests: XCTestCase {
 
+    func makePaymentDetailsStub(nickname: String? = nil) -> ConsumerPaymentDetails {
+        return ConsumerPaymentDetails(
+            stripeID: "1",
+            details: .card(card: .init(
+                expiryYear: 30,
+                expiryMonth: 10,
+                brand: "visa",
+                networks: ["visa"],
+                last4: "1234",
+                funding: .credit,
+                checks: nil
+            )),
+            billingAddress: nil,
+            billingEmailAddress: nil,
+            nickname: nickname,
+            isDefault: false
+        )
+    }
+
+    func makeSUT() -> PaymentSheetLinkAccount {
+        return PaymentSheetLinkAccount(
+            email: "user@example.com",
+            session: LinkStubs.consumerSession(),
+            publishableKey: nil,
+            apiClient: STPAPIClient(publishableKey: STPTestingDefaultPublishableKey),
+            useMobileEndpoints: false
+        )
+    }
+
     // MARK: - PaymentOptionDisplayData Labels Tests
 
     func testPaymentOptionDisplayData_CardLabels() {
@@ -179,5 +208,31 @@ class PaymentSheetFlowControllerTests: XCTestCase {
         // Test labels for saved Link payment method - display name is nil on fixture so should show "Link"
         XCTAssertEqual(displayData.labels.label, "Link")
         XCTAssertEqual(displayData.labels.sublabel, "•••• 4242")
+    }
+
+    func testPaymentOptionDisplayData_LinkWithPaymentDetailsLabels() {
+        let linkAccount = PaymentSheetLinkAccount._testValue(email: "foo@bar.com", isRegistered: false)
+
+        // Create payment details for a Visa card with a specific nickname
+        let paymentDetails = makePaymentDetailsStub(nickname: "Visa Credit")
+
+        let linkOption = PaymentSheet.LinkConfirmOption.withPaymentDetails(
+            account: linkAccount,
+            paymentDetails: paymentDetails,
+            confirmationExtras: nil,
+            shippingAddress: nil
+        )
+
+        let paymentOption = PaymentSheet.PaymentOption.link(option: linkOption)
+        let displayData = PaymentSheet.FlowController.PaymentOptionDisplayData(
+            paymentOption: paymentOption,
+            currency: "usd",
+            iconStyle: .filled
+        )
+
+        // Test labels for Link with payment details - should show "Link" as label and formatted details as sublabel
+        XCTAssertEqual(displayData.labels.label, "Link")
+        // The sublabel should now be the formatted string combining the nickname and card details
+        XCTAssertEqual(displayData.labels.sublabel, "Visa Credit •••• 1234")
     }
 }

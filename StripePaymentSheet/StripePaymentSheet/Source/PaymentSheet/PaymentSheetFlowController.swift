@@ -187,7 +187,7 @@ extension PaymentSheet {
                     shippingDetails = nil
                 case .link(let option):
                     label = option.paymentSheetLabel
-                    labels = Labels(label: STPPaymentMethodType.link.displayName, sublabel: option.paymentSheetLabel)
+                    labels = Labels(label: STPPaymentMethodType.link.displayName, sublabel: option.paymentSheetSubLabel)
                     paymentMethodType = option.paymentMethodType
                     billingDetails = option.billingDetails?.toPaymentSheetBillingDetails()
                     shippingDetails = option.shippingAddress

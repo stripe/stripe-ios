@@ -98,7 +98,7 @@ extension STPPaymentMethod {
         }
     }
 
-    private var linkPaymentDetailsFormattedString: String? {
+    var linkPaymentDetailsFormattedString: String? {
         guard let linkPaymentDetails else {
             return nil
         }
