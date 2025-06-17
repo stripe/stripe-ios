@@ -180,7 +180,7 @@ class PaymentSheetFlowControllerTests: XCTestCase {
 
     func testPaymentOptionDisplayData_SavedLinkCardLabels() {
         // Create a saved Link card payment method using test helper
-        let paymentMethod = STPPaymentMethod._testLink()
+        let paymentMethod = STPPaymentMethod._testLink(displayName: "TEST DISPLAY NAME")
 
         let paymentOption = PaymentSheet.PaymentOption.saved(paymentMethod: paymentMethod, confirmParams: nil)
         let displayData = PaymentSheet.FlowController.PaymentOptionDisplayData(
@@ -191,12 +191,12 @@ class PaymentSheetFlowControllerTests: XCTestCase {
 
         // Test labels for saved Link card - should show Link display name as label and detailed info as sublabel
         XCTAssertEqual(displayData.labels.label, STPPaymentMethodType.link.displayName)
-        XCTAssertEqual(displayData.labels.sublabel, "•••• 4242")
+        XCTAssertEqual(displayData.labels.sublabel, "TEST DISPLAY NAME •••• 4242")
     }
 
     func testPaymentOptionDisplayData_SavedLinkPaymentMethodLabels() {
         // Create a saved Link payment method using test helper
-        let paymentMethod = STPPaymentMethod._testLink()
+        let paymentMethod = STPPaymentMethod._testLink(displayName: "TEST DISPLAY NAME")
 
         let paymentOption = PaymentSheet.PaymentOption.saved(paymentMethod: paymentMethod, confirmParams: nil)
         let displayData = PaymentSheet.FlowController.PaymentOptionDisplayData(
@@ -207,7 +207,7 @@ class PaymentSheetFlowControllerTests: XCTestCase {
 
         // Test labels for saved Link payment method - display name is nil on fixture so should show "Link"
         XCTAssertEqual(displayData.labels.label, "Link")
-        XCTAssertEqual(displayData.labels.sublabel, "•••• 4242")
+        XCTAssertEqual(displayData.labels.sublabel, "TEST DISPLAY NAME •••• 4242")
     }
 
     func testPaymentOptionDisplayData_LinkWithPaymentDetailsLabels() {

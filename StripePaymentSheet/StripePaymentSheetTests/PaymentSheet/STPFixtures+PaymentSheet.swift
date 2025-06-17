@@ -387,7 +387,7 @@ extension STPPaymentMethod {
         ])!
     }
 
-    static func _testLink() -> STPPaymentMethod {
+    static func _testLink(displayName: String? = nil) -> STPPaymentMethod {
         let paymentMethod = STPPaymentMethod.decodedObject(fromAPIResponse: [
             "id": "pm_123",
             "type": "link",
@@ -402,7 +402,7 @@ extension STPPaymentMethod {
         paymentMethod.linkPaymentDetails = .card(
             LinkPaymentDetails.Card(
                 id: "csmr_123",
-                displayName: nil,
+                displayName: displayName,
                 expMonth: 12,
                 expYear: 2030,
                 last4: "4242",
