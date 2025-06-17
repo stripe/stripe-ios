@@ -35,10 +35,16 @@ class LinkSheetNavigationBar: SheetNavigationBar {
         return label
     }()
 
+    // Store constraint references so they can be updated as the content changes
+    private var titleLeadingConstraint: NSLayoutConstraint?
+    private var titleCenterXConstraint: NSLayoutConstraint?
+    private var titleTrailingConstraint: NSLayoutConstraint?
+
     var title: String? {
         didSet {
             titleLabel.text = title
             titleLabel.isHidden = title == nil || title?.isEmpty == true
+            updateTitleConstraints()
         }
     }
 
@@ -62,32 +68,28 @@ class LinkSheetNavigationBar: SheetNavigationBar {
         ])
 
         addSubview(titleLabel)
+
+        titleCenterXConstraint = titleLabel.centerXAnchor.constraint(equalTo: centerXAnchor)
+        titleLeadingConstraint = titleLabel.leadingAnchor.constraint(
+            greaterThanOrEqualTo: leftmostElement.trailingAnchor,
+            constant: LinkUI.contentSpacing
+        )
+        titleTrailingConstraint = titleLabel.trailingAnchor.constraint(
+            lessThanOrEqualTo: rightmostElement?.leadingAnchor ?? trailingAnchor,
+            constant: -LinkUI.contentSpacing
+        )
+
         NSLayoutConstraint.activate([
             titleLabel.centerYAnchor.constraint(equalTo: centerYAnchor),
-            titleLabel.centerXAnchor.constraint(equalTo: centerXAnchor),
-            titleLabel.leadingAnchor.constraint(
-                greaterThanOrEqualTo: leftmostElement.trailingAnchor,
-                constant: LinkUI.contentSpacing
-            ),
-            titleLabel.trailingAnchor.constraint(
-                lessThanOrEqualTo: rightmostElement.leadingAnchor,
-                constant: -LinkUI.contentSpacing
-            ),
+            titleCenterXConstraint!,
+            titleLeadingConstraint!,
+            titleTrailingConstraint!,
         ])
         titleLabel.isHidden = true
     }
 
     override var intrinsicContentSize: CGSize {
         return CGSize(width: UIView.noIntrinsicMetric, height: LinkUI.navigationBarHeight)
-    }
-
-    override func setStyle(_ style: SheetNavigationBar.Style) {
-        super.setStyle(style)
-        if case .back = style {
-            logoView.isHidden = true
-        } else {
-            logoView.isHidden = false
-        }
     }
 
     @MainActor required init?(coder: NSCoder) {
@@ -163,5 +165,78 @@ class LinkSheetNavigationBar: SheetNavigationBar {
         }
 
         return button
+    }
+
+    override func setStyle(_ style: SheetNavigationBar.Style) {
+        super.setStyle(style)
+        if case .back = style {
+            logoView.isHidden = true
+        } else {
+            logoView.isHidden = false
+        }
+
+        updateTitleConstraints()
+    }
+
+    private func updateTitleConstraints() {
+        guard !titleLabel.isHidden,
+                let centerXConstraint = titleCenterXConstraint,
+              let trailingConstraint = titleTrailingConstraint,
+              let leadingConstraint = titleLeadingConstraint else { return }
+
+        // Update leading constraint to latest leftmostElement
+        leadingConstraint.isActive = false
+        titleLeadingConstraint = titleLabel.leadingAnchor.constraint(
+            greaterThanOrEqualTo: leftmostElement.trailingAnchor,
+            constant: LinkUI.contentSpacing
+        )
+        titleLeadingConstraint?.isActive = true
+
+        // Update trailing constraint to latest rightmostElement
+        trailingConstraint.isActive = false
+        titleTrailingConstraint = titleLabel.trailingAnchor.constraint(
+            lessThanOrEqualTo: rightmostElement?.leadingAnchor ?? trailingAnchor,
+            constant: -LinkUI.contentSpacing
+        )
+        titleTrailingConstraint?.isActive = true
+
+        // Check if title fits with center constraint, otherwise remove it to prevent layout conflicts.
+        //
+        // When title is short, we want it centered:
+        // [Button]        [Title]        [Button]
+        //
+        // When title is too long, centering would conflict with leading/trailing constraints,
+        // so we remove the center constraint and let it align left:
+        // [Button] [ Very Long Title Message .. ]
+        layoutIfNeeded()
+        let titleSize = titleLabel.sizeThatFits(
+            CGSize(
+                width: CGFloat.greatestFiniteMagnitude,
+                height: titleLabel.bounds.height
+            )
+        )
+        let availableWidth = calculateAvailableWidthForTitle()
+
+        if titleSize.width > availableWidth {
+            // Title is too long - remove center constraint to prevent conflicts
+            centerXConstraint.isActive = false
+            titleLabel.textAlignment = .left
+        } else {
+            // Title fits - keep it centered for better visual balance
+            centerXConstraint.isActive = true
+            titleLabel.textAlignment = .center
+        }
+    }
+
+    private func calculateAvailableWidthForTitle() -> CGFloat {
+        let leftBoundary = leftmostElement.frame.maxX + LinkUI.contentSpacing
+        let rightBoundary = rightmostElement?.frame.minX ?? bounds.maxX
+        let rightSpacing = rightmostElement != nil ? LinkUI.contentSpacing : 0
+        return max(0, rightBoundary - leftBoundary - rightSpacing)
+    }
+
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        updateTitleConstraints()
     }
 }
