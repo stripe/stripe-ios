@@ -299,8 +299,8 @@ extension ConsumerPaymentDetails {
             let sublabel = card.secondaryName
             let components = [label, sublabel].compactMap { $0 }
             return components.joined(separator: " ")
-        case .bankAccount:
-            return paymentSheetLabel
+        case .bankAccount(let bankAccount):
+            return "\(bankAccount.name) \(paymentSheetLabel)"
         case .unparsable:
             return nil
         }

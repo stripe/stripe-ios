@@ -32,6 +32,21 @@ class PaymentSheetFlowControllerTests: XCTestCase {
         )
     }
 
+    func makeBankAccountPaymentDetailsStub(nickname: String? = nil) -> ConsumerPaymentDetails {
+        return ConsumerPaymentDetails(
+            stripeID: "2",
+            details: .bankAccount(bankAccount: .init(
+                iconCode: nil,
+                name: "STRIPE TEST BANK",
+                last4: "6789"
+            )),
+            billingAddress: nil,
+            billingEmailAddress: nil,
+            nickname: nickname,
+            isDefault: false
+        )
+    }
+
     func makeSUT() -> PaymentSheetLinkAccount {
         return PaymentSheetLinkAccount(
             email: "user@example.com",
@@ -234,5 +249,31 @@ class PaymentSheetFlowControllerTests: XCTestCase {
         XCTAssertEqual(displayData.labels.label, "Link")
         // The sublabel should now be the formatted string combining the nickname and card details
         XCTAssertEqual(displayData.labels.sublabel, "Visa Credit •••• 1234")
+    }
+
+    func testPaymentOptionDisplayData_LinkWithBankAccountPaymentDetailsLabels() {
+        let linkAccount = PaymentSheetLinkAccount._testValue(email: "foo@bar.com", isRegistered: false)
+
+        // Create payment details for a bank account with a specific nickname
+        let paymentDetails = makeBankAccountPaymentDetailsStub(nickname: "My Checking")
+
+        let linkOption = PaymentSheet.LinkConfirmOption.withPaymentDetails(
+            account: linkAccount,
+            paymentDetails: paymentDetails,
+            confirmationExtras: nil,
+            shippingAddress: nil
+        )
+
+        let paymentOption = PaymentSheet.PaymentOption.link(option: linkOption)
+        let displayData = PaymentSheet.FlowController.PaymentOptionDisplayData(
+            paymentOption: paymentOption,
+            currency: "usd",
+            iconStyle: .filled
+        )
+
+        // Test labels for Link with bank account payment details - should show "Link" as label and formatted details as sublabel
+        XCTAssertEqual(displayData.labels.label, "Link")
+        // The sublabel should show the bank account details
+        XCTAssertEqual(displayData.labels.sublabel, "STRIPE TEST BANK •••• 6789")
     }
 }
