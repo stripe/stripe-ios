@@ -15,7 +15,7 @@ class PaymentSheetFlowControllerTests: XCTestCase {
 
     // MARK: - Helper Methods
 
-    func makePaymentDetailsStub() -> ConsumerPaymentDetails {
+    func makePaymentDetailsStub(nickname: String? = nil) -> ConsumerPaymentDetails {
         return ConsumerPaymentDetails(
             stripeID: "1",
             details: .card(card: .init(
@@ -29,7 +29,7 @@ class PaymentSheetFlowControllerTests: XCTestCase {
             )),
             billingAddress: nil,
             billingEmailAddress: nil,
-            nickname: nil,
+            nickname: nickname,
             isDefault: false
         )
     }
@@ -216,7 +216,7 @@ class PaymentSheetFlowControllerTests: XCTestCase {
         let linkAccount = PaymentSheetLinkAccount._testValue(email: "foo@bar.com", isRegistered: false)
 
         // Create payment details for a Visa card
-        let paymentDetails = makePaymentDetailsStub()
+        let paymentDetails = makePaymentDetailsStub(nickname: "Visa Credit")
 
         let linkOption = PaymentSheet.LinkConfirmOption.withPaymentDetails(
             account: linkAccount,
