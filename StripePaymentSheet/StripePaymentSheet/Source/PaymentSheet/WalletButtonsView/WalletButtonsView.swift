@@ -5,6 +5,7 @@
 
 import PassKit
 import SwiftUI
+import WebKit
 
 @available(iOS 16.0, *)
 @_spi(STP) public struct WalletButtonsView: View {
@@ -155,8 +156,20 @@ import SwiftUI
                 }
             )
         case .shopPay:
-            // TODO
-            print("TODO")
+            guard let shopPayConfig = flowController.configuration.shopPay else {
+                // Shop Pay configuration is required
+                let error = PaymentSheetError.integrationError(nonPIIDebugDescription: "Shop Pay configuration is missing")
+                confirmHandler(.failed(error: error))
+                return
+            }
+
+            // Present Shop Pay via ECE WebView
+            let shopPayPresenter = ShopPayECEPresenter(
+                flowController: flowController,
+                configuration: shopPayConfig
+            )
+            shopPayPresenter.present(from: WindowAuthenticationContext().authenticationPresentingViewController(),
+                                     confirmHandler: confirmHandler)
         }
     }
 
@@ -182,7 +195,7 @@ import SwiftUI
     }
 }
 
-private class WindowAuthenticationContext: NSObject, STPAuthenticationContext {
+class WindowAuthenticationContext: NSObject, STPAuthenticationContext {
     public func authenticationPresentingViewController() -> UIViewController {
         UIWindow.visibleViewController ?? UIViewController()
     }

@@ -154,7 +154,10 @@ class ExampleWalletButtonsModel: ObservableObject {
                 configuration.returnURL = "payments-example://stripe-redirect"
                 configuration.willUseWalletButtonsView = true
                 PaymentSheet.FlowController.create(
-                    paymentIntentClientSecret: paymentIntentClientSecret,
+                    intentConfiguration: .init(mode: .payment(amount: 1000, currency: "USD", setupFutureUsage: nil, captureMethod: .automatic, paymentMethodOptions: nil), paymentMethodTypes: ["card", "link", "shop_pay"], confirmHandler: { paymentMethod, _, intentCreationCallback in
+                        print(paymentMethod)
+                        intentCreationCallback(.success(paymentIntentClientSecret))
+                    }),
                     configuration: configuration
                 ) { [weak self] result in
                     switch result {
@@ -252,9 +255,9 @@ class ExampleWalletButtonsModel: ObservableObject {
         )
 
         return PaymentSheet.ShopPayConfiguration(shippingAddressRequired: true,
-                                                 lineItems: [.init(name: "product 1", amount: 1099)],
-                                                 shippingRates: [.init(id: "id1", amount: 1099, displayName: "Overnight", deliveryEstimate: .init(minimum: singleBusinessDay, maximum: singleBusinessDay)),
-                                                                 .init(id: "id2", amount: 0, displayName: "Free", deliveryEstimate: .init(minimum: fiveBusinessDays, maximum: sevenBusinessDays)),
+                                                 lineItems: [.init(name: "Golden Potato", amount: 500), .init(name: "Silver Potato", amount: 345), .init(name: "Tax", amount: 200)],
+                                                 shippingRates: [.init(id: "express", amount: 1099, displayName: "Overnight", deliveryEstimate: .init(minimum: singleBusinessDay, maximum: singleBusinessDay)),
+                                                                 .init(id: "standard", amount: 0, displayName: "Free", deliveryEstimate: .init(minimum: fiveBusinessDays, maximum: sevenBusinessDays)),
                                                                 ],
                                                  shopId: "shop_1234",
                                                  handlers: handlers)

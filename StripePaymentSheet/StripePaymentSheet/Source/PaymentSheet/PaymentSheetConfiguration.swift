@@ -459,7 +459,7 @@ extension PaymentSheet {
             ///     completion(updates)
             /// }
             /// ```
-            /// WARNING: If you do not call the completion handler, your app will hang until the Apple Pay sheet times out.
+            /// WARNING: If you do not call the completion handler, your app will hang until the Shop Pay sheet times out.
             public let shippingMethodUpdateHandler:
             ((ShippingRateSelected, @escaping ((ShippingRateUpdate?) -> Void)) -> Void)?
 
@@ -475,7 +475,7 @@ extension PaymentSheet {
             ///     completion(updates)
             /// }
             /// ```
-            /// WARNING: If you do not call the completion handler, your app will hang until the Apple Pay sheet times out.
+            /// WARNING: If you do not call the completion handler, your app will hang until the Shop Pay sheet times out.
             public let shippingContactUpdateHandler:
             ((ShippingContactSelected, @escaping ((ShippingContactUpdate?) -> Void)) -> Void)?
 
@@ -591,6 +591,10 @@ extension PaymentSheet {
         /// Whether or not to collect the customer's shipping address
         public let shippingAddressRequired: Bool
 
+        /// By default, the Express Checkout Element allows all countries for shipping.
+        /// You can specify which countries are allowed for shipping in the Express Checkout Element with a list of two-letter country codes
+        public let allowedShippingCountries: [String]
+
         /// An array of LineItem objects. These LineItems are shown as line items in the payment interface, if line items are supported. You can represent discounts as negative amount LineItems.
         public let lineItems: [LineItem]
 
@@ -610,6 +614,7 @@ extension PaymentSheet {
             lineItems: [LineItem],
             shippingRates: [ShippingRate],
             shopId: String,
+            allowedShippingCountries: [String] = [],
             handlers: Handlers? = nil
         ) {
             self.billingAddressRequired = billingAddressRequired
@@ -618,6 +623,7 @@ extension PaymentSheet {
             self.lineItems = lineItems
             self.shippingRates = shippingRates
             self.shopId = shopId
+            self.allowedShippingCountries = allowedShippingCountries
             self.handlers = handlers
         }
     }
