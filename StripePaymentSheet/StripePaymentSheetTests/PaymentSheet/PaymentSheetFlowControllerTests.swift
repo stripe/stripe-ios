@@ -13,6 +13,37 @@ import XCTest
 
 class PaymentSheetFlowControllerTests: XCTestCase {
 
+    // MARK: - Helper Methods
+
+    func makePaymentDetailsStub() -> ConsumerPaymentDetails {
+        return ConsumerPaymentDetails(
+            stripeID: "1",
+            details: .card(card: .init(
+                expiryYear: 30,
+                expiryMonth: 10,
+                brand: "visa",
+                networks: ["visa"],
+                last4: "1234",
+                funding: .credit,
+                checks: nil
+            )),
+            billingAddress: nil,
+            billingEmailAddress: nil,
+            nickname: nil,
+            isDefault: false
+        )
+    }
+
+    func makeSUT() -> PaymentSheetLinkAccount {
+        return PaymentSheetLinkAccount(
+            email: "user@example.com",
+            session: LinkStubs.consumerSession(),
+            publishableKey: nil,
+            apiClient: STPAPIClient(publishableKey: STPTestingDefaultPublishableKey),
+            useMobileEndpoints: false
+        )
+    }
+
     // MARK: - PaymentOptionDisplayData Labels Tests
 
     func testPaymentOptionDisplayData_CardLabels() {
@@ -182,41 +213,10 @@ class PaymentSheetFlowControllerTests: XCTestCase {
     }
 
     func testPaymentOptionDisplayData_LinkWithPaymentDetailsLabels() {
-        // Create a Link account for the withPaymentDetails option
-        let linkAccount = PaymentSheetLinkAccount(
-            email: "user@example.com",
-            session: ConsumerSession(
-                clientSecret: "client_secret",
-                emailAddress: "user@example.com",
-                redactedFormattedPhoneNumber: "+1********55",
-                unredactedPhoneNumber: nil,
-                phoneNumberCountry: "US",
-                verificationSessions: [
-                    .init(type: .sms, state: .verified)
-                ],
-                supportedPaymentDetailsTypes: [.card]
-            ),
-            publishableKey: "pk_test_123",
-            useMobileEndpoints: false
-        )
+        let linkAccount = PaymentSheetLinkAccount._testValue(email: "foo@bar.com", isRegistered: false)
 
         // Create payment details for a Visa card
-        let paymentDetails = ConsumerPaymentDetails(
-            stripeID: "pd_123",
-            details: .card(card: .init(
-                expiryYear: 30,
-                expiryMonth: 12,
-                brand: "visa",
-                networks: ["visa"],
-                last4: "4242",
-                funding: .credit,
-                checks: nil
-            )),
-            billingAddress: nil,
-            billingEmailAddress: nil,
-            nickname: nil,
-            isDefault: false
-        )
+        let paymentDetails = makePaymentDetailsStub()
 
         let linkOption = PaymentSheet.LinkConfirmOption.withPaymentDetails(
             account: linkAccount,
