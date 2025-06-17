@@ -7,8 +7,8 @@
 
 @testable import StripeCore
 @testable @_spi(STP) import StripePayments
-@testable @_spi(STP) import StripePaymentsTestUtils
 @testable @_spi(AppearanceAPIAdditionsPreview) @_spi(STP) import StripePaymentSheet
+@testable @_spi(STP) import StripePaymentsTestUtils
 import XCTest
 
 class PaymentSheetFlowControllerTests: XCTestCase {
@@ -56,7 +56,7 @@ class PaymentSheetFlowControllerTests: XCTestCase {
 
         // Test labels for US bank account without linked bank
         XCTAssertEqual(displayData.labels.label, "US bank account")
-        XCTAssertEqual(displayData.labels.sublabel, "US bank account")
+        XCTAssertNil(displayData.labels.sublabel)
     }
 
     func testPaymentOptionDisplayData_SavedCardLabels() {
@@ -115,7 +115,7 @@ class PaymentSheetFlowControllerTests: XCTestCase {
 
         // Test labels for Link
         XCTAssertEqual(displayData.labels.label, STPPaymentMethodType.link.displayName)
-        XCTAssertEqual(displayData.labels.sublabel, STPPaymentMethodType.link.displayName)
+        XCTAssertNil(displayData.labels.sublabel)
     }
 
     func testPaymentOptionDisplayData_ExternalPaymentMethodLabels() {

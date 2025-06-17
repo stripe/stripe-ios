@@ -156,6 +156,12 @@ extension PaymentSheet {
                 /// describe any expanded details about the payment option such as the last
                 /// four digits of a card or bank account.
                 public let sublabel: String?
+
+                init(label: String, sublabel: String?) {
+                    self.label = label
+                    // Set sublabel to nil if it matches label to avoid redundancy
+                    self.sublabel = sublabel == label ? nil : sublabel
+                }
             }
 
             init(paymentOption: PaymentOption, currency: String?, iconStyle: PaymentSheet.Appearance.IconStyle) {
