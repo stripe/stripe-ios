@@ -15,6 +15,7 @@ import UIKit
 protocol LinkVerificationViewDelegate: AnyObject {
     func verificationViewDidCancel(_ view: LinkVerificationView)
     func verificationViewResendCode(_ view: LinkVerificationView)
+    func verificationViewSendCodeToEmail(_ view: LinkVerificationView)
     func verificationViewLogout(_ view: LinkVerificationView)
     func verificationView(_ view: LinkVerificationView, didEnterCode code: String)
 }
@@ -124,6 +125,16 @@ final class LinkVerificationView: UIView {
         return button
     }()
 
+    private lazy var sendCodeToEmailButton: Button = {
+        let button = Button(configuration: .linkPlain(), title: STPLocalizedString(
+            "Send code to email instead",
+            "Label for a button that sends the verification to the email instead of using SMS when tapped"
+        ))
+        button.configuration.font = LinkUI.font(forTextStyle: .bodyEmphasized)
+        button.addTarget(self, action: #selector(sendCodeToEmailTapped(_:)), for: .touchUpInside)
+        return button
+    }()
+
     private lazy var logoutView: LogoutView = {
         let logoutView = LogoutView(linkAccount: linkAccount)
         logoutView.button.addTarget(self, action: #selector(didTapOnLogout(_:)), for: .touchUpInside)
@@ -165,6 +176,11 @@ final class LinkVerificationView: UIView {
     func resendCodeTapped(_ sender: UIButton) {
         delegate?.verificationViewResendCode(self)
     }
+
+    @objc
+    func sendCodeToEmailTapped(_ sender: UIButton) {
+        delegate?.verificationViewSendCodeToEmail(self)
+    }
 }
 
 private extension LinkVerificationView {
@@ -173,18 +189,20 @@ private extension LinkVerificationView {
         switch mode {
         case .modal, .inlineLogin:
             return [
-                header,
+                // Remove header from modal mode since it's now fixed at navigation controller level
                 headingLabel,
                 bodyLabel,
                 codeFieldContainer,
-                resendCodeButton,
+//                resendCodeButton,
+                sendCodeToEmailButton,
             ]
         case .embedded:
             return [
                 headingLabel,
                 bodyLabel,
                 codeFieldContainer,
-                resendCodeButton,
+//                resendCodeButton,
+                sendCodeToEmailButton,
                 logoutView,
             ]
         }
@@ -199,11 +217,13 @@ private extension LinkVerificationView {
         stackView.alignment = .center
         stackView.translatesAutoresizingMaskIntoConstraints = false
 
-        // Spacing
-        stackView.setCustomSpacing(Constants.edgeMargin, after: header)
+        // Spacing - Remove header spacing for modal mode
+        if mode == .embedded {
+            stackView.setCustomSpacing(Constants.edgeMargin, after: header)
+        }
         stackView.setCustomSpacing(LinkUI.extraLargeContentSpacing, after: bodyLabel)
         stackView.setCustomSpacing(LinkUI.extraLargeContentSpacing, after: codeFieldContainer)
-        stackView.setCustomSpacing(LinkUI.largeContentSpacing, after: resendCodeButton)
+        stackView.setCustomSpacing(LinkUI.largeContentSpacing, after: sendCodeToEmailButton)
 
         addSubview(stackView)
 
@@ -219,7 +239,8 @@ private extension LinkVerificationView {
             codeFieldContainer.trailingAnchor.constraint(equalTo: stackView.trailingAnchor),
         ]
 
-        if mode.requiresModalPresentation {
+        // Remove header constraints for modal mode since header is now at navigation controller level
+        if mode == .embedded {
             constraints.append(contentsOf: [
                 // Header
                 header.leadingAnchor.constraint(equalTo: stackView.leadingAnchor),
