@@ -142,10 +142,10 @@ extension PaymentSheet {
             public let paymentMethodType: String
 
             /// An expanded label containing additional information about the payment option.
-            @_spi(ExtendedLabelingInPaymentOptionPreview) public let labels: Labels
+            @_spi(STP) public let labels: Labels
 
             /// A type that holds additional display data
-            @_spi(ExtendedLabelingInPaymentOptionPreview) public struct Labels {
+            @_spi(STP) public struct Labels {
                 /// Primary label for the payment option. This will primarily describe
                 /// the type of the payment option being used. For cards, this could
                 /// be `Mastercard`, 'Visa'. For other payment methods, this is typically the

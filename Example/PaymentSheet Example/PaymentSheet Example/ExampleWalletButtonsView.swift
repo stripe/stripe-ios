@@ -4,7 +4,7 @@
 //
 
 @_spi(STP) import StripePayments
-@_spi(STP) @_spi(ExtendedLabelingInPaymentOptionPreview) import StripePaymentSheet
+@_spi(STP) import StripePaymentSheet
 import SwiftUI
 
 struct ExampleWalletButtonsContainerView: View {

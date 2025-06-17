@@ -6,7 +6,7 @@
 //  Copyright © 2021 stripe-ios. All rights reserved.
 //
 
-@_spi(ExtendedLabelingInPaymentOptionPreview) import StripePaymentSheet
+@_spi(STP) import StripePaymentSheet
 import SwiftUI
 
 struct ExampleSwiftUICustomPaymentFlow: View {

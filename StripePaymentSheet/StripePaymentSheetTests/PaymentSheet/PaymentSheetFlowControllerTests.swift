@@ -7,7 +7,7 @@
 
 @testable import StripeCore
 @testable @_spi(STP) import StripePayments
-@testable @_spi(AppearanceAPIAdditionsPreview) @_spi(ExtendedLabelingInPaymentOptionPreview) import StripePaymentSheet
+@testable @_spi(AppearanceAPIAdditionsPreview) @_spi(STP) import StripePaymentSheet
 import XCTest
 
 class PaymentSheetFlowControllerTests: XCTestCase {
