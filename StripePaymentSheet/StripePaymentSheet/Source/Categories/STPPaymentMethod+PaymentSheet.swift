@@ -71,7 +71,7 @@ extension STPPaymentMethod {
     var expandedPaymentSheetLabel: String {
         switch type {
         case .card:
-            if linkPaymentDetails != nil {
+            if isLinkPaymentMethod {
                 return STPPaymentMethodType.link.displayName
             } else if let card {
                 return STPCardBrandUtilities.stringFrom(card.preferredDisplayBrand) ?? "Unknown"
