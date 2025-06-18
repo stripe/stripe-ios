@@ -647,9 +647,10 @@ extension PayWithLinkViewController: PayWithLinkCoordinating {
         )
         payWithLinkVC.payWithLinkDelegate = payWithLinkWebDelegate
         // Dismis ourselves...
-        self.dismiss(animated: false)
-        // ... and present the web controller. (This presentation will be handled by ASWebAuthenticationSession)
-        payWithLinkVC.present(over: presentingViewController)
+        self.dismiss(animated: false) {
+            // ... and present the web controller. (This presentation will be handled by ASWebAuthenticationSession)
+            payWithLinkVC.present(over: presentingViewController)
+        }
         STPAnalyticsClient.sharedClient.logLinkBailedToWebFlow()
     }
 
