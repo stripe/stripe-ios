@@ -110,6 +110,8 @@ public class STPPaymentMethodParams: NSObject, STPFormEncodable {
     @objc public var crypto: STPPaymentMethodCryptoParams?
     /// If this is a Multibanco PaymentMethod, this contains additional details.
     @objc public var multibanco: STPPaymentMethodMultibancoParams?
+    /// If this is a ShopPay PaymentMethod, this contains additional details.
+    @objc @_spi(STP) public var shopPay: STPPaymentMethodShopPayParams?
 
     /// Set of key-value pairs that you can attach to the PaymentMethod. This can be useful for storing additional information about the PaymentMethod in a structured format.
     @objc public var metadata: [String: String]?
@@ -742,6 +744,23 @@ public class STPPaymentMethodParams: NSObject, STPFormEncodable {
         self.metadata = metadata
     }
 
+    /// Creates params for an ShopPay PaymentMethod.
+    /// - Parameters:
+    ///   - shopPay:          An object containing additional ShopPay details.
+    ///   - billingDetails:      An object containing the user's billing details.
+    ///   - metadata:            Additional information to attach to the PaymentMethod.
+    @objc
+    @_spi(STP) public convenience init(
+        shopPay: STPPaymentMethodShopPayParams,
+        billingDetails: STPPaymentMethodBillingDetails?,
+        metadata: [String: String]?
+    ) {
+        self.init()
+        self.type = .shopPay
+        self.shopPay = shopPay
+        self.billingDetails = billingDetails
+        self.metadata = metadata
+    }
     /// Creates params from a single-use PaymentMethod. This is useful for recreating a new payment method
     /// with similar settings. It will return nil if used with a reusable PaymentMethod.
     /// - Parameter paymentMethod:       An object containing the original single-use PaymentMethod.
@@ -832,6 +851,7 @@ public class STPPaymentMethodParams: NSObject, STPFormEncodable {
             .USBankAccount,
             .cashApp,
             .revolutPay,
+            .shopPay,
             .unknown:
             return nil
         }
@@ -872,6 +892,7 @@ public class STPPaymentMethodParams: NSObject, STPFormEncodable {
             NSStringFromSelector(#selector(getter: usBankAccount)): "us_bank_account",
             NSStringFromSelector(#selector(getter: cashApp)): "cashapp",
             NSStringFromSelector(#selector(getter: revolutPay)): "revolut_pay",
+            NSStringFromSelector(#selector(getter: shopPay)): "shop_pay",
             NSStringFromSelector(#selector(getter: swish)): "swish",
             NSStringFromSelector(#selector(getter: mobilePay)): "mobilepay",
             NSStringFromSelector(#selector(getter: amazonPay)): "amazon_pay",
@@ -1360,6 +1381,8 @@ extension STPPaymentMethodParams {
             crypto = STPPaymentMethodCryptoParams()
         case .multibanco:
             multibanco = STPPaymentMethodMultibancoParams()
+        case .shopPay:
+            shopPay = STPPaymentMethodShopPayParams()
         case .cardPresent, .paynow, .zip, .konbini, .promptPay, .twint:
             // These payment methods don't have any params
             break

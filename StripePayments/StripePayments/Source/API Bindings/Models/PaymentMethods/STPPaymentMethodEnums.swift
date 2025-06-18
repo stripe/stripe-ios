@@ -96,6 +96,8 @@ import Foundation
     case twint
     /// A Multibanco payment method
     case multibanco
+    /// A ShopPay payment mehtod
+    case shopPay
     /// An unknown type.
     case unknown
 
@@ -190,6 +192,8 @@ import Foundation
             return "TWINT"
         case .multibanco:
             return "Multibanco"
+        case .shopPay:
+            return "ShopPay"
         case .cardPresent,
             .unknown:
             return STPLocalizedString("Unknown", "Default missing source type label")
@@ -287,6 +291,8 @@ import Foundation
             return "twint"
         case .multibanco:
             return "multibanco"
+        case .shopPay:
+            return "shop_pay"
         }
     }
 
