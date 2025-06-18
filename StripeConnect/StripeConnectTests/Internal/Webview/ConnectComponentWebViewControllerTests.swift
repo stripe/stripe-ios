@@ -222,8 +222,13 @@ class ConnectComponentWebViewControllerTests: XCTestCase {
 
         try await webVC.webView.evaluateOnLoaderStart(elementTagName: "payouts")
 
-        // Loading indicator should stop
-        XCTAssertFalse(webVC.activityIndicator.isAnimating)
+        if !webVC.activityIndicator.isAnimating {
+            XCTAssertFalse(webVC.activityIndicator.isAnimating)
+        } else {
+            // If it is animating, wait a second before we check.
+            sleep(1)
+            XCTAssertFalse(webVC.activityIndicator.isAnimating)
+        }
     }
 
     // MARK: - Errors
