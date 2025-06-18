@@ -69,6 +69,19 @@ extension PaymentSheet.LinkConfirmOption {
         }
     }
 
+    var paymentSheetSubLabel: String? {
+        switch self {
+        case .wallet:
+            return nil
+        case .signUp(_, _, _, _, let intentConfirmParams):
+            return intentConfirmParams.paymentMethodParams.paymentSheetLabel
+        case .withPaymentMethod(let paymentMethod):
+            return paymentMethod.linkPaymentDetailsFormattedString
+        case .withPaymentDetails(_, let paymentDetails, _, _):
+            return paymentDetails.linkPaymentDetailsFormattedString
+        }
+    }
+
     var paymentMethodType: String {
         switch self {
         case .signUp(_, _, _, _, let intentConfirmParams):

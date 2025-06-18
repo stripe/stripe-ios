@@ -103,7 +103,13 @@ struct WalletButtonsFlowControllerView: View {
         )
         .disabled(flowController.paymentOption == nil || isConfirmingPayment)
         if let paymentOption = flowController.paymentOption {
-            Text("Published payment option: \(paymentOption.label)")
+            VStack {
+                Text("Payment option label: \(paymentOption.label)")
+                Text("Payment option labels.label: \(paymentOption.labels.label)")
+                if let sublabel = paymentOption.labels.sublabel {
+                    Text("Payment option labels.sublabel: \(sublabel)")
+                }
+            }
         }
     }
 }
