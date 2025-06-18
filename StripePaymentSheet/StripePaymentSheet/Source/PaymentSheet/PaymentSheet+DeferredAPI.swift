@@ -21,6 +21,77 @@ extension PaymentSheet {
         mandateData: STPMandateDataParams? = nil,
         completion: @escaping (PaymentSheetResult, STPAnalyticsClient.DeferredIntentConfirmationType?) -> Void
     ) {
+        if intentConfig.facilitatedConfirmHandler != nil {
+            handleDeferredIntentConfirmationForFacilitatedUseCase(confirmType: confirmType,
+                                                                  configuration: configuration,
+                                                                  intentConfig: intentConfig,
+                                                                  authenticationContext: authenticationContext,
+                                                                  paymentHandler: paymentHandler,
+                                                                  isFlowController: isFlowController,
+                                                                  mandateData: mandateData,
+                                                                  completion: completion)
+        } else {
+            handleDeferredIntentConfirmationWithIntentCreation(confirmType: confirmType,
+                                                               configuration: configuration,
+                                                               intentConfig: intentConfig,
+                                                               authenticationContext: authenticationContext,
+                                                               paymentHandler: paymentHandler,
+                                                               isFlowController: isFlowController,
+                                                               mandateData: mandateData,
+                                                               completion: completion)
+        }
+    }
+    static func handleDeferredIntentConfirmationForFacilitatedUseCase(
+        confirmType: ConfirmPaymentMethodType,
+        configuration: PaymentElementConfiguration,
+        intentConfig: PaymentSheet.IntentConfiguration,
+        authenticationContext: STPAuthenticationContext,
+        paymentHandler: STPPaymentHandler,
+        isFlowController: Bool,
+        allowsSetAsDefaultPM: Bool = false,
+        mandateData: STPMandateDataParams? = nil,
+        completion: @escaping (PaymentSheetResult, STPAnalyticsClient.DeferredIntentConfirmationType?) -> Void
+    ) {
+        guard let facilitatedConfirmHandler = intentConfig.facilitatedConfirmHandler else {
+            stpAssertionFailure("Confirm Handler was not passed into the IntentConfiguration")
+            completion(.failed(error: PaymentSheetError.integrationError(nonPIIDebugDescription: "no confirm handler")), .completeWithoutConfirmingIntent)
+            return
+        }
+        Task { @MainActor in
+            let paymentMethod: STPPaymentMethod
+            switch confirmType {
+            case let .saved(savedPaymentMethod, _):
+                paymentMethod = savedPaymentMethod
+            case let .new(params, paymentOptions, newPaymentMethod, shouldSave, shouldSetAsDefaultPM):
+                if let newPaymentMethod {
+                    let errorAnalytic = ErrorAnalytic(event: .unexpectedPaymentSheetConfirmationError,
+                                                      error: PaymentSheetError.unexpectedNewPaymentMethod,
+                                                      additionalNonPIIParams: ["payment_method_type": newPaymentMethod.type])
+                    STPAnalyticsClient.sharedClient.log(analytic: errorAnalytic)
+                }
+                stpAssert(newPaymentMethod == nil)
+                do {
+                    paymentMethod = try await configuration.apiClient.createPaymentMethod(with: params, additionalPaymentUserAgentValues: makeDeferredPaymentUserAgentValue(intentConfiguration: intentConfig))
+                    facilitatedConfirmHandler(paymentMethod, nil)
+                    completion(.completed, .completeWithoutConfirmingIntent)
+
+                } catch {
+                    completion(.failed(error: error), .completeWithoutConfirmingIntent)
+                }
+            }
+        }
+    }
+    static func handleDeferredIntentConfirmationWithIntentCreation(
+        confirmType: ConfirmPaymentMethodType,
+        configuration: PaymentElementConfiguration,
+        intentConfig: PaymentSheet.IntentConfiguration,
+        authenticationContext: STPAuthenticationContext,
+        paymentHandler: STPPaymentHandler,
+        isFlowController: Bool,
+        allowsSetAsDefaultPM: Bool = false,
+        mandateData: STPMandateDataParams? = nil,
+        completion: @escaping (PaymentSheetResult, STPAnalyticsClient.DeferredIntentConfirmationType?) -> Void
+    ) {
         Task { @MainActor in
             do {
                 var confirmType = confirmType

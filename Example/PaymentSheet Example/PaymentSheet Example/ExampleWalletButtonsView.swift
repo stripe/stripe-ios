@@ -4,7 +4,7 @@
 //
 
 @_spi(STP) import StripePayments
-@_spi(STP) @_spi(CustomerSessionBetaAccess) import StripePaymentSheet
+@_spi(STP) @_spi(CustomerSessionBetaAccess) @_spi(FacilitatedPaymentSession) import StripePaymentSheet
 import SwiftUI
 
 struct ExampleWalletButtonsContainerView: View {
@@ -187,11 +187,12 @@ class ExampleWalletButtonsModel: ObservableObject {
                 configuration.customer = .init(id: customerId, customerSessionClientSecret: customerSessionClientSecret)
                 configuration.returnURL = "payments-example://stripe-redirect"
                 configuration.willUseWalletButtonsView = true
+
+                let intentConfiguration = PaymentSheet.IntentConfiguration(facilitatedPaymentSessionWithMode: .payment(amount: 1000, currency: "USD", setupFutureUsage: nil, captureMethod: .automatic, paymentMethodOptions: nil), sellerDetails: nil, paymentMethodTypes: ["card", "link", "shop_pay"], confirmHandler: { paymentMethod, _ in
+                    print(paymentMethod)
+                })
                 PaymentSheet.FlowController.create(
-                    intentConfiguration: .init(mode: .payment(amount: 1000, currency: "USD", setupFutureUsage: nil, captureMethod: .automatic, paymentMethodOptions: nil), paymentMethodTypes: ["card", "link", "shop_pay"], confirmHandler: { paymentMethod, _, intentCreationCallback in
-                        print(paymentMethod)
-                        intentCreationCallback(.success(paymentIntentClientSecret))
-                    }),
+                    intentConfiguration: intentConfiguration,
                     configuration: configuration
                 ) { [weak self] result in
                     switch result {
