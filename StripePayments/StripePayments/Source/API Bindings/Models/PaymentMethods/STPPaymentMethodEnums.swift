@@ -97,7 +97,7 @@ import Foundation
     /// A Multibanco payment method
     case multibanco
     /// A ShopPay payment mehtod
-    case shopPay
+    @_spi(STP) case shopPay
     /// An unknown type.
     case unknown
 

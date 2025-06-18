@@ -58,7 +58,7 @@ class ShopPayECEPresenterTests: XCTestCase {
 
         // Setup mock configuration
         mockConfiguration = PaymentSheet.Configuration()
-        mockConfiguration.apiClient = STPAPIClient(publishableKey: "pk_test_123")
+        mockConfiguration.apiClient = STPAPIClient(publishableKey: STPTestingDefaultPublishableKey)
         mockConfiguration.merchantDisplayName = "Test Merchant"
         mockConfiguration.shopPay = shopPayConfiguration
 
