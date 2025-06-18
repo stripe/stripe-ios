@@ -319,15 +319,18 @@ extension STPPaymentMethod {
             ],
         ])!
     }
+
+    static let _testCardAmexJSON = [
+        "id": "pm_123card",
+        "type": "card",
+        "card": [
+            "last4": "0005",
+            "brand": "amex",
+        ],
+    ] as [AnyHashable: Any]
+
     static func _testCardAmex() -> STPPaymentMethod {
-        return STPPaymentMethod.decodedObject(fromAPIResponse: [
-            "id": "pm_123card",
-            "type": "card",
-            "card": [
-                "last4": "0005",
-                "brand": "amex",
-            ],
-        ])!
+        return STPPaymentMethod.decodedObject(fromAPIResponse: _testCardAmexJSON)!
     }
 
     static func _testCardCoBranded(brand: String = "visa", displayBrand: String? = nil, networks: [String] = ["visa", "amex"]) -> STPPaymentMethod {
@@ -348,43 +351,47 @@ extension STPPaymentMethod {
         return STPPaymentMethod.decodedObject(fromAPIResponse: apiResponse)!
     }
 
+    static let _testUSBankAccountJSON = [
+        "id": "pm_123",
+        "type": "us_bank_account",
+        "us_bank_account": [
+            "account_holder_type": "individual",
+            "account_type": "checking",
+            "bank_name": "STRIPE TEST BANK",
+            "fingerprint": "ickfX9sbxIyAlbuh",
+            "last4": "6789",
+            "networks": [
+              "preferred": "ach",
+              "supported": [
+                "ach",
+              ],
+            ] as [String: Any],
+            "routing_number": "110000000",
+        ] as [String: Any],
+        "billing_details": [
+            "name": "Sam Stripe",
+            "email": "sam@stripe.com",
+        ] as [String: Any],
+    ] as [AnyHashable: Any]
+
     static func _testUSBankAccount() -> STPPaymentMethod {
-        return STPPaymentMethod.decodedObject(fromAPIResponse: [
-            "id": "pm_123",
-            "type": "us_bank_account",
-            "us_bank_account": [
-                "account_holder_type": "individual",
-                "account_type": "checking",
-                "bank_name": "STRIPE TEST BANK",
-                "fingerprint": "ickfX9sbxIyAlbuh",
-                "last4": "6789",
-                "networks": [
-                  "preferred": "ach",
-                  "supported": [
-                    "ach",
-                  ],
-                ] as [String: Any],
-                "routing_number": "110000000",
-            ] as [String: Any],
-            "billing_details": [
-                "name": "Sam Stripe",
-                "email": "sam@stripe.com",
-            ] as [String: Any],
-        ])!
+        return STPPaymentMethod.decodedObject(fromAPIResponse: _testUSBankAccountJSON)!
     }
 
+    static let _testSEPAJSON = [
+        "id": "pm_123",
+        "type": "sepa_debit",
+        "sepa_debit": [
+            "last4": "1234",
+        ],
+        "billing_details": [
+            "name": "Sam Stripe",
+            "email": "sam@stripe.com",
+        ] as [String: Any],
+    ] as [AnyHashable: Any]
+
     static func _testSEPA() -> STPPaymentMethod {
-        return STPPaymentMethod.decodedObject(fromAPIResponse: [
-            "id": "pm_123",
-            "type": "sepa_debit",
-            "sepa_debit": [
-                "last4": "1234",
-            ],
-            "billing_details": [
-                "name": "Sam Stripe",
-                "email": "sam@stripe.com",
-            ] as [String: Any],
-        ])!
+        return STPPaymentMethod.decodedObject(fromAPIResponse: _testSEPAJSON)!
     }
 
     static func _testLink(displayName: String? = nil) -> STPPaymentMethod {
