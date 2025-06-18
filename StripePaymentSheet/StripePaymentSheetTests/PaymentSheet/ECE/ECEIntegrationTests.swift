@@ -4,6 +4,8 @@
 //
 
 @testable @_spi(STP) import StripeCore
+import StripePaymentsTestUtils
+
 @testable @_spi(STP) import StripePayments
 @testable @_spi(STP) import StripePaymentSheet
 import WebKit
@@ -24,8 +26,7 @@ class ECEIntegrationTests: XCTestCase {
 
     override func setUp() {
         super.setUp()
-
-        apiClient = STPAPIClient(publishableKey: "pk_test_123")
+        apiClient = STPAPIClient(publishableKey: STPTestingDefaultPublishableKey)
 
                 // Setup PaymentSheet configuration
         mockConfiguration = PaymentSheet.Configuration()
@@ -178,7 +179,7 @@ class ECEIntegrationTests: XCTestCase {
         XCTAssertEqual(confirmResponse["status"] as? String, "success")
 
         // Wait for dismissal and completion
-        await fulfillment(of: [expectation], timeout: 2.0)
+        await fulfillment(of: [expectation], timeout: 3.0)
 
         // Verify result
         XCTAssertNotNil(receivedResult)

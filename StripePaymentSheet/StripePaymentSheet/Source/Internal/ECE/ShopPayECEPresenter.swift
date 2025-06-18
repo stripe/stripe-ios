@@ -245,9 +245,11 @@ extension ShopPayECEPresenter: ExpressCheckoutWebviewDelegate {
         }
 
         // Create Shop Pay payment method params
-        let paymentMethodParams = STPPaymentMethodParams()
-        paymentMethodParams.type = .unknown
-        paymentMethodParams.billingDetails = STPPaymentMethodBillingDetails()
+        let shopPayParams = STPPaymentMethodShopPayParams()
+        shopPayParams.externalSourceId = "TODO_12345" // TODO: Parse from paymentDetails when ready
+        let paymentMethodParams = STPPaymentMethodParams(shopPay: shopPayParams,
+                                                         billingDetails: STPPaymentMethodBillingDetails(),
+                                                         metadata: nil)
 
         // Add billing details
         if let email = billingDetails.email {
@@ -260,13 +262,10 @@ extension ShopPayECEPresenter: ExpressCheckoutWebviewDelegate {
             paymentMethodParams.billingDetails?.name = name
         }
 
-        // Create payment option
-        let confirmParams = IntentConfirmParams(type: .stripe(.unknown))
-        confirmParams.paymentMethodParams.billingDetails = paymentMethodParams.billingDetails
-
-        // TODO: Create a payment method here from the data (using STPAPIClient) once the API is available
-        // For now, use a mock STPPaymentMethod instead
-        let paymentMethod = STPPaymentMethod(stripeId: "pm_123abc", type: .unknown)
+        // Create payment method
+        // TODO: If this fails, then return a PaymentSheetResult failed?
+        let paymentMethod = try await flowController.configuration.apiClient.createPaymentMethod(with: paymentMethodParams,
+                                                                                                 additionalPaymentUserAgentValues: [])
 
         // Dismiss ECE and return the payment method ID on the main thread
         Task { @MainActor in
