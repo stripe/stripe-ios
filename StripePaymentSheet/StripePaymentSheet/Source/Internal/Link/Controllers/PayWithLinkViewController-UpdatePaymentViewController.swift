@@ -180,7 +180,8 @@ extension PayWithLinkViewController {
                     // Updates to CVC only get applied when the intent is confirmed so we manually add them here
                     // instead of including in the /update API call
                     if case .card(let card) = updatedPaymentDetails.details {
-                        card.cvc = params.cvc
+                        // If we collected CVC on the previous screen, use that value
+                        card.cvc = params.cvc ?? paymentMethod.cvc
                     }
 
                     var confirmationExtras: LinkConfirmationExtras?
