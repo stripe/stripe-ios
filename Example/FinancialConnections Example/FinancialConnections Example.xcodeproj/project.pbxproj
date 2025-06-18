@@ -24,6 +24,7 @@
 		49036F242D3951ED00354EA7 /* StripeApplePay.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 49036F162D39518900354EA7 /* StripeApplePay.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		49036F252D3951EF00354EA7 /* Stripe3DS2.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 49036F132D39515300354EA7 /* Stripe3DS2.framework */; };
 		49036F262D3951EF00354EA7 /* Stripe3DS2.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 49036F132D39515300354EA7 /* Stripe3DS2.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		497458A42D67F5C10094BC5F /* FinancialConnectionsLite in Frameworks */ = {isa = PBXBuildFile; productRef = 497458A32D67F5C10094BC5F /* FinancialConnectionsLite */; };
 		49B5463A2C6E54DB008DC127 /* InstantDebitsUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49B546392C6E54DB008DC127 /* InstantDebitsUITests.swift */; };
 		597C7552115D87218591934C /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07DA32DE3842C0AD47047104 /* AppDelegate.swift */; };
 		59C21AF5DEA23997E909ACA4 /* StripeCore.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 03E7365D673694C8D7EDFB20 /* StripeCore.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
@@ -158,6 +159,7 @@
 				DA6FA2C369E10A2B4663B434 /* StripeFinancialConnections.framework in Frameworks */,
 				49036F0E2D39512B00354EA7 /* StripePaymentSheet.framework in Frameworks */,
 				49036F252D3951EF00354EA7 /* Stripe3DS2.framework in Frameworks */,
+				497458A42D67F5C10094BC5F /* FinancialConnectionsLite in Frameworks */,
 				49036F212D3951EB00354EA7 /* StripePayments.framework in Frameworks */,
 				49036F1F2D3951EA00354EA7 /* StripePaymentsUI.framework in Frameworks */,
 				5B38135D1C37FC1812F4203A /* StripeUICore.framework in Frameworks */,
@@ -364,6 +366,9 @@
 				en,
 			);
 			mainGroup = 16B505A9E0578F89DFF3F7BC;
+			packageReferences = (
+				497458A22D67F5C10094BC5F /* XCRemoteSwiftPackageReference "FinancialConnectionsLite" */,
+			);
 			productRefGroup = EDE09A27F1A22ECA0F4D45B4 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -561,6 +566,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		497458A22D67F5C10094BC5F /* XCRemoteSwiftPackageReference "FinancialConnectionsLite" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/mats-stripe/FinancialConnectionsLite";
+			requirement = {
+				branch = master;
+				kind = branch;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		497458A32D67F5C10094BC5F /* FinancialConnectionsLite */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 497458A22D67F5C10094BC5F /* XCRemoteSwiftPackageReference "FinancialConnectionsLite" */;
+			productName = FinancialConnectionsLite;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 82CFE995323E51B8859FE080 /* Project object */;
 }
