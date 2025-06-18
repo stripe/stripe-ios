@@ -101,9 +101,11 @@ private extension UIColor {
     static let brand900: UIColor = UIColor(hex: 0x30303D)
     static let brand600: UIColor = UIColor(hex: 0x006635)
     static let brand400: UIColor = UIColor(red: 0, green: 0.64, blue: 0.33, alpha: 1.0) // #00A355
-    static let brand200: UIColor = UIColor(red: 0, green: 0.84, blue: 0.44, alpha: 1.0) // #00D670
+    static let brand200: UIColor = phantomBrand// UIColor(red: 0, green: 0.84, blue: 0.44, alpha: 1.0) // #00D670
     static let critical600: UIColor = UIColor(hex: 0xC0123C)
     static let critical500: UIColor = UIColor(hex: 0xE61947)
+
+    static let phantomBrand: UIColor = UIColor(hex: 0x9886E5)
 }
 
 // MARK: - Utils

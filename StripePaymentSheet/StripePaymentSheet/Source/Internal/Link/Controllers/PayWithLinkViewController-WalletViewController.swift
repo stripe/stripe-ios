@@ -113,7 +113,7 @@ extension PayWithLinkViewController {
         private lazy var paymentPickerContainerView: UIStackView = {
             let stackView = UIStackView(arrangedSubviews: [
                 paymentPicker,
-                mandateView,
+//                mandateView,
                 expiredCardNoticeView,
             ])
             stackView.axis = .vertical
@@ -179,9 +179,9 @@ extension PayWithLinkViewController {
                 containerView.addArrangedSubview(applePayButton)
             }
 
-            if let cancelButton {
-                containerView.addArrangedSubview(cancelButton)
-            }
+//            if let cancelButton {
+//                containerView.addArrangedSubview(cancelButton)
+//            }
 
             contentView.addAndPinSubview(containerView)
 

@@ -121,7 +121,7 @@ final class LinkPaymentMethodPicker: UIView {
 
     private lazy var stackView: UIStackView = {
         let stackView = UIStackView(arrangedSubviews: [
-            emailView,
+//            emailView,
             separatorView,
             headerView,
             listView,

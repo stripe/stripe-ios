@@ -15,26 +15,34 @@ import UIKit
 /// For internal SDK use only
 @objc(STP_Internal_LinkSheetNavigationBar)
 class LinkSheetNavigationBar: SheetNavigationBar {
-    private let logoView: UIImageView = {
-        let imageView = UIImageView(image: Image.link_logo.makeImage(template: false))
-        imageView.tintColor = .linkIconBrand
-        imageView.isAccessibilityElement = true
-        imageView.accessibilityTraits = .header
-        imageView.accessibilityLabel = STPPaymentMethodType.link.displayName
-        imageView.translatesAutoresizingMaskIntoConstraints = false
-        return imageView
+//    private let logoView: UIImageView = {
+//        let imageView = UIImageView(image: Image.link_logo.makeImage(template: false))
+//        imageView.tintColor = .linkIconBrand
+//        imageView.isAccessibilityElement = true
+//        imageView.accessibilityTraits = .header
+//        imageView.accessibilityLabel = STPPaymentMethodType.link.displayName
+//        imageView.translatesAutoresizingMaskIntoConstraints = false
+//        return imageView
+//    }()
+
+    private let payWithLabel: UILabel = {
+        let label = UILabel()
+        label.text = "Pay with"
+        label.font = LinkUI.font(forTextStyle: .title)
+        label.textColor = .white
+        return label
     }()
 
     override init(isTestMode: Bool, appearance: PaymentSheet.Appearance) {
         super.init(isTestMode: isTestMode, appearance: appearance)
 
-        logoView.translatesAutoresizingMaskIntoConstraints = false
-        addSubview(logoView)
+        payWithLabel.translatesAutoresizingMaskIntoConstraints = false
+        addSubview(payWithLabel)
 
         NSLayoutConstraint.activate([
-            logoView.leftAnchor.constraint(equalTo: leftAnchor, constant: LinkUI.contentMargins.leading),
-            logoView.centerYAnchor.constraint(equalTo: centerYAnchor),
-            logoView.heightAnchor.constraint(equalToConstant: 24),
+            payWithLabel.leftAnchor.constraint(equalTo: leftAnchor, constant: LinkUI.contentMargins.leading),
+            payWithLabel.centerYAnchor.constraint(equalTo: centerYAnchor),
+            payWithLabel.heightAnchor.constraint(equalToConstant: 24),
         ])
     }
 
@@ -45,9 +53,9 @@ class LinkSheetNavigationBar: SheetNavigationBar {
     override func setStyle(_ style: SheetNavigationBar.Style) {
         super.setStyle(style)
         if case .back = style {
-            logoView.isHidden = true
+                    payWithLabel.isHidden = true
         } else {
-            logoView.isHidden = false
+                    payWithLabel.isHidden = false
         }
     }
 
