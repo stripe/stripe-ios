@@ -96,7 +96,7 @@ import Foundation
     case twint
     /// A Multibanco payment method
     case multibanco
-    /// A ShopPay payment mehtod
+    /// A ShopPay payment method
     @_spi(STP) case shopPay
     /// An unknown type.
     case unknown
