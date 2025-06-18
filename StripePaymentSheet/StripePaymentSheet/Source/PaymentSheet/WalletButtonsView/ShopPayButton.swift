@@ -22,6 +22,7 @@ struct ShopPayButton: View {
                 .resizable()
                 .scaledToFit()
                 .frame(height: Constants.contentHeight)
+                .frame(minWidth: 180, maxWidth: .infinity)
         }
         .frame(maxWidth: .infinity)
         .frame(height: Constants.buttonHeight)
