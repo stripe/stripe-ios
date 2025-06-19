@@ -54,6 +54,19 @@ class SheetNavigationBar: UIView {
         return button
     }()
 
+    var leftmostElement: UIView {
+        leftItemsStackView
+    }
+
+    var rightmostElement: UIView? {
+        if !closeButtonRight.isHidden {
+            return closeButtonRight
+        } else if !additionalButton.isHidden {
+            return additionalButton
+        }
+        return nil
+    }
+
     let testModeView = TestModeView()
     let appearance: PaymentSheet.Appearance
 
