@@ -278,7 +278,7 @@ final class PlaygroundViewModel: ObservableObject {
 
     func didSelectShow() {
         let useFCLite = playgroundConfiguration.sdkType == .fcLite
-        FinancialConnectionsSDKAvailability.shouldPreferFCLite = useFCLite
+        FinancialConnectionsSDKAvailability.localFcLiteOverride = useFCLite
 
         switch playgroundConfiguration.integrationType {
         case .standalone:
