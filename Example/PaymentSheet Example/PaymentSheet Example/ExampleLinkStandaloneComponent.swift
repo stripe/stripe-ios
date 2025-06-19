@@ -17,6 +17,7 @@ struct ExampleLinkStandaloneComponent: View {
     @State private var hasPresentedLink = false
     @State private var paymentOption: PaymentSheet.FlowController.PaymentOptionDisplayData?
     @State private var showingPaymentSheet = false
+    @State private var showingCreditCardForm = false
     @State private var showingAlert = false
     @State private var alertTitle = ""
     @State private var alertMessage = ""
@@ -145,8 +146,11 @@ struct ExampleLinkStandaloneComponent: View {
             .shadow(color: .black.opacity(0.1), radius: 8, x: 0, y: -2)
         }
         .sheet(isPresented: $showingPaymentSheet) {
-            PaymentMethodSheet(linkController: linkController)
-                .presentationDetents([.fraction(0.35)])
+            PaymentMethodSheet(
+                linkController: linkController,
+                onCreditCardTap: { showingCreditCardForm = true }
+            )
+            .presentationDetents([.medium])
         }
         .alert(alertTitle, isPresented: $showingAlert) {
             Button("OK") { }
@@ -229,36 +233,40 @@ struct CarOptionRow: View {
 struct PaymentMethodSheet: View {
     @Environment(\.dismiss) private var dismiss
     var linkController: LinkController
+    var onCreditCardTap: () -> Void
 
     var body: some View {
         NavigationView {
             VStack(spacing: 0) {
                 // Payment options list
                 VStack(spacing: 0) {
-                    // Add credit card row (non-interactive)
-                    HStack(spacing: 16) {
-                        Image(systemName: "creditcard")
-                            .foregroundColor(.gray)
-                            .font(.title2)
-                            .frame(width: 32, height: 32)
+                    // Add credit card row (interactive)
+                    NavigationLink(destination: CreditCardFormView(linkController: linkController)) {
+                        HStack(spacing: 16) {
+                            Image(systemName: "creditcard")
+                                .foregroundColor(.gray)
+                                .font(.title2)
+                                .frame(width: 32, height: 32)
 
-                        VStack(alignment: .leading, spacing: 4) {
-                            Text("Add credit card")
-                                .font(.headline)
-                                .fontWeight(.medium)
-                            Text("Visa, Mastercard, Amex")
-                                .font(.subheadline)
+                            VStack(alignment: .leading, spacing: 4) {
+                                Text("Add credit card")
+                                    .font(.headline)
+                                    .fontWeight(.medium)
+                                Text("Visa, Mastercard, Amex")
+                                    .font(.subheadline)
+                                    .foregroundColor(.secondary)
+                            }
+
+                            Spacer()
+
+                            Image(systemName: "chevron.right")
                                 .foregroundColor(.secondary)
                         }
-
-                        Spacer()
-
-                        Image(systemName: "chevron.right")
-                            .foregroundColor(.secondary)
+                        .padding()
+                        .background(Color(.systemGray6))
+                        .cornerRadius(12)
                     }
-                    .padding()
-                    .background(Color(.systemGray6))
-                    .cornerRadius(12)
+                    .buttonStyle(PlainButtonStyle())
                     .padding(.horizontal)
                     .padding(.top)
 
@@ -320,6 +328,74 @@ struct PaymentMethodSheet: View {
                 dismiss()
             }
         }
+    }
+}
+
+@available(iOS 16.0, *)
+struct CreditCardFormView: View {
+    @Environment(\.dismiss) private var dismiss
+    var linkController: LinkController
+
+    @State private var cardNumber = ""
+    @State private var expiryDate = ""
+    @State private var cvc = ""
+
+    var body: some View {
+        VStack(spacing: 20) {
+            // Card number field
+            VStack(alignment: .leading, spacing: 8) {
+                Text("Card Number")
+                    .font(.headline)
+                    .foregroundColor(.primary)
+
+                TextField("1234 5678 9012 3456", text: $cardNumber)
+                    .textFieldStyle(RoundedBorderTextFieldStyle())
+                    .keyboardType(.numberPad)
+            }
+
+            // Expiry date and CVC row
+            HStack(spacing: 16) {
+                VStack(alignment: .leading, spacing: 8) {
+                    Text("Expiry Date")
+                        .font(.headline)
+                        .foregroundColor(.primary)
+
+                    TextField("MM/YY", text: $expiryDate)
+                        .textFieldStyle(RoundedBorderTextFieldStyle())
+                        .keyboardType(.numberPad)
+                }
+
+                VStack(alignment: .leading, spacing: 8) {
+                    Text("CVC")
+                        .font(.headline)
+                        .foregroundColor(.primary)
+
+                    TextField("123", text: $cvc)
+                        .textFieldStyle(RoundedBorderTextFieldStyle())
+                        .keyboardType(.numberPad)
+                }
+            }
+
+            Spacer()
+
+            // Save card button
+            Button(action: {
+                // TODO: Implement card saving logic
+                dismiss()
+            }) {
+                Text("Save Card")
+                    .font(.headline)
+                    .fontWeight(.semibold)
+                    .foregroundColor(.white)
+                    .frame(maxWidth: .infinity)
+                    .frame(height: 50)
+                    .background(Color.blue)
+                    .cornerRadius(25)
+            }
+        }
+        .padding()
+        .navigationTitle("Add Credit Card")
+        .navigationBarTitleDisplayMode(.inline)
     }
 }
 
