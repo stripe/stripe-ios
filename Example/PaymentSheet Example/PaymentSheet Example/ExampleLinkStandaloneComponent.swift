@@ -9,15 +9,143 @@ import StripePaymentSheet
 import SwiftUI
 
 struct ExampleLinkStandaloneComponent: View {
+    @State private var selectedPaymentMethod: PaymentMethod = .card
+    @State private var tipAmount: Double = 2.0
+
     private var linkController: LinkController {
         LinkController.create()
     }
 
+    private var subtotal: Double = 15.50
+    private var tax: Double = 1.55
+    private var total: Double {
+        subtotal + tax + tipAmount
+    }
+
     var body: some View {
-        VStack(alignment: .center) {
-            Spacer()
-            Button("Pay with Link", action: presentLink)
-            Spacer()
+        NavigationView {
+            VStack(spacing: 0) {
+                // Header
+                VStack(alignment: .leading, spacing: 16) {
+                    HStack {
+                        VStack(alignment: .leading, spacing: 4) {
+                            Text("Ride Summary")
+                                .font(.title)
+                                .fontWeight(.bold)
+
+                            Text("123 Main St → 456 Oak Ave")
+                                .font(.subheadline)
+                                .foregroundColor(.secondary)
+                        }
+                        Spacer()
+                    }
+
+                    // Trip details
+                    VStack(spacing: 12) {
+                        TripDetailRow(title: "Base fare", amount: "$12.50")
+                        TripDetailRow(title: "Distance (2.3 mi)", amount: "$3.00")
+                        Divider()
+                        TripDetailRow(title: "Subtotal", amount: String(format: "$%.2f", subtotal))
+                        TripDetailRow(title: "Tax", amount: String(format: "$%.2f", tax))
+                    }
+                }
+                .padding()
+                .background(Color(.systemBackground))
+
+                // Tip section
+                VStack(alignment: .leading, spacing: 12) {
+                    Text("Tip your driver")
+                        .font(.headline)
+                        .padding(.horizontal)
+
+                    HStack(spacing: 12) {
+                        ForEach([0.0, 1.0, 2.0, 3.0, 5.0], id: \.self) { tip in
+                            TipButton(
+                                amount: tip,
+                                isSelected: tipAmount == tip,
+                                action: { tipAmount = tip }
+                            )
+                        }
+                    }
+                    .padding(.horizontal)
+                }
+                .padding(.vertical)
+                .background(Color(.systemGray6))
+
+                // Payment method section
+                VStack(alignment: .leading, spacing: 12) {
+                    Text("Payment Method")
+                        .font(.headline)
+                        .padding(.horizontal)
+
+                    VStack(spacing: 8) {
+                        PaymentMethodRow(
+                            method: .card,
+                            isSelected: selectedPaymentMethod == .card,
+                            action: { selectedPaymentMethod = .card }
+                        )
+
+                        PaymentMethodRow(
+                            method: .link,
+                            isSelected: selectedPaymentMethod == .link,
+                            action: {
+                                selectedPaymentMethod = .link
+                                presentLink()
+                            }
+                        )
+                    }
+                    .padding(.horizontal)
+                }
+                .padding(.vertical)
+                .background(Color(.systemBackground))
+
+                Spacer()
+
+                // Total and Pay button
+                VStack(spacing: 16) {
+                    VStack(spacing: 8) {
+                        HStack {
+                            Text("Total")
+                                .font(.headline)
+                            Spacer()
+                            Text(String(format: "$%.2f", total))
+                                .font(.title)
+                                .fontWeight(.bold)
+                        }
+
+                        Text("You'll be charged after your ride")
+                            .font(.caption)
+                            .foregroundColor(.secondary)
+                    }
+                    .padding(.horizontal)
+
+                    Button(action: {
+                        if selectedPaymentMethod == .link {
+                            presentLink()
+                        } else {
+                            // Handle card payment
+                            print("Processing card payment...")
+                        }
+                    }) {
+                        HStack {
+                            Text("Pay")
+                                .font(.headline)
+                                .fontWeight(.semibold)
+                            Text(String(format: "$%.2f", total))
+                                .font(.headline)
+                                .fontWeight(.semibold)
+                        }
+                        .foregroundColor(.white)
+                        .frame(maxWidth: .infinity)
+                        .frame(height: 50)
+                        .background(Color.black)
+                        .cornerRadius(25)
+                    }
+                    .padding(.horizontal)
+                    .padding(.bottom, 34) // Safe area
+                }
+                .background(Color(.systemBackground))
+            }
         }
     }
 
@@ -30,6 +158,126 @@ struct ExampleLinkStandaloneComponent: View {
 
         linkController.present(from: viewController, with: "email@email.com") {
             print(linkController.paymentOption?.label ?? "no payment method")
+        }
+    }
+}
+
+// MARK: - Supporting Views
+
+struct TripDetailRow: View {
+    let title: String
+    let amount: String
+
+    var body: some View {
+        HStack {
+            Text(title)
+                .foregroundColor(.secondary)
+            Spacer()
+            Text(amount)
+                .fontWeight(.medium)
+        }
+    }
+}
+
+struct TipButton: View {
+    let amount: Double
+    let isSelected: Bool
+    let action: () -> Void
+
+    var body: some View {
+        Button(action: action) {
+            Text(amount == 0 ? "No tip" : String(format: "$%.0f", amount))
+                .font(.subheadline)
+                .fontWeight(.medium)
+                .foregroundColor(isSelected ? .white : .black)
+                .frame(maxWidth: .infinity)
+                .frame(height: 40)
+                .background(isSelected ? Color.black : Color(.systemGray5))
+                .cornerRadius(20)
+        }
+    }
+}
+
+struct PaymentMethodRow: View {
+    let method: PaymentMethod
+    let isSelected: Bool
+    let action: () -> Void
+
+    var body: some View {
+        Button(action: action) {
+            HStack {
+                Image(systemName: method.iconName)
+                    .foregroundColor(method.iconColor)
+                    .frame(width: 24, height: 24)
+
+                VStack(alignment: .leading, spacing: 2) {
+                    Text(method.displayName)
+                        .font(.subheadline)
+                        .fontWeight(.medium)
+                    Text(method.description)
+                        .font(.caption)
+                        .foregroundColor(.secondary)
+                }
+
+                Spacer()
+
+                if isSelected {
+                    Image(systemName: "checkmark.circle.fill")
+                        .foregroundColor(.blue)
+                }
+            }
+            .padding()
+            .background(isSelected ? Color(.systemBlue).opacity(0.1) : Color(.systemGray6))
+            .cornerRadius(12)
+        }
+        .buttonStyle(PlainButtonStyle())
+    }
+}
+
+// MARK: - Supporting Types
+
+enum PaymentMethod: CaseIterable {
+    case card
+    case link
+
+    var displayName: String {
+        switch self {
+        case .card:
+            return "Card"
+        case .link:
+            return "Link"
+        }
+    }
+
+    var description: String {
+        switch self {
+        case .card:
+            return "Credit or debit card"
+        case .link:
+            return "Pay with Link"
+        }
+    }
+
+    var iconName: String {
+        switch self {
+        case .card:
+            return "creditcard"
+        case .link:
+            return "link"
+        }
+    }
+
+    var iconColor: Color {
+        switch self {
+        case .card:
+            return .blue
+        case .link:
+            let uiColor = UIColor(red: 0, green: 0.84, blue: 0.44, alpha: 1.0) // #00D670
+            if #available(iOS 15.0, *) {
+                return Color(uiColor: uiColor)
+            } else {
+                return .green
+            }
         }
     }
 }
