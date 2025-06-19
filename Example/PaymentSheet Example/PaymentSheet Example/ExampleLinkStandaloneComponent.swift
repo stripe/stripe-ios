@@ -53,6 +53,7 @@ struct ExampleLinkStandaloneComponent: View {
                     }
                 }
                 .padding(.horizontal)
+                .padding(.bottom)
             }
             .background(Color(.systemBackground))
 
@@ -76,7 +77,7 @@ struct ExampleLinkStandaloneComponent: View {
                                 .font(.title2)
                                 .frame(width: 32, height: 32)
                         }
-                        
+
                         VStack(alignment: .leading, spacing: 4) {
                             Text("Payment method")
                                 .font(.subheadline)
@@ -148,6 +149,11 @@ struct ExampleLinkStandaloneComponent: View {
             Button("OK") { }
         } message: {
             Text(alertMessage)
+        }
+        .onAppear {
+            linkController.lookupConsumer(with: "email@email.com") { exists in
+                print("Existing Link consumer? \(exists)")
+            }
         }
     }
 
@@ -263,9 +269,12 @@ struct PaymentMethodSheet: View {
                                 Text("Pay with Link")
                                     .font(.headline)
                                     .fontWeight(.medium)
-                                Text("email@email.com")
-                                    .font(.subheadline)
-                                    .foregroundColor(.secondary)
+
+                                if linkController.isExistingLinkConsumer {
+                                    Text("email@email.com")
+                                        .font(.subheadline)
+                                        .foregroundColor(.secondary)
+                                }
                             }
 
                             Spacer()
