@@ -26,14 +26,14 @@ struct ExampleLinkStandaloneComponent: View {
 
     // Map region centered on San Francisco
     @State private var region = MKCoordinateRegion(
-        center: CLLocationCoordinate2D(latitude: 37.7749, longitude: -122.4194),
-        span: MKCoordinateSpan(latitudeDelta: 0.05, longitudeDelta: 0.05)
+        center: CLLocationCoordinate2D(latitude: 37.7845, longitude: -122.4263),
+        span: MKCoordinateSpan(latitudeDelta: 0.03, longitudeDelta: 0.03)
     )
 
     var body: some View {
         VStack(spacing: 0) {
-            // Map view - takes remaining space above car options
-            Map(coordinateRegion: $region)
+            // Map view with route - takes remaining space above car options
+            RouteMapView(region: $region)
                 .ignoresSafeArea(.container, edges: .top)
 
             // Car options section
@@ -173,6 +173,135 @@ struct ExampleLinkStandaloneComponent: View {
 
         linkController.present(from: viewController, with: "email@email.com") {
             self.paymentOption = linkController.paymentOption
+        }
+    }
+}
+
+// MARK: - Route Map View
+@available(iOS 16.0, *)
+struct RouteMapView: UIViewRepresentable {
+    @Binding var region: MKCoordinateRegion
+
+    func makeUIView(context: Context) -> MKMapView {
+        let mapView = MKMapView()
+        mapView.delegate = context.coordinator
+        mapView.setRegion(region, animated: false)
+
+        // Add route overlay using GPX coordinates
+        let routeCoordinates = createRouteFromGPX()
+        let polyline = MKPolyline(coordinates: routeCoordinates, count: routeCoordinates.count)
+        mapView.addOverlay(polyline)
+
+        // Add start and end markers
+        let startAnnotation = MKPointAnnotation()
+        startAnnotation.coordinate = routeCoordinates.first!
+        startAnnotation.title = "Pickup"
+        mapView.addAnnotation(startAnnotation)
+
+        let endAnnotation = MKPointAnnotation()
+        endAnnotation.coordinate = routeCoordinates.last!
+        endAnnotation.title = "Destination"
+        mapView.addAnnotation(endAnnotation)
+
+        return mapView
+    }
+
+    func updateUIView(_ mapView: MKMapView, context: Context) {
+        mapView.setRegion(region, animated: true)
+    }
+
+    func makeCoordinator() -> Coordinator {
+        Coordinator(self)
+    }
+
+    private func createRouteFromGPX() -> [CLLocationCoordinate2D] {
+        // GPX coordinates from the provided file (1.88 km route in San Francisco)
+        return [
+            CLLocationCoordinate2D(latitude: 37.77796, longitude: -122.42981),
+            CLLocationCoordinate2D(latitude: 37.77827, longitude: -122.42987),
+            CLLocationCoordinate2D(latitude: 37.77851, longitude: -122.42992),
+            CLLocationCoordinate2D(latitude: 37.77878, longitude: -122.42998),
+            CLLocationCoordinate2D(latitude: 37.77886, longitude: -122.43),
+            CLLocationCoordinate2D(latitude: 37.77894, longitude: -122.43001),
+            CLLocationCoordinate2D(latitude: 37.77948, longitude: -122.43012),
+            CLLocationCoordinate2D(latitude: 37.77979, longitude: -122.43018),
+            CLLocationCoordinate2D(latitude: 37.7798, longitude: -122.43012),
+            CLLocationCoordinate2D(latitude: 37.77985, longitude: -122.42974),
+            CLLocationCoordinate2D(latitude: 37.77988, longitude: -122.42954),
+            CLLocationCoordinate2D(latitude: 37.77991, longitude: -122.42931),
+            CLLocationCoordinate2D(latitude: 37.77993, longitude: -122.42914),
+            CLLocationCoordinate2D(latitude: 37.77997, longitude: -122.42876),
+            CLLocationCoordinate2D(latitude: 37.77999, longitude: -122.42862),
+            CLLocationCoordinate2D(latitude: 37.78001, longitude: -122.42844),
+            CLLocationCoordinate2D(latitude: 37.78008, longitude: -122.42791),
+            CLLocationCoordinate2D(latitude: 37.78009, longitude: -122.42785),
+            CLLocationCoordinate2D(latitude: 37.7801, longitude: -122.42772),
+            CLLocationCoordinate2D(latitude: 37.78018, longitude: -122.42715),
+            CLLocationCoordinate2D(latitude: 37.78019, longitude: -122.42704),
+            CLLocationCoordinate2D(latitude: 37.7802, longitude: -122.42696),
+            CLLocationCoordinate2D(latitude: 37.78025, longitude: -122.42659),
+            CLLocationCoordinate2D(latitude: 37.78028, longitude: -122.42634),
+            CLLocationCoordinate2D(latitude: 37.7804, longitude: -122.42538),
+            CLLocationCoordinate2D(latitude: 37.78041, longitude: -122.42531),
+            CLLocationCoordinate2D(latitude: 37.78056, longitude: -122.42418),
+            CLLocationCoordinate2D(latitude: 37.78061, longitude: -122.42375),
+            CLLocationCoordinate2D(latitude: 37.78068, longitude: -122.42318),
+            CLLocationCoordinate2D(latitude: 37.78074, longitude: -122.42274),
+            CLLocationCoordinate2D(latitude: 37.78082, longitude: -122.42211),
+            CLLocationCoordinate2D(latitude: 37.78094, longitude: -122.42115),
+            CLLocationCoordinate2D(latitude: 37.781, longitude: -122.42066),
+            CLLocationCoordinate2D(latitude: 37.78101, longitude: -122.42059),
+            CLLocationCoordinate2D(latitude: 37.78102, longitude: -122.42051),
+            CLLocationCoordinate2D(latitude: 37.78104, longitude: -122.42036),
+            CLLocationCoordinate2D(latitude: 37.78105, longitude: -122.42028),
+            CLLocationCoordinate2D(latitude: 37.78124, longitude: -122.41882),
+            CLLocationCoordinate2D(latitude: 37.78125, longitude: -122.41872),
+            CLLocationCoordinate2D(latitude: 37.78133, longitude: -122.4181),
+            CLLocationCoordinate2D(latitude: 37.78145, longitude: -122.41718),
+            CLLocationCoordinate2D(latitude: 37.78154, longitude: -122.4172),
+            CLLocationCoordinate2D(latitude: 37.78238, longitude: -122.41736),
+            CLLocationCoordinate2D(latitude: 37.78331, longitude: -122.41755),
+            CLLocationCoordinate2D(latitude: 37.78378, longitude: -122.41765),
+            CLLocationCoordinate2D(latitude: 37.78388, longitude: -122.41767),
+            CLLocationCoordinate2D(latitude: 37.78424, longitude: -122.41774),
+            CLLocationCoordinate2D(latitude: 37.78471, longitude: -122.41783),
+            CLLocationCoordinate2D(latitude: 37.78518, longitude: -122.41793),
+            CLLocationCoordinate2D(latitude: 37.78531, longitude: -122.41685),
+        ]
+    }
+
+    class Coordinator: NSObject, MKMapViewDelegate {
+        var parent: RouteMapView
+
+        init(_ parent: RouteMapView) {
+            self.parent = parent
+        }
+
+        func mapView(_ mapView: MKMapView, rendererFor overlay: MKOverlay) -> MKOverlayRenderer {
+            if let polyline = overlay as? MKPolyline {
+                let renderer = MKPolylineRenderer(polyline: polyline)
+                renderer.strokeColor = UIColor.systemBlue
+                renderer.lineWidth = 4
+                return renderer
+            }
+            return MKOverlayRenderer(overlay: overlay)
+        }
+
+        func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
+            let identifier = "RouteAnnotation"
+            var annotationView = mapView.dequeueReusableAnnotationView(withIdentifier: identifier)
+
+            if annotationView == nil {
+                annotationView = MKMarkerAnnotationView(annotation: annotation, reuseIdentifier: identifier)
+            }
+
+            if annotation.title == "Pickup" {
+                annotationView?.image = UIImage(systemName: "mappin.circle.fill")?.withTintColor(.systemGreen, renderingMode: .alwaysOriginal)
+            } else if annotation.title == "Destination" {
+                annotationView?.image = UIImage(systemName: "mappin.circle.fill")?.withTintColor(.systemRed, renderingMode: .alwaysOriginal)
+            }
+
+            return annotationView
         }
     }
 }
