@@ -28,105 +28,110 @@ struct ExampleLinkStandaloneComponent: View {
     )
 
     var body: some View {
-        VStack(spacing: 0) {
-            // Top half - Map
-            Map(coordinateRegion: $region)
-                .frame(height: UIScreen.main.bounds.height * 0.5)
-
-            // Bottom half - Car options and payment
+        ZStack(alignment: .bottom) {
             VStack(spacing: 0) {
-                // Car options - takes up space as needed
-                VStack(alignment: .leading, spacing: 16) {
-                    Text("Choose your ride")
-                        .font(.title2)
-                        .fontWeight(.bold)
+                // Top half - Map
+                Map(coordinateRegion: $region)
+                    .frame(height: UIScreen.main.bounds.height * 0.5)
+                    .ignoresSafeArea(.container, edges: .top)
+
+                // Bottom half - Car options
+                VStack(spacing: 0) {
+                    // Car options - takes up space as needed
+                    VStack(alignment: .leading, spacing: 16) {
+                        Text("Choose your ride")
+                            .font(.title2)
+                            .fontWeight(.bold)
+                            .padding(.horizontal)
+                            .padding(.top)
+
+                        VStack(spacing: 12) {
+                            ForEach(CarType.allCases, id: \.self) { carType in
+                                CarOptionRow(
+                                    carType: carType,
+                                    isSelected: selectedCarType == carType,
+                                    action: { selectedCarType = carType }
+                                )
+                            }
+                        }
                         .padding(.horizontal)
-                        .padding(.top)
-
-                    VStack(spacing: 12) {
-                        ForEach(CarType.allCases, id: \.self) { carType in
-                            CarOptionRow(
-                                carType: carType,
-                                isSelected: selectedCarType == carType,
-                                action: { selectedCarType = carType }
-                            )
-                        }
                     }
-                    .padding(.horizontal)
+                    .padding(.bottom, 140) // Space for footer (payment method + confirm button + padding)
+
+                    Spacer()
                 }
-
-                Spacer()
-
-                // Fixed footer - always visible
-                VStack(spacing: 16) {
-                    // Payment method row
-                    Button(action: {
-                        showingPaymentSheet = true
-                    }) {
-                        HStack {
-                            VStack(alignment: .leading, spacing: 4) {
-                                Text("Payment method")
-                                    .font(.subheadline)
-                                    .foregroundColor(.secondary)
-                                if let paymentOption = paymentOption {
-                                    Text(paymentOption.labels.sublabel ?? paymentOption.label)
-                                        .font(.headline)
-                                        .foregroundColor(.primary)
-                                } else {
-                                    Text("Choose payment method")
-                                        .font(.headline)
-                                        .foregroundColor(.primary)
-                                }
-                            }
-
-                            Spacer()
-
-                            Image(systemName: "chevron.right")
-                                .foregroundColor(.secondary)
-                        }
-                        .padding()
-                        .background(Color(.systemGray6))
-                        .cornerRadius(12)
-                    }
-                    .buttonStyle(PlainButtonStyle())
-
-                    // Confirm order button
-                    Button(action: {
-                        linkController.createPaymentMethod { result in
-                            DispatchQueue.main.async {
-                                switch result {
-                                case .success(let paymentMethod):
-                                    alertTitle = "Success"
-                                    alertMessage = paymentMethod.stripeId
-                                    showingAlert = true
-                                case .failure(let error):
-                                    alertTitle = "Error"
-                                    alertMessage = error.localizedDescription
-                                    showingAlert = true
-                                }
-                            }
-                        }
-                    }) {
-                        HStack {
-                            Text("Confirm order")
-                                .font(.headline)
-                                .fontWeight(.semibold)
-                            Text(String(format: "$%.2f", selectedCarType.price))
-                                .font(.headline)
-                                .fontWeight(.semibold)
-                        }
-                        .foregroundColor(.white)
-                        .frame(maxWidth: .infinity)
-                        .frame(height: 50)
-                        .background(Color.black)
-                        .cornerRadius(25)
-                    }
-                }
-                .padding()
                 .background(Color(.systemBackground))
-                .shadow(color: .black.opacity(0.1), radius: 8, x: 0, y: -2)
             }
+            .ignoresSafeArea(.container, edges: .top)
+
+            // Fixed footer - always visible at bottom
+            VStack(spacing: 16) {
+                // Payment method row
+                Button(action: {
+                    showingPaymentSheet = true
+                }) {
+                    HStack {
+                        VStack(alignment: .leading, spacing: 4) {
+                            Text("Payment method")
+                                .font(.subheadline)
+                                .foregroundColor(.secondary)
+                            if let paymentOption = paymentOption {
+                                Text(paymentOption.labels.sublabel ?? paymentOption.label)
+                                    .font(.headline)
+                                    .foregroundColor(.primary)
+                            } else {
+                                Text("Choose payment method")
+                                    .font(.headline)
+                                    .foregroundColor(.primary)
+                            }
+                        }
+
+                        Spacer()
+
+                        Image(systemName: "chevron.right")
+                            .foregroundColor(.secondary)
+                    }
+                    .padding()
+                    .background(Color(.systemGray6))
+                    .cornerRadius(12)
+                }
+                .buttonStyle(PlainButtonStyle())
+
+                // Confirm order button
+                Button(action: {
+                    linkController.createPaymentMethod { result in
+                        DispatchQueue.main.async {
+                            switch result {
+                            case .success(let paymentMethod):
+                                alertTitle = "Success"
+                                alertMessage = paymentMethod.stripeId
+                                showingAlert = true
+                            case .failure(let error):
+                                alertTitle = "Error"
+                                alertMessage = error.localizedDescription
+                                showingAlert = true
+                            }
+                        }
+                    }
+                }) {
+                    HStack {
+                        Text("Confirm order")
+                            .font(.headline)
+                            .fontWeight(.semibold)
+                        Text(String(format: "$%.2f", selectedCarType.price))
+                            .font(.headline)
+                            .fontWeight(.semibold)
+                    }
+                    .foregroundColor(.white)
+                    .frame(maxWidth: .infinity)
+                    .frame(height: 50)
+                    .background(Color.black)
+                    .cornerRadius(25)
+                }
+            }
+            .padding()
             .background(Color(.systemBackground))
+            .shadow(color: .black.opacity(0.1), radius: 8, x: 0, y: -2)
         }
         .sheet(isPresented: $showingPaymentSheet) {
             PaymentMethodSheet()
