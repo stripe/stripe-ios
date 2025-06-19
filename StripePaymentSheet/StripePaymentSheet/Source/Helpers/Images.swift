@@ -14,8 +14,8 @@ import Foundation
 /// The canonical set of all image files in the SDK.
 /// This helps us avoid duplicates and automatically test that all images load properly
 /// Raw value is the image file name. We use snake case to make long names easier to read.
-enum Image: String, CaseIterable, ImageMaker {
-    typealias BundleLocator = StripePaymentSheetBundleLocator
+@_spi(STP) public enum Image: String, CaseIterable, ImageMaker {
+    public typealias BundleLocator = StripePaymentSheetBundleLocator
 
     /// https://developer.apple.com/apple-pay/marketing/
     case apple_pay_mark = "apple_pay_mark"

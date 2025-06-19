@@ -63,10 +63,12 @@ public class LinkController: ObservableObject {
                     intent: loadResult!.intent,
                     elementsSession: loadResult!.elementsSession,
                     analyticsHelper: analyticsHelper
-                ) { [weak self] confirmOption, _ in
+                ) { [weak self] confirmOption, shouldClearSelection in
                     guard let confirmOption else {
-                        self?.paymentOption = nil
-                        self?.internalPaymentOption = nil
+                        if shouldClearSelection {
+                            self?.paymentOption = nil
+                            self?.internalPaymentOption = nil
+                        }
                         callback()
                         return
                     }
@@ -109,11 +111,6 @@ public class LinkController: ObservableObject {
                 completion(.failure(failure))
             }
         }
-
-//        DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
-//            let paymentMethod = STPPaymentMethod(stripeId: "", type: .link)
-//            completion(.success(paymentMethod))
-//        }
     }
 
     public static func create() -> LinkController {

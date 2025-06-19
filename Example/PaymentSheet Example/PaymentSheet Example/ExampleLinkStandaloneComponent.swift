@@ -6,13 +6,16 @@
 //
 
 import MapKit
-@_spi(STP) import StripePaymentSheet
 import SwiftUI
+
+@_spi(STP) import StripePaymentSheet
+@_spi(STP) import StripeUICore
 
 @available(iOS 16.0, *)
 struct ExampleLinkStandaloneComponent: View {
     @State private var selectedCarType: CarType = CarType.bolt
     @State private var hasPresentedLink = false
+    @State private var paymentOption: PaymentSheet.FlowController.PaymentOptionDisplayData?
     @State private var showingPaymentSheet = false
     @State private var showingAlert = false
     @State private var alertTitle = ""
@@ -27,41 +30,31 @@ struct ExampleLinkStandaloneComponent: View {
     )
 
     var body: some View {
-        ZStack(alignment: .bottom) {
-            VStack(spacing: 0) {
-                // Top half - Map
-                Map(coordinateRegion: $region)
-                    .frame(height: UIScreen.main.bounds.height * 0.5)
-                    .ignoresSafeArea(.container, edges: .top)
+        VStack(spacing: 0) {
+            // Map view - takes remaining space above car options
+            Map(coordinateRegion: $region)
+                .ignoresSafeArea(.container, edges: .top)
 
-                // Bottom half - Car options
-                VStack(spacing: 0) {
-                    // Car options - takes up space as needed
-                    VStack(alignment: .leading, spacing: 16) {
-                        Text("Choose your ride")
-                            .font(.title2)
-                            .fontWeight(.bold)
-                            .padding(.horizontal)
-                            .padding(.top)
+            // Car options section
+            VStack(alignment: .leading, spacing: 16) {
+                Text("Choose your ride")
+                    .font(.title2)
+                    .fontWeight(.bold)
+                    .padding(.horizontal)
+                    .padding(.top)
 
-                        VStack(spacing: 12) {
-                            ForEach(CarType.allCases, id: \.self) { carType in
-                                CarOptionRow(
-                                    carType: carType,
-                                    isSelected: selectedCarType == carType,
-                                    action: { selectedCarType = carType }
-                                )
-                            }
-                        }
-                        .padding(.horizontal)
+                VStack(spacing: 12) {
+                    ForEach(CarType.allCases, id: \.self) { carType in
+                        CarOptionRow(
+                            carType: carType,
+                            isSelected: selectedCarType == carType,
+                            action: { selectedCarType = carType }
+                        )
                     }
-                    .padding(.bottom, 140) // Space for footer (payment method + confirm button + padding)
-
-                    Spacer()
                 }
-                .background(Color(.systemBackground))
+                .padding(.horizontal)
             }
-            .ignoresSafeArea(.container, edges: .top)
+            .background(Color(.systemBackground))
 
             // Fixed footer - always visible at bottom
             VStack(spacing: 16) {
@@ -74,6 +67,16 @@ struct ExampleLinkStandaloneComponent: View {
                     }
                 }) {
                     HStack {
+                        if let paymentOption = linkController.paymentOption {
+                            Image(uiImage: paymentOption.image)
+                                .frame(width: 40, height: 40)
+                        } else {
+                            Image(systemName: "creditcard")
+                                .foregroundColor(.gray)
+                                .font(.title2)
+                                .frame(width: 32, height: 32)
+                        }
+                        
                         VStack(alignment: .leading, spacing: 4) {
                             Text("Payment method")
                                 .font(.subheadline)
@@ -131,6 +134,7 @@ struct ExampleLinkStandaloneComponent: View {
                     .background(Color.black)
                     .cornerRadius(25)
                 }
+                .disabled(linkController.paymentOption == nil)
             }
             .padding()
             .background(Color(.systemBackground))
@@ -155,7 +159,7 @@ struct ExampleLinkStandaloneComponent: View {
         STPAPIClient.shared.publishableKey = "pk_test_51HvTI7Lu5o3P18Zp6t5AgBSkMvWoTtA0nyA7pVYDqpfLkRtWun7qZTYCOHCReprfLM464yaBeF72UFfB7cY9WG4a00ZnDtiC2C"
 
         linkController.present(from: viewController, with: "email@email.com") {
-            // Nothing to do here…
+            self.paymentOption = linkController.paymentOption
         }
     }
 }
@@ -252,10 +256,8 @@ struct PaymentMethodSheet: View {
                     // Pay with Link row (interactive)
                     Button(action: presentLink) {
                         HStack(spacing: 16) {
-                            Image(systemName: "link")
-                                .foregroundColor(.blue)
-                                .font(.title2)
-                                .frame(width: 32, height: 32)
+                            Image(uiImage: Image.link_icon.makeImage())
+                                .frame(width: 40, height: 40)
 
                             VStack(alignment: .leading, spacing: 4) {
                                 Text("Pay with Link")
