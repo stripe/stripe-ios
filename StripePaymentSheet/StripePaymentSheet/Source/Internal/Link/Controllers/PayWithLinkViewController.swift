@@ -646,7 +646,7 @@ extension PayWithLinkViewController: PayWithLinkCoordinating {
             alwaysUseEphemeralSession: true
         )
         payWithLinkVC.payWithLinkDelegate = payWithLinkWebDelegate
-        // Dismis ourselves...
+        // Dismiss ourselves...
         self.dismiss(animated: false) {
             // ... and present the web controller. (This presentation will be handled by ASWebAuthenticationSession)
             payWithLinkVC.present(over: presentingViewController)
