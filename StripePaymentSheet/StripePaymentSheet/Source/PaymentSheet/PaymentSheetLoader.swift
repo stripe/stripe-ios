@@ -141,6 +141,9 @@ final class PaymentSheetLoader {
                 let isFcLiteKillswitchEnabled = elementsSession.flags["elements_disable_fc_lite"] == true
                 FinancialConnectionsSDKAvailability.fcLiteKillswitchEnabled = isFcLiteKillswitchEnabled
 
+                let shouldPreferFcLite = elementsSession.flags["elements_prefer_fc_lite"] == true
+                FinancialConnectionsSDKAvailability.shouldPreferFCLite = shouldPreferFcLite
+
                 // Send load finished analytic
                 // This is hacky; the logic to determine the default selected payment method belongs to the SavedPaymentOptionsViewController. We invoke it here just to report it to analytics before that VC loads.
                 let (defaultSelectedIndex, paymentOptionsViewModels) = SavedPaymentOptionsViewController.makeViewModels(
