@@ -9,7 +9,9 @@ import Combine
 import UIKit
 
 public class LinkController: ObservableObject {
+    private var internalPaymentOption: PaymentOption?
     @Published public private(set) var paymentOption: PaymentSheet.FlowController.PaymentOptionDisplayData?
+    private var loadResult: PaymentSheetLoader.LoadResult?
 
     public func present(
         from presentingViewController: UIViewController,
@@ -32,27 +34,43 @@ public class LinkController: ObservableObject {
 
         Task {
             do {
-                let result = try await PaymentSheetLoader.load(
-                    mode: .deferredIntent(intentConfiguration),
-                    configuration: configuration,
-                    analyticsHelper: analyticsHelper,
-                    integrationShape: .complete
-                )
+                var result = loadResult
+
+                if result == nil {
+                    result = try await PaymentSheetLoader.load(
+                        mode: .deferredIntent(intentConfiguration),
+                        configuration: configuration,
+                        analyticsHelper: analyticsHelper,
+                        integrationShape: .complete
+                    )
+                }
+
+                self.loadResult = result
+
+                var selectedPaymentDetailsID: String?
+
+                if case .link(let confirmOption) = internalPaymentOption {
+                    if case .withPaymentDetails(_, let paymentDetails, _, _) = confirmOption {
+                        selectedPaymentDetailsID = paymentDetails.stripeID
+                    }
+                }
 
                 await presentingViewController.presentNativeLink(
-                    selectedPaymentDetailsID: nil,
+                    selectedPaymentDetailsID: selectedPaymentDetailsID,
                     configuration: configuration,
-                    intent: result.intent,
-                    elementsSession: result.elementsSession,
+                    intent: loadResult!.intent,
+                    elementsSession: loadResult!.elementsSession,
                     analyticsHelper: analyticsHelper
                 ) { [weak self] confirmOption, _ in
                     guard let confirmOption else {
                         self?.paymentOption = nil
+                        self?.internalPaymentOption = nil
                         callback()
                         return
                     }
 
                     let paymentOption: PaymentOption = .link(option: confirmOption)
+                    self?.internalPaymentOption = paymentOption
                     self?.paymentOption = .init(paymentOption: paymentOption, currency: nil, iconStyle: .filled)
                     callback()
                 }
