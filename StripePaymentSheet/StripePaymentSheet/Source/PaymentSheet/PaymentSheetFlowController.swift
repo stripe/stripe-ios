@@ -402,10 +402,9 @@ extension PaymentSheet {
 
             // Overwrite completion closure to retain self until called
             let wrappedCompletion: () -> Void = {
-                self.updatePaymentOption { // ensure the payment option property is always updated before dismissing
-                    completion?()
-                    self.presentPaymentOptionsCompletion = nil
-                }
+                self.updatePaymentOption()
+                completion?()
+                self.presentPaymentOptionsCompletion = nil
             }
             presentPaymentOptionsCompletion = wrappedCompletion
 
@@ -628,24 +627,11 @@ extension PaymentSheet {
         }
 
         /// Updates the published paymentOption property based on the current state
-        internal func updatePaymentOption(completion: (() -> Void)? = nil) {
-            if Thread.isMainThread {
-                if let selectedPaymentOption = internalPaymentOption {
-                    paymentOption = PaymentOptionDisplayData(paymentOption: selectedPaymentOption, currency: intent.currency, iconStyle: configuration.appearance.iconStyle)
-                } else {
-                    paymentOption = nil
-                }
-                completion?()
+        internal func updatePaymentOption() {
+            if let selectedPaymentOption = internalPaymentOption {
+                paymentOption = PaymentOptionDisplayData(paymentOption: selectedPaymentOption, currency: intent.currency, iconStyle: configuration.appearance.iconStyle)
             } else {
-                DispatchQueue.main.async { [weak self] in
-                    guard let self = self else { return }
-                    if let selectedPaymentOption = self.internalPaymentOption {
-                        self.paymentOption = PaymentOptionDisplayData(paymentOption: selectedPaymentOption, currency: self.intent.currency, iconStyle: configuration.appearance.iconStyle)
-                    } else {
-                        self.paymentOption = nil
-                    }
-                    completion?()
-                }
+                paymentOption = nil
             }
         }
 
