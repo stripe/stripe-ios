@@ -212,15 +212,72 @@ struct CarOptionRow: View {
 @available(iOS 16.0, *)
 struct PaymentMethodSheet: View {
     @Environment(\.dismiss) private var dismiss
+    @StateObject private var linkController = LinkController.create()
 
     var body: some View {
         NavigationView {
-            VStack {
-                Spacer()
-                Text("Payment method")
-                    .font(.title2)
-                    .fontWeight(.medium)
-                Spacer()
+            VStack(spacing: 0) {
+                // Payment options list
+                VStack(spacing: 0) {
+                    // Add credit card row (non-interactive)
+                    HStack(spacing: 16) {
+                        Image(systemName: "creditcard")
+                            .foregroundColor(.gray)
+                            .font(.title2)
+                            .frame(width: 32, height: 32)
+
+                        VStack(alignment: .leading, spacing: 4) {
+                            Text("Add credit card")
+                                .font(.headline)
+                                .fontWeight(.medium)
+                            Text("Visa, Mastercard, Amex")
+                                .font(.subheadline)
+                                .foregroundColor(.secondary)
+                        }
+
+                        Spacer()
+
+                        Image(systemName: "chevron.right")
+                            .foregroundColor(.secondary)
+                    }
+                    .padding()
+                    .background(Color(.systemGray6))
+                    .cornerRadius(12)
+                    .padding(.horizontal)
+                    .padding(.top)
+
+                    // Pay with Link row (interactive)
+                    Button(action: presentLink) {
+                        HStack(spacing: 16) {
+                            Image(systemName: "link")
+                                .foregroundColor(.blue)
+                                .font(.title2)
+                                .frame(width: 32, height: 32)
+
+                            VStack(alignment: .leading, spacing: 4) {
+                                Text("Pay with Link")
+                                    .font(.headline)
+                                    .fontWeight(.medium)
+                                Text("email@email.com")
+                                    .font(.subheadline)
+                                    .foregroundColor(.secondary)
+                            }
+
+                            Spacer()
+
+                            Image(systemName: "chevron.right")
+                                .foregroundColor(.secondary)
+                        }
+                        .padding()
+                        .background(Color(.systemGray6))
+                        .cornerRadius(12)
+                    }
+                    .buttonStyle(PlainButtonStyle())
+                    .padding(.horizontal)
+                    .padding(.top, 12)
+
+                    Spacer()
+                }
             }
             .navigationTitle("Payment")
             .navigationBarTitleDisplayMode(.inline)
@@ -231,6 +288,18 @@ struct PaymentMethodSheet: View {
                     }
                 }
             }
+        }
+    }
+
+    private func presentLink() {
+        guard let viewController = findViewController() else {
+            return
+        }
+
+        STPAPIClient.shared.publishableKey = "pk_test_51HvTI7Lu5o3P18Zp6t5AgBSkMvWoTtA0nyA7pVYDqpfLkRtWun7qZTYCOHCReprfLM464yaBeF72UFfB7cY9WG4a00ZnDtiC2C"
+
+        linkController.present(from: viewController, with: "email@email.com") {
+            // Handle completion if needed
         }
     }
 }
