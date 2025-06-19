@@ -8,13 +8,14 @@
 import StripePaymentSheet
 import SwiftUI
 
+@available(iOS 14.0, *)
 struct ExampleLinkStandaloneComponent: View {
     @State private var selectedPaymentMethod: PaymentMethod = .card
     @State private var tipAmount: Double = 2.0
+    @State private var hasPresentedLink = false
+    @State private var paymentOption: PaymentSheet.FlowController.PaymentOptionDisplayData?
 
-    private var linkController: LinkController {
-        LinkController.create()
-    }
+    @StateObject private var linkController = LinkController.create()
 
     private var subtotal: Double = 15.50
     private var tax: Double = 1.55
@@ -79,20 +80,30 @@ struct ExampleLinkStandaloneComponent: View {
                         .padding(.horizontal)
 
                     VStack(spacing: 8) {
-                        PaymentMethodRow(
-                            method: .card,
-                            isSelected: selectedPaymentMethod == .card,
-                            action: { selectedPaymentMethod = .card }
-                        )
+                        // Only show Card option if no Link payment option is selected
+                        if paymentOption == nil {
+                            PaymentMethodRow(
+                                method: .card,
+                                isSelected: selectedPaymentMethod == .card,
+                                action: { selectedPaymentMethod = .card }
+                            )
+                        }
 
-                        PaymentMethodRow(
-                            method: .link,
-                            isSelected: selectedPaymentMethod == .link,
-                            action: {
-                                selectedPaymentMethod = .link
-                                presentLink()
-                            }
-                        )
+                        // Show Link option if a payment option is selected
+                        if let paymentOption {
+                            PaymentMethodRow(
+                                method: .link,
+                                isSelected: true,
+                                subtitle: paymentOption.label,
+                                action: { presentLink() }
+                            )
+                        } else {
+                            PaymentMethodRow(
+                                method: .link,
+                                isSelected: selectedPaymentMethod == .link,
+                                action: { presentLink() }
+                            )
+                        }
                     }
                     .padding(.horizontal)
                 }
@@ -120,7 +131,10 @@ struct ExampleLinkStandaloneComponent: View {
                     .padding(.horizontal)
 
                     Button(action: {
-                        if selectedPaymentMethod == .link {
+                        if linkController.paymentOption != nil {
+                            // Link payment option is selected, proceed with payment
+                            print("Processing Link payment...")
+                        } else if selectedPaymentMethod == .link {
                             presentLink()
                         } else {
                             // Handle card payment
@@ -147,6 +161,12 @@ struct ExampleLinkStandaloneComponent: View {
                 .background(Color(.systemBackground))
             }
         }
+        .onAppear {
+            if !hasPresentedLink {
+                hasPresentedLink = true
+                presentLink()
+            }
+        }
     }
 
     private func presentLink() {
@@ -157,7 +177,7 @@ struct ExampleLinkStandaloneComponent: View {
         STPAPIClient.shared.publishableKey = "pk_test_51HvTI7Lu5o3P18Zp6t5AgBSkMvWoTtA0nyA7pVYDqpfLkRtWun7qZTYCOHCReprfLM464yaBeF72UFfB7cY9WG4a00ZnDtiC2C"
 
         linkController.present(from: viewController, with: "email@email.com") {
-            print(linkController.paymentOption?.label ?? "no payment method")
+            self.paymentOption = linkController.paymentOption
         }
     }
 }
@@ -201,7 +221,15 @@ struct TipButton: View {
 struct PaymentMethodRow: View {
     let method: PaymentMethod
     let isSelected: Bool
+    let subtitle: String?
     let action: () -> Void
+
+    init(method: PaymentMethod, isSelected: Bool, subtitle: String? = nil, action: @escaping () -> Void) {
+        self.method = method
+        self.isSelected = isSelected
+        self.subtitle = subtitle
+        self.action = action
+    }
 
     var body: some View {
         Button(action: action) {
@@ -214,7 +242,7 @@ struct PaymentMethodRow: View {
                     Text(method.displayName)
                         .font(.subheadline)
                         .fontWeight(.medium)
-                    Text(method.description)
+                    Text(subtitle ?? method.description)
                         .font(.caption)
                         .foregroundColor(.secondary)
                 }
@@ -293,6 +321,10 @@ private func findViewController() -> UIViewController? {
 
 struct ExampleLinkStandaloneComponent_Previews: PreviewProvider {
     static var previews: some View {
-        ExampleLinkStandaloneComponent()
+        if #available(iOS 14.0, *) {
+            ExampleLinkStandaloneComponent()
+        } else {
+            // Fallback on earlier versions
+        }
     }
 }

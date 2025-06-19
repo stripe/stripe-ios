@@ -5,11 +5,11 @@
 //  Created by Till Hellmund on 6/19/25.
 //
 
+import Combine
 import UIKit
 
-public class LinkController {
-
-    private(set) public var paymentOption: PaymentSheet.FlowController.PaymentOptionDisplayData?
+public class LinkController: ObservableObject {
+    @Published public private(set) var paymentOption: PaymentSheet.FlowController.PaymentOptionDisplayData?
 
     public func present(
         from presentingViewController: UIViewController,

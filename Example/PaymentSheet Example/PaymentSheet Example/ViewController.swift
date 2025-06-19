@@ -57,7 +57,11 @@ class ViewController: UIViewController {
         }
     }
     @IBSegueAction func showLinkStandaloneComponent(_ coder: NSCoder) -> UIViewController? {
-        return UIHostingController(coder: coder, rootView: ExampleLinkStandaloneComponent())
+        if #available(iOS 14.0, *) {
+            return UIHostingController(coder: coder, rootView: ExampleLinkStandaloneComponent())
+        } else {
+            fatalError(">= iOS 14.0 required")
+        }
     }
 }
 
