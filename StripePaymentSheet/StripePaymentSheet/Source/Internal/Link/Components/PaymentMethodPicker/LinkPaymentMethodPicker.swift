@@ -298,6 +298,10 @@ extension LinkPaymentMethodPicker {
         cell.isLoading = false
     }
 
+    func setAddButtonIsLoading(_ isLoading: Bool) {
+        addPaymentMethodButton.isLoading = isLoading
+    }
+
     private func reloadDataIfNeeded() {
         if needsDataReload {
             reloadData()
