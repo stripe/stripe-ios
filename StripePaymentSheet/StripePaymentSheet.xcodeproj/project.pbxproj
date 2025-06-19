@@ -374,6 +374,7 @@
 		CB28DBAF2DBD57BB008DD7DF /* SavedPaymentMethodFormFactory+Link.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB28DBAE2DBD57BB008DD7DF /* SavedPaymentMethodFormFactory+Link.swift */; };
 		CB46EF492CED1A2E00E9A7F2 /* PaymentMethodIncentive.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB46EF482CED1A2E00E9A7F2 /* PaymentMethodIncentive.swift */; };
 		CB46EF4B2CED1BDA00E9A7F2 /* PromoBadgeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB46EF4A2CED1BDA00E9A7F2 /* PromoBadgeView.swift */; };
+		CB6F8F892E0455D9003551D5 /* LinkController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB6F8F882E0455D9003551D5 /* LinkController.swift */; };
 		CB76C0792DE4B57D0009E086 /* LinkDefaultOptInView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB76C0782DE4B57D0009E086 /* LinkDefaultOptInView.swift */; };
 		CBC98E222DD53F9D00458788 /* LinkFlowControllerHelpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = CBC98E212DD53F9D00458788 /* LinkFlowControllerHelpers.swift */; };
 		CBE09F4D2D8DA62A0083D0B8 /* LinkConfirmationExtras.swift in Sources */ = {isa = PBXBuildFile; fileRef = CBE09F4C2D8DA62A0083D0B8 /* LinkConfirmationExtras.swift */; };
@@ -889,6 +890,7 @@
 		CB28DBAE2DBD57BB008DD7DF /* SavedPaymentMethodFormFactory+Link.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SavedPaymentMethodFormFactory+Link.swift"; sourceTree = "<group>"; };
 		CB46EF482CED1A2E00E9A7F2 /* PaymentMethodIncentive.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentMethodIncentive.swift; sourceTree = "<group>"; };
 		CB46EF4A2CED1BDA00E9A7F2 /* PromoBadgeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PromoBadgeView.swift; sourceTree = "<group>"; };
+		CB6F8F882E0455D9003551D5 /* LinkController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LinkController.swift; sourceTree = "<group>"; };
 		CB76C0782DE4B57D0009E086 /* LinkDefaultOptInView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LinkDefaultOptInView.swift; sourceTree = "<group>"; };
 		CBC98E212DD53F9D00458788 /* LinkFlowControllerHelpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LinkFlowControllerHelpers.swift; sourceTree = "<group>"; };
 		CBCFE3D39D670C3C77C59722 /* cs-CZ */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "cs-CZ"; path = "cs-CZ.lproj/Localizable.strings"; sourceTree = "<group>"; };
@@ -1824,6 +1826,7 @@
 		DD2A9628CAC1A50896B625C2 /* Link */ = {
 			isa = PBXGroup;
 			children = (
+				CB6F8F882E0455D9003551D5 /* LinkController.swift */,
 				52185F7315D3C4089D3465BD /* LinkPaymentController.swift */,
 				B41560E0599A68A84F5C76D2 /* PaymentSheet-LinkConfirmOption.swift */,
 				313D00C72CD9972F00A8E6B0 /* PayWithNativeLinkController.swift */,
@@ -2539,6 +2542,7 @@
 				A59432E765A72CEE2C36E0EF /* PaymentSheetFormFactory+Card.swift in Sources */,
 				49803444CD948F1ED28FF021 /* PaymentSheetFormFactory+FormSpec.swift in Sources */,
 				B61E2C202C5C44FE0045B5CF /* PaymentSheetAnalyticsHelper.swift in Sources */,
+				CB6F8F892E0455D9003551D5 /* LinkController.swift in Sources */,
 				C5E3750BBCA700CF364F7578 /* PaymentSheetFormFactory+OXXO.swift in Sources */,
 				49909A352D8B48D40031EC33 /* FCLiteError.swift in Sources */,
 				4930D8D52DB92CDC0091FBFE /* LinkPaymentMethodPicker-Email.swift in Sources */,
