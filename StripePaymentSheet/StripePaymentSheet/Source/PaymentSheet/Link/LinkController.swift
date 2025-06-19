@@ -21,7 +21,7 @@ public class LinkController: ObservableObject {
         session != nil
     }
 
-    public func lookupConsumer(with email: String, completion: @escaping (Bool) -> Void) {
+    public func lookupConsumer(with email: String, completion: @escaping () -> Void) {
         let intentConfiguration = PaymentSheet.IntentConfiguration(
             mode: .setup(
                 currency: nil,
@@ -49,11 +49,10 @@ public class LinkController: ObservableObject {
 
                 let linkAccount = LinkAccountContext.shared.account
                 self.session = linkAccount?.currentSession
-
-                completion(linkAccount?.isRegistered == true)
+                completion()
             } catch {
                 print(error)
-                completion(false)
+                completion()
             }
         }
     }

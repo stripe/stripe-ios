@@ -156,8 +156,8 @@ struct ExampleLinkStandaloneComponent: View {
         .onAppear {
             STPAPIClient.shared.publishableKey = "pk_test_51HvTI7Lu5o3P18Zp6t5AgBSkMvWoTtA0nyA7pVYDqpfLkRtWun7qZTYCOHCReprfLM464yaBeF72UFfB7cY9WG4a00ZnDtiC2C"
 
-            linkController.lookupConsumer(with: "email@email.com") { exists in
-                print("Existing Link consumer? \(exists)")
+            linkController.lookupConsumer(with: "email@email.com") {
+                print("Existing Link consumer? \(linkController.isExistingLinkConsumer)")
             }
         }
     }
@@ -296,7 +296,7 @@ struct PaymentMethodSheet: View {
                     Spacer()
                 }
             }
-            .navigationTitle("Payment")
+            .navigationTitle("Add payment method")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .navigationBarTrailing) {
