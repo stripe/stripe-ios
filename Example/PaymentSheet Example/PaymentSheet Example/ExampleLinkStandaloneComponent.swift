@@ -5,141 +5,92 @@
 //  Created by Till Hellmund on 6/19/25.
 //
 
+import MapKit
 @_spi(STP) import StripePaymentSheet
 import SwiftUI
 
-@available(iOS 15.0, *)
+@available(iOS 16.0, *)
 struct ExampleLinkStandaloneComponent: View {
-    @State private var selectedPaymentMethod: PaymentMethod?
-    @State private var tipAmount: Double = 2.0
+    @State private var selectedCarType: CarType = CarType.bolt
     @State private var hasPresentedLink = false
     @State private var paymentOption: PaymentSheet.FlowController.PaymentOptionDisplayData?
+    @State private var showingPaymentSheet = false
     @State private var showingAlert = false
     @State private var alertTitle = ""
     @State private var alertMessage = ""
 
     @StateObject private var linkController = LinkController.create()
 
-    private var subtotal: Double = 15.50
-    private var tax: Double = 1.55
-    private var total: Double {
-        subtotal + tax + tipAmount
-    }
-
-    private var hasValidSelection: Bool {
-        selectedPaymentMethod != nil || paymentOption != nil
-    }
+    // Map region centered on San Francisco
+    @State private var region = MKCoordinateRegion(
+        center: CLLocationCoordinate2D(latitude: 37.7749, longitude: -122.4194),
+        span: MKCoordinateSpan(latitudeDelta: 0.05, longitudeDelta: 0.05)
+    )
 
     var body: some View {
-        NavigationView {
+        VStack(spacing: 0) {
+            // Top half - Map
+            Map(coordinateRegion: $region)
+                .frame(height: UIScreen.main.bounds.height * 0.5)
+
+            // Bottom half - Car options and payment
             VStack(spacing: 0) {
-                // Header
+                // Car options - takes up space as needed
                 VStack(alignment: .leading, spacing: 16) {
-                    HStack {
-                        VStack(alignment: .leading, spacing: 4) {
-                            Text("Ride Summary")
-                                .font(.title)
-                                .fontWeight(.bold)
-
-                            Text("123 Main St → 456 Oak Ave")
-                                .font(.subheadline)
-                                .foregroundColor(.secondary)
-                        }
-                        Spacer()
-                    }
-
-                    // Trip details
-                    VStack(spacing: 12) {
-                        TripDetailRow(title: "Base fare", amount: "$12.50")
-                        TripDetailRow(title: "Distance (2.3 mi)", amount: "$3.00")
-                        Divider()
-                        TripDetailRow(title: "Subtotal", amount: String(format: "$%.2f", subtotal))
-                        TripDetailRow(title: "Tax", amount: String(format: "$%.2f", tax))
-                    }
-                }
-                .padding()
-                .background(Color(.systemBackground))
-
-                // Tip section
-                VStack(alignment: .leading, spacing: 12) {
-                    Text("Tip your driver")
-                        .font(.headline)
+                    Text("Choose your ride")
+                        .font(.title2)
+                        .fontWeight(.bold)
                         .padding(.horizontal)
+                        .padding(.top)
 
-                    HStack(spacing: 12) {
-                        ForEach([0.0, 1.0, 2.0, 3.0, 5.0], id: \.self) { tip in
-                            TipButton(
-                                amount: tip,
-                                isSelected: tipAmount == tip,
-                                action: { tipAmount = tip }
+                    VStack(spacing: 12) {
+                        ForEach(CarType.allCases, id: \.self) { carType in
+                            CarOptionRow(
+                                carType: carType,
+                                isSelected: selectedCarType == carType,
+                                action: { selectedCarType = carType }
                             )
                         }
                     }
                     .padding(.horizontal)
-                }
-                .padding(.vertical)
-                .background(Color(.systemGray6))
-
-                // Payment method section
-                VStack(alignment: .leading, spacing: 0) {
-                    Text("Payment Method")
-                        .font(.headline)
-                        .padding(.horizontal)
-                        .padding(.vertical, 16)
-                        .background(Color(.systemBackground))
-
-                    VStack(spacing: 0) {
-                        // Only show Card option if no Link payment option is selected
-                        if paymentOption == nil {
-                            PaymentMethodListRow(
-                                method: .card,
-                                isSelected: selectedPaymentMethod == .card,
-                                action: { selectedPaymentMethod = .card }
-                            )
-
-                            Divider()
-                                .padding(.leading, 56)
-                        }
-
-                        // Show Link option if a payment option is selected
-                        if let paymentOption {
-                            PaymentMethodListRow(
-                                method: .link,
-                                isSelected: true,
-                                subtitle: paymentOption.labels.sublabel ?? paymentOption.label,
-                                action: { presentLink() }
-                            )
-                        } else {
-                            PaymentMethodListRow(
-                                method: .link,
-                                isSelected: selectedPaymentMethod == .link,
-                                action: { presentLink() }
-                            )
-                        }
-                    }
-                    .background(Color(.systemBackground))
                 }
 
                 Spacer()
 
-                // Total and Pay button
+                // Fixed footer - always visible
                 VStack(spacing: 16) {
-                    VStack(spacing: 8) {
+                    // Payment method row
+                    Button(action: {
+                        showingPaymentSheet = true
+                    }) {
                         HStack {
-                            Text("Total")
-                                .font(.headline)
+                            VStack(alignment: .leading, spacing: 4) {
+                                Text("Payment method")
+                                    .font(.subheadline)
+                                    .foregroundColor(.secondary)
+                                if let paymentOption = paymentOption {
+                                    Text(paymentOption.labels.sublabel ?? paymentOption.label)
+                                        .font(.headline)
+                                        .foregroundColor(.primary)
+                                } else {
+                                    Text("Choose payment method")
+                                        .font(.headline)
+                                        .foregroundColor(.primary)
+                                }
+                            }
+
                             Spacer()
-                            Text(String(format: "$%.2f", total))
-                                .font(.title)
-                                .fontWeight(.bold)
+
+                            Image(systemName: "chevron.right")
+                                .foregroundColor(.secondary)
                         }
-
-                        Text("You'll be charged after your ride")
-                            .font(.caption)
-                            .foregroundColor(.secondary)
+                        .padding()
+                        .background(Color(.systemGray6))
+                        .cornerRadius(12)
                     }
-                    .padding(.horizontal)
+                    .buttonStyle(PlainButtonStyle())
 
+                    // Confirm order button
                     Button(action: {
                         linkController.createPaymentMethod { result in
                             DispatchQueue.main.async {
@@ -157,31 +108,29 @@ struct ExampleLinkStandaloneComponent: View {
                         }
                     }) {
                         HStack {
-                            Text("Pay")
+                            Text("Confirm order")
                                 .font(.headline)
                                 .fontWeight(.semibold)
-                            Text(String(format: "$%.2f", total))
+                            Text(String(format: "$%.2f", selectedCarType.price))
                                 .font(.headline)
                                 .fontWeight(.semibold)
                         }
                         .foregroundColor(.white)
                         .frame(maxWidth: .infinity)
                         .frame(height: 50)
-                        .background(hasValidSelection ? Color.black : Color.gray)
+                        .background(Color.black)
                         .cornerRadius(25)
                     }
-                    .disabled(!hasValidSelection)
-                    .padding(.horizontal)
-                    .padding(.bottom, 34) // Safe area
                 }
+                .padding()
                 .background(Color(.systemBackground))
+                .shadow(color: .black.opacity(0.1), radius: 8, x: 0, y: -2)
             }
+            .background(Color(.systemBackground))
         }
-        .onAppear {
-            if !hasPresentedLink {
-                hasPresentedLink = true
-                presentLink()
-            }
+        .sheet(isPresented: $showingPaymentSheet) {
+            PaymentMethodSheet()
+                .presentationDetents([.medium])
         }
         .alert(alertTitle, isPresented: $showingAlert) {
             Button("OK") { }
@@ -204,123 +153,48 @@ struct ExampleLinkStandaloneComponent: View {
 }
 
 // MARK: - Supporting Views
-
-struct TripDetailRow: View {
-    let title: String
-    let amount: String
-
-    var body: some View {
-        HStack {
-            Text(title)
-                .foregroundColor(.secondary)
-            Spacer()
-            Text(amount)
-                .fontWeight(.medium)
-        }
-    }
-}
-
-struct TipButton: View {
-    let amount: Double
+@available(iOS 16.0, *)
+struct CarOptionRow: View {
+    let carType: CarType
     let isSelected: Bool
     let action: () -> Void
-
-    var body: some View {
-        Button(action: action) {
-            Text(amount == 0 ? "No tip" : String(format: "$%.0f", amount))
-                .font(.subheadline)
-                .fontWeight(.medium)
-                .foregroundColor(isSelected ? .white : .black)
-                .frame(maxWidth: .infinity)
-                .frame(height: 40)
-                .background(isSelected ? Color.black : Color(.systemGray5))
-                .cornerRadius(20)
-        }
-    }
-}
-
-struct PaymentMethodListRow: View {
-    let method: PaymentMethod
-    let isSelected: Bool
-    let subtitle: String?
-    let action: () -> Void
-
-    init(method: PaymentMethod, isSelected: Bool, subtitle: String? = nil, action: @escaping () -> Void) {
-        self.method = method
-        self.isSelected = isSelected
-        self.subtitle = subtitle
-        self.action = action
-    }
 
     var body: some View {
         Button(action: action) {
             HStack(spacing: 16) {
-                Image(systemName: method.iconName)
-                    .foregroundColor(method.iconColor)
-                    .frame(width: 24, height: 24)
+                Image(systemName: carType.iconName)
+                    .foregroundColor(carType.iconColor)
+                    .font(.title)
+                    .frame(width: 32, height: 32)
 
-                VStack(alignment: .leading, spacing: 2) {
-                    Text(method.displayName)
-                        .font(.subheadline)
+                VStack(alignment: .leading, spacing: 4) {
+                    Text(carType.displayName)
+                        .font(.headline)
                         .fontWeight(.medium)
-                    Text(subtitle ?? method.description)
-                        .font(.caption)
+                    Text(carType.description)
+                        .font(.subheadline)
                         .foregroundColor(.secondary)
                 }
 
                 Spacer()
 
+                VStack(alignment: .trailing, spacing: 4) {
+                    Text(String(format: "$%.2f", carType.price))
+                        .font(.headline)
+                        .fontWeight(.semibold)
+                    Text(carType.eta)
+                        .font(.caption)
+                        .foregroundColor(.secondary)
+                }
+
                 if isSelected {
                     Image(systemName: "checkmark.circle.fill")
                         .foregroundColor(.blue)
-                        .font(.title)
+                        .font(.title2)
                 } else {
                     Image(systemName: "circle")
                         .foregroundColor(.gray)
-                        .font(.title)
-                }
-            }
-            .padding(.horizontal, 16)
-            .padding(.vertical, 12)
-        }
-        .buttonStyle(PlainButtonStyle())
-    }
-}
-
-struct PaymentMethodRow: View {
-    let method: PaymentMethod
-    let isSelected: Bool
-    let subtitle: String?
-    let action: () -> Void
-
-    init(method: PaymentMethod, isSelected: Bool, subtitle: String? = nil, action: @escaping () -> Void) {
-        self.method = method
-        self.isSelected = isSelected
-        self.subtitle = subtitle
-        self.action = action
-    }
-
-    var body: some View {
-        Button(action: action) {
-            HStack {
-                Image(systemName: method.iconName)
-                    .foregroundColor(method.iconColor)
-                    .frame(width: 24, height: 24)
-
-                VStack(alignment: .leading, spacing: 2) {
-                    Text(method.displayName)
-                        .font(.subheadline)
-                        .fontWeight(.medium)
-                    Text(subtitle ?? method.description)
-                        .font(.caption)
-                        .foregroundColor(.secondary)
-                }
-
-                Spacer()
-
-                if isSelected {
-                    Image(systemName: "checkmark.circle.fill")
-                        .foregroundColor(.blue)
+                        .font(.title2)
                 }
             }
             .padding()
@@ -330,51 +204,102 @@ struct PaymentMethodRow: View {
         .buttonStyle(PlainButtonStyle())
     }
 }
+@available(iOS 16.0, *)
+struct PaymentMethodSheet: View {
+    @Environment(\.dismiss) private var dismiss
+
+    var body: some View {
+        NavigationView {
+            VStack {
+                Spacer()
+                Text("Payment method")
+                    .font(.title2)
+                    .fontWeight(.medium)
+                Spacer()
+            }
+            .navigationTitle("Payment")
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    Button("Done") {
+                        dismiss()
+                    }
+                }
+            }
+        }
+    }
+}
 
 // MARK: - Supporting Types
 
-enum PaymentMethod: CaseIterable {
-    case card
-    case link
+enum CarType: CaseIterable {
+    case bolt
+    case comfort
+    case van
 
     var displayName: String {
         switch self {
-        case .card:
-            return "Card"
-        case .link:
-            return "Link"
+        case .bolt:
+            return "Bolt"
+        case .comfort:
+            return "Comfort"
+        case .van:
+            return "Van"
         }
     }
 
     var description: String {
         switch self {
-        case .card:
-            return "Credit or debit card"
-        case .link:
-            return "Pay with Link"
+        case .bolt:
+            return "Affordable ride"
+        case .comfort:
+            return "Extra legroom"
+        case .van:
+            return "Seats 6 passengers"
+        }
+    }
+
+    var price: Double {
+        switch self {
+        case .bolt:
+            return 12.50
+        case .comfort:
+            return 18.75
+        case .van:
+            return 25.00
+        }
+    }
+
+    var eta: String {
+        switch self {
+        case .bolt:
+            return "2 min"
+        case .comfort:
+            return "4 min"
+        case .van:
+            return "6 min"
         }
     }
 
     var iconName: String {
         switch self {
-        case .card:
-            return "creditcard"
-        case .link:
-            return "link"
+        case .bolt:
+            return "car.fill"
+        case .comfort:
+            return "car.circle.fill"
+        case .van:
+            return "bus.fill"
         }
     }
 
     var iconColor: Color {
         switch self {
-        case .card:
+        case .bolt:
             return .blue
-        case .link:
-            let uiColor = UIColor(red: 0, green: 0.84, blue: 0.44, alpha: 1.0) // #00D670
-            if #available(iOS 15.0, *) {
-                return Color(uiColor: uiColor)
-            } else {
-                return .green
-            }
+        case .comfort:
+            return .green
+        case .van:
+            return .orange
         }
     }
 }
@@ -390,7 +315,7 @@ private func findViewController() -> UIViewController? {
 
 struct ExampleLinkStandaloneComponent_Previews: PreviewProvider {
     static var previews: some View {
-        if #available(iOS 15.0, *) {
+        if #available(iOS 16.0, *) {
             ExampleLinkStandaloneComponent()
         } else {
             // Fallback on earlier versions
