@@ -67,7 +67,7 @@ struct ExampleLinkStandaloneComponent: View {
                         showingPaymentSheet = true
                     }
                 }) {
-                    HStack {
+                    HStack(spacing: 20) {
                         if let paymentOption = linkController.paymentOption {
                             Image(uiImage: paymentOption.image)
                                 .frame(width: 40, height: 40)
@@ -79,13 +79,16 @@ struct ExampleLinkStandaloneComponent: View {
                         }
 
                         VStack(alignment: .leading, spacing: 4) {
-                            Text("Payment method")
-                                .font(.subheadline)
-                                .foregroundColor(.secondary)
                             if let paymentOption = linkController.paymentOption {
-                                Text(paymentOption.labels.sublabel ?? paymentOption.label)
+                                Text(paymentOption.labels.label)
                                     .font(.headline)
                                     .foregroundColor(.primary)
+
+                                if let sublabel = paymentOption.labels.sublabel {
+                                    Text(sublabel)
+                                        .font(.subheadline)
+                                        .foregroundColor(.secondary)
+                                }
                             } else {
                                 Text("Choose payment method")
                                     .font(.headline)
@@ -143,7 +146,7 @@ struct ExampleLinkStandaloneComponent: View {
         }
         .sheet(isPresented: $showingPaymentSheet) {
             PaymentMethodSheet(linkController: linkController)
-                .presentationDetents([.medium])
+                .presentationDetents([.fraction(0.35)])
         }
         .alert(alertTitle, isPresented: $showingAlert) {
             Button("OK") { }
@@ -151,6 +154,8 @@ struct ExampleLinkStandaloneComponent: View {
             Text(alertMessage)
         }
         .onAppear {
+            STPAPIClient.shared.publishableKey = "pk_test_51HvTI7Lu5o3P18Zp6t5AgBSkMvWoTtA0nyA7pVYDqpfLkRtWun7qZTYCOHCReprfLM464yaBeF72UFfB7cY9WG4a00ZnDtiC2C"
+
             linkController.lookupConsumer(with: "email@email.com") { exists in
                 print("Existing Link consumer? \(exists)")
             }
@@ -161,8 +166,6 @@ struct ExampleLinkStandaloneComponent: View {
         guard let viewController = findViewController() else {
             return
         }
-
-        STPAPIClient.shared.publishableKey = "pk_test_51HvTI7Lu5o3P18Zp6t5AgBSkMvWoTtA0nyA7pVYDqpfLkRtWun7qZTYCOHCReprfLM464yaBeF72UFfB7cY9WG4a00ZnDtiC2C"
 
         linkController.present(from: viewController, with: "email@email.com") {
             self.paymentOption = linkController.paymentOption
@@ -271,7 +274,7 @@ struct PaymentMethodSheet: View {
                                     .fontWeight(.medium)
 
                                 if linkController.isExistingLinkConsumer {
-                                    Text("email@email.com")
+                                    Text("Log in as email@email.com")
                                         .font(.subheadline)
                                         .foregroundColor(.secondary)
                                 }

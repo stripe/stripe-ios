@@ -51,6 +51,9 @@ public class LinkController: ObservableObject {
                 self.session = linkAccount?.currentSession
 
                 completion(linkAccount?.isRegistered == true)
+            } catch {
+                print(error)
+                completion(false)
             }
         }
     }
