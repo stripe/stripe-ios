@@ -8,6 +8,8 @@
 import Combine
 import UIKit
 
+@_spi(STP) import StripePayments
+
 public class LinkController: ObservableObject {
     private var internalPaymentOption: PaymentOption?
     @Published public private(set) var paymentOption: PaymentSheet.FlowController.PaymentOptionDisplayData?
@@ -78,6 +80,40 @@ public class LinkController: ObservableObject {
                 fatalError(error.localizedDescription)
             }
         }
+    }
+
+    public func createPaymentMethod(completion: @escaping (Result<STPPaymentMethod, Error>) -> Void) {
+        guard let paymentDetailsID = internalPaymentOption?.currentLinkPaymentMethod else {
+            return
+        }
+
+        guard let consumerSessionClientSecret = LinkAccountContext.shared.account?.currentSession?.clientSecret else {
+            return
+        }
+
+        let apiClient = STPAPIClient.shared
+
+        apiClient.sharePaymentDetails(
+            for: consumerSessionClientSecret,
+            id: paymentDetailsID,
+            consumerAccountPublishableKey: nil,
+            allowRedisplay: .unspecified,
+            cvc: nil,
+            expectedPaymentMethodType: nil,
+            billingPhoneNumber: nil
+        ) { shareResult in
+            switch shareResult {
+            case .success(let success):
+                completion(.success(success.paymentMethod))
+            case .failure(let failure):
+                completion(.failure(failure))
+            }
+        }
+
+//        DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+//            let paymentMethod = STPPaymentMethod(stripeId: "", type: .link)
+//            completion(.success(paymentMethod))
+//        }
     }
 
     public static func create() -> LinkController {

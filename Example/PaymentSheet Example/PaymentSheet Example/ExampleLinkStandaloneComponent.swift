@@ -8,12 +8,15 @@
 @_spi(STP) import StripePaymentSheet
 import SwiftUI
 
-@available(iOS 14.0, *)
+@available(iOS 15.0, *)
 struct ExampleLinkStandaloneComponent: View {
     @State private var selectedPaymentMethod: PaymentMethod?
     @State private var tipAmount: Double = 2.0
     @State private var hasPresentedLink = false
     @State private var paymentOption: PaymentSheet.FlowController.PaymentOptionDisplayData?
+    @State private var showingAlert = false
+    @State private var alertTitle = ""
+    @State private var alertMessage = ""
 
     @StateObject private var linkController = LinkController.create()
 
@@ -138,14 +141,19 @@ struct ExampleLinkStandaloneComponent: View {
                     .padding(.horizontal)
 
                     Button(action: {
-                        if linkController.paymentOption != nil {
-                            // Link payment option is selected, proceed with payment
-                            print("Processing Link payment...")
-                        } else if selectedPaymentMethod == .link {
-                            presentLink()
-                        } else {
-                            // Handle card payment
-                            print("Processing card payment...")
+                        linkController.createPaymentMethod { result in
+                            DispatchQueue.main.async {
+                                switch result {
+                                case .success(let paymentMethod):
+                                    alertTitle = "Success"
+                                    alertMessage = paymentMethod.stripeId
+                                    showingAlert = true
+                                case .failure(let error):
+                                    alertTitle = "Error"
+                                    alertMessage = error.localizedDescription
+                                    showingAlert = true
+                                }
+                            }
                         }
                     }) {
                         HStack {
@@ -174,6 +182,11 @@ struct ExampleLinkStandaloneComponent: View {
                 hasPresentedLink = true
                 presentLink()
             }
+        }
+        .alert(alertTitle, isPresented: $showingAlert) {
+            Button("OK") { }
+        } message: {
+            Text(alertMessage)
         }
     }
 
@@ -377,7 +390,7 @@ private func findViewController() -> UIViewController? {
 
 struct ExampleLinkStandaloneComponent_Previews: PreviewProvider {
     static var previews: some View {
-        if #available(iOS 14.0, *) {
+        if #available(iOS 15.0, *) {
             ExampleLinkStandaloneComponent()
         } else {
             // Fallback on earlier versions
