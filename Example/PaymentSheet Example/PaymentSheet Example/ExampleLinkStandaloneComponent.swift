@@ -5,12 +5,12 @@
 //  Created by Till Hellmund on 6/19/25.
 //
 
-import StripePaymentSheet
+@_spi(STP) import StripePaymentSheet
 import SwiftUI
 
 @available(iOS 14.0, *)
 struct ExampleLinkStandaloneComponent: View {
-    @State private var selectedPaymentMethod: PaymentMethod = .card
+    @State private var selectedPaymentMethod: PaymentMethod?
     @State private var tipAmount: Double = 2.0
     @State private var hasPresentedLink = false
     @State private var paymentOption: PaymentSheet.FlowController.PaymentOptionDisplayData?
@@ -21,6 +21,10 @@ struct ExampleLinkStandaloneComponent: View {
     private var tax: Double = 1.55
     private var total: Double {
         subtotal + tax + tipAmount
+    }
+
+    private var hasValidSelection: Bool {
+        selectedPaymentMethod != nil || paymentOption != nil
     }
 
     var body: some View {
@@ -74,41 +78,44 @@ struct ExampleLinkStandaloneComponent: View {
                 .background(Color(.systemGray6))
 
                 // Payment method section
-                VStack(alignment: .leading, spacing: 12) {
+                VStack(alignment: .leading, spacing: 0) {
                     Text("Payment Method")
                         .font(.headline)
                         .padding(.horizontal)
+                        .padding(.vertical, 16)
+                        .background(Color(.systemBackground))
 
-                    VStack(spacing: 8) {
+                    VStack(spacing: 0) {
                         // Only show Card option if no Link payment option is selected
                         if paymentOption == nil {
-                            PaymentMethodRow(
+                            PaymentMethodListRow(
                                 method: .card,
                                 isSelected: selectedPaymentMethod == .card,
                                 action: { selectedPaymentMethod = .card }
                             )
+
+                            Divider()
+                                .padding(.leading, 56)
                         }
 
                         // Show Link option if a payment option is selected
                         if let paymentOption {
-                            PaymentMethodRow(
+                            PaymentMethodListRow(
                                 method: .link,
                                 isSelected: true,
-                                subtitle: paymentOption.label,
+                                subtitle: paymentOption.labels.sublabel ?? paymentOption.label,
                                 action: { presentLink() }
                             )
                         } else {
-                            PaymentMethodRow(
+                            PaymentMethodListRow(
                                 method: .link,
                                 isSelected: selectedPaymentMethod == .link,
                                 action: { presentLink() }
                             )
                         }
                     }
-                    .padding(.horizontal)
+                    .background(Color(.systemBackground))
                 }
-                .padding(.vertical)
-                .background(Color(.systemBackground))
 
                 Spacer()
 
@@ -152,9 +159,10 @@ struct ExampleLinkStandaloneComponent: View {
                         .foregroundColor(.white)
                         .frame(maxWidth: .infinity)
                         .frame(height: 50)
-                        .background(Color.black)
+                        .background(hasValidSelection ? Color.black : Color.gray)
                         .cornerRadius(25)
                     }
+                    .disabled(!hasValidSelection)
                     .padding(.horizontal)
                     .padding(.bottom, 34) // Safe area
                 }
@@ -215,6 +223,54 @@ struct TipButton: View {
                 .background(isSelected ? Color.black : Color(.systemGray5))
                 .cornerRadius(20)
         }
+    }
+}
+
+struct PaymentMethodListRow: View {
+    let method: PaymentMethod
+    let isSelected: Bool
+    let subtitle: String?
+    let action: () -> Void
+
+    init(method: PaymentMethod, isSelected: Bool, subtitle: String? = nil, action: @escaping () -> Void) {
+        self.method = method
+        self.isSelected = isSelected
+        self.subtitle = subtitle
+        self.action = action
+    }
+
+    var body: some View {
+        Button(action: action) {
+            HStack(spacing: 16) {
+                Image(systemName: method.iconName)
+                    .foregroundColor(method.iconColor)
+                    .frame(width: 24, height: 24)
+
+                VStack(alignment: .leading, spacing: 2) {
+                    Text(method.displayName)
+                        .font(.subheadline)
+                        .fontWeight(.medium)
+                    Text(subtitle ?? method.description)
+                        .font(.caption)
+                        .foregroundColor(.secondary)
+                }
+
+                Spacer()
+
+                if isSelected {
+                    Image(systemName: "checkmark.circle.fill")
+                        .foregroundColor(.blue)
+                        .font(.title)
+                } else {
+                    Image(systemName: "circle")
+                        .foregroundColor(.gray)
+                        .font(.title)
+                }
+            }
+            .padding(.horizontal, 16)
+            .padding(.vertical, 12)
+        }
+        .buttonStyle(PlainButtonStyle())
     }
 }
 
