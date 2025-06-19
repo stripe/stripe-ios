@@ -150,7 +150,7 @@ struct ExampleLinkStandaloneComponent: View {
                 linkController: linkController,
                 onCreditCardTap: { showingCreditCardForm = true }
             )
-            .presentationDetents([.medium])
+            .presentationDetents([.fraction(0.7)])
         }
         .alert(alertTitle, isPresented: $showingAlert) {
             Button("OK") { }
@@ -340,6 +340,9 @@ struct CreditCardFormView: View {
     @State private var expiryDate = ""
     @State private var cvc = ""
 
+    @State private var showingAlert: Bool = false
+    @State private var alertText: String = ""
+
     var body: some View {
         VStack(spacing: 20) {
             // Card number field
@@ -378,10 +381,21 @@ struct CreditCardFormView: View {
 
             Spacer()
 
+            if let signupViewModel = linkController.signupViewModel {
+                LinkController.SignupView(viewModel: signupViewModel)
+            }
+
+            Spacer()
+
             // Save card button
             Button(action: {
-                // TODO: Implement card saving logic
-                dismiss()
+                alertText = [
+                    linkController.signupViewModel?.emailAddress,
+                    linkController.signupViewModel?.legalName,
+                    linkController.signupViewModel?.phone,
+                ].compactMap { $0 }.joined(separator: "\n")
+
+                showingAlert = true
             }) {
                 Text("Save Card")
                     .font(.headline)
@@ -396,6 +410,13 @@ struct CreditCardFormView: View {
         .padding()
         .navigationTitle("Add Credit Card")
         .navigationBarTitleDisplayMode(.inline)
+        .alert("Link signup", isPresented: $showingAlert) {
+            Button("OK") {
+                dismiss()
+            }
+        } message: {
+            Text(alertText)
+        }
     }
 }
 

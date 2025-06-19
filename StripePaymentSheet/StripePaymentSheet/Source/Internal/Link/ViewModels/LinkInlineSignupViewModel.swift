@@ -15,7 +15,7 @@ protocol LinkInlineSignupViewModelDelegate: AnyObject {
     func signupViewModelDidUpdate(_ viewModel: LinkInlineSignupViewModel)
 }
 
-final class LinkInlineSignupViewModel {
+public final class LinkInlineSignupViewModel {
     enum Action: Equatable {
         case signupAndPay(account: PaymentSheetLinkAccount, phoneNumber: PhoneNumber, legalName: String?)
         case continueWithoutLink
@@ -52,7 +52,7 @@ final class LinkInlineSignupViewModel {
         }
     }
 
-    var emailAddress: String? {
+    public var emailAddress: String? {
         didSet {
             if emailAddress != oldValue {
                 onEmailUpdate()
@@ -60,7 +60,7 @@ final class LinkInlineSignupViewModel {
         }
     }
 
-    var legalName: String? {
+    public var legalName: String? {
         didSet {
             if legalName != oldValue {
                 notifyUpdate()
@@ -78,6 +78,10 @@ final class LinkInlineSignupViewModel {
     var phoneNumberWasPrefilled: Bool = false
     var emailWasPrefilled: Bool = false
     var didAskToChangeSignupData: Bool = false
+
+    public var phone: String? {
+        phoneNumber?.string(as: .e164)
+    }
 
     private var defaultOptInInfoWasPrefilled: Bool {
         emailWasPrefilled && phoneNumberWasPrefilled

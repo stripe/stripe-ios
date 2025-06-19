@@ -21,6 +21,24 @@ public class LinkController: ObservableObject {
         session != nil
     }
 
+    public lazy var signupViewModel: LinkInlineSignupViewModel? = {
+        guard let loadResult else {
+            return nil
+        }
+
+        let configuration = PaymentSheet.Configuration()
+//        configuration.defaultBillingDetails.email = email
+
+        let accountService = LinkAccountService(apiClient: configuration.apiClient, elementsSession: loadResult.elementsSession)
+
+        return .init(
+            configuration: configuration,
+            showCheckbox: false,
+            accountService: accountService,
+            allowsDefaultOptIn: false
+        )
+    }()
+
     public func lookupConsumer(with email: String, completion: @escaping () -> Void) {
         let intentConfiguration = PaymentSheet.IntentConfiguration(
             mode: .setup(
