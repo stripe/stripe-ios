@@ -627,7 +627,7 @@ extension PaymentSheet {
         }
 
         /// Updates the published paymentOption property based on the current state
-        internal func updatePaymentOption() {
+        func updatePaymentOption() {
             if let selectedPaymentOption = internalPaymentOption {
                 paymentOption = PaymentOptionDisplayData(paymentOption: selectedPaymentOption, currency: intent.currency, iconStyle: configuration.appearance.iconStyle)
             } else {
