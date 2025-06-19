@@ -723,16 +723,20 @@ extension PayWithLinkViewController.WalletViewController: LinkPaymentMethodPicke
     }
 
     private func addBankAccount() {
-        confirmButton.update(state: .spinnerWithInteractionDisabled)
+        confirmButton.update(state: .disabled)
+        paymentPicker.setAddButtonIsLoading(true)
         coordinator?.startFinancialConnections { [weak self] result in
-            guard case .completed = result else {
+            let completion = {
                 self?.confirmButton.update(state: .enabled)
+                self?.paymentPicker.setAddButtonIsLoading(false)
+            }
+
+            guard case .completed = result else {
+                completion()
                 return
             }
 
-            self?.reloadPaymentDetails {
-                self?.confirmButton.update(state: .enabled)
-            }
+            self?.reloadPaymentDetails(completion: completion)
         }
     }
 
