@@ -13,7 +13,6 @@ import SwiftUI
 struct ExampleLinkStandaloneComponent: View {
     @State private var selectedCarType: CarType = CarType.bolt
     @State private var hasPresentedLink = false
-    @State private var paymentOption: PaymentSheet.FlowController.PaymentOptionDisplayData?
     @State private var showingPaymentSheet = false
     @State private var showingAlert = false
     @State private var alertTitle = ""
@@ -68,14 +67,18 @@ struct ExampleLinkStandaloneComponent: View {
             VStack(spacing: 16) {
                 // Payment method row
                 Button(action: {
-                    showingPaymentSheet = true
+                    if linkController.paymentOption != nil {
+                        presentLink()
+                    } else {
+                        showingPaymentSheet = true
+                    }
                 }) {
                     HStack {
                         VStack(alignment: .leading, spacing: 4) {
                             Text("Payment method")
                                 .font(.subheadline)
                                 .foregroundColor(.secondary)
-                            if let paymentOption = paymentOption {
+                            if let paymentOption = linkController.paymentOption {
                                 Text(paymentOption.labels.sublabel ?? paymentOption.label)
                                     .font(.headline)
                                     .foregroundColor(.primary)
@@ -134,7 +137,7 @@ struct ExampleLinkStandaloneComponent: View {
             .shadow(color: .black.opacity(0.1), radius: 8, x: 0, y: -2)
         }
         .sheet(isPresented: $showingPaymentSheet) {
-            PaymentMethodSheet()
+            PaymentMethodSheet(linkController: linkController)
                 .presentationDetents([.medium])
         }
         .alert(alertTitle, isPresented: $showingAlert) {
@@ -152,7 +155,7 @@ struct ExampleLinkStandaloneComponent: View {
         STPAPIClient.shared.publishableKey = "pk_test_51HvTI7Lu5o3P18Zp6t5AgBSkMvWoTtA0nyA7pVYDqpfLkRtWun7qZTYCOHCReprfLM464yaBeF72UFfB7cY9WG4a00ZnDtiC2C"
 
         linkController.present(from: viewController, with: "email@email.com") {
-            self.paymentOption = linkController.paymentOption
+            // Nothing to do here…
         }
     }
 }
@@ -212,7 +215,7 @@ struct CarOptionRow: View {
 @available(iOS 16.0, *)
 struct PaymentMethodSheet: View {
     @Environment(\.dismiss) private var dismiss
-    @StateObject private var linkController = LinkController.create()
+    var linkController: LinkController
 
     var body: some View {
         NavigationView {
@@ -299,7 +302,9 @@ struct PaymentMethodSheet: View {
         STPAPIClient.shared.publishableKey = "pk_test_51HvTI7Lu5o3P18Zp6t5AgBSkMvWoTtA0nyA7pVYDqpfLkRtWun7qZTYCOHCReprfLM464yaBeF72UFfB7cY9WG4a00ZnDtiC2C"
 
         linkController.present(from: viewController, with: "email@email.com") {
-            // Handle completion if needed
+            DispatchQueue.main.async {
+                dismiss()
+            }
         }
     }
 }
