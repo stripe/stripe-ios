@@ -9,9 +9,9 @@
 /* Begin PBXBuildFile section */
 		496A84572E059C53006255BF /* StripeCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 496A84562E059C53006255BF /* StripeCore.framework */; };
 		497E7B3D2E05A38400585A2E /* StripeFinancialConnectionsLite.h in Headers */ = {isa = PBXBuildFile; fileRef = 497E7B3C2E05A38400585A2E /* StripeFinancialConnectionsLite.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		497E7B3F2E05A38400585A2E /* StripeFinancialConnectionsLiteTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 497E7B3E2E05A38400585A2E /* StripeFinancialConnectionsLiteTests.swift */; };
 		49BA8B592E05A6DE00CE3E5B /* StripeFinancialConnectionsLiteBundleLocator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49BA8B582E05A6DE00CE3E5B /* StripeFinancialConnectionsLiteBundleLocator.swift */; };
 		49BA8B5B2E05A72000CE3E5B /* STPLocalizedString.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49BA8B5A2E05A72000CE3E5B /* STPLocalizedString.swift */; };
+		49BA8B602E05AA1400CE3E5B /* FCLiteImplementationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49BA8B5F2E05AA1400CE3E5B /* FCLiteImplementationTests.swift */; };
 		49E4E4AF2E05A53A00A252A2 /* FCLiteSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49E4E4AA2E05A53A00A252A2 /* FCLiteSession.swift */; };
 		49E4E4B02E05A53A00A252A2 /* FCLiteManifest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49E4E4A92E05A53A00A252A2 /* FCLiteManifest.swift */; };
 		49E4E4B12E05A53A00A252A2 /* FCLiteContainerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49E4E4A22E05A53A00A252A2 /* FCLiteContainerViewController.swift */; };
@@ -39,9 +39,10 @@
 /* Begin PBXFileReference section */
 		496A84562E059C53006255BF /* StripeCore.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = StripeCore.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		497E7B3C2E05A38400585A2E /* StripeFinancialConnectionsLite.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = StripeFinancialConnectionsLite.h; sourceTree = "<group>"; };
-		497E7B3E2E05A38400585A2E /* StripeFinancialConnectionsLiteTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StripeFinancialConnectionsLiteTests.swift; sourceTree = "<group>"; };
 		49BA8B582E05A6DE00CE3E5B /* StripeFinancialConnectionsLiteBundleLocator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StripeFinancialConnectionsLiteBundleLocator.swift; sourceTree = "<group>"; };
 		49BA8B5A2E05A72000CE3E5B /* STPLocalizedString.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = STPLocalizedString.swift; sourceTree = "<group>"; };
+		49BA8B5F2E05AA1400CE3E5B /* FCLiteImplementationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FCLiteImplementationTests.swift; sourceTree = "<group>"; };
+		49BA8B612E05AD5800CE3E5B /* StripeFinancialConnectionsLiteTests.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = StripeFinancialConnectionsLiteTests.xctestplan; sourceTree = "<group>"; };
 		49E4E49F2E05A53A00A252A2 /* FCLiteApiClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FCLiteApiClient.swift; sourceTree = "<group>"; };
 		49E4E4A12E05A53A00A252A2 /* FCLiteAuthFlowViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FCLiteAuthFlowViewController.swift; sourceTree = "<group>"; };
 		49E4E4A22E05A53A00A252A2 /* FCLiteContainerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FCLiteContainerViewController.swift; sourceTree = "<group>"; };
@@ -119,7 +120,7 @@
 		497E7B432E05A3ED00585A2E /* StripeFinancialConnectionsLiteTests */ = {
 			isa = PBXGroup;
 			children = (
-				497E7B3E2E05A38400585A2E /* StripeFinancialConnectionsLiteTests.swift */,
+				49BA8B5F2E05AA1400CE3E5B /* FCLiteImplementationTests.swift */,
 			);
 			path = StripeFinancialConnectionsLiteTests;
 			sourceTree = "<group>";
@@ -173,6 +174,7 @@
 		49EA6B3D2E059B7D00BE15B3 = {
 			isa = PBXGroup;
 			children = (
+				49BA8B612E05AD5800CE3E5B /* StripeFinancialConnectionsLiteTests.xctestplan */,
 				497E7B402E05A39A00585A2E /* StripeFinancialConnectionsLite */,
 				497E7B432E05A3ED00585A2E /* StripeFinancialConnectionsLiteTests */,
 				496A84552E059C53006255BF /* Frameworks */,
@@ -323,7 +325,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				497E7B3F2E05A38400585A2E /* StripeFinancialConnectionsLiteTests.swift in Sources */,
+				49BA8B602E05AA1400CE3E5B /* FCLiteImplementationTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -364,10 +366,12 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.stripe.StripeFinancialConnectionsLite;
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				SKIP_INSTALL = YES;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator xros xrsimulator";
+				SUPPORTS_MACCATALYST = YES;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_INSTALL_OBJC_HEADER = NO;
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = "1,2,7";
 			};
 			name = Debug;
 		};
@@ -397,10 +401,12 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.stripe.StripeFinancialConnectionsLite;
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				SKIP_INSTALL = YES;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator xros xrsimulator";
+				SUPPORTS_MACCATALYST = YES;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_INSTALL_OBJC_HEADER = NO;
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = "1,2,7";
 			};
 			name = Release;
 		};
