@@ -205,3 +205,16 @@ extension FCLiteAuthFlowViewController: ASWebAuthenticationPresentationContextPr
         return self.view.window ?? ASPresentationAnchor()
     }
 }
+
+private extension URL {
+    func matchesSchemeHostAndPath(of otherURL: URL?) -> Bool {
+        guard let otherURL else {
+            return false
+        }
+        return (
+            self.scheme == otherURL.scheme &&
+            self.host == otherURL.host &&
+            self.path == otherURL.path
+        )
+    }
+}

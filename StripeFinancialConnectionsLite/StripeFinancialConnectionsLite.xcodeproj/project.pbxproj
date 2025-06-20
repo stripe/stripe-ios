@@ -10,6 +10,8 @@
 		496A84572E059C53006255BF /* StripeCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 496A84562E059C53006255BF /* StripeCore.framework */; };
 		497E7B3D2E05A38400585A2E /* StripeFinancialConnectionsLite.h in Headers */ = {isa = PBXBuildFile; fileRef = 497E7B3C2E05A38400585A2E /* StripeFinancialConnectionsLite.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		497E7B3F2E05A38400585A2E /* StripeFinancialConnectionsLiteTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 497E7B3E2E05A38400585A2E /* StripeFinancialConnectionsLiteTests.swift */; };
+		49BA8B592E05A6DE00CE3E5B /* StripeFinancialConnectionsLiteBundleLocator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49BA8B582E05A6DE00CE3E5B /* StripeFinancialConnectionsLiteBundleLocator.swift */; };
+		49BA8B5B2E05A72000CE3E5B /* STPLocalizedString.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49BA8B5A2E05A72000CE3E5B /* STPLocalizedString.swift */; };
 		49E4E4AF2E05A53A00A252A2 /* FCLiteSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49E4E4AA2E05A53A00A252A2 /* FCLiteSession.swift */; };
 		49E4E4B02E05A53A00A252A2 /* FCLiteManifest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49E4E4A92E05A53A00A252A2 /* FCLiteManifest.swift */; };
 		49E4E4B12E05A53A00A252A2 /* FCLiteContainerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49E4E4A22E05A53A00A252A2 /* FCLiteContainerViewController.swift */; };
@@ -38,6 +40,8 @@
 		496A84562E059C53006255BF /* StripeCore.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = StripeCore.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		497E7B3C2E05A38400585A2E /* StripeFinancialConnectionsLite.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = StripeFinancialConnectionsLite.h; sourceTree = "<group>"; };
 		497E7B3E2E05A38400585A2E /* StripeFinancialConnectionsLiteTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StripeFinancialConnectionsLiteTests.swift; sourceTree = "<group>"; };
+		49BA8B582E05A6DE00CE3E5B /* StripeFinancialConnectionsLiteBundleLocator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StripeFinancialConnectionsLiteBundleLocator.swift; sourceTree = "<group>"; };
+		49BA8B5A2E05A72000CE3E5B /* STPLocalizedString.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = STPLocalizedString.swift; sourceTree = "<group>"; };
 		49E4E49F2E05A53A00A252A2 /* FCLiteApiClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FCLiteApiClient.swift; sourceTree = "<group>"; };
 		49E4E4A12E05A53A00A252A2 /* FCLiteAuthFlowViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FCLiteAuthFlowViewController.swift; sourceTree = "<group>"; };
 		49E4E4A22E05A53A00A252A2 /* FCLiteContainerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FCLiteContainerViewController.swift; sourceTree = "<group>"; };
@@ -101,7 +105,7 @@
 		497E7B422E05A3C800585A2E /* Source */ = {
 			isa = PBXGroup;
 			children = (
-				49E4E4BA2E05A69800A252A2 /* New Group */,
+				49E4E4BA2E05A69800A252A2 /* Localization */,
 				49E4E4A02E05A53A00A252A2 /* API Client */,
 				49E4E4A32E05A53A00A252A2 /* Controllers */,
 				49E4E4A82E05A53A00A252A2 /* Helpers */,
@@ -157,11 +161,13 @@
 			path = Models;
 			sourceTree = "<group>";
 		};
-		49E4E4BA2E05A69800A252A2 /* New Group */ = {
+		49E4E4BA2E05A69800A252A2 /* Localization */ = {
 			isa = PBXGroup;
 			children = (
+				49BA8B582E05A6DE00CE3E5B /* StripeFinancialConnectionsLiteBundleLocator.swift */,
+				49BA8B5A2E05A72000CE3E5B /* STPLocalizedString.swift */,
 			);
-			path = "New Group";
+			path = Localization;
 			sourceTree = "<group>";
 		};
 		49EA6B3D2E059B7D00BE15B3 = {
@@ -300,6 +306,8 @@
 				49E4E4AF2E05A53A00A252A2 /* FCLiteSession.swift in Sources */,
 				49E4E4B02E05A53A00A252A2 /* FCLiteManifest.swift in Sources */,
 				49E4E4B12E05A53A00A252A2 /* FCLiteContainerViewController.swift in Sources */,
+				49BA8B592E05A6DE00CE3E5B /* StripeFinancialConnectionsLiteBundleLocator.swift in Sources */,
+				49BA8B5B2E05A72000CE3E5B /* STPLocalizedString.swift in Sources */,
 				49E4E4B22E05A53A00A252A2 /* FCLiteApiClient.swift in Sources */,
 				49E4E4B32E05A53A00A252A2 /* FinancialConnectionsLite.swift in Sources */,
 				49E4E4B42E05A53A00A252A2 /* FCLiteModalPresentationWrapper.swift in Sources */,
