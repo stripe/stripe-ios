@@ -79,11 +79,13 @@ extension PaymentSheet.Appearance: Codable {
         self.textFieldInsets = try container.decode(NSDirectionalEdgeInsets.self, forKey: .textFieldInsets)
         self.formInsets = try container.decode(NSDirectionalEdgeInsets.self, forKey: .formInsets)
         self.sectionSpacing = try container.decode(CGFloat.self, forKey: .sectionSpacing)
-        self.iconStyle = switch try container.decode(String.self, forKey: .iconStyle) {
-        case "filled": .filled
-        case "outlined": .outlined
-        default: throw AppearanceCodableError(description: "Unknown icon style")
-        }
+        self.iconStyle = try {
+            switch try container.decode(String.self, forKey: .iconStyle) {
+            case "filled": .filled
+            case "outlined": .outlined
+            default: throw AppearanceCodableError(description: "Unknown icon style")
+            }
+        }()
         self.verticalModeRowPadding = try container.decode(CGFloat.self, forKey: .verticalModeRowPadding)
 
         // Font properties - will need to be expanded if more options are added to the playground
@@ -220,7 +222,8 @@ extension PaymentSheet.Appearance: Codable {
         try container.encode(sectionSpacing, forKey: .sectionSpacing)
         try container.encode(verticalModeRowPadding, forKey: .verticalModeRowPadding)
 
-        let iconStyleString = switch iconStyle {
+        let iconStyleString =
+        switch iconStyle {
         case .filled: "filled"
         case .outlined: "outlined"
         default: throw AppearanceCodableError(description: "Unknown icon style")
