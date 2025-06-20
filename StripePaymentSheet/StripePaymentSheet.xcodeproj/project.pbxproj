@@ -152,7 +152,6 @@
 		4930D8D52DB92CDC0091FBFE /* LinkPaymentMethodPicker-Email.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4930D8D42DB92CDC0091FBFE /* LinkPaymentMethodPicker-Email.swift */; };
 		4930D8D72DB93F060091FBFE /* LinkSeparatorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4930D8D62DB93F060091FBFE /* LinkSeparatorView.swift */; };
 		49377F022DE4E4FD005CA805 /* BaseLinkHoldbackExperiment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49377F012DE4E4FD005CA805 /* BaseLinkHoldbackExperiment.swift */; };
-		4954E9712D96FA0C0061585F /* FCLiteImplementationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4954E9702D96FA0C0061585F /* FCLiteImplementationTests.swift */; };
 		495C04692DCAA1AB006D8F1A /* PayWithLinkTestHelpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 495C04682DCAA1AB006D8F1A /* PayWithLinkTestHelpers.swift */; };
 		495D53102DF105E0008B92F9 /* LinkInlineVerificationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 495D530F2DF105E0008B92F9 /* LinkInlineVerificationView.swift */; };
 		495D53122DF10A7B008B92F9 /* LinkProgressIndicatorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 495D53112DF10A7B008B92F9 /* LinkProgressIndicatorView.swift */; };
@@ -614,7 +613,6 @@
 		4930D8D42DB92CDC0091FBFE /* LinkPaymentMethodPicker-Email.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "LinkPaymentMethodPicker-Email.swift"; sourceTree = "<group>"; };
 		4930D8D62DB93F060091FBFE /* LinkSeparatorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LinkSeparatorView.swift; sourceTree = "<group>"; };
 		49377F012DE4E4FD005CA805 /* BaseLinkHoldbackExperiment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseLinkHoldbackExperiment.swift; sourceTree = "<group>"; };
-		4954E9702D96FA0C0061585F /* FCLiteImplementationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FCLiteImplementationTests.swift; sourceTree = "<group>"; };
 		495C04682DCAA1AB006D8F1A /* PayWithLinkTestHelpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PayWithLinkTestHelpers.swift; sourceTree = "<group>"; };
 		495D530F2DF105E0008B92F9 /* LinkInlineVerificationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LinkInlineVerificationView.swift; sourceTree = "<group>"; };
 		495D53112DF10A7B008B92F9 /* LinkProgressIndicatorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LinkProgressIndicatorView.swift; sourceTree = "<group>"; };
@@ -1901,7 +1899,6 @@
 				B63B2CF02BF8313D003810F3 /* VerticalPaymentMethodListViewControllerTest.swift */,
 				61CBE6672BED97EE005F7FEB /* VerticalSavedPaymentMethodsViewControllerSnapshotTests.swift */,
 				619AF0882BF56F9100D1C981 /* VerticalSavedPaymentMethodsViewControllerTests.swift */,
-				4954E9702D96FA0C0061585F /* FCLiteImplementationTests.swift */,
 			);
 			path = PaymentSheet;
 			sourceTree = "<group>";
@@ -2183,7 +2180,6 @@
 				619AF0852BF56C5E00D1C981 /* PaymentMethodRowButtonSnapshotTests.swift in Sources */,
 				B6CACCA02CBD9A3300682ECE /* EmbeddedPaymentElementTest.swift in Sources */,
 				2EC9C94DD8D62E4F4EFC8AB8 /* IntentStatusPollerTest.swift in Sources */,
-				4954E9712D96FA0C0061585F /* FCLiteImplementationTests.swift in Sources */,
 				ABC3A7CF6D5B21D0C9684A09 /* LinkPopupURLParserTests.swift in Sources */,
 				F94F6A157CEB937896B682D4 /* LinkURLGeneratorTests.swift in Sources */,
 				10A336F0F2331F22F1A0AC1B /* LinkStubs.swift in Sources */,
