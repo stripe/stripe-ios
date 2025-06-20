@@ -2,8 +2,7 @@
 //  AppearanceCodableExtensions.swift
 //  PaymentSheet Example
 //
-//  Created by Assistant on 2024-01-01.
-//  Copyright © 2024 stripe-ios. All rights reserved.
+//  Created by George Birch on 6/19/2025.
 //
 //  Codable extensions for PaymentSheet.Appearance to enable persistence in the playground app.
 //  These extensions are only for the example app and don't affect the public API.
@@ -33,37 +32,6 @@ private struct CodableUIColor: Codable {
     }
 }
 
-private struct CodableUIFont: Codable {
-    let familyName: String
-    let pointSize: CGFloat
-
-    init(font: UIFont) {
-        self.familyName = font.familyName
-        self.pointSize = font.pointSize
-    }
-
-    var uiFont: UIFont {
-        return UIFont.systemFont(ofSize: pointSize)
-    }
-}
-
-extension UIFont.Weight: Codable {
-    enum CodingKeys: String, CodingKey {
-        case rawValue
-    }
-
-    public init(from decoder: Decoder) throws {
-        let container = try decoder.container(keyedBy: CodingKeys.self)
-        let rawValue = try container.decode(CGFloat.self, forKey: .rawValue)
-        self.init(rawValue: rawValue)
-    }
-
-    public func encode(to encoder: Encoder) throws {
-        var container = encoder.container(keyedBy: CodingKeys.self)
-        try container.encode(rawValue, forKey: .rawValue)
-    }
-}
-
 extension PaymentSheet.Appearance: Codable {
     private enum CodingKeys: String, CodingKey {
         // Top-level properties
@@ -72,7 +40,7 @@ extension PaymentSheet.Appearance: Codable {
         case textFieldInsets, formInsets
 
         // Font properties
-        case fontSizeScaleFactor, fontBase, fontCustomHeadline
+        case fontSizeScaleFactor, fontBaseName, fontCustomHeadlineName
 
         // Colors properties
         case colorsPrimary, colorsBackground, colorsComponentBackground, colorsComponentBorder
@@ -86,7 +54,7 @@ extension PaymentSheet.Appearance: Codable {
         case primaryButtonBackgroundColor, primaryButtonTextColor, primaryButtonDisabledBackgroundColor
         case primaryButtonDisabledTextColor, primaryButtonSuccessBackgroundColor, primaryButtonSuccessTextColor
         case primaryButtonCornerRadius, primaryButtonBorderColor, primaryButtonBorderWidth
-        case primaryButtonFont, primaryButtonShadowColor, primaryButtonShadowOpacity
+        case primaryButtonFontName, primaryButtonShadowColor, primaryButtonShadowOpacity
         case primaryButtonShadowOffset, primaryButtonShadowRadius, primaryButtonHeight
 
         // Embedded Payment Element properties
@@ -108,20 +76,30 @@ extension PaymentSheet.Appearance: Codable {
         self.borderWidth = try container.decode(CGFloat.self, forKey: .borderWidth)
         self.selectedBorderWidth = try container.decodeIfPresent(CGFloat.self, forKey: .selectedBorderWidth)
         self.sheetCornerRadius = try container.decode(CGFloat.self, forKey: .sheetCornerRadius)
-        self.sectionSpacing = try container.decode(CGFloat.self, forKey: .sectionSpacing)
-        self.verticalModeRowPadding = try container.decode(CGFloat.self, forKey: .verticalModeRowPadding)
-
-        let iconStyleString = try container.decode(String.self, forKey: .iconStyle)
-        self.iconStyle = iconStyleString == "filled" ? .filled : .outlined
-
         self.textFieldInsets = try container.decode(NSDirectionalEdgeInsets.self, forKey: .textFieldInsets)
         self.formInsets = try container.decode(NSDirectionalEdgeInsets.self, forKey: .formInsets)
+        self.sectionSpacing = try container.decode(CGFloat.self, forKey: .sectionSpacing)
+        self.iconStyle = switch try container.decode(String.self, forKey: .iconStyle) {
+        case "filled": .filled
+        case "outlined": .outlined
+        default: throw AppearanceCodableError(description: "Unknown icon style")
+        }
+        self.verticalModeRowPadding = try container.decode(CGFloat.self, forKey: .verticalModeRowPadding)
 
-        // Font properties
+        // Font properties - will need to be expanded if more options are added to the playground
         self.font.sizeScaleFactor = try container.decode(CGFloat.self, forKey: .fontSizeScaleFactor)
-        self.font.base = try container.decode(CodableUIFont.self, forKey: .fontBase).uiFont
-        if let headlineFont = try container.decodeIfPresent(CodableUIFont.self, forKey: .fontCustomHeadline) {
-            self.font.custom.headline = headlineFont.uiFont
+        let fontBaseName = try container.decode(String.self, forKey: .fontBaseName)
+        if let font = UIFont(name: fontBaseName, size: 12.0) {
+            self.font.base = font
+        } else {
+            throw AppearanceCodableError(description: "Failed to load base font with name \(fontBaseName)")
+        }
+        if let headlineFontName = try container.decodeIfPresent(String.self, forKey: .fontCustomHeadlineName) {
+            if let headlineFont = UIFont(name: headlineFontName, size: 12.0) {
+                self.font.custom.headline = headlineFont
+            } else {
+                throw AppearanceCodableError(description: "Failed to load custom headline font with name \(headlineFontName)")
+            }
         }
 
         // Colors properties
@@ -166,8 +144,13 @@ extension PaymentSheet.Appearance: Codable {
         self.primaryButton.cornerRadius = try container.decodeIfPresent(CGFloat.self, forKey: .primaryButtonCornerRadius)
         self.primaryButton.borderColor = try container.decode(CodableUIColor.self, forKey: .primaryButtonBorderColor).uiColor
         self.primaryButton.borderWidth = try container.decode(CGFloat.self, forKey: .primaryButtonBorderWidth)
-        if let font = try container.decodeIfPresent(CodableUIFont.self, forKey: .primaryButtonFont) {
-            self.primaryButton.font = font.uiFont
+
+        if let primaryButtonFontName = try container.decodeIfPresent(String.self, forKey: .primaryButtonFontName) {
+            if let primaryButtonFont = UIFont(name: primaryButtonFontName, size: 12.0) {
+                self.primaryButton.font = primaryButtonFont
+            } else {
+                throw AppearanceCodableError(description: "Failed to load primary button font with name \(primaryButtonFontName)")
+            }
         }
 
         // Primary Button Shadow
@@ -237,17 +220,21 @@ extension PaymentSheet.Appearance: Codable {
         try container.encode(sectionSpacing, forKey: .sectionSpacing)
         try container.encode(verticalModeRowPadding, forKey: .verticalModeRowPadding)
 
-        let iconStyleString = iconStyle == .filled ? "filled" : "outlined"
+        let iconStyleString = switch iconStyle {
+        case .filled: "filled"
+        case .outlined: "outlined"
+        default: throw AppearanceCodableError(description: "Unknown icon style")
+        }
         try container.encode(iconStyleString, forKey: .iconStyle)
 
         try container.encode(textFieldInsets, forKey: .textFieldInsets)
         try container.encode(formInsets, forKey: .formInsets)
 
-        // Font properties
+        // Font properties - will need to be expanded if more options are added to the playground
         try container.encode(font.sizeScaleFactor, forKey: .fontSizeScaleFactor)
-        try container.encode(CodableUIFont(font: font.base), forKey: .fontBase)
+        try container.encode(font.base.fontName, forKey: .fontBaseName)
         if let headline = font.custom.headline {
-            try container.encode(CodableUIFont(font: headline), forKey: .fontCustomHeadline)
+            try container.encode(headline.fontName, forKey: .fontCustomHeadlineName)
         }
 
         // Colors properties
@@ -293,7 +280,7 @@ extension PaymentSheet.Appearance: Codable {
         try container.encode(CodableUIColor(color: primaryButton.borderColor), forKey: .primaryButtonBorderColor)
         try container.encode(primaryButton.borderWidth, forKey: .primaryButtonBorderWidth)
         if let font = primaryButton.font {
-            try container.encode(CodableUIFont(font: font), forKey: .primaryButtonFont)
+            try container.encode(font.fontName, forKey: .primaryButtonFontName)
         }
 
         // Primary Button Shadow

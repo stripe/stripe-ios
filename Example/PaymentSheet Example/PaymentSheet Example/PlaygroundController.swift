@@ -1027,8 +1027,8 @@ extension PlaygroundController {
         }
 
         // save appearance setting
-        let data = try! JSONEncoder().encode(appearance)
-        UserDefaults.standard.set(data, forKey: PaymentSheetTestPlaygroundSettings.nsUserDefaultsAppearanceKey)
+        let appearanceData = try! JSONEncoder().encode(appearance)
+        UserDefaults.standard.set(appearanceData, forKey: PaymentSheetTestPlaygroundSettings.nsUserDefaultsAppearanceKey)
     }
 
     static func settingsFromDefaults() -> PaymentSheetTestPlaygroundSettings? {
