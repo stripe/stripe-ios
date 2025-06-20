@@ -33,7 +33,7 @@ public class LinkController: ObservableObject {
 
         return .init(
             configuration: configuration,
-            showCheckbox: false,
+            showCheckbox: true,
             accountService: accountService,
             allowsDefaultOptIn: false
         )
