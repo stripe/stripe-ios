@@ -18,7 +18,7 @@ extension LinkVerificationView {
         }
 
         private let logoView: UIImageView = {
-            let logoView = UIImageView(image: Image.link_logo.makeImage(template: false))
+            let logoView = UIImageView(image: Image.link_logo_knockout.makeImage(template: false))
             logoView.translatesAutoresizingMaskIntoConstraints = false
             logoView.isAccessibilityElement = true
             logoView.accessibilityTraits = .header

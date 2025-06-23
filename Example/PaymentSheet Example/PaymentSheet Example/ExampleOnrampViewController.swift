@@ -45,7 +45,8 @@ class ExampleOnrampViewController: UIViewController {
 
     private lazy var emailTextField: UITextField = {
         let textField = UITextField()
-        textField.placeholder = "abc@sample.com"
+//        textField.placeholder = "abc@sample.com"
+        textField.text = "mats@stripe.com"
         textField.font = UIFont.systemFont(ofSize: 18, weight: .regular)
         textField.textColor = .white
         textField.backgroundColor = .clear // Transparent background
