@@ -266,22 +266,45 @@ extension XCTestCase {
         ibanField.forceTapWhenHittableInTestCase(self)
         app.typeText(iban)
 
-        let addressLine1 = context.textFields["Address line 1"]
-        addressLine1.forceTapWhenHittableInTestCase(self)
-        app.typeText("123 Main")
-        context.buttons["Return"].tap()
+        // Handle the new autocomplete address field
+        // Use autocomplete to fill address instead of manual entry
+        let addressField = context.textFields["Address"]
+        if addressField.exists {
+            // Try tapping the address field directly to trigger autocomplete
+            addressField.waitForExistenceAndTap()
 
-        // Skip address 2
-        context.buttons["Return"].tap()
+            // Check if autocomplete view appeared
+            if app.staticTexts["Enter address manually"].waitForExistence(timeout: 2) {
+                // Autocomplete view appeared, proceed with typing
+                let autocompleteTextField = app.textFields.firstMatch
+                autocompleteTextField.waitForExistenceAndTap()
+                app.typeText("354 Oyster Point")
 
-        app.typeText("San Francisco")
-        context.buttons["Return"].tap()
+                // Wait for and tap the matching autocomplete result
+                let searchedCell = app.tables.element(boundBy: 0).cells.containing(NSPredicate(format: "label CONTAINS %@", "354 Oyster Point Blvd")).element
+                _ = searchedCell.waitForExistence(timeout: 5)
+                searchedCell.tap()
+                context.buttons["Done"].tap()
+            }
+        } else {
+            // Fallback to manual address entry if autocomplete not available
+            let addressLine1 = context.textFields["Address line 1"]
+            addressLine1.forceTapWhenHittableInTestCase(self)
+            app.typeText("123 Main")
+            context.buttons["Return"].tap()
 
-        context.pickerWheels.element.adjust(toPickerWheelValue: "California")
-        context.buttons["Done"].tap()
+            // Skip address 2
+            context.buttons["Return"].tap()
 
-        app.typeText("94016")
-        context.buttons["Done"].tap()
+            app.typeText("San Francisco")
+            context.buttons["Return"].tap()
+
+            context.pickerWheels.element.adjust(toPickerWheelValue: "California")
+            context.buttons["Done"].tap()
+
+            app.typeText("94016")
+            context.buttons["Done"].tap()
+        }
 
         if let checkboxText {
             let saveThisAccountToggle = app.switches[checkboxText]
