@@ -23,10 +23,10 @@ class PaymentMethodFormViewController: UIViewController {
     let configuration: PaymentElementConfiguration
     let analyticsHelper: PaymentSheetAnalyticsHelper
     weak var delegate: PaymentMethodFormViewControllerDelegate?
-    
+
     /// Reference to the AddressSectionElement in the form, if present
     private var addressSectionElement: AddressSectionElement?
-    
+
     var paymentOption: PaymentOption? {
         let params = IntentConfirmParams(type: paymentMethodType)
         params.setDefaultBillingDetailsIfNecessary(for: configuration)
@@ -125,7 +125,7 @@ class PaymentMethodFormViewController: UIViewController {
         }
         self.analyticsHelper = analyticsHelper
         super.init(nibName: nil, bundle: nil)
-        
+
         // Setup AddressSectionElement autocomplete callback after form creation
         setupAddressSectionAutocompleteCallback()
     }
@@ -168,7 +168,7 @@ class PaymentMethodFormViewController: UIViewController {
     func clearTextFields() {
         form.clearTextFields()
     }
-    
+
     /// Sets up the autocomplete button callback for any AddressSectionElement in the form
     private func setupAddressSectionAutocompleteCallback() {
         let formElement = (form as? PaymentMethodElementWrapper<FormElement>)?.element ?? form
@@ -181,30 +181,30 @@ class PaymentMethodFormViewController: UIViewController {
             }
         }
     }
-    
+
     /// Handles when the autocomplete button is tapped in the AddressSectionElement
     private func handleAutocompleteButtonTap() {
         presentAutocomplete()
     }
-    
+
     /// Presents the autocomplete view controller
     private func presentAutocomplete() {
         guard let addressSectionElement = addressSectionElement else {
             return
         }
-        
+
         // Create a basic AddressViewController.Configuration for the autocomplete
         let addressConfiguration = AddressViewController.Configuration(
             appearance: configuration.appearance
         )
-        
+
         let autoCompleteViewController = AutoCompleteViewController(
             configuration: addressConfiguration,
             initialLine1Text: addressSectionElement.line1?.text,
             addressSpecProvider: AddressSpecProvider.shared
         )
         autoCompleteViewController.delegate = self
-        
+
         // Present modally since we might not be in a navigation controller
         let navigationController = UINavigationController(rootViewController: autoCompleteViewController)
         present(navigationController, animated: true)
@@ -606,39 +606,33 @@ extension LinkBankPaymentMethod {
 extension PaymentMethodFormViewController: AutoCompleteViewControllerDelegate {
     func didSelectManualEntry(_ line1: String) {
         guard let addressSectionElement = addressSectionElement else { return }
-        
-        // Use default autocomplete countries like AddressViewController
-        let autocompleteCountries = ["AU", "BE", "BR", "CA", "CH", "DE", "ES", "FR", "GB", "IE", "IT", "MX", "NO", "NL", "PL", "RU", "SE", "TR", "US", "ZA"]
-        
+
         // Dismiss the autocomplete view controller
         presentedViewController?.dismiss(animated: true) {
             // Switch to manual entry mode and set the line1 text
-            addressSectionElement.collectionMode = .all(autocompletableCountries: autocompleteCountries)
+            addressSectionElement.collectionMode = .allWithAutocomplete
             addressSectionElement.line1?.setText(line1)
         }
     }
-    
+
     func didSelectAddress(_ address: PaymentSheet.Address?) {
         guard let addressSectionElement = addressSectionElement else { return }
-        
-        // Use default autocomplete countries like AddressViewController
-        let autocompleteCountries = ["AU", "BE", "BR", "CA", "CH", "DE", "ES", "FR", "GB", "IE", "IT", "MX", "NO", "NL", "PL", "RU", "SE", "TR", "US", "ZA"]
-        
+
         // Dismiss the autocomplete view controller
         presentedViewController?.dismiss(animated: true) {
             // Switch to manual entry mode after address selection
-            addressSectionElement.collectionMode = .all(autocompletableCountries: autocompleteCountries)
-            
+            addressSectionElement.collectionMode = .allWithAutocomplete
+
             guard let address = address else {
                 return
             }
-            
+
             // Set the country if it's supported
             let autocompleteCountryIndex = addressSectionElement.countryCodes.firstIndex(where: { $0 == address.country })
             if let autocompleteCountryIndex = autocompleteCountryIndex {
                 addressSectionElement.country.select(index: autocompleteCountryIndex)
             }
-            
+
             // Populate the address fields
             addressSectionElement.line1?.setText(address.line1 ?? "")
             addressSectionElement.city?.setText(address.city ?? "")

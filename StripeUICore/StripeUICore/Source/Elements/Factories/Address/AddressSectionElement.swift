@@ -68,6 +68,8 @@ import UIKit
         /// The default collection mode.
         /// - Parameter autocompletableCountries: If non-empty, the line1 field displays an autocomplete accessory button if the current country is in this list. Set the `didTapAutocompleteButton` property to be notified when the button is tapped.
         case all(autocompletableCountries: [String] = [])
+        /// Collects all address fields and always shows the autocomplete button for all countries.
+        case allWithAutocomplete
         /// Collects country and postal code if the country is one of `countriesRequiringPostalCollection`
         /// - Note: Really only useful for cards, where we only collect postal for a handful of countries
         case countryAndPostal(countriesRequiringPostalCollection: [String] = ["US", "GB", "CA"])
@@ -308,6 +310,8 @@ import UIKit
                 }
             case .autoCompletable:
                 return false
+            case .allWithAutocomplete:
+                return true
             }
         }
 
@@ -319,6 +323,11 @@ import UIKit
         // Re-create the address fields
         if fieldOrdering.contains(.line) {
             if case .all(let autocompletableCountries) = collectionMode, autocompletableCountries.caseInsensitiveContains(countryCode) {
+                line1 = TextFieldElement.Address.LineConfiguration(
+                    lineType: .line1Autocompletable(didTapAutocomplete: handleAutocompleteButtonTap),
+                    defaultValue: address.line1
+                ).makeElement(theme: theme)
+            } else if case .allWithAutocomplete = collectionMode {
                 line1 = TextFieldElement.Address.LineConfiguration(
                     lineType: .line1Autocompletable(didTapAutocomplete: handleAutocompleteButtonTap),
                     defaultValue: address.line1
