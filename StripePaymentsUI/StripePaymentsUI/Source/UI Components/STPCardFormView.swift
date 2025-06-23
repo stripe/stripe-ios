@@ -26,6 +26,7 @@ public enum STPCardFormViewStyle: Int {
 /// `STPCardFormViewDelegate` defines the interface that should be adopted to receive
 /// updates from `STPCardFormView` instances.
 @objc
+@MainActor @preconcurrency
 public protocol STPCardFormViewDelegate: NSObjectProtocol {
     /// Delegate method that is called when all of the form view's required inputs
     /// are complete or transition away from all being complete. These transitions
