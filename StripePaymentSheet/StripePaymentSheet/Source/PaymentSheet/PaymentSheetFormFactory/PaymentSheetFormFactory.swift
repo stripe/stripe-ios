@@ -426,7 +426,7 @@ extension PaymentSheetFormFactory {
     }
 
     func makeBillingAddressSection(
-        collectionMode: AddressSectionElement.CollectionMode = .all(),
+        collectionMode: AddressSectionElement.CollectionMode = .autoCompletable,
         countries: [String]? = nil,
         countryAPIPath: String? = nil
     ) -> PaymentMethodElementWrapper<AddressSectionElement> {
@@ -622,7 +622,7 @@ extension PaymentSheetFormFactory {
 
         let phoneElement = configuration.billingDetailsCollectionConfiguration.phone == .always ? makePhone() : nil
         let addressElement = configuration.billingDetailsCollectionConfiguration.address == .full
-            ? makeBillingAddressSection(collectionMode: .all(), countries: nil)
+        ? makeBillingAddressSection(collectionMode: .autoCompletable, countries: nil)
             : nil
         connectBillingDetailsFields(
             countryElement: nil,
@@ -793,7 +793,7 @@ extension PaymentSheetFormFactory {
         let nameElement = billingConfiguration.name == .always ? makeName() : nil
         let phoneElement = billingConfiguration.phone == .always ? makePhone() : nil
         let addressElement = billingConfiguration.address == .full
-        ? makeBillingAddressSection(collectionMode: .all(), countries: countries)
+        ? makeBillingAddressSection(collectionMode: .autoCompletable, countries: countries)
             : nil
 
         // An email is required, so only hide the email field iff:

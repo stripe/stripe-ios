@@ -80,7 +80,7 @@ extension PaymentSheetFormFactory {
             case .automatic:
                 return makeBillingAddressSection(collectionMode: .countryAndPostal(), countries: nil)
             case .full:
-                return makeBillingAddressSection(collectionMode: .all(), countries: nil)
+                return makeBillingAddressSection(collectionMode: .autoCompletable, countries: nil)
             case .never:
                 return nil
             }

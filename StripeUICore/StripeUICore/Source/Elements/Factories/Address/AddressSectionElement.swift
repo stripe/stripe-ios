@@ -150,7 +150,7 @@ import UIKit
     let addressSpecProvider: AddressSpecProvider
     let theme: ElementsAppearance
     private(set) var defaults: AddressDetails
-    let didTapAutocompleteButton: () -> Void
+    @_spi(STP) public var didTapAutocompleteButton: () -> Void
     public var didUpdate: DidUpdateAddress?
 
     // MARK: - Implementation
@@ -260,7 +260,7 @@ import UIKit
         self.defaults.address = defaultAddress
 
         // Next, show/hide the checkbox if address is valid/invalid
-        sameAsCheckbox.view.isHidden = defaultAddress == .init() || !countryCodes.contains(defaultAddress.country ?? "country doesnt exist")
+        sameAsCheckbox.view.isHidden = defaultAddress == .init() || !countryCodes.contains(defaultAddress.country ?? "country doesn't exist")
         guard !sameAsCheckbox.view.isHidden else {
             // We're done if the checkbox is hidden
             return
@@ -312,7 +312,7 @@ import UIKit
         }
 
         if collectionMode == .autoCompletable {
-            autoCompleteLine = autoCompleteLine ?? DummyAddressLine(theme: theme, didTap: didTapAutocompleteButton)
+            autoCompleteLine = autoCompleteLine ?? DummyAddressLine(theme: theme, didTap: handleAutocompleteButtonTap)
         } else {
             autoCompleteLine = nil
         }
@@ -320,7 +320,7 @@ import UIKit
         if fieldOrdering.contains(.line) {
             if case .all(let autocompletableCountries) = collectionMode, autocompletableCountries.caseInsensitiveContains(countryCode) {
                 line1 = TextFieldElement.Address.LineConfiguration(
-                    lineType: .line1Autocompletable(didTapAutocomplete: didTapAutocompleteButton),
+                    lineType: .line1Autocompletable(didTapAutocomplete: handleAutocompleteButtonTap),
                     defaultValue: address.line1
                 ).makeElement(theme: theme)
             } else {
@@ -384,6 +384,12 @@ import UIKit
            allDisplayedFieldsEqual = false
         }
         return allDisplayedFieldsEqual
+    }
+
+    /// Internal method that calls the current didTapAutocompleteButton
+    /// This ensures subcomponents always call the latest callback
+    private func handleAutocompleteButtonTap() {
+        didTapAutocompleteButton()
     }
 }
 
