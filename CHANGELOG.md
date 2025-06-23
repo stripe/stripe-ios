@@ -3,12 +3,17 @@
 ### PaymentSheet
 * [Added] Address autocomplete functionality when collecting full billing details in payment method forms.
 
+## 24.16.1 2025-06-23
+
+### PaymentSheet
+* [Fixed] A race condition when updating the `paymentOption` on `PaymentSheet.FlowController`.
+
 ## 24.16.0 2025-06-16
 
 ### PaymentSheet
 * [Fixed] A bug where the EmbeddedPaymentElement failed to display forms when tapped in SwiftUI.
 * [Changed] `paymentOption` on `PaymentSheet.FlowController` is now annotated with `@Published` for better ergonomics in SwiftUI.
-* [Added] A new `flatWIthChevron` Embedded Payment Element row style.
+* [Added] A new `flatWithChevron` Embedded Payment Element row style.
 
 ## 24.15.0 2025-06-02
 
