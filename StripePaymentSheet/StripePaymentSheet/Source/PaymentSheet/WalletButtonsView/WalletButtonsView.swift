@@ -162,11 +162,17 @@ import WebKit
                 confirmHandler(.failed(error: error))
                 return
             }
+            guard case .customerSession(let customerSessionClientSecret) = flowController.configuration.customer?.customerAccessProvider else {
+                let error = PaymentSheetError.integrationError(nonPIIDebugDescription: "CustomerSession client secret is missing")
+                confirmHandler(.failed(error: error))
+                return
+            }
 
             // Present Shop Pay via ECE WebView
             let shopPayPresenter = ShopPayECEPresenter(
                 flowController: flowController,
-                configuration: shopPayConfig
+                configuration: shopPayConfig,
+                customerSessionClientSecret: customerSessionClientSecret
             )
             shopPayPresenter.present(from: WindowAuthenticationContext().authenticationPresentingViewController(),
                                      confirmHandler: confirmHandler)
