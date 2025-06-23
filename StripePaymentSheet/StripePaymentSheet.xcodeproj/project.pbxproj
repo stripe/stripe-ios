@@ -159,6 +159,7 @@
 		495D531E2DF7640D008B92F9 /* LinkButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 495D531D2DF7640D008B92F9 /* LinkButton.swift */; };
 		495D53202DF7678A008B92F9 /* LinkButtonViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 495D531F2DF7678A008B92F9 /* LinkButtonViewModel.swift */; };
 		4965A7132D9D8D3700DC2E3C /* LinkGlobalHoldback.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4965A7122D9D8D3700DC2E3C /* LinkGlobalHoldback.swift */; };
+		496C13F82E073E3700D8A88B /* LinkVerificationControllerBridge.swift in Sources */ = {isa = PBXBuildFile; fileRef = 496C13F72E073E3700D8A88B /* LinkVerificationControllerBridge.swift */; };
 		497713042D9D8E1200DB5CB2 /* PaymentSheetAnalytics+Experiments.swift in Sources */ = {isa = PBXBuildFile; fileRef = 497713032D9D8E1200DB5CB2 /* PaymentSheetAnalytics+Experiments.swift */; };
 		49803444CD948F1ED28FF021 /* PaymentSheetFormFactory+FormSpec.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD7A1EFF100C589FDFF4D516 /* PaymentSheetFormFactory+FormSpec.swift */; };
 		498BF1722D92FF6A006E866B /* FCLiteImplementation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 498BF1712D92FF6A006E866B /* FCLiteImplementation.swift */; };
@@ -640,6 +641,7 @@
 		495D531D2DF7640D008B92F9 /* LinkButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LinkButton.swift; sourceTree = "<group>"; };
 		495D531F2DF7678A008B92F9 /* LinkButtonViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LinkButtonViewModel.swift; sourceTree = "<group>"; };
 		4965A7122D9D8D3700DC2E3C /* LinkGlobalHoldback.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LinkGlobalHoldback.swift; sourceTree = "<group>"; };
+		496C13F72E073E3700D8A88B /* LinkVerificationControllerBridge.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LinkVerificationControllerBridge.swift; sourceTree = "<group>"; };
 		497713032D9D8E1200DB5CB2 /* PaymentSheetAnalytics+Experiments.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "PaymentSheetAnalytics+Experiments.swift"; sourceTree = "<group>"; };
 		498BF1712D92FF6A006E866B /* FCLiteImplementation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FCLiteImplementation.swift; sourceTree = "<group>"; };
 		49909A152D8AF9760031EC33 /* FinancialConnectionsLite.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FinancialConnectionsLite.swift; sourceTree = "<group>"; };
@@ -1829,6 +1831,7 @@
 				313D00C72CD9972F00A8E6B0 /* PayWithNativeLinkController.swift */,
 				5DCFBC65AF58423E0E8DD04A /* PayWithLinkController.swift */,
 				CBC98E212DD53F9D00458788 /* LinkFlowControllerHelpers.swift */,
+				496C13F72E073E3700D8A88B /* LinkVerificationControllerBridge.swift */,
 			);
 			path = Link;
 			sourceTree = "<group>";
@@ -2568,6 +2571,7 @@
 				F4EA474D60D0889E7D48E1CF /* BankAccountInfoView.swift in Sources */,
 				057A899F4123F3716F2AC0FA /* USBankAccountPaymentMethodElement.swift in Sources */,
 				985DAA770BC0289D24A5999C /* AddressSearchResult.swift in Sources */,
+				496C13F82E073E3700D8A88B /* LinkVerificationControllerBridge.swift in Sources */,
 				A3BE1C242D4161DC0061632C /* RemoveButton.swift in Sources */,
 				31005B5A2DD4F99F00639F13 /* WalletButtonsView.swift in Sources */,
 				3147CED12CC1BF6E0067B5E4 /* LinkCardEditElement.swift in Sources */,

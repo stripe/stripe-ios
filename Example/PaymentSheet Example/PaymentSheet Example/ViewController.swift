@@ -56,6 +56,13 @@ class ViewController: UIViewController {
             fatalError(">= iOS 15.0 required")
         }
     }
+    @IBSegueAction func showOnrampExample(_ coder: NSCoder) -> UIViewController? {
+        if #available(iOS 15.0, *) {
+            return ExampleOnrampViewController(coder: coder)
+        } else {
+            fatalError(">= iOS 15.0 required")
+        }
+    }
 }
 
 extension UIViewController {

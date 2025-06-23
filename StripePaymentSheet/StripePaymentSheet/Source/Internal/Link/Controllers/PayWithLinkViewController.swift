@@ -300,7 +300,8 @@ final class PayWithLinkViewController: BottomSheetViewController {
         case .requiresVerification:
             setViewControllers([VerifyAccountViewController(linkAccount: linkAccount, context: context)])
         case .verified:
-            loadAndPresentWallet()
+            finish(withResult: .completed, deferredIntentConfirmationType: nil)
+//            loadAndPresentWallet()
         }
     }
 }
