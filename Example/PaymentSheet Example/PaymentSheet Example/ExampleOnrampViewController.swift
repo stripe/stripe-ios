@@ -299,6 +299,7 @@ class ExampleOnrampViewController: UIViewController {
     // MARK: - Actions
 
     @objc private func continueButtonTapped() {
+        resignFirstResponder()
         guard let email = emailTextField.text, !email.isEmpty else {
             // Show validation error
             return
