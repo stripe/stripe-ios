@@ -13,7 +13,7 @@ import UIKit
 
 /// A delegate for `AddressViewController`
 public protocol AddressViewControllerDelegate: AnyObject {
-    /// Called when the customer finishes entering their address or cancels. Your implemententation should dismiss the view controller.
+    /// Called when the customer finishes entering their address or cancels. Your implementation should dismiss the view controller.
     /// - Parameter address: A valid address or nil if the customer cancels the flow.
     func addressViewControllerDidFinish(_ addressViewController: AddressViewController, with address: AddressViewController.AddressDetails?)
 }
@@ -246,7 +246,7 @@ extension AddressViewController {
 
 // MARK: - Private methods
 extension AddressViewController {
-    /// Expands the address section element and begin editing if the current country selection does not support auto copmlete
+    /// Expands the address section element and begin editing if the current country selection does not support auto complete
     private func expandAddressSectionIfNeeded() {
         // If we're in autocomplete mode and the country is not supported by autocomplete, switch to normal address collection
         if let addressSection = addressSection, addressSection.collectionMode == .autoCompletable,
