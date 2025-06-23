@@ -883,12 +883,38 @@ class EmbeddedUITests: PaymentSheetUITestCase {
         app.typeText("John Doe" + XCUIKeyboardKey.return.rawValue)
         app.typeText("test@example.com" + XCUIKeyboardKey.return.rawValue)
         app.typeText("AT611904300234573201" + XCUIKeyboardKey.return.rawValue)
-        app.textFields["Address line 1"].tap()
-        app.typeText("510 Townsend St" + XCUIKeyboardKey.return.rawValue)
-        app.typeText("Floor 3" + XCUIKeyboardKey.return.rawValue)
-        app.typeText("San Francisco" + XCUIKeyboardKey.return.rawValue)
-        app.textFields["ZIP"].tap()
-        app.typeText("94102" + XCUIKeyboardKey.return.rawValue)
+
+        // Handle the new autocomplete address field
+        let addressField = app.textFields["Address"]
+        if addressField.exists {
+            addressField.tap()
+            // Check if autocomplete view appeared
+            if app.staticTexts["Enter address manually"].waitForExistence(timeout: 2) {
+                // Use autocomplete
+                let autocompleteTextField = app.textFields.firstMatch
+                autocompleteTextField.waitForExistenceAndTap()
+                app.typeText("354 Oyster Point")
+                let searchedCell = app.tables.element(boundBy: 0).cells.containing(NSPredicate(format: "label CONTAINS %@", "354 Oyster Point Blvd")).element
+                _ = searchedCell.waitForExistence(timeout: 5)
+                searchedCell.tap()
+                app.buttons["Done"].tap()
+            } else {
+                // Manual entry fallback
+                app.typeText("510 Townsend St" + XCUIKeyboardKey.return.rawValue)
+                app.typeText("Floor 3" + XCUIKeyboardKey.return.rawValue)
+                app.typeText("San Francisco" + XCUIKeyboardKey.return.rawValue)
+                app.textFields["ZIP"].tap()
+                app.typeText("94102" + XCUIKeyboardKey.return.rawValue)
+            }
+        } else {
+            // Fallback to old manual fields if autocomplete not available
+            app.textFields["Address line 1"].tap()
+            app.typeText("510 Townsend St" + XCUIKeyboardKey.return.rawValue)
+            app.typeText("Floor 3" + XCUIKeyboardKey.return.rawValue)
+            app.typeText("San Francisco" + XCUIKeyboardKey.return.rawValue)
+            app.textFields["ZIP"].tap()
+            app.typeText("94102" + XCUIKeyboardKey.return.rawValue)
+        }
         app.buttons["Pay €50.99"].tap()
 
         XCTAssertTrue(app.staticTexts["Success!"].waitForExistence(timeout: 10.0))

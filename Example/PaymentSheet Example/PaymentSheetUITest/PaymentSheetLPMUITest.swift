@@ -552,12 +552,38 @@ class PaymentSheetStandardLPMUITwoTests: PaymentSheetStandardLPMUICase {
         app.typeText("John Doe" + XCUIKeyboardKey.return.rawValue)
         app.typeText("test@example.com" + XCUIKeyboardKey.return.rawValue)
         app.typeText("AT611904300234573201" + XCUIKeyboardKey.return.rawValue)
-        app.textFields["Address line 1"].tap()
-        app.typeText("510 Townsend St" + XCUIKeyboardKey.return.rawValue)
-        app.typeText("Floor 3" + XCUIKeyboardKey.return.rawValue)
-        app.typeText("San Francisco" + XCUIKeyboardKey.return.rawValue)
-        app.textFields["ZIP"].tap()
-        app.typeText("94102" + XCUIKeyboardKey.return.rawValue)
+
+        // Handle the new autocomplete address field
+        let addressField = app.textFields["Address"]
+        if addressField.exists {
+            addressField.tap()
+            // Check if autocomplete view appeared
+            if app.staticTexts["Enter address manually"].waitForExistence(timeout: 2) {
+                // Use autocomplete
+                let autocompleteTextField = app.textFields.firstMatch
+                autocompleteTextField.waitForExistenceAndTap()
+                app.typeText("354 Oyster Point")
+                let searchedCell = app.tables.element(boundBy: 0).cells.containing(NSPredicate(format: "label CONTAINS %@", "354 Oyster Point Blvd")).element
+                _ = searchedCell.waitForExistence(timeout: 5)
+                searchedCell.tap()
+                app.buttons["Done"].tap()
+            } else {
+                // Manual entry fallback
+                app.typeText("510 Townsend St" + XCUIKeyboardKey.return.rawValue)
+                app.typeText("Floor 3" + XCUIKeyboardKey.return.rawValue)
+                app.typeText("San Francisco" + XCUIKeyboardKey.return.rawValue)
+                app.textFields["ZIP"].tap()
+                app.typeText("94102" + XCUIKeyboardKey.return.rawValue)
+            }
+        } else {
+            // Fallback to old manual fields if autocomplete not available
+            app.textFields["Address line 1"].tap()
+            app.typeText("510 Townsend St" + XCUIKeyboardKey.return.rawValue)
+            app.typeText("Floor 3" + XCUIKeyboardKey.return.rawValue)
+            app.typeText("San Francisco" + XCUIKeyboardKey.return.rawValue)
+            app.textFields["ZIP"].tap()
+            app.typeText("94102" + XCUIKeyboardKey.return.rawValue)
+        }
         app.buttons["Pay €50.99"].tap()
         let successText = app.staticTexts["Success!"]
         XCTAssertTrue(successText.waitForExistence(timeout: 10.0))
@@ -748,10 +774,28 @@ class PaymentSheetStandardLPMUIThreeTests: PaymentSheetStandardLPMUICase {
         app.typeText("foo@bar.com" + XCUIKeyboardKey.return.rawValue)
         app.typeText("108800")
         app.typeText("00012345")
-        app.typeText("123 Main St" + XCUIKeyboardKey.return.rawValue + XCUIKeyboardKey.return.rawValue)
-        app.typeText("San Francisco" + XCUIKeyboardKey.return.rawValue)
-        app.toolbars.buttons["Done"].tap() // State picker toolbar's "Done" button
-        app.typeText("94010" + XCUIKeyboardKey.return.rawValue)
+
+        // Handle the new autocomplete address field for Bacs
+        let addressField = app.textFields["Address"]
+        if addressField.exists {
+            addressField.tap()
+            // Check if autocomplete view appeared
+            if app.staticTexts["Enter address manually"].waitForExistence(timeout: 2) {
+                // Switch to manual entry
+                app.staticTexts["Enter address manually"].tap()
+            }
+            // Manual entry
+            app.typeText("123 Main St" + XCUIKeyboardKey.return.rawValue + XCUIKeyboardKey.return.rawValue)
+            app.typeText("San Francisco" + XCUIKeyboardKey.return.rawValue)
+            app.toolbars.buttons["Done"].tap() // State picker toolbar's "Done" button
+            app.typeText("94010" + XCUIKeyboardKey.return.rawValue)
+        } else {
+            // Fallback to old flow if autocomplete not available
+            app.typeText("123 Main St" + XCUIKeyboardKey.return.rawValue + XCUIKeyboardKey.return.rawValue)
+            app.typeText("San Francisco" + XCUIKeyboardKey.return.rawValue)
+            app.toolbars.buttons["Done"].tap() // State picker toolbar's "Done" button
+            app.typeText("94010" + XCUIKeyboardKey.return.rawValue)
+        }
         let payButton = app.buttons["Pay £50.99"]
         XCTAssertFalse(payButton.isEnabled)
         let checkbox = app.switches.firstMatch
@@ -853,16 +897,39 @@ class PaymentSheetStandardLPMUIThreeTests: PaymentSheetStandardLPMUICase {
         app.typeText(XCUIKeyboardKey.return.rawValue)
         app.typeText("00000000000")
         app.toolbars.buttons["Done"].tap() // Tap "Done", don't hit return - that's not possible using the system numpad keyboard
-        app.textFields["Address line 1"].tap()
-        app.typeText("123 fake st")
-        app.typeText(XCUIKeyboardKey.return.rawValue)
-        app.typeText(XCUIKeyboardKey.return.rawValue)
-        app.typeText("City")
-        app.typeText(XCUIKeyboardKey.return.rawValue)
-        app.typeText("AC")  // Valid brazilian state code.
-        app.typeText(XCUIKeyboardKey.return.rawValue)
-        app.typeText("11111111")
-        app.typeText(XCUIKeyboardKey.return.rawValue)
+
+        // Handle the new autocomplete address field
+        let addressField = app.textFields["Address"]
+        if addressField.exists {
+            addressField.tap()
+            // Check if autocomplete view appeared
+            if app.staticTexts["Enter address manually"].waitForExistence(timeout: 2) {
+                // Switch to manual entry since we want to enter a simple address
+                app.staticTexts["Enter address manually"].tap()
+            }
+            // Manual entry for Brazil
+            app.typeText("123 fake st")
+            app.typeText(XCUIKeyboardKey.return.rawValue)
+            app.typeText(XCUIKeyboardKey.return.rawValue)
+            app.typeText("City")
+            app.typeText(XCUIKeyboardKey.return.rawValue)
+            app.typeText("AC")  // Valid brazilian state code.
+            app.typeText(XCUIKeyboardKey.return.rawValue)
+            app.typeText("11111111")
+            app.typeText(XCUIKeyboardKey.return.rawValue)
+        } else {
+            // Fallback to old manual fields if autocomplete not available
+            app.textFields["Address line 1"].tap()
+            app.typeText("123 fake st")
+            app.typeText(XCUIKeyboardKey.return.rawValue)
+            app.typeText(XCUIKeyboardKey.return.rawValue)
+            app.typeText("City")
+            app.typeText(XCUIKeyboardKey.return.rawValue)
+            app.typeText("AC")  // Valid brazilian state code.
+            app.typeText(XCUIKeyboardKey.return.rawValue)
+            app.typeText("11111111")
+            app.typeText(XCUIKeyboardKey.return.rawValue)
+        }
 
         app.buttons["Pay R$50.99"].tap()
 
