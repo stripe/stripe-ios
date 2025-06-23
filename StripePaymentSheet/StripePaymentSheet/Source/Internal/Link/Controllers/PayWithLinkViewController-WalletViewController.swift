@@ -263,11 +263,6 @@ extension PayWithLinkViewController {
                 return
             }
 
-            guard canConfirmWith(paymentDetails) else {
-                handleIncompleteBillingDetails(for: paymentDetails, with: confirmationExtras)
-                return
-            }
-
             let confirmWithPaymentDetails: (ConsumerPaymentDetails) -> Void = { [self] paymentDetails in
                 if viewModel.shouldRecollectCardCVC {
                     if case let .card(card) = paymentDetails.details {
@@ -275,7 +270,9 @@ extension PayWithLinkViewController {
                     }
                 }
 
-                if context.launchedFromFlowController, let paymentMethod = viewModel.selectedPaymentMethod {
+                if isMissingRequestedBillingDetails(paymentDetails) {
+                    handleIncompleteBillingDetails(for: paymentDetails, with: confirmationExtras)
+                } else if context.launchedFromFlowController, let paymentMethod = viewModel.selectedPaymentMethod {
                     coordinator?.handlePaymentDetailsSelected(paymentMethod, confirmationExtras: confirmationExtras)
                 } else {
                     confirm(for: context.intent, with: paymentDetails, confirmationExtras: confirmationExtras)
@@ -305,14 +302,14 @@ extension PayWithLinkViewController {
             }
         }
 
-        /// Returns whether the provided `paymentDetails` contains all the required billing details.
-        private func canConfirmWith(_ paymentDetails: ConsumerPaymentDetails) -> Bool {
+        /// Returns whether the provided `paymentDetails` is missing any of the required billing details.
+        private func isMissingRequestedBillingDetails(_ paymentDetails: ConsumerPaymentDetails) -> Bool {
             let paymentDetailsAreSupported = paymentDetails.supports(
                 billingDetailsCollectionConfiguration,
                 in: linkAccount.currentSession
             )
 
-            return paymentDetailsAreSupported
+            return !paymentDetailsAreSupported
         }
 
         private func handleIncompleteBillingDetails(
