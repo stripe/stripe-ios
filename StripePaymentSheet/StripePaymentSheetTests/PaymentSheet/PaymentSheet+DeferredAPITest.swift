@@ -14,7 +14,11 @@
 import XCTest
 
 final class PaymentSheet_DeferredAPITest: STPNetworkStubbingTestCase {
-    let apiClient = STPAPIClient(publishableKey: STPTestingDefaultPublishableKey)
+    var apiClient: STPAPIClient!
+    override func setUp() {
+        super.setUp()
+        apiClient = STPAPIClient(publishableKey: STPTestingDefaultPublishableKey)
+    }
 
     lazy var configuration: PaymentSheet.Configuration = {
         var config = PaymentSheet.Configuration()
