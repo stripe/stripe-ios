@@ -225,6 +225,13 @@ final class PaymentSheet_LPM_ConfirmFlowTests: STPNetworkStubbingTestCase {
             // Satispay has no input fields
             XCTAssertEqual(form.getAllUnwrappedSubElements().count, 1)
         }
+        try await _testConfirm(intentKinds: [.paymentIntentWithSetupFutureUsage, .setupIntent],
+                               currency: "EUR",
+                               paymentMethodType: .satispay,
+                               merchantCountry: .IT) { form in
+            XCTAssertNotNil(form.getMandateElement())
+            XCTAssertEqual(form.getAllUnwrappedSubElements().count, 2)
+        }
     }
 
     func testCryptoConfirmFlows() async throws {
