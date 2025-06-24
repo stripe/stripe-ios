@@ -210,6 +210,7 @@ private func replaceNondeterministicParams(_ input: String) -> String {
 
         "payment_user_agent", // Contains the SDK version number
         "pk_token_transaction_id", // Random string
+        "mobile_session_id=", // Mobile session identifier that may vary between requests
     ]
     var components = input.components(separatedBy: "&")
 
@@ -219,7 +220,9 @@ private func replaceNondeterministicParams(_ input: String) -> String {
             XCTAssertEqual(parts.count, 2, "Invalid portion of query string: index\(index), component: \(component)")
             components[index] = "\(parts[0])=.*"
         }
+
     }
 
     return components.joined(separator: "&")
 }
+

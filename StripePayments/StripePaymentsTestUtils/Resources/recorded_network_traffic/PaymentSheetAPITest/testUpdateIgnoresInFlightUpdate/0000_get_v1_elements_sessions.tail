@@ -1,25 +1,25 @@
 GET
-https:\/\/api\.stripe\.com\/v1\/elements\/sessions\?deferred_intent%5Bamount%5D=1000&deferred_intent%5Bcapture_method%5D=automatic&deferred_intent%5Bcurrency%5D=USD&deferred_intent%5Bmode%5D=payment&key=pk_test_ErsyMEOTudSjQR8hh0VrQr5X008sBXGOu6&locale=en-US&mobile_app_id=com\.stripe\.StripeiOSTestHostApp&mobile_session_id=test-123&type=deferred_intent$
+https:\/\/api\.stripe\.com\/v1\/elements\/sessions\?deferred_intent%5Bamount%5D=1000&deferred_intent%5Bcapture_method%5D=automatic&deferred_intent%5Bcurrency%5D=USD&deferred_intent%5Bmode%5D=payment&key=pk_test_ErsyMEOTudSjQR8hh0VrQr5X008sBXGOu6&locale=en-US&mobile_app_id=com\.stripe\.StripeiOSTestHostApp&mobile_session_id=ee17d37d-9ca5-4546-9dde-9f3b9094deb9&type=deferred_intent$
 200
 application/json
 Content-Type: application/json
 Access-Control-Allow-Origin: *
 x-stripe-priority-routing-enabled: true
-content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=MiB3xmQeaFx1WuNVdGFvum9ZkJQRnFh5TvZBXzZSDHfPSl49n6vbC3yVkmnkkPDVDehaTuknmHXtemTt
+content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=c-JAom4fh82UL-f7KM0RckYw_DBr0oKMHtmtxuba_kvyfWT2jHJGTETp0cWczg0FNNc1iHbFdXOGTvmx
 x-wc: ABGHI
 access-control-allow-methods: GET, HEAD, PUT, PATCH, POST, DELETE
 Server: nginx
 access-control-expose-headers: Request-Id, Stripe-Manage-Version, Stripe-Should-Retry, X-Stripe-External-Auth-Required, X-Stripe-Privileged-Session-Required
 access-control-max-age: 300
 Cache-Control: no-cache, no-store
-Date: Tue, 24 Jun 2025 17:50:31 GMT
+Date: Tue, 24 Jun 2025 22:48:06 GMT
 stripe-version: 2020-08-27
 access-control-allow-credentials: true
-Content-Length: 13308
+Content-Length: 13374
 x-stripe-routing-context-priority-tier: api-testmode
 Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
 Vary: Origin
-request-id: req_fyGhd1JfEB8UWP
+request-id: req_js9qBd9Z6Rs3Mt
 
 {
   "payment_method_preference" : {
@@ -28,9 +28,9 @@ request-id: req_fyGhd1JfEB8UWP
     "type" : "deferred_intent",
     "ordered_payment_method_types" : [
       "card",
-      "crypto",
       "cashapp",
       "amazon_pay",
+      "crypto",
       "us_bank_account"
     ]
   },
@@ -122,6 +122,7 @@ request-id: req_fyGhd1JfEB8UWP
     "elements_enable_fraud_signal_data_transfer_to_hcaptcha" : false,
     "elements_disable_fc_lite" : false,
     "link_purchase_protections_rollout" : true,
+    "link_payment_element_keep_optional_doi_open_rollout" : false,
     "elements_easel_disable" : false,
     "elements_enable_passive_captcha" : true,
     "elements_should_hide_us_bank_account_manual_entry_cta" : false,
@@ -132,10 +133,10 @@ request-id: req_fyGhd1JfEB8UWP
     "elements_disable_recurring_express_checkout_button_amazon_pay" : false
   },
   "merchant_logo_url" : null,
-  "session_id" : "elements_session_14Pp0cYA0ML",
+  "session_id" : "elements_session_16ssN45NNGX",
   "card_installments_enabled" : false,
   "account_id" : "acct_1G6m1pFY0qyl6XeW",
-  "config_id" : "b9f6bace-4d3b-40d6-99f5-5105244e9f23",
+  "config_id" : "a0aefe66-208f-4f48-8d71-0ef1af7d8fb0",
   "merchant_currency" : "usd",
   "merchant_id" : "acct_1G6m1pFY0qyl6XeW",
   "card_brand_choice" : {
@@ -162,7 +163,7 @@ request-id: req_fyGhd1JfEB8UWP
     "paypal_merchant_id" : null
   },
   "experiments_data" : {
-    "arb_id" : "eaefd367-ef4c-419c-a773-91737c678fed",
+    "arb_id" : "c82908a9-576d-4647-8531-4b4adb43c211",
     "experiment_metadata" : {
       "seed" : "b553319699b1b5d5113fbff6884f437280af518aaac58e80b94c264ef604be0f",
       "semi_dominant_payment_methods" : [
@@ -346,9 +347,9 @@ request-id: req_fyGhd1JfEB8UWP
     }
   },
   "unactivated_payment_method_types" : [
-    "crypto",
     "cashapp",
     "amazon_pay",
+    "crypto",
     "us_bank_account"
   ],
   "unverified_payment_methods_on_domain" : [
@@ -368,10 +369,10 @@ request-id: req_fyGhd1JfEB8UWP
   "ordered_payment_method_types_and_wallets" : [
     "card",
     "apple_pay",
-    "crypto",
     "cashapp",
     "amazon_pay",
     "google_pay",
+    "crypto",
     "us_bank_account"
   ],
   "customer_error" : null
