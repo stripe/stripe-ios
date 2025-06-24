@@ -366,7 +366,7 @@ class ExampleWalletButtonsModel: ObservableObject {
                 if let requiresAction = json["requiresAction"] as? Bool, requiresAction,
                    let nextActionValue = json["nextActionValue"] as? String {
                     self?.addDebugLog("Payment requires action: \(nextActionValue)")
-                    STPPaymentHandler.shared().handleNextAction(forPaymentHashedValue: nextActionValue, with: WindowAuthenticationContext(), returnURL: nil) { [weak self] status, intent, error in
+                    STPPaymentHandler.shared().handleNextActionForPaymentHashedValue(nextActionValue, with: WindowAuthenticationContext(), returnURL: nil) { [weak self] status, intent, error in
                         self?.addDebugLog("Payment handler status: \(status.rawValue)")
                         if let intent = intent {
                             self?.addDebugLog("Payment intent: \(intent.stripeId)")

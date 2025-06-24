@@ -294,14 +294,14 @@ public class STPPaymentHandler: NSObject {
         self.confirmPayment(withParams, with: authenticationContext, completion: completion)
     }
 
-    @_spi(SharedPaymentToken) public func handleNextAction(
-        forPaymentHashedValue hashedValue: String,
+    @_spi(SharedPaymentToken) public func handleNextActionForPaymentHashedValue(
+        _ hashedValue: String,
         with authenticationContext: STPAuthenticationContext,
         returnURL: String?,
         completion: @escaping STPPaymentHandlerActionPaymentIntentCompletionBlock
     ) {
         guard subhandler == nil else {
-            stpAssertionFailure("`STPPaymentHandler.handleNextAction(forPaymentHashedValue:with:completion:)` was called while a previous call is still in progress.")
+            stpAssertionFailure("`STPPaymentHandler.handleNextActionForPaymentHashedValue(_:with:completion:)` was called while a previous call is still in progress.")
             completion(.failed, nil, _error(for: .noConcurrentActionsErrorCode))
             return
         }

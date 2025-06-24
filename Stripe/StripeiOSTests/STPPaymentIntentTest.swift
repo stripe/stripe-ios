@@ -574,7 +574,7 @@ class STPPaymentIntentTest: XCTestCase {
                 XCTAssertEqual(paymentIntent?.currency, "unknown")
             }
             if testCase["client_secret"] == nil {
-                XCTAssertEqual(paymentIntent?.clientSecret, "redacted")
+                XCTAssertEqual(paymentIntent?.clientSecret, "redacted_client_secret")
             }
             if testCase["payment_method_types"] == nil {
                 XCTAssertEqual(paymentIntent?.paymentMethodTypes, [])
