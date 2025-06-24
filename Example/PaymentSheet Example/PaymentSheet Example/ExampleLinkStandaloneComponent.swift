@@ -22,7 +22,7 @@ struct ExampleLinkStandaloneComponent: View {
     @State private var alertTitle = ""
     @State private var alertMessage = ""
 
-    @StateObject private var linkController = LinkController.create()
+    @StateObject private var linkController = LinkPaymentMethodLauncher.create()
 
     // Map region centered on San Francisco
     @State private var region = MKCoordinateRegion(
@@ -109,22 +109,20 @@ struct ExampleLinkStandaloneComponent: View {
                 .buttonStyle(PlainButtonStyle())
 
                 // Confirm order button
-                Button(action: {
-                    linkController.createPaymentMethod { result in
-                        DispatchQueue.main.async {
-                            switch result {
-                            case .success(let paymentMethod):
-                                alertTitle = "Success"
-                                alertMessage = paymentMethod.stripeId
-                                showingAlert = true
-                            case .failure(let error):
-                                alertTitle = "Error"
-                                alertMessage = error.localizedDescription
-                                showingAlert = true
-                            }
+                Button {
+                    Task {
+                        do {
+                            let paymentMethod = try await linkController.createPaymentMethod()
+                            alertTitle = "Success"
+                            alertMessage = paymentMethod.stripeId
+                            showingAlert = true
+                        } catch {
+                            alertTitle = "Error"
+                            alertMessage = error.localizedDescription
+                            showingAlert = true
                         }
                     }
-                }) {
+                } label: {
                     HStack {
                         Text("Confirm order")
                             .font(.headline)
@@ -160,8 +158,13 @@ struct ExampleLinkStandaloneComponent: View {
         .onAppear {
             STPAPIClient.shared.publishableKey = "pk_test_51HvTI7Lu5o3P18Zp6t5AgBSkMvWoTtA0nyA7pVYDqpfLkRtWun7qZTYCOHCReprfLM464yaBeF72UFfB7cY9WG4a00ZnDtiC2C"
 
-            linkController.lookupConsumer(with: "email@email.com") {
-                print("Existing Link consumer? \(linkController.isExistingLinkConsumer)")
+            Task {
+                do {
+                    let isExistingLinkConsumer = try await linkController.lookupConsumer(with: "email@email.com")
+                    print("Existing Link consumer? \(isExistingLinkConsumer)")
+                } catch {
+                    print("Failed to lookup Link consumer: \(error.localizedDescription)")
+                }
             }
         }
     }
@@ -171,8 +174,9 @@ struct ExampleLinkStandaloneComponent: View {
             return
         }
 
-        linkController.present(from: viewController, with: "email@email.com") {
-            self.paymentOption = linkController.paymentOption
+        Task {
+            let paymentOption = try? await linkController.present(from: viewController, with: "email@email.com")
+            self.paymentOption = paymentOption
         }
     }
 }
@@ -361,7 +365,7 @@ struct CarOptionRow: View {
 @available(iOS 16.0, *)
 struct PaymentMethodSheet: View {
     @Environment(\.dismiss) private var dismiss
-    var linkController: LinkController
+    var linkController: LinkPaymentMethodLauncher
     var onCreditCardTap: () -> Void
 
     var body: some View {
@@ -463,7 +467,7 @@ struct PaymentMethodSheet: View {
 @available(iOS 16.0, *)
 struct CreditCardFormView: View {
     @Environment(\.dismiss) private var dismiss
-    var linkController: LinkController
+    var linkController: LinkPaymentMethodLauncher
 
     @State private var cardNumber = ""
     @State private var expiryDate = ""
@@ -511,7 +515,7 @@ struct CreditCardFormView: View {
             Spacer()
 
             if let signupViewModel = linkController.signupViewModel {
-                LinkController.SignupView(viewModel: signupViewModel)
+                LinkPaymentMethodLauncher.SignupView(viewModel: signupViewModel)
             }
 
             Spacer()
@@ -526,23 +530,16 @@ struct CreditCardFormView: View {
                     country: "US"
                 )
 
-                linkController.signUpConsumer(with: cardPayload) { result in
-                    switch result {
-                    case .success:
+                Task {
+                    let signupResult = await linkController.signUpConsumer(with: cardPayload)
+                    if signupResult.success {
                         alertText = "Signed up Link consumer"
-                    case .failure:
-                        alertText = "Failed to sign up Link consumer"
+                        showingAlert = true
+                    } else {
+                        alertText = "Failed to sign up for Link"
+                        showingAlert = true
                     }
-                    showingAlert = true
                 }
-
-//                alertText = [
-//                    linkController.signupViewModel?.emailAddress,
-//                    linkController.signupViewModel?.legalName,
-//                    linkController.signupViewModel?.phone,
-//                ].compactMap { $0 }.joined(separator: "\n")
-//
-//                showingAlert = true
             } label: {
                 Text("Save Card")
                     .font(.headline)
@@ -553,24 +550,6 @@ struct CreditCardFormView: View {
                     .background(Color.blue)
                     .cornerRadius(25)
             }
-//            Button(action: {
-//                alertText = [
-//                    linkController.signupViewModel?.emailAddress,
-//                    linkController.signupViewModel?.legalName,
-//                    linkController.signupViewModel?.phone,
-//                ].compactMap { $0 }.joined(separator: "\n")
-//
-//                showingAlert = true
-//            }) {
-//                Text("Save Card")
-//                    .font(.headline)
-//                    .fontWeight(.semibold)
-//                    .foregroundColor(.white)
-//                    .frame(maxWidth: .infinity)
-//                    .frame(height: 50)
-//                    .background(Color.blue)
-//                    .cornerRadius(25)
-//            }
         }
         .padding()
         .navigationTitle("Add Credit Card")

@@ -9,7 +9,7 @@ import SwiftUI
 
 @_spi(STP) import StripeUICore
 
-extension LinkController {
+extension LinkPaymentMethodLauncher {
 
     public struct SignupView: UIViewRepresentable {
         private let viewModel: LinkInlineSignupViewModel

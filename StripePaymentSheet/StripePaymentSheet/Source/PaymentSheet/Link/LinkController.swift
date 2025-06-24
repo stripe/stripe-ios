@@ -36,7 +36,7 @@ public struct LinkSignupCardPayload {
     }
 }
 
-public class LinkController: ObservableObject {
+public class LinkPaymentMethodLauncher: ObservableObject {
     private let apiClient = STPAPIClient.shared
 
     private var internalPaymentOption: PaymentOption?
@@ -222,7 +222,49 @@ public class LinkController: ObservableObject {
         }
     }
 
-    public static func create() -> LinkController {
-        return LinkController()
+    public static func create() -> LinkPaymentMethodLauncher {
+        return LinkPaymentMethodLauncher()
+    }
+}
+
+public extension LinkPaymentMethodLauncher {
+
+    func lookupConsumer(with email: String) async throws -> Bool {
+        return try await withCheckedThrowingContinuation { continuation in
+            lookupConsumer(with: email) { [weak self] in
+                guard let self else { return }
+                continuation.resume(returning: self.isExistingLinkConsumer)
+            }
+        }
+    }
+
+    func present(from presentingViewController: UIViewController, with email: String?) async throws -> PaymentSheet.FlowController.PaymentOptionDisplayData? {
+        return try await withCheckedThrowingContinuation { continuation in
+            present(from: presentingViewController, with: email) { [weak self] in
+                guard let self else { return }
+                continuation.resume(returning: self.paymentOption)
+            }
+        }
+    }
+
+    func signUpConsumer(with cardPayload: LinkSignupCardPayload) async -> Result<Void, Error> {
+        return await withCheckedContinuation { continuation in
+            signUpConsumer(with: cardPayload) { result in
+                continuation.resume(returning: result)
+            }
+        }
+    }
+
+    func createPaymentMethod() async throws -> STPPaymentMethod {
+        return try await withCheckedThrowingContinuation { continuation in
+            createPaymentMethod { result in
+                switch result {
+                case .success(let paymentMethod):
+                    continuation.resume(returning: paymentMethod)
+                case .failure(let error):
+                    continuation.resume(throwing: error)
+                }
+            }
+        }
     }
 }
