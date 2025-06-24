@@ -24,10 +24,25 @@ class STPPaymentIntentTest: XCTestCase {
             ),
             "pi_123"
         )
+        XCTAssertEqual(
+            STPPaymentIntent.id(fromClientSecret: "pi_1CkiBMLENEVhOs7YMtUehLau_secret_s4O8SDh7s6spSmHDw1VaYPGZA"),
+            "pi_1CkiBMLENEVhOs7YMtUehLau"
+        )
+        
+        // Test scoped client secrets
+        XCTAssertEqual(
+            STPPaymentIntent.id(fromClientSecret: "pi_3RddVUHh8VvNDQ8j1CFgLC0y_scoped_secret_JouqJt9ahCKgh6B9r6"),
+            "pi_3RddVUHh8VvNDQ8j1CFgLC0y"
+        )
+        XCTAssertEqual(
+            STPPaymentIntent.id(fromClientSecret: "pi_1CkiBMLENEVhOs7YMtUehLau_scoped_secret_s4O8SDh7s6spSmHDw1VaYPGZA"),
+            "pi_1CkiBMLENEVhOs7YMtUehLau"
+        )
 
         XCTAssertNil(STPPaymentIntent.id(fromClientSecret: ""))
         XCTAssertNil(STPPaymentIntent.id(fromClientSecret: "po_123_secret_HasBadPrefix"))
         XCTAssertNil(STPPaymentIntent.id(fromClientSecret: "MissingSentinalForSplitting"))
+        XCTAssertNil(STPPaymentIntent.id(fromClientSecret: "pi_123_scoped_secret_"))
     }
 
     // MARK: - Description Tests

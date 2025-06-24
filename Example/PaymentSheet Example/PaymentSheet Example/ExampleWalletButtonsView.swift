@@ -11,6 +11,7 @@ struct ExampleWalletButtonsContainerView: View {
     @State private var email: String = ""
     @State private var shopId: String = "shop_id_123"
     @State private var linkInlineVerificationEnabled: Bool = PaymentSheet.LinkFeatureFlags.enableLinkInlineVerification
+    @State private var useRoughLyingCarriageBackend: Bool = false
 
     var body: some View {
         if #available(iOS 16.0, *) {
@@ -29,8 +30,10 @@ struct ExampleWalletButtonsContainerView: View {
                             PaymentSheet.LinkFeatureFlags.enableLinkInlineVerification = newValue
                         }
 
+                    Toggle("Use rough-lying-carriage backend", isOn: $useRoughLyingCarriageBackend)
+
                     NavigationLink("Launch") {
-                        ExampleWalletButtonsView(email: email, shopId: shopId)
+                        ExampleWalletButtonsView(email: email, shopId: shopId, useRoughLyingCarriageBackend: useRoughLyingCarriageBackend)
                     }
                 }
             }
@@ -44,8 +47,8 @@ struct ExampleWalletButtonsView: View {
     @ObservedObject var model: ExampleWalletButtonsModel
     @State var isConfirmingPayment = false
 
-    init(email: String, shopId: String) {
-        self.model = ExampleWalletButtonsModel(email: email, shopId: shopId)
+    init(email: String, shopId: String, useRoughLyingCarriageBackend: Bool) {
+        self.model = ExampleWalletButtonsModel(email: email, shopId: shopId, useRoughLyingCarriageBackend: useRoughLyingCarriageBackend)
     }
 
     var body: some View {
@@ -126,17 +129,29 @@ struct WalletButtonsFlowControllerView: View {
 class ExampleWalletButtonsModel: ObservableObject {
     let email: String
     let shopId: String
+    let useRoughLyingCarriageBackend: Bool
 
     let backendCheckoutUrl = URL(string: "https://stp-mobile-playground-backend-v7.stripedemos.com/checkout")!
+    let roughLyingCarriageCustomerUrl = URL(string: "https://rough-lying-carriage.glitch.me/customer")!
+    let roughLyingCarriageCreateIntentUrl = URL(string: "https://rough-lying-carriage.glitch.me/create-intent")!
     @Published var paymentSheetFlowController: PaymentSheet.FlowController?
     @Published var paymentResult: PaymentSheetResult?
 
-    init(email: String, shopId: String) {
+    init(email: String, shopId: String, useRoughLyingCarriageBackend: Bool) {
         self.email = email
         self.shopId = shopId
+        self.useRoughLyingCarriageBackend = useRoughLyingCarriageBackend
     }
 
     func preparePaymentSheet() {
+        if useRoughLyingCarriageBackend {
+            preparePaymentSheetWithRoughLyingCarriageBackend()
+        } else {
+            preparePaymentSheetWithOriginalBackend()
+        }
+    }
+
+    private func preparePaymentSheetWithOriginalBackend() {
         // MARK: Fetch the PaymentIntent and Customer information from the backend
         let body = [
             "mode": "payment",
@@ -208,6 +223,112 @@ class ExampleWalletButtonsModel: ObservableObject {
                             self?.paymentSheetFlowController = paymentSheetFlowController
                         }
                     }
+                }
+            })
+        task.resume()
+    }
+
+    private func preparePaymentSheetWithRoughLyingCarriageBackend() {
+        // First, create customer and get customer session
+        let body = [
+            "customerId": nil // Let backend create a new customer
+        ] as [String: Any?]
+        let json = try! JSONSerialization.data(withJSONObject: body, options: [])
+
+        var request = URLRequest(url: roughLyingCarriageCustomerUrl)
+        request.httpMethod = "POST"
+        request.httpBody = json
+        request.setValue("application/json", forHTTPHeaderField: "Content-type")
+        let task = URLSession.shared.dataTask(
+            with: request,
+            completionHandler: { (data, _, error) in
+                guard let data = data,
+                    let json = try? JSONSerialization.jsonObject(with: data, options: [])
+                        as? [String: Any],
+                    let customerId = json["customerId"] as? String,
+                    let customerSessionClientSecret = json["customerSessionClientSecret"] as? String
+                else {
+                    print("Error creating customer: \(error?.localizedDescription ?? "Unknown error")")
+                    return
+                }
+
+                // MARK: Set your Stripe publishable key for rough-lying-carriage backend
+                // Using test publishable key - in production, this should come from the backend
+                STPAPIClient.shared.publishableKey = "pk_test_51LsBpsAoVfWZ5CNZi82L5ALZB9C89AyblMIWBHERPJRvSTaLYjaTsjT7hMeVRuXzTIc9VkkiZQ59KqXqVxYL7Rn600Homq7UPk"
+
+                // MARK: Create a PaymentSheet instance
+                var configuration = PaymentSheet.Configuration()
+                configuration.defaultBillingDetails.email = self.email
+                configuration.merchantDisplayName = "Rough Lying Carriage, Inc."
+                configuration.applePay = .init(
+                    merchantId: "merchant.com.stripe.umbrella.test", // Be sure to use your own merchant ID here!
+                    merchantCountryCode: "US",
+                    customHandlers: .init(paymentRequestHandler: { paymentRequest in
+                        paymentRequest.requiredShippingContactFields = [.postalAddress, .emailAddress]
+                        return paymentRequest
+                    })
+                )
+                configuration.shopPay = self.shopPayConfiguration
+                configuration.customer = .init(id: customerId, customerSessionClientSecret: customerSessionClientSecret)
+                configuration.returnURL = "payments-example://stripe-redirect"
+                configuration.willUseWalletButtonsView = true
+
+                PaymentSheet.FlowController.create(
+                    intentConfiguration: .init(sharedPaymentTokenSessionWithMode: .payment(amount: 9999, currency: "USD", setupFutureUsage: nil, captureMethod: .automatic, paymentMethodOptions: nil), sellerDetails: .init(networkId: "internal", externalId: "stripe_test_merchant"), paymentMethodTypes: ["card"], preparePaymentMethodHandler: { [weak self] paymentMethod, address in
+                        print("PaymentMethod: \(paymentMethod)")
+                        print("Address: \(address)")
+                        // Create the payment intent on the rough-lying-carriage backend
+                        self?.createPaymentIntentWithRoughLyingCarriageBackend(customerId: customerId, paymentMethod: paymentMethod.stripeId)
+                    }),
+                    configuration: configuration
+                ) { [weak self] result in
+                    switch result {
+                    case .failure(let error):
+                        print("FlowController creation error: \(error)")
+                    case .success(let paymentSheetFlowController):
+                        DispatchQueue.main.async {
+                            self?.paymentSheetFlowController = paymentSheetFlowController
+                        }
+                    }
+                }
+            })
+        task.resume()
+    }
+
+    private func createPaymentIntentWithRoughLyingCarriageBackend(customerId: String, paymentMethod: String) {
+        let body = [
+            "customerId": customerId,
+            "paymentMethod": paymentMethod
+        ] as [String: Any]
+        let json = try! JSONSerialization.data(withJSONObject: body, options: [])
+
+        var request = URLRequest(url: roughLyingCarriageCreateIntentUrl)
+        request.httpMethod = "POST"
+        request.httpBody = json
+        request.setValue("application/json", forHTTPHeaderField: "Content-type")
+        let task = URLSession.shared.dataTask(
+            with: request,
+            completionHandler: { (data, _, error) in
+                guard let data = data,
+                    let json = try? JSONSerialization.jsonObject(with: data, options: [])
+                        as? [String: Any]
+                else {
+                    print("Error creating payment intent: \(error?.localizedDescription ?? "Unknown error")")
+                    return
+                }
+
+                print("Payment intent response: \(json)")
+                
+                if let requiresAction = json["requiresAction"] as? Bool, requiresAction,
+                   let nextActionValue = json["nextActionValue"] as? String {
+                    print("Payment requires action: \(nextActionValue)")
+                    STPPaymentHandler.shared().handleNextAction(forPaymentHashedValue: nextActionValue, with: WindowAuthenticationContext(), returnURL: nil) { status, intent, error in
+                        print(status)
+                        print(intent)
+                        print(error)
+                    }
+                } else if let clientSecret = json["clientSecret"] as? String {
+                    print("Payment intent created with client secret: \(clientSecret)")
                 }
             })
         task.resume()
