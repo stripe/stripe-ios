@@ -99,7 +99,7 @@ public extension PaymentSheet {
             self.preparePaymentMethodHandler = preparePaymentMethodHandler
             self.requireCVCRecollection = requireCVCRecollection
             self.sellerDetails = sellerDetails
-            self.confirmHandler = { paymentMethod, shouldSavePaymentMethod, callback in
+            self.confirmHandler = { _, _, callback in
                 // fail immediately, this should never be called
                 stpAssertionFailure("PaymentSheet.IntentConfiguration for SPT sessions should not call confirmHandler")
                 let error = PaymentSheetError.intentConfigurationValidationFailed(message: "Internal Shared Payment Token session error. Please file an issue at https://github.com/stripe/stripe-ios.")
@@ -119,8 +119,8 @@ public extension PaymentSheet {
         /// Called when the customer confirms payment.
         /// See the documentation for `ConfirmHandler` for more details.
         public var confirmHandler: ConfirmHandler
-        
-        var preparePaymentMethodHandler: PreparePaymentMethodHandler? = nil
+
+        var preparePaymentMethodHandler: PreparePaymentMethodHandler?
 
         /// The account (if any) for which the funds of the intent are intended.
         /// - Seealso: https://stripe.com/docs/api/payment_intents/object#payment_intent_object-on_behalf_of

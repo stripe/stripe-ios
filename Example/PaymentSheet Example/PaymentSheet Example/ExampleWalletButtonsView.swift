@@ -202,8 +202,7 @@ class ExampleWalletButtonsModel: ObservableObject {
 //                        // Handle 3DS2/other next action failure
 //                    }
 //                    }
-                                
-                       
+
                 PaymentSheet.FlowController.create(
                     intentConfiguration: .init(sharedPaymentTokenSessionWithMode: .payment(amount: 1000, currency: "USD", setupFutureUsage: nil, captureMethod: .automatic, paymentMethodOptions: nil), sellerDetails: .init(networkId: "123", externalId: "abc"), paymentMethodTypes: ["card", "link", "shop_pay"], preparePaymentMethodHandler: { paymentMethod, address in
                         print(paymentMethod)
@@ -381,7 +380,7 @@ extension UIViewController {
             // Recurse for any presented controllers
             return presented.findTopMostPresentedViewController()
         }
-        
+
         return self
     }
 }

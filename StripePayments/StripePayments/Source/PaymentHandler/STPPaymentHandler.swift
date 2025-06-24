@@ -293,7 +293,7 @@ public class STPPaymentHandler: NSObject {
     ) {
         self.confirmPayment(withParams, with: authenticationContext, completion: completion)
     }
-    
+
     @_spi(SharedPaymentToken) public func handleNextAction(
         forPaymentHashedValue hashedValue: String,
         with authenticationContext: STPAuthenticationContext,
@@ -301,30 +301,30 @@ public class STPPaymentHandler: NSObject {
         completion: @escaping STPPaymentHandlerActionPaymentIntentCompletionBlock
     ) {
         // hashedValue is a base64 encoded string in "pk_test_123:pi_123_secret_abc" format
-        
+
         // Decode the base64 string
         guard let decodedData = Data(base64Encoded: hashedValue),
               let decodedString = String(data: decodedData, encoding: .utf8) else {
             completion(.failed, nil, _error(for: .invalidClientSecret))
             return
         }
-        
+
         // Parse the decoded string to extract publishable key and client secret
         let components = decodedString.components(separatedBy: ":")
         guard components.count >= 2 else {
             completion(.failed, nil, _error(for: .invalidClientSecret))
             return
         }
-        
+
         let publishableKey = components[0]
         let clientSecret = components[1..<components.count].joined(separator: ":")
-        
+
         // Create a new API client with the publishable key
         let apiClient = STPAPIClient(publishableKey: publishableKey)
-        
+
         // Create a new payment handler with the new API client
         let paymentHandler = STPPaymentHandler(apiClient: apiClient, threeDSCustomizationSettings: self.threeDSCustomizationSettings)
-        
+
         // Use the new handler to handle the next action
         paymentHandler.handleNextAction(
             forPayment: clientSecret,
