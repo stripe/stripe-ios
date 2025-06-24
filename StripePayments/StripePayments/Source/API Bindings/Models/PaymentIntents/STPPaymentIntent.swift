@@ -359,7 +359,7 @@ extension STPPaymentIntent {
     /// When true, some fields like `amount`, `currency`, and `clientSecret` contain placeholder values
     /// and should not be used for display or business logic.
     @_spi(STP) public var isRedacted: Bool {
-        return amount == -1 || currency == "unknown" || clientSecret == Self.RedactedClientSecret
+        return amount == -1 || currency == "unknown" || clientSecret == Self.RedactedClientSecret || paymentMethodTypes.isEmpty
     }
 
     private static let RedactedClientSecret = "redacted_client_secret"

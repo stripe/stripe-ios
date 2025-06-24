@@ -223,7 +223,7 @@ class STPPaymentIntentTest: XCTestCase {
         // Check placeholder values
         XCTAssertEqual(paymentIntent?.amount, -1, "Should use -1 as placeholder for amount")
         XCTAssertEqual(paymentIntent?.currency, "unknown", "Should use 'unknown' as placeholder for currency")
-        XCTAssertEqual(paymentIntent?.clientSecret, "redacted", "Should use 'redacted' as placeholder for client_secret")
+        XCTAssertEqual(paymentIntent?.clientSecret, "redacted_client_secret", "Should use 'redacted_client_secret' as placeholder for client_secret")
         XCTAssertEqual(paymentIntent?.paymentMethodTypes, [], "Should use empty array for payment_method_types")
 
         // Verify isRedacted returns true
@@ -333,7 +333,7 @@ class STPPaymentIntentTest: XCTestCase {
         // Verify placeholder values
         XCTAssertEqual(paymentIntent?.amount, -1)
         XCTAssertEqual(paymentIntent?.currency, "unknown")
-        XCTAssertEqual(paymentIntent?.clientSecret, "redacted")
+        XCTAssertEqual(paymentIntent?.clientSecret, "redacted_client_secret")
     }
 
     func testRedactedPaymentIntentAllFieldsMissing() {
@@ -352,7 +352,7 @@ class STPPaymentIntentTest: XCTestCase {
         // Check all placeholder values
         XCTAssertEqual(paymentIntent?.amount, -1)
         XCTAssertEqual(paymentIntent?.currency, "unknown")
-        XCTAssertEqual(paymentIntent?.clientSecret, "redacted")
+        XCTAssertEqual(paymentIntent?.clientSecret, "redacted_client_secret")
         XCTAssertEqual(paymentIntent?.paymentMethodTypes, [])
         XCTAssertFalse(paymentIntent?.livemode ?? true)
 

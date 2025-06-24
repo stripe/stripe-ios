@@ -155,7 +155,7 @@ public class STPPaymentIntentParams: NSObject {
     @objc public var shipping: STPPaymentIntentShippingDetailsParams?
 
     /// The URL to redirect your customer back to after they authenticate or cancel
-    /// their payment on the payment method's app or site.
+    /// their payment on the payment method’s app or site.
     /// This property has been renamed to `returnURL` and deprecated.
     @available(*, deprecated, renamed: "returnURL")
     @objc public var returnUrl: String? {
