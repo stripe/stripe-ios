@@ -193,7 +193,7 @@ class ExampleWalletButtonsModel: ObservableObject {
                 configuration.willUseWalletButtonsView = true
 
                 PaymentSheet.FlowController.create(
-                    intentConfiguration: .init(sharedPaymentTokenSessionWithMode: .payment(amount: 1000, currency: "USD", setupFutureUsage: nil, captureMethod: .automatic, paymentMethodOptions: nil), sellerDetails: .init(networkId: "123", externalId: "abc"), paymentMethodTypes: ["card", "link", "shop_pay"], preparePaymentMethodHandler: { paymentMethod, address in
+                    intentConfiguration: .init(sharedPaymentTokenSessionWithMode: .payment(amount: 1000, currency: "USD", setupFutureUsage: nil, captureMethod: .automatic, paymentMethodOptions: nil), sellerDetails: .init(networkId: "internal", externalId: "stripe_test_merchant"), paymentMethodTypes: ["card", "link", "shop_pay"], preparePaymentMethodHandler: { paymentMethod, address in
                         print(paymentMethod)
                         print(address)
                         // Create the SPT on your backend here
