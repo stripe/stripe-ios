@@ -548,7 +548,7 @@ class WindowAuthenticationContext: NSObject, STPAuthenticationContext {
 struct DebugLogView: View {
     let logs: [String]
     let onClearLogs: () -> Void
-    
+
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
             HStack {
@@ -564,7 +564,7 @@ struct DebugLogView: View {
                 .font(.caption)
                 .foregroundColor(.blue)
             }
-            
+
             ScrollViewReader { proxy in
                 ScrollView {
                     LazyVStack(alignment: .leading, spacing: 4) {
