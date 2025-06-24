@@ -56,7 +56,7 @@ final class PaymentSheet_DeferredAPITest: XCTestCase {
         let testPaymentMethod = createValidSavedPaymentMethod()
         let handlerCalledExpectation = expectation(description: "PreparePaymentMethodHandler called")
         let completionCalledExpectation = expectation(description: "Completion called")
-        
+
         var capturedPaymentMethod: STPPaymentMethod?
         var capturedShippingAddress: STPAddress?
         var capturedResult: PaymentSheetResult?
@@ -95,22 +95,22 @@ final class PaymentSheet_DeferredAPITest: XCTestCase {
 
         // Then
         wait(for: [handlerCalledExpectation, completionCalledExpectation], timeout: 5.0)
-        
+
         XCTAssertNotNil(capturedPaymentMethod, "Payment method should be passed to handler")
         XCTAssertEqual(capturedPaymentMethod?.stripeId, testPaymentMethod.stripeId, "Correct payment method should be passed")
-        
+
         // Verify shipping address is properly passed from configuration
         XCTAssertNotNil(capturedShippingAddress, "Shipping address should be passed from configuration")
         XCTAssertEqual(capturedShippingAddress?.name, "Jane Doe", "Shipping address name should match configuration")
         XCTAssertEqual(capturedShippingAddress?.phone, "5551234567", "Shipping address phone should match configuration")
         XCTAssertEqual(capturedShippingAddress?.country, "US", "Shipping address country should match configuration")
         XCTAssertEqual(capturedShippingAddress?.line1, "Line 1", "Shipping address line1 should match configuration")
-        
+
         guard case .completed = capturedResult else {
             XCTFail("Result should be .completed")
             return
         }
-        
+
         XCTAssertEqual(capturedDeferredType, .completeWithoutConfirmingIntent, "Should complete without confirming intent")
     }
 
@@ -118,11 +118,11 @@ final class PaymentSheet_DeferredAPITest: XCTestCase {
         // Given
         let handlerCalledExpectation = expectation(description: "PreparePaymentMethodHandler called")
         let completionCalledExpectation = expectation(description: "Completion called")
-        
+
         var capturedPaymentMethod: STPPaymentMethod?
         var capturedResult: PaymentSheetResult?
 
-        let preparePaymentMethodHandler: PaymentSheet.IntentConfiguration.PreparePaymentMethodHandler = { paymentMethod, shippingAddress in
+        let preparePaymentMethodHandler: PaymentSheet.IntentConfiguration.PreparePaymentMethodHandler = { paymentMethod, _ in
             capturedPaymentMethod = paymentMethod
             handlerCalledExpectation.fulfill()
         }
@@ -166,10 +166,10 @@ final class PaymentSheet_DeferredAPITest: XCTestCase {
 
         // Then
         wait(for: [handlerCalledExpectation, completionCalledExpectation], timeout: 10.0)
-        
+
         XCTAssertNotNil(capturedPaymentMethod, "Payment method should be created and passed to handler")
         XCTAssertEqual(capturedPaymentMethod?.type, .card, "Payment method should be of type card")
-        
+
         guard case .completed = capturedResult else {
             XCTFail("Result should be .completed")
             return
@@ -181,7 +181,7 @@ final class PaymentSheet_DeferredAPITest: XCTestCase {
         let testPaymentMethod = createValidSavedPaymentMethod()
         let handlerCalledExpectation = expectation(description: "PreparePaymentMethodHandler called")
         let completionCalledExpectation = expectation(description: "Completion called")
-        
+
         var capturedResult: PaymentSheetResult?
 
         let preparePaymentMethodHandler: PaymentSheet.IntentConfiguration.PreparePaymentMethodHandler = { _, _ in
@@ -209,7 +209,7 @@ final class PaymentSheet_DeferredAPITest: XCTestCase {
 
         // Then
         wait(for: [handlerCalledExpectation, completionCalledExpectation], timeout: 5.0)
-        
+
         guard case .completed = capturedResult else {
             XCTFail("Result should be .completed")
             return
@@ -220,7 +220,7 @@ final class PaymentSheet_DeferredAPITest: XCTestCase {
         // Given
         let testPaymentMethod = createValidSavedPaymentMethod()
         let completionCalledExpectation = expectation(description: "Completion called")
-        
+
         var capturedResult: PaymentSheetResult?
         var capturedDeferredType: STPAnalyticsClient.DeferredIntentConfirmationType?
 
@@ -257,10 +257,10 @@ final class PaymentSheet_DeferredAPITest: XCTestCase {
 
         // Then
         wait(for: [completionCalledExpectation], timeout: 10.0)
-        
+
         // Should proceed to normal confirmation flow, not early return
         XCTAssertNotEqual(capturedDeferredType, .completeWithoutConfirmingIntent, "Should not complete immediately without confirming intent")
-        
+
         // The result could be completed or failed depending on the network request, but it should not be the immediate completion
         XCTAssertNotNil(capturedResult, "Result should be set")
     }
@@ -270,16 +270,16 @@ final class PaymentSheet_DeferredAPITest: XCTestCase {
         let testPaymentMethod = createValidSavedPaymentMethod()
         let handlerCalledExpectation = expectation(description: "PreparePaymentMethodHandler called")
         let completionCalledExpectation = expectation(description: "Completion called")
-        
+
         var intentCreationCallbackInvoked = false
-        
+
         let preparePaymentMethodHandler: PaymentSheet.IntentConfiguration.PreparePaymentMethodHandler = { _, _ in
             handlerCalledExpectation.fulfill()
         }
 
         var intentConfig = PaymentSheet.IntentConfiguration(
             sharedPaymentTokenSessionWithMode: .payment(amount: 1000, currency: "USD"),
-            sellerDetails: PaymentSheet.IntentConfiguration.SellerDetails(networkId: "test_network", externalId: "test_external"),     
+            sellerDetails: PaymentSheet.IntentConfiguration.SellerDetails(networkId: "test_network", externalId: "test_external"),
             preparePaymentMethodHandler: preparePaymentMethodHandler
         )
 
@@ -298,13 +298,13 @@ final class PaymentSheet_DeferredAPITest: XCTestCase {
             authenticationContext: TestAuthenticationContext(),
             paymentHandler: STPPaymentHandler(apiClient: apiClient),
             isFlowController: false
-        ) { result, _ in
+        ) { _, _ in
             completionCalledExpectation.fulfill()
         }
 
         // Then
         wait(for: [handlerCalledExpectation, completionCalledExpectation], timeout: 5.0)
-        
+
         XCTAssertFalse(intentCreationCallbackInvoked, "Intent creation callback should not be invoked when using preparePaymentMethodHandler")
     }
 }

@@ -86,12 +86,12 @@ public extension PaymentSheet {
         ///   - preparePaymentMethodHandler: A handler called with payment details when the user taps the primary button (e.g. the "Pay" or "Continue" button).
         ///   - requireCVCRecollection: If true, PaymentSheet recollects CVC for saved cards before confirmation (PaymentIntent only)
         @_spi(SharedPaymentToken) public init(sharedPaymentTokenSessionWithMode mode: Mode,
-                    sellerDetails: SellerDetails?,
-                    paymentMethodTypes: [String]? = nil,
-                    onBehalfOf: String? = nil,
-                    paymentMethodConfigurationId: String? = nil,
-                    preparePaymentMethodHandler: @escaping PreparePaymentMethodHandler,
-                    requireCVCRecollection: Bool = false) {
+                                              sellerDetails: SellerDetails?,
+                                              paymentMethodTypes: [String]? = nil,
+                                              onBehalfOf: String? = nil,
+                                              paymentMethodConfigurationId: String? = nil,
+                                              preparePaymentMethodHandler: @escaping PreparePaymentMethodHandler,
+                                              requireCVCRecollection: Bool = false) {
             self.mode = mode
             self.paymentMethodTypes = paymentMethodTypes
             self.onBehalfOf = onBehalfOf
