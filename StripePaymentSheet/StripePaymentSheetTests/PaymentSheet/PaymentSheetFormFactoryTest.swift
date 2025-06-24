@@ -2547,7 +2547,7 @@ class PaymentSheetFormFactoryTest: XCTestCase {
             XCTFail("expected address section")
             return
         }
-        let emptyAddressSectionElement = AddressSectionElement(addressSpecProvider: addressSpecProvider(countries: ["US"]))
+        let emptyAddressSectionElement = AddressSectionElement()
         XCTAssertEqual(addressSectionElement.addressDetails, emptyAddressSectionElement.addressDetails)
     }
 

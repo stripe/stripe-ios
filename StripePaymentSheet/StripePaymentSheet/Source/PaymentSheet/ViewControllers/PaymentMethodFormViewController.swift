@@ -156,6 +156,7 @@ class PaymentMethodFormViewController: UIViewController {
             let delegate = addressSection.delegate
             addressSection.delegate = nil  // Stop didUpdate delegate calls to avoid laying out while we're being presented
             if let newShippingAddress = configuration.shippingDetails()?.address {
+                addressSection.collectionMode = .allWithAutocomplete
                 addressSection.updateBillingSameAsShippingDefaultAddress(.init(newShippingAddress))
             } else {
                 addressSection.updateBillingSameAsShippingDefaultAddress(.init())
