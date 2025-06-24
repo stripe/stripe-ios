@@ -31,21 +31,6 @@ extension PayWithLinkViewController {
         /// If that is the case, we will immediately confirm the intent after updating the payment method.
         let isBillingDetailsUpdateFlow: Bool
 
-        private lazy var titleLabel: UILabel = {
-            let label = UILabel()
-            label.font = LinkUI.font(forTextStyle: .title)
-            label.textColor = .linkTextPrimary
-            label.adjustsFontForContentSizeCategory = true
-            label.numberOfLines = 0
-            label.textAlignment = .center
-            label.text = if isBillingDetailsUpdateFlow {
-                String.Localized.confirm_payment_details
-            } else {
-                String.Localized.update_card
-            }
-            return label
-        }()
-
         private lazy var thisIsYourDefaultLabel: UILabel = {
             let label = UILabel()
             label.font = LinkUI.font(forTextStyle: .bodyEmphasized)
@@ -65,13 +50,6 @@ extension PayWithLinkViewController {
         ) { [weak self] in
             self?.updateCard()
         }
-
-        private lazy var cancelButton: Button = {
-            let button = Button(configuration: .linkSecondary(), title: String.Localized.cancel)
-            button.addTarget(self, action: #selector(didSelectCancel), for: .touchUpInside)
-            button.adjustsFontForContentSizeCategory = true
-            return button
-        }()
 
         private lazy var errorLabel: UILabel = {
             return ElementsUI.makeErrorLabel(theme: LinkUI.appearance.asElementsTheme)
@@ -105,7 +83,9 @@ extension PayWithLinkViewController {
             self.configuration.linkPaymentMethodsOnly = true
             self.paymentMethod = paymentMethod
             self.isBillingDetailsUpdateFlow = isBillingDetailsUpdateFlow
-            super.init(context: context)
+
+            let title: String = isBillingDetailsUpdateFlow ? String.Localized.confirm_payment_details : String.Localized.update_card
+            super.init(context: context, navigationTitle: title)
         }
 
         required init?(coder: NSCoder) {
@@ -120,17 +100,14 @@ extension PayWithLinkViewController {
             errorLabel.isHidden = true
 
             let stackView = UIStackView(arrangedSubviews: [
-                titleLabel,
                 cardEditElement.view,
                 errorLabel,
                 thisIsYourDefaultLabel,
                 updateButton,
-                cancelButton,
             ])
 
             stackView.axis = .vertical
             stackView.spacing = LinkUI.contentSpacing
-            stackView.setCustomSpacing(LinkUI.extraLargeContentSpacing, after: titleLabel)
             stackView.isLayoutMarginsRelativeArrangement = true
             stackView.directionalLayoutMargins = LinkUI.contentMargins
             stackView.translatesAutoresizingMaskIntoConstraints = false
@@ -140,7 +117,7 @@ extension PayWithLinkViewController {
                 contentView.topAnchor.constraint(equalTo: stackView.topAnchor),
                 contentView.leadingAnchor.constraint(equalTo: stackView.leadingAnchor),
                 contentView.trailingAnchor.constraint(equalTo: stackView.trailingAnchor),
-                contentView.bottomAnchor.constraint(greaterThanOrEqualTo: stackView.bottomAnchor),
+                contentView.bottomAnchor.constraint(equalTo: stackView.bottomAnchor),
             ])
 
             if !paymentMethod.isDefault || isBillingDetailsUpdateFlow {
@@ -176,6 +153,8 @@ extension PayWithLinkViewController {
                 )
             )
 
+            coordinator?.allowSheetDismissal(false)
+
             linkAccount.updatePaymentDetails(id: paymentMethod.stripeID, updateParams: updateParams) { [weak self] result in
                 guard let self else {
                     return
@@ -186,7 +165,8 @@ extension PayWithLinkViewController {
                     // Updates to CVC only get applied when the intent is confirmed so we manually add them here
                     // instead of including in the /update API call
                     if case .card(let card) = updatedPaymentDetails.details {
-                        card.cvc = params.cvc
+                        // If we collected CVC on the previous screen, use that value
+                        card.cvc = params.cvc ?? paymentMethod.cvc
                     }
 
                     var confirmationExtras: LinkConfirmationExtras?
@@ -195,6 +175,7 @@ extension PayWithLinkViewController {
                     }
 
                     self.updateButton.update(state: .succeeded, style: nil, callToAction: nil, animated: true) {
+                        self.coordinator?.allowSheetDismissal(true)
                         self.delegate?.didUpdate(
                             paymentMethod: updatedPaymentDetails,
                             confirmationExtras: confirmationExtras
@@ -205,12 +186,9 @@ extension PayWithLinkViewController {
                     self.updateErrorLabel(for: error)
                     self.cardEditElement.view.isUserInteractionEnabled = true
                     self.updateButton.update(state: .enabled)
+                    coordinator?.allowSheetDismissal(true)
                 }
             }
-        }
-
-        @objc func didSelectCancel() {
-            _ = self.bottomSheetController?.popContentViewController()
         }
 
         func updateErrorLabel(for error: Error?) {

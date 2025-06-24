@@ -35,7 +35,7 @@ extension EmbeddedPaymentElement {
             allowsRemovalOfLastSavedPaymentMethod: loadResult.elementsSession.paymentMethodRemoveLast(configuration: configuration),
             allowsPaymentMethodRemoval: loadResult.elementsSession.allowsRemovalOfPaymentMethodsForPaymentSheet(),
             allowsPaymentMethodUpdate: loadResult.elementsSession.paymentMethodUpdateForPaymentSheet,
-            isFlatCheckmarkStyle: configuration.appearance.embeddedPaymentElement.row.style == .flatWithCheckmark
+            isFlatCheckmarkOrChevronStyle: configuration.appearance.embeddedPaymentElement.row.style == .flatWithCheckmark || configuration.appearance.embeddedPaymentElement.row.style == .flatWithChevron
         )
         let initialSelection: RowButtonType? = {
             // First, respect the previous selection
@@ -318,7 +318,7 @@ extension EmbeddedPaymentElement: UpdatePaymentMethodViewControllerDelegate {
             allowsRemovalOfLastSavedPaymentMethod: elementsSession.paymentMethodRemoveLast(configuration: configuration),
             allowsPaymentMethodRemoval: elementsSession.allowsRemovalOfPaymentMethodsForPaymentSheet(),
             allowsPaymentMethodUpdate: elementsSession.paymentMethodUpdateForPaymentSheet,
-            isFlatCheckmarkStyle: configuration.appearance.embeddedPaymentElement.row.style == .flatWithCheckmark
+            isFlatCheckmarkOrChevronStyle: configuration.appearance.embeddedPaymentElement.row.style == .flatWithCheckmark || configuration.appearance.embeddedPaymentElement.row.style == .flatWithChevron
         )
     }
 }
@@ -353,30 +353,35 @@ extension EmbeddedPaymentElement: VerticalSavedPaymentMethodsViewControllerDeleg
 // MARK: - EmbeddedPaymentElement.PaymentOptionDisplayData
 
 extension EmbeddedPaymentElement.PaymentOptionDisplayData {
-    init(paymentOption: PaymentOption, mandateText: NSAttributedString?, currency: String?) {
+    init(paymentOption: PaymentOption, mandateText: NSAttributedString?, currency: String?, iconStyle: PaymentSheet.Appearance.IconStyle) {
         self.mandateText = mandateText
-        self.image = paymentOption.makeIcon(currency: currency, updateImageHandler: nil) // ☠️ This can make a blocking network request TODO: https://jira.corp.stripe.com/browse/MOBILESDK-2604 Refactor this!
+        self.image = paymentOption.makeIcon(currency: currency, iconStyle: iconStyle, updateImageHandler: nil) // ☠️ This can make a blocking network request TODO: https://jira.corp.stripe.com/browse/MOBILESDK-2604 Refactor this!
         switch paymentOption {
         case .applePay:
             label = String.Localized.apple_pay
             paymentMethodType = "apple_pay"
             billingDetails = nil
+            shippingDetails = nil
         case .saved(let paymentMethod, let confirmParams):
             label = paymentMethod.paymentOptionLabel(confirmParams: confirmParams)
             paymentMethodType = paymentMethod.type.identifier
             billingDetails = paymentMethod.billingDetails?.toPaymentSheetBillingDetails()
+            shippingDetails = nil
         case .new(let confirmParams):
             label = confirmParams.paymentSheetLabel
             paymentMethodType = confirmParams.paymentMethodType.identifier
             billingDetails = confirmParams.paymentMethodParams.billingDetails?.toPaymentSheetBillingDetails()
+            shippingDetails = nil
         case .link(let option):
             label = option.paymentSheetLabel
             paymentMethodType = STPPaymentMethodType.link.identifier
             billingDetails = option.billingDetails?.toPaymentSheetBillingDetails()
+            shippingDetails = option.shippingAddress
         case .external(let paymentMethod, let stpBillingDetails):
             label = paymentMethod.displayText
             paymentMethodType = paymentMethod.type
             billingDetails = stpBillingDetails.toPaymentSheetBillingDetails()
+            shippingDetails = nil
         }
     }
 }
@@ -562,11 +567,16 @@ extension EmbeddedPaymentElement {
     }
 
     static func validateRowSelectionConfiguration(configuration: Configuration) throws {
-        if case .immediateAction = configuration.rowSelectionBehavior,
-           case .confirm = configuration.formSheetAction {
-            // Fail init if the merchant is using immediateAction and confirm form sheet action along w/ either a Customer or Apple Pay configuration
-            guard configuration.applePay == nil && configuration.customer == nil else {
+        switch configuration.rowSelectionBehavior {
+        case .immediateAction:
+            if case .confirm = configuration.formSheetAction, configuration.applePay != nil || configuration.customer != nil {
+                // Fail init if the merchant is using immediateAction and confirm form sheet action along w/ either a Customer or Apple Pay configuration
                 throw PaymentSheetError.integrationError(nonPIIDebugDescription: "Using .immediateAction with .confirm form sheet action is not supported when Apple Pay or a customer configuration is provided. Use .default row selection behavior or disable Apple Pay and saved payment methods.")
+            }
+        default:
+            if case .flatWithChevron = configuration.appearance.embeddedPaymentElement.row.style {
+                // Fail init if the merchant is using the flatWithChevron style without the immediateAction behavior since flatWithChevron does not provide a selected state
+                throw PaymentSheetError.integrationError(nonPIIDebugDescription: "Using .flatWithChevron row style without .immediateAction row selection behavior is not supported. Use a different style or enable .immediateAction.")
             }
         }
     }

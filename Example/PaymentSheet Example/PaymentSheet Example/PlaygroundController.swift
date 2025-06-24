@@ -58,9 +58,9 @@ class PlaygroundController: ObservableObject {
                     return request
                 },
                 authorizationResultHandler: { result, completion in
-                    //                  Hardcoded order details:
-                    //                  In a real app, you should fetch these details from your service and call the completion() block on
-                    //                  the main queue.
+                    // Hardcoded order details:
+                    // In a real app, you should fetch these details from your service and call the completion() block on
+                    // the main queue.
                     result.orderDetails = PKPaymentOrderDetails(
                         orderTypeIdentifier: "com.myapp.order",
                         orderIdentifier: "ABC123-AAAA-1111",
@@ -69,6 +69,55 @@ class PlaygroundController: ObservableObject {
                     completion(result)
                 }
             )
+            return PaymentSheet.ApplePayConfiguration(
+                merchantId: "merchant.com.stripe.umbrella.test",
+                merchantCountryCode: "US",
+                buttonType: buttonType,
+                customHandlers: customHandlers)
+        }
+
+        if #available(iOS 16.0, *), settings.applePayEnabled == .onWithShipping {
+            let customHandlers = PaymentSheet.ApplePayConfiguration.Handlers(
+                paymentRequestHandler: { request in
+                    request.shippingMethods = self.shippingMethods()
+                    request.requiredShippingContactFields = [.name, .postalAddress]
+                    return request
+                },
+                authorizationResultHandler: { result, completion in
+                    // Hardcoded order details:
+                    // In a real app, you should fetch these details from your service and call the completion() block on
+                    // the main queue.
+                    result.orderDetails = PKPaymentOrderDetails(
+                        orderTypeIdentifier: "com.myapp.order",
+                        orderIdentifier: "ABC123-AAAA-1111",
+                        webServiceURL: URL(string: "https://my-backend.example.com/apple-order-tracking-backend")!,
+                        authenticationToken: "abc123")
+                    completion(result)
+                },
+                shippingMethodUpdateHandler: { shippingMethod, completion in
+                    // Get tax rate from somewhere (either stored from last contact update or default)
+                    let (taxName, taxRate) = self.currentTaxRate ?? ("Sales Tax (5%)", 0.05)  // Default 5%
+                    let summaryItems = self.createSummaryItems(shippingMethod: shippingMethod,
+                                                               taxRate: taxRate,
+                                                               taxName: taxName)
+                    let update = PKPaymentRequestShippingMethodUpdate(paymentSummaryItems: summaryItems)
+                    completion(update)
+                },
+                shippingContactUpdateHandler: { contact, completion in
+                    let (taxName, taxRate) = self.determineTaxRate(contact: contact)
+                    self.currentTaxRate = (taxName, taxRate)
+
+                    let availableShippingMethods = self.shippingMethods()
+                    let defaultShippingMethod = availableShippingMethods.first!
+
+                    let summaryItems = self.createSummaryItems(shippingMethod: defaultShippingMethod,
+                                                               taxRate: taxRate,
+                                                               taxName: taxName)
+                    let update = PKPaymentRequestShippingContactUpdate(errors: nil,
+                                                                       paymentSummaryItems: summaryItems,
+                                                                       shippingMethods: availableShippingMethods)
+                    completion(update)
+                })
             return PaymentSheet.ApplePayConfiguration(
                 merchantId: "merchant.com.stripe.umbrella.test",
                 merchantCountryCode: "US",
@@ -85,6 +134,8 @@ class PlaygroundController: ObservableObject {
             return nil
         }
     }
+    private var currentTaxRate: (String, Double)?
+
     var linkConfiguration: PaymentSheet.LinkConfiguration {
         switch settings.linkDisplay {
         case .automatic:
@@ -500,10 +551,7 @@ class PlaygroundController: ObservableObject {
             UserDefaults.standard.set(enableInstantDebitsIncentives, forKey: "FINANCIAL_CONNECTIONS_INSTANT_DEBITS_INCENTIVES")
 
             let enableFcLite = newValue.fcLiteEnabled == .on
-            FinancialConnectionsSDKAvailability.shouldPreferFCLite = enableFcLite
-
-            PaymentSheet.LinkFeatureFlags.enableLinkInSPM = newValue.linkInSPMs == .on
-            PaymentSheet.LinkFeatureFlags.enableLinkFlowControllerChanges = newValue.linkFlowControllerChanges == .on
+            FinancialConnectionsSDKAvailability.localFcLiteOverride = enableFcLite
         }.store(in: &subscribers)
 
         // Listen for analytics

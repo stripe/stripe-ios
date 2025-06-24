@@ -9,7 +9,7 @@ import Foundation
 @_spi(STP) @testable import StripeCore
 @_spi(STP) import StripeCoreTestUtils
 @_spi(STP) import StripePayments
-@_spi(STP) @_spi(PaymentMethodOptionsSetupFutureUsagePreview) @testable import StripePaymentSheet
+@_spi(STP) @_spi(PaymentMethodOptionsSetupFutureUsagePreview) @_spi(AppearanceAPIAdditionsPreview) @testable import StripePaymentSheet
 import StripePaymentsTestUtils
 @_spi(STP) import StripeUICore
 
@@ -387,7 +387,7 @@ extension STPPaymentMethod {
         ])!
     }
 
-    static func _testLink() -> STPPaymentMethod {
+    static func _testLink(displayName: String? = nil) -> STPPaymentMethod {
         let paymentMethod = STPPaymentMethod.decodedObject(fromAPIResponse: [
             "id": "pm_123",
             "type": "link",
@@ -402,7 +402,7 @@ extension STPPaymentMethod {
         paymentMethod.linkPaymentDetails = .card(
             LinkPaymentDetails.Card(
                 id: "csmr_123",
-                displayName: nil,
+                displayName: displayName,
                 expMonth: 12,
                 expYear: 2030,
                 last4: "4242",
@@ -424,13 +424,14 @@ extension PaymentSheet.Appearance {
 
         appearance.cornerRadius = 0.0
         appearance.borderWidth = 2.0
+        appearance.sheetCornerRadius = 16.0
         appearance.shadow = PaymentSheet.Appearance.Shadow(
             color: .orange,
             opacity: 0.5,
             offset: CGSize(width: 0, height: 2),
             radius: 4
         )
-        appearance.formInsets = UIEdgeInsets(top: 30, left: 50, bottom: 70, right: 10)
+        appearance.formInsets = NSDirectionalEdgeInsets(top: 30, leading: 50, bottom: 70, trailing: 10)
 
         // Customize the colors
         var colors = PaymentSheet.Appearance.Colors()
@@ -448,6 +449,7 @@ extension PaymentSheet.Appearance {
 
         // Customize the primary button
         var primaryButton = PaymentSheet.Appearance.PrimaryButton()
+        primaryButton.height = 50
         primaryButton.cornerRadius = 8
 
         appearance.font = font

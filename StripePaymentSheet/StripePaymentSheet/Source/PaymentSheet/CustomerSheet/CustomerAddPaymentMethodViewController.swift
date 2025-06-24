@@ -117,8 +117,8 @@ class CustomerAddPaymentMethodViewController: UIViewController {
         let isCarouselHidden = paymentMethodTypes == [.stripe(.card)]
         view.directionalLayoutMargins = .insets(
             top: isCarouselHidden ? configuration.appearance.formInsets.top : 0,
-            leading: configuration.appearance.formInsets.left,
-            trailing: configuration.appearance.formInsets.right
+            leading: configuration.appearance.formInsets.leading,
+            trailing: configuration.appearance.formInsets.trailing
         )
         view.addPinnedSubview(paymentMethodDetailsView)
         view.updateHeight()

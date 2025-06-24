@@ -121,12 +121,7 @@ extension PaymentSheet {
 
     @_spi(STP) public enum LinkFeatureFlags {
 
-        /// Decides whether Link payment methods should be shown in the list of saved payment methods.
-        /// Only enable this in the PaymentSheet playground.
-        @_spi(STP) public static var enableLinkInSPM: Bool = false
-
-        /// Decides whether Link shows more actively in FlowController.
-        /// Only enable this in the PaymentSheet playground.
-        @_spi(STP) public static var enableLinkFlowControllerChanges: Bool = false
+        /// Decides whether Link inline verification is shown in the `WalletButtonsView`.
+        @_spi(STP) public static var enableLinkInlineVerification: Bool = false
     }
 }

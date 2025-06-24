@@ -63,13 +63,13 @@ class PaymentSheetImageLibrary {
         return "default"
     }
 
-    class func bankIcon(for bank: String?) -> UIImage {
+    class func bankIcon(for bank: String?, iconStyle: PaymentSheet.Appearance.IconStyle) -> UIImage {
         guard let bank = bank else {
-            return STPImageLibrary.bankIcon()
+            return STPPaymentMethodType.USBankAccount.makeImage(iconStyle: iconStyle) ?? UIImage()
         }
         let icon = safeImageNamed("bank_icon_\(bank.lowercased())")
         if icon.size == .zero {
-            return STPImageLibrary.bankIcon() // use generic
+            return STPPaymentMethodType.USBankAccount.makeImage(iconStyle: iconStyle) ?? UIImage() // use generic
         }
         return icon
     }

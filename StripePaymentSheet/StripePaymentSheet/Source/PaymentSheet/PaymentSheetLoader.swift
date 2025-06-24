@@ -96,13 +96,31 @@ final class PaymentSheetLoader {
                 let linkAccount = try? await lookupLinkAccount(elementsSession: elementsSession, configuration: configuration)
                 LinkAccountContext.shared.account = linkAccount
 
-                if let linkGlobalHoldbackExperiment = LinkGlobalHoldback(
-                    session: elementsSession,
-                    configuration: configuration,
-                    linkAccount: linkAccount,
-                    integrationShape: analyticsHelper.integrationShape
-                ) {
+                // Log experiment exposures
+                if let arbId = elementsSession.experimentsData?.arbId {
+                    let linkGlobalHoldbackExperiment = LinkGlobalHoldback(
+                        arbId: arbId,
+                        session: elementsSession,
+                        configuration: configuration,
+                        linkAccount: linkAccount,
+                        integrationShape: analyticsHelper.integrationShape
+                    )
                     analyticsHelper.logExposure(experiment: linkGlobalHoldbackExperiment)
+
+                    // Only log Link AB Test if Link is enabled
+                    if PaymentSheet.isLinkEnabled(
+                        elementsSession: elementsSession,
+                        configuration: configuration
+                    ) {
+                        let linkAbTestExperiment = LinkABTest(
+                            arbId: arbId,
+                            session: elementsSession,
+                            configuration: configuration,
+                            linkAccount: linkAccount,
+                            integrationShape: analyticsHelper.integrationShape
+                        )
+                        analyticsHelper.logExposure(experiment: linkAbTestExperiment)
+                    }
                 }
 
                 // Filter out payment methods that the PI/SI or PaymentSheet doesn't support
@@ -122,6 +140,9 @@ final class PaymentSheetLoader {
                 // Disable FC Lite if killswitch is enabled
                 let isFcLiteKillswitchEnabled = elementsSession.flags["elements_disable_fc_lite"] == true
                 FinancialConnectionsSDKAvailability.fcLiteKillswitchEnabled = isFcLiteKillswitchEnabled
+
+                let remoteFcLiteOverrideEnabled = elementsSession.flags["elements_prefer_fc_lite"] == true
+                FinancialConnectionsSDKAvailability.remoteFcLiteOverride = remoteFcLiteOverrideEnabled
 
                 // Send load finished analytic
                 // This is hacky; the logic to determine the default selected payment method belongs to the SavedPaymentOptionsViewController. We invoke it here just to report it to analytics before that VC loads.
@@ -148,6 +169,9 @@ final class PaymentSheetLoader {
                 if integrationShape.shouldStartCheckoutMeasurementOnLoad {
                     analyticsHelper.startTimeMeasurement(.checkout)
                 }
+
+                // Initialize telemetry. Don't wait for this to finish to call completion.
+                STPTelemetryClient.shared.sendTelemetryData()
 
                 // Call completion
                 let loadResult = LoadResult(

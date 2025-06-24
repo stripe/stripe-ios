@@ -38,6 +38,8 @@
 		39E61B5E6A88E5AF1922EE62 /* TextFieldFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34178B51599FDCB0D0D7475A /* TextFieldFormatter.swift */; };
 		4755A24604B396D5A25058CD /* StripeUICore.h in Headers */ = {isa = PBXBuildFile; fileRef = CB8A9F7B4B2E8AA5A7E4FE98 /* StripeUICore.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		48D3B7C2983A8A25C6599119 /* OneTimeCodeTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC2BFFB32C50AB4EECA90326 /* OneTimeCodeTextField.swift */; };
+		49377F042DE5F658005CA805 /* SectionSelectionBehavior.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49377F032DE5F658005CA805 /* SectionSelectionBehavior.swift */; };
+		495D530E2DF10597008B92F9 /* OneTimeCodeTextFieldRepresentable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 495D530D2DF10597008B92F9 /* OneTimeCodeTextFieldRepresentable.swift */; };
 		4A5EADAF2F6514299BA4B8D8 /* FormElement.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB1FE2B6BCD6FC77117A2521 /* FormElement.swift */; };
 		4B05CF7F485F0AED498DAE49 /* OneTimeCodeTextField-TextStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 815DB8DE48AE3CE1609C8316 /* OneTimeCodeTextField-TextStorage.swift */; };
 		4B414F0A0E46D914C89B3741 /* StaticElement.swift in Sources */ = {isa = PBXBuildFile; fileRef = 583B93BE0152CDF7383A37E7 /* StaticElement.swift */; };
@@ -189,6 +191,8 @@
 		4893E4B43FEFCE920D432F0C /* ContainerElement.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContainerElement.swift; sourceTree = "<group>"; };
 		48C9A13C4663EA8ACA6EA2E5 /* UIColor+StripeUICoreTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIColor+StripeUICoreTests.swift"; sourceTree = "<group>"; };
 		48E2652D09C1A4EBBDE2FB61 /* DateFieldElementSnapshotTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateFieldElementSnapshotTest.swift; sourceTree = "<group>"; };
+		49377F032DE5F658005CA805 /* SectionSelectionBehavior.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SectionSelectionBehavior.swift; sourceTree = "<group>"; };
+		495D530D2DF10597008B92F9 /* OneTimeCodeTextFieldRepresentable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OneTimeCodeTextFieldRepresentable.swift; sourceTree = "<group>"; };
 		4B66D666BB3EA733B92A60AA /* AddressSectionElement+DummyAddressLine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AddressSectionElement+DummyAddressLine.swift"; sourceTree = "<group>"; };
 		4CBAE2B07C5575F19470464D /* StripeiOS-Release.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "StripeiOS-Release.xcconfig"; sourceTree = "<group>"; };
 		4D4BD46908791D2E4150C4DC /* TextFieldElement+Factory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TextFieldElement+Factory.swift"; sourceTree = "<group>"; };
@@ -628,6 +632,7 @@
 				7EB48FCA3B2447A5F4CCEC69 /* Button.swift */,
 				815DB8DE48AE3CE1609C8316 /* OneTimeCodeTextField-TextStorage.swift */,
 				AC2BFFB32C50AB4EECA90326 /* OneTimeCodeTextField.swift */,
+				495D530D2DF10597008B92F9 /* OneTimeCodeTextFieldRepresentable.swift */,
 			);
 			path = Controls;
 			sourceTree = "<group>";
@@ -685,6 +690,7 @@
 				7BB17B284B6D063AF0329DAD /* SectionElement.swift */,
 				B6737026DF19C8D10AE8114A /* SectionElement+MultiElementRow.swift */,
 				CF3C9C0D2302B8E7F421EFBD /* SectionView.swift */,
+				49377F032DE5F658005CA805 /* SectionSelectionBehavior.swift */,
 			);
 			path = Section;
 			sourceTree = "<group>";
@@ -955,6 +961,7 @@
 				86427678E119E4AD22410E30 /* PhoneNumberElement.swift in Sources */,
 				019C76A03A30A67AE9F1FAEE /* PickerFieldView.swift in Sources */,
 				57C288DFD2CC2CFC216E47CC /* PickerTextField.swift in Sources */,
+				49377F042DE5F658005CA805 /* SectionSelectionBehavior.swift in Sources */,
 				32971AFF5D0DF9B28E9C464C /* SectionContainerView.swift in Sources */,
 				5A9B21FE5A6941713087B94B /* SectionElement+MultiElementRow.swift in Sources */,
 				336B882978CA47EE46260774 /* SectionElement.swift in Sources */,
@@ -966,6 +973,7 @@
 				5936629C4665BC698C3458B1 /* TextFieldElementConfiguration.swift in Sources */,
 				39E61B5E6A88E5AF1922EE62 /* TextFieldFormatter.swift in Sources */,
 				986924FDA1EEF4146CD81B50 /* TextFieldView.swift in Sources */,
+				495D530E2DF10597008B92F9 /* OneTimeCodeTextFieldRepresentable.swift in Sources */,
 				A29B5AC2F03116E2F48970EE /* TextOrDropdownElement.swift in Sources */,
 				36376E12AE7ABA21FFC474E6 /* Events.swift in Sources */,
 				FB33F2F446570394AABB7EC7 /* CompatibleColor.swift in Sources */,

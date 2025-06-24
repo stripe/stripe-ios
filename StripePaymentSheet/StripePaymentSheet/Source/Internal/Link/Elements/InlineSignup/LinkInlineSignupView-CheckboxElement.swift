@@ -17,6 +17,7 @@ extension LinkInlineSignupView {
 
         weak var delegate: ElementDelegate?
 
+        private let mode: LinkInlineSignupViewModel.Mode
         private let merchantName: String
         private let appearance: PaymentSheet.Appearance
         /// Controls the stroke color of the checkbox
@@ -42,26 +43,57 @@ extension LinkInlineSignupView {
             // Force the border to match the passed in borderColor
             appearanceCopy.colors.componentBorder = borderColor
 
-            let text = STPLocalizedString(
-                "Save your info for secure 1-click checkout with Link",
-                """
-                Label for a checkbox that when checked allows the payment information
-                to be saved and used in future checkout sessions.
-                """
-            )
+            let text = {
+                switch mode {
+                case .checkboxWithDefaultOptIn:
+                    return STPLocalizedString(
+                        "Save my info for faster checkout with Link",
+                        """
+                        Label for a checkbox that when checked allows the payment information
+                        to be saved and used in future checkout sessions.
+                        """
+                    )
+                case .checkbox, .textFieldsOnlyEmailFirst, .textFieldsOnlyPhoneFirst:
+                    return STPLocalizedString(
+                        "Save your info for secure 1-click checkout with Link",
+                        """
+                        Label for a checkbox that when checked allows the payment information
+                        to be saved and used in future checkout sessions.
+                        """
+                    )
+                }
+            }()
 
-            let description = String.Localized.pay_faster_at_$merchant_and_thousands_of_merchants(
-                merchantDisplayName: merchantName
-            )
+            let description: String? = {
+                switch mode {
+                case .checkbox, .textFieldsOnlyEmailFirst, .textFieldsOnlyPhoneFirst:
+                    return String.Localized.pay_faster_at_$merchant_and_thousands_of_merchants(
+                        merchantDisplayName: merchantName
+                    )
+                case .checkboxWithDefaultOptIn:
+                    return nil
+                }
+            }()
 
-            let checkbox = CheckboxButton(text: text, description: description, theme: appearanceCopy.asElementsTheme)
+            let checkbox = CheckboxButton(
+                text: text,
+                description: description,
+                theme: appearanceCopy.asElementsTheme,
+                alwaysEmphasizeText: true
+            )
             checkbox.addTarget(self, action: #selector(didToggleCheckbox), for: .touchUpInside)
             checkbox.isSelected = false
 
             return checkbox
         }()
 
-        init(merchantName: String, appearance: PaymentSheet.Appearance, borderColor: UIColor) {
+        init(
+            mode: LinkInlineSignupViewModel.Mode,
+            merchantName: String,
+            appearance: PaymentSheet.Appearance,
+            borderColor: UIColor
+        ) {
+            self.mode = mode
             self.merchantName = merchantName
             self.appearance = appearance
             self.borderColor = borderColor

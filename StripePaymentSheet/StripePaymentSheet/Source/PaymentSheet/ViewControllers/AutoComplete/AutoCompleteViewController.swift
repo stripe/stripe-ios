@@ -260,8 +260,8 @@ extension AutoCompleteViewController: UITableViewDelegate, UITableViewDataSource
         cell.indentationWidth = 5 // hardcoded value to align with searchbar textfield
 
         cell.contentView.directionalLayoutMargins = .insets(
-            leading: configuration.appearance.formInsets.left - 5, // adjust for the indentation
-            trailing: configuration.appearance.formInsets.right)
+            leading: configuration.appearance.formInsets.leading - 5, // adjust for the indentation
+            trailing: configuration.appearance.formInsets.trailing)
         cell.contentView.preservesSuperviewLayoutMargins = false
 
         return cell

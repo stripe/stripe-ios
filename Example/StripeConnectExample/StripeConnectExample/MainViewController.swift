@@ -5,7 +5,7 @@
 //  Created by Mel Ludowise on 4/30/24.
 //
 
-@_spi(PrivateBetaConnect) import StripeConnect
+import StripeConnect
 import SwiftUI
 import UIKit
 
@@ -63,12 +63,12 @@ class MainViewController: UITableViewController {
         return .init(appearance: AppSettings.shared.appearanceInfo.appearance,
                      fonts: customFonts(),
                      fetchClientSecret: { [weak self, merchant] in
-            do {
-                return try await API.accountSession(merchantId: merchant.id).get().clientSecret
-            } catch {
-                return nil
-            }
-        })
+                        do {
+                            return try await API.accountSession(merchantId: merchant.id).get().clientSecret
+                        } catch {
+                            return nil
+                        }
+                     })
     }()
 
     override func viewDidLoad() {
@@ -85,18 +85,18 @@ class MainViewController: UITableViewController {
     }
 
     func addChangeAppearanceButtonNavigationItem(to viewController: UIViewController) {
-         // Add a button to change the appearance
-         let button = UIBarButtonItem(
-             image: UIImage(systemName: "paintpalette"),
-             style: .plain,
-             target: self,
-             action: #selector(selectAppearance)
-         )
-         button.accessibilityLabel = "Change appearance"
-         var buttonItems = viewController.navigationItem.rightBarButtonItems ?? []
-         buttonItems = [button] + buttonItems
-         viewController.navigationItem.rightBarButtonItems = buttonItems
-     }
+        // Add a button to change the appearance
+        let button = UIBarButtonItem(
+            image: UIImage(systemName: "paintpalette"),
+            style: .plain,
+            target: self,
+            action: #selector(selectAppearance)
+        )
+        button.accessibilityLabel = "Change appearance"
+        var buttonItems = viewController.navigationItem.rightBarButtonItems ?? []
+        buttonItems = [button] + buttonItems
+        viewController.navigationItem.rightBarButtonItems = buttonItems
+    }
 
     @objc
     func selectAppearance() {
@@ -170,7 +170,7 @@ class MainViewController: UITableViewController {
 
         let fontSources: [EmbeddedComponentManager.CustomFontSource] = fonts.map { fontName in
             guard let fontFileURL = Bundle.main.url(forResource: fontName, withExtension: "ttf"),
-                    let font = UIFont(name: fontName, size: UIFont.systemFontSize) else {
+                  let font = UIFont(name: fontName, size: UIFont.systemFontSize) else {
                 print("Failed to load font with name \(fontName)")
                 return nil
             }

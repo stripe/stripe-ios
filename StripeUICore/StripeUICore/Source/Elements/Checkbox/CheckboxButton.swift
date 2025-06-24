@@ -111,10 +111,17 @@ import UIKit
         }
     }
 
+    private let alwaysEmphasizeText: Bool
+
     // MARK: - Initializers
 
-    public init(description: String? = nil, theme: ElementsAppearance = .default) {
+    public init(
+        description: String? = nil,
+        theme: ElementsAppearance = .default,
+        alwaysEmphasizeText: Bool = false
+    ) {
         self.theme = theme
+        self.alwaysEmphasizeText = alwaysEmphasizeText
         super.init(frame: .zero)
 
         isAccessibilityElement = true
@@ -130,8 +137,13 @@ import UIKit
         addGestureRecognizer(didTapGestureRecognizer)
     }
 
-    public convenience init(text: String, description: String? = nil, theme: ElementsAppearance = .default) {
-        self.init(description: description, theme: theme)
+    public convenience init(
+        text: String,
+        description: String? = nil,
+        theme: ElementsAppearance = .default,
+        alwaysEmphasizeText: Bool = false
+    ) {
+        self.init(description: description, theme: theme, alwaysEmphasizeText: alwaysEmphasizeText)
         setText(text)
     }
 
@@ -202,10 +214,11 @@ import UIKit
 
     private func updateLabels() {
         let hasDescription = descriptionLabel.text != nil
+        let emphasizeText = hasDescription || alwaysEmphasizeText
 
-        let textFont =  hasDescription ? emphasisFont : font
+        let textFont = emphasizeText ? emphasisFont : font
         textView.font = textFont
-        textView.textColor = hasDescription ? theme.colors.bodyText : theme.colors.secondaryText
+        textView.textColor = emphasizeText ? theme.colors.bodyText : theme.colors.secondaryText
 
         descriptionLabel.font = font
         descriptionLabel.isHidden = !hasDescription

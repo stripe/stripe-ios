@@ -6,7 +6,7 @@
 //
 
 import SafariServices
-@_spi(PrivateBetaConnect) @_spi(DashboardOnly) @testable import StripeConnect
+@_spi(DashboardOnly) @testable import StripeConnect
 @_spi(STP) import StripeCore
 import WebKit
 import XCTest
@@ -82,14 +82,14 @@ private class NotificationBannerViewControllerDelegatePassThrough: NotificationB
 
     var didFailLoad: ((_ notificationBanner: NotificationBannerViewController, _ error: Error) -> Void)?
     var didChange: ((_ notificationBanner: NotificationBannerViewController,
-                    _ total: Int,
-                    _ actionRequired: Int) -> Void)?
+                     _ total: Int,
+                     _ actionRequired: Int) -> Void)?
 
     init(
         didFailLoad: ((NotificationBannerViewController, Error) -> Void)? = nil,
         didChange: ((_ notificationBanner: NotificationBannerViewController,
-                        _ total: Int,
-                        _ actionRequired: Int) -> Void)? = nil
+                     _ total: Int,
+                     _ actionRequired: Int) -> Void)? = nil
     ) {
         self.didFailLoad = didFailLoad
         self.didChange = didChange

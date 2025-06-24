@@ -1,5 +1,22 @@
-## XX.XX.X XXXX-XX-XX
+## 24.16.1 2025-06-23
+
 ### PaymentSheet
+* [Fixed] A race condition when updating the `paymentOption` on `PaymentSheet.FlowController`.
+
+## 24.16.0 2025-06-16
+
+### PaymentSheet
+* [Fixed] A bug where the EmbeddedPaymentElement failed to display forms when tapped in SwiftUI.
+* [Changed] `paymentOption` on `PaymentSheet.FlowController` is now annotated with `@Published` for better ergonomics in SwiftUI.
+* [Added] A new `flatWithChevron` Embedded Payment Element row style.
+
+## 24.15.0 2025-06-02
+
+### Connect
+* [CHANGED] Removed `PrivateBetaConnect` annotation and all usages. [Connect SDK](https://docs.stripe.com/connect/get-started-connect-embedded-components?platform=ios) is now GA.
+
+### PaymentSheet
+* [Added] The ability to customize the height of the primary button with `PaymentSheetAppearance.primaryButton.height`.
 * [Added] The ability to customize form insets with `PaymentSheetAppearance.formInsets`.
 
 ## 24.14.0 2025-05-19

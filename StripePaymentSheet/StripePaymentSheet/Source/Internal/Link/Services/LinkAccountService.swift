@@ -71,6 +71,11 @@ final class LinkAccountService: LinkAccountServiceProtocol {
         doNotLogConsumerFunnelEvent: Bool,
         completion: @escaping (Result<PaymentSheetLinkAccount?, Error>) -> Void
     ) {
+        guard LinkEmailHelper.canLookupEmail(email) else {
+            completion(.success(nil))
+            return
+        }
+
         ConsumerSession.lookupSession(
             for: email,
             emailSource: emailSource,

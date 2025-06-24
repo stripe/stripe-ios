@@ -1,0 +1,12 @@
+{
+  "images" : [
+    {
+      "filename" : "shoppay_logo_bw.png",
+      "idiom" : "universal"
+    }
+  ],
+  "info" : {
+    "author" : "xcode",
+    "version" : 1
+  }
+}

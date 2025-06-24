@@ -174,12 +174,12 @@ extension RowButton.RightAccessoryButton {
                                        allowsRemovalOfLastSavedPaymentMethod: Bool,
                                        allowsPaymentMethodRemoval: Bool,
                                        allowsPaymentMethodUpdate: Bool,
-                                       isFlatCheckmarkStyle: Bool = false) -> AccessoryType? {
+                                       isFlatCheckmarkOrChevronStyle: Bool = false) -> AccessoryType? {
         guard savedPaymentMethodsCount > 0 else { return nil }
 
         // If we have more than 1 saved payment method always show the "View more" button
         if savedPaymentMethodsCount > 1 {
-            return isFlatCheckmarkStyle ? .viewMore : .viewMoreChevron
+            return isFlatCheckmarkOrChevronStyle ? .viewMore : .viewMoreChevron
         }
 
         // We only have 1 payment method... show the edit icon if the card brand can be updated or if it can be removed

@@ -69,8 +69,8 @@ class PaymentMethodTypeCollectionView: UICollectionView {
         let layout = UICollectionViewFlowLayout()
         layout.scrollDirection = .horizontal
         layout.sectionInset = UIEdgeInsets(
-            top: 0, left: appearance.formInsets.left, bottom: 0,
-            right: appearance.formInsets.right)
+            top: 0, left: appearance.formInsets.leading, bottom: 0,
+            right: appearance.formInsets.trailing)
         layout.minimumInteritemSpacing = PaymentMethodTypeCollectionView.minInteritemSpacing
         super.init(frame: .zero, collectionViewLayout: layout)
         self.dataSource = self
@@ -326,7 +326,7 @@ extension PaymentMethodTypeCollectionView {
 
             label.font = appearance.scaledFont(for: appearance.font.base.medium, style: .footnote, maximumPointSize: 20)
             let currPaymentMethodType = self.paymentMethodType
-            let image = paymentMethodType.makeImage(forDarkBackground: appearance.colors.componentBackground.contrastingColor == .white, currency: currency) { [weak self] image in
+            let image = paymentMethodType.makeImage(forDarkBackground: appearance.colors.componentBackground.contrastingColor == .white, currency: currency, iconStyle: appearance.iconStyle) { [weak self] image in
                 DispatchQueue.main.async {
                     guard let self, currPaymentMethodType == self.paymentMethodType else {
                         return

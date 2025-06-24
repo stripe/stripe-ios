@@ -64,7 +64,7 @@
 
 "By joining Link, you agree to the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "การเข้าร่วม Link หมายถึงคุณยอมรับ<terms>ข้อกำหนด</terms>และ<privacy>นโยบายความเป็นส่วนตัว</privacy>";
 
-"By providing your bank account details and confirming this payment, you agree to this Direct Debit Request and the <terms>Direct Debit Request service agreement</terms>, and authorise Stripe Payments Australia Pty Ltd ACN 160 180 343 Direct Debit User ID number 507156 (“Stripe”) to debit your account through the Bulk Electronic Clearing System (BECS) on behalf of %@ (the \"Merchant\") for any amounts separately communicated to you by the Merchant. You certify that you are either an account holder or an authorised signatory on the account listed above." = "การระบุรายละเอียดบัญชีธนาคารและการยืนยันการชำระเงินนี้หมายความว่าคุณยอมรับ<terms>ข้อตกลงในการให้บริการการขอหักบัญชีอัตโนมัติ</terms> และอนุญาตให้ Stripe Payments Australia Pty Ltd ACN 160 180 343 Direct Debit User ID หมายเลข 507156 (\"Stripe\") หักเงินจากบัญชีของคุณผ่าน Bulk Electronic Clearing System (BECS) ในนามของ %@ (\"ผู้ค้า\") สำหรับจำนวนเงินใดก็ตามที่ผู้ค้าได้แจ้งคุณไว้ต่างหาก และคุณรับรองว่าตนเองเป็นเจ้าของบัญชีหรือผู้มีอำนาจลงนามในบัญชีที่ระบุข้างต้น";
+"By providing phone number and email, you agree to create a Link account subject to the Link <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "การให้หมายเลขโทรศัพท์และอีเมลหมายความว่าคุณยินยอมที่จะสร้างบัญชี Link ที่อยู่ภายใต้<terms>ข้อกำหนด</terms>และ<privacy>นโยบายความเป็นส่วนตัว</privacy>ของ Link";
 
 "By providing your card information, you allow %@ to charge your card for future payments in accordance with their terms." = "การให้ข้อมูลบัตร หมายความว่าคุณอนุญาตให้ %@ เรียกเก็บเงินจากบัตรสำหรับการชำระเงินในอนาคตตามเงื่อนไขของผู้ค้ารายดังกล่าว";
 
@@ -106,6 +106,8 @@
 
 "Continue another way" = "ดำเนินการต่อด้วยวิธีอื่น";
 
+"Debit or credit card" = "บัตรเดบิตหรือบัตรเครดิต";
+
 "Default" = "ค่าเริ่มต้น";
 
 "Default payment method" = "วิธีการชำระเงินตามค่าเริ่มต้น";
@@ -132,11 +134,15 @@
 
 "IBAN" = "IBAN";
 
+"Log in or sign up" = "เข้าสู่ระบบหรือลงทะเบียน";
+
 "Log out of Link" = "ออกจากระบบ Link";
 
 "Manage SEPA debit" = "จัดการการหักบัญชีอัตโนมัติแบบ SEPA";
 
 "Manage US bank account" = "จัดการบัญชีธนาคารในสหรัฐอเมริกา";
+
+"Manage bank account" = "จัดการบัญชีธนาคาร";
 
 "Manage card" = "จัดการบัตร";
 
@@ -155,6 +161,8 @@
 "New payment method" = "วิธีการชำระเงินใหม่";
 
 "No %@ promo" = "ไม่มีโปรโมชัน %@";
+
+"Not you?" = "หากไม่ใช่คุณ";
 
 "Only card brand can be changed." = "เปลี่ยนได้เฉพาะแบรนด์บัตรเท่านั้น";
 
@@ -216,6 +224,8 @@
 
 "Save for future payments" = "บันทึกไว้เพื่อชำระเงินในอนาคต";
 
+"Save my info for faster checkout with Link" = "บันทึกข้อมูลของฉันเพื่อให้ชำระเงินด้วย Link ได้รวดเร็วขึ้น";
+
 "Save payment details to %@ for future purchases" = "บันทึกรายละเอียดการชำระเงินไปยัง %@ เพื่อการซื้อในอนาคต";
 
 "Save this account for future %@ payments" = "บันทึกบัญชีนี้เพื่อชำระเงินให้ %@ ในอนาคต";
@@ -246,8 +256,6 @@
 
 "Simple, secure one-click payments" = "การชำระเงินด้วยคลิกเดียวที่ปลอดภัยและใช้ง่าย";
 
-"Something went wrong when linking your account.\nPlease try again later." = "เกิดข้อผิดพลาดบางอย่างขณะเชื่อมโยงกับบัญชีของคุณ \nโปรดลองอีกครั้งในภายหลัง";
-
 "Stripe will deposit $0.01 to your account in 1-2 business days. Then you'll get an email with instructions to finish saving your bank account with %@." = "Stripe จะฝากเงินจำนวน $0.01 ในบัญชีของคุณภายใน 1-2 วันทำการ จากนั้นคุณก็จะได้รับอีเมลแจ้งวิธีตั้งค่าบัญชีธนาคารด้วย %@";
 
 "Stripe will deposit $0.01 to your account in 1-2 business days. Then you’ll get an email with instructions to complete payment to %@." = "Stripe จะฝากเงินจำนวน $0.01 ในบัญชีของคุณภายใน 1-2 วันทำการ จากนั้นคุณก็จะได้รับอีเมลแจ้งวิธีชำระเงินแก่ %@ ให้เสร็จสิ้น";
@@ -257,8 +265,6 @@
 "Tap to expand" = "แตะเพื่อขยาย";
 
 "The IBAN you entered is incomplete." = "IBAN ที่คุณป้อนไม่ครบถ้วน";
-
-"The IBAN you entered is invalid, \"%@\" is not a supported country code." = "IBAN ที่คุณป้อนไม่ถูกต้อง \"%@\" ไม่ใช่รหัสประเทศที่รองรับ";
 
 "The provided verification code has expired." = "รหัสยืนยันที่ป้อนหมดอายุแล้ว";
 

@@ -64,7 +64,7 @@
 
 "By joining Link, you agree to the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "En rejoignant Link, vous acceptez les <terms>Conditions</terms> et la <privacy>Politique de confidentialité</privacy>.";
 
-"By providing your bank account details and confirming this payment, you agree to this Direct Debit Request and the <terms>Direct Debit Request service agreement</terms>, and authorise Stripe Payments Australia Pty Ltd ACN 160 180 343 Direct Debit User ID number 507156 (“Stripe”) to debit your account through the Bulk Electronic Clearing System (BECS) on behalf of %@ (the \"Merchant\") for any amounts separately communicated to you by the Merchant. You certify that you are either an account holder or an authorised signatory on the account listed above." = "En fournissant vos coordonnées bancaires et en confirmant ce paiement, vous acceptez cette demande de prélèvement automatique et le <terms>Contrat d'utilisation du service correspondant</terms>, et autorisez Stripe Payments Australia Pty Ltd, ACN 160 180 343, ID de compte de prélèvement numéro 507156 (« Stripe »), à débiter votre compte par le biais du système de prélèvement BECS pour le compte du marchand %@ (le « Marchand ») pour tout montant vous étant communiqué séparément par ce dernier. Vous certifiez que vous êtes le titulaire ou un signataire autorisé du compte susmentionné.";
+"By providing phone number and email, you agree to create a Link account subject to the Link <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "En indiquant votre numéro de téléphone et votre adresse de courriel, vous acceptez de créer un compte Link, conformément aux <terms>Conditions</terms> et à la <privacy>Politique de confidentialité</privacy> de Link.";
 
 "By providing your card information, you allow %@ to charge your card for future payments in accordance with their terms." = "En fournissant vos informations de carte, vous autorisez %@ à débiter votre carte pour les paiements à venir, conformément à ses conditions.";
 
@@ -106,6 +106,8 @@
 
 "Continue another way" = "Autre mode de paiement";
 
+"Debit or credit card" = "Carte de débit ou de crédit";
+
 "Default" = "Par défaut";
 
 "Default payment method" = "Mode de paiement par défaut";
@@ -132,11 +134,15 @@
 
 "IBAN" = "IBAN";
 
+"Log in or sign up" = "Connexion ou inscription";
+
 "Log out of Link" = "Déconnexion de Link with Stripe";
 
 "Manage SEPA debit" = "Gérer le prélèvement SEPA";
 
 "Manage US bank account" = "Gérer le compte bancaire américain";
+
+"Manage bank account" = "Gérer le compte bancaire";
 
 "Manage card" = "Gérer la carte";
 
@@ -155,6 +161,8 @@
 "New payment method" = "Nouveau moyen de paiement";
 
 "No %@ promo" = "Aucune remise de %@";
+
+"Not you?" = "Ce n'est pas vous?";
 
 "Only card brand can be changed." = "Vous pouvez uniquement modifier la marque de la carte.";
 
@@ -216,6 +224,8 @@
 
 "Save for future payments" = "Enregistrer pour les prochains achats";
 
+"Save my info for faster checkout with Link" = "Enregistrer mes informations pour payer plus rapidement avec Link";
+
 "Save payment details to %@ for future purchases" = "Enregistrer les informations de paiement sur %@ pour vos prochains achats";
 
 "Save this account for future %@ payments" = "Enregistrer ce compte pour vos futurs achats auprès de %@";
@@ -246,8 +256,6 @@
 
 "Simple, secure one-click payments" = "Des paiements simples et sécurisés en un seul clic";
 
-"Something went wrong when linking your account.\nPlease try again later." = "Un problème est survenu lors de l'association de votre compte.\nVeuillez réessayer ultérieurement.";
-
 "Stripe will deposit $0.01 to your account in 1-2 business days. Then you'll get an email with instructions to finish saving your bank account with %@." = "Stripe va effectuer un versement de 0,01 $ sur votre compte sous 1 ou 2 jours ouvrables. Vous recevrez ensuite un courriel contenant des instructions pour finaliser l'enregistrement de votre compte bancaire auprès de %@.";
 
 "Stripe will deposit $0.01 to your account in 1-2 business days. Then you’ll get an email with instructions to complete payment to %@." = "Stripe va effectuer un versement de 0,01 $ sur votre compte sous 1 ou 2 jours ouvrables. Vous recevrez ensuite un courriel contenant des instructions pour finaliser le paiement à %@.";
@@ -257,8 +265,6 @@
 "Tap to expand" = "Touchez pour afficher";
 
 "The IBAN you entered is incomplete." = "L'IBAN que vous avez saisi est incomplet.";
-
-"The IBAN you entered is invalid, \"%@\" is not a supported country code." = "L'IBAN que vous avez saisi n'est pas valide. « %@ » n'est pas un code de pays pris en charge.";
 
 "The provided verification code has expired." = "Le code de vérification indiqué a expiré.";
 

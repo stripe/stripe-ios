@@ -66,7 +66,7 @@ class CVCPaymentMethodInformationView: UIView {
             addSubview($0)
         }
         NSLayoutConstraint.activate([
-            paymentMethodImage.leadingAnchor.constraint(equalTo: leadingAnchor, constant: ElementsUI.contentViewInsets.leading),
+            paymentMethodImage.leadingAnchor.constraint(equalTo: leadingAnchor, constant: appearance.textFieldInsets.leading),
             paymentMethodImage.centerYAnchor.constraint(equalTo: centerYAnchor),
             paymentMethodLabelPrimary.leadingAnchor.constraint(equalTo: paymentMethodImage.trailingAnchor, constant: defaultPadding),
             paymentMethodLabelPrimary.centerYAnchor.constraint(equalTo: paymentMethodImage.centerYAnchor),

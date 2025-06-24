@@ -38,6 +38,7 @@ class PaymentSheetFormFactory {
     let cardBrandChoiceEligible: Bool
     let savePaymentMethodConsentBehavior: SavePaymentMethodConsentBehavior
     let allowsSetAsDefaultPM: Bool
+    let allowsLinkDefaultOptIn: Bool
     let isFirstSavedPaymentMethod: Bool
     let analyticsHelper: PaymentSheetAnalyticsHelper?
     let paymentMethodIncentive: PaymentMethodIncentive?
@@ -127,6 +128,7 @@ class PaymentSheetFormFactory {
                   currency: intent.currency,
                   savePaymentMethodConsentBehavior: elementsSession.savePaymentMethodConsentBehavior,
                   allowsSetAsDefaultPM: elementsSession.paymentMethodSetAsDefaultForPaymentSheet,
+                  allowsLinkDefaultOptIn: elementsSession.allowsLinkDefaultOptIn,
                   isFirstSavedPaymentMethod: elementsSession.customer?.paymentMethods.isEmpty ?? true,
                   analyticsHelper: analyticsHelper,
                   paymentMethodIncentive: elementsSession.incentive)
@@ -147,6 +149,7 @@ class PaymentSheetFormFactory {
         currency: String? = nil,
         savePaymentMethodConsentBehavior: SavePaymentMethodConsentBehavior,
         allowsSetAsDefaultPM: Bool = false,
+        allowsLinkDefaultOptIn: Bool = false,
         isFirstSavedPaymentMethod: Bool = true,
         analyticsHelper: PaymentSheetAnalyticsHelper?,
         paymentMethodIncentive: PaymentMethodIncentive?
@@ -170,6 +173,7 @@ class PaymentSheetFormFactory {
         self.cardBrandChoiceEligible = cardBrandChoiceEligible
         self.savePaymentMethodConsentBehavior = savePaymentMethodConsentBehavior
         self.allowsSetAsDefaultPM = allowsSetAsDefaultPM
+        self.allowsLinkDefaultOptIn = allowsLinkDefaultOptIn
         self.isFirstSavedPaymentMethod = isFirstSavedPaymentMethod
         self.analyticsHelper = analyticsHelper
         self.paymentMethodIncentive = paymentMethodIncentive
@@ -188,7 +192,7 @@ class PaymentSheetFormFactory {
             // We have two ways to create the form for a payment method
             // 1. Custom, one-off forms
             if paymentMethod == .card {
-                return makeCard(cardBrandChoiceEligible: cardBrandChoiceEligible)
+                return makeCard(cardBrandChoiceEligible: cardBrandChoiceEligible, allowsLinkDefaultOptIn: allowsLinkDefaultOptIn)
             } else if paymentMethod == .USBankAccount {
                 return makeUSBankAccount(merchantName: configuration.merchantDisplayName)
             } else if paymentMethod == .UPI {
@@ -1042,6 +1046,8 @@ extension PaymentSheet.Appearance {
         theme.borderWidth = borderWidth
         theme.cornerRadius = cornerRadius
         theme.shadow = shadow.asElementThemeShadow
+        theme.textFieldInsets = textFieldInsets
+        theme.sectionSpacing = sectionSpacing
 
         var fonts = ElementsAppearance.Font()
         fonts.subheadline = scaledFont(for: font.base.regular, style: .subheadline, maximumPointSize: 20)
@@ -1053,8 +1059,19 @@ extension PaymentSheet.Appearance {
 
         theme.colors = colors
         theme.fonts = fonts
-
+        theme.iconStyle = iconStyle.asElementsThemeIconStyle
         return theme
+    }
+}
+
+extension PaymentSheet.Appearance.IconStyle {
+    var asElementsThemeIconStyle: ElementsAppearance.IconStyle {
+        switch self {
+        case .filled:
+            return .filled
+        case .outlined:
+            return .outlined
+        }
     }
 }
 

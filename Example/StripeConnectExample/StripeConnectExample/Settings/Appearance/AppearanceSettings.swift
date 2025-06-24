@@ -5,7 +5,7 @@
 //  Created by Chris Mays on 9/5/24.
 //
 
-@_spi(PrivateBetaConnect) import StripeConnect
+import StripeConnect
 import SwiftUI
 
 struct AppearanceSettings: View {
@@ -33,8 +33,8 @@ struct AppearanceSettings: View {
                         OptionListRow(title: appearanceInfo.displayName,
                                       selected: selectedAppearance.id == appearanceInfo.id,
                                       onSelected: {
-                            selectedAppearance = appearanceInfo
-                        })
+                                        selectedAppearance = appearanceInfo
+                                      })
                     }
                 } header: {
                     Text("Select a preset")

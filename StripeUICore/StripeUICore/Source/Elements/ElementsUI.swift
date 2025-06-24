@@ -89,6 +89,11 @@ import UIKit
     public var borderWidth = ElementsUI.fieldBorderWidth
     public var cornerRadius = ElementsUI.defaultCornerRadius
     public var shadow: Shadow? = Shadow()
+    public var textFieldInsets = ElementsUI.contentViewInsets
+    public var iconStyle: IconStyle = .filled
+
+    /// The spacing between sections in forms
+    public var sectionSpacing = ElementsUI.formSpacing
 
     public struct Font {
         public init() {}
@@ -136,5 +141,10 @@ import UIKit
             self.offset = offset
             self.radius = radius
         }
+    }
+
+    @frozen public enum IconStyle {
+        case filled
+        case outlined
     }
 }

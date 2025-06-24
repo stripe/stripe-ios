@@ -45,14 +45,59 @@ final class IntentConfirmParams {
         }
     }
 
+    var expandedPaymentSheetLabel: String {
+        switch paymentMethodType {
+        case .stripe(let stpPaymentMethodType):
+            switch stpPaymentMethodType {
+            case .card:
+                let brand = STPCardValidator.brand(for: paymentMethodParams.card)
+                return STPCardBrandUtilities.stringFrom(brand) ?? STPPaymentMethodType.card.displayName
+            case .USBankAccount:
+                // Use linked bank name if available, otherwise fallback to generic display name for bank
+                return financialConnectionsLinkedBank?.displayName ?? STPPaymentMethodType.USBankAccount.displayName
+            default:
+                // For all other payment method types just use the default label
+                return paymentSheetLabel
+            }
+        case .external:
+            return paymentSheetLabel
+        case .instantDebits:
+            return STPPaymentMethodType.link.displayName
+        case .linkCardBrand:
+            return STPPaymentMethodType.link.displayName
+        }
+    }
+
+    var paymentSheetSublabel: String? {
+        switch paymentMethodType {
+        case .stripe(let stpPaymentMethodType):
+            switch stpPaymentMethodType {
+            case .card:
+                return paymentSheetLabel
+            case .USBankAccount:
+                return paymentSheetLabel
+            default:
+                return nil
+            }
+        case .external:
+            return nil
+        case .instantDebits, .linkCardBrand:
+            if let linkedBank = instantDebitsLinkedBank {
+                let last4 = "••••\(linkedBank.last4 ?? "")"
+                return "\(linkedBank.bankName ?? String.Localized.bank) \(last4)"
+            }
+            return nil
+        }
+    }
+
     /// True if the customer opts to save their payment method as their default payment method.
     var setAsDefaultPM: Bool?
 
-    func makeIcon(currency: String?, updateImageHandler: DownloadManager.UpdateImageHandler?) -> UIImage {
+    func makeIcon(currency: String?, iconStyle: PaymentSheet.Appearance.IconStyle, updateImageHandler: DownloadManager.UpdateImageHandler?) -> UIImage {
         if let bankName = (financialConnectionsLinkedBank?.bankName ?? instantDebitsLinkedBank?.bankName) {
-            return PaymentSheetImageLibrary.bankIcon(for: PaymentSheetImageLibrary.bankIconCode(for: bankName))
+            return PaymentSheetImageLibrary.bankIcon(for: PaymentSheetImageLibrary.bankIconCode(for: bankName), iconStyle: iconStyle)
         } else {
-            return paymentMethodParams.makeIcon(currency: currency, updateHandler: updateImageHandler)
+            return paymentMethodParams.makeIcon(currency: currency, iconStyle: iconStyle, updateHandler: updateImageHandler)
         }
     }
 

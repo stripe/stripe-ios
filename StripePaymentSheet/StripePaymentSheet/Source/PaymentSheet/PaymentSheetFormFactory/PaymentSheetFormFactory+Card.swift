@@ -13,7 +13,10 @@ import StripePayments
 import UIKit
 
 extension PaymentSheetFormFactory {
-    func makeCard(cardBrandChoiceEligible: Bool = false) -> PaymentMethodElement {
+    func makeCard(
+        cardBrandChoiceEligible: Bool = false,
+        allowsLinkDefaultOptIn: Bool
+    ) -> PaymentMethodElement {
         let showLinkInlineSignup = showLinkInlineCardSignup
         let defaultCheckbox: Element? = {
             guard allowsSetAsDefaultPM else {
@@ -106,7 +109,8 @@ extension PaymentSheetFormFactory {
                 linkAccount: linkAccount,
                 country: countryCode,
                 showCheckbox: !shouldDisplaySaveCheckbox,
-                accountService: accountService
+                accountService: accountService,
+                allowsDefaultOptIn: allowsLinkDefaultOptIn
             )
             elements.append(inlineSignupElement)
         }

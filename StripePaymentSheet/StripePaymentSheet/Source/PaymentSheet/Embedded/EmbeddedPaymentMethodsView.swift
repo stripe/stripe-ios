@@ -71,6 +71,9 @@ class EmbeddedPaymentMethodsView: UIView {
             }
         }
     }
+    private var linkRowButton: RowButton? {
+        rowButtons.first(where: { $0.type == .link })
+    }
 
     private let mandateProvider: MandateTextProvider
     private let shouldShowMandate: Bool
@@ -214,6 +217,11 @@ class EmbeddedPaymentMethodsView: UIView {
         fatalError("init(coder:) has not been implemented")
     }
 
+    deinit {
+        // Just to make sure no observer stays around
+        LinkAccountContext.shared.removeObserver(self)
+    }
+
     private func logRenderLPMs() {
         // The user has to scroll through all the payment method options before checking out, so all of the lpms are visible
         let visibleLPMs: [String] = rowButtons.filter { !$0.type.isSaved }.compactMap { $0.type.analyticsIdentifier }
@@ -243,6 +251,26 @@ class EmbeddedPaymentMethodsView: UIView {
         }
     }
 
+    override func didMoveToWindow() {
+        super.didMoveToWindow()
+
+        if window != nil {
+            if linkRowButton != nil {
+                initializeLinkAccountObserver()
+            }
+        } else {
+            LinkAccountContext.shared.removeObserver(self)
+        }
+    }
+
+    private func initializeLinkAccountObserver() {
+        LinkAccountContext.shared.addObserver(self, selector: #selector(onLinkAccountChange(_:)))
+
+        if let linkAccount = LinkAccountContext.shared.account, linkAccount.isRegistered {
+            updateLinkRow(for: linkAccount, animated: false)
+        }
+    }
+
     // MARK: Internal functions
 
     /// If the customer cancels out of a form, restore the last selected payment method row
@@ -252,6 +280,14 @@ class EmbeddedPaymentMethodsView: UIView {
 
     func resetSelection() {
         selectedRowButton = nil
+    }
+
+    @objc
+    func onLinkAccountChange(_ notification: Notification) {
+        DispatchQueue.main.async { [weak self] in
+            let linkAccount = notification.object as? PaymentSheetLinkAccount
+            self?.updateLinkRow(for: linkAccount)
+        }
     }
 
     // MARK: Tap handling
@@ -264,6 +300,20 @@ class EmbeddedPaymentMethodsView: UIView {
 
     func didTapViewMoreSavedPaymentMethods() {
         delegate?.embeddedPaymentMethodsViewDidTapViewMoreSavedPaymentMethods(selectedSavedPaymentMethod: selectedRowButton?.type.savedPaymentMethod)
+    }
+
+    func updateLinkRow(for linkAccount: PaymentSheetLinkAccount?, animated: Bool = true) {
+        guard let linkRowButton else {
+            return
+        }
+
+        var sublabel = String.Localized.link_subtitle_text
+
+        if let linkAccount, linkAccount.isRegistered {
+            sublabel = linkAccount.email
+        }
+
+        linkRowButton.setSublabel(text: sublabel, animated: animated)
     }
 
     func updateSavedPaymentMethodRow(_ savedPaymentMethods: [STPPaymentMethod],
@@ -468,7 +518,7 @@ extension PaymentSheet.Appearance.EmbeddedPaymentElement.Row.Style {
         switch self {
         case .flatWithRadio:
             return UIEdgeInsets(top: 0, left: 30, bottom: 0, right: 0)
-        case .floatingButton, .flatWithCheckmark:
+        case .floatingButton, .flatWithCheckmark, .flatWithChevron:
             return .zero
         }
     }

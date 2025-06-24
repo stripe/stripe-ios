@@ -29,6 +29,10 @@ class BottomSheetViewController: UIViewController, BottomSheetPresentable {
         static let keyboardAvoidanceEdgePadding: CGFloat = 16
     }
 
+    var sheetCornerRadius: CGFloat? {
+        BottomSheetTransitioningDelegate.appearance.sheetCornerRadius
+    }
+
     // MARK: - Views
     lazy var scrollView: UIScrollView = {
         let scrollView = UIScrollView()
@@ -217,6 +221,9 @@ class BottomSheetViewController: UIViewController, BottomSheetPresentable {
         contentContainerView.addArrangedSubview(self.contentViewController.view)
         if let presentationController = rootParent.presentationController as? BottomSheetPresentationController {
             presentationController.forceFullHeight = newContentViewController.requiresFullScreen
+
+            // Force layout pass to apply safe area insets
+            presentationController.containerView?.layoutIfNeeded()
         }
 
         contentContainerView.layoutIfNeeded()
@@ -337,7 +344,7 @@ class BottomSheetViewController: UIViewController, BottomSheetPresentable {
         ])
 
         contentContainerView.translatesAutoresizingMaskIntoConstraints = false
-        contentContainerView.directionalLayoutMargins = appearance.allFormInsets
+        contentContainerView.directionalLayoutMargins = appearance.formInsets
         scrollView.addSubview(contentContainerView)
 
         // Give the scroll view a desired height

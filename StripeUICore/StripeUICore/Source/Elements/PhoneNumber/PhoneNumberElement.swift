@@ -15,7 +15,11 @@ import UIKit
 @_spi(STP) public class PhoneNumberElement: ContainerElement {
     // MARK: - ContainerElement protocol
     public lazy var elements: [Element] = { [countryDropdownElement, textFieldElement] }()
+    private(set) public var lastUpdatedElement: Element?
     public var delegate: ElementDelegate?
+
+    private let theme: ElementsAppearance
+
     public lazy var view: UIView = {
         countryDropdownElement.view.directionalLayoutMargins.trailing = 0
         let hStackView = UIStackView(arrangedSubviews: elements.map { $0.view })
@@ -28,7 +32,7 @@ import UIKit
                 top: 0,
                 leading: 0,
                 bottom: 0,
-                trailing: ElementsUI.contentViewInsets.trailing
+                trailing: theme.textFieldInsets.trailing
             )
         }
         return hStackView
@@ -80,6 +84,7 @@ import UIKit
         theme: ElementsAppearance = .default
     ) {
         self.infoView = infoView
+        self.theme = theme
         let defaults = Self.deriveDefaults(countryCode: defaultCountryCode, phoneNumber: defaultPhoneNumber)
         let allowedCountryCodes = allowedCountryCodes ?? PhoneNumber.Metadata.allMetadata.map { $0.regionCode }
         let countryDropdownElement = DropdownFieldElement.makeCountryCode(
@@ -120,6 +125,8 @@ import UIKit
 
     // MARK: - ElementDelegate
     public func didUpdate(element: Element) {
+        lastUpdatedElement = element
+
         if element === textFieldElement && textFieldElement.didReceiveAutofill {
             // Autofilled numbers may already include the country code, so check if that's the case.
             // Note: We only validate against the currently selected country code, as an autofilled number _without_ a country code can trigger false positives, e.g. "2481234567" could be either "(248) 123-4567" (a phone number from Michigan, USA with no country code) or "+248 1 234 567" (a phone number from Seychelles with a country code). We can assume that generally, a user's autofilled phone number will match their phone's region setting.

@@ -309,6 +309,10 @@ extension STPElementsSession {
     var incentive: PaymentMethodIncentive? {
         linkSettings?.linkConsumerIncentive.flatMap(PaymentMethodIncentive.init)
     }
+
+    var allowsLinkDefaultOptIn: Bool {
+        linkFlags["link_mobile_disable_default_opt_in"] != true
+    }
 }
 
 extension STPElementsSession {

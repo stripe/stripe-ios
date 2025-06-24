@@ -229,9 +229,10 @@ private extension PayWithLinkViewController.SignUpViewModel {
                     self.delegate?.viewModel(self, didLookupAccount: account)
                 case .failure(let error):
                     self.linkAccount = nil
-                    self.errorMessage = error.nonGenericDescription
                     if StripeAttest.isLinkAssertionError(error: error) {
                         self.delegate?.viewModelDidEncounterAttestationError(self)
+                    } else {
+                        self.errorMessage = error.nonGenericDescription
                     }
                 }
             }

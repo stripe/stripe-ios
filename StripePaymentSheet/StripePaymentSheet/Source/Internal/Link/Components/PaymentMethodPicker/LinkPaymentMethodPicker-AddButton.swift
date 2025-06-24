@@ -25,6 +25,20 @@ extension LinkPaymentMethodPicker {
             return label
         }()
 
+        private lazy var activityIndicator: ActivityIndicator = {
+            let indicator = ActivityIndicator(size: .medium)
+            // Lower the alpha since it will only be shown when the button is disabled.
+            indicator.alpha = 0.5
+            indicator.translatesAutoresizingMaskIntoConstraints = false
+            return indicator
+        }()
+
+        var isLoading: Bool = false {
+            didSet {
+                update()
+            }
+        }
+
         override var isHighlighted: Bool {
             didSet {
                 update()
@@ -62,22 +76,33 @@ extension LinkPaymentMethodPicker {
 
         private func setupUI() {
             addSubview(textLabel)
+            addSubview(activityIndicator)
 
             NSLayoutConstraint.activate([
                 textLabel.topAnchor.constraint(equalTo: layoutMarginsGuide.topAnchor),
                 textLabel.bottomAnchor.constraint(equalTo: layoutMarginsGuide.bottomAnchor),
                 textLabel.leadingAnchor.constraint(equalTo: layoutMarginsGuide.leadingAnchor),
-                textLabel.trailingAnchor.constraint(equalTo: layoutMarginsGuide.trailingAnchor),
+                textLabel.trailingAnchor.constraint(lessThanOrEqualTo: activityIndicator.leadingAnchor, constant: -LinkUI.smallContentSpacing),
+
+                activityIndicator.centerYAnchor.constraint(equalTo: layoutMarginsGuide.centerYAnchor),
+                activityIndicator.trailingAnchor.constraint(equalTo: layoutMarginsGuide.trailingAnchor),
             ])
         }
 
         private func update() {
-            if isHighlighted {
-                textLabel.alpha = 0.7
-                backgroundColor = .linkSurfaceTertiary
-            } else {
-                textLabel.alpha = 1
+            if isLoading {
+                activityIndicator.startAnimating()
+                textLabel.alpha = 0.5
                 backgroundColor = .clear
+            } else {
+                activityIndicator.stopAnimating()
+                if isHighlighted {
+                    textLabel.alpha = 0.7
+                    backgroundColor = .linkSurfaceTertiary
+                } else {
+                    textLabel.alpha = 1
+                    backgroundColor = .clear
+                }
             }
         }
 
