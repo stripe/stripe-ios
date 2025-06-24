@@ -445,8 +445,9 @@ extension PaymentSheetFormFactory {
 
         // Determine the collection mode based on whether we have default values
         let finalCollectionMode: AddressSectionElement.CollectionMode = {
-            // If we have default address values and the requested mode would show all fields, use allWithAutocomplete
-            if defaultBillingDetails().address != .init() {
+            // If we have default address values (either from billing defaults or shipping details) and the requested mode would show all fields, use allWithAutocomplete
+            let hasDefaultAddressValues = defaultBillingDetails().address != .init() || (configuration.shippingDetails() != nil && displayBillingSameAsShippingCheckbox)
+            if hasDefaultAddressValues {
                 switch collectionMode {
                 case .autoCompletable:
                     return .allWithAutocomplete
