@@ -63,7 +63,7 @@ final class DocumentFileUploadViewControllerTest: XCTestCase {
 
     func testAlertNoRequireLiveCapture() {
         let vc = makeViewController(requireLiveCapture: false)
-        vc.didTapSelect(for: .front)
+        vc.didTapSelect(for: .front, from: UIButton())
         guard let alert = vc.test_presentedViewController as? UIAlertController else {
             return XCTFail("Expected UIAlertController")
         }
@@ -75,7 +75,7 @@ final class DocumentFileUploadViewControllerTest: XCTestCase {
     func testSelectPhotoFromLibrary() {
         let vc = makeViewController()
         // Mock that user selected to upload front of document
-        vc.didTapSelect(for: .front)
+        vc.didTapSelect(for: .front, from: UIButton())
         // Mock that user chooses to Photo Library
         vc.selectPhotoFromLibrary()
         guard let pickerController = vc.test_presentedViewController as? UIImagePickerController
@@ -101,7 +101,7 @@ final class DocumentFileUploadViewControllerTest: XCTestCase {
 
         let vc = makeViewController()
         // Mock that user selected to upload front of document
-        vc.didTapSelect(for: .back)
+        vc.didTapSelect(for: .back, from: UIButton())
         // Mock that user chooses to Take Photo
         vc.takePhoto()
         XCTAssertTrue(mockCameraPermissionsManager.didRequestCameraAccess)
@@ -120,7 +120,7 @@ final class DocumentFileUploadViewControllerTest: XCTestCase {
     func testSelectFileFromSystem() {
         let vc = makeViewController()
         // Mock that user selected to upload front of document
-        vc.didTapSelect(for: .front)
+        vc.didTapSelect(for: .front, from: UIButton())
         // Mock that user chooses to Select File
         vc.selectFileFromSystem()
         guard
