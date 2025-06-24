@@ -158,7 +158,7 @@ class STPAPIClient_PaymentSheetTest: XCTestCase {
         XCTAssertNil(parameters["customer_session_client_secret"])
     }
 
-    func testElementsSessionParameters_DeferredPayment_WithSellerDetails() throws {
+        func testElementsSessionParameters_DeferredPayment_WithSellerDetails() throws {
         let sellerDetails = PaymentSheet.IntentConfiguration.SellerDetails(networkId: "network_123", externalId: "external_456")
         let intentConfig = PaymentSheet.IntentConfiguration(
             sharedPaymentTokenSessionWithMode: .payment(amount: 2000, currency: "USD"),
@@ -175,14 +175,13 @@ class STPAPIClient_PaymentSheetTest: XCTestCase {
             customerAccessProvider: nil
         )
 
-        let deferredIntent = try XCTUnwrap(parameters["deferred_intent"] as? [String: Any])
-        let sellerDetailsParams = try XCTUnwrap(deferredIntent["seller_details"] as? [String: Any])
+        let sellerDetailsParams = try XCTUnwrap(parameters["seller_details"] as? [String: Any])
 
         XCTAssertEqual(sellerDetailsParams["network_id"] as? String, "network_123")
         XCTAssertEqual(sellerDetailsParams["external_id"] as? String, "external_456")
     }
 
-    func testElementsSessionParameters_DeferredPayment_WithoutSellerDetails() throws {
+        func testElementsSessionParameters_DeferredPayment_WithoutSellerDetails() throws {
         let intentConfig = PaymentSheet.IntentConfiguration(
             mode: .payment(amount: 2000, currency: "USD"),
             paymentMethodTypes: ["card"],
@@ -197,8 +196,6 @@ class STPAPIClient_PaymentSheetTest: XCTestCase {
             customerAccessProvider: nil
         )
 
-        let deferredIntent = try XCTUnwrap(parameters["deferred_intent"] as? [String: Any])
-
-        XCTAssertNil(deferredIntent["seller_details"])
+        XCTAssertNil(parameters["seller_details"])
     }
 }
