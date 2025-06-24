@@ -42,7 +42,7 @@ extension PaymentSheet {
                     confirmType = .new(params: params, paymentOptions: paymentOptions, paymentMethod: paymentMethod, shouldSave: shouldSave, shouldSetAsDefaultPM: shouldSetAsDefaultPM)
                 }
 
-                // 2. Handle shared payment token sessions (preparePaymentMethodHandler) OR get Intent client secret from merchant
+                // 2a. If we have a preparePaymentMethodHandler, use the shared payment token session flow
                 if let preparePaymentMethodHandler = intentConfig.preparePaymentMethodHandler {
                     // For shared payment token sessions, call the preparePaymentMethodHandler and complete successfully
                     // Note: Shipping address is passed for Apple Pay in STPApplePayContext+PaymentSheet.swift.
@@ -53,7 +53,7 @@ extension PaymentSheet {
                     return
                 }
 
-                // Get Intent client secret from merchant
+                // 2b. Otherwise, call the standard confirmHandler
                 let clientSecret = try await fetchIntentClientSecretFromMerchant(intentConfig: intentConfig,
                                                                                  paymentMethod: paymentMethod,
                                                                                  shouldSavePaymentMethod: confirmType.shouldSave)
@@ -180,23 +180,5 @@ extension PaymentSheet {
             paymentUserAgentValues.append("autopm")
         }
         return paymentUserAgentValues
-    }
-}
-
-// MARK: - AddressSectionElement.AddressDetails Extensions
-
-extension AddressViewController.AddressDetails {
-    /// Converts AddressDetails to STPAddress
-    var stpAddress: STPAddress {
-        let stpAddress = STPAddress()
-        stpAddress.name = name
-        stpAddress.phone = phone
-        stpAddress.line1 = address.line1
-        stpAddress.line2 = address.line2
-        stpAddress.city = address.city
-        stpAddress.state = address.state
-        stpAddress.postalCode = address.postalCode
-        stpAddress.country = address.country
-        return stpAddress
     }
 }

@@ -186,7 +186,6 @@ class ExampleWalletButtonsModel: ObservableObject {
                         paymentRequest.requiredShippingContactFields = [.postalAddress, .emailAddress]
                         return paymentRequest
                     })
-
                 )
                 configuration.shopPay = self.shopPayConfiguration
                 configuration.customer = .init(id: customerId, customerSessionClientSecret: customerSessionClientSecret)
@@ -197,7 +196,7 @@ class ExampleWalletButtonsModel: ObservableObject {
                     intentConfiguration: .init(sharedPaymentTokenSessionWithMode: .payment(amount: 1000, currency: "USD", setupFutureUsage: nil, captureMethod: .automatic, paymentMethodOptions: nil), sellerDetails: .init(networkId: "123", externalId: "abc"), paymentMethodTypes: ["card", "link", "shop_pay"], preparePaymentMethodHandler: { paymentMethod, address in
                         print(paymentMethod)
                         print(address)
-                        // Create the SPT 
+                        // Create the SPT on your backend here
                     }),
                     configuration: configuration
                 ) { [weak self] result in
@@ -332,46 +331,6 @@ class ExampleWalletButtonsModel: ObservableObject {
 
 class WindowAuthenticationContext: NSObject, STPAuthenticationContext {
     public func authenticationPresentingViewController() -> UIViewController {
-        UIWindow.visibleViewController ?? UIViewController()
-    }
-}
-
-extension UIWindow {
-    static var visibleViewController: UIViewController? {
-        UIApplication.shared.stp_hackilyFumbleAroundUntilYouFindAKeyWindow()?.rootViewController?.findTopMostPresentedViewController()
-    }
-}
-
-extension UIApplication {
-    func stp_hackilyFumbleAroundUntilYouFindAKeyWindow() -> UIWindow? {
-        // We really shouldn't do this: Try to find a way to get the user to pass us a window instead.
-        #if canImport(CompositorServices)
-        let windows = connectedScenes
-            .compactMap { ($0 as? UIWindowScene)?.windows }
-            .flatMap { $0 }
-            .sorted { firstWindow, _ in firstWindow.isKeyWindow }
-        return windows.first
-        #else
-        return windows.first { $0.isKeyWindow }
-        #endif
-    }
-}
-
-extension UIViewController {
-    /// Returns the topmost view controller in the hierarchy.
-    /// - Returns: The topmost `UIViewController`, or `self` if no higher controller is found.
-    func findTopMostPresentedViewController() -> UIViewController {
-        if let nav = self as? UINavigationController {
-            // Use visibleViewController for navigation stacks
-            return nav.visibleViewController?.findTopMostPresentedViewController() ?? nav
-        } else if let tab = self as? UITabBarController {
-            // Use selectedViewController for tab controllers
-            return tab.selectedViewController?.findTopMostPresentedViewController() ?? tab
-        } else if let presented = presentedViewController {
-            // Recurse for any presented controllers
-            return presented.findTopMostPresentedViewController()
-        }
-
-        return self
+        UIViewController.topMostViewController() ?? UIViewController()
     }
 }

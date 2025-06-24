@@ -35,7 +35,8 @@ public extension PaymentSheet {
             _ intentCreationCallback: @escaping ((Result<String, Error>) -> Void)
         ) -> Void
 
-        /// Called when the customer confirms payment in a facilitated payment session.
+        /// Called when the payment is confirmed in a shared payment token session.
+        /// Returns `paymentMethod` and `shippingAddress` info, which can be passed to the backend for confirmation.
         @_spi(SharedPaymentToken) public typealias PreparePaymentMethodHandler = (
             _ paymentMethod: STPPaymentMethod,
             _ shippingAddress: STPAddress?
@@ -76,14 +77,14 @@ public extension PaymentSheet {
             validate()
         }
 
-        /// Creates a `PaymentSheet.IntentConfiguration` for facilitated payment sessions
+        /// Creates a `PaymentSheet.IntentConfiguration` for a shared payment token session
         /// - Parameters:
         ///   - mode: The mode of this intent, either payment or setup
-        ///   - sellerDetails: Seller details for the facilitated payment session
+        ///   - sellerDetails: Seller details for the shared payment token session
         ///   - paymentMethodTypes: The payment method types for the intent
         ///   - onBehalfOf: The account (if any) for which the funds of the intent are intended
         ///   - paymentMethodConfigurationId: Configuration ID (if any) for the selected payment method configuration
-        ///   - preparePaymentMethodHandler: A handler called with payment details when the user taps the primary button (e.g. the "Pay" or "Continue" button).
+        ///   - preparePaymentMethodHandler: A handler called with payment and shipping when the user taps the primary button (e.g. the "Pay" or "Continue" button).
         ///   - requireCVCRecollection: If true, PaymentSheet recollects CVC for saved cards before confirmation (PaymentIntent only)
         @_spi(SharedPaymentToken) public init(sharedPaymentTokenSessionWithMode mode: Mode,
                                               sellerDetails: SellerDetails?,
