@@ -117,7 +117,7 @@ extension PayWithLinkViewController {
                 contentView.topAnchor.constraint(equalTo: stackView.topAnchor),
                 contentView.leadingAnchor.constraint(equalTo: stackView.leadingAnchor),
                 contentView.trailingAnchor.constraint(equalTo: stackView.trailingAnchor),
-                contentView.bottomAnchor.constraint(greaterThanOrEqualTo: stackView.bottomAnchor),
+                contentView.bottomAnchor.constraint(equalTo: stackView.bottomAnchor),
             ])
 
             if !paymentMethod.isDefault || isBillingDetailsUpdateFlow {
