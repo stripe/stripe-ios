@@ -243,13 +243,27 @@ extension STPPaymentIntent: STPAPIResponseDecodable {
     public class func decodedObject(fromAPIResponse response: [AnyHashable: Any]?) -> Self? {
         guard let dict = response,
             let stripeId = dict["id"] as? String,
-            let clientSecret = dict["client_secret"] as? String,
-            let amount = dict["amount"] as? Int,
-            let currency = dict["currency"] as? String,
-            let rawStatus = dict["status"] as? String,
-            let livemode = dict["livemode"] as? Bool,
-            let createdUnixTime = dict["created"] as? TimeInterval,
-            let paymentMethodTypeStrings = dict["payment_method_types"] as? [String]
+            let rawStatus = dict["status"] as? String
+        else {
+            return nil
+        }
+
+        // Check if this is a redacted PaymentIntent by looking for nil required fields
+        let isRedacted = dict["amount"] == nil || dict["currency"] == nil || dict["payment_method_types"] == nil || dict["client_secret"] == nil
+        
+        // For redacted PaymentIntents, use placeholder values for required fields
+        let amount = dict["amount"] as? Int ?? (isRedacted ? -1 : nil)
+        let currency = dict["currency"] as? String ?? (isRedacted ? "unknown" : nil)
+        let paymentMethodTypeStrings = dict["payment_method_types"] as? [String] ?? (isRedacted ? [] : nil)
+        let livemode = dict["livemode"] as? Bool ?? false
+        let createdUnixTime = dict["created"] as? TimeInterval ?? Date().timeIntervalSince1970
+        let clientSecret = dict["client_secret"] as? String ?? (isRedacted ? "redacted" : nil)
+        
+        // Ensure we have all required values (either real or placeholders)
+        guard let finalAmount = amount,
+              let finalCurrency = currency,
+              let finalPaymentMethodTypes = paymentMethodTypeStrings,
+              let finalClientSecret = clientSecret
         else {
             return nil
         }
@@ -261,18 +275,18 @@ extension STPPaymentIntent: STPAPIResponseDecodable {
         let canceledAtUnixTime = dict["canceled_at"] as? TimeInterval
         return STPPaymentIntent(
             allResponseFields: dict,
-            amount: amount,
+            amount: finalAmount,
             canceledAt: canceledAtUnixTime != nil
                 ? Date(timeIntervalSince1970: canceledAtUnixTime!) : nil,
             captureMethod: STPPaymentIntentCaptureMethod.captureMethod(
                 from: dict["capture_method"] as? String ?? ""
             ),
-            clientSecret: clientSecret,
+            clientSecret: finalClientSecret,
             confirmationMethod: STPPaymentIntentConfirmationMethod.confirmationMethod(
                 from: dict["confirmation_method"] as? String ?? ""
             ),
             created: Date(timeIntervalSince1970: createdUnixTime),
-            currency: currency,
+            currency: finalCurrency,
             lastPaymentError: STPPaymentIntentLastPaymentError.decodedObject(
                 fromAPIResponse: dict["last_payment_error"] as? [AnyHashable: Any]
             ),
@@ -285,7 +299,7 @@ extension STPPaymentIntent: STPAPIResponseDecodable {
             paymentMethodOptions: STPPaymentMethodOptions.decodedObject(
                 fromAPIResponse: dict["payment_method_options"] as? [AnyHashable: Any]
             ),
-            paymentMethodTypes: STPPaymentMethod.types(from: paymentMethodTypeStrings),
+            paymentMethodTypes: STPPaymentMethod.types(from: finalPaymentMethodTypes),
             receiptEmail: dict["receipt_email"] as? String,
             setupFutureUsage: setupFutureUsageString != nil
                 ? STPPaymentIntentSetupFutureUsage(string: setupFutureUsageString!) : .none,
@@ -337,6 +351,15 @@ extension STPPaymentIntent {
             }
         }
         return nil
+    }
+
+    /// Indicates whether this PaymentIntent was created from a redacted API response
+    /// (typically when using a scoped client secret).
+    /// 
+    /// When true, some fields like `amount`, `currency`, and `clientSecret` contain placeholder values
+    /// and should not be used for display or business logic.
+    @_spi(STP) public var isRedacted: Bool {
+        return amount == -1 || currency == "unknown" || clientSecret == "redacted"
     }
 }
 

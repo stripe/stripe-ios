@@ -298,7 +298,7 @@ class ExampleWalletButtonsModel: ObservableObject {
     private func createPaymentIntentWithRoughLyingCarriageBackend(customerId: String, paymentMethod: String) {
         let body = [
             "customerId": customerId,
-            "paymentMethod": paymentMethod
+            "paymentMethod": paymentMethod,
         ] as [String: Any]
         let json = try! JSONSerialization.data(withJSONObject: body, options: [])
 
@@ -318,7 +318,7 @@ class ExampleWalletButtonsModel: ObservableObject {
                 }
 
                 print("Payment intent response: \(json)")
-                
+
                 if let requiresAction = json["requiresAction"] as? Bool, requiresAction,
                    let nextActionValue = json["nextActionValue"] as? String {
                     print("Payment requires action: \(nextActionValue)")

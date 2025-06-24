@@ -312,7 +312,7 @@ public class STPPaymentHandler: NSObject {
             of: "\n",
             with: ""
         )
-        
+
         guard let decodedData = Data(base64Encoded: hashedValue),
               let decodedString = String(data: decodedData, encoding: .utf8) else {
             completion(.failed, nil, _error(for: .invalidClientSecret))

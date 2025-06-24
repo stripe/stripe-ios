@@ -214,7 +214,7 @@ class STPPaymentIntentParamsTest: XCTestCase {
             ),
             "'pi_1CkiBMLENEVhOs7YMtUehLau_secret_s4O8SDh7s6spSmHDw1VaYPGZA' is a valid client secret."
         )
-        
+
         // Test valid scoped client secrets
         XCTAssertTrue(
             STPPaymentIntentParams.isClientSecretValid("pi_3RddVUHh8VvNDQ8j1CFgLC0y_scoped_secret_JouqJt9ahCKgh6B9r6"),
@@ -224,7 +224,7 @@ class STPPaymentIntentParamsTest: XCTestCase {
             STPPaymentIntentParams.isClientSecretValid("pi_1CkiBMLENEVhOs7YMtUehLau_scoped_secret_s4O8SDh7s6spSmHDw1VaYPGZA"),
             "'pi_1CkiBMLENEVhOs7YMtUehLau_scoped_secret_s4O8SDh7s6spSmHDw1VaYPGZA' is a valid scoped client secret."
         )
-        
+
         // Test invalid scoped client secrets
         XCTAssertFalse(
             STPPaymentIntentParams.isClientSecretValid("pi_12345_scoped_secret_"),
