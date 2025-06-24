@@ -14,8 +14,8 @@ struct PaymentSheetTestPlayground: View {
     @StateObject var analyticsLogObserver: AnalyticsLogObserver = .shared
     @State var showingQRSheet = false
 
-    init(settings: PaymentSheetTestPlaygroundSettings) {
-        _playgroundController = StateObject(wrappedValue: PlaygroundController(settings: settings))
+    init(settings: PaymentSheetTestPlaygroundSettings, appearance: PaymentSheet.Appearance) {
+        _playgroundController = StateObject(wrappedValue: PlaygroundController(settings: settings, appearance: appearance))
     }
 
     @ViewBuilder
@@ -618,6 +618,6 @@ struct SettingPickerView<S: PickerEnum>: View {
 @available(iOS 15.0, *)
 struct PaymentSheetTestPlayground_Previews: PreviewProvider {
     static var previews: some View {
-        PaymentSheetTestPlayground(settings: .defaultValues())
+        PaymentSheetTestPlayground(settings: .defaultValues(), appearance: PaymentSheet.Appearance.default)
     }
 }

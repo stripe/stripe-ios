@@ -273,6 +273,7 @@ class PlaygroundController: ObservableObject {
         configuration.formSheetAction = formSheetAction
         configuration.embeddedViewDisplaysMandateText = settings.embeddedViewDisplaysMandateText == .on
         configuration.rowSelectionBehavior = settings.rowSelectionBehavior == .default ? .default : .immediateAction { [weak self] in
+            print("immediateAction callback triggered")
             self?.embeddedPlaygroundViewController?.dismiss(animated: true)
             self?.embeddedPlaygroundViewController?.updatePaymentOptionView()
         }
@@ -516,7 +517,7 @@ class PlaygroundController: ObservableObject {
 
     private var subscribers: Set<AnyCancellable> = []
 
-    init(settings: PaymentSheetTestPlaygroundSettings) {
+    init(settings: PaymentSheetTestPlaygroundSettings, appearance: PaymentSheet.Appearance) {
         // Enable experimental payment methods.
         //        PaymentSheet.supportedPaymentMethods += [.link]
 
@@ -528,6 +529,7 @@ class PlaygroundController: ObservableObject {
             UserDefaults.standard.set(true, forKey: "FINANCIAL_CONNECTIONS_EXAMPLE_APP_ENABLE_NATIVE")
         }
         self.settings = settings
+        self.appearance = appearance
         self.currentlyRenderedSettings = .defaultValues()
 
         $settings.removeDuplicates().sink { newValue in
@@ -969,8 +971,7 @@ extension PlaygroundController {
                 let data = data,
                 let json = try? JSONSerialization.jsonObject(with: data, options: []) as? [String: Any]
             else {
-                if let data, (response as? HTTPURLResponse)?.statusCode == 400 {
-                    let errorMessage = String(decoding: data, as: UTF8.self)
+                if let data, (response as? HTTPURLResponse)?.statusCode == 400, let errorMessage = String(data: data, encoding: .utf8) {
                     // read the error message
                     intentCreationCallback(.failure(ConfirmHandlerError.confirmError(errorMessage)))
                 } else {
@@ -1016,8 +1017,8 @@ extension PlaygroundController: STPAnalyticsClientDelegate {
 
 extension PlaygroundController {
     func serializeSettingsToNSUserDefaults() {
-        let data = try! JSONEncoder().encode(settings)
-        UserDefaults.standard.set(data, forKey: PaymentSheetTestPlaygroundSettings.nsUserDefaultsKey)
+        let settingsData = try! JSONEncoder().encode(settings)
+        UserDefaults.standard.set(settingsData, forKey: PaymentSheetTestPlaygroundSettings.nsUserDefaultsKey)
 
         if let customerId {
             let customerIdData = try! JSONEncoder().encode(customerId)
@@ -1025,6 +1026,10 @@ extension PlaygroundController {
         } else {
             UserDefaults.standard.removeObject(forKey: PaymentSheetTestPlaygroundSettings.nsUserDefaultsCustomerIDKey)
         }
+
+        // save appearance setting
+        let appearanceData = try! JSONEncoder().encode(appearance)
+        UserDefaults.standard.set(appearanceData, forKey: PaymentSheetTestPlaygroundSettings.nsUserDefaultsAppearanceKey)
     }
 
     static func settingsFromDefaults() -> PaymentSheetTestPlaygroundSettings? {
@@ -1034,6 +1039,18 @@ extension PlaygroundController {
             } catch {
                 print("Unable to deserialize saved settings")
                 UserDefaults.standard.removeObject(forKey: PaymentSheetTestPlaygroundSettings.nsUserDefaultsKey)
+            }
+        }
+        return nil
+    }
+
+    static func appearanceFromDefaults() -> PaymentSheet.Appearance? {
+        if let appearanceData = UserDefaults.standard.value(forKey: PaymentSheetTestPlaygroundSettings.nsUserDefaultsAppearanceKey) as? Data {
+            do {
+                return try JSONDecoder().decode(PaymentSheet.Appearance.self, from: appearanceData)
+            } catch {
+                print("Unable to deserialize appearance: \(error)")
+                UserDefaults.standard.removeObject(forKey: PaymentSheetTestPlaygroundSettings.nsUserDefaultsAppearanceKey)
             }
         }
         return nil
@@ -1051,6 +1068,7 @@ extension PlaygroundController {
             self.customerId = nil
         }
     }
+
     static func resetCustomer() {
         UserDefaults.standard.removeObject(forKey: PaymentSheetTestPlaygroundSettings.nsUserDefaultsCustomerIDKey)
     }
