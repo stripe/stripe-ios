@@ -293,6 +293,46 @@ public class STPPaymentHandler: NSObject {
     ) {
         self.confirmPayment(withParams, with: authenticationContext, completion: completion)
     }
+    
+    @_spi(SharedPaymentToken) public func handleNextAction(
+        forPaymentHashedValue hashedValue: String,
+        with authenticationContext: STPAuthenticationContext,
+        returnURL: String?,
+        completion: @escaping STPPaymentHandlerActionPaymentIntentCompletionBlock
+    ) {
+        // hashedValue is a base64 encoded string in "pk_test_123:pi_123_secret_abc" format
+        
+        // Decode the base64 string
+        guard let decodedData = Data(base64Encoded: hashedValue),
+              let decodedString = String(data: decodedData, encoding: .utf8) else {
+            completion(.failed, nil, _error(for: .invalidClientSecret))
+            return
+        }
+        
+        // Parse the decoded string to extract publishable key and client secret
+        let components = decodedString.components(separatedBy: ":")
+        guard components.count >= 2 else {
+            completion(.failed, nil, _error(for: .invalidClientSecret))
+            return
+        }
+        
+        let publishableKey = components[0]
+        let clientSecret = components[1..<components.count].joined(separator: ":")
+        
+        // Create a new API client with the publishable key
+        let apiClient = STPAPIClient(publishableKey: publishableKey)
+        
+        // Create a new payment handler with the new API client
+        let paymentHandler = STPPaymentHandler(apiClient: apiClient, threeDSCustomizationSettings: self.threeDSCustomizationSettings)
+        
+        // Use the new handler to handle the next action
+        paymentHandler.handleNextAction(
+            forPayment: clientSecret,
+            with: authenticationContext,
+            returnURL: returnURL,
+            completion: completion
+        )
+    }
 
     /// Handles any `nextAction` required to authenticate the PaymentIntent.
     /// Call this method if you are using server-side confirmation.  - seealso: https://stripe.com/docs/payments/accept-a-payment?platform=ios&ui=custom
@@ -2247,7 +2287,7 @@ extension STPPaymentHandler: SFSafariViewControllerDelegate {
     /// :nodoc:
     @_spi(STP) public func handleURLCallback(_ url: URL) -> Bool {
         if currentAction?.nextAction()?.redirectToURL?.useWebAuthSession ?? false {
-            // Don't handle the URL — If a user clicks the URL in ASWebAuthenticationSession, ASWebAuthenticationSession will handle it internally.
+            // Don't handle the URL — If a user clicks the URL in ASWebAuthenticationSession, ASWebAuthenticationSession will handle it internally.
             // If we're returning from another app via a URL while ASWebAuthenticationSession is open, it's likely that the PM initiated a redirect to another app
             // (such as a banking app) and is waiting for a response from that app.
             return false

@@ -3,7 +3,7 @@
 //  PaymentSheet Example
 //
 
-@_spi(STP) import StripePaymentSheet
+@_spi(STP) @_spi(SharedPaymentToken) import StripePaymentSheet
 import SwiftUI
 
 struct ExampleWalletButtonsView: View {
@@ -55,7 +55,11 @@ struct ExampleWalletButtonsView: View {
     }
 }
 
-class ExampleWalletButtonsModel: ObservableObject {
+class ExampleWalletButtonsModel: ObservableObject, STPAuthenticationContext {
+    func authenticationPresentingViewController() -> UIViewController {
+        <#code#>
+    }
+    
     let backendCheckoutUrl = URL(string: "https://stripe-mobile-payment-sheet.glitch.me/checkout")!
     @Published var paymentSheetFlowController: PaymentSheet.FlowController?
     @Published var paymentResult: PaymentSheetResult?
@@ -92,6 +96,43 @@ class ExampleWalletButtonsModel: ObservableObject {
                     id: customerId, ephemeralKeySecret: customerEphemeralKeySecret)
                 configuration.returnURL = "payments-example://stripe-redirect"
                 configuration.willUseWalletButtonsView = true
+let intentConfig = PaymentSheet.IntentConfiguration.init(
+    sharedPaymentTokenSessionWithMode:
+            .payment(amount: 100,
+                     currency: "USD",
+                     setupFutureUsage: nil,
+                     captureMethod: .manual,
+                     paymentMethodOptions: nil),
+    sellerDetails: .init(networkId: "@network", externalId: "abc-123-456"),
+    paymentMethodTypes: ["card", "link"]
+) { paymentMethod, shippingAddress in
+    let paymentMethodID = paymentMethod.stripeId
+    let line1 = shippingAddress?.line1 // etc
+    // Send payment method ID and shipping address info to your backend
+}
+                
+                
+STPPaymentHandler.sharedHandler.handleNextAction(forPaymentHashedValue: "ABC123", with: self, returnURL: "my-app") { status, pi, error in
+    switch status {
+    case .succeeded:
+        // Handle success
+    case .canceled:
+        // Handle 3DS2/other next action cancelled
+    case .failed:
+        // Handle 3DS2/other next action failure
+    }
+}
+                
+                
+                PaymentSheet.FlowController.create(intentConfiguration: intentConfig, configuration: configuration) { result in
+                    switch result {
+                    case .failure(let error):
+                        // Handle FlowController creation error
+                    case .success(let paymentSheetFlowController):
+                        print("PaymentSheetFlowController created successfully")
+                    }
+                }
+                
                 PaymentSheet.FlowController.create(
                     paymentIntentClientSecret: paymentIntentClientSecret,
                     configuration: configuration

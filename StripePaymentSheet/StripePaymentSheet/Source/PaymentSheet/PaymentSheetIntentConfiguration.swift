@@ -35,14 +35,13 @@ public extension PaymentSheet {
         ) -> Void
 
         /// Called when the customer confirms payment in a facilitated payment session.
-        @_spi(FacilitatedPaymentSession) public typealias FacilitatedPaymentSessionConfirmHandler = (
+        @_spi(SharedPaymentToken) public typealias PreparePaymentMethodHandler = (
             _ paymentMethod: STPPaymentMethod,
-            _ shouldSavePaymentMethod: Bool,
-            _ intentCreationCallback: @escaping ((Result<String, Error>) -> Void)
+            _ shippingAddress: STPAddress?
         ) -> Void
 
         /// Seller details for facilitated payment sessions
-        @_spi(FacilitatedPaymentSession) public struct SellerDetails {
+        @_spi(SharedPaymentToken) public struct SellerDetails {
             public let networkId: String
             public let externalId: String
 
@@ -85,20 +84,25 @@ public extension PaymentSheet {
         ///   - paymentMethodConfigurationId: Configuration ID (if any) for the selected payment method configuration
         ///   - confirmHandler: A handler called with payment details when the user taps the primary button (e.g. the "Pay" or "Continue" button).
         ///   - requireCVCRecollection: If true, PaymentSheet recollects CVC for saved cards before confirmation (PaymentIntent only)
-        @_spi(FacilitatedPaymentSession) public init(facilitatedPaymentSessionWithMode mode: Mode,
+        @_spi(SharedPaymentToken) public init(sharedPaymentTokenSessionWithMode mode: Mode,
                     sellerDetails: SellerDetails?,
                     paymentMethodTypes: [String]? = nil,
                     onBehalfOf: String? = nil,
                     paymentMethodConfigurationId: String? = nil,
-                    confirmHandler: @escaping FacilitatedPaymentSessionConfirmHandler,
+                    preparePaymentMethodHandler: @escaping PreparePaymentMethodHandler,
                     requireCVCRecollection: Bool = false) {
             self.mode = mode
             self.paymentMethodTypes = paymentMethodTypes
             self.onBehalfOf = onBehalfOf
             self.paymentMethodConfigurationId = paymentMethodConfigurationId
-            self.confirmHandler = confirmHandler
+            self.preparePaymentMethodHandler = preparePaymentMethodHandler
             self.requireCVCRecollection = requireCVCRecollection
             self.sellerDetails = sellerDetails
+            self.confirmHandler = { paymentMethod, shouldSavePaymentMethod, callback in
+                // fail immediately, this should never be called
+                let error = PaymentSheetError.intentConfigurationValidationFailed(message: "PaymentSheet.IntentConfiguration for shared payment token sessions should not call confirmHandler")
+                callback(.failure(error))
+            }
             validate()
         }
 
@@ -113,6 +117,8 @@ public extension PaymentSheet {
         /// Called when the customer confirms payment.
         /// See the documentation for `ConfirmHandler` for more details.
         public var confirmHandler: ConfirmHandler
+        
+        var preparePaymentMethodHandler: PreparePaymentMethodHandler? = nil
 
         /// The account (if any) for which the funds of the intent are intended.
         /// - Seealso: https://stripe.com/docs/api/payment_intents/object#payment_intent_object-on_behalf_of
@@ -128,7 +134,7 @@ public extension PaymentSheet {
         public var requireCVCRecollection: Bool
 
         /// Seller details for facilitated payment sessions
-        @_spi(FacilitatedPaymentSession) public var sellerDetails: SellerDetails?
+        @_spi(SharedPaymentToken) public var sellerDetails: SellerDetails?
 
         /// Controls when the funds will be captured. 
         /// - Seealso: https://stripe.com/docs/api/payment_intents/create#create_payment_intent-capture_method
