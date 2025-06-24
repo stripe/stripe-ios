@@ -67,6 +67,19 @@ private class ApplePayContextClosureDelegate: NSObject, ApplePayContextDelegate 
                 completion(nil, STPApplePayContext.makeUnknownError(message: "Failed to convert StripeAPI.PaymentMethod to STPPaymentMethod."))
                 return
             }
+
+            // Check if this is a shared payment token session, which will have a preparePaymentMethodHandler
+            if let preparePaymentMethodHandler = intentConfig.preparePaymentMethodHandler {
+                // Extract shipping address from the PKPayment
+                let shippingAddress = paymentInformation.shippingContact != nil ? STPAddress(pkContact: paymentInformation.shippingContact!) : nil
+
+                // Call the preparePaymentMethodHandler with the payment method and shipping address, then complete
+                preparePaymentMethodHandler(stpPaymentMethod, shippingAddress)
+                completion(STPApplePayContext.COMPLETE_WITHOUT_CONFIRMING_INTENT, nil)
+                return
+            }
+
+            // Regular deferred intent flow
             let shouldSavePaymentMethod = false // Apple Pay doesn't present the customer the choice to choose to save their payment method
             intentConfig.confirmHandler(stpPaymentMethod, shouldSavePaymentMethod) { result in
                 switch result {

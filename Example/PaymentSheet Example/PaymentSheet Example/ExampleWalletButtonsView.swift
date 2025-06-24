@@ -4,7 +4,7 @@
 //
 
 @_spi(STP) import StripePayments
-@_spi(STP) @_spi(CustomerSessionBetaAccess) import StripePaymentSheet
+@_spi(STP)  @_spi(SharedPaymentToken) @_spi(CustomerSessionBetaAccess) import StripePaymentSheet
 import SwiftUI
 
 struct ExampleWalletButtonsContainerView: View {
@@ -181,16 +181,22 @@ class ExampleWalletButtonsModel: ObservableObject {
                 configuration.merchantDisplayName = "Example, Inc."
                 configuration.applePay = .init(
                     merchantId: "merchant.com.stripe.umbrella.test", // Be sure to use your own merchant ID here!
-                    merchantCountryCode: "US"
+                    merchantCountryCode: "US",
+                    customHandlers: .init(paymentRequestHandler: { paymentRequest in
+                        paymentRequest.requiredShippingContactFields = [.postalAddress, .emailAddress]
+                        return paymentRequest
+                    })
                 )
                 configuration.shopPay = self.shopPayConfiguration
                 configuration.customer = .init(id: customerId, customerSessionClientSecret: customerSessionClientSecret)
                 configuration.returnURL = "payments-example://stripe-redirect"
                 configuration.willUseWalletButtonsView = true
+
                 PaymentSheet.FlowController.create(
-                    intentConfiguration: .init(mode: .payment(amount: 1000, currency: "USD", setupFutureUsage: nil, captureMethod: .automatic, paymentMethodOptions: nil), paymentMethodTypes: ["card", "link", "shop_pay"], confirmHandler: { paymentMethod, _, intentCreationCallback in
+                    intentConfiguration: .init(sharedPaymentTokenSessionWithMode: .payment(amount: 1000, currency: "USD", setupFutureUsage: nil, captureMethod: .automatic, paymentMethodOptions: nil), sellerDetails: .init(networkId: "internal", externalId: "stripe_test_merchant"), paymentMethodTypes: ["card", "link", "shop_pay"], preparePaymentMethodHandler: { paymentMethod, address in
                         print(paymentMethod)
-                        intentCreationCallback(.success(paymentIntentClientSecret))
+                        print(address)
+                        // Create the SPT on your backend here
                     }),
                     configuration: configuration
                 ) { [weak self] result in
@@ -320,5 +326,11 @@ class ExampleWalletButtonsModel: ObservableObject {
                 )
             ),
         ]
+    }
+}
+
+class WindowAuthenticationContext: NSObject, STPAuthenticationContext {
+    public func authenticationPresentingViewController() -> UIViewController {
+        UIViewController.topMostViewController() ?? UIViewController()
     }
 }

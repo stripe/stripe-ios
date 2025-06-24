@@ -41,7 +41,18 @@ extension PaymentSheet {
                     confirmType = .new(params: params, paymentOptions: paymentOptions, paymentMethod: paymentMethod, shouldSave: shouldSave, shouldSetAsDefaultPM: shouldSetAsDefaultPM)
                 }
 
-                // 2. Get Intent client secret from merchant
+                // 2a. If we have a preparePaymentMethodHandler, use the shared payment token session flow
+                if let preparePaymentMethodHandler = intentConfig.preparePaymentMethodHandler {
+                    // For shared payment token sessions, call the preparePaymentMethodHandler and complete successfully
+                    // Note: Shipping address is passed for Apple Pay in STPApplePayContext+PaymentSheet.swift.
+                    // For other payment methods, get shipping address from configuration.
+                    let shippingAddress = configuration.shippingDetails()?.stpAddress
+                    preparePaymentMethodHandler(paymentMethod, shippingAddress)
+                    completion(.completed, STPAnalyticsClient.DeferredIntentConfirmationType.completeWithoutConfirmingIntent)
+                    return
+                }
+
+                // 2b. Otherwise, call the standard confirmHandler
                 let clientSecret = try await fetchIntentClientSecretFromMerchant(intentConfig: intentConfig,
                                                                                  paymentMethod: paymentMethod,
                                                                                  shouldSavePaymentMethod: confirmType.shouldSave)
