@@ -74,8 +74,31 @@ extension XCTestCase {
         nameField.tap()
         nameField.typeText("Jane Doe")
 
-        // Use the new autocomplete extension for address
-        app.fillAddressWithAutocomplete()
+        // Check if autocomplete Address field exists, otherwise use individual fields
+        let addressField = app.textFields["Address"]
+        if addressField.exists {
+            // Use the new autocomplete extension for address
+            app.fillAddressWithAutocomplete()
+        } else {
+            // Fill individual address fields when defaults are present
+            let addressLine1Field = app.textFields["Address line 1"]
+            if addressLine1Field.exists {
+                addressLine1Field.tap()
+                addressLine1Field.typeText("354 Oyster Point Blvd")
+            }
+
+            let cityField = app.textFields["City"]
+            if cityField.exists {
+                cityField.tap()
+                cityField.typeText("South San Francisco")
+            }
+
+            let zipField = app.textFields["ZIP"]
+            if zipField.exists {
+                zipField.tap()
+                zipField.typeText("94080")
+            }
+        }
 
         XCTAssertTrue(app.toolbars.buttons["Done"].waitForExistenceAndTap(timeout: 10))
     }

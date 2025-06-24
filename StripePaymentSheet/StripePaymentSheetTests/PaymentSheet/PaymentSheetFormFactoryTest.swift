@@ -1030,7 +1030,16 @@ class PaymentSheetFormFactoryTest: XCTestCase {
                 zipNameType: .zip
             ),
         ]
-        let configuration = PaymentSheet.Configuration()
+        var configuration = PaymentSheet.Configuration()
+        configuration.defaultBillingDetails = PaymentSheet.BillingDetails(
+            address: PaymentSheet.Address(
+                city: "South San Francisco",
+                country: "US",
+                line1: "354 Oyster Point Blvd",
+                postalCode: "94080",
+                state: "CA"
+            )
+        )
         let factory = PaymentSheetFormFactory(
             intent: ._testValue(), elementsSession: ._testCardValue(),
             configuration: .paymentElement(configuration),
