@@ -11,7 +11,7 @@ struct ExampleWalletButtonsContainerView: View {
     @State private var email: String = ""
     @State private var shopId: String = "shop_id_123"
     @State private var linkInlineVerificationEnabled: Bool = PaymentSheet.LinkFeatureFlags.enableLinkInlineVerification
-    @State private var useRoughLyingCarriageBackend: Bool = false
+    @State private var useSPTTestBackend: Bool = false
 
     var body: some View {
         if #available(iOS 16.0, *) {
@@ -30,10 +30,10 @@ struct ExampleWalletButtonsContainerView: View {
                             PaymentSheet.LinkFeatureFlags.enableLinkInlineVerification = newValue
                         }
 
-                    Toggle("Use rough-lying-carriage backend", isOn: $useRoughLyingCarriageBackend)
+                    Toggle("Use rough-lying-carriage backend", isOn: $useSPTTestBackend)
 
                     NavigationLink("Launch") {
-                        ExampleWalletButtonsView(email: email, shopId: shopId, useRoughLyingCarriageBackend: useRoughLyingCarriageBackend)
+                        ExampleWalletButtonsView(email: email, shopId: shopId, useSPTTestBackend: useSPTTestBackend)
                     }
                 }
             }
@@ -47,8 +47,8 @@ struct ExampleWalletButtonsView: View {
     @ObservedObject var model: ExampleWalletButtonsModel
     @State var isConfirmingPayment = false
 
-    init(email: String, shopId: String, useRoughLyingCarriageBackend: Bool) {
-        self.model = ExampleWalletButtonsModel(email: email, shopId: shopId, useRoughLyingCarriageBackend: useRoughLyingCarriageBackend)
+    init(email: String, shopId: String, useSPTTestBackend: Bool) {
+        self.model = ExampleWalletButtonsModel(email: email, shopId: shopId, useSPTTestBackend: useSPTTestBackend)
     }
 
     var body: some View {
@@ -129,23 +129,23 @@ struct WalletButtonsFlowControllerView: View {
 class ExampleWalletButtonsModel: ObservableObject {
     let email: String
     let shopId: String
-    let useRoughLyingCarriageBackend: Bool
+    let useSPTTestBackend: Bool
 
     let backendCheckoutUrl = URL(string: "https://stp-mobile-playground-backend-v7.stripedemos.com/checkout")!
-    let roughLyingCarriageCustomerUrl = URL(string: "https://rough-lying-carriage.glitch.me/customer")!
-    let roughLyingCarriageCreateIntentUrl = URL(string: "https://rough-lying-carriage.glitch.me/create-intent")!
+    let SPTTestCustomerUrl = URL(string: "https://rough-lying-carriage.glitch.me/customer")!
+    let SPTTestCreateIntentUrl = URL(string: "https://rough-lying-carriage.glitch.me/create-intent")!
     @Published var paymentSheetFlowController: PaymentSheet.FlowController?
     @Published var paymentResult: PaymentSheetResult?
 
-    init(email: String, shopId: String, useRoughLyingCarriageBackend: Bool) {
+    init(email: String, shopId: String, useSPTTestBackend: Bool) {
         self.email = email
         self.shopId = shopId
-        self.useRoughLyingCarriageBackend = useRoughLyingCarriageBackend
+        self.useSPTTestBackend = useSPTTestBackend
     }
 
     func preparePaymentSheet() {
-        if useRoughLyingCarriageBackend {
-            preparePaymentSheetWithRoughLyingCarriageBackend()
+        if useSPTTestBackend {
+            preparePaymentSheetWithSPTTestBackend()
         } else {
             preparePaymentSheetWithOriginalBackend()
         }
@@ -228,14 +228,14 @@ class ExampleWalletButtonsModel: ObservableObject {
         task.resume()
     }
 
-    private func preparePaymentSheetWithRoughLyingCarriageBackend() {
+    private func preparePaymentSheetWithSPTTestBackend() {
         // First, create customer and get customer session
         let body = [
             "customerId": nil // Let backend create a new customer
         ] as [String: Any?]
         let json = try! JSONSerialization.data(withJSONObject: body, options: [])
 
-        var request = URLRequest(url: roughLyingCarriageCustomerUrl)
+        var request = URLRequest(url: SPTTestCustomerUrl)
         request.httpMethod = "POST"
         request.httpBody = json
         request.setValue("application/json", forHTTPHeaderField: "Content-type")
@@ -278,7 +278,7 @@ class ExampleWalletButtonsModel: ObservableObject {
                         print("PaymentMethod: \(paymentMethod)")
                         print("Address: \(address)")
                         // Create the payment intent on the rough-lying-carriage backend
-                        self?.createPaymentIntentWithRoughLyingCarriageBackend(customerId: customerId, paymentMethod: paymentMethod.stripeId)
+                        self?.createPaymentIntentWithSPTTestBackend(customerId: customerId, paymentMethod: paymentMethod.stripeId)
                     }),
                     configuration: configuration
                 ) { [weak self] result in
@@ -295,14 +295,14 @@ class ExampleWalletButtonsModel: ObservableObject {
         task.resume()
     }
 
-    private func createPaymentIntentWithRoughLyingCarriageBackend(customerId: String, paymentMethod: String) {
+    private func createPaymentIntentWithSPTTestBackend(customerId: String, paymentMethod: String) {
         let body = [
             "customerId": customerId,
             "paymentMethod": paymentMethod,
         ] as [String: Any]
         let json = try! JSONSerialization.data(withJSONObject: body, options: [])
 
-        var request = URLRequest(url: roughLyingCarriageCreateIntentUrl)
+        var request = URLRequest(url: SPTTestCreateIntentUrl)
         request.httpMethod = "POST"
         request.httpBody = json
         request.setValue("application/json", forHTTPHeaderField: "Content-type")
