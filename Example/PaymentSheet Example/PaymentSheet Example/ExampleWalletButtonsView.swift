@@ -548,7 +548,7 @@ class WindowAuthenticationContext: NSObject, STPAuthenticationContext {
 struct DebugLogView: View {
     let logs: [String]
     let onClearLogs: () -> Void
-
+    
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
             HStack {
@@ -564,22 +564,39 @@ struct DebugLogView: View {
                 .font(.caption)
                 .foregroundColor(.blue)
             }
-
-            ScrollView {
-                LazyVStack(alignment: .leading, spacing: 4) {
-                    ForEach(logs, id: \.self) { log in
-                        Text(log)
-                            .font(.system(.caption, design: .monospaced))
-                            .foregroundColor(.primary)
-                            .textSelection(.enabled)
+            
+            ScrollViewReader { proxy in
+                ScrollView {
+                    LazyVStack(alignment: .leading, spacing: 4) {
+                        ForEach(Array(logs.enumerated()), id: \.offset) { index, log in
+                            Text(log)
+                                .font(.system(.caption, design: .monospaced))
+                                .foregroundColor(.primary)
+                                .textSelection(.enabled)
+                                .id(index)
+                        }
+                    }
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                }
+                .frame(maxHeight: 200)
+                .padding(8)
+                .background(Color(.systemGray6))
+                .cornerRadius(8)
+                .onAppear {
+                    if !logs.isEmpty {
+                        withAnimation(.easeOut(duration: 0.3)) {
+                            proxy.scrollTo(logs.count - 1, anchor: .bottom)
+                        }
                     }
                 }
-                .frame(maxWidth: .infinity, alignment: .leading)
+                .onChange(of: logs.count) { _ in
+                    if !logs.isEmpty {
+                        withAnimation(.easeOut(duration: 0.3)) {
+                            proxy.scrollTo(logs.count - 1, anchor: .bottom)
+                        }
+                    }
+                }
             }
-            .frame(maxHeight: 200)
-            .padding(8)
-            .background(Color(.systemGray6))
-            .cornerRadius(8)
         }
         .padding(.horizontal)
     }
