@@ -170,17 +170,33 @@ extension STPAPIClient {
         consumerAccountPublishableKey: String?,
         completion: @escaping (Result<ConsumerPaymentDetails, Error>) -> Void
     ) {
+        createPaymentDetails(
+            for: consumerSessionClientSecret,
+            rawCardParams: cardParams.consumersAPIParams,
+            billingEmailAddress: billingEmailAddress,
+            billingDetails: billingDetails,
+            consumerAccountPublishableKey: consumerAccountPublishableKey,
+            completion: completion
+        )
+    }
+
+    func createPaymentDetails(
+        for consumerSessionClientSecret: String,
+        rawCardParams: [String: Any],
+        billingEmailAddress: String,
+        billingDetails: STPPaymentMethodBillingDetails,
+        consumerAccountPublishableKey: String?,
+        completion: @escaping (Result<ConsumerPaymentDetails, Error>) -> Void
+    ) {
         let endpoint: String = "consumers/payment_details"
 
         let billingParams = billingDetails.consumersAPIParams
-
-        let card = cardParams.consumersAPIParams
 
         let parameters: [String: Any] = [
             "credentials": ["consumer_session_client_secret": consumerSessionClientSecret],
             "request_surface": "ios_payment_element",
             "type": "card",
-            "card": card,
+            "card": rawCardParams,
             "billing_email_address": billingEmailAddress,
             "billing_address": billingParams,
             "active": true, // card details are created with active true so they can be shared for passthrough mode

@@ -150,7 +150,7 @@ struct ExampleLinkStandaloneComponent: View {
                 linkController: linkController,
                 onCreditCardTap: { showingCreditCardForm = true }
             )
-            .presentationDetents([.fraction(0.7)])
+            .presentationDetents([.large])
         }
         .alert(alertTitle, isPresented: $showingAlert) {
             Button("OK") { }
@@ -517,15 +517,33 @@ struct CreditCardFormView: View {
             Spacer()
 
             // Save card button
-            Button(action: {
-                alertText = [
-                    linkController.signupViewModel?.emailAddress,
-                    linkController.signupViewModel?.legalName,
-                    linkController.signupViewModel?.phone,
-                ].compactMap { $0 }.joined(separator: "\n")
+            Button {
+                let cardPayload = LinkSignupCardPayload(
+                    number: cardNumber,
+                    expiryYear: Int(String(expiryDate.suffix(2)))!,
+                    expiryMonth: Int(String(expiryDate.prefix(2)))!,
+                    postalCode: "12345",
+                    country: "US"
+                )
 
-                showingAlert = true
-            }) {
+                linkController.signUpConsumer(with: cardPayload) { result in
+                    switch result {
+                    case .success:
+                        alertText = "Signed up Link consumer"
+                    case .failure:
+                        alertText = "Failed to sign up Link consumer"
+                    }
+                    showingAlert = true
+                }
+
+//                alertText = [
+//                    linkController.signupViewModel?.emailAddress,
+//                    linkController.signupViewModel?.legalName,
+//                    linkController.signupViewModel?.phone,
+//                ].compactMap { $0 }.joined(separator: "\n")
+//
+//                showingAlert = true
+            } label: {
                 Text("Save Card")
                     .font(.headline)
                     .fontWeight(.semibold)
@@ -535,6 +553,24 @@ struct CreditCardFormView: View {
                     .background(Color.blue)
                     .cornerRadius(25)
             }
+//            Button(action: {
+//                alertText = [
+//                    linkController.signupViewModel?.emailAddress,
+//                    linkController.signupViewModel?.legalName,
+//                    linkController.signupViewModel?.phone,
+//                ].compactMap { $0 }.joined(separator: "\n")
+//
+//                showingAlert = true
+//            }) {
+//                Text("Save Card")
+//                    .font(.headline)
+//                    .fontWeight(.semibold)
+//                    .foregroundColor(.white)
+//                    .frame(maxWidth: .infinity)
+//                    .frame(height: 50)
+//                    .background(Color.blue)
+//                    .cornerRadius(25)
+//            }
         }
         .padding()
         .navigationTitle("Add Credit Card")
