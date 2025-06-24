@@ -8,6 +8,7 @@
 import Foundation
 @_spi(STP) import StripeCore
 @_spi(STP) import StripePayments
+@_spi(STP) import StripeUICore
 
 extension PaymentSheet {
     static func handleDeferredIntentConfirmation(
@@ -45,8 +46,9 @@ extension PaymentSheet {
                 if let preparePaymentMethodHandler = intentConfig.preparePaymentMethodHandler {
                     // For shared payment token sessions, call the preparePaymentMethodHandler and complete successfully
                     // Note: Shipping address is passed for Apple Pay in STPApplePayContext+PaymentSheet.swift.
-                    // For other payment methods, shipping address isn't available in this context.
-                    preparePaymentMethodHandler(paymentMethod, nil)
+                    // For other payment methods, get shipping address from configuration.
+                    let shippingAddress = configuration.shippingDetails()?.stpAddress
+                    preparePaymentMethodHandler(paymentMethod, shippingAddress)
                     completion(.completed, STPAnalyticsClient.DeferredIntentConfirmationType.completeWithoutConfirmingIntent)
                     return
                 }
@@ -178,5 +180,23 @@ extension PaymentSheet {
             paymentUserAgentValues.append("autopm")
         }
         return paymentUserAgentValues
+    }
+}
+
+// MARK: - AddressSectionElement.AddressDetails Extensions
+
+extension AddressViewController.AddressDetails {
+    /// Converts AddressDetails to STPAddress
+    var stpAddress: STPAddress {
+        let stpAddress = STPAddress()
+        stpAddress.name = name
+        stpAddress.phone = phone
+        stpAddress.line1 = address.line1
+        stpAddress.line2 = address.line2
+        stpAddress.city = address.city
+        stpAddress.state = address.state
+        stpAddress.postalCode = address.postalCode
+        stpAddress.country = address.country
+        return stpAddress
     }
 }

@@ -186,7 +186,7 @@ class ExampleWalletButtonsModel: ObservableObject {
                         paymentRequest.requiredShippingContactFields = [.postalAddress, .emailAddress]
                         return paymentRequest
                     })
-                        
+
                 )
                 configuration.shopPay = self.shopPayConfiguration
                 configuration.customer = .init(id: customerId, customerSessionClientSecret: customerSessionClientSecret)

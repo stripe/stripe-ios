@@ -101,7 +101,6 @@ public extension PaymentSheet {
             self.sellerDetails = sellerDetails
             self.confirmHandler = { _, _, callback in
                 // fail immediately, this should never be called
-                stpAssertionFailure("PaymentSheet.IntentConfiguration for SPT sessions should not call confirmHandler")
                 let error = PaymentSheetError.intentConfigurationValidationFailed(message: "Internal Shared Payment Token session error. Please file an issue at https://github.com/stripe/stripe-ios.")
                 callback(.failure(error))
             }
