@@ -68,12 +68,12 @@ private class ApplePayContextClosureDelegate: NSObject, ApplePayContextDelegate 
                 return
             }
 
-            // Check if this is a shared payment token session with preparePaymentMethodHandler
+            // Check if this is a shared payment token session, which will have a preparePaymentMethodHandler
             if let preparePaymentMethodHandler = intentConfig.preparePaymentMethodHandler {
-                // Extract shipping address from Apple Pay payment information
+                // Extract shipping address from the PKPayment
                 let shippingAddress = paymentInformation.shippingContact != nil ? STPAddress(pkContact: paymentInformation.shippingContact!) : nil
 
-                // Call the preparePaymentMethodHandler with shipping address
+                // Call the preparePaymentMethodHandler with the payment method and shipping address, then complete
                 preparePaymentMethodHandler(stpPaymentMethod, shippingAddress)
                 completion(STPApplePayContext.COMPLETE_WITHOUT_CONFIRMING_INTENT, nil)
                 return

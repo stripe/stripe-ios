@@ -13,7 +13,7 @@
 @testable@_spi(STP) import StripeUICore
 import XCTest
 
-final class PaymentSheet_DeferredAPITest: XCTestCase {
+final class PaymentSheet_DeferredAPITest: STPNetworkStubbingTestCase {
     let apiClient = STPAPIClient(publishableKey: STPTestingDefaultPublishableKey)
 
     lazy var configuration: PaymentSheet.Configuration = {

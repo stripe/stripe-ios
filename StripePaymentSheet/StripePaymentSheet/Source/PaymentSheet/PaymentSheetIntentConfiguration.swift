@@ -102,6 +102,7 @@ public extension PaymentSheet {
             self.sellerDetails = sellerDetails
             self.confirmHandler = { _, _, callback in
                 // fail immediately, this should never be called
+                stpAssertionFailure("sharedPaymentTokenSessionWithMode call the preparePaymentMethodHandler, not the confirmHandler")
                 let error = PaymentSheetError.intentConfigurationValidationFailed(message: "Internal Shared Payment Token session error. Please file an issue at https://github.com/stripe/stripe-ios.")
                 callback(.failure(error))
             }
@@ -120,6 +121,7 @@ public extension PaymentSheet {
         /// See the documentation for `ConfirmHandler` for more details.
         public var confirmHandler: ConfirmHandler
 
+        /// Replacement for confirmHandler in sharedPaymentTokenSession flows. Not publicly available.
         var preparePaymentMethodHandler: PreparePaymentMethodHandler?
 
         /// The account (if any) for which the funds of the intent are intended.
@@ -144,7 +146,7 @@ public extension PaymentSheet {
             /// (Default) Stripe automatically captures funds when the customer authorizes the payment.
             case automatic = "automatic"
 
-            /// Place a hold on the funds when the customer authorizes the payment, but don't capture the funds until later. (Not all payment methods support this.)
+            /// Place a hold on the funds when the customer authorizes the payment, but don’t capture the funds until later. (Not all payment methods support this.)
             case manual = "manual"
 
             /// Asynchronously capture funds when the customer authorizes the payment.
@@ -153,7 +155,7 @@ public extension PaymentSheet {
             case automaticAsync = "automatic_async"
         }
 
-        /// Indicates that you intend to make future payments with this PaymentIntent's payment method.
+        /// Indicates that you intend to make future payments with this PaymentIntent’s payment method.
         /// - Seealso: https://stripe.com/docs/api/payment_intents/create#create_payment_intent-setup_future_usage
         public enum SetupFutureUsage: String {
             /// Use off_session if your customer may or may not be present in your checkout flow.
