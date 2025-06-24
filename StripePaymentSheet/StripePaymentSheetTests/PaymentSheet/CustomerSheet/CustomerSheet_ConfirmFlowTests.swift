@@ -80,7 +80,7 @@ final class CustomerSheet_ConfirmFlowTests: STPNetworkStubbingTestCase {
         let apiClient = STPAPIClient(publishableKey: merchantCountry.publishableKey)
         let newCustomer = try await STPTestingAPIClient.shared().fetchCustomerAndEphemeralKey(customerID: nil,
                                                                                               merchantCountry: merchantCountry.rawValue.lowercased())
-        
+
         // Create default billing details to trigger individual address fields
         let defaultBillingDetails = PaymentSheet.BillingDetails(
             address: PaymentSheet.Address(
@@ -91,7 +91,7 @@ final class CustomerSheet_ConfirmFlowTests: STPNetworkStubbingTestCase {
                 state: "CA"
             )
         )
-        
+
         try await _testConfirm(
             apiClient: apiClient,
             merchantCountry: merchantCountry,
@@ -102,7 +102,7 @@ final class CustomerSheet_ConfirmFlowTests: STPNetworkStubbingTestCase {
                 form.getTextFieldElement("Full name")?.setText("John Doe")
                 form.getTextFieldElement("Email")?.setText("test@example.com")
                 form.getTextFieldElement("IBAN")?.setText("DE89370400440532013000")
-                
+
                 // With default billing details, individual address fields should be shown and pre-populated
                 XCTAssertEqual(form.getTextFieldElement("Address line 1")?.text, "354 Oyster Point Blvd")
                 XCTAssertEqual(form.getTextFieldElement("City")?.text, "South San Francisco")
