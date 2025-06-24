@@ -41,6 +41,12 @@ extension STPAPIClient {
         case .deferredIntent(let intentConfig):
             parameters["type"] = "deferred_intent"
             parameters["key"] = publishableKey
+            if let sellerDetails = intentConfig.sellerDetails {
+                parameters["seller_details"] = [
+                    "network_id": sellerDetails.networkId,
+                    "external_id": sellerDetails.externalId,
+                ]
+            }
             parameters["deferred_intent"] = {
                 var deferredIntent = [String: Any]()
                 deferredIntent["payment_method_types"] = intentConfig.paymentMethodTypes

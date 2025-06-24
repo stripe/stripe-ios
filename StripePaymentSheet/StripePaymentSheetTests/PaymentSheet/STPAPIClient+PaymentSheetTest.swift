@@ -11,7 +11,7 @@ import XCTest
 
 @testable@_spi(STP) import StripeCore
 @testable@_spi(STP) import StripePayments
-@testable@_spi(STP)@_spi(CustomerSessionBetaAccess)@_spi(CustomPaymentMethodsBeta) import StripePaymentSheet
+@testable@_spi(STP)@_spi(CustomerSessionBetaAccess)@_spi(CustomPaymentMethodsBeta)@_spi(SharedPaymentToken) import StripePaymentSheet
 @testable@_spi(STP) import StripePaymentsUI
 
 class STPAPIClient_PaymentSheetTest: XCTestCase {
@@ -165,5 +165,46 @@ class STPAPIClient_PaymentSheetTest: XCTestCase {
         )
         XCTAssertNil(parameters["legacy_customer_ephemeral_key"])
         XCTAssertNil(parameters["customer_session_client_secret"])
+    }
+
+        func testElementsSessionParameters_DeferredPayment_WithSellerDetails() throws {
+        let sellerDetails = PaymentSheet.IntentConfiguration.SellerDetails(networkId: "network_123", externalId: "external_456")
+        let intentConfig = PaymentSheet.IntentConfiguration(
+            sharedPaymentTokenSessionWithMode: .payment(amount: 2000, currency: "USD"),
+            sellerDetails: sellerDetails,
+            paymentMethodTypes: ["card"],
+            preparePaymentMethodHandler: { _, _ in }
+        )
+
+        let parameters = STPAPIClient(publishableKey: "pk_test").makeElementsSessionsParams(
+            mode: .deferredIntent(intentConfig),
+            epmConfiguration: nil,
+            cpmConfiguration: nil,
+            clientDefaultPaymentMethod: nil,
+            customerAccessProvider: nil
+        )
+
+        let sellerDetailsParams = try XCTUnwrap(parameters["seller_details"] as? [String: Any])
+
+        XCTAssertEqual(sellerDetailsParams["network_id"] as? String, "network_123")
+        XCTAssertEqual(sellerDetailsParams["external_id"] as? String, "external_456")
+    }
+
+        func testElementsSessionParameters_DeferredPayment_WithoutSellerDetails() throws {
+        let intentConfig = PaymentSheet.IntentConfiguration(
+            mode: .payment(amount: 2000, currency: "USD"),
+            paymentMethodTypes: ["card"],
+            confirmHandler: { _, _, _ in }
+        )
+
+        let parameters = STPAPIClient(publishableKey: "pk_test").makeElementsSessionsParams(
+            mode: .deferredIntent(intentConfig),
+            epmConfiguration: nil,
+            cpmConfiguration: nil,
+            clientDefaultPaymentMethod: nil,
+            customerAccessProvider: nil
+        )
+
+        XCTAssertNil(parameters["seller_details"])
     }
 }
