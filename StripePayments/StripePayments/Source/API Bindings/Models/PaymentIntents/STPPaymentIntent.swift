@@ -250,15 +250,15 @@ extension STPPaymentIntent: STPAPIResponseDecodable {
 
         // Check if this is a redacted PaymentIntent by looking for nil required fields
         let isRedacted = dict["amount"] == nil || dict["currency"] == nil || dict["payment_method_types"] == nil || dict["client_secret"] == nil
-        
+
         // For redacted PaymentIntents, use placeholder values for required fields
         let amount = dict["amount"] as? Int ?? (isRedacted ? -1 : nil)
         let currency = dict["currency"] as? String ?? (isRedacted ? "unknown" : nil)
         let paymentMethodTypeStrings = dict["payment_method_types"] as? [String] ?? (isRedacted ? [] : nil)
         let livemode = dict["livemode"] as? Bool ?? false
         let createdUnixTime = dict["created"] as? TimeInterval ?? Date().timeIntervalSince1970
-        let clientSecret = dict["client_secret"] as? String ?? (isRedacted ? "redacted" : nil)
-        
+        let clientSecret = dict["client_secret"] as? String ?? (isRedacted ? Self.RedactedClientSecret : nil)
+
         // Ensure we have all required values (either real or placeholders)
         guard let finalAmount = amount,
               let finalCurrency = currency,
@@ -359,8 +359,10 @@ extension STPPaymentIntent {
     /// When true, some fields like `amount`, `currency`, and `clientSecret` contain placeholder values
     /// and should not be used for display or business logic.
     @_spi(STP) public var isRedacted: Bool {
-        return amount == -1 || currency == "unknown" || clientSecret == "redacted"
+        return amount == -1 || currency == "unknown" || clientSecret == Self.RedactedClientSecret
     }
+
+    private static let RedactedClientSecret = "redacted_client_secret"
 }
 
 // MARK: - STPPaymentIntentEnum support
