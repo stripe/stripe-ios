@@ -45,6 +45,12 @@ extension STPAPIClient {
                 if let paymentMethodConfigurationId = intentConfig.paymentMethodConfigurationId {
                     deferredIntent["payment_method_configuration"] = ["id": paymentMethodConfigurationId]
                 }
+                if let sellerDetails = intentConfig.sellerDetails {
+                    deferredIntent["seller_details"] = [
+                        "network_id": sellerDetails.networkId,
+                        "external_id": sellerDetails.externalId
+                    ]
+                }
                 switch intentConfig.mode {
                 case .payment(let amount, let currency, let setupFutureUsage, let captureMethod, _):
                     deferredIntent["mode"] = "payment"
