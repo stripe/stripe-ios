@@ -354,7 +354,7 @@ extension STPPaymentIntent {
     }
 
     /// Indicates whether this PaymentIntent was created from a redacted API response
-    /// (typically when using a scoped client secret).
+    /// when using a scoped client secret.
     /// 
     /// When true, some fields like `amount`, `currency`, and `clientSecret` contain placeholder values
     /// and should not be used for display or business logic.

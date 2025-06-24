@@ -75,17 +75,17 @@ public class STPPaymentIntentParams: NSObject {
     /// Email address that the receipt for the resulting payment will be sent to.
     @objc public var receiptEmail: String?
 
-    /// `@YES` to save this PaymentIntent's PaymentMethod or Source to the associated Customer,
+    /// `@YES` to save this PaymentIntent’s PaymentMethod or Source to the associated Customer,
     /// if the PaymentMethod/Source is not already attached.
     /// This should be a boolean NSNumber, so that it can be `nil`
     @objc public var savePaymentMethod: NSNumber?
 
-    /// `@YES` to set this PaymentIntent's PaymentMethod as the associated Customer's default
+    /// `@YES` to set this PaymentIntent’s PaymentMethod as the associated Customer's default
     /// This should be a boolean NSNumber, so that it can be `nil`
     @objc @_spi(STP) public var setAsDefaultPM: NSNumber?
 
     /// The URL to redirect your customer back to after they authenticate or cancel
-    /// their payment on the payment method's app or site.
+    /// their payment on the payment method’s app or site.
     /// This should probably be a URL that opens your iOS app.
     @objc public var returnURL: String?
 
@@ -166,7 +166,7 @@ public class STPPaymentIntentParams: NSObject {
             returnURL = returnUrl
         }
     }
-    /// `@YES` to save this PaymentIntent's Source to the associated Customer,
+    /// `@YES` to save this PaymentIntent’s Source to the associated Customer,
     /// if the Source is not already attached.
     /// This should be a boolean NSNumber, so that it can be `nil`
     /// This property has been renamed to `savePaymentMethod` and deprecated.
