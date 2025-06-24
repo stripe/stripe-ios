@@ -442,12 +442,28 @@ extension PaymentSheetFormFactory {
             displayBillingSameAsShippingCheckbox = false
             defaultAddress = defaultBillingDetails().address.addressSectionDefaults
         }
+
+        // Determine the collection mode based on whether we have default values
+        let finalCollectionMode: AddressSectionElement.CollectionMode = {
+            // If we have default address values and the requested mode would show all fields, use allWithAutocomplete
+            if defaultBillingDetails().address != .init() {
+                switch collectionMode {
+                case .autoCompletable:
+                    return .allWithAutocomplete
+                default:
+                    return collectionMode
+                }
+            } else {
+                return collectionMode
+            }
+        }()
+
         let section = AddressSectionElement(
             title: String.Localized.billing_address_lowercase,
             countries: countries,
             addressSpecProvider: addressSpecProvider,
             defaults: defaultAddress,
-            collectionMode: collectionMode,
+            collectionMode: finalCollectionMode,
             additionalFields: .init(
                 billingSameAsShippingCheckbox: displayBillingSameAsShippingCheckbox
                     ? .enabled(isOptional: false) : .disabled
