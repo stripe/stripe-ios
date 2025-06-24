@@ -74,17 +74,8 @@ extension XCTestCase {
         nameField.tap()
         nameField.typeText("Jane Doe")
 
-        let line1Field = app.textFields["Address line 1"]
-        line1Field.tap()
-        line1Field.typeText("123 Main St")
-
-        let cityField = app.textFields["City"]
-        cityField.tap()
-        cityField.typeText("Big City")
-
-        let zipField = app.textFields["ZIP"]
-        zipField.tap()
-        zipField.typeText("12345")
+        // Use the new autocomplete extension for address
+        app.fillAddressWithAutocomplete()
 
         XCTAssertTrue(app.toolbars.buttons["Done"].waitForExistenceAndTap(timeout: 10))
     }
