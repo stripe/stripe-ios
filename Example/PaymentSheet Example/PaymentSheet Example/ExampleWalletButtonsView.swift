@@ -4,7 +4,7 @@
 //
 
 @_spi(STP) @_spi(SharedPaymentToken) import StripePayments
-@_spi(STP) @_spi(CustomerSessionBetaAccess) import StripePaymentSheet
+@_spi(STP) @_spi(SharedPaymentToken) @_spi(CustomerSessionBetaAccess) import StripePaymentSheet
 import SwiftUI
 
 struct ExampleWalletButtonsContainerView: View {
