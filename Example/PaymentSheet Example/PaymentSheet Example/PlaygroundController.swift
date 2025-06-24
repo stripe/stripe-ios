@@ -273,6 +273,7 @@ class PlaygroundController: ObservableObject {
         configuration.formSheetAction = formSheetAction
         configuration.embeddedViewDisplaysMandateText = settings.embeddedViewDisplaysMandateText == .on
         configuration.rowSelectionBehavior = settings.rowSelectionBehavior == .default ? .default : .immediateAction { [weak self] in
+            print("immediateAction callback triggered")
             self?.embeddedPlaygroundViewController?.dismiss(animated: true)
             self?.embeddedPlaygroundViewController?.updatePaymentOptionView()
         }
