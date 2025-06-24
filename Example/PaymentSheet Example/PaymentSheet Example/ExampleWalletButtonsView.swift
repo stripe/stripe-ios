@@ -181,32 +181,23 @@ class ExampleWalletButtonsModel: ObservableObject {
                 configuration.merchantDisplayName = "Example, Inc."
                 configuration.applePay = .init(
                     merchantId: "merchant.com.stripe.umbrella.test", // Be sure to use your own merchant ID here!
-                    merchantCountryCode: "US"
+                    merchantCountryCode: "US",
+                    customHandlers: .init(paymentRequestHandler: { paymentRequest in
+                        paymentRequest.requiredShippingContactFields = [.postalAddress, .emailAddress]
+                        return paymentRequest
+                    })
+                        
                 )
                 configuration.shopPay = self.shopPayConfiguration
                 configuration.customer = .init(id: customerId, customerSessionClientSecret: customerSessionClientSecret)
                 configuration.returnURL = "payments-example://stripe-redirect"
                 configuration.willUseWalletButtonsView = true
 
-//                
-//                STPPaymentHandler.sharedHandler.handleNextAction(forPaymentHashedValue: "ABC123", with: WindowAuthenticationContext(), returnURL: "my-app") { status, pi, error in
-//                    switch status {
-//                    case .succeeded:
-//                    break
-//                        // Handle success
-//                    case .canceled:
-//                        break
-//                        // Handle 3DS2/other next action cancelled
-//                    case .failed:
-//                        break
-//                        // Handle 3DS2/other next action failure
-//                    }
-//                    }
-
                 PaymentSheet.FlowController.create(
                     intentConfiguration: .init(sharedPaymentTokenSessionWithMode: .payment(amount: 1000, currency: "USD", setupFutureUsage: nil, captureMethod: .automatic, paymentMethodOptions: nil), sellerDetails: .init(networkId: "123", externalId: "abc"), paymentMethodTypes: ["card", "link", "shop_pay"], preparePaymentMethodHandler: { paymentMethod, address in
                         print(paymentMethod)
                         print(address)
+                        // Create the SPT 
                     }),
                     configuration: configuration
                 ) { [weak self] result in

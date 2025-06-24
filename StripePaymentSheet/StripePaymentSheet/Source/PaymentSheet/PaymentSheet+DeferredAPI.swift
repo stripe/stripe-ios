@@ -44,7 +44,9 @@ extension PaymentSheet {
                 // 2. Handle shared payment token sessions (preparePaymentMethodHandler) OR get Intent client secret from merchant
                 if let preparePaymentMethodHandler = intentConfig.preparePaymentMethodHandler {
                     // For shared payment token sessions, call the preparePaymentMethodHandler and complete successfully
-                    preparePaymentMethodHandler(paymentMethod, nil) // TODO: Add shipping address support if needed
+                    // Note: Shipping address is passed for Apple Pay in STPApplePayContext+PaymentSheet.swift.
+                    // For other payment methods, shipping address isn't available in this context.
+                    preparePaymentMethodHandler(paymentMethod, nil)
                     completion(.completed, STPAnalyticsClient.DeferredIntentConfirmationType.completeWithoutConfirmingIntent)
                     return
                 }
