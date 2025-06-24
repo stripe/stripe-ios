@@ -849,10 +849,31 @@ class PaymentSheetStandardLPMUIThreeTests: PaymentSheetStandardLPMUICase {
         app.typeText("00000000000")
         app.toolbars.buttons["Done"].tap() // Tap "Done", don't hit return - that's not possible using the system numpad keyboard
 
-        // Use the new autocomplete extension
-        app.fillAddressWithAutocomplete()
+        // Tap Address field to open address form
+        let addressField = app.textFields["Address"]
+        addressField.tap()
 
-        app.buttons["Pay R$50.99"].tap()
+        // Switch to manual entry mode
+        app.staticTexts["Enter address manually"].waitForExistenceAndTap()
+
+        // Fill address fields manually for Brazilian address
+        let addressLine1Field = app.textFields["Address line 1"]
+        addressLine1Field.waitForExistenceAndTap()
+        app.typeText("123 fake st" + XCUIKeyboardKey.return.rawValue)
+
+        let cityField = app.textFields["City"]
+        cityField.tap()
+        app.typeText("City" + XCUIKeyboardKey.return.rawValue)
+
+        let stateField = app.textFields["State"]
+        stateField.tap()
+        app.typeText("AC" + XCUIKeyboardKey.return.rawValue)
+
+        let postalCodeField = app.textFields["Postal code"]
+        postalCodeField.tap()
+        app.typeText("11111111" + XCUIKeyboardKey.return.rawValue)
+
+        app.buttons["Pay R$50.99"].waitForExistenceAndTap()
 
         // Boleto is a voucher-based LPM, so once you close the browser the payment is considered completed
         let webviewCloseButton = app.otherElements["TopBrowserBar"].buttons["Close"]
