@@ -48,7 +48,7 @@ extension STPAPIClient {
                 if let sellerDetails = intentConfig.sellerDetails {
                     deferredIntent["seller_details"] = [
                         "network_id": sellerDetails.networkId,
-                        "external_id": sellerDetails.externalId
+                        "external_id": sellerDetails.externalId,
                     ]
                 }
                 switch intentConfig.mode {

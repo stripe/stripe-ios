@@ -177,7 +177,7 @@ class STPAPIClient_PaymentSheetTest: XCTestCase {
 
         let deferredIntent = try XCTUnwrap(parameters["deferred_intent"] as? [String: Any])
         let sellerDetailsParams = try XCTUnwrap(deferredIntent["seller_details"] as? [String: Any])
-        
+
         XCTAssertEqual(sellerDetailsParams["network_id"] as? String, "network_123")
         XCTAssertEqual(sellerDetailsParams["external_id"] as? String, "external_456")
     }
@@ -198,7 +198,7 @@ class STPAPIClient_PaymentSheetTest: XCTestCase {
         )
 
         let deferredIntent = try XCTUnwrap(parameters["deferred_intent"] as? [String: Any])
-        
+
         XCTAssertNil(deferredIntent["seller_details"])
     }
 }
