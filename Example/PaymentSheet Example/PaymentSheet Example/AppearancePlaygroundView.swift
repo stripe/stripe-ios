@@ -85,6 +85,11 @@ struct AppearancePlaygroundView: View {
             set: { self.appearance.cornerRadius = $0 }
         )
 
+        let sheetCornerRadiusBinding = Binding(
+            get: { self.appearance.sheetCornerRadius },
+            set: { self.appearance.sheetCornerRadius = $0 }
+        )
+
         let borderWidthBinding = Binding(
             get: { self.appearance.borderWidth },
             set: { self.appearance.borderWidth = $0 }
@@ -138,6 +143,26 @@ struct AppearancePlaygroundView: View {
         let formInsetsRightBinding = Binding(
             get: { self.appearance.formInsets.trailing },
             set: { self.appearance.formInsets.trailing = $0 }
+        )
+
+        let textFieldInsetsTopBinding = Binding(
+            get: { self.appearance.textFieldInsets.top },
+            set: { self.appearance.textFieldInsets.top = $0 }
+        )
+
+        let textFieldInsetsLeftBinding = Binding(
+            get: { self.appearance.textFieldInsets.leading },
+            set: { self.appearance.textFieldInsets.leading = $0 }
+        )
+
+        let textFieldInsetsBottomBinding = Binding(
+            get: { self.appearance.textFieldInsets.bottom },
+            set: { self.appearance.textFieldInsets.bottom = $0 }
+        )
+
+        let textFieldInsetsRightBinding = Binding(
+            get: { self.appearance.textFieldInsets.trailing },
+            set: { self.appearance.textFieldInsets.trailing = $0 }
         )
 
         let sizeScaleFactorBinding = Binding(
@@ -306,6 +331,11 @@ struct AppearancePlaygroundView: View {
             set: { self.appearance.embeddedPaymentElement.row.flat.checkmark.color = UIColor($0) }
         )
 
+        let embeddedPaymentElementChevronColorBinding = Binding(
+            get: { Color(self.appearance.embeddedPaymentElement.row.flat.chevron.color) },
+            set: { self.appearance.embeddedPaymentElement.row.flat.chevron.color = UIColor($0) }
+        )
+
         let regularFonts = ["AvenirNext-Regular", "PingFangHK-Regular", "ChalkboardSE-Light"]
         let customFontOptions = ["System Default"] + regularFonts
 
@@ -332,9 +362,16 @@ struct AppearancePlaygroundView: View {
 
                 Section(header: Text("Miscellaneous")) {
                     Stepper(String(format: "cornerRadius: %.1f", appearance.cornerRadius), value: cornerRadiusBinding, in: 0...30)
+                    Stepper(String(format: "sheetCornerRadius: %.1f", appearance.sheetCornerRadius), value: sheetCornerRadiusBinding, in: 0...30)
                     Stepper(String(format: "borderWidth: %.1f", appearance.borderWidth), value: borderWidthBinding, in: 0.0...2.0, step: 0.5)
                     Stepper(String(format: "selectedBorderWidth: %.1f", appearance.selectedBorderWidth ?? appearance.borderWidth * 1.5), value: selectedBorderWidthBinding, in: 0.0...2.0, step: 0.5)
                     Stepper(String(format: "sectionSpacing: %.1f", appearance.sectionSpacing), value: $appearance.sectionSpacing, in: 0...50, step: 1.0)
+                    Stepper(String(format: "verticalModeRowPadding: %.1f", appearance.verticalModeRowPadding), value: $appearance.verticalModeRowPadding, in: 0...20, step: 0.5)
+                    Picker("Icon Style", selection: $appearance.iconStyle) {
+                        ForEach(PaymentSheet.Appearance.IconStyle.allCases, id: \.self) {
+                            Text(String(describing: $0))
+                        }
+                    }
                     VStack {
                         Text("componentShadow")
                         ColorPicker("color", selection: componentShadowColorBinding)
@@ -364,6 +401,17 @@ struct AppearancePlaygroundView: View {
                                 value: formInsetsBottomBinding, in: 0...100)
                         Stepper("right: \(Int(appearance.formInsets.trailing))",
                                 value: formInsetsRightBinding, in: 0...100)
+                    }
+                    VStack {
+                        Text("textFieldInsets")
+                        Stepper("top: \(Int(appearance.textFieldInsets.top))",
+                                value: textFieldInsetsTopBinding, in: 0...50)
+                        Stepper("left: \(Int(appearance.textFieldInsets.leading))",
+                                value: textFieldInsetsLeftBinding, in: 0...50)
+                        Stepper("bottom: \(Int(appearance.textFieldInsets.bottom))",
+                                value: textFieldInsetsBottomBinding, in: 0...50)
+                        Stepper("right: \(Int(appearance.textFieldInsets.trailing))",
+                                value: textFieldInsetsRightBinding, in: 0...50)
                     }
                 }
                 Section(header: Text("Fonts")) {
@@ -482,6 +530,11 @@ struct AppearancePlaygroundView: View {
                                 ColorPicker("checkmarkColor", selection: embeddedPaymentElementCheckmarkColorBinding)
                             } label: {
                                 Text("FlatWithCheckmark")
+                            }
+                            DisclosureGroup {
+                                ColorPicker("chevronColor", selection: embeddedPaymentElementChevronColorBinding)
+                            } label: {
+                                Text("FlatWithChevron")
                             }
                         } label: {
                             Text("Row")

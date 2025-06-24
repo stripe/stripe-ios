@@ -28,16 +28,6 @@ extension PayWithLinkViewController {
             return ElementsUI.makeErrorLabel(theme: LinkUI.appearance.asElementsTheme)
         }()
 
-        private let titleLabel: UILabel = {
-            let label = UILabel()
-            label.font = LinkUI.font(forTextStyle: .title)
-            label.adjustsFontForContentSizeCategory = true
-            label.numberOfLines = 0
-            label.textAlignment = .center
-            label.text = String.Localized.add_a_payment_method
-            return label
-        }()
-
         private lazy var confirmButton: ConfirmButton = .makeLinkButton(
             callToAction: context.callToAction,
             // Use a compact button if we are also displaying the Apple Pay button.
@@ -45,20 +35,6 @@ extension PayWithLinkViewController {
         ) { [weak self] in
             self?.confirm()
         }
-
-        private lazy var cancelButton: Button = {
-            let buttonTitle = isAddingFirstPaymentMethod
-                ? context.secondaryButtonLabel
-                : String.Localized.cancel
-
-            let configuration: Button.Configuration = shouldShowApplePayButton
-                ? .linkPlain()
-                : .linkSecondary()
-
-            let button = Button(configuration: configuration, title: buttonTitle)
-            button.addTarget(self, action: #selector(cancelButtonTapped(_:)), for: .touchUpInside)
-            return button
-        }()
 
         private lazy var separator = SeparatorLabel(text: String.Localized.or)
 
@@ -84,7 +60,6 @@ extension PayWithLinkViewController {
                 vStack.addArrangedSubview(applePayButton)
             }
 
-            vStack.addArrangedSubview(cancelButton)
             return vStack
         }()
 
@@ -130,7 +105,9 @@ extension PayWithLinkViewController {
         ) {
             self.linkAccount = linkAccount
             self.isAddingFirstPaymentMethod = isAddingFirstPaymentMethod
-            super.init(context: context)
+
+            let title: String? = isAddingFirstPaymentMethod ? nil : String.Localized.add_a_payment_method
+            super.init(context: context, navigationTitle: title)
         }
 
         required init?(coder: NSCoder) {
@@ -147,7 +124,6 @@ extension PayWithLinkViewController {
             errorLabel.isHidden = true
 
             let stackView = UIStackView(arrangedSubviews: [
-                titleLabel,
                 addPaymentMethodVC.view,
                 errorLabel,
                 buttonContainer,
@@ -155,21 +131,15 @@ extension PayWithLinkViewController {
 
             stackView.axis = .vertical
             stackView.spacing = LinkUI.contentSpacing
+            stackView.isLayoutMarginsRelativeArrangement = true
+            stackView.directionalLayoutMargins = LinkUI.contentMargins
             stackView.alignment = .center
-            stackView.setCustomSpacing(LinkUI.extraLargeContentSpacing, after: titleLabel)
             stackView.setCustomSpacing(LinkUI.extraLargeContentSpacing, after: addPaymentMethodVC.view)
             stackView.translatesAutoresizingMaskIntoConstraints = false
 
             contentView.addAndPinSubviewToSafeArea(stackView)
 
             NSLayoutConstraint.activate([
-                titleLabel.leadingAnchor.constraint(
-                    equalTo: stackView.safeAreaLayoutGuide.leadingAnchor,
-                    constant: preferredContentMargins.leading),
-                titleLabel.trailingAnchor.constraint(
-                    equalTo: stackView.safeAreaLayoutGuide.trailingAnchor,
-                    constant: -preferredContentMargins.trailing),
-
                 errorLabel.leadingAnchor.constraint(
                     equalTo: stackView.safeAreaLayoutGuide.leadingAnchor,
                     constant: preferredContentMargins.leading),
@@ -305,15 +275,6 @@ extension PayWithLinkViewController {
         @objc
         func applePayButtonTapped(_ sender: PKPaymentButton) {
             coordinator?.confirmWithApplePay()
-        }
-
-        @objc
-        func cancelButtonTapped(_ sender: Button) {
-            if isAddingFirstPaymentMethod {
-                coordinator?.cancel(shouldReturnToPaymentSheet: false)
-            } else {
-                _ = bottomSheetController?.popContentViewController()
-            }
         }
     }
 }

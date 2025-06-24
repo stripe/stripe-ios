@@ -1046,6 +1046,7 @@ extension PaymentSheet.Appearance {
         theme.borderWidth = borderWidth
         theme.cornerRadius = cornerRadius
         theme.shadow = shadow.asElementThemeShadow
+        theme.textFieldInsets = textFieldInsets
         theme.sectionSpacing = sectionSpacing
 
         var fonts = ElementsAppearance.Font()
@@ -1058,8 +1059,19 @@ extension PaymentSheet.Appearance {
 
         theme.colors = colors
         theme.fonts = fonts
-
+        theme.iconStyle = iconStyle.asElementsThemeIconStyle
         return theme
+    }
+}
+
+extension PaymentSheet.Appearance.IconStyle {
+    var asElementsThemeIconStyle: ElementsAppearance.IconStyle {
+        switch self {
+        case .filled:
+            return .filled
+        case .outlined:
+            return .outlined
+        }
     }
 }
 

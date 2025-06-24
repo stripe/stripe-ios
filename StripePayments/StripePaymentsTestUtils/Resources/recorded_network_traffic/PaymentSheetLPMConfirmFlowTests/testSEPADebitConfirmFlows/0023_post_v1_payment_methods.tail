@@ -3,30 +3,27 @@ https:\/\/api\.stripe\.com\/v1\/payment_methods$
 200
 application/json
 access-control-allow-methods: GET, HEAD, PUT, PATCH, POST, DELETE
-content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=s_42xfYkmTef4nGrikUeMXuW4gLeqDFx7VtFGxu9Wf1UObb3GrTNBOse88bDBgWaAxWF-ziSXtFvJiED
+content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=eURg79LF_4m_ENzqfmXiWEyX_oF6WH-SheEUpFMu-tunPj1bnaNRk00HWzqwPn8iNsOFVNbc4-Nk1muy
 Server: nginx
 Cache-Control: no-cache, no-store
-reporting-endpoints: coop="https://q.stripe.com/coop-report"
-x-wc: AB
+x-wc: ABGHI
 Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
-cross-origin-opener-policy-report-only: same-origin; report-to="coop"
 Access-Control-Allow-Origin: *
 stripe-should-retry: false
 x-stripe-priority-routing-enabled: true
-report-to: {"group":"coop","max_age":8640,"endpoints":[{"url":"https://q.stripe.com/coop-report"}],"include_subdomains":true}
-request-id: req_7skSBkZL9zFUbl
 x-stripe-routing-context-priority-tier: api-testmode
-Content-Length: 681
+request-id: req_nTRKUyEXjQLHgZ
+Content-Length: 701
 Vary: Origin
-Date: Wed, 05 Feb 2025 01:55:13 GMT
-original-request: req_7skSBkZL9zFUbl
+Date: Tue, 03 Jun 2025 21:03:09 GMT
+original-request: req_nTRKUyEXjQLHgZ
 stripe-version: 2020-08-27
-idempotency-key: a3969f2e-b7fb-4530-8ffb-e02403851966
+idempotency-key: befb7f8e-6432-4a7b-aad7-ce94275ee48c
 access-control-expose-headers: Request-Id, Stripe-Manage-Version, Stripe-Should-Retry, X-Stripe-External-Auth-Required, X-Stripe-Privileged-Session-Required
 access-control-max-age: 300
 access-control-allow-credentials: true
 Content-Type: application/json
-X-Stripe-Mock-Request: allow_redisplay=unspecified&billing_details\[address]\[city]=asdf&billing_details\[address]\[country]=US&billing_details\[address]\[line1]=asdf&billing_details\[address]\[line2]=&billing_details\[address]\[postal_code]=12345&billing_details\[address]\[state]=AL&billing_details\[email]=f%40z\.c&billing_details\[name]=Foo&payment_user_agent=.*&sepa_debit\[iban]=DE89370400440532013000&type=sepa_debit
+X-Stripe-Mock-Request: allow_redisplay=unspecified&billing_details\[address]\[city]=asdf&billing_details\[address]\[country]=US&billing_details\[address]\[line1]=asdf&billing_details\[address]\[line2]=&billing_details\[address]\[postal_code]=12345&billing_details\[address]\[state]=AL&billing_details\[email]=f%40z\.c&billing_details\[name]=Foo&guid=.*&muid=.*&payment_user_agent=.*&sepa_debit\[iban]=DE89370400440532013000&sid=.*&type=sepa_debit
 
 {
   "object" : "payment_method",
@@ -41,10 +38,11 @@ X-Stripe-Mock-Request: allow_redisplay=unspecified&billing_details\[address]\[ci
     },
     "branch_code" : ""
   },
-  "id" : "pm_1QoxpcFY0qyl6XeWcRXiecSu",
+  "id" : "pm_1RW1zFFY0qyl6XeWgBOPVE1R",
   "billing_details" : {
     "email" : "f@z.c",
     "phone" : null,
+    "tax_id" : null,
     "name" : "Foo",
     "address" : {
       "state" : "AL",
@@ -56,7 +54,7 @@ X-Stripe-Mock-Request: allow_redisplay=unspecified&billing_details\[address]\[ci
     }
   },
   "livemode" : false,
-  "created" : 1738720512,
+  "created" : 1748984589,
   "allow_redisplay" : "unspecified",
   "type" : "sepa_debit",
   "customer" : null

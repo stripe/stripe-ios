@@ -64,7 +64,7 @@
 
 "By joining Link, you agree to the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "С присъединяването към Link Вие се съгласявате с <terms>Условията</terms> и с <privacy>Правилата за защита на личните данни</privacy>.";
 
-"By providing your bank account details and confirming this payment, you agree to this Direct Debit Request and the <terms>Direct Debit Request service agreement</terms>, and authorise Stripe Payments Australia Pty Ltd ACN 160 180 343 Direct Debit User ID number 507156 (“Stripe”) to debit your account through the Bulk Electronic Clearing System (BECS) on behalf of %@ (the \"Merchant\") for any amounts separately communicated to you by the Merchant. You certify that you are either an account holder or an authorised signatory on the account listed above." = "Предоставяйки подробности за акаунта си и потвърждавайки това плащане, вие се съгласявате с това Искане за директен дебит и с <terms>Договора за услуга за искане на директен дебит</terms> и упълномощавате Stripe Payments Australia Pty Ltd ACN 160 180 343, потребителски идентификационен номер за директен дебит 507156 („Stripe“) да дебитира вашата сметка чрез системата за масов електронен клиринг (BECS) от името на %@ („Търговеца“) за всички суми, за които търговецът ви е съобщил отделно. Удостоверявате, че по отношение на горепосочената сметка сте титуляр на сметката или лице, имащо правото да подписва.";
+"By providing phone number and email, you agree to create a Link account subject to the Link <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Предоставяйки телефонен номер и имейл, се съгласявате да създадете акаунт в Link в съответствие с <terms>Условията</terms> и <privacy>Правилата за защита на личните данни</privacy> на Link.";
 
 "By providing your card information, you allow %@ to charge your card for future payments in accordance with their terms." = "Предоставяйки информацията за Вашата карта, позволявате на %@ да дебитира картата Ви при бъдещи плащания съгласно условията им.";
 
@@ -224,6 +224,8 @@
 
 "Save for future payments" = "Запазване за бъдещи плащания";
 
+"Save my info for faster checkout with Link" = "Запази моята информация за по-бързо финализиране на плащане с Link";
+
 "Save payment details to %@ for future purchases" = "Запазване на платежните данни в %@ за бъдещи покупки";
 
 "Save this account for future %@ payments" = "Запазете тази сметка за следващи %@ плащания";
@@ -254,8 +256,6 @@
 
 "Simple, secure one-click payments" = "Лесни и сигурни плащания с едно щракане";
 
-"Something went wrong when linking your account.\nPlease try again later." = "Възникнал е проблем при свързването на акаунта ви.\nМоля, опитайте отново по-късно.";
-
 "Stripe will deposit $0.01 to your account in 1-2 business days. Then you'll get an email with instructions to finish saving your bank account with %@." = "В рамките на 1-2 работни дни Stripe ще депозира в сметката Ви сума от 0,01 USD. След това ще получите имейл с инструкции за завършване на запазването на банковата ви сметка с %@.";
 
 "Stripe will deposit $0.01 to your account in 1-2 business days. Then you’ll get an email with instructions to complete payment to %@." = "В рамките на 1-2 работни дни Stripe ще депозира в сметката Ви сума от 0.01 USD. След това ще получите имейл с инструкции за завършване на плащането към %@.";
@@ -265,8 +265,6 @@
 "Tap to expand" = "Докоснете, за да разширите";
 
 "The IBAN you entered is incomplete." = "Въведеният IBAN е непълен.";
-
-"The IBAN you entered is invalid, \"%@\" is not a supported country code." = "Въведеният IBAN е невалиден, „%@“ не е поддържан код на държава.";
 
 "The provided verification code has expired." = "Предоставеният код за потвърждаване е изтекъл.";
 

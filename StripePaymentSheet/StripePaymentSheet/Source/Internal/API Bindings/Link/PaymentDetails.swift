@@ -292,6 +292,20 @@ extension ConsumerPaymentDetails {
         }
     }
 
+    var linkPaymentDetailsFormattedString: String? {
+        switch details {
+        case .card(let card):
+            let label = card.displayName(with: nickname) ?? card.secondaryName
+            let sublabel = card.secondaryName
+            let components = [label, sublabel].compactMap { $0 }
+            return components.joined(separator: " ")
+        case .bankAccount(let bankAccount):
+            return "\(bankAccount.name) \(paymentSheetLabel)"
+        case .unparsable:
+            return nil
+        }
+    }
+
     var cvc: String? {
         switch details {
         case .card(let card):

@@ -54,9 +54,12 @@ extension PayWithLinkViewController {
             self.confirm(confirmationExtras: confirmationExtras)
         }
 
-        private lazy var cancelButton: Button = {
+        private lazy var cancelButton: Button? = {
+            guard let cancelButtonConfiguration = viewModel.cancelButtonConfiguration else {
+                return nil
+            }
             let button = Button(
-                configuration: viewModel.cancelButtonConfiguration,
+                configuration: cancelButtonConfiguration,
                 title: viewModel.context.secondaryButtonLabel
             )
             button.addTarget(self, action: #selector(cancelButtonTapped(_:)), for: .touchUpInside)
@@ -176,7 +179,9 @@ extension PayWithLinkViewController {
                 containerView.addArrangedSubview(applePayButton)
             }
 
-            containerView.addArrangedSubview(cancelButton)
+            if let cancelButton {
+                containerView.addArrangedSubview(cancelButton)
+            }
 
             contentView.addAndPinSubview(containerView)
 
@@ -258,11 +263,6 @@ extension PayWithLinkViewController {
                 return
             }
 
-            guard canConfirmWith(paymentDetails) else {
-                handleIncompleteBillingDetails(for: paymentDetails, with: confirmationExtras)
-                return
-            }
-
             let confirmWithPaymentDetails: (ConsumerPaymentDetails) -> Void = { [self] paymentDetails in
                 if viewModel.shouldRecollectCardCVC {
                     if case let .card(card) = paymentDetails.details {
@@ -270,7 +270,9 @@ extension PayWithLinkViewController {
                     }
                 }
 
-                if context.launchedFromFlowController, let paymentMethod = viewModel.selectedPaymentMethod {
+                if isMissingRequestedBillingDetails(paymentDetails) {
+                    handleIncompleteBillingDetails(for: paymentDetails, with: confirmationExtras)
+                } else if context.launchedFromFlowController, let paymentMethod = viewModel.selectedPaymentMethod {
                     coordinator?.handlePaymentDetailsSelected(paymentMethod, confirmationExtras: confirmationExtras)
                 } else {
                     confirm(for: context.intent, with: paymentDetails, confirmationExtras: confirmationExtras)
@@ -300,14 +302,14 @@ extension PayWithLinkViewController {
             }
         }
 
-        /// Returns whether the provided `paymentDetails` contains all the required billing details.
-        private func canConfirmWith(_ paymentDetails: ConsumerPaymentDetails) -> Bool {
+        /// Returns whether the provided `paymentDetails` is missing any of the required billing details.
+        private func isMissingRequestedBillingDetails(_ paymentDetails: ConsumerPaymentDetails) -> Bool {
             let paymentDetailsAreSupported = paymentDetails.supports(
                 billingDetailsCollectionConfiguration,
                 in: linkAccount.currentSession
             )
 
-            return paymentDetailsAreSupported
+            return !paymentDetailsAreSupported
         }
 
         private func handleIncompleteBillingDetails(
@@ -672,12 +674,17 @@ extension PayWithLinkViewController.WalletViewController: LinkPaymentMethodPicke
         present(alertController, animated: true)
     }
 
-    func paymentDetailsPickerDidTapOnAddPayment(_ pickerView: LinkPaymentMethodPicker) {
+    func paymentDetailsPickerDidTapOnAddPayment(
+        _ pickerView: LinkPaymentMethodPicker,
+        sourceRect: CGRect
+    ) {
         let supportedPaymentDetailsTypes = linkAccount.supportedPaymentDetailsTypes(for: context.elementsSession)
 
         let bankAndCard = [ConsumerPaymentDetails.DetailsType.bankAccount, .card]
         if bankAndCard.allSatisfy(supportedPaymentDetailsTypes.contains) {
             let alertController = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
+            alertController.popoverPresentationController?.sourceView = pickerView
+            alertController.popoverPresentationController?.sourceRect = sourceRect
 
             let addBankAction = UIAlertAction(
                 title: STPLocalizedString(
@@ -713,16 +720,20 @@ extension PayWithLinkViewController.WalletViewController: LinkPaymentMethodPicke
     }
 
     private func addBankAccount() {
-        confirmButton.update(state: .spinnerWithInteractionDisabled)
+        confirmButton.update(state: .disabled)
+        paymentPicker.setAddButtonIsLoading(true)
         coordinator?.startFinancialConnections { [weak self] result in
-            guard case .completed = result else {
+            let completion = {
                 self?.confirmButton.update(state: .enabled)
+                self?.paymentPicker.setAddButtonIsLoading(false)
+            }
+
+            guard case .completed = result else {
+                completion()
                 return
             }
 
-            self?.reloadPaymentDetails {
-                self?.confirmButton.update(state: .enabled)
-            }
+            self?.reloadPaymentDetails(completion: completion)
         }
     }
 
@@ -740,8 +751,14 @@ extension PayWithLinkViewController.WalletViewController: LinkPaymentMethodPicke
         actions(for: index, includeCancelAction: false)
     }
 
-    func didTapOnAccountMenuItem(_ picker: LinkPaymentMethodPicker) {
+    func didTapOnAccountMenuItem(
+        _ picker: LinkPaymentMethodPicker,
+        sourceRect: CGRect
+    ) {
         let actionSheet = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
+        actionSheet.popoverPresentationController?.sourceView = picker
+        actionSheet.popoverPresentationController?.sourceRect = sourceRect
+
         actionSheet.addAction(UIAlertAction(
             title: STPLocalizedString("Log out of Link", "Title of the logout action."),
             style: .destructive,
@@ -750,10 +767,6 @@ extension PayWithLinkViewController.WalletViewController: LinkPaymentMethodPicke
             }
         ))
         actionSheet.addAction(UIAlertAction(title: String.Localized.cancel, style: .cancel))
-
-        // iPad support
-        actionSheet.popoverPresentationController?.sourceView = picker
-        actionSheet.popoverPresentationController?.sourceRect = picker.bounds
 
         present(actionSheet, animated: true)
     }

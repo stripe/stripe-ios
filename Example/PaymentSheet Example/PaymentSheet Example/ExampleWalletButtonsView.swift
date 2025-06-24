@@ -3,48 +3,70 @@
 //  PaymentSheet Example
 //
 
-@_spi(STP) @_spi(SharedPaymentToken) import StripePaymentSheet
+@_spi(STP) import StripePayments
+@_spi(STP)  @_spi(SharedPaymentToken) @_spi(CustomerSessionBetaAccess) import StripePaymentSheet
 import SwiftUI
 
+struct ExampleWalletButtonsContainerView: View {
+    @State private var email: String = ""
+    @State private var shopId: String = "shop_id_123"
+    @State private var linkInlineVerificationEnabled: Bool = PaymentSheet.LinkFeatureFlags.enableLinkInlineVerification
+
+    var body: some View {
+        if #available(iOS 16.0, *) {
+            Form {
+                Section("WalletButtonsView Configuration") {
+                    TextField("Email", text: $email)
+                        .textContentType(.emailAddress)
+                        .textInputAutocapitalization(.never)
+
+                    TextField("ShopId", text: $shopId)
+                        .textContentType(.emailAddress)
+                        .textInputAutocapitalization(.never)
+
+                    Toggle("Enable inline verification", isOn: $linkInlineVerificationEnabled)
+                        .onChange(of: linkInlineVerificationEnabled) { newValue in
+                            PaymentSheet.LinkFeatureFlags.enableLinkInlineVerification = newValue
+                        }
+
+                    NavigationLink("Launch") {
+                        ExampleWalletButtonsView(email: email, shopId: shopId)
+                    }
+                }
+            }
+        } else {
+            Text("Use >= iOS 16.0")
+        }
+    }
+}
+
 struct ExampleWalletButtonsView: View {
-    @ObservedObject var model = ExampleWalletButtonsModel()
+    @ObservedObject var model: ExampleWalletButtonsModel
     @State var isConfirmingPayment = false
+
+    init(email: String, shopId: String) {
+        self.model = ExampleWalletButtonsModel(email: email, shopId: shopId)
+    }
+
     var body: some View {
         if #available(iOS 16.0, *) {
             VStack {
                 if let flowController = model.paymentSheetFlowController {
-                    if flowController.paymentOption == nil {
-                        WalletButtonsView(flowController: flowController) { _ in
-                        }
-                    }
-                    PaymentSheet.FlowController.PaymentOptionsButton(
-                        paymentSheetFlowController: flowController,
-                        onSheetDismissed: model.onOptionsCompletion
-                    ) {
-                        ExamplePaymentOptionView(
-                            paymentOptionDisplayData: flowController.paymentOption)
-                    }
-                    Button(action: {
-                        // If you need to update the PaymentIntent's amount, you should do it here and
-                        // set the `isConfirmingPayment` binding after your update completes.
-                        isConfirmingPayment = true
-                    }) {
-                        if isConfirmingPayment {
-                            ExampleLoadingView()
-                        } else {
-                            ExamplePaymentButtonView()
-                        }
-                    }.paymentConfirmationSheet(
-                        isConfirming: $isConfirmingPayment,
-                        paymentSheetFlowController: flowController,
+                    WalletButtonsFlowControllerView(
+                        flowController: flowController,
+                        isConfirmingPayment: $isConfirmingPayment,
                         onCompletion: model.onCompletion
                     )
-                    .disabled(flowController.paymentOption == nil || isConfirmingPayment)
                 } else {
                     ExampleLoadingView()
                 }
-            }.onAppear {
+            }
+            .onAppear {
                 model.preparePaymentSheet()
+            }
+            .onDisappear {
+                model.paymentSheetFlowController = nil
+                model.paymentResult = nil
             }
             if let result = model.paymentResult {
                 ExamplePaymentStatusView(result: result)
@@ -55,28 +77,96 @@ struct ExampleWalletButtonsView: View {
     }
 }
 
-class ExampleWalletButtonsModel: ObservableObject, STPAuthenticationContext {
-    func authenticationPresentingViewController() -> UIViewController {
-        <#code#>
+@available(iOS 16.0, *)
+struct WalletButtonsFlowControllerView: View {
+    @ObservedObject var flowController: PaymentSheet.FlowController
+    @Binding var isConfirmingPayment: Bool
+    let onCompletion: (PaymentSheetResult) -> Void
+
+    var body: some View {
+        if flowController.paymentOption == nil {
+            WalletButtonsView(flowController: flowController) { _ in }
+                .padding(.horizontal)
+        }
+        PaymentSheet.FlowController.PaymentOptionsButton(
+            paymentSheetFlowController: flowController,
+            onSheetDismissed: {}
+        ) {
+            ExamplePaymentOptionView(
+                paymentOptionDisplayData: flowController.paymentOption)
+        }
+        Button(action: {
+            // If you need to update the PaymentIntent's amount, you should do it here and
+            // set the `isConfirmingPayment` binding after your update completes.
+            isConfirmingPayment = true
+        }) {
+            if isConfirmingPayment {
+                ExampleLoadingView()
+            } else {
+                ExamplePaymentButtonView()
+            }
+        }.paymentConfirmationSheet(
+            isConfirming: $isConfirmingPayment,
+            paymentSheetFlowController: flowController,
+            onCompletion: onCompletion
+        )
+        .disabled(flowController.paymentOption == nil || isConfirmingPayment)
+        if let paymentOption = flowController.paymentOption {
+            VStack {
+                Text("Payment option label: \(paymentOption.label)")
+                Text("Payment option labels.label: \(paymentOption.labels.label)")
+                if let sublabel = paymentOption.labels.sublabel {
+                    Text("Payment option labels.sublabel: \(sublabel)")
+                }
+            }
+        }
     }
-    
-    let backendCheckoutUrl = URL(string: "https://stripe-mobile-payment-sheet.glitch.me/checkout")!
+}
+
+class ExampleWalletButtonsModel: ObservableObject {
+    let email: String
+    let shopId: String
+
+    let backendCheckoutUrl = URL(string: "https://stp-mobile-playground-backend-v7.stripedemos.com/checkout")!
     @Published var paymentSheetFlowController: PaymentSheet.FlowController?
     @Published var paymentResult: PaymentSheetResult?
 
+    init(email: String, shopId: String) {
+        self.email = email
+        self.shopId = shopId
+    }
+
     func preparePaymentSheet() {
         // MARK: Fetch the PaymentIntent and Customer information from the backend
+        let body = [
+            "mode": "payment",
+            "merchant_country_code": "US",
+            "customer_email": self.email,
+            "amount": "5000",
+            "currency": "usd",
+            "customer": "new",
+            "customer_key_type": "customer_session",
+            "customer_session_component_name": "mobile_payment_element",
+            "customer_session_payment_method_save": "enabled",
+            "customer_session_payment_method_remove": "enabled",
+            "customer_session_payment_method_remove_last": "enabled",
+            "customer_session_payment_method_redisplay": "enabled",
+        ] as [String: Any]
+        let json = try! JSONSerialization.data(withJSONObject: body, options: [])
+
         var request = URLRequest(url: backendCheckoutUrl)
         request.httpMethod = "POST"
+        request.httpBody = json
+        request.setValue("application/json", forHTTPHeaderField: "Content-type")
         let task = URLSession.shared.dataTask(
             with: request,
             completionHandler: { (data, _, error) in
                 guard let data = data,
                     let json = try? JSONSerialization.jsonObject(with: data, options: [])
                         as? [String: Any],
-                    let customerId = json["customer"] as? String,
-                    let customerEphemeralKeySecret = json["ephemeralKey"] as? String,
-                    let paymentIntentClientSecret = json["paymentIntent"] as? String,
+                    let customerId = json["customerId"] as? String,
+                    let customerSessionClientSecret = json["customerSessionClientSecret"] as? String,
+                    let paymentIntentClientSecret = json["intentClientSecret"] as? String,
                     let publishableKey = json["publishableKey"] as? String
                 else {
                     // Handle error
@@ -87,54 +177,38 @@ class ExampleWalletButtonsModel: ObservableObject, STPAuthenticationContext {
 
                 // MARK: Create a PaymentSheet instance
                 var configuration = PaymentSheet.Configuration()
+                configuration.defaultBillingDetails.email = self.email
                 configuration.merchantDisplayName = "Example, Inc."
                 configuration.applePay = .init(
                     merchantId: "merchant.com.stripe.umbrella.test", // Be sure to use your own merchant ID here!
                     merchantCountryCode: "US"
                 )
-                configuration.customer = .init(
-                    id: customerId, ephemeralKeySecret: customerEphemeralKeySecret)
+                configuration.shopPay = self.shopPayConfiguration
+                configuration.customer = .init(id: customerId, customerSessionClientSecret: customerSessionClientSecret)
                 configuration.returnURL = "payments-example://stripe-redirect"
                 configuration.willUseWalletButtonsView = true
-let intentConfig = PaymentSheet.IntentConfiguration.init(
-    sharedPaymentTokenSessionWithMode:
-            .payment(amount: 100,
-                     currency: "USD",
-                     setupFutureUsage: nil,
-                     captureMethod: .manual,
-                     paymentMethodOptions: nil),
-    sellerDetails: .init(networkId: "@network", externalId: "abc-123-456"),
-    paymentMethodTypes: ["card", "link"]
-) { paymentMethod, shippingAddress in
-    let paymentMethodID = paymentMethod.stripeId
-    let line1 = shippingAddress?.line1 // etc
-    // Send payment method ID and shipping address info to your backend
-}
-                
-                
-STPPaymentHandler.sharedHandler.handleNextAction(forPaymentHashedValue: "ABC123", with: self, returnURL: "my-app") { status, pi, error in
-    switch status {
-    case .succeeded:
-        // Handle success
-    case .canceled:
-        // Handle 3DS2/other next action cancelled
-    case .failed:
-        // Handle 3DS2/other next action failure
-    }
-}
-                
-                
-                PaymentSheet.FlowController.create(intentConfiguration: intentConfig, configuration: configuration) { result in
-                    switch result {
-                    case .failure(let error):
-                        // Handle FlowController creation error
-                    case .success(let paymentSheetFlowController):
-                        print("PaymentSheetFlowController created successfully")
-                    }
-                }
-                
+
+//                
+//                STPPaymentHandler.sharedHandler.handleNextAction(forPaymentHashedValue: "ABC123", with: WindowAuthenticationContext(), returnURL: "my-app") { status, pi, error in
+//                    switch status {
+//                    case .succeeded:
+//                    break
+//                        // Handle success
+//                    case .canceled:
+//                        break
+//                        // Handle 3DS2/other next action cancelled
+//                    case .failed:
+//                        break
+//                        // Handle 3DS2/other next action failure
+//                    }
+//                    }
+                                
+                       
                 PaymentSheet.FlowController.create(
-                    paymentIntentClientSecret: paymentIntentClientSecret,
+                    intentConfiguration: .init(sharedPaymentTokenSessionWithMode: .payment(amount: 1000, currency: "USD", setupFutureUsage: nil, captureMethod: .automatic, paymentMethodOptions: nil), sellerDetails: .init(networkId: "123", externalId: "abc"), paymentMethodTypes: ["card", "link", "shop_pay"], preparePaymentMethodHandler: { paymentMethod, address in
+                        print(paymentMethod)
+                        print(address)
+                    }),
                     configuration: configuration
                 ) { [weak self] result in
                     switch result {
@@ -150,11 +224,6 @@ STPPaymentHandler.sharedHandler.handleNextAction(forPaymentHashedValue: "ABC123"
         task.resume()
     }
 
-    func onOptionsCompletion() {
-        // Tell our observer to refresh
-        objectWillChange.send()
-    }
-
     func onCompletion(result: PaymentSheetResult) {
         self.paymentResult = result
 
@@ -164,5 +233,155 @@ STPPaymentHandler.sharedHandler.handleNextAction(forPaymentHashedValue: "ABC123"
             self.paymentSheetFlowController = nil
             preparePaymentSheet()
         }
+    }
+    var shopPayConfiguration: PaymentSheet.ShopPayConfiguration {
+        let singleBusinessDay = PaymentSheet.ShopPayConfiguration.DeliveryEstimate.DeliveryEstimateUnit(value: 1, unit: .business_day)
+        let fiveBusinessDays = PaymentSheet.ShopPayConfiguration.DeliveryEstimate.DeliveryEstimateUnit(value: 5, unit: .business_day)
+        let sevenBusinessDays = PaymentSheet.ShopPayConfiguration.DeliveryEstimate.DeliveryEstimateUnit(value: 7, unit: .business_day)
+
+        let handlers = PaymentSheet.ShopPayConfiguration.Handlers(
+            shippingMethodUpdateHandler: { shippingRateSelected, completion in
+                // Process the selected shipping method
+                // For example, you might recalculate totals based on the shipping rate
+                let selectedRate = shippingRateSelected.shippingRate
+                print("User selected shipping rate: \(selectedRate.displayName) with cost \(selectedRate.amount)")
+
+                // Create the update with the new line items and available shipping rates
+                let update = PaymentSheet.ShopPayConfiguration.ShippingRateUpdate(
+                    lineItems: [.init(name: "Subtotal", amount: 200),
+                                .init(name: "Tax", amount: 200),
+                                .init(name: "Shipping", amount: selectedRate.amount), ],
+                    shippingRates: [
+                        PaymentSheet.ShopPayConfiguration.ShippingRate(
+                            id: "standard",
+                            amount: 500,
+                            displayName: "Standard Shipping",
+                            deliveryEstimate: PaymentSheet.ShopPayConfiguration.DeliveryEstimate(
+                                minimum: .init(value: 3, unit: .business_day),
+                                maximum: .init(value: 5, unit: .business_day)
+                            )
+                        ),
+                        PaymentSheet.ShopPayConfiguration.ShippingRate(
+                            id: "express",
+                            amount: 1000,
+                            displayName: "Express Shipping",
+                            deliveryEstimate: .init(
+                                minimum: .init(value: 1, unit: .business_day),
+                                maximum: .init(value: 2, unit: .business_day)
+                            )
+                        ),
+                    ]
+                )
+
+                // Return the update to the Shop Pay UI
+                completion(update)
+            },
+            shippingContactUpdateHandler: { shippingContactSelected, completion in
+                // Process the selected shipping contact information
+                let name = shippingContactSelected.name
+                let address = shippingContactSelected.address
+
+                print("User selected shipping to: \(name) in \(address.city), \(address.state)")
+                // Check if we can ship to this location
+                let canShipToLocation = self.isValidShippingLocation(address)
+
+                if canShipToLocation {
+                    // Create available shipping rates based on the location
+                    let shippingRates = self.getShippingRatesForLocation(address)
+
+                    // Return the update with new line items and shipping rates
+                    let update = PaymentSheet.ShopPayConfiguration.ShippingContactUpdate(
+                        lineItems: [.init(name: "Subtotal", amount: 200),
+                                    .init(name: "Tax", amount: 200),
+                                    .init(name: "Shipping", amount: shippingRates.first!.amount), ],
+                        shippingRates: shippingRates
+                    )
+
+                    completion(update)
+                } else {
+                    // If we can't ship to this location, pass nil to reject it
+                    completion(nil)
+                }
+            }
+        )
+
+        return PaymentSheet.ShopPayConfiguration(shippingAddressRequired: true,
+                                                 lineItems: [.init(name: "Golden Potato", amount: 500), .init(name: "Silver Potato", amount: 345), .init(name: "Tax", amount: 200)],
+                                                 shippingRates: [.init(id: "express", amount: 1099, displayName: "Overnight", deliveryEstimate: .init(minimum: singleBusinessDay, maximum: singleBusinessDay)),
+                                                                 .init(id: "standard", amount: 0, displayName: "Free", deliveryEstimate: .init(minimum: fiveBusinessDays, maximum: sevenBusinessDays)),
+                                                                ],
+                                                 shopId: self.shopId,
+                                                 handlers: handlers)
+    }
+    func isValidShippingLocation(_ address: PaymentSheet.ShopPayConfiguration.PartialAddress) -> Bool {
+        return true
+    }
+    func getShippingRatesForLocation(_ address: PaymentSheet.ShopPayConfiguration.PartialAddress) -> [PaymentSheet.ShopPayConfiguration.ShippingRate] {
+        return [
+            PaymentSheet.ShopPayConfiguration.ShippingRate(
+                id: "standard",
+                amount: 500,
+                displayName: "Standard Shipping",
+                deliveryEstimate: .init(
+                    minimum: .init(value: 3, unit: .business_day),
+                    maximum: .init(value: 5, unit: .business_day)
+                )
+            ),
+            PaymentSheet.ShopPayConfiguration.ShippingRate(
+                id: "express",
+                amount: 1000,
+                displayName: "Express Shipping",
+                deliveryEstimate: .init(
+                    minimum: .init(value: 1, unit: .business_day),
+                    maximum: .init(value: 2, unit: .business_day)
+                )
+            ),
+        ]
+    }
+}
+
+class WindowAuthenticationContext: NSObject, STPAuthenticationContext {
+    public func authenticationPresentingViewController() -> UIViewController {
+        UIWindow.visibleViewController ?? UIViewController()
+    }
+}
+
+extension UIWindow {
+    static var visibleViewController: UIViewController? {
+        UIApplication.shared.stp_hackilyFumbleAroundUntilYouFindAKeyWindow()?.rootViewController?.findTopMostPresentedViewController()
+    }
+}
+
+extension UIApplication {
+    func stp_hackilyFumbleAroundUntilYouFindAKeyWindow() -> UIWindow? {
+        // We really shouldn't do this: Try to find a way to get the user to pass us a window instead.
+        #if canImport(CompositorServices)
+        let windows = connectedScenes
+            .compactMap { ($0 as? UIWindowScene)?.windows }
+            .flatMap { $0 }
+            .sorted { firstWindow, _ in firstWindow.isKeyWindow }
+        return windows.first
+        #else
+        return windows.first { $0.isKeyWindow }
+        #endif
+    }
+}
+
+extension UIViewController {
+    /// Returns the topmost view controller in the hierarchy.
+    /// - Returns: The topmost `UIViewController`, or `self` if no higher controller is found.
+    func findTopMostPresentedViewController() -> UIViewController {
+        if let nav = self as? UINavigationController {
+            // Use visibleViewController for navigation stacks
+            return nav.visibleViewController?.findTopMostPresentedViewController() ?? nav
+        } else if let tab = self as? UITabBarController {
+            // Use selectedViewController for tab controllers
+            return tab.selectedViewController?.findTopMostPresentedViewController() ?? tab
+        } else if let presented = presentedViewController {
+            // Recurse for any presented controllers
+            return presented.findTopMostPresentedViewController()
+        }
+        
+        return self
     }
 }

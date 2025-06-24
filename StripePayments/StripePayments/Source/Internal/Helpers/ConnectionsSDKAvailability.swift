@@ -20,7 +20,8 @@ import UIKit
         as? FinancialConnectionsSDKInterface.Type
 
     @_spi(STP) public static var fcLiteKillswitchEnabled: Bool = false
-    @_spi(STP) public static var shouldPreferFCLite: Bool = false
+    @_spi(STP) public static var localFcLiteOverride: Bool = false
+    @_spi(STP) public static var remoteFcLiteOverride: Bool = false
 
     private static var FCLiteClassIfEnabled: FinancialConnectionsSDKInterface.Type? {
         guard !fcLiteKillswitchEnabled else {
@@ -75,7 +76,8 @@ import UIKit
             return StubbedConnectionsSDKInterface()
         }
 
-        let klass: FinancialConnectionsSDKInterface.Type? = shouldPreferFCLite
+        let fcLiteOverrideEnabled = localFcLiteOverride || remoteFcLiteOverride
+        let klass: FinancialConnectionsSDKInterface.Type? = fcLiteOverrideEnabled
             ? (FCLiteClassIfEnabled ?? FinancialConnectionsSDKClass)
             : (FinancialConnectionsSDKClass ?? FCLiteClassIfEnabled) // Default
 

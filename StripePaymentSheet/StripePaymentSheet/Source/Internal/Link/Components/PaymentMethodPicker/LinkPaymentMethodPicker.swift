@@ -26,9 +26,15 @@ protocol LinkPaymentMethodPickerDelegate: AnyObject {
         sourceRect: CGRect
     )
 
-    func paymentDetailsPickerDidTapOnAddPayment(_ picker: LinkPaymentMethodPicker)
+    func paymentDetailsPickerDidTapOnAddPayment(
+        _ picker: LinkPaymentMethodPicker,
+        sourceRect: CGRect
+    )
 
-    func didTapOnAccountMenuItem(_ picker: LinkPaymentMethodPicker)
+    func didTapOnAccountMenuItem(
+        _ picker: LinkPaymentMethodPicker,
+        sourceRect: CGRect
+    )
 }
 
 protocol LinkPaymentMethodPickerDataSource: AnyObject {
@@ -225,11 +231,13 @@ private extension LinkPaymentMethodPicker {
     }
 
     @objc func onAddPaymentButtonTapped(_ sender: AddButton) {
-        delegate?.paymentDetailsPickerDidTapOnAddPayment(self)
+        let sourceRect = sender.convert(sender.bounds, to: self)
+        delegate?.paymentDetailsPickerDidTapOnAddPayment(self, sourceRect: sourceRect)
     }
 
     @objc func didTapOnAccountMenuItem(_ sender: AddButton) {
-        delegate?.didTapOnAccountMenuItem(self)
+        let sourceRect = sender.convert(sender.bounds, to: self)
+        delegate?.didTapOnAccountMenuItem(self, sourceRect: sourceRect)
     }
 
 }
@@ -288,6 +296,10 @@ extension LinkPaymentMethodPicker {
         }
 
         cell.isLoading = false
+    }
+
+    func setAddButtonIsLoading(_ isLoading: Bool) {
+        addPaymentMethodButton.isLoading = isLoading
     }
 
     private func reloadDataIfNeeded() {

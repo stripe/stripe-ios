@@ -780,7 +780,8 @@ public class STPPaymentHandler: NSObject {
             .promptPay,
             .swish,
             .twint,
-            .multibanco:
+            .multibanco,
+            .shopPay:
             return false
 
         case .unknown:

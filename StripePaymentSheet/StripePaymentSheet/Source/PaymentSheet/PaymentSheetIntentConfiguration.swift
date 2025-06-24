@@ -6,6 +6,7 @@
 //
 
 import Foundation
+@_spi(STP) import StripeCore
 
 public extension PaymentSheet {
     /// Contains information needed to render PaymentSheet
@@ -82,7 +83,7 @@ public extension PaymentSheet {
         ///   - paymentMethodTypes: The payment method types for the intent
         ///   - onBehalfOf: The account (if any) for which the funds of the intent are intended
         ///   - paymentMethodConfigurationId: Configuration ID (if any) for the selected payment method configuration
-        ///   - confirmHandler: A handler called with payment details when the user taps the primary button (e.g. the "Pay" or "Continue" button).
+        ///   - preparePaymentMethodHandler: A handler called with payment details when the user taps the primary button (e.g. the "Pay" or "Continue" button).
         ///   - requireCVCRecollection: If true, PaymentSheet recollects CVC for saved cards before confirmation (PaymentIntent only)
         @_spi(SharedPaymentToken) public init(sharedPaymentTokenSessionWithMode mode: Mode,
                     sellerDetails: SellerDetails?,
@@ -100,7 +101,8 @@ public extension PaymentSheet {
             self.sellerDetails = sellerDetails
             self.confirmHandler = { paymentMethod, shouldSavePaymentMethod, callback in
                 // fail immediately, this should never be called
-                let error = PaymentSheetError.intentConfigurationValidationFailed(message: "PaymentSheet.IntentConfiguration for shared payment token sessions should not call confirmHandler")
+                stpAssertionFailure("PaymentSheet.IntentConfiguration for SPT sessions should not call confirmHandler")
+                let error = PaymentSheetError.intentConfigurationValidationFailed(message: "Internal Shared Payment Token session error. Please file an issue at https://github.com/stripe/stripe-ios.")
                 callback(.failure(error))
             }
             validate()

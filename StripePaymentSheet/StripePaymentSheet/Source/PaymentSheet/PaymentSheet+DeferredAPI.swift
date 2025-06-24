@@ -41,7 +41,15 @@ extension PaymentSheet {
                     confirmType = .new(params: params, paymentOptions: paymentOptions, paymentMethod: paymentMethod, shouldSave: shouldSave, shouldSetAsDefaultPM: shouldSetAsDefaultPM)
                 }
 
-                // 2. Get Intent client secret from merchant
+                // 2. Handle shared payment token sessions (preparePaymentMethodHandler) OR get Intent client secret from merchant
+                if let preparePaymentMethodHandler = intentConfig.preparePaymentMethodHandler {
+                    // For shared payment token sessions, call the preparePaymentMethodHandler and complete successfully
+                    preparePaymentMethodHandler(paymentMethod, nil) // TODO: Add shipping address support if needed
+                    completion(.completed, STPAnalyticsClient.DeferredIntentConfirmationType.completeWithoutConfirmingIntent)
+                    return
+                }
+
+                // Get Intent client secret from merchant
                 let clientSecret = try await fetchIntentClientSecretFromMerchant(intentConfig: intentConfig,
                                                                                  paymentMethod: paymentMethod,
                                                                                  shouldSavePaymentMethod: confirmType.shouldSave)

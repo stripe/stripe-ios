@@ -25,6 +25,24 @@ class LinkNavigationBarSnapshotTests: STPSnapshotTestCase {
         verify(backSut, identifier: "BackButton")
     }
 
+    func testTitle() {
+        let sut = makeSUT(title: "Test title")
+        sut.setStyle(.back(showAdditionalButton: false))
+        verify(sut)
+    }
+
+    func testLongTitle() {
+        let sut = makeSUT(title: "Test title that is pretty long")
+        sut.setStyle(.back(showAdditionalButton: false))
+        verify(sut)
+    }
+
+    func testTruncatingTitle() {
+        let sut = makeSUT(title: "Test title that is pretty long and should wrap")
+        sut.setStyle(.back(showAdditionalButton: false))
+        verify(sut)
+    }
+
     func verify(
         _ sut: UIView,
         identifier: String? = nil,
@@ -58,7 +76,9 @@ extension LinkNavigationBarSnapshotTests {
         )
     }
 
-    fileprivate func makeSUT() -> LinkSheetNavigationBar {
-        LinkSheetNavigationBar(isTestMode: false, appearance: .init())
+    fileprivate func makeSUT(title: String? = nil) -> LinkSheetNavigationBar {
+        let sut = LinkSheetNavigationBar(isTestMode: false, appearance: .init())
+        sut.title = title
+        return sut
     }
 }

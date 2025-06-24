@@ -39,6 +39,9 @@ import UIKit
         /// The width of the focused ring's border.
         let itemFocusRingThickness: CGFloat
 
+        /// The background color of the focused field.
+        let itemFocusBackgroundColor: UIColor?
+
         public init(
             numberOfDigits: Int = 6,
             itemSpacing: CGFloat = 6,
@@ -46,7 +49,8 @@ import UIKit
             font: UIFont = .systemFont(ofSize: 20),
             itemCornerRadius: CGFloat = 8,
             itemHeight: CGFloat = 60,
-            itemFocusRingThickness: CGFloat = 2
+            itemFocusRingThickness: CGFloat = 2,
+            itemFocusBackgroundColor: UIColor? = nil
         ) {
             self.numberOfDigits = numberOfDigits
             self.itemSpacing = itemSpacing
@@ -55,6 +59,7 @@ import UIKit
             self.itemCornerRadius = itemCornerRadius
             self.itemHeight = itemHeight
             self.itemFocusRingThickness = itemFocusRingThickness
+            self.itemFocusBackgroundColor = itemFocusBackgroundColor
         }
     }
 
@@ -99,7 +104,8 @@ import UIKit
                 cornerRadius: configuration.itemCornerRadius,
                 focusRingThickness: configuration.itemFocusRingThickness,
                 font: configuration.font,
-                itemHeight: configuration.itemHeight
+                itemHeight: configuration.itemHeight,
+                focusBackgroundColor: configuration.itemFocusBackgroundColor
             ),
             theme: theme
         )
@@ -677,19 +683,22 @@ private extension OneTimeCodeTextField {
             let focusRingThickness: CGFloat
             let font: UIFont
             let itemHeight: CGFloat
+            let focusBackgroundColor: UIColor?
 
             init(
                 borderWidth: CGFloat = 1,
                 cornerRadius: CGFloat,
                 focusRingThickness: CGFloat = 2,
                 font: UIFont,
-                itemHeight: CGFloat
+                itemHeight: CGFloat,
+                focusBackgroundColor: UIColor? = nil
             ) {
                 self.borderWidth = borderWidth
                 self.cornerRadius = cornerRadius
                 self.focusRingThickness = focusRingThickness
                 self.font = font
                 self.itemHeight = itemHeight
+                self.focusBackgroundColor = focusBackgroundColor
             }
         }
 
@@ -803,6 +812,22 @@ private extension OneTimeCodeTextField {
                 showCaret()
             } else {
                 hideCaret()
+            }
+
+            // Animate background color change when field becomes active
+            if isActive, let backgroundColor = configuration.focusBackgroundColor {
+                let backgroundAnimation = CABasicAnimation(keyPath: "backgroundColor")
+                backgroundAnimation.fromValue = borderLayer.backgroundColor
+                backgroundAnimation.toValue = backgroundColor.cgColor
+                backgroundAnimation.duration = 0.2
+                backgroundAnimation.timingFunction = CAMediaTimingFunction(name: .easeInEaseOut)
+                backgroundAnimation.fillMode = .forwards
+                backgroundAnimation.isRemovedOnCompletion = false
+                borderLayer.add(backgroundAnimation, forKey: "backgroundColor")
+            } else {
+                // Reset background color when inactive
+                borderLayer.removeAnimation(forKey: "backgroundColor")
+                updateColors()
             }
 
             CATransaction.commit()

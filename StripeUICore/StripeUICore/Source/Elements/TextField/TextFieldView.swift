@@ -107,7 +107,7 @@ class TextFieldView: UIView {
             } else if let accessoryView = accessoryView {
                 accessoryContainerView.addAndPinSubview(accessoryView)
                 accessoryView.setContentHuggingPriority(.required, for: .horizontal)
-                hStack.updateTrailingAnchor(constant: -ElementsUI.contentViewInsets.trailing)
+                hStack.updateTrailingAnchor(constant: -viewModel.theme.textFieldInsets.trailing)
             }
         }
     }
@@ -181,7 +181,7 @@ class TextFieldView: UIView {
                                                                        for: .horizontal)
         hStack.alignment = .center
         hStack.spacing = 6
-        addAndPinSubview(hStack, insets: ElementsUI.contentViewInsets)
+        addAndPinSubview(hStack, insets: viewModel.theme.textFieldInsets)
     }
 
     @objc private func clearText() {

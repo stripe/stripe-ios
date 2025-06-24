@@ -48,6 +48,16 @@ public extension PaymentSheet {
         /// Describes the appearance of the Embedded Mobile Payment Element
         public var embeddedPaymentElement: EmbeddedPaymentElement = EmbeddedPaymentElement()
 
+        /// The corner radius used for Mobile Payment Element sheets
+        /// - Note: The behavior of this property is consistent with the behavior of corner radius on `CALayer`
+        @_spi(AppearanceAPIAdditionsPreview)
+        public var sheetCornerRadius: CGFloat = 12.0
+
+        /// The insets used for all text fields in PaymentSheet
+        /// - Note: Controls the internal padding within text fields for more manual control over text field spacing
+        @_spi(AppearanceAPIAdditionsPreview)
+        public var textFieldInsets: NSDirectionalEdgeInsets = NSDirectionalEdgeInsets(top: 4, leading: 11, bottom: 4, trailing: 11)
+
         /// Describes the padding used for all forms
         public var formInsets: NSDirectionalEdgeInsets = PaymentSheetUI.defaultSheetMargins
 
@@ -55,6 +65,24 @@ public extension PaymentSheet {
         /// - Note: This spacing is applied between different conceptual sections of the form, not between individual input fields within a section.
         @_spi(AppearanceAPIAdditionsPreview)
         public var sectionSpacing: CGFloat = 12.0
+
+        /// The visual style for icons displayed in PaymentSheet
+        @_spi(AppearanceAPIAdditionsPreview)
+        public var iconStyle: IconStyle = .filled
+
+        /// The vertical padding for floating payment method rows in vertical (non-embedded) mode
+        /// - Note: Increasing this value increases the height of each floating payment method row
+        /// - Note: This only applies to non-embedded integrations (i.e., regular PaymentSheet)
+        @_spi(AppearanceAPIAdditionsPreview)
+        public var verticalModeRowPadding: CGFloat = 4.0 {
+            didSet {
+                guard verticalModeRowPadding >= 0.0 else {
+                    assertionFailure("verticalModeRowPadding must be a non-negative value")
+                    verticalModeRowPadding = 0.0
+                    return
+                }
+            }
+        }
 
         // MARK: Fonts
 
@@ -285,6 +313,9 @@ public extension PaymentSheet.Appearance {
                 case floatingButton
                 /// A flat style with a checkmark
                 case flatWithCheckmark
+                /// A flat style with a chevron
+                /// Note that EmbeddedPaymentElement.Configuration.RowSelectionBehavior must be set to `immediateAction` to use this style.
+                case flatWithChevron
             }
 
             /// The display style of the row
@@ -310,7 +341,7 @@ public extension PaymentSheet.Appearance {
                 public var separatorColor: UIColor?
 
                 /// The insets of the separator line between rows
-                /// - Note: If `nil`, defaults to `UIEdgeInsets(top: 0, left: 30, bottom: 0, right: 0)` for style of `flatWithRadio` and to `UIEdgeInsets.zero` for style of `flatWithCheckmark`.
+                /// - Note: If `nil`, defaults to `UIEdgeInsets(top: 0, left: 30, bottom: 0, right: 0)` for style of `flatWithRadio` and to `UIEdgeInsets.zero` for styles of `flatWithCheckmark` and `flatWithChevron`.
                 public var separatorInsets: UIEdgeInsets?
 
                 /// Determines if the top separator is visible at the top of the Embedded Mobile Payment Element
@@ -324,6 +355,9 @@ public extension PaymentSheet.Appearance {
 
                 /// Appearance settings for the checkmark
                 public var checkmark: Checkmark = Checkmark()
+
+                /// Appearance settings for the chevron
+                public var chevron: Chevron = Chevron()
 
                 /// Describes the appearance of the radio button
                 public struct Radio: Equatable {
@@ -342,6 +376,13 @@ public extension PaymentSheet.Appearance {
                     /// - Note: If `nil`, defaults to `appearance.color.primaryColor`
                     public var color: UIColor?
                 }
+
+                /// Describes the appearance of the chevron
+                /// Note that EmbeddedPaymentElement.Configuration.RowSelectionBehavior must be set to `immediateAction` to use this style.
+                public struct Chevron: Equatable {
+                    /// The color of the chevron icon
+                    public var color: UIColor = .systemGray
+                }
             }
 
             /// Describes the appearance of the floating button style payment method row
@@ -350,6 +391,15 @@ public extension PaymentSheet.Appearance {
                 public var spacing: CGFloat = 12.0
             }
         }
+    }
+
+    /// Defines the visual style of icons in PaymentSheet
+    @_spi(AppearanceAPIAdditionsPreview)
+    enum IconStyle: CaseIterable {
+        /// Display icons with a filled appearance
+        case filled
+        /// Display icons with an outlined appearance
+        case outlined
     }
 }
 
