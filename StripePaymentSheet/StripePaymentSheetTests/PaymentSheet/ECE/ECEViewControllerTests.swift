@@ -58,10 +58,10 @@ class ECEViewControllerTests: XCTestCase {
 
         // Check webview properties
         let webView = webViews.first!
-        XCTAssertEqual(webView.frame.width, 500) // TODO: Will be 1x1 in production
-        XCTAssertEqual(webView.frame.height, 500)
+        XCTAssertEqual(webView.frame.width, 1)
+        XCTAssertEqual(webView.frame.height, 1)
         XCTAssertFalse(webView.isHidden)
-        XCTAssertEqual(webView.alpha, 1.0) // TODO: Will be 0.01 in production
+        XCTAssertTrue(webView.alpha <= 0.01)
         XCTAssertEqual(webView.customUserAgent, ECEViewController.FakeSafariUserAgent)
     }
 

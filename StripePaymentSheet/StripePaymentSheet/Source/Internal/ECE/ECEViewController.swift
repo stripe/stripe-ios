@@ -240,7 +240,7 @@ class ECEViewController: UIViewController {
         }
         #endif
         webView.isHidden = false // Should not be hidden, so that we actually render it
-        webView.alpha = 1.00 // TODO: Set this to 0.01 (or 0.00 if we can get away with it without Safari optimizing it out?)
+        webView.alpha = 0.01 // TODO: Attempt to set to 0.00 if we can get away with it without Safari optimizing it out
 
         webView.customUserAgent = Self.FakeSafariUserAgent
     }
