@@ -487,61 +487,55 @@ struct AppearancePlaygroundView: View {
 
                 Section(header: Text("EmbeddedPaymentElement")) {
                     DisclosureGroup {
+                        Picker("Style", selection: $appearance.embeddedPaymentElement.row.style) {
+                            ForEach(PaymentSheet.Appearance.EmbeddedPaymentElement.Row.Style.allCases, id: \.self) {
+                                Text(String(describing: $0))
+                            }
+                        }
+
+                        Stepper("additionalInsets: \(Int(appearance.embeddedPaymentElement.row.additionalInsets))",
+                                value: $appearance.embeddedPaymentElement.row.additionalInsets, in: 0...40)
+
                         DisclosureGroup {
-                            Picker("Style", selection: $appearance.embeddedPaymentElement.row.style) {
-                                ForEach(PaymentSheet.Appearance.EmbeddedPaymentElement.Row.Style.allCases, id: \.self) {
-                                    Text(String(describing: $0))
-                                }
-                            }
-
-                            Stepper("additionalInsets: \(Int(appearance.embeddedPaymentElement.row.additionalInsets))",
-                                    value: $appearance.embeddedPaymentElement.row.additionalInsets, in: 0...40)
-
-                            DisclosureGroup {
-                                Stepper("separatorThickness: \(Int(appearance.embeddedPaymentElement.row.flat.separatorThickness))",
-                                        value: $appearance.embeddedPaymentElement.row.flat.separatorThickness, in: 0...10)
-                                ColorPicker("separatorColor", selection: embeddedPaymentElementFlatSeparatorColorBinding)
-                                Stepper("leftSeparatorInset: \(Int(appearance.embeddedPaymentElement.row.flat.separatorInsets?.left ?? 0))",
-                                        value: embeddedPaymentElementFlatLeftSeparatorInset, in: -40...40)
-                                Stepper("rightSeparatorInset: \(Int(appearance.embeddedPaymentElement.row.flat.separatorInsets?.right ?? 0))",
-                                        value: embeddedPaymentElementFlatRightSeparatorInset, in: -40...40)
-                                Toggle("topSeparatorEnabled", isOn: $appearance.embeddedPaymentElement.row.flat.topSeparatorEnabled)
-                                Toggle("bottomSeparatorEnabled", isOn: $appearance.embeddedPaymentElement.row.flat.bottomSeparatorEnabled)
-
-                                DisclosureGroup {
-                                    ColorPicker("selectedColor", selection: embeddedPaymentElementFlatRadioColorSelected)
-                                    ColorPicker("unselectedColor", selection: embeddedPaymentElementFlatRadioColorUnselected)
-                                } label: {
-                                    Text("Radio")
-                                }
-
-                            } label: {
-                                Text("FlatWithRadio")
-                            }
+                            Stepper("separatorThickness: \(Int(appearance.embeddedPaymentElement.row.flat.separatorThickness))",
+                                    value: $appearance.embeddedPaymentElement.row.flat.separatorThickness, in: 0...10)
+                            ColorPicker("separatorColor", selection: embeddedPaymentElementFlatSeparatorColorBinding)
+                            Stepper("leftSeparatorInset: \(Int(appearance.embeddedPaymentElement.row.flat.separatorInsets?.left ?? 0))",
+                                    value: embeddedPaymentElementFlatLeftSeparatorInset, in: -40...40)
+                            Stepper("rightSeparatorInset: \(Int(appearance.embeddedPaymentElement.row.flat.separatorInsets?.right ?? 0))",
+                                    value: embeddedPaymentElementFlatRightSeparatorInset, in: -40...40)
+                            Toggle("topSeparatorEnabled", isOn: $appearance.embeddedPaymentElement.row.flat.topSeparatorEnabled)
+                            Toggle("bottomSeparatorEnabled", isOn: $appearance.embeddedPaymentElement.row.flat.bottomSeparatorEnabled)
 
                             DisclosureGroup {
-                                Stepper("Spacing: \(Int(appearance.embeddedPaymentElement.row.floating.spacing))",
-                                        value: $appearance.embeddedPaymentElement.row.floating.spacing, in: 0...40)
-
+                                ColorPicker("selectedColor", selection: embeddedPaymentElementFlatRadioColorSelected)
+                                ColorPicker("unselectedColor", selection: embeddedPaymentElementFlatRadioColorUnselected)
                             } label: {
-                                Text("FloatingButton")
+                                Text("Radio")
                             }
                             DisclosureGroup {
                                 ColorPicker("checkmarkColor", selection: embeddedPaymentElementCheckmarkColorBinding)
                             } label: {
-                                Text("FlatWithCheckmark")
+                                Text("Checkmark")
                             }
                             DisclosureGroup {
                                 ColorPicker("chevronColor", selection: embeddedPaymentElementChevronColorBinding)
                             } label: {
-                                Text("FlatWithChevron")
+                                Text("Chevron")
                             }
                         } label: {
-                            Text("Row")
+                            Text("Flat")
                         }
 
+                        DisclosureGroup {
+                            Stepper("Spacing: \(Int(appearance.embeddedPaymentElement.row.floating.spacing))",
+                                    value: $appearance.embeddedPaymentElement.row.floating.spacing, in: 0...40)
+
+                        } label: {
+                            Text("FloatingButton")
+                        }
                     } label: {
-                        Text("EmbeddedPaymentElement")
+                        Text("EmbeddedPaymentElement.Row")
                     }
                 }
 

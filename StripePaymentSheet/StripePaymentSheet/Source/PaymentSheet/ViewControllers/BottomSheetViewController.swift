@@ -221,6 +221,9 @@ class BottomSheetViewController: UIViewController, BottomSheetPresentable {
         contentContainerView.addArrangedSubview(self.contentViewController.view)
         if let presentationController = rootParent.presentationController as? BottomSheetPresentationController {
             presentationController.forceFullHeight = newContentViewController.requiresFullScreen
+
+            // Force layout pass to apply safe area insets
+            presentationController.containerView?.layoutIfNeeded()
         }
 
         contentContainerView.layoutIfNeeded()
