@@ -7,7 +7,7 @@
 import StripePaymentsTestUtils
 
 @testable @_spi(STP) import StripePayments
-@testable @_spi(STP) import StripePaymentSheet
+@testable @_spi(STP) @_spi(CustomerSessionBetaAccess) @_spi(SharedPaymentToken) import StripePaymentSheet
 import WebKit
 import XCTest
 
@@ -32,6 +32,7 @@ class ECEIntegrationTests: XCTestCase {
         mockConfiguration = PaymentSheet.Configuration()
         mockConfiguration.apiClient = apiClient
         mockConfiguration.merchantDisplayName = "Test Merchant"
+        mockConfiguration.customer = .init(id: "cus_123", customerSessionClientSecret: "cuss_12345")
 
         // Setup Shop Pay configuration
         shopPayConfiguration = PaymentSheet.ShopPayConfiguration(
@@ -41,6 +42,7 @@ class ECEIntegrationTests: XCTestCase {
             lineItems: [
                 PaymentSheet.ShopPayConfiguration.LineItem(name: "Test Product", amount: 2000),
                 PaymentSheet.ShopPayConfiguration.LineItem(name: "Another Product", amount: 1500),
+                PaymentSheet.ShopPayConfiguration.LineItem(name: "Shipping", amount: 1000),
             ],
             shippingRates: [
                 PaymentSheet.ShopPayConfiguration.ShippingRate(
@@ -60,9 +62,10 @@ class ECEIntegrationTests: XCTestCase {
         // Create a real flow controller
         mockConfiguration.shopPay = shopPayConfiguration
         let intentConfig = PaymentSheet.IntentConfiguration(
-            mode: .payment(amount: 1000, currency: "USD"),
-            confirmHandler: { _, _, completion in
-                completion(.success("pm_123"))
+            sharedPaymentTokenSessionWithMode: .payment(amount: 1000, currency: "USD"),
+            sellerDetails: nil,
+            preparePaymentMethodHandler: { _, _ in
+                // no-op
             }
         )
         let intent = Intent.deferredIntent(intentConfig: intentConfig)
@@ -161,7 +164,7 @@ class ECEIntegrationTests: XCTestCase {
         XCTAssertNil(rateResponse["error"])
 
         // Simulate payment confirmation
-        let paymentDetails = [
+        let paymentDetails: [String: Any] = [
             "billingDetails": [
                 "email": "john.doe@example.com",
                 "phone": "+14155551234",
@@ -169,6 +172,11 @@ class ECEIntegrationTests: XCTestCase {
             ],
             "shippingAddress": shippingAddress,
             "shippingRate": shippingRate,
+            "paymentMethodOptions": [
+                "shopPay": [
+                    "externalSourceId": "st_zxd123456",
+                ],
+            ],
         ]
 
         let confirmResponse = try await presenter.eceView(
@@ -189,7 +197,9 @@ class ECEIntegrationTests: XCTestCase {
 
     func testShippingAddressValidation() async throws {
         // Given
-        let eceViewController = ECEViewController(apiClient: apiClient)
+        let eceViewController = ECEViewController(apiClient: apiClient,
+                                                  shopId: "shop_id_123",
+                                                  customerSessionClientSecret: "cuss_12345")
         eceViewController.expressCheckoutWebviewDelegate = presenter
 
         var validationCallCount = 0
@@ -309,7 +319,9 @@ class ECEIntegrationTests: XCTestCase {
 
     func testWebViewMessageHandling() async throws {
         // Given
-        let eceViewController = ECEViewController(apiClient: apiClient)
+        let eceViewController = ECEViewController(apiClient: apiClient,
+                                                  shopId: "shop_id_123",
+                                                  customerSessionClientSecret: "cuss_12345")
         eceViewController.expressCheckoutWebviewDelegate = presenter
         eceViewController.loadViewIfNeeded()
 
@@ -345,7 +357,9 @@ class ECEIntegrationTests: XCTestCase {
 
     func testAmountCalculation() {
         // Given
-        let eceViewController = ECEViewController(apiClient: apiClient)
+        let eceViewController = ECEViewController(apiClient: apiClient,
+                                                  shopId: "shop_id_123",
+                                                  customerSessionClientSecret: "cuss_12345")
 
         // Test with different configurations
 
@@ -381,7 +395,8 @@ class ECEIntegrationTests: XCTestCase {
         let configMultiShipping = PaymentSheet.ShopPayConfiguration(
             shippingAddressRequired: true,
             lineItems: [
-                PaymentSheet.ShopPayConfiguration.LineItem(name: "Item", amount: 1000)
+                PaymentSheet.ShopPayConfiguration.LineItem(name: "Item", amount: 1000),
+                PaymentSheet.ShopPayConfiguration.LineItem(name: "cheap shipping", amount: 500),
             ],
             shippingRates: [
                 PaymentSheet.ShopPayConfiguration.ShippingRate(id: "cheap", amount: 500, displayName: "Cheap", deliveryEstimate: nil),
@@ -408,7 +423,9 @@ class ECEIntegrationTests: XCTestCase {
     func testShippingAddressChangeHandler_MultipleCalls() async throws {
         // Given
         let apiClient = STPAPIClient(publishableKey: "pk_test_123")
-        let eceViewController = ECEViewController(apiClient: apiClient)
+        let eceViewController = ECEViewController(apiClient: apiClient,
+                                                  shopId: "shop_id_123",
+                                                  customerSessionClientSecret: "cuss_12345")
 
         // Create flow controller with dynamic shipping configuration
         let expectation = expectation(description: "Handler should be called")
@@ -569,7 +586,8 @@ class ECEIntegrationTests: XCTestCase {
         let configMultiShipping = PaymentSheet.ShopPayConfiguration(
             shippingAddressRequired: true,
             lineItems: [
-                PaymentSheet.ShopPayConfiguration.LineItem(name: "Item", amount: 1000)
+                PaymentSheet.ShopPayConfiguration.LineItem(name: "Item", amount: 1000),
+                PaymentSheet.ShopPayConfiguration.LineItem(name: "cheap shipping", amount: 500),
             ],
             shippingRates: [
                 PaymentSheet.ShopPayConfiguration.ShippingRate(id: "cheap", amount: 500, displayName: "Cheap", deliveryEstimate: nil),
@@ -599,7 +617,9 @@ class ECEIntegrationTests: XCTestCase {
             configuration: configMultiShipping
         )
 
-        let mockECEVC = ECEViewController(apiClient: apiClient)
+        let mockECEVC = ECEViewController(apiClient: apiClient,
+                                          shopId: "shop_id_123",
+                                          customerSessionClientSecret: "cuss_12345")
 
         // When/Then
         // Test 1: With standard shipping
@@ -623,7 +643,9 @@ extension ECEIntegrationTests {
 
     func testMessageHandlingPerformance() {
         // Given
-        let eceViewController = ECEViewController(apiClient: apiClient)
+        let eceViewController = ECEViewController(apiClient: apiClient,
+                                                  shopId: "shop_id_123",
+                                                  customerSessionClientSecret: "cuss_12345")
         eceViewController.expressCheckoutWebviewDelegate = presenter
 
         let shippingAddress: [String: Any] = [

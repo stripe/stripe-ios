@@ -3,7 +3,12 @@
 //  StripePaymentSheet
 //
 
-let ECEHTML = """
+struct ECEIndexHTML {
+    let shopId: String
+    let customerSessionClientSecret: String
+
+    var ECEHTML: String {
+"""
 <!DOCTYPE html>
 <html>
   <head>
@@ -36,6 +41,13 @@ let ECEHTML = """
           amount: window.NATIVE_AMOUNT_TOTAL,
           currency: "usd",
           payment_method_types: ["card", "link", "shop_pay"],
+          customerSessionClientSecret: "\(customerSessionClientSecret)",
+          paymentMethodOptions: {
+            shop_pay: {
+              shop_id: "\(shopId)",
+            },
+          },
+          __elementsInitSource: 'native_sdk',
         };
 
       console.log("Initializing stripe elements with options", options);
@@ -84,6 +96,7 @@ let ECEHTML = """
         } else {
           expressCheckoutDiv.style.visibility = "initial";
         }
+        expressCheckoutElement._sendNativeSdkClick({paymentMethodType: 'shop_pay'})
       });
 
       expressCheckoutElement.on("click", async function (event) {
@@ -215,7 +228,7 @@ let ECEHTML = """
               shippingRate: event.shippingRate,
               mode: mode,
               captureMethod: captureMethod,
-              //paymentMethod: paymentMethod,
+              paymentMethodOptions: event._paymentMethodOptions,
             };
 
             const response = await window.NativeStripeECE.confirmPayment(paymentDetails);
@@ -245,3 +258,5 @@ let ECEHTML = """
   </body>
 </html>
 """
+    }
+}
