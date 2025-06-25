@@ -218,7 +218,7 @@ public class STPPaymentIntentParams: NSObject {
     }
 
     static internal let isClientSecretValidRegex: NSRegularExpression? = try? NSRegularExpression(
-        pattern: "^pi_[^_]+_secret_[^_]+$",
+        pattern: "^pi_[^_]+_(scoped_)?secret_[^_]+$",
         options: []
     )
 

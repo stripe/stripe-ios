@@ -25,7 +25,9 @@ class ECEViewControllerSnapshotTests: STPSnapshotTestCase {
 
         mockAPIClient = STPAPIClient(publishableKey: "pk_test_123")
         mockDelegate = MockExpressCheckoutWebviewDelegate()
-        sut = ECEViewController(apiClient: mockAPIClient)
+        sut = ECEViewController(apiClient: mockAPIClient,
+                                shopId: "shop_id_123",
+                                customerSessionClientSecret: "cuss_12345")
         sut.expressCheckoutWebviewDelegate = mockDelegate
 
         navigationController = UINavigationController(rootViewController: sut)

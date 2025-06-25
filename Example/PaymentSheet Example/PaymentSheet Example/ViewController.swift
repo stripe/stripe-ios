@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import StripePaymentSheet
 import SwiftUI
 import UIKit
 
@@ -25,7 +26,7 @@ class ViewController: UIViewController {
     }
     @IBSegueAction func showSwiftUITestPlayground(_ coder: NSCoder) -> UIViewController? {
         if #available(iOS 15.0, *) {
-            return UIHostingController(coder: coder, rootView: PaymentSheetTestPlayground(settings: PlaygroundController.settingsFromDefaults() ?? .defaultValues()))
+            return UIHostingController(coder: coder, rootView: PaymentSheetTestPlayground(settings: PlaygroundController.settingsFromDefaults() ?? .defaultValues(), appearance: PlaygroundController.appearanceFromDefaults() ?? PaymentSheet.Appearance.default))
         } else {
             fatalError(">= iOS 15.0 required")
         }
