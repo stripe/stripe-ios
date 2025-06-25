@@ -470,9 +470,6 @@ class ExampleWalletButtonsModel: ObservableObject {
                 let canShipToLocation = self?.isValidShippingLocation(address) ?? false
 
                 if canShipToLocation {
-                    // Create available shipping rates based on the location
-                    let shippingRates = self?.getShippingRatesForLocation(address) ?? []
-
                     // Return the update with new line items and shipping rates
                     let update = PaymentSheet.ShopPayConfiguration.ShippingContactUpdate(
                         lineItems: [.init(name: "Golden Potato", amount: 500),
