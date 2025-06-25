@@ -433,11 +433,13 @@ extension CustomerAddPaymentMethodViewController: AutoCompleteViewControllerDele
             // Switch to manual entry mode and set the line1 text
             addressSectionElement.collectionMode = .allWithAutocomplete
             addressSectionElement.line1?.setText(line1)
+            addressSectionElement.line1?.beginEditing()
         }
     }
 
     func didSelectAddress(_ address: PaymentSheet.Address?) {
         guard let addressSectionElement = addressSectionElement else { return }
+        self.view.endEditing(true)
 
         // Dismiss the autocomplete view controller
         presentedViewController?.dismiss(animated: true) {
@@ -459,7 +461,6 @@ extension CustomerAddPaymentMethodViewController: AutoCompleteViewControllerDele
             addressSectionElement.city?.setText(address.city ?? "")
             addressSectionElement.postalCode?.setText(address.postalCode ?? "")
             addressSectionElement.state?.setRawData(address.state ?? "")
-            addressSectionElement.state?.view.resignFirstResponder()
         }
     }
 }
