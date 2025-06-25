@@ -4,7 +4,7 @@
 //
 
 @_spi(STP) @_spi(SharedPaymentToken) import StripePayments
-@_spi(STP) @_spi(SharedPaymentToken) @_spi(CustomerSessionBetaAccess) import StripePaymentSheet
+@_spi(STP) @_spi(SharedPaymentToken) @_spi(CustomerSessionBetaAccess) @_spi(AppearanceAPIAdditionsPreview) import StripePaymentSheet
 import SwiftUI
 
 struct ExampleWalletButtonsContainerView: View {
@@ -12,6 +12,8 @@ struct ExampleWalletButtonsContainerView: View {
     @State private var shopId: String = "shop_id_123"
     @State private var linkInlineVerificationEnabled: Bool = PaymentSheet.LinkFeatureFlags.enableLinkInlineVerification
     @State private var useSPTTestBackend: Bool = false
+    @State private var appearance: PaymentSheet.Appearance = PaymentSheet.Appearance()
+    @State private var showingAppearancePlayground = false
 
     var body: some View {
         if #available(iOS 16.0, *) {
@@ -31,9 +33,20 @@ struct ExampleWalletButtonsContainerView: View {
                         }
 
                     Toggle("Use SPT test backend", isOn: $useSPTTestBackend)
-
+                    
+                    Button("Customize Appearance") {
+                        showingAppearancePlayground = true
+                    }
+                    
                     NavigationLink("Launch") {
-                        ExampleWalletButtonsView(email: email, shopId: shopId, useSPTTestBackend: useSPTTestBackend)
+                        ExampleWalletButtonsView(email: email, shopId: shopId, useSPTTestBackend: useSPTTestBackend, appearance: appearance)
+                    }
+                }
+            }.sheet(isPresented: $showingAppearancePlayground) {
+                if #available(iOS 14.0, *) {
+                    AppearancePlaygroundView(appearance: appearance) { updatedAppearance in
+                        appearance = updatedAppearance
+                        showingAppearancePlayground = false
                     }
                 }
             }
@@ -47,8 +60,8 @@ struct ExampleWalletButtonsView: View {
     @ObservedObject var model: ExampleWalletButtonsModel
     @State var isConfirmingPayment = false
 
-    init(email: String, shopId: String, useSPTTestBackend: Bool) {
-        self.model = ExampleWalletButtonsModel(email: email, shopId: shopId, useSPTTestBackend: useSPTTestBackend)
+    init(email: String, shopId: String, useSPTTestBackend: Bool, appearance: PaymentSheet.Appearance = PaymentSheet.Appearance()) {
+        self.model = ExampleWalletButtonsModel(email: email, shopId: shopId, useSPTTestBackend: useSPTTestBackend, appearance: appearance)
     }
 
     var body: some View {
@@ -138,6 +151,7 @@ class ExampleWalletButtonsModel: ObservableObject {
     let email: String
     let shopId: String
     let useSPTTestBackend: Bool
+    let appearance: PaymentSheet.Appearance
 
     let backendCheckoutUrl = URL(string: "https://stp-mobile-playground-backend-v7.stripedemos.com/checkout")!
     let SPTTestCustomerUrl = URL(string: "https://rough-lying-carriage.glitch.me/customer")!
@@ -147,10 +161,11 @@ class ExampleWalletButtonsModel: ObservableObject {
     @Published var isProcessing: Bool = false
     @Published var debugLogs: [String] = []
 
-    init(email: String, shopId: String, useSPTTestBackend: Bool) {
+    init(email: String, shopId: String, useSPTTestBackend: Bool, appearance: PaymentSheet.Appearance) {
         self.email = email
         self.shopId = shopId
         self.useSPTTestBackend = useSPTTestBackend
+        self.appearance = appearance
     }
 
     func addDebugLog(_ message: String) {
@@ -238,6 +253,7 @@ class ExampleWalletButtonsModel: ObservableObject {
                 configuration.customer = .init(id: customerId, customerSessionClientSecret: customerSessionClientSecret)
                 configuration.returnURL = "payments-example://stripe-redirect"
                 configuration.willUseWalletButtonsView = true
+                configuration.appearance = self?.appearance ?? PaymentSheet.Appearance()
 
                 self?.addDebugLog("Creating PaymentSheet FlowController with original backend...")
                 PaymentSheet.FlowController.create(
@@ -309,10 +325,11 @@ class ExampleWalletButtonsModel: ObservableObject {
                 configuration.customer = .init(id: customerId, customerSessionClientSecret: customerSessionClientSecret)
                 configuration.returnURL = "payments-example://stripe-redirect"
                 configuration.willUseWalletButtonsView = true
+                configuration.appearance = self?.appearance ?? PaymentSheet.Appearance()
 
                 self?.addDebugLog("Creating PaymentSheet FlowController...")
                 PaymentSheet.FlowController.create(
-                    intentConfiguration: .init(sharedPaymentTokenSessionWithMode: .payment(amount: 9999, currency: "USD", setupFutureUsage: nil, captureMethod: .automatic, paymentMethodOptions: nil), sellerDetails: .init(networkId: "internal", externalId: "stripe_test_merchant"), paymentMethodTypes: ["card"], preparePaymentMethodHandler: { [weak self] paymentMethod, address in
+                    intentConfiguration: .init(sharedPaymentTokenSessionWithMode: .payment(amount: 9999, currency: "USD", setupFutureUsage: nil, captureMethod: .automatic, paymentMethodOptions: nil), sellerDetails: .init(networkId: "internal", externalId: "stripe_test_merchant"), paymentMethodTypes: ["card", "link", "shop_pay"], preparePaymentMethodHandler: { [weak self] paymentMethod, address in
                         self?.isProcessing = true
                         self?.addDebugLog("PaymentMethod prepared: \(paymentMethod.stripeId)")
                         self?.addDebugLog("Address: \(address)")
@@ -395,9 +412,11 @@ class ExampleWalletButtonsModel: ObservableObject {
                             }
                         }
                     }
-                } else if let clientSecret = json["clientSecret"] as? String {
-                    self?.addDebugLog("Payment intent created with client secret: \(clientSecret)")
+                } else {
+                    let paymentIntentID = json["paymentIntent"] as? String
+                    self?.addDebugLog("Payment intent created: \(paymentIntentID)")
                     DispatchQueue.main.async {
+                        self?.isProcessing = false
                         self?.paymentResult = .completed
                     }
                 }
