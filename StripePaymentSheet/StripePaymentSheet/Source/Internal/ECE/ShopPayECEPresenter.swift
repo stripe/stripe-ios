@@ -14,26 +14,26 @@ import WebKit
 class ShopPayECEPresenter: NSObject, UIAdaptivePresentationControllerDelegate {
     private let flowController: PaymentSheet.FlowController
     private let shopPayConfiguration: PaymentSheet.ShopPayConfiguration
-    private let customerSessionClientSecret: String
     private var confirmHandler: ((PaymentSheetResult) -> Void)?
     private var eceViewController: ECEViewController?
     private weak var presentingViewController: UIViewController?
 
     init(
         flowController: PaymentSheet.FlowController,
-        configuration: PaymentSheet.ShopPayConfiguration,
-        customerSessionClientSecret: String
+        configuration: PaymentSheet.ShopPayConfiguration
     ) {
         self.flowController = flowController
         self.shopPayConfiguration = configuration
-        self.customerSessionClientSecret = customerSessionClientSecret
         super.init()
     }
 
     func present(from viewController: UIViewController,
                  confirmHandler: @escaping (PaymentSheetResult) -> Void) {
+        guard case .customerSession(let customerSessionClientSecret) = flowController.configuration.customer?.customerAccessProvider else {
+            stpAssertionFailure("Integration Error: CustomerSessions is required")
+            return
+        }
         self.presentingViewController = viewController
-
         let eceVC = ECEViewController(apiClient: flowController.configuration.apiClient,
                                       shopId: shopPayConfiguration.shopId,
                                       customerSessionClientSecret: customerSessionClientSecret)
@@ -65,10 +65,7 @@ class ShopPayECEPresenter: NSObject, UIAdaptivePresentationControllerDelegate {
 @available(iOS 16.0, *)
 extension ShopPayECEPresenter: ExpressCheckoutWebviewDelegate {
     func amountForECEView(_ eceView: ECEViewController) -> Int {
-        let itemsTotal = shopPayConfiguration.lineItems.reduce(0) { $0 + $1.amount }
-        // add default shipping amount if available
-        let defaultShippingAmount = shopPayConfiguration.shippingRates.first?.amount ?? 0
-        return itemsTotal + defaultShippingAmount
+        return shopPayConfiguration.lineItems.reduce(0) { $0 + $1.amount }
     }
 
     func eceView(_ eceView: ECEViewController, didReceiveShippingAddressChange shippingAddress: [String: Any]) async throws -> [String: Any] {
