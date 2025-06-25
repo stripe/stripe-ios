@@ -33,11 +33,11 @@ struct ExampleWalletButtonsContainerView: View {
                         }
 
                     Toggle("Use SPT test backend", isOn: $useSPTTestBackend)
-                    
+
                     Button("Customize Appearance") {
                         showingAppearancePlayground = true
                     }
-                    
+
                     NavigationLink("Launch") {
                         ExampleWalletButtonsView(email: email, shopId: shopId, useSPTTestBackend: useSPTTestBackend, appearance: appearance)
                     }
