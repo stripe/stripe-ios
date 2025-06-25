@@ -171,6 +171,7 @@ class PaymentMethodFormViewController: UIViewController {
     }
 
     /// Sets up the autocomplete button callback for any AddressSectionElement in the form
+    /// TODO(porter) Make this more generic for when we have shipping address section in here too
     private func setupAddressSectionAutocompleteCallback() {
         let formElement = (form as? PaymentMethodElementWrapper<FormElement>)?.element ?? form
         if let addressSection = formElement.getAllUnwrappedSubElements()
@@ -178,14 +179,9 @@ class PaymentMethodFormViewController: UIViewController {
             // Store reference to the address section element
             self.addressSectionElement = addressSection
             addressSection.didTapAutocompleteButton = { [weak self] in
-                self?.handleAutocompleteButtonTap()
+                self?.presentAutocomplete()
             }
         }
-    }
-
-    /// Handles when the autocomplete button is tapped in the AddressSectionElement
-    private func handleAutocompleteButtonTap() {
-        presentAutocomplete()
     }
 
     /// Presents the autocomplete view controller
@@ -206,7 +202,6 @@ class PaymentMethodFormViewController: UIViewController {
         )
         autoCompleteViewController.delegate = self
 
-        // Present modally since we might not be in a navigation controller
         let navigationController = UINavigationController(rootViewController: autoCompleteViewController)
         present(navigationController, animated: true)
     }

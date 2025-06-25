@@ -77,7 +77,6 @@ extension XCTestCase {
         // Check if autocomplete Address field exists, otherwise use individual fields
         let addressField = app.textFields["Address"]
         if addressField.exists {
-            // Use the new autocomplete extension for address
             app.fillAddressWithAutocomplete()
         } else {
             // Fill individual address fields when defaults are present

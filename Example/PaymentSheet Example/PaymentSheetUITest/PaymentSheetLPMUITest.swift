@@ -745,7 +745,6 @@ class PaymentSheetStandardLPMUIThreeTests: PaymentSheetStandardLPMUICase {
         app.typeText("108800")
         app.typeText("00012345")
 
-        // Use the new autocomplete extension
         app.fillAddressWithAutocomplete()
         let payButton = app.buttons["Pay £50.99"]
         XCTAssertFalse(payButton.isEnabled)

@@ -884,7 +884,6 @@ class EmbeddedUITests: PaymentSheetUITestCase {
         app.typeText("test@example.com" + XCUIKeyboardKey.return.rawValue)
         app.typeText("AT611904300234573201" + XCUIKeyboardKey.return.rawValue)
 
-        // Use the new autocomplete extension
         app.fillAddressWithAutocomplete()
         app.buttons["Pay €50.99"].tap()
 

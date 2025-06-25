@@ -308,7 +308,6 @@ extension XCTestCase {
         ibanField.forceTapWhenHittableInTestCase(self)
         app.typeText(iban)
 
-        // Use the new autocomplete extension
         app.fillAddressWithAutocomplete(context: context, needsDoneButton: true)
 
         if let checkboxText {
