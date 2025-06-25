@@ -427,6 +427,17 @@ extension STPAPIClient {
             endpoint: endpoint,
             parameters: parameters
         ) { paymentIntent, _, error in
+            // If using a scoped client secret, inject the client secret here
+            let paymentIntent = {
+                if let paymentIntent = paymentIntent, paymentIntent.isRedacted {
+                    // If the payment intent was retrieved successfully, we need to
+                    // inject the client secret into the payment intent object.
+                    var responseFields = paymentIntent.allResponseFields
+                    responseFields["client_secret"] = secret
+                    return STPPaymentIntent.decodedObject(fromAPIResponse: responseFields)
+                }
+                return paymentIntent
+            }()
             completion(paymentIntent, error)
         }
     }
