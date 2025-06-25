@@ -4,6 +4,7 @@
 //
 
 import Foundation
+import StripePayments
 
 // MARK: - Shipping Address Types
 
@@ -137,6 +138,13 @@ struct ECEDeliveryEstimateUnit: Codable {
     }
 }
 
+struct ECEPaymentMethodOptions: Codable {
+    struct ShopPay: Codable {
+        let externalSourceId: String
+    }
+    let shopPay: ShopPay?
+}
+
 // MARK: - Line Item Types
 
 /// Line item shown in the payment interface
@@ -219,6 +227,9 @@ struct ECEConfirmEventData: Codable {
 
     /// Selected shipping rate
     let shippingRate: ECEShippingRate?
+
+    /// Payment method options
+    let paymentMethodOptions: ECEPaymentMethodOptions?
 }
 
 /// Shipping address data from confirm event
@@ -228,6 +239,19 @@ struct ECEShippingAddressData: Codable {
 
     /// The full shipping address
     let address: ECEFullAddress?
+}
+extension ECEShippingAddressData {
+    func toSTPAddress() -> STPAddress {
+        let stpAddress = STPAddress()
+        stpAddress.name = name
+        stpAddress.line1 = address?.line1
+        stpAddress.line2 = address?.line2
+        stpAddress.city = address?.city
+        stpAddress.state = address?.state
+        stpAddress.postalCode = address?.postalCode
+        stpAddress.country = address?.country
+        return stpAddress
+    }
 }
 
 // MARK: - Express Payment Type

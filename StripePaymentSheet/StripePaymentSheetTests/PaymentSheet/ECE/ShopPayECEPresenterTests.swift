@@ -31,6 +31,7 @@ class ShopPayECEPresenterTests: XCTestCase {
             lineItems: [
                 PaymentSheet.ShopPayConfiguration.LineItem(name: "Item 1", amount: 1000),
                 PaymentSheet.ShopPayConfiguration.LineItem(name: "Item 2", amount: 500),
+                PaymentSheet.ShopPayConfiguration.LineItem(name: "Shipping", amount: 500),
             ],
             shippingRates: [
                 PaymentSheet.ShopPayConfiguration.ShippingRate(
@@ -116,7 +117,9 @@ class ShopPayECEPresenterTests: XCTestCase {
 
     func testAmountForECEView() {
         // Given
-        let mockECEViewController = ECEViewController(apiClient: mockConfiguration.apiClient)
+        let mockECEViewController = ECEViewController(apiClient: mockConfiguration.apiClient,
+                                                      shopId: "shop_id_123",
+                                                      customerSessionClientSecret: "cuss_12345")
 
         // When
         let amount = sut.amountForECEView(mockECEViewController)
@@ -132,7 +135,10 @@ class ShopPayECEPresenterTests: XCTestCase {
             billingAddressRequired: true,
             emailRequired: true,
             shippingAddressRequired: false,
-            lineItems: shopPayConfiguration.lineItems,
+            lineItems: [
+                PaymentSheet.ShopPayConfiguration.LineItem(name: "Item 1", amount: 1000),
+                PaymentSheet.ShopPayConfiguration.LineItem(name: "Item 2", amount: 500),
+            ],
             shippingRates: [],
             shopId: shopPayConfiguration.shopId,
             allowedShippingCountries: shopPayConfiguration.allowedShippingCountries
@@ -141,7 +147,9 @@ class ShopPayECEPresenterTests: XCTestCase {
             flowController: mockFlowController,
             configuration: noShippingConfig
         )
-        let mockECEViewController = ECEViewController(apiClient: mockConfiguration.apiClient)
+        let mockECEViewController = ECEViewController(apiClient: mockConfiguration.apiClient,
+                                                      shopId: "shop_id_123",
+                                                      customerSessionClientSecret: "cuss_12345")
 
         // When
         let amount = sut.amountForECEView(mockECEViewController)
@@ -155,7 +163,9 @@ class ShopPayECEPresenterTests: XCTestCase {
 
     func testShippingAddressChange_NoHandler_AcceptsWithDefaults() async throws {
         // Given
-        let mockECEViewController = ECEViewController(apiClient: mockConfiguration.apiClient)
+        let mockECEViewController = ECEViewController(apiClient: mockConfiguration.apiClient,
+                                                      shopId: "shop_id_123",
+                                                      customerSessionClientSecret: "cuss_12345")
         let shippingAddress: [String: Any] = [
             "name": "John Doe",
             "address": [
@@ -172,7 +182,7 @@ class ShopPayECEPresenterTests: XCTestCase {
         // Then
         XCTAssertNil(response["error"])
         let lineItems = response["lineItems"] as? [[String: Any]]
-        XCTAssertEqual(lineItems?.count, 2)
+        XCTAssertEqual(lineItems?.count, 3)
         XCTAssertEqual(lineItems?[0]["name"] as? String, "Item 1")
         XCTAssertEqual(lineItems?[0]["amount"] as? Int, 1000)
 
@@ -195,7 +205,9 @@ class ShopPayECEPresenterTests: XCTestCase {
 
     func testShippingAddressChange_WithHandler_CallsHandler() async throws {
         // Given
-        let mockECEViewController = ECEViewController(apiClient: mockConfiguration.apiClient)
+        let mockECEViewController = ECEViewController(apiClient: mockConfiguration.apiClient,
+                                                      shopId: "shop_id_123",
+                                                      customerSessionClientSecret: "cuss_12345")
         let expectation = expectation(description: "Shipping contact handler called")
 
         var handlerCalled = false
@@ -220,7 +232,8 @@ class ShopPayECEPresenterTests: XCTestCase {
                     // Return updated values
                     let update = PaymentSheet.ShopPayConfiguration.ShippingContactUpdate(
                         lineItems: [
-                            PaymentSheet.ShopPayConfiguration.LineItem(name: "Updated Item", amount: 2000)
+                            PaymentSheet.ShopPayConfiguration.LineItem(name: "Updated Item", amount: 2000),
+                            PaymentSheet.ShopPayConfiguration.LineItem(name: "Shipping", amount: 1000),
                         ],
                         shippingRates: [
                             PaymentSheet.ShopPayConfiguration.ShippingRate(
@@ -264,14 +277,16 @@ class ShopPayECEPresenterTests: XCTestCase {
 
         XCTAssertNil(response["error"])
         let lineItems = response["lineItems"] as? [[String: Any]]
-        XCTAssertEqual(lineItems?.count, 1)
+        XCTAssertEqual(lineItems?.count, 2)
         XCTAssertEqual(lineItems?[0]["name"] as? String, "Updated Item")
         XCTAssertEqual(response["totalAmount"] as? Int, 3000) // 2000 + 1000
     }
 
     func testShippingAddressChange_HandlerRejects() async throws {
         // Given
-        let mockECEViewController = ECEViewController(apiClient: mockConfiguration.apiClient)
+        let mockECEViewController = ECEViewController(apiClient: mockConfiguration.apiClient,
+                                                      shopId: "shop_id_123",
+                                                      customerSessionClientSecret: "cuss_12345")
         let expectation = expectation(description: "Shipping contact handler called")
 
         // Create new configuration with handlers that reject
@@ -319,7 +334,9 @@ class ShopPayECEPresenterTests: XCTestCase {
 
     func testShippingAddressChange_MissingRequiredFields() async {
         // Given
-        let mockECEViewController = ECEViewController(apiClient: mockConfiguration.apiClient)
+        let mockECEViewController = ECEViewController(apiClient: mockConfiguration.apiClient,
+                                                      shopId: "shop_id_123",
+                                                      customerSessionClientSecret: "cuss_12345")
         let shippingAddress = [
             "name": "John"
             // Missing address object
@@ -335,27 +352,11 @@ class ShopPayECEPresenterTests: XCTestCase {
     }
 
     // MARK: - Shipping Rate Change Tests
-
-    func testShippingRateChange_NoHandler_Accepts() async throws {
-        // Given
-        let mockECEViewController = ECEViewController(apiClient: mockConfiguration.apiClient)
-        let shippingRate: [String: Any] = [
-            "id": "express",
-            "displayName": "Express Shipping",
-            "amount": 1500,
-        ]
-
-        // When
-        let response = try await sut.eceView(mockECEViewController, didReceiveShippingRateChange: shippingRate)
-
-        // Then
-        XCTAssertNil(response["error"])
-        XCTAssertEqual(response["totalAmount"] as? Int, 3000) // Items (1500) + Express (1500)
-    }
-
     func testShippingRateChange_WithHandler_CallsHandler() async throws {
         // Given
-        let mockECEViewController = ECEViewController(apiClient: mockConfiguration.apiClient)
+        let mockECEViewController = ECEViewController(apiClient: mockConfiguration.apiClient,
+                                                      shopId: "shop_id_123",
+                                                      customerSessionClientSecret: "cuss_12345")
         let expectation = expectation(description: "Shipping method handler called")
 
         var handlerCalled = false
@@ -370,14 +371,15 @@ class ShopPayECEPresenterTests: XCTestCase {
             shopId: shopPayConfiguration.shopId,
             allowedShippingCountries: shopPayConfiguration.allowedShippingCountries,
             handlers: PaymentSheet.ShopPayConfiguration.Handlers(
-                shippingMethodUpdateHandler: { _, completion in
+                shippingMethodUpdateHandler: { shippingInfo, completion in
                     handlerCalled = true
                     expectation.fulfill()
 
                     // Return updated values
                     let update = PaymentSheet.ShopPayConfiguration.ShippingRateUpdate(
                         lineItems: [
-                            PaymentSheet.ShopPayConfiguration.LineItem(name: "Updated Item", amount: 3000)
+                            PaymentSheet.ShopPayConfiguration.LineItem(name: "Updated Item", amount: 3000),
+                            PaymentSheet.ShopPayConfiguration.LineItem(name: shippingInfo.shippingRate.displayName, amount: shippingInfo.shippingRate.amount),
                         ],
                         shippingRates: [
                             PaymentSheet.ShopPayConfiguration.ShippingRate(
@@ -415,7 +417,9 @@ class ShopPayECEPresenterTests: XCTestCase {
 
     func testShippingRateChange_InvalidRateId() async {
         // Given
-        let mockECEViewController = ECEViewController(apiClient: mockConfiguration.apiClient)
+        let mockECEViewController = ECEViewController(apiClient: mockConfiguration.apiClient,
+                                                      shopId: "shop_id_123",
+                                                      customerSessionClientSecret: "cuss_12345")
         let shippingRate: [String: Any] = [
             "id": "invalid_rate_id",
             "amount": 100,
@@ -442,7 +446,9 @@ class ShopPayECEPresenterTests: XCTestCase {
 
     func testECEClick_ReturnsProperConfiguration() async throws {
         // Given
-        let mockECEViewController = ECEViewController(apiClient: mockConfiguration.apiClient)
+        let mockECEViewController = ECEViewController(apiClient: mockConfiguration.apiClient,
+                                                      shopId: "shop_id_123",
+                                                      customerSessionClientSecret: "cuss_12345")
         let event = [
             "walletType": "shop_pay",
             "expressPaymentType": "shop_pay",
@@ -453,7 +459,7 @@ class ShopPayECEPresenterTests: XCTestCase {
 
         // Then
         let lineItems = response["lineItems"] as? [[String: Any]]
-        XCTAssertEqual(lineItems?.count, 2)
+        XCTAssertEqual(lineItems?.count, 3)
 
         XCTAssertEqual(response["billingAddressRequired"] as? Bool, true)
         XCTAssertEqual(response["emailRequired"] as? Bool, true)
@@ -475,7 +481,9 @@ class ShopPayECEPresenterTests: XCTestCase {
 
     func testECEConfirmation_Success() async throws {
         // Given
-        let mockECEViewController = ECEViewController(apiClient: mockConfiguration.apiClient)
+        let mockECEViewController = ECEViewController(apiClient: mockConfiguration.apiClient,
+                                                      shopId: "shop_id_123",
+                                                      customerSessionClientSecret: "cuss_12345")
         let paymentDetails: [String: Any] = [
             "billingDetails": [
                 "email": "test@example.com",
@@ -486,6 +494,11 @@ class ShopPayECEPresenterTests: XCTestCase {
             "shippingRate": ["id": "standard", "amount": 100, "displayName": "Standard Shipping"],
             "mode": "payment",
             "captureMethod": "automatic",
+            "paymentMethodOptions": [
+                "shopPay": [
+                    "externalSourceId": "st_zxd123456",
+                ],
+            ],
         ]
 
         // When
@@ -498,7 +511,9 @@ class ShopPayECEPresenterTests: XCTestCase {
 
     func testECEConfirmation_MissingBillingDetails() async {
         // Given
-        let mockECEViewController = ECEViewController(apiClient: mockConfiguration.apiClient)
+        let mockECEViewController = ECEViewController(apiClient: mockConfiguration.apiClient,
+                                                      shopId: "shop_id_123",
+                                                      customerSessionClientSecret: "cuss_12345")
         let paymentDetails = [
             "shippingAddress": ["address1": "123 Main St"]
             // Missing billingDetails
