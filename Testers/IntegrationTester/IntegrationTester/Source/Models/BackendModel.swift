@@ -11,8 +11,8 @@ import Stripe
 
 class BackendModel {
     // You can replace this with your own backend URL.
-    // Visit https://glitch.com/edit/#!/stripe-integration-tester and click "remix".
-    static let backendAPIURL = URL(string: "https://stripe-integration-tester.glitch.me")!
+    // Visit https://codesandbox.io/p/devbox/3c3ymr, login, and click "Fork".
+    static let backendAPIURL = URL(string: "https://codesandbox.io/p/devbox/3c3ymr")!
 
     static let returnURL = "stp-integration-tester://stripe-redirect"
 
