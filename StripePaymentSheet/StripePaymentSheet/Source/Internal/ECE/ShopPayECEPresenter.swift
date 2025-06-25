@@ -29,14 +29,20 @@ class ShopPayECEPresenter: NSObject, UIAdaptivePresentationControllerDelegate {
 
     func present(from viewController: UIViewController,
                  confirmHandler: @escaping (PaymentSheetResult) -> Void) {
+        guard case .customerSession(let customerSessionClientSecret) = flowController.configuration.customer?.customerAccessProvider else {
+            stpAssertionFailure("Integration Error: CustomerSessions is required")
+            return
+        }
         self.presentingViewController = viewController
+        let eceVC = ECEViewController(apiClient: flowController.configuration.apiClient,
+                                      shopId: shopPayConfiguration.shopId,
+                                      customerSessionClientSecret: customerSessionClientSecret)
 
-        let eceVC = ECEViewController(apiClient: flowController.configuration.apiClient)
-         eceVC.expressCheckoutWebviewDelegate = self
-         self.eceViewController = eceVC
+        eceVC.expressCheckoutWebviewDelegate = self
+        self.eceViewController = eceVC
         let navController = UINavigationController(rootViewController: eceVC)
-         navController.modalPresentationStyle = .pageSheet
-         viewController.present(navController, animated: true)
+        navController.modalPresentationStyle = .pageSheet
+        viewController.present(navController, animated: true)
         eceVC.presentationController?.delegate = self
         // retain self while presented
         self.confirmHandler = { result in
@@ -59,10 +65,7 @@ class ShopPayECEPresenter: NSObject, UIAdaptivePresentationControllerDelegate {
 @available(iOS 16.0, *)
 extension ShopPayECEPresenter: ExpressCheckoutWebviewDelegate {
     func amountForECEView(_ eceView: ECEViewController) -> Int {
-        let itemsTotal = shopPayConfiguration.lineItems.reduce(0) { $0 + $1.amount }
-        // add default shipping amount if available
-        let defaultShippingAmount = shopPayConfiguration.shippingRates.first?.amount ?? 0
-        return itemsTotal + defaultShippingAmount
+        return shopPayConfiguration.lineItems.reduce(0) { $0 + $1.amount }
     }
 
     func eceView(_ eceView: ECEViewController, didReceiveShippingAddressChange shippingAddress: [String: Any]) async throws -> [String: Any] {
@@ -101,7 +104,7 @@ extension ShopPayECEPresenter: ExpressCheckoutWebviewDelegate {
                                 )
                             },
                             applePay: nil,
-                            totalAmount: self.calculateTotal(lineItems: update.lineItems, shippingRates: update.shippingRates)
+                            totalAmount: self.calculateTotal(lineItems: update.lineItems)
                         )
 
                         // Convert to dictionary for JavaScript
@@ -132,7 +135,7 @@ extension ShopPayECEPresenter: ExpressCheckoutWebviewDelegate {
                     )
                 },
                 applePay: nil,
-                totalAmount: calculateTotal(lineItems: shopPayConfiguration.lineItems, shippingRates: shopPayConfiguration.shippingRates)
+                totalAmount: calculateTotal(lineItems: shopPayConfiguration.lineItems)
             )
 
             return try ECEBridgeTypes.encode(response)
@@ -168,7 +171,7 @@ extension ShopPayECEPresenter: ExpressCheckoutWebviewDelegate {
                                 )
                             },
                             applePay: nil,
-                            totalAmount: self.calculateTotal(lineItems: update.lineItems, selectedShippingRate: matchingRate)
+                            totalAmount: self.calculateTotal(lineItems: update.lineItems)
                         )
 
                         // Convert to dictionary for JavaScript
@@ -199,7 +202,7 @@ extension ShopPayECEPresenter: ExpressCheckoutWebviewDelegate {
                     )
                 },
                 applePay: nil,
-                totalAmount: calculateTotal(lineItems: shopPayConfiguration.lineItems, selectedShippingRate: matchingRate)
+                totalAmount: calculateTotal(lineItems: shopPayConfiguration.lineItems)
             )
 
             return try ECEBridgeTypes.encode(response)
@@ -241,12 +244,25 @@ extension ShopPayECEPresenter: ExpressCheckoutWebviewDelegate {
         let confirmData = try ECEBridgeTypes.decode(ECEConfirmEventData.self, from: paymentDetails)
 
         guard let billingDetails = confirmData.billingDetails else {
-            throw ExpressCheckoutError.missingRequiredField(field: "billingDetails")
+            let error = ExpressCheckoutError.missingRequiredField(field: "billingDetails")
+            dismissECE { [weak self] in
+                guard let self = self else { return }
+                self.confirmHandler?(.failed(error: error))
+            }
+            throw error
+        }
+        guard let externalSourceId = confirmData.paymentMethodOptions?.shopPay?.externalSourceId else {
+            let error = ExpressCheckoutError.missingRequiredField(field: "externalSourceId")
+            dismissECE { [weak self] in
+                guard let self = self else { return }
+                self.confirmHandler?(.failed(error: error))
+            }
+            throw error
         }
 
         // Create Shop Pay payment method params
         let shopPayParams = STPPaymentMethodShopPayParams()
-        shopPayParams.externalSourceId = "TODO_12345" // TODO: Parse from paymentDetails when ready
+        shopPayParams.externalSourceId = externalSourceId
         let paymentMethodParams = STPPaymentMethodParams(shopPay: shopPayParams,
                                                          billingDetails: STPPaymentMethodBillingDetails(),
                                                          metadata: nil)
@@ -263,26 +279,35 @@ extension ShopPayECEPresenter: ExpressCheckoutWebviewDelegate {
         }
 
         // Create payment method
-        // TODO: If this fails, then return a PaymentSheetResult failed?
-        let paymentMethod = try await flowController.configuration.apiClient.createPaymentMethod(with: paymentMethodParams,
+        do {
+            let paymentMethod = try await flowController.configuration.apiClient.createPaymentMethod(with: paymentMethodParams,
                                                                                                  additionalPaymentUserAgentValues: [])
+            // Dismiss ECE and return the payment method ID on the main thread
+            Task { @MainActor in
+                dismissECE { [weak self] in
+                    guard let self = self else { return }
 
-        // Dismiss ECE and return the payment method ID on the main thread
-        Task { @MainActor in
-
+                    guard case .deferredIntent(let intentConfig) = self.flowController.intent else  {
+                        stpAssertionFailure("Integration Error: Shop Pay ECE flow requires a deferred intent.")
+                        return
+                    }
+                    // Call the intent config confirm handler first
+                    guard let preparePaymentMethodHandler = intentConfig.preparePaymentMethodHandler else {
+                        stpAssertionFailure("Integration Error: Shop Pay ECE flow requires a preparePaymentMethodHandler")
+                        return
+                    }
+                    preparePaymentMethodHandler(paymentMethod,
+                                                confirmData.shippingAddress?.toSTPAddress())
+                    // And then the PaymentSheet presentation handler
+                    self.confirmHandler?(.completed)
+                }
+            }
+        } catch {
             dismissECE { [weak self] in
                 guard let self = self else { return }
-
-                guard case .deferredIntent(let intentConfig) = self.flowController.intent else  {
-                    stpAssertionFailure("Integration Error: Shop Pay ECE flow requires a deferred intent.")
-                    return
-                }
-                // TODO: Replace this to use the new facilitatedPaymentSession confirmation handler when ready
-                // Call the intent config confirm handler first
-                intentConfig.confirmHandler(paymentMethod, false, { _ in })
-                // And then the PaymentSheet presentation handler
-                self.confirmHandler?(.completed)
+                self.confirmHandler?(.failed(error: error))
             }
+            throw error
         }
 
         // Return success response to webview
@@ -324,14 +349,7 @@ extension ShopPayECEPresenter: ExpressCheckoutWebviewDelegate {
         }
     }
 
-    private func calculateTotal(lineItems: [PaymentSheet.ShopPayConfiguration.LineItem], shippingRates: [PaymentSheet.ShopPayConfiguration.ShippingRate]) -> Int {
-        let itemsTotal = lineItems.reduce(0) { $0 + $1.amount }
-        let defaultShippingAmount = shippingRates.first?.amount ?? 0
-        return itemsTotal + defaultShippingAmount
-    }
-
-    private func calculateTotal(lineItems: [PaymentSheet.ShopPayConfiguration.LineItem], selectedShippingRate: PaymentSheet.ShopPayConfiguration.ShippingRate) -> Int {
-        let itemsTotal = lineItems.reduce(0) { $0 + $1.amount }
-        return itemsTotal + selectedShippingRate.amount
+    private func calculateTotal(lineItems: [PaymentSheet.ShopPayConfiguration.LineItem]) -> Int {
+        return lineItems.reduce(0) { $0 + $1.amount }
     }
 }

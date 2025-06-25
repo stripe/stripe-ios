@@ -300,9 +300,19 @@ public class STPPaymentHandler: NSObject {
         returnURL: String?,
         completion: @escaping STPPaymentHandlerActionPaymentIntentCompletionBlock
     ) {
+        guard subhandler == nil else {
+            stpAssertionFailure("`STPPaymentHandler.handleNextAction(forPaymentHashedValue:with:completion:)` was called while a previous call is still in progress.")
+            completion(.failed, nil, _error(for: .noConcurrentActionsErrorCode))
+            return
+        }
         // hashedValue is a base64 encoded string in "pk_test_123:pi_123_secret_abc" format
 
-        // Decode the base64 string
+        // Strip out any newlines or "\n" before decoding
+        let hashedValue = hashedValue.trimmingCharacters(in: .whitespacesAndNewlines).replacingOccurrences(
+            of: "\n",
+            with: ""
+        )
+
         guard let decodedData = Data(base64Encoded: hashedValue),
               let decodedString = String(data: decodedData, encoding: .utf8) else {
             completion(.failed, nil, _error(for: .invalidClientSecret))
@@ -323,16 +333,23 @@ public class STPPaymentHandler: NSObject {
         let apiClient = STPAPIClient(publishableKey: publishableKey)
 
         // Create a new payment handler with the new API client
-        let paymentHandler = STPPaymentHandler(apiClient: apiClient, threeDSCustomizationSettings: self.threeDSCustomizationSettings)
+        let subhandler = STPPaymentHandler(apiClient: apiClient, threeDSCustomizationSettings: self.threeDSCustomizationSettings)
 
         // Use the new handler to handle the next action
-        paymentHandler.handleNextAction(
+        subhandler.handleNextAction(
             forPayment: clientSecret,
             with: authenticationContext,
             returnURL: returnURL,
-            completion: completion
+            completion: { action, paymentIntent, error in
+                completion(action, paymentIntent, error)
+                // Clean up the subhandler
+                self.subhandler = nil
+            }
         )
+        // Retain the subhandler during the confirmation
+        self.subhandler = subhandler
     }
+    private var subhandler: STPPaymentHandler?
 
     /// Handles any `nextAction` required to authenticate the PaymentIntent.
     /// Call this method if you are using server-side confirmation.  - seealso: https://stripe.com/docs/payments/accept-a-payment?platform=ios&ui=custom
