@@ -14,6 +14,7 @@ import UIKit
 /// :nodoc:
 protocol LinkVerificationViewDelegate: AnyObject {
     func verificationViewDidCancel(_ view: LinkVerificationView)
+    func verificationViewShouldSendCodeToEmail(_ view: LinkVerificationView)
     func verificationViewResendCode(_ view: LinkVerificationView)
     func verificationViewLogout(_ view: LinkVerificationView)
     func verificationView(_ view: LinkVerificationView, didEnterCode code: String)
@@ -32,11 +33,21 @@ final class LinkVerificationView: UIView {
         case embedded
     }
 
+    enum VerificationFactor {
+        case sms
+        case email
+    }
+
     weak var delegate: LinkVerificationViewDelegate?
 
     private let mode: Mode
 
     let linkAccount: PaymentSheetLinkAccountInfoProtocol
+    var verificationFactor: VerificationFactor {
+        didSet {
+            updateForVerificationFactor()
+        }
+    }
 
     var sendingCode: Bool = false {
         didSet {
@@ -74,7 +85,10 @@ final class LinkVerificationView: UIView {
         label.textAlignment = .center
         label.font = mode.bodyFont
         label.textColor = .linkTextSecondary
-        label.text = mode.bodyText(redactedPhoneNumber: linkAccount.redactedPhoneNumber ?? "")
+        label.text = verificationFactor.bodyText(
+            redactedPhoneNumber: linkAccount.redactedPhoneNumber ?? "",
+            email: linkAccount.email
+        )
         label.adjustsFontForContentSizeCategory = true
         return label
     }()
@@ -114,6 +128,16 @@ final class LinkVerificationView: UIView {
         return stackView
     }()
 
+    private lazy var sendCodeToEmailButton: Button = {
+        let button = Button(configuration: .linkPlain(), title: STPLocalizedString(
+            "Send code to email instead",
+            "Label for a button that sends the code to the user's email when tapped"
+        ))
+        button.configuration.font = LinkUI.font(forTextStyle: .bodyEmphasized)
+        button.addTarget(self, action: #selector(sendCodeToEmailTapped(_:)), for: .touchUpInside)
+        return button
+    }()
+
     private lazy var resendCodeButton: Button = {
         let button = Button(configuration: .linkPlain(), title: STPLocalizedString(
             "Resend code",
@@ -130,8 +154,13 @@ final class LinkVerificationView: UIView {
         return logoutView
     }()
 
-    required init(mode: Mode, linkAccount: PaymentSheetLinkAccountInfoProtocol) {
+    required init(
+        mode: Mode,
+        verificationFactor: VerificationFactor,
+        linkAccount: PaymentSheetLinkAccountInfoProtocol
+    ) {
         self.mode = mode
+        self.verificationFactor = verificationFactor
         self.linkAccount = linkAccount
         super.init(frame: .zero)
         setupUI()
@@ -162,6 +191,11 @@ final class LinkVerificationView: UIView {
     }
 
     @objc
+    func sendCodeToEmailTapped(_ sender: UIButton) {
+        delegate?.verificationViewShouldSendCodeToEmail(self)
+    }
+
+    @objc
     func resendCodeTapped(_ sender: UIButton) {
         delegate?.verificationViewResendCode(self)
     }
@@ -177,6 +211,7 @@ private extension LinkVerificationView {
                 headingLabel,
                 bodyLabel,
                 codeFieldContainer,
+                sendCodeToEmailButton,
                 resendCodeButton,
             ]
         case .embedded:
@@ -184,6 +219,7 @@ private extension LinkVerificationView {
                 headingLabel,
                 bodyLabel,
                 codeFieldContainer,
+                sendCodeToEmailButton,
                 resendCodeButton,
                 logoutView,
             ]
@@ -229,6 +265,24 @@ private extension LinkVerificationView {
 
         NSLayoutConstraint.activate(constraints)
         backgroundColor = .systemBackground
+
+        updateForVerificationFactor()
+    }
+
+    private func updateForVerificationFactor() {
+        bodyLabel.text = verificationFactor.bodyText(
+            redactedPhoneNumber: linkAccount.redactedPhoneNumber ?? "",
+            email: linkAccount.email
+        )
+
+        switch verificationFactor {
+        case .sms:
+            sendCodeToEmailButton.isHidden = false
+            resendCodeButton.isHidden = true
+        case .email:
+            sendCodeToEmailButton.isHidden = true
+            resendCodeButton.isHidden = false
+        }
     }
 }
 
@@ -267,12 +321,15 @@ extension LinkVerificationView.Mode {
         }
     }
 
-    func bodyText(redactedPhoneNumber: String) -> String {
+}
+
+extension LinkVerificationView.VerificationFactor {
+    func bodyText(redactedPhoneNumber: String, email: String) -> String {
         let format = STPLocalizedString(
             "Enter the code sent to %@ to use your saved information.",
-            "Instructs the user to enter the code sent to their phone number in order to login to Link"
+            "Instructs the user to enter the code sent to their email or phone number in order to login to Link"
         )
-        return String(format: format, redactedPhoneNumber)
+        let value = self == .email ? email : redactedPhoneNumber
+        return String(format: format, value)
     }
-
 }
