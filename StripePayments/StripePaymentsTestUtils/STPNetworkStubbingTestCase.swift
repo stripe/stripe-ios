@@ -32,6 +32,8 @@ import XCTest
     open override func setUp() {
         super.setUp()
 
+        AnalyticsHelper.shared.clearSessionID()
+
         recordingMode = ProcessInfo.processInfo.environment["STP_RECORD_NETWORK"] != nil
         disableMocking = ProcessInfo.processInfo.environment["STP_NO_NETWORK_MOCKS"] != nil
 
@@ -210,7 +212,6 @@ private func replaceNondeterministicParams(_ input: String) -> String {
 
         "payment_user_agent", // Contains the SDK version number
         "pk_token_transaction_id", // Random string
-        "mobile_session_id=", // Mobile session identifier that may vary between requests
     ]
     var components = input.components(separatedBy: "&")
 

@@ -1034,6 +1034,7 @@ class PaymentSheetAPITest: STPNetworkStubbingTestCase {
     // MARK: - update tests
 
     func testUpdate() {
+        AnalyticsHelper.shared.isTest = true
         STPAnalyticsClient.sharedClient._testLogHistory = []
         var intentConfig = PaymentSheet.IntentConfiguration(mode: .payment(amount: 1000, currency: "USD")) { _, _, _ in
             // These tests don't confirm, so this is unused
@@ -1085,6 +1086,7 @@ class PaymentSheetAPITest: STPNetworkStubbingTestCase {
     }
 
     func testUpdateFails() {
+        AnalyticsHelper.shared.isTest = true
         var intentConfig = PaymentSheet.IntentConfiguration(mode: .payment(amount: 1000, currency: "USD")) { _, _, _ in
             // These tests don't confirm, so this is unused
         }
@@ -1120,6 +1122,7 @@ class PaymentSheetAPITest: STPNetworkStubbingTestCase {
     }
 
     func testUpdateIgnoresInFlightUpdate() {
+        AnalyticsHelper.shared.isTest = true
         var intentConfig = PaymentSheet.IntentConfiguration(mode: .payment(amount: 1000, currency: "USD")) { _, _, _ in
             // These tests don't confirm, so this is unused
         }
