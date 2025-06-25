@@ -13,21 +13,18 @@ import UIKit
 
 protocol LinkPaymentMethodPickerDelegate: AnyObject {
 
-    func paymentMethodPicker(_ picker: LinkPaymentMethodPicker, didSelectIndex index: Int)
+    func paymentMethodPicker(didSelectIndex index: Int)
 
     func paymentMethodPicker(
-        _ picker: LinkPaymentMethodPicker,
         menuActionsForItemAt index: Int
     ) -> [PayWithLinkViewController.WalletViewController.Action]
 
     func paymentMethodPicker(
-        _ picker: LinkPaymentMethodPicker,
         showMenuForItemAt index: Int,
         sourceRect: CGRect
     )
 
     func paymentDetailsPickerDidTapOnAddPayment(
-        _ picker: LinkPaymentMethodPicker,
         sourceRect: CGRect
     )
 
@@ -42,12 +39,11 @@ protocol LinkPaymentMethodPickerDataSource: AnyObject {
 
     /// Returns the total number of payment methods.
     /// - Returns: Payment method count
-    func numberOfPaymentMethods(in picker: LinkPaymentMethodPicker) -> Int
+    func numberOfPaymentMethods() -> Int
 
     /// Returns the payment method at the specific index.
     /// - Returns: Payment method.
     func paymentPicker(
-        _ picker: LinkPaymentMethodPicker,
         paymentMethodAt index: Int
     ) -> ConsumerPaymentDetails
 
@@ -59,43 +55,33 @@ protocol LinkPaymentMethodPickerDataSource: AnyObject {
 /// For internal SDK use only
 @objc(STP_Internal_LinkPaymentMethodPicker)
 final class LinkPaymentMethodPicker: UIView {
-    weak var delegate: LinkPaymentMethodPickerDelegate?
+    weak var delegate: LinkPaymentMethodPickerDelegate? {
+        didSet {
+            paymentMethodListView.delegate = delegate
+        }
+    }
     weak var dataSource: LinkPaymentMethodPickerDataSource? {
         didSet {
             emailView.accountEmail = dataSource?.accountEmail
+            paymentMethodListView.dataSource = dataSource
         }
-    }
-
-    var selectedIndex: Int {
-        dataSource?.selectedIndex ?? 0
-    }
-
-    var collapsable: Bool {
-        guard let dataSource else { return false }
-        return selectedPaymentMethod.map { dataSource.isPaymentMethodSupported($0) } ?? false
     }
 
     var supportedPaymentMethodTypes = Set(ConsumerPaymentDetails.DetailsType.allCases)
 
-    var selectedPaymentMethod: ConsumerPaymentDetails? {
-        let count = dataSource?.numberOfPaymentMethods(in: self) ?? 0
-
-        guard selectedIndex >= 0 && selectedIndex < count else {
-            return nil
-        }
-
-        return dataSource?.paymentPicker(self, paymentMethodAt: selectedIndex)
-    }
-
     var billingDetailsCollectionConfiguration: PaymentSheet.BillingDetailsCollectionConfiguration? {
         didSet {
-            reloadData()
+            reloadPaymentMethods()
         }
+    }
+
+    func setExpanded(_ expanded: Bool, animated: Bool) {
+        paymentMethodListView.setExpanded(expanded, animated: animated)
     }
 
     var billingDetails: PaymentSheet.BillingDetails? {
         didSet {
-            reloadData()
+            reloadPaymentMethods()
         }
     }
 
@@ -111,20 +97,17 @@ final class LinkPaymentMethodPicker: UIView {
         let emailLabelSize = sizeOf(string: emailLabel)
 
         // LinkPaymentMethodPicker.Header.payWithLabel
-        let paymentLabel = Header.Strings.payment
+        let paymentLabel = LinkPaymentMethodListView.Header.Strings.payment
         let paymentLabelSize = sizeOf(string: paymentLabel)
 
         return max(emailLabelSize.width, paymentLabelSize.width)
     }()
 
-    private var needsDataReload: Bool = true
-
     private lazy var stackView: UIStackView = {
         let stackView = UIStackView(arrangedSubviews: [
             emailView,
             separatorView,
-            headerView,
-            listView,
+            paymentMethodListView,
         ])
 
         stackView.axis = .vertical
@@ -135,26 +118,8 @@ final class LinkPaymentMethodPicker: UIView {
 
     private let emailView = EmailView()
     private let separatorView = LinkSeparatorView()
-    private let headerView = Header()
 
-    private lazy var listView: UIStackView = {
-        let stackView = UIStackView(arrangedSubviews: [
-            addPaymentMethodButton
-        ])
-
-        stackView.axis = .vertical
-        stackView.distribution = .equalSpacing
-        stackView.clipsToBounds = true
-        stackView.translatesAutoresizingMaskIntoConstraints = false
-        return stackView
-    }()
-
-    #if !os(visionOS)
-    private let impactFeedbackGenerator = UIImpactFeedbackGenerator(style: .medium)
-    private let selectionFeedbackGenerator = UISelectionFeedbackGenerator()
-    #endif
-
-    private let addPaymentMethodButton = AddButton()
+    private lazy var paymentMethodListView = LinkPaymentMethodListView()
 
     override init(frame: CGRect) {
         super.init(frame: .zero)
@@ -175,21 +140,14 @@ final class LinkPaymentMethodPicker: UIView {
         tintColor = .linkIconBrand
         backgroundColor = .linkSurfaceSecondary
 
-        addPaymentMethodButton.tintColor = .linkTextBrand
+        paymentMethodListView.layer.zPosition = 0
 
-        headerView.addTarget(self, action: #selector(onHeaderTapped(_:)), for: .touchUpInside)
-        headerView.layer.zPosition = 1
-
-        listView.isHidden = true
-        listView.layer.zPosition = 0
-
-        addPaymentMethodButton.addTarget(self, action: #selector(onAddPaymentButtonTapped(_:)), for: .touchUpInside)
         emailView.menuButton.addTarget(self, action: #selector(didTapOnAccountMenuItem), for: .touchUpInside)
     }
 
     override func layoutSubviews() {
         super.layoutSubviews()
-        reloadDataIfNeeded()
+        paymentMethodListView.reloadDataIfNeeded()
     }
 
 #if !os(visionOS)
@@ -199,43 +157,10 @@ final class LinkPaymentMethodPicker: UIView {
     }
 #endif
 
-    func setExpanded(_ expanded: Bool, animated: Bool) {
-        headerView.isExpanded = collapsable ? expanded : true
-
-        // Prevent double header animation
-        if headerView.isExpanded {
-            // TODO(link): revise layout margin placement and remove conditional
-            setNeedsLayout()
-            layoutIfNeeded()
-        } else {
-            headerView.layoutIfNeeded()
-        }
-
-        guard let listViewIndex = stackView.arrangedSubviews.firstIndex(of: listView) else { return }
-        if headerView.isExpanded {
-            stackView.showArrangedSubview(at: listViewIndex, animated: animated)
-        } else {
-            stackView.hideArrangedSubview(at: listViewIndex, animated: animated)
-        }
-    }
 }
 
 private extension LinkPaymentMethodPicker {
-
-    @objc func onHeaderTapped(_ sender: Header) {
-        guard collapsable || !sender.isExpanded else { return }
-        setExpanded(!sender.isExpanded, animated: true)
-#if !os(visionOS)
-        impactFeedbackGenerator.impactOccurred()
-#endif
-    }
-
-    @objc func onAddPaymentButtonTapped(_ sender: AddButton) {
-        let sourceRect = sender.convert(sender.bounds, to: self)
-        delegate?.paymentDetailsPickerDidTapOnAddPayment(self, sourceRect: sourceRect)
-    }
-
-    @objc func didTapOnAccountMenuItem(_ sender: AddButton) {
+    @objc func didTapOnAccountMenuItem(_ sender: UIView) {
         let sourceRect = sender.convert(sender.bounds, to: self)
         delegate?.didTapOnAccountMenuItem(self, sourceRect: sourceRect)
     }
@@ -246,86 +171,21 @@ private extension LinkPaymentMethodPicker {
 
 extension LinkPaymentMethodPicker {
 
-    func reloadData() {
-        needsDataReload = false
-
-        addMissingPaymentMethodCells()
-
-        let count = dataSource?.numberOfPaymentMethods(in: self) ?? 0
-        if count == 0 {
-            headerView.isHidden = true
-            listView.isHidden = false
-        }
-
-        for index in 0..<count {
-            reloadCell(at: index)
-        }
+    func reloadPaymentMethods() {
+        paymentMethodListView.reloadData()
     }
 
-    func reloadCell(at index: Int) {
-        guard let cell = listView.arrangedSubviews[index] as? Cell else {
-            stpAssertionFailure("Cell not found at index: \(index)")
-            return
-        }
-
-        guard let dataSource = dataSource else {
-            stpAssertionFailure("Data source not configured.")
-            return
-        }
-
-        let paymentMethod = dataSource.paymentPicker(self, paymentMethodAt: index)
-
-        cell.paymentMethod = paymentMethod
-        cell.isSelected = selectedIndex == index
-        cell.isSupported = dataSource.isPaymentMethodSupported(paymentMethod)
+    func showLoaderForPaymentMethod(at index: Int) {
+        paymentMethodListView.showLoaderForPaymentMethod(at: index)
     }
 
-    func showLoader(at index: Int) {
-        guard let cell = listView.arrangedSubviews[index] as? Cell else {
-            stpAssertionFailure("Cell not found at index: \(index)")
-            return
-        }
-
-        cell.isLoading = true
-    }
-
-    func hideLoader(at index: Int) {
-        guard let cell = listView.arrangedSubviews[index] as? Cell else {
-            stpAssertionFailure("Cell not found at index: \(index)")
-            return
-        }
-
-        cell.isLoading = false
+    func hideLoaderForPaymentMethod(at index: Int) {
+        paymentMethodListView.hideLoaderForPaymentMethod(at: index)
     }
 
     func setAddButtonIsLoading(_ isLoading: Bool) {
-        addPaymentMethodButton.isLoading = isLoading
+        paymentMethodListView.setAddButtonIsLoading(isLoading)
     }
-
-    private func reloadDataIfNeeded() {
-        if needsDataReload {
-            reloadData()
-        }
-    }
-
-    private func addMissingPaymentMethodCells() {
-        let count = dataSource?.numberOfPaymentMethods(in: self) ?? 0
-
-        while count > listView.arrangedSubviews.count - 1 {
-            let cell = Cell()
-            cell.delegate = self
-
-            let index = listView.arrangedSubviews.count - 1
-            listView.insertArrangedSubview(cell, at: index)
-        }
-
-        for (index, subview) in listView.arrangedSubviews.enumerated() {
-            subview.layer.zPosition = CGFloat(-index)
-        }
-
-        headerView.setSelectedPaymentMethod(selectedPaymentMethod: selectedPaymentMethod, supported: dataSource?.isPaymentMethodSupported(selectedPaymentMethod) ?? false)
-    }
-
 }
 
 extension ConsumerPaymentDetails {
@@ -444,49 +304,7 @@ private extension PaymentSheet.Address {
 }
 
 extension LinkPaymentMethodPicker {
-
-    func index(for cell: Cell) -> Int? {
-        return listView.arrangedSubviews.firstIndex(of: cell)
-    }
-
     func removePaymentMethod(at index: Int, animated: Bool) {
-        isUserInteractionEnabled = false
-
-        listView.removeArrangedSubview(at: index, animated: true) {
-            self.isUserInteractionEnabled = true
-            self.reloadData()
-        }
-    }
-
-}
-
-// MARK: - Cell delegate
-
-extension LinkPaymentMethodPicker: LinkPaymentMethodPickerCellDelegate {
-
-    func savedPaymentPickerCellDidSelect(_ savedCardView: Cell) {
-        if let newIndex = index(for: savedCardView), savedCardView.isSupported {
-#if !os(visionOS)
-            selectionFeedbackGenerator.selectionChanged()
-#endif
-
-            delegate?.paymentMethodPicker(self, didSelectIndex: newIndex)
-        }
-    }
-
-    func savedPaymentPickerCell(_ cell: Cell, didTapMenuButton button: UIButton) {
-        guard let index = index(for: cell) else {
-            stpAssertionFailure("Index not found")
-            return
-        }
-
-        let sourceRect = button.convert(button.bounds, to: self)
-
-        delegate?.paymentMethodPicker(self, showMenuForItemAt: index, sourceRect: sourceRect)
-    }
-
-    func savedPaymentPickerCellMenuActions(for cell: Cell) -> [PayWithLinkViewController.WalletViewController.Action]? {
-        guard let index = index(for: cell) else { return nil }
-        return delegate?.paymentMethodPicker(self, menuActionsForItemAt: index)
+        paymentMethodListView.removePaymentMethod(at: index, animated: animated)
     }
 }

@@ -22,6 +22,7 @@ extension PayWithLinkViewController {
         let context: Context
         let linkAccount: PaymentSheetLinkAccount
         private(set) var paymentMethods: [ConsumerPaymentDetails]
+        private(set) var shippingAddresses: [ShippingAddressesResponse.ShippingAddress]
 
         weak var delegate: PayWithLinkWalletViewModelDelegate?
 
@@ -191,7 +192,8 @@ extension PayWithLinkViewController {
         init(
             linkAccount: PaymentSheetLinkAccount,
             context: Context,
-            paymentMethods: [ConsumerPaymentDetails]
+            paymentMethods: [ConsumerPaymentDetails],
+            shippingAddresses: [ShippingAddressesResponse.ShippingAddress]
         ) {
             self.linkAccount = linkAccount
             self.context = context
@@ -200,6 +202,7 @@ extension PayWithLinkViewController {
                 context: context,
                 paymentMethods: paymentMethods
             )
+            self.shippingAddresses = shippingAddresses
         }
 
         func deletePaymentMethod(at index: Int, completion: @escaping (Result<Void, Error>) -> Void) {
