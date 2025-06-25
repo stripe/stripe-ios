@@ -453,6 +453,7 @@ extension CustomerAddPaymentMethodViewController: AutoCompleteViewControllerDele
 
             // Populate the address fields
             addressSectionElement.line1?.setText(address.line1 ?? "")
+            addressSectionElement.line2?.setText(address.line2 ?? "")
             addressSectionElement.city?.setText(address.city ?? "")
             addressSectionElement.postalCode?.setText(address.postalCode ?? "")
             addressSectionElement.state?.setRawData(address.state ?? "")
