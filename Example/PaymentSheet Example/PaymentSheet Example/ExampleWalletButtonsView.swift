@@ -228,6 +228,11 @@ class ExampleWalletButtonsModel: ObservableObject {
         let fiveBusinessDays = PaymentSheet.ShopPayConfiguration.DeliveryEstimate.DeliveryEstimateUnit(value: 5, unit: .business_day)
         let sevenBusinessDays = PaymentSheet.ShopPayConfiguration.DeliveryEstimate.DeliveryEstimateUnit(value: 7, unit: .business_day)
 
+        let shippingRates: [PaymentSheet.ShopPayConfiguration.ShippingRate] = [
+            .init(id: "express", amount: 1099, displayName: "Overnight", deliveryEstimate: .init(minimum: singleBusinessDay, maximum: singleBusinessDay)),
+            .init(id: "standard", amount: 0, displayName: "Free", deliveryEstimate: .init(minimum: fiveBusinessDays, maximum: sevenBusinessDays)),
+        ]
+
         let handlers = PaymentSheet.ShopPayConfiguration.Handlers(
             shippingMethodUpdateHandler: { shippingRateSelected, completion in
                 // Process the selected shipping method
@@ -237,29 +242,11 @@ class ExampleWalletButtonsModel: ObservableObject {
 
                 // Create the update with the new line items and available shipping rates
                 let update = PaymentSheet.ShopPayConfiguration.ShippingRateUpdate(
-                    lineItems: [.init(name: "Subtotal", amount: 200),
+                    lineItems: [.init(name: "Golden Potato", amount: 500),
+                                .init(name: "Silver Potato", amount: 345),
                                 .init(name: "Tax", amount: 200),
                                 .init(name: "Shipping", amount: selectedRate.amount), ],
-                    shippingRates: [
-                        PaymentSheet.ShopPayConfiguration.ShippingRate(
-                            id: "standard",
-                            amount: 500,
-                            displayName: "Standard Shipping",
-                            deliveryEstimate: PaymentSheet.ShopPayConfiguration.DeliveryEstimate(
-                                minimum: .init(value: 3, unit: .business_day),
-                                maximum: .init(value: 5, unit: .business_day)
-                            )
-                        ),
-                        PaymentSheet.ShopPayConfiguration.ShippingRate(
-                            id: "express",
-                            amount: 1000,
-                            displayName: "Express Shipping",
-                            deliveryEstimate: .init(
-                                minimum: .init(value: 1, unit: .business_day),
-                                maximum: .init(value: 2, unit: .business_day)
-                            )
-                        ),
-                    ]
+                    shippingRates: shippingRates
                 )
 
                 // Return the update to the Shop Pay UI
@@ -276,11 +263,10 @@ class ExampleWalletButtonsModel: ObservableObject {
 
                 if canShipToLocation {
                     // Create available shipping rates based on the location
-                    let shippingRates = self.getShippingRatesForLocation(address)
-
                     // Return the update with new line items and shipping rates
                     let update = PaymentSheet.ShopPayConfiguration.ShippingContactUpdate(
-                        lineItems: [.init(name: "Subtotal", amount: 200),
+                        lineItems: [.init(name: "Golden Potato", amount: 500),
+                                    .init(name: "Silver Potato", amount: 345),
                                     .init(name: "Tax", amount: 200),
                                     .init(name: "Shipping", amount: shippingRates.first!.amount), ],
                         shippingRates: shippingRates
@@ -295,37 +281,16 @@ class ExampleWalletButtonsModel: ObservableObject {
         )
 
         return PaymentSheet.ShopPayConfiguration(shippingAddressRequired: true,
-                                                 lineItems: [.init(name: "Golden Potato", amount: 500), .init(name: "Silver Potato", amount: 345), .init(name: "Tax", amount: 200)],
-                                                 shippingRates: [.init(id: "express", amount: 1099, displayName: "Overnight", deliveryEstimate: .init(minimum: singleBusinessDay, maximum: singleBusinessDay)),
-                                                                 .init(id: "standard", amount: 0, displayName: "Free", deliveryEstimate: .init(minimum: fiveBusinessDays, maximum: sevenBusinessDays)),
-                                                                ],
+                                                 lineItems: [.init(name: "Golden Potato", amount: 500),
+                                                             .init(name: "Silver Potato", amount: 345),
+                                                             .init(name: "Tax", amount: 200),
+                                                             .init(name: "Shipping", amount: shippingRates.first!.amount), ],
+                                                 shippingRates: shippingRates,
                                                  shopId: self.shopId,
                                                  handlers: handlers)
     }
     func isValidShippingLocation(_ address: PaymentSheet.ShopPayConfiguration.PartialAddress) -> Bool {
         return true
-    }
-    func getShippingRatesForLocation(_ address: PaymentSheet.ShopPayConfiguration.PartialAddress) -> [PaymentSheet.ShopPayConfiguration.ShippingRate] {
-        return [
-            PaymentSheet.ShopPayConfiguration.ShippingRate(
-                id: "standard",
-                amount: 500,
-                displayName: "Standard Shipping",
-                deliveryEstimate: .init(
-                    minimum: .init(value: 3, unit: .business_day),
-                    maximum: .init(value: 5, unit: .business_day)
-                )
-            ),
-            PaymentSheet.ShopPayConfiguration.ShippingRate(
-                id: "express",
-                amount: 1000,
-                displayName: "Express Shipping",
-                deliveryEstimate: .init(
-                    minimum: .init(value: 1, unit: .business_day),
-                    maximum: .init(value: 2, unit: .business_day)
-                )
-            ),
-        ]
     }
 }
 

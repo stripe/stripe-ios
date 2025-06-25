@@ -36,9 +36,15 @@ enum ExpressCheckoutError: LocalizedError {
 @available(iOS 16.0, *)
 class ECEViewController: UIViewController {
     let apiClient: STPAPIClient
+    let shopId: String
+    let customerSessionClientSecret: String
 
-    init(apiClient: STPAPIClient) {
+    init(apiClient: STPAPIClient,
+         shopId: String,
+         customerSessionClientSecret: String) {
         self.apiClient = apiClient
+        self.shopId = shopId
+        self.customerSessionClientSecret = customerSessionClientSecret
         super.init(nibName: nil, bundle: nil)
     }
 
@@ -216,7 +222,8 @@ class ECEViewController: UIViewController {
     }
 
     private func loadECE() {
-        webView.loadHTMLString(ECEHTML, baseURL: URL(string: "https://pay.stripe.com")!)
+        let staticHTML = ECEIndexHTML(shopId: shopId, customerSessionClientSecret: customerSessionClientSecret)
+        webView.loadHTMLString(staticHTML.ECEHTML, baseURL: URL(string: "https://pay.stripe.com")!)
     }
 
     @objc private func refreshWebView() {
