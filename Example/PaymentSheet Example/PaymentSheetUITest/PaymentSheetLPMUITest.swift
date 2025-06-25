@@ -506,35 +506,35 @@ class PaymentSheetStandardLPMUITwoTests: PaymentSheetStandardLPMUICase {
         _testInstantDebits(mode: .setup)
     }
 
-//    func testUPIPaymentMethod() throws {
-//        var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
-//        settings.layout = .horizontal
-//        settings.customerMode = .new
-//        settings.merchantCountryCode = .IN
-//        settings.currency = .inr
-//        settings.apmsEnabled = .off
-//        loadPlayground(app, settings)
-//
-//        app.buttons["Present PaymentSheet"].waitForExistenceAndTap()
-//        XCTAssertTrue(app.buttons["Pay ₹50.99"].waitForExistence(timeout: 5))
-//
-//        let payButton = app.buttons["Pay ₹50.99"]
-//        tapPaymentMethod("UPI")
-//
-//        XCTAssertFalse(payButton.isEnabled)
-//        // Test invalid VPA
-//        let upi_id = app.textFields["UPI ID"]
-//        upi_id.tap()
-//        upi_id.typeText("payment.success" + XCUIKeyboardKey.return.rawValue)
-//        XCTAssertFalse(payButton.isEnabled)
-//
-//        // Test valid VPA
-//        upi_id.tap()
-//        upi_id.typeText(String(repeating: XCUIKeyboardKey.delete.rawValue, count: "payment.success".count))
-//        upi_id.typeText("payment.success@stripeupi" + XCUIKeyboardKey.return.rawValue)
-//        payButton.tap()
-//        XCTAssertTrue(app.staticTexts["Success!"].waitForExistence(timeout: 10.0))
-//    }
+    func testUPIPaymentMethod() throws {
+        var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
+        settings.layout = .horizontal
+        settings.customerMode = .new
+        settings.merchantCountryCode = .IN
+        settings.currency = .inr
+        settings.apmsEnabled = .off
+        loadPlayground(app, settings)
+
+        app.buttons["Present PaymentSheet"].waitForExistenceAndTap()
+        XCTAssertTrue(app.buttons["Pay ₹50.99"].waitForExistence(timeout: 5))
+
+        let payButton = app.buttons["Pay ₹50.99"]
+        tapPaymentMethod("UPI")
+
+        XCTAssertFalse(payButton.isEnabled)
+        // Test invalid VPA
+        let upi_id = app.textFields["UPI ID"]
+        upi_id.tap()
+        upi_id.typeText("payment.success" + XCUIKeyboardKey.return.rawValue)
+        XCTAssertFalse(payButton.isEnabled)
+
+        // Test valid VPA
+        upi_id.tap()
+        upi_id.typeText(String(repeating: XCUIKeyboardKey.delete.rawValue, count: "payment.success".count))
+        upi_id.typeText("payment.success@stripeupi" + XCUIKeyboardKey.return.rawValue)
+        payButton.tap()
+        XCTAssertTrue(app.staticTexts["Success!"].waitForExistence(timeout: 10.0))
+    }
 
     // This only tests the PaymentSheet + PaymentIntent flow.
     // Other confirmation flows are tested in PaymentSheet+LPMTests.swift
