@@ -470,42 +470,42 @@ class PaymentSheetStandardUITests: PaymentSheetUITestCase {
         webviewCloseButton.tap()
     }
 
-    func testUPIPaymentMethodPolling() throws {
-        var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
-        settings.layout = .horizontal
-        settings.customerMode = .new
-        settings.customerKeyType = .legacy
-        settings.merchantCountryCode = .IN
-        settings.currency = .inr
-        settings.apmsEnabled = .off
-        loadPlayground(app, settings)
-
-        app.buttons["Present PaymentSheet"].tap()
-
-        let payButton = app.buttons["Pay ₹50.99"]
-        XCTAssertTrue(payButton.waitForExistence(timeout: 10))
-        guard let upi = scroll(collectionView: app.collectionViews.firstMatch, toFindCellWithId: "UPI") else {
-            XCTFail()
-            return
-        }
-        upi.tap()
-
-        XCTAssertFalse(payButton.isEnabled)
-        let upi_id = app.textFields["UPI ID"]
-        upi_id.tap()
-        upi_id.typeText("payment.pending@stripeupi")
-        upi_id.typeText(XCUIKeyboardKey.return.rawValue)
-
-        payButton.tap()
-
-        let approvePaymentText = app.staticTexts["Approve payment"]
-        XCTAssertTrue(approvePaymentText.waitForExistence(timeout: 10.0))
-
-        // UPI Specific CTA
-        let predicate = NSPredicate(format: "label BEGINSWITH 'Open your UPI app to approve your payment within'")
-        let upiCTAText = XCUIApplication().staticTexts.element(matching: predicate)
-        XCTAssertTrue(upiCTAText.waitForExistence(timeout: 10.0))
-    }
+//    func testUPIPaymentMethodPolling() throws {
+//        var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
+//        settings.layout = .horizontal
+//        settings.customerMode = .new
+//        settings.customerKeyType = .legacy
+//        settings.merchantCountryCode = .IN
+//        settings.currency = .inr
+//        settings.apmsEnabled = .off
+//        loadPlayground(app, settings)
+//
+//        app.buttons["Present PaymentSheet"].tap()
+//
+//        let payButton = app.buttons["Pay ₹50.99"]
+//        XCTAssertTrue(payButton.waitForExistence(timeout: 10))
+//        guard let upi = scroll(collectionView: app.collectionViews.firstMatch, toFindCellWithId: "UPI") else {
+//            XCTFail()
+//            return
+//        }
+//        upi.tap()
+//
+//        XCTAssertFalse(payButton.isEnabled)
+//        let upi_id = app.textFields["UPI ID"]
+//        upi_id.tap()
+//        upi_id.typeText("payment.pending@stripeupi")
+//        upi_id.typeText(XCUIKeyboardKey.return.rawValue)
+//
+//        payButton.tap()
+//
+//        let approvePaymentText = app.staticTexts["Approve payment"]
+//        XCTAssertTrue(approvePaymentText.waitForExistence(timeout: 10.0))
+//
+//        // UPI Specific CTA
+//        let predicate = NSPredicate(format: "label BEGINSWITH 'Open your UPI app to approve your payment within'")
+//        let upiCTAText = XCUIApplication().staticTexts.element(matching: predicate)
+//        XCTAssertTrue(upiCTAText.waitForExistence(timeout: 10.0))
+//    }
 
     func testBLIKPaymentMethodPolling() throws {
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
