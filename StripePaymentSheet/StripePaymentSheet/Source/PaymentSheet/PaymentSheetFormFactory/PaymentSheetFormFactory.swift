@@ -866,7 +866,12 @@ extension PaymentSheetFormFactory {
     func makeBillingAddressSectionIfNecessary(requiredByPaymentMethod: Bool) -> Element? {
         if configuration.billingDetailsCollectionConfiguration.address == .full
             || (configuration.billingDetailsCollectionConfiguration.address == .automatic && requiredByPaymentMethod) {
-           return makeBillingAddressSection()
+            let allowedCountries = configuration.billingDetailsCollectionConfiguration.allowedCountries.isEmpty
+                ? nil
+                : configuration.billingDetailsCollectionConfiguration.allowedCountries
+            return makeBillingAddressSection(
+                countries: allowedCountries
+            )
         } else {
             return nil
         }

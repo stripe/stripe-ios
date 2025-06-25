@@ -76,11 +76,20 @@ extension PaymentSheetFormFactory {
         )
 
         let billingAddressSection: PaymentMethodElementWrapper<AddressSectionElement>? = {
+            let allowedCountries = configuration.billingDetailsCollectionConfiguration.allowedCountries.isEmpty
+                ? nil
+                : configuration.billingDetailsCollectionConfiguration.allowedCountries
             switch configuration.billingDetailsCollectionConfiguration.address {
             case .automatic:
-                return makeBillingAddressSection(collectionMode: .countryAndPostal(), countries: nil)
+                return makeBillingAddressSection(
+                    collectionMode: .countryAndPostal(),
+                    countries: allowedCountries
+                )
             case .full:
-                return makeBillingAddressSection(collectionMode: .all(), countries: nil)
+                return makeBillingAddressSection(
+                    collectionMode: .all(),
+                    countries: allowedCountries
+                )
             case .never:
                 return nil
             }

@@ -78,11 +78,16 @@ extension SavedPaymentMethodFormFactory {
             guard configuration.canUpdate else {
                 return nil
             }
+
+            let allowedCountries = configuration.billingDetailsCollectionConfiguration.allowedCountries.isEmpty
+                ? nil
+                : configuration.billingDetailsCollectionConfiguration.allowedCountries
+
             switch configuration.billingDetailsCollectionConfiguration.address {
             case .automatic:
-                return makeBillingAddressSection(configuration, collectionMode: .countryAndPostal(), countries: nil)
+                return makeBillingAddressSection(configuration, collectionMode: .countryAndPostal(), countries: allowedCountries)
             case .full:
-                return makeBillingAddressSection(configuration, collectionMode: .all(), countries: nil)
+                return makeBillingAddressSection(configuration, collectionMode: .all(), countries: allowedCountries)
             case .never:
                 return nil
             }

@@ -126,6 +126,7 @@ final class PaymentSheetLoader {
                 // Filter out payment methods that the PI/SI or PaymentSheet doesn't support
                 let filteredSavedPaymentMethods = try await savedPaymentMethods
                     .filter { elementsSession.orderedPaymentMethodTypes.contains($0.type) }
+                    .filter { configuration.billingDetailsCollectionConfiguration.supportsCountry($0.billingDetails?.address?.country) }
                     .filter {
                         $0.supportsSavedPaymentMethod(
                             configuration: configuration,

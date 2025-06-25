@@ -184,7 +184,8 @@ import UIKit
             countryCodes: countryCodes,
             theme: theme,
             defaultCountry: defaults.address.country,
-            locale: locale
+            locale: locale,
+            disableDropdownWithSingleCountry: true
         )
         self.defaults = defaults
         self.addressSpecProvider = addressSpecProvider

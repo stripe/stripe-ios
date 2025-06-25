@@ -751,6 +751,22 @@ extension PaymentSheet {
         ///
         /// If `false` (the default), those values will only be used to prefill the corresponding fields in the form.
         public var attachDefaultsToPaymentMethod = false
+
+        /// A list of two-letter country codes representing countries the customers can select.
+        /// If the list is empty (the default), we display all countries.
+        @_spi(STP) public var allowedCountries: [String] = []
+
+        func supportsCountry(_ country: String?) -> Bool {
+            if !allowedCountries.isEmpty {
+                if let country {
+                    return allowedCountries.contains(country)
+                } else {
+                    return false
+                }
+            }
+
+            return true
+        }
     }
 
     /// Configuration for external payment methods
