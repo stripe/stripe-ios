@@ -221,7 +221,6 @@ private func replaceNondeterministicParams(_ input: String) -> String {
             XCTAssertEqual(parts.count, 2, "Invalid portion of query string: index\(index), component: \(component)")
             components[index] = "\(parts[0])=.*"
         }
-
     }
 
     return components.joined(separator: "&")
