@@ -47,7 +47,7 @@ final class ListItemViewSnapshotTest: STPSnapshotTestCase {
                 accessibilityLabel: nil,
                 accessory: .button(
                     title: buttonText,
-                    onTap: {}
+                    onTap: { _ in }
                 ),
                 onTap: nil
             ),
@@ -95,7 +95,7 @@ final class ListItemViewSnapshotTest: STPSnapshotTestCase {
                 accessibilityLabel: nil,
                 accessory: .button(
                     title: buttonText,
-                    onTap: {}
+                    onTap: { _ in }
                 ),
                 onTap: nil
             ),

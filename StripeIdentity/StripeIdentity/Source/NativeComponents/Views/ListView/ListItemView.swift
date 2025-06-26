@@ -16,7 +16,7 @@ final class ListItemView: UIView {
 
     struct ViewModel {
         enum Accessory {
-            case button(title: String, onTap: () -> Void)
+            case button(title: String, onTap: (UIButton) -> Void)
             case activityIndicator
             case icon(UIImage)
         }
@@ -90,7 +90,7 @@ final class ListItemView: UIView {
         }
     }
 
-    private var buttonTapHandler: (() -> Void)?
+    private var buttonTapHandler: ((UIButton) -> Void)?
 
     // MARK: - TapHandler
 
@@ -186,7 +186,7 @@ final class ListItemView: UIView {
         }
 
         if let buttonTapHandler = buttonTapHandler {
-            buttonTapHandler()
+            buttonTapHandler(button)
             return true
         }
 
@@ -228,6 +228,6 @@ final class ListItemView: UIView {
     }
 
     @objc private func didTapButton() {
-        buttonTapHandler?()
+        buttonTapHandler?(button)
     }
 }
