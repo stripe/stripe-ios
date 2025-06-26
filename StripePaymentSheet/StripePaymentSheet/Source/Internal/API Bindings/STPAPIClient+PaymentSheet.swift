@@ -162,7 +162,7 @@ extension STPAPIClient {
             }
         }
     }
-    
+
     func retrieveDeferredElementsSessionForCustomerSheet(paymentMethodTypes: [String]?,
                                                          clientDefaultPaymentMethod: String?,
                                                          customerSessionClientSecret: CustomerSessionClientSecret?) async throws -> STPElementsSession {
