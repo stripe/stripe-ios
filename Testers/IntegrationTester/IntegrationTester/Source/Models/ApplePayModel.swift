@@ -59,7 +59,7 @@ class MyApplePayBackendModel: NSObject, ObservableObject, STPApplePayContextDele
       fetchPaymentIntentForApplePay(completion: completion)
     }
   }
-  
+
   private func fetchPaymentIntentForApplePay(completion: @escaping STPIntentClientSecretCompletionBlock) {
     BackendModel.shared.fetchPaymentIntent(integrationMethod: .card) { pip in
       if let clientSecret = pip?.clientSecret {
