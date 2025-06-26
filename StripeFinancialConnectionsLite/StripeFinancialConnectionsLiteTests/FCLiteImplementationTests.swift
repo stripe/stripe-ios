@@ -1,8 +1,8 @@
 //
 //  FCLiteImplementationTests.swift
-//  StripePaymentSheetTests
+//  StripeFinancialConnectionsLiteTests
 //
-//  Created by Mat Schmid on 2025-03-28.
+//  Created by Mat Schmid on 6/20/25.
 //
 
 @_spi(STP) import StripeCore
@@ -11,7 +11,7 @@ import XCTest
 class FCLiteImplementationTests: XCTestCase {
     func testFCLiteImplementationAvailable() {
         let FinancialConnectionsLiteImplementation: FinancialConnectionsSDKInterface.Type? =
-            NSClassFromString("StripePaymentSheet.FCLiteImplementation")
+            NSClassFromString("StripeFinancialConnectionsLite.FCLiteImplementation")
             as? FinancialConnectionsSDKInterface.Type
         XCTAssertNotNil(FinancialConnectionsLiteImplementation)
     }

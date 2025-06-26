@@ -1,0 +1,607 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 77;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		496A84572E059C53006255BF /* StripeCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 496A84562E059C53006255BF /* StripeCore.framework */; };
+		497E7B3D2E05A38400585A2E /* StripeFinancialConnectionsLite.h in Headers */ = {isa = PBXBuildFile; fileRef = 497E7B3C2E05A38400585A2E /* StripeFinancialConnectionsLite.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		49BA8B592E05A6DE00CE3E5B /* StripeFinancialConnectionsLiteBundleLocator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49BA8B582E05A6DE00CE3E5B /* StripeFinancialConnectionsLiteBundleLocator.swift */; };
+		49BA8B5B2E05A72000CE3E5B /* STPLocalizedString.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49BA8B5A2E05A72000CE3E5B /* STPLocalizedString.swift */; };
+		49BA8B602E05AA1400CE3E5B /* FCLiteImplementationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49BA8B5F2E05AA1400CE3E5B /* FCLiteImplementationTests.swift */; };
+		49E4E4AF2E05A53A00A252A2 /* FCLiteSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49E4E4AA2E05A53A00A252A2 /* FCLiteSession.swift */; };
+		49E4E4B02E05A53A00A252A2 /* FCLiteManifest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49E4E4A92E05A53A00A252A2 /* FCLiteManifest.swift */; };
+		49E4E4B12E05A53A00A252A2 /* FCLiteContainerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49E4E4A22E05A53A00A252A2 /* FCLiteContainerViewController.swift */; };
+		49E4E4B22E05A53A00A252A2 /* FCLiteApiClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49E4E49F2E05A53A00A252A2 /* FCLiteApiClient.swift */; };
+		49E4E4B32E05A53A00A252A2 /* FinancialConnectionsLite.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49E4E4AD2E05A53A00A252A2 /* FinancialConnectionsLite.swift */; };
+		49E4E4B42E05A53A00A252A2 /* FCLiteModalPresentationWrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49E4E4A72E05A53A00A252A2 /* FCLiteModalPresentationWrapper.swift */; };
+		49E4E4B52E05A53A00A252A2 /* FCLiteImplementation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49E4E4AC2E05A53A00A252A2 /* FCLiteImplementation.swift */; };
+		49E4E4B62E05A53A00A252A2 /* FCLiteAuthFlowViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49E4E4A12E05A53A00A252A2 /* FCLiteAuthFlowViewController.swift */; };
+		49E4E4B72E05A53A00A252A2 /* FCLiteColor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49E4E4A42E05A53A00A252A2 /* FCLiteColor.swift */; };
+		49E4E4B82E05A53A00A252A2 /* FCLiteError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49E4E4A52E05A53A00A252A2 /* FCLiteError.swift */; };
+		49E4E4B92E05A53A00A252A2 /* FCLiteErrorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49E4E4A62E05A53A00A252A2 /* FCLiteErrorView.swift */; };
+		49EA6B502E059B7D00BE15B3 /* StripeFinancialConnectionsLite.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 49EA6B472E059B7D00BE15B3 /* StripeFinancialConnectionsLite.framework */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		49EA6B512E059B7D00BE15B3 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 49EA6B3E2E059B7D00BE15B3 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 49EA6B462E059B7D00BE15B3;
+			remoteInfo = StripeFinancialConnectionsLite;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		496A84562E059C53006255BF /* StripeCore.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = StripeCore.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		497E7B3C2E05A38400585A2E /* StripeFinancialConnectionsLite.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = StripeFinancialConnectionsLite.h; sourceTree = "<group>"; };
+		49BA8B582E05A6DE00CE3E5B /* StripeFinancialConnectionsLiteBundleLocator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StripeFinancialConnectionsLiteBundleLocator.swift; sourceTree = "<group>"; };
+		49BA8B5A2E05A72000CE3E5B /* STPLocalizedString.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = STPLocalizedString.swift; sourceTree = "<group>"; };
+		49BA8B5F2E05AA1400CE3E5B /* FCLiteImplementationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FCLiteImplementationTests.swift; sourceTree = "<group>"; };
+		49BA8B612E05AD5800CE3E5B /* StripeFinancialConnectionsLiteTests.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = StripeFinancialConnectionsLiteTests.xctestplan; sourceTree = "<group>"; };
+		49E4E49F2E05A53A00A252A2 /* FCLiteApiClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FCLiteApiClient.swift; sourceTree = "<group>"; };
+		49E4E4A12E05A53A00A252A2 /* FCLiteAuthFlowViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FCLiteAuthFlowViewController.swift; sourceTree = "<group>"; };
+		49E4E4A22E05A53A00A252A2 /* FCLiteContainerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FCLiteContainerViewController.swift; sourceTree = "<group>"; };
+		49E4E4A42E05A53A00A252A2 /* FCLiteColor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FCLiteColor.swift; sourceTree = "<group>"; };
+		49E4E4A52E05A53A00A252A2 /* FCLiteError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FCLiteError.swift; sourceTree = "<group>"; };
+		49E4E4A62E05A53A00A252A2 /* FCLiteErrorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FCLiteErrorView.swift; sourceTree = "<group>"; };
+		49E4E4A72E05A53A00A252A2 /* FCLiteModalPresentationWrapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FCLiteModalPresentationWrapper.swift; sourceTree = "<group>"; };
+		49E4E4A92E05A53A00A252A2 /* FCLiteManifest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FCLiteManifest.swift; sourceTree = "<group>"; };
+		49E4E4AA2E05A53A00A252A2 /* FCLiteSession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FCLiteSession.swift; sourceTree = "<group>"; };
+		49E4E4AC2E05A53A00A252A2 /* FCLiteImplementation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FCLiteImplementation.swift; sourceTree = "<group>"; };
+		49E4E4AD2E05A53A00A252A2 /* FinancialConnectionsLite.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FinancialConnectionsLite.swift; sourceTree = "<group>"; };
+		49EA6B472E059B7D00BE15B3 /* StripeFinancialConnectionsLite.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = StripeFinancialConnectionsLite.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		49EA6B4F2E059B7D00BE15B3 /* StripeFinancialConnectionsLiteTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = StripeFinancialConnectionsLiteTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		49EA6B442E059B7D00BE15B3 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				496A84572E059C53006255BF /* StripeCore.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		49EA6B4C2E059B7D00BE15B3 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				49EA6B502E059B7D00BE15B3 /* StripeFinancialConnectionsLite.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		496A84552E059C53006255BF /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				496A84562E059C53006255BF /* StripeCore.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		497E7B402E05A39A00585A2E /* StripeFinancialConnectionsLite */ = {
+			isa = PBXGroup;
+			children = (
+				497E7B422E05A3C800585A2E /* Source */,
+				497E7B412E05A3B900585A2E /* Ressources */,
+				497E7B3C2E05A38400585A2E /* StripeFinancialConnectionsLite.h */,
+			);
+			path = StripeFinancialConnectionsLite;
+			sourceTree = "<group>";
+		};
+		497E7B412E05A3B900585A2E /* Ressources */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Ressources;
+			sourceTree = "<group>";
+		};
+		497E7B422E05A3C800585A2E /* Source */ = {
+			isa = PBXGroup;
+			children = (
+				49E4E4BA2E05A69800A252A2 /* Localization */,
+				49E4E4A02E05A53A00A252A2 /* API Client */,
+				49E4E4A32E05A53A00A252A2 /* Controllers */,
+				49E4E4A82E05A53A00A252A2 /* Helpers */,
+				49E4E4AB2E05A53A00A252A2 /* Models */,
+				49E4E4AC2E05A53A00A252A2 /* FCLiteImplementation.swift */,
+				49E4E4AD2E05A53A00A252A2 /* FinancialConnectionsLite.swift */,
+			);
+			path = Source;
+			sourceTree = "<group>";
+		};
+		497E7B432E05A3ED00585A2E /* StripeFinancialConnectionsLiteTests */ = {
+			isa = PBXGroup;
+			children = (
+				49BA8B5F2E05AA1400CE3E5B /* FCLiteImplementationTests.swift */,
+			);
+			path = StripeFinancialConnectionsLiteTests;
+			sourceTree = "<group>";
+		};
+		49E4E4A02E05A53A00A252A2 /* API Client */ = {
+			isa = PBXGroup;
+			children = (
+				49E4E49F2E05A53A00A252A2 /* FCLiteApiClient.swift */,
+			);
+			path = "API Client";
+			sourceTree = "<group>";
+		};
+		49E4E4A32E05A53A00A252A2 /* Controllers */ = {
+			isa = PBXGroup;
+			children = (
+				49E4E4A12E05A53A00A252A2 /* FCLiteAuthFlowViewController.swift */,
+				49E4E4A22E05A53A00A252A2 /* FCLiteContainerViewController.swift */,
+			);
+			path = Controllers;
+			sourceTree = "<group>";
+		};
+		49E4E4A82E05A53A00A252A2 /* Helpers */ = {
+			isa = PBXGroup;
+			children = (
+				49E4E4A42E05A53A00A252A2 /* FCLiteColor.swift */,
+				49E4E4A52E05A53A00A252A2 /* FCLiteError.swift */,
+				49E4E4A62E05A53A00A252A2 /* FCLiteErrorView.swift */,
+				49E4E4A72E05A53A00A252A2 /* FCLiteModalPresentationWrapper.swift */,
+			);
+			path = Helpers;
+			sourceTree = "<group>";
+		};
+		49E4E4AB2E05A53A00A252A2 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				49E4E4A92E05A53A00A252A2 /* FCLiteManifest.swift */,
+				49E4E4AA2E05A53A00A252A2 /* FCLiteSession.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		49E4E4BA2E05A69800A252A2 /* Localization */ = {
+			isa = PBXGroup;
+			children = (
+				49BA8B582E05A6DE00CE3E5B /* StripeFinancialConnectionsLiteBundleLocator.swift */,
+				49BA8B5A2E05A72000CE3E5B /* STPLocalizedString.swift */,
+			);
+			path = Localization;
+			sourceTree = "<group>";
+		};
+		49EA6B3D2E059B7D00BE15B3 = {
+			isa = PBXGroup;
+			children = (
+				49BA8B612E05AD5800CE3E5B /* StripeFinancialConnectionsLiteTests.xctestplan */,
+				497E7B402E05A39A00585A2E /* StripeFinancialConnectionsLite */,
+				497E7B432E05A3ED00585A2E /* StripeFinancialConnectionsLiteTests */,
+				496A84552E059C53006255BF /* Frameworks */,
+				49EA6B482E059B7D00BE15B3 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		49EA6B482E059B7D00BE15B3 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				49EA6B472E059B7D00BE15B3 /* StripeFinancialConnectionsLite.framework */,
+				49EA6B4F2E059B7D00BE15B3 /* StripeFinancialConnectionsLiteTests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXHeadersBuildPhase section */
+		49EA6B422E059B7D00BE15B3 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				497E7B3D2E05A38400585A2E /* StripeFinancialConnectionsLite.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXHeadersBuildPhase section */
+
+/* Begin PBXNativeTarget section */
+		49EA6B462E059B7D00BE15B3 /* StripeFinancialConnectionsLite */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 49EA6B582E059B7D00BE15B3 /* Build configuration list for PBXNativeTarget "StripeFinancialConnectionsLite" */;
+			buildPhases = (
+				49EA6B422E059B7D00BE15B3 /* Headers */,
+				49EA6B432E059B7D00BE15B3 /* Sources */,
+				49EA6B442E059B7D00BE15B3 /* Frameworks */,
+				49EA6B452E059B7D00BE15B3 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = StripeFinancialConnectionsLite;
+			packageProductDependencies = (
+			);
+			productName = StripeFinancialConnectionsLite;
+			productReference = 49EA6B472E059B7D00BE15B3 /* StripeFinancialConnectionsLite.framework */;
+			productType = "com.apple.product-type.framework";
+		};
+		49EA6B4E2E059B7D00BE15B3 /* StripeFinancialConnectionsLiteTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 49EA6B5D2E059B7D00BE15B3 /* Build configuration list for PBXNativeTarget "StripeFinancialConnectionsLiteTests" */;
+			buildPhases = (
+				49EA6B4B2E059B7D00BE15B3 /* Sources */,
+				49EA6B4C2E059B7D00BE15B3 /* Frameworks */,
+				49EA6B4D2E059B7D00BE15B3 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				49EA6B522E059B7D00BE15B3 /* PBXTargetDependency */,
+			);
+			name = StripeFinancialConnectionsLiteTests;
+			packageProductDependencies = (
+			);
+			productName = StripeFinancialConnectionsLiteTests;
+			productReference = 49EA6B4F2E059B7D00BE15B3 /* StripeFinancialConnectionsLiteTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		49EA6B3E2E059B7D00BE15B3 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = 1;
+				LastSwiftUpdateCheck = 1620;
+				LastUpgradeCheck = 1620;
+				TargetAttributes = {
+					49EA6B462E059B7D00BE15B3 = {
+						CreatedOnToolsVersion = 16.2;
+					};
+					49EA6B4E2E059B7D00BE15B3 = {
+						CreatedOnToolsVersion = 16.2;
+					};
+				};
+			};
+			buildConfigurationList = 49EA6B412E059B7D00BE15B3 /* Build configuration list for PBXProject "StripeFinancialConnectionsLite" */;
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 49EA6B3D2E059B7D00BE15B3;
+			minimizedProjectReferenceProxies = 1;
+			preferredProjectObjectVersion = 77;
+			productRefGroup = 49EA6B482E059B7D00BE15B3 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				49EA6B462E059B7D00BE15B3 /* StripeFinancialConnectionsLite */,
+				49EA6B4E2E059B7D00BE15B3 /* StripeFinancialConnectionsLiteTests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		49EA6B452E059B7D00BE15B3 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		49EA6B4D2E059B7D00BE15B3 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		49EA6B432E059B7D00BE15B3 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				49E4E4AF2E05A53A00A252A2 /* FCLiteSession.swift in Sources */,
+				49E4E4B02E05A53A00A252A2 /* FCLiteManifest.swift in Sources */,
+				49E4E4B12E05A53A00A252A2 /* FCLiteContainerViewController.swift in Sources */,
+				49BA8B592E05A6DE00CE3E5B /* StripeFinancialConnectionsLiteBundleLocator.swift in Sources */,
+				49BA8B5B2E05A72000CE3E5B /* STPLocalizedString.swift in Sources */,
+				49E4E4B22E05A53A00A252A2 /* FCLiteApiClient.swift in Sources */,
+				49E4E4B32E05A53A00A252A2 /* FinancialConnectionsLite.swift in Sources */,
+				49E4E4B42E05A53A00A252A2 /* FCLiteModalPresentationWrapper.swift in Sources */,
+				49E4E4B52E05A53A00A252A2 /* FCLiteImplementation.swift in Sources */,
+				49E4E4B62E05A53A00A252A2 /* FCLiteAuthFlowViewController.swift in Sources */,
+				49E4E4B72E05A53A00A252A2 /* FCLiteColor.swift in Sources */,
+				49E4E4B82E05A53A00A252A2 /* FCLiteError.swift in Sources */,
+				49E4E4B92E05A53A00A252A2 /* FCLiteErrorView.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		49EA6B4B2E059B7D00BE15B3 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				49BA8B602E05AA1400CE3E5B /* FCLiteImplementationTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		49EA6B522E059B7D00BE15B3 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 49EA6B462E059B7D00BE15B3 /* StripeFinancialConnectionsLite */;
+			targetProxy = 49EA6B512E059B7D00BE15B3 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		49EA6B592E059B7D00BE15B3 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUILD_LIBRARY_FOR_DISTRIBUTION = YES;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEFINES_MODULE = YES;
+				DEVELOPMENT_TEAM = Y28TH9SHX7;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				ENABLE_MODULE_VERIFIER = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				MODULE_VERIFIER_SUPPORTED_LANGUAGES = "objective-c objective-c++";
+				MODULE_VERIFIER_SUPPORTED_LANGUAGE_STANDARDS = "gnu17 gnu++20";
+				PRODUCT_BUNDLE_IDENTIFIER = com.stripe.StripeFinancialConnectionsLite;
+				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
+				SKIP_INSTALL = YES;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator xros xrsimulator";
+				SUPPORTS_MACCATALYST = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_INSTALL_OBJC_HEADER = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2,7";
+			};
+			name = Debug;
+		};
+		49EA6B5A2E059B7D00BE15B3 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUILD_LIBRARY_FOR_DISTRIBUTION = YES;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEFINES_MODULE = YES;
+				DEVELOPMENT_TEAM = Y28TH9SHX7;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				ENABLE_MODULE_VERIFIER = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				MODULE_VERIFIER_SUPPORTED_LANGUAGES = "objective-c objective-c++";
+				MODULE_VERIFIER_SUPPORTED_LANGUAGE_STANDARDS = "gnu17 gnu++20";
+				PRODUCT_BUNDLE_IDENTIFIER = com.stripe.StripeFinancialConnectionsLite;
+				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
+				SKIP_INSTALL = YES;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator xros xrsimulator";
+				SUPPORTS_MACCATALYST = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_INSTALL_OBJC_HEADER = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2,7";
+			};
+			name = Release;
+		};
+		49EA6B5B2E059B7D00BE15B3 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				CURRENT_PROJECT_VERSION = 1;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEFINES_MODULE = YES;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Debug;
+		};
+		49EA6B5C2E059B7D00BE15B3 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				CURRENT_PROJECT_VERSION = 1;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEFINES_MODULE = YES;
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_VERSION = 5.0;
+				VALIDATE_PRODUCT = YES;
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Release;
+		};
+		49EA6B5E2E059B7D00BE15B3 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = Y28TH9SHX7;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.stripe.StripeFinancialConnectionsLiteTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		49EA6B5F2E059B7D00BE15B3 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = Y28TH9SHX7;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.stripe.StripeFinancialConnectionsLiteTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		49EA6B412E059B7D00BE15B3 /* Build configuration list for PBXProject "StripeFinancialConnectionsLite" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				49EA6B5B2E059B7D00BE15B3 /* Debug */,
+				49EA6B5C2E059B7D00BE15B3 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		49EA6B582E059B7D00BE15B3 /* Build configuration list for PBXNativeTarget "StripeFinancialConnectionsLite" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				49EA6B592E059B7D00BE15B3 /* Debug */,
+				49EA6B5A2E059B7D00BE15B3 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		49EA6B5D2E059B7D00BE15B3 /* Build configuration list for PBXNativeTarget "StripeFinancialConnectionsLiteTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				49EA6B5E2E059B7D00BE15B3 /* Debug */,
+				49EA6B5F2E059B7D00BE15B3 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 49EA6B3E2E059B7D00BE15B3 /* Project object */;
+}
