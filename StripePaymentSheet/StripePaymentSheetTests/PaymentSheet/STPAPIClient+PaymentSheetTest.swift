@@ -34,7 +34,6 @@ class STPAPIClient_PaymentSheetTest: XCTestCase {
         })
 
         // Create a session ID
-        AnalyticsHelper.shared.isTest = true
         AnalyticsHelper.shared.generateSessionID()
 
         let parameters = STPAPIClient(publishableKey: "pk_test").makeElementsSessionsParams(mode: .deferredIntent(intentConfig), epmConfiguration: config.externalPaymentMethodConfiguration, cpmConfiguration: config.customPaymentMethodConfiguration, clientDefaultPaymentMethod: "pm_12345", customerAccessProvider: .customerSession("cs_12345"))
@@ -64,7 +63,6 @@ class STPAPIClient_PaymentSheetTest: XCTestCase {
                                                             onBehalfOf: "acct_connect",
                                                             confirmHandler: { _, _, _ in })
         // Create a session ID
-        AnalyticsHelper.shared.isTest = true
         AnalyticsHelper.shared.generateSessionID()
 
         let parameters = STPAPIClient(publishableKey: "pk_test").makeElementsSessionsParams(mode: .deferredIntent(intentConfig), epmConfiguration: nil, cpmConfiguration: nil, clientDefaultPaymentMethod: nil, customerAccessProvider: .legacyCustomerEphemeralKey("ek_12345"))
