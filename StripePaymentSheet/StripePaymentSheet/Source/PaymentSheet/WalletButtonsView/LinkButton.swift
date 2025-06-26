@@ -23,9 +23,11 @@ struct LinkButton: View {
     @StateObject private var viewModel: LinkButtonViewModel
     private let action: () -> Void
     private let height: CGFloat
+    private let cornerRadius: CGFloat
 
-    init(height: CGFloat = Constants.defaultButtonHeight, viewModel: LinkButtonViewModel = LinkButtonViewModel(), action: @escaping () -> Void) {
+    init(height: CGFloat = Constants.defaultButtonHeight, cornerRadius: CGFloat = Constants.defaultButtonHeight / 2, viewModel: LinkButtonViewModel = LinkButtonViewModel(), action: @escaping () -> Void) {
         self.height = height
+        self.cornerRadius = cornerRadius
         self._viewModel = StateObject(wrappedValue: viewModel)
         self.action = action
     }
@@ -77,7 +79,7 @@ struct LinkButton: View {
             .frame(height: height)
             .background(Color(uiColor: .linkIconBrand))
             .foregroundColor(Color(uiColor: .linkTextPrimary))
-            .cornerRadius(height / 2)
+            .cornerRadius(cornerRadius)
         }
     }
 }
