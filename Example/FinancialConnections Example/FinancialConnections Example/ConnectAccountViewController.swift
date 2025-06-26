@@ -12,7 +12,7 @@ class ConnectAccountViewController: UIViewController {
 
     // MARK: - Constants
 
-    let baseURL = "https://stripe-mobile-connections-example.glitch.me"
+    let baseURL = "https://v6q2rx-4000.csb.app"
     let financialConnectionsEndpoint = "/create_session"
 
     // MARK: - IBOutlets
