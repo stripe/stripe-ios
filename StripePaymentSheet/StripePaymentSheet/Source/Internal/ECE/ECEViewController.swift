@@ -179,7 +179,7 @@ class ECEViewController: UIViewController {
             observer.observe(document.body, { childList: true, subtree: true });
 
             // Also check periodically (as a fallback)
-            // setInterval(hideReturnButtons, 500);
+            setInterval(hideReturnButtons, 500);
 
             console.log('Return button hiding observer initialized');
         })();
