@@ -183,6 +183,9 @@ with the transaction. */
 /* Label title for EPS Bank */
 "EPS Bank" = "EPS Bank";
 
+/* Label shown when a network-related error has occured. */
+"Failed to connect" = "Failed to connect";
+
 /* Title for the Link signup screen */
 "Fast, secure, 1⁠-⁠click checkout" = "Fast, secure, 1⁠-⁠click checkout";
 

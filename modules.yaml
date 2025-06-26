@@ -182,19 +182,6 @@ modules:
     max_uncompressed_size: 5000
     max_incremental_uncompressed_size: 100
 
-- podspec: StripeFinancialConnectionsLite.podspec
-  scheme: StripeFinancialConnectionsLite
-  framework_name: StripeFinancialConnectionsLite
-  supports_catalyst: true
-  docs:
-    output: docs/stripefinancialconnectionslite
-    readme: StripeFinancialConnectionsLite/README.md
-    include:
-      - StripeCore
-  size_report:
-    max_incremental_uncompressed_size: 100
-  localization_dir: StripeFinancialConnectionsLite/StripeFinancialConnectionsLite
-
 - podspec: StripeUICore.podspec
   scheme: StripeUICore
   framework_name: StripeUICore
@@ -229,5 +216,4 @@ pod_push_order:
 - StripeIdentity.podspec
 - StripeCardScan.podspec
 - StripeFinancialConnections.podspec
-- StripeFinancialConnectionsLite.podspec
 - StripeConnect.podspec

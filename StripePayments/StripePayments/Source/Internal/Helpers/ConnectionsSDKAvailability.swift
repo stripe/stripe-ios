@@ -16,7 +16,7 @@ import UIKit
         as? FinancialConnectionsSDKInterface.Type
 
     static let FinancialConnectionsLiteImplementation: FinancialConnectionsSDKInterface.Type? =
-        NSClassFromString("StripeFinancialConnectionsLite.FCLiteImplementation")
+        NSClassFromString("StripePaymentSheet.FCLiteImplementation")
         as? FinancialConnectionsSDKInterface.Type
 
     @_spi(STP) public static var fcLiteKillswitchEnabled: Bool = false
