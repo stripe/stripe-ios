@@ -20,7 +20,7 @@ struct CustomerSession: Equatable, Hashable {
     /// - Parameter response: The value of the `external_payment_methods_data` key in the `v1/elements/sessions` response.
     public static func decoded(fromAPIResponse response: [AnyHashable: Any]?) -> CustomerSession? {
         guard let response,
-              let id = response["idd"] as? String,
+              let id = response["id"] as? String,
               let liveMode = response["livemode"] as? Bool,
               let apiKey = response["api_key"] as? String,
               let apiKeyExpiry = response["api_key_expiry"] as? Int,
