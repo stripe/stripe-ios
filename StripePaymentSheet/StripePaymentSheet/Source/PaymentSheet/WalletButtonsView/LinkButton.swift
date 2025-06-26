@@ -78,7 +78,7 @@ struct LinkButton: View {
             .frame(maxWidth: .infinity)
             .frame(height: height)
             .background(Color(uiColor: .linkIconBrand))
-            .foregroundColor(Color(uiColor: .linkTextPrimary))
+            .foregroundColor(Color(uiColor: .linkTextOnPrimary))
             .cornerRadius(cornerRadius)
         }
     }
