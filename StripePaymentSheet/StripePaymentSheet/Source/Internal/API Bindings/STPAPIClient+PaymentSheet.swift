@@ -98,6 +98,10 @@ extension STPAPIClient {
         else {
             throw PaymentSheetError.unknown(debugDescription: "PaymentIntent missing from v1/elements/sessions response")
         }
+        if case .customerSession = configuration.customer?.customerAccessProvider {
+            stpAssert(elementsSession.customer!.customerSession.mobilePaymentElementComponent.enabled,
+                      "Integration Error: Attempting to use a customerSession with MobilePaymentElement that does not have mobile_payment_element component enabled")
+        }
         return (paymentIntent, elementsSession)
     }
 
@@ -122,6 +126,10 @@ extension STPAPIClient {
         else {
             throw PaymentSheetError.unknown(debugDescription: "SetupIntent missing from v1/elements/sessions response")
         }
+        if case .customerSession = configuration.customer?.customerAccessProvider {
+            stpAssert(elementsSession.customer!.customerSession.mobilePaymentElementComponent.enabled,
+                      "Integration Error: Attempting to use a customerSession with MobilePaymentElement that does not have mobile_payment_element component enabled")
+        }
         return (setupIntent, elementsSession)
     }
 
@@ -135,11 +143,16 @@ extension STPAPIClient {
                                                     cpmConfiguration: configuration.customPaymentMethodConfiguration,
                                                     clientDefaultPaymentMethod: clientDefaultPaymentMethod,
                                                     customerAccessProvider: configuration.customer?.customerAccessProvider)
-        return try await APIRequest<STPElementsSession>.getWith(
+        let elementsSession = try await APIRequest<STPElementsSession>.getWith(
             self,
             endpoint: APIEndpointElementsSessions,
             parameters: parameters
         )
+        if case .customerSession = configuration.customer?.customerAccessProvider {
+            stpAssert(elementsSession.customer!.customerSession.mobilePaymentElementComponent.enabled,
+                      "Integration Error: Attempting to use a customerSession with MobilePaymentElement that does not have mobile_payment_element component enabled")
+        }
+        return elementsSession
     }
 
     func retrieveDeferredElementsSessionForCustomerSheet(paymentMethodTypes: [String]?,
@@ -149,11 +162,16 @@ extension STPAPIClient {
         let parameters = makeDeferredElementsSessionsParamsForCustomerSheet(paymentMethodTypes: paymentMethodTypes,
                                                                             clientDefaultPaymentMethod: clientDefaultPaymentMethod,
                                                                             customerSessionClientSecret: customerSessionClientSecret)
-        return try await APIRequest<STPElementsSession>.getWith(
+        let elementsSession = try await APIRequest<STPElementsSession>.getWith(
             self,
             endpoint: APIEndpointElementsSessions,
             parameters: parameters
         )
+        if customerSessionClientSecret != nil {
+            stpAssert(elementsSession.customer!.customerSession.customerSheetComponent.enabled,
+                      "Integration Error: Attempting to use a customerSession with CustomerSheet that does not have customer_sheet component enabled")
+        }
+        return elementsSession
     }
 
     func makeDeferredElementsSessionsParamsForCustomerSheet(paymentMethodTypes: [String]?,
@@ -186,11 +204,16 @@ extension STPAPIClient {
         let parameters = makeElementsSessionsParamsForCustomerSheet(setupIntentClientSecret: setupIntentClientSecret,
                                                                     clientDefaultPaymentMethod: clientDefaultPaymentMethod,
                                                                     customerSessionClientSecret: customerSessionClientSecret)
-        return try await APIRequest<STPElementsSession>.getWith(
+        let elementsSession = try await APIRequest<STPElementsSession>.getWith(
             self,
             endpoint: APIEndpointElementsSessions,
             parameters: parameters
         )
+        if customerSessionClientSecret != nil {
+            stpAssert(elementsSession.customer!.customerSession.customerSheetComponent.enabled,
+                      "Integration Error: Attempting to use a customerSession with CustomerSheet that does not have customer_sheet component enabled")
+        }
+        return elementsSession
     }
 
     func makeElementsSessionsParamsForCustomerSheet(setupIntentClientSecret: String,
