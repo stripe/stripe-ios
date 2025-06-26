@@ -514,32 +514,10 @@ struct CreditCardFormView: View {
 
             Spacer()
 
-            if let signupViewModel = linkController.signupViewModel {
-                LinkPaymentMethodLauncher.SignupView(viewModel: signupViewModel)
-            }
-
-            Spacer()
-
             // Save card button
             Button {
-                let cardPayload = LinkSignupCardPayload(
-                    number: cardNumber,
-                    expiryYear: Int(String(expiryDate.suffix(2)))!,
-                    expiryMonth: Int(String(expiryDate.prefix(2)))!,
-                    postalCode: "12345",
-                    country: "US"
-                )
-
-                Task {
-                    let signupResult = await linkController.signUpConsumer(with: cardPayload)
-                    if signupResult.success {
-                        alertText = "Signed up Link consumer"
-                        showingAlert = true
-                    } else {
-                        alertText = "Failed to sign up for Link"
-                        showingAlert = true
-                    }
-                }
+                alertText = "Not yet implemented"
+                showingAlert = true
             } label: {
                 Text("Save Card")
                     .font(.headline)

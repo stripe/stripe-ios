@@ -11,31 +11,6 @@ import UIKit
 @_spi(STP) import StripePayments
 @_spi(STP) import StripeUICore
 
-public struct LinkSignupCardPayload {
-    public var number: String
-    public var expiryYear: Int
-    public var expiryMonth: Int
-    public var postalCode: String?
-    public var country: String
-    public var preferredNetwork: String?
-
-    public init(
-        number: String,
-        expiryYear: Int,
-        expiryMonth: Int,
-        postalCode: String? = nil,
-        country: String,
-        preferredNetwork: String? = nil
-    ) {
-        self.number = number
-        self.expiryYear = expiryYear
-        self.expiryMonth = expiryMonth
-        self.postalCode = postalCode
-        self.country = country
-        self.preferredNetwork = preferredNetwork
-    }
-}
-
 public class LinkPaymentMethodLauncher: ObservableObject {
     private let apiClient = STPAPIClient.shared
 
@@ -48,24 +23,6 @@ public class LinkPaymentMethodLauncher: ObservableObject {
     public var isExistingLinkConsumer: Bool {
         session != nil
     }
-
-    public lazy var signupViewModel: LinkInlineSignupViewModel? = {
-        guard let loadResult else {
-            return nil
-        }
-
-        let configuration = PaymentSheet.Configuration()
-//        configuration.defaultBillingDetails.email = email
-
-        let accountService = LinkAccountService(apiClient: configuration.apiClient, elementsSession: loadResult.elementsSession)
-
-        return .init(
-            configuration: configuration,
-            showCheckbox: true,
-            accountService: accountService,
-            allowsDefaultOptIn: false
-        )
-    }()
 
     public func lookupConsumer(with email: String, completion: @escaping () -> Void) {
         let intentConfiguration = PaymentSheet.IntentConfiguration(
@@ -143,58 +100,6 @@ public class LinkPaymentMethodLauncher: ObservableObject {
         }
     }
 
-    public func signUpConsumer(
-        with cardPayload: LinkSignupCardPayload,
-        // TODO: Allow redisplay?
-        completion: @escaping (Result<Void, Error>) -> Void
-    ) {
-        guard let signupViewModel, case let .signupAndPay(account, phoneNumber, legalName) = signupViewModel.action else {
-            // TODO: Return error
-            return
-        }
-
-//        let cardParams = [
-//            "exp_month": cardPayload.expiryMonth,
-//            "exp_year": cardPayload.expiryYear,
-//            "number": cardPayload.number,
-//            "preferred_networks": cardPayload.preferredNetwork != nil ? [cardPayload.preferredNetwork!] : []
-//        ] as [String : Any]
-
-        account.signUp(
-            with: phoneNumber,
-            legalName: legalName,
-            consentAction: .checkbox_v0
-        ) { result in
-            switch result {
-            case .success:
-                let billingDetails = STPPaymentMethodBillingDetails()
-
-                let cardParams = STPPaymentMethodCardParams()
-                cardParams.number = cardPayload.number
-                cardParams.expMonth = NSNumber(value: cardPayload.expiryMonth)
-                cardParams.expYear = NSNumber(value: cardPayload.expiryYear)
-                cardParams.networks = .init(preferred: cardPayload.preferredNetwork)
-
-                let paymentMethodParams = STPPaymentMethodParams(
-                    card: cardParams,
-                    billingDetails: billingDetails,
-                    metadata: nil
-                )
-
-                account.createPaymentDetails(with: paymentMethodParams) { result in
-                    switch result {
-                    case .success:
-                        completion(.success(()))
-                    case .failure(let error):
-                        completion(.failure(error))
-                    }
-                }
-            case .failure(let error):
-                completion(.failure(error))
-            }
-        }
-    }
-
     public func createPaymentMethod(completion: @escaping (Result<STPPaymentMethod, Error>) -> Void) {
         guard let paymentDetailsID = internalPaymentOption?.currentLinkPaymentMethod else {
             return
@@ -243,14 +148,6 @@ public extension LinkPaymentMethodLauncher {
             present(from: presentingViewController, with: email) { [weak self] in
                 guard let self else { return }
                 continuation.resume(returning: self.paymentOption)
-            }
-        }
-    }
-
-    func signUpConsumer(with cardPayload: LinkSignupCardPayload) async -> Result<Void, Error> {
-        return await withCheckedContinuation { continuation in
-            signUpConsumer(with: cardPayload) { result in
-                continuation.resume(returning: result)
             }
         }
     }
