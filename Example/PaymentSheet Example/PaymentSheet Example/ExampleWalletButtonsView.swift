@@ -517,7 +517,7 @@ class ExampleWalletButtonsModel: ObservableObject {
                                                  handlers: handlers)
     }
     func isValidShippingLocation(_ address: PaymentSheet.ShopPayConfiguration.PartialAddress) -> Bool {
-        return true
+        return address.postalCode != "91911"
     }
 }
 
