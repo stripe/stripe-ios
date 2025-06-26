@@ -61,7 +61,7 @@ class LoadingViewController: UIViewController, BottomSheetContentViewController 
 
         activityIndicator.color = appearance.colors.background.contrastingColor
         if #available(iOS 17.0, *) {
-            registerForTraitChanges([UITraitUserInterfaceStyle.self], handler: { (self: Self, previousTraitCollection: UITraitCollection) in
+            registerForTraitChanges([UITraitUserInterfaceStyle.self], handler: { (self: Self, _: UITraitCollection) in
                 self.activityIndicator.color = self.appearance.colors.background.contrastingColor
             })
         }
