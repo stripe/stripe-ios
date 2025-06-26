@@ -74,6 +74,7 @@ final class PayWithNativeLinkController {
 
     func presentAsBottomSheet(
         from presentingController: UIViewController,
+        linkAccount: PaymentSheetLinkAccount?,
         shouldOfferApplePay: Bool,
         hidingUnderlyingBottomSheet: Bool = true,
         shouldFinishOnClose: Bool,
@@ -81,6 +82,7 @@ final class PayWithNativeLinkController {
     ) {
         presentAsBottomSheetInternal(
             from: presentingController,
+            linkAccount: linkAccount,
             shouldOfferApplePay: shouldOfferApplePay,
             hidingUnderlyingBottomSheet: hidingUnderlyingBottomSheet,
             shouldFinishOnClose: shouldFinishOnClose
@@ -95,12 +97,14 @@ final class PayWithNativeLinkController {
 
     func presentForPaymentMethodSelection(
         from presentingController: UIViewController,
+        linkAccount: PaymentSheetLinkAccount?,
         initiallySelectedPaymentDetailsID: String?,
         shouldShowSecondaryCta: Bool = true,
         completion: @escaping (_ confirmOption: PaymentSheet.LinkConfirmOption?, _ shouldReturnToPaymentSheet: Bool) -> Void
     ) {
         presentAsBottomSheetInternal(
             from: presentingController,
+            linkAccount: linkAccount,
             shouldOfferApplePay: false,
             hidingUnderlyingBottomSheet: true,
             launchedFromFlowController: true,
@@ -119,6 +123,7 @@ final class PayWithNativeLinkController {
 
     private func presentAsBottomSheetInternal(
         from presentingController: UIViewController,
+        linkAccount: PaymentSheetLinkAccount?,
         shouldOfferApplePay: Bool,
         hidingUnderlyingBottomSheet: Bool = true,
         launchedFromFlowController: Bool = false,
@@ -136,7 +141,7 @@ final class PayWithNativeLinkController {
         let presentBottomSheet: (UIViewController) -> Void = { presentingController in
             let payWithLinkVC = PayWithLinkViewController(
                 intent: self.intent,
-                linkAccount: LinkAccountContext.shared.account,
+                linkAccount: linkAccount,
                 elementsSession: self.elementsSession,
                 configuration: self.configuration,
                 shouldOfferApplePay: shouldOfferApplePay,

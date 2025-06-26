@@ -20,6 +20,7 @@ extension STPElementsSession {
 extension UIViewController {
 
     func presentNativeLink(
+        linkAccount: PaymentSheetLinkAccount?,
         selectedPaymentDetailsID: String?,
         configuration: PaymentElementConfiguration,
         intent: Intent,
@@ -28,8 +29,6 @@ extension UIViewController {
         verificationDismissed: (() -> Void)? = nil,
         callback: @escaping (_ confirmOption: PaymentSheet.LinkConfirmOption?, _ shouldReturnToPaymentSheet: Bool) -> Void
     ) {
-        let linkAccount = LinkAccountContext.shared.account
-
         if let linkAccount, linkAccount.sessionState == .requiresVerification {
             let verificationController = LinkVerificationController(
                 mode: .inlineLogin,
@@ -44,6 +43,7 @@ extension UIViewController {
                 }
 
                 self.presentNativeLink(
+                    linkAccount: linkAccount,
                     selectedPaymentDetailsID: selectedPaymentDetailsID,
                     intent: intent,
                     elementsSession: elementsSession,
@@ -54,6 +54,7 @@ extension UIViewController {
             }
         } else {
             presentNativeLink(
+                linkAccount: linkAccount,
                 selectedPaymentDetailsID: selectedPaymentDetailsID,
                 intent: intent,
                 elementsSession: elementsSession,
@@ -65,6 +66,7 @@ extension UIViewController {
     }
 
     private func presentNativeLink(
+        linkAccount: PaymentSheetLinkAccount?,
         selectedPaymentDetailsID: String?,
         intent: Intent,
         elementsSession: STPElementsSession,
@@ -83,6 +85,7 @@ extension UIViewController {
 
         payWithLinkController.presentForPaymentMethodSelection(
             from: self,
+            linkAccount: linkAccount,
             initiallySelectedPaymentDetailsID: selectedPaymentDetailsID,
             completion: callback
         )

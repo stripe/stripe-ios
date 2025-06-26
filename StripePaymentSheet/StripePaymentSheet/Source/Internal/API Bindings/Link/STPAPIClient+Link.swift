@@ -18,7 +18,7 @@ extension STPAPIClient {
     func lookupConsumerSession(
         for email: String?,
         emailSource: EmailSource?,
-        sessionID: String,
+        sessionID: String?,
         cookieStore: LinkCookieStore,
         useMobileEndpoints: Bool,
         doNotLogConsumerFunnelEvent: Bool,
@@ -30,8 +30,11 @@ extension STPAPIClient {
 
             var parameters: [String: Any] = [
                 "request_surface": "ios_payment_element",
-                "session_id": sessionID,
             ]
+            if let sessionID {
+                parameters["session_id"] = sessionID
+
+            }
             if doNotLogConsumerFunnelEvent {
                 parameters["do_not_log_consumer_funnel_event"] = true
             }

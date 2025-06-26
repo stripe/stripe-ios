@@ -11,18 +11,53 @@ import SwiftUI
 @_spi(STP) import StripePaymentSheet
 @_spi(STP) import StripeUICore
 
+class ExampleLinkStandaloneComponentViewModel: ObservableObject {
+    @Published var linkPaymentMethodLauncher: LinkPaymentMethodLauncher?
+    @Published var error: String?
+}
+
 @available(iOS 16.0, *)
 struct ExampleLinkStandaloneComponent: View {
-    @State private var selectedCarType: CarType = CarType.bolt
+
+    @ObservedObject var model = ExampleLinkStandaloneComponentViewModel()
+
+    var body: some View {
+        Group {
+            if let linkPaymentMethodLauncher = model.linkPaymentMethodLauncher {
+                ExampleLinkStandaloneComponentContent(linkPaymentMethodLauncher: linkPaymentMethodLauncher)
+            } else if let error = model.error {
+                Text(error)
+            } else {
+                ExampleLoadingView()
+            }
+        }
+        .onAppear {
+            STPAPIClient.shared.publishableKey = "pk_test_51HvTI7Lu5o3P18Zp6t5AgBSkMvWoTtA0nyA7pVYDqpfLkRtWun7qZTYCOHCReprfLM464yaBeF72UFfB7cY9WG4a00ZnDtiC2C"
+
+            Task {
+                do {
+                    let launcher = try await LinkPaymentMethodLauncher.create(mode: .payment)
+                    model.linkPaymentMethodLauncher = launcher
+                } catch {
+                    model.error = error.localizedDescription
+                }
+            }
+        }
+    }
+}
+
+@available(iOS 16.0, *)
+struct ExampleLinkStandaloneComponentContent: View {
+    @State private var selectedCarType: CarType = CarType.basic
     @State private var hasPresentedLink = false
-    @State private var paymentOption: PaymentSheet.FlowController.PaymentOptionDisplayData?
+    @State private var paymentMethodPreview: LinkPaymentMethodLauncher.PaymentMethodPreview?
     @State private var showingPaymentSheet = false
     @State private var showingCreditCardForm = false
     @State private var showingAlert = false
     @State private var alertTitle = ""
     @State private var alertMessage = ""
 
-    @StateObject private var linkController = LinkPaymentMethodLauncher.create()
+    @StateObject var linkPaymentMethodLauncher: LinkPaymentMethodLauncher
 
     // Map region centered on San Francisco
     @State private var region = MKCoordinateRegion(
@@ -62,15 +97,15 @@ struct ExampleLinkStandaloneComponent: View {
             VStack(spacing: 16) {
                 // Payment method row
                 Button(action: {
-                    if linkController.paymentOption != nil {
+                    if linkPaymentMethodLauncher.paymentMethodPreview != nil {
                         presentLink()
                     } else {
                         showingPaymentSheet = true
                     }
                 }) {
                     HStack(spacing: 20) {
-                        if let paymentOption = linkController.paymentOption {
-                            Image(uiImage: paymentOption.image)
+                        if let paymentMethodPreview = linkPaymentMethodLauncher.paymentMethodPreview {
+                            Image(uiImage: paymentMethodPreview.icon)
                                 .frame(width: 40, height: 40)
                         } else {
                             Image(systemName: "creditcard")
@@ -80,12 +115,12 @@ struct ExampleLinkStandaloneComponent: View {
                         }
 
                         VStack(alignment: .leading, spacing: 4) {
-                            if let paymentOption = linkController.paymentOption {
-                                Text(paymentOption.labels.label)
+                            if let paymentMethodPreview = linkPaymentMethodLauncher.paymentMethodPreview {
+                                Text(paymentMethodPreview.label)
                                     .font(.headline)
                                     .foregroundColor(.primary)
 
-                                if let sublabel = paymentOption.labels.sublabel {
+                                if let sublabel = paymentMethodPreview.sublabel {
                                     Text(sublabel)
                                         .font(.subheadline)
                                         .foregroundColor(.secondary)
@@ -112,9 +147,9 @@ struct ExampleLinkStandaloneComponent: View {
                 Button {
                     Task {
                         do {
-                            let paymentMethod = try await linkController.createPaymentMethod()
+                            let paymentMethod = try await linkPaymentMethodLauncher.createPaymentMethod()
                             alertTitle = "Success"
-                            alertMessage = paymentMethod.stripeId
+                            alertMessage = "Created \(paymentMethod.stripeId)"
                             showingAlert = true
                         } catch {
                             alertTitle = "Error"
@@ -137,7 +172,7 @@ struct ExampleLinkStandaloneComponent: View {
                     .background(Color.black)
                     .cornerRadius(25)
                 }
-                .disabled(linkController.paymentOption == nil)
+                .disabled(linkPaymentMethodLauncher.paymentMethodPreview == nil)
             }
             .padding()
             .background(Color(.systemBackground))
@@ -145,7 +180,7 @@ struct ExampleLinkStandaloneComponent: View {
         }
         .sheet(isPresented: $showingPaymentSheet) {
             PaymentMethodSheet(
-                linkController: linkController,
+                linkPaymentMethodLauncher: linkPaymentMethodLauncher,
                 onCreditCardTap: { showingCreditCardForm = true }
             )
             .presentationDetents([.large])
@@ -156,11 +191,9 @@ struct ExampleLinkStandaloneComponent: View {
             Text(alertMessage)
         }
         .onAppear {
-            STPAPIClient.shared.publishableKey = "pk_test_51HvTI7Lu5o3P18Zp6t5AgBSkMvWoTtA0nyA7pVYDqpfLkRtWun7qZTYCOHCReprfLM464yaBeF72UFfB7cY9WG4a00ZnDtiC2C"
-
             Task {
                 do {
-                    let isExistingLinkConsumer = try await linkController.lookupConsumer(with: "email@email.com")
+                    let isExistingLinkConsumer = try await linkPaymentMethodLauncher.lookupConsumer(with: "email@email.com")
                     print("Existing Link consumer? \(isExistingLinkConsumer)")
                 } catch {
                     print("Failed to lookup Link consumer: \(error.localizedDescription)")
@@ -175,8 +208,8 @@ struct ExampleLinkStandaloneComponent: View {
         }
 
         Task {
-            let paymentOption = try? await linkController.present(from: viewController, with: "email@email.com")
-            self.paymentOption = paymentOption
+            let paymentMethodPreview = await linkPaymentMethodLauncher.present(from: viewController, with: "email@email.com")
+            self.paymentMethodPreview = paymentMethodPreview
         }
     }
 }
@@ -365,7 +398,7 @@ struct CarOptionRow: View {
 @available(iOS 16.0, *)
 struct PaymentMethodSheet: View {
     @Environment(\.dismiss) private var dismiss
-    var linkController: LinkPaymentMethodLauncher
+    var linkPaymentMethodLauncher: LinkPaymentMethodLauncher
     var onCreditCardTap: () -> Void
 
     var body: some View {
@@ -374,7 +407,7 @@ struct PaymentMethodSheet: View {
                 // Payment options list
                 VStack(spacing: 0) {
                     // Add credit card row (interactive)
-                    NavigationLink(destination: CreditCardFormView(linkController: linkController)) {
+                    NavigationLink(destination: CreditCardFormView(linkPaymentMethodLauncher: linkPaymentMethodLauncher)) {
                         HStack(spacing: 16) {
                             Image(systemName: "creditcard")
                                 .foregroundColor(.gray)
@@ -414,11 +447,9 @@ struct PaymentMethodSheet: View {
                                     .font(.headline)
                                     .fontWeight(.medium)
 
-                                if linkController.isExistingLinkConsumer {
-                                    Text("Log in as email@email.com")
-                                        .font(.subheadline)
-                                        .foregroundColor(.secondary)
-                                }
+                                Text("Log in as email@email.com")
+                                    .font(.subheadline)
+                                    .foregroundColor(.secondary)
                             }
 
                             Spacer()
@@ -456,9 +487,12 @@ struct PaymentMethodSheet: View {
 
         STPAPIClient.shared.publishableKey = "pk_test_51HvTI7Lu5o3P18Zp6t5AgBSkMvWoTtA0nyA7pVYDqpfLkRtWun7qZTYCOHCReprfLM464yaBeF72UFfB7cY9WG4a00ZnDtiC2C"
 
-        linkController.present(from: viewController, with: "email@email.com") {
-            DispatchQueue.main.async {
-                dismiss()
+        Task {
+            let paymentMethodPreview = await linkPaymentMethodLauncher.present(from: viewController, with: "email@email.com")
+            if paymentMethodPreview != nil {
+                DispatchQueue.main.async {
+                    dismiss()
+                }
             }
         }
     }
@@ -467,7 +501,8 @@ struct PaymentMethodSheet: View {
 @available(iOS 16.0, *)
 struct CreditCardFormView: View {
     @Environment(\.dismiss) private var dismiss
-    var linkController: LinkPaymentMethodLauncher
+
+    var linkPaymentMethodLauncher: LinkPaymentMethodLauncher
 
     @State private var cardNumber = ""
     @State private var expiryDate = ""
@@ -545,14 +580,14 @@ struct CreditCardFormView: View {
 // MARK: - Supporting Types
 
 enum CarType: CaseIterable {
-    case bolt
+    case basic
     case comfort
     case van
 
     var displayName: String {
         switch self {
-        case .bolt:
-            return "Bolt"
+        case .basic:
+            return "Basic"
         case .comfort:
             return "Comfort"
         case .van:
@@ -562,7 +597,7 @@ enum CarType: CaseIterable {
 
     var description: String {
         switch self {
-        case .bolt:
+        case .basic:
             return "Affordable ride"
         case .comfort:
             return "Extra legroom"
@@ -573,7 +608,7 @@ enum CarType: CaseIterable {
 
     var price: Double {
         switch self {
-        case .bolt:
+        case .basic:
             return 12.50
         case .comfort:
             return 18.75
@@ -584,7 +619,7 @@ enum CarType: CaseIterable {
 
     var eta: String {
         switch self {
-        case .bolt:
+        case .basic:
             return "2 min"
         case .comfort:
             return "4 min"
@@ -595,7 +630,7 @@ enum CarType: CaseIterable {
 
     var iconName: String {
         switch self {
-        case .bolt:
+        case .basic:
             return "car.fill"
         case .comfort:
             return "car.circle.fill"
@@ -606,7 +641,7 @@ enum CarType: CaseIterable {
 
     var iconColor: Color {
         switch self {
-        case .bolt:
+        case .basic:
             return .blue
         case .comfort:
             return .green

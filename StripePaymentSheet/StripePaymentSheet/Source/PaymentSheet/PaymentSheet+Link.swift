@@ -61,6 +61,7 @@ extension PaymentSheet {
 
     func presentPayWithNativeLinkController(
         from presentingController: UIViewController,
+        linkAccount: PaymentSheetLinkAccount?,
         intent: Intent,
         elementsSession: STPElementsSession,
         shouldOfferApplePay: Bool,
@@ -69,7 +70,12 @@ extension PaymentSheet {
     ) {
         let payWithNativeLink = PayWithNativeLinkController(mode: .full, intent: intent, elementsSession: elementsSession, configuration: configuration, analyticsHelper: analyticsHelper)
 
-        payWithNativeLink.presentAsBottomSheet(from: presentingController, shouldOfferApplePay: shouldOfferApplePay, shouldFinishOnClose: shouldFinishOnClose, completion: { result, _, didFinish in
+        payWithNativeLink.presentAsBottomSheet(
+            from: presentingController,
+            linkAccount: linkAccount,
+            shouldOfferApplePay: shouldOfferApplePay,
+            shouldFinishOnClose: shouldFinishOnClose,
+            completion: { result, _, didFinish in
             if case let .failed(error) = result {
                 self.mostRecentError = error
             }

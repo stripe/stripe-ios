@@ -467,6 +467,7 @@ extension PaymentSheet {
             }
 
             presentingViewController.presentNativeLink(
+                linkAccount: LinkAccountContext.shared.account,
                 selectedPaymentDetailsID: selectedPaymentDetailsID,
                 configuration: configuration,
                 intent: intent,

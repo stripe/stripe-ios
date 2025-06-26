@@ -292,6 +292,7 @@ class PaymentSheetFlowControllerViewController: UIViewController, FlowController
 
     private func presentLink() {
         presentNativeLink(
+            linkAccount: LinkAccountContext.shared.account,
             selectedPaymentDetailsID: selectedPaymentOption?.currentLinkPaymentMethod,
             configuration: configuration,
             intent: intent,

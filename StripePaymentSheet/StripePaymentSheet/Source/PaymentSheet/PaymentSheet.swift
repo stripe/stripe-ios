@@ -187,7 +187,14 @@ public class PaymentSheet {
                     verificationController.present(from: self.bottomSheetViewController) { result in
                         switch result {
                         case .completed:
-                            self.presentPayWithNativeLinkController(from: self.bottomSheetViewController, intent: loadResult.intent, elementsSession: loadResult.elementsSession, shouldOfferApplePay: self.configuration.isApplePayEnabled, shouldFinishOnClose: false, onClose: {
+                            self.presentPayWithNativeLinkController(
+                                from: self.bottomSheetViewController,
+                                linkAccount: linkAccount,
+                                intent: loadResult.intent,
+                                elementsSession: loadResult.elementsSession,
+                                shouldOfferApplePay: self.configuration.isApplePayEnabled,
+                                shouldFinishOnClose: false,
+                                onClose: {
                                 presentPaymentSheet()
                             })
                         case .canceled:
@@ -342,7 +349,14 @@ extension PaymentSheet: PaymentSheetViewControllerDelegate {
     func paymentSheetViewControllerDidSelectPayWithLink(_ paymentSheetViewController: PaymentSheetViewControllerProtocol) {
         let useNativeLink = deviceCanUseNativeLink(elementsSession: paymentSheetViewController.elementsSession, configuration: configuration)
         if useNativeLink {
-            presentPayWithNativeLinkController(from: paymentSheetViewController, intent: paymentSheetViewController.intent, elementsSession: paymentSheetViewController.elementsSession, shouldOfferApplePay: false, shouldFinishOnClose: false)
+            presentPayWithNativeLinkController(
+                from: paymentSheetViewController,
+                linkAccount: LinkAccountContext.shared.account,
+                intent: paymentSheetViewController.intent,
+                elementsSession: paymentSheetViewController.elementsSession,
+                shouldOfferApplePay: false,
+                shouldFinishOnClose: false
+            )
         } else {
             self.presentPayWithLinkController(
                 from: paymentSheetViewController,

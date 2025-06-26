@@ -487,6 +487,7 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
 
     private func presentLinkInFlowController() {
         presentNativeLink(
+            linkAccount: LinkAccountContext.shared.account,
             selectedPaymentDetailsID: nil,
             configuration: configuration,
             intent: intent,

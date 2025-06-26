@@ -144,6 +144,7 @@ import WebKit
             )
             linkController.presentForPaymentMethodSelection(
                 from: WindowAuthenticationContext().authenticationPresentingViewController(),
+                linkAccount: LinkAccountContext.shared.account,
                 initiallySelectedPaymentDetailsID: nil,
                 shouldShowSecondaryCta: false,
                 completion: { confirmOptions, _ in
