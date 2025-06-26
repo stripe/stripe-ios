@@ -10,8 +10,8 @@ import StripeApplePay
 
 class BackendModel {
     // You can replace this with your own backend URL.
-    // Visit https://codesandbox.io/p/devbox/3c3ymr, login, and click "Fork".
-    static let backendAPIURL = URL(string: "https://3c3ymr-3000.csb.app")!
+    // Visit https://codesandbox.io/p/devbox/gn8r2j, login, and click "Fork".
+    static let backendAPIURL = URL(string: "https://gn8r2j-3000.csb.app")!
 
     static let returnURL = "stp-integration-tester://stripe-redirect"
 
