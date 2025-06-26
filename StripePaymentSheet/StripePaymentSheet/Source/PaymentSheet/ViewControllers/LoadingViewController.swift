@@ -60,6 +60,11 @@ class LoadingViewController: UIViewController, BottomSheetContentViewController 
         super.viewDidLoad()
 
         activityIndicator.color = appearance.colors.background.contrastingColor
+        if #available(iOS 17.0, *) {
+            registerForTraitChanges([UITraitUserInterfaceStyle.self], handler: { (self: Self, previousTraitCollection: UITraitCollection) in
+                self.activityIndicator.color = self.appearance.colors.background.contrastingColor
+            })
+        }
         [activityIndicator].forEach {
             view.addSubview($0)
             $0.translatesAutoresizingMaskIntoConstraints = false
@@ -74,12 +79,12 @@ class LoadingViewController: UIViewController, BottomSheetContentViewController 
         activityIndicator.startAnimating()
     }
 
-#if !canImport(CompositorServices)
     public override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
         super.traitCollectionDidChange(previousTraitCollection)
-        activityIndicator.color = appearance.colors.background.contrastingColor
+        if #unavailable(iOS 17.0) {
+            activityIndicator.color = appearance.colors.background.contrastingColor
+        }
     }
-#endif
 
 }
 
