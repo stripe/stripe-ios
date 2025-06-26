@@ -79,12 +79,14 @@ class LoadingViewController: UIViewController, BottomSheetContentViewController 
         activityIndicator.startAnimating()
     }
 
+#if !os(visionOS)
     public override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
         super.traitCollectionDidChange(previousTraitCollection)
         if #unavailable(iOS 17.0) {
             activityIndicator.color = appearance.colors.background.contrastingColor
         }
     }
+#endif
 
 }
 
