@@ -29,7 +29,7 @@ import Foundation
         sessionID = uuid.uuidString.lowercased()
     }
 
-    internal func clearSessionID() {
+    func clearSessionID() {
         sessionID = nil
     }
 
