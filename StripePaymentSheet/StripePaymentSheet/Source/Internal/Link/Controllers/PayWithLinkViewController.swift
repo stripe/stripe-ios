@@ -52,7 +52,7 @@ protocol PayWithLinkCoordinating: AnyObject {
     func cancel(shouldReturnToPaymentSheet: Bool)
     func accountUpdated(_ linkAccount: PaymentSheetLinkAccount)
     func finish(withResult result: PaymentSheetResult, deferredIntentConfirmationType: STPAnalyticsClient.DeferredIntentConfirmationType?)
-    func handlePaymentDetailsSelected(_ paymentDetails: ConsumerPaymentDetails, confirmationExtras: LinkConfirmationExtras)
+    func handlePaymentDetailsSelected(_ paymentDetails: ConsumerPaymentDetails, shippingAddress: ShippingAddressesResponse.ShippingAddress?, confirmationExtras: LinkConfirmationExtras)
     func logout(cancel: Bool)
     func bailToWebFlow()
     func allowSheetDismissal(_ enable: Bool)
@@ -146,6 +146,7 @@ final class PayWithLinkViewController: BottomSheetViewController {
     var shippingAddressResponse: ShippingAddressesResponse?
 
     var defaultShippingAddress: ShippingAddressesResponse.ShippingAddress? {
+        
         shippingAddressResponse?.shippingAddresses.first {
             $0.isDefault ?? false
         } ?? shippingAddressResponse?.shippingAddresses.first
@@ -330,7 +331,7 @@ private extension PayWithLinkViewController {
 
             async let shippingAddressResult = fetchShippingAddress(
                 using: linkAccount,
-                shouldFetch: context.launchedFromFlowController
+                shouldFetch: true //context.launchedFromFlowController
             )
 
             do {
@@ -341,7 +342,8 @@ private extension PayWithLinkViewController {
 
                 presentAppropriateViewController(
                     with: linkAccount,
-                    paymentDetails: paymentDetails
+                    paymentDetails: paymentDetails,
+                    shippingAddresses: shippingAddressResponse?.shippingAddresses ?? []
                 )
             } catch {
                 payWithLinkDelegate?.payWithLinkViewControllerDidFinish(
@@ -363,7 +365,8 @@ private extension PayWithLinkViewController {
 
     private func presentAppropriateViewController(
         with linkAccount: PaymentSheetLinkAccount,
-        paymentDetails: [ConsumerPaymentDetails]
+        paymentDetails: [ConsumerPaymentDetails],
+        shippingAddresses: [ShippingAddressesResponse.ShippingAddress]
     ) {
         let viewController: BottomSheetContentViewController
         if paymentDetails.isEmpty {
@@ -377,7 +380,8 @@ private extension PayWithLinkViewController {
             let walletViewController = WalletViewController(
                 linkAccount: linkAccount,
                 context: context,
-                paymentMethods: paymentDetails
+                paymentMethods: paymentDetails,
+                shippingAddresses: shippingAddresses
             )
             viewController = walletViewController
         }
@@ -414,6 +418,7 @@ extension PayWithLinkViewController: SheetNavigationBarDelegate {
 extension PayWithLinkViewController: PayWithLinkCoordinating {
     func handlePaymentDetailsSelected(
         _ paymentDetails: ConsumerPaymentDetails,
+        shippingAddress: ShippingAddressesResponse.ShippingAddress?,
         confirmationExtras: LinkConfirmationExtras
     ) {
         guard let linkAccount else {
@@ -425,7 +430,7 @@ extension PayWithLinkViewController: PayWithLinkCoordinating {
             account: linkAccount,
             paymentDetails: paymentDetails,
             confirmationExtras: confirmationExtras,
-            shippingAddress: defaultShippingAddress
+            shippingAddress: shippingAddress
         )
 
         payWithLinkDelegate?.payWithLinkViewControllerDidFinish(self, confirmOption: confirmOption)

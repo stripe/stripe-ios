@@ -7,8 +7,28 @@
 //
 
 import UIKit
+@_spi(STP) import StripeCore
+@_spi(STP) import StripeUICore
 
 extension PayWithLinkViewController {
+
+    class AddressBaseViewController: BaseViewController {
+        let address = AddressSectionElement(title: "Test", locale: .current, collectionMode: .autoCompletable)
+
+        override func viewDidLoad() {
+            super.viewDidLoad()
+            self.view.backgroundColor = .white
+            address.view.translatesAutoresizingMaskIntoConstraints = false
+            self.view.addSubview(address.view)
+            address.view.topAnchor.constraint(equalTo: self.view.topAnchor).isActive = true
+            address.view.trailingAnchor.constraint(equalTo: self.view.trailingAnchor, constant: -20).isActive = true
+            address.view.leadingAnchor.constraint(equalTo: self.view.leadingAnchor, constant: 20).isActive = true
+
+        }
+
+        override var requiresFullScreen: Bool { true }
+
+    }
 
     /// For internal SDK use only
     @objc(STP_Internal_PayWithLinkBaseViewController)

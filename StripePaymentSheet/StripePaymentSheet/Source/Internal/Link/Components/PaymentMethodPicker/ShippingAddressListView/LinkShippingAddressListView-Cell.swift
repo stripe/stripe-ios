@@ -1,5 +1,5 @@
 //
-//  LinkPaymentMethodPicker-Cell.swift
+//  LinkPaymentMethodListView-Cell.swift
 //  StripePaymentSheet
 //
 //  Created by Ramon Torres on 10/19/21.
@@ -10,22 +10,13 @@
 @_spi(STP) import StripeUICore
 import UIKit
 
-protocol LinkPaymentMethodPickerCellDelegate: AnyObject {
-    func savedPaymentPickerCellDidSelect(_ cell: LinkPaymentMethodPicker.Cell)
-    func savedPaymentPickerCell(_ cell: LinkPaymentMethodPicker.Cell, didTapMenuButton button: UIButton)
-    func savedPaymentPickerCellMenuActions(
-        for cell: LinkPaymentMethodPicker.Cell
-    ) -> [PayWithLinkViewController.WalletViewController.Action]?
-}
 
-extension LinkPaymentMethodPicker {
+extension LinkShippingAddressListView {
 
     final class Cell: UIControl {
         struct Constants {
-            static let margins = NSDirectionalEdgeInsets(top: 16, leading: 20, bottom: 16, trailing: 20)
             static let contentSpacing: CGFloat = 12
             static let contentIndentation: CGFloat = 34
-            static let menuSpacing: CGFloat = 8
             static let menuButtonSize: CGSize = .init(width: 24, height: 24)
             static let separatorHeight: CGFloat = 0.5
             static let iconViewSize: CGSize = .init(width: 14, height: 20)
@@ -44,7 +35,7 @@ extension LinkPaymentMethodPicker {
             }
         }
 
-        var paymentMethod: ConsumerPaymentDetails? {
+        var shippingAddress: ShippingAddressesResponse.ShippingAddress? {
             didSet {
                 update()
             }
@@ -66,9 +57,9 @@ extension LinkPaymentMethodPicker {
             }
         }
 
-        weak var delegate: LinkPaymentMethodPickerCellDelegate?
+        weak var delegate: LinkShippingAddressCellDelegate?
 
-        private let radioButton = RadioButton()
+        private let radioButton = LinkCollapsingListView.RadioButton()
 
         private let contentView = CellContentView()
 
@@ -78,19 +69,6 @@ extension LinkPaymentMethodPicker {
             type: .neutral,
             text: String.Localized.default_text
         )
-
-        private let alertIconView: UIImageView = {
-            let iconView = UIImageView()
-            iconView.contentMode = .scaleAspectFit
-            iconView.image = Image.icon_link_error.makeImage(template: true)
-            iconView.tintColor = .linkIconCritical
-            return iconView
-        }()
-
-        private let unavailableBadge = LinkBadgeView(type: .error, text: STPLocalizedString(
-            "Unavailable for this purchase",
-            "Label shown when a payment method cannot be used for the current transaction."
-        ))
 
         private lazy var menuButton: UIButton = {
             let button = UIButton(type: .system)
@@ -126,7 +104,7 @@ extension LinkPaymentMethodPicker {
             super.init(frame: frame)
 
             isAccessibilityElement = true
-            directionalLayoutMargins = Constants.margins
+            directionalLayoutMargins = LinkPaymentMethodListView.Constants.margins
 
             setupUI()
 
@@ -143,7 +121,7 @@ extension LinkPaymentMethodPicker {
         }
 
         private func setupUI() {
-            let rightStackView = UIStackView(arrangedSubviews: [defaultBadge, alertIconView, activityIndicator, menuButton])
+            let rightStackView = UIStackView(arrangedSubviews: [defaultBadge, activityIndicator, menuButton])
             rightStackView.spacing = LinkUI.smallContentSpacing
             rightStackView.distribution = .equalSpacing
             rightStackView.alignment = .center
@@ -153,7 +131,7 @@ extension LinkPaymentMethodPicker {
             stackView.distribution = .equalSpacing
             stackView.alignment = .center
 
-            let container = UIStackView(arrangedSubviews: [stackView, unavailableBadge])
+            let container = UIStackView(arrangedSubviews: [stackView])
             container.axis = .vertical
             container.spacing = Constants.contentSpacing
             container.distribution = .equalSpacing
@@ -179,10 +157,6 @@ extension LinkPaymentMethodPicker {
                 activityIndicator.widthAnchor.constraint(equalToConstant: Constants.menuButtonSize.width),
                 activityIndicator.heightAnchor.constraint(equalToConstant: Constants.menuButtonSize.height),
 
-                // Icon
-                alertIconView.widthAnchor.constraint(equalToConstant: Constants.iconViewSize.width),
-                alertIconView.heightAnchor.constraint(equalToConstant: Constants.iconViewSize.height),
-
                 // Container
                 container.topAnchor.constraint(equalTo: layoutMarginsGuide.topAnchor),
                 container.bottomAnchor.constraint(equalTo: layoutMarginsGuide.bottomAnchor),
@@ -200,27 +174,18 @@ extension LinkPaymentMethodPicker {
         }
 
         private func update() {
-            contentView.paymentMethod = paymentMethod
+            contentView.shippingAddress = shippingAddress
             updateAccessibilityContent()
 
-            guard let paymentMethod else {
+            guard let shippingAddress else {
                 return
             }
 
-            var hasExpired: Bool {
-                switch paymentMethod.details {
-                case .card(let card):
-                    return card.hasExpired
-                case .bankAccount, .unparsable:
-                    return false
-                }
-            }
 
-            defaultBadge.isHidden = isLoading || !paymentMethod.isDefault
-            alertIconView.isHidden = isLoading || !hasExpired
+
+            defaultBadge.isHidden = isLoading || !(shippingAddress.isDefault ?? false)
             menuButton.isHidden = isLoading
             contentView.alpha = isSupported ? 1 : Constants.disabledContentAlpha
-            unavailableBadge.isHidden = isSupported
 
             if isLoading {
                 activityIndicator.startAnimating()
@@ -236,12 +201,12 @@ extension LinkPaymentMethodPicker {
         }
 
         private func updateAccessibilityContent() {
-            guard let paymentMethod else {
-                return
-            }
+//            guard let paymentMethod else {
+//                return
+//            }
 
             accessibilityIdentifier = "Stripe.Link.PaymentMethodPickerCell"
-            accessibilityLabel = paymentMethod.accessibilityDescription
+//            accessibilityLabel = paymentMethod.accessibilityDescription
             accessibilityCustomActions = [
                 UIAccessibilityCustomAction(
                     name: String.Localized.show_menu,
@@ -287,7 +252,7 @@ extension LinkPaymentMethodPicker {
 
 }
 
-extension LinkPaymentMethodPicker.Cell {
+extension LinkShippingAddressListView.Cell {
     override func contextMenuInteraction(
         _ interaction: UIContextMenuInteraction,
         configurationForMenuAtLocation location: CGPoint

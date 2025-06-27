@@ -271,6 +271,32 @@ extension ConsumerSession {
             completion: completion)
     }
 
+    func deleteShippingAddress(
+        with apiClient: STPAPIClient = STPAPIClient.shared,
+        id: String,
+        consumerAccountPublishableKey: String?,
+        completion: @escaping (Result<Void, Error>) -> Void
+    ) {
+        apiClient.deleteShippingAddress(
+            for: clientSecret,
+            id: id,
+            consumerAccountPublishableKey: consumerAccountPublishableKey,
+            completion: completion)
+    }
+
+    func createShippingAddress(
+        with apiClient: STPAPIClient = STPAPIClient.shared,
+        address: ShippingAddressesResponse.ShippingAddress.Address,
+        consumerAccountPublishableKey: String?,
+        completion: @escaping (Result<ShippingAddressesResponse.ShippingAddress, Error>) -> Void
+    ) {
+        apiClient.createShippingAddress(
+            for: clientSecret,
+            address: address,
+            consumerAccountPublishableKey: consumerAccountPublishableKey,
+            completion: completion)
+    }
+
     func updatePaymentDetails(
         with apiClient: STPAPIClient = STPAPIClient.shared,
         id: String,
@@ -279,6 +305,20 @@ extension ConsumerSession {
         completion: @escaping (Result<ConsumerPaymentDetails, Error>) -> Void
     ) {
         apiClient.updatePaymentDetails(
+            for: clientSecret, id: id,
+            updateParams: updateParams,
+            consumerAccountPublishableKey: consumerAccountPublishableKey,
+            completion: completion)
+    }
+
+    func updateShippingAddress(
+        with apiClient: STPAPIClient = STPAPIClient.shared,
+        id: String,
+        updateParams: UpdateShippingAddressParams,
+        consumerAccountPublishableKey: String?,
+        completion: @escaping (Result<ShippingAddressesResponse.ShippingAddress, Error>) -> Void
+    ) {
+        apiClient.updateShippingAddress(
             for: clientSecret, id: id,
             updateParams: updateParams,
             consumerAccountPublishableKey: consumerAccountPublishableKey,
