@@ -31,7 +31,7 @@ extension TextFieldElement: TextOrDropdownElement {
         return text
     }
 
-    public func setRawData(_ rawData: String, shouldAutoAdvance: Bool = false) {
+    public func setRawData(_ rawData: String, shouldAutoAdvance: Bool = true) {
         // Intentional, ignore shouldAutoAdvance as setting the text does not cause an automatic advance like DropdownFieldElement
         setText(rawData)
     }
