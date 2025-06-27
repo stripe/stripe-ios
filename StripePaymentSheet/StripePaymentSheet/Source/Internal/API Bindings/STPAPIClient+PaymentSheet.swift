@@ -23,6 +23,9 @@ extension STPAPIClient {
             "external_payment_methods": epmConfiguration?.externalPaymentMethods.compactMap { $0.lowercased() } ?? [],
             "custom_payment_methods": cpmConfiguration?.customPaymentMethods.compactMap { $0.id } ?? [],
         ]
+        if let sessionId = AnalyticsHelper.shared.sessionID {
+            parameters["mobile_session_id"] = sessionId
+        }
         if let appId = Bundle.main.bundleIdentifier {
             parameters["mobile_app_id"] = appId
         }
