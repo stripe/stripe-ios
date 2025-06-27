@@ -10,17 +10,59 @@
 
 import UIKit
 
+protocol LinkPaymentMethodListDataSource: AnyObject {
+
+    /// Returns the total number of payment methods.
+    /// - Returns: Payment method count
+    func numberOfPaymentMethods() -> Int
+
+    /// Returns the payment method at the specific index.
+    /// - Returns: Payment method.
+    func paymentPicker(
+        paymentMethodAt index: Int
+    ) -> ConsumerPaymentDetails
+
+    func isPaymentMethodSupported(_ paymentMethod: ConsumerPaymentDetails?) -> Bool
+
+    var selectedIndex: Int { get }
+}
+
+protocol LinkPaymentMethodListDelegate: AnyObject {
+    func paymentMethodPicker(didSelectIndex index: Int)
+
+    func paymentMethodPicker(
+        menuActionsForItemAt index: Int
+    ) -> [PayWithLinkViewController.WalletViewController.Action]
+
+    func paymentMethodPicker(
+        showMenuForItemAt index: Int,
+        sourceRect: CGRect
+    )
+
+    func paymentDetailsPickerDidTapOnAddPayment(
+        sourceRect: CGRect
+    )
+
+    func paymentListDidExpand()
+}
+
 class LinkPaymentMethodListView: LinkCollapsingListView {
     private var needsDataReload: Bool = true
 
     private let addPaymentMethodButton = LinkCollapsingListView.AddButton(text:  String.Localized.add_a_payment_method)
 
-    weak var dataSource: LinkPaymentMethodPickerDataSource?
+    weak var dataSource: LinkPaymentMethodListDataSource?
 
-    weak var delegate: LinkPaymentMethodPickerDelegate?
+    weak var delegate: LinkPaymentMethodListDelegate?
 
     var selectedIndex: Int {
         dataSource?.selectedIndex ?? 0
+    }
+
+    lazy var paymentMethodHeader: Header = Header()
+
+    override var headerView: LinkCollapsingListView.Header {
+        paymentMethodHeader
     }
 
     override var collapsable: Bool {
@@ -43,6 +85,10 @@ class LinkPaymentMethodListView: LinkCollapsingListView {
         listView.addArrangedSubview(addPaymentMethodButton)
         addPaymentMethodButton.tintColor = .linkTextBrand
         addPaymentMethodButton.addTarget(self, action: #selector(onAddPaymentButtonTapped(_:)), for: .touchUpInside)
+    }
+
+    override func didExpand() {
+        delegate?.paymentListDidExpand()
     }
 
     func reloadData() {
@@ -122,7 +168,7 @@ class LinkPaymentMethodListView: LinkCollapsingListView {
             subview.layer.zPosition = CGFloat(-index)
         }
 
-        headerView.setSelectedPaymentMethod(selectedPaymentMethod: selectedPaymentMethod, supported: dataSource?.isPaymentMethodSupported(selectedPaymentMethod) ?? false)
+        paymentMethodHeader.setSelectedPaymentMethod(selectedPaymentMethod: selectedPaymentMethod, supported: dataSource?.isPaymentMethodSupported(selectedPaymentMethod) ?? false)
     }
 
     func index(for cell: Cell) -> Int? {

@@ -202,7 +202,7 @@ extension PayWithLinkViewController {
                     )
 
                     guard !context.launchedFromFlowController else {
-                        coordinator?.handlePaymentDetailsSelected(paymentDetails, confirmationExtras: confirmationExtras)
+                        coordinator?.handlePaymentDetailsSelected(paymentDetails, shippingAddress: nil, confirmationExtras: confirmationExtras)
                         return
                     }
 

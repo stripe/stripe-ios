@@ -28,7 +28,7 @@ extension LinkCollapsingListView {
 
         // Indicates whether the header should appear collapsable or not.
         // The header is collapsable when the currently selected payment method is supported.
-        var collapsable: Bool = false
+        var collapsable: Bool = true
 
         var isExpanded: Bool = false {
             didSet {

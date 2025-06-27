@@ -35,6 +35,22 @@ extension PayWithLinkViewController {
             }
         }
 
+        var selectedShippingAddressIndex: Int {
+            didSet {
+                if oldValue != selectedShippingAddressIndex {
+                    delegate?.viewModelDidChange(self)
+                }
+            }
+        }
+
+        var selectedShippingAddress: ShippingAddressesResponse.ShippingAddress? {
+            guard shippingAddresses.count > selectedShippingAddressIndex else {
+                return nil
+            }
+
+            return shippingAddresses[selectedShippingAddressIndex]
+        }
+
         var supportedPaymentMethodTypes: Set<ConsumerPaymentDetails.DetailsType> {
             return linkAccount.supportedPaymentDetailsTypes(for: context.elementsSession)
         }
@@ -173,6 +189,10 @@ extension PayWithLinkViewController {
                 return .disabled
             }
 
+            if selectedShippingAddress == nil {
+                return .disabled
+            }
+
             return .enabled
         }
 
@@ -202,8 +222,50 @@ extension PayWithLinkViewController {
                 context: context,
                 paymentMethods: paymentMethods
             )
+            self.selectedShippingAddressIndex = Self.determineInitiallySelectedShippingAddress(shippingAddresses: shippingAddresses)
             self.shippingAddresses = shippingAddresses
         }
+
+        func createShippingAddress(address: ShippingAddressesResponse.ShippingAddress.Address,
+        completion: @escaping (Result<ShippingAddressesResponse.ShippingAddress, Error>) -> Void) {
+            linkAccount.creatingShippingAddress(address: address, completion: { [weak self] in
+                guard let self else { return }
+                if case let .success(address) = $0 {
+                    shippingAddresses.append(address)
+                    delegate?.viewModelDidChange(self)
+                }
+                completion($0)
+            })
+        }
+
+        func deleteAddress(at index: Int, completion: @escaping (Result<Void, Error>) -> Void) {
+            let shippingAddress = shippingAddresses[index]
+            linkAccount.deleteShippingAddress(id: shippingAddress.id, completion: { [self] result in
+                switch result {
+                case .success:
+                    let previouslySelectedShippingAddress = shippingAddresses[self.selectedShippingAddressIndex]
+                    shippingAddresses.remove(at: index)
+
+                    var defaultShippingAddressIndex: Int {
+                        Self.determineInitiallySelectedShippingAddress(shippingAddresses: shippingAddresses)
+                    }
+
+                    var updatedShippingAddressIndex: Int? {
+                        shippingAddresses.firstIndex(where: {
+                            $0.id == previouslySelectedShippingAddress.id
+                        })
+                    }
+
+                    selectedShippingAddressIndex = updatedShippingAddressIndex ?? defaultShippingAddressIndex
+                    delegate?.viewModelDidChange(self)
+                case .failure:
+                    break
+                }
+
+                completion(result)
+            })
+        }
+
 
         func deletePaymentMethod(at index: Int, completion: @escaping (Result<Void, Error>) -> Void) {
             let paymentMethod = paymentMethods[index]
@@ -249,6 +311,29 @@ extension PayWithLinkViewController {
                 if case let .success(updatedPaymentDetails) = result {
                     paymentMethods.forEach({ $0.isDefault = false })
                     paymentMethods[index] = updatedPaymentDetails
+                }
+
+                completion(result)
+            }
+        }
+
+        func setDefaultShippingAddress(
+            at index: Int,
+            completion: @escaping (Result<ShippingAddressesResponse.ShippingAddress, Error>) -> Void
+        ) {
+            let shippingAddress = shippingAddresses[index]
+
+            linkAccount.updateShippingAddress(
+                id: shippingAddress.id,
+                updateParams: .init(isDefault: true)
+            ) { [self] result in
+                if case let .success(updatedAddress) = result {
+                    shippingAddresses = shippingAddresses.map({
+                        var address = $0
+                        address.isDefault = false
+                        return address
+                    })
+                    shippingAddresses[index] = updatedAddress
                 }
 
                 completion(result)
@@ -343,6 +428,12 @@ extension PayWithLinkViewController {
 }
 
 private extension PayWithLinkViewController.WalletViewModel {
+
+    static func determineInitiallySelectedShippingAddress(
+        shippingAddresses: [ShippingAddressesResponse.ShippingAddress]
+    ) -> Int {
+        shippingAddresses.firstIndex(where: { $0.isDefault == true }) ?? 0
+    }
 
     static func determineInitiallySelectedPaymentMethod(
         context: PayWithLinkViewController.Context,

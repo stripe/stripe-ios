@@ -22,7 +22,7 @@ let impactFeedbackGenerator = UIImpactFeedbackGenerator(style: .medium)
 let selectionFeedbackGenerator = UISelectionFeedbackGenerator()
 #endif
 
-    let headerView = LinkPaymentMethodListView.PaymentListHeader()
+    private(set) var headerView = LinkCollapsingListView.Header()
 
     private lazy var stackView: UIStackView = {
         let stackView = UIStackView(arrangedSubviews: [
@@ -76,6 +76,7 @@ let selectionFeedbackGenerator = UISelectionFeedbackGenerator()
     }
 
     func setExpanded(_ expanded: Bool, animated: Bool) {
+        let previouslyExpanded = headerView.isExpanded
         headerView.isExpanded = collapsable ? expanded : true
 
         // Prevent double header animation
@@ -93,6 +94,14 @@ let selectionFeedbackGenerator = UISelectionFeedbackGenerator()
         } else {
             stackView.hideArrangedSubview(at: listViewIndex, animated: animated)
         }
+
+        if !previouslyExpanded && headerView.isExpanded {
+            didExpand()
+        }
+    }
+
+    func didExpand() {
+        // Base blank meant to be overridden
     }
 
     @objc func onHeaderTapped(_ sender: UIView) {

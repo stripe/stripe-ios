@@ -162,6 +162,21 @@ extension STPAPIClient {
         }
     }
 
+    private func makeShippingAddressRequest(
+        endpoint: String,
+        parameters: [String: Any],
+        consumerAccountPublishableKey: String?,
+        completion: @escaping (Result<ShippingAddressesResponse.ShippingAddress, Error>) -> Void
+    ) {
+        post(
+            resource: endpoint,
+            parameters: parameters,
+            consumerPublishableKey: consumerAccountPublishableKey
+        ) { (result: Result<ShippingAddressUpdateResponse, Error>) in
+            completion(result.map { $0.shippingAddress })
+        }
+    }
+
     func createPaymentDetails(
         for consumerSessionClientSecret: String,
         cardParams: STPPaymentMethodCardParams,
@@ -400,6 +415,78 @@ extension STPAPIClient {
         ) { result in
             completion(result.map { _ in () } )
         }
+    }
+
+    func deleteShippingAddress(
+        for consumerSessionClientSecret: String,
+        id: String,
+        consumerAccountPublishableKey: String?,
+        completion: @escaping (Result<Void, Error>) -> Void
+    ) {
+        let endpoint: String = "consumers/shipping_addresses/\(id)"
+
+        let parameters: [String: Any] = [
+            "credentials": ["consumer_session_client_secret": consumerSessionClientSecret],
+            "request_surface": "ios_payment_element",
+        ]
+
+        APIRequest<STPEmptyStripeResponse>.delete(
+            with: self,
+            endpoint: endpoint,
+            additionalHeaders: authorizationHeader(using: consumerAccountPublishableKey),
+            parameters: parameters
+        ) { result in
+            completion(result.map { _ in () } )
+        }
+    }
+
+    func createShippingAddress(
+        for consumerSessionClientSecret: String,
+        address: ShippingAddressesResponse.ShippingAddress.Address,
+        consumerAccountPublishableKey: String?,
+        completion: @escaping (Result<ShippingAddressesResponse.ShippingAddress, Error>) -> Void
+    ) {
+        let endpoint: String = "consumers/shipping_addresses"
+
+        let parameters: [String: Any] = [
+            "credentials": ["consumer_session_client_secret": consumerSessionClientSecret],
+            "address":  address.convertToDictionary() ?? [:],
+            "request_surface": "ios_payment_element",
+        ]
+
+        post(
+            resource: endpoint,
+            parameters: parameters,
+            consumerPublishableKey: consumerAccountPublishableKey
+        ) { (result: Result<ShippingAddressUpdateResponse, Error>) in
+            completion(result.map { $0.shippingAddress })
+        }
+    }
+
+    func updateShippingAddress(
+        for consumerSessionClientSecret: String,
+        id: String,
+        updateParams: UpdateShippingAddressParams,
+        consumerAccountPublishableKey: String?,
+        completion: @escaping (Result<ShippingAddressesResponse.ShippingAddress, Error>) -> Void
+    ) {
+        let endpoint: String = "consumers/shipping_addresses/\(id)"
+
+        var parameters: [String: Any] = [
+            "credentials": ["consumer_session_client_secret": consumerSessionClientSecret],
+            "request_surface": "ios_payment_element",
+        ]
+
+        if let isDefault = updateParams.isDefault {
+            parameters["is_default"] = isDefault
+        }
+
+        makeShippingAddressRequest(
+            endpoint: endpoint,
+            parameters: parameters,
+            consumerAccountPublishableKey: consumerAccountPublishableKey,
+            completion: completion
+        )
     }
 
     func updatePaymentDetails(

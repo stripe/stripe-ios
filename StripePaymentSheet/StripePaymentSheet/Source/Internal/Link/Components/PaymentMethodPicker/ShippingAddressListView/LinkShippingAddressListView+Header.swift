@@ -5,14 +5,14 @@
 //  Created by Chris Mays on 6/25/25.
 //
 
-extension LinkPaymentMethodListView {
+extension LinkShippingAddressListView {
     class Header: LinkCollapsingListView.Header {
 
         override init(frame: CGRect) {
             super.init(frame: frame)
-            collapsedLabel.text = Strings.payment
+            collapsedLabel.text = "Shipping"
             headingLabel.text = STPLocalizedString(
-                "Payment methods",
+                "Shipping address",
                 "Title for a section listing one or more payment methods."
             )
             collapsedStackView.addArrangedSubview(collapsedContent)
@@ -25,17 +25,16 @@ extension LinkPaymentMethodListView {
         let collapsedContent = CellContentView()
 
         /// The selected payment method.
-        private(set) var selectedPaymentMethod: ConsumerPaymentDetails? {
+        private(set) var selectedShippingAddress: ShippingAddressesResponse.ShippingAddress? {
             didSet {
                 updateChevron()
-                collapsedContent.paymentMethod = selectedPaymentMethod
+                collapsedContent.shippingAddress = selectedShippingAddress
                 updateAccessibilityContent()
             }
         }
 
-        func setSelectedPaymentMethod(selectedPaymentMethod: ConsumerPaymentDetails?, supported: Bool) {
-            self.collapsable = supported
-            self.selectedPaymentMethod = selectedPaymentMethod
+        func setSelectedShippingAddress(_ selectedShippingAddress: ShippingAddressesResponse.ShippingAddress?) {
+            self.selectedShippingAddress = selectedShippingAddress
         }
 
         override func updateAccessibilityContent() {
@@ -43,7 +42,7 @@ extension LinkPaymentMethodListView {
             if isExpanded {
                 accessibilityLabel = collapsedLabel.text
             } else {
-                accessibilityLabel = selectedPaymentMethod?.accessibilityDescription
+//                accessibilityLabel = selectedPaymentMethod?.accessibilityDescription
             }
         }
 

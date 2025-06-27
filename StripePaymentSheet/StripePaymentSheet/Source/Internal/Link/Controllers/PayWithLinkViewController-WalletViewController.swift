@@ -24,10 +24,6 @@ extension PayWithLinkViewController {
 
         let viewModel: WalletViewModel
 
-        var accountEmail: String {
-            linkAccount.email
-        }
-
         private lazy var paymentPicker: LinkPaymentMethodPicker = {
             let paymentPicker = LinkPaymentMethodPicker()
             paymentPicker.delegate = self
@@ -189,12 +185,12 @@ extension PayWithLinkViewController {
             // If the initially selected payment method is not supported, we should automatically
             // expand the payment picker to hint the user to pick another payment method.
             if !viewModel.selectedPaymentMethodIsSupported {
-                paymentPicker.setExpanded(true, animated: false)
+                paymentPicker.setPaymentListExpanded(true, animated: false)
             }
 
             if context.initiallySelectedPaymentDetailsID != nil {
                 // Automatically expand, since the user is likely here to change the payment method
-                paymentPicker.setExpanded(true, animated: false)
+                paymentPicker.setPaymentListExpanded(true, animated: false)
             }
         }
 
@@ -274,7 +270,7 @@ extension PayWithLinkViewController {
                 if isMissingRequestedBillingDetails(paymentDetails) {
                     handleIncompleteBillingDetails(for: paymentDetails, with: confirmationExtras)
                 } else if context.launchedFromFlowController, let paymentMethod = viewModel.selectedPaymentMethod {
-                    coordinator?.handlePaymentDetailsSelected(paymentMethod, confirmationExtras: confirmationExtras)
+                    coordinator?.handlePaymentDetailsSelected(paymentMethod, shippingAddress: viewModel.selectedShippingAddress, confirmationExtras: confirmationExtras)
                 } else {
                     confirm(for: context.intent, with: paymentDetails, confirmationExtras: confirmationExtras)
                 }
@@ -506,6 +502,51 @@ extension PayWithLinkViewController.WalletViewController {
 
 private extension PayWithLinkViewController.WalletViewController {
 
+    func removeShippingAddress(at index: Int) {
+
+        let alertTitle: String = {
+            return STPLocalizedString(
+                "Are you sure you want to remove this address?",
+                "Title of confirmation prompt when removing a shipping address."
+            )
+        }()
+
+        let alertController = UIAlertController(
+            title: alertTitle,
+            message: STPLocalizedString(
+                "This address will be removed from your Link account.",
+                "Description of confirmation prompt when removing a shipping address."
+            ),
+            preferredStyle: .alert
+        )
+
+        alertController.addAction(UIAlertAction(
+            title: String.Localized.cancel,
+            style: .cancel
+        ))
+
+        alertController.addAction(UIAlertAction(
+            title: String.Localized.remove,
+            style: .destructive,
+            handler: { _ in
+                self.paymentPicker.showLoaderForShippingAddress(at: index)
+
+                self.viewModel.deleteAddress(at: index) { result in
+                    switch result {
+                    case .success:
+                        self.paymentPicker.removeShippingAddress(at: index, animated: true)
+                    case .failure:
+                        break
+                    }
+
+                    self.paymentPicker.hideLoaderForShippingAddress(at: index)
+                }
+            }
+        ))
+
+        present(alertController, animated: true)
+    }
+
     func removePaymentMethod(at index: Int) {
         let paymentMethod = viewModel.paymentMethods[index]
 
@@ -623,6 +664,12 @@ extension PayWithLinkViewController.WalletViewController: PayWithLinkWalletViewM
 // MARK: - LinkPaymentMethodPickerDataSource
 
 extension PayWithLinkViewController.WalletViewController: LinkPaymentMethodPickerDataSource {
+    var accountEmail: String {
+        linkAccount.email
+    }
+}
+
+extension PayWithLinkViewController.WalletViewController: LinkPaymentMethodListDataSource {
     var selectedIndex: Int {
         viewModel.selectedPaymentMethodIndex
     }
@@ -640,14 +687,139 @@ extension PayWithLinkViewController.WalletViewController: LinkPaymentMethodPicke
     }
 }
 
+extension PayWithLinkViewController.WalletViewController: LinkShippingAddressListDatasource {
+    func numberOfShippingAddresses() -> Int {
+        viewModel.shippingAddresses.count
+    }
+
+    func shippingAddress(atIndex index: Int) -> ShippingAddressesResponse.ShippingAddress {
+        viewModel.shippingAddresses[index]
+    }
+
+    var selectedShippingAddressIndex: Int {
+        viewModel.selectedShippingAddressIndex
+    }
+}
+
 // MARK: - LinkPaymentMethodPickerDelegate
 
-extension PayWithLinkViewController.WalletViewController: LinkPaymentMethodPickerDelegate {
+extension PayWithLinkViewController.WalletViewController: AddressViewControllerDelegate {
+    func addressViewControllerDidFinish(_ addressViewController: AddressViewController, with address: AddressViewController.AddressDetails?) {
+        addressViewController.dismiss(animated: true)
+        if let address {
+            paymentPicker.setAddShippingAddressButtonIsLoading(true)
+            viewModel.createShippingAddress(address: .init(administrativeArea: address.address.state, countryCode: address.address.country, dependentLocality: nil, line1: address.address.line1, line2: address.address.line2, locality: address.address.city, name: address.name, postalCode: address.address.postalCode, sortingCode: nil)) { [weak self] _ in
+                self?.paymentPicker.reloadShippingAddresses()
+                self?.paymentPicker.setAddShippingAddressButtonIsLoading(false)
+            }
+            print(address)
+        }
+    }
+}
+
+extension PayWithLinkViewController.WalletViewController: LinkShippingAddressListDelegate {
+    func shippingAddressListDidExpand() {
+        paymentPicker.setPaymentListExpanded(false, animated: true)
+    }
+    
+    func didTapOnAddShippingAddress(
+        sourceRect: CGRect
+    ) {
+        self.bottomSheetController?.present(UINavigationController(rootViewController: AddressViewController(configuration: .init(appearance: LinkUI.appearance), delegate: self)), animated: true)
+    }
+
+    func didSelectShippingAddress(atIndex index: Int) {
+        viewModel.selectedShippingAddressIndex = index
+        paymentPicker.setShippingAddressExpanded(false, animated: true)
+        paymentPicker.reloadShippingAddresses()
+    }
+
+    func showMenuForShippingAddress(
+        atIndex index: Int,
+        sourceRect: CGRect
+    ) {
+        let alertController = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
+        alertController.popoverPresentationController?.sourceView = paymentPicker
+        alertController.popoverPresentationController?.sourceRect = sourceRect
+
+        let actions = shippingAddressActions(for: index, includeCancelAction: true)
+        for action in actions {
+            alertController.addAction(
+                UIAlertAction(
+                    title: action.title,
+                    style: action.style,
+                    handler: { _ in action.action() }
+                )
+            )
+        }
+
+        present(alertController, animated: true)
+    }
+
+    func shippingAddressActions(for index: Int, includeCancelAction: Bool) -> [Action] {
+        let shippingAddress = viewModel.shippingAddresses[index]
+        var actions: [Action] = []
+
+        if shippingAddress.isDefault != true {
+            let setAsDefaultAction = Action(
+                title: STPLocalizedString(
+                    "Set as default",
+                    "Label for a button or menu item that sets a payment method as default when tapped."
+                ),
+                action: { [weak self] in
+                    self?.paymentPicker.showLoaderForShippingAddress(at: index)
+                    self?.viewModel.setDefaultShippingAddress(at: index) { [weak self] _ in
+                        self?.paymentPicker.hideLoaderForShippingAddress(at: index)
+                        self?.paymentPicker.reloadShippingAddresses()
+                    }
+                }
+            )
+            actions.append(setAsDefaultAction)
+        }
+
+        let removeTitle: String = STPLocalizedString(
+            "Remove address",
+            "Title for a button that when tapped removes a shipping address."
+        )
+
+            let removeAction = Action(
+                title: removeTitle,
+                style: .destructive,
+                action: { [weak self] in
+                    self?.removeShippingAddress(at: index)
+                }
+            )
+            actions.append(removeAction)
+
+        if includeCancelAction {
+            let cancelAction = Action(
+                title: String.Localized.cancel,
+                style: .cancel,
+                action: {}
+            )
+            actions.append(cancelAction)
+        }
+
+        return actions
+    }
+
+    func menuActionForShippingAddress(
+        atIndex index: Int
+    ) -> [PayWithLinkViewController.WalletViewController.Action] {
+        shippingAddressActions(for: index, includeCancelAction: false)
+    }
+}
+
+extension PayWithLinkViewController.WalletViewController: LinkPaymentMethodPickerDelegate, LinkPaymentMethodListDelegate {
+
+    func paymentListDidExpand() {
+        paymentPicker.setShippingAddressExpanded(false, animated: true)
+    }
 
     func paymentMethodPicker(didSelectIndex index: Int) {
         viewModel.selectedPaymentMethodIndex = index
         if viewModel.selectedPaymentMethodIsSupported {
-            paymentPicker.setExpanded(false, animated: true)
+            paymentPicker.setPaymentListExpanded(false, animated: true)
         }
         paymentPicker.reloadPaymentMethods()
     }
@@ -672,6 +844,10 @@ extension PayWithLinkViewController.WalletViewController: LinkPaymentMethodPicke
         }
 
         present(alertController, animated: true)
+    }
+
+    func paymentDetailsPickerDidTapOnAddShippingAddress(sourceRect: CGRect) {
+        // TODO: 
     }
 
     func paymentDetailsPickerDidTapOnAddPayment(

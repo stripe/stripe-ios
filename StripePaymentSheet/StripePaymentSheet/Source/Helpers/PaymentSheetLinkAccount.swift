@@ -390,6 +390,50 @@ class PaymentSheetLinkAccount: PaymentSheetLinkAccountInfoProtocol {
         }
     }
 
+    func deleteShippingAddress(id: String, completion: @escaping (Result<Void, Error>) -> Void) {
+        retryingOnAuthError(completion: completion) { completionRetryingOnAuthErrors in
+            guard let session = self.currentSession else {
+                stpAssertionFailure()
+                return completion(
+                    .failure(
+                        PaymentSheetError.unknown(
+                            debugDescription: "Deleting Link shipping address without valid session"
+                        )
+                    )
+                )
+            }
+
+            session.deleteShippingAddress(
+                with: self.apiClient,
+                id: id,
+                consumerAccountPublishableKey: self.publishableKey,
+                completion: completionRetryingOnAuthErrors
+            )
+        }
+    }
+
+    func creatingShippingAddress(address: ShippingAddressesResponse.ShippingAddress.Address, completion: @escaping (Result<ShippingAddressesResponse.ShippingAddress, Error>) -> Void) {
+        retryingOnAuthError(completion: completion) { completionRetryingOnAuthErrors in
+            guard let session = self.currentSession else {
+                stpAssertionFailure()
+                return completion(
+                    .failure(
+                        PaymentSheetError.unknown(
+                            debugDescription: "Deleting Link shipping address without valid session"
+                        )
+                    )
+                )
+            }
+
+            session.createShippingAddress(
+                with: self.apiClient,
+                address: address,
+                consumerAccountPublishableKey: self.publishableKey,
+                completion: completionRetryingOnAuthErrors
+            )
+        }
+    }
+
     func updatePaymentDetails(
         id: String,
         updateParams: UpdatePaymentDetailsParams,
@@ -408,6 +452,33 @@ class PaymentSheetLinkAccount: PaymentSheetLinkAccountInfoProtocol {
             }
 
             session.updatePaymentDetails(
+                with: apiClient,
+                id: id,
+                updateParams: updateParams,
+                consumerAccountPublishableKey: publishableKey,
+                completion: completionRetryingOnAuthErrors
+            )
+        }
+    }
+
+    func updateShippingAddress(
+        id: String,
+        updateParams: UpdateShippingAddressParams,
+        completion: @escaping (Result<ShippingAddressesResponse.ShippingAddress, Error>) -> Void
+    ) {
+        retryingOnAuthError(completion: completion) { [apiClient, publishableKey] completionRetryingOnAuthErrors in
+            guard let session = self.currentSession else {
+                stpAssertionFailure()
+                return completion(
+                    .failure(
+                        PaymentSheetError.unknown(
+                            debugDescription: "Updating Link payment details without valid session"
+                        )
+                    )
+                )
+            }
+
+            session.updateShippingAddress(
                 with: apiClient,
                 id: id,
                 updateParams: updateParams,
@@ -672,6 +743,14 @@ struct UpdatePaymentDetailsParams {
     init(isDefault: Bool? = nil, details: DetailsType? = nil) {
         self.isDefault = isDefault
         self.details = details
+    }
+}
+
+struct UpdateShippingAddressParams {
+    let isDefault: Bool?
+
+    init(isDefault: Bool? = nil) {
+        self.isDefault = isDefault
     }
 }
 

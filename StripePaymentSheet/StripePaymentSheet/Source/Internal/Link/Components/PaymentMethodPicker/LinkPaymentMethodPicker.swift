@@ -12,22 +12,6 @@ import UIKit
 @_spi(STP) import StripeUICore
 
 protocol LinkPaymentMethodPickerDelegate: AnyObject {
-
-    func paymentMethodPicker(didSelectIndex index: Int)
-
-    func paymentMethodPicker(
-        menuActionsForItemAt index: Int
-    ) -> [PayWithLinkViewController.WalletViewController.Action]
-
-    func paymentMethodPicker(
-        showMenuForItemAt index: Int,
-        sourceRect: CGRect
-    )
-
-    func paymentDetailsPickerDidTapOnAddPayment(
-        sourceRect: CGRect
-    )
-
     func didTapOnAccountMenuItem(
         _ picker: LinkPaymentMethodPicker,
         sourceRect: CGRect
@@ -36,34 +20,22 @@ protocol LinkPaymentMethodPickerDelegate: AnyObject {
 
 protocol LinkPaymentMethodPickerDataSource: AnyObject {
     var accountEmail: String { get }
-
-    /// Returns the total number of payment methods.
-    /// - Returns: Payment method count
-    func numberOfPaymentMethods() -> Int
-
-    /// Returns the payment method at the specific index.
-    /// - Returns: Payment method.
-    func paymentPicker(
-        paymentMethodAt index: Int
-    ) -> ConsumerPaymentDetails
-
-    func isPaymentMethodSupported(_ paymentMethod: ConsumerPaymentDetails?) -> Bool
-
-    var selectedIndex: Int { get }
 }
 
 /// For internal SDK use only
 @objc(STP_Internal_LinkPaymentMethodPicker)
 final class LinkPaymentMethodPicker: UIView {
-    weak var delegate: LinkPaymentMethodPickerDelegate? {
+    weak var delegate: (LinkPaymentMethodPickerDelegate & LinkShippingAddressListDelegate & LinkPaymentMethodListDelegate)? {
         didSet {
             paymentMethodListView.delegate = delegate
+            shippingAddressListView.delegate = delegate
         }
     }
-    weak var dataSource: LinkPaymentMethodPickerDataSource? {
+    weak var dataSource: (LinkPaymentMethodPickerDataSource & LinkShippingAddressListDatasource & LinkPaymentMethodListDataSource)? {
         didSet {
             emailView.accountEmail = dataSource?.accountEmail
             paymentMethodListView.dataSource = dataSource
+            shippingAddressListView.dataSource = dataSource
         }
     }
 
@@ -75,8 +47,12 @@ final class LinkPaymentMethodPicker: UIView {
         }
     }
 
-    func setExpanded(_ expanded: Bool, animated: Bool) {
+    func setPaymentListExpanded(_ expanded: Bool, animated: Bool) {
         paymentMethodListView.setExpanded(expanded, animated: animated)
+    }
+
+    func setShippingAddressExpanded(_ expanded: Bool, animated: Bool) {
+        shippingAddressListView.setExpanded(expanded, animated: animated)
     }
 
     var billingDetails: PaymentSheet.BillingDetails? {
@@ -106,7 +82,9 @@ final class LinkPaymentMethodPicker: UIView {
     private lazy var stackView: UIStackView = {
         let stackView = UIStackView(arrangedSubviews: [
             emailView,
-            separatorView,
+            LinkSeparatorView(),
+            shippingAddressListView,
+            LinkSeparatorView(),
             paymentMethodListView,
         ])
 
@@ -117,9 +95,9 @@ final class LinkPaymentMethodPicker: UIView {
     }()
 
     private let emailView = EmailView()
-    private let separatorView = LinkSeparatorView()
 
     private lazy var paymentMethodListView = LinkPaymentMethodListView()
+    private lazy var shippingAddressListView = LinkShippingAddressListView()
 
     override init(frame: CGRect) {
         super.init(frame: .zero)
@@ -148,6 +126,7 @@ final class LinkPaymentMethodPicker: UIView {
     override func layoutSubviews() {
         super.layoutSubviews()
         paymentMethodListView.reloadDataIfNeeded()
+        shippingAddressListView.reloadDataIfNeeded()
     }
 
 #if !os(visionOS)
@@ -175,16 +154,32 @@ extension LinkPaymentMethodPicker {
         paymentMethodListView.reloadData()
     }
 
+    func reloadShippingAddresses() {
+        shippingAddressListView.reloadData()
+    }
+
     func showLoaderForPaymentMethod(at index: Int) {
         paymentMethodListView.showLoaderForPaymentMethod(at: index)
+    }
+
+    func showLoaderForShippingAddress(at index: Int) {
+        shippingAddressListView.showLoaderForShippingAddress(at: index)
     }
 
     func hideLoaderForPaymentMethod(at index: Int) {
         paymentMethodListView.hideLoaderForPaymentMethod(at: index)
     }
 
+    func hideLoaderForShippingAddress(at index: Int) {
+        shippingAddressListView.hideLoaderForShippingAddress(at: index)
+    }
+
     func setAddButtonIsLoading(_ isLoading: Bool) {
         paymentMethodListView.setAddButtonIsLoading(isLoading)
+    }
+
+    func setAddShippingAddressButtonIsLoading(_ isLoading: Bool) {
+        shippingAddressListView.setAddButtonIsLoading(isLoading)
     }
 }
 
@@ -306,5 +301,9 @@ private extension PaymentSheet.Address {
 extension LinkPaymentMethodPicker {
     func removePaymentMethod(at index: Int, animated: Bool) {
         paymentMethodListView.removePaymentMethod(at: index, animated: animated)
+    }
+
+    func removeShippingAddress(at index: Int, animated: Bool) {
+        shippingAddressListView.remove(at: index, animated: animated)
     }
 }
