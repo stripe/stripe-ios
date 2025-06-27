@@ -1553,7 +1553,7 @@ class PaymentSheetAPITest: STPNetworkStubbingTestCase {
         configuration.apiClient = apiClient
         // Create a new customer and new key
         let customerAndEphemeralKey = try await STPTestingAPIClient.shared().fetchCustomerAndEphemeralKey(customerID: nil, merchantCountry: nil)
-        let cscs = try await STPTestingAPIClient.shared().fetchCustomerAndCustomerSessionClientSecret(customerID: customerAndEphemeralKey.customer, merchantCountry: nil, paymentMethodSave: true, paymentMethodRemove: true, paymentMethodSetAsDefault: true)
+        let cscs = try await STPTestingAPIClient.shared().fetchCustomerAndCustomerSessionClientSecretCustomerSheet(customerID: customerAndEphemeralKey.customer, merchantCountry: nil, paymentMethodSave: true, paymentMethodRemove: true, paymentMethodSetAsDefault: true)
         // Create a new payment method
         let defaultPaymentMethod = try await apiClient.createPaymentMethod(with: ._testCardValue(), additionalPaymentUserAgentValues: [])
 
