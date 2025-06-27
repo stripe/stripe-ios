@@ -1,0 +1,4 @@
+Query chain:
+ →Find: Target Application 'com.stripe.PaymentSheet-Example'
+  ↪︎Find: Descendants matching type StaticText
+    ↪︎Find: Elements matching predicate '"Success!" IN identifiers'

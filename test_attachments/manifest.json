@@ -1,0 +1,2368 @@
+[
+  {
+    "attachments" : [
+      {
+        "configurationName" : "Configuration 1",
+        "deviceId" : "F88A7C09-B7DD-4BED-BBF4-AACCF19C2CD7",
+        "deviceName" : "iPhone 12 mini",
+        "exportedFileName" : "EA1D1A7D-F622-4B56-B881-8DE7CC3ED08F",
+        "isAssociatedWithFailure" : false,
+        "repetitionNumber" : 1,
+        "suggestedHumanReadableName" : "UI Snapshot 2025-06-27 at 03.22.32 PM",
+        "timestamp" : 1751062952.757
+      },
+      {
+        "configurationName" : "Configuration 1",
+        "deviceId" : "F88A7C09-B7DD-4BED-BBF4-AACCF19C2CD7",
+        "deviceName" : "iPhone 12 mini",
+        "exportedFileName" : "B8751DD3-58B9-4E41-BD85-603C0B222626.jpeg",
+        "isAssociatedWithFailure" : false,
+        "repetitionNumber" : 1,
+        "suggestedHumanReadableName" : "Screenshot 2025-06-27 at 03.22.32 PM.jpeg",
+        "timestamp" : 1751062952.782
+      },
+      {
+        "configurationName" : "Configuration 1",
+        "deviceId" : "F88A7C09-B7DD-4BED-BBF4-AACCF19C2CD7",
+        "deviceName" : "iPhone 12 mini",
+        "exportedFileName" : "460278E6-1BAA-4003-BAD4-8928D2ED4AA5.txt",
+        "isAssociatedWithFailure" : false,
+        "repetitionNumber" : 1,
+        "suggestedHumanReadableName" : "Debug description for `\"Success!\" StaticText`_1_D937355D-3041-4CCC-804F-1D1EC1B8649F.txt",
+        "timestamp" : 1751062952.428
+      },
+      {
+        "configurationName" : "Configuration 1",
+        "deviceId" : "F88A7C09-B7DD-4BED-BBF4-AACCF19C2CD7",
+        "deviceName" : "iPhone 12 mini",
+        "exportedFileName" : "C5A97971-C98A-4AAD-B361-66B8E0F96F13.txt",
+        "isAssociatedWithFailure" : false,
+        "repetitionNumber" : 1,
+        "suggestedHumanReadableName" : "Debug description for `\"Success!\" StaticText`_1_C2555D8B-193E-4BA0-B27A-AFEDEBC8AF2B.txt",
+        "timestamp" : 1751062951.342
+      },
+      {
+        "configurationName" : "Configuration 1",
+        "deviceId" : "F88A7C09-B7DD-4BED-BBF4-AACCF19C2CD7",
+        "deviceName" : "iPhone 12 mini",
+        "exportedFileName" : "98A0B555-B02E-4BB7-90DB-DC9645ADCF10.txt",
+        "isAssociatedWithFailure" : false,
+        "repetitionNumber" : 1,
+        "suggestedHumanReadableName" : "Debug description for `\"Success!\" StaticText`_1_97AD9591-9E2D-49C5-9DB6-D6AF647C8277.txt",
+        "timestamp" : 1751062950.268
+      },
+      {
+        "configurationName" : "Configuration 1",
+        "deviceId" : "F88A7C09-B7DD-4BED-BBF4-AACCF19C2CD7",
+        "deviceName" : "iPhone 12 mini",
+        "exportedFileName" : "CCE75F77-E1A1-428B-B639-6B9261D55C20.txt",
+        "isAssociatedWithFailure" : false,
+        "repetitionNumber" : 1,
+        "suggestedHumanReadableName" : "Debug description for `\"Success!\" StaticText`_1_79272A04-D4D2-4C20-A98F-896E6715A118.txt",
+        "timestamp" : 1751062949.199
+      },
+      {
+        "configurationName" : "Configuration 1",
+        "deviceId" : "F88A7C09-B7DD-4BED-BBF4-AACCF19C2CD7",
+        "deviceName" : "iPhone 12 mini",
+        "exportedFileName" : "20C442B5-4BF7-4032-BB50-BC1115C5543A.txt",
+        "isAssociatedWithFailure" : false,
+        "repetitionNumber" : 1,
+        "suggestedHumanReadableName" : "Debug description for `\"Success!\" StaticText`_1_48E1ED3A-21C0-4B53-ACCF-0FE324DD5AB6.txt",
+        "timestamp" : 1751062948.138
+      },
+      {
+        "configurationName" : "Configuration 1",
+        "deviceId" : "F88A7C09-B7DD-4BED-BBF4-AACCF19C2CD7",
+        "deviceName" : "iPhone 12 mini",
+        "exportedFileName" : "AB0DAB2D-4D31-468D-9305-347062090537.txt",
+        "isAssociatedWithFailure" : false,
+        "repetitionNumber" : 1,
+        "suggestedHumanReadableName" : "Debug description for `\"Success!\" StaticText`_1_AE6777CC-F13C-42E1-90B4-23A962475EF0.txt",
+        "timestamp" : 1751062947.038
+      },
+      {
+        "configurationName" : "Configuration 1",
+        "deviceId" : "F88A7C09-B7DD-4BED-BBF4-AACCF19C2CD7",
+        "deviceName" : "iPhone 12 mini",
+        "exportedFileName" : "25482EA9-8F2A-4EA4-90F5-D0619DBBF435.txt",
+        "isAssociatedWithFailure" : false,
+        "repetitionNumber" : 1,
+        "suggestedHumanReadableName" : "Debug description for `\"Success!\" StaticText`_1_9B1EC2C7-0008-4FA9-8EBE-E362FCFDB794.txt",
+        "timestamp" : 1751062945.949
+      },
+      {
+        "configurationName" : "Configuration 1",
+        "deviceId" : "F88A7C09-B7DD-4BED-BBF4-AACCF19C2CD7",
+        "deviceName" : "iPhone 12 mini",
+        "exportedFileName" : "B65FBCCD-DCE1-4E5E-9870-5F3C4138D026.txt",
+        "isAssociatedWithFailure" : false,
+        "repetitionNumber" : 1,
+        "suggestedHumanReadableName" : "Debug description for `\"Success!\" StaticText`_1_B7753499-1E39-4320-8E39-9ECA990A4343.txt",
+        "timestamp" : 1751062944.86
+      },
+      {
+        "configurationName" : "Configuration 1",
+        "deviceId" : "F88A7C09-B7DD-4BED-BBF4-AACCF19C2CD7",
+        "deviceName" : "iPhone 12 mini",
+        "exportedFileName" : "6A6A466B-B121-458F-A87D-4F26F8CBA22F.txt",
+        "isAssociatedWithFailure" : false,
+        "repetitionNumber" : 1,
+        "suggestedHumanReadableName" : "Debug description for `\"Success!\" StaticText`_1_64E4800C-3F66-4466-B54A-51E0C2F77A4B.txt",
+        "timestamp" : 1751062943.741
+      },
+      {
+        "configurationName" : "Configuration 1",
+        "deviceId" : "F88A7C09-B7DD-4BED-BBF4-AACCF19C2CD7",
+        "deviceName" : "iPhone 12 mini",
+        "exportedFileName" : "A9474C3C-2E65-4BAB-B70D-486E6ADE926C.jpeg",
+        "isAssociatedWithFailure" : false,
+        "repetitionNumber" : 1,
+        "suggestedHumanReadableName" : "Screenshot 2025-06-27 at 03.22.22 PM.jpeg",
+        "timestamp" : 1751062942.63
+      },
+      {
+        "configurationName" : "Configuration 1",
+        "deviceId" : "F88A7C09-B7DD-4BED-BBF4-AACCF19C2CD7",
+        "deviceName" : "iPhone 12 mini",
+        "exportedFileName" : "882E0550-9CA5-4B02-8364-9C626FCF1FB0",
+        "isAssociatedWithFailure" : false,
+        "repetitionNumber" : 1,
+        "suggestedHumanReadableName" : "UI Snapshot 2025-06-27 at 03.22.22 PM",
+        "timestamp" : 1751062942.114
+      },
+      {
+        "configurationName" : "Configuration 1",
+        "deviceId" : "F88A7C09-B7DD-4BED-BBF4-AACCF19C2CD7",
+        "deviceName" : "iPhone 12 mini",
+        "exportedFileName" : "D1DE5CCB-7D0F-4B62-A42C-3E4AE49D6DAB.jpeg",
+        "isAssociatedWithFailure" : false,
+        "repetitionNumber" : 1,
+        "suggestedHumanReadableName" : "Screenshot 2025-06-27 at 03.22.22 PM.jpeg",
+        "timestamp" : 1751062942.128
+      },
+      {
+        "configurationName" : "Configuration 1",
+        "deviceId" : "F88A7C09-B7DD-4BED-BBF4-AACCF19C2CD7",
+        "deviceName" : "iPhone 12 mini",
+        "exportedFileName" : "3710E7AC-1F61-4D27-8907-2D38E9142BF3",
+        "isAssociatedWithFailure" : false,
+        "repetitionNumber" : 1,
+        "suggestedHumanReadableName" : "Synthesized Event 2025-06-27 at 03.22.22 PM",
+        "timestamp" : 1751062942.616
+      },
+      {
+        "configurationName" : "Configuration 1",
+        "deviceId" : "F88A7C09-B7DD-4BED-BBF4-AACCF19C2CD7",
+        "deviceName" : "iPhone 12 mini",
+        "exportedFileName" : "96452CCA-268D-42D1-82B0-4B9B5E5E1282.jpeg",
+        "isAssociatedWithFailure" : false,
+        "repetitionNumber" : 1,
+        "suggestedHumanReadableName" : "Screenshot 2025-06-27 at 03.22.21 PM.jpeg",
+        "timestamp" : 1751062941.611
+      },
+      {
+        "configurationName" : "Configuration 1",
+        "deviceId" : "F88A7C09-B7DD-4BED-BBF4-AACCF19C2CD7",
+        "deviceName" : "iPhone 12 mini",
+        "exportedFileName" : "B9429B89-A994-48EB-8CF0-01AE1F77C5A8.jpeg",
+        "isAssociatedWithFailure" : false,
+        "repetitionNumber" : 1,
+        "suggestedHumanReadableName" : "Screenshot 2025-06-27 at 03.22.21 PM.jpeg",
+        "timestamp" : 1751062941.29
+      },
+      {
+        "configurationName" : "Configuration 1",
+        "deviceId" : "F88A7C09-B7DD-4BED-BBF4-AACCF19C2CD7",
+        "deviceName" : "iPhone 12 mini",
+        "exportedFileName" : "8C206B55-85C2-4305-A6C5-B04001D3FCF5",
+        "isAssociatedWithFailure" : false,
+        "repetitionNumber" : 1,
+        "suggestedHumanReadableName" : "UI Snapshot 2025-06-27 at 03.22.20 PM",
+        "timestamp" : 1751062940.846
+      },
+      {
+        "configurationName" : "Configuration 1",
+        "deviceId" : "F88A7C09-B7DD-4BED-BBF4-AACCF19C2CD7",
+        "deviceName" : "iPhone 12 mini",
+        "exportedFileName" : "E109E94F-87CB-4CAB-AE44-7770E67EAF92.jpeg",
+        "isAssociatedWithFailure" : false,
+        "repetitionNumber" : 1,
+        "suggestedHumanReadableName" : "Screenshot 2025-06-27 at 03.22.20 PM.jpeg",
+        "timestamp" : 1751062940.86
+      },
+      {
+        "configurationName" : "Configuration 1",
+        "deviceId" : "F88A7C09-B7DD-4BED-BBF4-AACCF19C2CD7",
+        "deviceName" : "iPhone 12 mini",
+        "exportedFileName" : "D03C8672-162C-430F-BE1B-7B36C73B5C43",
+        "isAssociatedWithFailure" : false,
+        "repetitionNumber" : 1,
+        "suggestedHumanReadableName" : "Synthesized Event 2025-06-27 at 03.22.21 PM",
+        "timestamp" : 1751062941.274
+      },
+      {
+        "configurationName" : "Configuration 1",
+        "deviceId" : "F88A7C09-B7DD-4BED-BBF4-AACCF19C2CD7",
+        "deviceName" : "iPhone 12 mini",
+        "exportedFileName" : "C6DD5FAB-4C16-4A8C-9D54-149BBB3C39C2.jpeg",
+        "isAssociatedWithFailure" : false,
+        "repetitionNumber" : 1,
+        "suggestedHumanReadableName" : "Screenshot 2025-06-27 at 03.22.20 PM.jpeg",
+        "timestamp" : 1751062940.752
+      },
+      {
+        "configurationName" : "Configuration 1",
+        "deviceId" : "F88A7C09-B7DD-4BED-BBF4-AACCF19C2CD7",
+        "deviceName" : "iPhone 12 mini",
+        "exportedFileName" : "5A686E63-90B1-45DB-877E-507DA5DCA81B.jpeg",
+        "isAssociatedWithFailure" : false,
+        "repetitionNumber" : 1,
+        "suggestedHumanReadableName" : "Screenshot 2025-06-27 at 03.22.20 PM.jpeg",
+        "timestamp" : 1751062940.735
+      },
+      {
+        "configurationName" : "Configuration 1",
+        "deviceId" : "F88A7C09-B7DD-4BED-BBF4-AACCF19C2CD7",
+        "deviceName" : "iPhone 12 mini",
+        "exportedFileName" : "12553AE6-2607-43E0-B7F1-F2138CC815DA",
+        "isAssociatedWithFailure" : false,
+        "repetitionNumber" : 1,
+        "suggestedHumanReadableName" : "UI Snapshot 2025-06-27 at 03.22.20 PM",
+        "timestamp" : 1751062940.422
+      },
+      {
+        "configurationName" : "Configuration 1",
+        "deviceId" : "F88A7C09-B7DD-4BED-BBF4-AACCF19C2CD7",
+        "deviceName" : "iPhone 12 mini",
+        "exportedFileName" : "0C1C1A41-1369-4A02-ACF2-5B6CFE1A5494.jpeg",
+        "isAssociatedWithFailure" : false,
+        "repetitionNumber" : 1,
+        "suggestedHumanReadableName" : "Screenshot 2025-06-27 at 03.22.20 PM.jpeg",
+        "timestamp" : 1751062940.435
+      },
+      {
+        "configurationName" : "Configuration 1",
+        "deviceId" : "F88A7C09-B7DD-4BED-BBF4-AACCF19C2CD7",
+        "deviceName" : "iPhone 12 mini",
+        "exportedFileName" : "5B14D8B0-B3DB-460C-ACDD-93AD351C2547",
+        "isAssociatedWithFailure" : false,
+        "repetitionNumber" : 1,
+        "suggestedHumanReadableName" : "Synthesized Event 2025-06-27 at 03.22.20 PM",
+        "timestamp" : 1751062940.717
+      },
+      {
+        "configurationName" : "Configuration 1",
+        "deviceId" : "F88A7C09-B7DD-4BED-BBF4-AACCF19C2CD7",
+        "deviceName" : "iPhone 12 mini",
+        "exportedFileName" : "B159BED7-92A0-4BFB-BC21-D3159E6304B1.jpeg",
+        "isAssociatedWithFailure" : false,
+        "repetitionNumber" : 1,
+        "suggestedHumanReadableName" : "Screenshot 2025-06-27 at 03.22.20 PM.jpeg",
+        "timestamp" : 1751062940.313
+      },
+      {
+        "configurationName" : "Configuration 1",
+        "deviceId" : "F88A7C09-B7DD-4BED-BBF4-AACCF19C2CD7",
+        "deviceName" : "iPhone 12 mini",
+        "exportedFileName" : "CAE50092-6921-4EB5-AC5C-8E553320181C.jpeg",
+        "isAssociatedWithFailure" : false,
+        "repetitionNumber" : 1,
+        "suggestedHumanReadableName" : "Screenshot 2025-06-27 at 03.22.19 PM.jpeg",
+        "timestamp" : 1751062939.198
+      },
+      {
+        "configurationName" : "Configuration 1",
+        "deviceId" : "F88A7C09-B7DD-4BED-BBF4-AACCF19C2CD7",
+        "deviceName" : "iPhone 12 mini",
+        "exportedFileName" : "9EFE860A-085B-434C-A044-1FDFE022A1CC",
+        "isAssociatedWithFailure" : false,
+        "repetitionNumber" : 1,
+        "suggestedHumanReadableName" : "UI Snapshot 2025-06-27 at 03.22.18 PM",
+        "timestamp" : 1751062938.633
+      },
+      {
+        "configurationName" : "Configuration 1",
+        "deviceId" : "F88A7C09-B7DD-4BED-BBF4-AACCF19C2CD7",
+        "deviceName" : "iPhone 12 mini",
+        "exportedFileName" : "EB403CD9-A83D-4618-BD9C-7EC6AFC61968.jpeg",
+        "isAssociatedWithFailure" : false,
+        "repetitionNumber" : 1,
+        "suggestedHumanReadableName" : "Screenshot 2025-06-27 at 03.22.18 PM.jpeg",
+        "timestamp" : 1751062938.653
+      },
+      {
+        "configurationName" : "Configuration 1",
+        "deviceId" : "F88A7C09-B7DD-4BED-BBF4-AACCF19C2CD7",
+        "deviceName" : "iPhone 12 mini",
+        "exportedFileName" : "717407D9-A3EC-440E-B82A-1D2474517D53",
+        "isAssociatedWithFailure" : false,
+        "repetitionNumber" : 1,
+        "suggestedHumanReadableName" : "Synthesized Event 2025-06-27 at 03.22.19 PM",
+        "timestamp" : 1751062939.178
+      },
+      {
+        "configurationName" : "Configuration 1",
+        "deviceId" : "F88A7C09-B7DD-4BED-BBF4-AACCF19C2CD7",
+        "deviceName" : "iPhone 12 mini",
+        "exportedFileName" : "B3AAD13C-02E0-4A6F-8071-844003D5E933.jpeg",
+        "isAssociatedWithFailure" : false,
+        "repetitionNumber" : 1,
+        "suggestedHumanReadableName" : "Screenshot 2025-06-27 at 03.22.18 PM.jpeg",
+        "timestamp" : 1751062938.67
+      },
+      {
+        "configurationName" : "Configuration 1",
+        "deviceId" : "F88A7C09-B7DD-4BED-BBF4-AACCF19C2CD7",
+        "deviceName" : "iPhone 12 mini",
+        "exportedFileName" : "5390C443-31A0-471D-985D-2416A85BFFA8.jpeg",
+        "isAssociatedWithFailure" : false,
+        "repetitionNumber" : 1,
+        "suggestedHumanReadableName" : "Screenshot 2025-06-27 at 03.22.18 PM.jpeg",
+        "timestamp" : 1751062938.542
+      },
+      {
+        "configurationName" : "Configuration 1",
+        "deviceId" : "F88A7C09-B7DD-4BED-BBF4-AACCF19C2CD7",
+        "deviceName" : "iPhone 12 mini",
+        "exportedFileName" : "ADA06E49-958F-4203-9562-B8A46871CBF3.jpeg",
+        "isAssociatedWithFailure" : false,
+        "repetitionNumber" : 1,
+        "suggestedHumanReadableName" : "Screenshot 2025-06-27 at 03.22.18 PM.jpeg",
+        "timestamp" : 1751062938.519
+      },
+      {
+        "configurationName" : "Configuration 1",
+        "deviceId" : "F88A7C09-B7DD-4BED-BBF4-AACCF19C2CD7",
+        "deviceName" : "iPhone 12 mini",
+        "exportedFileName" : "EA52D8C4-067C-4FA3-9812-83C0695F1360",
+        "isAssociatedWithFailure" : false,
+        "repetitionNumber" : 1,
+        "suggestedHumanReadableName" : "UI Snapshot 2025-06-27 at 03.22.17 PM",
+        "timestamp" : 1751062937.998
+      },
+      {
+        "configurationName" : "Configuration 1",
+        "deviceId" : "F88A7C09-B7DD-4BED-BBF4-AACCF19C2CD7",
+        "deviceName" : "iPhone 12 mini",
+        "exportedFileName" : "7579F993-83C1-4D68-8805-FAB93389E725.jpeg",
+        "isAssociatedWithFailure" : false,
+        "repetitionNumber" : 1,
+        "suggestedHumanReadableName" : "Screenshot 2025-06-27 at 03.22.18 PM.jpeg",
+        "timestamp" : 1751062938.013
+      },
+      {
+        "configurationName" : "Configuration 1",
+        "deviceId" : "F88A7C09-B7DD-4BED-BBF4-AACCF19C2CD7",
+        "deviceName" : "iPhone 12 mini",
+        "exportedFileName" : "ED935BEB-A6D4-4599-94DC-7BFE26F1D760",
+        "isAssociatedWithFailure" : false,
+        "repetitionNumber" : 1,
+        "suggestedHumanReadableName" : "Synthesized Event 2025-06-27 at 03.22.18 PM",
+        "timestamp" : 1751062938.503
+      },
+      {
+        "configurationName" : "Configuration 1",
+        "deviceId" : "F88A7C09-B7DD-4BED-BBF4-AACCF19C2CD7",
+        "deviceName" : "iPhone 12 mini",
+        "exportedFileName" : "858FF4CC-B652-4DDC-B467-929E362C0CFD.jpeg",
+        "isAssociatedWithFailure" : false,
+        "repetitionNumber" : 1,
+        "suggestedHumanReadableName" : "Screenshot 2025-06-27 at 03.22.17 PM.jpeg",
+        "timestamp" : 1751062937.887
+      },
+      {
+        "configurationName" : "Configuration 1",
+        "deviceId" : "F88A7C09-B7DD-4BED-BBF4-AACCF19C2CD7",
+        "deviceName" : "iPhone 12 mini",
+        "exportedFileName" : "D46C04FD-10BF-469E-B207-4F4D027A3EAF.jpeg",
+        "isAssociatedWithFailure" : false,
+        "repetitionNumber" : 1,
+        "suggestedHumanReadableName" : "Screenshot 2025-06-27 at 03.22.16 PM.jpeg",
+        "timestamp" : 1751062936.18
+      },
+      {
+        "configurationName" : "Configuration 1",
+        "deviceId" : "F88A7C09-B7DD-4BED-BBF4-AACCF19C2CD7",
+        "deviceName" : "iPhone 12 mini",
+        "exportedFileName" : "EBF8F49B-1C0E-462F-BC6A-376D98385D9D",
+        "isAssociatedWithFailure" : false,
+        "repetitionNumber" : 1,
+        "suggestedHumanReadableName" : "UI Snapshot 2025-06-27 at 03.22.15 PM",
+        "timestamp" : 1751062935.749
+      },
+      {
+        "configurationName" : "Configuration 1",
+        "deviceId" : "F88A7C09-B7DD-4BED-BBF4-AACCF19C2CD7",
+        "deviceName" : "iPhone 12 mini",
+        "exportedFileName" : "DD9CB07F-4D5E-40E9-92B5-2D79AFE1DAE9.jpeg",
+        "isAssociatedWithFailure" : false,
+        "repetitionNumber" : 1,
+        "suggestedHumanReadableName" : "Screenshot 2025-06-27 at 03.22.15 PM.jpeg",
+        "timestamp" : 1751062935.77
+      },
+      {
+        "configurationName" : "Configuration 1",
+        "deviceId" : "F88A7C09-B7DD-4BED-BBF4-AACCF19C2CD7",
+        "deviceName" : "iPhone 12 mini",
+        "exportedFileName" : "15890BD1-6A92-4C8A-99F3-5DA70DCA8A95",
+        "isAssociatedWithFailure" : false,
+        "repetitionNumber" : 1,
+        "suggestedHumanReadableName" : "Synthesized Event 2025-06-27 at 03.22.16 PM",
+        "timestamp" : 1751062936.157
+      },
+      {
+        "configurationName" : "Configuration 1",
+        "deviceId" : "F88A7C09-B7DD-4BED-BBF4-AACCF19C2CD7",
+        "deviceName" : "iPhone 12 mini",
+        "exportedFileName" : "D2B8F553-773D-4A0F-9FE3-1A2F5528A28F.jpeg",
+        "isAssociatedWithFailure" : false,
+        "repetitionNumber" : 1,
+        "suggestedHumanReadableName" : "Screenshot 2025-06-27 at 03.22.15 PM.jpeg",
+        "timestamp" : 1751062935.621
+      },
+      {
+        "configurationName" : "Configuration 1",
+        "deviceId" : "F88A7C09-B7DD-4BED-BBF4-AACCF19C2CD7",
+        "deviceName" : "iPhone 12 mini",
+        "exportedFileName" : "06772DAA-B464-46A5-A504-3F59A61DB333.jpeg",
+        "isAssociatedWithFailure" : false,
+        "repetitionNumber" : 1,
+        "suggestedHumanReadableName" : "Screenshot 2025-06-27 at 03.22.15 PM.jpeg",
+        "timestamp" : 1751062935.523
+      },
+      {
+        "configurationName" : "Configuration 1",
+        "deviceId" : "F88A7C09-B7DD-4BED-BBF4-AACCF19C2CD7",
+        "deviceName" : "iPhone 12 mini",
+        "exportedFileName" : "D1626498-D0AC-49B3-90F1-04B983B3D2DB",
+        "isAssociatedWithFailure" : false,
+        "repetitionNumber" : 1,
+        "suggestedHumanReadableName" : "UI Snapshot 2025-06-27 at 03.22.15 PM",
+        "timestamp" : 1751062935.147
+      },
+      {
+        "configurationName" : "Configuration 1",
+        "deviceId" : "F88A7C09-B7DD-4BED-BBF4-AACCF19C2CD7",
+        "deviceName" : "iPhone 12 mini",
+        "exportedFileName" : "45DB9979-A865-40CF-9141-8618615B52B7.jpeg",
+        "isAssociatedWithFailure" : false,
+        "repetitionNumber" : 1,
+        "suggestedHumanReadableName" : "Screenshot 2025-06-27 at 03.22.15 PM.jpeg",
+        "timestamp" : 1751062935.17
+      },
+      {
+        "configurationName" : "Configuration 1",
+        "deviceId" : "F88A7C09-B7DD-4BED-BBF4-AACCF19C2CD7",
+        "deviceName" : "iPhone 12 mini",
+        "exportedFileName" : "EB44C5D8-CF47-4F64-9525-870DF8ED839C",
+        "isAssociatedWithFailure" : false,
+        "repetitionNumber" : 1,
+        "suggestedHumanReadableName" : "Synthesized Event 2025-06-27 at 03.22.15 PM",
+        "timestamp" : 1751062935.499
+      },
+      {
+        "configurationName" : "Configuration 1",
+        "deviceId" : "F88A7C09-B7DD-4BED-BBF4-AACCF19C2CD7",
+        "deviceName" : "iPhone 12 mini",
+        "exportedFileName" : "87930396-3134-4068-AC88-39A67E935360.jpeg",
+        "isAssociatedWithFailure" : false,
+        "repetitionNumber" : 1,
+        "suggestedHumanReadableName" : "Screenshot 2025-06-27 at 03.22.15 PM.jpeg",
+        "timestamp" : 1751062935.005
+      },
+      {
+        "configurationName" : "Configuration 1",
+        "deviceId" : "F88A7C09-B7DD-4BED-BBF4-AACCF19C2CD7",
+        "deviceName" : "iPhone 12 mini",
+        "exportedFileName" : "0B09DBC5-12AE-460D-ABC8-218ED8C0CAD0.jpeg",
+        "isAssociatedWithFailure" : false,
+        "repetitionNumber" : 1,
+        "suggestedHumanReadableName" : "Screenshot 2025-06-27 at 03.22.14 PM.jpeg",
+        "timestamp" : 1751062934.646
+      },
+      {
+        "configurationName" : "Configuration 1",
+        "deviceId" : "F88A7C09-B7DD-4BED-BBF4-AACCF19C2CD7",
+        "deviceName" : "iPhone 12 mini",
+        "exportedFileName" : "23EC9344-E1CB-484E-9E37-620176796461",
+        "isAssociatedWithFailure" : false,
+        "repetitionNumber" : 1,
+        "suggestedHumanReadableName" : "UI Snapshot 2025-06-27 at 03.22.14 PM",
+        "timestamp" : 1751062934.314
+      },
+      {
+        "configurationName" : "Configuration 1",
+        "deviceId" : "F88A7C09-B7DD-4BED-BBF4-AACCF19C2CD7",
+        "deviceName" : "iPhone 12 mini",
+        "exportedFileName" : "59023A5C-C81C-42A5-987C-E97185F2420B.jpeg",
+        "isAssociatedWithFailure" : false,
+        "repetitionNumber" : 1,
+        "suggestedHumanReadableName" : "Screenshot 2025-06-27 at 03.22.14 PM.jpeg",
+        "timestamp" : 1751062934.333
+      },
+      {
+        "configurationName" : "Configuration 1",
+        "deviceId" : "F88A7C09-B7DD-4BED-BBF4-AACCF19C2CD7",
+        "deviceName" : "iPhone 12 mini",
+        "exportedFileName" : "6AD29792-A336-42D3-88BA-BD30F78EF847",
+        "isAssociatedWithFailure" : false,
+        "repetitionNumber" : 1,
+        "suggestedHumanReadableName" : "Synthesized Event 2025-06-27 at 03.22.14 PM",
+        "timestamp" : 1751062934.629
+      },
+      {
+        "configurationName" : "Configuration 1",
+        "deviceId" : "F88A7C09-B7DD-4BED-BBF4-AACCF19C2CD7",
+        "deviceName" : "iPhone 12 mini",
+        "exportedFileName" : "FA0EB11D-47EC-461F-8D62-BDDF0427D8A1.jpeg",
+        "isAssociatedWithFailure" : false,
+        "repetitionNumber" : 1,
+        "suggestedHumanReadableName" : "Screenshot 2025-06-27 at 03.22.14 PM.jpeg",
+        "timestamp" : 1751062934.206
+      },
+      {
+        "configurationName" : "Configuration 1",
+        "deviceId" : "F88A7C09-B7DD-4BED-BBF4-AACCF19C2CD7",
+        "deviceName" : "iPhone 12 mini",
+        "exportedFileName" : "1C5B6EE0-10B0-406B-B696-1784EE3B90B8.jpeg",
+        "isAssociatedWithFailure" : false,
+        "repetitionNumber" : 1,
+        "suggestedHumanReadableName" : "Screenshot 2025-06-27 at 03.22.14 PM.jpeg",
+        "timestamp" : 1751062934.188
+      },
+      {
+        "configurationName" : "Configuration 1",
+        "deviceId" : "F88A7C09-B7DD-4BED-BBF4-AACCF19C2CD7",
+        "deviceName" : "iPhone 12 mini",
+        "exportedFileName" : "FBE8079C-72A1-4374-9907-6B066787CECD",
+        "isAssociatedWithFailure" : false,
+        "repetitionNumber" : 1,
+        "suggestedHumanReadableName" : "UI Snapshot 2025-06-27 at 03.22.13 PM",
+        "timestamp" : 1751062933.828
+      },
+      {
+        "configurationName" : "Configuration 1",
+        "deviceId" : "F88A7C09-B7DD-4BED-BBF4-AACCF19C2CD7",
+        "deviceName" : "iPhone 12 mini",
+        "exportedFileName" : "0A1247AC-60A1-40A4-A2D1-F8D45C83D41F.jpeg",
+        "isAssociatedWithFailure" : false,
+        "repetitionNumber" : 1,
+        "suggestedHumanReadableName" : "Screenshot 2025-06-27 at 03.22.13 PM.jpeg",
+        "timestamp" : 1751062933.843
+      },
+      {
+        "configurationName" : "Configuration 1",
+        "deviceId" : "F88A7C09-B7DD-4BED-BBF4-AACCF19C2CD7",
+        "deviceName" : "iPhone 12 mini",
+        "exportedFileName" : "0B9D7DEE-DCAD-46AB-960B-45EF1797C9B0",
+        "isAssociatedWithFailure" : false,
+        "repetitionNumber" : 1,
+        "suggestedHumanReadableName" : "Synthesized Event 2025-06-27 at 03.22.14 PM",
+        "timestamp" : 1751062934.169
+      },
+      {
+        "configurationName" : "Configuration 1",
+        "deviceId" : "F88A7C09-B7DD-4BED-BBF4-AACCF19C2CD7",
+        "deviceName" : "iPhone 12 mini",
+        "exportedFileName" : "895625EE-EA04-4B05-9ACE-799669976554.jpeg",
+        "isAssociatedWithFailure" : false,
+        "repetitionNumber" : 1,
+        "suggestedHumanReadableName" : "Screenshot 2025-06-27 at 03.22.13 PM.jpeg",
+        "timestamp" : 1751062933.862
+      },
+      {
+        "configurationName" : "Configuration 1",
+        "deviceId" : "F88A7C09-B7DD-4BED-BBF4-AACCF19C2CD7",
+        "deviceName" : "iPhone 12 mini",
+        "exportedFileName" : "18978A8F-6774-46B1-9BFE-6EB0EE9F831A.jpeg",
+        "isAssociatedWithFailure" : false,
+        "repetitionNumber" : 1,
+        "suggestedHumanReadableName" : "Screenshot 2025-06-27 at 03.22.13 PM.jpeg",
+        "timestamp" : 1751062933.746
+      },
+      {
+        "configurationName" : "Configuration 1",
+        "deviceId" : "F88A7C09-B7DD-4BED-BBF4-AACCF19C2CD7",
+        "deviceName" : "iPhone 12 mini",
+        "exportedFileName" : "CAEA233D-F6A6-41B0-B40F-2E48221C77FF.jpeg",
+        "isAssociatedWithFailure" : false,
+        "repetitionNumber" : 1,
+        "suggestedHumanReadableName" : "Screenshot 2025-06-27 at 03.22.13 PM.jpeg",
+        "timestamp" : 1751062933.601
+      },
+      {
+        "configurationName" : "Configuration 1",
+        "deviceId" : "F88A7C09-B7DD-4BED-BBF4-AACCF19C2CD7",
+        "deviceName" : "iPhone 12 mini",
+        "exportedFileName" : "51EC6267-18E8-43D3-A1D7-FAF201CA00BC",
+        "isAssociatedWithFailure" : false,
+        "repetitionNumber" : 1,
+        "suggestedHumanReadableName" : "UI Snapshot 2025-06-27 at 03.22.13 PM",
+        "timestamp" : 1751062933.235
+      },
+      {
+        "configurationName" : "Configuration 1",
+        "deviceId" : "F88A7C09-B7DD-4BED-BBF4-AACCF19C2CD7",
+        "deviceName" : "iPhone 12 mini",
+        "exportedFileName" : "7BCE6D85-53B1-4139-8199-24069459C557.jpeg",
+        "isAssociatedWithFailure" : false,
+        "repetitionNumber" : 1,
+        "suggestedHumanReadableName" : "Screenshot 2025-06-27 at 03.22.13 PM.jpeg",
+        "timestamp" : 1751062933.253
+      },
+      {
+        "configurationName" : "Configuration 1",
+        "deviceId" : "F88A7C09-B7DD-4BED-BBF4-AACCF19C2CD7",
+        "deviceName" : "iPhone 12 mini",
+        "exportedFileName" : "AFD5DABD-2906-4D06-96B6-054C7EB96CCA",
+        "isAssociatedWithFailure" : false,
+        "repetitionNumber" : 1,
+        "suggestedHumanReadableName" : "Synthesized Event 2025-06-27 at 03.22.13 PM",
+        "timestamp" : 1751062933.583
+      },
+      {
+        "configurationName" : "Configuration 1",
+        "deviceId" : "F88A7C09-B7DD-4BED-BBF4-AACCF19C2CD7",
+        "deviceName" : "iPhone 12 mini",
+        "exportedFileName" : "6B6792BE-7919-4BB0-AC37-2860F58C0E29.jpeg",
+        "isAssociatedWithFailure" : false,
+        "repetitionNumber" : 1,
+        "suggestedHumanReadableName" : "Screenshot 2025-06-27 at 03.22.13 PM.jpeg",
+        "timestamp" : 1751062933.272
+      },
+      {
+        "configurationName" : "Configuration 1",
+        "deviceId" : "F88A7C09-B7DD-4BED-BBF4-AACCF19C2CD7",
+        "deviceName" : "iPhone 12 mini",
+        "exportedFileName" : "7784A051-0174-40DF-B9AB-F54AF4FCB956.jpeg",
+        "isAssociatedWithFailure" : false,
+        "repetitionNumber" : 1,
+        "suggestedHumanReadableName" : "Screenshot 2025-06-27 at 03.22.13 PM.jpeg",
+        "timestamp" : 1751062933.143
+      },
+      {
+        "configurationName" : "Configuration 1",
+        "deviceId" : "F88A7C09-B7DD-4BED-BBF4-AACCF19C2CD7",
+        "deviceName" : "iPhone 12 mini",
+        "exportedFileName" : "989B945A-579E-49BF-A125-08791164D2B8.jpeg",
+        "isAssociatedWithFailure" : false,
+        "repetitionNumber" : 1,
+        "suggestedHumanReadableName" : "Screenshot 2025-06-27 at 03.22.12 PM.jpeg",
+        "timestamp" : 1751062932.998
+      },
+      {
+        "configurationName" : "Configuration 1",
+        "deviceId" : "F88A7C09-B7DD-4BED-BBF4-AACCF19C2CD7",
+        "deviceName" : "iPhone 12 mini",
+        "exportedFileName" : "48FC4F34-F769-4A7F-AA85-0D84CA53C790",
+        "isAssociatedWithFailure" : false,
+        "repetitionNumber" : 1,
+        "suggestedHumanReadableName" : "UI Snapshot 2025-06-27 at 03.22.12 PM",
+        "timestamp" : 1751062932.454
+      },
+      {
+        "configurationName" : "Configuration 1",
+        "deviceId" : "F88A7C09-B7DD-4BED-BBF4-AACCF19C2CD7",
+        "deviceName" : "iPhone 12 mini",
+        "exportedFileName" : "4142EEFE-2A61-4376-A291-D9C9AA6C9AC2.jpeg",
+        "isAssociatedWithFailure" : false,
+        "repetitionNumber" : 1,
+        "suggestedHumanReadableName" : "Screenshot 2025-06-27 at 03.22.12 PM.jpeg",
+        "timestamp" : 1751062932.472
+      },
+      {
+        "configurationName" : "Configuration 1",
+        "deviceId" : "F88A7C09-B7DD-4BED-BBF4-AACCF19C2CD7",
+        "deviceName" : "iPhone 12 mini",
+        "exportedFileName" : "184BB37F-6993-4E43-9915-AAA73BB5314E",
+        "isAssociatedWithFailure" : false,
+        "repetitionNumber" : 1,
+        "suggestedHumanReadableName" : "Synthesized Event 2025-06-27 at 03.22.12 PM",
+        "timestamp" : 1751062932.973
+      },
+      {
+        "configurationName" : "Configuration 1",
+        "deviceId" : "F88A7C09-B7DD-4BED-BBF4-AACCF19C2CD7",
+        "deviceName" : "iPhone 12 mini",
+        "exportedFileName" : "76125193-8B3B-42BC-AF8C-E9AE4F132AD6.jpeg",
+        "isAssociatedWithFailure" : false,
+        "repetitionNumber" : 1,
+        "suggestedHumanReadableName" : "Screenshot 2025-06-27 at 03.22.12 PM.jpeg",
+        "timestamp" : 1751062932.489
+      },
+      {
+        "configurationName" : "Configuration 1",
+        "deviceId" : "F88A7C09-B7DD-4BED-BBF4-AACCF19C2CD7",
+        "deviceName" : "iPhone 12 mini",
+        "exportedFileName" : "A9A11350-F88E-4FF1-99F4-73E58712B0EA.jpeg",
+        "isAssociatedWithFailure" : false,
+        "repetitionNumber" : 1,
+        "suggestedHumanReadableName" : "Screenshot 2025-06-27 at 03.22.12 PM.jpeg",
+        "timestamp" : 1751062932.362
+      },
+      {
+        "configurationName" : "Configuration 1",
+        "deviceId" : "F88A7C09-B7DD-4BED-BBF4-AACCF19C2CD7",
+        "deviceName" : "iPhone 12 mini",
+        "exportedFileName" : "BF45210B-94EA-496A-A32B-1A2D5CD22C96.jpeg",
+        "isAssociatedWithFailure" : false,
+        "repetitionNumber" : 1,
+        "suggestedHumanReadableName" : "Screenshot 2025-06-27 at 03.22.11 PM.jpeg",
+        "timestamp" : 1751062931.978
+      },
+      {
+        "configurationName" : "Configuration 1",
+        "deviceId" : "F88A7C09-B7DD-4BED-BBF4-AACCF19C2CD7",
+        "deviceName" : "iPhone 12 mini",
+        "exportedFileName" : "4DF4ED98-826A-42F7-8DF1-1097057C99DA",
+        "isAssociatedWithFailure" : false,
+        "repetitionNumber" : 1,
+        "suggestedHumanReadableName" : "UI Snapshot 2025-06-27 at 03.22.11 PM",
+        "timestamp" : 1751062931.632
+      },
+      {
+        "configurationName" : "Configuration 1",
+        "deviceId" : "F88A7C09-B7DD-4BED-BBF4-AACCF19C2CD7",
+        "deviceName" : "iPhone 12 mini",
+        "exportedFileName" : "A1C45065-7FDA-447C-AE4D-7C8021E55831.jpeg",
+        "isAssociatedWithFailure" : false,
+        "repetitionNumber" : 1,
+        "suggestedHumanReadableName" : "Screenshot 2025-06-27 at 03.22.11 PM.jpeg",
+        "timestamp" : 1751062931.658
+      },
+      {
+        "configurationName" : "Configuration 1",
+        "deviceId" : "F88A7C09-B7DD-4BED-BBF4-AACCF19C2CD7",
+        "deviceName" : "iPhone 12 mini",
+        "exportedFileName" : "5A6FAD85-3BB2-4FBA-BA18-5967F676F214",
+        "isAssociatedWithFailure" : false,
+        "repetitionNumber" : 1,
+        "suggestedHumanReadableName" : "Synthesized Event 2025-06-27 at 03.22.11 PM",
+        "timestamp" : 1751062931.948
+      },
+      {
+        "configurationName" : "Configuration 1",
+        "deviceId" : "F88A7C09-B7DD-4BED-BBF4-AACCF19C2CD7",
+        "deviceName" : "iPhone 12 mini",
+        "exportedFileName" : "495BB71C-39AE-4AB4-8BBE-3799DF2D6374.jpeg",
+        "isAssociatedWithFailure" : false,
+        "repetitionNumber" : 1,
+        "suggestedHumanReadableName" : "Screenshot 2025-06-27 at 03.22.11 PM.jpeg",
+        "timestamp" : 1751062931.523
+      },
+      {
+        "configurationName" : "Configuration 1",
+        "deviceId" : "F88A7C09-B7DD-4BED-BBF4-AACCF19C2CD7",
+        "deviceName" : "iPhone 12 mini",
+        "exportedFileName" : "A22A9306-7A01-4E92-AF69-7A66FD79120D",
+        "isAssociatedWithFailure" : false,
+        "repetitionNumber" : 1,
+        "suggestedHumanReadableName" : "UI Snapshot 2025-06-27 at 03.22.11 PM",
+        "timestamp" : 1751062931.398
+      },
+      {
+        "configurationName" : "Configuration 1",
+        "deviceId" : "F88A7C09-B7DD-4BED-BBF4-AACCF19C2CD7",
+        "deviceName" : "iPhone 12 mini",
+        "exportedFileName" : "A28C2513-0784-49A5-B51B-2BC4E28876E9.jpeg",
+        "isAssociatedWithFailure" : false,
+        "repetitionNumber" : 1,
+        "suggestedHumanReadableName" : "Screenshot 2025-06-27 at 03.22.11 PM.jpeg",
+        "timestamp" : 1751062931.428
+      },
+      {
+        "configurationName" : "Configuration 1",
+        "deviceId" : "F88A7C09-B7DD-4BED-BBF4-AACCF19C2CD7",
+        "deviceName" : "iPhone 12 mini",
+        "exportedFileName" : "1DA2183D-D287-491B-9073-15CA837C0B11.jpeg",
+        "isAssociatedWithFailure" : false,
+        "repetitionNumber" : 1,
+        "suggestedHumanReadableName" : "Screenshot 2025-06-27 at 03.22.10 PM.jpeg",
+        "timestamp" : 1751062930.016
+      },
+      {
+        "configurationName" : "Configuration 1",
+        "deviceId" : "F88A7C09-B7DD-4BED-BBF4-AACCF19C2CD7",
+        "deviceName" : "iPhone 12 mini",
+        "exportedFileName" : "A8F9176A-5976-461C-A593-8AA53858AAC8",
+        "isAssociatedWithFailure" : false,
+        "repetitionNumber" : 1,
+        "suggestedHumanReadableName" : "UI Snapshot 2025-06-27 at 03.22.09 PM",
+        "timestamp" : 1751062929.69
+      },
+      {
+        "configurationName" : "Configuration 1",
+        "deviceId" : "F88A7C09-B7DD-4BED-BBF4-AACCF19C2CD7",
+        "deviceName" : "iPhone 12 mini",
+        "exportedFileName" : "20BC1053-D8ED-43BA-BD18-CF2BDEFEB391.jpeg",
+        "isAssociatedWithFailure" : false,
+        "repetitionNumber" : 1,
+        "suggestedHumanReadableName" : "Screenshot 2025-06-27 at 03.22.09 PM.jpeg",
+        "timestamp" : 1751062929.712
+      },
+      {
+        "configurationName" : "Configuration 1",
+        "deviceId" : "F88A7C09-B7DD-4BED-BBF4-AACCF19C2CD7",
+        "deviceName" : "iPhone 12 mini",
+        "exportedFileName" : "CC50BD52-3C65-4F5E-9551-A77B14AC4CBA",
+        "isAssociatedWithFailure" : false,
+        "repetitionNumber" : 1,
+        "suggestedHumanReadableName" : "Synthesized Event 2025-06-27 at 03.22.09 PM",
+        "timestamp" : 1751062929.998
+      },
+      {
+        "configurationName" : "Configuration 1",
+        "deviceId" : "F88A7C09-B7DD-4BED-BBF4-AACCF19C2CD7",
+        "deviceName" : "iPhone 12 mini",
+        "exportedFileName" : "CBE3A845-D27B-4485-909F-FD8F348D40E0.jpeg",
+        "isAssociatedWithFailure" : false,
+        "repetitionNumber" : 1,
+        "suggestedHumanReadableName" : "Screenshot 2025-06-27 at 03.22.09 PM.jpeg",
+        "timestamp" : 1751062929.596
+      },
+      {
+        "configurationName" : "Configuration 1",
+        "deviceId" : "F88A7C09-B7DD-4BED-BBF4-AACCF19C2CD7",
+        "deviceName" : "iPhone 12 mini",
+        "exportedFileName" : "4E5B76F2-0C86-4ACC-B9DD-E2B63B8C9F70",
+        "isAssociatedWithFailure" : false,
+        "repetitionNumber" : 1,
+        "suggestedHumanReadableName" : "UI Snapshot 2025-06-27 at 03.22.09 PM",
+        "timestamp" : 1751062929.441
+      },
+      {
+        "configurationName" : "Configuration 1",
+        "deviceId" : "F88A7C09-B7DD-4BED-BBF4-AACCF19C2CD7",
+        "deviceName" : "iPhone 12 mini",
+        "exportedFileName" : "02FAB0DA-9D42-4AAF-827F-5B1281FC0732.jpeg",
+        "isAssociatedWithFailure" : false,
+        "repetitionNumber" : 1,
+        "suggestedHumanReadableName" : "Screenshot 2025-06-27 at 03.22.09 PM.jpeg",
+        "timestamp" : 1751062929.466
+      },
+      {
+        "configurationName" : "Configuration 1",
+        "deviceId" : "F88A7C09-B7DD-4BED-BBF4-AACCF19C2CD7",
+        "deviceName" : "iPhone 12 mini",
+        "exportedFileName" : "519CC8B4-F98C-4DE9-88BE-C26FA44A63A3.txt",
+        "isAssociatedWithFailure" : false,
+        "repetitionNumber" : 1,
+        "suggestedHumanReadableName" : "Debug description for `\"Full name\" TextField`_1_97508AA6-A37B-4734-9C5B-011208CB0405.txt",
+        "timestamp" : 1751062929.119
+      },
+      {
+        "configurationName" : "Configuration 1",
+        "deviceId" : "F88A7C09-B7DD-4BED-BBF4-AACCF19C2CD7",
+        "deviceName" : "iPhone 12 mini",
+        "exportedFileName" : "0CBEB9C6-817A-40D1-818C-11BA2442EBEB.txt",
+        "isAssociatedWithFailure" : false,
+        "repetitionNumber" : 1,
+        "suggestedHumanReadableName" : "Debug description for `\"Full name\" TextField`_1_9D367F60-AE37-4240-8B2D-A28B8539ACF5.txt",
+        "timestamp" : 1751062928.014
+      },
+      {
+        "configurationName" : "Configuration 1",
+        "deviceId" : "F88A7C09-B7DD-4BED-BBF4-AACCF19C2CD7",
+        "deviceName" : "iPhone 12 mini",
+        "exportedFileName" : "CE329D80-A7AF-40E4-8A3A-17068B2B069A.txt",
+        "isAssociatedWithFailure" : false,
+        "repetitionNumber" : 1,
+        "suggestedHumanReadableName" : "Debug description for `\"Full name\" TextField`_1_B812D7A2-2E5A-45F8-B535-9899EC2B90F2.txt",
+        "timestamp" : 1751062926.919
+      },
+      {
+        "configurationName" : "Configuration 1",
+        "deviceId" : "F88A7C09-B7DD-4BED-BBF4-AACCF19C2CD7",
+        "deviceName" : "iPhone 12 mini",
+        "exportedFileName" : "6F12787E-5670-4C09-9F0C-91554D786A8F.txt",
+        "isAssociatedWithFailure" : false,
+        "repetitionNumber" : 1,
+        "suggestedHumanReadableName" : "Debug description for `\"Full name\" TextField`_1_4A4A7A72-138E-4578-A924-57C0F5FEA559.txt",
+        "timestamp" : 1751062925.845
+      },
+      {
+        "configurationName" : "Configuration 1",
+        "deviceId" : "F88A7C09-B7DD-4BED-BBF4-AACCF19C2CD7",
+        "deviceName" : "iPhone 12 mini",
+        "exportedFileName" : "1CCBB604-5CF4-4786-B748-8B3903661747.txt",
+        "isAssociatedWithFailure" : false,
+        "repetitionNumber" : 1,
+        "suggestedHumanReadableName" : "Debug description for `\"Full name\" TextField`_1_23F76775-78AF-4A76-9A66-2A1DBB94B175.txt",
+        "timestamp" : 1751062924.76
+      },
+      {
+        "configurationName" : "Configuration 1",
+        "deviceId" : "F88A7C09-B7DD-4BED-BBF4-AACCF19C2CD7",
+        "deviceName" : "iPhone 12 mini",
+        "exportedFileName" : "B63CD98E-E85C-40AD-8370-7FE1DB1DE25B.txt",
+        "isAssociatedWithFailure" : false,
+        "repetitionNumber" : 1,
+        "suggestedHumanReadableName" : "Debug description for `\"Full name\" TextField`_1_F9F9D62F-597B-4DAF-AA96-93C08E267285.txt",
+        "timestamp" : 1751062923.646
+      },
+      {
+        "configurationName" : "Configuration 1",
+        "deviceId" : "F88A7C09-B7DD-4BED-BBF4-AACCF19C2CD7",
+        "deviceName" : "iPhone 12 mini",
+        "exportedFileName" : "D03D0FD4-D90B-4FB7-9DDF-0BD4D46CE6AA.txt",
+        "isAssociatedWithFailure" : false,
+        "repetitionNumber" : 1,
+        "suggestedHumanReadableName" : "Debug description for `\"Full name\" TextField`_1_5D21CC81-DA2A-4093-9314-4A4E2C1A1F4C.txt",
+        "timestamp" : 1751062922.559
+      },
+      {
+        "configurationName" : "Configuration 1",
+        "deviceId" : "F88A7C09-B7DD-4BED-BBF4-AACCF19C2CD7",
+        "deviceName" : "iPhone 12 mini",
+        "exportedFileName" : "32EC6A25-ABE4-4994-B0CF-B5E8C063D82A.txt",
+        "isAssociatedWithFailure" : false,
+        "repetitionNumber" : 1,
+        "suggestedHumanReadableName" : "Debug description for `\"Full name\" TextField`_1_D77D1039-322C-4C09-89B4-2F497535357E.txt",
+        "timestamp" : 1751062921.486
+      },
+      {
+        "configurationName" : "Configuration 1",
+        "deviceId" : "F88A7C09-B7DD-4BED-BBF4-AACCF19C2CD7",
+        "deviceName" : "iPhone 12 mini",
+        "exportedFileName" : "21D1C80F-2B82-4DE5-80EC-E6B16844F72E.txt",
+        "isAssociatedWithFailure" : false,
+        "repetitionNumber" : 1,
+        "suggestedHumanReadableName" : "Debug description for `\"Full name\" TextField`_1_5F1A148A-AC37-4E35-A94C-78B0E663DE60.txt",
+        "timestamp" : 1751062920.402
+      },
+      {
+        "configurationName" : "Configuration 1",
+        "deviceId" : "F88A7C09-B7DD-4BED-BBF4-AACCF19C2CD7",
+        "deviceName" : "iPhone 12 mini",
+        "exportedFileName" : "6D18B999-0F71-465D-A1CD-0A151981FC51.jpeg",
+        "isAssociatedWithFailure" : false,
+        "repetitionNumber" : 1,
+        "suggestedHumanReadableName" : "Screenshot 2025-06-27 at 03.21.59 PM.jpeg",
+        "timestamp" : 1751062919.298
+      },
+      {
+        "configurationName" : "Configuration 1",
+        "deviceId" : "F88A7C09-B7DD-4BED-BBF4-AACCF19C2CD7",
+        "deviceName" : "iPhone 12 mini",
+        "exportedFileName" : "BF827000-5525-4096-B4C8-6DCBB8FB0CB9.jpeg",
+        "isAssociatedWithFailure" : false,
+        "repetitionNumber" : 1,
+        "suggestedHumanReadableName" : "Screenshot 2025-06-27 at 03.21.58 PM.jpeg",
+        "timestamp" : 1751062918.917
+      },
+      {
+        "configurationName" : "Configuration 1",
+        "deviceId" : "F88A7C09-B7DD-4BED-BBF4-AACCF19C2CD7",
+        "deviceName" : "iPhone 12 mini",
+        "exportedFileName" : "07DC995D-4A34-46D5-9D98-5BC60699331B",
+        "isAssociatedWithFailure" : false,
+        "repetitionNumber" : 1,
+        "suggestedHumanReadableName" : "Synthesized Event 2025-06-27 at 03.21.59 PM",
+        "timestamp" : 1751062919.281
+      },
+      {
+        "configurationName" : "Configuration 1",
+        "deviceId" : "F88A7C09-B7DD-4BED-BBF4-AACCF19C2CD7",
+        "deviceName" : "iPhone 12 mini",
+        "exportedFileName" : "FA79C793-B3E8-4F23-8A00-3A1FD6CDD92C.jpeg",
+        "isAssociatedWithFailure" : false,
+        "repetitionNumber" : 1,
+        "suggestedHumanReadableName" : "Screenshot 2025-06-27 at 03.21.58 PM.jpeg",
+        "timestamp" : 1751062918.802
+      },
+      {
+        "configurationName" : "Configuration 1",
+        "deviceId" : "F88A7C09-B7DD-4BED-BBF4-AACCF19C2CD7",
+        "deviceName" : "iPhone 12 mini",
+        "exportedFileName" : "836D11B9-1C1E-47EC-92A4-B90DD782CA89.jpeg",
+        "isAssociatedWithFailure" : false,
+        "repetitionNumber" : 1,
+        "suggestedHumanReadableName" : "Screenshot 2025-06-27 at 03.21.58 PM.jpeg",
+        "timestamp" : 1751062918.439
+      },
+      {
+        "configurationName" : "Configuration 1",
+        "deviceId" : "F88A7C09-B7DD-4BED-BBF4-AACCF19C2CD7",
+        "deviceName" : "iPhone 12 mini",
+        "exportedFileName" : "137DCDBB-83F3-49E8-A284-FAF3119B965F.jpeg",
+        "isAssociatedWithFailure" : false,
+        "repetitionNumber" : 1,
+        "suggestedHumanReadableName" : "Screenshot 2025-06-27 at 03.21.58 PM.jpeg",
+        "timestamp" : 1751062918.13
+      },
+      {
+        "configurationName" : "Configuration 1",
+        "deviceId" : "F88A7C09-B7DD-4BED-BBF4-AACCF19C2CD7",
+        "deviceName" : "iPhone 12 mini",
+        "exportedFileName" : "DDB43C4E-83D1-4E56-B392-553ECA37D340",
+        "isAssociatedWithFailure" : false,
+        "repetitionNumber" : 1,
+        "suggestedHumanReadableName" : "Synthesized Event 2025-06-27 at 03.21.58 PM",
+        "timestamp" : 1751062918.423
+      },
+      {
+        "configurationName" : "Configuration 1",
+        "deviceId" : "F88A7C09-B7DD-4BED-BBF4-AACCF19C2CD7",
+        "deviceName" : "iPhone 12 mini",
+        "exportedFileName" : "4411D1E1-693F-485A-9934-B1064B67F03B.jpeg",
+        "isAssociatedWithFailure" : false,
+        "repetitionNumber" : 1,
+        "suggestedHumanReadableName" : "Screenshot 2025-06-27 at 03.21.58 PM.jpeg",
+        "timestamp" : 1751062918.02
+      },
+      {
+        "configurationName" : "Configuration 1",
+        "deviceId" : "F88A7C09-B7DD-4BED-BBF4-AACCF19C2CD7",
+        "deviceName" : "iPhone 12 mini",
+        "exportedFileName" : "5F6FC5CE-A967-4E92-900F-0DE78B04C320.jpeg",
+        "isAssociatedWithFailure" : false,
+        "repetitionNumber" : 1,
+        "suggestedHumanReadableName" : "Screenshot 2025-06-27 at 03.21.56 PM.jpeg",
+        "timestamp" : 1751062916.756
+      },
+      {
+        "configurationName" : "Configuration 1",
+        "deviceId" : "F88A7C09-B7DD-4BED-BBF4-AACCF19C2CD7",
+        "deviceName" : "iPhone 12 mini",
+        "exportedFileName" : "D4A7BD47-F144-466C-8609-32C37E1DAF0A.jpeg",
+        "isAssociatedWithFailure" : false,
+        "repetitionNumber" : 1,
+        "suggestedHumanReadableName" : "Screenshot 2025-06-27 at 03.21.55 PM.jpeg",
+        "timestamp" : 1751062915.441
+      },
+      {
+        "configurationName" : "Configuration 1",
+        "deviceId" : "F88A7C09-B7DD-4BED-BBF4-AACCF19C2CD7",
+        "deviceName" : "iPhone 12 mini",
+        "exportedFileName" : "FD537B66-DA0B-45B1-8558-B5D885801F96",
+        "isAssociatedWithFailure" : false,
+        "repetitionNumber" : 1,
+        "suggestedHumanReadableName" : "Synthesized Event 2025-06-27 at 03.21.56 PM",
+        "timestamp" : 1751062916.74
+      },
+      {
+        "configurationName" : "Configuration 1",
+        "deviceId" : "F88A7C09-B7DD-4BED-BBF4-AACCF19C2CD7",
+        "deviceName" : "iPhone 12 mini",
+        "exportedFileName" : "C7C5BEA7-5747-4404-A3E4-2A9C302D2DA6.jpeg",
+        "isAssociatedWithFailure" : false,
+        "repetitionNumber" : 1,
+        "suggestedHumanReadableName" : "Screenshot 2025-06-27 at 03.21.55 PM.jpeg",
+        "timestamp" : 1751062915.332
+      },
+      {
+        "configurationName" : "Configuration 1",
+        "deviceId" : "F88A7C09-B7DD-4BED-BBF4-AACCF19C2CD7",
+        "deviceName" : "iPhone 12 mini",
+        "exportedFileName" : "39F40059-DACC-4DFE-8185-6B6D79F6773B.jpeg",
+        "isAssociatedWithFailure" : false,
+        "repetitionNumber" : 1,
+        "suggestedHumanReadableName" : "Screenshot 2025-06-27 at 03.21.53 PM.jpeg",
+        "timestamp" : 1751062913.847
+      },
+      {
+        "configurationName" : "Configuration 1",
+        "deviceId" : "F88A7C09-B7DD-4BED-BBF4-AACCF19C2CD7",
+        "deviceName" : "iPhone 12 mini",
+        "exportedFileName" : "47968ADB-5073-40D6-82ED-FB221FF23B2B.jpeg",
+        "isAssociatedWithFailure" : false,
+        "repetitionNumber" : 1,
+        "suggestedHumanReadableName" : "Screenshot 2025-06-27 at 03.21.53 PM.jpeg",
+        "timestamp" : 1751062913.55
+      },
+      {
+        "configurationName" : "Configuration 1",
+        "deviceId" : "F88A7C09-B7DD-4BED-BBF4-AACCF19C2CD7",
+        "deviceName" : "iPhone 12 mini",
+        "exportedFileName" : "449F84E4-1C5D-4342-B42B-C0C36476B3BA",
+        "isAssociatedWithFailure" : false,
+        "repetitionNumber" : 1,
+        "suggestedHumanReadableName" : "Synthesized Event 2025-06-27 at 03.21.53 PM",
+        "timestamp" : 1751062913.832
+      },
+      {
+        "configurationName" : "Configuration 1",
+        "deviceId" : "F88A7C09-B7DD-4BED-BBF4-AACCF19C2CD7",
+        "deviceName" : "iPhone 12 mini",
+        "exportedFileName" : "C8A4F067-4717-4417-BFC8-8934C171B89C.jpeg",
+        "isAssociatedWithFailure" : false,
+        "repetitionNumber" : 1,
+        "suggestedHumanReadableName" : "Screenshot 2025-06-27 at 03.21.53 PM.jpeg",
+        "timestamp" : 1751062913.471
+      },
+      {
+        "configurationName" : "Configuration 1",
+        "deviceId" : "F88A7C09-B7DD-4BED-BBF4-AACCF19C2CD7",
+        "deviceName" : "iPhone 12 mini",
+        "exportedFileName" : "F817C506-697C-4B2A-92D1-A00B2FF0C31F.jpeg",
+        "isAssociatedWithFailure" : false,
+        "repetitionNumber" : 1,
+        "suggestedHumanReadableName" : "Screenshot 2025-06-27 at 03.21.52 PM.jpeg",
+        "timestamp" : 1751062912.62
+      },
+      {
+        "configurationName" : "Configuration 1",
+        "deviceId" : "F88A7C09-B7DD-4BED-BBF4-AACCF19C2CD7",
+        "deviceName" : "iPhone 12 mini",
+        "exportedFileName" : "73EE1DB9-6AA4-42AB-B38E-EA4BF728CB83.jpeg",
+        "isAssociatedWithFailure" : false,
+        "repetitionNumber" : 1,
+        "suggestedHumanReadableName" : "Screenshot 2025-06-27 at 03.21.52 PM.jpeg",
+        "timestamp" : 1751062912.312
+      },
+      {
+        "configurationName" : "Configuration 1",
+        "deviceId" : "F88A7C09-B7DD-4BED-BBF4-AACCF19C2CD7",
+        "deviceName" : "iPhone 12 mini",
+        "exportedFileName" : "F7B598D0-2C1A-46E0-B46E-77ACC61D2329",
+        "isAssociatedWithFailure" : false,
+        "repetitionNumber" : 1,
+        "suggestedHumanReadableName" : "Synthesized Event 2025-06-27 at 03.21.52 PM",
+        "timestamp" : 1751062912.607
+      },
+      {
+        "configurationName" : "Configuration 1",
+        "deviceId" : "F88A7C09-B7DD-4BED-BBF4-AACCF19C2CD7",
+        "deviceName" : "iPhone 12 mini",
+        "exportedFileName" : "641B59A8-C291-4C5E-AF1B-104453482C8C.jpeg",
+        "isAssociatedWithFailure" : false,
+        "repetitionNumber" : 1,
+        "suggestedHumanReadableName" : "Screenshot 2025-06-27 at 03.21.52 PM.jpeg",
+        "timestamp" : 1751062912.222
+      },
+      {
+        "configurationName" : "Configuration 1",
+        "deviceId" : "F88A7C09-B7DD-4BED-BBF4-AACCF19C2CD7",
+        "deviceName" : "iPhone 12 mini",
+        "exportedFileName" : "7D68F562-183A-4E50-B44D-D846CC8F535C.jpeg",
+        "isAssociatedWithFailure" : false,
+        "repetitionNumber" : 1,
+        "suggestedHumanReadableName" : "Screenshot 2025-06-27 at 03.21.48 PM.jpeg",
+        "timestamp" : 1751062908.118
+      },
+      {
+        "configurationName" : "Configuration 1",
+        "deviceId" : "F88A7C09-B7DD-4BED-BBF4-AACCF19C2CD7",
+        "deviceName" : "iPhone 12 mini",
+        "exportedFileName" : "A3501B93-A3B8-4CF1-AB9E-4677ABFCD97C.jpeg",
+        "isAssociatedWithFailure" : false,
+        "repetitionNumber" : 1,
+        "suggestedHumanReadableName" : "Screenshot 2025-06-27 at 03.21.49 PM.jpeg",
+        "timestamp" : 1751062909.653
+      },
+      {
+        "configurationName" : "Configuration 1",
+        "deviceId" : "F88A7C09-B7DD-4BED-BBF4-AACCF19C2CD7",
+        "deviceName" : "iPhone 12 mini",
+        "exportedFileName" : "44582B08-9C3D-42B2-9FE8-6F6AE4D9275D.jpeg",
+        "isAssociatedWithFailure" : false,
+        "repetitionNumber" : 1,
+        "suggestedHumanReadableName" : "Screenshot 2025-06-27 at 03.21.48 PM.jpeg",
+        "timestamp" : 1751062908.132
+      },
+      {
+        "configurationName" : "Configuration 1",
+        "deviceId" : "F88A7C09-B7DD-4BED-BBF4-AACCF19C2CD7",
+        "deviceName" : "iPhone 12 mini",
+        "exportedFileName" : "1B2EC359-D16B-4BBE-8194-43798711E6E6.jpeg",
+        "isAssociatedWithFailure" : false,
+        "repetitionNumber" : 1,
+        "suggestedHumanReadableName" : "Screenshot 2025-06-27 at 03.21.48 PM.jpeg",
+        "timestamp" : 1751062908.104
+      },
+      {
+        "configurationName" : "Configuration 1",
+        "deviceId" : "F88A7C09-B7DD-4BED-BBF4-AACCF19C2CD7",
+        "deviceName" : "iPhone 12 mini",
+        "exportedFileName" : "9AB69E65-5FBD-44E3-A129-5449ECC36425.jpeg",
+        "isAssociatedWithFailure" : true,
+        "repetitionNumber" : 1,
+        "suggestedHumanReadableName" : "Screenshot 2025-06-27 at 03.22.32 PM.jpeg",
+        "timestamp" : 1751062952.782
+      },
+      {
+        "configurationName" : "Configuration 1",
+        "deviceId" : "F88A7C09-B7DD-4BED-BBF4-AACCF19C2CD7",
+        "deviceName" : "iPhone 12 mini",
+        "exportedFileName" : "6D8DEA9E-3B46-4DA4-82D1-98F363CE8075",
+        "isAssociatedWithFailure" : false,
+        "repetitionNumber" : 2,
+        "suggestedHumanReadableName" : "UI Snapshot 2025-06-27 at 03.23.16 PM",
+        "timestamp" : 1751062996.829
+      },
+      {
+        "configurationName" : "Configuration 1",
+        "deviceId" : "F88A7C09-B7DD-4BED-BBF4-AACCF19C2CD7",
+        "deviceName" : "iPhone 12 mini",
+        "exportedFileName" : "49DCDFCF-5ABA-4281-BA13-8BE06F26CAC3.jpeg",
+        "isAssociatedWithFailure" : false,
+        "repetitionNumber" : 2,
+        "suggestedHumanReadableName" : "Screenshot 2025-06-27 at 03.23.16 PM.jpeg",
+        "timestamp" : 1751062996.853
+      },
+      {
+        "configurationName" : "Configuration 1",
+        "deviceId" : "F88A7C09-B7DD-4BED-BBF4-AACCF19C2CD7",
+        "deviceName" : "iPhone 12 mini",
+        "exportedFileName" : "5E606CE9-CADE-44E3-8163-BC705814FD3E.txt",
+        "isAssociatedWithFailure" : false,
+        "repetitionNumber" : 2,
+        "suggestedHumanReadableName" : "Debug description for `\"Success!\" StaticText`_1_B6FE85D4-EB8D-4D5E-A70B-A1473E45840B.txt",
+        "timestamp" : 1751062996.404
+      },
+      {
+        "configurationName" : "Configuration 1",
+        "deviceId" : "F88A7C09-B7DD-4BED-BBF4-AACCF19C2CD7",
+        "deviceName" : "iPhone 12 mini",
+        "exportedFileName" : "6C902A10-032F-41B2-BFE6-EA3123D753D8.txt",
+        "isAssociatedWithFailure" : false,
+        "repetitionNumber" : 2,
+        "suggestedHumanReadableName" : "Debug description for `\"Success!\" StaticText`_1_C7364C7E-40FB-4BE5-A5F9-DBC26ACE9AF8.txt",
+        "timestamp" : 1751062995.331
+      },
+      {
+        "configurationName" : "Configuration 1",
+        "deviceId" : "F88A7C09-B7DD-4BED-BBF4-AACCF19C2CD7",
+        "deviceName" : "iPhone 12 mini",
+        "exportedFileName" : "41ABBC87-4175-4654-AD82-236A44A0569E.txt",
+        "isAssociatedWithFailure" : false,
+        "repetitionNumber" : 2,
+        "suggestedHumanReadableName" : "Debug description for `\"Success!\" StaticText`_1_1665A23E-767B-4E15-8AE6-ADC48F25BB7D.txt",
+        "timestamp" : 1751062994.273
+      },
+      {
+        "configurationName" : "Configuration 1",
+        "deviceId" : "F88A7C09-B7DD-4BED-BBF4-AACCF19C2CD7",
+        "deviceName" : "iPhone 12 mini",
+        "exportedFileName" : "2AA415C4-EFDD-444C-86F4-9A3970AB02FD.txt",
+        "isAssociatedWithFailure" : false,
+        "repetitionNumber" : 2,
+        "suggestedHumanReadableName" : "Debug description for `\"Success!\" StaticText`_1_BEECE785-7945-49D7-886E-018FD420F04F.txt",
+        "timestamp" : 1751062993.198
+      },
+      {
+        "configurationName" : "Configuration 1",
+        "deviceId" : "F88A7C09-B7DD-4BED-BBF4-AACCF19C2CD7",
+        "deviceName" : "iPhone 12 mini",
+        "exportedFileName" : "83AA8737-F81C-4E7B-B603-12DC190782CB.txt",
+        "isAssociatedWithFailure" : false,
+        "repetitionNumber" : 2,
+        "suggestedHumanReadableName" : "Debug description for `\"Success!\" StaticText`_1_89430AC4-4A7E-40C1-9262-37AE66EB2B95.txt",
+        "timestamp" : 1751062992.13
+      },
+      {
+        "configurationName" : "Configuration 1",
+        "deviceId" : "F88A7C09-B7DD-4BED-BBF4-AACCF19C2CD7",
+        "deviceName" : "iPhone 12 mini",
+        "exportedFileName" : "E85E894D-0AB9-409C-9ABA-F8BE14E89565.txt",
+        "isAssociatedWithFailure" : false,
+        "repetitionNumber" : 2,
+        "suggestedHumanReadableName" : "Debug description for `\"Success!\" StaticText`_1_27C2F71C-0894-40DC-8206-7028AD894B9F.txt",
+        "timestamp" : 1751062991.07
+      },
+      {
+        "configurationName" : "Configuration 1",
+        "deviceId" : "F88A7C09-B7DD-4BED-BBF4-AACCF19C2CD7",
+        "deviceName" : "iPhone 12 mini",
+        "exportedFileName" : "FCAF52C6-066F-42B0-980C-973A85C755DB.txt",
+        "isAssociatedWithFailure" : false,
+        "repetitionNumber" : 2,
+        "suggestedHumanReadableName" : "Debug description for `\"Success!\" StaticText`_1_9BFEF622-F7E3-4D15-8C11-C14E7E1D692A.txt",
+        "timestamp" : 1751062989.983
+      },
+      {
+        "configurationName" : "Configuration 1",
+        "deviceId" : "F88A7C09-B7DD-4BED-BBF4-AACCF19C2CD7",
+        "deviceName" : "iPhone 12 mini",
+        "exportedFileName" : "04E1AADA-9B92-41E4-AD8A-697DABB09120.txt",
+        "isAssociatedWithFailure" : false,
+        "repetitionNumber" : 2,
+        "suggestedHumanReadableName" : "Debug description for `\"Success!\" StaticText`_1_CF7CE66C-3079-49F5-B38F-7507C32B9353.txt",
+        "timestamp" : 1751062988.888
+      },
+      {
+        "configurationName" : "Configuration 1",
+        "deviceId" : "F88A7C09-B7DD-4BED-BBF4-AACCF19C2CD7",
+        "deviceName" : "iPhone 12 mini",
+        "exportedFileName" : "41F1B014-0728-435B-8F72-DF1A865AC763.txt",
+        "isAssociatedWithFailure" : false,
+        "repetitionNumber" : 2,
+        "suggestedHumanReadableName" : "Debug description for `\"Success!\" StaticText`_1_F640F2EF-4EDA-4A84-9E7F-28C0D21BA94B.txt",
+        "timestamp" : 1751062987.796
+      },
+      {
+        "configurationName" : "Configuration 1",
+        "deviceId" : "F88A7C09-B7DD-4BED-BBF4-AACCF19C2CD7",
+        "deviceName" : "iPhone 12 mini",
+        "exportedFileName" : "6849B4DF-3087-447E-90B7-C6DB08DF76C4.jpeg",
+        "isAssociatedWithFailure" : false,
+        "repetitionNumber" : 2,
+        "suggestedHumanReadableName" : "Screenshot 2025-06-27 at 03.23.06 PM.jpeg",
+        "timestamp" : 1751062986.702
+      },
+      {
+        "configurationName" : "Configuration 1",
+        "deviceId" : "F88A7C09-B7DD-4BED-BBF4-AACCF19C2CD7",
+        "deviceName" : "iPhone 12 mini",
+        "exportedFileName" : "C656A61B-F34B-4DFD-824C-5BFD31D54B9B",
+        "isAssociatedWithFailure" : false,
+        "repetitionNumber" : 2,
+        "suggestedHumanReadableName" : "UI Snapshot 2025-06-27 at 03.23.06 PM",
+        "timestamp" : 1751062986.202
+      },
+      {
+        "configurationName" : "Configuration 1",
+        "deviceId" : "F88A7C09-B7DD-4BED-BBF4-AACCF19C2CD7",
+        "deviceName" : "iPhone 12 mini",
+        "exportedFileName" : "3D48D775-C9FF-4BDC-A338-9FE8BF545B2F.jpeg",
+        "isAssociatedWithFailure" : false,
+        "repetitionNumber" : 2,
+        "suggestedHumanReadableName" : "Screenshot 2025-06-27 at 03.23.06 PM.jpeg",
+        "timestamp" : 1751062986.214
+      },
+      {
+        "configurationName" : "Configuration 1",
+        "deviceId" : "F88A7C09-B7DD-4BED-BBF4-AACCF19C2CD7",
+        "deviceName" : "iPhone 12 mini",
+        "exportedFileName" : "4FF58BB7-B718-40F8-9935-40235FF5731D",
+        "isAssociatedWithFailure" : false,
+        "repetitionNumber" : 2,
+        "suggestedHumanReadableName" : "Synthesized Event 2025-06-27 at 03.23.06 PM",
+        "timestamp" : 1751062986.689
+      },
+      {
+        "configurationName" : "Configuration 1",
+        "deviceId" : "F88A7C09-B7DD-4BED-BBF4-AACCF19C2CD7",
+        "deviceName" : "iPhone 12 mini",
+        "exportedFileName" : "3CB8E01A-A392-46FA-ACBC-A05E3E65F6C0.jpeg",
+        "isAssociatedWithFailure" : false,
+        "repetitionNumber" : 2,
+        "suggestedHumanReadableName" : "Screenshot 2025-06-27 at 03.23.05 PM.jpeg",
+        "timestamp" : 1751062985.679
+      },
+      {
+        "configurationName" : "Configuration 1",
+        "deviceId" : "F88A7C09-B7DD-4BED-BBF4-AACCF19C2CD7",
+        "deviceName" : "iPhone 12 mini",
+        "exportedFileName" : "6F478EA8-7D3F-476A-BC6A-05C71A56FA58.jpeg",
+        "isAssociatedWithFailure" : false,
+        "repetitionNumber" : 2,
+        "suggestedHumanReadableName" : "Screenshot 2025-06-27 at 03.23.05 PM.jpeg",
+        "timestamp" : 1751062985.438
+      },
+      {
+        "configurationName" : "Configuration 1",
+        "deviceId" : "F88A7C09-B7DD-4BED-BBF4-AACCF19C2CD7",
+        "deviceName" : "iPhone 12 mini",
+        "exportedFileName" : "FABC246D-0BD1-4472-810A-34BBDEE4134F",
+        "isAssociatedWithFailure" : false,
+        "repetitionNumber" : 2,
+        "suggestedHumanReadableName" : "UI Snapshot 2025-06-27 at 03.23.04 PM",
+        "timestamp" : 1751062984.984
+      },
+      {
+        "configurationName" : "Configuration 1",
+        "deviceId" : "F88A7C09-B7DD-4BED-BBF4-AACCF19C2CD7",
+        "deviceName" : "iPhone 12 mini",
+        "exportedFileName" : "40A3E14A-110B-4172-9678-9B2961151615.jpeg",
+        "isAssociatedWithFailure" : false,
+        "repetitionNumber" : 2,
+        "suggestedHumanReadableName" : "Screenshot 2025-06-27 at 03.23.05 PM.jpeg",
+        "timestamp" : 1751062985.005
+      },
+      {
+        "configurationName" : "Configuration 1",
+        "deviceId" : "F88A7C09-B7DD-4BED-BBF4-AACCF19C2CD7",
+        "deviceName" : "iPhone 12 mini",
+        "exportedFileName" : "2F8D04C9-0B08-4D1F-B710-3EAE719AFD28",
+        "isAssociatedWithFailure" : false,
+        "repetitionNumber" : 2,
+        "suggestedHumanReadableName" : "Synthesized Event 2025-06-27 at 03.23.05 PM",
+        "timestamp" : 1751062985.423
+      },
+      {
+        "configurationName" : "Configuration 1",
+        "deviceId" : "F88A7C09-B7DD-4BED-BBF4-AACCF19C2CD7",
+        "deviceName" : "iPhone 12 mini",
+        "exportedFileName" : "01B35045-40B0-4FB2-9132-E601D491A0F1.jpeg",
+        "isAssociatedWithFailure" : false,
+        "repetitionNumber" : 2,
+        "suggestedHumanReadableName" : "Screenshot 2025-06-27 at 03.23.04 PM.jpeg",
+        "timestamp" : 1751062984.894
+      },
+      {
+        "configurationName" : "Configuration 1",
+        "deviceId" : "F88A7C09-B7DD-4BED-BBF4-AACCF19C2CD7",
+        "deviceName" : "iPhone 12 mini",
+        "exportedFileName" : "C4CD9782-7B7F-42A7-9537-E7ABB02C161E.jpeg",
+        "isAssociatedWithFailure" : false,
+        "repetitionNumber" : 2,
+        "suggestedHumanReadableName" : "Screenshot 2025-06-27 at 03.23.04 PM.jpeg",
+        "timestamp" : 1751062984.879
+      },
+      {
+        "configurationName" : "Configuration 1",
+        "deviceId" : "F88A7C09-B7DD-4BED-BBF4-AACCF19C2CD7",
+        "deviceName" : "iPhone 12 mini",
+        "exportedFileName" : "4C1A01C1-0C8A-4C43-8402-A636DA43FA84",
+        "isAssociatedWithFailure" : false,
+        "repetitionNumber" : 2,
+        "suggestedHumanReadableName" : "UI Snapshot 2025-06-27 at 03.23.04 PM",
+        "timestamp" : 1751062984.56
+      },
+      {
+        "configurationName" : "Configuration 1",
+        "deviceId" : "F88A7C09-B7DD-4BED-BBF4-AACCF19C2CD7",
+        "deviceName" : "iPhone 12 mini",
+        "exportedFileName" : "26529405-888F-4810-87DB-8554247B2C86.jpeg",
+        "isAssociatedWithFailure" : false,
+        "repetitionNumber" : 2,
+        "suggestedHumanReadableName" : "Screenshot 2025-06-27 at 03.23.04 PM.jpeg",
+        "timestamp" : 1751062984.573
+      },
+      {
+        "configurationName" : "Configuration 1",
+        "deviceId" : "F88A7C09-B7DD-4BED-BBF4-AACCF19C2CD7",
+        "deviceName" : "iPhone 12 mini",
+        "exportedFileName" : "38029E21-DC5F-43E4-A09F-042D0D8E02CF",
+        "isAssociatedWithFailure" : false,
+        "repetitionNumber" : 2,
+        "suggestedHumanReadableName" : "Synthesized Event 2025-06-27 at 03.23.04 PM",
+        "timestamp" : 1751062984.865
+      },
+      {
+        "configurationName" : "Configuration 1",
+        "deviceId" : "F88A7C09-B7DD-4BED-BBF4-AACCF19C2CD7",
+        "deviceName" : "iPhone 12 mini",
+        "exportedFileName" : "B49E8B0B-CAF1-4D65-9595-71E412463766.jpeg",
+        "isAssociatedWithFailure" : false,
+        "repetitionNumber" : 2,
+        "suggestedHumanReadableName" : "Screenshot 2025-06-27 at 03.23.04 PM.jpeg",
+        "timestamp" : 1751062984.458
+      },
+      {
+        "configurationName" : "Configuration 1",
+        "deviceId" : "F88A7C09-B7DD-4BED-BBF4-AACCF19C2CD7",
+        "deviceName" : "iPhone 12 mini",
+        "exportedFileName" : "F90F5EBB-BC8B-4AC4-B8C7-CAA857D25CE2.jpeg",
+        "isAssociatedWithFailure" : false,
+        "repetitionNumber" : 2,
+        "suggestedHumanReadableName" : "Screenshot 2025-06-27 at 03.23.03 PM.jpeg",
+        "timestamp" : 1751062983.351
+      },
+      {
+        "configurationName" : "Configuration 1",
+        "deviceId" : "F88A7C09-B7DD-4BED-BBF4-AACCF19C2CD7",
+        "deviceName" : "iPhone 12 mini",
+        "exportedFileName" : "3387AB21-EAB1-461C-88BD-CCD349183AE0",
+        "isAssociatedWithFailure" : false,
+        "repetitionNumber" : 2,
+        "suggestedHumanReadableName" : "UI Snapshot 2025-06-27 at 03.23.02 PM",
+        "timestamp" : 1751062982.818
+      },
+      {
+        "configurationName" : "Configuration 1",
+        "deviceId" : "F88A7C09-B7DD-4BED-BBF4-AACCF19C2CD7",
+        "deviceName" : "iPhone 12 mini",
+        "exportedFileName" : "B844C721-A937-4889-BEB7-EC1921D25482.jpeg",
+        "isAssociatedWithFailure" : false,
+        "repetitionNumber" : 2,
+        "suggestedHumanReadableName" : "Screenshot 2025-06-27 at 03.23.02 PM.jpeg",
+        "timestamp" : 1751062982.83
+      },
+      {
+        "configurationName" : "Configuration 1",
+        "deviceId" : "F88A7C09-B7DD-4BED-BBF4-AACCF19C2CD7",
+        "deviceName" : "iPhone 12 mini",
+        "exportedFileName" : "9707FF97-3F12-409C-8224-4DD961161BEA",
+        "isAssociatedWithFailure" : false,
+        "repetitionNumber" : 2,
+        "suggestedHumanReadableName" : "Synthesized Event 2025-06-27 at 03.23.03 PM",
+        "timestamp" : 1751062983.337
+      },
+      {
+        "configurationName" : "Configuration 1",
+        "deviceId" : "F88A7C09-B7DD-4BED-BBF4-AACCF19C2CD7",
+        "deviceName" : "iPhone 12 mini",
+        "exportedFileName" : "DB1C35E1-CB3C-47AD-8702-7E3CBEA5D41F.jpeg",
+        "isAssociatedWithFailure" : false,
+        "repetitionNumber" : 2,
+        "suggestedHumanReadableName" : "Screenshot 2025-06-27 at 03.23.02 PM.jpeg",
+        "timestamp" : 1751062982.841
+      },
+      {
+        "configurationName" : "Configuration 1",
+        "deviceId" : "F88A7C09-B7DD-4BED-BBF4-AACCF19C2CD7",
+        "deviceName" : "iPhone 12 mini",
+        "exportedFileName" : "DAE6546D-F41A-408B-80CD-07199815D004.jpeg",
+        "isAssociatedWithFailure" : false,
+        "repetitionNumber" : 2,
+        "suggestedHumanReadableName" : "Screenshot 2025-06-27 at 03.23.02 PM.jpeg",
+        "timestamp" : 1751062982.743
+      },
+      {
+        "configurationName" : "Configuration 1",
+        "deviceId" : "F88A7C09-B7DD-4BED-BBF4-AACCF19C2CD7",
+        "deviceName" : "iPhone 12 mini",
+        "exportedFileName" : "1E75C36C-3D50-4CC5-A71A-5F9FB36B1A05.jpeg",
+        "isAssociatedWithFailure" : false,
+        "repetitionNumber" : 2,
+        "suggestedHumanReadableName" : "Screenshot 2025-06-27 at 03.23.02 PM.jpeg",
+        "timestamp" : 1751062982.729
+      },
+      {
+        "configurationName" : "Configuration 1",
+        "deviceId" : "F88A7C09-B7DD-4BED-BBF4-AACCF19C2CD7",
+        "deviceName" : "iPhone 12 mini",
+        "exportedFileName" : "FEBF8053-6098-4403-B448-CF218583540C",
+        "isAssociatedWithFailure" : false,
+        "repetitionNumber" : 2,
+        "suggestedHumanReadableName" : "UI Snapshot 2025-06-27 at 03.23.02 PM",
+        "timestamp" : 1751062982.233
+      },
+      {
+        "configurationName" : "Configuration 1",
+        "deviceId" : "F88A7C09-B7DD-4BED-BBF4-AACCF19C2CD7",
+        "deviceName" : "iPhone 12 mini",
+        "exportedFileName" : "3EA0A9B5-FA5F-4072-9659-54ACA356BEDC.jpeg",
+        "isAssociatedWithFailure" : false,
+        "repetitionNumber" : 2,
+        "suggestedHumanReadableName" : "Screenshot 2025-06-27 at 03.23.02 PM.jpeg",
+        "timestamp" : 1751062982.245
+      },
+      {
+        "configurationName" : "Configuration 1",
+        "deviceId" : "F88A7C09-B7DD-4BED-BBF4-AACCF19C2CD7",
+        "deviceName" : "iPhone 12 mini",
+        "exportedFileName" : "84CD49A5-0132-4B3B-B740-E65736D2CC19",
+        "isAssociatedWithFailure" : false,
+        "repetitionNumber" : 2,
+        "suggestedHumanReadableName" : "Synthesized Event 2025-06-27 at 03.23.02 PM",
+        "timestamp" : 1751062982.716
+      },
+      {
+        "configurationName" : "Configuration 1",
+        "deviceId" : "F88A7C09-B7DD-4BED-BBF4-AACCF19C2CD7",
+        "deviceName" : "iPhone 12 mini",
+        "exportedFileName" : "C4224236-A9A6-4882-9058-0BC5FE887308.jpeg",
+        "isAssociatedWithFailure" : false,
+        "repetitionNumber" : 2,
+        "suggestedHumanReadableName" : "Screenshot 2025-06-27 at 03.23.02 PM.jpeg",
+        "timestamp" : 1751062982.128
+      },
+      {
+        "configurationName" : "Configuration 1",
+        "deviceId" : "F88A7C09-B7DD-4BED-BBF4-AACCF19C2CD7",
+        "deviceName" : "iPhone 12 mini",
+        "exportedFileName" : "2A65295C-DAAB-4DCF-9B54-43CE0200E554.jpeg",
+        "isAssociatedWithFailure" : false,
+        "repetitionNumber" : 2,
+        "suggestedHumanReadableName" : "Screenshot 2025-06-27 at 03.23.00 PM.jpeg",
+        "timestamp" : 1751062980.472
+      },
+      {
+        "configurationName" : "Configuration 1",
+        "deviceId" : "F88A7C09-B7DD-4BED-BBF4-AACCF19C2CD7",
+        "deviceName" : "iPhone 12 mini",
+        "exportedFileName" : "4ABC7694-B7AF-42F7-803F-E22DB53384CD",
+        "isAssociatedWithFailure" : false,
+        "repetitionNumber" : 2,
+        "suggestedHumanReadableName" : "UI Snapshot 2025-06-27 at 03.23.00 PM",
+        "timestamp" : 1751062980.081
+      },
+      {
+        "configurationName" : "Configuration 1",
+        "deviceId" : "F88A7C09-B7DD-4BED-BBF4-AACCF19C2CD7",
+        "deviceName" : "iPhone 12 mini",
+        "exportedFileName" : "049E14B9-AD42-459A-A05C-CB561683E3C8.jpeg",
+        "isAssociatedWithFailure" : false,
+        "repetitionNumber" : 2,
+        "suggestedHumanReadableName" : "Screenshot 2025-06-27 at 03.23.00 PM.jpeg",
+        "timestamp" : 1751062980.1
+      },
+      {
+        "configurationName" : "Configuration 1",
+        "deviceId" : "F88A7C09-B7DD-4BED-BBF4-AACCF19C2CD7",
+        "deviceName" : "iPhone 12 mini",
+        "exportedFileName" : "CD3044C1-07E6-4D3D-B80F-D5E3A122876F",
+        "isAssociatedWithFailure" : false,
+        "repetitionNumber" : 2,
+        "suggestedHumanReadableName" : "Synthesized Event 2025-06-27 at 03.23.00 PM",
+        "timestamp" : 1751062980.457
+      },
+      {
+        "configurationName" : "Configuration 1",
+        "deviceId" : "F88A7C09-B7DD-4BED-BBF4-AACCF19C2CD7",
+        "deviceName" : "iPhone 12 mini",
+        "exportedFileName" : "70B7B7C2-EFCB-419D-8898-2FB63F2FB0CB.jpeg",
+        "isAssociatedWithFailure" : false,
+        "repetitionNumber" : 2,
+        "suggestedHumanReadableName" : "Screenshot 2025-06-27 at 03.22.59 PM.jpeg",
+        "timestamp" : 1751062979.956
+      },
+      {
+        "configurationName" : "Configuration 1",
+        "deviceId" : "F88A7C09-B7DD-4BED-BBF4-AACCF19C2CD7",
+        "deviceName" : "iPhone 12 mini",
+        "exportedFileName" : "2CF4BD5F-EBD1-4F56-8F28-C0EAB25CCF38.jpeg",
+        "isAssociatedWithFailure" : false,
+        "repetitionNumber" : 2,
+        "suggestedHumanReadableName" : "Screenshot 2025-06-27 at 03.22.59 PM.jpeg",
+        "timestamp" : 1751062979.887
+      },
+      {
+        "configurationName" : "Configuration 1",
+        "deviceId" : "F88A7C09-B7DD-4BED-BBF4-AACCF19C2CD7",
+        "deviceName" : "iPhone 12 mini",
+        "exportedFileName" : "E0E50E43-E39E-494F-88DB-9162BFDBFF76",
+        "isAssociatedWithFailure" : false,
+        "repetitionNumber" : 2,
+        "suggestedHumanReadableName" : "UI Snapshot 2025-06-27 at 03.22.59 PM",
+        "timestamp" : 1751062979.53
+      },
+      {
+        "configurationName" : "Configuration 1",
+        "deviceId" : "F88A7C09-B7DD-4BED-BBF4-AACCF19C2CD7",
+        "deviceName" : "iPhone 12 mini",
+        "exportedFileName" : "37C05CD3-7676-4469-B07C-8CBAB9EBA6B9.jpeg",
+        "isAssociatedWithFailure" : false,
+        "repetitionNumber" : 2,
+        "suggestedHumanReadableName" : "Screenshot 2025-06-27 at 03.22.59 PM.jpeg",
+        "timestamp" : 1751062979.544
+      },
+      {
+        "configurationName" : "Configuration 1",
+        "deviceId" : "F88A7C09-B7DD-4BED-BBF4-AACCF19C2CD7",
+        "deviceName" : "iPhone 12 mini",
+        "exportedFileName" : "B6DA6D66-F685-445A-B455-DC29F5B8D7D4",
+        "isAssociatedWithFailure" : false,
+        "repetitionNumber" : 2,
+        "suggestedHumanReadableName" : "Synthesized Event 2025-06-27 at 03.22.59 PM",
+        "timestamp" : 1751062979.873
+      },
+      {
+        "configurationName" : "Configuration 1",
+        "deviceId" : "F88A7C09-B7DD-4BED-BBF4-AACCF19C2CD7",
+        "deviceName" : "iPhone 12 mini",
+        "exportedFileName" : "126A3EC3-1254-484F-9D2A-E0083E0BBC1E.jpeg",
+        "isAssociatedWithFailure" : false,
+        "repetitionNumber" : 2,
+        "suggestedHumanReadableName" : "Screenshot 2025-06-27 at 03.22.59 PM.jpeg",
+        "timestamp" : 1751062979.431
+      },
+      {
+        "configurationName" : "Configuration 1",
+        "deviceId" : "F88A7C09-B7DD-4BED-BBF4-AACCF19C2CD7",
+        "deviceName" : "iPhone 12 mini",
+        "exportedFileName" : "04D35C86-83BD-4B5B-9DB7-1A1BB0DDCB4D.jpeg",
+        "isAssociatedWithFailure" : false,
+        "repetitionNumber" : 2,
+        "suggestedHumanReadableName" : "Screenshot 2025-06-27 at 03.22.59 PM.jpeg",
+        "timestamp" : 1751062979.079
+      },
+      {
+        "configurationName" : "Configuration 1",
+        "deviceId" : "F88A7C09-B7DD-4BED-BBF4-AACCF19C2CD7",
+        "deviceName" : "iPhone 12 mini",
+        "exportedFileName" : "7246FDCC-BC68-45AF-838A-83E2A1B87316",
+        "isAssociatedWithFailure" : false,
+        "repetitionNumber" : 2,
+        "suggestedHumanReadableName" : "UI Snapshot 2025-06-27 at 03.22.58 PM",
+        "timestamp" : 1751062978.768
+      },
+      {
+        "configurationName" : "Configuration 1",
+        "deviceId" : "F88A7C09-B7DD-4BED-BBF4-AACCF19C2CD7",
+        "deviceName" : "iPhone 12 mini",
+        "exportedFileName" : "DBE3DBBA-3CB0-49C6-99F5-069F06641825.jpeg",
+        "isAssociatedWithFailure" : false,
+        "repetitionNumber" : 2,
+        "suggestedHumanReadableName" : "Screenshot 2025-06-27 at 03.22.58 PM.jpeg",
+        "timestamp" : 1751062978.781
+      },
+      {
+        "configurationName" : "Configuration 1",
+        "deviceId" : "F88A7C09-B7DD-4BED-BBF4-AACCF19C2CD7",
+        "deviceName" : "iPhone 12 mini",
+        "exportedFileName" : "49F493C2-2273-4621-8AF1-FE346BD0ED7A",
+        "isAssociatedWithFailure" : false,
+        "repetitionNumber" : 2,
+        "suggestedHumanReadableName" : "Synthesized Event 2025-06-27 at 03.22.59 PM",
+        "timestamp" : 1751062979.065
+      },
+      {
+        "configurationName" : "Configuration 1",
+        "deviceId" : "F88A7C09-B7DD-4BED-BBF4-AACCF19C2CD7",
+        "deviceName" : "iPhone 12 mini",
+        "exportedFileName" : "F3790DC7-789A-44C5-B15F-1ECCA2C5EC9A.jpeg",
+        "isAssociatedWithFailure" : false,
+        "repetitionNumber" : 2,
+        "suggestedHumanReadableName" : "Screenshot 2025-06-27 at 03.22.58 PM.jpeg",
+        "timestamp" : 1751062978.677
+      },
+      {
+        "configurationName" : "Configuration 1",
+        "deviceId" : "F88A7C09-B7DD-4BED-BBF4-AACCF19C2CD7",
+        "deviceName" : "iPhone 12 mini",
+        "exportedFileName" : "5DB1299D-E6CE-40EC-B6ED-552E6E70D08A.jpeg",
+        "isAssociatedWithFailure" : false,
+        "repetitionNumber" : 2,
+        "suggestedHumanReadableName" : "Screenshot 2025-06-27 at 03.22.58 PM.jpeg",
+        "timestamp" : 1751062978.661
+      },
+      {
+        "configurationName" : "Configuration 1",
+        "deviceId" : "F88A7C09-B7DD-4BED-BBF4-AACCF19C2CD7",
+        "deviceName" : "iPhone 12 mini",
+        "exportedFileName" : "1B083A7B-0588-4CC2-832E-0943F96DF4B0",
+        "isAssociatedWithFailure" : false,
+        "repetitionNumber" : 2,
+        "suggestedHumanReadableName" : "UI Snapshot 2025-06-27 at 03.22.58 PM",
+        "timestamp" : 1751062978.321
+      },
+      {
+        "configurationName" : "Configuration 1",
+        "deviceId" : "F88A7C09-B7DD-4BED-BBF4-AACCF19C2CD7",
+        "deviceName" : "iPhone 12 mini",
+        "exportedFileName" : "912CAE81-E850-4AD2-B657-3579B6024864.jpeg",
+        "isAssociatedWithFailure" : false,
+        "repetitionNumber" : 2,
+        "suggestedHumanReadableName" : "Screenshot 2025-06-27 at 03.22.58 PM.jpeg",
+        "timestamp" : 1751062978.335
+      },
+      {
+        "configurationName" : "Configuration 1",
+        "deviceId" : "F88A7C09-B7DD-4BED-BBF4-AACCF19C2CD7",
+        "deviceName" : "iPhone 12 mini",
+        "exportedFileName" : "7FD2D6D5-5505-438B-A8CD-53885654D6D2",
+        "isAssociatedWithFailure" : false,
+        "repetitionNumber" : 2,
+        "suggestedHumanReadableName" : "Synthesized Event 2025-06-27 at 03.22.58 PM",
+        "timestamp" : 1751062978.646
+      },
+      {
+        "configurationName" : "Configuration 1",
+        "deviceId" : "F88A7C09-B7DD-4BED-BBF4-AACCF19C2CD7",
+        "deviceName" : "iPhone 12 mini",
+        "exportedFileName" : "D8523C81-E93D-4155-B642-EBB0E5CD7755.jpeg",
+        "isAssociatedWithFailure" : false,
+        "repetitionNumber" : 2,
+        "suggestedHumanReadableName" : "Screenshot 2025-06-27 at 03.22.58 PM.jpeg",
+        "timestamp" : 1751062978.348
+      },
+      {
+        "configurationName" : "Configuration 1",
+        "deviceId" : "F88A7C09-B7DD-4BED-BBF4-AACCF19C2CD7",
+        "deviceName" : "iPhone 12 mini",
+        "exportedFileName" : "DA40DFBD-E027-45E8-ACF4-1A937E2920ED.jpeg",
+        "isAssociatedWithFailure" : false,
+        "repetitionNumber" : 2,
+        "suggestedHumanReadableName" : "Screenshot 2025-06-27 at 03.22.58 PM.jpeg",
+        "timestamp" : 1751062978.254
+      },
+      {
+        "configurationName" : "Configuration 1",
+        "deviceId" : "F88A7C09-B7DD-4BED-BBF4-AACCF19C2CD7",
+        "deviceName" : "iPhone 12 mini",
+        "exportedFileName" : "41186AFC-610D-4CF7-8D63-B988978C683D.jpeg",
+        "isAssociatedWithFailure" : false,
+        "repetitionNumber" : 2,
+        "suggestedHumanReadableName" : "Screenshot 2025-06-27 at 03.22.58 PM.jpeg",
+        "timestamp" : 1751062978.121
+      },
+      {
+        "configurationName" : "Configuration 1",
+        "deviceId" : "F88A7C09-B7DD-4BED-BBF4-AACCF19C2CD7",
+        "deviceName" : "iPhone 12 mini",
+        "exportedFileName" : "C7363773-A25C-49DD-A691-99AD9D0BDDF9",
+        "isAssociatedWithFailure" : false,
+        "repetitionNumber" : 2,
+        "suggestedHumanReadableName" : "UI Snapshot 2025-06-27 at 03.22.57 PM",
+        "timestamp" : 1751062977.785
+      },
+      {
+        "configurationName" : "Configuration 1",
+        "deviceId" : "F88A7C09-B7DD-4BED-BBF4-AACCF19C2CD7",
+        "deviceName" : "iPhone 12 mini",
+        "exportedFileName" : "F11097DA-F4E3-413D-B2EE-2C4ACEF61DCC.jpeg",
+        "isAssociatedWithFailure" : false,
+        "repetitionNumber" : 2,
+        "suggestedHumanReadableName" : "Screenshot 2025-06-27 at 03.22.57 PM.jpeg",
+        "timestamp" : 1751062977.799
+      },
+      {
+        "configurationName" : "Configuration 1",
+        "deviceId" : "F88A7C09-B7DD-4BED-BBF4-AACCF19C2CD7",
+        "deviceName" : "iPhone 12 mini",
+        "exportedFileName" : "872D4395-D3FD-49FB-9219-16E29285E80F",
+        "isAssociatedWithFailure" : false,
+        "repetitionNumber" : 2,
+        "suggestedHumanReadableName" : "Synthesized Event 2025-06-27 at 03.22.58 PM",
+        "timestamp" : 1751062978.107
+      },
+      {
+        "configurationName" : "Configuration 1",
+        "deviceId" : "F88A7C09-B7DD-4BED-BBF4-AACCF19C2CD7",
+        "deviceName" : "iPhone 12 mini",
+        "exportedFileName" : "E4C91E06-561E-4074-BB55-9D8C68E290E4.jpeg",
+        "isAssociatedWithFailure" : false,
+        "repetitionNumber" : 2,
+        "suggestedHumanReadableName" : "Screenshot 2025-06-27 at 03.22.57 PM.jpeg",
+        "timestamp" : 1751062977.812
+      },
+      {
+        "configurationName" : "Configuration 1",
+        "deviceId" : "F88A7C09-B7DD-4BED-BBF4-AACCF19C2CD7",
+        "deviceName" : "iPhone 12 mini",
+        "exportedFileName" : "F3BCC4EF-21BD-4A2E-8339-52687642B735.jpeg",
+        "isAssociatedWithFailure" : false,
+        "repetitionNumber" : 2,
+        "suggestedHumanReadableName" : "Screenshot 2025-06-27 at 03.22.57 PM.jpeg",
+        "timestamp" : 1751062977.715
+      },
+      {
+        "configurationName" : "Configuration 1",
+        "deviceId" : "F88A7C09-B7DD-4BED-BBF4-AACCF19C2CD7",
+        "deviceName" : "iPhone 12 mini",
+        "exportedFileName" : "CC65F362-702D-48AA-9221-CB0D4D89706E.jpeg",
+        "isAssociatedWithFailure" : false,
+        "repetitionNumber" : 2,
+        "suggestedHumanReadableName" : "Screenshot 2025-06-27 at 03.22.57 PM.jpeg",
+        "timestamp" : 1751062977.554
+      },
+      {
+        "configurationName" : "Configuration 1",
+        "deviceId" : "F88A7C09-B7DD-4BED-BBF4-AACCF19C2CD7",
+        "deviceName" : "iPhone 12 mini",
+        "exportedFileName" : "1DE83BF4-9429-4B4D-A8E2-C0811CB1E834",
+        "isAssociatedWithFailure" : false,
+        "repetitionNumber" : 2,
+        "suggestedHumanReadableName" : "UI Snapshot 2025-06-27 at 03.22.57 PM",
+        "timestamp" : 1751062977.038
+      },
+      {
+        "configurationName" : "Configuration 1",
+        "deviceId" : "F88A7C09-B7DD-4BED-BBF4-AACCF19C2CD7",
+        "deviceName" : "iPhone 12 mini",
+        "exportedFileName" : "C148459F-34D6-49AB-B8C4-9ACA088E743D.jpeg",
+        "isAssociatedWithFailure" : false,
+        "repetitionNumber" : 2,
+        "suggestedHumanReadableName" : "Screenshot 2025-06-27 at 03.22.57 PM.jpeg",
+        "timestamp" : 1751062977.052
+      },
+      {
+        "configurationName" : "Configuration 1",
+        "deviceId" : "F88A7C09-B7DD-4BED-BBF4-AACCF19C2CD7",
+        "deviceName" : "iPhone 12 mini",
+        "exportedFileName" : "7F1B1C4B-0084-4219-A82E-4576398D280D",
+        "isAssociatedWithFailure" : false,
+        "repetitionNumber" : 2,
+        "suggestedHumanReadableName" : "Synthesized Event 2025-06-27 at 03.22.57 PM",
+        "timestamp" : 1751062977.54
+      },
+      {
+        "configurationName" : "Configuration 1",
+        "deviceId" : "F88A7C09-B7DD-4BED-BBF4-AACCF19C2CD7",
+        "deviceName" : "iPhone 12 mini",
+        "exportedFileName" : "A665E152-7B5B-4EC4-A058-F8EEEFCF247F.jpeg",
+        "isAssociatedWithFailure" : false,
+        "repetitionNumber" : 2,
+        "suggestedHumanReadableName" : "Screenshot 2025-06-27 at 03.22.57 PM.jpeg",
+        "timestamp" : 1751062977.064
+      },
+      {
+        "configurationName" : "Configuration 1",
+        "deviceId" : "F88A7C09-B7DD-4BED-BBF4-AACCF19C2CD7",
+        "deviceName" : "iPhone 12 mini",
+        "exportedFileName" : "E1C4E864-7EF9-44DE-A09D-E9DEB71646A9.jpeg",
+        "isAssociatedWithFailure" : false,
+        "repetitionNumber" : 2,
+        "suggestedHumanReadableName" : "Screenshot 2025-06-27 at 03.22.56 PM.jpeg",
+        "timestamp" : 1751062976.967
+      },
+      {
+        "configurationName" : "Configuration 1",
+        "deviceId" : "F88A7C09-B7DD-4BED-BBF4-AACCF19C2CD7",
+        "deviceName" : "iPhone 12 mini",
+        "exportedFileName" : "33E8E730-B20D-4880-9293-B47DE3618801.jpeg",
+        "isAssociatedWithFailure" : false,
+        "repetitionNumber" : 2,
+        "suggestedHumanReadableName" : "Screenshot 2025-06-27 at 03.22.56 PM.jpeg",
+        "timestamp" : 1751062976.598
+      },
+      {
+        "configurationName" : "Configuration 1",
+        "deviceId" : "F88A7C09-B7DD-4BED-BBF4-AACCF19C2CD7",
+        "deviceName" : "iPhone 12 mini",
+        "exportedFileName" : "08A563DE-0653-4CB7-8C40-904D4DCA22ED",
+        "isAssociatedWithFailure" : false,
+        "repetitionNumber" : 2,
+        "suggestedHumanReadableName" : "UI Snapshot 2025-06-27 at 03.22.56 PM",
+        "timestamp" : 1751062976.277
+      },
+      {
+        "configurationName" : "Configuration 1",
+        "deviceId" : "F88A7C09-B7DD-4BED-BBF4-AACCF19C2CD7",
+        "deviceName" : "iPhone 12 mini",
+        "exportedFileName" : "37349FE1-554F-4BAE-8C3D-48A9C1C98E1C.jpeg",
+        "isAssociatedWithFailure" : false,
+        "repetitionNumber" : 2,
+        "suggestedHumanReadableName" : "Screenshot 2025-06-27 at 03.22.56 PM.jpeg",
+        "timestamp" : 1751062976.295
+      },
+      {
+        "configurationName" : "Configuration 1",
+        "deviceId" : "F88A7C09-B7DD-4BED-BBF4-AACCF19C2CD7",
+        "deviceName" : "iPhone 12 mini",
+        "exportedFileName" : "AE7B6214-E073-4D37-9276-6C4F89E8EEF1",
+        "isAssociatedWithFailure" : false,
+        "repetitionNumber" : 2,
+        "suggestedHumanReadableName" : "Synthesized Event 2025-06-27 at 03.22.56 PM",
+        "timestamp" : 1751062976.582
+      },
+      {
+        "configurationName" : "Configuration 1",
+        "deviceId" : "F88A7C09-B7DD-4BED-BBF4-AACCF19C2CD7",
+        "deviceName" : "iPhone 12 mini",
+        "exportedFileName" : "34D11A57-ADC4-4103-BF17-666FF2B1AB08.jpeg",
+        "isAssociatedWithFailure" : false,
+        "repetitionNumber" : 2,
+        "suggestedHumanReadableName" : "Screenshot 2025-06-27 at 03.22.56 PM.jpeg",
+        "timestamp" : 1751062976.196
+      },
+      {
+        "configurationName" : "Configuration 1",
+        "deviceId" : "F88A7C09-B7DD-4BED-BBF4-AACCF19C2CD7",
+        "deviceName" : "iPhone 12 mini",
+        "exportedFileName" : "DB10AC22-1E85-4706-8558-AF820689AC8D",
+        "isAssociatedWithFailure" : false,
+        "repetitionNumber" : 2,
+        "suggestedHumanReadableName" : "UI Snapshot 2025-06-27 at 03.22.56 PM",
+        "timestamp" : 1751062976.11
+      },
+      {
+        "configurationName" : "Configuration 1",
+        "deviceId" : "F88A7C09-B7DD-4BED-BBF4-AACCF19C2CD7",
+        "deviceName" : "iPhone 12 mini",
+        "exportedFileName" : "AC862B44-5B8C-4BA1-967C-211B63000D48.jpeg",
+        "isAssociatedWithFailure" : false,
+        "repetitionNumber" : 2,
+        "suggestedHumanReadableName" : "Screenshot 2025-06-27 at 03.22.56 PM.jpeg",
+        "timestamp" : 1751062976.128
+      },
+      {
+        "configurationName" : "Configuration 1",
+        "deviceId" : "F88A7C09-B7DD-4BED-BBF4-AACCF19C2CD7",
+        "deviceName" : "iPhone 12 mini",
+        "exportedFileName" : "E0382AA7-91F8-4449-857C-1DD97F28DEA1.jpeg",
+        "isAssociatedWithFailure" : false,
+        "repetitionNumber" : 2,
+        "suggestedHumanReadableName" : "Screenshot 2025-06-27 at 03.22.54 PM.jpeg",
+        "timestamp" : 1751062974.699
+      },
+      {
+        "configurationName" : "Configuration 1",
+        "deviceId" : "F88A7C09-B7DD-4BED-BBF4-AACCF19C2CD7",
+        "deviceName" : "iPhone 12 mini",
+        "exportedFileName" : "FEFA39AC-A048-4B02-AB90-B0A364056A1E",
+        "isAssociatedWithFailure" : false,
+        "repetitionNumber" : 2,
+        "suggestedHumanReadableName" : "UI Snapshot 2025-06-27 at 03.22.54 PM",
+        "timestamp" : 1751062974.377
+      },
+      {
+        "configurationName" : "Configuration 1",
+        "deviceId" : "F88A7C09-B7DD-4BED-BBF4-AACCF19C2CD7",
+        "deviceName" : "iPhone 12 mini",
+        "exportedFileName" : "A9BEC3A7-4DC2-403A-AD54-692FC179619E.jpeg",
+        "isAssociatedWithFailure" : false,
+        "repetitionNumber" : 2,
+        "suggestedHumanReadableName" : "Screenshot 2025-06-27 at 03.22.54 PM.jpeg",
+        "timestamp" : 1751062974.397
+      },
+      {
+        "configurationName" : "Configuration 1",
+        "deviceId" : "F88A7C09-B7DD-4BED-BBF4-AACCF19C2CD7",
+        "deviceName" : "iPhone 12 mini",
+        "exportedFileName" : "2AF151B2-8A37-4D95-B82C-D65A743D7ECE",
+        "isAssociatedWithFailure" : false,
+        "repetitionNumber" : 2,
+        "suggestedHumanReadableName" : "Synthesized Event 2025-06-27 at 03.22.54 PM",
+        "timestamp" : 1751062974.686
+      },
+      {
+        "configurationName" : "Configuration 1",
+        "deviceId" : "F88A7C09-B7DD-4BED-BBF4-AACCF19C2CD7",
+        "deviceName" : "iPhone 12 mini",
+        "exportedFileName" : "9215E47B-14EE-4AB2-A55E-1857FC065499.jpeg",
+        "isAssociatedWithFailure" : false,
+        "repetitionNumber" : 2,
+        "suggestedHumanReadableName" : "Screenshot 2025-06-27 at 03.22.54 PM.jpeg",
+        "timestamp" : 1751062974.297
+      },
+      {
+        "configurationName" : "Configuration 1",
+        "deviceId" : "F88A7C09-B7DD-4BED-BBF4-AACCF19C2CD7",
+        "deviceName" : "iPhone 12 mini",
+        "exportedFileName" : "20E50DB8-8DB7-4FCB-A21B-09F2DFB95677",
+        "isAssociatedWithFailure" : false,
+        "repetitionNumber" : 2,
+        "suggestedHumanReadableName" : "UI Snapshot 2025-06-27 at 03.22.54 PM",
+        "timestamp" : 1751062974.167
+      },
+      {
+        "configurationName" : "Configuration 1",
+        "deviceId" : "F88A7C09-B7DD-4BED-BBF4-AACCF19C2CD7",
+        "deviceName" : "iPhone 12 mini",
+        "exportedFileName" : "2A9433FF-C10B-43ED-94EF-A39F5E8FA1D3.jpeg",
+        "isAssociatedWithFailure" : false,
+        "repetitionNumber" : 2,
+        "suggestedHumanReadableName" : "Screenshot 2025-06-27 at 03.22.54 PM.jpeg",
+        "timestamp" : 1751062974.188
+      },
+      {
+        "configurationName" : "Configuration 1",
+        "deviceId" : "F88A7C09-B7DD-4BED-BBF4-AACCF19C2CD7",
+        "deviceName" : "iPhone 12 mini",
+        "exportedFileName" : "D4C4A559-3804-4112-9F2D-45DE4B983A9E.txt",
+        "isAssociatedWithFailure" : false,
+        "repetitionNumber" : 2,
+        "suggestedHumanReadableName" : "Debug description for `\"Full name\" TextField`_1_C1F4AF26-54F3-4F01-BAE9-2A2ACC44170E.txt",
+        "timestamp" : 1751062973.695
+      },
+      {
+        "configurationName" : "Configuration 1",
+        "deviceId" : "F88A7C09-B7DD-4BED-BBF4-AACCF19C2CD7",
+        "deviceName" : "iPhone 12 mini",
+        "exportedFileName" : "2ABEB34D-8B8F-4F24-8A2C-34A8A182475A.txt",
+        "isAssociatedWithFailure" : false,
+        "repetitionNumber" : 2,
+        "suggestedHumanReadableName" : "Debug description for `\"Full name\" TextField`_1_C6C49660-1A89-4A96-8816-4081B724271D.txt",
+        "timestamp" : 1751062972.61
+      },
+      {
+        "configurationName" : "Configuration 1",
+        "deviceId" : "F88A7C09-B7DD-4BED-BBF4-AACCF19C2CD7",
+        "deviceName" : "iPhone 12 mini",
+        "exportedFileName" : "9379F4C4-19D2-4548-9855-CF3092C0BF5F.txt",
+        "isAssociatedWithFailure" : false,
+        "repetitionNumber" : 2,
+        "suggestedHumanReadableName" : "Debug description for `\"Full name\" TextField`_1_0230FCC7-CEEE-4809-A770-B94A94759741.txt",
+        "timestamp" : 1751062971.55
+      },
+      {
+        "configurationName" : "Configuration 1",
+        "deviceId" : "F88A7C09-B7DD-4BED-BBF4-AACCF19C2CD7",
+        "deviceName" : "iPhone 12 mini",
+        "exportedFileName" : "915569CC-68F3-47F2-8A29-BD1679DCAE6D.txt",
+        "isAssociatedWithFailure" : false,
+        "repetitionNumber" : 2,
+        "suggestedHumanReadableName" : "Debug description for `\"Full name\" TextField`_1_20BEF80C-8C63-4BDE-8C41-11EEEFA4BD10.txt",
+        "timestamp" : 1751062970.483
+      },
+      {
+        "configurationName" : "Configuration 1",
+        "deviceId" : "F88A7C09-B7DD-4BED-BBF4-AACCF19C2CD7",
+        "deviceName" : "iPhone 12 mini",
+        "exportedFileName" : "79C280AD-477A-4AAF-9595-FE337043465B.txt",
+        "isAssociatedWithFailure" : false,
+        "repetitionNumber" : 2,
+        "suggestedHumanReadableName" : "Debug description for `\"Full name\" TextField`_1_194FAD90-2F1C-49D4-974B-8065D1B42A8D.txt",
+        "timestamp" : 1751062969.395
+      },
+      {
+        "configurationName" : "Configuration 1",
+        "deviceId" : "F88A7C09-B7DD-4BED-BBF4-AACCF19C2CD7",
+        "deviceName" : "iPhone 12 mini",
+        "exportedFileName" : "6066F14C-355E-43E0-838D-EE5393FBBA30.txt",
+        "isAssociatedWithFailure" : false,
+        "repetitionNumber" : 2,
+        "suggestedHumanReadableName" : "Debug description for `\"Full name\" TextField`_1_517EEA3F-D751-4668-8DE3-124EFAE4AF3F.txt",
+        "timestamp" : 1751062968.326
+      },
+      {
+        "configurationName" : "Configuration 1",
+        "deviceId" : "F88A7C09-B7DD-4BED-BBF4-AACCF19C2CD7",
+        "deviceName" : "iPhone 12 mini",
+        "exportedFileName" : "B76B2836-0CBB-4296-9CC7-8218DB98CE3B.txt",
+        "isAssociatedWithFailure" : false,
+        "repetitionNumber" : 2,
+        "suggestedHumanReadableName" : "Debug description for `\"Full name\" TextField`_1_180DE6D8-42C6-4CDD-9881-F2777FC56BE3.txt",
+        "timestamp" : 1751062967.259
+      },
+      {
+        "configurationName" : "Configuration 1",
+        "deviceId" : "F88A7C09-B7DD-4BED-BBF4-AACCF19C2CD7",
+        "deviceName" : "iPhone 12 mini",
+        "exportedFileName" : "8DD42371-2699-41AE-AE9B-DAF10D7FFB6A.txt",
+        "isAssociatedWithFailure" : false,
+        "repetitionNumber" : 2,
+        "suggestedHumanReadableName" : "Debug description for `\"Full name\" TextField`_1_C6AB5884-30DA-4BE7-BD2D-13364BF8F0D6.txt",
+        "timestamp" : 1751062966.162
+      },
+      {
+        "configurationName" : "Configuration 1",
+        "deviceId" : "F88A7C09-B7DD-4BED-BBF4-AACCF19C2CD7",
+        "deviceName" : "iPhone 12 mini",
+        "exportedFileName" : "886C3950-14A3-4E16-A45B-61567FF4CAF8.txt",
+        "isAssociatedWithFailure" : false,
+        "repetitionNumber" : 2,
+        "suggestedHumanReadableName" : "Debug description for `\"Full name\" TextField`_1_1CE250A7-3842-4AD4-A63D-E66DFEEBCB7A.txt",
+        "timestamp" : 1751062965.108
+      },
+      {
+        "configurationName" : "Configuration 1",
+        "deviceId" : "F88A7C09-B7DD-4BED-BBF4-AACCF19C2CD7",
+        "deviceName" : "iPhone 12 mini",
+        "exportedFileName" : "EC1F6B95-FEAA-4099-948C-8457E4E4ECFF.jpeg",
+        "isAssociatedWithFailure" : false,
+        "repetitionNumber" : 2,
+        "suggestedHumanReadableName" : "Screenshot 2025-06-27 at 03.22.44 PM.jpeg",
+        "timestamp" : 1751062964.038
+      },
+      {
+        "configurationName" : "Configuration 1",
+        "deviceId" : "F88A7C09-B7DD-4BED-BBF4-AACCF19C2CD7",
+        "deviceName" : "iPhone 12 mini",
+        "exportedFileName" : "56A9C5BF-665B-4533-870B-925427DFC870.jpeg",
+        "isAssociatedWithFailure" : false,
+        "repetitionNumber" : 2,
+        "suggestedHumanReadableName" : "Screenshot 2025-06-27 at 03.22.43 PM.jpeg",
+        "timestamp" : 1751062963.659
+      },
+      {
+        "configurationName" : "Configuration 1",
+        "deviceId" : "F88A7C09-B7DD-4BED-BBF4-AACCF19C2CD7",
+        "deviceName" : "iPhone 12 mini",
+        "exportedFileName" : "53F25809-362D-4663-AACA-8D49380EA88F",
+        "isAssociatedWithFailure" : false,
+        "repetitionNumber" : 2,
+        "suggestedHumanReadableName" : "Synthesized Event 2025-06-27 at 03.22.44 PM",
+        "timestamp" : 1751062964.023
+      },
+      {
+        "configurationName" : "Configuration 1",
+        "deviceId" : "F88A7C09-B7DD-4BED-BBF4-AACCF19C2CD7",
+        "deviceName" : "iPhone 12 mini",
+        "exportedFileName" : "97FE32E2-1190-4ADB-8C03-CADF9684E06C.jpeg",
+        "isAssociatedWithFailure" : false,
+        "repetitionNumber" : 2,
+        "suggestedHumanReadableName" : "Screenshot 2025-06-27 at 03.22.43 PM.jpeg",
+        "timestamp" : 1751062963.548
+      },
+      {
+        "configurationName" : "Configuration 1",
+        "deviceId" : "F88A7C09-B7DD-4BED-BBF4-AACCF19C2CD7",
+        "deviceName" : "iPhone 12 mini",
+        "exportedFileName" : "738B44F3-BD9E-4A5A-80B1-71544DE1C48D.jpeg",
+        "isAssociatedWithFailure" : false,
+        "repetitionNumber" : 2,
+        "suggestedHumanReadableName" : "Screenshot 2025-06-27 at 03.22.43 PM.jpeg",
+        "timestamp" : 1751062963.197
+      },
+      {
+        "configurationName" : "Configuration 1",
+        "deviceId" : "F88A7C09-B7DD-4BED-BBF4-AACCF19C2CD7",
+        "deviceName" : "iPhone 12 mini",
+        "exportedFileName" : "F85F3326-7910-4605-B165-C040D0C8E4A7.jpeg",
+        "isAssociatedWithFailure" : false,
+        "repetitionNumber" : 2,
+        "suggestedHumanReadableName" : "Screenshot 2025-06-27 at 03.22.42 PM.jpeg",
+        "timestamp" : 1751062962.892
+      },
+      {
+        "configurationName" : "Configuration 1",
+        "deviceId" : "F88A7C09-B7DD-4BED-BBF4-AACCF19C2CD7",
+        "deviceName" : "iPhone 12 mini",
+        "exportedFileName" : "04C07398-12AB-4CC9-8903-164802045178",
+        "isAssociatedWithFailure" : false,
+        "repetitionNumber" : 2,
+        "suggestedHumanReadableName" : "Synthesized Event 2025-06-27 at 03.22.43 PM",
+        "timestamp" : 1751062963.182
+      },
+      {
+        "configurationName" : "Configuration 1",
+        "deviceId" : "F88A7C09-B7DD-4BED-BBF4-AACCF19C2CD7",
+        "deviceName" : "iPhone 12 mini",
+        "exportedFileName" : "D9577B68-2685-41B4-805E-7606E46A2589.jpeg",
+        "isAssociatedWithFailure" : false,
+        "repetitionNumber" : 2,
+        "suggestedHumanReadableName" : "Screenshot 2025-06-27 at 03.22.42 PM.jpeg",
+        "timestamp" : 1751062962.797
+      },
+      {
+        "configurationName" : "Configuration 1",
+        "deviceId" : "F88A7C09-B7DD-4BED-BBF4-AACCF19C2CD7",
+        "deviceName" : "iPhone 12 mini",
+        "exportedFileName" : "FE950B5A-1183-4494-8A9D-8B527763A707.jpeg",
+        "isAssociatedWithFailure" : false,
+        "repetitionNumber" : 2,
+        "suggestedHumanReadableName" : "Screenshot 2025-06-27 at 03.22.41 PM.jpeg",
+        "timestamp" : 1751062961.585
+      },
+      {
+        "configurationName" : "Configuration 1",
+        "deviceId" : "F88A7C09-B7DD-4BED-BBF4-AACCF19C2CD7",
+        "deviceName" : "iPhone 12 mini",
+        "exportedFileName" : "91A15CA7-9E64-4F5A-AF58-0BF22713BD50.jpeg",
+        "isAssociatedWithFailure" : false,
+        "repetitionNumber" : 2,
+        "suggestedHumanReadableName" : "Screenshot 2025-06-27 at 03.22.40 PM.jpeg",
+        "timestamp" : 1751062960.277
+      },
+      {
+        "configurationName" : "Configuration 1",
+        "deviceId" : "F88A7C09-B7DD-4BED-BBF4-AACCF19C2CD7",
+        "deviceName" : "iPhone 12 mini",
+        "exportedFileName" : "97DE28ED-6D2C-4161-9652-2EB28FEEDC02",
+        "isAssociatedWithFailure" : false,
+        "repetitionNumber" : 2,
+        "suggestedHumanReadableName" : "Synthesized Event 2025-06-27 at 03.22.41 PM",
+        "timestamp" : 1751062961.57
+      },
+      {
+        "configurationName" : "Configuration 1",
+        "deviceId" : "F88A7C09-B7DD-4BED-BBF4-AACCF19C2CD7",
+        "deviceName" : "iPhone 12 mini",
+        "exportedFileName" : "6F82250E-0E7A-47EF-9B39-73396994281F.jpeg",
+        "isAssociatedWithFailure" : false,
+        "repetitionNumber" : 2,
+        "suggestedHumanReadableName" : "Screenshot 2025-06-27 at 03.22.40 PM.jpeg",
+        "timestamp" : 1751062960.141
+      },
+      {
+        "configurationName" : "Configuration 1",
+        "deviceId" : "F88A7C09-B7DD-4BED-BBF4-AACCF19C2CD7",
+        "deviceName" : "iPhone 12 mini",
+        "exportedFileName" : "10B44F85-3721-43D3-803E-CF9715116922.jpeg",
+        "isAssociatedWithFailure" : false,
+        "repetitionNumber" : 2,
+        "suggestedHumanReadableName" : "Screenshot 2025-06-27 at 03.22.38 PM.jpeg",
+        "timestamp" : 1751062958.72
+      },
+      {
+        "configurationName" : "Configuration 1",
+        "deviceId" : "F88A7C09-B7DD-4BED-BBF4-AACCF19C2CD7",
+        "deviceName" : "iPhone 12 mini",
+        "exportedFileName" : "4BC173EB-AB55-4FC9-AA62-1527A28DE3C3.jpeg",
+        "isAssociatedWithFailure" : false,
+        "repetitionNumber" : 2,
+        "suggestedHumanReadableName" : "Screenshot 2025-06-27 at 03.22.38 PM.jpeg",
+        "timestamp" : 1751062958.417
+      },
+      {
+        "configurationName" : "Configuration 1",
+        "deviceId" : "F88A7C09-B7DD-4BED-BBF4-AACCF19C2CD7",
+        "deviceName" : "iPhone 12 mini",
+        "exportedFileName" : "A5186E08-A72F-41F9-94CB-AC248DBAAB5C",
+        "isAssociatedWithFailure" : false,
+        "repetitionNumber" : 2,
+        "suggestedHumanReadableName" : "Synthesized Event 2025-06-27 at 03.22.38 PM",
+        "timestamp" : 1751062958.706
+      },
+      {
+        "configurationName" : "Configuration 1",
+        "deviceId" : "F88A7C09-B7DD-4BED-BBF4-AACCF19C2CD7",
+        "deviceName" : "iPhone 12 mini",
+        "exportedFileName" : "65192881-3D4F-4BB3-9875-EE36C2799F50.jpeg",
+        "isAssociatedWithFailure" : false,
+        "repetitionNumber" : 2,
+        "suggestedHumanReadableName" : "Screenshot 2025-06-27 at 03.22.38 PM.jpeg",
+        "timestamp" : 1751062958.334
+      },
+      {
+        "configurationName" : "Configuration 1",
+        "deviceId" : "F88A7C09-B7DD-4BED-BBF4-AACCF19C2CD7",
+        "deviceName" : "iPhone 12 mini",
+        "exportedFileName" : "24B8CAE9-7CFA-4C32-B75E-47527BCC11EF.jpeg",
+        "isAssociatedWithFailure" : false,
+        "repetitionNumber" : 2,
+        "suggestedHumanReadableName" : "Screenshot 2025-06-27 at 03.22.37 PM.jpeg",
+        "timestamp" : 1751062957.504
+      },
+      {
+        "configurationName" : "Configuration 1",
+        "deviceId" : "F88A7C09-B7DD-4BED-BBF4-AACCF19C2CD7",
+        "deviceName" : "iPhone 12 mini",
+        "exportedFileName" : "376BFA3A-9BBB-4068-AE8E-9301362D892E.jpeg",
+        "isAssociatedWithFailure" : false,
+        "repetitionNumber" : 2,
+        "suggestedHumanReadableName" : "Screenshot 2025-06-27 at 03.22.37 PM.jpeg",
+        "timestamp" : 1751062957.201
+      },
+      {
+        "configurationName" : "Configuration 1",
+        "deviceId" : "F88A7C09-B7DD-4BED-BBF4-AACCF19C2CD7",
+        "deviceName" : "iPhone 12 mini",
+        "exportedFileName" : "CE6ABCBD-336A-42A2-8AB8-DDC7A9436A1B",
+        "isAssociatedWithFailure" : false,
+        "repetitionNumber" : 2,
+        "suggestedHumanReadableName" : "Synthesized Event 2025-06-27 at 03.22.37 PM",
+        "timestamp" : 1751062957.49
+      },
+      {
+        "configurationName" : "Configuration 1",
+        "deviceId" : "F88A7C09-B7DD-4BED-BBF4-AACCF19C2CD7",
+        "deviceName" : "iPhone 12 mini",
+        "exportedFileName" : "197BD6C7-84CA-4522-AF46-FBB68B242C78.jpeg",
+        "isAssociatedWithFailure" : false,
+        "repetitionNumber" : 2,
+        "suggestedHumanReadableName" : "Screenshot 2025-06-27 at 03.22.37 PM.jpeg",
+        "timestamp" : 1751062957.119
+      },
+      {
+        "configurationName" : "Configuration 1",
+        "deviceId" : "F88A7C09-B7DD-4BED-BBF4-AACCF19C2CD7",
+        "deviceName" : "iPhone 12 mini",
+        "exportedFileName" : "EA4097AE-C9AD-405F-BA47-750D96C624A9.jpeg",
+        "isAssociatedWithFailure" : false,
+        "repetitionNumber" : 2,
+        "suggestedHumanReadableName" : "Screenshot 2025-06-27 at 03.22.33 PM.jpeg",
+        "timestamp" : 1751062953.078
+      },
+      {
+        "configurationName" : "Configuration 1",
+        "deviceId" : "F88A7C09-B7DD-4BED-BBF4-AACCF19C2CD7",
+        "deviceName" : "iPhone 12 mini",
+        "exportedFileName" : "A8804135-62F2-4155-8A35-8B94F2FA8820.jpeg",
+        "isAssociatedWithFailure" : false,
+        "repetitionNumber" : 2,
+        "suggestedHumanReadableName" : "Screenshot 2025-06-27 at 03.22.34 PM.jpeg",
+        "timestamp" : 1751062954.565
+      },
+      {
+        "configurationName" : "Configuration 1",
+        "deviceId" : "F88A7C09-B7DD-4BED-BBF4-AACCF19C2CD7",
+        "deviceName" : "iPhone 12 mini",
+        "exportedFileName" : "75CD9CED-5558-45FC-A572-7E283C73B355.jpeg",
+        "isAssociatedWithFailure" : false,
+        "repetitionNumber" : 2,
+        "suggestedHumanReadableName" : "Screenshot 2025-06-27 at 03.22.33 PM.jpeg",
+        "timestamp" : 1751062953.089
+      },
+      {
+        "configurationName" : "Configuration 1",
+        "deviceId" : "F88A7C09-B7DD-4BED-BBF4-AACCF19C2CD7",
+        "deviceName" : "iPhone 12 mini",
+        "exportedFileName" : "E70E33DD-3063-4005-A958-17E9A1CA1A05.jpeg",
+        "isAssociatedWithFailure" : false,
+        "repetitionNumber" : 2,
+        "suggestedHumanReadableName" : "Screenshot 2025-06-27 at 03.22.33 PM.jpeg",
+        "timestamp" : 1751062953.064
+      },
+      {
+        "configurationName" : "Configuration 1",
+        "deviceId" : "F88A7C09-B7DD-4BED-BBF4-AACCF19C2CD7",
+        "deviceName" : "iPhone 12 mini",
+        "exportedFileName" : "BE9B7ECE-3DE2-476C-999B-EBB625263CB3.jpeg",
+        "isAssociatedWithFailure" : true,
+        "repetitionNumber" : 2,
+        "suggestedHumanReadableName" : "Screenshot 2025-06-27 at 03.23.16 PM.jpeg",
+        "timestamp" : 1751062996.854
+      }
+    ],
+    "testIdentifier" : "PaymentSheetLinkUITests/testBillingDetailsCollectionInNativeLinkInPassthroughModeForNewUser()",
+    "testIdentifierURL" : "test://com.apple.xcode/PaymentSheet%20Example/PaymentSheetUITest/PaymentSheetLinkUITests/testBillingDetailsCollectionInNativeLinkInPassthroughModeForNewUser"
+  }
+]

@@ -1,0 +1,4 @@
+Query chain:
+ →Find: Target Application 'com.stripe.PaymentSheet-Example'
+  ↪︎Find: Descendants matching type TextField
+    ↪︎Find: Elements matching predicate '"Full name" IN identifiers'

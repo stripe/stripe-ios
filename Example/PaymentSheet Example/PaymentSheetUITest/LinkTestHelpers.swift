@@ -118,11 +118,20 @@ extension XCTestCase {
     }
 
     func payLink(_ app: XCUIApplication) {
-        app.buttons
+        let payButton = app.buttons
             .matching(identifier: "Pay $50.99")
             .matching(NSPredicate(format: "isEnabled == true"))
             .firstMatch
-            .waitForExistenceAndTap()
+
+        XCTAssertTrue(payButton.waitForExistence(timeout: 10.0))
+
+        // Scroll to make the pay button visible if it's not currently visible
+        if !payButton.isHittable {
+            let scrollView = app.scrollViews.firstMatch
+            _ = scrollDown(scrollView: scrollView, toFindElement: payButton, maxTimesToScroll: 3)
+        }
+
+        payButton.forceTapElement()
     }
 
     func assertLinkPaymentSuccess(_ app: XCUIApplication) {
