@@ -39,7 +39,8 @@ final class PaymentMethodFormViewControllerTest: XCTestCase {
         // ...should fill its address fields with the shipping address
         sut.beginAppearanceTransition(true, animated: false)
         sut.endAppearanceTransition()
-        XCTAssertEqual(sut.form.getTextFieldElement("Address line 1").text, "")
+        // ...should show the "autocomplete" line until we have pre-filled address from the shippingDetails
+        XCTAssertNil(sut.form.getTextFieldElement("Address line 1"))
 
         // ...and updating the shipping address...
         shippingDetails = AddressViewController.AddressDetails(address: .init(country: "US", line1: "Updated line1"))

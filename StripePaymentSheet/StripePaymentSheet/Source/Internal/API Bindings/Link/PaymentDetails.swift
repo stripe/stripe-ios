@@ -68,6 +68,7 @@ final class ConsumerPaymentDetails: Decodable {
 extension ConsumerPaymentDetails {
     func isSupported(linkAccount: PaymentSheetLinkAccount,
                      elementsSession: STPElementsSession,
+                     configuration: PaymentElementConfiguration,
                      cardBrandFilter: CardBrandFilter) -> Bool {
         guard linkAccount.supportedPaymentDetailsTypes(for: elementsSession).contains(type) else {
             return false
@@ -77,6 +78,21 @@ extension ConsumerPaymentDetails {
            !cardBrandFilter.isAccepted(cardBrand: details.stpBrand),
            elementsSession.linkCardBrandFilteringEnabled {
             return false
+        }
+
+        if case .bankAccount = details {
+            // Only support bank accounts if we don't have to collect any missing billing details
+            let effectiveBillingDetails = configuration.effectiveBillingDetails(for: linkAccount)
+
+            let effectivePaymentDetails = update(
+                with: effectiveBillingDetails,
+                basedOn: configuration.billingDetailsCollectionConfiguration
+            )
+
+            return effectivePaymentDetails.supports(
+                configuration.billingDetailsCollectionConfiguration,
+                in: linkAccount.currentSession
+            )
         }
 
         return true

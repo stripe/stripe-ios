@@ -128,10 +128,7 @@ class ECEIntegrationTests: XCTestCase {
         try await Task.sleep(nanoseconds: 500_000_000) // 0.5 seconds
 
         // Verify ECE view controller was presented
-        let navController = presentingViewController.presentedViewController as? UINavigationController
-        XCTAssertNotNil(navController)
-
-        let eceViewController = navController?.viewControllers.first as? ECEViewController
+        let eceViewController = presentingViewController?.presentedViewController as? ECEViewController
         XCTAssertNotNil(eceViewController)
         XCTAssertNotNil(eceViewController?.expressCheckoutWebviewDelegate)
 

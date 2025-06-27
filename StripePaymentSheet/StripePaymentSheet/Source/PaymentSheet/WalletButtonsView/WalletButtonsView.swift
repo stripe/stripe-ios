@@ -49,9 +49,17 @@ import WebKit
 
                     switch wallet {
                     case .applePay:
-                        ApplePayButton(height: flowController.configuration.appearance.primaryButton.height, action: completion)
+                        ApplePayButton(
+                            height: flowController.configuration.appearance.primaryButton.height,
+                            cornerRadius: flowController.configuration.appearance.primaryButton.cornerRadius ?? flowController.configuration.appearance.cornerRadius,
+                            action: completion
+                        )
                     case .link:
-                        LinkButton(height: flowController.configuration.appearance.primaryButton.height, action: completion)
+                        LinkButton(
+                            height: flowController.configuration.appearance.primaryButton.height,
+                            cornerRadius: flowController.configuration.appearance.primaryButton.cornerRadius ?? flowController.configuration.appearance.cornerRadius,
+                            action: completion
+                        )
                     case .linkInlineVerification(let account):
                         LinkInlineVerificationView(
                             account: account,
@@ -59,7 +67,10 @@ import WebKit
                             onComplete: completion
                         )
                     case .shopPay:
-                        ShopPayButton {
+                        ShopPayButton(
+                            height: flowController.configuration.appearance.primaryButton.height,
+                            cornerRadius: flowController.configuration.appearance.primaryButton.cornerRadius ?? flowController.configuration.appearance.cornerRadius
+                        ) {
                             Task {
                                 checkoutTapped(.shopPay)
                             }
@@ -179,10 +190,12 @@ import WebKit
         }
 
         let height: CGFloat
+        let cornerRadius: CGFloat
         let action: () -> Void
 
-        init(height: CGFloat = Constants.defaultButtonHeight, action: @escaping () -> Void) {
+        init(height: CGFloat = Constants.defaultButtonHeight, cornerRadius: CGFloat = Constants.defaultButtonHeight / 2, action: @escaping () -> Void) {
             self.height = height
+            self.cornerRadius = cornerRadius
             self.action = action
         }
 
@@ -190,7 +203,7 @@ import WebKit
             PayWithApplePayButton(.plain, action: action)
                 .frame(maxWidth: .infinity)
                 .frame(height: height)
-                .cornerRadius(height / 2)
+                .cornerRadius(cornerRadius)
         }
     }
 }

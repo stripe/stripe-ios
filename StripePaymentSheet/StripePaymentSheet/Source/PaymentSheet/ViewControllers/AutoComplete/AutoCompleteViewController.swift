@@ -25,6 +25,9 @@ class AutoCompleteViewController: UIViewController {
     let configuration: AddressViewController.Configuration
     let initialLine1Text: String?
     let addressSpecProvider: AddressSpecProvider
+    /// Vertical offset for the view controller content. Negative values move content up, positive values move content down.
+    let verticalOffset: CGFloat
+
     private lazy var addressSearchCompleter: MKLocalSearchCompleter = {
        let searchCompleter = MKLocalSearchCompleter()
         searchCompleter.delegate = self
@@ -112,11 +115,13 @@ class AutoCompleteViewController: UIViewController {
     required init(
         configuration: AddressViewController.Configuration,
         initialLine1Text: String?,
-        addressSpecProvider: AddressSpecProvider = .shared
+        addressSpecProvider: AddressSpecProvider = .shared,
+        verticalOffset: CGFloat = 0
     ) {
         self.configuration = configuration
         self.initialLine1Text = initialLine1Text
         self.addressSpecProvider = addressSpecProvider
+        self.verticalOffset = verticalOffset
         super.init(nibName: nil, bundle: nil)
         if let initialLine1Text = initialLine1Text {
             self.addressSearchCompleter.queryFragment = initialLine1Text
@@ -146,7 +151,7 @@ class AutoCompleteViewController: UIViewController {
         NSLayoutConstraint.activate([
             stackViewBottomConstraint,
 
-            stackView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
+            stackView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: verticalOffset),
             stackView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
             stackView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
             separatorView.heightAnchor.constraint(equalToConstant: 0.33),

@@ -29,6 +29,10 @@ import Foundation
         sessionID = uuid.uuidString.lowercased()
     }
 
+    func clearSessionID() {
+        sessionID = nil
+    }
+
     @_spi(STP) public func startTimeMeasurement(_ measurement: TimeMeasurement) {
         startTimes[measurement] = timeProvider()
     }

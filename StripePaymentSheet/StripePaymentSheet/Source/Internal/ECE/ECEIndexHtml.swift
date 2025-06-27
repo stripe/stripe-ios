@@ -42,11 +42,6 @@ struct ECEIndexHTML {
           currency: "usd",
           payment_method_types: ["card", "link", "shop_pay"],
           customerSessionClientSecret: "\(customerSessionClientSecret)",
-          paymentMethodOptions: {
-            shop_pay: {
-              shop_id: "\(shopId)",
-            },
-          },
           __elementsInitSource: 'native_sdk',
         };
 

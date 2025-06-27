@@ -36,13 +36,13 @@ class ShopPayECEPresenter: NSObject, UIAdaptivePresentationControllerDelegate {
         self.presentingViewController = viewController
         let eceVC = ECEViewController(apiClient: flowController.configuration.apiClient,
                                       shopId: shopPayConfiguration.shopId,
-                                      customerSessionClientSecret: customerSessionClientSecret)
+                                      customerSessionClientSecret: customerSessionClientSecret,
+                                      delegate: self)
 
         eceVC.expressCheckoutWebviewDelegate = self
         self.eceViewController = eceVC
-        let navController = UINavigationController(rootViewController: eceVC)
-        navController.modalPresentationStyle = .pageSheet
-        viewController.present(navController, animated: true)
+        eceVC.modalPresentationStyle = .pageSheet
+        viewController.present(eceVC, animated: true)
         eceVC.presentationController?.delegate = self
         // retain self while presented
         self.confirmHandler = { result in
@@ -57,7 +57,19 @@ class ShopPayECEPresenter: NSObject, UIAdaptivePresentationControllerDelegate {
     }
 
     private func dismissECE(completion: (() -> Void)? = nil) {
-        presentingViewController?.dismiss(animated: true, completion: completion)
+        presentingViewController?.dismiss(animated: true) {
+            self.eceViewController?.unloadWebview()
+            self.eceViewController = nil
+            completion?()
+        }
+    }
+}
+
+@available(iOS 16.0, *)
+extension ShopPayECEPresenter: ECEViewControllerDelegate {
+    func didCancel() {
+        self.confirmHandler?(.canceled)
+        dismissECE()
     }
 }
 

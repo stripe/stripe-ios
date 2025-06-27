@@ -18,14 +18,17 @@ struct LinkButton: View {
         static let baseFontSize: CGFloat = 15
         static let minScaleFactor: CGFloat = 0.7
         static let maxScaleFactor: CGFloat = 1.5
+        static let minWidth: CGFloat = 180
     }
 
     @StateObject private var viewModel: LinkButtonViewModel
     private let action: () -> Void
     private let height: CGFloat
+    private let cornerRadius: CGFloat
 
-    init(height: CGFloat = Constants.defaultButtonHeight, viewModel: LinkButtonViewModel = LinkButtonViewModel(), action: @escaping () -> Void) {
+    init(height: CGFloat = Constants.defaultButtonHeight, cornerRadius: CGFloat = Constants.defaultButtonHeight / 2, viewModel: LinkButtonViewModel = LinkButtonViewModel(), action: @escaping () -> Void) {
         self.height = height
+        self.cornerRadius = cornerRadius
         self._viewModel = StateObject(wrappedValue: viewModel)
         self.action = action
     }
@@ -73,12 +76,14 @@ struct LinkButton: View {
                 }
             }
             .padding(.horizontal, LinkUI.contentSpacing)
-            .frame(maxWidth: .infinity)
-            .frame(height: height)
-            .background(Color(uiColor: .linkIconBrand))
-            .foregroundColor(Color(uiColor: .linkTextPrimary))
-            .cornerRadius(height / 2)
+            .foregroundColor(Color(uiColor: .linkTextOnPrimary))
+            .frame(height: scaledContentHeight)
+            .frame(minWidth: Constants.minWidth, maxWidth: .infinity)
         }
+        .frame(maxWidth: .infinity)
+        .frame(height: height)
+        .background(Color(uiColor: .linkIconBrand))
+        .cornerRadius(cornerRadius)
     }
 }
 

@@ -21,26 +21,24 @@ struct ECEShippingAddressChangeEvent: Codable {
 /// Partial address used during shipping address selection
 /// May have missing or partially redacted fields for privacy
 struct ECEPartialAddress: Codable {
-    /// Array of address lines
-    let addressLine: [String]?
-
     /// City name
     let city: String?
-
-    /// State or province
-    let state: String?
-
-    /// Postal or ZIP code
-    let postalCode: String?
 
     /// Two-letter country code
     let country: String?
 
-    /// Phone number
-    let phone: String?
+    /// Postal or ZIP code
+    let postalCode: String?
 
-    /// Organization or company name
-    let organization: String?
+    /// State
+    let state: String?
+
+    private enum CodingKeys: String, CodingKey {
+        case city
+        case country
+        case postalCode = "postal_code"
+        case state
+    }
 }
 
 /// Full address used in billing/shipping confirmation

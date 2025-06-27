@@ -186,6 +186,48 @@ func scrollDown(scrollView: XCUIElement, toFindElement element: XCUIElement, max
     return nil
 }
 
+// MARK: - Address Autocomplete Extension
+extension XCUIApplication {
+    /// Fills an address field using autocomplete flow only
+    /// - Parameters:
+    ///   - addressFieldIdentifier: The identifier for the address field (e.g., "Address", "Address line 1")
+    ///   - searchTerm: The search term to type for autocomplete (e.g., "354 Oyster Point")
+    ///   - expectedResult: The expected autocomplete result to look for (e.g., "354 Oyster Point Blvd")
+    ///   - context: The context element to search within (defaults to self)
+    ///   - needsDoneButton: Whether to tap Done button after autocomplete selection
+    func fillAddressWithAutocomplete(
+        addressFieldIdentifier: String = "Address",
+        searchTerm: String = "354 Oyster Point",
+        expectedResult: String = "354 Oyster Point Blvd",
+        context: XCUIElement? = nil,
+        needsDoneButton: Bool = false
+    ) {
+        let contextElement = context ?? self
+        let addressField = contextElement.textFields[addressFieldIdentifier]
+
+        // Tap the address field
+        addressField.tap()
+
+        // Wait for autocomplete view to appear
+        XCTAssertTrue(staticTexts["Enter address manually"].waitForExistence(timeout: 2), "Autocomplete view should appear")
+
+        // Proceed with autocomplete flow
+        let autocompleteTextField = textFields.firstMatch
+        autocompleteTextField.waitForExistenceAndTap()
+        typeText(searchTerm)
+
+        // Wait for and tap the matching autocomplete result
+        let searchedCell = tables.element(boundBy: 0).cells.containing(NSPredicate(format: "label CONTAINS %@", expectedResult)).element
+        XCTAssertTrue(searchedCell.waitForExistence(timeout: 5), "Autocomplete result '\(expectedResult)' should appear")
+        searchedCell.tap()
+
+        // Some contexts need a Done button tap after autocomplete
+        if needsDoneButton {
+            contextElement.buttons["Done"].tap()
+        }
+    }
+}
+
 extension XCTestCase {
     func fillCardData(_ app: XCUIApplication,
                       container: XCUIElement? = nil,
@@ -266,22 +308,7 @@ extension XCTestCase {
         ibanField.forceTapWhenHittableInTestCase(self)
         app.typeText(iban)
 
-        let addressLine1 = context.textFields["Address line 1"]
-        addressLine1.forceTapWhenHittableInTestCase(self)
-        app.typeText("123 Main")
-        context.buttons["Return"].tap()
-
-        // Skip address 2
-        context.buttons["Return"].tap()
-
-        app.typeText("San Francisco")
-        context.buttons["Return"].tap()
-
-        context.pickerWheels.element.adjust(toPickerWheelValue: "California")
-        context.buttons["Done"].tap()
-
-        app.typeText("94016")
-        context.buttons["Done"].tap()
+        app.fillAddressWithAutocomplete(context: context, needsDoneButton: true)
 
         if let checkboxText {
             let saveThisAccountToggle = app.switches[checkboxText]

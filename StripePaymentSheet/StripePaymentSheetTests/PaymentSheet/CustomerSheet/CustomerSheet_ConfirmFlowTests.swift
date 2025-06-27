@@ -80,18 +80,33 @@ final class CustomerSheet_ConfirmFlowTests: STPNetworkStubbingTestCase {
         let apiClient = STPAPIClient(publishableKey: merchantCountry.publishableKey)
         let newCustomer = try await STPTestingAPIClient.shared().fetchCustomerAndEphemeralKey(customerID: nil,
                                                                                               merchantCountry: merchantCountry.rawValue.lowercased())
+
+        // Create default billing details to trigger individual address fields
+        let defaultBillingDetails = PaymentSheet.BillingDetails(
+            address: PaymentSheet.Address(
+                city: "South San Francisco",
+                country: "US",
+                line1: "354 Oyster Point Blvd",
+                postalCode: "94080",
+                state: "CA"
+            )
+        )
+
         try await _testConfirm(
             apiClient: apiClient,
             merchantCountry: merchantCountry,
             paymentMethodType: .SEPADebit,
             elementsSession: ._testCardValue(),
-            customerID: newCustomer.customer) { form in
+            customerID: newCustomer.customer,
+            defaultBillingDetails: defaultBillingDetails) { form in
                 form.getTextFieldElement("Full name")?.setText("John Doe")
                 form.getTextFieldElement("Email")?.setText("test@example.com")
                 form.getTextFieldElement("IBAN")?.setText("DE89370400440532013000")
-                form.getTextFieldElement("Address line 1")?.setText("123 Main")
-                form.getTextFieldElement("City")?.setText("San Francisco")
-                form.getTextFieldElement("ZIP")?.setText("65432")
+
+                // With default billing details, individual address fields should be shown and pre-populated
+                XCTAssertEqual(form.getTextFieldElement("Address line 1")?.text, "354 Oyster Point Blvd")
+                XCTAssertEqual(form.getTextFieldElement("City")?.text, "South San Francisco")
+                XCTAssertEqual(form.getTextFieldElement("ZIP")?.text, "94080")
         }
     }
 
@@ -249,12 +264,14 @@ extension CustomerSheet_ConfirmFlowTests {
                       paymentMethodType: STPPaymentMethodType,
                       elementsSession: STPElementsSession,
                       customerID: String,
+                      defaultBillingDetails: PaymentSheet.BillingDetails? = nil,
                       formCompleter: (PaymentMethodElement) -> Void) async throws -> String? {
         let customerSheetConfiguration: CustomerSheet.Configuration = {
             var config = CustomerSheet.Configuration()
             config.apiClient = apiClient
             config.allowsRemovalOfLastSavedPaymentMethod = true
             config.returnURL =  "https://foo.com"
+            config.defaultBillingDetails = defaultBillingDetails ?? .init()
             return config
         }()
 

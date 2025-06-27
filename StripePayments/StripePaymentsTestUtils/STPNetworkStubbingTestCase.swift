@@ -32,6 +32,8 @@ import XCTest
     open override func setUp() {
         super.setUp()
 
+        AnalyticsHelper.shared.clearSessionID()
+
         recordingMode = ProcessInfo.processInfo.environment["STP_RECORD_NETWORK"] != nil
         disableMocking = ProcessInfo.processInfo.environment["STP_NO_NETWORK_MOCKS"] != nil
 
@@ -84,16 +86,29 @@ import XCTest
             // Creates filenames like `post_v1_tokens_0.tail`.
             var count = 0
             if strictParamsEnforcement {
-                // Just record the full URL, don't try to strip out params
                 recorder?.urlRegexPatternBlock = { request, _ in
                     // Need to escape this to fit in a regex (e.g. \? instead of ? before the query)
-                    return NSRegularExpression.escapedPattern(for: request?.url?.absoluteString ?? "")
+                    let escapedRequest = NSRegularExpression.escapedPattern(for: request?.url?.absoluteString ?? "")
+                    // Then remove any params that may contain UUIDs or other random data
+                    return replaceNondeterministicParams(escapedRequest, componentsToFilter: ["mobile_session_id"])
                 }
                 recorder?.postBodyTransformBlock = { _, postBody in
                     // Regex filter these:
                     let escapedBody = NSRegularExpression.escapedPattern(for: postBody ?? "")
                     // Then remove any params that may contain UUIDs or other random data
-                    return replaceNondeterministicParams(escapedBody)
+                    let componentsToFilter = [
+                        "guid=", // Fraud detection data
+                        "muid=",
+                        "sid=",
+                        "[guid]=",
+                        "[muid]=",
+                        "[sid]=",
+                        "app_version_key", // Current version of Xcode, for Alipay
+
+                        "payment_user_agent", // Contains the SDK version number
+                        "pk_token_transaction_id", // Random string
+                    ]
+                    return replaceNondeterministicParams(escapedBody, componentsToFilter: componentsToFilter)
                 }
             } else {
                 recorder?.urlRegexPatternBlock = nil
@@ -198,19 +213,7 @@ import XCTest
 }
 
 // Function to filter out some common UUIDs or other request parameters that may change
-private func replaceNondeterministicParams(_ input: String) -> String {
-    let componentsToFilter = [
-        "guid=", // Fraud detection data
-        "muid=",
-        "sid=",
-        "[guid]=",
-        "[muid]=",
-        "[sid]=",
-        "app_version_key", // Current version of Xcode, for Alipay
-
-        "payment_user_agent", // Contains the SDK version number
-        "pk_token_transaction_id", // Random string
-    ]
+private func replaceNondeterministicParams(_ input: String, componentsToFilter: [String]) -> String {
     var components = input.components(separatedBy: "&")
 
     for (index, component) in components.enumerated() {

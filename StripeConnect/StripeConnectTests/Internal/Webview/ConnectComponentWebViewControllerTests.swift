@@ -222,13 +222,9 @@ class ConnectComponentWebViewControllerTests: XCTestCase {
 
         try await webVC.webView.evaluateOnLoaderStart(elementTagName: "payouts")
 
-        if !webVC.activityIndicator.isAnimating {
-            XCTAssertFalse(webVC.activityIndicator.isAnimating)
-        } else {
-            // If it is animating, wait a second before we check.
-            sleep(1)
-            XCTAssertFalse(webVC.activityIndicator.isAnimating)
-        }
+        // Wait for the animation state to settle after the async operation
+        try await Task.sleep(nanoseconds: 100_000_000) // 100ms
+        XCTAssertFalse(webVC.activityIndicator.isAnimating)
     }
 
     // MARK: - Errors

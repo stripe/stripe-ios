@@ -1543,10 +1543,20 @@ public class STPPaymentHandler: NSObject {
                                 forAction: currentAction
                             )
                             if requiresAction {
-                                guard let paymentMethod = paymentIntent.paymentMethod else {
+                                let paymentMethodType: STPPaymentMethodType? = {
+                                    if let paymentMethod = paymentIntent.paymentMethod {
+                                        return paymentMethod.type
+                                    }
+                                    if paymentIntent.isRedacted && paymentIntent.nextAction?.type == .useStripeSDK {
+                                        // For now, we'll assume redacted PIs are card
+                                        return .card
+                                    }
+                                    return nil
+                                }()
+                                guard let paymentMethodType else {
                                     currentAction.complete(
                                         with: STPPaymentHandlerActionStatus.failed,
-                                        error: self._error(for: .unexpectedErrorCode, loggingSafeErrorMessage: "PaymentIntent requires action but missing PaymentMethod.")
+                                        error: self._error(for: .unexpectedErrorCode, loggingSafeErrorMessage: "PaymentIntent requires action but missing payment method type data.")
                                     )
                                     return
                                 }
@@ -1559,14 +1569,14 @@ public class STPPaymentHandler: NSObject {
                                 } else {
                                     // If this is a web-based 3DS2 transaction that is still in requires_action, we may just need to refresh the PI a few more times.
                                     // Also retry a few times for app redirects, the redirect flow is fast and sometimes the intent doesn't update quick enough
-                                    let shouldRetryForCard = paymentMethod.type == .card && paymentIntent.nextAction?.type == .useStripeSDK
-                                    if retryCount > 0, paymentMethod.type != .card || shouldRetryForCard, let pollingRequirement = paymentMethod.type.pollingRequirement {
+                                    let shouldRetryForCard = paymentMethodType == .card && paymentIntent.nextAction?.type == .useStripeSDK
+                                    if retryCount > 0, paymentMethodType != .card || shouldRetryForCard, let pollingRequirement = paymentMethodType.pollingRequirement {
                                         self._retryAfterDelay(retryCount: retryCount, delayTime: pollingRequirement.timeBetweenPollingAttempts) {
                                             self._retrieveAndCheckIntentForCurrentAction(
                                                 retryCount: retryCount - 1
                                             )
                                         }
-                                    } else if paymentMethod.type != .paynow && paymentMethod.type != .promptPay {
+                                    } else if paymentMethodType != .paynow && paymentMethodType != .promptPay {
                                         // For PayNow, we don't want to mark as canceled when the web view dismisses
                                         // Instead we rely on the presented PollingViewController to complete the currentAction
                                         self._markChallengeCanceled(currentAction: currentAction) { _, _ in
