@@ -85,20 +85,22 @@ class PaymentSheetLinkAccount: PaymentSheetLinkAccountInfoProtocol {
 
     var sessionState: SessionState {
         if let currentSession = currentSession {
-            // sms verification is not required if we are in the signup flow
-            return currentSession.hasVerifiedSMSSession || currentSession.isVerifiedForSignup
+            // verification is not required if we are in the signup flow
+            return currentSession.hasVerifiedSession || currentSession.isVerifiedForSignup
                 ? .verified : .requiresVerification
         } else {
             return .requiresSignUp
         }
     }
 
-    var hasStartedSMSVerification: Bool {
-        return currentSession?.hasStartedSMSVerification ?? false
+    var hasStartedVerification: Bool {
+        guard let currentSession else { return false }
+        return currentSession.hasStartedVerification
     }
 
-    var hasCompletedSMSVerification: Bool {
-        return currentSession?.hasVerifiedSMSSession ?? false
+    var hasCompletedVerification: Bool {
+        guard let currentSession else { return false }
+        return currentSession.hasVerifiedSession
     }
 
     private(set) var currentSession: ConsumerSession?
@@ -173,7 +175,7 @@ class PaymentSheetLinkAccount: PaymentSheetLinkAccountInfoProtocol {
         }
     }
 
-    func startVerification(completion: @escaping (Result<Bool, Error>) -> Void) {
+    func startVerification(factor: LinkVerificationView.VerificationFactor, completion: @escaping (Result<Bool, Error>) -> Void) {
         guard case .requiresVerification = sessionState else {
             DispatchQueue.main.async {
                 completion(.success(false))
@@ -193,7 +195,13 @@ class PaymentSheetLinkAccount: PaymentSheetLinkAccountInfoProtocol {
             return
         }
 
+        let verificationType: ConsumerSession.VerificationSession.SessionType
+        switch factor {
+        case .sms: verificationType = .sms
+        case .email: verificationType = .email
+        }
         session.startVerification(
+            type: verificationType,
             with: apiClient,
             cookieStore: cookieStore,
             consumerAccountPublishableKey: publishableKey
@@ -201,16 +209,20 @@ class PaymentSheetLinkAccount: PaymentSheetLinkAccountInfoProtocol {
             switch result {
             case .success(let newSession):
                 self?.currentSession = newSession
-                completion(.success(newSession.hasStartedSMSVerification))
+                completion(.success(newSession.hasStartedVerification(ofType: verificationType)))
             case .failure(let error):
                 completion(.failure(error))
             }
         }
     }
 
-    func verify(with oneTimePasscode: String, completion: @escaping (Result<Void, Error>) -> Void) {
+    func verify(
+        with oneTimePasscode: String,
+        factor: LinkVerificationView.VerificationFactor,
+        completion: @escaping (Result<Void, Error>) -> Void
+    ) {
         guard case .requiresVerification = sessionState,
-            hasStartedSMSVerification,
+              hasStartedVerification,
             let session = currentSession
         else {
             stpAssertionFailure()
@@ -224,8 +236,14 @@ class PaymentSheetLinkAccount: PaymentSheetLinkAccountInfoProtocol {
             return
         }
 
-        session.confirmSMSVerification(
+        let verificationType: ConsumerSession.VerificationSession.SessionType
+        switch factor {
+        case .sms: verificationType = .sms
+        case .email: verificationType = .email
+        }
+        session.confirmVerification(
             with: oneTimePasscode,
+            type: verificationType,
             with: apiClient,
             cookieStore: cookieStore,
             consumerAccountPublishableKey: publishableKey
