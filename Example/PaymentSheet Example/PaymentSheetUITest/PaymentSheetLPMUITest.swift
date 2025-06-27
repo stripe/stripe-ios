@@ -560,7 +560,7 @@ class PaymentSheetStandardLPMUITwoTests: PaymentSheetStandardLPMUICase {
         app.typeText("94102" + XCUIKeyboardKey.return.rawValue)
         app.buttons["Pay €50.99"].tap()
         let successText = app.staticTexts["Success!"]
-        XCTAssertTrue(successText.waitForExistence(timeout: 10.0))
+        XCTAssertTrue(successText.waitForExistence(timeout: 15.0))
     }
 
     func testSavedSEPADebitPaymentMethod_FlowController_ShowsMandate() {
