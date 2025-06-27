@@ -179,6 +179,10 @@ public class STPSetupIntent: NSObject, STPAPIResponseDecodable {
             let paymentMethodTypeStrings = dict["payment_method_types"] as? [String],
             dict["livemode"] != nil
         else {
+            if let errorDict = dict.stp_dictionary(forKey: "error"),
+               let setupIntent = errorDict["setup_intent"] as? [AnyHashable: Any] {
+                return decodedObject(fromAPIResponse: setupIntent)
+            }
             return nil
         }
 
