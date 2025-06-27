@@ -118,7 +118,7 @@ extension XCTestCase {
     }
 
     func payLink(_ app: XCUIApplication) {
-        app.swipeDown()
+        app.swipeUp()
         app.buttons
             .matching(identifier: "Pay $50.99")
             .matching(NSPredicate(format: "isEnabled == true"))
