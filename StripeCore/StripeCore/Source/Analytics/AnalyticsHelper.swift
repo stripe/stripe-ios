@@ -29,7 +29,7 @@ import Foundation
         sessionID = uuid.uuidString.lowercased()
     }
 
-    @_spi(STP) public func clearSessionID() {
+    internal func clearSessionID() {
         sessionID = nil
     }
 
