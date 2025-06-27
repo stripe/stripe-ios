@@ -15,7 +15,7 @@ import Foundation
     var rawData: String { get }
 
     /// Sets the raw data for this element
-    func setRawData(_ rawData: String)
+    func setRawData(_ rawData: String, shouldAutoAdvance: Bool)
 }
 
 // MARK: Conformance
@@ -25,7 +25,8 @@ extension TextFieldElement: TextOrDropdownElement {
         return text
     }
 
-    public func setRawData(_ rawData: String) {
+    public func setRawData(_ rawData: String, shouldAutoAdvance: Bool = false) {
+        // Intentional, ignore shouldAutoAdvance as setting the text does not cause an automatic advance like DropdownFieldElement
         setText(rawData)
     }
 
@@ -36,12 +37,12 @@ extension DropdownFieldElement: TextOrDropdownElement {
         return items[selectedIndex].rawData
     }
 
-    public func setRawData(_ rawData: String) {
+    public func setRawData(_ rawData: String, shouldAutoAdvance: Bool = true) {
         guard let itemIndex = items.firstIndex(where: {$0.rawData.lowercased() == rawData.lowercased()
             || $0.pickerDisplayName.string.lowercased() == rawData.lowercased()}) else {
                 return
             }
 
-        select(index: itemIndex)
+        select(index: itemIndex, shouldAutoAdvance: shouldAutoAdvance)
     }
 }

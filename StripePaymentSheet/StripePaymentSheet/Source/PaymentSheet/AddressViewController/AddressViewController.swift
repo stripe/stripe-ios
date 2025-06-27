@@ -390,7 +390,7 @@ extension AddressViewController: AutoCompleteViewControllerDelegate {
         addressSection.line1?.setText(address.line1 ?? "")
         addressSection.city?.setText(address.city ?? "")
         addressSection.postalCode?.setText(address.postalCode ?? "")
-        addressSection.state?.setRawData(address.state ?? "")
+        addressSection.state?.setRawData(address.state ?? "", shouldAutoAdvance: false)
         addressSection.state?.view.resignFirstResponder()
 
         self.selectedAutoCompleteResult = address

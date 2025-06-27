@@ -614,7 +614,6 @@ extension PaymentMethodFormViewController: AutoCompleteViewControllerDelegate {
 
     func didSelectAddress(_ address: PaymentSheet.Address?) {
         guard let addressSectionElement = addressSectionElement else { return }
-        self.view.endEditing(true)
 
         // Dismiss the autocomplete view controller
         presentedViewController?.dismiss(animated: true) {
@@ -628,7 +627,7 @@ extension PaymentMethodFormViewController: AutoCompleteViewControllerDelegate {
             // Set the country if it's supported
             let autocompleteCountryIndex = addressSectionElement.countryCodes.firstIndex(where: { $0 == address.country })
             if let autocompleteCountryIndex = autocompleteCountryIndex {
-                addressSectionElement.country.select(index: autocompleteCountryIndex)
+                addressSectionElement.country.select(index: autocompleteCountryIndex, shouldAutoAdvance: false)
             }
 
             // Populate the address fields
@@ -636,7 +635,7 @@ extension PaymentMethodFormViewController: AutoCompleteViewControllerDelegate {
             addressSectionElement.line2?.setText(address.line2 ?? "")
             addressSectionElement.city?.setText(address.city ?? "")
             addressSectionElement.postalCode?.setText(address.postalCode ?? "")
-            addressSectionElement.state?.setRawData(address.state ?? "")
+            addressSectionElement.state?.setRawData(address.state ?? "", shouldAutoAdvance: false)
         }
     }
 }
