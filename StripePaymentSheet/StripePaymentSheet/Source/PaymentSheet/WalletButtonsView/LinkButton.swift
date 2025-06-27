@@ -18,6 +18,7 @@ struct LinkButton: View {
         static let baseFontSize: CGFloat = 15
         static let minScaleFactor: CGFloat = 0.7
         static let maxScaleFactor: CGFloat = 1.5
+        static let minWidth: CGFloat = 180
     }
 
     @StateObject private var viewModel: LinkButtonViewModel
@@ -75,12 +76,14 @@ struct LinkButton: View {
                 }
             }
             .padding(.horizontal, LinkUI.contentSpacing)
-            .frame(maxWidth: .infinity)
-            .frame(height: height)
-            .background(Color(uiColor: .linkIconBrand))
-            .foregroundColor(Color(uiColor: .linkTextPrimary))
-            .cornerRadius(cornerRadius)
+            .foregroundColor(Color(uiColor: .linkTextOnPrimary))
+            .frame(height: scaledContentHeight)
+            .frame(minWidth: Constants.minWidth, maxWidth: .infinity)
         }
+        .frame(maxWidth: .infinity)
+        .frame(height: height)
+        .background(Color(uiColor: .linkIconBrand))
+        .cornerRadius(cornerRadius)
     }
 }
 
