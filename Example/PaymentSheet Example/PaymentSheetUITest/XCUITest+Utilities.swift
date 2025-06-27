@@ -302,7 +302,7 @@ extension XCTestCase {
         ibanField.forceTapWhenHittableInTestCase(self)
         app.typeText(iban)
 
-        app.fillAddressWithAutocomplete(context: context, needsDoneButton: true)
+        app.fillAddressWithAutocomplete(context: context)
 
         if let checkboxText {
             let saveThisAccountToggle = app.switches[checkboxText]
