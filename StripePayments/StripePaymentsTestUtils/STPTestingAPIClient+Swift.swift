@@ -169,7 +169,24 @@ extension STPTestingAPIClient {
         ]
         return try await makeRequest(endpoint: "create_customer_session_cs", params: params)
     }
-
+    func fetchCustomerAndCustomerSessionClientSecretCustomerSheet(
+        customerID: String? = nil,
+        merchantCountry: String? = "us",
+        paymentMethodSave: Bool = true,
+        paymentMethodRemove: Bool = true,
+        paymentMethodSetAsDefault: Bool = false
+    ) async throws -> CreateCustomerSessionResponse {
+        let params: [String: Any?] = [
+            "component_name": "customer_sheet",
+            "customer_id": customerID,
+            "account": merchantCountry,
+            "features": [
+                "payment_method_remove": paymentMethodRemove ? "enabled" : "disabled",
+                "payment_method_sync_default": paymentMethodSetAsDefault ? "enabled" : "disabled",
+            ],
+        ]
+        return try await makeRequest(endpoint: "create_customer_session_cs", params: params)
+    }
     // MARK: - Helpers
 
     fileprivate func makeRequest<ResponseType: Decodable>(
