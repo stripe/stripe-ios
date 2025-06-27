@@ -54,6 +54,9 @@ public class AddressViewController: UIViewController {
     public weak var delegate: AddressViewControllerDelegate?
     private var selectedAutoCompleteResult: PaymentSheet.Address?
     private var didLogAddressShow = false
+    
+    // Store reference to default address values for repopulation
+    private var defaultAddressValues: AddressSectionElement.AddressDetails?
 
     // MARK: - Internal properties
     let addressSpecProvider: AddressSpecProvider
@@ -98,7 +101,7 @@ public class AddressViewController: UIViewController {
 
     // MARK: - Elements
     lazy var formElement: FormElement = {
-        let formElement = FormElement(elements: [addressSection, checkboxElement], theme: configuration.appearance.asElementsTheme)
+        let formElement = FormElement(elements: [shippingEqualsBillingCheckbox, addressSection, checkboxElement], theme: configuration.appearance.asElementsTheme)
         formElement.delegate = self
         return formElement
     }()
@@ -114,6 +117,21 @@ public class AddressViewController: UIViewController {
 
         return element
     }()
+    
+    lazy var shippingEqualsBillingCheckbox: CheckboxElement? = {
+        guard configuration.showShippingAddressEqualsBilling else { return nil }
+        let hasDefaultValues = configuration.defaultValues.address != .init()
+        let element = CheckboxElement(
+            theme: configuration.appearance.asElementsTheme,
+            label: "Shipping is same as billing",
+            isSelectedByDefault: hasDefaultValues,
+            didToggle: { [weak self] isSelected in
+                self?.handleShippingEqualsBillingToggle(isSelected: isSelected)
+            }
+        )
+        return element
+    }()
+
     fileprivate lazy var closeButton: UIButton = {
         let button = SheetNavigationButton.makeCloseButton(appearance: configuration.appearance)
         button.addTarget(self, action: #selector(didTapCloseButton), for: .touchUpInside)
@@ -242,6 +260,60 @@ extension AddressViewController {
     @objc func didTapCloseButton() {
         delegate?.addressViewControllerDidFinish(self, with: nil)
     }
+    
+    func handleShippingEqualsBillingToggle(isSelected: Bool) {
+        guard addressSection != nil else { return }
+        
+        if isSelected {
+            // Repopulate with default values if available
+            if let defaultValues = defaultAddressValues {
+                populateAddressSection(with: defaultValues)
+            }
+        } else {
+            // Clear all address fields
+            clearAddressSection()
+        }
+    }
+    
+    private func populateAddressSection(with addressDetails: AddressSectionElement.AddressDetails) {
+        guard let addressSection = addressSection else { return }
+        
+        // Set country first as it affects available fields
+        if let countryIndex = addressSection.countryCodes.firstIndex(where: { $0 == addressDetails.address.country }) {
+            addressSection.country.select(index: countryIndex)
+        }
+        
+        // Populate address fields
+        addressSection.line1?.setText(addressDetails.address.line1 ?? "")
+        addressSection.line2?.setText(addressDetails.address.line2 ?? "")
+        addressSection.city?.setText(addressDetails.address.city ?? "")
+        addressSection.postalCode?.setText(addressDetails.address.postalCode ?? "")
+        addressSection.state?.setRawData(addressDetails.address.state ?? "", shouldAutoAdvance: false)
+        
+        // Populate name and phone if available
+        addressSection.name?.setText(addressDetails.name ?? "")
+        // Note: Phone number repopulation is not supported due to API limitations
+        // Users will need to re-enter their phone number manually
+    }
+    
+    private func clearAddressSection() {
+        guard let addressSection = addressSection else { return }
+        
+        // Clear all text fields
+        addressSection.line1?.setText("")
+        addressSection.line2?.setText("")
+        addressSection.city?.setText("")
+        addressSection.postalCode?.setText("")
+        addressSection.state?.setRawData("", shouldAutoAdvance: false)
+        addressSection.name?.setText("")
+        addressSection.phone?.clearPhoneNumber()
+        
+        // Reset to default country if needed (first in allowed countries or US)
+        let defaultCountryCode = configuration.allowedCountries.first ?? "US"
+        if let defaultCountryIndex = addressSection.countryCodes.firstIndex(where: { $0 == defaultCountryCode }) {
+            addressSection.country.select(index: defaultCountryIndex)
+        }
+    }
 }
 
 // MARK: - Private methods
@@ -261,6 +333,12 @@ extension AddressViewController {
         let additionalFields = configuration.additionalFields
         let defaultValues = configuration.defaultValues
         let allowedCountries = configuration.allowedCountries
+        
+        // Store default values for repopulation when shipping equals billing checkbox is used
+        if configuration.showShippingAddressEqualsBilling && defaultValues.address != .init() {
+            defaultAddressValues = .init(from: defaultValues)
+        }
+        
         addressSection = AddressSectionElement(
             countries: allowedCountries.isEmpty ? nil : allowedCountries,
             addressSpecProvider: addressSpecProvider,
