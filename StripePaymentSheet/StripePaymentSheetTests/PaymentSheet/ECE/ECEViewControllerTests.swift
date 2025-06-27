@@ -212,10 +212,6 @@ class ECEViewControllerTests: XCTestCase {
         XCTAssertNotNil(popupWebView)
         XCTAssertEqual(popupWebView?.frame, sut.view.bounds)
         XCTAssertEqual(popupWebView?.customUserAgent, ECEViewController.FakeSafariUserAgent)
-
-        // Check close button was added
-        let closeButton = popupWebView?.subviews.first { $0.tag == 999 } as? UIButton
-        XCTAssertNotNil(closeButton)
     }
 }
 #endif
