@@ -897,12 +897,8 @@ class EmbeddedUITests: PaymentSheetUITestCase {
         app.typeText("John Doe" + XCUIKeyboardKey.return.rawValue)
         app.typeText("test@example.com" + XCUIKeyboardKey.return.rawValue)
         app.typeText("AT611904300234573201" + XCUIKeyboardKey.return.rawValue)
-        app.textFields["Address line 1"].tap()
-        app.typeText("510 Townsend St" + XCUIKeyboardKey.return.rawValue)
-        app.typeText("Floor 3" + XCUIKeyboardKey.return.rawValue)
-        app.typeText("San Francisco" + XCUIKeyboardKey.return.rawValue)
-        app.textFields["ZIP"].tap()
-        app.typeText("94102" + XCUIKeyboardKey.return.rawValue)
+
+        app.fillAddressWithAutocomplete()
         app.buttons["Pay €50.99"].tap()
 
         XCTAssertTrue(app.staticTexts["Success!"].waitForExistence(timeout: 10.0))

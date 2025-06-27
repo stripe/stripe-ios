@@ -282,7 +282,8 @@ class ExampleWalletButtonsModel: ObservableObject {
         // First, create customer and get customer session
         self.addDebugLog("Creating customer with SPT test backend...")
         let body = [
-            "customerId": nil // Let backend create a new customer
+            "customerId": nil, // Let backend create a new customer
+            "isMobile": true,
         ] as [String: Any?]
         let json = try! JSONSerialization.data(withJSONObject: body, options: [])
 
@@ -517,7 +518,7 @@ class ExampleWalletButtonsModel: ObservableObject {
                                                  handlers: handlers)
     }
     func isValidShippingLocation(_ address: PaymentSheet.ShopPayConfiguration.PartialAddress) -> Bool {
-        return true
+        return address.postalCode != "91911"
     }
 }
 
