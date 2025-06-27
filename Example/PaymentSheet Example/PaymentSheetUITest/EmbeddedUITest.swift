@@ -1012,7 +1012,16 @@ class EmbeddedUITests: PaymentSheetUITestCase {
         app.launch()
         XCTAssertTrue(app.buttons["EmbeddedPaymentElement (SwiftUI)"].waitForExistenceAndTap())
 
-        app.buttons["Card"].waitForExistenceAndTap(timeout: 10)
+        // Wait for the SwiftUI embedded payment element to fully load
+        // The loading screen shows "Preparing Payment..." while the element loads asynchronously
+        let cardButton = app.buttons["Card"]
+        XCTAssertTrue(cardButton.waitForExistence(timeout: 30), "Card button should appear after embedded payment element loads")
+        cardButton.waitForExistenceAndTap(timeout: 10)
+        
+        // Additional wait to ensure the card form is fully rendered before trying to fill data
+        let cardNumberField = app.textFields["Card number"]
+        XCTAssertTrue(cardNumberField.waitForExistence(timeout: 15), "Card number field should be available after tapping Card button")
+        
         try fillCardData(app)
         let continueButton = app.buttons["Continue"]
         XCTAssertTrue(continueButton.isEnabled)
