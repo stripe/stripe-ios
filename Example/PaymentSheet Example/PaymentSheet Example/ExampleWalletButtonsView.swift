@@ -616,11 +616,7 @@ class ExampleWalletButtonsModel: ObservableObject {
         return config
     }
     func isValidShippingLocation(_ address: PaymentSheet.ShopPayConfiguration.PartialAddress) -> Bool {
-        // Check postal code restriction
-        if address.postalCode == "91911" {
-            return false
-        }
-        return true
+        return address.postalCode != "91911"
     }
 }
 
