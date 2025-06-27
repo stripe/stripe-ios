@@ -160,6 +160,9 @@ final class VerificationSheetFlowControllerTest: XCTestCase {
 
     // Requires document photo without type - should return DocumentTypeSelectViewController
     func testMissingDocFrontNoType() throws {
+        // Mock that user has selected document type
+        mockSheetController.collectedData = .init()
+
         // Mock that document ML models successfully loaded
         mockMLModelLoader.documentModelsPromise.resolve(with: .init(DocumentScannerMock()))
 
