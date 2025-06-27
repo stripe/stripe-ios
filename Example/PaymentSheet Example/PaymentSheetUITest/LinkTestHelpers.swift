@@ -97,9 +97,9 @@ extension XCTestCase {
                 zipField.tap()
                 zipField.typeText("94080")
             }
-        }
 
-        XCTAssertTrue(app.toolbars.buttons["Done"].waitForExistenceAndTap(timeout: 10))
+            XCTAssertTrue(app.toolbars.buttons["Done"].waitForExistenceAndTap(timeout: 10))
+        }
     }
 
     func logInToLink(
