@@ -10,14 +10,11 @@ import SwiftUI
 struct ShopPayTestingOptions {
     var billingAddressRequired: Bool = false
     var emailRequired: Bool = false
-    var phoneNumberRequired: Bool = false
     var shippingAddressRequired: Bool = true
     var allowedShippingCountries: String = ""
-    var businessName: String = ""
     var rejectShippingAddressChange: Bool = false
     var rejectShippingRateChange: Bool = false
     var simulatePaymentFailed: Bool = false
-    var disableOverlay: Bool = false
 }
 
 struct ExampleWalletButtonsContainerView: View {
@@ -31,14 +28,11 @@ struct ExampleWalletButtonsContainerView: View {
     // Shop Pay testing options
     @State private var billingAddressRequired: Bool = false
     @State private var emailRequired: Bool = false
-    @State private var phoneNumberRequired: Bool = false
     @State private var shippingAddressRequired: Bool = true
     @State private var allowedShippingCountries: String = ""
-    @State private var businessName: String = ""
     @State private var rejectShippingAddressChange: Bool = false
     @State private var rejectShippingRateChange: Bool = false
     @State private var simulatePaymentFailed: Bool = false
-    @State private var disableOverlay: Bool = false
 
     var body: some View {
         if #available(iOS 16.0, *) {
@@ -68,20 +62,16 @@ struct ExampleWalletButtonsContainerView: View {
                     Group {
                         Toggle("Billing Address Required", isOn: $billingAddressRequired)
                         Toggle("Email Required", isOn: $emailRequired)
-                        Toggle("Phone Number Required", isOn: $phoneNumberRequired)
                         Toggle("Shipping Address Required", isOn: $shippingAddressRequired)
 
                         TextField("Allowed Shipping Countries (comma separated)", text: $allowedShippingCountries)
                             .textInputAutocapitalization(.never)
-
-                        TextField("Business Name", text: $businessName)
                     }
 
                     Group {
                         Toggle("Reject Shipping Address Change", isOn: $rejectShippingAddressChange)
                         Toggle("Reject Shipping Rate Change", isOn: $rejectShippingRateChange)
                         Toggle("Simulate Payment Failed", isOn: $simulatePaymentFailed)
-                        Toggle("Disable Overlay", isOn: $disableOverlay)
                     }
                 }.sheet(isPresented: $showingAppearancePlayground) {
                     AppearancePlaygroundView(appearance: appearance) { updatedAppearance in
@@ -100,14 +90,11 @@ struct ExampleWalletButtonsContainerView: View {
                             shopPayTestingOptions: ShopPayTestingOptions(
                                 billingAddressRequired: billingAddressRequired,
                                 emailRequired: emailRequired,
-                                phoneNumberRequired: phoneNumberRequired,
                                 shippingAddressRequired: shippingAddressRequired,
                                 allowedShippingCountries: allowedShippingCountries,
-                                businessName: businessName,
                                 rejectShippingAddressChange: rejectShippingAddressChange,
                                 rejectShippingRateChange: rejectShippingRateChange,
-                                simulatePaymentFailed: simulatePaymentFailed,
-                                disableOverlay: disableOverlay
+                                simulatePaymentFailed: simulatePaymentFailed
                             )
                         )
                     }
@@ -605,6 +592,7 @@ class ExampleWalletButtonsModel: ObservableObject {
         // Create configuration with test options
         var config = PaymentSheet.ShopPayConfiguration(
             billingAddressRequired: shopPayTestingOptions.billingAddressRequired,
+            emailRequired: shopPayTestingOptions.emailRequired,
             shippingAddressRequired: shopPayTestingOptions.shippingAddressRequired,
             lineItems: [.init(name: "Golden Potato", amount: 500),
                         .init(name: "Silver Potato", amount: 345),
@@ -619,16 +607,11 @@ class ExampleWalletButtonsModel: ObservableObject {
         // Log the testing configuration
         addDebugLog("[SHOP PAY CONFIG] Billing Address Required: \(shopPayTestingOptions.billingAddressRequired)")
         addDebugLog("[SHOP PAY CONFIG] Email Required: \(shopPayTestingOptions.emailRequired)")
-        addDebugLog("[SHOP PAY CONFIG] Phone Required: \(shopPayTestingOptions.phoneNumberRequired)")
         addDebugLog("[SHOP PAY CONFIG] Shipping Address Required: \(shopPayTestingOptions.shippingAddressRequired)")
         addDebugLog("[SHOP PAY CONFIG] Allowed Countries: \(allowedCountries.joined(separator: ", "))")
-        if !shopPayTestingOptions.businessName.isEmpty {
-            addDebugLog("[SHOP PAY CONFIG] Business Name: \(shopPayTestingOptions.businessName)")
-        }
         addDebugLog("[SHOP PAY CONFIG] Reject Shipping Address: \(shopPayTestingOptions.rejectShippingAddressChange)")
         addDebugLog("[SHOP PAY CONFIG] Reject Shipping Rate: \(shopPayTestingOptions.rejectShippingRateChange)")
         addDebugLog("[SHOP PAY CONFIG] Simulate Payment Failed: \(shopPayTestingOptions.simulatePaymentFailed)")
-        addDebugLog("[SHOP PAY CONFIG] Disable Overlay: \(shopPayTestingOptions.disableOverlay)")
 
         return config
     }
