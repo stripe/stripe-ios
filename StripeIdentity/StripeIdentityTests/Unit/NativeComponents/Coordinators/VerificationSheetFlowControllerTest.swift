@@ -160,6 +160,9 @@ final class VerificationSheetFlowControllerTest: XCTestCase {
 
     // Requires document photo without type - should return DocumentTypeSelectViewController
     func testMissingDocFrontNoType() throws {
+        // Mock that document ML models successfully loaded
+        mockMLModelLoader.documentModelsPromise.resolve(with: .init(DocumentScannerMock()))
+
         let exp = expectation(description: "testMissingDocFrontNoType")
         try nextViewController(
             missingRequirements: [.idDocumentFront],
@@ -168,12 +171,6 @@ final class VerificationSheetFlowControllerTest: XCTestCase {
                 exp.fulfill()
             }
         )
-
-        // Resolve the promise after setting up the observation to avoid race condition
-        DispatchQueue.main.async {
-            self.mockMLModelLoader.documentModelsPromise.resolve(with: .init(DocumentScannerMock()))
-        }
-
         wait(for: [exp], timeout: 1)
     }
 
@@ -324,6 +321,9 @@ final class VerificationSheetFlowControllerTest: XCTestCase {
         // Mock that user has selected document type
         mockSheetController.collectedData = .init()
 
+        // Mock that document ML models successfully loaded
+        mockMLModelLoader.documentModelsPromise.resolve(with: .init(DocumentScannerMock()))
+
         let frontExp = expectation(description: "front")
         try nextViewController(
             missingRequirements: [.idDocumentFront],
@@ -341,11 +341,6 @@ final class VerificationSheetFlowControllerTest: XCTestCase {
                 backExp.fulfill()
             }
         )
-
-        // Resolve the promise after setting up the observations to avoid race condition
-        DispatchQueue.main.async {
-            self.mockMLModelLoader.documentModelsPromise.resolve(with: .init(DocumentScannerMock()))
-        }
 
         wait(for: [frontExp, backExp], timeout: 1)
     }
