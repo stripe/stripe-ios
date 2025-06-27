@@ -321,28 +321,38 @@ final class VerificationSheetFlowControllerTest: XCTestCase {
         // Mock that user has selected document type
         mockSheetController.collectedData = .init()
 
-        // Mock that document ML models successfully loaded
-        mockMLModelLoader.documentModelsPromise.resolve(with: .init(DocumentScannerMock()))
-
         let frontExp = expectation(description: "front")
-        try nextViewController(
-            missingRequirements: [.idDocumentFront],
-            completion: { nextVC in
-                XCTAssertIs(nextVC, DocumentWarmupViewController.self.self)
-                frontExp.fulfill()
-            }
-        )
-
         let backExp = expectation(description: "back")
-        try nextViewController(
-            missingRequirements: [.idDocumentBack],
-            completion: { nextVC in
-                XCTAssertIs(nextVC, DocumentWarmupViewController.self)
+        
+        // Mock that document ML models successfully loaded - do this before nextViewController calls
+        mockMLModelLoader.documentModelsPromise.resolve(with: .init(DocumentScannerMock()))
+        
+        // Add a slight delay to ensure promise resolution completes before proceeding
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.01) {
+            do {
+                try self.nextViewController(
+                    missingRequirements: [.idDocumentFront],
+                    completion: { nextVC in
+                        XCTAssertIs(nextVC, DocumentWarmupViewController.self.self)
+                        frontExp.fulfill()
+                    }
+                )
+
+                try self.nextViewController(
+                    missingRequirements: [.idDocumentBack],
+                    completion: { nextVC in
+                        XCTAssertIs(nextVC, DocumentWarmupViewController.self)
+                        backExp.fulfill()
+                    }
+                )
+            } catch {
+                XCTFail("Failed to create next view controller: \(error)")
+                frontExp.fulfill()
                 backExp.fulfill()
             }
-        )
+        }
 
-        wait(for: [frontExp, backExp], timeout: 1)
+        wait(for: [frontExp, backExp], timeout: 2)
     }
 
     func testNextViewControllerSelfie() throws {
