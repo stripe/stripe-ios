@@ -76,7 +76,7 @@ struct LinkButton: View {
                 }
             }
             .padding(.horizontal, LinkUI.contentSpacing)
-            .foregroundColor(Color(uiColor: .linkTextPrimary))
+            .foregroundColor(Color(uiColor: .linkTextOnPrimary))
             .frame(height: scaledContentHeight)
             .frame(minWidth: Constants.minWidth, maxWidth: .infinity)
         }
