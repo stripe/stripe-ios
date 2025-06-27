@@ -83,7 +83,9 @@ extension EmbeddedPaymentElement {
     /// Helper method to inform delegate only if the payment option changed
     func informDelegateIfPaymentOptionUpdated() {
         if lastUpdatedPaymentOption != paymentOption {
-            delegate?.embeddedPaymentElementDidUpdatePaymentOption(embeddedPaymentElement: self)
+            // Defensive check to ensure delegate is still valid before calling
+            guard let delegate = delegate else { return }
+            delegate.embeddedPaymentElementDidUpdatePaymentOption(embeddedPaymentElement: self)
             lastUpdatedPaymentOption = paymentOption
         }
     }
@@ -563,7 +565,10 @@ extension EmbeddedPaymentElement {
             return
         }
 
-        clearPaymentOption()
+        // Dispatch to the next run loop iteration to avoid potential race conditions
+        DispatchQueue.main.async { [weak self] in
+            self?.clearPaymentOption()
+        }
     }
 
     static func validateRowSelectionConfiguration(configuration: Configuration) throws {
