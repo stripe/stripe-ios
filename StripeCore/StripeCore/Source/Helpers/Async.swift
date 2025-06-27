@@ -14,13 +14,13 @@ import Foundation
     public typealias Result = Swift.Result<Value, Error>
 
     private let task: Task<Value, Error>
-    
+
     public init(_ operation: @escaping () async throws -> Value) {
         self.task = Task {
             try await operation()
         }
     }
-    
+
     internal init(task: Task<Value, Error>) {
         self.task = task
     }
@@ -61,7 +61,7 @@ import Foundation
 
 @_spi(STP) public class Promise<Value>: Future<Value> {
     private let continuation: CheckedContinuation<Value, Error>
-    
+
     public init() {
         let (task, continuation) = Self.makeTask()
         self.continuation = continuation
@@ -103,7 +103,7 @@ import Foundation
             reject(with: error)
         }
     }
-    
+
     private static func makeTask() -> (Task<Value, Error>, CheckedContinuation<Value, Error>) {
         var continuation: CheckedContinuation<Value, Error>!
         let task = Task<Value, Error> {
