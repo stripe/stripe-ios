@@ -18,6 +18,12 @@ import Foundation
     func setRawData(_ rawData: String, shouldAutoAdvance: Bool)
 }
 
+extension TextOrDropdownElement {
+    public func setRawData(_ rawData: String) {
+        setRawData(rawData, shouldAutoAdvance: true)
+    }
+}
+
 // MARK: Conformance
 
 extension TextFieldElement: TextOrDropdownElement {
