@@ -245,6 +245,10 @@ extension STPPaymentIntent: STPAPIResponseDecodable {
             let stripeId = dict["id"] as? String,
             let rawStatus = dict["status"] as? String
         else {
+            if let errorDict = response?["error"] as? [AnyHashable: Any],
+               let paymentIntent = errorDict["payment_intent"] as? [AnyHashable: Any] {
+                return decodedObject(fromAPIResponse: paymentIntent)
+            }
             return nil
         }
 

@@ -123,7 +123,7 @@ let JSONKeyObject = "object"
         apiClient.urlSession.stp_performDataTask(
             with: request as URLRequest,
             completionHandler: { body, response, error in
-                self.parseResponse(response, method: "DELETE" ,body: body, error: error, completion: completion)
+                self.parseResponse(response, method: "DELETE", body: body, error: error, completion: completion)
             }
         )
     }
@@ -195,13 +195,12 @@ let JSONKeyObject = "object"
         }
         #endif
 
+        let error: Error? =
+            NSError.stp_error(fromStripeResponse: jsonDictionary, httpResponse: httpResponse)
         if let responseObject = ResponseType.decodedObject(fromAPIResponse: jsonDictionary) {
-            safeCompletion(responseObject, nil)
+            safeCompletion(responseObject, error)
         } else {
-            let error: Error =
-                NSError.stp_error(fromStripeResponse: jsonDictionary, httpResponse: httpResponse)
-                ?? NSError.stp_genericFailedToParseResponseError()
-            safeCompletion(nil, error)
+            safeCompletion(nil, error ?? NSError.stp_genericFailedToParseResponseError())
         }
     }
 

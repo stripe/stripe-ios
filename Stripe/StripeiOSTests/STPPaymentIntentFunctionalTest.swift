@@ -120,7 +120,7 @@ class STPPaymentIntentFunctionalTest: STPNetworkStubbingTestCase {
         params.sourceParams = cardSourceParams()
         client.confirmPaymentIntent(
             with: params) { paymentIntent, error in
-            XCTAssertNil(paymentIntent)
+            XCTAssertNotNil(paymentIntent)
 
             XCTAssertNotNil(error)
             XCTAssertEqual((error as NSError?)?.domain, STPError.stripeDomain)
@@ -451,7 +451,7 @@ class STPPaymentIntentFunctionalTest: STPNetworkStubbingTestCase {
             with: params) { paymentIntent, error in
             XCTAssertNotNil(error, "Confirming with invalid network should result in an error")
 
-            XCTAssertNil(paymentIntent)
+            XCTAssertNotNil(paymentIntent)
 
             expectation.fulfill()
         }
