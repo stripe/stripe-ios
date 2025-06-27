@@ -1,5 +1,5 @@
 //
-//  LinkPaymentMethodPicker-Header.swift
+//  LinkCollapsingListView-Header.swift
 //  StripePaymentSheet
 //
 //  Created by Ramon Torres on 10/22/21.
@@ -9,9 +9,9 @@
 @_spi(STP) import StripeUICore
 import UIKit
 
-extension LinkPaymentMethodPicker {
+extension LinkCollapsingListView {
 
-    final class Header: UIControl {
+    class Header: UIControl {
         struct Constants {
             static let contentSpacing: CGFloat = 16
             static let chevronSize: CGSize = .init(width: 24, height: 24)
@@ -26,18 +26,9 @@ extension LinkPaymentMethodPicker {
             )
         }
 
-        /// The selected payment method.
-        private(set) var selectedPaymentMethod: ConsumerPaymentDetails? {
-            didSet {
-                updateChevron()
-                contentView.paymentMethod = selectedPaymentMethod
-                updateAccessibilityContent()
-            }
-        }
-
         // Indicates whether the header should appear collapsable or not.
         // The header is collapsable when the currently selected payment method is supported.
-        private(set) var collapsable: Bool = false
+        var collapsable: Bool = false
 
         var isExpanded: Bool = false {
             didSet {
@@ -57,34 +48,21 @@ extension LinkPaymentMethodPicker {
             }
         }
 
-        private let payWithLabel: UILabel = {
+        let collapsedLabel: UILabel = {
             let label = UILabel()
-            label.font = LinkUI.font(forTextStyle: .body)
             label.textColor = .linkTextTertiary
-            label.text = Strings.payment
+            label.font = LinkUI.font(forTextStyle: .body)
             label.adjustsFontForContentSizeCategory = true
             label.translatesAutoresizingMaskIntoConstraints = false
             return label
         }()
 
-        private let headingLabel: UILabel = {
+        let headingLabel: UILabel = {
             let label = UILabel()
             label.font = LinkUI.font(forTextStyle: .body)
             label.textColor = .linkTextTertiary
-            label.text = STPLocalizedString(
-                "Payment methods",
-                "Title for a section listing one or more payment methods."
-            )
+
             label.adjustsFontForContentSizeCategory = true
-            return label
-        }()
-
-        private let contentView = CellContentView()
-
-        private let cardNumberLabel: UILabel = {
-            let label = UILabel()
-            label.font = UIFont.monospacedDigitSystemFont(ofSize: 14, weight: .medium)
-                .scaled(withTextStyle: .body, maximumPointSize: 20)
             return label
         }()
 
@@ -100,17 +78,16 @@ extension LinkPaymentMethodPicker {
             return chevron
         }()
 
-        private lazy var paymentInfoStackView: UIStackView = {
+        lazy var collapsedStackView: UIStackView = {
             let stackView = UIStackView(arrangedSubviews: [
-                payWithLabel,
-                contentView,
+                collapsedLabel,
             ])
 
             stackView.alignment = .center
-            stackView.setCustomSpacing(Constants.contentSpacing, after: payWithLabel)
+            stackView.setCustomSpacing(Constants.contentSpacing, after: collapsedLabel)
             stackView.translatesAutoresizingMaskIntoConstraints = false
 
-            let payWithLabelWidth = payWithLabel.widthAnchor.constraint(equalToConstant: LinkPaymentMethodPicker.widthForHeaderLabels)
+            let payWithLabelWidth = collapsedLabel.widthAnchor.constraint(equalToConstant: LinkPaymentMethodPicker.widthForHeaderLabels)
             payWithLabelWidth.priority = .defaultLow
 
             NSLayoutConstraint.activate([
@@ -122,7 +99,7 @@ extension LinkPaymentMethodPicker {
 
         private lazy var stackView: UIStackView = {
             let stackView = UIStackView(arrangedSubviews: [
-                paymentInfoStackView,
+                collapsedStackView,
                 headingLabel,
                 chevron,
             ])
@@ -161,12 +138,7 @@ extension LinkPaymentMethodPicker {
             fatalError("init(coder:) has not been implemented")
         }
 
-        func setSelectedPaymentMethod(selectedPaymentMethod: ConsumerPaymentDetails?, supported: Bool) {
-            self.collapsable = supported
-            self.selectedPaymentMethod = selectedPaymentMethod
-        }
-
-        private func updateChevron() {
+        func updateChevron() {
             if isExpanded {
                 chevron.transform = CGAffineTransform(rotationAngle: .pi)
             } else {
@@ -176,15 +148,13 @@ extension LinkPaymentMethodPicker {
             chevron.isHidden = !collapsable
         }
 
-        private func updateAccessibilityContent() {
+        func updateAccessibilityContent() {
             if isExpanded {
-                accessibilityLabel = headingLabel.text
                 accessibilityHint = STPLocalizedString(
                     "Tap to close",
                     "Accessibility hint to tell the user that they can tap to hide additional content."
                 )
             } else {
-                accessibilityLabel = selectedPaymentMethod?.accessibilityDescription
                 accessibilityHint = STPLocalizedString(
                     "Tap to expand",
                     "Accessibility hint to tell the user that they can tap to reveal additional content."
@@ -196,11 +166,11 @@ extension LinkPaymentMethodPicker {
             super.layoutSubviews()
 
             if isExpanded {
-                paymentInfoStackView.isHidden = true
+                collapsedStackView.isHidden = true
                 headingLabel.isHidden = false
                 stackView.directionalLayoutMargins = Constants.expandedInsets
             } else {
-                paymentInfoStackView.isHidden = false
+                collapsedStackView.isHidden = false
                 headingLabel.isHidden = true
                 stackView.directionalLayoutMargins = Constants.collapsedInsets
             }

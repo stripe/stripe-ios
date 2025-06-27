@@ -11,7 +11,7 @@
 @_spi(STP) import StripeUICore
 import UIKit
 
-extension LinkPaymentMethodPicker {
+extension LinkPaymentMethodListView {
 
     final class CellContentView: UIView {
         struct Constants {

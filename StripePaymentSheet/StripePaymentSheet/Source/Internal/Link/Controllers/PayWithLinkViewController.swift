@@ -341,7 +341,8 @@ private extension PayWithLinkViewController {
 
                 presentAppropriateViewController(
                     with: linkAccount,
-                    paymentDetails: paymentDetails
+                    paymentDetails: paymentDetails,
+                    shippingAddresses: shippingAddressResponse?.shippingAddresses ?? []
                 )
             } catch {
                 payWithLinkDelegate?.payWithLinkViewControllerDidFinish(
@@ -363,7 +364,8 @@ private extension PayWithLinkViewController {
 
     private func presentAppropriateViewController(
         with linkAccount: PaymentSheetLinkAccount,
-        paymentDetails: [ConsumerPaymentDetails]
+        paymentDetails: [ConsumerPaymentDetails],
+        shippingAddresses: [ShippingAddressesResponse.ShippingAddress]
     ) {
         let viewController: BottomSheetContentViewController
         if paymentDetails.isEmpty {
@@ -377,7 +379,8 @@ private extension PayWithLinkViewController {
             let walletViewController = WalletViewController(
                 linkAccount: linkAccount,
                 context: context,
-                paymentMethods: paymentDetails
+                paymentMethods: paymentDetails,
+                shippingAddresses: shippingAddresses
             )
             viewController = walletViewController
         }

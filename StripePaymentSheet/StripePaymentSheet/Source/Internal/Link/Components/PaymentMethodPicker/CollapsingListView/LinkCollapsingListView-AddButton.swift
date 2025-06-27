@@ -1,22 +1,19 @@
 //
-//  LinkPaymentMethodPicker-AddButton.swift
+//  LinkCollapsingListView-AddButton.swift
 //  StripePaymentSheet
 //
 //  Created by Ramon Torres on 10/20/21.
 //  Copyright © 2021 Stripe, Inc. All rights reserved.
 //
 
-@_spi(STP) import StripeCore
 @_spi(STP) import StripeUICore
 import UIKit
 
-extension LinkPaymentMethodPicker {
+extension LinkCollapsingListView {
 
     final class AddButton: UIControl {
-
         private lazy var textLabel: UILabel = {
             let label = UILabel()
-            label.text = String.Localized.add_a_payment_method
             label.numberOfLines = 0
             label.textColor = tintColor
             label.font = LinkUI.font(forTextStyle: .bodyEmphasized)
@@ -45,13 +42,14 @@ extension LinkPaymentMethodPicker {
             }
         }
 
-        init() {
+        init(text: String) {
             super.init(frame: .zero)
 
             isAccessibilityElement = true
             accessibilityTraits = .button
+            textLabel.text = text
             accessibilityLabel = textLabel.text
-            directionalLayoutMargins = Cell.Constants.margins
+            directionalLayoutMargins = LinkCollapsingListView.Constants.margins
 
             setupUI()
             update()

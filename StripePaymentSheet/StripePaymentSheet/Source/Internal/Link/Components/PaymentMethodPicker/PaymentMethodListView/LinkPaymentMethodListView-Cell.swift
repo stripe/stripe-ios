@@ -1,5 +1,5 @@
 //
-//  LinkPaymentMethodPicker-Cell.swift
+//  LinkPaymentMethodListView-Cell.swift
 //  StripePaymentSheet
 //
 //  Created by Ramon Torres on 10/19/21.
@@ -11,21 +11,19 @@
 import UIKit
 
 protocol LinkPaymentMethodPickerCellDelegate: AnyObject {
-    func savedPaymentPickerCellDidSelect(_ cell: LinkPaymentMethodPicker.Cell)
-    func savedPaymentPickerCell(_ cell: LinkPaymentMethodPicker.Cell, didTapMenuButton button: UIButton)
+    func savedPaymentPickerCellDidSelect(_ cell: LinkPaymentMethodListView.Cell)
+    func savedPaymentPickerCell(_ cell: LinkPaymentMethodListView.Cell, didTapMenuButton button: UIButton)
     func savedPaymentPickerCellMenuActions(
-        for cell: LinkPaymentMethodPicker.Cell
+        for cell: LinkPaymentMethodListView.Cell
     ) -> [PayWithLinkViewController.WalletViewController.Action]?
 }
 
-extension LinkPaymentMethodPicker {
+extension LinkPaymentMethodListView {
 
     final class Cell: UIControl {
         struct Constants {
-            static let margins = NSDirectionalEdgeInsets(top: 16, leading: 20, bottom: 16, trailing: 20)
             static let contentSpacing: CGFloat = 12
             static let contentIndentation: CGFloat = 34
-            static let menuSpacing: CGFloat = 8
             static let menuButtonSize: CGSize = .init(width: 24, height: 24)
             static let separatorHeight: CGFloat = 0.5
             static let iconViewSize: CGSize = .init(width: 14, height: 20)
@@ -68,7 +66,7 @@ extension LinkPaymentMethodPicker {
 
         weak var delegate: LinkPaymentMethodPickerCellDelegate?
 
-        private let radioButton = RadioButton()
+        private let radioButton = LinkCollapsingListView.RadioButton()
 
         private let contentView = CellContentView()
 
@@ -126,7 +124,7 @@ extension LinkPaymentMethodPicker {
             super.init(frame: frame)
 
             isAccessibilityElement = true
-            directionalLayoutMargins = Constants.margins
+            directionalLayoutMargins = LinkPaymentMethodListView.Constants.margins
 
             setupUI()
 
@@ -287,7 +285,7 @@ extension LinkPaymentMethodPicker {
 
 }
 
-extension LinkPaymentMethodPicker.Cell {
+extension LinkPaymentMethodListView.Cell {
     override func contextMenuInteraction(
         _ interaction: UIContextMenuInteraction,
         configurationForMenuAtLocation location: CGPoint
