@@ -323,10 +323,10 @@ final class VerificationSheetFlowControllerTest: XCTestCase {
 
         let frontExp = expectation(description: "front")
         let backExp = expectation(description: "back")
-        
+
         // Mock that document ML models successfully loaded - do this before nextViewController calls
         mockMLModelLoader.documentModelsPromise.resolve(with: .init(DocumentScannerMock()))
-        
+
         // Add a slight delay to ensure promise resolution completes before proceeding
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.01) {
             do {
