@@ -554,6 +554,9 @@ class PaymentSheetStandardLPMUITwoTests: PaymentSheetStandardLPMUICase {
         app.typeText("AT611904300234573201" + XCUIKeyboardKey.return.rawValue)
 
         app.fillAddressWithAutocomplete()
+
+        // Dismiss keyboard before tapping pay button
+        app.toolbars.buttons["Done"].tap()
         app.buttons["Pay €50.99"].tap()
         let successText = app.staticTexts["Success!"]
         XCTAssertTrue(successText.waitForExistence(timeout: 10.0))
