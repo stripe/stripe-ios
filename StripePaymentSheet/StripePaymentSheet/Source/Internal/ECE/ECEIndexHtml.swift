@@ -42,7 +42,6 @@ struct ECEIndexHTML {
           currency: "usd",
           payment_method_types: ["card", "link", "shop_pay"],
           customerSessionClientSecret: "\(customerSessionClientSecret)",
-          __elementsInitSource: 'native_sdk',
         };
 
       console.log("Initializing stripe elements with options", options);
