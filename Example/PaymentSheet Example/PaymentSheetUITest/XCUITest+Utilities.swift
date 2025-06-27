@@ -199,8 +199,7 @@ extension XCUIApplication {
         addressFieldIdentifier: String = "Address",
         searchTerm: String = "354 Oyster Point",
         expectedResult: String = "354 Oyster Point Blvd",
-        context: XCUIElement? = nil,
-        needsDoneButton: Bool = false
+        context: XCUIElement? = nil
     ) {
         let contextElement = context ?? self
         let addressField = contextElement.textFields[addressFieldIdentifier]
@@ -220,11 +219,6 @@ extension XCUIApplication {
         let searchedCell = tables.element(boundBy: 0).cells.containing(NSPredicate(format: "label CONTAINS %@", expectedResult)).element
         XCTAssertTrue(searchedCell.waitForExistence(timeout: 5), "Autocomplete result '\(expectedResult)' should appear")
         searchedCell.tap()
-
-        // Some contexts need a Done button tap after autocomplete
-        if needsDoneButton {
-            contextElement.buttons["Done"].tap()
-        }
     }
 }
 
