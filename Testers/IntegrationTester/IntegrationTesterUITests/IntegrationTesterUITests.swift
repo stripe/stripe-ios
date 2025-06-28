@@ -205,7 +205,7 @@ class IntegrationTesterUIPMTests: IntegrationTesterUITests {
         rowForPaymentMethod.scrollToAndTap(in: app)
 
         let buyButton = app.buttons["Buy"]
-        XCTAssertTrue(buyButton.waitForExistence(timeout: 30.0))
+        XCTAssertTrue(buyButton.waitForExistence(timeout: 10.0))
         buyButton.forceTapElement()
 
         let webView = app.webViews.firstMatch
@@ -227,7 +227,7 @@ class IntegrationTesterUIPMTests: IntegrationTesterUITests {
         rowForPaymentMethod.scrollToAndTap(in: app)
 
         let buyButton = app.buttons["Buy"]
-        XCTAssertTrue(buyButton.waitForExistence(timeout: 30.0))
+        XCTAssertTrue(buyButton.waitForExistence(timeout: 10.0))
         buyButton.forceTapElement()
 
         // Klarna uses ASWebAuthenticationSession, tap continue to allow the web view to open:
@@ -363,7 +363,7 @@ class IntegrationTesterUITests: XCTestCase {
         submitCodeButton.forceTapElement()
 
         let statusView = app.staticTexts["Payment status view"]
-        XCTAssertTrue(statusView.waitForExistence(timeout: 30.0))
+        XCTAssertTrue(statusView.waitForExistence(timeout: 10.0))
         XCTAssertNotNil(statusView.label.range(of: "Payment complete!"))
     }
 
@@ -510,7 +510,7 @@ class IntegrationTesterUITests: XCTestCase {
         rowForPaymentMethod.scrollToAndTap(in: app)
 
         let buyButton = app.buttons["Buy"]
-        XCTAssertTrue(buyButton.waitForExistence(timeout: 30.0))
+        XCTAssertTrue(buyButton.waitForExistence(timeout: 10.0))
         buyButton.forceTapElement()
 
         if integrationMethod == .paypal {
