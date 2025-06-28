@@ -312,7 +312,7 @@ class ExampleWalletButtonsModel: ObservableObject {
                     intentConfiguration: .init(sharedPaymentTokenSessionWithMode: .payment(amount: 1000, currency: "USD", setupFutureUsage: nil, captureMethod: .automatic, paymentMethodOptions: nil), sellerDetails: .init(networkId: "internal", externalId: "stripe_test_merchant"), paymentMethodTypes: ["card", "link", "shop_pay"], preparePaymentMethodHandler: { [weak self] paymentMethod, address in
                         self?.addDebugLog("PaymentMethod prepared: \(paymentMethod.stripeId)")
                         self?.addDebugLog("Address: \(address)")
-                        // Create the SPT on your backend here
+                        self?.onCompletion(result: .completed)
                     }),
                     configuration: configuration
                 ) { [weak self] result in
@@ -449,18 +449,18 @@ class ExampleWalletButtonsModel: ObservableObject {
                         if status == .succeeded {
                             self?.addDebugLog("Payment completed successfully after handling next action")
                             DispatchQueue.main.async {
-                                self?.paymentResult = .completed
-                                self?.cleanupDemo()
+                                self?.onCompletion(result: .completed)
                             }
                         } else if status == .failed {
                             self?.addDebugLog("Payment failed after handling next action")
                             DispatchQueue.main.async {
-                                self?.paymentResult = .failed(error: error ?? NSError(domain: "PaymentHandler", code: -1, userInfo: [NSLocalizedDescriptionKey: "Payment failed"]))
+                                self?.onCompletion(result: .failed(error: error ?? NSError(domain: "PaymentHandler", code: -1, userInfo: [NSLocalizedDescriptionKey: "Payment failed"])))
+
                             }
                         } else if status == .canceled {
                             self?.addDebugLog("Payment canceled after handling next action")
                             DispatchQueue.main.async {
-                                self?.paymentResult = .canceled
+                                self?.onCompletion(result: .canceled)
                             }
                         }
                     }
@@ -469,7 +469,7 @@ class ExampleWalletButtonsModel: ObservableObject {
                     self?.addDebugLog("Payment intent created: \(paymentIntentID)")
                     DispatchQueue.main.async {
                         self?.isProcessing = false
-                        self?.paymentResult = .completed
+                        self?.onCompletion(result: .completed)
                     }
                 }
             })
