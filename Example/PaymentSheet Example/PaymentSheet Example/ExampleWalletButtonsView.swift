@@ -123,8 +123,13 @@ struct ExampleWalletButtonsView: View {
                         isConfirmingPayment: $isConfirmingPayment,
                         onCompletion: model.onCompletion
                     )
-                } else {
+                } else if model.paymentResult == nil {
                     ExampleLoadingView()
+                } else {
+                    Button("Reload", action: {
+                        self.model.paymentResult = nil
+                        self.model.preparePaymentSheet()
+                    })
                 }
 
                 // Debug logs section
@@ -150,7 +155,6 @@ struct ExampleWalletButtonsView: View {
         }
     }
 }
-
 @available(iOS 16.0, *)
 struct WalletButtonsFlowControllerView: View {
     @ObservedObject var flowController: PaymentSheet.FlowController
@@ -486,11 +490,6 @@ class ExampleWalletButtonsModel: ObservableObject {
             return
         }
 
-        if useSPTTestBackend {
-            // We'll handle completion after handling the SPT next actions manually
-            return
-        }
-
         // Only set the result if it hasn't been set by the payment handler
         if self.paymentResult == nil {
             self.paymentResult = result
@@ -505,8 +504,6 @@ class ExampleWalletButtonsModel: ObservableObject {
     func cleanupDemo() {
         // A PaymentIntent can't be reused after a successful payment. Prepare a new one for the demo.
         self.paymentSheetFlowController = nil
-        self.addDebugLog("Preparing new payment sheet for demo")
-        preparePaymentSheet()
     }
 
     var shopPayConfiguration: PaymentSheet.ShopPayConfiguration {
