@@ -116,7 +116,7 @@ class AddressViewControllerSnapshotTests: STPSnapshotTestCase {
         let testWindow = UIWindow(frame: CGRect(x: 0, y: 0, width: 428, height: 500))
         testWindow.isHidden = false
         var configuration = configuration
-        configuration.showShippingAddressEqualsBilling = true
+        configuration.showUseBillingAddressCheckbox = true
         configuration.defaultValues = .init(
             address: .init(
                 city: "San Francisco",
