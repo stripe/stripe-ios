@@ -5,7 +5,7 @@
 
 import SwiftUI
 
-@available(iOS 15.0, *)
+@available(iOS 14.0, *)
 struct PaymentSheetExampleAppRootView: View {
 
     private struct Constants {
@@ -144,15 +144,30 @@ struct PaymentSheetExampleAppRootView: View {
             StoryboardSceneView<ExampleEmbeddedElementCheckoutViewController>(sceneIdentifier: "ExampleEmbeddedElementCheckoutViewController")
 
         case .embeddedPaymentElement_swiftUI:
-            MyEmbeddedCheckoutView()
+            if #available(iOS 15.0, *) {
+                MyEmbeddedCheckoutView()
+            } else {
+                Text("Sorry, only available on >= iOS 15.0")
+                    .font(.title2)
+            }
         case .walletButtonsView_swiftUI:
             ExampleWalletButtonsContainerView()
 
         // Playgrounds
         case .customerSheet_playground:
-            CustomerSheetTestPlayground(settings: CustomerSheetTestPlaygroundController.settingsFromDefaults() ?? .defaultValues())
+            if #available(iOS 15.0, *) {
+                CustomerSheetTestPlayground(settings: CustomerSheetTestPlaygroundController.settingsFromDefaults() ?? .defaultValues())
+            } else {
+                Text("Sorry, only available on >= iOS 15.0")
+                    .font(.title2)
+            }
         case .paymentSheet_playground:
-            PaymentSheetTestPlayground(settings: PlaygroundController.settingsFromDefaults() ?? .defaultValues())
+            if #available(iOS 15.0, *) {
+                PaymentSheetTestPlayground(settings: PlaygroundController.settingsFromDefaults() ?? .defaultValues())
+            } else {
+                Text("Sorry, only available on >= iOS 15.0")
+                    .font(.title2)
+            }
         case .none:
             EmptyView()
         }
