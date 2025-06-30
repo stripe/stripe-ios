@@ -101,7 +101,18 @@ public class AddressViewController: UIViewController {
 
     // MARK: - Elements
     lazy var formElement: FormElement = {
-        let formElement = FormElement(elements: [shippingEqualsBillingCheckbox, addressSection, checkboxElement], theme: configuration.appearance.asElementsTheme)
+        var customSpacing: [(Element, CGFloat)] = []
+        
+        // Add padding under the shipping equals billing checkbox if it exists
+        if let shippingCheckbox = shippingEqualsBillingCheckbox {
+            customSpacing.append((shippingCheckbox, PaymentSheetUI.defaultPadding))
+        }
+        
+        let formElement = FormElement(
+            elements: [shippingEqualsBillingCheckbox, addressSection, checkboxElement], 
+            theme: configuration.appearance.asElementsTheme,
+            customSpacing: customSpacing
+        )
         formElement.delegate = self
         return formElement
     }()
@@ -121,10 +132,11 @@ public class AddressViewController: UIViewController {
     lazy var shippingEqualsBillingCheckbox: CheckboxElement? = {
         guard configuration.showShippingAddressEqualsBilling else { return nil }
         let hasDefaultValues = configuration.defaultValues.address != .init()
+        guard hasDefaultValues else { return nil }
         let element = CheckboxElement(
             theme: configuration.appearance.asElementsTheme,
             label: "Shipping is same as billing",
-            isSelectedByDefault: hasDefaultValues,
+            isSelectedByDefault: true,
             didToggle: { [weak self] isSelected in
                 self?.handleShippingEqualsBillingToggle(isSelected: isSelected)
             }
