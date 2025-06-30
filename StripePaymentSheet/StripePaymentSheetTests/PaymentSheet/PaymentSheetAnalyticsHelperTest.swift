@@ -149,45 +149,11 @@ final class PaymentSheetAnalyticsHelperTest: XCTestCase {
             // Reset the analytics client for each iteration
             analyticsClient._testLogHistory.removeAll()
 
-            let testCardJSON = [
-                "id": "pm_123card",
-                "type": "card",
-                "card": [
-                    "last4": "4242",
-                    "brand": "visa",
-                    "fingerprint": "B8XXs2y2JsVBtB9f",
-                    "networks": ["available": ["visa"]],
-                    "exp_month": "01",
-                    "exp_year": "2040",
-                ],
-            ] as [AnyHashable: Any]
-            let testUSBankAccountJSON = [
-                "id": "pm_123bank",
-                "type": "us_bank_account",
-                "us_bank_account": [
-                    "account_holder_type": "individual",
-                    "account_type": "checking",
-                    "bank_name": "STRIPE TEST BANK",
-                    "fingerprint": "ickfX9sbxIyAlbuh",
-                    "last4": "6789",
-                    "networks": [
-                      "preferred": "ach",
-                      "supported": [
-                        "ach",
-                      ],
-                    ] as [String: Any],
-                    "routing_number": "110000000",
-                ] as [String: Any],
-                "billing_details": [
-                    "name": "Sam Stripe",
-                    "email": "sam@stripe.com",
-                ] as [String: Any],
-            ] as [AnyHashable: Any]
             // Load started -> succeeded
             sut.logLoadStarted()
             sut.logLoadSucceeded(
                 intent: ._testValue(),
-                elementsSession: ._testDefaultCardValue(defaultPaymentMethod: STPPaymentMethod._testCard().stripeId, paymentMethods: [testCardJSON, testUSBankAccountJSON]),
+                elementsSession: ._testDefaultCardValue(defaultPaymentMethod: STPPaymentMethod._testCard().stripeId, paymentMethods: [STPPaymentMethod._testCardJSON, STPPaymentMethod._testUSBankAccountJSON]),
                 defaultPaymentMethod: .saved(paymentMethod: STPPaymentMethod._testCard()),
                 orderedPaymentMethodTypes: [.stripe(.card), .stripe(.USBankAccount)]
             )

@@ -504,28 +504,8 @@ class STPElementsSessionTest: XCTestCase {
         let allowsSetAsDefault = elementsSession.paymentMethodSyncDefaultForCustomerSheet
         XCTAssertFalse(allowsSetAsDefault)
     }
-    private let testCardJSON = [
-        "id": "pm_123card",
-        "type": "card",
-        "card": [
-            "last4": "4242",
-            "brand": "visa",
-            "fingerprint": "B8XXs2y2JsVBtB9f",
-            "networks": ["available": ["visa"]],
-            "exp_month": "01",
-            "exp_year": "2040",
-        ],
-    ] as [AnyHashable: Any]
-    private let testCardAmexJSON = [
-        "id": "pm_123amexcard",
-        "type": "card",
-        "card": [
-            "last4": "0005",
-            "brand": "amex",
-        ],
-    ] as [AnyHashable: Any]
     func testElementsCustomerDefaultPaymentMethod() {
-        let elementsSession = STPElementsSession._testDefaultCardValue(defaultPaymentMethod: "pm_123card", paymentMethods: [testCardAmexJSON, testCardJSON])
+        let elementsSession = STPElementsSession._testDefaultCardValue(defaultPaymentMethod: "pm_123card", paymentMethods: [STPPaymentMethod._testCardAmexJSON, STPPaymentMethod._testCardJSON])
         let customer = elementsSession.customer
         XCTAssertNotNil(customer)
         let defaultPaymentMethodId = customer?.defaultPaymentMethod
@@ -536,7 +516,7 @@ class STPElementsSessionTest: XCTestCase {
         XCTAssertEqual(defaultPaymentMethod?.stripeId, "pm_123card")
     }
     func testElementsCustomerNoDefaultPaymentMethodHasSavedPaymentMethods() {
-        let elementsSession = STPElementsSession._testDefaultCardValue(defaultPaymentMethod: nil, paymentMethods: [testCardAmexJSON, testCardJSON])
+        let elementsSession = STPElementsSession._testDefaultCardValue(defaultPaymentMethod: nil, paymentMethods: [STPPaymentMethod._testCardAmexJSON, STPPaymentMethod._testCardJSON])
         let customer = elementsSession.customer
         XCTAssertNotNil(customer)
         let defaultPaymentMethodId = customer?.defaultPaymentMethod
