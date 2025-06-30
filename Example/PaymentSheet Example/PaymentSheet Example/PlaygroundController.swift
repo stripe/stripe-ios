@@ -517,7 +517,7 @@ class PlaygroundController: ObservableObject {
 
     private var subscribers: Set<AnyCancellable> = []
 
-    init(settings: PaymentSheetTestPlaygroundSettings) {
+    init(settings: PaymentSheetTestPlaygroundSettings, appearance: PaymentSheet.Appearance) {
         // Enable experimental payment methods.
         //        PaymentSheet.supportedPaymentMethods += [.link]
 
@@ -529,6 +529,7 @@ class PlaygroundController: ObservableObject {
             UserDefaults.standard.set(true, forKey: "FINANCIAL_CONNECTIONS_EXAMPLE_APP_ENABLE_NATIVE")
         }
         self.settings = settings
+        self.appearance = appearance
         self.currentlyRenderedSettings = .defaultValues()
 
         $settings.removeDuplicates().sink { newValue in
@@ -1025,6 +1026,10 @@ extension PlaygroundController {
         } else {
             UserDefaults.standard.removeObject(forKey: PaymentSheetTestPlaygroundSettings.nsUserDefaultsCustomerIDKey)
         }
+
+        // save appearance setting
+        let appearanceData = try! JSONEncoder().encode(appearance)
+        UserDefaults.standard.set(appearanceData, forKey: PaymentSheetTestPlaygroundSettings.nsUserDefaultsAppearanceKey)
     }
 
     static func settingsFromDefaults() -> PaymentSheetTestPlaygroundSettings? {
@@ -1034,6 +1039,18 @@ extension PlaygroundController {
             } catch {
                 print("Unable to deserialize saved settings")
                 UserDefaults.standard.removeObject(forKey: PaymentSheetTestPlaygroundSettings.nsUserDefaultsKey)
+            }
+        }
+        return nil
+    }
+
+    static func appearanceFromDefaults() -> PaymentSheet.Appearance? {
+        if let appearanceData = UserDefaults.standard.value(forKey: PaymentSheetTestPlaygroundSettings.nsUserDefaultsAppearanceKey) as? Data {
+            do {
+                return try JSONDecoder().decode(PaymentSheet.Appearance.self, from: appearanceData)
+            } catch {
+                print("Unable to deserialize appearance: \(error)")
+                UserDefaults.standard.removeObject(forKey: PaymentSheetTestPlaygroundSettings.nsUserDefaultsAppearanceKey)
             }
         }
         return nil
