@@ -439,9 +439,7 @@ extension AddressViewController {
          expandAddressSectionIfNeeded()
 
          // Automatically check/uncheck the "shipping equals billing" checkbox if the user edits
-         if let validDefaults = validDefaultValues {
-             shippingEqualsBillingCheckbox?.isSelected = !hasAddressSectionChanged()
-         }
+         shippingEqualsBillingCheckbox?.isSelected = !hasAddressSectionChanged()
      }
 
      @_spi(STP) public func continueToNextField(element: Element) {
