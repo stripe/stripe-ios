@@ -9,6 +9,7 @@
 import SafariServices
 import SwiftUI
 
+@available(iOSApplicationExtension, unavailable)
 struct ConfirmPaymentPresenter<ParamsType, CompletionBlockType>: UIViewControllerRepresentable {
     @Binding var presented: Bool
     let intentParams: ParamsType
@@ -91,6 +92,7 @@ struct ConfirmPaymentPresenter<ParamsType, CompletionBlockType>: UIViewControlle
     }
 }
 
+@available(iOSApplicationExtension, unavailable)
 extension View {
     /// Confirm the payment, presenting a sheet for the user to confirm their payment if needed.
     /// - Parameter isConfirmingPayment: A binding to whether the payment is being confirmed. This will present a sheet if needed. It will be updated to `false` after performing the payment confirmation.
@@ -129,6 +131,7 @@ extension View {
     }
 }
 
+@available(iOSApplicationExtension, unavailable)
 struct ConfirmPaymentPresentationModifier<ParamsType, CompletionBlockType>: ViewModifier {
     @Binding var isPresented: Bool
     let intentParams: ParamsType
