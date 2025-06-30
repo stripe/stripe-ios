@@ -155,9 +155,8 @@ struct PaymentSheetExampleAppRootView: View {
             CustomerSheetTestPlayground(settings: CustomerSheetTestPlaygroundController.settingsFromDefaults() ?? .defaultValues())
         case .paymentSheet_playground:
             PaymentSheetTestPlayground(settings: PlaygroundController.settingsFromDefaults() ?? .defaultValues())
-
-        default:
-            Text("Error no view defined for: \(destination!)")
+        case .none:
+            EmptyView()
         }
     }
 }
