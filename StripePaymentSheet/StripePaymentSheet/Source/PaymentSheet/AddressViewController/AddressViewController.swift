@@ -56,7 +56,7 @@ public class AddressViewController: UIViewController {
     private var didLogAddressShow = false
 
     // Store reference to default address values for repopulation
-    private var defaultAddressValues: AddressSectionElement.AddressDetails?
+
 
     // MARK: - Internal properties
     let addressSpecProvider: AddressSpecProvider
@@ -129,11 +129,16 @@ public class AddressViewController: UIViewController {
         return element
     }()
 
+    private var validDefaultValues: AddressViewController.Configuration.DefaultAddressDetails? {
+        guard configuration.defaultValues.address != .init() else { return nil }
+        guard !configuration.allowedCountries.isEmpty else { return configuration.defaultValues }
+        guard let defaultCountry = configuration.defaultValues.address.country else { return nil }
+        return configuration.allowedCountries.contains(defaultCountry) ? configuration.defaultValues : nil
+    }
+
     lazy var shippingEqualsBillingCheckbox: CheckboxElement? = {
-        guard configuration.showShippingAddressEqualsBilling else { return nil }
-        let hasDefaultValues = configuration.defaultValues.address != .init()
-        guard hasDefaultValues else { return nil }
-        let element = CheckboxElement(
+        guard configuration.showShippingAddressEqualsBilling, validDefaultValues != nil else { return nil }
+        return CheckboxElement(
             theme: configuration.appearance.asElementsTheme,
             label: String.Localized.use_billing_address_for_shipping,
             isSelectedByDefault: true,
@@ -141,7 +146,6 @@ public class AddressViewController: UIViewController {
                 self?.handleShippingEqualsBillingToggle(isSelected: isSelected)
             }
         )
-        return element
     }()
 
     fileprivate lazy var closeButton: UIButton = {
@@ -278,8 +282,8 @@ extension AddressViewController {
 
         if isSelected {
             // Repopulate with default values if available
-            if let defaultValues = defaultAddressValues {
-                populateAddressSection(with: defaultValues)
+            if let validDefaults = validDefaultValues {
+                populateAddressSection(with: .init(from: validDefaults))
             }
         } else {
             // Clear all address fields
@@ -346,27 +350,21 @@ extension AddressViewController {
     private func makeDefaultAddressSection() -> AddressSectionElement? {
         guard hasLoadedSpecs else { return nil }
 
-        let additionalFields = configuration.additionalFields
-        let defaultValues = configuration.defaultValues
-        let allowedCountries = configuration.allowedCountries
+        let defaultValues = validDefaultValues ?? .init()
 
-        // Store default values for repopulation when shipping equals billing checkbox is used
-        if configuration.showShippingAddressEqualsBilling && defaultValues.address != .init() {
-            defaultAddressValues = .init(from: defaultValues)
-        }
 
-        let section = AddressSectionElement(
-            countries: allowedCountries.isEmpty ? nil : allowedCountries,
+
+        return AddressSectionElement(
+            countries: configuration.allowedCountries.isEmpty ? nil : configuration.allowedCountries,
             addressSpecProvider: addressSpecProvider,
             defaults: .init(from: defaultValues),
-            collectionMode: configuration.defaultValues.address != .init() ? .all(autocompletableCountries: configuration.autocompleteCountries) : .autoCompletable,
-            additionalFields: .init(from: additionalFields),
+            collectionMode: validDefaultValues != nil ? .all(autocompletableCountries: configuration.autocompleteCountries) : .autoCompletable,
+            additionalFields: .init(from: configuration.additionalFields),
             theme: configuration.appearance.asElementsTheme,
             presentAutoComplete: { [weak self] in
                 self?.presentAutocomplete()
             }
         )
-        return section
     }
 
     private func loadUI() {
@@ -446,7 +444,9 @@ extension AddressViewController {
          expandAddressSectionIfNeeded()
 
          // Automatically check/uncheck the "shipping equals billing" checkbox if the user edits
-         shippingEqualsBillingCheckbox?.isSelected = !hasAddressSectionChanged(from: defaultAddressValues ?? .init())
+         if let validDefaults = validDefaultValues {
+             shippingEqualsBillingCheckbox?.isSelected = !hasAddressSectionChanged(from: .init(from: validDefaults))
+         }
      }
 
      @_spi(STP) public func continueToNextField(element: Element) {
