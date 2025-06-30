@@ -9,7 +9,6 @@
 import Foundation
 @_spi(STP) import StripeCameraCore
 import UIKit
-import CoreMedia
 
 extension IdentityImageUploader.Configuration {
     init(
