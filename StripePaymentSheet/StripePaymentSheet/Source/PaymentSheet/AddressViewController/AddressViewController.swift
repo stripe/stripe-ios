@@ -55,8 +55,6 @@ public class AddressViewController: UIViewController {
     private var selectedAutoCompleteResult: PaymentSheet.Address?
     private var didLogAddressShow = false
 
-    // Store reference to default address values for repopulation
-
     // MARK: - Internal properties
     let addressSpecProvider: AddressSpecProvider
     private var latestError: Error? {
@@ -135,7 +133,7 @@ public class AddressViewController: UIViewController {
         return configuration.allowedCountries.contains(defaultCountry) ? configuration.defaultValues : nil
     }
 
-    lazy var shippingEqualsBillingCheckbox: CheckboxElement? = {
+    private lazy var shippingEqualsBillingCheckbox: CheckboxElement? = {
         guard configuration.showUseBillingAddressCheckbox, validDefaultValues != nil else { return nil }
         return CheckboxElement(
             theme: configuration.appearance.asElementsTheme,
@@ -442,7 +440,7 @@ extension AddressViewController {
 
          // Automatically check/uncheck the "shipping equals billing" checkbox if the user edits
          if let validDefaults = validDefaultValues {
-             shippingEqualsBillingCheckbox?.isSelected = !hasAddressSectionChanged(from: .init(from: validDefaults))
+             shippingEqualsBillingCheckbox?.isSelected = !hasAddressSectionChanged()
          }
      }
 
@@ -542,12 +540,8 @@ extension AddressSectionElement.AdditionalFields {
 }
 
 extension AddressViewController {
-    private func hasAddressSectionChanged(from defaults: AddressSectionElement.AddressDetails) -> Bool {
+    private func hasAddressSectionChanged() -> Bool {
         guard let addressSection = addressSection, let defaultAddressSection = makeDefaultAddressSection() else { return false }
-
-        let current = addressSection.addressDetails
-        let defaultAddress = defaultAddressSection.addressDetails
-
-        return current != defaultAddress
+        return addressSection.addressDetails != defaultAddressSection.addressDetails
     }
 }
