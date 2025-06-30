@@ -26,7 +26,8 @@ trigger_map:
 pipelines:
   main-trigger-pipeline:
     stages:
-    - stage-trigger-run-all: {}
+    - stage-change-detection: {}
+    - stage-conditional-tests: {}
   releases-trigger-pipeline:
     stages:
     - stage-releases-run-all: {}
@@ -34,6 +35,25 @@ pipelines:
     stages:
     - stage-nightly-all: {}
 stages:
+  stage-change-detection:
+    workflows:
+    - detect-changes: {}
+  stage-conditional-tests:
+    workflows:
+    - conditional-framework-tests:
+        run_if: '{{enveq "RUN_FRAMEWORK_TESTS" "true"}}'
+    - conditional-ui-tests:
+        run_if: '{{enveq "RUN_UI_TESTS" "true"}}'
+    - conditional-integration-tests:
+        run_if: '{{enveq "RUN_INTEGRATION_TESTS" "true"}}'
+    - conditional-lint-tests:
+        run_if: '{{enveq "RUN_LINT" "true"}}'
+    - conditional-build-tests:
+        run_if: '{{enveq "RUN_FRAMEWORK_TESTS" "true"}}'
+    - size-report:
+        run_if: '{{enveq "RUN_FRAMEWORK_TESTS" "true"}}'
+    - lokalise-upload:
+        run_if: '{{enveq "RUN_FRAMEWORK_TESTS" "true"}}'
   stage-trigger-run-all:
     workflows:
     - framework-tests: {}
@@ -750,6 +770,236 @@ workflows:
         - deploy_path: build-ci-tests/Logs/Test
         - is_enable_public_page: "false"
         title: Deploy test log artifacts
+  # Optimized workflows for conditional execution
+  detect-changes:
+    steps:
+    - script@1:
+        inputs:
+        - content: |
+            #!/bin/bash
+            set -e
+            
+            # Fetch the base branch for comparison
+            git fetch origin master:master || true
+            
+            # Run change detection
+            ruby ./ci_scripts/detect_changes.rb master
+            
+            # Source the environment variables
+            if [ -f test_matrix.json ]; then
+              export SKIP_ALL_TESTS=$(cat test_matrix.json | jq -r '.skip_all_tests')
+              export FRAMEWORKS_TO_TEST=$(cat test_matrix.json | jq -r '.frameworks_to_test | join(",")')
+              export RUN_INTEGRATION_TESTS=$(cat test_matrix.json | jq -r '.run_integration_tests')
+              export RUN_UI_TESTS=$(cat test_matrix.json | jq -r '.run_ui_tests')
+              export RUN_LINT=$(cat test_matrix.json | jq -r '.run_lint')
+              export RUN_FRAMEWORK_TESTS=$(cat test_matrix.json | jq -r '.run_framework_tests')
+              
+              # Set Bitrise environment variables
+              envman add --key SKIP_ALL_TESTS --value "$SKIP_ALL_TESTS"
+              envman add --key FRAMEWORKS_TO_TEST --value "$FRAMEWORKS_TO_TEST"
+              envman add --key RUN_INTEGRATION_TESTS --value "$RUN_INTEGRATION_TESTS"
+              envman add --key RUN_UI_TESTS --value "$RUN_UI_TESTS"
+              envman add --key RUN_LINT --value "$RUN_LINT"
+              envman add --key RUN_FRAMEWORK_TESTS --value "$RUN_FRAMEWORK_TESTS"
+              
+              echo "🎯 Change detection complete:"
+              echo "  SKIP_ALL_TESTS: $SKIP_ALL_TESTS"
+              echo "  FRAMEWORKS_TO_TEST: $FRAMEWORKS_TO_TEST"
+              echo "  RUN_INTEGRATION_TESTS: $RUN_INTEGRATION_TESTS"
+              echo "  RUN_UI_TESTS: $RUN_UI_TESTS"
+              echo "  RUN_LINT: $RUN_LINT"
+              echo "  RUN_FRAMEWORK_TESTS: $RUN_FRAMEWORK_TESTS"
+            else
+              echo "❌ test_matrix.json not found, falling back to full test suite"
+              envman add --key SKIP_ALL_TESTS --value "false"
+              envman add --key RUN_FRAMEWORK_TESTS --value "true"
+              envman add --key RUN_INTEGRATION_TESTS --value "true"
+              envman add --key RUN_UI_TESTS --value "true"
+              envman add --key RUN_LINT --value "true"
+            fi
+        title: Detect Changes and Set Test Matrix
+    before_run:
+    - prep_all
+  conditional-framework-tests:
+    steps:
+    - script@1:
+        inputs:
+        - content: |
+            #!/bin/bash
+            set -e
+            
+            if [ "$SKIP_ALL_TESTS" = "true" ]; then
+              echo "📝 Skipping framework tests - only docs/assets changed"
+              exit 0
+            fi
+            
+            IFS=',' read -ra FRAMEWORKS <<< "$FRAMEWORKS_TO_TEST"
+            
+            for framework in "${FRAMEWORKS[@]}"; do
+              if [ -n "$framework" ]; then
+                echo "🧪 Testing framework: $framework"
+                case "$framework" in
+                  "StripeiOS"|"Stripe")
+                    bundle exec xcodebuild test -workspace Stripe.xcworkspace -scheme "StripeiOS" -destination "$DEFAULT_TEST_DEVICE" -quiet SWIFT_SUPPRESS_WARNINGS=YES SWIFT_TREAT_WARNINGS_AS_ERRORS=NO
+                    ;;
+                  "StripeCore")
+                    bundle exec xcodebuild test -workspace Stripe.xcworkspace -scheme "StripeCore" -destination "$DEFAULT_TEST_DEVICE" -quiet SWIFT_SUPPRESS_WARNINGS=YES SWIFT_TREAT_WARNINGS_AS_ERRORS=NO
+                    ;;
+                  "StripePayments")
+                    bundle exec xcodebuild test -workspace Stripe.xcworkspace -scheme "StripePayments" -destination "$DEFAULT_TEST_DEVICE" -quiet SWIFT_SUPPRESS_WARNINGS=YES SWIFT_TREAT_WARNINGS_AS_ERRORS=NO
+                    ;;
+                  "StripePaymentsUI")
+                    bundle exec xcodebuild test -workspace Stripe.xcworkspace -scheme "StripePaymentsUI" -destination "$DEFAULT_TEST_DEVICE" -quiet SWIFT_SUPPRESS_WARNINGS=YES SWIFT_TREAT_WARNINGS_AS_ERRORS=NO
+                    ;;
+                  "StripePaymentSheet")
+                    bundle exec xcodebuild test -workspace Stripe.xcworkspace -scheme "StripePaymentSheet" -destination "$DEFAULT_TEST_DEVICE" -quiet SWIFT_SUPPRESS_WARNINGS=YES SWIFT_TREAT_WARNINGS_AS_ERRORS=NO
+                    ;;
+                  "StripeUICore")
+                    bundle exec xcodebuild test -workspace Stripe.xcworkspace -scheme "StripeUICore" -destination "$DEFAULT_TEST_DEVICE" -quiet SWIFT_SUPPRESS_WARNINGS=YES SWIFT_TREAT_WARNINGS_AS_ERRORS=NO
+                    ;;
+                  "StripeConnect")
+                    bundle exec xcodebuild test -workspace Stripe.xcworkspace -scheme "StripeConnect" -destination "$DEFAULT_TEST_DEVICE" -quiet SWIFT_SUPPRESS_WARNINGS=YES SWIFT_TREAT_WARNINGS_AS_ERRORS=NO
+                    ;;
+                  "StripeIdentity")
+                    bundle exec xcodebuild test -workspace Stripe.xcworkspace -scheme "StripeIdentity" -destination "$DEFAULT_TEST_DEVICE" -quiet SWIFT_SUPPRESS_WARNINGS=YES SWIFT_TREAT_WARNINGS_AS_ERRORS=NO
+                    ;;
+                  "StripeFinancialConnections")
+                    bundle exec xcodebuild test -workspace Stripe.xcworkspace -scheme "StripeFinancialConnections" -destination "$DEFAULT_TEST_DEVICE" -quiet SWIFT_SUPPRESS_WARNINGS=YES SWIFT_TREAT_WARNINGS_AS_ERRORS=NO
+                    ;;
+                  "StripeCardScan")
+                    bundle exec xcodebuild test -workspace Stripe.xcworkspace -scheme "StripeCardScan" -destination "$DEFAULT_TEST_DEVICE" -quiet SWIFT_SUPPRESS_WARNINGS=YES SWIFT_TREAT_WARNINGS_AS_ERRORS=NO
+                    ;;
+                  "StripeApplePay")
+                    bundle exec xcodebuild test -workspace Stripe.xcworkspace -scheme "StripeApplePay" -destination "$DEFAULT_TEST_DEVICE" -quiet SWIFT_SUPPRESS_WARNINGS=YES SWIFT_TREAT_WARNINGS_AS_ERRORS=NO
+                    ;;
+                  "StripeCameraCore")
+                    bundle exec xcodebuild test -workspace Stripe.xcworkspace -scheme "StripeCameraCore" -destination "$DEFAULT_TEST_DEVICE" -quiet SWIFT_SUPPRESS_WARNINGS=YES SWIFT_TREAT_WARNINGS_AS_ERRORS=NO
+                    ;;
+                  *)
+                    echo "⚠️ Unknown framework: $framework"
+                    ;;
+                esac
+              fi
+            done
+        title: Run Framework Tests
+    - deploy-to-bitrise-io@2: {}
+    - save-spm-cache@1: {}
+    before_run:
+    - prep_all
+    meta:
+      bitrise.io:
+        stack: osx-xcode-15.0.x
+        machine_type_id: g2.mac.large
+  conditional-ui-tests:
+    steps:
+    - script@1:
+        inputs:
+        - content: |
+            #!/bin/bash
+            set -e
+            
+            if [ "$SKIP_ALL_TESTS" = "true" ]; then
+              echo "📝 Skipping UI tests - only docs/assets changed"
+              exit 0
+            fi
+            
+            echo "🎭 Running UI tests..."
+            
+            # Warm up emulator
+            IOS_SIMULATOR_UDID=`xcrun xctrace list devices 2>&1 | grep "iPhone 12 mini Simulator\ (16.4)" | awk -F " " '{print $NF}' | tr -d "()" |tail -1`
+            open -a "simulator" --args -CurrentDeviceUDID $IOS_SIMULATOR_UDID
+            
+            # Run PaymentSheet UI tests if needed
+            if [[ "$FRAMEWORKS_TO_TEST" == *"StripePaymentSheet"* ]]; then
+              echo "🧪 Running PaymentSheet UI tests..."
+              bundle exec xcodebuild test -workspace Stripe.xcworkspace -scheme "PaymentSheet Example" -testPlan "PaymentSheet Example-Shard1" -destination "$DEFAULT_TEST_DEVICE" -quiet SWIFT_SUPPRESS_WARNINGS=YES SWIFT_TREAT_WARNINGS_AS_ERRORS=NO
+              bundle exec xcodebuild test -workspace Stripe.xcworkspace -scheme "PaymentSheet Example" -testPlan "PaymentSheet Example-Shard2" -destination "$DEFAULT_TEST_DEVICE" -quiet SWIFT_SUPPRESS_WARNINGS=YES SWIFT_TREAT_WARNINGS_AS_ERRORS=NO
+            fi
+            
+            # Run Connect UI tests if needed
+            if [[ "$FRAMEWORKS_TO_TEST" == *"StripeConnect"* ]]; then
+              echo "🧪 Running Connect UI tests..."
+              bundle exec xcodebuild test -workspace Stripe.xcworkspace -scheme "StripeConnect Example" -testPlan "StripeConnectExample" -destination "$DEFAULT_TEST_DEVICE" -quiet SWIFT_SUPPRESS_WARNINGS=YES SWIFT_TREAT_WARNINGS_AS_ERRORS=NO
+            fi
+        title: Run UI Tests
+    - deploy-to-bitrise-io@2: {}
+    before_run:
+    - prep_all
+    meta:
+      bitrise.io:
+        stack: osx-xcode-15.0.x
+        machine_type_id: g2.mac.large
+  conditional-integration-tests:
+    steps:
+    - script@1:
+        inputs:
+        - content: |
+            #!/bin/bash
+            set -e
+            
+            if [ "$SKIP_ALL_TESTS" = "true" ]; then
+              echo "📝 Skipping integration tests - only docs/assets changed"
+              exit 0
+            fi
+            
+            echo "🔗 Running integration tests..."
+            bundle exec xcodebuild test -workspace Stripe.xcworkspace -scheme "IntegrationTester" -destination "$DEFAULT_TEST_DEVICE" -quiet SWIFT_SUPPRESS_WARNINGS=YES SWIFT_TREAT_WARNINGS_AS_ERRORS=NO
+        title: Run Integration Tests
+    - deploy-to-bitrise-io@2: {}
+    before_run:
+    - prep_all
+    meta:
+      bitrise.io:
+        stack: osx-xcode-15.0.x
+        machine_type_id: g2.mac.large
+  conditional-lint-tests:
+    steps:
+    - script@1:
+        inputs:
+        - content: |
+            #!/bin/bash
+            set -e
+            
+            if [ "$SKIP_ALL_TESTS" = "true" ]; then
+              echo "📝 Skipping lint tests - only docs/assets changed"
+              exit 0
+            fi
+            
+            echo "🔍 Running lint checks..."
+            ./ci_scripts/lint_modified_files.sh
+            ./ci_scripts/check_paymentsheet_test_sharding.rb
+            ./ci_scripts/check_image_format.sh
+            bundle exec fastlane build_extras
+            bundle exec fastlane analyze
+        title: Run Lint Tests
+    before_run:
+    - prep_all
+    meta:
+      bitrise.io:
+        stack: osx-xcode-15.0.x
+        machine_type_id: g2.mac.large
+  conditional-build-tests:
+    steps:
+    - script@1:
+        inputs:
+        - content: |
+            #!/bin/bash
+            set -e
+            
+            if [ "$SKIP_ALL_TESTS" = "true" ]; then
+              echo "📝 Skipping build tests - only docs/assets changed"
+              exit 0
+            fi
+            
+            echo "🏗️ Running build tests..."
+            bundle exec xcodebuild build-for-testing -workspace Stripe.xcworkspace -scheme "AllStripeFrameworks" -destination "generic/platform=iOS Simulator" -quiet SWIFT_SUPPRESS_WARNINGS=YES SWIFT_TREAT_WARNINGS_AS_ERRORS=NO
+        title: Run Build Tests
+    before_run:
+    - prep_all
+    meta:
+      bitrise.io:
+        stack: osx-xcode-15.0.x
+        machine_type_id: g2.mac.large
 meta:
   bitrise.io:
     stack: osx-xcode-15.0.x
