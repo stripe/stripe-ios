@@ -48,16 +48,14 @@ struct PaymentSheetExampleAppRootView: View {
     @ViewBuilder
     func destinationLink(for destination: NavigationDestination) -> some View {
         ZStack(alignment: .leading) {
-            // This is the staticText that XCUITest will find and tap
-            Text(destination.displayTitle)
-                .foregroundColor(.blue)
-                .padding(.bottom, Constants.bottomPadding)
-                .accessibility(identifier: destination.displayTitle)
-                .contentShape(Rectangle())
-                .onTapGesture {
-                    selectedDestination = destination
-                }
-                .zIndex(1)
+            PressableTextLink(
+                text: destination.displayTitle,
+                bottomPadding: Constants.bottomPadding,
+                destination: destination,
+                selection: $selectedDestination
+            )
+            .accessibility(identifier: destination.displayTitle)
+            .zIndex(1)
 
             // Hidden NavigationLink to handle the actual navigation
             NavigationLink(
@@ -65,8 +63,8 @@ struct PaymentSheetExampleAppRootView: View {
                 tag: destination,
                 selection: $selectedDestination
             ) { EmptyView() }
-            .opacity(0)
-            .frame(width: 0, height: 0)
+                .opacity(0)
+                .frame(width: 0, height: 0)
         }
     }
 
@@ -157,6 +155,53 @@ struct PaymentSheetExampleAppRootView: View {
             PaymentSheetTestPlayground(settings: PlaygroundController.settingsFromDefaults() ?? .defaultValues())
         case .none:
             EmptyView()
+        }
+    }
+
+    struct PressableTextLink: View {
+        let text: String
+        let bottomPadding: CGFloat
+        let destination: NavigationDestination
+        @Binding var selection: NavigationDestination?
+
+        @GestureState private var isPressed = false
+        @State private var isTouchInside = false
+
+        var body: some View {
+            GeometryReader { geometry in
+                HStack {
+                    Spacer()
+                    Text(text)
+                        .foregroundColor(isPressed && isTouchInside ? .blue.opacity(0.6) : .blue)
+                        .padding(.bottom, bottomPadding)
+                        .contentShape(Rectangle())
+                        .gesture(
+                            DragGesture(minimumDistance: 0)
+                                .updating($isPressed) { _, state, _ in
+                                    state = true
+                                }
+                                .onChanged { value in
+                                    // Check if touch is within bounds
+                                    let isInBounds = geometry.frame(in: .local).contains(value.location)
+                                    withAnimation(.easeOut(duration: 0.05)) {
+                                        isTouchInside = isInBounds
+                                    }
+                                }
+                                .onEnded { value in
+                                    // Only navigate if finger was inside when lifted
+                                    let isInBounds = geometry.frame(in: .local).contains(value.location)
+                                    if isInBounds {
+                                        selection = destination
+                                    }
+                                    isTouchInside = false
+                                }
+                        )
+                        .animation(.easeOut(duration: 0.05), value: isPressed)
+                    Spacer()
+                }
+            }
+            // Provide a reasonable size
+            .frame(height: 20 + bottomPadding) // Adjust based on your text size
         }
     }
 }
