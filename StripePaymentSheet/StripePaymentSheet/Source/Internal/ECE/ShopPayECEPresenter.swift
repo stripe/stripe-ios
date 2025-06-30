@@ -39,7 +39,7 @@ class ShopPayECEPresenter: NSObject, UIAdaptivePresentationControllerDelegate {
         }
         self.presentingViewController = viewController
         analyticsHelper.logShopPayWebviewLoadAttempt()
-        
+
         let eceVC = ECEViewController(apiClient: flowController.configuration.apiClient,
                                       shopId: shopPayConfiguration.shopId,
                                       customerSessionClientSecret: customerSessionClientSecret,

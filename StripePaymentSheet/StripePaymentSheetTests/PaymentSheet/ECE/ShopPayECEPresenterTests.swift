@@ -551,12 +551,12 @@ class ShopPayECEPresenterTests: XCTestCase {
     func testAnalytics_LoadAttemptLogged() {
         // Given
         STPAnalyticsClient.sharedClient._testLogHistory = []
-        
+
         // When
         sut.present(from: mockViewController) { _ in
             // Do nothing, we'll log the event immediately
         }
-        
+
         // Then
         let loggedEvents = STPAnalyticsClient.sharedClient._testLogHistory.compactMap { $0["event"] as? String }
         XCTAssertTrue(loggedEvents.contains("mc_shoppay_webview_load_attempt"))
@@ -574,17 +574,17 @@ class ShopPayECEPresenterTests: XCTestCase {
 
         // When - First trigger ECE click to set the flag
         _ = try await sut.eceView(mockECEViewController, didReceiveECEClick: event)
-        
+
         // Reset analytics to only capture cancellation event
         STPAnalyticsClient.sharedClient._testLogHistory = []
-        
+
         // Then trigger cancellation
         sut.didCancel()
 
         // Then
         let loggedEvents = STPAnalyticsClient.sharedClient._testLogHistory.compactMap { $0["event"] as? String }
         XCTAssertTrue(loggedEvents.contains("mc_shoppay_webview_cancelled"))
-        
+
         // Find the cancellation event and check parameters
         if let cancelEvent = STPAnalyticsClient.sharedClient._testLogHistory.first(where: { ($0["event"] as? String) == "mc_shoppay_webview_cancelled" }) {
             XCTAssertEqual(cancelEvent["did_receive_ece_click"] as? Bool, true)
@@ -596,14 +596,14 @@ class ShopPayECEPresenterTests: XCTestCase {
     func testAnalytics_CancellationWithoutECEClick() {
         // Given
         STPAnalyticsClient.sharedClient._testLogHistory = []
-        
+
         // When - Cancel without triggering ECE click first
         sut.didCancel()
 
         // Then
         let loggedEvents = STPAnalyticsClient.sharedClient._testLogHistory.compactMap { $0["event"] as? String }
         XCTAssertTrue(loggedEvents.contains("mc_shoppay_webview_cancelled"))
-        
+
         // Find the cancellation event and check parameters
         if let cancelEvent = STPAnalyticsClient.sharedClient._testLogHistory.first(where: { ($0["event"] as? String) == "mc_shoppay_webview_cancelled" }) {
             XCTAssertEqual(cancelEvent["did_receive_ece_click"] as? Bool, false)
@@ -616,14 +616,14 @@ class ShopPayECEPresenterTests: XCTestCase {
         // Given
         STPAnalyticsClient.sharedClient._testLogHistory = []
         let mockPresentationController = UIPresentationController(presentedViewController: UIViewController(), presenting: mockViewController)
-        
+
         // When
         sut.presentationControllerDidDismiss(mockPresentationController)
 
         // Then
         let loggedEvents = STPAnalyticsClient.sharedClient._testLogHistory.compactMap { $0["event"] as? String }
         XCTAssertTrue(loggedEvents.contains("mc_shoppay_webview_cancelled"))
-        
+
         // Verify the ECE click flag is correctly reported
         if let cancelEvent = STPAnalyticsClient.sharedClient._testLogHistory.first(where: { ($0["event"] as? String) == "mc_shoppay_webview_cancelled" }) {
             XCTAssertEqual(cancelEvent["did_receive_ece_click"] as? Bool, false)

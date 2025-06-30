@@ -294,7 +294,7 @@ import Foundation
 
     // MARK: - Custom Payment Methods
     case paymentSheetInvalidCPM = "mc_invalid_cpm"
-    
+
     // MARK: - Shop Pay Webview
     case shopPayWebviewLoadAttempt = "mc_shoppay_webview_load_attempt"
     case shopPayWebviewConfirmSuccess = "mc_shoppay_webview_confirm_success"
