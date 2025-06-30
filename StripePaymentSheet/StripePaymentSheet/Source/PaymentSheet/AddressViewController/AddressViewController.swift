@@ -304,8 +304,12 @@ extension AddressViewController {
         
         // Populate name and phone if available
         addressSection.name?.setText(addressDetails.name ?? "")
-        // Note: Phone number repopulation is not supported due to API limitations
-        // Users will need to re-enter their phone number manually
+        if let phone = addressDetails.phone {
+            addressSection.phone?.setPhoneNumber(phone)
+        }
+        if let phoneCountry = addressDetails.address.country {
+            addressSection.phone?.setSelectedCountryCode(phoneCountry, shouldUpdateDefaultNumber: false)
+        }
     }
     
     private func clearAddressSection() {

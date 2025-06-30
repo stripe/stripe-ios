@@ -117,6 +117,12 @@ import UIKit
         textFieldElement.setText("")
     }
 
+    /// Sets the phone number text programmatically. Country code will remain unchanged.
+    /// - Note: For internal SDK usage only, protected by @_spi(STP).
+    @_spi(STP) public func setPhoneNumber(_ phoneNumber: String?) {
+        textFieldElement.setText(phoneNumber ?? "")
+    }
+
     // MARK: - Element protocol
     public let collectsUserInput: Bool = true
     public func beginEditing() -> Bool {
