@@ -14,7 +14,6 @@ SIMULATOR_NAME="iPhone 12 mini (Stripe)"
 # Function to clear cache
 clear_cache() {
     if [ -f "$CONFIG_FILE" ]; then
-        echo "Clearing simulator cache..."
         rm "$CONFIG_FILE"
     fi
 }
@@ -26,7 +25,6 @@ find_existing_simulator() {
 
 # Function to create new simulator
 create_simulator() {
-    echo "Creating new $DEVICE_TYPE simulator with iOS $IOS_VERSION..."
     xcrun simctl create "$SIMULATOR_NAME" "com.apple.CoreSimulator.SimDeviceType.iPhone-12-mini" "com.apple.CoreSimulator.SimRuntime.iOS-16-4"
 }
 
@@ -41,7 +39,6 @@ main() {
     # Handle --clear-cache flag
     if [ "$1" = "--clear-cache" ]; then
         clear_cache
-        echo "Cache cleared. Run again to set up simulator."
         exit 0
     fi
     
@@ -51,11 +48,9 @@ main() {
         
         # Validate cached simulator still exists
         if validate_simulator "$DEVICE_ID_FROM_USER_SETTINGS"; then
-            echo "✅ Using cached simulator: $DEVICE_ID_FROM_USER_SETTINGS"
             echo "DEVICE_ID_FROM_USER_SETTINGS=$DEVICE_ID_FROM_USER_SETTINGS"
             exit 0
         else
-            echo "⚠️  Cached simulator no longer exists, finding new one..."
             clear_cache
         fi
     fi
@@ -64,20 +59,16 @@ main() {
     EXISTING_DEVICE=$(find_existing_simulator)
     
     if [ -n "$EXISTING_DEVICE" ]; then
-        echo "Found existing $DEVICE_TYPE: $EXISTING_DEVICE"
         DEVICE_ID="$EXISTING_DEVICE"
     else
         DEVICE_ID=$(create_simulator)
         if [ -z "$DEVICE_ID" ]; then
-            echo "❌ Failed to create simulator"
             exit 1
         fi
-        echo "Created simulator: $DEVICE_ID"
     fi
     
     # Save to config file
     echo "DEVICE_ID_FROM_USER_SETTINGS=$DEVICE_ID" > "$CONFIG_FILE"
-    echo "Simulator ID saved to $CONFIG_FILE: $DEVICE_ID"
     echo "DEVICE_ID_FROM_USER_SETTINGS=$DEVICE_ID"
 }
 
