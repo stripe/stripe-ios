@@ -53,8 +53,8 @@
 		973DA944730BD761CE479F8E /* QRView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 575345B1A7F6EBD12A1A5F9C /* QRView.swift */; };
 		9F126696AD86BF2E861B5CC5 /* StripeFinancialConnections.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 16547B41C80B97FC2EFD0798 /* StripeFinancialConnections.framework */; };
 		A0037CC8E331CFF5CEE2D580 /* ExampleSwiftUICustomPaymentFlow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 447A394B34A55D5B1CD5C0C1 /* ExampleSwiftUICustomPaymentFlow.swift */; };
+		A00DB98A2E132EAB00A75242 /* Appearance+Codable.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00DB9892E132EAB00A75242 /* Appearance+Codable.swift */; };
 		A03BF5292DD292B700B5122B /* EmbeddedPaymentElementWrapperViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A03BF5282DD292A800B5122B /* EmbeddedPaymentElementWrapperViewController.swift */; };
-		A0640AA32E05992E0019A686 /* AppearanceCodableExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0640AA22E05992E0019A686 /* AppearanceCodableExtensions.swift */; };
 		A071C07B6FFACC5DEFC6AA01 /* ExampleSwiftUIViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = D20765908089ACB79B556592 /* ExampleSwiftUIViews.swift */; };
 		A262D76C3319002A2F6EE395 /* CustomerSheetTestPlaygroundSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C2A8BAE3842A0E892D06BB9 /* CustomerSheetTestPlaygroundSettings.swift */; };
 		A3884C372DA701A700CAE78E /* PaymentMethodOptionsSetupFutureUsagePlaygroundView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3884C362DA701A700CAE78E /* PaymentMethodOptionsSetupFutureUsagePlaygroundView.swift */; };
@@ -249,8 +249,8 @@
 		9D55109311453F8D8F44A144 /* pl-PL */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "pl-PL"; path = "pl-PL.lproj/Main.strings"; sourceTree = "<group>"; };
 		9D6F8659F31E23DF549E5057 /* el-GR */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "el-GR"; path = "el-GR.lproj/Main.strings"; sourceTree = "<group>"; };
 		9F9C96D25ED549D6255FC274 /* StripeUICore.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = StripeUICore.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		A00DB9892E132EAB00A75242 /* Appearance+Codable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Appearance+Codable.swift"; sourceTree = "<group>"; };
 		A03BF5282DD292A800B5122B /* EmbeddedPaymentElementWrapperViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmbeddedPaymentElementWrapperViewController.swift; sourceTree = "<group>"; };
-		A0640AA22E05992E0019A686 /* AppearanceCodableExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppearanceCodableExtensions.swift; sourceTree = "<group>"; };
 		A10301FB96F08B8ADF93B2DB /* lv-LV */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "lv-LV"; path = "lv-LV.lproj/LaunchScreen.strings"; sourceTree = "<group>"; };
 		A10F554509B65711F00BE91C /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/LaunchScreen.strings; sourceTree = "<group>"; };
 		A1D77C5D868315EAB494325C /* lv-LV */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "lv-LV"; path = "lv-LV.lproj/Main.strings"; sourceTree = "<group>"; };
@@ -459,7 +459,6 @@
 		C4BE75A2EECEF0AC9EC24CD8 /* PaymentSheet Example */ = {
 			isa = PBXGroup;
 			children = (
-				A0640AA22E05992E0019A686 /* AppearanceCodableExtensions.swift */,
 				A03BF5282DD292A800B5122B /* EmbeddedPaymentElementWrapperViewController.swift */,
 				31CDFC2B2BA36F5B00B3DD91 /* PrivacyInfo.xcprivacy */,
 				132709C10C0114D239ED3FE9 /* Resources */,
@@ -494,6 +493,7 @@
 				53AAAA316E1DA1C44D30D7B0 /* SceneDelegate.swift */,
 				31AB49B62C9E72DB007E74E7 /* UIView+PaymentSheetDebugging.swift */,
 				5259232431E2683DDD05CB84 /* ViewController.swift */,
+				A00DB9892E132EAB00A75242 /* Appearance+Codable.swift */,
 			);
 			path = "PaymentSheet Example";
 			sourceTree = "<group>";
@@ -732,13 +732,13 @@
 				56EF0879D7EAC041B147680C /* ExampleLinkPaymentCheckoutViewController.swift in Sources */,
 				A0037CC8E331CFF5CEE2D580 /* ExampleSwiftUICustomPaymentFlow.swift in Sources */,
 				27233E85B0B6E1114E9AF6E8 /* ExampleSwiftUICustomerSheet.swift in Sources */,
-				A0640AA32E05992E0019A686 /* AppearanceCodableExtensions.swift in Sources */,
 				432E82C3F5EC56E89D257563 /* ExampleSwiftUIPaymentSheet.swift in Sources */,
 				6BE115002DF8A6150024AC26 /* PlaygroundController+ApplePay.swift in Sources */,
 				A071C07B6FFACC5DEFC6AA01 /* ExampleSwiftUIViews.swift in Sources */,
 				17D626E890FD11B84654C846 /* PaymentSheetTestPlayground.swift in Sources */,
 				79E8C77C99A25E38F96747F1 /* PaymentSheetTestPlaygroundSettings.swift in Sources */,
 				2CB72F11E36DB65E8BA9205A /* PlaygroundController.swift in Sources */,
+				A00DB98A2E132EAB00A75242 /* Appearance+Codable.swift in Sources */,
 				6B1E84072DDBA5E300C75BB4 /* ExampleWalletButtonsView.swift in Sources */,
 				31AB49B72C9E72DB007E74E7 /* UIView+PaymentSheetDebugging.swift in Sources */,
 				973DA944730BD761CE479F8E /* QRView.swift in Sources */,
