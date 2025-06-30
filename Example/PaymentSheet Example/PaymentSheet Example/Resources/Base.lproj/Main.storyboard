@@ -175,7 +175,7 @@
         <!--Checkout (Complete)-->
         <scene sceneID="fm7-ai-ZPG">
             <objects>
-                <viewController id="ViG-Ud-ejY" userLabel="Checkout (Complete)" customClass="ExampleCheckoutViewController" customModule="PaymentSheetExample" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="ExampleCheckoutViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="ViG-Ud-ejY" userLabel="Checkout (Complete)" customClass="ExampleCheckoutViewController" customModule="PaymentSheetExample" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="HhX-SV-zhW">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -468,7 +468,7 @@
         <!--Checkout (Custom)-->
         <scene sceneID="QR4-jL-qym">
             <objects>
-                <viewController id="My4-RU-qnC" userLabel="Checkout (Custom)" customClass="ExampleCustomCheckoutViewController" customModule="PaymentSheetExample" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="ExampleCustomCheckoutViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="My4-RU-qnC" userLabel="Checkout (Custom)" customClass="ExampleCustomCheckoutViewController" customModule="PaymentSheetExample" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="0zh-P5-QSM">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -825,7 +825,7 @@
         <!--PaymentSheet.FlowController (Deferred)-->
         <scene sceneID="ejG-PH-rfd">
             <objects>
-                <viewController id="Gh7-vw-dR9" userLabel="PaymentSheet.FlowController (Deferred)" customClass="ExampleCustomDeferredCheckoutViewController" customModule="PaymentSheetExample" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="ExampleCustomDeferredCheckoutViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="Gh7-vw-dR9" userLabel="PaymentSheet.FlowController (Deferred)" customClass="ExampleCustomDeferredCheckoutViewController" customModule="PaymentSheetExample" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="vbN-l1-Fy9">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -1551,7 +1551,7 @@
         <!--Checkout (Custom)-->
         <scene sceneID="r8R-dv-x3u">
             <objects>
-                <viewController id="jqF-43-4W3" userLabel="Checkout (Custom)" customClass="ExampleLinkPaymentCheckoutViewController" customModule="PaymentSheetExample" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="ExampleLinkPaymentCheckoutViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="jqF-43-4W3" userLabel="Checkout (Custom)" customClass="ExampleLinkPaymentCheckoutViewController" customModule="PaymentSheetExample" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="vNl-rj-Cqk">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -1925,7 +1925,7 @@
         <!--Embedded Example-->
         <scene sceneID="sBF-Wb-BlW">
             <objects>
-                <viewController id="Y7b-Za-B0P" userLabel="Embedded Example" customClass="ExampleEmbeddedElementCheckoutViewController" customModule="PaymentSheetExample" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="ExampleEmbeddedElementCheckoutViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="Y7b-Za-B0P" userLabel="Embedded Example" customClass="ExampleEmbeddedElementCheckoutViewController" customModule="PaymentSheetExample" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="VQB-C7-GPu">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -2317,22 +2317,22 @@
             <color white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
         </systemColor>
         <systemColor name="opaqueSeparatorColor">
-            <color red="0.77647058823529413" green="0.77647058823529413" blue="0.78431372549019607" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <color red="0.77647058820000003" green="0.77647058820000003" blue="0.7843137255" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>
         <systemColor name="secondaryLabelColor">
-            <color red="0.23529411764705882" green="0.23529411764705882" blue="0.2627450980392157" alpha="0.59999999999999998" colorSpace="custom" customColorSpace="sRGB"/>
+            <color red="0.23529411759999999" green="0.23529411759999999" blue="0.26274509800000001" alpha="0.59999999999999998" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>
         <systemColor name="secondarySystemBackgroundColor">
-            <color red="0.94901960784313721" green="0.94901960784313721" blue="0.96862745098039216" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <color red="0.94901960780000005" green="0.94901960780000005" blue="0.96862745100000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
         </systemColor>
         <systemColor name="systemBlueColor">
-            <color red="0.0" green="0.47843137254901963" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <color red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>
         <systemColor name="systemGray4Color">
-            <color red="0.81960784313725488" green="0.81960784313725488" blue="0.83921568627450982" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <color red="0.81960784310000001" green="0.81960784310000001" blue="0.83921568629999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>
     </resources>
 </document>
