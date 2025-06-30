@@ -93,6 +93,9 @@ US
         app.buttons["Close"].tap()
         // The merchant app should get back nil
         XCTAssertEqual(shippingButton.label, "Address")
+
+        // Checkbox should NOT be shown when no defaults provided
+        XCTAssertFalse(app.buttons["Use billing address for shipping"].exists)
     }
 
     func testAddressWithDefaults() throws {
@@ -367,5 +370,69 @@ NZ
 
         // Ensure UK is persisted as phone country after tapping done
         XCTAssert(app.textFields["United Kingdom +44"].exists)
+    }
+
+    func testShippingEqualsBillingCheckboxAutoUncheck() throws {
+        var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
+        settings.layout = .horizontal
+        settings.uiStyle = .flowController
+        settings.shippingInfo = .onWithDefaults
+
+        loadPlayground(app, settings)
+        let shippingButton = app.buttons["Address"]
+        XCTAssertTrue(shippingButton.waitForExistence(timeout: 4.0))
+        shippingButton.tap()
+
+        let checkbox = app.switches["Use billing address for shipping"]
+        XCTAssertTrue(checkbox.waitForExistence(timeout: 2.0))
+        XCTAssertTrue(checkbox.isSelected)
+
+        // 1. Manually toggle off -> on
+        checkbox.tap()
+        XCTAssertFalse(checkbox.isSelected)
+        checkbox.tap()
+        XCTAssertTrue(checkbox.isSelected)
+
+        // 2. Edit line1 to be different -> checkbox auto-unchecks
+        let line1 = app.textFields["Address line 1"]
+        line1.tap()
+        // Clear existing text then type new
+        let existingValue = line1.value as? String ?? ""
+        line1.typeText(String(repeating: XCUIKeyboardKey.delete.rawValue, count: existingValue.count))
+        line1.typeText("123 New St")
+        XCTAssertFalse(checkbox.isSelected)
+
+        // 3. Change value back to original default -> checkbox should remain unchecked
+        line1.tap()
+        line1.typeText(String(repeating: XCUIKeyboardKey.delete.rawValue, count: "123 New St".count))
+        line1.typeText("510 Townsend St.")
+        XCTAssertTrue(checkbox.isSelected)
+
+        // 4. User unchecks again -> fields clear
+        checkbox.tap()
+        XCTAssertFalse(checkbox.isSelected)
+        XCTAssertEqual(line1.value as? String ?? "", "")
+
+        // 5. Re-check again -> fields repopulate
+        checkbox.tap()
+        XCTAssertTrue(checkbox.isSelected)
+        XCTAssertEqual(line1.value as? String, "510 Townsend St.")
+
+        // 6. Change State to a different value -> checkbox auto-unchecks
+        let stateField = app.textFields["State"]
+        stateField.tap()
+        app.pickerWheels.firstMatch.adjust(toPickerWheelValue: "Alabama")
+        app.toolbars.buttons["Done"].tap()
+        XCTAssertFalse(checkbox.isSelected)
+
+        // 7. Change State back to default (California) -> checkbox re-checks automatically
+        stateField.tap()
+        app.pickerWheels.firstMatch.adjust(toPickerWheelValue: "California")
+        app.toolbars.buttons["Done"].tap()
+        XCTAssertTrue(checkbox.isSelected)
+
+        // 8. Verify the address is valid
+        let saveAddressButton = app.buttons["Save address"]
+        XCTAssertTrue(saveAddressButton.isEnabled)
     }
 }

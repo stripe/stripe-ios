@@ -135,7 +135,7 @@ public class AddressViewController: UIViewController {
         guard hasDefaultValues else { return nil }
         let element = CheckboxElement(
             theme: configuration.appearance.asElementsTheme,
-            label: "Shipping is same as billing",
+            label: String.Localized.use_billing_address_for_shipping,
             isSelectedByDefault: true,
             didToggle: { [weak self] isSelected in
                 self?.handleShippingEqualsBillingToggle(isSelected: isSelected)
