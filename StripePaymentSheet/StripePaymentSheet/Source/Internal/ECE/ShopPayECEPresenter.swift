@@ -53,6 +53,8 @@ class ShopPayECEPresenter: NSObject, UIAdaptivePresentationControllerDelegate {
 
     // If the sheet is pulled down
     func presentationControllerDidDismiss(_ presentationController: UIPresentationController) {
+        self.eceViewController?.unloadWebview()
+        self.eceViewController = nil
         self.confirmHandler?(.canceled)
     }
 
