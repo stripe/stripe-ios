@@ -163,8 +163,10 @@ public extension AddressViewController {
         /// Defaults to a list of countries that Stripe has audited to ensure a good autocomplete experience.
         public var autocompleteCountries: [String] = ["AU", "BE", "BR", "CA", "CH", "DE", "ES", "FR", "GB", "IE", "IT", "MX", "NO", "NL", "PL", "RU", "SE", "TR", "US", "ZA"]
 
-        /// When enabled, shows a "Shipping is same as billing" checkbox at the top of the address form.
-        /// The checkbox defaults to "on" when default values are provided, and clears/repopulates fields when toggled.
-        @_spi(STP) public var showShippingAddressEqualsBilling: Bool = false
+        /// Shows a "Use billing address" checkbox when `defaultValues.address` is set.
+        /// 
+        /// Toggles between populating fields with defaults (checked) and clearing them (unchecked).
+        /// Hidden if the default country is not in `allowedCountries`.
+        @_spi(STP) public var showUseBillingAddressCheckbox: Bool = false
     }
 }

@@ -136,7 +136,7 @@ public class AddressViewController: UIViewController {
     }
 
     lazy var shippingEqualsBillingCheckbox: CheckboxElement? = {
-        guard configuration.showShippingAddressEqualsBilling, validDefaultValues != nil else { return nil }
+        guard configuration.showUseBillingAddressCheckbox, validDefaultValues != nil else { return nil }
         return CheckboxElement(
             theme: configuration.appearance.asElementsTheme,
             label: String.Localized.use_billing_address_for_shipping,
