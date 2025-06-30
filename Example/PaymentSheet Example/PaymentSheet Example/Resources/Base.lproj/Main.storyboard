@@ -1209,7 +1209,7 @@
         <!--PaymentSheet (Deferred)-->
         <scene sceneID="mO0-22-dTC">
             <objects>
-                <viewController id="Rd2-MU-RV5" userLabel="PaymentSheet (Deferred)" customClass="ExampleDeferredCheckoutViewController" customModule="PaymentSheetExample" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="ExampleDeferredCheckoutViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="Rd2-MU-RV5" userLabel="PaymentSheet (Deferred)" customClass="ExampleDeferredCheckoutViewController" customModule="PaymentSheetExample" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="HA4-PB-bqH">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
