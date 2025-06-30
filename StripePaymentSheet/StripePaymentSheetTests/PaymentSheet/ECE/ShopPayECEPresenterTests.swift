@@ -5,10 +5,13 @@
 
 @testable @_spi(STP) import StripeCore
 @testable @_spi(STP) import StripePayments
-@testable @_spi(STP) import StripePaymentSheet
+@testable @_spi(STP) @_spi(CustomerSessionBetaAccess) import StripePaymentSheet
 @testable @_spi(STP) import StripePaymentsTestUtils
 import UIKit
 import XCTest
+
+// We'll test analytics integration directly using the existing STPAnalyticsClient infrastructure
+// since PaymentSheetAnalyticsHelper is final and can't be subclassed for testing
 
 @available(iOS 16.0, *)
 @MainActor
@@ -19,6 +22,7 @@ class ShopPayECEPresenterTests: XCTestCase {
     var shopPayConfiguration: PaymentSheet.ShopPayConfiguration!
     var mockViewController: UIViewController!
     var mockFlowController: PaymentSheet.FlowController!
+    var analyticsHelper: PaymentSheetAnalyticsHelper!
 
     override func setUp() {
         super.setUp()
@@ -62,6 +66,7 @@ class ShopPayECEPresenterTests: XCTestCase {
         mockConfiguration.apiClient = STPAPIClient(publishableKey: STPTestingDefaultPublishableKey)
         mockConfiguration.merchantDisplayName = "Test Merchant"
         mockConfiguration.shopPay = shopPayConfiguration
+        mockConfiguration.customer = .init(id: "cus_123abc", customerSessionClientSecret: "cuss_123abc_secret_123")
 
         // Create mock flow controller
         let intentConfig = PaymentSheet.IntentConfiguration(
@@ -78,7 +83,7 @@ class ShopPayECEPresenterTests: XCTestCase {
             savedPaymentMethods: [],
             paymentMethodTypes: []
         )
-        let analyticsHelper = PaymentSheetAnalyticsHelper(
+        analyticsHelper = PaymentSheetAnalyticsHelper(
             integrationShape: .flowController,
             configuration: mockConfiguration
         )
@@ -92,7 +97,8 @@ class ShopPayECEPresenterTests: XCTestCase {
         // Create presenter
         sut = ShopPayECEPresenter(
             flowController: mockFlowController,
-            configuration: shopPayConfiguration
+            configuration: shopPayConfiguration,
+            analyticsHelper: analyticsHelper
         )
 
         mockViewController = UIViewController()
@@ -104,6 +110,7 @@ class ShopPayECEPresenterTests: XCTestCase {
         shopPayConfiguration = nil
         mockViewController = nil
         mockFlowController = nil
+        analyticsHelper = nil
         super.tearDown()
     }
 
@@ -145,7 +152,8 @@ class ShopPayECEPresenterTests: XCTestCase {
         )
         sut = ShopPayECEPresenter(
             flowController: mockFlowController,
-            configuration: noShippingConfig
+            configuration: noShippingConfig,
+            analyticsHelper: mockFlowController.analyticsHelper
         )
         let mockECEViewController = ECEViewController(apiClient: mockConfiguration.apiClient,
                                                       shopId: "shop_id_123",
@@ -251,7 +259,8 @@ class ShopPayECEPresenterTests: XCTestCase {
 
         sut = ShopPayECEPresenter(
             flowController: mockFlowController,
-            configuration: shopPayConfiguration
+            configuration: shopPayConfiguration,
+            analyticsHelper: mockFlowController.analyticsHelper
         )
 
         let shippingAddress: [String: Any] = [
@@ -309,7 +318,8 @@ class ShopPayECEPresenterTests: XCTestCase {
 
         sut = ShopPayECEPresenter(
             flowController: mockFlowController,
-            configuration: shopPayConfiguration
+            configuration: shopPayConfiguration,
+            analyticsHelper: mockFlowController.analyticsHelper
         )
 
         let shippingAddress: [String: Any] = [
@@ -398,7 +408,8 @@ class ShopPayECEPresenterTests: XCTestCase {
 
         sut = ShopPayECEPresenter(
             flowController: mockFlowController,
-            configuration: shopPayConfiguration
+            configuration: shopPayConfiguration,
+            analyticsHelper: mockFlowController.analyticsHelper
         )
 
         let shippingRate: [String: Any] = ["id": "express", "amount": 1000, "displayName": "Express Shipping"]
@@ -532,6 +543,92 @@ class ShopPayECEPresenterTests: XCTestCase {
             }
         } catch {
             XCTFail("Unexpected error: \(error)")
+        }
+    }
+
+    // MARK: - Analytics Tests
+
+    func testAnalytics_LoadAttemptLogged() {
+        // Given
+        STPAnalyticsClient.sharedClient._testLogHistory = []
+        
+        // When
+        sut.present(from: mockViewController) { _ in
+            // Do nothing, we'll log the event immediately
+        }
+        
+        // Then
+        let loggedEvents = STPAnalyticsClient.sharedClient._testLogHistory.compactMap { $0["event"] as? String }
+        XCTAssertTrue(loggedEvents.contains("mc_shoppay_webview_load_attempt"))
+    }
+
+    func testAnalytics_ECEClickTrackedForCancellation() async throws {
+        // Given
+        let mockECEViewController = ECEViewController(apiClient: mockConfiguration.apiClient,
+                                                      shopId: "shop_id_123",
+                                                      customerSessionClientSecret: "cuss_12345")
+        let event = [
+            "walletType": "shop_pay",
+            "expressPaymentType": "shop_pay",
+        ]
+
+        // When - First trigger ECE click to set the flag
+        _ = try await sut.eceView(mockECEViewController, didReceiveECEClick: event)
+        
+        // Reset analytics to only capture cancellation event
+        STPAnalyticsClient.sharedClient._testLogHistory = []
+        
+        // Then trigger cancellation
+        sut.didCancel()
+
+        // Then
+        let loggedEvents = STPAnalyticsClient.sharedClient._testLogHistory.compactMap { $0["event"] as? String }
+        XCTAssertTrue(loggedEvents.contains("mc_shoppay_webview_cancelled"))
+        
+        // Find the cancellation event and check parameters
+        if let cancelEvent = STPAnalyticsClient.sharedClient._testLogHistory.first(where: { ($0["event"] as? String) == "mc_shoppay_webview_cancelled" }) {
+            XCTAssertEqual(cancelEvent["did_receive_ece_click"] as? Bool, true)
+        } else {
+            XCTFail("Cancellation event not found")
+        }
+    }
+
+    func testAnalytics_CancellationWithoutECEClick() {
+        // Given
+        STPAnalyticsClient.sharedClient._testLogHistory = []
+        
+        // When - Cancel without triggering ECE click first
+        sut.didCancel()
+
+        // Then
+        let loggedEvents = STPAnalyticsClient.sharedClient._testLogHistory.compactMap { $0["event"] as? String }
+        XCTAssertTrue(loggedEvents.contains("mc_shoppay_webview_cancelled"))
+        
+        // Find the cancellation event and check parameters
+        if let cancelEvent = STPAnalyticsClient.sharedClient._testLogHistory.first(where: { ($0["event"] as? String) == "mc_shoppay_webview_cancelled" }) {
+            XCTAssertEqual(cancelEvent["did_receive_ece_click"] as? Bool, false)
+        } else {
+            XCTFail("Cancellation event not found")
+        }
+    }
+
+    func testAnalytics_PresentationControllerDismiss() {
+        // Given
+        STPAnalyticsClient.sharedClient._testLogHistory = []
+        let mockPresentationController = UIPresentationController(presentedViewController: UIViewController(), presenting: mockViewController)
+        
+        // When
+        sut.presentationControllerDidDismiss(mockPresentationController)
+
+        // Then
+        let loggedEvents = STPAnalyticsClient.sharedClient._testLogHistory.compactMap { $0["event"] as? String }
+        XCTAssertTrue(loggedEvents.contains("mc_shoppay_webview_cancelled"))
+        
+        // Verify the ECE click flag is correctly reported
+        if let cancelEvent = STPAnalyticsClient.sharedClient._testLogHistory.first(where: { ($0["event"] as? String) == "mc_shoppay_webview_cancelled" }) {
+            XCTAssertEqual(cancelEvent["did_receive_ece_click"] as? Bool, false)
+        } else {
+            XCTFail("Cancellation event not found")
         }
     }
 
