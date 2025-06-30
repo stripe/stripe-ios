@@ -49,11 +49,11 @@ extension StripeAPI.VerificationPageDataFace {
             bestCameraLensModel: bestFrameExifMetadata?.lensModel,
             bestExposureDuration: capturedImages.bestMiddle.scannerOutput.cameraProperties.flatMap { properties in
                 let exposureDuration = properties.exposureDuration
-                
+
                 if exposureDuration.isNumeric {
                     return Int(properties.exposureDuration.seconds * 1000)
                 }
-                
+
                 return nil
             },
             bestExposureIso: capturedImages.bestMiddle.scannerOutput.cameraProperties.map {
