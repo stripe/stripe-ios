@@ -57,7 +57,6 @@ public class AddressViewController: UIViewController {
 
     // Store reference to default address values for repopulation
 
-
     // MARK: - Internal properties
     let addressSpecProvider: AddressSpecProvider
     private var latestError: Error? {
@@ -351,8 +350,6 @@ extension AddressViewController {
         guard hasLoadedSpecs else { return nil }
 
         let defaultValues = validDefaultValues ?? .init()
-
-
 
         return AddressSectionElement(
             countries: configuration.allowedCountries.isEmpty ? nil : configuration.allowedCountries,
