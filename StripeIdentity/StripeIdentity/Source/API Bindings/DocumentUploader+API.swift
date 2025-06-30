@@ -42,7 +42,7 @@ extension StripeAPI.VerificationPageDataDocumentFileData {
             cameraLensModel: exifMetadata?.lensModel,
             exposureDuration: documentScannerOutput?.cameraProperties.flatMap { properties in
                 let exposureDuration = properties.exposureDuration
-                if exposureDuration.isValid {
+                if exposureDuration.isNumeric {
                     return Int(exposureDuration.seconds * 1000)
                 }
                 return nil
