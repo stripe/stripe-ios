@@ -5,7 +5,7 @@
 
 @testable @_spi(STP) import StripeCore
 @testable @_spi(STP) import StripePayments
-@testable @_spi(STP) @_spi(CustomerSessionBetaAccess) import StripePaymentSheet
+@testable @_spi(STP) @_spi(CustomerSessionBetaAccess) @_spi(SharedPaymentToken) import StripePaymentSheet
 @testable @_spi(STP) import StripePaymentsTestUtils
 import UIKit
 import XCTest
@@ -69,12 +69,10 @@ class ShopPayECEPresenterTests: XCTestCase {
         mockConfiguration.customer = .init(id: "cus_123abc", customerSessionClientSecret: "cuss_123abc_secret_123")
 
         // Create mock flow controller
-        let intentConfig = PaymentSheet.IntentConfiguration(
-            mode: .payment(amount: 1000, currency: "USD"),
-            confirmHandler: { _, _, completion in
-                completion(.failure(NSError(domain: "test", code: 0)))
-            }
-        )
+        let intentConfig = PaymentSheet.IntentConfiguration(sharedPaymentTokenSessionWithMode: .payment(amount: 100, currency: "USD", setupFutureUsage: nil, captureMethod: .automatic, paymentMethodOptions: nil),
+                                                                 sellerDetails: .init(networkId: "abc123", externalId: "abc123")) { _, _ in
+            // Nothing
+        }
         let intent = Intent.deferredIntent(intentConfig: intentConfig)
         let elementsSession = STPElementsSession.emptyElementsSession
         let loadResult = PaymentSheetLoader.LoadResult(
@@ -630,6 +628,79 @@ class ShopPayECEPresenterTests: XCTestCase {
         } else {
             XCTFail("Cancellation event not found")
         }
+    }
+
+    func testAnalytics_ConfirmSuccessLogged() async throws {
+        // Given - Create a configuration with preparePaymentMethodHandler (more realistic for Shop Pay)
+        let successfulIntentConfig = PaymentSheet.IntentConfiguration(
+            sharedPaymentTokenSessionWithMode: PaymentSheet.IntentConfiguration.Mode.payment(amount: 1000, currency: "USD"),
+            sellerDetails: PaymentSheet.IntentConfiguration.SellerDetails(networkId: "abc123", externalId: "abc123"),
+            preparePaymentMethodHandler: { _, _ in
+                // Shop Pay flow - just prepare the payment method, no additional confirmation needed
+            }
+        )
+        let intent = Intent.deferredIntent(intentConfig: successfulIntentConfig)
+        let elementsSession = STPElementsSession.emptyElementsSession
+        let loadResult = PaymentSheetLoader.LoadResult(
+            intent: intent,
+            elementsSession: elementsSession,
+            savedPaymentMethods: [],
+            paymentMethodTypes: []
+        )
+        let successfulFlowController = PaymentSheet.FlowController(
+            configuration: mockConfiguration,
+            loadResult: loadResult,
+            analyticsHelper: analyticsHelper
+        )
+
+        sut = ShopPayECEPresenter(
+            flowController: successfulFlowController,
+            configuration: shopPayConfiguration,
+            analyticsHelper: analyticsHelper
+        )
+
+        STPAnalyticsClient.sharedClient._testLogHistory = []
+        let mockECEViewController = ECEViewController(apiClient: mockConfiguration.apiClient,
+                                                      shopId: "shop_id_123",
+                                                      customerSessionClientSecret: "cuss_12345")
+        let paymentDetails: [String: Any] = [
+            "billingDetails": [
+                "email": "test@example.com",
+                "phone": "+14155551234",
+                "name": "John Doe",
+            ],
+            "shippingAddress": ["address1": "123 Main St"],
+            "shippingRate": ["id": "standard", "amount": 100, "displayName": "Standard Shipping"],
+            "mode": "payment",
+            "captureMethod": "automatic",
+            "paymentMethodOptions": [
+                "shopPay": [
+                    "externalSourceId": "st_zxd123456",
+                ],
+            ],
+        ]
+
+        // Present the VC (to set presentingViewController, so that dismissECE works)
+        sut.present(from: mockViewController) { _ in
+            // Do nothing
+        }
+
+        // When
+        _ = try await sut.eceView(mockECEViewController, didReceiveECEConfirmation: paymentDetails)
+
+        // Wait for async analytics logging
+        let expectation = expectation(description: "Analytics logged")
+        Task {
+            while !STPAnalyticsClient.sharedClient._testLogHistory.contains(where: { ($0["event"] as? String) == "mc_shoppay_webview_confirm_success" }) {
+                await Task.yield()
+            }
+            expectation.fulfill()
+        }
+        await fulfillment(of: [expectation], timeout: 1.0)
+
+        // Then
+        let loggedEvents = STPAnalyticsClient.sharedClient._testLogHistory.compactMap { $0["event"] as? String }
+        XCTAssertTrue(loggedEvents.contains("mc_shoppay_webview_confirm_success"))
     }
 
 }
