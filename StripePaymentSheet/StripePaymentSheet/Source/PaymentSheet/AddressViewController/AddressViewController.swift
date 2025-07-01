@@ -102,7 +102,8 @@ public class AddressViewController: UIViewController {
 
         // Add padding under the shipping equals billing checkbox if it exists
         if let shippingCheckbox = shippingEqualsBillingCheckbox {
-            customSpacing.append((shippingCheckbox, PaymentSheetUI.defaultPadding))
+            // Default spacing is a bit too tight for what we want, scale the appearance value a bit
+            customSpacing.append((shippingCheckbox, configuration.appearance.sectionSpacing * 1.6))
         }
 
         let formElement = FormElement(
@@ -126,15 +127,23 @@ public class AddressViewController: UIViewController {
         return element
     }()
 
-    private var validDefaultValues: AddressViewController.Configuration.DefaultAddressDetails? {
-        guard configuration.defaultValues.address != .init() else { return nil }
+    /// Returns a default address only if it is compatible with allowed countries.
+    private var compatibleDefaultValues: AddressViewController.Configuration.DefaultAddressDetails? {
+        // No default address provided, early exit
+        guard !configuration.defaultValues.address.isEmpty else { return nil }
+
+        // No blocked countries, allow all default addresses
         guard !configuration.allowedCountries.isEmpty else { return configuration.defaultValues }
+
+        // Default address has no country specified, allow it
         guard let defaultCountry = configuration.defaultValues.address.country else { return configuration.defaultValues }
+
+        // Only allow default addresses with allowed countries
         return configuration.allowedCountries.contains(defaultCountry) ? configuration.defaultValues : nil
     }
 
     private lazy var shippingEqualsBillingCheckbox: CheckboxElement? = {
-        guard configuration.showUseBillingAddressCheckbox, validDefaultValues != nil else { return nil }
+        guard configuration.showUseBillingAddressCheckbox, compatibleDefaultValues != nil else { return nil }
         return CheckboxElement(
             theme: configuration.appearance.asElementsTheme,
             label: String.Localized.use_billing_address_for_shipping,
@@ -277,7 +286,7 @@ extension AddressViewController {
     func handleShippingEqualsBillingToggle(isSelected: Bool) {
         if isSelected {
             // Repopulate with default values if available
-            if let validDefaults = validDefaultValues {
+            if let validDefaults = compatibleDefaultValues {
                 populateAddressSection(with: .init(from: validDefaults))
             }
         } else {
@@ -345,13 +354,13 @@ extension AddressViewController {
     private func makeDefaultAddressSection() -> AddressSectionElement? {
         guard hasLoadedSpecs else { return nil }
 
-        let defaultValues = validDefaultValues ?? .init()
+        let defaultValues = compatibleDefaultValues ?? .init()
 
         return AddressSectionElement(
             countries: configuration.allowedCountries.isEmpty ? nil : configuration.allowedCountries,
             addressSpecProvider: addressSpecProvider,
             defaults: .init(from: defaultValues),
-            collectionMode: validDefaultValues != nil ? .all(autocompletableCountries: configuration.autocompleteCountries) : .autoCompletable,
+            collectionMode: compatibleDefaultValues != nil ? .all(autocompletableCountries: configuration.autocompleteCountries) : .autoCompletable,
             additionalFields: .init(from: configuration.additionalFields),
             theme: configuration.appearance.asElementsTheme,
             presentAutoComplete: { [weak self] in
@@ -539,5 +548,11 @@ extension AddressViewController {
     private func hasAddressSectionChanged() -> Bool {
         guard let addressSection = addressSection, let defaultAddressSection = makeDefaultAddressSection() else { return false }
         return addressSection.addressDetails != defaultAddressSection.addressDetails
+    }
+}
+
+extension PaymentSheet.Address {
+    var isEmpty: Bool {
+        return self == .init()
     }
 }
