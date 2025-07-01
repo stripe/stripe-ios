@@ -129,7 +129,7 @@ public class AddressViewController: UIViewController {
     private var validDefaultValues: AddressViewController.Configuration.DefaultAddressDetails? {
         guard configuration.defaultValues.address != .init() else { return nil }
         guard !configuration.allowedCountries.isEmpty else { return configuration.defaultValues }
-        guard let defaultCountry = configuration.defaultValues.address.country else { return nil }
+        guard let defaultCountry = configuration.defaultValues.address.country else { return configuration.defaultValues }
         return configuration.allowedCountries.contains(defaultCountry) ? configuration.defaultValues : nil
     }
 
@@ -275,15 +275,13 @@ extension AddressViewController {
     }
 
     func handleShippingEqualsBillingToggle(isSelected: Bool) {
-        guard addressSection != nil else { return }
-
         if isSelected {
             // Repopulate with default values if available
             if let validDefaults = validDefaultValues {
                 populateAddressSection(with: .init(from: validDefaults))
             }
         } else {
-            // Clear all address fields
+            // Clear all address fields when unselected
             clearAddressSection()
         }
     }
