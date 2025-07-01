@@ -23,6 +23,9 @@ extension STPAPIClient {
             "external_payment_methods": epmConfiguration?.externalPaymentMethods.compactMap { $0.lowercased() } ?? [],
             "custom_payment_methods": cpmConfiguration?.customPaymentMethods.compactMap { $0.id } ?? [],
         ]
+        if let sessionId = AnalyticsHelper.shared.sessionID {
+            parameters["mobile_session_id"] = sessionId
+        }
         if let appId = Bundle.main.bundleIdentifier {
             parameters["mobile_app_id"] = appId
         }
@@ -98,6 +101,7 @@ extension STPAPIClient {
         else {
             throw PaymentSheetError.unknown(debugDescription: "PaymentIntent missing from v1/elements/sessions response")
         }
+        try verifyCustomerSessionForPaymentSheet(configuration: configuration, elementsSession: elementsSession)
         return (paymentIntent, elementsSession)
     }
 
@@ -122,6 +126,7 @@ extension STPAPIClient {
         else {
             throw PaymentSheetError.unknown(debugDescription: "SetupIntent missing from v1/elements/sessions response")
         }
+        try verifyCustomerSessionForPaymentSheet(configuration: configuration, elementsSession: elementsSession)
         return (setupIntent, elementsSession)
     }
 
@@ -135,11 +140,30 @@ extension STPAPIClient {
                                                     cpmConfiguration: configuration.customPaymentMethodConfiguration,
                                                     clientDefaultPaymentMethod: clientDefaultPaymentMethod,
                                                     customerAccessProvider: configuration.customer?.customerAccessProvider)
-        return try await APIRequest<STPElementsSession>.getWith(
+        let elementsSession = try await APIRequest<STPElementsSession>.getWith(
             self,
             endpoint: APIEndpointElementsSessions,
             parameters: parameters
         )
+        try verifyCustomerSessionForPaymentSheet(configuration: configuration, elementsSession: elementsSession)
+        return elementsSession
+    }
+
+    func verifyCustomerSessionForPaymentSheet(configuration: PaymentElementConfiguration, elementsSession: STPElementsSession) throws {
+        if case .customerSession = configuration.customer?.customerAccessProvider {
+            // User passed in a customerSessionClient secret
+            if let customer = elementsSession.customer {
+                // If claimed, customer will be not nil.
+                // Verify that it was created specifically for `mobile_payment_element`, or fail loudly
+                if !customer.customerSession.mobilePaymentElementComponent.enabled {
+                    stpAssertionFailure("Integration Error: Attempting to use a customerSession with MobilePaymentElement that does not have `mobile_payment_element` component enabled")
+                    throw PaymentSheetError.unknown(debugDescription: "Attempting to use customerSession without `mobile_payment_element` component enabled")
+                }
+            } else {
+                // If customer does not exist: backend issue or failure in deserialization, fail.
+                throw PaymentSheetError.unknown(debugDescription: "Failed to claim customerSession")
+            }
+        }
     }
 
     func retrieveDeferredElementsSessionForCustomerSheet(paymentMethodTypes: [String]?,
@@ -149,11 +173,13 @@ extension STPAPIClient {
         let parameters = makeDeferredElementsSessionsParamsForCustomerSheet(paymentMethodTypes: paymentMethodTypes,
                                                                             clientDefaultPaymentMethod: clientDefaultPaymentMethod,
                                                                             customerSessionClientSecret: customerSessionClientSecret)
-        return try await APIRequest<STPElementsSession>.getWith(
+        let elementsSession = try await APIRequest<STPElementsSession>.getWith(
             self,
             endpoint: APIEndpointElementsSessions,
             parameters: parameters
         )
+        try verifyCustomerSessionForCustomerSheet(customerSessionClientSecret: customerSessionClientSecret, elementsSession: elementsSession)
+        return elementsSession
     }
 
     func makeDeferredElementsSessionsParamsForCustomerSheet(paymentMethodTypes: [String]?,
@@ -186,11 +212,13 @@ extension STPAPIClient {
         let parameters = makeElementsSessionsParamsForCustomerSheet(setupIntentClientSecret: setupIntentClientSecret,
                                                                     clientDefaultPaymentMethod: clientDefaultPaymentMethod,
                                                                     customerSessionClientSecret: customerSessionClientSecret)
-        return try await APIRequest<STPElementsSession>.getWith(
+        let elementsSession = try await APIRequest<STPElementsSession>.getWith(
             self,
             endpoint: APIEndpointElementsSessions,
             parameters: parameters
         )
+        try verifyCustomerSessionForCustomerSheet(customerSessionClientSecret: customerSessionClientSecret, elementsSession: elementsSession)
+        return elementsSession
     }
 
     func makeElementsSessionsParamsForCustomerSheet(setupIntentClientSecret: String,
@@ -211,6 +239,22 @@ extension STPAPIClient {
             parameters["client_default_payment_method"] = clientDefaultPaymentMethod
         }
         return parameters
+    }
+    func verifyCustomerSessionForCustomerSheet(customerSessionClientSecret: CustomerSessionClientSecret?, elementsSession: STPElementsSession) throws {
+        if customerSessionClientSecret != nil {
+            // User passed in a customerSessionClient secret
+            if let customer = elementsSession.customer {
+                // If claimed, customer will be not nil.
+                // Verify that it was created specifically for `customer_sheet`, or fail loudly
+                if !customer.customerSession.customerSheetComponent.enabled {
+                    stpAssertionFailure("Integration Error: Attempting to use a customerSession with CustomerSheet that does not have `customer_sheet` component enabled")
+                    throw PaymentSheetError.unknown(debugDescription: "Attempting to use customerSession without `customer_sheet` component enabled")
+                }
+            } else {
+                // If customer does not exist: backend issue or failure in deserialization, fail.
+                throw PaymentSheetError.unknown(debugDescription: "Failed to claim customerSession")
+            }
+        }
     }
 }
 

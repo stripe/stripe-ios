@@ -177,7 +177,8 @@ import WebKit
             // Present Shop Pay via ECE WebView
             let shopPayPresenter = ShopPayECEPresenter(
                 flowController: flowController,
-                configuration: shopPayConfig
+                configuration: shopPayConfig,
+                analyticsHelper: flowController.analyticsHelper
             )
             shopPayPresenter.present(from: WindowAuthenticationContext().authenticationPresentingViewController(),
                                      confirmHandler: confirmHandler)

@@ -548,17 +548,15 @@ class PaymentSheetStandardLPMUITwoTests: PaymentSheetStandardLPMUICase {
 
         tapPaymentMethod("SEPA Debit")
 
-        app.textFields["Full name"].tap()
+        app.textFields["Full name"].waitForExistenceAndTap()
         app.typeText("John Doe" + XCUIKeyboardKey.return.rawValue)
         app.typeText("test@example.com" + XCUIKeyboardKey.return.rawValue)
         app.typeText("AT611904300234573201" + XCUIKeyboardKey.return.rawValue)
-        app.textFields["Address line 1"].tap()
-        app.typeText("510 Townsend St" + XCUIKeyboardKey.return.rawValue)
-        app.typeText("Floor 3" + XCUIKeyboardKey.return.rawValue)
-        app.typeText("San Francisco" + XCUIKeyboardKey.return.rawValue)
-        app.textFields["ZIP"].tap()
-        app.typeText("94102" + XCUIKeyboardKey.return.rawValue)
-        app.buttons["Pay €50.99"].tap()
+
+        app.fillAddressWithAutocomplete()
+        XCTAssertTrue(app.staticTexts["SEPA Debit"].waitForExistence(timeout: 10))
+        app.swipeUp()
+        app.buttons["Pay €50.99"].waitForExistenceAndTap()
         let successText = app.staticTexts["Success!"]
         XCTAssertTrue(successText.waitForExistence(timeout: 10.0))
     }
@@ -748,10 +746,8 @@ class PaymentSheetStandardLPMUIThreeTests: PaymentSheetStandardLPMUICase {
         app.typeText("foo@bar.com" + XCUIKeyboardKey.return.rawValue)
         app.typeText("108800")
         app.typeText("00012345")
-        app.typeText("123 Main St" + XCUIKeyboardKey.return.rawValue + XCUIKeyboardKey.return.rawValue)
-        app.typeText("San Francisco" + XCUIKeyboardKey.return.rawValue)
-        app.toolbars.buttons["Done"].tap() // State picker toolbar's "Done" button
-        app.typeText("94010" + XCUIKeyboardKey.return.rawValue)
+
+        app.fillAddressWithAutocomplete()
         let payButton = app.buttons["Pay £50.99"]
         XCTAssertFalse(payButton.isEnabled)
         let checkbox = app.switches.firstMatch
@@ -853,18 +849,32 @@ class PaymentSheetStandardLPMUIThreeTests: PaymentSheetStandardLPMUICase {
         app.typeText(XCUIKeyboardKey.return.rawValue)
         app.typeText("00000000000")
         app.toolbars.buttons["Done"].tap() // Tap "Done", don't hit return - that's not possible using the system numpad keyboard
-        app.textFields["Address line 1"].tap()
-        app.typeText("123 fake st")
-        app.typeText(XCUIKeyboardKey.return.rawValue)
-        app.typeText(XCUIKeyboardKey.return.rawValue)
-        app.typeText("City")
-        app.typeText(XCUIKeyboardKey.return.rawValue)
-        app.typeText("AC")  // Valid brazilian state code.
-        app.typeText(XCUIKeyboardKey.return.rawValue)
-        app.typeText("11111111")
-        app.typeText(XCUIKeyboardKey.return.rawValue)
 
-        app.buttons["Pay R$50.99"].tap()
+        // Tap Address field to open address form
+        let addressField = app.textFields["Address"]
+        addressField.tap()
+
+        // Switch to manual entry mode
+        app.staticTexts["Enter address manually"].waitForExistenceAndTap()
+
+        // Fill address fields manually for Brazilian address
+        let addressLine1Field = app.textFields["Address line 1"]
+        addressLine1Field.waitForExistenceAndTap()
+        app.typeText("123 fake st" + XCUIKeyboardKey.return.rawValue)
+
+        let cityField = app.textFields["City"]
+        cityField.tap()
+        app.typeText("City" + XCUIKeyboardKey.return.rawValue)
+
+        let stateField = app.textFields["State"]
+        stateField.tap()
+        app.typeText("AC" + XCUIKeyboardKey.return.rawValue)
+
+        let postalCodeField = app.textFields["Postal code"]
+        postalCodeField.tap()
+        app.typeText("11111111" + XCUIKeyboardKey.return.rawValue)
+
+        app.buttons["Pay R$50.99"].waitForExistenceAndTap()
 
         // Boleto is a voucher-based LPM, so once you close the browser the payment is considered completed
         let webviewCloseButton = app.otherElements["TopBrowserBar"].buttons["Close"]
