@@ -4,7 +4,7 @@
 //
 
 @_spi(STP) @_spi(SharedPaymentToken) import StripePayments
-@_spi(STP) @_spi(SharedPaymentToken) @_spi(CustomerSessionBetaAccess) @_spi(AppearanceAPIAdditionsPreview) import StripePaymentSheet
+@_spi(STP) @_spi(STP_DEBUG) @_spi(SharedPaymentToken) @_spi(CustomerSessionBetaAccess) @_spi(AppearanceAPIAdditionsPreview) import StripePaymentSheet
 import SwiftUI
 
 struct ShopPayTestingOptions {
@@ -15,6 +15,7 @@ struct ShopPayTestingOptions {
     var rejectShippingAddressChange: Bool = false
     var rejectShippingRateChange: Bool = false
     var simulatePaymentFailed: Bool = false
+    var shopPayDebugMode: Bool = false
 }
 
 struct ExampleWalletButtonsContainerView: View {
@@ -33,6 +34,7 @@ struct ExampleWalletButtonsContainerView: View {
     @State private var rejectShippingAddressChange: Bool = false
     @State private var rejectShippingRateChange: Bool = false
     @State private var simulatePaymentFailed: Bool = false
+    @State private var shopPayDebugMode: Bool = false
 
     var body: some View {
         if #available(iOS 16.0, *) {
@@ -72,6 +74,8 @@ struct ExampleWalletButtonsContainerView: View {
                         Toggle("Reject Shipping Address Change", isOn: $rejectShippingAddressChange)
                         Toggle("Reject Shipping Rate Change", isOn: $rejectShippingRateChange)
                         Toggle("Simulate Payment Failed", isOn: $simulatePaymentFailed)
+                        Toggle("Debug mode", isOn: $shopPayDebugMode)
+
                     }
                 }.sheet(isPresented: $showingAppearancePlayground) {
                     AppearancePlaygroundView(appearance: appearance) { updatedAppearance in
@@ -94,7 +98,8 @@ struct ExampleWalletButtonsContainerView: View {
                                 allowedShippingCountries: allowedShippingCountries,
                                 rejectShippingAddressChange: rejectShippingAddressChange,
                                 rejectShippingRateChange: rejectShippingRateChange,
-                                simulatePaymentFailed: simulatePaymentFailed
+                                simulatePaymentFailed: simulatePaymentFailed,
+                                shopPayDebugMode: shopPayDebugMode
                             )
                         )
                     }
@@ -599,6 +604,7 @@ class ExampleWalletButtonsModel: ObservableObject {
             shippingRates: shippingRates,
             shopId: self.shopId,
             allowedShippingCountries: allowedCountries,
+            debugMode: shopPayTestingOptions.shopPayDebugMode,
             handlers: handlers
         )
 

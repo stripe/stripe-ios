@@ -42,15 +42,18 @@ class ECEViewController: UIViewController {
     let apiClient: STPAPIClient
     let shopId: String
     let customerSessionClientSecret: String
+    let debugMode: Bool
     private weak var delegate: ECEViewControllerDelegate?
 
     init(apiClient: STPAPIClient,
          shopId: String,
          customerSessionClientSecret: String,
+         debugMode: Bool,
          delegate: ECEViewControllerDelegate? = nil) {
         self.apiClient = apiClient
         self.shopId = shopId
         self.customerSessionClientSecret = customerSessionClientSecret
+        self.debugMode = debugMode
         self.delegate = delegate
         super.init(nibName: nil, bundle: nil)
     }
@@ -197,9 +200,11 @@ class ECEViewController: UIViewController {
 
         let script = WKUserScript(source: bridgeScript, injectionTime: .atDocumentEnd, forMainFrameOnly: false)
         contentController.addUserScript(script)
+        let heightWidth = debugMode ? 500 : 1
+        let alpha = debugMode ? 1.0 : 0.01
 
         // TODO: It's 500x500 for now for debugging, but set this to 1x1 before release
-        webView = WKWebView(frame: CGRect(x: 0, y: 0, width: 1, height: 1), configuration: configuration)
+        webView = WKWebView(frame: CGRect(x: 0, y: 0, width: heightWidth, height: heightWidth), configuration: configuration)
         webView.navigationDelegate = self
         webView.uiDelegate = self
         #if DEBUG
@@ -208,7 +213,7 @@ class ECEViewController: UIViewController {
         }
         #endif
         webView.isHidden = false // Should not be hidden, so that we actually render it
-        webView.alpha = 0.01 // TODO: Attempt to set to 0.00 if we can get away with it without Safari optimizing it out
+        webView.alpha = alpha // TODO: Attempt to set to 0.00 if we can get away with it without Safari optimizing it out
 
         webView.customUserAgent = Self.FakeSafariUserAgent
     }

@@ -607,6 +607,9 @@ extension PaymentSheet {
         /// A set of optional handlers to facilitate the checkout experience
         public let handlers: Handlers?
 
+        /// Debug mode for ShopPay
+        @_spi(STP_DEBUG) public let debugMode: Bool
+
         public init(
             billingAddressRequired: Bool = true,
             emailRequired: Bool = true,
@@ -624,6 +627,29 @@ extension PaymentSheet {
             self.shippingRates = shippingRates
             self.shopId = shopId
             self.allowedShippingCountries = allowedShippingCountries
+            self.debugMode = false
+            self.handlers = handlers
+        }
+
+        @_spi(STP_DEBUG) public init(
+            billingAddressRequired: Bool = true,
+            emailRequired: Bool = true,
+            shippingAddressRequired: Bool,
+            lineItems: [LineItem],
+            shippingRates: [ShippingRate],
+            shopId: String,
+            allowedShippingCountries: [String] = [],
+            debugMode: Bool = false,
+            handlers: Handlers? = nil
+        ) {
+            self.billingAddressRequired = billingAddressRequired
+            self.emailRequired = emailRequired
+            self.shippingAddressRequired = shippingAddressRequired
+            self.lineItems = lineItems
+            self.shippingRates = shippingRates
+            self.shopId = shopId
+            self.allowedShippingCountries = allowedShippingCountries
+            self.debugMode = debugMode
             self.handlers = handlers
         }
     }

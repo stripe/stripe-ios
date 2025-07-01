@@ -37,6 +37,7 @@ class ShopPayECEPresenter: NSObject, UIAdaptivePresentationControllerDelegate {
         let eceVC = ECEViewController(apiClient: flowController.configuration.apiClient,
                                       shopId: shopPayConfiguration.shopId,
                                       customerSessionClientSecret: customerSessionClientSecret,
+                                      debugMode: shopPayConfiguration.debugMode,
                                       delegate: self)
 
         eceVC.expressCheckoutWebviewDelegate = self
