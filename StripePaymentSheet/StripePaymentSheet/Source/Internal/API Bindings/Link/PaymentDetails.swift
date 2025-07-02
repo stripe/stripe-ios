@@ -68,7 +68,6 @@ final class ConsumerPaymentDetails: Decodable {
 extension ConsumerPaymentDetails {
     func isSupported(linkAccount: PaymentSheetLinkAccount,
                      elementsSession: STPElementsSession,
-                     configuration: PaymentElementConfiguration,
                      cardBrandFilter: CardBrandFilter) -> Bool {
         guard linkAccount.supportedPaymentDetailsTypes(for: elementsSession).contains(type) else {
             return false
