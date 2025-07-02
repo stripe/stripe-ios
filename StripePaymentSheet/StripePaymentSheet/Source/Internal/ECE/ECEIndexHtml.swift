@@ -119,14 +119,22 @@ struct ECEIndexHTML {
           console.error("Failed on initial Shop Pay click:", error);
         }
 
-        // Then continue with additional attempts every 50ms for 1 second
+        // Then continue with additional attempts every 100ms for 1 second, up to 5 clicks
         let clickCount = 1;
+        const maxClicks = 5;
         const clickInterval = setInterval(() => {
           // Stop if a click event was received
           if (clickEventReceived) {
             console.log("Click event received, stopping further click attempts");
             clearInterval(clickInterval);
             return;
+          }
+
+          // Stop if we've reached the maximum number of clicks
+          if (clickCount >= maxClicks) {
+              console.log(`Reached maximum ${maxClicks} click attempts, stopping further attempts`);
+              clearInterval(clickInterval);
+              return;
           }
 
           clickCount++;
@@ -137,7 +145,7 @@ struct ECEIndexHTML {
           } catch (error) {
             console.error(`Failed on Shop Pay click #${clickCount}:`, error);
           }
-        }, 50);
+        }, 100);
       });
 
       expressCheckoutElement.on("click", async function (event) {
