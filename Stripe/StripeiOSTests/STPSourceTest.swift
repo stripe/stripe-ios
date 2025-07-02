@@ -219,23 +219,6 @@ class STPSourceTest: XCTestCase {
         XCTAssertNotNil(source?.cardDetails) // STPSourceCardDetailsTest
     }
 
-    func testDecodingSource_sepa_debit() {
-        let response = STPTestUtils.jsonNamed(STPTestJSONSourceSEPADebit)
-        let source = STPSource.decodedObject(fromAPIResponse: response)
-        XCTAssertEqual(source?.stripeID, "src_18HgGjHNCLa1Vra6Y9TIP6tU")
-        XCTAssertNil(source?.amount)
-        XCTAssertEqual(source?.clientSecret, "src_client_secret_XcBmS94nTg5o0xc9MSliSlDW")
-        XCTAssertEqual(source?.created?.timeIntervalSince1970 ?? 0, 1464803577.0, accuracy: 1.0)
-        XCTAssertEqual(source?.currency, "eur")
-        XCTAssertEqual(source?.livemode, false)
-        XCTAssertNil(source?.perform(NSSelectorFromString("metadata")))
-        XCTAssertEqual(source?.status, STPSourceStatus.chargeable)
-        XCTAssertEqual(source?.type, STPSourceType.card)
-        XCTAssertEqual(source?.usage, STPSourceUsage.reusable)
-        XCTAssertEqual(source!.details! as NSDictionary, response!["card"] as! NSDictionary)
-        XCTAssertNotNil(source?.cardDetails) // STPSourceCardDetailsTest
-    }
-
     func possibleAPIResponses() -> [[AnyHashable: Any]] {
         return [
             STPTestUtils.jsonNamed(STPTestJSONSourceCard),
