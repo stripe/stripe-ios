@@ -44,23 +44,8 @@ class STPSourceParamsTest: XCTestCase {
         let sourceParams = STPSourceParams()
         XCTAssertEqual(sourceParams.type, .unknown)
 
-        sourceParams.type = .bancontact
-        XCTAssertEqual(sourceParams.rawTypeString, "bancontact")
-
         sourceParams.type = .card
         XCTAssertEqual(sourceParams.rawTypeString, "card")
-
-        sourceParams.type = .giropay
-        XCTAssertEqual(sourceParams.rawTypeString, "giropay")
-
-        sourceParams.type = .iDEAL
-        XCTAssertEqual(sourceParams.rawTypeString, "ideal")
-
-        sourceParams.type = .SEPADebit
-        XCTAssertEqual(sourceParams.rawTypeString, "sepa_debit")
-
-        sourceParams.type = .sofort
-        XCTAssertEqual(sourceParams.rawTypeString, "sofort")
 
         sourceParams.type = .threeDSecure
         XCTAssertEqual(sourceParams.rawTypeString, "three_d_secure")

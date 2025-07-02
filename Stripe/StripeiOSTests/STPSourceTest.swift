@@ -52,53 +52,6 @@ class STPSourceTest: XCTestCase {
         }
     }
 
-    // MARK: - STPSourceFlow Tests
-
-    func testFlowFromString() {
-        XCTAssertEqual(STPSource.flow(from: "redirect"), .redirect)
-        XCTAssertEqual(STPSource.flow(from: "REDIRECT"), .redirect)
-
-        XCTAssertEqual(STPSource.flow(from: "receiver"), .receiver)
-        XCTAssertEqual(STPSource.flow(from: "RECEIVER"), .receiver)
-
-        XCTAssertEqual(STPSource.flow(from: "code_verification"), .codeVerification)
-        XCTAssertEqual(STPSource.flow(from: "CODE_VERIFICATION"), .codeVerification)
-
-        XCTAssertEqual(STPSource.flow(from: "none"), .none)
-        XCTAssertEqual(STPSource.flow(from: "NONE"), .none)
-
-        XCTAssertEqual(STPSource.flow(from: "garbage"), .unknown)
-        XCTAssertEqual(STPSource.flow(from: "GARBAGE"), .unknown)
-    }
-
-    func testStringFromFlow() {
-        let values: [STPSourceFlow] = [
-            .redirect,
-            .receiver,
-            .codeVerification,
-            .none,
-            .unknown,
-        ]
-
-        for flow in values {
-            let string = STPSource.string(from: flow)
-
-            switch flow {
-            case .redirect:
-                XCTAssertEqual(string, "redirect")
-            case .receiver:
-                XCTAssertEqual(string, "receiver")
-            case .codeVerification:
-                XCTAssertEqual(string, "code_verification")
-            case .none:
-                XCTAssertEqual(string, "none")
-            case .unknown:
-                XCTAssertNil(string)
-            default:
-                break
-            }
-        }
-    }
 
     // MARK: - STPSourceStatus Tests
 
@@ -238,7 +191,6 @@ class STPSourceTest: XCTestCase {
         XCTAssertEqual(source?.clientSecret, "src_client_secret_456")
         XCTAssertEqual(source?.created?.timeIntervalSince1970 ?? 0, 1483663790.0, accuracy: 1.0)
         XCTAssertEqual(source?.currency, "eur")
-        XCTAssertEqual(source?.flow, .redirect)
         XCTAssertEqual(source?.livemode, false)
         XCTAssertNil(source?.perform(NSSelectorFromString("metadata")))
         XCTAssertEqual(source?.status, STPSourceStatus.pending)
@@ -259,7 +211,6 @@ class STPSourceTest: XCTestCase {
         XCTAssertEqual(source?.clientSecret, "src_client_secret_123")
         XCTAssertEqual(source?.created?.timeIntervalSince1970 ?? 0, 1483575790.0, accuracy: 1.0)
         XCTAssertNil(source?.currency)
-        XCTAssertEqual(source?.flow, STPSourceFlow.none)
         XCTAssertEqual(source?.livemode, false)
         XCTAssertNil(source?.perform(NSSelectorFromString("metadata")))
         XCTAssertEqual(source?.status, STPSourceStatus.chargeable)

@@ -30,7 +30,6 @@
 		4E2D4579B9171CAD4FCC7849 /* ApplePayExampleViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F6FFC2DA74C47C8941205CB /* ApplePayExampleViewController.m */; };
 		59551D92F75526B6E0789570 /* KlarnaExampleViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C7C09286B3FF62A1562B3FB /* KlarnaExampleViewController.swift */; };
 		5A6075039E5216D93B8AA113 /* StripeUICore.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 9BDD4885AE1CEEEC3A45EC34 /* StripeUICore.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		616358522C3A1FCD579F2B37 /* WeChatPayExampleViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = F1A0CF82AB6742C41BA5C19C /* WeChatPayExampleViewController.m */; };
 		617C1C822BB4940500B10AC5 /* AlmaExampleViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 617C1C812BB4940500B10AC5 /* AlmaExampleViewController.swift */; };
 		61951FBB2B8674EC005F90BE /* AmazonPayExampleViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 61951FBA2B8674EC005F90BE /* AmazonPayExampleViewController.swift */; };
 		61E1CA232BD6B9DF00A421AE /* MultibancoExampleViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 61E1CA222BD6B9DE00A421AE /* MultibancoExampleViewController.swift */; };
@@ -49,7 +48,6 @@
 		975D189CB2E61E7C1871F0DA /* iDEALExampleViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 052F9CDA0D4546CC1E5FF77C /* iDEALExampleViewController.m */; };
 		9D89DFED47708115C613BC80 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B08862809018A4D7FF681FF7 /* Images.xcassets */; };
 		9F560040896BEB25E5B4ACCA /* StripePaymentsUI.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 173B34E97F92E48FBB42E82B /* StripePaymentsUI.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		A2728A537E75F4AF46AC4152 /* KlarnaSourcesExampleViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F74D08CE9A94C0D55EB3618A /* KlarnaSourcesExampleViewController.swift */; };
 		A8BE2C599C08080AE773D2D8 /* StripeApplePay.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 951B76B22A5088E944157C23 /* StripeApplePay.framework */; };
 		AA09261F606AFE3124912983 /* BancontactExampleViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 9C4D6ECA899F3348A844E370 /* BancontactExampleViewController.m */; };
 		AD9A0FE43A089F7CDAFF2DBB /* StripeUICore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9BDD4885AE1CEEEC3A45EC34 /* StripeUICore.framework */; };
@@ -65,7 +63,6 @@
 		D46A05D88420B85C1B275640 /* MyAPIClient.m in Sources */ = {isa = PBXBuildFile; fileRef = 0AA7CAC14165BD4EFB39E7C5 /* MyAPIClient.m */; };
 		D9507571006167E5188CA5BD /* GiropayExampleViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2D896A3BF93A934C07AB388E /* GiropayExampleViewController.m */; };
 		E13F276E0F55F333EDF31545 /* CashAppExampleViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2BB1F320D089C55C6013B2E7 /* CashAppExampleViewController.swift */; };
-		E25C6341B4F787932711D689 /* SofortSourcesExampleViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 58E87A8E1AE06AA97A3310C1 /* SofortSourcesExampleViewController.m */; };
 		E29BEECD69C041C085EFDEA9 /* BlikExampleViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = ABD4A8C07A1D8B651413DF43 /* BlikExampleViewController.swift */; };
 		E88340F6DFAA14F6772159E7 /* Stripe.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6CA51E7BD0D4D1E0B94075FE /* Stripe.framework */; };
 		F60858F22CEF052100D62278 /* CryptoExampleViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F60858F12CEF052100D62278 /* CryptoExampleViewController.swift */; };
@@ -99,7 +96,6 @@
 		052F9CDA0D4546CC1E5FF77C /* iDEALExampleViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = iDEALExampleViewController.m; sourceTree = "<group>"; };
 		05FF02CFBFA8863282D020E0 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		0AA7CAC14165BD4EFB39E7C5 /* MyAPIClient.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MyAPIClient.m; sourceTree = "<group>"; };
-		0D9290D2C037196B3A240121 /* SofortSourcesExampleViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SofortSourcesExampleViewController.h; sourceTree = "<group>"; };
 		1282A6CFB51F4F3D2CE92B22 /* AffirmExampleViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AffirmExampleViewController.swift; sourceTree = "<group>"; };
 		15F68FCA537974E451A03C00 /* ShippingManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ShippingManager.m; sourceTree = "<group>"; };
 		173B34E97F92E48FBB42E82B /* StripePaymentsUI.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = StripePaymentsUI.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -118,7 +114,6 @@
 		4C003C0154CCBA34AF5CAC43 /* EPSExampleViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = EPSExampleViewController.m; sourceTree = "<group>"; };
 		4C7C09286B3FF62A1562B3FB /* KlarnaExampleViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KlarnaExampleViewController.swift; sourceTree = "<group>"; };
 		54FC82B45AF4D84F4A87C0AD /* ShippingManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ShippingManager.h; sourceTree = "<group>"; };
-		58E87A8E1AE06AA97A3310C1 /* SofortSourcesExampleViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SofortSourcesExampleViewController.m; sourceTree = "<group>"; };
 		5B7DEBB2735CF9537D464127 /* PayPalExampleViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PayPalExampleViewController.h; sourceTree = "<group>"; };
 		5D8F3D727489A14C470D62C6 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		617C1C812BB4940500B10AC5 /* AlmaExampleViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlmaExampleViewController.swift; sourceTree = "<group>"; };
@@ -177,15 +172,12 @@
 		DF98C4542C942B8BE99AF2AE /* PaymentExampleViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PaymentExampleViewController.m; sourceTree = "<group>"; };
 		E05CDE4D4B5F09D6FDF265B6 /* it */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = it; path = it.lproj/Localizable.strings; sourceTree = "<group>"; };
 		E1C73C37A4DC7815C328BE12 /* AUBECSDebitExampleViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AUBECSDebitExampleViewController.m; sourceTree = "<group>"; };
-		E3EC1F5B37D8AD554396A3D7 /* WeChatPayExampleViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = WeChatPayExampleViewController.h; sourceTree = "<group>"; };
 		EB7E01F379079D28383E8559 /* Przelewy24ExampleViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Przelewy24ExampleViewController.m; sourceTree = "<group>"; };
 		EC269156D60D875784B0E074 /* Project-Release.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "Project-Release.xcconfig"; sourceTree = "<group>"; };
 		EE78B2BB1747FC2994ADC48C /* USBankAccountExampleViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = USBankAccountExampleViewController.swift; sourceTree = "<group>"; };
 		F185553AA1B3E2D0C80B8424 /* SEPADebitExampleViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SEPADebitExampleViewController.h; sourceTree = "<group>"; };
-		F1A0CF82AB6742C41BA5C19C /* WeChatPayExampleViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = WeChatPayExampleViewController.m; sourceTree = "<group>"; };
 		F2F0E1A3A75AC9C2C8E9C01B /* OXXOExampleViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = OXXOExampleViewController.h; sourceTree = "<group>"; };
 		F60858F12CEF052100D62278 /* CryptoExampleViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CryptoExampleViewController.swift; sourceTree = "<group>"; };
-		F74D08CE9A94C0D55EB3618A /* KlarnaSourcesExampleViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KlarnaSourcesExampleViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -283,7 +275,6 @@
 				673900BEF4553912511DBFE3 /* Info.plist */,
 				9ED911EC3E3C3C06B6909C18 /* KeyboardAvoidingScrollView.swift */,
 				4C7C09286B3FF62A1562B3FB /* KlarnaExampleViewController.swift */,
-				F74D08CE9A94C0D55EB3618A /* KlarnaSourcesExampleViewController.swift */,
 				5D8F3D727489A14C470D62C6 /* main.m */,
 				B9466FA637EB865C98AAA7B4 /* MyAPIClient.h */,
 				0AA7CAC14165BD4EFB39E7C5 /* MyAPIClient.m */,
@@ -304,13 +295,9 @@
 				15F68FCA537974E451A03C00 /* ShippingManager.m */,
 				990E6E75D5D7776609A82157 /* SofortExampleViewController.h */,
 				B9E0327F7A35DC353A823690 /* SofortExampleViewController.m */,
-				0D9290D2C037196B3A240121 /* SofortSourcesExampleViewController.h */,
-				58E87A8E1AE06AA97A3310C1 /* SofortSourcesExampleViewController.m */,
 				81BB6D6CEDC23FD2A8F3FB5A /* SwishExampleViewController.swift */,
 				32C7B53B74E206CF2A2DF38C /* USBankAccountConnectionsExampleViewController.swift */,
 				EE78B2BB1747FC2994ADC48C /* USBankAccountExampleViewController.swift */,
-				E3EC1F5B37D8AD554396A3D7 /* WeChatPayExampleViewController.h */,
-				F1A0CF82AB6742C41BA5C19C /* WeChatPayExampleViewController.m */,
 				CAC3A0312C2F1184007BC888 /* SunbitExampleViewController.swift */,
 				CAC3A0392C2F2AB5007BC888 /* BillieExampleViewController.swift */,
 				CAC80EBA2C333164001E3D0D /* SatispayExampleViewController.swift */,
@@ -448,7 +435,6 @@
 				61951FBB2B8674EC005F90BE /* AmazonPayExampleViewController.swift in Sources */,
 				0B69B9B4DEB17B393C5E4CD1 /* KeyboardAvoidingScrollView.swift in Sources */,
 				59551D92F75526B6E0789570 /* KlarnaExampleViewController.swift in Sources */,
-				A2728A537E75F4AF46AC4152 /* KlarnaSourcesExampleViewController.swift in Sources */,
 				D46A05D88420B85C1B275640 /* MyAPIClient.m in Sources */,
 				4B618821707204173527D0F2 /* OXXOExampleViewController.m in Sources */,
 				CF0983C679CA4196DF4DA37D /* PayPalExampleViewController.m in Sources */,
@@ -459,13 +445,11 @@
 				1EFD2CA666EA80AB86B3C3E6 /* ShippingManager.m in Sources */,
 				86C982DF1DC60CB160DA0FBB /* SofortExampleViewController.m in Sources */,
 				617C1C822BB4940500B10AC5 /* AlmaExampleViewController.swift in Sources */,
-				E25C6341B4F787932711D689 /* SofortSourcesExampleViewController.m in Sources */,
 				88AE1CED5467E828AE738B62 /* SwishExampleViewController.swift in Sources */,
 				7347961ABF706602E2915A53 /* USBankAccountConnectionsExampleViewController.swift in Sources */,
 				07E1B52EA12E4F9789013E8C /* USBankAccountExampleViewController.swift in Sources */,
 				6BA4B9182BF3E2AF00D1F21D /* MobilePayExampleViewController.swift in Sources */,
 				CAC3A0322C2F1184007BC888 /* SunbitExampleViewController.swift in Sources */,
-				616358522C3A1FCD579F2B37 /* WeChatPayExampleViewController.m in Sources */,
 				975D189CB2E61E7C1871F0DA /* iDEALExampleViewController.m in Sources */,
 				4331C8C4F8BA76E560F420DF /* main.m in Sources */,
 			);
