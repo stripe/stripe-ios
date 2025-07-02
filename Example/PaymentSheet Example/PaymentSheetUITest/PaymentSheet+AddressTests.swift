@@ -93,6 +93,9 @@ US
         app.buttons["Close"].tap()
         // The merchant app should get back nil
         XCTAssertEqual(shippingButton.label, "Address")
+
+        // Checkbox should NOT be shown when no defaults provided
+        XCTAssertFalse(app.buttons["Use billing address for shipping"].exists)
     }
 
     func testAddressWithDefaults() throws {
@@ -367,5 +370,111 @@ NZ
 
         // Ensure UK is persisted as phone country after tapping done
         XCTAssert(app.textFields["United Kingdom +44"].exists)
+    }
+
+    func testShippingEqualsBillingCheckboxAutoUncheck() throws {
+        var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
+        settings.layout = .horizontal
+        settings.uiStyle = .flowController
+        settings.shippingInfo = .onWithDefaults
+
+        loadPlayground(app, settings)
+        let shippingButton = app.buttons["Address"]
+        XCTAssertTrue(shippingButton.waitForExistence(timeout: 4.0))
+        shippingButton.tap()
+
+        let checkbox = app.switches["Use billing address for shipping"]
+        XCTAssertTrue(checkbox.waitForExistence(timeout: 2.0))
+        XCTAssertTrue(checkbox.isSelected)
+
+        // Get references to all fields we'll validate
+        let nameField = app.textFields["Full name"]
+        let line1Field = app.textFields["Address line 1"]
+        let cityField = app.textFields["City"]
+        let stateField = app.textFields["State"]
+        let postalField = app.textFields["ZIP"]
+        let phoneField = app.textFields["Phone number"]
+
+        // Validate initial state - all fields should be populated with defaults
+        XCTAssertEqual(nameField.value as? String, "Jane Doe")
+        XCTAssertEqual(line1Field.value as? String, "510 Townsend St.")
+        XCTAssertEqual(cityField.value as? String, "San Francisco")
+        XCTAssertEqual(stateField.value as? String, "California")
+        XCTAssertEqual(postalField.value as? String, "94102")
+        XCTAssertEqual(phoneField.value as? String, "(555) 555-5555")
+
+        // 1. Manually toggle off -> validate text fields are cleared (dropdowns keep their values)
+        checkbox.tap()
+        XCTAssertFalse(checkbox.isSelected)
+        XCTAssertEqual(nameField.value as? String ?? "", "")
+        XCTAssertEqual(line1Field.value as? String ?? "", "")
+        XCTAssertEqual(cityField.value as? String ?? "", "")
+        // Note: stateField is a dropdown and doesn't clear to empty
+        XCTAssertEqual(postalField.value as? String ?? "", "")
+        XCTAssertEqual(phoneField.value as? String ?? "", "")
+
+        // Toggle back on -> validate all fields are repopulated
+        checkbox.tap()
+        XCTAssertTrue(checkbox.isSelected)
+        XCTAssertEqual(nameField.value as? String, "Jane Doe")
+        XCTAssertEqual(line1Field.value as? String, "510 Townsend St.")
+        XCTAssertEqual(cityField.value as? String, "San Francisco")
+        XCTAssertEqual(stateField.value as? String, "California")
+        XCTAssertEqual(postalField.value as? String, "94102")
+        XCTAssertEqual(phoneField.value as? String, "(555) 555-5555")
+
+        // 2. Edit line1 to be different -> checkbox auto-unchecks
+        line1Field.tap()
+        let existingValue = line1Field.value as? String ?? ""
+        line1Field.typeText(String(repeating: XCUIKeyboardKey.delete.rawValue, count: existingValue.count))
+        line1Field.typeText("123 New St")
+        XCTAssertFalse(checkbox.isSelected)
+
+        // 3. Change value back to original default -> checkbox should re-check automatically
+        line1Field.tap()
+        line1Field.typeText(String(repeating: XCUIKeyboardKey.delete.rawValue, count: "123 New St".count))
+        line1Field.typeText("510 Townsend St.")
+        XCTAssertTrue(checkbox.isSelected)
+
+        // 4. User unchecks again -> validate text fields clear (dropdowns keep their values)
+        checkbox.tap()
+        XCTAssertFalse(checkbox.isSelected)
+        XCTAssertEqual(nameField.value as? String ?? "", "")
+        XCTAssertEqual(line1Field.value as? String ?? "", "")
+        XCTAssertEqual(cityField.value as? String ?? "", "")
+        XCTAssertEqual(postalField.value as? String ?? "", "")
+        XCTAssertEqual(phoneField.value as? String ?? "", "")
+
+        // 5. Re-check again -> validate all fields repopulate
+        checkbox.tap()
+        XCTAssertTrue(checkbox.isSelected)
+        XCTAssertEqual(nameField.value as? String, "Jane Doe")
+        XCTAssertEqual(line1Field.value as? String, "510 Townsend St.")
+        XCTAssertEqual(cityField.value as? String, "San Francisco")
+        XCTAssertEqual(stateField.value as? String, "California")
+        XCTAssertEqual(postalField.value as? String, "94102")
+        XCTAssertEqual(phoneField.value as? String, "(555) 555-5555")
+
+        // 6. Change State to a different value -> checkbox auto-unchecks
+        stateField.tap()
+        app.pickerWheels.firstMatch.adjust(toPickerWheelValue: "Alabama")
+        app.toolbars.buttons["Done"].tap()
+        XCTAssertFalse(checkbox.isSelected)
+
+        // 7. Change State back to default (California) -> checkbox re-checks automatically
+        stateField.tap()
+        app.pickerWheels.firstMatch.adjust(toPickerWheelValue: "California")
+        app.toolbars.buttons["Done"].tap()
+        XCTAssertTrue(checkbox.isSelected)
+        // Validate all fields are back to defaults
+        XCTAssertEqual(nameField.value as? String, "Jane Doe")
+        XCTAssertEqual(line1Field.value as? String, "510 Townsend St.")
+        XCTAssertEqual(cityField.value as? String, "San Francisco")
+        XCTAssertEqual(postalField.value as? String, "94102")
+        XCTAssertEqual(phoneField.value as? String, "(555) 555-5555")
+
+        // 8. Verify the address is valid
+        let saveAddressButton = app.buttons["Save address"]
+        XCTAssertTrue(saveAddressButton.isEnabled)
     }
 }

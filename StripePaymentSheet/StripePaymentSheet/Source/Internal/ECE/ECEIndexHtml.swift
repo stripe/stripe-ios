@@ -6,7 +6,17 @@
 struct ECEIndexHTML {
     let shopId: String
     let customerSessionClientSecret: String
-
+    var shopPayHTMLString: String {
+        return !shopId.isEmpty ?
+"""
+          paymentMethodOptions: {
+            shop_pay: {
+              shop_id: "\(shopId)",
+            },
+          },
+"""
+        : ""
+    }
     var ECEHTML: String {
 """
 <!DOCTYPE html>
@@ -43,6 +53,7 @@ struct ECEIndexHTML {
           payment_method_types: ["card", "link", "shop_pay"],
           customerSessionClientSecret: "\(customerSessionClientSecret)",
           __elementsInitSource: 'native_sdk',
+          \(shopPayHTMLString)
         };
 
       console.log("Initializing stripe elements with options", options);

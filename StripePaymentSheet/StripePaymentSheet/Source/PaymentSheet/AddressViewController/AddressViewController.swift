@@ -98,7 +98,19 @@ public class AddressViewController: UIViewController {
 
     // MARK: - Elements
     lazy var formElement: FormElement = {
-        let formElement = FormElement(elements: [addressSection, checkboxElement], theme: configuration.appearance.asElementsTheme)
+        var customSpacing: [(Element, CGFloat)] = []
+
+        // Add padding under the shipping equals billing checkbox if it exists
+        if let shippingCheckbox = shippingEqualsBillingCheckbox {
+            // Default spacing is a bit too tight for what we want, scale the appearance value a bit
+            customSpacing.append((shippingCheckbox, configuration.appearance.sectionSpacing * 1.6))
+        }
+
+        let formElement = FormElement(
+            elements: [shippingEqualsBillingCheckbox, addressSection, checkboxElement],
+            theme: configuration.appearance.asElementsTheme,
+            customSpacing: customSpacing
+        )
         formElement.delegate = self
         return formElement
     }()
@@ -114,6 +126,34 @@ public class AddressViewController: UIViewController {
 
         return element
     }()
+
+    /// Returns a default address only if it is compatible with allowed countries.
+    private var compatibleDefaultValues: AddressViewController.Configuration.DefaultAddressDetails? {
+        // No default address provided, early exit
+        guard !configuration.defaultValues.address.isEmpty else { return nil }
+
+        // No blocked countries, allow all default addresses
+        guard !configuration.allowedCountries.isEmpty else { return configuration.defaultValues }
+
+        // Default address has no country specified, allow it
+        guard let defaultCountry = configuration.defaultValues.address.country else { return configuration.defaultValues }
+
+        // Only allow default addresses with allowed countries
+        return configuration.allowedCountries.contains(defaultCountry) ? configuration.defaultValues : nil
+    }
+
+    private lazy var shippingEqualsBillingCheckbox: CheckboxElement? = {
+        guard configuration.showUseBillingAddressCheckbox, compatibleDefaultValues != nil else { return nil }
+        return CheckboxElement(
+            theme: configuration.appearance.asElementsTheme,
+            label: String.Localized.use_billing_address_for_shipping,
+            isSelectedByDefault: true,
+            didToggle: { [weak self] isSelected in
+                self?.handleShippingEqualsBillingToggle(isSelected: isSelected)
+            }
+        )
+    }()
+
     fileprivate lazy var closeButton: UIButton = {
         let button = SheetNavigationButton.makeCloseButton(appearance: configuration.appearance)
         button.addTarget(self, action: #selector(didTapCloseButton), for: .touchUpInside)
@@ -242,6 +282,62 @@ extension AddressViewController {
     @objc func didTapCloseButton() {
         delegate?.addressViewControllerDidFinish(self, with: nil)
     }
+
+    func handleShippingEqualsBillingToggle(isSelected: Bool) {
+        if isSelected {
+            // Repopulate with default values if available
+            if let validDefaults = compatibleDefaultValues {
+                populateAddressSection(with: .init(from: validDefaults))
+            }
+        } else {
+            // Clear all address fields when unselected
+            clearAddressSection()
+        }
+    }
+
+    private func populateAddressSection(with addressDetails: AddressSectionElement.AddressDetails) {
+        guard let addressSection = addressSection else { return }
+
+        // Set country first as it affects available fields
+        if let countryIndex = addressSection.countryCodes.firstIndex(where: { $0 == addressDetails.address.country }) {
+            addressSection.country.select(index: countryIndex)
+        }
+
+        // Populate address fields
+        addressSection.line1?.setText(addressDetails.address.line1 ?? "")
+        addressSection.line2?.setText(addressDetails.address.line2 ?? "")
+        addressSection.city?.setText(addressDetails.address.city ?? "")
+        addressSection.postalCode?.setText(addressDetails.address.postalCode ?? "")
+        addressSection.state?.setRawData(addressDetails.address.state ?? "", shouldAutoAdvance: false)
+
+        // Populate name and phone if available
+        addressSection.name?.setText(addressDetails.name ?? "")
+        if let phone = addressDetails.phone {
+            addressSection.phone?.setPhoneNumber(phone)
+        }
+        if let phoneCountry = addressDetails.address.country {
+            addressSection.phone?.setSelectedCountryCode(phoneCountry, shouldUpdateDefaultNumber: false)
+        }
+    }
+
+    private func clearAddressSection() {
+        guard let addressSection = addressSection else { return }
+
+        // Clear all text fields
+        addressSection.line1?.setText("")
+        addressSection.line2?.setText("")
+        addressSection.city?.setText("")
+        addressSection.postalCode?.setText("")
+        addressSection.state?.setRawData("", shouldAutoAdvance: false)
+        addressSection.name?.setText("")
+        addressSection.phone?.clearPhoneNumber()
+
+        // Reset to default country if needed (first in allowed countries or US)
+        let defaultCountryCode = configuration.allowedCountries.first ?? "US"
+        if let defaultCountryIndex = addressSection.countryCodes.firstIndex(where: { $0 == defaultCountryCode }) {
+            addressSection.country.select(index: defaultCountryIndex)
+        }
+    }
 }
 
 // MARK: - Private methods
@@ -255,18 +351,17 @@ extension AddressViewController {
         }
     }
 
-    private func initAddressSection() {
-        guard hasLoadedSpecs else { return }
+    private func makeDefaultAddressSection() -> AddressSectionElement? {
+        guard hasLoadedSpecs else { return nil }
 
-        let additionalFields = configuration.additionalFields
-        let defaultValues = configuration.defaultValues
-        let allowedCountries = configuration.allowedCountries
-        addressSection = AddressSectionElement(
-            countries: allowedCountries.isEmpty ? nil : allowedCountries,
+        let defaultValues = compatibleDefaultValues ?? .init()
+
+        return AddressSectionElement(
+            countries: configuration.allowedCountries.isEmpty ? nil : configuration.allowedCountries,
             addressSpecProvider: addressSpecProvider,
             defaults: .init(from: defaultValues),
-            collectionMode: configuration.defaultValues.address != .init() ? .all(autocompletableCountries: configuration.autocompleteCountries) : .autoCompletable,
-            additionalFields: .init(from: additionalFields),
+            collectionMode: compatibleDefaultValues != nil ? .all(autocompletableCountries: configuration.autocompleteCountries) : .autoCompletable,
+            additionalFields: .init(from: configuration.additionalFields),
             theme: configuration.appearance.asElementsTheme,
             presentAutoComplete: { [weak self] in
                 self?.presentAutocomplete()
@@ -275,7 +370,7 @@ extension AddressViewController {
     }
 
     private func loadUI() {
-        initAddressSection()
+        self.addressSection = makeDefaultAddressSection()
 
         let stackView = UIStackView(arrangedSubviews: [headerLabel, formElement.view, errorLabel])
         stackView.directionalLayoutMargins = configuration.appearance.topFormInsets
@@ -349,6 +444,9 @@ extension AddressViewController {
          let enabled = addressSection.validationState.isValid
          button.update(state: enabled ? .enabled : .disabled, animated: true)
          expandAddressSectionIfNeeded()
+
+         // Automatically check/uncheck the "shipping equals billing" checkbox if the user edits
+         shippingEqualsBillingCheckbox?.isSelected = !hasAddressSectionChanged()
      }
 
      @_spi(STP) public func continueToNextField(element: Element) {
@@ -444,4 +542,17 @@ extension AddressSectionElement.AdditionalFields {
 
 @_spi(STP) extension AddressViewController: STPAnalyticsProtocol {
     @_spi(STP) public static var stp_analyticsIdentifier = "PaymentSheet.AddressController"
+}
+
+extension AddressViewController {
+    private func hasAddressSectionChanged() -> Bool {
+        guard let addressSection = addressSection, let defaultAddressSection = makeDefaultAddressSection() else { return false }
+        return addressSection.addressDetails != defaultAddressSection.addressDetails
+    }
+}
+
+extension PaymentSheet.Address {
+    var isEmpty: Bool {
+        return self == .init()
+    }
 }
