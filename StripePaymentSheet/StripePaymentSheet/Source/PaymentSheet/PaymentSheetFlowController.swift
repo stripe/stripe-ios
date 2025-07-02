@@ -174,8 +174,14 @@ extension PaymentSheet {
                     billingDetails = nil
                     shippingDetails = nil
                 case .saved(let paymentMethod, let confirmParams):
+                    if let linkedBank = confirmParams?.instantDebitsLinkedBank {
+                        // Special case for Instant Bank Payments
+                        let sublabel = linkedBank.last4.flatMap { "••••\($0)" }
+                        labels = Labels(label: linkedBank.bankName ?? .Localized.bank, sublabel: sublabel)
+                    } else {
+                        labels = Labels(label: paymentMethod.expandedPaymentSheetLabel, sublabel: paymentMethod.paymentSheetSublabel)
+                    }
                     label = paymentMethod.paymentOptionLabel(confirmParams: confirmParams)
-                    labels = Labels(label: paymentMethod.expandedPaymentSheetLabel, sublabel: paymentMethod.paymentSheetSublabel)
                     paymentMethodType = paymentMethod.type.identifier
                     billingDetails = paymentMethod.billingDetails?.toPaymentSheetBillingDetails()
                     shippingDetails = nil
