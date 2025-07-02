@@ -52,7 +52,6 @@ class STPSourceTest: XCTestCase {
         }
     }
 
-
     // MARK: - STPSourceStatus Tests
 
     func testStatusFromString() {
