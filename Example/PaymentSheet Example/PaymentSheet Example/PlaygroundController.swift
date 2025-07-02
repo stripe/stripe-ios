@@ -489,7 +489,12 @@ class PlaygroundController: ObservableObject {
     var customerSessionClientSecret: String?
     var paymentMethodTypes: [String]?
     var addressViewController: AddressViewController?
-    var appearance = PaymentSheet.Appearance.default
+    var appearance = {
+        var appearance = PaymentSheet.Appearance.default
+        appearance.embeddedPaymentElement.row.flat.chevron.size = 24
+        appearance.embeddedPaymentElement.row.flat.chevron.image = UIImage(named: "edit")!
+        return appearance
+    }()
     var currentDataTask: URLSessionDataTask?
 
     var checkoutEndpoint: String {
@@ -602,6 +607,8 @@ class PlaygroundController: ObservableObject {
         self.settings = PaymentSheetTestPlaygroundSettings.defaultValues()
         PaymentSheet.resetCustomer()
         self.appearance = PaymentSheet.Appearance.default
+        appearance.embeddedPaymentElement.row.flat.chevron.size = 24
+        appearance.embeddedPaymentElement.row.flat.chevron.image = UIImage(named: "edit")!
     }
 
     func appearanceButtonTapped() {

@@ -382,6 +382,8 @@ public extension PaymentSheet.Appearance {
                 public struct Chevron: Equatable {
                     /// The color of the chevron icon
                     public var color: UIColor = .systemGray
+                    public var image: UIImage = UIImage()
+                    public var size: CGFloat = 0
                 }
             }
 
