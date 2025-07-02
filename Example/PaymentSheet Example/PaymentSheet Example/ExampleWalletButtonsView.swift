@@ -509,11 +509,12 @@ class ExampleWalletButtonsModel: ObservableObject {
 
     var shopPayConfiguration: PaymentSheet.ShopPayConfiguration {
         let singleBusinessDay = PaymentSheet.ShopPayConfiguration.DeliveryEstimate.DeliveryEstimateUnit(value: 1, unit: .business_day)
+        let twoBusinessDay = PaymentSheet.ShopPayConfiguration.DeliveryEstimate.DeliveryEstimateUnit(value: 2, unit: .business_day)
         let fiveBusinessDays = PaymentSheet.ShopPayConfiguration.DeliveryEstimate.DeliveryEstimateUnit(value: 5, unit: .business_day)
         let sevenBusinessDays = PaymentSheet.ShopPayConfiguration.DeliveryEstimate.DeliveryEstimateUnit(value: 7, unit: .business_day)
 
         let shippingRates: [PaymentSheet.ShopPayConfiguration.ShippingRate] = [
-            .init(id: "express", amount: 1099, displayName: "Overnight", deliveryEstimate: .init(minimum: singleBusinessDay, maximum: singleBusinessDay)),
+            .init(id: "express", amount: 1099, displayName: "Express", deliveryEstimate: .init(minimum: singleBusinessDay, maximum: twoBusinessDay)),
             .init(id: "standard", amount: 0, displayName: "Free", deliveryEstimate: .init(minimum: fiveBusinessDays, maximum: sevenBusinessDays)),
         ]
 
