@@ -94,7 +94,7 @@ struct ECEIndexHTML {
       expressCheckoutElement.mount("#express-checkout-element");
       //When expressCheckoutElement is mounted, ready event tries to show the available payment methods
 
-      window.clickEventReceived = false;
+      let clickEventReceived = false;
       expressCheckoutElement.on("ready", ({ availablePaymentMethods }) => {
         const expressCheckoutDiv = document.getElementById(
           "express-checkout-element"
@@ -109,7 +109,7 @@ struct ECEIndexHTML {
         console.log("Attempting to trigger Shop Pay click immediately...");
         try {
           // Check if a click event was already received
-          if (!window.clickEventReceived) {
+          if (!clickEventReceived) {
             expressCheckoutElement._sendNativeSdkClick({paymentMethodType: 'shop_pay'});
             console.log("Initial Shop Pay click triggered");
           } else {
@@ -123,7 +123,7 @@ struct ECEIndexHTML {
         let clickCount = 1;
         const clickInterval = setInterval(() => {
           // Stop if a click event was received
-          if (window.clickEventReceived) {
+          if (clickEventReceived) {
             console.log("Click event received, stopping further click attempts");
             clearInterval(clickInterval);
             return;
@@ -142,7 +142,7 @@ struct ECEIndexHTML {
 
       expressCheckoutElement.on("click", async function (event) {
         // We need to know when to stop sending _sendNativeSdkClick
-        window.clickEventReceived = true;
+        clickEventReceived = true;
 
         console.log(`Click received with event:\n${hashToString(event)}`);
         try {
