@@ -84,6 +84,14 @@ final class LinkCardEditElement: Element {
         )
     }
 
+    private var showNameFieldInBillingAddressSection: Bool {
+        // If we're showing this form for payment methods other than cards, we can't rely on the cardholder name field
+        // in the card section. Therefore, we show it in the address section.
+        let isCard = paymentMethod.type == .card
+        let collectsName = configuration.billingDetailsCollectionConfiguration.name == .always
+        return !isCard && collectsName
+    }
+
     private lazy var emailElement: TextFieldElement? = {
         guard configuration.billingDetailsCollectionConfiguration.email == .always else { return nil }
 
@@ -231,12 +239,17 @@ final class LinkCardEditElement: Element {
         guard configuration.billingDetailsCollectionConfiguration.address != .never else { return nil }
 
         let defaultBillingAddress = AddressSectionElement.AddressDetails(billingAddress: paymentMethod.billingAddress ?? .init(), phone: nil)
+        let additionalFields = AddressSectionElement.AdditionalFields(
+            name: showNameFieldInBillingAddressSection ? .enabled(isOptional: false) : .disabled
+        )
+
         return AddressSectionElement(
             title: String.Localized.billing_address_lowercase,
             defaults: defaultBillingAddress,
             collectionMode: configuration.billingDetailsCollectionConfiguration.address == .full
                 ? .all()
                 : .countryAndPostal(),
+            additionalFields: additionalFields,
             theme: theme
         )
     }()
