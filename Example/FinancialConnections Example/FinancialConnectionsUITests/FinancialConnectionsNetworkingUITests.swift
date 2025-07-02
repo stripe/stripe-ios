@@ -397,9 +397,6 @@ final class FinancialConnectionsNetworkingUITests: XCTestCase {
         // auto-fill OTP
         app.fc_nativeTestModeAutofillButton.waitForExistenceAndTap()
 
-        // tap manual entry institution
-        app.scrollViews.staticTexts["Test Institution"].waitForExistenceAndTap()
-
         app.fc_nativeConnectAccountsButton.waitForExistenceAndTap()
 
         app.fc_nativeSuccessDoneButton.waitForExistenceAndTap()
