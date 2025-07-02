@@ -193,16 +193,21 @@ final class LinkCardEditElement: Element {
     )
 
     private lazy var formElement: FormElement = {
+        var elements: [Element?] = [contactInformationSection]
+
+        if paymentMethod.type == .card {
+            elements.append(cardSection)
+        }
+
+        elements.append(billingAddressSection)
+        elements.append(checkboxElement)
+
         let formElement = FormElement(
-            elements: [
-                contactInformationSection,
-                cardSection,
-                billingAddressSection,
-                checkboxElement,
-            ],
+            elements: elements,
             theme: theme,
             customSpacing: [(cardSection, LinkUI.largeContentSpacing)]
         )
+        formElement.toggleChild(cardSection, show: paymentMethod.type == .card, animated: false)
         formElement.delegate = self
         return formElement
     }()

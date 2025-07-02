@@ -80,21 +80,6 @@ extension ConsumerPaymentDetails {
             return false
         }
 
-        if case .bankAccount = details {
-            // Only support bank accounts if we don't have to collect any missing billing details
-            let effectiveBillingDetails = configuration.effectiveBillingDetails(for: linkAccount)
-
-            let effectivePaymentDetails = update(
-                with: effectiveBillingDetails,
-                basedOn: configuration.billingDetailsCollectionConfiguration
-            )
-
-            return effectivePaymentDetails.supports(
-                configuration.billingDetailsCollectionConfiguration,
-                in: linkAccount.currentSession
-            )
-        }
-
         return true
     }
 }
