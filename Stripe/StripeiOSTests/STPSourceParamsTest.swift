@@ -19,7 +19,6 @@ class STPSourceParamsTest: XCTestCase {
     func testInit() {
         let sourceParams = STPSourceParams()
         XCTAssertEqual(sourceParams.rawTypeString, "")
-        XCTAssertEqual(sourceParams.flow, .unknown)
         XCTAssertEqual(sourceParams.usage, .unknown)
         XCTAssertEqual(sourceParams.additionalAPIParameters as NSDictionary, [:] as NSDictionary)
     }
@@ -28,41 +27,11 @@ class STPSourceParamsTest: XCTestCase {
         let sourceParams = STPSourceParams()
         XCTAssertEqual(sourceParams.type, .unknown)
 
-        sourceParams.rawTypeString = "bancontact"
-        XCTAssertEqual(sourceParams.type, .bancontact)
-
         sourceParams.rawTypeString = "card"
         XCTAssertEqual(sourceParams.type, .card)
 
-        sourceParams.rawTypeString = "giropay"
-        XCTAssertEqual(sourceParams.type, .giropay)
-
-        sourceParams.rawTypeString = "ideal"
-        XCTAssertEqual(sourceParams.type, .iDEAL)
-
-        sourceParams.rawTypeString = "sepa_debit"
-        XCTAssertEqual(sourceParams.type, .SEPADebit)
-
-        sourceParams.rawTypeString = "sofort"
-        XCTAssertEqual(sourceParams.type, .sofort)
-
         sourceParams.rawTypeString = "three_d_secure"
         XCTAssertEqual(sourceParams.type, .threeDSecure)
-
-        sourceParams.rawTypeString = "alipay"
-        XCTAssertEqual(sourceParams.type, .alipay)
-
-        sourceParams.rawTypeString = "p24"
-        XCTAssertEqual(sourceParams.type, .P24)
-
-        sourceParams.rawTypeString = "eps"
-        XCTAssertEqual(sourceParams.type, .EPS)
-
-        sourceParams.rawTypeString = "multibanco"
-        XCTAssertEqual(sourceParams.type, .multibanco)
-
-        sourceParams.rawTypeString = "klarna"
-        XCTAssertEqual(sourceParams.type, .klarna)
 
         sourceParams.rawTypeString = "unknown"
         XCTAssertEqual(sourceParams.type, .unknown)
@@ -96,21 +65,6 @@ class STPSourceParamsTest: XCTestCase {
         sourceParams.type = .threeDSecure
         XCTAssertEqual(sourceParams.rawTypeString, "three_d_secure")
 
-        sourceParams.type = .alipay
-        XCTAssertEqual(sourceParams.rawTypeString, "alipay")
-
-        sourceParams.type = .P24
-        XCTAssertEqual(sourceParams.rawTypeString, "p24")
-
-        sourceParams.type = .EPS
-        XCTAssertEqual(sourceParams.rawTypeString, "eps")
-
-        sourceParams.type = .multibanco
-        XCTAssertEqual(sourceParams.rawTypeString, "multibanco")
-
-        sourceParams.type = .klarna
-        XCTAssertEqual(sourceParams.rawTypeString, "klarna")
-
         sourceParams.type = .unknown
         XCTAssertNil(sourceParams.rawTypeString)
     }
@@ -141,25 +95,8 @@ class STPSourceParamsTest: XCTestCase {
         XCTAssertEqual(sourceParams.rawTypeString, "new_source_type")
 
         // Check setting string to known type sets type correctly
-        sourceParams.rawTypeString = STPSource.string(from: .iDEAL)
-        XCTAssertEqual(sourceParams.type, .iDEAL)
-    }
-
-    func testFlowString() {
-        let sourceParams = STPSourceParams()
-        XCTAssertNil(sourceParams.flowString())
-
-        sourceParams.flow = .redirect
-        XCTAssertEqual(sourceParams.flowString(), "redirect")
-
-        sourceParams.flow = .receiver
-        XCTAssertEqual(sourceParams.flowString(), "receiver")
-
-        sourceParams.flow = .codeVerification
-        XCTAssertEqual(sourceParams.flowString(), "code_verification")
-
-        sourceParams.flow = .none
-        XCTAssertEqual(sourceParams.flowString(), "none")
+        sourceParams.rawTypeString = STPSource.string(from: .card)
+        XCTAssertEqual(sourceParams.type, .card)
     }
 
     // MARK: - Constructors Tests
@@ -220,22 +157,6 @@ class STPSourceParamsTest: XCTestCase {
         XCTAssertEqual(sourceMasterpass!["transaction_id"] as! String, "87654321")
     }
 
-    func testKlarnaParams() {
-        let params = STPSourceParams.klarnaParams(
-            withReturnURL: "return_url",
-            currency: "USD",
-            purchaseCountry: "US",
-            items: [],
-            customPaymentMethods: [.none],
-            billingAddress: nil,
-            billingFirstName: nil,
-            billingLastName: nil,
-            billingDOB: nil
-        )
-
-        XCTAssertNotNil(params)
-    }
-
     // MARK: - Redirect Dictionary Tests
     func redirectMerchantNameQueryItemValue(fromURLString urlString: String?) -> String? {
         let components = NSURLComponents(string: urlString ?? "")
@@ -245,52 +166,6 @@ class STPSourceParamsTest: XCTestCase {
             }
         }
         return nil
-    }
-
-    func testRedirectMerchantNameURL() {
-        var sourceParams = STPSourceParams.sofortParams(
-            withAmount: 1000,
-            returnURL: "test://foo?value=baz",
-            country: "DE",
-            statementDescriptor: nil
-        )
-
-        var params = STPFormEncoder.dictionary(forObject: sourceParams)
-        // Should be nil because we have no app name in tests
-        XCTAssertNil(
-            redirectMerchantNameQueryItemValue(
-                fromURLString: (params["redirect"] as! [String: AnyHashable])["return_url"]
-                    as? String
-            )
-        )
-
-        sourceParams.redirectMerchantName = "bar"
-        params = STPFormEncoder.dictionary(forObject: sourceParams)
-        XCTAssertEqual(
-            redirectMerchantNameQueryItemValue(
-                fromURLString: (params["redirect"] as! [String: AnyHashable])["return_url"]
-                    as? String
-            ),
-            "bar"
-        )
-
-        sourceParams = STPSourceParams.sofortParams(
-            withAmount: 1000,
-            returnURL: "test://foo?redirect_merchant_name=Manual%20Custom%20Name",
-            country: "DE",
-            statementDescriptor: nil
-        )
-        sourceParams.redirectMerchantName = "bar"
-        params = STPFormEncoder.dictionary(forObject: sourceParams)
-        // Don't override names set by the user directly in the url
-        XCTAssertEqual(
-            redirectMerchantNameQueryItemValue(
-                fromURLString: (params["redirect"] as! [String: AnyHashable])["return_url"]
-                    as? String
-            ),
-            "Manual Custom Name"
-        )
-
     }
 
     // MARK: - STPFormEncodable Tests

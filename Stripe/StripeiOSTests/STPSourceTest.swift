@@ -15,38 +15,12 @@ class STPSourceTest: XCTestCase {
     // MARK: - STPSourceType Tests
 
     func testTypeFromString() {
-        XCTAssertEqual(STPSource.type(from: "bancontact"), STPSourceType.bancontact)
-        XCTAssertEqual(STPSource.type(from: "BANCONTACT"), STPSourceType.bancontact)
 
         XCTAssertEqual(STPSource.type(from: "card"), STPSourceType.card)
         XCTAssertEqual(STPSource.type(from: "CARD"), STPSourceType.card)
 
-        XCTAssertEqual(STPSource.type(from: "giropay"), STPSourceType.giropay)
-        XCTAssertEqual(STPSource.type(from: "GIROPAY"), STPSourceType.giropay)
-
-        XCTAssertEqual(STPSource.type(from: "ideal"), STPSourceType.iDEAL)
-        XCTAssertEqual(STPSource.type(from: "IDEAL"), STPSourceType.iDEAL)
-
-        XCTAssertEqual(STPSource.type(from: "sepa_debit"), STPSourceType.SEPADebit)
-        XCTAssertEqual(STPSource.type(from: "SEPA_DEBIT"), STPSourceType.SEPADebit)
-
-        XCTAssertEqual(STPSource.type(from: "sofort"), STPSourceType.sofort)
-        XCTAssertEqual(STPSource.type(from: "Sofort"), STPSourceType.sofort)
-
         XCTAssertEqual(STPSource.type(from: "three_d_secure"), STPSourceType.threeDSecure)
         XCTAssertEqual(STPSource.type(from: "THREE_D_SECURE"), STPSourceType.threeDSecure)
-
-        XCTAssertEqual(STPSource.type(from: "alipay"), STPSourceType.alipay)
-        XCTAssertEqual(STPSource.type(from: "ALIPAY"), STPSourceType.alipay)
-
-        XCTAssertEqual(STPSource.type(from: "p24"), STPSourceType.P24)
-        XCTAssertEqual(STPSource.type(from: "P24"), STPSourceType.P24)
-
-        XCTAssertEqual(STPSource.type(from: "eps"), STPSourceType.EPS)
-        XCTAssertEqual(STPSource.type(from: "EPS"), STPSourceType.EPS)
-
-        XCTAssertEqual(STPSource.type(from: "multibanco"), STPSourceType.multibanco)
-        XCTAssertEqual(STPSource.type(from: "MULTIBANCO"), STPSourceType.multibanco)
 
         XCTAssertEqual(STPSource.type(from: "unknown"), STPSourceType.unknown)
         XCTAssertEqual(STPSource.type(from: "UNKNOWN"), STPSourceType.unknown)
@@ -57,17 +31,8 @@ class STPSourceTest: XCTestCase {
 
     func testStringFromType() {
         let values = [
-            STPSourceType.bancontact,
             STPSourceType.card,
-            STPSourceType.giropay,
-            STPSourceType.iDEAL,
-            STPSourceType.SEPADebit,
-            STPSourceType.sofort,
             STPSourceType.threeDSecure,
-            STPSourceType.alipay,
-            STPSourceType.P24,
-            STPSourceType.EPS,
-            STPSourceType.multibanco,
             STPSourceType.unknown,
         ]
 
@@ -75,32 +40,10 @@ class STPSourceTest: XCTestCase {
             let string = STPSource.string(from: type)
 
             switch type {
-            case STPSourceType.bancontact:
-                XCTAssertEqual(string, "bancontact")
             case STPSourceType.card:
                 XCTAssertEqual(string, "card")
-            case STPSourceType.giropay:
-                XCTAssertEqual(string, "giropay")
-            case STPSourceType.iDEAL:
-                XCTAssertEqual(string, "ideal")
-            case STPSourceType.SEPADebit:
-                XCTAssertEqual(string, "sepa_debit")
-            case STPSourceType.sofort:
-                XCTAssertEqual(string, "sofort")
             case STPSourceType.threeDSecure:
                 XCTAssertEqual(string, "three_d_secure")
-            case STPSourceType.alipay:
-                XCTAssertEqual(string, "alipay")
-            case STPSourceType.P24:
-                XCTAssertEqual(string, "p24")
-            case STPSourceType.EPS:
-                XCTAssertEqual(string, "eps")
-            case STPSourceType.multibanco:
-                XCTAssertEqual(string, "multibanco")
-            case STPSourceType.weChatPay:
-                XCTAssertEqual(string, "wechat")
-            case STPSourceType.klarna:
-                XCTAssertEqual(string, "klarna")
             case STPSourceType.unknown:
                 XCTAssertNil(string)
             default:
@@ -250,8 +193,8 @@ class STPSourceTest: XCTestCase {
     // MARK: - Equality Tests
 
     func testSourceEquals() {
-        let source1 = STPSource.decodedObject(fromAPIResponse: STPTestUtils.jsonNamed("AlipaySource"))
-        let source2 = STPSource.decodedObject(fromAPIResponse: STPTestUtils.jsonNamed("AlipaySource"))
+        let source1 = STPSource.decodedObject(fromAPIResponse: STPTestUtils.jsonNamed("CardSource"))
+        let source2 = STPSource.decodedObject(fromAPIResponse: STPTestUtils.jsonNamed("CardSource"))
 
         XCTAssertEqual(source1, source1)
         XCTAssertEqual(source1, source2)
@@ -263,7 +206,7 @@ class STPSourceTest: XCTestCase {
     // MARK: - Description Tests
 
     func testDescription() {
-        let source = STPSource.decodedObject(fromAPIResponse: STPTestUtils.jsonNamed("AlipaySource"))
+        let source = STPSource.decodedObject(fromAPIResponse: STPTestUtils.jsonNamed("CardSource"))
         XCTAssertNotNil(source?.description)
     }
 
@@ -278,13 +221,13 @@ class STPSourceTest: XCTestCase {
         ]
 
         for field in requiredFields {
-            var response = STPTestUtils.jsonNamed("AlipaySource")
+            var response = STPTestUtils.jsonNamed("CardSource")
             response?.removeValue(forKey: field)
 
             XCTAssertNil(STPSource.decodedObject(fromAPIResponse: response))
         }
 
-        XCTAssertNotNil(STPSource.decodedObject(fromAPIResponse: STPTestUtils.jsonNamed("AlipaySource")))
+        XCTAssertNotNil(STPSource.decodedObject(fromAPIResponse: STPTestUtils.jsonNamed("CardSource")))
     }
 
     func testDecodingSource_3ds() {
@@ -298,45 +241,14 @@ class STPSourceTest: XCTestCase {
         XCTAssertEqual(source?.flow, .redirect)
         XCTAssertEqual(source?.livemode, false)
         XCTAssertNil(source?.perform(NSSelectorFromString("metadata")))
-        XCTAssertNotNil(source?.owner) // STPSourceOwnerTest
-        XCTAssertNotNil(source?.receiver) // STPSourceReceiverTest
-        XCTAssertNotNil(source?.redirect) // STPSourceRedirectTest
         XCTAssertEqual(source?.status, STPSourceStatus.pending)
         XCTAssertEqual(source?.type, STPSourceType.threeDSecure)
         XCTAssertEqual(source?.usage, STPSourceUsage.singleUse)
-        XCTAssertNil(source?.verification)
         var threedsecure = response?["three_d_secure"] as? [AnyHashable: Any]
         threedsecure?.removeValue(forKey: "customer") // should be nil
 //        XCTAssertEqual(source?.details, threedsecure)
         XCTAssertNotNil(source?.details)
         XCTAssertNil(source?.cardDetails) // STPSourceCardDetailsTest
-        XCTAssertNil(source?.sepaDebitDetails) // STPSourceSEPADebitDetailsTest
-    }
-
-    func testDecodingSource_alipay() {
-        let response = STPTestUtils.jsonNamed(STPTestJSONSourceAlipay)
-        let source = STPSource.decodedObject(fromAPIResponse: response)
-        XCTAssertEqual(source?.stripeID, "src_123")
-        XCTAssertEqual(source?.amount, NSNumber(value: 1099))
-        XCTAssertEqual(source?.clientSecret, "src_client_secret_123")
-        XCTAssertEqual(source?.created?.timeIntervalSince1970 ?? 0, 1445277809.0, accuracy: 1.0)
-        XCTAssertEqual(source?.currency, "usd")
-        XCTAssertEqual(source?.flow, .redirect)
-        XCTAssertEqual(source?.livemode, true)
-        XCTAssertNil(source?.perform(NSSelectorFromString("metadata")))
-        XCTAssertNotNil(source?.owner) // STPSourceOwnerTest
-        XCTAssertNil(source?.receiver) // STPSourceReceiverTest
-        XCTAssertNotNil(source?.redirect) // STPSourceRedirectTest
-        XCTAssertEqual(source?.status, STPSourceStatus.pending)
-        XCTAssertEqual(source?.type, STPSourceType.alipay)
-        XCTAssertEqual(source?.usage, STPSourceUsage.singleUse)
-        XCTAssertNil(source?.verification)
-        var alipayResponse = response!["alipay"] as? [AnyHashable: Any]
-        alipayResponse?.removeValue(forKey: "native_url") // should be nil
-        alipayResponse?.removeValue(forKey: "statement_descriptor") // should be nil
-        XCTAssertEqual(source!.details! as NSDictionary, alipayResponse! as NSDictionary)
-        XCTAssertNil(source?.cardDetails) // STPSourceCardDetailsTest
-        XCTAssertNil(source?.sepaDebitDetails) // STPSourceSEPADebitDetailsTest
     }
 
     func testDecodingSource_card() {
@@ -350,39 +262,11 @@ class STPSourceTest: XCTestCase {
         XCTAssertEqual(source?.flow, STPSourceFlow.none)
         XCTAssertEqual(source?.livemode, false)
         XCTAssertNil(source?.perform(NSSelectorFromString("metadata")))
-        XCTAssertNotNil(source?.owner) // STPSourceOwnerTest
-        XCTAssertNil(source?.receiver) // STPSourceReceiverTest
-        XCTAssertNil(source?.redirect) // STPSourceRedirectTest
         XCTAssertEqual(source?.status, STPSourceStatus.chargeable)
         XCTAssertEqual(source?.type, STPSourceType.card)
         XCTAssertEqual(source?.usage, STPSourceUsage.reusable)
-        XCTAssertNil(source?.verification)
         XCTAssertEqual(source!.details! as NSDictionary, response!["card"] as! NSDictionary)
         XCTAssertNotNil(source?.cardDetails) // STPSourceCardDetailsTest
-        XCTAssertNil(source?.sepaDebitDetails) // STPSourceSEPADebitDetailsTest
-    }
-
-    func testDecodingSource_ideal() {
-        let response = STPTestUtils.jsonNamed(STPTestJSONSourceiDEAL)
-        let source = STPSource.decodedObject(fromAPIResponse: response)
-        XCTAssertEqual(source?.stripeID, "src_123")
-        XCTAssertEqual(source?.amount, NSNumber(value: 1099))
-        XCTAssertEqual(source?.clientSecret, "src_client_secret_123")
-        XCTAssertEqual(source?.created?.timeIntervalSince1970 ?? 0, 1445277809.0, accuracy: 1.0)
-        XCTAssertEqual(source?.currency, "eur")
-        XCTAssertEqual(source?.flow, .redirect)
-        XCTAssertEqual(source?.livemode, true)
-        XCTAssertNil(source?.perform(NSSelectorFromString("metadata")))
-        XCTAssertNotNil(source?.owner) // STPSourceOwnerTest
-        XCTAssertNil(source?.receiver) // STPSourceReceiverTest
-        XCTAssertNotNil(source?.redirect) // STPSourceRedirectTest
-        XCTAssertEqual(source?.status, STPSourceStatus.pending)
-        XCTAssertEqual(source?.type, STPSourceType.iDEAL)
-        XCTAssertEqual(source?.usage, STPSourceUsage.singleUse)
-        XCTAssertNil(source?.verification)
-        XCTAssertEqual(source!.details! as NSDictionary, response!["ideal"] as! NSDictionary)
-        XCTAssertNil(source?.cardDetails) // STPSourceCardDetailsTest
-        XCTAssertNil(source?.sepaDebitDetails) // STPSourceSEPADebitDetailsTest
     }
 
     func testDecodingSource_sepa_debit() {
@@ -393,36 +277,19 @@ class STPSourceTest: XCTestCase {
         XCTAssertEqual(source?.clientSecret, "src_client_secret_XcBmS94nTg5o0xc9MSliSlDW")
         XCTAssertEqual(source?.created?.timeIntervalSince1970 ?? 0, 1464803577.0, accuracy: 1.0)
         XCTAssertEqual(source?.currency, "eur")
-        XCTAssertEqual(source?.flow, STPSourceFlow.none)
         XCTAssertEqual(source?.livemode, false)
         XCTAssertNil(source?.perform(NSSelectorFromString("metadata")))
-        XCTAssertEqual(source?.owner?.name, "Jenny Rosen")
-        XCTAssertNotNil(source?.owner) // STPSourceOwnerTest
-        XCTAssertNil(source?.receiver) // STPSourceReceiverTest
-        XCTAssertNil(source?.redirect) // STPSourceRedirectTest
         XCTAssertEqual(source?.status, STPSourceStatus.chargeable)
-        XCTAssertEqual(source?.type, STPSourceType.SEPADebit)
+        XCTAssertEqual(source?.type, STPSourceType.card)
         XCTAssertEqual(source?.usage, STPSourceUsage.reusable)
-        XCTAssertEqual(source?.verification?.attemptsRemaining, NSNumber(value: 5))
-        XCTAssertEqual(source?.verification?.status, STPSourceVerificationStatus.pending)
-        XCTAssertEqual(source!.details! as NSDictionary, response!["sepa_debit"] as! NSDictionary)
-        XCTAssertNil(source?.cardDetails) // STPSourceCardDetailsTest
-        XCTAssertNotNil(source?.sepaDebitDetails) // STPSourceSEPADebitDetailsTest
+        XCTAssertEqual(source!.details! as NSDictionary, response!["card"] as! NSDictionary)
+        XCTAssertNotNil(source?.cardDetails) // STPSourceCardDetailsTest
     }
 
     func possibleAPIResponses() -> [[AnyHashable: Any]] {
         return [
             STPTestUtils.jsonNamed(STPTestJSONSourceCard),
             STPTestUtils.jsonNamed(STPTestJSONSource3DS),
-            STPTestUtils.jsonNamed(STPTestJSONSourceAlipay),
-            STPTestUtils.jsonNamed(STPTestJSONSourceBancontact),
-            STPTestUtils.jsonNamed(STPTestJSONSourceEPS),
-            STPTestUtils.jsonNamed(STPTestJSONSourceGiropay),
-            STPTestUtils.jsonNamed(STPTestJSONSourceiDEAL),
-            STPTestUtils.jsonNamed(STPTestJSONSourceMultibanco),
-            STPTestUtils.jsonNamed(STPTestJSONSourceP24),
-            STPTestUtils.jsonNamed(STPTestJSONSourceSEPADebit),
-            STPTestUtils.jsonNamed(STPTestJSONSourceSofort),
         ]
     }
 
