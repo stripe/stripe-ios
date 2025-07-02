@@ -42,6 +42,7 @@ class ECEViewController: UIViewController {
     let apiClient: STPAPIClient
     let shopId: String
     let customerSessionClientSecret: String
+    var eventLog: [ECEBridgeEvent]
     private weak var delegate: ECEViewControllerDelegate?
 
     init(apiClient: STPAPIClient,
@@ -52,6 +53,7 @@ class ECEViewController: UIViewController {
         self.shopId = shopId
         self.customerSessionClientSecret = customerSessionClientSecret
         self.delegate = delegate
+        self.eventLog = []
         super.init(nibName: nil, bundle: nil)
     }
 
@@ -112,6 +114,7 @@ class ECEViewController: UIViewController {
         contentController.addScriptMessageHandler(self, contentWorld: .page, name: "calculateShippingRateChange")
         contentController.addScriptMessageHandler(self, contentWorld: .page, name: "confirmPayment")
         contentController.addScriptMessageHandler(self, contentWorld: .page, name: "handleECEClick")
+        contentController.addScriptMessageHandler(self, contentWorld: .page, name: "heartBeat")
 
         configuration.userContentController = contentController
 
@@ -126,6 +129,11 @@ class ECEViewController: UIViewController {
         window.NativeStripeECE = {
             handleClick: async function(eventData) {
                 return await window.webkit.messageHandlers.handleECEClick.postMessage({
+                    eventData: eventData
+                });
+            },
+            heartBeat: async function(eventData) {
+                return await window.webkit.messageHandlers.heartBeat.postMessage({
                     eventData: eventData
                 });
             },
@@ -151,6 +159,21 @@ class ECEViewController: UIViewController {
             type: 'bridgeReady'
         });
 
+        (function() {
+            if (window.location.pathname !== '/') {
+                return;
+            }
+            window.heartbeatInitialized = true;
+            async function issueHeartBeat() {
+                try {
+                    const response = await window.NativeStripeECE.heartBeat({});
+                } catch (error) {
+                    console.error("Threw on heartbeat");
+                }
+            }
+            window.heartbeatIntervalId = setInterval(issueHeartBeat, 1000);
+            console.log('Heartbeat Started with ID:', window.heartbeatIntervalId);
+        })();
         """
 
         // Intercept console logs
@@ -235,6 +258,7 @@ extension ECEViewController: WKScriptMessageHandler {
         switch message.name {
         case "ready":
             log("✅ Bridge Ready")
+            logEvent(.bridgeReady)
 
         case "error":
             log("❌ Bridge Error:")
@@ -360,14 +384,39 @@ extension ECEViewController: WKScriptMessageHandlerWithReply {
             }
 
         case "handleECEClick":
+            logEvent(.handleECEClick)
             if let eventData = messageDict["eventData"] as? [String: Any] {
                 return try await expressCheckoutDelegate.eceView(self, didReceiveECEClick: eventData)
             } else {
                 throw BridgeError("Invalid handleECEClick message format")
             }
-
+        case "heartBeat":
+            logEvent(.heartBeat)
+            heartBeatRunLoop()
+            return ["status": "success"]
         default:
             throw BridgeError("Unknown message type: \(message.name)")
+        }
+    }
+
+    func heartBeatRunLoop() {
+        // Detect how long waits until tapEventHappens
+        if let bridgeReady = eventLog.first(where: { $0.eventName == .bridgeReady }) {
+            if let eceClick = eventLog.first(where: { $0.eventName == .handleECEClick }) {
+                let timeSince = eceClick.date.timeIntervalSince(bridgeReady.date)
+                print("wooj: It took \(timeSince) from bridgeReady to tapping on ece")
+            } else {
+                if let lastHeartBeat = eventLog.last(where: { $0.eventName == .heartBeat }) {
+                    // Bridge ready, got at least one heart beat
+                    let timeSince = lastHeartBeat.date.timeIntervalSince(bridgeReady.date)
+                    print("wooj: Bridge ready, waiting to tap on ECE for: \(timeSince)")
+                    // TODO: If tapEvent hasn't happend within x number of seconds, dismisssheet.
+
+                } else {
+                    print("wooj: Bridge up, but no heartbeats yet")
+                    // Bridge ready, no heartbeat.. continue
+                }
+            }
         }
     }
 }
@@ -494,4 +543,21 @@ private func log(_ message: String) {
     #if DEBUG
     print("[\(timestamp)] \(message)")
     #endif
+}
+
+@available(iOS 16.0, *)
+extension ECEViewController {
+    struct ECEBridgeEvent {
+        enum Event {
+            case bridgeReady
+            case heartBeat
+            case handleECEClick
+        }
+        let eventName: Event
+        let date: Date
+    }
+    private func logEvent(_ eventName: ECEBridgeEvent.Event) {
+        let date = Date()
+        eventLog.append(.init(eventName: eventName, date: date))
+    }
 }
