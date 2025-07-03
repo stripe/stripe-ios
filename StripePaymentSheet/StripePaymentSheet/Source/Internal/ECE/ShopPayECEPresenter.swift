@@ -344,7 +344,10 @@ extension ShopPayECEPresenter: ExpressCheckoutWebviewDelegate {
 
     // MARK: - Helper Functions
 
-    private func convertDeliveryEstimate(_ estimate: PaymentSheet.ShopPayConfiguration.DeliveryEstimate) -> ECEDeliveryEstimate {
+    private func convertDeliveryEstimate(_ estimate: PaymentSheet.ShopPayConfiguration.DeliveryEstimate?) -> ECEDeliveryEstimate? {
+        guard let estimate else {
+            return nil
+        }
         switch estimate {
         case .unstructured(let deliveryEstimateString):
             return ECEDeliveryEstimate.string(deliveryEstimateString)

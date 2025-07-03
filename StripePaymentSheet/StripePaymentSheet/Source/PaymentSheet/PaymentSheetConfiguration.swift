@@ -506,8 +506,8 @@ extension PaymentSheet {
             public let id: String
             public let amount: Int
             public let displayName: String
-            public let deliveryEstimate: DeliveryEstimate
-            public init(id: String, amount: Int, displayName: String, deliveryEstimate: DeliveryEstimate) {
+            public let deliveryEstimate: DeliveryEstimate?
+            public init(id: String, amount: Int, displayName: String, deliveryEstimate: DeliveryEstimate?) {
                 self.id = id
                 self.amount = amount
                 self.displayName = displayName

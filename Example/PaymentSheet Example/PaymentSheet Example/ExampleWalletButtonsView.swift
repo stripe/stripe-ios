@@ -517,7 +517,8 @@ class ExampleWalletButtonsModel: ObservableObject {
             .init(id: "immediate", amount: 1099, displayName: "2-hour", deliveryEstimate: .unstructured("Get your item in 2 hours")),
             .init(id: "fast", amount: 500, displayName: "Expedited", deliveryEstimate: .structured(minimum: twoBusinessDays, maximum: fiveBusinessDays)),
             .init(id: "regular", amount: 200, displayName: "Standard", deliveryEstimate: .structured(minimum: nil, maximum: sevenBusinessDays)),
-            .init(id: "no_rush", amount: 0, displayName: "No Rush", deliveryEstimate: .structured(minimum: twoWeeks, maximum: nil)),
+            .init(id: "no_rush", amount: 100, displayName: "No Rush", deliveryEstimate: .structured(minimum: twoWeeks, maximum: nil)),
+            .init(id: "no_estimate", amount: 0, displayName: "Free (No estimate)", deliveryEstimate: nil),
         ]
 
         let handlers = PaymentSheet.ShopPayConfiguration.Handlers(
