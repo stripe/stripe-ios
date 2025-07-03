@@ -144,6 +144,7 @@ extension NSError {
         stripeErrorMessage: String?,
         errorParam: String?,
         declineCode: Any?,
+        intent: [String: Any]?,
         httpResponse: HTTPURLResponse?
     ) -> NSError? {
         var userInfo = [AnyHashable: Any]()
@@ -196,6 +197,12 @@ extension NSError {
             userInfo[STPError.stripeRequestIDKey] = requestId
         }
 
+        // intent
+        if let intent = intent,
+           let type = intent["object"] as? String {
+            userInfo[type] = intent
+        }
+
         // code
         let code = switch errorType {
         case "invalid_request_error":
@@ -232,6 +239,15 @@ extension NSError {
         let stripeErrorMessage = errorDictionary["message"] as? String
         let stripeErrorCode = errorDictionary["code"] as? String
         let declineCode = errorDictionary["decline_code"]
+        let intent: [String: Any]? = {
+            if let paymentIntent = errorDictionary["payment_intent"] as? [String: Any] {
+                return paymentIntent
+            }
+            if let setupIntent = errorDictionary["setup_intent"] as? [String: Any] {
+                return setupIntent
+            }
+            return nil
+        }()
 
         return stp_error(
             errorType: errorType,
@@ -239,6 +255,7 @@ extension NSError {
             stripeErrorMessage: stripeErrorMessage,
             errorParam: errorParam,
             declineCode: declineCode,
+            intent: intent,
             httpResponse: httpResponse
         )
     }

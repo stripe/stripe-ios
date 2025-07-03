@@ -63,6 +63,7 @@ extension NSError {
             stripeErrorMessage: stripeApiError.message,
             errorParam: stripeApiError.param,
             declineCode: nil,
+            intent: nil,
             httpResponse: nil
         )
     }
