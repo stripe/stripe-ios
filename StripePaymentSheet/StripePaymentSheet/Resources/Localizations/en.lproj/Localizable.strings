@@ -74,9 +74,6 @@
 /* Paypal mandate text */
 "By confirming your payment with PayPal, you allow %@ to charge your PayPal account for future payments in accordance with their terms." = "By confirming your payment with PayPal, you allow %@ to charge your PayPal account for future payments in accordance with their terms.";
 
-/* Satispay mandate text */
-"By confirming your payment with Satispay, you allow %@ to charge your Satispay account for future payments in accordance with their terms." = "By confirming your payment with Satispay, you allow %@ to charge your Satispay account for future payments in accordance with their terms.";
-
 /* Amazon Pay mandate text */
 "By continuing to Amazon Pay, you allow %@ to charge your Amazon Pay account for future payments in accordance with their terms." = "By continuing to Amazon Pay, you allow %@ to charge your Amazon Pay account for future payments in accordance with their terms.";
 
@@ -89,14 +86,14 @@
 /* Revolut Pay mandate text */
 "By continuing to Revolut Pay, you allow %@ to charge your Revolut Pay account for future payments in accordance with their terms." = "By continuing to Revolut Pay, you allow %@ to charge your Revolut Pay account for future payments in accordance with their terms.";
 
-/* Satispay mandate text */
-"By continuing to Satispay, you allow %@ to charge your Satispay account for future payments in accordance with their terms." = "By continuing to Satispay, you allow %@ to charge your Satispay account for future payments in accordance with their terms.";
-
 /* Legal text shown when creating a Link account. */
 "By continuing you agree to the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "By continuing you agree to the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>.";
 
 /* Text providing link to terms for ACH payments */
 "By continuing, you agree to authorize payments pursuant to <terms>these terms</terms>." = "By continuing, you agree to authorize payments pursuant to <terms>these terms</terms>.";
+
+/* Satispay mandate text */
+"By continuing, you authorize %@ to automatically debit your Satispay Balance on a recurring basis in accordance with your purchase or subscription plan." = "By continuing, you authorize %@ to automatically debit your Satispay Balance on a recurring basis in accordance with your purchase or subscription plan.";
 
 /* Cash App mandate text */
 "By continuing, you authorize %@ to debit your Cash App account for this payment and future payments in accordance with %@'s terms, until this authorization is revoked. You can change this anytime in your Cash App Settings." = "By continuing, you authorize %1$@ to debit your Cash App account for this payment and future payments in accordance with %2$@'s terms, until this authorization is revoked. You can change this anytime in your Cash App Settings.";

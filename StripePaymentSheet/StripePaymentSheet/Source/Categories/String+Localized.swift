@@ -312,16 +312,9 @@ extension String.Localized {
         )
     }
 
-    static var satispay_mandate_text_payment: String {
+    static var satispay_mandate_text: String {
         STPLocalizedString(
-            "By confirming your payment with Satispay, you allow %@ to charge your Satispay account for future payments in accordance with their terms.",
-            "Satispay mandate text"
-        )
-    }
-
-    static var satispay_mandate_text_setup: String {
-        STPLocalizedString(
-            "By continuing to Satispay, you allow %@ to charge your Satispay account for future payments in accordance with their terms.",
+            "By continuing, you authorize %@ to automatically debit your Satispay Balance on a recurring basis in accordance with your purchase or subscription plan.",
             "Satispay mandate text"
         )
     }
