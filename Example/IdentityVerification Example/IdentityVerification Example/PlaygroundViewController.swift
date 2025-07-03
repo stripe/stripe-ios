@@ -12,7 +12,7 @@ import UIKit
 class PlaygroundViewController: UIViewController {
 
     // Constants
-    let baseURL = "https://stripe-mobile-identity-verification-playground.glitch.me"
+    let baseURL = "https://stripe-mobile-identity-verification-playground-v47gtw.csb.app"
     let verifyEndpoint = "/create-verification-session"
     let reuseEndpoint = "/reuse-verification-session"
 
