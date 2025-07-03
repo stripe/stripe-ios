@@ -79,13 +79,30 @@ final class PaymentSheet_LPM_ConfirmFlowTests: STPNetworkStubbingTestCase {
     }
 
     func testSEPADebitConfirmFlows() async throws {
-        try await _testConfirm(intentKinds: [.paymentIntent, .paymentIntentWithSetupFutureUsage, .setupIntent], currency: "EUR", paymentMethodType: .SEPADebit) { form in
+        var configuration = PaymentSheet.Configuration()
+        configuration.allowsDelayedPaymentMethods = true
+        configuration.returnURL = "https://foo.com"
+        configuration.allowsPaymentMethodsRequiringShippingAddress = true
+        configuration.defaultBillingDetails = PaymentSheet.BillingDetails(
+            address: PaymentSheet.Address(
+                city: "South San Francisco",
+                country: "US",
+                line1: "354 Oyster Point Blvd",
+                postalCode: "94080",
+                state: "CA"
+            )
+        )
+
+        try await _testConfirm(intentKinds: [.paymentIntent, .paymentIntentWithSetupFutureUsage, .setupIntent], currency: "EUR", paymentMethodType: .SEPADebit, configuration: configuration) { form in
             form.getTextFieldElement("Full name").setText("Foo")
             form.getTextFieldElement("Email").setText("f@z.c")
             form.getTextFieldElement("IBAN").setText("DE89370400440532013000")
-            form.getTextFieldElement("Address line 1").setText("asdf")
-            form.getTextFieldElement("City").setText("asdf")
-            form.getTextFieldElement("ZIP").setText("12345")
+
+            // With default billing details, individual address fields should be shown and pre-populated
+            XCTAssertEqual(form.getTextFieldElement("Address line 1")?.text, "354 Oyster Point Blvd")
+            XCTAssertEqual(form.getTextFieldElement("City")?.text, "South San Francisco")
+            XCTAssertEqual(form.getTextFieldElement("ZIP")?.text, "94080")
+
             XCTAssertNotNil(form.getMandateElement())
             XCTAssertEqual(form.getAllUnwrappedSubElements().count, 16)
         }
@@ -164,14 +181,31 @@ final class PaymentSheet_LPM_ConfirmFlowTests: STPNetworkStubbingTestCase {
     }
 
     func testBacsDDConfirmFlows() async throws {
-        try await _testConfirm(intentKinds: [.paymentIntent, .paymentIntentWithSetupFutureUsage], currency: "GBP", paymentMethodType: .bacsDebit, merchantCountry: .GB) { form in
+        var configuration = PaymentSheet.Configuration()
+        configuration.allowsDelayedPaymentMethods = true
+        configuration.returnURL = "https://foo.com"
+        configuration.allowsPaymentMethodsRequiringShippingAddress = true
+        configuration.defaultBillingDetails = PaymentSheet.BillingDetails(
+            address: PaymentSheet.Address(
+                city: "South San Francisco",
+                country: "US",
+                line1: "354 Oyster Point Blvd",
+                postalCode: "94080",
+                state: "CA"
+            )
+        )
+
+        try await _testConfirm(intentKinds: [.paymentIntent, .paymentIntentWithSetupFutureUsage], currency: "GBP", paymentMethodType: .bacsDebit, merchantCountry: .GB, configuration: configuration) { form in
             form.getTextFieldElement("Full name").setText("Foo")
             form.getTextFieldElement("Email").setText("f@z.c")
             form.getTextFieldElement("Sort code").setText("108800")
             form.getTextFieldElement("Account number").setText("00012345")
-            form.getTextFieldElement("Address line 1").setText("asdf")
-            form.getTextFieldElement("City").setText("asdf")
-            form.getTextFieldElement("ZIP").setText("12345")
+
+            // With default billing details, individual address fields should be shown and pre-populated
+            XCTAssertEqual(form.getTextFieldElement("Address line 1")?.text, "354 Oyster Point Blvd")
+            XCTAssertEqual(form.getTextFieldElement("City")?.text, "South San Francisco")
+            XCTAssertEqual(form.getTextFieldElement("ZIP")?.text, "94080")
+
             form.getCheckboxElement(startingWith: "I understand that Stripe will be collecting Direct Debits")!.isSelected = true
         }
     }
@@ -287,20 +321,38 @@ final class PaymentSheet_LPM_ConfirmFlowTests: STPNetworkStubbingTestCase {
     }
 
     func testBoletoConfirmFlows() async throws {
+        var configuration = PaymentSheet.Configuration()
+        configuration.allowsDelayedPaymentMethods = true
+        configuration.returnURL = "https://foo.com"
+        configuration.allowsPaymentMethodsRequiringShippingAddress = true
+        configuration.defaultBillingDetails = PaymentSheet.BillingDetails(
+            address: PaymentSheet.Address(
+                city: "São Paulo",
+                country: "BR",
+                line1: "Rua das Flores, 123",
+                postalCode: "01234567",
+                state: "SP"
+            )
+        )
+
         try await _testConfirm(
             intentKinds: [.paymentIntent, .paymentIntentWithSetupFutureUsage, .setupIntent],
             currency: "BRL",
             paymentMethodType: .boleto,
             merchantCountry: .BR,
+            configuration: configuration,
             defaultCountry: "BR"
         ) { form in
             form.getTextFieldElement("Full name").setText("Jane Doe")
             form.getTextFieldElement("Email").setText("foo@bar.com")
             form.getTextFieldElement("CPF/CPNJ").setText("00000000000")
-            form.getTextFieldElement("Address line 1").setText("123 fake st")
-            form.getTextFieldElement("City").setText("City")
-            form.getTextFieldElement("State").setText("AC")  // Valid Brazilian state code
-            form.getTextFieldElement("Postal code").setText("11111111")
+
+            // With default billing details, individual address fields should be shown and pre-populated
+            XCTAssertEqual(form.getTextFieldElement("Address line 1")?.text, "Rua das Flores, 123")
+            XCTAssertEqual(form.getTextFieldElement("City")?.text, "São Paulo")
+            XCTAssertEqual(form.getTextFieldElement("State")?.text, "SP")
+            XCTAssertEqual(form.getTextFieldElement("Postal code")?.text, "01234567")
+
             XCTAssertEqual(form.getAllUnwrappedSubElements().count, 15)
         }
     }
@@ -328,19 +380,36 @@ final class PaymentSheet_LPM_ConfirmFlowTests: STPNetworkStubbingTestCase {
     }
 
     func testAfterpayConfirmFlows() async throws {
+        var configuration = PaymentSheet.Configuration()
+        configuration.allowsDelayedPaymentMethods = true
+        configuration.returnURL = "https://foo.com"
+        configuration.allowsPaymentMethodsRequiringShippingAddress = true
+        configuration.defaultBillingDetails = PaymentSheet.BillingDetails(
+            address: PaymentSheet.Address(
+                city: "South San Francisco",
+                country: "US",
+                line1: "354 Oyster Point Blvd",
+                postalCode: "94080",
+                state: "CA"
+            )
+        )
+
         try await _testConfirm(
             intentKinds: [.paymentIntent],
             currency: "USD",
             paymentMethodType: .afterpayClearpay,
-            merchantCountry: .US
+            merchantCountry: .US,
+            configuration: configuration
         ) { form in
             // Afterpay shows name, email, and full billing
             XCTAssertEqual(form.getAllUnwrappedSubElements().count, 15)
             form.getTextFieldElement("Full name").setText("Foo")
             form.getTextFieldElement("Email").setText("foo@bar.com")
-            form.getTextFieldElement("Address line 1").setText("123 Street")
-            form.getTextFieldElement("City").setText("Your City")
-            form.getTextFieldElement("ZIP").setText("12345")
+
+            // With default billing details, individual address fields should be shown and pre-populated
+            XCTAssertEqual(form.getTextFieldElement("Address line 1")?.text, "354 Oyster Point Blvd")
+            XCTAssertEqual(form.getTextFieldElement("City")?.text, "South San Francisco")
+            XCTAssertEqual(form.getTextFieldElement("ZIP")?.text, "94080")
         }
     }
 
@@ -947,6 +1016,15 @@ extension PaymentSheet_LPM_ConfirmFlowTests {
         allFieldsConfig.billingDetailsCollectionConfiguration.email = .always
         allFieldsConfig.billingDetailsCollectionConfiguration.phone = .always
         allFieldsConfig.billingDetailsCollectionConfiguration.address = .full
+        allFieldsConfig.defaultBillingDetails = PaymentSheet.BillingDetails(
+            address: PaymentSheet.Address(
+                city: "South San Francisco",
+                country: "US",
+                line1: "354 Oyster Point Blvd",
+                postalCode: "94080",
+                state: "CA"
+            )
+        )
         form = PaymentSheetFormFactory(intent: ._testPaymentIntent(paymentMethodTypes: [paymentMethodType]), elementsSession: .emptyElementsSession, configuration: .paymentElement(allFieldsConfig), paymentMethod: .stripe(paymentMethodType)).make()
         XCTAssertNotNil(getName(from: form))
         XCTAssertNotNil(form.getTextFieldElement("Email"))

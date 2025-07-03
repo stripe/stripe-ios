@@ -1,3 +1,8 @@
+## x.x.x x.x.x
+
+### PaymentSheet
+* [Added] Address autocomplete functionality when collecting full billing details in payment method forms.
+
 ## 24.16.1 2025-06-23
 
 ### PaymentSheet

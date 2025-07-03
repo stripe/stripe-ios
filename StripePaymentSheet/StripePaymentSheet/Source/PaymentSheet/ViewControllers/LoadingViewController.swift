@@ -60,6 +60,11 @@ class LoadingViewController: UIViewController, BottomSheetContentViewController 
         super.viewDidLoad()
 
         activityIndicator.color = appearance.colors.background.contrastingColor
+        if #available(iOS 17.0, *) {
+            registerForTraitChanges([UITraitUserInterfaceStyle.self], handler: { (self: Self, _: UITraitCollection) in
+                self.activityIndicator.color = self.appearance.colors.background.contrastingColor
+            })
+        }
         [activityIndicator].forEach {
             view.addSubview($0)
             $0.translatesAutoresizingMaskIntoConstraints = false
@@ -73,6 +78,16 @@ class LoadingViewController: UIViewController, BottomSheetContentViewController 
         ])
         activityIndicator.startAnimating()
     }
+
+#if !os(visionOS)
+    public override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+        super.traitCollectionDidChange(previousTraitCollection)
+        if #unavailable(iOS 17.0) {
+            activityIndicator.color = appearance.colors.background.contrastingColor
+        }
+    }
+#endif
+
 }
 
 extension LoadingViewController: SheetNavigationBarDelegate {
