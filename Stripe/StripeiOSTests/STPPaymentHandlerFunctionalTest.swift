@@ -204,7 +204,7 @@ final class STPPaymentHandlerFunctionalSwiftTest: STPNetworkStubbingTestCase, ST
         paymentHandler.confirmPayment(paymentIntentParams, with: self) { (_, _, error) in
             XCTAssertNotNil(error)
             XCTAssertNotNil(error?.userInfo["payment_intent"])
-            
+
             // ...should send these analytics
             let firstAnalytic = analyticsClient._testLogHistory.first
             XCTAssertEqual(firstAnalytic?["event"] as? String, STPAnalyticEvent.paymentHandlerConfirmStarted.rawValue)
