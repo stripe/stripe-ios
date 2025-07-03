@@ -56,7 +56,6 @@
 		310B6D9C2DFBD456009CA85D /* ECEIndexHtml.swift in Sources */ = {isa = PBXBuildFile; fileRef = 310B6D9B2DFBD456009CA85D /* ECEIndexHtml.swift */; };
 		310B6DBC2DFBE40D009CA85D /* ShopPayECEPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 310B6DBB2DFBE40D009CA85D /* ShopPayECEPresenter.swift */; };
 		310B6DC62DFC9745009CA85D /* ECEIntegrationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 310B6DBE2DFC9745009CA85D /* ECEIntegrationTests.swift */; };
-		310B6DC72DFC9745009CA85D /* ECEViewControllerSnapshotTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 310B6DC02DFC9745009CA85D /* ECEViewControllerSnapshotTests.swift */; };
 		310B6DC82DFC9745009CA85D /* ECEViewControllerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 310B6DC12DFC9745009CA85D /* ECEViewControllerTests.swift */; };
 		310B6DC92DFC9745009CA85D /* ECETestHelpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 310B6DBF2DFC9745009CA85D /* ECETestHelpers.swift */; };
 		310B6DCA2DFC9745009CA85D /* ShopPayECEPresenterTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 310B6DC32DFC9745009CA85D /* ShopPayECEPresenterTests.swift */; };
@@ -540,7 +539,6 @@
 		310B6DBB2DFBE40D009CA85D /* ShopPayECEPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShopPayECEPresenter.swift; sourceTree = "<group>"; };
 		310B6DBE2DFC9745009CA85D /* ECEIntegrationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ECEIntegrationTests.swift; sourceTree = "<group>"; };
 		310B6DBF2DFC9745009CA85D /* ECETestHelpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ECETestHelpers.swift; sourceTree = "<group>"; };
-		310B6DC02DFC9745009CA85D /* ECEViewControllerSnapshotTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ECEViewControllerSnapshotTests.swift; sourceTree = "<group>"; };
 		310B6DC12DFC9745009CA85D /* ECEViewControllerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ECEViewControllerTests.swift; sourceTree = "<group>"; };
 		310B6DC32DFC9745009CA85D /* ShopPayECEPresenterTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShopPayECEPresenterTests.swift; sourceTree = "<group>"; };
 		312171712E0A6F33008AE798 /* AddressDetails+STPAddress.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AddressDetails+STPAddress.swift"; sourceTree = "<group>"; };
@@ -1081,7 +1079,6 @@
 			children = (
 				310B6DBE2DFC9745009CA85D /* ECEIntegrationTests.swift */,
 				310B6DBF2DFC9745009CA85D /* ECETestHelpers.swift */,
-				310B6DC02DFC9745009CA85D /* ECEViewControllerSnapshotTests.swift */,
 				310B6DC12DFC9745009CA85D /* ECEViewControllerTests.swift */,
 				310B6DC32DFC9745009CA85D /* ShopPayECEPresenterTests.swift */,
 			);
@@ -2317,7 +2314,6 @@
 				9787A622B527C1AD96A73827 /* SepaMandateViewControllerSnapshotTest.swift in Sources */,
 				61A799522CC2053500D7DFFA /* EmbeddedFormViewControllerSnapshotTests.swift in Sources */,
 				310B6DC62DFC9745009CA85D /* ECEIntegrationTests.swift in Sources */,
-				310B6DC72DFC9745009CA85D /* ECEViewControllerSnapshotTests.swift in Sources */,
 				310B6DC82DFC9745009CA85D /* ECEViewControllerTests.swift in Sources */,
 				310B6DC92DFC9745009CA85D /* ECETestHelpers.swift in Sources */,
 				310B6DCA2DFC9745009CA85D /* ShopPayECEPresenterTests.swift in Sources */,

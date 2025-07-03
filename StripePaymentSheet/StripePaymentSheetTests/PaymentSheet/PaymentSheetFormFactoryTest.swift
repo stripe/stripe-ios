@@ -1030,7 +1030,16 @@ class PaymentSheetFormFactoryTest: XCTestCase {
                 zipNameType: .zip
             ),
         ]
-        let configuration = PaymentSheet.Configuration()
+        var configuration = PaymentSheet.Configuration()
+        configuration.defaultBillingDetails = PaymentSheet.BillingDetails(
+            address: PaymentSheet.Address(
+                city: "South San Francisco",
+                country: "US",
+                line1: "354 Oyster Point Blvd",
+                postalCode: "94080",
+                state: "CA"
+            )
+        )
         let factory = PaymentSheetFormFactory(
             intent: ._testValue(), elementsSession: ._testCardValue(),
             configuration: .paymentElement(configuration),
@@ -2274,6 +2283,7 @@ class PaymentSheetFormFactoryTest: XCTestCase {
         XCTAssertFalse(instantDebitsSection.enableCTA)
 
         // Set a valid address
+        instantDebitsSection.addressElement?.collectionMode = .all() // simulate going to manual entry
         instantDebitsSection.addressElement?.city?.setText(defaultAddress.city!)
         instantDebitsSection.addressElement?.country.select(index: 0) // "US"
         instantDebitsSection.addressElement?.line1?.setText(defaultAddress.line1!)
@@ -2537,7 +2547,7 @@ class PaymentSheetFormFactoryTest: XCTestCase {
             XCTFail("expected address section")
             return
         }
-        let emptyAddressSectionElement = AddressSectionElement()
+        let emptyAddressSectionElement = AddressSectionElement(collectionMode: .autoCompletable)
         XCTAssertEqual(addressSectionElement.addressDetails, emptyAddressSectionElement.addressDetails)
     }
 

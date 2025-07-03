@@ -33,7 +33,11 @@ class STPAPIClient_PaymentSheetTest: XCTestCase {
             return .completed
         })
 
+        // Create a session ID
+        AnalyticsHelper.shared.generateSessionID()
+
         let parameters = STPAPIClient(publishableKey: "pk_test").makeElementsSessionsParams(mode: .deferredIntent(intentConfig), epmConfiguration: config.externalPaymentMethodConfiguration, cpmConfiguration: config.customPaymentMethodConfiguration, clientDefaultPaymentMethod: "pm_12345", customerAccessProvider: .customerSession("cs_12345"))
+        XCTAssertNotNil(parameters["mobile_session_id"])
         XCTAssertEqual(parameters["key"] as? String, "pk_test")
         XCTAssertEqual(parameters["locale"] as? String, Locale.current.toLanguageTag())
         XCTAssertEqual(parameters["external_payment_methods"] as? [String], ["external_foo", "external_bar"])
@@ -58,8 +62,11 @@ class STPAPIClient_PaymentSheetTest: XCTestCase {
                                                             paymentMethodTypes: ["card", "cashapp"],
                                                             onBehalfOf: "acct_connect",
                                                             confirmHandler: { _, _, _ in })
+        // Create a session ID
+        AnalyticsHelper.shared.generateSessionID()
 
         let parameters = STPAPIClient(publishableKey: "pk_test").makeElementsSessionsParams(mode: .deferredIntent(intentConfig), epmConfiguration: nil, cpmConfiguration: nil, clientDefaultPaymentMethod: nil, customerAccessProvider: .legacyCustomerEphemeralKey("ek_12345"))
+        XCTAssertNotNil(parameters["mobile_session_id"])
         XCTAssertEqual(parameters["key"] as? String, "pk_test")
         XCTAssertEqual(parameters["locale"] as? String, Locale.current.toLanguageTag())
         XCTAssertEqual(parameters["external_payment_methods"] as? [String], [])

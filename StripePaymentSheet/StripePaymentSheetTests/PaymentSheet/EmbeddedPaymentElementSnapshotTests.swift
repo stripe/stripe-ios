@@ -88,6 +88,19 @@ class EmbeddedPaymentElementSnapshotTests: STPSnapshotTestCase, EmbeddedPaymentE
 
     func _testShowsChangeButton(rowStyle: PaymentSheet.Appearance.EmbeddedPaymentElement.Row.Style) async {
         var configuration = configuration
+        configuration.defaultBillingDetails = PaymentSheet.BillingDetails(
+            address: PaymentSheet.Address(
+                city: "South San Francisco",
+                country: "US",
+                line1: "354 Oyster Point Blvd",
+                line2: "Apt 123",
+                postalCode: "94080",
+                state: "CA"
+            ),
+            email: "foo@bar.com",
+            name: "Jane Doe",
+            phone: "+15551234567"
+        )
         configuration.appearance.embeddedPaymentElement.row.style = rowStyle
         var paymentIntentConfig = paymentIntentConfig
         paymentIntentConfig.paymentMethodTypes = ["card", "us_bank_account", "afterpay_clearpay"]
