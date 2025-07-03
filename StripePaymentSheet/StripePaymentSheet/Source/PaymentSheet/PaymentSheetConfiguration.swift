@@ -506,8 +506,8 @@ extension PaymentSheet {
             public let id: String
             public let amount: Int
             public let displayName: String
-            public let deliveryEstimate: DeliveryEstimate?
-            public init(id: String, amount: Int, displayName: String, deliveryEstimate: DeliveryEstimate?) {
+            public let deliveryEstimate: DeliveryEstimate
+            public init(id: String, amount: Int, displayName: String, deliveryEstimate: DeliveryEstimate) {
                 self.id = id
                 self.amount = amount
                 self.displayName = displayName
@@ -554,7 +554,10 @@ extension PaymentSheet {
 
         /// Type used to describe DeliveryEstimates for shipping. This maps to the ECE API shape:
         /// https://docs.stripe.com/js/elements_object/create_express_checkout_element#express_checkout_element_create-options-shippingRates-deliveryEstimate
-        public struct DeliveryEstimate {
+        public enum DeliveryEstimate {
+            case structured(minimum: DeliveryEstimateUnit?, maximum: DeliveryEstimateUnit?)
+            case unstructured(String)
+
             public struct DeliveryEstimateUnit {
                 public enum TimeUnit {
                     case hour
@@ -570,13 +573,6 @@ extension PaymentSheet {
                     self.unit = unit
                     self.value = value
                 }
-            }
-
-            public let maximum: DeliveryEstimateUnit
-            public let minimum: DeliveryEstimateUnit
-            public init(minimum: DeliveryEstimateUnit, maximum: DeliveryEstimateUnit) {
-                self.minimum = minimum
-                self.maximum = maximum
             }
         }
 

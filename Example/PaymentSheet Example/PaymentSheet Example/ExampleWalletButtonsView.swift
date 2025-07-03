@@ -508,14 +508,16 @@ class ExampleWalletButtonsModel: ObservableObject {
     }
 
     var shopPayConfiguration: PaymentSheet.ShopPayConfiguration {
-        let singleBusinessDay = PaymentSheet.ShopPayConfiguration.DeliveryEstimate.DeliveryEstimateUnit(value: 1, unit: .business_day)
-        let twoBusinessDay = PaymentSheet.ShopPayConfiguration.DeliveryEstimate.DeliveryEstimateUnit(value: 2, unit: .business_day)
+        let twoBusinessDays = PaymentSheet.ShopPayConfiguration.DeliveryEstimate.DeliveryEstimateUnit(value: 2, unit: .business_day)
         let fiveBusinessDays = PaymentSheet.ShopPayConfiguration.DeliveryEstimate.DeliveryEstimateUnit(value: 5, unit: .business_day)
         let sevenBusinessDays = PaymentSheet.ShopPayConfiguration.DeliveryEstimate.DeliveryEstimateUnit(value: 7, unit: .business_day)
+        let twoWeeks = PaymentSheet.ShopPayConfiguration.DeliveryEstimate.DeliveryEstimateUnit(value: 2, unit: .week)
 
         let shippingRates: [PaymentSheet.ShopPayConfiguration.ShippingRate] = [
-            .init(id: "express", amount: 1099, displayName: "Express", deliveryEstimate: .init(minimum: singleBusinessDay, maximum: twoBusinessDay)),
-            .init(id: "standard", amount: 0, displayName: "Free", deliveryEstimate: .init(minimum: fiveBusinessDays, maximum: sevenBusinessDays)),
+            .init(id: "immediate", amount: 1099, displayName: "2-hour", deliveryEstimate: .unstructured("Get your item in 2 hours")),
+            .init(id: "fast", amount: 500, displayName: "Expedited", deliveryEstimate: .structured(minimum: twoBusinessDays, maximum: fiveBusinessDays)),
+            .init(id: "regular", amount: 200, displayName: "Standard", deliveryEstimate: .structured(minimum: nil, maximum: sevenBusinessDays)),
+            .init(id: "no_rush", amount: 0, displayName: "No Rush", deliveryEstimate: .structured(minimum: twoWeeks, maximum: nil)),
         ]
 
         let handlers = PaymentSheet.ShopPayConfiguration.Handlers(
