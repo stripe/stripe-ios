@@ -1,5 +1,5 @@
 //
-//  LinkPaymentMethodPicker-RadioButton.swift
+//  LinkCollapsingListView-RadioButton.swift
 //  StripePaymentSheet
 //
 //  Created by Ramon Torres on 11/15/21.
@@ -8,7 +8,7 @@
 
 import UIKit
 
-extension LinkPaymentMethodPicker {
+extension LinkCollapsingListView {
 
     final class RadioButton: UIView {
         struct Constants {

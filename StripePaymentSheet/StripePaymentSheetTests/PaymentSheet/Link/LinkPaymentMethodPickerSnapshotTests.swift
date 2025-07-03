@@ -150,7 +150,7 @@ extension LinkPaymentMethodPickerSnapshotTests {
             self.accountEmail = email
         }
 
-        func numberOfPaymentMethods(in picker: LinkPaymentMethodPicker) -> Int {
+        func numberOfPaymentMethods() -> Int {
             return paymentMethods.count
         }
 
@@ -159,7 +159,6 @@ extension LinkPaymentMethodPickerSnapshotTests {
         }
 
         func paymentPicker(
-            _ picker: LinkPaymentMethodPicker,
             paymentMethodAt index: Int
         ) -> ConsumerPaymentDetails {
             return paymentMethods[index]
