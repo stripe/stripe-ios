@@ -18,6 +18,10 @@ protocol ExpressCheckoutWebviewDelegate: AnyObject {
     func eceView(_ eceView: ECEViewController, didReceiveECEConfirmation paymentDetails: [String: Any]) async throws -> [String: Any]
 }
 
+protocol ECEViewControllerDelegate: AnyObject {
+    func didCancel()
+}
+
 // Custom errors for Express Checkout operations
 enum ExpressCheckoutError: LocalizedError {
     case invalidShippingRate(rateId: String)
@@ -38,13 +42,16 @@ class ECEViewController: UIViewController {
     let apiClient: STPAPIClient
     let shopId: String
     let customerSessionClientSecret: String
+    private weak var delegate: ECEViewControllerDelegate?
 
     init(apiClient: STPAPIClient,
          shopId: String,
-         customerSessionClientSecret: String) {
+         customerSessionClientSecret: String,
+         delegate: ECEViewControllerDelegate? = nil) {
         self.apiClient = apiClient
         self.shopId = shopId
         self.customerSessionClientSecret = customerSessionClientSecret
+        self.delegate = delegate
         super.init(nibName: nil, bundle: nil)
     }
 
@@ -70,7 +77,6 @@ class ECEViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        setupNavigationBar()
 
         // Add a loading spinner
         let spinner = UIActivityIndicatorView(style: .large)
@@ -144,6 +150,7 @@ class ECEViewController: UIViewController {
         window.webkit.messageHandlers.ready.postMessage({
             type: 'bridgeReady'
         });
+
         """
 
         // Intercept console logs
@@ -192,7 +199,7 @@ class ECEViewController: UIViewController {
         contentController.addUserScript(script)
 
         // TODO: It's 500x500 for now for debugging, but set this to 1x1 before release
-        webView = WKWebView(frame: CGRect(x: 0, y: 0, width: 500, height: 500), configuration: configuration)
+        webView = WKWebView(frame: CGRect(x: 0, y: 0, width: 1, height: 1), configuration: configuration)
         webView.navigationDelegate = self
         webView.uiDelegate = self
         #if DEBUG
@@ -201,24 +208,9 @@ class ECEViewController: UIViewController {
         }
         #endif
         webView.isHidden = false // Should not be hidden, so that we actually render it
-        webView.alpha = 1.00 // TODO: Set this to 0.01 (or 0.00 if we can get away with it without Safari optimizing it out?)
+        webView.alpha = 0.01 // TODO: Attempt to set to 0.00 if we can get away with it without Safari optimizing it out
 
         webView.customUserAgent = Self.FakeSafariUserAgent
-    }
-
-    private func setupNavigationBar() {
-        title = "Checkout"
-
-        // Add refresh button, back, and forward for debugging. TODO: Get rid of these before ship
-        navigationItem.rightBarButtonItem = UIBarButtonItem(
-            barButtonSystemItem: .refresh,
-            target: self,
-            action: #selector(refreshWebView)
-        )
-        navigationItem.leftBarButtonItems = [
-            UIBarButtonItem(title: "Back", style: .plain, target: self, action: #selector(goBack)),
-            UIBarButtonItem(title: "Forward", style: .plain, target: self, action: #selector(goForward)),
-        ]
     }
 
     private func loadECE() {
@@ -226,24 +218,11 @@ class ECEViewController: UIViewController {
         webView.loadHTMLString(staticHTML.ECEHTML, baseURL: URL(string: "https://pay.stripe.com")!)
     }
 
-    @objc private func refreshWebView() {
-        if let popupWebView {
-            popupWebView.reload()
-        } else {
-            webView.reload()
-        }
-    }
-
-    @objc private func goBack() {
-        if webView.canGoBack {
-            webView.goBack()
-        }
-    }
-
-    @objc private func goForward() {
-        if webView.canGoForward {
-            webView.goForward()
-        }
+    func unloadWebview() {
+        popupWebView?.removeFromSuperview()
+        popupWebView = nil
+        webView?.removeFromSuperview()
+        webView = nil
     }
 }
 
@@ -451,35 +430,14 @@ extension ECEViewController: WKUIDelegate {
         // Add the popup webview as a fullscreen overlay
         if let popupWebView = popupWebView {
             view.addSubview(popupWebView)
-
-            // Add a close button overlay
-            let closeButton = UIButton(type: .custom)
-            closeButton.setImage(UIImage(systemName: "xmark.circle.fill"), for: .normal)
-            closeButton.tintColor = .systemGray
-            closeButton.backgroundColor = .systemBackground.withAlphaComponent(0.9)
-            closeButton.layer.cornerRadius = 20
-            closeButton.translatesAutoresizingMaskIntoConstraints = false
-            closeButton.addTarget(self, action: #selector(closePopup), for: .touchUpInside)
-
-            popupWebView.addSubview(closeButton)
-
-            NSLayoutConstraint.activate([
-                closeButton.topAnchor.constraint(equalTo: popupWebView.safeAreaLayoutGuide.topAnchor, constant: 16),
-                closeButton.trailingAnchor.constraint(equalTo: popupWebView.trailingAnchor, constant: -16),
-                closeButton.widthAnchor.constraint(equalToConstant: 40),
-                closeButton.heightAnchor.constraint(equalToConstant: 40),
-            ])
-
-            // Store reference to close button so we can remove it later
-            closeButton.tag = 999
         }
 
         return popupWebView
     }
 
     @objc private func closePopup() {
-        popupWebView?.removeFromSuperview()
-        popupWebView = nil
+        unloadWebview()
+        delegate?.didCancel()
     }
 
     func webViewDidClose(_ webView: WKWebView) {

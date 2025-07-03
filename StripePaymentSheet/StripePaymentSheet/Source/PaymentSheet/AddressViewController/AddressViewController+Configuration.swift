@@ -162,5 +162,11 @@ public extension AddressViewController {
         /// A list of two-letter country codes that support autocomplete
         /// Defaults to a list of countries that Stripe has audited to ensure a good autocomplete experience.
         public var autocompleteCountries: [String] = ["AU", "BE", "BR", "CA", "CH", "DE", "ES", "FR", "GB", "IE", "IT", "MX", "NO", "NL", "PL", "RU", "SE", "TR", "US", "ZA"]
+
+        /// Shows a "Use billing address" checkbox when `defaultValues.address` is set.
+        /// 
+        /// Toggles between populating fields with defaults (checked) and clearing them (unchecked).
+        /// Hidden if the default country is not in `allowedCountries`.
+        @_spi(STP) public var showUseBillingAddressCheckbox: Bool = false
     }
 }
