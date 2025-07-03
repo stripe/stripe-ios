@@ -313,7 +313,7 @@ class ExampleWalletButtonsModel: ObservableObject {
 
                 self?.addDebugLog("Creating PaymentSheet FlowController with original backend...")
                 PaymentSheet.FlowController.create(
-                    intentConfiguration: .init(sharedPaymentTokenSessionWithMode: .payment(amount: 1000, currency: "USD", setupFutureUsage: nil, captureMethod: .automatic, paymentMethodOptions: nil), sellerDetails: .init(networkId: "internal", externalId: "stripe_test_merchant"), paymentMethodTypes: ["card", "link", "shop_pay"], preparePaymentMethodHandler: { [weak self] paymentMethod, address in
+                    intentConfiguration: .init(sharedPaymentTokenSessionWithMode: .payment(amount: 1000, currency: "USD", setupFutureUsage: nil, captureMethod: .automatic, paymentMethodOptions: nil), sellerDetails: .init(networkId: "stripe", externalId: "acct_1HvTI7Lu5o3P18Zp"), paymentMethodTypes: ["card", "link", "shop_pay"], preparePaymentMethodHandler: { [weak self] paymentMethod, address in
                         self?.addDebugLog("PaymentMethod prepared: \(paymentMethod.stripeId)")
                         self?.addDebugLog("Address: \(address)")
                         self?.onCompletion(result: .completed)
@@ -386,7 +386,7 @@ class ExampleWalletButtonsModel: ObservableObject {
 
                 self?.addDebugLog("Creating PaymentSheet FlowController...")
                 PaymentSheet.FlowController.create(
-                    intentConfiguration: .init(sharedPaymentTokenSessionWithMode: .payment(amount: 9999, currency: "USD", setupFutureUsage: nil, captureMethod: .automatic, paymentMethodOptions: nil), sellerDetails: .init(networkId: "internal", externalId: "stripe_test_merchant"), paymentMethodTypes: ["card", "link", "shop_pay"], preparePaymentMethodHandler: { [weak self] paymentMethod, address in
+                    intentConfiguration: .init(sharedPaymentTokenSessionWithMode: .payment(amount: 9999, currency: "USD", setupFutureUsage: nil, captureMethod: .automatic, paymentMethodOptions: nil), sellerDetails: .init(networkId: "stripe", externalId: "acct_1HvTI7Lu5o3P18Zp"), paymentMethodTypes: ["card", "link", "shop_pay"], preparePaymentMethodHandler: { [weak self] paymentMethod, address in
                         self?.isProcessing = true
                         self?.addDebugLog("PaymentMethod prepared: \(paymentMethod.stripeId)")
                         self?.addDebugLog("Address: \(address)")
@@ -508,13 +508,17 @@ class ExampleWalletButtonsModel: ObservableObject {
     }
 
     var shopPayConfiguration: PaymentSheet.ShopPayConfiguration {
-        let singleBusinessDay = PaymentSheet.ShopPayConfiguration.DeliveryEstimate.DeliveryEstimateUnit(value: 1, unit: .business_day)
+        let twoBusinessDays = PaymentSheet.ShopPayConfiguration.DeliveryEstimate.DeliveryEstimateUnit(value: 2, unit: .business_day)
         let fiveBusinessDays = PaymentSheet.ShopPayConfiguration.DeliveryEstimate.DeliveryEstimateUnit(value: 5, unit: .business_day)
         let sevenBusinessDays = PaymentSheet.ShopPayConfiguration.DeliveryEstimate.DeliveryEstimateUnit(value: 7, unit: .business_day)
+        let twoWeeks = PaymentSheet.ShopPayConfiguration.DeliveryEstimate.DeliveryEstimateUnit(value: 2, unit: .week)
 
         let shippingRates: [PaymentSheet.ShopPayConfiguration.ShippingRate] = [
-            .init(id: "express", amount: 1099, displayName: "Overnight", deliveryEstimate: .init(minimum: singleBusinessDay, maximum: singleBusinessDay)),
-            .init(id: "standard", amount: 0, displayName: "Free", deliveryEstimate: .init(minimum: fiveBusinessDays, maximum: sevenBusinessDays)),
+            .init(id: "immediate", amount: 1099, displayName: "2-hour", deliveryEstimate: .unstructured("Get your item in 2 hours")),
+            .init(id: "fast", amount: 500, displayName: "Expedited", deliveryEstimate: .structured(minimum: twoBusinessDays, maximum: fiveBusinessDays)),
+            .init(id: "regular", amount: 200, displayName: "Standard", deliveryEstimate: .structured(minimum: nil, maximum: sevenBusinessDays)),
+            .init(id: "no_rush", amount: 100, displayName: "No Rush", deliveryEstimate: .structured(minimum: twoWeeks, maximum: nil)),
+            .init(id: "no_estimate", amount: 0, displayName: "Free (No estimate)", deliveryEstimate: nil),
         ]
 
         let handlers = PaymentSheet.ShopPayConfiguration.Handlers(

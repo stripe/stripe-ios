@@ -122,7 +122,7 @@ extension ShopPayECEPresenter: ExpressCheckoutWebviewDelegate {
                                     id: rate.id,
                                     amount: rate.amount,
                                     displayName: rate.displayName,
-                                    deliveryEstimate: rate.deliveryEstimate.map { self.convertDeliveryEstimate($0) }
+                                    deliveryEstimate: self.convertDeliveryEstimate(rate.deliveryEstimate)
                                 )
                             },
                             applePay: nil,
@@ -153,7 +153,7 @@ extension ShopPayECEPresenter: ExpressCheckoutWebviewDelegate {
                         id: rate.id,
                         amount: rate.amount,
                         displayName: rate.displayName,
-                        deliveryEstimate: rate.deliveryEstimate.map { convertDeliveryEstimate($0) }
+                        deliveryEstimate: self.convertDeliveryEstimate(rate.deliveryEstimate)
                     )
                 },
                 applePay: nil,
@@ -189,7 +189,7 @@ extension ShopPayECEPresenter: ExpressCheckoutWebviewDelegate {
                                     id: rate.id,
                                     amount: rate.amount,
                                     displayName: rate.displayName,
-                                    deliveryEstimate: rate.deliveryEstimate.map { self.convertDeliveryEstimate($0) }
+                                    deliveryEstimate: self.convertDeliveryEstimate(rate.deliveryEstimate)
                                 )
                             },
                             applePay: nil,
@@ -220,7 +220,7 @@ extension ShopPayECEPresenter: ExpressCheckoutWebviewDelegate {
                         id: rate.id,
                         amount: rate.amount,
                         displayName: rate.displayName,
-                        deliveryEstimate: rate.deliveryEstimate.map { convertDeliveryEstimate($0) }
+                        deliveryEstimate: self.convertDeliveryEstimate(rate.deliveryEstimate)
                     )
                 },
                 applePay: nil,
@@ -241,7 +241,7 @@ extension ShopPayECEPresenter: ExpressCheckoutWebviewDelegate {
                     id: rate.id,
                     amount: rate.amount,
                     displayName: rate.displayName,
-                    deliveryEstimate: rate.deliveryEstimate.map { convertDeliveryEstimate($0) }
+                    deliveryEstimate: self.convertDeliveryEstimate(rate.deliveryEstimate)
                 )
             } : nil,
             applePay: nil
@@ -344,19 +344,24 @@ extension ShopPayECEPresenter: ExpressCheckoutWebviewDelegate {
 
     // MARK: - Helper Functions
 
-    private func convertDeliveryEstimate(_ estimate: PaymentSheet.ShopPayConfiguration.DeliveryEstimate) -> ECEDeliveryEstimate {
-        // Convert to structured format
-        let structured = ECEStructuredDeliveryEstimate(
-            maximum: ECEDeliveryEstimateUnit(
-                unit: convertDeliveryUnit(estimate.maximum.unit),
-                value: estimate.maximum.value
-            ),
-            minimum: ECEDeliveryEstimateUnit(
-                unit: convertDeliveryUnit(estimate.minimum.unit),
-                value: estimate.minimum.value
-            )
-        )
-        return .structured(structured)
+    private func convertDeliveryEstimate(_ estimate: PaymentSheet.ShopPayConfiguration.DeliveryEstimate?) -> ECEDeliveryEstimate? {
+        guard let estimate else {
+            return nil
+        }
+        switch estimate {
+        case .unstructured(let deliveryEstimateString):
+            return ECEDeliveryEstimate.string(deliveryEstimateString)
+        case .structured(let minimum, let maximum):
+            var minimumEstimate: ECEDeliveryEstimateUnit?
+            if let minimum {
+                minimumEstimate = ECEDeliveryEstimateUnit(unit: convertDeliveryUnit(minimum.unit), value: minimum.value)
+            }
+            var maximumEstimate: ECEDeliveryEstimateUnit?
+            if let maximum {
+                maximumEstimate = ECEDeliveryEstimateUnit(unit: convertDeliveryUnit(maximum.unit), value: maximum.value)
+            }
+            return .structured(ECEStructuredDeliveryEstimate(maximum: maximumEstimate, minimum: minimumEstimate))
+        }
     }
 
     private func convertDeliveryUnit(_ unit: PaymentSheet.ShopPayConfiguration.DeliveryEstimate.DeliveryEstimateUnit.TimeUnit) -> ECEDeliveryEstimateUnit.DeliveryTimeUnit {
