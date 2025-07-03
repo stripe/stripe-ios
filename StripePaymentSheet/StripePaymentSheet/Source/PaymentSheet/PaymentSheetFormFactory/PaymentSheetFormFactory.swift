@@ -824,7 +824,7 @@ extension PaymentSheetFormFactory {
 
         let incentive = paymentMethodIncentive?.takeIfAppliesTo(paymentMethod)
 
-        return InstantDebitsPaymentMethodElement(
+        let element = InstantDebitsPaymentMethodElement(
             configuration: configuration,
             subtitleElement: titleElement,
             nameElement: nameElement,
@@ -835,6 +835,12 @@ extension PaymentSheetFormFactory {
             isPaymentIntent: isPaymentIntent,
             appearance: configuration.appearance
         )
+
+        if let linkedBank = previousCustomerInput?.instantDebitsLinkedBank {
+            element.setLinkedBank(linkedBank)
+        }
+
+        return element
     }
 
     private func makeUSBankAccountCopyLabel() -> SubtitleElement {

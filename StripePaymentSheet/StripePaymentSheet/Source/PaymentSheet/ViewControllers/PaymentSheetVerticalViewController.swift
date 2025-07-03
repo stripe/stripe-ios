@@ -199,9 +199,31 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
             // Otherwise, we're using the list
             let paymentMethodListViewController = makePaymentMethodListViewController(selection: updatedListSelection)
             self.paymentMethodListViewController = paymentMethodListViewController
-            if case let .new(confirmParams: confirmParams) = previousPaymentOption,
-               paymentMethodTypes.contains(confirmParams.paymentMethodType),
-               shouldDisplayForm(for: confirmParams.paymentMethodType)
+
+            let confirmParams: IntentConfirmParams? = {
+                guard let paymentOption = previousPaymentOption else {
+                    return nil
+                }
+                switch paymentOption {
+                case .saved(_, let confirmParams):
+                    if let confirmParams {
+                        return confirmParams
+                    } else {
+                        return nil
+                    }
+                case .new(let confirmParams):
+                    return confirmParams
+                case .link:
+                    // Handled elsewhere
+                    return nil
+                case .applePay, .external:
+                    return nil
+                }
+            }()
+
+            if let confirmParams,
+                paymentMethodTypes.contains(confirmParams.paymentMethodType),
+                shouldDisplayForm(for: confirmParams.paymentMethodType)
             {
                 // If the previous customer input was for a PM form and it collects user input, display the form on top of the list
                 let formVC = makeFormVC(paymentMethodType: confirmParams.paymentMethodType)
@@ -800,6 +822,8 @@ extension PaymentSheetVerticalViewController: VerticalPaymentMethodListViewContr
     private func makeFormVC(paymentMethodType: PaymentSheet.PaymentMethodType) -> PaymentMethodFormViewController {
         let previousCustomerInput: IntentConfirmParams? = {
             if case let .new(confirmParams: confirmParams) = previousPaymentOption {
+                return confirmParams
+            } else if case let .saved(_, confirmParams) = previousPaymentOption {
                 return confirmParams
             } else {
                 return nil

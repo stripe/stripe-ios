@@ -49,7 +49,7 @@ class ECEIntegrationTests: XCTestCase {
                     id: "standard",
                     amount: 1000,
                     displayName: "Standard Shipping",
-                    deliveryEstimate: PaymentSheet.ShopPayConfiguration.DeliveryEstimate(
+                    deliveryEstimate: PaymentSheet.ShopPayConfiguration.DeliveryEstimate.structured(
                         minimum: PaymentSheet.ShopPayConfiguration.DeliveryEstimate.DeliveryEstimateUnit(value: 3, unit: .business_day),
                         maximum: PaymentSheet.ShopPayConfiguration.DeliveryEstimate.DeliveryEstimateUnit(value: 5, unit: .business_day)
                     )

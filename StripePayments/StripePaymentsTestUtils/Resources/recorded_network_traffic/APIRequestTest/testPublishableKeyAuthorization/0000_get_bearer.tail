@@ -1,5 +1,5 @@
 GET
-https:\/\/luxurious-alpine-devourer\.glitch\.me\/bearer\?foo=bar$
+https:\/\/stripe-mobile-luxurious-alpine-devourer\.stripedemos\.com\/bearer\?foo=bar$
 200
 application/json
 access-control-allow-credentials: true
