@@ -63,7 +63,7 @@ final class FinancialConnectionsNetworkingUITests: XCTestCase {
         phoneTextFieldToolbarDoneButton.tap()
 
         let saveToLinkButon = app.buttons["networking_link_signup_footer_view.save_to_link_button"]
-        XCTAssertTrue(saveToLinkButon.waitForExistence(timeout: 120.0))  // glitch app can take time to lload
+        XCTAssertTrue(saveToLinkButon.waitForExistence(timeout: 120.0))  // backend app can take time to load
         saveToLinkButon.tap()
 
         let successPaneDoneButton = app.fc_nativeSuccessDoneButton
@@ -273,7 +273,7 @@ final class FinancialConnectionsNetworkingUITests: XCTestCase {
         phoneTextFieldToolbarDoneButton.tap()
 
         let saveToLinkButon = app.buttons["networking_link_signup_footer_view.save_to_link_button"]
-        XCTAssertTrue(saveToLinkButon.waitForExistence(timeout: 120.0))  // glitch app can take time to lload
+        XCTAssertTrue(saveToLinkButon.waitForExistence(timeout: 120.0))  // backend app can take time to load
         saveToLinkButon.tap()
 
         let successPaneDoneButton = app.fc_nativeSuccessDoneButton
@@ -329,7 +329,7 @@ final class FinancialConnectionsNetworkingUITests: XCTestCase {
         // both, email and phone, will already be pre-filled
 
         let saveToLinkButon = app.buttons["networking_link_signup_footer_view.save_to_link_button"]
-        XCTAssertTrue(saveToLinkButon.waitForExistence(timeout: 120.0))  // glitch app can take time to lload
+        XCTAssertTrue(saveToLinkButon.waitForExistence(timeout: 120.0))  // backend app can take time to load
         saveToLinkButon.tap()
 
         let successPaneDoneButton = app.fc_nativeSuccessDoneButton
