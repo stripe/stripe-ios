@@ -122,7 +122,7 @@ extension ShopPayECEPresenter: ExpressCheckoutWebviewDelegate {
                                     id: rate.id,
                                     amount: rate.amount,
                                     displayName: rate.displayName,
-                                    deliveryEstimate: self.convertDeliveryEstimate(rate.deliveryEstimate),
+                                    deliveryEstimate: self.convertDeliveryEstimate(rate.deliveryEstimate)
                                 )
                             },
                             applePay: nil,
@@ -153,7 +153,7 @@ extension ShopPayECEPresenter: ExpressCheckoutWebviewDelegate {
                         id: rate.id,
                         amount: rate.amount,
                         displayName: rate.displayName,
-                        deliveryEstimate: self.convertDeliveryEstimate(rate.deliveryEstimate),
+                        deliveryEstimate: self.convertDeliveryEstimate(rate.deliveryEstimate)
                     )
                 },
                 applePay: nil,
@@ -189,7 +189,7 @@ extension ShopPayECEPresenter: ExpressCheckoutWebviewDelegate {
                                     id: rate.id,
                                     amount: rate.amount,
                                     displayName: rate.displayName,
-                                    deliveryEstimate: self.convertDeliveryEstimate(rate.deliveryEstimate),
+                                    deliveryEstimate: self.convertDeliveryEstimate(rate.deliveryEstimate)
                                 )
                             },
                             applePay: nil,
@@ -220,7 +220,7 @@ extension ShopPayECEPresenter: ExpressCheckoutWebviewDelegate {
                         id: rate.id,
                         amount: rate.amount,
                         displayName: rate.displayName,
-                        deliveryEstimate: self.convertDeliveryEstimate(rate.deliveryEstimate),
+                        deliveryEstimate: self.convertDeliveryEstimate(rate.deliveryEstimate)
                     )
                 },
                 applePay: nil,
@@ -241,7 +241,7 @@ extension ShopPayECEPresenter: ExpressCheckoutWebviewDelegate {
                     id: rate.id,
                     amount: rate.amount,
                     displayName: rate.displayName,
-                    deliveryEstimate: self.convertDeliveryEstimate(rate.deliveryEstimate),
+                    deliveryEstimate: self.convertDeliveryEstimate(rate.deliveryEstimate)
                 )
             } : nil,
             applePay: nil
