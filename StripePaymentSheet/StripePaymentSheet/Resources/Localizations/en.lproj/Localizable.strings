@@ -74,6 +74,9 @@
 /* Paypal mandate text */
 "By confirming your payment with PayPal, you allow %@ to charge your PayPal account for future payments in accordance with their terms." = "By confirming your payment with PayPal, you allow %@ to charge your PayPal account for future payments in accordance with their terms.";
 
+/* Satispay mandate text */
+"By confirming your payment with Satispay, you allow %@ to charge your Satispay account for future payments in accordance with their terms." = "By confirming your payment with Satispay, you allow %@ to charge your Satispay account for future payments in accordance with their terms.";
+
 /* Amazon Pay mandate text */
 "By continuing to Amazon Pay, you allow %@ to charge your Amazon Pay account for future payments in accordance with their terms." = "By continuing to Amazon Pay, you allow %@ to charge your Amazon Pay account for future payments in accordance with their terms.";
 
@@ -85,6 +88,9 @@
 
 /* Revolut Pay mandate text */
 "By continuing to Revolut Pay, you allow %@ to charge your Revolut Pay account for future payments in accordance with their terms." = "By continuing to Revolut Pay, you allow %@ to charge your Revolut Pay account for future payments in accordance with their terms.";
+
+/* Satispay mandate text */
+"By continuing to Satispay, you allow %@ to charge your Satispay account for future payments in accordance with their terms." = "By continuing to Satispay, you allow %@ to charge your Satispay account for future payments in accordance with their terms.";
 
 /* Legal text shown when creating a Link account. */
 "By continuing you agree to the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "By continuing you agree to the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>.";
