@@ -12,6 +12,7 @@ import Foundation
 import UIKit
 
 /// A delegate for `AddressViewController`
+@MainActor @preconcurrency
 public protocol AddressViewControllerDelegate: AnyObject {
     /// Called when the customer finishes entering their address or cancels. Your implementation should dismiss the view controller.
     /// - Parameter address: A valid address or nil if the customer cancels the flow.
