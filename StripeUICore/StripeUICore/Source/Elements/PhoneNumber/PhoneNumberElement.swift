@@ -26,6 +26,11 @@ import UIKit
         if let infoView = infoView {
             infoView.translatesAutoresizingMaskIntoConstraints = false
             hStackView.addArrangedSubview(infoView)
+
+            NSLayoutConstraint.activate([
+                infoView.trailingAnchor.constraint(equalTo: hStackView.trailingAnchor)
+            ])
+
             // Add some extra padding to the right side
             hStackView.isLayoutMarginsRelativeArrangement = true
             hStackView.directionalLayoutMargins = .insets(
@@ -115,6 +120,11 @@ import UIKit
 
     public func clearPhoneNumber() {
         textFieldElement.setText("")
+    }
+
+    /// Sets the phone number text programmatically. Country code will remain unchanged.
+    @_spi(STP) public func setPhoneNumber(_ phoneNumber: String?) {
+        textFieldElement.setText(phoneNumber ?? "")
     }
 
     // MARK: - Element protocol

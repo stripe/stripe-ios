@@ -526,4 +526,8 @@ extension String.Localized {
             "Error message that's displayed when you try to confirm a payment without a valid payment method"
        )
     }
+
+    static var use_billing_address_for_shipping: String {
+        STPLocalizedString("Use billing address for shipping", "Label for checkbox in address form allowing user to use billing address")
+    }
 }
