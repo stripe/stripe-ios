@@ -312,6 +312,20 @@ extension String.Localized {
         )
     }
 
+    static var satispay_mandate_text_payment: String {
+        STPLocalizedString(
+            "By confirming your payment with Satispay, you allow %@ to charge your Satispay account for future payments in accordance with their terms.",
+            "Satispay mandate text"
+        )
+    }
+
+    static var satispay_mandate_text_setup: String {
+        STPLocalizedString(
+            "By continuing to Satispay, you allow %@ to charge your Satispay account for future payments in accordance with their terms.",
+            "Satispay mandate text"
+        )
+    }
+
     static var blik_confirm_payment: String {
         STPLocalizedString("Confirm the payment in your bank's app within %@ to complete the purchase.",
                            "Text for alert message when user needs to confirm payment in their banking app")
