@@ -97,9 +97,9 @@ extension XCTestCase {
                 zipField.tap()
                 zipField.typeText("94080")
             }
-        }
 
-        XCTAssertTrue(app.toolbars.buttons["Done"].waitForExistenceAndTap(timeout: 10))
+            XCTAssertTrue(app.toolbars.buttons["Done"].waitForExistenceAndTap(timeout: 10))
+        }
     }
 
     func logInToLink(
@@ -118,6 +118,7 @@ extension XCTestCase {
     }
 
     func payLink(_ app: XCUIApplication) {
+        app.swipeUp()
         app.buttons
             .matching(identifier: "Pay $50.99")
             .matching(NSPredicate(format: "isEnabled == true"))

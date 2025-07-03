@@ -6,7 +6,17 @@
 struct ECEIndexHTML {
     let shopId: String
     let customerSessionClientSecret: String
-
+    var shopPayHTMLString: String {
+        return !shopId.isEmpty ?
+"""
+          paymentMethodOptions: {
+            shop_pay: {
+              shop_id: "\(shopId)",
+            },
+          },
+"""
+        : ""
+    }
     var ECEHTML: String {
 """
 <!DOCTYPE html>
@@ -43,6 +53,7 @@ struct ECEIndexHTML {
           payment_method_types: ["card", "link", "shop_pay"],
           customerSessionClientSecret: "\(customerSessionClientSecret)",
           __elementsInitSource: 'native_sdk',
+          \(shopPayHTMLString)
         };
 
       console.log("Initializing stripe elements with options", options);
@@ -82,6 +93,8 @@ struct ECEIndexHTML {
         console.log("Ready to mount");
       expressCheckoutElement.mount("#express-checkout-element");
       //When expressCheckoutElement is mounted, ready event tries to show the available payment methods
+
+      let clickEventReceived = false;
       expressCheckoutElement.on("ready", ({ availablePaymentMethods }) => {
         const expressCheckoutDiv = document.getElementById(
           "express-checkout-element"
@@ -91,10 +104,54 @@ struct ECEIndexHTML {
         } else {
           expressCheckoutDiv.style.visibility = "initial";
         }
-        expressCheckoutElement._sendNativeSdkClick({paymentMethodType: 'shop_pay'})
+
+
+        console.log("Attempting to trigger Shop Pay click immediately...");
+        try {
+          // Check if a click event was already received
+          if (!clickEventReceived) {
+            expressCheckoutElement._sendNativeSdkClick({paymentMethodType: 'shop_pay'});
+            console.log("Initial Shop Pay click triggered");
+          } else {
+            console.log("Click event already received, skipping initial click");
+          }
+        } catch (error) {
+          console.error("Failed on initial Shop Pay click:", error);
+        }
+
+        // Then continue with additional attempts every 100ms for 1 second, up to 5 clicks
+        let clickCount = 1;
+        const maxClicks = 5;
+        const clickInterval = setInterval(() => {
+          // Stop if a click event was received
+          if (clickEventReceived) {
+            console.log("Click event received, stopping further click attempts");
+            clearInterval(clickInterval);
+            return;
+          }
+
+          // Stop if we've reached the maximum number of clicks
+          if (clickCount >= maxClicks) {
+              console.log(`Reached maximum ${maxClicks} click attempts, stopping further attempts`);
+              clearInterval(clickInterval);
+              return;
+          }
+
+          clickCount++;
+          console.log(`Attempting Shop Pay click #${clickCount}...`);
+          try {
+            expressCheckoutElement._sendNativeSdkClick({paymentMethodType: 'shop_pay'});
+            console.log(`Shop Pay click #${clickCount} triggered`);
+          } catch (error) {
+            console.error(`Failed on Shop Pay click #${clickCount}:`, error);
+          }
+        }, 100);
       });
 
       expressCheckoutElement.on("click", async function (event) {
+        // We need to know when to stop sending _sendNativeSdkClick
+        clickEventReceived = true;
+
         console.log(`Click received with event:\n${hashToString(event)}`);
         try {
           // Extract only serializable data from the event

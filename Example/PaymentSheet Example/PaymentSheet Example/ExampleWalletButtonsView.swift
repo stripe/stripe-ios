@@ -7,6 +7,16 @@
 @_spi(STP) @_spi(SharedPaymentToken) @_spi(CustomerSessionBetaAccess) @_spi(AppearanceAPIAdditionsPreview) import StripePaymentSheet
 import SwiftUI
 
+struct ShopPayTestingOptions {
+    var billingAddressRequired: Bool = false
+    var emailRequired: Bool = false
+    var shippingAddressRequired: Bool = true
+    var allowedShippingCountries: String = ""
+    var rejectShippingAddressChange: Bool = false
+    var rejectShippingRateChange: Bool = false
+    var simulatePaymentFailed: Bool = false
+}
+
 struct ExampleWalletButtonsContainerView: View {
     @State private var email: String = ""
     @State private var shopId: String = ""
@@ -14,6 +24,15 @@ struct ExampleWalletButtonsContainerView: View {
     @State private var useSPTTestBackend: Bool = false
     @State private var appearance: PaymentSheet.Appearance = PaymentSheet.Appearance()
     @State private var showingAppearancePlayground = false
+
+    // Shop Pay testing options
+    @State private var billingAddressRequired: Bool = false
+    @State private var emailRequired: Bool = false
+    @State private var shippingAddressRequired: Bool = true
+    @State private var allowedShippingCountries: String = ""
+    @State private var rejectShippingAddressChange: Bool = false
+    @State private var rejectShippingRateChange: Bool = false
+    @State private var simulatePaymentFailed: Bool = false
 
     var body: some View {
         if #available(iOS 16.0, *) {
@@ -37,16 +56,47 @@ struct ExampleWalletButtonsContainerView: View {
                     Button("Customize Appearance") {
                         showingAppearancePlayground = true
                     }
-
-                    NavigationLink("Launch") {
-                        ExampleWalletButtonsView(email: email, shopId: shopId, useSPTTestBackend: useSPTTestBackend, appearance: appearance)
-                    }
                 }
-            }.sheet(isPresented: $showingAppearancePlayground) {
-                if #available(iOS 14.0, *) {
+
+                Section("Shop Pay Testing Options") {
+                    Group {
+                        Toggle("Billing Address Required", isOn: $billingAddressRequired)
+                        Toggle("Email Required", isOn: $emailRequired)
+                        Toggle("Shipping Address Required", isOn: $shippingAddressRequired)
+
+                        TextField("Allowed Shipping Countries (comma separated)", text: $allowedShippingCountries)
+                            .textInputAutocapitalization(.never)
+                    }
+
+                    Group {
+                        Toggle("Reject Shipping Address Change", isOn: $rejectShippingAddressChange)
+                        Toggle("Reject Shipping Rate Change", isOn: $rejectShippingRateChange)
+                        Toggle("Simulate Payment Failed", isOn: $simulatePaymentFailed)
+                    }
+                }.sheet(isPresented: $showingAppearancePlayground) {
                     AppearancePlaygroundView(appearance: appearance) { updatedAppearance in
                         appearance = updatedAppearance
                         showingAppearancePlayground = false
+                    }
+                }
+
+                Section {
+                    NavigationLink("Launch") {
+                        ExampleWalletButtonsView(
+                            email: email,
+                            shopId: shopId,
+                            useSPTTestBackend: useSPTTestBackend,
+                            appearance: appearance,
+                            shopPayTestingOptions: ShopPayTestingOptions(
+                                billingAddressRequired: billingAddressRequired,
+                                emailRequired: emailRequired,
+                                shippingAddressRequired: shippingAddressRequired,
+                                allowedShippingCountries: allowedShippingCountries,
+                                rejectShippingAddressChange: rejectShippingAddressChange,
+                                rejectShippingRateChange: rejectShippingRateChange,
+                                simulatePaymentFailed: simulatePaymentFailed
+                            )
+                        )
                     }
                 }
             }
@@ -60,8 +110,8 @@ struct ExampleWalletButtonsView: View {
     @ObservedObject var model: ExampleWalletButtonsModel
     @State var isConfirmingPayment = false
 
-    init(email: String, shopId: String, useSPTTestBackend: Bool, appearance: PaymentSheet.Appearance = PaymentSheet.Appearance()) {
-        self.model = ExampleWalletButtonsModel(email: email, shopId: shopId, useSPTTestBackend: useSPTTestBackend, appearance: appearance)
+    init(email: String, shopId: String, useSPTTestBackend: Bool, appearance: PaymentSheet.Appearance = PaymentSheet.Appearance(), shopPayTestingOptions: ShopPayTestingOptions = ShopPayTestingOptions()) {
+        self.model = ExampleWalletButtonsModel(email: email, shopId: shopId, useSPTTestBackend: useSPTTestBackend, appearance: appearance, shopPayTestingOptions: shopPayTestingOptions)
     }
 
     var body: some View {
@@ -73,8 +123,13 @@ struct ExampleWalletButtonsView: View {
                         isConfirmingPayment: $isConfirmingPayment,
                         onCompletion: model.onCompletion
                     )
-                } else {
+                } else if model.paymentResult == nil {
                     ExampleLoadingView()
+                } else {
+                    Button("Reload", action: {
+                        self.model.paymentResult = nil
+                        self.model.preparePaymentSheet()
+                    })
                 }
 
                 // Debug logs section
@@ -100,7 +155,6 @@ struct ExampleWalletButtonsView: View {
         }
     }
 }
-
 @available(iOS 16.0, *)
 struct WalletButtonsFlowControllerView: View {
     @ObservedObject var flowController: PaymentSheet.FlowController
@@ -152,6 +206,7 @@ class ExampleWalletButtonsModel: ObservableObject {
     let shopId: String
     let useSPTTestBackend: Bool
     let appearance: PaymentSheet.Appearance
+    let shopPayTestingOptions: ShopPayTestingOptions
 
     let backendCheckoutUrl = URL(string: "https://stp-mobile-playground-backend-v7.stripedemos.com/checkout")!
     let SPTTestCustomerUrl = URL(string: "https://rough-lying-carriage.glitch.me/customer")!
@@ -161,11 +216,12 @@ class ExampleWalletButtonsModel: ObservableObject {
     @Published var isProcessing: Bool = false
     @Published var debugLogs: [String] = []
 
-    init(email: String, shopId: String, useSPTTestBackend: Bool, appearance: PaymentSheet.Appearance) {
+    init(email: String, shopId: String, useSPTTestBackend: Bool, appearance: PaymentSheet.Appearance, shopPayTestingOptions: ShopPayTestingOptions = ShopPayTestingOptions()) {
         self.email = email
         self.shopId = shopId
         self.useSPTTestBackend = useSPTTestBackend
         self.appearance = appearance
+        self.shopPayTestingOptions = shopPayTestingOptions
     }
 
     func addDebugLog(_ message: String) {
@@ -257,10 +313,10 @@ class ExampleWalletButtonsModel: ObservableObject {
 
                 self?.addDebugLog("Creating PaymentSheet FlowController with original backend...")
                 PaymentSheet.FlowController.create(
-                    intentConfiguration: .init(sharedPaymentTokenSessionWithMode: .payment(amount: 1000, currency: "USD", setupFutureUsage: nil, captureMethod: .automatic, paymentMethodOptions: nil), sellerDetails: .init(networkId: "internal", externalId: "stripe_test_merchant"), paymentMethodTypes: ["card", "link", "shop_pay"], preparePaymentMethodHandler: { [weak self] paymentMethod, address in
+                    intentConfiguration: .init(sharedPaymentTokenSessionWithMode: .payment(amount: 1000, currency: "USD", setupFutureUsage: nil, captureMethod: .automatic, paymentMethodOptions: nil), sellerDetails: .init(networkId: "stripe", externalId: "acct_1HvTI7Lu5o3P18Zp"), paymentMethodTypes: ["card", "link", "shop_pay"], preparePaymentMethodHandler: { [weak self] paymentMethod, address in
                         self?.addDebugLog("PaymentMethod prepared: \(paymentMethod.stripeId)")
                         self?.addDebugLog("Address: \(address)")
-                        // Create the SPT on your backend here
+                        self?.onCompletion(result: .completed)
                     }),
                     configuration: configuration
                 ) { [weak self] result in
@@ -330,7 +386,7 @@ class ExampleWalletButtonsModel: ObservableObject {
 
                 self?.addDebugLog("Creating PaymentSheet FlowController...")
                 PaymentSheet.FlowController.create(
-                    intentConfiguration: .init(sharedPaymentTokenSessionWithMode: .payment(amount: 9999, currency: "USD", setupFutureUsage: nil, captureMethod: .automatic, paymentMethodOptions: nil), sellerDetails: .init(networkId: "internal", externalId: "stripe_test_merchant"), paymentMethodTypes: ["card", "link", "shop_pay"], preparePaymentMethodHandler: { [weak self] paymentMethod, address in
+                    intentConfiguration: .init(sharedPaymentTokenSessionWithMode: .payment(amount: 9999, currency: "USD", setupFutureUsage: nil, captureMethod: .automatic, paymentMethodOptions: nil), sellerDetails: .init(networkId: "stripe", externalId: "acct_1HvTI7Lu5o3P18Zp"), paymentMethodTypes: ["card", "link", "shop_pay"], preparePaymentMethodHandler: { [weak self] paymentMethod, address in
                         self?.isProcessing = true
                         self?.addDebugLog("PaymentMethod prepared: \(paymentMethod.stripeId)")
                         self?.addDebugLog("Address: \(address)")
@@ -398,18 +454,18 @@ class ExampleWalletButtonsModel: ObservableObject {
                         if status == .succeeded {
                             self?.addDebugLog("Payment completed successfully after handling next action")
                             DispatchQueue.main.async {
-                                self?.paymentResult = .completed
-                                self?.cleanupDemo()
+                                self?.onCompletion(result: .completed)
                             }
                         } else if status == .failed {
                             self?.addDebugLog("Payment failed after handling next action")
                             DispatchQueue.main.async {
-                                self?.paymentResult = .failed(error: error ?? NSError(domain: "PaymentHandler", code: -1, userInfo: [NSLocalizedDescriptionKey: "Payment failed"]))
+                                self?.onCompletion(result: .failed(error: error ?? NSError(domain: "PaymentHandler", code: -1, userInfo: [NSLocalizedDescriptionKey: "Payment failed"])))
+
                             }
                         } else if status == .canceled {
                             self?.addDebugLog("Payment canceled after handling next action")
                             DispatchQueue.main.async {
-                                self?.paymentResult = .canceled
+                                self?.onCompletion(result: .canceled)
                             }
                         }
                     }
@@ -418,7 +474,7 @@ class ExampleWalletButtonsModel: ObservableObject {
                     self?.addDebugLog("Payment intent created: \(paymentIntentID)")
                     DispatchQueue.main.async {
                         self?.isProcessing = false
-                        self?.paymentResult = .completed
+                        self?.onCompletion(result: .completed)
                     }
                 }
             })
@@ -428,8 +484,10 @@ class ExampleWalletButtonsModel: ObservableObject {
     func onCompletion(result: PaymentSheetResult) {
         self.addDebugLog("PaymentSheet completion called with result: \(result)")
 
-        if useSPTTestBackend {
-            // We'll handle completion after handling the SPT next actions manually
+        // Check if we should simulate payment failure for testing
+        if shopPayTestingOptions.simulatePaymentFailed {
+            self.addDebugLog("[TEST MODE] Simulating payment failure")
+            self.paymentResult = .failed(error: NSError(domain: "TestMode", code: -1, userInfo: [NSLocalizedDescriptionKey: "Simulated payment failure for testing"]))
             return
         }
 
@@ -447,18 +505,20 @@ class ExampleWalletButtonsModel: ObservableObject {
     func cleanupDemo() {
         // A PaymentIntent can't be reused after a successful payment. Prepare a new one for the demo.
         self.paymentSheetFlowController = nil
-        self.addDebugLog("Preparing new payment sheet for demo")
-        preparePaymentSheet()
     }
 
     var shopPayConfiguration: PaymentSheet.ShopPayConfiguration {
-        let singleBusinessDay = PaymentSheet.ShopPayConfiguration.DeliveryEstimate.DeliveryEstimateUnit(value: 1, unit: .business_day)
+        let twoBusinessDays = PaymentSheet.ShopPayConfiguration.DeliveryEstimate.DeliveryEstimateUnit(value: 2, unit: .business_day)
         let fiveBusinessDays = PaymentSheet.ShopPayConfiguration.DeliveryEstimate.DeliveryEstimateUnit(value: 5, unit: .business_day)
         let sevenBusinessDays = PaymentSheet.ShopPayConfiguration.DeliveryEstimate.DeliveryEstimateUnit(value: 7, unit: .business_day)
+        let twoWeeks = PaymentSheet.ShopPayConfiguration.DeliveryEstimate.DeliveryEstimateUnit(value: 2, unit: .week)
 
         let shippingRates: [PaymentSheet.ShopPayConfiguration.ShippingRate] = [
-            .init(id: "express", amount: 1099, displayName: "Overnight", deliveryEstimate: .init(minimum: singleBusinessDay, maximum: singleBusinessDay)),
-            .init(id: "standard", amount: 0, displayName: "Free", deliveryEstimate: .init(minimum: fiveBusinessDays, maximum: sevenBusinessDays)),
+            .init(id: "immediate", amount: 1099, displayName: "2-hour", deliveryEstimate: .unstructured("Get your item in 2 hours")),
+            .init(id: "fast", amount: 500, displayName: "Expedited", deliveryEstimate: .structured(minimum: twoBusinessDays, maximum: fiveBusinessDays)),
+            .init(id: "regular", amount: 200, displayName: "Standard", deliveryEstimate: .structured(minimum: nil, maximum: sevenBusinessDays)),
+            .init(id: "no_rush", amount: 100, displayName: "No Rush", deliveryEstimate: .structured(minimum: twoWeeks, maximum: nil)),
+            .init(id: "no_estimate", amount: 0, displayName: "Free (No estimate)", deliveryEstimate: nil),
         ]
 
         let handlers = PaymentSheet.ShopPayConfiguration.Handlers(
@@ -467,6 +527,13 @@ class ExampleWalletButtonsModel: ObservableObject {
                 // For example, you might recalculate totals based on the shipping rate
                 let selectedRate = shippingRateSelected.shippingRate
                 self?.addDebugLog("User selected shipping rate: \(selectedRate.displayName) with cost \(selectedRate.amount)")
+
+                // Check if we should reject the shipping rate change for testing
+                if self?.shopPayTestingOptions.rejectShippingRateChange == true {
+                    self?.addDebugLog("[TEST MODE] Rejecting shipping rate change")
+                    completion(nil)
+                    return
+                }
 
                 // Create the update with the new line items and available shipping rates
                 let update = PaymentSheet.ShopPayConfiguration.ShippingRateUpdate(
@@ -486,6 +553,14 @@ class ExampleWalletButtonsModel: ObservableObject {
                 let address = shippingContactSelected.address
 
                 self?.addDebugLog("User selected shipping to: \(name) in \(address.city), \(address.state)")
+
+                // Check if we should reject the shipping address change for testing
+                if self?.shopPayTestingOptions.rejectShippingAddressChange == true {
+                    self?.addDebugLog("[TEST MODE] Rejecting shipping address change")
+                    completion(nil)
+                    return
+                }
+
                 // Check if we can ship to this location
                 let canShipToLocation = self?.isValidShippingLocation(address) ?? false
 
@@ -508,14 +583,39 @@ class ExampleWalletButtonsModel: ObservableObject {
             }
         )
 
-        return PaymentSheet.ShopPayConfiguration(shippingAddressRequired: true,
-                                                 lineItems: [.init(name: "Golden Potato", amount: 500),
-                                                             .init(name: "Silver Potato", amount: 345),
-                                                             .init(name: "Tax", amount: 200),
-                                                             .init(name: "Shipping", amount: shippingRates.first!.amount), ],
-                                                 shippingRates: shippingRates,
-                                                 shopId: self.shopId,
-                                                 handlers: handlers)
+        // Parse allowed shipping countries if provided
+        var allowedCountries: [String] = []
+        if !shopPayTestingOptions.allowedShippingCountries.isEmpty {
+            allowedCountries = shopPayTestingOptions.allowedShippingCountries
+                .split(separator: ",")
+                .map { $0.trimmingCharacters(in: .whitespaces).uppercased() }
+        }
+
+        // Create configuration with test options
+        var config = PaymentSheet.ShopPayConfiguration(
+            billingAddressRequired: shopPayTestingOptions.billingAddressRequired,
+            emailRequired: shopPayTestingOptions.emailRequired,
+            shippingAddressRequired: shopPayTestingOptions.shippingAddressRequired,
+            lineItems: [.init(name: "Golden Potato", amount: 500),
+                        .init(name: "Silver Potato", amount: 345),
+                        .init(name: "Tax", amount: 200),
+                        .init(name: "Shipping", amount: shippingRates.first!.amount), ],
+            shippingRates: shippingRates,
+            shopId: self.shopId,
+            allowedShippingCountries: allowedCountries,
+            handlers: handlers
+        )
+
+        // Log the testing configuration
+        addDebugLog("[SHOP PAY CONFIG] Billing Address Required: \(shopPayTestingOptions.billingAddressRequired)")
+        addDebugLog("[SHOP PAY CONFIG] Email Required: \(shopPayTestingOptions.emailRequired)")
+        addDebugLog("[SHOP PAY CONFIG] Shipping Address Required: \(shopPayTestingOptions.shippingAddressRequired)")
+        addDebugLog("[SHOP PAY CONFIG] Allowed Countries: \(allowedCountries.joined(separator: ", "))")
+        addDebugLog("[SHOP PAY CONFIG] Reject Shipping Address: \(shopPayTestingOptions.rejectShippingAddressChange)")
+        addDebugLog("[SHOP PAY CONFIG] Reject Shipping Rate: \(shopPayTestingOptions.rejectShippingRateChange)")
+        addDebugLog("[SHOP PAY CONFIG] Simulate Payment Failed: \(shopPayTestingOptions.simulatePaymentFailed)")
+
+        return config
     }
     func isValidShippingLocation(_ address: PaymentSheet.ShopPayConfiguration.PartialAddress) -> Bool {
         return address.postalCode != "91911"

@@ -112,6 +112,32 @@ class AddressViewControllerSnapshotTests: STPSnapshotTestCase {
         verify(navVC.view)
     }
 
+    func testShippingAddressViewController_shippingEqualsBillingCheckbox() {
+        let testWindow = UIWindow(frame: CGRect(x: 0, y: 0, width: 428, height: 500))
+        testWindow.isHidden = false
+        var configuration = configuration
+        configuration.showUseBillingAddressCheckbox = true
+        configuration.defaultValues = .init(
+            address: .init(
+                city: "San Francisco",
+                country: "US",
+                line1: "510 Townsend St.",
+                postalCode: "94102",
+                state: "California"
+            ),
+            name: "Jane Doe",
+            phone: "5555555555"
+        )
+        let vc = AddressViewController(
+            addressSpecProvider: addressSpecProvider,
+            configuration: configuration,
+            delegate: self
+        )
+        let navVC = UINavigationController(rootViewController: vc)
+        testWindow.rootViewController = navVC
+        verify(navVC.view)
+    }
+
     func verify(
         _ view: UIView,
         identifier: String? = nil,
