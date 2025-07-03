@@ -49,7 +49,7 @@ final class LinkCardEditElementSnapshotTests: STPSnapshotTestCase {
     }
 
     func verify(
-        _ element: LinkCardEditElement,
+        _ element: LinkPaymentMethodFormElement,
         identifier: String? = nil,
         file: StaticString = #filePath,
         line: UInt = #line
@@ -66,7 +66,7 @@ extension LinkCardEditElementSnapshotTests {
         isDefault: Bool,
         useCVCPlaceholder: Bool = false,
         networks: [String] = ["visa"]
-    ) -> LinkCardEditElement {
+    ) -> LinkPaymentMethodFormElement {
         let paymentMethod = ConsumerPaymentDetails(
             stripeID: "1",
             details: .card(
@@ -86,7 +86,7 @@ extension LinkCardEditElementSnapshotTests {
             isDefault: isDefault
         )
 
-        return LinkCardEditElement(
+        return LinkPaymentMethodFormElement(
             paymentMethod: paymentMethod,
             configuration: PaymentSheet.Configuration(),
             useCVCPlaceholder: useCVCPlaceholder

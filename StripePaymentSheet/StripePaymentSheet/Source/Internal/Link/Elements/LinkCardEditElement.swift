@@ -1,5 +1,5 @@
 //
-//  LinkCardEditElement.swift
+//  LinkPaymentMethodFormElement.swift
 //  StripePaymentSheet
 //
 //  Created by Ramon Torres on 9/30/22.
@@ -25,7 +25,7 @@ fileprivate extension ConsumerPaymentDetails {
     }
 }
 
-final class LinkCardEditElement: Element {
+final class LinkPaymentMethodFormElement: Element {
     let collectsUserInput: Bool = true
 
     struct Params {
@@ -270,7 +270,7 @@ final class LinkCardEditElement: Element {
 
 }
 
-extension LinkCardEditElement: ElementDelegate {
+extension LinkPaymentMethodFormElement: ElementDelegate {
 
     func didUpdate(element: Element) {
         delegate?.didUpdate(element: self)
