@@ -17,13 +17,17 @@ class ShopPayECEPresenter: NSObject, UIAdaptivePresentationControllerDelegate {
     private var confirmHandler: ((PaymentSheetResult) -> Void)?
     private var eceViewController: ECEViewController?
     private weak var presentingViewController: UIViewController?
+    private var didReceiveECEClick: Bool = false
+    private let analyticsHelper: PaymentSheetAnalyticsHelper
 
     init(
         flowController: PaymentSheet.FlowController,
-        configuration: PaymentSheet.ShopPayConfiguration
+        configuration: PaymentSheet.ShopPayConfiguration,
+        analyticsHelper: PaymentSheetAnalyticsHelper
     ) {
         self.flowController = flowController
         self.shopPayConfiguration = configuration
+        self.analyticsHelper = analyticsHelper
         super.init()
     }
 
@@ -34,15 +38,17 @@ class ShopPayECEPresenter: NSObject, UIAdaptivePresentationControllerDelegate {
             return
         }
         self.presentingViewController = viewController
+        analyticsHelper.logShopPayWebviewLoadAttempt()
+
         let eceVC = ECEViewController(apiClient: flowController.configuration.apiClient,
                                       shopId: shopPayConfiguration.shopId,
-                                      customerSessionClientSecret: customerSessionClientSecret)
+                                      customerSessionClientSecret: customerSessionClientSecret,
+                                      delegate: self)
 
         eceVC.expressCheckoutWebviewDelegate = self
         self.eceViewController = eceVC
-        let navController = UINavigationController(rootViewController: eceVC)
-        navController.modalPresentationStyle = .pageSheet
-        viewController.present(navController, animated: true)
+        eceVC.modalPresentationStyle = .pageSheet
+        viewController.present(eceVC, animated: true)
         eceVC.presentationController?.delegate = self
         // retain self while presented
         self.confirmHandler = { result in
@@ -53,11 +59,27 @@ class ShopPayECEPresenter: NSObject, UIAdaptivePresentationControllerDelegate {
 
     // If the sheet is pulled down
     func presentationControllerDidDismiss(_ presentationController: UIPresentationController) {
+        analyticsHelper.logShopPayWebviewCancelled(didReceiveECEClick: didReceiveECEClick)
+        self.eceViewController?.unloadWebview()
+        self.eceViewController = nil
         self.confirmHandler?(.canceled)
     }
 
     private func dismissECE(completion: (() -> Void)? = nil) {
-        presentingViewController?.dismiss(animated: true, completion: completion)
+        presentingViewController?.dismiss(animated: true) {
+            self.eceViewController?.unloadWebview()
+            self.eceViewController = nil
+            completion?()
+        }
+    }
+}
+
+@available(iOS 16.0, *)
+extension ShopPayECEPresenter: ECEViewControllerDelegate {
+    func didCancel() {
+        analyticsHelper.logShopPayWebviewCancelled(didReceiveECEClick: didReceiveECEClick)
+        self.confirmHandler?(.canceled)
+        dismissECE()
     }
 }
 
@@ -210,6 +232,7 @@ extension ShopPayECEPresenter: ExpressCheckoutWebviewDelegate {
     }
 
     func eceView(_ eceView: ECEViewController, didReceiveECEClick event: [String: Any]) async throws -> [String: Any] {
+        didReceiveECEClick = true
         // Build the configuration for Shop Pay
         let clickConfig = ECEClickConfiguration(
             lineItems: shopPayConfiguration.lineItems.map { ECELineItem(name: $0.name, amount: $0.amount) },
@@ -298,6 +321,8 @@ extension ShopPayECEPresenter: ExpressCheckoutWebviewDelegate {
                     }
                     preparePaymentMethodHandler(paymentMethod,
                                                 confirmData.shippingAddress?.toSTPAddress())
+                    // Log successful completion
+                    self.analyticsHelper.logShopPayWebviewConfirmSuccess()
                     // And then the PaymentSheet presentation handler
                     self.confirmHandler?(.completed)
                 }

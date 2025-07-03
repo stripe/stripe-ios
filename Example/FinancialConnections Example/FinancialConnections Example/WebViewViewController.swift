@@ -32,7 +32,7 @@ import WebKit
 //    (ex. `stripe.financialConnections.sessions.create`).
 //
 //    The `return_url` should be a link to your website. In this example code,
-//    the `return_url` is `https://fc-webview.glitch.me/redirect`.
+//    the `return_url` is `https://connections-webview-example.stripedemos.com/redirect`.
 //
 // 2. Add client code (shown below) that will open an extra browser that
 //    will handle the bank OAuth pop-up.
@@ -49,7 +49,7 @@ import WebKit
 //    This is done automatically when using `ASWebAuthenticationSession`.
 
 /// The website that presents the Financial Connections Auth Flow.
-private let websiteURL = URL(string: "https://connections-webview-example.glitch.me/")!
+private let websiteURL = URL(string: "https://connections-webview-example.stripedemos.com/")!
 
 // ======================
 // IMPORTANT NOTE:

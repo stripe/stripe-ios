@@ -452,6 +452,9 @@ the heading the screen itself. */
 /* Accessibility label for a button that leads to a screen for updating a payment method. */
 "Update payment method" = "Update payment method";
 
+/* Label for checkbox in address form allowing user to use billing address */
+"Use billing address for shipping" = "Use billing address for shipping";
+
 /* Two factor authentication screen heading */
 "Use your saved info to check out faster" = "Use your saved info to check out faster";
 

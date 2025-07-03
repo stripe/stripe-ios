@@ -68,6 +68,8 @@ import UIKit
         /// The default collection mode.
         /// - Parameter autocompletableCountries: If non-empty, the line1 field displays an autocomplete accessory button if the current country is in this list. Set the `didTapAutocompleteButton` property to be notified when the button is tapped.
         case all(autocompletableCountries: [String] = [])
+        /// Collects all address fields and always shows the autocomplete button for all countries.
+        case allWithAutocomplete
         /// Collects country and postal code if the country is one of `countriesRequiringPostalCollection`
         /// - Note: Really only useful for cards, where we only collect postal for a handful of countries
         case countryAndPostal(countriesRequiringPostalCollection: [String] = ["US", "GB", "CA"])
@@ -141,7 +143,7 @@ import UIKit
             )
         }
     }
-    var addressDetails: AddressDetails {
+    public var addressDetails: AddressDetails {
         let address = AddressDetails.Address(city: city?.text, country: selectedCountryCode, line1: line1?.text, line2: line2?.text, postalCode: postalCode?.text, state: state?.rawData)
         return .init(name: name?.text, phone: phone?.phoneNumber?.string(as: .e164), address: address)
     }
@@ -150,7 +152,7 @@ import UIKit
     let addressSpecProvider: AddressSpecProvider
     let theme: ElementsAppearance
     private(set) var defaults: AddressDetails
-    let didTapAutocompleteButton: () -> Void
+    @_spi(STP) public var didTapAutocompleteButton: () -> Void
     public var didUpdate: DidUpdateAddress?
 
     // MARK: - Implementation
@@ -260,7 +262,7 @@ import UIKit
         self.defaults.address = defaultAddress
 
         // Next, show/hide the checkbox if address is valid/invalid
-        sameAsCheckbox.view.isHidden = defaultAddress == .init() || !countryCodes.contains(defaultAddress.country ?? "country doesnt exist")
+        sameAsCheckbox.view.isHidden = defaultAddress == .init() || !countryCodes.contains(defaultAddress.country ?? "country doesn't exist")
         guard !sameAsCheckbox.view.isHidden else {
             // We're done if the checkbox is hidden
             return
@@ -308,11 +310,13 @@ import UIKit
                 }
             case .autoCompletable:
                 return false
+            case .allWithAutocomplete:
+                return true
             }
         }
 
         if collectionMode == .autoCompletable {
-            autoCompleteLine = autoCompleteLine ?? DummyAddressLine(theme: theme, didTap: didTapAutocompleteButton)
+            autoCompleteLine = autoCompleteLine ?? DummyAddressLine(theme: theme, didTap: handleAutocompleteButtonTap)
         } else {
             autoCompleteLine = nil
         }
@@ -320,7 +324,12 @@ import UIKit
         if fieldOrdering.contains(.line) {
             if case .all(let autocompletableCountries) = collectionMode, autocompletableCountries.caseInsensitiveContains(countryCode) {
                 line1 = TextFieldElement.Address.LineConfiguration(
-                    lineType: .line1Autocompletable(didTapAutocomplete: didTapAutocompleteButton),
+                    lineType: .line1Autocompletable(didTapAutocomplete: handleAutocompleteButtonTap),
+                    defaultValue: address.line1
+                ).makeElement(theme: theme)
+            } else if case .allWithAutocomplete = collectionMode {
+                line1 = TextFieldElement.Address.LineConfiguration(
+                    lineType: .line1Autocompletable(didTapAutocomplete: handleAutocompleteButtonTap),
                     defaultValue: address.line1
                 ).makeElement(theme: theme)
             } else {
@@ -384,6 +393,12 @@ import UIKit
            allDisplayedFieldsEqual = false
         }
         return allDisplayedFieldsEqual
+    }
+
+    /// Internal method that calls the current didTapAutocompleteButton
+    /// This ensures subcomponents always call the latest callback
+    private func handleAutocompleteButtonTap() {
+        didTapAutocompleteButton()
     }
 }
 
