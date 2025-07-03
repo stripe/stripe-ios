@@ -29,7 +29,7 @@ enum ECETestData {
                     id: "standard",
                     amount: 500,
                     displayName: "Standard Shipping",
-                    deliveryEstimate: PaymentSheet.ShopPayConfiguration.DeliveryEstimate(
+                    deliveryEstimate: PaymentSheet.ShopPayConfiguration.DeliveryEstimate.structured(
                         minimum: PaymentSheet.ShopPayConfiguration.DeliveryEstimate.DeliveryEstimateUnit(value: 5, unit: .day),
                         maximum: PaymentSheet.ShopPayConfiguration.DeliveryEstimate.DeliveryEstimateUnit(value: 7, unit: .day)
                     )
@@ -38,7 +38,7 @@ enum ECETestData {
                     id: "express",
                     amount: 1500,
                     displayName: "Express Shipping",
-                    deliveryEstimate: PaymentSheet.ShopPayConfiguration.DeliveryEstimate(
+                    deliveryEstimate: PaymentSheet.ShopPayConfiguration.DeliveryEstimate.structured(
                         minimum: PaymentSheet.ShopPayConfiguration.DeliveryEstimate.DeliveryEstimateUnit(value: 1, unit: .day),
                         maximum: PaymentSheet.ShopPayConfiguration.DeliveryEstimate.DeliveryEstimateUnit(value: 2, unit: .day)
                     )

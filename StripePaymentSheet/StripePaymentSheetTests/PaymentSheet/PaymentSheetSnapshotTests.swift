@@ -19,7 +19,7 @@ import XCTest
 class PaymentSheetSnapshotTests: STPSnapshotTestCase {
 
     private let backendCheckoutUrl = URL(
-        string: "https://stripe-mobile-payment-sheet-test-playground-v6.glitch.me/checkout"
+        string: "https://stripe-mobile-test-playground-v6.stripedemos.com/checkout"
     )!
 
     private var paymentSheet: PaymentSheet!

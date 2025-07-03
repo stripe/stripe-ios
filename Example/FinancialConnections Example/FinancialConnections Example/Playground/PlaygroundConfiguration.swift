@@ -187,7 +187,7 @@ final class PlaygroundConfiguration {
             self.stripeAccount = stripeAccount
         }
 
-        // The id's should use underscore as "-" is not supported in Glitch
+        // The id's should use underscore as "-" is not supported in our backend
         enum CustomId: String {
             case `default` = "default"
             case networking = "networking"
