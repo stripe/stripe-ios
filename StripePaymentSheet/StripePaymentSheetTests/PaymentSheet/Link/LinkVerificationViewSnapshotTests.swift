@@ -44,6 +44,16 @@ class LinkVerificationViewSnapshotTests: STPSnapshotTestCase {
         verify(sut)
     }
 
+    func testInlineLoginWithEmailFactor() {
+        let sut = makeSUT(mode: .inlineLogin, factor: .email)
+        verify(sut)
+    }
+
+    func testModalWithEmailFactor() {
+        let sut = makeSUT(mode: .modal, factor: .email)
+        verify(sut)
+    }
+
     func verify(
         _ view: LinkVerificationView,
         identifier: String? = nil,
@@ -64,9 +74,10 @@ extension LinkVerificationViewSnapshotTests {
         let isRegistered: Bool
     }
 
-    func makeSUT(mode: LinkVerificationView.Mode) -> LinkVerificationView {
+    func makeSUT(mode: LinkVerificationView.Mode, factor: LinkVerificationView.VerificationFactor = .sms) -> LinkVerificationView {
         let sut = LinkVerificationView(
             mode: mode,
+            verificationFactor: factor,
             linkAccount: LinkAccountStub(
                 email: "user@example.com",
                 redactedPhoneNumber: "(•••) ••• ••55",

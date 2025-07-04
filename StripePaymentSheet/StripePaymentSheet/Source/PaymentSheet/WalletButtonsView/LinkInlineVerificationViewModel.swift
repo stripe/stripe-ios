@@ -9,6 +9,9 @@
 import SwiftUI
 
 class LinkInlineVerificationViewModel: ObservableObject {
+    // Inline verification currently only supports SMS.
+    private let factor: LinkVerificationView.VerificationFactor = .sms
+
     let account: PaymentSheetLinkAccount
     let textFieldController = OneTimeCodeTextFieldController()
     let appearance: PaymentSheet.Appearance
@@ -26,7 +29,7 @@ class LinkInlineVerificationViewModel: ObservableObject {
     @MainActor
     func startVerification() async throws {
         try await withCheckedThrowingContinuation { continuation in
-            account.startVerification { result in
+            account.startVerification(factor: factor) { result in
                 switch result {
                 case .success:
                     continuation.resume()
@@ -40,7 +43,7 @@ class LinkInlineVerificationViewModel: ObservableObject {
     @MainActor
     func confirmVerification(code: String) async throws {
         try await withCheckedThrowingContinuation { continuation in
-            account.verify(with: code) { result in
+            account.verify(with: code, factor: factor) { result in
                 switch result {
                 case .success:
                     continuation.resume()
