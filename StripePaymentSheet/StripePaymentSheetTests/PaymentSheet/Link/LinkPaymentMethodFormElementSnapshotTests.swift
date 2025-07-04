@@ -47,6 +47,11 @@ final class LinkPaymentMethodFormElementSnapshotTests: STPSnapshotTestCase {
         let sut = makeSUT(isDefault: false, networks: ["cartes_bancaires", "visa"])
         verify(sut)
     }
+    
+    func testBillingDetailsUpdateForBankAccount() {
+        let sut = makeBankAccountSUT()
+        verify(sut)
+    }
 
     func verify(
         _ element: LinkPaymentMethodFormElement,
@@ -90,6 +95,37 @@ extension LinkPaymentMethodFormElementSnapshotTests {
             paymentMethod: paymentMethod,
             configuration: PaymentSheet.Configuration(),
             useCVCPlaceholder: useCVCPlaceholder
+        )
+    }
+
+    func makeBankAccountSUT() -> LinkPaymentMethodFormElement {
+        let paymentMethod = ConsumerPaymentDetails(
+            stripeID: "1",
+            details: .bankAccount(
+                bankAccount: .init(
+                    iconCode: nil,
+                    name: "Stripe Bank",
+                    last4: "6789"
+                )
+            ),
+            billingAddress: BillingAddress(
+                name: "Jane Doe"
+            ),
+            billingEmailAddress: nil,
+            nickname: nil,
+            isDefault: false
+        )
+
+        var config = PaymentSheet.Configuration()
+        config.billingDetailsCollectionConfiguration.address = .full
+        config.billingDetailsCollectionConfiguration.email = .always
+        config.billingDetailsCollectionConfiguration.name = .always
+        config.billingDetailsCollectionConfiguration.phone = .always
+
+        return LinkPaymentMethodFormElement(
+            paymentMethod: paymentMethod,
+            configuration: config,
+            useCVCPlaceholder: true
         )
     }
 }

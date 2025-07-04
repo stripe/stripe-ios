@@ -63,7 +63,7 @@ final class LinkPaymentMethodFormElement: Element {
         // This matches the object that was returned by CardDetailsEditView, but won't work
         // with `collectionMode: .all`, because extra fields won't match what expected by Link.
         let billingDetails = STPPaymentMethodBillingDetails()
-        billingDetails.name = nameElement?.text
+        billingDetails.name = billingAddressSection?.name?.text ?? nameElement?.text
         billingDetails.email = emailElement?.text
         billingDetails.phone = phoneElement?.phoneNumber?.string(as: .e164)
         billingDetails.nonnil_address.country = billingAddressSection?.selectedCountryCode
@@ -238,7 +238,11 @@ final class LinkPaymentMethodFormElement: Element {
     private lazy var billingAddressSection: AddressSectionElement? = {
         guard configuration.billingDetailsCollectionConfiguration.address != .never else { return nil }
 
-        let defaultBillingAddress = AddressSectionElement.AddressDetails(billingAddress: paymentMethod.billingAddress ?? .init(), phone: nil)
+        let defaultBillingAddress = AddressSectionElement.AddressDetails(
+            billingAddress: paymentMethod.billingAddress ?? .init(),
+            phone: nil,
+            name: paymentMethod.billingAddress?.name
+        )
 
         let additionalFields = AddressSectionElement.AdditionalFields(
             name: showNameFieldInBillingAddressSection ? .enabled(isOptional: false) : .disabled
