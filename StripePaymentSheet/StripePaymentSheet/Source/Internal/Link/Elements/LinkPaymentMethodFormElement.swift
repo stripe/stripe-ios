@@ -239,6 +239,7 @@ final class LinkPaymentMethodFormElement: Element {
         guard configuration.billingDetailsCollectionConfiguration.address != .never else { return nil }
 
         let defaultBillingAddress = AddressSectionElement.AddressDetails(billingAddress: paymentMethod.billingAddress ?? .init(), phone: nil)
+
         let additionalFields = AddressSectionElement.AdditionalFields(
             name: showNameFieldInBillingAddressSection ? .enabled(isOptional: false) : .disabled
         )

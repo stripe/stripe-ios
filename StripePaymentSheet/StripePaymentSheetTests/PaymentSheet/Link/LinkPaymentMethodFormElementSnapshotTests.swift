@@ -1,5 +1,5 @@
 //
-//  LinkCardEditElementSnapshotTests.swift
+//  LinkPaymentMethodFormElementSnapshotTests.swift
 //  StripeiOS Tests
 //
 //  Created by Ramon Torres on 10/3/22.
@@ -12,13 +12,13 @@ import UIKit
 @testable@_spi(STP) import StripePaymentSheet
 @testable@_spi(STP) import StripeUICore
 
-final class LinkCardEditElementSnapshotTests: STPSnapshotTestCase {
+final class LinkPaymentMethodFormElementSnapshotTests: STPSnapshotTestCase {
 
     override func setUp() {
         super.setUp()
         //        self.recordMode = true
 
-        // `LinkCardEditElement` depends on `AddressSectionElement`, which requires
+        // `LinkPaymentMethodFormElement` depends on `AddressSectionElement`, which requires
         // address specs to be loaded in memory.
         let expectation = expectation(description: "Load address specs")
         AddressSpecProvider.shared.loadAddressSpecs {
@@ -60,7 +60,7 @@ final class LinkCardEditElementSnapshotTests: STPSnapshotTestCase {
 
 }
 
-extension LinkCardEditElementSnapshotTests {
+extension LinkPaymentMethodFormElementSnapshotTests {
 
     func makeSUT(
         isDefault: Bool,
@@ -92,5 +92,4 @@ extension LinkCardEditElementSnapshotTests {
             useCVCPlaceholder: useCVCPlaceholder
         )
     }
-
 }
