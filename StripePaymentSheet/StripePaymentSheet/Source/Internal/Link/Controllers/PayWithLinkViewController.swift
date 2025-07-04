@@ -627,6 +627,13 @@ extension PayWithLinkViewController: PayWithLinkCoordinating {
             // Multiple things can kick off bailing to web flow, but we only want to do it once
             return
         }
+        guard !context.launchedFromFlowController else {
+            // If we're launched from FlowController, then just finish with a wallet confirm option.
+            // The wallet confirm option will trigger Link at the time of confirmation, where we can
+            // use the web flow without issue.
+            payWithLinkDelegate?.payWithLinkViewControllerDidFinish(self, confirmOption: .wallet)
+            return
+        }
         isBailingToWebFlow = true
         // Make sure we're presenting over a VC
         guard let presentingViewController else {
