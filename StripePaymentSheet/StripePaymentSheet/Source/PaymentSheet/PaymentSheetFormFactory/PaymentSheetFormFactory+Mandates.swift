@@ -73,4 +73,9 @@ extension PaymentSheetFormFactory {
         }()
         return makeMandate(mandateText: mandateText)
     }
+
+    func makeSatispayMandate() -> SimpleMandateElement {
+        let mandateText: String = String(format: String.Localized.satispay_mandate_text, configuration.merchantDisplayName)
+        return makeMandate(mandateText: mandateText)
+    }
 }
