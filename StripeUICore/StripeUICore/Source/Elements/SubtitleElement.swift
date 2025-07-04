@@ -24,7 +24,7 @@ import UIKit
         view.translatesAutoresizingMaskIntoConstraints = false
         containerView.addSubview(view)
 
-        let padding = UIEdgeInsets(top: 0, left: 0, bottom: 20, right: 0)
+        let padding = UIEdgeInsets(top: 14, left: 0, bottom: 0, right: 0)
         NSLayoutConstraint.activate([
             view.topAnchor.constraint(equalTo: containerView.topAnchor, constant: padding.top),
             view.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: padding.left),
