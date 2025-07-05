@@ -26,21 +26,6 @@ extension STPAnalyticsClient {
         )
     }
 
-    func logSourceCreationAttempt(
-        with configuration: NSObject?,
-        sourceType: String?
-    ) {
-        log(
-            analytic: GenericPaymentAnalytic(
-                event: .sourceCreation,
-                paymentConfiguration: configuration,
-                additionalParams: [
-                    "source_type": sourceType ?? "unknown",
-                ]
-            )
-        )
-    }
-
     func logPaymentMethodCreationAttempt(
         with configuration: NSObject?,
         paymentMethodType: String?,
