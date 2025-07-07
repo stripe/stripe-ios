@@ -684,7 +684,7 @@ extension PaymentSheet {
             if let shouldSetAsDefaultPM {
                 params.setAsDefaultPM = NSNumber(value: shouldSetAsDefaultPM)
             }
-            let requiresMandateData: [STPPaymentMethodType] = [.payPal, .cashApp, .revolutPay, .amazonPay, .klarna]
+            let requiresMandateData: [STPPaymentMethodType] = [.payPal, .cashApp, .revolutPay, .amazonPay, .klarna, .satispay]
             let isSetupFutureUsageOffSession = paymentIntent.setupFutureUsage(for: paymentMethodType) == "off_session"
             if requiresMandateData.contains(paymentMethodType) && isSetupFutureUsageOffSession
             {
@@ -737,8 +737,8 @@ extension PaymentSheet {
             if let shouldSetAsDefaultPM {
                 params.setAsDefaultPM = NSNumber(value: shouldSetAsDefaultPM)
             }
-            // Paypal & revolut requires mandate_data if setting up
-            if params.paymentMethodType == .payPal || params.paymentMethodType == .revolutPay {
+            // Paypal & revolut & satispay requires mandate_data if setting up
+            if params.paymentMethodType == .payPal || params.paymentMethodType == .revolutPay || params.paymentMethodType == .satispay {
                 params.mandateData = .makeWithInferredValues()
             }
         }
