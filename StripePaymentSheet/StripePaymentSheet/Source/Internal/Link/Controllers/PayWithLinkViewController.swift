@@ -268,6 +268,13 @@ final class PayWithLinkViewController: BottomSheetViewController {
 
     override func pushContentViewController(_ contentViewController: any BottomSheetContentViewController) {
         super.pushContentViewController(contentViewController)
+
+        // Re-enable user interaction when presenting a new controller.
+        let wasUserInteractionEnabled = view.isUserInteractionEnabled
+        if !wasUserInteractionEnabled {
+            view.isUserInteractionEnabled = true
+        }
+
         if let viewController = contentViewController as? BaseViewController {
             viewController.coordinator = self
             if contentStack.count > 1 {
