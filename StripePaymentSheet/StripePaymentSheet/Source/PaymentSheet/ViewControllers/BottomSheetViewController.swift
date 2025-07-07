@@ -507,6 +507,15 @@ extension BottomSheetViewController: PaymentSheetAuthenticationContext {
         let threeDS2ViewController = BottomSheet3DS2ViewController(
             challengeViewController: authenticationViewController, appearance: appearance, isTestMode: isTestMode)
         threeDS2ViewController.delegate = self
+
+        // Re-enable user interaction when presenting the 3DS controller.
+        // This fixes an issue where the PayWithLinkViewController disables user interaction
+        // during payment confirmation but the 3DS controller needs to be interactable.
+        let wasUserInteractionEnabled = view.isUserInteractionEnabled
+        if !wasUserInteractionEnabled {
+            view.isUserInteractionEnabled = true
+        }
+
         pushContentViewController(threeDS2ViewController)
         // Remove a blur effect, if any
         self.removeBlurEffect(animated: true, completion: completion)
