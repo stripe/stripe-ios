@@ -212,6 +212,9 @@ class PaymentSheetFormFactory {
             } else if paymentMethod == .amazonPay && isSettingUp {
                 // special case, display mandate for Amazon Pay when setting up or pi+sfu
                 additionalElements = [makeAmazonPayMandate()]
+            } else if paymentMethod == .satispay && isSettingUp {
+                // special case, display mandate for Satispay when setting up or pi+sfu
+                additionalElements = [makeSatispayMandate()]
             } else if paymentMethod == .bancontact {
                 return makeBancontact()
             } else if paymentMethod == .bacsDebit {
