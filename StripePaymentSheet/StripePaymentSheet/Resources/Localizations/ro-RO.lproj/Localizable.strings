@@ -14,9 +14,9 @@
 
 "Add new card" = "Adăugare card nou";
 
-"Add new payment method" = "Adăugare metodă de plată nouă";
+"Add new payment method" = "Adăuga o nouă metodă de plată";
 
-"Add your payment information" = "Adăugați informațiile dvs. privind plata";
+"Add your payment information" = "Adăuga informațiile privind plata";
 
 "Agree and continue" = "Confirmare și continuare";
 
@@ -84,7 +84,7 @@
 
 "Change" = "Modificare";
 
-"Choose a payment method" = "Alegeți o metodă de plată";
+"Choose a payment method" = "Alege o metodă de plată";
 
 "Close card scanner" = "Închidere scaner card";
 
@@ -100,7 +100,7 @@
 
 "Confirm the payment in your bank's app within %@ to complete the purchase." = "Confirmați plata în aplicația băncii dvs. în termen de %@ pentru a finaliza achiziția.";
 
-"Confirm your CVC" = "Confirmați-vă CVC-ul";
+"Confirm your CVC" = "Confirmă CVC-ul";
 
 "Contact information" = "Informații de contact";
 
@@ -170,15 +170,15 @@
 
 "Or" = "Sau";
 
-"Or pay using" = "Sau folosiți ca metodă de plată";
+"Or pay using" = "Sau poti alege ca metodă de plată";
 
-"Or pay with a card" = "Sau folosiți ca metodă de plată un card";
+"Or pay with a card" = "Sau poti alege ca metodă de plată un card";
 
-"Or use" = "Sau utilizați";
+"Or use" = "Sau utilizează";
 
-"Or use a card" = "Sau utilizați un card";
+"Or use a card" = "Sau utilizează un card";
 
-"Pay %@" = "Plătiți %@";
+"Pay %@" = "Adaugă %@";
 
 "Pay another way" = "Folosiți altă metodă de plată";
 
@@ -208,7 +208,7 @@
 
 "Przelewy24 Bank" = "Banca Przelewy24";
 
-"Remove card?" = "Eliminați cardul?";
+"Remove card?" = "Doresti sa elimini cardul?";
 
 "Remove linked account" = "Eliminare cont asociat";
 
@@ -218,17 +218,17 @@
 
 "Save" = "Salvare";
 
-"Save a new payment method" = "Salvați o metodă de plată nouă";
+"Save a new payment method" = "Salvează o metodă de plată nouă";
 
 "Save address" = "Salvare adresă";
 
-"Save for future payments" = "Salvați pentru plăți viitoare";
+"Save for future payments" = "Salvează pentru plăți viitoare";
 
 "Save my info for faster checkout with Link" = "Salvează informațiile mele pentru finalizarea mai rapidă a comenzii cu Link";
 
-"Save payment details to %@ for future purchases" = "Salvați detaliile de plată în %@ pentru achiziții viitoare";
+"Save payment details to %@ for future purchases" = "Salvează detaliile de plată în %@ pentru achiziții viitoare";
 
-"Save this account for future %@ payments" = "Salvați acest cont pentru plăți viitoare către %@";
+"Save this account for future %@ payments" = "Salvează acest cont pentru plăți viitoare către %@";
 
 "Save your bank account in just a few steps." = "Salvați-vă contul bancar în doar câțiva pași.";
 
@@ -236,17 +236,17 @@
 
 "Save your payment information with Link, and securely check out in 1-click on Link-supported sites." = "Salvați-vă informațiile privind plata cu Link și finalizați comanda în siguranță cu un singur clic pe site-urile acceptate de Link.";
 
-"Saved" = "Salvare efectuată";
+"Saved" = "Carduri salvate";
 
 "Select card" = "Selectare card";
 
 "Select payment method" = "Selectare metodă de plată";
 
-"Select your payment method" = "Selectați metoda de plată";
+"Select your payment method" = "Selectează metoda de plată";
 
 "Set as default" = "Setați ca implicită";
 
-"Set as default payment method" = "Setați ca metodă de plată implicită";
+"Set as default payment method" = "Setează ca metodă de plată implicită";
 
 "Set up" = "Configurare";
 
