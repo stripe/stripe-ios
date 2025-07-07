@@ -37,6 +37,10 @@ protocol PayWithLinkViewControllerDelegate: AnyObject {
         _ payWithLinkViewController: PayWithLinkViewController,
         confirmOption: PaymentSheet.LinkConfirmOption
     )
+
+    func payWithLinkViewControllerShouldCancel3DS2ChallengeFlow(
+        _ payWithLinkViewController: PayWithLinkViewController
+    )
 }
 
 protocol PayWithLinkCoordinating: AnyObject {
@@ -56,6 +60,7 @@ protocol PayWithLinkCoordinating: AnyObject {
     func logout(cancel: Bool)
     func bailToWebFlow()
     func allowSheetDismissal(_ enable: Bool)
+    func cancel3DS2ChallengeFlow()
 }
 
 /// A view controller for paying with Link.
@@ -190,7 +195,23 @@ final class PayWithLinkViewController: BottomSheetViewController {
     private init(context: Context, linkAccount: PaymentSheetLinkAccount?) {
         self.context = context
         let initialVC: BaseViewController = Self.initialVC(linkAccount: linkAccount, context: context)
-        super.init(contentViewController: initialVC, appearance: context.configuration.appearance, isTestMode: false, didCancelNative3DS2: {})
+
+        // Create a local variable that will hold the handler
+        var cancellationHandler: (() -> Void)?
+
+        super.init(
+            contentViewController: initialVC,
+            appearance: context.configuration.appearance,
+            isTestMode: false,
+            didCancelNative3DS2: {
+                cancellationHandler?()
+            }
+        )
+
+        cancellationHandler = { [weak self] in
+            self?.cancel3DS2ChallengeFlow()
+        }
+
         initialVC.coordinator = self
         initialVC.navigationBar.delegate = self
         self.linkAccount = linkAccount
@@ -247,6 +268,13 @@ final class PayWithLinkViewController: BottomSheetViewController {
 
     override func pushContentViewController(_ contentViewController: any BottomSheetContentViewController) {
         super.pushContentViewController(contentViewController)
+
+        // Re-enable user interaction when presenting a new controller.
+        let wasUserInteractionEnabled = view.isUserInteractionEnabled
+        if !wasUserInteractionEnabled {
+            view.isUserInteractionEnabled = true
+        }
+
         if let viewController = contentViewController as? BaseViewController {
             viewController.coordinator = self
             if contentStack.count > 1 {
@@ -659,6 +687,10 @@ extension PayWithLinkViewController: PayWithLinkCoordinating {
             payWithLinkVC.present(over: presentingViewController)
         }
         STPAnalyticsClient.sharedClient.logLinkBailedToWebFlow()
+    }
+
+    func cancel3DS2ChallengeFlow() {
+        payWithLinkDelegate?.payWithLinkViewControllerShouldCancel3DS2ChallengeFlow(self)
     }
 
 }
