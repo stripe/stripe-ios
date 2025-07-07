@@ -162,11 +162,11 @@ class PlaygroundViewController: UIViewController {
         var url: URL
         var requestDict: [String: Any]
 
-        if (creationMethod == .reuse) {
+        if creationMethod == .reuse {
             url = URL(string: baseURL + reuseEndpoint)!
 
             requestDict = [
-                "verification_session":reuseVerificationSessionIDInput.text ?? ""
+                "verification_session": reuseVerificationSessionIDInput.text ?? ""
             ]
         } else {
             // Make request to our verification endpoint
