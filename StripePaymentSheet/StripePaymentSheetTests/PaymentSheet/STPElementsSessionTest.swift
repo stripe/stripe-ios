@@ -504,6 +504,37 @@ class STPElementsSessionTest: XCTestCase {
         let allowsSetAsDefault = elementsSession.paymentMethodSyncDefaultForCustomerSheet
         XCTAssertFalse(allowsSetAsDefault)
     }
+    func testCanDeserializeMPEWithoutCS() {
+        let elementsSession = STPElementsSession._testValue(paymentMethodTypes: ["card"],
+                                                            customerSessionData: [
+                                                                "mobile_payment_element": [
+                                                                    "enabled": true,
+                                                                    "features": ["payment_method_save": "enabled",
+                                                                                 "payment_method_remove": "enabled",
+                                                                                 "payment_method_set_as_default": "enabled",
+                                                                                ],
+                                                                ],
+                                                            ])
+
+        let allowsSetAsDefault = elementsSession.paymentMethodSetAsDefaultForPaymentSheet
+        XCTAssertTrue(allowsSetAsDefault)
+    }
+    func testCanDeserializeCSWithoutMPE() {
+        let elementsSession = STPElementsSession._testValue(paymentMethodTypes: ["card"],
+                                                            customerSessionData: [
+                                                                "customer_sheet": [
+                                                                    "enabled": true,
+                                                                    "features": [
+                                                                        "payment_method_remove": "enabled",
+                                                                        "payment_method_sync_default": "enabled",
+                                                                    ],
+                                                                ],
+                                                            ])
+
+        let allowsSetAsDefault = elementsSession.paymentMethodSyncDefaultForCustomerSheet
+        XCTAssertTrue(allowsSetAsDefault)
+    }
+
     private let testCardJSON = [
         "id": "pm_123card",
         "type": "card",
