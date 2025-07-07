@@ -86,6 +86,7 @@
 		3C1E9069CD03ED9981D7F3E2 /* ConfirmButtonTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CFFE40AD9D875709F643D2E5 /* ConfirmButtonTests.swift */; };
 		3EA9D509E59DA65EE4EDF98D /* STPAddressTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A39580123A4F1EA96F91768A /* STPAddressTests.swift */; };
 		3EB3745F556EA12AB27A8545 /* APIRequestTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85AAB72218409F85FE29E69E /* APIRequestTest.swift */; };
+		3FD5ABC45AF3A03F4EFE196F /* STPSourceFunctionalTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17013F78CE3F9662029FEF5B /* STPSourceFunctionalTest.swift */; };
 		4059301B0365BD4220E591FB /* STPPaymentMethodSwishTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DE9F0BAC35EA14579775033 /* STPPaymentMethodSwishTests.swift */; };
 		420F8CAB4FAD6D9AF4AF25C0 /* StripePaymentSheet.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DDC55CC034022DFAC9366E2E /* StripePaymentSheet.framework */; };
 		42395EF962DB8AD6A094630B /* StripePaymentSheet.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = DDC55CC034022DFAC9366E2E /* StripePaymentSheet.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
@@ -409,6 +410,7 @@
 		153071C69A0BEE033E035DCF /* CardExpiryDateTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardExpiryDateTests.swift; sourceTree = "<group>"; };
 		1645D9793463E266501B74FD /* STPPIIFunctionalTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = STPPIIFunctionalTest.swift; sourceTree = "<group>"; };
 		1671EC46C713D51013AD7D8B /* STPPaymentMethodCardParamsTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = STPPaymentMethodCardParamsTest.swift; sourceTree = "<group>"; };
+		17013F78CE3F9662029FEF5B /* STPSourceFunctionalTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = STPSourceFunctionalTest.swift; sourceTree = "<group>"; };
 		180CF848E3ABF0236C494D8B /* FBSnapshotTestCase+STPViewControllerLoading.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "FBSnapshotTestCase+STPViewControllerLoading.swift"; sourceTree = "<group>"; };
 		195DEC752CC82CC4BA1E2351 /* STPConnectAccountParamsTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = STPConnectAccountParamsTest.swift; sourceTree = "<group>"; };
 		1A8A6B88797870BC71CCB3AF /* STPPushProvisioningDetailsFunctionalTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = STPPushProvisioningDetailsFunctionalTest.swift; sourceTree = "<group>"; };
@@ -1082,6 +1084,7 @@
 				01B057D99A14E5BA6019C349 /* STPSetupIntentLastSetupErrorTest.swift */,
 				CA8B8F540CD05B3DC2C5EEA6 /* STPSetupIntentTest.swift */,
 				63114D0EAAE2606732DF5AA0 /* STPSourceCardDetailsTest.swift */,
+				17013F78CE3F9662029FEF5B /* STPSourceFunctionalTest.swift */,
 				095EBF095BA2BC8D299547DB /* STPSourceOwnerTest.swift */,
 				1F6CB4B8FAD14B4D70A63595 /* STPSourceParamsTest.swift */,
 				6B7A947152A728EB2CBC4DB2 /* STPSourceReceiverTest.swift */,
@@ -1624,6 +1627,7 @@
 				E699508F4DB4D9D4666BAA08 /* STPSetupIntentLastSetupErrorTest.swift in Sources */,
 				EC4DC8E386544959E1AA9355 /* STPSetupIntentTest.swift in Sources */,
 				AE747ADA2841AA06F32558D8 /* STPSourceCardDetailsTest.swift in Sources */,
+				3FD5ABC45AF3A03F4EFE196F /* STPSourceFunctionalTest.swift in Sources */,
 				922C0DF37F5AAA29375A5454 /* STPSourceOwnerTest.swift in Sources */,
 				D8BECFB70834CC42BA6706D8 /* STPSourceParamsTest.swift in Sources */,
 				46FF3CC61200F2C27D4F3369 /* STPSourceReceiverTest.swift in Sources */,
