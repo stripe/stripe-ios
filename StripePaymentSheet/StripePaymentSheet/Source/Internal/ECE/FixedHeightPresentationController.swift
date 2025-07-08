@@ -80,5 +80,3 @@ class FixedHeightPresentationController: UIPresentationController {
         presentedViewController.dismiss(animated: true)
     }
 }
-
-
