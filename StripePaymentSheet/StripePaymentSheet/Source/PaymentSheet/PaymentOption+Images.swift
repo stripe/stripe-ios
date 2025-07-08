@@ -81,11 +81,11 @@ extension STPPaymentMethod {
     func makeIcon(iconStyle: PaymentSheet.Appearance.IconStyle = .filled) -> UIImage {
         switch type {
         case .card:
-            return (isLinkPaymentMethod || isLinkOrigin)
+            return (isLinkPaymentMethod || isLinkPassthroughMode)
                 ? Image.link_icon.makeImage()
                 : STPImageLibrary.cardBrandImage(for: calculateCardBrandToDisplay())
         case .USBankAccount:
-            return isLinkOrigin
+            return isLinkPassthroughMode
                 ? Image.link_icon.makeImage()
                 : PaymentSheetImageLibrary.bankIcon(for: PaymentSheetImageLibrary.bankIconCode(for: usBankAccount?.bankName), iconStyle: iconStyle)
         case .link:
@@ -109,11 +109,11 @@ extension STPPaymentMethod {
     func makeSavedPaymentMethodCellImage(overrideUserInterfaceStyle: UIUserInterfaceStyle?, iconStyle: PaymentSheet.Appearance.IconStyle) -> UIImage {
         switch type {
         case .card:
-            return (isLinkPaymentMethod || isLinkOrigin)
+            return (isLinkPaymentMethod || isLinkPassthroughMode)
                 ? Image.link_logo.makeImage()
                 : calculateCardBrandToDisplay().makeSavedPaymentMethodCellImage(overrideUserInterfaceStyle: overrideUserInterfaceStyle)
         case .USBankAccount:
-            return isLinkOrigin
+            return isLinkPassthroughMode
                 ? Image.link_logo.makeImage()
                 : PaymentSheetImageLibrary.bankIcon(for: PaymentSheetImageLibrary.bankIconCode(for: usBankAccount?.bankName), iconStyle: iconStyle)
         case .SEPADebit:
@@ -130,11 +130,11 @@ extension STPPaymentMethod {
     func makeSavedPaymentMethodRowImage(iconStyle: PaymentSheet.Appearance.IconStyle) -> UIImage {
         switch type {
         case .card:
-            return (isLinkPaymentMethod || isLinkOrigin)
+            return (isLinkPaymentMethod || isLinkPassthroughMode)
                 ? Image.link_icon.makeImage()
                 : STPImageLibrary.unpaddedCardBrandImage(for: calculateCardBrandToDisplay())
         case .USBankAccount:
-            return isLinkOrigin
+            return isLinkPassthroughMode
                 ? Image.link_icon.makeImage()
                 : PaymentSheetImageLibrary.bankIcon(for: PaymentSheetImageLibrary.bankIconCode(for: usBankAccount?.bankName), iconStyle: iconStyle).rounded(radius: 3)
         case .SEPADebit:

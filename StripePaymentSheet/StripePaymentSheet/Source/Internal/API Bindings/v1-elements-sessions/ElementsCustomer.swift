@@ -57,9 +57,10 @@ struct ElementsCustomer: Equatable, Hashable {
             if enableLinkInSPM {
                 if let paymentMethodWithLinkDetails = PaymentMethodWithLinkDetails.decodedObject(fromAPIResponse: json) {
                     let paymentMethod = paymentMethodWithLinkDetails.paymentMethod
-                    paymentMethod.isLinkOrigin = paymentMethodWithLinkDetails.isLinkOrigin
                     if let linkDetails = paymentMethodWithLinkDetails.linkDetails {
                         paymentMethod.setLinkPaymentDetails(from: linkDetails)
+                    } else {
+                        paymentMethod.isLinkPassthroughMode = paymentMethodWithLinkDetails.isLinkOrigin
                     }
                     paymentMethods.append(paymentMethod)
                 }
