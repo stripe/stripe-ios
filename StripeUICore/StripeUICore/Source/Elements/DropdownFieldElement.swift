@@ -209,28 +209,20 @@ import UIKit
         }()
         self.items = initialItems
 
-        if startsEmpty {
-            if let providedIndex = defaultIndex {
-                // Map provided index to underlying items (skip placeholders)
-                let offset = initialItems.prefix { $0.isPlaceholder }.count
-                let adjusted = providedIndex + offset
-                if adjusted >= 0 && adjusted < initialItems.count {
-                    self.selectedIndex = adjusted
-                } else {
-                    self.selectedIndex = 0 // fallback
-                }
+        // Determine initial selection
+        let placeholders = initialItems.prefix { $0.isPlaceholder }.count
+        let selectedIndex: Int = {
+            if startsEmpty {
+                guard let defaultIndex else { return 0 }
+                let adjustedIndex = defaultIndex + placeholders
+                return (0..<initialItems.count).contains(adjustedIndex) ? adjustedIndex : 0
             } else {
-                // No default provided – leave unselected (placeholder)
-                self.selectedIndex = 0
+                let idx = defaultIndex ?? 0
+                return (0..<initialItems.count).contains(idx) ? idx : 0
             }
-        } else {
-            let idx = defaultIndex ?? 0
-            if idx < 0 || idx >= initialItems.count {
-                self.selectedIndex = 0
-            } else {
-                self.selectedIndex = idx
-            }
-        }
+        }()
+
+        self.selectedIndex = selectedIndex
         self.previouslySelectedIndex = selectedIndex
 
         if !items.isEmpty {
@@ -279,6 +271,10 @@ private extension DropdownFieldElement {
             pickerFieldView.displayText = items[selectedIndex].labelDisplayName
             pickerFieldView.displayTextAccessibilityValue = items[selectedIndex].accessibilityValue
         }
+
+        // Ensure the floating placeholder view updates immediately so the label doesn't overlap.
+        pickerFieldView.setNeedsLayout()
+        pickerFieldView.layoutIfNeeded()
     }
 
 }
