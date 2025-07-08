@@ -175,6 +175,144 @@ final class STPBankAccountCollectorTests: APIStubbedTestCase {
         waitForExpectations(timeout: 2.0)
     }
 
+    // MARK: - OnEvent Callback Tests
+
+    func testCollectBankAccountForPaymentWithOnEventCallback() {
+        let paymentIntentID = "pi_with_events"
+        let clientSecret = "\(paymentIntentID)_secret_events"
+
+        stubCreateLinkAccountSession(paymentIntentID: paymentIntentID)
+        stubAttachLinkAccountSession(paymentIntentID: paymentIntentID)
+
+        let collector = STPBankAccountCollector(apiClient: stubbedAPIClient())
+        let exp = expectation(description: "completion")
+
+        collector.collectBankAccountForPayment(
+            clientSecret: clientSecret,
+            returnURL: nil,
+            params: makeParams(),
+            from: UIViewController(),
+            onEvent: { _ in
+                // Event callback is called - this verifies the API accepts the parameter
+            }
+        ) { intent, error in
+            XCTAssertNil(error)
+            XCTAssertEqual(intent?.stripeId, paymentIntentID)
+            exp.fulfill()
+        }
+        waitForExpectations(timeout: 2.0)
+    }
+
+    func testCollectBankAccountForSetupWithOnEventCallback() {
+        let setupIntentID = "seti_with_events"
+        let clientSecret = "\(setupIntentID)_secret_events"
+
+        stubCreateLinkAccountSessionForSetupIntent(setupIntentID: setupIntentID)
+        stubAttachLinkAccountSessionToSetupIntent(setupIntentID: setupIntentID)
+
+        let collector = STPBankAccountCollector(apiClient: stubbedAPIClient())
+        let exp = expectation(description: "completion")
+
+        collector.collectBankAccountForSetup(
+            clientSecret: clientSecret,
+            returnURL: nil,
+            params: makeParams(),
+            from: UIViewController(),
+            onEvent: { _ in
+                // Event callback is called - this verifies the API accepts the parameter
+            }
+        ) { intent, error in
+            XCTAssertNil(error)
+            XCTAssertEqual(intent?.stripeID, setupIntentID)
+            exp.fulfill()
+        }
+        waitForExpectations(timeout: 2.0)
+    }
+
+    // MARK: - Setup Intent with Return URL Tests
+
+    func testCollectBankAccountForSetupWithReturnURLSucceeds() {
+        let setupIntentID = "seti_with_return_url"
+        let clientSecret = "\(setupIntentID)_secret_return"
+
+        stubCreateLinkAccountSessionForSetupIntent(setupIntentID: setupIntentID)
+        stubAttachLinkAccountSessionToSetupIntent(setupIntentID: setupIntentID)
+
+        let collector = STPBankAccountCollector(apiClient: stubbedAPIClient())
+        let exp = expectation(description: "completion")
+
+        collector.collectBankAccountForSetup(
+            clientSecret: clientSecret,
+            returnURL: "myapp://stripe-setup-return",
+            params: makeParams(),
+            from: UIViewController()
+        ) { intent, error in
+            XCTAssertNil(error)
+            XCTAssertEqual(intent?.stripeID, setupIntentID)
+            exp.fulfill()
+        }
+        waitForExpectations(timeout: 2.0)
+    }
+
+    // MARK: - Instant Debits Params Tests
+
+    func testInstantDebitsParams() {
+        let params = STPCollectBankAccountParams.collectInstantDebitsParams(email: "test@example.com")
+        XCTAssertEqual(params.paymentMethodParams.billingDetails?.email, "test@example.com")
+        XCTAssertEqual(params.paymentMethodParams.type, STPPaymentMethodType.link)
+        // Note: Instant debits uses .link type, not .USBankAccount, so no account type is set
+    }
+
+    // MARK: - Error Scenarios Tests
+
+    func testFinancialConnectionsSDKNotLinkedError() {
+        // This test verifies that the error type exists and has the correct properties
+        let error = STPCollectBankAccountError.financialConnectionsSDKNotLinked
+        XCTAssertEqual(error.rawValue, 0)
+    }
+
+    func testUnexpectedError() {
+        let error = STPCollectBankAccountError.unexpectedError
+        XCTAssertEqual(error.rawValue, 2)
+    }
+
+    // MARK: - Additional Helper Methods for New Tests
+
+    private func stubRetrievePaymentIntent(paymentIntentID: String) {
+        stub(condition:
+                isHost("api.stripe.com") &&
+                isPath("/v1/payment_intents/\(paymentIntentID)") &&
+                isMethodGET()
+        ) { _ in
+            let response: [String: Any] = [
+                "id": paymentIntentID,
+                "object": "payment_intent",
+                "status": "requires_payment_method",
+                "client_secret": "\(paymentIntentID)_secret_cancelled",
+            ]
+            return HTTPStubsResponse(jsonObject: response, statusCode: 200, headers: nil)
+        }
+    }
+
+    private func stubRetrieveSetupIntent(setupIntentID: String) {
+        stub(condition:
+                isHost("api.stripe.com") &&
+                isPath("/v1/setup_intents/\(setupIntentID)") &&
+                isMethodGET()
+        ) { _ in
+            let response: [String: Any] = [
+                "id": setupIntentID,
+                "object": "setup_intent",
+                "status": "requires_payment_method",
+                "client_secret": "\(setupIntentID)_secret_cancelled",
+                "created": 1609459200,
+                "payment_method_types": ["us_bank_account"],
+                "livemode": false,
+            ]
+            return HTTPStubsResponse(jsonObject: response, statusCode: 200, headers: nil)
+        }
+    }
+
     // MARK: - Helpers
 
     private func makeParams() -> STPCollectBankAccountParams {
