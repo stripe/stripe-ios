@@ -161,6 +161,14 @@ import Foundation
         STPLocalizedString("Your postal code is incomplete.", "Error message for when postal code in form is incomplete")
     }
 
+    static var your_zip_is_invalid: String {
+        STPLocalizedString("Your ZIP code is invalid.", "Error message for when ZIP code in form is invalid (US only)")
+    }
+
+    static var your_postal_code_is_invalid: String {
+        STPLocalizedString("Your postal code is invalid.", "Error message for when postal code in form is invalid")
+    }
+
     // MARK: State field labels
 
     static var area: String {

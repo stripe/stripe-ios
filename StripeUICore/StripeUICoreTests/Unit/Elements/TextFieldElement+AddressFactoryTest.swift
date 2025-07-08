@@ -68,17 +68,36 @@ class TextFieldElementAddressFactoryTest: XCTestCase {
 
     // MARK: - Postal Code
 
-    func testPostalCodeConfigurationValidation() {
-        let US_config = TextFieldElement.Address.PostalCodeConfiguration(countryCode: "US", label: "ZIP", defaultValue: nil, isOptional: false)
-        XCTAssertEqual(US_config.keyboardProperties(for: "").type, .numberPad)
-        US_config.test(text: "9411", isOptional: false, matches: .invalid(TextFieldElement.Error.incomplete(localizedDescription: String.Localized.your_zip_is_incomplete)))
-        US_config.test(text: "94115", isOptional: false, matches: .valid)
-
-        // PostalCodeConfiguration only special cases US, so we can test any other country for full code coverage
-        let UK_config = TextFieldElement.Address.PostalCodeConfiguration(countryCode: "UK", label: "Postal", defaultValue: nil, isOptional: false)
-        XCTAssertEqual(UK_config.keyboardProperties(for: "").type, .default)
-        UK_config.test(text: "SW1A 1AA", isOptional: false, matches: .valid)
+    func testPostalCodeConfigurationValidationUS() {
+        let config = TextFieldElement.Address.PostalCodeConfiguration(countryCode: "US", label: "ZIP", defaultValue: nil, isOptional: false)
+        XCTAssertEqual(config.keyboardProperties(for: "").type, .numberPad)
+        config.test(text: "9411", isOptional: false, matches: .invalid(TextFieldElement.Error.incomplete(localizedDescription: String.Localized.your_zip_is_incomplete)))
+        config.test(text: "abcde", isOptional: false, matches: .invalid(TextFieldElement.Error.invalid(localizedDescription: String.Localized.your_zip_is_invalid)))
+        config.test(text: "94115", isOptional: false, matches: .valid)
     }
+
+    func testPostalCodeConfigurationValidationGB() {
+        let config = TextFieldElement.Address.PostalCodeConfiguration(countryCode: "GB", label: "Postal", defaultValue: nil, isOptional: false)
+        XCTAssertEqual(config.keyboardProperties(for: "").type, .default)
+        config.test(text: "A99A", isOptional: false, matches: .invalid(TextFieldElement.Error.incomplete(localizedDescription: String.Localized.your_postal_code_is_incomplete)))
+        config.test(text: "1W0NY", isOptional: false, matches: .invalid(TextFieldElement.Error.invalid(localizedDescription: String.Localized.your_postal_code_is_invalid)))
+        config.test(text: "A99AA", isOptional: false, matches: .valid)
+        config.test(text: "SW1W0NY", isOptional: false, matches: .valid)
+        config.test(text: "OX12BQ", isOptional: false, matches: .valid)
+        config.test(text: "G26AY", isOptional: false, matches: .valid)
+    }
+
+    func testPostalCodeConfigurationValidationCA() {
+        let config = TextFieldElement.Address.PostalCodeConfiguration(countryCode: "CA", label: "Postal", defaultValue: nil, isOptional: false)
+        XCTAssertEqual(config.keyboardProperties(for: "").type, .default)
+        config.test(text: "A9A9A", isOptional: false, matches: .invalid(TextFieldElement.Error.incomplete(localizedDescription: String.Localized.your_postal_code_is_incomplete)))
+        config.test(text: "A9AAA9", isOptional: false, matches: .invalid(TextFieldElement.Error.invalid(localizedDescription: String.Localized.your_postal_code_is_invalid)))
+        config.test(text: "A9A9A9", isOptional: false, matches: .valid)
+        config.test(text: "A9A 9A9", isOptional: false, matches: .valid)
+        config.test(text: "A9A-9A9", isOptional: false, matches: .valid)
+        config.test(text: "P0L 1N0", isOptional: false, matches: .valid)
+    }
+
 
     // MARK: - Phone Number
     func testPhoneNumberConfigurationValidation() {
