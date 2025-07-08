@@ -91,7 +91,7 @@ import UIKit
 
         if #available(macCatalyst 14.0, *) {
             let menu = UIMenu(children:
-                items.enumerated().map { (index, item) in
+                items.enumerated().filter { !$0.element.isPlaceholder }.map { (index, item) in
                     UIAction(title: item.pickerDisplayName.string, identifier: .init(rawValue: String(index)), handler: action)
                 }
             )
@@ -151,6 +151,16 @@ import UIKit
         return [placeholder] + items
     }
     lazy var pickerViewDelegate: PickerViewDelegate = { PickerViewDelegate(self) }()
+
+    /// Number of placeholder items at the start of `items`.
+    private var placeholderCount: Int {
+        return items.count - nonPlacerholderItems.count
+    }
+
+    /// Converts a picker row (which excludes placeholder rows) to the corresponding index in `items`.
+    private func itemIndex(forPickerRow row: Int) -> Int {
+        return row + placeholderCount
+    }
 
     /**
      - Parameters:
@@ -240,9 +250,10 @@ private extension DropdownFieldElement {
             (pickerView.menu?.children[selectedIndex] as? UIAction)?.state = .on
         }
         #else
-        if pickerView.selectedRow(inComponent: 0) != selectedIndex {
+        let displayRow = selectedIndex - placeholderCount
+        if pickerView.selectedRow(inComponent: 0) != displayRow {
             pickerView.reloadComponent(0)
-            pickerView.selectRow(selectedIndex, inComponent: 0, animated: false)
+            pickerView.selectRow(displayRow, inComponent: 0, animated: false)
         }
         #endif
 
@@ -304,7 +315,7 @@ extension DropdownFieldElement {
 
         public func pickerView(_ pickerView: UIPickerView, attributedTitleForRow row: Int, forComponent component: Int) -> NSAttributedString? {
             guard let dropdownFieldElement else { return nil }
-            let item = dropdownFieldElement.items[row]
+            let item = dropdownFieldElement.items[dropdownFieldElement.itemIndex(forPickerRow: row)]
 
             guard item.isPlaceholder || item.isDisabled else { return item.pickerDisplayName }
 
@@ -317,7 +328,9 @@ extension DropdownFieldElement {
         }
 
         public func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
-            dropdownFieldElement?.pickerView(pickerView, didSelectRow: row, inComponent: component)
+            guard let dropdownFieldElement else { return }
+            let actualIndex = dropdownFieldElement.itemIndex(forPickerRow: row)
+            dropdownFieldElement.pickerView(pickerView, didSelectRow: actualIndex, inComponent: component)
         }
 
         public func numberOfComponents(in pickerView: UIPickerView) -> Int {
@@ -325,7 +338,7 @@ extension DropdownFieldElement {
         }
 
         public func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
-            return dropdownFieldElement?.items.count ?? 0
+            return dropdownFieldElement?.nonPlacerholderItems.count ?? 0
         }
     }
 
