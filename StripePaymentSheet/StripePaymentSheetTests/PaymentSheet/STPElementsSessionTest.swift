@@ -531,8 +531,7 @@ class STPElementsSessionTest: XCTestCase {
                                                                 ],
                                                             ])
 
-        let allowsSetAsDefault = elementsSession.paymentMethodSyncDefaultForCustomerSheet
-        XCTAssertTrue(allowsSetAsDefault)
+        XCTAssertTrue(elementsSession.paymentMethodSyncDefaultForCustomerSheet)
     }
 
     private let testCardJSON = [
