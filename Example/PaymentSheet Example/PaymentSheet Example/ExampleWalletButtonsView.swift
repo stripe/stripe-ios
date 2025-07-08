@@ -209,8 +209,8 @@ class ExampleWalletButtonsModel: ObservableObject {
     let shopPayTestingOptions: ShopPayTestingOptions
 
     let backendCheckoutUrl = URL(string: "https://stp-mobile-playground-backend-v7.stripedemos.com/checkout")!
-    let SPTTestCustomerUrl = URL(string: "https://rough-lying-carriage.glitch.me/customer")!
-    let SPTTestCreateIntentUrl = URL(string: "https://rough-lying-carriage.glitch.me/create-intent")!
+    let SPTTestCustomerUrl = URL(string: "https://2f6qwl-3000.csb.app/api/customer")!
+    let SPTTestCreateIntentUrl = URL(string: "https://2f6qwl-3000.csb.app/api/create-intent")!
     @Published var paymentSheetFlowController: PaymentSheet.FlowController?
     @Published var paymentResult: PaymentSheetResult?
     @Published var isProcessing: Bool = false
