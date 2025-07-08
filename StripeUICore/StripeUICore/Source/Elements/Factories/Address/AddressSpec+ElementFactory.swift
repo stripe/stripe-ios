@@ -35,7 +35,7 @@ extension AddressSpec {
                                                                      rawData: $0.key)}).sorted { $0.pickerDisplayName.string < $1.pickerDisplayName.string }
 
         let defaultIndex = items.firstIndex(where: {$0.rawData.lowercased() == defaultValue?.lowercased()
-            || $0.pickerDisplayName.string.lowercased() == defaultValue?.lowercased()}) ?? 0
+            || $0.pickerDisplayName.string.lowercased() == defaultValue?.lowercased()})
 
         return DropdownFieldElement(items: items,
                                     defaultIndex: defaultIndex,
