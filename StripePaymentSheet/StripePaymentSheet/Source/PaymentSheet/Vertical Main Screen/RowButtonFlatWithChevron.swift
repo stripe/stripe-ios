@@ -13,12 +13,16 @@ import UIKit
 final class RowButtonFlatWithChevron: RowButton {
     // MARK: - Subviews
     private lazy var chevronView: UIImageView = {
-        let chevronImageView = UIImageView(image: Image.icon_chevron_right.makeImage(template: true))
-
-        chevronImageView.tintColor = appearance.embeddedPaymentElement.row.flat.chevron.color
-        chevronImageView.contentMode = .scaleAspectFit
-        chevronImageView.translatesAutoresizingMaskIntoConstraints = false
-        return chevronImageView
+        if let customView = appearance.embeddedPaymentElement.row.flat.chevron.image?() {
+            customView.translatesAutoresizingMaskIntoConstraints = false
+            return customView
+        } else {
+            let chevronImageView = UIImageView(image: Image.icon_chevron_right.makeImage(template: true))
+            chevronImageView.tintColor = appearance.embeddedPaymentElement.row.flat.chevron.color
+            chevronImageView.contentMode = .scaleAspectFit
+            chevronImageView.translatesAutoresizingMaskIntoConstraints = false
+            return chevronImageView
+        }
     }()
 
     override func setupUI() {

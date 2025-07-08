@@ -380,8 +380,16 @@ public extension PaymentSheet.Appearance {
                 /// Describes the appearance of the chevron
                 /// Note that EmbeddedPaymentElement.Configuration.RowSelectionBehavior must be set to `immediateAction` to use this style.
                 public struct Chevron: Equatable {
+                    public static func == (lhs: PaymentSheet.Appearance.EmbeddedPaymentElement.Row.Flat.Chevron, rhs: PaymentSheet.Appearance.EmbeddedPaymentElement.Row.Flat.Chevron) -> Bool {
+                        return lhs.color == rhs.color && lhs.image?().image == rhs.image?().image
+                    }
+                    
                     /// The color of the chevron icon
                     public var color: UIColor = .systemGray
+                    
+                    /// The image used to display the chevron
+                    /// - Note: If `nil, uses a default chevron. If set, `color` is ignored.
+                    public var image: (() -> UIImageView)? = nil
                 }
             }
 
