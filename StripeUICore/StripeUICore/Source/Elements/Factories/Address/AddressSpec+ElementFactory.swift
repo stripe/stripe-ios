@@ -41,7 +41,7 @@ extension AddressSpec {
                                     defaultIndex: defaultIndex,
                                     label: stateNameType.localizedLabel,
                                     theme: theme,
-                                    didUpdate: nil)
+                                    startsEmpty: true)
     }
 
     func makePostalElement(countryCode: String, defaultValue: String?, theme: ElementsAppearance = .default) -> TextFieldElement {
