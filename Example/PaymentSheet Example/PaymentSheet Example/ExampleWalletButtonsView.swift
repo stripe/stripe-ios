@@ -313,7 +313,7 @@ class ExampleWalletButtonsModel: ObservableObject {
 
                 self?.addDebugLog("Creating PaymentSheet FlowController with original backend...")
                 PaymentSheet.FlowController.create(
-                    intentConfiguration: .init(sharedPaymentTokenSessionWithMode: .payment(amount: 1000, currency: "USD", setupFutureUsage: nil, captureMethod: .automatic, paymentMethodOptions: nil), sellerDetails: .init(networkId: "stripe", externalId: "acct_1HvTI7Lu5o3P18Zp"), paymentMethodTypes: ["card", "link", "shop_pay"], preparePaymentMethodHandler: { [weak self] paymentMethod, address in
+                    intentConfiguration: .init(sharedPaymentTokenSessionWithMode: .payment(amount: 1000, currency: "USD", setupFutureUsage: nil, captureMethod: .automatic, paymentMethodOptions: nil), sellerDetails: .init(networkId: "stripe", externalId: "acct_1HvTI7Lu5o3P18Zp"), paymentMethodTypes: ["card", "shop_pay"], preparePaymentMethodHandler: { [weak self] paymentMethod, address in
                         self?.addDebugLog("PaymentMethod prepared: \(paymentMethod.stripeId)")
                         self?.addDebugLog("Address: \(address)")
                         self?.onCompletion(result: .completed)
@@ -386,7 +386,7 @@ class ExampleWalletButtonsModel: ObservableObject {
 
                 self?.addDebugLog("Creating PaymentSheet FlowController...")
                 PaymentSheet.FlowController.create(
-                    intentConfiguration: .init(sharedPaymentTokenSessionWithMode: .payment(amount: 9999, currency: "USD", setupFutureUsage: nil, captureMethod: .automatic, paymentMethodOptions: nil), sellerDetails: .init(networkId: "stripe", externalId: "acct_1HvTI7Lu5o3P18Zp"), paymentMethodTypes: ["card", "link", "shop_pay"], preparePaymentMethodHandler: { [weak self] paymentMethod, address in
+                    intentConfiguration: .init(sharedPaymentTokenSessionWithMode: .payment(amount: 9999, currency: "USD", setupFutureUsage: nil, captureMethod: .automatic, paymentMethodOptions: nil), sellerDetails: .init(networkId: "stripe", externalId: "acct_1HvTI7Lu5o3P18Zp"), paymentMethodTypes: ["card", "shop_pay"], preparePaymentMethodHandler: { [weak self] paymentMethod, address in
                         self?.isProcessing = true
                         self?.addDebugLog("PaymentMethod prepared: \(paymentMethod.stripeId)")
                         self?.addDebugLog("Address: \(address)")
