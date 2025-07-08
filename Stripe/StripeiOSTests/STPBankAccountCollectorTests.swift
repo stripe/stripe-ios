@@ -5,22 +5,22 @@
 //  Created by Nick Porter on 7/7/25.
 //
 
-import XCTest
 import OHHTTPStubs
 import OHHTTPStubsSwift
-import UIKit
-import StripeCoreTestUtils
 @testable@_spi(STP) import Stripe
 @testable@_spi(STP) import StripeCore
+import StripeCoreTestUtils
 @testable@_spi(STP) import StripePayments
 @testable@_spi(STP) import StripePaymentSheet
-@testable@_spi(STP) import StripePaymentsUI
 @testable import StripePaymentsTestUtils
+@testable@_spi(STP) import StripePaymentsUI
+import UIKit
+import XCTest
 
 final class STPBankAccountCollectorTests: APIStubbedTestCase {
-    
+
     // MARK: - Tests
-    
+
     func testDefaultInitialization() {
         let collector = STPBankAccountCollector()
         XCTAssertTrue(collector.apiClient === STPAPIClient.shared)
@@ -174,9 +174,9 @@ final class STPBankAccountCollectorTests: APIStubbedTestCase {
         }
         waitForExpectations(timeout: 2.0)
     }
-    
+
     // MARK: - Helpers
-    
+
     private func makeParams() -> STPCollectBankAccountParams {
         return STPCollectBankAccountParams.collectUSBankAccountParams(with: "Jane Doe", email: "jane@example.com")
     }
@@ -190,7 +190,7 @@ final class STPBankAccountCollectorTests: APIStubbedTestCase {
             let response: [String: Any] = [
                 "id": linkAccountSessionID,
                 "livemode": false,
-                "client_secret": "\(linkAccountSessionID)_secret_456"
+                "client_secret": "\(linkAccountSessionID)_secret_456",
             ]
             return HTTPStubsResponse(jsonObject: response, statusCode: 200, headers: nil)
         }
@@ -206,7 +206,7 @@ final class STPBankAccountCollectorTests: APIStubbedTestCase {
                 "id": paymentIntentID,
                 "object": "payment_intent",
                 "status": "succeeded",
-                "client_secret": "\(paymentIntentID)_secret_abc"
+                "client_secret": "\(paymentIntentID)_secret_abc",
             ]
             return HTTPStubsResponse(jsonObject: response, statusCode: 200, headers: nil)
         }
@@ -221,7 +221,7 @@ final class STPBankAccountCollectorTests: APIStubbedTestCase {
             let response: [String: Any] = [
                 "id": linkAccountSessionID,
                 "livemode": false,
-                "client_secret": "\(linkAccountSessionID)_secret_456"
+                "client_secret": "\(linkAccountSessionID)_secret_456",
             ]
             return HTTPStubsResponse(jsonObject: response, statusCode: 200, headers: nil)
         }
@@ -240,7 +240,7 @@ final class STPBankAccountCollectorTests: APIStubbedTestCase {
                 "client_secret": "\(setupIntentID)_secret_def",
                 "created": 1609459200,
                 "payment_method_types": ["us_bank_account"],
-                "livemode": false
+                "livemode": false,
             ]
             return HTTPStubsResponse(jsonObject: response, statusCode: 200, headers: nil)
         }
@@ -255,7 +255,7 @@ final class STPBankAccountCollectorTests: APIStubbedTestCase {
             let response: [String: Any] = [
                 "id": "las_789",
                 "livemode": false,
-                "client_secret": "las_789_secret_123"
+                "client_secret": "las_789_secret_123",
             ]
             return HTTPStubsResponse(jsonObject: response, statusCode: 200, headers: nil)
         }
