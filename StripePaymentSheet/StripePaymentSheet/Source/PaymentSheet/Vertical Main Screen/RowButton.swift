@@ -531,11 +531,15 @@ extension RowButton {
         let imageView = UIImageView(image: paymentMethod.makeSavedPaymentMethodRowImage(iconStyle: appearance.iconStyle))
         imageView.contentMode = .scaleAspectFit
 
+        let text = paymentMethod.isLinkPassthroughMode
+            ? STPPaymentMethodType.link.displayName
+            : paymentMethod.paymentSheetLabel
+
         let button = RowButton.create(
             appearance: appearance,
             type: .saved(paymentMethod: paymentMethod),
             imageView: imageView,
-            text: paymentMethod.isLinkPassthroughMode ? "Link" : paymentMethod.paymentSheetLabel,
+            text: text,
             subtext: paymentMethod.linkSpecificSublabel ?? subtext,
             badgeText: badgeText,
             accessoryView: accessoryView,
