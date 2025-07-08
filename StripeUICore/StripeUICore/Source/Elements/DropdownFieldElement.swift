@@ -176,7 +176,7 @@ import UIKit
      */
     public init(
         items: [DropdownItem],
-        defaultIndex: Int = 0,
+        defaultIndex: Int? = nil,
         label: String?,
         theme: ElementsAppearance = .default,
         hasPadding: Bool = true,
@@ -210,12 +210,26 @@ import UIKit
         self.items = initialItems
 
         if startsEmpty {
-            // Select the placeholder row by default
-            self.selectedIndex = 0
-        } else if defaultIndex < 0 || defaultIndex >= initialItems.count {
-            self.selectedIndex = 0
+            if let providedIndex = defaultIndex {
+                // Map provided index to underlying items (skip placeholders)
+                let offset = initialItems.prefix { $0.isPlaceholder }.count
+                let adjusted = providedIndex + offset
+                if adjusted >= 0 && adjusted < initialItems.count {
+                    self.selectedIndex = adjusted
+                } else {
+                    self.selectedIndex = 0 // fallback
+                }
+            } else {
+                // No default provided – leave unselected (placeholder)
+                self.selectedIndex = 0
+            }
         } else {
-            self.selectedIndex = defaultIndex
+            let idx = defaultIndex ?? 0
+            if idx < 0 || idx >= initialItems.count {
+                self.selectedIndex = 0
+            } else {
+                self.selectedIndex = idx
+            }
         }
         self.previouslySelectedIndex = selectedIndex
 
