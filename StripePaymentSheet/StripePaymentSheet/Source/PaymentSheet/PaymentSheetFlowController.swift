@@ -779,7 +779,7 @@ extension PaymentOption {
         let hasLinkAccount = LinkAccountContext.shared.account?.isRegistered ?? false
         switch self {
         case .saved(let paymentMethod, _):
-            return paymentMethod.isLinkPaymentMethod && hasLinkAccount
+            return (paymentMethod.isLinkPaymentMethod || paymentMethod.isLinkOrigin) && hasLinkAccount
         case .link(let confirmOption):
             switch confirmOption {
             case .signUp, .withPaymentMethod:

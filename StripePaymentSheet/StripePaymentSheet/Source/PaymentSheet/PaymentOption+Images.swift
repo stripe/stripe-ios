@@ -81,13 +81,13 @@ extension STPPaymentMethod {
     func makeIcon(iconStyle: PaymentSheet.Appearance.IconStyle = .filled) -> UIImage {
         switch type {
         case .card:
-            return isLinkPaymentMethod
+            return (isLinkPaymentMethod || isLinkOrigin)
                 ? Image.link_icon.makeImage()
                 : STPImageLibrary.cardBrandImage(for: calculateCardBrandToDisplay())
         case .USBankAccount:
-            return PaymentSheetImageLibrary.bankIcon(
-                for: PaymentSheetImageLibrary.bankIconCode(for: usBankAccount?.bankName), iconStyle: iconStyle
-            )
+            return isLinkOrigin
+                ? Image.link_icon.makeImage()
+                : PaymentSheetImageLibrary.bankIcon(for: PaymentSheetImageLibrary.bankIconCode(for: usBankAccount?.bankName), iconStyle: iconStyle)
         case .link:
             return Image.link_icon.makeImage()
         default:
@@ -109,13 +109,13 @@ extension STPPaymentMethod {
     func makeSavedPaymentMethodCellImage(overrideUserInterfaceStyle: UIUserInterfaceStyle?, iconStyle: PaymentSheet.Appearance.IconStyle) -> UIImage {
         switch type {
         case .card:
-            return isLinkPaymentMethod
+            return (isLinkPaymentMethod || isLinkOrigin)
                 ? Image.link_logo.makeImage()
                 : calculateCardBrandToDisplay().makeSavedPaymentMethodCellImage(overrideUserInterfaceStyle: overrideUserInterfaceStyle)
         case .USBankAccount:
-            return PaymentSheetImageLibrary.bankIcon(
-                for: PaymentSheetImageLibrary.bankIconCode(for: usBankAccount?.bankName), iconStyle: iconStyle
-            )
+            return isLinkOrigin
+                ? Image.link_logo.makeImage()
+                : PaymentSheetImageLibrary.bankIcon(for: PaymentSheetImageLibrary.bankIconCode(for: usBankAccount?.bankName), iconStyle: iconStyle)
         case .SEPADebit:
             return Image.carousel_sepa.makeImage(overrideUserInterfaceStyle: overrideUserInterfaceStyle).withRenderingMode(.alwaysOriginal)
         case .link:
@@ -130,13 +130,13 @@ extension STPPaymentMethod {
     func makeSavedPaymentMethodRowImage(iconStyle: PaymentSheet.Appearance.IconStyle) -> UIImage {
         switch type {
         case .card:
-            return isLinkPaymentMethod
+            return (isLinkPaymentMethod || isLinkOrigin)
                 ? Image.link_icon.makeImage()
                 : STPImageLibrary.unpaddedCardBrandImage(for: calculateCardBrandToDisplay())
         case .USBankAccount:
-            return PaymentSheetImageLibrary.bankIcon(
-                for: PaymentSheetImageLibrary.bankIconCode(for: usBankAccount?.bankName), iconStyle: iconStyle
-            ).rounded(radius: 3)
+            return isLinkOrigin
+                ? Image.link_icon.makeImage()
+                : PaymentSheetImageLibrary.bankIcon(for: PaymentSheetImageLibrary.bankIconCode(for: usBankAccount?.bankName), iconStyle: iconStyle).rounded(radius: 3)
         case .SEPADebit:
             return Image.pm_type_sepa.makeImage().withRenderingMode(.alwaysOriginal)
         case .link:
