@@ -6,6 +6,7 @@
 //  Copyright © 2022 Stripe, Inc. All rights reserved.
 //
 
+@_spi(STP) import StripeCore
 @_spi(STP) import StripeUICore
 import UIKit
 
@@ -364,8 +365,8 @@ public extension PaymentSheet.Appearance {
                 /// Appearance settings for the checkmark
                 public var checkmark: Checkmark = Checkmark()
 
-                /// Appearance settings for the chevron
-                public var chevron: Chevron = Chevron()
+                /// Appearance settings for the disclosure (by default, a chevron)
+                public var disclosure: Disclosure = Disclosure()
 
                 /// Describes the appearance of the radio button
                 public struct Radio: Equatable {
@@ -385,11 +386,20 @@ public extension PaymentSheet.Appearance {
                     public var color: UIColor?
                 }
 
-                /// Describes the appearance of the chevron
+                /// Describes the appearance of the disclosure (by default, a chevron)
                 /// Note that EmbeddedPaymentElement.Configuration.RowSelectionBehavior must be set to `immediateAction` to use this style.
-                public struct Chevron: Equatable {
-                    /// The color of the chevron icon
+                public struct Disclosure: Equatable {
+                    public static func == (lhs: PaymentSheet.Appearance.EmbeddedPaymentElement.Row.Flat.Disclosure, rhs: PaymentSheet.Appearance.EmbeddedPaymentElement.Row.Flat.Disclosure) -> Bool {
+                        return lhs.color == rhs.color && lhs.disclosureView.isNil == rhs.disclosureView.isNil
+                    }
+
+                    /// The color of the default chevron icon
                     public var color: UIColor = .systemGray
+
+                    /// The view displayed on the right of the row.
+                    /// - Note: If `nil` (the default), a chevron is displayed.
+                    /// - Note: If set, `color` is ignored.
+                    public var disclosureView: (() -> UIView)?
                 }
             }
 

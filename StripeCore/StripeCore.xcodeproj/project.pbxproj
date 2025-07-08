@@ -105,6 +105,7 @@
 		A987DFFA404EBD0788DAB21A /* UIImage+StripeCoreTestingUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1678E0A16D46DA2B4D3B3ECD /* UIImage+StripeCoreTestingUtils.swift */; };
 		AE26BFFBE9B1242E10CA052F /* STPAnalyticsClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1DD5B6F1152FD1C4A508A103 /* STPAnalyticsClient.swift */; };
 		B35FD03DD246CC4DD6C4F3C0 /* Decimal+StripeCore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 06A516593E48DCFD5D98D702 /* Decimal+StripeCore.swift */; };
+		B61500B12E2954A000CF3DCE /* Optional+StripeCore.swift in Sources */ = {isa = PBXBuildFile; fileRef = B61500B02E2954A000CF3DCE /* Optional+StripeCore.swift */; };
 		B644BC402BB234D6001FA436 /* STPAssert.swift in Sources */ = {isa = PBXBuildFile; fileRef = B644BC3F2BB234D6001FA436 /* STPAssert.swift */; };
 		B67F2CA22BAB8B690011E34A /* AnalyticLoggableErrorV2.swift in Sources */ = {isa = PBXBuildFile; fileRef = B67F2CA12BAB8B690011E34A /* AnalyticLoggableErrorV2.swift */; };
 		B67F2CA42BAB91860011E34A /* AnalyticLoggableErrorTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = B67F2CA32BAB91860011E34A /* AnalyticLoggableErrorTest.swift */; };
@@ -334,6 +335,7 @@
 		AF82F68E8D3A8286FD31DB13 /* APIStubbedTestCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIStubbedTestCase.swift; sourceTree = "<group>"; };
 		B3CA4B1855BF8D2F08F275A9 /* Error_SerializeForLoggingTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Error_SerializeForLoggingTest.swift; sourceTree = "<group>"; };
 		B3F73CA77397EAE70480FF25 /* et-EE */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "et-EE"; path = "et-EE.lproj/Localizable.strings"; sourceTree = "<group>"; };
+		B61500B02E2954A000CF3DCE /* Optional+StripeCore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Optional+StripeCore.swift"; sourceTree = "<group>"; };
 		B644BC3F2BB234D6001FA436 /* STPAssert.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = STPAssert.swift; sourceTree = "<group>"; };
 		B67F2CA12BAB8B690011E34A /* AnalyticLoggableErrorV2.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnalyticLoggableErrorV2.swift; sourceTree = "<group>"; };
 		B67F2CA32BAB91860011E34A /* AnalyticLoggableErrorTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnalyticLoggableErrorTest.swift; sourceTree = "<group>"; };
@@ -586,6 +588,7 @@
 				21608B7BC24190523363CB3D /* NSArray+Stripe.swift */,
 				6E852B53CF75A119D3810B41 /* NSBundle+Stripe_AppName.swift */,
 				BC5151C3B6CB4130E9C259A6 /* NSCharacterSet+StripeCore.swift */,
+				B61500B02E2954A000CF3DCE /* Optional+StripeCore.swift */,
 				9E415507B0152B07796114CC /* NSError+Stripe.swift */,
 				23506F3E93ECA5A96DCE7E31 /* NSError+StripeCore.swift */,
 				2BD3D02EBA8A732A9C832925 /* NSMutableURLRequest+Stripe.swift */,
@@ -1052,6 +1055,7 @@
 				12FF091C555F75B914464475 /* STPMultipartFormDataEncoder.swift in Sources */,
 				552DA7969984C443617DBC3E /* STPMultipartFormDataPart.swift in Sources */,
 				DAD4099D03E43A0CA89464CD /* StripeAPI.swift in Sources */,
+				B61500B12E2954A000CF3DCE /* Optional+StripeCore.swift in Sources */,
 				D22FAB2F1AE9AE43C1808747 /* StripeAPIConfiguration+Version.swift in Sources */,
 				6B987BDA2C910F5500DDFDB3 /* STPAnalyticsEventTranslator.swift in Sources */,
 				677951C643328D76E46720A5 /* StripeAPIConfiguration.swift in Sources */,

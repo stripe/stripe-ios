@@ -12,13 +12,17 @@ import UIKit
 /// A `RowButton` subclass that presents a flat layout featuring a chevron. No selected state is available for this style.
 final class RowButtonFlatWithDisclosure: RowButton {
     // MARK: - Subviews
-    private lazy var chevronView: UIImageView = {
-        let chevronImageView = UIImageView(image: Image.icon_chevron_right.makeImage(template: true))
-
-        chevronImageView.tintColor = appearance.embeddedPaymentElement.row.flat.chevron.color
-        chevronImageView.contentMode = .scaleAspectFit
-        chevronImageView.translatesAutoresizingMaskIntoConstraints = false
-        return chevronImageView
+    private lazy var chevronView: UIView = {
+        if let customView = appearance.embeddedPaymentElement.row.flat.chevron.disclosureView?() {
+            customView.translatesAutoresizingMaskIntoConstraints = false
+            return customView
+        } else {
+            let chevronImageView = UIImageView(image: Image.icon_chevron_right.makeImage(template: true))
+            chevronImageView.tintColor = appearance.embeddedPaymentElement.row.flat.chevron.color
+            chevronImageView.contentMode = .scaleAspectFit
+            chevronImageView.translatesAutoresizingMaskIntoConstraints = false
+            return chevronImageView
+        }
     }()
 
     override func setupUI() {

@@ -878,6 +878,28 @@ class EmbeddedPaymentMethodsViewSnapshotTests: STPSnapshotTestCase {
         verify(embeddedView)
     }
 
+    func testEmbeddedPaymentMethodsView_flatWithDisclosure_customDisclosureView() {
+        var appearance: PaymentSheet.Appearance = .default
+        appearance.embeddedPaymentElement.row.style = .flatWithDisclosure
+        appearance.embeddedPaymentElement.row.flat.chevron.color = .purple // should be ignored
+        appearance.embeddedPaymentElement.row.flat.chevron.disclosureView = {
+            let customImage = UIImageView(image: UIImage(systemName: "nose"))
+            customImage.contentMode = .scaleAspectFit
+            return customImage
+        }
+        let embeddedView = EmbeddedPaymentMethodsView(
+            initialSelection: nil,
+            paymentMethodTypes: [.stripe(.card), .stripe(.cashApp)],
+            savedPaymentMethod: nil,
+            appearance: appearance,
+            shouldShowApplePay: true,
+            shouldShowLink: true,
+            savedPaymentMethodAccessoryType: .none,
+            mandateProvider: MockMandateProvider()
+        )
+        verify(embeddedView)
+    }
+
     func testEmbeddedPaymentMethodsView_flatWithDisclosure_savedPaymentMethod() {
         var appearance: PaymentSheet.Appearance = .default
         appearance.embeddedPaymentElement.row.style = .flatWithDisclosure
