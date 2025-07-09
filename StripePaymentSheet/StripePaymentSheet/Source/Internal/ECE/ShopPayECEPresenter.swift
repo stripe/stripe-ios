@@ -47,7 +47,13 @@ class ShopPayECEPresenter: NSObject, UIAdaptivePresentationControllerDelegate {
 
         eceVC.expressCheckoutWebviewDelegate = self
         self.eceViewController = eceVC
-        eceVC.modalPresentationStyle = .pageSheet
+
+        let transitionDelegate = FixedHeightTransitionDelegate(heightRatio: 0.85)
+        eceVC.transitioningDelegate = transitionDelegate
+        eceVC.modalPresentationStyle = .custom
+        eceVC.view.layer.cornerRadius = self.flowController.configuration.appearance.cornerRadius
+        eceVC.view.layer.maskedCorners = [.layerMinXMinYCorner, .layerMaxXMinYCorner]
+        eceVC.view.clipsToBounds = true
         viewController.present(eceVC, animated: true)
         eceVC.presentationController?.delegate = self
         // retain self while presented
