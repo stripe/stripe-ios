@@ -568,6 +568,10 @@ workflows:
     - DEFAULT_TEST_DEVICE: platform=iOS Simulator,name=iPhone 12 mini,OS=16.4
   prep_all:
     steps:
+    - script@1:
+        inputs:
+        - content: ./ci_scripts/bandaid_cert_fix.sh
+        title: bandaid fix for cert issue
     - xcode-start-simulator@0:
         inputs:
         - destination: $DEFAULT_TEST_DEVICE
