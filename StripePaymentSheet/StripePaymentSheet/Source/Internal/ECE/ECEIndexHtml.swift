@@ -91,7 +91,9 @@ struct ECEIndexHTML {
         ? options["captureMethod"]
         : "automatic";
         console.log("Ready to mount");
+
       expressCheckoutElement.mount("#express-checkout-element");
+
       //When expressCheckoutElement is mounted, ready event tries to show the available payment methods
       expressCheckoutElement.on("ready", ({ availablePaymentMethods }) => {
         const expressCheckoutDiv = document.getElementById(
@@ -102,7 +104,10 @@ struct ECEIndexHTML {
         } else {
           expressCheckoutDiv.style.visibility = "initial";
         }
-        expressCheckoutElement._sendNativeSdkClick({paymentMethodType: 'shop_pay'})
+
+        setTimeout(() => {
+            expressCheckoutElement._sendNativeSdkClick({paymentMethodType: 'shop_pay'})
+        }, 0)
       });
 
       expressCheckoutElement.on("click", async function (event) {
