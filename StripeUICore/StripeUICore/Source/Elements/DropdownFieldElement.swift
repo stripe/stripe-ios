@@ -146,21 +146,11 @@ import UIKit
             accessibilityValue: "",
             rawData: "",
             isPlaceholder: true,
-            isDisabled: false
+            isDisabled: true
         )
         return [placeholder] + items
     }
     lazy var pickerViewDelegate: PickerViewDelegate = { PickerViewDelegate(self) }()
-
-    /// Number of placeholder items at the start of `items`.
-    private var placeholderCount: Int {
-        return items.count - nonPlacerholderItems.count
-    }
-
-    /// Converts a picker row (which excludes placeholder rows) to the corresponding index in `items`.
-    private func itemIndex(forPickerRow row: Int) -> Int {
-        return row + placeholderCount
-    }
 
     /**
      - Parameters:
@@ -256,21 +246,15 @@ private extension DropdownFieldElement {
             (pickerView.menu?.children[selectedIndex] as? UIAction)?.state = .on
         }
         #else
-        let displayRow = selectedIndex - placeholderCount
-        if pickerView.selectedRow(inComponent: 0) != displayRow {
+        // Update picker view selection directly using selectedIndex
+        if pickerView.selectedRow(inComponent: 0) != selectedIndex {
             pickerView.reloadComponent(0)
-            pickerView.selectRow(displayRow, inComponent: 0, animated: false)
+            pickerView.selectRow(selectedIndex, inComponent: 0, animated: false)
         }
         #endif
 
-        if items[selectedIndex].isPlaceholder {
-            // No selection, clear any displayed text so the placeholder is visible.
-            pickerFieldView.displayText = nil
-            pickerFieldView.displayTextAccessibilityValue = nil
-        } else {
-            pickerFieldView.displayText = items[selectedIndex].labelDisplayName
-            pickerFieldView.displayTextAccessibilityValue = items[selectedIndex].accessibilityValue
-        }
+        pickerFieldView.displayText = items[selectedIndex].labelDisplayName
+        pickerFieldView.displayTextAccessibilityValue = items[selectedIndex].accessibilityValue
 
         // Ensure the floating placeholder view updates immediately so the label doesn't overlap.
         pickerFieldView.setNeedsLayout()
@@ -325,7 +309,7 @@ extension DropdownFieldElement {
 
         public func pickerView(_ pickerView: UIPickerView, attributedTitleForRow row: Int, forComponent component: Int) -> NSAttributedString? {
             guard let dropdownFieldElement else { return nil }
-            let item = dropdownFieldElement.items[dropdownFieldElement.itemIndex(forPickerRow: row)]
+            let item = dropdownFieldElement.items[row]
 
             guard item.isPlaceholder || item.isDisabled else { return item.pickerDisplayName }
 
@@ -339,8 +323,7 @@ extension DropdownFieldElement {
 
         public func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
             guard let dropdownFieldElement else { return }
-            let actualIndex = dropdownFieldElement.itemIndex(forPickerRow: row)
-            dropdownFieldElement.pickerView(pickerView, didSelectRow: actualIndex, inComponent: component)
+            dropdownFieldElement.pickerView(pickerView, didSelectRow: row, inComponent: component)
         }
 
         public func numberOfComponents(in pickerView: UIPickerView) -> Int {
@@ -348,7 +331,7 @@ extension DropdownFieldElement {
         }
 
         public func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
-            return dropdownFieldElement?.nonPlacerholderItems.count ?? 0
+            return dropdownFieldElement?.items.count ?? 0
         }
     }
 
