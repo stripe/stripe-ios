@@ -177,6 +177,7 @@
 		49DBCAFB2DCA9BB400DB3ACB /* LinkSignUpViewControllerSnapshotTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49DBCAFA2DCA9BB400DB3ACB /* LinkSignUpViewControllerSnapshotTests.swift */; };
 		49E908B32DDE107600D5BDBF /* LinkABTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49E908B22DDE107600D5BDBF /* LinkABTest.swift */; };
 		49F62EDF394F18E5BB201D53 /* StripePaymentSheet.h in Headers */ = {isa = PBXBuildFile; fileRef = 7AA6166F234C3A2129CBD573 /* StripePaymentSheet.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		49FD1DC52E1EA9780003B966 /* LinkAuthenticationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49FD1DC42E1EA9780003B966 /* LinkAuthenticationController.swift */; };
 		4A1A0A542B824C830A200BE0 /* StubbedBackend.swift in Sources */ = {isa = PBXBuildFile; fileRef = BBF8498CCD12A5190F9267CD /* StubbedBackend.swift */; };
 		4A8C7B2AFB290567C961DAB0 /* StripePaymentsUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F22354BD25171B8DC2B922D2 /* StripePaymentsUI.framework */; };
 		4D9D6DD01C7FACE61D459AFB /* BottomSheetTransitioningDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5FD715F32B61017198E9F952 /* BottomSheetTransitioningDelegate.swift */; };
@@ -657,6 +658,7 @@
 		49BCD44D2D9ECBEF003A6251 /* PaymentSheetAnalyticsExperimentsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentSheetAnalyticsExperimentsTests.swift; sourceTree = "<group>"; };
 		49DBCAFA2DCA9BB400DB3ACB /* LinkSignUpViewControllerSnapshotTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LinkSignUpViewControllerSnapshotTests.swift; sourceTree = "<group>"; };
 		49E908B22DDE107600D5BDBF /* LinkABTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LinkABTest.swift; sourceTree = "<group>"; };
+		49FD1DC42E1EA9780003B966 /* LinkAuthenticationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LinkAuthenticationController.swift; sourceTree = "<group>"; };
 		4BEFE8C0CFEAE73F9FD736D3 /* STPStringUtils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = STPStringUtils.swift; sourceTree = "<group>"; };
 		4C6AA41454A6757B3E26AE67 /* StripePaymentSheetTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = StripePaymentSheetTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		4D595AA033BC84CB4E1C277F /* PaymentSheetFormFactorySnapshotTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentSheetFormFactorySnapshotTest.swift; sourceTree = "<group>"; };
@@ -1827,6 +1829,7 @@
 			isa = PBXGroup;
 			children = (
 				CB6F8F882E0455D9003551D5 /* LinkController.swift */,
+				49FD1DC42E1EA9780003B966 /* LinkAuthenticationController.swift */,
 				52185F7315D3C4089D3465BD /* LinkPaymentController.swift */,
 				B41560E0599A68A84F5C76D2 /* PaymentSheet-LinkConfirmOption.swift */,
 				313D00C72CD9972F00A8E6B0 /* PayWithNativeLinkController.swift */,
@@ -2563,6 +2566,7 @@
 				3147CEDB2CC1BF860067B5E4 /* LinkVerificationView.swift in Sources */,
 				A3B2F2B42CEE882D00C0E88C /* SavedPaymentMethodFormFactory.swift in Sources */,
 				3147CEDC2CC1BF860067B5E4 /* LinkVerificationView-Header.swift in Sources */,
+				49FD1DC52E1EA9780003B966 /* LinkAuthenticationController.swift in Sources */,
 				3147CEDD2CC1BF860067B5E4 /* LinkVerificationView-LogoutView.swift in Sources */,
 				6103F2BC2BE45990002D67F8 /* SavedPaymentMethodManager.swift in Sources */,
 				ED75C8F47475E4BE5D496C93 /* STPPaymentIntentShippingDetailsParams+PaymentSheet.swift in Sources */,

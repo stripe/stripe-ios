@@ -144,23 +144,20 @@ extension PayWithLinkViewController {
 
         private let accountLookupDebouncer = OperationDebouncer(debounceTime: LinkUI.accountLookupDebounceTime)
 
-        private let configuration: PaymentElementConfiguration
-
         private let country: String?
 
         // MARK: Initializer
 
         init(
-            configuration: PaymentElementConfiguration,
             accountService: LinkAccountServiceProtocol,
             linkAccount: PaymentSheetLinkAccount?,
+            legalName: String?,
             country: String?
         ) {
-            self.configuration = configuration
             self.accountService = accountService
             self.linkAccount = linkAccount
             self.emailAddress = linkAccount?.email
-            self.legalName = configuration.defaultBillingDetails.name
+            self.legalName = legalName
             self.country = country
         }
 

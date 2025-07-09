@@ -10,6 +10,11 @@ import UIKit
 
 /// Standalone verification controller.
 final class LinkVerificationController {
+    enum Style {
+        case automatic
+        case alwaysLight
+        case alwaysDark
+    }
 
     typealias CompletionBlock = (LinkVerificationViewController.VerificationResult) -> Void
 
@@ -26,6 +31,23 @@ final class LinkVerificationController {
         self.verificationViewController = LinkVerificationViewController(mode: mode, linkAccount: linkAccount)
         verificationViewController.delegate = self
         configuration.style.configure(verificationViewController)
+    }
+
+    init(
+        mode: LinkVerificationView.Mode = .modal,
+        linkAccount: PaymentSheetLinkAccount,
+        style: Style = .automatic
+    ) {
+        self.verificationViewController = LinkVerificationViewController(mode: mode, linkAccount: linkAccount)
+        verificationViewController.delegate = self
+
+        let paymentSheetStyle: PaymentSheet.UserInterfaceStyle
+        switch style {
+        case .automatic: paymentSheetStyle = .automatic
+        case .alwaysLight: paymentSheetStyle = .alwaysLight
+        case .alwaysDark: paymentSheetStyle = .alwaysDark
+        }
+        paymentSheetStyle.configure(verificationViewController)
     }
 
     func present(
