@@ -147,7 +147,7 @@ extension PaymentMethodTypeCollectionView: UICollectionViewDataSource, UICollect
 
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         var useFixedSizeCells: Bool {
-            #if canImport(CompositorServices)
+            #if os(visionOS)
             return true
             #else
             // Prefer fixed size cells for iPads and Mac.
@@ -288,7 +288,7 @@ extension PaymentMethodTypeCollectionView {
             fatalError("init(coder:) has not been implemented")
         }
 
-        #if !canImport(CompositorServices)
+        #if !os(visionOS)
         override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
             super.traitCollectionDidChange(previousTraitCollection)
             update()

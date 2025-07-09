@@ -83,7 +83,7 @@ private let TelemetryURL = URL(string: "https://m.stripe.com/6")!
 
     private let urlSession: URLSession
 
-    @_spi(STP) public class func shouldSendTelemetry() -> Bool {
+    @_spi(STP) public static func shouldSendTelemetry() -> Bool {
         #if targetEnvironment(simulator)
             return false
         #else
@@ -121,7 +121,7 @@ private let TelemetryURL = URL(string: "https://m.stripe.com/6")!
     private var osVersion = UIDevice.current.systemVersion
 
     private var screenSize: String {
-        #if canImport(CompositorServices)
+        #if os(visionOS)
         return "visionOS"
         #else
         let screen = UIScreen.main

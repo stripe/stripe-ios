@@ -207,7 +207,7 @@ class AddPaymentMethodViewController: UIViewController {
 extension AddPaymentMethodViewController: PaymentMethodTypeCollectionViewDelegate {
     func didUpdateSelection(_ paymentMethodTypeCollectionView: PaymentMethodTypeCollectionView) {
         analyticsHelper.logNewPaymentMethodSelected(paymentMethodTypeIdentifier: selectedPaymentMethodType.identifier)
-#if !canImport(CompositorServices)
+#if !os(visionOS)
             UISelectionFeedbackGenerator().selectionChanged()
 #endif
         updateFormElement()
