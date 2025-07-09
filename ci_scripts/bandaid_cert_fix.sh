@@ -1,3 +1,5 @@
+#!/bin/bash
+
 mkdir -p certs && cd certs
 wget https://www.apple.com/certificateauthority/AppleRootCA-G3.cer
 openssl x509 -inform DER -in AppleRootCA-G3.cer -out AppleRootCA-G3.pem
