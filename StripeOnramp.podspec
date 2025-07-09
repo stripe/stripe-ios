@@ -5,9 +5,10 @@ Pod::Spec.new do |s|
   # Instead, update the VERSION file and run ./ci_scripts/update_version.sh
   s.version                        = '24.16.2'
 
-  s.summary                        = 'StripeOnramp provides [description of onramp functionality].'
+  s.summary                        = 'StripeOnramp provides the ability to sign up/in a Link user with custom UI provided by the client.'
   s.license                        = { :type => 'MIT', :file => 'LICENSE' }
   s.homepage                       = 'https://stripe.com/docs/mobile/ios'
+  s.readme                         = 'StripeOnramp/README.md'
   s.authors                        = { 'Stripe' => 'support+github@stripe.com' }
   s.source                         = { :git => 'https://github.com/stripe/stripe-ios.git', :tag => "#{s.version}" }
   s.frameworks                     = 'Foundation', 'UIKit'
