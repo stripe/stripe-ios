@@ -1,5 +1,6 @@
 ## x.x.x x.x.x
 
+* [Added] Postal code validation for Canada and UK addresses
 ### PaymentSheet
 * [Added] Address autocomplete functionality when collecting full billing details in payment method forms.
 
