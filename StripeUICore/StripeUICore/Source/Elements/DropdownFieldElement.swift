@@ -91,7 +91,7 @@ import UIKit
 
         if #available(macCatalyst 14.0, *) {
             let menu = UIMenu(children:
-                items.enumerated().filter { !$0.element.isPlaceholder }.map { (index, item) in
+                items.enumerated().map { (index, item) in
                     UIAction(title: item.pickerDisplayName.string, identifier: .init(rawValue: String(index)), handler: action)
                 }
             )
@@ -322,8 +322,7 @@ extension DropdownFieldElement {
         }
 
         public func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
-            guard let dropdownFieldElement else { return }
-            dropdownFieldElement.pickerView(pickerView, didSelectRow: row, inComponent: component)
+            dropdownFieldElement?.pickerView(pickerView, didSelectRow: row, inComponent: component)
         }
 
         public func numberOfComponents(in pickerView: UIPickerView) -> Int {
