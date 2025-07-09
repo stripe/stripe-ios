@@ -763,8 +763,24 @@ class EmbeddedPaymentElementTest: XCTestCase {
             XCTAssertTrue(paymentSheetError.debugDescription.contains("flatWithChevron row style without .immediateAction row selection behavior is not supported"))
         }
     }
+    
+    func testCreateFails_whenImmediateActionAndDisplayingMandate() async throws {
+        // Given an `immediateAction` configuration...
+        var config = configuration
+        config.rowSelectionBehavior = .immediateAction(didSelectPaymentOption: { /* no-op */ })
+        // ...that doesn't set `embeddedViewDisplaysMandateText = false`...
+        config.embeddedViewDisplaysMandateText = true
 
-    func testCreateSucceds_whenFlatWithChevronWithImmediateActionRowSelectionBehavior() async throws {
+        // ...creating the EmbeddedPaymentElement should fail
+        await XCTAssertThrowsErrorAsync(
+            _ = try await EmbeddedPaymentElement.create(
+                intentConfiguration: self.paymentIntentConfig,
+                configuration: config
+            )
+        )
+    }
+
+    func testCreateSucceeds_whenFlatWithChevronWithImmediateActionRowSelectionBehavior() async throws {
         // Given an appearance with row.style = .flatWithChevron and a config with rowSelectionBehavior = .immediateAction
         var config = configuration
         config.appearance.embeddedPaymentElement.row.style = .flatWithChevron

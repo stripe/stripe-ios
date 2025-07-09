@@ -1,3 +1,7 @@
+## X.Y.Z 2025-XX-YY
+### PaymentSheet
+* [Fixed] EmbeddedPaymentElement now errors when `configuration.rowSelectionBehavior` is `.immediateAction` and `configuration.embeddedViewDisplaysMandateText` is `true` to ensure integrations display legal mandate text to the customer.
+
 ## 24.16.2 2025-07-07
 
 ### PaymentSheet
