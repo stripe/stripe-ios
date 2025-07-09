@@ -238,6 +238,10 @@ extension PayWithNativeLinkController: PayWithLinkViewControllerDelegate {
         selfRetainer = nil
     }
 
+    func payWithLinkViewControllerShouldCancel3DS2ChallengeFlow(_ payWithLinkViewController: PayWithLinkViewController) {
+        paymentHandler.cancel3DS2ChallengeFlow()
+    }
+
 }
 
 // Used if the native controlled falls back to the web controller
