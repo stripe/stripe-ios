@@ -572,9 +572,9 @@ extension EmbeddedPaymentElement {
             if configuration.embeddedViewDisplaysMandateText {
                 switch configuration.formSheetAction {
                 case .continue:
-                    throw PaymentSheetError.integrationError(nonPIIDebugDescription: "Your integration must set `embeddedViewDisplaysMandateText` to false and display the mandate to the customer near your buy button when `rowSelectionBehavior = .immediateAction`")
+                    throw PaymentSheetError.integrationError(nonPIIDebugDescription: "Your integration must set `embeddedViewDisplaysMandateText` to false and display the mandate (`embeddedPaymentElement.paymentOption.mandateText`) to the customer near your buy button when `rowSelectionBehavior = .immediateAction`")
                 case .confirm:
-                    throw PaymentSheetError.integrationError(nonPIIDebugDescription: "Your integration must set `embeddedViewDisplaysMandateText` to false and display the mandate to the customer before confirming the payment or setup when `rowSelectionBehavior = .immediateAction`")
+                    throw PaymentSheetError.integrationError(nonPIIDebugDescription: "Your integration must set `embeddedViewDisplaysMandateText` to false and display the mandate (`embeddedPaymentElement.paymentOption.mandateText`) to the customer before confirming the payment or setup when `rowSelectionBehavior = .immediateAction`")
                 }
             }
             if case .confirm = configuration.formSheetAction, configuration.applePay != nil || configuration.customer != nil {

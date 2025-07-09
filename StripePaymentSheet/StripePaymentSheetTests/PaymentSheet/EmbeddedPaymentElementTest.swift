@@ -68,6 +68,7 @@ class EmbeddedPaymentElementTest: XCTestCase {
 
         // Given a EmbeddedPaymentElement instance...
         var config = configuration
+        config.embeddedViewDisplaysMandateText = false
         config.rowSelectionBehavior = .immediateAction(didSelectPaymentOption: {
             rowSelectionBehaviorExpectation.fulfill()
         })
@@ -352,6 +353,7 @@ class EmbeddedPaymentElementTest: XCTestCase {
 
         // Given a EmbeddedPaymentElement instance...
         var config = configuration
+        config.embeddedViewDisplaysMandateText = false
         config.rowSelectionBehavior = .immediateAction(didSelectPaymentOption: {
             rowSelectionBehaviorExpectation.fulfill()
         })
@@ -386,6 +388,7 @@ class EmbeddedPaymentElementTest: XCTestCase {
         rowSelectionBehaviorExpectation.assertForOverFulfill = true
 
         var config = configuration
+        config.embeddedViewDisplaysMandateText = false
         config.rowSelectionBehavior = .immediateAction(didSelectPaymentOption: {
             rowSelectionBehaviorExpectation.fulfill()
         })
@@ -451,6 +454,7 @@ class EmbeddedPaymentElementTest: XCTestCase {
         rowSelectionBehaviorExpectation.assertForOverFulfill = true
 
         var config = configuration
+        config.embeddedViewDisplaysMandateText = false
         config.rowSelectionBehavior = .immediateAction(didSelectPaymentOption: {
             rowSelectionBehaviorExpectation.fulfill()
         })
@@ -667,6 +671,7 @@ class EmbeddedPaymentElementTest: XCTestCase {
         rowSelectionBehaviorExpectation.assertForOverFulfill = true
 
         var config = configuration
+        config.embeddedViewDisplaysMandateText = false
         config.rowSelectionBehavior = .immediateAction(didSelectPaymentOption: {
             rowSelectionBehaviorExpectation.fulfill()
         })
@@ -716,6 +721,7 @@ class EmbeddedPaymentElementTest: XCTestCase {
     func testCreateFails_whenImmediateActionWithConfirmAndApplePay() async throws {
         // Given a config that has rowSelectionBehavior = immediateAction, formSheetAction = .confirm, and Apple Pay
         var config = configuration
+        config.embeddedViewDisplaysMandateText = false
         config.rowSelectionBehavior = .immediateAction(didSelectPaymentOption: {})
         config.formSheetAction = .confirm { _ in
             XCTFail("Confirm handler should not be invoked in this test.")
@@ -767,6 +773,7 @@ class EmbeddedPaymentElementTest: XCTestCase {
     func testCreateFails_whenImmediateActionAndDisplayingMandate() async throws {
         // Given an `immediateAction` configuration...
         var config = configuration
+        config.embeddedViewDisplaysMandateText = false
         config.rowSelectionBehavior = .immediateAction(didSelectPaymentOption: { /* no-op */ })
         // ...that doesn't set `embeddedViewDisplaysMandateText = false`...
         config.embeddedViewDisplaysMandateText = true
@@ -784,6 +791,7 @@ class EmbeddedPaymentElementTest: XCTestCase {
         // Given an appearance with row.style = .flatWithChevron and a config with rowSelectionBehavior = .immediateAction
         var config = configuration
         config.appearance.embeddedPaymentElement.row.style = .flatWithChevron
+        config.embeddedViewDisplaysMandateText = false
         config.rowSelectionBehavior = .immediateAction(didSelectPaymentOption: {})
 
         // When we create an EmbeddedPaymentElement
@@ -820,6 +828,7 @@ class EmbeddedPaymentElementTest: XCTestCase {
     func testCreateFails_whenImmediateActionWithConfirmAndCustomer() async throws {
         // Given a config that has rowSelectionBehavior = immediateAction, formSheetAction = .confirm, and a customer configuration
         var config = configuration
+        config.embeddedViewDisplaysMandateText = false
         config.rowSelectionBehavior = .immediateAction(didSelectPaymentOption: {})
         config.formSheetAction = .confirm { _ in
             XCTFail("Confirm handler should not be invoked in this test.")
@@ -856,6 +865,7 @@ class EmbeddedPaymentElementTest: XCTestCase {
 
         // Given a configuration with immediateAction
         var config = configuration
+        config.embeddedViewDisplaysMandateText = false
         config.rowSelectionBehavior = .immediateAction(didSelectPaymentOption: {
             immediateActionExpectation.fulfill()
         })
@@ -901,6 +911,7 @@ class EmbeddedPaymentElementTest: XCTestCase {
         // - rowSelectionBehavior = .immediateAction
         // - formSheetAction = .confirm
         var config = configuration
+        config.embeddedViewDisplaysMandateText = false
         config.rowSelectionBehavior = .immediateAction(didSelectPaymentOption: {})
         config.formSheetAction = .confirm { _ in
             XCTFail("Confirm handler should not be invoked in this test.")
@@ -938,6 +949,7 @@ class EmbeddedPaymentElementTest: XCTestCase {
         let failureConfirmHandler = EmbeddedPaymentElement.IntentConfiguration(mode: .payment(amount: 1000, currency: "USD"), paymentMethodTypes: ["card"]) {_, _, intentCreationCallback in
             intentCreationCallback(.failure(TestError.testFailure))
         }
+        config.embeddedViewDisplaysMandateText = false
         config.rowSelectionBehavior = .immediateAction(didSelectPaymentOption: {})
         config.formSheetAction = .confirm { _ in
             // no-op
@@ -977,6 +989,7 @@ class EmbeddedPaymentElementTest: XCTestCase {
     func testPaymentOptionDelegateFiresBeforeImmediateAction() async throws {
         let immediateActionExpectation = expectation(description: "immediateAction fired")
         var config = configuration
+        config.embeddedViewDisplaysMandateText = false
         config.rowSelectionBehavior = .immediateAction(didSelectPaymentOption: {
             // This closure must execute *after* the delegate sets `didCallDelegate`
             XCTAssertTrue(self.delegateDidUpdatePaymentOptionCalled,
