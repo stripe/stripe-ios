@@ -421,7 +421,7 @@ extension PaymentSheet {
         public var display: Display = .automatic
         
         /// Whether missing billing details should be collected for existing Link payment methods.
-        @_spi(STP) public var collectMissingBillingDetailsForExistingPaymentMethods: Bool = true
+        @_spi(CollectMissingLinkBillingDetailsPreview) public var collectMissingBillingDetailsForExistingPaymentMethods: Bool = true
         
         /// Display configuration for Link
         public enum Display: String {
@@ -445,7 +445,7 @@ extension PaymentSheet {
             self.display = display
         }
         
-        @_spi(STP) public init(
+        @_spi(CollectMissingLinkBillingDetailsPreview) public init(
             display: Display = .automatic,
             collectMissingBillingDetailsForExistingPaymentMethods: Bool = true
         ) {
