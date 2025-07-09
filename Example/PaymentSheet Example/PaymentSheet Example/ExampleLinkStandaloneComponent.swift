@@ -48,6 +48,8 @@ struct ExampleLinkStandaloneComponent: View {
 
 @available(iOS 16.0, *)
 struct ExampleLinkStandaloneComponentContent: View {
+    private let email: String = "email@email.com"
+
     @State private var selectedCarType: CarType = CarType.basic
     @State private var hasPresentedLink = false
     @State private var paymentMethodPreview: LinkController.PaymentMethodPreview?
@@ -106,7 +108,8 @@ struct ExampleLinkStandaloneComponentContent: View {
                     HStack(spacing: 20) {
                         if let paymentMethodPreview = linkController.paymentMethodPreview {
                             Image(uiImage: paymentMethodPreview.icon)
-                                .frame(width: 40, height: 40)
+                                .resizable()
+                                .frame(width: 28, height: 28)
                         } else {
                             Image(systemName: "creditcard")
                                 .foregroundColor(.gray)
@@ -172,6 +175,7 @@ struct ExampleLinkStandaloneComponentContent: View {
                     .background(Color.black)
                     .cornerRadius(25)
                 }
+                .opacity(linkController.paymentMethodPreview == nil ? 0.8 : 1)
                 .disabled(linkController.paymentMethodPreview == nil)
             }
             .padding()
@@ -180,6 +184,7 @@ struct ExampleLinkStandaloneComponentContent: View {
         }
         .sheet(isPresented: $showingPaymentSheet) {
             PaymentMethodSheet(
+                email: email,
                 linkController: linkController,
                 onCreditCardTap: { showingCreditCardForm = true }
             )
@@ -193,7 +198,7 @@ struct ExampleLinkStandaloneComponentContent: View {
         .onAppear {
             Task {
                 do {
-                    let isExistingLinkConsumer = try await linkController.lookupConsumer(with: "email@email.com")
+                    let isExistingLinkConsumer = try await linkController.lookupConsumer(with: email)
                     print("Existing Link consumer? \(isExistingLinkConsumer)")
                 } catch {
                     print("Failed to lookup Link consumer: \(error.localizedDescription)")
@@ -208,7 +213,7 @@ struct ExampleLinkStandaloneComponentContent: View {
         }
 
         Task {
-            let paymentMethodPreview = await linkController.present(from: viewController, with: "email@email.com")
+            let paymentMethodPreview = await linkController.present(from: viewController, with: email)
             self.paymentMethodPreview = paymentMethodPreview
         }
     }
@@ -398,6 +403,7 @@ struct CarOptionRow: View {
 @available(iOS 16.0, *)
 struct PaymentMethodSheet: View {
     @Environment(\.dismiss) private var dismiss
+    let email: String
     var linkController: LinkController
     var onCreditCardTap: () -> Void
 
@@ -440,16 +446,19 @@ struct PaymentMethodSheet: View {
                     Button(action: presentLink) {
                         HStack(spacing: 16) {
                             Image(uiImage: LinkController.linkIcon)
-                                .frame(width: 40, height: 40)
+                                .resizable()
+                                .frame(width: 28, height: 28)
 
                             VStack(alignment: .leading, spacing: 4) {
                                 Text("Pay with Link")
                                     .font(.headline)
                                     .fontWeight(.medium)
 
-                                Text("Log in as email@email.com")
-                                    .font(.subheadline)
-                                    .foregroundColor(.secondary)
+                                if !email.isEmpty {
+                                    Text("Continue as \(email)")
+                                        .font(.subheadline)
+                                        .foregroundColor(.secondary)
+                                }
                             }
 
                             Spacer()
@@ -488,7 +497,7 @@ struct PaymentMethodSheet: View {
         STPAPIClient.shared.publishableKey = "pk_test_51HvTI7Lu5o3P18Zp6t5AgBSkMvWoTtA0nyA7pVYDqpfLkRtWun7qZTYCOHCReprfLM464yaBeF72UFfB7cY9WG4a00ZnDtiC2C"
 
         Task {
-            let paymentMethodPreview = await linkController.present(from: viewController, with: "email@email.com")
+            let paymentMethodPreview = await linkController.present(from: viewController, with: email)
             if paymentMethodPreview != nil {
                 DispatchQueue.main.async {
                     dismiss()

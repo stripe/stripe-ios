@@ -13,7 +13,7 @@ import UIKit
 @_spi(STP) import StripeUICore
 
 /// A controller that presents a Link sheet to collect a customer's payment method.
-@_spi(STP) public class LinkController: ObservableObject {
+@MainActor @_spi(STP) public class LinkController: ObservableObject {
 
     /// Represents the payment method currently selected by the user.
     @_spi(STP) public struct PaymentMethodPreview {
@@ -41,8 +41,7 @@ import UIKit
         case setup
     }
 
-    private let apiClient = STPAPIClient.shared
-
+    private let apiClient: STPAPIClient
     private let mode: Mode
     private let elementsSession: STPElementsSession
     private let intent: Intent
@@ -66,7 +65,7 @@ import UIKit
                 return
             }
             paymentMethodPreview = .init(
-                icon: Image.link_icon.makeImage(),
+                icon: Self.linkIcon,
                 label: STPPaymentMethodType.link.displayName,
                 sublabel: selectedPaymentDetails.linkPaymentDetailsFormattedString
             )
@@ -77,12 +76,14 @@ import UIKit
     @Published @_spi(STP) public private(set) var paymentMethodPreview: PaymentMethodPreview?
 
     private init(
+        apiClient: STPAPIClient = .shared,
         mode: Mode,
         elementsSession: STPElementsSession,
         intent: Intent,
         configuration: PaymentElementConfiguration,
         analyticsHelper: PaymentSheetAnalyticsHelper
     ) {
+        self.apiClient = apiClient
         self.mode = mode
         self.elementsSession = elementsSession
         self.intent = intent
