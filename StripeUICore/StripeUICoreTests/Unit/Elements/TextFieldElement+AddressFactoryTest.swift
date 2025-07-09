@@ -98,7 +98,6 @@ class TextFieldElementAddressFactoryTest: XCTestCase {
         config.test(text: "P0L 1N0", isOptional: false, matches: .valid)
     }
 
-
     // MARK: - Phone Number
     func testPhoneNumberConfigurationValidation() {
         // US formatting

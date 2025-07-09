@@ -356,7 +356,7 @@ import Foundation
     static var remove_card: String {
         STPLocalizedString("Remove card", "Label on a button for removing a card")
     }
-    
+
     static var brand_not_accepted: String {
         STPLocalizedString(
             "(not accepted)",
