@@ -596,7 +596,6 @@ private extension STPAPIClient {
     }
 
     struct SessionResponse: Decodable {
-        let authSessionClientSecret: String?
         let consumerSession: ConsumerSession
     }
 }
