@@ -305,6 +305,7 @@
 /* Begin XCBuildConfiguration section */
 		0B4292972E1EC57700012FB8 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 0B83D9752E1EF6D2004F0115 /* Project-Debug.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
@@ -371,6 +372,7 @@
 		};
 		0B4292982E1EC57700012FB8 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 0B83D9762E1EF6D2004F0115 /* Project-Release.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
@@ -430,6 +432,7 @@
 		};
 		0B42929A2E1EC57700012FB8 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 0B83D97B2E1EF6D2004F0115 /* StripeiOS-Debug.xcconfig */;
 			buildSettings = {
 				BUILD_LIBRARY_FOR_DISTRIBUTION = YES;
 				CODE_SIGN_STYLE = Manual;
@@ -462,6 +465,7 @@
 		};
 		0B42929B2E1EC57700012FB8 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 0B83D97C2E1EF6D2004F0115 /* StripeiOS-Release.xcconfig */;
 			buildSettings = {
 				BUILD_LIBRARY_FOR_DISTRIBUTION = YES;
 				CODE_SIGN_STYLE = Manual;
@@ -494,6 +498,7 @@
 		};
 		0B42929D2E1EC57700012FB8 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 0B83D9782E1EF6D2004F0115 /* StripeiOS Tests-Debug.xcconfig */;
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
@@ -509,6 +514,7 @@
 		};
 		0B42929E2E1EC57700012FB8 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 0B83D9792E1EF6D2004F0115 /* StripeiOS Tests-Release.xcconfig */;
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
