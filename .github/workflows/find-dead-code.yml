@@ -28,17 +28,17 @@ jobs:
           
       - name: Copy .periphery.yml to temporary location
         run: |
-            # Copy necessary files to /tmp/ before checking out master
-            cp .periphery.yml /tmp/
-            cp -r ci_scripts/dead_code/ /tmp/
+            # Copy necessary files to temporary directory provided by GitHub Actions runner
+            cp .periphery.yml "$RUNNER_TEMP/"
+            cp -r ci_scripts/dead_code/ "$RUNNER_TEMP/"
 
       - name: Compare Periphery output with master baseline
         run: |
           git fetch origin ${{ github.base_ref }}:${{ github.base_ref }}
           git checkout ${{ github.base_ref }}
-          cp /tmp/.periphery.yml .periphery.yml
+          cp "$RUNNER_TEMP/.periphery.yml" .periphery.yml
           mkdir -p ci_scripts/dead_code/
-          cp -r /tmp/ ci_scripts/dead_code/
+          cp -r "$RUNNER_TEMP/" ci_scripts/dead_code/
 
           periphery scan --config .periphery.yml --clean-build --retain-codable-properties 2>&1 > periphery_report_master_formatted_sorted.txt
           ruby ci_scripts/dead_code/process_periphery_output.rb periphery_report_master_formatted_sorted.txt unused_code_master.json
