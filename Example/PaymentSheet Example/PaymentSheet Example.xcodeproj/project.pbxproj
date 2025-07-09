@@ -69,6 +69,7 @@
 		B6DA0FEE2CC97F4900BF41B7 /* EmbeddedUITest.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6DA0FED2CC97F3D00BF41B7 /* EmbeddedUITest.swift */; };
 		C39CA2EBE08EE768559A8FD1 /* StripeCore.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 1FD1F5193E4A361EA9E8FED3 /* StripeCore.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		CB433B462D9715C70066DD18 /* LinkTestHelpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB433B452D9715C70066DD18 /* LinkTestHelpers.swift */; };
+		CB6F8F872E04545D003551D5 /* ExampleLinkStandaloneComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB6F8F862E04545D003551D5 /* ExampleLinkStandaloneComponent.swift */; };
 		CC9090D573972E8B14D204CB /* CustomerSheetTestPlaygroundSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = F2F10B63B9ECBC62AFCF8B32 /* CustomerSheetTestPlaygroundSettings.swift */; };
 		D235E82A7173E8051BC5A261 /* ExampleCustomCheckoutViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECF244A593BD92A973B1C369 /* ExampleCustomCheckoutViewController.swift */; };
 		D89C23032CFB732A0CFCD565 /* StripePayments.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1E565B552830E657F863C4F8 /* StripePayments.framework */; };
@@ -290,6 +291,7 @@
 		CA7B4F3A0C373E78CF35D4A6 /* pt-PT */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "pt-PT"; path = "pt-PT.lproj/Main.strings"; sourceTree = "<group>"; };
 		CAB1D321D0BDBF696CA90532 /* fil */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fil; path = fil.lproj/LaunchScreen.strings; sourceTree = "<group>"; };
 		CB433B452D9715C70066DD18 /* LinkTestHelpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LinkTestHelpers.swift; sourceTree = "<group>"; };
+		CB6F8F862E04545D003551D5 /* ExampleLinkStandaloneComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExampleLinkStandaloneComponent.swift; sourceTree = "<group>"; };
 		D09A0708A006CB661551A84B /* id */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = id; path = id.lproj/LaunchScreen.strings; sourceTree = "<group>"; };
 		D1BC09347B9F3629671A1E9A /* pt-BR */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "pt-BR"; path = "pt-BR.lproj/Main.strings"; sourceTree = "<group>"; };
 		D20765908089ACB79B556592 /* ExampleSwiftUIViews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExampleSwiftUIViews.swift; sourceTree = "<group>"; };
@@ -483,6 +485,7 @@
 				ECF244A593BD92A973B1C369 /* ExampleCustomCheckoutViewController.swift */,
 				179D026BA4F5F12EA9EB6F6F /* ExampleCustomDeferredCheckoutViewController.swift */,
 				2D423EEB2C6C8BB05D632BBD /* ExampleLinkPaymentCheckoutViewController.swift */,
+				CB6F8F862E04545D003551D5 /* ExampleLinkStandaloneComponent.swift */,
 				0156812DC170AFC05C102465 /* ExampleSwiftUICustomerSheet.swift */,
 				447A394B34A55D5B1CD5C0C1 /* ExampleSwiftUICustomPaymentFlow.swift */,
 				B7AFD32B5EAD3BEEEC3D4260 /* ExampleSwiftUIPaymentSheet.swift */,
@@ -726,6 +729,7 @@
 				61B2532E2D52C4F1008CFC96 /* ExampleSwiftUIEmbeddedPaymentElement.swift in Sources */,
 				6BFE613D2D407C420094DFE2 /* CustomerSessionPlaygroundView.swift in Sources */,
 				4694B03B08B7DA9706A2ED9D /* AppearancePlaygroundView.swift in Sources */,
+				CB6F8F872E04545D003551D5 /* ExampleLinkStandaloneComponent.swift in Sources */,
 				A3884C372DA701A700CAE78E /* PaymentMethodOptionsSetupFutureUsagePlaygroundView.swift in Sources */,
 				DDF30DE9D7AA4BCC47CC12FB /* CustomerSheetTestPlayground.swift in Sources */,
 				8D9AAFD1D1D49112A7777414 /* CustomerSheetTestPlaygroundController.swift in Sources */,
