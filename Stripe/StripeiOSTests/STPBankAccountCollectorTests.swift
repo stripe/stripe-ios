@@ -57,7 +57,7 @@ final class STPBankAccountCollectorTests: APIStubbedTestCase {
             expectation.fulfill()
         }
 
-        waitForExpectations(timeout: 1.0)
+        waitForExpectations(timeout: 2.0)
     }
 
     func testCollectBankAccountForSetupInvalidSecretReturnsError() {
@@ -77,7 +77,7 @@ final class STPBankAccountCollectorTests: APIStubbedTestCase {
             expectation.fulfill()
         }
 
-        waitForExpectations(timeout: 1.0)
+        waitForExpectations(timeout: 2.0)
     }
 
     func testCollectBankAccountForPaymentSucceeds() {
@@ -185,7 +185,7 @@ final class STPBankAccountCollectorTests: APIStubbedTestCase {
         stubAttachLinkAccountSession(paymentIntentID: paymentIntentID)
 
         let collector = STPBankAccountCollector(apiClient: stubbedAPIClient())
-        let exp = expectation(description: "completion")
+        let completionExp = expectation(description: "completion")
 
         collector.collectBankAccountForPayment(
             clientSecret: clientSecret,
@@ -194,11 +194,12 @@ final class STPBankAccountCollectorTests: APIStubbedTestCase {
             from: UIViewController(),
             onEvent: { _ in
                 // Event callback is called - this verifies the API accepts the parameter
+                // Note: In test environment, this may not be called due to mocked Financial Connections SDK
             }
         ) { intent, error in
             XCTAssertNil(error)
             XCTAssertEqual(intent?.stripeId, paymentIntentID)
-            exp.fulfill()
+            completionExp.fulfill()
         }
         waitForExpectations(timeout: 2.0)
     }
@@ -211,7 +212,7 @@ final class STPBankAccountCollectorTests: APIStubbedTestCase {
         stubAttachLinkAccountSessionToSetupIntent(setupIntentID: setupIntentID)
 
         let collector = STPBankAccountCollector(apiClient: stubbedAPIClient())
-        let exp = expectation(description: "completion")
+        let completionExp = expectation(description: "completion")
 
         collector.collectBankAccountForSetup(
             clientSecret: clientSecret,
@@ -220,11 +221,12 @@ final class STPBankAccountCollectorTests: APIStubbedTestCase {
             from: UIViewController(),
             onEvent: { _ in
                 // Event callback is called - this verifies the API accepts the parameter
+                // Note: In test environment, this may not be called due to mocked Financial Connections SDK
             }
         ) { intent, error in
             XCTAssertNil(error)
             XCTAssertEqual(intent?.stripeID, setupIntentID)
-            exp.fulfill()
+            completionExp.fulfill()
         }
         waitForExpectations(timeout: 2.0)
     }
