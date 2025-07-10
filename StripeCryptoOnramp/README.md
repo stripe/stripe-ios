@@ -20,7 +20,7 @@ StripeCryptoOnramp provides the ability to sign up/in a Link user with custom UI
 
 ## Requirements
 
-The Stripe Onramp iOS SDK is compatible with apps targeting iOS 13.0 or above.
+The Stripe Crypto Onramp iOS SDK is compatible with apps targeting iOS 13.0 or above.
 
 ## Getting started
 
@@ -34,6 +34,6 @@ Placeholder
 
 ## Manual linking
 
-If you link the Stripe Onramp library manually, use a version from our [releases](https://github.com/stripe/stripe-ios/releases) page and make sure to embed <ins>all</ins> of the following frameworks:
+If you link the Stripe Crypto Onramp library manually, use a version from our [releases](https://github.com/stripe/stripe-ios/releases) page and make sure to embed <ins>all</ins> of the following frameworks:
 - `StripeCryptoOnramp.xcframework`
 - `StripeCore.xcframework`
