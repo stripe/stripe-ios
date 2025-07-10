@@ -6,7 +6,6 @@
 //
 
 import XCTest
-@testable import StripeCryptoOnramp
 
 final class StripeCryptoOnrampTests: XCTestCase {
 
