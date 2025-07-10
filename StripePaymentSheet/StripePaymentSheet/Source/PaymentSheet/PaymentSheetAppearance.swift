@@ -133,14 +133,14 @@ public extension PaymentSheet {
             public init() {}
 
             /// The primary color used throughout PaymentSheet
-            #if canImport(CompositorServices)
+            #if os(visionOS)
             public var primary: UIColor = .label
             #else
             public var primary: UIColor = .systemBlue
             #endif
 
             /// The color used for the background of PaymentSheet
-            #if canImport(CompositorServices)
+            #if os(visionOS)
             public var background: UIColor = .clear
             #else
             public var background: UIColor = .systemBackground
@@ -232,7 +232,7 @@ public extension PaymentSheet {
 
             /// The background color of the primary button
             /// - Note: If `nil`, `appearance.colors.primary` will be used as the primary button background color
-            #if canImport(CompositorServices)
+            #if os(visionOS)
             public var backgroundColor: UIColor? = .systemBlue
             #else
             public var backgroundColor: UIColor?
