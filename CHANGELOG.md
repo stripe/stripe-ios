@@ -1,5 +1,6 @@
 ## 24.16.2 2025-07-07
 
+* [Added] Postal code validation for Canada and UK addresses
 ### PaymentSheet
 * [Added] Address autocomplete functionality when collecting full billing details in payment method forms.
 * [Fixed] Form error text not respecting Appearance API font settings
