@@ -65,6 +65,22 @@ public class STPFormView: UIView, STPFormInputValidationObserver {
     static let cornerRadius: CGFloat = 6
     static let interSectionSpacing: CGFloat = 7
 
+    public override var intrinsicContentSize: CGSize {
+        var width: CGFloat = 0
+        var height: CGFloat = 0
+
+        for (index, sectionView) in sectionViews.enumerated() {
+            if index > 0 {
+                height += STPFormView.interSectionSpacing
+            }
+            let sectionSize = sectionView.intrinsicContentSize
+            width = max(width, sectionSize.width)
+            height += sectionSize.height
+        }
+
+        return CGSize(width: width, height: height)
+    }
+
     @_spi(STP) public weak var formViewInternalDelegate: STPFormViewInternalDelegate?
 
     required init(
@@ -177,6 +193,9 @@ public class STPFormView: UIView, STPFormInputValidationObserver {
             textField.isHidden = isHidden
             rowView.isHidden = hideContainer
         }
+
+        // Invalidate intrinsic content size when field visibility changes
+        invalidateIntrinsicContentSize()
     }
 
     // MARK: - UIResponder
@@ -449,6 +468,9 @@ public class STPFormView: UIView, STPFormInputValidationObserver {
                 UIAccessibility.post(notification: .screenChanged, argument: nextField)
             }
         }
+
+        // Invalidate intrinsic content size when validation state changes
+        invalidateIntrinsicContentSize()
     }
 }
 
@@ -519,6 +541,34 @@ extension STPFormView {
         static let titleVerticalMargin: CGFloat = 4
 
         let footerLabel = UILabel()
+
+        public override var intrinsicContentSize: CGSize {
+            let stackWidth = stackView.intrinsicContentSize.width
+            var width = stackWidth
+            var height = stackView.intrinsicContentSize.height
+
+            // If there's a title, add its height and the spacing below it
+            if let title = section.title, !title.isEmpty {
+                let fontMetrics = UIFontMetrics(forTextStyle: .body)
+                let titleFont = fontMetrics.scaledFont(for: UIFont.systemFont(ofSize: 13, weight: .semibold))
+                let titleHeight = titleFont.lineHeight
+                height += titleHeight + SectionView.titleVerticalMargin // spacing below title
+
+                // Update width to include title if it's wider
+                let titleSize = (title as NSString).size(withAttributes: [.font: titleFont])
+                width = max(width, titleSize.width)
+            }
+
+            // Add the margin above footer and footer height
+            // Use the footerLabel's font lineHeight for more precise calculation
+            let footerHeight = footerLabel.font.lineHeight
+            height += SectionView.titleVerticalMargin + footerHeight
+
+            // Update width to include footer if it's wider
+            width = max(width, footerLabel.intrinsicContentSize.width)
+
+            return CGSize(width: width, height: height)
+        }
 
         var footerTextColor: UIColor {
             get {

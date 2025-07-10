@@ -40,6 +40,15 @@ extension STPCardFormView {
             let cardFormView = STPCardFormView(style: cardFormViewStyle)
             cardFormView.delegate = context.coordinator
             cardFormView.cardParams = paymentMethodParams
+
+            // Ensure proper sizing for SwiftUI
+            cardFormView.setContentCompressionResistancePriority(.required, for: .vertical)
+            cardFormView.setContentHuggingPriority(.defaultHigh, for: .vertical)
+
+            // Force initial layout
+            cardFormView.setNeedsLayout()
+            cardFormView.layoutIfNeeded()
+
             return cardFormView
         }
 

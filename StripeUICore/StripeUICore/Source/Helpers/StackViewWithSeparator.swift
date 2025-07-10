@@ -14,6 +14,49 @@ import UIKit
 
     public static let borderlessInset: CGFloat = 10
 
+    public override var intrinsicContentSize: CGSize {
+        switch axis {
+        case .vertical:
+            var width: CGFloat = 0
+            var height: CGFloat = 0
+            let nonHiddenArrangedSubviews = arrangedSubviews.filter({ !$0.isHidden })
+            for view in nonHiddenArrangedSubviews {
+                width = max(width, view.intrinsicContentSize.width)
+                height += view.intrinsicContentSize.height
+            }
+            // Include spacing between views (like UIStackView does)
+            if nonHiddenArrangedSubviews.count > 1 {
+                height += spacing * CGFloat(nonHiddenArrangedSubviews.count - 1)
+            }
+            // Include layout margins if they are relative arrangement
+            if isLayoutMarginsRelativeArrangement {
+                width += layoutMargins.left + layoutMargins.right
+                height += layoutMargins.top + layoutMargins.bottom
+            }
+            return CGSize(width: width, height: height)
+        case .horizontal:
+            var width: CGFloat = 0
+            var height: CGFloat = 0
+            let nonHiddenArrangedSubviews = arrangedSubviews.filter({ !$0.isHidden })
+            for view in nonHiddenArrangedSubviews {
+                width += view.intrinsicContentSize.width
+                height = max(height, view.intrinsicContentSize.height)
+            }
+            // Include spacing between views (like UIStackView does)
+            if nonHiddenArrangedSubviews.count > 1 {
+                width += spacing * CGFloat(nonHiddenArrangedSubviews.count - 1)
+            }
+            // Include layout margins if they are relative arrangement
+            if isLayoutMarginsRelativeArrangement {
+                width += layoutMargins.left + layoutMargins.right
+                height += layoutMargins.top + layoutMargins.bottom
+            }
+            return CGSize(width: width, height: height)
+        default:
+            return CGSize(width: UIView.noIntrinsicMetric, height: UIView.noIntrinsicMetric)
+        }
+    }
+
     public enum SeparatoryStyle {
         case full
         case partial
