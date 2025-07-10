@@ -19,7 +19,7 @@ enum PaymentSheetUI {
     /// The padding between views in the sheet e.g., between the bottom of the form and the Pay button
     static let defaultPadding: CGFloat = 20
 
-#if canImport(CompositorServices)
+#if os(visionOS)
     static let navBarPadding: CGFloat = 30
 #else
     static let navBarPadding = defaultPadding

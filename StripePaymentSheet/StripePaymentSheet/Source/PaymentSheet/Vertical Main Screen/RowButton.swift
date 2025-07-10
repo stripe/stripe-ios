@@ -124,7 +124,7 @@ class RowButton: UIView, EventHandler {
 
     // MARK: Overrides
 
-#if !canImport(CompositorServices)
+#if !os(visionOS)
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
         // If the font size changes, make this RowButton the same height as the tallest variant if necessary
         heightConstraint?.isActive = false

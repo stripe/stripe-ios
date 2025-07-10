@@ -211,7 +211,7 @@ class CustomerAddPaymentMethodViewController: UIViewController {
             paymentMethodDetailsContainerView.layoutIfNeeded()
             newView.alpha = 0
 
-            #if !canImport(CompositorServices)
+            #if !os(visionOS)
             UISelectionFeedbackGenerator().selectionChanged()
             #endif
             // Fade the new one in and the old one out
