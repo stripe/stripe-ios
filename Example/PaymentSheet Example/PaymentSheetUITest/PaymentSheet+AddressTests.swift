@@ -292,6 +292,8 @@ NZ
         app.textFields["City"].tap()
         app.typeText("San Francisco")
         app.textFields["State"].tap()
+        app.pickerWheels.firstMatch.adjust(toPickerWheelValue: "California")
+        app.toolbars.buttons["Done"].tap()
         app.typeText("California")
         app.textFields["ZIP"].tap()
         app.typeText("94102")
@@ -310,6 +312,9 @@ NZ
         app.buttons["Address"].tap()
         app.textFields["Country or region"].waitForExistenceAndTap()
         app.pickerWheels.firstMatch.adjust(toPickerWheelValue: "🇨🇦 Canada")
+        app.toolbars.buttons["Done"].tap()
+        app.textFields["Province"].waitForExistenceAndTap()
+        app.pickerWheels.firstMatch.adjust(toPickerWheelValue: "Ontario")
         app.toolbars.buttons["Done"].tap()
         app.buttons["Save address"].tap()
 
@@ -331,6 +336,9 @@ NZ
         app.buttons["Address"].tap()
         app.textFields["Country or region"].waitForExistenceAndTap()
         app.pickerWheels.firstMatch.adjust(toPickerWheelValue: "🇺🇸 United States")
+        app.toolbars.buttons["Done"].tap()
+        app.textFields["State"].waitForExistenceAndTap()
+        app.pickerWheels.firstMatch.adjust(toPickerWheelValue: "California")
         app.toolbars.buttons["Done"].tap()
         app.buttons["Save address"].tap()
 
