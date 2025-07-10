@@ -320,7 +320,7 @@ extension STPPaymentMethodType {
         // Note: Card only requires polling for 3DS2 web-based transactions
         case .card, .amazonPay, .revolutPay:
             return PollingRequirement(timeBetweenPollingAttempts: 3)
-        case .swish, .twint:
+        case .swish, .twint, .przelewy24:
             // We are intentionally polling for Swish and Twint even though they use the redirect trampoline.
             // The intent is still in `requires_action` status after redirecting following a successful payment (about 50% of the time for Swish).
             // This allows time for the intent to transition to its terminal state.
