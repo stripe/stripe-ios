@@ -31,7 +31,7 @@ extension PaymentSheetFormFactory {
             )
         ) { selected in
             if let defaultCheckbox {
-                UIView.transition(with: defaultCheckbox.view, duration: 0.25,
+                UIView.transition(with: defaultCheckbox.view, duration: 0.2,
                                   options: .transitionCrossDissolve,
                                   animations: {
                     defaultCheckbox.view.isHidden = !selected
