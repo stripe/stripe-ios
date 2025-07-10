@@ -342,48 +342,4 @@ class MockCustomerSessionManager {
     }
 }
 
-struct MockPaymentMethod {
-    let id: String
-    let type: PaymentMethodType
-    let isValid: Bool
-    
-    static func createMockCard(id: String = "pm_card_mock") -> MockPaymentMethod {
-        return MockPaymentMethod(id: id, type: .card, isValid: true)
-    }
-    
-    static func createMockSepa(id: String = "pm_sepa_mock") -> MockPaymentMethod {
-        return MockPaymentMethod(id: id, type: .sepaDebit, isValid: true)
-    }
-    
-    static func createInvalidCard() -> MockPaymentMethod {
-        return MockPaymentMethod(id: "pm_invalid", type: .card, isValid: false)
-    }
-}
-
-enum PaymentMethodType {
-    case card
-    case sepaDebit
-    case usBankAccount
-}
-
-struct PaymentMethodError: Error {
-    let code: PaymentMethodErrorCode
-}
-
-enum PaymentMethodErrorCode {
-    case networkError
-    case duplicatePaymentMethod
-    case paymentMethodNotFound
-    case invalidPaymentMethod
-}
-
-extension Result {
-    var isSuccess: Bool {
-        switch self {
-        case .success:
-            return true
-        case .failure:
-            return false
-        }
-    }
-}
+// Mock classes moved to TestMocks.swift

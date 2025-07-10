@@ -432,6 +432,7 @@ class MockAPIClient {
         let paymentMethod = MockPaymentMethod(
             id: id,
             type: .usBankAccount,
+            isValid: true,
             verificationStatus: .verified,
             bankAccount: MockBankAccount.createUSBankAccount(),
             microDepositSession: nil
@@ -440,61 +441,7 @@ class MockAPIClient {
     }
 }
 
-struct MockBankAccount {
-    let routingNumber: String
-    let accountNumber: String
-    let accountType: BankAccountType
-    let last4: String
-    
-    static func createUSBankAccount(accountType: BankAccountType = .checking) -> MockBankAccount {
-        return MockBankAccount(
-            routingNumber: "110000000",
-            accountNumber: "000123456789",
-            accountType: accountType,
-            last4: "6789"
-        )
-    }
-    
-    static func createUSBankAccountWithInvalidRouting() -> MockBankAccount {
-        return MockBankAccount(
-            routingNumber: "123", // Invalid length
-            accountNumber: "000123456789",
-            accountType: .checking,
-            last4: "6789"
-        )
-    }
-    
-    static func createUSBankAccountWithInvalidAccount() -> MockBankAccount {
-        return MockBankAccount(
-            routingNumber: "110000000",
-            accountNumber: "123", // Invalid length
-            accountType: .checking,
-            last4: "123"
-        )
-    }
-}
-
-struct MockPaymentMethod {
-    let id: String
-    let type: PaymentMethodType
-    let verificationStatus: BankAccountVerificationStatus
-    let bankAccount: MockBankAccount?
-    let microDepositSession: MockMicroDepositSession?
-    
-    static func createBankAccountPaymentMethod(
-        bankAccount: MockBankAccount,
-        verificationStatus: BankAccountVerificationStatus,
-        microDepositSession: MockMicroDepositSession?
-    ) -> MockPaymentMethod {
-        return MockPaymentMethod(
-            id: "pm_test_bank_\(UUID().uuidString)",
-            type: .usBankAccount,
-            verificationStatus: verificationStatus,
-            bankAccount: bankAccount,
-            microDepositSession: microDepositSession
-        )
-    }
-}
+// MARK: - Additional Mock Classes for Bank Account Tests
 
 struct MockConnectedAccount {
     let institutionName: String
@@ -502,47 +449,8 @@ struct MockConnectedAccount {
     let isVerified: Bool
 }
 
-struct MockMicroDepositSession {
-    let id: String
-}
-
 struct BankAccountVerificationResult {
     let status: BankAccountVerificationStatus
     let verificationType: BankAccountVerificationType
     let microDepositSession: MockMicroDepositSession?
-}
-
-enum BankAccountType {
-    case checking
-    case savings
-}
-
-enum BankAccountVerificationStatus {
-    case verified
-    case pendingMicroDeposits
-    case failed
-}
-
-enum BankAccountVerificationType {
-    case instant
-    case microDeposits
-}
-
-struct BankAccountError: Error {
-    let code: BankAccountErrorCode
-    let message: String
-}
-
-enum BankAccountErrorCode {
-    case networkError
-    case invalidBankAccount
-    case verificationFailed
-    case userCancelled
-    case authenticationFailed
-}
-
-enum PaymentMethodType {
-    case card
-    case usBankAccount
-    case sepaDebit
 }

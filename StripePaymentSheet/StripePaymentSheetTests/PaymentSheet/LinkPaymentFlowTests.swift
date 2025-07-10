@@ -340,7 +340,7 @@ struct MockPaymentIntent {
 struct MockLinkPaymentMethod {
     let id: String
     let type: LinkPaymentMethodType
-    let bankAccount: MockBankAccount?
+    let bankAccount: MockLinkBankAccount?
     
     var isValid: Bool {
         return bankAccount != nil
@@ -350,7 +350,7 @@ struct MockLinkPaymentMethod {
         return MockLinkPaymentMethod(
             id: "pm_link_instant_debits",
             type: .linkInstantDebits,
-            bankAccount: MockBankAccount(routingNumber: "110000000", accountNumber: "000123456789")
+            bankAccount: MockLinkBankAccount(routingNumber: "110000000", accountNumber: "000123456789")
         )
     }
     
@@ -363,7 +363,8 @@ struct MockLinkPaymentMethod {
     }
 }
 
-struct MockBankAccount {
+// MockBankAccount is now defined in TestMocks.swift
+struct MockLinkBankAccount {
     let routingNumber: String
     let accountNumber: String
 }

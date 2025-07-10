@@ -521,26 +521,4 @@ enum MicroDepositSessionStatus {
     case expired
 }
 
-struct MicroDepositError: Error {
-    let code: MicroDepositErrorCode
-}
-
-enum MicroDepositErrorCode {
-    case networkError
-    case incorrectMicroDepositAmounts
-    case tooManyAttempts
-    case sessionExpired
-    case noAttemptsRemaining
-    case invalidAmounts
-}
-
-extension Result {
-    var isFailure: Bool {
-        switch self {
-        case .success:
-            return false
-        case .failure:
-            return true
-        }
-    }
-}
+// MARK: - Additional Mock Classes for MicroDeposit Tests
