@@ -161,6 +161,9 @@ Label of an address field */
 /* Message when a user is selecting a card brand in a dropdown */
 "Select card brand (optional)" = "Select card brand (optional)";
 
+/* Error message for empty dropdown selection. */
+"Selection is empty." = "Selection is empty.";
+
 /* Placeholder for Bacs sort code (a bank routing number used in the UK and Ireland) */
 "Sort code" = "Sort code";
 

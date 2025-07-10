@@ -103,7 +103,7 @@ final class ManualEntryViewController: UIViewController {
             keepFooterAboveKeyboard: true
         )
         paneLayoutView?.addTo(view: view)
-        #if !canImport(CompositorServices)
+        #if !os(visionOS)
         paneLayoutView?.scrollView.keyboardDismissMode = .onDrag
         #endif
 

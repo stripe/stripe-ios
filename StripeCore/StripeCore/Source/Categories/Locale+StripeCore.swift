@@ -11,7 +11,7 @@ import Foundation
     /// Returns the regionCode, for visionOS compatibility
     /// We can remove this once we drop iOS 16
     var stp_regionCode: String? {
-#if canImport(CompositorServices)
+#if os(visionOS)
         return self.region?.identifier
         #else
         return self.regionCode
@@ -19,7 +19,7 @@ import Foundation
     }
 
     var stp_currencyCode: String? {
-        #if canImport(CompositorServices)
+        #if os(visionOS)
         return self.currency?.identifier
         #else
         return self.currencyCode
@@ -27,7 +27,7 @@ import Foundation
     }
 
     var stp_languageCode: String? {
-#if canImport(CompositorServices)
+#if os(visionOS)
         return self.language.languageCode?.identifier
         #else
         return self.languageCode
@@ -35,7 +35,7 @@ import Foundation
     }
 
     static var stp_isoRegionCodes: [String] {
-#if canImport(CompositorServices)
+#if os(visionOS)
         return self.Region.isoRegions.map { $0.identifier }
 #else
         return self.isoRegionCodes
