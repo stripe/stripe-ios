@@ -7,3 +7,4 @@
 
 import Foundation
 
+// Placeholder file for framework structure setup PR.
