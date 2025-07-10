@@ -11,7 +11,7 @@ import StripePaymentsTestUtils
 import WebKit
 import XCTest
 
-#if !canImport(CompositorServices)
+#if !os(visionOS)
 @available(iOS 16.0, *)
 @MainActor
 class ECEIntegrationTests: XCTestCase {

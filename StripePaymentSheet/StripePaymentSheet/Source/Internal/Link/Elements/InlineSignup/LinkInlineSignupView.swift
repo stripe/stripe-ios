@@ -244,7 +244,7 @@ final class LinkInlineSignupView: UIView {
         }
     }
 
-    #if !canImport(CompositorServices)
+    #if !os(visionOS)
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
         super.traitCollectionDidChange(previousTraitCollection)
         updateAppearance()
@@ -319,7 +319,7 @@ extension LinkInlineSignupView: LinkLegalTermsViewDelegate {
     func legalTermsView(_ legalTermsView: LinkLegalTermsView, didTapOnLinkWithURL url: URL) -> Bool {
         let safariVC = SFSafariViewController(url: url)
 
-        #if !canImport(CompositorServices)
+        #if !os(visionOS)
         safariVC.dismissButtonStyle = .close
         safariVC.preferredControlTintColor = window?.tintColor ?? viewModel.configuration.appearance.colors.primary
         #endif

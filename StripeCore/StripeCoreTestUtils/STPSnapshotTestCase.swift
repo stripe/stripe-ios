@@ -5,7 +5,7 @@
 //  Created by David Estes on 4/13/22.
 //
 
-#if !canImport(CompositorServices)
+#if !os(visionOS)
 import Foundation
 import iOSSnapshotTestCase
 
