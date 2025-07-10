@@ -1,5 +1,5 @@
 //
-//  LinkCardEditElementSnapshotTests.swift
+//  LinkPaymentMethodFormElementSnapshotTests.swift
 //  StripeiOS Tests
 //
 //  Created by Ramon Torres on 10/3/22.
@@ -8,17 +8,18 @@
 
 import UIKit
 
+@testable@_spi(STP) import StripeCore
 @testable@_spi(STP) import StripeCoreTestUtils
 @testable@_spi(STP) import StripePaymentSheet
 @testable@_spi(STP) import StripeUICore
 
-final class LinkCardEditElementSnapshotTests: STPSnapshotTestCase {
+final class LinkPaymentMethodFormElementSnapshotTests: STPSnapshotTestCase {
 
     override func setUp() {
         super.setUp()
         //        self.recordMode = true
 
-        // `LinkCardEditElement` depends on `AddressSectionElement`, which requires
+        // `LinkPaymentMethodFormElement` depends on `AddressSectionElement`, which requires
         // address specs to be loaded in memory.
         let expectation = expectation(description: "Load address specs")
         AddressSpecProvider.shared.loadAddressSpecs {
@@ -47,9 +48,14 @@ final class LinkCardEditElementSnapshotTests: STPSnapshotTestCase {
         let sut = makeSUT(isDefault: false, networks: ["cartes_bancaires", "visa"])
         verify(sut)
     }
+    
+    func testBillingDetailsUpdateForBankAccount() {
+        let sut = makeBankAccountSUT()
+        verify(sut)
+    }
 
     func verify(
-        _ element: LinkCardEditElement,
+        _ element: LinkPaymentMethodFormElement,
         identifier: String? = nil,
         file: StaticString = #filePath,
         line: UInt = #line
@@ -60,13 +66,13 @@ final class LinkCardEditElementSnapshotTests: STPSnapshotTestCase {
 
 }
 
-extension LinkCardEditElementSnapshotTests {
+extension LinkPaymentMethodFormElementSnapshotTests {
 
     func makeSUT(
         isDefault: Bool,
         useCVCPlaceholder: Bool = false,
         networks: [String] = ["visa"]
-    ) -> LinkCardEditElement {
+    ) -> LinkPaymentMethodFormElement {
         let paymentMethod = ConsumerPaymentDetails(
             stripeID: "1",
             details: .card(
@@ -86,11 +92,41 @@ extension LinkCardEditElementSnapshotTests {
             isDefault: isDefault
         )
 
-        return LinkCardEditElement(
+        return LinkPaymentMethodFormElement(
             paymentMethod: paymentMethod,
             configuration: PaymentSheet.Configuration(),
             useCVCPlaceholder: useCVCPlaceholder
         )
     }
 
+    func makeBankAccountSUT() -> LinkPaymentMethodFormElement {
+        let paymentMethod = ConsumerPaymentDetails(
+            stripeID: "1",
+            details: .bankAccount(
+                bankAccount: .init(
+                    iconCode: nil,
+                    name: "Stripe Bank",
+                    last4: "6789"
+                )
+            ),
+            billingAddress: BillingAddress(
+                name: "Jane Doe"
+            ),
+            billingEmailAddress: nil,
+            nickname: nil,
+            isDefault: false
+        )
+
+        var config = PaymentSheet.Configuration()
+        config.billingDetailsCollectionConfiguration.address = .full
+        config.billingDetailsCollectionConfiguration.email = .always
+        config.billingDetailsCollectionConfiguration.name = .always
+        config.billingDetailsCollectionConfiguration.phone = .always
+
+        return LinkPaymentMethodFormElement(
+            paymentMethod: paymentMethod,
+            configuration: config,
+            useCVCPlaceholder: true
+        )
+    }
 }

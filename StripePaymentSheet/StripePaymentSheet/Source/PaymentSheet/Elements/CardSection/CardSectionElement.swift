@@ -24,7 +24,7 @@ final class CardSectionElement: ContainerElement {
 
     weak var delegate: ElementDelegate?
     lazy var view: UIView = {
-        #if !canImport(CompositorServices)
+        #if !os(visionOS)
         if #available(iOS 13.0, macCatalyst 14, *), STPCardScanner.cardScanningAvailable {
             return CardSectionWithScannerView(cardSectionView: cardSection.view, delegate: self, theme: theme, analyticsHelper: analyticsHelper)
         } else {
@@ -306,7 +306,7 @@ internal func cardParams(for intentParams: IntentConfirmParams) -> STPPaymentMet
     return cardParams
 }
 
-#if !canImport(CompositorServices)
+#if !os(visionOS)
 // MARK: - CardSectionWithScannerViewDelegate
 
 extension CardSectionElement: CardSectionWithScannerViewDelegate {

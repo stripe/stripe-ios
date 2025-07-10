@@ -1,5 +1,5 @@
 //
-//  LinkCardEditElement.swift
+//  LinkPaymentMethodFormElement.swift
 //  StripePaymentSheet
 //
 //  Created by Ramon Torres on 9/30/22.
@@ -25,7 +25,7 @@ fileprivate extension ConsumerPaymentDetails {
     }
 }
 
-final class LinkCardEditElement: Element {
+final class LinkPaymentMethodFormElement: Element {
     let collectsUserInput: Bool = true
 
     struct Params {
@@ -63,7 +63,7 @@ final class LinkCardEditElement: Element {
         // This matches the object that was returned by CardDetailsEditView, but won't work
         // with `collectionMode: .all`, because extra fields won't match what expected by Link.
         let billingDetails = STPPaymentMethodBillingDetails()
-        billingDetails.name = nameElement?.text
+        billingDetails.name = billingAddressSection?.name?.text ?? nameElement?.text
         billingDetails.email = emailElement?.text
         billingDetails.phone = phoneElement?.phoneNumber?.string(as: .e164)
         billingDetails.nonnil_address.country = billingAddressSection?.selectedCountryCode
@@ -82,6 +82,14 @@ final class LinkCardEditElement: Element {
             setAsDefault: checkboxElement.checkboxButton.isSelected,
             preferredNetwork: preferredNetwork
         )
+    }
+
+    private var showNameFieldInBillingAddressSection: Bool {
+        // If we're showing this form for payment methods other than cards, we can't rely on the cardholder name field
+        // in the card section. Therefore, we show it in the address section.
+        let isCard = paymentMethod.type == .card
+        let collectsName = configuration.billingDetailsCollectionConfiguration.name == .always
+        return !isCard && collectsName
     }
 
     private lazy var emailElement: TextFieldElement? = {
@@ -193,16 +201,21 @@ final class LinkCardEditElement: Element {
     )
 
     private lazy var formElement: FormElement = {
+        var elements: [Element?] = [contactInformationSection]
+
+        if paymentMethod.type == .card {
+            elements.append(cardSection)
+        }
+
+        elements.append(billingAddressSection)
+        elements.append(checkboxElement)
+
         let formElement = FormElement(
-            elements: [
-                contactInformationSection,
-                cardSection,
-                billingAddressSection,
-                checkboxElement,
-            ],
+            elements: elements,
             theme: theme,
             customSpacing: [(cardSection, LinkUI.largeContentSpacing)]
         )
+        formElement.toggleChild(cardSection, show: paymentMethod.type == .card, animated: false)
         formElement.delegate = self
         return formElement
     }()
@@ -225,13 +238,23 @@ final class LinkCardEditElement: Element {
     private lazy var billingAddressSection: AddressSectionElement? = {
         guard configuration.billingDetailsCollectionConfiguration.address != .never else { return nil }
 
-        let defaultBillingAddress = AddressSectionElement.AddressDetails(billingAddress: paymentMethod.billingAddress ?? .init(), phone: nil)
+        let defaultBillingAddress = AddressSectionElement.AddressDetails(
+            billingAddress: paymentMethod.billingAddress ?? .init(),
+            phone: nil,
+            name: paymentMethod.billingAddress?.name
+        )
+
+        let additionalFields = AddressSectionElement.AdditionalFields(
+            name: showNameFieldInBillingAddressSection ? .enabled(isOptional: false) : .disabled
+        )
+
         return AddressSectionElement(
             title: String.Localized.billing_address_lowercase,
             defaults: defaultBillingAddress,
             collectionMode: configuration.billingDetailsCollectionConfiguration.address == .full
                 ? .all()
                 : .countryAndPostal(),
+            additionalFields: additionalFields,
             theme: theme
         )
     }()
@@ -252,7 +275,7 @@ final class LinkCardEditElement: Element {
 
 }
 
-extension LinkCardEditElement: ElementDelegate {
+extension LinkPaymentMethodFormElement: ElementDelegate {
 
     func didUpdate(element: Element) {
         delegate?.didUpdate(element: self)

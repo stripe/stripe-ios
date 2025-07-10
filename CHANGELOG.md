@@ -1,7 +1,8 @@
-## x.x.x x.x.x
+## 24.16.2 2025-07-07
 
 ### PaymentSheet
 * [Added] Address autocomplete functionality when collecting full billing details in payment method forms.
+* [Fixed] Form error text not respecting Appearance API font settings
 
 ## 24.16.1 2025-06-23
 

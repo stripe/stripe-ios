@@ -5,7 +5,7 @@
 //  Created by Yuki Tokuhiro on 3/22/23.
 //
 
-#if !canImport(CompositorServices)
+#if !os(visionOS)
 import iOSSnapshotTestCase
 import StripeCoreTestUtils
 @_spi(STP) @_spi(CustomerSessionBetaAccess) @testable import StripePaymentSheet
