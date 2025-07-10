@@ -6,26 +6,33 @@
 //  Copyright © 2025 Stripe, Inc. All rights reserved.
 //
 
+@_spi(STP) import StripeCore
 import SwiftUI
 import UIKit
-@_spi(STP) import StripeCore
 
-/// Private implementation of UIViewControllerRepresentable for AddressViewController.
+// MARK: - Private Implementation
+
+/// Private UIViewControllerRepresentable wrapper for AddressViewController.
 /// Use AddressElement instead of using this directly.
 @available(iOS 15.0, *)
 private struct AddressViewControllerRepresentable: UIViewControllerRepresentable {
-    /// Configuration for the address collection
-    private let configuration: AddressViewController.Configuration
-    /// Binding for the collected address
-    @Binding var address: AddressViewController.AddressDetails?
-    /// Environment dismiss action for automatic dismissal
+
+    // MARK: Properties
+
+    /// Configuration for address collection
+    private let configuration: AddressElement.Configuration
+    /// Binding for collected address
+    @Binding var address: AddressElement.AddressDetails?
+    /// Dismissal closure
     private let dismiss: () -> Void
-    
-    /// Initializes the address collection view
+
+    // MARK: Initialization
+
+    /// Initializes a AddressViewControllerRepresentable
     /// - Parameters:
-    ///   - configuration: Configuration for appearance and behavior
+    ///   - configuration: AddressElement configuration
     ///   - address: Binding to the collected address
-    ///   - dismiss: Closure to dismiss the view
+    ///   - dismiss: A closure that when called dismisses the AddressElement
     init(
         configuration: AddressViewController.Configuration = AddressViewController.Configuration(),
         address: Binding<AddressViewController.AddressDetails?>,
@@ -35,70 +42,89 @@ private struct AddressViewControllerRepresentable: UIViewControllerRepresentable
         self._address = address
         self.dismiss = dismiss
     }
-    
+
+    // MARK: UIViewControllerRepresentable
+
     func makeUIViewController(context: Context) -> UINavigationController {
         let addressViewController = AddressViewController(
             configuration: configuration,
             delegate: context.coordinator
         )
-        
+
         return UINavigationController(rootViewController: addressViewController)
     }
-    
+
     func updateUIViewController(_ uiViewController: UINavigationController, context: Context) {
-        // Update the coordinator's binding and dismiss closure if needed
         context.coordinator.address = $address
         context.coordinator.dismiss = dismiss
     }
-    
+
     func makeCoordinator() -> Coordinator {
         Coordinator(address: $address, dismiss: dismiss)
     }
-    
+
+    // MARK: - Coordinator
+
+    /// Coordinator for AddressViewController delegate
     class Coordinator: NSObject, AddressViewControllerDelegate {
         var address: Binding<AddressViewController.AddressDetails?>
         var dismiss: () -> Void
-        
+
         init(address: Binding<AddressViewController.AddressDetails?>, dismiss: @escaping () -> Void) {
             self.address = address
             self.dismiss = dismiss
         }
-        
+
         func addressViewControllerDidFinish(
             _ addressViewController: AddressViewController,
             with address: AddressViewController.AddressDetails?
         ) {
-            // Update the binding with the collected address
             self.address.wrappedValue = address
             dismiss()
         }
     }
 }
 
-/// A SwiftUI view that presents an AddressViewController for collecting address information.
-/// This handles keyboard presentation properly and provides a clean SwiftUI interface.
+// MARK: - Public API
+
+/// A SwiftUI view that presents an address collection interface with full localization and autocomplete.
+/// - Note: This view automatically handles keyboard presentation and dismissal.
+/// - Seealso: https://stripe.com/docs/elements/address-element?platform=ios
 @available(iOS 15.0, *)
 public struct AddressElement: View {
-    /// Configuration for the address collection
-    public let configuration: AddressViewController.Configuration
-    /// Binding for the collected address
-    @Binding public var address: AddressViewController.AddressDetails?
+
+    // MARK: - Types
+
+    /// Configuration for an `AddressElement`.
+    public typealias Configuration = AddressViewController.Configuration
+    /// The customer data collected by `AddressElement`
+    public typealias AddressDetails = AddressViewController.AddressDetails
+
+    // MARK: Properties
+
+    /// Configuration for the address collection e.g., to style the appearance.
+    private let configuration: Configuration
+    /// A valid address or nil.
+    @Binding public var address: AddressDetails?
     /// Environment dismiss action
     @Environment(\.dismiss) private var dismiss
-    
-    /// Initializes the address element
-    /// - Parameters:
-    ///   - address: Binding to the collected address
-    ///   - configuration: Configuration for appearance and behavior
+
+    // MARK: Initialization
+
+    /// Initializes an `AddressElement`.
+    /// - Parameter address: This is updated when the customer completes entering their address or cancels the sheet.
+    /// - Parameter configuration: The configuration for this `AddressElement` e.g., to style the appearance.
     public init(
-        address: Binding<AddressViewController.AddressDetails?>,
-        configuration: AddressViewController.Configuration = AddressViewController.Configuration()
+        address: Binding<AddressDetails?>,
+        configuration: Configuration
     ) {
         self._address = address
         self.configuration = configuration
         STPAnalyticsClient.sharedClient.addClass(toProductUsageIfNecessary: Self.self)
     }
-    
+
+    // MARK: View Body
+
     public var body: some View {
         AddressViewControllerRepresentable(
             configuration: configuration,
@@ -109,9 +135,9 @@ public struct AddressElement: View {
     }
 }
 
-// MARK: STPAnalyticsProtocol
+// MARK: - Analytics Integration
 
 @available(iOS 15.0, *)
 @_spi(STP) extension AddressElement: STPAnalyticsProtocol {
     public static let stp_analyticsIdentifier = "AddressElement"
-} 
+}
