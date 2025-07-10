@@ -38,7 +38,7 @@ class PaymentSheetStandardLPMUIOneTests: PaymentSheetStandardLPMUICase {
         payButton.tap()
         XCTAssertTrue(app.staticTexts["Success!"].waitForExistence(timeout: 10.0))
     }
-    
+
 }
 
 class PaymentSheetStandardLPMUITwoTests: PaymentSheetStandardLPMUICase {
