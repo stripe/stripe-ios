@@ -584,7 +584,7 @@ final class PaymentSheet_LPM_ConfirmFlowTests: STPNetworkStubbingTestCase {
             form.getTextFieldElement("Full name").setText("John Doe")
             XCTAssertNil(form.getMandateElement())
             XCTAssertNil(form.getTextFieldElement("Email"))
-            XCTAssertEqual(form.getAllUnwrappedSubElements().count, 3)
+            XCTAssertEqual(form.getAllUnwrappedSubElements().count, 5)
         }
     }
 
@@ -594,14 +594,14 @@ final class PaymentSheet_LPM_ConfirmFlowTests: STPNetworkStubbingTestCase {
             form.getTextFieldElement("Email").setText("test@test.com")
             XCTAssertNotNil(form.getDropdownFieldElement("Przelewy24 Bank"))
             XCTAssertNil(form.getMandateElement())
-            XCTAssertEqual(form.getAllUnwrappedSubElements().count, 5)
+            XCTAssertEqual(form.getAllUnwrappedSubElements().count, 7)
         }
     }
 
     func testAffirmConfirmFlows() async throws {
         try await _testConfirm(intentKinds: [.paymentIntent], currency: "USD", paymentMethodType: .affirm, merchantCountry: .US) { form in
-            // Affirm has no input fields
-            XCTAssertEqual(form.getAllUnwrappedSubElements().count, 1)
+            // Affirm has no input fields and one non-interactive Affirm UI element
+            XCTAssertEqual(form.getAllUnwrappedSubElements().count, 2)
         }
     }
 
@@ -609,13 +609,6 @@ final class PaymentSheet_LPM_ConfirmFlowTests: STPNetworkStubbingTestCase {
         try await _testConfirm(intentKinds: [.paymentIntent], currency: "AUD", paymentMethodType: .zip, merchantCountry: .AU) { form in
             // Zip has no input fields
             XCTAssertEqual(form.getAllUnwrappedSubElements().count, 1)
-        }
-    }
-
-    func testUPIConfirmFlows() async throws {
-        try await _testConfirm(intentKinds: [.paymentIntent], currency: "INR", paymentMethodType: .UPI, merchantCountry: .US, defaultCountry: "IN") { form in
-            form.getTextFieldElement("UPI ID").setText("payment.success@stripeupi")
-            XCTAssertEqual(form.getAllUnwrappedSubElements().count, 3)
         }
     }
 

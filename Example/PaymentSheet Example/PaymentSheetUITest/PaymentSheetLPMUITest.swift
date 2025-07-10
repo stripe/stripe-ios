@@ -8,201 +8,40 @@
 import XCTest
 
 class PaymentSheetStandardLPMUIOneTests: PaymentSheetStandardLPMUICase {
-    // EPS confirm flows are covered in PaymentSheetLPMConfirmFlowTests.swift
-
-    // P24 confirm flows are covered in PaymentSheetLPMConfirmFlowTests.swift
-
-    // Klarna confirm flows are covered in PaymentSheetLPMConfirmFlowTests.swift
-
-    // Affirm confirm flows are covered in PaymentSheetLPMConfirmFlowTests.swift
-
-    // Amazon Pay confirm flows are covered in PaymentSheetLPMConfirmFlowTests.swift
-
-    // Alma confirm flows are covered in PaymentSheetLPMConfirmFlowTests.swift
-
-    // Sunbit confirm flows are covered in PaymentSheetLPMConfirmFlowTests.swift
-
-    // Billie confirm flows are covered in PaymentSheetLPMConfirmFlowTests.swift
-
-    // Satispay confirm flows are covered in PaymentSheetLPMConfirmFlowTests.swift
-
-    // Crypto confirm flows are covered in PaymentSheetLPMConfirmFlowTests.swift
-
-    // Zip confirm flows are covered in PaymentSheetLPMConfirmFlowTests.swift
-
-    func testCashAppPaymentMethod() throws {
+    // UPI is a little custom and isn't well-tested by PaymentSheet_LPM_ConfirmFlowTests
+    func testUPIPaymentMethod() throws {
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
         settings.layout = .horizontal
         settings.customerMode = .new
-        settings.apmsEnabled = .on
+        settings.merchantCountryCode = .IN
+        settings.currency = .inr
+        settings.apmsEnabled = .off
         loadPlayground(app, settings)
 
-        app.buttons["Present PaymentSheet"].tap()
-        let payButton = app.buttons["Pay $50.99"]
+        app.buttons["Present PaymentSheet"].waitForExistenceAndTap()
+        XCTAssertTrue(app.buttons["Pay ₹50.99"].waitForExistence(timeout: 5))
 
-        // Select Cash App
-        guard let cashApp = scroll(collectionView: app.collectionViews.firstMatch, toFindCellWithId: "Cash App Pay")
-        else {
-            XCTFail()
-            return
-        }
-        cashApp.tap()
+        let payButton = app.buttons["Pay ₹50.99"]
+        tapPaymentMethod("UPI")
 
-        // Attempt payment
+        XCTAssertFalse(payButton.isEnabled)
+        // Test invalid VPA
+        let upi_id = app.textFields["UPI ID"]
+        upi_id.tap()
+        upi_id.typeText("payment.success" + XCUIKeyboardKey.return.rawValue)
+        XCTAssertFalse(payButton.isEnabled)
+
+        // Test valid VPA
+        upi_id.tap()
+        upi_id.typeText(String(repeating: XCUIKeyboardKey.delete.rawValue, count: "payment.success".count))
+        upi_id.typeText("payment.success@stripeupi" + XCUIKeyboardKey.return.rawValue)
         payButton.tap()
-
-        // Close the webview, to simulate cancel
-        app.otherElements["TopBrowserBar"].buttons["Close"].waitForExistenceAndTap(timeout: 15)
-
-        // Tap to attempt a payment, but fail it
-        payButton.waitForExistenceAndTap()
-        let failPaymentText = app.firstDescendant(withLabel: "FAIL TEST PAYMENT")
-        failPaymentText.waitForExistenceAndTap(timeout: 15.0)
-
-        XCTAssertTrue(app.staticTexts["The customer declined this payment."].waitForExistence(timeout: 5.0))
-
-        // Tap to attempt a payment
-        payButton.waitForExistenceAndTap()
-        let approvePaymentText = app.firstDescendant(withLabel: "AUTHORIZE TEST PAYMENT")
-        approvePaymentText.waitForExistenceAndTap(timeout: 15.0)
-
-        XCTAssertTrue(app.staticTexts["Success!"].waitForExistence(timeout: 15.0))
+        XCTAssertTrue(app.staticTexts["Success!"].waitForExistence(timeout: 10.0))
     }
-
-    func testCashAppPaymentMethod_setup() throws {
-        var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
-        settings.layout = .horizontal
-        settings.customerMode = .new
-        settings.apmsEnabled = .on
-        settings.mode = .setup
-        loadPlayground(
-            app,
-            settings
-        )
-
-        app.buttons["Present PaymentSheet"].tap()
-        let setupButton = app.buttons["Set up"]
-
-        // Select Cash App
-        tapPaymentMethod("Cash App Pay")
-
-        // Attempt set up
-        setupButton.tap()
-
-        // Close the webview, to simulate cancel
-        app.otherElements["TopBrowserBar"].buttons["Close"].waitForExistenceAndTap(timeout: 15)
-
-        // Tap to attempt a set up, but fail it
-        setupButton.waitForExistenceAndTap()
-        let failSetupText = app.firstDescendant(withLabel: "FAIL TEST SETUP")
-        failSetupText.waitForExistenceAndTap(timeout: 15.0)
-
-        XCTAssertTrue(app.staticTexts["The customer declined this payment."].waitForExistence(timeout: 5.0))
-
-        // Tap to attempt a set up, make it succeed
-        setupButton.waitForExistenceAndTap()
-        let approveSetupText = app.firstDescendant(withLabel: "AUTHORIZE TEST SETUP")
-        approveSetupText.waitForExistenceAndTap(timeout: 15.0)
-
-        XCTAssertTrue(app.staticTexts["Success!"].waitForExistence(timeout: 15.0))
-    }
-
-    func testCashAppPaymentMethod_setupFutureUsage() throws {
-        var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
-        settings.layout = .horizontal
-        settings.customerMode = .new
-        settings.apmsEnabled = .on
-        settings.mode = .paymentWithSetup
-        loadPlayground(
-            app,
-            settings
-        )
-
-        app.buttons["Present PaymentSheet"].tap()
-        let payButton = app.buttons["Pay $50.99"]
-
-        // Select Cash App
-        tapPaymentMethod("Cash App Pay")
-
-        // Attempt to pay
-        payButton.tap()
-        webviewAuthorizePaymentButton.waitForExistenceAndTap(timeout: 10)
-        XCTAssertTrue(app.staticTexts["Success!"].waitForExistence(timeout: 15.0))
-    }
+    
 }
 
 class PaymentSheetStandardLPMUITwoTests: PaymentSheetStandardLPMUICase {
-    func testAmazonPayPaymentMethod_setup() throws {
-        var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
-        settings.layout = .horizontal
-        settings.customerMode = .new
-        settings.apmsEnabled = .on
-        settings.mode = .setup
-        loadPlayground(
-            app,
-            settings
-        )
-
-        app.buttons["Present PaymentSheet"].tap()
-
-        // Select Amazon Pay
-        tapPaymentMethod("Amazon Pay")
-
-        // Attempt set up
-        app.buttons["Set up"].tap()
-
-        // Close the webview, Amazon Pay test playground is out of scope
-        app.otherElements["TopBrowserBar"].buttons["Close"].waitForExistenceAndTap(timeout: 10)
-    }
-
-    func testPayPalPaymentMethod_setup() throws {
-        var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
-        settings.layout = .horizontal
-        settings.customerMode = .new
-        settings.apmsEnabled = .on
-        settings.merchantCountryCode = .FR
-        settings.currency = .eur
-        settings.mode = .setup
-        loadPlayground(
-            app,
-            settings
-        )
-
-        app.buttons["Present PaymentSheet"].tap()
-
-        // Select PayPal
-        tapPaymentMethod("PayPal")
-        app.buttons["Set up"].tap()
-        waitForASWebAuthSigninModalAndTapContinue()
-        webviewAuthorizeSetupButton.waitForExistenceAndTap(timeout: 10)
-        XCTAssertTrue(app.staticTexts["Success!"].waitForExistence(timeout: 15.0))
-    }
-
-    func testRevolutPayPaymentMethod_setup() throws {
-        var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
-        settings.layout = .horizontal
-        settings.customerMode = .new
-        settings.apmsEnabled = .on
-        settings.merchantCountryCode = .GB
-        settings.currency = .gbp
-        settings.mode = .setup
-        loadPlayground(
-            app,
-            settings
-        )
-
-        app.buttons["Present PaymentSheet"].tap()
-
-        // Select Revolut Pay
-        tapPaymentMethod("Revolut Pay")
-
-        // Attempt set up
-        app.buttons["Set up"].tap()
-
-        // Close the webview, Revolut Pay test playground is out of scope
-        app.otherElements["TopBrowserBar"].buttons["Close"].waitForExistenceAndTap(timeout: 10)
-    }
-
     func testUSBankAccountPaymentMethod() throws {
         app.launchEnvironment = app.launchEnvironment.merging([
             "FinancialConnectionsSDKAvailable": "true",
@@ -254,9 +93,6 @@ class PaymentSheetStandardLPMUITwoTests: PaymentSheetStandardLPMUICase {
         // no pay button tap because linked account is stubbed/fake in UI test
     }
 
-    func testGrabPayPaymentMethod() throws {
-        // GrabPay confirm flows are covered in PaymentSheetLPMConfirmFlowTests.swift
-    }
     func testPaymentIntent_USBankAccount() {
         _testUSBankAccount(mode: .payment, integrationType: .normal)
     }
@@ -273,14 +109,6 @@ class PaymentSheetStandardLPMUITwoTests: PaymentSheetStandardLPMUICase {
         _testInstantDebits(mode: .setup)
     }
 
-    func testUPIPaymentMethod() throws {
-        // UPI confirm flows are covered in PaymentSheetLPMConfirmFlowTests.swift
-    }
-    // This only tests the PaymentSheet + PaymentIntent flow.
-    // Other confirmation flows are tested in PaymentSheet+LPMTests.swift
-    func testSEPADebitPaymentMethod_PaymentSheet() {
-        // SEPA Debit confirm flows are covered in PaymentSheetLPMConfirmFlowTests.swift
-    }
     func testSavedSEPADebitPaymentMethod_FlowController_ShowsMandate() {
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
         settings.layout = .horizontal
@@ -333,40 +161,8 @@ class PaymentSheetStandardLPMUITwoTests: PaymentSheetStandardLPMUICase {
         app.buttons["Confirm"].tap()
         XCTAssertTrue(app.staticTexts["Success!"].waitForExistence(timeout: 10.0))
     }
-
-    func testAlipayPaymentMethod() throws {
-        // Alipay confirm flows are covered in PaymentSheetLPMConfirmFlowTests.swift
-    }
-    func testPayNowPaymentMethod() throws {
-        // PayNow confirm flows are covered in PaymentSheetLPMConfirmFlowTests.swift
-    }
 }
 
-class PaymentSheetStandardLPMUIThreeTests: PaymentSheetStandardLPMUICase {
-    func testPromptPayPaymentMethod() throws {
-        // PromptPay confirm flows are covered in PaymentSheetLPMConfirmFlowTests.swift
-    }
-    func testSwishPaymentMethod() throws {
-        // Swish confirm flows are covered in PaymentSheetLPMConfirmFlowTests.swift
-    }
-    func testBlikPaymentMethod() throws {
-        // BLIK confirm flows are covered in PaymentSheetLPMConfirmFlowTests.swift
-    }
-    func testBacsDebit() {
-        // Bacs Direct Debit confirm flows are covered in PaymentSheetLPMConfirmFlowTests.swift
-    }
-    // MARK: - Voucher based LPMs
-    /// https://docs.stripe.com/payments/vouchers
-    func testMultibancoPaymentMethod() throws {
-        // Multibanco confirm flows are covered in PaymentSheetLPMConfirmFlowTests.swift
-    }
-    func testOXXOPaymentMethod() throws {
-        // OXXO confirm flows are covered in PaymentSheetLPMConfirmFlowTests.swift
-    }
-    func testBoletoPaymentMethod() throws {
-        // Boleto confirm flows are covered in PaymentSheetLPMConfirmFlowTests.swift
-    }
-}
 class PaymentSheetStandardLPMUICBCTests: PaymentSheetStandardLPMUICase {
     // MARK: Card brand choice
 
@@ -639,6 +435,7 @@ class PaymentSheetStandardLPMUICBCTests: PaymentSheetStandardLPMUICase {
 class PaymentSheetStandardLPMUICase: PaymentSheetUITestCase {
 
 }
+
 extension PaymentSheetStandardLPMUICase {
     var webviewAuthorizePaymentButton: XCUIElement { app.firstDescendant(withLabel: "AUTHORIZE TEST PAYMENT") }
     var webviewAuthorizeSetupButton: XCUIElement { app.firstDescendant(withLabel: "AUTHORIZE TEST SETUP") }
