@@ -35,7 +35,7 @@ index 25e5009784..ca719eb600 100644
 @@ -280,7 +283,11 @@
  				DEVELOPMENT_TEAM = Y28TH9SHX7;
  				INFOPLIST_FILE = SPMTestUITests/Info.plist;
- 				IPHONEOS_DEPLOYMENT_TARGET = 14.5;
+ 				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
 -				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 +				LD_RUNPATH_SEARCH_PATHS = (
 +					"$(inherited)",
@@ -48,7 +48,7 @@ index 25e5009784..ca719eb600 100644
 @@ -304,11 +311,16 @@
  				DEVELOPMENT_TEAM = Y28TH9SHX7;
  				INFOPLIST_FILE = SPMTestUITests/Info.plist;
- 				IPHONEOS_DEPLOYMENT_TARGET = 14.5;
+ 				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
 -				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 +				LD_RUNPATH_SEARCH_PATHS = (
 +					"$(inherited)",
@@ -69,7 +69,7 @@ index 25e5009784..ca719eb600 100644
  				GCC_TREAT_WARNINGS_AS_ERRORS = YES;
  				INFOPLIST_FILE = SPMTest/Info.plist;
 +				INFOPLIST_KEY_CFBundleDisplayName = "{{SDK}}Size";
- 				IPHONEOS_DEPLOYMENT_TARGET = 14.5;
+ 				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
 -				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 -				PRODUCT_BUNDLE_IDENTIFIER = com.stripe.SPMTest;
 -				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -88,7 +88,7 @@ index 25e5009784..ca719eb600 100644
  				GCC_TREAT_WARNINGS_AS_ERRORS = YES;
  				INFOPLIST_FILE = SPMTest/Info.plist;
 +				INFOPLIST_KEY_CFBundleDisplayName = "{{SDK}}Size";
- 				IPHONEOS_DEPLOYMENT_TARGET = 14.5;
+ 				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
 -				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 -				PRODUCT_BUNDLE_IDENTIFIER = com.stripe.SPMTest;
 -				PRODUCT_NAME = "$(TARGET_NAME)";

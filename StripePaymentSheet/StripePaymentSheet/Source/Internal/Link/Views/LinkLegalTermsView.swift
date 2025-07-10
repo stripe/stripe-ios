@@ -173,7 +173,7 @@ extension LinkLegalTermsView: UITextViewDelegate {
         case linkLegalTermsViewUITextViewDelegate
     }
 
-#if !canImport(CompositorServices)
+#if !os(visionOS)
     func textView(
         _ textView: UITextView,
         shouldInteractWith URL: URL,

@@ -5,7 +5,7 @@
 //  Created by David Estes on 8/17/20.
 //  Copyright © 2020 Stripe, Inc. All rights reserved.
 //
-#if !canImport(CompositorServices)
+#if !os(visionOS)
 
 import AVFoundation
 import UIKit
