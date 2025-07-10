@@ -290,6 +290,7 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
     }
 
     func updateMandate(animated: Bool = true) {
+        let hadLabelInStackView = mandateView.attributedText != nil || errorLabel.text != nil
         let mandateProvider = VerticalListMandateProvider(configuration: configuration, elementsSession: elementsSession, intent: intent, analyticsHelper: analyticsHelper)
         let newMandateText = mandateProvider.mandate(
             for: selectedPaymentOption?.paymentMethodType,
@@ -299,6 +300,15 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
         animateHeightChange {
             self.mandateView.attributedText = newMandateText
             self.mandateView.setHiddenIfNecessary(newMandateText == nil)
+            let hasLabelInStackView = newMandateText != nil || self.errorLabel.text != nil
+            if self.isViewLoaded, hadLabelInStackView != hasLabelInStackView {
+                NSLayoutConstraint.deactivate([
+                    self.stackView.bottomAnchor.constraint(equalTo: self.primaryButton.topAnchor, constant: hadLabelInStackView ? -20 : -32)
+                ])
+                NSLayoutConstraint.activate([
+                    self.stackView.bottomAnchor.constraint(equalTo: self.primaryButton.topAnchor, constant: hasLabelInStackView ? -20 : -32)
+                ])
+            }
         }
     }
 
@@ -485,7 +495,7 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
             primaryButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -configuration.appearance.formInsets.trailing),
 
             stackView.topAnchor.constraint(equalTo: view.topAnchor),
-            stackView.bottomAnchor.constraint(equalTo: primaryButton.topAnchor, constant: -20),
+            stackView.bottomAnchor.constraint(equalTo: primaryButton.topAnchor, constant: mandateView.attributedText == nil && errorLabel.text == nil ? -32 : -20),
             primaryButton.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -configuration.appearance.formInsets.bottom),
         ])
     }
