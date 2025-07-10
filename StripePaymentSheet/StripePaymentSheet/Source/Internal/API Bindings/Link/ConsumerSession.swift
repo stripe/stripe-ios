@@ -99,7 +99,7 @@ extension ConsumerSession {
     class func lookupSession(
         for email: String?,
         emailSource: EmailSource?,
-        sessionID: String,
+        sessionID: String?,
         with apiClient: STPAPIClient = STPAPIClient.shared,
         cookieStore: LinkCookieStore = LinkSecureCookieStore.shared,
         useMobileEndpoints: Bool,

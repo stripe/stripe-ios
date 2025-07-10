@@ -23,15 +23,6 @@ final class LinkSignUpController {
         case attestationError
     }
 
-    enum Style {
-        /// (default)  Link sign up controller will automatically switch between light and dark mode compatible colors based on device settings.
-        case automatic
-        /// Link sign up controller will always use colors appropriate for light mode UI.
-        case alwaysLight
-        /// Link sign up controller will always use colors appropriate for dark mode UI.
-        case alwaysDark
-    }
-
     typealias CompletionBlock = (SignUpResult) -> Void
 
     private var completion: CompletionBlock?
@@ -42,9 +33,9 @@ final class LinkSignUpController {
     init(
         accountService: LinkAccountServiceProtocol,
         linkAccount: PaymentSheetLinkAccount?,
-        country: String?,
+        country: String? = nil,
         defaultBillingDetails: PaymentSheet.BillingDetails = PaymentSheet.BillingDetails(),
-        style: Style = .automatic
+        style: LinkStyle = .automatic
     ) {
         self.signUpViewController = LinkSignUpViewController(
             accountService: accountService,
@@ -54,13 +45,7 @@ final class LinkSignUpController {
         )
         signUpViewController.delegate = self
 
-        let paymentSheetStyle: PaymentSheet.UserInterfaceStyle
-        switch style {
-        case .automatic: paymentSheetStyle = .automatic
-        case .alwaysLight: paymentSheetStyle = .alwaysLight
-        case .alwaysDark: paymentSheetStyle = .alwaysDark
-        }
-        paymentSheetStyle.configure(signUpViewController)
+        style.asPaymentSheetStyle.configure(signUpViewController)
     }
 
     func present(

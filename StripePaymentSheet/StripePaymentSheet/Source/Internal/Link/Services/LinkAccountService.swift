@@ -39,7 +39,7 @@ final class LinkAccountService: LinkAccountServiceProtocol {
 
     let apiClient: STPAPIClient
     let cookieStore: LinkCookieStore
-    let sessionID: String
+    let sessionID: String?
     let useMobileEndpoints: Bool
 
     /// The default cookie store used by new instances of the service.
@@ -57,7 +57,7 @@ final class LinkAccountService: LinkAccountServiceProtocol {
         apiClient: STPAPIClient = .shared,
         cookieStore: LinkCookieStore = defaultCookieStore,
         useMobileEndpoints: Bool,
-        sessionID: String
+        sessionID: String?
     ) {
         self.apiClient = apiClient
         self.cookieStore = cookieStore
@@ -68,7 +68,7 @@ final class LinkAccountService: LinkAccountServiceProtocol {
     func lookupAccount(
         withEmail email: String?,
         emailSource: EmailSource,
-        doNotLogConsumerFunnelEvent: Bool,
+        doNotLogConsumerFunnelEvent: Bool = false,
         completion: @escaping (Result<PaymentSheetLinkAccount?, Error>) -> Void
     ) {
         guard LinkEmailHelper.canLookupEmail(email) else {

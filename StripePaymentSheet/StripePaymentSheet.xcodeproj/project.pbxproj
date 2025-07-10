@@ -158,6 +158,8 @@
 		495D531E2DF7640D008B92F9 /* LinkButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 495D531D2DF7640D008B92F9 /* LinkButton.swift */; };
 		495D53202DF7678A008B92F9 /* LinkButtonViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 495D531F2DF7678A008B92F9 /* LinkButtonViewModel.swift */; };
 		4965A7132D9D8D3700DC2E3C /* LinkGlobalHoldback.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4965A7122D9D8D3700DC2E3C /* LinkGlobalHoldback.swift */; };
+		496961C22E20145100D824C1 /* LinkAuthenticationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 496961C12E20145100D824C1 /* LinkAuthenticationController.swift */; };
+		496961C42E2014DF00D824C1 /* LinkStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 496961C32E2014DF00D824C1 /* LinkStyle.swift */; };
 		497713042D9D8E1200DB5CB2 /* PaymentSheetAnalytics+Experiments.swift in Sources */ = {isa = PBXBuildFile; fileRef = 497713032D9D8E1200DB5CB2 /* PaymentSheetAnalytics+Experiments.swift */; };
 		49803444CD948F1ED28FF021 /* PaymentSheetFormFactory+FormSpec.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD7A1EFF100C589FDFF4D516 /* PaymentSheetFormFactory+FormSpec.swift */; };
 		498BF1722D92FF6A006E866B /* FCLiteImplementation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 498BF1712D92FF6A006E866B /* FCLiteImplementation.swift */; };
@@ -644,6 +646,8 @@
 		495D531D2DF7640D008B92F9 /* LinkButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LinkButton.swift; sourceTree = "<group>"; };
 		495D531F2DF7678A008B92F9 /* LinkButtonViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LinkButtonViewModel.swift; sourceTree = "<group>"; };
 		4965A7122D9D8D3700DC2E3C /* LinkGlobalHoldback.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LinkGlobalHoldback.swift; sourceTree = "<group>"; };
+		496961C12E20145100D824C1 /* LinkAuthenticationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LinkAuthenticationController.swift; sourceTree = "<group>"; };
+		496961C32E2014DF00D824C1 /* LinkStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LinkStyle.swift; sourceTree = "<group>"; };
 		497713032D9D8E1200DB5CB2 /* PaymentSheetAnalytics+Experiments.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "PaymentSheetAnalytics+Experiments.swift"; sourceTree = "<group>"; };
 		498BF1712D92FF6A006E866B /* FCLiteImplementation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FCLiteImplementation.swift; sourceTree = "<group>"; };
 		49909A152D8AF9760031EC33 /* FinancialConnectionsLite.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FinancialConnectionsLite.swift; sourceTree = "<group>"; };
@@ -1853,6 +1857,8 @@
 				313D00C72CD9972F00A8E6B0 /* PayWithNativeLinkController.swift */,
 				5DCFBC65AF58423E0E8DD04A /* PayWithLinkController.swift */,
 				CBC98E212DD53F9D00458788 /* LinkFlowControllerHelpers.swift */,
+				496961C12E20145100D824C1 /* LinkAuthenticationController.swift */,
+				496961C32E2014DF00D824C1 /* LinkStyle.swift */,
 			);
 			path = Link;
 			sourceTree = "<group>";
@@ -2379,6 +2385,7 @@
 				3CB64564D5B6F092A2A3A5BE /* STPPaymentMethodParams+PaymentSheet.swift in Sources */,
 				05B61641310A9775D40C1775 /* String+Localized.swift in Sources */,
 				AAF2AFF4B9A935B2A3FD52EA /* String+StripePaymentSheet.swift in Sources */,
+				496961C42E2014DF00D824C1 /* LinkStyle.swift in Sources */,
 				F70BCDEECB5863244085F12F /* BoolReference.swift in Sources */,
 				49E908B32DDE107600D5BDBF /* LinkABTest.swift in Sources */,
 				8B1D7A7CE7D50382E9FA77E3 /* Images.swift in Sources */,
@@ -2619,6 +2626,7 @@
 				CB46EF4B2CED1BDA00E9A7F2 /* PromoBadgeView.swift in Sources */,
 				9BFC22175CF85F58B8B8792A /* AfterpayPriceBreakdownView.swift in Sources */,
 				A3B2F2BA2CF134B500C0E88C /* SavedPaymentMethodFormFactory+SEPADebit.swift in Sources */,
+				496961C22E20145100D824C1 /* LinkAuthenticationController.swift in Sources */,
 				4926B9E22D9C66250049A43E /* ExperimentData.swift in Sources */,
 				EA712D67C03385B9AD80288C /* Appearance+FontScaling.swift in Sources */,
 				B667BF0B2BF2B7C60050EFD8 /* RowButton.swift in Sources */,
