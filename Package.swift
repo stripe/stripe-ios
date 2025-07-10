@@ -170,7 +170,6 @@ let package = Package(
             name: "StripeCryptoOnramp",
             dependencies: ["StripeCore"],
             path: "StripeCryptoOnramp/StripeCryptoOnramp",
-            exclude: ["Info.plist"],
             resources: [
                 .process("Resources")
             ]
