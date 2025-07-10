@@ -485,7 +485,7 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
             primaryButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -configuration.appearance.formInsets.trailing),
 
             stackView.topAnchor.constraint(equalTo: view.topAnchor),
-            stackView.bottomAnchor.constraint(equalTo: primaryButton.topAnchor, constant: -32),
+            stackView.bottomAnchor.constraint(equalTo: primaryButton.topAnchor, constant: -20),
             primaryButton.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -configuration.appearance.formInsets.bottom),
         ])
     }
