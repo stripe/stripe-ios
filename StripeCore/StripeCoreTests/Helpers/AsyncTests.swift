@@ -139,6 +139,16 @@ class AsyncTests: XCTestCase {
         promise.fullfill(with: .success(42))
         wait(for: [expectation], timeout: 1.0)
     }
+    
+    func testPromiseResolvedImmediatelyEdgecase() {
+        // This caused an EXC_BAD_ACCESS in a previous implementation of Async.swift that didn't make the Future's `result` property threadsafe
+        var i = 0
+        while i < 1000 {
+            let promise = Promise<Int>(error: NSError(domain: "", code: 0))
+            promise.resolve(with: 42)
+            i += 1
+        }
+    }
 }
 
 private extension Result {
