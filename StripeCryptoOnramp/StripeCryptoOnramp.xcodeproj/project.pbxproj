@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		0B34E23F2E2020E20072FC89 /* StripeCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0B34E23E2E2020E20072FC89 /* StripeCore.framework */; };
 		0B4292912E1EC57700012FB8 /* StripeCryptoOnramp.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0B4292852E1EC57600012FB8 /* StripeCryptoOnramp.framework */; };
+		0B5109912E202985000D678B /* Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 0B5109902E202985000D678B /* Info.plist */; };
 		0B83D9802E1EF6D2004F0115 /* Project-Debug.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 0B83D9752E1EF6D2004F0115 /* Project-Debug.xcconfig */; };
 		0B83D9812E1EF6D2004F0115 /* Project-Release.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 0B83D9762E1EF6D2004F0115 /* Project-Release.xcconfig */; };
 		0B83D9832E1EF6D2004F0115 /* StripeiOS Tests-Debug.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 0B83D9782E1EF6D2004F0115 /* StripeiOS Tests-Debug.xcconfig */; };
@@ -36,6 +37,7 @@
 		0B34E23E2E2020E20072FC89 /* StripeCore.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = StripeCore.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		0B4292852E1EC57600012FB8 /* StripeCryptoOnramp.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = StripeCryptoOnramp.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		0B4292902E1EC57700012FB8 /* StripeCryptoOnrampTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = StripeCryptoOnrampTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		0B5109902E202985000D678B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		0B83D9752E1EF6D2004F0115 /* Project-Debug.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "Project-Debug.xcconfig"; sourceTree = "<group>"; };
 		0B83D9762E1EF6D2004F0115 /* Project-Release.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "Project-Release.xcconfig"; sourceTree = "<group>"; };
 		0B83D9782E1EF6D2004F0115 /* StripeiOS Tests-Debug.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "StripeiOS Tests-Debug.xcconfig"; sourceTree = "<group>"; };
@@ -124,6 +126,7 @@
 				0B83D98C2E1EF6EF004F0115 /* Source */,
 				0B83D98D2E1EF6EF004F0115 /* StripeCryptoOnramp.h */,
 				0B83D98E2E1EF6EF004F0115 /* Docs.docc */,
+				0B5109902E202985000D678B /* Info.plist */,
 			);
 			path = StripeCryptoOnramp;
 			sourceTree = "<group>";
@@ -266,6 +269,7 @@
 				0B83D9842E1EF6D2004F0115 /* StripeiOS Tests-Release.xcconfig in Resources */,
 				0B83D9862E1EF6D2004F0115 /* StripeiOS-Debug.xcconfig in Resources */,
 				0B83D9872E1EF6D2004F0115 /* StripeiOS-Release.xcconfig in Resources */,
+				0B5109912E202985000D678B /* Info.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -446,7 +450,7 @@
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				ENABLE_MODULE_VERIFIER = YES;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				INFOPLIST_FILE = StripeCryptoOnramp/StripeCryptoOnramp/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -479,7 +483,7 @@
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				ENABLE_MODULE_VERIFIER = YES;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				INFOPLIST_FILE = StripeCryptoOnramp/StripeCryptoOnramp/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
