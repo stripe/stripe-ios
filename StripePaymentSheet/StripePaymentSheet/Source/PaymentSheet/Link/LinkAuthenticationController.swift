@@ -16,8 +16,6 @@ import UIKit
         case completed
         /// Authentication was canceled by the user.
         case canceled
-        /// Authentication failed due to an unrecoverable error.
-        case failed(Error)
     }
 
     @_spi(STP) public enum LinkAuthenticationError: Error {
