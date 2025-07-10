@@ -17,7 +17,7 @@
 		0B83D9872E1EF6D2004F0115 /* StripeiOS-Release.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 0B83D97C2E1EF6D2004F0115 /* StripeiOS-Release.xcconfig */; };
 		0B83D9902E1EF6EF004F0115 /* StripeCryptoOnramp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B83D98B2E1EF6EF004F0115 /* StripeCryptoOnramp.swift */; };
 		0B83D9912E1EF6EF004F0115 /* Docs.docc in Sources */ = {isa = PBXBuildFile; fileRef = 0B83D98E2E1EF6EF004F0115 /* Docs.docc */; };
-		0B83D9922E1EF6EF004F0115 /* StripeCryptoOnramp.h in Headers */ = {isa = PBXBuildFile; fileRef = 0B83D98D2E1EF6EF004F0115 /* StripeCryptoOnramp.h */; };
+		0B83D9922E1EF6EF004F0115 /* StripeCryptoOnramp.h in Headers */ = {isa = PBXBuildFile; fileRef = 0B83D98D2E1EF6EF004F0115 /* StripeCryptoOnramp.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		0B83D9962E1EF6F8004F0115 /* StripeCryptoOnrampTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B83D9932E1EF6F8004F0115 /* StripeCryptoOnrampTests.swift */; };
 		0B83D99A2E1EF8B7004F0115 /* XCTest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0B83D9992E1EF8B7004F0115 /* XCTest.framework */; platformFilter = ios; };
 /* End PBXBuildFile section */
