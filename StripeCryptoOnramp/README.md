@@ -1,6 +1,6 @@
-# Stripe Onramp iOS SDK
+# Stripe Crypto Onramp iOS SDK
 
-StripeOnramp provides the ability to sign up/in a Link user with custom UI provided by the client.
+StripeCryptoOnramp provides the ability to sign up/in a Link user with custom UI provided by the client.
 
 ## Table of contents
 <!-- NOTE: Use case-sensitive anchor links for docc compatibility -->
@@ -35,5 +35,5 @@ Placeholder
 ## Manual linking
 
 If you link the Stripe Onramp library manually, use a version from our [releases](https://github.com/stripe/stripe-ios/releases) page and make sure to embed <ins>all</ins> of the following frameworks:
-- `StripeOnramp.xcframework`
+- `StripeCryptoOnramp.xcframework`
 - `StripeCore.xcframework`

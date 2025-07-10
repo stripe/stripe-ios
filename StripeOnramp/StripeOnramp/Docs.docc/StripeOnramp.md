@@ -1,3 +1,0 @@
-# ``StripeOnramp``
-
-Placeholder

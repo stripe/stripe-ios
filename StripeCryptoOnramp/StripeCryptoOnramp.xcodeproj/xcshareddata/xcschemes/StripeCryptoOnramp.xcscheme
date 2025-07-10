@@ -16,9 +16,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "0B4292842E1EC57600012FB8"
-               BuildableName = "StripeOnramp.framework"
-               BlueprintName = "StripeOnramp"
-               ReferencedContainer = "container:StripeOnramp.xcodeproj">
+               BuildableName = "StripeCryptoOnramp.framework"
+               BlueprintName = "StripeCryptoOnramp"
+               ReferencedContainer = "container:StripeCryptoOnramp.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -36,9 +36,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "0B42928F2E1EC57700012FB8"
-               BuildableName = "StripeOnrampTests.xctest"
-               BlueprintName = "StripeOnrampTests"
-               ReferencedContainer = "container:StripeOnramp.xcodeproj">
+               BuildableName = "StripeCryptoOnrampTests.xctest"
+               BlueprintName = "StripeCryptoOnrampTests"
+               ReferencedContainer = "container:StripeCryptoOnramp.xcodeproj">
             </BuildableReference>
          </TestableReference>
       </Testables>
@@ -64,9 +64,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "0B4292842E1EC57600012FB8"
-            BuildableName = "StripeOnramp.framework"
-            BlueprintName = "StripeOnramp"
-            ReferencedContainer = "container:StripeOnramp.xcodeproj">
+            BuildableName = "StripeCryptoOnramp.framework"
+            BlueprintName = "StripeCryptoOnramp"
+            ReferencedContainer = "container:StripeCryptoOnramp.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
    </ProfileAction>

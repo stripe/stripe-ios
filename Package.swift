@@ -45,8 +45,8 @@ let package = Package(
             targets: ["StripeConnect"]
         ),
         .library(
-            name: "StripeOnramp",
-            targets: ["StripeOnramp"]
+            name: "StripeCryptoOnramp",
+            targets: ["StripeCryptoOnramp"]
         )
     ],
     targets: [
@@ -167,9 +167,9 @@ let package = Package(
             path: "StripeConnect/StripeConnect"
         ),
         .target(
-            name: "StripeOnramp",
+            name: "StripeCryptoOnramp",
             dependencies: ["StripeCore"],
-            path: "StripeOnramp/StripeOnramp",
+            path: "StripeCryptoOnramp/StripeCryptoOnramp",
             exclude: ["Info.plist"],
             resources: [
                 .process("Resources")

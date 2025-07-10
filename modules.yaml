@@ -201,13 +201,13 @@ modules:
       - StripeCore
   size_report: true
 
-- podspec: StripeOnramp.podspec
-  scheme: StripeOnramp
-  framework_name: StripeOnramp
+- podspec: StripeCryptoOnramp.podspec
+  scheme: StripeCryptoOnramp
+  framework_name: StripeCryptoOnramp
   supports_catalyst: false
   docs:
-    output: docs/stripeonramp
-    readme: StripeOnramp/README.md
+    output: docs/stripecryptoonramp
+    readme: StripeCryptoOnramp/README.md
     include:
       - StripeCore
   size_report:
@@ -229,4 +229,4 @@ pod_push_order:
 - StripeCardScan.podspec
 - StripeFinancialConnections.podspec
 - StripeConnect.podspec
-- StripeOnramp.podspec
+- StripeCryptoOnramp.podspec

@@ -1,6 +1,6 @@
 //
-//  StripeOnramp.swift
-//  StripeOnramp
+//  StripeCryptoOnramp.swift
+//  StripeCryptoOnramp
 //
 //  Created by Michael Liberatore on 7/9/25.
 //
