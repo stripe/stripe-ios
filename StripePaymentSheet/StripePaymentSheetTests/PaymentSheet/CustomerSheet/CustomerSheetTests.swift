@@ -297,10 +297,16 @@ class CustomerSheetTests: APIStubbedTestCase {
                                           customerSessionClientSecretProvider: { return .init(customerId: "cus_123", clientSecret: "cuss_123") })
         let csDataSource = customerSheet.createCustomerSheetDataSource()!
         csDataSource.loadPaymentMethodInfo { result in
-            guard case .failure = result else {
+            guard case .failure(let error) = result else {
                 XCTFail()
                 return
             }
+            guard let psError = error as? PaymentSheetError,
+                  case .unknown(let debugDescription) = psError else {
+                XCTFail()
+                return
+            }
+            XCTAssertEqual(debugDescription, "Failed to claim customerSession")
             expectedFailure.fulfill()
         }
         wait(for: [expectedFailure], timeout: 5.0)

@@ -312,6 +312,13 @@ extension String.Localized {
         )
     }
 
+    static var satispay_mandate_text: String {
+        STPLocalizedString(
+            "By continuing, you authorize %@ to automatically debit your Satispay Balance on a recurring basis in accordance with your purchase or subscription plan.",
+            "Satispay mandate text"
+        )
+    }
+
     static var blik_confirm_payment: String {
         STPLocalizedString("Confirm the payment in your bank's app within %@ to complete the purchase.",
                            "Text for alert message when user needs to confirm payment in their banking app")
@@ -525,5 +532,9 @@ extension String.Localized {
             "Please choose a valid payment method.",
             "Error message that's displayed when you try to confirm a payment without a valid payment method"
        )
+    }
+
+    static var use_billing_address_for_shipping: String {
+        STPLocalizedString("Use billing address for shipping", "Label for checkbox in address form allowing user to use billing address")
     }
 }

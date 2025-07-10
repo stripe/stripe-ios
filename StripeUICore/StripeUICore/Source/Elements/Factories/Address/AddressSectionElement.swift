@@ -143,7 +143,7 @@ import UIKit
             )
         }
     }
-    var addressDetails: AddressDetails {
+    public var addressDetails: AddressDetails {
         let address = AddressDetails.Address(city: city?.text, country: selectedCountryCode, line1: line1?.text, line2: line2?.text, postalCode: postalCode?.text, state: state?.rawData)
         return .init(name: name?.text, phone: phone?.phoneNumber?.string(as: .e164), address: address)
     }
@@ -458,9 +458,13 @@ extension AddressSectionElement: ElementDelegate {
 }
 
 @_spi(STP) public extension AddressSectionElement.AddressDetails {
-    init(billingAddress: BillingAddress, phone: String?) {
+    init(
+        billingAddress: BillingAddress,
+        phone: String?,
+        name: String? = nil
+    ) {
         self.init(
-            name: billingAddress.name,
+            name: name ?? billingAddress.name,
             phone: phone,
             address: Address(
                 city: billingAddress.city,

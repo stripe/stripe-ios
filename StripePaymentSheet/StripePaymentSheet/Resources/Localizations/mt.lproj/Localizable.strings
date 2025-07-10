@@ -4,13 +4,13 @@
 
 "Add US bank account" = "Żid kont tal-bank ibbażat ġewwa l-Istati Uniti tal-Amerka";
 
-"Add a card" = "Żid kard";
+"Add a card" = "Żid karta";
 
 "Add a payment method" = "Żid metodu tal-pagament";
 
 "Add bank account" = "Żid kont tal-bank";
 
-"Add card" = "Żid kard";
+"Add card" = "Żid karta";
 
 "Add new card" = "Żid karta ġdida";
 
@@ -50,7 +50,7 @@
 
 "By continuing to Amazon Pay, you allow %@ to charge your Amazon Pay account for future payments in accordance with their terms." = "Meta tkompli għal fuq Amazon Pay, tkun qed tagħti permess lil %@ biex fil-ġejjieni tiġbor il-pagamenti mill-kont Amazon Pay tiegħek skont ir-regoli tagħha.";
 
-"By continuing to Klarna, you allow %@ to charge your Klarna account for future payments in accordance with their terms and Klarna's terms. You can change this at any time in your Klarna app or by reaching out to %@." = "Meta tkompli għal fuq Klarna, tkun qed tagħti permess lil %1$@ biex jiċċarġjaw il-kont ta' Klarna tiegħek għal pagamenti futuri skont it-termini tagħhom u ta' Klarna. Dan tista' tibdlu fi kwalunkwe ħin fl-app ta' Klarna billi tikkuntattja lil %2$@.";
+"By continuing to Klarna, you allow %@ to charge your Klarna account for future payments in accordance with their terms and Klarna's terms. You can change this at any time in your Klarna app or by reaching out to %@." = "Meta tkompli għal Klarna, tkun qed tagħti permess lil %1$@ biex fil-ġejjieni tiġbor il-pagamenti mill-kont Klarna tiegħek skont ir-regoli tagħha u ta' Klarna. Tista' tibdel dal-permess meta trid mill-app ta' Klarna tiegħek jew billi tikkuntattja lil %2$@.";
 
 "By continuing to PayPal, you allow %@ to charge your PayPal account for future payments in accordance with their terms." = "Meta tkompli għal PayPal tkun qed tħalli lil %@ tiġbor il-flus mill-kont ta' PayPal tiegħek għall-pagamenti tal-ġejjieni skont ir-regoli tagħha.";
 
@@ -62,7 +62,7 @@
 
 "By continuing, you authorize %@ to debit your Cash App account for this payment and future payments in accordance with %@'s terms, until this authorization is revoked. You can change this anytime in your Cash App Settings." = "Meta tkompli tkun qed tagħti permess lil %1$@ biex, sakemm dal-permess jitneħħa, tkun tista' tiġbor il-flus mill-kont Cash App tiegħek għal dal-pagament u għall-pagamenti tal-ġejjieni skont ir-regoli ta' %2$@. Tista' tibdel dil-ħaġa meta trid mill-Għażliet ta' Cash App.";
 
-"By joining Link, you agree to the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Meta tingħaqad ma' Link tkun qed taqbel mat-<terms>Termini</terms> u l-<privacy>Politika tal-Privatezza</privacy>.";
+"By joining Link, you agree to the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Meta tingħaqad ma' Link tkun qed taqbel mar-<terms>Regoli</terms> u l-<privacy>Politika tal-Privatezza</privacy>.";
 
 "By providing phone number and email, you agree to create a Link account subject to the Link <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Meta tagħtina n-numru tal-mowbajl u l-indirizz tal-email, tkun qed taqbel li toħloq kont Link skont ir-<terms>Regoli</terms> u l-<privacy>Politika tal-Privatezza</privacy> ta' Link.";
 
@@ -70,7 +70,7 @@
 
 "By providing your email, you agree to create a Link account and save your payment info to Link, according to the Link <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Meta tagħti l-indirizz tal-email tiegħek, tkun qed taqbel li toħloq kont Link u li terfa' l-informazzjoni tal-pagament tiegħek ma' Link, skont ir-<terms>Regoli</terms> u l-<privacy>Politika tal-Privatezza</privacy> ta' Link.";
 
-"By providing your payment information and confirming this payment, you authorise (A) %@ and Stripe, our payment service provider, to send instructions to your bank to debit your account and (B) your bank to debit your account in accordance with those instructions. As part of your rights, you are entitled to a refund from your bank under the terms and conditions of your agreement with your bank. A refund must be claimed within 8 weeks starting from the date on which your account was debited. Your rights are explained in a statement that you can obtain from your bank. You agree to receive notifications for future debits up to 2 days before they occur." = "Meta tagħti l-informazzjoni tal-pagament tiegħek u tikkonferma dan il-pagament, tkun qed tawtorizza lil (A) %@ u lil Stripe, l-operatur tas-servizz tal-pagamenti tagħna, biex jibagħtu struzzjonijiet lill-bank tiegħek biex jieħu l-fondi mill-kont tiegħek u (B) lill-bank tiegħek biex jieħu l-fondi mill-kont tiegħek skont dawn l-istruzzjonijiet. Bħala parti mid-drittijiet tiegħek, inti għandek dritt għall-ħlas lura mill-bank tiegħek skont it-termini u l-kundizzjonijiet tal-ftehim tiegħek mal-bank tiegħek. Ħlas lura għandu jintalab fi żmien 8 ġimgħat, li jibdew jgħoddu mid-data li fiha l-fondi jittieħdu mill-kont tiegħek. Id-drittijiet tiegħek huma spjegati f'dikjarazzjoni li tista' tikseb mingħand il-bank tiegħek. Inti taqbel li, sa jumejn qabel, tirċievi notifika kull darba li l-fondi jkunu se jittieħdu mill-kont tiegħek.";
+"By providing your payment information and confirming this payment, you authorise (A) %@ and Stripe, our payment service provider, to send instructions to your bank to debit your account and (B) your bank to debit your account in accordance with those instructions. As part of your rights, you are entitled to a refund from your bank under the terms and conditions of your agreement with your bank. A refund must be claimed within 8 weeks starting from the date on which your account was debited. Your rights are explained in a statement that you can obtain from your bank. You agree to receive notifications for future debits up to 2 days before they occur." = "Meta tagħti l-informazzjoni tal-pagament tiegħek u tikkonferma dan il-pagament, tkun qed tawtorizza lil (A) %@ u lil Stripe, l-operatur tas-servizz tal-pagamenti tagħna, biex jibagħtu struzzjonijiet lill-bank tiegħek biex jieħu l-fondi mill-kont tiegħek u (B) lill-bank tiegħek biex jieħu l-fondi mill-kont tiegħek skont dawn l-istruzzjonijiet. Bħala parti mid-drittijiet tiegħek, inti għandek dritt għall-ħlas lura mill-bank tiegħek skont ir-regoli u l-kundizzjonijiet tal-ftehim tiegħek mal-bank tiegħek. Ħlas lura għandu jintalab fi żmien 8 ġimgħat, li jibdew jgħoddu mid-data li fiha l-fondi jittieħdu mill-kont tiegħek. Il-jeddijiet tiegħek imfissra fi stqarrija li tista' tikseb mingħand il-bank tiegħek. Int taqbel li, sa jumejn qabel, tikseb tagħrif kull darba li l-fondi jkunu se jittieħdu mill-kont tiegħek.";
 
 "By providing your phone number, you agree to create a Link account and save your payment info to Link, according to the Link <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Meta tagħti n-numru tal-mowbajl tiegħek, tkun qed taqbel li toħloq kont Link u li terfa' l-informazzjoni tal-pagament tiegħek ma' Link, skont ir-<terms>Regoli</terms> u l-<privacy>Politika tal-Privatezza</privacy> ta' Link.";
 
@@ -86,7 +86,7 @@
 
 "Choose a payment method" = "Agħżel metodu tal-ħlas";
 
-"Close card scanner" = "Agħlaq l-iskenner tal-kard";
+"Close card scanner" = "Agħlaq l-iskenner tal-karta";
 
 "Code sent" = "Il-kodiċi ntbagħat";
 
@@ -172,7 +172,7 @@
 
 "Or pay using" = "Jew ħallas bil-";
 
-"Or pay with a card" = "Jew ħallas bil-kard";
+"Or pay with a card" = "Jew ħallas bil-karta";
 
 "Or use" = "Jew uża";
 
@@ -202,7 +202,7 @@
 
 "Please go back and select another payment method" = "Jekk jogħġbok mur lura u agħżel metodu tal-pagament ieħor";
 
-"Point the camera at your card." = "Dawwar il-kamera lejn il-kard tiegħek.";
+"Point the camera at your card." = "Ipponta l-kamera lejn il-karta tiegħek.";
 
 "Processing..." = "Qed jiġi pproċessat...";
 

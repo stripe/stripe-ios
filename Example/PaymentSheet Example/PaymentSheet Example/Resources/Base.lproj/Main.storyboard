@@ -90,8 +90,16 @@
                                             <segue destination="jqF-43-4W3" kind="show" id="I4Q-i5-Ogf"/>
                                         </connections>
                                     </button>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" id="NEW-LINK-BTN" userLabel="LinkStandaloneComponent">
+                                        <rect key="frame" x="89" y="108" width="220" height="0.0"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <state key="normal" title="Link Standalone Component"/>
+                                        <connections>
+                                            <segue destination="AjW-Xm-4P3" kind="show" destinationCreationSelector="showLinkStandaloneComponent:" id="NEW-LINK-SEGUE"/>
+                                        </connections>
+                                    </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" id="ZXq-dE-S2O" userLabel="EmbeddedPaymentElement">
-                                        <rect key="frame" x="104" y="108" width="190" height="0.0"/>
+                                        <rect key="frame" x="104" y="120" width="190" height="0.0"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <state key="normal" title="EmbeddedPaymentElement"/>
                                         <connections>
@@ -99,7 +107,7 @@
                                         </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" id="ExN-w7-ZQf" userLabel="EmbeddedPaymentElement (SwiftUI)">
-                                        <rect key="frame" x="72" y="120" width="254" height="0.0"/>
+                                        <rect key="frame" x="72" y="132" width="254" height="0.0"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <state key="normal" title="EmbeddedPaymentElement (SwiftUI)"/>
                                         <connections>
@@ -107,7 +115,7 @@
                                         </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" id="8uB-H8-3cZ" userLabel="WalletButtonsView (SwiftUI)">
-                                        <rect key="frame" x="102.5" y="132" width="193" height="0.0"/>
+                                        <rect key="frame" x="102.5" y="144" width="193" height="0.0"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <state key="normal" title="WalletButtonsView (SwiftUI)"/>
                                         <connections>
@@ -115,13 +123,13 @@
                                         </connections>
                                     </button>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Test Playgrounds" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="5HP-ay-2IP" userLabel="Test playgrounds">
-                                        <rect key="frame" x="133.5" y="144" width="131" height="0.0"/>
+                                        <rect key="frame" x="133.5" y="156" width="131" height="0.0"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                         <nil key="textColor"/>
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" id="or6-aq-0to">
-                                        <rect key="frame" x="84.5" y="156" width="229" height="0.0"/>
+                                        <rect key="frame" x="84.5" y="168" width="229" height="0.0"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <state key="normal" title="CustomerSheet (test playground)"/>
                                         <connections>
@@ -129,7 +137,7 @@
                                         </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" id="ynH-6g-uwR">
-                                        <rect key="frame" x="88" y="168" width="222" height="12"/>
+                                        <rect key="frame" x="88" y="180" width="222" height="12"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <state key="normal" title="PaymentSheet (test playground)"/>
                                         <connections>
@@ -175,7 +183,7 @@
         <!--Checkout (Complete)-->
         <scene sceneID="fm7-ai-ZPG">
             <objects>
-                <viewController id="ViG-Ud-ejY" userLabel="Checkout (Complete)" customClass="ExampleCheckoutViewController" customModule="PaymentSheetExample" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="ExampleCheckoutViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="ViG-Ud-ejY" userLabel="Checkout (Complete)" customClass="ExampleCheckoutViewController" customModule="PaymentSheetExample" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="HhX-SV-zhW">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -468,7 +476,7 @@
         <!--Checkout (Custom)-->
         <scene sceneID="QR4-jL-qym">
             <objects>
-                <viewController id="My4-RU-qnC" userLabel="Checkout (Custom)" customClass="ExampleCustomCheckoutViewController" customModule="PaymentSheetExample" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="ExampleCustomCheckoutViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="My4-RU-qnC" userLabel="Checkout (Custom)" customClass="ExampleCustomCheckoutViewController" customModule="PaymentSheetExample" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="0zh-P5-QSM">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -825,7 +833,7 @@
         <!--PaymentSheet.FlowController (Deferred)-->
         <scene sceneID="ejG-PH-rfd">
             <objects>
-                <viewController id="Gh7-vw-dR9" userLabel="PaymentSheet.FlowController (Deferred)" customClass="ExampleCustomDeferredCheckoutViewController" customModule="PaymentSheetExample" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="ExampleCustomDeferredCheckoutViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="Gh7-vw-dR9" userLabel="PaymentSheet.FlowController (Deferred)" customClass="ExampleCustomDeferredCheckoutViewController" customModule="PaymentSheetExample" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="vbN-l1-Fy9">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -1209,7 +1217,7 @@
         <!--PaymentSheet (Deferred)-->
         <scene sceneID="mO0-22-dTC">
             <objects>
-                <viewController id="Rd2-MU-RV5" userLabel="PaymentSheet (Deferred)" customClass="ExampleDeferredCheckoutViewController" customModule="PaymentSheetExample" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="ExampleDeferredCheckoutViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="Rd2-MU-RV5" userLabel="PaymentSheet (Deferred)" customClass="ExampleDeferredCheckoutViewController" customModule="PaymentSheetExample" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="HA4-PB-bqH">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -1551,7 +1559,7 @@
         <!--Checkout (Custom)-->
         <scene sceneID="r8R-dv-x3u">
             <objects>
-                <viewController id="jqF-43-4W3" userLabel="Checkout (Custom)" customClass="ExampleLinkPaymentCheckoutViewController" customModule="PaymentSheetExample" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="ExampleLinkPaymentCheckoutViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="jqF-43-4W3" userLabel="Checkout (Custom)" customClass="ExampleLinkPaymentCheckoutViewController" customModule="PaymentSheetExample" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="vNl-rj-Cqk">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -1925,7 +1933,7 @@
         <!--Embedded Example-->
         <scene sceneID="sBF-Wb-BlW">
             <objects>
-                <viewController id="Y7b-Za-B0P" userLabel="Embedded Example" customClass="ExampleEmbeddedElementCheckoutViewController" customModule="PaymentSheetExample" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="ExampleEmbeddedElementCheckoutViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="Y7b-Za-B0P" userLabel="Embedded Example" customClass="ExampleEmbeddedElementCheckoutViewController" customModule="PaymentSheetExample" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="VQB-C7-GPu">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -2317,22 +2325,22 @@
             <color white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
         </systemColor>
         <systemColor name="opaqueSeparatorColor">
-            <color red="0.77647058823529413" green="0.77647058823529413" blue="0.78431372549019607" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <color red="0.77647058820000003" green="0.77647058820000003" blue="0.7843137255" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>
         <systemColor name="secondaryLabelColor">
-            <color red="0.23529411764705882" green="0.23529411764705882" blue="0.2627450980392157" alpha="0.59999999999999998" colorSpace="custom" customColorSpace="sRGB"/>
+            <color red="0.23529411759999999" green="0.23529411759999999" blue="0.26274509800000001" alpha="0.59999999999999998" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>
         <systemColor name="secondarySystemBackgroundColor">
-            <color red="0.94901960784313721" green="0.94901960784313721" blue="0.96862745098039216" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <color red="0.94901960780000005" green="0.94901960780000005" blue="0.96862745100000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
         </systemColor>
         <systemColor name="systemBlueColor">
-            <color red="0.0" green="0.47843137254901963" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <color red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>
         <systemColor name="systemGray4Color">
-            <color red="0.81960784313725488" green="0.81960784313725488" blue="0.83921568627450982" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <color red="0.81960784310000001" green="0.81960784310000001" blue="0.83921568629999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>
     </resources>
 </document>

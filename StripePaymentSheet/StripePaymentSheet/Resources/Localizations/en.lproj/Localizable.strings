@@ -92,6 +92,9 @@
 /* Text providing link to terms for ACH payments */
 "By continuing, you agree to authorize payments pursuant to <terms>these terms</terms>." = "By continuing, you agree to authorize payments pursuant to <terms>these terms</terms>.";
 
+/* Satispay mandate text */
+"By continuing, you authorize %@ to automatically debit your Satispay Balance on a recurring basis in accordance with your purchase or subscription plan." = "By continuing, you authorize %@ to automatically debit your Satispay Balance on a recurring basis in accordance with your purchase or subscription plan.";
+
 /* Cash App mandate text */
 "By continuing, you authorize %@ to debit your Cash App account for this payment and future payments in accordance with %@'s terms, until this authorization is revoked. You can change this anytime in your Cash App Settings." = "By continuing, you authorize %1$@ to debit your Cash App account for this payment and future payments in accordance with %2$@'s terms, until this authorization is revoked. You can change this anytime in your Cash App Settings.";
 
@@ -445,6 +448,9 @@ the heading the screen itself. */
 
 /* Accessibility label for a button that leads to a screen for updating a payment method. */
 "Update payment method" = "Update payment method";
+
+/* Label for checkbox in address form allowing user to use billing address */
+"Use billing address for shipping" = "Use billing address for shipping";
 
 /* Two factor authentication screen heading */
 "Use your saved info to check out faster" = "Use your saved info to check out faster";

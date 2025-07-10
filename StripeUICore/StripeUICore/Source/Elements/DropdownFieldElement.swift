@@ -132,6 +132,24 @@ import UIKit
     private var previouslySelectedIndex: Int
     private let disableDropdownWithSingleElement: Bool
     private let isOptional: Bool
+    // Indicates if this dropdown should start with no selection. When true, a placeholder item is automatically
+    // inserted at index 0 and selected by default so the user must actively make a choice.
+    private let startsEmpty: Bool
+
+    // MARK: Placeholder Helper
+    /// Returns `items`, optionally prepending a fresh placeholder when `startsEmpty` is true.
+    private func itemsWithOptionalPlaceholder(from items: [DropdownItem]) -> [DropdownItem] {
+        guard startsEmpty else { return items }
+        let placeholder = DropdownItem(
+            pickerDisplayName: NSAttributedString(string: ""),
+            labelDisplayName: NSAttributedString(string: ""),
+            accessibilityValue: "",
+            rawData: "",
+            isPlaceholder: true,
+            isDisabled: true
+        )
+        return [placeholder] + items
+    }
     lazy var pickerViewDelegate: PickerViewDelegate = { PickerViewDelegate(self) }()
 
     /**
@@ -148,30 +166,53 @@ import UIKit
      */
     public init(
         items: [DropdownItem],
-        defaultIndex: Int = 0,
+        defaultIndex: Int? = nil,
         label: String?,
         theme: ElementsAppearance = .default,
         hasPadding: Bool = true,
         disableDropdownWithSingleElement: Bool = false,
         isOptional: Bool = false,
+        startsEmpty: Bool = false,
         didUpdate: DidUpdateSelectedIndex? = nil
     ) {
         stpAssert(!items.filter { !$0.isDisabled }.isEmpty, "`items` must contain at least one non-disabled item; if this is a test, you might need to set AddressSpecProvider.shared.loadAddressSpecs")
 
         self.label = label
         self.theme = theme
-        self.items = items
         self.disableDropdownWithSingleElement = disableDropdownWithSingleElement
         self.isOptional = isOptional
+        self.startsEmpty = startsEmpty
         self.didUpdate = didUpdate
         self.hasPadding = hasPadding
 
-        // Default to defaultIndex, if in bounds
-        if defaultIndex < 0 || defaultIndex >= items.count {
-            self.selectedIndex = 0
-        } else {
-            self.selectedIndex = defaultIndex
-        }
+        let initialItems: [DropdownItem] = {
+            guard startsEmpty else { return items }
+            let placeholder = DropdownItem(
+                pickerDisplayName: NSAttributedString(string: ""),
+                labelDisplayName: NSAttributedString(string: ""),
+                accessibilityValue: "",
+                rawData: "",
+                isPlaceholder: true,
+                isDisabled: false
+            )
+            return [placeholder] + items
+        }()
+        self.items = initialItems
+
+        // Determine initial selection
+        let placeholders = initialItems.prefix { $0.isPlaceholder }.count
+        let selectedIndex: Int = {
+            if startsEmpty {
+                guard let defaultIndex else { return 0 }
+                let adjustedIndex = defaultIndex + placeholders
+                return (0..<initialItems.count).contains(adjustedIndex) ? adjustedIndex : 0
+            } else {
+                let idx = defaultIndex ?? 0
+                return (0..<initialItems.count).contains(idx) ? idx : 0
+            }
+        }()
+
+        self.selectedIndex = selectedIndex
         self.previouslySelectedIndex = selectedIndex
 
         if !items.isEmpty {
@@ -187,9 +228,10 @@ import UIKit
     public func update(items: [DropdownItem]) {
         assert(!items.isEmpty, "`items` must contain at least one item")
         // Try to re-select the same item after updating, if not possible default to the first item in the list
-        let newSelectedIndex = items.firstIndex(where: { $0.rawData == self.items[selectedIndex].rawData }) ?? 0
+        let withPlaceholder = itemsWithOptionalPlaceholder(from: items)
+        let newSelectedIndex = withPlaceholder.firstIndex(where: { $0.rawData == self.items[selectedIndex].rawData }) ?? (startsEmpty ? 0 : 0)
 
-        self.items = items
+        self.items = withPlaceholder
         self.select(index: newSelectedIndex, shouldAutoAdvance: false)
     }
 }
@@ -204,6 +246,7 @@ private extension DropdownFieldElement {
             (pickerView.menu?.children[selectedIndex] as? UIAction)?.state = .on
         }
         #else
+        // Update picker view selection directly using selectedIndex
         if pickerView.selectedRow(inComponent: 0) != selectedIndex {
             pickerView.reloadComponent(0)
             pickerView.selectRow(selectedIndex, inComponent: 0, animated: false)
@@ -212,6 +255,10 @@ private extension DropdownFieldElement {
 
         pickerFieldView.displayText = items[selectedIndex].labelDisplayName
         pickerFieldView.displayTextAccessibilityValue = items[selectedIndex].accessibilityValue
+
+        // Ensure the floating placeholder view updates immediately so the label doesn't overlap.
+        pickerFieldView.setNeedsLayout()
+        pickerFieldView.layoutIfNeeded()
     }
 
 }
@@ -220,6 +267,26 @@ private extension DropdownFieldElement {
 
 extension DropdownFieldElement: Element {
     public var collectsUserInput: Bool { true }
+
+    struct EmptySelectionError: ElementValidationError {
+        var localizedDescription: String = STPLocalizedString(
+            "Selection is empty.",
+            "Error message for empty dropdown selection."
+        )
+    }
+
+    public var validationState: ElementValidationState {
+        // If the field is optional, it's always valid even when empty.
+        if isOptional {
+            return .valid
+        }
+
+        // When the currently selected item is a placeholder, treat as invalid but don't display the error yet.
+        if items[selectedIndex].isPlaceholder {
+            return .invalid(error: EmptySelectionError(), shouldDisplay: false)
+        }
+        return .valid
+    }
 
     public var view: UIView {
         return pickerFieldView

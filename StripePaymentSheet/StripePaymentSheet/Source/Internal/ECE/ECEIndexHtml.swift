@@ -6,7 +6,17 @@
 struct ECEIndexHTML {
     let shopId: String
     let customerSessionClientSecret: String
-
+    var shopPayHTMLString: String {
+        return !shopId.isEmpty ?
+"""
+          paymentMethodOptions: {
+            shop_pay: {
+              shop_id: "\(shopId)",
+            },
+          },
+"""
+        : ""
+    }
     var ECEHTML: String {
 """
 <!DOCTYPE html>
@@ -43,6 +53,7 @@ struct ECEIndexHTML {
           payment_method_types: ["card", "link", "shop_pay"],
           customerSessionClientSecret: "\(customerSessionClientSecret)",
           __elementsInitSource: 'native_sdk',
+          \(shopPayHTMLString)
         };
 
       console.log("Initializing stripe elements with options", options);
@@ -80,7 +91,9 @@ struct ECEIndexHTML {
         ? options["captureMethod"]
         : "automatic";
         console.log("Ready to mount");
+
       expressCheckoutElement.mount("#express-checkout-element");
+
       //When expressCheckoutElement is mounted, ready event tries to show the available payment methods
       expressCheckoutElement.on("ready", ({ availablePaymentMethods }) => {
         const expressCheckoutDiv = document.getElementById(
@@ -91,7 +104,10 @@ struct ECEIndexHTML {
         } else {
           expressCheckoutDiv.style.visibility = "initial";
         }
-        expressCheckoutElement._sendNativeSdkClick({paymentMethodType: 'shop_pay'})
+
+        setTimeout(() => {
+            expressCheckoutElement._sendNativeSdkClick({paymentMethodType: 'shop_pay'})
+        }, 0)
       });
 
       expressCheckoutElement.on("click", async function (event) {

@@ -212,6 +212,9 @@ class PaymentSheetFormFactory {
             } else if paymentMethod == .amazonPay && isSettingUp {
                 // special case, display mandate for Amazon Pay when setting up or pi+sfu
                 additionalElements = [makeAmazonPayMandate()]
+            } else if paymentMethod == .satispay && isSettingUp {
+                // special case, display mandate for Satispay when setting up or pi+sfu
+                additionalElements = [makeSatispayMandate()]
             } else if paymentMethod == .bancontact {
                 return makeBancontact()
             } else if paymentMethod == .bacsDebit {
@@ -821,7 +824,7 @@ extension PaymentSheetFormFactory {
 
         let incentive = paymentMethodIncentive?.takeIfAppliesTo(paymentMethod)
 
-        return InstantDebitsPaymentMethodElement(
+        let element = InstantDebitsPaymentMethodElement(
             configuration: configuration,
             subtitleElement: titleElement,
             nameElement: nameElement,
@@ -832,6 +835,12 @@ extension PaymentSheetFormFactory {
             isPaymentIntent: isPaymentIntent,
             appearance: configuration.appearance
         )
+
+        if let linkedBank = previousCustomerInput?.instantDebitsLinkedBank {
+            element.setLinkedBank(linkedBank)
+        }
+
+        return element
     }
 
     private func makeUSBankAccountCopyLabel() -> SubtitleElement {

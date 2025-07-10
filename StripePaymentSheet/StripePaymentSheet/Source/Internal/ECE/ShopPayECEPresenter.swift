@@ -17,13 +17,17 @@ class ShopPayECEPresenter: NSObject, UIAdaptivePresentationControllerDelegate {
     private var confirmHandler: ((PaymentSheetResult) -> Void)?
     private var eceViewController: ECEViewController?
     private weak var presentingViewController: UIViewController?
+    private var didReceiveECEClick: Bool = false
+    private let analyticsHelper: PaymentSheetAnalyticsHelper
 
     init(
         flowController: PaymentSheet.FlowController,
-        configuration: PaymentSheet.ShopPayConfiguration
+        configuration: PaymentSheet.ShopPayConfiguration,
+        analyticsHelper: PaymentSheetAnalyticsHelper
     ) {
         self.flowController = flowController
         self.shopPayConfiguration = configuration
+        self.analyticsHelper = analyticsHelper
         super.init()
     }
 
@@ -34,6 +38,8 @@ class ShopPayECEPresenter: NSObject, UIAdaptivePresentationControllerDelegate {
             return
         }
         self.presentingViewController = viewController
+        analyticsHelper.logShopPayWebviewLoadAttempt()
+
         let eceVC = ECEViewController(apiClient: flowController.configuration.apiClient,
                                       shopId: shopPayConfiguration.shopId,
                                       customerSessionClientSecret: customerSessionClientSecret,
@@ -41,7 +47,13 @@ class ShopPayECEPresenter: NSObject, UIAdaptivePresentationControllerDelegate {
 
         eceVC.expressCheckoutWebviewDelegate = self
         self.eceViewController = eceVC
-        eceVC.modalPresentationStyle = .pageSheet
+
+        let transitionDelegate = FixedHeightTransitionDelegate(heightRatio: 0.85)
+        eceVC.transitioningDelegate = transitionDelegate
+        eceVC.modalPresentationStyle = .custom
+        eceVC.view.layer.cornerRadius = self.flowController.configuration.appearance.cornerRadius
+        eceVC.view.layer.maskedCorners = [.layerMinXMinYCorner, .layerMaxXMinYCorner]
+        eceVC.view.clipsToBounds = true
         viewController.present(eceVC, animated: true)
         eceVC.presentationController?.delegate = self
         // retain self while presented
@@ -53,6 +65,9 @@ class ShopPayECEPresenter: NSObject, UIAdaptivePresentationControllerDelegate {
 
     // If the sheet is pulled down
     func presentationControllerDidDismiss(_ presentationController: UIPresentationController) {
+        analyticsHelper.logShopPayWebviewCancelled(didReceiveECEClick: didReceiveECEClick)
+        self.eceViewController?.unloadWebview()
+        self.eceViewController = nil
         self.confirmHandler?(.canceled)
     }
 
@@ -68,6 +83,7 @@ class ShopPayECEPresenter: NSObject, UIAdaptivePresentationControllerDelegate {
 @available(iOS 16.0, *)
 extension ShopPayECEPresenter: ECEViewControllerDelegate {
     func didCancel() {
+        analyticsHelper.logShopPayWebviewCancelled(didReceiveECEClick: didReceiveECEClick)
         self.confirmHandler?(.canceled)
         dismissECE()
     }
@@ -112,7 +128,7 @@ extension ShopPayECEPresenter: ExpressCheckoutWebviewDelegate {
                                     id: rate.id,
                                     amount: rate.amount,
                                     displayName: rate.displayName,
-                                    deliveryEstimate: rate.deliveryEstimate.map { self.convertDeliveryEstimate($0) }
+                                    deliveryEstimate: self.convertDeliveryEstimate(rate.deliveryEstimate)
                                 )
                             },
                             applePay: nil,
@@ -143,7 +159,7 @@ extension ShopPayECEPresenter: ExpressCheckoutWebviewDelegate {
                         id: rate.id,
                         amount: rate.amount,
                         displayName: rate.displayName,
-                        deliveryEstimate: rate.deliveryEstimate.map { convertDeliveryEstimate($0) }
+                        deliveryEstimate: self.convertDeliveryEstimate(rate.deliveryEstimate)
                     )
                 },
                 applePay: nil,
@@ -179,7 +195,7 @@ extension ShopPayECEPresenter: ExpressCheckoutWebviewDelegate {
                                     id: rate.id,
                                     amount: rate.amount,
                                     displayName: rate.displayName,
-                                    deliveryEstimate: rate.deliveryEstimate.map { self.convertDeliveryEstimate($0) }
+                                    deliveryEstimate: self.convertDeliveryEstimate(rate.deliveryEstimate)
                                 )
                             },
                             applePay: nil,
@@ -210,7 +226,7 @@ extension ShopPayECEPresenter: ExpressCheckoutWebviewDelegate {
                         id: rate.id,
                         amount: rate.amount,
                         displayName: rate.displayName,
-                        deliveryEstimate: rate.deliveryEstimate.map { convertDeliveryEstimate($0) }
+                        deliveryEstimate: self.convertDeliveryEstimate(rate.deliveryEstimate)
                     )
                 },
                 applePay: nil,
@@ -222,6 +238,7 @@ extension ShopPayECEPresenter: ExpressCheckoutWebviewDelegate {
     }
 
     func eceView(_ eceView: ECEViewController, didReceiveECEClick event: [String: Any]) async throws -> [String: Any] {
+        didReceiveECEClick = true
         // Build the configuration for Shop Pay
         let clickConfig = ECEClickConfiguration(
             lineItems: shopPayConfiguration.lineItems.map { ECELineItem(name: $0.name, amount: $0.amount) },
@@ -230,7 +247,7 @@ extension ShopPayECEPresenter: ExpressCheckoutWebviewDelegate {
                     id: rate.id,
                     amount: rate.amount,
                     displayName: rate.displayName,
-                    deliveryEstimate: rate.deliveryEstimate.map { convertDeliveryEstimate($0) }
+                    deliveryEstimate: self.convertDeliveryEstimate(rate.deliveryEstimate)
                 )
             } : nil,
             applePay: nil
@@ -310,6 +327,8 @@ extension ShopPayECEPresenter: ExpressCheckoutWebviewDelegate {
                     }
                     preparePaymentMethodHandler(paymentMethod,
                                                 confirmData.shippingAddress?.toSTPAddress())
+                    // Log successful completion
+                    self.analyticsHelper.logShopPayWebviewConfirmSuccess()
                     // And then the PaymentSheet presentation handler
                     self.confirmHandler?(.completed)
                 }
@@ -331,19 +350,24 @@ extension ShopPayECEPresenter: ExpressCheckoutWebviewDelegate {
 
     // MARK: - Helper Functions
 
-    private func convertDeliveryEstimate(_ estimate: PaymentSheet.ShopPayConfiguration.DeliveryEstimate) -> ECEDeliveryEstimate {
-        // Convert to structured format
-        let structured = ECEStructuredDeliveryEstimate(
-            maximum: ECEDeliveryEstimateUnit(
-                unit: convertDeliveryUnit(estimate.maximum.unit),
-                value: estimate.maximum.value
-            ),
-            minimum: ECEDeliveryEstimateUnit(
-                unit: convertDeliveryUnit(estimate.minimum.unit),
-                value: estimate.minimum.value
-            )
-        )
-        return .structured(structured)
+    private func convertDeliveryEstimate(_ estimate: PaymentSheet.ShopPayConfiguration.DeliveryEstimate?) -> ECEDeliveryEstimate? {
+        guard let estimate else {
+            return nil
+        }
+        switch estimate {
+        case .unstructured(let deliveryEstimateString):
+            return ECEDeliveryEstimate.string(deliveryEstimateString)
+        case .structured(let minimum, let maximum):
+            var minimumEstimate: ECEDeliveryEstimateUnit?
+            if let minimum {
+                minimumEstimate = ECEDeliveryEstimateUnit(unit: convertDeliveryUnit(minimum.unit), value: minimum.value)
+            }
+            var maximumEstimate: ECEDeliveryEstimateUnit?
+            if let maximum {
+                maximumEstimate = ECEDeliveryEstimateUnit(unit: convertDeliveryUnit(maximum.unit), value: maximum.value)
+            }
+            return .structured(ECEStructuredDeliveryEstimate(maximum: maximumEstimate, minimum: minimumEstimate))
+        }
     }
 
     private func convertDeliveryUnit(_ unit: PaymentSheet.ShopPayConfiguration.DeliveryEstimate.DeliveryEstimateUnit.TimeUnit) -> ECEDeliveryEstimateUnit.DeliveryTimeUnit {

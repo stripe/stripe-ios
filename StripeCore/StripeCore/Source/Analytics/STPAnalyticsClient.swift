@@ -27,7 +27,19 @@ import UIKit
     @objc public static let sharedClient = STPAnalyticsClient()
     /// When this class logs a payload in an XCTestCase, it's added to `_testLogHistory` instead of being sent over the network.
     /// This is a hack - ideally, we inject a different analytics client in our tests. This is an escape hatch until we can make that (significant) refactor
-    public var _testLogHistory: [[String: Any]] = []
+    private var _testLogHistoryStorage: [[String: Any]] = []
+    public var _testLogHistory: [[String: Any]] {
+        get {
+            objc_sync_enter(self)
+            defer { objc_sync_exit(self) }
+            return _testLogHistoryStorage
+        }
+        set {
+            objc_sync_enter(self)
+            _testLogHistoryStorage = newValue
+            objc_sync_exit(self)
+        }
+    }
     public weak var delegate: STPAnalyticsClientDelegate?
 
     @objc public var productUsage: Set<String> = Set()
@@ -124,7 +136,9 @@ import UIKit
 
         // If in testing, don't log analytic, instead append payload to log history
         guard !STPAnalyticsClient.isUnitOrUITest else {
-            _testLogHistory.append(payload)
+            objc_sync_enter(self)
+            _testLogHistoryStorage.append(payload)
+            objc_sync_exit(self)
             return
         }
 

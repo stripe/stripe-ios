@@ -49,7 +49,7 @@ class ECEIntegrationTests: XCTestCase {
                     id: "standard",
                     amount: 1000,
                     displayName: "Standard Shipping",
-                    deliveryEstimate: PaymentSheet.ShopPayConfiguration.DeliveryEstimate(
+                    deliveryEstimate: PaymentSheet.ShopPayConfiguration.DeliveryEstimate.structured(
                         minimum: PaymentSheet.ShopPayConfiguration.DeliveryEstimate.DeliveryEstimateUnit(value: 3, unit: .business_day),
                         maximum: PaymentSheet.ShopPayConfiguration.DeliveryEstimate.DeliveryEstimateUnit(value: 5, unit: .business_day)
                     )
@@ -89,7 +89,8 @@ class ECEIntegrationTests: XCTestCase {
 
         presenter = ShopPayECEPresenter(
             flowController: flowController,
-            configuration: shopPayConfiguration
+            configuration: shopPayConfiguration,
+            analyticsHelper: analyticsHelper
         )
 
         presentingViewController = UIViewController()
@@ -250,7 +251,8 @@ class ECEIntegrationTests: XCTestCase {
 
         presenter = ShopPayECEPresenter(
             flowController: flowController,
-            configuration: configWithHandlers
+            configuration: configWithHandlers,
+            analyticsHelper: analyticsHelper
         )
         eceViewController.expressCheckoutWebviewDelegate = presenter
 
@@ -383,7 +385,8 @@ class ECEIntegrationTests: XCTestCase {
         )
         let presenterNoShipping = ShopPayECEPresenter(
             flowController: flowController2,
-            configuration: configNoShipping
+            configuration: configNoShipping,
+            analyticsHelper: analyticsHelper
         )
         let amount2 = presenterNoShipping.amountForECEView(eceViewController)
         XCTAssertEqual(amount2, 5000) // Just the item
@@ -411,7 +414,8 @@ class ECEIntegrationTests: XCTestCase {
         )
         let presenterMultiShipping = ShopPayECEPresenter(
             flowController: flowController3,
-            configuration: configMultiShipping
+            configuration: configMultiShipping,
+            analyticsHelper: analyticsHelper
         )
         let amount3 = presenterMultiShipping.amountForECEView(eceViewController)
         XCTAssertEqual(amount3, 1500) // 1000 + 500 (first shipping rate)
@@ -492,7 +496,8 @@ class ECEIntegrationTests: XCTestCase {
 
         let presenter = ShopPayECEPresenter(
             flowController: flowController,
-            configuration: shopPayConfiguration
+            configuration: shopPayConfiguration,
+            analyticsHelper: analyticsHelper
         )
 
         eceViewController.expressCheckoutWebviewDelegate = presenter
@@ -576,7 +581,8 @@ class ECEIntegrationTests: XCTestCase {
         )
         let presenterNoShipping = ShopPayECEPresenter(
             flowController: flowController2,
-            configuration: configNoShipping
+            configuration: configNoShipping,
+            analyticsHelper: analyticsHelper
         )
 
         // Configuration 3: Multiple shipping rates (should use first)
@@ -611,7 +617,8 @@ class ECEIntegrationTests: XCTestCase {
         )
         let presenterMultiShipping = ShopPayECEPresenter(
             flowController: flowController3,
-            configuration: configMultiShipping
+            configuration: configMultiShipping,
+            analyticsHelper: analyticsHelper
         )
 
         let mockECEVC = ECEViewController(apiClient: apiClient,

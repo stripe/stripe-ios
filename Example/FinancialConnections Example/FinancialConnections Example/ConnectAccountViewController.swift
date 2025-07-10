@@ -12,7 +12,7 @@ class ConnectAccountViewController: UIViewController {
 
     // MARK: - Constants
 
-    let baseURL = "https://v6q2rx-4000.csb.app"
+    let baseURL = "https://ios-financial-connections-playground.stripedemos.com"
     let financialConnectionsEndpoint = "/create_session"
 
     // MARK: - IBOutlets

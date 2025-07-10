@@ -63,7 +63,7 @@ final class FinancialConnectionsNetworkingUITests: XCTestCase {
         phoneTextFieldToolbarDoneButton.tap()
 
         let saveToLinkButon = app.buttons["networking_link_signup_footer_view.save_to_link_button"]
-        XCTAssertTrue(saveToLinkButon.waitForExistence(timeout: 120.0))  // glitch app can take time to lload
+        XCTAssertTrue(saveToLinkButon.waitForExistence(timeout: 120.0))  // backend app can take time to load
         saveToLinkButon.tap()
 
         let successPaneDoneButton = app.fc_nativeSuccessDoneButton
@@ -273,7 +273,7 @@ final class FinancialConnectionsNetworkingUITests: XCTestCase {
         phoneTextFieldToolbarDoneButton.tap()
 
         let saveToLinkButon = app.buttons["networking_link_signup_footer_view.save_to_link_button"]
-        XCTAssertTrue(saveToLinkButon.waitForExistence(timeout: 120.0))  // glitch app can take time to lload
+        XCTAssertTrue(saveToLinkButon.waitForExistence(timeout: 120.0))  // backend app can take time to load
         saveToLinkButon.tap()
 
         let successPaneDoneButton = app.fc_nativeSuccessDoneButton
@@ -329,7 +329,7 @@ final class FinancialConnectionsNetworkingUITests: XCTestCase {
         // both, email and phone, will already be pre-filled
 
         let saveToLinkButon = app.buttons["networking_link_signup_footer_view.save_to_link_button"]
-        XCTAssertTrue(saveToLinkButon.waitForExistence(timeout: 120.0))  // glitch app can take time to lload
+        XCTAssertTrue(saveToLinkButon.waitForExistence(timeout: 120.0))  // backend app can take time to load
         saveToLinkButon.tap()
 
         let successPaneDoneButton = app.fc_nativeSuccessDoneButton
@@ -371,7 +371,10 @@ final class FinancialConnectionsNetworkingUITests: XCTestCase {
         // auto-fill manual entry screen
         app.fc_nativeTestModeAutofillButton.waitForExistenceAndTap()
 
-        app.fc_nativeSaveToLinkButton.waitForExistenceAndTap()
+        // Wait a moment for the consumer session lookup to complete before tapping `Save to Link`.
+        DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+            app.fc_nativeSaveToLinkButton.waitForExistenceAndTap()
+        }
 
         app.fc_nativeSuccessDoneButton.waitForExistenceAndTap()
 
@@ -396,9 +399,6 @@ final class FinancialConnectionsNetworkingUITests: XCTestCase {
 
         // auto-fill OTP
         app.fc_nativeTestModeAutofillButton.waitForExistenceAndTap()
-
-        // tap manual entry institution
-        app.scrollViews.staticTexts["Test Institution"].waitForExistenceAndTap()
 
         app.fc_nativeConnectAccountsButton.waitForExistenceAndTap()
 

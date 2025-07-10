@@ -548,13 +548,15 @@ class PaymentSheetStandardLPMUITwoTests: PaymentSheetStandardLPMUICase {
 
         tapPaymentMethod("SEPA Debit")
 
-        app.textFields["Full name"].tap()
+        app.textFields["Full name"].waitForExistenceAndTap()
         app.typeText("John Doe" + XCUIKeyboardKey.return.rawValue)
         app.typeText("test@example.com" + XCUIKeyboardKey.return.rawValue)
         app.typeText("AT611904300234573201" + XCUIKeyboardKey.return.rawValue)
 
         app.fillAddressWithAutocomplete()
-        app.buttons["Pay €50.99"].tap()
+        XCTAssertTrue(app.staticTexts["SEPA Debit"].waitForExistence(timeout: 10))
+        app.swipeUp()
+        app.buttons["Pay €50.99"].waitForExistenceAndTap()
         let successText = app.staticTexts["Success!"]
         XCTAssertTrue(successText.waitForExistence(timeout: 10.0))
     }

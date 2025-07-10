@@ -92,31 +92,36 @@ import WebKit
     private static func determineAvailableWallets(for flowController: PaymentSheet.FlowController) -> [ExpressType] {
         // Determine available wallets and their order from elementsSession
         var wallets: [ExpressType] = []
+
+        // Always show Link at the top if it's enabled, regardless of orderedPaymentMethodTypesAndWallets
+        if PaymentSheet.isLinkEnabled(
+            elementsSession: flowController.elementsSession,
+            configuration: flowController.configuration
+        ) {
+            let canUseLinkInlineVerification: Bool = {
+                let featureFlagEnabled = PaymentSheet.LinkFeatureFlags.enableLinkInlineVerification
+                let canUseNativeLink = deviceCanUseNativeLink(
+                    elementsSession: flowController.elementsSession,
+                    configuration: flowController.configuration
+                )
+                return featureFlagEnabled && canUseNativeLink
+            }()
+
+            if canUseLinkInlineVerification,
+               let linkAccount = LinkAccountContext.shared.account,
+               linkAccount.sessionState == .requiresVerification {
+                wallets.append(.linkInlineVerification(linkAccount))
+            } else {
+                wallets.append(.link)
+            }
+        }
+
+        // Add other wallets based on their order in orderedPaymentMethodTypesAndWallets
         for type in flowController.elementsSession.orderedPaymentMethodTypesAndWallets {
             switch type {
             case "link":
-                // Also check PaymentSheet local availability logic
-                if PaymentSheet.isLinkEnabled(
-                    elementsSession: flowController.elementsSession,
-                    configuration: flowController.configuration
-                ) {
-                    let canUseLinkInlineVerification: Bool = {
-                        let featureFlagEnabled = PaymentSheet.LinkFeatureFlags.enableLinkInlineVerification
-                        let canUseNativeLink = deviceCanUseNativeLink(
-                            elementsSession: flowController.elementsSession,
-                            configuration: flowController.configuration
-                        )
-                        return featureFlagEnabled && canUseNativeLink
-                    }()
-
-                    if canUseLinkInlineVerification,
-                       let linkAccount = LinkAccountContext.shared.account,
-                       linkAccount.sessionState == .requiresVerification {
-                        wallets.append(.linkInlineVerification(linkAccount))
-                    } else {
-                        wallets.append(.link)
-                    }
-                }
+                // Skip Link here since we already added it at the top if enabled
+                continue
             case "apple_pay":
                 if PaymentSheet.isApplePayEnabled(elementsSession: flowController.elementsSession, configuration: flowController.configuration) {
                     wallets.append(.applePay)
@@ -177,7 +182,8 @@ import WebKit
             // Present Shop Pay via ECE WebView
             let shopPayPresenter = ShopPayECEPresenter(
                 flowController: flowController,
-                configuration: shopPayConfig
+                configuration: shopPayConfig,
+                analyticsHelper: flowController.analyticsHelper
             )
             shopPayPresenter.present(from: WindowAuthenticationContext().authenticationPresentingViewController(),
                                      confirmHandler: confirmHandler)

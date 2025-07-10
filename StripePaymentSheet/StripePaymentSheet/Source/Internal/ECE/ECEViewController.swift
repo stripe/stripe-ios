@@ -151,38 +151,6 @@ class ECEViewController: UIViewController {
             type: 'bridgeReady'
         });
 
-        (function() {
-            function hideReturnButtons() {
-                const returnButtons = document.querySelectorAll('button[aria-label="Return to store"]');
-                returnButtons.forEach(button => {
-                    if (!button.hasAttribute('data-hidden')) {
-                        button.style.display = 'none';
-                        button.style.visibility = 'hidden';
-                        button.style.opacity = '0';
-                        button.style.pointerEvents = 'none';
-                        button.setAttribute('data-hidden', 'true');
-                    }
-                });
-            }
-
-            // Initial hiding
-            hideReturnButtons();
-
-            // Set up a mutation observer to watch for DOM changes
-            const observer = new MutationObserver(function(mutations) {
-                mutations.forEach(function() {
-                    hideReturnButtons();
-                });
-            });
-
-            // Start observing the document with the configured parameters
-            observer.observe(document.body, { childList: true, subtree: true });
-
-            // Also check periodically (as a fallback)
-            setInterval(hideReturnButtons, 500);
-
-            console.log('Return button hiding observer initialized');
-        })();
         """
 
         // Intercept console logs
@@ -462,27 +430,6 @@ extension ECEViewController: WKUIDelegate {
         // Add the popup webview as a fullscreen overlay
         if let popupWebView = popupWebView {
             view.addSubview(popupWebView)
-
-            // Add a close button overlay
-            let closeButton = UIButton(type: .custom)
-            closeButton.setImage(UIImage(systemName: "xmark.circle.fill"), for: .normal)
-            closeButton.tintColor = .systemGray
-            closeButton.backgroundColor = .systemBackground.withAlphaComponent(0.9)
-            closeButton.layer.cornerRadius = 20
-            closeButton.translatesAutoresizingMaskIntoConstraints = false
-            closeButton.addTarget(self, action: #selector(closePopup), for: .touchUpInside)
-
-            popupWebView.addSubview(closeButton)
-
-            NSLayoutConstraint.activate([
-                closeButton.topAnchor.constraint(equalTo: popupWebView.safeAreaLayoutGuide.topAnchor, constant: 16),
-                closeButton.trailingAnchor.constraint(equalTo: popupWebView.trailingAnchor, constant: -16),
-                closeButton.widthAnchor.constraint(equalToConstant: 44),
-                closeButton.heightAnchor.constraint(equalToConstant: 44),
-            ])
-
-            // Store reference to close button so we can remove it later
-            closeButton.tag = 999
         }
 
         return popupWebView
