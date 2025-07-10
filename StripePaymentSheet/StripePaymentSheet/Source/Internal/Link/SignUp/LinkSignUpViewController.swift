@@ -123,7 +123,7 @@ final class LinkSignUpViewController: UIViewController {
         return button
     }()
 
-    private lazy var stackView: UIStackView = {
+    private(set) lazy var stackView: UIStackView = {
         let stackView = UIStackView(arrangedSubviews: [
             titleLabel,
             subtitleLabel,
@@ -207,7 +207,7 @@ final class LinkSignUpViewController: UIViewController {
         nameElement.delegate = self
     }
 
-    private func updateUI(animated: Bool = false) {
+    func updateUI(animated: Bool = false) {
         if viewModel.isLookingUpLinkAccount {
             emailElement.startAnimating()
         } else {
