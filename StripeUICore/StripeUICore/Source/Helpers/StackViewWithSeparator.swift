@@ -203,7 +203,7 @@ import UIKit
             UIBezierPath(roundedRect: bounds, cornerRadius: borderCornerRadius).cgPath
     }
 
-#if !canImport(CompositorServices)
+#if !os(visionOS)
     public override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
         super.traitCollectionDidChange(previousTraitCollection)
         // CGColor's must be manually updated when the trait collection changes
