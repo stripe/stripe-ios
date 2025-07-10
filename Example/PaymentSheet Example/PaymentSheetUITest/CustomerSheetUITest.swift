@@ -25,6 +25,8 @@ class CustomerSheetUITest: XCTestCase {
         app.launch()
     }
 
+    // CRITICAL E2E TEST: This test validates the complete customer sheet flow including Apple Pay integration,
+    // unsupported payment method handling, and complex UI state transitions. This is a critical user journey.
     func testCustomerSheetStandard_applePayOn_addCard_ensureCanDismissOnUnsupportedPaymentMethod() throws {
         var settings = CustomerSheetTestPlaygroundSettings.defaultValues()
         settings.customerMode = .new
@@ -88,43 +90,11 @@ class CustomerSheetUITest: XCTestCase {
 
     }
 
-    func testAddPaymentMethod_RemoveBeforeConfirming() throws {
-        var settings = CustomerSheetTestPlaygroundSettings.defaultValues()
-        settings.customerMode = .new
-        settings.applePay = .on
-        loadPlayground(
-            app,
-            settings
-        )
+    // REMOVED: testAddPaymentMethod_RemoveBeforeConfirming() - Migrated to PaymentMethodCollectionTests.swift unit tests
+    // Payment method add/remove logic is now tested at the unit level without UI automation
 
-        app.staticTexts["None"].waitForExistenceAndTap(timeout: timeout)
-        app.staticTexts["+ Add"].waitForExistenceAndTap(timeout: timeout)
-
-        try! fillCardData(app, postalEnabled: true)
-        app.buttons["Save"].tap()
-
-        let cardPresence_beforeRemoval = app.staticTexts["•••• 4242"]
-        XCTAssertTrue(cardPresence_beforeRemoval.waitForExistence(timeout: 60.0))
-
-        let editButton = app.staticTexts["Edit"]
-        XCTAssertTrue(editButton.waitForExistence(timeout: 60.0))
-        editButton.tap()
-
-        removeFirstPaymentMethodInList()
-
-        let cardPresence_afterRemoval = app.staticTexts["•••• 4242"]
-        waitToDisappear(cardPresence_afterRemoval)
-
-        let closeButton = app.buttons["Close"]
-        XCTAssertTrue(closeButton.waitForExistence(timeout: 60.0))
-        closeButton.tap()
-
-        dismissAlertView(alertBody: "Success: payment method not set, canceled", alertTitle: "Complete", buttonToTap: "OK")
-
-        let selectButtonFinal = app.staticTexts["None"]
-        XCTAssertTrue(selectButtonFinal.waitForExistence(timeout: timeout))
-    }
-
+    // CRITICAL E2E TEST: This test validates the create and attach payment method mode,
+    // which is a key customer sheet functionality that requires testing the full UI flow.
     func testCreateAndAttach() throws {
         var settings = CustomerSheetTestPlaygroundSettings.defaultValues()
         settings.customerMode = .new
@@ -167,44 +137,8 @@ class CustomerSheetUITest: XCTestCase {
         XCTAssertTrue(selectButtonFinal.waitForExistence(timeout: timeout))
     }
 
-    func testAddTwoPaymentMethods_RemoveTwoPaymentMethods() throws {
-        var settings = CustomerSheetTestPlaygroundSettings.defaultValues()
-        settings.customerMode = .new
-        settings.applePay = .on
-        loadPlayground(
-            app,
-            settings
-        )
-
-        presentCSAndAddCardFrom(buttonLabel: "None")
-        presentCSAndAddCardFrom(buttonLabel: "•••• 4242", cardNumber: "5555555555554444")
-
-        app.staticTexts["•••• 4444"].waitForExistenceAndTap(timeout: timeout)
-
-        let editButton = app.staticTexts["Edit"]
-        XCTAssertTrue(editButton.waitForExistence(timeout: timeout))
-        editButton.tap()
-
-        removeFirstPaymentMethodInList(alertBody: "Mastercard •••• 4444")
-        // •••• 4444 is rendered as the PM to remove, as well as the status on the playground
-        // Check that it is removed by waiting for there only be one instance
-        let elementLabel = "•••• 4444"
-        let elementQuery = app.staticTexts.matching(NSPredicate(format: "label == %@", elementLabel))
-        waitForNItemsExistence(elementQuery, count: 1)
-
-        removeFirstPaymentMethodInList(alertBody: "Visa •••• 4242")
-        let visa = app.staticTexts["•••• 4242"]
-        waitToDisappear(visa)
-
-        let closeButton = app.buttons["Close"]
-        XCTAssertTrue(closeButton.waitForExistence(timeout: timeout))
-        closeButton.tap()
-
-        dismissAlertView(alertBody: "Success: payment method not set, canceled", alertTitle: "Complete", buttonToTap: "OK")
-
-        let selectButtonFinal = app.staticTexts["None"]
-        XCTAssertTrue(selectButtonFinal.waitForExistence(timeout: timeout))
-    }
+    // REMOVED: testAddTwoPaymentMethods_RemoveTwoPaymentMethods() - Migrated to PaymentMethodCollectionTests.swift unit tests
+    // Multiple payment method operations are now tested at the unit level for better performance
 
     func testRemoveCardPaymentMethod_customerSessions() throws {
         var settings = CustomerSheetTestPlaygroundSettings.defaultValues()
