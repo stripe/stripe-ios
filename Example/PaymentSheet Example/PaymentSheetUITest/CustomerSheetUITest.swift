@@ -871,6 +871,10 @@ class CustomerSheetUITest: XCTestCase {
         app.pickerWheels.firstMatch.adjust(toPickerWheelValue: "🇺🇸 United States")
         app.toolbars.buttons["Done"].tap()
 
+        app.textFields["State"].tap()
+        app.pickerWheels.firstMatch.adjust(toPickerWheelValue: "Alabama")
+        app.toolbars.buttons["Done"].tap()
+
         let line1Field = app.textFields["Address line 1"]
         XCTAssertTrue(line1Field.waitForExistence(timeout: 3.0))
         line1Field.tap()
