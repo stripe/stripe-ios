@@ -884,12 +884,8 @@ class PaymentSheetStandardLPMUIThreeTests: PaymentSheetStandardLPMUICase {
 }
 class PaymentSheetStandardLPMUICBCTests: PaymentSheetStandardLPMUICase {
     // MARK: Card brand choice
-    // Note: Basic card brand choice functionality is well-covered by unit tests.
-    // These E2E tests focus on complex user flows not easily testable in unit tests.
-
     func testCardBrandChoiceSavedCard() {
-        // Tests the complete saved card flow with card brand choice - this complex E2E scenario
-        // is valuable as it tests card saving, brand selection persistence, editing, and removal
+        // Tests the complete saved card flow with card brand choice, including saving, brand selection persistence, editing, and removal
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
         settings.layout = .horizontal
         settings.customerMode = .new
@@ -990,8 +986,6 @@ class PaymentSheetStandardLPMUICBCTests: PaymentSheetStandardLPMUICase {
     }
 
     func testCardBrandChoiceUpdateAndRemove() {
-        // Tests editing and removing multiple saved cards with different card brands
-        // This E2E test is valuable as it tests complex multi-card management scenarios
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
         settings.layout = .horizontal
         settings.merchantCountryCode = .FR
@@ -1028,9 +1022,6 @@ class PaymentSheetStandardLPMUICBCTests: PaymentSheetStandardLPMUICase {
         XCTAssertEqual(app.images.matching(identifier: "carousel_card_visa").count, 1)
         app.buttons["Done"].waitForExistenceAndTap()
     }
-
-    // Note: Custom payment method functionality is well-covered by dedicated unit tests
-    // in PaymentSheetCustomPaymentMethodTests.swift, so the E2E test has been removed.
 }
 
 // MARK: - Helpers
