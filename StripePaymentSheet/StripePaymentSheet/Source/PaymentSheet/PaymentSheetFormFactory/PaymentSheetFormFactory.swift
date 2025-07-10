@@ -634,7 +634,7 @@ extension PaymentSheetFormFactory {
         ) { value in
             isSaving.value = value
             if let defaultCheckbox {
-                UIView.transition(with: defaultCheckbox.view, duration: 0.1,
+                UIView.transition(with: defaultCheckbox.view, duration: 0.25,
                                   options: .transitionCrossDissolve,
                                   animations: {
                     defaultCheckbox.view.isHidden = !value
