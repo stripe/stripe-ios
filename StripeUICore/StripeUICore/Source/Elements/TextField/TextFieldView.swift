@@ -232,7 +232,7 @@ class TextFieldView: UIView {
         textField.textContentType = viewModel.keyboardProperties.textContentType
         if viewModel.keyboardProperties.type != textField.keyboardType {
             textField.keyboardType = viewModel.keyboardProperties.type
-#if !canImport(CompositorServices)
+#if !os(visionOS)
             textField.inputAccessoryView = textField.keyboardType.hasReturnKey ? nil : toolbar
 #endif
             textField.reloadInputViews()
@@ -264,7 +264,7 @@ class TextFieldView: UIView {
         layoutIfNeeded()
     }
 
-#if !canImport(CompositorServices)
+#if !os(visionOS)
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
         super.traitCollectionDidChange(previousTraitCollection)
         self.transparentMaskView.backgroundColor = viewModel.theme.colors.componentBackground.translucentMaskColor

@@ -232,6 +232,42 @@ class AddressSectionElementTest: XCTestCase {
         XCTAssertNotEqual(sut.country.selectedIndex, sut.phone?.countryDropdownElement.selectedIndex)
     }
 
+    func test_state_dropdown_starts_empty_validation() {
+        // Create a spec where State is required and has dropdown values
+        let specProvider = AddressSpecProvider()
+        specProvider.addressSpecs = [
+            "US": AddressSpec(
+                format: "ACS", // collect Address, City, State
+                require: "AS", // Address & State required
+                cityNameType: .city,
+                stateNameType: .state,
+                zip: nil,
+                zipNameType: .zip,
+                subKeys: ["CA", "NY"],
+                subLabels: ["California", "New York"]
+            ),
+        ]
+
+        let sut = AddressSectionElement(
+            title: "",
+            locale: locale_enUS,
+            addressSpecProvider: specProvider
+        )
+
+        guard let stateDropdown = sut.state as? DropdownFieldElement else {
+            return XCTFail("Expected state element to be DropdownFieldElement")
+        }
+
+        // Placeholder should be selected initially, making the field invalid
+        XCTAssertEqual(stateDropdown.selectedIndex, 0)
+        XCTAssertFalse(stateDropdown.validationState.isValid)
+
+        // Select the first actual state (index 1) and check that validation becomes valid
+        stateDropdown.select(index: 1, shouldAutoAdvance: false)
+        XCTAssertTrue(stateDropdown.validationState.isValid)
+        XCTAssertEqual(sut.addressDetails.address.state, "CA")
+    }
+
     func testConvertLinkBillingAddressToAddressDetails() {
         let linkBillingDetails = BillingAddress(
             name: "Test Testerson",

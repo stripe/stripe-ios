@@ -122,7 +122,7 @@ final class LinkLoginViewController: UIViewController {
 
         paneLayoutView?.addTo(view: view)
 
-        #if !canImport(CompositorServices)
+        #if !os(visionOS)
         // if user drags, dismiss keyboard so the CTA buttons can be shown
         paneLayoutView?.scrollView.keyboardDismissMode = .onDrag
         #endif

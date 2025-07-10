@@ -611,7 +611,7 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
                     self.updatePrimaryButton()
                     self.isUserInteractionEnabled = true
                 case .failed(let error):
-#if !canImport(CompositorServices)
+#if !os(visionOS)
                     UINotificationFeedbackGenerator().notificationOccurred(.error)
 #endif
 
@@ -635,7 +635,7 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
                     self.presentedViewController?.isBeingDismissed == true ? 1 : 0
                     // Hack: PaymentHandler calls the completion block while SafariVC is still being dismissed - "wait" until it's finished before updating UI
                     DispatchQueue.main.asyncAfter(deadline: .now() + delay) {
-#if !canImport(CompositorServices)
+#if !os(visionOS)
                         UINotificationFeedbackGenerator().notificationOccurred(.success)
 #endif
                         self.primaryButton.update(state: .succeeded, animated: true) {
@@ -799,7 +799,7 @@ extension PaymentSheetVerticalViewController: VerticalPaymentMethodListViewContr
     func didTapPaymentMethod(_ selection: RowButtonType) {
         analyticsHelper.logNewPaymentMethodSelected(paymentMethodTypeIdentifier: selection.analyticsIdentifier)
         error = nil
-#if !canImport(CompositorServices)
+#if !os(visionOS)
         UISelectionFeedbackGenerator().selectionChanged()
 #endif
         switch selection {
@@ -823,7 +823,7 @@ extension PaymentSheetVerticalViewController: VerticalPaymentMethodListViewContr
     }
 
     func didTapSavedPaymentMethodAccessoryButton() {
-#if !canImport(CompositorServices)
+#if !os(visionOS)
         UISelectionFeedbackGenerator().selectionChanged()
 #endif
         presentManageScreen()

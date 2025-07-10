@@ -19,7 +19,7 @@ struct ShopPayTestingOptions {
 
 struct ExampleWalletButtonsContainerView: View {
     @State private var email: String = ""
-    @State private var shopId: String = ""
+    @State private var shopId: String = "69293637654"
     @State private var linkInlineVerificationEnabled: Bool = PaymentSheet.LinkFeatureFlags.enableLinkInlineVerification
     @State private var useSPTTestBackend: Bool = false
     @State private var appearance: PaymentSheet.Appearance = PaymentSheet.Appearance()

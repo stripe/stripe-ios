@@ -70,7 +70,7 @@ class RadioButton: UIView {
         outerCircle.position = CGPoint(x: bounds.midX, y: bounds.midY)
         innerCircle.position = CGPoint(x: bounds.midX, y: bounds.midY)
     }
-#if !canImport(CompositorServices)
+#if !os(visionOS)
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
         super.traitCollectionDidChange(previousTraitCollection)
         update()
