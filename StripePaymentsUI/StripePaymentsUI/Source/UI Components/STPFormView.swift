@@ -543,8 +543,7 @@ extension STPFormView {
         let footerLabel = UILabel()
 
         public override var intrinsicContentSize: CGSize {
-            let stackWidth = stackView.intrinsicContentSize.width
-            var width = stackWidth
+            var width = stackView.intrinsicContentSize.width
             var height = stackView.intrinsicContentSize.height
 
             // If there's a title, add its height and the spacing below it
