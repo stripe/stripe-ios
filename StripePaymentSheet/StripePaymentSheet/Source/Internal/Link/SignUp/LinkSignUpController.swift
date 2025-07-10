@@ -27,7 +27,11 @@ final class LinkSignUpController {
 
     private var completion: CompletionBlock?
     private var selfRetainer: LinkSignUpController?
-    private let signUpViewController: LinkSignUpViewController
+    private let linkAccount: PaymentSheetLinkAccount?
+    private let accountService: LinkAccountServiceProtocol
+    private let country: String?
+    private let defaultBillingDetails: PaymentSheet.BillingDetails
+    private let style: LinkStyle
     private var bottomSheetViewController: BottomSheetViewController?
 
     init(
@@ -37,15 +41,11 @@ final class LinkSignUpController {
         defaultBillingDetails: PaymentSheet.BillingDetails = PaymentSheet.BillingDetails(),
         style: LinkStyle = .automatic
     ) {
-        self.signUpViewController = LinkSignUpViewController(
-            accountService: accountService,
-            linkAccount: linkAccount,
-            country: country,
-            defaultBillingDetails: defaultBillingDetails
-        )
-        signUpViewController.delegate = self
-
-        style.asPaymentSheetStyle.configure(signUpViewController)
+        self.accountService = accountService
+        self.linkAccount = linkAccount
+        self.country = country
+        self.defaultBillingDetails = defaultBillingDetails
+        self.style = style
     }
 
     func present(
@@ -55,7 +55,18 @@ final class LinkSignUpController {
         self.selfRetainer = self
         self.completion = completion
 
-        let wrapperViewController = LinkSignUpBottomSheetContentWrapper(contentViewController: signUpViewController)
+        guard let initialViewController = initialViewController() else {
+            // If there is no initial view controller, the account is already verified.
+            // `dismissAndComplete` with a `.completed` result has been called.
+            return
+        }
+
+        let wrapperViewController = LinkSignUpBottomSheetContentWrapper(
+            contentViewController: initialViewController,
+            onDismiss: { [weak self] in
+                self?.dismissAndComplete(with: .canceled)
+            }
+        )
         let bottomSheetViewController = BottomSheetViewController(
             contentViewController: wrapperViewController,
             appearance: .default,
@@ -63,11 +74,45 @@ final class LinkSignUpController {
             didCancelNative3DS2: { }
         )
 
-        // Store reference for later dismissal
         self.bottomSheetViewController = bottomSheetViewController
-
-        // Present as bottom sheet
         presentingController.presentAsBottomSheet(bottomSheetViewController, appearance: .default)
+    }
+
+    private func initialViewController() -> UIViewController? {
+        guard let linkAccount else {
+            return createSignUpViewController()
+        }
+
+        switch linkAccount.sessionState {
+        case .requiresSignUp:
+            return createSignUpViewController()
+        case .requiresVerification:
+            return VerifyAccountViewController(
+                linkAccount: linkAccount,
+                completionHandler: { [weak self] result in
+                    self?.dismissAndComplete(with: result)
+                }
+            )
+        case .verified:
+            // Complete the flow in this scenario.
+            DispatchQueue.main.async { [weak self] in
+                self?.dismissAndComplete(with: .completed(linkAccount))
+            }
+
+            return nil
+        }
+    }
+
+    private func createSignUpViewController() -> LinkSignUpViewController {
+        let signUpViewController = LinkSignUpViewController(
+            accountService: accountService,
+            linkAccount: linkAccount,
+            country: country,
+            defaultBillingDetails: defaultBillingDetails
+        )
+        signUpViewController.delegate = self
+        style.asPaymentSheetStyle.configure(signUpViewController)
+        return signUpViewController
     }
 
     private func dismissAndComplete(with result: SignUpResult) {
@@ -78,64 +123,84 @@ final class LinkSignUpController {
                 self?.bottomSheetViewController = nil
             }
         } else {
-            // Fallback - should not happen in normal flow
-            signUpViewController.dismiss(animated: true) { [weak self] in
-                self?.completion?(result)
-                self?.selfRetainer = nil
-            }
+            completion?(result)
+            selfRetainer = nil
         }
     }
 
-}
-
-// MARK: - BottomSheetContentWrapper
-
-private final class LinkSignUpBottomSheetContentWrapper: UIViewController, BottomSheetContentViewController {
-
-    private let contentViewController: LinkSignUpViewController
-
-    lazy var navigationBar: SheetNavigationBar = {
-        let navigationBar = LinkSheetNavigationBar(
-            isTestMode: false,
-            appearance: .init()
+    private func pushVerificationController(with linkAccount: PaymentSheetLinkAccount) {
+        let verificationViewController = VerifyAccountViewController(
+            linkAccount: linkAccount,
+            completionHandler: { [weak self] result in
+                self?.dismissAndComplete(with: result)
+            }
         )
-        navigationBar.delegate = self
-        return navigationBar
-    }()
-
-    var requiresFullScreen: Bool { true }
-
-    init(contentViewController: LinkSignUpViewController) {
-        self.contentViewController = contentViewController
-        super.init(nibName: nil, bundle: nil)
-    }
-
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-
-    override func viewDidLoad() {
-        super.viewDidLoad()
-
-        addChild(contentViewController)
-        view.addSubview(contentViewController.view)
-        contentViewController.didMove(toParent: self)
-
-        contentViewController.view.translatesAutoresizingMaskIntoConstraints = false
-        NSLayoutConstraint.activate([
-            contentViewController.view.topAnchor.constraint(equalTo: view.topAnchor),
-            contentViewController.view.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            contentViewController.view.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            contentViewController.view.bottomAnchor.constraint(equalTo: view.bottomAnchor),
-        ])
-    }
-
-    func didTapOrSwipeToDismiss() {
-        contentViewController.delegate?.signUpControllerDidCancel(contentViewController)
+        bottomSheetViewController?.pushContentViewController(verificationViewController)
     }
 }
 
-extension LinkSignUpBottomSheetContentWrapper: SheetNavigationBarDelegate {
+// MARK: - VerifyAccountViewController
+
+extension LinkSignUpController {
+    final class VerifyAccountViewController: UIViewController, BottomSheetContentViewController {
+
+        private let linkAccount: PaymentSheetLinkAccount
+        private let completionHandler: (LinkSignUpController.SignUpResult) -> Void
+
+        lazy var navigationBar: SheetNavigationBar = {
+            let navigationBar = LinkSheetNavigationBar(
+                isTestMode: false,
+                appearance: .init()
+            )
+            navigationBar.delegate = self
+            return navigationBar
+        }()
+
+        var requiresFullScreen: Bool { true }
+
+        private lazy var verificationVC: LinkVerificationViewController = {
+            let vc = LinkVerificationViewController(mode: .embedded, linkAccount: linkAccount)
+            vc.delegate = self
+            vc.view.backgroundColor = .clear
+            return vc
+        }()
+
+        init(linkAccount: PaymentSheetLinkAccount, completionHandler: @escaping (LinkSignUpController.SignUpResult) -> Void) {
+            self.linkAccount = linkAccount
+            self.completionHandler = completionHandler
+            super.init(nibName: nil, bundle: nil)
+        }
+
+        required init?(coder: NSCoder) {
+            fatalError("init(coder:) has not been implemented")
+        }
+
+        override func viewDidLoad() {
+            super.viewDidLoad()
+
+            addChild(verificationVC)
+            view.addSubview(verificationVC.view)
+            verificationVC.didMove(toParent: self)
+            verificationVC.view.translatesAutoresizingMaskIntoConstraints = false
+
+            NSLayoutConstraint.activate([
+                verificationVC.view.topAnchor.constraint(equalTo: view.topAnchor),
+                verificationVC.view.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+                verificationVC.view.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+                verificationVC.view.bottomAnchor.constraint(lessThanOrEqualTo: view.bottomAnchor),
+                view.heightAnchor.constraint(greaterThanOrEqualToConstant: 300),
+            ])
+        }
+
+        func didTapOrSwipeToDismiss() {
+            completionHandler(.canceled)
+        }
+    }
+}
+
+// MARK: - VerifyAccountViewController SheetNavigationBarDelegate
+
+extension LinkSignUpController.VerifyAccountViewController: SheetNavigationBarDelegate {
     func sheetNavigationBarDidClose(_ sheetNavigationBar: SheetNavigationBar) {
         didTapOrSwipeToDismiss()
     }
@@ -145,12 +210,39 @@ extension LinkSignUpBottomSheetContentWrapper: SheetNavigationBarDelegate {
     }
 }
 
+// MARK: - VerifyAccountViewController LinkVerificationViewControllerDelegate
+
+extension LinkSignUpController.VerifyAccountViewController: LinkVerificationViewControllerDelegate {
+    func verificationController(
+        _ controller: LinkVerificationViewController,
+        didFinishWithResult result: LinkVerificationViewController.VerificationResult
+    ) {
+        switch result {
+        case .completed:
+            completionHandler(.completed(linkAccount))
+        case .canceled:
+            completionHandler(.canceled)
+        case .failed(let error):
+            completionHandler(.failed(error))
+        }
+    }
+}
+
+// MARK: - LinkSignUpController LinkSignUpViewControllerDelegate
+
 extension LinkSignUpController: LinkSignUpViewControllerDelegate {
     func signUpController(
         _ controller: LinkSignUpViewController,
         didCompleteSignUpWith linkAccount: PaymentSheetLinkAccount
     ) {
-        dismissAndComplete(with: .completed(linkAccount))
+        switch linkAccount.sessionState {
+        case .requiresVerification:
+            pushVerificationController(with: linkAccount)
+        case .verified:
+            dismissAndComplete(with: .completed(linkAccount))
+        case .requiresSignUp:
+            break
+        }
     }
 
     func signUpController(

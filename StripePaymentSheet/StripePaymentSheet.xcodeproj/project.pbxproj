@@ -160,6 +160,7 @@
 		4965A7132D9D8D3700DC2E3C /* LinkGlobalHoldback.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4965A7122D9D8D3700DC2E3C /* LinkGlobalHoldback.swift */; };
 		496961C22E20145100D824C1 /* LinkAuthenticationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 496961C12E20145100D824C1 /* LinkAuthenticationController.swift */; };
 		496961C42E2014DF00D824C1 /* LinkStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 496961C32E2014DF00D824C1 /* LinkStyle.swift */; };
+		496961C82E20365A00D824C1 /* LinkSignUpBottomSheetContentWrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 496961C72E20365A00D824C1 /* LinkSignUpBottomSheetContentWrapper.swift */; };
 		497713042D9D8E1200DB5CB2 /* PaymentSheetAnalytics+Experiments.swift in Sources */ = {isa = PBXBuildFile; fileRef = 497713032D9D8E1200DB5CB2 /* PaymentSheetAnalytics+Experiments.swift */; };
 		49803444CD948F1ED28FF021 /* PaymentSheetFormFactory+FormSpec.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD7A1EFF100C589FDFF4D516 /* PaymentSheetFormFactory+FormSpec.swift */; };
 		498BF1722D92FF6A006E866B /* FCLiteImplementation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 498BF1712D92FF6A006E866B /* FCLiteImplementation.swift */; };
@@ -650,6 +651,7 @@
 		4965A7122D9D8D3700DC2E3C /* LinkGlobalHoldback.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LinkGlobalHoldback.swift; sourceTree = "<group>"; };
 		496961C12E20145100D824C1 /* LinkAuthenticationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LinkAuthenticationController.swift; sourceTree = "<group>"; };
 		496961C32E2014DF00D824C1 /* LinkStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LinkStyle.swift; sourceTree = "<group>"; };
+		496961C72E20365A00D824C1 /* LinkSignUpBottomSheetContentWrapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LinkSignUpBottomSheetContentWrapper.swift; sourceTree = "<group>"; };
 		497713032D9D8E1200DB5CB2 /* PaymentSheetAnalytics+Experiments.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "PaymentSheetAnalytics+Experiments.swift"; sourceTree = "<group>"; };
 		498BF1712D92FF6A006E866B /* FCLiteImplementation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FCLiteImplementation.swift; sourceTree = "<group>"; };
 		49909A152D8AF9760031EC33 /* FinancialConnectionsLite.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FinancialConnectionsLite.swift; sourceTree = "<group>"; };
@@ -1334,6 +1336,7 @@
 			children = (
 				49B1F7CB2E1EC43300EA2593 /* LinkSignUpViewController.swift */,
 				49B1F7CF2E1F33FB00EA2593 /* LinkSignUpController.swift */,
+				496961C72E20365A00D824C1 /* LinkSignUpBottomSheetContentWrapper.swift */,
 				49B1F7CD2E1EC44500EA2593 /* LinkSignUpViewModel.swift */,
 			);
 			path = SignUp;
@@ -2648,6 +2651,7 @@
 				6BA8D33A2B0C1FBF008C51FF /* CVCPaymentMethodInformationView.swift in Sources */,
 				B662953E2C63F6C2007B6B14 /* PaymentDetailsShareResponse.swift in Sources */,
 				F79DBDF42E5C0ED6B6DDC246 /* ConfirmButton.swift in Sources */,
+				496961C82E20365A00D824C1 /* LinkSignUpBottomSheetContentWrapper.swift in Sources */,
 				5C0D1B932954D0EF3F3A679F /* ManualEntryButton.swift in Sources */,
 				49909A202D8AFAC80031EC33 /* FCLiteSession.swift in Sources */,
 				A3B2F2B82CF1343F00C0E88C /* SavedPaymentMethodFormFactory+USBankAccount.swift in Sources */,
