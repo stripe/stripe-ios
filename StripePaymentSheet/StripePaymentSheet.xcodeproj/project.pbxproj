@@ -103,6 +103,13 @@
 		31699A832BE183D40048677F /* DownloadManagerTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31699A822BE183D40048677F /* DownloadManagerTest.swift */; };
 		316B33122B5F171C0008D2E5 /* UserDefaults+StripePaymentSheetTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 316B33112B5F171C0008D2E5 /* UserDefaults+StripePaymentSheetTest.swift */; };
 		3190006D2DFD32BF00B84F6C /* ECEBridgeTypes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3190006C2DFD32BF00B84F6C /* ECEBridgeTypes.swift */; };
+		319068F72E1F7D3D00743807 /* BankAccountIntegrationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 319068F32E1F7D3D00743807 /* BankAccountIntegrationTests.swift */; };
+		319068F82E1F7D3D00743807 /* PaymentMethodCollectionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 319068F62E1F7D3D00743807 /* PaymentMethodCollectionTests.swift */; };
+		319068F92E1F7D3D00743807 /* AddressValidationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 319068F22E1F7D3D00743807 /* AddressValidationTests.swift */; };
+		319068FA2E1F7D3D00743807 /* LinkPaymentFlowTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 319068F42E1F7D3D00743807 /* LinkPaymentFlowTests.swift */; };
+		319068FB2E1F7D3D00743807 /* MicroDepositIntegrationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 319068F52E1F7D3D00743807 /* MicroDepositIntegrationTests.swift */; };
+		319068FC2E1F7D3D00743807 /* AddressAutocompleteTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 319068F12E1F7D3D00743807 /* AddressAutocompleteTests.swift */; };
+		319068FE2E1F7F0600743807 /* TestMocks.swift in Sources */ = {isa = PBXBuildFile; fileRef = 319068FD2E1F7F0600743807 /* TestMocks.swift */; };
 		31AD3BE72B0C2D080080C800 /* UIApplication+StripePaymentSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31AD3BE62B0C2D080080C800 /* UIApplication+StripePaymentSheet.swift */; };
 		31CC9B792CB5F69600E84A38 /* LinkNavigationBarSnapshotTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31CC9B712CB5F69600E84A38 /* LinkNavigationBarSnapshotTests.swift */; };
 		31CC9B7D2CB5F69600E84A38 /* ButtonLinkSnapshotTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31CC9B6C2CB5F69600E84A38 /* ButtonLinkSnapshotTests.swift */; };
@@ -588,6 +595,13 @@
 		31699A822BE183D40048677F /* DownloadManagerTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DownloadManagerTest.swift; sourceTree = "<group>"; };
 		316B33112B5F171C0008D2E5 /* UserDefaults+StripePaymentSheetTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UserDefaults+StripePaymentSheetTest.swift"; sourceTree = "<group>"; };
 		3190006C2DFD32BF00B84F6C /* ECEBridgeTypes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ECEBridgeTypes.swift; sourceTree = "<group>"; };
+		319068F12E1F7D3D00743807 /* AddressAutocompleteTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddressAutocompleteTests.swift; sourceTree = "<group>"; };
+		319068F22E1F7D3D00743807 /* AddressValidationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddressValidationTests.swift; sourceTree = "<group>"; };
+		319068F32E1F7D3D00743807 /* BankAccountIntegrationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BankAccountIntegrationTests.swift; sourceTree = "<group>"; };
+		319068F42E1F7D3D00743807 /* LinkPaymentFlowTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LinkPaymentFlowTests.swift; sourceTree = "<group>"; };
+		319068F52E1F7D3D00743807 /* MicroDepositIntegrationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MicroDepositIntegrationTests.swift; sourceTree = "<group>"; };
+		319068F62E1F7D3D00743807 /* PaymentMethodCollectionTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentMethodCollectionTests.swift; sourceTree = "<group>"; };
+		319068FD2E1F7F0600743807 /* TestMocks.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestMocks.swift; sourceTree = "<group>"; };
 		31AD3BE62B0C2D080080C800 /* UIApplication+StripePaymentSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = "UIApplication+StripePaymentSheet.swift"; path = "StripePaymentSheet/Source/Categories/UIApplication+StripePaymentSheet.swift"; sourceTree = "<group>"; };
 		31CC9B6C2CB5F69600E84A38 /* ButtonLinkSnapshotTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ButtonLinkSnapshotTests.swift; sourceTree = "<group>"; };
 		31CC9B6D2CB5F69600E84A38 /* LinkBadgeViewSnapshotTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LinkBadgeViewSnapshotTest.swift; sourceTree = "<group>"; };
@@ -1906,6 +1920,13 @@
 		F8A74FF9A80AC3BCD5856058 /* PaymentSheet */ = {
 			isa = PBXGroup;
 			children = (
+				319068F12E1F7D3D00743807 /* AddressAutocompleteTests.swift */,
+				319068F22E1F7D3D00743807 /* AddressValidationTests.swift */,
+				319068F32E1F7D3D00743807 /* BankAccountIntegrationTests.swift */,
+				319068F42E1F7D3D00743807 /* LinkPaymentFlowTests.swift */,
+				319068FD2E1F7F0600743807 /* TestMocks.swift */,
+				319068F52E1F7D3D00743807 /* MicroDepositIntegrationTests.swift */,
+				319068F62E1F7D3D00743807 /* PaymentMethodCollectionTests.swift */,
 				3F70E5F0FE6218715432D55A /* AddPaymentMethodViewControllerSnapshotTests.swift */,
 				25AB69CF78A2B13839EB32EC /* AddressViewController */,
 				BE92D55DA4B4D449734B2917 /* BacsDDMandateViewSnapshotTests.swift */,
@@ -2240,6 +2261,12 @@
 				E5C7667A08EA85C0FF12523D /* AddPaymentMethodViewControllerSnapshotTests.swift in Sources */,
 				B63B2CF12BF8313D003810F3 /* VerticalPaymentMethodListViewControllerTest.swift in Sources */,
 				61CB0BD02BED985100E24A4C /* VerticalSavedPaymentMethodsViewControllerSnapshotTests.swift in Sources */,
+				319068F72E1F7D3D00743807 /* BankAccountIntegrationTests.swift in Sources */,
+				319068F82E1F7D3D00743807 /* PaymentMethodCollectionTests.swift in Sources */,
+				319068F92E1F7D3D00743807 /* AddressValidationTests.swift in Sources */,
+				319068FA2E1F7D3D00743807 /* LinkPaymentFlowTests.swift in Sources */,
+				319068FB2E1F7D3D00743807 /* MicroDepositIntegrationTests.swift in Sources */,
+				319068FC2E1F7D3D00743807 /* AddressAutocompleteTests.swift in Sources */,
 				31443D5B2DD55F540022AF1A /* WalletButtonsViewSnapshotTests.swift in Sources */,
 				8180BC3615767F896E2F9355 /* AddressViewControllerSnapshotTests.swift in Sources */,
 				31CC9B792CB5F69600E84A38 /* LinkNavigationBarSnapshotTests.swift in Sources */,
@@ -2271,6 +2298,7 @@
 				2EC9C94DD8D62E4F4EFC8AB8 /* IntentStatusPollerTest.swift in Sources */,
 				4954E9712D96FA0C0061585F /* FCLiteImplementationTests.swift in Sources */,
 				ABC3A7CF6D5B21D0C9684A09 /* LinkPopupURLParserTests.swift in Sources */,
+				319068FE2E1F7F0600743807 /* TestMocks.swift in Sources */,
 				F94F6A157CEB937896B682D4 /* LinkURLGeneratorTests.swift in Sources */,
 				10A336F0F2331F22F1A0AC1B /* LinkStubs.swift in Sources */,
 				61C87E1E2CB81FAD001B7DA9 /* CardBrandFilterTests.swift in Sources */,

@@ -301,7 +301,7 @@ class ExampleWalletButtonsModel: ObservableObject {
                     merchantId: "merchant.com.stripe.umbrella.test", // Be sure to use your own merchant ID here!
                     merchantCountryCode: "US",
                     customHandlers: .init(paymentRequestHandler: { paymentRequest in
-                        paymentRequest.requiredShippingContactFields = [.postalAddress, .emailAddress]
+                        paymentRequest.requiredShippingContactFields = [.postalAddress, .emailAddress, .phoneNumber]
                         return paymentRequest
                     })
                 )
@@ -374,7 +374,7 @@ class ExampleWalletButtonsModel: ObservableObject {
                     merchantId: "merchant.com.stripe.umbrella.test", // Be sure to use your own merchant ID here!
                     merchantCountryCode: "US",
                     customHandlers: .init(paymentRequestHandler: { paymentRequest in
-                        paymentRequest.requiredShippingContactFields = [.postalAddress, .emailAddress]
+                        paymentRequest.requiredShippingContactFields = [.postalAddress, .emailAddress, .phoneNumber]
                         return paymentRequest
                     })
                 )
