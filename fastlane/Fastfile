@@ -187,16 +187,6 @@ platform :ios do
     )
   end
 
-  lane :installation_carthage do
-    Dir.chdir('..') do
-      sh('./Tests/installation_tests/carthage/setup.sh')
-    end
-    run_tests(
-      project: './Tests/installation_tests/carthage/CarthageTest.xcodeproj',
-      destination: "platform=iOS Simulator,name=#{DEFAULT_TEST_DEVICE},OS=#{DEFAULT_TEST_VERSION}"
-    )
-  end
-
   lane :installation_spm_objc do
     run_tests(
       workspace: './Tests/installation_tests/swift_package_manager/with_objc/SPMTest.xcworkspace',
