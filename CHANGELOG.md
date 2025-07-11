@@ -1,5 +1,10 @@
 ## 24.16.2 2025-07-07
 
+### AddressElement
+* [Added] SwiftUI support for AddressElement.
+
+## 24.16.2 2025-07-07
+
 ### PaymentSheet
 * [Added] Address autocomplete functionality when collecting full billing details in payment method forms.
 
