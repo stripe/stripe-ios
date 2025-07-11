@@ -51,7 +51,12 @@ private struct AddressViewControllerRepresentable: UIViewControllerRepresentable
             delegate: context.coordinator
         )
 
-        return UINavigationController(rootViewController: addressViewController)
+        let navigationController = UINavigationController(rootViewController: addressViewController)
+
+        // Set preferred content size to help SwiftUI with initial sizing
+        // This prevents constraint conflicts during measurement phase
+        navigationController.preferredContentSize = UIView.layoutFittingExpandedSize
+        return navigationController
     }
 
     func updateUIViewController(_ uiViewController: UINavigationController, context: Context) {
