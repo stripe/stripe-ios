@@ -28,7 +28,7 @@ import UIKit
         @_spi(STP) public let sublabel: String?
     }
 
-    @_spi(STP) public enum AuthenticationResult {
+    @frozen @_spi(STP) public enum AuthenticationResult {
         /// Authentication was completed successfully.
         case completed
         /// Authentication was canceled by the user.
@@ -86,11 +86,11 @@ import UIKit
         }
     }
 
-    /// A preview of the currently selected Link payment method.
-    @Published @_spi(STP) public private(set) var paymentMethodPreview: PaymentMethodPreview?
-
     /// Details on the current Link account.
     @Published @_spi(STP) public private(set) var linkAccount: PaymentSheetLinkAccount?
+
+    /// A preview of the currently selected Link payment method.
+    @Published @_spi(STP) public private(set) var paymentMethodPreview: PaymentMethodPreview?
 
     private init(
         apiClient: STPAPIClient = .shared,
