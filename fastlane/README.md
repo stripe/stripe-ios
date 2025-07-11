@@ -159,14 +159,6 @@ Generate new localized screenshots
 
 
 
-### ios installation_carthage
-
-```sh
-[bundle exec] fastlane ios installation_carthage
-```
-
-
-
 ### ios installation_spm_objc
 
 ```sh
