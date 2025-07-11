@@ -31,6 +31,7 @@ struct PaymentSheetExampleAppRootView: View {
 
                 destinationLink(for: .customerSheet_swiftUI)
                 destinationLink(for: .linkPaymentController)
+                destinationLink(for: .linkController)
                 destinationLink(for: .linkStandaloneDemo)
                 destinationLink(for: .embeddedPaymentElement)
                 destinationLink(for: .embeddedPaymentElement_swiftUI)
@@ -80,6 +81,7 @@ struct PaymentSheetExampleAppRootView: View {
 
         case customerSheet_swiftUI
         case linkPaymentController
+        case linkController
         case linkStandaloneDemo
         case embeddedPaymentElement
         case embeddedPaymentElement_swiftUI
@@ -106,6 +108,8 @@ struct PaymentSheetExampleAppRootView: View {
                 return "CustomerSheet (SwiftUI)"
             case .linkPaymentController:
                 return "LinkPaymentController"
+            case .linkController:
+                return "LinkController (SwiftUI)"
             case .linkStandaloneDemo:
                 return "Link Standalone Demo"
             case .embeddedPaymentElement:
@@ -145,6 +149,13 @@ struct PaymentSheetExampleAppRootView: View {
 
         case .linkPaymentController:
             StoryboardSceneView<ExampleLinkPaymentCheckoutViewController>(sceneIdentifier: "ExampleLinkPaymentCheckoutViewController")
+        case .linkController:
+            if #available(iOS 16.0, *) {
+                ExampleLinkControllerView()
+            } else {
+                Text("Sorry, only available on >= iOS 16.0")
+                    .font(.title2)
+            }
         case .linkStandaloneDemo:
             if #available(iOS 16.0, *) {
                 ExampleLinkStandaloneComponent()

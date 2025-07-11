@@ -113,6 +113,10 @@ final class LinkSignUpController {
     }
 
     private func dismissAndComplete(with result: SignUpResult) {
+        if case .completed(let linkAccount) = result {
+            LinkAccountContext.shared.account = linkAccount
+        }
+
         if let bottomSheetViewController = self.bottomSheetViewController {
             bottomSheetViewController.dismiss(animated: true) { [weak self] in
                 self?.completion?(result)
