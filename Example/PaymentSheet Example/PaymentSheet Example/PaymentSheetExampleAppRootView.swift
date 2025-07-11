@@ -3,7 +3,6 @@
 //  PaymentSheet Example
 //
 
-import StripePaymentSheet
 import SwiftUI
 
 @available(iOS 14.0, *)

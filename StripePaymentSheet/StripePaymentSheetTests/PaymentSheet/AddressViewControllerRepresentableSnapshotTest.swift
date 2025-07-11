@@ -21,35 +21,35 @@ class AddressElementRepresentableSnapshotTest: STPSnapshotTestCase {
         var configuration = AddressElement.Configuration()
         configuration.apiClient = STPAPIClient(publishableKey: STPTestingDefaultPublishableKey)
         configuration.appearance = PaymentSheet.Appearance.default
-        
+
         // Create a binding for the address
-        @State var address: AddressElement.AddressDetails? = nil
-        
+        @State var address: AddressElement.AddressDetails?
+
         // Create our SwiftUI view
         let swiftUIView = AddressElement(
             address: $address,
             configuration: configuration
         )
         .animation(nil) // Disable animations for testing
-        
+
         // Embed `swiftUIView` in a UIWindow for rendering
         let hostingVC = makeWindowWithAddressView(swiftUIView)
-        
+
         // Wait for address specs to load before taking snapshot
         let expectation = XCTestExpectation(description: "Address specs loaded")
         DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
             expectation.fulfill()
         }
         await fulfillment(of: [expectation], timeout: 2.0)
-        
+
         // Assume the hostingVC only has 1 subview...
         XCTAssertFalse(hostingVC.view.subviews.isEmpty)
         let subview = hostingVC.view.subviews[0]
-        
+
         verify(subview, identifier: "address_element_default")
-        
+
         // Test with pre-populated address
-        
+
         var prePopulatedConfiguration = AddressElement.Configuration()
         prePopulatedConfiguration.apiClient = STPAPIClient(publishableKey: STPTestingDefaultPublishableKey)
         prePopulatedConfiguration.appearance = PaymentSheet.Appearance.default
@@ -65,19 +65,19 @@ class AddressElementRepresentableSnapshotTest: STPSnapshotTestCase {
             name: "John Doe",
             phone: "+15551234567"
         )
-        
-        @State var prePopulatedAddressState: AddressElement.AddressDetails? = nil
-        
+
+        @State var prePopulatedAddressState: AddressElement.AddressDetails?
+
         let prePopulatedView = AddressElement(
             address: $prePopulatedAddressState,
             configuration: prePopulatedConfiguration
         )
         .animation(nil) // Disable animations for testing
-        
+
         let prePopulatedHostingVC = makeWindowWithAddressView(prePopulatedView)
         XCTAssertFalse(prePopulatedHostingVC.view.subviews.isEmpty)
         let prePopulatedSubview = prePopulatedHostingVC.view.subviews[0]
-        
+
         verify(prePopulatedSubview, identifier: "address_element_prepopulated")
     }
 
