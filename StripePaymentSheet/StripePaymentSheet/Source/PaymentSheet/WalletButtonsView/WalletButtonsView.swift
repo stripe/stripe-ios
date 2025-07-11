@@ -221,7 +221,7 @@ class WindowAuthenticationContext: NSObject, STPAuthenticationContext {
 }
 
 extension PaymentSheetLinkAccount: Hashable {
-    func hash(into hasher: inout Hasher) {
+    @_spi(STP) public func hash(into hasher: inout Hasher) {
         hasher.combine(ObjectIdentifier(self))
     }
 }

@@ -30,22 +30,19 @@ final class LinkSignUpController {
     private let linkAccount: PaymentSheetLinkAccount?
     private let accountService: LinkAccountServiceProtocol
     private let country: String?
-    private let defaultBillingDetails: PaymentSheet.BillingDetails
-    private let style: LinkStyle
     private var bottomSheetViewController: BottomSheetViewController?
+    private let configuration: PaymentElementConfiguration
 
     init(
         accountService: LinkAccountServiceProtocol,
         linkAccount: PaymentSheetLinkAccount?,
         country: String? = nil,
-        defaultBillingDetails: PaymentSheet.BillingDetails = PaymentSheet.BillingDetails(),
-        style: LinkStyle = .automatic
+        configuration: PaymentElementConfiguration
     ) {
         self.accountService = accountService
         self.linkAccount = linkAccount
         self.country = country
-        self.defaultBillingDetails = defaultBillingDetails
-        self.style = style
+        self.configuration = configuration
     }
 
     func present(
@@ -108,10 +105,10 @@ final class LinkSignUpController {
             accountService: accountService,
             linkAccount: linkAccount,
             country: country,
-            defaultBillingDetails: defaultBillingDetails
+            defaultBillingDetails: configuration.defaultBillingDetails
         )
         signUpViewController.delegate = self
-        style.asPaymentSheetStyle.configure(signUpViewController)
+        configuration.style.configure(signUpViewController)
         return signUpViewController
     }
 

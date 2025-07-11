@@ -24,7 +24,6 @@
 		432E82C3F5EC56E89D257563 /* ExampleSwiftUIPaymentSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = B7AFD32B5EAD3BEEEC3D4260 /* ExampleSwiftUIPaymentSheet.swift */; };
 		4694B03B08B7DA9706A2ED9D /* AppearancePlaygroundView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D025413F3246E241A1DFE5C /* AppearancePlaygroundView.swift */; };
 		4954E96F2D960E340061585F /* FCLiteUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4954E96E2D960E340061585F /* FCLiteUITests.swift */; };
-		496961C62E202F4A00D824C1 /* ExampleLinkAuthenticationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 496961C52E202F4A00D824C1 /* ExampleLinkAuthenticationController.swift */; };
 		4E3F7EFF78BC4F14D18024E7 /* PaymentSheetLocalizationScreenshotGenerator.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA08203146CADE9649CF0EAD /* PaymentSheetLocalizationScreenshotGenerator.swift */; };
 		540F279CE5B41C122AD1DEF6 /* PaymentSheetUITest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5CA299EAF5914484195167EB /* PaymentSheetUITest.swift */; };
 		5441EB34BBE32DD98B7A6883 /* CustomerSheetTestPlaygroundSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2806FC6A4514AA88A26B32CD /* CustomerSheetTestPlaygroundSettings.swift */; };
@@ -201,7 +200,6 @@
 		4609AB90957A6F72852677BF /* PaymentSheet-Example-Release.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "PaymentSheet-Example-Release.xcconfig"; sourceTree = "<group>"; };
 		47F5ABF3CE2F657E0085EBB2 /* mt */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = mt; path = mt.lproj/LaunchScreen.strings; sourceTree = "<group>"; };
 		4954E96E2D960E340061585F /* FCLiteUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FCLiteUITests.swift; sourceTree = "<group>"; };
-		496961C52E202F4A00D824C1 /* ExampleLinkAuthenticationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExampleLinkAuthenticationController.swift; sourceTree = "<group>"; };
 		4A52C114362A90EF8A5BBA1A /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/LaunchScreen.strings"; sourceTree = "<group>"; };
 		4AD9595F2BD9D48997A44309 /* hu */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = hu; path = hu.lproj/LaunchScreen.strings; sourceTree = "<group>"; };
 		4E74185DD2F7DC4BBDC4774A /* ExampleCheckoutDeferredViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExampleCheckoutDeferredViewController.swift; sourceTree = "<group>"; };
@@ -490,7 +488,6 @@
 				179D026BA4F5F12EA9EB6F6F /* ExampleCustomDeferredCheckoutViewController.swift */,
 				2D423EEB2C6C8BB05D632BBD /* ExampleLinkPaymentCheckoutViewController.swift */,
 				CB6F8F862E04545D003551D5 /* ExampleLinkStandaloneComponent.swift */,
-				496961C52E202F4A00D824C1 /* ExampleLinkAuthenticationController.swift */,
 				0156812DC170AFC05C102465 /* ExampleSwiftUICustomerSheet.swift */,
 				447A394B34A55D5B1CD5C0C1 /* ExampleSwiftUICustomPaymentFlow.swift */,
 				B7AFD32B5EAD3BEEEC3D4260 /* ExampleSwiftUIPaymentSheet.swift */,
@@ -735,7 +732,6 @@
 				61B2532E2D52C4F1008CFC96 /* ExampleSwiftUIEmbeddedPaymentElement.swift in Sources */,
 				6BFE613D2D407C420094DFE2 /* CustomerSessionPlaygroundView.swift in Sources */,
 				4694B03B08B7DA9706A2ED9D /* AppearancePlaygroundView.swift in Sources */,
-				496961C62E202F4A00D824C1 /* ExampleLinkAuthenticationController.swift in Sources */,
 				CB6F8F872E04545D003551D5 /* ExampleLinkStandaloneComponent.swift in Sources */,
 				A3884C372DA701A700CAE78E /* PaymentMethodOptionsSetupFutureUsagePlaygroundView.swift in Sources */,
 				DDF30DE9D7AA4BCC47CC12FB /* CustomerSheetTestPlayground.swift in Sources */,
