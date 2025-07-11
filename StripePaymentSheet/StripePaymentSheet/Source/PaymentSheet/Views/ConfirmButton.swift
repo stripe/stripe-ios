@@ -154,7 +154,7 @@ class ConfirmButton: UIView {
         fatalError("init(coder:) has not been implemented")
     }
 
-#if !canImport(CompositorServices)
+#if !os(visionOS)
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
         super.traitCollectionDidChange(previousTraitCollection)
         self.buyButton.update(status: state, callToAction: callToAction, animated: false)
@@ -393,7 +393,7 @@ class ConfirmButton: UIView {
             overriddenForegroundColor = appearance.primaryButton.textColor
         }
 
-#if !canImport(CompositorServices)
+#if !os(visionOS)
         override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
             super.traitCollectionDidChange(previousTraitCollection)
             layer.borderColor = appearance.primaryButton.borderColor.cgColor

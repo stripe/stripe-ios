@@ -116,14 +116,12 @@ The Stripe iOS SDK is organized as a multi-module framework with clear dependenc
 ### Package Manager Support
 - **Swift Package Manager**: Defined in `Package.swift` with iOS 13+ minimum deployment
 - **CocoaPods**: Individual `.podspec` files for each module
-- **Carthage**: Supported with proper framework linking
 
 ## Development Workflow
 
 ### Requirements
 - Xcode 15+ required
-- iOS 13+ minimum deployment target  
-- Carthage 0.37+ for dependency management
+- iOS 13+ minimum deployment target
 - Bundle/Fastlane for automation
 
 ### Testing Strategy

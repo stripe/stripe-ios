@@ -633,7 +633,13 @@ extension PaymentSheetFormFactory {
             )
         ) { value in
             isSaving.value = value
-            defaultCheckbox?.view.isHidden = !value
+            if let defaultCheckbox {
+                UIView.transition(with: defaultCheckbox.view, duration: 0.2,
+                                  options: .transitionCrossDissolve,
+                                  animations: {
+                    defaultCheckbox.view.isHidden = !value
+                })
+            }
         }
 
         isSaving.value =
@@ -1081,6 +1087,8 @@ extension PaymentSheet.Appearance {
         fonts.sectionHeader = scaledFont(for: font.base.medium, style: .footnote, maximumPointSize: 18)
         fonts.caption = scaledFont(for: font.base.regular, style: .caption1, maximumPointSize: 20)
         fonts.footnote = scaledFont(for: font.base.regular, style: .footnote, maximumPointSize: 20)
+        fonts.error = scaledFont(for: font.base.regular, style: .caption2, maximumPointSize: 20)
+        fonts.smallFootnote = scaledFont(for: font.base.medium, style: .caption2, maximumPointSize: 18)
         fonts.footnoteEmphasis = scaledFont(for: font.base.medium, style: .footnote, maximumPointSize: 20)
 
         theme.colors = colors

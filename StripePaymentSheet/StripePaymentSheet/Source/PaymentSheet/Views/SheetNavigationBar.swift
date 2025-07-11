@@ -84,7 +84,7 @@ class SheetNavigationBar: UIView {
         testModeView.isHidden = !isTestMode
         self.appearance = appearance
         super.init(frame: .zero)
-        #if !canImport(CompositorServices)
+        #if !os(visionOS)
         backgroundColor = appearance.colors.background.withAlphaComponent(0.9)
         #endif
         [leftItemsStackView, closeButtonRight, additionalButton].forEach {
