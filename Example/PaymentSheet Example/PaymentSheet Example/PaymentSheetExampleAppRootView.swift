@@ -170,7 +170,7 @@ struct PaymentSheetExampleAppRootView: View {
             ExampleWalletButtonsContainerView()
         case .addressCollection_swiftUI:
             if #available(iOS 15.0, *) {
-                AddressCollectionExampleView()
+                AddressElementExampleView()
             } else {
                 Text("Sorry, only available on >= iOS 15.0")
                     .font(.title2)
