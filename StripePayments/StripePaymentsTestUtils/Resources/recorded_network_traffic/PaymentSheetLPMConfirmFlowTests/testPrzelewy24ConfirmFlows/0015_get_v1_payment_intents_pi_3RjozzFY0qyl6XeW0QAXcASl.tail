@@ -1,29 +1,25 @@
-POST
-https:\/\/api\.stripe\.com\/v1\/payment_intents\/pi_3RjoLmFY0qyl6XeW1LSMrFxs\/confirm$
+GET
+https:\/\/api\.stripe\.com\/v1\/payment_intents\/pi_3RjozzFY0qyl6XeW0QAXcASl\?client_secret=pi_3RjozzFY0qyl6XeW0QAXcASl_secret_0e9VRjaLTd5Ew0zw6IwRDsp7C&expand%5B0%5D=payment_method$
 200
 application/json
-access-control-allow-methods: GET, HEAD, PUT, PATCH, POST, DELETE
-content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=MLuE6cWutcyUrIYrua0p-229crNi2Ku9E1xBChjheEToInaMygjNCvckVAx75SygcQrq0WxQzXH3Iwp9
-Server: nginx
-Cache-Control: no-cache, no-store
-x-wc: ABGHIJ
-Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
+Content-Type: application/json
 Access-Control-Allow-Origin: *
-stripe-should-retry: false
 x-stripe-priority-routing-enabled: true
-x-stripe-routing-context-priority-tier: api-testmode
-request-id: req_JqaDAjFRwtZshC
-Content-Length: 1679
-Vary: Origin
-Date: Fri, 11 Jul 2025 21:19:23 GMT
-original-request: req_JqaDAjFRwtZshC
-stripe-version: 2020-08-27
-idempotency-key: 1180ff99-490a-446b-9c4f-a7596c562b72
+content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=ADOBeb6oGJUkd7jSyg6Z1pDSevzgiU1nh60bsewsSohHvsk3ky__38JedZ_uDW789qhjZ6UyzGhErQg_
+x-wc: ABGHIJ
+access-control-allow-methods: GET, HEAD, PUT, PATCH, POST, DELETE
+Server: nginx
 access-control-expose-headers: Request-Id, Stripe-Manage-Version, Stripe-Should-Retry, X-Stripe-External-Auth-Required, X-Stripe-Privileged-Session-Required
 access-control-max-age: 300
+Cache-Control: no-cache, no-store
+Date: Fri, 11 Jul 2025 22:00:59 GMT
+stripe-version: 2020-08-27
 access-control-allow-credentials: true
-Content-Type: application/json
-X-Stripe-Mock-Request: client_secret=pi_3RjoLmFY0qyl6XeW1LSMrFxs_secret_FLTI2hA323wSA61WECkXvafSm&expand\[0]=payment_method&payment_method=pm_1RjoLmFY0qyl6XeWkFPwTRYE&return_url=https%3A\/\/foo\.com&use_stripe_sdk=true
+Content-Length: 1679
+x-stripe-routing-context-priority-tier: api-testmode
+Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
+Vary: Origin
+request-id: req_IEd78BJAOX3y1U
 
 {
   "payment_method_configuration_details" : null,
@@ -44,7 +40,7 @@ X-Stripe-Mock-Request: client_secret=pi_3RjoLmFY0qyl6XeW1LSMrFxs_secret_FLTI2hA3
     "type" : "redirect_to_url",
     "redirect_to_url" : {
       "return_url" : "https:\/\/foo.com",
-      "url" : "https:\/\/pm-redirects.stripe.com\/authorize\/acct_1G6m1pFY0qyl6XeW\/pa_nonce_Sf8diPhFyC6GMssHUWF4rfn8i9I7b0X"
+      "url" : "https:\/\/pm-redirects.stripe.com\/authorize\/acct_1G6m1pFY0qyl6XeW\/pa_nonce_Sf9IyxU6uuP6VanTnm2vYK4KlpD2GNF"
     }
   },
   "total_details" : {
@@ -54,7 +50,7 @@ X-Stripe-Mock-Request: client_secret=pi_3RjoLmFY0qyl6XeW1LSMrFxs_secret_FLTI2hA3
   },
   "payment_method" : {
     "object" : "payment_method",
-    "id" : "pm_1RjoLmFY0qyl6XeWkFPwTRYE",
+    "id" : "pm_1RjozzFY0qyl6XeWSycVSVgC",
     "billing_details" : {
       "email" : "test@test.com",
       "phone" : null,
@@ -70,7 +66,7 @@ X-Stripe-Mock-Request: client_secret=pi_3RjoLmFY0qyl6XeW1LSMrFxs_secret_FLTI2hA3
       }
     },
     "livemode" : false,
-    "created" : 1752268762,
+    "created" : 1752271255,
     "allow_redisplay" : "unspecified",
     "type" : "p24",
     "customer" : null,
@@ -78,8 +74,8 @@ X-Stripe-Mock-Request: client_secret=pi_3RjoLmFY0qyl6XeW1LSMrFxs_secret_FLTI2hA3
       "bank" : "alior_bank"
     }
   },
-  "client_secret" : "pi_3RjoLmFY0qyl6XeW1LSMrFxs_secret_FLTI2hA323wSA61WECkXvafSm",
-  "id" : "pi_3RjoLmFY0qyl6XeW1LSMrFxs",
+  "client_secret" : "pi_3RjozzFY0qyl6XeW0QAXcASl_secret_0e9VRjaLTd5Ew0zw6IwRDsp7C",
+  "id" : "pi_3RjozzFY0qyl6XeW0QAXcASl",
   "confirmation_method" : "automatic",
   "amount_details" : {
     "tip" : {
@@ -92,6 +88,6 @@ X-Stripe-Mock-Request: client_secret=pi_3RjoLmFY0qyl6XeW1LSMrFxs_secret_FLTI2hA3
     "p24"
   ],
   "setup_future_usage" : null,
-  "created" : 1752268762,
+  "created" : 1752271255,
   "description" : null
 }
