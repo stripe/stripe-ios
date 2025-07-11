@@ -72,7 +72,7 @@ class ShadowedRoundedRectangle: UIView {
         update()
     }
 
-    #if !canImport(CompositorServices)
+    #if !os(visionOS)
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
         super.traitCollectionDidChange(previousTraitCollection)
         update()

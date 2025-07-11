@@ -138,7 +138,7 @@ private extension UIImage {
     }
 
     static func from(imageData: Data) throws -> UIImage {
-        #if canImport(CompositorServices)
+        #if os(visionOS)
         let scale = 1.0
         #else
         let scale = UIScreen.main.scale
