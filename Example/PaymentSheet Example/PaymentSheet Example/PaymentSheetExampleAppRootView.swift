@@ -34,6 +34,7 @@ struct PaymentSheetExampleAppRootView: View {
                 destinationLink(for: .embeddedPaymentElement)
                 destinationLink(for: .embeddedPaymentElement_swiftUI)
                 destinationLink(for: .walletButtonsView_swiftUI)
+                destinationLink(for: .addressCollection_swiftUI)
 
                 Text("Test Playgrounds")
                     .font(.title2)
@@ -83,6 +84,7 @@ struct PaymentSheetExampleAppRootView: View {
         case embeddedPaymentElement
         case embeddedPaymentElement_swiftUI
         case walletButtonsView_swiftUI
+        case addressCollection_swiftUI
 
         case customerSheet_playground
         case paymentSheet_playground
@@ -113,6 +115,8 @@ struct PaymentSheetExampleAppRootView: View {
                 return "EmbeddedPaymentElement (SwiftUI)"
             case .walletButtonsView_swiftUI:
                 return "WalletButtonsView (SwiftUI)"
+            case .addressCollection_swiftUI:
+                return "AddressElement (SwiftUI)"
             case .customerSheet_playground:
                 return "Customer Sheet (test playground)"
             case .paymentSheet_playground:
@@ -163,6 +167,13 @@ struct PaymentSheetExampleAppRootView: View {
             }
         case .walletButtonsView_swiftUI:
             ExampleWalletButtonsContainerView()
+        case .addressCollection_swiftUI:
+            if #available(iOS 15.0, *) {
+                AddressElementExampleView()
+            } else {
+                Text("Sorry, only available on >= iOS 15.0")
+                    .font(.title2)
+            }
 
         // Playgrounds
         case .customerSheet_playground:
