@@ -28,16 +28,6 @@ final class LinkVerificationController {
         configuration.style.configure(verificationViewController)
     }
 
-    init(
-        mode: LinkVerificationView.Mode = .modal,
-        linkAccount: PaymentSheetLinkAccount,
-        style: LinkStyle = .automatic
-    ) {
-        self.verificationViewController = LinkVerificationViewController(mode: mode, linkAccount: linkAccount)
-        verificationViewController.delegate = self
-        style.asPaymentSheetStyle.configure(verificationViewController)
-    }
-
     func present(
         from presentingController: UIViewController,
         completion: @escaping CompletionBlock
