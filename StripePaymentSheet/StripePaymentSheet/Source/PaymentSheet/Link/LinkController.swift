@@ -181,7 +181,6 @@ import UIKit
         from viewController: UIViewController
     ) async throws -> AuthenticationResult {
         let isRegistered = try await lookupConsumer(with: email)
-        let style: LinkStyle = .automatic
 
         var configuration = self.configuration
         configuration.defaultBillingDetails.email = email
@@ -191,7 +190,7 @@ import UIKit
             let verificationController = LinkVerificationController(
                 mode: .modal,
                 linkAccount: linkAccount,
-                style: style
+                configuration: configuration
             )
 
             return try await withCheckedThrowingContinuation { continuation in
@@ -212,8 +211,7 @@ import UIKit
                 accountService: linkAccountService,
                 linkAccount: linkAccount,
                 country: elementsSession.countryCode,
-                defaultBillingDetails: configuration.defaultBillingDetails,
-                style: style
+                configuration: configuration
             )
 
             return try await withCheckedThrowingContinuation { continuation in
