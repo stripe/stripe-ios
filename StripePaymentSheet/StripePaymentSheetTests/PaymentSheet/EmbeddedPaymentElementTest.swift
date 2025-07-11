@@ -769,7 +769,7 @@ class EmbeddedPaymentElementTest: XCTestCase {
             XCTAssertTrue(paymentSheetError.debugDescription.contains("flatWithChevron row style without .immediateAction row selection behavior is not supported"))
         }
     }
-    
+
     func testCreateFails_whenImmediateActionAndDisplayingMandate() async throws {
         // Given an `immediateAction` configuration...
         var config = configuration

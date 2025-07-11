@@ -60,7 +60,7 @@ public extension XCTestCase {
         }
         waitForExpectations(timeout: seconds)
     }
-    
+
 }
 
 /// Helper to await an async throwing call and assert it throws an error.
