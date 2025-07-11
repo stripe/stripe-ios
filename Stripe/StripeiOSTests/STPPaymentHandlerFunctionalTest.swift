@@ -201,7 +201,10 @@ final class STPPaymentHandlerFunctionalSwiftTest: STPNetworkStubbingTestCase, ST
         let paymentHandler = STPPaymentHandler(apiClient: STPAPIClient(publishableKey: STPTestingDefaultPublishableKey))
         let analyticsClient = STPAnalyticsClient()
         paymentHandler.analyticsClient = analyticsClient
-        paymentHandler.confirmPayment(paymentIntentParams, with: self) { (_, _, _) in
+        paymentHandler.confirmPayment(paymentIntentParams, with: self) { (_, _, error) in
+            XCTAssertNotNil(error)
+            XCTAssertNotNil(error?.userInfo["payment_intent"])
+
             // ...should send these analytics
             let firstAnalytic = analyticsClient._testLogHistory.first
             XCTAssertEqual(firstAnalytic?["event"] as? String, STPAnalyticEvent.paymentHandlerConfirmStarted.rawValue)
@@ -228,7 +231,9 @@ final class STPPaymentHandlerFunctionalSwiftTest: STPNetworkStubbingTestCase, ST
         let paymentHandler = STPPaymentHandler(apiClient: STPAPIClient(publishableKey: STPTestingDefaultPublishableKey))
         let analyticsClient = STPAnalyticsClient()
         paymentHandler.analyticsClient = analyticsClient
-        paymentHandler.confirmPayment(paymentIntentParams, with: self) { (_, _, _) in
+        paymentHandler.confirmPayment(paymentIntentParams, with: self) { (_, _, error) in
+            XCTAssertNotNil(error)
+            XCTAssertNotNil(error?.userInfo["payment_intent"])
             // ...should send these analytics
             let firstAnalytic = analyticsClient._testLogHistory.first
             XCTAssertEqual(firstAnalytic?["event"] as? String, STPAnalyticEvent.paymentHandlerConfirmStarted.rawValue)
@@ -256,7 +261,9 @@ final class STPPaymentHandlerFunctionalSwiftTest: STPNetworkStubbingTestCase, ST
         let paymentHandler = STPPaymentHandler(apiClient: STPAPIClient(publishableKey: STPTestingDefaultPublishableKey))
         let analyticsClient = STPAnalyticsClient()
         paymentHandler.analyticsClient = analyticsClient
-        paymentHandler.confirmSetupIntent(setupIntentParams, with: self) { (_, _, _) in
+        paymentHandler.confirmSetupIntent(setupIntentParams, with: self) { (_, _, error) in
+            XCTAssertNotNil(error)
+            XCTAssertNotNil(error?.userInfo["setup_intent"])
             // ...should send these analytics
             let firstAnalytic = analyticsClient._testLogHistory.first
             XCTAssertEqual(firstAnalytic?["event"] as? String, STPAnalyticEvent.paymentHandlerConfirmStarted.rawValue)
@@ -284,7 +291,9 @@ final class STPPaymentHandlerFunctionalSwiftTest: STPNetworkStubbingTestCase, ST
         let paymentHandler = STPPaymentHandler(apiClient: STPAPIClient(publishableKey: STPTestingDefaultPublishableKey))
         let analyticsClient = STPAnalyticsClient()
         paymentHandler.analyticsClient = analyticsClient
-        paymentHandler.confirmSetupIntent(setupIntentParams, with: self) { (_, _, _) in
+        paymentHandler.confirmSetupIntent(setupIntentParams, with: self) { (_, _, error) in
+            XCTAssertNotNil(error)
+            XCTAssertNotNil(error?.userInfo["setup_intent"])
             // ...should send these analytics
             let firstAnalytic = analyticsClient._testLogHistory.first
             XCTAssertEqual(firstAnalytic?["event"] as? String, STPAnalyticEvent.paymentHandlerConfirmStarted.rawValue)

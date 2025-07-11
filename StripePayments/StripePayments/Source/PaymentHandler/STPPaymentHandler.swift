@@ -1811,7 +1811,7 @@ public class STPPaymentHandler: NSObject {
                     } else {
                         let safariViewController = SFSafariViewController(url: fallbackURL)
                         safariViewController.modalPresentationStyle = .overFullScreen
-#if !canImport(CompositorServices)
+#if !os(visionOS)
                         safariViewController.dismissButtonStyle = .close
                         safariViewController.delegate = self
 #endif
@@ -2282,7 +2282,7 @@ struct STPPaymentHandlerError: Error, CustomNSError, AnalyticLoggableError {
     }
 }
 
-#if !canImport(CompositorServices)
+#if !os(visionOS)
 extension STPPaymentHandler: SFSafariViewControllerDelegate {
     // MARK: - SFSafariViewControllerDelegate
     /// :nodoc:
