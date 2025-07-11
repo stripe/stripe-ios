@@ -51,7 +51,7 @@ extension PaymentSheet {
                     // Try to create a radar session for the payment method before calling the handler
                     configuration.apiClient.createSavedPaymentMethodRadarSession(paymentMethodId: paymentMethod.stripeId) { _, error in
                         // If radar session creation fails, just continue with the payment method directly
-                        if let error = error {
+                        if let error {
                             // Log the error but don't fail the payment
                             let errorAnalytic = ErrorAnalytic(event: .savedPaymentMethodRadarSessionFailure, error: error)
                             STPAnalyticsClient.sharedClient.log(analytic: errorAnalytic, apiClient: configuration.apiClient)
@@ -59,8 +59,8 @@ extension PaymentSheet {
 
                         // Call the handler regardless of radar session success/failure
                         preparePaymentMethodHandler(paymentMethod, shippingAddress)
+                        completion(.completed, STPAnalyticsClient.DeferredIntentConfirmationType.completeWithoutConfirmingIntent)
                     }
-                    completion(.completed, STPAnalyticsClient.DeferredIntentConfirmationType.completeWithoutConfirmingIntent)
                     return
                 }
 

@@ -61,7 +61,7 @@ class STPRadarSessionFunctionalTest: XCTestCase {
         let cardParams = STPPaymentMethodCardParams()
         cardParams.number = "4242424242424242"
         cardParams.expMonth = 12
-        cardParams.expYear = 2025
+        cardParams.expYear = 2035
         cardParams.cvc = "123"
 
         let billingDetails = STPPaymentMethodBillingDetails()

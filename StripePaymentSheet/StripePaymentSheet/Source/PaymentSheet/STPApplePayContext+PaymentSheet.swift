@@ -76,7 +76,7 @@ private class ApplePayContextClosureDelegate: NSObject, ApplePayContextDelegate 
                 // Try to create a radar session for the payment method before calling the handler
                 context.apiClient.createSavedPaymentMethodRadarSession(paymentMethodId: stpPaymentMethod.stripeId) { _, error in
                     // If radar session creation fails, just continue with the payment method directly
-                    if let error = error {
+                    if let error {
                         // Log the error but don't fail the payment
                         let errorAnalytic = ErrorAnalytic(event: .savedPaymentMethodRadarSessionFailure, error: error)
                         STPAnalyticsClient.sharedClient.log(analytic: errorAnalytic, apiClient: context.apiClient)
@@ -84,8 +84,8 @@ private class ApplePayContextClosureDelegate: NSObject, ApplePayContextDelegate 
 
                     // Call the handler regardless of radar session success/failure
                     preparePaymentMethodHandler(stpPaymentMethod, shippingAddress)
+                    completion(STPApplePayContext.COMPLETE_WITHOUT_CONFIRMING_INTENT, nil)
                 }
-                completion(STPApplePayContext.COMPLETE_WITHOUT_CONFIRMING_INTENT, nil)
                 return
             }
 
