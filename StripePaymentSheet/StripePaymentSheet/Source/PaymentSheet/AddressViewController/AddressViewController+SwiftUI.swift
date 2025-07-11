@@ -15,7 +15,7 @@ import UIKit
 /// Private UIViewControllerRepresentable wrapper for AddressViewController.
 /// Use AddressElement instead of using this directly.
 @available(iOS 15.0, *)
-private struct AddressViewControllerRepresentable: UIViewControllerRepresentable {
+struct AddressViewControllerRepresentable: UIViewControllerRepresentable {
 
     // MARK: Properties
 
