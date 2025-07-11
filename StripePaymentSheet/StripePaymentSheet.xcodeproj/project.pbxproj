@@ -89,7 +89,6 @@
 		3147CEEE2CC1D3700067B5E4 /* PayWithLinkViewController-WalletViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3147CEED2CC1D3700067B5E4 /* PayWithLinkViewController-WalletViewModel.swift */; };
 		3147CEEF2CC1D3700067B5E4 /* PayWithLinkViewController-NewPaymentViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3147CEE72CC1D3700067B5E4 /* PayWithLinkViewController-NewPaymentViewController.swift */; };
 		3147CEF02CC1D3700067B5E4 /* PayWithLinkViewController-WalletViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3147CEEC2CC1D3700067B5E4 /* PayWithLinkViewController-WalletViewController.swift */; };
-		3147CEF12CC1D3700067B5E4 /* PayWithLinkViewController-SignUpViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3147CEE92CC1D3700067B5E4 /* PayWithLinkViewController-SignUpViewModel.swift */; };
 		3147CEF22CC1D3700067B5E4 /* PayWithLinkViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3147CEE42CC1D3700067B5E4 /* PayWithLinkViewController.swift */; };
 		3147CEF32CC1D3700067B5E4 /* PayWithLinkViewController-LoaderViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3147CEE62CC1D3700067B5E4 /* PayWithLinkViewController-LoaderViewController.swift */; };
 		3147CEF42CC1D3700067B5E4 /* PayWithLinkViewController-BaseViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3147CEE52CC1D3700067B5E4 /* PayWithLinkViewController-BaseViewController.swift */; };
@@ -173,6 +172,8 @@
 		49909A332D8B48820031EC33 /* FCLiteErrorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49909A322D8B48820031EC33 /* FCLiteErrorView.swift */; };
 		49909A352D8B48D40031EC33 /* FCLiteError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49909A342D8B48D40031EC33 /* FCLiteError.swift */; };
 		49909A372D8B5AA30031EC33 /* FCLiteModalPresentationWrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49909A362D8B5AA30031EC33 /* FCLiteModalPresentationWrapper.swift */; };
+		49B1F7CC2E1EC43300EA2593 /* LinkSignUpViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49B1F7CB2E1EC43300EA2593 /* LinkSignUpViewController.swift */; };
+		49B1F7CE2E1EC44500EA2593 /* LinkSignUpViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49B1F7CD2E1EC44500EA2593 /* LinkSignUpViewModel.swift */; };
 		49BCD44E2D9ECBEF003A6251 /* PaymentSheetAnalyticsExperimentsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49BCD44D2D9ECBEF003A6251 /* PaymentSheetAnalyticsExperimentsTests.swift */; };
 		49DBCAFB2DCA9BB400DB3ACB /* LinkSignUpViewControllerSnapshotTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49DBCAFA2DCA9BB400DB3ACB /* LinkSignUpViewControllerSnapshotTests.swift */; };
 		49E908B32DDE107600D5BDBF /* LinkABTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49E908B22DDE107600D5BDBF /* LinkABTest.swift */; };
@@ -575,7 +576,6 @@
 		3147CEE62CC1D3700067B5E4 /* PayWithLinkViewController-LoaderViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "PayWithLinkViewController-LoaderViewController.swift"; sourceTree = "<group>"; };
 		3147CEE72CC1D3700067B5E4 /* PayWithLinkViewController-NewPaymentViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "PayWithLinkViewController-NewPaymentViewController.swift"; sourceTree = "<group>"; };
 		3147CEE82CC1D3700067B5E4 /* PayWithLinkViewController-SignUpViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "PayWithLinkViewController-SignUpViewController.swift"; sourceTree = "<group>"; };
-		3147CEE92CC1D3700067B5E4 /* PayWithLinkViewController-SignUpViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "PayWithLinkViewController-SignUpViewModel.swift"; sourceTree = "<group>"; };
 		3147CEEA2CC1D3700067B5E4 /* PayWithLinkViewController-UpdatePaymentViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "PayWithLinkViewController-UpdatePaymentViewController.swift"; sourceTree = "<group>"; };
 		3147CEEB2CC1D3700067B5E4 /* PayWithLinkViewController-VerifyAccountViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "PayWithLinkViewController-VerifyAccountViewController.swift"; sourceTree = "<group>"; };
 		3147CEEC2CC1D3700067B5E4 /* PayWithLinkViewController-WalletViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "PayWithLinkViewController-WalletViewController.swift"; sourceTree = "<group>"; };
@@ -656,6 +656,8 @@
 		49909A322D8B48820031EC33 /* FCLiteErrorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FCLiteErrorView.swift; sourceTree = "<group>"; };
 		49909A342D8B48D40031EC33 /* FCLiteError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FCLiteError.swift; sourceTree = "<group>"; };
 		49909A362D8B5AA30031EC33 /* FCLiteModalPresentationWrapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FCLiteModalPresentationWrapper.swift; sourceTree = "<group>"; };
+		49B1F7CB2E1EC43300EA2593 /* LinkSignUpViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LinkSignUpViewController.swift; sourceTree = "<group>"; };
+		49B1F7CD2E1EC44500EA2593 /* LinkSignUpViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LinkSignUpViewModel.swift; sourceTree = "<group>"; };
 		49BCD44D2D9ECBEF003A6251 /* PaymentSheetAnalyticsExperimentsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentSheetAnalyticsExperimentsTests.swift; sourceTree = "<group>"; };
 		49DBCAFA2DCA9BB400DB3ACB /* LinkSignUpViewControllerSnapshotTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LinkSignUpViewControllerSnapshotTests.swift; sourceTree = "<group>"; };
 		49E908B22DDE107600D5BDBF /* LinkABTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LinkABTest.swift; sourceTree = "<group>"; };
@@ -1317,6 +1319,15 @@
 			path = Helpers;
 			sourceTree = "<group>";
 		};
+		49B1F7C82E1EC40500EA2593 /* SignUp */ = {
+			isa = PBXGroup;
+			children = (
+				49B1F7CB2E1EC43300EA2593 /* LinkSignUpViewController.swift */,
+				49B1F7CD2E1EC44500EA2593 /* LinkSignUpViewModel.swift */,
+			);
+			path = SignUp;
+			sourceTree = "<group>";
+		};
 		4B88C1E80A7419ED296F1C68 /* FormSpec */ = {
 			isa = PBXGroup;
 			children = (
@@ -1773,6 +1784,7 @@
 				E46EF43F3DC5F4348B844EE7 /* Elements */,
 				86FB97D65ED6CB44B3E8B66C /* Extensions */,
 				319DFD940EAA6EA0A0F4E771 /* Services */,
+				49B1F7C82E1EC40500EA2593 /* SignUp */,
 				73E4C5AC3CA0DE994AF58C3F /* Utils */,
 				9DC724D623B9D7C0853761B5 /* Verification */,
 				CC85BBE4A0D121E0D8C0FC52 /* ViewModels */,
@@ -2035,7 +2047,6 @@
 				3147CEE62CC1D3700067B5E4 /* PayWithLinkViewController-LoaderViewController.swift */,
 				3147CEE72CC1D3700067B5E4 /* PayWithLinkViewController-NewPaymentViewController.swift */,
 				3147CEE82CC1D3700067B5E4 /* PayWithLinkViewController-SignUpViewController.swift */,
-				3147CEE92CC1D3700067B5E4 /* PayWithLinkViewController-SignUpViewModel.swift */,
 				3147CEEA2CC1D3700067B5E4 /* PayWithLinkViewController-UpdatePaymentViewController.swift */,
 				3147CEEB2CC1D3700067B5E4 /* PayWithLinkViewController-VerifyAccountViewController.swift */,
 				3147CEEC2CC1D3700067B5E4 /* PayWithLinkViewController-WalletViewController.swift */,
@@ -2506,7 +2517,6 @@
 				3147CEEE2CC1D3700067B5E4 /* PayWithLinkViewController-WalletViewModel.swift in Sources */,
 				3147CEEF2CC1D3700067B5E4 /* PayWithLinkViewController-NewPaymentViewController.swift in Sources */,
 				3147CEF02CC1D3700067B5E4 /* PayWithLinkViewController-WalletViewController.swift in Sources */,
-				3147CEF12CC1D3700067B5E4 /* PayWithLinkViewController-SignUpViewModel.swift in Sources */,
 				3147CEF22CC1D3700067B5E4 /* PayWithLinkViewController.swift in Sources */,
 				3147CEF32CC1D3700067B5E4 /* PayWithLinkViewController-LoaderViewController.swift in Sources */,
 				3147CEF42CC1D3700067B5E4 /* PayWithLinkViewController-BaseViewController.swift in Sources */,
@@ -2515,6 +2525,7 @@
 				3147CEF72CC1D3700067B5E4 /* PayWithLinkViewController-VerifyAccountViewController.swift in Sources */,
 				8C91277A8FEFD0B914CC6564 /* PaymentSheet-LinkConfirmOption.swift in Sources */,
 				B63DC6782CC054410011C27E /* EmbeddedPaymentElementContainerView.swift in Sources */,
+				49B1F7CC2E1EC43300EA2593 /* LinkSignUpViewController.swift in Sources */,
 				573E3DB554058AC1E34E34B6 /* AddPaymentMethodViewController.swift in Sources */,
 				4930D8D72DB93F060091FBFE /* LinkSeparatorView.swift in Sources */,
 				8D4951AE0D793D01528F352D /* PaymentMethodTypeCollectionView.swift in Sources */,
@@ -2522,6 +2533,7 @@
 				99B171DC60405D4822819E0E /* PaymentMethodType.swift in Sources */,
 				6B1657542E16DDF500E0EC06 /* FixedHeightPresentationController.swift in Sources */,
 				F29DF2AD08718147C299D2C3 /* PaymentOption+Images.swift in Sources */,
+				49B1F7CE2E1EC44500EA2593 /* LinkSignUpViewModel.swift in Sources */,
 				49909A312D8B48710031EC33 /* FCLiteContainerViewController.swift in Sources */,
 				49909A1E2D8AFAB70031EC33 /* FCLiteManifest.swift in Sources */,
 				6107F5462D4C389800905BD8 /* EmbeddedViewRepresentable.swift in Sources */,
