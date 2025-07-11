@@ -136,6 +136,7 @@ public struct AddressElement: View {
             address: $address,
             dismiss: { dismiss() }
         )
+        // Ensure keyboard doesn't push up content and create layout issues
         .ignoresSafeArea(.keyboard, edges: .bottom)
     }
 }
