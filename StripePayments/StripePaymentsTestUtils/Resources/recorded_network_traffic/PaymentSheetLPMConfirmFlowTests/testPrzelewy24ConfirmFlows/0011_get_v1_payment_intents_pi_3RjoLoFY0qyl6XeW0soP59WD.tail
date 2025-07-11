@@ -1,25 +1,25 @@
 GET
-https:\/\/api\.stripe\.com\/v1\/payment_intents\/pi_3RjB3hFY0qyl6XeW0w8Gqw2Z\?client_secret=pi_3RjB3hFY0qyl6XeW0w8Gqw2Z_secret_GIm8seDTHC7a1wcyaki1m9oZo&expand%5B0%5D=payment_method$
+https:\/\/api\.stripe\.com\/v1\/payment_intents\/pi_3RjoLoFY0qyl6XeW0soP59WD\?client_secret=pi_3RjoLoFY0qyl6XeW0soP59WD_secret_D6vxzltydc4KOYWNxbh4MHj7P&expand%5B0%5D=payment_method$
 200
 application/json
 Content-Type: application/json
 Access-Control-Allow-Origin: *
 x-stripe-priority-routing-enabled: true
-content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=u29L5bjaYTgzd0G0n6_m8wkLwddVdqfg9ygI_TiVLBcyUGMj_H73_IVoiFNjrfPT6vre87vSo5bSNDWh
+content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=ADOBeb6oGJUkd7jSyg6Z1pDSevzgiU1nh60bsewsSohHvsk3ky__38JedZ_uDW789qhjZ6UyzGhErQg_
 x-wc: ABGHIJ
 access-control-allow-methods: GET, HEAD, PUT, PATCH, POST, DELETE
 Server: nginx
 access-control-expose-headers: Request-Id, Stripe-Manage-Version, Stripe-Should-Retry, X-Stripe-External-Auth-Required, X-Stripe-Privileged-Session-Required
 access-control-max-age: 300
 Cache-Control: no-cache, no-store
-Date: Thu, 10 Jul 2025 03:22:06 GMT
+Date: Fri, 11 Jul 2025 21:19:25 GMT
 stripe-version: 2020-08-27
 access-control-allow-credentials: true
 Content-Length: 1673
 x-stripe-routing-context-priority-tier: api-testmode
 Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
 Vary: Origin
-request-id: req_m5lgvoVT6A5J5X
+request-id: req_9iIoLQ1Sh9yNyj
 
 {
   "payment_method_configuration_details" : null,
@@ -40,7 +40,7 @@ request-id: req_m5lgvoVT6A5J5X
     "type" : "redirect_to_url",
     "redirect_to_url" : {
       "return_url" : "foo:\/\/bar",
-      "url" : "https:\/\/pm-redirects.stripe.com\/authorize\/acct_1G6m1pFY0qyl6XeW\/pa_nonce_SeU1qg9cnvNNri6v7L1kfud8H5Ulu64"
+      "url" : "https:\/\/pm-redirects.stripe.com\/authorize\/acct_1G6m1pFY0qyl6XeW\/pa_nonce_Sf8dNphjwcaNjdHEGJmoJxk0GFJwoV5"
     }
   },
   "total_details" : {
@@ -50,7 +50,7 @@ request-id: req_m5lgvoVT6A5J5X
   },
   "payment_method" : {
     "object" : "payment_method",
-    "id" : "pm_1RjB3hFY0qyl6XeWvRmSFb3B",
+    "id" : "pm_1RjoLoFY0qyl6XeWGsfALvL6",
     "billing_details" : {
       "email" : "test@test.com",
       "phone" : null,
@@ -66,7 +66,7 @@ request-id: req_m5lgvoVT6A5J5X
       }
     },
     "livemode" : false,
-    "created" : 1752117725,
+    "created" : 1752268764,
     "allow_redisplay" : "unspecified",
     "type" : "p24",
     "customer" : null,
@@ -74,8 +74,8 @@ request-id: req_m5lgvoVT6A5J5X
       "bank" : "alior_bank"
     }
   },
-  "client_secret" : "pi_3RjB3hFY0qyl6XeW0w8Gqw2Z_secret_GIm8seDTHC7a1wcyaki1m9oZo",
-  "id" : "pi_3RjB3hFY0qyl6XeW0w8Gqw2Z",
+  "client_secret" : "pi_3RjoLoFY0qyl6XeW0soP59WD_secret_D6vxzltydc4KOYWNxbh4MHj7P",
+  "id" : "pi_3RjoLoFY0qyl6XeW0soP59WD",
   "confirmation_method" : "automatic",
   "amount_details" : {
     "tip" : {
@@ -88,6 +88,6 @@ request-id: req_m5lgvoVT6A5J5X
     "p24"
   ],
   "setup_future_usage" : null,
-  "created" : 1752117725,
+  "created" : 1752268764,
   "description" : null
 }
