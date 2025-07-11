@@ -35,7 +35,7 @@ extension STPAPIClient {
             if doNotLogConsumerFunnelEvent {
                 parameters["do_not_log_consumer_funnel_event"] = true
             }
-            if let email, let emailSource {
+            if let email, !email.isEmpty, let emailSource {
                 parameters["email_address"] = email.lowercased()
                 parameters["email_source"] = emailSource.rawValue
             } else {

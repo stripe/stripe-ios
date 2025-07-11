@@ -68,7 +68,7 @@ final class LinkAccountService: LinkAccountServiceProtocol {
     func lookupAccount(
         withEmail email: String?,
         emailSource: EmailSource,
-        doNotLogConsumerFunnelEvent: Bool,
+        doNotLogConsumerFunnelEvent: Bool = false,
         completion: @escaping (Result<PaymentSheetLinkAccount?, Error>) -> Void
     ) {
         guard LinkEmailHelper.canLookupEmail(email) else {
