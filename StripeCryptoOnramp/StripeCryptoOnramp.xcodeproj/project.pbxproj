@@ -15,7 +15,6 @@
 		0B83D9842E1EF6D2004F0115 /* StripeiOS Tests-Release.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 0B83D9792E1EF6D2004F0115 /* StripeiOS Tests-Release.xcconfig */; };
 		0B83D9862E1EF6D2004F0115 /* StripeiOS-Debug.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 0B83D97B2E1EF6D2004F0115 /* StripeiOS-Debug.xcconfig */; };
 		0B83D9872E1EF6D2004F0115 /* StripeiOS-Release.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 0B83D97C2E1EF6D2004F0115 /* StripeiOS-Release.xcconfig */; };
-		0B83D9902E1EF6EF004F0115 /* StripeCryptoOnramp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B83D98B2E1EF6EF004F0115 /* StripeCryptoOnramp.swift */; };
 		0B83D9912E1EF6EF004F0115 /* Docs.docc in Sources */ = {isa = PBXBuildFile; fileRef = 0B83D98E2E1EF6EF004F0115 /* Docs.docc */; };
 		0B83D9922E1EF6EF004F0115 /* StripeCryptoOnramp.h in Headers */ = {isa = PBXBuildFile; fileRef = 0B83D98D2E1EF6EF004F0115 /* StripeCryptoOnramp.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		0B83D9962E1EF6F8004F0115 /* StripeCryptoOnrampTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B83D9932E1EF6F8004F0115 /* StripeCryptoOnrampTests.swift */; };
@@ -47,7 +46,6 @@
 		0B83D9792E1EF6D2004F0115 /* StripeiOS Tests-Release.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "StripeiOS Tests-Release.xcconfig"; sourceTree = "<group>"; };
 		0B83D97B2E1EF6D2004F0115 /* StripeiOS-Debug.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "StripeiOS-Debug.xcconfig"; sourceTree = "<group>"; };
 		0B83D97C2E1EF6D2004F0115 /* StripeiOS-Release.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "StripeiOS-Release.xcconfig"; sourceTree = "<group>"; };
-		0B83D98B2E1EF6EF004F0115 /* StripeCryptoOnramp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StripeCryptoOnramp.swift; sourceTree = "<group>"; };
 		0B83D98D2E1EF6EF004F0115 /* StripeCryptoOnramp.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = StripeCryptoOnramp.h; sourceTree = "<group>"; };
 		0B83D98E2E1EF6EF004F0115 /* Docs.docc */ = {isa = PBXFileReference; lastKnownFileType = folder.documentationcatalog; path = Docs.docc; sourceTree = "<group>"; };
 		0B83D9932E1EF6F8004F0115 /* StripeCryptoOnrampTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StripeCryptoOnrampTests.swift; sourceTree = "<group>"; };
@@ -127,7 +125,6 @@
 			isa = PBXGroup;
 			children = (
 				0BED9B602E255BB1009FFF76 /* Components */,
-				0B83D98B2E1EF6EF004F0115 /* StripeCryptoOnramp.swift */,
 			);
 			path = Source;
 			sourceTree = "<group>";
@@ -310,7 +307,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				0B83D9902E1EF6EF004F0115 /* StripeCryptoOnramp.swift in Sources */,
 				0BED9B622E255BC2009FFF76 /* CryptoOnrampCoordinator.swift in Sources */,
 				0B83D9912E1EF6EF004F0115 /* Docs.docc in Sources */,
 			);
