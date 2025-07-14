@@ -95,9 +95,11 @@ import UIKit
 
     /// Creates a `LinkController` for the specified `mode`.
     ///
+    /// - Parameter apiClient: The `STPAPIClient` instance for this controller. Defaults to `.shared`.
     /// - Parameter mode: The mode in which the Link payment method controller should operate, either `payment` or `setup`.
     /// - Parameter completion: A closure that is called with the result of the creation. It returns a `LinkController` if successful, or an error if the creation failed.
     @_spi(STP) public static func create(
+        apiClient: STPAPIClient = .shared,
         mode: LinkController.Mode,
         completion: @escaping (Result<LinkController, Error>) -> Void
     ) {
@@ -117,6 +119,7 @@ import UIKit
                 }
 
                 let controller = LinkController(
+                    apiClient: apiClient,
                     mode: mode,
                     elementsSession: loadResult.elementsSession,
                     intent: loadResult.intent,
@@ -319,11 +322,12 @@ import UIKit
 
     /// Creates a `LinkController` for the specified `mode`.
     ///
+    /// - Parameter apiClient: The `STPAPIClient` instance for this controller. Defaults to `.shared`.
     /// - Parameter mode: The mode in which the Link payment method controller should operate, either `payment` or `setup`.
     /// - Returns: A `LinkController` if successful, or throws an error if the creation failed.
-    static func create(mode: LinkController.Mode) async throws -> LinkController {
+    static func create(apiClient: STPAPIClient = .shared, mode: LinkController.Mode) async throws -> LinkController {
         return try await withCheckedThrowingContinuation { continuation in
-            create(mode: mode) { result in
+            create(apiClient: apiClient, mode: mode) { result in
                 switch result {
                 case .success(let controller):
                     continuation.resume(returning: controller)
