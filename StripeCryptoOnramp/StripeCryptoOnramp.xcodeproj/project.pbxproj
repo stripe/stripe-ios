@@ -20,6 +20,11 @@
 		0B83D9922E1EF6EF004F0115 /* StripeCryptoOnramp.h in Headers */ = {isa = PBXBuildFile; fileRef = 0B83D98D2E1EF6EF004F0115 /* StripeCryptoOnramp.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		0B83D9962E1EF6F8004F0115 /* StripeCryptoOnrampTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B83D9932E1EF6F8004F0115 /* StripeCryptoOnrampTests.swift */; };
 		0B83D99A2E1EF8B7004F0115 /* XCTest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0B83D9992E1EF8B7004F0115 /* XCTest.framework */; platformFilter = ios; };
+		0BED9B622E255BC2009FFF76 /* CryptoOnrampCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BED9B612E255BC2009FFF76 /* CryptoOnrampCoordinator.swift */; };
+		0BED9B642E255FB8009FFF76 /* StripeUICore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0BED9B632E255FB8009FFF76 /* StripeUICore.framework */; };
+		0BED9B662E255FD7009FFF76 /* StripePaymentSheet.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0BED9B652E255FD7009FFF76 /* StripePaymentSheet.framework */; };
+		0BED9B682E255FE8009FFF76 /* StripeIdentity.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0BED9B672E255FE8009FFF76 /* StripeIdentity.framework */; };
+		0BED9B6A2E255FF1009FFF76 /* StripeFinancialConnections.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0BED9B692E255FF1009FFF76 /* StripeFinancialConnections.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -47,6 +52,11 @@
 		0B83D98E2E1EF6EF004F0115 /* Docs.docc */ = {isa = PBXFileReference; lastKnownFileType = folder.documentationcatalog; path = Docs.docc; sourceTree = "<group>"; };
 		0B83D9932E1EF6F8004F0115 /* StripeCryptoOnrampTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StripeCryptoOnrampTests.swift; sourceTree = "<group>"; };
 		0B83D9992E1EF8B7004F0115 /* XCTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCTest.framework; path = Platforms/iPhoneOS.platform/Developer/Library/Frameworks/XCTest.framework; sourceTree = DEVELOPER_DIR; };
+		0BED9B612E255BC2009FFF76 /* CryptoOnrampCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CryptoOnrampCoordinator.swift; sourceTree = "<group>"; };
+		0BED9B632E255FB8009FFF76 /* StripeUICore.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = StripeUICore.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		0BED9B652E255FD7009FFF76 /* StripePaymentSheet.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = StripePaymentSheet.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		0BED9B672E255FE8009FFF76 /* StripeIdentity.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = StripeIdentity.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		0BED9B692E255FF1009FFF76 /* StripeFinancialConnections.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = StripeFinancialConnections.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -54,7 +64,11 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0BED9B642E255FB8009FFF76 /* StripeUICore.framework in Frameworks */,
+				0BED9B6A2E255FF1009FFF76 /* StripeFinancialConnections.framework in Frameworks */,
+				0BED9B682E255FE8009FFF76 /* StripeIdentity.framework in Frameworks */,
 				0B34E23F2E2020E20072FC89 /* StripeCore.framework in Frameworks */,
+				0BED9B662E255FD7009FFF76 /* StripePaymentSheet.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -112,6 +126,7 @@
 		0B83D98C2E1EF6EF004F0115 /* Source */ = {
 			isa = PBXGroup;
 			children = (
+				0BED9B602E255BB1009FFF76 /* Components */,
 				0B83D98B2E1EF6EF004F0115 /* StripeCryptoOnramp.swift */,
 			);
 			path = Source;
@@ -147,6 +162,10 @@
 		0B83D9982E1EF8B7004F0115 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				0BED9B692E255FF1009FFF76 /* StripeFinancialConnections.framework */,
+				0BED9B672E255FE8009FFF76 /* StripeIdentity.framework */,
+				0BED9B652E255FD7009FFF76 /* StripePaymentSheet.framework */,
+				0BED9B632E255FB8009FFF76 /* StripeUICore.framework */,
 				0B34E23E2E2020E20072FC89 /* StripeCore.framework */,
 				0B83D9992E1EF8B7004F0115 /* XCTest.framework */,
 			);
@@ -161,6 +180,14 @@
 				0B83D9952E1EF6F8004F0115 /* StripeCryptoOnrampTests */,
 			);
 			name = Project;
+			sourceTree = "<group>";
+		};
+		0BED9B602E255BB1009FFF76 /* Components */ = {
+			isa = PBXGroup;
+			children = (
+				0BED9B612E255BC2009FFF76 /* CryptoOnrampCoordinator.swift */,
+			);
+			path = Components;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -284,6 +311,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				0B83D9902E1EF6EF004F0115 /* StripeCryptoOnramp.swift in Sources */,
+				0BED9B622E255BC2009FFF76 /* CryptoOnrampCoordinator.swift in Sources */,
 				0B83D9912E1EF6EF004F0115 /* Docs.docc in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
