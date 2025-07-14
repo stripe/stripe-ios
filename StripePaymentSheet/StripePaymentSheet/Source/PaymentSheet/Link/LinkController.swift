@@ -392,7 +392,6 @@ import UIKit
 
     @objc
     private func onLinkAccountChange(_ notification: Notification) {
-        print("**** LinkController.onLinkAccountChange")
         DispatchQueue.main.async { [weak self] in
             let linkAccount = notification.object as? PaymentSheetLinkAccount
             self?.linkAccount = linkAccount

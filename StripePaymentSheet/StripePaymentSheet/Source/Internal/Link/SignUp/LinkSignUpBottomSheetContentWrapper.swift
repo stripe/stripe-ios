@@ -5,7 +5,6 @@
 //  Created by Mat Schmid on 7/10/25.
 //
 
-@_spi(STP) import StripeUICore
 import UIKit
 
 final class LinkSignUpBottomSheetContentWrapper: UIViewController, BottomSheetContentViewController {

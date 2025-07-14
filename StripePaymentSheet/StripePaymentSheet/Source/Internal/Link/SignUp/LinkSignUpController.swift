@@ -7,10 +7,6 @@
 
 import UIKit
 
-@_spi(STP) import StripeCore
-@_spi(STP) import StripePayments
-@_spi(STP) import StripeUICore
-
 final class LinkSignUpController {
     enum SignUpResult {
         /// Sign up was completed successfully.
