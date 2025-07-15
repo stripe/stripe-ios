@@ -179,6 +179,7 @@ class STPCardScanner: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate {
 
     func stopWithError(_ error: Error?) {
         if isScanning {
+            // asdf: this is what doesn't get called
             finish(with: nil, error: error)
         }
     }

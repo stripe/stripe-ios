@@ -221,6 +221,9 @@ extension PaymentSheet {
 
         /// Set to `true` if using a wallet buttons view. This changes a few behaviors of PaymentSheet (for example, wallet buttons will never be selected by default).
         @_spi(STP) public var willUseWalletButtonsView = false
+
+        /// TODO:
+        public var autoOpenCardScan: Bool = true
     }
 
     /// Defines the layout orientations available for displaying payment methods in PaymentSheet.

@@ -127,4 +127,13 @@ enum PaymentSheetFormFactoryConfig {
         }
     }
 
+    var autoOpenCardScan: Bool {
+        switch self {
+        case .paymentElement(let config):
+            return config.autoOpenCardScan
+        case .customerSheet:
+            return false
+        }
+    }
+
 }

@@ -29,6 +29,7 @@ private class CardScanningEasilyTappableButton: UIButton {
 @objc protocol STP_Internal_CardScanningViewDelegate: NSObjectProtocol {
     func cardScanningView(
         _ cardScanningView: CardScanningView, didFinishWith cardParams: STPPaymentMethodCardParams?)
+    func cardScanningViewShouldClose(_ cardScanneringView: CardScanningView)
 }
 
 /// For internal SDK use only
@@ -57,9 +58,11 @@ class CardScanningView: UIView, STPCardScannerDelegate {
         error: Error?
     ) {
         if error != nil {
+            // or maybe this is asdf?
             self.isDisplayingError = true
         } else {
             self.delegate?.cardScanningView(self, didFinishWith: cardParams)
+            self.delegate?.cardScanningViewShouldClose(self)
         }
     }
 
@@ -160,6 +163,7 @@ class CardScanningView: UIView, STPCardScannerDelegate {
 
     func stop() {
         if isDisplayingError {
+            // closes it in the case of an error since cardScanner?.stop() won't do it in this case (because of asdf)
             self.delegate?.cardScanningView(self, didFinishWith: nil)
         }
         cardScanner?.stop()
@@ -167,6 +171,7 @@ class CardScanningView: UIView, STPCardScannerDelegate {
 
     @objc private func closeTapped() {
         self.stop()
+        self.delegate?.cardScanningViewShouldClose(self)
     }
 
     var snapshotView: UIView?
@@ -288,6 +293,7 @@ class CardScanningView: UIView, STPCardScannerDelegate {
 
     override func willMove(toWindow newWindow: UIWindow?) {
         if newWindow == nil {
+            // TOOD: fix this still being called when you hit back
             stop()
         }
         super.willMove(toWindow: newWindow)

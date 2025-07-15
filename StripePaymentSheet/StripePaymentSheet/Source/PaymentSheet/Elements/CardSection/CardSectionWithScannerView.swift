@@ -22,28 +22,51 @@ import UIKit
 @objc(STP_Internal_CardSectionWithScannerView)
 final class CardSectionWithScannerView: UIView {
     let cardSectionView: UIView
+    let autoOpenCardScan: Bool
     let analyticsHelper: PaymentSheetAnalyticsHelper?
     lazy var cardScanButton: UIButton = {
         let button = UIButton.makeCardScanButton(theme: theme)
+        button.isHidden = true
         button.addTarget(self, action: #selector(didTapCardScanButton), for: .touchUpInside)
         return button
     }()
     lazy var cardScanningView: CardScanningView = {
         let scanningView = CardScanningView()
-        scanningView.isHidden = true
         scanningView.delegate = self
+//        if #available(iOS 16.0, *) {
+//            Task {
+//                try await Task.sleep(for: .seconds(1))
+                scanningView.start()
+//            }
+//        }
         return scanningView
     }()
     weak var delegate: CardSectionWithScannerViewDelegate?
     private let theme: ElementsAppearance
 
-    init(cardSectionView: UIView, delegate: CardSectionWithScannerViewDelegate, theme: ElementsAppearance = .default, analyticsHelper: PaymentSheetAnalyticsHelper?) {
+    init(cardSectionView: UIView, autoOpenCardScan: Bool, delegate: CardSectionWithScannerViewDelegate, theme: ElementsAppearance = .default, analyticsHelper: PaymentSheetAnalyticsHelper?) {
         self.cardSectionView = cardSectionView
+        self.autoOpenCardScan = autoOpenCardScan
         self.delegate = delegate
         self.theme = theme
         self.analyticsHelper = analyticsHelper
         super.init(frame: .zero)
         installConstraints()
+
+        Task { @MainActor in
+            if #available(iOS 16.0, *) {
+                _ = try await Task.sleep(for: .seconds(0.1))
+            }
+//            cardScanningView.layoutSubviews()
+        cardScanningView.setNeedsLayout()
+        }
+
+//        if autoOpenCardScan {
+//            cardScanButton.alpha = 0
+//            cardScanningView.isHidden = false
+//            cardScanningView.start()
+//            becomeFirstResponder()
+//        }
     }
 
     required init?(coder: NSCoder) { fatalError("init(coder:) has not been implemented") }
@@ -62,26 +85,49 @@ final class CardSectionWithScannerView: UIView {
 
     @objc func didTapCardScanButton() {
         analyticsHelper?.logFormInteracted(paymentMethodTypeIdentifier: "card")
-        setCardScanVisible(true)
+//        setCardScanVisible(true)
+        showCardScan()
         cardScanningView.start()
         becomeFirstResponder()
     }
 
-    private func setCardScanVisible(_ isCardScanVisible: Bool) {
-        if !isCardScanVisible {
-            self.cardScanningView.prepDismissAnimation()
-        }
+    private func hideCardScan() {
+        self.cardScanningView.prepDismissAnimation()
+        self.cardScanButton.alpha = 0
+        self.cardScanButton.isHidden = false
         UIView.animate(withDuration: 0.3, delay: 0, usingSpringWithDamping: 1.0, initialSpringVelocity: 0.3, options: [.curveEaseInOut]) {
-            self.cardScanButton.alpha = isCardScanVisible ? 0 : 1
-            self.cardScanningView.setHiddenIfNecessary(!isCardScanVisible)
+            self.cardScanButton.alpha = 1
+            self.cardScanningView.setHiddenIfNecessary(true)
             self.layoutIfNeeded()
         } completion: { _ in
-            if !isCardScanVisible {
-                self.cardScanningView.completeDismissAnimation()
-            }
+            self.cardScanningView.completeDismissAnimation()
         }
     }
-
+    private func showCardScan() {
+        UIView.animate(withDuration: 0.3, delay: 0, usingSpringWithDamping: 1.0, initialSpringVelocity: 0.3, options: [.curveEaseInOut]) {
+            self.cardScanButton.alpha = 0
+            self.cardScanningView.setHiddenIfNecessary(false)
+            self.layoutIfNeeded()
+        } completion: { _ in
+            self.cardScanButton.isHidden = true
+        }
+    }
+//    private func setCardScanVisible(_ isCardScanVisible: Bool) {
+//        if !isCardScanVisible {
+//            self.cardScanningView.prepDismissAnimation()
+//        }
+//        UIView.animate(withDuration: 0.3, delay: 0, usingSpringWithDamping: 1.0, initialSpringVelocity: 0.3, options: [.curveEaseInOut]) {
+////            self.cardScanButton.isHidden = isCardScanVisible
+//            self.cardScanButton.alpha = isCardScanVisible ? 0 : 1
+//            self.cardScanningView.setHiddenIfNecessary(!isCardScanVisible)
+//            self.layoutIfNeeded()
+//        } completion: { _ in
+//            if !isCardScanVisible {
+//                self.cardScanningView.completeDismissAnimation()
+//            }
+//        }
+//    }
+//
     override var canBecomeFirstResponder: Bool {
         return true
     }
@@ -94,8 +140,13 @@ final class CardSectionWithScannerView: UIView {
 
 @available(macCatalyst 14.0, *)
 extension CardSectionWithScannerView: STP_Internal_CardScanningViewDelegate {
+    func cardScanningViewShouldClose(_ cardScanneringView: CardScanningView) {
+        hideCardScan()
+        //        setCardScanVisible(false)
+    }
+
     func cardScanningView(_ cardScanningView: CardScanningView, didFinishWith cardParams: STPPaymentMethodCardParams?) {
-        setCardScanVisible(false)
+//        setCardScanVisible(false)
         if let cardParams = cardParams {
             self.delegate?.didScanCard(cardParams: cardParams)
         }
