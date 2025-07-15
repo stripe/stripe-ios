@@ -176,58 +176,25 @@ import UIKit
         }
     }
 
+    /// Presents the Link authentication flow for an existing or new consumer.
+    ///
+    /// - Parameter email: The email address to authenticate or sign up with.
+    /// - Parameter viewController: The view controller from which to present the authentication flow.
+    /// - Parameter completion: A closure that is called with the result of the authentication. It returns an `AuthenticationResult` if successful, or an error if the authentication failed.
     @_spi(STP) public func presentForAuthentication(
         email: String,
-        from viewController: UIViewController
-    ) async throws -> AuthenticationResult {
-        let isRegistered = try await lookupConsumer(with: email)
-
-        var configuration = self.configuration
-        configuration.defaultBillingDetails.email = email
-
-        if isRegistered, let linkAccount {
-            // Present for authentication
-            let verificationController = LinkVerificationController(
-                mode: .modal,
-                linkAccount: linkAccount,
-                configuration: configuration
-            )
-
-            return try await withCheckedThrowingContinuation { continuation in
-                verificationController.present(from: viewController) { result in
-                    switch result {
-                    case .completed:
-                        continuation.resume(returning: .completed)
-                    case .canceled:
-                        continuation.resume(returning: .canceled)
-                    case .failed(let error):
-                        continuation.resume(throwing: error)
-                    }
-                }
-            }
-        } else {
-            // Present for signup
-            let signupController = LinkSignUpController(
-                accountService: linkAccountService,
-                linkAccount: linkAccount,
-                country: elementsSession.countryCode,
-                configuration: configuration
-            )
-
-            return try await withCheckedThrowingContinuation { continuation in
-                signupController.present(from: viewController) { result in
-                    switch result {
-                    case .completed:
-                        continuation.resume(returning: .completed)
-                    case .canceled:
-                        continuation.resume(returning: .canceled)
-                    case .failed(let error):
-                        continuation.resume(throwing: error)
-                    case .attestationError:
-                        let error = IntegrationError.missingAppAttestation
-                        continuation.resume(throwing: error)
-                    }
-                }
+        from viewController: UIViewController,
+        completion: @escaping (Result<AuthenticationResult, Error>) -> Void
+    ) {
+        Task {
+            do {
+                let result = try await presentForAuthentication(
+                    email: email,
+                    from: viewController
+                )
+                completion(.success(result))
+            } catch {
+                completion(.failure(error))
             }
         }
     }
@@ -431,6 +398,67 @@ import UIKit
                     continuation.resume(returning: isExistingLinkConsumer)
                 case .failure(let failure):
                     continuation.resume(throwing: failure)
+                }
+            }
+        }
+    }
+
+    /// Presents the Link authentication flow for an existing or new consumer.
+    ///
+    /// - Parameter email: The email address to authenticate or sign up with.
+    /// - Parameter viewController: The view controller from which to present the authentication flow.
+    /// - Returns: An `AuthenticationResult` indicating whether authentication was completed or canceled.
+    func presentForAuthentication(
+        email: String,
+        from viewController: UIViewController
+    ) async throws -> AuthenticationResult {
+        let isRegistered = try await lookupConsumer(with: email)
+
+        var configuration = self.configuration
+        configuration.defaultBillingDetails.email = email
+
+        if isRegistered, let linkAccount {
+            // Present for authentication
+            let verificationController = LinkVerificationController(
+                mode: .modal,
+                linkAccount: linkAccount,
+                configuration: configuration
+            )
+
+            return try await withCheckedThrowingContinuation { continuation in
+                verificationController.present(from: viewController) { result in
+                    switch result {
+                    case .completed:
+                        continuation.resume(returning: .completed)
+                    case .canceled:
+                        continuation.resume(returning: .canceled)
+                    case .failed(let error):
+                        continuation.resume(throwing: error)
+                    }
+                }
+            }
+        } else {
+            // Present for signup
+            let signupController = LinkSignUpController(
+                accountService: linkAccountService,
+                linkAccount: linkAccount,
+                country: elementsSession.countryCode,
+                configuration: configuration
+            )
+
+            return try await withCheckedThrowingContinuation { continuation in
+                signupController.present(from: viewController) { result in
+                    switch result {
+                    case .completed:
+                        continuation.resume(returning: .completed)
+                    case .canceled:
+                        continuation.resume(returning: .canceled)
+                    case .failed(let error):
+                        continuation.resume(throwing: error)
+                    case .attestationError:
+                        let error = IntegrationError.missingAppAttestation
+                        continuation.resume(throwing: error)
+                    }
                 }
             }
         }
