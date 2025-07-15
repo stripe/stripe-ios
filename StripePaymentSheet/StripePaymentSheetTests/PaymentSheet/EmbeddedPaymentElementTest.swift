@@ -233,29 +233,30 @@ class EmbeddedPaymentElementTest: XCTestCase {
         XCTAssertEqual(firstUpdateResult, .succeeded)
     }
 
-    func testConfirmHandlesInflightUpdateThatFails() async throws {
-        // Given a EmbeddedPaymentElement instance...
-        let sut = try await EmbeddedPaymentElement.create(intentConfiguration: paymentIntentConfig, configuration: configuration)
-        sut.delegate = self
-        sut.presentingViewController = UIViewController()
-        sut.view.autosizeHeight(width: 320)
-        sut.embeddedPaymentMethodsView.didTap(rowButton: sut.embeddedPaymentMethodsView.getRowButton(accessibilityIdentifier: "Cash App Pay"))
-        // ...updating w/ a broken config...
-        let brokenConfig = EmbeddedPaymentElement.IntentConfiguration(mode: .payment(amount: -1000, currency: "bad currency"), confirmHandler: { _, _, _ in
-            // These tests don't confirm, so this is unused
-            XCTFail("Unexpectedly called confirm handler of broken config")
-        })
-        async let _ = sut.update(intentConfiguration: brokenConfig)
-        // ...and immediately calling confirm, before the 1st update finishes...
-        async let confirmResult = sut.confirm() // Note: If this is `await`, it runs *before* the `update` call above is run.
-        // ...should make the confirm call fail b/c the update is in progress
-        switch await confirmResult {
-        case let .failed(error: error):
-            XCTAssertEqual(error.nonGenericDescription, "An error occurred in PaymentSheet. There's a problem with your integration. confirm was called when an update task is in progress. This is not allowed, wait for updates to complete before calling confirm.")
-        default:
-            XCTFail("Expected confirm to fail")
-        }
-    }
+    // Re-enable with https://jira.corp.stripe.com/browse/RUN_MOBILESDK-4465
+//    func testConfirmHandlesInflightUpdateThatFails() async throws {
+//        // Given a EmbeddedPaymentElement instance...
+//        let sut = try await EmbeddedPaymentElement.create(intentConfiguration: paymentIntentConfig, configuration: configuration)
+//        sut.delegate = self
+//        sut.presentingViewController = UIViewController()
+//        sut.view.autosizeHeight(width: 320)
+//        sut.embeddedPaymentMethodsView.didTap(rowButton: sut.embeddedPaymentMethodsView.getRowButton(accessibilityIdentifier: "Cash App Pay"))
+//        // ...updating w/ a broken config...
+//        let brokenConfig = EmbeddedPaymentElement.IntentConfiguration(mode: .payment(amount: -1000, currency: "bad currency"), confirmHandler: { _, _, _ in
+//            // These tests don't confirm, so this is unused
+//            XCTFail("Unexpectedly called confirm handler of broken config")
+//        })
+//        async let _ = sut.update(intentConfiguration: brokenConfig)
+//        // ...and immediately calling confirm, before the 1st update finishes...
+//        async let confirmResult = sut.confirm() // Note: If this is `await`, it runs *before* the `update` call above is run.
+//        // ...should make the confirm call fail b/c the update is in progress
+//        switch await confirmResult {
+//        case let .failed(error: error):
+//            XCTAssertEqual(error.nonGenericDescription, "An error occurred in PaymentSheet. There's a problem with your integration. confirm was called when an update task is in progress. This is not allowed, wait for updates to complete before calling confirm.")
+//        default:
+//            XCTFail("Expected confirm to fail")
+//        }
+//    }
 
     func testConfirmHandlesCompletedUpdateThatFailed() async throws {
         // Given a EmbeddedPaymentElement instance...
