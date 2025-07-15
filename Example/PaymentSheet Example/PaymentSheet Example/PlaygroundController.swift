@@ -368,7 +368,7 @@ class PlaygroundController: ObservableObject {
             configuration.allowedCountries = ["US", "CA", "MX", "GB"]
         }
         configuration.additionalFields.checkboxLabel = "Save this address for future orders"
-        configuration.showUseBillingAddressCheckbox = true
+        configuration.useBillingAddressCheckbox = .visible(initiallySelected: true)
         return configuration
     }
 

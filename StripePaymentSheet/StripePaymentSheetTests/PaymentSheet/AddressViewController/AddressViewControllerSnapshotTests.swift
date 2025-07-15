@@ -116,7 +116,87 @@ class AddressViewControllerSnapshotTests: STPSnapshotTestCase {
         let testWindow = UIWindow(frame: CGRect(x: 0, y: 0, width: 428, height: 500))
         testWindow.isHidden = false
         var configuration = configuration
-        configuration.showUseBillingAddressCheckbox = true
+        configuration.useBillingAddressCheckbox = .visible(initiallySelected: true)
+        configuration.defaultValues = .init(
+            address: .init(
+                city: "San Francisco",
+                country: "US",
+                line1: "510 Townsend St.",
+                postalCode: "94102",
+                state: "California"
+            ),
+            name: "Jane Doe",
+            phone: "5555555555"
+        )
+        let vc = AddressViewController(
+            addressSpecProvider: addressSpecProvider,
+            configuration: configuration,
+            delegate: self
+        )
+        let navVC = UINavigationController(rootViewController: vc)
+        testWindow.rootViewController = navVC
+        verify(navVC.view)
+    }
+
+    func testShippingAddressViewController_shippingEqualsBillingCheckboxUnselected() {
+        let testWindow = UIWindow(frame: CGRect(x: 0, y: 0, width: 428, height: 500))
+        testWindow.isHidden = false
+        var configuration = configuration
+        configuration.useBillingAddressCheckbox = .visible(initiallySelected: false)
+        configuration.defaultValues = .init(
+            address: .init(
+                city: "San Francisco",
+                country: "US",
+                line1: "510 Townsend St.",
+                postalCode: "94102",
+                state: "California"
+            ),
+            name: "Jane Doe",
+            phone: "5555555555"
+        )
+        let vc = AddressViewController(
+            addressSpecProvider: addressSpecProvider,
+            configuration: configuration,
+            delegate: self
+        )
+        let navVC = UINavigationController(rootViewController: vc)
+        testWindow.rootViewController = navVC
+        verify(navVC.view)
+    }
+
+    func testShippingAddressViewController_shippingEqualsBillingCheckboxHidden() {
+        let testWindow = UIWindow(frame: CGRect(x: 0, y: 0, width: 428, height: 500))
+        testWindow.isHidden = false
+        var configuration = configuration
+        configuration.useBillingAddressCheckbox = .hidden
+        configuration.defaultValues = .init(
+            address: .init(
+                city: "San Francisco",
+                country: "US",
+                line1: "510 Townsend St.",
+                postalCode: "94102",
+                state: "California"
+            ),
+            name: "Jane Doe",
+            phone: "5555555555"
+        )
+        let vc = AddressViewController(
+            addressSpecProvider: addressSpecProvider,
+            configuration: configuration,
+            delegate: self
+        )
+        let navVC = UINavigationController(rootViewController: vc)
+        testWindow.rootViewController = navVC
+        verify(navVC.view)
+    }
+
+    func testShippingAddressViewController_useBillingAddressCheckboxWithDefaultsButNotSelected() {
+        let testWindow = UIWindow(frame: CGRect(x: 0, y: 0, width: 428, height: 500))
+        testWindow.isHidden = false
+        var configuration = configuration
+        // This test demonstrates that when the checkbox is visible but not initially selected,
+        // the fields remain empty even though default values are provided
+        configuration.useBillingAddressCheckbox = .visible(initiallySelected: false)
         configuration.defaultValues = .init(
             address: .init(
                 city: "San Francisco",

@@ -163,10 +163,19 @@ public extension AddressViewController {
         /// Defaults to a list of countries that Stripe has audited to ensure a good autocomplete experience.
         public var autocompleteCountries: [String] = ["AU", "BE", "BR", "CA", "CH", "DE", "ES", "FR", "GB", "IE", "IT", "MX", "NO", "NL", "PL", "RU", "SE", "TR", "US", "ZA"]
 
-        /// Shows a "Use billing address" checkbox when `defaultValues.address` is set.
+        /// Configuration for the "Use billing address" checkbox behavior
         /// 
-        /// Toggles between populating fields with defaults (checked) and clearing them (unchecked).
+        /// Controls whether to show a checkbox that toggles between populating fields with defaults (checked) and clearing them (unchecked).
         /// Hidden if the default country is not in `allowedCountries`.
-        @_spi(STP) public var showUseBillingAddressCheckbox: Bool = false
+        @_spi(STP) public var useBillingAddressCheckbox: BillingAddressCheckbox = .hidden
+
+        /// Configuration options for the "Use billing address" checkbox
+        @_spi(STP) public enum BillingAddressCheckbox {
+            /// The checkbox is not displayed
+            case hidden
+            /// The checkbox is displayed with the specified initial selection state
+            /// - Parameter initiallySelected: Whether the checkbox should be initially selected
+            case visible(initiallySelected: Bool)
+        }
     }
 }

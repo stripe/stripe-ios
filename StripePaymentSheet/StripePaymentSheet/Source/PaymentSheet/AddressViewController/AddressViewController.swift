@@ -143,11 +143,12 @@ public class AddressViewController: UIViewController {
     }
 
     private lazy var shippingEqualsBillingCheckbox: CheckboxElement? = {
-        guard configuration.showUseBillingAddressCheckbox, compatibleDefaultValues != nil else { return nil }
+        guard case .visible(let initiallySelected) = configuration.useBillingAddressCheckbox,
+              compatibleDefaultValues != nil else { return nil }
         return CheckboxElement(
             theme: configuration.appearance.asElementsTheme,
             label: String.Localized.use_billing_address_for_shipping,
-            isSelectedByDefault: true,
+            isSelectedByDefault: initiallySelected,
             didToggle: { [weak self] isSelected in
                 self?.handleShippingEqualsBillingToggle(isSelected: isSelected)
             }
@@ -354,13 +355,25 @@ extension AddressViewController {
     private func makeDefaultAddressSection() -> AddressSectionElement? {
         guard hasLoadedSpecs else { return nil }
 
-        let defaultValues = compatibleDefaultValues ?? .init()
+        // Determine whether to use default values based on checkbox configuration
+        let shouldUseDefaults: Bool = {
+            switch configuration.useBillingAddressCheckbox {
+            case .hidden:
+                // When checkbox is hidden, use defaults if available (existing behavior)
+                return compatibleDefaultValues != nil
+            case .visible(let initiallySelected):
+                // When checkbox is visible, only use defaults if initially selected
+                return compatibleDefaultValues != nil && initiallySelected
+            }
+        }()
+
+        let defaultValues = shouldUseDefaults ? compatibleDefaultValues! : .init()
 
         return AddressSectionElement(
             countries: configuration.allowedCountries.isEmpty ? nil : configuration.allowedCountries,
             addressSpecProvider: addressSpecProvider,
             defaults: .init(from: defaultValues),
-            collectionMode: compatibleDefaultValues != nil ? .all(autocompletableCountries: configuration.autocompleteCountries) : .autoCompletable,
+            collectionMode: shouldUseDefaults ? .all(autocompletableCountries: configuration.autocompleteCountries) : .autoCompletable,
             additionalFields: .init(from: configuration.additionalFields),
             theme: configuration.appearance.asElementsTheme,
             presentAutoComplete: { [weak self] in
