@@ -30,7 +30,13 @@ extension PaymentSheetFormFactory {
                 merchantDisplayName: configuration.merchantDisplayName
             )
         ) { selected in
-            defaultCheckbox?.view.isHidden = !selected
+            if let defaultCheckbox {
+                UIView.transition(with: defaultCheckbox.view, duration: 0.2,
+                                  options: .transitionCrossDissolve,
+                                  animations: {
+                    defaultCheckbox.view.isHidden = !selected
+                })
+            }
         }
         defaultCheckbox?.view.isHidden = !saveCheckbox.element.isSelected
 

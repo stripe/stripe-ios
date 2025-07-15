@@ -1,4 +1,10 @@
+## X.Y.Z 2025-XX-YY
+### PaymentSheet
+* [Fixed] EmbeddedPaymentElement now errors when `configuration.rowSelectionBehavior` is `.immediateAction` and `configuration.embeddedViewDisplaysMandateText` is `true` to ensure integrations display legal mandate text to the customer.
+
 ## 24.16.2 2025-07-07
+
+* [Deprecated] Carthage is no longer officially supported. We will continue to publish binaries to the GitHub releases page for Carthage, but we will no longer test the Carthage CLI tool.
 
 ### PaymentSheet
 * [Added] Address autocomplete functionality when collecting full billing details in payment method forms.
