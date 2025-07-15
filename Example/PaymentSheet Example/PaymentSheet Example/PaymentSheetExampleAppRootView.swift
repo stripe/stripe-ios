@@ -6,51 +6,18 @@
 import StripePaymentSheet
 import SwiftUI
 
-@available(iOS 14.0, *)
+@available(iOS 15.0, *)
 struct PaymentSheetExampleAppRootView: View {
-
-    private var exampleDestinations: [NavigationDestination] {
-        [
-            .paymentSheet,
-            .paymentSheet_deferred,
-            .paymentSheet_flowController,
-            .paymentSheet_flowController_deferred,
-            .paymentSheet_swiftUI,
-            .paymentSheet_flowController_swiftUI,
-            .customerSheet_swiftUI,
-            .linkPaymentController,
-            .linkController,
-            .linkStandaloneDemo,
-            .embeddedPaymentElement,
-            .embeddedPaymentElement_swiftUI,
-            .walletButtonsView_swiftUI,
-        ]
-    }
-
-    private var playgroundDestinations: [NavigationDestination] {
-        [
-            .customerSheet_playground,
-            .paymentSheet_playground,
-        ]
+    private var destinationsBySection: [Section: [NavigationDestination]] {
+        NavigationDestination.destinationsBySection
     }
 
     var body: some View {
-        if #available(iOS 15.0, *) {
-            NavigationView {
-                Form {
-                    Section("Test Playgrounds") {
-                        ForEach(playgroundDestinations, id: \.self) { destination in
-                            NavigationLink(
-                                destination: destinationView(for: destination)
-                            ) {
-                                Text(destination.displayTitle)
-                            }
-                            .accessibility(identifier: destination.displayTitle)
-                        }
-                    }
-
-                    Section("Examples") {
-                        ForEach(exampleDestinations, id: \.self) { destination in
+        NavigationView {
+            Form {
+                ForEach(Section.allCases, id: \.self) { section in
+                    SwiftUI.Section(section.rawValue) {
+                        ForEach(destinationsBySection[section] ?? [], id: \.self) { destination in
                             NavigationLink(
                                 destination: destinationView(for: destination)
                             ) {
@@ -61,14 +28,17 @@ struct PaymentSheetExampleAppRootView: View {
                     }
                 }
             }
-            .navigationTitle("Examples")
-            .navigationBarTitleDisplayMode(.inline)
-        } else {
-            Text("Sorry, only available on >= iOS 15.0")
         }
+        .navigationTitle("Examples")
+        .navigationBarTitleDisplayMode(.inline)
     }
 
-    enum NavigationDestination: Hashable {
+    enum Section: String, CaseIterable {
+        case testPlaygrounds = "Test Playgrounds"
+        case examples = "Examples"
+    }
+
+    enum NavigationDestination: Hashable, CaseIterable {
         case paymentSheet
         case paymentSheet_deferred
         case paymentSheet_flowController
@@ -87,6 +57,38 @@ struct PaymentSheetExampleAppRootView: View {
 
         case customerSheet_playground
         case paymentSheet_playground
+
+        static var destinationsBySection: [Section: [NavigationDestination]] {
+            var result: [Section: [NavigationDestination]] = [:]
+
+            for section in Section.allCases {
+                result[section] = []
+            }
+
+            for destination in allCases {
+                switch destination {
+                case .paymentSheet,
+                     .paymentSheet_deferred,
+                     .paymentSheet_flowController,
+                     .paymentSheet_flowController_deferred,
+                     .paymentSheet_swiftUI,
+                     .paymentSheet_flowController_swiftUI,
+                     .customerSheet_swiftUI,
+                     .linkPaymentController,
+                     .linkController,
+                     .linkStandaloneDemo,
+                     .embeddedPaymentElement,
+                     .embeddedPaymentElement_swiftUI,
+                     .walletButtonsView_swiftUI:
+                    result[.examples]?.append(destination)
+                case .customerSheet_playground,
+                     .paymentSheet_playground:
+                    result[.testPlaygrounds]?.append(destination)
+                }
+            }
+
+            return result
+        }
 
         var displayTitle: String {
             switch self {
@@ -168,12 +170,7 @@ struct PaymentSheetExampleAppRootView: View {
             StoryboardSceneView<ExampleEmbeddedElementCheckoutViewController>(sceneIdentifier: "ExampleEmbeddedElementCheckoutViewController")
 
         case .embeddedPaymentElement_swiftUI:
-            if #available(iOS 15.0, *) {
-                MyEmbeddedCheckoutView()
-            } else {
-                Text("Sorry, only available on >= iOS 15.0")
-                    .font(.title2)
-            }
+            MyEmbeddedCheckoutView()
         case .walletButtonsView_swiftUI:
             ExampleWalletButtonsContainerView()
         case .addressCollection_swiftUI:
@@ -186,19 +183,9 @@ struct PaymentSheetExampleAppRootView: View {
 
         // Playgrounds
         case .customerSheet_playground:
-            if #available(iOS 15.0, *) {
-                CustomerSheetTestPlayground(settings: CustomerSheetTestPlaygroundController.settingsFromDefaults() ?? .defaultValues())
-            } else {
-                Text("Sorry, only available on >= iOS 15.0")
-                    .font(.title2)
-            }
+            CustomerSheetTestPlayground(settings: CustomerSheetTestPlaygroundController.settingsFromDefaults() ?? .defaultValues())
         case .paymentSheet_playground:
-            if #available(iOS 15.0, *) {
-                PaymentSheetTestPlayground(settings: PlaygroundController.settingsFromDefaults() ?? .defaultValues(), appearance: PaymentSheet.Appearance.default)
-            } else {
-                Text("Sorry, only available on >= iOS 15.0")
-                    .font(.title2)
-            }
+            PaymentSheetTestPlayground(settings: PlaygroundController.settingsFromDefaults() ?? .defaultValues(), appearance: PaymentSheet.Appearance.default)
         case .none:
             EmptyView()
         }
