@@ -26,7 +26,7 @@ public protocol CryptoOnrampCoordinatorProtocol {
     func isLinkUser(email: String) async throws -> Bool
 }
 
-///Coordinates headless Link user authentication and identity verification, leaving most of the UI to the client.
+/// Coordinates headless Link user authentication and identity verification, leaving most of the UI to the client.
 @_spi(CryptoOnrampSDKPreview)
 public final class CryptoOnrampCoordinator: CryptoOnrampCoordinatorProtocol {
     private let linkController: LinkController
