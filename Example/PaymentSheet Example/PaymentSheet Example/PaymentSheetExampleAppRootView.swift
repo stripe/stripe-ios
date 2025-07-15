@@ -9,66 +9,62 @@ import SwiftUI
 @available(iOS 14.0, *)
 struct PaymentSheetExampleAppRootView: View {
 
-    private struct Constants {
-        static let bottomPadding: CGFloat = 15.0
+    private var exampleDestinations: [NavigationDestination] {
+        [
+            .paymentSheet,
+            .paymentSheet_deferred,
+            .paymentSheet_flowController,
+            .paymentSheet_flowController_deferred,
+            .paymentSheet_swiftUI,
+            .paymentSheet_flowController_swiftUI,
+            .customerSheet_swiftUI,
+            .linkPaymentController,
+            .linkController,
+            .linkStandaloneDemo,
+            .embeddedPaymentElement,
+            .embeddedPaymentElement_swiftUI,
+            .walletButtonsView_swiftUI,
+        ]
     }
-    @State private var selectedDestination: NavigationDestination?
+
+    private var playgroundDestinations: [NavigationDestination] {
+        [
+            .customerSheet_playground,
+            .paymentSheet_playground,
+        ]
+    }
 
     var body: some View {
-        NavigationView  {
-            VStack {
-                Spacer()
-                Text("Examples")
-                    .font(.title2)
-                    .fontWeight(.semibold)
-                    .padding(.bottom, Constants.bottomPadding)
-                destinationLink(for: .paymentSheet)
-                destinationLink(for: .paymentSheet_deferred)
-                destinationLink(for: .paymentSheet_flowController)
-                destinationLink(for: .paymentSheet_flowController_deferred)
-                destinationLink(for: .paymentSheet_swiftUI)
-                destinationLink(for: .paymentSheet_flowController_swiftUI)
+        if #available(iOS 15.0, *) {
+            NavigationView {
+                Form {
+                    Section("Test Playgrounds") {
+                        ForEach(playgroundDestinations, id: \.self) { destination in
+                            NavigationLink(
+                                destination: destinationView(for: destination)
+                            ) {
+                                Text(destination.displayTitle)
+                            }
+                            .accessibility(identifier: destination.displayTitle)
+                        }
+                    }
 
-                destinationLink(for: .customerSheet_swiftUI)
-                destinationLink(for: .linkPaymentController)
-                destinationLink(for: .linkController)
-                destinationLink(for: .linkStandaloneDemo)
-                destinationLink(for: .embeddedPaymentElement)
-                destinationLink(for: .embeddedPaymentElement_swiftUI)
-                destinationLink(for: .walletButtonsView_swiftUI)
-                destinationLink(for: .addressCollection_swiftUI)
-
-                Text("Test Playgrounds")
-                    .font(.title2)
-                    .fontWeight(.semibold)
-                    .padding(.bottom, Constants.bottomPadding)
-                destinationLink(for: .customerSheet_playground)
-                destinationLink(for: .paymentSheet_playground)
-                Spacer()
+                    Section("Examples") {
+                        ForEach(exampleDestinations, id: \.self) { destination in
+                            NavigationLink(
+                                destination: destinationView(for: destination)
+                            ) {
+                                Text(destination.displayTitle)
+                            }
+                            .accessibility(identifier: destination.displayTitle)
+                        }
+                    }
+                }
             }
-        }
-    }
-
-    @ViewBuilder
-    func destinationLink(for destination: NavigationDestination) -> some View {
-        ZStack(alignment: .leading) {
-            PressableTextLink(
-                text: destination.displayTitle,
-                bottomPadding: Constants.bottomPadding,
-                destination: destination,
-                selection: $selectedDestination
-            )
-            .accessibility(identifier: destination.displayTitle)
-            .zIndex(1)
-
-            // Hidden NavigationLink to handle the actual navigation
-            NavigationLink(
-                destination: destinationView(for: destination),
-                tag: destination,
-                selection: $selectedDestination
-            ) { EmptyView() }
-                .opacity(0)
-                .frame(width: 0, height: 0)
+            .navigationTitle("Examples")
+            .navigationBarTitleDisplayMode(.inline)
+        } else {
+            Text("Sorry, only available on >= iOS 15.0")
         }
     }
 
@@ -91,6 +87,7 @@ struct PaymentSheetExampleAppRootView: View {
 
         case customerSheet_playground
         case paymentSheet_playground
+
         var displayTitle: String {
             switch self {
             case .paymentSheet:
@@ -204,53 +201,6 @@ struct PaymentSheetExampleAppRootView: View {
             }
         case .none:
             EmptyView()
-        }
-    }
-
-    struct PressableTextLink: View {
-        let text: String
-        let bottomPadding: CGFloat
-        let destination: NavigationDestination
-        @Binding var selection: NavigationDestination?
-
-        @GestureState private var isPressed = false
-        @State private var isTouchInside = false
-
-        var body: some View {
-            GeometryReader { geometry in
-                HStack {
-                    Spacer()
-                    Text(text)
-                        .foregroundColor(isPressed && isTouchInside ? .blue.opacity(0.6) : .blue)
-                        .padding(.bottom, bottomPadding)
-                        .contentShape(Rectangle())
-                        .gesture(
-                            DragGesture(minimumDistance: 0)
-                                .updating($isPressed) { _, state, _ in
-                                    state = true
-                                }
-                                .onChanged { value in
-                                    // Check if touch is within bounds
-                                    let isInBounds = geometry.frame(in: .local).contains(value.location)
-                                    withAnimation(.easeOut(duration: 0.05)) {
-                                        isTouchInside = isInBounds
-                                    }
-                                }
-                                .onEnded { value in
-                                    // Only navigate if finger was inside when lifted
-                                    let isInBounds = geometry.frame(in: .local).contains(value.location)
-                                    if isInBounds {
-                                        selection = destination
-                                    }
-                                    isTouchInside = false
-                                }
-                        )
-                        .animation(.easeOut(duration: 0.05), value: isPressed)
-                    Spacer()
-                }
-            }
-            // Provide a reasonable size
-            .frame(height: 20 + bottomPadding) // Adjust based on your text size
         }
     }
 }
