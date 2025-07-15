@@ -31,17 +31,23 @@ public protocol CryptoOnrampCoordinatorProtocol {
 public final class CryptoOnrampCoordinator: CryptoOnrampCoordinatorProtocol {
     private let linkController: LinkController
     private let apiClient: STPAPIClient
+    private let appearance: Appearance
 
-    private init(linkController: LinkController, apiClient: STPAPIClient = .shared) {
+    private init(linkController: LinkController, apiClient: STPAPIClient = .shared, appearance: Appearance) {
         self.linkController = linkController
         self.apiClient = apiClient
+        self.appearance = appearance
     }
 
     // MARK: - CryptoOnrampCoordinatorProtocol
 
-    public static func create(apiClient: STPAPIClient, appearance: Appearance) async throws -> CryptoOnrampCoordinator {
+    public static func create(apiClient: STPAPIClient = .shared, appearance: Appearance) async throws -> CryptoOnrampCoordinator {
         let linkController = try await LinkController.create(apiClient: apiClient, mode: .payment)
-        return CryptoOnrampCoordinator(linkController: linkController)
+        return CryptoOnrampCoordinator(
+            linkController: linkController,
+            apiClient: apiClient,
+            appearance: appearance
+        )
     }
 
     public func isLinkUser(email: String) async throws -> Bool {
