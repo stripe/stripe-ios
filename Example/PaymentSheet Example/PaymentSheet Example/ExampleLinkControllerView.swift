@@ -18,6 +18,7 @@ struct ExampleLinkControllerView: View {
     @State private var errorMessage: String?
     @State private var statusMessage: String?
     @State private var authenticationResult: String?
+    @FocusState private var isEmailFieldFocused: Bool
 
     var body: some View {
         NavigationView {
@@ -40,6 +41,7 @@ struct ExampleLinkControllerView: View {
                             .keyboardType(.emailAddress)
                             .autocapitalization(.none)
                             .disableAutocorrection(true)
+                            .focused($isEmailFieldFocused)
                     }
 
                     // Action Buttons
@@ -187,6 +189,7 @@ struct ExampleLinkControllerView: View {
         }
 
         await MainActor.run {
+            self.isEmailFieldFocused = false
             self.isLoading = true
             self.errorMessage = nil
             self.statusMessage = "Authenticating user..."
@@ -236,6 +239,7 @@ struct ExampleLinkControllerView: View {
         }
 
         await MainActor.run {
+            self.isEmailFieldFocused = false
             self.isLoading = true
             self.errorMessage = nil
             self.statusMessage = "Collecting payment method..."
