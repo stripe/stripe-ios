@@ -325,12 +325,24 @@ extension ShopPayECEPresenter: ExpressCheckoutWebviewDelegate {
                         stpAssertionFailure("Integration Error: Shop Pay ECE flow requires a preparePaymentMethodHandler")
                         return
                     }
-                    preparePaymentMethodHandler(paymentMethod,
-                                                confirmData.shippingAddress?.toSTPAddress())
-                    // Log successful completion
-                    self.analyticsHelper.logShopPayWebviewConfirmSuccess()
-                    // And then the PaymentSheet presentation handler
-                    self.confirmHandler?(.completed)
+
+                    // Try to create a radar session for the payment method before calling the handler
+                    flowController.configuration.apiClient.createSavedPaymentMethodRadarSession(paymentMethodId: paymentMethod.stripeId) { _, error in
+                        // If radar session creation fails, just continue with the payment method directly
+                        if let error {
+                            // Log the error but don't fail the payment
+                            let errorAnalytic = ErrorAnalytic(event: .savedPaymentMethodRadarSessionFailure, error: error)
+                            STPAnalyticsClient.sharedClient.log(analytic: errorAnalytic, apiClient: self.flowController.configuration.apiClient)
+                        }
+
+                        // Call the handler regardless of radar session success/failure
+                        preparePaymentMethodHandler(paymentMethod, confirmData.shippingAddress?.toSTPAddress())
+
+                        // Log successful completion
+                        self.analyticsHelper.logShopPayWebviewConfirmSuccess()
+                        // And then the PaymentSheet presentation handler
+                        self.confirmHandler?(.completed)
+                    }
                 }
             }
         } catch {

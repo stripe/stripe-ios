@@ -579,6 +579,39 @@ final class PaymentSheet_LPM_ConfirmFlowTests: STPNetworkStubbingTestCase {
         }
     }
 
+    func testEPSConfirmFlows() async throws {
+        try await _testConfirm(intentKinds: [.paymentIntent], currency: "EUR", paymentMethodType: .EPS) { form in
+            form.getTextFieldElement("Full name").setText("John Doe")
+            XCTAssertNil(form.getMandateElement())
+            XCTAssertNil(form.getTextFieldElement("Email"))
+            XCTAssertEqual(form.getAllUnwrappedSubElements().count, 5)
+        }
+    }
+
+    func testPrzelewy24ConfirmFlows() async throws {
+        try await _testConfirm(intentKinds: [.paymentIntent], currency: "EUR", paymentMethodType: .przelewy24) { form in
+            form.getTextFieldElement("Full name").setText("John Doe")
+            form.getTextFieldElement("Email").setText("test@test.com")
+            XCTAssertNotNil(form.getDropdownFieldElement("Przelewy24 Bank"))
+            XCTAssertNil(form.getMandateElement())
+            XCTAssertEqual(form.getAllUnwrappedSubElements().count, 7)
+        }
+    }
+
+    func testAffirmConfirmFlows() async throws {
+        try await _testConfirm(intentKinds: [.paymentIntent], currency: "USD", paymentMethodType: .affirm, merchantCountry: .US) { form in
+            // Affirm has no input fields and one non-interactive Affirm UI element
+            XCTAssertEqual(form.getAllUnwrappedSubElements().count, 2)
+        }
+    }
+
+    func testZipConfirmFlows() async throws {
+        try await _testConfirm(intentKinds: [.paymentIntent], currency: "AUD", paymentMethodType: .zip, merchantCountry: .AU) { form in
+            // Zip has no input fields
+            XCTAssertEqual(form.getAllUnwrappedSubElements().count, 1)
+        }
+    }
+
     // MARK: Add tests above this line
     // MARK: - 👋 👨‍🏫  Look at this test to understand how to write your own tests in this file
     func testiDEALConfirmFlows() async throws {

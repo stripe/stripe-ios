@@ -461,7 +461,6 @@ extension PaymentSheet {
                 }
 
                 if shouldReturnToPaymentSheet {
-                    self.viewController.linkConfirmOption = nil
                     self.updatePaymentOption()
                     returnToPaymentSheet()
                     return

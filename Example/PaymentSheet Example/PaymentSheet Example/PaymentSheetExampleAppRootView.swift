@@ -3,6 +3,7 @@
 //  PaymentSheet Example
 //
 
+import StripePaymentSheet
 import SwiftUI
 
 @available(iOS 14.0, *)
@@ -185,7 +186,7 @@ struct PaymentSheetExampleAppRootView: View {
             }
         case .paymentSheet_playground:
             if #available(iOS 15.0, *) {
-                PaymentSheetTestPlayground(settings: PlaygroundController.settingsFromDefaults() ?? .defaultValues())
+                PaymentSheetTestPlayground(settings: PlaygroundController.settingsFromDefaults() ?? .defaultValues(), appearance: PaymentSheet.Appearance.default)
             } else {
                 Text("Sorry, only available on >= iOS 15.0")
                     .font(.title2)
