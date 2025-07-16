@@ -550,7 +550,7 @@ extension STPAPIClient {
         if var paymentMethodParamsDict = params[PaymentMethodDataHash] as? [String: Any] {
             STPTelemetryClient.shared.addTelemetryFields(toParams: &paymentMethodParamsDict)
             paymentMethodParamsDict = Self.paramsAddingPaymentUserAgent(paymentMethodParamsDict)
-            paymentMethodParamsDict = Self.paramsAddingClientAttributionMetadata(paymentMethodParamsDict, elementsSessionConfigId: elementsSessionConfigId)
+            paymentMethodParamsDict = Self.paramsAddingClientAttributionMetadata(paymentMethodParamsDict, elementsSessionConfigId: elementsSessionConfigId, paymentIntentCreationFlow: paymentIntentCreationFlow, paymentMethodSelectionFlow: paymentMethodSelectionFlow)
             params[PaymentMethodDataHash] = paymentMethodParamsDict
         }
         if (expand?.count ?? 0) > 0 {
@@ -734,7 +734,7 @@ extension STPAPIClient {
         if var paymentMethodParamsDict = params[PaymentMethodDataHash] as? [String: Any] {
             STPTelemetryClient.shared.addTelemetryFields(toParams: &paymentMethodParamsDict)
             paymentMethodParamsDict = Self.paramsAddingPaymentUserAgent(paymentMethodParamsDict)
-            paymentMethodParamsDict = Self.paramsAddingClientAttributionMetadata(paymentMethodParamsDict, elementsSessionConfigId: elementsSessionConfigId)
+            paymentMethodParamsDict = Self.paramsAddingClientAttributionMetadata(paymentMethodParamsDict, elementsSessionConfigId: elementsSessionConfigId, paymentIntentCreationFlow: paymentIntentCreationFlow, paymentMethodSelectionFlow: paymentMethodSelectionFlow)
             params[PaymentMethodDataHash] = paymentMethodParamsDict
         }
         if let expand = expand,
@@ -834,7 +834,7 @@ extension STPAPIClient {
         )
         var parameters = STPFormEncoder.dictionary(forObject: paymentMethodParams)
         parameters = Self.paramsAddingPaymentUserAgent(parameters, additionalValues: additionalPaymentUserAgentValues)
-        parameters = Self.paramsAddingClientAttributionMetadata(parameters, elementsSessionConfigId: elementsSessionConfigId)
+        parameters = Self.paramsAddingClientAttributionMetadata(parameters, elementsSessionConfigId: elementsSessionConfigId, paymentIntentCreationFlow: paymentIntentCreationFlow, paymentMethodSelectionFlow: paymentMethodSelectionFlow)
         STPTelemetryClient.shared.addTelemetryFields(toParams: &parameters)
         APIRequest<STPPaymentMethod>.post(
             with: self,

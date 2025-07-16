@@ -125,7 +125,7 @@ class STPAPIClientTest: XCTestCase {
         STPAnalyticsClient.sharedClient.productUsage = .init()
         STPAnalyticsClient.sharedClient.addClass(toProductUsageIfNecessary: MockUAUsageClass.self)
         var params: [String: Any] = [:]
-        params = STPAPIClient.paramsAddingClientAttributionMetadata(params, elementsSessionConfigId: client.elementsSessionConfigId)
+        params = STPAPIClient.paramsAddingClientAttributionMetadata(params, elementsSessionConfigId: client.elementsSessionConfigId, paymentIntentCreationFlow: "deferred", paymentMethodSelectionFlow: "automatic")
         let clientAttributionMetadata = params["client_attribution_metadata"] as? [String: Any]
         XCTAssertNotNil(clientAttributionMetadata)
         XCTAssertNotNil(clientAttributionMetadata?["client_session_id"])
@@ -133,6 +133,8 @@ class STPAPIClientTest: XCTestCase {
         XCTAssertEqual(clientAttributionMetadata?["merchant_integration_source"] as? String, "elements")
         XCTAssertEqual(clientAttributionMetadata?["merchant_integration_subtype"] as? String, "mobile")
         XCTAssertEqual(clientAttributionMetadata?["merchant_integration_version"] as? String, "stripe-ios/\(STPAPIClient.STPSDKVersion)")
+        XCTAssertEqual(clientAttributionMetadata?["payment_intent_creation_flow"] as? String, "deferred")
+        XCTAssertEqual(clientAttributionMetadata?["payment_method_selection_flow"] as? String, "automatic")
     }
 
     func testSetAppInfo() {

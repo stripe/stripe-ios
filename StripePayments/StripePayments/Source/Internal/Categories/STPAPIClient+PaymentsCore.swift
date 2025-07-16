@@ -23,7 +23,9 @@ extension STPAPIClient {
 
     @_spi(STP) public class func paramsAddingClientAttributionMetadata(
         _ params: [String: Any],
-        elementsSessionConfigId: String?
+        elementsSessionConfigId: String?,
+        paymentIntentCreationFlow: String?,
+        paymentMethodSelectionFlow: String?
     ) -> [String: Any] {
         var newParams = params
         var clientAttributionMetadataDict: [String: Any] = [:]
@@ -32,6 +34,8 @@ extension STPAPIClient {
         clientAttributionMetadataDict["merchant_integration_source"] = "elements"
         clientAttributionMetadataDict["merchant_integration_subtype"] = "mobile"
         clientAttributionMetadataDict["merchant_integration_version"] = "stripe-ios/\(STPAPIClient.STPSDKVersion)"
+        clientAttributionMetadataDict["payment_intent_creation_flow"] = paymentIntentCreationFlow
+        clientAttributionMetadataDict["payment_method_selection_flow"] = paymentMethodSelectionFlow
         newParams["client_attribution_metadata"] = clientAttributionMetadataDict
         return newParams
     }

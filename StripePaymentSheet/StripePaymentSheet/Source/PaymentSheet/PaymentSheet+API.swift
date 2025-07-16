@@ -267,7 +267,6 @@ extension PaymentSheet {
                     : intentConfirmParamsFromSavedPaymentMethod?.confirmPaymentMethodOptions
 
                 let paymentIntentParams = makePaymentIntentParams(confirmPaymentMethodType: .saved(paymentMethod, paymentOptions: paymentOptions), paymentIntent: paymentIntent, configuration: configuration)
-
                 paymentHandler.confirmPayment(
                     paymentIntentParams,
                     with: authenticationContext,
