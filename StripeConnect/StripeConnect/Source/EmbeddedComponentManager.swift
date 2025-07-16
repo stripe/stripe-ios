@@ -93,7 +93,8 @@ public final class EmbeddedComponentManager {
 
     /// Creates a `PayoutsViewController`
     /// - Seealso: [Payouts component documentation](https://docs.stripe.com/connect/supported-embedded-components/payouts?platform=ios)
-    @_spi(DashboardOnly)
+    @_spi(PrivateBetaConnect)
+    @_documentation(visibility: public)
     public func createPayoutsViewController() -> PayoutsViewController {
         .init(componentManager: self,
               loadContent: shouldLoadContent,
