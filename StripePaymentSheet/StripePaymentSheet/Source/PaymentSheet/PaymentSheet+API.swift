@@ -174,7 +174,7 @@ extension PaymentSheet {
             STPAnalyticsClient.sharedClient.clientAttributionMetadata["payment_intent_creation_flow"] = "deferred"
             STPAnalyticsClient.sharedClient.clientAttributionMetadata["payment_method_selection_flow"] = intentConfig.paymentMethodTypes?.isEmpty ?? true ? "automatic" : "merchant_specified"
         }
-        
+
         switch paymentOption {
         // MARK: - Apple Pay
         case .applePay:

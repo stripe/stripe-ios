@@ -165,7 +165,7 @@ public class STPPaymentIntent: NSObject {
             "stripeId = \(stripeId)",
             // PaymentIntent details (alphabetical)
             "amount = \(amount)",
-            "automaticPaymentMethods = \(String(describing:automaticPaymentMethods))",
+            "automaticPaymentMethods = \(String(describing: automaticPaymentMethods))",
             "canceledAt = \(String(describing: canceledAt))",
             "captureMethod = \(String(describing: allResponseFields["capture_method"] as? String))",
             "clientSecret = <redacted>",

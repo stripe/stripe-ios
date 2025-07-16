@@ -318,7 +318,7 @@ final class PaymentSheetLoader {
             STPAnalyticsClient.sharedClient.clientAttributionMetadata["elements_session_config_id"] = elementsSession.sessionID
             STPAnalyticsClient.sharedClient.clientAttributionMetadata["payment_intent_creation_flow"] = "standard"
             STPAnalyticsClient.sharedClient.clientAttributionMetadata["payment_method_selection_flow"] = paymentIntent.automaticPaymentMethods?.enabled ?? false ? "automatic" : "merchant_specified"
-            
+
         case .setupIntentClientSecret(let clientSecret):
             let setupIntent: STPSetupIntent
             do {
