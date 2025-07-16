@@ -84,6 +84,34 @@ public extension AddressViewController {
             self.appearance = appearance
             self.buttonTitle = buttonTitle ?? .Localized.save_address
             self.title = title ?? .Localized.shipping_address
+            self.billingAddress = nil
+        }
+
+        /// Initializes a Configuration with separate billing and shipping addresses.
+        /// - Parameter billingAddress: The billing address to use for the "Use billing address for shipping" checkbox. Optional.
+        /// - Parameter defaultValues: The shipping address to pre-populate the form with.
+        /// - Parameter additionalFields: Configuration related to the collection of additional fields beyond the physical address.
+        /// - Parameter allowedCountries: A list of two-letter country codes representing countries the customers can select.
+        /// - Parameter appearance: Configuration for the look and feel of the UI.
+        /// - Parameter buttonTitle: The title of the primary button displayed at the bottom of the screen.
+        /// - Parameter title: The title of the view controller.
+        @_spi(STP) public init(
+            billingAddress: DefaultAddressDetails = .init(),
+            defaultValues: DefaultAddressDetails = .init(),
+            additionalFields: AddressViewController.Configuration.AdditionalFields = .init(),
+            allowedCountries: [String] = [],
+            appearance: PaymentSheet.Appearance = PaymentSheet.Appearance.default,
+            buttonTitle: String? = nil,
+            title: String? = nil
+        ) {
+            self.billingAddress = billingAddress.address.isEmpty ? nil : billingAddress
+            self.defaultValues = defaultValues
+
+            self.additionalFields = additionalFields
+            self.allowedCountries = allowedCountries
+            self.appearance = appearance
+            self.buttonTitle = buttonTitle ?? .Localized.save_address
+            self.title = title ?? .Localized.shipping_address
         }
 
         /// Configuration related to the collection of additional fields beyond the physical address.
@@ -163,10 +191,9 @@ public extension AddressViewController {
         /// Defaults to a list of countries that Stripe has audited to ensure a good autocomplete experience.
         public var autocompleteCountries: [String] = ["AU", "BE", "BR", "CA", "CH", "DE", "ES", "FR", "GB", "IE", "IT", "MX", "NO", "NL", "PL", "RU", "SE", "TR", "US", "ZA"]
 
-        /// Shows a "Use billing address" checkbox when `defaultValues.address` is set.
-        /// 
-        /// Toggles between populating fields with defaults (checked) and clearing them (unchecked).
-        /// Hidden if the default country is not in `allowedCountries`.
-        @_spi(STP) public var showUseBillingAddressCheckbox: Bool = false
+        /// The billing address to use for the "Use billing address for shipping" checkbox.
+        /// When provided, shows a checkbox that allows customers to populate shipping fields with billing address data.
+        @_spi(STP) public var billingAddress: DefaultAddressDetails?
+
     }
 }
