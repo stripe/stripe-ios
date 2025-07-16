@@ -37,8 +37,6 @@ extension PaymentSheet {
                         STPAnalyticsClient.sharedClient.log(analytic: errorAnalytic)
                     }
                     stpAssert(newPaymentMethod == nil)
-                    configuration.apiClient.paymentIntentCreationFlow = "deferred"
-                    configuration.apiClient.paymentMethodSelectionFlow = intentConfig.paymentMethodTypes?.isEmpty ?? true ? "automatic" : "merchant-specified"
                     paymentMethod = try await configuration.apiClient.createPaymentMethod(with: params, additionalPaymentUserAgentValues: makeDeferredPaymentUserAgentValue(intentConfiguration: intentConfig))
                     confirmType = .new(params: params, paymentOptions: paymentOptions, paymentMethod: paymentMethod, shouldSave: shouldSave, shouldSetAsDefaultPM: shouldSetAsDefaultPM)
                 }

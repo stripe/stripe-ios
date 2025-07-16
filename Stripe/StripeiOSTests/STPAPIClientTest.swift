@@ -12,8 +12,7 @@ import XCTest
 @testable@_spi(STP) import StripeApplePay
 @testable@_spi(STP) import StripeCore
 @testable@_spi(STP) import StripePayments
-@testable@_spi(STP) @_spi(CustomerSessionBetaAccess) import StripePaymentSheet
-@testable import StripePaymentsTestUtils
+@testable@_spi(STP) import StripePaymentSheet
 @testable@_spi(STP) import StripePaymentsUI
 
 class STPAPIClientTest: XCTestCase {
@@ -104,37 +103,6 @@ class STPAPIClientTest: XCTestCase {
 
         params = STPAPIClient.paramsAddingPaymentUserAgent(params, additionalValues: ["foo"])
         XCTAssertEqual(params["payment_user_agent"] as! String, "stripe-ios/\(StripeAPIConfiguration.STPSDKVersion); variant.paymentsheet; MockUAUsageClass; foo")
-    }
-
-    func testClientAttributionMetadata() async throws {
-        AnalyticsHelper.shared.generateSessionID()
-        let client = STPAPIClient(publishableKey: STPTestingDefaultPublishableKey)
-        // Create a new customer and new key
-        let customerAndEphemeralKey = try await STPTestingAPIClient.shared().fetchCustomerAndEphemeralKey(customerID: nil, merchantCountry: nil)
-        let cscs = try await STPTestingAPIClient.shared().fetchCustomerAndCustomerSessionClientSecret(customerID: customerAndEphemeralKey.customer,
-                                                                                                      merchantCountry: nil)
-        var configuration = PaymentSheet.Configuration()
-        configuration.customer = PaymentSheet.CustomerConfiguration(id: cscs.customer, customerSessionClientSecret: cscs.customerSessionClientSecret)
-        let elementsSession = try await client.retrieveDeferredElementsSession(
-            withIntentConfig: .init(mode: .payment(amount: 5000, currency: "usd", setupFutureUsage: .offSession, captureMethod: .automatic),
-                confirmHandler: { _, _, _ in
-                    // no-op
-                }),
-            clientDefaultPaymentMethod: nil,
-            configuration: configuration)
-        STPAnalyticsClient.sharedClient.productUsage = .init()
-        STPAnalyticsClient.sharedClient.addClass(toProductUsageIfNecessary: MockUAUsageClass.self)
-        var params: [String: Any] = [:]
-        params = STPAPIClient.paramsAddingClientAttributionMetadata(params, elementsSessionConfigId: client.elementsSessionConfigId, paymentIntentCreationFlow: "deferred", paymentMethodSelectionFlow: "automatic")
-        let clientAttributionMetadata = params["client_attribution_metadata"] as? [String: Any]
-        XCTAssertNotNil(clientAttributionMetadata)
-        XCTAssertNotNil(clientAttributionMetadata?["client_session_id"])
-        XCTAssertEqual(clientAttributionMetadata?["elements_session_config_id"] as? String, elementsSession.sessionID)
-        XCTAssertEqual(clientAttributionMetadata?["merchant_integration_source"] as? String, "elements")
-        XCTAssertEqual(clientAttributionMetadata?["merchant_integration_subtype"] as? String, "mobile")
-        XCTAssertEqual(clientAttributionMetadata?["merchant_integration_version"] as? String, "stripe-ios/\(STPAPIClient.STPSDKVersion)")
-        XCTAssertEqual(clientAttributionMetadata?["payment_intent_creation_flow"] as? String, "deferred")
-        XCTAssertEqual(clientAttributionMetadata?["payment_method_selection_flow"] as? String, "automatic")
     }
 
     func testSetAppInfo() {

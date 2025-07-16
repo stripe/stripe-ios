@@ -297,7 +297,6 @@ final class PaymentSheetLoader {
             }
             return defaultStripePaymentMethodId(forCustomerID: customer.id)
         }()
-
         switch mode {
         case .paymentIntentClientSecret(let clientSecret):
             let paymentIntent: STPPaymentIntent
@@ -316,6 +315,10 @@ final class PaymentSheetLoader {
                 throw PaymentSheetError.paymentIntentInTerminalState(status: paymentIntent.status)
             }
             intent = .paymentIntent(paymentIntent)
+            STPAnalyticsClient.sharedClient.clientAttributionMetadata["elements_session_config_id"] = elementsSession.sessionID
+            STPAnalyticsClient.sharedClient.clientAttributionMetadata["payment_intent_creation_flow"] = "standard"
+            STPAnalyticsClient.sharedClient.clientAttributionMetadata["payment_method_selection_flow"] = paymentIntent.automaticPaymentMethods?.enabled ?? false ? "automatic" : "merchant_specified"
+            
         case .setupIntentClientSecret(let clientSecret):
             let setupIntent: STPSetupIntent
             do {
@@ -333,6 +336,9 @@ final class PaymentSheetLoader {
                 throw PaymentSheetError.setupIntentInTerminalState(status: setupIntent.status)
             }
             intent = .setupIntent(setupIntent)
+            STPAnalyticsClient.sharedClient.clientAttributionMetadata["elements_session_config_id"] = elementsSession.sessionID
+            STPAnalyticsClient.sharedClient.clientAttributionMetadata["payment_intent_creation_flow"] = "standard"
+            STPAnalyticsClient.sharedClient.clientAttributionMetadata["payment_method_selection_flow"] = setupIntent.automaticPaymentMethods?.enabled ?? false ? "automatic" : "merchant_specified"
         case .deferredIntent(let intentConfig):
             do {
                 elementsSession = try await configuration.apiClient.retrieveDeferredElementsSession(withIntentConfig: intentConfig,
@@ -347,6 +353,9 @@ final class PaymentSheetLoader {
                 let paymentMethodTypes = intentConfig.paymentMethodTypes?.map { STPPaymentMethod.type(from: $0) } ?? [.card]
                 elementsSession = .makeBackupElementsSession(allResponseFields: [:], paymentMethodTypes: paymentMethodTypes)
                 intent = .deferredIntent(intentConfig: intentConfig)
+                STPAnalyticsClient.sharedClient.clientAttributionMetadata["elements_session_config_id"] = elementsSession.sessionID
+                STPAnalyticsClient.sharedClient.clientAttributionMetadata["payment_intent_creation_flow"] = "deferred"
+                STPAnalyticsClient.sharedClient.clientAttributionMetadata["payment_method_selection_flow"] = intentConfig.paymentMethodTypes?.isEmpty ?? true ? "automatic" : "merchant_specified"
             }
         }
 

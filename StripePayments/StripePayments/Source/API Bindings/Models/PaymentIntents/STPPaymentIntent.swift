@@ -153,6 +153,9 @@ public class STPPaymentIntent: NSObject {
         return setupFutureUsage.stringValue
     }
 
+    /// Automatic payment methods configuration for this PaymentIntent.
+    @_spi(STP) public let automaticPaymentMethods: STPIntentAutomaticPaymentMethods?
+
     /// :nodoc:
     @objc public override var description: String {
         let props: [String] = [
@@ -162,6 +165,7 @@ public class STPPaymentIntent: NSObject {
             "stripeId = \(stripeId)",
             // PaymentIntent details (alphabetical)
             "amount = \(amount)",
+            "automaticPaymentMethods = \(String(describing:automaticPaymentMethods))",
             "canceledAt = \(String(describing: canceledAt))",
             "captureMethod = \(String(describing: allResponseFields["capture_method"] as? String))",
             "clientSecret = <redacted>",
@@ -189,6 +193,7 @@ public class STPPaymentIntent: NSObject {
     private init(
         allResponseFields: [AnyHashable: Any],
         amount: Int,
+        automaticPaymentMethods: STPIntentAutomaticPaymentMethods?,
         canceledAt: Date?,
         captureMethod: STPPaymentIntentCaptureMethod,
         clientSecret: String,
@@ -212,6 +217,7 @@ public class STPPaymentIntent: NSObject {
     ) {
         self.allResponseFields = allResponseFields
         self.amount = amount
+        self.automaticPaymentMethods = automaticPaymentMethods
         self.canceledAt = canceledAt
         self.captureMethod = captureMethod
         self.clientSecret = clientSecret
@@ -271,11 +277,15 @@ extension STPPaymentIntent: STPAPIResponseDecodable {
         let paymentMethod = STPPaymentMethod.decodedObject(
             fromAPIResponse: dict["payment_method"] as? [AnyHashable: Any]
         )
+        let automaticPaymentMethods = STPIntentAutomaticPaymentMethods.decodedObject(
+            fromAPIResponse: dict["automatic_payment_methods"] as? [AnyHashable: Any]
+        )
         let setupFutureUsageString = dict["setup_future_usage"] as? String
         let canceledAtUnixTime = dict["canceled_at"] as? TimeInterval
         return STPPaymentIntent(
             allResponseFields: dict,
             amount: finalAmount,
+            automaticPaymentMethods: automaticPaymentMethods,
             canceledAt: canceledAtUnixTime != nil
                 ? Date(timeIntervalSince1970: canceledAtUnixTime!) : nil,
             captureMethod: STPPaymentIntentCaptureMethod.captureMethod(

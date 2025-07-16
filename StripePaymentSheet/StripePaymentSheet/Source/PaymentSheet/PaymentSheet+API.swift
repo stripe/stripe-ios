@@ -160,6 +160,21 @@ extension PaymentSheet {
             completion(makePaymentSheetResult(for: status, error: error), nil)
         }
 
+        switch intent {
+        // MARK: ↪ PaymentIntent
+        case .paymentIntent(let paymentIntent):
+            STPAnalyticsClient.sharedClient.clientAttributionMetadata["payment_intent_creation_flow"] = "standard"
+            STPAnalyticsClient.sharedClient.clientAttributionMetadata["payment_method_selection_flow"] = paymentIntent.automaticPaymentMethods?.enabled ?? false ? "automatic" : "merchant_specified"
+        // MARK: ↪ SetupIntent
+        case .setupIntent(let setupIntent):
+            STPAnalyticsClient.sharedClient.clientAttributionMetadata["payment_intent_creation_flow"] = "standard"
+            STPAnalyticsClient.sharedClient.clientAttributionMetadata["payment_method_selection_flow"] = setupIntent.automaticPaymentMethods?.enabled ?? false ? "automatic" : "merchant_specified"
+        // MARK: ↪ Deferred Intent
+        case .deferredIntent(let intentConfig):
+            STPAnalyticsClient.sharedClient.clientAttributionMetadata["payment_intent_creation_flow"] = "deferred"
+            STPAnalyticsClient.sharedClient.clientAttributionMetadata["payment_method_selection_flow"] = intentConfig.paymentMethodTypes?.isEmpty ?? true ? "automatic" : "merchant_specified"
+        }
+        
         switch paymentOption {
         // MARK: - Apple Pay
         case .applePay:

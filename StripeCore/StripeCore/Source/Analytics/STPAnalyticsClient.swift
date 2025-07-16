@@ -42,6 +42,8 @@ import UIKit
     }
     public weak var delegate: STPAnalyticsClientDelegate?
 
+    @_spi(STP) public var clientAttributionMetadata: [String: Any] = ["merchant_integration_source": "elements", "merchant_integration_subtype": "mobile", "merchant_integration_version": "stripe-ios/\(STPAPIClient.STPSDKVersion)"]
+
     @objc public var productUsage: Set<String> = Set()
     private var additionalInfoSet: Set<String> = Set()
     private(set) var urlSession: URLSession = URLSession(
