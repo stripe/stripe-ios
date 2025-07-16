@@ -88,24 +88,24 @@ public extension AddressViewController {
         }
 
         /// Initializes a Configuration with separate billing and shipping addresses.
-        /// - Parameter billingAddress: The billing address to use for the "Use billing address for shipping" checkbox. Optional.
         /// - Parameter defaultValues: The shipping address to pre-populate the form with.
+        /// - Parameter billingAddress: The billing address to use for the "Use billing address for shipping" checkbox. Optional.
         /// - Parameter additionalFields: Configuration related to the collection of additional fields beyond the physical address.
         /// - Parameter allowedCountries: A list of two-letter country codes representing countries the customers can select.
         /// - Parameter appearance: Configuration for the look and feel of the UI.
         /// - Parameter buttonTitle: The title of the primary button displayed at the bottom of the screen.
         /// - Parameter title: The title of the view controller.
         @_spi(STP) public init(
-            billingAddress: DefaultAddressDetails = .init(),
             defaultValues: DefaultAddressDetails = .init(),
+            billingAddress: DefaultAddressDetails = .init(),
             additionalFields: AddressViewController.Configuration.AdditionalFields = .init(),
             allowedCountries: [String] = [],
             appearance: PaymentSheet.Appearance = PaymentSheet.Appearance.default,
             buttonTitle: String? = nil,
             title: String? = nil
         ) {
-            self.billingAddress = billingAddress.address.isEmpty ? nil : billingAddress
             self.defaultValues = defaultValues
+            self.billingAddress = billingAddress.address.isEmpty ? nil : billingAddress
 
             self.additionalFields = additionalFields
             self.allowedCountries = allowedCountries
