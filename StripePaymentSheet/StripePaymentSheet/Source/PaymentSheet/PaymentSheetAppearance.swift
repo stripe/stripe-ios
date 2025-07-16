@@ -325,6 +325,10 @@ public extension PaymentSheet.Appearance {
             /// - Note: Increasing this value increases the height of each row
             public var additionalInsets: CGFloat = 6.0
 
+            /// Controls the padding around the payment method icon.
+            /// - Note: The top and bottom margins are ignored; use `additionalInsets` to control the height of the row.
+            public var paymentMethodIconLayoutMargins: NSDirectionalEdgeInsets = .init(top: 0, leading: 12, bottom: 0, trailing: 12)
+
             /// Appearance settings for the flat style
             public var flat: Flat = Flat()
 
