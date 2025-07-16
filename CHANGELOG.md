@@ -4,6 +4,7 @@
 
 ### AddressElement
 * [Added] SwiftUI support for AddressElement.
+
 ## 24.16.2 2025-07-07
 
 ## 24.16.2 2025-07-07
