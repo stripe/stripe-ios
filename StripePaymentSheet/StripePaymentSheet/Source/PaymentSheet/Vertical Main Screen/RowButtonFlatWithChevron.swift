@@ -67,7 +67,7 @@ final class RowButtonFlatWithChevron: RowButton {
         let insets = appearance.embeddedPaymentElement.row.additionalInsets
         NSLayoutConstraint.activate([
             // Image view constraints
-            imageView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 12),
+            imageView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: appearance.embeddedPaymentElement.row.paymentMethodIconLayoutMargins.leading),
             imageView.topAnchor.constraint(greaterThanOrEqualTo: topAnchor, constant: 10 + insets),
             imageView.bottomAnchor.constraint(lessThanOrEqualTo: bottomAnchor, constant: -10 - insets),
             imageView.heightAnchor.constraint(equalToConstant: 20),
@@ -77,7 +77,7 @@ final class RowButtonFlatWithChevron: RowButton {
             imageViewBottomConstraint,
 
             // Label constraints
-            horizontalStackView.leadingAnchor.constraint(equalTo: imageView.trailingAnchor, constant: 12),
+            horizontalStackView.leadingAnchor.constraint(equalTo: imageView.trailingAnchor, constant: appearance.embeddedPaymentElement.row.paymentMethodIconLayoutMargins.trailing),
             horizontalStackView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -12),
             horizontalStackView.centerYAnchor.constraint(equalTo: centerYAnchor),
             horizontalStackView.topAnchor.constraint(greaterThanOrEqualTo: topAnchor, constant: insets),
