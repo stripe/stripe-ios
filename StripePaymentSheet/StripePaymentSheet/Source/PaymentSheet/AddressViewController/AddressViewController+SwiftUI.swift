@@ -10,9 +10,9 @@
 import SwiftUI
 import UIKit
 
-// MARK: - Private Implementation
+// MARK: - Internal Implementation
 
-/// Private UIViewControllerRepresentable wrapper for AddressViewController.
+/// Internal UIViewControllerRepresentable wrapper for AddressViewController.
 /// Use AddressElement instead of using this directly.
 @available(iOS 15.0, *)
 struct AddressViewControllerRepresentable: UIViewControllerRepresentable {
@@ -54,7 +54,7 @@ struct AddressViewControllerRepresentable: UIViewControllerRepresentable {
         let navigationController = UINavigationController(rootViewController: addressViewController)
 
         // Set preferred content size to help SwiftUI with initial sizing
-        // This prevents constraint conflicts during measurement phase
+        // This prevents constraint conflicts during measurement phase and janky present animation
         navigationController.preferredContentSize = UIView.layoutFittingExpandedSize
         return navigationController
     }
