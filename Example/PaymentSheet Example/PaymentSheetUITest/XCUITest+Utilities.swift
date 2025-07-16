@@ -228,7 +228,8 @@ extension XCTestCase {
                       cardNumber: String? = nil,
                       cvc: String = "123",
                       postalEnabled: Bool = true,
-                      tapCheckboxWithText checkboxText: String? = nil) throws {
+                      tapCheckboxWithText checkboxText: String? = nil,
+                      disableDefaultOptInIfNeeded: Bool = false) throws {
         let context = container ?? app
 
         let numberField = context.textFields["Card number"]
@@ -244,6 +245,12 @@ extension XCTestCase {
             XCTAssertFalse(saveThisAccountToggle.isSelected)
             saveThisAccountToggle.tap()
             XCTAssertTrue(saveThisAccountToggle.isSelected)
+        }
+        if disableDefaultOptInIfNeeded {
+            let saveSwitch = app.switches.containing(NSPredicate(format: "label CONTAINS[c] 'Save'")).firstMatch
+            if saveSwitch.exists && saveSwitch.isSelected {
+                saveSwitch.tap()
+            }
         }
     }
 
