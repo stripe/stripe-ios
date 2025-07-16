@@ -3,7 +3,7 @@ https:\/\/api\.stripe\.com\/v1\/payment_methods$
 200
 application/json
 access-control-allow-methods: GET, HEAD, PUT, PATCH, POST, DELETE
-content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=cPXUWdEBSemR8DRbn1evdJ2T67PKAID4T8Uf5_TlXj1O_8l6OxNFDNbS4Mr7-YJ-ZcN4Nq12GPmEytVo
+content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=kaEvxMSKvxme6nbdnxQGaP9wOdADidFYyVqpqcVfJUckamuRQ_leroHQ3dD1nCXMQwLaNbgXmdiyhXdr
 Server: nginx
 Cache-Control: no-cache, no-store
 x-wc: ABGHIJ
@@ -12,13 +12,13 @@ Access-Control-Allow-Origin: *
 stripe-should-retry: false
 x-stripe-priority-routing-enabled: true
 x-stripe-routing-context-priority-tier: api-testmode
-request-id: req_FkBRD5TpQQD8Hz
+request-id: req_SZug6ysVIkGOAe
 Content-Length: 989
 Vary: Origin
-Date: Wed, 16 Jul 2025 00:01:05 GMT
-original-request: req_FkBRD5TpQQD8Hz
+Date: Wed, 16 Jul 2025 00:02:44 GMT
+original-request: req_SZug6ysVIkGOAe
 stripe-version: 2020-08-27
-idempotency-key: f2a5ffbc-e7e5-4f32-bf2f-dcfaa03568e2
+idempotency-key: 6c0449bd-f456-4de3-bd2c-cd64ec23de01
 access-control-expose-headers: Request-Id, Stripe-Manage-Version, Stripe-Should-Retry, X-Stripe-External-Auth-Required, X-Stripe-Privileged-Session-Required
 access-control-max-age: 300
 access-control-allow-credentials: true
@@ -27,7 +27,7 @@ X-Stripe-Mock-Request: allow_redisplay=always&billing_details\[address]\[country
 
 {
   "object" : "payment_method",
-  "id" : "pm_1RlImTFY0qyl6XeWe6xZ4wrZ",
+  "id" : "pm_1RlIo4FY0qyl6XeWf9SIVyfo",
   "billing_details" : {
     "email" : null,
     "phone" : null,
@@ -69,7 +69,7 @@ X-Stripe-Mock-Request: allow_redisplay=always&billing_details\[address]\[country
     "country" : "US"
   },
   "livemode" : false,
-  "created" : 1752624065,
+  "created" : 1752624164,
   "allow_redisplay" : "always",
   "type" : "card",
   "customer" : null

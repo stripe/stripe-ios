@@ -22,11 +22,16 @@ extension STPAPIClient {
     }
 
     @_spi(STP) public class func paramsAddingClientAttributionMetadata(
-        _ params: [String: Any]
+        _ params: [String: Any],
+        elementsSessionConfigId: String?
     ) -> [String: Any] {
         var newParams = params
         var clientAttributionMetadataDict: [String: Any] = [:]
         clientAttributionMetadataDict["client_session_id"] = AnalyticsHelper.shared.sessionID
+        clientAttributionMetadataDict["elements_session_config_id"] = elementsSessionConfigId
+        clientAttributionMetadataDict["merchant_integration_source"] = "elements"
+        clientAttributionMetadataDict["merchant_integration_subtype"] = "mobile"
+        clientAttributionMetadataDict["merchant_integration_version"] = "stripe-ios/\(STPAPIClient.STPSDKVersion)"
         newParams["client_attribution_metadata"] = clientAttributionMetadataDict
         return newParams
     }

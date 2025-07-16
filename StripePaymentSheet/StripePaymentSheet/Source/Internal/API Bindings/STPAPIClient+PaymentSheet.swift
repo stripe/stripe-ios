@@ -102,6 +102,7 @@ extension STPAPIClient {
             throw PaymentSheetError.unknown(debugDescription: "PaymentIntent missing from v1/elements/sessions response")
         }
         try verifyCustomerSessionForPaymentSheet(configuration: configuration, elementsSession: elementsSession)
+        elementsSessionConfigId = elementsSession.sessionID
         return (paymentIntent, elementsSession)
     }
 
@@ -127,6 +128,7 @@ extension STPAPIClient {
             throw PaymentSheetError.unknown(debugDescription: "SetupIntent missing from v1/elements/sessions response")
         }
         try verifyCustomerSessionForPaymentSheet(configuration: configuration, elementsSession: elementsSession)
+        elementsSessionConfigId = elementsSession.sessionID
         return (setupIntent, elementsSession)
     }
 
@@ -146,6 +148,7 @@ extension STPAPIClient {
             parameters: parameters
         )
         try verifyCustomerSessionForPaymentSheet(configuration: configuration, elementsSession: elementsSession)
+        elementsSessionConfigId = elementsSession.sessionID
         return elementsSession
     }
 
@@ -218,6 +221,7 @@ extension STPAPIClient {
             parameters: parameters
         )
         try verifyCustomerSessionForCustomerSheet(customerSessionClientSecret: customerSessionClientSecret, elementsSession: elementsSession)
+        elementsSessionConfigId = elementsSession.sessionID
         return elementsSession
     }
 

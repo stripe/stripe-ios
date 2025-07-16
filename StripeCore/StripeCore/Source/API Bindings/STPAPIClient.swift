@@ -75,6 +75,7 @@ import UIKit
     @_spi(STP) public var urlSession = URLSession(
         configuration: StripeAPIConfiguration.sharedUrlSessionConfiguration
     )
+    @_spi(STP) public var elementsSessionConfigId: String?
 
     @_spi(STP) public var sourcePollers: [String: NSObject]?
     @_spi(STP) public var sourcePollersQueue: DispatchQueue?
