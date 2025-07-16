@@ -1698,15 +1698,15 @@
 		B667BF072BF2B7390050EFD8 /* Vertical Main Screen */ = {
 			isa = PBXGroup;
 			children = (
-				A0317DBA2DC2CD7D003EF979 /* RowButtonFlatWithChevron.swift */,
-				B6859A872BE54CD30018E06C /* PaymentSheetVerticalViewController.swift */,
 				610EAAEF2C0F5D9400124AB2 /* FormHeaderView.swift */,
+				B6859A872BE54CD30018E06C /* PaymentSheetVerticalViewController.swift */,
+				61D8688D2C06553E001FAD84 /* RightAccessoryButton.swift */,
 				B667BF0A2BF2B7C60050EFD8 /* RowButton.swift */,
+				6114AEBF2D6519EC00C0EF40 /* RowButtonFlatWithCheckmark.swift */,
+				A0317DBA2DC2CD7D003EF979 /* RowButtonFlatWithChevron.swift */,
 				6185901A2D5BF1D200D533D6 /* RowButtonFlatWithRadioView.swift */,
 				6155F0862D5D2F60000DCD3A /* RowButtonFloating.swift */,
-				6114AEBF2D6519EC00C0EF40 /* RowButtonFlatWithCheckmark.swift */,
 				B63B2CF22BFBEE7B003810F3 /* VerticalPaymentMethodListViewController.swift */,
-				61D8688D2C06553E001FAD84 /* RightAccessoryButton.swift */,
 			);
 			path = "Vertical Main Screen";
 			sourceTree = "<group>";

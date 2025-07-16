@@ -1,6 +1,7 @@
 ## X.Y.Z 2025-XX-YY
 ### PaymentSheet
 * [Fixed] EmbeddedPaymentElement now errors when `configuration.rowSelectionBehavior` is `.immediateAction` and `configuration.embeddedViewDisplaysMandateText` is `true` to ensure integrations display legal mandate text to the customer.
+* [Added] Added `Appearance.EmbeddedPaymentElement.Row.paymentMethodIconLayoutMargins` to customize the spacing around payment method icons in EmbeddedPaymentElement payment method rows.
 
 ### AddressElement
 * [Added] SwiftUI support for AddressElement.
