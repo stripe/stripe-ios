@@ -1,0 +1,66 @@
+POST
+https:\/\/api\.stripe\.com\/v1\/payment_intents\/pi_3RlYPzAOnZToJom112IYLlVv\/confirm$
+200
+application/json
+access-control-allow-methods: GET, HEAD, PUT, PATCH, POST, DELETE
+content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=MY54mll02p6BxqIwBiivwp8y1r5eQZpOTGZhimruw334gnb0_hZy8NfDuN7VLe5pFMCp6sJKc8Xj-sQx
+Server: nginx
+Cache-Control: no-cache, no-store
+x-wc: ABGHIJ
+Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
+Access-Control-Allow-Origin: *
+stripe-should-retry: false
+x-stripe-priority-routing-enabled: true
+x-stripe-routing-context-priority-tier: api-testmode
+request-id: req_J6pLC1HIuoLzth
+Content-Length: 1047
+Vary: Origin
+Date: Wed, 16 Jul 2025 16:42:56 GMT
+original-request: req_J6pLC1HIuoLzth
+stripe-version: 2020-08-27
+idempotency-key: 142cab2b-6e43-4c5d-ae43-24a0ba4a7223
+access-control-expose-headers: Request-Id, Stripe-Manage-Version, Stripe-Should-Retry, X-Stripe-External-Auth-Required, X-Stripe-Privileged-Session-Required
+access-control-max-age: 300
+access-control-allow-credentials: true
+Content-Type: application/json
+X-Stripe-Mock-Request: client_secret=pi_3RlYPzAOnZToJom112IYLlVv_secret_w92BFko5GVQMZG7ACN1b1mhh5&payment_method_data\[allow_redisplay]=unspecified&payment_method_data\[billing_details]\[name]=Jenny%20Rosen&payment_method_data\[client_attribution_metadata]\[merchant_integration_source]=elements&payment_method_data\[client_attribution_metadata]\[merchant_integration_subtype]=mobile&payment_method_data\[client_attribution_metadata]\[merchant_integration_version]=.*&payment_method_data\[guid]=.*&payment_method_data\[muid]=.*&payment_method_data\[payment_user_agent]=.*&payment_method_data\[sid]=.*&payment_method_data\[type]=grabpay&return_url=example-app-scheme%3A\/\/authorized
+
+{
+  "payment_method_configuration_details" : null,
+  "canceled_at" : null,
+  "source" : null,
+  "amount" : 100,
+  "capture_method" : "automatic",
+  "livemode" : false,
+  "shipping" : null,
+  "status" : "requires_action",
+  "object" : "payment_intent",
+  "currency" : "sgd",
+  "last_payment_error" : null,
+  "automatic_payment_methods" : null,
+  "cancellation_reason" : null,
+  "next_action" : {
+    "type" : "redirect_to_url",
+    "redirect_to_url" : {
+      "return_url" : "example-app-scheme:\/\/authorized",
+      "url" : "https:\/\/pm-redirects.stripe.com\/authorize\/acct_1H7oXMAOnZToJom1\/pa_nonce_SgwI19ybzvymBm5kygFwxBhjCmyyiSa"
+    }
+  },
+  "payment_method" : "pm_1RlYQ0AOnZToJom1QuPgRl66",
+  "client_secret" : "pi_3RlYPzAOnZToJom112IYLlVv_secret_w92BFko5GVQMZG7ACN1b1mhh5",
+  "id" : "pi_3RlYPzAOnZToJom112IYLlVv",
+  "confirmation_method" : "automatic",
+  "amount_details" : {
+    "tip" : {
+
+    }
+  },
+  "processing" : null,
+  "receipt_email" : null,
+  "payment_method_types" : [
+    "grabpay"
+  ],
+  "setup_future_usage" : null,
+  "created" : 1752684175,
+  "description" : null
+}
