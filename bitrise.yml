@@ -37,10 +37,9 @@ stages:
   stage-trigger-run-all:
     workflows:
     - framework-tests: {}
-    - test-builds-xcode-15: {}
     - test-builds-xcode-16: {}
     - test-builds-vision: {}
-    - install-tests-non-carthage: {}
+    - install-tests: {}
     - lint-tests: {}
     - size-report: {}
     - ui-tests-1: {}
@@ -53,13 +52,11 @@ stages:
   stage-releases-run-all:
     workflows:
     - framework-tests-no-mocks: {}
-    - test-builds-xcode-15: {}
     - test-builds-xcode-16: {}
-    - test-builds-xcode-15-release: {}
     - test-builds-xcode-16-release: {}
     - test-builds-vision: {}
     - deploy-docs: {}
-    - install-tests-non-carthage: {}
+    - install-tests: {}
     - lint-tests: {}
     - size-report: {}
     - ui-tests-1: {}
@@ -69,33 +66,18 @@ stages:
     - ui-tests-5: {}
     - legacy-tests-15: {}
     - legacy-tests-16: {}
-    - carthage-install-test: {}
     - pod-lint-tests: {}
     - integration-all: {}
   stage-nightly-all:
     workflows:
-    - test-builds-xcode-15-release: {}
     - test-builds-xcode-16-release: {}
     - framework-tests-no-mocks: {}
     - check-docs: {}
     - legacy-tests-15: {}
     - legacy-tests-16: {}
-    - carthage-install-test: {}
     - deploy-dry-run: {}
     - pod-lint-tests: {}
 workflows:
-  carthage-install-test:
-    steps:
-    - fastlane@3:
-        inputs:
-        - lane: installation_carthage
-        title: fastlane installation_carthage
-    before_run:
-    - prep_all
-    after_run:
-    - notify_ci
-    envs:
-    - DEFAULT_TEST_DEVICE: platform=iOS Simulator,name=iPhone 12 mini,OS=16.4
   check-docs:
     steps:
     - script@1:
@@ -163,7 +145,7 @@ workflows:
     - notify_ci
     meta:
       bitrise.io:
-        stack: osx-xcode-15.0.x
+        stack: osx-xcode-16.0.x
         machine_type_id: g2.mac.large
     envs:
     - DEFAULT_TEST_DEVICE: platform=iOS Simulator,name=iPhone 12 mini,OS=16.4
@@ -331,7 +313,7 @@ workflows:
     after_run: []
     meta:
       bitrise.io:
-        stack: osx-xcode-15.0.x
+        stack: osx-xcode-16.0.x
         machine_type_id: g2.mac.large
   framework-tests-no-mocks:
     steps:
@@ -353,22 +335,7 @@ workflows:
     - notify_ci
     meta:
       bitrise.io:
-        stack: osx-xcode-15.0.x
-        machine_type_id: g2.mac.large
-  test-builds-xcode-15:
-    steps:
-    - xcode-build-for-test@2:
-        inputs:
-        - scheme: AllStripeFrameworks
-        - destination: generic/platform=iOS Simulator
-    - deploy-to-bitrise-io@2: {}
-    envs:
-    - DEFAULT_TEST_DEVICE: platform=iOS Simulator,name=iPhone 15,OS=17.0
-    before_run:
-    - prep_all
-    meta:
-      bitrise.io:
-        stack: osx-xcode-15.0.x
+        stack: osx-xcode-16.0.x
         machine_type_id: g2.mac.large
   test-builds-xcode-16:
     steps:
@@ -384,18 +351,6 @@ workflows:
     meta:
       bitrise.io:
         stack: osx-xcode-16.0.x
-        machine_type_id: g2.mac.large
-  test-builds-xcode-15-release:
-    steps:
-    - script@1:
-        inputs:
-        - content: xcodebuild build -workspace "Stripe.xcworkspace" -scheme "AllStripeFrameworks" -configuration "Release" -sdk "iphonesimulator" | xcpretty
-        title: Build release builds
-    before_run:
-    - prep_all
-    meta:
-      bitrise.io:
-        stack: osx-xcode-15.0.x
         machine_type_id: g2.mac.large
   test-builds-xcode-16-release:
     steps:
@@ -420,9 +375,9 @@ workflows:
     - prep_all
     meta:
       bitrise.io:
-        stack: osx-xcode-15.2.x
+        stack: osx-xcode-16.0.x
         machine_type_id: g2.mac.large
-  install-tests-non-carthage:
+  install-tests:
     steps:
     - fastlane@3:
         inputs:
@@ -462,7 +417,7 @@ workflows:
     - prep_all
     meta:
       bitrise.io:
-        stack: osx-xcode-15.0.x
+        stack: osx-xcode-16.0.x
         machine_type_id: g2.mac.large
     envs:
     - DEFAULT_TEST_DEVICE: platform=iOS Simulator,name=iPhone 12 mini,OS=16.4
@@ -476,7 +431,7 @@ workflows:
     - DEFAULT_TEST_DEVICE: platform=iOS Simulator,name=iPhone 12 mini,OS=15.5
     meta:
       bitrise.io:
-        stack: osx-xcode-15.0.x
+        stack: osx-xcode-16.0.x
         machine_type_id: g2.mac.large
     before_run:
     - prep_all
@@ -498,7 +453,7 @@ workflows:
     - notify_ci
     meta:
       bitrise.io:
-        stack: osx-xcode-15.0.x
+        stack: osx-xcode-16.0.x
         machine_type_id: g2.mac.large
   lint-tests:
     steps:
@@ -532,7 +487,7 @@ workflows:
         title: fastlane analyze
     meta:
       bitrise.io:
-        stack: osx-xcode-15.0.x
+        stack: osx-xcode-16.0.x
         machine_type_id: g2.mac.large
   notify_ci:
     steps:
@@ -554,7 +509,7 @@ workflows:
       - LOKALISE_API_KEY: $LOKALISE_API_KEY
     meta:
       bitrise.io:
-        stack: osx-xcode-15.0.x
+        stack: osx-xcode-16.0.x
         machine_type_id: g2.mac.large
   pod-lint-tests:
     steps:
@@ -629,7 +584,7 @@ workflows:
         title: Generate size report
     meta:
       bitrise.io:
-        stack: osx-xcode-15.3.x
+        stack: osx-xcode-16.0.x
         machine_type_id: g2.mac.large
   ui-tests-1:
     steps:
@@ -651,7 +606,7 @@ workflows:
     - prep_all
     meta:
       bitrise.io:
-        stack: osx-xcode-15.0.x
+        stack: osx-xcode-16.0.x
         machine_type_id: g2.mac.large
   ui-tests-2:
     steps:
@@ -673,7 +628,7 @@ workflows:
     - prep_all
     meta:
       bitrise.io:
-        stack: osx-xcode-15.0.x
+        stack: osx-xcode-16.0.x
         machine_type_id: g2.mac.large
   ui-tests-3:
     steps:
@@ -695,7 +650,7 @@ workflows:
     - prep_all
     meta:
       bitrise.io:
-        stack: osx-xcode-15.0.x
+        stack: osx-xcode-16.0.x
         machine_type_id: g2.mac.large
   ui-tests-4:
     steps:
@@ -717,7 +672,7 @@ workflows:
     - prep_all
     meta:
       bitrise.io:
-        stack: osx-xcode-15.0.x
+        stack: osx-xcode-16.0.x
         machine_type_id: g2.mac.large
   ui-tests-5:
     steps:
@@ -739,7 +694,7 @@ workflows:
     - prep_all
     meta:
       bitrise.io:
-        stack: osx-xcode-15.0.x
+        stack: osx-xcode-16.0.x
         machine_type_id: g2.mac.large
   upload_logs:
     steps:
@@ -752,5 +707,5 @@ workflows:
         title: Deploy test log artifacts
 meta:
   bitrise.io:
-    stack: osx-xcode-15.0.x
+    stack: osx-xcode-16.0.x
     machine_type_id: g2.mac.large

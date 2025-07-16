@@ -199,9 +199,31 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
             // Otherwise, we're using the list
             let paymentMethodListViewController = makePaymentMethodListViewController(selection: updatedListSelection)
             self.paymentMethodListViewController = paymentMethodListViewController
-            if case let .new(confirmParams: confirmParams) = previousPaymentOption,
-               paymentMethodTypes.contains(confirmParams.paymentMethodType),
-               shouldDisplayForm(for: confirmParams.paymentMethodType)
+
+            let confirmParams: IntentConfirmParams? = {
+                guard let paymentOption = previousPaymentOption else {
+                    return nil
+                }
+                switch paymentOption {
+                case .saved(_, let confirmParams):
+                    if let confirmParams {
+                        return confirmParams
+                    } else {
+                        return nil
+                    }
+                case .new(let confirmParams):
+                    return confirmParams
+                case .link:
+                    // Handled elsewhere
+                    return nil
+                case .applePay, .external:
+                    return nil
+                }
+            }()
+
+            if let confirmParams,
+                paymentMethodTypes.contains(confirmParams.paymentMethodType),
+                shouldDisplayForm(for: confirmParams.paymentMethodType)
             {
                 // If the previous customer input was for a PM form and it collects user input, display the form on top of the list
                 let formVC = makeFormVC(paymentMethodType: confirmParams.paymentMethodType)
@@ -268,6 +290,7 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
     }
 
     func updateMandate(animated: Bool = true) {
+        let hadLabelInStackView = mandateView.attributedText != nil || errorLabel.text != nil
         let mandateProvider = VerticalListMandateProvider(configuration: configuration, elementsSession: elementsSession, intent: intent, analyticsHelper: analyticsHelper)
         let newMandateText = mandateProvider.mandate(
             for: selectedPaymentOption?.paymentMethodType,
@@ -277,6 +300,15 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
         animateHeightChange {
             self.mandateView.attributedText = newMandateText
             self.mandateView.setHiddenIfNecessary(newMandateText == nil)
+            let hasLabelInStackView = newMandateText != nil || self.errorLabel.text != nil
+            if self.isViewLoaded, hadLabelInStackView != hasLabelInStackView {
+                NSLayoutConstraint.deactivate([
+                    self.stackView.bottomAnchor.constraint(equalTo: self.primaryButton.topAnchor, constant: hadLabelInStackView ? -20 : -32)
+                ])
+                NSLayoutConstraint.activate([
+                    self.stackView.bottomAnchor.constraint(equalTo: self.primaryButton.topAnchor, constant: hasLabelInStackView ? -20 : -32)
+                ])
+            }
         }
     }
 
@@ -463,7 +495,7 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
             primaryButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -configuration.appearance.formInsets.trailing),
 
             stackView.topAnchor.constraint(equalTo: view.topAnchor),
-            stackView.bottomAnchor.constraint(equalTo: primaryButton.topAnchor, constant: -32),
+            stackView.bottomAnchor.constraint(equalTo: primaryButton.topAnchor, constant: mandateView.attributedText == nil && errorLabel.text == nil ? -32 : -20),
             primaryButton.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -configuration.appearance.formInsets.bottom),
         ])
     }
@@ -579,7 +611,7 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
                     self.updatePrimaryButton()
                     self.isUserInteractionEnabled = true
                 case .failed(let error):
-#if !canImport(CompositorServices)
+#if !os(visionOS)
                     UINotificationFeedbackGenerator().notificationOccurred(.error)
 #endif
 
@@ -603,7 +635,7 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
                     self.presentedViewController?.isBeingDismissed == true ? 1 : 0
                     // Hack: PaymentHandler calls the completion block while SafariVC is still being dismissed - "wait" until it's finished before updating UI
                     DispatchQueue.main.asyncAfter(deadline: .now() + delay) {
-#if !canImport(CompositorServices)
+#if !os(visionOS)
                         UINotificationFeedbackGenerator().notificationOccurred(.success)
 #endif
                         self.primaryButton.update(state: .succeeded, animated: true) {
@@ -767,7 +799,7 @@ extension PaymentSheetVerticalViewController: VerticalPaymentMethodListViewContr
     func didTapPaymentMethod(_ selection: RowButtonType) {
         analyticsHelper.logNewPaymentMethodSelected(paymentMethodTypeIdentifier: selection.analyticsIdentifier)
         error = nil
-#if !canImport(CompositorServices)
+#if !os(visionOS)
         UISelectionFeedbackGenerator().selectionChanged()
 #endif
         switch selection {
@@ -791,7 +823,7 @@ extension PaymentSheetVerticalViewController: VerticalPaymentMethodListViewContr
     }
 
     func didTapSavedPaymentMethodAccessoryButton() {
-#if !canImport(CompositorServices)
+#if !os(visionOS)
         UISelectionFeedbackGenerator().selectionChanged()
 #endif
         presentManageScreen()
@@ -800,6 +832,8 @@ extension PaymentSheetVerticalViewController: VerticalPaymentMethodListViewContr
     private func makeFormVC(paymentMethodType: PaymentSheet.PaymentMethodType) -> PaymentMethodFormViewController {
         let previousCustomerInput: IntentConfirmParams? = {
             if case let .new(confirmParams: confirmParams) = previousPaymentOption {
+                return confirmParams
+            } else if case let .saved(_, confirmParams) = previousPaymentOption {
                 return confirmParams
             } else {
                 return nil

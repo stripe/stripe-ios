@@ -103,7 +103,7 @@ import UIKit
         pickerView.dataSource = wrappedDataSource
         inputView = pickerView
 
-#if !canImport(CompositorServices)
+#if !os(visionOS)
         inputAccessoryView = DoneButtonToolbar(delegate: self)
 #endif
 

@@ -212,6 +212,9 @@ class PaymentSheetFormFactory {
             } else if paymentMethod == .amazonPay && isSettingUp {
                 // special case, display mandate for Amazon Pay when setting up or pi+sfu
                 additionalElements = [makeAmazonPayMandate()]
+            } else if paymentMethod == .satispay && isSettingUp {
+                // special case, display mandate for Satispay when setting up or pi+sfu
+                additionalElements = [makeSatispayMandate()]
             } else if paymentMethod == .bancontact {
                 return makeBancontact()
             } else if paymentMethod == .bacsDebit {
@@ -630,7 +633,13 @@ extension PaymentSheetFormFactory {
             )
         ) { value in
             isSaving.value = value
-            defaultCheckbox?.view.isHidden = !value
+            if let defaultCheckbox {
+                UIView.transition(with: defaultCheckbox.view, duration: 0.2,
+                                  options: .transitionCrossDissolve,
+                                  animations: {
+                    defaultCheckbox.view.isHidden = !value
+                })
+            }
         }
 
         isSaving.value =
@@ -821,7 +830,7 @@ extension PaymentSheetFormFactory {
 
         let incentive = paymentMethodIncentive?.takeIfAppliesTo(paymentMethod)
 
-        return InstantDebitsPaymentMethodElement(
+        let element = InstantDebitsPaymentMethodElement(
             configuration: configuration,
             subtitleElement: titleElement,
             nameElement: nameElement,
@@ -832,6 +841,12 @@ extension PaymentSheetFormFactory {
             isPaymentIntent: isPaymentIntent,
             appearance: configuration.appearance
         )
+
+        if let linkedBank = previousCustomerInput?.instantDebitsLinkedBank {
+            element.setLinkedBank(linkedBank)
+        }
+
+        return element
     }
 
     private func makeUSBankAccountCopyLabel() -> SubtitleElement {
@@ -1072,6 +1087,8 @@ extension PaymentSheet.Appearance {
         fonts.sectionHeader = scaledFont(for: font.base.medium, style: .footnote, maximumPointSize: 18)
         fonts.caption = scaledFont(for: font.base.regular, style: .caption1, maximumPointSize: 20)
         fonts.footnote = scaledFont(for: font.base.regular, style: .footnote, maximumPointSize: 20)
+        fonts.error = scaledFont(for: font.base.regular, style: .caption2, maximumPointSize: 20)
+        fonts.smallFootnote = scaledFont(for: font.base.medium, style: .caption2, maximumPointSize: 18)
         fonts.footnoteEmphasis = scaledFont(for: font.base.medium, style: .footnote, maximumPointSize: 20)
 
         theme.colors = colors

@@ -174,8 +174,14 @@ extension PaymentSheet {
                     billingDetails = nil
                     shippingDetails = nil
                 case .saved(let paymentMethod, let confirmParams):
+                    if let linkedBank = confirmParams?.instantDebitsLinkedBank {
+                        // Special case for Instant Bank Payments
+                        let sublabel = linkedBank.last4.flatMap { "••••\($0)" }
+                        labels = Labels(label: linkedBank.bankName ?? .Localized.bank, sublabel: sublabel)
+                    } else {
+                        labels = Labels(label: paymentMethod.expandedPaymentSheetLabel, sublabel: paymentMethod.paymentSheetSublabel)
+                    }
                     label = paymentMethod.paymentOptionLabel(confirmParams: confirmParams)
-                    labels = Labels(label: paymentMethod.expandedPaymentSheetLabel, sublabel: paymentMethod.paymentSheetSublabel)
                     paymentMethodType = paymentMethod.type.identifier
                     billingDetails = paymentMethod.billingDetails?.toPaymentSheetBillingDetails()
                     shippingDetails = nil
@@ -455,7 +461,6 @@ extension PaymentSheet {
                 }
 
                 if shouldReturnToPaymentSheet {
-                    self.viewController.linkConfirmOption = nil
                     self.updatePaymentOption()
                     returnToPaymentSheet()
                     return
@@ -773,7 +778,7 @@ extension PaymentOption {
         let hasLinkAccount = LinkAccountContext.shared.account?.isRegistered ?? false
         switch self {
         case .saved(let paymentMethod, _):
-            return paymentMethod.isLinkPaymentMethod && hasLinkAccount
+            return (paymentMethod.isLinkPaymentMethod || paymentMethod.isLinkPassthroughMode) && hasLinkAccount
         case .link(let confirmOption):
             switch confirmOption {
             case .signUp, .withPaymentMethod:

@@ -47,7 +47,13 @@ class ShopPayECEPresenter: NSObject, UIAdaptivePresentationControllerDelegate {
 
         eceVC.expressCheckoutWebviewDelegate = self
         self.eceViewController = eceVC
-        eceVC.modalPresentationStyle = .pageSheet
+
+        let transitionDelegate = FixedHeightTransitionDelegate(heightRatio: 0.85)
+        eceVC.transitioningDelegate = transitionDelegate
+        eceVC.modalPresentationStyle = .custom
+        eceVC.view.layer.cornerRadius = self.flowController.configuration.appearance.cornerRadius
+        eceVC.view.layer.maskedCorners = [.layerMinXMinYCorner, .layerMaxXMinYCorner]
+        eceVC.view.clipsToBounds = true
         viewController.present(eceVC, animated: true)
         eceVC.presentationController?.delegate = self
         // retain self while presented
@@ -122,7 +128,7 @@ extension ShopPayECEPresenter: ExpressCheckoutWebviewDelegate {
                                     id: rate.id,
                                     amount: rate.amount,
                                     displayName: rate.displayName,
-                                    deliveryEstimate: rate.deliveryEstimate.map { self.convertDeliveryEstimate($0) }
+                                    deliveryEstimate: self.convertDeliveryEstimate(rate.deliveryEstimate)
                                 )
                             },
                             applePay: nil,
@@ -153,7 +159,7 @@ extension ShopPayECEPresenter: ExpressCheckoutWebviewDelegate {
                         id: rate.id,
                         amount: rate.amount,
                         displayName: rate.displayName,
-                        deliveryEstimate: rate.deliveryEstimate.map { convertDeliveryEstimate($0) }
+                        deliveryEstimate: self.convertDeliveryEstimate(rate.deliveryEstimate)
                     )
                 },
                 applePay: nil,
@@ -189,7 +195,7 @@ extension ShopPayECEPresenter: ExpressCheckoutWebviewDelegate {
                                     id: rate.id,
                                     amount: rate.amount,
                                     displayName: rate.displayName,
-                                    deliveryEstimate: rate.deliveryEstimate.map { self.convertDeliveryEstimate($0) }
+                                    deliveryEstimate: self.convertDeliveryEstimate(rate.deliveryEstimate)
                                 )
                             },
                             applePay: nil,
@@ -220,7 +226,7 @@ extension ShopPayECEPresenter: ExpressCheckoutWebviewDelegate {
                         id: rate.id,
                         amount: rate.amount,
                         displayName: rate.displayName,
-                        deliveryEstimate: rate.deliveryEstimate.map { convertDeliveryEstimate($0) }
+                        deliveryEstimate: self.convertDeliveryEstimate(rate.deliveryEstimate)
                     )
                 },
                 applePay: nil,
@@ -241,7 +247,7 @@ extension ShopPayECEPresenter: ExpressCheckoutWebviewDelegate {
                     id: rate.id,
                     amount: rate.amount,
                     displayName: rate.displayName,
-                    deliveryEstimate: rate.deliveryEstimate.map { convertDeliveryEstimate($0) }
+                    deliveryEstimate: self.convertDeliveryEstimate(rate.deliveryEstimate)
                 )
             } : nil,
             applePay: nil
@@ -319,12 +325,24 @@ extension ShopPayECEPresenter: ExpressCheckoutWebviewDelegate {
                         stpAssertionFailure("Integration Error: Shop Pay ECE flow requires a preparePaymentMethodHandler")
                         return
                     }
-                    preparePaymentMethodHandler(paymentMethod,
-                                                confirmData.shippingAddress?.toSTPAddress())
-                    // Log successful completion
-                    self.analyticsHelper.logShopPayWebviewConfirmSuccess()
-                    // And then the PaymentSheet presentation handler
-                    self.confirmHandler?(.completed)
+
+                    // Try to create a radar session for the payment method before calling the handler
+                    flowController.configuration.apiClient.createSavedPaymentMethodRadarSession(paymentMethodId: paymentMethod.stripeId) { _, error in
+                        // If radar session creation fails, just continue with the payment method directly
+                        if let error {
+                            // Log the error but don't fail the payment
+                            let errorAnalytic = ErrorAnalytic(event: .savedPaymentMethodRadarSessionFailure, error: error)
+                            STPAnalyticsClient.sharedClient.log(analytic: errorAnalytic, apiClient: self.flowController.configuration.apiClient)
+                        }
+
+                        // Call the handler regardless of radar session success/failure
+                        preparePaymentMethodHandler(paymentMethod, confirmData.shippingAddress?.toSTPAddress())
+
+                        // Log successful completion
+                        self.analyticsHelper.logShopPayWebviewConfirmSuccess()
+                        // And then the PaymentSheet presentation handler
+                        self.confirmHandler?(.completed)
+                    }
                 }
             }
         } catch {
@@ -344,19 +362,24 @@ extension ShopPayECEPresenter: ExpressCheckoutWebviewDelegate {
 
     // MARK: - Helper Functions
 
-    private func convertDeliveryEstimate(_ estimate: PaymentSheet.ShopPayConfiguration.DeliveryEstimate) -> ECEDeliveryEstimate {
-        // Convert to structured format
-        let structured = ECEStructuredDeliveryEstimate(
-            maximum: ECEDeliveryEstimateUnit(
-                unit: convertDeliveryUnit(estimate.maximum.unit),
-                value: estimate.maximum.value
-            ),
-            minimum: ECEDeliveryEstimateUnit(
-                unit: convertDeliveryUnit(estimate.minimum.unit),
-                value: estimate.minimum.value
-            )
-        )
-        return .structured(structured)
+    private func convertDeliveryEstimate(_ estimate: PaymentSheet.ShopPayConfiguration.DeliveryEstimate?) -> ECEDeliveryEstimate? {
+        guard let estimate else {
+            return nil
+        }
+        switch estimate {
+        case .unstructured(let deliveryEstimateString):
+            return ECEDeliveryEstimate.string(deliveryEstimateString)
+        case .structured(let minimum, let maximum):
+            var minimumEstimate: ECEDeliveryEstimateUnit?
+            if let minimum {
+                minimumEstimate = ECEDeliveryEstimateUnit(unit: convertDeliveryUnit(minimum.unit), value: minimum.value)
+            }
+            var maximumEstimate: ECEDeliveryEstimateUnit?
+            if let maximum {
+                maximumEstimate = ECEDeliveryEstimateUnit(unit: convertDeliveryUnit(maximum.unit), value: maximum.value)
+            }
+            return .structured(ECEStructuredDeliveryEstimate(maximum: maximumEstimate, minimum: minimumEstimate))
+        }
     }
 
     private func convertDeliveryUnit(_ unit: PaymentSheet.ShopPayConfiguration.DeliveryEstimate.DeliveryEstimateUnit.TimeUnit) -> ECEDeliveryEstimateUnit.DeliveryTimeUnit {

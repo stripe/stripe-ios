@@ -3,6 +3,7 @@
 //  PaymentSheet Example
 //
 
+import StripePaymentSheet
 import SwiftUI
 
 @available(iOS 14.0, *)
@@ -30,6 +31,7 @@ struct PaymentSheetExampleAppRootView: View {
 
                 destinationLink(for: .customerSheet_swiftUI)
                 destinationLink(for: .linkPaymentController)
+                destinationLink(for: .linkStandaloneComponent)
                 destinationLink(for: .embeddedPaymentElement)
                 destinationLink(for: .embeddedPaymentElement_swiftUI)
                 destinationLink(for: .walletButtonsView_swiftUI)
@@ -78,6 +80,7 @@ struct PaymentSheetExampleAppRootView: View {
 
         case customerSheet_swiftUI
         case linkPaymentController
+        case linkStandaloneComponent
         case embeddedPaymentElement
         case embeddedPaymentElement_swiftUI
         case walletButtonsView_swiftUI
@@ -103,6 +106,8 @@ struct PaymentSheetExampleAppRootView: View {
                 return "CustomerSheet (SwiftUI)"
             case .linkPaymentController:
                 return "LinkPaymentController"
+            case .linkStandaloneComponent:
+                return "Link Standalone Component"
             case .embeddedPaymentElement:
                 return "EmbeddedPaymentElement"
             case .embeddedPaymentElement_swiftUI:
@@ -140,6 +145,13 @@ struct PaymentSheetExampleAppRootView: View {
 
         case .linkPaymentController:
             StoryboardSceneView<ExampleLinkPaymentCheckoutViewController>(sceneIdentifier: "ExampleLinkPaymentCheckoutViewController")
+        case .linkStandaloneComponent:
+            if #available(iOS 16.0, *) {
+                ExampleLinkStandaloneComponent()
+            } else {
+                Text("Sorry, only available on >= iOS 16.0")
+                    .font(.title2)
+            }
         case .embeddedPaymentElement:
             StoryboardSceneView<ExampleEmbeddedElementCheckoutViewController>(sceneIdentifier: "ExampleEmbeddedElementCheckoutViewController")
 
@@ -163,7 +175,7 @@ struct PaymentSheetExampleAppRootView: View {
             }
         case .paymentSheet_playground:
             if #available(iOS 15.0, *) {
-                PaymentSheetTestPlayground(settings: PlaygroundController.settingsFromDefaults() ?? .defaultValues())
+                PaymentSheetTestPlayground(settings: PlaygroundController.settingsFromDefaults() ?? .defaultValues(), appearance: PaymentSheet.Appearance.default)
             } else {
                 Text("Sorry, only available on >= iOS 15.0")
                     .font(.title2)

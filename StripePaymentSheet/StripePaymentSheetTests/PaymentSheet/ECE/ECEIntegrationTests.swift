@@ -11,7 +11,7 @@ import StripePaymentsTestUtils
 import WebKit
 import XCTest
 
-#if !canImport(CompositorServices)
+#if !os(visionOS)
 @available(iOS 16.0, *)
 @MainActor
 class ECEIntegrationTests: XCTestCase {
@@ -49,7 +49,7 @@ class ECEIntegrationTests: XCTestCase {
                     id: "standard",
                     amount: 1000,
                     displayName: "Standard Shipping",
-                    deliveryEstimate: PaymentSheet.ShopPayConfiguration.DeliveryEstimate(
+                    deliveryEstimate: PaymentSheet.ShopPayConfiguration.DeliveryEstimate.structured(
                         minimum: PaymentSheet.ShopPayConfiguration.DeliveryEstimate.DeliveryEstimateUnit(value: 3, unit: .business_day),
                         maximum: PaymentSheet.ShopPayConfiguration.DeliveryEstimate.DeliveryEstimateUnit(value: 5, unit: .business_day)
                     )
