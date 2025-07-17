@@ -393,6 +393,7 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
         static var enumName: String { "UserOverrideCountry (debug only)" }
 
         case off
+        case US
         case GB
     }
 
