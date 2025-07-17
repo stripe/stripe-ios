@@ -864,7 +864,7 @@ class EmbeddedPaymentMethodsViewSnapshotTests: STPSnapshotTestCase {
     func testEmbeddedPaymentMethodsView_flatWithDisclosure_color() {
         var appearance: PaymentSheet.Appearance = .default
         appearance.embeddedPaymentElement.row.style = .flatWithDisclosure
-        appearance.embeddedPaymentElement.row.flat.chevron.color = .purple
+        appearance.embeddedPaymentElement.row.flat.disclosure.color = .purple
 
         let embeddedView = EmbeddedPaymentMethodsView(initialSelection: nil,
                                                       paymentMethodTypes: [.stripe(.card), .stripe(.cashApp)],
@@ -881,8 +881,8 @@ class EmbeddedPaymentMethodsViewSnapshotTests: STPSnapshotTestCase {
     func testEmbeddedPaymentMethodsView_flatWithDisclosure_customDisclosureView() {
         var appearance: PaymentSheet.Appearance = .default
         appearance.embeddedPaymentElement.row.style = .flatWithDisclosure
-        appearance.embeddedPaymentElement.row.flat.chevron.color = .purple // should be ignored
-        appearance.embeddedPaymentElement.row.flat.chevron.disclosureView = {
+        appearance.embeddedPaymentElement.row.flat.disclosure.color = .purple // should be ignored
+        appearance.embeddedPaymentElement.row.flat.disclosure.disclosureView = {
             let customImage = UIImageView(image: UIImage(systemName: "nose"))
             customImage.contentMode = .scaleAspectFit
             return customImage
