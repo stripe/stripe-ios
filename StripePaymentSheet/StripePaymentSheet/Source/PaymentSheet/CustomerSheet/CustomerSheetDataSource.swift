@@ -4,6 +4,7 @@
 //
 
 import Foundation
+@_spi(STP) import StripeCore
 
 class CustomerSheetDataSource {
     enum DataSource {
@@ -69,7 +70,6 @@ class CustomerSheetDataSource {
 
                 // Ensure local specs are loaded prior to the ones from elementSession
                 await loadFormSpecs()
-
                 let (paymentMethods, selectedPaymentMethod, elementSession) = try await (paymentMethodsResult.filter({ paymentMethod in
                     guard let card = paymentMethod.card else { return true }
                     return configuration.cardBrandFilter.isAccepted(cardBrand: card.preferredDisplayBrand)

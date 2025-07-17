@@ -102,6 +102,7 @@ extension STPAPIClient {
             throw PaymentSheetError.unknown(debugDescription: "PaymentIntent missing from v1/elements/sessions response")
         }
         try verifyCustomerSessionForPaymentSheet(configuration: configuration, elementsSession: elementsSession)
+        STPAnalyticsClient.sharedClient.clientAttributionMetadata["elements_session_config_id"] = elementsSession.sessionID
         return (paymentIntent, elementsSession)
     }
 
@@ -127,6 +128,7 @@ extension STPAPIClient {
             throw PaymentSheetError.unknown(debugDescription: "SetupIntent missing from v1/elements/sessions response")
         }
         try verifyCustomerSessionForPaymentSheet(configuration: configuration, elementsSession: elementsSession)
+        STPAnalyticsClient.sharedClient.clientAttributionMetadata["elements_session_config_id"] = elementsSession.sessionID
         return (setupIntent, elementsSession)
     }
 
@@ -146,6 +148,7 @@ extension STPAPIClient {
             parameters: parameters
         )
         try verifyCustomerSessionForPaymentSheet(configuration: configuration, elementsSession: elementsSession)
+        STPAnalyticsClient.sharedClient.clientAttributionMetadata["elements_session_config_id"] = elementsSession.sessionID
         return elementsSession
     }
 
@@ -179,6 +182,7 @@ extension STPAPIClient {
             parameters: parameters
         )
         try verifyCustomerSessionForCustomerSheet(customerSessionClientSecret: customerSessionClientSecret, elementsSession: elementsSession)
+        STPAnalyticsClient.sharedClient.clientAttributionMetadata["elements_session_config_id"] = elementsSession.sessionID
         return elementsSession
     }
 
@@ -218,6 +222,7 @@ extension STPAPIClient {
             parameters: parameters
         )
         try verifyCustomerSessionForCustomerSheet(customerSessionClientSecret: customerSessionClientSecret, elementsSession: elementsSession)
+        STPAnalyticsClient.sharedClient.clientAttributionMetadata["elements_session_config_id"] = elementsSession.sessionID
         return elementsSession
     }
 
