@@ -335,13 +335,15 @@ extension ShopPayECEPresenter: ExpressCheckoutWebviewDelegate {
                             STPAnalyticsClient.sharedClient.log(analytic: errorAnalytic, apiClient: self.flowController.configuration.apiClient)
                         }
 
-                        // Call the handler regardless of radar session success/failure
-                        preparePaymentMethodHandler(paymentMethod, confirmData.shippingAddress?.toSTPAddress())
+                        Task { @MainActor in
+                            // Call the handler regardless of radar session success/failure
+                            await preparePaymentMethodHandler(paymentMethod, confirmData.shippingAddress?.toSTPAddress())
 
-                        // Log successful completion
-                        self.analyticsHelper.logShopPayWebviewConfirmSuccess()
-                        // And then the PaymentSheet presentation handler
-                        self.confirmHandler?(.completed)
+                            // Log successful completion
+                            self.analyticsHelper.logShopPayWebviewConfirmSuccess()
+                            // And then the PaymentSheet presentation handler
+                            self.confirmHandler?(.completed)
+                        }
                     }
                 }
             }
