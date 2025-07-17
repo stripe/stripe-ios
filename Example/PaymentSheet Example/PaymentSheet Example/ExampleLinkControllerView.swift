@@ -14,10 +14,14 @@ import UIKit
 struct ExampleLinkControllerView: View {
     @State private var linkController: LinkController?
     @State private var email: String = ""
+    @State private var fullName: String = ""
+    @State private var phone: String = ""
+    @State private var country: String = "US"
     @State private var isLoading: Bool = false
     @State private var errorMessage: String?
     @State private var statusMessage: String?
     @State private var authenticationResult: String?
+    @State private var userExists: Bool?
     @FocusState private var isEmailFieldFocused: Bool
 
     var body: some View {
@@ -32,22 +36,72 @@ struct ExampleLinkControllerView: View {
                     }
                     .frame(maxWidth: .infinity, alignment: .leading)
 
-                    // Email Input
-                    VStack(alignment: .leading, spacing: 8) {
-                        Text("Email")
+                    // User Information Section
+                    VStack(alignment: .leading, spacing: 16) {
+                        Text("User Information")
                             .font(.headline)
-                        TextField("Enter email address", text: $email)
-                            .textFieldStyle(RoundedBorderTextFieldStyle())
-                            .keyboardType(.emailAddress)
-                            .autocapitalization(.none)
-                            .disableAutocorrection(true)
-                            .focused($isEmailFieldFocused)
+
+                        VStack(alignment: .leading, spacing: 8) {
+                            Text("Email")
+                                .font(.subheadline)
+                            TextField("Enter email address", text: $email)
+                                .textFieldStyle(RoundedBorderTextFieldStyle())
+                                .keyboardType(.emailAddress)
+                                .autocapitalization(.none)
+                                .disableAutocorrection(true)
+                                .focused($isEmailFieldFocused)
+                        }
+
+                        if userExists == false {
+                            VStack(alignment: .leading, spacing: 8) {
+                                Text("Full Name")
+                                    .font(.subheadline)
+                                TextField("Enter full name (optional)", text: $fullName)
+                                    .textFieldStyle(RoundedBorderTextFieldStyle())
+                                    .autocapitalization(.words)
+                            }
+
+                            VStack(alignment: .leading, spacing: 8) {
+                                Text("Phone Number")
+                                    .font(.subheadline)
+                                TextField("Enter phone number (E.164 format)", text: $phone)
+                                    .textFieldStyle(RoundedBorderTextFieldStyle())
+                                    .keyboardType(.phonePad)
+                            }
+
+                            VStack(alignment: .leading, spacing: 8) {
+                                Text("Country Code")
+                                    .font(.subheadline)
+                                TextField("Enter country code", text: $country)
+                                    .textFieldStyle(RoundedBorderTextFieldStyle())
+                                    .autocapitalization(.allCharacters)
+                            }
+                        }
+                    }
+                    .padding()
+                    .background(Color.gray.opacity(0.1))
+                    .cornerRadius(8)
+
+                    // User Lookup Section
+                    VStack(spacing: 12) {
+                        lookupUserButton
+
+                        if let userExists {
+                            Text(userExists ? "✅ Existing Link user found" : "❌ New user - registration required")
+                                .font(.subheadline)
+                                .foregroundColor(userExists ? .green : .orange)
+                                .padding(.vertical, 4)
+                        }
                     }
 
                     // Action Buttons
                     VStack(spacing: 12) {
+                        registerNewUserButton
+                        verifyUserButton
+
                         authenticateButton
                         collectPaymentMethodButton
+
                         resetButton
                     }
 
@@ -105,19 +159,40 @@ struct ExampleLinkControllerView: View {
     }
 
     @ViewBuilder
-    private var authenticateButton: some View {
-        if linkController?.linkAccount == nil {
-            Button("Authenticate") {
+    private var lookupUserButton: some View {
+        if userExists == nil {
+            Button("Lookup User") {
                 Task {
-                    await authenticateUser()
+                    await lookupUser()
+                }
+            }
+            .buttonStyle(PrimaryButtonStyle())
+            .disabled(isLoading || email.isEmpty)
+        } else {
+            Button("Lookup User") {
+                Task {
+                    await lookupUser()
+                }
+            }
+            .buttonStyle(SecondaryButtonStyle())
+            .disabled(isLoading || email.isEmpty)
+        }
+    }
+
+    @ViewBuilder
+    private var verifyUserButton: some View {
+        if case .requiresVerification = linkController?.linkAccount?.sessionState {
+            Button("Verify Existing User") {
+                Task {
+                    await verifyUser()
                 }
             }
             .buttonStyle(PrimaryButtonStyle())
             .disabled(isLoading)
         } else {
-            Button("Authenticate") {
+            Button("Verify Existing User") {
                 Task {
-                    await authenticateUser()
+                    await verifyUser()
                 }
             }
             .buttonStyle(SecondaryButtonStyle())
@@ -126,14 +201,56 @@ struct ExampleLinkControllerView: View {
     }
 
     @ViewBuilder
+    private var registerNewUserButton: some View {
+        if userExists == false {
+            Button("Register New User") {
+                Task {
+                    await registerNewUser()
+                }
+            }
+            .buttonStyle(PrimaryButtonStyle())
+            .disabled(isLoading || phone.isEmpty)
+        } else {
+            Button("Register New User") {
+                Task {
+                    await registerNewUser()
+                }
+            }
+            .buttonStyle(SecondaryButtonStyle())
+            .disabled(isLoading || phone.isEmpty)
+        }
+    }
+
+    @ViewBuilder
+    private var authenticateButton: some View {
+        if linkController?.linkAccount?.sessionState != .verified {
+            Button("Authenticate (Combined Flow)") {
+                Task {
+                    await authenticateUser()
+                }
+            }
+            .buttonStyle(PrimaryButtonStyle())
+            .disabled(isLoading || email.isEmpty)
+        } else {
+            Button("Authenticate (Combined Flow)") {
+                Task {
+                    await authenticateUser()
+                }
+            }
+            .buttonStyle(SecondaryButtonStyle())
+            .disabled(isLoading || email.isEmpty)
+        }
+    }
+
+    @ViewBuilder
     private var collectPaymentMethodButton: some View {
-        if linkController?.linkAccount == nil {
+        if case .verified = linkController?.linkAccount?.sessionState {
             Button("Collect Payment Method") {
                 Task {
                     await collectPaymentMethod()
                 }
             }
-            .buttonStyle(SecondaryButtonStyle())
+            .buttonStyle(PrimaryButtonStyle())
             .disabled(isLoading)
         } else {
             Button("Collect Payment Method") {
@@ -141,7 +258,7 @@ struct ExampleLinkControllerView: View {
                     await collectPaymentMethod()
                 }
             }
-            .buttonStyle(PrimaryButtonStyle())
+            .buttonStyle(SecondaryButtonStyle())
             .disabled(isLoading)
         }
     }
@@ -180,10 +297,146 @@ struct ExampleLinkControllerView: View {
         }
     }
 
+    private func lookupUser() async {
+        guard let linkController else {
+            await MainActor.run {
+                self.errorMessage = "LinkController not initialized"
+            }
+            return
+        }
+
+        guard !email.isEmpty else {
+            await MainActor.run {
+                self.errorMessage = "Please enter an email address"
+            }
+            return
+        }
+
+        await MainActor.run {
+            self.isEmailFieldFocused = false
+            self.isLoading = true
+            self.errorMessage = nil
+            self.statusMessage = "Looking up user..."
+            self.userExists = nil
+        }
+
+        do {
+            let exists = try await linkController.lookupConsumer(with: email)
+            await MainActor.run {
+                self.isLoading = false
+                self.userExists = exists
+                self.statusMessage = exists ? "Existing Link user found" : "New user - registration available"
+            }
+        } catch {
+            await MainActor.run {
+                self.isLoading = false
+                self.errorMessage = "User lookup failed: \(error.localizedDescription)"
+                self.statusMessage = nil
+                self.userExists = nil
+            }
+        }
+    }
+
+    private func verifyUser() async {
+        guard let linkController else {
+            await MainActor.run {
+                self.errorMessage = "LinkController not initialized"
+            }
+            return
+        }
+
+        await MainActor.run {
+            self.isLoading = true
+            self.errorMessage = nil
+            self.statusMessage = "Presenting verification flow..."
+            self.authenticationResult = nil
+        }
+
+        guard let rootViewController = findViewController() else {
+            await MainActor.run {
+                self.isLoading = false
+                self.errorMessage = "Could not find root view controller"
+                self.statusMessage = nil
+            }
+            return
+        }
+
+        do {
+            let result = try await linkController.presentForVerification(from: rootViewController)
+            await MainActor.run {
+                self.isLoading = false
+                self.statusMessage = "Verification completed"
+                switch result {
+                case .completed:
+                    self.authenticationResult = "Completed"
+                case .canceled:
+                    self.authenticationResult = "Canceled"
+                }
+            }
+        } catch {
+            await MainActor.run {
+                self.isLoading = false
+                self.errorMessage = "Verification failed: \(error.localizedDescription)"
+                self.statusMessage = nil
+            }
+        }
+    }
+
+    private func registerNewUser() async {
+        guard let linkController else {
+            await MainActor.run {
+                self.errorMessage = "LinkController not initialized"
+            }
+            return
+        }
+
+        guard !phone.isEmpty else {
+            await MainActor.run {
+                self.errorMessage = "Phone number is required for registration"
+            }
+            return
+        }
+
+        await MainActor.run {
+            self.isLoading = true
+            self.errorMessage = nil
+            self.statusMessage = "Registering new Link user..."
+            self.authenticationResult = nil
+        }
+
+        do {
+            try await linkController.registerNewLinkUser(
+                fullName: fullName.isEmpty ? nil : fullName,
+                phone: phone,
+                country: country
+            )
+            await MainActor.run {
+                self.isLoading = false
+                self.statusMessage = "Registration completed successfully"
+                self.authenticationResult = "Registered"
+                // Update user exists state since they're now registered
+                self.userExists = true
+            }
+        } catch {
+            await MainActor.run {
+                self.isLoading = false
+                self.errorMessage = "Registration failed: \(error.localizedDescription)"
+                self.statusMessage = nil
+            }
+        }
+    }
+
     private func authenticateUser() async {
         guard let linkController else {
             await MainActor.run {
                 self.errorMessage = "LinkController not initialized"
+            }
+            return
+        }
+
+        guard !email.isEmpty else {
+            await MainActor.run {
+                self.errorMessage = "Please enter an email address"
             }
             return
         }
@@ -275,7 +528,11 @@ struct ExampleLinkControllerView: View {
         errorMessage = nil
         statusMessage = nil
         authenticationResult = nil
+        userExists = nil
         email = ""
+        fullName = ""
+        phone = ""
+        country = "US"
 
         initializeLinkController()
     }
