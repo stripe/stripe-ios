@@ -891,7 +891,7 @@ class EmbeddedPaymentMethodsViewSnapshotTests: STPSnapshotTestCase {
         let embeddedView = EmbeddedPaymentMethodsView(
             savedPaymentMethod: ._testCard(),
             appearance: appearance,
-            savedPaymentMethodAccessoryType: .viewMore,
+            savedPaymentMethodAccessoryType: .viewMore
         )
         verify(embeddedView, identifier: "nose_icon")
 
