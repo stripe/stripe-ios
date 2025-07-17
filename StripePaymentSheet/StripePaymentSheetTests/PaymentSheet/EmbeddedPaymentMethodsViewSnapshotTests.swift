@@ -845,9 +845,9 @@ class EmbeddedPaymentMethodsViewSnapshotTests: STPSnapshotTestCase {
 
     // MARK: Flat with chevron snapshot tests
 
-    func testEmbeddedPaymentMethodsView_flatWithChevron() {
+    func testEmbeddedPaymentMethodsView_flatWithDisclosure() {
         var appearance: PaymentSheet.Appearance = .default
-        appearance.embeddedPaymentElement.row.style = .flatWithChevron
+        appearance.embeddedPaymentElement.row.style = .flatWithDisclosure
 
         let embeddedView = EmbeddedPaymentMethodsView(initialSelection: nil,
                                                       paymentMethodTypes: [.stripe(.card), .stripe(.cashApp)],
@@ -861,9 +861,9 @@ class EmbeddedPaymentMethodsViewSnapshotTests: STPSnapshotTestCase {
         verify(embeddedView)
     }
 
-    func testEmbeddedPaymentMethodsView_flatWithChevron_color() {
+    func testEmbeddedPaymentMethodsView_flatWithDisclosure_color() {
         var appearance: PaymentSheet.Appearance = .default
-        appearance.embeddedPaymentElement.row.style = .flatWithChevron
+        appearance.embeddedPaymentElement.row.style = .flatWithDisclosure
         appearance.embeddedPaymentElement.row.flat.chevron.color = .purple
 
         let embeddedView = EmbeddedPaymentMethodsView(initialSelection: nil,
@@ -878,9 +878,9 @@ class EmbeddedPaymentMethodsViewSnapshotTests: STPSnapshotTestCase {
         verify(embeddedView)
     }
 
-    func testEmbeddedPaymentMethodsView_flatWithChevron_savedPaymentMethod() {
+    func testEmbeddedPaymentMethodsView_flatWithDisclosure_savedPaymentMethod() {
         var appearance: PaymentSheet.Appearance = .default
-        appearance.embeddedPaymentElement.row.style = .flatWithChevron
+        appearance.embeddedPaymentElement.row.style = .flatWithDisclosure
 
         let embeddedView = EmbeddedPaymentMethodsView(initialSelection: .saved(paymentMethod: STPPaymentMethod._testCard()),
                                                       paymentMethodTypes: [.stripe(.card), .stripe(.cashApp)],
@@ -895,9 +895,9 @@ class EmbeddedPaymentMethodsViewSnapshotTests: STPSnapshotTestCase {
         verify(embeddedView)
     }
 
-    func testEmbeddedPaymentMethodsView_flatWithChevron_noApplePay() {
+    func testEmbeddedPaymentMethodsView_flatWithDisclosure_noApplePay() {
         var appearance: PaymentSheet.Appearance = .default
-        appearance.embeddedPaymentElement.row.style = .flatWithChevron
+        appearance.embeddedPaymentElement.row.style = .flatWithDisclosure
 
         let embeddedView = EmbeddedPaymentMethodsView(initialSelection: nil,
                                                       paymentMethodTypes: [.stripe(.card), .stripe(.cashApp)],
@@ -911,9 +911,9 @@ class EmbeddedPaymentMethodsViewSnapshotTests: STPSnapshotTestCase {
         verify(embeddedView)
     }
 
-    func testEmbeddedPaymentMethodsView_flatWithChevron_noLink() {
+    func testEmbeddedPaymentMethodsView_flatWithDisclosure_noLink() {
         var appearance: PaymentSheet.Appearance = .default
-        appearance.embeddedPaymentElement.row.style = .flatWithChevron
+        appearance.embeddedPaymentElement.row.style = .flatWithDisclosure
 
         let embeddedView = EmbeddedPaymentMethodsView(initialSelection: nil,
                                                       paymentMethodTypes: [.stripe(.card), .stripe(.cashApp)],
@@ -927,9 +927,9 @@ class EmbeddedPaymentMethodsViewSnapshotTests: STPSnapshotTestCase {
         verify(embeddedView)
     }
 
-    func testEmbeddedPaymentMethodsView_flatWithChevron_rowHeight() {
+    func testEmbeddedPaymentMethodsView_flatWithDisclosure_rowHeight() {
         var appearance: PaymentSheet.Appearance = .default
-        appearance.embeddedPaymentElement.row.style = .flatWithChevron
+        appearance.embeddedPaymentElement.row.style = .flatWithDisclosure
         appearance.embeddedPaymentElement.row.additionalInsets = 20
 
         let embeddedView = EmbeddedPaymentMethodsView(initialSelection: nil,
@@ -952,9 +952,9 @@ class EmbeddedPaymentMethodsViewSnapshotTests: STPSnapshotTestCase {
         }
     }
 
-    func testEmbeddedPaymentMethodsView_flatWithChevron_rowHeightSingleLine() {
+    func testEmbeddedPaymentMethodsView_flatWithDisclosure_rowHeightSingleLine() {
         var appearance: PaymentSheet.Appearance = .default
-        appearance.embeddedPaymentElement.row.style = .flatWithChevron
+        appearance.embeddedPaymentElement.row.style = .flatWithDisclosure
         appearance.embeddedPaymentElement.row.additionalInsets = 20
 
         let embeddedView = EmbeddedPaymentMethodsView(initialSelection: nil,
@@ -977,9 +977,9 @@ class EmbeddedPaymentMethodsViewSnapshotTests: STPSnapshotTestCase {
         }
     }
 
-    func testEmbeddedPaymentMethodsView_flatWithChevron_spacing() {
+    func testEmbeddedPaymentMethodsView_flatWithDisclosure_spacing() {
         var appearance: PaymentSheet.Appearance = .default
-        appearance.embeddedPaymentElement.row.style = .flatWithChevron
+        appearance.embeddedPaymentElement.row.style = .flatWithDisclosure
         appearance.embeddedPaymentElement.row.floating.spacing = 30
 
         let embeddedView = EmbeddedPaymentMethodsView(initialSelection: nil,
@@ -994,9 +994,9 @@ class EmbeddedPaymentMethodsViewSnapshotTests: STPSnapshotTestCase {
         verify(embeddedView)
     }
 
-    func testEmbeddedPaymentMethodsView_flatWithChevron_selectedBorder() {
+    func testEmbeddedPaymentMethodsView_flatWithDisclosure_selectedBorder() {
         var appearance: PaymentSheet.Appearance = .default
-        appearance.embeddedPaymentElement .row.style = .flatWithChevron
+        appearance.embeddedPaymentElement .row.style = .flatWithDisclosure
         appearance.selectedBorderWidth = 5.0
         appearance.colors.selectedComponentBorder = .red
 
@@ -1015,9 +1015,9 @@ class EmbeddedPaymentMethodsViewSnapshotTests: STPSnapshotTestCase {
         verify(embeddedView)
     }
 
-    func testEmbeddedPaymentMethodsView_flatWithChevron_borderWidth() {
+    func testEmbeddedPaymentMethodsView_flatWithDisclosure_borderWidth() {
         var appearance: PaymentSheet.Appearance = .default
-        appearance.embeddedPaymentElement .row.style = .flatWithChevron
+        appearance.embeddedPaymentElement .row.style = .flatWithDisclosure
         appearance.borderWidth = 5.0
         appearance.colors.primary = .red
 
@@ -1036,9 +1036,9 @@ class EmbeddedPaymentMethodsViewSnapshotTests: STPSnapshotTestCase {
         verify(embeddedView)
     }
 
-    func testEmbeddedPaymentMethodsView_flatWithChevron_cornerRadius() {
+    func testEmbeddedPaymentMethodsView_flatWithDisclosure_cornerRadius() {
         var appearance: PaymentSheet.Appearance = .default
-        appearance.embeddedPaymentElement.row.style = .flatWithChevron
+        appearance.embeddedPaymentElement.row.style = .flatWithDisclosure
         appearance.cornerRadius = 15
 
         let embeddedView = EmbeddedPaymentMethodsView(initialSelection: nil,
@@ -1053,9 +1053,9 @@ class EmbeddedPaymentMethodsViewSnapshotTests: STPSnapshotTestCase {
         verify(embeddedView)
     }
 
-    func testEmbeddedPaymentMethodsView_flatWithChevron_smallFont() {
+    func testEmbeddedPaymentMethodsView_flatWithDisclosure_smallFont() {
         var appearance: PaymentSheet.Appearance = .default
-        appearance.embeddedPaymentElement.row.style = .flatWithChevron
+        appearance.embeddedPaymentElement.row.style = .flatWithDisclosure
         appearance.font.sizeScaleFactor = 0.5
         appearance.font.base = UIFont(name: "AmericanTypewriter", size: 12)!
 
@@ -1071,9 +1071,9 @@ class EmbeddedPaymentMethodsViewSnapshotTests: STPSnapshotTestCase {
         verify(embeddedView)
     }
 
-    func testEmbeddedPaymentMethodsView_flatWithChevron_largeFont() {
+    func testEmbeddedPaymentMethodsView_flatWithDisclosure_largeFont() {
         var appearance: PaymentSheet.Appearance = .default
-        appearance.embeddedPaymentElement.row.style = .flatWithChevron
+        appearance.embeddedPaymentElement.row.style = .flatWithDisclosure
         appearance.font.sizeScaleFactor = 1.5
         appearance.font.base = UIFont(name: "AmericanTypewriter", size: 12)!
 
@@ -1089,9 +1089,9 @@ class EmbeddedPaymentMethodsViewSnapshotTests: STPSnapshotTestCase {
         verify(embeddedView)
     }
 
-    func testEmbeddedPaymentMethodsView_flatWithChevron_promoBadge_unselected() {
+    func testEmbeddedPaymentMethodsView_flatWithDisclosure_promoBadge_unselected() {
         var appearance: PaymentSheet.Appearance = .default
-        appearance.embeddedPaymentElement.row.style = .flatWithChevron
+        appearance.embeddedPaymentElement.row.style = .flatWithDisclosure
 
         let embeddedView = EmbeddedPaymentMethodsView(
             initialSelection: .new(paymentMethodType: .stripe(.card)),

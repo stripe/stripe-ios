@@ -1,5 +1,5 @@
 //
-//  RowButtonFlatWithChevron.swift
+//  RowButtonFlatWithDisclosure.swift
 //  StripePaymentSheet
 //
 //  Created by George Birch on 4/30/25.
@@ -10,7 +10,7 @@ import Foundation
 import UIKit
 
 /// A `RowButton` subclass that presents a flat layout featuring a chevron. No selected state is available for this style.
-final class RowButtonFlatWithChevron: RowButton {
+final class RowButtonFlatWithDisclosure: RowButton {
     // MARK: - Subviews
     private lazy var chevronView: UIImageView = {
         let chevronImageView = UIImageView(image: Image.icon_chevron_right.makeImage(template: true))
