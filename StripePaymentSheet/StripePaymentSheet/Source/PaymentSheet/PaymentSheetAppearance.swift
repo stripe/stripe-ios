@@ -315,7 +315,7 @@ public extension PaymentSheet.Appearance {
                 case flatWithCheckmark
                 /// A flat style with a chevron
                 /// Note that EmbeddedPaymentElement.Configuration.RowSelectionBehavior must be set to `immediateAction` to use this style.
-                case flatWithChevron
+                case flatWithDisclosure
             }
 
             /// The display style of the row
@@ -349,7 +349,7 @@ public extension PaymentSheet.Appearance {
                 public var separatorColor: UIColor?
 
                 /// The insets of the separator line between rows
-                /// - Note: If `nil`, defaults to `UIEdgeInsets(top: 0, left: 30, bottom: 0, right: 0)` for style of `flatWithRadio` and to `UIEdgeInsets.zero` for styles of `flatWithCheckmark` and `flatWithChevron`.
+                /// - Note: If `nil`, defaults to `UIEdgeInsets(top: 0, left: 30, bottom: 0, right: 0)` for style of `flatWithRadio` and to `UIEdgeInsets.zero` for styles of `flatWithCheckmark` and `flatWithDisclosure`.
                 public var separatorInsets: UIEdgeInsets?
 
                 /// Determines if the top separator is visible at the top of the Embedded Mobile Payment Element

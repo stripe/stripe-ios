@@ -176,8 +176,8 @@ extension PaymentSheet.Appearance: Codable {
             self.embeddedPaymentElement.row.style = .floatingButton
         case "flatWithCheckmark":
             self.embeddedPaymentElement.row.style = .flatWithCheckmark
-        case "flatWithChevron":
-            self.embeddedPaymentElement.row.style = .flatWithChevron
+        case "flatWithDisclosure":
+            self.embeddedPaymentElement.row.style = .flatWithDisclosure
         default:
             self.embeddedPaymentElement.row.style = .flatWithRadio
         }
@@ -307,8 +307,8 @@ extension PaymentSheet.Appearance: Codable {
             embeddedRowStyleString = "floatingButton"
         case .flatWithCheckmark:
             embeddedRowStyleString = "flatWithCheckmark"
-        case .flatWithChevron:
-            embeddedRowStyleString = "flatWithChevron"
+        case .flatWithDisclosure:
+            embeddedRowStyleString = "flatWithDisclosure"
         default:
             throw AppearanceCodableError(description: "Implement encoding for new row styles in AppearanceCodableExtensions.swift")
         }

@@ -3,6 +3,7 @@
 * [Fixed] EmbeddedPaymentElement now errors when `configuration.rowSelectionBehavior` is `.immediateAction` and `configuration.embeddedViewDisplaysMandateText` is `true` to ensure integrations display legal mandate text to the customer.
 * [Added] Added `Appearance.EmbeddedPaymentElement.Row.paymentMethodIconLayoutMargins` to customize the spacing around payment method icons in EmbeddedPaymentElement payment method rows.
 * [Added] Added `Appearance.EmbeddedPaymentElement.Row.titleFont` to customize the font of EmbeddedPaymentElement payment method row titles.
+* [Changed] Renamed `PaymentSheet.Appearance.EmbeddedPaymentElement.Row.Style.flatWithChevron` to `PaymentSheet.Appearance.EmbeddedPaymentElement.Row.Style.flatWithDisclosure` and added `disclosureView` to customize the chevron icon displayed in EmbeddedPaymentElement payment method rows.
 
 
 ## 24.16.2 2025-07-07

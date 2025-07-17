@@ -49,7 +49,7 @@ class RowButton: UIView, EventHandler {
 
     var isFlatWithCheckmarkOrChevronStyle: Bool {
         let rowStyle = appearance.embeddedPaymentElement.row.style
-        return (rowStyle == .flatWithCheckmark || rowStyle == .flatWithChevron) && isEmbedded
+        return (rowStyle == .flatWithCheckmark || rowStyle == .flatWithDisclosure) && isEmbedded
     }
 
     var hasSubtext: Bool {
@@ -357,8 +357,8 @@ extension RowButton {
                   isEmbedded: isEmbedded,
                   didTap: didTap
               )
-          case .flatWithChevron:
-              return RowButtonFlatWithChevron(
+          case .flatWithDisclosure:
+              return RowButtonFlatWithDisclosure(
                   appearance: appearance,
                   type: type,
                   imageView: imageView,
@@ -399,7 +399,7 @@ extension RowButton {
             }
 
             switch appearance.embeddedPaymentElement.row.style {
-            case .flatWithRadio, .flatWithCheckmark, .flatWithChevron:
+            case .flatWithRadio, .flatWithCheckmark, .flatWithDisclosure:
                 return appearance.colors.text
             case .floatingButton:
                 return appearance.colors.componentText
@@ -424,7 +424,7 @@ extension RowButton {
             }
 
             switch appearance.embeddedPaymentElement.row.style {
-            case .flatWithRadio, .flatWithCheckmark, .flatWithChevron:
+            case .flatWithRadio, .flatWithCheckmark, .flatWithDisclosure:
                 return appearance.colors.textSecondary
             case .floatingButton:
                 return appearance.colors.componentPlaceholderText

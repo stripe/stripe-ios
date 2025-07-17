@@ -309,7 +309,7 @@
 		9DEDA3E0FFF73F9275F5F8F0 /* AutoCompleteViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDDECF0A74497EE887DFCB46 /* AutoCompleteViewController.swift */; };
 		9E77F1E9F801AE970F1A5BE1 /* CustomerSheetConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7768E4377A7D7495A02655D /* CustomerSheetConfiguration.swift */; };
 		9F750611C4E8EAABE9F0B460 /* CustomerSheetTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED7ABCE56539213DCE501C54 /* CustomerSheetTests.swift */; };
-		A0317DBB2DC2CD88003EF979 /* RowButtonFlatWithChevron.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0317DBA2DC2CD7D003EF979 /* RowButtonFlatWithChevron.swift */; };
+		A0317DBB2DC2CD88003EF979 /* RowButtonFlatWithDisclosure.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0317DBA2DC2CD7D003EF979 /* RowButtonFlatWithDisclosure.swift */; };
 		A1AC7034E778F81B8758A653 /* OHHTTPStubsSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 20076FBD56C42E259EF62F2B /* OHHTTPStubsSwift */; };
 		A36949C52CE7D72300739E5D /* UpdatePaymentMethodViewController+Configuration.swift in Sources */ = {isa = PBXBuildFile; fileRef = A36949C42CE7D72300739E5D /* UpdatePaymentMethodViewController+Configuration.swift */; };
 		A3B2F2B22CEE689C00C0E88C /* TextFieldElement+USBankAccount.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3B2F2B12CEE689C00C0E88C /* TextFieldElement+USBankAccount.swift */; };
@@ -805,7 +805,7 @@
 		9A0BBDBFC37770CF870594B1 /* nl */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = nl; path = nl.lproj/Localizable.strings; sourceTree = "<group>"; };
 		9A0D887C5AC6EFFAFE1AFD77 /* PaymentMethodType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentMethodType.swift; sourceTree = "<group>"; };
 		9E3905FE9F40E82EAEF49CD2 /* ro-RO */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "ro-RO"; path = "ro-RO.lproj/Localizable.strings"; sourceTree = "<group>"; };
-		A0317DBA2DC2CD7D003EF979 /* RowButtonFlatWithChevron.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RowButtonFlatWithChevron.swift; sourceTree = "<group>"; };
+		A0317DBA2DC2CD7D003EF979 /* RowButtonFlatWithDisclosure.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RowButtonFlatWithDisclosure.swift; sourceTree = "<group>"; };
 		A09CCD0ED44336B23450A995 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
 		A1928BE9DFF116368B1A19DC /* LinkCookieKey.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LinkCookieKey.swift; sourceTree = "<group>"; };
 		A36949C42CE7D72300739E5D /* UpdatePaymentMethodViewController+Configuration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UpdatePaymentMethodViewController+Configuration.swift"; sourceTree = "<group>"; };
@@ -1699,7 +1699,7 @@
 				61D8688D2C06553E001FAD84 /* RightAccessoryButton.swift */,
 				B667BF0A2BF2B7C60050EFD8 /* RowButton.swift */,
 				6114AEBF2D6519EC00C0EF40 /* RowButtonFlatWithCheckmark.swift */,
-				A0317DBA2DC2CD7D003EF979 /* RowButtonFlatWithChevron.swift */,
+				A0317DBA2DC2CD7D003EF979 /* RowButtonFlatWithDisclosure.swift */,
 				6185901A2D5BF1D200D533D6 /* RowButtonFlatWithRadioView.swift */,
 				6155F0862D5D2F60000DCD3A /* RowButtonFloating.swift */,
 				B63B2CF22BFBEE7B003810F3 /* VerticalPaymentMethodListViewController.swift */,
@@ -2420,7 +2420,7 @@
 				CB28DBAF2DBD57BB008DD7DF /* SavedPaymentMethodFormFactory+Link.swift in Sources */,
 				3147CEC22CC080570067B5E4 /* LinkSecureCookieStore.swift in Sources */,
 				258A75AF2E5393186C8850CA /* LinkEmailElement.swift in Sources */,
-				A0317DBB2DC2CD88003EF979 /* RowButtonFlatWithChevron.swift in Sources */,
+				A0317DBB2DC2CD88003EF979 /* RowButtonFlatWithDisclosure.swift in Sources */,
 				EDE71E0BEDD94FB1101F3C10 /* FormElement+Link.swift in Sources */,
 				C346B534D57A952D4415ADFD /* Intent+Link.swift in Sources */,
 				A3B2F2B62CF1149200C0E88C /* SavedPaymentMethodFormFactory+Card.swift in Sources */,
