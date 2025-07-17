@@ -198,9 +198,44 @@ import UIKit
             with: phone,
             legalName: fullName,
             countryCode: country,
-            consentAction: nil,
-            completion: completion
+            consentAction: .clicked_button_mobile_v1,
+            completion: { [weak self] result in
+                LinkAccountContext.shared.account = self?.linkAccount
+                completion(result)
+            }
         )
+    }
+
+    /// Presents the Link verification flow for an existing user.
+    ///
+    /// - Parameter viewController: The view controller from which to present the authentication flow.
+    /// - Parameter completion: A closure that is called with the result of the authentication. It returns an `AuthenticationResult` if successful, or an error if the verification failed.
+    @_spi(STP) public func presentForVerification(
+        from viewController: UIViewController,
+        completion: @escaping (Result<AuthenticationResult, Error>) -> Void
+    ) {
+        guard let linkAccount, linkAccount.isRegistered else {
+            let error = IntegrationError.noActiveLinkConsumer
+            completion(.failure(error))
+            return
+        }
+
+        let verificationController = LinkVerificationController(
+            mode: .modal,
+            linkAccount: linkAccount,
+            configuration: configuration
+        )
+
+        verificationController.present(from: viewController) { result in
+            switch result {
+            case .completed:
+                completion(.success(.completed))
+            case .canceled:
+                completion(.success(.canceled))
+            case .failed(let error):
+                completion(.failure(error))
+            }
+        }
     }
 
     /// Presents the Link authentication flow for an existing or new consumer.
@@ -454,6 +489,23 @@ import UIKit
         }
     }
 
+    /// Presents the Link verification flow for an existing user.
+    ///
+    /// - Parameter viewController: The view controller from which to present the authentication flow.
+    /// - Returns: An `AuthenticationResult` indicating whether authentication was completed or canceled.
+    func presentForVerification(from viewController: UIViewController) async throws -> AuthenticationResult {
+        try await withCheckedThrowingContinuation { continuation in
+            presentForVerification(from: viewController) { result in
+                switch result {
+                case .success(let result):
+                    continuation.resume(returning: result)
+                case .failure(let error):
+                    continuation.resume(throwing: error)
+                }
+            }
+        }
+    }
+
     /// Presents the Link authentication flow for an existing or new consumer.
     ///
     /// - Parameter email: The email address to authenticate or sign up with.
@@ -468,26 +520,9 @@ import UIKit
         var configuration = self.configuration
         configuration.defaultBillingDetails.email = email
 
-        if isRegistered, let linkAccount {
-            // Present for authentication
-            let verificationController = LinkVerificationController(
-                mode: .modal,
-                linkAccount: linkAccount,
-                configuration: configuration
-            )
-
-            return try await withCheckedThrowingContinuation { continuation in
-                verificationController.present(from: viewController) { result in
-                    switch result {
-                    case .completed:
-                        continuation.resume(returning: .completed)
-                    case .canceled:
-                        continuation.resume(returning: .canceled)
-                    case .failed(let error):
-                        continuation.resume(throwing: error)
-                    }
-                }
-            }
+        if isRegistered {
+            // Present for verification
+            return try await presentForVerification(from: viewController)
         } else {
             // Present for signup
             let signupController = LinkSignUpController(

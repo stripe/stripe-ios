@@ -122,7 +122,7 @@ struct LinkPMDisplayDetails {
     func signUp(
         with phoneNumber: PhoneNumber,
         legalName: String?,
-        consentAction: ConsentAction?,
+        consentAction: ConsentAction,
         completion: @escaping (Result<Void, Error>) -> Void
     ) {
         signUp(
@@ -138,7 +138,7 @@ struct LinkPMDisplayDetails {
         with phoneNumber: String,
         legalName: String?,
         countryCode: String?,
-        consentAction: ConsentAction?,
+        consentAction: ConsentAction,
         completion: @escaping (Result<Void, Error>) -> Void
     ) {
         guard case .requiresSignUp = sessionState else {
@@ -158,7 +158,7 @@ struct LinkPMDisplayDetails {
             phoneNumber: phoneNumber,
             legalName: legalName,
             countryCode: countryCode,
-            consentAction: consentAction?.rawValue,
+            consentAction: consentAction.rawValue,
             useMobileEndpoints: useMobileEndpoints,
             with: apiClient
         ) { [weak self] result in
