@@ -553,7 +553,6 @@ extension STPAPIClient {
             paymentMethodParamsDict = Self.paramsAddingClientAttributionMetadata(paymentMethodParamsDict)
             params[PaymentMethodDataHash] = paymentMethodParamsDict
         }
-
         if (expand?.count ?? 0) > 0 {
             if let expand = expand {
                 params["expand"] = expand

@@ -297,6 +297,7 @@ final class PaymentSheetLoader {
             }
             return defaultStripePaymentMethodId(forCustomerID: customer.id)
         }()
+
         switch mode {
         case .paymentIntentClientSecret(let clientSecret):
             let paymentIntent: STPPaymentIntent
