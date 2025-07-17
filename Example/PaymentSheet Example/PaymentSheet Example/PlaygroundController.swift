@@ -366,9 +366,19 @@ class PlaygroundController: ObservableObject {
                 phone: "5555555555"
             )
             configuration.allowedCountries = ["US", "CA", "MX", "GB"]
+            configuration.billingAddress = .init(
+                address: .init(
+                    city: "New York",
+                    country: "US",
+                    line1: "123 Main Street",
+                    postalCode: "10001",
+                    state: "New York"
+                ),
+                name: "John Smith",
+                phone: "5551234567"
+            )
         }
         configuration.additionalFields.checkboxLabel = "Save this address for future orders"
-        configuration.showUseBillingAddressCheckbox = true
         return configuration
     }
 
