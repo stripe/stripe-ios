@@ -365,6 +365,7 @@ class PlaygroundController: ObservableObject {
                 name: "Jane Doe",
                 phone: "5555555555"
             )
+            configuration.allowedCountries = ["US", "CA", "MX", "GB"]
             configuration.billingAddress = .init(
                 address: .init(
                     city: "New York",

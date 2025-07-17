@@ -143,11 +143,6 @@ public class AddressViewController: UIViewController {
             }
         }
 
-        // Fall back to legacy default values
-        if !configuration.defaultValues.address.isEmpty && isAddressCompatible(configuration.defaultValues) {
-            return configuration.defaultValues
-        }
-
         return nil
     }
 
