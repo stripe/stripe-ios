@@ -101,6 +101,7 @@ struct ExampleLinkControllerView: View {
 
                         authenticateButton
                         collectPaymentMethodButton
+                        createPaymentMethodButton
 
                         resetButton
                     }
@@ -256,6 +257,27 @@ struct ExampleLinkControllerView: View {
             Button("Collect Payment Method") {
                 Task {
                     await collectPaymentMethod()
+                }
+            }
+            .buttonStyle(SecondaryButtonStyle())
+            .disabled(isLoading)
+        }
+    }
+
+    @ViewBuilder
+    private var createPaymentMethodButton: some View {
+        if linkController?.paymentMethodPreview != nil {
+            Button("Create Payment Method") {
+                Task {
+                    await createPaymentMethod()
+                }
+            }
+            .buttonStyle(PrimaryButtonStyle())
+            .disabled(isLoading)
+        } else {
+            Button("Create Payment Method") {
+                Task {
+                    await createPaymentMethod()
                 }
             }
             .buttonStyle(SecondaryButtonStyle())
@@ -518,6 +540,35 @@ struct ExampleLinkControllerView: View {
                 self.statusMessage = "Payment method collected successfully"
             } else {
                 self.statusMessage = "Payment method collection canceled"
+            }
+        }
+    }
+
+    private func createPaymentMethod() async {
+        guard let linkController else {
+            await MainActor.run {
+                self.errorMessage = "LinkController not initialized"
+            }
+            return
+        }
+
+        await MainActor.run {
+            self.isLoading = true
+            self.errorMessage = nil
+            self.statusMessage = "Creating payment method..."
+        }
+
+        do {
+            let paymentMethod = try await linkController.createPaymentMethod()
+            await MainActor.run {
+                self.isLoading = false
+                self.statusMessage = "Payment method created successfully (ID: \(paymentMethod.stripeId))"
+            }
+        } catch {
+            await MainActor.run {
+                self.isLoading = false
+                self.errorMessage = "Failed to create payment method: \(error.localizedDescription)"
+                self.statusMessage = nil
             }
         }
     }
