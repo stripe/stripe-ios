@@ -35,7 +35,7 @@ extension EmbeddedPaymentElement {
             allowsRemovalOfLastSavedPaymentMethod: loadResult.elementsSession.paymentMethodRemoveLast(configuration: configuration),
             allowsPaymentMethodRemoval: loadResult.elementsSession.allowsRemovalOfPaymentMethodsForPaymentSheet(),
             allowsPaymentMethodUpdate: loadResult.elementsSession.paymentMethodUpdateForPaymentSheet,
-            isFlatCheckmarkOrChevronStyle: configuration.appearance.embeddedPaymentElement.row.style == .flatWithCheckmark || configuration.appearance.embeddedPaymentElement.row.style == .flatWithDisclosure
+            isFlatCheckmarkOrDisclosureStyle: configuration.appearance.embeddedPaymentElement.row.style == .flatWithCheckmark || configuration.appearance.embeddedPaymentElement.row.style == .flatWithDisclosure
         )
         let initialSelection: RowButtonType? = {
             // First, respect the previous selection
@@ -318,7 +318,7 @@ extension EmbeddedPaymentElement: UpdatePaymentMethodViewControllerDelegate {
             allowsRemovalOfLastSavedPaymentMethod: elementsSession.paymentMethodRemoveLast(configuration: configuration),
             allowsPaymentMethodRemoval: elementsSession.allowsRemovalOfPaymentMethodsForPaymentSheet(),
             allowsPaymentMethodUpdate: elementsSession.paymentMethodUpdateForPaymentSheet,
-            isFlatCheckmarkOrChevronStyle: configuration.appearance.embeddedPaymentElement.row.style == .flatWithCheckmark || configuration.appearance.embeddedPaymentElement.row.style == .flatWithDisclosure
+            isFlatCheckmarkOrDisclosureStyle: configuration.appearance.embeddedPaymentElement.row.style == .flatWithCheckmark || configuration.appearance.embeddedPaymentElement.row.style == .flatWithDisclosure
         )
     }
 }

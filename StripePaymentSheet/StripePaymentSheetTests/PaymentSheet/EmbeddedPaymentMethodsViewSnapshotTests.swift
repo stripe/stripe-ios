@@ -7,7 +7,7 @@
 
 import StripeCoreTestUtils
 @_spi(STP) @testable import StripePayments
-@_spi(CustomPaymentMethodsBeta) @_spi(AppearanceAPIAdditionsPreview) @testable import StripePaymentSheet
+@_spi(CustomPaymentMethodsBeta) @_spi(AppearanceAPIAdditionsPreview) @_spi(CustomEmbeddedDisclosureImagePreview) @testable import StripePaymentSheet
 @testable import StripePaymentsTestUtils
 @_spi(STP) @testable import StripeUICore
 import XCTest
@@ -864,7 +864,7 @@ class EmbeddedPaymentMethodsViewSnapshotTests: STPSnapshotTestCase {
     func testEmbeddedPaymentMethodsView_flatWithDisclosure_color() {
         var appearance: PaymentSheet.Appearance = .default
         appearance.embeddedPaymentElement.row.style = .flatWithDisclosure
-        appearance.embeddedPaymentElement.row.flat.chevron.color = .purple
+        appearance.embeddedPaymentElement.row.flat.disclosure.color = .purple
 
         let embeddedView = EmbeddedPaymentMethodsView(initialSelection: nil,
                                                       paymentMethodTypes: [.stripe(.card), .stripe(.cashApp)],
@@ -876,6 +876,40 @@ class EmbeddedPaymentMethodsViewSnapshotTests: STPSnapshotTestCase {
                                                       mandateProvider: MockMandateProvider())
 
         verify(embeddedView)
+    }
+    
+    func testEmbeddedPaymentMethodsView_flatWithDisclosure_customDisclosureView() {
+        // Custom small 👃 icon
+        var appearance: PaymentSheet.Appearance = .default
+        appearance.embeddedPaymentElement.row.style = .flatWithDisclosure
+        appearance.embeddedPaymentElement.row.flat.disclosure.color = .purple
+        appearance.embeddedPaymentElement.row.flat.disclosure.disclosureImage = UIImage(systemName: "nose", withConfiguration: UIImage.SymbolConfiguration(pointSize: 5))
+        let embeddedView = EmbeddedPaymentMethodsView(
+            savedPaymentMethod: ._testCard(),
+            appearance: appearance,
+            savedPaymentMethodAccessoryType: .viewMore
+        )
+        verify(embeddedView, identifier: "small_purple_nose_icon")
+        
+        // Custom BIG PNG
+        appearance.embeddedPaymentElement.row.flat.disclosure.color = .systemGray
+        appearance.embeddedPaymentElement.row.flat.disclosure.disclosureImage = UIImage(named: "polling_error_icon", in: Bundle(for: PaymentSheet.self), with: nil)
+        let embeddedViewBigCustomIcon = EmbeddedPaymentMethodsView(
+            savedPaymentMethod: ._testCard(),
+            appearance: appearance,
+            savedPaymentMethodAccessoryType: .viewMore
+        )
+        verify(embeddedViewBigCustomIcon, identifier: "big_error_icon")
+
+        // Custom svg
+        let image = UIImage(named: "afterpay_icon_info", in: Bundle(for: PaymentSheet.self), with: nil)
+        appearance.embeddedPaymentElement.row.flat.disclosure.disclosureImage = image
+        let embeddedViewSmallCustomIcon = EmbeddedPaymentMethodsView(
+            savedPaymentMethod: ._testCard(),
+            appearance: appearance,
+            savedPaymentMethodAccessoryType: .viewMore
+        )
+        verify(embeddedViewSmallCustomIcon, identifier: "info_icon")
     }
 
     func testEmbeddedPaymentMethodsView_flatWithDisclosure_savedPaymentMethod() {
