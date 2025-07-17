@@ -206,7 +206,7 @@ import UIKit
         )
     }
 
-    /// Presents the Link verification flow for an existing user.
+    /// Presents the Link verification flow for an existing user which requires verification.
     ///
     /// - Parameter viewController: The view controller from which to present the authentication flow.
     /// - Parameter completion: A closure that is called with the result of the authentication. It returns an `AuthenticationResult` if successful, or an error if the verification failed.
@@ -214,7 +214,7 @@ import UIKit
         from viewController: UIViewController,
         completion: @escaping (Result<AuthenticationResult, Error>) -> Void
     ) {
-        guard let linkAccount, linkAccount.isRegistered else {
+        guard let linkAccount, linkAccount.sessionState == .requiresVerification else {
             let error = IntegrationError.noActiveLinkConsumer
             completion(.failure(error))
             return
