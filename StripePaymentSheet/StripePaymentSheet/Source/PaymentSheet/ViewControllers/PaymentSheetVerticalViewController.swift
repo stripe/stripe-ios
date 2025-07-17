@@ -501,10 +501,12 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
     }
 
     private var canPresentLinkOnPrimaryButton: Bool {
+        // Presenting Link as the primary action should only happen when selecting Link
+        // as the payment method (i.e. LinkConfirmOptions == .wallet) from the FlowController.
         guard elementsSession.enableFlowControllerRUX(for: configuration) else {
             return false
         }
-        guard case .link = selectedPaymentOption else {
+        guard case .link(.wallet) = selectedPaymentOption else {
             return false
         }
         return isFlowController
