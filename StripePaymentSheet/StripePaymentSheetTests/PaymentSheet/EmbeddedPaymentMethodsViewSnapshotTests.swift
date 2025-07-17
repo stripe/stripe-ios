@@ -920,8 +920,6 @@ class EmbeddedPaymentMethodsViewSnapshotTests: STPSnapshotTestCase {
         // Custom [ SELECT A PAYMENT METHOD!! ] view that's too big and should get shrunk.
         appearance.embeddedPaymentElement.row.flat.disclosure.disclosureView = {
             let selectButton = UIView()
-            // Frame is deliberately much taller than the rest of the things in the row
-            selectButton.frame = .init(origin: .zero, size: .init(width: UIView.noIntrinsicMetric, height: 100))
             let selectLabel = UILabel()
             selectLabel.text = "SELECT A PAYMENT METHOD!!"
             selectLabel.font = .boldSystemFont(ofSize: 100)
