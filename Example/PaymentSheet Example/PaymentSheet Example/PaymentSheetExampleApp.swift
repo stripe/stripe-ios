@@ -5,7 +5,7 @@
 
 import SwiftUI
 
-@available(iOS 14.0, *)
+@available(iOS 15.0, *)
 @main
 struct PaymentSheetExampleApp: App {
     @UIApplicationDelegateAdaptor(AppDelegate.self) private var appdelegate
