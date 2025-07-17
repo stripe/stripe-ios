@@ -176,6 +176,33 @@ import UIKit
         }
     }
 
+    /// Registers a new Link user with the provided details.
+    /// `lookupConsumer` must be called before this.
+    ///
+    /// - Parameter fullName: The full name of the user.
+    /// - Parameter phone: The phone number of the user. Expected to be in E.164 format.
+    /// - Parameter country: The country code of the user.
+    /// - Parameter completion: A closure that is called with the result of the sign up.
+    @_spi(STP) public func registerNewLinkUser(
+        fullName: String?,
+        phone: String,
+        country: String,
+        completion: @escaping (Result<Void, Error>) -> Void
+    ) {
+        guard let linkAccount else {
+            let error = IntegrationError.noActiveLinkConsumer
+            completion(.failure(error))
+            return
+        }
+        linkAccount.signUp(
+            with: phone,
+            legalName: fullName,
+            countryCode: country,
+            consentAction: nil,
+            completion: completion
+        )
+    }
+
     /// Presents the Link authentication flow for an existing or new consumer.
     ///
     /// - Parameter email: The email address to authenticate or sign up with.
@@ -391,13 +418,37 @@ import UIKit
     /// - Parameter email: The email address to look up.
     /// - Returns: Returns `true` if the email is associated with an existing Link consumer, or `false` otherwise.
     func lookupConsumer(with email: String) async throws -> Bool {
-        return try await withCheckedThrowingContinuation { continuation in
+        try await withCheckedThrowingContinuation { continuation in
             lookupConsumer(with: email) { result in
                 switch result {
                 case .success(let isExistingLinkConsumer):
                     continuation.resume(returning: isExistingLinkConsumer)
-                case .failure(let failure):
-                    continuation.resume(throwing: failure)
+                case .failure(let error):
+                    continuation.resume(throwing: error)
+                }
+            }
+        }
+    }
+
+    /// Registers a new Link user with the provided details.
+    /// `lookupConsumer` must be called before this.
+    ///
+    /// - Parameter fullName: The full name of the user.
+    /// - Parameter phone: The phone number of the user. Expected to be in E.164 format.
+    /// - Parameter country: The country code of the user.
+    /// Throws if `lookupConsumer` was not called prior to this, or an API error occurs.
+    func registerNewLinkUser(
+        fullName: String?,
+        phone: String,
+        country: String
+    ) async throws {
+        try await withCheckedThrowingContinuation { continuation in
+            registerNewLinkUser(fullName: fullName, phone: phone, country: country) { result in
+                switch result {
+                case .success:
+                    continuation.resume(returning: ())
+                case .failure(let error):
+                    continuation.resume(throwing: error)
                 }
             }
         }
