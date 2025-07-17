@@ -15,6 +15,7 @@ struct ShopPayTestingOptions {
     var rejectShippingAddressChange: Bool = false
     var rejectShippingRateChange: Bool = false
     var simulatePaymentFailed: Bool = false
+    var simulatePreparePaymentMethodError: Bool = false
 }
 
 struct ExampleWalletButtonsContainerView: View {
@@ -33,6 +34,7 @@ struct ExampleWalletButtonsContainerView: View {
     @State private var rejectShippingAddressChange: Bool = false
     @State private var rejectShippingRateChange: Bool = false
     @State private var simulatePaymentFailed: Bool = false
+    @State private var simulatePreparePaymentMethodError: Bool = false
 
     var body: some View {
         if #available(iOS 16.0, *) {
@@ -72,6 +74,7 @@ struct ExampleWalletButtonsContainerView: View {
                         Toggle("Reject Shipping Address Change", isOn: $rejectShippingAddressChange)
                         Toggle("Reject Shipping Rate Change", isOn: $rejectShippingRateChange)
                         Toggle("Simulate Payment Failed", isOn: $simulatePaymentFailed)
+                        Toggle("Simulate PreparePaymentMethod Error", isOn: $simulatePreparePaymentMethodError)
                     }
                 }.sheet(isPresented: $showingAppearancePlayground) {
                     AppearancePlaygroundView(appearance: appearance) { updatedAppearance in
@@ -94,7 +97,8 @@ struct ExampleWalletButtonsContainerView: View {
                                 allowedShippingCountries: allowedShippingCountries,
                                 rejectShippingAddressChange: rejectShippingAddressChange,
                                 rejectShippingRateChange: rejectShippingRateChange,
-                                simulatePaymentFailed: simulatePaymentFailed
+                                simulatePaymentFailed: simulatePaymentFailed,
+                                simulatePreparePaymentMethodError: simulatePreparePaymentMethodError
                             )
                         )
                     }
@@ -316,6 +320,13 @@ class ExampleWalletButtonsModel: ObservableObject {
                     intentConfiguration: .init(sharedPaymentTokenSessionWithMode: .payment(amount: 1000, currency: "USD", setupFutureUsage: nil, captureMethod: .automatic, paymentMethodOptions: nil), sellerDetails: .init(networkId: "stripe", externalId: "acct_1HvTI7Lu5o3P18Zp"), paymentMethodTypes: ["card", "shop_pay"], preparePaymentMethodHandler: { [weak self] paymentMethod, address in
                         self?.addDebugLog("PaymentMethod prepared: \(paymentMethod.stripeId)")
                         self?.addDebugLog("Address: \(address)")
+
+                        // Check if we should simulate preparePaymentMethodHandler error
+                        if self?.shopPayTestingOptions.simulatePreparePaymentMethodError == true {
+                            self?.addDebugLog("[TEST MODE] Simulating preparePaymentMethodHandler error")
+                            throw NSError(domain: "TestMode", code: -1, userInfo: [NSLocalizedDescriptionKey: "Simulated preparePaymentMethodHandler error for testing"])
+                        }
+
                         self?.onCompletion(result: .completed)
                     }),
                     configuration: configuration
@@ -390,6 +401,14 @@ class ExampleWalletButtonsModel: ObservableObject {
                         self?.isProcessing = true
                         self?.addDebugLog("PaymentMethod prepared: \(paymentMethod.stripeId)")
                         self?.addDebugLog("Address: \(address)")
+
+                        // Check if we should simulate preparePaymentMethodHandler error
+                        if self?.shopPayTestingOptions.simulatePreparePaymentMethodError == true {
+                            self?.addDebugLog("[TEST MODE] Simulating preparePaymentMethodHandler error")
+                            self?.isProcessing = false
+                            throw NSError(domain: "TestMode", code: -1, userInfo: [NSLocalizedDescriptionKey: "Simulated preparePaymentMethodHandler error for testing"])
+                        }
+
                         // Create the payment intent on the rough-lying-carriage backend
                         self?.createPaymentIntentWithSPTTestBackend(customerId: customerId, paymentMethod: paymentMethod.stripeId)
                     }),
@@ -614,6 +633,7 @@ class ExampleWalletButtonsModel: ObservableObject {
         addDebugLog("[SHOP PAY CONFIG] Reject Shipping Address: \(shopPayTestingOptions.rejectShippingAddressChange)")
         addDebugLog("[SHOP PAY CONFIG] Reject Shipping Rate: \(shopPayTestingOptions.rejectShippingRateChange)")
         addDebugLog("[SHOP PAY CONFIG] Simulate Payment Failed: \(shopPayTestingOptions.simulatePaymentFailed)")
+        addDebugLog("[SHOP PAY CONFIG] Simulate PreparePaymentMethod Error: \(shopPayTestingOptions.simulatePreparePaymentMethodError)")
 
         return config
     }
