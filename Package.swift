@@ -168,7 +168,7 @@ let package = Package(
         ),
         .target(
             name: "StripeCryptoOnramp",
-            dependencies: ["StripeCore"],
+            dependencies: ["StripeCore", "StripeUICore", "StripePaymentSheet", "StripeIdentity", "StripeFinancialConnections"],
             path: "StripeCryptoOnramp/StripeCryptoOnramp",
             resources: [
                 .process("Resources")
