@@ -879,6 +879,7 @@ class EmbeddedPaymentMethodsViewSnapshotTests: STPSnapshotTestCase {
     }
 
     func testEmbeddedPaymentMethodsView_flatWithDisclosure_customDisclosureView() {
+        // Custom 👃 icon
         var appearance: PaymentSheet.Appearance = .default
         appearance.embeddedPaymentElement.row.style = .flatWithDisclosure
         appearance.embeddedPaymentElement.row.flat.disclosure.color = .purple // should be ignored
@@ -888,16 +889,56 @@ class EmbeddedPaymentMethodsViewSnapshotTests: STPSnapshotTestCase {
             return customImage
         }
         let embeddedView = EmbeddedPaymentMethodsView(
-            initialSelection: nil,
-            paymentMethodTypes: [.stripe(.card), .stripe(.cashApp)],
-            savedPaymentMethod: nil,
+            savedPaymentMethod: ._testCard(),
             appearance: appearance,
-            shouldShowApplePay: true,
-            shouldShowLink: true,
-            savedPaymentMethodAccessoryType: .none,
-            mandateProvider: MockMandateProvider()
+            savedPaymentMethodAccessoryType: .viewMore,
         )
-        verify(embeddedView)
+        verify(embeddedView, identifier: "nose_icon")
+
+        // Custom [ SELECT ] view
+        appearance.embeddedPaymentElement.row.flat.disclosure.disclosureView = {
+            let selectButton = UIView()
+            // Frame is deliberately much taller than the rest of the things in the row
+            selectButton.frame = .init(origin: .zero, size: .init(width: UIView.noIntrinsicMetric, height: 100))
+            let selectLabel = UILabel()
+            selectLabel.text = "SELECT"
+            selectButton.backgroundColor = .white
+            selectButton.layer.borderWidth = 1
+            selectButton.layer.borderColor = UIColor.black.cgColor
+            selectButton.layer.cornerRadius = 2.5
+            selectButton.layer.masksToBounds = true
+            selectButton.addAndPinSubview(selectLabel, insets: .insets(amount: 10))
+            return selectButton
+        }
+        let embeddedViewBigCustomView = EmbeddedPaymentMethodsView(
+            savedPaymentMethod: ._testCard(),
+            appearance: appearance,
+            savedPaymentMethodAccessoryType: .viewMore
+        )
+        verify(embeddedViewBigCustomView, identifier: "select_button")
+
+        // Custom [ SELECT A PAYMENT METHOD!! ] view that's too big and should get shrunk.
+        appearance.embeddedPaymentElement.row.flat.disclosure.disclosureView = {
+            let selectButton = UIView()
+            // Frame is deliberately much taller than the rest of the things in the row
+            selectButton.frame = .init(origin: .zero, size: .init(width: UIView.noIntrinsicMetric, height: 100))
+            let selectLabel = UILabel()
+            selectLabel.text = "SELECT A PAYMENT METHOD!!"
+            selectLabel.font = .boldSystemFont(ofSize: 100)
+            selectButton.backgroundColor = .white
+            selectButton.layer.borderWidth = 1
+            selectButton.layer.borderColor = UIColor.black.cgColor
+            selectButton.layer.cornerRadius = 2.5
+            selectButton.layer.masksToBounds = true
+            selectButton.addAndPinSubview(selectLabel, insets: .insets(amount: 10))
+            return selectButton
+        }
+        let embeddedViewWayTooBigCustomView = EmbeddedPaymentMethodsView(
+            savedPaymentMethod: ._testCard(),
+            appearance: appearance,
+            savedPaymentMethodAccessoryType: .viewMore
+        )
+        verify(embeddedViewWayTooBigCustomView, identifier: "too_big_select_button")
     }
 
     func testEmbeddedPaymentMethodsView_flatWithDisclosure_savedPaymentMethod() {
