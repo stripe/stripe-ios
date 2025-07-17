@@ -264,6 +264,8 @@ public class AddressViewController: UIViewController {
             STPAnalyticsClient.sharedClient.logAddressShow(defaultCountryCode: addressSection?.selectedCountryCode ?? "", apiClient: configuration.apiClient)
             didLogAddressShow = true
         }
+        // Ensure we receive dismissal callbacks even when presented modally inside a UINavigationController
+        navigationController?.presentationController?.delegate = self
         addressSection?.beginEditing()
     }
 }
@@ -318,7 +320,7 @@ extension AddressViewController {
     }
 
     @objc func didTapCloseButton() {
-        delegate?.addressViewControllerDidFinish(self, with: nil)
+        didContinue()
     }
 
     func handleShippingEqualsBillingToggle(isSelected: Bool) {
@@ -615,5 +617,12 @@ extension AddressViewController {
 extension PaymentSheet.Address {
     var isEmpty: Bool {
         return self == .init()
+    }
+}
+
+// MARK: - UIAdaptivePresentationControllerDelegate
+extension AddressViewController: UIAdaptivePresentationControllerDelegate {
+    public func presentationControllerWillDismiss(_ presentationController: UIPresentationController) {
+        didContinue()
     }
 }
