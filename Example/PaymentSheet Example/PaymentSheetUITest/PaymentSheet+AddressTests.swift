@@ -380,6 +380,21 @@ NZ
         XCTAssert(app.textFields["United Kingdom +44"].exists)
     }
 
+    // Helper method to wait for checkbox state and assert
+    private func waitForCheckboxState(_ checkbox: XCUIElement, expectedState: Bool, timeout: TimeInterval = 2.0, file: StaticString = #file, line: UInt = #line) {
+        let expectation = XCTNSPredicateExpectation(
+            predicate: NSPredicate(format: "isSelected == %@", NSNumber(value: expectedState)),
+            object: checkbox
+        )
+        wait(for: [expectation], timeout: timeout)
+
+        if expectedState {
+            XCTAssertTrue(checkbox.isSelected, file: file, line: line)
+        } else {
+            XCTAssertFalse(checkbox.isSelected, file: file, line: line)
+        }
+    }
+
     func testShippingEqualsBillingCheckboxAutoUncheck() throws {
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
         settings.layout = .horizontal
@@ -394,7 +409,7 @@ NZ
         let checkbox = app.switches["Use billing address for shipping"]
         XCTAssertTrue(checkbox.waitForExistence(timeout: 2.0))
         // Checkbox should start unchecked because shipping address (defaultValues) is populated
-        XCTAssertFalse(checkbox.isSelected)
+        waitForCheckboxState(checkbox, expectedState: false)
 
         // Get references to all fields we'll validate
         let nameField = app.textFields["Full name"]
@@ -414,7 +429,7 @@ NZ
 
         // 1. Check the checkbox -> should populate with billing address
         checkbox.tap()
-        XCTAssertTrue(checkbox.isSelected)
+        waitForCheckboxState(checkbox, expectedState: true)
         XCTAssertEqual(nameField.value as? String, "John Smith")
         XCTAssertEqual(line1Field.value as? String, "123 Main Street")
         XCTAssertEqual(cityField.value as? String, "New York")
@@ -424,7 +439,7 @@ NZ
 
         // 2. Uncheck the checkbox -> should populate with shipping address  
         checkbox.tap()
-        XCTAssertFalse(checkbox.isSelected)
+        waitForCheckboxState(checkbox, expectedState: false)
         XCTAssertEqual(nameField.value as? String, "Jane Doe")
         XCTAssertEqual(line1Field.value as? String, "510 Townsend St.")
         XCTAssertEqual(cityField.value as? String, "San Francisco")
@@ -464,13 +479,13 @@ NZ
         phoneField.typeText("5551234567")
 
         // Now checkbox should be auto-checked since form matches billing address
-        XCTAssertTrue(checkbox.isSelected)
+        waitForCheckboxState(checkbox, expectedState: true)
 
         // 4. Edit line1 to be different from billing -> checkbox should auto-uncheck
         line1Field.tap()
         line1Field.typeText(String(repeating: XCUIKeyboardKey.delete.rawValue, count: "123 Main Street".count))
         line1Field.typeText("456 Different St")
-        XCTAssertFalse(checkbox.isSelected)
+        waitForCheckboxState(checkbox, expectedState: false)
 
         // 5. Verify the address is valid
         let saveAddressButton = app.buttons["Save address"]
