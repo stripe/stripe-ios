@@ -69,11 +69,9 @@ import UIKit
         }
 
         // Create a descriptor that set's the font to the specified weight
-        let descriptor = fontDescriptor.addingAttributes([
-            .traits: [
-                UIFontDescriptor.TraitKey.weight: useWeight,
-            ],
-        ])
+        let descriptor = useWeight.map {
+            fontDescriptor.addingAttributes([.traits: [UIFontDescriptor.TraitKey.weight: $0]])
+        } ?? fontDescriptor
 
         // Get the point size used by the system font for this style
         let pointSize = systemDefaultFontDescriptor.pointSize
