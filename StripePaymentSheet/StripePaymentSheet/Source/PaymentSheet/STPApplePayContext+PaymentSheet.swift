@@ -84,8 +84,12 @@ private class ApplePayContextClosureDelegate: NSObject, ApplePayContextDelegate 
 
                     Task { @MainActor in
                         // Call the handler regardless of radar session success/failure
-                        await preparePaymentMethodHandler(stpPaymentMethod, shippingAddress)
-                        completion(STPApplePayContext.COMPLETE_WITHOUT_CONFIRMING_INTENT, nil)
+                        do {
+                            try await preparePaymentMethodHandler(stpPaymentMethod, shippingAddress)
+                            completion(STPApplePayContext.COMPLETE_WITHOUT_CONFIRMING_INTENT, nil)
+                        } catch {
+                            completion(nil, error)
+                        }
                     }
                 }
                 return

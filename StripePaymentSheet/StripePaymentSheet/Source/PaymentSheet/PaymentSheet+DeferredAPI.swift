@@ -59,8 +59,12 @@ extension PaymentSheet {
 
                         Task { @MainActor in
                             // Call the handler regardless of radar session success/failure
-                            await preparePaymentMethodHandler(paymentMethod, shippingAddress)
-                            completion(.completed, STPAnalyticsClient.DeferredIntentConfirmationType.completeWithoutConfirmingIntent)
+                            do {
+                                try await preparePaymentMethodHandler(paymentMethod, shippingAddress)
+                                completion(.completed, STPAnalyticsClient.DeferredIntentConfirmationType.completeWithoutConfirmingIntent)
+                            } catch {
+                                completion(.failed(error: error), nil)
+                            }
                         }
                     }
                     return

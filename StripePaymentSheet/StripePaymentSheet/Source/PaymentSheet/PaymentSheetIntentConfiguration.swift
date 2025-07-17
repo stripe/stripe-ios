@@ -40,7 +40,7 @@ public extension PaymentSheet {
         @_spi(SharedPaymentToken) public typealias PreparePaymentMethodHandler = (
             _ paymentMethod: STPPaymentMethod,
             _ shippingAddress: STPAddress?
-        ) async -> Void
+        ) async throws -> Void
 
         /// Seller details for facilitated payment sessions
         @_spi(SharedPaymentToken) public struct SellerDetails {
