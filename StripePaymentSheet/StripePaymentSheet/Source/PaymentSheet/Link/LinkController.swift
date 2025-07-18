@@ -28,6 +28,13 @@ import UIKit
         @_spi(STP) public let sublabel: String?
     }
 
+    @frozen @_spi(STP) public enum AuthenticationResult {
+        /// Authentication was completed successfully.
+        case completed
+        /// Authentication was canceled by the user.
+        case canceled
+    }
+
     /// Errors specific incorrect integrations with LinkController
     @_spi(STP) public enum IntegrationError: Error {
         case noPaymentMethodSelected
@@ -47,6 +54,13 @@ import UIKit
     private let intent: Intent
     private let configuration: PaymentElementConfiguration
     private let analyticsHelper: PaymentSheetAnalyticsHelper
+
+    private lazy var linkAccountService: LinkAccountServiceProtocol = {
+        LinkAccountService(
+            useMobileEndpoints: elementsSession.linkSettings?.useAttestationEndpoints ?? false,
+            sessionID: elementsSession.sessionID
+        )
+    }()
 
     private var selectedPaymentDetails: ConsumerPaymentDetails? {
         guard case .link(let confirmOption) = internalPaymentOption else {
@@ -72,6 +86,9 @@ import UIKit
         }
     }
 
+    /// Details on the current Link account.
+    @Published @_spi(STP) public private(set) var linkAccount: PaymentSheetLinkAccount?
+
     /// A preview of the currently selected Link payment method.
     @Published @_spi(STP) public private(set) var paymentMethodPreview: PaymentMethodPreview?
 
@@ -89,6 +106,13 @@ import UIKit
         self.intent = intent
         self.configuration = configuration
         self.analyticsHelper = analyticsHelper
+
+        LinkAccountContext.shared.addObserver(self, selector: #selector(onLinkAccountChange))
+    }
+
+    deinit {
+        // Just to make sure no observers stay around
+        LinkAccountContext.shared.removeObserver(self)
     }
 
     @_spi(STP) public static var linkIcon: UIImage = Image.link_icon.makeImage()
@@ -140,8 +164,7 @@ import UIKit
     @_spi(STP) public func lookupConsumer(with email: String, completion: @escaping (Result<Bool, Error>) -> Void) {
         Self.lookupConsumer(
             email: email,
-            useMobileEndpoints: elementsSession.linkSettings?.useAttestationEndpoints ?? false,
-            sessionID: elementsSession.sessionID
+            linkAccountService: linkAccountService
         ) { result in
             switch result {
             case .success(let linkAccount):
@@ -153,12 +176,35 @@ import UIKit
         }
     }
 
+    /// Presents the Link authentication flow for an existing or new consumer.
+    ///
+    /// - Parameter email: The email address to authenticate or sign up with.
+    /// - Parameter viewController: The view controller from which to present the authentication flow.
+    /// - Parameter completion: A closure that is called with the result of the authentication. It returns an `AuthenticationResult` if successful, or an error if the authentication failed.
+    @_spi(STP) public func presentForAuthentication(
+        email: String,
+        from viewController: UIViewController,
+        completion: @escaping (Result<AuthenticationResult, Error>) -> Void
+    ) {
+        Task {
+            do {
+                let result = try await presentForAuthentication(
+                    email: email,
+                    from: viewController
+                )
+                completion(.success(result))
+            } catch {
+                completion(.failure(error))
+            }
+        }
+    }
+
     /// Presents the Link sheet to collect a customer's payment method.
     ///
     /// - Parameter presentingViewController: The view controller from which to present the Link sheet.
     /// - Parameter email: The email address to pre-fill in the Link sheet. If `nil`, the email field will be empty.
     /// - Parameter completion: A closure that is called when the user has selected a payment method or canceled the sheet. If the user selects a payment method, the `paymentMethodPreview` will be updated accordingly.
-    @_spi(STP) public func present(
+    @_spi(STP) public func presentForPayment(
         from presentingViewController: UIViewController,
         with email: String?,
         completion: @escaping () -> Void
@@ -298,15 +344,9 @@ import UIKit
 
     private static func lookupConsumer(
         email: String,
-        useMobileEndpoints: Bool,
-        sessionID: String,
+        linkAccountService: LinkAccountServiceProtocol,
         completion: @escaping (Result<PaymentSheetLinkAccount?, Error>) -> Void
     ) {
-        let linkAccountService = LinkAccountService(
-            useMobileEndpoints: useMobileEndpoints,
-            sessionID: sessionID
-        )
-
         linkAccountService.lookupAccount(
             withEmail: email,
             // TODO: Check that this is the right email source to pass in
@@ -315,6 +355,14 @@ import UIKit
             doNotLogConsumerFunnelEvent: false,
             completion: completion
         )
+    }
+
+    @objc
+    private func onLinkAccountChange(_ notification: Notification) {
+        DispatchQueue.main.async { [weak self] in
+            let linkAccount = notification.object as? PaymentSheetLinkAccount
+            self?.linkAccount = linkAccount
+        }
     }
 }
 
@@ -355,15 +403,76 @@ import UIKit
         }
     }
 
+    /// Presents the Link authentication flow for an existing or new consumer.
+    ///
+    /// - Parameter email: The email address to authenticate or sign up with.
+    /// - Parameter viewController: The view controller from which to present the authentication flow.
+    /// - Returns: An `AuthenticationResult` indicating whether authentication was completed or canceled.
+    func presentForAuthentication(
+        email: String,
+        from viewController: UIViewController
+    ) async throws -> AuthenticationResult {
+        let isRegistered = try await lookupConsumer(with: email)
+
+        var configuration = self.configuration
+        configuration.defaultBillingDetails.email = email
+
+        if isRegistered, let linkAccount {
+            // Present for authentication
+            let verificationController = LinkVerificationController(
+                mode: .modal,
+                linkAccount: linkAccount,
+                configuration: configuration
+            )
+
+            return try await withCheckedThrowingContinuation { continuation in
+                verificationController.present(from: viewController) { result in
+                    switch result {
+                    case .completed:
+                        continuation.resume(returning: .completed)
+                    case .canceled:
+                        continuation.resume(returning: .canceled)
+                    case .failed(let error):
+                        continuation.resume(throwing: error)
+                    }
+                }
+            }
+        } else {
+            // Present for signup
+            let signupController = LinkSignUpController(
+                accountService: linkAccountService,
+                linkAccount: linkAccount,
+                country: elementsSession.countryCode,
+                configuration: configuration
+            )
+
+            return try await withCheckedThrowingContinuation { continuation in
+                signupController.present(from: viewController) { result in
+                    switch result {
+                    case .completed:
+                        continuation.resume(returning: .completed)
+                    case .canceled:
+                        continuation.resume(returning: .canceled)
+                    case .failed(let error):
+                        continuation.resume(throwing: error)
+                    case .attestationError:
+                        let error = IntegrationError.missingAppAttestation
+                        continuation.resume(throwing: error)
+                    }
+                }
+            }
+        }
+    }
+
     /// Presents the Link sheet to collect a customer's payment method.
     ///
     /// - Parameter presentingViewController: The view controller from which to present the Link sheet.
     /// - Parameter email: The email address to pre-fill in the Link sheet. If `nil`, the email field will be empty.
     /// - Returns: A `PaymentMethodPreview` if the user selected a payment method, or `nil` otherwise.
-    func present(from presentingViewController: UIViewController, with email: String?) async -> LinkController.PaymentMethodPreview? {
+    func presentForPayment(from presentingViewController: UIViewController, with email: String?) async -> LinkController.PaymentMethodPreview? {
         return await withCheckedContinuation { continuation in
             DispatchQueue.main.async {
-                self.present(from: presentingViewController, with: email) { [weak self] in
+                self.presentForPayment(from: presentingViewController, with: email) { [weak self] in
                     guard let self else { return }
                     continuation.resume(returning: self.paymentMethodPreview)
                 }

@@ -199,9 +199,11 @@ extension LinkVerificationViewController: LinkVerificationViewDelegate {
         view.codeField.resignFirstResponder()
 
         linkAccount.verify(with: code) { [weak self] result in
+            guard let self else { return }
             switch result {
             case .success:
-                self?.finish(withResult: .completed)
+                LinkAccountContext.shared.account = self.linkAccount
+                self.finish(withResult: .completed)
                 STPAnalyticsClient.sharedClient.logLink2FAComplete()
             case .failure(let error):
                 view.codeField.performInvalidCodeAnimation()

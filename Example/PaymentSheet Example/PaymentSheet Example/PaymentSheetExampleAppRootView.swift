@@ -31,7 +31,8 @@ struct PaymentSheetExampleAppRootView: View {
 
                 destinationLink(for: .customerSheet_swiftUI)
                 destinationLink(for: .linkPaymentController)
-                destinationLink(for: .linkStandaloneComponent)
+                destinationLink(for: .linkController)
+                destinationLink(for: .linkStandaloneDemo)
                 destinationLink(for: .embeddedPaymentElement)
                 destinationLink(for: .embeddedPaymentElement_swiftUI)
                 destinationLink(for: .walletButtonsView_swiftUI)
@@ -81,7 +82,8 @@ struct PaymentSheetExampleAppRootView: View {
 
         case customerSheet_swiftUI
         case linkPaymentController
-        case linkStandaloneComponent
+        case linkController
+        case linkStandaloneDemo
         case embeddedPaymentElement
         case embeddedPaymentElement_swiftUI
         case walletButtonsView_swiftUI
@@ -108,8 +110,10 @@ struct PaymentSheetExampleAppRootView: View {
                 return "CustomerSheet (SwiftUI)"
             case .linkPaymentController:
                 return "LinkPaymentController"
-            case .linkStandaloneComponent:
-                return "Link Standalone Component"
+            case .linkController:
+                return "LinkController (SwiftUI)"
+            case .linkStandaloneDemo:
+                return "Link Standalone Demo"
             case .embeddedPaymentElement:
                 return "EmbeddedPaymentElement"
             case .embeddedPaymentElement_swiftUI:
@@ -149,7 +153,14 @@ struct PaymentSheetExampleAppRootView: View {
 
         case .linkPaymentController:
             StoryboardSceneView<ExampleLinkPaymentCheckoutViewController>(sceneIdentifier: "ExampleLinkPaymentCheckoutViewController")
-        case .linkStandaloneComponent:
+        case .linkController:
+            if #available(iOS 16.0, *) {
+                ExampleLinkControllerView()
+            } else {
+                Text("Sorry, only available on >= iOS 16.0")
+                    .font(.title2)
+            }
+        case .linkStandaloneDemo:
             if #available(iOS 16.0, *) {
                 ExampleLinkStandaloneComponent()
             } else {
