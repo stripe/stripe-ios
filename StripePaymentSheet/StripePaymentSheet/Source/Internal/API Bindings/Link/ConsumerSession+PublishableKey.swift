@@ -34,14 +34,19 @@ extension ConsumerSession {
 
 extension ConsumerSession {
     final class DisplayablePaymentDetails: Decodable {
+        enum PaymentType: String, Decodable, CaseIterable {
+            case card = "CARD"
+            case bankAccount = "BANK_ACCOUNT"
+        }
+
         let defaultCardBrand: String?
-        let defaultPaymentType: String?
+        let defaultPaymentType: PaymentType?
         let last4: String?
         let numberOfSavedPaymentDetails: Int?
 
         init(
             defaultCardBrand: String?,
-            defaultPaymentType: String?,
+            defaultPaymentType: PaymentType?,
             last4: String?,
             numberOfSavedPaymentDetails: Int?
         ) {
@@ -61,7 +66,7 @@ extension ConsumerSession {
         init(from decoder: Decoder) throws {
             let container = try decoder.container(keyedBy: CodingKeys.self)
             self.defaultCardBrand = try container.decodeIfPresent(String.self, forKey: .defaultCardBrand)
-            self.defaultPaymentType = try container.decodeIfPresent(String.self, forKey: .defaultPaymentType)
+            self.defaultPaymentType = try container.decodeIfPresent(PaymentType.self, forKey: .defaultPaymentType)
             self.last4 = try container.decodeIfPresent(String.self, forKey: .last4)
             self.numberOfSavedPaymentDetails = try container.decodeIfPresent(Int.self, forKey: .numberOfSavedPaymentDetails)
         }

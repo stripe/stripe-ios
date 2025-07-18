@@ -104,6 +104,7 @@ final class LinkAccountService: LinkAccountServiceProtocol {
                             email: session.consumerSession.emailAddress,
                             session: session.consumerSession,
                             publishableKey: session.publishableKey,
+                            displayablePaymentDetails: session.displayablePaymentDetails,
                             apiClient: apiClient,
                             useMobileEndpoints: self.useMobileEndpoints
                         )
@@ -115,6 +116,7 @@ final class LinkAccountService: LinkAccountServiceProtocol {
                                 email: email,
                                 session: nil,
                                 publishableKey: nil,
+                                displayablePaymentDetails: nil,
                                 apiClient: self.apiClient,
                                 useMobileEndpoints: self.useMobileEndpoints
                             )
