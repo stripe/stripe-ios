@@ -62,7 +62,7 @@ extension PaymentSheet.Appearance: Codable {
         case embeddedFlatSeparatorThickness, embeddedFlatSeparatorColor, embeddedFlatSeparatorInsets
         case embeddedFlatTopSeparatorEnabled, embeddedFlatBottomSeparatorEnabled
         case embeddedFlatRadioSelectedColor, embeddedFlatRadioUnselectedColor
-        case embeddedFlatCheckmarkColor, embeddedFlatChevronColor
+        case embeddedFlatCheckmarkColor, embeddedFlatDisclosureColor
         case embeddedFloatingSpacing
     }
 
@@ -205,7 +205,7 @@ extension PaymentSheet.Appearance: Codable {
         if let checkmarkColor = try container.decodeIfPresent(CodableUIColor.self, forKey: .embeddedFlatCheckmarkColor) {
             self.embeddedPaymentElement.row.flat.checkmark.color = checkmarkColor.uiColor
         }
-        self.embeddedPaymentElement.row.flat.chevron.color = try container.decode(CodableUIColor.self, forKey: .embeddedFlatChevronColor).uiColor
+        self.embeddedPaymentElement.row.flat.disclosure.color = try container.decode(CodableUIColor.self, forKey: .embeddedFlatDisclosureColor).uiColor
 
         // Floating properties
         self.embeddedPaymentElement.row.floating.spacing = try container.decode(CGFloat.self, forKey: .embeddedFloatingSpacing)
@@ -336,7 +336,7 @@ extension PaymentSheet.Appearance: Codable {
         if let checkmarkColor = embeddedPaymentElement.row.flat.checkmark.color {
             try container.encode(CodableUIColor(color: checkmarkColor), forKey: .embeddedFlatCheckmarkColor)
         }
-        try container.encode(CodableUIColor(color: embeddedPaymentElement.row.flat.chevron.color), forKey: .embeddedFlatChevronColor)
+        try container.encode(CodableUIColor(color: embeddedPaymentElement.row.flat.disclosure.color), forKey: .embeddedFlatDisclosureColor)
 
         // Floating properties
         try container.encode(embeddedPaymentElement.row.floating.spacing, forKey: .embeddedFloatingSpacing)
