@@ -395,10 +395,6 @@ final class PaymentSheetAnalyticsHelper {
         log(event: .shopPayWebviewConfirmSuccess)
     }
 
-    func logShopPayWebviewConfirmFailed(error: Error) {
-        log(event: .shopPayWebviewConfirmFailed, error: error)
-    }
-
     func logShopPayWebviewCancelled(didReceiveECEClick: Bool) {
         log(event: .shopPayWebviewCancelled, params: ["did_receive_ece_click": didReceiveECEClick])
     }
