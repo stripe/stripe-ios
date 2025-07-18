@@ -55,7 +55,7 @@ import Foundation
         return [
             "merchant_integration_source": "elements",
             "merchant_integration_subtype": "mobile",
-            "merchant_integration_version": "stripe-ios/\(STPAPIClient.STPSDKVersion)"
+            "merchant_integration_version": "stripe-ios/\(STPAPIClient.STPSDKVersion)",
         ]
     }
 }

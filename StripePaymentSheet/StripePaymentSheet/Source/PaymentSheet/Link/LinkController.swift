@@ -379,7 +379,7 @@ import UIKit
     /// - Returns: A `STPPaymentMethod` if successful, or throws an error if the payment method could not be created.
     func createPaymentMethod() async throws -> STPPaymentMethod {
         return try await withCheckedThrowingContinuation { continuation in
-            createPaymentMethod() { result in
+            createPaymentMethod { result in
                 switch result {
                 case .success(let paymentMethod):
                     continuation.resume(returning: paymentMethod)

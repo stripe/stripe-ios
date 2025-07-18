@@ -4,9 +4,9 @@
 //
 
 import PassKit
+@_spi(STP) import StripePayments
 import SwiftUI
 import WebKit
-@_spi(STP) import StripePayments
 
 @available(iOS 16.0, *)
 @_spi(STP) public struct WalletButtonsView: View {

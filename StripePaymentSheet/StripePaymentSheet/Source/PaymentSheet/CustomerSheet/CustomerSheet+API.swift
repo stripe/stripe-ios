@@ -62,7 +62,7 @@ extension CustomerSheet {
             let additionalClientAttributionMetadata: [String: String] = [
                 "elements_session_config_id": elementsSession.sessionID,
                 "payment_intent_creation_flow": "deferred",
-                "payment_method_selection_flow": setupIntent.automaticPaymentMethods?.enabled ?? false ? "automatic" : "merchant_specified"
+                "payment_method_selection_flow": setupIntent.automaticPaymentMethods?.enabled ?? false ? "automatic" : "merchant_specified",
             ]
             paymentHandler.confirmSetupIntent(
                 setupIntentParams,

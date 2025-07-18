@@ -27,8 +27,8 @@ extension STPAPIClient {
     ) -> [String: Any] {
         var newParams = params
         newParams["client_attribution_metadata"] = ["client_session_id": AnalyticsHelper.shared.sessionID]
-            .merging(PaymentsSDKVariant.clientAttributionMetadata){ _, new in new}
-            .merging(additionalClientAttributionMetadata) { _, new in new}
+            .merging(PaymentsSDKVariant.clientAttributionMetadata) { _, new in new }
+            .merging(additionalClientAttributionMetadata) { _, new in new }
         return newParams
     }
 }

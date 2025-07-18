@@ -634,7 +634,7 @@ extension PaymentSheet {
         return [
             "elements_session_config_id": elementsSessionConfigId,
             "payment_intent_creation_flow": "standard",
-            "payment_method_selection_flow": paymentIntent.automaticPaymentMethods?.enabled ?? false ? "automatic" : "merchant_specified"
+            "payment_method_selection_flow": paymentIntent.automaticPaymentMethods?.enabled ?? false ? "automatic" : "merchant_specified",
         ]
     }
 
@@ -642,7 +642,7 @@ extension PaymentSheet {
         return [
             "elements_session_config_id": elementsSessionConfigId,
             "payment_intent_creation_flow": "standard",
-            "payment_method_selection_flow": setupIntent.automaticPaymentMethods?.enabled ?? false ? "automatic" : "merchant_specified"
+            "payment_method_selection_flow": setupIntent.automaticPaymentMethods?.enabled ?? false ? "automatic" : "merchant_specified",
         ]
     }
 
@@ -650,7 +650,7 @@ extension PaymentSheet {
         return [
             "elements_session_config_id": elementsSessionConfigId,
             "payment_intent_creation_flow": "deferred",
-            "payment_method_selection_flow": intentConfig.paymentMethodTypes?.isEmpty ?? true ? "automatic" : "merchant_specified"
+            "payment_method_selection_flow": intentConfig.paymentMethodTypes?.isEmpty ?? true ? "automatic" : "merchant_specified",
         ]
     }
 
