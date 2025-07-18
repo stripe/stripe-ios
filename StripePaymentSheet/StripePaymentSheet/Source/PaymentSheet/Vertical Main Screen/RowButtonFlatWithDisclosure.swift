@@ -12,7 +12,7 @@ import UIKit
 /// A `RowButton` subclass that presents a flat layout featuring a chevron. No selected state is available for this style.
 final class RowButtonFlatWithDisclosure: RowButton {
     // MARK: - Subviews
-    private lazy var disclosureView: UIImageView = {
+    private lazy var disclosureImageView: UIImageView = {
         let disclosureImage = appearance.embeddedPaymentElement.row.flat.disclosure.disclosureImage ?? Image.icon_chevron_right.makeImage(template: true)
         let chevronImageView = UIImageView(image: disclosureImage)
         chevronImageView.tintColor = appearance.embeddedPaymentElement.row.flat.disclosure.color
@@ -35,7 +35,7 @@ final class RowButtonFlatWithDisclosure: RowButton {
                                                                  defaultBadgeLabel,
                                                                  UIView.makeSpacerView(),
                                                                  promoBadge,
-                                                                 disclosureView, ].compactMap { $0 })
+                                                                 disclosureImageView, ].compactMap { $0 })
         horizontalStackView.spacing = 8
         horizontalStackView.alignment = .center
         if let promoBadge {
