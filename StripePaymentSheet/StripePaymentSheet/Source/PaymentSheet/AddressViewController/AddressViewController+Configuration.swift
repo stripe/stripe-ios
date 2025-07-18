@@ -169,3 +169,6 @@ public extension AddressViewController {
 
     }
 }
+
+extension AddressViewController.AddressDetails.Address: Equatable { }
+extension AddressViewController.AddressDetails: Equatable { }

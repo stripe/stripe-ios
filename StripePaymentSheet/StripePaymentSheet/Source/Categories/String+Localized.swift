@@ -537,4 +537,8 @@ extension String.Localized {
     static var use_billing_address_for_shipping: String {
         STPLocalizedString("Use billing address for shipping", "Label for checkbox in address form allowing user to use billing address")
     }
+    
+    static var discard_changes: String {
+        STPLocalizedString("Discard Changes", "Button text for discarding unsaved changes in address form")
+    }
 }

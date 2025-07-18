@@ -50,6 +50,35 @@ public class AddressViewController: UIViewController {
             isCheckboxSelected: checkboxElement?.checkboxButton.isSelected
         )
     }
+    
+    /// The original address details when the view controller was first presented
+    private var originalAddressDetails: AddressDetails?
+    
+    /// Computed property to get current form data regardless of validation state
+    private var currentFormData: AddressDetails? {
+        guard let addressSection = addressSection else { return nil }
+        
+        let address = AddressDetails.Address(
+            city: addressSection.city?.text.nonEmpty,
+            country: addressSection.selectedCountryCode,
+            line1: addressSection.line1?.text.nonEmpty ?? "",
+            line2: addressSection.line2?.text.nonEmpty,
+            postalCode: addressSection.postalCode?.text.nonEmpty,
+            state: addressSection.state?.rawData.nonEmpty
+        )
+        return .init(
+            address: address,
+            name: addressSection.name?.text.nonEmpty,
+            phone: addressSection.phone?.phoneNumber?.string(as: .e164).nonEmpty,
+            isCheckboxSelected: checkboxElement?.checkboxButton.isSelected
+        )
+    }
+    
+    /// Returns true if the current form data differs from the original data
+    private var hasUnsavedChanges: Bool {
+        let current = currentFormData
+        return current != originalAddressDetails
+    }
     /// The delegate, notified when the customer completes or cancels.
     public weak var delegate: AddressViewControllerDelegate?
     private var selectedAutoCompleteResult: PaymentSheet.Address?
@@ -320,7 +349,7 @@ extension AddressViewController {
     }
 
     @objc func didTapCloseButton() {
-        didContinue()
+        handleDismissal()
     }
 
     func handleShippingEqualsBillingToggle(isSelected: Bool) {
@@ -337,6 +366,47 @@ extension AddressViewController {
                 clearAddressSection()
             }
         }
+    }
+    
+    func handleDismissal() {
+        if hasUnsavedChanges {
+            showDiscardChangesAlert()
+        } else {
+            didContinue()
+        }
+    }
+    
+    private func showDiscardChangesAlert() {
+        let alert = UIAlertController(
+            title: nil,
+            message: nil,
+            preferredStyle: .actionSheet
+        )
+        
+        let discardAction = UIAlertAction(
+            title: String.Localized.discard_changes,
+            style: .destructive
+        ) { [weak self] _ in
+            // Return the original address details when discarding changes
+            self?.delegate?.addressViewControllerDidFinish(self!, with: self?.originalAddressDetails)
+        }
+        
+        let cancelAction = UIAlertAction(
+            title: String.Localized.cancel,
+            style: .cancel,
+            handler: nil
+        )
+        
+        alert.addAction(discardAction)
+        alert.addAction(cancelAction)
+        
+        // Configure for iPad presentation
+        if let popover = alert.popoverPresentationController {
+            popover.barButtonItem = navigationItem.leftBarButtonItem
+            popover.permittedArrowDirections = .up
+        }
+        
+        present(alert, animated: true, completion: nil)
     }
 
     private func populateAddressSection(with addressDetails: AddressSectionElement.AddressDetails) {
@@ -445,6 +515,11 @@ extension AddressViewController {
             button.trailingAnchor.constraint(equalTo: scrollView.contentLayoutGuide.trailingAnchor, constant: -configuration.appearance.formInsets.trailing),
             button.bottomAnchor.constraint(equalTo: scrollView.contentLayoutGuide.bottomAnchor, constant: -configuration.appearance.formInsets.bottom),
         ])
+        
+        // Capture original address details after UI is loaded
+        DispatchQueue.main.async {
+            self.originalAddressDetails = self.currentFormData
+        }
     }
 
     private func loadSpecsIfNeeded() {
@@ -623,6 +698,6 @@ extension PaymentSheet.Address {
 // MARK: - UIAdaptivePresentationControllerDelegate
 extension AddressViewController: UIAdaptivePresentationControllerDelegate {
     public func presentationControllerWillDismiss(_ presentationController: UIPresentationController) {
-        didContinue()
+        handleDismissal()
     }
 }
