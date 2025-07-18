@@ -1,5 +1,5 @@
 //
-//  RowButtonFlatWithChevron.swift
+//  RowButtonFlatWithDisclosure.swift
 //  StripePaymentSheet
 //
 //  Created by George Birch on 4/30/25.
@@ -10,12 +10,12 @@ import Foundation
 import UIKit
 
 /// A `RowButton` subclass that presents a flat layout featuring a chevron. No selected state is available for this style.
-final class RowButtonFlatWithChevron: RowButton {
+final class RowButtonFlatWithDisclosure: RowButton {
     // MARK: - Subviews
-    private lazy var chevronView: UIImageView = {
-        let chevronImageView = UIImageView(image: Image.icon_chevron_right.makeImage(template: true))
-
-        chevronImageView.tintColor = appearance.embeddedPaymentElement.row.flat.chevron.color
+    private lazy var disclosureImageView: UIImageView = {
+        let disclosureImage = appearance.embeddedPaymentElement.row.flat.disclosure.disclosureImage ?? Image.icon_chevron_right.makeImage(template: true)
+        let chevronImageView = UIImageView(image: disclosureImage)
+        chevronImageView.tintColor = appearance.embeddedPaymentElement.row.flat.disclosure.color
         chevronImageView.contentMode = .scaleAspectFit
         chevronImageView.translatesAutoresizingMaskIntoConstraints = false
         return chevronImageView
@@ -35,8 +35,9 @@ final class RowButtonFlatWithChevron: RowButton {
                                                                  defaultBadgeLabel,
                                                                  UIView.makeSpacerView(),
                                                                  promoBadge,
-                                                                 chevronView, ].compactMap { $0 })
+                                                                 disclosureImageView, ].compactMap { $0 })
         horizontalStackView.spacing = 8
+        horizontalStackView.alignment = .center
         if let promoBadge {
             horizontalStackView.setCustomSpacing(12, after: promoBadge)
         }

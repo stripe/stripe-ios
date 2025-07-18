@@ -64,9 +64,9 @@ struct AppearancePlaygroundView_EmbeddedPaymentElement: View {
             set: { self.appearance.embeddedPaymentElement.row.flat.checkmark.color = UIColor($0) }
         )
 
-        let embeddedPaymentElementChevronColorBinding = Binding(
-            get: { Color(self.appearance.embeddedPaymentElement.row.flat.chevron.color) },
-            set: { self.appearance.embeddedPaymentElement.row.flat.chevron.color = UIColor($0) }
+        let embeddedPaymentElementDisclosureColorBinding = Binding(
+            get: { Color(self.appearance.embeddedPaymentElement.row.flat.disclosure.color) },
+            set: { self.appearance.embeddedPaymentElement.row.flat.disclosure.color = UIColor($0) }
         )
         let paymentMethodIconLayoutMarginsLeading = Binding(
             get: { self.appearance.embeddedPaymentElement.row.paymentMethodIconLayoutMargins.leading },
@@ -142,7 +142,7 @@ struct AppearancePlaygroundView_EmbeddedPaymentElement: View {
                     Text("Checkmark")
                 }
                 DisclosureGroup {
-                    ColorPicker("chevronColor", selection: embeddedPaymentElementChevronColorBinding)
+                    ColorPicker("chevronColor", selection: embeddedPaymentElementDisclosureColorBinding)
                 } label: {
                     Text("Chevron")
                 }
