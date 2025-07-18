@@ -27,7 +27,7 @@ import Foundation
         let uuid = UUID()
         // Convert the UUID to lowercase to comply with RFC 4122 and ITU-T X.667.
         sessionID = uuid.uuidString.lowercased()
-        STPAnalyticsClient.sharedClient.clientAttributionMetadata["client_session_id"] = sessionID
+        STPAnalyticsClient.sharedClient.clientAttributionMetadata.clientSessionId = sessionID
     }
 
     func clearSessionID() {

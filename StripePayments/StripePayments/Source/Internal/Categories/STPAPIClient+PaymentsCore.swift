@@ -25,7 +25,7 @@ extension STPAPIClient {
         _ params: [String: Any]
     ) -> [String: Any] {
         var newParams = params
-        newParams["client_attribution_metadata"] = STPAnalyticsClient.sharedClient.clientAttributionMetadata
+        newParams["client_attribution_metadata"] = STPAnalyticsClient.sharedClient.clientAttributionMetadata.toDictionary()
         return newParams
     }
 }

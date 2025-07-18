@@ -2,6 +2,9 @@
   "id": "seti_123456789",
   "object": "setup_intent",
   "application": "ca_123456789",
+  "automatic_payment_methods": {
+      "enabled": true,
+  },
   "client_secret": "seti_123456789_secret_123456789",
   "created": 123456789,
   "customer": "cus_123456",

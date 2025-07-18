@@ -42,7 +42,54 @@ import UIKit
     }
     public weak var delegate: STPAnalyticsClientDelegate?
 
-    @_spi(STP) public var clientAttributionMetadata: [String: Any] = ["merchant_integration_source": "elements", "merchant_integration_subtype": "mobile", "merchant_integration_version": "stripe-ios/\(STPAPIClient.STPSDKVersion)"]
+    public struct ClientAttributionMetadata: Equatable {
+        public enum IntentCreationFlow: String {
+            case standard
+            case deferred
+        }
+        public enum PaymentMethodSelectionFlow: String {
+            case automatic
+            case merchant_specified
+        }
+        public var clientSessionId: String?
+        public var elementsSessionConfigId: String?
+        public let merchantIntegrationSource: String = "elements"
+        public let merchantIntegrationSubtype: String = "mobile"
+        public let merchantIntegrationVersion: String = "stripe-ios/\(STPAPIClient.STPSDKVersion)"
+        public var paymentIntentCreationFlow: IntentCreationFlow?
+        public var paymentMethodSelectionFlow: PaymentMethodSelectionFlow?
+        init(clientSessionId: String? = nil,
+             elementsSessionConfigId: String? = nil,
+             paymentIntentCreationFlow: IntentCreationFlow? = nil,
+             paymentMethodSelectionFlow: PaymentMethodSelectionFlow? = nil) {
+            self.clientSessionId = clientSessionId
+            self.elementsSessionConfigId = elementsSessionConfigId
+            self.paymentIntentCreationFlow = paymentIntentCreationFlow
+            self.paymentMethodSelectionFlow = paymentMethodSelectionFlow
+        }
+        public func toDictionary() -> [String: Any] {
+            var clientAttributionMetadataDict: [String: Any] = [
+                "merchant_integration_source": merchantIntegrationSource,
+                "merchant_integration_subtype": merchantIntegrationSubtype,
+                "merchant_integration_version": merchantIntegrationVersion,
+            ]
+            if let clientSessionId = clientSessionId {
+                clientAttributionMetadataDict["client_session_id"] = clientSessionId
+            }
+            if let elementsSessionConfigId = elementsSessionConfigId {
+                clientAttributionMetadataDict["elements_session_config_id"] = elementsSessionConfigId
+            }
+            if let paymentIntentCreationFlow = paymentIntentCreationFlow {
+                clientAttributionMetadataDict["payment_intent_creation_flow"] = paymentIntentCreationFlow.rawValue
+            }
+            if let paymentMethodSelectionFlow = paymentMethodSelectionFlow {
+                clientAttributionMetadataDict["payment_method_selection_flow"] = paymentMethodSelectionFlow.rawValue
+            }
+            return clientAttributionMetadataDict
+        }
+    }
+    
+    public var clientAttributionMetadata: ClientAttributionMetadata = ClientAttributionMetadata()
 
     @objc public var productUsage: Set<String> = Set()
     private var additionalInfoSet: Set<String> = Set()

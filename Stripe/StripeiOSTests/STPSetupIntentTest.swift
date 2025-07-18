@@ -49,6 +49,7 @@ class STPSetupIntentTest: XCTestCase {
         guard let setupIntent = STPSetupIntent.decodedObject(fromAPIResponse: setupIntentJson) else { XCTFail(); return }
 
         XCTAssertEqual(setupIntent.stripeID, "seti_123456789")
+        XCTAssertEqual(setupIntent.automaticPaymentMethods?.enabled, true)
         XCTAssertEqual(setupIntent.clientSecret, "seti_123456789_secret_123456789")
         XCTAssertEqual(setupIntent.created, Date(timeIntervalSince1970: 123456789))
         XCTAssertEqual(setupIntent.customerID, "cus_123456")

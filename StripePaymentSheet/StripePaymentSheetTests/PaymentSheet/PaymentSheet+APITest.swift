@@ -22,6 +22,7 @@ class PaymentSheetAPITest: STPNetworkStubbingTestCase {
     override func setUp() {
         super.setUp()
         self.apiClient = STPAPIClient(publishableKey: STPTestingDefaultPublishableKey)
+        AnalyticsHelper.shared.generateSessionID()
     }
     lazy var paymentHandler: STPPaymentHandler = {
         return STPPaymentHandler(
@@ -104,6 +105,14 @@ class PaymentSheetAPITest: STPNetworkStubbingTestCase {
                             Set(expected)
                         )
                         XCTAssertEqual(loadResult.savedPaymentMethods, [])
+                        XCTAssertEqual(
+                            STPAnalyticsClient.sharedClient.clientAttributionMetadata,
+                            STPAnalyticsClient.ClientAttributionMetadata(
+                                clientSessionId: AnalyticsHelper.shared.sessionID,
+                                elementsSessionConfigId: loadResult.elementsSession.sessionID,
+                                paymentIntentCreationFlow: .standard,
+                                paymentMethodSelectionFlow: .merchant_specified)
+                        )
                         // 2. Confirm the intent with a new card
 
                         PaymentSheet.confirm(
@@ -194,7 +203,14 @@ class PaymentSheetAPITest: STPNetworkStubbingTestCase {
                     XCTFail()
                     return
                 }
-
+                XCTAssertEqual(
+                    STPAnalyticsClient.sharedClient.clientAttributionMetadata,
+                    STPAnalyticsClient.ClientAttributionMetadata(
+                        clientSessionId: AnalyticsHelper.shared.sessionID,
+                        elementsSessionConfigId: loadResult.elementsSession.sessionID,
+                        paymentIntentCreationFlow: .deferred,
+                        paymentMethodSelectionFlow: .merchant_specified)
+                )
                 PaymentSheet.confirm(configuration: self.configuration,
                                      authenticationContext: self,
                                      intent: .deferredIntent(intentConfig: intentConfig),
@@ -262,7 +278,14 @@ class PaymentSheetAPITest: STPNetworkStubbingTestCase {
                     XCTFail()
                     return
                 }
-
+                XCTAssertEqual(
+                    STPAnalyticsClient.sharedClient.clientAttributionMetadata,
+                    STPAnalyticsClient.ClientAttributionMetadata(
+                        clientSessionId: AnalyticsHelper.shared.sessionID,
+                        elementsSessionConfigId: loadResult.elementsSession.sessionID,
+                        paymentIntentCreationFlow: .deferred,
+                        paymentMethodSelectionFlow: .merchant_specified)
+                )
                 PaymentSheet.confirm(configuration: self.configuration,
                                      authenticationContext: self,
                                      intent: .deferredIntent(intentConfig: intentConfig),
@@ -440,7 +463,6 @@ class PaymentSheetAPITest: STPNetworkStubbingTestCase {
     }
 
     func testPaymentSheetLoadAndConfirmWithSetupIntentSetAsDefault() async throws {
-        let types = ["card"]
         let expectation = XCTestExpectation(description: "Check default payment method set")
         // Create a new customer and new key
         let customerAndEphemeralKey = try await STPTestingAPIClient.shared().fetchCustomerAndEphemeralKey(customerID: nil, merchantCountry: nil)
@@ -448,7 +470,7 @@ class PaymentSheetAPITest: STPNetworkStubbingTestCase {
         var configuration = self.configuration
         configuration.customer = PaymentSheet.CustomerConfiguration(id: cscs.customer, customerSessionClientSecret: cscs.customerSessionClientSecret)
         // 0. Create a SI on our test backend
-        let clientSecret = try await STPTestingAPIClient.shared.fetchSetupIntent(types: types, customerID: configuration.customer?.id)
+        let clientSecret = try await STPTestingAPIClient.shared.fetchSetupIntent(types: [], automaticPaymentMethods: true, customerID: configuration.customer?.id)
         // 1. Load the SI
         PaymentSheetLoader.load(
             mode: .setupIntentClientSecret(clientSecret),
@@ -471,6 +493,14 @@ class PaymentSheetAPITest: STPNetworkStubbingTestCase {
                 ) { result, _ in
                     switch result {
                     case .completed:
+                        XCTAssertEqual(
+                            STPAnalyticsClient.sharedClient.clientAttributionMetadata,
+                            STPAnalyticsClient.ClientAttributionMetadata(
+                                clientSessionId: AnalyticsHelper.shared.sessionID,
+                                elementsSessionConfigId: loadResult.elementsSession.sessionID,
+                                paymentIntentCreationFlow: .standard,
+                                paymentMethodSelectionFlow: .automatic)
+                        )
                         self.waitForDefaultPaymentMethodToBePersisted()
                         // 3. Fetch the SI
                         self.apiClient.retrieveSetupIntent(withClientSecret: clientSecret)
@@ -478,7 +508,7 @@ class PaymentSheetAPITest: STPNetworkStubbingTestCase {
                             XCTAssertEqual(setupIntent?.status, .succeeded)
                             // 4. Create a new SI on our test backend
                             Task { [configuration] in
-                                let clientSecret2 = try await STPTestingAPIClient.shared.fetchSetupIntent(types: types, customerID: configuration.customer?.id)
+                                let clientSecret2 = try await STPTestingAPIClient.shared.fetchSetupIntent(types: [], automaticPaymentMethods: true, customerID: configuration.customer?.id)
                                 // 5. Reload PaymentSheet
                                 PaymentSheetLoader.load(
                                     mode: .setupIntentClientSecret(clientSecret2),

@@ -105,6 +105,7 @@ class STPPaymentIntentTest: XCTestCase {
             "pi_1Cl15wIl4IdHmuTbCWrpJXN6_secret_EkKtQ7Sg75hLDFKqFG8DtWcaK"
         )
         XCTAssertEqual(paymentIntent.amount, 2345)
+        XCTAssertEqual(paymentIntent.automaticPaymentMethods?.enabled, true)
         XCTAssertEqual(paymentIntent.canceledAt, Date(timeIntervalSince1970: 1_530_911_045))
         XCTAssertEqual(paymentIntent.captureMethod, .manual)
         XCTAssertEqual(paymentIntent.confirmationMethod, .automatic)
@@ -222,6 +223,7 @@ class STPPaymentIntentTest: XCTestCase {
 
         // Check placeholder values
         XCTAssertEqual(paymentIntent?.amount, -1, "Should use -1 as placeholder for amount")
+        XCTAssertEqual(paymentIntent?.automaticPaymentMethods?.enabled ?? false, false)
         XCTAssertEqual(paymentIntent?.currency, "unknown", "Should use 'unknown' as placeholder for currency")
         XCTAssertEqual(paymentIntent?.clientSecret, "redacted_client_secret", "Should use 'redacted_client_secret' as placeholder for client_secret")
         XCTAssertEqual(paymentIntent?.paymentMethodTypes, [], "Should use empty array for payment_method_types")

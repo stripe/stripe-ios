@@ -489,8 +489,8 @@ class CustomerSavedPaymentMethodsViewController: UIViewController {
                 self.updateUI()
                 return
             }
-            STPAnalyticsClient.sharedClient.clientAttributionMetadata["payment_intent_creation_flow"] = "deferred"
-            STPAnalyticsClient.sharedClient.clientAttributionMetadata["payment_method_selection_flow"] = fetchedSetupIntent.automaticPaymentMethods?.enabled ?? false ? "automatic" : "merchant_specified"
+            STPAnalyticsClient.sharedClient.clientAttributionMetadata.paymentIntentCreationFlow = .deferred
+            STPAnalyticsClient.sharedClient.clientAttributionMetadata.paymentMethodSelectionFlow = fetchedSetupIntent.automaticPaymentMethods?.enabled ?? false ? .automatic : .merchant_specified
 
             let setupIntent = Intent.setupIntent(fetchedSetupIntent)
 
@@ -600,8 +600,8 @@ class CustomerSavedPaymentMethodsViewController: UIViewController {
     private func addPaymentOptionToCustomer(paymentOption: PaymentOption, customerSheetDataSource: CustomerSheetDataSource) {
         self.processingInFlight = true
         updateUI(animated: false)
-        STPAnalyticsClient.sharedClient.clientAttributionMetadata["payment_intent_creation_flow"] = nil
-        STPAnalyticsClient.sharedClient.clientAttributionMetadata["payment_method_selection_flow"] = nil
+        STPAnalyticsClient.sharedClient.clientAttributionMetadata.paymentIntentCreationFlow = nil
+        STPAnalyticsClient.sharedClient.clientAttributionMetadata.paymentMethodSelectionFlow = nil
         if case .new(let confirmParams) = paymentOption  {
             configuration.apiClient.createPaymentMethod(with: confirmParams.paymentMethodParams) { paymentMethod, error in
                 if let error = error {

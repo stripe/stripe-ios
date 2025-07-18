@@ -97,6 +97,7 @@ extension STPTestingAPIClient {
 
     func fetchSetupIntent(
         types: [String],
+        automaticPaymentMethods: Bool? = nil,
         merchantCountry: String? = "us",
         paymentMethodID: String? = nil,
         customerID: String? = nil,
@@ -111,6 +112,10 @@ extension STPTestingAPIClient {
         }
         if let customerID {
             params["customer"] = customerID
+        }
+        if let automaticPaymentMethods {
+            params["automatic_payment_methods"] = ["enabled": automaticPaymentMethods]
+            params["payment_method_types"] = nil
         }
         params.merge(otherParams) { _, b in b }
         return try await withCheckedThrowingContinuation { continuation in

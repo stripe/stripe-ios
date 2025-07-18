@@ -125,6 +125,14 @@ class STPAnalyticsClientPaymentsTest: XCTestCase {
         _ = STPApplePayContext(paymentRequest: STPFixtures.applePayRequest(), delegate: nil)
         XCTAssertTrue(STPAnalyticsClient.sharedClient.productUsage.contains("STPApplePayContext"))
     }
+
+    func testClientAttributionMetadata() {
+        AnalyticsHelper.shared.generateSessionID()
+        XCTAssertNotNil(STPAnalyticsClient.sharedClient.clientAttributionMetadata.clientSessionId)
+        XCTAssertEqual(STPAnalyticsClient.sharedClient.clientAttributionMetadata.merchantIntegrationSource, "elements")
+        XCTAssertEqual(STPAnalyticsClient.sharedClient.clientAttributionMetadata.merchantIntegrationSubtype, "mobile")
+        XCTAssertEqual(STPAnalyticsClient.sharedClient.clientAttributionMetadata.merchantIntegrationVersion, "stripe-ios/\(STPAPIClient.STPSDKVersion)")
+    }
 }
 
 // MARK: - Helpers
