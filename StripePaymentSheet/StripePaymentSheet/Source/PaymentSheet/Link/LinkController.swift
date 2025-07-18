@@ -176,6 +176,69 @@ import UIKit
         }
     }
 
+    /// Registers a new Link user with the provided details.
+    /// `lookupConsumer` must be called before this.
+    ///
+    /// - Parameter fullName: The full name of the user.
+    /// - Parameter phone: The phone number of the user. Expected to be in E.164 format.
+    /// - Parameter country: The country code of the user.
+    /// - Parameter completion: A closure that is called with the result of the sign up.
+    @_spi(STP) public func registerNewLinkUser(
+        fullName: String?,
+        phone: String,
+        country: String,
+        completion: @escaping (Result<Void, Error>) -> Void
+    ) {
+        guard let linkAccount else {
+            let error = IntegrationError.noActiveLinkConsumer
+            completion(.failure(error))
+            return
+        }
+        linkAccount.signUp(
+            with: phone,
+            legalName: fullName,
+            countryCode: country,
+            consentAction: .clicked_button_mobile_v1,
+            completion: { [weak self] result in
+                LinkAccountContext.shared.account = self?.linkAccount
+                completion(result)
+            }
+        )
+    }
+
+    /// Presents the Link verification flow for an existing user which requires verification.
+    /// `lookupConsumer` must be called before this.
+    ///
+    /// - Parameter viewController: The view controller from which to present the authentication flow.
+    /// - Parameter completion: A closure that is called with the result of the authentication. It returns an `AuthenticationResult` if successful, or an error if the verification failed.
+    @_spi(STP) public func presentForVerification(
+        from viewController: UIViewController,
+        completion: @escaping (Result<AuthenticationResult, Error>) -> Void
+    ) {
+        guard let linkAccount, linkAccount.sessionState == .requiresVerification else {
+            let error = IntegrationError.noActiveLinkConsumer
+            completion(.failure(error))
+            return
+        }
+
+        let verificationController = LinkVerificationController(
+            mode: .modal,
+            linkAccount: linkAccount,
+            configuration: configuration
+        )
+
+        verificationController.present(from: viewController) { result in
+            switch result {
+            case .completed:
+                completion(.success(.completed))
+            case .canceled:
+                completion(.success(.canceled))
+            case .failed(let error):
+                completion(.failure(error))
+            }
+        }
+    }
+
     /// Presents the Link authentication flow for an existing or new consumer.
     ///
     /// - Parameter email: The email address to authenticate or sign up with.
@@ -391,13 +454,56 @@ import UIKit
     /// - Parameter email: The email address to look up.
     /// - Returns: Returns `true` if the email is associated with an existing Link consumer, or `false` otherwise.
     func lookupConsumer(with email: String) async throws -> Bool {
-        return try await withCheckedThrowingContinuation { continuation in
+        try await withCheckedThrowingContinuation { continuation in
             lookupConsumer(with: email) { result in
                 switch result {
                 case .success(let isExistingLinkConsumer):
                     continuation.resume(returning: isExistingLinkConsumer)
-                case .failure(let failure):
-                    continuation.resume(throwing: failure)
+                case .failure(let error):
+                    continuation.resume(throwing: error)
+                }
+            }
+        }
+    }
+
+    /// Registers a new Link user with the provided details.
+    /// `lookupConsumer` must be called before this.
+    ///
+    /// - Parameter fullName: The full name of the user.
+    /// - Parameter phone: The phone number of the user. Expected to be in E.164 format.
+    /// - Parameter country: The country code of the user.
+    /// Throws if `lookupConsumer` was not called prior to this, or an API error occurs.
+    func registerNewLinkUser(
+        fullName: String?,
+        phone: String,
+        country: String
+    ) async throws {
+        try await withCheckedThrowingContinuation { continuation in
+            registerNewLinkUser(fullName: fullName, phone: phone, country: country) { result in
+                switch result {
+                case .success:
+                    continuation.resume(returning: ())
+                case .failure(let error):
+                    continuation.resume(throwing: error)
+                }
+            }
+        }
+    }
+
+    /// Presents the Link verification flow for an existing user.
+    /// `lookupConsumer` must be called before this.
+    ///
+    /// - Parameter viewController: The view controller from which to present the authentication flow.
+    /// - Returns: An `AuthenticationResult` indicating whether authentication was completed or canceled.
+    /// Throws if `lookupConsumer` was not called prior to this, or an API error occurs.
+    func presentForVerification(from viewController: UIViewController) async throws -> AuthenticationResult {
+        try await withCheckedThrowingContinuation { continuation in
+            presentForVerification(from: viewController) { result in
+                switch result {
+                case .success(let result):
+                    continuation.resume(returning: result)
+                case .failure(let error):
+                    continuation.resume(throwing: error)
                 }
             }
         }
@@ -417,26 +523,9 @@ import UIKit
         var configuration = self.configuration
         configuration.defaultBillingDetails.email = email
 
-        if isRegistered, let linkAccount {
-            // Present for authentication
-            let verificationController = LinkVerificationController(
-                mode: .modal,
-                linkAccount: linkAccount,
-                configuration: configuration
-            )
-
-            return try await withCheckedThrowingContinuation { continuation in
-                verificationController.present(from: viewController) { result in
-                    switch result {
-                    case .completed:
-                        continuation.resume(returning: .completed)
-                    case .canceled:
-                        continuation.resume(returning: .canceled)
-                    case .failed(let error):
-                        continuation.resume(throwing: error)
-                    }
-                }
-            }
+        if isRegistered {
+            // Present for verification
+            return try await presentForVerification(from: viewController)
         } else {
             // Present for signup
             let signupController = LinkSignUpController(
