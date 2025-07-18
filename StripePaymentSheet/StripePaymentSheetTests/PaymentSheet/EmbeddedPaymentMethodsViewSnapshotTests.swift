@@ -877,7 +877,7 @@ class EmbeddedPaymentMethodsViewSnapshotTests: STPSnapshotTestCase {
 
         verify(embeddedView)
     }
-    
+
     func testEmbeddedPaymentMethodsView_flatWithDisclosure_customDisclosureView() {
         // Custom small 👃 icon
         var appearance: PaymentSheet.Appearance = .default
@@ -890,7 +890,7 @@ class EmbeddedPaymentMethodsViewSnapshotTests: STPSnapshotTestCase {
             savedPaymentMethodAccessoryType: .viewMore
         )
         verify(embeddedView, identifier: "small_purple_nose_icon")
-        
+
         // Custom BIG PNG
         appearance.embeddedPaymentElement.row.flat.disclosure.color = .systemGray
         appearance.embeddedPaymentElement.row.flat.disclosure.disclosureImage = UIImage(named: "polling_error_icon", in: Bundle(for: PaymentSheet.self), with: nil)
