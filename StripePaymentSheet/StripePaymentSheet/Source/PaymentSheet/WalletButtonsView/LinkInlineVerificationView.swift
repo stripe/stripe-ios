@@ -10,6 +10,13 @@ import SwiftUI
 
 @available(iOS 16.0, *)
 struct LinkInlineVerificationView: View {
+    private enum Constants {
+        static let logoHeight: CGFloat = 20
+        static let baseSeparatorWidth: CGFloat = 1
+        static let baseContentSpacing: CGFloat = 8
+        static let baseFontSize: CGFloat = 14
+    }
+
     @StateObject private var viewModel: LinkInlineVerificationViewModel
     private var onComplete: () -> Void
 
@@ -27,12 +34,42 @@ struct LinkInlineVerificationView: View {
         self.onComplete = onComplete
     }
 
+    private var scaledSeparatorWidth: CGFloat {
+        max(Constants.baseSeparatorWidth, 0.5) // Ensure separator is always visible
+    }
+
+    private var scaledContentSpacing: CGFloat {
+        Constants.baseContentSpacing
+    }
+
+    private var scaledFont: UIFont {
+        UIFont.systemFont(ofSize: Constants.baseFontSize, weight: .medium)
+            .scaled(withTextStyle: .caption1, maximumPointSize: Constants.baseFontSize)
+    }
+
     var body: some View {
         VStack(spacing: LinkUI.contentSpacing) {
-            SwiftUI.Image(uiImage: Image.link_logo.makeImage())
-                .resizable()
-                .scaledToFit()
-                .frame(height: 20)
+            HStack(spacing: scaledContentSpacing) {
+                SwiftUI.Image(uiImage: Image.link_logo.makeImage())
+                    .resizable()
+                    .scaledToFit()
+                    .frame(height: Constants.logoHeight)
+
+                if let paymentMethodPreview = viewModel.paymentMethodPreview {
+                    Rectangle()
+                        .fill(Color(uiColor: .separator))
+                        .frame(width: scaledSeparatorWidth, height: Constants.logoHeight)
+
+                    SwiftUI.Image(uiImage: paymentMethodPreview.icon)
+                        .resizable()
+                        .scaledToFit()
+                        .frame(height: Constants.logoHeight)
+
+                    Text(paymentMethodPreview.last4)
+                        .font(Font(scaledFont))
+                        .foregroundColor(Color(uiColor: .label))
+                }
+            }
 
             // TODO: Localize
             Text("Enter the code sent to \(viewModel.account.redactedPhoneNumber ?? "your phone") to use your saved information.")
@@ -118,22 +155,27 @@ enum Stubs {
         supportedPaymentDetailsTypes: [.card]
     )
 
-    static let displayablePaymentDetails: ConsumerSession.DisplayablePaymentDetails = .init(
-        defaultCardBrand: "VISA",
-        defaultPaymentType: .card,
-        last4: "4242",
-        numberOfSavedPaymentDetails: 6
-    )
+    static func displayablePaymentDetails(
+        paymentMethodType: ConsumerSession.DisplayablePaymentDetails.PaymentType
+    ) -> ConsumerSession.DisplayablePaymentDetails {
+        .init(
+            defaultCardBrand: "VISA",
+            defaultPaymentType: paymentMethodType,
+            last4: "4242",
+            numberOfSavedPaymentDetails: 6
+        )
+    }
 
     static func linkAccount(
         email: String = "jane.diaz@gmail.com",
+        paymentMethodType: ConsumerSession.DisplayablePaymentDetails.PaymentType? = nil,
         isRegistered: Bool = true
     ) -> PaymentSheetLinkAccount {
         .init(
             email: email,
             session: isRegistered ? Self.consumerSession : nil,
             publishableKey: "pk_test_123",
-            displayablePaymentDetails: Self.displayablePaymentDetails,
+            displayablePaymentDetails: paymentMethodType.map { Self.displayablePaymentDetails(paymentMethodType: $0) },
             useMobileEndpoints: true
         )
     }
@@ -141,11 +183,27 @@ enum Stubs {
 
 @available(iOS 16.0, *)
 #Preview {
-    LinkInlineVerificationView(
-        account: Stubs.linkAccount(),
-        appearance: .default,
-        onComplete: { }
-    )
-    .padding()
+    VStack {
+        LinkInlineVerificationView(
+            account: Stubs.linkAccount(paymentMethodType: nil),
+            appearance: .default,
+            onComplete: { }
+        )
+        .padding()
+
+        LinkInlineVerificationView(
+            account: Stubs.linkAccount(paymentMethodType: .card),
+            appearance: .default,
+            onComplete: { }
+        )
+        .padding()
+
+        LinkInlineVerificationView(
+            account: Stubs.linkAccount(paymentMethodType: .bankAccount),
+            appearance: .default,
+            onComplete: { }
+        )
+        .padding()
+    }
 }
 #endif
