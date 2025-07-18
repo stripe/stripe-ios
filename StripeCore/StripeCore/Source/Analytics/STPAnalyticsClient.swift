@@ -88,7 +88,7 @@ import UIKit
             return clientAttributionMetadataDict
         }
     }
-    
+
     public var clientAttributionMetadata: ClientAttributionMetadata = ClientAttributionMetadata()
 
     @objc public var productUsage: Set<String> = Set()
