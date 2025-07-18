@@ -326,9 +326,13 @@ extension STPAPIClient {
             "id": id,
         ]
 
+        var paymentMethodOptionsDict: [String: Any] = [:]
         if let cvc = cvc {
-            parameters["payment_method_options"] = ["card": ["cvc": cvc]]
+            paymentMethodOptionsDict["card"] = ["cvc": cvc]
         }
+        paymentMethodOptionsDict = Self.paramsAddingClientAttributionMetadata(paymentMethodOptionsDict)
+        parameters["payment_method_options"] = paymentMethodOptionsDict
+
         if let allowRedisplay {
             parameters["allow_redisplay"] = allowRedisplay.stringValue
         }
