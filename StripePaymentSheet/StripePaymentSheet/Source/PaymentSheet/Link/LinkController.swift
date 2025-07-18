@@ -191,6 +191,7 @@ import UIKit
 
     /// Creates a [STPPaymentMethod] from the selected Link payment method preview.
     ///
+    /// - Parameter additionalClientAttributionMetadata: A dictionary of metadata about the integration.
     /// - Parameter completion: A closure that is called with the result of the payment method creation. It returns a `STPPaymentMethod` if successful, or an error if the payment method could not be created.
     @_spi(STP) public func createPaymentMethod(completion: @escaping (Result<STPPaymentMethod, Error>) -> Void) {
         guard let selectedPaymentDetails else {
@@ -233,7 +234,8 @@ import UIKit
             allowRedisplay: nil,
             cvc: paymentDetails.cvc,
             expectedPaymentMethodType: nil,
-            billingPhoneNumber: nil
+            billingPhoneNumber: nil,
+            additionalClientAttributionMetadata: [:]
         ) { shareResult in
             switch shareResult {
             case .success(let success):
@@ -260,7 +262,8 @@ import UIKit
                 )!
                 let paymentMethod = try await apiClient.createPaymentMethod(
                     with: paymentMethodParams,
-                    additionalPaymentUserAgentValues: []
+                    additionalPaymentUserAgentValues: [],
+                    additionalClientAttributionMetadata: [:]
                 )
                 completion(.success(paymentMethod))
             } catch {
@@ -372,10 +375,11 @@ import UIKit
     }
 
     /// Creates a [STPPaymentMethod] from the selected Link payment method preview.
+    /// - Parameter additionalClientAttributionMetadata: A dictionary of metadata about the integration.
     /// - Returns: A `STPPaymentMethod` if successful, or throws an error if the payment method could not be created.
     func createPaymentMethod() async throws -> STPPaymentMethod {
         return try await withCheckedThrowingContinuation { continuation in
-            createPaymentMethod { result in
+            createPaymentMethod() { result in
                 switch result {
                 case .success(let paymentMethod):
                     continuation.resume(returning: paymentMethod)

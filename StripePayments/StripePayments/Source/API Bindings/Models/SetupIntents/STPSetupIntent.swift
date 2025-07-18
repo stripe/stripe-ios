@@ -39,6 +39,8 @@ public class STPSetupIntent: NSObject, STPAPIResponseDecodable {
     @objc public let lastSetupError: STPSetupIntentLastSetupError?
     /// Payment-method-specific configuration for this SetupIntent.
     @_spi(STP) public let paymentMethodOptions: STPPaymentMethodOptions?
+    /// Automatic payment methods configuration for this SetupIntent
+    @_spi(STP) public let automaticPaymentMethods: STPIntentAutomaticPaymentMethods?
 
     // MARK: - Deprecated
 
@@ -56,6 +58,7 @@ public class STPSetupIntent: NSObject, STPAPIResponseDecodable {
 
     required init(
         stripeID: String,
+        automaticPaymentMethods: STPIntentAutomaticPaymentMethods?,
         clientSecret: String,
         created: Date,
         customerID: String?,
@@ -72,6 +75,7 @@ public class STPSetupIntent: NSObject, STPAPIResponseDecodable {
         allResponseFields: [AnyHashable: Any]
     ) {
         self.stripeID = stripeID
+        self.automaticPaymentMethods = automaticPaymentMethods
         self.clientSecret = clientSecret
         self.created = created
         self.customerID = customerID
@@ -201,9 +205,12 @@ public class STPSetupIntent: NSObject, STPAPIResponseDecodable {
         let lastSetupError = STPSetupIntentLastSetupError.decodedObject(
             fromAPIResponse: dict.stp_dictionary(forKey: "last_setup_error")
         )
-
+        let automaticPaymentMethods = STPIntentAutomaticPaymentMethods.decodedObject(
+            fromAPIResponse: dict["automatic_payment_methods"] as? [AnyHashable: Any]
+        )
         let setupIntent = self.init(
             stripeID: stripeId,
+            automaticPaymentMethods: automaticPaymentMethods,
             clientSecret: clientSecret,
             created: created,
             customerID: customerID,

@@ -50,4 +50,12 @@ import Foundation
         paymentUserAgent = components.joined(separator: "; ")
         return paymentUserAgent
     }
+
+    @_spi(STP) public static var clientAttributionMetadata: [String: String] {
+        return [
+            "merchant_integration_source": "elements",
+            "merchant_integration_subtype": "mobile",
+            "merchant_integration_version": "stripe-ios/\(STPAPIClient.STPSDKVersion)"
+        ]
+    }
 }

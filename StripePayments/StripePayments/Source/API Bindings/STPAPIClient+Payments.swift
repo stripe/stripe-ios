@@ -496,15 +496,18 @@ extension STPAPIClient {
     /// of calling this method directly. It handles any authentication necessary for you. - seealso: https://stripe.com/docs/payments/3d-secure
     /// - Parameters:
     ///   - paymentIntentParams:  The `STPPaymentIntentParams` to pass to `/confirm`
+    ///   - additionalClientAttributionMetadata: A dictionary of metadata about the integration.
     ///   - completion:           The callback to run with the returned PaymentIntent object, or an error.
-    @objc(confirmPaymentIntentWithParams:completion:)
+    @objc(confirmPaymentIntentWithParams:additionalClientAttributionMetadata:completion:)
     public func confirmPaymentIntent(
         with paymentIntentParams: STPPaymentIntentParams,
+        additionalClientAttributionMetadata: [String: String],
         completion: @escaping STPPaymentIntentCompletionBlock
     ) {
         confirmPaymentIntent(
             with: paymentIntentParams,
             expand: nil,
+            additionalClientAttributionMetadata: additionalClientAttributionMetadata,
             completion: completion
         )
     }
@@ -517,11 +520,13 @@ extension STPAPIClient {
     /// - Parameters:
     ///   - paymentIntentParams:  The `STPPaymentIntentParams` to pass to `/confirm`
     ///   - expand:  An array of string keys to expand on the returned PaymentIntent object. These strings should match one or more of the parameter names that are marked as expandable. - seealso: https://stripe.com/docs/api/payment_intents/object
+    ///   - additionalClientAttributionMetadata: A dictionary of metadata about the integration.
     ///   - completion:           The callback to run with the returned PaymentIntent object, or an error.
-    @objc(confirmPaymentIntentWithParams:expand:completion:)
+    @objc(confirmPaymentIntentWithParams:expand:additionalClientAttributionMetadata:completion:)
     public func confirmPaymentIntent(
         with paymentIntentParams: STPPaymentIntentParams,
         expand: [String]?,
+        additionalClientAttributionMetadata: [String: String],
         completion: @escaping STPPaymentIntentCompletionBlock
     ) {
         assert(
@@ -550,7 +555,7 @@ extension STPAPIClient {
         if var paymentMethodParamsDict = params[PaymentMethodDataHash] as? [String: Any] {
             STPTelemetryClient.shared.addTelemetryFields(toParams: &paymentMethodParamsDict)
             paymentMethodParamsDict = Self.paramsAddingPaymentUserAgent(paymentMethodParamsDict)
-            paymentMethodParamsDict = Self.paramsAddingClientAttributionMetadata(paymentMethodParamsDict)
+            paymentMethodParamsDict = Self.paramsAddingClientAttributionMetadata(paymentMethodParamsDict, additionalClientAttributionMetadata: additionalClientAttributionMetadata)
             params[PaymentMethodDataHash] = paymentMethodParamsDict
         }
         if (expand?.count ?? 0) > 0 {
@@ -685,15 +690,18 @@ extension STPAPIClient {
     /// of calling this method directly. It handles any authentication necessary for you. - seealso: https://stripe.com/docs/payments/3d-secure
     /// - Parameters:
     ///   - setupIntentParams:    The `STPSetupIntentConfirmParams` to pass to `/confirm`
+    ///   - additionalClientAttributionMetadata: A dictionary of metadata about the integration.
     ///   - completion:           The callback to run with the returned PaymentIntent object, or an error.
-    @objc(confirmSetupIntentWithParams:completion:)
+    @objc(confirmSetupIntentWithParams:additionalClientAttributionMetadata:completion:)
     public func confirmSetupIntent(
         with setupIntentParams: STPSetupIntentConfirmParams,
+        additionalClientAttributionMetadata: [String: String],
         completion: @escaping STPSetupIntentCompletionBlock
     ) {
         confirmSetupIntent(
             with: setupIntentParams,
             expand: nil,
+            additionalClientAttributionMetadata: additionalClientAttributionMetadata,
             completion: completion
         )
     }
@@ -706,11 +714,13 @@ extension STPAPIClient {
     /// - Parameters:
     ///   - setupIntentParams:    The `STPSetupIntentConfirmParams` to pass to `/confirm`
     ///   - expand:  An array of string keys to expand on the returned SetupIntent object. These strings should match one or more of the parameter names that are marked as expandable. - seealso: https://stripe.com/docs/api/setup_intents/object
+    ///   - additionalClientAttributionMetadata: A dictionary of metadata about the integration.
     ///   - completion:           The callback to run with the returned PaymentIntent object, or an error.
-    @objc(confirmSetupIntentWithParams:expand:completion:)
+    @objc(confirmSetupIntentWithParams:expand:additionalClientAttributionMetadata:completion:)
     public func confirmSetupIntent(
         with setupIntentParams: STPSetupIntentConfirmParams,
         expand: [String]?,
+        additionalClientAttributionMetadata: [String: String],
         completion: @escaping STPSetupIntentCompletionBlock
     ) {
         assert(
@@ -734,7 +744,7 @@ extension STPAPIClient {
         if var paymentMethodParamsDict = params[PaymentMethodDataHash] as? [String: Any] {
             STPTelemetryClient.shared.addTelemetryFields(toParams: &paymentMethodParamsDict)
             paymentMethodParamsDict = Self.paramsAddingPaymentUserAgent(paymentMethodParamsDict)
-            paymentMethodParamsDict = Self.paramsAddingClientAttributionMetadata(paymentMethodParamsDict)
+            paymentMethodParamsDict = Self.paramsAddingClientAttributionMetadata(paymentMethodParamsDict, additionalClientAttributionMetadata: additionalClientAttributionMetadata)
             params[PaymentMethodDataHash] = paymentMethodParamsDict
         }
         if let expand = expand,
@@ -812,19 +822,24 @@ extension STPAPIClient {
     /// - seealso: https://stripe.com/docs/api/payment_methods/create
     /// - Parameters:
     ///   - paymentMethodParams:  The `STPPaymentMethodParams` to pass to `/v1/payment_methods`.  Cannot be nil.
+    ///   - additionalClientAttributionMetadata: A dictionary of metadata about the integration.
     ///   - completion:           The callback to run with the returned PaymentMethod object, or an error.
-    @objc(createPaymentMethodWithParams:completion:)
+    @objc(createPaymentMethodWithParams:additionalClientAttributionMetadata:completion:)
     public func createPaymentMethod(
         with paymentMethodParams: STPPaymentMethodParams,
+        additionalClientAttributionMetadata: [String: String],
         completion: @escaping STPPaymentMethodCompletionBlock
     ) {
-        createPaymentMethod(with: paymentMethodParams, additionalPaymentUserAgentValues: [], completion: completion)
+        createPaymentMethod(with: paymentMethodParams, additionalPaymentUserAgentValues: [], additionalClientAttributionMetadata: additionalClientAttributionMetadata, completion: completion)
     }
 
-    /// - Parameter additionalPaymentUserAgentValues: A list of values to append to the `payment_user_agent` parameter sent in the request. e.g. `["deferred-intent", "autopm"]` will append "; deferred-intent; autopm" to the `payment_user_agent`.
+    /// - Parameters:
+    ///    - additionalPaymentUserAgentValues: A list of values to append to the `payment_user_agent` parameter sent in the request. e.g. `["deferred-intent", "autopm"]` will append "; deferred-intent; autopm" to the `payment_user_agent`.
+    ///    - additionalClientAttributionMetadata: A dictionary of metadata about the integration.
     func createPaymentMethod(
         with paymentMethodParams: STPPaymentMethodParams,
         additionalPaymentUserAgentValues: [String] = [],
+        additionalClientAttributionMetadata: [String: String],
         completion: @escaping STPPaymentMethodCompletionBlock
     ) {
         STPAnalyticsClient.sharedClient.logPaymentMethodCreationAttempt(
@@ -834,7 +849,7 @@ extension STPAPIClient {
         )
         var parameters = STPFormEncoder.dictionary(forObject: paymentMethodParams)
         parameters = Self.paramsAddingPaymentUserAgent(parameters, additionalValues: additionalPaymentUserAgentValues)
-        parameters = Self.paramsAddingClientAttributionMetadata(parameters)
+        parameters = Self.paramsAddingClientAttributionMetadata(parameters, additionalClientAttributionMetadata: additionalClientAttributionMetadata)
         STPTelemetryClient.shared.addTelemetryFields(toParams: &parameters)
         APIRequest<STPPaymentMethod>.post(
             with: self,
@@ -850,10 +865,11 @@ extension STPAPIClient {
     /// - Parameters:
     ///   - paymentMethodParams:  The `STPPaymentMethodParams` to pass to `/v1/payment_methods`.  Cannot be nil.
     ///   - additionalPaymentUserAgentValues:  A list of values to append to the `payment_user_agent` parameter sent in the request. e.g. `["deferred-intent", "autopm"]` will append "; deferred-intent; autopm" to the `payment_user_agent`.
+    ///   - additionalClientAttributionMetadata: A dictionary of metadata about the integration.
     /// - Returns: the returned PaymentMethod object.
-    public func createPaymentMethod(with paymentMethodParams: STPPaymentMethodParams, additionalPaymentUserAgentValues: [String]) async throws -> STPPaymentMethod {
+    public func createPaymentMethod(with paymentMethodParams: STPPaymentMethodParams, additionalPaymentUserAgentValues: [String], additionalClientAttributionMetadata: [String: String]) async throws -> STPPaymentMethod {
         return try await withCheckedThrowingContinuation({ continuation in
-            createPaymentMethod(with: paymentMethodParams, additionalPaymentUserAgentValues: additionalPaymentUserAgentValues) { paymentMethod, error in
+            createPaymentMethod(with: paymentMethodParams, additionalPaymentUserAgentValues: additionalPaymentUserAgentValues, additionalClientAttributionMetadata: additionalClientAttributionMetadata) { paymentMethod, error in
                 if let paymentMethod = paymentMethod {
                     continuation.resume(with: .success(paymentMethod))
                 } else {

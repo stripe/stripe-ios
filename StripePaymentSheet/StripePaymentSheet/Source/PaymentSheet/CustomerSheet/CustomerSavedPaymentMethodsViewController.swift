@@ -38,6 +38,7 @@ class CustomerSavedPaymentMethodsViewController: UIViewController {
     let paymentMethodSyncDefault: Bool
     let allowsRemovalOfLastSavedPaymentMethod: Bool
     let cbcEligible: Bool
+    let elementsSessionConfigId: String
 
     // MARK: - Writable Properties
     var savedPaymentMethods: [STPPaymentMethod]
@@ -160,6 +161,7 @@ class CustomerSavedPaymentMethodsViewController: UIViewController {
         allowsRemovalOfLastSavedPaymentMethod: Bool,
         cbcEligible: Bool,
         csCompletion: CustomerSheet.CustomerSheetCompletion?,
+        elementsSessionConfigId: String,
         delegate: CustomerSavedPaymentMethodsViewControllerDelegate
     ) {
         self.savedPaymentMethods = savedPaymentMethods
@@ -174,6 +176,7 @@ class CustomerSavedPaymentMethodsViewController: UIViewController {
         self.allowsRemovalOfLastSavedPaymentMethod = allowsRemovalOfLastSavedPaymentMethod
         self.cbcEligible = cbcEligible
         self.csCompletion = csCompletion
+        self.elementsSessionConfigId = elementsSessionConfigId
         self.delegate = delegate
 
         if Self.shouldShowPaymentMethodCarousel(savedPaymentMethods: savedPaymentMethods, showApplePay: isApplePayEnabled && !paymentMethodSyncDefault) {
@@ -598,7 +601,7 @@ class CustomerSavedPaymentMethodsViewController: UIViewController {
         self.processingInFlight = true
         updateUI(animated: false)
         if case .new(let confirmParams) = paymentOption  {
-            configuration.apiClient.createPaymentMethod(with: confirmParams.paymentMethodParams) { paymentMethod, error in
+            configuration.apiClient.createPaymentMethod(with: confirmParams.paymentMethodParams, additionalClientAttributionMetadata: ["elements_session_config_id": elementsSessionConfigId]) { paymentMethod, error in
                 if let error = error {
                     self.error = error
                     self.processingInFlight = false

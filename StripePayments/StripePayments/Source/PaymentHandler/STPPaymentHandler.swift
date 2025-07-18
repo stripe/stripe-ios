@@ -175,11 +175,13 @@ public class STPPaymentHandler: NSObject {
     /// - Parameters:
     ///   - paymentParams: The params used to confirm the PaymentIntent. Note that this method overrides the value of `paymentParams.useStripeSDK` to `@YES`.
     ///   - authenticationContext: The authentication context used to authenticate the payment.
+    ///   - additionalClientAttributionMetadata: A dictionary of metadata about the integration.
     ///   - completion: The completion block. If the status returned is `STPPaymentHandlerActionStatusSucceeded`, the PaymentIntent status is not necessarily STPPaymentIntentStatusSucceeded (e.g. some bank payment methods take days before the PaymentIntent succeeds).
-    @objc(confirmPayment:withAuthenticationContext:completion:)
+    @objc(confirmPayment:withAuthenticationContext:additionalClientAttributionMetadata:completion:)
     public func confirmPayment(
         _ paymentParams: STPPaymentIntentParams,
         with authenticationContext: STPAuthenticationContext,
+        additionalClientAttributionMetadata: [String: String],
         completion: @escaping STPPaymentHandlerActionPaymentIntentCompletionBlock
     ) {
         let paymentIntentID = paymentParams.stripeId
@@ -275,6 +277,7 @@ public class STPPaymentHandler: NSObject {
         apiClient.confirmPaymentIntent(
             with: params,
             expand: ["payment_method"],
+            additionalClientAttributionMetadata: additionalClientAttributionMetadata,
             completion: confirmCompletionBlock
         )
     }
@@ -291,7 +294,7 @@ public class STPPaymentHandler: NSObject {
         authenticationContext: STPAuthenticationContext,
         completion: @escaping STPPaymentHandlerActionPaymentIntentCompletionBlock
     ) {
-        self.confirmPayment(withParams, with: authenticationContext, completion: completion)
+        self.confirmPayment(withParams, with: authenticationContext, additionalClientAttributionMetadata: [:], completion: completion)
     }
 
     @_spi(SharedPaymentToken) public func handleNextAction(
@@ -500,11 +503,13 @@ public class STPPaymentHandler: NSObject {
     /// - Parameters:
     ///   - setupIntentConfirmParams: The params used to confirm the SetupIntent. Note that this method overrides the value of `setupIntentConfirmParams.useStripeSDK` to `@YES`.
     ///   - authenticationContext: The authentication context used to authenticate the SetupIntent.
+    ///   - additionalClientAttributionMetadata: A dictionary of metadata about the integration.
     ///   - completion: The completion block. If the status returned is `STPPaymentHandlerActionStatusSucceeded`, the SetupIntent status will always be STPSetupIntentStatusSucceeded.
-            @objc(confirmSetupIntent:withAuthenticationContext:completion:)
+    @objc(confirmSetupIntent:withAuthenticationContext:additionalClientAttributionMetadata:completion:)
     public func confirmSetupIntent(
         _ setupIntentConfirmParams: STPSetupIntentConfirmParams,
         with authenticationContext: STPAuthenticationContext,
+        additionalClientAttributionMetadata: [String: String],
         completion: @escaping STPPaymentHandlerActionSetupIntentCompletionBlock
     ) {
         let setupIntentID = STPSetupIntent.id(fromClientSecret: setupIntentConfirmParams.clientSecret)
@@ -607,7 +612,7 @@ public class STPPaymentHandler: NSObject {
             params = setupIntentConfirmParams.copy() as! STPSetupIntentConfirmParams
             params.useStripeSDK = NSNumber(value: true)
         }
-        apiClient.confirmSetupIntent(with: params, expand: ["payment_method"], completion: confirmCompletionBlock)
+        apiClient.confirmSetupIntent(with: params, expand: ["payment_method"], additionalClientAttributionMetadata: additionalClientAttributionMetadata, completion: confirmCompletionBlock)
     }
 
     /// Handles any `nextAction` required to authenticate the SetupIntent.

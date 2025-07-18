@@ -59,9 +59,15 @@ extension CustomerSheet {
             setupIntentParams.paymentMethodParams = confirmParams.paymentMethodParams
             setupIntentParams.returnURL = configuration.returnURL
             setupIntentParams.additionalAPIParameters = [ "expand": ["payment_method"]]
+            let additionalClientAttributionMetadata: [String: String] = [
+                "elements_session_config_id": elementsSession.sessionID,
+                "payment_intent_creation_flow": "deferred",
+                "payment_method_selection_flow": setupIntent.automaticPaymentMethods?.enabled ?? false ? "automatic" : "merchant_specified"
+            ]
             paymentHandler.confirmSetupIntent(
                 setupIntentParams,
                 with: authenticationContext,
+                additionalClientAttributionMetadata: additionalClientAttributionMetadata,
                 completion: paymentHandlerCompletion)
         } else {
             let errorAnalytic = ErrorAnalytic(event: .unexpectedCustomerSheetError,

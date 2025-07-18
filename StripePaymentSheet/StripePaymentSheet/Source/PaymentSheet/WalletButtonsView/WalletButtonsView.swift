@@ -6,6 +6,7 @@
 import PassKit
 import SwiftUI
 import WebKit
+@_spi(STP) import StripePayments
 
 @available(iOS 16.0, *)
 @_spi(STP) public struct WalletButtonsView: View {
@@ -178,11 +179,23 @@ import WebKit
                 confirmHandler(.failed(error: error))
                 return
             }
-
+            var additionalClientAttributionMetadata: [String: String] = ["elements_session_config_id": flowController.elementsSession.sessionID]
+            switch flowController.intent {
+            case .paymentIntent(let paymentIntent):
+                additionalClientAttributionMetadata["payment_intent_creation_flow"] = "standard"
+                additionalClientAttributionMetadata["payment_method_selection_flow"] = paymentIntent.automaticPaymentMethods?.enabled ?? false ? "automatic" : "merchant_specified"
+            case .setupIntent(let setupIntent):
+                additionalClientAttributionMetadata["payment_intent_creation_flow"] = "standard"
+                additionalClientAttributionMetadata["payment_method_selection_flow"] = setupIntent.automaticPaymentMethods?.enabled ?? false ? "automatic" : "merchant_specified"
+            case .deferredIntent(let intentConfig):
+                additionalClientAttributionMetadata["payment_intent_creation_flow"] = "deferred"
+                additionalClientAttributionMetadata["payment_method_selection_flow"] = intentConfig.paymentMethodTypes?.isEmpty ?? true ? "automatic" : "merchant_specified"
+            }
             // Present Shop Pay via ECE WebView
             let shopPayPresenter = ShopPayECEPresenter(
                 flowController: flowController,
                 configuration: shopPayConfig,
+                additionalClientAttributionMetadata: additionalClientAttributionMetadata,
                 analyticsHelper: flowController.analyticsHelper
             )
             shopPayPresenter.present(from: WindowAuthenticationContext().authenticationPresentingViewController(),

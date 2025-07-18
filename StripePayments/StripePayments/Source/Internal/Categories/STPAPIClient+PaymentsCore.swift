@@ -22,10 +22,13 @@ extension STPAPIClient {
     }
 
     @_spi(STP) public class func paramsAddingClientAttributionMetadata(
-        _ params: [String: Any]
+        _ params: [String: Any],
+        additionalClientAttributionMetadata: [String: String] = [:]
     ) -> [String: Any] {
         var newParams = params
         newParams["client_attribution_metadata"] = ["client_session_id": AnalyticsHelper.shared.sessionID]
+            .merging(PaymentsSDKVariant.clientAttributionMetadata){ _, new in new}
+            .merging(additionalClientAttributionMetadata) { _, new in new}
         return newParams
     }
 }
