@@ -749,10 +749,10 @@ class EmbeddedPaymentElementTest: XCTestCase {
         }
     }
 
-    func testCreateFails_whenFlatWithChevronWithDefaultRowSelectionBehavior() async throws {
-        // Given an appearance with row.style = .flatWithChevron and a config with rowSelectionBehavior = .default
+    func testCreateFails_whenFlatWithDisclosureWithDefaultRowSelectionBehavior() async throws {
+        // Given an appearance with row.style = .flatWithDisclosure and a config with rowSelectionBehavior = .default
         var config = configuration
-        config.appearance.embeddedPaymentElement.row.style = .flatWithChevron
+        config.appearance.embeddedPaymentElement.row.style = .flatWithDisclosure
 
         // When we create an EmbeddedPaymentElement
         do {
@@ -767,7 +767,7 @@ class EmbeddedPaymentElementTest: XCTestCase {
                 XCTFail("Unexpected error type: \(error)")
                 return
             }
-            XCTAssertTrue(paymentSheetError.debugDescription.contains("flatWithChevron row style without .immediateAction row selection behavior is not supported"))
+            XCTAssertTrue(paymentSheetError.debugDescription.contains("flatWithDisclosure row style without .immediateAction row selection behavior is not supported"))
         }
     }
 
@@ -788,10 +788,10 @@ class EmbeddedPaymentElementTest: XCTestCase {
         )
     }
 
-    func testCreateSucceeds_whenFlatWithChevronWithImmediateActionRowSelectionBehavior() async throws {
-        // Given an appearance with row.style = .flatWithChevron and a config with rowSelectionBehavior = .immediateAction
+    func testCreateSucceeds_whenFlatWithDisclosureWithImmediateActionRowSelectionBehavior() async throws {
+        // Given an appearance with row.style = .flatWithDisclosure and a config with rowSelectionBehavior = .immediateAction
         var config = configuration
-        config.appearance.embeddedPaymentElement.row.style = .flatWithChevron
+        config.appearance.embeddedPaymentElement.row.style = .flatWithDisclosure
         config.embeddedViewDisplaysMandateText = false
         config.rowSelectionBehavior = .immediateAction(didSelectPaymentOption: {})
 
