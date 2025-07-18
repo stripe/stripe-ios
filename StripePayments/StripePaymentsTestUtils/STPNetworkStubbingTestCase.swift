@@ -106,7 +106,8 @@ import XCTest
                         "app_version_key", // Current version of Xcode, for Alipay
 
                         "payment_user_agent", // Contains the SDK version number
-                        "pk_token_transaction_id", // Random string
+                        "pk_token_transaction_id", // Random string,
+                        "client_session_id", // Random string
                     ]
                     return replaceNondeterministicParams(escapedBody, componentsToFilter: componentsToFilter)
                 }
