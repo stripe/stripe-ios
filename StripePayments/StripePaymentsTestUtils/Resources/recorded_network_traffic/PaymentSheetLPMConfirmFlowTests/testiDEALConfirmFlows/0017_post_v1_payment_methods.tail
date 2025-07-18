@@ -3,27 +3,27 @@ https:\/\/api\.stripe\.com\/v1\/payment_methods$
 200
 application/json
 access-control-allow-methods: GET, HEAD, PUT, PATCH, POST, DELETE
-content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=yZiLIxI9mqYoRetucO7yBPVGgdRSAsIFW1rCD60TLVIm3uBG93Fmi3fXkOS0CXvaQKlfY1mmIFKg1tDO
+content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=0nzRgdyoSU-sgAwsUgfXlIwDx1yuDvOau27wBYwpaC-k9nLdMT8jLvhn5Daam9xoX6peq5j9no7FE26a
 Server: nginx
 Cache-Control: no-cache, no-store
-x-wc: ABGHI
+x-wc: ABGHIJ
 Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
 Access-Control-Allow-Origin: *
 stripe-should-retry: false
 x-stripe-priority-routing-enabled: true
 x-stripe-routing-context-priority-tier: api-testmode
-request-id: req_Kt84i25kPIbia2
+request-id: req_QKuOOOUyykFJKb
 Content-Length: 519
 Vary: Origin
-Date: Tue, 03 Jun 2025 21:00:35 GMT
-original-request: req_Kt84i25kPIbia2
+Date: Fri, 18 Jul 2025 23:12:04 GMT
+original-request: req_QKuOOOUyykFJKb
 stripe-version: 2020-08-27
-idempotency-key: cef9cff3-8c9b-44c2-a551-ca68af6ca33e
+idempotency-key: 7908ffc8-633d-4e83-9521-98c8b437edeb
 access-control-expose-headers: Request-Id, Stripe-Manage-Version, Stripe-Should-Retry, X-Stripe-External-Auth-Required, X-Stripe-Privileged-Session-Required
 access-control-max-age: 300
 access-control-allow-credentials: true
 Content-Type: application/json
-X-Stripe-Mock-Request: allow_redisplay=unspecified&billing_details\[email]=f%40z\.c&billing_details\[name]=Foo&guid=.*&ideal%5Bbank%5D=abn_amro&muid=.*&payment_user_agent=.*&sid=.*&type=ideal
+X-Stripe-Mock-Request: allow_redisplay=unspecified&billing_details\[email]=f%40z\.c&billing_details\[name]=Foo&client_attribution_metadata\[client_session_id]=.*&guid=.*&ideal%5Bbank%5D=abn_amro&muid=.*&payment_user_agent=.*&sid=.*&type=ideal
 
 {
   "object" : "payment_method",
@@ -31,7 +31,7 @@ X-Stripe-Mock-Request: allow_redisplay=unspecified&billing_details\[email]=f%40z
     "bic" : "ABNANL2A",
     "bank" : "abn_amro"
   },
-  "id" : "pm_1RW1wlFY0qyl6XeW9w4D6QAJ",
+  "id" : "pm_1RmNRgFY0qyl6XeWeaoNQnBX",
   "billing_details" : {
     "email" : "f@z.c",
     "phone" : null,
@@ -47,7 +47,7 @@ X-Stripe-Mock-Request: allow_redisplay=unspecified&billing_details\[email]=f%40z
     }
   },
   "livemode" : false,
-  "created" : 1748984435,
+  "created" : 1752880324,
   "allow_redisplay" : "unspecified",
   "type" : "ideal",
   "customer" : null
