@@ -332,8 +332,8 @@ struct AppearancePlaygroundView: View {
         )
 
         let embeddedPaymentElementChevronColorBinding = Binding(
-            get: { Color(self.appearance.embeddedPaymentElement.row.flat.chevron.color) },
-            set: { self.appearance.embeddedPaymentElement.row.flat.chevron.color = UIColor($0) }
+            get: { Color(self.appearance.embeddedPaymentElement.row.flat.disclosure.color) },
+            set: { self.appearance.embeddedPaymentElement.row.flat.disclosure.color = UIColor($0) }
         )
 
         let regularFonts = ["AvenirNext-Regular", "PingFangHK-Regular", "ChalkboardSE-Light"]
