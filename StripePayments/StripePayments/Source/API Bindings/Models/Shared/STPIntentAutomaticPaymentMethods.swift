@@ -5,10 +5,9 @@
 //  Created by Joyce Qin on 7/16/25.
 //
 
-
 @_spi(STP) public class STPIntentAutomaticPaymentMethods: NSObject {
     public let enabled: Bool
-    public var allResponseFields: [AnyHashable : Any]
+    public var allResponseFields: [AnyHashable: Any]
 
     internal init(
         enabled: Bool,
