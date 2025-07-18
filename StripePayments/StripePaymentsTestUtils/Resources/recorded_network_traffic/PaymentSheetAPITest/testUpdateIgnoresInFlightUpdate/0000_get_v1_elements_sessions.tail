@@ -5,21 +5,21 @@ application/json
 Content-Type: application/json
 Access-Control-Allow-Origin: *
 x-stripe-priority-routing-enabled: true
-content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=NpZfhn4c7O8hrg76DqzVzMn0Wg6DWnBUc9QRXUuIXg1ZzpfjBQz-_sP28v-Y2Zgv2Qe-cYSxh3UaHuws
-x-wc: ABGHI
+content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=LohRBMsmf72L1njx9-5quXdYRQ6624eYDGYB9JAjUtlR204PgVNLexzYzq2HNytfdi-xY-hvSBMrV4IO
+x-wc: ABGHIJ
 access-control-allow-methods: GET, HEAD, PUT, PATCH, POST, DELETE
 Server: nginx
 access-control-expose-headers: Request-Id, Stripe-Manage-Version, Stripe-Should-Retry, X-Stripe-External-Auth-Required, X-Stripe-Privileged-Session-Required
 access-control-max-age: 300
 Cache-Control: no-cache, no-store
-Date: Thu, 26 Jun 2025 20:37:39 GMT
+Date: Fri, 18 Jul 2025 22:32:16 GMT
 stripe-version: 2020-08-27
 access-control-allow-credentials: true
-Content-Length: 13506
+Content-Length: 13575
 x-stripe-routing-context-priority-tier: api-testmode
 Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
 Vary: Origin
-request-id: req_4FvGWT2KxLkJYY
+request-id: req_uQ2M9YSLpTl41q
 
 {
   "payment_method_preference" : {
@@ -28,9 +28,9 @@ request-id: req_4FvGWT2KxLkJYY
     "type" : "deferred_intent",
     "ordered_payment_method_types" : [
       "card",
-      "cashapp",
       "crypto",
       "amazon_pay",
+      "cashapp",
       "us_bank_account"
     ]
   },
@@ -42,7 +42,6 @@ request-id: req_4FvGWT2KxLkJYY
   ],
   "flags" : {
     "enable_us_bank_account_as_link_funding_source_data_permissions_requested" : true,
-    "remove_elements_update_in_hosted_invoice_page_client" : true,
     "legacy_confirmation_tokens" : false,
     "elements_enable_jp_installments_updated_ui" : true,
     "elements_spm_max_visible_payment_methods" : false,
@@ -57,10 +56,13 @@ request-id: req_4FvGWT2KxLkJYY
     "id_bank_transfers_v1_integration" : false,
     "networked_business_profile_demo" : false,
     "paypal_phone_number_support_in_ece" : false,
-    "elements_easel_enable_lpm_autofills" : false,
+    "elements_easel_enable_lpm_autofills" : true,
+    "elements_disable_express_checkout_button_shop_pay" : false,
     "elements_easel_disable_payment_fill" : false,
     "elements_spm_set_as_default" : true,
+    "link_payment_element_minor_signup_ui_updates" : false,
     "elements_disable_paypal_express" : false,
+    "abstracted_adaptive_pricing_should_show_markup_disclosure_percentage" : false,
     "linkglobalholdbackmanager_test_rollout" : true,
     "elements_enable_save_for_future_payments_pre_check" : false,
     "elements_enable_nz_bank_account_spm" : false,
@@ -106,7 +108,7 @@ request-id: req_4FvGWT2KxLkJYY
     "elements_disable_link_email_otp" : false,
     "elements_disable_progressive_cursor" : false,
     "elements_enable_payment_element_custom_payment_methods_byof" : false,
-    "easel_testmode_customer_location" : false,
+    "easel_testmode_customer_location" : true,
     "enable_custom_checkout_currency_selector_element" : false,
     "payment_element_link_modal_preload_killswitch" : false,
     "elements_hide_optional_klarna_fields" : true,
@@ -118,13 +120,12 @@ request-id: req_4FvGWT2KxLkJYY
     "disable_payment_element_if_required_billing_config" : false,
     "elements_enable_billing_details_in_pe_change_event" : false,
     "elements_enable_link_spm" : true,
-    "elements_use_stripe_account_header_in_available_installment_plans_request" : false,
+    "link_enable_ncdv_recall_id_selectors_l3" : true,
     "elements_enable_fraud_signal_data_transfer_to_hcaptcha" : false,
     "elements_disable_fc_lite" : false,
-    "link_enable_ncdv_recall_id_selectors_l3" : true,
+    "link_purchase_protections_rollout" : true,
     "link_payment_element_keep_optional_doi_open_rollout" : true,
     "elements_easel_disable" : false,
-    "link_purchase_protections_rollout" : true,
     "elements_enable_passive_captcha" : true,
     "elements_enable_link_spm_branding" : false,
     "elements_enable_mx_card_installments" : true,
@@ -133,10 +134,10 @@ request-id: req_4FvGWT2KxLkJYY
     "elements_disable_recurring_express_checkout_button_amazon_pay" : false
   },
   "merchant_logo_url" : null,
-  "session_id" : "elements_session_1IGTi3D08WG",
+  "session_id" : "elements_session_1YYnto63G5O",
   "card_installments_enabled" : false,
   "account_id" : "acct_1G6m1pFY0qyl6XeW",
-  "config_id" : "a717dd10-6914-4cac-b988-e15c4c929dbb",
+  "config_id" : "182d2039-ec90-4bd8-afe8-46d544170604",
   "merchant_currency" : "usd",
   "merchant_id" : "acct_1G6m1pFY0qyl6XeW",
   "card_brand_choice" : {
@@ -163,14 +164,15 @@ request-id: req_4FvGWT2KxLkJYY
     "paypal_merchant_id" : null
   },
   "experiments_data" : {
-    "arb_id" : "7e14ffaa-4c46-49eb-9618-13982d1c7fe0",
+    "arb_id" : "32eb057a-1165-4094-98cb-ab51acd500b1",
     "experiment_metadata" : {
-      "seed" : "5d6bc589af12b40d9e56b82d9ecf38a637b7027ef6c3600b4f836c304316cec6",
+      "seed" : "d7096f90c7d6a6d8e7e63f0d8d41eb4b1ffe695330ee27bf5f442a9a1147f7a7",
       "semi_dominant_payment_methods" : [
 
       ],
       "lpm_holdback_t1_payment_methods" : [
-        "us_bank_account"
+        "us_bank_account",
+        "cashapp"
       ],
       "lpm_adoption_ranking_upe_v2_ignore_fixed_lpms" : false,
       "lpm_holdback_t2_payment_methods" : [
@@ -349,9 +351,9 @@ request-id: req_4FvGWT2KxLkJYY
     }
   },
   "unactivated_payment_method_types" : [
-    "cashapp",
     "crypto",
     "amazon_pay",
+    "cashapp",
     "us_bank_account"
   ],
   "unverified_payment_methods_on_domain" : [
@@ -371,10 +373,10 @@ request-id: req_4FvGWT2KxLkJYY
   "ordered_payment_method_types_and_wallets" : [
     "card",
     "apple_pay",
-    "cashapp",
     "crypto",
-    "google_pay",
     "amazon_pay",
+    "cashapp",
+    "google_pay",
     "us_bank_account"
   ],
   "customer_error" : null
