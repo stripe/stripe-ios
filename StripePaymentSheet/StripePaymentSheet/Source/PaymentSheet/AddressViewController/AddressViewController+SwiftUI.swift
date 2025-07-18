@@ -50,6 +50,7 @@ struct AddressViewControllerRepresentable: UIViewControllerRepresentable {
             configuration: configuration,
             delegate: context.coordinator
         )
+        context.coordinator.addressViewController = addressViewController
 
         let navigationController = UINavigationController(rootViewController: addressViewController)
 
@@ -62,6 +63,14 @@ struct AddressViewControllerRepresentable: UIViewControllerRepresentable {
     func updateUIViewController(_ uiViewController: UINavigationController, context: Context) {
         context.coordinator.address = $address
         context.coordinator.dismiss = dismiss
+
+        // Ensure delegate is set on the _parent_ presentation controller that actually owns the sheet.
+        // Walk up the hierarchy to find the topmost presenting controller (the sheet's root)
+        var topController: UIViewController? = uiViewController
+        while let parent = topController?.parent {
+            topController = parent
+        }
+        topController?.presentationController?.delegate = context.coordinator
     }
 
     func makeCoordinator() -> Coordinator {
@@ -71,9 +80,10 @@ struct AddressViewControllerRepresentable: UIViewControllerRepresentable {
     // MARK: - Coordinator
 
     /// Coordinator for AddressViewController delegate
-    class Coordinator: NSObject, AddressViewControllerDelegate {
+    class Coordinator: NSObject, AddressViewControllerDelegate, UIAdaptivePresentationControllerDelegate {
         var address: Binding<AddressViewController.AddressDetails?>
         var dismiss: () -> Void
+        weak var addressViewController: AddressViewController?
 
         init(address: Binding<AddressViewController.AddressDetails?>, dismiss: @escaping () -> Void) {
             self.address = address
@@ -84,8 +94,17 @@ struct AddressViewControllerRepresentable: UIViewControllerRepresentable {
             _ addressViewController: AddressViewController,
             with address: AddressViewController.AddressDetails?
         ) {
-            self.address.wrappedValue = address
             dismiss()
+            // Give some time for the sheet to dismiss before updating the address
+            // SwiftUI doesn't have completion handlers for dismisses
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
+                self.address.wrappedValue = address
+            }
+        }
+
+        // Called after the sheet has been dismissed by a swipe down
+        func presentationControllerDidDismiss(_ presentationController: UIPresentationController) {
+            addressViewController?.didContinue()
         }
     }
 }
