@@ -118,6 +118,13 @@ enum Stubs {
         supportedPaymentDetailsTypes: [.card]
     )
 
+    static let displayablePaymentDetails: ConsumerSession.DisplayablePaymentDetails = .init(
+        defaultCardBrand: "VISA",
+        defaultPaymentType: .card,
+        last4: "4242",
+        numberOfSavedPaymentDetails: 6
+    )
+
     static func linkAccount(
         email: String = "jane.diaz@gmail.com",
         isRegistered: Bool = true
@@ -126,6 +133,7 @@ enum Stubs {
             email: email,
             session: isRegistered ? Self.consumerSession : nil,
             publishableKey: "pk_test_123",
+            displayablePaymentDetails: Self.displayablePaymentDetails,
             useMobileEndpoints: true
         )
     }
