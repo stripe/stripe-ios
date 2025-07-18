@@ -140,8 +140,7 @@ import UIKit
     @_spi(STP) public func lookupConsumer(with email: String, completion: @escaping (Result<Bool, Error>) -> Void) {
         Self.lookupConsumer(
             email: email,
-            useMobileEndpoints: elementsSession.linkSettings?.useAttestationEndpoints ?? false,
-            sessionID: elementsSession.sessionID
+            elementsSession: elementsSession
         ) { result in
             switch result {
             case .success(let linkAccount):
@@ -298,14 +297,10 @@ import UIKit
 
     private static func lookupConsumer(
         email: String,
-        useMobileEndpoints: Bool,
-        sessionID: String,
+        elementsSession: STPElementsSession,
         completion: @escaping (Result<PaymentSheetLinkAccount?, Error>) -> Void
     ) {
-        let linkAccountService = LinkAccountService(
-            useMobileEndpoints: useMobileEndpoints,
-            sessionID: sessionID
-        )
+        let linkAccountService = LinkAccountService(elementsSession: elementsSession)
 
         linkAccountService.lookupAccount(
             withEmail: email,

@@ -102,11 +102,13 @@ class PaymentSheetLinkAccount: PaymentSheetLinkAccountInfoProtocol {
     }
 
     private(set) var currentSession: ConsumerSession?
+    let displayablePaymentDetails: ConsumerSession.DisplayablePaymentDetails?
 
     init(
         email: String,
         session: ConsumerSession?,
         publishableKey: String?,
+        displayablePaymentDetails: ConsumerSession.DisplayablePaymentDetails?,
         apiClient: STPAPIClient = .shared,
         cookieStore: LinkCookieStore = LinkSecureCookieStore.shared,
         useMobileEndpoints: Bool
@@ -114,6 +116,7 @@ class PaymentSheetLinkAccount: PaymentSheetLinkAccountInfoProtocol {
         self.email = email
         self.currentSession = session
         self.publishableKey = publishableKey
+        self.displayablePaymentDetails = displayablePaymentDetails
         self.apiClient = apiClient
         self.cookieStore = cookieStore
         self.useMobileEndpoints = useMobileEndpoints
