@@ -1,0 +1,91 @@
+POST
+https:\/\/api\.stripe\.com\/v1\/payment_intents\/pi_3RmNSAKG6vc7r7YC1aaKOyVg\/confirm$
+200
+application/json
+access-control-allow-methods: GET, HEAD, PUT, PATCH, POST, DELETE
+content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=OwL0-evh5yRczVdoV0Z3B_A713mcvbWbB0BCygvISyf1bphrGcG0xdHbGoR9wI16l9-BA2uyOgMam1Cb
+Server: nginx
+Cache-Control: no-cache, no-store
+x-wc: ABGHIJ
+Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
+Access-Control-Allow-Origin: *
+stripe-should-retry: false
+x-stripe-priority-routing-enabled: true
+x-stripe-routing-context-priority-tier: api-testmode
+request-id: req_eQvGoxUgq4hv5d
+Content-Length: 1525
+Vary: Origin
+Date: Fri, 18 Jul 2025 23:12:35 GMT
+original-request: req_eQvGoxUgq4hv5d
+stripe-version: 2020-08-27
+idempotency-key: 67b6a97b-02ac-4cc9-953f-cf5ae4ddefa4
+access-control-expose-headers: Request-Id, Stripe-Manage-Version, Stripe-Should-Retry, X-Stripe-External-Auth-Required, X-Stripe-Privileged-Session-Required
+access-control-max-age: 300
+access-control-allow-credentials: true
+Content-Type: application/json
+X-Stripe-Mock-Request: client_secret=pi_3RmNSAKG6vc7r7YC1aaKOyVg_secret_wQtB8v6a105Q5uWLPodxAAIBY&expand\[0]=payment_method&payment_method=pm_1RmNSAKG6vc7r7YCYdiumV3J&return_url=https%3A\/\/foo\.com&use_stripe_sdk=true
+
+{
+  "payment_method_configuration_details" : null,
+  "canceled_at" : null,
+  "source" : null,
+  "amount" : 5050,
+  "capture_method" : "automatic",
+  "livemode" : false,
+  "shipping" : null,
+  "status" : "requires_action",
+  "object" : "payment_intent",
+  "currency" : "dkk",
+  "last_payment_error" : null,
+  "automatic_payment_methods" : null,
+  "cancellation_reason" : null,
+  "next_action" : {
+    "type" : "redirect_to_url",
+    "redirect_to_url" : {
+      "return_url" : "https:\/\/foo.com",
+      "url" : "https:\/\/pm-redirects.stripe.com\/authorize\/acct_1JtgfQKG6vc7r7YC\/pa_nonce_Shn28Vn5OruhNgcx8BLas9GjkPKAQbF"
+    }
+  },
+  "payment_method" : {
+    "object" : "payment_method",
+    "id" : "pm_1RmNSAKG6vc7r7YCYdiumV3J",
+    "billing_details" : {
+      "email" : null,
+      "phone" : null,
+      "tax_id" : null,
+      "name" : null,
+      "address" : {
+        "state" : null,
+        "country" : null,
+        "line2" : null,
+        "city" : null,
+        "line1" : null,
+        "postal_code" : null
+      }
+    },
+    "livemode" : false,
+    "mobilepay" : {
+
+    },
+    "created" : 1752880354,
+    "allow_redisplay" : "unspecified",
+    "type" : "mobilepay",
+    "customer" : null
+  },
+  "client_secret" : "pi_3RmNSAKG6vc7r7YC1aaKOyVg_secret_wQtB8v6a105Q5uWLPodxAAIBY",
+  "id" : "pi_3RmNSAKG6vc7r7YC1aaKOyVg",
+  "confirmation_method" : "automatic",
+  "amount_details" : {
+    "tip" : {
+
+    }
+  },
+  "processing" : null,
+  "receipt_email" : null,
+  "payment_method_types" : [
+    "mobilepay"
+  ],
+  "setup_future_usage" : null,
+  "created" : 1752880354,
+  "description" : null
+}

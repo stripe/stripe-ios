@@ -550,6 +550,7 @@ extension STPAPIClient {
         if var paymentMethodParamsDict = params[PaymentMethodDataHash] as? [String: Any] {
             STPTelemetryClient.shared.addTelemetryFields(toParams: &paymentMethodParamsDict)
             paymentMethodParamsDict = Self.paramsAddingPaymentUserAgent(paymentMethodParamsDict)
+            paymentMethodParamsDict = Self.paramsAddingClientAttributionMetadata(paymentMethodParamsDict)
             params[PaymentMethodDataHash] = paymentMethodParamsDict
         }
         if (expand?.count ?? 0) > 0 {
@@ -733,6 +734,7 @@ extension STPAPIClient {
         if var paymentMethodParamsDict = params[PaymentMethodDataHash] as? [String: Any] {
             STPTelemetryClient.shared.addTelemetryFields(toParams: &paymentMethodParamsDict)
             paymentMethodParamsDict = Self.paramsAddingPaymentUserAgent(paymentMethodParamsDict)
+            paymentMethodParamsDict = Self.paramsAddingClientAttributionMetadata(paymentMethodParamsDict)
             params[PaymentMethodDataHash] = paymentMethodParamsDict
         }
         if let expand = expand,
@@ -832,6 +834,7 @@ extension STPAPIClient {
         )
         var parameters = STPFormEncoder.dictionary(forObject: paymentMethodParams)
         parameters = Self.paramsAddingPaymentUserAgent(parameters, additionalValues: additionalPaymentUserAgentValues)
+        parameters = Self.paramsAddingClientAttributionMetadata(parameters)
         STPTelemetryClient.shared.addTelemetryFields(toParams: &parameters)
         APIRequest<STPPaymentMethod>.post(
             with: self,

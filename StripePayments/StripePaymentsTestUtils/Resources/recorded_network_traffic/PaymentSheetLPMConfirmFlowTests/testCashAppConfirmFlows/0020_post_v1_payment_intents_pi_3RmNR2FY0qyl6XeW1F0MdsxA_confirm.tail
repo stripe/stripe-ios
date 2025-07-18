@@ -1,0 +1,103 @@
+POST
+https:\/\/api\.stripe\.com\/v1\/payment_intents\/pi_3RmNR2FY0qyl6XeW1F0MdsxA\/confirm$
+200
+application/json
+access-control-allow-methods: GET, HEAD, PUT, PATCH, POST, DELETE
+content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=cZJ7vOEj13x1x5C9wnTiDycG-gaYexJ_fPV6G5JYIIH62gW_9WsrwjKyEJ3bvJwftrKPYblOVvuV4D2A
+Server: nginx
+Cache-Control: no-cache, no-store
+x-wc: ABGHIJ
+Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
+Access-Control-Allow-Origin: *
+stripe-should-retry: false
+x-stripe-priority-routing-enabled: true
+x-stripe-routing-context-priority-tier: api-testmode
+request-id: req_13iPRgTMgiT96y
+Content-Length: 2281
+Vary: Origin
+Date: Fri, 18 Jul 2025 23:11:26 GMT
+original-request: req_13iPRgTMgiT96y
+stripe-version: 2020-08-27
+idempotency-key: eb27ab45-7443-4fb4-bff2-29fbd3ac3e3b
+access-control-expose-headers: Request-Id, Stripe-Manage-Version, Stripe-Should-Retry, X-Stripe-External-Auth-Required, X-Stripe-Privileged-Session-Required
+access-control-max-age: 300
+access-control-allow-credentials: true
+Content-Type: application/json
+X-Stripe-Mock-Request: client_secret=pi_3RmNR2FY0qyl6XeW1F0MdsxA_secret_7u9fG7p1nNQZM2EwFDYONWuqv&expand\[0]=payment_method&mandate_data\[customer_acceptance]\[online]\[infer_from_client]=true&mandate_data\[customer_acceptance]\[type]=online&payment_method=pm_1RmNR2FY0qyl6XeW7WyjZGSG&return_url=https%3A\/\/foo\.com&use_stripe_sdk=true
+
+{
+  "payment_method_configuration_details" : null,
+  "canceled_at" : null,
+  "source" : null,
+  "amount" : 5050,
+  "capture_method" : "automatic",
+  "livemode" : false,
+  "shipping" : null,
+  "status" : "requires_action",
+  "object" : "payment_intent",
+  "currency" : "usd",
+  "last_payment_error" : null,
+  "amount_subtotal" : 5050,
+  "automatic_payment_methods" : null,
+  "cancellation_reason" : null,
+  "next_action" : {
+    "type" : "cashapp_handle_redirect_or_display_qr_code",
+    "cashapp_handle_redirect_or_display_qr_code" : {
+      "qr_code" : {
+        "image_url_png" : "https:\/\/qr.stripe.com\/test_YWNjdF8xRzZtMXBGWTBxeWw2WGVXLF9TaG4xMVhIcHhZWjhkU2VtczZzUmF4a2JFckxWRmVy0100v66CxcKU.png",
+        "image_url_svg" : "https:\/\/qr.stripe.com\/test_YWNjdF8xRzZtMXBGWTBxeWw2WGVXLF9TaG4xMVhIcHhZWjhkU2VtczZzUmF4a2JFckxWRmVy0100v66CxcKU.svg",
+        "expires_at" : 1752880306
+      },
+      "hosted_instructions_url" : "https:\/\/payments.stripe.com\/qr\/instructions\/CDQaFwoVYWNjdF8xRzZtMXBGWTBxeWw2WGVXKJ6p68MGMgbJ45MKHy86MJUkdRHxtVkxB5xzDb99LG0XsJeZFyUbggKWJYrIQIZKLZS52RnV_K0MRCLfTTW0Sg",
+      "mobile_auth_url" : "https:\/\/pm-redirects.stripe.com\/authorize\/acct_1G6m1pFY0qyl6XeW\/pa_nonce_Shn1ZogPbuLfBD5LOOsZCVKx575iiMa"
+    }
+  },
+  "total_details" : {
+    "amount_discount" : 0,
+    "amount_tip" : null,
+    "amount_tax" : 0
+  },
+  "payment_method" : {
+    "object" : "payment_method",
+    "id" : "pm_1RmNR2FY0qyl6XeW7WyjZGSG",
+    "billing_details" : {
+      "email" : null,
+      "phone" : null,
+      "tax_id" : null,
+      "name" : null,
+      "address" : {
+        "state" : null,
+        "country" : null,
+        "line2" : null,
+        "city" : null,
+        "line1" : null,
+        "postal_code" : null
+      }
+    },
+    "livemode" : false,
+    "created" : 1752880284,
+    "allow_redisplay" : "unspecified",
+    "type" : "cashapp",
+    "customer" : null,
+    "cashapp" : {
+      "cashtag" : null,
+      "buyer_id" : null
+    }
+  },
+  "client_secret" : "pi_3RmNR2FY0qyl6XeW1F0MdsxA_secret_7u9fG7p1nNQZM2EwFDYONWuqv",
+  "id" : "pi_3RmNR2FY0qyl6XeW1F0MdsxA",
+  "confirmation_method" : "automatic",
+  "amount_details" : {
+    "tip" : {
+
+    }
+  },
+  "processing" : null,
+  "receipt_email" : null,
+  "payment_method_types" : [
+    "cashapp"
+  ],
+  "setup_future_usage" : "off_session",
+  "created" : 1752880284,
+  "description" : null
+}

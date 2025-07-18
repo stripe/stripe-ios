@@ -1,0 +1,67 @@
+POST
+https:\/\/api\.stripe\.com\/v1\/payment_intents\/pi_3RmLR2HNG4o8pO5l1zZh8YoZ\/confirm$
+200
+application/json
+access-control-allow-methods: GET, HEAD, PUT, PATCH, POST, DELETE
+content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=UXx08fltzL_mgWxTlx14peE4k5OKe6ZE4d9Rv5OOZTi3_YHsD14SiT7N_Xfz3I_ZkVkG6viNa985HIX6
+Server: nginx
+Cache-Control: no-cache, no-store
+x-wc: ABGHIJ
+Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
+Access-Control-Allow-Origin: *
+stripe-should-retry: false
+x-stripe-priority-routing-enabled: true
+x-stripe-routing-context-priority-tier: api-testmode
+request-id: req_yGvjBLsygE8oNe
+Content-Length: 1128
+Vary: Origin
+Date: Fri, 18 Jul 2025 21:03:16 GMT
+original-request: req_yGvjBLsygE8oNe
+stripe-version: 2020-08-27
+idempotency-key: 46731e0c-b628-43e9-96f3-7a4562c37d95
+access-control-expose-headers: Request-Id, Stripe-Manage-Version, Stripe-Should-Retry, X-Stripe-External-Auth-Required, X-Stripe-Privileged-Session-Required
+access-control-max-age: 300
+access-control-allow-credentials: true
+Content-Type: application/json
+X-Stripe-Mock-Request: client_secret=pi_3RmLR2HNG4o8pO5l1zZh8YoZ_secret_DUoheEorS1HAdH01xHODskCOQ&payment_method_data\[allow_redisplay]=unspecified&payment_method_data\[billing_details]\[email]=email%40email\.com&payment_method_data\[billing_details]\[name]=Jane%20Doe&payment_method_data\[client_attribution_metadata]\[client_session_id]=.*&payment_method_data\[guid]=.*&payment_method_data\[muid]=.*&payment_method_data\[payment_user_agent]=.*&payment_method_data\[sid]=.*&payment_method_data\[type]=oxxo
+
+{
+  "payment_method_configuration_details" : null,
+  "canceled_at" : null,
+  "source" : null,
+  "amount" : 2000,
+  "capture_method" : "automatic",
+  "livemode" : false,
+  "shipping" : null,
+  "status" : "requires_action",
+  "object" : "payment_intent",
+  "currency" : "mxn",
+  "last_payment_error" : null,
+  "automatic_payment_methods" : null,
+  "cancellation_reason" : null,
+  "next_action" : {
+    "type" : "oxxo_display_details",
+    "oxxo_display_details" : {
+      "number" : "12345678901234657890123456789012",
+      "hosted_voucher_url" : "https:\/\/payments.stripe.com\/oxxo\/voucher\/test_YWNjdF8xR3ZBWTVITkc0bzhwTzVsLF9TaGt3elU4ZFdIc0hZTFNkQ0tMM3ZvNHVZczd1V3Fn0100tQJUnQbQ",
+      "expires_after" : 1753163999
+    }
+  },
+  "payment_method" : "pm_1RmLR2HNG4o8pO5l2v2EMXtg",
+  "client_secret" : "pi_3RmLR2HNG4o8pO5l1zZh8YoZ_secret_DUoheEorS1HAdH01xHODskCOQ",
+  "id" : "pi_3RmLR2HNG4o8pO5l1zZh8YoZ",
+  "confirmation_method" : "automatic",
+  "amount_details" : {
+    "tip" : {
+
+    }
+  },
+  "processing" : null,
+  "receipt_email" : null,
+  "payment_method_types" : [
+    "oxxo"
+  ],
+  "setup_future_usage" : null,
+  "created" : 1752872596,
+  "description" : null
+}
