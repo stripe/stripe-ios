@@ -428,6 +428,7 @@ final class PaymentSheetAnalyticsHelper {
         additionalParams["mpe_config"] = configuration.analyticPayload
         additionalParams["currency"] = intent?.currency
         additionalParams["is_decoupled"] = intent?.intentConfig != nil
+        additionalParams["is_spt"] = intent?.intentConfig?.preparePaymentMethodHandler != nil
         additionalParams["deferred_intent_confirmation_type"] = deferredIntentConfirmationType?.rawValue
         additionalParams["require_cvc_recollection"] = intent?.cvcRecollectionEnabled
         additionalParams["selected_lpm"] = selectedLPM
