@@ -6,6 +6,7 @@
 
 ### AddressElement
 * [Added] SwiftUI support for AddressElement.
+* [Changed] `AddressViewController` now notifies its delegate when the sheet is dismissed, whether by tapping the **Close** button or swiping down, so `AddressElement` always returns the current address.
 
 ## 24.16.2 2025-07-07
 ### PaymentSheet
