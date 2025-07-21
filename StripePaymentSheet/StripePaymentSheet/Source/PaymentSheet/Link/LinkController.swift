@@ -207,6 +207,7 @@ import UIKit
     }
 
     /// Presents the Link verification flow for an existing user which requires verification.
+    /// `lookupConsumer` must be called before this.
     ///
     /// - Parameter viewController: The view controller from which to present the authentication flow.
     /// - Parameter completion: A closure that is called with the result of the authentication. It returns an `AuthenticationResult` if successful, or an error if the verification failed.
@@ -490,9 +491,11 @@ import UIKit
     }
 
     /// Presents the Link verification flow for an existing user.
+    /// `lookupConsumer` must be called before this.
     ///
     /// - Parameter viewController: The view controller from which to present the authentication flow.
     /// - Returns: An `AuthenticationResult` indicating whether authentication was completed or canceled.
+    /// Throws if `lookupConsumer` was not called prior to this, or an API error occurs.
     func presentForVerification(from viewController: UIViewController) async throws -> AuthenticationResult {
         try await withCheckedThrowingContinuation { continuation in
             presentForVerification(from: viewController) { result in

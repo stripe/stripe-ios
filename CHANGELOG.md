@@ -4,8 +4,10 @@
 * [Deprecated] Carthage is no longer officially supported. We will continue to publish binaries to the GitHub releases page for Carthage, but we will no longer test using the Carthage CLI tool.
 * [Added] Added `Appearance.EmbeddedPaymentElement.Row.paymentMethodIconLayoutMargins` to customize the spacing around payment method icons in EmbeddedPaymentElement payment method rows.
 
-## 24.16.2 2025-07-07
+### AddressElement
+* [Added] SwiftUI support for AddressElement.
 
+## 24.16.2 2025-07-07
 ### PaymentSheet
 * [Added] Address autocomplete functionality when collecting full billing details in payment method forms.
 * [Fixed] Form error text not respecting Appearance API font settings

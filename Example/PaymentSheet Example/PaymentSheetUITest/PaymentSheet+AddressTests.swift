@@ -17,60 +17,171 @@ class PaymentSheet_AddressTests: XCTestCase {
         app.launchEnvironment = ["UITesting": "true"]
     }
 
+    // MARK: - Helper Functions
+
+    /// Helper function to fill address fields manually
+    private func fillManualAddress(
+        name: String = "Jane Doe",
+        line1: String = "510 Townsend St",
+        line2: String = "Apt 152",
+        city: String = "San Francisco",
+        state: String = "California",
+        zip: String = "94102",
+        phone: String? = nil
+    ) {
+        app.textFields["Full name"].tap()
+        app.textFields["Full name"].typeText(name)
+
+        // Navigate to manual entry
+        app.textFields["Address"].waitForExistenceAndTap()
+        app.buttons["Enter address manually"].waitForExistenceAndTap()
+
+        // Fill address fields
+        app.textFields["Address line 1"].waitForExistenceAndTap()
+        app.typeText(line1)
+
+        app.textFields["Address line 2"].tap()
+        app.typeText(line2)
+
+        app.textFields["City"].tap()
+        app.typeText(city)
+
+        app.textFields["State"].tap()
+        app.pickerWheels.firstMatch.adjust(toPickerWheelValue: state)
+        app.toolbars.buttons["Done"].tap()
+
+        app.textFields["ZIP"].tap()
+        app.typeText(zip)
+
+        if let phone = phone {
+            app.textFields["Phone number"].tap()
+            app.textFields["Phone number"].typeText(phone)
+        }
+    }
+
+    /// Helper function to fill address using autocomplete
+    private func fillAutocompleteAddress(
+        name: String = "Jane Doe",
+        searchTerm: String = "354 Oyster Point",
+        expectedResult: String = "354 Oyster Point Blvd"
+    ) {
+        // Fill name field if provided
+        if !name.isEmpty {
+            app.textFields["Full name"].tap()
+            app.textFields["Full name"].typeText(name)
+        }
+
+        // Use autocomplete
+        app.textFields["Address"].waitForExistenceAndTap()
+        app.typeText(searchTerm)
+
+        let searchedCell = app.tables.element(boundBy: 0).cells.containing(NSPredicate(format: "label CONTAINS %@", expectedResult)).element
+        _ = searchedCell.waitForExistence(timeout: 5)
+        searchedCell.tap()
+    }
+
+    /// Helper function to verify address field values
+    private func verifyAddressFields(
+        line1: String,
+        line2: String = "",
+        city: String,
+        state: String,
+        zip: String
+    ) {
+        _ = app.textFields["Address line 1"].waitForExistence(timeout: 5)
+        XCTAssertEqual(app.textFields["Address line 1"].value as! String, line1)
+        XCTAssertEqual(app.textFields["Address line 2"].value as! String, line2)
+        XCTAssertEqual(app.textFields["City"].value as! String, city)
+        XCTAssertEqual(app.textFields["State"].value as! String, state)
+        XCTAssertEqual(app.textFields["ZIP"].value as! String, zip)
+    }
+
+    /// Helper function to verify collected address display in SwiftUI
+    private func verifyCollectedAddressDisplay(
+        name: String,
+        line1: String,
+        city: String,
+        state: String,
+        zip: String,
+        country: String = "US"
+    ) {
+        XCTAssertTrue(app.staticTexts["Collected Address:"].waitForExistence(timeout: 2.0))
+        XCTAssertTrue(app.staticTexts["Name: \(name)"].exists)
+        XCTAssertTrue(app.staticTexts["Address: \(line1)"].exists)
+        XCTAssertTrue(app.staticTexts["City: \(city)"].exists)
+        XCTAssertTrue(app.staticTexts["State: \(state)"].exists)
+        XCTAssertTrue(app.staticTexts["ZIP: \(zip)"].exists)
+        XCTAssertTrue(app.staticTexts["Country: \(country)"].exists)
+    }
+
+    /// Helper function to navigate to address collection for shipping
+    private func navigateToShippingAddress() {
+        let shippingButton = app.buttons["Address"]
+        XCTAssertTrue(shippingButton.waitForExistence(timeout: 4.0))
+        shippingButton.tap()
+    }
+
+    /// Helper function to navigate to SwiftUI AddressElement
+    private func navigateToSwiftUIAddressElement() {
+        app.launch()
+        XCTAssertTrue(app.staticTexts["AddressElement (SwiftUI)"].waitForExistenceAndTap())
+        XCTAssertTrue(app.buttons["Collect Address"].waitForExistenceAndTap())
+    }
+
+    /// Helper function to verify save address button state and tap if enabled
+    private func saveAddress(shouldBeEnabled: Bool = true) {
+        let saveAddressButton = app.buttons["Save address"]
+        if shouldBeEnabled {
+            XCTAssertTrue(saveAddressButton.isEnabled)
+            saveAddressButton.tap()
+        } else {
+            XCTAssertFalse(saveAddressButton.isEnabled)
+        }
+    }
+
+    /// Helper function to verify save address button state for SwiftUI
+    private func saveAddressSwiftUI(shouldBeEnabled: Bool = true) {
+        let saveAddressButton = app.buttons["Save Address"]
+        if shouldBeEnabled {
+            XCTAssertTrue(saveAddressButton.isEnabled)
+            saveAddressButton.tap()
+        } else {
+            XCTAssertFalse(saveAddressButton.isEnabled)
+        }
+    }
+
+    /// Helper function to verify the final address in the shipping button
+    private func verifyShippingButtonAddress(expectedAddress: String) {
+        let shippingButton = app.buttons["Address"]
+        XCTAssertEqual(shippingButton.label, expectedAddress)
+    }
+
     func testManualAddressEntry() throws {
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
         settings.layout = .horizontal
         settings.uiStyle = .flowController
         settings.shippingInfo = .on
 
-        loadPlayground(
-            app,
-            settings
-        )
+        loadPlayground(app, settings)
 
-        let shippingButton = app.buttons["Address"]
-        XCTAssertTrue(shippingButton.waitForExistence(timeout: 4.0))
-        shippingButton.tap()
+        navigateToShippingAddress()
 
-        // The Save Address button should be disabled
-        let saveAddressButton = app.buttons["Save address"]
-        XCTAssertFalse(saveAddressButton.isEnabled)
+        // The Save Address button should be disabled initially
+        saveAddress(shouldBeEnabled: false)
 
-        app.textFields["Full name"].tap()
-        app.textFields["Full name"].typeText("Jane Doe")
+        // Fill address manually with phone number
+        fillManualAddress(phone: "5555555555")
 
-        // Tapping the address field should go to autocomplete
-        app.textFields["Address"].waitForExistenceAndTap()
-        app.buttons["Enter address manually"].waitForExistenceAndTap()
-
-        // Tapping the address line 1 field should now just let us enter the field manually
-        app.textFields["Address line 1"].waitForExistenceAndTap()
-        app.typeText("510 Townsend St")
-
-        // Tapping autocomplete button in line 1 field should take us to autocomplete with the line 1 already entered in the search field
+        // Test autocomplete affordance in line 1 field
         app.buttons["autocomplete_affordance"].tap()
         XCTAssertEqual(app.textFields["Address"].value as! String, "510 Townsend St")
         app.buttons["Enter address manually"].waitForExistenceAndTap()
 
-        // Continue entering address manually...
-        app.textFields["Address line 2"].tap()
-        app.typeText("Apt 152")
-        app.textFields["City"].tap()
-        app.typeText("San Francisco")
-        app.textFields["State"].tap()
-        app.pickerWheels.firstMatch.adjust(toPickerWheelValue: "California")
-        app.toolbars.buttons["Done"].tap()
-        // The save address button should still be disabled until we fill in all required fields
-        XCTAssertFalse(saveAddressButton.isEnabled)
-        app.textFields["ZIP"].tap()
-        app.typeText("94102")
-        app.textFields["Phone number"].tap()
-        app.textFields["Phone number"].typeText("5555555555")
+        // Save address
+        saveAddress()
 
-        XCTAssertTrue(saveAddressButton.isEnabled)
-        saveAddressButton.tap()
-
-        // The merchant app should get back the expected address
+        // Verify the merchant app gets the expected address
+        let shippingButton = app.buttons["Address"]
         let expectedAddress = """
 Jane Doe
 510 Townsend St, Apt 152
@@ -80,18 +191,18 @@ US
 """
         XCTAssertEqual(shippingButton.label, expectedAddress)
 
-        // Opening the shipping address back up...
+        // Test editing ZIP to invalid value
         shippingButton.tap()
-        // ...and editing ZIP to be invalid...
         let zip = app.textFields["ZIP"]
         XCTAssertEqual(zip.value as! String, "94102")
         zip.tap()
         app.typeText(XCUIKeyboardKey.delete.rawValue) // Invalid length
-        // ...should disable the save address button
-        XCTAssertFalse(saveAddressButton.isEnabled)
-        // If we dismiss the sheet while its invalid...
+
+        // Should disable the save address button
+        saveAddress(shouldBeEnabled: false)
+
+        // If we dismiss the sheet while invalid, merchant app should get back nil
         app.buttons["Close"].tap()
-        // The merchant app should get back nil
         XCTAssertEqual(shippingButton.label, "Address")
 
         // Checkbox should NOT be shown when no defaults provided
@@ -139,47 +250,37 @@ US
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
         settings.layout = .horizontal
         settings.uiStyle = .flowController
-        loadPlayground(
-            app,
-            settings
-        )
-        let shippingButton = app.buttons["Address"]
-        XCTAssertTrue(shippingButton.waitForExistence(timeout: 4.0))
-        shippingButton.tap()
+        loadPlayground(app, settings)
 
-        // The Save address button should be disabled
-        let saveAddressButton = app.buttons["Save address"]
-        XCTAssertFalse(saveAddressButton.isEnabled)
+        navigateToShippingAddress()
 
-        // Tapping the address field should go to autocomplete
-        app.textFields["Address"].waitForExistenceAndTap()
+        // The Save address button should be disabled initially
+        saveAddress(shouldBeEnabled: false)
 
-        // Enter partial address and tap first result
-        app.typeText("354 Oyster Point")
-        let searchedCell = app.tables.element(boundBy: 0).cells.containing(NSPredicate(format: "label CONTAINS %@", "354 Oyster Point Blvd")).element
-        _ = searchedCell.waitForExistence(timeout: 5)
-        searchedCell.tap()
-
-        // Verify text fields
-        _ = app.textFields["Address line 1"].waitForExistence(timeout: 5)
-        XCTAssertEqual(app.textFields["Address line 1"].value as! String, "354 Oyster Point Blvd")
-        XCTAssertEqual(app.textFields["Address line 2"].value as! String, "")
-        XCTAssertEqual(app.textFields["City"].value as! String, "South San Francisco")
-        XCTAssertEqual(app.textFields["State"].value as! String, "California")
-        XCTAssertEqual(app.textFields["ZIP"].value as! String, "94080")
-
-        // Type in phone number
-        app.textFields["Phone number"].tap()
-        app.textFields["Phone number"].typeText("5555555555")
-
-        // Type in the name to complete the form
+        // Fill address using autocomplete (name first, then address)
         app.textFields["Full name"].tap()
         app.typeText("Jane Doe")
 
-        XCTAssertTrue(saveAddressButton.isEnabled)
-        saveAddressButton.tap()
+        fillAutocompleteAddress(name: "", searchTerm: "354 Oyster Point", expectedResult: "354 Oyster Point Blvd")
 
-        // The merchant app should get back the expected address
+        // Verify autocomplete populated the address fields
+        verifyAddressFields(
+            line1: "354 Oyster Point Blvd",
+            line2: "",
+            city: "South San Francisco",
+            state: "California",
+            zip: "94080"
+        )
+
+        // Add phone number to complete the form
+        app.textFields["Phone number"].tap()
+        app.textFields["Phone number"].typeText("5555555555")
+
+        // Save address
+        saveAddress()
+
+        // Verify the merchant app gets the expected address
+        let shippingButton = app.buttons["Address"]
         let expectedAddress = """
 Jane Doe
 354 Oyster Point Blvd
@@ -355,7 +456,7 @@ NZ
 
     func testManualAddressEntry_phoneCountryDoesPersist() throws {
 
-            var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
+        var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
         settings.layout = .horizontal
         settings.uiStyle = .flowController
             loadPlayground(
@@ -490,5 +591,54 @@ NZ
         // 5. Verify the address is valid
         let saveAddressButton = app.buttons["Save address"]
         XCTAssertTrue(saveAddressButton.isEnabled)
+    }
+
+    func testAddressElement_SwiftUI_ManualEntry() {
+        navigateToSwiftUIAddressElement()
+
+        // The Save Address button should be disabled initially
+        saveAddressSwiftUI(shouldBeEnabled: false)
+
+        // Fill address manually
+        fillManualAddress()
+
+        // Save address and verify the collected address display
+        saveAddressSwiftUI()
+        verifyCollectedAddressDisplay(
+            name: "Jane Doe",
+            line1: "510 Townsend St",
+            city: "San Francisco",
+            state: "CA",
+            zip: "94102"
+        )
+    }
+
+    func testAddressElement_SwiftUI_AutoComplete() {
+        navigateToSwiftUIAddressElement()
+
+        // The Save Address button should be disabled initially
+        saveAddressSwiftUI(shouldBeEnabled: false)
+
+        // Fill address using autocomplete
+        fillAutocompleteAddress()
+
+        // Verify autocomplete populated the address fields correctly
+        verifyAddressFields(
+            line1: "354 Oyster Point Blvd",
+            line2: "",
+            city: "South San Francisco",
+            state: "California",
+            zip: "94080"
+        )
+
+        // Save address and verify the collected address display
+        saveAddressSwiftUI()
+        verifyCollectedAddressDisplay(
+            name: "Jane Doe",
+            line1: "354 Oyster Point Blvd",
+            city: "South San Francisco",
+            state: "CA",
+            zip: "94080"
+        )
     }
 }
