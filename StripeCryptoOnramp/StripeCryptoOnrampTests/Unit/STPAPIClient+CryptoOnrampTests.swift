@@ -34,7 +34,7 @@ final class STPAPIClientCryptoOnrampTests: APIStubbedTestCase {
                 return false
             }
 
-            XCTAssertEqual(String(data: httpBody, encoding: .utf8), "consumer_session_client_secret=\(Constant.requestSecret)")
+            XCTAssertEqual(String(data: httpBody, encoding: .utf8), "credentials[consumer_session_client_secret]=\(Constant.requestSecret)")
 
             return true
         } response: { _ in
