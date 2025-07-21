@@ -10,12 +10,23 @@ import Foundation
 /// Codable model passed to the `crypto/internal/customers` endpoint.
 struct CustomerRequest: Codable {
 
-    /// Client secret provided by the Link account’s consumer session.
-    let consumerSessionClientSecret: String
+    /// Container for credentials required to make the request
+    struct Credentials: Codable {
 
-    // MARK: - Codable
+        /// Client secret provided by the Link account’s consumer session.
+        let consumerSessionClientSecret: String
 
-    enum CodingKeys: String, CodingKey {
-        case consumerSessionClientSecret = "consumer_session_client_secret"
+        // MARK: - Codable
+
+        enum CodingKeys: String, CodingKey {
+            case consumerSessionClientSecret = "consumer_session_client_secret"
+        }
+    }
+
+    /// Contains credentials required to make the request.
+    let credentials: Credentials
+
+    init(consumerSessionClientSecret: String) {
+        credentials = Credentials(consumerSessionClientSecret: consumerSessionClientSecret)
     }
 }
