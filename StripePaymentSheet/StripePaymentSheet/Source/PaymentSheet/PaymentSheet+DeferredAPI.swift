@@ -58,15 +58,9 @@ extension PaymentSheet {
                             STPAnalyticsClient.sharedClient.log(analytic: errorAnalytic, apiClient: configuration.apiClient)
                         }
 
-                        Task { @MainActor in
-                            // Call the handler regardless of radar session success/failure
-                            do {
-                                try await preparePaymentMethodHandler(paymentMethod, shippingAddress)
-                                completion(.completed, STPAnalyticsClient.DeferredIntentConfirmationType.completeWithoutConfirmingIntent)
-                            } catch {
-                                completion(.failed(error: error), nil)
-                            }
-                        }
+                        // Call the handler regardless of radar session success/failure
+                        preparePaymentMethodHandler(paymentMethod, shippingAddress)
+                        completion(.completed, STPAnalyticsClient.DeferredIntentConfirmationType.completeWithoutConfirmingIntent)
                     }
                     return
                 }

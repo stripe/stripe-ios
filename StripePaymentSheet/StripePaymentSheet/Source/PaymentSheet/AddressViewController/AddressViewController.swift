@@ -13,8 +13,8 @@ import UIKit
 
 /// A delegate for `AddressViewController`
 public protocol AddressViewControllerDelegate: AnyObject {
-    /// Called when the customer finishes entering their address or cancels. Your implementation should dismiss the view controller.
-    /// - Parameter address: A valid address or nil if the customer cancels the flow.
+    /// Called when the customer finishes entering their address or dismisses the view controller. Your implementation should dismiss the view controller.
+    /// - Parameter address: A valid address or nil if the address information is incomplete or invalid.
     func addressViewControllerDidFinish(_ addressViewController: AddressViewController, with address: AddressViewController.AddressDetails?)
 }
 
