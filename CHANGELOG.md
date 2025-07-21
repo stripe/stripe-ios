@@ -5,6 +5,7 @@
 * [Added] Added `Appearance.EmbeddedPaymentElement.Row.paymentMethodIconLayoutMargins` to customize the spacing around payment method icons in EmbeddedPaymentElement payment method rows.
 * [Added] Added `Appearance.EmbeddedPaymentElement.Row.titleFont` to customize the font of EmbeddedPaymentElement payment method row titles.
 * [Changed] Renamed `PaymentSheet.Appearance.EmbeddedPaymentElement.Row.Style.flatWithChevron` to `PaymentSheet.Appearance.EmbeddedPaymentElement.Row.Style.flatWithDisclosure` and added an experimental `disclosureImage` property to customize the chevron icon displayed in EmbeddedPaymentElement payment method rows when the row style is flatWithDisclosure.
+* [Fixed] `EmbeddedPaymentElementDelegate` `didUpdateHeight` now accommodates cases where the embedded view can't change height until after `didUpdateHeight` is called, like inside a UITableViewCell.
 
 ### AddressElement
 * [Added] SwiftUI support for AddressElement.
