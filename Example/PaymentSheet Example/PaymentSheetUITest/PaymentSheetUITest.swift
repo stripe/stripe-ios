@@ -370,7 +370,7 @@ class PaymentSheetStandardUITests: PaymentSheetUITestCase {
         paymentMethodButton.waitForExistenceAndTap(timeout: 10)
 
         // Fill out card form first
-        try! fillCardData(app)
+        try! fillCardData(app, disableDefaultOptInIfNeeded: true)
         app.buttons["Continue"].tap()
         sleep(2)
         XCTAssertEqual(paymentMethodButton.label, "•••• 4242, card, 12345, US")

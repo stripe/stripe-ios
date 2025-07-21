@@ -461,7 +461,6 @@ extension PaymentSheet {
                 }
 
                 if shouldReturnToPaymentSheet {
-                    self.viewController.linkConfirmOption = nil
                     self.updatePaymentOption()
                     returnToPaymentSheet()
                     return
@@ -779,7 +778,7 @@ extension PaymentOption {
         let hasLinkAccount = LinkAccountContext.shared.account?.isRegistered ?? false
         switch self {
         case .saved(let paymentMethod, _):
-            return paymentMethod.isLinkPaymentMethod && hasLinkAccount
+            return (paymentMethod.isLinkPaymentMethod || paymentMethod.isLinkPassthroughMode) && hasLinkAccount
         case .link(let confirmOption):
             switch confirmOption {
             case .signUp, .withPaymentMethod:

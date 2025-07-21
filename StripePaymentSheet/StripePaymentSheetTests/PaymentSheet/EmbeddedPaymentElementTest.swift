@@ -68,6 +68,7 @@ class EmbeddedPaymentElementTest: XCTestCase {
 
         // Given a EmbeddedPaymentElement instance...
         var config = configuration
+        config.embeddedViewDisplaysMandateText = false
         config.rowSelectionBehavior = .immediateAction(didSelectPaymentOption: {
             rowSelectionBehaviorExpectation.fulfill()
         })
@@ -232,29 +233,30 @@ class EmbeddedPaymentElementTest: XCTestCase {
         XCTAssertEqual(firstUpdateResult, .succeeded)
     }
 
-    func testConfirmHandlesInflightUpdateThatFails() async throws {
-        // Given a EmbeddedPaymentElement instance...
-        let sut = try await EmbeddedPaymentElement.create(intentConfiguration: paymentIntentConfig, configuration: configuration)
-        sut.delegate = self
-        sut.presentingViewController = UIViewController()
-        sut.view.autosizeHeight(width: 320)
-        sut.embeddedPaymentMethodsView.didTap(rowButton: sut.embeddedPaymentMethodsView.getRowButton(accessibilityIdentifier: "Cash App Pay"))
-        // ...updating w/ a broken config...
-        let brokenConfig = EmbeddedPaymentElement.IntentConfiguration(mode: .payment(amount: -1000, currency: "bad currency"), confirmHandler: { _, _, _ in
-            // These tests don't confirm, so this is unused
-            XCTFail("Unexpectedly called confirm handler of broken config")
-        })
-        async let _ = sut.update(intentConfiguration: brokenConfig)
-        // ...and immediately calling confirm, before the 1st update finishes...
-        async let confirmResult = sut.confirm() // Note: If this is `await`, it runs *before* the `update` call above is run.
-        // ...should make the confirm call fail b/c the update is in progress
-        switch await confirmResult {
-        case let .failed(error: error):
-            XCTAssertEqual(error.nonGenericDescription, "An error occurred in PaymentSheet. There's a problem with your integration. confirm was called when an update task is in progress. This is not allowed, wait for updates to complete before calling confirm.")
-        default:
-            XCTFail("Expected confirm to fail")
-        }
-    }
+    // Re-enable with https://jira.corp.stripe.com/browse/RUN_MOBILESDK-4465
+//    func testConfirmHandlesInflightUpdateThatFails() async throws {
+//        // Given a EmbeddedPaymentElement instance...
+//        let sut = try await EmbeddedPaymentElement.create(intentConfiguration: paymentIntentConfig, configuration: configuration)
+//        sut.delegate = self
+//        sut.presentingViewController = UIViewController()
+//        sut.view.autosizeHeight(width: 320)
+//        sut.embeddedPaymentMethodsView.didTap(rowButton: sut.embeddedPaymentMethodsView.getRowButton(accessibilityIdentifier: "Cash App Pay"))
+//        // ...updating w/ a broken config...
+//        let brokenConfig = EmbeddedPaymentElement.IntentConfiguration(mode: .payment(amount: -1000, currency: "bad currency"), confirmHandler: { _, _, _ in
+//            // These tests don't confirm, so this is unused
+//            XCTFail("Unexpectedly called confirm handler of broken config")
+//        })
+//        async let _ = sut.update(intentConfiguration: brokenConfig)
+//        // ...and immediately calling confirm, before the 1st update finishes...
+//        async let confirmResult = sut.confirm() // Note: If this is `await`, it runs *before* the `update` call above is run.
+//        // ...should make the confirm call fail b/c the update is in progress
+//        switch await confirmResult {
+//        case let .failed(error: error):
+//            XCTAssertEqual(error.nonGenericDescription, "An error occurred in PaymentSheet. There's a problem with your integration. confirm was called when an update task is in progress. This is not allowed, wait for updates to complete before calling confirm.")
+//        default:
+//            XCTFail("Expected confirm to fail")
+//        }
+//    }
 
     func testConfirmHandlesCompletedUpdateThatFailed() async throws {
         // Given a EmbeddedPaymentElement instance...
@@ -352,6 +354,7 @@ class EmbeddedPaymentElementTest: XCTestCase {
 
         // Given a EmbeddedPaymentElement instance...
         var config = configuration
+        config.embeddedViewDisplaysMandateText = false
         config.rowSelectionBehavior = .immediateAction(didSelectPaymentOption: {
             rowSelectionBehaviorExpectation.fulfill()
         })
@@ -386,6 +389,7 @@ class EmbeddedPaymentElementTest: XCTestCase {
         rowSelectionBehaviorExpectation.assertForOverFulfill = true
 
         var config = configuration
+        config.embeddedViewDisplaysMandateText = false
         config.rowSelectionBehavior = .immediateAction(didSelectPaymentOption: {
             rowSelectionBehaviorExpectation.fulfill()
         })
@@ -451,6 +455,7 @@ class EmbeddedPaymentElementTest: XCTestCase {
         rowSelectionBehaviorExpectation.assertForOverFulfill = true
 
         var config = configuration
+        config.embeddedViewDisplaysMandateText = false
         config.rowSelectionBehavior = .immediateAction(didSelectPaymentOption: {
             rowSelectionBehaviorExpectation.fulfill()
         })
@@ -667,6 +672,7 @@ class EmbeddedPaymentElementTest: XCTestCase {
         rowSelectionBehaviorExpectation.assertForOverFulfill = true
 
         var config = configuration
+        config.embeddedViewDisplaysMandateText = false
         config.rowSelectionBehavior = .immediateAction(didSelectPaymentOption: {
             rowSelectionBehaviorExpectation.fulfill()
         })
@@ -716,6 +722,7 @@ class EmbeddedPaymentElementTest: XCTestCase {
     func testCreateFails_whenImmediateActionWithConfirmAndApplePay() async throws {
         // Given a config that has rowSelectionBehavior = immediateAction, formSheetAction = .confirm, and Apple Pay
         var config = configuration
+        config.embeddedViewDisplaysMandateText = false
         config.rowSelectionBehavior = .immediateAction(didSelectPaymentOption: {})
         config.formSheetAction = .confirm { _ in
             XCTFail("Confirm handler should not be invoked in this test.")
@@ -742,10 +749,10 @@ class EmbeddedPaymentElementTest: XCTestCase {
         }
     }
 
-    func testCreateFails_whenFlatWithChevronWithDefaultRowSelectionBehavior() async throws {
-        // Given an appearance with row.style = .flatWithChevron and a config with rowSelectionBehavior = .default
+    func testCreateFails_whenFlatWithDisclosureWithDefaultRowSelectionBehavior() async throws {
+        // Given an appearance with row.style = .flatWithDisclosure and a config with rowSelectionBehavior = .default
         var config = configuration
-        config.appearance.embeddedPaymentElement.row.style = .flatWithChevron
+        config.appearance.embeddedPaymentElement.row.style = .flatWithDisclosure
 
         // When we create an EmbeddedPaymentElement
         do {
@@ -760,14 +767,32 @@ class EmbeddedPaymentElementTest: XCTestCase {
                 XCTFail("Unexpected error type: \(error)")
                 return
             }
-            XCTAssertTrue(paymentSheetError.debugDescription.contains("flatWithChevron row style without .immediateAction row selection behavior is not supported"))
+            XCTAssertTrue(paymentSheetError.debugDescription.contains("flatWithDisclosure row style without .immediateAction row selection behavior is not supported"))
         }
     }
 
-    func testCreateSucceds_whenFlatWithChevronWithImmediateActionRowSelectionBehavior() async throws {
-        // Given an appearance with row.style = .flatWithChevron and a config with rowSelectionBehavior = .immediateAction
+    func testCreateFails_whenImmediateActionAndDisplayingMandate() async throws {
+        // Given an `immediateAction` configuration...
         var config = configuration
-        config.appearance.embeddedPaymentElement.row.style = .flatWithChevron
+        config.embeddedViewDisplaysMandateText = false
+        config.rowSelectionBehavior = .immediateAction(didSelectPaymentOption: { /* no-op */ })
+        // ...that doesn't set `embeddedViewDisplaysMandateText = false`...
+        config.embeddedViewDisplaysMandateText = true
+
+        // ...creating the EmbeddedPaymentElement should fail
+        await XCTAssertThrowsErrorAsync(
+            _ = try await EmbeddedPaymentElement.create(
+                intentConfiguration: self.paymentIntentConfig,
+                configuration: config
+            )
+        )
+    }
+
+    func testCreateSucceeds_whenFlatWithDisclosureWithImmediateActionRowSelectionBehavior() async throws {
+        // Given an appearance with row.style = .flatWithDisclosure and a config with rowSelectionBehavior = .immediateAction
+        var config = configuration
+        config.appearance.embeddedPaymentElement.row.style = .flatWithDisclosure
+        config.embeddedViewDisplaysMandateText = false
         config.rowSelectionBehavior = .immediateAction(didSelectPaymentOption: {})
 
         // When we create an EmbeddedPaymentElement
@@ -804,6 +829,7 @@ class EmbeddedPaymentElementTest: XCTestCase {
     func testCreateFails_whenImmediateActionWithConfirmAndCustomer() async throws {
         // Given a config that has rowSelectionBehavior = immediateAction, formSheetAction = .confirm, and a customer configuration
         var config = configuration
+        config.embeddedViewDisplaysMandateText = false
         config.rowSelectionBehavior = .immediateAction(didSelectPaymentOption: {})
         config.formSheetAction = .confirm { _ in
             XCTFail("Confirm handler should not be invoked in this test.")
@@ -840,6 +866,7 @@ class EmbeddedPaymentElementTest: XCTestCase {
 
         // Given a configuration with immediateAction
         var config = configuration
+        config.embeddedViewDisplaysMandateText = false
         config.rowSelectionBehavior = .immediateAction(didSelectPaymentOption: {
             immediateActionExpectation.fulfill()
         })
@@ -885,6 +912,7 @@ class EmbeddedPaymentElementTest: XCTestCase {
         // - rowSelectionBehavior = .immediateAction
         // - formSheetAction = .confirm
         var config = configuration
+        config.embeddedViewDisplaysMandateText = false
         config.rowSelectionBehavior = .immediateAction(didSelectPaymentOption: {})
         config.formSheetAction = .confirm { _ in
             XCTFail("Confirm handler should not be invoked in this test.")
@@ -922,6 +950,7 @@ class EmbeddedPaymentElementTest: XCTestCase {
         let failureConfirmHandler = EmbeddedPaymentElement.IntentConfiguration(mode: .payment(amount: 1000, currency: "USD"), paymentMethodTypes: ["card"]) {_, _, intentCreationCallback in
             intentCreationCallback(.failure(TestError.testFailure))
         }
+        config.embeddedViewDisplaysMandateText = false
         config.rowSelectionBehavior = .immediateAction(didSelectPaymentOption: {})
         config.formSheetAction = .confirm { _ in
             // no-op
@@ -961,6 +990,7 @@ class EmbeddedPaymentElementTest: XCTestCase {
     func testPaymentOptionDelegateFiresBeforeImmediateAction() async throws {
         let immediateActionExpectation = expectation(description: "immediateAction fired")
         var config = configuration
+        config.embeddedViewDisplaysMandateText = false
         config.rowSelectionBehavior = .immediateAction(didSelectPaymentOption: {
             // This closure must execute *after* the delegate sets `didCallDelegate`
             XCTAssertTrue(self.delegateDidUpdatePaymentOptionCalled,

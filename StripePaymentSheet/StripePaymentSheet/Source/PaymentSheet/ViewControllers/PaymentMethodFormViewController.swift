@@ -48,7 +48,7 @@ class PaymentMethodFormViewController: UIViewController {
                     return .new(confirmParams: params)
                 case .none:
                     // Link is optional when in textFieldOnly mode
-                    if linkInlineSignupElement.viewModel.mode != .checkbox {
+                    if linkInlineSignupElement.viewModel.mode != .checkbox && linkInlineSignupElement.viewModel.mode != .checkboxWithDefaultOptIn {
                         return .new(confirmParams: params)
                     }
                     return nil

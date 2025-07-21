@@ -172,7 +172,12 @@ class EmbeddedUITests: PaymentSheetUITestCase {
 
         app.buttons["Present PaymentSheet"].waitForExistenceAndTap()
 
-        try! fillCardData(app, cardNumber: "4000002500001001", postalEnabled: true)
+        try! fillCardData(
+            app,
+            cardNumber: "4000002500001001",
+            postalEnabled: true,
+            disableDefaultOptInIfNeeded: true
+        )
 
         // Complete payment
         app.buttons["Pay €50.99"].tap()
@@ -257,7 +262,12 @@ class EmbeddedUITests: PaymentSheetUITestCase {
         app.buttons["Present embedded payment element"].waitForExistenceAndTap()
         app.buttons["Card"].waitForExistenceAndTap()
 
-        try! fillCardData(app, cardNumber: "4000002500001001", postalEnabled: true)
+        try! fillCardData(
+            app,
+            cardNumber: "4000002500001001",
+            postalEnabled: true,
+            disableDefaultOptInIfNeeded: true
+        )
 
         let presentEmbeddedLog = analyticsLog.compactMap({ $0[string: "event"] })
             .filter({ $0.starts(with: "mc_") })

@@ -16,6 +16,7 @@ struct SwiftUICardFormView: View {
 
     var body: some View {
         VStack {
+            Spacer().layoutPriority(1)
             STPCardFormView.Representable(paymentMethodParams: $paymentMethodParams,
                                           isComplete: $cardFormIsComplete)
                 .padding()
@@ -25,6 +26,7 @@ struct SwiftUICardFormView: View {
                 Text("Buy")
             }).disabled(!cardFormIsComplete)
             .padding()
+            Spacer().layoutPriority(1)
         }
     }
 }

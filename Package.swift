@@ -43,6 +43,10 @@ let package = Package(
         .library(
             name: "StripeConnect",
             targets: ["StripeConnect"]
+        ),
+        .library(
+            name: "StripeCryptoOnramp",
+            targets: ["StripeCryptoOnramp"]
         )
     ],
     targets: [
@@ -161,6 +165,14 @@ let package = Package(
             name: "StripeConnect",
             dependencies: ["StripeCore", "StripeUICore", "StripeFinancialConnections"],
             path: "StripeConnect/StripeConnect"
+        ),
+        .target(
+            name: "StripeCryptoOnramp",
+            dependencies: ["StripeCore", "StripeUICore", "StripePaymentSheet", "StripeIdentity", "StripeFinancialConnections"],
+            path: "StripeCryptoOnramp/StripeCryptoOnramp",
+            resources: [
+                .process("Resources")
+            ]
         )
     ]
 )
