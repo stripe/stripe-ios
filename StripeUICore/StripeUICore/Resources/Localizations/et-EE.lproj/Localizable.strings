@@ -104,6 +104,8 @@
 
 "Select card brand (optional)" = "Valige kaardi kaubamärk (valikuline)";
 
+"Selection is empty." = "Valik on tühi.";
+
 "Sort code" = "Sorteerimiskood";
 
 "State" = "Osariik";

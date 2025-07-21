@@ -104,6 +104,8 @@
 
 "Select card brand (optional)" = "카드 브랜드 선택(선택 사항)";
 
+"Selection is empty." = "선택 항목이 비어 있습니다.";
+
 "Sort code" = "코드 정렬";
 
 "State" = "주";

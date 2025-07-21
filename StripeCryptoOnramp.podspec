@@ -3,7 +3,7 @@ Pod::Spec.new do |s|
 
   # Do not update s.version directly.
   # Instead, update the VERSION file and run ./ci_scripts/update_version.sh
-  s.version                        = '24.16.2'
+  s.version                        = '24.17.0'
 
   s.summary                        = 'StripeCryptoOnramp provides the ability to sign up/in a Link user with custom UI provided by the client.'
   s.license                        = { :type => 'MIT', :file => 'LICENSE' }

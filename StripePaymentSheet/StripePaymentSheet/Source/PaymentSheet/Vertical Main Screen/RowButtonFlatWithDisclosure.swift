@@ -13,7 +13,7 @@ import UIKit
 final class RowButtonFlatWithDisclosure: RowButton {
     // MARK: - Subviews
     private lazy var disclosureImageView: UIImageView = {
-        let disclosureImage = appearance.embeddedPaymentElement.row.flat.disclosure.disclosureImage ?? Image.icon_chevron_right.makeImage(template: true)
+        let disclosureImage = appearance.embeddedPaymentElement.row.flat.disclosure.disclosureImage ?? UIImage(systemName: "cehvron.right")
         let chevronImageView = UIImageView(image: disclosureImage)
         chevronImageView.tintColor = appearance.embeddedPaymentElement.row.flat.disclosure.color
         chevronImageView.contentMode = .scaleAspectFit

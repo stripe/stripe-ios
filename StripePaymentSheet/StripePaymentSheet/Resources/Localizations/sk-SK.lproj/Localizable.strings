@@ -60,11 +60,15 @@
 
 "By continuing, you agree to authorize payments pursuant to <terms>these terms</terms>." = "Pokračovaním súhlasíte s autorizáciou platieb podľa <terms>týchto podmienok</terms>.";
 
+"By continuing, you authorize %@ to automatically debit your Satispay Balance on a recurring basis in accordance with your purchase or subscription plan." = "Pokračovaním oprávňujete %@ na automatické opakované odpísanie vášho zostatku Satispay v súlade s vaším nákupom alebo plánom predplatného.";
+
 "By continuing, you authorize %@ to debit your Cash App account for this payment and future payments in accordance with %@'s terms, until this authorization is revoked. You can change this anytime in your Cash App Settings." = "Pokračovaním oprávňujete spoločnosť %1$@, aby zaúčtovala túto platbu a budúce platby na debet vášho účtu Cash App v súlade s podmienkami spoločnosti %2$@, až do odvolania tohto oprávnenia. Toto oprávnenie môžete kedykoľvek zmeniť v nastaveniach aplikácie Cash App.";
 
 "By joining Link, you agree to the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Pripojením k službe Link súhlasíte s <terms>podmienkami</terms> a <privacy>zásadami ochrany osobných údajov</privacy>.";
 
 "By providing phone number and email, you agree to create a Link account subject to the Link <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Poskytnutím telefónneho čísla a e-mailu súhlasíte s vytvorením účtu Link, ktoré podlieha <terms>podmienkam</terms> a <privacy>zásadám ochrany osobných údajov</privacy> služby Link.";
+
+"By providing your bank account details and confirming this payment, you agree to this Direct Debit Request and the <terms>Direct Debit Request service agreement</terms>, and authorise Stripe Payments Australia Pty Ltd ACN 160 180 343 Direct Debit User ID number 507156 (“Stripe”) to debit your account through the Bulk Electronic Clearing System (BECS) on behalf of %@ (the \"Merchant\") for any amounts separately communicated to you by the Merchant. You certify that you are either an account holder or an authorised signatory on the account listed above." = "Poskytnutím údajov o svojom bankovom účte a potvrdením tejto platby súhlasíte s touto žiadosťou o inkaso a <terms>zmluvou o poskytovaní služieb žiadosti o inkaso</terms> a oprávňujete spoločnosť Stripe Payments Australia Pty Ltd ACN 160 180 343 inkaso ID používateľa 507156 („Stripe“) na odpísanie žiadosti z vášho účtu prostredníctvom hromadného elektronického zúčtovacieho systému (BECS) v mene spoločnosti %@ (ďalej len „obchodník“) o akékoľvek sumy, ktoré vám obchodník osobitne oznámi. Potvrdzujete, že ste majiteľom účtu alebo oprávnenou signatárskou osobou na účte uvedenom vyššie.";
 
 "By providing your card information, you allow %@ to charge your card for future payments in accordance with their terms." = "Poskytnutím informácií o karte povolíte spoločnosti %@ účtovať na vašej karte budúce platby v súlade s ich podmienkami.";
 
@@ -256,6 +260,8 @@
 
 "Simple, secure one-click payments" = "Jednoduché, bezpečné platby jedným kliknutím";
 
+"Something went wrong when linking your account.\nPlease try again later." = "Niečo sa pokazilo pri prepájaní vášho účtu.\nSkúste to znova neskôr.";
+
 "Stripe will deposit $0.01 to your account in 1-2 business days. Then you'll get an email with instructions to finish saving your bank account with %@." = "V priebehu 1 až 2 pracovných dní vloží Stripe na váš účet vklad vo výške 0,01 USD. Potom dostanete e-mail s pokynmi na dokončenie uloženia svojho účtu prostredníctvom %@.";
 
 "Stripe will deposit $0.01 to your account in 1-2 business days. Then you’ll get an email with instructions to complete payment to %@." = "V priebehu 1 až 2 pracovných dní vloží Stripe na váš účet vklad vo výške 0,01 USD. Potom dostanete e-mail s pokynmi na dokončenie platby spoločnosti %@.";
@@ -265,6 +271,8 @@
 "Tap to expand" = "Ťuknutím rozbaľte";
 
 "The IBAN you entered is incomplete." = "Zadaný IBAN je neúplný.";
+
+"The IBAN you entered is invalid, \"%@\" is not a supported country code." = "Zadaný IBAN je neplatný, „%@“ nie je podporovaný kód krajiny.";
 
 "The provided verification code has expired." = "Platnosť zadaného overovacieho kódu skončila.";
 
@@ -281,6 +289,8 @@
 "Update card" = "Aktualizovať kartu";
 
 "Update payment method" = "Aktualizovať spôsob platby";
+
+"Use billing address for shipping" = "Použiť fakturačnú adresu na doručenie";
 
 "Use your saved info to check out faster" = "Použite vaše uložené údaje a plaťte rýchlejšie";
 

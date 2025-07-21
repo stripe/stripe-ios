@@ -104,6 +104,8 @@
 
 "Select card brand (optional)" = "Vel kortmerkje (valfritt)";
 
+"Selection is empty." = "Utvalet er tomt.";
+
 "Sort code" = "Sorteringskode";
 
 "State" = "Stat";
