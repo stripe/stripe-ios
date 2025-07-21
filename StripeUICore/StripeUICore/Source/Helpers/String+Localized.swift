@@ -154,7 +154,7 @@ import Foundation
     }
 
     static var your_zip_is_incomplete: String {
-        STPLocalizedString("Your ZIP is incomplete.", "Error message for when ZIP code in form is incomplete (US only)")
+        STPLocalizedString("Your ZIP code is incomplete.", "Error message for when ZIP code in form is incomplete (US only)")
     }
 
     static var your_postal_code_is_incomplete: String {
