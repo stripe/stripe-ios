@@ -28,6 +28,7 @@ class MainViewController: UITableViewController {
     enum Row: String, CaseIterable {
         case onboarding = "Account onboarding"
         case payouts = "Payouts"
+        case payments = "Payments"
 
         var label: String { rawValue }
 
@@ -63,6 +64,8 @@ class MainViewController: UITableViewController {
                 return "Show a localized onboarding form that validates data."
             case .payouts:
                 return "Show payout information and allow your users to perform payouts."
+            case .payments:
+                return "Show payment information and allow your users to view payment details."
             }
         }
     }
@@ -134,6 +137,10 @@ class MainViewController: UITableViewController {
             let payoutsVC = embeddedComponentManager.createPayoutsViewController()
             payoutsVC.delegate = self
             viewControllerToPresent = payoutsVC
+        case .payments:
+            let paymentsVC = embeddedComponentManager.createPaymentsViewController()
+            paymentsVC.delegate = self
+            viewControllerToPresent = paymentsVC
         }
 
         // Fetch ViewController presentation settings
@@ -278,6 +285,14 @@ extension MainViewController: AccountOnboardingControllerDelegate {
 extension MainViewController: PayoutsViewControllerDelegate {
     func payouts(_ payouts: PayoutsViewController, didFailLoadWithError error: any Error) {
         presentAlert(title: "Error loading payouts", message: (error as NSError).debugDescription)
+    }
+}
+
+// MARK: - PaymentsViewControllerDelegate
+
+extension MainViewController: PaymentsViewControllerDelegate {
+    func payments(_ payments: PaymentsViewController, didFailLoadWithError error: any Error) {
+        presentAlert(title: "Error loading payments", message: (error as NSError).debugDescription)
     }
 }
 

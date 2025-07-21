@@ -101,6 +101,16 @@ public final class EmbeddedComponentManager {
               analyticsClientFactory: analyticsClientFactory)
     }
 
+    /// Creates a `PaymentsViewController`
+    /// - Seealso: [Payments component documentation](https://docs.stripe.com/connect/supported-embedded-components/payments?platform=ios)
+    @_spi(PrivateBetaConnect)
+    @_documentation(visibility: public)
+    public func createPaymentsViewController() -> PaymentsViewController {
+        .init(componentManager: self,
+              loadContent: shouldLoadContent,
+              analyticsClientFactory: analyticsClientFactory)
+    }
+
     /**
      Creates an `AccountOnboardingController
      - Seealso: [Account onboarding component documentation](https://docs.stripe.com/connect/supported-embedded-components/account-onboarding?platform=ios)
