@@ -39,8 +39,7 @@ extension RowButton {
                 case .edit, .viewMore, .change:
                     return nil
                 case .viewMoreChevron, .update, .changeWithChevron:
-                    return UIImage(systemName: "chevron.right")
-//                    return Image.icon_chevron_right.makeImage(template: true).withAlignmentRectInsets(UIEdgeInsets(top: -2, left: 0, bottom: 0, right: 0))
+                    return Image.icon_chevron_right.makeImage(template: true).withAlignmentRectInsets(UIEdgeInsets(top: -2, left: 0, bottom: 0, right: 0))
                 }
             }
         }
