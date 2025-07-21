@@ -26,6 +26,8 @@ struct CustomerRequest: Codable {
     /// Contains credentials required to make the request.
     let credentials: Credentials
 
+    /// Creates a new `CustomerRequest` instance.
+    /// - Parameter consumerSessionClientSecret: Contains credentials required to make the request.
     init(consumerSessionClientSecret: String) {
         credentials = Credentials(consumerSessionClientSecret: consumerSessionClientSecret)
     }
