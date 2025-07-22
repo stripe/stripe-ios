@@ -49,7 +49,7 @@ public protocol PaymentsViewControllerDelegate: AnyObject {
        - error: The error that occurred when loading the component
      */
     func payments(_ payments: PaymentsViewController,
-                 didFailLoadWithError error: Error)
+                  didFailLoadWithError error: Error)
 
 }
 
@@ -57,5 +57,5 @@ public protocol PaymentsViewControllerDelegate: AnyObject {
 public extension PaymentsViewControllerDelegate {
     // Default implementation to make optional
     func payments(_ payments: PaymentsViewController,
-                 didFailLoadWithError error: Error) { }
+                  didFailLoadWithError error: Error) { }
 }
