@@ -12,6 +12,7 @@
 import UIKit
 
 /// A selectable button with various display styles used in vertical mode and embedded to display payment methods.
+/// - Note: This is an 'abstract base class', see its subclasses.
 class RowButton: UIView, EventHandler {
     typealias DidTapClosure = (RowButton) -> Void
 
@@ -48,7 +49,7 @@ class RowButton: UIView, EventHandler {
 
     var isFlatWithCheckmarkOrChevronStyle: Bool {
         let rowStyle = appearance.embeddedPaymentElement.row.style
-        return (rowStyle == .flatWithCheckmark || rowStyle == .flatWithChevron) && isEmbedded
+        return (rowStyle == .flatWithCheckmark || rowStyle == .flatWithDisclosure) && isEmbedded
     }
 
     var hasSubtext: Bool {
@@ -356,8 +357,8 @@ extension RowButton {
                   isEmbedded: isEmbedded,
                   didTap: didTap
               )
-          case .flatWithChevron:
-              return RowButtonFlatWithChevron(
+          case .flatWithDisclosure:
+              return RowButtonFlatWithDisclosure(
                   appearance: appearance,
                   type: type,
                   imageView: imageView,
@@ -383,7 +384,11 @@ extension RowButton {
 
     static func makeRowButtonLabel(text: String, appearance: PaymentSheet.Appearance, isEmbedded: Bool) -> UILabel {
         let label = UILabel()
-        label.font = appearance.scaledFont(for: appearance.font.base.medium, style: .subheadline, maximumPointSize: 25)
+        if isEmbedded, let customFont = appearance.embeddedPaymentElement.row.titleFont {
+            label.font = customFont
+        } else {
+            label.font = appearance.scaledFont(for: appearance.font.base.medium, style: .subheadline, maximumPointSize: 25)
+        }
         label.adjustsFontSizeToFitWidth = true
         label.adjustsFontForContentSizeCategory = true
         label.text = text
@@ -394,7 +399,7 @@ extension RowButton {
             }
 
             switch appearance.embeddedPaymentElement.row.style {
-            case .flatWithRadio, .flatWithCheckmark, .flatWithChevron:
+            case .flatWithRadio, .flatWithCheckmark, .flatWithDisclosure:
                 return appearance.colors.text
             case .floatingButton:
                 return appearance.colors.componentText
@@ -419,7 +424,7 @@ extension RowButton {
             }
 
             switch appearance.embeddedPaymentElement.row.style {
-            case .flatWithRadio, .flatWithCheckmark, .flatWithChevron:
+            case .flatWithRadio, .flatWithCheckmark, .flatWithDisclosure:
                 return appearance.colors.textSecondary
             case .floatingButton:
                 return appearance.colors.componentPlaceholderText

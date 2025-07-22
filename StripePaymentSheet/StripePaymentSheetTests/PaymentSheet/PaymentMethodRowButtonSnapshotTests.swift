@@ -144,6 +144,40 @@ class PaymentMethodRowButtonSnapshotTests: STPSnapshotTestCase {
         verify(rowButton, identifier: "non_embedded_unaffected")
     }
 
+    func testAppearanceEmbeddedPaymentElementRowTitleFont() {
+        // For every embedded row style...
+        for style in PaymentSheet.Appearance.EmbeddedPaymentElement.Row.Style.allCases {
+            var appearance = PaymentSheet.Appearance()
+            appearance.embeddedPaymentElement.row.style = style
+            // ...with `appearance.embeddedPaymentElement.row.titleFont` set to a custom italic font...
+            appearance.embeddedPaymentElement.row.titleFont = .italicSystemFont(ofSize: 12)
+            let rowButton = RowButton.makeForPaymentMethodType(
+                paymentMethodType: .stripe(.card),
+                hasSavedCard: false,
+                appearance: appearance,
+                shouldAnimateOnPress: false,
+                isEmbedded: true,
+                didTap: { _ in }
+            )
+            rowButton.isSelected = true
+            // ...the row button label should have the custom italic font
+            verify(rowButton, identifier: "\(style)_custom_italic_title_font")
+        }
+
+        // Non-embedded row button should ignore `appearance.embeddedPaymentElement.row.titleFont`
+        var appearance = PaymentSheet.Appearance()
+        appearance.embeddedPaymentElement.row.paymentMethodIconLayoutMargins = .init(top: 100, leading: 100, bottom: 100, trailing: 100)
+        let rowButton = RowButton.makeForPaymentMethodType(
+            paymentMethodType: .stripe(.card),
+            hasSavedCard: false,
+            appearance: appearance,
+            shouldAnimateOnPress: false,
+            isEmbedded: false,
+            didTap: { _ in }
+        )
+        verify(rowButton, identifier: "non_embedded_unaffected")
+    }
+
     func verify(
         _ view: UIView,
         identifier: String? = nil,
