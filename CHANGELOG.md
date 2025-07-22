@@ -11,6 +11,9 @@
 * [Added] SwiftUI support for AddressElement.
 * [Changed] `AddressViewController` now notifies its delegate when the sheet is dismissed, whether by tapping the **Close** button or swiping down, so `AddressElement` always returns the current address.
 
+### General
+* [Removed] Removed nn-NO (Norwegian Nynorsk) localization. Norwegian users can continue using nb (Norwegian Bokmål) localization.
+
 ## 24.16.2 2025-07-07
 ### PaymentSheet
 * [Added] Address autocomplete functionality when collecting full billing details in payment method forms.
@@ -938,7 +941,7 @@ When a customer is adding a new payment method, PaymentSheet uses information li
 * Postal code collection for cards is now limited to US, CA, UK
 * Fixed SwiftUI memory leaks [Issue #1881](https://github.com/stripe/stripe-ios/issues/1881)
 * Added "hint" for error messages
-* Adds many new localizations. The SDK now localizes in the following languages: bg-BG,ca-ES,cs-CZ,da,de,el-GR,en-GB,es-419,es,et-EE,fi,fil,fr-CA,fr,hr,hu,id,it,ja,ko,lt-LT,lv-LV,ms-MY,mt,nb,nl,nn-NO,pl-PL,pt-BR,pt-PT,ro-RO,ru,sk-SK,sl-SI,sv,tk,tr,vi,zh-Hans,zh-Hant,zh-HK
+* Adds many new localizations. The SDK now localizes in the following languages: bg-BG,ca-ES,cs-CZ,da,de,el-GR,en-GB,es-419,es,et-EE,fi,fil,fr-CA,fr,hr,hu,id,it,ja,ko,lt-LT,lv-LV,ms-MY,mt,nb,nl,pl-PL,pt-BR,pt-PT,ro-RO,ru,sk-SK,sl-SI,sv,tk,tr,vi,zh-Hans,zh-Hant,zh-HK
 * `Stripe` and `StripeIdentity` now require `StripeUICore`. See `MIGRATING.md` for more info.
 
 ## 21.8.1 2021-08-10

@@ -402,7 +402,6 @@
 		5726517468179B69D50692C0 /* StripeCoreTestUtils.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = StripeCoreTestUtils.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		57F22CC7DFA4B98A1A533CE0 /* MotionBlurDetector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MotionBlurDetector.swift; sourceTree = "<group>"; };
 		598A711C4A2B8988EFBEEF77 /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/Localizable.strings"; sourceTree = "<group>"; };
-		5B975279521B43A8F82EBAB3 /* nn-NO */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "nn-NO"; path = "nn-NO.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		5D4A09C8B4EBF06D00B80994 /* ListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListView.swift; sourceTree = "<group>"; };
 		5F0B317274417308FBA55E55 /* DocumentFileUploadViewControllerTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DocumentFileUploadViewControllerTest.swift; sourceTree = "<group>"; };
 		6182719E4413B5136BB763D1 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
@@ -1463,7 +1462,6 @@
 				mt,
 				nb,
 				nl,
-				"nn-NO",
 				"pl-PL",
 				"pt-BR",
 				"pt-PT",
@@ -1827,7 +1825,6 @@
 				6BC7102DF0964D1204E2BFEB /* mt */,
 				2FAE3BFE9870AF3F0553AB9C /* nb */,
 				F8103B1FD36D79D22EACF7EE /* nl */,
-				5B975279521B43A8F82EBAB3 /* nn-NO */,
 				9A5A1304CA30DC06B715BD92 /* pl-PL */,
 				F43124EF97ADAB2BD1B7DEE2 /* pt-BR */,
 				74D9040BDF0DBA526C156C3D /* pt-PT */,

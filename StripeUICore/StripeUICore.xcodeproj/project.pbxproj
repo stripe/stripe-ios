@@ -272,7 +272,6 @@
 		B32FABC26C892C74FD444E88 /* TextFieldFormatterTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextFieldFormatterTest.swift; sourceTree = "<group>"; };
 		B6737026DF19C8D10AE8114A /* SectionElement+MultiElementRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SectionElement+MultiElementRow.swift"; sourceTree = "<group>"; };
 		B844EED0578B990F4772CD01 /* AddressSpecProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddressSpecProvider.swift; sourceTree = "<group>"; };
-		B84B32F86F684EA5233DDED5 /* nn-NO */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "nn-NO"; path = "nn-NO.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		B871CED2EB8A1F7EEC0FE087 /* pl-PL */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "pl-PL"; path = "pl-PL.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		B8DC1E33CDF3B3FE549A7210 /* StripeCore.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = StripeCore.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		B9CAB799E5645867F2400F0F /* pt-PT */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "pt-PT"; path = "pt-PT.lproj/Localizable.strings"; sourceTree = "<group>"; };
@@ -828,7 +827,6 @@
 				mt,
 				nb,
 				nl,
-				"nn-NO",
 				"pl-PL",
 				"pt-BR",
 				"pt-PT",
@@ -1041,7 +1039,6 @@
 				E0C8DFA9A617506071C59815 /* mt */,
 				34EC2F4C025AD1B1DD44CF78 /* nb */,
 				1A50D68D24D1DE0459ED9529 /* nl */,
-				B84B32F86F684EA5233DDED5 /* nn-NO */,
 				B871CED2EB8A1F7EEC0FE087 /* pl-PL */,
 				72EB2DE23B3740D8DA3081E5 /* pt-BR */,
 				B9CAB799E5645867F2400F0F /* pt-PT */,
