@@ -52,28 +52,24 @@ extension STPAPIClient {
     /// Converts a PKPayment object into a Stripe Payment Method using the Stripe API.
     /// - Parameters:
     ///   - payment:     The user's encrypted payment information as returned from a PKPaymentAuthorizationController. Cannot be nil.
-    ///   - additionalClientAttributionMetadata: A dictionary of metadata about the integration.
     ///   - completion:  The callback to run with the returned Stripe source (and any errors that may have occurred).
-    @objc(createPaymentMethodWithPayment:additionalClientAttributionMetadata:completion:)
+    @objc(createPaymentMethodWithPayment:completion:)
     public func createPaymentMethod(
         with payment: PKPayment,
-        additionalClientAttributionMetadata: [String: String],
         completion: @escaping STPPaymentMethodCompletionBlock
     ) {
-        createPaymentMethod(with: payment, metadata: [:], additionalClientAttributionMetadata: additionalClientAttributionMetadata, completion: completion)
+        createPaymentMethod(with: payment, metadata: [:], completion: completion)
     }
 
     /// Converts a PKPayment object into a Stripe Payment Method using the Stripe API.
     /// - Parameters:
     ///   - payment:     The user's encrypted payment information as returned from a PKPaymentAuthorizationController. Cannot be nil.
     ///   - metadata:    Additional data to be included with the payment method
-    ///   - additionalClientAttributionMetadata: A dictionary of metadata about the integration.
     ///   - completion:  The callback to run with the returned Stripe source (and any errors that may have occurred).
-    @objc(createPaymentMethodWithPayment:metadata:additionalClientAttributionMetadata:completion:)
+    @objc(createPaymentMethodWithPayment:metadata:completion:)
     public func createPaymentMethod(
         with payment: PKPayment,
         metadata: [String: String],
-        additionalClientAttributionMetadata: [String: String],
         completion: @escaping STPPaymentMethodCompletionBlock
     ) {
         createToken(with: payment) { token, error in
@@ -88,7 +84,7 @@ extension STPAPIClient {
                     billingDetails: billingDetails,
                     metadata: metadata
                 )
-                self.createPaymentMethod(with: paymentMethodParams, additionalClientAttributionMetadata: additionalClientAttributionMetadata, completion: completion)
+                self.createPaymentMethod(with: paymentMethodParams, additionalClientAttributionMetadata: [:], completion: completion)
             }
         }
     }

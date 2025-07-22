@@ -191,7 +191,6 @@ import UIKit
 
     /// Creates a [STPPaymentMethod] from the selected Link payment method preview.
     ///
-    /// - Parameter additionalClientAttributionMetadata: A dictionary of metadata about the integration.
     /// - Parameter completion: A closure that is called with the result of the payment method creation. It returns a `STPPaymentMethod` if successful, or an error if the payment method could not be created.
     @_spi(STP) public func createPaymentMethod(completion: @escaping (Result<STPPaymentMethod, Error>) -> Void) {
         guard let selectedPaymentDetails else {
@@ -204,16 +203,31 @@ import UIKit
             return
         }
 
+        var additionalClientAttributionMetadata: [String: String] = ["elements_session_config_id": elementsSession.sessionID]
+        switch intent {
+        case .paymentIntent(let paymentIntent):
+            additionalClientAttributionMetadata["payment_intent_creation_flow"] = "standard"
+            additionalClientAttributionMetadata["payment_method_selection_flow"] = paymentIntent.automaticPaymentMethods?.enabled ?? false ? "automatic" : "merchant_specified"
+        case .setupIntent(let setupIntent):
+            additionalClientAttributionMetadata["payment_intent_creation_flow"] = "standard"
+            additionalClientAttributionMetadata["payment_method_selection_flow"] = setupIntent.automaticPaymentMethods?.enabled ?? false ? "automatic" : "merchant_specified"
+        case .deferredIntent(let intentConfig):
+            additionalClientAttributionMetadata["payment_intent_creation_flow"] = "deferred"
+            additionalClientAttributionMetadata["payment_method_selection_flow"] = intentConfig.paymentMethodTypes?.isEmpty ?? true ? "automatic" : "merchant_specified"
+        }
+
         if elementsSession.linkPassthroughModeEnabled {
             createPaymentMethodInPassthroughMode(
                 paymentDetails: selectedPaymentDetails,
                 consumerSessionClientSecret: consumerSessionClientSecret,
+                additionalClientAttributionMetadata: additionalClientAttributionMetadata,
                 completion: completion
             )
         } else {
             createPaymentMethodInPaymentMethodMode(
                 paymentDetails: selectedPaymentDetails,
                 linkAccount: linkAccount,
+                additionalClientAttributionMetadata: additionalClientAttributionMetadata,
                 completion: completion
             )
         }
@@ -224,6 +238,7 @@ import UIKit
     private func createPaymentMethodInPassthroughMode(
         paymentDetails: ConsumerPaymentDetails,
         consumerSessionClientSecret: String,
+        additionalClientAttributionMetadata: [String: String],
         completion: @escaping (Result<STPPaymentMethod, Error>) -> Void
     ) {
         // TODO: These parameters aren't final
@@ -235,7 +250,7 @@ import UIKit
             cvc: paymentDetails.cvc,
             expectedPaymentMethodType: nil,
             billingPhoneNumber: nil,
-            additionalClientAttributionMetadata: [:]
+            additionalClientAttributionMetadata: additionalClientAttributionMetadata
         ) { shareResult in
             switch shareResult {
             case .success(let success):
@@ -249,6 +264,7 @@ import UIKit
     private func createPaymentMethodInPaymentMethodMode(
         paymentDetails: ConsumerPaymentDetails,
         linkAccount: PaymentSheetLinkAccount,
+        additionalClientAttributionMetadata: [String: String],
         completion: @escaping (Result<STPPaymentMethod, Error>) -> Void
     ) {
         Task {
@@ -263,7 +279,7 @@ import UIKit
                 let paymentMethod = try await apiClient.createPaymentMethod(
                     with: paymentMethodParams,
                     additionalPaymentUserAgentValues: [],
-                    additionalClientAttributionMetadata: [:]
+                    additionalClientAttributionMetadata: additionalClientAttributionMetadata
                 )
                 completion(.success(paymentMethod))
             } catch {
@@ -375,7 +391,6 @@ import UIKit
     }
 
     /// Creates a [STPPaymentMethod] from the selected Link payment method preview.
-    /// - Parameter additionalClientAttributionMetadata: A dictionary of metadata about the integration.
     /// - Returns: A `STPPaymentMethod` if successful, or throws an error if the payment method could not be created.
     func createPaymentMethod() async throws -> STPPaymentMethod {
         return try await withCheckedThrowingContinuation { continuation in
