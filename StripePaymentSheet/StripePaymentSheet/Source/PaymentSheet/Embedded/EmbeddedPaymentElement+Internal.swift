@@ -590,71 +590,11 @@ extension EmbeddedPaymentElement {
     }
 }
 
-// TODO(porter) When we use Xcode 16 on CI do this instead of `STPAuthenticationContextWrapper`
-// @retroactive is not supported in Xcode 15
-// extension UIViewController: @retroactive STPAuthenticationContext {
-//    public func authenticationPresentingViewController() -> UIViewController {
-//        return self
-//    }
-// }
-
-final class STPAuthenticationContextWrapper: UIViewController {
-    let _presentingViewController: UIViewController
-    let appearance: PaymentSheet.Appearance
-
-    private var pollingVC: PollingViewController?
-    private var shouldPresentPollingVC = false
-
-    init(presentingViewController: UIViewController, appearance: PaymentSheet.Appearance) {
-        self._presentingViewController = presentingViewController
-        self.appearance = appearance
-        super.init(nibName: nil, bundle: nil)
-    }
-
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-}
-
-extension STPAuthenticationContextWrapper: PaymentSheetAuthenticationContext {
-
-    func present(_ authenticationViewController: UIViewController, completion: @escaping () -> Void) {
-        DispatchQueue.main.async {
-            self._presentingViewController.present(authenticationViewController, animated: true) {
-                completion()
-            }
-        }
-    }
-
-    func dismiss(_ authenticationViewController: UIViewController, completion: (() -> Void)?) {
-        DispatchQueue.main.async {
-            authenticationViewController.dismiss(animated: true) {
-                completion?()
-            }
-        }
-    }
-
-    func presentPollingVCForAction(action: StripePayments.STPPaymentHandlerPaymentIntentActionParams, type: StripePayments.STPPaymentMethodType, safariViewController: SFSafariViewController?) {
-        // Initialize the polling view controller and flag it for presentation
-        self.pollingVC = PollingViewController(currentAction: action, viewModel: PollingViewModel(paymentMethodType: type),
-                                                      appearance: self.appearance, safariViewController: safariViewController)
-        shouldPresentPollingVC = true
-    }
-
-    func authenticationContextDidDismiss(_ viewController: UIViewController) {
-        // The following code should only be executed if we have dismissed a SFSafariViewController
-        guard viewController is SFSafariViewController else { return }
-
-        if let pollingViewController = self.pollingVC, shouldPresentPollingVC {
-            self._presentingViewController.present(pollingViewController, animated: true)
-            self.shouldPresentPollingVC = false
-        }
-    }
-
+ extension UIViewController: @retroactive STPAuthenticationContext {
     public func authenticationPresentingViewController() -> UIViewController {
-        return _presentingViewController
+        return self
     }
-}
+ }
 
 extension EmbeddedPaymentElement.Configuration.RowSelectionBehavior: Equatable {
    @_spi(STP) public static func == (lhs: EmbeddedPaymentElement.Configuration.RowSelectionBehavior, rhs: EmbeddedPaymentElement.Configuration.RowSelectionBehavior) -> Bool {

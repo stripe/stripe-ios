@@ -486,11 +486,7 @@ extension BottomSheetViewController: UIScrollViewDelegate {
 
 // MARK: - PaymentSheetAuthenticationContext
 extension BottomSheetViewController: PaymentSheetAuthenticationContext {
-
-    func authenticationPresentingViewController() -> UIViewController {
-        return findTopMostPresentedViewController()
-    }
-
+    
     func configureSafariViewController(_ viewController: SFSafariViewController) {
         // Change to a from bottom modal presentation. This also avoids a bug where the contents is squished when returning
         viewController.modalPresentationStyle = .overFullScreen
