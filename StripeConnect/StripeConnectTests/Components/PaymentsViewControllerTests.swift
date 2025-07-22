@@ -43,7 +43,7 @@ class PaymentsViewControllerTests: XCTestCase {
         var paymentsDidFailLoadWithError: ((_ payments: PaymentsViewController, _ error: Error) -> Void)?
 
         func payments(_ payments: PaymentsViewController,
-                     didFailLoadWithError error: Error)
+                      didFailLoadWithError error: Error)
         {
             paymentsDidFailLoadWithError?(payments, error)
         }
