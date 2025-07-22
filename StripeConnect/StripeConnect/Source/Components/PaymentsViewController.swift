@@ -7,13 +7,7 @@
 
 import UIKit
 
-/**
- Displays a list of payments for the connected account. It can also allow the user to view payment details, perform refunds, and manage disputes.
- - Important: Include  `@_spi(PrivateBetaConnect)` on import to gain access to this API.
- - See also: [Payments component documentation](https://docs.stripe.com/connect/supported-embedded-components/payments?platform=ios)
- */
-@_spi(PrivateBetaConnect)
-@_documentation(visibility: public)
+@_spi(DashboardOnly)
 @available(iOS 15, *)
 public class PaymentsViewController: UIViewController {
     private(set) var webVC: ConnectComponentWebViewController!
@@ -44,9 +38,7 @@ public class PaymentsViewController: UIViewController {
 }
 
 /// Delegate of an `PaymentsViewController`
-///  - Important: Include  `@_spi(PrivateBetaConnect)` on import to gain access to this API.
-@_spi(PrivateBetaConnect)
-@_documentation(visibility: public)
+@_spi(DashboardOnly)
 @available(iOS 15, *)
 public protocol PaymentsViewControllerDelegate: AnyObject {
 
@@ -56,17 +48,14 @@ public protocol PaymentsViewControllerDelegate: AnyObject {
        - payments: The payments component that errored when loading
        - error: The error that occurred when loading the component
      */
-    @_documentation(visibility: public)
     func payments(_ payments: PaymentsViewController,
                  didFailLoadWithError error: Error)
 
 }
 
 @available(iOS 15, *)
-@_documentation(visibility: public)
 public extension PaymentsViewControllerDelegate {
     // Default implementation to make optional
-    @_documentation(visibility: public)
     func payments(_ payments: PaymentsViewController,
                  didFailLoadWithError error: Error) { }
 } 

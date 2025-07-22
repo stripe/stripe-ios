@@ -5,7 +5,7 @@
 //  Created by Mel Ludowise on 4/30/24.
 //
 
-@_spi(PrivateBetaConnect) import StripeConnect
+@_spi(DashboardOnly) import StripeConnect
 import SwiftUI
 import UIKit
 
@@ -55,6 +55,10 @@ class MainViewController: UITableViewController {
             switch self {
             case .onboarding:
                 return false  // GA
+            case .payouts:
+                return true   // Experimental
+            case .payments:
+                return true   // Experimental
             }
         }
 
@@ -63,9 +67,9 @@ class MainViewController: UITableViewController {
             case .onboarding:
                 return "Show a localized onboarding form that validates data."
             case .payouts:
-                return "Show payout information and allow your users to perform payouts."
+                return "Show payouts and allow your users to perform payouts."
             case .payments:
-                return "Show payment information and allow your users to view payment details."
+                return "Show payments and allow your users to view payment details and manage disputes."
             }
         }
     }
