@@ -15,21 +15,22 @@ extension STPAPIClient {
     /// Errors that can occur that are specific to usage of crypto endpoints.
     enum CryptoOnrampAPIError: Error {
 
+        /// No consumer session client secret was found to be associated with the active link account session.
+        case missingConsumerSessionClientSecret
+
         /// The request requires a session with a verified link account, but the account was found to not be verified.
         case linkAccountNotVerified
     }
 
     /// Creates a crypto customer on the backend, upon granting the partner-merchant permission to facilitate crypto onramp transactions upon a customer’s behalf.
-    /// - Parameter consumerSessionClientSecret: The client secret provided by the Link account’s consumer session.
-    /// - Parameter linkAccountSessionState: The current state of the link account, provided by `PaymentSheetLinkAccount.sessionState`.
-    /// Throws if `linkAccountSessionState` is not verified, or if an API error occurs.
-    func grantPartnerMerchantPermissions(consumerSessionClientSecret: String, linkAccountSessionState: PaymentSheetLinkAccount.SessionState) async throws -> CustomerResponse {
-        switch linkAccountSessionState {
-        case .verified:
-            break
-        case .requiresSignUp, .requiresVerification:
-            throw CryptoOnrampAPIError.linkAccountNotVerified
-        @unknown default:
+    /// - Parameter linkAccountInfo: The client secret provided by the Link account’s consumer session.
+    /// Throws if `linkAccountSessionState` is not verified, a client secret doesn’t exist, or if an API error occurs.
+    func grantPartnerMerchantPermissions(with linkAccountInfo: PaymentSheetLinkAccountInfoProtocol) async throws -> CustomerResponse {
+        guard let consumerSessionClientSecret = linkAccountInfo.consumerSessionClientSecret else {
+            throw CryptoOnrampAPIError.missingConsumerSessionClientSecret
+        }
+
+        guard case .verified = linkAccountInfo.sessionState else {
             throw CryptoOnrampAPIError.linkAccountNotVerified
         }
 
