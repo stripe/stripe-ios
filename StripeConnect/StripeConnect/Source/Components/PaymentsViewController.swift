@@ -58,4 +58,4 @@ public extension PaymentsViewControllerDelegate {
     // Default implementation to make optional
     func payments(_ payments: PaymentsViewController,
                  didFailLoadWithError error: Error) { }
-} 
+}

@@ -148,7 +148,6 @@ public final class EmbeddedComponentManager {
               analyticsClientFactory: analyticsClientFactory)
     }
 
-
     @_spi(DashboardOnly)
     public func createPayoutsViewController() -> PayoutsViewController {
         .init(componentManager: self,

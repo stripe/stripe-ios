@@ -49,4 +49,4 @@ class PaymentsViewControllerTests: XCTestCase {
         }
     }
 
-} 
+}

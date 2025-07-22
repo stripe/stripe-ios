@@ -76,4 +76,4 @@ struct PresentationSettingsView: View {
             return Text("Embeds the view controller in a `UINavigationController`.")
         }
     }
-} 
+}
