@@ -49,7 +49,12 @@ class MainViewController: UITableViewController {
             return attributeString
         }
 
-        var isBeta: Bool { true }
+        var isBeta: Bool {
+            switch self {
+            case .onboarding:
+                return false  // GA
+            }
+        }
 
         var detailText: String {
             switch self {

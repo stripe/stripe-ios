@@ -35,7 +35,7 @@ extension EmbeddedPaymentElement {
             allowsRemovalOfLastSavedPaymentMethod: loadResult.elementsSession.paymentMethodRemoveLast(configuration: configuration),
             allowsPaymentMethodRemoval: loadResult.elementsSession.allowsRemovalOfPaymentMethodsForPaymentSheet(),
             allowsPaymentMethodUpdate: loadResult.elementsSession.paymentMethodUpdateForPaymentSheet,
-            isFlatCheckmarkOrChevronStyle: configuration.appearance.embeddedPaymentElement.row.style == .flatWithCheckmark || configuration.appearance.embeddedPaymentElement.row.style == .flatWithChevron
+            isFlatCheckmarkOrDisclosureStyle: configuration.appearance.embeddedPaymentElement.row.style == .flatWithCheckmark || configuration.appearance.embeddedPaymentElement.row.style == .flatWithDisclosure
         )
         let initialSelection: RowButtonType? = {
             // First, respect the previous selection
@@ -318,7 +318,7 @@ extension EmbeddedPaymentElement: UpdatePaymentMethodViewControllerDelegate {
             allowsRemovalOfLastSavedPaymentMethod: elementsSession.paymentMethodRemoveLast(configuration: configuration),
             allowsPaymentMethodRemoval: elementsSession.allowsRemovalOfPaymentMethodsForPaymentSheet(),
             allowsPaymentMethodUpdate: elementsSession.paymentMethodUpdateForPaymentSheet,
-            isFlatCheckmarkOrChevronStyle: configuration.appearance.embeddedPaymentElement.row.style == .flatWithCheckmark || configuration.appearance.embeddedPaymentElement.row.style == .flatWithChevron
+            isFlatCheckmarkOrDisclosureStyle: configuration.appearance.embeddedPaymentElement.row.style == .flatWithCheckmark || configuration.appearance.embeddedPaymentElement.row.style == .flatWithDisclosure
         )
     }
 }
@@ -582,9 +582,9 @@ extension EmbeddedPaymentElement {
                 throw PaymentSheetError.integrationError(nonPIIDebugDescription: "Using .immediateAction with .confirm form sheet action is not supported when Apple Pay or a customer configuration is provided. Use .default row selection behavior or disable Apple Pay and saved payment methods.")
             }
         default:
-            if case .flatWithChevron = configuration.appearance.embeddedPaymentElement.row.style {
-                // Fail init if the merchant is using the flatWithChevron style without the immediateAction behavior since flatWithChevron does not provide a selected state
-                throw PaymentSheetError.integrationError(nonPIIDebugDescription: "Using .flatWithChevron row style without .immediateAction row selection behavior is not supported. Use a different style or enable .immediateAction.")
+            if case .flatWithDisclosure = configuration.appearance.embeddedPaymentElement.row.style {
+                // Fail init if the merchant is using the flatWithDisclosure style without the immediateAction behavior since flatWithDisclosure does not provide a selected state
+                throw PaymentSheetError.integrationError(nonPIIDebugDescription: "Using .flatWithDisclosure row style without .immediateAction row selection behavior is not supported. Use a different style or enable .immediateAction.")
             }
         }
     }

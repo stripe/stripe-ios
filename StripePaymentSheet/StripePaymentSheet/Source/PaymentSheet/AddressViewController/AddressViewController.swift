@@ -13,8 +13,8 @@ import UIKit
 
 /// A delegate for `AddressViewController`
 public protocol AddressViewControllerDelegate: AnyObject {
-    /// Called when the customer finishes entering their address or cancels. Your implementation should dismiss the view controller.
-    /// - Parameter address: A valid address or nil if the customer cancels the flow.
+    /// Called when the customer finishes entering their address or dismisses the view controller. Your implementation should dismiss the view controller.
+    /// - Parameter address: A valid address or nil if the address information is incomplete or invalid.
     func addressViewControllerDidFinish(_ addressViewController: AddressViewController, with address: AddressViewController.AddressDetails?)
 }
 
@@ -264,6 +264,8 @@ public class AddressViewController: UIViewController {
             STPAnalyticsClient.sharedClient.logAddressShow(defaultCountryCode: addressSection?.selectedCountryCode ?? "", apiClient: configuration.apiClient)
             didLogAddressShow = true
         }
+        // Ensure we receive dismissal callbacks even when presented modally inside a UINavigationController
+        navigationController?.presentationController?.delegate = self
         addressSection?.beginEditing()
     }
 }
@@ -318,7 +320,7 @@ extension AddressViewController {
     }
 
     @objc func didTapCloseButton() {
-        delegate?.addressViewControllerDidFinish(self, with: nil)
+        didContinue()
     }
 
     func handleShippingEqualsBillingToggle(isSelected: Bool) {
@@ -615,5 +617,12 @@ extension AddressViewController {
 extension PaymentSheet.Address {
     var isEmpty: Bool {
         return self == .init()
+    }
+}
+
+// MARK: - UIAdaptivePresentationControllerDelegate
+extension AddressViewController: UIAdaptivePresentationControllerDelegate {
+    public func presentationControllerWillDismiss(_ presentationController: UIPresentationController) {
+        didContinue()
     }
 }
