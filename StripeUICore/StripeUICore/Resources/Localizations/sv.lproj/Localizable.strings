@@ -104,6 +104,8 @@
 
 "Select card brand (optional)" = "Välj korttyp (valfritt)";
 
+"Selection is empty." = "Urvalet är tomt.";
+
 "Sort code" = "Clearingnummer";
 
 "State" = "Delstat";

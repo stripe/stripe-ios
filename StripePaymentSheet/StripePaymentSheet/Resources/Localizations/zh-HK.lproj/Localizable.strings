@@ -60,11 +60,15 @@
 
 "By continuing, you agree to authorize payments pursuant to <terms>these terms</terms>." = "繼續操作即表示您同意按照<terms>這些條款</terms>授權付款。";
 
+"By continuing, you authorize %@ to automatically debit your Satispay Balance on a recurring basis in accordance with your purchase or subscription plan." = "一旦繼續，即表示您授權 %@ 根據您的購買或訂閱計劃，定期從您的 Satispay 結餘自動扣款。";
+
 "By continuing, you authorize %@ to debit your Cash App account for this payment and future payments in accordance with %@'s terms, until this authorization is revoked. You can change this anytime in your Cash App Settings." = "繼續操作，即表示您授權 %1$@ 按照 %2$@ 的條款從您的 Cash App 賬戶中扣取該款項及未來的款項，直至撤銷授權。您可以隨時在 Cash App 設置中進行修改。";
 
 "By joining Link, you agree to the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "加入 Link 即表示您同意<terms>條款</terms>和<privacy>隱私政策</privacy>。";
 
 "By providing phone number and email, you agree to create a Link account subject to the Link <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "提供您的手機號碼和電子郵件地址，即表示您同意按照 Link <terms>條款</terms>和<privacy>私隱權政策</privacy>創建 Link 賬戶。";
+
+"By providing your bank account details and confirming this payment, you agree to this Direct Debit Request and the <terms>Direct Debit Request service agreement</terms>, and authorise Stripe Payments Australia Pty Ltd ACN 160 180 343 Direct Debit User ID number 507156 (“Stripe”) to debit your account through the Bulk Electronic Clearing System (BECS) on behalf of %@ (the \"Merchant\") for any amounts separately communicated to you by the Merchant. You certify that you are either an account holder or an authorised signatory on the account listed above." = "當您提供銀行帳戶資料並確認付款，即表示您同意此直接扣款請求以及<terms>直接扣款請求服務協議</terms>，並授權 Stripe Payments Australia Pty Ltd（ACN 160 180 343，直接扣帳用戶 ID：507156，下稱「Stripe」）代表 %@（下稱「商戶」），根據商戶另行通知您的金額，透過批量電子清算系統 (BECS) 從您的帳戶扣款。您亦確認自己為上述帳戶的帳戶持有人或授權簽署人。";
 
 "By providing your card information, you allow %@ to charge your card for future payments in accordance with their terms." = "提供您的銀行卡資訊，即表示您允許 %@ 按照他們的條款從您的銀行卡扣取未來款項。";
 
@@ -256,6 +260,8 @@
 
 "Simple, secure one-click payments" = "簡單、安全地一鍵支付";
 
+"Something went wrong when linking your account.\nPlease try again later." = "連結您的帳戶時發生錯誤。\n請稍後再試。";
+
 "Stripe will deposit $0.01 to your account in 1-2 business days. Then you'll get an email with instructions to finish saving your bank account with %@." = "Stripe 會在 1-2 個工作日向您的賬戶存入 0.01 美元。然後您會收到一封包含說明的電子郵件，指導您用 %@ 儲存您的銀行賬戶。";
 
 "Stripe will deposit $0.01 to your account in 1-2 business days. Then you’ll get an email with instructions to complete payment to %@." = "Stripe 會在 1-2 個工作日向您的賬戶存入 0.01 美元。然後您會收到一封郵件，指導您完成向 %@ 的付款。";
@@ -265,6 +271,8 @@
 "Tap to expand" = "點擊以展開";
 
 "The IBAN you entered is incomplete." = "您輸入的 IBAN 不完整。";
+
+"The IBAN you entered is invalid, \"%@\" is not a supported country code." = "您所輸入的 IBAN 無效，「%@」不是受支援的國家代碼。";
 
 "The provided verification code has expired." = "提供的驗證碼已過期。";
 
@@ -281,6 +289,8 @@
 "Update card" = "更新銀行卡";
 
 "Update payment method" = "更新支付方式";
+
+"Use billing address for shipping" = "使用帳單地址作為送貨地址";
 
 "Use your saved info to check out faster" = "用您儲存的資訊，更快結賬";
 

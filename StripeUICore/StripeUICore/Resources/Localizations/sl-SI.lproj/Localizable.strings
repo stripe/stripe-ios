@@ -104,6 +104,8 @@
 
 "Select card brand (optional)" = "Izberite blagovno znamko kartice (neobvezno)";
 
+"Selection is empty." = "Izbor je prazen.";
+
 "Sort code" = "Številka banke";
 
 "State" = "Zvezna država";
