@@ -22,8 +22,8 @@ struct LinkPMDisplayDetails {
     let brand: STPCardBrand
 }
 
-class PaymentSheetLinkAccount: PaymentSheetLinkAccountInfoProtocol {
-    enum SessionState: String {
+@_spi(STP) public class PaymentSheetLinkAccount: PaymentSheetLinkAccountInfoProtocol {
+    @_spi(STP) public enum SessionState: String {
         case requiresSignUp
         case requiresVerification
         case verified
@@ -73,17 +73,17 @@ class PaymentSheetLinkAccount: PaymentSheetLinkAccountInfoProtocol {
     var phoneNumberUsedInSignup: String?
     var nameUsedInSignup: String?
 
-    let email: String
+    @_spi(STP) public let email: String
 
-    var redactedPhoneNumber: String? {
+    @_spi(STP) public var redactedPhoneNumber: String? {
         return currentSession?.redactedFormattedPhoneNumber.replacingOccurrences(of: "*", with: "•")
     }
 
-    var isRegistered: Bool {
+    @_spi(STP) public var isRegistered: Bool {
         return currentSession != nil
     }
 
-    var sessionState: SessionState {
+    @_spi(STP) public var sessionState: SessionState {
         if let currentSession = currentSession {
             // sms verification is not required if we are in the signup flow
             return currentSession.hasVerifiedSMSSession || currentSession.isVerifiedForSignup
@@ -91,6 +91,10 @@ class PaymentSheetLinkAccount: PaymentSheetLinkAccountInfoProtocol {
         } else {
             return .requiresSignUp
         }
+    }
+
+    @_spi(STP) public var consumerSessionClientSecret: String? {
+        currentSession?.clientSecret
     }
 
     var hasStartedSMSVerification: Bool {
@@ -471,7 +475,7 @@ class PaymentSheetLinkAccount: PaymentSheetLinkAccountInfoProtocol {
 
 extension PaymentSheetLinkAccount: Equatable {
 
-    static func == (lhs: PaymentSheetLinkAccount, rhs: PaymentSheetLinkAccount) -> Bool {
+    @_spi(STP) public static func == (lhs: PaymentSheetLinkAccount, rhs: PaymentSheetLinkAccount) -> Bool {
         return
             (lhs.email == rhs.email && lhs.currentSession == rhs.currentSession
             && lhs.publishableKey == rhs.publishableKey)
