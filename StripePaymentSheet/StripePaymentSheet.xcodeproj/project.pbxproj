@@ -950,7 +950,6 @@
 		F69E543E007B4361C7929FF5 /* LinkURLGenerator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LinkURLGenerator.swift; sourceTree = "<group>"; };
 		F6A5556B8D1AE901CC16133B /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/Localizable.strings; sourceTree = "<group>"; };
 		F78135339DB1893C2DC11AD4 /* bg-BG */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "bg-BG"; path = "bg-BG.lproj/Localizable.strings"; sourceTree = "<group>"; };
-		F8A04595309632C227482CA0 /* nn-NO */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "nn-NO"; path = "nn-NO.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		F8A3A76BD737F195578558CA /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		FA76F51B5E433A83B410B276 /* BacsDDMandateView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BacsDDMandateView.swift; sourceTree = "<group>"; };
 		FBA0007525BF2610569B5B7D /* AddressSearchResult.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddressSearchResult.swift; sourceTree = "<group>"; };
@@ -2183,7 +2182,6 @@
 				mt,
 				nb,
 				nl,
-				"nn-NO",
 				"pl-PL",
 				"pt-BR",
 				"pt-PT",
@@ -2717,7 +2715,6 @@
 				2E2B99961C09E31383C9FCE9 /* mt */,
 				2C9ABA7E1C1848A07E5649E8 /* nb */,
 				9A0BBDBFC37770CF870594B1 /* nl */,
-				F8A04595309632C227482CA0 /* nn-NO */,
 				B4CD2ADFCF34E3F4A35255DC /* pl-PL */,
 				2B84310D9A9A390EDB8FC9BB /* pt-BR */,
 				08B1723A7F578FB52BD6077A /* pt-PT */,

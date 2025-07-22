@@ -8,7 +8,7 @@
 @testable@_spi(STP) import StripeCore
 @_spi(STP)@testable import StripeCoreTestUtils
 @_spi(STP)@testable import StripePayments
-@testable @_spi(STP) @_spi(CustomPaymentMethodsBeta) import StripePaymentSheet
+@testable @_spi(STP) @_spi(CustomPaymentMethodsBeta) @_spi(SharedPaymentToken) import StripePaymentSheet
 @_spi(STP)@testable import StripePaymentsTestUtils
 import XCTest
 
@@ -622,6 +622,69 @@ final class PaymentSheetAnalyticsHelperTest: XCTestCase {
         XCTAssertEqual(analyticsClient._testLogHistory.last!["duration"] as? TimeInterval, testDuration)
         XCTAssertNil(analyticsClient._testLogHistory.last!["error_type"])
         XCTAssertNil(analyticsClient._testLogHistory.last!["error_code"])
+    }
+
+    func testAnalyticsIntentConfigurationParameters() {
+        let sut = PaymentSheetAnalyticsHelper(
+            integrationShape: .complete,
+            configuration: PaymentSheet.Configuration(),
+            analyticsClient: analyticsClient
+        )
+        sut.logLoadStarted() // To get the load timer working
+
+        // Test case 1: Regular PaymentIntent (no intentConfig)
+        // Should set is_decoupled = false, is_spt = false
+        analyticsClient._testLogHistory.removeAll()
+        let regularIntent = Intent._testValue()
+        sut.logLoadSucceeded(
+            intent: regularIntent,
+            elementsSession: ._testValue(),
+            defaultPaymentMethod: nil,
+            orderedPaymentMethodTypes: [.stripe(.card)]
+        )
+
+        let regularEvent = analyticsClient._testLogHistory.last!
+        XCTAssertEqual(regularEvent["is_decoupled"] as? Bool, false, "Regular PaymentIntent should have is_decoupled = false")
+        XCTAssertEqual(regularEvent["is_spt"] as? Bool, false, "Regular PaymentIntent should have is_spt = false")
+
+        // Test case 2: Deferred intent without preparePaymentMethodHandler
+        // Should set is_decoupled = true, is_spt = false
+        analyticsClient._testLogHistory.removeAll()
+        let deferredIntentConfig = PaymentSheet.IntentConfiguration(mode: .payment(amount: 1000, currency: "usd")) { _, _, _ in }
+        let deferredIntent = Intent.deferredIntent(intentConfig: deferredIntentConfig)
+        sut.logLoadSucceeded(
+            intent: deferredIntent,
+            elementsSession: ._testValue(),
+            defaultPaymentMethod: nil,
+            orderedPaymentMethodTypes: [.stripe(.card)]
+        )
+
+        let deferredEvent = analyticsClient._testLogHistory.last!
+        XCTAssertEqual(deferredEvent["is_decoupled"] as? Bool, true, "Deferred intent should have is_decoupled = true")
+        XCTAssertEqual(deferredEvent["is_spt"] as? Bool, false, "Deferred intent without preparePaymentMethodHandler should have is_spt = false")
+
+        // Test case 3: Deferred intent with preparePaymentMethodHandler (SPT)
+        // Should set is_decoupled = true, is_spt = true
+        analyticsClient._testLogHistory.removeAll()
+        let sptIntentConfig = PaymentSheet.IntentConfiguration(
+            sharedPaymentTokenSessionWithMode: .payment(amount: 1000, currency: "usd"),
+            sellerDetails: PaymentSheet.IntentConfiguration.SellerDetails(networkId: "stripe", externalId: "test"),
+            paymentMethodTypes: ["card"],
+            preparePaymentMethodHandler: { _, _ in
+                // Empty handler for test
+            }
+        )
+        let sptIntent = Intent.deferredIntent(intentConfig: sptIntentConfig)
+        sut.logLoadSucceeded(
+            intent: sptIntent,
+            elementsSession: ._testValue(),
+            defaultPaymentMethod: nil,
+            orderedPaymentMethodTypes: [.stripe(.card)]
+        )
+
+        let sptEvent = analyticsClient._testLogHistory.last!
+        XCTAssertEqual(sptEvent["is_decoupled"] as? Bool, true, "SPT intent should have is_decoupled = true")
+        XCTAssertEqual(sptEvent["is_spt"] as? Bool, true, "SPT intent with preparePaymentMethodHandler should have is_spt = true")
     }
 
     // MARK: - Helpers
