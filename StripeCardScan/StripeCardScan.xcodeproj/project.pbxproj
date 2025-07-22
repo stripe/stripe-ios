@@ -275,7 +275,6 @@
 		88F89EC392AFBE060336B63F /* sl-SI */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "sl-SI"; path = "sl-SI.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		89BBC06EC107C8BDEF79BB3D /* sv */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = sv; path = sv.lproj/Localizable.strings; sourceTree = "<group>"; };
 		8AEB912151CB564AE21D073C /* SSDOcrDetect.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SSDOcrDetect.swift; sourceTree = "<group>"; };
-		8C227CA761586744976C952D /* nn-NO */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "nn-NO"; path = "nn-NO.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		8CA457DF27DC45455B8E1345 /* Array+utils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Array+utils.swift"; sourceTree = "<group>"; };
 		8EDF39435211B456B7579739 /* AppleCreditCardOcr.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppleCreditCardOcr.swift; sourceTree = "<group>"; };
 		8FB602C9E909E31BAE6703D6 /* ca-ES */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "ca-ES"; path = "ca-ES.lproj/Localizable.strings"; sourceTree = "<group>"; };
@@ -881,7 +880,6 @@
 				mt,
 				nb,
 				nl,
-				"nn-NO",
 				"pl-PL",
 				"pt-BR",
 				"pt-PT",
@@ -1108,7 +1106,6 @@
 				9593D6788C4DBF554735E2B6 /* mt */,
 				9A256BCB7822DD94572DDA07 /* nb */,
 				AB64890F80D91D9D7B92197D /* nl */,
-				8C227CA761586744976C952D /* nn-NO */,
 				1C94EE6DB0E3114A38DD9CFE /* pl-PL */,
 				45C9A1A26405DEAD8E11F13D /* pt-BR */,
 				2667E0E0C7DC6CDAF03F8B40 /* pt-PT */,

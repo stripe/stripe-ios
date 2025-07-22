@@ -269,11 +269,9 @@
 		A430B6DF5233ACF15D47D507 /* it */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = it; path = it.lproj/LaunchScreen.strings; sourceTree = "<group>"; };
 		A462672B893EF4F811331B2F /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		A61C5739DBE6405A4D9FD5F2 /* PaymentSheet+AddressTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "PaymentSheet+AddressTests.swift"; sourceTree = "<group>"; };
-		A911134020188AD4EA0D0F73 /* nn-NO */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "nn-NO"; path = "nn-NO.lproj/Main.strings"; sourceTree = "<group>"; };
 		AA08203146CADE9649CF0EAD /* PaymentSheetLocalizationScreenshotGenerator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentSheetLocalizationScreenshotGenerator.swift; sourceTree = "<group>"; };
 		AA18950DA9394C1A3756B4F3 /* da */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = da; path = da.lproj/Main.strings; sourceTree = "<group>"; };
 		AB52AEBB55BDC5F8F9C2880F /* sk-SK */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "sk-SK"; path = "sk-SK.lproj/Main.strings"; sourceTree = "<group>"; };
-		AD281922251DE848FAD9DECA /* nn-NO */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "nn-NO"; path = "nn-NO.lproj/LaunchScreen.strings"; sourceTree = "<group>"; };
 		ADBEC0CE822B92C078E5D758 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		B33D2066D7BA7984CABC23A5 /* zh-HK */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-HK"; path = "zh-HK.lproj/LaunchScreen.strings"; sourceTree = "<group>"; };
 		B54E58F2CA450CF49ECD5637 /* CustomerSheetTestPlaygroundController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomerSheetTestPlaygroundController.swift; sourceTree = "<group>"; };
@@ -636,7 +634,6 @@
 				mt,
 				nb,
 				nl,
-				"nn-NO",
 				"pl-PL",
 				"pt-BR",
 				"pt-PT",
@@ -821,7 +818,6 @@
 				47F5ABF3CE2F657E0085EBB2 /* mt */,
 				8542B65BCF43F2EE1B606603 /* nb */,
 				42ABA03F697FDC1AEAA3C9FB /* nl */,
-				AD281922251DE848FAD9DECA /* nn-NO */,
 				923D9CE10871FEA23359122F /* pl-PL */,
 				4546705B6D6BCA883F5532B8 /* pt-BR */,
 				EFD868533089E2ED82F82987 /* pt-PT */,
@@ -870,7 +866,6 @@
 				92136ABC8F4154790E9757D9 /* mt */,
 				FC7D694F73564D632588F417 /* nb */,
 				4135E39F036A7E3D61254A8C /* nl */,
-				A911134020188AD4EA0D0F73 /* nn-NO */,
 				9D55109311453F8D8F44A144 /* pl-PL */,
 				D1BC09347B9F3629671A1E9A /* pt-BR */,
 				CA7B4F3A0C373E78CF35D4A6 /* pt-PT */,

@@ -368,7 +368,6 @@
 		E919FBEB852CFEA9517FCBDC /* FraudDetectionData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FraudDetectionData.swift; sourceTree = "<group>"; };
 		EA55726A0FE74A4D90A10C01 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		ECF3D265DCDD0D64F6D7E6B2 /* hu */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = hu; path = hu.lproj/Localizable.strings; sourceTree = "<group>"; };
-		EDBE83430B8FE494EF2AB5F3 /* nn-NO */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "nn-NO"; path = "nn-NO.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		F2C7099CB854E1E90424235C /* MockAnalyticsClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockAnalyticsClient.swift; sourceTree = "<group>"; };
 		F4FC2FC535DAF9B340F9EA75 /* STPAPIClient+FileUpload.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "STPAPIClient+FileUpload.swift"; sourceTree = "<group>"; };
 		F66C883A10AA9BAB7456BF03 /* vi */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = vi; path = vi.lproj/Localizable.strings; sourceTree = "<group>"; };
@@ -951,7 +950,6 @@
 				mt,
 				nb,
 				nl,
-				"nn-NO",
 				"pl-PL",
 				"pt-BR",
 				"pt-PT",
@@ -1203,7 +1201,6 @@
 				5CE5D62D8BA864BFB38B70C5 /* mt */,
 				0ACE2C3A8889C655E58EEA67 /* nb */,
 				49538DBF8457D96707A2DA56 /* nl */,
-				EDBE83430B8FE494EF2AB5F3 /* nn-NO */,
 				CD9288E147B8C9D33CCB5045 /* pl-PL */,
 				019EC578C08FE61F858E1F1F /* pt-BR */,
 				ACBD856B96CD58D2938B3F02 /* pt-PT */,
