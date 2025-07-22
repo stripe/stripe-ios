@@ -7,7 +7,7 @@
 
 import Foundation
 
-/// Codable model passed to the `crypto/internal/customers` endpoint.
+/// Codable model passed to the `/v1/crypto/internal/customers` endpoint.
 struct CustomerRequest: Codable {
 
     /// Container for credentials required to make the request
