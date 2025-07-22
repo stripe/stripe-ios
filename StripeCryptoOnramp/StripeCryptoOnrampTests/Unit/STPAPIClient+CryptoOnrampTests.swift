@@ -8,6 +8,7 @@
 import StripeCore
 import StripeCoreTestUtils
 @testable import StripeCryptoOnramp
+@_spi(STP) import StripePaymentSheet
 
 import OHHTTPStubs
 import OHHTTPStubsSwift
@@ -15,14 +16,29 @@ import XCTest
 
 final class STPAPIClientCryptoOnrampTests: APIStubbedTestCase {
 
-    enum Constant {
+    private enum Constant {
         static let requestSecret = "cscs_12345"
         static let responseID = "crc_12345"
         static let grantPartnerMerchantPermissionsAPIPath = "/v1/crypto/internal/customers"
         static let errorDomain = "STPAPIClientCryptoOnrampTests.Error"
+        static let validLinkAccountInfo = LinkAccountInfo(
+            email: "test@example.com",
+            redactedPhoneNumber: nil,
+            isRegistered: true,
+            sessionState: .verified,
+            consumerSessionClientSecret: requestSecret
+        )
     }
 
-    func testGrantPartnerMerchantPermissionsSuccess() throws {
+    private struct LinkAccountInfo: PaymentSheetLinkAccountInfoProtocol {
+        let email: String
+        let redactedPhoneNumber: String?
+        let isRegistered: Bool
+        var sessionState: StripePaymentSheet.PaymentSheetLinkAccount.SessionState
+        var consumerSessionClientSecret: String?
+    }
+
+    func testGrantPartnerMerchantPermissionsSuccess() async throws {
         let mockResponseData = try JSONEncoder().encode(CustomerResponse(id: Constant.responseID))
 
         stub { request in
@@ -42,23 +58,16 @@ final class STPAPIClientCryptoOnrampTests: APIStubbedTestCase {
         }
 
         let apiClient = stubbedAPIClient()
-        let expectation = expectation(description: "`grantPartnerMerchantPermissions` request completed.")
-
-        Task {
-            do {
-                let response = try await apiClient.grantPartnerMerchantPermissions(consumerSessionClientSecret: Constant.requestSecret)
-                XCTAssertEqual(response.id, Constant.responseID)
-            } catch {
-                XCTFail("Expected a success response but got an error: \(error).")
-            }
-
-            expectation.fulfill()
+        do {
+            let response = try await apiClient.grantPartnerMerchantPermissions(with: Constant.validLinkAccountInfo)
+            XCTAssertEqual(response.id, Constant.responseID)
+        } catch {
+            XCTFail("Expected a success response but got an error: \(error).")
         }
 
-        waitForExpectations(timeout: 2)
     }
 
-    func testGrantPartnerMerchantPermissionsFailure() throws {
+    func testGrantPartnerMerchantPermissionsFailure() async {
         stub { request in
             XCTAssertEqual(request.url?.path, Constant.grantPartnerMerchantPermissionsAPIPath)
             return true
@@ -67,19 +76,24 @@ final class STPAPIClientCryptoOnrampTests: APIStubbedTestCase {
         }
 
         let apiClient = stubbedAPIClient()
-        let expectation = expectation(description: "`grantPartnerMerchantPermissions` request completed.")
 
-        Task {
-            do {
-                _ = try await apiClient.grantPartnerMerchantPermissions(consumerSessionClientSecret: Constant.requestSecret)
-                XCTFail("Expected failure but got success.")
-            } catch {
-                XCTAssertEqual((error as NSError).domain, Constant.errorDomain)
-            }
-
-            expectation.fulfill()
+        do {
+            _ = try await apiClient.grantPartnerMerchantPermissions(with: Constant.validLinkAccountInfo)
+            XCTFail("Expected failure but got success.")
+        } catch {
+            XCTAssertEqual((error as NSError).domain, Constant.errorDomain)
         }
+    }
 
-        waitForExpectations(timeout: 2)
+    func testGrantPartnerMerchantPermissionsThrowsWithInvalidArguments() async {
+        let apiClient = stubbedAPIClient()
+
+        var noSecretLinkAccountInfo = Constant.validLinkAccountInfo
+        noSecretLinkAccountInfo.consumerSessionClientSecret = nil
+        await XCTAssertThrowsErrorAsync(_ = try await apiClient.grantPartnerMerchantPermissions(with: noSecretLinkAccountInfo))
+
+        var unverifiedLinkAccountInfo = Constant.validLinkAccountInfo
+        unverifiedLinkAccountInfo.sessionState = .requiresVerification
+        await XCTAssertThrowsErrorAsync(_ = try await apiClient.grantPartnerMerchantPermissions(with: unverifiedLinkAccountInfo))
     }
 }
