@@ -12,7 +12,6 @@ import UIKit
 public class PaymentsViewController: UIViewController {
     private(set) var webVC: ConnectComponentWebViewController!
 
-    @_documentation(visibility: public)
     public weak var delegate: PaymentsViewControllerDelegate?
 
     init(componentManager: EmbeddedComponentManager,
