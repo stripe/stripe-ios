@@ -2,11 +2,11 @@
 //  PaymentsViewControllerTests.swift
 //  StripeConnectTests
 //
-//  Created by Chris Mays on 8/21/24.
+//  Created by Torrance Yan on 7/22/25.
 //
 
 import SafariServices
-@_spi(PrivateBetaConnect) @testable import StripeConnect
+@_spi(DashboardOnly) @testable import StripeConnect
 @_spi(STP) import StripeCore
 import WebKit
 import XCTest
