@@ -218,7 +218,6 @@
 		41249D082D6E6F0800BB9948 /* Localizable.strings */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = Localizable.strings; path = mt.lproj/Localizable.strings; sourceTree = "<group>"; };
 		41249D092D6E6F0800BB9948 /* Localizable.strings */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = Localizable.strings; path = nb.lproj/Localizable.strings; sourceTree = "<group>"; };
 		41249D0A2D6E6F0800BB9948 /* Localizable.strings */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = Localizable.strings; path = nl.lproj/Localizable.strings; sourceTree = "<group>"; };
-		41249D0B2D6E6F0800BB9948 /* Localizable.strings */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = Localizable.strings; path = "nn-NO.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		41249D0C2D6E6F0800BB9948 /* Localizable.strings */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = Localizable.strings; path = "pl-PL.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		41249D0D2D6E6F0800BB9948 /* Localizable.strings */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = Localizable.strings; path = "pt-BR.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		41249D0E2D6E6F0800BB9948 /* Localizable.strings */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = Localizable.strings; path = "pt-PT.lproj/Localizable.strings"; sourceTree = "<group>"; };
@@ -948,7 +947,6 @@
 				mt,
 				nb,
 				nl,
-				"nn-NO",
 				"pl-PL",
 				"pt-BR",
 				"pt-PT",
@@ -1193,7 +1191,6 @@
 				41249D082D6E6F0800BB9948 /* Localizable.strings */,
 				41249D092D6E6F0800BB9948 /* Localizable.strings */,
 				41249D0A2D6E6F0800BB9948 /* Localizable.strings */,
-				41249D0B2D6E6F0800BB9948 /* Localizable.strings */,
 				41249D0C2D6E6F0800BB9948 /* Localizable.strings */,
 				41249D0D2D6E6F0800BB9948 /* Localizable.strings */,
 				41249D0E2D6E6F0800BB9948 /* Localizable.strings */,

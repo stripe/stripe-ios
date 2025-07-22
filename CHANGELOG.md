@@ -11,6 +11,9 @@
 * [Added] SwiftUI support for AddressElement.
 * [Changed] `AddressViewController` now notifies its delegate when the sheet is dismissed, whether by tapping the **Close** button or swiping down, so `AddressElement` always returns the current address.
 
+### General
+* [Removed] Removed nn-NO (Norwegian Nynorsk) localization. Norwegian users can continue using nb (Norwegian Bokmål) localization.
+
 ## 24.16.2 2025-07-07
 ### PaymentSheet
 * [Added] Address autocomplete functionality when collecting full billing details in payment method forms.

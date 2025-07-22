@@ -372,7 +372,6 @@
 		587CD174831344F15ADB538D /* ModalPresentationWrapperViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModalPresentationWrapperViewController.swift; sourceTree = "<group>"; };
 		591E8073D2AD30115ABDB60F /* BulletPointLabelView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BulletPointLabelView.swift; sourceTree = "<group>"; };
 		596A401ABA089532A5006584 /* AuthenticationSessionManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthenticationSessionManager.swift; sourceTree = "<group>"; };
-		5AC5D8EE52FE5D305F78E3A0 /* nn-NO */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "nn-NO"; path = "nn-NO.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		5B65388786D25271A87D34CE /* it */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = it; path = it.lproj/Localizable.strings; sourceTree = "<group>"; };
 		5B77DE6D7A86CC847977396A /* check@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "check@3x.png"; sourceTree = "<group>"; };
 		5C0737DE86515E172909366F /* FinancialConnectionsSheetError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FinancialConnectionsSheetError.swift; sourceTree = "<group>"; };
@@ -1249,7 +1248,6 @@
 				mt,
 				nb,
 				nl,
-				"nn-NO",
 				"pl-PL",
 				"pt-BR",
 				"pt-PT",
@@ -1573,7 +1571,6 @@
 				F25B2AB87C9548245C28D14C /* mt */,
 				EFB09DF9C9434032F387E081 /* nb */,
 				C0467CE507A92557C72885DF /* nl */,
-				5AC5D8EE52FE5D305F78E3A0 /* nn-NO */,
 				F2BA0F04A5A7D3B1DBF34AEE /* pl-PL */,
 				9EA0AA05BC9FC60A06AC1B5E /* pt-BR */,
 				66D2857E68EA69AC6F658BEA /* pt-PT */,
