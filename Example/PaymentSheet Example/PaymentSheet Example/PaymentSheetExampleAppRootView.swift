@@ -79,7 +79,8 @@ struct PaymentSheetExampleAppRootView: View {
                      .linkStandaloneDemo,
                      .embeddedPaymentElement,
                      .embeddedPaymentElement_swiftUI,
-                     .walletButtonsView_swiftUI:
+                     .walletButtonsView_swiftUI,
+                     .addressCollection_swiftUI:
                     result[.examples]?.append(destination)
                 case .customerSheet_playground,
                      .paymentSheet_playground:
