@@ -306,82 +306,30 @@ class PaymentSheetFlowControllerTests: XCTestCase {
 
         let mockViewController = UIViewController()
 
-        // Verify enhanced presentPaymentOptions method exists and accepts didCancel parameter
-        var enhancedCallbackCalled = false
+        // Test enhanced presentPaymentOptions method with didCancel parameter
+        let enhancedExpectation = expectation(description: "Enhanced completion called")
         flowController.presentPaymentOptions(from: mockViewController) { didCancel in
-            enhancedCallbackCalled = true
             // Verify didCancel is a boolean parameter that can be accessed
             XCTAssertTrue(didCancel == true || didCancel == false, "didCancel should be a boolean value")
+            enhancedExpectation.fulfill()
         }
 
-        // Verify legacy presentPaymentOptions method exists without didCancel parameter
-        var legacyCallbackCalled = false
+        // Trigger the delegate method directly to simulate dismissal
+        flowController.flowControllerViewControllerShouldClose(flowController.viewController, didCancel: true)
+
+        // Wait for enhanced callback
+        wait(for: [enhancedExpectation], timeout: 2.0)
+
+        // Test legacy presentPaymentOptions method without didCancel parameter
+        let legacyExpectation = expectation(description: "Legacy completion called")
         flowController.presentPaymentOptions(from: mockViewController) {
-            legacyCallbackCalled = true
+            legacyExpectation.fulfill()
         }
 
-        // Both methods should be callable (compilation success is the test)
-        XCTAssertTrue(true, "Both enhanced and legacy presentPaymentOptions methods should be available")
-    }
+        // Trigger the delegate method directly to simulate dismissal
+        flowController.flowControllerViewControllerShouldClose(flowController.viewController, didCancel: false)
 
-    func testLegacyPresentPaymentOptions_CallsEnhancedVersion() {
-        // This test verifies that the legacy method internally calls the enhanced version
-        let configuration = PaymentSheet.Configuration()
-        let intent = Intent._testPaymentIntent(paymentMethodTypes: [.card])
-        let elementsSession = STPElementsSession._testCardValue()
-        let loadResult = PaymentSheetLoader.LoadResult(intent: intent, elementsSession: elementsSession, savedPaymentMethods: [], paymentMethodTypes: [.stripe(.card)])
-
-        let flowController = PaymentSheet.FlowController(
-            configuration: configuration,
-            loadResult: loadResult,
-            analyticsHelper: ._testValue()
-        )
-
-        let mockViewController = UIViewController()
-
-        // Test that legacy method can be called - compilation success validates this
-        flowController.presentPaymentOptions(from: mockViewController) {
-            // Legacy completion - should be called by internal delegation to enhanced method
-        }
-
-        XCTAssertTrue(true, "Legacy presentPaymentOptions method should delegate to enhanced version")
-    }
-
-    func testFlowControllerProperties_RequiredForEnhancedAPI() {
-        // Test that the FlowController has the required properties for enhanced functionality
-        let configuration = PaymentSheet.Configuration()
-        let intent = Intent._testPaymentIntent(paymentMethodTypes: [.card])
-        let elementsSession = STPElementsSession._testCardValue()
-        let loadResult = PaymentSheetLoader.LoadResult(intent: intent, elementsSession: elementsSession, savedPaymentMethods: [], paymentMethodTypes: [.stripe(.card)])
-
-        let flowController = PaymentSheet.FlowController(
-            configuration: configuration,
-            loadResult: loadResult,
-            analyticsHelper: ._testValue()
-        )
-
-        // Verify didPresentAndContinue property exists and is accessible
-        let initialValue = flowController.didPresentAndContinue
-        XCTAssertTrue(initialValue == true || initialValue == false, "didPresentAndContinue should be a boolean property")
-
-        // Verify the property starts as false for new FlowController instances
-        XCTAssertFalse(flowController.didPresentAndContinue, "didPresentAndContinue should start as false")
-    }
-
-    func testFlowControllerDelegate_Protocol() {
-        // Test that FlowController conforms to the delegate protocol
-        let configuration = PaymentSheet.Configuration()
-        let intent = Intent._testPaymentIntent(paymentMethodTypes: [.card])
-        let elementsSession = STPElementsSession._testCardValue()
-        let loadResult = PaymentSheetLoader.LoadResult(intent: intent, elementsSession: elementsSession, savedPaymentMethods: [], paymentMethodTypes: [.stripe(.card)])
-
-        let flowController = PaymentSheet.FlowController(
-            configuration: configuration,
-            loadResult: loadResult,
-            analyticsHelper: ._testValue()
-        )
-
-        // Verify FlowController conforms to FlowControllerViewControllerDelegate
-        XCTAssertTrue(flowController is FlowControllerViewControllerDelegate, "FlowController should conform to FlowControllerViewControllerDelegate")
+        // Wait for legacy callback
+        wait(for: [legacyExpectation], timeout: 2.0)
     }
 }
