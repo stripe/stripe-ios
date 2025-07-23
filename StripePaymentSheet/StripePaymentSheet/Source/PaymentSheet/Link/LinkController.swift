@@ -183,7 +183,7 @@ import UIKit
     /// - Parameter phone: The phone number of the user. Expected to be in E.164 format.
     /// - Parameter country: The country code of the user.
     /// - Parameter completion: A closure that is called with the result of the sign up.
-    @_spi(STP) public func registerNewLinkUser(
+    @_spi(STP) public func registerLinkUser(
         fullName: String?,
         phone: String,
         country: String,
@@ -257,6 +257,7 @@ import UIKit
 
         presentingViewController.presentNativeLink(
             selectedPaymentDetailsID: selectedPaymentDetails?.stripeID,
+            linkAccount: linkAccount,
             configuration: configuration,
             intent: intent,
             elementsSession: elementsSession,
@@ -450,13 +451,13 @@ import UIKit
     /// - Parameter phone: The phone number of the user. Expected to be in E.164 format.
     /// - Parameter country: The country code of the user.
     /// Throws if `lookupConsumer` was not called prior to this, or an API error occurs.
-    func registerNewLinkUser(
+    func registerLinkUser(
         fullName: String?,
         phone: String,
         country: String
     ) async throws {
         try await withCheckedThrowingContinuation { continuation in
-            registerNewLinkUser(fullName: fullName, phone: phone, country: country) { result in
+            registerLinkUser(fullName: fullName, phone: phone, country: country) { result in
                 switch result {
                 case .success:
                     continuation.resume(returning: ())
