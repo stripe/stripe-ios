@@ -424,3 +424,9 @@ extension EmbeddedFormViewController: PaymentMethodFormViewControllerDelegate {
         updateError()
     }
 }
+
+extension EmbeddedFormViewController: STPAuthenticationContext {
+    func authenticationPresentingViewController() -> UIViewController {
+        return self
+    }
+}
