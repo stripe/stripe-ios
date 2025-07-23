@@ -248,6 +248,14 @@ import UIKit
         client.userKeyLiveMode = userKeyLiveMode
         return client
     }
+
+    @_spi(STP) public class func paramsAddingClientAttributionMetadata(
+        _ params: [String: Any]
+    ) -> [String: Any] {
+        var newParams = params
+        newParams["client_attribution_metadata"] = ["client_session_id": AnalyticsHelper.shared.sessionID]
+        return newParams
+    }
 }
 
 private let APIVersion = "2020-08-27"
