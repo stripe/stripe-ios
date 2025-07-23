@@ -570,6 +570,16 @@ extension PaymentSheet {
             case .withPaymentDetails(let linkAccount, let paymentDetails, let confirmationExtras, _):
                 let shouldSave = false // always false, as we don't show a save-to-merchant checkbox in Link VC
 
+                if let addressDetails = AddressViewController.addressDetails {
+                    linkAccount.listShippingAddress { result in
+                        guard case let .success(addresses) = result, addresses.shippingAddresses.isEmpty else {
+                            return
+                        }
+
+                        linkAccount.createShippingAddress(addressDetails.stpAddress, isDefault: true)
+                    }
+                }
+
                 if elementsSession.linkPassthroughModeEnabled {
                     // allowRedisplay is nil since we are not saving a payment method.
                     linkAccount.sharePaymentDetails(

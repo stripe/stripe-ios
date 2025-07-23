@@ -197,7 +197,7 @@ struct LinkPMDisplayDetails {
         }
     }
 
-    private func createShippingAddress(_ address: STPAddress, isDefault: Bool) {
+    func createShippingAddress(_ address: STPAddress, isDefault: Bool) {
         guard let session = self.currentSession else {
             stpAssertionFailure()
             return
