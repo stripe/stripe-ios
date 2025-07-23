@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		0B20053F2E318235008FCF8D /* AuthenticationResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B20053E2E318231008FCF8D /* AuthenticationResult.swift */; };
 		0B34E23F2E2020E20072FC89 /* StripeCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0B34E23E2E2020E20072FC89 /* StripeCore.framework */; };
 		0B4292912E1EC57700012FB8 /* StripeCryptoOnramp.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0B4292852E1EC57600012FB8 /* StripeCryptoOnramp.framework */; };
 		0B6DF3492E296E41008B1800 /* STPAPIClient+CryptoOnramp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B6DF3482E296E38008B1800 /* STPAPIClient+CryptoOnramp.swift */; };
@@ -57,6 +58,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		0B20053E2E318231008FCF8D /* AuthenticationResult.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthenticationResult.swift; sourceTree = "<group>"; };
 		0B34E23E2E2020E20072FC89 /* StripeCore.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = StripeCore.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		0B4292852E1EC57600012FB8 /* StripeCryptoOnramp.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = StripeCryptoOnramp.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		0B4292902E1EC57700012FB8 /* StripeCryptoOnrampTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = StripeCryptoOnrampTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -220,6 +222,7 @@
 		0BED9B602E255BB1009FFF76 /* Components */ = {
 			isa = PBXGroup;
 			children = (
+				0B20053E2E318231008FCF8D /* AuthenticationResult.swift */,
 				0BED9B6B2E257965009FFF76 /* Appearance.swift */,
 				0BED9B612E255BC2009FFF76 /* CryptoOnrampCoordinator.swift */,
 			);
@@ -353,6 +356,7 @@
 				0BED9B6C2E25796B009FFF76 /* Appearance.swift in Sources */,
 				0B83D9912E1EF6EF004F0115 /* Docs.docc in Sources */,
 				0B6DF3492E296E41008B1800 /* STPAPIClient+CryptoOnramp.swift in Sources */,
+				0B20053F2E318235008FCF8D /* AuthenticationResult.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
