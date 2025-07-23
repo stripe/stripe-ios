@@ -242,7 +242,8 @@ public final class EmbeddedPaymentElement {
             assertionFailure("`confirm` should only be called when `paymentOption` is not nil")
             return .failed(error: PaymentSheetError.confirmingWithInvalidPaymentOption)
         }
-        let confirmResult = await _confirm(paymentOption: paymentOption, authContext: presentingViewController).result
+        let authContext = PaymentSheetAuthenticationContextViewController(presentingViewController: presentingViewController, appearance: configuration.appearance)
+        let confirmResult = await _confirm(paymentOption: paymentOption, authContext: authContext).result
         if confirmResult.isCanceledOrFailed {
             clearPaymentOptionIfNeeded()
         }
