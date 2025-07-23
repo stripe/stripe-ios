@@ -111,7 +111,6 @@ final class ImageScanningConcurrencyManager: ImageScanningConcurrencyManagerProt
     ) {
         assert(!Thread.isMainThread, "`scanImage` should not be called from the main thread")
 
-        
         // Get camera session properties immediately before the camera state changes
         let cameraProperties = cameraSession.getCameraProperties()
 
