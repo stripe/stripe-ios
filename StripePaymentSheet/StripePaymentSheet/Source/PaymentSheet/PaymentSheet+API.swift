@@ -154,14 +154,21 @@ extension PaymentSheet {
             return
         }
 
-        let billingDetails = confirmParams.paymentMethodParams.billingDetails
-        let email = billingDetails?.email ?? LinkAccountContext.shared.account?.email
+        let linkAccount = LinkAccountContext.shared.account
 
-        let phoneNumber = billingDetails?.phone.flatMap { PhoneNumber.fromE164($0) }
+        guard linkAccount?.isRegistered != true else {
+            // The user already has a Link account
+            return
+        }
+
+        let billingDetails = confirmParams.paymentMethodParams.billingDetails
+        let email = linkAccount?.email ?? billingDetails?.email
 
         guard let email else {
             return
         }
+
+        let phoneNumber = billingDetails?.phone.flatMap { PhoneNumber.fromE164($0) }
 
         ConsumerSession.signUp(
             email: email,

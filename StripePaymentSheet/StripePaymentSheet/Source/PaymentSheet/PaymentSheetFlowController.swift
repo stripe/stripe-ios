@@ -214,12 +214,18 @@ extension PaymentSheet {
         /// You can use this to e.g. display the payment option in your UI.
         @Published public private(set) var paymentOption: PaymentOptionDisplayData?
 
+        /// The current recognition status of the Link account.
+        /// You can use this to render any “Sign up to Link” messaging in your own UI.
         @Published public private(set) var linkAccountRecognitionStatus: LinkAccountRecognitionStatus?
 
+        /// Whether your customer has chosen to sign up to Link in your UI.
         public var linkSignUpOptIn: Bool = false
 
+        /// The recognition status of the current user's Link account.
         public enum LinkAccountRecognitionStatus {
+            /// The current user has been recognized as a Link consumer.
             case recognized
+            /// The current user has not been recognized as a Link consumer.
             case notRecognized
         }
 
