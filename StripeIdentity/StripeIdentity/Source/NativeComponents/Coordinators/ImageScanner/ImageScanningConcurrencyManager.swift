@@ -98,7 +98,6 @@ final class ImageScanningConcurrencyManager: ImageScanningConcurrencyManagerProt
         completeOn completionQueue: DispatchQueue,
         completion: @escaping (ScannerOutput) -> Void
     ) {
-        
         assert(!Thread.isMainThread, "`scanImage` should not be called from the main thread")
 
         // Get camera session properties immediately before the camera state changes
