@@ -60,6 +60,8 @@
 
 "By continuing, you agree to authorize payments pursuant to <terms>these terms</terms>." = "A folytatással elfogadja, hogy engedélyezi a kifizetéseket ezen <terms>feltételek</terms> szerint.";
 
+"By continuing, you authorize %@ to automatically debit your Satispay Balance on a recurring basis in accordance with your purchase or subscription plan." = "A folytatással felhatalmazza a(z) %@-t, hogy a vásárlási vagy előfizetési csomagjának megfelelően rendszeresen automatikusan megterhelje Satispay egyenlegét.";
+
 "By continuing, you authorize %@ to debit your Cash App account for this payment and future payments in accordance with %@'s terms, until this authorization is revoked. You can change this anytime in your Cash App Settings." = "Ha folytatja, azzal engedélyezi, hogy a(z) %1$@ megterhelje a Cash App számláját ezzel a fizetéssel, és jövőbeli fizetésekkel a(z) %2$@ feltételeinek megfelelően, ameddig az engedélyt vissza nem vonja. Ezt bármikor megváltoztathatja a Cash App beállításaiban.";
 
 "By joining Link, you agree to the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "A Linkhez történő csatlakozással Őn elfogadja a <terms>feltételeket</terms> és az <privacy>adatvédelmi szabályzatot</privacy>.";
@@ -256,6 +258,8 @@
 
 "Simple, secure one-click payments" = "Egyszerű, biztonságos, egykattintásos fizetés";
 
+"Something went wrong when linking your account.\nPlease try again later." = "Valami hiba történt a fiók összekapcsolásakor.\nKérjük, próbálja meg újra később.";
+
 "Stripe will deposit $0.01 to your account in 1-2 business days. Then you'll get an email with instructions to finish saving your bank account with %@." = "A Stripe 1-2 munkanapon belül egy 0,01 dollár összegű utalást fog küldeni a bankszámlájára. Ezután e-mailben megkapja az útmutatást a bankszámlája mentéséről a(z) %@ vállalkozáshoz.";
 
 "Stripe will deposit $0.01 to your account in 1-2 business days. Then you’ll get an email with instructions to complete payment to %@." = "A Stripe néhány munkanapon belül egy 0,01 $ összegű utalást fog küldeni a bankszámlájára. Ezután e-mailben megkapja az útmutatást a fizetés befejezéséhez a(z) %@ felé.";
@@ -265,6 +269,8 @@
 "Tap to expand" = "Koppintson a kinyitáshoz";
 
 "The IBAN you entered is incomplete." = "A beírt IBAN-szám hiányos.";
+
+"The IBAN you entered is invalid, \"%@\" is not a supported country code." = "A megadott IBAN érvénytelen, a \"%@\" nem támogatott országkód.";
 
 "The provided verification code has expired." = "A megadott ellenőrző kód lejárt.";
 
@@ -281,6 +287,8 @@
 "Update card" = "Kártya módosítása";
 
 "Update payment method" = "Fizetési mód frissítése";
+
+"Use billing address for shipping" = "Számlázási cím használata a szállításhoz";
 
 "Use your saved info to check out faster" = "Mentett adatok használata a gyorsabb fizetéshez";
 

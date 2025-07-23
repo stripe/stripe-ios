@@ -21,6 +21,7 @@ extension UIViewController {
 
     func presentNativeLink(
         selectedPaymentDetailsID: String?,
+        linkAccount: PaymentSheetLinkAccount? = LinkAccountContext.shared.account,
         configuration: PaymentElementConfiguration,
         intent: Intent,
         elementsSession: STPElementsSession,
@@ -28,8 +29,6 @@ extension UIViewController {
         verificationDismissed: (() -> Void)? = nil,
         callback: @escaping (_ confirmOption: PaymentSheet.LinkConfirmOption?, _ shouldReturnToPaymentSheet: Bool) -> Void
     ) {
-        let linkAccount = LinkAccountContext.shared.account
-
         if let linkAccount, linkAccount.sessionState == .requiresVerification {
             let verificationController = LinkVerificationController(
                 mode: .inlineLogin,

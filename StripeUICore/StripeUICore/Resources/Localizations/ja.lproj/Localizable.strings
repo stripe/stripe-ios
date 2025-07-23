@@ -104,6 +104,8 @@
 
 "Select card brand (optional)" = "カードブランドを選択 (任意)";
 
+"Selection is empty." = "項目が選択されていません。";
+
 "Sort code" = "銀行コード";
 
 "State" = "都道府県";

@@ -104,6 +104,8 @@
 
 "Select card brand (optional)" = "Выберите бренд карты (необязательно)";
 
+"Selection is empty." = "Ничего не выбрано.";
+
 "Sort code" = "Код банка";
 
 "State" = "Штат";

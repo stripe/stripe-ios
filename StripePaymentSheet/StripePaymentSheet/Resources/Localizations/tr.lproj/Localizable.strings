@@ -60,11 +60,15 @@
 
 "By continuing, you agree to authorize payments pursuant to <terms>these terms</terms>." = "Devam ettiğinizde ödemeleri <terms>bu koşullara</terms> göre yetkilendirmeyi kabul etmiş olursunuz.";
 
+"By continuing, you authorize %@ to automatically debit your Satispay Balance on a recurring basis in accordance with your purchase or subscription plan." = "Devam ederek, %@ tarafından Satispay Bakiyenizin satın alma veya abonelik planınıza uygun olarak yinelenen bir şekilde otomatik olarak borçlandırılmasına izin verirsiniz.";
+
 "By continuing, you authorize %@ to debit your Cash App account for this payment and future payments in accordance with %@'s terms, until this authorization is revoked. You can change this anytime in your Cash App Settings." = "Devam ederek %1$@ şirketinin bu ödeme ve gelecekteki ödemeler için Cash Uygulaması hesabınızı %2$@ şirketinin şartlarına uygun olarak borçlandırmasına izin vermiş olursunuz. Bu durum, izin iptal edilene kadar geçerli olur. İstediğiniz zaman Cash Uygulamasının Ayarlarından bu izni değiştirebilirsiniz.";
 
 "By joining Link, you agree to the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Link'e katılarak <terms>Hükümleri</terms> ve <privacy>Gizlilik Politikasını</privacy> kabul etmiş olursunuz.";
 
 "By providing phone number and email, you agree to create a Link account subject to the Link <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Telefon numarası ve e-posta adresi vererek Link <terms>Şartları</terms> ve <privacy>Gizlilik Politikası</privacy>'na tabi bir Link hesabı oluşturmayı kabul etmiş olursunuz.";
+
+"By providing your bank account details and confirming this payment, you agree to this Direct Debit Request and the <terms>Direct Debit Request service agreement</terms>, and authorise Stripe Payments Australia Pty Ltd ACN 160 180 343 Direct Debit User ID number 507156 (“Stripe”) to debit your account through the Bulk Electronic Clearing System (BECS) on behalf of %@ (the \"Merchant\") for any amounts separately communicated to you by the Merchant. You certify that you are either an account holder or an authorised signatory on the account listed above." = "Banka hesap bilgilerinizi vererek ve bu ödemeyi onaylayarak bu Doğrudan Borçlandırma Talebini ve <terms>Doğrudan Borçlandırma Talebi hizmet sözleşmesini</terms> kabul etmiş ve Stripe Payments Australia Pty Ltd ACN 160 180 343 Doğrudan Borçlandırma Kullanıcı Kimliği numarası 507156 (\"Stripe\") tarafından %@ (\"Satıcı\") adına Toplu Elektronik Takas Sistemi (BECS) aracılığıyla Satıcı tarafından size ayrıca bildirilen tutarlar için hesabınızın borçlandırılmasını yetkilendirmiş olursunuz. Yukarıda listelenen hesabın hesap sahibi veya imza yetkilisi olduğu tarafınızca onaylanmaktadır.";
 
 "By providing your card information, you allow %@ to charge your card for future payments in accordance with their terms." = "Kart bilgilerinizi sağlayarak %@ işletmesinin gelecekteki ödemeler için kartınızı kendi şartlarına uygun olarak ücretlendirmesine izin vermiş olursunuz.";
 
@@ -256,6 +260,8 @@
 
 "Simple, secure one-click payments" = "Tek tıkla basit ve güvenli ödemeler";
 
+"Something went wrong when linking your account.\nPlease try again later." = "Hesabınızı bağlarken bir sorun oluştu.\nLütfen daha sonra tekrar deneyin.";
+
 "Stripe will deposit $0.01 to your account in 1-2 business days. Then you'll get an email with instructions to finish saving your bank account with %@." = "Stripe, 1-2 iş günü içerisinde hesabınıza 0,01 ABD doları yatıracaktır. Bunun ardından %@ işletmesinde banka hesabınızı kaydetme işlemini tamamlamak için yapmanız gerekenleri içeren bir e-posta alacaksınız.";
 
 "Stripe will deposit $0.01 to your account in 1-2 business days. Then you’ll get an email with instructions to complete payment to %@." = "Stripe, 1-2 iş günü içinde hesabınıza 0,01 ABD doları yatıracaktır. Ardından, %@ ödemesini tamamlama talimatlarını içeren bir e-posta alacaksınız.";
@@ -265,6 +271,8 @@
 "Tap to expand" = "Genişletmek için dokunun";
 
 "The IBAN you entered is incomplete." = "Girdiğiniz IBAN eksik.";
+
+"The IBAN you entered is invalid, \"%@\" is not a supported country code." = "Girdiğiniz IBAN geçersiz, \"%@\" desteklenen bir ülke kodu değil.";
 
 "The provided verification code has expired." = "Sağlanan doğrulama kodunun süresi dolmuş.";
 
@@ -281,6 +289,8 @@
 "Update card" = "Kartı güncelle";
 
 "Update payment method" = "Ödeme yöntemini güncelleyin";
+
+"Use billing address for shipping" = "Gönderim için fatura adresini kullanın";
 
 "Use your saved info to check out faster" = "Kayıtlı bilgilerinizi kullanarak daha hızlı ödeme yapabilirsiniz";
 
