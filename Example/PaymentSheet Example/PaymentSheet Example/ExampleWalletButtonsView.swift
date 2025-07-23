@@ -161,6 +161,8 @@ struct WalletButtonsFlowControllerView: View {
     @Binding var isConfirmingPayment: Bool
     let onCompletion: (PaymentSheetResult) -> Void
 
+    @State var linkSignUpOptIn: Bool = false
+
     var body: some View {
         if flowController.paymentOption == nil {
             WalletButtonsView(flowController: flowController) { _ in }
@@ -173,6 +175,15 @@ struct WalletButtonsFlowControllerView: View {
             ExamplePaymentOptionView(
                 paymentOptionDisplayData: flowController.paymentOption)
         }
+
+        Toggle(isOn: $linkSignUpOptIn) {
+            Text("Sign up to Link")
+        }
+        .onChange(of: linkSignUpOptIn) { newValue in
+            flowController.linkSignUpOptIn = newValue
+        }
+        .padding(.horizontal)
+
         Button(action: {
             // If you need to update the PaymentIntent's amount, you should do it here and
             // set the `isConfirmingPayment` binding after your update completes.
@@ -310,6 +321,9 @@ class ExampleWalletButtonsModel: ObservableObject {
                 configuration.returnURL = "payments-example://stripe-redirect"
                 configuration.willUseWalletButtonsView = true
                 configuration.appearance = self?.appearance ?? PaymentSheet.Appearance()
+
+                configuration.billingDetailsCollectionConfiguration.email = .always
+                configuration.billingDetailsCollectionConfiguration.phone = .always
 
                 self?.addDebugLog("Creating PaymentSheet FlowController with original backend...")
                 PaymentSheet.FlowController.create(

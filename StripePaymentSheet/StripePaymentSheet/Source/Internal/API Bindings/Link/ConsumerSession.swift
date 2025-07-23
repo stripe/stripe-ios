@@ -119,7 +119,7 @@ extension ConsumerSession {
 
     class func signUp(
         email: String,
-        phoneNumber: String,
+        phoneNumber: String?,
         locale: Locale = .autoupdatingCurrent,
         legalName: String?,
         countryCode: String?,
@@ -144,6 +144,7 @@ extension ConsumerSession {
         paymentMethodParams: STPPaymentMethodParams,
         with apiClient: STPAPIClient = STPAPIClient.shared,
         consumerAccountPublishableKey: String?,
+        isDefault: Bool,
         completion: @escaping (Result<ConsumerPaymentDetails, Error>) -> Void
     ) {
         guard paymentMethodParams.type == .card,
@@ -168,6 +169,7 @@ extension ConsumerSession {
             cardParams: cardParams,
             billingEmailAddress: billingEmailAddress,
             billingDetails: paymentMethodParams.nonnil_billingDetails,
+            isDefault: isDefault,
             consumerAccountPublishableKey: consumerAccountPublishableKey,
             completion: completion)
     }

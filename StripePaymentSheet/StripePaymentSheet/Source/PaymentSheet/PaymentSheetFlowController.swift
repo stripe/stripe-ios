@@ -214,6 +214,15 @@ extension PaymentSheet {
         /// You can use this to e.g. display the payment option in your UI.
         @Published public private(set) var paymentOption: PaymentOptionDisplayData?
 
+        @Published public private(set) var linkAccountRecognitionStatus: LinkAccountRecognitionStatus?
+
+        public var linkSignUpOptIn: Bool = false
+
+        public enum LinkAccountRecognitionStatus {
+            case recognized
+            case notRecognized
+        }
+
         // MARK: - Private properties
         var intent: Intent { viewController.intent }
         var elementsSession: STPElementsSession { viewController.elementsSession }
@@ -289,6 +298,17 @@ extension PaymentSheet {
             self.viewController = Self.makeViewController(configuration: configuration, loadResult: loadResult, analyticsHelper: analyticsHelper, walletButtonsShownExternally: self.walletButtonsShownExternally)
             self.viewController.flowControllerDelegate = self
             updatePaymentOption()
+
+            LinkAccountContext.shared.addObserver(self, selector: #selector(onAccountChange(_:)))
+        }
+
+        @objc
+        func onAccountChange(_ notification: Notification) {
+            DispatchQueue.main.async { [weak self] in
+                let linkAccount = notification.object as? PaymentSheetLinkAccount
+                let isLinkConsumer = linkAccount?.isRegistered == true
+                self?.linkAccountRecognitionStatus = isLinkConsumer ? .recognized : .notRecognized
+            }
         }
 
         // MARK: - Public methods
@@ -544,6 +564,7 @@ extension PaymentSheet {
                     paymentOption: paymentOption,
                     paymentHandler: paymentHandler,
                     integrationShape: .flowController,
+                    linkSignUpOptIn: linkSignUpOptIn,
                     analyticsHelper: analyticsHelper
                 ) { [analyticsHelper, configuration] result, deferredIntentConfirmationType in
                     analyticsHelper.logPayment(

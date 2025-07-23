@@ -42,6 +42,7 @@ extension PaymentSheet {
         paymentHandler: STPPaymentHandler,
         integrationShape: IntegrationShape = .complete,
         paymentMethodID: String? = nil,
+        linkSignUpOptIn: Bool = false,
         analyticsHelper: PaymentSheetAnalyticsHelper,
         completion: @escaping (PaymentSheetResult, STPAnalyticsClient.DeferredIntentConfirmationType?) -> Void
     ) {
@@ -108,7 +109,7 @@ extension PaymentSheet {
             presentingViewController.presentAsBottomSheet(bottomSheetVC, appearance: configuration.appearance)
         } else {
             // MARK: - No local actions
-            confirmAfterHandlingLocalActions(configuration: configuration, authenticationContext: authenticationContext, intent: intent, elementsSession: elementsSession, paymentOption: paymentOption, intentConfirmParamsForDeferredIntent: nil, paymentHandler: paymentHandler, analyticsHelper: analyticsHelper, completion: completion)
+            confirmAfterHandlingLocalActions(configuration: configuration, authenticationContext: authenticationContext, intent: intent, elementsSession: elementsSession, paymentOption: paymentOption, intentConfirmParamsForDeferredIntent: nil, paymentHandler: paymentHandler, linkSignUpOptIn: linkSignUpOptIn, analyticsHelper: analyticsHelper, completion: completion)
         }
     }
 
@@ -142,6 +143,63 @@ extension PaymentSheet {
         }
     }
 
+    private static func signUpToLinkIfPossible(
+        linkSignUpOptIn: Bool,
+        paymentMethodType: STPPaymentMethodType,
+        confirmParams: IntentConfirmParams,
+        useMobileEndpoints: Bool,
+        configuration: PaymentElementConfiguration
+    ) {
+        guard linkSignUpOptIn, paymentMethodType == .card else {
+            return
+        }
+
+        let billingDetails = confirmParams.paymentMethodParams.billingDetails
+        let email = billingDetails?.email ?? LinkAccountContext.shared.account?.email
+
+        let phoneNumber = billingDetails?.phone.flatMap { PhoneNumber.fromE164($0) }
+
+        guard let email else {
+            return
+        }
+
+        ConsumerSession.signUp(
+            email: email,
+            phoneNumber: phoneNumber?.string(as: .e164),
+            legalName: billingDetails?.name,
+            countryCode: phoneNumber?.countryCode,
+            consentAction: PaymentSheetLinkAccount.ConsentAction.implied_v0_0.rawValue, // TODO: Figure out the right value
+            useMobileEndpoints: useMobileEndpoints
+        ) { consumerSessionResult in
+            switch consumerSessionResult {
+            case .success(let signupResponse):
+                let linkAccount = PaymentSheetLinkAccount(
+                    email: signupResponse.consumerSession.emailAddress,
+                    session: signupResponse.consumerSession,
+                    publishableKey: signupResponse.publishableKey,
+                    apiClient: configuration.apiClient,
+                    useMobileEndpoints: useMobileEndpoints
+                )
+
+                LinkAccountContext.shared.account = linkAccount
+
+                linkAccount.createPaymentDetails(
+                    with: confirmParams.paymentMethodParams,
+                    isDefault: true
+                ) { paymentDetailsResult in
+                    switch paymentDetailsResult {
+                    case .success(let success):
+                        print("Created payment details with ID \(success.stripeID)")
+                    case .failure(let failure):
+                        print(failure.localizedDescription)
+                    }
+                }
+            case .failure(let failure):
+                print(failure.localizedDescription)
+            }
+        }
+    }
+
     static fileprivate func confirmAfterHandlingLocalActions(
         configuration: PaymentElementConfiguration,
         authenticationContext: STPAuthenticationContext,
@@ -152,6 +210,7 @@ extension PaymentSheet {
         paymentHandler: STPPaymentHandler,
         isFlowController: Bool = false,
         paymentMethodID: String? = nil,
+        linkSignUpOptIn: Bool = false,
         analyticsHelper: PaymentSheetAnalyticsHelper,
         completion: @escaping (PaymentSheetResult, STPAnalyticsClient.DeferredIntentConfirmationType?) -> Void
     ) {
@@ -191,6 +250,15 @@ extension PaymentSheet {
                 mobilePaymentElementFeatures: elementsSession.customerSessionMobilePaymentElementFeatures,
                 isSettingUp: intent.isSetupFutureUsageSet(for: paymentMethodType)
             )
+
+            signUpToLinkIfPossible(
+                linkSignUpOptIn: linkSignUpOptIn,
+                paymentMethodType: paymentMethodType,
+                confirmParams: confirmParams,
+                useMobileEndpoints: elementsSession.linkSettings?.useAttestationEndpoints ?? false,
+                configuration: configuration
+            )
+
             switch intent {
             // MARK: ↪ PaymentIntent
             case .paymentIntent(let paymentIntent):
@@ -471,7 +539,7 @@ extension PaymentSheet {
                         return
                     }
 
-                    linkAccount.createPaymentDetails(with: paymentMethodParams) { result in
+                    linkAccount.createPaymentDetails(with: paymentMethodParams, isDefault: false) { result in
                         switch result {
                         case .success(let paymentDetails):
                             // We need to explicitly pass the billing phone number to the share and payment method endpoints,
