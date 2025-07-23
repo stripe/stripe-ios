@@ -341,6 +341,7 @@ extension PaymentSheet {
                     paymentHandler.confirmPayment(
                         paymentIntentParams,
                         with: authenticationContext,
+                        additionalClientAttributionMetadata: additionalClientAttributionMetadata,
                         completion: { actionStatus, _, error in
                             paymentHandlerCompletion(actionStatus, error)
                             if actionStatus == .succeeded {
@@ -355,6 +356,7 @@ extension PaymentSheet {
                     paymentHandler.confirmSetupIntent(
                         setupIntentParams,
                         with: authenticationContext,
+                        additionalClientAttributionMetadata: additionalClientAttributionMetadata,
                         completion: { actionStatus, _, error in
                             paymentHandlerCompletion(actionStatus, error)
                             if actionStatus == .succeeded {
@@ -374,6 +376,7 @@ extension PaymentSheet {
                         authenticationContext: authenticationContext,
                         paymentHandler: paymentHandler,
                         isFlowController: isFlowController,
+                        additionalClientAttributionMetadata: additionalClientAttributionMetadata,
                         completion: { psResult, confirmationType in
                             if case .completed = psResult {
                                 linkAccount?.logout()
@@ -406,6 +409,7 @@ extension PaymentSheet {
                     paymentHandler.confirmPayment(
                         paymentIntentParams,
                         with: authenticationContext,
+                        additionalClientAttributionMetadata: additionalClientAttributionMetadata,
                         completion: { actionStatus, _, error in
                             if actionStatus == .succeeded {
                                 linkAccount?.logout()
@@ -421,6 +425,7 @@ extension PaymentSheet {
                     paymentHandler.confirmSetupIntent(
                         setupIntentParams,
                         with: authenticationContext,
+                        additionalClientAttributionMetadata: additionalClientAttributionMetadata,
                         completion: { actionStatus, _, error in
                             if actionStatus == .succeeded {
                                 linkAccount?.logout()
@@ -436,6 +441,7 @@ extension PaymentSheet {
                         authenticationContext: authenticationContext,
                         paymentHandler: paymentHandler,
                         isFlowController: isFlowController,
+                        additionalClientAttributionMetadata: additionalClientAttributionMetadata,
                         completion: { psResult, confirmationType in
                             if case .completed = psResult {
                                 linkAccount?.logout()
@@ -499,7 +505,8 @@ extension PaymentSheet {
                                     cvc: paymentMethodParams.card?.cvc,
                                     allowRedisplay: paymentMethodParams.allowRedisplay,
                                     expectedPaymentMethodType: paymentDetails.expectedPaymentMethodTypeForPassthroughMode(elementsSession),
-                                    billingPhoneNumber: billingPhoneNumber
+                                    billingPhoneNumber: billingPhoneNumber,
+                                    additionalClientAttributionMetadata: additionalClientAttributionMetadata
                                 ) { result in
                                     switch result {
                                     case .success(let paymentDetailsShareResponse):
