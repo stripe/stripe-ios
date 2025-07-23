@@ -72,12 +72,16 @@ extension ConsumerSession: Equatable {
 
 // MARK: - Helpers
 extension ConsumerSession {
-    var hasVerifiedSMSSession: Bool {
-        verificationSessions.containsVerifiedSMSSession
+    var hasVerifiedSession: Bool {
+        verificationSessions.containsVerifiedSMSSession || verificationSessions.containsVerifiedEmailSession
     }
 
-    var hasStartedSMSVerification: Bool {
-        verificationSessions.contains( where: { $0.type == .sms && $0.state == .started })
+    var hasStartedVerification: Bool {
+        hasStartedVerification(ofType: .sms) || hasStartedVerification(ofType: .email)
+    }
+
+    func hasStartedVerification(ofType type: ConsumerSession.VerificationSession.SessionType) -> Bool {
+        verificationSessions.contains( where: { $0.type == type && $0.state == .started })
     }
 
     var isVerifiedForSignup: Bool {
@@ -204,16 +208,18 @@ extension ConsumerSession {
             completion: completion)
     }
 
-    func confirmSMSVerification(
+    func confirmVerification(
         with code: String,
+        type: VerificationSession.SessionType = .sms,
         with apiClient: STPAPIClient = STPAPIClient.shared,
         cookieStore: LinkCookieStore = LinkSecureCookieStore.shared,
         consumerAccountPublishableKey: String?,
         completion: @escaping (Result<ConsumerSession, Error>) -> Void
     ) {
-        apiClient.confirmSMSVerification(
+        apiClient.confirmVerification(
             for: clientSecret,
             with: code,
+            type: type,
             cookieStore: cookieStore,
             consumerAccountPublishableKey: consumerAccountPublishableKey,
             completion: completion)
