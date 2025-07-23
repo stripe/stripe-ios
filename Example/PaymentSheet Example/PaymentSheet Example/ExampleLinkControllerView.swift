@@ -408,7 +408,8 @@ struct ExampleLinkControllerView: View {
             try await linkController.registerLinkUser(
                 fullName: fullName.isEmpty ? nil : fullName,
                 phone: phone,
-                country: country
+                country: country,
+                consentAction: .clicked_button_mobile_v1
             )
             await MainActor.run {
                 self.isLoading = false
