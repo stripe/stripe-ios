@@ -28,10 +28,10 @@ import UIKit
         @_spi(STP) public let sublabel: String?
     }
 
-    @frozen @_spi(STP) public enum AuthenticationResult {
-        /// Authentication was completed successfully.
+    @frozen @_spi(STP) public enum VerificationResult {
+        /// Verification was completed successfully.
         case completed
-        /// Authentication was canceled by the user.
+        /// Verification was canceled by the user.
         case canceled
     }
 
@@ -182,11 +182,13 @@ import UIKit
     /// - Parameter fullName: The full name of the user.
     /// - Parameter phone: The phone number of the user. Expected to be in E.164 format.
     /// - Parameter country: The country code of the user.
+    /// - Parameter consentAction: The action taken by the user in order to register for Link.
     /// - Parameter completion: A closure that is called with the result of the sign up.
-    @_spi(STP) public func registerNewLinkUser(
+    @_spi(STP) public func registerLinkUser(
         fullName: String?,
         phone: String,
         country: String,
+        consentAction: PaymentSheetLinkAccount.ConsentAction,
         completion: @escaping (Result<Void, Error>) -> Void
     ) {
         guard let linkAccount else {
@@ -198,7 +200,7 @@ import UIKit
             with: phone,
             legalName: fullName,
             countryCode: country,
-            consentAction: .clicked_button_mobile_v1,
+            consentAction: consentAction,
             completion: { [weak self] result in
                 LinkAccountContext.shared.account = self?.linkAccount
                 completion(result)
@@ -209,11 +211,11 @@ import UIKit
     /// Presents the Link verification flow for an existing user which requires verification.
     /// `lookupConsumer` must be called before this.
     ///
-    /// - Parameter viewController: The view controller from which to present the authentication flow.
-    /// - Parameter completion: A closure that is called with the result of the authentication. It returns an `AuthenticationResult` if successful, or an error if the verification failed.
+    /// - Parameter viewController: The view controller from which to present the verification flow.
+    /// - Parameter completion: A closure that is called with the result of the verification. It returns a `VerificationResult` if successful, or an error if the verification failed.
     @_spi(STP) public func presentForVerification(
         from viewController: UIViewController,
-        completion: @escaping (Result<AuthenticationResult, Error>) -> Void
+        completion: @escaping (Result<VerificationResult, Error>) -> Void
     ) {
         guard let linkAccount, linkAccount.sessionState == .requiresVerification else {
             let error = IntegrationError.noActiveLinkConsumer
@@ -257,6 +259,7 @@ import UIKit
 
         presentingViewController.presentNativeLink(
             selectedPaymentDetailsID: selectedPaymentDetails?.stripeID,
+            linkAccount: linkAccount,
             configuration: configuration,
             intent: intent,
             elementsSession: elementsSession,
@@ -449,14 +452,21 @@ import UIKit
     /// - Parameter fullName: The full name of the user.
     /// - Parameter phone: The phone number of the user. Expected to be in E.164 format.
     /// - Parameter country: The country code of the user.
+    /// - Parameter consentAction: The action taken by the user in order to register for Link.
     /// Throws if `lookupConsumer` was not called prior to this, or an API error occurs.
-    func registerNewLinkUser(
+    func registerLinkUser(
         fullName: String?,
         phone: String,
-        country: String
+        country: String,
+        consentAction: PaymentSheetLinkAccount.ConsentAction
     ) async throws {
         try await withCheckedThrowingContinuation { continuation in
-            registerNewLinkUser(fullName: fullName, phone: phone, country: country) { result in
+            registerLinkUser(
+                fullName: fullName,
+                phone: phone,
+                country: country,
+                consentAction: consentAction
+            ) { result in
                 switch result {
                 case .success:
                     continuation.resume(returning: ())
@@ -470,10 +480,10 @@ import UIKit
     /// Presents the Link verification flow for an existing user.
     /// `lookupConsumer` must be called before this.
     ///
-    /// - Parameter viewController: The view controller from which to present the authentication flow.
-    /// - Returns: An `AuthenticationResult` indicating whether authentication was completed or canceled.
+    /// - Parameter viewController: The view controller from which to present the verification flow.
+    /// - Returns: A `VerificationResult` indicating whether verification was completed or canceled.
     /// Throws if `lookupConsumer` was not called prior to this, or an API error occurs.
-    func presentForVerification(from viewController: UIViewController) async throws -> AuthenticationResult {
+    func presentForVerification(from viewController: UIViewController) async throws -> VerificationResult {
         try await withCheckedThrowingContinuation { continuation in
             presentForVerification(from: viewController) { result in
                 switch result {

@@ -32,7 +32,7 @@ struct LinkPMDisplayDetails {
     }
 
     // More information: go/link-signup-consent-action-log
-    enum ConsentAction: String {
+    @_spi(STP) public enum ConsentAction: String {
         // Checkbox, no fields prefilled
         case checkbox_v0 = "clicked_checkbox_nospm_mobile_v0"
 
@@ -59,6 +59,9 @@ struct LinkPMDisplayDetails {
 
         // Checkbox pre-checked, no fields prefilled
         case prechecked_opt_in_box_prefilled_none = "prechecked_opt_in_box_prefilled_none"
+
+        // Crypto onramp, email and phone number are entered, a sign up button is tapped
+        case entered_phone_number_email_clicked_signup_crypto_onramp = "entered_phone_number_email_clicked_signup_crypto_onramp"
     }
 
     // Dependencies
