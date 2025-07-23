@@ -31,8 +31,7 @@ extension StripeAPI.PaymentMethod {
             var parameters = try params.encodeJSONDictionary()
             parameters = STPAPIClient.paramsAddingClientAttributionMetadata(parameters)
             apiClient.post(resource: Resource, parameters: parameters, completion: completion)
-        }
-        catch {
+        } catch {
             apiClient.post(resource: Resource, object: params, completion: completion)
         }
     }
