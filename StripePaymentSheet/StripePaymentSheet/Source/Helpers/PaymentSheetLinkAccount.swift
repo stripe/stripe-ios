@@ -185,11 +185,30 @@ struct LinkPMDisplayDetails {
             case .success(let signupResponse):
                 self?.currentSession = signupResponse.consumerSession
                 self?.publishableKey = signupResponse.publishableKey
+
+                if let shippingAddress = AddressViewController.addressDetails {
+                    self?.createShippingAddress(shippingAddress.stpAddress, isDefault: true)
+                }
+
                 completion(.success(()))
             case .failure(let error):
                 completion(.failure(error))
             }
         }
+    }
+
+    private func createShippingAddress(_ address: STPAddress, isDefault: Bool) {
+        guard let session = self.currentSession else {
+            stpAssertionFailure()
+            return
+        }
+
+        session.createShippingAddress(
+            address: address,
+            consumerAccountPublishableKey: self.publishableKey,
+            isDefault: isDefault,
+            completion: { _ in }
+        )
     }
 
     func startVerification(completion: @escaping (Result<Bool, Error>) -> Void) {

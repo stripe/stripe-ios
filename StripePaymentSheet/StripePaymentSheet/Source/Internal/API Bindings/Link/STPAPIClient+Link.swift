@@ -246,6 +246,38 @@ extension STPAPIClient {
         )
     }
 
+    func createShippingAddress(
+        for consumerSessionClientSecret: String,
+        address: STPAddress,
+        consumerAccountPublishableKey: String?,
+        isDefault: Bool,
+        completion: @escaping (Result<ShippingAddressResponse, Error>) -> Void
+    ) {
+        let endpoint: String = "consumers/shipping_addresses"
+
+        let parameters: [String: Any] = [
+            "credentials": ["consumer_session_client_secret": consumerSessionClientSecret],
+            "request_surface": "ios_payment_element",
+            "address": [
+                "name": address.name,
+                "line_1": address.line1,
+                "line_2": address.line2,
+                "locality": address.city,
+                "administrative_area": address.state,
+                "postal_code": address.postalCode,
+                "country_code": address.country,
+            ],
+            "is_default": isDefault,
+        ]
+
+        post(
+            resource: endpoint,
+            parameters: parameters,
+            consumerPublishableKey: consumerAccountPublishableKey,
+            completion: completion
+        )
+    }
+
     private func makeConsumerSessionRequest(
         endpoint: String,
         parameters: [String: Any],

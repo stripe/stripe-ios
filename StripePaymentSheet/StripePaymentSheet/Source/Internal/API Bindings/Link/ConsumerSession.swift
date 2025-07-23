@@ -191,6 +191,22 @@ extension ConsumerSession {
             completion: completion)
     }
 
+    func createShippingAddress(
+        address: STPAddress,
+        with apiClient: STPAPIClient = STPAPIClient.shared,
+        consumerAccountPublishableKey: String?,
+        isDefault: Bool,
+        completion: @escaping (Result<ShippingAddressResponse, Error>) -> Void
+    ) {
+        apiClient.createShippingAddress(
+            for: clientSecret,
+            address: address,
+            consumerAccountPublishableKey: consumerAccountPublishableKey,
+            isDefault: isDefault,
+            completion: completion
+        )
+    }
+
     func startVerification(
         type: VerificationSession.SessionType = .sms,
         locale: Locale = .autoupdatingCurrent,

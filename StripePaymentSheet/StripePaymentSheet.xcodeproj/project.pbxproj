@@ -386,6 +386,7 @@
 		CB46EF4B2CED1BDA00E9A7F2 /* PromoBadgeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB46EF4A2CED1BDA00E9A7F2 /* PromoBadgeView.swift */; };
 		CB6F8F892E0455D9003551D5 /* LinkController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB6F8F882E0455D9003551D5 /* LinkController.swift */; };
 		CB76C0792DE4B57D0009E086 /* LinkDefaultOptInView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB76C0782DE4B57D0009E086 /* LinkDefaultOptInView.swift */; };
+		CB94F7122E30354500D076DF /* ShippingAddressResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB94F7112E30354500D076DF /* ShippingAddressResponse.swift */; };
 		CBC98E222DD53F9D00458788 /* LinkFlowControllerHelpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = CBC98E212DD53F9D00458788 /* LinkFlowControllerHelpers.swift */; };
 		CBE09F4D2D8DA62A0083D0B8 /* LinkConfirmationExtras.swift in Sources */ = {isa = PBXBuildFile; fileRef = CBE09F4C2D8DA62A0083D0B8 /* LinkConfirmationExtras.swift */; };
 		CBECCB382DB1BA4100EF0875 /* PaymentMethodWithLinkDetails.swift in Sources */ = {isa = PBXBuildFile; fileRef = CBECCB372DB1BA4100EF0875 /* PaymentMethodWithLinkDetails.swift */; };
@@ -912,6 +913,7 @@
 		CB46EF4A2CED1BDA00E9A7F2 /* PromoBadgeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PromoBadgeView.swift; sourceTree = "<group>"; };
 		CB6F8F882E0455D9003551D5 /* LinkController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LinkController.swift; sourceTree = "<group>"; };
 		CB76C0782DE4B57D0009E086 /* LinkDefaultOptInView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LinkDefaultOptInView.swift; sourceTree = "<group>"; };
+		CB94F7112E30354500D076DF /* ShippingAddressResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShippingAddressResponse.swift; sourceTree = "<group>"; };
 		CBC98E212DD53F9D00458788 /* LinkFlowControllerHelpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LinkFlowControllerHelpers.swift; sourceTree = "<group>"; };
 		CBCFE3D39D670C3C77C59722 /* cs-CZ */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "cs-CZ"; path = "cs-CZ.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		CBE09F4C2D8DA62A0083D0B8 /* LinkConfirmationExtras.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LinkConfirmationExtras.swift; sourceTree = "<group>"; };
@@ -1433,6 +1435,7 @@
 			isa = PBXGroup;
 			children = (
 				4180070F2DE0EB80000FEB87 /* ShippingAddressesResponse.swift */,
+				CB94F7112E30354500D076DF /* ShippingAddressResponse.swift */,
 				D0CE026F53D10DA10D7BC4E7 /* ConsumerSession.swift */,
 				4208AD2E0A737F5E0F00DE48 /* ConsumerSession+LookupResponse.swift */,
 				E2D61B52BFA201D25E8F6428 /* ConsumerSession+PublishableKey.swift */,
@@ -2462,6 +2465,7 @@
 				29C91CE046099B86D8DCF310 /* STPAnalyticsClient+Link.swift in Sources */,
 				61FDF8EC2D81E12C004B3B0D /* ExternalPaymentOption.swift in Sources */,
 				93FB7933528A45350593D3EC /* UIColor+Link.swift in Sources */,
+				CB94F7122E30354500D076DF /* ShippingAddressResponse.swift in Sources */,
 				11C23605F97D2DB6F171843E /* LinkUI.swift in Sources */,
 				AB40D7549CDA2E01793CC5D1 /* LinkAccountService.swift in Sources */,
 				5943CD64F4F85071B16A76AC /* LinkPopupURLParser.swift in Sources */,

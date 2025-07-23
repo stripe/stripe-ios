@@ -55,6 +55,8 @@ public class AddressViewController: UIViewController {
     private var selectedAutoCompleteResult: PaymentSheet.Address?
     private var didLogAddressShow = false
 
+    static var addressDetails: AddressDetails?
+
     // MARK: - Internal properties
     let addressSpecProvider: AddressSpecProvider
     private var latestError: Error? {
@@ -305,6 +307,7 @@ extension AddressViewController {
 
     func didContinue() {
         logAddressCompleted()
+        Self.addressDetails = addressDetails
         delegate?.addressViewControllerDidFinish(self, with: addressDetails)
     }
 
