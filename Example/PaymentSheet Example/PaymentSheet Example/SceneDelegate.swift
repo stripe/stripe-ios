@@ -45,7 +45,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     @available(iOS 15.0, *)
     func launchWith(base64String: String, windowScene: UIWindowScene) {
         let settings = PaymentSheetTestPlaygroundSettings.fromBase64(base64: base64String, className: PaymentSheetTestPlaygroundSettings.self)!
-        let hvc = UIHostingController(rootView: PaymentSheetTestPlayground(settings: settings))
+        let hvc = UIHostingController(rootView: PaymentSheetTestPlayground(settings: settings, appearance: PaymentSheet.Appearance.default))
         let navController = UINavigationController(rootViewController: hvc)
         windowScene.windows.first!.rootViewController = navController
     }

@@ -34,7 +34,7 @@ final class PickerFieldView: UIView {
 #endif
         textField.adjustsFontForContentSizeCategory = true
         textField.font = theme.fonts.subheadline
-#if !canImport(CompositorServices)
+#if !os(visionOS)
         textField.inputAccessoryView = toolbar
 #endif
         textField.delegate = self
@@ -166,7 +166,7 @@ final class PickerFieldView: UIView {
         }
     }
 
-#if !canImport(CompositorServices)
+#if !os(visionOS)
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
         super.traitCollectionDidChange(previousTraitCollection)
         layer.borderColor = theme.colors.border.cgColor

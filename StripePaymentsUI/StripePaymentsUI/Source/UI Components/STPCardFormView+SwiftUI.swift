@@ -46,6 +46,16 @@ extension STPCardFormView {
         public func updateUIView(_ cardFormView: STPCardFormView, context: Context) {
             cardFormView.cardParams = paymentMethodParams
         }
+
+        @available(iOS 16.0, *)
+        public func sizeThatFits(_ proposal: ProposedViewSize, uiView: STPCardFormView, context: Context) -> CGSize? {
+            let width = proposal.width ?? UIView.layoutFittingExpandedSize.width
+            let height = proposal.height ?? UIView.layoutFittingExpandedSize.height
+            let targetSize = CGSize(width: width, height: height)
+            return uiView.systemLayoutSizeFitting(targetSize,
+                                                   withHorizontalFittingPriority: .defaultHigh,
+                                                   verticalFittingPriority: .fittingSizeLevel)
+        }
     }
 
     /// :nodoc:

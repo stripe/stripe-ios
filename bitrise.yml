@@ -39,7 +39,7 @@ stages:
     - framework-tests: {}
     - test-builds-xcode-16: {}
     - test-builds-vision: {}
-    - install-tests-non-carthage: {}
+    - install-tests: {}
     - lint-tests: {}
     - size-report: {}
     - ui-tests-1: {}
@@ -56,7 +56,7 @@ stages:
     - test-builds-xcode-16-release: {}
     - test-builds-vision: {}
     - deploy-docs: {}
-    - install-tests-non-carthage: {}
+    - install-tests: {}
     - lint-tests: {}
     - size-report: {}
     - ui-tests-1: {}
@@ -66,7 +66,6 @@ stages:
     - ui-tests-5: {}
     - legacy-tests-15: {}
     - legacy-tests-16: {}
-    - carthage-install-test: {}
     - pod-lint-tests: {}
     - integration-all: {}
   stage-nightly-all:
@@ -76,22 +75,9 @@ stages:
     - check-docs: {}
     - legacy-tests-15: {}
     - legacy-tests-16: {}
-    - carthage-install-test: {}
     - deploy-dry-run: {}
     - pod-lint-tests: {}
 workflows:
-  carthage-install-test:
-    steps:
-    - fastlane@3:
-        inputs:
-        - lane: installation_carthage
-        title: fastlane installation_carthage
-    before_run:
-    - prep_all
-    after_run:
-    - notify_ci
-    envs:
-    - DEFAULT_TEST_DEVICE: platform=iOS Simulator,name=iPhone 12 mini,OS=16.4
   check-docs:
     steps:
     - script@1:
@@ -391,7 +377,7 @@ workflows:
       bitrise.io:
         stack: osx-xcode-16.0.x
         machine_type_id: g2.mac.large
-  install-tests-non-carthage:
+  install-tests:
     steps:
     - fastlane@3:
         inputs:

@@ -12,6 +12,7 @@
 import UIKit
 
 /// A selectable button with various display styles used in vertical mode and embedded to display payment methods.
+/// - Note: This is an 'abstract base class', see its subclasses.
 class RowButton: UIView, EventHandler {
     typealias DidTapClosure = (RowButton) -> Void
 
@@ -48,7 +49,7 @@ class RowButton: UIView, EventHandler {
 
     var isFlatWithCheckmarkOrChevronStyle: Bool {
         let rowStyle = appearance.embeddedPaymentElement.row.style
-        return (rowStyle == .flatWithCheckmark || rowStyle == .flatWithChevron) && isEmbedded
+        return (rowStyle == .flatWithCheckmark || rowStyle == .flatWithDisclosure) && isEmbedded
     }
 
     var hasSubtext: Bool {
@@ -124,7 +125,7 @@ class RowButton: UIView, EventHandler {
 
     // MARK: Overrides
 
-#if !canImport(CompositorServices)
+#if !os(visionOS)
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
         // If the font size changes, make this RowButton the same height as the tallest variant if necessary
         heightConstraint?.isActive = false
@@ -356,8 +357,8 @@ extension RowButton {
                   isEmbedded: isEmbedded,
                   didTap: didTap
               )
-          case .flatWithChevron:
-              return RowButtonFlatWithChevron(
+          case .flatWithDisclosure:
+              return RowButtonFlatWithDisclosure(
                   appearance: appearance,
                   type: type,
                   imageView: imageView,
@@ -383,7 +384,11 @@ extension RowButton {
 
     static func makeRowButtonLabel(text: String, appearance: PaymentSheet.Appearance, isEmbedded: Bool) -> UILabel {
         let label = UILabel()
-        label.font = appearance.scaledFont(for: appearance.font.base.medium, style: .subheadline, maximumPointSize: 25)
+        if isEmbedded, let customFont = appearance.embeddedPaymentElement.row.titleFont {
+            label.font = customFont
+        } else {
+            label.font = appearance.scaledFont(for: appearance.font.base.medium, style: .subheadline, maximumPointSize: 25)
+        }
         label.adjustsFontSizeToFitWidth = true
         label.adjustsFontForContentSizeCategory = true
         label.text = text
@@ -394,7 +399,7 @@ extension RowButton {
             }
 
             switch appearance.embeddedPaymentElement.row.style {
-            case .flatWithRadio, .flatWithCheckmark, .flatWithChevron:
+            case .flatWithRadio, .flatWithCheckmark, .flatWithDisclosure:
                 return appearance.colors.text
             case .floatingButton:
                 return appearance.colors.componentText
@@ -419,7 +424,7 @@ extension RowButton {
             }
 
             switch appearance.embeddedPaymentElement.row.style {
-            case .flatWithRadio, .flatWithCheckmark, .flatWithChevron:
+            case .flatWithRadio, .flatWithCheckmark, .flatWithDisclosure:
                 return appearance.colors.textSecondary
             case .floatingButton:
                 return appearance.colors.componentPlaceholderText
@@ -531,12 +536,16 @@ extension RowButton {
         let imageView = UIImageView(image: paymentMethod.makeSavedPaymentMethodRowImage(iconStyle: appearance.iconStyle))
         imageView.contentMode = .scaleAspectFit
 
+        let text = paymentMethod.isLinkPassthroughMode
+            ? STPPaymentMethodType.link.displayName
+            : paymentMethod.paymentSheetLabel
+
         let button = RowButton.create(
             appearance: appearance,
             type: .saved(paymentMethod: paymentMethod),
             imageView: imageView,
-            text: paymentMethod.paymentSheetLabel,
-            subtext: paymentMethod.linkPaymentDetails?.sublabel ?? subtext,
+            text: text,
+            subtext: paymentMethod.linkSpecificSublabel ?? subtext,
             badgeText: badgeText,
             accessoryView: accessoryView,
             isEmbedded: isEmbedded,
@@ -628,5 +637,20 @@ extension PaymentSheet.Appearance {
 
     var defaultBadgeFont: UIFont {
         return scaledFont(for: font.base.regular, style: .caption1, maximumPointSize: 20)
+    }
+}
+
+private extension STPPaymentMethod {
+
+    var linkSpecificSublabel: String? {
+        if let linkPaymentDetails {
+            return linkPaymentDetails.sublabel
+        }
+        if isLinkPassthroughMode {
+            // We render "Link" as the label, so use the original label
+            // as the sublabel.
+            return paymentSheetLabel
+        }
+        return nil
     }
 }
