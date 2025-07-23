@@ -183,6 +183,7 @@ extension STPApplePayContext {
     static func create(
         intent: Intent,
         configuration: PaymentElementConfiguration,
+        additionalClientAttributionMetadata: [String: String],
         completion: @escaping PaymentSheetResultCompletionBlock
     ) -> STPApplePayContext? {
         guard let applePay = configuration.applePay else {
@@ -203,7 +204,7 @@ extension STPApplePayContext {
             shippingContactUpdateHandler: configuration.applePay?.customHandlers?.shippingContactUpdateHandler,
             completion: completion
         )
-        if let applePayContext = STPApplePayContext(paymentRequest: paymentRequest, delegate: delegate) {
+        if let applePayContext = STPApplePayContext(paymentRequest: paymentRequest, additionalClientAttributionMetadata: additionalClientAttributionMetadata, delegate: delegate) {
             applePayContext.shippingDetails = makeShippingDetails(from: configuration)
             applePayContext.apiClient = configuration.apiClient
             applePayContext.returnUrl = configuration.returnURL

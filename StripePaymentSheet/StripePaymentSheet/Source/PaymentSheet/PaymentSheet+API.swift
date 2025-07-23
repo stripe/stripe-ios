@@ -178,6 +178,7 @@ extension PaymentSheet {
                 let applePayContext = STPApplePayContext.create(
                     intent: intent,
                     configuration: configuration,
+                    additionalClientAttributionMetadata: additionalClientAttributionMetadata,
                     completion: completion
                 )
             else {

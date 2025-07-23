@@ -22,6 +22,7 @@ extension StripeAPI.PaymentMethod {
     static func create(
         apiClient: STPAPIClient = .shared,
         params: StripeAPI.PaymentMethodParams,
+        additionalClientAttributionMetadata: [String: String],
         completion: @escaping PaymentMethodCompletionBlock
     ) {
         STPAnalyticsClient.sharedClient.logPaymentMethodCreationAttempt(
@@ -29,7 +30,7 @@ extension StripeAPI.PaymentMethod {
         )
         do {
             var parameters = try params.encodeJSONDictionary()
-            parameters = STPAPIClient.paramsAddingClientAttributionMetadata(parameters)
+            parameters = STPAPIClient.paramsAddingClientAttributionMetadata(parameters, additionalClientAttributionMetadata: additionalClientAttributionMetadata)
             apiClient.post(resource: Resource, parameters: parameters, completion: completion)
         } catch {
             apiClient.post(resource: Resource, object: params, completion: completion)
@@ -43,6 +44,7 @@ extension StripeAPI.PaymentMethod {
     @_spi(STP) public static func create(
         apiClient: STPAPIClient = .shared,
         payment: PKPayment,
+        additionalClientAttributionMetadata: [String: String],
         completion: @escaping PaymentMethodCompletionBlock
     ) {
         StripeAPI.Token.create(apiClient: apiClient, payment: payment) { (result) in
@@ -59,7 +61,7 @@ extension StripeAPI.PaymentMethod {
             let billingDetails = StripeAPI.BillingDetails(from: payment)
             var paymentMethodParams = StripeAPI.PaymentMethodParams(type: .card, card: cardParams)
             paymentMethodParams.billingDetails = billingDetails
-            Self.create(apiClient: apiClient, params: paymentMethodParams, completion: completion)
+            Self.create(apiClient: apiClient, params: paymentMethodParams, additionalClientAttributionMetadata: additionalClientAttributionMetadata, completion: completion)
         }
     }
 
