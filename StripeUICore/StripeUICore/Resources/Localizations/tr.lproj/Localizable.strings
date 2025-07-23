@@ -104,6 +104,8 @@
 
 "Select card brand (optional)" = "Kart markasını seçin (isteğe bağlı)";
 
+"Selection is empty." = "Seçim boş.";
+
 "Sort code" = "Şube kodu";
 
 "State" = "Eyalet";

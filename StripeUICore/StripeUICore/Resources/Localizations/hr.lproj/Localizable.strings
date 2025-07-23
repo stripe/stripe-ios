@@ -104,6 +104,8 @@
 
 "Select card brand (optional)" = "Odaberite marku kartice (nije obavezno)";
 
+"Selection is empty." = "Odabir je prazan.";
+
 "Sort code" = "Bankovni kod za razvrstavanje (UK)";
 
 "State" = "Država";

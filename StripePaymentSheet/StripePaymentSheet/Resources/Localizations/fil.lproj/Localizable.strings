@@ -60,11 +60,15 @@
 
 "By continuing, you agree to authorize payments pursuant to <terms>these terms</terms>." = "Sa pagpapatuloy, sumasang-ayon ka na pahintulutan ang mga pagbabayad alinsunod sa <terms>mga tuntuning ito</terms>.";
 
+"By continuing, you authorize %@ to automatically debit your Satispay Balance on a recurring basis in accordance with your purchase or subscription plan." = "Sa pagpapatuloy, pinahihintulutan mo ang %@ na awtomatikong i-debit ang Satispay Balance mo nang paulit-ulit alinsunod sa plano sa pagbili o subscription mo.";
+
 "By continuing, you authorize %@ to debit your Cash App account for this payment and future payments in accordance with %@'s terms, until this authorization is revoked. You can change this anytime in your Cash App Settings." = "Sa pagpapatuloy, binibigyan mo ng awtorisasyon ang %1$@ na i-debit ang iyong Cash App account para sa pagbabayad na ito at sa mga pagbabayad sa hinaharap alinsunod sa mga tuntunin ng  %2$@, hanggang bawiin mo ang awtorisasyong ito. Maaari mong palitan ito sa anumang oras sa iyong Cash App Settings.";
 
 "By joining Link, you agree to the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Sa pagsali sa Link, sumasang-ayon ka sa <terms>Mga Tuntunin</terms> at <privacy>Patakaran sa Pagkapribado</privacy>.";
 
 "By providing phone number and email, you agree to create a Link account subject to the Link <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Sa pagbibigay ng numero ng telepono at email, sumasang-ayon ka na gumawa ng isang Link account na napapailalim sa <terms>Mga Tuntunin</terms> at <privacy>Patakaran sa Pagkapribado</privacy> ng Link.";
+
+"By providing your bank account details and confirming this payment, you agree to this Direct Debit Request and the <terms>Direct Debit Request service agreement</terms>, and authorise Stripe Payments Australia Pty Ltd ACN 160 180 343 Direct Debit User ID number 507156 (“Stripe”) to debit your account through the Bulk Electronic Clearing System (BECS) on behalf of %@ (the \"Merchant\") for any amounts separately communicated to you by the Merchant. You certify that you are either an account holder or an authorised signatory on the account listed above." = "Sa pamamagitan ng pagbibigay ng mga detalye ng iyong bank account at pagkumpirma ng pagbabayad na ito, sumasang-ayon ka sa Direct Debit Request na ito at sa <terms>kasunduan sa serbisyo ng Direct Debit Request</terms>, at pinahihintulutan ang Stripe Payments Australia Pty Ltd ACN 160 180 343 Direct Debit User ID number 507156 (\"Stripe\") na i-debit ang iyong account sa pamamagitan ng Bulk Electronic Clearing System (BECS) sa ngalan ni %@ (ang \"Merchant\") para sa anumang halaga na hiwalay na ipinaalam sa iyo ng Merchant. Pinatutunayan mo na ikaw ay alinman sa may-ari ng account o awtorisadong lumagda sa account na nakalista sa itaas.";
 
 "By providing your card information, you allow %@ to charge your card for future payments in accordance with their terms." = "Sa pagbibigay ng impormasyon ng iyong kard, pinahihintulutan mo ang %@ na singilin ang iyong kard para sa mga pagbabayad sa hinaharap alinsunod sa kanilang mga tuntunin.";
 
@@ -256,6 +260,8 @@
 
 "Simple, secure one-click payments" = "Simple, ligtas na isang-click na mga pagbabayad";
 
+"Something went wrong when linking your account.\nPlease try again later." = "May mali sa pag-link ng iyong account.\nMangyaring subukang muli mamaya.";
+
 "Stripe will deposit $0.01 to your account in 1-2 business days. Then you'll get an email with instructions to finish saving your bank account with %@." = "Idedeposito ng Stripe ang $0.01 sa iyong account sa loob ng 1-2 araw ng trabaho. Pagkatapos ay makakatanggap ka ng email na may mga tagubilin na tapusin ang pag-save sa iyong account sa bangko sa %@.";
 
 "Stripe will deposit $0.01 to your account in 1-2 business days. Then you’ll get an email with instructions to complete payment to %@." = "Idedeposito ng Stripe ang $0.01 sa iyong account sa loob ng 1-2 araw ng trabaho. Pagkatapos ay makakatanggap ka ng email na may mga tagubilin para kumpletuhin ang pagbabayad sa %@.";
@@ -265,6 +271,8 @@
 "Tap to expand" = "I-tap para i-expand";
 
 "The IBAN you entered is incomplete." = "Ang IBAN na iniligay mo ay di kumpleto.";
+
+"The IBAN you entered is invalid, \"%@\" is not a supported country code." = "Ang IBAN na iyong ipinasok ay hindi wasto, ang \"%@\" ay hindi isang suportadong country code.";
 
 "The provided verification code has expired." = "Paso na ang ibinigay na verification code.";
 
@@ -281,6 +289,8 @@
 "Update card" = "I-update ang kard";
 
 "Update payment method" = "I-update ang paraan ng pagbabayad";
+
+"Use billing address for shipping" = "Gamitin ang billing address para sa pagpapadala";
 
 "Use your saved info to check out faster" = "Gamitin ang iyong naka-save na impormayon para mas mabilis na mag-check out";
 

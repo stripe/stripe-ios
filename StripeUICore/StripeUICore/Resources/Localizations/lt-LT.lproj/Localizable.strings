@@ -104,6 +104,8 @@
 
 "Select card brand (optional)" = "Pasirinkite kortelės prekės ženklą (neprivaloma)";
 
+"Selection is empty." = "Nieko nepasirinkta.";
+
 "Sort code" = "Identifikacinis kodas";
 
 "State" = "Valstija";
