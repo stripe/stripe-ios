@@ -227,6 +227,7 @@ extension STPApplePayContext {
             currency: intent.currency ?? "USD"
         )
         paymentRequest.requiredBillingContactFields = makeRequiredBillingDetails(from: configuration)
+        paymentRequest.requiredShippingContactFields = makeRequiredShippingDetails(from: configuration)
         if let paymentSummaryItems = applePay.paymentSummaryItems {
             // Use the merchant supplied paymentSummaryItems
             paymentRequest.paymentSummaryItems = paymentSummaryItems
@@ -289,15 +290,22 @@ private func makeRequiredBillingDetails(from configuration: PaymentElementConfig
     if billingConfig.address == .automatic || billingConfig.address == .full {
         requiredPKContactFields.insert(.postalAddress)
     }
-    // Only request other fields if requested:
+    // Only request name field - phone and email go into shipping contact fields
+    if billingConfig.name == .always {
+        requiredPKContactFields.insert(.name)
+    }
+    return requiredPKContactFields
+}
+
+private func makeRequiredShippingDetails(from configuration: PaymentElementConfiguration) -> Set<PKContactField> {
+    var requiredPKContactFields = Set<PKContactField>()
+    let billingConfig = configuration.billingDetailsCollectionConfiguration
+    // Phone and email are collected through shipping contact fields
     if billingConfig.email == .always {
         requiredPKContactFields.insert(.emailAddress)
     }
     if billingConfig.phone == .always {
         requiredPKContactFields.insert(.phoneNumber)
-    }
-    if billingConfig.name == .always {
-        requiredPKContactFields.insert(.name)
     }
     return requiredPKContactFields
 }
