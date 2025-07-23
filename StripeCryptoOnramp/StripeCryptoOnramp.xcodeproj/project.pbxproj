@@ -158,13 +158,6 @@
 			path = ../BuildConfigurations;
 			sourceTree = "<group>";
 		};
-		0B83D98A2E1EF6EF004F0115 /* Resources */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = Resources;
-			sourceTree = "<group>";
-		};
 		0B83D98C2E1EF6EF004F0115 /* Source */ = {
 			isa = PBXGroup;
 			children = (
@@ -177,7 +170,6 @@
 		0B83D98F2E1EF6EF004F0115 /* StripeCryptoOnramp */ = {
 			isa = PBXGroup;
 			children = (
-				0B83D98A2E1EF6EF004F0115 /* Resources */,
 				0B83D98C2E1EF6EF004F0115 /* Source */,
 				0B83D98D2E1EF6EF004F0115 /* StripeCryptoOnramp.h */,
 				0B83D98E2E1EF6EF004F0115 /* Docs.docc */,
