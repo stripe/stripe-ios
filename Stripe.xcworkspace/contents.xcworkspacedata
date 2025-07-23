@@ -54,9 +54,6 @@
       location = "group:StripeCore/StripeCore.xcodeproj">
    </FileRef>
    <FileRef
-      location = "group:StripeCryptoOnramp/StripeCryptoOnramp.xcodeproj">
-   </FileRef>
-   <FileRef
       location = "group:StripeFinancialConnections/StripeFinancialConnections.xcodeproj">
    </FileRef>
    <FileRef

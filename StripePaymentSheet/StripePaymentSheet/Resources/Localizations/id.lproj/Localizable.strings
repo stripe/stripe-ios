@@ -60,11 +60,15 @@
 
 "By continuing, you agree to authorize payments pursuant to <terms>these terms</terms>." = "Dengan melanjutkan, Anda berarti setuju untuk mengotorisasi pembayaran sesuai dengan <terms>ketentuan-ketentuan berikut</terms>.";
 
+"By continuing, you authorize %@ to automatically debit your Satispay Balance on a recurring basis in accordance with your purchase or subscription plan." = "Dengan melanjutkan, Anda mengizinkan %@ untuk secara otomatis mendebit Saldo Satispay Anda secara berkala sesuai dengan paket pembelian atau langganan Anda.";
+
 "By continuing, you authorize %@ to debit your Cash App account for this payment and future payments in accordance with %@'s terms, until this authorization is revoked. You can change this anytime in your Cash App Settings." = "Dengan melanjutkan, berarti Anda memberi %1$@ otorisasi untuk mendebit akun Cash App Anda bagi pembayaran ini dan pembayaran mendatang sesuai dengan ketentuan %2$@, hingga otorisasi ini dicabut. Anda dapat mengubahnya kapan saja di Pengaturan Cash App.";
 
 "By joining Link, you agree to the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Dengan bergabung ke Link, Anda berarti menyetujui <terms>Ketentuan</terms> dan <privacy>Kebijakan Privasi</privacy>.";
 
 "By providing phone number and email, you agree to create a Link account subject to the Link <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Dengan memberikan nomor telepon dan email, berarti Anda menyetujui pembuatan akun Link yang tunduk pada <terms>Ketentuan</terms> dan <privacy>Kebijakan Privasi</privacy> Link.";
+
+"By providing your bank account details and confirming this payment, you agree to this Direct Debit Request and the <terms>Direct Debit Request service agreement</terms>, and authorise Stripe Payments Australia Pty Ltd ACN 160 180 343 Direct Debit User ID number 507156 (“Stripe”) to debit your account through the Bulk Electronic Clearing System (BECS) on behalf of %@ (the \"Merchant\") for any amounts separately communicated to you by the Merchant. You certify that you are either an account holder or an authorised signatory on the account listed above." = "Dengan memberikan detail rekening bank Anda dan mengonfirmasi pembayaran ini, Anda menyetujui Permintaan Debit Langsung ini dan <terms>perjanjian layanan Permintaan Debit Langsung</terms>, dan mengizinkan Stripe Payments Australia Pty Ltd ACN 160 180 343 dengan Nomor ID Pengguna Debit Langsung 507156 (\"Stripe\") untuk mendebit akun Anda melalui Sistem Kliring Elektronik Massal (BECS) atas nama %@ (\"Penjual\") untuk jumlah apa pun yang dikomunikasikan secara terpisah kepada Anda oleh Penjual. Anda menyatakan bahwa Anda adalah pemegang akun atau penandatangan resmi pada akun yang tercantum di atas.";
 
 "By providing your card information, you allow %@ to charge your card for future payments in accordance with their terms." = "Dengan memberikan informasi kartu, Anda berarti mengizinkan %@ mengenakan charge pada kartu Anda untuk pembayaran mendatang sesuai dengan ketentuan mereka.";
 
@@ -256,6 +260,8 @@
 
 "Simple, secure one-click payments" = "Pembayaran sekali klik yang mudah dan aman";
 
+"Something went wrong when linking your account.\nPlease try again later." = "Ada yang tidak beres saat menautkan akun Anda.\nSilakan coba lagi nanti.";
+
 "Stripe will deposit $0.01 to your account in 1-2 business days. Then you'll get an email with instructions to finish saving your bank account with %@." = "Stripe akan menyetorkan $0,01 ke rekening Anda dalam waktu 1–2 hari kerja. Kemudian Anda akan mendapatkan email yang berisi instruksi untuk menyelesaikan penyimpanan rekening bank pada %@.";
 
 "Stripe will deposit $0.01 to your account in 1-2 business days. Then you’ll get an email with instructions to complete payment to %@." = "Stripe akan menyetorkan $0,01 ke rekening Anda dalam waktu 1–2 hari kerja. Kemudian Anda akan mendapatkan email yang berisi petunjuk untuk menyelesaikan pembayaran kepada %@.";
@@ -265,6 +271,8 @@
 "Tap to expand" = "Sentuh untuk memperluas";
 
 "The IBAN you entered is incomplete." = "IBAN yang Anda masukkan tidak lengkap.";
+
+"The IBAN you entered is invalid, \"%@\" is not a supported country code." = "IBAN yang Anda masukkan tidak valid, \"%@\" bukan kode negara yang didukung.";
 
 "The provided verification code has expired." = "Kode verifikasi yang diberikan telah kedaluwarsa.";
 
@@ -281,6 +289,8 @@
 "Update card" = "Perbarui kartu";
 
 "Update payment method" = "Perbarui metode pembayaran";
+
+"Use billing address for shipping" = "Gunakan alamat penagihan untuk pengiriman";
 
 "Use your saved info to check out faster" = "Gunakan info yang tersimpan untuk memproses pembayaran dengan lebih cepat";
 

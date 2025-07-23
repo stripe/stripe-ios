@@ -1,3 +1,0 @@
-# ``StripeCryptoOnramp``
-
-Placeholder
