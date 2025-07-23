@@ -20,12 +20,4 @@ extension STPAPIClient {
         newParams["payment_user_agent"] = ([PaymentsSDKVariant.paymentUserAgent] + additionalValues).joined(separator: "; ")
         return newParams
     }
-
-    @_spi(STP) public class func paramsAddingClientAttributionMetadata(
-        _ params: [String: Any]
-    ) -> [String: Any] {
-        var newParams = params
-        newParams["client_attribution_metadata"] = ["client_session_id": AnalyticsHelper.shared.sessionID]
-        return newParams
-    }
 }

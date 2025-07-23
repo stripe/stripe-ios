@@ -3,31 +3,31 @@ https:\/\/api\.stripe\.com\/v1\/payment_methods$
 200
 application/json
 access-control-allow-methods: GET, HEAD, PUT, PATCH, POST, DELETE
-content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=0yOUjyuAJoo_Yk-kM3-dLHgb0-MMPpbG6IejWro-sUpiF_kc3Hc4vMpgg6LZWB6aO-LFv4aq7u9naX4u
+content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=2FFcAAsBrCFhGRWecqADvI3lfac2GR1X_n_a3mvAHWN9qT6gxjkg3qwfXptWGDxJC8AjsYDFIk6Ydl-d
 Server: nginx
 Cache-Control: no-cache, no-store
-x-wc: ABGHIJ
+x-wc: ABGHI
 Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
 Access-Control-Allow-Origin: *
 stripe-should-retry: false
 x-stripe-priority-routing-enabled: true
 x-stripe-routing-context-priority-tier: api-testmode
-request-id: req_GJISgfPihZPIIg
+request-id: req_qfAeC2OU8xShP5
 Content-Length: 537
 Vary: Origin
-Date: Fri, 18 Jul 2025 23:08:23 GMT
-original-request: req_GJISgfPihZPIIg
+Date: Tue, 24 Jun 2025 18:35:39 GMT
+original-request: req_qfAeC2OU8xShP5
 stripe-version: 2020-08-27
-idempotency-key: 0bb7d1c8-0254-42c3-9a90-f5a35721bc4c
+idempotency-key: 49707408-6ed5-4e3d-9169-cd3efaf6e74f
 access-control-expose-headers: Request-Id, Stripe-Manage-Version, Stripe-Should-Retry, X-Stripe-External-Auth-Required, X-Stripe-Privileged-Session-Required
 access-control-max-age: 300
 access-control-allow-credentials: true
 Content-Type: application/json
-X-Stripe-Mock-Request: allow_redisplay=unspecified&billing_details\[address]\[city]=South%20San%20Francisco&billing_details\[address]\[country]=US&billing_details\[address]\[line1]=354%20Oyster%20Point%20Blvd&billing_details\[address]\[line2]=&billing_details\[address]\[postal_code]=94080&billing_details\[address]\[state]=CA&billing_details%5Bemail%5D=foo%40bar\.com&billing_details%5Bname%5D=Foo&client_attribution_metadata\[client_session_id]=.*&guid=.*&muid=.*&payment_user_agent=.*&sid=.*&type=afterpay_clearpay
+X-Stripe-Mock-Request: allow_redisplay=unspecified&billing_details\[address]\[city]=South%20San%20Francisco&billing_details\[address]\[country]=US&billing_details\[address]\[line1]=354%20Oyster%20Point%20Blvd&billing_details\[address]\[line2]=&billing_details\[address]\[postal_code]=94080&billing_details\[address]\[state]=CA&billing_details%5Bemail%5D=foo%40bar\.com&billing_details%5Bname%5D=Foo&guid=.*&muid=.*&payment_user_agent=.*&sid=.*&type=afterpay_clearpay
 
 {
   "object" : "payment_method",
-  "id" : "pm_1RmNO7FY0qyl6XeWI8Zab3ak",
+  "id" : "pm_1Rdbh1FY0qyl6XeWVcqJkrzW",
   "billing_details" : {
     "email" : "foo@bar.com",
     "phone" : null,
@@ -46,7 +46,7 @@ X-Stripe-Mock-Request: allow_redisplay=unspecified&billing_details\[address]\[ci
   "afterpay_clearpay" : {
 
   },
-  "created" : 1752880103,
+  "created" : 1750790139,
   "allow_redisplay" : "unspecified",
   "type" : "afterpay_clearpay",
   "customer" : null

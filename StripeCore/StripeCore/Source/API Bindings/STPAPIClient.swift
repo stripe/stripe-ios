@@ -248,6 +248,19 @@ import UIKit
         client.userKeyLiveMode = userKeyLiveMode
         return client
     }
+
+    @_spi(STP) public class func paramsAddingClientAttributionMetadata(
+        _ params: [String: Any],
+        additionalClientAttributionMetadata: [String: String] = [:]
+    ) -> [String: Any] {
+        var newParams = params
+        newParams["client_attribution_metadata"] = ["client_session_id": AnalyticsHelper.shared.sessionID,
+                                                    "merchant_integration_source": "elements",
+                                                    "merchant_integration_subtype": "mobile",
+                                                    "merchant_integration_version": "stripe-ios/\(STPAPIClient.STPSDKVersion)"]
+            .merging(additionalClientAttributionMetadata) { _, new in new }
+        return newParams
+    }
 }
 
 private let APIVersion = "2020-08-27"
