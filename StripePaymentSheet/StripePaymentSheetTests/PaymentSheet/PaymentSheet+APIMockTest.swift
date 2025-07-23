@@ -86,6 +86,7 @@ final class PaymentSheetAPIMockTest: APIStubbedTestCase {
                         supportedPaymentDetailsTypes: [.card]
                     ),
                     publishableKey: "pk_xxx_for_link_account_xxx",
+                    displayablePaymentDetails: nil,
                     useMobileEndpoints: false
                 ),
                 paymentDetails: .init(
@@ -191,6 +192,7 @@ final class PaymentSheetAPIMockTest: APIStubbedTestCase {
                             supportedPaymentDetailsTypes: [.card]
                         ),
                         publishableKey: MockParams.publicKey,
+                        displayablePaymentDetails: nil,
                         useMobileEndpoints: false),
                     paymentDetails: .init(
                         stripeID: "pd1",
@@ -258,6 +260,7 @@ final class PaymentSheetAPIMockTest: APIStubbedTestCase {
                     email: "email@email.com",
                     session: nil,
                     publishableKey: "pk_123",
+                    displayablePaymentDetails: nil,
                     useMobileEndpoints: false
                 ),
                 phoneNumber: PhoneNumber(number: "5555555555", countryCode: "US")!,
