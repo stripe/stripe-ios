@@ -104,6 +104,8 @@
 
 "Select card brand (optional)" = "เลือกแบรนด์บัตร (ไม่บังคับ)";
 
+"Selection is empty." = "การเลือกว่างเปล่า";
+
 "Sort code" = "Sort Code";
 
 "State" = "รัฐ";

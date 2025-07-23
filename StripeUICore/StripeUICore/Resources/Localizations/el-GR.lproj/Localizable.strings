@@ -104,6 +104,8 @@
 
 "Select card brand (optional)" = "Επιλέξτε επωνυμία κάρτας (προαιρετικό)";
 
+"Selection is empty." = "Η επιλογή είναι κενή.";
+
 "Sort code" = "Κωδικός sort";
 
 "State" = "Πολιτεία";

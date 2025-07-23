@@ -98,7 +98,7 @@ final class RightAccessoryButtonTest: XCTestCase {
                                                                            allowsRemovalOfLastSavedPaymentMethod: true,
                                                                            allowsPaymentMethodRemoval: true,
                                                                            allowsPaymentMethodUpdate: true,
-                                                                           isFlatCheckmarkOrDisclosureStyle: true)
+                                                                           omitChevron: true)
         XCTAssertEqual(result, .viewMore)
     }
 }
