@@ -257,7 +257,7 @@ import UIKit
         newParams["client_attribution_metadata"] = ["client_session_id": AnalyticsHelper.shared.sessionID,
                                                     "merchant_integration_source": "elements",
                                                     "merchant_integration_subtype": "mobile",
-                                                    "merchant_integration_version": "stripe-ios/\(STPAPIClient.STPSDKVersion)",]
+                                                    "merchant_integration_version": "stripe-ios/\(STPAPIClient.STPSDKVersion)", ]
             .merging(additionalClientAttributionMetadata) { _, new in new }
         return newParams
     }
