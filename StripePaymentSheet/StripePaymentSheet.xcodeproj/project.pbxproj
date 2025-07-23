@@ -159,6 +159,7 @@
 		495D53202DF7678A008B92F9 /* LinkButtonViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 495D531F2DF7678A008B92F9 /* LinkButtonViewModel.swift */; };
 		4965A7132D9D8D3700DC2E3C /* LinkGlobalHoldback.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4965A7122D9D8D3700DC2E3C /* LinkGlobalHoldback.swift */; };
 		497713042D9D8E1200DB5CB2 /* PaymentSheetAnalytics+Experiments.swift in Sources */ = {isa = PBXBuildFile; fileRef = 497713032D9D8E1200DB5CB2 /* PaymentSheetAnalytics+Experiments.swift */; };
+		4978AC8B2E316DE600001144 /* LinkInlineVerificationViewSnapshotTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4978AC8A2E316DE600001144 /* LinkInlineVerificationViewSnapshotTests.swift */; };
 		49803444CD948F1ED28FF021 /* PaymentSheetFormFactory+FormSpec.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD7A1EFF100C589FDFF4D516 /* PaymentSheetFormFactory+FormSpec.swift */; };
 		498BF1722D92FF6A006E866B /* FCLiteImplementation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 498BF1712D92FF6A006E866B /* FCLiteImplementation.swift */; };
 		49909A162D8AF9760031EC33 /* FinancialConnectionsLite.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49909A152D8AF9760031EC33 /* FinancialConnectionsLite.swift */; };
@@ -646,6 +647,7 @@
 		495D531F2DF7678A008B92F9 /* LinkButtonViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LinkButtonViewModel.swift; sourceTree = "<group>"; };
 		4965A7122D9D8D3700DC2E3C /* LinkGlobalHoldback.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LinkGlobalHoldback.swift; sourceTree = "<group>"; };
 		497713032D9D8E1200DB5CB2 /* PaymentSheetAnalytics+Experiments.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "PaymentSheetAnalytics+Experiments.swift"; sourceTree = "<group>"; };
+		4978AC8A2E316DE600001144 /* LinkInlineVerificationViewSnapshotTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LinkInlineVerificationViewSnapshotTests.swift; sourceTree = "<group>"; };
 		498BF1712D92FF6A006E866B /* FCLiteImplementation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FCLiteImplementation.swift; sourceTree = "<group>"; };
 		49909A152D8AF9760031EC33 /* FinancialConnectionsLite.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FinancialConnectionsLite.swift; sourceTree = "<group>"; };
 		49909A1B2D8AFA600031EC33 /* FCLiteApiClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FCLiteApiClient.swift; sourceTree = "<group>"; };
@@ -2040,6 +2042,7 @@
 				312AE7082D2C87EA0091E5AF /* PayWithLinkViewControllerTests.swift */,
 				49DBCAFA2DCA9BB400DB3ACB /* LinkSignUpViewControllerSnapshotTests.swift */,
 				495C04682DCAA1AB006D8F1A /* PayWithLinkTestHelpers.swift */,
+				4978AC8A2E316DE600001144 /* LinkInlineVerificationViewSnapshotTests.swift */,
 			);
 			path = Link;
 			sourceTree = "<group>";
@@ -2334,6 +2337,7 @@
 				49DBCAFB2DCA9BB400DB3ACB /* LinkSignUpViewControllerSnapshotTests.swift in Sources */,
 				E0E47773D3C0B432E26AA457 /* STPElementsSessionTest.swift in Sources */,
 				29C98FB712F3FB987CBE18B0 /* STPFixtures+PaymentSheet.swift in Sources */,
+				4978AC8B2E316DE600001144 /* LinkInlineVerificationViewSnapshotTests.swift in Sources */,
 				45D9849E9B36C56E15EAAE0A /* SavedPaymentOptionsViewControllerSnapshotTests.swift in Sources */,
 				B6F4C5F82CADB0CB00AF3767 /* USBankAccountPaymentMethodElementTest.swift in Sources */,
 				9787A622B527C1AD96A73827 /* SepaMandateViewControllerSnapshotTest.swift in Sources */,

@@ -234,6 +234,7 @@ extension LinkInlineSignupViewModelTests {
                             email: "user@example.com",
                             session: nil,
                             publishableKey: nil,
+                            displayablePaymentDetails: nil,
                             useMobileEndpoints: false
                         )
                     )
@@ -255,8 +256,14 @@ extension LinkInlineSignupViewModelTests {
         allowsDefaultOptIn: Bool = false
     ) -> LinkInlineSignupViewModel {
         let linkAccount: PaymentSheetLinkAccount? = hasAccountObject
-            ? PaymentSheetLinkAccount(email: "user@example.com", session: nil, publishableKey: nil, useMobileEndpoints: false)
-            : nil
+        ? PaymentSheetLinkAccount(
+            email: "user@example.com",
+            session: nil,
+            publishableKey: nil,
+            displayablePaymentDetails: nil,
+            useMobileEndpoints: false
+        )
+        : nil
 
         return LinkInlineSignupViewModel(
             configuration: PaymentSheet.Configuration(),
