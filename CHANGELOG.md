@@ -6,7 +6,7 @@
 * [Added] Added `Appearance.EmbeddedPaymentElement.Row.titleFont` to customize the font of EmbeddedPaymentElement payment method row titles.
 * [Changed] Renamed `PaymentSheet.Appearance.EmbeddedPaymentElement.Row.Style.flatWithChevron` to `PaymentSheet.Appearance.EmbeddedPaymentElement.Row.Style.flatWithDisclosure` and added an experimental `disclosureImage` property to customize the chevron icon displayed in EmbeddedPaymentElement payment method rows when the row style is flatWithDisclosure.
 * [Fixed] `EmbeddedPaymentElementDelegate` `didUpdateHeight` now accommodates cases where the embedded view can't change height until after `didUpdateHeight` is called, like inside a UITableViewCell.
-* [Fixed] Apple Pay now properly collects phone number and email address when marked as required in PaymentSheetConfig billing details collection configuration.
+* [Fixed] Apple Pay now properly collects phone number and email address when marked as required in `PaymentSheet.Configuration.billingDetailsCollectionConfiguration`.
 
 ### AddressElement
 * [Added] SwiftUI support for AddressElement.
