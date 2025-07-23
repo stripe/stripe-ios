@@ -170,6 +170,76 @@ final class STPApplePayContext_PaymentSheetTest: XCTestCase {
             }
         }
     }
+
+    func testCreatePaymentRequest_requiredContactFields_billingOnly() {
+        var config = PaymentSheet.Configuration._testValue_MostPermissive()
+        config.applePay = applePayConfiguration
+        config.billingDetailsCollectionConfiguration.name = .always
+        config.billingDetailsCollectionConfiguration.address = .full
+        config.billingDetailsCollectionConfiguration.email = .never
+        config.billingDetailsCollectionConfiguration.phone = .never
+
+        let intent = Intent._testValue()
+        let sut = STPApplePayContext.createPaymentRequest(intent: intent, configuration: config, applePay: applePayConfiguration)
+
+        XCTAssertTrue(sut.requiredBillingContactFields.contains(.name))
+        XCTAssertTrue(sut.requiredBillingContactFields.contains(.postalAddress))
+        XCTAssertFalse(sut.requiredBillingContactFields.contains(.emailAddress))
+        XCTAssertFalse(sut.requiredBillingContactFields.contains(.phoneNumber))
+        XCTAssertTrue(sut.requiredShippingContactFields.isEmpty)
+    }
+
+    func testCreatePaymentRequest_requiredContactFields_phoneAndEmailToShipping() {
+        var config = PaymentSheet.Configuration._testValue_MostPermissive()
+        config.applePay = applePayConfiguration
+        config.billingDetailsCollectionConfiguration.name = .always
+        config.billingDetailsCollectionConfiguration.address = .full
+        config.billingDetailsCollectionConfiguration.email = .always
+        config.billingDetailsCollectionConfiguration.phone = .always
+
+        let intent = Intent._testValue()
+        let sut = STPApplePayContext.createPaymentRequest(intent: intent, configuration: config, applePay: applePayConfiguration)
+
+        // Billing should only have name and address
+        XCTAssertTrue(sut.requiredBillingContactFields.contains(.name))
+        XCTAssertTrue(sut.requiredBillingContactFields.contains(.postalAddress))
+        XCTAssertFalse(sut.requiredBillingContactFields.contains(.emailAddress))
+        XCTAssertFalse(sut.requiredBillingContactFields.contains(.phoneNumber))
+
+        // Phone and email should go to shipping
+        XCTAssertTrue(sut.requiredShippingContactFields.contains(.emailAddress))
+        XCTAssertTrue(sut.requiredShippingContactFields.contains(.phoneNumber))
+    }
+
+    func testCreatePaymentRequest_requiredContactFields_emailOnly() {
+        var config = PaymentSheet.Configuration._testValue_MostPermissive()
+        config.applePay = applePayConfiguration
+        config.billingDetailsCollectionConfiguration.email = .always
+        config.billingDetailsCollectionConfiguration.phone = .never
+
+        let intent = Intent._testValue()
+        let sut = STPApplePayContext.createPaymentRequest(intent: intent, configuration: config, applePay: applePayConfiguration)
+
+        XCTAssertFalse(sut.requiredBillingContactFields.contains(.emailAddress))
+        XCTAssertFalse(sut.requiredBillingContactFields.contains(.phoneNumber))
+        XCTAssertTrue(sut.requiredShippingContactFields.contains(.emailAddress))
+        XCTAssertFalse(sut.requiredShippingContactFields.contains(.phoneNumber))
+    }
+
+    func testCreatePaymentRequest_requiredContactFields_phoneOnly() {
+        var config = PaymentSheet.Configuration._testValue_MostPermissive()
+        config.applePay = applePayConfiguration
+        config.billingDetailsCollectionConfiguration.email = .never
+        config.billingDetailsCollectionConfiguration.phone = .always
+
+        let intent = Intent._testValue()
+        let sut = STPApplePayContext.createPaymentRequest(intent: intent, configuration: config, applePay: applePayConfiguration)
+
+        XCTAssertFalse(sut.requiredBillingContactFields.contains(.emailAddress))
+        XCTAssertFalse(sut.requiredBillingContactFields.contains(.phoneNumber))
+        XCTAssertFalse(sut.requiredShippingContactFields.contains(.emailAddress))
+        XCTAssertTrue(sut.requiredShippingContactFields.contains(.phoneNumber))
+    }
 }
 
 #if compiler(>=5.9)
