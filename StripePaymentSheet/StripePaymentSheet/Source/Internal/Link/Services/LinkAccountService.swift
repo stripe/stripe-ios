@@ -42,6 +42,7 @@ final class LinkAccountService: LinkAccountServiceProtocol {
     let sessionID: String
     let customerID: String?
     let useMobileEndpoints: Bool
+    let shouldPassCustomerIdToLookup: Bool
 
     /// The default cookie store used by new instances of the service.
     static var defaultCookieStore: LinkCookieStore = LinkSecureCookieStore.shared
@@ -51,12 +52,15 @@ final class LinkAccountService: LinkAccountServiceProtocol {
         cookieStore: LinkCookieStore = defaultCookieStore,
         elementsSession: STPElementsSession
     ) {
+        let shouldPassCustomerIdToLookup = elementsSession.linkSettings?.linkEnableDisplayableDefaultValuesInECE == true
+
         self.init(
             apiClient: apiClient,
             cookieStore: cookieStore,
             useMobileEndpoints: elementsSession.linkSettings?.useAttestationEndpoints ?? false,
             sessionID: elementsSession.sessionID,
-            customerID: elementsSession.customer?.customerSession.id
+            customerID: elementsSession.customer?.customerSession.id,
+            shouldPassCustomerIdToLookup: shouldPassCustomerIdToLookup
         )
     }
 
@@ -65,13 +69,15 @@ final class LinkAccountService: LinkAccountServiceProtocol {
         cookieStore: LinkCookieStore = defaultCookieStore,
         useMobileEndpoints: Bool,
         sessionID: String,
-        customerID: String?
+        customerID: String?,
+        shouldPassCustomerIdToLookup: Bool
     ) {
         self.apiClient = apiClient
         self.cookieStore = cookieStore
         self.useMobileEndpoints = useMobileEndpoints
         self.sessionID = sessionID
         self.customerID = customerID
+        self.shouldPassCustomerIdToLookup = shouldPassCustomerIdToLookup
     }
 
     func lookupAccount(
@@ -89,7 +95,7 @@ final class LinkAccountService: LinkAccountServiceProtocol {
             for: email,
             emailSource: emailSource,
             sessionID: sessionID,
-            customerID: customerID,
+            customerID: shouldPassCustomerIdToLookup ? customerID : nil,
             with: apiClient,
             useMobileEndpoints: useMobileEndpoints,
             doNotLogConsumerFunnelEvent: doNotLogConsumerFunnelEvent
