@@ -27,7 +27,14 @@ extension StripeAPI.PaymentMethod {
         STPAnalyticsClient.sharedClient.logPaymentMethodCreationAttempt(
             paymentMethodType: params.type.rawValue
         )
-        apiClient.post(resource: Resource, object: params, completion: completion)
+        do {
+            var parameters = try params.encodeJSONDictionary()
+            parameters = STPAPIClient.paramsAddingClientAttributionMetadata(parameters)
+            apiClient.post(resource: Resource, parameters: parameters, completion: completion)
+        }
+        catch {
+            apiClient.post(resource: Resource, object: params, completion: completion)
+        }
     }
 
     /// Converts a PKPayment object into a Stripe Payment Method using the Stripe API.
