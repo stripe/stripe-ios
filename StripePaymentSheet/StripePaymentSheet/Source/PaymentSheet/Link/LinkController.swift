@@ -182,11 +182,13 @@ import UIKit
     /// - Parameter fullName: The full name of the user.
     /// - Parameter phone: The phone number of the user. Expected to be in E.164 format.
     /// - Parameter country: The country code of the user.
+    /// - Parameter consentAction: The action taken by the user in order to register for Link.
     /// - Parameter completion: A closure that is called with the result of the sign up.
     @_spi(STP) public func registerLinkUser(
         fullName: String?,
         phone: String,
         country: String,
+        consentAction: PaymentSheetLinkAccount.ConsentAction,
         completion: @escaping (Result<Void, Error>) -> Void
     ) {
         guard let linkAccount else {
@@ -198,7 +200,7 @@ import UIKit
             with: phone,
             legalName: fullName,
             countryCode: country,
-            consentAction: .clicked_button_mobile_v1,
+            consentAction: consentAction,
             completion: { [weak self] result in
                 LinkAccountContext.shared.account = self?.linkAccount
                 completion(result)
@@ -450,14 +452,21 @@ import UIKit
     /// - Parameter fullName: The full name of the user.
     /// - Parameter phone: The phone number of the user. Expected to be in E.164 format.
     /// - Parameter country: The country code of the user.
+    /// - Parameter consentAction: The action taken by the user in order to register for Link.
     /// Throws if `lookupConsumer` was not called prior to this, or an API error occurs.
     func registerLinkUser(
         fullName: String?,
         phone: String,
-        country: String
+        country: String,
+        consentAction: PaymentSheetLinkAccount.ConsentAction
     ) async throws {
         try await withCheckedThrowingContinuation { continuation in
-            registerLinkUser(fullName: fullName, phone: phone, country: country) { result in
+            registerLinkUser(
+                fullName: fullName,
+                phone: phone,
+                country: country,
+                consentAction: consentAction
+            ) { result in
                 switch result {
                 case .success:
                     continuation.resume(returning: ())
