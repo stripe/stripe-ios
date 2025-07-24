@@ -292,16 +292,29 @@ import UIKit
             return
         }
 
+        let additionalClientAttributionMetadata: [String: String] = {
+            switch intent {
+            case .paymentIntent(let paymentIntent):
+                PaymentSheet.makePaymentIntentClientAttributionMetadata(paymentIntent, elementsSessionConfigId: elementsSession.sessionID)
+            case .setupIntent(let setupIntent):
+                PaymentSheet.makeSetupIntentClientAttributionMetadata(setupIntent, elementsSessionConfigId: elementsSession.sessionID)
+            case .deferredIntent(let intentConfig):
+                PaymentSheet.makeDeferredClientAttributionMetadata(intentConfig, elementsSessionConfigId: elementsSession.sessionID)
+            }
+        }()
+
         if elementsSession.linkPassthroughModeEnabled {
             createPaymentMethodInPassthroughMode(
                 paymentDetails: selectedPaymentDetails,
                 consumerSessionClientSecret: consumerSessionClientSecret,
+                additionalClientAttributionMetadata: additionalClientAttributionMetadata,
                 completion: completion
             )
         } else {
             createPaymentMethodInPaymentMethodMode(
                 paymentDetails: selectedPaymentDetails,
                 linkAccount: linkAccount,
+                additionalClientAttributionMetadata: additionalClientAttributionMetadata,
                 completion: completion
             )
         }
@@ -312,6 +325,7 @@ import UIKit
     private func createPaymentMethodInPassthroughMode(
         paymentDetails: ConsumerPaymentDetails,
         consumerSessionClientSecret: String,
+        additionalClientAttributionMetadata: [String: String],
         completion: @escaping (Result<STPPaymentMethod, Error>) -> Void
     ) {
         // TODO: These parameters aren't final
@@ -322,7 +336,8 @@ import UIKit
             allowRedisplay: nil,
             cvc: paymentDetails.cvc,
             expectedPaymentMethodType: nil,
-            billingPhoneNumber: nil
+            billingPhoneNumber: nil,
+            additionalClientAttributionMetadata: additionalClientAttributionMetadata
         ) { shareResult in
             switch shareResult {
             case .success(let success):
@@ -336,6 +351,7 @@ import UIKit
     private func createPaymentMethodInPaymentMethodMode(
         paymentDetails: ConsumerPaymentDetails,
         linkAccount: PaymentSheetLinkAccount,
+        additionalClientAttributionMetadata: [String: String],
         completion: @escaping (Result<STPPaymentMethod, Error>) -> Void
     ) {
         Task {
@@ -349,7 +365,8 @@ import UIKit
                 )!
                 let paymentMethod = try await apiClient.createPaymentMethod(
                     with: paymentMethodParams,
-                    additionalPaymentUserAgentValues: []
+                    additionalPaymentUserAgentValues: [],
+                    additionalClientAttributionMetadata: additionalClientAttributionMetadata
                 )
                 completion(.success(paymentMethod))
             } catch {
