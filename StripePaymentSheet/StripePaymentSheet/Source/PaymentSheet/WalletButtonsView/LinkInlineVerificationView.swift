@@ -161,8 +161,7 @@ enum Stubs {
         .init(
             defaultCardBrand: "VISA",
             defaultPaymentType: paymentMethodType,
-            last4: "4242",
-            numberOfSavedPaymentDetails: 6
+            last4: "4242"
         )
     }
 

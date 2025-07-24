@@ -46,8 +46,7 @@ extension ConsumerSession {
         init(
             defaultCardBrand: String?,
             defaultPaymentType: PaymentType?,
-            last4: String?,
-            numberOfSavedPaymentDetails: Int?
+            last4: String?
         ) {
             self.defaultCardBrand = defaultCardBrand
             self.defaultPaymentType = defaultPaymentType
