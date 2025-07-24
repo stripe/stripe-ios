@@ -39,6 +39,8 @@ public class STPSetupIntent: NSObject, STPAPIResponseDecodable {
     @objc public let lastSetupError: STPSetupIntentLastSetupError?
     /// Payment-method-specific configuration for this SetupIntent.
     @_spi(STP) public let paymentMethodOptions: STPPaymentMethodOptions?
+    /// Automatic payment methods configuration for this SetupIntent
+    @_spi(STP) public let automaticPaymentMethods: STPIntentAutomaticPaymentMethods?
 
     // MARK: - Deprecated
 
@@ -56,6 +58,7 @@ public class STPSetupIntent: NSObject, STPAPIResponseDecodable {
 
     required init(
         stripeID: String,
+        automaticPaymentMethods: STPIntentAutomaticPaymentMethods?,
         clientSecret: String,
         created: Date,
         customerID: String?,
@@ -72,6 +75,7 @@ public class STPSetupIntent: NSObject, STPAPIResponseDecodable {
         allResponseFields: [AnyHashable: Any]
     ) {
         self.stripeID = stripeID
+        self.automaticPaymentMethods = automaticPaymentMethods
         self.clientSecret = clientSecret
         self.created = created
         self.customerID = customerID
@@ -97,6 +101,7 @@ public class STPSetupIntent: NSObject, STPAPIResponseDecodable {
             // Identifier
             "stripeId = \(stripeID)",
             // SetupIntent details (alphabetical)
+            "automaticPaymentMethods = \(String(describing: automaticPaymentMethods))",
             "clientSecret = <redacted>",
             "created = \(String(describing: created))",
             "customerId = \(customerID ?? "")",
@@ -182,6 +187,9 @@ public class STPSetupIntent: NSObject, STPAPIResponseDecodable {
             return nil
         }
 
+        let automaticPaymentMethods = STPIntentAutomaticPaymentMethods.decodedObject(
+            fromAPIResponse: dict["automatic_payment_methods"] as? [AnyHashable: Any]
+        )
         let customerID = dict.stp_string(forKey: "customer")
         let stripeDescription = dict.stp_string(forKey: "description")
         let livemode = dict.stp_bool(forKey: "livemode", or: true)
@@ -204,6 +212,7 @@ public class STPSetupIntent: NSObject, STPAPIResponseDecodable {
 
         let setupIntent = self.init(
             stripeID: stripeId,
+            automaticPaymentMethods: automaticPaymentMethods,
             clientSecret: clientSecret,
             created: created,
             customerID: customerID,

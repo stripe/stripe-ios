@@ -98,7 +98,7 @@ extension UnknownFieldsEncodable {
 }
 
 extension Encodable {
-    func encodeJSONDictionary(includingUnknownFields: Bool = true) throws -> [String: Any] {
+    @_spi(STP) public func encodeJSONDictionary(includingUnknownFields: Bool = true) throws -> [String: Any] {
         let encoder = StripeJSONEncoder()
         return try encoder.encodeJSONDictionary(
             self,
