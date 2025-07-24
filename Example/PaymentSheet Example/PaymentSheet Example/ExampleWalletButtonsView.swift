@@ -161,8 +161,6 @@ struct WalletButtonsFlowControllerView: View {
     @Binding var isConfirmingPayment: Bool
     let onCompletion: (PaymentSheetResult) -> Void
 
-    @State var linkSignUpOptIn: Bool = false
-
     var body: some View {
         if flowController.paymentOption == nil {
             WalletButtonsView(flowController: flowController) { _ in }
@@ -177,7 +175,7 @@ struct WalletButtonsFlowControllerView: View {
         }
 
         if case let .visible(title, description, _) = flowController.linkSignupOptInState {
-            Toggle(isOn: $linkSignUpOptIn) {
+            Toggle(isOn: $flowController.linkSignUpOptIn) {
                 VStack(alignment: .leading) {
                     Text(title)
                         .foregroundStyle(Color.primary)
@@ -188,12 +186,6 @@ struct WalletButtonsFlowControllerView: View {
                         .font(.system(size: 13))
                 }
                 .frame(maxWidth: .infinity)
-            }
-            .onAppear {
-                linkSignUpOptIn = flowController.linkSignUpOptIn
-            }
-            .onChange(of: linkSignUpOptIn) { newValue in
-                flowController.linkSignUpOptIn = newValue
             }
             .frame(maxWidth: .infinity)
             .padding(.horizontal)

@@ -218,7 +218,7 @@ extension PaymentSheet {
         @Published public private(set) var linkSignupOptInState: LinkSignupOptInState = .hidden
 
         /// Whether your customer has chosen to sign up to Link in your UI.
-         public var linkSignUpOptIn: Bool = false
+        public var linkSignUpOptIn: Bool = false
 
 //        /// The recognition status of the current user's Link account.
 //        public enum LinkAccountRecognitionStatus {
@@ -328,8 +328,8 @@ extension PaymentSheet {
         }
 
         private func updateLinkAccountRecognitionStatus(for linkAccount: PaymentSheetLinkAccount?) {
-            let canShowSignupOptIn = linkAccount?.isRegistered == true
-            linkSignupOptInState = canShowSignupOptIn ? .hidden : .visible(
+            let hideSignupOptIn = linkAccount?.isRegistered == true
+            linkSignupOptInState = hideSignupOptIn ? .hidden : .visible(
                 title: "Save my info for faster checkout with Link",
                 description: NSAttributedString(string: "Pay faster everywhere Link is accepted."),
                 termsAndConditions: NSAttributedString(
@@ -343,7 +343,7 @@ extension PaymentSheet {
                 )
             )
 
-            if !canShowSignupOptIn {
+            if !hideSignupOptIn {
                 // Default to opt-in for US users
                 linkSignUpOptIn = elementsSession.countryCode == "US"
             }
