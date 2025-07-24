@@ -163,6 +163,12 @@ import Foundation
     case link2FAFailure = "link.2fa.failure"
     case linkNativeBailed = "link.native.bailed"
 
+    // MARK: - Link New User Signup API
+    case linkNewUserSignupViaApiSuccess = "link.new_user_signup_api.signup_success"
+    case linkNewUserSignupViaApiFailure = "link.new_user_signup_api.signup_failure"
+    case linkNewUserPaymentDetailCreationViaApiSuccess = "link.new_user_signup_api.payment_detail_creation_success"
+    case linkNewUserPaymentDetailCreationViaApiFailure = "link.new_user_signup_api.payment_detail_creation_failure"
+
     // MARK: - Link Misc
     case linkAccountLookupComplete = "link.account_lookup.complete"
     case linkAccountLookupFailure = "link.account_lookup.failure"

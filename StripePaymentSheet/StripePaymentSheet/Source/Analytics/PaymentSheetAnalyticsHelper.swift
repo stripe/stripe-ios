@@ -399,6 +399,24 @@ final class PaymentSheetAnalyticsHelper {
         log(event: .shopPayWebviewCancelled, params: ["did_receive_ece_click": didReceiveECEClick])
     }
 
+    func logLinkUserSignupSucceeded() {
+        log(event: .linkNewUserSignupViaApiSuccess)
+    }
+
+    func logLinkUserSignupFailed(error: Error) {
+        let params = error.serializeForV1Analytics()
+        log(event: .linkNewUserSignupViaApiFailure, params: params)
+    }
+
+    func logLinkUserPaymentDetailCreationCompleted(error: Error?) {
+        let event: STPAnalyticEvent = error == nil
+            ? .linkNewUserPaymentDetailCreationViaApiSuccess
+            : .linkNewUserPaymentDetailCreationViaApiFailure
+
+        let params = error?.serializeForV1Analytics() ?? [:]
+        log(event: event, params: params)
+    }
+
     func log(
         event: STPAnalyticEvent,
         duration: TimeInterval? = nil,

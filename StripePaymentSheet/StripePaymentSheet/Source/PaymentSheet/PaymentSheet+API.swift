@@ -148,7 +148,8 @@ extension PaymentSheet {
         paymentMethodType: STPPaymentMethodType,
         confirmParams: IntentConfirmParams,
         useMobileEndpoints: Bool,
-        configuration: PaymentElementConfiguration
+        configuration: PaymentElementConfiguration,
+        analyticsHelper: PaymentSheetAnalyticsHelper
     ) {
         guard linkSignUpOptIn, paymentMethodType == .card else {
             return
@@ -180,6 +181,8 @@ extension PaymentSheet {
         ) { consumerSessionResult in
             switch consumerSessionResult {
             case .success(let signupResponse):
+                analyticsHelper.logLinkUserSignupSucceeded()
+
                 let linkAccount = PaymentSheetLinkAccount(
                     email: signupResponse.consumerSession.emailAddress,
                     session: signupResponse.consumerSession,
@@ -194,15 +197,10 @@ extension PaymentSheet {
                     with: confirmParams.paymentMethodParams,
                     isDefault: true
                 ) { paymentDetailsResult in
-                    switch paymentDetailsResult {
-                    case .success(let success):
-                        print("Created payment details with ID \(success.stripeID)")
-                    case .failure(let failure):
-                        print(failure.localizedDescription)
-                    }
+                    analyticsHelper.logLinkUserPaymentDetailCreationCompleted(error: paymentDetailsResult.error)
                 }
-            case .failure(let failure):
-                print(failure.localizedDescription)
+            case .failure(let error):
+                analyticsHelper.logLinkUserSignupFailed(error: error)
             }
         }
     }
@@ -263,7 +261,8 @@ extension PaymentSheet {
                 paymentMethodType: paymentMethodType,
                 confirmParams: confirmParams,
                 useMobileEndpoints: elementsSession.linkSettings?.useAttestationEndpoints ?? false,
-                configuration: configuration
+                configuration: configuration,
+                analyticsHelper: analyticsHelper
             )
 
             switch intent {
