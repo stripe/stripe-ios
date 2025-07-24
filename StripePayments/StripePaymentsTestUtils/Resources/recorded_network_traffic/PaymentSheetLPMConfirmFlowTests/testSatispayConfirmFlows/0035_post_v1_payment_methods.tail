@@ -3,31 +3,31 @@ https:\/\/api\.stripe\.com\/v1\/payment_methods$
 200
 application/json
 access-control-allow-methods: GET, HEAD, PUT, PATCH, POST, DELETE
-content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=bUm-q157D0xfakL9yD4uZTNImc_OZl7TF1gYnSuJ7x3JX2_8U8SxuLEPulYgi2M9SKSoc3DjJZSWy2gk
+content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=7CyXQNCMP2zTvIQsBCS-b5q2bcUAcGnJI-AR_hGkPci7SysLBW8Yfbq9bVwPDan53D21ZFkeELceuqb6
 Server: nginx
 Cache-Control: no-cache, no-store
-x-wc: ABGHIJ
+x-wc: ABGHI
 Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
 Access-Control-Allow-Origin: *
 stripe-should-retry: false
 x-stripe-priority-routing-enabled: true
 x-stripe-routing-context-priority-tier: api-testmode
-request-id: req_aSErE47ZE0Ydmc
+request-id: req_R0lztXsb3pLR7f
 Content-Length: 472
 Vary: Origin
-Date: Fri, 18 Jul 2025 23:14:37 GMT
-original-request: req_aSErE47ZE0Ydmc
+Date: Thu, 03 Jul 2025 16:24:28 GMT
+original-request: req_R0lztXsb3pLR7f
 stripe-version: 2020-08-27
-idempotency-key: bd13bc3e-3349-40b1-89e0-4a003d840515
+idempotency-key: aee026c4-7081-45fa-8706-1db07fc55a7d
 access-control-expose-headers: Request-Id, Stripe-Manage-Version, Stripe-Should-Retry, X-Stripe-External-Auth-Required, X-Stripe-Privileged-Session-Required
 access-control-max-age: 300
 access-control-allow-credentials: true
 Content-Type: application/json
-X-Stripe-Mock-Request: allow_redisplay=unspecified&client_attribution_metadata\[client_session_id]=.*&guid=.*&muid=.*&payment_user_agent=.*&sid=.*&type=satispay
+X-Stripe-Mock-Request: allow_redisplay=unspecified&guid=.*&muid=.*&payment_user_agent=.*&sid=.*&type=satispay
 
 {
   "object" : "payment_method",
-  "id" : "pm_1RmNU9IFbdis1OxTM60KAihZ",
+  "id" : "pm_1Rgpw0IFbdis1OxTQ1uD2pRT",
   "billing_details" : {
     "email" : null,
     "phone" : null,
@@ -46,7 +46,7 @@ X-Stripe-Mock-Request: allow_redisplay=unspecified&client_attribution_metadata\[
   "satispay" : {
 
   },
-  "created" : 1752880477,
+  "created" : 1751559868,
   "allow_redisplay" : "unspecified",
   "type" : "satispay",
   "customer" : null

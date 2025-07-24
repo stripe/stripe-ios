@@ -256,7 +256,7 @@ import UIKit
         var clientAttributionMetadata = ["client_session_id": AnalyticsHelper.shared.sessionID,
                                          "merchant_integration_source": "elements",
                                          "merchant_integration_subtype": "mobile",
-                                         "merchant_integration_version": "stripe-ios/\(StripeAPIConfiguration.STPSDKVersion)"]
+                                         "merchant_integration_version": "stripe-ios/\(StripeAPIConfiguration.STPSDKVersion)",]
         newParams["client_attribution_metadata"] = clientAttributionMetadata
         return newParams
     }

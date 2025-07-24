@@ -3,31 +3,31 @@ https:\/\/api\.stripe\.com\/v1\/payment_methods$
 200
 application/json
 access-control-allow-methods: GET, HEAD, PUT, PATCH, POST, DELETE
-content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=xxFjWDZUOwgH_LBM33UjVmM01pe4YnNUwGaaSggNzJ0y5xtKjNEl0wN7cb_uxpBqrmc-42J51oIKbNjJ
+content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=yZiLIxI9mqYoRetucO7yBPVGgdRSAsIFW1rCD60TLVIm3uBG93Fmi3fXkOS0CXvaQKlfY1mmIFKg1tDO
 Server: nginx
 Cache-Control: no-cache, no-store
-x-wc: ABGHIJ
+x-wc: ABGHI
 Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
 Access-Control-Allow-Origin: *
 stripe-should-retry: false
 x-stripe-priority-routing-enabled: true
 x-stripe-routing-context-priority-tier: api-testmode
-request-id: req_QIrr7oFJ5TN9qk
+request-id: req_0eNVA90ynfcDEo
 Content-Length: 531
 Vary: Origin
-Date: Fri, 18 Jul 2025 23:11:52 GMT
-original-request: req_QIrr7oFJ5TN9qk
+Date: Tue, 03 Jun 2025 21:00:22 GMT
+original-request: req_0eNVA90ynfcDEo
 stripe-version: 2020-08-27
-idempotency-key: fb288853-2709-48f9-a5dd-02e486ef539a
+idempotency-key: e59a00b4-68a0-43e3-a481-004c6ac5afc2
 access-control-expose-headers: Request-Id, Stripe-Manage-Version, Stripe-Should-Retry, X-Stripe-External-Auth-Required, X-Stripe-Privileged-Session-Required
 access-control-max-age: 300
 access-control-allow-credentials: true
 Content-Type: application/json
-X-Stripe-Mock-Request: allow_redisplay=unspecified&client_attribution_metadata\[client_session_id]=.*&fpx%5Bbank%5D=affin_bank&guid=.*&muid=.*&payment_user_agent=.*&sid=.*&type=fpx
+X-Stripe-Mock-Request: allow_redisplay=unspecified&fpx%5Bbank%5D=affin_bank&guid=.*&muid=.*&payment_user_agent=.*&sid=.*&type=fpx
 
 {
   "object" : "payment_method",
-  "id" : "pm_1RmNRUINV13NEzqK3XGig70I",
+  "id" : "pm_1RW1wYINV13NEzqKjg5B5IlA",
   "billing_details" : {
     "email" : null,
     "phone" : null,
@@ -43,7 +43,7 @@ X-Stripe-Mock-Request: allow_redisplay=unspecified&client_attribution_metadata\[
     }
   },
   "livemode" : false,
-  "created" : 1752880312,
+  "created" : 1748984422,
   "allow_redisplay" : "unspecified",
   "type" : "fpx",
   "customer" : null,
