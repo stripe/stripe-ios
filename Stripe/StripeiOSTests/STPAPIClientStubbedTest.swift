@@ -38,6 +38,42 @@ class STPAPIClientStubbedTest: APIStubbedTestCase {
         waitForExpectations(timeout: 10)
     }
 
+    private func stubClientAttributionMetadata() {
+        stub { urlRequest in
+            guard let queryItems = urlRequest.queryItems else {
+                return false
+            }
+            XCTAssertTrue(queryItems.contains(where: { item in
+                item.name == "client_attribution_metadata[client_session_id]" && item.value == AnalyticsHelper.shared.sessionID
+            }))
+            return true
+        } response: { _ in
+            return .init()
+        }
+    }
+
+    func testCreatePaymentMethodWithClientAttributionMetadata() {
+        let sut = stubbedAPIClient()
+        AnalyticsHelper.shared.generateSessionID()
+        stubClientAttributionMetadata()
+        let e = expectation(description: "")
+        sut.createPaymentMethod(with: ._testValidCardValue(), additionalPaymentUserAgentValues: []) { _, _ in
+            e.fulfill()
+        }
+        waitForExpectations(timeout: 10)
+    }
+
+    func testCreateApplePayPaymentMethodWithClientAttributionMetadata() {
+        let sut = stubbedAPIClient()
+        AnalyticsHelper.shared.generateSessionID()
+        stubClientAttributionMetadata()
+        let e = expectation(description: "")
+        StripeAPI.PaymentMethod.create(apiClient: sut, params: StripeAPI.PaymentMethodParams(type: .card)) { _ in
+            e.fulfill()
+        }
+        waitForExpectations(timeout: 10)
+    }
+
     private func stubConfirmClientAttributionMetadata(_ shouldContainClientAttributionMetadata: Bool) {
         stub { urlRequest in
             guard let queryItems = urlRequest.queryItems else {
@@ -50,27 +86,6 @@ class STPAPIClientStubbedTest: APIStubbedTestCase {
         } response: { _ in
             return .init()
         }
-    }
-
-    func testCreatePaymentMethodWithClientAttributionMetadata() {
-        let sut = stubbedAPIClient()
-        AnalyticsHelper.shared.generateSessionID()
-        stub { urlRequest in
-            guard let queryItems = urlRequest.queryItems else {
-                return false
-            }
-            XCTAssertTrue(queryItems.contains(where: { item in
-                item.name == "client_attribution_metadata[client_session_id]" && item.value == AnalyticsHelper.shared.sessionID
-            }))
-            return true
-        } response: { _ in
-            return .init()
-        }
-        let e = expectation(description: "")
-        sut.createPaymentMethod(with: ._testValidCardValue(), additionalPaymentUserAgentValues: []) { _, _ in
-            e.fulfill()
-        }
-        waitForExpectations(timeout: 10)
     }
 
     func testConfirmPaymentIntentWithClientAttributionMetadata() {
@@ -120,6 +135,39 @@ class STPAPIClientStubbedTest: APIStubbedTestCase {
         let e = expectation(description: "")
         let setupIntentParams = STPSetupIntentConfirmParams(clientSecret: "seti_123456_secret_654321")
         sut.confirmSetupIntent(with: setupIntentParams) { _, _ in
+            e.fulfill()
+        }
+        waitForExpectations(timeout: 10)
+    }
+
+    private func stubSharePaymentDetailsClientAttributionMetadata() {
+        stub { urlRequest in
+            guard let queryItems = urlRequest.queryItems else {
+                return false
+            }
+            XCTAssertTrue(queryItems.contains(where: { item in
+                item.name == "payment_method_options[client_attribution_metadata][client_session_id]" && item.value == AnalyticsHelper.shared.sessionID
+            }))
+            return true
+        } response: { _ in
+            return .init()
+        }
+    }
+
+    func testSharePaymentDetailsWithClientAttributionMetadata() {
+        let sut = stubbedAPIClient()
+        AnalyticsHelper.shared.generateSessionID()
+        stubSharePaymentDetailsClientAttributionMetadata()
+        let e = expectation(description: "")
+//        for consumerSessionClientSecret: String,
+//        id: String,
+//        consumerAccountPublishableKey: String?,
+//        allowRedisplay: STPPaymentMethodAllowRedisplay?,
+//        cvc: String?,
+//        expectedPaymentMethodType: String?,
+//        billingPhoneNumber: String?,
+//        completion: @escaping (Result<PaymentDetailsShareResponse, Error>) -> Void
+        sut.sharePaymentDetails(for: "consumer_session_client_secret", id: "id", consumerAccountPublishableKey: nil, allowRedisplay: nil, cvc: nil, expectedPaymentMethodType: nil, billingPhoneNumber: nil) { _ in
             e.fulfill()
         }
         waitForExpectations(timeout: 10)
