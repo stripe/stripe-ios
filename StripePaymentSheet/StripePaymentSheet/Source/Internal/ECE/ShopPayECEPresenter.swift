@@ -18,15 +18,18 @@ class ShopPayECEPresenter: NSObject, UIAdaptivePresentationControllerDelegate {
     private var eceViewController: ECEViewController?
     private weak var presentingViewController: UIViewController?
     private var didReceiveECEClick: Bool = false
+    private let additionalClientAttributionMetadata: [String: String]
     private let analyticsHelper: PaymentSheetAnalyticsHelper
 
     init(
         flowController: PaymentSheet.FlowController,
         configuration: PaymentSheet.ShopPayConfiguration,
+        additionalClientAttributionMetadata: [String: String],
         analyticsHelper: PaymentSheetAnalyticsHelper
     ) {
         self.flowController = flowController
         self.shopPayConfiguration = configuration
+        self.additionalClientAttributionMetadata = additionalClientAttributionMetadata
         self.analyticsHelper = analyticsHelper
         super.init()
     }
@@ -310,7 +313,8 @@ extension ShopPayECEPresenter: ExpressCheckoutWebviewDelegate {
         // Create payment method
         do {
             let paymentMethod = try await flowController.configuration.apiClient.createPaymentMethod(with: paymentMethodParams,
-                                                                                                 additionalPaymentUserAgentValues: [])
+                                                                                                 additionalPaymentUserAgentValues: [],
+                                                                                                 additionalClientAttributionMetadata: additionalClientAttributionMetadata)
             // Dismiss ECE and return the payment method ID on the main thread
             Task { @MainActor in
                 dismissECE { [weak self] in

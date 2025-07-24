@@ -60,7 +60,7 @@ struct ConfirmPaymentPresenter<ParamsType, CompletionBlockType>: UIViewControlle
                 let completion = self.parent.onCompletion
                     as? STPPaymentHandlerActionPaymentIntentCompletionBlock
             {
-                STPPaymentHandler.sharedHandler.confirmPayment(params, with: self) {
+                STPPaymentHandler.sharedHandler.confirmPayment(params, with: self, additionalClientAttributionMetadata: [:]) {
                     (status, pi, error) in
                     self.parent.presented = false
                     completion(status, pi, error)
@@ -69,7 +69,7 @@ struct ConfirmPaymentPresenter<ParamsType, CompletionBlockType>: UIViewControlle
                 let completion = self.parent.onCompletion
                     as? STPPaymentHandlerActionSetupIntentCompletionBlock
             {
-                STPPaymentHandler.sharedHandler.confirmSetupIntent(params, with: self) {
+                STPPaymentHandler.sharedHandler.confirmSetupIntent(params, with: self, additionalClientAttributionMetadata: [:]) {
                     (status, si, error) in
                     self.parent.presented = false
                     completion(status, si, error)

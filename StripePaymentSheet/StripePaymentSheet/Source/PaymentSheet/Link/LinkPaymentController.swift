@@ -446,7 +446,8 @@ import UIKit
                 paymentIntentParams.paymentMethodId = paymentMethodId
                 paymentIntentParams.mandateData = STPMandateDataParams.makeWithInferredValues()
                 STPPaymentHandler.shared().confirmPayment(
-                    paymentIntentParams, with: authenticationContext
+                    paymentIntentParams, with: authenticationContext,
+                    additionalClientAttributionMetadata: [:]
                 ) { (status, _, error) in
                     switch status {
                     case .canceled:
@@ -464,7 +465,8 @@ import UIKit
                 setupIntentParams.paymentMethodID = paymentMethodId
                 setupIntentParams.mandateData = STPMandateDataParams.makeWithInferredValues()
                 STPPaymentHandler.shared().confirmSetupIntent(
-                    setupIntentParams, with: authenticationContext
+                    setupIntentParams, with: authenticationContext,
+                    additionalClientAttributionMetadata: [:]
                 ) { (status, _, error) in
                     switch status {
                     case .canceled:
@@ -487,7 +489,8 @@ import UIKit
                         authenticationContext: authenticationContext,
                         paymentHandler: STPPaymentHandler.shared(),
                         isFlowController: true,
-                        mandateData: STPMandateDataParams.makeWithInferredValues()) { result, _ in
+                        mandateData: STPMandateDataParams.makeWithInferredValues(),
+                        additionalClientAttributionMetadata: [:]) { result, _ in
                     switch result {
                     case .canceled:
                         continuation.resume(throwing: Error.canceled)

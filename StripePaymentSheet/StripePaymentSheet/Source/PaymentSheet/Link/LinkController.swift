@@ -292,16 +292,31 @@ import UIKit
             return
         }
 
+        var additionalClientAttributionMetadata: [String: String] = ["elements_session_config_id": elementsSession.sessionID]
+        switch intent {
+        case .paymentIntent(let paymentIntent):
+            additionalClientAttributionMetadata["payment_intent_creation_flow"] = "standard"
+            additionalClientAttributionMetadata["payment_method_selection_flow"] = paymentIntent.automaticPaymentMethods?.enabled ?? false ? "automatic" : "merchant_specified"
+        case .setupIntent(let setupIntent):
+            additionalClientAttributionMetadata["payment_intent_creation_flow"] = "standard"
+            additionalClientAttributionMetadata["payment_method_selection_flow"] = setupIntent.automaticPaymentMethods?.enabled ?? false ? "automatic" : "merchant_specified"
+        case .deferredIntent(let intentConfig):
+            additionalClientAttributionMetadata["payment_intent_creation_flow"] = "deferred"
+            additionalClientAttributionMetadata["payment_method_selection_flow"] = intentConfig.paymentMethodTypes?.isEmpty ?? true ? "automatic" : "merchant_specified"
+        }
+
         if elementsSession.linkPassthroughModeEnabled {
             createPaymentMethodInPassthroughMode(
                 paymentDetails: selectedPaymentDetails,
                 consumerSessionClientSecret: consumerSessionClientSecret,
+                additionalClientAttributionMetadata: additionalClientAttributionMetadata,
                 completion: completion
             )
         } else {
             createPaymentMethodInPaymentMethodMode(
                 paymentDetails: selectedPaymentDetails,
                 linkAccount: linkAccount,
+                additionalClientAttributionMetadata: additionalClientAttributionMetadata,
                 completion: completion
             )
         }
@@ -312,6 +327,7 @@ import UIKit
     private func createPaymentMethodInPassthroughMode(
         paymentDetails: ConsumerPaymentDetails,
         consumerSessionClientSecret: String,
+        additionalClientAttributionMetadata: [String: String],
         completion: @escaping (Result<STPPaymentMethod, Error>) -> Void
     ) {
         // TODO: These parameters aren't final
@@ -322,7 +338,8 @@ import UIKit
             allowRedisplay: nil,
             cvc: paymentDetails.cvc,
             expectedPaymentMethodType: nil,
-            billingPhoneNumber: nil
+            billingPhoneNumber: nil,
+            additionalClientAttributionMetadata: additionalClientAttributionMetadata
         ) { shareResult in
             switch shareResult {
             case .success(let success):
@@ -336,6 +353,7 @@ import UIKit
     private func createPaymentMethodInPaymentMethodMode(
         paymentDetails: ConsumerPaymentDetails,
         linkAccount: PaymentSheetLinkAccount,
+        additionalClientAttributionMetadata: [String: String],
         completion: @escaping (Result<STPPaymentMethod, Error>) -> Void
     ) {
         Task {
@@ -349,7 +367,8 @@ import UIKit
                 )!
                 let paymentMethod = try await apiClient.createPaymentMethod(
                     with: paymentMethodParams,
-                    additionalPaymentUserAgentValues: []
+                    additionalPaymentUserAgentValues: [],
+                    additionalClientAttributionMetadata: additionalClientAttributionMetadata
                 )
                 completion(.success(paymentMethod))
             } catch {

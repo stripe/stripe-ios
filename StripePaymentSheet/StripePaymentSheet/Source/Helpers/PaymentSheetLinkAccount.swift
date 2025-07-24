@@ -432,6 +432,7 @@ struct LinkPMDisplayDetails {
         allowRedisplay: STPPaymentMethodAllowRedisplay?,
         expectedPaymentMethodType: String?,
         billingPhoneNumber: String?,
+        additionalClientAttributionMetadata: [String: String],
         completion: @escaping (Result<PaymentDetailsShareResponse, Error>
     ) -> Void) {
         retryingOnAuthError(completion: completion) { [apiClient, publishableKey] completionRetryingOnAuthErrors in
@@ -452,6 +453,7 @@ struct LinkPMDisplayDetails {
                 expectedPaymentMethodType: expectedPaymentMethodType,
                 billingPhoneNumber: billingPhoneNumber,
                 consumerAccountPublishableKey: publishableKey,
+                additionalClientAttributionMetadata: additionalClientAttributionMetadata,
                 completion: completionRetryingOnAuthErrors
             )
         }

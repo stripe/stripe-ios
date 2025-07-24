@@ -315,6 +315,7 @@ extension STPAPIClient {
         cvc: String?,
         expectedPaymentMethodType: String?,
         billingPhoneNumber: String?,
+        additionalClientAttributionMetadata: [String: String],
         completion: @escaping (Result<PaymentDetailsShareResponse, Error>) -> Void
     ) {
         let endpoint: String = "consumers/payment_details/share"
@@ -326,9 +327,13 @@ extension STPAPIClient {
             "id": id,
         ]
 
+        var paymentMethodOptionsDict: [String: Any] = [:]
         if let cvc = cvc {
-            parameters["payment_method_options"] = ["card": ["cvc": cvc]]
+            paymentMethodOptionsDict["card"] = ["cvc": cvc]
         }
+        paymentMethodOptionsDict = Self.paramsAddingClientAttributionMetadata(paymentMethodOptionsDict, additionalClientAttributionMetadata: additionalClientAttributionMetadata)
+        parameters["payment_method_options"] = paymentMethodOptionsDict
+
         if let allowRedisplay {
             parameters["allow_redisplay"] = allowRedisplay.stringValue
         }

@@ -84,7 +84,7 @@ extension STPAPIClient {
                     billingDetails: billingDetails,
                     metadata: metadata
                 )
-                self.createPaymentMethod(with: paymentMethodParams, completion: completion)
+                self.createPaymentMethod(with: paymentMethodParams, additionalClientAttributionMetadata: [:], completion: completion)
             }
         }
     }
