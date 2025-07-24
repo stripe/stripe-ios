@@ -19,6 +19,9 @@
 /* Title of ID document scanning screen when scanning the back of an identity card */
 "Back of identity document" = "Back of identity document";
 
+/* Title of ID document scanning screen when scanning the back of either a driver's license, passport, or government issued photo id */
+"Back of %@" = "Back of %@";
+
 /* Error title displayed to the user when camera permissions have been denied
    Title displayed when requesting camera permissions */
 "Camera permission" = "Camera permission";
@@ -63,6 +66,9 @@
 
 /* Title of ID document scanning screen when scanning the front of an identity card */
 "Front of identity document" = "Front of identity document";
+
+/* Title of ID document scanning screen when scanning the front of either a driver's license, passport, or government issued photo id */
+"Front of %@" = "Front of %@";
 
 /* Title for document front warmup page */
 "Get ready to scan your photo ID" = "Get ready to scan your photo ID";

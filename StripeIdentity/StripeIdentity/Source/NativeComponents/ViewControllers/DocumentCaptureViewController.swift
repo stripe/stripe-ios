@@ -227,12 +227,12 @@ final class DocumentCaptureViewController: IdentityFlowViewController {
     var titleText: String? {
         switch imageScanningSession.state {
         case .initial:
-            return titleText(for: .front)
+            return titleText(for: .front, availableIDTypes: availableIDTypes)
         case .scanning(let side, _),
             .scanned(let side, _):
-            return titleText(for: side)
+            return titleText(for: side, availableIDTypes: availableIDTypes)
         case .saving(let side, _):
-            return titleText(for: side)
+            return titleText(for: side, availableIDTypes: availableIDTypes)
         case .noCameraAccess,
             .cameraError,
             .timeout:
@@ -247,6 +247,8 @@ final class DocumentCaptureViewController: IdentityFlowViewController {
 
     let apiConfig: StripeAPI.VerificationPageStaticContentDocumentCapturePage
     private var feedbackGenerator: UINotificationFeedbackGenerator?
+    
+    private let availableIDTypes: [String]
 
     // MARK: Coordinators
     let documentUploader: DocumentUploaderProtocol
@@ -258,11 +260,13 @@ final class DocumentCaptureViewController: IdentityFlowViewController {
         apiConfig: StripeAPI.VerificationPageStaticContentDocumentCapturePage,
         documentUploader: DocumentUploaderProtocol,
         imageScanningSession: DocumentImageScanningSession,
-        sheetController: VerificationSheetControllerProtocol
+        sheetController: VerificationSheetControllerProtocol,
+        avaialableIDTypes: [String]
     ) {
         self.apiConfig = apiConfig
         self.documentUploader = documentUploader
         self.imageScanningSession = imageScanningSession
+        self.availableIDTypes = avaialableIDTypes
         super.init(sheetController: sheetController, analyticsScreenName: .documentCapture)
         imageScanningSession.setDelegate(delegate: self)
     }
@@ -277,7 +281,8 @@ final class DocumentCaptureViewController: IdentityFlowViewController {
         documentUploader: DocumentUploaderProtocol,
         anyDocumentScanner: AnyDocumentScanner,
         concurrencyManager: ImageScanningConcurrencyManagerProtocol? = nil,
-        appSettingsHelper: AppSettingsHelperProtocol = AppSettingsHelper.shared
+        appSettingsHelper: AppSettingsHelperProtocol = AppSettingsHelper.shared,
+        avaialableIDTypes: [String]
     ) {
         self.init(
             apiConfig: apiConfig,
@@ -295,7 +300,8 @@ final class DocumentCaptureViewController: IdentityFlowViewController {
                 cameraPermissionsManager: cameraPermissionsManager,
                 appSettingsHelper: appSettingsHelper
             ),
-            sheetController: sheetController
+            sheetController: sheetController,
+            avaialableIDTypes: avaialableIDTypes
         )
         updateUI()
     }
