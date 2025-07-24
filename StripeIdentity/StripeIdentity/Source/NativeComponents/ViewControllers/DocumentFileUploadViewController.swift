@@ -202,8 +202,8 @@ final class DocumentFileUploadViewController: IdentityFlowViewController {
             .error:
             return .button(
                 title: String.Localized.select,
-                onTap: { [weak self] in
-                    self?.didTapSelect(for: side)
+                onTap: { [weak self] button in
+                    self?.didTapSelect(for: side, from: button)
                 }
             )
         case .inProgress:
@@ -231,7 +231,7 @@ final class DocumentFileUploadViewController: IdentityFlowViewController {
 
     // MARK: - File selection
 
-    func didTapSelect(for side: DocumentSide) {
+    func didTapSelect(for side: DocumentSide, from button: UIButton) {
         currentlySelectingSide = side
 
         let message: String?
@@ -255,6 +255,8 @@ final class DocumentFileUploadViewController: IdentityFlowViewController {
             message: message,
             preferredStyle: .actionSheet
         )
+        alert.popoverPresentationController?.sourceView = button
+        alert.popoverPresentationController?.sourceRect = button.bounds
 
         if !requireLiveCapture && UIImagePickerController.isSourceTypeAvailable(.photoLibrary) {
             alert.addAction(
