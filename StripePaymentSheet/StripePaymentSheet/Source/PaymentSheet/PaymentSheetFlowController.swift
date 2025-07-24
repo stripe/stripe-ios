@@ -332,7 +332,15 @@ extension PaymentSheet {
             linkNewUserSignupState = isLinkConsumer ? .hidden : .visible(
                 title: "Save my info for faster checkout with Link",
                 description: NSAttributedString(string: "Pay faster everywhere Link is accepted."),
-                termsAndConditions: NSAttributedString(string: "Your information will be saved to Link, see Terms and Privacy Policy.")
+                termsAndConditions: NSAttributedString(
+                    attributedString: STPStringUtils.applyLinksToString(
+                        template: "Your information will be saved to Link, see <terms>Terms</terms> and <privacy>Privacy Policy</privacy>.",
+                        links: [
+                            "terms": URL(string: "https://link.co/terms")!,
+                            "privacy": URL(string: "https://link.co/privacy")!,
+                        ]
+                    )
+                )
             )
 
             if case .visible = linkNewUserSignupState {

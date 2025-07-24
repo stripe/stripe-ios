@@ -176,17 +176,16 @@ struct WalletButtonsFlowControllerView: View {
                 paymentOptionDisplayData: flowController.paymentOption)
         }
 
-        if case let .visible(title, description, termsAndConditions) = flowController.linkNewUserSignupState {
+        if case let .visible(title, description, _) = flowController.linkNewUserSignupState {
             Toggle(isOn: $linkSignUpOptIn) {
                 VStack(alignment: .leading) {
                     Text(title)
-                        .bold()
                         .foregroundStyle(Color.primary)
+                        .font(.system(size: 14))
+
                     Text(AttributedString(description))
                         .foregroundStyle(Color.secondary)
-                    Text(AttributedString(termsAndConditions))
-                        .foregroundStyle(Color.secondary)
-                        .font(.footnote)
+                        .font(.system(size: 13))
                 }
                 .frame(maxWidth: .infinity)
             }
@@ -196,7 +195,17 @@ struct WalletButtonsFlowControllerView: View {
             .onChange(of: linkSignUpOptIn) { newValue in
                 flowController.linkSignUpOptIn = newValue
             }
+            .frame(maxWidth: .infinity)
             .padding(.horizontal)
+        }
+
+        if case let .visible(_, _, termsAndConditions) = flowController.linkNewUserSignupState {
+            Text(AttributedString(termsAndConditions))
+                .foregroundStyle(Color.secondary)
+                .font(.footnote)
+                .multilineTextAlignment(.center)
+                .frame(maxWidth: .infinity)
+                .padding(.horizontal)
         }
 
         Button(action: {
