@@ -590,15 +590,7 @@ extension EmbeddedPaymentElement {
     }
 }
 
-// TODO(porter) When we use Xcode 16 on CI do this instead of `STPAuthenticationContextWrapper`
-// @retroactive is not supported in Xcode 15
-// extension UIViewController: @retroactive STPAuthenticationContext {
-//    public func authenticationPresentingViewController() -> UIViewController {
-//        return self
-//    }
-// }
-
-final class STPAuthenticationContextWrapper: UIViewController {
+final class PaymentSheetAuthenticationContextViewController: UIViewController {
     let _presentingViewController: UIViewController
     let appearance: PaymentSheet.Appearance
 
@@ -616,7 +608,7 @@ final class STPAuthenticationContextWrapper: UIViewController {
     }
 }
 
-extension STPAuthenticationContextWrapper: PaymentSheetAuthenticationContext {
+extension PaymentSheetAuthenticationContextViewController: PaymentSheetAuthenticationContext {
 
     func present(_ authenticationViewController: UIViewController, completion: @escaping () -> Void) {
         DispatchQueue.main.async {
