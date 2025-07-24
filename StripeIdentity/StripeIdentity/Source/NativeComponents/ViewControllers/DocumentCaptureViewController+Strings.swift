@@ -30,19 +30,7 @@ extension DocumentCaptureViewController {
         if availableIDTypes.count == 1 {
             let idType = availableIDTypes[0]
             
-            func uiIDType() -> String? {
-                if idType == "driving_license" {
-                    return String.Localized.driverLicense
-                } else if idType == "id_card" {
-                    return String.Localized.governmentIssuedId
-                } else if idType == "passport" {
-                    return String.Localized.passport
-                }
-                
-                return nil
-            }
-            
-            if let type = uiIDType() {
+            if let type = idType.uiIDType() {
                 switch side {
                 case .front:
                     return String(format: STPLocalizedString("Front of %@", "Title of ID document scanning screen when scanning the front of either a driver's license, passport, or government issued photo id "), type)
