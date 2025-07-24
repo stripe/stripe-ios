@@ -38,6 +38,93 @@ class STPAPIClientStubbedTest: APIStubbedTestCase {
         waitForExpectations(timeout: 10)
     }
 
+    private func stubConfirmClientAttributionMetadata(_ shouldContainClientAttributionMetadata: Bool) {
+        stub { urlRequest in
+            guard let queryItems = urlRequest.queryItems else {
+                return false
+            }
+            XCTAssertEqual(queryItems.contains(where: { item in
+                item.name == "payment_method_data[client_attribution_metadata][client_session_id]" && item.value == AnalyticsHelper.shared.sessionID
+            }), shouldContainClientAttributionMetadata)
+            return true
+        } response: { _ in
+            return .init()
+        }
+    }
+
+    func testCreatePaymentMethodWithClientAttributionMetadata() {
+        let sut = stubbedAPIClient()
+        AnalyticsHelper.shared.generateSessionID()
+        stub { urlRequest in
+            guard let queryItems = urlRequest.queryItems else {
+                return false
+            }
+            XCTAssertTrue(queryItems.contains(where: { item in
+                item.name == "client_attribution_metadata[client_session_id]" && item.value == AnalyticsHelper.shared.sessionID
+            }))
+            return true
+        } response: { _ in
+            return .init()
+        }
+        let e = expectation(description: "")
+        sut.createPaymentMethod(with: ._testValidCardValue(), additionalPaymentUserAgentValues: []) { _, _ in
+            e.fulfill()
+        }
+        waitForExpectations(timeout: 10)
+    }
+
+    func testConfirmPaymentIntentWithClientAttributionMetadata() {
+        let sut = stubbedAPIClient()
+        AnalyticsHelper.shared.generateSessionID()
+        stubConfirmClientAttributionMetadata(true)
+        let e = expectation(description: "")
+        let paymentMethodParams = STPPaymentMethodParams()
+        let paymentIntentParams = STPPaymentIntentParams(clientSecret: "pi_123456_secret_654321")
+        paymentIntentParams.paymentMethodParams = paymentMethodParams
+        sut.confirmPaymentIntent(with: paymentIntentParams) { _, _ in
+            e.fulfill()
+        }
+        waitForExpectations(timeout: 10)
+    }
+
+    func testConfirmPaymentIntentWithoutClientAttributionMetadata() {
+        let sut = stubbedAPIClient()
+        AnalyticsHelper.shared.generateSessionID()
+        stubConfirmClientAttributionMetadata(false)
+        let e = expectation(description: "")
+        let paymentIntentParams = STPPaymentIntentParams(clientSecret: "pi_123456_secret_654321")
+        sut.confirmPaymentIntent(with: paymentIntentParams) { _, _ in
+            e.fulfill()
+        }
+        waitForExpectations(timeout: 10)
+    }
+
+    func testConfirmSetupIntentWithClientAttributionMetadata() {
+        let sut = stubbedAPIClient()
+        AnalyticsHelper.shared.generateSessionID()
+        stubConfirmClientAttributionMetadata(true)
+        let e = expectation(description: "")
+        let paymentMethodParams = STPPaymentMethodParams()
+        let setupIntentParams = STPSetupIntentConfirmParams(clientSecret: "seti_123456_secret_654321")
+        setupIntentParams.paymentMethodParams = paymentMethodParams
+        sut.confirmSetupIntent(with: setupIntentParams) { _, _ in
+            e.fulfill()
+        }
+        waitForExpectations(timeout: 10)
+    }
+
+    func testConfirmSetupIntentWithoutClientAttributionMetadata() {
+        let sut = stubbedAPIClient()
+        AnalyticsHelper.shared.generateSessionID()
+        stubConfirmClientAttributionMetadata(false)
+        let e = expectation(description: "")
+        let setupIntentParams = STPSetupIntentConfirmParams(clientSecret: "seti_123456_secret_654321")
+        sut.confirmSetupIntent(with: setupIntentParams) { _, _ in
+            e.fulfill()
+        }
+        waitForExpectations(timeout: 10)
+    }
+
     func testSetupIntent_LinkAccountSessionForUSBankAccount() {
         let sut = stubbedAPIClient()
         stub { urlRequest in
@@ -49,7 +136,7 @@ class STPAPIClientStubbedTest: APIStubbedTestCase {
                 let body = String(data: data, encoding: .utf8)
             else {
                 return HTTPStubsResponse(
-                    data: "".data(using: .utf8)!,
+                    data: Data("".utf8),
                     statusCode: 400,
                     headers: nil
                 )
@@ -118,7 +205,7 @@ class STPAPIClientStubbedTest: APIStubbedTestCase {
                 let body = String(data: data, encoding: .utf8)
             else {
                 return HTTPStubsResponse(
-                    data: "".data(using: .utf8)!,
+                    data: Data("".utf8),
                     statusCode: 400,
                     headers: nil
                 )
@@ -152,7 +239,7 @@ class STPAPIClientStubbedTest: APIStubbedTestCase {
                 }
                 """
             return HTTPStubsResponse(
-                data: jsonText.data(using: .utf8)!,
+                data: Data(jsonText.utf8),
                 statusCode: 200,
                 headers: nil
             )
@@ -189,7 +276,7 @@ class STPAPIClientStubbedTest: APIStubbedTestCase {
                 let body = String(data: data, encoding: .utf8)
             else {
                 return HTTPStubsResponse(
-                    data: "".data(using: .utf8)!,
+                    data: Data("".utf8),
                     statusCode: 400,
                     headers: nil
                 )
@@ -221,7 +308,7 @@ class STPAPIClientStubbedTest: APIStubbedTestCase {
                 }
                 """
             return HTTPStubsResponse(
-                data: jsonText.data(using: .utf8)!,
+                data: Data(jsonText.utf8),
                 statusCode: 200,
                 headers: nil
             )
@@ -255,7 +342,7 @@ class STPAPIClientStubbedTest: APIStubbedTestCase {
                 let body = String(data: data, encoding: .utf8)
             else {
                 return HTTPStubsResponse(
-                    data: "".data(using: .utf8)!,
+                    data: Data("".utf8),
                     statusCode: 400,
                     headers: nil
                 )
@@ -288,7 +375,7 @@ class STPAPIClientStubbedTest: APIStubbedTestCase {
                 }
                 """
             return HTTPStubsResponse(
-                data: jsonText.data(using: .utf8)!,
+                data: Data(jsonText.utf8),
                 statusCode: 200,
                 headers: nil
             )
