@@ -53,7 +53,7 @@ public final class CryptoOnrampCoordinator: CryptoOnrampCoordinatorProtocol {
     /// A subset of errors that may be thrown by `CryptoOnrampCoordinator` APIs.
     public enum Error: Swift.Error {
 
-        ///Phone number validation failed. Phone number should be in E.164 format (e.g., +12125551234).
+        /// Phone number validation failed. Phone number should be in E.164 format (e.g., +12125551234).
         case invalidPhoneFormat
     }
 
