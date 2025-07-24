@@ -3,34 +3,34 @@ https:\/\/api\.stripe\.com\/v1\/payment_methods$
 200
 application/json
 access-control-allow-methods: GET, HEAD, PUT, PATCH, POST, DELETE
-content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=yZiLIxI9mqYoRetucO7yBPVGgdRSAsIFW1rCD60TLVIm3uBG93Fmi3fXkOS0CXvaQKlfY1mmIFKg1tDO
+content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=TPtPqjIdL5VXFgmj2aox6ri3nZOaB5l3ruXXtlD_6GZH1i95izjJA7Mj-2f8OQkbZNd2ZhwDxOXI_ObI
 Server: nginx
 Cache-Control: no-cache, no-store
-x-wc: ABGHI
+x-wc: ABGHIJ
 Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
 Access-Control-Allow-Origin: *
 stripe-should-retry: false
 x-stripe-priority-routing-enabled: true
 x-stripe-routing-context-priority-tier: api-testmode
-request-id: req_w1ZbOPa570KfMz
+request-id: req_CLooF1fdbXieYI
 Content-Length: 468
 Vary: Origin
-Date: Tue, 03 Jun 2025 21:00:13 GMT
-original-request: req_w1ZbOPa570KfMz
+Date: Thu, 24 Jul 2025 21:05:31 GMT
+original-request: req_CLooF1fdbXieYI
 stripe-version: 2020-08-27
-idempotency-key: 506e2ffd-2839-4393-80b8-c5deba7ab2ef
+idempotency-key: aa7184f9-8f2a-4929-9c59-71c3303c81b0
 access-control-expose-headers: Request-Id, Stripe-Manage-Version, Stripe-Should-Retry, X-Stripe-External-Auth-Required, X-Stripe-Privileged-Session-Required
 access-control-max-age: 300
 access-control-allow-credentials: true
 Content-Type: application/json
-X-Stripe-Mock-Request: allow_redisplay=unspecified&guid=.*&muid=.*&payment_user_agent=.*&sid=.*&type=crypto
+X-Stripe-Mock-Request: allow_redisplay=unspecified&client_attribution_metadata\[client_session_id]=.*&client_attribution_metadata\[merchant_integration_source]=elements&client_attribution_metadata\[merchant_integration_subtype]=mobile&client_attribution_metadata\[merchant_integration_version]=.*&guid=.*&muid=.*&payment_user_agent=.*&sid=.*&type=crypto
 
 {
   "object" : "payment_method",
   "crypto" : {
 
   },
-  "id" : "pm_1RW1wPFY0qyl6XeWMAYsfoxz",
+  "id" : "pm_1RoWKVFY0qyl6XeWPrCmKbsI",
   "billing_details" : {
     "email" : null,
     "phone" : null,
@@ -46,7 +46,7 @@ X-Stripe-Mock-Request: allow_redisplay=unspecified&guid=.*&muid=.*&payment_user_
     }
   },
   "livemode" : false,
-  "created" : 1748984413,
+  "created" : 1753391131,
   "allow_redisplay" : "unspecified",
   "type" : "crypto",
   "customer" : null
