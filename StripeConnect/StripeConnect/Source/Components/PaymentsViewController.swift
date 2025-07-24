@@ -1,18 +1,18 @@
 //
-//  PayoutsViewController.swift
+//  PaymentsViewController.swift
 //  StripeConnect
 //
-//  Created by Chris Mays on 8/21/24.
+//  Created by Torrance Yang on 7/16/25.
 //
 
 import UIKit
 
 @_spi(DashboardOnly)
 @available(iOS 15, *)
-public class PayoutsViewController: UIViewController {
+public class PaymentsViewController: UIViewController {
     private(set) var webVC: ConnectComponentWebViewController!
 
-    public weak var delegate: PayoutsViewControllerDelegate?
+    public weak var delegate: PaymentsViewControllerDelegate?
 
     init(componentManager: EmbeddedComponentManager,
          loadContent: Bool,
@@ -20,12 +20,12 @@ public class PayoutsViewController: UIViewController {
         super.init(nibName: nil, bundle: nil)
         webVC = ConnectComponentWebViewController(
             componentManager: componentManager,
-            componentType: .payouts,
+            componentType: .payments,
             loadContent: loadContent,
             analyticsClientFactory: analyticsClientFactory
         ) { [weak self] error in
             guard let self else { return }
-            delegate?.payouts(self, didFailLoadWithError: error)
+            delegate?.payments(self, didFailLoadWithError: error)
         }
 
         addChildAndPinView(webVC)
@@ -36,25 +36,25 @@ public class PayoutsViewController: UIViewController {
     }
 }
 
-/// Delegate of an `PayoutsViewController`
+/// Delegate of an `PaymentsViewController`
 @_spi(DashboardOnly)
 @available(iOS 15, *)
-public protocol PayoutsViewControllerDelegate: AnyObject {
+public protocol PaymentsViewControllerDelegate: AnyObject {
 
     /**
-     Triggered when an error occurs loading the payouts component
+     Triggered when an error occurs loading the payments component
      - Parameters:
-       - payouts: The payouts component that errored when loading
+       - payments: The payments component that errored when loading
        - error: The error that occurred when loading the component
      */
-    func payouts(_ payouts: PayoutsViewController,
-                 didFailLoadWithError error: Error)
+    func payments(_ payments: PaymentsViewController,
+                  didFailLoadWithError error: Error)
 
 }
 
 @available(iOS 15, *)
-public extension PayoutsViewControllerDelegate {
+public extension PaymentsViewControllerDelegate {
     // Default implementation to make optional
-    func payouts(_ payouts: PayoutsViewController,
-                 didFailLoadWithError error: Error) { }
+    func payments(_ payments: PaymentsViewController,
+                  didFailLoadWithError error: Error) { }
 }
