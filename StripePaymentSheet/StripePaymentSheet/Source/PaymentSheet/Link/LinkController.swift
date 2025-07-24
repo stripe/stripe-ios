@@ -56,10 +56,7 @@ import UIKit
     private let analyticsHelper: PaymentSheetAnalyticsHelper
 
     private lazy var linkAccountService: LinkAccountServiceProtocol = {
-        LinkAccountService(
-            useMobileEndpoints: elementsSession.linkSettings?.useAttestationEndpoints ?? false,
-            sessionID: elementsSession.sessionID
-        )
+        LinkAccountService(elementsSession: elementsSession)
     }()
 
     private var selectedPaymentDetails: ConsumerPaymentDetails? {
