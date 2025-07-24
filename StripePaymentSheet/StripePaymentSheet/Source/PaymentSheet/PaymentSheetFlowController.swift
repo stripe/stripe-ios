@@ -214,19 +214,30 @@ extension PaymentSheet {
         /// You can use this to e.g. display the payment option in your UI.
         @Published public private(set) var paymentOption: PaymentOptionDisplayData?
 
-        /// The current recognition status of the Link account.
-        /// You can use this to render any “Sign up to Link” messaging in your own UI.
-        @Published public private(set) var linkAccountRecognitionStatus: LinkAccountRecognitionStatus?
+        /// The current state of the Link new user signup.
+        @Published public private(set) var linkNewUserSignupState: LinkNewUserSignupState = .hidden
 
         /// Whether your customer has chosen to sign up to Link in your UI.
          public var linkSignUpOptIn: Bool = false
 
+//        /// The recognition status of the current user's Link account.
+//        public enum LinkAccountRecognitionStatus {
+//            /// The current user has been recognized as a Link consumer.
+//            case recognized
+//            /// The current user has not been recognized as a Link consumer.
+//            case notRecognized
+//        }
+
         /// The recognition status of the current user's Link account.
-        public enum LinkAccountRecognitionStatus {
+        public enum LinkNewUserSignupState {
             /// The current user has been recognized as a Link consumer.
-            case recognized
+            case hidden
             /// The current user has not been recognized as a Link consumer.
-            case notRecognized
+            case visible(
+                title: String,
+                description: NSAttributedString,
+                termsAndConditions: NSAttributedString
+            )
         }
 
         // MARK: - Private properties
@@ -318,7 +329,17 @@ extension PaymentSheet {
 
         private func updateLinkAccountRecognitionStatus(for linkAccount: PaymentSheetLinkAccount?) {
             let isLinkConsumer = linkAccount?.isRegistered == true
-            linkAccountRecognitionStatus = isLinkConsumer ? .recognized : .notRecognized
+            linkNewUserSignupState = isLinkConsumer ? .hidden : .visible(
+                title: "Save my info for faster checkout with Link",
+                description: NSAttributedString(string: "Pay faster everywhere Link is accepted."),
+                termsAndConditions: NSAttributedString(string: "Your information will be saved to Link, see Terms and Privacy Policy.")
+            )
+
+            if case .visible = linkNewUserSignupState {
+                // Default to opt-in for US users
+                linkSignUpOptIn = elementsSession.countryCode == "CA"
+            }
+//            linkAccountRecognitionStatus = isLinkConsumer ? .recognized : .notRecognized
         }
 
         // MARK: - Public methods

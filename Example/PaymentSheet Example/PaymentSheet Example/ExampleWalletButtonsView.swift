@@ -176,9 +176,22 @@ struct WalletButtonsFlowControllerView: View {
                 paymentOptionDisplayData: flowController.paymentOption)
         }
 
-        if flowController.linkAccountRecognitionStatus == .notRecognized {
+        if case let .visible(title, description, termsAndConditions) = flowController.linkNewUserSignupState {
             Toggle(isOn: $linkSignUpOptIn) {
-                Text("Sign up to Link")
+                VStack(alignment: .leading) {
+                    Text(title)
+                        .bold()
+                        .foregroundStyle(Color.primary)
+                    Text(AttributedString(description))
+                        .foregroundStyle(Color.secondary)
+                    Text(AttributedString(termsAndConditions))
+                        .foregroundStyle(Color.secondary)
+                        .font(.footnote)
+                }
+                .frame(maxWidth: .infinity)
+            }
+            .onAppear {
+                linkSignUpOptIn = flowController.linkSignUpOptIn
             }
             .onChange(of: linkSignUpOptIn) { newValue in
                 flowController.linkSignUpOptIn = newValue
