@@ -218,6 +218,18 @@ private extension ConnectWebViewController {
         // Remove reference so we can log if we inadvertently get simultaneous downloads
         self.downloadedFile = nil
     }
+
+    /// Checks if the given URL is a data export URL from Stripe's S3 bucket
+    func isDataExportURL(_ url: URL) -> Bool {
+        guard let host = url.host else { return false }
+        return host.contains("stripe-data-exports") ||
+               (host.contains("s3.amazonaws.com") && url.path.contains("stripe-data-exports"))
+    }
+
+    /// Checks if the given host is an S3 domain
+    func isS3Host(_ host: String) -> Bool {
+        return host.contains("s3.amazonaws.com") || host.contains("stripe-data-exports")
+    }
 }
 
 // MARK: - WKUIDelegate
@@ -239,6 +251,15 @@ extension ConnectWebViewController: WKUIDelegate {
                 openOnSystem(url: url)
                 return nil
             }
+
+            // Special handling for data export URLs - these should be treated as downloads
+            // rather than popups to prevent frame load interruptions
+            if isDataExportURL(url) {
+                // For data export URLs, return nil to let the navigation proceed normally
+                // The download will be handled by the navigation response delegate
+                return nil
+            }
+
             // Only open popups to known hosts inside PopupWebViewController,
             // otherwise use an SFSafariViewController
             guard let host = url.host,
@@ -256,8 +277,13 @@ extension ConnectWebViewController: WKUIDelegate {
                  initiatedBy frame: WKFrameInfo,
                  type: WKMediaCaptureType) async -> WKPermissionDecision {
         // Don't prompt the user for camera permissions from a Connect host
+        // But exclude S3 domains which are only used for downloads
         // https://developer.apple.com/videos/play/wwdc2021/10032/?time=754
-        allowedHosts.contains(origin.host) ? .grant : .deny
+        if allowedHosts.contains(origin.host) && !isS3Host(origin.host) {
+            return .grant
+        } else {
+            return .deny
+        }
     }
 
     func webViewDidClose(_ webView: WKWebView) {
@@ -304,7 +330,13 @@ extension ConnectWebViewController: WKNavigationDelegate {
          after its response is received. Those cases are handled by
          `decidePolicyFor navigationResponse` below.
          */
-        navigationAction.shouldPerformDownload ? .download : .allow
+
+        // Check if this is a data export URL, which should be treated as a download
+        if let url = navigationAction.request.url, isDataExportURL(url) {
+            return .download
+        }
+
+        return navigationAction.shouldPerformDownload ? .download : .allow
     }
 
     func webView(
