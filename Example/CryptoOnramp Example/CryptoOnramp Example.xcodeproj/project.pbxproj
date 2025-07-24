@@ -3,19 +3,35 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 77;
+	objectVersion = 70;
 	objects = {
+
+/* Begin PBXBuildFile section */
+		0BA5FE422E32AB9E00D44BFE /* StripeCryptoOnramp.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0BA5FE412E32AB9E00D44BFE /* StripeCryptoOnramp.framework */; };
+		0BA5FE432E32AB9E00D44BFE /* StripeCryptoOnramp.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 0BA5FE412E32AB9E00D44BFE /* StripeCryptoOnramp.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+/* End PBXBuildFile section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		0BA5FE442E32AB9E00D44BFE /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				0BA5FE432E32AB9E00D44BFE /* StripeCryptoOnramp.framework in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		0BA5FE322E32A11600D44BFE /* CryptoOnramp Example.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "CryptoOnramp Example.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		0BA5FE412E32AB9E00D44BFE /* StripeCryptoOnramp.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = StripeCryptoOnramp.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
-		0BA5FE342E32A11600D44BFE /* CryptoOnramp Example */ = {
-			isa = PBXFileSystemSynchronizedRootGroup;
-			path = "CryptoOnramp Example";
-			sourceTree = "<group>";
-		};
+		0BA5FE342E32A11600D44BFE /* CryptoOnramp Example */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = "CryptoOnramp Example"; sourceTree = "<group>"; };
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -23,6 +39,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0BA5FE422E32AB9E00D44BFE /* StripeCryptoOnramp.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -33,6 +50,7 @@
 			isa = PBXGroup;
 			children = (
 				0BA5FE342E32A11600D44BFE /* CryptoOnramp Example */,
+				0BA5FE402E32AB9E00D44BFE /* Frameworks */,
 				0BA5FE332E32A11600D44BFE /* Products */,
 			);
 			sourceTree = "<group>";
@@ -45,6 +63,14 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
+		0BA5FE402E32AB9E00D44BFE /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				0BA5FE412E32AB9E00D44BFE /* StripeCryptoOnramp.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -55,6 +81,7 @@
 				0BA5FE2E2E32A11600D44BFE /* Sources */,
 				0BA5FE2F2E32A11600D44BFE /* Frameworks */,
 				0BA5FE302E32A11600D44BFE /* Resources */,
+				0BA5FE442E32AB9E00D44BFE /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
@@ -86,6 +113,7 @@
 				};
 			};
 			buildConfigurationList = 0BA5FE2D2E32A11600D44BFE /* Build configuration list for PBXProject "CryptoOnramp Example" */;
+			compatibilityVersion = "Xcode 15.0";
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
 			knownRegions = (
@@ -94,7 +122,6 @@
 			);
 			mainGroup = 0BA5FE292E32A11600D44BFE;
 			minimizedProjectReferenceProxies = 1;
-			preferredProjectObjectVersion = 77;
 			productRefGroup = 0BA5FE332E32A11600D44BFE /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
