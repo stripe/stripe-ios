@@ -62,6 +62,8 @@ extension LinkVerificationViewSnapshotTests {
         let email: String
         let redactedPhoneNumber: String?
         let isRegistered: Bool
+        let sessionState: PaymentSheetLinkAccount.SessionState
+        let consumerSessionClientSecret: String?
     }
 
     func makeSUT(mode: LinkVerificationView.Mode) -> LinkVerificationView {
@@ -70,7 +72,9 @@ extension LinkVerificationViewSnapshotTests {
             linkAccount: LinkAccountStub(
                 email: "user@example.com",
                 redactedPhoneNumber: "(•••) ••• ••55",
-                isRegistered: true
+                isRegistered: true,
+                sessionState: .verified,
+                consumerSessionClientSecret: nil
             )
         )
 
