@@ -71,7 +71,8 @@ final class DocumentCaptureViewController: IdentityFlowViewController {
                     scanningViewModel: .blank,
                     instructionalText: scanningInstructionText(
                         for: .front,
-                        documentScannerOutput: nil
+                        documentScannerOutput: nil,
+                        availableIDTypes: availableIDTypes
                     )
                 )
             )
@@ -80,7 +81,7 @@ final class DocumentCaptureViewController: IdentityFlowViewController {
             let now = Date()
             // update instruction text, at most once a second
             if now.timeIntervalSince(lastScanningInstructionTextUpdate) > 1 {
-                newScanningInstructionText = scanningInstructionText(for: documentSide, documentScannerOutput: documentScannerOutput)
+                newScanningInstructionText = scanningInstructionText(for: documentSide, documentScannerOutput: documentScannerOutput, availableIDTypes: availableIDTypes)
                 lastScanningInstructionText = newScanningInstructionText
                 lastScanningInstructionTextUpdate = now
 
@@ -92,7 +93,7 @@ final class DocumentCaptureViewController: IdentityFlowViewController {
                 if let lastScanningInstructionText {
                     newScanningInstructionText = lastScanningInstructionText
                 } else {
-                    newScanningInstructionText = documentSide == .front ? String.Localized.position_in_center : String.Localized.flip_to_other_side
+                    newScanningInstructionText = scanningTextWithNoInput(availableIDTypes: availableIDTypes, for: documentSide)
                 }
             }
             return .scan(

@@ -45,18 +45,35 @@ extension DocumentCaptureViewController {
             
         }
     }
+    
+    func scanningTextWithNoInput(availableIDTypes: [String], for side: DocumentSide) -> String {
+        let type = (availableIDTypes.count == 1) ? availableIDTypes[0].uiIDType() : nil
+        
+        if let type = type {
+            switch side {
+            case .front:
+                return String(format: String.Localized.position_in_center, type)
+            case .back:
+                return String(format: String.Localized.flip_to_other_side, type)
+            }
+        } else {
+            switch side {
+            case .front:
+                return String.Localized.position_in_center_identity_card
+            case .back:
+                return String.Localized.flip_to_other_side_identity_card
+            }
+        }
+    }
 
     func scanningInstructionText(
         for side: DocumentSide,
-        documentScannerOutput: DocumentScannerOutput?
+        documentScannerOutput: DocumentScannerOutput?,
+        availableIDTypes: [String]
     ) -> String {
         switch documentScannerOutput {
         case .none:
-            if side == .front {
-                return String.Localized.position_in_center
-            } else {
-                return String.Localized.flip_to_other_side
-            }
+            return scanningTextWithNoInput(availableIDTypes: availableIDTypes, for: side)
         case .some(.legacy(let idDetectorOutput, _, _, _, _)):
             let foundClassification = idDetectorOutput.classification
             let matchesClassification = foundClassification.matchesDocument(side: side)

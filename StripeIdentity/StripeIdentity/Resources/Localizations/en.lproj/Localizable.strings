@@ -58,6 +58,9 @@
 /* Instructional text for scanning back of a identity card */
 "Flip your identity card over to the other side" = "Flip your identity card over to the other side";
 
+/* Instructional text for scanning back of a driver's license, passport, or government issued photo id */
+"Flip your %@ over to the other side" = "Flip your %@ over to the other side";
+
 /* Accessibility label when front identity card photo has successfully uploaded */
 "Front identity card photo successfully uploaded" = "Front identity card photo successfully uploaded";
 
@@ -154,6 +157,9 @@
 
 /* Instructional text for scanning front of a identity card */
 "Position your identity card in the center of the frame" = "Position your identity card in the center of the frame";
+
+/* Instructional text for scanning front of a driver's license, passport, or government issued photo id */
+"Position your %@ in the center of the frame" = "Position your %@ in the center of the frame";
 
 /* Button text displayed to the user to retake photo */
 "Retake Photos" = "Retake Photos";
