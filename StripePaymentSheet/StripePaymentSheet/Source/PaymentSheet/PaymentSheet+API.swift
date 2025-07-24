@@ -577,7 +577,8 @@ extension PaymentSheet {
                         cvc: paymentDetails.cvc,
                         allowRedisplay: nil,
                         expectedPaymentMethodType: paymentDetails.expectedPaymentMethodTypeForPassthroughMode(elementsSession),
-                        billingPhoneNumber: confirmationExtras?.billingPhoneNumber
+                        billingPhoneNumber: confirmationExtras?.billingPhoneNumber,
+                        additionalClientAttributionMetadata: additionalClientAttributionMetadata
                     ) { result in
                         switch result {
                         case .success(let paymentDetailsShareResponse):

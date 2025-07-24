@@ -160,9 +160,10 @@ class STPAPIClientStubbedTest: APIStubbedTestCase {
     func testSharePaymentDetailsWithClientAttributionMetadata() {
         let sut = stubbedAPIClient()
         AnalyticsHelper.shared.generateSessionID()
-        stubClientAttributionMetadata(base: "payment_method_options")
+        let additionalClientAttributionMetadata = ["elements_session_config_id": "elements_session_config_id", "payment_intent_creation_flow": "deferred", "payment_method_selection_flow": "automatic"]
+        stubClientAttributionMetadata(base: "payment_method_options", additionalClientAttributionMetadata: additionalClientAttributionMetadata)
         let e = expectation(description: "")
-        sut.sharePaymentDetails(for: "consumer_session_client_secret", id: "id", consumerAccountPublishableKey: nil, allowRedisplay: nil, cvc: nil, expectedPaymentMethodType: nil, billingPhoneNumber: nil) { _ in
+        sut.sharePaymentDetails(for: "consumer_session_client_secret", id: "id", consumerAccountPublishableKey: nil, allowRedisplay: nil, cvc: nil, expectedPaymentMethodType: nil, billingPhoneNumber: nil, additionalClientAttributionMetadata: additionalClientAttributionMetadata) { _ in
             e.fulfill()
         }
         waitForExpectations(timeout: 10)
