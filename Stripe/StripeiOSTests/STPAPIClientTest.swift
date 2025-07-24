@@ -109,7 +109,15 @@ class STPAPIClientTest: XCTestCase {
         AnalyticsHelper.shared.generateSessionID()
         var params: [String: Any] = [:]
         params = STPAPIClient.paramsAddingClientAttributionMetadata(params)
-        XCTAssertEqual(params["client_attribution_metadata"] as? [String: String], ["client_session_id": AnalyticsHelper.shared.sessionID ?? ""])
+        var clientAttributionMetadata: [String: String] = params["client_attribution_metadata"] as? [String: String] ?? [:]
+        XCTAssertEqual(clientAttributionMetadata["client_session_id"], AnalyticsHelper.shared.sessionID)
+        XCTAssertEqual(clientAttributionMetadata["merchant_integration_source"], "elements")
+        XCTAssertEqual(clientAttributionMetadata["merchant_integration_subtype"], "mobile")
+        XCTAssertEqual(clientAttributionMetadata["merchant_integration_version"], "stripe-ios/\(StripeAPIConfiguration.STPSDKVersion)")
+        params = STPAPIClient.paramsAddingClientAttributionMetadata(params, additionalClientAttributionMetadata: ["payment_intent_creation_flow": "deferred", "payment_method_selection_flow": "automatic"])
+        clientAttributionMetadata = params["client_attribution_metadata"] as? [String: String] ?? [:]
+        XCTAssertEqual(clientAttributionMetadata["payment_intent_creation_flow"], "deferred")
+        XCTAssertEqual(clientAttributionMetadata["payment_method_selection_flow"], "automatic")
     }
 
     func testSetAppInfo() {

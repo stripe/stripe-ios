@@ -44,7 +44,6 @@ extension StripeAPI.Token {
         var mutableParams = parameters
         STPTelemetryClient.shared.addTelemetryFields(toParams: &mutableParams)
         mutableParams = STPAPIClient.paramsAddingPaymentUserAgent(mutableParams)
-        mutableParams = STPAPIClient.paramsAddingClientAttributionMetadata(mutableParams)
         STPAnalyticsClient.sharedClient.logTokenCreationAttempt(tokenType: tokenType)
         apiClient.post(resource: Resource, parameters: mutableParams, completion: completion)
         STPTelemetryClient.shared.sendTelemetryData()

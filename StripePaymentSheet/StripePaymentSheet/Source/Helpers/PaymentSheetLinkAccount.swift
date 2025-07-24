@@ -11,10 +11,12 @@
 @_spi(STP) import StripeUICore
 import UIKit
 
-protocol PaymentSheetLinkAccountInfoProtocol {
-    var email: String { get }
-    var redactedPhoneNumber: String? { get }
-    var isRegistered: Bool { get }
+@_spi(STP) public protocol PaymentSheetLinkAccountInfoProtocol {
+    @_spi(STP) var email: String { get }
+    @_spi(STP) var redactedPhoneNumber: String? { get }
+    @_spi(STP) var isRegistered: Bool { get }
+    @_spi(STP) var sessionState: PaymentSheetLinkAccount.SessionState { get }
+    @_spi(STP) var consumerSessionClientSecret: String? { get }
 }
 
 struct LinkPMDisplayDetails {
@@ -22,15 +24,15 @@ struct LinkPMDisplayDetails {
     let brand: STPCardBrand
 }
 
-class PaymentSheetLinkAccount: PaymentSheetLinkAccountInfoProtocol {
-    enum SessionState: String {
+@_spi(STP) public class PaymentSheetLinkAccount: PaymentSheetLinkAccountInfoProtocol {
+    @_spi(STP) public enum SessionState: String {
         case requiresSignUp
         case requiresVerification
         case verified
     }
 
     // More information: go/link-signup-consent-action-log
-    enum ConsentAction: String {
+    @_spi(STP) public enum ConsentAction: String {
         // Checkbox, no fields prefilled
         case checkbox_v0 = "clicked_checkbox_nospm_mobile_v0"
 
@@ -57,6 +59,9 @@ class PaymentSheetLinkAccount: PaymentSheetLinkAccountInfoProtocol {
 
         // Checkbox pre-checked, no fields prefilled
         case prechecked_opt_in_box_prefilled_none = "prechecked_opt_in_box_prefilled_none"
+
+        // Crypto onramp, email and phone number are entered, a sign up button is tapped
+        case entered_phone_number_email_clicked_signup_crypto_onramp = "entered_phone_number_email_clicked_signup_crypto_onramp"
     }
 
     // Dependencies
@@ -73,17 +78,17 @@ class PaymentSheetLinkAccount: PaymentSheetLinkAccountInfoProtocol {
     var phoneNumberUsedInSignup: String?
     var nameUsedInSignup: String?
 
-    let email: String
+    @_spi(STP) public let email: String
 
-    var redactedPhoneNumber: String? {
+    @_spi(STP) public var redactedPhoneNumber: String? {
         return currentSession?.redactedFormattedPhoneNumber.replacingOccurrences(of: "*", with: "•")
     }
 
-    var isRegistered: Bool {
+    @_spi(STP) public var isRegistered: Bool {
         return currentSession != nil
     }
 
-    var sessionState: SessionState {
+    @_spi(STP) public var sessionState: SessionState {
         if let currentSession = currentSession {
             // sms verification is not required if we are in the signup flow
             return currentSession.hasVerifiedSMSSession || currentSession.isVerifiedForSignup
@@ -91,6 +96,10 @@ class PaymentSheetLinkAccount: PaymentSheetLinkAccountInfoProtocol {
         } else {
             return .requiresSignUp
         }
+    }
+
+    @_spi(STP) public var consumerSessionClientSecret: String? {
+        currentSession?.clientSecret
     }
 
     var hasStartedSMSVerification: Bool {
@@ -471,7 +480,7 @@ class PaymentSheetLinkAccount: PaymentSheetLinkAccountInfoProtocol {
 
 extension PaymentSheetLinkAccount: Equatable {
 
-    static func == (lhs: PaymentSheetLinkAccount, rhs: PaymentSheetLinkAccount) -> Bool {
+    @_spi(STP) public static func == (lhs: PaymentSheetLinkAccount, rhs: PaymentSheetLinkAccount) -> Bool {
         return
             (lhs.email == rhs.email && lhs.currentSession == rhs.currentSession
             && lhs.publishableKey == rhs.publishableKey)

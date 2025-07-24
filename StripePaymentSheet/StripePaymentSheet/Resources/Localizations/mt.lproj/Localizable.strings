@@ -60,11 +60,15 @@
 
 "By continuing, you agree to authorize payments pursuant to <terms>these terms</terms>." = "Meta tkompli tkun qed taqbel li tawtorizza l-pagamenti skont <terms>dar-regoli</terms>.";
 
+"By continuing, you authorize %@ to automatically debit your Satispay Balance on a recurring basis in accordance with your purchase or subscription plan." = "Billi tkompli, tawtorizza lil %@ biex awtomatikament tiddebita l-Bilanċ ta’ Satispay tiegħek fuq bażi rikorrenti skont il-pjan tax-xiri jew l-abbonament tiegħek.";
+
 "By continuing, you authorize %@ to debit your Cash App account for this payment and future payments in accordance with %@'s terms, until this authorization is revoked. You can change this anytime in your Cash App Settings." = "Meta tkompli tkun qed tagħti permess lil %1$@ biex, sakemm dal-permess jitneħħa, tkun tista' tiġbor il-flus mill-kont Cash App tiegħek għal dal-pagament u għall-pagamenti tal-ġejjieni skont ir-regoli ta' %2$@. Tista' tibdel dil-ħaġa meta trid mill-Għażliet ta' Cash App.";
 
 "By joining Link, you agree to the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Meta tingħaqad ma' Link tkun qed taqbel mar-<terms>Regoli</terms> u l-<privacy>Politika tal-Privatezza</privacy>.";
 
 "By providing phone number and email, you agree to create a Link account subject to the Link <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Meta tagħtina n-numru tal-mowbajl u l-indirizz tal-email, tkun qed taqbel li toħloq kont Link skont ir-<terms>Regoli</terms> u l-<privacy>Politika tal-Privatezza</privacy> ta' Link.";
+
+"By providing your bank account details and confirming this payment, you agree to this Direct Debit Request and the <terms>Direct Debit Request service agreement</terms>, and authorise Stripe Payments Australia Pty Ltd ACN 160 180 343 Direct Debit User ID number 507156 (“Stripe”) to debit your account through the Bulk Electronic Clearing System (BECS) on behalf of %@ (the \"Merchant\") for any amounts separately communicated to you by the Merchant. You certify that you are either an account holder or an authorised signatory on the account listed above." = "Billi tipprovdi d-dettalji tal-kont bankarju tiegħek u tikkonferma dan il-ħlas, inti taqbel ma’ din it-Talba ta’ Debitu Dirett u l-<terms>ftehim tas-servizz tat-Talba ta’ Debitu Dirett</terms>, u tawtorizza lil Stripe Payments Australia Pty Ltd ACN 160 180 343 Numru tal-ID tal-Utent tad-Debitu Dirett 507156 (“Stripe”) biex tiddebita l-kont tiegħek permezz tas-Sistema ta’ Kklerjar Elettroniku bl-Ingrossa (BECS, Bulk Electronic Clearing System) f’isem %@ (il-“Kummerċjant”) għal kwalunkwe ammont ikkomunikat lilek separatament mill-Kummerċjant. Inti tiċċertifika li int detentur ta’ kont jew firmatarju awtorizzat fuq il-kont elenkat hawn fuq.";
 
 "By providing your card information, you allow %@ to charge your card for future payments in accordance with their terms." = "Meta tagħti l-informazzjoni tal-karta tiegħek, tkun qed tħalli lil %@ tiġbor il-pagamenti tal-ġejjieni mill-karta tiegħek skont ir-regoli tagħha.";
 
@@ -256,6 +260,8 @@
 
 "Simple, secure one-click payments" = "Pagamenti sempliċi u siguri b'mossa waħda";
 
+"Something went wrong when linking your account.\nPlease try again later." = "Xi ħaġa marret ħażin fil-konnessjioni tal-kont tiegħek.\nJekk jogħġbok erġa’ pprova aktar tard.";
+
 "Stripe will deposit $0.01 to your account in 1-2 business days. Then you'll get an email with instructions to finish saving your bank account with %@." = "Stripe se tiddepożita $0.01 fil-kont tiegħek fi żmien jum/jumejn tax-xogħol. Imbagħad se tirċievi email bl-istruzzjonijiet biex tlesti l-proċess li terfa' l-kont tiegħek ma' %@.";
 
 "Stripe will deposit $0.01 to your account in 1-2 business days. Then you’ll get an email with instructions to complete payment to %@." = "Stripe se tiddepożita $0.01 fil-kont tiegħek fi żmien jum/jumejn tax-xogħol. Imbagħad se tirċievi email bl-istruzzjonijiet biex tagħmel il-pagament lil %@.";
@@ -265,6 +271,8 @@
 "Tap to expand" = "Agħfas biex tkabbar";
 
 "The IBAN you entered is incomplete." = "L-IBAN li daħħalt mhux komplut.";
+
+"The IBAN you entered is invalid, \"%@\" is not a supported country code." = "L-IBAN li daħħalt mhuwiex validu, \"%@\" mhuwiex kodiċi ta’ pajjiż appoġġjat.";
 
 "The provided verification code has expired." = "Il-kodiċi tal-verifika mogħti skada.";
 
@@ -281,6 +289,8 @@
 "Update card" = "Aġġorna l-karta";
 
 "Update payment method" = "Ibdel il-metodu tal-pagament";
+
+"Use billing address for shipping" = "Uża l-indirizz tal-ħlas għall-kunsinna";
 
 "Use your saved info to check out faster" = "Uża l-informazzjoni li għandek merfugħa biex tħallas iktar malajr";
 

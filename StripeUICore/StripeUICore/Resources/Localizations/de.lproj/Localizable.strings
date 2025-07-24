@@ -104,6 +104,8 @@
 
 "Select card brand (optional)" = "Kartenmarke auswählen (optional)";
 
+"Selection is empty." = "Die Auswahl ist leer.";
+
 "Sort code" = "Bankleitzahl";
 
 "State" = "Bundesland";
