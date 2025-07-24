@@ -519,7 +519,8 @@ private extension PaymentSheetAPIMockTest {
 
     func bodyParams(from request: URLRequest, line: UInt) -> [String: String] {
         guard let httpBody = request.httpBodyOrBodyStream,
-              let query = String(decoding: httpBody, as: UTF8.self).addingPercentEncoding(withAllowedCharacters: .urlPathAllowed),
+              let bodyString = String(data: httpBody, encoding: .utf8),
+              let query = bodyString.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed),
               let components = URLComponents(string: "http://someurl.com?\(query)") else {
             XCTFail("Request body empty", line: line)
             return [:]
