@@ -39,11 +39,11 @@ public protocol CryptoOnrampCoordinatorProtocol {
     /// Presents the Link verification flow for an existing user.
     /// `lookupConsumer` must be called before this.
     ///
-    /// - Parameter viewController: The view controller from which to present the authentication flow.
-    /// - Returns: An `AuthenticationResult` indicating whether authentication was completed or canceled.
-    ///   If authentication completes, a crypto customer ID will be included in the result.
+    /// - Parameter viewController: The view controller from which to present the verification flow.
+    /// - Returns: A `VerificationResult` indicating whether verification was completed or canceled.
+    ///   If verification completes, a crypto customer ID will be included in the result.
     /// Throws if `lookupConsumer` was not called prior to this, or an API error occurs.
-    func presentForVerification(from viewController: UIViewController) async throws -> AuthenticationResult
+    func presentForVerification(from viewController: UIViewController) async throws -> VerificationResult
 }
 
 /// Coordinates headless Link user authentication and identity verification, leaving most of the UI to the client.
@@ -93,7 +93,7 @@ public final class CryptoOnrampCoordinator: CryptoOnrampCoordinatorProtocol {
         return try await apiClient.grantPartnerMerchantPermissions(with: linkAccountInfo).id
     }
 
-    public func presentForVerification(from viewController: UIViewController) async throws -> AuthenticationResult {
+    public func presentForVerification(from viewController: UIViewController) async throws -> VerificationResult {
         let verificationResult = try await linkController.presentForVerification(from: viewController)
         switch verificationResult {
         case .canceled:
