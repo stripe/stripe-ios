@@ -59,7 +59,7 @@ final class LinkAccountService: LinkAccountServiceProtocol {
             cookieStore: cookieStore,
             useMobileEndpoints: elementsSession.linkSettings?.useAttestationEndpoints ?? false,
             sessionID: elementsSession.sessionID,
-            customerID: elementsSession.customer?.customerSession.id,
+            customerID: elementsSession.customer?.customerSession.customer,
             shouldPassCustomerIdToLookup: shouldPassCustomerIdToLookup
         )
     }
