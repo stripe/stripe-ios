@@ -11,7 +11,7 @@ import SwiftUI
 struct CryptoOnramp_ExampleApp: App {
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            CryptoOnrampExampleView()
         }
     }
 }

@@ -9,6 +9,8 @@
 /* Begin PBXBuildFile section */
 		0BA5FE422E32AB9E00D44BFE /* StripeCryptoOnramp.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0BA5FE412E32AB9E00D44BFE /* StripeCryptoOnramp.framework */; };
 		0BA5FE432E32AB9E00D44BFE /* StripeCryptoOnramp.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 0BA5FE412E32AB9E00D44BFE /* StripeCryptoOnramp.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		0BA5FE462E32AD5100D44BFE /* StripeCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0BA5FE452E32AD5100D44BFE /* StripeCore.framework */; };
+		0BA5FE472E32AD5100D44BFE /* StripeCore.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 0BA5FE452E32AD5100D44BFE /* StripeCore.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -18,6 +20,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
+				0BA5FE472E32AD5100D44BFE /* StripeCore.framework in Embed Frameworks */,
 				0BA5FE432E32AB9E00D44BFE /* StripeCryptoOnramp.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
@@ -28,6 +31,7 @@
 /* Begin PBXFileReference section */
 		0BA5FE322E32A11600D44BFE /* CryptoOnramp Example.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "CryptoOnramp Example.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		0BA5FE412E32AB9E00D44BFE /* StripeCryptoOnramp.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = StripeCryptoOnramp.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		0BA5FE452E32AD5100D44BFE /* StripeCore.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = StripeCore.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -39,6 +43,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0BA5FE462E32AD5100D44BFE /* StripeCore.framework in Frameworks */,
 				0BA5FE422E32AB9E00D44BFE /* StripeCryptoOnramp.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -66,6 +71,7 @@
 		0BA5FE402E32AB9E00D44BFE /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				0BA5FE452E32AD5100D44BFE /* StripeCore.framework */,
 				0BA5FE412E32AB9E00D44BFE /* StripeCryptoOnramp.framework */,
 			);
 			name = Frameworks;
