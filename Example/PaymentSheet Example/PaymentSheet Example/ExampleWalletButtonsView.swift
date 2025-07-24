@@ -176,7 +176,7 @@ struct WalletButtonsFlowControllerView: View {
                 paymentOptionDisplayData: flowController.paymentOption)
         }
 
-        if case let .visible(title, description, _) = flowController.linkNewUserSignupState {
+        if case let .visible(title, description, _) = flowController.linkSignupOptInState {
             Toggle(isOn: $linkSignUpOptIn) {
                 VStack(alignment: .leading) {
                     Text(title)
@@ -199,7 +199,7 @@ struct WalletButtonsFlowControllerView: View {
             .padding(.horizontal)
         }
 
-        if case let .visible(_, _, termsAndConditions) = flowController.linkNewUserSignupState {
+        if case let .visible(_, _, termsAndConditions) = flowController.linkSignupOptInState {
             Text(AttributedString(termsAndConditions))
                 .foregroundStyle(Color.secondary)
                 .font(.footnote)

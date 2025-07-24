@@ -215,7 +215,7 @@ extension PaymentSheet {
         @Published public private(set) var paymentOption: PaymentOptionDisplayData?
 
         /// The current state of the Link new user signup.
-        @Published public private(set) var linkNewUserSignupState: LinkNewUserSignupState = .hidden
+        @Published public private(set) var linkSignupOptInState: LinkSignupOptInState = .hidden
 
         /// Whether your customer has chosen to sign up to Link in your UI.
          public var linkSignUpOptIn: Bool = false
@@ -228,11 +228,11 @@ extension PaymentSheet {
 //            case notRecognized
 //        }
 
-        /// The recognition status of the current user's Link account.
-        public enum LinkNewUserSignupState {
-            /// The current user has been recognized as a Link consumer.
+        /// The state of the Link signup opt-in. Use this to present the appropriate UI to the user.
+        public enum LinkSignupOptInState {
+            /// The current user has been recognized as a Link consumer. No signup opt-in UI should be shown.
             case hidden
-            /// The current user has not been recognized as a Link consumer.
+            /// The current user has not been recognized as a Link consumer. Display signup opt-in UI.
             case visible(
                 title: String,
                 description: NSAttributedString,
@@ -328,8 +328,8 @@ extension PaymentSheet {
         }
 
         private func updateLinkAccountRecognitionStatus(for linkAccount: PaymentSheetLinkAccount?) {
-            let isLinkConsumer = linkAccount?.isRegistered == true
-            linkNewUserSignupState = isLinkConsumer ? .hidden : .visible(
+            let canShowSignupOptIn = linkAccount?.isRegistered == true
+            linkSignupOptInState = canShowSignupOptIn ? .hidden : .visible(
                 title: "Save my info for faster checkout with Link",
                 description: NSAttributedString(string: "Pay faster everywhere Link is accepted."),
                 termsAndConditions: NSAttributedString(
@@ -343,11 +343,10 @@ extension PaymentSheet {
                 )
             )
 
-            if case .visible = linkNewUserSignupState {
+            if !canShowSignupOptIn {
                 // Default to opt-in for US users
-                linkSignUpOptIn = elementsSession.countryCode == "CA"
+                linkSignUpOptIn = elementsSession.countryCode == "US"
             }
-//            linkAccountRecognitionStatus = isLinkConsumer ? .recognized : .notRecognized
         }
 
         // MARK: - Public methods
