@@ -11,10 +11,12 @@
 @_spi(STP) import StripeUICore
 import UIKit
 
-protocol PaymentSheetLinkAccountInfoProtocol {
-    var email: String { get }
-    var redactedPhoneNumber: String? { get }
-    var isRegistered: Bool { get }
+@_spi(STP) public protocol PaymentSheetLinkAccountInfoProtocol {
+    @_spi(STP) var email: String { get }
+    @_spi(STP) var redactedPhoneNumber: String? { get }
+    @_spi(STP) var isRegistered: Bool { get }
+    @_spi(STP) var sessionState: PaymentSheetLinkAccount.SessionState { get }
+    @_spi(STP) var consumerSessionClientSecret: String? { get }
 }
 
 struct LinkPMDisplayDetails {
