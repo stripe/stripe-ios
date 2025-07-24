@@ -95,22 +95,24 @@ struct CryptoOnrampExampleView: View {
 
     private func lookupConsumerAndContinue() {
         guard let coordinator else { return }
-
+        isLoading = true
         Task {
             do {
                 let lookupResult = try await coordinator.lookupConsumer(with: email)
                 await MainActor.run {
                     errorMessage = nil
+                    isLoading = false
 
                     if lookupResult {
-                        // show
+                        // show verification
                     } else {
-
+                        // show sign up
                     }
                 }
             } catch {
                 await MainActor.run {
-                    errorMessage = error.localizedDescription
+                    isLoading = false
+                    errorMessage = "Customer lookup failed. Ensure the email address is properly formatted. (Underlying error: \(error.localizedDescription))"
                 }
             }
         }
