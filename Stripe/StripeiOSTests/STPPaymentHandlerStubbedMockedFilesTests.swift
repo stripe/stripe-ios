@@ -198,7 +198,7 @@ class STPPaymentHandlerStubbedMockedFilesTests: APIStubbedTestCase, STPAuthentic
 
         // Override it with a spec that doesn't define a next action so that we force the SDK to default behavior
         let updatedSpecJson =
-            """
+            Data("""
             [{
                 "type": "affirm",
                 "async": false,
@@ -208,7 +208,7 @@ class STPPaymentHandlerStubbedMockedFilesTests: APIStubbedTestCase, STPAuthentic
                     }
                 ]
             }]
-            """.data(using: .utf8)!
+            """.utf8)
         let formSpec = try! JSONSerialization.jsonObject(with: updatedSpecJson) as! [NSDictionary]
         XCTAssert(formSpecProvider.loadFrom(formSpec))
         guard formSpecProvider.formSpec(for: "affirm") != nil else {

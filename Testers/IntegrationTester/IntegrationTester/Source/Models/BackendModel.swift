@@ -63,7 +63,7 @@ class BackendModel {
                 let json = try? JSONSerialization.jsonObject(with: unwrappedData, options: []) as? [String: Any],
                 let publishableKey = json["publishableKey"] as? String else {
             if let data = data {
-                print("\(String(decoding: data, as: UTF8.self))")
+                print("\(String(data: data, encoding: .utf8) ?? "")")
             } else {
                 print("\(error ?? NSError())")  // swiftlint:disable:this discouraged_direct_init
             }
