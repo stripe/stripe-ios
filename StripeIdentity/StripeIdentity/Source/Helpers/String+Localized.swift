@@ -71,12 +71,24 @@ extension String.Localized {
 
     static var position_in_center: String {
         return STPLocalizedString(
-            "Position your identity card in the center of the frame",
-            "Instructional text for scanning front of a identity card"
-        )
+            "Position your %@ in the center of the frame",
+            "Instructional text for scanning front of a driver's license, passport, or government issued photo id")
     }
 
     static var flip_to_other_side: String {
+        return STPLocalizedString(
+            "Flip your %@ over to the other side",
+            "Instructional text for scanning back of a driver's license, passport, or government issued photo id"
+        )
+    }
+    
+    static var position_in_center_identity_card: String {
+        return STPLocalizedString(
+            "Position your identity card in the center of the frame",
+            "Instructional text for scanning front of a identity card")
+    }
+
+    static var flip_to_other_side_identity_card: String {
         return STPLocalizedString(
             "Flip your identity card over to the other side",
             "Instructional text for scanning back of a identity card"

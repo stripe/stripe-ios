@@ -11,31 +11,69 @@ import Foundation
 
 extension DocumentCaptureViewController {
 
-    func titleText(for side: DocumentSide) -> String {
-        if side == .front {
-            return STPLocalizedString(
-                "Front of identity document",
-                "Title of ID document scanning screen when scanning the front of an identity card"
-            )
+    func titleText(for side: DocumentSide, availableIDTypes: [String]) -> String {
+        
+        func idDocument() -> String {
+            if side == .front {
+                return STPLocalizedString(
+                    "Front of identity document",
+                    "Title of ID document scanning screen when scanning the front of an identity card"
+                )
+            } else {
+                return STPLocalizedString(
+                    "Back of identity document",
+                    "Title of ID document scanning screen when scanning the back of an identity card"
+                )
+            }
+        }
+        
+        if availableIDTypes.count == 1 {
+            let idType = availableIDTypes[0]
+            
+            if let type = idType.uiIDType() {
+                switch side {
+                case .front:
+                    return String(format: STPLocalizedString("Front of %@", "Title of ID document scanning screen when scanning the front of either a driver's license, passport, or government issued photo id "), type)
+                case .back:
+                    return String(format: STPLocalizedString("Back of %@", "Title of ID document scanning screen when scanning the back of either a driver's license, passport, or government issued photo id"), type)
+                }
+            } else {
+                return idDocument()
+            }
         } else {
-            return STPLocalizedString(
-                "Back of identity document",
-                "Title of ID document scanning screen when scanning the back of an identity card"
-            )
+            return idDocument()
+            
+        }
+    }
+    
+    func scanningTextWithNoInput(availableIDTypes: [String], for side: DocumentSide) -> String {
+        let type = (availableIDTypes.count == 1) ? availableIDTypes[0].uiIDType() : nil
+        
+        if let type = type {
+            switch side {
+            case .front:
+                return String(format: String.Localized.position_in_center, type)
+            case .back:
+                return String(format: String.Localized.flip_to_other_side, type)
+            }
+        } else {
+            switch side {
+            case .front:
+                return String.Localized.position_in_center_identity_card
+            case .back:
+                return String.Localized.flip_to_other_side_identity_card
+            }
         }
     }
 
     func scanningInstructionText(
         for side: DocumentSide,
-        documentScannerOutput: DocumentScannerOutput?
+        documentScannerOutput: DocumentScannerOutput?,
+        availableIDTypes: [String]
     ) -> String {
         switch documentScannerOutput {
         case .none:
-            if side == .front {
-                return String.Localized.position_in_center
-            } else {
-                return String.Localized.flip_to_other_side
-            }
+            return scanningTextWithNoInput(availableIDTypes: availableIDTypes, for: side)
         case .some(.legacy(let idDetectorOutput, _, _, _, _)):
             let foundClassification = idDetectorOutput.classification
             let matchesClassification = foundClassification.matchesDocument(side: side)

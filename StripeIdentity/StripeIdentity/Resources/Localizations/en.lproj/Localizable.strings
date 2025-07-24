@@ -19,6 +19,9 @@
 /* Title of ID document scanning screen when scanning the back of an identity card */
 "Back of identity document" = "Back of identity document";
 
+/* Title of ID document scanning screen when scanning the back of either a driver's license, passport, or government issued photo id */
+"Back of %@" = "Back of %@";
+
 /* Error title displayed to the user when camera permissions have been denied
    Title displayed when requesting camera permissions */
 "Camera permission" = "Camera permission";
@@ -55,6 +58,9 @@
 /* Instructional text for scanning back of a identity card */
 "Flip your identity card over to the other side" = "Flip your identity card over to the other side";
 
+/* Instructional text for scanning back of a driver's license, passport, or government issued photo id */
+"Flip your %@ over to the other side" = "Flip your %@ over to the other side";
+
 /* Accessibility label when front identity card photo has successfully uploaded */
 "Front identity card photo successfully uploaded" = "Front identity card photo successfully uploaded";
 
@@ -63,6 +69,9 @@
 
 /* Title of ID document scanning screen when scanning the front of an identity card */
 "Front of identity document" = "Front of identity document";
+
+/* Title of ID document scanning screen when scanning the front of either a driver's license, passport, or government issued photo id */
+"Front of %@" = "Front of %@";
 
 /* Title for document front warmup page */
 "Get ready to scan your photo ID" = "Get ready to scan your photo ID";
@@ -148,6 +157,9 @@
 
 /* Instructional text for scanning front of a identity card */
 "Position your identity card in the center of the frame" = "Position your identity card in the center of the frame";
+
+/* Instructional text for scanning front of a driver's license, passport, or government issued photo id */
+"Position your %@ in the center of the frame" = "Position your %@ in the center of the frame";
 
 /* Button text displayed to the user to retake photo */
 "Retake Photos" = "Retake Photos";
