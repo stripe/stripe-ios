@@ -46,6 +46,15 @@ class STPAPIClientStubbedTest: APIStubbedTestCase {
             XCTAssertTrue(queryItems.contains(where: { item in
                 item.name == "client_attribution_metadata[client_session_id]" && item.value == AnalyticsHelper.shared.sessionID
             }))
+            XCTAssertTrue(queryItems.contains(where: { item in
+                item.name == "client_attribution_metadata[merchant_integration_source]" && item.value == "elements"
+            }))
+            XCTAssertTrue(queryItems.contains(where: { item in
+                item.name == "client_attribution_metadata[merchant_integration_subtype]" && item.value == "mobile"
+            }))
+            XCTAssertTrue(queryItems.contains(where: { item in
+                item.name == "client_attribution_metadata[merchant_integration_version]" && item.value == "stripe-ios/\(StripeAPIConfiguration.STPSDKVersion)"
+            }))
             return true
         } response: { _ in
             return .init()
@@ -81,6 +90,15 @@ class STPAPIClientStubbedTest: APIStubbedTestCase {
             }
             XCTAssertEqual(queryItems.contains(where: { item in
                 item.name == "payment_method_data[client_attribution_metadata][client_session_id]" && item.value == AnalyticsHelper.shared.sessionID
+            }), shouldContainClientAttributionMetadata)
+            XCTAssertEqual(queryItems.contains(where: { item in
+                item.name == "client_attribution_metadata[merchant_integration_source]" && item.value == "elements"
+            }), shouldContainClientAttributionMetadata)
+            XCTAssertEqual(queryItems.contains(where: { item in
+                item.name == "client_attribution_metadata[merchant_integration_subtype]" && item.value == "mobile"
+            }), shouldContainClientAttributionMetadata)
+            XCTAssertEqual(queryItems.contains(where: { item in
+                item.name == "client_attribution_metadata[merchant_integration_version]" && item.value == "stripe-ios/\(StripeAPIConfiguration.STPSDKVersion)"
             }), shouldContainClientAttributionMetadata)
             return true
         } response: { _ in
@@ -148,6 +166,15 @@ class STPAPIClientStubbedTest: APIStubbedTestCase {
             XCTAssertTrue(queryItems.contains(where: { item in
                 item.name == "payment_method_options[client_attribution_metadata][client_session_id]" && item.value == AnalyticsHelper.shared.sessionID
             }))
+            XCTAssertTrue(queryItems.contains(where: { item in
+                item.name == "client_attribution_metadata[merchant_integration_source]" && item.value == "elements"
+            }))
+            XCTAssertTrue(queryItems.contains(where: { item in
+                item.name == "client_attribution_metadata[merchant_integration_subtype]" && item.value == "mobile"
+            }))
+            XCTAssertTrue(queryItems.contains(where: { item in
+                item.name == "client_attribution_metadata[merchant_integration_version]" && item.value == "stripe-ios/\(StripeAPIConfiguration.STPSDKVersion)"
+            }))
             return true
         } response: { _ in
             return .init()
@@ -159,14 +186,6 @@ class STPAPIClientStubbedTest: APIStubbedTestCase {
         AnalyticsHelper.shared.generateSessionID()
         stubSharePaymentDetailsClientAttributionMetadata()
         let e = expectation(description: "")
-//        for consumerSessionClientSecret: String,
-//        id: String,
-//        consumerAccountPublishableKey: String?,
-//        allowRedisplay: STPPaymentMethodAllowRedisplay?,
-//        cvc: String?,
-//        expectedPaymentMethodType: String?,
-//        billingPhoneNumber: String?,
-//        completion: @escaping (Result<PaymentDetailsShareResponse, Error>) -> Void
         sut.sharePaymentDetails(for: "consumer_session_client_secret", id: "id", consumerAccountPublishableKey: nil, allowRedisplay: nil, cvc: nil, expectedPaymentMethodType: nil, billingPhoneNumber: nil) { _ in
             e.fulfill()
         }

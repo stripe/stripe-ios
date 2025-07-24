@@ -253,7 +253,11 @@ import UIKit
         _ params: [String: Any]
     ) -> [String: Any] {
         var newParams = params
-        newParams["client_attribution_metadata"] = ["client_session_id": AnalyticsHelper.shared.sessionID]
+        var clientAttributionMetadata = ["client_session_id": AnalyticsHelper.shared.sessionID,
+                                         "merchant_integration_source": "elements",
+                                         "merchant_integration_subtype": "mobile",
+                                         "merchant_integration_version": "stripe-ios/\(StripeAPIConfiguration.STPSDKVersion)"]
+        newParams["client_attribution_metadata"] = clientAttributionMetadata
         return newParams
     }
 }
