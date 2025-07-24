@@ -91,15 +91,6 @@ public final class EmbeddedComponentManager {
         }
     }
 
-    /// Creates a `PayoutsViewController`
-    /// - Seealso: [Payouts component documentation](https://docs.stripe.com/connect/supported-embedded-components/payouts?platform=ios)
-    @_spi(DashboardOnly)
-    public func createPayoutsViewController() -> PayoutsViewController {
-        .init(componentManager: self,
-              loadContent: shouldLoadContent,
-              analyticsClientFactory: analyticsClientFactory)
-    }
-
     /**
      Creates an `AccountOnboardingController
      - Seealso: [Account onboarding component documentation](https://docs.stripe.com/connect/supported-embedded-components/account-onboarding?platform=ios)
@@ -153,6 +144,20 @@ public final class EmbeddedComponentManager {
     ) -> NotificationBannerViewController {
         .init(componentManager: self,
               collectionOptions: collectionOptions,
+              loadContent: shouldLoadContent,
+              analyticsClientFactory: analyticsClientFactory)
+    }
+
+    @_spi(DashboardOnly)
+    public func createPayoutsViewController() -> PayoutsViewController {
+        .init(componentManager: self,
+              loadContent: shouldLoadContent,
+              analyticsClientFactory: analyticsClientFactory)
+    }
+
+    @_spi(DashboardOnly)
+    public func createPaymentsViewController() -> PaymentsViewController {
+        .init(componentManager: self,
               loadContent: shouldLoadContent,
               analyticsClientFactory: analyticsClientFactory)
     }

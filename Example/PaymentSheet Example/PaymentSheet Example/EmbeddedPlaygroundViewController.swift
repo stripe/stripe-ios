@@ -132,9 +132,10 @@ class EmbeddedPlaygroundViewController: UIViewController {
             do {
                 try await setupUI()
             } catch {
+                let paymentSheetError = error as? PaymentSheetError
                 let alert = UIAlertController(
                     title: "Error loading Embedded Payment Element",
-                    message: error.localizedDescription,
+                    message: paymentSheetError?.debugDescription ?? error.localizedDescription,
                     preferredStyle: .alert
                 )
                 alert.addAction(UIAlertAction(title: "OK", style: .default))

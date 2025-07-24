@@ -28,6 +28,13 @@ import UIKit
         @_spi(STP) public let sublabel: String?
     }
 
+    @frozen @_spi(STP) public enum VerificationResult {
+        /// Verification was completed successfully.
+        case completed
+        /// Verification was canceled by the user.
+        case canceled
+    }
+
     /// Errors specific incorrect integrations with LinkController
     @_spi(STP) public enum IntegrationError: Error {
         case noPaymentMethodSelected
@@ -47,6 +54,13 @@ import UIKit
     private let intent: Intent
     private let configuration: PaymentElementConfiguration
     private let analyticsHelper: PaymentSheetAnalyticsHelper
+
+    private lazy var linkAccountService: LinkAccountServiceProtocol = {
+        LinkAccountService(
+            useMobileEndpoints: elementsSession.linkSettings?.useAttestationEndpoints ?? false,
+            sessionID: elementsSession.sessionID
+        )
+    }()
 
     private var selectedPaymentDetails: ConsumerPaymentDetails? {
         guard case .link(let confirmOption) = internalPaymentOption else {
@@ -72,6 +86,9 @@ import UIKit
         }
     }
 
+    /// Details on the current Link account.
+    @Published @_spi(STP) public private(set) var linkAccount: PaymentSheetLinkAccount?
+
     /// A preview of the currently selected Link payment method.
     @Published @_spi(STP) public private(set) var paymentMethodPreview: PaymentMethodPreview?
 
@@ -89,6 +106,13 @@ import UIKit
         self.intent = intent
         self.configuration = configuration
         self.analyticsHelper = analyticsHelper
+
+        LinkAccountContext.shared.addObserver(self, selector: #selector(onLinkAccountChange))
+    }
+
+    deinit {
+        // Just to make sure no observers stay around
+        LinkAccountContext.shared.removeObserver(self)
     }
 
     @_spi(STP) public static var linkIcon: UIImage = Image.link_icon.makeImage()
@@ -140,8 +164,7 @@ import UIKit
     @_spi(STP) public func lookupConsumer(with email: String, completion: @escaping (Result<Bool, Error>) -> Void) {
         Self.lookupConsumer(
             email: email,
-            useMobileEndpoints: elementsSession.linkSettings?.useAttestationEndpoints ?? false,
-            sessionID: elementsSession.sessionID
+            linkAccountService: linkAccountService
         ) { result in
             switch result {
             case .success(let linkAccount):
@@ -153,12 +176,77 @@ import UIKit
         }
     }
 
+    /// Registers a new Link user with the provided details.
+    /// `lookupConsumer` must be called before this.
+    ///
+    /// - Parameter fullName: The full name of the user.
+    /// - Parameter phone: The phone number of the user. Expected to be in E.164 format.
+    /// - Parameter country: The country code of the user.
+    /// - Parameter consentAction: The action taken by the user in order to register for Link.
+    /// - Parameter completion: A closure that is called with the result of the sign up.
+    @_spi(STP) public func registerLinkUser(
+        fullName: String?,
+        phone: String,
+        country: String,
+        consentAction: PaymentSheetLinkAccount.ConsentAction,
+        completion: @escaping (Result<Void, Error>) -> Void
+    ) {
+        guard let linkAccount else {
+            let error = IntegrationError.noActiveLinkConsumer
+            completion(.failure(error))
+            return
+        }
+        linkAccount.signUp(
+            with: phone,
+            legalName: fullName,
+            countryCode: country,
+            consentAction: consentAction,
+            completion: { [weak self] result in
+                LinkAccountContext.shared.account = self?.linkAccount
+                completion(result)
+            }
+        )
+    }
+
+    /// Presents the Link verification flow for an existing user which requires verification.
+    /// `lookupConsumer` must be called before this.
+    ///
+    /// - Parameter viewController: The view controller from which to present the verification flow.
+    /// - Parameter completion: A closure that is called with the result of the verification. It returns a `VerificationResult` if successful, or an error if the verification failed.
+    @_spi(STP) public func presentForVerification(
+        from viewController: UIViewController,
+        completion: @escaping (Result<VerificationResult, Error>) -> Void
+    ) {
+        guard let linkAccount, linkAccount.sessionState == .requiresVerification else {
+            let error = IntegrationError.noActiveLinkConsumer
+            completion(.failure(error))
+            return
+        }
+
+        let verificationController = LinkVerificationController(
+            mode: .modal,
+            linkAccount: linkAccount,
+            configuration: configuration
+        )
+
+        verificationController.present(from: viewController) { result in
+            switch result {
+            case .completed:
+                completion(.success(.completed))
+            case .canceled:
+                completion(.success(.canceled))
+            case .failed(let error):
+                completion(.failure(error))
+            }
+        }
+    }
+
     /// Presents the Link sheet to collect a customer's payment method.
     ///
     /// - Parameter presentingViewController: The view controller from which to present the Link sheet.
     /// - Parameter email: The email address to pre-fill in the Link sheet. If `nil`, the email field will be empty.
     /// - Parameter completion: A closure that is called when the user has selected a payment method or canceled the sheet. If the user selects a payment method, the `paymentMethodPreview` will be updated accordingly.
-    @_spi(STP) public func present(
+    @_spi(STP) public func collectPaymentMethod(
         from presentingViewController: UIViewController,
         with email: String?,
         completion: @escaping () -> Void
@@ -171,6 +259,7 @@ import UIKit
 
         presentingViewController.presentNativeLink(
             selectedPaymentDetailsID: selectedPaymentDetails?.stripeID,
+            linkAccount: linkAccount,
             configuration: configuration,
             intent: intent,
             elementsSession: elementsSession,
@@ -298,15 +387,9 @@ import UIKit
 
     private static func lookupConsumer(
         email: String,
-        useMobileEndpoints: Bool,
-        sessionID: String,
+        linkAccountService: LinkAccountServiceProtocol,
         completion: @escaping (Result<PaymentSheetLinkAccount?, Error>) -> Void
     ) {
-        let linkAccountService = LinkAccountService(
-            useMobileEndpoints: useMobileEndpoints,
-            sessionID: sessionID
-        )
-
         linkAccountService.lookupAccount(
             withEmail: email,
             // TODO: Check that this is the right email source to pass in
@@ -315,6 +398,14 @@ import UIKit
             doNotLogConsumerFunnelEvent: false,
             completion: completion
         )
+    }
+
+    @objc
+    private func onLinkAccountChange(_ notification: Notification) {
+        DispatchQueue.main.async { [weak self] in
+            let linkAccount = notification.object as? PaymentSheetLinkAccount
+            self?.linkAccount = linkAccount
+        }
     }
 }
 
@@ -343,13 +434,63 @@ import UIKit
     /// - Parameter email: The email address to look up.
     /// - Returns: Returns `true` if the email is associated with an existing Link consumer, or `false` otherwise.
     func lookupConsumer(with email: String) async throws -> Bool {
-        return try await withCheckedThrowingContinuation { continuation in
+        try await withCheckedThrowingContinuation { continuation in
             lookupConsumer(with: email) { result in
                 switch result {
                 case .success(let isExistingLinkConsumer):
                     continuation.resume(returning: isExistingLinkConsumer)
-                case .failure(let failure):
-                    continuation.resume(throwing: failure)
+                case .failure(let error):
+                    continuation.resume(throwing: error)
+                }
+            }
+        }
+    }
+
+    /// Registers a new Link user with the provided details.
+    /// `lookupConsumer` must be called before this.
+    ///
+    /// - Parameter fullName: The full name of the user.
+    /// - Parameter phone: The phone number of the user. Expected to be in E.164 format.
+    /// - Parameter country: The country code of the user.
+    /// - Parameter consentAction: The action taken by the user in order to register for Link.
+    /// Throws if `lookupConsumer` was not called prior to this, or an API error occurs.
+    func registerLinkUser(
+        fullName: String?,
+        phone: String,
+        country: String,
+        consentAction: PaymentSheetLinkAccount.ConsentAction
+    ) async throws {
+        try await withCheckedThrowingContinuation { continuation in
+            registerLinkUser(
+                fullName: fullName,
+                phone: phone,
+                country: country,
+                consentAction: consentAction
+            ) { result in
+                switch result {
+                case .success:
+                    continuation.resume(returning: ())
+                case .failure(let error):
+                    continuation.resume(throwing: error)
+                }
+            }
+        }
+    }
+
+    /// Presents the Link verification flow for an existing user.
+    /// `lookupConsumer` must be called before this.
+    ///
+    /// - Parameter viewController: The view controller from which to present the verification flow.
+    /// - Returns: A `VerificationResult` indicating whether verification was completed or canceled.
+    /// Throws if `lookupConsumer` was not called prior to this, or an API error occurs.
+    func presentForVerification(from viewController: UIViewController) async throws -> VerificationResult {
+        try await withCheckedThrowingContinuation { continuation in
+            presentForVerification(from: viewController) { result in
+                switch result {
+                case .success(let result):
+                    continuation.resume(returning: result)
+                case .failure(let error):
+                    continuation.resume(throwing: error)
                 }
             }
         }
@@ -360,10 +501,10 @@ import UIKit
     /// - Parameter presentingViewController: The view controller from which to present the Link sheet.
     /// - Parameter email: The email address to pre-fill in the Link sheet. If `nil`, the email field will be empty.
     /// - Returns: A `PaymentMethodPreview` if the user selected a payment method, or `nil` otherwise.
-    func present(from presentingViewController: UIViewController, with email: String?) async -> LinkController.PaymentMethodPreview? {
+    func collectPaymentMethod(from presentingViewController: UIViewController, with email: String?) async -> LinkController.PaymentMethodPreview? {
         return await withCheckedContinuation { continuation in
             DispatchQueue.main.async {
-                self.present(from: presentingViewController, with: email) { [weak self] in
+                self.collectPaymentMethod(from: presentingViewController, with: email) { [weak self] in
                     guard let self else { return }
                     continuation.resume(returning: self.paymentMethodPreview)
                 }

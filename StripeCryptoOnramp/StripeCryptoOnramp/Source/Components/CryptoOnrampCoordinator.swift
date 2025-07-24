@@ -19,11 +19,11 @@ public protocol CryptoOnrampCoordinatorProtocol {
     /// - Returns: A configured `CryptoOnrampCoordinator`.
     static func create(apiClient: STPAPIClient, appearance: Appearance) async throws -> Self
 
-    /// Determines whether the user with the specified email is already a Link user.
+    /// Looks up whether the provided email is associated with an existing Link consumer.
     ///
-    /// - Parameter email: The email address of the user in question.
-    /// - Returns: Whether the email corresponds to an already registered Link user.
-    func isLinkUser(email: String) async throws -> Bool
+    /// - Parameter email: The email address to look up.
+    /// - Returns: Returns `true` if the email is associated with an existing Link consumer, or `false` otherwise.
+    func lookupConsumer(with email: String) async throws -> Bool
 }
 
 /// Coordinates headless Link user authentication and identity verification, leaving most of the UI to the client.
@@ -50,7 +50,7 @@ public final class CryptoOnrampCoordinator: CryptoOnrampCoordinatorProtocol {
         )
     }
 
-    public func isLinkUser(email: String) async throws -> Bool {
+    public func lookupConsumer(with email: String) async throws -> Bool {
         return try await linkController.lookupConsumer(with: email)
     }
 }

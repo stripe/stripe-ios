@@ -35,7 +35,7 @@ extension EmbeddedPaymentElement {
             allowsRemovalOfLastSavedPaymentMethod: loadResult.elementsSession.paymentMethodRemoveLast(configuration: configuration),
             allowsPaymentMethodRemoval: loadResult.elementsSession.allowsRemovalOfPaymentMethodsForPaymentSheet(),
             allowsPaymentMethodUpdate: loadResult.elementsSession.paymentMethodUpdateForPaymentSheet,
-            isFlatCheckmarkOrDisclosureStyle: configuration.appearance.embeddedPaymentElement.row.style == .flatWithCheckmark || configuration.appearance.embeddedPaymentElement.row.style == .flatWithDisclosure
+            omitChevron: configuration.appearance.embeddedPaymentElement.row.style.omitChevronInAccessoryButton
         )
         let initialSelection: RowButtonType? = {
             // First, respect the previous selection
@@ -318,7 +318,7 @@ extension EmbeddedPaymentElement: UpdatePaymentMethodViewControllerDelegate {
             allowsRemovalOfLastSavedPaymentMethod: elementsSession.paymentMethodRemoveLast(configuration: configuration),
             allowsPaymentMethodRemoval: elementsSession.allowsRemovalOfPaymentMethodsForPaymentSheet(),
             allowsPaymentMethodUpdate: elementsSession.paymentMethodUpdateForPaymentSheet,
-            isFlatCheckmarkOrDisclosureStyle: configuration.appearance.embeddedPaymentElement.row.style == .flatWithCheckmark || configuration.appearance.embeddedPaymentElement.row.style == .flatWithDisclosure
+            omitChevron: configuration.appearance.embeddedPaymentElement.row.style.omitChevronInAccessoryButton
         )
     }
 }
@@ -590,15 +590,7 @@ extension EmbeddedPaymentElement {
     }
 }
 
-// TODO(porter) When we use Xcode 16 on CI do this instead of `STPAuthenticationContextWrapper`
-// @retroactive is not supported in Xcode 15
-// extension UIViewController: @retroactive STPAuthenticationContext {
-//    public func authenticationPresentingViewController() -> UIViewController {
-//        return self
-//    }
-// }
-
-final class STPAuthenticationContextWrapper: UIViewController {
+final class PaymentSheetAuthenticationContextViewController: UIViewController {
     let _presentingViewController: UIViewController
     let appearance: PaymentSheet.Appearance
 
@@ -616,7 +608,7 @@ final class STPAuthenticationContextWrapper: UIViewController {
     }
 }
 
-extension STPAuthenticationContextWrapper: PaymentSheetAuthenticationContext {
+extension PaymentSheetAuthenticationContextViewController: PaymentSheetAuthenticationContext {
 
     func present(_ authenticationViewController: UIViewController, completion: @escaping () -> Void) {
         DispatchQueue.main.async {
@@ -675,6 +667,17 @@ extension PaymentSheetResult {
         case .canceled, .failed:
             return true
         case .completed:
+            return false
+        }
+    }
+}
+
+extension PaymentSheet.Appearance.EmbeddedPaymentElement.Row.Style {
+    var omitChevronInAccessoryButton: Bool {
+        switch self {
+        case .flatWithCheckmark, .flatWithDisclosure:
+            return true
+        case .flatWithRadio, .floatingButton:
             return false
         }
     }

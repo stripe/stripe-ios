@@ -104,6 +104,8 @@
 
 "Select card brand (optional)" = "Selecciona una marca de tarjeta (opcional)";
 
+"Selection is empty." = "La selección está vacía.";
+
 "Sort code" = "Código Sort";
 
 "State" = "Estado";

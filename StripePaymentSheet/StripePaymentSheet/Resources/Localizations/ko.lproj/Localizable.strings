@@ -60,6 +60,8 @@
 
 "By continuing, you agree to authorize payments pursuant to <terms>these terms</terms>." = "계속하면 <terms>해당 약관</terms>에 따라 결제를 승인하는 데 동의하는 것입니다.";
 
+"By continuing, you authorize %@ to automatically debit your Satispay Balance on a recurring basis in accordance with your purchase or subscription plan." = "계속 진행함으로써 귀하는 %@이(가) 귀하의 구매 또는 구독 플랜에 따라 귀하의 Satispay 잔고에서 정기적으로 자동 출금하도록 승인하는 것입니다.";
+
 "By continuing, you authorize %@ to debit your Cash App account for this payment and future payments in accordance with %@'s terms, until this authorization is revoked. You can change this anytime in your Cash App Settings." = "계속하면 이 승인이 취소될 때까지 %2$@의 약관에 따라 이 결제 및 향후 결제에 대해 %1$@이(가) Cash App 계좌에서 인출하도록 승인하는 것입니다. 이는 Cash App 설정에서 언제든지 변경할 수 있습니다.";
 
 "By joining Link, you agree to the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Link에 참여하면 <terms>약관</terms> 및 <privacy>개인정보정책</privacy>에 동의하는 것입니다.";
@@ -256,6 +258,8 @@
 
 "Simple, secure one-click payments" = "간단하고 안전한 원클릭 결제";
 
+"Something went wrong when linking your account.\nPlease try again later." = "계정을 연결하는 동안 문제가 발생했습니다.\n나중에 다시 시도해 주십시오.";
+
 "Stripe will deposit $0.01 to your account in 1-2 business days. Then you'll get an email with instructions to finish saving your bank account with %@." = "Stripe는 영업일 기준 1~2일 후에 계좌에 0.01$를 예금할 예정입니다. 이후 %@에 은행 계좌 저장을 완료하라는 지침이 포함된 이메일이 전송됩니다.";
 
 "Stripe will deposit $0.01 to your account in 1-2 business days. Then you’ll get an email with instructions to complete payment to %@." = "Stripe에서 영업일 기준 1~2일 후에 계좌로 0.01$를 입금할 예정입니다. 그런 다음 %@에 대한 결제를 완료하기 위한 지침이 포함된 이메일을 전송할 것입니다.";
@@ -265,6 +269,8 @@
 "Tap to expand" = "탭하여 확장";
 
 "The IBAN you entered is incomplete." = "입력한 IBAN이 불완전합니다.";
+
+"The IBAN you entered is invalid, \"%@\" is not a supported country code." = "입력한 IBAN이 유효하지 않습니다. \"%@\"은(는) 지원되는 국가 코드가 아닙니다.";
 
 "The provided verification code has expired." = "제공된 확인 코드가 만료되었습니다.";
 
@@ -281,6 +287,8 @@
 "Update card" = "카드 업데이트";
 
 "Update payment method" = "결제 방식 업데이트";
+
+"Use billing address for shipping" = "배송에 청구지 주소 사용";
 
 "Use your saved info to check out faster" = "저장된 정보를 사용하여 더 빠르게 체크아웃";
 

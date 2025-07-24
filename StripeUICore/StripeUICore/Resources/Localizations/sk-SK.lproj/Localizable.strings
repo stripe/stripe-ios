@@ -104,6 +104,8 @@
 
 "Select card brand (optional)" = "Vybrať značku karty (voliteľne)";
 
+"Selection is empty." = "Výber je prázdny.";
+
 "Sort code" = "Triediaci kód";
 
 "State" = "Štát";

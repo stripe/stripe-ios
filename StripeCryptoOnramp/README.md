@@ -37,3 +37,7 @@ Placeholder
 If you link the Stripe Crypto Onramp library manually, use a version from our [releases](https://github.com/stripe/stripe-ios/releases) page and make sure to embed <ins>all</ins> of the following frameworks:
 - `StripeCryptoOnramp.xcframework`
 - `StripeCore.xcframework`
+- `StripeUICore.xcframework`
+- `StripePaymentSheet.xcframework`
+- `StripeIdentity.xcframework`
+- `StripeFinancialConnections.xcframework`
