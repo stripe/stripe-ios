@@ -38,6 +38,195 @@ class STPAPIClientStubbedTest: APIStubbedTestCase {
         waitForExpectations(timeout: 10)
     }
 
+    func testCreatePaymentMethodWithClientAttributionMetadata() {
+        let sut = stubbedAPIClient()
+        AnalyticsHelper.shared.generateSessionID()
+        stub { urlRequest in
+            guard let queryItems = urlRequest.queryItems else {
+                return false
+            }
+            XCTAssertTrue(queryItems.contains(where: { item in
+                item.name == "client_attribution_metadata[client_session_id]" && item.value == AnalyticsHelper.shared.sessionID
+            }))
+            return true
+        } response: { _ in
+            return .init()
+        }
+        let e = expectation(description: "")
+        sut.createPaymentMethod(with: ._testValidCardValue(), additionalPaymentUserAgentValues: []) { _, _ in
+            e.fulfill()
+        }
+        waitForExpectations(timeout: 10)
+    }
+
+    func testConfirmPaymentIntentWithClientAttributionMetadata() {
+        let sut = stubbedAPIClient()
+        AnalyticsHelper.shared.generateSessionID()
+        stub { urlRequest in
+            guard let queryItems = urlRequest.queryItems else {
+                return false
+            }
+            XCTAssertTrue(queryItems.contains(where: { item in
+                item.name == "payment_method_data[client_attribution_metadata][client_session_id]" && item.value == AnalyticsHelper.shared.sessionID
+            }))
+            return true
+        } response: { _ in
+            return .init()
+        }
+        let createPaymentIntentExpectation = self.expectation(
+            description: "createPaymentIntentExpectation"
+        )
+        var retrievedClientSecret: String?
+        STPTestingAPIClient.shared.createPaymentIntent(withParams: nil) {
+            (createdPIClientSecret, _) in
+            if let createdPIClientSecret {
+                retrievedClientSecret = createdPIClientSecret
+                createPaymentIntentExpectation.fulfill()
+            } else {
+                XCTFail()
+            }
+        }
+        wait(for: [createPaymentIntentExpectation], timeout: 8)  // STPTestingNetworkRequestTimeout
+        guard let clientSecret = retrievedClientSecret
+        else {
+            XCTFail()
+            return
+        }
+        let e = expectation(description: "")
+        let paymentMethodParams = STPPaymentMethodParams()
+        let paymentIntentParams = STPPaymentIntentParams(clientSecret: clientSecret)
+        paymentIntentParams.paymentMethodParams = paymentMethodParams
+        sut.confirmPaymentIntent(with: paymentIntentParams) { _, _ in
+            e.fulfill()
+        }
+        waitForExpectations(timeout: 10)
+    }
+
+    func testConfirmPaymentIntentWithoutClientAttributionMetadata() {
+        let sut = stubbedAPIClient()
+        AnalyticsHelper.shared.generateSessionID()
+        stub { urlRequest in
+            guard let queryItems = urlRequest.queryItems else {
+                return false
+            }
+            XCTAssertFalse(queryItems.contains(where: { item in
+                item.name == "payment_method_data[client_attribution_metadata][client_session_id]"
+            }))
+            return true
+        } response: { _ in
+            return .init()
+        }
+        let createPaymentIntentExpectation = self.expectation(
+            description: "createPaymentIntentExpectation"
+        )
+        var retrievedClientSecret: String?
+        STPTestingAPIClient.shared.createPaymentIntent(withParams: nil) {
+            (createdPIClientSecret, _) in
+            if let createdPIClientSecret {
+                retrievedClientSecret = createdPIClientSecret
+                createPaymentIntentExpectation.fulfill()
+            } else {
+                XCTFail()
+            }
+        }
+        wait(for: [createPaymentIntentExpectation], timeout: 8)  // STPTestingNetworkRequestTimeout
+        guard let clientSecret = retrievedClientSecret
+        else {
+            XCTFail()
+            return
+        }
+        let e = expectation(description: "")
+        let paymentIntentParams = STPPaymentIntentParams(clientSecret: clientSecret)
+        sut.confirmPaymentIntent(with: paymentIntentParams) { _, _ in
+            e.fulfill()
+        }
+        waitForExpectations(timeout: 10)
+    }
+
+    func testConfirmSetupIntentWithClientAttributionMetadata() {
+        let sut = stubbedAPIClient()
+        AnalyticsHelper.shared.generateSessionID()
+        stub { urlRequest in
+            guard let queryItems = urlRequest.queryItems else {
+                return false
+            }
+            XCTAssertTrue(queryItems.contains(where: { item in
+                item.name == "payment_method_data[client_attribution_metadata][client_session_id]" && item.value == AnalyticsHelper.shared.sessionID
+            }))
+            return true
+        } response: { _ in
+            return .init()
+        }
+        let createSetupIntentExpectation = self.expectation(
+            description: "createPaymentIntentExpectation"
+        )
+        var retrievedClientSecret: String?
+        STPTestingAPIClient.shared.createSetupIntent(withParams: nil) {
+            (createdPIClientSecret, _) in
+            if let createdPIClientSecret {
+                retrievedClientSecret = createdPIClientSecret
+                createSetupIntentExpectation.fulfill()
+            } else {
+                XCTFail()
+            }
+        }
+        wait(for: [createSetupIntentExpectation], timeout: 8)  // STPTestingNetworkRequestTimeout
+        guard let clientSecret = retrievedClientSecret
+        else {
+            XCTFail()
+            return
+        }
+        let e = expectation(description: "")
+        let paymentMethodParams = STPPaymentMethodParams()
+        let setupIntentParams = STPSetupIntentConfirmParams(clientSecret: clientSecret)
+        setupIntentParams.paymentMethodParams = paymentMethodParams
+        sut.confirmSetupIntent(with: setupIntentParams) { _, _ in
+            e.fulfill()
+        }
+        waitForExpectations(timeout: 10)
+    }
+
+    func testConfirmSetupIntentWithoutClientAttributionMetadata() {
+        let sut = stubbedAPIClient()
+        AnalyticsHelper.shared.generateSessionID()
+        stub { urlRequest in
+            guard let queryItems = urlRequest.queryItems else {
+                return false
+            }
+            XCTAssertFalse(queryItems.contains(where: { item in
+                item.name == "payment_method_data[client_attribution_metadata][client_session_id]"
+            }))
+            return true
+        } response: { _ in
+            return .init()
+        }
+        let createSetupIntentExpectation = self.expectation(
+            description: "createPaymentIntentExpectation"
+        )
+        var retrievedClientSecret: String?
+        STPTestingAPIClient.shared.createSetupIntent(withParams: nil) {
+            (createdPIClientSecret, _) in
+            if let createdPIClientSecret {
+                retrievedClientSecret = createdPIClientSecret
+                createSetupIntentExpectation.fulfill()
+            } else {
+                XCTFail()
+            }
+        }
+        wait(for: [createSetupIntentExpectation], timeout: 8)  // STPTestingNetworkRequestTimeout
+        guard let clientSecret = retrievedClientSecret
+        else {
+            XCTFail()
+            return
+        }
+        let e = expectation(description: "")
+        let setupIntentParams = STPSetupIntentConfirmParams(clientSecret: clientSecret)
+        sut.confirmSetupIntent(with: setupIntentParams) { _, _ in
+            e.fulfill()
+        }
+        waitForExpectations(timeout: 10)
+    }
+
     func testSetupIntent_LinkAccountSessionForUSBankAccount() {
         let sut = stubbedAPIClient()
         stub { urlRequest in
