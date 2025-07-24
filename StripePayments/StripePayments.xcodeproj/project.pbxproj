@@ -574,7 +574,6 @@
 		8EA81FB26BC27763B09E55ED /* StripePaymentsTestUtils.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = StripePaymentsTestUtils.h; sourceTree = "<group>"; };
 		9014B29558BB1B58C8981FBB /* STPBINController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = STPBINController.swift; sourceTree = "<group>"; };
 		90B3D8567EEB33BC253105F4 /* STPCustomer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = STPCustomer.swift; sourceTree = "<group>"; };
-		90FCA038D0D7A1F3A2392626 /* nn-NO */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "nn-NO"; path = "nn-NO.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		92A9741EA9B8FD4301DEB5FD /* STPPaymentMethodMobilePayParams.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = STPPaymentMethodMobilePayParams.swift; sourceTree = "<group>"; };
 		92F27143E2EACD3D4C898DF7 /* fr-CA */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "fr-CA"; path = "fr-CA.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		93327A70BDB39DA521BAE777 /* Stripe3DS2.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Stripe3DS2.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -1534,7 +1533,6 @@
 				mt,
 				nb,
 				nl,
-				"nn-NO",
 				"pl-PL",
 				"pt-BR",
 				"pt-PT",
@@ -1989,7 +1987,6 @@
 				AE030180048E3DF393BF3BFF /* mt */,
 				FCB8DBEEC0F571E7BEB78D6C /* nb */,
 				A277EC102AAFEF5029D82569 /* nl */,
-				90FCA038D0D7A1F3A2392626 /* nn-NO */,
 				246048AA06A91263FF8D4603 /* pl-PL */,
 				46074E7130DD491C6FEF8689 /* pt-BR */,
 				F1F72E1D891FE901F9AA1B4E /* pt-PT */,

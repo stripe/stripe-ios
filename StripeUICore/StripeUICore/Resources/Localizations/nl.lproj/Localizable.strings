@@ -104,6 +104,8 @@
 
 "Select card brand (optional)" = "Merk van betaalkaart selecteren (optioneel)";
 
+"Selection is empty." = "Selectie is leeg.";
+
 "Sort code" = "Bankcode";
 
 "State" = "Staat";

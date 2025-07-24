@@ -104,6 +104,8 @@
 
 "Select card brand (optional)" = "Valitse korttimerkki (valinnainen)";
 
+"Selection is empty." = "Valinta on tyhjä.";
+
 "Sort code" = "Pankin tunnusnumero";
 
 "State" = "Osavaltio";

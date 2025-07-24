@@ -60,11 +60,15 @@
 
 "By continuing, you agree to authorize payments pursuant to <terms>these terms</terms>." = "Ao continuar, concorda em autorizar pagamentos de acordo com <terms>estas condições</terms>.";
 
+"By continuing, you authorize %@ to automatically debit your Satispay Balance on a recurring basis in accordance with your purchase or subscription plan." = "Ao continuar, autoriza %@ a debitar automaticamente o seu Saldo Satispay de forma recorrente, de acordo com o seu plano de compra ou subscrição.";
+
 "By continuing, you authorize %@ to debit your Cash App account for this payment and future payments in accordance with %@'s terms, until this authorization is revoked. You can change this anytime in your Cash App Settings." = "Ao continuar, autoriza %1$@ a debitar a sua conta Cash App para este pagamento e pagamentos futuros de acordo com as condições de %2$@, até que esta autorização seja revogada. Pode alterar isto a qualquer altura nas definições da sua Cash App.";
 
 "By joining Link, you agree to the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Ao juntar-se ao Link, concorda com as <terms>Condições</terms> e com a <privacy>Política de Privacidade</privacy>.";
 
 "By providing phone number and email, you agree to create a Link account subject to the Link <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Ao fornecer o número de telefone e o e-mail, concorda em criar uma conta Link sujeita às <terms>Condições</terms> e à <privacy>Política de Privacidade</privacy> do Link.";
+
+"By providing your bank account details and confirming this payment, you agree to this Direct Debit Request and the <terms>Direct Debit Request service agreement</terms>, and authorise Stripe Payments Australia Pty Ltd ACN 160 180 343 Direct Debit User ID number 507156 (“Stripe”) to debit your account through the Bulk Electronic Clearing System (BECS) on behalf of %@ (the \"Merchant\") for any amounts separately communicated to you by the Merchant. You certify that you are either an account holder or an authorised signatory on the account listed above." = "Ao fornecer os detalhes da sua conta bancária e confirmar este pagamento, concorda com esta Solicitação de Débito Direto e com o <terms>contrato de serviço de Solicitação de Débito Direto e autoriza a Stripe Payments Australia Pty Ltd ACN 160 180 343 número de identificação de utilizador de débito direto 507156 (“Stripe”) a debitar</terms> a sua conta através do Sistema de Compensação Eletrónica em Massa (BECS) em nome de %@ (o “Comerciante”) para quaisquer montantes que lhe forem comunicados separadamente pelo Estabelecimento Comerciante. Certifica que é titular de conta ou signatário autorizado na conta listada acima.";
 
 "By providing your card information, you allow %@ to charge your card for future payments in accordance with their terms." = "Quando fornecer as informações do seu cartão, autoriza %@ a cobrar futuros pagamentos do seu cartão de acordo com as respetivas condições.";
 
@@ -256,6 +260,8 @@
 
 "Simple, secure one-click payments" = "Pagamentos simples e seguros com um clique";
 
+"Something went wrong when linking your account.\nPlease try again later." = "Algo correu mal ao vincular a sua conta. \nTente novamente mais tarde.";
+
 "Stripe will deposit $0.01 to your account in 1-2 business days. Then you'll get an email with instructions to finish saving your bank account with %@." = "A Stripe efetuará um depósito de 0,01 USD na sua conta dentro de 1 a 2 dias úteis. Receberá posteriormente um email com instruções para concluir o registo da sua conta bancária com %@.";
 
 "Stripe will deposit $0.01 to your account in 1-2 business days. Then you’ll get an email with instructions to complete payment to %@." = "A Stripe efetuará um depósito de 0,01 USD na sua conta dentro de 1 a 2 dias úteis. Receberá posteriormente um email com instruções para concluir o pagamento a %@.";
@@ -265,6 +271,8 @@
 "Tap to expand" = "Toque para expandir";
 
 "The IBAN you entered is incomplete." = "O IBAN que introduziu está incompleto.";
+
+"The IBAN you entered is invalid, \"%@\" is not a supported country code." = "O IBAN introduzido é inválido, “%@” não é um código de país suportado.";
 
 "The provided verification code has expired." = "O código de verificação fornecido expirou.";
 
@@ -281,6 +289,8 @@
 "Update card" = "Atualizar cartão";
 
 "Update payment method" = "Atualizar método de pagamento";
+
+"Use billing address for shipping" = "Utilizar endereço de faturação para envio";
 
 "Use your saved info to check out faster" = "Utilizar as suas informações guardadas para finalizar compras mais rapidamente";
 

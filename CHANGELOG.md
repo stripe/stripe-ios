@@ -1,6 +1,11 @@
-## X.Y.Z 2025-XX-YY
+## X.Y.Z 2025-xx-yy
 
 * [Added] Postal code validation for Canada and UK addresses
+
+### PaymentSheet
+* [Added] Added `Appearance.EmbeddedPaymentElement.Row.subtitleFont` to customize the font of EmbeddedPaymentElement payment method row subtitles.
+
+## 24.17.0 2025-07-21
 
 ### PaymentSheet
 * [Fixed] EmbeddedPaymentElement now errors when `configuration.rowSelectionBehavior` is `.immediateAction` and `configuration.embeddedViewDisplaysMandateText` is `true` to ensure integrations display legal mandate text to the customer.
@@ -8,10 +13,15 @@
 * [Added] Added `Appearance.EmbeddedPaymentElement.Row.paymentMethodIconLayoutMargins` to customize the spacing around payment method icons in EmbeddedPaymentElement payment method rows.
 * [Added] Added `Appearance.EmbeddedPaymentElement.Row.titleFont` to customize the font of EmbeddedPaymentElement payment method row titles.
 * [Changed] Renamed `PaymentSheet.Appearance.EmbeddedPaymentElement.Row.Style.flatWithChevron` to `PaymentSheet.Appearance.EmbeddedPaymentElement.Row.Style.flatWithDisclosure` and added an experimental `disclosureImage` property to customize the chevron icon displayed in EmbeddedPaymentElement payment method rows when the row style is flatWithDisclosure.
+* [Fixed] `EmbeddedPaymentElementDelegate` `didUpdateHeight` now accommodates cases where the embedded view can't change height until after `didUpdateHeight` is called, like inside a UITableViewCell.
+* [Fixed] Apple Pay now properly collects phone number and email address when marked as required in `PaymentSheet.Configuration.billingDetailsCollectionConfiguration`.
 
 ### AddressElement
 * [Added] SwiftUI support for AddressElement.
 * [Changed] `AddressViewController` now notifies its delegate when the sheet is dismissed, whether by tapping the **Close** button or swiping down, so `AddressElement` always returns the current address.
+
+### General
+* [Removed] Removed nn-NO (Norwegian Nynorsk) localization. Norwegian users can continue using nb (Norwegian Bokmål) localization.
 
 ## 24.16.2 2025-07-07
 

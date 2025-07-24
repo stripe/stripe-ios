@@ -1,5 +1,5 @@
 //
-//  AddressElementRepresentableSnapshotTest.swift
+//  AddressViewControllerRepresentableSnapshotTest.swift
 //  StripePaymentSheetTests
 //
 //  Created by Nick Porter on 7/11/25.
@@ -15,7 +15,7 @@ import XCTest
 
 @available(iOS 15.0, *)
 @MainActor
-class AddressElementRepresentableSnapshotTest: STPSnapshotTestCase {
+class AddressViewControllerRepresentableSnapshotTest: STPSnapshotTestCase {
 
     func testAddressElementView() async throws {
         var configuration = AddressElement.Configuration()

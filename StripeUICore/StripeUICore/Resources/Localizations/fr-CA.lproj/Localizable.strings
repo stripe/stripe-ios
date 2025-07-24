@@ -104,6 +104,8 @@
 
 "Select card brand (optional)" = "Sélectionner la marque de la carte (facultatif)";
 
+"Selection is empty." = "La sélection est vide.";
+
 "Sort code" = "Code guichet";
 
 "State" = "État";
