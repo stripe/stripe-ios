@@ -330,6 +330,7 @@ public extension PaymentSheet.Appearance {
             public var titleFont: UIFont?
 
             /// The font of the subtitle in a payment method row e.g. "Buy now or pay later with Klarna"
+            /// - Note: If `nil`, uses a default font based on `appearance.font`
             public var subtitleFont: UIFont?
 
             /// Controls the padding around the payment method icon.
