@@ -28,13 +28,7 @@ protocol ApplicationURLOpener {
 }
 
 extension ApplicationURLOpener {
-    // The signature of the `completionHandler` in UIApplication.open changed
-    // in Xcode 16
-    #if compiler(>=6.0)
     typealias OpenCompletionHandler = @MainActor @Sendable (Bool) -> Void
-    #else
-    typealias OpenCompletionHandler = (Bool) -> Void
-    #endif
 
     func openIfPossible(_ url: URL) throws {
         guard canOpenURL(url) else {
