@@ -74,7 +74,7 @@ extension SatispayExampleViewController {
                 }
 
                 // 2. Confirm the payment and redirect the user to Satispay
-                let paymentIntentParams = STPPaymentIntentParams(clientSecret: clientSecret)
+                let paymentIntentParams = STPPaymentIntentConfirmParams(clientSecret: clientSecret)
                 paymentIntentParams.paymentMethodParams = STPPaymentMethodParams(
                     satispay: STPPaymentMethodSatispayParams(),
                     billingDetails: nil,

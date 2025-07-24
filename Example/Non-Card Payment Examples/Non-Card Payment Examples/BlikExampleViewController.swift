@@ -72,7 +72,7 @@ extension BlikExampleViewController {
                     return
                 }
 
-                let paymentIntentParams = STPPaymentIntentParams(clientSecret: clientSecret)
+                let paymentIntentParams = STPPaymentIntentConfirmParams(clientSecret: clientSecret)
                 paymentIntentParams.paymentMethodParams = STPPaymentMethodParams(
                     blik: STPPaymentMethodBLIKParams(),
                     billingDetails: nil,

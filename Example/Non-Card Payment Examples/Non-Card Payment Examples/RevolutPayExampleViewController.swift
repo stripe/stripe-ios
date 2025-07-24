@@ -73,7 +73,7 @@ extension RevolutPayExampleViewController {
                 }
 
                 // 2. Confirm the payment and handle redirect
-                let paymentIntentParams = STPPaymentIntentParams(clientSecret: clientSecret)
+                let paymentIntentParams = STPPaymentIntentConfirmParams(clientSecret: clientSecret)
                 paymentIntentParams.paymentMethodParams = STPPaymentMethodParams(
                     revolutPay: STPPaymentMethodRevolutPayParams(),
                     billingDetails: nil,

@@ -64,7 +64,7 @@
         [paymentHandler safariViewControllerDidFinish:self.presentingViewController];
     });
     
-    STPPaymentIntentParams *confirmParams = [[STPPaymentIntentParams alloc] initWithClientSecret:clientSecret];
+    STPPaymentIntentConfirmParams *confirmParams = [[STPPaymentIntentConfirmParams alloc] initWithClientSecret:clientSecret];
     confirmParams.paymentMethodOptions = [STPConfirmPaymentMethodOptions new];
     confirmParams.paymentMethodOptions.alipayOptions = [STPConfirmAlipayOptions new];
     confirmParams.paymentMethodParams = [STPPaymentMethodParams paramsWithAlipay:[STPPaymentMethodAlipayParams new] billingDetails:nil metadata:nil];

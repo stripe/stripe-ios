@@ -56,7 +56,7 @@ struct ConfirmPaymentPresenter<ParamsType, CompletionBlockType>: UIViewControlle
         }
 
         private func presentConfirmationSheet() {
-            if let params = self.parent.intentParams as? STPPaymentIntentParams,
+            if let params = self.parent.intentParams as? STPPaymentIntentConfirmParams,
                 let completion = self.parent.onCompletion
                     as? STPPaymentHandlerActionPaymentIntentCompletionBlock
             {
@@ -98,7 +98,7 @@ extension View {
     /// - Parameter onCompletion: Called with the result of the payment after the payment confirmation is done and the sheet (if any) is dismissed.
     public func paymentConfirmationSheet(
         isConfirmingPayment: Binding<Bool>,
-        paymentIntentParams: STPPaymentIntentParams,
+        paymentIntentParams: STPPaymentIntentConfirmParams,
         onCompletion: @escaping STPPaymentHandlerActionPaymentIntentCompletionBlock
     ) -> some View {
         self.modifier(

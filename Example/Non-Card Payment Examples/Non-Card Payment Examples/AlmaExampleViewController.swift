@@ -75,7 +75,7 @@ extension AlmaExampleViewController {
                 }
 
                 // 2. Confirm the payment and redirect the user to Alma
-                let paymentIntentParams = STPPaymentIntentParams(clientSecret: clientSecret)
+                let paymentIntentParams = STPPaymentIntentConfirmParams(clientSecret: clientSecret)
                 paymentIntentParams.paymentMethodParams = STPPaymentMethodParams(
                     alma: STPPaymentMethodAlmaParams(),
                     billingDetails: nil,

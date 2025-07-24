@@ -75,7 +75,7 @@ extension MobilePayExampleViewController {
                 // 2. Confirm the payment and redirect the user to Mobilepay
                 let billingDetails = STPPaymentMethodBillingDetails()
                 billingDetails.email = "tester@example.com"
-                let paymentIntentParams = STPPaymentIntentParams(clientSecret: clientSecret)
+                let paymentIntentParams = STPPaymentIntentConfirmParams(clientSecret: clientSecret)
                 paymentIntentParams.paymentMethodParams = STPPaymentMethodParams(
                     mobilePay: STPPaymentMethodMobilePayParams(),
                     billingDetails: billingDetails,

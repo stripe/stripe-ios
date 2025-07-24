@@ -74,7 +74,7 @@ import Stripe3DS2
     @objc(STPPaymentHandlerInvalidClientSecret)
     case invalidClientSecret
 
-    /// The payment method requires a return URL and one was not provided. Your integration should provide one in your `STPPaymentIntentParams`/`STPSetupIntentConfirmParams` object if you call `STPPaymentHandler.confirm...` or when you call  `STPPaymentHandler.handleNextAction`.
+    /// The payment method requires a return URL and one was not provided. Your integration should provide one in your `STPPaymentIntentConfirmParams`/`STPSetupIntentConfirmParams` object if you call `STPPaymentHandler.confirm...` or when you call  `STPPaymentHandler.handleNextAction`.
     @objc(STPPaymentHandlerMissingReturnURL)
     case missingReturnURL
 
@@ -92,7 +92,7 @@ public typealias STPPaymentHandlerActionSetupIntentCompletionBlock = (
     STPPaymentHandlerActionStatus, STPSetupIntent?, NSError?
 ) -> Void
 
-let missingReturnURLErrorMessage = "The payment method requires a return URL and one was not provided. Your integration should provide one in your `STPPaymentIntentParams`/`STPSetupIntentConfirmParams` object if you call `STPPaymentHandler.confirm...` or when you call  `STPPaymentHandler.handleNextAction`."
+let missingReturnURLErrorMessage = "The payment method requires a return URL and one was not provided. Your integration should provide one in your `STPPaymentIntentConfirmParams`/`STPSetupIntentConfirmParams` object if you call `STPPaymentHandler.confirm...` or when you call  `STPPaymentHandler.handleNextAction`."
 
 /// `STPPaymentHandler` is a utility class that confirms PaymentIntents/SetupIntents and handles any authentication required, such as 3DS1/3DS2 for Strong Customer Authentication.
 /// It can present authentication UI on top of your app or redirect users out of your app (to e.g. their banking app).
@@ -178,7 +178,7 @@ public class STPPaymentHandler: NSObject {
     ///   - completion: The completion block. If the status returned is `STPPaymentHandlerActionStatusSucceeded`, the PaymentIntent status is not necessarily STPPaymentIntentStatusSucceeded (e.g. some bank payment methods take days before the PaymentIntent succeeds).
     @objc(confirmPayment:withAuthenticationContext:completion:)
     public func confirmPayment(
-        _ paymentParams: STPPaymentIntentParams,
+        _ paymentParams: STPPaymentIntentConfirmParams,
         with authenticationContext: STPAuthenticationContext,
         completion: @escaping STPPaymentHandlerActionPaymentIntentCompletionBlock
     ) {
@@ -193,7 +193,7 @@ public class STPPaymentHandler: NSObject {
             assertionFailure("`STPPaymentHandler.confirmPayment` was called while a previous call is still in progress.")
             completion(.failed, nil, _error(for: .noConcurrentActionsErrorCode))
             return
-        } else if !STPPaymentIntentParams.isClientSecretValid(paymentParams.clientSecret) {
+        } else if !STPPaymentIntentConfirmParams.isClientSecretValid(paymentParams.clientSecret) {
             assertionFailure("`STPPaymentHandler.confirmPayment` was called with an invalid client secret. See https://docs.stripe.com/api/payment_intents/object#payment_intent_object-client_secret")
             completion(.failed, nil, _error(for: .invalidClientSecret))
             return
@@ -269,7 +269,7 @@ public class STPPaymentHandler: NSObject {
         var params = paymentParams
         // We always set useStripeSDK = @YES in STPPaymentHandler
         if !(params.useStripeSDK?.boolValue ?? false) {
-            params = paymentParams.copy() as! STPPaymentIntentParams
+            params = paymentParams.copy() as! STPPaymentIntentConfirmParams
             params.useStripeSDK = NSNumber(value: true)
         }
         apiClient.confirmPaymentIntent(
@@ -287,7 +287,7 @@ public class STPPaymentHandler: NSObject {
         renamed: "confirmPayment(_:with:completion:)"
     )
     public func confirmPayment(
-        withParams: STPPaymentIntentParams,
+        withParams: STPPaymentIntentConfirmParams,
         authenticationContext: STPAuthenticationContext,
         completion: @escaping STPPaymentHandlerActionPaymentIntentCompletionBlock
     ) {
@@ -372,7 +372,7 @@ public class STPPaymentHandler: NSObject {
             completion(status, paymentIntent, error)
         }
         logHandleNextActionStarted(intentID: paymentIntentID, paymentMethod: nil)
-        if !STPPaymentIntentParams.isClientSecretValid(paymentIntentClientSecret) {
+        if !STPPaymentIntentConfirmParams.isClientSecretValid(paymentIntentClientSecret) {
             assertionFailure("`STPPaymentHandler.handleNextAction` was called with an invalid client secret. See https://docs.stripe.com/api/payment_intents/object#payment_intent_object-client_secret")
             completion(.failed, nil, _error(for: .invalidClientSecret))
             return

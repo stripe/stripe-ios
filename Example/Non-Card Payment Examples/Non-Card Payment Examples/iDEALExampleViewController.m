@@ -34,7 +34,7 @@
             return;
         }
 
-        STPPaymentIntentParams *paymentIntentParams = [[STPPaymentIntentParams alloc] initWithClientSecret:clientSecret];
+        STPPaymentIntentConfirmParams *paymentIntentParams = [[STPPaymentIntentConfirmParams alloc] initWithClientSecret:clientSecret];
 
         STPPaymentMethodiDEALParams *iDEALParams = [[STPPaymentMethodiDEALParams alloc] init];
         iDEALParams.bankName = @"ing";

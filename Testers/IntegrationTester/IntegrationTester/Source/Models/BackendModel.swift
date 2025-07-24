@@ -18,14 +18,14 @@ class BackendModel {
 
     public static let shared = BackendModel()
 
-    func fetchPaymentIntent(integrationMethod: IntegrationMethod = .card, completion: @escaping (STPPaymentIntentParams?) -> Void) {
+    func fetchPaymentIntent(integrationMethod: IntegrationMethod = .card, completion: @escaping (STPPaymentIntentConfirmParams?) -> Void) {
         let params = ["integration_method": integrationMethod.rawValue]
         getAPI(method: "create_pi", params: params) { (json) in
             guard let paymentIntentClientSecret = json["paymentIntent"] as? String else {
                 completion(nil)
                 return
             }
-            completion(STPPaymentIntentParams(clientSecret: paymentIntentClientSecret))
+            completion(STPPaymentIntentConfirmParams(clientSecret: paymentIntentClientSecret))
         }
     }
 
