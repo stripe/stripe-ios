@@ -95,9 +95,10 @@ class STPAPIClientStubbedTest: APIStubbedTestCase {
     func testCreateApplePayPaymentMethodWithClientAttributionMetadata() {
         let sut = stubbedAPIClient()
         AnalyticsHelper.shared.generateSessionID()
-        stubClientAttributionMetadata()
+        let additionalClientAttributionMetadata = ["elements_session_config_id": "elements_session_config_id", "payment_intent_creation_flow": "deferred", "payment_method_selection_flow": "automatic"]
+        stubClientAttributionMetadata(additionalClientAttributionMetadata: additionalClientAttributionMetadata)
         let e = expectation(description: "")
-        StripeAPI.PaymentMethod.create(apiClient: sut, params: StripeAPI.PaymentMethodParams(type: .card)) { _ in
+        StripeAPI.PaymentMethod.create(apiClient: sut, params: StripeAPI.PaymentMethodParams(type: .card), additionalClientAttributionMetadata: additionalClientAttributionMetadata) { _ in
             e.fulfill()
         }
         waitForExpectations(timeout: 10)

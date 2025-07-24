@@ -107,7 +107,6 @@ public class STPApplePayContext: NSObject, PKPaymentAuthorizationControllerDeleg
     @_spi(STP) public static let COMPLETE_WITHOUT_CONFIRMING_INTENT = "COMPLETE_WITHOUT_CONFIRMING_INTENT"
 
     internal var analyticsClient: STPAnalyticsClient = .sharedClient
-    let additionalClientAttributionMetadata: [String: String]
     /// These indicate a programming error in STPApplePayContext. They are separate from the NSErrors vended to merchants; these errors are only reported to analytics and do not get vended to users of this class.
     enum InternalError: Swift.Error {
         case invalidState
@@ -119,16 +118,8 @@ public class STPApplePayContext: NSObject, PKPaymentAuthorizationControllerDeleg
     ///   - paymentRequest:      The payment request to use with Apple Pay.
     ///   - delegate:                    The delegate.
     @objc(initWithPaymentRequest:delegate:)
-    public convenience init?(
+    public required init?(
         paymentRequest: PKPaymentRequest,
-        delegate: _stpinternal_STPApplePayContextDelegateBase?
-    ) {
-        self.init(paymentRequest: paymentRequest, additionalClientAttributionMetadata: [:], delegate: delegate)
-    }
-
-    @_spi(STP) public required init?(
-        paymentRequest: PKPaymentRequest,
-        additionalClientAttributionMetadata: [String: String],
         delegate: _stpinternal_STPApplePayContextDelegateBase?
     ) {
         STPAnalyticsClient.sharedClient.addClass(toProductUsageIfNecessary: STPApplePayContext.self)
@@ -165,7 +156,6 @@ public class STPApplePayContext: NSObject, PKPaymentAuthorizationControllerDeleg
         }
 
         authorizationController = PKPaymentAuthorizationController(paymentRequest: paymentRequest)
-        self.additionalClientAttributionMetadata = additionalClientAttributionMetadata
         self.delegate = delegate
 
         super.init()
@@ -284,6 +274,8 @@ public class STPApplePayContext: NSObject, PKPaymentAuthorizationControllerDeleg
     }
     /// Tracks where the call to confirm the PaymentIntent or SetupIntent happened.
     @_spi(STP) public var confirmType: ConfirmType?
+
+    @_spi(STP) public var additionalClientAttributionMetadata: [String: String] = [:]
     // Internal state
     private var paymentState: PaymentState = .notStarted
     private var error: Swift.Error?
