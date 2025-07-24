@@ -176,13 +176,15 @@ struct WalletButtonsFlowControllerView: View {
                 paymentOptionDisplayData: flowController.paymentOption)
         }
 
-        Toggle(isOn: $linkSignUpOptIn) {
-            Text("Sign up to Link")
+        if flowController.linkAccountRecognitionStatus == .notRecognized {
+            Toggle(isOn: $linkSignUpOptIn) {
+                Text("Sign up to Link")
+            }
+            .onChange(of: linkSignUpOptIn) { newValue in
+                flowController.linkSignUpOptIn = newValue
+            }
+            .padding(.horizontal)
         }
-        .onChange(of: linkSignUpOptIn) { newValue in
-            flowController.linkSignUpOptIn = newValue
-        }
-        .padding(.horizontal)
 
         Button(action: {
             // If you need to update the PaymentIntent's amount, you should do it here and

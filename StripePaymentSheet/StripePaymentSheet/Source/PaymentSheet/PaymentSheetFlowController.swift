@@ -219,7 +219,7 @@ extension PaymentSheet {
         @Published public private(set) var linkAccountRecognitionStatus: LinkAccountRecognitionStatus?
 
         /// Whether your customer has chosen to sign up to Link in your UI.
-        public var linkSignUpOptIn: Bool = false
+         public var linkSignUpOptIn: Bool = false
 
         /// The recognition status of the current user's Link account.
         public enum LinkAccountRecognitionStatus {
@@ -304,7 +304,7 @@ extension PaymentSheet {
             self.viewController = Self.makeViewController(configuration: configuration, loadResult: loadResult, analyticsHelper: analyticsHelper, walletButtonsShownExternally: self.walletButtonsShownExternally)
             self.viewController.flowControllerDelegate = self
             updatePaymentOption()
-
+            updateLinkAccountRecognitionStatus(for: LinkAccountContext.shared.account)
             LinkAccountContext.shared.addObserver(self, selector: #selector(onAccountChange(_:)))
         }
 
@@ -312,9 +312,13 @@ extension PaymentSheet {
         func onAccountChange(_ notification: Notification) {
             DispatchQueue.main.async { [weak self] in
                 let linkAccount = notification.object as? PaymentSheetLinkAccount
-                let isLinkConsumer = linkAccount?.isRegistered == true
-                self?.linkAccountRecognitionStatus = isLinkConsumer ? .recognized : .notRecognized
+                self?.updateLinkAccountRecognitionStatus(for: linkAccount)
             }
+        }
+
+        private func updateLinkAccountRecognitionStatus(for linkAccount: PaymentSheetLinkAccount?) {
+            let isLinkConsumer = linkAccount?.isRegistered == true
+            linkAccountRecognitionStatus = isLinkConsumer ? .recognized : .notRecognized
         }
 
         // MARK: - Public methods
