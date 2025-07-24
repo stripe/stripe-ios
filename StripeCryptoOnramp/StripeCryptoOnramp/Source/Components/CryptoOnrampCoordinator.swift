@@ -30,7 +30,7 @@ public protocol CryptoOnrampCoordinatorProtocol {
     /// `lookupConsumer` must be called before this.
     ///
     /// - Parameter fullName: The full name of the user.
-    /// - Parameter phone: The phone number of the user. Expected to be in E.164 format.
+    /// - Parameter phone: The phone number of the user. Phone number must be in E.164 format (e.g., +12125551234), otherwise an error will be thrown.
     /// - Parameter country: The country code of the user.
     /// - Returns: The crypto customer ID.
     /// Throws if `lookupConsumer` was not called prior to this, or an API error occurs.
@@ -49,6 +49,14 @@ public protocol CryptoOnrampCoordinatorProtocol {
 /// Coordinates headless Link user authentication and identity verification, leaving most of the UI to the client.
 @_spi(CryptoOnrampSDKPreview)
 public final class CryptoOnrampCoordinator: CryptoOnrampCoordinatorProtocol {
+
+    /// A subset of errors that may be thrown by `CryptoOnrampCoordinator` APIs.
+    public enum Error: Swift.Error {
+
+        ///Phone number validation failed. Phone number should be in E.164 format (e.g., +12125551234).
+        case invalidPhoneFormat
+    }
+
     private let linkController: LinkController
     private let apiClient: STPAPIClient
     private let appearance: Appearance
@@ -84,12 +92,24 @@ public final class CryptoOnrampCoordinator: CryptoOnrampCoordinatorProtocol {
     }
 
     public func registerLinkUser(fullName: String?, phone: String, country: String) async throws -> String {
-        try await linkController.registerLinkUser(
-            fullName: fullName,
-            phone: phone,
-            country: country,
-            consentAction: .entered_phone_number_email_clicked_signup_crypto_onramp
-        )
+        do {
+            try await linkController.registerLinkUser(
+                fullName: fullName,
+                phone: phone,
+                country: country,
+                consentAction: .entered_phone_number_email_clicked_signup_crypto_onramp
+            )
+        } catch {
+            if let stripeError = (error as? StripeError),
+               case let .apiError(stripeAPIError) = stripeError,
+               stripeAPIError.type == .invalidRequestError,
+               let message = stripeAPIError.message,
+               message.hasPrefix("There was an issue parsing the phone number") {
+                throw Error.invalidPhoneFormat
+            } else {
+                throw error
+            }
+        }
         return try await apiClient.grantPartnerMerchantPermissions(with: linkAccountInfo).id
     }
 
