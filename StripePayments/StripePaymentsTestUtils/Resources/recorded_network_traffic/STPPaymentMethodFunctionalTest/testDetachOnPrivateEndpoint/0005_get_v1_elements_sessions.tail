@@ -1,25 +1,25 @@
 GET
-https:\/\/api\.stripe\.com\/v1\/elements\/sessions\?customer_session_client_secret=cuss_secret_SjzMryu3JOkXET33M5c2ive4XB9O7bbMNkqh7rLy5lAA6EU&deferred_intent%5Bamount%5D=5000&deferred_intent%5Bcapture_method%5D=automatic&deferred_intent%5Bcurrency%5D=eur&deferred_intent%5Bmode%5D=payment&deferred_intent%5Bsetup_future_usage%5D=off_session&key=pk_test_51JtgfQKG6vc7r7YCU0qQNOkDaaHrEgeHgGKrJMNfuWwaKgXMLzPUA1f8ZlCNPonIROLOnzpUnJK1C1xFH3M3Mz8X00Q6O4GfUt&locale=en-US&mobile_app_id=com\.apple\.dt\.xctest\.tool&type=deferred_intent$
+https:\/\/api\.stripe\.com\/v1\/elements\/sessions\?customer_session_client_secret=cuss_secret_SkOvyBsMe0yjicl8QCDR0mw10cUOvByCIiQLugl7h5qEdil&deferred_intent%5Bamount%5D=5000&deferred_intent%5Bcapture_method%5D=automatic&deferred_intent%5Bcurrency%5D=eur&deferred_intent%5Bmode%5D=payment&deferred_intent%5Bsetup_future_usage%5D=off_session&key=pk_test_51JtgfQKG6vc7r7YCU0qQNOkDaaHrEgeHgGKrJMNfuWwaKgXMLzPUA1f8ZlCNPonIROLOnzpUnJK1C1xFH3M3Mz8X00Q6O4GfUt&locale=en-US&mobile_app_id=com\.apple\.dt\.xctest\.tool&mobile_session_id=.*&type=deferred_intent$
 200
 application/json
 Content-Type: application/json
 Access-Control-Allow-Origin: *
 x-stripe-priority-routing-enabled: true
-content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=axf0NSAAci5jzs_IFbPHJvXxNhB5VGvPEXpchvC5EU0wJHMt4dajdQgl6wDbyOUGJLr4sttk_MZNathi
+content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=sMt1O2ytEhPVZnb2DpzMeBNErzf_kW2Pt896cp_I_BQho_wA6apyOazfza0_orlJajbns4J-ZXlpZwhe
 x-wc: ABGHIJ
 access-control-allow-methods: GET, HEAD, PUT, PATCH, POST, DELETE
 Server: nginx
 access-control-expose-headers: Request-Id, Stripe-Manage-Version, Stripe-Should-Retry, X-Stripe-External-Auth-Required, X-Stripe-Privileged-Session-Required
 access-control-max-age: 300
 Cache-Control: no-cache, no-store
-Date: Thu, 24 Jul 2025 20:04:52 GMT
+Date: Fri, 25 Jul 2025 22:30:07 GMT
 stripe-version: 2020-08-27
 access-control-allow-credentials: true
-Content-Length: 23612
+Content-Length: 23595
 x-stripe-routing-context-priority-tier: api-testmode
 Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
 Vary: Origin
-request-id: req_V9c2VBJe8qaBfg
+request-id: req_B82y1MnGfYAKP4
 
 {
   "payment_method_preference" : {
@@ -136,10 +136,10 @@ request-id: req_V9c2VBJe8qaBfg
     "elements_disable_recurring_express_checkout_button_amazon_pay" : false
   },
   "merchant_logo_url" : null,
-  "session_id" : "elements_session_1DhGoVPWRzo",
+  "session_id" : "elements_session_1t1iFT2UQYK",
   "card_installments_enabled" : false,
   "account_id" : "acct_1JtgfQKG6vc7r7YC",
-  "config_id" : "14765fd3-ccbd-45cf-822a-50e60a4b2ac7",
+  "config_id" : "b10ead62-8785-4823-9a20-7cd35cb841e0",
   "merchant_currency" : "eur",
   "merchant_id" : "acct_1JtgfQKG6vc7r7YC",
   "sepa_debit_info" : {
@@ -170,15 +170,14 @@ request-id: req_V9c2VBJe8qaBfg
     "paypal_merchant_id" : "AGPH92J9HME62"
   },
   "experiments_data" : {
-    "arb_id" : "33a23c22-442c-4aad-a142-b53f64eb70f5",
+    "arb_id" : "66bf973c-b7ba-413e-834c-1e3270795b52",
     "experiment_metadata" : {
-      "seed" : "25163324b9a2d093df6dcec59afe17ef685473b3e7567c217f6fd4a58056924c",
+      "seed" : "d4443fb4c71ad4579ea72f0e4853252590f3045bab46173e9fe4fc30af0d4c1d",
       "semi_dominant_payment_methods" : [
 
       ],
       "lpm_holdback_t1_payment_methods" : [
-        "bancontact",
-        "ideal",
+        "sepa_debit",
         "sofort",
         "paypal"
       ],
@@ -630,7 +629,7 @@ request-id: req_V9c2VBJe8qaBfg
           },
           "branch_code" : ""
         },
-        "id" : "pm_1RoVNlKG6vc7r7YCyentMcmz",
+        "id" : "pm_1Rou7uKG6vc7r7YCl9bPgKr4",
         "billing_details" : {
           "email" : "email@email.com",
           "phone" : "555-555-5555",
@@ -646,10 +645,10 @@ request-id: req_V9c2VBJe8qaBfg
           }
         },
         "livemode" : false,
-        "created" : 1753387489,
+        "created" : 1753482606,
         "allow_redisplay" : "unspecified",
         "type" : "sepa_debit",
-        "customer" : "cus_SjzM9YLgRdH5K6"
+        "customer" : "cus_SkOv5SvUw9b1Df"
       }
     ],
     "payment_methods_with_link_details" : [
@@ -667,7 +666,7 @@ request-id: req_V9c2VBJe8qaBfg
             },
             "branch_code" : ""
           },
-          "id" : "pm_1RoVNlKG6vc7r7YCyentMcmz",
+          "id" : "pm_1Rou7uKG6vc7r7YCl9bPgKr4",
           "billing_details" : {
             "email" : "email@email.com",
             "phone" : "555-555-5555",
@@ -683,10 +682,10 @@ request-id: req_V9c2VBJe8qaBfg
             }
           },
           "livemode" : false,
-          "created" : 1753387489,
+          "created" : 1753482606,
           "allow_redisplay" : "unspecified",
           "type" : "sepa_debit",
-          "customer" : "cus_SjzM9YLgRdH5K6"
+          "customer" : "cus_SkOv5SvUw9b1Df"
         },
         "is_link_origin" : false,
         "link_payment_details" : null
@@ -695,8 +694,8 @@ request-id: req_V9c2VBJe8qaBfg
     "default_payment_method" : null,
     "customer_session" : {
       "object" : "customer_session",
-      "api_key_expiry" : 1753389292,
-      "id" : "cuss_1RoVNnKG6vc7r7YCWQ4XM85f",
+      "api_key_expiry" : 1753484407,
+      "id" : "cuss_1Rou7vKG6vc7r7YCHeiZ3JpH",
       "livemode" : false,
       "components" : {
         "customer_sheet" : {
@@ -730,8 +729,8 @@ request-id: req_V9c2VBJe8qaBfg
           "enabled" : false
         }
       },
-      "customer" : "cus_SjzM9YLgRdH5K6",
-      "api_key" : "ek_test_YWNjdF8xSnRnZlFLRzZ2YzdyN1lDLFd2dThxVG41VWlhckdrTGttck5sZVdwUVowbWZ0UEM_00UosbMrwz"
+      "customer" : "cus_SkOv5SvUw9b1Df",
+      "api_key" : "ek_test_YWNjdF8xSnRnZlFLRzZ2YzdyN1lDLFYyNmtOTFJCa0VLNm5vdDJ3TDJOWGkzclRrSXBablk_008v3rcxX8"
     }
   },
   "klarna_express_config" : {
