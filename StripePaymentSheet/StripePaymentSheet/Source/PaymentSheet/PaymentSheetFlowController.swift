@@ -334,11 +334,11 @@ extension PaymentSheet {
             }
 
             return .visible(
-                title: "Save my info for faster checkout with Link",
-                description: NSAttributedString(string: "Pay faster everywhere Link is accepted."),
+                title: .Localized.save_my_info_for_faster_checkout_with_link,
+                description: NSAttributedString(string: .Localized.pay_faster_everywhere_link_is_accepted),
                 termsAndConditions: NSAttributedString(
                     attributedString: STPStringUtils.applyLinksToString(
-                        template: "Your information will be saved to Link, see <terms>Terms</terms> and <privacy>Privacy Policy</privacy>.",
+                        template: .Localized.your_information_will_be_saved_to_link_see_terms,
                         links: [
                             "terms": URL(string: "https://link.com/terms")!,
                             "privacy": URL(string: "https://link.com/privacy")!,
