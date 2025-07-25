@@ -274,6 +274,8 @@ public class STPApplePayContext: NSObject, PKPaymentAuthorizationControllerDeleg
     }
     /// Tracks where the call to confirm the PaymentIntent or SetupIntent happened.
     @_spi(STP) public var confirmType: ConfirmType?
+
+    @_spi(STP) public var additionalClientAttributionMetadata: [String: String] = [:]
     // Internal state
     private var paymentState: PaymentState = .notStarted
     private var error: Swift.Error?
@@ -575,7 +577,7 @@ public class STPApplePayContext: NSObject, PKPaymentAuthorizationControllerDeleg
         }
 
         // 1. Create PaymentMethod
-        StripeAPI.PaymentMethod.create(apiClient: apiClient, payment: payment) { result in
+        StripeAPI.PaymentMethod.create(apiClient: apiClient, payment: payment, additionalClientAttributionMetadata: additionalClientAttributionMetadata) { result in
             guard let paymentMethod = try? result.get(), self.authorizationController != nil else {
                 if case .failure(let error) = result {
                     let errorMessage = "Failed on token creation"
