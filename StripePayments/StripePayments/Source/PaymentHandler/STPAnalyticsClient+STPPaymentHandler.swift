@@ -53,7 +53,7 @@ extension STPPaymentHandler {
         analyticsClient.log(analytic: analytic, apiClient: apiClient)
     }
 
-    func logConfirmPaymentIntentStarted(paymentIntentID: String?, paymentParams: STPPaymentIntentParams) {
+    func logConfirmPaymentIntentStarted(paymentIntentID: String?, paymentParams: STPPaymentIntentConfirmParams) {
         let analytic = Analytic(
             event: .paymentHandlerConfirmStarted,
             intentID: paymentIntentID,
@@ -67,7 +67,7 @@ extension STPPaymentHandler {
 
     // MARK: - Confirm completed
 
-    func logConfirmPaymentIntentCompleted(paymentIntentID: String?, paymentParams: STPPaymentIntentParams, status: STPPaymentHandlerActionStatus, error: Error?) {
+    func logConfirmPaymentIntentCompleted(paymentIntentID: String?, paymentParams: STPPaymentIntentConfirmParams, status: STPPaymentHandlerActionStatus, error: Error?) {
         let analytic = Analytic(
             event: .paymentHandlerConfirmFinished,
             intentID: paymentIntentID,

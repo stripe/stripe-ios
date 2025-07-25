@@ -60,7 +60,7 @@
             return;
         }
 
-        STPPaymentIntentParams *paymentIntentParams = [[STPPaymentIntentParams alloc] initWithClientSecret:clientSecret];
+        STPPaymentIntentConfirmParams *paymentIntentParams = [[STPPaymentIntentConfirmParams alloc] initWithClientSecret:clientSecret];
 
         STPPaymentMethodBillingDetails *billingDetails = [[STPPaymentMethodBillingDetails alloc] init];
         billingDetails.name = @"SEPA Test Customer";

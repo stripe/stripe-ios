@@ -67,7 +67,7 @@ class STPPaymentHandlerStubbedTests: STPNetworkStubbingTestCase {
             metadata: nil
         )
 
-        let paymentIntentParams = STPPaymentIntentParams(clientSecret: clientSecret)
+        let paymentIntentParams = STPPaymentIntentConfirmParams(clientSecret: clientSecret)
         paymentIntentParams.paymentMethodParams = paymentMethodParams
 
         // STPTestingDefaultPublishableKey

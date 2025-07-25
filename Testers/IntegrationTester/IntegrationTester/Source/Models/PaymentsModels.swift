@@ -30,7 +30,7 @@ class MySIModel: ObservableObject {
 
 class MyPIModel: ObservableObject {
   @Published var paymentStatus: STPPaymentHandlerActionStatus?
-  @Published var paymentIntentParams: STPPaymentIntentParams?
+  @Published var paymentIntentParams: STPPaymentIntentConfirmParams?
   @Published var lastPaymentError: NSError?
     var integrationMethod: IntegrationMethod = .card
 

@@ -75,7 +75,7 @@ extension BillieExampleViewController {
                 }
 
                 // 2. Confirm the payment and redirect the user to Billie
-                let paymentIntentParams = STPPaymentIntentParams(clientSecret: clientSecret)
+                let paymentIntentParams = STPPaymentIntentConfirmParams(clientSecret: clientSecret)
                 paymentIntentParams.paymentMethodParams = STPPaymentMethodParams(
                     billie: STPPaymentMethodBillieParams(),
                     billingDetails: nil,
