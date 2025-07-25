@@ -145,13 +145,12 @@ extension PaymentSheet {
 
     private static func signUpToLinkIfPossible(
         linkSignUpOptIn: Bool,
-        paymentMethodType: STPPaymentMethodType,
-        confirmParams: IntentConfirmParams,
+        paymentOption: PaymentOption,
         useMobileEndpoints: Bool,
         configuration: PaymentElementConfiguration,
         analyticsHelper: PaymentSheetAnalyticsHelper
     ) {
-        guard linkSignUpOptIn, paymentMethodType == .card else {
+        guard linkSignUpOptIn else {
             return
         }
 
@@ -162,7 +161,17 @@ extension PaymentSheet {
             return
         }
 
-        let billingDetails = confirmParams.paymentMethodParams.billingDetails
+        let billingDetails = {
+            switch paymentOption {
+            case .saved(let paymentMethod, _):
+                return paymentMethod.billingDetails
+            case .new(let confirmParams):
+                return confirmParams.paymentMethodParams.billingDetails
+            case .applePay, .link, .external:
+                return nil
+            }
+        }()
+
         let email = linkAccount?.email ?? billingDetails?.email
 
         guard let email else {
@@ -193,11 +202,13 @@ extension PaymentSheet {
 
                 LinkAccountContext.shared.account = linkAccount
 
-                linkAccount.createPaymentDetails(
-                    with: confirmParams.paymentMethodParams,
-                    isDefault: true
-                ) { paymentDetailsResult in
-                    analyticsHelper.logLinkUserPaymentDetailCreationCompleted(error: paymentDetailsResult.error)
+                if case let .new(confirmParams) = paymentOption, confirmParams.paymentMethodType == .stripe(.card) {
+                    linkAccount.createPaymentDetails(
+                        with: confirmParams.paymentMethodParams,
+                        isDefault: true
+                    ) { paymentDetailsResult in
+                        analyticsHelper.logLinkUserPaymentDetailCreationCompleted(error: paymentDetailsResult.error)
+                    }
                 }
             case .failure(let error):
                 analyticsHelper.logLinkUserSignupFailed(error: error)
@@ -223,6 +234,15 @@ extension PaymentSheet {
         let paymentHandlerCompletion: (STPPaymentHandlerActionStatus, NSError?) -> Void = { status, error in
             completion(makePaymentSheetResult(for: status, error: error), nil)
         }
+
+        // TODO: Only with WalletButtonsView
+        signUpToLinkIfPossible(
+            linkSignUpOptIn: linkSignUpOptIn,
+            paymentOption: paymentOption,
+            useMobileEndpoints: elementsSession.linkSettings?.useAttestationEndpoints ?? false,
+            configuration: configuration,
+            analyticsHelper: analyticsHelper
+        )
 
         switch paymentOption {
         // MARK: - Apple Pay
@@ -254,15 +274,6 @@ extension PaymentSheet {
             confirmParams.setAllowRedisplay(
                 mobilePaymentElementFeatures: elementsSession.customerSessionMobilePaymentElementFeatures,
                 isSettingUp: intent.isSetupFutureUsageSet(for: paymentMethodType)
-            )
-
-            signUpToLinkIfPossible(
-                linkSignUpOptIn: linkSignUpOptIn,
-                paymentMethodType: paymentMethodType,
-                confirmParams: confirmParams,
-                useMobileEndpoints: elementsSession.linkSettings?.useAttestationEndpoints ?? false,
-                configuration: configuration,
-                analyticsHelper: analyticsHelper
             )
 
             switch intent {
