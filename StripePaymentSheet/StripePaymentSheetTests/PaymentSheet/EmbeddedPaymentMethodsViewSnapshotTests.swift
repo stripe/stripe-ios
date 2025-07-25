@@ -1414,7 +1414,11 @@ class EmbeddedPaymentMethodsViewSnapshotTests: STPSnapshotTestCase {
 }
 
 extension PaymentSheetLinkAccount {
-    static func _testValue(email: String, isRegistered: Bool = true) -> PaymentSheetLinkAccount {
+    static func _testValue(
+        email: String,
+        isRegistered: Bool = true,
+        displayablePaymentDetails: ConsumerSession.DisplayablePaymentDetails? = nil
+    ) -> PaymentSheetLinkAccount {
         var session: ConsumerSession?
         if isRegistered {
             session = ConsumerSession(
@@ -1433,6 +1437,7 @@ extension PaymentSheetLinkAccount {
             email: email,
             session: session,
             publishableKey: "pk_123",
+            displayablePaymentDetails: displayablePaymentDetails,
             useMobileEndpoints: true
         )
     }

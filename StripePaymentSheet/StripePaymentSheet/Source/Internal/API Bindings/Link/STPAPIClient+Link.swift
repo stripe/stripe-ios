@@ -19,6 +19,7 @@ extension STPAPIClient {
         for email: String?,
         emailSource: EmailSource?,
         sessionID: String,
+        customerID: String?,
         cookieStore: LinkCookieStore,
         useMobileEndpoints: Bool,
         doNotLogConsumerFunnelEvent: Bool,
@@ -32,6 +33,7 @@ extension STPAPIClient {
                 "request_surface": "ios_payment_element",
                 "session_id": sessionID,
             ]
+            parameters["customer_id"] = customerID
             if doNotLogConsumerFunnelEvent {
                 parameters["do_not_log_consumer_funnel_event"] = true
             }

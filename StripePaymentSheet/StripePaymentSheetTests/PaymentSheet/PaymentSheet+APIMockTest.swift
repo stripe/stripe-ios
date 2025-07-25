@@ -86,6 +86,7 @@ final class PaymentSheetAPIMockTest: APIStubbedTestCase {
                         supportedPaymentDetailsTypes: [.card]
                     ),
                     publishableKey: "pk_xxx_for_link_account_xxx",
+                    displayablePaymentDetails: nil,
                     useMobileEndpoints: false
                 ),
                 paymentDetails: .init(
@@ -191,6 +192,7 @@ final class PaymentSheetAPIMockTest: APIStubbedTestCase {
                             supportedPaymentDetailsTypes: [.card]
                         ),
                         publishableKey: MockParams.publicKey,
+                        displayablePaymentDetails: nil,
                         useMobileEndpoints: false),
                     paymentDetails: .init(
                         stripeID: "pd1",
@@ -258,6 +260,7 @@ final class PaymentSheetAPIMockTest: APIStubbedTestCase {
                     email: "email@email.com",
                     session: nil,
                     publishableKey: "pk_123",
+                    displayablePaymentDetails: nil,
                     useMobileEndpoints: false
                 ),
                 phoneNumber: PhoneNumber(number: "5555555555", countryCode: "US")!,
@@ -516,7 +519,8 @@ private extension PaymentSheetAPIMockTest {
 
     func bodyParams(from request: URLRequest, line: UInt) -> [String: String] {
         guard let httpBody = request.httpBodyOrBodyStream,
-              let query = String(decoding: httpBody, as: UTF8.self).addingPercentEncoding(withAllowedCharacters: .urlPathAllowed),
+              let bodyString = String(data: httpBody, encoding: .utf8),
+              let query = bodyString.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed),
               let components = URLComponents(string: "http://someurl.com?\(query)") else {
             XCTFail("Request body empty", line: line)
             return [:]

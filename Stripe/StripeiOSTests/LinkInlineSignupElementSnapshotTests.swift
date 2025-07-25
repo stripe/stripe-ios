@@ -146,6 +146,7 @@ extension LinkInlineSignupElementSnapshotTests {
                         email: "user@example.com",
                         session: nil,
                         publishableKey: nil,
+                        displayablePaymentDetails: nil,
                         useMobileEndpoints: false
                     )
                 )
@@ -176,7 +177,13 @@ extension LinkInlineSignupElementSnapshotTests {
         var linkAccount: PaymentSheetLinkAccount?
 
         if let linkAccountEmailAddress {
-            linkAccount = PaymentSheetLinkAccount(email: linkAccountEmailAddress, session: nil, publishableKey: nil, useMobileEndpoints: false)
+            linkAccount = PaymentSheetLinkAccount(
+                email: linkAccountEmailAddress,
+                session: nil,
+                publishableKey: nil,
+                displayablePaymentDetails: nil,
+                useMobileEndpoints: false
+            )
         }
 
         let viewModel = LinkInlineSignupViewModel(
