@@ -28,6 +28,7 @@ extension StripeAPI {
             return PaymentsSDKVariant.paymentUserAgent
         }()
 
+        /// Contains metadata with identifiers for the session and information about the integration
         @_spi(STP) public var clientAttributionMetadata: [String: String] = {
             var clientAttributionMetadata = [
                 "merchant_integration_source": "elements",
