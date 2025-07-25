@@ -24,7 +24,7 @@ public class STPSource: NSObject, STPAPIResponseDecodable, STPSourceProtocol {
     /// using a publishable key.
     @objc public private(set) var clientSecret: String?
     /// When the source was created.
-    @objc public private(set) var created: Date?
+    @objc public private(set) var created: Date = Date(timeIntervalSince1970: TimeInterval(0))
     /// The currency associated with the source.
     @objc public private(set) var currency: String?
     /// The authentication flow of the source.
@@ -284,7 +284,7 @@ public class STPSource: NSObject, STPAPIResponseDecodable, STPSourceProtocol {
         source.stripeID = stripeId ?? ""
         source.amount = dict.stp_number(forKey: "amount")
         source.clientSecret = dict.stp_string(forKey: "client_secret")
-        source.created = dict.stp_date(forKey: "created")
+        source.created = dict.stp_date(forKey: "created") ?? Date(timeIntervalSince1970: TimeInterval(0))
         source.currency = dict.stp_string(forKey: "currency")
         let rawFlow = dict.stp_string(forKey: "flow")
         source.flow = self.flow(from: rawFlow ?? "")

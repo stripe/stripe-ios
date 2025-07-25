@@ -1567,8 +1567,7 @@ extension STPAPIClient {
         group.notify(queue: DispatchQueue.main) {
             // Once all parallel requests are finished, sort the array w/ newest first
             shared_allPaymentMethods.sort { a, b in
-                guard let aCreated = a.created, let bCreated = b.created else { return true }
-                return aCreated > bCreated
+                return a.created > b.created
             }
             completion(shared_allPaymentMethods, shared_lastError)
         }
