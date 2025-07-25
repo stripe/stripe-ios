@@ -258,10 +258,12 @@ import UIKit
             "Overwriting existing client_attribution_metadata"
         )
         var newParams = params
-        let clientAttributionMetadata = ["client_session_id": AnalyticsHelper.shared.sessionID,
-                                         "merchant_integration_source": "elements",
+        var clientAttributionMetadata = ["merchant_integration_source": "elements",
                                          "merchant_integration_subtype": "mobile",
                                          "merchant_integration_version": "stripe-ios/\(StripeAPIConfiguration.STPSDKVersion)", ]
+        if let clientSessionId = AnalyticsHelper.shared.sessionID {
+            clientAttributionMetadata["client_session_id"] = clientSessionId
+        }
         newParams["client_attribution_metadata"] = clientAttributionMetadata
         return newParams
     }

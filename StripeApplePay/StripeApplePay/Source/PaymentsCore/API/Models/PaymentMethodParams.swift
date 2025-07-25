@@ -28,12 +28,17 @@ extension StripeAPI {
             return PaymentsSDKVariant.paymentUserAgent
         }()
 
-        @_spi(STP) public var clientAttributionMetadata: [String: String] = [
-            "client_session_id": AnalyticsHelper.shared.sessionID ?? "",
-            "merchant_integration_source": "elements",
-            "merchant_integration_subtype": "mobile",
-            "merchant_integration_version": "stripe-ios/\(StripeAPIConfiguration.STPSDKVersion)",
-        ]
+        @_spi(STP) public var clientAttributionMetadata: [String: String] = {
+            var clientAttributionMetadata = [
+                "merchant_integration_source": "elements",
+                "merchant_integration_subtype": "mobile",
+                "merchant_integration_version": "stripe-ios/\(StripeAPIConfiguration.STPSDKVersion)",
+            ]
+            if let clientSessionId = AnalyticsHelper.shared.sessionID {
+                clientAttributionMetadata["client_session_id"] = clientSessionId
+            }
+            return clientAttributionMetadata
+        }()
 
         /// :nodoc:
         @_spi(STP) public struct Card: UnknownFieldsEncodable {
