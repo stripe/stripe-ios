@@ -1,8 +1,12 @@
 ## X.Y.Z 2025-xx-yy
+
+* [Added] Postal code validation for Canada and UK addresses
+
 ### PaymentSheet
 * [Added] Added `Appearance.EmbeddedPaymentElement.Row.subtitleFont` to customize the font of EmbeddedPaymentElement payment method row subtitles.
 
 ## 24.17.0 2025-07-21
+
 ### PaymentSheet
 * [Fixed] EmbeddedPaymentElement now errors when `configuration.rowSelectionBehavior` is `.immediateAction` and `configuration.embeddedViewDisplaysMandateText` is `true` to ensure integrations display legal mandate text to the customer.
 * [Deprecated] Carthage is no longer officially supported. We will continue to publish binaries to the GitHub releases page for Carthage, but we will no longer test using the Carthage CLI tool.
@@ -20,6 +24,7 @@
 * [Removed] Removed nn-NO (Norwegian Nynorsk) localization. Norwegian users can continue using nb (Norwegian Bokmål) localization.
 
 ## 24.16.2 2025-07-07
+
 ### PaymentSheet
 * [Added] Address autocomplete functionality when collecting full billing details in payment method forms.
 * [Fixed] Form error text not respecting Appearance API font settings

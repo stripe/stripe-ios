@@ -423,16 +423,13 @@ NZ
         app.buttons["Close"].tap()
         app.buttons["Address"].tap()
         app.textFields["Country or region"].waitForExistenceAndTap()
-        app.pickerWheels.firstMatch.adjust(toPickerWheelValue: "🇨🇦 Canada")
-        app.toolbars.buttons["Done"].tap()
-        app.textFields["Province"].waitForExistenceAndTap()
-        app.pickerWheels.firstMatch.adjust(toPickerWheelValue: "Ontario")
+        app.pickerWheels.firstMatch.adjust(toPickerWheelValue: "🇺🇾 Uruguay")
         app.toolbars.buttons["Done"].tap()
         app.buttons["Save address"].tap()
 
         // ...should update PaymentSheet.FlowController
         app.buttons["Payment method"].waitForExistenceAndTap()
-        XCTAssertEqual(app.textFields["Country or region"].value as? String, "Canada")
+        XCTAssertEqual(app.textFields["Country or region"].value as? String, "Uruguay")
 
         // If you change the billing address, however...
         let updatedBillingAddressPostalCode = "12345"
@@ -456,7 +453,7 @@ NZ
 
         // ...should not affect your billing address...
         app.buttons["Payment method"].waitForExistenceAndTap()
-        XCTAssertEqual(app.textFields["Country or region"].value as? String, "Canada")
+        XCTAssertEqual(app.textFields["Country or region"].value as? String, "Uruguay")
         XCTAssertEqual(app.textFields["Postal code"].value as? String, updatedBillingAddressPostalCode)
 
         // ...until 'Billing address is same as shipping' checkbox is selected again
