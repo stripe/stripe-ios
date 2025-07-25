@@ -220,14 +220,6 @@ extension PaymentSheet {
         /// Whether your customer has chosen to sign up to Link in your UI.
         public var linkSignUpOptIn: Bool = false
 
-//        /// The recognition status of the current user's Link account.
-//        public enum LinkAccountRecognitionStatus {
-//            /// The current user has been recognized as a Link consumer.
-//            case recognized
-//            /// The current user has not been recognized as a Link consumer.
-//            case notRecognized
-//        }
-
         /// The state of the Link signup opt-in. Use this to present the appropriate UI to the user.
         public enum LinkSignupOptInState {
             /// The current user has been recognized as a Link consumer. No signup opt-in UI should be shown.
@@ -328,25 +320,28 @@ extension PaymentSheet {
         }
 
         private func updateLinkAccountRecognitionStatus(for linkAccount: PaymentSheetLinkAccount?) {
-            let hideSignupOptIn = linkAccount?.isRegistered == true
-            linkSignupOptInState = hideSignupOptIn ? .hidden : .visible(
+            linkSignUpOptIn = elementsSession.linkSettings?.newUserSignupInitialValue ?? false
+            linkSignupOptInState = makeVisibleLinkSignupOptInState(for: linkAccount)
+        }
+
+        private func makeVisibleLinkSignupOptInState(for linkAccount: PaymentSheetLinkAccount?) -> LinkSignupOptInState {
+            guard linkAccount?.isRegistered != true && elementsSession.linkSettings?.enableNewUserSignupAPI == true else {
+                return .hidden
+            }
+
+            return .visible(
                 title: "Save my info for faster checkout with Link",
                 description: NSAttributedString(string: "Pay faster everywhere Link is accepted."),
                 termsAndConditions: NSAttributedString(
                     attributedString: STPStringUtils.applyLinksToString(
                         template: "Your information will be saved to Link, see <terms>Terms</terms> and <privacy>Privacy Policy</privacy>.",
                         links: [
-                            "terms": URL(string: "https://link.co/terms")!,
-                            "privacy": URL(string: "https://link.co/privacy")!,
+                            "terms": URL(string: "https://link.com/terms")!,
+                            "privacy": URL(string: "https://link.com/privacy")!,
                         ]
                     )
                 )
             )
-
-            if !hideSignupOptIn {
-                // Default to opt-in for US users
-                linkSignUpOptIn = elementsSession.countryCode == "US"
-            }
         }
 
         // MARK: - Public methods
