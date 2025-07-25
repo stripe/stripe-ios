@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct ShopPayTestingOptions {
+    var enabled: Bool = true
     var billingAddressRequired: Bool = false
     var emailRequired: Bool = false
     var shippingAddressRequired: Bool = true
@@ -26,6 +27,7 @@ struct ExampleWalletButtonsContainerView: View {
     @State private var showingAppearancePlayground = false
 
     // Shop Pay testing options
+    @State private var enableShopPay: Bool = true
     @State private var billingAddressRequired: Bool = false
     @State private var emailRequired: Bool = false
     @State private var shippingAddressRequired: Bool = true
@@ -51,6 +53,8 @@ struct ExampleWalletButtonsContainerView: View {
                             PaymentSheet.LinkFeatureFlags.enableLinkInlineVerification = newValue
                         }
 
+                    Toggle("Enable Shop Pay", isOn: $enableShopPay)
+
                     Toggle("Use SPT test backend", isOn: $useSPTTestBackend)
 
                     Button("Customize Appearance") {
@@ -58,25 +62,27 @@ struct ExampleWalletButtonsContainerView: View {
                     }
                 }
 
-                Section("Shop Pay Testing Options") {
-                    Group {
-                        Toggle("Billing Address Required", isOn: $billingAddressRequired)
-                        Toggle("Email Required", isOn: $emailRequired)
-                        Toggle("Shipping Address Required", isOn: $shippingAddressRequired)
+                if enableShopPay {
+                    Section("Shop Pay Testing Options") {
+                        Group {
+                            Toggle("Billing Address Required", isOn: $billingAddressRequired)
+                            Toggle("Email Required", isOn: $emailRequired)
+                            Toggle("Shipping Address Required", isOn: $shippingAddressRequired)
 
-                        TextField("Allowed Shipping Countries (comma separated)", text: $allowedShippingCountries)
-                            .textInputAutocapitalization(.never)
-                    }
+                            TextField("Allowed Shipping Countries (comma separated)", text: $allowedShippingCountries)
+                                .textInputAutocapitalization(.never)
+                        }
 
-                    Group {
-                        Toggle("Reject Shipping Address Change", isOn: $rejectShippingAddressChange)
-                        Toggle("Reject Shipping Rate Change", isOn: $rejectShippingRateChange)
-                        Toggle("Simulate Payment Failed", isOn: $simulatePaymentFailed)
-                    }
-                }.sheet(isPresented: $showingAppearancePlayground) {
-                    AppearancePlaygroundView(appearance: appearance) { updatedAppearance in
-                        appearance = updatedAppearance
-                        showingAppearancePlayground = false
+                        Group {
+                            Toggle("Reject Shipping Address Change", isOn: $rejectShippingAddressChange)
+                            Toggle("Reject Shipping Rate Change", isOn: $rejectShippingRateChange)
+                            Toggle("Simulate Payment Failed", isOn: $simulatePaymentFailed)
+                        }
+                    }.sheet(isPresented: $showingAppearancePlayground) {
+                        AppearancePlaygroundView(appearance: appearance) { updatedAppearance in
+                            appearance = updatedAppearance
+                            showingAppearancePlayground = false
+                        }
                     }
                 }
 
@@ -88,6 +94,7 @@ struct ExampleWalletButtonsContainerView: View {
                             useSPTTestBackend: useSPTTestBackend,
                             appearance: appearance,
                             shopPayTestingOptions: ShopPayTestingOptions(
+                                enabled: enableShopPay,
                                 billingAddressRequired: billingAddressRequired,
                                 emailRequired: emailRequired,
                                 shippingAddressRequired: shippingAddressRequired,
@@ -341,9 +348,24 @@ class ExampleWalletButtonsModel: ObservableObject {
                 configuration.billingDetailsCollectionConfiguration.email = .always
                 configuration.billingDetailsCollectionConfiguration.phone = .always
 
+                var paymentMethodTypes = ["card"]
+                if self?.shopPayTestingOptions.enabled == true {
+                    paymentMethodTypes.append("shop_pay")
+                }
+
                 self?.addDebugLog("Creating PaymentSheet FlowController with original backend...")
                 PaymentSheet.FlowController.create(
-                    intentConfiguration: .init(sharedPaymentTokenSessionWithMode: .payment(amount: 1000, currency: "USD", setupFutureUsage: nil, captureMethod: .automatic, paymentMethodOptions: nil), sellerDetails: .init(networkId: "stripe", externalId: "acct_1HvTI7Lu5o3P18Zp"), paymentMethodTypes: ["card", "shop_pay"], preparePaymentMethodHandler: { [weak self] paymentMethod, address in
+                    intentConfiguration: .init(
+                        sharedPaymentTokenSessionWithMode: .payment(
+                            amount: 1000,
+                            currency: "USD",
+                            setupFutureUsage: nil,
+                            captureMethod: .automatic,
+                            paymentMethodOptions: nil
+                        ),
+                        sellerDetails: .init(networkId: "stripe", externalId: "acct_1HvTI7Lu5o3P18Zp"),
+                        paymentMethodTypes: paymentMethodTypes,
+                        preparePaymentMethodHandler: { [weak self] paymentMethod, address in
                         self?.addDebugLog("PaymentMethod prepared: \(paymentMethod.stripeId)")
                         self?.addDebugLog("Address: \(address)")
                         self?.onCompletion(result: .completed)
