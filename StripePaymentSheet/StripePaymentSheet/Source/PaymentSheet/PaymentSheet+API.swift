@@ -42,7 +42,7 @@ extension PaymentSheet {
         paymentHandler: STPPaymentHandler,
         integrationShape: IntegrationShape = .complete,
         paymentMethodID: String? = nil,
-        linkSignUpOptIn: Bool = false,
+        attemptLinkSignup: Bool = false,
         analyticsHelper: PaymentSheetAnalyticsHelper,
         completion: @escaping (PaymentSheetResult, STPAnalyticsClient.DeferredIntentConfirmationType?) -> Void
     ) {
@@ -109,7 +109,7 @@ extension PaymentSheet {
             presentingViewController.presentAsBottomSheet(bottomSheetVC, appearance: configuration.appearance)
         } else {
             // MARK: - No local actions
-            confirmAfterHandlingLocalActions(configuration: configuration, authenticationContext: authenticationContext, intent: intent, elementsSession: elementsSession, paymentOption: paymentOption, intentConfirmParamsForDeferredIntent: nil, paymentHandler: paymentHandler, linkSignUpOptIn: linkSignUpOptIn, analyticsHelper: analyticsHelper, completion: completion)
+            confirmAfterHandlingLocalActions(configuration: configuration, authenticationContext: authenticationContext, intent: intent, elementsSession: elementsSession, paymentOption: paymentOption, intentConfirmParamsForDeferredIntent: nil, paymentHandler: paymentHandler, isFlowController: integrationShape == .flowController, attemptLinkSignup: attemptLinkSignup, analyticsHelper: analyticsHelper, completion: completion)
         }
     }
 
@@ -144,16 +144,11 @@ extension PaymentSheet {
     }
 
     private static func signUpToLinkIfPossible(
-        linkSignUpOptIn: Bool,
         paymentOption: PaymentOption,
         useMobileEndpoints: Bool,
         configuration: PaymentElementConfiguration,
         analyticsHelper: PaymentSheetAnalyticsHelper
     ) {
-        guard linkSignUpOptIn else {
-            return
-        }
-
         let linkAccount = LinkAccountContext.shared.account
 
         guard linkAccount?.isRegistered != true else {
@@ -226,7 +221,7 @@ extension PaymentSheet {
         paymentHandler: STPPaymentHandler,
         isFlowController: Bool = false,
         paymentMethodID: String? = nil,
-        linkSignUpOptIn: Bool = false,
+        attemptLinkSignup: Bool = false,
         analyticsHelper: PaymentSheetAnalyticsHelper,
         completion: @escaping (PaymentSheetResult, STPAnalyticsClient.DeferredIntentConfirmationType?) -> Void
     ) {
@@ -235,14 +230,14 @@ extension PaymentSheet {
             completion(makePaymentSheetResult(for: status, error: error), nil)
         }
 
-        // TODO: Only with WalletButtonsView
-        signUpToLinkIfPossible(
-            linkSignUpOptIn: linkSignUpOptIn,
-            paymentOption: paymentOption,
-            useMobileEndpoints: elementsSession.linkSettings?.useAttestationEndpoints ?? false,
-            configuration: configuration,
-            analyticsHelper: analyticsHelper
-        )
+        if attemptLinkSignup {
+            signUpToLinkIfPossible(
+                paymentOption: paymentOption,
+                useMobileEndpoints: elementsSession.linkSettings?.useAttestationEndpoints ?? false,
+                configuration: configuration,
+                analyticsHelper: analyticsHelper
+            )
+        }
 
         switch paymentOption {
         // MARK: - Apple Pay

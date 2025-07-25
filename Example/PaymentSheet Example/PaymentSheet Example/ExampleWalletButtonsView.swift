@@ -182,7 +182,7 @@ struct WalletButtonsFlowControllerView: View {
         }
 
         if case let .visible(title, description, _) = flowController.linkSignupOptInState {
-            Toggle(isOn: $flowController.linkSignUpOptIn) {
+            Toggle(isOn: $flowController.linkSignUpOptedIn) {
                 VStack(alignment: .leading) {
                     Text(title)
                         .foregroundStyle(Color.primary)

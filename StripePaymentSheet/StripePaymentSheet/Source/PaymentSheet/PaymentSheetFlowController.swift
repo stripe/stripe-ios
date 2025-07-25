@@ -218,7 +218,7 @@ extension PaymentSheet {
         @Published @_spi(STP) public private(set) var linkSignupOptInState: LinkSignupOptInState = .hidden
 
         /// Whether your customer has chosen to sign up to Link in your UI.
-        @_spi(STP) public var linkSignUpOptIn: Bool = false
+        @_spi(STP) public var linkSignUpOptedIn: Bool = false
 
         /// The state of the Link signup opt-in. Use this to present the appropriate UI to the user.
         @_spi(STP) public enum LinkSignupOptInState {
@@ -246,6 +246,15 @@ extension PaymentSheet {
             didSet {
                 // Update payment method options
                 self.updateForWalletButtonsView()
+            }
+        }
+
+        private var attemptLinkSignupOnConfirmation: Bool {
+            switch linkSignupOptInState {
+            case .hidden:
+                return false
+            case .visible:
+                return linkSignUpOptedIn
             }
         }
 
@@ -320,7 +329,7 @@ extension PaymentSheet {
         }
 
         private func updateLinkAccountRecognitionStatus(for linkAccount: PaymentSheetLinkAccount?) {
-            linkSignUpOptIn = elementsSession.linkSettings?.newUserSignupInitialValue ?? false
+            linkSignUpOptedIn = elementsSession.linkSettings?.newUserSignupInitialValue ?? false
             linkSignupOptInState = makeVisibleLinkSignupOptInState(for: linkAccount)
         }
 
@@ -331,6 +340,10 @@ extension PaymentSheet {
 
             let hasExistingLinkPaymentMethod = elementsSession.customer?.paymentMethods.contains { paymentMethod in
                 paymentMethod.isLinkPaymentMethod || paymentMethod.isLinkPassthroughMode
+            } ?? false
+
+            guard !hasExistingLinkPaymentMethod else {
+                return .hidden
             }
 
             return .visible(
@@ -601,7 +614,7 @@ extension PaymentSheet {
                     paymentOption: paymentOption,
                     paymentHandler: paymentHandler,
                     integrationShape: .flowController,
-                    linkSignUpOptIn: linkSignUpOptIn,
+                    attemptLinkSignup: attemptLinkSignupOnConfirmation,
                     analyticsHelper: analyticsHelper
                 ) { [analyticsHelper, configuration] result, deferredIntentConfirmationType in
                     analyticsHelper.logPayment(
