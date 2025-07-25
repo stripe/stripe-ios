@@ -3,31 +3,31 @@ https:\/\/api\.stripe\.com\/v1\/payment_methods$
 200
 application/json
 access-control-allow-methods: GET, HEAD, PUT, PATCH, POST, DELETE
-content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=rWubzevkqgaKQ0_xKjFLkHE67EuoRSxqtTbdsj2InIXCbJ3OP2ba22_C6ysvZgjLRZ84kpbyX3SsTIGB
+content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=ZpJ4f5xZgLptP_zl53rkOYJWnlvWWuPSzv67k49vyJeVoWO9neEXEuht_qaxHkNtLdhpWv3l5zKaveuT
 Server: nginx
 Cache-Control: no-cache, no-store
-x-wc: ABGHIJ
+x-wc: ABGHI
 Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
 Access-Control-Allow-Origin: *
 stripe-should-retry: false
 x-stripe-priority-routing-enabled: true
 x-stripe-routing-context-priority-tier: api-testmode
-request-id: req_LsCBl96VN3ox5D
+request-id: req_BnAAQBvdVfgnxm
 Content-Length: 482
 Vary: Origin
-Date: Thu, 24 Jul 2025 20:02:11 GMT
-original-request: req_LsCBl96VN3ox5D
+Date: Tue, 03 Jun 2025 15:08:21 GMT
+original-request: req_BnAAQBvdVfgnxm
 stripe-version: 2020-08-27
-idempotency-key: d27e7e7a-3f42-4467-b0ba-7d219c2618be
+idempotency-key: 84f0852a-decd-495d-8f2c-58dc1144246b
 access-control-expose-headers: Request-Id, Stripe-Manage-Version, Stripe-Should-Retry, X-Stripe-External-Auth-Required, X-Stripe-Privileged-Session-Required
 access-control-max-age: 300
 access-control-allow-credentials: true
 Content-Type: application/json
-X-Stripe-Mock-Request: allow_redisplay=unspecified&billing_details\[name]=Jane%20Doe&client_attribution_metadata\[client_session_id]=.*&client_attribution_metadata\[merchant_integration_source]=elements&client_attribution_metadata\[merchant_integration_subtype]=mobile&client_attribution_metadata\[merchant_integration_version]=.*&guid=.*&metadata\[test_key]=test_value&muid=.*&payment_user_agent=.*&sid=.*&type=bancontact
+X-Stripe-Mock-Request: allow_redisplay=unspecified&billing_details\[name]=Jane%20Doe&guid=.*&metadata\[test_key]=test_value&muid=.*&payment_user_agent=.*&sid=.*&type=bancontact
 
 {
   "object" : "payment_method",
-  "id" : "pm_1RoVLDFY0qyl6XeWYQLaT5ot",
+  "id" : "pm_1RVwRtFY0qyl6XeWVvjQXCqj",
   "billing_details" : {
     "email" : null,
     "phone" : null,
@@ -43,7 +43,7 @@ X-Stripe-Mock-Request: allow_redisplay=unspecified&billing_details\[name]=Jane%2
     }
   },
   "livemode" : false,
-  "created" : 1753387331,
+  "created" : 1748963301,
   "allow_redisplay" : "unspecified",
   "type" : "bancontact",
   "customer" : null,

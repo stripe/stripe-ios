@@ -3,31 +3,31 @@ https:\/\/api\.stripe\.com\/v1\/payment_methods$
 200
 application/json
 access-control-allow-methods: GET, HEAD, PUT, PATCH, POST, DELETE
-content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=H-l4cbvGtfxV745-ISMv9L-HrxXJVVDac3adFiluG8v69x12WWVQl8U9uGUUoLqxJkiTsBl4LGv59PYN
+content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=hNk3_CiK3pZogTqehruLl6NmtdsmpfsS_y9VA_SpXsBFKPFJkjnlkotDHA6qF1cFybfb0l8DDFvt3NtC
 Server: nginx
 Cache-Control: no-cache, no-store
-x-wc: ABGHIJ
+x-wc: ABGHI
 Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
 Access-Control-Allow-Origin: *
 stripe-should-retry: false
 x-stripe-priority-routing-enabled: true
 x-stripe-routing-context-priority-tier: api-testmode
-request-id: req_H305R1LJYsIHXc
+request-id: req_xxqlVwO9yYK4JA
 Content-Length: 515
 Vary: Origin
-Date: Thu, 24 Jul 2025 21:05:10 GMT
-original-request: req_H305R1LJYsIHXc
+Date: Tue, 03 Jun 2025 20:59:53 GMT
+original-request: req_xxqlVwO9yYK4JA
 stripe-version: 2020-08-27
-idempotency-key: a1fd6b4e-5362-4d78-8d3e-f09b539e28f2
+idempotency-key: 9c3ddc3b-471c-4a16-a023-30e2d32fecb9
 access-control-expose-headers: Request-Id, Stripe-Manage-Version, Stripe-Should-Retry, X-Stripe-External-Auth-Required, X-Stripe-Privileged-Session-Required
 access-control-max-age: 300
 access-control-allow-credentials: true
 Content-Type: application/json
-X-Stripe-Mock-Request: allow_redisplay=unspecified&client_attribution_metadata\[client_session_id]=.*&client_attribution_metadata\[merchant_integration_source]=elements&client_attribution_metadata\[merchant_integration_subtype]=mobile&client_attribution_metadata\[merchant_integration_version]=.*&guid=.*&muid=.*&payment_user_agent=.*&sid=.*&type=cashapp
+X-Stripe-Mock-Request: allow_redisplay=unspecified&guid=.*&muid=.*&payment_user_agent=.*&sid=.*&type=cashapp
 
 {
   "object" : "payment_method",
-  "id" : "pm_1RoWKAFY0qyl6XeWO8aAWBjR",
+  "id" : "pm_1RW1w5FY0qyl6XeWGTug0zow",
   "billing_details" : {
     "email" : null,
     "phone" : null,
@@ -43,7 +43,7 @@ X-Stripe-Mock-Request: allow_redisplay=unspecified&client_attribution_metadata\[
     }
   },
   "livemode" : false,
-  "created" : 1753391110,
+  "created" : 1748984393,
   "allow_redisplay" : "unspecified",
   "type" : "cashapp",
   "customer" : null,
