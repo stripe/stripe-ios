@@ -28,6 +28,13 @@ extension StripeAPI {
             return PaymentsSDKVariant.paymentUserAgent
         }()
 
+        @_spi(STP) public var clientAttributionMetadata: [String: String] = [
+            "client_session_id": AnalyticsHelper.shared.sessionID ?? "",
+            "merchant_integration_source": "elements",
+            "merchant_integration_subtype": "mobile",
+            "merchant_integration_version": "stripe-ios/\(StripeAPIConfiguration.STPSDKVersion)",
+        ]
+
         /// :nodoc:
         @_spi(STP) public struct Card: UnknownFieldsEncodable {
             /// The card number, as a string without any separators. Ex. "4242424242424242"
