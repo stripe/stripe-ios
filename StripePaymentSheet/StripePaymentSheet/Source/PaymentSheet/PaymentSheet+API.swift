@@ -42,6 +42,7 @@ extension PaymentSheet {
         paymentHandler: STPPaymentHandler,
         integrationShape: IntegrationShape = .complete,
         paymentMethodID: String? = nil,
+        attemptLinkSignup: Bool = false,
         analyticsHelper: PaymentSheetAnalyticsHelper,
         completion: @escaping (PaymentSheetResult, STPAnalyticsClient.DeferredIntentConfirmationType?) -> Void
     ) {
@@ -108,7 +109,7 @@ extension PaymentSheet {
             presentingViewController.presentAsBottomSheet(bottomSheetVC, appearance: configuration.appearance)
         } else {
             // MARK: - No local actions
-            confirmAfterHandlingLocalActions(configuration: configuration, authenticationContext: authenticationContext, intent: intent, elementsSession: elementsSession, paymentOption: paymentOption, intentConfirmParamsForDeferredIntent: nil, paymentHandler: paymentHandler, analyticsHelper: analyticsHelper, completion: completion)
+            confirmAfterHandlingLocalActions(configuration: configuration, authenticationContext: authenticationContext, intent: intent, elementsSession: elementsSession, paymentOption: paymentOption, intentConfirmParamsForDeferredIntent: nil, paymentHandler: paymentHandler, isFlowController: integrationShape == .flowController, attemptLinkSignup: attemptLinkSignup, analyticsHelper: analyticsHelper, completion: completion)
         }
     }
 
@@ -142,6 +143,74 @@ extension PaymentSheet {
         }
     }
 
+    private static func signUpToLinkIfPossible(
+        paymentOption: PaymentOption,
+        useMobileEndpoints: Bool,
+        configuration: PaymentElementConfiguration,
+        analyticsHelper: PaymentSheetAnalyticsHelper
+    ) {
+        let linkAccount = LinkAccountContext.shared.account
+
+        guard linkAccount?.isRegistered != true else {
+            // The user already has a Link account
+            return
+        }
+
+        let billingDetails = {
+            switch paymentOption {
+            case .saved(let paymentMethod, _):
+                return paymentMethod.billingDetails
+            case .new(let confirmParams):
+                return confirmParams.paymentMethodParams.billingDetails
+            case .applePay, .link, .external:
+                return nil
+            }
+        }()
+
+        let email = linkAccount?.email ?? billingDetails?.email
+
+        guard let email else {
+            return
+        }
+
+        let phoneNumber = billingDetails?.phone.flatMap { PhoneNumber.fromE164($0) }
+
+        ConsumerSession.signUp(
+            email: email,
+            phoneNumber: phoneNumber?.string(as: .e164),
+            legalName: billingDetails?.name,
+            countryCode: phoneNumber?.countryCode,
+            consentAction: PaymentSheetLinkAccount.ConsentAction.implied_v0_0.rawValue, // TODO: Figure out the right value
+            useMobileEndpoints: useMobileEndpoints
+        ) { consumerSessionResult in
+            switch consumerSessionResult {
+            case .success(let signupResponse):
+                analyticsHelper.logLinkUserSignupSucceeded()
+
+                let linkAccount = PaymentSheetLinkAccount(
+                    email: signupResponse.consumerSession.emailAddress,
+                    session: signupResponse.consumerSession,
+                    publishableKey: signupResponse.publishableKey,
+                    apiClient: configuration.apiClient,
+                    useMobileEndpoints: useMobileEndpoints
+                )
+
+                LinkAccountContext.shared.account = linkAccount
+
+                if case let .new(confirmParams) = paymentOption, confirmParams.paymentMethodType == .stripe(.card) {
+                    linkAccount.createPaymentDetails(
+                        with: confirmParams.paymentMethodParams,
+                        isDefault: true
+                    ) { paymentDetailsResult in
+                        analyticsHelper.logLinkUserPaymentDetailCreationCompleted(error: paymentDetailsResult.error)
+                    }
+                }
+            case .failure(let error):
+                analyticsHelper.logLinkUserSignupFailed(error: error)
+            }
+        }
+    }
+
     static fileprivate func confirmAfterHandlingLocalActions(
         configuration: PaymentElementConfiguration,
         authenticationContext: STPAuthenticationContext,
@@ -152,12 +221,22 @@ extension PaymentSheet {
         paymentHandler: STPPaymentHandler,
         isFlowController: Bool = false,
         paymentMethodID: String? = nil,
+        attemptLinkSignup: Bool = false,
         analyticsHelper: PaymentSheetAnalyticsHelper,
         completion: @escaping (PaymentSheetResult, STPAnalyticsClient.DeferredIntentConfirmationType?) -> Void
     ) {
         // Translates a STPPaymentHandler result to a PaymentResult
         let paymentHandlerCompletion: (STPPaymentHandlerActionStatus, NSError?) -> Void = { status, error in
             completion(makePaymentSheetResult(for: status, error: error), nil)
+        }
+
+        if attemptLinkSignup {
+            signUpToLinkIfPossible(
+                paymentOption: paymentOption,
+                useMobileEndpoints: elementsSession.linkSettings?.useAttestationEndpoints ?? false,
+                configuration: configuration,
+                analyticsHelper: analyticsHelper
+            )
         }
 
         switch paymentOption {
@@ -191,6 +270,7 @@ extension PaymentSheet {
                 mobilePaymentElementFeatures: elementsSession.customerSessionMobilePaymentElementFeatures,
                 isSettingUp: intent.isSetupFutureUsageSet(for: paymentMethodType)
             )
+
             switch intent {
             // MARK: ↪ PaymentIntent
             case .paymentIntent(let paymentIntent):
@@ -471,7 +551,7 @@ extension PaymentSheet {
                         return
                     }
 
-                    linkAccount.createPaymentDetails(with: paymentMethodParams) { result in
+                    linkAccount.createPaymentDetails(with: paymentMethodParams, isDefault: false) { result in
                         switch result {
                         case .success(let paymentDetails):
                             // We need to explicitly pass the billing phone number to the share and payment method endpoints,

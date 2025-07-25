@@ -80,11 +80,16 @@ class PaymentSheetFormFactory {
         addressSpecProvider: AddressSpecProvider = .shared,
         linkAccount: PaymentSheetLinkAccount? = nil,
         accountService: LinkAccountServiceProtocol,
-        analyticsHelper: PaymentSheetAnalyticsHelper?
+        analyticsHelper: PaymentSheetAnalyticsHelper?,
+        forceHideLinkInlineSignup: Bool = false
     ) {
 
         /// Whether or not the card form should show the link inline signup checkbox
         let showLinkInlineCardSignup: Bool = {
+            guard !forceHideLinkInlineSignup else {
+                return false
+            }
+
             guard case .paymentElement(let configuration) = configuration else {
                 return false
             }

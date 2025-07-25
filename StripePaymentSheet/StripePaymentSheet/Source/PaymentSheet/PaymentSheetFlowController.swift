@@ -214,6 +214,24 @@ extension PaymentSheet {
         /// You can use this to e.g. display the payment option in your UI.
         @Published public private(set) var paymentOption: PaymentOptionDisplayData?
 
+        /// The current state of the Link new user signup.
+        @Published @_spi(STP) public private(set) var linkSignupOptInState: LinkSignupOptInState = .hidden
+
+        /// Whether your customer has chosen to sign up to Link in your UI.
+        @_spi(STP) public var linkSignUpOptedIn: Bool = false
+
+        /// The state of the Link signup opt-in. Use this to present the appropriate UI to the user.
+        @_spi(STP) public enum LinkSignupOptInState {
+            /// The current user has been recognized as a Link consumer. No signup opt-in UI should be shown.
+            case hidden
+            /// The current user has not been recognized as a Link consumer. Display signup opt-in UI.
+            case visible(
+                title: String,
+                description: NSAttributedString,
+                termsAndConditions: NSAttributedString
+            )
+        }
+
         // MARK: - Private properties
         var intent: Intent { viewController.intent }
         var elementsSession: STPElementsSession { viewController.elementsSession }
@@ -228,6 +246,15 @@ extension PaymentSheet {
             didSet {
                 // Update payment method options
                 self.updateForWalletButtonsView()
+            }
+        }
+
+        private var attemptLinkSignupOnConfirmation: Bool {
+            switch linkSignupOptInState {
+            case .hidden:
+                return false
+            case .visible:
+                return linkSignUpOptedIn
             }
         }
 
@@ -289,6 +316,49 @@ extension PaymentSheet {
             self.viewController = Self.makeViewController(configuration: configuration, loadResult: loadResult, analyticsHelper: analyticsHelper, walletButtonsShownExternally: self.walletButtonsShownExternally)
             self.viewController.flowControllerDelegate = self
             updatePaymentOption()
+            updateLinkAccountRecognitionStatus(for: LinkAccountContext.shared.account)
+            LinkAccountContext.shared.addObserver(self, selector: #selector(onAccountChange(_:)))
+        }
+
+        @objc
+        func onAccountChange(_ notification: Notification) {
+            DispatchQueue.main.async { [weak self] in
+                let linkAccount = notification.object as? PaymentSheetLinkAccount
+                self?.updateLinkAccountRecognitionStatus(for: linkAccount)
+            }
+        }
+
+        private func updateLinkAccountRecognitionStatus(for linkAccount: PaymentSheetLinkAccount?) {
+            linkSignUpOptedIn = elementsSession.linkSettings?.newUserSignupInitialValue ?? false
+            linkSignupOptInState = makeVisibleLinkSignupOptInState(for: linkAccount)
+        }
+
+        private func makeVisibleLinkSignupOptInState(for linkAccount: PaymentSheetLinkAccount?) -> LinkSignupOptInState {
+            guard linkAccount?.isRegistered != true && elementsSession.linkSettings?.enableNewUserSignupAPI == true else {
+                return .hidden
+            }
+
+            let hasExistingLinkPaymentMethod = elementsSession.customer?.paymentMethods.contains { paymentMethod in
+                paymentMethod.isLinkPaymentMethod || paymentMethod.isLinkPassthroughMode
+            } ?? false
+
+            guard !hasExistingLinkPaymentMethod else {
+                return .hidden
+            }
+
+            return .visible(
+                title: .Localized.save_my_info_for_faster_checkout_with_link,
+                description: NSAttributedString(string: .Localized.pay_faster_everywhere_link_is_accepted),
+                termsAndConditions: NSAttributedString(
+                    attributedString: STPStringUtils.applyLinksToString(
+                        template: .Localized.your_information_will_be_saved_to_link_see_terms,
+                        links: [
+                            "terms": URL(string: "https://link.com/terms")!,
+                            "privacy": URL(string: "https://link.com/privacy")!,
+                        ]
+                    )
+                )
+            )
         }
 
         // MARK: - Public methods
@@ -544,6 +614,7 @@ extension PaymentSheet {
                     paymentOption: paymentOption,
                     paymentHandler: paymentHandler,
                     integrationShape: .flowController,
+                    attemptLinkSignup: attemptLinkSignupOnConfirmation,
                     analyticsHelper: analyticsHelper
                 ) { [analyticsHelper, configuration] result, deferredIntentConfirmationType in
                     analyticsHelper.logPayment(

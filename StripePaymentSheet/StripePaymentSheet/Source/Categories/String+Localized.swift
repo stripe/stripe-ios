@@ -537,4 +537,34 @@ extension String.Localized {
     static var use_billing_address_for_shipping: String {
         STPLocalizedString("Use billing address for shipping", "Label for checkbox in address form allowing user to use billing address")
     }
+
+    static var save_my_info_for_faster_checkout_with_link: String {
+        STPLocalizedString(
+            "Save my info for faster checkout with Link",
+            """
+            Label for a checkbox that when checked allows the payment information
+            to be saved and used in future checkout sessions.
+            """
+        )
+    }
+
+    static var pay_faster_everywhere_link_is_accepted: String {
+        STPLocalizedString(
+            "Pay faster everywhere Link is accepted.",
+            """
+            Sublabel for a checkbox that when checked allows the payment information
+            to be saved and used in future checkout sessions.
+            """
+        )
+    }
+
+    static var your_information_will_be_saved_to_link_see_terms: String {
+        STPLocalizedString(
+            "Your information will be saved to Link, see <terms>Terms</terms> and <privacy>Privacy Policy</privacy>.",
+            """
+            Disclaimer for a checkbox that when checked allows the payment information
+            to be saved and used in future checkout sessions.
+            """
+        )
+    }
 }

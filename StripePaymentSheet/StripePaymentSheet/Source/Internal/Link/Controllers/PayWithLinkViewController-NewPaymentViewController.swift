@@ -184,7 +184,10 @@ extension PayWithLinkViewController {
             confirmButton.update(state: .processing)
             coordinator?.allowSheetDismissal(false)
 
-            linkAccount.createPaymentDetails(with: confirmParams.paymentMethodParams) { [weak self] result in
+            linkAccount.createPaymentDetails(
+                with: confirmParams.paymentMethodParams,
+                isDefault: isAddingFirstPaymentMethod
+            ) { [weak self] result in
                 guard let self = self else {
                     return
                 }

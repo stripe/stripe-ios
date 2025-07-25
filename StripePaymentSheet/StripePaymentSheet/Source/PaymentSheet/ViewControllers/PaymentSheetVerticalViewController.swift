@@ -893,7 +893,8 @@ extension PaymentSheetVerticalViewController: VerticalPaymentMethodListViewContr
             configuration: configuration,
             headerView: headerView,
             analyticsHelper: analyticsHelper,
-            delegate: self
+            delegate: self,
+            forceHideLinkInlineSignup: walletButtonsShownExternally
         )
     }
 

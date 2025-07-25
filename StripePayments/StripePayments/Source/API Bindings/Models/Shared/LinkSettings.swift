@@ -42,6 +42,14 @@ import Foundation
 
     @_spi(STP) public let allResponseFields: [AnyHashable: Any]
 
+    @_spi(STP) public var enableNewUserSignupAPI: Bool {
+        linkFlags?["link_enable_new_user_signup_api"] ?? false
+    }
+
+    @_spi(STP) public var newUserSignupInitialValue: Bool {
+        linkFlags?["link_new_user_signup_api_initial_value"] ?? false
+    }
+
     @_spi(STP) public init(
         fundingSources: Set<FundingSource>,
         popupWebviewOption: PopupWebviewOption?,

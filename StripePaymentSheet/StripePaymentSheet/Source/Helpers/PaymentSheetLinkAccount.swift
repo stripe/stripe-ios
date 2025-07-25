@@ -129,22 +129,22 @@ struct LinkPMDisplayDetails {
     }
 
     func signUp(
-        with phoneNumber: PhoneNumber,
+        with phoneNumber: PhoneNumber?,
         legalName: String?,
         consentAction: ConsentAction,
         completion: @escaping (Result<Void, Error>) -> Void
     ) {
         signUp(
-            with: phoneNumber.string(as: .e164),
+            with: phoneNumber?.string(as: .e164),
             legalName: legalName,
-            countryCode: phoneNumber.countryCode,
+            countryCode: phoneNumber?.countryCode,
             consentAction: consentAction,
             completion: completion
         )
     }
 
     func signUp(
-        with phoneNumber: String,
+        with phoneNumber: String?,
         legalName: String?,
         countryCode: String?,
         consentAction: ConsentAction,
@@ -274,6 +274,7 @@ struct LinkPMDisplayDetails {
 
     func createPaymentDetails(
         with paymentMethodParams: STPPaymentMethodParams,
+        isDefault: Bool,
         completion: @escaping (Result<ConsumerPaymentDetails, Error>) -> Void
     ) {
         retryingOnAuthError(completion: completion) { completionRetryingOnAuthErrors in
@@ -289,6 +290,7 @@ struct LinkPMDisplayDetails {
                 paymentMethodParams: paymentMethodParams,
                 with: self.apiClient,
                 consumerAccountPublishableKey: self.publishableKey,
+                isDefault: isDefault,
                 completion: completionRetryingOnAuthErrors
             )
         }
