@@ -17,7 +17,7 @@ extension StripeAPI {
         public let id: String
 
         /// Time at which the object was created. Measured in seconds since the Unix epoch.
-        public var created: Date?
+        public var created: Date
         /// `YES` if the object exists in live mode or the value `NO` if the object exists in test mode.
         public var livemode = false
 

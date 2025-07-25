@@ -35,7 +35,7 @@ public class STPFile: NSObject, STPAPIResponseDecodable {
     /// The token for this file.
     @objc public private(set) var fileId: String?
     /// The date this file was created.
-    @objc public private(set) var created: Date?
+    @objc public private(set) var created: Date = Date(timeIntervalSince1970: TimeInterval(0))
     /// The purpose of this file. This can be either an identifing document or an evidence dispute.
     /// - seealso: https://stripe.com/docs/file-upload
     @objc public private(set) var purpose: STPFilePurpose = .unknown
@@ -63,7 +63,7 @@ public class STPFile: NSObject, STPAPIResponseDecodable {
 
     convenience init(
         fileId: String?,
-        created: Date?,
+        created: Date,
         purpose: STPFilePurpose,
         size: NSNumber?,
         type: String?
@@ -127,7 +127,7 @@ public class STPFile: NSObject, STPAPIResponseDecodable {
 
         let file = self.init()
         file.fileId = stripeId
-        file.created = created
+        file.created = created ?? Date(timeIntervalSince1970: TimeInterval(0))
         file.size = size
         file.type = type
 
