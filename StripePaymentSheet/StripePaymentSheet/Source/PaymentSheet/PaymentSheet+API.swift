@@ -160,6 +160,17 @@ extension PaymentSheet {
             completion(makePaymentSheetResult(for: status, error: error), nil)
         }
 
+        let additionalClientAttributionMetadata: [String: String] = {
+            switch intent {
+            case .paymentIntent(let paymentIntent):
+                makePaymentIntentClientAttributionMetadata(paymentIntent, elementsSessionConfigId: elementsSession.sessionID)
+            case .setupIntent(let setupIntent):
+                makeSetupIntentClientAttributionMetadata(setupIntent, elementsSessionConfigId: elementsSession.sessionID)
+            case .deferredIntent(let intentConfig):
+                makeDeferredClientAttributionMetadata(intentConfig, elementsSessionConfigId: elementsSession.sessionID)
+            }
+        }()
+
         switch paymentOption {
         // MARK: - Apple Pay
         case .applePay:
@@ -207,6 +218,7 @@ extension PaymentSheet {
                 paymentHandler.confirmPayment(
                     params,
                     with: authenticationContext,
+                    additionalClientAttributionMetadata: additionalClientAttributionMetadata,
                     completion: { actionStatus, paymentIntent, error in
                         if let paymentIntent {
                             setDefaultPaymentMethodIfNecessary(actionStatus: actionStatus, intent: .paymentIntent(paymentIntent), configuration: configuration, paymentMethodSetAsDefault: elementsSession.paymentMethodSetAsDefaultForPaymentSheet)
@@ -229,6 +241,7 @@ extension PaymentSheet {
                 paymentHandler.confirmSetupIntent(
                     setupIntentParams,
                     with: authenticationContext,
+                    additionalClientAttributionMetadata: additionalClientAttributionMetadata,
                     completion: { actionStatus, setupIntent, error in
                         if let setupIntent {
                             setDefaultPaymentMethodIfNecessary(actionStatus: actionStatus, intent: .setupIntent(setupIntent), configuration: configuration, paymentMethodSetAsDefault: elementsSession.paymentMethodSetAsDefaultForPaymentSheet)
@@ -251,6 +264,7 @@ extension PaymentSheet {
                     paymentHandler: paymentHandler,
                     isFlowController: isFlowController,
                     allowsSetAsDefaultPM: elementsSession.paymentMethodSetAsDefaultForPaymentSheet,
+                    additionalClientAttributionMetadata: additionalClientAttributionMetadata,
                     completion: completion
                 )
             }
@@ -327,6 +341,7 @@ extension PaymentSheet {
                     paymentHandler.confirmPayment(
                         paymentIntentParams,
                         with: authenticationContext,
+                        additionalClientAttributionMetadata: additionalClientAttributionMetadata,
                         completion: { actionStatus, _, error in
                             paymentHandlerCompletion(actionStatus, error)
                             if actionStatus == .succeeded {
@@ -341,6 +356,7 @@ extension PaymentSheet {
                     paymentHandler.confirmSetupIntent(
                         setupIntentParams,
                         with: authenticationContext,
+                        additionalClientAttributionMetadata: additionalClientAttributionMetadata,
                         completion: { actionStatus, _, error in
                             paymentHandlerCompletion(actionStatus, error)
                             if actionStatus == .succeeded {
@@ -360,6 +376,7 @@ extension PaymentSheet {
                         authenticationContext: authenticationContext,
                         paymentHandler: paymentHandler,
                         isFlowController: isFlowController,
+                        additionalClientAttributionMetadata: additionalClientAttributionMetadata,
                         completion: { psResult, confirmationType in
                             if case .completed = psResult {
                                 linkAccount?.logout()
@@ -392,6 +409,7 @@ extension PaymentSheet {
                     paymentHandler.confirmPayment(
                         paymentIntentParams,
                         with: authenticationContext,
+                        additionalClientAttributionMetadata: additionalClientAttributionMetadata,
                         completion: { actionStatus, _, error in
                             if actionStatus == .succeeded {
                                 linkAccount?.logout()
@@ -407,6 +425,7 @@ extension PaymentSheet {
                     paymentHandler.confirmSetupIntent(
                         setupIntentParams,
                         with: authenticationContext,
+                        additionalClientAttributionMetadata: additionalClientAttributionMetadata,
                         completion: { actionStatus, _, error in
                             if actionStatus == .succeeded {
                                 linkAccount?.logout()
@@ -422,6 +441,7 @@ extension PaymentSheet {
                         authenticationContext: authenticationContext,
                         paymentHandler: paymentHandler,
                         isFlowController: isFlowController,
+                        additionalClientAttributionMetadata: additionalClientAttributionMetadata,
                         completion: { psResult, confirmationType in
                             if case .completed = psResult {
                                 linkAccount?.logout()
@@ -485,7 +505,8 @@ extension PaymentSheet {
                                     cvc: paymentMethodParams.card?.cvc,
                                     allowRedisplay: paymentMethodParams.allowRedisplay,
                                     expectedPaymentMethodType: paymentDetails.expectedPaymentMethodTypeForPassthroughMode(elementsSession),
-                                    billingPhoneNumber: billingPhoneNumber
+                                    billingPhoneNumber: billingPhoneNumber,
+                                    additionalClientAttributionMetadata: additionalClientAttributionMetadata
                                 ) { result in
                                     switch result {
                                     case .success(let paymentDetailsShareResponse):
@@ -556,7 +577,8 @@ extension PaymentSheet {
                         cvc: paymentDetails.cvc,
                         allowRedisplay: nil,
                         expectedPaymentMethodType: paymentDetails.expectedPaymentMethodTypeForPassthroughMode(elementsSession),
-                        billingPhoneNumber: confirmationExtras?.billingPhoneNumber
+                        billingPhoneNumber: confirmationExtras?.billingPhoneNumber,
+                        additionalClientAttributionMetadata: additionalClientAttributionMetadata
                     ) { result in
                         switch result {
                         case .success(let paymentDetailsShareResponse):
@@ -604,6 +626,30 @@ extension PaymentSheet {
                 return setupIntent.paymentMethod
             }
         }
+    }
+
+    static func makePaymentIntentClientAttributionMetadata(_ paymentIntent: STPPaymentIntent, elementsSessionConfigId: String) -> [String: String] {
+        return [
+            "elements_session_config_id": elementsSessionConfigId,
+            "payment_intent_creation_flow": "standard",
+            "payment_method_selection_flow": paymentIntent.automaticPaymentMethods?.enabled ?? false ? "automatic" : "merchant_specified",
+        ]
+    }
+
+    static func makeSetupIntentClientAttributionMetadata(_ setupIntent: STPSetupIntent, elementsSessionConfigId: String) -> [String: String] {
+        return [
+            "elements_session_config_id": elementsSessionConfigId,
+            "payment_intent_creation_flow": "standard",
+            "payment_method_selection_flow": setupIntent.automaticPaymentMethods?.enabled ?? false ? "automatic" : "merchant_specified",
+        ]
+    }
+
+    static func makeDeferredClientAttributionMetadata(_ intentConfig: IntentConfiguration, elementsSessionConfigId: String) -> [String: String] {
+        return [
+            "elements_session_config_id": elementsSessionConfigId,
+            "payment_intent_creation_flow": "deferred",
+            "payment_method_selection_flow": intentConfig.paymentMethodTypes?.isEmpty ?? true ? "automatic" : "merchant_specified",
+        ]
     }
 
     /// A helper method that sets the Customer's default payment method if necessary.
