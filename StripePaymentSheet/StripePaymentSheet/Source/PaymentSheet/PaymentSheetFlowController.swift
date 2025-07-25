@@ -329,6 +329,10 @@ extension PaymentSheet {
                 return .hidden
             }
 
+            let hasExistingLinkPaymentMethod = elementsSession.customer?.paymentMethods.contains { paymentMethod in
+                paymentMethod.isLinkPaymentMethod || paymentMethod.isLinkPassthroughMode
+            }
+
             return .visible(
                 title: "Save my info for faster checkout with Link",
                 description: NSAttributedString(string: "Pay faster everywhere Link is accepted."),
