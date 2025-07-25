@@ -14,15 +14,9 @@ class STPPostalCodeInputTextFieldValidator: STPInputTextFieldValidator {
 
     override var defaultErrorMessage: String? {
         if countryCode?.uppercased() == "US" {
-            return STPLocalizedString(
-                "Your ZIP is invalid.",
-                "Error message for when postal code in form is invalid (US only)"
-            )
+            String.Localized.your_zip_is_invalid
         } else {
-            return STPLocalizedString(
-                "Your postal code is invalid.",
-                "Error message for when postal code in form is invalid"
-            )
+            String.Localized.your_postal_code_is_invalid
         }
     }
 
