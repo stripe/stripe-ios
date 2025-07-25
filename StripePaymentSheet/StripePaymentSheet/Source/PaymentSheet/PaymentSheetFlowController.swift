@@ -215,13 +215,13 @@ extension PaymentSheet {
         @Published public private(set) var paymentOption: PaymentOptionDisplayData?
 
         /// The current state of the Link new user signup.
-        @Published public private(set) var linkSignupOptInState: LinkSignupOptInState = .hidden
+        @Published @_spi(STP) public private(set) var linkSignupOptInState: LinkSignupOptInState = .hidden
 
         /// Whether your customer has chosen to sign up to Link in your UI.
-        public var linkSignUpOptIn: Bool = false
+        @_spi(STP) public var linkSignUpOptIn: Bool = false
 
         /// The state of the Link signup opt-in. Use this to present the appropriate UI to the user.
-        public enum LinkSignupOptInState {
+        @_spi(STP) public enum LinkSignupOptInState {
             /// The current user has been recognized as a Link consumer. No signup opt-in UI should be shown.
             case hidden
             /// The current user has not been recognized as a Link consumer. Display signup opt-in UI.
