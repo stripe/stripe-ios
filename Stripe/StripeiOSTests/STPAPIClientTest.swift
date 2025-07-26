@@ -105,6 +105,17 @@ class STPAPIClientTest: XCTestCase {
         XCTAssertEqual(params["payment_user_agent"] as! String, "stripe-ios/\(StripeAPIConfiguration.STPSDKVersion); variant.paymentsheet; MockUAUsageClass; foo")
     }
 
+    func testClientAttributionMetadata() {
+        AnalyticsHelper.shared.generateSessionID()
+        var params: [String: Any] = [:]
+        params = STPAPIClient.paramsAddingClientAttributionMetadata(params)
+        let clientAttributionMetadata = params["client_attribution_metadata"] as? [String: String]
+        XCTAssertEqual(clientAttributionMetadata?["client_session_id"], AnalyticsHelper.shared.sessionID)
+        XCTAssertEqual(clientAttributionMetadata?["merchant_integration_source"], "elements")
+        XCTAssertEqual(clientAttributionMetadata?["merchant_integration_subtype"], "mobile")
+        XCTAssertEqual(clientAttributionMetadata?["merchant_integration_version"], "stripe-ios/\(StripeAPIConfiguration.STPSDKVersion)")
+    }
+
     func testSetAppInfo() {
         let sut = STPAPIClient(publishableKey: "pk_foo")
         sut.appInfo = STPAppInfo(

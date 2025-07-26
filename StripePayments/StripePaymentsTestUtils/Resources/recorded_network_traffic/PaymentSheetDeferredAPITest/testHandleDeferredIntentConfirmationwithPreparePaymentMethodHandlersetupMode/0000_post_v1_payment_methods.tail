@@ -3,7 +3,7 @@ https:\/\/api\.stripe\.com\/v1\/payment_methods$
 200
 application/json
 access-control-allow-methods: GET, HEAD, PUT, PATCH, POST, DELETE
-content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=F6nS4iXXRRnAn6oZBdGENbEUcf8wUYCIWzfFBY8RaB3ZOzGh-Tga8wY4OKxx94KAkxTm5s8TDVGxxkv8
+content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=FitzukJXWVNrLLhHate0rKGCKNt8YKP5qdYiKw-nK8wNBUJtx_MAkrnLY5zSttkToMQelGckZM87YWGG
 Server: nginx
 Cache-Control: no-cache, no-store
 x-wc: ABGHIJ
@@ -12,22 +12,22 @@ Access-Control-Allow-Origin: *
 stripe-should-retry: false
 x-stripe-priority-routing-enabled: true
 x-stripe-routing-context-priority-tier: api-testmode
-request-id: req_AZQlUqWL8fAS04
+request-id: req_Kuqgi7bnRjiy9f
 Content-Length: 990
 Vary: Origin
-Date: Fri, 11 Jul 2025 21:15:33 GMT
-original-request: req_AZQlUqWL8fAS04
+Date: Sat, 26 Jul 2025 00:03:08 GMT
+original-request: req_Kuqgi7bnRjiy9f
 stripe-version: 2020-08-27
-idempotency-key: d7e47233-73bf-4092-bbab-a5c9fa75d7a4
+idempotency-key: 5326d568-1fb0-4133-a4c1-8619e56643a7
 access-control-expose-headers: Request-Id, Stripe-Manage-Version, Stripe-Should-Retry, X-Stripe-External-Auth-Required, X-Stripe-Privileged-Session-Required
 access-control-max-age: 300
 access-control-allow-credentials: true
 Content-Type: application/json
-X-Stripe-Mock-Request: allow_redisplay=unspecified&card\[cvc]=123&card\[exp_month]=1&card\[exp_year]=2040&card\[number]=4242424242424242&guid=.*&muid=.*&payment_user_agent=.*&sid=.*&type=card
+X-Stripe-Mock-Request: allow_redisplay=unspecified&card\[cvc]=123&card\[exp_month]=1&card\[exp_year]=2040&card\[number]=4242424242424242&client_attribution_metadata\[merchant_integration_source]=elements&client_attribution_metadata\[merchant_integration_subtype]=mobile&client_attribution_metadata\[merchant_integration_version]=.*&guid=.*&muid=.*&payment_user_agent=.*&sid=.*&type=card
 
 {
   "object" : "payment_method",
-  "id" : "pm_1RjoI5FY0qyl6XeWygfqzBRk",
+  "id" : "pm_1RovZwFY0qyl6XeW5ifUjTZt",
   "billing_details" : {
     "email" : null,
     "phone" : null,
@@ -69,7 +69,7 @@ X-Stripe-Mock-Request: allow_redisplay=unspecified&card\[cvc]=123&card\[exp_mont
     "country" : "US"
   },
   "livemode" : false,
-  "created" : 1752268533,
+  "created" : 1753488188,
   "allow_redisplay" : "unspecified",
   "type" : "card",
   "customer" : null

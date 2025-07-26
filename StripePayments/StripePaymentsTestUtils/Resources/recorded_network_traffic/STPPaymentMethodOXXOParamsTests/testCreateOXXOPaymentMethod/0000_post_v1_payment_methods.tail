@@ -3,34 +3,34 @@ https:\/\/api\.stripe\.com\/v1\/payment_methods$
 200
 application/json
 access-control-allow-methods: GET, HEAD, PUT, PATCH, POST, DELETE
-content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=wHL9D9t5XWYw79ElhcpyVJUK4a_Ce3x7TqZJ9HGdO5EQs9SwXhA7DcuxznLUA8deZTnJWjzO3LD_qib6
+content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=Djep3FQaljLXtD5NY49E3gawRY6MP80CY2WjhQHMGZ3eDUZ-_M0DwgHvXxkncAcpn9Ha5kzKuSgJCwsR
 Server: nginx
 Cache-Control: no-cache, no-store
-x-wc: ABGHI
+x-wc: ABGHIJ
 Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
 Access-Control-Allow-Origin: *
 stripe-should-retry: false
 x-stripe-priority-routing-enabled: true
 x-stripe-routing-context-priority-tier: api-testmode
-request-id: req_wfw1TRGf7yJwJe
+request-id: req_PGNeNLYHo0K8r8
 Content-Length: 481
 Vary: Origin
-Date: Tue, 03 Jun 2025 15:20:10 GMT
-original-request: req_wfw1TRGf7yJwJe
+Date: Fri, 25 Jul 2025 23:26:22 GMT
+original-request: req_PGNeNLYHo0K8r8
 stripe-version: 2020-08-27
-idempotency-key: aa7aa17a-69c8-4558-a47d-735fb7d5e828
+idempotency-key: 6cebb2ea-6d5e-4ef6-9ee7-81793a2779cb
 access-control-expose-headers: Request-Id, Stripe-Manage-Version, Stripe-Should-Retry, X-Stripe-External-Auth-Required, X-Stripe-Privileged-Session-Required
 access-control-max-age: 300
 access-control-allow-credentials: true
 Content-Type: application/json
-X-Stripe-Mock-Request: allow_redisplay=unspecified&billing_details\[email]=test%40test\.com&billing_details\[name]=Jane%20Doe&guid=.*&muid=.*&payment_user_agent=.*&sid=.*&type=oxxo
+X-Stripe-Mock-Request: allow_redisplay=unspecified&billing_details\[email]=test%40test\.com&billing_details\[name]=Jane%20Doe&client_attribution_metadata\[merchant_integration_source]=elements&client_attribution_metadata\[merchant_integration_subtype]=mobile&client_attribution_metadata\[merchant_integration_version]=.*&guid=.*&muid=.*&payment_user_agent=.*&sid=.*&type=oxxo
 
 {
   "object" : "payment_method",
   "oxxo" : {
 
   },
-  "id" : "pm_1RVwdKFY0qyl6XeWWTrSW3s0",
+  "id" : "pm_1Rov0MFY0qyl6XeWhNZYBUNI",
   "billing_details" : {
     "email" : "test@test.com",
     "phone" : null,
@@ -46,7 +46,7 @@ X-Stripe-Mock-Request: allow_redisplay=unspecified&billing_details\[email]=test%
     }
   },
   "livemode" : false,
-  "created" : 1748964010,
+  "created" : 1753485982,
   "allow_redisplay" : "unspecified",
   "type" : "oxxo",
   "customer" : null

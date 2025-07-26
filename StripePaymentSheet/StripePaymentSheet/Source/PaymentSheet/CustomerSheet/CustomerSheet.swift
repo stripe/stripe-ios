@@ -98,6 +98,7 @@ public class CustomerSheet {
     public init(configuration: CustomerSheet.Configuration,
                 intentConfiguration: CustomerSheet.IntentConfiguration,
                 customerSessionClientSecretProvider: @escaping () async throws -> CustomerSessionClientSecret) {
+        AnalyticsHelper.shared.generateSessionID()
         self.integrationType = .customerSession
         self.configuration = configuration
         self.customerAdapter = nil
