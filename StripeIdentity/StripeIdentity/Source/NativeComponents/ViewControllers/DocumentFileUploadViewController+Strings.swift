@@ -10,18 +10,7 @@ import Foundation
 
 extension DocumentFileUploadViewController {
     func listItemText(for side: DocumentSide, availableIDTypes: [String]) -> String {
-        switch side {
-        case .front:
-            return STPLocalizedString(
-                "Front of identity card",
-                "Description of front of identity card image"
-            )
-        case .back:
-            return STPLocalizedString(
-                "Back of identity card",
-                "Description of back of identity card image"
-            )
-        }
+        return side.instruction(availableIDTypes: availableIDTypes)
     }
 
     func accessibilityLabel(
