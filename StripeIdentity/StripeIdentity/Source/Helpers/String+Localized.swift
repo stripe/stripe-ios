@@ -304,6 +304,13 @@ extension String.Localized {
             "Instructions for uploading images of identity card"
         )
     }
+    
+    static var fileUploadInstructionTextSpecific: String {
+        STPLocalizedString(
+            "Please upload images of the front and back of your %@",
+            "Instructions for uploading images of a driver's license, government issued photo id, or passport"
+        )
+    }
 
     // MARK: - DocumentWarmup
     static var documentFrontWarmupTitle: String {

@@ -152,6 +152,9 @@
 /* Instructions for uploading images of identity card */
 "Please upload images of the front and back of your identity card" = "Please upload images of the front and back of your identity card";
 
+/* Instructions for uploading images of a driver's license, government issued photo id, or passport */
+"Please upload images of the front and back of your %@" = "Please upload images of the front and back of your %@";
+
 /* Instructional text for scanning selfies */
 "Position your face in the center of the frame." = "Position your face in the center of the frame.";
 

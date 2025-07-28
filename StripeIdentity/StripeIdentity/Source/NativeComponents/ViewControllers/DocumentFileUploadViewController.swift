@@ -112,8 +112,16 @@ final class DocumentFileUploadViewController: IdentityFlowViewController {
                 )
             )
         }
+        
+        let instructionText: String
+        
+        if let idType = (availableIDTypes.count == 1 ? availableIDTypes[0] : nil)?.uiIDType() {
+            instructionText = String(format: .Localized.fileUploadInstructionTextSpecific, idType)
+        } else {
+            instructionText = .Localized.fileUploadInstructionText
+        }
 
-        return .init(instructionText: String.Localized.fileUploadInstructionText, listViewModel: .init(items: items))
+        return .init(instructionText: instructionText, listViewModel: .init(items: items))
     }
 
     var buttonState: IdentityFlowView.ViewModel.Button.State {
