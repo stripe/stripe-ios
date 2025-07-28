@@ -134,7 +134,9 @@
 
 "Your BLIK code is invalid." = "Kod BLIK anda tidak sah.";
 
-"Your ZIP is incomplete." = "Kod ZIP anda tidak lengkap.";
+"Your ZIP code is incomplete." = "Poskod ZIP tidak lengkap.";
+
+"Your ZIP code is invalid." = "Poskod anda tidak sah.";
 
 "Your email is invalid." = "E-mel anda tidak sah.";
 

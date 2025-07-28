@@ -48,8 +48,6 @@
 
 "To scan your card, allow camera access in Settings." = "Sta toegang tot je camera toe in Instellingen om je kaart te scannen.";
 
-"Your ZIP is invalid." = "Je ZIP is ongeldig.";
-
 "Your card has expired." = "Je betaalkaart is verlopen.";
 
 "Your card number is incomplete." = "Je kaartnummer is onvolledig.";
@@ -67,8 +65,6 @@
 "Your card's security code is incomplete." = "De beveiligingscode van je kaart is onvolledig.";
 
 "Your card's security code is invalid." = "De beveiligingscode van je kaart is ongeldig.";
-
-"Your postal code is invalid." = "Je postcode is ongeldig.";
 
 "card number" = "kaartnummer";
 

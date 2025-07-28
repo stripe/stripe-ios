@@ -134,7 +134,9 @@
 
 "Your BLIK code is invalid." = "您的 BLIK 代碼無效。";
 
-"Your ZIP is incomplete." = "您的郵區編號不完整。";
+"Your ZIP code is incomplete." = "您的郵遞區號不完整。";
+
+"Your ZIP code is invalid." = "您的郵遞區號是無效的。";
 
 "Your email is invalid." = "您的電郵地址無效。";
 
