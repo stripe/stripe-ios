@@ -12,9 +12,10 @@ import SwiftUI
 struct LinkInlineVerificationView: View {
     private enum Constants {
         static let logoHeight: CGFloat = 20
-        static let baseSeparatorWidth: CGFloat = 1
-        static let baseContentSpacing: CGFloat = 8
-        static let baseFontSize: CGFloat = 14
+        static let separatorWidth: CGFloat = 1
+        static let contentSpacing: CGFloat = 8
+        static let paymentMehtodIconAndNumberSpacing: CGFloat = 4
+        static let fontSize: CGFloat = 14
     }
 
     @StateObject private var viewModel: LinkInlineVerificationViewModel
@@ -34,22 +35,14 @@ struct LinkInlineVerificationView: View {
         self.onComplete = onComplete
     }
 
-    private var scaledSeparatorWidth: CGFloat {
-        max(Constants.baseSeparatorWidth, 0.5) // Ensure separator is always visible
-    }
-
-    private var scaledContentSpacing: CGFloat {
-        Constants.baseContentSpacing
-    }
-
-    private var scaledFont: UIFont {
-        UIFont.systemFont(ofSize: Constants.baseFontSize, weight: .medium)
-            .scaled(withTextStyle: .caption1, maximumPointSize: Constants.baseFontSize)
+    private var font: UIFont {
+        UIFont.systemFont(ofSize: Constants.fontSize, weight: .medium)
+            .scaled(withTextStyle: .caption1, maximumPointSize: Constants.fontSize)
     }
 
     var body: some View {
         VStack(spacing: LinkUI.contentSpacing) {
-            HStack(spacing: scaledContentSpacing) {
+            HStack(spacing: Constants.contentSpacing) {
                 SwiftUI.Image(uiImage: Image.link_logo.makeImage())
                     .resizable()
                     .scaledToFit()
@@ -58,16 +51,18 @@ struct LinkInlineVerificationView: View {
                 if let paymentMethodPreview = viewModel.paymentMethodPreview {
                     Rectangle()
                         .fill(Color(uiColor: .separator))
-                        .frame(width: scaledSeparatorWidth, height: Constants.logoHeight)
+                        .frame(width: Constants.separatorWidth, height: Constants.logoHeight)
 
-                    SwiftUI.Image(uiImage: paymentMethodPreview.icon)
-                        .resizable()
-                        .scaledToFit()
-                        .frame(height: Constants.logoHeight)
+                    HStack(spacing: Constants.paymentMehtodIconAndNumberSpacing) {
+                        SwiftUI.Image(uiImage: paymentMethodPreview.icon)
+                            .resizable()
+                            .scaledToFit()
+                            .frame(height: Constants.logoHeight)
 
-                    Text(paymentMethodPreview.last4)
-                        .font(Font(scaledFont))
-                        .foregroundColor(Color(uiColor: .label))
+                        Text(paymentMethodPreview.last4)
+                            .font(Font(font))
+                            .foregroundColor(Color(uiColor: .label))
+                    }
                 }
             }
 

@@ -42,7 +42,6 @@ final class LinkAccountService: LinkAccountServiceProtocol {
     let sessionID: String
     let customerID: String?
     let useMobileEndpoints: Bool
-    let shouldPassCustomerIdToLookup: Bool
 
     /// The default cookie store used by new instances of the service.
     static var defaultCookieStore: LinkCookieStore = LinkSecureCookieStore.shared
@@ -76,8 +75,7 @@ final class LinkAccountService: LinkAccountServiceProtocol {
         self.cookieStore = cookieStore
         self.useMobileEndpoints = useMobileEndpoints
         self.sessionID = sessionID
-        self.customerID = customerID
-        self.shouldPassCustomerIdToLookup = shouldPassCustomerIdToLookup
+        self.customerID = shouldPassCustomerIdToLookup ? customerID : nil
     }
 
     func lookupAccount(
@@ -95,7 +93,7 @@ final class LinkAccountService: LinkAccountServiceProtocol {
             for: email,
             emailSource: emailSource,
             sessionID: sessionID,
-            customerID: shouldPassCustomerIdToLookup ? customerID : nil,
+            customerID: customerID,
             with: apiClient,
             useMobileEndpoints: useMobileEndpoints,
             doNotLogConsumerFunnelEvent: doNotLogConsumerFunnelEvent

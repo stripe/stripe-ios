@@ -74,7 +74,7 @@ class LinkInlineVerificationViewSnapshotTests: STPSnapshotTestCase {
         let displayablePaymentDetails = ConsumerSession.DisplayablePaymentDetails(
             defaultCardBrand: nil,
             defaultPaymentType: .bankAccount,
-            last4: "4242"
+            last4: "6789"
         )
 
         let account = PaymentSheetLinkAccount._testValue(
