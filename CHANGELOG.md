@@ -1,4 +1,4 @@
-## X.Y.Z 2025-xx-yy
+## 24.18.0 2025-07-28
 
 * [Added] Postal code validation for Canada and UK addresses
 
