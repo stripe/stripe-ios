@@ -16,6 +16,7 @@ struct CryptoOnrampExampleView: View {
     @State private var errorMessage: String?
     @State private var isLoading: Bool = true
     @State private var email: String = ""
+    @State private var showRegistration: Bool = false
 
     @FocusState private var isEmailFieldFocused: Bool
 
@@ -36,6 +37,12 @@ struct CryptoOnrampExampleView: View {
                             .autocapitalization(.none)
                             .disableAutocorrection(true)
                             .focused($isEmailFieldFocused)
+                            .submitLabel(.go)
+                            .onSubmit {
+                                if !isNextButtonDisabled {
+                                    lookupConsumerAndContinue()
+                                }
+                            }
                     }
 
                     Button("Next") {
@@ -52,6 +59,15 @@ struct CryptoOnrampExampleView: View {
                             .padding()
                             .background(Color.red.opacity(0.1))
                             .cornerRadius(8)
+                    }
+
+                    if let coordinator {
+                        NavigationLink(
+                            destination: RegistrationView(coordinator: coordinator, email: email),
+                            isActive: $showRegistration
+                        ) { EmptyView() }
+                            .opacity(0)
+                            .frame(width: 0, height: 0)
                     }
                 }
                 .padding()
@@ -106,7 +122,7 @@ struct CryptoOnrampExampleView: View {
                     if lookupResult {
                         // show verification
                     } else {
-                        // show sign up
+                        showRegistration = true
                     }
                 }
             } catch {
