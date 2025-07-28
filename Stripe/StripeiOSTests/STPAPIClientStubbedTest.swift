@@ -112,6 +112,7 @@ class STPAPIClientStubbedTest: APIStubbedTestCase {
     func testConfirmPaymentIntentWithoutClientAttributionMetadata() {
         let sut = stubbedAPIClient()
         AnalyticsHelper.shared.generateSessionID()
+        // We only want to include client_attribution_metadata on tokenization with payment method params
         stubClientAttributionMetadata(base: "payment_method_data", shouldContainClientAttributionMetadata: false)
         let e = expectation(description: "")
         let paymentIntentParams = STPPaymentIntentParams(clientSecret: "pi_123456_secret_654321")
@@ -138,6 +139,7 @@ class STPAPIClientStubbedTest: APIStubbedTestCase {
     func testConfirmSetupIntentWithoutClientAttributionMetadata() {
         let sut = stubbedAPIClient()
         AnalyticsHelper.shared.generateSessionID()
+        // We only want to include client_attribution_metadata on tokenization with payment method params
         stubClientAttributionMetadata(base: "payment_method_data", shouldContainClientAttributionMetadata: false)
         let e = expectation(description: "")
         let setupIntentParams = STPSetupIntentConfirmParams(clientSecret: "seti_123456_secret_654321")
