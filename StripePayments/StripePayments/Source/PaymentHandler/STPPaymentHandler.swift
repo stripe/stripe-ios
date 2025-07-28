@@ -284,7 +284,7 @@ public class STPPaymentHandler: NSObject {
         apiClient.confirmPaymentIntent(
             with: params,
             expand: ["payment_method"],
-            additionalClientAttributionMetadata: additionalClientAttributionMetadata,
+//            additionalClientAttributionMetadata: additionalClientAttributionMetadata,
             completion: confirmCompletionBlock
         )
     }

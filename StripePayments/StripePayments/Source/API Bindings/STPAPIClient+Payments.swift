@@ -527,6 +527,17 @@ extension STPAPIClient {
         confirmPaymentIntent(with: paymentIntentParams, expand: expand, additionalClientAttributionMetadata: [:], completion: completion)
     }
 
+    /// Confirms the PaymentIntent object with the provided params object.
+    /// At a minimum, the params object must include the `clientSecret`.
+    /// - seealso: https://stripe.com/docs/api#confirm_payment_intent
+    /// @note Use the `confirmPayment:withAuthenticationContext:completion:` method on `STPPaymentHandler` instead
+    /// of calling this method directly. It handles any authentication necessary for you. - seealso: https://stripe.com/docs/payments/3d-secure
+    /// - Parameters:
+    ///   - paymentIntentParams:  The `STPPaymentIntentParams` to pass to `/confirm`
+    ///   - expand:  An array of string keys to expand on the returned PaymentIntent object. These strings should match one or more of the parameter names that are marked as expandable. - seealso: https://stripe.com/docs/api/payment_intents/object
+    ///   - additionalClientAttributionMetadata:  Contains metadata with identifiers for the session and information about the integration.
+    ///   - completion:           The callback to run with the returned PaymentIntent object, or an error.
+    @objc(confirmPaymentIntentWithParams:expand:additionalClientAttributionMetadata:completion:)
     @_spi(STP) public func confirmPaymentIntent(
         with paymentIntentParams: STPPaymentIntentParams,
         expand: [String]?,
@@ -725,6 +736,17 @@ extension STPAPIClient {
         confirmSetupIntent(with: setupIntentParams, expand: expand, additionalClientAttributionMetadata: [:], completion: completion)
     }
 
+    /// Confirms the SetupIntent object with the provided params object.
+    /// At a minimum, the params object must include the `clientSecret`.
+    /// - seealso: https://stripe.com/docs/api/setup_intents/confirm
+    /// @note Use the `confirmSetupIntent:withAuthenticationContext:completion:` method on `STPPaymentHandler` instead
+    /// of calling this method directly. It handles any authentication necessary for you. - seealso: https://stripe.com/docs/mobile/ios/authentication
+    /// - Parameters:
+    ///   - setupIntentParams:    The `STPSetupIntentConfirmParams` to pass to `/confirm`
+    ///   - expand:  An array of string keys to expand on the returned SetupIntent object. These strings should match one or more of the parameter names that are marked as expandable. - seealso: https://stripe.com/docs/api/setup_intents/object
+    ///   - additionalClientAttributionMetadata:  Contains metadata with identifiers for the session and information about the integration.
+    ///   - completion:           The callback to run with the returned SetupIntent object, or an error.
+    @objc(confirmSetupIntentWithParams:expand:additionalClientAttributionMetadata:completion:)
     @_spi(STP) public func confirmSetupIntent(
         with setupIntentParams: STPSetupIntentConfirmParams,
         expand: [String]?,
