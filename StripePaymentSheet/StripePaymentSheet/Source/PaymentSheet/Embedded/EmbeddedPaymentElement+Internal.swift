@@ -569,14 +569,6 @@ extension EmbeddedPaymentElement {
     static func validateRowSelectionConfiguration(configuration: Configuration) throws {
         switch configuration.rowSelectionBehavior {
         case .immediateAction:
-            if configuration.embeddedViewDisplaysMandateText {
-                switch configuration.formSheetAction {
-                case .continue:
-                    throw PaymentSheetError.integrationError(nonPIIDebugDescription: "Your integration must set `embeddedViewDisplaysMandateText` to false and display the mandate (`embeddedPaymentElement.paymentOption.mandateText`) to the customer near your buy button when `rowSelectionBehavior = .immediateAction`")
-                case .confirm:
-                    throw PaymentSheetError.integrationError(nonPIIDebugDescription: "Your integration must set `embeddedViewDisplaysMandateText` to false and display the mandate (`embeddedPaymentElement.paymentOption.mandateText`) to the customer before confirming the payment or setup when `rowSelectionBehavior = .immediateAction`")
-                }
-            }
             if case .confirm = configuration.formSheetAction, configuration.applePay != nil || configuration.customer != nil {
                 // Fail init if the merchant is using immediateAction and confirm form sheet action along w/ either a Customer or Apple Pay configuration
                 throw PaymentSheetError.integrationError(nonPIIDebugDescription: "Using .immediateAction with .confirm form sheet action is not supported when Apple Pay or a customer configuration is provided. Use .default row selection behavior or disable Apple Pay and saved payment methods.")
