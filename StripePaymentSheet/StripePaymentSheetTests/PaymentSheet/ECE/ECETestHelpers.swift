@@ -178,7 +178,7 @@ class MockWKFrameInfo: WKFrameInfo {
     }
 
     override var securityOrigin: WKSecurityOrigin {
-        return unsafeDowncast(_securityOrigin, to: WKSecurityOrigin.self)
+        return unsafeBitCast(_securityOrigin, to: WKSecurityOrigin.self)
     }
 }
 
