@@ -22,12 +22,8 @@ class ScriptMessageHandlerWithReply<Payload: Decodable, Response: Encodable>: NS
     func userContentController(_ userContentController: WKUserContentController,
                                didReceive message: WKScriptMessage) async -> (Any?, String?) {
         guard message.name == name else {
+            debugPrint("Unexpected message name: \(message.name)")
             return (nil, "Unexpected message")
-        }
-
-        // Validate message origin for security
-        guard isValidStripeOrigin(message) else {
-            return (nil, "Invalid message origin")
         }
         do {
             let payload: Payload = try message.toDecodable()
@@ -36,18 +32,8 @@ class ScriptMessageHandlerWithReply<Payload: Decodable, Response: Encodable>: NS
             let response = try value.jsonObject(with: .connectEncoder)
             return (response, nil)
         } catch {
+            debugPrint("Error processing message: \((error as NSError).debugDescription)")
             return (nil, (error as NSError).debugDescription)
         }
-    }
-
-    /// Validates that the message comes from a trusted Stripe origin
-    private func isValidStripeOrigin(_ message: WKScriptMessage) -> Bool {
-        guard let securityOrigin = message.frameInfo.securityOrigin else {
-            return false
-        }
-
-        // Allow messages from Stripe domains
-        let allowedHosts = ["connect.stripe.com", "connect-js.stripe.com", "js.stripe.com"]
-        return allowedHosts.contains(securityOrigin.host)
     }
 }

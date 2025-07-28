@@ -43,26 +43,10 @@ class ScriptMessageHandler<Payload: Decodable>: NSObject, WKScriptMessageHandler
             ))
             return
         }
-
-        // Validate message origin for security
-        guard isValidStripeOrigin(message) else {
-            return
-        }
         do {
             didReceiveMessage(try message.toDecodable())
         } catch {
             analyticsClient.logDeserializeMessageErrorEvent(message: message.name, error: error)
         }
-    }
-
-    /// Validates that the message comes from a trusted Stripe origin
-    private func isValidStripeOrigin(_ message: WKScriptMessage) -> Bool {
-        guard let securityOrigin = message.frameInfo.securityOrigin else {
-            return false
-        }
-
-        // Allow messages from Stripe domains
-        let allowedHosts = ["connect.stripe.com", "connect-js.stripe.com", "js.stripe.com"]
-        return allowedHosts.contains(securityOrigin.host)
     }
 }
