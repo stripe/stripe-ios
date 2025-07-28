@@ -353,7 +353,8 @@ class CustomerSheetUITest: XCTestCase {
         dismissAlertView(alertBody: "Success: ••••6789, selected", alertTitle: "Complete", buttonToTap: "OK")
     }
 
-    func testCustomerSheet_addUSBankAccount_MicroDeposit() throws {
+    // TODO(CONSUMERBANK-835): Reenable when Link is disabled
+    func disabled_testCustomerSheet_addUSBankAccount_MicroDeposit() throws {
         var settings = CustomerSheetTestPlaygroundSettings.defaultValues()
         settings.customerMode = .new
         settings.applePay = .off
