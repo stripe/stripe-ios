@@ -16,7 +16,7 @@ extension String {
         } else if self == "passport" {
             return String.Localized.passport
         }
-        
+
         return nil
     }
 }

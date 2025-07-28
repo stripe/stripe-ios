@@ -12,7 +12,7 @@ import Foundation
 extension DocumentCaptureViewController {
 
     func titleText(for side: DocumentSide, availableIDTypes: [String]) -> String {
-        
+
         func idDocument() -> String {
             if side == .front {
                 return STPLocalizedString(
@@ -26,10 +26,10 @@ extension DocumentCaptureViewController {
                 )
             }
         }
-        
+
         if availableIDTypes.count == 1 {
             let idType = availableIDTypes[0]
-            
+
             if let type = idType.uiIDType() {
                 switch side {
                 case .front:
@@ -42,13 +42,13 @@ extension DocumentCaptureViewController {
             }
         } else {
             return idDocument()
-            
+
         }
     }
-    
+
     func scanningTextWithNoInput(availableIDTypes: [String], for side: DocumentSide) -> String {
         let type = (availableIDTypes.count == 1) ? availableIDTypes[0].uiIDType() : nil
-        
+
         if let type = type {
             switch side {
             case .front:

@@ -648,7 +648,7 @@ extension VerificationSheetFlowController: VerificationSheetFlowControllerProtoc
             )
 
         case .success(let anyDocumentScanner):
-            
+
             let availableTypes = staticContent.documentSelect.idDocumentTypeAllowlistKeys
             return DocumentCaptureViewController(
                 apiConfig: staticContent.documentCapture,

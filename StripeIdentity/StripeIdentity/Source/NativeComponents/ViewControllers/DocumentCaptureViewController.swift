@@ -248,7 +248,7 @@ final class DocumentCaptureViewController: IdentityFlowViewController {
 
     let apiConfig: StripeAPI.VerificationPageStaticContentDocumentCapturePage
     private var feedbackGenerator: UINotificationFeedbackGenerator?
-    
+
     private let availableIDTypes: [String]
 
     // MARK: Coordinators

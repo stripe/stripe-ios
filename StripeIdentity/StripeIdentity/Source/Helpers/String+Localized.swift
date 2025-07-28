@@ -81,7 +81,7 @@ extension String.Localized {
             "Instructional text for scanning back of a driver's license, passport, or government issued photo id"
         )
     }
-    
+
     static var position_in_center_identity_card: String {
         return STPLocalizedString(
             "Position your identity card in the center of the frame",
