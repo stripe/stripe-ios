@@ -51,6 +51,7 @@ struct CryptoOnrampExampleView: View {
                     }
 
                     Button("Next") {
+                        isEmailFieldFocused = false
                         lookupConsumerAndContinue()
                     }
                     .buttonStyle(PrimaryButtonStyle())
