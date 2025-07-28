@@ -18,7 +18,7 @@ public protocol CryptoOnrampCoordinatorProtocol {
     /// - Parameter apiClient: The `STPAPIClient` instance for this coordinator. Defaults to `.shared`.
     /// - Parameter appearance: Customizable appearance-related configuration for any Stripe-provided UI.
     /// - Returns: A configured `CryptoOnrampCoordinator`.
-    static func create(apiClient: STPAPIClient, appearance: Appearance) async throws -> Self
+    static func create(apiClient: STPAPIClient, appearance: LinkAppearance) async throws -> Self
 
     /// Looks up whether the provided email is associated with an existing Link consumer.
     ///
@@ -59,7 +59,7 @@ public final class CryptoOnrampCoordinator: CryptoOnrampCoordinatorProtocol {
 
     private let linkController: LinkController
     private let apiClient: STPAPIClient
-    private let appearance: Appearance
+    private let appearance: LinkAppearance
 
     private var linkAccountInfo: PaymentSheetLinkAccountInfoProtocol {
         get async throws {
@@ -70,7 +70,7 @@ public final class CryptoOnrampCoordinator: CryptoOnrampCoordinatorProtocol {
         }
     }
 
-    private init(linkController: LinkController, apiClient: STPAPIClient = .shared, appearance: Appearance) {
+    private init(linkController: LinkController, apiClient: STPAPIClient = .shared, appearance: LinkAppearance) {
         self.linkController = linkController
         self.apiClient = apiClient
         self.appearance = appearance
@@ -78,7 +78,7 @@ public final class CryptoOnrampCoordinator: CryptoOnrampCoordinatorProtocol {
 
     // MARK: - CryptoOnrampCoordinatorProtocol
 
-    public static func create(apiClient: STPAPIClient = .shared, appearance: Appearance) async throws -> CryptoOnrampCoordinator {
+    public static func create(apiClient: STPAPIClient = .shared, appearance: LinkAppearance) async throws -> CryptoOnrampCoordinator {
         let linkController = try await LinkController.create(apiClient: apiClient, mode: .payment)
         return CryptoOnrampCoordinator(
             linkController: linkController,
