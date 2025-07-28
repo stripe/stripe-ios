@@ -9,7 +9,7 @@
 import Foundation
 
 extension DocumentFileUploadViewController {
-    func listItemText(for side: DocumentSide) -> String {
+    func listItemText(for side: DocumentSide, availableIDTypes: [String]) -> String {
         switch side {
         case .front:
             return STPLocalizedString(

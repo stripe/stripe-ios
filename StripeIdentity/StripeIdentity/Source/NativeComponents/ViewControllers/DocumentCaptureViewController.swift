@@ -391,7 +391,8 @@ final class DocumentCaptureViewController: IdentityFlowViewController {
             sheetController: sheetController,
             documentUploader: documentUploader,
             cameraPermissionsManager: imageScanningSession.permissionsManager,
-            appSettingsHelper: imageScanningSession.appSettingsHelper
+            appSettingsHelper: imageScanningSession.appSettingsHelper,
+            availableIDTypes: availableIDTypes
         )
         sheetController.flowController.replaceCurrentScreen(
             with: uploadVC

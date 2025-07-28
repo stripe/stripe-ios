@@ -636,6 +636,8 @@ extension VerificationSheetFlowController: VerificationSheetFlowControllerProtoc
         )
         self.documentUploader = documentUploader
 
+        let availableTypes = staticContent.documentSelect.idDocumentTypeAllowlistKeys
+
         switch documentScannerResult {
         case .failure(let error):
             sheetController.analyticsClient.logGenericError(error: error, sheetController: sheetController)
@@ -644,12 +646,12 @@ extension VerificationSheetFlowController: VerificationSheetFlowControllerProtoc
             return DocumentFileUploadViewController(
                 requireLiveCapture: staticContent.documentCapture.requireLiveCapture,
                 sheetController: sheetController,
-                documentUploader: documentUploader
+                documentUploader: documentUploader,
+                availableIDTypes: availableTypes
             )
 
         case .success(let anyDocumentScanner):
 
-            let availableTypes = staticContent.documentSelect.idDocumentTypeAllowlistKeys
             return DocumentCaptureViewController(
                 apiConfig: staticContent.documentCapture,
                 sheetController: sheetController,
