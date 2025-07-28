@@ -99,12 +99,13 @@ import WebKit
             configuration: flowController.configuration
         ) {
             let canUseLinkInlineVerification: Bool = {
-                let featureFlagEnabled = PaymentSheet.LinkFeatureFlags.enableLinkInlineVerification
+                let inlineVerificationKillswitch = "link_mobile_express_checkout_element_inline_otp_killswitch"
+                let killswitchEnabled = flowController.elementsSession.flags[inlineVerificationKillswitch] == true
                 let canUseNativeLink = deviceCanUseNativeLink(
                     elementsSession: flowController.elementsSession,
                     configuration: flowController.configuration
                 )
-                return featureFlagEnabled && canUseNativeLink
+                return canUseNativeLink && !killswitchEnabled
             }()
 
             if canUseLinkInlineVerification,

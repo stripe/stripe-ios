@@ -114,14 +114,3 @@ func deviceCanUseNativeLink(elementsSession: STPElementsSession, configuration: 
 
     return configuration.apiClient.stripeAttest.isSupported
 }
-
-// MARK: - Link features
-
-extension PaymentSheet {
-
-    @_spi(STP) public enum LinkFeatureFlags {
-
-        /// Decides whether Link inline verification is shown in the `WalletButtonsView`.
-        @_spi(STP) public static var enableLinkInlineVerification: Bool = false
-    }
-}

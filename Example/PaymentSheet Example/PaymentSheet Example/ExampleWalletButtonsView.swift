@@ -20,7 +20,6 @@ struct ShopPayTestingOptions {
 struct ExampleWalletButtonsContainerView: View {
     @State private var email: String = ""
     @State private var shopId: String = "69293637654"
-    @State private var linkInlineVerificationEnabled: Bool = PaymentSheet.LinkFeatureFlags.enableLinkInlineVerification
     @State private var useSPTTestBackend: Bool = false
     @State private var appearance: PaymentSheet.Appearance = PaymentSheet.Appearance()
     @State private var showingAppearancePlayground = false
@@ -45,11 +44,6 @@ struct ExampleWalletButtonsContainerView: View {
                     TextField("ShopId", text: $shopId)
                         .textContentType(.emailAddress)
                         .textInputAutocapitalization(.never)
-
-                    Toggle("Enable inline verification", isOn: $linkInlineVerificationEnabled)
-                        .onChange(of: linkInlineVerificationEnabled) { newValue in
-                            PaymentSheet.LinkFeatureFlags.enableLinkInlineVerification = newValue
-                        }
 
                     Toggle("Use SPT test backend", isOn: $useSPTTestBackend)
 
