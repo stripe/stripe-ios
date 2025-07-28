@@ -69,6 +69,27 @@ extension PaymentSheet {
         }
     }
 
+    /// Options for how mandate text is displayed in PaymentSheet
+    public enum MandateDisplay {
+        /// (Default) PaymentSheet displays the standard mandate text for payment methods that require it
+        case automatic
+        /// PaymentSheet will not display mandate text. Your integration is responsible for displaying mandate text to comply with payment method regulations.
+        case hidden
+        /// PaymentSheet displays the provided custom mandate text instead of the standard text
+        case custom(NSAttributedString)
+        
+        var analyticValue: String {
+            switch self {
+            case .automatic:
+                return "automatic"
+            case .hidden:
+                return "hidden"
+            case .custom:
+                return "custom"
+            }
+        }
+    }
+
     /// Configuration for PaymentSheet
     public struct Configuration {
         // The text that shows in the header of the payment sheet when adding a card.
@@ -218,6 +239,10 @@ extension PaymentSheet {
         /// Note: This is only a client-side solution.
         /// Note: Card brand filtering is not currently supported by Link.
         public var cardBrandAcceptance: PaymentSheet.CardBrandAcceptance = .all
+
+        /// Controls how mandate text is displayed in the payment sheet.
+        /// Defaults to `.automatic`.
+        public var mandateDisplay: MandateDisplay = .automatic
 
         /// Set to `true` if using a wallet buttons view. This changes a few behaviors of PaymentSheet (for example, wallet buttons will never be selected by default).
         @_spi(STP) public var willUseWalletButtonsView = false

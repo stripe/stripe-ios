@@ -484,6 +484,7 @@ extension PaymentSheet.Configuration {
     var analyticPayload: [String: Any] {
         var payload = commonAnalyticPayload
         payload["payment_method_layout"] = paymentMethodLayout.description
+        payload["mandate_display"] = mandateDisplay.analyticValue
         return payload
     }
 }

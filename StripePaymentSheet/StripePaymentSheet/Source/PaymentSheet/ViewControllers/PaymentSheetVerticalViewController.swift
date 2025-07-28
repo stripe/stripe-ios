@@ -291,12 +291,22 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
 
     func updateMandate(animated: Bool = true) {
         let hadLabelInStackView = mandateView.attributedText != nil || errorLabel.text != nil
-        let mandateProvider = VerticalListMandateProvider(configuration: configuration, elementsSession: elementsSession, intent: intent, analyticsHelper: analyticsHelper)
-        let newMandateText = mandateProvider.mandate(
-            for: selectedPaymentOption?.paymentMethodType,
-            savedPaymentMethod: selectedPaymentOption?.savedPaymentMethod,
-            bottomNoticeAttributedString: paymentMethodFormViewController?.bottomNoticeAttributedString
-        )
+        let newMandateText: NSAttributedString?
+        
+        switch configuration.mandateDisplay {
+        case .automatic:
+            let mandateProvider = VerticalListMandateProvider(configuration: configuration, elementsSession: elementsSession, intent: intent, analyticsHelper: analyticsHelper)
+            newMandateText = mandateProvider.mandate(
+                for: selectedPaymentOption?.paymentMethodType,
+                savedPaymentMethod: selectedPaymentOption?.savedPaymentMethod,
+                bottomNoticeAttributedString: paymentMethodFormViewController?.bottomNoticeAttributedString
+            )
+        case .hidden:
+            newMandateText = nil
+        case .custom(let customText):
+            newMandateText = customText
+        }
+        
         animateHeightChange {
             self.mandateView.attributedText = newMandateText
             self.mandateView.setHiddenIfNecessary(newMandateText == nil)

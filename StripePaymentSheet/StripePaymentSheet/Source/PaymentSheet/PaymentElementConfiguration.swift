@@ -39,6 +39,7 @@ protocol PaymentElementConfiguration: PaymentMethodRequirementProvider {
     var paymentMethodOrder: [String]? { get set }
     var allowsRemovalOfLastSavedPaymentMethod: Bool { get set }
     var cardBrandAcceptance: PaymentSheet.CardBrandAcceptance { get set }
+    var mandateDisplay: PaymentSheet.MandateDisplay { get set }
     var analyticPayload: [String: Any] { get }
     var disableWalletPaymentMethodFiltering: Bool { get set }
     var linkPaymentMethodsOnly: Bool { get set }
@@ -94,6 +95,19 @@ extension EmbeddedPaymentElement.Configuration: PaymentElementConfiguration {
     var shopPay: PaymentSheet.ShopPayConfiguration? {
         get { return nil }
         set {}
+    }
+    var mandateDisplay: PaymentSheet.MandateDisplay {
+        get { 
+            return embeddedViewDisplaysMandateText ? .automatic : .hidden
+        }
+        set { 
+            switch newValue {
+            case .automatic, .custom:
+                embeddedViewDisplaysMandateText = true
+            case .hidden:
+                embeddedViewDisplaysMandateText = false
+            }
+        }
     }
     var paymentMethodLayout: PaymentSheet.PaymentMethodLayout {
         return .vertical
