@@ -33,9 +33,17 @@ struct RegistrationView: View {
         ScrollView {
             VStack(spacing: 20) {
                 VStack(alignment: .leading, spacing: 8) {
+                    Text("Finish setting up your new account")
+                        .font(.subheadline)
+                        .foregroundColor(.secondary)
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                }
+                
+                VStack(alignment: .leading, spacing: 8) {
                     Text("Email")
                         .font(.headline)
                     Text(email)
+                        .frame(maxWidth: .infinity, alignment: .leading)
                         .padding()
                         .background(Color.gray.opacity(0.1))
                         .cornerRadius(8)
@@ -129,4 +137,29 @@ struct RegistrationView: View {
             }
         }
     }
+}
+
+private struct RegistrationPreviewView: View {
+    @State var coordinator: CryptoOnrampCoordinator?
+    var body: some View {
+        NavigationView {
+            if let coordinator = coordinator {
+                RegistrationView(coordinator: coordinator, email: "test@example.com")
+            }
+        }
+        .onAppear {
+            STPAPIClient.shared.setUpPublishableKey()
+            Task {
+                let coordinator = try? await CryptoOnrampCoordinator.create(appearance: .init())
+
+                await MainActor.run {
+                    self.coordinator = coordinator
+                }
+            }
+        }
+    }
+}
+
+#Preview {
+    RegistrationPreviewView()
 }
