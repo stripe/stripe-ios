@@ -28,12 +28,16 @@ class VerticalListMandateProvider: MandateTextProvider {
         self.analyticsHelper = analyticsHelper
     }
 
-    /// Builds the attributed string for a given payment method type.
+    /// Returns the mandate text for a given payment method type if we aren't going to show the form to the customer.
     /// - Parameter paymentMethodType: The payment method type who's mandate should be constructed
     /// - Parameter savedPaymentMethod: The currently selected saved payment method if any
     /// - Parameter bottomNoticeAttributedString: Passing this in just makes this method return it
     /// - Returns: An `NSAttributedString` representing the mandate to be displayed for `paymentMethodType` or `nil` if there is no mandate.
-    func mandate(for paymentMethodType: PaymentSheet.PaymentMethodType?, savedPaymentMethod: STPPaymentMethod?, bottomNoticeAttributedString: NSAttributedString? = nil) -> NSAttributedString? {
+    func mandate(
+        for paymentMethodType: PaymentSheet.PaymentMethodType?,
+        savedPaymentMethod: STPPaymentMethod?,
+        bottomNoticeAttributedString: NSAttributedString? = nil
+    ) -> NSAttributedString? {
         guard let paymentMethodType else { return nil }
         if savedPaymentMethod != nil {
             // 1. For saved PMs, manually build mandates
@@ -66,16 +70,23 @@ class VerticalListMandateProvider: MandateTextProvider {
                 analyticsHelper: analyticsHelper
             ).make()
 
-            guard !form.collectsUserInput else {
-                // If it collects user input, the mandate will be displayed in the form and not here
+            // If the form collects user input, the mandate will be displayed in the form and not here, so return nil
+            if form.collectsUserInput {
                 return nil
             }
-            // Get the mandate from the form, if available
-            // 🙋‍♂️ Note: assumes mandates are SimpleMandateElement!
-            if let mandateText = form.getAllUnwrappedSubElements().compactMap({ $0 as? SimpleMandateElement }).first?.mandateTextView.attributedText, !mandateText.string.isEmpty {
-                return mandateText
+
+            // In this EmbeddedPaymentElement edge case, we will show the form even though it doesn't collect user input, so return nil
+            let paymentMethodHasNoFormAndHasAMandate: Bool = form.collectsUserInput == false && form.getMandateText() != nil
+            if let configuration = configuration as? EmbeddedPaymentElement.Configuration,
+               case .immediateAction = configuration.rowSelectionBehavior,
+               configuration.embeddedViewDisplaysMandateText,
+               paymentMethodHasNoFormAndHasAMandate {
+                return nil
             }
-            return nil
+
+            // If we get to this point, we didn't show the form, so return the mandate from the form if it exists
+            // 🙋‍♂️ Note: assumes mandates are SimpleMandateElement!
+            return form.getMandateText()
         }
     }
 }

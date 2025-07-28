@@ -115,10 +115,20 @@ extension EmbeddedPaymentElement {
             formCache: formCache,
             delegate: delegate
         )
-        guard formViewController.collectsUserInput else {
-            return nil
+
+        let paymentMethodHasNoFormAndHasAMandate: Bool = formViewController.form.collectsUserInput == false && formViewController.form.getMandateText() != nil
+        if case .immediateAction = configuration.rowSelectionBehavior, configuration.embeddedViewDisplaysMandateText, paymentMethodHasNoFormAndHasAMandate {
+            // By default, we don't show or use form VCs if they don't collect user input
+            // However: When `rowSelectionBehavior` is `immediateAction` and `embeddedViewDisplaysMandateText` is `true` and the customer selects a PM that has no form but has a mandate, there's a problem.
+            // We'd normally show the mandate in the embedded view, but `immediateAction` implies the merchant will immediately confirm or move the customer to a different screen before they can see or consent to the mandate.
+            // We therefore show a form with the mandate text and proceed as normal as if it were any other PM with a form (customer can continue or confirm in the sheet).
+            return formViewController
+        } else {
+            guard formViewController.collectsUserInput else {
+                return nil
+            }
+            return formViewController
         }
-        return formViewController
     }
 }
 
@@ -151,6 +161,7 @@ extension EmbeddedPaymentElement: EmbeddedPaymentMethodsViewDelegate {
     }
 
     func embeddedPaymentMethodsViewDidTapPaymentMethodRow() {
+        // 😓 Note: This method depends on `embeddedPaymentMethodsViewDidUpdateSelection` being called *before* this method is called when a row is tapped.
         guard let selectedFormViewController else {
             // If the current selection has no form VC, simply alert the merchant of the selection if they are using immediateAction
             if case .immediateAction(let didSelectPaymentOption) = configuration.rowSelectionBehavior {

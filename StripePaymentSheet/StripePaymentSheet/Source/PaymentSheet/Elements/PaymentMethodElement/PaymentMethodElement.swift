@@ -64,3 +64,16 @@ extension StaticElement: PaymentMethodElement {
         return params
     }
 }
+
+// MARK: - Helpers
+
+extension PaymentMethodElement {
+    // Get the mandate from the form, if available
+    // 🙋‍♂️ Note: assumes mandates are SimpleMandateElement!
+    func getMandateText() -> NSAttributedString? {
+        guard let mandateText = getAllUnwrappedSubElements().compactMap({ $0 as? SimpleMandateElement }).first?.mandateTextView.attributedText, !mandateText.string.isEmpty else {
+            return nil
+        }
+        return mandateText
+    }
+}
