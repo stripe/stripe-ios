@@ -60,12 +60,10 @@ struct CryptoOnrampExampleView: View {
                     }
 
                     if let coordinator {
-                        NavigationLink(
+                        HiddenNavigationLink(
                             destination: RegistrationView(coordinator: coordinator, email: email),
                             isActive: $showRegistration
-                        ) { EmptyView() }
-                            .opacity(0)
-                            .frame(width: 0, height: 0)
+                        )
                     }
                 }
                 .padding()

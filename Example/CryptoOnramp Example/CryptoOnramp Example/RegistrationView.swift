@@ -99,12 +99,10 @@ struct RegistrationView: View {
                 }
 
                 if let customerId = registrationCustomerId {
-                    NavigationLink(
+                    HiddenNavigationLink(
                         destination: SuccessView(message: "Registration Successful!", customerId: customerId),
                         isActive: $showSuccess
-                    ) { EmptyView() }
-                        .opacity(0)
-                        .frame(width: 0, height: 0)
+                    )
                 }
             }
             .padding()
@@ -129,7 +127,7 @@ struct RegistrationView: View {
                     isLoading.wrappedValue = false
                     registrationCustomerId = customerId
 
-                    // Small delay to allow loading overlay to finish animating
+                    // Delay so the navigation link animation doesn’t get canceled.
                     DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
                         showSuccess = true
                     }
