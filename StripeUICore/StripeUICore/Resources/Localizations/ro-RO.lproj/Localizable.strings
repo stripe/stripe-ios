@@ -134,7 +134,9 @@
 
 "Your BLIK code is invalid." = "Codul dvs. BLIK nu este valid.";
 
-"Your ZIP is incomplete." = "Codul dvs. poștal nu este complet.";
+"Your ZIP code is incomplete." = "Codul dvs. poștal este incomplet.";
+
+"Your ZIP code is invalid." = "Codul dvs. poștal este nevalid.";
 
 "Your email is invalid." = "E-mailul nu este valid.";
 
