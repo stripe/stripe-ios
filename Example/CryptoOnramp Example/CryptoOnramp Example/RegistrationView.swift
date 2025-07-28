@@ -5,8 +5,8 @@
 //  Created by Michael Liberatore on 7/28/25.
 //
 
-import SwiftUI
 import StripeCore
+import SwiftUI
 
 @_spi(CryptoOnrampSDKPreview)
 import StripeCryptoOnramp

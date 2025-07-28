@@ -11,12 +11,12 @@ import SwiftUI
 struct HiddenNavigationLink<Destination: View>: View {
     /// The destination view to show when the `isActive` binding is `true`.
     let destination: Destination
-    
+
     /// Determines whether to show `destination`.
     @Binding var isActive: Bool
-    
+
     // MARK: - View
-    
+
     var body: some View {
         NavigationLink(destination: destination, isActive: $isActive) {
             EmptyView()

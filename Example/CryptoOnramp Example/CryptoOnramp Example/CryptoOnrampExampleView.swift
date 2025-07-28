@@ -5,8 +5,8 @@
 //  Created by Michael Liberatore on 7/24/25.
 //
 
-import SwiftUI
 import StripeCore
+import SwiftUI
 
 @_spi(CryptoOnrampSDKPreview)
 import StripeCryptoOnramp
@@ -18,7 +18,7 @@ struct CryptoOnrampExampleView: View {
     @State private var email: String = ""
     @State private var showRegistration: Bool = false
     @State private var showSuccess: Bool = false
-    @State private var authenticationCustomerId: String? = nil
+    @State private var authenticationCustomerId: String?
 
     @Environment(\.isLoading) private var isLoading
     @FocusState private var isEmailFieldFocused: Bool

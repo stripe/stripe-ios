@@ -7,7 +7,6 @@
 
 import SwiftUI
 
-
 /// A simple view that displays an error message with a background in shades of red.
 struct ErrorMessageView: View {
 

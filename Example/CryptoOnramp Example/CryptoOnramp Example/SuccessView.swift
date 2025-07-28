@@ -21,12 +21,12 @@ struct SuccessView: View {
     var body: some View {
         VStack(spacing: 24) {
             Spacer()
-            
+
             VStack(spacing: 16) {
                 Image(systemName: "checkmark.circle.fill")
                     .font(.system(size: 60))
                     .foregroundColor(.green)
-                
+
                 Text(message)
                     .font(.title2)
                     .fontWeight(.semibold)
@@ -48,7 +48,7 @@ struct SuccessView: View {
             .cornerRadius(8)
 
             Spacer()
-            
+
             Button("Restart") {
                 if let navigationController = UIApplication.shared.findTopNavigationController() {
                     navigationController.popToRootViewController(animated: true)
