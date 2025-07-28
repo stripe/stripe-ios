@@ -48,8 +48,6 @@
 
 "To scan your card, allow camera access in Settings." = "Kad nuskaitytumėte kortelę, nustatymuose suteikite prieigą fotoaparatui.";
 
-"Your ZIP is invalid." = "Jūsų pašto kodas yra netinkamas.";
-
 "Your card has expired." = "Jūsų kortelė baigė galioti.";
 
 "Your card number is incomplete." = "Neišsamus kortelės numeris.";
@@ -67,8 +65,6 @@
 "Your card's security code is incomplete." = "Neišsamus kortelės saugos kodas.";
 
 "Your card's security code is invalid." = "Kortelės saugos kodas negalioja.";
-
-"Your postal code is invalid." = "Jūsų pašto kodas yra netinkamas.";
 
 "card number" = "kortelės numeris";
 

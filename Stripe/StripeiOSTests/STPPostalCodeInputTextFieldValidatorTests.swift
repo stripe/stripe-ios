@@ -34,7 +34,7 @@ class STPPostalCodeInputTextFieldValidatorTests: XCTestCase {
 
         validator.inputValue = "1234"
         XCTAssertEqual(
-            STPValidatedInputState.incomplete(description: "Your ZIP is incomplete."),
+            STPValidatedInputState.incomplete(description: "Your ZIP code is incomplete."),
             validator.validationState
         )
 
@@ -43,7 +43,7 @@ class STPPostalCodeInputTextFieldValidatorTests: XCTestCase {
 
         validator.inputValue = "12345678"
         XCTAssertEqual(
-            STPValidatedInputState.incomplete(description: "Your ZIP is incomplete."),
+            STPValidatedInputState.incomplete(description: "Your ZIP code is incomplete."),
             validator.validationState
         )
 
@@ -55,19 +55,19 @@ class STPPostalCodeInputTextFieldValidatorTests: XCTestCase {
 
         validator.inputValue = "12-3456789"
         XCTAssertEqual(
-            STPValidatedInputState.invalid(errorMessage: "Your ZIP is invalid."),
+            STPValidatedInputState.invalid(errorMessage: "Your ZIP code is invalid."),
             validator.validationState
         )
 
         validator.inputValue = "12345-"
         XCTAssertEqual(
-            STPValidatedInputState.incomplete(description: "Your ZIP is incomplete."),
+            STPValidatedInputState.incomplete(description: "Your ZIP code is incomplete."),
             validator.validationState
         )
 
         validator.inputValue = "hi"
         XCTAssertEqual(
-            STPValidatedInputState.invalid(errorMessage: "Your ZIP is invalid."),
+            STPValidatedInputState.invalid(errorMessage: "Your ZIP code is invalid."),
             validator.validationState
         )
 
