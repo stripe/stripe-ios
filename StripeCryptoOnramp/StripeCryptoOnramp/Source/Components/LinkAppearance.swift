@@ -7,8 +7,7 @@
 
 import UIKit
 
-// Placeholder type which will eventually hold appearance-related
-// properties for customizable UI that we’ll fill out as we make use of them.
+// Customizable appearance-related configuration for Stripe-provided Link UI.
 @_spi(CryptoOnrampSDKPreview)
 public struct LinkAppearance {
 
@@ -58,7 +57,7 @@ public struct LinkAppearance {
     ///   - primaryColor: The primary color used in the Link UI. Defaults to the Link brand color.
     ///   - primaryButton: Configuration values for the primary button. Uses reasonable defaults if nothing is provided.
     ///   - style: Style options for colors in the Link UI.
-    init(primaryColor: UIColor?, primaryButton: PrimaryButtonConfiguration?, style: Style) {
+    public init(primaryColor: UIColor? = nil, primaryButton: PrimaryButtonConfiguration? = nil, style: Style = .automatic) {
         self.primaryColor = primaryColor
         self.primaryButton = primaryButton
         self.style = style
