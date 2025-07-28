@@ -11,8 +11,13 @@ import StripeCore
 @_spi(CryptoOnrampSDKPreview)
 import StripeCryptoOnramp
 
+/// A view used to collect additional account registration information.
 struct RegistrationView: View {
+
+    /// The coordinator to use to perform registration.
     let coordinator: CryptoOnrampCoordinator
+
+    /// The email address associated with the new account being registered.
     let email: String
 
     @State private var fullName: String = ""
@@ -31,6 +36,8 @@ struct RegistrationView: View {
     private var isRegisterButtonDisabled: Bool {
         isLoading.wrappedValue || phoneNumber.isEmpty
     }
+
+    // MARK: - View
 
     var body: some View {
         ScrollView {

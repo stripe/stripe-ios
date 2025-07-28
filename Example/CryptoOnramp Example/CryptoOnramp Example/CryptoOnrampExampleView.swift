@@ -11,6 +11,7 @@ import StripeCore
 @_spi(CryptoOnrampSDKPreview)
 import StripeCryptoOnramp
 
+/// The main content view of the example CryptoOnramp app.
 struct CryptoOnrampExampleView: View {
     @State private var coordinator: CryptoOnrampCoordinator?
     @State private var errorMessage: String?
@@ -23,6 +24,8 @@ struct CryptoOnrampExampleView: View {
     private var isNextButtonDisabled: Bool {
         isLoading.wrappedValue || email.isEmpty || coordinator == nil
     }
+
+    // MARK: - View
 
     var body: some View {
         NavigationView {
@@ -119,7 +122,6 @@ struct CryptoOnrampExampleView: View {
                 }
             }
         }
-
     }
 }
 

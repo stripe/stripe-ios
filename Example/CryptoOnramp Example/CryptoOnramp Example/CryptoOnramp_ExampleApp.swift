@@ -7,10 +7,13 @@
 
 import SwiftUI
 
+/// The root of the example CryptoOnramp app.
 @main
 struct CryptoOnramp_ExampleApp: App {
     @State private var isLoading: Bool = false
-    
+
+    // MARK: - App
+
     var body: some Scene {
         WindowGroup {
             ZStack {

@@ -6,12 +6,18 @@
 //
 
 import SwiftUI
-import UIKit
 
+/// A view that displays a success message along with a customer id and the ability to pop the navigation stack to root.
 struct SuccessView: View {
+
+    // The message to display indicating success.
     let message: LocalizedStringKey
+
+    // The customer id that was retrieved that led to this success.
     let customerId: String
-    
+
+    // MARK: - View
+
     var body: some View {
         VStack(spacing: 24) {
             Spacer()
