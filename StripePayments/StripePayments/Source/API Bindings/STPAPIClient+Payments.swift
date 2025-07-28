@@ -579,6 +579,7 @@ extension STPAPIClient {
             completion(paymentIntent, error)
         }
     }
+
     /// Endpoint to call to indicate that the web-based challenge flow for 3DS authentication was canceled.
     func cancel3DSAuthentication(
         forPaymentIntent paymentIntentID: String,
