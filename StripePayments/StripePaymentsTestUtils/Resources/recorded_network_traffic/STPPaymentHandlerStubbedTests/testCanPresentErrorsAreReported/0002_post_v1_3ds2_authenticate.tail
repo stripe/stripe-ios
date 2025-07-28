@@ -1,0 +1,52 @@
+POST
+https:\/\/api\.stripe\.com\/v1\/3ds2\/authenticate$
+200
+application/json
+access-control-allow-methods: GET, HEAD, PUT, PATCH, POST, DELETE
+content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=TOf5NuSKveCLRqqyY4rHeyEEWmQgLBuwTgYA9lFOxJBCn7ToYV1aJRojgNISSD4P3D05p9UYLI5Gvg9S
+Server: nginx
+Cache-Control: no-cache, no-store
+x-wc: ABGHIJ
+Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
+Access-Control-Allow-Origin: *
+stripe-should-retry: false
+x-stripe-priority-routing-enabled: true
+x-stripe-routing-context-priority-tier: api-testmode
+request-id: req_pqreMG1OSjrRTA
+Content-Length: 1700
+Vary: Origin
+Date: Mon, 28 Jul 2025 20:50:32 GMT
+original-request: req_pqreMG1OSjrRTA
+stripe-version: 2020-08-27
+idempotency-key: 9d0fe63b-64f1-4716-921f-7164ce3b0a6b
+access-control-expose-headers: Request-Id, Stripe-Manage-Version, Stripe-Should-Retry, X-Stripe-External-Auth-Required, X-Stripe-Privileged-Session-Required
+access-control-max-age: 300
+access-control-allow-credentials: true
+Content-Type: application/json
+X-Stripe-Mock-Request: app=%7B%0A%20%20%22sdkTransID%22%20%3A%20%2287a8832d-dbd3-44a6-84f9-d07bd4a39922%22%2C%0A%20%20%22messageVersion%22%20%3A%20%222\.2\.0%22%2C%0A%20%20%22sdkEphemPubKey%22%20%3A%20%7B%0A%20%20%20%20%22y%22%20%3A%20%22gxxDGAlUh3fTcK5rY36apusGiA3NHfaej-B0CyEVU98%22%2C%0A%20%20%20%20%22x%22%20%3A%20%226ABQ4v2hQCLvEplHze4GZ2r3q8NlADsxbD-kfIiv5WQ%22%2C%0A%20%20%20%20%22kty%22%20%3A%20%22EC%22%2C%0A%20%20%20%20%22crv%22%20%3A%20%22P-256%22%0A%20%20%7D%2C%0A%20%20%22sdkAppID%22%20%3A%20%226dba3666-3544-45f0-9ec7-81de97ebdfe0%22%2C%0A%20%20%22sdkEncData%22%20%3A%20%22eyJlbmMiOiJBMTI4Q0JDLUhTMjU2IiwiYWxnIjoiUlNBLU9BRVAtMjU2In0\.KPsl2KAOYWiQf7HShPeCwacc77etg6FpPO42KSfW-WTJXfNwdf9M0lFdSx0s78iwjXfdOpmF4-4xdjLyP4m0Ro-mN6FgxR1cCmy34BJzs0JiK4SDv41YshghH1SmRmlQu5kuFczMGqWgeC33rmmI-YZTZtkrq_qth4wYu8kwrkS3hPUFNpQgNIm_qafCeI5L1irRvbaFfoXgzm0VAgdfyGhMLJMsiJDNa0OdahSlS-9yGZDDFBi0WtwwhM6Ot4NuJMGf1nxdWBZLWMYH8LRsFw4JSuLwfB2Sz3FncFUNG8wRwno8YkIQGHNoVw8EAsagTZak7p4Ezo7CxG7imEVwWA\._UnWUVND6OYNwRo5rJEfNA\.3xgBiy7jSK_0KziKa8odqK3NyXjBy_921OklBE4LnDTX0u0RnBHPd8y4u1ETPjJaeN8iRBiAIot7nF2D9j1YSYz3rvcj-9rOf1OmMlip1YGgAaljUlVHy0JvMmHKdBag1lbS40fhS_NEtU8hzkCv9bsRgnIiSYYuFmG0dvWWuomLgZLQIUQLASvTScoAnoOge-YnipWPQczBdh3t9xv7jakyIOx87-Hj0J1wqg_5wQELUtUCJTLixOBzMKsWQ9TOxfjos9tNeg5zIyqbD263AdWp41b_MARnXp1iP6Sgs6NOOE6lM7qiovzNAuNF63nEt147cwzwa2R7uh5e-dmUjqnQDuboPdZk3BZdSPyUrs3NxhCJFJDo6WVidxKXEig0oAMvDDS5JU0tonFaZWFGuZ5Wg6Vp9n5QlXVc3wtoGHcLAVQYYWu6SR2Jh5uC5Sz99oDZq0Ikan4dZqzyoKxZeVmj1nvZkLGfuddkkyVUHwh24j8Scno9MusXTyfYDg1T0pBwWZfu909qMbQMFD8lXRNVG1cp8ng-cidu1lQ7hQThwWc9hrCweDwjcW2hoRh2AHPbFzdVwYkbIHyWDGdKqOW7CnW6DK9VXWypC7YqQ3UlwG2HenaAFw_NDiVVT3Cj9fv_2l-ziJw4RAPT0q3KEo0Ij2C5m6iRMgazY05KANrnN7TJcQ4uo4Ww3Ni48akzDO0OuC5q9ab6qfboVRWE0h7aEXIuYdcrK7E6d84ybu1ugde6XfzeHrFKXw5Nc3ea\.WGAVQnnxzLGHTkmk1IXEMA%22%2C%0A%20%20%22sdkReferenceNumber%22%20%3A%20%223DS_LOA_SDK_STIN_020200_00961%22%2C%0A%20%20%22deviceRenderOptions%22%20%3A%20%7B%0A%20%20%20%20%22sdkUiType%22%20%3A%20%5B%0A%20%20%20%20%20%20%2201%22%2C%0A%20%20%20%20%20%20%2202%22%2C%0A%20%20%20%20%20%20%2203%22%2C%0A%20%20%20%20%20%20%2204%22%2C%0A%20%20%20%20%20%20%2205%22%0A%20%20%20%20%5D%2C%0A%20%20%20%20%22sdkInterface%22%20%3A%20%2203%22%0A%20%20%7D%2C%0A%20%20%22sdkMaxTimeout%22%20%3A%20%2210%22%0A%7D&source=payatt_3Rpy05FY0qyl6XeW1UiNb41c
+
+{
+  "object" : "three_d_secure_2",
+  "fallback_redirect_url" : null,
+  "source" : "payatt_3Rpy05FY0qyl6XeW1UiNb41c",
+  "id" : "threeds2_1Rpy0CFY0qyl6XeWKZ4m96TS",
+  "livemode" : false,
+  "creq" : "eyJ0aHJlZURTU2VydmVyVHJhbnNJRCI6Ijg3M2NhMWE3LTY2ZmUtNDkyZC04NGRmLWRjMzY2N2ZhMGYxMSIsImFjc1RyYW5zSUQiOiI0ZjZmN2UxOS01ZjdhLTQzY2YtYmExYi0yZTVlMDM3NDcxZjEiLCJjaGFsbGVuZ2VXaW5kb3dTaXplIjoiMDUiLCJtZXNzYWdlVHlwZSI6IkNSZXEiLCJtZXNzYWdlVmVyc2lvbiI6IjIuMi4wIn0",
+  "created" : 1753735832,
+  "ares" : {
+    "threeDSServerTransID" : "873ca1a7-66fe-492d-84df-dc3667fa0f11",
+    "acsSignedContent" : "eyJhbGciOiJFUzI1NiJ9.eyJhY3NFcGhlbVB1YktleSI6eyJjcnYiOiJQLTI1NiIsImt0eSI6IkVDIiwieCI6Il9PcHlNUk8wSUllMldnRWk1STJGbU40eGYwekVsTndvY0RRS20yeDZzYWMiLCJ5IjoiRlFUSTBqU2l1YWtwcFpTWThNV01kaG9UMHdNMk9PUUk4ZFc5WGlZRlByTSJ9LCJzZGtFcGhlbVB1YktleSI6eyJ5IjoiZ3h4REdBbFVoM2ZUY0s1clkzNmFwdXNHaUEzTkhmYWVqLUIwQ3lFVlU5OCIsIngiOiI2QUJRNHYyaFFDTHZFcGxIemU0R1oycjNxOE5sQURzeGJELWtmSWl2NVdRIiwia3R5IjoiRUMiLCJjcnYiOiJQLTI1NiJ9LCJhY3NVUkwiOiJodHRwczovL3Rlc3Rtb2RlLWFjcy5zdHJpcGUuY29tLzNkX3NlY3VyZV8yX3Rlc3QvYWNjdF8xRzZtMXBGWTBxeWw2WGVXL3RocmVlZHMyXzFScHkwQ0ZZMHF5bDZYZVdLWjRtOTZUUy9hcHBfY2hhbGxlbmdlL0g0b3ZMTm1OUnJHcUJJNnY0UVFkRkpaOGVQVENvcWZPQkQ1SnlTa1VSbDg9In0.Q0Xp2Z4S6sZfPg7-mVxflvmZ0uoGJYK5eQ8HkSNX5vg7MNk7j-m840_lVvxvUIWlFRithOlegmyTUeCSQd-ArQ",
+    "acsTransID" : "4f6f7e19-5f7a-43cf-ba1b-2e5e037471f1",
+    "transStatus" : "C",
+    "messageType" : "ARes",
+    "messageVersion" : "2.2.0",
+    "acsURL" : null,
+    "messageExtension" : null,
+    "cardholderInfo" : null,
+    "authenticationType" : "02",
+    "acsChallengeMandated" : "Y",
+    "sdkTransID" : "87a8832d-dbd3-44a6-84f9-d07bd4a39922"
+  },
+  "error" : null,
+  "state" : "challenge_required"
+}

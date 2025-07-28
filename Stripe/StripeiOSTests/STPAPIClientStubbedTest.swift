@@ -141,7 +141,7 @@ class STPAPIClientStubbedTest: APIStubbedTestCase {
         let paymentMethodParams = STPPaymentMethodParams()
         let setupIntentParams = STPSetupIntentConfirmParams(clientSecret: "seti_123456_secret_654321")
         setupIntentParams.paymentMethodParams = paymentMethodParams
-        sut.confirmSetupIntent(with: setupIntentParams) { _, _ in
+        sut.confirmSetupIntent(with: setupIntentParams, expand: nil, additionalClientAttributionMetadata: additionalClientAttributionMetadata) { _, _ in
             e.fulfill()
         }
         waitForExpectations(timeout: 10)
