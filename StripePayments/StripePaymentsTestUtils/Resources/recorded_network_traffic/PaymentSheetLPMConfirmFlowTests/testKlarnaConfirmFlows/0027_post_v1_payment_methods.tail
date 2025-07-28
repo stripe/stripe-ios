@@ -3,11 +3,7 @@ https:\/\/api\.stripe\.com\/v1\/payment_methods$
 200
 application/json
 access-control-allow-methods: GET, HEAD, PUT, PATCH, POST, DELETE
-<<<<<<< HEAD
-content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=42Rz1xE2eBei4fwIpy-l7YJIe7ywFdnHudLvqOncktIjiC_-agpHJ5qUvaC7nd9Q3ILZBREFW-tG0dCH
-=======
-content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=9mwy6XcpgfzpV9RlZHDPZg2S1s5cvtM43DsvfsAs-4aixh8Ep5PYgxN4U73pd6RSED7mMauNefeIwwCI
->>>>>>> origin/master
+content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=3HqB68ImeMsB9hvTcaOBO01FE71edadvyopS9dNtsdSFvmBkDfwo7HTp8zN4C77OIjaYkhaS92oSlOWy
 Server: nginx
 Cache-Control: no-cache, no-store
 x-wc: ABGHIJ
@@ -16,23 +12,13 @@ Access-Control-Allow-Origin: *
 stripe-should-retry: false
 x-stripe-priority-routing-enabled: true
 x-stripe-routing-context-priority-tier: api-testmode
-<<<<<<< HEAD
-request-id: req_WhlTIKsj1FYSyT
+request-id: req_yk5TClCS96TeKU
 Content-Length: 477
 Vary: Origin
-Date: Mon, 28 Jul 2025 17:26:08 GMT
-original-request: req_WhlTIKsj1FYSyT
+Date: Mon, 28 Jul 2025 19:41:08 GMT
+original-request: req_yk5TClCS96TeKU
 stripe-version: 2020-08-27
-idempotency-key: 5dd6649f-40d8-4083-9ac5-baf1289acf70
-=======
-request-id: req_f53tdERXKhv0OG
-Content-Length: 477
-Vary: Origin
-Date: Sat, 26 Jul 2025 03:13:12 GMT
-original-request: req_f53tdERXKhv0OG
-stripe-version: 2020-08-27
-idempotency-key: 8f4b8659-c4d9-42e2-a5e7-7199decbe4f4
->>>>>>> origin/master
+idempotency-key: f3b2ffa2-79fc-4323-aa8e-30094f5c947c
 access-control-expose-headers: Request-Id, Stripe-Manage-Version, Stripe-Should-Retry, X-Stripe-External-Auth-Required, X-Stripe-Privileged-Session-Required
 access-control-max-age: 300
 access-control-allow-credentials: true
@@ -44,11 +30,7 @@ X-Stripe-Mock-Request: allow_redisplay=unspecified&billing_details%5Baddress%5D%
   "klarna" : {
 
   },
-<<<<<<< HEAD
-  "id" : "pm_1RpuoOFY0qyl6XeWp1risJxX",
-=======
-  "id" : "pm_1RoyXsFY0qyl6XeWKHqm1xeZ",
->>>>>>> origin/master
+  "id" : "pm_1Rpwv2FY0qyl6XeWy7DczGBG",
   "billing_details" : {
     "email" : "foo@bar.com",
     "phone" : null,
@@ -64,11 +46,7 @@ X-Stripe-Mock-Request: allow_redisplay=unspecified&billing_details%5Baddress%5D%
     }
   },
   "livemode" : false,
-<<<<<<< HEAD
-  "created" : 1753723568,
-=======
-  "created" : 1753499592,
->>>>>>> origin/master
+  "created" : 1753731668,
   "allow_redisplay" : "unspecified",
   "type" : "klarna",
   "customer" : null

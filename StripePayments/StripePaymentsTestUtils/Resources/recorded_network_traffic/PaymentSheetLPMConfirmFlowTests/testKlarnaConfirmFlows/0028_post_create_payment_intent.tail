@@ -4,28 +4,15 @@ https:\/\/stp-mobile-ci-test-backend-e1b3\.stripedemos\.com\/create_payment_inte
 text/html
 Content-Type: text/html;charset=utf-8
 Alt-Svc: h3=":443"; ma=2592000,h3-29=":443"; ma=2592000
-<<<<<<< HEAD
-Set-Cookie: rack.session=NIZAcV1w4hgi%2Blwd0J3pnbz%2BVpz69S3%2BEDTykmqCY6K%2FlTIEk9XzUuHrS5bXVPolMMl4tM2gTgti3uDJkOcfHPRKcqsclZQTYOSVU2tdt1i4uAqyfmYrxzGZ5EiC80vVrHQhOoclbR2Wof8hNzC%2Fc8pAqIl41JDk9o2esm2KZez0fWEoYl%2F0fQRYN1HFEYdoRZ2pXWtLmvWJhbpkDsDwUd0ob7d3CyIvqzSRZcYCNgk%3D; path=/
+Set-Cookie: rack.session=%2FqizlG7zGoY%2FQb69kyuijeX%2B%2FQPdVMEg%2BvuH1DNtUfltK7pqGSoAVqbDGwC0zhH440uSJWypMuVD9nCwH9NFZcL2UMfEwnvxXbfns%2BkAosIfor41FP3qzDWNFM6%2BSRzHZ%2Ft5TGwMV3TBRg2pNH3Ob4Nm29i0ROIeqLzwyXgYYLSkXrTDzXn3IdCX%2BGoANnU3Kj%2FbJR7SAy8hd5MGkHcZo90AJ274WHBbm5nN%2B%2BQLskc%3D; path=/
 Server: Google Frontend
-x-cloud-trace-context: 6625e49ac3284469997ab72172a5a645
+x-cloud-trace-context: dfbbb0e793a5870398238912e66d741b
 Via: 1.1 google
 x-xss-protection: 1; mode=block
-Date: Mon, 28 Jul 2025 17:26:09 GMT
-=======
-Set-Cookie: rack.session=cKhD9ybq0lnGDeZwKabqUgpji5WOQoU%2BSAOQZoeGChiV8tMjS79H9mNVK231Q9Xf6EfSEKGbK6BxdKaTgvgIAA18X6%2BC4JYkaLha2QhryXWaiLFWKjswo9%2BJPjhYRNWPCW758qMkvgKkdEYaOop1KID8D%2BvqVqxo5vIhS3D4F7BURVtFDuwOLAZmtTR71TcX6QSS6E21onhdeoGuixprxGp9JPGpjVkUUonFRBDDmQ4%3D; path=/
-Server: Google Frontend
-x-cloud-trace-context: 7077fa57dc5ff221d216a9e74ea9113a
-Via: 1.1 google
-x-xss-protection: 1; mode=block
-Date: Sat, 26 Jul 2025 03:13:12 GMT
->>>>>>> origin/master
+Date: Mon, 28 Jul 2025 19:41:09 GMT
 x-robots-tag: noindex, nofollow
 Content-Length: 202
 x-content-type-options: nosniff
 x-frame-options: SAMEORIGIN
 
-<<<<<<< HEAD
-{"intent":"pi_3RpuoPFY0qyl6XeW1HhIjSGa","secret":"pi_3RpuoPFY0qyl6XeW1HhIjSGa_secret_rpk8w0vEC6UpYg6pZ2QNkCPOU","status":"requires_action","publishable_key":"pk_test_ErsyMEOTudSjQR8hh0VrQr5X008sBXGOu6"}
-=======
-{"intent":"pi_3RoyXsFY0qyl6XeW0dDjapcg","secret":"pi_3RoyXsFY0qyl6XeW0dDjapcg_secret_rkphk4H96CxrBtkN1DmDECCUE","status":"requires_action","publishable_key":"pk_test_ErsyMEOTudSjQR8hh0VrQr5X008sBXGOu6"}
->>>>>>> origin/master
+{"intent":"pi_3Rpwv2FY0qyl6XeW1SYwV90c","secret":"pi_3Rpwv2FY0qyl6XeW1SYwV90c_secret_A52IfodE86LnO74WfWqFX0FzO","status":"requires_action","publishable_key":"pk_test_ErsyMEOTudSjQR8hh0VrQr5X008sBXGOu6"}
