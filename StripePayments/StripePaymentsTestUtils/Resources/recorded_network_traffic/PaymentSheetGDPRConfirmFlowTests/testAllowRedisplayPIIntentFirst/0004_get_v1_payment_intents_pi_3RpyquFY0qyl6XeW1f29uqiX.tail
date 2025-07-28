@@ -1,25 +1,25 @@
 GET
-https:\/\/api\.stripe\.com\/v1\/payment_intents\/pi_3RovbXFY0qyl6XeW070eHdkN\?client_secret=pi_3RovbXFY0qyl6XeW070eHdkN_secret_sgl2s2A0kcUHwobSblMKvBb1N$
+https:\/\/api\.stripe\.com\/v1\/payment_intents\/pi_3RpyquFY0qyl6XeW1f29uqiX\?client_secret=pi_3RpyquFY0qyl6XeW1f29uqiX_secret_nKZ2qPtaBZiGOFS7kCXJO5BUr$
 200
 application/json
 Content-Type: application/json
 Access-Control-Allow-Origin: *
 x-stripe-priority-routing-enabled: true
-content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=2GtS-3eMNBJtmos1KvOFzeMN__Tr066Xn5CO-I0vsIyfB_T7SYh_h2pe79tBsDm497vWpwKOg4eKkCzK
+content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=bw6a6i5CNeiawv8J4ljNGqy0zZusIJvNUBvre4rrfeXMXkH9cvGy9rJhUFWjhK-D4hf_s309KxEoWzDk
 x-wc: ABGHIJ
 access-control-allow-methods: GET, HEAD, PUT, PATCH, POST, DELETE
 Server: nginx
 access-control-expose-headers: Request-Id, Stripe-Manage-Version, Stripe-Should-Retry, X-Stripe-External-Auth-Required, X-Stripe-Privileged-Session-Required
 access-control-max-age: 300
 Cache-Control: no-cache, no-store
-Date: Sat, 26 Jul 2025 00:04:48 GMT
+Date: Mon, 28 Jul 2025 21:45:02 GMT
 stripe-version: 2020-08-27
 access-control-allow-credentials: true
-Content-Length: 913
+Content-Length: 1021
 x-stripe-routing-context-priority-tier: api-testmode
 Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
 Vary: Origin
-request-id: req_pvkIKKIa6jeLYC
+request-id: req_KhNrBm5aEJRY0Q
 
 {
   "payment_method_configuration_details" : null,
@@ -29,7 +29,11 @@ request-id: req_pvkIKKIa6jeLYC
   "capture_method" : "automatic",
   "livemode" : false,
   "shipping" : null,
-  "status" : "requires_payment_method",
+  "payment_method_options" : {
+    "card" : {
+      "setup_future_usage" : "off_session"
+    }
+  },
   "object" : "payment_intent",
   "currency" : "usd",
   "last_payment_error" : null,
@@ -37,14 +41,15 @@ request-id: req_pvkIKKIa6jeLYC
   "automatic_payment_methods" : null,
   "cancellation_reason" : null,
   "next_action" : null,
+  "status" : "succeeded",
+  "payment_method" : "pm_1RpyqvFY0qyl6XeWjorbjgYn",
+  "client_secret" : "pi_3RpyquFY0qyl6XeW1f29uqiX_secret_nKZ2qPtaBZiGOFS7kCXJO5BUr",
   "total_details" : {
     "amount_discount" : 0,
     "amount_tip" : null,
     "amount_tax" : 0
   },
-  "payment_method" : null,
-  "client_secret" : "pi_3RovbXFY0qyl6XeW070eHdkN_secret_sgl2s2A0kcUHwobSblMKvBb1N",
-  "id" : "pi_3RovbXFY0qyl6XeW070eHdkN",
+  "id" : "pi_3RpyquFY0qyl6XeW1f29uqiX",
   "confirmation_method" : "automatic",
   "amount_details" : {
     "tip" : {
@@ -57,6 +62,6 @@ request-id: req_pvkIKKIa6jeLYC
     "card"
   ],
   "setup_future_usage" : null,
-  "created" : 1753488287,
+  "created" : 1753739100,
   "description" : null
 }
