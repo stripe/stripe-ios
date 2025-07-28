@@ -9,9 +9,20 @@ import SwiftUI
 
 @main
 struct CryptoOnramp_ExampleApp: App {
+    @State private var isLoading: Bool = false
+    
     var body: some Scene {
         WindowGroup {
-            CryptoOnrampExampleView()
+            ZStack {
+                CryptoOnrampExampleView()
+                    .environment(\.isLoading, $isLoading)
+
+                if isLoading {
+                    Color.black.opacity(0.3)
+                        .ignoresSafeArea()
+                    ProgressView("Loading…")
+                }
+            }
         }
     }
 }

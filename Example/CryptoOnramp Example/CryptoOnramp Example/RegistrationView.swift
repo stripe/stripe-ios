@@ -18,15 +18,16 @@ struct RegistrationView: View {
     @State private var fullName: String = ""
     @State private var phoneNumber: String = ""
     @State private var country: String = "US"
-    @State private var isLoading: Bool = false
     @State private var errorMessage: String?
+    
+    @Environment(\.isLoading) private var isLoading
 
     @FocusState private var isFullNameFieldFocused: Bool
     @FocusState private var isPhoneNumberFieldFocused: Bool
     @FocusState private var isCountryFieldFocused: Bool
 
     private var isRegisterButtonDisabled: Bool {
-        isLoading || phoneNumber.isEmpty || phoneNumber.isEmpty
+        isLoading.wrappedValue || phoneNumber.isEmpty
     }
 
     var body: some View {
@@ -92,19 +93,10 @@ struct RegistrationView: View {
         }
         .navigationTitle("Registration")
         .navigationBarTitleDisplayMode(.inline)
-        .overlay(
-            ZStack {
-                if isLoading {
-                    ProgressView("Registering…")
-                        .frame(maxWidth: .infinity, maxHeight: .infinity)
-                        .background(Color.black.opacity(0.3))
-                }
-            }
-        )
     }
 
     private func registerUser() {
-        isLoading = true
+        isLoading.wrappedValue = true
         errorMessage = nil
 
         Task {
@@ -116,13 +108,13 @@ struct RegistrationView: View {
                 )
 
                 await MainActor.run {
-                    isLoading = false
+                    isLoading.wrappedValue = false
                     // TODO: Navigate to next step or show success
                     print("Registration successful! Customer ID: \(customerId)")
                 }
             } catch {
                 await MainActor.run {
-                    isLoading = false
+                    isLoading.wrappedValue = false
                     if let cryptoError = error as? CryptoOnrampCoordinator.Error {
                         switch cryptoError {
                         case .invalidPhoneFormat:

@@ -14,14 +14,14 @@ import StripeCryptoOnramp
 struct CryptoOnrampExampleView: View {
     @State private var coordinator: CryptoOnrampCoordinator?
     @State private var errorMessage: String?
-    @State private var isLoading: Bool = true
     @State private var email: String = ""
     @State private var showRegistration: Bool = false
 
+    @Environment(\.isLoading) private var isLoading
     @FocusState private var isEmailFieldFocused: Bool
 
     private var isNextButtonDisabled: Bool {
-        isLoading || email.isEmpty || coordinator == nil
+        isLoading.wrappedValue || email.isEmpty || coordinator == nil
     }
 
     var body: some View {
@@ -73,31 +73,23 @@ struct CryptoOnrampExampleView: View {
         .onAppear {
             initializeCoordinator()
         }
-        .overlay(
-            ZStack {
-                if isLoading {
-                    ProgressView("Loading…")
-                        .frame(maxWidth: .infinity, maxHeight: .infinity)
-                        .background(Color.black.opacity(0.3))
-                }
-            }
-        )
     }
 
     private func initializeCoordinator() {
         STPAPIClient.shared.setUpPublishableKey()
 
+        isLoading.wrappedValue = true
         Task {
             do {
                 let coordinator = try await CryptoOnrampCoordinator.create(appearance: .init())
 
                 await MainActor.run {
                     self.coordinator = coordinator
-                    self.isLoading = false
+                    self.isLoading.wrappedValue = false
                 }
             } catch {
                 await MainActor.run {
-                    self.isLoading = false
+                    self.isLoading.wrappedValue = false
                     self.errorMessage = "Failed to initialize CryptoOnrampCoordinator: \(error.localizedDescription)"
                 }
             }
@@ -106,13 +98,13 @@ struct CryptoOnrampExampleView: View {
 
     private func lookupConsumerAndContinue() {
         guard let coordinator else { return }
-        isLoading = true
+        isLoading.wrappedValue = true
         Task {
             do {
                 let lookupResult = try await coordinator.lookupConsumer(with: email)
                 await MainActor.run {
                     errorMessage = nil
-                    isLoading = false
+                    isLoading.wrappedValue = false
 
                     if lookupResult {
                         // show verification
@@ -122,7 +114,7 @@ struct CryptoOnrampExampleView: View {
                 }
             } catch {
                 await MainActor.run {
-                    isLoading = false
+                    isLoading.wrappedValue = false
                     errorMessage = "Customer lookup failed. Ensure the email address is properly formatted. (Underlying error: \(error.localizedDescription))"
                 }
             }
