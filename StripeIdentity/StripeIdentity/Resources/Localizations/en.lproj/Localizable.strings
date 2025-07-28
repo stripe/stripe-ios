@@ -226,6 +226,9 @@
 /* Title of document upload screen */
 "Upload your photo ID" = "Upload your photo ID";
 
+/* Title of document upload screen */
+"Upload your %@" = "Upload your %@";
+
 /* Accessibility label while photo of back of identity card is uploading */
 "Uploading back identity card photo" = "Uploading back identity card photo";
 

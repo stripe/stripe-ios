@@ -160,6 +160,18 @@ final class DocumentFileUploadViewController: IdentityFlowViewController {
 
     func updateUI() {
         instructionListView.configure(with: viewModel)
+        
+        let titleText: String
+        
+        if let idType = (availableIDTypes.count == 1 ? availableIDTypes[0] : nil)?.uiIDType() {
+            titleText = String(format: STPLocalizedString(
+                "Upload your %@",
+                "Title of document upload screen"
+            ), idType)
+        } else {
+            titleText = .Localized.upload_your_photo_id
+        }
+        
         configure(
             backButtonTitle: STPLocalizedString(
                 "Upload",
@@ -169,7 +181,7 @@ final class DocumentFileUploadViewController: IdentityFlowViewController {
                 headerViewModel: .init(
                     backgroundColor: .systemBackground,
                     headerType: .plain,
-                    titleText: .Localized.upload_your_photo_id
+                    titleText: titleText
                 ),
                 contentViewModel: .init(
                     view: instructionListView,
