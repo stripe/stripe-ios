@@ -17,6 +17,8 @@ struct CryptoOnrampExampleView: View {
     @State private var errorMessage: String?
     @State private var email: String = ""
     @State private var showRegistration: Bool = false
+    @State private var showSuccess: Bool = false
+    @State private var authenticationCustomerId: String? = nil
 
     @Environment(\.isLoading) private var isLoading
     @FocusState private var isEmailFieldFocused: Bool
@@ -65,6 +67,13 @@ struct CryptoOnrampExampleView: View {
                             isActive: $showRegistration
                         )
                     }
+
+                    if let customerId = authenticationCustomerId {
+                        HiddenNavigationLink(
+                            destination: SuccessView(message: "Authentication Successful!", customerId: customerId),
+                            isActive: $showSuccess
+                        )
+                    }
                 }
                 .padding()
             }
@@ -108,7 +117,7 @@ struct CryptoOnrampExampleView: View {
                     isLoading.wrappedValue = false
 
                     if lookupResult {
-                        // show verification
+                        presentVerification(using: coordinator)
                     } else {
                         showRegistration = true
                     }
@@ -119,6 +128,36 @@ struct CryptoOnrampExampleView: View {
                     errorMessage = "Customer lookup failed. Ensure the email address is properly formatted. (Underlying error: \(error.localizedDescription))"
                 }
             }
+        }
+    }
+
+    private func presentVerification(using coordinator: CryptoOnrampCoordinator) {
+        if let viewController = UIApplication.shared.findTopNavigationController() {
+            Task {
+                do {
+                    let result = try await coordinator.presentForVerification(from: viewController)
+                    switch result {
+                    case .completed(customerId: let customerId):
+                        await MainActor.run {
+                            authenticationCustomerId = customerId
+
+                            DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
+                                showSuccess = true
+                            }
+                        }
+                    case .canceled:
+                        // do nothing, verification canceled.
+                        break
+                    @unknown default:
+                        // do nothing, verification canceled.
+                        break
+                    }
+                } catch {
+                    errorMessage = error.localizedDescription
+                }
+            }
+        } else {
+            errorMessage = "Unable to find view controller to present from."
         }
     }
 }
