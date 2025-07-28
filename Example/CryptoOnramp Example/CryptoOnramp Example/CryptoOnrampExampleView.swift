@@ -90,7 +90,7 @@ struct CryptoOnrampExampleView: View {
     }
 
     private func initializeCoordinator() {
-        STPAPIClient.shared.publishableKey = "pk_test_51K9W3OHMaDsveWq0oLP0ZjldetyfHIqyJcz27k2BpMGHxu9v9Cei2tofzoHncPyk3A49jMkFEgTOBQyAMTUffRLa00xzzARtZO"
+        STPAPIClient.shared.setUpPublishableKey()
 
         Task {
             do {
