@@ -141,6 +141,7 @@ struct CryptoOnrampExampleView: View {
                         await MainActor.run {
                             authenticationCustomerId = customerId
 
+                            // Delay so the navigation link animation doesn’t get canceled.
                             DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
                                 showSuccess = true
                             }
