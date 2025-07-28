@@ -19,7 +19,9 @@ struct RegistrationView: View {
     @State private var phoneNumber: String = ""
     @State private var country: String = "US"
     @State private var errorMessage: String?
-    
+    @State private var showSuccess: Bool = false
+    @State private var registrationCustomerId: String?
+
     @Environment(\.isLoading) private var isLoading
 
     @FocusState private var isFullNameFieldFocused: Bool
@@ -39,7 +41,7 @@ struct RegistrationView: View {
                         .foregroundColor(.secondary)
                         .frame(maxWidth: .infinity, alignment: .leading)
                 }
-                
+
                 VStack(alignment: .leading, spacing: 8) {
                     Text("Email")
                         .font(.headline)
@@ -88,6 +90,15 @@ struct RegistrationView: View {
                 if let errorMessage {
                     ErrorMessageView(message: errorMessage)
                 }
+
+                if let customerId = registrationCustomerId {
+                    NavigationLink(
+                        destination: SuccessView(message: "Registration Successful!", customerId: customerId),
+                        isActive: $showSuccess
+                    ) { EmptyView() }
+                        .opacity(0)
+                        .frame(width: 0, height: 0)
+                }
             }
             .padding()
         }
@@ -109,8 +120,12 @@ struct RegistrationView: View {
 
                 await MainActor.run {
                     isLoading.wrappedValue = false
-                    // TODO: Navigate to next step or show success
-                    print("Registration successful! Customer ID: \(customerId)")
+                    registrationCustomerId = customerId
+
+                    // Small delay to allow loading overlay to finish animating
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
+                        showSuccess = true
+                    }
                 }
             } catch {
                 await MainActor.run {
