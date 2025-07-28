@@ -134,7 +134,7 @@
 
 "Your BLIK code is invalid." = "BLIK-koodi ei kelpaa.";
 
-"Your ZIP is incomplete." = "Postinumero on puutteellinen.";
+"Your ZIP code is invalid." = "Postinumero ei ole kelvollinen.";
 
 "Your email is invalid." = "Sähköposti on virheellinen.";
 
