@@ -77,12 +77,7 @@ struct RegistrationView: View {
                 .opacity(isRegisterButtonDisabled ? 0.5 : 1)
 
                 if let errorMessage {
-                    Text(errorMessage)
-                        .font(.subheadline)
-                        .foregroundColor(.red)
-                        .padding()
-                        .background(Color.red.opacity(0.1))
-                        .cornerRadius(8)
+                    ErrorMessageView(message: errorMessage)
                 }
             }
             .padding()
