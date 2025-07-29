@@ -108,6 +108,8 @@ import XCTest
                         "payment_user_agent", // Contains the SDK version number
                         "pk_token_transaction_id", // Random string,
                         "client_session_id", // Random string
+                        "merchant_integration_version", // Contains the SDK version number
+                        "elements_session_config_id", // Random string
                     ]
                     return replaceNondeterministicParams(escapedBody, componentsToFilter: componentsToFilter)
                 }

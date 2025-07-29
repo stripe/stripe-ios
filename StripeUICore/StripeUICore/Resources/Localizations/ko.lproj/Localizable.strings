@@ -134,7 +134,9 @@
 
 "Your BLIK code is invalid." = "BLIK 코드가 유효하지 않습니다.";
 
-"Your ZIP is incomplete." = "우편번호가 불완전합니다.";
+"Your ZIP code is incomplete." = "우편 번호가 완전하지 않습니다.";
+
+"Your ZIP code is invalid." = "우편번호가 유효하지 않습니다.";
 
 "Your email is invalid." = "이메일이 잘못되었습니다.";
 

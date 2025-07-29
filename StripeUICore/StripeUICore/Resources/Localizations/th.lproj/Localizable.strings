@@ -134,7 +134,9 @@
 
 "Your BLIK code is invalid." = "รหัส BLIK ไม่ถูกต้อง";
 
-"Your ZIP is incomplete." = "รหัสไปรษณีย์ไม่ครบถ้วน";
+"Your ZIP code is incomplete." = "รหัสไปรษณีย์ของคุณไม่สมบูรณ์";
+
+"Your ZIP code is invalid." = "รหัสไปรษณีย์ของคุณไม่ถูกต้อง";
 
 "Your email is invalid." = "อีเมลไม่ถูกต้อง";
 

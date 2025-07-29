@@ -48,8 +48,6 @@
 
 "To scan your card, allow camera access in Settings." = "Lai noskenētu karti, Iestatījumos atļaujiet piekļuvi kamerai.";
 
-"Your ZIP is invalid." = "Pasta indekss nav derīgs.";
-
 "Your card has expired." = "Kartes derīguma termiņš ir beidzies.";
 
 "Your card number is incomplete." = "Kartes numurs nav pilnīgs.";
@@ -67,8 +65,6 @@
 "Your card's security code is incomplete." = "Kartes drošības kods nav pilnīgs.";
 
 "Your card's security code is invalid." = "Kartes drošības kods nav derīgs.";
-
-"Your postal code is invalid." = "Pasta indekss nav derīgs.";
 
 "card number" = "kartes numurs";
 

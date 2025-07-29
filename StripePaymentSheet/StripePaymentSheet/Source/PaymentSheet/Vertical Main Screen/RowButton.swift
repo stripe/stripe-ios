@@ -412,7 +412,11 @@ extension RowButton {
 
     static func makeRowButtonSublabel(text: String?, appearance: PaymentSheet.Appearance, isEmbedded: Bool) -> UILabel {
         let sublabel = UILabel()
-        sublabel.font = appearance.scaledFont(for: appearance.font.base.regular, style: .caption1, maximumPointSize: 20)
+        if isEmbedded, let customFont = appearance.embeddedPaymentElement.row.subtitleFont {
+            sublabel.font = customFont
+        } else {
+            sublabel.font = appearance.scaledFont(for: appearance.font.base.regular, style: .caption1, maximumPointSize: 20)
+        }
         sublabel.numberOfLines = 1
         sublabel.adjustsFontSizeToFitWidth = true
         sublabel.adjustsFontForContentSizeCategory = true

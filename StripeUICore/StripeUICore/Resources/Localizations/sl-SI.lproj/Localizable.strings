@@ -134,7 +134,7 @@
 
 "Your BLIK code is invalid." = "Vaša koda BLIK ni veljavna.";
 
-"Your ZIP is incomplete." = "Vaša poštna številka ni popolna.";
+"Your ZIP code is invalid." = "Vaša poštna številka ni veljavna.";
 
 "Your email is invalid." = "Vaš e-poštni naslov ni veljaven.";
 
