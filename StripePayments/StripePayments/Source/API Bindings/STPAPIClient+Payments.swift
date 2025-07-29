@@ -527,6 +527,17 @@ extension STPAPIClient {
         confirmPaymentIntent(with: paymentIntentParams, expand: expand, additionalClientAttributionMetadata: [:], completion: completion)
     }
 
+    /// Confirms the PaymentIntent object with the provided params object.
+    /// At a minimum, the params object must include the `clientSecret`.
+    /// - seealso: https://stripe.com/docs/api#confirm_payment_intent
+    /// @note Use the `confirmPayment:withAuthenticationContext:completion:` method on `STPPaymentHandler` instead
+    /// of calling this method directly. It handles any authentication necessary for you. - seealso: https://stripe.com/docs/payments/3d-secure
+    /// - Parameters:
+    ///   - paymentIntentParams:  The `STPPaymentIntentParams` to pass to `/confirm`
+    ///   - expand:  An array of string keys to expand on the returned PaymentIntent object. These strings should match one or more of the parameter names that are marked as expandable. - seealso: https://stripe.com/docs/api/payment_intents/object
+    ///   - additionalClientAttributionMetadata:  A dictionary of metadata with identifiers for the session and information about the integration to append to the `client_attribution_metadata` sent in the request.
+    ///   - completion:           The callback to run with the returned PaymentIntent object, or an error.
+    @objc(confirmPaymentIntentWithParams:expand:additionalClientAttributionMetadata:completion:)
     @_spi(STP) public func confirmPaymentIntent(
         with paymentIntentParams: STPPaymentIntentParams,
         expand: [String]?,
@@ -579,6 +590,7 @@ extension STPAPIClient {
             completion(paymentIntent, error)
         }
     }
+
     /// Endpoint to call to indicate that the web-based challenge flow for 3DS authentication was canceled.
     func cancel3DSAuthentication(
         forPaymentIntent paymentIntentID: String,
@@ -724,6 +736,17 @@ extension STPAPIClient {
         confirmSetupIntent(with: setupIntentParams, expand: expand, additionalClientAttributionMetadata: [:], completion: completion)
     }
 
+    /// Confirms the SetupIntent object with the provided params object.
+    /// At a minimum, the params object must include the `clientSecret`.
+    /// - seealso: https://stripe.com/docs/api/setup_intents/confirm
+    /// @note Use the `confirmSetupIntent:withAuthenticationContext:completion:` method on `STPPaymentHandler` instead
+    /// of calling this method directly. It handles any authentication necessary for you. - seealso: https://stripe.com/docs/mobile/ios/authentication
+    /// - Parameters:
+    ///   - setupIntentParams:    The `STPSetupIntentConfirmParams` to pass to `/confirm`
+    ///   - expand:  An array of string keys to expand on the returned SetupIntent object. These strings should match one or more of the parameter names that are marked as expandable. - seealso: https://stripe.com/docs/api/setup_intents/object
+    ///   - additionalClientAttributionMetadata:  A dictionary of metadata with identifiers for the session and information about the integration to append to the `client_attribution_metadata` sent in the request.
+    ///   - completion:           The callback to run with the returned SetupIntent object, or an error.
+    @objc(confirmSetupIntentWithParams:expand:additionalClientAttributionMetadata:completion:)
     @_spi(STP) public func confirmSetupIntent(
         with setupIntentParams: STPSetupIntentConfirmParams,
         expand: [String]?,
@@ -839,7 +862,7 @@ extension STPAPIClient {
     }
 
     /// - Parameter additionalPaymentUserAgentValues: A list of values to append to the `payment_user_agent` parameter sent in the request. e.g. `["deferred-intent", "autopm"]` will append "; deferred-intent; autopm" to the `payment_user_agent`.
-    /// - Parameter additionalPaymentUserAgentValues: A dictionary of metadata about the integration to append to the `client_attribution_metadata` parameter sent in the request.
+    /// - Parameter additionalClientAttributionMetadata: A dictionary of metadata with identifiers for the session and information about the integration to append to the `client_attribution_metadata` sent in the request.
     func createPaymentMethod(
         with paymentMethodParams: STPPaymentMethodParams,
         additionalPaymentUserAgentValues: [String] = [],

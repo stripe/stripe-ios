@@ -48,8 +48,6 @@
 
 "To scan your card, allow camera access in Settings." = "โปรดให้สิทธิ์เข้าถึงกล้องถ่ายรูปในการตั้งค่าเพื่อสแกนบัตร";
 
-"Your ZIP is invalid." = "รหัสไปรษณีย์ไม่ถูกต้อง";
-
 "Your card has expired." = "บัตรของคุณหมดอายุแล้ว";
 
 "Your card number is incomplete." = "หมายเลขบัตรไม่ครบถ้วน";
@@ -67,8 +65,6 @@
 "Your card's security code is incomplete." = "รหัสความปลอดภัยของบัตรไม่ครบถ้วน";
 
 "Your card's security code is invalid." = "รหัสความปลอดภัยของบัตรไม่ถูกต้อง";
-
-"Your postal code is invalid." = "รหัสไปรษณีย์ไม่ถูกต้อง";
 
 "card number" = "หมายเลขบัตร";
 

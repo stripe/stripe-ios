@@ -134,7 +134,9 @@
 
 "Your BLIK code is invalid." = "BLIK kódja érvénytelen.";
 
-"Your ZIP is incomplete." = "A ZIP hiányos.";
+"Your ZIP code is incomplete." = "Az irányítószám hiányos.";
+
+"Your ZIP code is invalid." = "Az irányítószáma érvénytelen.";
 
 "Your email is invalid." = "Érvénytelen e-mail-cím.";
 

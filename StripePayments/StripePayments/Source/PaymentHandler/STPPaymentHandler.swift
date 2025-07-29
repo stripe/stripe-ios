@@ -628,6 +628,7 @@ public class STPPaymentHandler: NSObject {
         }
         apiClient.confirmSetupIntent(with: params, expand: ["payment_method"], additionalClientAttributionMetadata: additionalClientAttributionMetadata, completion: confirmCompletionBlock)
     }
+
     /// Handles any `nextAction` required to authenticate the SetupIntent.
     /// Call this method if you are confirming the SetupIntent on your backend and get a status of requires_action.
     /// - Parameters:

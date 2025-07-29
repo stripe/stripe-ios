@@ -48,8 +48,6 @@
 
 "To scan your card, allow camera access in Settings." = "Чтобы сканировать карту, войдите в \"Настройки\" и разрешите доступ к камере.";
 
-"Your ZIP is invalid." = "Введенный почтовый индекс неверен.";
-
 "Your card has expired." = "Срок действия карты истек.";
 
 "Your card number is incomplete." = "Номер карты введен не полностью.";
@@ -67,8 +65,6 @@
 "Your card's security code is incomplete." = "Код CVV/CVC карты введен не полностью.";
 
 "Your card's security code is invalid." = "Код CVV/CVC карты недействителен.";
-
-"Your postal code is invalid." = "Введенный почтовый индекс недействителен.";
 
 "card number" = "номер карты";
 
