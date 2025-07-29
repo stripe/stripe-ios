@@ -86,7 +86,7 @@ extension EmbeddedPaymentElement {
         public var appearance = PaymentSheet.Appearance.default
 
         /// Describes the appearance of Link-specific UI in PaymentSheet.
-        public var linkUIAppearance = LinkUI.appearance
+        public var linkUIAppearance = PaymentSheet.Appearance.defaultLinkUIAppearance
 
         /// A closure that returns the customer's shipping details.
         /// This is used to display a "Billing address is same as shipping" checkbox if `defaultBillingDetails` is not provided

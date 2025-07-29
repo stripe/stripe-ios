@@ -200,7 +200,7 @@ class ConfirmButtonSnapshotTests: STPSnapshotTestCase {
 
         let confirmButton = ConfirmButton.makeLinkButton(
             callToAction: .continue,
-            appearance: LinkUI.appearance,
+            appearance: PaymentSheet.Appearance.defaultLinkUIAppearance,
             didTap: {}
         )
         verify(confirmButton)
