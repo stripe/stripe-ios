@@ -51,8 +51,6 @@ final class LinkPaymentMethodFormElement: Element {
 
     let configuration: PaymentElementConfiguration
 
-    let theme: ElementsAppearance = LinkUI.appearance.asElementsTheme
-
     var params: Params? {
         guard validationState.isValid,
               let expiryDate = CardExpiryDate(expiryDateElement.text) else {
@@ -170,7 +168,7 @@ final class LinkPaymentMethodFormElement: Element {
             cardBrandDropDown: cardBrandDropdownElement?.element
         )
 
-        return panElementConfig.makeElement(theme: LinkUI.appearance.asElementsTheme)
+        return panElementConfig.makeElement(theme: theme)
     }()
 
     private lazy var cvcElement: TextFieldElement = {
@@ -258,6 +256,10 @@ final class LinkPaymentMethodFormElement: Element {
             theme: theme
         )
     }()
+
+    private var theme: ElementsAppearance {
+        configuration.linkUIAppearance.asElementsTheme
+    }
 
     init(paymentMethod: ConsumerPaymentDetails, configuration: PaymentElementConfiguration, useCVCPlaceholder: Bool) {
         self.paymentMethod = paymentMethod

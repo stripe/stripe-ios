@@ -34,7 +34,7 @@ final class LinkSignUpViewController: UIViewController {
     private let viewModel: LinkSignUpViewModel
     private let defaultBillingDetails: PaymentSheet.BillingDetails?
     private let selectionBehavior = SelectionBehavior.highlightBorder(configuration: LinkUI.highlightBorderConfiguration)
-    private let theme = LinkUI.appearance.asElementsTheme
+    private let theme: ElementsAppearance
 
     private let titleLabel: UILabel = {
         let label = UILabel()
@@ -150,7 +150,8 @@ final class LinkSignUpViewController: UIViewController {
         accountService: LinkAccountServiceProtocol,
         linkAccount: PaymentSheetLinkAccount?,
         country: String? = nil,
-        defaultBillingDetails: PaymentSheet.BillingDetails?
+        defaultBillingDetails: PaymentSheet.BillingDetails?,
+        theme: ElementsAppearance
     ) {
         self.viewModel = LinkSignUpViewModel(
             accountService: accountService,
@@ -159,6 +160,7 @@ final class LinkSignUpViewController: UIViewController {
             country: country ?? defaultBillingDetails?.address.country
         )
         self.defaultBillingDetails = defaultBillingDetails
+        self.theme = theme
         super.init(nibName: nil, bundle: nil)
     }
 

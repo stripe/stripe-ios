@@ -85,6 +85,9 @@ extension EmbeddedPaymentElement {
         /// Describes the appearance of PaymentSheet
         public var appearance = PaymentSheet.Appearance.default
 
+        /// Describes the appearance of Link-specific UI in PaymentSheet.
+        public var linkUIAppearance = LinkUI.appearance
+
         /// A closure that returns the customer's shipping details.
         /// This is used to display a "Billing address is same as shipping" checkbox if `defaultBillingDetails` is not provided
         /// If `name` and `line1` are populated, it's also [attached to the PaymentIntent](https://stripe.com/docs/api/payment_intents/object#payment_intent_object-shipping) during payment.

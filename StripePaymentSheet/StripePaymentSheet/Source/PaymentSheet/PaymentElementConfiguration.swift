@@ -29,6 +29,7 @@ protocol PaymentElementConfiguration: PaymentMethodRequirementProvider {
     var defaultBillingDetails: PaymentSheet.BillingDetails { get set }
     var savePaymentMethodOptInBehavior: PaymentSheet.SavePaymentMethodOptInBehavior { get set }
     var appearance: PaymentSheet.Appearance { get set }
+    var linkUIAppearance: PaymentSheet.Appearance { get set }
     var shippingDetails: () -> AddressViewController.AddressDetails? { get set }
     var preferredNetworks: [STPCardBrand]? { get set }
     var userOverrideCountry: String? { get set }

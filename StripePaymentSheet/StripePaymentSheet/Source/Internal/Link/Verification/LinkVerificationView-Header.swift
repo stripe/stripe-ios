@@ -26,10 +26,10 @@ extension LinkVerificationView {
             return logoView
         }()
 
-        let closeButton: UIButton = {
+        lazy var closeButton: UIButton = {
             LinkSheetNavigationBar.createCloseButton(
                 accessibilityIdentifier: "LinkVerificationCloseButton",
-                appearance: LinkUI.appearance
+                appearance: appearance
             )
         }()
 
@@ -37,7 +37,10 @@ extension LinkVerificationView {
             return CGSize(width: 72, height: 32)
         }
 
-        init() {
+        private let appearance: PaymentSheet.Appearance
+        
+        init(appearance: PaymentSheet.Appearance) {
+            self.appearance = appearance
             super.init(frame: .zero)
 
             addSubview(logoView)

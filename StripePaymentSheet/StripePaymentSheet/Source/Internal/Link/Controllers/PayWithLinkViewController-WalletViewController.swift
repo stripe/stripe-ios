@@ -42,6 +42,7 @@ extension PayWithLinkViewController {
 
         private lazy var confirmButton = ConfirmButton.makeLinkButton(
             callToAction: viewModel.confirmButtonCallToAction,
+            appearance: context.configuration.linkUIAppearance,
             compact: viewModel.shouldUseCompactConfirmButton
         ) { [weak self] in
             guard let self else {
@@ -86,12 +87,12 @@ extension PayWithLinkViewController {
                     return self?.viewModel.cardBrand ?? .unknown
             })
 
-            return TextFieldElement(configuration: configuration, theme: LinkUI.appearance.asElementsTheme)
+            return TextFieldElement(configuration: configuration, theme: theme)
         }()
 
         private lazy var expiryDateElement: TextFieldElement = {
             let configuration = TextFieldElement.ExpiryDateConfiguration()
-            return TextFieldElement(configuration: configuration, theme: LinkUI.appearance.asElementsTheme)
+            return TextFieldElement(configuration: configuration, theme: theme)
         }()
 
         private lazy var expiredCardNoticeView: LinkNoticeView = {
@@ -103,8 +104,8 @@ extension PayWithLinkViewController {
         private lazy var cardDetailsRecollectionSection: SectionElement = {
             let sectionElement = SectionElement(
                 elements: [
-                    SectionElement.MultiElementRow([expiryDateElement, cvcElement], theme: LinkUI.appearance.asElementsTheme)
-                ], theme: LinkUI.appearance.asElementsTheme
+                    SectionElement.MultiElementRow([expiryDateElement, cvcElement], theme: theme)
+                ], theme: theme
             )
             sectionElement.delegate = self
             return sectionElement
@@ -122,7 +123,7 @@ extension PayWithLinkViewController {
         }()
 
         private lazy var errorLabel: UILabel = {
-            let label = ElementsUI.makeErrorLabel(theme: LinkUI.appearance.asElementsTheme)
+            let label = ElementsUI.makeErrorLabel(theme: theme)
             label.textAlignment = .center
             label.isHidden = true
             return label
@@ -146,6 +147,10 @@ extension PayWithLinkViewController {
 
         private var billingDetailsCollectionConfiguration: PaymentSheet.BillingDetailsCollectionConfiguration {
             context.configuration.billingDetailsCollectionConfiguration
+        }
+
+        private var theme: ElementsAppearance {
+            context.configuration.linkUIAppearance.asElementsTheme
         }
 
         #if !os(visionOS)

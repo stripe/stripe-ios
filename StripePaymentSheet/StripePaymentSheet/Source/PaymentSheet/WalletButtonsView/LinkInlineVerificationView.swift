@@ -42,7 +42,7 @@ struct LinkInlineVerificationView: View {
 
             Group {
                 if viewModel.loading {
-                    LinkProgressIndicatorView()
+                    LinkProgressIndicatorView(foregroundColor: Color(uiColor: viewModel.appearance.colors.primary))
                 } else {
                     OneTimeCodeTextFieldRepresentable(
                         text: $viewModel.code,
