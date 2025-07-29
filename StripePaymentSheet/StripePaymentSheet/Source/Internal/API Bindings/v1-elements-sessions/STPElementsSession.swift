@@ -41,6 +41,9 @@ import Foundation
     /// Country code of the merchant.
     let merchantCountryCode: String?
 
+    /// Link to the merchant's logo asset.
+    let merchantLogoUrl: URL?
+
     /// A map describing payment method types form specs.
     let paymentMethodSpecs: [[AnyHashable: Any]]?
 
@@ -70,6 +73,7 @@ import Foundation
         unactivatedPaymentMethodTypes: [STPPaymentMethodType],
         countryCode: String?,
         merchantCountryCode: String?,
+        merchantLogoUrl: URL?,
         linkSettings: LinkSettings?,
         experimentsData: ExperimentsData?,
         flags: [String: Bool],
@@ -88,6 +92,7 @@ import Foundation
         self.unactivatedPaymentMethodTypes = unactivatedPaymentMethodTypes
         self.countryCode = countryCode
         self.merchantCountryCode = merchantCountryCode
+        self.merchantLogoUrl = merchantLogoUrl
         self.linkSettings = linkSettings
         self.experimentsData = experimentsData
         self.flags = flags
@@ -131,6 +136,7 @@ import Foundation
             unactivatedPaymentMethodTypes: [],
             countryCode: nil,
             merchantCountryCode: nil,
+            merchantLogoUrl: nil,
             linkSettings: nil,
             experimentsData: nil,
             flags: [:],
@@ -220,6 +226,7 @@ extension STPElementsSession: STPAPIResponseDecodable {
             unactivatedPaymentMethodTypes: unactivatedPaymentMethodTypeStrings.map({ STPPaymentMethod.type(from: $0) }),
             countryCode: paymentMethodPrefDict["country_code"] as? String,
             merchantCountryCode: response["merchant_country"] as? String,
+            merchantLogoUrl: (response["merchant_logo_url"] as? String).flatMap { URL(string: $0) },
             linkSettings: LinkSettings.decodedObject(
                 fromAPIResponse: response["link_settings"] as? [AnyHashable: Any]
             ),
