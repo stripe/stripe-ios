@@ -18,9 +18,7 @@ extension ConfirmButton {
     ) -> ConfirmButton {
         let directionalLayoutMargins = compact ? LinkUI.compactButtonMargins : LinkUI.buttonMargins
 
-        // TODO: update to set the primary button height on the instance passed in from onramp
-        var appearance = appearance
-        appearance.primaryButton.height = LinkUI.primaryButtonHeight(margins: directionalLayoutMargins)
+        // TODO: verify that we should be using the value specified in `LinkAppearance` instead of what was hardcoded here.
 
         let button = ConfirmButton(
             callToAction: callToAction,
