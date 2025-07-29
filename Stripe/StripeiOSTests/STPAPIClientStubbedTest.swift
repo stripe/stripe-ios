@@ -38,8 +38,14 @@ class STPAPIClientStubbedTest: APIStubbedTestCase {
         waitForExpectations(timeout: 10)
     }
 
-    private func stubClientAttributionMetadata(base: String? = nil, shouldContainClientAttributionMetadata: Bool = true, additionalClientAttributionMetadata: [String: String] = [:]) {
+    private func stubClientAttributionMetadata(base: String? = nil, shouldContainClientAttributionMetadata: Bool = true, additionalClientAttributionMetadata: [String: String] = [:], urlPattern: String? = nil) {
             stub { urlRequest in
+                // If urlPattern is specified, only validate requests that match the pattern
+                if let urlPattern {
+                    guard urlRequest.url?.absoluteString.contains(urlPattern) == true else {
+                        return false
+                    }
+                }
                 guard let queryItems = urlRequest.queryItems else {
                     return false
                 }
@@ -97,9 +103,32 @@ class STPAPIClientStubbedTest: APIStubbedTestCase {
         let sut = stubbedAPIClient()
         AnalyticsHelper.shared.generateSessionID()
         let additionalClientAttributionMetadata = ["elements_session_config_id": "elements_session_config_id", "payment_intent_creation_flow": "deferred", "payment_method_selection_flow": "automatic"]
-        stubClientAttributionMetadata(additionalClientAttributionMetadata: additionalClientAttributionMetadata)
+        
+        // Stub token creation call
+        stub { urlRequest in
+            return urlRequest.url?.absoluteString.contains("/tokens") ?? false
+        } response: { _ in
+            let tokenResponse = """
+                {
+                    "id": "tok_test_123",
+                    "object": "token",
+                    "used": false,
+                    "livemode": false,
+                    "created": 1234567890,
+                    "type": "card"
+                }
+                """
+            return HTTPStubsResponse(
+                data: Data(tokenResponse.utf8),
+                statusCode: 200,
+                headers: ["Content-Type": "application/json"]
+            )
+        }
+
+        // Stub payment method creation call
+        stubClientAttributionMetadata(additionalClientAttributionMetadata: additionalClientAttributionMetadata, urlPattern: "/payment_methods")
         let e = expectation(description: "")
-        StripeAPI.PaymentMethod.create(apiClient: sut, params: StripeAPI.PaymentMethodParams(type: .card), additionalClientAttributionMetadata: additionalClientAttributionMetadata) { _ in
+        StripeAPI.PaymentMethod.create(apiClient: sut, payment: .init(), additionalClientAttributionMetadata: additionalClientAttributionMetadata) { _ in
             e.fulfill()
         }
         waitForExpectations(timeout: 10)
