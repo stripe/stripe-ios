@@ -103,7 +103,7 @@ class STPAPIClientStubbedTest: APIStubbedTestCase {
         let sut = stubbedAPIClient()
         AnalyticsHelper.shared.generateSessionID()
         let additionalClientAttributionMetadata = ["elements_session_config_id": "elements_session_config_id", "payment_intent_creation_flow": "deferred", "payment_method_selection_flow": "automatic"]
-        
+
         // Stub token creation call
         stub { urlRequest in
             return urlRequest.url?.absoluteString.contains("/tokens") ?? false
