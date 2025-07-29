@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import StripePaymentSheet
 
 // Customizable appearance-related configuration for Stripe-provided Link UI.
 @_spi(CryptoOnrampSDKPreview)
@@ -61,5 +62,23 @@ public struct LinkAppearance {
         self.primaryColor = primaryColor
         self.primaryButton = primaryButton
         self.style = style
+    }
+}
+
+extension LinkAppearance {
+    var toPaymentSheetAppearance: PaymentSheet.Appearance {
+        var appearance = PaymentSheet.Appearance.defaultLinkUIAppearance
+        if let primaryColor {
+            appearance.colors.primary = primaryColor
+        }
+
+        if let primaryButton {
+            appearance.primaryButton.cornerRadius = primaryButton.cornerRadius
+            appearance.primaryButton.height = primaryButton.height
+        }
+
+        // TODO: determine how to configure light/dark mode based on `style`.
+
+        return appearance
     }
 }

@@ -121,15 +121,22 @@ import UIKit
     ///
     /// - Parameter apiClient: The `STPAPIClient` instance for this controller. Defaults to `.shared`.
     /// - Parameter mode: The mode in which the Link payment method controller should operate, either `payment` or `setup`.
+    /// - Parameter appearance: Link UI-specific appearance overrides. If not specified, `PaymentSheet.Configuration` defaults are used.
     /// - Parameter completion: A closure that is called with the result of the creation. It returns a `LinkController` if successful, or an error if the creation failed.
     @_spi(STP) public static func create(
         apiClient: STPAPIClient = .shared,
         mode: LinkController.Mode,
+        appearance: PaymentSheet.Appearance? = nil,
         completion: @escaping (Result<LinkController, Error>) -> Void
     ) {
         Task {
             do {
-                let configuration = PaymentSheet.Configuration()
+                var configuration = PaymentSheet.Configuration()
+
+                if let appearance = appearance {
+                    configuration.linkUIAppearance = appearance
+                }
+                
                 let analyticsHelper = PaymentSheetAnalyticsHelper(integrationShape: .complete, configuration: configuration)
 
                 let loadResult = try await Self.loadElementsSession(
@@ -415,10 +422,11 @@ import UIKit
     ///
     /// - Parameter apiClient: The `STPAPIClient` instance for this controller. Defaults to `.shared`.
     /// - Parameter mode: The mode in which the Link payment method controller should operate, either `payment` or `setup`.
+    /// - Parameter appearance: Link UI-specific appearance overrides. If not specified, `PaymentSheet.Configuration` defaults are used.
     /// - Returns: A `LinkController` if successful, or throws an error if the creation failed.
-    static func create(apiClient: STPAPIClient = .shared, mode: LinkController.Mode) async throws -> LinkController {
+    static func create(apiClient: STPAPIClient = .shared, mode: LinkController.Mode, appearance: PaymentSheet.Appearance? = nil) async throws -> LinkController {
         return try await withCheckedThrowingContinuation { continuation in
-            create(apiClient: apiClient, mode: mode) { result in
+            create(apiClient: apiClient, mode: mode, appearance: appearance) { result in
                 switch result {
                 case .success(let controller):
                     continuation.resume(returning: controller)

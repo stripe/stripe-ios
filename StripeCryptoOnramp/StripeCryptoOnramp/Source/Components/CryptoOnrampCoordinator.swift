@@ -79,7 +79,7 @@ public final class CryptoOnrampCoordinator: CryptoOnrampCoordinatorProtocol {
     // MARK: - CryptoOnrampCoordinatorProtocol
 
     public static func create(apiClient: STPAPIClient = .shared, appearance: LinkAppearance) async throws -> CryptoOnrampCoordinator {
-        let linkController = try await LinkController.create(apiClient: apiClient, mode: .payment)
+        let linkController = try await LinkController.create(apiClient: apiClient, mode: .payment, appearance: appearance.toPaymentSheetAppearance)
         return CryptoOnrampCoordinator(
             linkController: linkController,
             apiClient: apiClient,
