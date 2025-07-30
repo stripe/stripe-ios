@@ -6,9 +6,9 @@
 //  Copyright © 2018 HCaptcha. All rights reserved.
 //
 
-import WebKit
-import UIKit
 import JavaScriptCore
+import UIKit
+import WebKit
 
 /**
   hCaptcha SDK facade (entry point)
@@ -159,7 +159,6 @@ import JavaScriptCore
         manager.stop()
     }
 
-
     /**
      - parameter configure: A closure that receives an instance of `WKWebView` for configuration.
 
@@ -248,7 +247,6 @@ import JavaScriptCore
     public convenience init(apiKey: String, baseURL: URL, locale: Locale) throws {
         try self.init(apiKey: apiKey, baseURL: baseURL, locale: locale, size: .invisible)
     }
-
 
     @objc
     public convenience init(apiKey: String, baseURL: URL, locale: Locale, size: HCaptchaSize) throws {

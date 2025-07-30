@@ -6,8 +6,8 @@
 //
 
 import Foundation
-import XCTest
 @_spi(STP) @testable import StripePayments
+import XCTest
 
 class HCaptcha__Bench: XCTestCase {
     var testTimeout: TimeInterval = 5 // Default timeout value

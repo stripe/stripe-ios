@@ -5,10 +5,10 @@
 //  Copyright © 2024 HCaptcha. All rights reserved.
 //
 
-import Foundation
 import CommonCrypto
-import UIKit
 import CryptoKit
+import Foundation
+import UIKit
 
 private extension String {
     func jsSanitize() -> String {
@@ -20,19 +20,18 @@ private extension String {
     }
 }
 
-
 private func getFinalHash(_ ctx: inout Insecure.MD5) -> String {
     let digest = ctx.finalize()
     let hexDigest = digest.map { String(format: "%02hhx", $0) }.joined()
     return hexDigest
 }
 
-//private func getFinalHash(_ ctx: UnsafeMutablePointer<CC_MD5_CTX>) -> String {
+// private func getFinalHash(_ ctx: UnsafeMutablePointer<CC_MD5_CTX>) -> String {
 //    var digest: [UInt8] = Array(repeating: 0, count: Int(CC_MD5_DIGEST_LENGTH))
 //    CC_MD5_Final(&digest, ctx)
 //    let hexDigest = digest.map { String(format: "%02hhx", $0) }.joined()
 //    return hexDigest
-//}
+// }
 
 private func bundleShortVersion() -> String {
     let sdkBundle = Bundle(for: HCaptchaDebugInfo.self)
@@ -97,7 +96,7 @@ class HCaptchaDebugInfo {
             "deps_\(String(describing: depsHash))",
             "app_\(String(describing: appHash))",
             "iver_\(String(describing: iver))",
-            "sdk_\(bundleShortVersion())"
+            "sdk_\(bundleShortVersion())",
         ]
     }
 }

@@ -57,7 +57,6 @@ internal class HCaptchaLogger {
 #endif
     }
 
-
     private static var threadId: String {
         return Thread.isMainThread ? "main" : "\(pthread_self())"
     }

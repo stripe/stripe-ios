@@ -38,7 +38,7 @@ extension HCaptchaWebViewManager: WKNavigationDelegate {
                             code: kHCaptchaErrorWebViewProcessDidTerminate,
                             userInfo: [
                                 NSLocalizedDescriptionKey: "WebView web content process did terminate",
-                                NSLocalizedRecoverySuggestionErrorKey: "Call HCaptcha.reset()"])
+                                NSLocalizedRecoverySuggestionErrorKey: "Call HCaptcha.reset()",])
         completion?(HCaptchaResult(self, error: .unexpected(error)))
         didFinishLoading = false
     }

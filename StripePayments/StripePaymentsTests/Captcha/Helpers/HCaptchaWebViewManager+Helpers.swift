@@ -32,7 +32,7 @@ extension HCaptchaWebViewManager {
         let html = String(format: HCaptchaWebViewManager.unformattedHTML,
                           arguments: [
                             "message": messageBody,
-                            "shouldFail": shouldFail.description
+                            "shouldFail": shouldFail.description,
                           ])
 
         self.init(
