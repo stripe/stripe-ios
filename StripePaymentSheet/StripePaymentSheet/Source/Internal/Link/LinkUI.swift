@@ -199,6 +199,7 @@ public extension PaymentSheet.Appearance {
         // Text
         appearance.colors.text = .linkTextPrimary
         appearance.colors.textSecondary = .linkTextSecondary
+        appearance.colors.brandText = .linkTextBrand
 
         // Insets
         appearance.textFieldInsets = NSDirectionalEdgeInsets(

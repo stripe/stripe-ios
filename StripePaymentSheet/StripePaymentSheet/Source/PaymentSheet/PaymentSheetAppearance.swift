@@ -70,6 +70,9 @@ public extension PaymentSheet {
         @_spi(AppearanceAPIAdditionsPreview)
         public var iconStyle: IconStyle = .filled
 
+        /// The interface style used by select Link UI.
+        public var linkUserInterfaceStyle: UIUserInterfaceStyle = .unspecified
+
         /// The vertical padding for floating payment method rows in vertical (non-embedded) mode
         /// - Note: Increasing this value increases the height of each floating payment method row
         /// - Note: This only applies to non-embedded integrations (i.e., regular PaymentSheet)
@@ -171,6 +174,9 @@ public extension PaymentSheet {
 
             /// The color used for input placeholder text
             public var componentPlaceholderText: UIColor = .secondaryLabel
+
+            /// The color used for brand-tinted text.
+            public var brandText: UIColor = .label
 
             /// The color used for icons in PaymentSheet, such as the close or back icons
             public var icon: UIColor = .secondaryLabel

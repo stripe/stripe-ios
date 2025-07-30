@@ -70,6 +70,7 @@ extension LinkAppearance {
         var appearance = PaymentSheet.Appearance.defaultLinkUIAppearance
         if let primaryColor {
             appearance.colors.primary = primaryColor
+            appearance.colors.brandText = primaryColor
         }
 
         if let primaryButton {
