@@ -9,6 +9,7 @@
 import Foundation
 import WebKit
 
+
 /** The Decoder of javascript messages from the webview
  */
 internal class HCaptchaDecoder: NSObject {
@@ -57,6 +58,7 @@ internal class HCaptchaDecoder: NSObject {
         super.init()
     }
 
+
     /**
      - parameter error: The error to be sent.
 
@@ -66,6 +68,7 @@ internal class HCaptchaDecoder: NSObject {
         sendMessage(.error(error))
     }
 }
+
 
 // MARK: Script Handler
 
@@ -80,6 +83,7 @@ extension HCaptchaDecoder: WKScriptMessageHandler {
         sendMessage(Result.from(response: dict))
     }
 }
+
 
 // MARK: - Result
 
@@ -96,9 +100,11 @@ fileprivate extension HCaptchaDecoder.Result {
     static func from(response: [String: Any]) -> HCaptchaDecoder.Result {
         if let token = response["token"] as? String {
             return .token(token)
-        } else if let message = response["log"] as? String {
+        }
+        else if let message = response["log"] as? String {
             return .log(message)
-        } else if let error = response["error"] as? Int {
+        }
+        else if let error = response["error"] as? Int {
             return from(error)
         }
 

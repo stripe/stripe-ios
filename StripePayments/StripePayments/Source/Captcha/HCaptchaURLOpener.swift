@@ -34,6 +34,10 @@ internal class HCapchaAppURLOpener: HCaptchaURLOpener {
     }
 
     func openURL(_ url: URL) {
-        UIApplication.shared.open(url, options: [:], completionHandler: nil)
+        if #available(iOS 10.0, *) {
+            UIApplication.shared.open(url, options: [:], completionHandler: nil)
+        } else {
+            UIApplication.shared.openURL(url)
+        }
     }
 }

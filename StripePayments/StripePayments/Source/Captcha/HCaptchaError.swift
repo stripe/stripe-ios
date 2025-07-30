@@ -9,7 +9,7 @@
 import Foundation
 
 /// The codes of possible errors thrown by HCaptcha
-enum HCaptchaError: Error, CustomStringConvertible {
+@_spi(STP) public enum HCaptchaError: Error, CustomStringConvertible {
 
     /// Unexpected error
     case unexpected(Error)
@@ -44,12 +44,12 @@ enum HCaptchaError: Error, CustomStringConvertible {
     /// Invalid custom theme passed
     case invalidCustomTheme
 
-    static func == (lhs: HCaptchaError, rhs: HCaptchaError) -> Bool {
+    public static func == (lhs: HCaptchaError, rhs: HCaptchaError) -> Bool {
         return lhs.description == rhs.description
     }
 
     /// A human-readable description for each error
-    var description: String {
+    public var description: String {
         switch self {
         case .unexpected(let error):
             return "Unexpected Error: \(error)"

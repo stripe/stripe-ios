@@ -6,7 +6,7 @@
 //  Copyright © 2021 HCaptcha. All rights reserved.
 //
 
-@testable import StripePayments
+@_spi(STP) @testable import StripePayments
 
 import WebKit
 import XCTest
@@ -19,6 +19,7 @@ class HCaptchaWebViewManager__HTML__Tests: XCTestCase {
         try super.setUpWithError()
 
         webViewContentIsAvailable = expectation(description: "get webview content")
+        _ = HCaptchaDebugInfo.json
     }
 
     override func tearDownWithError() throws {
@@ -27,14 +28,17 @@ class HCaptchaWebViewManager__HTML__Tests: XCTestCase {
         try super.tearDownWithError()
     }
 
-    func test__Size_Is_Mapped_Into_HTML() {
-        let manager = HCaptchaWebViewManager(html: "size: ${size}", size: .compact)
+    func test__Size_Is_Mapped_Into_HTML() throws {
+        let config = try HCaptchaConfig(html: "size: ${size}", size: .compact)
+        let manager = HCaptchaWebViewManager(config: config)
         waitForWebViewContent(manager: manager)
         XCTAssertEqual(webViewContent, "size: compact")
     }
 
-    func test__Orientation_Is_Mapped_Into_HTML() {
-        let manager = HCaptchaWebViewManager(html: "orientation: ${orientation}", orientation: .portrait)
+    func test__Orientation_Is_Mapped_Into_HTML() throws {
+        let config = try HCaptchaConfig(html: "orientation: ${orientation}",
+                                        orientation: .portrait)
+        let manager = HCaptchaWebViewManager(config: config)
         waitForWebViewContent(manager: manager)
         XCTAssertEqual(webViewContent, "orientation: portrait")
     }

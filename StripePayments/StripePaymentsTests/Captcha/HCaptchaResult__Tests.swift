@@ -6,8 +6,9 @@
 //  Copyright © 2018 HCaptcha. All rights reserved.
 //
 
-@testable import StripePayments
+@_spi(STP) @testable import StripePayments
 import XCTest
+
 
 class HCaptchaResult__Tests: XCTestCase {
     func test__Get_Token() {
@@ -18,7 +19,8 @@ class HCaptchaResult__Tests: XCTestCase {
         do {
             let value = try result.dematerialize()
             XCTAssertEqual(value, token)
-        } catch let err {
+        }
+        catch let err {
             XCTFail(err.localizedDescription)
         }
     }
@@ -31,7 +33,8 @@ class HCaptchaResult__Tests: XCTestCase {
         do {
             _ = try result.dematerialize()
             XCTFail("Shouldn't have completed")
-        } catch let err {
+        }
+        catch let err {
             XCTAssertEqual(err as? HCaptchaError, error)
         }
     }

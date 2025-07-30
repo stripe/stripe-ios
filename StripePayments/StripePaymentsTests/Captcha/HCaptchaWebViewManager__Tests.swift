@@ -6,10 +6,11 @@
 //  Copyright © 2018 HCaptcha. All rights reserved.
 //
 
-@testable import StripePayments
+@_spi(STP) @testable import StripePayments
 
 import WebKit
 import XCTest
+
 
 class HCaptchaWebViewManager__Tests: XCTestCase {
 
@@ -19,8 +20,17 @@ class HCaptchaWebViewManager__Tests: XCTestCase {
     override func setUp() {
         super.setUp()
 
-        presenterView = UIApplication.shared.windows.first(where: { $0.isKeyWindow })?.rootViewController?.view
-        apiKey = UUID().uuidString
+        #if os(visionOS)
+        let windows = UIApplication.shared.connectedScenes
+            .compactMap { ($0 as? UIWindowScene)?.windows }
+            .flatMap { $0 }
+            .sorted { firstWindow, _ in firstWindow.isKeyWindow }
+        let window = windows.first
+        #else
+        let window = UIApplication.shared.windows.first { $0.isKeyWindow }
+        #endif
+        presenterView = window?.rootViewController?.view
+        apiKey = String(arc4random())
     }
 
     override func tearDown() {
@@ -50,10 +60,12 @@ class HCaptchaWebViewManager__Tests: XCTestCase {
 
         waitForExpectations(timeout: 10)
 
+
         // Verify
         XCTAssertNotNil(result1)
         XCTAssertNil(result1?.error)
         XCTAssertEqual(result1?.token, apiKey)
+
 
         // Validate again
         let exp2 = expectation(description: "reload token")
@@ -67,11 +79,13 @@ class HCaptchaWebViewManager__Tests: XCTestCase {
 
         waitForExpectations(timeout: 10)
 
+
         // Verify
         XCTAssertNotNil(result2)
         XCTAssertNil(result2?.error)
         XCTAssertEqual(result2?.token, apiKey)
     }
+
 
     func test__Validate__Show_HCaptcha() {
         let exp = expectation(description: "show hcaptcha")
@@ -88,6 +102,7 @@ class HCaptchaWebViewManager__Tests: XCTestCase {
 
         waitForExpectations(timeout: 10)
     }
+
 
     func test__Validate__Message_Error() {
         let exp0 = expectation(description: "should call configureWebView")
@@ -359,8 +374,8 @@ class HCaptchaWebViewManager__Tests: XCTestCase {
         waitForExpectations(timeout: 10)
 
         XCTAssertNotNil(result)
-        XCTAssertNil(result?.error)
-        XCTAssertEqual(result?.token, endpoint.absoluteString)
+        XCTAssertNil(result!.error)
+        XCTAssertTrue(result!.token!.contains("endpoint=https%3A%2F%2Fsome.endpoint"))
     }
 
     // MARK: Reset
@@ -451,39 +466,6 @@ class HCaptchaWebViewManager__Tests: XCTestCase {
         XCTAssertEqual(result?.token, apiKey)
     }
 
-    func test__Validate__Should_Skip_For_Tests() {
-        let exp = expectation(description: "did skip validation")
-
-        let manager = HCaptchaWebViewManager()
-        manager.shouldSkipForTests = true
-
-        manager.completion = { result in
-            XCTAssertEqual(result.token, "")
-            exp.fulfill()
-        }
-
-        manager.validate(on: presenterView)
-
-        waitForExpectations(timeout: 1)
-    }
-
-    // MARK: Force Challenge Visible
-
-    func test__Force_Visible_Challenge() {
-        let manager = HCaptchaWebViewManager()
-
-        // Initial value
-        XCTAssertFalse(manager.forceVisibleChallenge)
-
-        // Set True
-        manager.forceVisibleChallenge = true
-        XCTAssertEqual(manager.webView.customUserAgent, "bot/2.1")
-
-        // Set False
-        manager.forceVisibleChallenge = false
-        XCTAssertNotEqual(manager.webView.customUserAgent?.isEmpty, false)
-    }
-
     // MARK: On Did Finish Loading
 
     func test__Did_Finish_Loading__Immediate() {
@@ -518,25 +500,6 @@ class HCaptchaWebViewManager__Tests: XCTestCase {
         waitForExpectations(timeout: 5)
     }
 
-    func test__Invalid_Theme() {
-        let exp = expectation(description: "bad theme value")
-
-        let manager = HCaptchaWebViewManager(messageBody: "{action: \"showHCaptcha\"}",
-                                             apiKey: apiKey,
-                                             theme: "[Object object]") // invalid theme
-        manager.shouldResetOnError = false
-        manager.configureWebView { _ in
-            XCTFail("should not ask to configure the webview")
-        }
-
-        manager.validate(on: presenterView, resetOnError: false) { response in
-            XCTAssertEqual(HCaptchaError.htmlLoadError, response.error)
-            exp.fulfill()
-        }
-
-        waitForExpectations(timeout: 10)
-    }
-
     func test__OnEvent_Open_Callback() {
         let exp0 = expectation(description: "should call configureWebView")
         let exp1 = expectation(description: "setup key")
@@ -569,7 +532,7 @@ class HCaptchaWebViewManager__Tests: XCTestCase {
     func test__OnEvent_Without_Validation() {
         let testParams: [(String, HCaptchaEvent)] = [("onChallengeExpired", .challengeExpired),
                                                      ("onExpired", .expired),
-                                                     ("onClose", .close), ]
+                                                     ("onClose", .close)]
 
         testParams.forEach { (action, expectedEventType) in
             let exp0 = expectation(description: "should call configureWebView")
@@ -617,7 +580,7 @@ class HCaptchaWebViewManager__Tests: XCTestCase {
             }
         }
 
-        let manager = HCaptchaWebViewManager(messageBody: "{token: key, action: \"openExternalPage\"}",
+        let manager = HCaptchaWebViewManager(messageBody: "{action: \"openExternalPage\"}",
                                              apiKey: apiKey,
                                              urlOpener: TestURLOpener(exp1, exp2))
         manager.configureWebView { _ in
@@ -643,6 +606,53 @@ class HCaptchaWebViewManager__Tests: XCTestCase {
             XCTAssertEqual(HCaptchaError.htmlLoadError, response.error)
             exp.fulfill()
         }
+
+        waitForExpectations(timeout: 10)
+    }
+
+    func test__HTML_Load_Error_Timeout() {
+        let exp = expectation(description: "didLoad never called")
+
+        let manager = HCaptchaWebViewManager(html: "<html>", apiKey: apiKey, loadingTimeout: 0.5)
+        manager.shouldResetOnError = false
+        manager.configureWebView { _ in
+            XCTFail("should not ask to configure the webview")
+        }
+
+        manager.validate(on: presenterView, resetOnError: false) { response in
+            XCTAssertEqual(HCaptchaError.htmlLoadError, response.error)
+            exp.fulfill()
+        }
+
+        waitForExpectations(timeout: 10)
+    }
+
+    func test__Validate_Passive_Key_On_Nil_View() {
+        let exp = expectation(description: "wait for completion")
+
+        let manager = HCaptchaWebViewManager(messageBody: "{token: \"success-token\"}", passiveApiKey: true)
+        manager.shouldResetOnError = false
+        manager.completion = { response in
+            XCTAssertEqual(try? response.dematerialize(), "success-token")
+            exp.fulfill()
+        }
+        manager.validate(on: nil)
+
+        waitForExpectations(timeout: 10)
+    }
+
+    func test__Validate_Non_Passive_Key_On_Nil_View() {
+        let exp = expectation(description: "didLoad never called")
+
+        let manager = HCaptchaWebViewManager(messageBody: "{token: \"should-not-be-delivered\"}", passiveApiKey: false)
+        manager.shouldResetOnError = false
+
+        manager.completion = { response in
+            XCTAssertEqual(HCaptchaError.failedSetup, response.error)
+            exp.fulfill()
+        }
+
+        manager.validate(on: nil)
 
         waitForExpectations(timeout: 10)
     }

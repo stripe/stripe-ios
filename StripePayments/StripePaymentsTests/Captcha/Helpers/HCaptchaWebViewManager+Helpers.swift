@@ -7,7 +7,7 @@
 //
 
 import Foundation
-@testable import StripePayments
+@_spi(STP) @testable import StripePayments
 import WebKit
 
 extension HCaptchaWebViewManager {
@@ -20,51 +20,64 @@ extension HCaptchaWebViewManager {
     convenience init(
         messageBody: String = "undefined",
         apiKey: String? = nil,
+        passiveApiKey: Bool = false,
         endpoint: URL? = nil,
         shouldFail: Bool = false, // will fail with retriable sessionTimeout
         size: HCaptchaSize = .invisible,
         rqdata: String? = nil,
-        theme: String = "\"light\"",
+        theme: String = "light",
+        customTheme: String? = nil,
         urlOpener: HCaptchaURLOpener = HCapchaAppURLOpener()
     ) {
         let html = String(format: HCaptchaWebViewManager.unformattedHTML,
                           arguments: [
                             "message": messageBody,
-                            "shouldFail": shouldFail.description,
+                            "shouldFail": shouldFail.description
                           ])
 
         self.init(
             html: html,
-            apiKey: apiKey,
-            endpoint: endpoint,
+            apiKey: apiKey ?? "api-key",
+            passiveApiKey: passiveApiKey,
+            endpoint: endpoint ?? URL(string: "https://api.hcaptcha.com")!,
             size: size,
             rqdata: rqdata,
             theme: theme,
+            customTheme: customTheme,
             urlOpener: urlOpener
         )
     }
 
     convenience init(
         html: String,
-        apiKey: String? = nil,
-        endpoint: URL? = nil,
+        apiKey: String,
+        passiveApiKey: Bool = false,
+        endpoint: URL = URL(string: "https://api.hcaptcha.com")!,
         size: HCaptchaSize = .invisible,
         orientation: HCaptchaOrientation = .portrait,
         rqdata: String? = nil,
-        theme: String = "\"light\"",
-        urlOpener: HCaptchaURLOpener = HCapchaAppURLOpener()
+        theme: String = "light",
+        customTheme: String? = nil,
+        urlOpener: HCaptchaURLOpener = HCapchaAppURLOpener(),
+        loadingTimeout: TimeInterval = 5
     ) {
         let localhost = URL(string: "http://localhost")!
 
+        // swiftlint:disable:next force_try
+        let config = try! HCaptchaConfig(html: html,
+                                         apiKey: apiKey,
+                                         passiveApiKey: passiveApiKey,
+                                         baseURL: localhost,
+                                         size: size,
+                                         orientation: orientation,
+                                         rqdata: rqdata,
+                                         endpoint: endpoint,
+                                         theme: theme,
+                                         customTheme: customTheme,
+                                         loadingTimeout: loadingTimeout)
+
         self.init(
-            html: html,
-            apiKey: apiKey ?? UUID().uuidString,
-            baseURL: localhost,
-            endpoint: endpoint ?? localhost,
-            size: size,
-            orientation: orientation,
-            rqdata: rqdata,
-            theme: theme,
+            config: config,
             urlOpener: urlOpener
         )
     }

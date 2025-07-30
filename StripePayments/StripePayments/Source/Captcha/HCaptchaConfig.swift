@@ -6,21 +6,21 @@
 //  Copyright © 2018 HCaptcha. All rights reserved.
 //
 
-import JavaScriptCore
-import UIKit
 import WebKit
+import UIKit
+import JavaScriptCore
 
 /** Widget display mode
  */
 @objc
-enum HCaptchaSize: Int, RawRepresentable {
+@_spi(STP) public enum HCaptchaSize: Int, RawRepresentable {
     case invisible
     case compact
     case normal
 
-    typealias RawValue = String
+    public typealias RawValue = String
 
-    var rawValue: RawValue {
+    public var rawValue: RawValue {
         switch self {
         case .invisible:
             return "invisible"
@@ -31,7 +31,7 @@ enum HCaptchaSize: Int, RawRepresentable {
         }
     }
 
-    init?(rawValue: RawValue) {
+    public init?(rawValue: RawValue) {
         switch rawValue {
         case "invisible":
             self = .invisible
@@ -48,13 +48,13 @@ enum HCaptchaSize: Int, RawRepresentable {
 /** Widget orientation mode
  */
 @objc
-enum HCaptchaOrientation: Int, RawRepresentable {
+@_spi(STP) public enum HCaptchaOrientation: Int, RawRepresentable {
     case portrait
     case landscape
 
-    typealias RawValue = String
+    public typealias RawValue = String
 
-    var rawValue: RawValue {
+    public var rawValue: RawValue {
         switch self {
         case .portrait:
             return "portrait"
@@ -63,7 +63,7 @@ enum HCaptchaOrientation: Int, RawRepresentable {
         }
     }
 
-    init?(rawValue: RawValue) {
+    public init?(rawValue: RawValue) {
         switch rawValue {
         case "portrait":
             self = .portrait
@@ -83,6 +83,9 @@ struct HCaptchaConfig: CustomDebugStringConvertible {
 
     /// The API key that will be sent to the HCaptcha API
     let apiKey: String
+
+    /// For passive apiKeys no user interaction required and HCaptcha stays invisible
+    let passiveApiKey: Bool
 
     /// Size of visible area
     let size: HCaptchaSize
@@ -127,6 +130,15 @@ struct HCaptchaConfig: CustomDebugStringConvertible {
 
     /// Custom theme JSON string.
     let customTheme: String?
+
+    /// A locale value to translate HCaptcha into a different language
+    let locale: Locale?
+
+    /// A time before throw the `.htmlLoadError` if HCaptcha is not loaded
+    let loadingTimeout: TimeInterval
+
+    /// A debug property
+    let disablePat: Bool?
 
     /// Return actual theme value based on init params. It must return valid JS object.
     var actualTheme: String {
@@ -181,22 +193,27 @@ struct HCaptchaConfig: CustomDebugStringConvertible {
      Info.plist.
      - Throws: Rethrows any exceptions thrown by `String(contentsOfFile:)`
      */
-    init(apiKey: String?,
-         infoPlistKey: String?,
-         baseURL: URL?,
-         infoPlistURL: URL?,
-         jsSrc: URL,
-         size: HCaptchaSize,
-         orientation: HCaptchaOrientation,
-         rqdata: String?,
-         sentry: Bool?,
-         endpoint: URL?,
-         reportapi: URL?,
-         assethost: URL?,
-         imghost: URL?,
-         host: String?,
-         theme: String,
-         customTheme: String?) throws {
+    public init(html: String = HCaptchaHtml.template,
+                apiKey: String?,
+                passiveApiKey: Bool?,
+                infoPlistKey: String?,
+                baseURL: URL?,
+                infoPlistURL: URL?,
+                jsSrc: URL,
+                size: HCaptchaSize,
+                orientation: HCaptchaOrientation,
+                rqdata: String?,
+                sentry: Bool?,
+                endpoint: URL?,
+                reportapi: URL?,
+                assethost: URL?,
+                imghost: URL?,
+                host: String?,
+                theme: String,
+                customTheme: String?,
+                locale: Locale?,
+                loadingTimeout: TimeInterval = 5.0,
+                disablePat: Bool?) throws {
         guard let apiKey = apiKey ?? infoPlistKey else {
             throw HCaptchaError.apiKeyNotFound
         }
@@ -217,8 +234,9 @@ struct HCaptchaConfig: CustomDebugStringConvertible {
             }
         }
 
-        self.html = HCaptchaHtml.template
+        self.html = html
         self.apiKey = apiKey
+        self.passiveApiKey = passiveApiKey ?? false
         self.size = size
         self.orientation = orientation
         self.baseURL = HCaptchaConfig.fixSchemeIfNeeded(for: domain)
@@ -232,19 +250,21 @@ struct HCaptchaConfig: CustomDebugStringConvertible {
         self.host = host
         self.theme = theme
         self.customTheme = customTheme
+        self.locale = locale
+        self.loadingTimeout = loadingTimeout
+        self.disablePat = disablePat
     }
 
     /**
      The JS API endpoint to be loaded onto the HTML file.
-     - parameter url: The URL to be fixed
      */
-    func getEndpointURL(locale: Locale? = nil) -> URL {
+    public var actualEndpoint: URL {
         var result = URLComponents(url: jsSrc, resolvingAgainstBaseURL: false)!
         var queryItems = [
             URLQueryItem(name: "onload", value: "onloadCallback"),
             URLQueryItem(name: "render", value: "explicit"),
             URLQueryItem(name: "recaptchacompat", value: "off"),
-            URLQueryItem(name: "host", value: host ?? "\(apiKey).ios-sdk.hcaptcha.com"),
+            URLQueryItem(name: "host", value: host ?? "\(apiKey).ios-sdk.hcaptcha.com")
         ]
 
         if let sentry = sentry {
@@ -267,6 +287,9 @@ struct HCaptchaConfig: CustomDebugStringConvertible {
         }
         if customTheme != nil {
             queryItems.append(URLQueryItem(name: "custom", value: String(true)))
+        }
+        if let disablePat = disablePat, disablePat {
+            queryItems.append(URLQueryItem(name: "pat", value: "off"))
         }
 
         result.percentEncodedQuery = queryItems.map {
