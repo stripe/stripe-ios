@@ -53,7 +53,8 @@ extension LinkSignUpViewControllerSnapshotTests {
                 publishableKey: nil,
                 useMobileEndpoints: false
             ),
-            defaultBillingDetails: nil
+            defaultBillingDetails: nil,
+            theme: PaymentSheet.Appearance.defaultLinkUIAppearance.asElementsTheme
         )
     }
 }
