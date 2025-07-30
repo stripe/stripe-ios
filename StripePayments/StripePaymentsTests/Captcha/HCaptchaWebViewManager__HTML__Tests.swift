@@ -19,7 +19,6 @@ class HCaptchaWebViewManager__HTML__Tests: XCTestCase {
         try super.setUpWithError()
 
         webViewContentIsAvailable = expectation(description: "get webview content")
-        _ = HCaptchaDebugInfo.json
     }
 
     override func tearDownWithError() throws {

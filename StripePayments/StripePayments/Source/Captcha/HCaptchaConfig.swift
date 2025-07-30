@@ -187,7 +187,7 @@ struct HCaptchaConfig: CustomDebugStringConvertible {
      Info.plist.
      - Throws: Rethrows any exceptions thrown by `String(contentsOfFile:)`
      */
-    public init(html: String = HCaptchaHtml.template,
+    init(html: String = HCaptchaHtml.template,
                 apiKey: String?,
                 passiveApiKey: Bool?,
                 infoPlistKey: String?,
@@ -248,7 +248,7 @@ struct HCaptchaConfig: CustomDebugStringConvertible {
     /**
      The JS API endpoint to be loaded onto the HTML file.
      */
-    public var actualEndpoint: URL {
+    var actualEndpoint: URL {
         var result = URLComponents(url: jsSrc, resolvingAgainstBaseURL: false)!
         var queryItems = [
             URLQueryItem(name: "onload", value: "onloadCallback"),

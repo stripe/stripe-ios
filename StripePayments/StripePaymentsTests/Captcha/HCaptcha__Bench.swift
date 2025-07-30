@@ -13,6 +13,13 @@ class HCaptcha__Bench: XCTestCase {
     var testTimeout: TimeInterval = 5 // Default timeout value
 
     override func setUp() {
+        super.setUp()
+
+        // Set timeout value based on CI environment
+        if ProcessInfo.processInfo.environment["CI"] != nil {
+            testTimeout = 20
+        }
+
         HCaptchaHtml.template = """
             <html>
               <head>
