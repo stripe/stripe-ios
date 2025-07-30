@@ -250,41 +250,4 @@ class HCaptcha: NSObject {
     convenience init(apiKey: String, baseURL: URL, locale: Locale, size: HCaptchaSize) throws {
         try self.init(apiKey: apiKey, baseURL: baseURL, locale: locale, size: size, rqdata: nil)
     }
-
-    @objc
-    convenience init(apiKey: String?,
-                            passiveApiKey: Bool,
-                            baseURL: URL?,
-                            locale: Locale?,
-                            size: HCaptchaSize,
-                            orientation: HCaptchaOrientation,
-                            jsSrc: URL,
-                            rqdata: String?,
-                            sentry: Bool,
-                            endpoint: URL?,
-                            reportapi: URL?,
-                            assethost: URL?,
-                            imghost: URL?,
-                            host: String?,
-                            theme: String,
-                            customTheme: String?,
-                            diagnosticLog: Bool) throws {
-        try self.init(apiKey: apiKey,
-                      passiveApiKey: passiveApiKey,
-                      baseURL: baseURL,
-                      locale: locale,
-                      size: size,
-                      orientation: orientation,
-                      jsSrc: jsSrc,
-                      rqdata: rqdata,
-                      sentry: sentry,
-                      endpoint: endpoint,
-                      reportapi: reportapi,
-                      assethost: assethost,
-                      imghost: imghost,
-                      host: host,
-                      theme: theme,
-                      customTheme: customTheme,
-                      diagnosticLog: diagnosticLog)
-    }
 }
