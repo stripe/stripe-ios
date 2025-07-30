@@ -64,8 +64,8 @@
 /* Instructional text for scanning back of a driver's license, passport, or government issued photo id */
 "Flip your %@ over to the other side" = "Flip your %@ over to the other side";
 
-/* Accessibility label when front identity card photo has successfully uploaded */
-"Front identity card photo successfully uploaded" = "Front identity card photo successfully uploaded";
+/* Accessibility label when front identity document photo has successfully uploaded */
+"Front identity document photo successfully uploaded" = "Front identity document photo successfully uploaded";
 
 /* Accessibility label when front driver's license, passport, or government issued photo id photo has successfully uploaded */
 "Front %@ photo successfully uploaded" = "Front %@ photo successfully uploaded";
