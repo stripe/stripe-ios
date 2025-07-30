@@ -21,7 +21,7 @@ class ButtonLinkSnapshotTests: STPSnapshotTestCase {
     }
 
     func testPlain() {
-        let sut = makeSUT(configuration: .linkPlain(), title: "Plain Button")
+        let sut = makeSUT(configuration: .linkPlain(foregroundColor: .linkTextBrand), title: "Plain Button")
         verify(sut)
     }
 
