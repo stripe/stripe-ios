@@ -5,8 +5,8 @@
 //  Created by Michael Liberatore on 7/14/25.
 //
 
-import UIKit
 import StripePaymentSheet
+import UIKit
 
 // Customizable appearance-related configuration for Stripe-provided Link UI.
 @_spi(CryptoOnrampSDKPreview)

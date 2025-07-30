@@ -136,7 +136,7 @@ import UIKit
                 if let appearance = appearance {
                     configuration.linkUIAppearance = appearance
                 }
-                
+
                 let analyticsHelper = PaymentSheetAnalyticsHelper(integrationShape: .complete, configuration: configuration)
 
                 let loadResult = try await Self.loadElementsSession(

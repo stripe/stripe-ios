@@ -38,7 +38,7 @@ extension LinkVerificationView {
         }
 
         private let appearance: PaymentSheet.Appearance
-        
+
         init(appearance: PaymentSheet.Appearance) {
             self.appearance = appearance
             super.init(frame: .zero)
