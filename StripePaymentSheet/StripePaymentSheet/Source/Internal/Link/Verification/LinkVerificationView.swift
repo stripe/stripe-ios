@@ -117,7 +117,7 @@ final class LinkVerificationView: UIView {
     }()
 
     private lazy var resendCodeButton: Button = {
-        let button = Button(configuration: .linkPlain(), title: STPLocalizedString(
+        let button = Button(configuration: .linkPlain(foregroundColor: appearance.colors.primary), title: STPLocalizedString(
             "Resend code",
             "Label for a button that re-sends the a login code when tapped"
         ))
@@ -127,7 +127,7 @@ final class LinkVerificationView: UIView {
     }()
 
     private lazy var logoutView: LogoutView = {
-        let logoutView = LogoutView(linkAccount: linkAccount)
+        let logoutView = LogoutView(linkAccount: linkAccount, appearance: appearance)
         logoutView.button.addTarget(self, action: #selector(didTapOnLogout(_:)), for: .touchUpInside)
         return logoutView
     }()
