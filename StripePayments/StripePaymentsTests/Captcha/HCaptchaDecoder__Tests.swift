@@ -6,7 +6,7 @@
 //  Copyright © 2018 HCaptcha. All rights reserved.
 //
 
-@_spi(STP) @testable import StripePayments
+@testable import StripePayments
 
 import WebKit
 import XCTest
@@ -112,7 +112,7 @@ class HCaptchaDecoder__Tests: XCTestCase {
         }
 
         // Send
-        let token = String(arc4random())
+        let token = UUID().uuidString
         let message = MockMessage(message: ["token": token])
         decoder.send(message: message)
 

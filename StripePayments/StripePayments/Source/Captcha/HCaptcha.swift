@@ -14,7 +14,7 @@ import WebKit
   hCaptcha SDK facade (entry point)
 */
 @objc
-@_spi(STP) public class HCaptcha: NSObject {
+class HCaptcha: NSObject {
     fileprivate struct Constants {
         struct InfoDictKeys {
             static let APIKey = "HCaptchaKey"
@@ -59,7 +59,7 @@ import WebKit
      - Throws: Rethrows any exceptions thrown by `String(contentsOfFile:)`
      */
     @objc
-    public convenience init(
+    convenience init(
         apiKey: String? = nil,
         passiveApiKey: Bool = false,
         baseURL: URL? = nil,
@@ -126,7 +126,7 @@ import WebKit
        onEvent allow to subscribe to SDK's events
      */
     @objc
-    public func onEvent(_ reciever: ((HCaptchaEvent, Any?) -> Void)? = nil) {
+    func onEvent(_ reciever: ((HCaptchaEvent, Any?) -> Void)? = nil) {
         Log.debug(".onEvent")
 
         manager.onEvent = reciever
@@ -141,7 +141,7 @@ import WebKit
      Starts the challenge validation
     */
     @objc
-    public func validate(on view: UIView? = nil, resetOnError: Bool = true,
+    func validate(on view: UIView? = nil, resetOnError: Bool = true,
                          completion: @escaping (HCaptchaResult) -> Void) {
         Log.debug(".validate on: \(String(describing: view)) resetOnError: \(resetOnError)")
 
@@ -153,7 +153,7 @@ import WebKit
 
     /// Stops the execution of the webview
     @objc
-    public func stop() {
+    func stop() {
         Log.debug(".stop")
 
         manager.stop()
@@ -168,7 +168,7 @@ import WebKit
      it might need to be added in a view currently visible.
     */
     @objc
-    public func configureWebView(_ configure: @escaping (WKWebView) -> Void) {
+    func configureWebView(_ configure: @escaping (WKWebView) -> Void) {
         Log.debug(".configureWebView")
 
         manager.configureWebView = configure
@@ -180,7 +180,7 @@ import WebKit
      The reset is achieved by calling `hcaptcha.reset()` on the JS API.
     */
     @objc
-    public func reset() {
+    func reset() {
         Log.debug(".reset")
 
         manager.reset()
@@ -196,7 +196,7 @@ import WebKit
      finished loading when you set the closure.
     */
     @objc
-    public func didFinishLoading(_ closure: (() -> Void)?) {
+    func didFinishLoading(_ closure: (() -> Void)?) {
         Log.debug(".didFinishLoading")
         manager.onDidFinishLoading = closure
     }
@@ -207,54 +207,54 @@ import WebKit
      This may be useful if you need to modify the layout of hCaptcha.
     */
     @objc
-    public func redrawView() {
+    func redrawView() {
         manager.configureWebView?(manager.webView)
     }
 
     // MARK: - Objective-C 'convenience' inits
 
     @objc
-    public convenience init(locale: Locale) throws {
+    convenience init(locale: Locale) throws {
         try self.init(locale: locale, size: .invisible)
     }
 
     @objc
-    public convenience init(size: HCaptchaSize) throws {
+    convenience init(size: HCaptchaSize) throws {
         try self.init(locale: nil, size: size)
     }
 
     @objc
-    public convenience init(passiveApiKey: Bool) throws {
+    convenience init(passiveApiKey: Bool) throws {
         try self.init(passiveApiKey: passiveApiKey, locale: nil)
     }
 
     @objc
-    public convenience init(apiKey: String) throws {
+    convenience init(apiKey: String) throws {
         try self.init(apiKey: apiKey, locale: nil)
     }
 
     @objc
-    public convenience init(apiKey: String, baseURL: URL) throws {
+    convenience init(apiKey: String, baseURL: URL) throws {
         try self.init(apiKey: apiKey, baseURL: baseURL, locale: nil)
     }
 
     @objc
-    public convenience init(apiKey: String, passiveApiKey: Bool) throws {
+    convenience init(apiKey: String, passiveApiKey: Bool) throws {
         try self.init(apiKey: apiKey, passiveApiKey: passiveApiKey, locale: nil)
     }
 
     @objc
-    public convenience init(apiKey: String, baseURL: URL, locale: Locale) throws {
+    convenience init(apiKey: String, baseURL: URL, locale: Locale) throws {
         try self.init(apiKey: apiKey, baseURL: baseURL, locale: locale, size: .invisible)
     }
 
     @objc
-    public convenience init(apiKey: String, baseURL: URL, locale: Locale, size: HCaptchaSize) throws {
+    convenience init(apiKey: String, baseURL: URL, locale: Locale, size: HCaptchaSize) throws {
         try self.init(apiKey: apiKey, baseURL: baseURL, locale: locale, size: size, rqdata: nil)
     }
 
     @objc
-    public convenience init(apiKey: String?,
+    convenience init(apiKey: String?,
                             passiveApiKey: Bool,
                             baseURL: URL?,
                             locale: Locale?,

@@ -7,7 +7,7 @@
 //
 
 import Foundation
-@_spi(STP) @testable import StripePayments
+@testable import StripePayments
 import WebKit
 
 class MockMessage: WKScriptMessage {

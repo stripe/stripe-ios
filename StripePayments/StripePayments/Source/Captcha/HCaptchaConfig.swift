@@ -13,14 +13,14 @@ import WebKit
 /** Widget display mode
  */
 @objc
-@_spi(STP) public enum HCaptchaSize: Int, RawRepresentable {
+enum HCaptchaSize: Int, RawRepresentable {
     case invisible
     case compact
     case normal
 
-    public typealias RawValue = String
+    typealias RawValue = String
 
-    public var rawValue: RawValue {
+    var rawValue: RawValue {
         switch self {
         case .invisible:
             return "invisible"
@@ -31,7 +31,7 @@ import WebKit
         }
     }
 
-    public init?(rawValue: RawValue) {
+    init?(rawValue: RawValue) {
         switch rawValue {
         case "invisible":
             self = .invisible
@@ -48,13 +48,13 @@ import WebKit
 /** Widget orientation mode
  */
 @objc
-@_spi(STP) public enum HCaptchaOrientation: Int, RawRepresentable {
+enum HCaptchaOrientation: Int, RawRepresentable {
     case portrait
     case landscape
 
-    public typealias RawValue = String
+    typealias RawValue = String
 
-    public var rawValue: RawValue {
+    var rawValue: RawValue {
         switch self {
         case .portrait:
             return "portrait"
@@ -63,7 +63,7 @@ import WebKit
         }
     }
 
-    public init?(rawValue: RawValue) {
+    init?(rawValue: RawValue) {
         switch rawValue {
         case "portrait":
             self = .portrait

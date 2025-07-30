@@ -6,7 +6,7 @@
 //  Copyright © 2018 HCaptcha. All rights reserved.
 //
 
-@_spi(STP) @testable import StripePayments
+@testable import StripePayments
 
 import WebKit
 import XCTest
@@ -19,17 +19,8 @@ class HCaptchaWebViewManager__Tests: XCTestCase {
     override func setUp() {
         super.setUp()
 
-        #if os(visionOS)
-        let windows = UIApplication.shared.connectedScenes
-            .compactMap { ($0 as? UIWindowScene)?.windows }
-            .flatMap { $0 }
-            .sorted { firstWindow, _ in firstWindow.isKeyWindow }
-        let window = windows.first
-        #else
-        let window = UIApplication.shared.windows.first { $0.isKeyWindow }
-        #endif
-        presenterView = window?.rootViewController?.view
-        apiKey = String(arc4random())
+        presenterView = UIApplication.shared.windows.first(where: { $0.isKeyWindow })?.rootViewController?.view
+        apiKey = UUID().uuidString
     }
 
     override func tearDown() {

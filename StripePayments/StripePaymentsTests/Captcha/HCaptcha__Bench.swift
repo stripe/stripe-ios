@@ -6,7 +6,7 @@
 //
 
 import Foundation
-@_spi(STP) @testable import StripePayments
+@testable import StripePayments
 import XCTest
 
 class HCaptcha__Bench: XCTestCase {
