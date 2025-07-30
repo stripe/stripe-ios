@@ -110,8 +110,8 @@ extension DocumentFileUploadViewController {
                 )
             case .back:
                 return STPLocalizedString(
-                    "Back identity card photo successfully uploaded",
-                    "Accessibility label when back identity card photo has successfully uploaded"
+                    "Back identity document photo successfully uploaded",
+                    "Accessibility label when back identity document photo has successfully uploaded"
                 )
             }
         }

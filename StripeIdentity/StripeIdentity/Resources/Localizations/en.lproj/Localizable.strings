@@ -10,8 +10,8 @@
 /* Opens the app's settings in the Settings app */
 "App Settings" = "App Settings";
 
-/* Accessibility label when back identity card photo has successfully uploaded */
-"Back identity card photo successfully uploaded" = "Back identity card photo successfully uploaded";
+/* Accessibility label when back identity document photo has successfully uploaded */
+"Back identity document photo successfully uploaded" = "Back identity document photo successfully uploaded";
 
 /* Accessibility label when back driver's license, passport, or government issued photo id photo photo has successfully uploaded */
 "Back %@ photo successfully uploaded" = "Back %@ photo successfully uploaded";
