@@ -78,6 +78,8 @@ final class LinkVerificationViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
+        overrideUserInterfaceStyle = appearance.linkUserInterfaceStyle
+
         view.tintColor = .linkIconBrand
         view.backgroundColor = .systemBackground
 

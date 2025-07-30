@@ -78,8 +78,21 @@ extension LinkAppearance {
             appearance.primaryButton.height = primaryButton.height
         }
 
-        // TODO: determine how to configure light/dark mode based on `style`.
+        appearance.linkUserInterfaceStyle = style.toUserInterfaceStyle
 
         return appearance
+    }
+}
+
+private extension LinkAppearance.Style {
+    var toUserInterfaceStyle: UIUserInterfaceStyle {
+        switch self {
+        case .automatic:
+            return .unspecified
+        case .alwaysLight:
+            return .light
+        case .alwaysDark:
+            return .dark
+        }
     }
 }

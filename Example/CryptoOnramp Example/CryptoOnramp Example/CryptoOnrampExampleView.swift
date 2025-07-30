@@ -94,9 +94,9 @@ struct CryptoOnrampExampleView: View {
             do {
                 let coordinator = try await CryptoOnrampCoordinator.create(
                     appearance: LinkAppearance(
-                        primaryColor: .purple,
+                        primaryColor: .systemPink,
                         primaryButton: .init(cornerRadius: 0, height: 200),
-                        style: .alwaysDark
+                        style: .automatic
                     )
                 )
 
