@@ -70,9 +70,6 @@
 /* Accessibility label when front driver's license, passport, or government issued photo id photo has successfully uploaded */
 "Front %@ photo successfully uploaded" = "Front %@ photo successfully uploaded";
 
-/* Description of front of identity card image */
-"Front of identity card" = "Front of identity card";
-
 /* Title of ID document scanning screen when scanning the front of an identity card */
 "Front of identity document" = "Front of identity document";
 
