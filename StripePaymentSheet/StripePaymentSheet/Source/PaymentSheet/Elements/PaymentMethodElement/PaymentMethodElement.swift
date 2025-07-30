@@ -6,6 +6,7 @@
 //  Copyright © 2021 Stripe, Inc. All rights reserved.
 //
 
+import Foundation
 @_spi(STP) import StripeUICore
 
 // MARK: - PaymentMethodElement protocol

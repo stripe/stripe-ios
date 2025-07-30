@@ -154,6 +154,7 @@ class EmbeddedFormViewController: UIViewController {
         )
     }()
 
+    private lazy var mandateView = SimpleMandateTextView(theme: configuration.appearance.asElementsTheme)
     private lazy var errorLabel = ElementsUI.makeErrorLabel(theme: configuration.appearance.asElementsTheme)
     private let stackView: UIStackView = UIStackView()
 
@@ -185,9 +186,10 @@ class EmbeddedFormViewController: UIViewController {
         updateUI()
     }
 
-    /// Updates all UI elements (pay button, error)
+    /// Updates all UI elements (pay button, error, mandate)
     private func updateUI() {
         updatePrimaryButton()
+        updateMandate()
         updateError()
     }
 
@@ -220,6 +222,19 @@ class EmbeddedFormViewController: UIViewController {
             callToAction: callToAction,
             animated: true
         )
+    }
+
+    func updateMandate() {
+        let mandateProvider = VerticalListMandateProvider(configuration: configuration, elementsSession: elementsSession, intent: intent, analyticsHelper: analyticsHelper)
+        let newMandateText = mandateProvider.mandate(
+            for: selectedPaymentOption?.paymentMethodType,
+            savedPaymentMethod: selectedPaymentOption?.savedPaymentMethod,
+            bottomNoticeAttributedString: paymentMethodFormViewController.bottomNoticeAttributedString
+        )
+        animateHeightChange {
+            self.mandateView.attributedText = newMandateText
+            self.mandateView.setHiddenIfNecessary(newMandateText == nil)
+        }
     }
 
     private func updateError() {
@@ -261,7 +276,7 @@ class EmbeddedFormViewController: UIViewController {
         paymentContainerView.directionalLayoutMargins = .zero
 
         // One stack view contains all our subviews
-        let views: [UIView] = [paymentContainerView, errorLabel].compactMap { $0 }
+        let views: [UIView] = [paymentContainerView, mandateView, errorLabel].compactMap { $0 }
         for view in views {
             stackView.addArrangedSubview(view)
         }
@@ -269,6 +284,7 @@ class EmbeddedFormViewController: UIViewController {
         stackView.directionalLayoutMargins = configuration.appearance.topFormInsets
         stackView.isLayoutMarginsRelativeArrangement = true
         stackView.axis = .vertical
+        stackView.sendSubviewToBack(mandateView)
 
         for subview in [stackView, primaryButton] {
             subview.translatesAutoresizingMaskIntoConstraints = false
