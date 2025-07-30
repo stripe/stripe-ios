@@ -333,7 +333,7 @@ class BottomSheetViewController: UIViewController, BottomSheetPresentable {
         self.bottomAnchor = bottomAnchor
 
         NSLayoutConstraint.activate([
-            navigationBarContainerView.topAnchor.constraint(equalTo: view.topAnchor, constant: 4),  // Adding top spacing to match right spacing around X button
+            navigationBarContainerView.topAnchor.constraint(equalTo: view.topAnchor),  // Adding top spacing to match right spacing around X button
             navigationBarContainerView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             navigationBarContainerView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
 
