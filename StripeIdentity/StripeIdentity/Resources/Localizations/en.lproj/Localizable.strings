@@ -247,8 +247,8 @@
 /* Accessibility label while photo of back of driver's license, passport, or government issued photo id is uploading */
 "Uploading back %@ photo" = "Uploading back %@ photo";
 
-/* Accessibility label while photo of front of identity card is uploading */
-"Uploading front identity card photo" = "Uploading front identity card photo";
+/* Accessibility label while photo of front of identity document is uploading */
+"Uploading front identity document photo" = "Uploading front identity document photo";
 
 /* Accessibility label while photo of front of driver's license, passport, or government issued photo id is uploading */
 "Uploading front %@ photo" = "Uploading front %@ photo";
