@@ -188,24 +188,24 @@ struct HCaptchaConfig: CustomDebugStringConvertible {
      - Throws: Rethrows any exceptions thrown by `String(contentsOfFile:)`
      */
     init(html: String = HCaptchaHtml.template,
-                apiKey: String?,
-                passiveApiKey: Bool?,
-                infoPlistKey: String?,
-                baseURL: URL?,
-                infoPlistURL: URL?,
-                jsSrc: URL,
-                size: HCaptchaSize,
-                orientation: HCaptchaOrientation,
-                rqdata: String?,
-                sentry: Bool?,
-                endpoint: URL?,
-                reportapi: URL?,
-                assethost: URL?,
-                imghost: URL?,
-                host: String?,
-                theme: String,
-                customTheme: String?,
-                locale: Locale?) throws {
+         apiKey: String?,
+         passiveApiKey: Bool?,
+         infoPlistKey: String?,
+         baseURL: URL?,
+         infoPlistURL: URL?,
+         jsSrc: URL,
+         size: HCaptchaSize,
+         orientation: HCaptchaOrientation,
+         rqdata: String?,
+         sentry: Bool?,
+         endpoint: URL?,
+         reportapi: URL?,
+         assethost: URL?,
+         imghost: URL?,
+         host: String?,
+         theme: String,
+         customTheme: String?,
+         locale: Locale?) throws {
         guard let apiKey = apiKey ?? infoPlistKey else {
             throw HCaptchaError.apiKeyNotFound
         }
