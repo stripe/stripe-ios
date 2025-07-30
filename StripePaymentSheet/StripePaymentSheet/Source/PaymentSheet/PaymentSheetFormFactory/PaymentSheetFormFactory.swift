@@ -39,6 +39,8 @@ class PaymentSheetFormFactory {
     let savePaymentMethodConsentBehavior: SavePaymentMethodConsentBehavior
     let allowsSetAsDefaultPM: Bool
     let allowsLinkDefaultOptIn: Bool
+    let signupOptInFeatureEnabled: Bool
+    let signupOptInInitialValue: Bool
     let isFirstSavedPaymentMethod: Bool
     let analyticsHelper: PaymentSheetAnalyticsHelper?
     let paymentMethodIncentive: PaymentMethodIncentive?
@@ -89,8 +91,7 @@ class PaymentSheetFormFactory {
                 return false
             }
 
-            let isLinkEnabled = PaymentSheet.isLinkEnabled(elementsSession: elementsSession, configuration: configuration)
-            guard isLinkEnabled && !elementsSession.disableLinkSignup && elementsSession.supportsLinkCard else {
+            guard PaymentSheet.isLinkSignupEnabled(elementsSession: elementsSession, configuration: configuration) else {
                 return false
             }
 
@@ -129,6 +130,8 @@ class PaymentSheetFormFactory {
                   savePaymentMethodConsentBehavior: elementsSession.savePaymentMethodConsentBehavior,
                   allowsSetAsDefaultPM: elementsSession.paymentMethodSetAsDefaultForPaymentSheet,
                   allowsLinkDefaultOptIn: elementsSession.allowsLinkDefaultOptIn,
+                  signupOptInFeatureEnabled: elementsSession.linkSignupOptInFeatureEnabled,
+                  signupOptInInitialValue: elementsSession.linkSignupOptInInitialValue,
                   isFirstSavedPaymentMethod: elementsSession.customer?.paymentMethods.isEmpty ?? true,
                   analyticsHelper: analyticsHelper,
                   paymentMethodIncentive: elementsSession.incentive)
@@ -150,6 +153,8 @@ class PaymentSheetFormFactory {
         savePaymentMethodConsentBehavior: SavePaymentMethodConsentBehavior,
         allowsSetAsDefaultPM: Bool = false,
         allowsLinkDefaultOptIn: Bool = false,
+        signupOptInFeatureEnabled: Bool = false,
+        signupOptInInitialValue: Bool = false,
         isFirstSavedPaymentMethod: Bool = true,
         analyticsHelper: PaymentSheetAnalyticsHelper?,
         paymentMethodIncentive: PaymentMethodIncentive?
@@ -174,6 +179,8 @@ class PaymentSheetFormFactory {
         self.savePaymentMethodConsentBehavior = savePaymentMethodConsentBehavior
         self.allowsSetAsDefaultPM = allowsSetAsDefaultPM
         self.allowsLinkDefaultOptIn = allowsLinkDefaultOptIn
+        self.signupOptInFeatureEnabled = signupOptInFeatureEnabled
+        self.signupOptInInitialValue = signupOptInInitialValue
         self.isFirstSavedPaymentMethod = isFirstSavedPaymentMethod
         self.analyticsHelper = analyticsHelper
         self.paymentMethodIncentive = paymentMethodIncentive
@@ -192,7 +199,12 @@ class PaymentSheetFormFactory {
             // We have two ways to create the form for a payment method
             // 1. Custom, one-off forms
             if paymentMethod == .card {
-                return makeCard(cardBrandChoiceEligible: cardBrandChoiceEligible, allowsLinkDefaultOptIn: allowsLinkDefaultOptIn)
+                return makeCard(
+                    cardBrandChoiceEligible: cardBrandChoiceEligible,
+                    allowsLinkDefaultOptIn: allowsLinkDefaultOptIn,
+                    signupOptInFeatureEnabled: signupOptInFeatureEnabled,
+                    signupOptInInitialValue: signupOptInInitialValue
+                )
             } else if paymentMethod == .USBankAccount {
                 return makeUSBankAccount(merchantName: configuration.merchantDisplayName)
             } else if paymentMethod == .UPI {

@@ -32,7 +32,7 @@ class PaymentMethodFormViewController: UIViewController {
         params.setDefaultBillingDetailsIfNecessary(for: configuration)
 
         if let params = form.updateParams(params: params) {
-            if let linkInlineSignupElement = form.getAllUnwrappedSubElements().compactMap({ $0 as? LinkInlineSignupElement }).first {
+            if let linkInlineSignupElement = form.linkInlineSignupElement {
                 switch linkInlineSignupElement.action {
                 case .signupAndPay(let account, let phoneNumber, let legalName):
                     return .link(
@@ -228,6 +228,16 @@ extension PaymentMethodFormViewController: ElementDelegate {
                 let headerIncentive = instantDebitsFormElement.showIncentiveInHeader ? incentive : nil
                 formHeaderView.setIncentive(headerIncentive)
             }
+        }
+
+        if let linkSignup = form.linkInlineSignupElement, let mandateElement = form.mandateElement {
+            // Update the mandate with or without Link
+            let text = PaymentSheetFormFactory.makeMandateText(
+                linkSignupOptInFeatureEnabled: linkSignup.viewModel.mode == .signupOptIn,
+                shouldSaveToLink: linkSignup.viewModel.saveCheckboxChecked,
+                merchantName: configuration.merchantDisplayName
+            )
+            mandateElement.mandateTextView.attributedText = text
         }
     }
 }
@@ -594,6 +604,16 @@ extension LinkBankPaymentMethod {
 
     func decode() -> STPPaymentMethod? {
         return STPPaymentMethod.decodedObject(fromAPIResponse: allResponseFields)
+    }
+}
+
+private extension Element {
+    var linkInlineSignupElement: LinkInlineSignupElement? {
+        return getAllUnwrappedSubElements().compactMap({ $0 as? LinkInlineSignupElement }).first
+    }
+
+    var mandateElement: SimpleMandateElement? {
+        return getAllUnwrappedSubElements().compactMap({ $0 as? SimpleMandateElement }).first
     }
 }
 

@@ -5,6 +5,7 @@
 //  Created by Yuki Tokuhiro on 3/26/23.
 //
 
+@_spi(STP) import StripePaymentsUI
 @_spi(STP) import StripeUICore
 import UIKit
 
@@ -38,6 +39,11 @@ class SimpleMandateElement: PaymentMethodElement {
     let customerAlreadySawMandate: Bool
 
     init(mandateText: String, customerAlreadySawMandate: Bool, theme: ElementsAppearance = .default) {
+        mandateTextView = SimpleMandateTextView(mandateText: mandateText, theme: theme)
+        self.customerAlreadySawMandate = customerAlreadySawMandate
+    }
+
+    init(mandateText: NSAttributedString, customerAlreadySawMandate: Bool, theme: ElementsAppearance = .default) {
         mandateTextView = SimpleMandateTextView(mandateText: mandateText, theme: theme)
         self.customerAlreadySawMandate = customerAlreadySawMandate
     }

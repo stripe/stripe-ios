@@ -85,7 +85,7 @@ extension STPAPIClient {
 
     func createConsumer(
         for email: String,
-        with phoneNumber: String,
+        with phoneNumber: String?,
         locale: Locale,
         legalName: String?,
         countryCode: String?,
@@ -100,10 +100,13 @@ extension STPAPIClient {
             var parameters: [String: Any] = [
                 "request_surface": "ios_payment_element",
                 "email_address": email.lowercased(),
-                "phone_number": phoneNumber,
                 "locale": locale.toLanguageTag(),
                 "country_inferring_method": "PHONE_NUMBER",
             ]
+
+            if let phoneNumber {
+                parameters["phone_number"] = phoneNumber
+            }
 
             if let legalName = legalName {
                 parameters["legal_name"] = legalName
@@ -169,6 +172,7 @@ extension STPAPIClient {
         cardParams: STPPaymentMethodCardParams,
         billingEmailAddress: String,
         billingDetails: STPPaymentMethodBillingDetails,
+        isDefault: Bool,
         consumerAccountPublishableKey: String?,
         completion: @escaping (Result<ConsumerPaymentDetails, Error>) -> Void
     ) {
@@ -177,6 +181,7 @@ extension STPAPIClient {
             rawCardParams: cardParams.consumersAPIParams,
             billingEmailAddress: billingEmailAddress,
             billingDetails: billingDetails,
+            isDefault: isDefault,
             consumerAccountPublishableKey: consumerAccountPublishableKey,
             completion: completion
         )
@@ -187,6 +192,7 @@ extension STPAPIClient {
         rawCardParams: [String: Any],
         billingEmailAddress: String,
         billingDetails: STPPaymentMethodBillingDetails,
+        isDefault: Bool,
         consumerAccountPublishableKey: String?,
         completion: @escaping (Result<ConsumerPaymentDetails, Error>) -> Void
     ) {
@@ -202,6 +208,7 @@ extension STPAPIClient {
             "billing_email_address": billingEmailAddress,
             "billing_address": billingParams,
             "active": true, // card details are created with active true so they can be shared for passthrough mode
+            "is_default": isDefault,
         ]
 
         makePaymentDetailsRequest(

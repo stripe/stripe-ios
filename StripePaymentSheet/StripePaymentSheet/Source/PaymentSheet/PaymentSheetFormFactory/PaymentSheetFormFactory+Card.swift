@@ -9,13 +9,16 @@
 import Foundation
 @_spi(STP) import StripeCore
 import StripePayments
+@_spi(STP) import StripePaymentsUI
 @_spi(STP) import StripeUICore
 import UIKit
 
 extension PaymentSheetFormFactory {
     func makeCard(
         cardBrandChoiceEligible: Bool = false,
-        allowsLinkDefaultOptIn: Bool
+        allowsLinkDefaultOptIn: Bool,
+        signupOptInFeatureEnabled: Bool,
+        signupOptInInitialValue: Bool
     ) -> PaymentMethodElement {
         let showLinkInlineSignup = showLinkInlineCardSignup
         let defaultCheckbox: Element? = {
@@ -116,15 +119,19 @@ extension PaymentSheetFormFactory {
                 country: countryCode,
                 showCheckbox: !shouldDisplaySaveCheckbox,
                 accountService: accountService,
-                allowsDefaultOptIn: allowsLinkDefaultOptIn
+                allowsDefaultOptIn: allowsLinkDefaultOptIn,
+                signupOptInFeatureEnabled: signupOptInFeatureEnabled,
+                signupOptInInitialValue: signupOptInInitialValue
             )
             elements.append(inlineSignupElement)
         }
 
         let mandate: SimpleMandateElement? = {
-            if isSettingUp {
-                return makeMandate(mandateText: String(format: .Localized.by_providing_your_card_information_text, configuration.merchantDisplayName))
-
+            if isSettingUp || signupOptInFeatureEnabled {
+                return makeMandate(
+                    linkSignupOptInFeatureEnabled: signupOptInFeatureEnabled,
+                    linkSignupOptInInitialValue: signupOptInInitialValue
+                )
             }
             return nil
         }()
@@ -139,5 +146,52 @@ extension PaymentSheetFormFactory {
             elements: elements,
             theme: theme,
             customSpacing: customSpacing)
+    }
+
+    private func makeMandate(
+        linkSignupOptInFeatureEnabled: Bool,
+        linkSignupOptInInitialValue: Bool
+    ) -> SimpleMandateElement {
+        let mandateText = Self.makeMandateText(
+            linkSignupOptInFeatureEnabled: signupOptInFeatureEnabled,
+            shouldSaveToLink: linkSignupOptInInitialValue,
+            merchantName: configuration.merchantDisplayName
+        )
+        return makeMandate(mandateText: mandateText)
+    }
+
+    static func makeMandateText(
+        linkSignupOptInFeatureEnabled: Bool,
+        shouldSaveToLink: Bool,
+        merchantName: String
+    ) -> NSAttributedString {
+        let formatText = if linkSignupOptInFeatureEnabled {
+            if shouldSaveToLink {
+                String.Localized.by_continuing_you_agree_to_save_your_information_to_merchant_and_link
+            } else {
+                String.Localized.by_continuing_you_agree_to_save_your_information_to_merchant
+            }
+        } else {
+            String.Localized.by_providing_your_card_information_text
+        }
+
+        let terms = String(format: formatText, merchantName).removeTrailingDots()
+
+        if linkSignupOptInFeatureEnabled && shouldSaveToLink {
+            let links = [
+                "link": URL(string: "https://link.com")!,
+                "terms": URL(string: "https://link.com/terms")!,
+                "privacy": URL(string: "https://link.com/privacy")!,
+            ]
+            return STPStringUtils.applyLinksToString(template: terms, links: links)
+        } else {
+            return NSAttributedString(string: terms)
+        }
+    }
+}
+
+private extension String {
+    func removeTrailingDots() -> String {
+        return hasSuffix("..") ? String(dropLast()) : self
     }
 }

@@ -73,6 +73,14 @@ extension PaymentSheet {
         return true
     }
 
+    static func isLinkSignupEnabled(elementsSession: STPElementsSession, configuration: PaymentElementConfiguration) -> Bool {
+        guard isLinkEnabled(elementsSession: elementsSession, configuration: configuration) else {
+            return false
+        }
+        let enableSignupOrOptIn = !elementsSession.disableLinkSignup || elementsSession.linkSignupOptInFeatureEnabled
+        return enableSignupOrOptIn && elementsSession.supportsLinkCard
+    }
+
     /// An unordered list of paymentMethodTypes that can be used with Link in PaymentSheet
     /// - Note: This is a var because it depends on the authenticated Link user
     ///
