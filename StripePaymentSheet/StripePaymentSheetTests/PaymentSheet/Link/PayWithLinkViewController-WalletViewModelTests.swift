@@ -268,6 +268,7 @@ extension PayWithLinkViewController_WalletViewModelTests {
                 email: "user@example.com",
                 session: LinkStubs.consumerSession(supportedPaymentDetailsTypes: supportedPaymentDetailsTypes),
                 publishableKey: nil,
+                displayablePaymentDetails: nil,
                 useMobileEndpoints: false
             ),
             context: .init(
