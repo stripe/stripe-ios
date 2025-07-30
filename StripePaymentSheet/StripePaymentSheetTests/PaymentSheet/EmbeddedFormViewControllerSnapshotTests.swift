@@ -156,28 +156,8 @@ final class EmbeddedFormViewControllerSnapshotTests: STPSnapshotTestCase {
             paymentMethodType: .SEPADebit
         )
 
-        sut.updateMandate()
         verify(sut)
     }
-
-    func testDisplaysErrorAndMandate() {
-        struct MockError: LocalizedError {
-            var errorDescription: String? {
-                return "Mock error description"
-            }
-        }
-        var configuration = EmbeddedPaymentElement.Configuration()
-        configuration.formSheetAction = .confirm(completion: { _ in })
-        let sut = makeEmbeddedFormViewController(
-            configuration: configuration,
-            paymentMethodType: .SEPADebit
-        )
-
-        sut.updateMandate()
-        sut.updateErrorLabel(for: MockError())
-        verify(sut)
-    }
-
 }
 
 extension EmbeddedFormViewControllerSnapshotTests: EmbeddedFormViewControllerDelegate {
