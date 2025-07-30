@@ -526,7 +526,7 @@ class HCaptchaWebViewManager__Tests: XCTestCase {
     func test__OnEvent_Without_Validation() {
         let testParams: [(String, HCaptchaEvent)] = [("onChallengeExpired", .challengeExpired),
                                                      ("onExpired", .expired),
-                                                     ("onClose", .close),]
+                                                     ("onClose", .close), ]
 
         testParams.forEach { (action, expectedEventType) in
             let exp0 = expectation(description: "should call configureWebView")

@@ -131,7 +131,7 @@ internal class HCaptchaWebViewManager: NSObject {
                              "orientation": config.orientation.rawValue,
                              "rqdata": config.rqdata ?? "",
                              "theme": config.actualTheme,
-                             "debugInfo": HCaptchaDebugInfo.json,]
+                             "debugInfo": HCaptchaDebugInfo.json, ]
             self.formattedHTML = String(format: config.html, arguments: arguments)
             Log.debug("WebViewManager.init formattedHTML built")
             DispatchQueue.main.async { [weak self] in
