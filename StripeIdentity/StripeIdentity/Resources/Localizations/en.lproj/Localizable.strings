@@ -241,8 +241,8 @@
 /* Title of document upload screen */
 "Upload your %@" = "Upload your %@";
 
-/* Accessibility label while photo of back of identity card is uploading */
-"Uploading back identity card photo" = "Uploading back identity card photo";
+/* Accessibility label while photo of back of identity document is uploading */
+"Uploading back identity document photo" = "Uploading back identity document photo";
 
 /* Accessibility label while photo of back of driver's license, passport, or government issued photo id is uploading */
 "Uploading back %@ photo" = "Uploading back %@ photo";
