@@ -120,7 +120,7 @@ class SheetNavigationBar: UIView {
     }
 
     override var intrinsicContentSize: CGSize {
-        return CGSize(width: UIView.noIntrinsicMetric, height: Self.height)
+        return CGSize(width: UIView.noIntrinsicMetric, height: 48)
     }
 
     @objc

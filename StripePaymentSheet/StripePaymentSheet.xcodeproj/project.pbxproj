@@ -102,6 +102,7 @@
 		31699A832BE183D40048677F /* DownloadManagerTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31699A822BE183D40048677F /* DownloadManagerTest.swift */; };
 		316B33122B5F171C0008D2E5 /* UserDefaults+StripePaymentSheetTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 316B33112B5F171C0008D2E5 /* UserDefaults+StripePaymentSheetTest.swift */; };
 		3190006D2DFD32BF00B84F6C /* ECEBridgeTypes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3190006C2DFD32BF00B84F6C /* ECEBridgeTypes.swift */; };
+		319D2D7D2E385C680036A95B /* AppearanceAPIAdditionsSnapshotTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 319D2D7C2E385C680036A95B /* AppearanceAPIAdditionsSnapshotTests.swift */; };
 		31AD3BE72B0C2D080080C800 /* UIApplication+StripePaymentSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31AD3BE62B0C2D080080C800 /* UIApplication+StripePaymentSheet.swift */; };
 		31CC9B792CB5F69600E84A38 /* LinkNavigationBarSnapshotTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31CC9B712CB5F69600E84A38 /* LinkNavigationBarSnapshotTests.swift */; };
 		31CC9B7D2CB5F69600E84A38 /* ButtonLinkSnapshotTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31CC9B6C2CB5F69600E84A38 /* ButtonLinkSnapshotTests.swift */; };
@@ -591,6 +592,7 @@
 		31699A822BE183D40048677F /* DownloadManagerTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DownloadManagerTest.swift; sourceTree = "<group>"; };
 		316B33112B5F171C0008D2E5 /* UserDefaults+StripePaymentSheetTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UserDefaults+StripePaymentSheetTest.swift"; sourceTree = "<group>"; };
 		3190006C2DFD32BF00B84F6C /* ECEBridgeTypes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ECEBridgeTypes.swift; sourceTree = "<group>"; };
+		319D2D7C2E385C680036A95B /* AppearanceAPIAdditionsSnapshotTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppearanceAPIAdditionsSnapshotTests.swift; sourceTree = "<group>"; };
 		31AD3BE62B0C2D080080C800 /* UIApplication+StripePaymentSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = "UIApplication+StripePaymentSheet.swift"; path = "StripePaymentSheet/Source/Categories/UIApplication+StripePaymentSheet.swift"; sourceTree = "<group>"; };
 		31CC9B6C2CB5F69600E84A38 /* ButtonLinkSnapshotTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ButtonLinkSnapshotTests.swift; sourceTree = "<group>"; };
 		31CC9B6D2CB5F69600E84A38 /* LinkBadgeViewSnapshotTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LinkBadgeViewSnapshotTest.swift; sourceTree = "<group>"; };
@@ -1925,6 +1927,7 @@
 			isa = PBXGroup;
 			children = (
 				3F70E5F0FE6218715432D55A /* AddPaymentMethodViewControllerSnapshotTests.swift */,
+				319D2D7C2E385C680036A95B /* AppearanceAPIAdditionsSnapshotTests.swift */,
 				25AB69CF78A2B13839EB32EC /* AddressViewController */,
 				BE92D55DA4B4D449734B2917 /* BacsDDMandateViewSnapshotTests.swift */,
 				31443D5A2DD55F540022AF1A /* WalletButtonsViewSnapshotTests.swift */,
@@ -2348,6 +2351,7 @@
 				310B6DCA2DFC9745009CA85D /* ShopPayECEPresenterTests.swift in Sources */,
 				B68CB9632B0D2169006ACDB1 /* STPAPIClient+PaymentSheetTest.swift in Sources */,
 				6141C5072C0A47A700E81735 /* RightAccessoryButtonTest.swift in Sources */,
+				319D2D7D2E385C680036A95B /* AppearanceAPIAdditionsSnapshotTests.swift in Sources */,
 				B64FEF122C0FAC1E00F7CA26 /* PaymentSheetVerticalViewControllerTest.swift in Sources */,
 				4A1A0A542B824C830A200BE0 /* StubbedBackend.swift in Sources */,
 				6151DDC02B14FDCF00ED4F7E /* UpdatePaymentMethodViewControllerSnapshotTests.swift in Sources */,

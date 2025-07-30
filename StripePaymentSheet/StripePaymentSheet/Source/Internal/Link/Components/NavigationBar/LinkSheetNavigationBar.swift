@@ -89,7 +89,7 @@ class LinkSheetNavigationBar: SheetNavigationBar {
     }
 
     override var intrinsicContentSize: CGSize {
-        return CGSize(width: UIView.noIntrinsicMetric, height: LinkUI.navigationBarHeight)
+        return CGSize(width: UIView.noIntrinsicMetric, height: 48)
     }
 
     @MainActor required init?(coder: NSCoder) {

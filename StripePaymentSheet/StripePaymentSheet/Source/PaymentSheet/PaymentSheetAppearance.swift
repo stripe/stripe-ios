@@ -84,6 +84,7 @@ public extension PaymentSheet {
             }
         }
 
+
         // MARK: Fonts
 
         /// Describes the appearance of fonts in PaymentSheet

@@ -21,7 +21,7 @@ import UIKit
     /// The spacing between elements of a SectionElement
     public static let sectionSpacing: CGFloat = 4
     /// The spacing between elements of a FormElement
-    public static let formSpacing: CGFloat = 12
+    public static let formSpacing: CGFloat = 16
     public static let defaultCornerRadius: CGFloat = 6
     public static let backgroundColor: UIColor = {
         // systemBackground has a 'base' and 'elevated' state; we don't want this behavior.
