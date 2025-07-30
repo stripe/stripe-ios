@@ -394,11 +394,30 @@ class PaymentSheetViewController: UIViewController, PaymentSheetViewControllerPr
     }
 
     func updateBottomNotice() {
+
         switch mode {
         case .selectingSaved:
-            self.bottomNoticeTextField.attributedText = savedPaymentOptionsViewController.bottomNoticeAttributedString
+            guard case .saved(let paymentMethod, _) = savedPaymentOptionsViewController.selectedPaymentOption else {
+                self.bottomNoticeTextField.attributedText = nil
+                return
+            }
+            let paymentMethodType = PaymentSheet.PaymentMethodType.stripe(paymentMethod.type)
+            let mandateDisplay = configuration.mandateDisplayFor(paymentMethodType: paymentMethodType)
+            switch mandateDisplay {
+            case .automatic:
+                self.bottomNoticeTextField.attributedText = savedPaymentOptionsViewController.bottomNoticeAttributedString
+            case .never:
+                self.bottomNoticeTextField.attributedText = nil
+            }
+
         case .addingNew:
-            self.bottomNoticeTextField.attributedText = addPaymentMethodViewController.bottomNoticeAttributedString
+            let mandateDisplay = configuration.mandateDisplayFor(paymentMethodType: self.addPaymentMethodViewController.selectedPaymentMethodType)
+            switch mandateDisplay {
+            case .automatic:
+                self.bottomNoticeTextField.attributedText = addPaymentMethodViewController.bottomNoticeAttributedString
+            case .never:
+                self.bottomNoticeTextField.attributedText = nil
+            }
         }
         UIView.animate(withDuration: PaymentSheetUI.defaultAnimationDuration) {
             self.bottomNoticeTextField.setHiddenIfNecessary(self.bottomNoticeTextField.attributedText?.length == 0)
