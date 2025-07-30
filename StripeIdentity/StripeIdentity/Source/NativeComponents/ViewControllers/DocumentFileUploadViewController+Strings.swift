@@ -54,10 +54,10 @@ extension DocumentFileUploadViewController {
                     "Accessibility label to select a photo of front of driver's license, passport, or government issued photo id"
                 ), idType)
             case .back:
-                return STPLocalizedString(
+                return String(format: STPLocalizedString(
                     "Select back %@ photo",
                     "Accessibility label to select a photo of back of driver's license, passport, or government issued photo id"
-                )
+                ), idType)
             }
         }
         
@@ -89,10 +89,10 @@ extension DocumentFileUploadViewController {
                     "Accessibility label while photo of front of driver's license, passport, or government issued photo id is uploading"
                 ), idType)
             case .back:
-                return STPLocalizedString(
+                return String(format: STPLocalizedString(
                     "Uploading back %@ photo",
                     "Accessibility label while photo of back of driver's license, passport, or government issued photo id is uploading"
-                )
+                ), idType)
             }
         }
         
@@ -124,10 +124,10 @@ extension DocumentFileUploadViewController {
                     "Accessibility label when front driver's license, passport, or government issued photo id photo has successfully uploaded"
                 ), idType)
             case .back:
-                return STPLocalizedString(
+                return String(format: STPLocalizedString(
                     "Back %@ photo successfully uploaded",
                     "Accessibility label when back driver's license, passport, or government issued photo id photo photo has successfully uploaded"
-                )
+                ), idType)
             }
         }
         
