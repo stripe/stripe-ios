@@ -191,8 +191,8 @@
 /* Accessibility label to select a photo of back of driver's license, passport, or government issued photo id */
 "Select back %@ photo" = "Select back %@ photo";
 
-/* Accessibility label to select a photo of front of identity card */
-"Select front identity card photo" = "Select front identity card photo";
+/* Accessibility label to select a photo of front of identity document */
+"Select front identity document photo" = "Select front identity card document";
 
 /* Accessibility label to select a photo of front of driver's license, passport, or government issued photo id */
 "Select front %@ photo" = "Select front %@ photo";

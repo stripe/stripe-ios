@@ -35,8 +35,8 @@ extension DocumentFileUploadViewController {
             switch side {
             case .front:
                 return STPLocalizedString(
-                    "Select front identity card photo",
-                    "Accessibility label to select a photo of front of identity card"
+                    "Select front identity document photo",
+                    "Accessibility label to select a photo of front of identity document"
                 )
             case .back:
                 return STPLocalizedString(
