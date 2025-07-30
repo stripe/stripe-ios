@@ -63,7 +63,6 @@ import WebKit
                     case .linkInlineVerification(let account):
                         LinkInlineVerificationView(
                             account: account,
-                            // TODO: Previously this *wasn’t* using LinkUI.appearance so there may be some unexpected changes to uncover.
                             appearance: flowController.configuration.linkUIAppearance,
                             onComplete: completion
                         )
