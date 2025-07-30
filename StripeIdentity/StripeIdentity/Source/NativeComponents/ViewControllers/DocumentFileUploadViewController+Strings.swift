@@ -40,8 +40,8 @@ extension DocumentFileUploadViewController {
                 )
             case .back:
                 return STPLocalizedString(
-                    "Select back identity card photo",
-                    "Accessibility label to select a photo of back of identity card"
+                    "Select back identity document photo",
+                    "Accessibility label to select a photo of back of identity document"
                 )
             }
         }
