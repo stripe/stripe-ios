@@ -13,6 +13,9 @@
 /* Accessibility label when back identity card photo has successfully uploaded */
 "Back identity card photo successfully uploaded" = "Back identity card photo successfully uploaded";
 
+/* Accessibility label when back driver's license, passport, or government issued photo id photo photo has successfully uploaded */
+"Back %@ photo successfully uploaded" = "Back %@ photo successfully uploaded";
+
 /* Description of back of identity card image */
 "Back of identity card" = "Back of identity card";
 
@@ -63,6 +66,9 @@
 
 /* Accessibility label when front identity card photo has successfully uploaded */
 "Front identity card photo successfully uploaded" = "Front identity card photo successfully uploaded";
+
+/* Accessibility label when front driver's license, passport, or government issued photo id photo has successfully uploaded */
+"Front %@ photo successfully uploaded" = "Front %@ photo successfully uploaded";
 
 /* Description of front of identity card image */
 "Front of identity card" = "Front of identity card";
@@ -185,8 +191,14 @@
 /* Accessibility label to select a photo of back of identity card */
 "Select back identity card photo" = "Select back identity card photo";
 
+/* Accessibility label to select a photo of back of driver's license, passport, or government issued photo id */
+"Select back %@ photo" = "Select back %@ photo";
+
 /* Accessibility label to select a photo of front of identity card */
 "Select front identity card photo" = "Select front identity card photo";
+
+/* Accessibility label to select a photo of front of driver's license, passport, or government issued photo id */
+"Select front %@ photo" = "Select front %@ photo";
 
 /* Accessibility label of captured selfie images
    Back button title for returning to the selfie screen */
@@ -235,8 +247,14 @@
 /* Accessibility label while photo of back of identity card is uploading */
 "Uploading back identity card photo" = "Uploading back identity card photo";
 
+/* Accessibility label while photo of back of driver's license, passport, or government issued photo id is uploading */
+"Uploading back %@ photo" = "Uploading back %@ photo";
+
 /* Accessibility label while photo of front of identity card is uploading */
 "Uploading front identity card photo" = "Uploading front identity card photo";
+
+/* Accessibility label while photo of front of driver's license, passport, or government issued photo id is uploading */
+"Uploading front %@ photo" = "Uploading front %@ photo";
 
 /* Displays in the navigation bar title of the Identity Verification Sheet */
 "Verify your identity" = "Verify your identity";

@@ -85,7 +85,8 @@ final class DocumentFileUploadViewController: IdentityFlowViewController {
                 text: listItemText(for: .front, availableIDTypes: availableIDTypes),
                 accessibilityLabel: accessibilityLabel(
                     for: .front,
-                    uploadStatus: documentUploader.frontUploadStatus
+                    uploadStatus: documentUploader.frontUploadStatus,
+                    availableIDTypes: availableIDTypes
                 ),
                 accessory: listItemAccessory(
                     for: .front,
@@ -101,7 +102,8 @@ final class DocumentFileUploadViewController: IdentityFlowViewController {
                     text: listItemText(for: .back, availableIDTypes: availableIDTypes),
                     accessibilityLabel: accessibilityLabel(
                         for: .back,
-                        uploadStatus: documentUploader.backUploadStatus
+                        uploadStatus: documentUploader.backUploadStatus,
+                        availableIDTypes: availableIDTypes
                     ),
                     accessory: listItemAccessory(
                         for: .back,
