@@ -595,23 +595,6 @@ class HCaptchaWebViewManager__Tests: XCTestCase {
         waitForExpectations(timeout: 10)
     }
 
-    func test__HTML_Load_Error_Timeout() {
-        let exp = expectation(description: "didLoad never called")
-
-        let manager = HCaptchaWebViewManager(html: "<html>", apiKey: apiKey, loadingTimeout: 0.5)
-        manager.shouldResetOnError = false
-        manager.configureWebView { _ in
-            XCTFail("should not ask to configure the webview")
-        }
-
-        manager.validate(on: presenterView, resetOnError: false) { response in
-            XCTAssertEqual(HCaptchaError.htmlLoadError, response.error)
-            exp.fulfill()
-        }
-
-        waitForExpectations(timeout: 10)
-    }
-
     func test__Validate_Passive_Key_On_Nil_View() {
         let exp = expectation(description: "wait for completion")
 

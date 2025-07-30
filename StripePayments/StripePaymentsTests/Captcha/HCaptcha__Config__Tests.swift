@@ -134,9 +134,4 @@ class HCaptcha__Config__Tests: XCTestCase {
         }
     }
 
-    func test__Pat() {
-        let config = try? HCaptchaConfig(disablePat: true)
-        let actual = config!.actualEndpoint.absoluteString
-        XCTAssertTrue(actual.contains("pat=off"))
-    }
 }

@@ -7,7 +7,7 @@
 //
 
 import Foundation
-@_spi(STP) @testable import StripePayments
+@testable import StripePayments
 
 extension HCaptchaConfig {
     init(html: String = HCaptchaHtml.template,
@@ -23,9 +23,7 @@ extension HCaptchaConfig {
          host: String? = nil,
          theme: String = "\"light\"",
          customTheme: String? = nil,
-         locale: Locale? = nil,
-         loadingTimeout: TimeInterval = 5.0,
-         disablePat: Bool? = nil) throws {
+         locale: Locale? = nil) throws {
 
         try self.init(html: html,
                       apiKey: apiKey,
@@ -45,9 +43,7 @@ extension HCaptchaConfig {
                       host: host,
                       theme: theme,
                       customTheme: customTheme,
-                      locale: locale,
-                      loadingTimeout: loadingTimeout,
-                      disablePat: disablePat)
+                      locale: locale)
     }
 
     init(apiKey: String = "some-api-key",

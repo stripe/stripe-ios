@@ -60,8 +60,6 @@ internal class HCaptchaWebViewManager: NSObject {
         }
     }
 
-    internal var loadingTimer: Timer?
-
     /// Stop async webView configuration
     private var stopInitWebViewConfiguration = false
 
@@ -79,9 +77,6 @@ internal class HCaptchaWebViewManager: NSObject {
 
     /// Keep error If it happens before validate call
     fileprivate var lastError: HCaptchaError?
-
-    /// Timeout to throw `.htmlLoadError` if no `didLoad` called
-    fileprivate let loadingTimeout: TimeInterval
 
     /// The webview that executes JS code
     lazy var webView: WKWebView = {
@@ -119,7 +114,6 @@ internal class HCaptchaWebViewManager: NSObject {
         self.urlOpener = urlOpener
         self.baseURL = config.baseURL
         self.passiveApiKey = config.passiveApiKey
-        self.loadingTimeout = config.loadingTimeout
         super.init()
         self.decoder = HCaptchaDecoder { [weak self] result in
             self?.handle(result: result)
@@ -173,8 +167,6 @@ internal class HCaptchaWebViewManager: NSObject {
         stopInitWebViewConfiguration = true
         webView.stopLoading()
         resultHandled = true
-        loadingTimer?.invalidate()
-        loadingTimer = nil
     }
 
     /**
@@ -246,8 +238,6 @@ fileprivate extension HCaptchaWebViewManager {
     }
 
     private func handle(error: HCaptchaError) {
-        loadingTimer?.invalidate()
-        loadingTimer = nil
         if error == .sessionTimeout {
             if shouldResetOnError, let view = webView.superview {
                 reset()
@@ -270,8 +260,6 @@ fileprivate extension HCaptchaWebViewManager {
             executeJS(command: .execute, didLoad: true)
         }
         didFinishLoading = true
-        loadingTimer?.invalidate()
-        loadingTimer = nil
         self.doConfigureWebView()
     }
 
@@ -334,11 +322,6 @@ fileprivate extension HCaptchaWebViewManager {
         if webView.navigationDelegate == nil {
             webView.navigationDelegate = self
         }
-        loadingTimer?.invalidate()
-        loadingTimer = Timer.scheduledTimer(withTimeInterval: self.loadingTimeout, repeats: false, block: { _ in
-            self.handle(error: .htmlLoadError)
-            self.loadingTimer = nil
-        })
 
         if let observer = observer {
             NotificationCenter.default.removeObserver(observer)
@@ -357,8 +340,6 @@ fileprivate extension HCaptchaWebViewManager {
         Log.debug("WebViewManager.executeJS: \(command)")
         guard didLoad else {
             if let error = lastError {
-                loadingTimer?.invalidate()
-                loadingTimer = nil
                 DispatchQueue.main.async { [weak self] in
                     guard let self = self else { return }
                     Log.debug("WebViewManager complete with pendingError: \(error)")

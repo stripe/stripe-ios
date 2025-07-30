@@ -63,7 +63,7 @@ class HCaptcha: NSObject {
         apiKey: String? = nil,
         passiveApiKey: Bool = false,
         baseURL: URL? = nil,
-        locale: Locale? = Locale.current,
+        locale: Locale? = nil,
         size: HCaptchaSize = .invisible,
         orientation: HCaptchaOrientation = .portrait,
         jsSrc: URL = URL(string: "https://js.hcaptcha.com/1/api.js")!,
@@ -76,8 +76,7 @@ class HCaptcha: NSObject {
         host: String? = nil,
         theme: String = "light",
         customTheme: String? = nil,
-        diagnosticLog: Bool = false,
-        disablePat: Bool = false
+        diagnosticLog: Bool = false
     ) throws {
         Log.minLevel = diagnosticLog ? .debug : .warning
 
@@ -103,8 +102,7 @@ class HCaptcha: NSObject {
                                         host: host,
                                         theme: theme,
                                         customTheme: customTheme,
-                                        locale: locale,
-                                        disablePat: disablePat)
+                                        locale: locale)
 
         Log.debug(".init with: \(config)")
 
@@ -287,7 +285,6 @@ class HCaptcha: NSObject {
                       host: host,
                       theme: theme,
                       customTheme: customTheme,
-                      diagnosticLog: diagnosticLog,
-                      disablePat: false)
+                      diagnosticLog: diagnosticLog)
     }
 }

@@ -7,7 +7,7 @@
 //
 
 import Foundation
-@_spi(STP) @testable import StripePayments
+@testable import StripePayments
 
 extension HCaptchaError: Equatable {
     public static func == (lhs: HCaptchaError, rhs: HCaptchaError) -> Bool {

@@ -7,7 +7,7 @@
 //
 
 import Foundation
-@_spi(STP) @testable import StripePayments
+@testable import StripePayments
 import WebKit
 
 extension HCaptchaWebViewManager {
@@ -58,8 +58,7 @@ extension HCaptchaWebViewManager {
         rqdata: String? = nil,
         theme: String = "light",
         customTheme: String? = nil,
-        urlOpener: HCaptchaURLOpener = HCapchaAppURLOpener(),
-        loadingTimeout: TimeInterval = 5
+        urlOpener: HCaptchaURLOpener = HCapchaAppURLOpener()
     ) {
         let localhost = URL(string: "http://localhost")!
 
@@ -73,8 +72,7 @@ extension HCaptchaWebViewManager {
                                          rqdata: rqdata,
                                          endpoint: endpoint,
                                          theme: theme,
-                                         customTheme: customTheme,
-                                         loadingTimeout: loadingTimeout)
+                                         customTheme: customTheme)
 
         self.init(
             config: config,
