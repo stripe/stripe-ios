@@ -70,17 +70,16 @@ class VerticalListMandateProvider: MandateTextProvider {
                 analyticsHelper: analyticsHelper
             ).make()
 
-            // If the form collects user input, the mandate will be displayed in the form and not here, so return nil
-            if form.collectsUserInput {
+            // Embedded has special logic to determine whether it will show the form or not. If it shows the form, return nil.
+            if
+                let embeddedPaymentElementConfiguration = configuration as? EmbeddedPaymentElement.Configuration,
+                EmbeddedPaymentElement.shouldShowForm(form, configuration: embeddedPaymentElementConfiguration)
+            {
                 return nil
             }
 
-            // In this EmbeddedPaymentElement edge case, we will show the form even though it doesn't collect user input, so return nil
-            let paymentMethodHasNoFormAndHasAMandate: Bool = form.collectsUserInput == false && form.getMandateText() != nil
-            if let configuration = configuration as? EmbeddedPaymentElement.Configuration,
-               case .immediateAction = configuration.rowSelectionBehavior,
-               configuration.embeddedViewDisplaysMandateText,
-               paymentMethodHasNoFormAndHasAMandate {
+            // If we're not embeded, and the form collects user input, the mandate will be displayed in the form and not here, so return nil
+            if form.collectsUserInput {
                 return nil
             }
 
