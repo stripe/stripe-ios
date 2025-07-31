@@ -249,7 +249,6 @@ import UIKit
         return client
     }
 
-    
     @_spi(STP) public class func paramsAddingClientAttributionMetadata(
         _ params: [String: Any],
         clientAttributionMetadata: STPClientAttributionMetadata = .init()
