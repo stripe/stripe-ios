@@ -24,6 +24,7 @@ extension PayWithLinkViewController {
             )
             vc.delegate = self
             vc.view.backgroundColor = .clear
+            context.configuration.style.configure(vc)
             return vc
         }()
 

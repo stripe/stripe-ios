@@ -78,21 +78,19 @@ extension LinkAppearance {
             appearance.primaryButton.height = primaryButton.height
         }
 
-        appearance.linkUserInterfaceStyle = style.toUserInterfaceStyle
-
         return appearance
     }
 }
 
-private extension LinkAppearance.Style {
-    var toUserInterfaceStyle: UIUserInterfaceStyle {
+extension LinkAppearance.Style {
+    var toUserInterfaceStyle: PaymentSheet.UserInterfaceStyle {
         switch self {
         case .automatic:
-            return .unspecified
+            return .automatic
         case .alwaysLight:
-            return .light
+            return .alwaysLight
         case .alwaysDark:
-            return .dark
+            return .alwaysDark
         }
     }
 }

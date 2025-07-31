@@ -70,9 +70,6 @@ public extension PaymentSheet {
         @_spi(AppearanceAPIAdditionsPreview)
         public var iconStyle: IconStyle = .filled
 
-        /// The interface style used by select Link UI.
-        public var linkUserInterfaceStyle: UIUserInterfaceStyle = .unspecified
-
         /// The vertical padding for floating payment method rows in vertical (non-embedded) mode
         /// - Note: Increasing this value increases the height of each floating payment method row
         /// - Note: This only applies to non-embedded integrations (i.e., regular PaymentSheet)
