@@ -30,7 +30,7 @@ import Foundation
     @objc public let merchantIntegrationVersion: String
     @objc public var paymentIntentCreationFlow: String?
     @objc public var paymentMethodSelectionFlow: String?
-    
+
     public init(elementsSessionConfigId: String? = nil,
                 paymentIntentCreationFlow: IntentCreationFlow? = nil,
                 paymentMethodSelectionFlow: PaymentMethodSelectionFlow? = nil) {
@@ -49,8 +49,8 @@ import Foundation
     public static func rootObjectName() -> String? {
         return "client_attribution_metadata"
     }
-    
-    public static func propertyNamesToFormFieldNamesMapping() -> [String : String] {
+
+    public static func propertyNamesToFormFieldNamesMapping() -> [String: String] {
         return [
             NSStringFromSelector(#selector(getter: clientSessionId)): "client_session_id",
             NSStringFromSelector(#selector(getter: elementsSessionConfigId)): "elements_session_config_id",
