@@ -261,8 +261,7 @@ import UIKit
         var newParams = params
         do {
             newParams["client_attribution_metadata"] = try clientAttributionMetadata.encodeJSONDictionary()
-        }
-        catch {
+        } catch {
             stpAssertionFailure("Could not encode clientAttributionMetadata to JSON: \(error)")
         }
         return newParams
