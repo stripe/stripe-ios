@@ -70,17 +70,16 @@ class VerticalListMandateProvider: MandateTextProvider {
                 analyticsHelper: analyticsHelper
             ).make()
 
-            // Embedded has special logic to determine whether it will show the form or not. If it shows the form, return nil.
-            if
-                let embeddedPaymentElementConfiguration = configuration as? EmbeddedPaymentElement.Configuration,
-                EmbeddedPaymentElement.shouldShowForm(form, configuration: embeddedPaymentElementConfiguration)
-            {
-                return nil
-            }
-
-            // If we're not embeded, and the form collects user input, the mandate will be displayed in the form and not here, so return nil
-            if form.collectsUserInput {
-                return nil
+            if let embeddedPaymentElementConfiguration = configuration as? EmbeddedPaymentElement.Configuration {
+                // Embedded has special logic to determine whether it will show the form or not. If it shows the form, return nil.
+                if EmbeddedPaymentElement.shouldShowForm(form, configuration: embeddedPaymentElementConfiguration) {
+                    return nil
+                }
+            } else {
+                // If we're not embeded, and the form collects user input, the mandate will be displayed in the form and not here, so return nil
+                if form.collectsUserInput {
+                    return nil
+                }
             }
 
             // If we get to this point, we didn't show the form, so return the mandate from the form if it exists
