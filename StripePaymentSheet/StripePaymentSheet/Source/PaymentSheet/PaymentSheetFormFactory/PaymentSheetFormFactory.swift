@@ -198,11 +198,15 @@ class PaymentSheetFormFactory {
             } else if paymentMethod == .UPI {
                 return makeUPI()
             } else if paymentMethod == .cashApp && isSettingUp {
-                // special case, display mandate for Cash App when setting up or pi+sfu
-                additionalElements = [makeCashAppMandate()]
+                if let cashAppMandate = makeCashAppMandate() {
+                    // special case, display mandate for Cash App when setting up or pi+sfu
+                    additionalElements = [cashAppMandate]
+                }
             } else if paymentMethod == .payPal && isSettingUp {
-                // Paypal requires mandate when setting up
-                additionalElements = [makePaypalMandate()]
+                if let payPalMandate = makePaypalMandate() {
+                    // Paypal requires mandate when setting up
+                    additionalElements = [payPalMandate]
+                }
             } else if paymentMethod == .revolutPay && isSettingUp {
                 // special case, display mandate for revolutPay when setting up or pi+sfu
                 additionalElements = [makeRevolutPayMandate()]
@@ -528,7 +532,15 @@ extension PaymentSheetFormFactory {
                 return makeCountry(countryCodes: countries, apiPath: "sofort[country]")
             }
         }()
-        let mandate: Element? = isSettingUp ? makeSepaMandate() : nil // Note: We show a SEPA mandate b/c sofort saves bank details as a SEPA Direct Debit Payment Method
+        let mandate: Element? = {
+            switch configuration.termsDisplayFor(paymentMethodType: .stripe(.sofort)) {
+            case .automatic:
+                // Note: We show a SEPA mandate b/c sofort saves bank details as a SEPA Direct Debit Payment Method
+                return isSettingUp ? makeSepaMandate() : nil
+            case .never:
+                return nil
+            }
+        }()
         let checkboxElement: Element? = makeSepaBasedPMCheckbox()
         let elements: [Element?] = [contactSection, addressSection, checkboxElement, mandate]
         return FormElement(
@@ -546,7 +558,14 @@ extension PaymentSheetFormFactory {
         let iban: Element = makeIban()
         let addressSection: Element? = makeBillingAddressSectionIfNecessary(requiredByPaymentMethod: true)
         let checkboxElement: Element? = makeSepaBasedPMCheckbox()
-        let mandate: Element? = makeSepaMandate()
+        let mandate: Element? = {
+            switch configuration.termsDisplayFor(paymentMethodType: .stripe(.SEPADebit)) {
+            case .automatic:
+                return makeSepaMandate()
+            case .never:
+                return nil
+            }
+        }()
         let elements: [Element?] = [contactSection, iban, addressSection, checkboxElement, mandate]
         return FormElement(
             autoSectioningElements: elements.compactMap { $0 },
@@ -562,7 +581,15 @@ extension PaymentSheetFormFactory {
         )
         let addressSection: Element? = makeBillingAddressSectionIfNecessary(requiredByPaymentMethod: false)
         let checkboxElement: Element? = makeSepaBasedPMCheckbox()
-        let mandate: Element? = isSettingUp ? makeSepaMandate() : nil // Note: We show a SEPA mandate b/c iDEAL saves bank details as a SEPA Direct Debit Payment Method
+        let mandate: Element? = {
+            switch configuration.termsDisplayFor(paymentMethodType: .stripe(.bancontact)) {
+            case .automatic:
+                // Note: We show a SEPA mandate b/c iDEAL saves bank details as a SEPA Direct Debit Payment Method
+                return isSettingUp ? makeSepaMandate() : nil
+            case .never:
+                return nil
+            }
+        }()
         let elements: [Element?] = [contactSection, addressSection, checkboxElement, mandate]
         return FormElement(
             autoSectioningElements: elements.compactMap { $0 },
@@ -608,7 +635,15 @@ extension PaymentSheetFormFactory {
         }
 
         let addressSection: Element? = makeBillingAddressSectionIfNecessary(requiredByPaymentMethod: false)
-        let mandate: Element? = isSettingUp ? makeSepaMandate() : nil // Note: We show a SEPA mandate b/c iDEAL saves bank details as a SEPA Direct Debit Payment Method
+        let mandate: Element? = {
+            switch configuration.termsDisplayFor(paymentMethodType: .stripe(.iDEAL)) {
+            case .never:
+                return nil
+            case .automatic:
+                // Note: We show a SEPA mandate b/c iDEAL saves bank details as a SEPA Direct Debit Payment Method
+                return isSettingUp ? makeSepaMandate() : nil
+            }
+        }()
         let checkboxElement = makeSepaBasedPMCheckbox()
         let elements: [Element?] = [contactSection, bankDropdown, addressSection, checkboxElement, mandate]
         return FormElement(

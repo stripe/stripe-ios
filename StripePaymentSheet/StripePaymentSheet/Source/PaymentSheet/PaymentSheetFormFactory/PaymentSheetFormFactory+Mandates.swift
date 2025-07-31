@@ -16,8 +16,13 @@ extension PaymentSheetFormFactory {
         return SimpleMandateElement(mandateText: mandateText, customerAlreadySawMandate: customerAlreadySawMandate, theme: theme)
     }
 
-    func makeAUBECSMandate() -> StaticElement {
-        return StaticElement(view: AUBECSLegalTermsView(configuration: configuration))
+    func makeAUBECSMandate() -> StaticElement? {
+        switch configuration.termsDisplayFor(paymentMethodType: .stripe(.AUBECSDebit)) {
+        case .never:
+            return nil
+        case .automatic:
+            return StaticElement(view: AUBECSLegalTermsView(configuration: configuration))
+        }
     }
 
     func makeBacsMandate() -> PaymentMethodElementWrapper<CheckboxElement> {
@@ -39,9 +44,14 @@ extension PaymentSheetFormFactory {
         return makeMandate(mandateText: mandateText)
     }
 
-    func makeCashAppMandate() -> SimpleMandateElement {
-        let mandateText = String(format: String.Localized.cash_app_mandate_text, configuration.merchantDisplayName, configuration.merchantDisplayName)
-        return makeMandate(mandateText: mandateText)
+    func makeCashAppMandate() -> SimpleMandateElement? {
+        switch configuration.termsDisplayFor(paymentMethodType: .stripe(.cashApp)) {
+        case .automatic:
+            let mandateText = String(format: String.Localized.cash_app_mandate_text, configuration.merchantDisplayName, configuration.merchantDisplayName)
+            return makeMandate(mandateText: mandateText)
+        case .never:
+            return nil
+        }
     }
 
     func makeRevolutPayMandate() -> SimpleMandateElement {
@@ -63,15 +73,20 @@ extension PaymentSheetFormFactory {
         return makeMandate(mandateText: mandateText)
     }
 
-    func makePaypalMandate() -> SimpleMandateElement {
-        let mandateText: String = {
-            if isPaymentIntent {
-                return String(format: String.Localized.paypal_mandate_text_payment, configuration.merchantDisplayName)
-            } else {
-                return String(format: String.Localized.paypal_mandate_text_setup, configuration.merchantDisplayName)
-            }
-        }()
-        return makeMandate(mandateText: mandateText)
+    func makePaypalMandate() -> SimpleMandateElement? {
+        switch configuration.termsDisplayFor(paymentMethodType: .stripe(.payPal)) {
+        case .never:
+            return nil
+        case .automatic:
+            let mandateText: String = {
+                if isPaymentIntent {
+                    return String(format: String.Localized.paypal_mandate_text_payment, configuration.merchantDisplayName)
+                } else {
+                    return String(format: String.Localized.paypal_mandate_text_setup, configuration.merchantDisplayName)
+                }
+            }()
+            return makeMandate(mandateText: mandateText)
+        }
     }
 
     func makeSatispayMandate() -> SimpleMandateElement {
