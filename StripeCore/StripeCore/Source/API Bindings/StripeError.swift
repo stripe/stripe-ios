@@ -84,3 +84,19 @@ extension StripeError: LocalizedError {
         }
     }
 }
+
+extension Error {
+    /// Returns the Stripe error code, if available. Works with modern and legacy Stripe API errors.
+    @_spi(STP) public var _stp_error_code: String? {
+        if let stripeError = self as? StripeError,
+              case let .apiError(stripeAPIError) = stripeError {
+            return stripeAPIError.code
+        }
+
+        if let errorCodeString = (self as NSError).userInfo[STPError.stripeErrorCodeKey] as? String {
+            return errorCodeString
+        }
+
+        return nil
+    }
+}
