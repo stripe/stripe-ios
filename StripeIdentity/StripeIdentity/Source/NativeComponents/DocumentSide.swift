@@ -11,9 +11,9 @@ import Foundation
 enum DocumentSide: String {
     case front
     case back
-    
+
     func instruction(availableIDTypes: [String]) -> String {
-        
+
         func idDocument() -> String {
             if self == .front {
                 return STPLocalizedString(
