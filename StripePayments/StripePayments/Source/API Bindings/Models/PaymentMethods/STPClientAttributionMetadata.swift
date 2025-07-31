@@ -10,19 +10,19 @@ import Foundation
 
 // See https://docs.google.com/document/d/11wWdHwWzTJGe_29mHsk71fk-kG4lwvp8TLBBf4ws9JM/edit?usp=sharing
 @objc @_spi(STP) public class STPClientAttributionMetadata: NSObject {
-    
+
     public enum IntentCreationFlow: String {
         case standard
         case deferred
     }
-    
+
     public enum PaymentMethodSelectionFlow: String {
         case automatic
         case merchantSpecified = "merchant_specified"
     }
-    
+
     public var additionalAPIParameters: [AnyHashable: Any] = [:]
-    
+
     /// The identifier string for the session
     @objc public let clientSessionId: String?
     /// The identifier string for the elements session
@@ -37,7 +37,7 @@ import Foundation
     @objc public var paymentIntentCreationFlow: String?
     /// The payment method selection for the merchant integration. Can be `automatic` or `merchant_specified`
     @objc public var paymentMethodSelectionFlow: String?
-    
+
     public init(elementsSessionConfigId: String? = nil,
                 paymentIntentCreationFlow: IntentCreationFlow? = nil,
                 paymentMethodSelectionFlow: PaymentMethodSelectionFlow? = nil) {
@@ -57,7 +57,7 @@ extension STPClientAttributionMetadata: STPFormEncodable {
     public static func rootObjectName() -> String? {
         return "client_attribution_metadata"
     }
-    
+
     public static func propertyNamesToFormFieldNamesMapping() -> [String: String] {
         return [
             NSStringFromSelector(#selector(getter: clientSessionId)): "client_session_id",
