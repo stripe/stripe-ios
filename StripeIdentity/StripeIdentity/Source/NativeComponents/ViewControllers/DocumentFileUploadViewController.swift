@@ -42,7 +42,7 @@ final class DocumentFileUploadViewController: IdentityFlowViewController {
 
     /// If the image must come from a live camera feed
     let requireLiveCapture: Bool
-    
+
     let availableIDTypes: [String]
 
     private(set) var currentlySelectingSide: DocumentSide?
@@ -114,9 +114,9 @@ final class DocumentFileUploadViewController: IdentityFlowViewController {
                 )
             )
         }
-        
+
         let instructionText: String
-        
+
         if let idType = (availableIDTypes.count == 1 ? availableIDTypes[0] : nil)?.uiIDType() {
             instructionText = String(format: .Localized.fileUploadInstructionTextSpecific, idType)
         } else {
@@ -170,9 +170,9 @@ final class DocumentFileUploadViewController: IdentityFlowViewController {
 
     func updateUI() {
         instructionListView.configure(with: viewModel)
-        
+
         let titleText: String
-        
+
         if let idType = (availableIDTypes.count == 1 ? availableIDTypes[0] : nil)?.uiIDType() {
             titleText = String(format: STPLocalizedString(
                 "Upload your %@",
@@ -181,7 +181,7 @@ final class DocumentFileUploadViewController: IdentityFlowViewController {
         } else {
             titleText = .Localized.upload_your_photo_id
         }
-        
+
         configure(
             backButtonTitle: STPLocalizedString(
                 "Upload",

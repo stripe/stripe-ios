@@ -30,7 +30,7 @@ extension DocumentFileUploadViewController {
     }
 
     func selectAccessibilityLabel(for side: DocumentSide, availableIDTypes: [String]) -> String {
-        
+
         func baseCase() -> String {
             switch side {
             case .front:
@@ -45,7 +45,7 @@ extension DocumentFileUploadViewController {
                 )
             }
         }
-        
+
         if availableIDTypes.count == 1, let idType = availableIDTypes[0].uiIDType() {
             switch side {
             case .front:
@@ -60,12 +60,12 @@ extension DocumentFileUploadViewController {
                 ), idType)
             }
         }
-        
+
         return baseCase()
     }
 
     func uploadingAccessibilityLabel(for side: DocumentSide, availableIDTypes: [String]) -> String {
-        
+
         func baseCase() -> String {
             switch side {
             case .front:
@@ -80,7 +80,7 @@ extension DocumentFileUploadViewController {
                 )
             }
         }
-        
+
         if availableIDTypes.count == 1, let idType = availableIDTypes[0].uiIDType() {
             switch side {
             case .front:
@@ -95,12 +95,12 @@ extension DocumentFileUploadViewController {
                 ), idType)
             }
         }
-        
+
         return baseCase()
     }
 
     func uploadCompleteAccessibilityLabel(for side: DocumentSide, availableIDTypes: [String]) -> String {
-        
+
         func baseCase() -> String {
             switch side {
             case .front:
@@ -115,7 +115,7 @@ extension DocumentFileUploadViewController {
                 )
             }
         }
-        
+
         if availableIDTypes.count == 1, let idType = availableIDTypes[0].uiIDType() {
             switch side {
             case .front:
@@ -130,7 +130,7 @@ extension DocumentFileUploadViewController {
                 ), idType)
             }
         }
-        
+
         return baseCase()
     }
 }

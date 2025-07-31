@@ -304,7 +304,7 @@ extension String.Localized {
             "Instructions for uploading images of identity card"
         )
     }
-    
+
     static var fileUploadInstructionTextSpecific: String {
         STPLocalizedString(
             "Please upload images of the front and back of your %@",
