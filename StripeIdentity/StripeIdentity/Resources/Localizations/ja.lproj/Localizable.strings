@@ -6,8 +6,6 @@
 
 "App Settings" = "アプリの設定";
 
-"Back identity card photo successfully uploaded" = "身分証明書の裏面の写真のアップロードが完了しました";
-
 "Back of identity card" = "身分証明書の裏面";
 
 "Back of identity document" = "本人確認書類の裏面";
@@ -31,10 +29,6 @@
 "Details not visible" = "詳細が見えません";
 
 "Flip your identity card over to the other side" = "身分証明書を裏返してください";
-
-"Front identity card photo successfully uploaded" = "身分証明書の表面の写真のアップロードが完了しました";
-
-"Front of identity card" = "身分証明書の表面";
 
 "Front of identity document" = "本人確認書類の表面";
 
@@ -84,11 +78,7 @@
 
 "Photo Library" = "フォトライブラリー";
 
-"Please upload images of the front and back of your identity card" = "身分証明書の表裏両面の画像をアップロードしてください";
-
 "Position your face in the center of the frame." = "フレームの中央に顔を置いてください。";
-
-"Position your identity card in the center of the frame" = "身分証明書をフレームの中央に置いてください";
 
 "Retake Photos" = "写真を撮り直す";
 
@@ -101,10 +91,6 @@
 "Select a location to upload the back of your identity document from" = "身分証明書の裏面をどこからアップロードするのかを選択してください";
 
 "Select a location to upload the front of your identity document from" = "身分証明書の表面をどこからアップロードするのかを選択してください";
-
-"Select back identity card photo" = "身分証明書の裏面の写真を選択";
-
-"Select front identity card photo" = "身分証明書の表面の写真を選択";
 
 "Selfie" = "顔写真";
 
@@ -131,10 +117,6 @@
 "Upload a Photo" = "写真をアップロード";
 
 "Upload your photo ID" = "写真付き身分証明書をアップロードする";
-
-"Uploading back identity card photo" = "身分証明書の裏面をアップロードしています";
-
-"Uploading front identity card photo" = "身分証明書の表面をアップロードしています";
 
 "Verify your identity" = "本人確認を行う";
 

@@ -11,31 +11,38 @@ import Foundation
 
 extension DocumentCaptureViewController {
 
-    func titleText(for side: DocumentSide) -> String {
-        if side == .front {
-            return STPLocalizedString(
-                "Front of identity document",
-                "Title of ID document scanning screen when scanning the front of an identity card"
-            )
+    func titleText(for side: DocumentSide, availableIDTypes: [String]) -> String {
+        return side.instruction(availableIDTypes: availableIDTypes)
+    }
+
+    func scanningTextWithNoInput(availableIDTypes: [String], for side: DocumentSide) -> String {
+        let type = (availableIDTypes.count == 1) ? availableIDTypes[0].uiIDType() : nil
+
+        if let type = type {
+            switch side {
+            case .front:
+                return String(format: String.Localized.position_in_center, type)
+            case .back:
+                return String(format: String.Localized.flip_to_other_side, type)
+            }
         } else {
-            return STPLocalizedString(
-                "Back of identity document",
-                "Title of ID document scanning screen when scanning the back of an identity card"
-            )
+            switch side {
+            case .front:
+                return String.Localized.position_in_center_identity_card
+            case .back:
+                return String.Localized.flip_to_other_side_identity_card
+            }
         }
     }
 
     func scanningInstructionText(
         for side: DocumentSide,
-        documentScannerOutput: DocumentScannerOutput?
+        documentScannerOutput: DocumentScannerOutput?,
+        availableIDTypes: [String]
     ) -> String {
         switch documentScannerOutput {
         case .none:
-            if side == .front {
-                return String.Localized.position_in_center
-            } else {
-                return String.Localized.flip_to_other_side
-            }
+            return scanningTextWithNoInput(availableIDTypes: availableIDTypes, for: side)
         case .some(.legacy(let idDetectorOutput, _, _, _, _)):
             let foundClassification = idDetectorOutput.classification
             let matchesClassification = foundClassification.matchesDocument(side: side)

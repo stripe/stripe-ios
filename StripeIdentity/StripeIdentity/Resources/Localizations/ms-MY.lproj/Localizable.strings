@@ -6,8 +6,6 @@
 
 "App Settings" = "Tetapan Aplikasi";
 
-"Back identity card photo successfully uploaded" = "Foto bahagian belakang kad pengenalan berjaya dimuat naik";
-
 "Back of identity card" = "Bahagian belakang kad pengenalan";
 
 "Back of identity document" = "Bahagian belakang dokumen pengenalan";
@@ -31,10 +29,6 @@
 "Details not visible" = "Butiran tidak kelihatan";
 
 "Flip your identity card over to the other side" = "Terbalikkan kad pengenalan anda ke sebelah satu lagi";
-
-"Front identity card photo successfully uploaded" = "Foto bahagian hadapan kad pengenalan berjaya dimuat naik";
-
-"Front of identity card" = "Bahagian hadapan kad pengenalan";
 
 "Front of identity document" = "Bahagian hadapan dokumen pengenalan";
 
@@ -84,11 +78,7 @@
 
 "Photo Library" = "Pustaka Foto";
 
-"Please upload images of the front and back of your identity card" = "Sila muat naik imej hadapan dan belakang kad pengenalan anda";
-
 "Position your face in the center of the frame." = "Letakkan muka anda di tengah bingkai";
-
-"Position your identity card in the center of the frame" = "Letakkan kad pengenalan anda di tengah bingkai";
 
 "Retake Photos" = "Ambil Semula Foto";
 
@@ -101,10 +91,6 @@
 "Select a location to upload the back of your identity document from" = "Pilih lokasi sumber untuk memuat naik bahagian belakang dokumen pengenalan anda";
 
 "Select a location to upload the front of your identity document from" = "Pilih lokasi sumber untuk memuat naik bahagian hadapan dokumen pengenalan anda";
-
-"Select back identity card photo" = "Pilih foto bahagian belakang kad pengenalan";
-
-"Select front identity card photo" = "Pilih foto bahagian hadapan kad pengenalan";
 
 "Selfie" = "Swafoto";
 
@@ -131,10 +117,6 @@
 "Upload a Photo" = "Muat Naik Foto";
 
 "Upload your photo ID" = "Muat naik ID berfoto anda";
-
-"Uploading back identity card photo" = "Foto bahagian belakang kad pengenalan sedang dimuat naik";
-
-"Uploading front identity card photo" = "Foto bahagian hadapan kad pengenalan sedang dimuat naik";
 
 "Verify your identity" = "Tentusahkan identiti anda";
 

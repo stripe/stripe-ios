@@ -6,8 +6,6 @@
 
 "App Settings" = "Sovelluksen asetukset";
 
-"Back identity card photo successfully uploaded" = "Henkilökortin takapuolen kuva ladattu onnistuneesti";
-
 "Back of identity card" = "Henkilökortin takapuoli";
 
 "Back of identity document" = "Henkilötodistuksen takapuoli";
@@ -31,10 +29,6 @@
 "Details not visible" = "Tiedot eivät ole näkyvillä";
 
 "Flip your identity card over to the other side" = "Käännä henkilökortti toisinpäin";
-
-"Front identity card photo successfully uploaded" = "Henkilökortin etupuolen kuva ladattu onnistuneesti";
-
-"Front of identity card" = "Henkilökortin etupuoli";
 
 "Front of identity document" = "Henkilötodistuksen etupuoli";
 
@@ -84,11 +78,7 @@
 
 "Photo Library" = "Kuvakirjasto";
 
-"Please upload images of the front and back of your identity card" = "Lataa henkilökortin etu- ja takapuolen kuvat";
-
 "Position your face in the center of the frame." = "Aseta kasvosi kuvan keskelle.";
-
-"Position your identity card in the center of the frame" = "Aseta henkilökortti kehyksen keskelle";
 
 "Retake Photos" = "Ota kuvat uudelleen";
 
@@ -101,10 +91,6 @@
 "Select a location to upload the back of your identity document from" = "Valitse sijainti, josta haluat ladata henkilöllisyysasiakirjan takapuolen";
 
 "Select a location to upload the front of your identity document from" = "Valitse sijainti, josta haluat ladata henkilöllisyysasiakirjan etupuolen";
-
-"Select back identity card photo" = "Valitse henkilökortin takapuolen kuva";
-
-"Select front identity card photo" = "Valitse henkilökortin etupuolen kuva";
 
 "Selfie" = "Selfie";
 
@@ -131,10 +117,6 @@
 "Upload a Photo" = "Lataa kuva";
 
 "Upload your photo ID" = "Lataa kuvallinen henkilöllisyystodistus";
-
-"Uploading back identity card photo" = "Ladataan henkilökortin takapuolen kuvaa";
-
-"Uploading front identity card photo" = "Ladataan henkilökortin etupuolen kuvaa";
 
 "Verify your identity" = "Vahvista henkilöllisyytesi";
 

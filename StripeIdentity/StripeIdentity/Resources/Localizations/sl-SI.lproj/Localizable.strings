@@ -6,8 +6,6 @@
 
 "App Settings" = "Nastavitve aplikacije";
 
-"Back identity card photo successfully uploaded" = "Fotografija hrbtne strani osebne izkaznice je bila uspešno naložena";
-
 "Back of identity card" = "Hrbtna stran osebne izkaznice";
 
 "Back of identity document" = "Hrbtna stran osebnega dokumenta";
@@ -31,10 +29,6 @@
 "Details not visible" = "Podrobnosti niso vidne";
 
 "Flip your identity card over to the other side" = "Obrnite osebno izkaznico na drugo stran";
-
-"Front identity card photo successfully uploaded" = "Fotografija sprednje strani osebne izkaznice je bila uspešno naložena";
-
-"Front of identity card" = "Sprednja stran osebne izkaznice";
 
 "Front of identity document" = "Sprednja stran osebnega dokumenta";
 
@@ -84,11 +78,7 @@
 
 "Photo Library" = "Knjižnica fotografij";
 
-"Please upload images of the front and back of your identity card" = "Naložite sliki sprednje in hrbtne strani osebne izkaznice";
-
 "Position your face in the center of the frame." = "Zagotovite, da je vaš obraz na sredini okvira.";
-
-"Position your identity card in the center of the frame" = "Zagotovite, da je osebna izkaznica na sredini okvirja";
 
 "Retake Photos" = "Znova posnemi fotografije";
 
@@ -101,10 +91,6 @@
 "Select a location to upload the back of your identity document from" = "Izberite mesto, s katerega želite naložiti hrbtno stran osebnega dokumenta";
 
 "Select a location to upload the front of your identity document from" = "Izberite mesto, s katerega želite naložiti sprednjo stran osebnega dokumenta";
-
-"Select back identity card photo" = "Izberite fotografijo hrbtne strani osebne izkaznice";
-
-"Select front identity card photo" = "Izberite fotografijo sprednje strani osebne izkaznice";
 
 "Selfie" = "Selfi";
 
@@ -131,10 +117,6 @@
 "Upload a Photo" = "Naloži fotografijo";
 
 "Upload your photo ID" = "Naložite osebni dokument s svojo fotografijo";
-
-"Uploading back identity card photo" = "Nalaganje fotografije hrbtne strani osebne izkaznice";
-
-"Uploading front identity card photo" = "Nalaganje fotografije sprednje strani osebne izkaznice";
 
 "Verify your identity" = "Preverite svojo identiteto";
 

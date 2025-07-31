@@ -6,8 +6,6 @@
 
 "App Settings" = "Configuració de l'aplicació";
 
-"Back identity card photo successfully uploaded" = "La foto del revers document d'identitat s'ha carregat correctament";
-
 "Back of identity card" = "Revers del document d'identitat";
 
 "Back of identity document" = "Dors del document d'identitat";
@@ -31,10 +29,6 @@
 "Details not visible" = "Els detalls no es veuen bé";
 
 "Flip your identity card over to the other side" = "Gireu el document d'identitat perquè se'n vegi l'altra cara";
-
-"Front identity card photo successfully uploaded" = "La foto de l'anvers del document d'identitat s'ha carregat correctament";
-
-"Front of identity card" = "Anvers del document d'identitat";
 
 "Front of identity document" = "Anvers del document d'identitat";
 
@@ -84,11 +78,7 @@
 
 "Photo Library" = "Biblioteca de fotos";
 
-"Please upload images of the front and back of your identity card" = "Carregueu les imatges de l'anvers i el revers del document d'identitat";
-
 "Position your face in the center of the frame." = "Col·loqueu la cara al centre del marc.";
-
-"Position your identity card in the center of the frame" = "Col·loqueu el document d'identitat al centre del marc";
 
 "Retake Photos" = "Torna a fer les fotos";
 
@@ -101,10 +91,6 @@
 "Select a location to upload the back of your identity document from" = "Seleccioneu una ubicació des d'on carregar el revers del document d'identitat";
 
 "Select a location to upload the front of your identity document from" = "Seleccioneu una ubicació des d'on carregar l'anvers del document d'identitat";
-
-"Select back identity card photo" = "Seleccioneu la foto del revers del document d'identitat";
-
-"Select front identity card photo" = "Seleccioneu la foto del document d'identitat";
 
 "Selfie" = "Autofoto";
 
@@ -131,10 +117,6 @@
 "Upload a Photo" = "Carrega una foto";
 
 "Upload your photo ID" = "Carregueu la vostra ID amb foto";
-
-"Uploading back identity card photo" = "S'està carregant la foto del revers del document d'identitat";
-
-"Uploading front identity card photo" = "S'està carregant la foto de l'anvers del document d'identitat";
 
 "Verify your identity" = "Verifica la teva identitat";
 

@@ -6,8 +6,6 @@
 
 "App Settings" = "Appinställningar";
 
-"Back identity card photo successfully uploaded" = "Bilden på id-kortets baksida har laddats upp";
-
 "Back of identity card" = "Baksida av id-kort";
 
 "Back of identity document" = "Id-handlingens baksida";
@@ -31,10 +29,6 @@
 "Details not visible" = "Detaljer syns inte";
 
 "Flip your identity card over to the other side" = "Vänd på id-handlingen";
-
-"Front identity card photo successfully uploaded" = "Bilden på id-kortets framsida har laddats upp";
-
-"Front of identity card" = "Framsida av id-kort";
 
 "Front of identity document" = "Id-handlingens framsida";
 
@@ -84,11 +78,7 @@
 
 "Photo Library" = "Fotobibliotek";
 
-"Please upload images of the front and back of your identity card" = "Ladda upp bilderna på fram- och baksidan av ditt id-kort";
-
 "Position your face in the center of the frame." = "Placera ansiktet i mitten av ramen.";
-
-"Position your identity card in the center of the frame" = "Placera id-kortet i mitten av ramen";
 
 "Retake Photos" = "Ta bilden på nytt";
 
@@ -101,10 +91,6 @@
 "Select a location to upload the back of your identity document from" = "Välj från vilken plats du vill ladda upp baksidan på din id-handling";
 
 "Select a location to upload the front of your identity document from" = "Välj från vilken plats du vill ladda upp framsidan på din id-handling";
-
-"Select back identity card photo" = "Välj en bild på id-kortets baksida";
-
-"Select front identity card photo" = "Välj en bild på id-kortets framsida";
 
 "Selfie" = "Selfie";
 
@@ -131,10 +117,6 @@
 "Upload a Photo" = "Ladda upp en bild";
 
 "Upload your photo ID" = "Ladda upp ditt foto-id";
-
-"Uploading back identity card photo" = "Laddar upp bild på id-kortets baksida";
-
-"Uploading front identity card photo" = "Laddar upp bild på id-kortets framsida";
 
 "Verify your identity" = "Verifiera din identitet";
 

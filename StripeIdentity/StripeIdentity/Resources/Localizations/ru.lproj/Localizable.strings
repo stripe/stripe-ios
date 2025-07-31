@@ -6,8 +6,6 @@
 
 "App Settings" = "Настройки приложения";
 
-"Back identity card photo successfully uploaded" = "Фотография оборотной стороны удостоверения личности успешно отправлена";
-
 "Back of identity card" = "Оборот удостоверения личности";
 
 "Back of identity document" = "Оборотная сторона документа, удостоверяющего личность";
@@ -31,10 +29,6 @@
 "Details not visible" = "Детали не видны";
 
 "Flip your identity card over to the other side" = "Переверните удостоверение личности другой стороной";
-
-"Front identity card photo successfully uploaded" = "Фотография лицевой стороны удостоверения личности успешно отправлена";
-
-"Front of identity card" = "Лицевая сторона удостоверения личности";
 
 "Front of identity document" = "Лицевая сторона документа, удостоверяющего личность";
 
@@ -84,11 +78,7 @@
 
 "Photo Library" = "Библиотека фотографий";
 
-"Please upload images of the front and back of your identity card" = "Отправьте изображения лицевой стороны и оборота вашего удостоверения личности";
-
 "Position your face in the center of the frame." = "Расположите лицо по центру рамки";
-
-"Position your identity card in the center of the frame" = "Поместите удостоверение личности в центр рамки";
 
 "Retake Photos" = "Повторные фото";
 
@@ -101,10 +91,6 @@
 "Select a location to upload the back of your identity document from" = "Выберите папку с изображением оборота вашего документа, удостоверяющего личность, для отправки";
 
 "Select a location to upload the front of your identity document from" = "Выберите папку с изображением лицевой стороны вашего документа, удостоверяющего личность, для отправки";
-
-"Select back identity card photo" = "Выбрать фотографию оборотной стороны удостоверения личности";
-
-"Select front identity card photo" = "Выбрать фотографию лицевой стороны удостоверения личности";
 
 "Selfie" = "Селфи";
 
@@ -131,10 +117,6 @@
 "Upload a Photo" = "Отправьте фотографию";
 
 "Upload your photo ID" = "Отправьте удостоверение личности с фото";
-
-"Uploading back identity card photo" = "Отправляется фотография оборотной стороны удостоверения личности";
-
-"Uploading front identity card photo" = "Отправляется фотография лицевой стороны удостоверения личности";
 
 "Verify your identity" = "Подтвердите свою личность";
 
