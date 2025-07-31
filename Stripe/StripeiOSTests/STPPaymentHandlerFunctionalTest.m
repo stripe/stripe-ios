@@ -22,13 +22,6 @@
 - (BOOL)_canPresentWithAuthenticationContext:(id<STPAuthenticationContext>)authenticationContext error:(NSError **)error;
 @end
 
-@interface STPAPIClient (TestHelper)
-- (void)confirmPaymentIntentWithParams:(STPPaymentIntentParams *)paymentIntentParams 
-                                expand:(NSArray<NSString *> *)expand 
-       additionalClientAttributionMetadata:(NSDictionary<NSString *, NSString *> *)additionalClientAttributionMetadata 
-                            completion:(void (^)(STPPaymentIntent *, NSError *))completion;
-@end
-
 @implementation STPPaymentHandlerFunctionalTest
 
 - (void)setUp {
