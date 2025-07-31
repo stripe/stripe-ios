@@ -269,4 +269,28 @@ class StripeErrorTest: XCTestCase {
             "req_123"
         )
     }
+
+    func testStpErrorCodeExtension() {
+        let modernAPIError = StripeError.apiError(StripeAPIError(
+            message: "Test message",
+            type: .invalidRequest,
+            code: "test_code",
+            param: nil,
+            declineCode: nil,
+            paymentIntent: nil
+        ))
+        XCTAssertEqual(modernAPIError._stp_error_code, "test_code")
+
+        let response = [
+            "error": [
+                "type": "card_error",
+                "code": "card_declined",
+            ],
+        ]
+        let legacyError = NSError.stp_error(fromStripeResponse: response)!
+        XCTAssertEqual(legacyError._stp_error_code, "card_declined")
+
+        let genericError = NSError(domain: "test", code: 1, userInfo: nil)
+        XCTAssertNil(genericError._stp_error_code)
+    }
 }
