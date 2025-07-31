@@ -128,7 +128,7 @@ extension PaymentSheetFormFactory {
             case .automatic:
                 if isSettingUp {
                     return makeMandate(mandateText: String(format: .Localized.by_providing_your_card_information_text, configuration.merchantDisplayName))
-                    
+
                 }
             }
             return nil

@@ -126,7 +126,7 @@ enum PaymentSheetFormFactoryConfig {
             return true
         }
     }
-    
+
     func mandateDisplayFor(paymentMethodType: PaymentSheet.PaymentMethodType) -> PaymentSheet.MandateDisplay {
         switch self {
         case .paymentElement(let configuration):
