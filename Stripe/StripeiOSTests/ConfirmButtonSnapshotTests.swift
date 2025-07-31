@@ -194,13 +194,13 @@ class ConfirmButtonSnapshotTests: STPSnapshotTestCase {
 
     // Tests that `primaryButton` used in Link has the correct height
     func testConfirmButtonInLinkUI() {
-        var appearance = PaymentSheet.Appearance.default
+        var appearance = PaymentSheet.Appearance.defaultLinkUIAppearance
         // This should not have any effect when rendered in Link
         appearance.primaryButton.height = 30
 
         let confirmButton = ConfirmButton.makeLinkButton(
             callToAction: .continue,
-            appearance: PaymentSheet.Appearance.defaultLinkUIAppearance,
+            appearance: appearance,
             didTap: {}
         )
         verify(confirmButton)
