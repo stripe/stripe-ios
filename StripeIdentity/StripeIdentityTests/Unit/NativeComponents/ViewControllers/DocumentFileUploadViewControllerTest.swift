@@ -176,7 +176,8 @@ extension DocumentFileUploadViewControllerTest {
             sheetController: mockSheetController,
             documentUploader: mockDocumentUploader,
             cameraPermissionsManager: mockCameraPermissionsManager,
-            appSettingsHelper: mockAppSettingsHelper
+            appSettingsHelper: mockAppSettingsHelper,
+            availableIDTypes: ["driving_license", "passport"]
         )
     }
 }
