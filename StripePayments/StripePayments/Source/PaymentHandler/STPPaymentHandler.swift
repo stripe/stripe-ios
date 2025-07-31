@@ -182,15 +182,6 @@ public class STPPaymentHandler: NSObject {
         with authenticationContext: STPAuthenticationContext,
         completion: @escaping STPPaymentHandlerActionPaymentIntentCompletionBlock
     ) {
-        confirmPayment(paymentParams, with: authenticationContext, clientAttributionMetadata: .init(), completion: completion)
-    }
-
-    @_spi(STP) public func confirmPayment(
-        _ paymentParams: STPPaymentIntentParams,
-        with authenticationContext: STPAuthenticationContext,
-        clientAttributionMetadata: STPClientAttributionMetadata,
-        completion: @escaping STPPaymentHandlerActionPaymentIntentCompletionBlock
-    ) {
         let paymentIntentID = paymentParams.stripeId
         logConfirmPaymentIntentStarted(paymentIntentID: paymentIntentID, paymentParams: paymentParams)
         // Overwrite completion to send an analytic before calling the caller-supplied completion
@@ -284,7 +275,6 @@ public class STPPaymentHandler: NSObject {
         apiClient.confirmPaymentIntent(
             with: params,
             expand: ["payment_method"],
-            clientAttributionMetadata: clientAttributionMetadata,
             completion: confirmCompletionBlock
         )
     }
@@ -517,15 +507,6 @@ public class STPPaymentHandler: NSObject {
         with authenticationContext: STPAuthenticationContext,
         completion: @escaping STPPaymentHandlerActionSetupIntentCompletionBlock
     ) {
-        confirmSetupIntent(setupIntentConfirmParams, with: authenticationContext, clientAttributionMetadata: .init(), completion: completion)
-    }
-
-    @_spi(STP) public func confirmSetupIntent(
-        _ setupIntentConfirmParams: STPSetupIntentConfirmParams,
-        with authenticationContext: STPAuthenticationContext,
-        clientAttributionMetadata: STPClientAttributionMetadata,
-        completion: @escaping STPPaymentHandlerActionSetupIntentCompletionBlock
-    ) {
         let setupIntentID = STPSetupIntent.id(fromClientSecret: setupIntentConfirmParams.clientSecret)
         logConfirmSetupIntentStarted(setupIntentID: setupIntentID, confirmParams: setupIntentConfirmParams)
         // Overwrite completion to send an analytic before calling the caller-supplied completion
@@ -626,7 +607,7 @@ public class STPPaymentHandler: NSObject {
             params = setupIntentConfirmParams.copy() as! STPSetupIntentConfirmParams
             params.useStripeSDK = NSNumber(value: true)
         }
-        apiClient.confirmSetupIntent(with: params, expand: ["payment_method"], clientAttributionMetadata: clientAttributionMetadata, completion: confirmCompletionBlock)
+        apiClient.confirmSetupIntent(with: params, expand: ["payment_method"], completion: confirmCompletionBlock)
     }
 
     /// Handles any `nextAction` required to authenticate the SetupIntent.

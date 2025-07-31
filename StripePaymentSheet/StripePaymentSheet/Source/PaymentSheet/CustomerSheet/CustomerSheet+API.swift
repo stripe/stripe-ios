@@ -55,6 +55,7 @@ extension CustomerSheet {
         if case .new(let confirmParams) = paymentOption,
            case .setupIntent(let setupIntent) = intent {
             confirmParams.setAllowRedisplayForCustomerSheet(elementsSession.savePaymentMethodConsentBehaviorForCustomerSheet())
+            confirmParams.setClientAttributionMetadata(clientAttributionMetadata: STPClientAttributionMetadata(elementsSessionConfigId: elementsSession.sessionID))
             let setupIntentParams = STPSetupIntentConfirmParams(clientSecret: setupIntent.clientSecret)
             setupIntentParams.paymentMethodParams = confirmParams.paymentMethodParams
             setupIntentParams.returnURL = configuration.returnURL
@@ -62,7 +63,6 @@ extension CustomerSheet {
             paymentHandler.confirmSetupIntent(
                 setupIntentParams,
                 with: authenticationContext,
-                clientAttributionMetadata: .init(elementsSessionConfigId: elementsSession.sessionID),
                 completion: paymentHandlerCompletion)
         } else {
             let errorAnalytic = ErrorAnalytic(event: .unexpectedCustomerSheetError,

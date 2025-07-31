@@ -105,22 +105,6 @@ class STPAPIClientTest: XCTestCase {
         XCTAssertEqual(params["payment_user_agent"] as! String, "stripe-ios/\(StripeAPIConfiguration.STPSDKVersion); variant.paymentsheet; MockUAUsageClass; foo")
     }
 
-    func testClientAttributionMetadata() {
-        AnalyticsHelper.shared.generateSessionID()
-        var params: [String: Any] = [:]
-        params = STPAPIClient.paramsAddingClientAttributionMetadata(params)
-        let clientAttributionMetadata = params["client_attribution_metadata"] as? [String: String]
-        XCTAssertEqual(clientAttributionMetadata?["client_session_id"], AnalyticsHelper.shared.sessionID)
-        XCTAssertEqual(clientAttributionMetadata?["merchant_integration_source"], "elements")
-        XCTAssertEqual(clientAttributionMetadata?["merchant_integration_subtype"], "mobile")
-        XCTAssertEqual(clientAttributionMetadata?["merchant_integration_version"], "stripe-ios/\(StripeAPIConfiguration.STPSDKVersion)")
-        var paramsWithAdditionalClientAttributionMetadata: [String: Any] = [:]
-        paramsWithAdditionalClientAttributionMetadata = STPAPIClient.paramsAddingClientAttributionMetadata(paramsWithAdditionalClientAttributionMetadata, clientAttributionMetadata: .init(paymentIntentCreationFlow: .deferred, paymentMethodSelectionFlow: .automatic))
-        let clientAttributionMetadataWithAdditional = paramsWithAdditionalClientAttributionMetadata["client_attribution_metadata"] as? [String: String]
-        XCTAssertEqual(clientAttributionMetadataWithAdditional?["payment_intent_creation_flow"], "deferred")
-        XCTAssertEqual(clientAttributionMetadataWithAdditional?["payment_method_selection_flow"], "automatic")
-    }
-
     func testSetAppInfo() {
         let sut = STPAPIClient(publishableKey: "pk_foo")
         sut.appInfo = STPAppInfo(

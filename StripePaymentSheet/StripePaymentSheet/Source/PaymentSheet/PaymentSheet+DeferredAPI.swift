@@ -19,7 +19,6 @@ extension PaymentSheet {
         isFlowController: Bool,
         allowsSetAsDefaultPM: Bool = false,
         mandateData: STPMandateDataParams? = nil,
-        clientAttributionMetadata: STPClientAttributionMetadata = .init(),
         completion: @escaping (PaymentSheetResult, STPAnalyticsClient.DeferredIntentConfirmationType?) -> Void
     ) {
         Task { @MainActor in
@@ -38,7 +37,7 @@ extension PaymentSheet {
                         STPAnalyticsClient.sharedClient.log(analytic: errorAnalytic)
                     }
                     stpAssert(newPaymentMethod == nil)
-                    paymentMethod = try await configuration.apiClient.createPaymentMethod(with: params, clientAttributionMetadata: clientAttributionMetadata, additionalPaymentUserAgentValues: makeDeferredPaymentUserAgentValue(intentConfiguration: intentConfig))
+                    paymentMethod = try await configuration.apiClient.createPaymentMethod(with: params, additionalPaymentUserAgentValues: makeDeferredPaymentUserAgentValue(intentConfiguration: intentConfig))
                     confirmType = .new(params: params, paymentOptions: paymentOptions, paymentMethod: paymentMethod, shouldSave: shouldSave, shouldSetAsDefaultPM: shouldSetAsDefaultPM)
                 }
 

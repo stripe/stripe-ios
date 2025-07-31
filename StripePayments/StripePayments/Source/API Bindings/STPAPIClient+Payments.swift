@@ -524,26 +524,6 @@ extension STPAPIClient {
         expand: [String]?,
         completion: @escaping STPPaymentIntentCompletionBlock
     ) {
-        confirmPaymentIntent(with: paymentIntentParams, expand: expand, clientAttributionMetadata: .init(), completion: completion)
-    }
-
-    /// Confirms the PaymentIntent object with the provided params object.
-    /// At a minimum, the params object must include the `clientSecret`.
-    /// - seealso: https://stripe.com/docs/api#confirm_payment_intent
-    /// @note Use the `confirmPayment:withAuthenticationContext:completion:` method on `STPPaymentHandler` instead
-    /// of calling this method directly. It handles any authentication necessary for you. - seealso: https://stripe.com/docs/payments/3d-secure
-    /// - Parameters:
-    ///   - paymentIntentParams:  The `STPPaymentIntentParams` to pass to `/confirm`
-    ///   - expand:  An array of string keys to expand on the returned PaymentIntent object. These strings should match one or more of the parameter names that are marked as expandable. - seealso: https://stripe.com/docs/api/payment_intents/object
-    ///   - clientAttributionMetadata:  The `STPClientAttributionMetadata` with identifiers for the session and information about the integration to pass to `/confirm`
-    ///   - completion:           The callback to run with the returned PaymentIntent object, or an error.
-    @objc(confirmPaymentIntentWithParams:expand:clientAttributionMetadata:completion:)
-    @_spi(STP) public func confirmPaymentIntent(
-        with paymentIntentParams: STPPaymentIntentParams,
-        expand: [String]?,
-        clientAttributionMetadata: STPClientAttributionMetadata,
-        completion: @escaping STPPaymentIntentCompletionBlock
-    ) {
         assert(
             STPPaymentIntentParams.isClientSecretValid(paymentIntentParams.clientSecret),
             "`paymentIntentParams.clientSecret` format does not match expected client secret formatting."
@@ -570,7 +550,6 @@ extension STPAPIClient {
         if var paymentMethodParamsDict = params[PaymentMethodDataHash] as? [String: Any] {
             STPTelemetryClient.shared.addTelemetryFields(toParams: &paymentMethodParamsDict)
             paymentMethodParamsDict = Self.paramsAddingPaymentUserAgent(paymentMethodParamsDict)
-            paymentMethodParamsDict = Self.paramsAddingClientAttributionMetadata(paymentMethodParamsDict, clientAttributionMetadata: clientAttributionMetadata)
             params[PaymentMethodDataHash] = paymentMethodParamsDict
         }
         if (expand?.count ?? 0) > 0 {
@@ -733,15 +712,6 @@ extension STPAPIClient {
         expand: [String]?,
         completion: @escaping STPSetupIntentCompletionBlock
     ) {
-        confirmSetupIntent(with: setupIntentParams, expand: expand, clientAttributionMetadata: .init(), completion: completion)
-    }
-
-    @_spi(STP) public func confirmSetupIntent(
-        with setupIntentParams: STPSetupIntentConfirmParams,
-        expand: [String]?,
-        clientAttributionMetadata: STPClientAttributionMetadata,
-        completion: @escaping STPSetupIntentCompletionBlock
-    ) {
         assert(
             STPSetupIntentConfirmParams.isClientSecretValid(setupIntentParams.clientSecret),
             "`setupIntentParams.clientSecret` format does not match expected client secret formatting."
@@ -763,7 +733,6 @@ extension STPAPIClient {
         if var paymentMethodParamsDict = params[PaymentMethodDataHash] as? [String: Any] {
             STPTelemetryClient.shared.addTelemetryFields(toParams: &paymentMethodParamsDict)
             paymentMethodParamsDict = Self.paramsAddingPaymentUserAgent(paymentMethodParamsDict)
-            paymentMethodParamsDict = Self.paramsAddingClientAttributionMetadata(paymentMethodParamsDict, clientAttributionMetadata: clientAttributionMetadata)
             params[PaymentMethodDataHash] = paymentMethodParamsDict
         }
         if let expand = expand,
@@ -847,14 +816,12 @@ extension STPAPIClient {
         with paymentMethodParams: STPPaymentMethodParams,
         completion: @escaping STPPaymentMethodCompletionBlock
     ) {
-        createPaymentMethod(with: paymentMethodParams, clientAttributionMetadata: .init(), additionalPaymentUserAgentValues: [], completion: completion)
+        createPaymentMethod(with: paymentMethodParams, additionalPaymentUserAgentValues: [], completion: completion)
     }
 
     /// - Parameter additionalPaymentUserAgentValues: A list of values to append to the `payment_user_agent` parameter sent in the request. e.g. `["deferred-intent", "autopm"]` will append "; deferred-intent; autopm" to the `payment_user_agent`.
-    /// - Parameter clientAttributionMetadata:  The `STPClientAttributionMetadata` with identifiers for the session and information about the integration to pass to `/v1/payment_methods`
     func createPaymentMethod(
         with paymentMethodParams: STPPaymentMethodParams,
-        clientAttributionMetadata: STPClientAttributionMetadata,
         additionalPaymentUserAgentValues: [String] = [],
         completion: @escaping STPPaymentMethodCompletionBlock
     ) {
@@ -865,7 +832,6 @@ extension STPAPIClient {
         )
         var parameters = STPFormEncoder.dictionary(forObject: paymentMethodParams)
         parameters = Self.paramsAddingPaymentUserAgent(parameters, additionalValues: additionalPaymentUserAgentValues)
-        parameters = Self.paramsAddingClientAttributionMetadata(parameters, clientAttributionMetadata: clientAttributionMetadata)
         STPTelemetryClient.shared.addTelemetryFields(toParams: &parameters)
         APIRequest<STPPaymentMethod>.post(
             with: self,
@@ -884,19 +850,7 @@ extension STPAPIClient {
     /// - Returns: the returned PaymentMethod object.
     public func createPaymentMethod(with paymentMethodParams: STPPaymentMethodParams, additionalPaymentUserAgentValues: [String]) async throws -> STPPaymentMethod {
         return try await withCheckedThrowingContinuation({ continuation in
-            createPaymentMethod(with: paymentMethodParams, clientAttributionMetadata: .init(), additionalPaymentUserAgentValues: additionalPaymentUserAgentValues) { paymentMethod, error in
-                if let paymentMethod = paymentMethod {
-                    continuation.resume(with: .success(paymentMethod))
-                } else {
-                    continuation.resume(with: .failure(error ?? NSError.stp_genericFailedToParseResponseError()))
-                }
-            }
-        })
-    }
-
-    @_spi(STP) public func createPaymentMethod(with paymentMethodParams: STPPaymentMethodParams, clientAttributionMetadata: STPClientAttributionMetadata, additionalPaymentUserAgentValues: [String]) async throws -> STPPaymentMethod {
-        return try await withCheckedThrowingContinuation({ continuation in
-            createPaymentMethod(with: paymentMethodParams, clientAttributionMetadata: clientAttributionMetadata, additionalPaymentUserAgentValues: additionalPaymentUserAgentValues) { paymentMethod, error in
+            createPaymentMethod(with: paymentMethodParams, additionalPaymentUserAgentValues: additionalPaymentUserAgentValues) { paymentMethod, error in
                 if let paymentMethod = paymentMethod {
                     continuation.resume(with: .success(paymentMethod))
                 } else {
