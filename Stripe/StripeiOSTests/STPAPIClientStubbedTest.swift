@@ -47,27 +47,27 @@ class STPAPIClientStubbedTest: APIStubbedTestCase {
             }
             XCTAssertEqual(queryItems.contains(where: { item in
                 if let base {
-                    return item.name == "\(base)[client_attribution_metadata][client_session_id]" && item.value == clientAttributionMetadata.clientSessionId
+                    return item.name == "\(base)[client_attribution_metadata][client_session_id]" && item.value == AnalyticsHelper.shared.sessionID
                 }
-                return item.name == "client_attribution_metadata[client_session_id]" && item.value == clientAttributionMetadata.clientSessionId
+                return item.name == "client_attribution_metadata[client_session_id]" && item.value == AnalyticsHelper.shared.sessionID
             }), shouldContainClientAttributionMetadata)
             XCTAssertEqual(queryItems.contains(where: { item in
                 if let base {
-                    return item.name == "\(base)[client_attribution_metadata][merchant_integration_source]" && item.value == clientAttributionMetadata.merchantIntegrationSource
+                    return item.name == "\(base)[client_attribution_metadata][merchant_integration_source]" && item.value == "elements"
                 }
                 return item.name == "client_attribution_metadata[merchant_integration_source]" && item.value == "elements"
             }), shouldContainClientAttributionMetadata)
             XCTAssertEqual(queryItems.contains(where: { item in
                 if let base {
-                    return item.name == "\(base)[client_attribution_metadata][merchant_integration_subtype]" && item.value == clientAttributionMetadata.merchantIntegrationSubtype
+                    return item.name == "\(base)[client_attribution_metadata][merchant_integration_subtype]" && item.value == "mobile"
                 }
-                return item.name == "client_attribution_metadata[merchant_integration_subtype]" && item.value == clientAttributionMetadata.merchantIntegrationSubtype
+                return item.name == "client_attribution_metadata[merchant_integration_subtype]" && item.value == "mobile"
             }), shouldContainClientAttributionMetadata)
             XCTAssertEqual(queryItems.contains(where: { item in
                 if let base {
-                    return item.name == "\(base)[client_attribution_metadata][merchant_integration_version]" && item.value == clientAttributionMetadata.merchantIntegrationVersion
+                    return item.name == "\(base)[client_attribution_metadata][merchant_integration_version]" && item.value == "stripe-ios/\(StripeAPIConfiguration.STPSDKVersion)"
                 }
-                return item.name == "client_attribution_metadata[merchant_integration_version]" && item.value == clientAttributionMetadata.merchantIntegrationVersion
+                return item.name == "client_attribution_metadata[merchant_integration_version]" && item.value == "stripe-ios/\(StripeAPIConfiguration.STPSDKVersion)"
             }), shouldContainClientAttributionMetadata)
             if let elementsSessionConfigId = clientAttributionMetadata.elementsSessionConfigId {
                 XCTAssertEqual(queryItems.contains(where: { item in
