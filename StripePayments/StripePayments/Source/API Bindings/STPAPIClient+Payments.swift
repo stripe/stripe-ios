@@ -851,7 +851,7 @@ extension STPAPIClient {
     }
 
     /// - Parameter additionalPaymentUserAgentValues: A list of values to append to the `payment_user_agent` parameter sent in the request. e.g. `["deferred-intent", "autopm"]` will append "; deferred-intent; autopm" to the `payment_user_agent`.
-    /// - Parameter clientAttributionMetadata:  The `STPClientAttributionMetadata` with identifiers for the session and information about the integration to pass to `/confirm`
+    /// - Parameter clientAttributionMetadata:  The `STPClientAttributionMetadata` with identifiers for the session and information about the integration to pass to `/v1/payment_methods`
     func createPaymentMethod(
         with paymentMethodParams: STPPaymentMethodParams,
         clientAttributionMetadata: STPClientAttributionMetadata,
