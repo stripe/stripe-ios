@@ -109,6 +109,7 @@ import XCTest
                         "pk_token_transaction_id", // Random string,
                         "client_session_id", // Random string
                         "merchant_integration_version", // Contains the SDK version number
+                        "hcaptcha_token", // Random string
                     ]
                     return replaceNondeterministicParams(escapedBody, componentsToFilter: componentsToFilter)
                 }
