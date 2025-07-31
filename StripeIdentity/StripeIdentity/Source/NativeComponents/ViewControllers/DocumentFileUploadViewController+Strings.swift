@@ -126,7 +126,7 @@ extension DocumentFileUploadViewController {
             case .back:
                 return String(format: STPLocalizedString(
                     "Back %@ photo successfully uploaded",
-                    "Accessibility label when back driver's license, passport, or government issued photo id photo photo has successfully uploaded"
+                    "Accessibility label when back driver's license, passport, or government issued photo id photo has successfully uploaded"
                 ), idType)
             }
         }
