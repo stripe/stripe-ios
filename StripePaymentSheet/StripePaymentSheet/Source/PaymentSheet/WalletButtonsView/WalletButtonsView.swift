@@ -63,7 +63,7 @@ import WebKit
                     case .linkInlineVerification(let account):
                         LinkInlineVerificationView(
                             account: account,
-                            appearance: flowController.configuration.linkUIAppearance,
+                            appearance: flowController.configuration.appearance,
                             onComplete: completion
                         )
                     case .shopPay:
