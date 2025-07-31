@@ -132,5 +132,6 @@ public final class CryptoOnrampCoordinator: CryptoOnrampCoordinatorProtocol {
 
     public func collectKYCData(info: KYCData) async throws {
         // TODO: implement
+        // /v1/crypto/internal/kyc_data_collection
     }
 }
