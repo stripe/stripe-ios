@@ -440,10 +440,10 @@ class PaymentSheetFlowControllerViewController: UIViewController, FlowController
     }
 
     func updateBottomNotice() {
-        let mandateDisplay = configuration.mandateDisplayFor(paymentMethodType: selectedPaymentMethodType)
+        let termsDisplay = configuration.termsDisplayFor(paymentMethodType: selectedPaymentMethodType)
         switch mode {
         case .selectingSaved:
-            switch mandateDisplay {
+            switch termsDisplay {
             case .automatic:
                 if selectedPaymentMethodType?.requiresMandateDisplayForSavedSelection ?? false {
                     self.bottomNoticeTextField.attributedText = savedPaymentOptionsViewController.bottomNoticeAttributedString // TODO remove probably?
@@ -454,7 +454,7 @@ class PaymentSheetFlowControllerViewController: UIViewController, FlowController
                 self.bottomNoticeTextField.attributedText = nil
             }
         case .addingNew:
-            switch mandateDisplay {
+            switch termsDisplay {
             case .automatic:
                 self.bottomNoticeTextField.attributedText = addPaymentMethodViewController.bottomNoticeAttributedString
             case .never:

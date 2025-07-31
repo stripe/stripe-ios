@@ -219,11 +219,11 @@ extension PaymentSheet {
         /// Note: Card brand filtering is not currently supported by Link.
         public var cardBrandAcceptance: PaymentSheet.CardBrandAcceptance = .all
 
-        /// A mapping between a payment method type and MandateDisplay for specifying when a mandate is displayed
+        /// A map for specifying when legal agreements are displayed for each payment method type.
         /// If the payment method is not specified in the list, the MandateDisplay value will default to `.automatic`.
-        /// This only applies to payment method types:
-        /// AUBecs, Bancontact, Card, Cashapp, Ideal, Paypal, SepaDebit, Sofort,and USBankAccount
-        public var mandateDisplay: [STPPaymentMethodType: PaymentSheet.MandateDisplay] = [:]
+        /// Valid payment method types include:
+        /// .AUBECSDebit, .bancontact, .card, .cashApp, .iDEAL, .payPal, .SEPADebit, .sofort, and .USBankAccount
+        public var termsDisplay: [STPPaymentMethodType: PaymentSheet.TermsDisplay] = [:]
 
         /// Set to `true` if using a wallet buttons view. This changes a few behaviors of PaymentSheet (for example, wallet buttons will never be selected by default).
         @_spi(STP) public var willUseWalletButtonsView = false
@@ -286,9 +286,9 @@ extension PaymentSheet {
                       "Argument does not look like a CustomerSession client secret. See CustomerSession API: https://docs.stripe.com/api/customer_sessions/create")
         }
     }
-    /// MandateDisplay controls how mandates or other legal agreements are displayed. Use 'never' to never display legal agreements, and 'always' to always show it.
-    /// The default setting is 'automatic', which cauess legal agreements to be shown only when nessecary
-    public enum MandateDisplay {
+    /// TermsDisplay controls how mandates or other legal agreements are displayed. Use 'never' to never display legal agreements.
+    /// The default setting is 'automatic', which cauess legal agreements to be shown only when nessecary.
+    public enum TermsDisplay {
         /// Show legal agreements only when nessecary
         case automatic
 

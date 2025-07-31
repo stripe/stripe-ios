@@ -137,11 +137,11 @@ extension EmbeddedPaymentElement {
         /// Note: Card brand filtering is not currently supported by Link.
         public var cardBrandAcceptance: PaymentSheet.CardBrandAcceptance = .all
 
-        /// A mapping between a payment method type and MandateDisplay for specifying when a mandate is displayed
-        /// If the payment method is not specified in the list, the MandateDisplay value will default to `.automatic`.
-        /// This only applies to payment method types:
-        /// AUBecs, Bancontact, Card, Cashapp, Ideal, Paypal, SepaDebit, Sofort,and USBankAccount
-        public var mandateDisplay: [STPPaymentMethodType: PaymentSheet.MandateDisplay] = [:]
+        /// A map for specifying when legal agreements are displayed for each payment method type.
+        /// If the payment method is not specified in the list, the TermsDisplay value will default to `.automatic`.
+        /// Valid payment method types include:
+        /// .AUBECSDebit, .bancontact, .card, .cashApp, .iDEAL, .payPal, .SEPADebit, .sofort, and .USBankAccount
+        public var termsDisplay: [STPPaymentMethodType: PaymentSheet.TermsDisplay] = [:]
 
         /// The view can display payment methods like “Card” that, when tapped, open a form sheet where customers enter their payment method details. The sheet has a button at the bottom. `FormSheetAction` enumerates the actions the button can perform.
         public enum FormSheetAction {

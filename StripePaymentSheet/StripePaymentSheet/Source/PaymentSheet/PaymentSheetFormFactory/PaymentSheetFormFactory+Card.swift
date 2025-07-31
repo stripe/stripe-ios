@@ -122,7 +122,7 @@ extension PaymentSheetFormFactory {
         }
 
         let mandate: SimpleMandateElement? = {
-            switch configuration.mandateDisplayFor(paymentMethodType: .stripe(.card)) {
+            switch configuration.termsDisplayFor(paymentMethodType: .stripe(.card)) {
             case .never:
                 return nil
             case .automatic:

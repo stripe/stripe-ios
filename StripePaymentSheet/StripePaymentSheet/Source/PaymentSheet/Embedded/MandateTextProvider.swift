@@ -35,8 +35,8 @@ class VerticalListMandateProvider: MandateTextProvider {
     /// - Returns: An `NSAttributedString` representing the mandate to be displayed for `paymentMethodType` or `nil` if there is no mandate.
     func mandate(for paymentMethodType: PaymentSheet.PaymentMethodType?, savedPaymentMethod: STPPaymentMethod?, bottomNoticeAttributedString: NSAttributedString? = nil) -> NSAttributedString? {
         guard let paymentMethodType else { return nil }
-        let mandateDisplay = configuration.mandateDisplayFor(paymentMethodType: paymentMethodType)
-        guard case .automatic = mandateDisplay else {
+        let termsDisplay = configuration.termsDisplayFor(paymentMethodType: paymentMethodType)
+        guard case .automatic = termsDisplay else {
             return nil
         }
 

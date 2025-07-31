@@ -43,7 +43,7 @@ protocol PaymentElementConfiguration: PaymentMethodRequirementProvider {
     var disableWalletPaymentMethodFiltering: Bool { get set }
     var linkPaymentMethodsOnly: Bool { get set }
     var paymentMethodLayout: PaymentSheet.PaymentMethodLayout { get }
-    var mandateDisplay: [STPPaymentMethodType: PaymentSheet.MandateDisplay] { get }
+    var termsDisplay: [STPPaymentMethodType: PaymentSheet.TermsDisplay] { get }
 }
 
 extension PaymentElementConfiguration {
@@ -87,13 +87,13 @@ extension PaymentElementConfiguration {
 
         return billingDetails
     }
-    func mandateDisplayFor(paymentMethodType: PaymentSheet.PaymentMethodType?) -> PaymentSheet.MandateDisplay {
+    func termsDisplayFor(paymentMethodType: PaymentSheet.PaymentMethodType?) -> PaymentSheet.TermsDisplay {
         guard let paymentMethodType = paymentMethodType,
               case .stripe(let stpPaymentMethodType) = paymentMethodType,
-              let mandateDisplay = mandateDisplay[stpPaymentMethodType] else {
+              let termsDisplay = termsDisplay[stpPaymentMethodType] else {
             return .automatic
         }
-        return mandateDisplay
+        return termsDisplay
     }
 }
 

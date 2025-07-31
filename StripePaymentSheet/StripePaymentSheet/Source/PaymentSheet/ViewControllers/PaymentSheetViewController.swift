@@ -402,8 +402,8 @@ class PaymentSheetViewController: UIViewController, PaymentSheetViewControllerPr
                 return
             }
             let paymentMethodType = PaymentSheet.PaymentMethodType.stripe(paymentMethod.type)
-            let mandateDisplay = configuration.mandateDisplayFor(paymentMethodType: paymentMethodType)
-            switch mandateDisplay {
+            let termsDisplay = configuration.termsDisplayFor(paymentMethodType: paymentMethodType)
+            switch termsDisplay {
             case .automatic:
                 self.bottomNoticeTextField.attributedText = savedPaymentOptionsViewController.bottomNoticeAttributedString
             case .never:
@@ -411,8 +411,8 @@ class PaymentSheetViewController: UIViewController, PaymentSheetViewControllerPr
             }
 
         case .addingNew:
-            let mandateDisplay = configuration.mandateDisplayFor(paymentMethodType: self.addPaymentMethodViewController.selectedPaymentMethodType)
-            switch mandateDisplay {
+            let termsDisplay = configuration.termsDisplayFor(paymentMethodType: self.addPaymentMethodViewController.selectedPaymentMethodType)
+            switch termsDisplay {
             case .automatic:
                 self.bottomNoticeTextField.attributedText = addPaymentMethodViewController.bottomNoticeAttributedString
             case .never:

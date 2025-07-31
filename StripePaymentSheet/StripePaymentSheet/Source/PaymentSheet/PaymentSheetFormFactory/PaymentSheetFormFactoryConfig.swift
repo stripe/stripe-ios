@@ -127,10 +127,10 @@ enum PaymentSheetFormFactoryConfig {
         }
     }
 
-    func mandateDisplayFor(paymentMethodType: PaymentSheet.PaymentMethodType) -> PaymentSheet.MandateDisplay {
+    func termsDisplayFor(paymentMethodType: PaymentSheet.PaymentMethodType) -> PaymentSheet.TermsDisplay {
         switch self {
         case .paymentElement(let configuration):
-            return configuration.mandateDisplayFor(paymentMethodType: paymentMethodType)
+            return configuration.termsDisplayFor(paymentMethodType: paymentMethodType)
         case .customerSheet:
             return .automatic
         }
