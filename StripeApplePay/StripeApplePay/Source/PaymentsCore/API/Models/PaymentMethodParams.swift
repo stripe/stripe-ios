@@ -55,7 +55,6 @@ extension StripeAPI {
             @_spi(STP) public var _additionalParametersStorage: NonEncodableParameters?
         }
 
-        
         // See https://docs.google.com/document/d/11wWdHwWzTJGe_29mHsk71fk-kG4lwvp8TLBBf4ws9JM/edit?usp=sharing
         @_spi(STP) public struct ClientAttributionMetadata: UnknownFieldsEncodable {
 

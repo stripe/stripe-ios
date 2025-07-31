@@ -607,7 +607,7 @@ extension STPAPIClient {
 }
 
 //// See https://docs.google.com/document/d/11wWdHwWzTJGe_29mHsk71fk-kG4lwvp8TLBBf4ws9JM/edit?usp=sharing
-//@objc @_spi(STP) public class STPClientAttributionMetadata: NSObject, Encodable {
+// @objc @_spi(STP) public class STPClientAttributionMetadata: NSObject, Encodable {
 //
 //    public enum IntentCreationFlow: String {
 //        case standard
@@ -659,4 +659,4 @@ extension STPAPIClient {
 //        try container.encodeIfPresent(paymentIntentCreationFlow?.rawValue, forKey: .paymentIntentCreationFlow)
 //        try container.encodeIfPresent(paymentMethodSelectionFlow?.rawValue, forKey: .paymentMethodSelectionFlow)
 //    }
-//}
+// }
