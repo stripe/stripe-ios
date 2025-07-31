@@ -625,7 +625,7 @@ extension PaymentSheet {
     }
 
     /// An address.
-    public struct Address: Equatable {
+    public struct Address: Codable, Equatable {
         /// City, district, suburb, town, or village.
         /// - Note: The value set is displayed in the payment sheet as-is. Depending on the payment method, the customer may be required to edit this value.
         public var city: String?
