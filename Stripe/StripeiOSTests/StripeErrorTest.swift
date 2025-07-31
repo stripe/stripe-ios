@@ -272,12 +272,8 @@ class StripeErrorTest: XCTestCase {
 
     func testStpErrorCodeExtension() {
         let modernAPIError = StripeError.apiError(StripeAPIError(
-            message: "Test message",
-            type: .invalidRequest,
-            code: "test_code",
-            param: nil,
-            declineCode: nil,
-            paymentIntent: nil
+            type: .invalidRequestError, code: "test_code", message: "Test message",
+            param: nil
         ))
         XCTAssertEqual(modernAPIError._stp_error_code, "test_code")
 
