@@ -68,12 +68,19 @@ extension StripeAPI {
                 case merchantSpecified = "merchant_specified"
             }
 
+            /// The identifier string for the session
             let clientSessionId: String?
+            /// The identifier string for the elements session
             var elementsSessionConfigId: String?
+            /// The source for the merchant integration
             let merchantIntegrationSource: String
+            /// The subtype for the merchant integration
             let merchantIntegrationSubtype: String
+            /// The version for the merchant integration
             let merchantIntegrationVersion: String
+            /// The intent creation flow for the merchant integration. Can be `standard` or `deferred`
             var paymentIntentCreationFlow: String?
+            /// The payment method selection for the merchant integration. Can be `automatic` or `merchant_specified`
             var paymentMethodSelectionFlow: String?
 
             public init(elementsSessionConfigId: String? = nil,
