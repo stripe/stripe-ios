@@ -251,7 +251,7 @@ import UIKit
 
     @_spi(STP) public class func paramsAddingClientAttributionMetadata(
         _ params: [String: Any],
-        clientAttributionMetadata: STPClientAttributionMetadata = .init()
+        clientAttributionMetadata: STPClientAttributionMetadata = STPClientAttributionMetadata()
     ) -> [String: Any] {
         stpAssert(
             params["client_attribution_metadata"] == nil,
