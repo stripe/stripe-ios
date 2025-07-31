@@ -29,7 +29,7 @@ extension StripeAPI {
         }()
 
         /// Contains metadata with identifiers for the session and information about the integration
-        @_spi(STP) public var clientAttributionMetadata: STPClientAttributionMetadata = STPClientAttributionMetadata()
+        @_spi(STP) public var clientAttributionMetadata: ClientAttributionMetadata = ClientAttributionMetadata()
 
         /// :nodoc:
         @_spi(STP) public struct Card: UnknownFieldsEncodable {
@@ -52,6 +52,43 @@ extension StripeAPI {
                     return nil
                 }
             }
+            @_spi(STP) public var _additionalParametersStorage: NonEncodableParameters?
+        }
+
+        
+        // See https://docs.google.com/document/d/11wWdHwWzTJGe_29mHsk71fk-kG4lwvp8TLBBf4ws9JM/edit?usp=sharing
+        @_spi(STP) public struct ClientAttributionMetadata: UnknownFieldsEncodable {
+
+            public enum IntentCreationFlow: String {
+                case standard
+                case deferred
+            }
+
+            public enum PaymentMethodSelectionFlow: String {
+                case automatic
+                case merchantSpecified = "merchant_specified"
+            }
+
+            let clientSessionId: String?
+            var elementsSessionConfigId: String?
+            let merchantIntegrationSource: String
+            let merchantIntegrationSubtype: String
+            let merchantIntegrationVersion: String
+            var paymentIntentCreationFlow: String?
+            var paymentMethodSelectionFlow: String?
+
+            public init(elementsSessionConfigId: String? = nil,
+                        paymentIntentCreationFlow: IntentCreationFlow? = nil,
+                        paymentMethodSelectionFlow: PaymentMethodSelectionFlow? = nil) {
+                self.clientSessionId = AnalyticsHelper.shared.sessionID
+                self.elementsSessionConfigId = elementsSessionConfigId
+                self.merchantIntegrationSource = "elements"
+                self.merchantIntegrationSubtype = "mobile"
+                self.merchantIntegrationVersion = "stripe-ios/\(StripeAPIConfiguration.STPSDKVersion)"
+                self.paymentIntentCreationFlow = paymentIntentCreationFlow?.rawValue
+                self.paymentMethodSelectionFlow = paymentMethodSelectionFlow?.rawValue
+            }
+
             @_spi(STP) public var _additionalParametersStorage: NonEncodableParameters?
         }
 

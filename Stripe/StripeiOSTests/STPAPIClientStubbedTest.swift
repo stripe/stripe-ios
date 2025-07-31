@@ -77,7 +77,7 @@ class STPAPIClientStubbedTest: APIStubbedTestCase {
                     return item.name == "client_attribution_metadata[elements_session_config_id]" && item.value == elementsSessionConfigId
                 }), shouldContainClientAttributionMetadata)
             }
-            if let intentCreationFlow = clientAttributionMetadata.paymentIntentCreationFlow?.rawValue {
+            if let intentCreationFlow = clientAttributionMetadata.paymentIntentCreationFlow {
                 XCTAssertEqual(queryItems.contains(where: { item in
                     if let base {
                         return item.name == "\(base)[client_attribution_metadata][payment_intent_creation_flow]" && item.value == intentCreationFlow
@@ -85,7 +85,7 @@ class STPAPIClientStubbedTest: APIStubbedTestCase {
                     return item.name == "client_attribution_metadata[payment_intent_creation_flow]" && item.value == intentCreationFlow
                 }), shouldContainClientAttributionMetadata)
             }
-            if let paymentMethodSelectionFlow = clientAttributionMetadata.paymentMethodSelectionFlow?.rawValue {
+            if let paymentMethodSelectionFlow = clientAttributionMetadata.paymentMethodSelectionFlow {
                 XCTAssertEqual(queryItems.contains(where: { item in
                     if let base {
                         return item.name == "\(base)[client_attribution_metadata][payment_method_selection_flow]" && item.value == paymentMethodSelectionFlow
