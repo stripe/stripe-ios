@@ -103,7 +103,7 @@ class STPAPIClientStubbedTest: APIStubbedTestCase {
         let sut = stubbedAPIClient()
         AnalyticsHelper.shared.generateSessionID()
         let clientAttributionMetadata: STPClientAttributionMetadata = STPClientAttributionMetadata(elementsSessionConfigId: "elements_session_config_id", paymentIntentCreationFlow: .deferred, paymentMethodSelectionFlow: .automatic)
-        var paymentMethodParams: STPPaymentMethodParams = ._testValidCardValue()
+        let paymentMethodParams: STPPaymentMethodParams = ._testValidCardValue()
         paymentMethodParams.clientAttributionMetadata = clientAttributionMetadata
         stubClientAttributionMetadata(clientAttributionMetadata: clientAttributionMetadata)
         let e = expectation(description: "")
