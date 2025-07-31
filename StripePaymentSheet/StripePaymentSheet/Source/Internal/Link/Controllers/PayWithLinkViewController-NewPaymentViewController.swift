@@ -25,12 +25,12 @@ extension PayWithLinkViewController {
         let isAddingFirstPaymentMethod: Bool
 
         private lazy var errorLabel: UILabel = {
-            return ElementsUI.makeErrorLabel(theme: context.configuration.linkUIAppearance.asElementsTheme)
+            return ElementsUI.makeErrorLabel(theme: context.configuration.appearance.asElementsTheme)
         }()
 
         private lazy var confirmButton: ConfirmButton = .makeLinkButton(
             callToAction: context.callToAction,
-            appearance: context.configuration.linkUIAppearance,
+            appearance: context.configuration.appearance,
             // Use a compact button if we are also displaying the Apple Pay button.
             compact: shouldShowApplePayButton
         ) { [weak self] in
@@ -79,10 +79,6 @@ extension PayWithLinkViewController {
         private func makeConfiguration() -> PaymentElementConfiguration {
             var configuration = context.configuration
             configuration.linkPaymentMethodsOnly = true
-
-            // reconfigure `appearance` to use `linkUIAppearance` so all non-Link-specific
-            // UI gets appropriately customized for our Link use cases.
-            configuration.appearance = configuration.linkUIAppearance
 
             configuration.cardBrandAcceptance = context.elementsSession.linkCardBrandFilteringEnabled ? configuration.cardBrandAcceptance : .all
 

@@ -136,7 +136,7 @@ import UIKit
                 var configuration = PaymentSheet.Configuration()
 
                 if let appearance = appearance {
-                    configuration.linkUIAppearance = appearance
+                    configuration.appearance = appearance
                 }
 
                 configuration.style = userInterfaceStyle

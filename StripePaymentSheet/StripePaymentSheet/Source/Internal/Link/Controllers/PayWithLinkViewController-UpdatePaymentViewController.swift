@@ -47,13 +47,13 @@ extension PayWithLinkViewController {
 
         private lazy var updateButton: ConfirmButton = .makeLinkButton(
             callToAction: isBillingDetailsUpdateFlow ? context.callToAction : .custom(title: String.Localized.update_card),
-            appearance: configuration.linkUIAppearance
+            appearance: configuration.appearance
         ) { [weak self] in
             self?.updateCard()
         }
 
         private lazy var errorLabel: UILabel = {
-            return ElementsUI.makeErrorLabel(theme: configuration.linkUIAppearance.asElementsTheme)
+            return ElementsUI.makeErrorLabel(theme: configuration.appearance.asElementsTheme)
         }()
 
         private lazy var cardEditElement = LinkPaymentMethodFormElement(

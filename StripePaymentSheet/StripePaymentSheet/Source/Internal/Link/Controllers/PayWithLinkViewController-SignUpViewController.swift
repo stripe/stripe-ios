@@ -25,7 +25,7 @@ extension PayWithLinkViewController {
                 linkAccount: linkAccount,
                 country: context.elementsSession.countryCode,
                 defaultBillingDetails: context.configuration.defaultBillingDetails,
-                theme: context.configuration.linkUIAppearance.asElementsTheme
+                theme: context.configuration.appearance.asElementsTheme
             )
             viewController.delegate = self
             viewController.view.backgroundColor = .clear

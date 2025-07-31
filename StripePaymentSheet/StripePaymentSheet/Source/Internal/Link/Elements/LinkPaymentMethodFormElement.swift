@@ -258,7 +258,7 @@ final class LinkPaymentMethodFormElement: Element {
     }()
 
     private var theme: ElementsAppearance {
-        configuration.linkUIAppearance.asElementsTheme
+        configuration.appearance.asElementsTheme
     }
 
     init(paymentMethod: ConsumerPaymentDetails, configuration: PaymentElementConfiguration, useCVCPlaceholder: Bool) {

@@ -26,7 +26,7 @@ final class LinkVerificationController {
         self.verificationViewController = LinkVerificationViewController(
             mode: mode,
             linkAccount: linkAccount,
-            appearance: configuration.linkUIAppearance
+            appearance: configuration.appearance
         )
         verificationViewController.delegate = self
         configuration.style.configure(verificationViewController)

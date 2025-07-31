@@ -42,7 +42,7 @@ extension PayWithLinkViewController {
 
         private lazy var confirmButton = ConfirmButton.makeLinkButton(
             callToAction: viewModel.confirmButtonCallToAction,
-            appearance: context.configuration.linkUIAppearance,
+            appearance: context.configuration.appearance,
             compact: viewModel.shouldUseCompactConfirmButton
         ) { [weak self] in
             guard let self else {
@@ -150,7 +150,7 @@ extension PayWithLinkViewController {
         }
 
         private var theme: ElementsAppearance {
-            context.configuration.linkUIAppearance.asElementsTheme
+            context.configuration.appearance.asElementsTheme
         }
 
         #if !os(visionOS)
