@@ -44,7 +44,7 @@
     paymentIntentJSON[@"payment_method"] = [STPTestUtils jsonNamed:STPTestJSONPaymentMethodCard];
     STPPaymentIntent *paymentIntent = [STPPaymentIntent decodedObjectFromAPIResponse:paymentIntentJSON];
     
-    OCMStub([apiClient confirmPaymentIntentWithParams:[OCMArg any] expand:[OCMArg any] additionalClientAttributionMetadata:[OCMArg any] completion:[OCMArg any]]).andDo(^(NSInvocation *invocation) {
+    OCMStub([apiClient confirmPaymentIntentWithParams:[OCMArg any] expand:[OCMArg any] clientAttributionMetadata:[OCMArg any] completion:[OCMArg any]]).andDo(^(NSInvocation *invocation) {
         void (^handler)(STPPaymentIntent *paymentIntent, __unused NSError * _Nullable error);
         [invocation getArgument:&handler atIndex:5];
         handler(paymentIntent, nil);

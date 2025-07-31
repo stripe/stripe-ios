@@ -160,17 +160,22 @@ extension PaymentSheet {
             completion(makePaymentSheetResult(for: status, error: error), nil)
         }
 
-        let additionalClientAttributionMetadata: [String: String] = {
+        let clientAttributionMetadata: STPClientAttributionMetadata = {
             switch intent {
             case .paymentIntent(let paymentIntent):
-                makePaymentIntentClientAttributionMetadata(paymentIntent, elementsSessionConfigId: elementsSession.sessionID)
+                return .init(elementsSessionConfigId: elementsSession.sessionID,
+                             paymentIntentCreationFlow: .standard,
+                             paymentMethodSelectionFlow: paymentIntent.automaticPaymentMethods?.enabled ?? false ? .automatic : .merchantSpecified)
             case .setupIntent(let setupIntent):
-                makeSetupIntentClientAttributionMetadata(setupIntent, elementsSessionConfigId: elementsSession.sessionID)
+                return .init(elementsSessionConfigId: elementsSession.sessionID,
+                             paymentIntentCreationFlow: .standard,
+                             paymentMethodSelectionFlow: setupIntent.automaticPaymentMethods?.enabled ?? false ? .automatic : .merchantSpecified)
             case .deferredIntent(let intentConfig):
-                makeDeferredClientAttributionMetadata(intentConfig, elementsSessionConfigId: elementsSession.sessionID)
+                return .init(elementsSessionConfigId: elementsSession.sessionID,
+                             paymentIntentCreationFlow: .deferred,
+                             paymentMethodSelectionFlow: intentConfig.paymentMethodTypes?.isEmpty ?? true ? .automatic : .merchantSpecified)
             }
         }()
-
         switch paymentOption {
         // MARK: - Apple Pay
         case .applePay:
@@ -218,7 +223,7 @@ extension PaymentSheet {
                 paymentHandler.confirmPayment(
                     params,
                     with: authenticationContext,
-                    additionalClientAttributionMetadata: additionalClientAttributionMetadata,
+                    clientAttributionMetadata: clientAttributionMetadata,
                     completion: { actionStatus, paymentIntent, error in
                         if let paymentIntent {
                             setDefaultPaymentMethodIfNecessary(actionStatus: actionStatus, intent: .paymentIntent(paymentIntent), configuration: configuration, paymentMethodSetAsDefault: elementsSession.paymentMethodSetAsDefaultForPaymentSheet)
@@ -241,7 +246,7 @@ extension PaymentSheet {
                 paymentHandler.confirmSetupIntent(
                     setupIntentParams,
                     with: authenticationContext,
-                    additionalClientAttributionMetadata: additionalClientAttributionMetadata,
+                    clientAttributionMetadata: clientAttributionMetadata,
                     completion: { actionStatus, setupIntent, error in
                         if let setupIntent {
                             setDefaultPaymentMethodIfNecessary(actionStatus: actionStatus, intent: .setupIntent(setupIntent), configuration: configuration, paymentMethodSetAsDefault: elementsSession.paymentMethodSetAsDefaultForPaymentSheet)
@@ -264,7 +269,7 @@ extension PaymentSheet {
                     paymentHandler: paymentHandler,
                     isFlowController: isFlowController,
                     allowsSetAsDefaultPM: elementsSession.paymentMethodSetAsDefaultForPaymentSheet,
-                    additionalClientAttributionMetadata: additionalClientAttributionMetadata,
+                    clientAttributionMetadata: clientAttributionMetadata,
                     completion: completion
                 )
             }
@@ -618,30 +623,6 @@ extension PaymentSheet {
                 return setupIntent.paymentMethod
             }
         }
-    }
-
-    static func makePaymentIntentClientAttributionMetadata(_ paymentIntent: STPPaymentIntent, elementsSessionConfigId: String) -> [String: String] {
-        return [
-            "elements_session_config_id": elementsSessionConfigId,
-            "payment_intent_creation_flow": "standard",
-            "payment_method_selection_flow": paymentIntent.automaticPaymentMethods?.enabled ?? false ? "automatic" : "merchant_specified",
-        ]
-    }
-
-    static func makeSetupIntentClientAttributionMetadata(_ setupIntent: STPSetupIntent, elementsSessionConfigId: String) -> [String: String] {
-        return [
-            "elements_session_config_id": elementsSessionConfigId,
-            "payment_intent_creation_flow": "standard",
-            "payment_method_selection_flow": setupIntent.automaticPaymentMethods?.enabled ?? false ? "automatic" : "merchant_specified",
-        ]
-    }
-
-    static func makeDeferredClientAttributionMetadata(_ intentConfig: IntentConfiguration, elementsSessionConfigId: String) -> [String: String] {
-        return [
-            "elements_session_config_id": elementsSessionConfigId,
-            "payment_intent_creation_flow": "deferred",
-            "payment_method_selection_flow": intentConfig.paymentMethodTypes?.isEmpty ?? true ? "automatic" : "merchant_specified",
-        ]
     }
 
     /// A helper method that sets the Customer's default payment method if necessary.

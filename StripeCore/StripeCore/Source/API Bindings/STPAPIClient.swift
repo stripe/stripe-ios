@@ -252,21 +252,19 @@ import UIKit
     // See https://docs.google.com/document/d/11wWdHwWzTJGe_29mHsk71fk-kG4lwvp8TLBBf4ws9JM/edit?usp=sharing
     @_spi(STP) public class func paramsAddingClientAttributionMetadata(
         _ params: [String: Any],
-        additionalClientAttributionMetadata: [String: String] = [:]
+        clientAttributionMetadata: STPClientAttributionMetadata = .init()
     ) -> [String: Any] {
         stpAssert(
             params["client_attribution_metadata"] == nil,
             "Overwriting existing client_attribution_metadata"
         )
         var newParams = params
-        var clientAttributionMetadata = ["merchant_integration_source": "elements",
-                                         "merchant_integration_subtype": "mobile",
-                                         "merchant_integration_version": "stripe-ios/\(StripeAPIConfiguration.STPSDKVersion)", ]
-            .merging(additionalClientAttributionMetadata) { _, new in new }
-        if let clientSessionId = AnalyticsHelper.shared.sessionID {
-            clientAttributionMetadata["client_session_id"] = clientSessionId
+        do {
+            newParams["client_attribution_metadata"] = try clientAttributionMetadata.encodeJSONDictionary()
         }
-        newParams["client_attribution_metadata"] = clientAttributionMetadata
+        catch {
+            stpAssertionFailure("Could not encode clientAttributionMetadata to JSON: \(error)")
+        }
         return newParams
     }
 }
@@ -623,5 +621,59 @@ extension STPAPIClient {
     enum HTTPMethod: String {
         case get = "GET"
         case post = "POST"
+    }
+}
+
+@_spi(STP) @objc public class STPClientAttributionMetadata: NSObject, Encodable {
+
+    public enum IntentCreationFlow: String {
+        case standard
+        case deferred
+    }
+
+    public enum PaymentMethodSelectionFlow: String {
+        case automatic
+        case merchantSpecified = "merchant_specified"
+    }
+
+    let clientSessionId: String?
+    var elementsSessionConfigId: String?
+    let merchantIntegrationSource: String
+    let merchantIntegrationSubtype: String
+    let merchantIntegrationVersion: String
+    var paymentIntentCreationFlow: IntentCreationFlow?
+    var paymentMethodSelectionFlow: PaymentMethodSelectionFlow?
+
+    public init(elementsSessionConfigId: String? = nil,
+                paymentIntentCreationFlow: IntentCreationFlow? = nil,
+                paymentMethodSelectionFlow: PaymentMethodSelectionFlow? = nil) {
+        self.clientSessionId = AnalyticsHelper.shared.sessionID
+        self.elementsSessionConfigId = elementsSessionConfigId
+        self.merchantIntegrationSource = "elements"
+        self.merchantIntegrationSubtype = "mobile"
+        self.merchantIntegrationVersion = "stripe-ios/\(StripeAPIConfiguration.STPSDKVersion)"
+        self.paymentIntentCreationFlow = paymentIntentCreationFlow
+        self.paymentMethodSelectionFlow = paymentMethodSelectionFlow
+    }
+
+    enum CodingKeys: String, CodingKey {
+        case clientSessionId = "client_session_id"
+        case elementsSessionConfigId = "elements_session_config_id"
+        case merchantIntegrationSource = "merchant_integration_source"
+        case merchantIntegrationSubtype = "merchant_integration_subtype"
+        case merchantIntegrationVersion = "merchant_integration_version"
+        case paymentIntentCreationFlow = "payment_intent_creation_flow"
+        case paymentMethodSelectionFlow = "payment_method_selection_flow"
+    }
+
+    public func encode(to encoder: any Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encodeIfPresent(clientSessionId, forKey: .clientSessionId)
+        try container.encodeIfPresent(elementsSessionConfigId, forKey: .elementsSessionConfigId)
+        try container.encode(merchantIntegrationSource, forKey: .merchantIntegrationSource)
+        try container.encode(merchantIntegrationSubtype, forKey: .merchantIntegrationSubtype)
+        try container.encode(merchantIntegrationVersion, forKey: .merchantIntegrationVersion)
+        try container.encodeIfPresent(paymentIntentCreationFlow?.rawValue, forKey: .paymentIntentCreationFlow)
+        try container.encodeIfPresent(paymentMethodSelectionFlow?.rawValue, forKey: .paymentMethodSelectionFlow)
     }
 }
