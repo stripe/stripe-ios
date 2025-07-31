@@ -161,8 +161,8 @@
 /* Instructional text for scanning selfies */
 "Position your face in the center of the frame." = "Position your face in the center of the frame.";
 
-/* Instructional text for scanning front of a identity card */
-"Position your identity card in the center of the frame" = "Position your identity card in the center of the frame";
+/* Instructional text for scanning front of a identity document */
+"Position your identity document in the center of the frame" = "Position your identity document in the center of the frame";
 
 /* Button text displayed to the user to retake photo */
 "Retake Photos" = "Retake Photos";

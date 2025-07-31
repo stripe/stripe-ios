@@ -84,8 +84,8 @@ extension String.Localized {
 
     static var position_in_center_identity_card: String {
         return STPLocalizedString(
-            "Position your identity card in the center of the frame",
-            "Instructional text for scanning front of a identity card")
+            "Position your identity document in the center of the frame",
+            "Instructional text for scanning front of a identity document")
     }
 
     static var flip_to_other_side_identity_card: String {
