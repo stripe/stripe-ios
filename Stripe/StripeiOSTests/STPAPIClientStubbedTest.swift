@@ -53,12 +53,6 @@ class STPAPIClientStubbedTest: APIStubbedTestCase {
             }), shouldContainClientAttributionMetadata)
             XCTAssertEqual(queryItems.contains(where: { item in
                 if let base {
-                    return item.name == "\(base)[client_attribution_metadata][elements_session_config_id]" && item.value == clientAttributionMetadata.elementsSessionConfigId
-                }
-                return item.name == "client_attribution_metadata[elements_session_config_id]" && item.value == clientAttributionMetadata.elementsSessionConfigId
-            }), shouldContainClientAttributionMetadata)
-            XCTAssertEqual(queryItems.contains(where: { item in
-                if let base {
                     return item.name == "\(base)[client_attribution_metadata][merchant_integration_source]" && item.value == clientAttributionMetadata.merchantIntegrationSource
                 }
                 return item.name == "client_attribution_metadata[merchant_integration_source]" && item.value == "elements"
@@ -75,18 +69,30 @@ class STPAPIClientStubbedTest: APIStubbedTestCase {
                 }
                 return item.name == "client_attribution_metadata[merchant_integration_version]" && item.value == clientAttributionMetadata.merchantIntegrationVersion
             }), shouldContainClientAttributionMetadata)
-            XCTAssertEqual(queryItems.contains(where: { item in
-                if let base {
-                    return item.name == "\(base)[client_attribution_metadata][payment_intent_creation_flow]" && item.value == clientAttributionMetadata.paymentIntentCreationFlow?.rawValue
-                }
-                return item.name == "client_attribution_metadata[payment_intent_creation_flow]" && item.value == clientAttributionMetadata.paymentIntentCreationFlow?.rawValue
-            }), shouldContainClientAttributionMetadata)
-            XCTAssertEqual(queryItems.contains(where: { item in
-                if let base {
-                    return item.name == "\(base)[client_attribution_metadata][payment_method_selection_flow]" && item.value == clientAttributionMetadata.paymentMethodSelectionFlow?.rawValue
-                }
-                return item.name == "client_attribution_metadata[payment_method_selection_flow]" && item.value == clientAttributionMetadata.paymentMethodSelectionFlow?.rawValue
-            }), shouldContainClientAttributionMetadata)
+            if let elementsSessionConfigId = clientAttributionMetadata.elementsSessionConfigId {
+                XCTAssertEqual(queryItems.contains(where: { item in
+                    if let base {
+                        return item.name == "\(base)[client_attribution_metadata][elements_session_config_id]" && item.value == elementsSessionConfigId
+                    }
+                    return item.name == "client_attribution_metadata[elements_session_config_id]" && item.value == elementsSessionConfigId
+                }), shouldContainClientAttributionMetadata)
+            }
+            if let intentCreationFlow = clientAttributionMetadata.paymentIntentCreationFlow?.rawValue {
+                XCTAssertEqual(queryItems.contains(where: { item in
+                    if let base {
+                        return item.name == "\(base)[client_attribution_metadata][payment_intent_creation_flow]" && item.value == intentCreationFlow
+                    }
+                    return item.name == "client_attribution_metadata[payment_intent_creation_flow]" && item.value == intentCreationFlow
+                }), shouldContainClientAttributionMetadata)
+            }
+            if let paymentMethodSelectionFlow = clientAttributionMetadata.paymentMethodSelectionFlow?.rawValue {
+                XCTAssertEqual(queryItems.contains(where: { item in
+                    if let base {
+                        return item.name == "\(base)[client_attribution_metadata][payment_method_selection_flow]" && item.value == paymentMethodSelectionFlow
+                    }
+                    return item.name == "client_attribution_metadata[payment_method_selection_flow]" && item.value == paymentMethodSelectionFlow
+                }), shouldContainClientAttributionMetadata)
+            }
             return true
         } response: { _ in
             return .init()
