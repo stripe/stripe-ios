@@ -212,6 +212,45 @@ class LinkInlineSignupViewModelTests: STPNetworkStubbingTestCase {
         XCTAssertTrue(sut.shouldShowEmailField)
         XCTAssertTrue(sut.shouldShowPhoneField)
     }
+
+    func test_signupOptIn_shows_no_fields() {
+        let sut = makeSUT(
+            country: "US",
+            showCheckbox: true,
+            hasAccountObject: true,
+            allowsDefaultOptIn: true,
+            signupOptInFeatureEnabled: true,
+            signupOptInInitialValue: true
+        )
+        XCTAssertFalse(sut.shouldShowDefaultOptInView)
+        XCTAssertFalse(sut.shouldShowEmailField)
+        XCTAssertFalse(sut.shouldShowPhoneField)
+        XCTAssertFalse(sut.shouldShowNameField)
+    }
+
+    func test_signupOptIn_prechecked() {
+        let sut = makeSUT(
+            country: "US",
+            showCheckbox: true,
+            hasAccountObject: true,
+            allowsDefaultOptIn: true,
+            signupOptInFeatureEnabled: true,
+            signupOptInInitialValue: true
+        )
+        XCTAssertTrue(sut.saveCheckboxChecked)
+    }
+
+    func test_signupOptIn_not_prechecked() {
+        let sut = makeSUT(
+            country: "US",
+            showCheckbox: true,
+            hasAccountObject: true,
+            allowsDefaultOptIn: true,
+            signupOptInFeatureEnabled: true,
+            signupOptInInitialValue: false
+        )
+        XCTAssertFalse(sut.saveCheckboxChecked)
+    }
 }
 
 extension LinkInlineSignupViewModelTests {
