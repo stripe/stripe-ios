@@ -160,3 +160,13 @@ extension PaymentSheet.Appearance.EmbeddedPaymentElement.Row.Style {
         }
     }
 }
+
+extension Dictionary where Key == STPPaymentMethodType, Value == PaymentSheet.TermsDisplay {
+    var analyticValue: [String: Any] {
+        var result: [String: Any] = [:]
+        for (paymentMethodType, termsDisplayValue) in self {
+            result[paymentMethodType.identifier] = termsDisplayValue.analyticValue
+        }
+        return result
+    }
+}
