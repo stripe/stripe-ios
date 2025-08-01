@@ -1,3 +1,7 @@
+## X.X.X
+### PaymentSheet
+* [Fixed] Updated default spacing of form elements in PaymentSheet.
+
 ## 24.18.1 2025-07-29
 * [Fixed] Improved Klarna payments when using Universal Links.
 
