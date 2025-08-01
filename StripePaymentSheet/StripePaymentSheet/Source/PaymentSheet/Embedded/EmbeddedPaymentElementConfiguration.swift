@@ -187,6 +187,18 @@ extension EmbeddedPaymentElement {
         public var rowSelectionBehavior: RowSelectionBehavior = .default
 
         /// Initializes a Configuration with default values
-        public init() {}
+        public init() {
+            validateConfiguration()
+        }
+    }
+}
+
+extension EmbeddedPaymentElement.Configuration {
+    private func validateConfiguration() {
+        for (paymentMethodType, _) in termsDisplay {
+            if paymentMethodType != .card {
+                stpAssertionFailure("EmbeddedPaymentElement.Configuration termsDisplay contains unsupported payment method type: \(paymentMethodType)")
+            }
+        }
     }
 }

@@ -172,7 +172,9 @@ extension PaymentSheet {
         @_spi(DashboardOnly) public var disableWalletPaymentMethodFiltering: Bool = false
 
         /// Initializes a Configuration with default values
-        public init() {}
+        public init() {
+            validateConfiguration()
+        }
 
         /// Override country for test purposes
         @_spi(STP) public var userOverrideCountry: String?
@@ -896,6 +898,15 @@ extension PaymentSheet.CustomerConfiguration {
             return legacy
         case .customerSession:
             return elementsSession?.customer?.customerSession.apiKey
+        }
+    }
+}
+extension PaymentSheet.Configuration {
+    private func validateConfiguration() {
+        for (paymentMethodType, _) in termsDisplay {
+            if paymentMethodType != .card {
+                stpAssertionFailure("PaymentSheet.Configuration termsDisplay contains unsupported payment method type: \(paymentMethodType)")
+            }
         }
     }
 }
