@@ -17,7 +17,12 @@ extension PayWithLinkViewController {
         private let linkAccount: PaymentSheetLinkAccount
 
         private lazy var verificationVC: LinkVerificationViewController = {
-            let vc = LinkVerificationViewController(mode: .embedded, linkAccount: linkAccount)
+            let vc = LinkVerificationViewController(
+                mode: .embedded,
+                linkAccount: linkAccount,
+                elementsSession: context.elementsSession,
+                shouldLoadConsumerState: context.canSkipWalletAfterVerification
+            )
             vc.delegate = self
             vc.view.backgroundColor = .clear
             return vc
@@ -66,8 +71,8 @@ extension PayWithLinkViewController.VerifyAccountViewController: LinkVerificatio
         didFinishWithResult result: LinkVerificationViewController.VerificationResult
     ) {
         switch result {
-        case .completed:
-            coordinator?.accountUpdated(linkAccount)
+        case .completed(let consumerState):
+            coordinator?.accountUpdated(linkAccount, consumerState)
         case .canceled:
             coordinator?.logout(cancel: false)
         case .failed(let error):

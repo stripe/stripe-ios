@@ -488,6 +488,23 @@ struct LinkPMDisplayDetails {
 
         cookieStore.write(key: .lastLogoutEmail, value: hashedEmail)
     }
+
+    func loadLinkConsumerState(
+        supportedPaymentDetailsTypes: [ConsumerPaymentDetails.DetailsType],
+        shouldFetchShippingAddress: Bool
+    ) async throws -> LinkConsumerState {
+        async let paymentDetailsResult = listPaymentDetails(supportedTypes: supportedPaymentDetailsTypes)
+        async let shippingAddressResult = shouldFetchShippingAddress ? listShippingAddress() : nil
+
+        let paymentDetails = try await paymentDetailsResult
+        // Ignore any errors that might happen here.
+        let shippingAddressResponse = try? await shippingAddressResult
+
+        return LinkConsumerState(
+            paymentDetails: paymentDetails,
+            shippingAddresses: shippingAddressResponse?.shippingAddresses
+        )
+    }
 }
 
 // MARK: - Equatable

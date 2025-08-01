@@ -69,7 +69,7 @@ extension PayWithLinkViewController.SignUpViewController: LinkSignUpViewControll
         _ controller: LinkSignUpViewController,
         didCompleteSignUpWith linkAccount: PaymentSheetLinkAccount
     ) {
-        coordinator?.accountUpdated(linkAccount)
+        coordinator?.accountUpdated(linkAccount, nil)
     }
 
     func signUpController(

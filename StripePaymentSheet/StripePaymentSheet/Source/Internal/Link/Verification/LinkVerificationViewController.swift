@@ -22,8 +22,8 @@ protocol LinkVerificationViewControllerDelegate: AnyObject {
 @objc(STP_Internal_LinkVerificationViewController)
 final class LinkVerificationViewController: UIViewController {
     enum VerificationResult {
-        /// Verification was completed successfully.
-        case completed
+        /// Verification was completed successfully. If `shouldLoadConsumerState` is true, this will contain the `LinkConsumerState`.
+        case completed(LinkConsumerState?)
         /// Verification was canceled by the user.
         case canceled
         /// Verification failed due to an unrecoverable error.
@@ -34,6 +34,8 @@ final class LinkVerificationViewController: UIViewController {
 
     let mode: LinkVerificationView.Mode
     let linkAccount: PaymentSheetLinkAccount
+    let elementsSession: STPElementsSession
+    let shouldLoadConsumerState: Bool
 
     private let appearance: LinkAppearance?
 
@@ -59,11 +61,15 @@ final class LinkVerificationViewController: UIViewController {
     required init(
         mode: LinkVerificationView.Mode = .modal,
         linkAccount: PaymentSheetLinkAccount,
-        appearance: LinkAppearance? = nil
+        appearance: LinkAppearance? = nil,
+        elementsSession: STPElementsSession,
+        shouldLoadConsumerState: Bool
     ) {
         self.mode = mode
         self.linkAccount = linkAccount
         self.appearance = appearance
+        self.elementsSession = elementsSession
+        self.shouldLoadConsumerState = shouldLoadConsumerState
         super.init(nibName: nil, bundle: nil)
 
         if mode.requiresModalPresentation {
@@ -128,7 +134,7 @@ final class LinkVerificationViewController: UIViewController {
                         self?.verificationView.codeField.becomeFirstResponder()
                     } else {
                         // No OTP collection is required.
-                        self?.finish(withResult: .completed)
+                        self?.finish(withResult: .completed(nil))
                     }
                 case .failure(let error):
                     STPAnalyticsClient.sharedClient.logLink2FAStartFailure()
@@ -205,8 +211,7 @@ extension LinkVerificationViewController: LinkVerificationViewDelegate {
         linkAccount.verify(with: code) { [weak self] result in
             switch result {
             case .success:
-                self?.finish(withResult: .completed)
-                STPAnalyticsClient.sharedClient.logLink2FAComplete()
+                self?.handleSuccessfulVerification()
             case .failure(let error):
                 view.codeField.performInvalidCodeAnimation()
                 view.errorMessage = LinkUtils.getLocalizedErrorMessage(from: error)
@@ -215,6 +220,37 @@ extension LinkVerificationViewController: LinkVerificationViewDelegate {
         }
     }
 
+    private func handleSuccessfulVerification() {
+        guard shouldLoadConsumerState else {
+            finish(withResult: .completed(nil))
+            STPAnalyticsClient.sharedClient.logLink2FAComplete()
+            return
+        }
+
+        Task {
+            let consumerState = await loadLinkConsumerState()
+            finish(withResult: .completed(consumerState))
+            STPAnalyticsClient.sharedClient.logLink2FAComplete()
+        }
+    }
+
+    private func loadLinkConsumerState() async -> LinkConsumerState? {
+        do {
+            guard let linkAccount = LinkAccountContext.shared.account else {
+                return nil
+            }
+            let supportedPaymentDetailsTypes = linkAccount
+                .supportedPaymentDetailsTypes(for: elementsSession)
+                .toSortedArray()
+            let linkConsumerState = try await linkAccount.loadLinkConsumerState(
+                supportedPaymentDetailsTypes: supportedPaymentDetailsTypes,
+                shouldFetchShippingAddress: true
+            )
+            return linkConsumerState
+        } catch {
+            return nil
+        }
+    }
 }
 
 extension LinkVerificationViewController {

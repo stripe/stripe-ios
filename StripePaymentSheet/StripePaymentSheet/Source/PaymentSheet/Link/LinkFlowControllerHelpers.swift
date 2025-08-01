@@ -33,7 +33,9 @@ extension UIViewController {
             let verificationController = LinkVerificationController(
                 mode: .inlineLogin,
                 linkAccount: linkAccount,
-                configuration: configuration
+                configuration: configuration,
+                elementsSession: elementsSession,
+                shouldLoadConsumerState: false
             )
 
             verificationController.present(from: bottomSheetController ?? self) { [weak self] result in
@@ -83,6 +85,7 @@ extension UIViewController {
         payWithLinkController.presentForPaymentMethodSelection(
             from: self,
             initiallySelectedPaymentDetailsID: selectedPaymentDetailsID,
+            canSkipWalletAfterVerification: false,
             completion: callback
         )
     }

@@ -330,6 +330,24 @@ extension LinkPaymentMethodPicker {
 
 extension ConsumerPaymentDetails {
 
+    /// Returns whether the provided `paymentDetails` is missing any of the required billing details.
+    func isMissingRequestedBillingDetails(
+        for configuration: PaymentElementConfiguration,
+        in consumerSession: ConsumerSession?
+    ) -> Bool {
+        guard configuration.link.collectMissingBillingDetailsForExistingPaymentMethods else {
+            // Don't recollect even if details are missing
+            return false
+        }
+
+        let paymentDetailsAreSupported = supports(
+            configuration.billingDetailsCollectionConfiguration,
+            in: consumerSession
+        )
+
+        return !paymentDetailsAreSupported
+    }
+
     /// Returns whether the `ConsumerPaymentDetails` contains all the billing details fields requested by the provided `billingDetailsConfig`.
     /// We use the `consumerSession` to populate any missing fields from the Link account.
     func supports(
