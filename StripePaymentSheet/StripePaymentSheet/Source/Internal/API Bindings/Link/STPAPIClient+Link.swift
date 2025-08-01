@@ -101,11 +101,11 @@ extension STPAPIClient {
                 "request_surface": "ios_payment_element",
                 "email_address": email.lowercased(),
                 "locale": locale.toLanguageTag(),
-                "country_inferring_method": "PHONE_NUMBER",
             ]
 
             if let phoneNumber {
                 parameters["phone_number"] = phoneNumber
+                parameters["country_inferring_method"] = "PHONE_NUMBER"
             }
 
             if let legalName = legalName {
