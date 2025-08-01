@@ -229,6 +229,7 @@ class STPPaymentHandlerTests: APIStubbedTestCase {
         )
         let setupIntent = STPSetupIntent(
             stripeID: "test",
+            automaticPaymentMethods: nil,
             clientSecret: "seti_123_secret_123",
             created: Date(),
             customerID: nil,

@@ -180,47 +180,76 @@ class STPAPIClientStubbedTest: APIStubbedTestCase {
         waitForExpectations(timeout: 10)
     }
 
-    private func stubClientAttributionMetadata(base: String? = nil, shouldContainClientAttributionMetadata: Bool = true) {
-            stub { urlRequest in
-                guard let queryItems = urlRequest.queryItems else {
-                    return false
-                }
-                XCTAssertEqual(queryItems.contains(where: { item in
-                    if let base {
-                        return item.name == "\(base)[client_attribution_metadata][client_session_id]" && item.value == AnalyticsHelper.shared.sessionID
-                    }
-                    return item.name == "client_attribution_metadata[client_session_id]" && item.value == AnalyticsHelper.shared.sessionID
-                }), shouldContainClientAttributionMetadata)
-                XCTAssertEqual(queryItems.contains(where: { item in
-                    if let base {
-                        return item.name == "\(base)[client_attribution_metadata][merchant_integration_source]" && item.value == "elements"
-                    }
-                    return item.name == "client_attribution_metadata[merchant_integration_source]" && item.value == "elements"
-                }), shouldContainClientAttributionMetadata)
-                XCTAssertEqual(queryItems.contains(where: { item in
-                    if let base {
-                        return item.name == "\(base)[client_attribution_metadata][merchant_integration_subtype]" && item.value == "mobile"
-                    }
-                    return item.name == "client_attribution_metadata[merchant_integration_subtype]" && item.value == "mobile"
-                }), shouldContainClientAttributionMetadata)
-                XCTAssertEqual(queryItems.contains(where: { item in
-                    if let base {
-                        return item.name == "\(base)[client_attribution_metadata][merchant_integration_version]" && item.value == "stripe-ios/\(StripeAPIConfiguration.STPSDKVersion)"
-                    }
-                    return item.name == "client_attribution_metadata[merchant_integration_version]" && item.value == "stripe-ios/\(StripeAPIConfiguration.STPSDKVersion)"
-                }), shouldContainClientAttributionMetadata)
-                return true
-            } response: { _ in
-                return .init()
+    private func stubClientAttributionMetadata(base: String? = nil,
+                                               shouldContainClientAttributionMetadata: Bool = true,
+                                               clientAttributionMetadata: STPClientAttributionMetadata = STPClientAttributionMetadata()) {
+        stub { urlRequest in
+            guard let queryItems = urlRequest.queryItems else {
+                return false
             }
+            XCTAssertEqual(queryItems.contains(where: { item in
+                if let base {
+                    return item.name == "\(base)[client_attribution_metadata][client_session_id]" && item.value == AnalyticsHelper.shared.sessionID
+                }
+                return item.name == "client_attribution_metadata[client_session_id]" && item.value == AnalyticsHelper.shared.sessionID
+            }), shouldContainClientAttributionMetadata)
+            XCTAssertEqual(queryItems.contains(where: { item in
+                if let base {
+                    return item.name == "\(base)[client_attribution_metadata][merchant_integration_source]" && item.value == "elements"
+                }
+                return item.name == "client_attribution_metadata[merchant_integration_source]" && item.value == "elements"
+            }), shouldContainClientAttributionMetadata)
+            XCTAssertEqual(queryItems.contains(where: { item in
+                if let base {
+                    return item.name == "\(base)[client_attribution_metadata][merchant_integration_subtype]" && item.value == "mobile"
+                }
+                return item.name == "client_attribution_metadata[merchant_integration_subtype]" && item.value == "mobile"
+            }), shouldContainClientAttributionMetadata)
+            XCTAssertEqual(queryItems.contains(where: { item in
+                if let base {
+                    return item.name == "\(base)[client_attribution_metadata][merchant_integration_version]" && item.value == "stripe-ios/\(StripeAPIConfiguration.STPSDKVersion)"
+                }
+                return item.name == "client_attribution_metadata[merchant_integration_version]" && item.value == "stripe-ios/\(StripeAPIConfiguration.STPSDKVersion)"
+            }), shouldContainClientAttributionMetadata)
+            if let elementsSessionConfigId = clientAttributionMetadata.elementsSessionConfigId {
+                XCTAssertEqual(queryItems.contains(where: { item in
+                    if let base {
+                        return item.name == "\(base)[client_attribution_metadata][elements_session_config_id]" && item.value == elementsSessionConfigId
+                    }
+                    return item.name == "client_attribution_metadata[elements_session_config_id]" && item.value == elementsSessionConfigId
+                }), shouldContainClientAttributionMetadata)
+            }
+            if let intentCreationFlow = clientAttributionMetadata.paymentIntentCreationFlow {
+                XCTAssertEqual(queryItems.contains(where: { item in
+                    if let base {
+                        return item.name == "\(base)[client_attribution_metadata][payment_intent_creation_flow]" && item.value == intentCreationFlow
+                    }
+                    return item.name == "client_attribution_metadata[payment_intent_creation_flow]" && item.value == intentCreationFlow
+                }), shouldContainClientAttributionMetadata)
+            }
+            if let paymentMethodSelectionFlow = clientAttributionMetadata.paymentMethodSelectionFlow {
+                XCTAssertEqual(queryItems.contains(where: { item in
+                    if let base {
+                        return item.name == "\(base)[client_attribution_metadata][payment_method_selection_flow]" && item.value == paymentMethodSelectionFlow
+                    }
+                    return item.name == "client_attribution_metadata[payment_method_selection_flow]" && item.value == paymentMethodSelectionFlow
+                }), shouldContainClientAttributionMetadata)
+            }
+            return true
+        } response: { _ in
+            return .init()
         }
+    }
 
     func testCreatePaymentMethodWithClientAttributionMetadata() {
         let sut = stubbedAPIClient()
         AnalyticsHelper.shared.generateSessionID()
-        stubClientAttributionMetadata()
+        let clientAttributionMetadata: STPClientAttributionMetadata = STPClientAttributionMetadata(elementsSessionConfigId: "elements_session_config_id", paymentIntentCreationFlow: .deferred, paymentMethodSelectionFlow: .automatic)
+        let paymentMethodParams: STPPaymentMethodParams = ._testValidCardValue()
+        paymentMethodParams.clientAttributionMetadata = clientAttributionMetadata
+        stubClientAttributionMetadata(clientAttributionMetadata: clientAttributionMetadata)
         let e = expectation(description: "")
-        sut.createPaymentMethod(with: ._testValidCardValue(), additionalPaymentUserAgentValues: []) { _, _ in
+        sut.createPaymentMethod(with: paymentMethodParams) { _, _ in
             e.fulfill()
         }
         waitForExpectations(timeout: 10)
@@ -240,9 +269,11 @@ class STPAPIClientStubbedTest: APIStubbedTestCase {
     func testConfirmPaymentIntentWithClientAttributionMetadata() {
         let sut = stubbedAPIClient()
         AnalyticsHelper.shared.generateSessionID()
-        stubClientAttributionMetadata(base: "payment_method_data")
+        let clientAttributionMetadata: STPClientAttributionMetadata = STPClientAttributionMetadata(elementsSessionConfigId: "elements_session_config_id", paymentIntentCreationFlow: .deferred, paymentMethodSelectionFlow: .automatic)
+        stubClientAttributionMetadata(base: "payment_method_data", clientAttributionMetadata: clientAttributionMetadata)
         let e = expectation(description: "")
         let paymentMethodParams = STPPaymentMethodParams()
+        paymentMethodParams.clientAttributionMetadata = clientAttributionMetadata
         let paymentIntentParams = STPPaymentIntentParams(clientSecret: "pi_123456_secret_654321")
         paymentIntentParams.paymentMethodParams = paymentMethodParams
         sut.confirmPaymentIntent(with: paymentIntentParams) { _, _ in
@@ -267,9 +298,11 @@ class STPAPIClientStubbedTest: APIStubbedTestCase {
     func testConfirmSetupIntentWithClientAttributionMetadata() {
         let sut = stubbedAPIClient()
         AnalyticsHelper.shared.generateSessionID()
-        stubClientAttributionMetadata(base: "payment_method_data")
+        let clientAttributionMetadata: STPClientAttributionMetadata = STPClientAttributionMetadata(elementsSessionConfigId: "elements_session_config_id", paymentIntentCreationFlow: .deferred, paymentMethodSelectionFlow: .automatic)
+        stubClientAttributionMetadata(base: "payment_method_data", shouldContainClientAttributionMetadata: true, clientAttributionMetadata: clientAttributionMetadata)
         let e = expectation(description: "")
         let paymentMethodParams = STPPaymentMethodParams()
+        paymentMethodParams.clientAttributionMetadata = clientAttributionMetadata
         let setupIntentParams = STPSetupIntentConfirmParams(clientSecret: "seti_123456_secret_654321")
         setupIntentParams.paymentMethodParams = paymentMethodParams
         sut.confirmSetupIntent(with: setupIntentParams) { _, _ in
