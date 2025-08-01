@@ -201,6 +201,10 @@ final class IntentConfirmParams {
             paymentMethodParams.allowRedisplay = .always
         }
     }
+
+    func setClientAttributionMetadata(clientAttributionMetadata: STPClientAttributionMetadata) {
+        paymentMethodParams.clientAttributionMetadata = clientAttributionMetadata
+    }
 }
 
 extension STPConfirmPaymentMethodOptions {

@@ -160,6 +160,22 @@ extension PaymentSheet {
             completion(makePaymentSheetResult(for: status, error: error), nil)
         }
 
+        let clientAttributionMetadata: STPClientAttributionMetadata = {
+            switch intent {
+            case .paymentIntent(let paymentIntent):
+                return .init(elementsSessionConfigId: elementsSession.sessionID,
+                             paymentIntentCreationFlow: .standard,
+                             paymentMethodSelectionFlow: paymentIntent.automaticPaymentMethods?.enabled ?? false ? .automatic : .merchantSpecified)
+            case .setupIntent(let setupIntent):
+                return .init(elementsSessionConfigId: elementsSession.sessionID,
+                             paymentIntentCreationFlow: .standard,
+                             paymentMethodSelectionFlow: setupIntent.automaticPaymentMethods?.enabled ?? false ? .automatic : .merchantSpecified)
+            case .deferredIntent(let intentConfig):
+                return .init(elementsSessionConfigId: elementsSession.sessionID,
+                             paymentIntentCreationFlow: .deferred,
+                             paymentMethodSelectionFlow: intentConfig.paymentMethodTypes?.isEmpty ?? true ? .automatic : .merchantSpecified)
+            }
+        }()
         switch paymentOption {
         // MARK: - Apple Pay
         case .applePay:
@@ -191,6 +207,7 @@ extension PaymentSheet {
                 mobilePaymentElementFeatures: elementsSession.customerSessionMobilePaymentElementFeatures,
                 isSettingUp: intent.isSetupFutureUsageSet(for: paymentMethodType)
             )
+            confirmParams.setClientAttributionMetadata(clientAttributionMetadata: clientAttributionMetadata)
             switch intent {
             // MARK: ↪ PaymentIntent
             case .paymentIntent(let paymentIntent):

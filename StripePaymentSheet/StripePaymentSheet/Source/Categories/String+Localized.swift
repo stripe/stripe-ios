@@ -47,15 +47,6 @@ extension String.Localized {
         )
     }
 
-    static var save_your_payment_information_with_link: String {
-        STPLocalizedString(
-                "Save your payment information with Link, and securely check out in 1-click on Link-supported sites.",
-                """
-                Label describing the benefit of signing up for Link.
-                """
-                )
-    }
-
     static var save_for_future_payments: String {
         STPLocalizedString(
             "Save for future payments",

@@ -39,8 +39,7 @@ final class SectionView: UIView {
 
         let stack = UIStackView(arrangedSubviews: [titleLabel, containerView, errorOrSubLabel])
         stack.axis = .vertical
-        stack.spacing = 4
-        stack.setCustomSpacing(8, after: containerView)
+        stack.spacing = ElementsUI.sectionElementInternalSpacing
         addAndPinSubview(stack)
 
         setupBorderLayer()

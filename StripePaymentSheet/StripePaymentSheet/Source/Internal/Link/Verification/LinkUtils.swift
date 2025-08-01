@@ -40,7 +40,7 @@ final class LinkUtils {
     }
 
     static func getLocalizedErrorMessage(from error: Error) -> String {
-        guard let errorCodeString = (error as NSError).userInfo[STPError.stripeErrorCodeKey] as? String,
+        guard let errorCodeString = error._stp_error_code,
               let errorCode = ConsumerErrorCode(rawValue: errorCodeString) else {
             return error.localizedDescription
         }
