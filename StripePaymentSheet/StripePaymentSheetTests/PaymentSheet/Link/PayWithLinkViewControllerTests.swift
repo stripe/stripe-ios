@@ -52,7 +52,7 @@ class PayWithLinkViewControllerTests: XCTestCase {
         )
 
         // Now make the fake PayWithLinkViewController and present it
-        let vc = PayWithLinkViewController(intent: ._testValue(), linkAccount: nil, elementsSession: ._testValue(intent: ._testValue()), configuration: config, analyticsHelper: ._testValue())
+        let vc = PayWithLinkViewController(intent: ._testValue(), linkAccount: nil, elementsSession: ._testValue(intent: ._testValue()), configuration: config, canSkipWalletAfterVerification: false, analyticsHelper: ._testValue())
         vc.payWithLinkDelegate = paymentSheet
         hostVC.present(vc, animated: true, completion: {})
 

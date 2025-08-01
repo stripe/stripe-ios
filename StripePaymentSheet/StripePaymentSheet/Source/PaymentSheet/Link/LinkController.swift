@@ -223,7 +223,9 @@ import UIKit
         let verificationController = LinkVerificationController(
             mode: .modal,
             linkAccount: linkAccount,
-            configuration: configuration
+            configuration: configuration,
+            elementsSession: elementsSession,
+            shouldLoadConsumerState: false
         )
 
         verificationController.present(from: viewController) { result in
