@@ -21,9 +21,16 @@ final class LinkVerificationController {
     init(
         mode: LinkVerificationView.Mode = .modal,
         linkAccount: PaymentSheetLinkAccount,
-        configuration: PaymentElementConfiguration
+        configuration: PaymentElementConfiguration,
+        elementsSession: STPElementsSession,
+        shouldLoadConsumerState: Bool
     ) {
-        self.verificationViewController = LinkVerificationViewController(mode: mode, linkAccount: linkAccount)
+        self.verificationViewController = LinkVerificationViewController(
+            mode: mode,
+            linkAccount: linkAccount,
+            elementsSession: elementsSession,
+            shouldLoadConsumerState: shouldLoadConsumerState
+        )
         verificationViewController.delegate = self
         configuration.style.configure(verificationViewController)
     }

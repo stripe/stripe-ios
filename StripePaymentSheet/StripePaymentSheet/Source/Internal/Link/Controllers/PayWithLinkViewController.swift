@@ -54,7 +54,7 @@ protocol PayWithLinkCoordinating: AnyObject {
     func startFinancialConnections(completion: @escaping (PaymentSheetResult) -> Void)
     func startInstantDebits(completion: @escaping (Result<ConsumerPaymentDetails, Error>) -> Void)
     func cancel(shouldReturnToPaymentSheet: Bool)
-    func accountUpdated(_ linkAccount: PaymentSheetLinkAccount)
+    func accountUpdated(_ linkAccount: PaymentSheetLinkAccount, _ consumerState: LinkConsumerState?)
     func finish(withResult result: PaymentSheetResult, deferredIntentConfirmationType: STPAnalyticsClient.DeferredIntentConfirmationType?)
     func handlePaymentDetailsSelected(_ paymentDetails: ConsumerPaymentDetails, confirmationExtras: LinkConfirmationExtras)
     func logout(cancel: Bool)
@@ -88,6 +88,7 @@ final class PayWithLinkViewController: BottomSheetViewController {
         let launchedFromFlowController: Bool
         let initiallySelectedPaymentDetailsID: String?
         let callToAction: ConfirmButton.CallToActionType
+        let canSkipWalletAfterVerification: Bool
         var lastAddedPaymentDetails: ConsumerPaymentDetails?
         var analyticsHelper: PaymentSheetAnalyticsHelper
 
@@ -123,6 +124,7 @@ final class PayWithLinkViewController: BottomSheetViewController {
             launchedFromFlowController: Bool = false,
             initiallySelectedPaymentDetailsID: String?,
             callToAction: ConfirmButton.CallToActionType?,
+            canSkipWalletAfterVerification: Bool,
             analyticsHelper: PaymentSheetAnalyticsHelper
         ) {
             self.intent = intent
@@ -134,6 +136,7 @@ final class PayWithLinkViewController: BottomSheetViewController {
             self.launchedFromFlowController = launchedFromFlowController
             self.initiallySelectedPaymentDetailsID = initiallySelectedPaymentDetailsID
             self.callToAction = callToAction ?? .makeDefaultTypeForLink(intent: intent)
+            self.canSkipWalletAfterVerification = canSkipWalletAfterVerification
             self.analyticsHelper = analyticsHelper
         }
     }
@@ -148,12 +151,10 @@ final class PayWithLinkViewController: BottomSheetViewController {
 
     weak var payWithLinkDelegate: PayWithLinkViewControllerDelegate?
 
-    var shippingAddressResponse: ShippingAddressesResponse?
+    var shippingAddresses: [ShippingAddressesResponse.ShippingAddress]?
 
     var defaultShippingAddress: ShippingAddressesResponse.ShippingAddress? {
-        shippingAddressResponse?.shippingAddresses.first {
-            $0.isDefault ?? false
-        } ?? shippingAddressResponse?.shippingAddresses.first
+        shippingAddresses?.first { $0.isDefault ?? false } ?? shippingAddresses?.first
     }
 
     override var sheetCornerRadius: CGFloat? {
@@ -172,6 +173,7 @@ final class PayWithLinkViewController: BottomSheetViewController {
         shouldShowSecondaryCta: Bool = true,
         launchedFromFlowController: Bool = false,
         initiallySelectedPaymentDetailsID: String? = nil,
+        canSkipWalletAfterVerification: Bool,
         callToAction: ConfirmButton.CallToActionType? = nil,
         analyticsHelper: PaymentSheetAnalyticsHelper
     ) {
@@ -186,6 +188,7 @@ final class PayWithLinkViewController: BottomSheetViewController {
                 launchedFromFlowController: launchedFromFlowController,
                 initiallySelectedPaymentDetailsID: initiallySelectedPaymentDetailsID,
                 callToAction: callToAction,
+                canSkipWalletAfterVerification: canSkipWalletAfterVerification,
                 analyticsHelper: analyticsHelper
             ),
             linkAccount: linkAccount
@@ -352,24 +355,17 @@ private extension PayWithLinkViewController {
             .toSortedArray()
 
         Task { @MainActor in
-            async let paymentDetailsResult = linkAccount.listPaymentDetails(
-                supportedTypes: supportedPaymentDetailsTypes
-            )
-
-            async let shippingAddressResult = fetchShippingAddress(
-                using: linkAccount,
-                shouldFetch: context.launchedFromFlowController
-            )
-
             do {
-                let paymentDetails = try await paymentDetailsResult
+                let consumerState = try await linkAccount.loadLinkConsumerState(
+                    supportedPaymentDetailsTypes: supportedPaymentDetailsTypes,
+                    shouldFetchShippingAddress: context.launchedFromFlowController
+                )
 
-                // Ignore any errors that might happen here.
-                shippingAddressResponse = try? await shippingAddressResult
+                shippingAddresses = consumerState.shippingAddresses
 
                 presentAppropriateViewController(
                     with: linkAccount,
-                    paymentDetails: paymentDetails
+                    paymentDetails: consumerState.paymentDetails
                 )
             } catch {
                 payWithLinkDelegate?.payWithLinkViewControllerDidFinish(
@@ -379,14 +375,6 @@ private extension PayWithLinkViewController {
                 )
             }
         }
-    }
-
-    private func fetchShippingAddress(
-        using account: PaymentSheetLinkAccount,
-        shouldFetch: Bool
-    ) async throws -> ShippingAddressesResponse? {
-        guard shouldFetch else { return nil }
-        return try await account.listShippingAddress()
     }
 
     private func presentAppropriateViewController(
@@ -627,10 +615,16 @@ extension PayWithLinkViewController: PayWithLinkCoordinating {
         payWithLinkDelegate?.payWithLinkViewControllerDidCancel(self, shouldReturnToPaymentSheet: shouldReturnToPaymentSheet)
     }
 
-    func accountUpdated(_ linkAccount: PaymentSheetLinkAccount) {
+    func accountUpdated(_ linkAccount: PaymentSheetLinkAccount, _ consumerState: LinkConsumerState?) {
         self.linkAccount = linkAccount
         updateSupportedPaymentMethods()
-        updateUI()
+
+        if linkAccount.sessionState == .verified, let consumerState, let defaultPaymentDetails = consumerState.defaultPaymentDetails, defaultPaymentDetails.isValidCard {
+            // TODO: Billing phone
+            handlePaymentDetailsSelected(defaultPaymentDetails, confirmationExtras: .init())
+        } else {
+            updateUI()
+        }
     }
 
     func finish(withResult result: PaymentSheetResult, deferredIntentConfirmationType: STPAnalyticsClient.DeferredIntentConfirmationType?) {
@@ -714,7 +708,9 @@ extension PayWithLinkViewController: PaymentSheetLinkAccountDelegate {
                     let verificationController = LinkVerificationController(
                         mode: .modal,
                         linkAccount: account,
-                        configuration: self.context.configuration
+                        configuration: self.context.configuration,
+                        elementsSession: self.context.elementsSession,
+                        shouldLoadConsumerState: false
                     )
                     verificationController.present(from: self) { result in
                         switch result {
