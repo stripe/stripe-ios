@@ -183,7 +183,7 @@ extension STPApplePayContext {
     static func create(
         intent: Intent,
         configuration: PaymentElementConfiguration,
-        clientAttributionMetadata: StripeAPI.PaymentMethodParams.ClientAttributionMetadata,
+        clientAttributionMetadata: STPClientAttributionMetadata,
         completion: @escaping PaymentSheetResultCompletionBlock
     ) -> STPApplePayContext? {
         guard let applePay = configuration.applePay else {

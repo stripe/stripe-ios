@@ -180,27 +180,11 @@ extension PaymentSheet {
         switch paymentOption {
         // MARK: - Apple Pay
         case .applePay:
-            let applePayClientAttributionMetadata: StripeAPI.PaymentMethodParams.ClientAttributionMetadata = {
-                switch intent {
-                case .paymentIntent(let paymentIntent):
-                    return .init(elementsSessionConfigId: elementsSession.sessionID,
-                                 paymentIntentCreationFlow: .standard,
-                                 paymentMethodSelectionFlow: paymentIntent.automaticPaymentMethods?.enabled ?? false ? .automatic : .merchantSpecified)
-                case .setupIntent(let setupIntent):
-                    return .init(elementsSessionConfigId: elementsSession.sessionID,
-                                 paymentIntentCreationFlow: .standard,
-                                 paymentMethodSelectionFlow: setupIntent.automaticPaymentMethods?.enabled ?? false ? .automatic : .merchantSpecified)
-                case .deferredIntent(let intentConfig):
-                    return .init(elementsSessionConfigId: elementsSession.sessionID,
-                                 paymentIntentCreationFlow: .deferred,
-                                 paymentMethodSelectionFlow: intentConfig.paymentMethodTypes?.isEmpty ?? true ? .automatic : .merchantSpecified)
-                }
-            }()
             guard
                 let applePayContext = STPApplePayContext.create(
                     intent: intent,
                     configuration: configuration,
-                    clientAttributionMetadata: applePayClientAttributionMetadata,
+                    clientAttributionMetadata: clientAttributionMetadata,
                     completion: completion
                 )
             else {
