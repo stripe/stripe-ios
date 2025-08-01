@@ -8,7 +8,7 @@
 import Foundation
 @_spi(STP) import StripeCore
 @_spi(STP) import StripePayments
-struct PaymentSheetDeferredValidator {
+enum PaymentSheetDeferredValidator {
     /// Note: We don't validate amount (for any payment method) because there are use cases where the amount can change slightly between PM collection and confirmation.
     static func validate(paymentIntent: STPPaymentIntent,
                          intentConfiguration: PaymentSheet.IntentConfiguration,
@@ -20,15 +20,7 @@ struct PaymentSheetDeferredValidator {
         guard paymentIntent.currency.uppercased() == currency.uppercased() else {
             throw PaymentSheetError.deferredIntentValidationFailed(message: "Your PaymentIntent currency (\(paymentIntent.currency.uppercased())) does not match the PaymentSheet.IntentConfiguration currency (\(currency.uppercased())).")
         }
-        guard setupFutureUsage != PaymentSheet.IntentConfiguration.SetupFutureUsage.none else {
-            throw PaymentSheetError.deferredIntentValidationFailed(message: "Your PaymentSheet.IntentConfiguration setupFutureUsage (\(setupFutureUsage?.rawValue ?? "")) is invalid. You can only set it to `.onSession`, `.offSession`, or leave it `nil`.")
-        }
-        // Validate that the PaymentIntent and IntentConfiguration SFU values are both nil or both non-nil. Don't validate the particular non-nil values are the same (off_session vs on_session).
-        let isPaymentIntentSFUSet = paymentIntent.setupFutureUsage != .none
-        let isIntentConfigurationSFUSet = setupFutureUsage != nil
-        guard isPaymentIntentSFUSet == isIntentConfigurationSFUSet else {
-           throw PaymentSheetError.deferredIntentValidationFailed(message: "Your PaymentIntent setupFutureUsage (\(paymentIntent.setupFutureUsage)) does not match the PaymentSheet.IntentConfiguration setupFutureUsage (\(String(describing: setupFutureUsage))).")
-        }
+        try validateSFUAndPMOSFU(setupFutureUsage: setupFutureUsage, paymentMethodOptions: paymentMethodOptions, paymentMethodType: paymentMethod.type, paymentIntent: paymentIntent)
         try validatePaymentMethod(intentPaymentMethod: paymentIntent.paymentMethod, paymentMethod: paymentMethod)
         /*
          Manual confirmation is only available using FlowController because merchants own the final step of confirmation.
@@ -91,6 +83,30 @@ struct PaymentSheetDeferredValidator {
             let errorAnalytic = ErrorAnalytic(event: .paymentSheetDeferredIntentPaymentMethodMismatch, error: PaymentSheetError.unknown(debugDescription: errorMessage), additionalNonPIIParams: ["field": "fingerprint"])
             STPAnalyticsClient.sharedClient.log(analytic: errorAnalytic)
             throw PaymentSheetError.deferredIntentValidationFailed(message: errorMessage)
+        }
+    }
+
+    static func validateSFUAndPMOSFU(
+        setupFutureUsage: PaymentSheet.IntentConfiguration.SetupFutureUsage?,
+        paymentMethodOptions: PaymentSheet.IntentConfiguration.Mode.PaymentMethodOptions?,
+        paymentMethodType: STPPaymentMethodType,
+        paymentIntent: STPPaymentIntent
+    ) throws {
+        guard setupFutureUsage != PaymentSheet.IntentConfiguration.SetupFutureUsage.none else {
+            throw PaymentSheetError.deferredIntentValidationFailed(message: "Your IntentConfiguration setupFutureUsage (none) is invalid. You can only set it to `.onSession`, `.offSession`, or leave it `nil`.")
+        }
+
+        if let PMOSFUValues = paymentMethodOptions?.setupFutureUsageValues, !PMOSFUValues.isEmpty {
+            // If you're using PMO SFU on the IntentConfiguration, don't validate PMO SFU / SFU match
+            // See https://docs.google.com/document/d/1AW8j-cJ9ZW5h-LapzXOYrrE2b1XtmVo_SnvbNf-asOU
+            return
+        } else {
+            // Validate that the PaymentIntent and IntentConfiguration SFU values are both nil or both non-nil. Don't validate the particular non-nil values are the same (off_session vs on_session).
+            let isPaymentIntentSFUSet = paymentIntent.setupFutureUsage != .none
+            let isIntentConfigurationSFUSet = setupFutureUsage != nil
+            guard isPaymentIntentSFUSet == isIntentConfigurationSFUSet else {
+                throw PaymentSheetError.deferredIntentValidationFailed(message: "Your PaymentIntent setupFutureUsage (\(paymentIntent.setupFutureUsage)) does not match the PaymentSheet.IntentConfiguration setupFutureUsage (\(String(describing: setupFutureUsage))).")
+            }
         }
     }
 }

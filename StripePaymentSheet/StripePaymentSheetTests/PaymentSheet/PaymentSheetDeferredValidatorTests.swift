@@ -70,48 +70,31 @@ final class PaymentSheetDeferredValidatorTests: XCTestCase {
                                                                         intentConfiguration: intentConfig,
                                                                         paymentMethod: STPPaymentMethod._testCard(),
                                                                         isFlowController: false)) { error in
-            XCTAssertEqual("\(error)", "An error occurred in PaymentSheet. Your PaymentSheet.IntentConfiguration setupFutureUsage (none) is invalid. You can only set it to `.onSession`, `.offSession`, or leave it `nil`.")
+            XCTAssertEqual("\(error)", "An error occurred in PaymentSheet. Your IntentConfiguration setupFutureUsage (none) is invalid. You can only set it to `.onSession`, `.offSession`, or leave it `nil`.")
         }
     }
 
-    func testPaymentIntentMismatchedPaymentMethodOptionsSetupFutureUsage() throws {
-        // payment method types with pmo sfu do not match
-        var pi = STPFixtures.makePaymentIntent(amount: 100, currency: "USD", paymentMethodTypes: [.card, .amazonPay], paymentMethodOptions: STPPaymentMethodOptions(usBankAccount: nil, card: nil, allResponseFields: ["card": ["setup_future_usage": "off_session"], "amazon_pay": ["setup_future_usage": "off_session"]]))
-        var intentConfig = PaymentSheet.IntentConfiguration(mode: .payment(amount: 100, currency: "USD", paymentMethodOptions: PaymentSheet.IntentConfiguration.Mode.PaymentMethodOptions(setupFutureUsageValues: [.card: .offSession, .USBankAccount: .offSession])), confirmHandler: confirmHandler)
-        XCTAssertThrowsError(try PaymentSheetDeferredValidator.validate(paymentIntent: pi,
-                                                                        intentConfiguration: intentConfig,
-                                                                        paymentMethod: STPPaymentMethod._testCard(),
-                                                                        isFlowController: false))
-        // even if payment method type pmo sfu value non-nil on both, if one is .none, both must be .none
-        pi = STPFixtures.makePaymentIntent(amount: 100, currency: "USD", paymentMethodTypes: [.card], paymentMethodOptions: STPPaymentMethodOptions(usBankAccount: nil, card: nil, allResponseFields: ["card": ["setup_future_usage": "off_session"]]))
-        intentConfig = PaymentSheet.IntentConfiguration(mode: .payment(amount: 100, currency: "USD", paymentMethodOptions: PaymentSheet.IntentConfiguration.Mode.PaymentMethodOptions(setupFutureUsageValues: [.card: .none])), confirmHandler: confirmHandler)
-        XCTAssertThrowsError(try PaymentSheetDeferredValidator.validate(paymentIntent: pi,
-                                                                        intentConfiguration: intentConfig,
-                                                                        paymentMethod: STPPaymentMethod._testCard(),
-                                                                        isFlowController: false))
-        // intent config pmo nil but intent pmo is non-nil
-        pi = STPFixtures.makePaymentIntent(amount: 100, currency: "USD", paymentMethodTypes: [.card], paymentMethodOptions: STPPaymentMethodOptions(usBankAccount: nil, card: nil, allResponseFields: ["card": ["setup_future_usage": "off_session"]]))
-        intentConfig = PaymentSheet.IntentConfiguration(mode: .payment(amount: 100, currency: "USD"), confirmHandler: confirmHandler)
-        XCTAssertThrowsError(try PaymentSheetDeferredValidator.validate(paymentIntent: pi,
-                                                                        intentConfiguration: intentConfig,
-                                                                        paymentMethod: STPPaymentMethod._testCard(),
-                                                                        isFlowController: false))
+    func testPaymentIntentAllowsSFUMismatchWhenPMOSFUIsSet() throws {
+        let pi_without_pmo_sfu = STPFixtures.makePaymentIntent(amount: 100, currency: "USD")
+        let intentConfig = PaymentSheet.IntentConfiguration(mode: .payment(amount: 100, currency: "USD", setupFutureUsage: nil, paymentMethodOptions: .init(setupFutureUsageValues: [.card: .offSession])), confirmHandler: confirmHandler)
+        // PI without PMO[card][sfu] set should not error even though IntentConfig PMO SFU *is* set.
+        try PaymentSheetDeferredValidator.validate(
+            paymentIntent: pi_without_pmo_sfu,
+            intentConfiguration: intentConfig,
+            paymentMethod: STPPaymentMethod._testCard(),
+            isFlowController: false
+        )
 
-        // intent config pmo has something that intent pmo doesn't AND that payment type is on the intent
-        pi = STPFixtures.makePaymentIntent(amount: 100, currency: "USD", paymentMethodTypes: [.card])
-        intentConfig = PaymentSheet.IntentConfiguration(mode: .payment(amount: 100, currency: "USD", paymentMethodOptions: PaymentSheet.IntentConfiguration.Mode.PaymentMethodOptions(setupFutureUsageValues: [.card: .offSession])), confirmHandler: confirmHandler)
-        XCTAssertThrowsError(try PaymentSheetDeferredValidator.validate(paymentIntent: pi,
-                                                                        intentConfiguration: intentConfig,
-                                                                        paymentMethod: STPPaymentMethod._testCard(),
-                                                                        isFlowController: false))
-
-        // intent pmo has something that intent config pmo doesn't AND that payment type is on the intent
-        pi = STPFixtures.makePaymentIntent(amount: 100, currency: "USD", paymentMethodTypes: [.card], paymentMethodOptions: STPPaymentMethodOptions(usBankAccount: nil, card: nil, allResponseFields: ["card": ["setup_future_usage": "off_session"]]))
-        intentConfig = PaymentSheet.IntentConfiguration(mode: .payment(amount: 100, currency: "USD"), confirmHandler: confirmHandler)
-        XCTAssertThrowsError(try PaymentSheetDeferredValidator.validate(paymentIntent: pi,
-                                                                        intentConfiguration: intentConfig,
-                                                                        paymentMethod: STPPaymentMethod._testCard(),
-                                                                        isFlowController: false))
+        // PI without SFU set should not error even though IntentConfig SFU *is* set
+        let pi_without_SFU = STPFixtures.makePaymentIntent(amount: 100, currency: "USD")
+        let intentConfig2 = PaymentSheet.IntentConfiguration(mode: .payment(amount: 100, currency: "USD", setupFutureUsage: .offSession, paymentMethodOptions: .init(setupFutureUsageValues: [.card: .none])), confirmHandler: confirmHandler)
+        // PI without SFU set should not error even though IntentConfig SFU *is* set.
+        try PaymentSheetDeferredValidator.validate(
+            paymentIntent: pi_without_SFU,
+            intentConfiguration: intentConfig2,
+            paymentMethod: STPPaymentMethod._testCard(),
+            isFlowController: false
+        )
     }
 
     func testPaymentIntentConfigurationPaymentMethodOptionsSetupFutureUsage() throws {
