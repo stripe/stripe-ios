@@ -6,10 +6,9 @@
 //
 
 import Foundation
-@_spi(STP) import StripeCore
 
 // See https://docs.google.com/document/d/11wWdHwWzTJGe_29mHsk71fk-kG4lwvp8TLBBf4ws9JM/edit?usp=sharing
-@objc @_spi(STP) public class STPClientAttributionMetadata: NSObject {
+@_spi(STP) public class STPClientAttributionMetadata: NSObject {
 
     public enum IntentCreationFlow: String {
         case standard
@@ -21,7 +20,7 @@ import Foundation
         case merchantSpecified = "merchant_specified"
     }
 
-    public var additionalAPIParameters: [AnyHashable: Any] = [:]
+    @objc public var additionalAPIParameters: [AnyHashable: Any] = [:]
 
     /// The identifier string for the session
     @objc public let clientSessionId: String?
@@ -49,25 +48,6 @@ import Foundation
         self.paymentIntentCreationFlow = paymentIntentCreationFlow?.rawValue
         self.paymentMethodSelectionFlow = paymentMethodSelectionFlow?.rawValue
         super.init()
-    }
-}
-
-// MARK: - STPFormEncodable
-extension STPClientAttributionMetadata: STPFormEncodable {
-    public static func rootObjectName() -> String? {
-        return "client_attribution_metadata"
-    }
-
-    public static func propertyNamesToFormFieldNamesMapping() -> [String: String] {
-        return [
-            NSStringFromSelector(#selector(getter: clientSessionId)): "client_session_id",
-            NSStringFromSelector(#selector(getter: elementsSessionConfigId)): "elements_session_config_id",
-            NSStringFromSelector(#selector(getter: merchantIntegrationSource)): "merchant_integration_source",
-            NSStringFromSelector(#selector(getter: merchantIntegrationSubtype)): "merchant_integration_subtype",
-            NSStringFromSelector(#selector(getter: merchantIntegrationVersion)): "merchant_integration_version",
-            NSStringFromSelector(#selector(getter: paymentIntentCreationFlow)): "payment_intent_creation_flow",
-            NSStringFromSelector(#selector(getter: paymentMethodSelectionFlow)): "payment_method_selection_flow",
-        ]
     }
 }
 

@@ -176,6 +176,7 @@ extension PaymentSheet {
                              paymentMethodSelectionFlow: intentConfig.paymentMethodTypes?.isEmpty ?? true ? .automatic : .merchantSpecified)
             }
         }()
+
         switch paymentOption {
         // MARK: - Apple Pay
         case .applePay:
@@ -183,6 +184,7 @@ extension PaymentSheet {
                 let applePayContext = STPApplePayContext.create(
                     intent: intent,
                     configuration: configuration,
+                    clientAttributionMetadata: clientAttributionMetadata,
                     completion: completion
                 )
             else {
