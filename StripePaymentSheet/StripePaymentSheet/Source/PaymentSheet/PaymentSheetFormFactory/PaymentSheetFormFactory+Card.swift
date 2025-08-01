@@ -123,8 +123,14 @@ extension PaymentSheetFormFactory {
         }
 
         let mandate: SimpleMandateElement? = {
-            if isSettingUp || signupOptInFeatureEnabled {
-                return makeMandate()
+            switch configuration.termsDisplayFor(paymentMethodType: .stripe(.card)) {
+            case .never:
+                return nil
+            case .automatic:
+                if isSettingUp || signupOptInFeatureEnabled  {
+                    return makeMandate()
+
+                }
             }
             return nil
         }()

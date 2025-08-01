@@ -219,6 +219,12 @@ extension PaymentSheet {
         /// Note: Card brand filtering is not currently supported by Link.
         public var cardBrandAcceptance: PaymentSheet.CardBrandAcceptance = .all
 
+        /// A map for specifying when legal agreements are displayed for each payment method type.
+        /// If the payment method is not specified in the list, the TermsDisplay value will default to `.automatic`.
+        /// Valid payment method types include:
+        /// .card
+        public var termsDisplay: [STPPaymentMethodType: PaymentSheet.TermsDisplay] = [:]
+
         /// Set to `true` if using a wallet buttons view. This changes a few behaviors of PaymentSheet (for example, wallet buttons will never be selected by default).
         @_spi(STP) public var willUseWalletButtonsView = false
 
@@ -282,6 +288,24 @@ extension PaymentSheet {
                       "Argument looks like an Ephemeral Key secret, but expecting a CustomerSession client secret. See CustomerSession API: https://docs.stripe.com/api/customer_sessions/create")
             stpAssert(customerSessionClientSecret.hasPrefix("cuss_"),
                       "Argument does not look like a CustomerSession client secret. See CustomerSession API: https://docs.stripe.com/api/customer_sessions/create")
+        }
+    }
+    /// TermsDisplay controls how mandates or other legal agreements are displayed. Use 'never' to never display legal agreements.
+    /// The default setting is 'automatic', which cauess legal agreements to be shown only when nessecary.
+    public enum TermsDisplay {
+        /// Show legal agreements only when nessecary
+        case automatic
+
+        /// Never show legal agreements
+        case never
+
+        var analyticValue: String {
+            switch self {
+            case .automatic:
+                return "automatic"
+            case .never:
+                return "never"
+            }
         }
     }
 
