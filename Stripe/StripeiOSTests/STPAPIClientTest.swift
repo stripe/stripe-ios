@@ -114,11 +114,6 @@ class STPAPIClientTest: XCTestCase {
         XCTAssertEqual(clientAttributionMetadata?["merchant_integration_source"], "elements")
         XCTAssertEqual(clientAttributionMetadata?["merchant_integration_subtype"], "mobile")
         XCTAssertEqual(clientAttributionMetadata?["merchant_integration_version"], "stripe-ios/\(StripeAPIConfiguration.STPSDKVersion)")
-        var paramsWithAdditionalClientAttributionMetadata: [String: Any] = [:]
-        paramsWithAdditionalClientAttributionMetadata = STPAPIClient.paramsAddingClientAttributionMetadata(paramsWithAdditionalClientAttributionMetadata, additionalClientAttributionMetadata: ["payment_intent_creation_flow": "deferred", "payment_method_selection_flow": "automatic"])
-        let clientAttributionMetadataWithAdditional = paramsWithAdditionalClientAttributionMetadata["client_attribution_metadata"] as? [String: String]
-        XCTAssertEqual(clientAttributionMetadataWithAdditional?["payment_intent_creation_flow"], "deferred")
-        XCTAssertEqual(clientAttributionMetadataWithAdditional?["payment_method_selection_flow"], "automatic")
     }
 
     func testSetAppInfo() {

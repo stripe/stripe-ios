@@ -183,7 +183,7 @@ extension STPApplePayContext {
     static func create(
         intent: Intent,
         configuration: PaymentElementConfiguration,
-        additionalClientAttributionMetadata: [String: String],
+        clientAttributionMetadata: StripeAPI.PaymentMethodParams.ClientAttributionMetadata,
         completion: @escaping PaymentSheetResultCompletionBlock
     ) -> STPApplePayContext? {
         guard let applePay = configuration.applePay else {
@@ -208,7 +208,7 @@ extension STPApplePayContext {
             applePayContext.shippingDetails = makeShippingDetails(from: configuration)
             applePayContext.apiClient = configuration.apiClient
             applePayContext.returnUrl = configuration.returnURL
-            applePayContext.additionalClientAttributionMetadata = additionalClientAttributionMetadata
+            applePayContext.clientAttributionMetadata = clientAttributionMetadata
             return applePayContext
         } else {
             // Delegate only deallocs when Apple Pay completes

@@ -63,7 +63,6 @@ extension CustomerSheet {
             paymentHandler.confirmSetupIntent(
                 setupIntentParams,
                 with: authenticationContext,
-                additionalClientAttributionMetadata: ["elements_session_config_id": elementsSession.sessionID],
                 completion: paymentHandlerCompletion)
         } else {
             let errorAnalytic = ErrorAnalytic(event: .unexpectedCustomerSheetError,

@@ -180,11 +180,27 @@ extension PaymentSheet {
         switch paymentOption {
         // MARK: - Apple Pay
         case .applePay:
+            let applePayClientAttributionMetadata: StripeAPI.PaymentMethodParams.ClientAttributionMetadata = {
+                switch intent {
+                case .paymentIntent(let paymentIntent):
+                    return .init(elementsSessionConfigId: elementsSession.sessionID,
+                                 paymentIntentCreationFlow: .standard,
+                                 paymentMethodSelectionFlow: paymentIntent.automaticPaymentMethods?.enabled ?? false ? .automatic : .merchantSpecified)
+                case .setupIntent(let setupIntent):
+                    return .init(elementsSessionConfigId: elementsSession.sessionID,
+                                 paymentIntentCreationFlow: .standard,
+                                 paymentMethodSelectionFlow: setupIntent.automaticPaymentMethods?.enabled ?? false ? .automatic : .merchantSpecified)
+                case .deferredIntent(let intentConfig):
+                    return .init(elementsSessionConfigId: elementsSession.sessionID,
+                                 paymentIntentCreationFlow: .deferred,
+                                 paymentMethodSelectionFlow: intentConfig.paymentMethodTypes?.isEmpty ?? true ? .automatic : .merchantSpecified)
+                }
+            }()
             guard
                 let applePayContext = STPApplePayContext.create(
                     intent: intent,
                     configuration: configuration,
-                    additionalClientAttributionMetadata: additionalClientAttributionMetadata,
+                    clientAttributionMetadata: applePayClientAttributionMetadata,
                     completion: completion
                 )
             else {
@@ -226,7 +242,6 @@ extension PaymentSheet {
                 paymentHandler.confirmPayment(
                     params,
                     with: authenticationContext,
-                    additionalClientAttributionMetadata: additionalClientAttributionMetadata,
                     completion: { actionStatus, paymentIntent, error in
                         if let paymentIntent {
                             setDefaultPaymentMethodIfNecessary(actionStatus: actionStatus, intent: .paymentIntent(paymentIntent), configuration: configuration, paymentMethodSetAsDefault: elementsSession.paymentMethodSetAsDefaultForPaymentSheet)
@@ -249,7 +264,6 @@ extension PaymentSheet {
                 paymentHandler.confirmSetupIntent(
                     setupIntentParams,
                     with: authenticationContext,
-                    additionalClientAttributionMetadata: additionalClientAttributionMetadata,
                     completion: { actionStatus, setupIntent, error in
                         if let setupIntent {
                             setDefaultPaymentMethodIfNecessary(actionStatus: actionStatus, intent: .setupIntent(setupIntent), configuration: configuration, paymentMethodSetAsDefault: elementsSession.paymentMethodSetAsDefaultForPaymentSheet)
@@ -272,7 +286,6 @@ extension PaymentSheet {
                     paymentHandler: paymentHandler,
                     isFlowController: isFlowController,
                     allowsSetAsDefaultPM: elementsSession.paymentMethodSetAsDefaultForPaymentSheet,
-                    additionalClientAttributionMetadata: additionalClientAttributionMetadata,
                     completion: completion
                 )
             }
