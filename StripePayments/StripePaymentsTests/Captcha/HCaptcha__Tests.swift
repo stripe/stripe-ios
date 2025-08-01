@@ -17,17 +17,6 @@ class HCaptcha__Tests: XCTestCase {
         }
     }
 
-    func test__Force_Visible_Challenge() {
-        let hcaptcha = HCaptcha(manager: HCaptchaWebViewManager())
-
-        // Initial value
-        XCTAssertFalse(hcaptcha.forceVisibleChallenge)
-
-        // Set true
-        hcaptcha.forceVisibleChallenge = true
-        XCTAssertTrue(hcaptcha.forceVisibleChallenge)
-    }
-
     func test__valid_js_customTheme() {
         let customTheme = """
               {
@@ -128,6 +117,41 @@ class HCaptcha__Tests: XCTestCase {
             }
         }
         wait(for: [exp], timeout: 10)
+    }
+
+    func test__passiveSiteKey_configure_not_called() {
+        let loaded = expectation(description: "hCaptcha WebView loaded")
+        let tokenRecieved = expectation(description: "hCaptcha token recieved")
+        let hcaptcha = HCaptcha(manager: HCaptchaWebViewManager(messageBody: "{token: \"some_token\"}",
+                                                                passiveApiKey: true))
+        hcaptcha.configureWebView { _ in
+            XCTFail("configureWebView should not be called for passive sitekey")
+        }
+        hcaptcha.didFinishLoading {
+            loaded.fulfill()
+        }
+        let view = UIApplication.shared.windows.first!.rootViewController!.view!
+        hcaptcha.validate(on: view) { result in
+            XCTAssertEqual("some_token", result.token)
+            tokenRecieved.fulfill()
+        }
+        wait(for: [loaded, tokenRecieved], timeout: 10)
+    }
+
+    func test__convenience_inits_is_not_recursive() throws {
+        XCTAssertNotNil(try? HCaptcha(locale: Locale.current))
+        XCTAssertNotNil(try? HCaptcha(size: .compact))
+        XCTAssertNotNil(try? HCaptcha(passiveApiKey: true))
+        XCTAssertNotNil(try? HCaptcha(apiKey: "10000000-ffff-ffff-ffff-000000000001"))
+        XCTAssertNotNil(try? HCaptcha(apiKey: "10000000-ffff-ffff-ffff-000000000001",
+                                      baseURL: URL(string: "http://localhost")!))
+        XCTAssertNotNil(try? HCaptcha(apiKey: "10000000-ffff-ffff-ffff-000000000001",
+                                      baseURL: URL(string: "http://localhost")!,
+                                      locale: Locale.current))
+        XCTAssertNotNil(try? HCaptcha(apiKey: "10000000-ffff-ffff-ffff-000000000001",
+                                      baseURL: URL(string: "http://localhost")!,
+                                      locale: Locale.current,
+                                      size: .normal))
     }
 }
 

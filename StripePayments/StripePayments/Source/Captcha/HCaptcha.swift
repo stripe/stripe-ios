@@ -61,6 +61,7 @@ class HCaptcha: NSObject {
     @objc
     convenience init(
         apiKey: String? = nil,
+        passiveApiKey: Bool = false,
         baseURL: URL? = nil,
         locale: Locale? = nil,
         size: HCaptchaSize = .invisible,
@@ -85,6 +86,7 @@ class HCaptcha: NSObject {
         let plistDomain = (infoDict?[Constants.InfoDictKeys.Domain] as? String).flatMap(URL.init(string:))
 
         let config = try HCaptchaConfig(apiKey: apiKey,
+                                        passiveApiKey: passiveApiKey,
                                         infoPlistKey: plistApiKey,
                                         baseURL: baseURL,
                                         infoPlistURL: plistDomain,
@@ -99,20 +101,12 @@ class HCaptcha: NSObject {
                                         imghost: imghost,
                                         host: host,
                                         theme: theme,
-                                        customTheme: customTheme)
+                                        customTheme: customTheme,
+                                        locale: locale)
 
         Log.debug(".init with: \(config)")
 
-        self.init(manager: HCaptchaWebViewManager(
-            html: config.html,
-            apiKey: config.apiKey,
-            baseURL: config.baseURL,
-            endpoint: config.getEndpointURL(locale: locale),
-            size: config.size,
-            orientation: config.orientation,
-            rqdata: config.rqdata,
-            theme: config.actualTheme
-        ))
+        self.init(manager: HCaptchaWebViewManager(config: config))
     }
 
     /**
@@ -145,8 +139,8 @@ class HCaptcha: NSObject {
      Starts the challenge validation
     */
     @objc
-    func validate(on view: UIView, resetOnError: Bool = true, completion: @escaping (HCaptchaResult) -> Void) {
-        Log.debug(".validate on: \(view) resetOnError: \(resetOnError)")
+    func validate(on view: UIView? = nil, resetOnError: Bool = true, completion: @escaping (HCaptchaResult) -> Void) {
+        Log.debug(".validate on: \(String(describing: view)) resetOnError: \(resetOnError)")
 
         manager.shouldResetOnError = resetOnError
         manager.completion = completion
@@ -214,34 +208,6 @@ class HCaptcha: NSObject {
         manager.configureWebView?(manager.webView)
     }
 
-    // MARK: - Development
-
-#if DEBUG
-    /// Forces the challenge widget to be explicitly displayed.
-    @objc
-    var forceVisibleChallenge: Bool {
-        get { return manager.forceVisibleChallenge }
-        set {
-            manager.forceVisibleChallenge = newValue
-        }
-    }
-
-    /**
-     Allows validation stubbing for testing
-
-     When this property is set to `true`, every call to `validate()` will immediately be resolved with `.token("")`.
-     
-     Use only when testing your application.
-    */
-    @objc
-    var shouldSkipForTests: Bool {
-        get { return manager.shouldSkipForTests }
-        set {
-            manager.shouldSkipForTests = newValue
-        }
-    }
-#endif
-
     // MARK: - Objective-C 'convenience' inits
 
     @objc
@@ -255,8 +221,23 @@ class HCaptcha: NSObject {
     }
 
     @objc
+    convenience init(passiveApiKey: Bool) throws {
+        try self.init(passiveApiKey: passiveApiKey, locale: nil)
+    }
+
+    @objc
+    convenience init(apiKey: String) throws {
+        try self.init(apiKey: apiKey, locale: nil)
+    }
+
+    @objc
     convenience init(apiKey: String, baseURL: URL) throws {
         try self.init(apiKey: apiKey, baseURL: baseURL, locale: nil)
+    }
+
+    @objc
+    convenience init(apiKey: String, passiveApiKey: Bool) throws {
+        try self.init(apiKey: apiKey, passiveApiKey: passiveApiKey, locale: nil)
     }
 
     @objc
