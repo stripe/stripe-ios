@@ -11,7 +11,6 @@ import StripeCoreTestUtils
 import XCTest
 
 @testable@_spi(STP) import Stripe
-@testable@_spi(STP) import StripeCore
 @testable@_spi(STP) import StripePayments
 @testable@_spi(STP) import StripePaymentSheet
 import StripePaymentsTestUtils
@@ -43,6 +42,7 @@ class STPPaymentMethodUSBankAccountParamsTest: STPNetworkStubbingTestCase {
             billingDetails: billingDetails,
             metadata: nil
         )
+        params.radarOptions = STPRadarOptions(hcaptchaToken: "hcaptcha_token")
 
         let exp = expectation(description: "Payment Method US Bank Account create")
 
