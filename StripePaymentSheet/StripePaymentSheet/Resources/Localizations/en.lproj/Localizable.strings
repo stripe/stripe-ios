@@ -190,7 +190,7 @@ with the transaction. */
 "Failed to connect" = "Failed to connect";
 
 /* Title for the Link signup screen */
-"Fast, secure, 1⁠-⁠click checkout" = "Fast, secure, 1⁠-⁠click checkout";
+"Fast, secure checkout" = "Fast, secure checkout";
 
 /* A text notice shown when the user selects a card that requires
 re-entering the security code (CVV/CVC). */
@@ -291,6 +291,9 @@ Pay faster at {Merchant Name} and thousands of businesses
 e.g, 'Pay faster at Example, Inc. and thousands of businesses.' */
 "Pay faster at %@ and thousands of businesses." = "Pay faster at %@ and thousands of businesses.";
 
+/* Subtitle for the Link signup screen */
+"Pay faster everywhere Link is accepted." = "Pay faster everywhere Link is accepted.";
+
 /* Pay over time with Affirm copy */
 "Pay over time with %@" = "Pay over time with %@";
 
@@ -365,9 +368,6 @@ to be saved and used in future checkout sessions. */
 /* Label for a checkbox that when checked allows the payment information
 to be saved and used in future checkout sessions. */
 "Save your info for secure 1-click checkout with Link" = "Save your info for secure 1-click checkout with Link";
-
-/* Label describing the benefit of signing up for Link. */
-"Save your payment information with Link, and securely check out in 1-click on Link-supported sites." = "Save your payment information with Link, and securely check out in 1-click on Link-supported sites.";
 
 /* Title shown above a button that represents the customer's saved payment method e.g., a saved credit card or bank account. */
 "Saved" = "Saved";

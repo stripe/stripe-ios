@@ -270,7 +270,7 @@ extension PayWithLinkViewController {
                     }
                 }
 
-                if isMissingRequestedBillingDetails(paymentDetails) {
+                if isMissingRequestedBillingDetails(paymentDetails) && context.configuration.link.collectMissingBillingDetailsForExistingPaymentMethods {
                     handleIncompleteBillingDetails(for: paymentDetails, with: confirmationExtras)
                 } else if context.launchedFromFlowController, let paymentMethod = viewModel.selectedPaymentMethod {
                     coordinator?.handlePaymentDetailsSelected(paymentMethod, confirmationExtras: confirmationExtras)
