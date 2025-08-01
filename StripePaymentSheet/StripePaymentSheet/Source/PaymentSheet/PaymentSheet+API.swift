@@ -176,6 +176,7 @@ extension PaymentSheet {
                              paymentMethodSelectionFlow: intentConfig.paymentMethodTypes?.isEmpty ?? true ? .automatic : .merchantSpecified)
             }
         }()
+
         switch paymentOption {
         // MARK: - Apple Pay
         case .applePay:
@@ -330,6 +331,7 @@ extension PaymentSheet {
             // - paymentMethodParams: The params to use for the payment.
             // - linkAccount: The Link account used for payment. Will be logged out if present after payment completes, whether it was successful or not.
             let confirmWithPaymentMethodParams: (STPPaymentMethodParams, PaymentSheetLinkAccount?, Bool) -> Void = { paymentMethodParams, linkAccount, shouldSave in
+                paymentMethodParams.clientAttributionMetadata = clientAttributionMetadata
                 switch intent {
                 case .paymentIntent(let paymentIntent):
                     let paymentIntentParams = STPPaymentIntentParams(clientSecret: paymentIntent.clientSecret)
@@ -478,6 +480,7 @@ extension PaymentSheet {
                     STPPaymentMethodParams,
                     Bool
                 ) -> Void = { linkAccount, paymentMethodParams, shouldSave in
+                    paymentMethodParams.clientAttributionMetadata = clientAttributionMetadata
                     guard linkAccount.sessionState == .verified else {
                         // We don't support 2FA in the native mobile Link flow, so if 2FA is required then this is a no-op.
                         // Just fall through and don't save the card details to Link.
@@ -502,7 +505,8 @@ extension PaymentSheet {
                                     cvc: paymentMethodParams.card?.cvc,
                                     allowRedisplay: paymentMethodParams.allowRedisplay,
                                     expectedPaymentMethodType: paymentDetails.expectedPaymentMethodTypeForPassthroughMode(elementsSession),
-                                    billingPhoneNumber: billingPhoneNumber
+                                    billingPhoneNumber: billingPhoneNumber,
+                                    clientAttributionMetadata: clientAttributionMetadata
                                 ) { result in
                                     switch result {
                                     case .success(let paymentDetailsShareResponse):
@@ -573,7 +577,8 @@ extension PaymentSheet {
                         cvc: paymentDetails.cvc,
                         allowRedisplay: nil,
                         expectedPaymentMethodType: paymentDetails.expectedPaymentMethodTypeForPassthroughMode(elementsSession),
-                        billingPhoneNumber: confirmationExtras?.billingPhoneNumber
+                        billingPhoneNumber: confirmationExtras?.billingPhoneNumber,
+                        clientAttributionMetadata: clientAttributionMetadata
                     ) { result in
                         switch result {
                         case .success(let paymentDetailsShareResponse):
