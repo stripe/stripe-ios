@@ -471,6 +471,20 @@ extension String.Localized {
         )
     }
 
+    static var by_continuing_you_agree_to_save_your_information_to_merchant: String {
+        STPLocalizedString(
+            "By continuing, you agree to save your information for future purchases with %@.",
+            "Text displayed below a credit card entry form when the card will be saved with the merchant."
+        )
+    }
+
+    static var by_continuing_you_agree_to_save_your_information_to_merchant_and_link: String {
+        STPLocalizedString(
+            "By continuing, you agree to save your information for future purchases with %@ and <link>Link</link>. You also agree to Link's <terms>Terms</terms> and <privacy>Privacy</privacy>.",
+            "Text displayed below a credit card entry form when the card will be saved with the merchant and saved to Link."
+        )
+    }
+
     static var confirm_your_cvc: String {
         STPLocalizedString("Confirm your CVC", "Title for prompting for a card's CVC on confirming the payment")
     }

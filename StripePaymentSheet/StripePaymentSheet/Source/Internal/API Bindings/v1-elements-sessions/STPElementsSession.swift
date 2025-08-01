@@ -320,6 +320,14 @@ extension STPElementsSession {
     var allowsLinkDefaultOptIn: Bool {
         linkFlags["link_mobile_disable_default_opt_in"] != true
     }
+
+    var linkSignupOptInFeatureEnabled: Bool {
+        linkFlags["link_sign_up_opt_in_feature_enabled"] == true
+    }
+
+    var linkSignupOptInInitialValue: Bool {
+        linkFlags["link_sign_up_opt_in_initial_value"] == true
+    }
 }
 
 extension STPElementsSession {
