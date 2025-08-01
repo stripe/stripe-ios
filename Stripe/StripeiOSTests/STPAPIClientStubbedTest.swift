@@ -68,7 +68,7 @@ class STPAPIClientStubbedTest: APIStubbedTestCase {
                 return false
             }
             XCTAssertTrue(queryItems.contains(where: { item in
-                item.name == "radar_options[hcaptcha_token]" && item.value == "test_hcaptcha_token"
+                item.name == "payment_method_data[radar_options][hcaptcha_token]" && item.value == "test_hcaptcha_token"
             }))
             return true
         } response: { _ in
@@ -92,7 +92,7 @@ class STPAPIClientStubbedTest: APIStubbedTestCase {
                 return false
             }
             XCTAssertFalse(queryItems.contains(where: { item in
-                item.name == "radar_options[hcaptcha_token]"
+                item.name == "payment_method_data[radar_options][hcaptcha_token]"
             }))
             return true
         } response: { _ in
@@ -116,7 +116,7 @@ class STPAPIClientStubbedTest: APIStubbedTestCase {
                 return false
             }
             XCTAssertTrue(queryItems.contains(where: { item in
-                item.name == "radar_options[hcaptcha_token]" && item.value == "test_hcaptcha_token"
+                item.name == "payment_method_data[radar_options][hcaptcha_token]" && item.value == "test_hcaptcha_token"
             }))
             return true
         } response: { _ in
@@ -142,7 +142,7 @@ class STPAPIClientStubbedTest: APIStubbedTestCase {
                 return false
             }
             XCTAssertFalse(queryItems.contains(where: { item in
-                item.name == "radar_options[hcaptcha_token]"
+                item.name == "payment_method_data[radar_options][hcaptcha_token]"
             }))
             return true
         } response: { _ in
