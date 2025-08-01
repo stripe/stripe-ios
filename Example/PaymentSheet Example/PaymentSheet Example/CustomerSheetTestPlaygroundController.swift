@@ -141,6 +141,7 @@ class CustomerSheetTestPlaygroundController: ObservableObject {
         case .allowVisa:
             configuration.cardBrandAcceptance = .allowed(brands: [.visa])
         }
+        configuration.opensCardScannerAutomatically = settings.opensCardScannerAutomatically == .on
 
         return configuration
     }
