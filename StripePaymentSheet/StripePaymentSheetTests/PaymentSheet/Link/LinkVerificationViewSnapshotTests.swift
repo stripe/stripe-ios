@@ -75,7 +75,8 @@ extension LinkVerificationViewSnapshotTests {
                 isRegistered: true,
                 sessionState: .verified,
                 consumerSessionClientSecret: nil
-            )
+            ),
+            appearance: PaymentSheet.Appearance.defaultLinkUIAppearance
         )
 
         sut.tintColor = .linkIconBrand

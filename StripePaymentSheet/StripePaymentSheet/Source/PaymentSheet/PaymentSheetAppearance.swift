@@ -172,6 +172,9 @@ public extension PaymentSheet {
             /// The color used for input placeholder text
             public var componentPlaceholderText: UIColor = .secondaryLabel
 
+            /// The color used for brand-tinted text.
+            public var brandText: UIColor = .label
+
             /// The color used for icons in PaymentSheet, such as the close or back icons
             public var icon: UIColor = .secondaryLabel
 

@@ -815,7 +815,7 @@ private extension OneTimeCodeTextField {
             }
 
             // Animate background color change when field becomes active
-            if isActive, let backgroundColor = configuration.focusBackgroundColor {
+            if isActive, let backgroundColor = configuration.focusBackgroundColor?.resolvedColor(with: traitCollection) {
                 let backgroundAnimation = CABasicAnimation(keyPath: "backgroundColor")
                 backgroundAnimation.fromValue = borderLayer.backgroundColor
                 backgroundAnimation.toValue = backgroundColor.cgColor
@@ -838,7 +838,7 @@ private extension OneTimeCodeTextField {
             borderLayer.backgroundColor = backgroundColor.resolvedColor(with: traitCollection).cgColor
             borderLayer.borderColor = theme.colors.border.resolvedColor(with: traitCollection).cgColor
             caret.backgroundColor = label.textColor.resolvedColor(with: traitCollection).cgColor
-            focusRing.borderColor = tintColor.cgColor
+            focusRing.borderColor = tintColor.resolvedColor(with: traitCollection).cgColor
         }
 
         private func showCaret() {

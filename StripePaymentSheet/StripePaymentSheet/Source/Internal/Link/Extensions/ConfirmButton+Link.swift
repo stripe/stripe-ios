@@ -12,12 +12,13 @@ extension ConfirmButton {
 
     static func makeLinkButton(
         callToAction: CallToActionType,
+        appearance: PaymentSheet.Appearance,
         compact: Bool = false,
         didTap: @escaping () -> Void
     ) -> ConfirmButton {
         let directionalLayoutMargins = compact ? LinkUI.compactButtonMargins : LinkUI.buttonMargins
 
-        var appearance = LinkUI.appearance
+        var appearance = appearance
         appearance.primaryButton.height = LinkUI.primaryButtonHeight(margins: directionalLayoutMargins)
 
         let button = ConfirmButton(

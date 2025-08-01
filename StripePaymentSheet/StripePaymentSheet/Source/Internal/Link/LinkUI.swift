@@ -188,9 +188,9 @@ extension LinkUI {
 
 // MARK: - Appearance
 
-extension LinkUI {
+public extension PaymentSheet.Appearance {
 
-    static let appearance: PaymentSheet.Appearance = {
+    static let defaultLinkUIAppearance: PaymentSheet.Appearance = {
         var appearance = PaymentSheet.Appearance.default
         appearance.cornerRadius = LinkUI.cornerRadius
         appearance.colors.primary = .linkBorderSelected
@@ -199,6 +199,7 @@ extension LinkUI {
         // Text
         appearance.colors.text = .linkTextPrimary
         appearance.colors.textSecondary = .linkTextSecondary
+        appearance.colors.brandText = .linkTextBrand
 
         // Insets
         appearance.textFieldInsets = NSDirectionalEdgeInsets(

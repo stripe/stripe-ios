@@ -17,9 +17,14 @@ extension PayWithLinkViewController {
         private let linkAccount: PaymentSheetLinkAccount
 
         private lazy var verificationVC: LinkVerificationViewController = {
-            let vc = LinkVerificationViewController(mode: .embedded, linkAccount: linkAccount)
+            let vc = LinkVerificationViewController(
+                mode: .embedded,
+                linkAccount: linkAccount,
+                appearance: context.configuration.appearance
+            )
             vc.delegate = self
             vc.view.backgroundColor = .clear
+            context.configuration.style.configure(vc)
             return vc
         }()
 

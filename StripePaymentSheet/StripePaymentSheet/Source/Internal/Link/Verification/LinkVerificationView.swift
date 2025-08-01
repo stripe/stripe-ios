@@ -38,6 +38,8 @@ final class LinkVerificationView: UIView {
 
     let linkAccount: PaymentSheetLinkAccountInfoProtocol
 
+    let appearance: PaymentSheet.Appearance
+
     var sendingCode: Bool = false {
         didSet {
             resendCodeButton.isLoading = sendingCode
@@ -52,7 +54,7 @@ final class LinkVerificationView: UIView {
     }
 
     private lazy var header: Header = {
-        let header = Header()
+        let header = Header(appearance: appearance)
         header.closeButton.addTarget(self, action: #selector(didSelectCancel), for: .touchUpInside)
         return header
     }()
@@ -88,11 +90,11 @@ final class LinkVerificationView: UIView {
                 itemCornerRadius: LinkUI.cornerRadius,
                 itemHeight: 56,
                 itemFocusRingThickness: LinkUI.borderWidth,
-                itemFocusBackgroundColor: LinkUI.appearance.colors.background
+                itemFocusBackgroundColor: appearance.colors.background
             ),
-            theme: LinkUI.appearance.asElementsTheme
+            theme: appearance.asElementsTheme
         )
-        codeField.tintColor = LinkUI.appearance.colors.selectedComponentBorder
+        codeField.tintColor = appearance.colors.selectedComponentBorder
         codeField.addTarget(self, action: #selector(oneTimeCodeFieldChanged(_:)), for: .valueChanged)
         return codeField
     }()
@@ -115,7 +117,7 @@ final class LinkVerificationView: UIView {
     }()
 
     private lazy var resendCodeButton: Button = {
-        let button = Button(configuration: .linkPlain(), title: STPLocalizedString(
+        let button = Button(configuration: .linkPlain(foregroundColor: appearance.colors.brandText), title: STPLocalizedString(
             "Resend code",
             "Label for a button that re-sends the a login code when tapped"
         ))
@@ -125,14 +127,15 @@ final class LinkVerificationView: UIView {
     }()
 
     private lazy var logoutView: LogoutView = {
-        let logoutView = LogoutView(linkAccount: linkAccount)
+        let logoutView = LogoutView(linkAccount: linkAccount, appearance: appearance)
         logoutView.button.addTarget(self, action: #selector(didTapOnLogout(_:)), for: .touchUpInside)
         return logoutView
     }()
 
-    required init(mode: Mode, linkAccount: PaymentSheetLinkAccountInfoProtocol) {
+    required init(mode: Mode, linkAccount: PaymentSheetLinkAccountInfoProtocol, appearance: PaymentSheet.Appearance) {
         self.mode = mode
         self.linkAccount = linkAccount
+        self.appearance = appearance
         super.init(frame: .zero)
         setupUI()
     }
