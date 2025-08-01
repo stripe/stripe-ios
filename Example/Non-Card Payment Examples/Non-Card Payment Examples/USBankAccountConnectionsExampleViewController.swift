@@ -191,7 +191,7 @@ extension USBankAccountFinancialConnectionsExampleViewController {
             assertionFailure("Shouldn't have pay enabled without valid clientSecret")
             return
         }
-        let paymentIntentParams = STPPaymentIntentParams(clientSecret: clientSecret, paymentMethodType: .USBankAccount)
+        let paymentIntentParams = STPPaymentIntentConfirmParams(clientSecret: clientSecret, paymentMethodType: .USBankAccount)
         paymentIntentParams.returnURL = "payments-example://stripe/"
         STPPaymentHandler.shared().confirmPayment(
             paymentIntentParams, with: self

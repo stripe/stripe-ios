@@ -16,7 +16,7 @@
 		080417E33FB91C7F94A0438C /* STPPaymentMethodRevolutPayParams.swift in Sources */ = {isa = PBXBuildFile; fileRef = 138E9C6A4E3D71B397A1C61B /* STPPaymentMethodRevolutPayParams.swift */; };
 		0921022765F92309BE302A47 /* STPPaymentMethodPayPalParams.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0D4C9FA6229E7CF5E6194ED /* STPPaymentMethodPayPalParams.swift */; };
 		0A0F8D842C98441D08F8D14E /* STPPaymentMethodAfterpayClearpay.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0E6839FB4FC9CA2A9EAAC4F /* STPPaymentMethodAfterpayClearpay.swift */; };
-		0D03C74718AC07502E0C47E4 /* STPPaymentIntentParams.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31E9110C4EB3A3D185DC8D00 /* STPPaymentIntentParams.swift */; };
+		0D03C74718AC07502E0C47E4 /* STPPaymentIntentConfirmParams.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31E9110C4EB3A3D185DC8D00 /* STPPaymentIntentConfirmParams.swift */; };
 		0D354D6321274CA6F330321C /* StripePayments.h in Headers */ = {isa = PBXBuildFile; fileRef = EAA7516BE26EEF7FA3720E2C /* StripePayments.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		0D656430E69EEB35C2B4C9CA /* STPSourceOwner.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3ED0DDE359BC093F1766FDD5 /* STPSourceOwner.swift */; };
 		0E5EF1AFCCA0D7B932D173F8 /* STPConfirmBLIKOptions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CE7DBFDCD8676DB9F60C96F /* STPConfirmBLIKOptions.swift */; };
@@ -462,7 +462,7 @@
 		31B7F5492BD1D4E500BF1015 /* HCaptchaWebViewManager+WKNavigationDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "HCaptchaWebViewManager+WKNavigationDelegate.swift"; sourceTree = "<group>"; };
 		31B7F54C2BD1D4E500BF1015 /* HCaptchaURLOpener.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HCaptchaURLOpener.swift; sourceTree = "<group>"; };
 		31CBA061716922E978337D26 /* STPSetupIntentConfirmParams.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = STPSetupIntentConfirmParams.swift; sourceTree = "<group>"; };
-		31E9110C4EB3A3D185DC8D00 /* STPPaymentIntentParams.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = STPPaymentIntentParams.swift; sourceTree = "<group>"; };
+		31E9110C4EB3A3D185DC8D00 /* STPPaymentIntentConfirmParams.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = STPPaymentIntentConfirmParams.swift; sourceTree = "<group>"; };
 		3413DC6380ADC49B79FA0D71 /* STPIntentActionKonbiniDisplayDetails.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = STPIntentActionKonbiniDisplayDetails.swift; sourceTree = "<group>"; };
 		34CB5AD8FDE347B19ED2D9CD /* STPConfirmUSBankAccountOptions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = STPConfirmUSBankAccountOptions.swift; sourceTree = "<group>"; };
 		359FF7718254FCD446312BFA /* sv */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = sv; path = sv.lproj/Localizable.strings; sourceTree = "<group>"; };
@@ -985,7 +985,7 @@
 				9850E5BC24407862EAEEE2BA /* STPPaymentIntentActionRedirectToURL.swift */,
 				2BD1E8C2A561AF7E6CDFCD97 /* STPPaymentIntentEnums.swift */,
 				5212EA8107E8CEC838262D99 /* STPPaymentIntentLastPaymentError.swift */,
-				31E9110C4EB3A3D185DC8D00 /* STPPaymentIntentParams.swift */,
+				31E9110C4EB3A3D185DC8D00 /* STPPaymentIntentConfirmParams.swift */,
 				B71B50D1ABEA53CE45BAFA74 /* STPPaymentIntentShippingDetails.swift */,
 				5CB97088726E660840DA856F /* STPPaymentIntentShippingDetailsAddress.swift */,
 				63E3C264676712B260FCF600 /* STPPaymentIntentShippingDetailsAddressParams.swift */,
@@ -1689,7 +1689,7 @@
 				466FD050408B0678FE5B60FC /* STPPaymentIntentEnums.swift in Sources */,
 				B59B706A4935CAAC42113526 /* STPPaymentIntentLastPaymentError.swift in Sources */,
 				CB486DD02DB6B7580098A75D /* LinkPaymentDetails.swift in Sources */,
-				0D03C74718AC07502E0C47E4 /* STPPaymentIntentParams.swift in Sources */,
+				0D03C74718AC07502E0C47E4 /* STPPaymentIntentConfirmParams.swift in Sources */,
 				E4CF13E10D8F317B704AFFAE /* STPPaymentIntentShippingDetails.swift in Sources */,
 				98D4EC200247138A4AC89DB5 /* STPPaymentIntentShippingDetailsAddress.swift in Sources */,
 				D7A66D12E933BD2ABBB59148 /* STPPaymentIntentShippingDetailsAddressParams.swift in Sources */,
