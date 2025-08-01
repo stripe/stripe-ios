@@ -123,10 +123,7 @@ extension PaymentSheetFormFactory {
 
         let mandate: SimpleMandateElement? = {
             if isSettingUp || signupOptInFeatureEnabled {
-                return makeMandate(
-                    linkSignupOptInFeatureEnabled: signupOptInFeatureEnabled,
-                    linkSignupOptInInitialValue: signupOptInInitialValue
-                )
+                return makeMandate()
             }
             return nil
         }()
@@ -143,13 +140,10 @@ extension PaymentSheetFormFactory {
             customSpacing: customSpacing)
     }
 
-    private func makeMandate(
-        linkSignupOptInFeatureEnabled: Bool,
-        linkSignupOptInInitialValue: Bool
-    ) -> SimpleMandateElement {
+    private func makeMandate() -> SimpleMandateElement {
         let mandateText = Self.makeMandateText(
             linkSignupOptInFeatureEnabled: signupOptInFeatureEnabled,
-            shouldSaveToLink: linkSignupOptInInitialValue,
+            shouldSaveToLink: signupOptInInitialValue,
             merchantName: configuration.merchantDisplayName
         )
         return makeMandate(mandateText: mandateText)
