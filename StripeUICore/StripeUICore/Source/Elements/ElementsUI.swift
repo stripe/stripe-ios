@@ -19,7 +19,7 @@ import UIKit
     public static let textFieldFont: UIFont = UIFontMetrics(forTextStyle: .body).scaledFont(for: .systemFont(ofSize: 14))
     public static let sectionTitleFont: UIFont = UIFontMetrics(forTextStyle: .body).scaledFont(for: .systemFont(ofSize: 13, weight: .semibold))
     /// The spacing between elements of a SectionElement
-    public static let sectionSpacing: CGFloat = 4
+    public static let sectionElementInternalSpacing: CGFloat = 8
     /// The spacing between elements of a FormElement
     public static let formSpacing: CGFloat = 16
     public static let defaultCornerRadius: CGFloat = 6
