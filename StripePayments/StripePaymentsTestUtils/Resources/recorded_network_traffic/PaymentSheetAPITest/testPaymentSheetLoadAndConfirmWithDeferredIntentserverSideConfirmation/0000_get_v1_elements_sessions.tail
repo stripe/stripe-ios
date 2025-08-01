@@ -5,21 +5,21 @@ application/json
 Content-Type: application/json
 Access-Control-Allow-Origin: *
 x-stripe-priority-routing-enabled: true
-content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=wJO6mH4HtYNgmVm8lymarRQXFwM9pj_FGRN78_RpIc3wgQm5s483sCD18pM9VWRuiMKyYUGJwI9wZM_C
+content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=p5EXLP5n6cce0XgY59eU0uamm-YRwX4lzYKZRJkqd_uriuO1bSDx-iPIs-dFrOVLVak9L7IC4HFPGhJH
 x-wc: ABGHIJ
 access-control-allow-methods: GET, HEAD, PUT, PATCH, POST, DELETE
 Server: nginx
 access-control-expose-headers: Request-Id, Stripe-Manage-Version, Stripe-Should-Retry, X-Stripe-External-Auth-Required, X-Stripe-Privileged-Session-Required
 access-control-max-age: 300
 Cache-Control: no-cache, no-store
-Date: Fri, 25 Jul 2025 23:52:45 GMT
+Date: Tue, 29 Jul 2025 04:41:57 GMT
 stripe-version: 2020-08-27
 access-control-allow-credentials: true
-Content-Length: 11385
+Content-Length: 11458
 x-stripe-routing-context-priority-tier: api-testmode
 Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
 Vary: Origin
-request-id: req_nj1XJL7FI2z48o
+request-id: req_KsjjYcg1BIKphy
 
 {
   "payment_method_preference" : {
@@ -52,6 +52,7 @@ request-id: req_nj1XJL7FI2z48o
     "elements_enable_read_allow_redisplay" : false,
     "id_bank_transfers_v1_integration" : false,
     "networked_business_profile_demo" : false,
+    "link_mobile_express_checkout_element_inline_otp_killswitch" : false,
     "paypal_phone_number_support_in_ece" : false,
     "elements_easel_enable_lpm_autofills" : true,
     "elements_disable_express_checkout_button_shop_pay" : false,
@@ -132,10 +133,10 @@ request-id: req_nj1XJL7FI2z48o
     "elements_disable_recurring_express_checkout_button_amazon_pay" : false
   },
   "merchant_logo_url" : null,
-  "session_id" : "elements_session_1HoLKNXWEaD",
+  "session_id" : "elements_session_1bWpGJDfNh9",
   "card_installments_enabled" : false,
   "account_id" : "acct_1G6m1pFY0qyl6XeW",
-  "config_id" : "198faf99-08d3-4829-be86-c4fe9baf6a98",
+  "config_id" : "74a66405-91eb-4863-83ed-b53462575596",
   "merchant_currency" : "usd",
   "merchant_id" : "acct_1G6m1pFY0qyl6XeW",
   "card_brand_choice" : {
@@ -162,9 +163,9 @@ request-id: req_nj1XJL7FI2z48o
     "paypal_merchant_id" : null
   },
   "experiments_data" : {
-    "arb_id" : "5e26cf45-e413-4b1f-a25b-8ab48eef9148",
+    "arb_id" : "49e92545-5b0b-43b8-9e5b-97f8ba268d59",
     "experiment_metadata" : {
-      "seed" : "0ed0bc3ed5fb5726d62e673bfe01b9050ef7dba4dfe41f2a91d3779e2c4b2eb6",
+      "seed" : "176cc7f4da7a506cdd2658bbf53da9b1488d41a8855465f9a6e15616f022c9e3",
       "semi_dominant_payment_methods" : [
 
       ],
@@ -309,8 +310,8 @@ request-id: req_nj1XJL7FI2z48o
   "ordered_payment_method_types_and_wallets" : [
     "card",
     "apple_pay",
-    "google_pay",
-    "cashapp"
+    "cashapp",
+    "google_pay"
   ],
   "customer_error" : null
 }
