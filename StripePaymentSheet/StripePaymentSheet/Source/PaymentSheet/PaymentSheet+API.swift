@@ -628,30 +628,6 @@ extension PaymentSheet {
         }
     }
 
-    static func makePaymentIntentClientAttributionMetadata(_ paymentIntent: STPPaymentIntent, elementsSessionConfigId: String) -> [String: String] {
-        return [
-            "elements_session_config_id": elementsSessionConfigId,
-            "payment_intent_creation_flow": "standard",
-            "payment_method_selection_flow": paymentIntent.automaticPaymentMethods?.enabled ?? false ? "automatic" : "merchant_specified",
-        ]
-    }
-
-    static func makeSetupIntentClientAttributionMetadata(_ setupIntent: STPSetupIntent, elementsSessionConfigId: String) -> [String: String] {
-        return [
-            "elements_session_config_id": elementsSessionConfigId,
-            "payment_intent_creation_flow": "standard",
-            "payment_method_selection_flow": setupIntent.automaticPaymentMethods?.enabled ?? false ? "automatic" : "merchant_specified",
-        ]
-    }
-
-    static func makeDeferredClientAttributionMetadata(_ intentConfig: IntentConfiguration, elementsSessionConfigId: String) -> [String: String] {
-        return [
-            "elements_session_config_id": elementsSessionConfigId,
-            "payment_intent_creation_flow": "deferred",
-            "payment_method_selection_flow": intentConfig.paymentMethodTypes?.isEmpty ?? true ? "automatic" : "merchant_specified",
-        ]
-    }
-
     /// A helper method that sets the Customer's default payment method if necessary.
     /// - Parameter actionStatus: The final status returned by `STPPaymentHandler`'s completion block.
     static func setDefaultPaymentMethodIfNecessary(actionStatus: STPPaymentHandlerActionStatus, intent: PaymentOrSetupIntent, configuration: PaymentElementConfiguration, paymentMethodSetAsDefault: Bool) {

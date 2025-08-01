@@ -816,11 +816,10 @@ extension STPAPIClient {
         with paymentMethodParams: STPPaymentMethodParams,
         completion: @escaping STPPaymentMethodCompletionBlock
     ) {
-        createPaymentMethod(with: paymentMethodParams, additionalPaymentUserAgentValues: [], additionalClientAttributionMetadata: [:], completion: completion)
+        createPaymentMethod(with: paymentMethodParams, additionalPaymentUserAgentValues: [], completion: completion)
     }
 
     /// - Parameter additionalPaymentUserAgentValues: A list of values to append to the `payment_user_agent` parameter sent in the request. e.g. `["deferred-intent", "autopm"]` will append "; deferred-intent; autopm" to the `payment_user_agent`.
-    /// - Parameter additionalClientAttributionMetadata: A dictionary of metadata with identifiers for the session and information about the integration to append to the `client_attribution_metadata` sent in the request.
     func createPaymentMethod(
         with paymentMethodParams: STPPaymentMethodParams,
         additionalPaymentUserAgentValues: [String] = [],

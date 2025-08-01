@@ -295,7 +295,7 @@ extension ConsumerSession {
         expectedPaymentMethodType: String?,
         billingPhoneNumber: String?,
         consumerAccountPublishableKey: String?,
-        additionalClientAttributionMetadata: [String: String],
+        clientAttributionMetadata: STPClientAttributionMetadata,
         completion: @escaping (Result<PaymentDetailsShareResponse, Error>) -> Void
     ) {
         apiClient.sharePaymentDetails(
@@ -306,7 +306,7 @@ extension ConsumerSession {
             cvc: cvc,
             expectedPaymentMethodType: expectedPaymentMethodType,
             billingPhoneNumber: billingPhoneNumber,
-            additionalClientAttributionMetadata: additionalClientAttributionMetadata,
+            clientAttributionMetadata: clientAttributionMetadata,
             completion: completion)
     }
 

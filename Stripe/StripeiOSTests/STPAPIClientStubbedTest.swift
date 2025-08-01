@@ -134,7 +134,7 @@ class STPAPIClientStubbedTest: APIStubbedTestCase {
         paymentMethodParams.clientAttributionMetadata = clientAttributionMetadata
         let paymentIntentParams = STPPaymentIntentParams(clientSecret: "pi_123456_secret_654321")
         paymentIntentParams.paymentMethodParams = paymentMethodParams
-        sut.confirmPaymentIntent(with: paymentIntentParams, expand: nil, additionalClientAttributionMetadata: additionalClientAttributionMetadata) { _, _ in
+        sut.confirmPaymentIntent(with: paymentIntentParams) { _, _ in
             e.fulfill()
         }
         waitForExpectations(timeout: 10)
@@ -163,7 +163,7 @@ class STPAPIClientStubbedTest: APIStubbedTestCase {
         paymentMethodParams.clientAttributionMetadata = clientAttributionMetadata
         let setupIntentParams = STPSetupIntentConfirmParams(clientSecret: "seti_123456_secret_654321")
         setupIntentParams.paymentMethodParams = paymentMethodParams
-        sut.confirmSetupIntent(with: setupIntentParams, expand: nil, additionalClientAttributionMetadata: additionalClientAttributionMetadata) { _, _ in
+        sut.confirmSetupIntent(with: setupIntentParams) { _, _ in
             e.fulfill()
         }
         waitForExpectations(timeout: 10)
