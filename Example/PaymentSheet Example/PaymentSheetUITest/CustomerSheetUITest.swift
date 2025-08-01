@@ -381,14 +381,6 @@ class CustomerSheetUITest: XCTestCase {
         app.otherElements["consent_manually_verify_label"].links.firstMatch.tap()
         try! fillUSBankData_microdeposits(app)
 
-        // Fill out Link
-        XCTAssertTrue(app.textFields["Email"].waitForExistence(timeout: timeout))
-        app.typeText("test-\(UUID().uuidString)@example.com")
-        XCTAssertTrue(app.textFields["Phone number"].waitForExistence(timeout: timeout))
-        app.typeText("3105551234")
-        app.toolbars.buttons["Done"].tap()
-        app.buttons["Save with Link"].waitForExistenceAndTap(timeout: timeout)
-
         let doneManualEntry = app.buttons["success_done_button"]
         XCTAssertTrue(doneManualEntry.waitForExistence(timeout: timeout))
         doneManualEntry.tap()

@@ -160,14 +160,20 @@ extension PaymentSheet {
             completion(makePaymentSheetResult(for: status, error: error), nil)
         }
 
-        let additionalClientAttributionMetadata: [String: String] = {
+        let clientAttributionMetadata: STPClientAttributionMetadata = {
             switch intent {
             case .paymentIntent(let paymentIntent):
-                makePaymentIntentClientAttributionMetadata(paymentIntent, elementsSessionConfigId: elementsSession.sessionID)
+                return .init(elementsSessionConfigId: elementsSession.sessionID,
+                             paymentIntentCreationFlow: .standard,
+                             paymentMethodSelectionFlow: paymentIntent.automaticPaymentMethods?.enabled ?? false ? .automatic : .merchantSpecified)
             case .setupIntent(let setupIntent):
-                makeSetupIntentClientAttributionMetadata(setupIntent, elementsSessionConfigId: elementsSession.sessionID)
+                return .init(elementsSessionConfigId: elementsSession.sessionID,
+                             paymentIntentCreationFlow: .standard,
+                             paymentMethodSelectionFlow: setupIntent.automaticPaymentMethods?.enabled ?? false ? .automatic : .merchantSpecified)
             case .deferredIntent(let intentConfig):
-                makeDeferredClientAttributionMetadata(intentConfig, elementsSessionConfigId: elementsSession.sessionID)
+                return .init(elementsSessionConfigId: elementsSession.sessionID,
+                             paymentIntentCreationFlow: .deferred,
+                             paymentMethodSelectionFlow: intentConfig.paymentMethodTypes?.isEmpty ?? true ? .automatic : .merchantSpecified)
             }
         }()
 
@@ -203,6 +209,7 @@ extension PaymentSheet {
                 mobilePaymentElementFeatures: elementsSession.customerSessionMobilePaymentElementFeatures,
                 isSettingUp: intent.isSetupFutureUsageSet(for: paymentMethodType)
             )
+            confirmParams.setClientAttributionMetadata(clientAttributionMetadata: clientAttributionMetadata)
             switch intent {
             // MARK: ↪ PaymentIntent
             case .paymentIntent(let paymentIntent):
