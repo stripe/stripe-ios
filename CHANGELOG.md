@@ -1,3 +1,8 @@
+## XX.YY.ZZ 2025-XX-YY
+
+### PaymentSheet
+* [Fixed] Fixed an issue that caused EmbeddedPaymentElement to log broken layout constraints.
+
 ## 24.18.1 2025-07-29
 * [Fixed] Improved Klarna payments when using Universal Links.
 
