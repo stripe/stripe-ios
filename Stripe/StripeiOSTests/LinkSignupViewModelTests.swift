@@ -253,7 +253,9 @@ extension LinkInlineSignupViewModelTests {
         showCheckbox: Bool,
         hasAccountObject: Bool = false,
         shouldFailLookup: Bool = false,
-        allowsDefaultOptIn: Bool = false
+        allowsDefaultOptIn: Bool = false,
+        signupOptInFeatureEnabled: Bool = false,
+        signupOptInInitialValue: Bool = false
     ) -> LinkInlineSignupViewModel {
         let linkAccount: PaymentSheetLinkAccount? = hasAccountObject
         ? PaymentSheetLinkAccount(
@@ -270,6 +272,8 @@ extension LinkInlineSignupViewModelTests {
             showCheckbox: showCheckbox,
             accountService: MockAccountService(shouldFailLookup: shouldFailLookup),
             allowsDefaultOptIn: allowsDefaultOptIn,
+            signupOptInFeatureEnabled: signupOptInFeatureEnabled,
+            signupOptInInitialValue: signupOptInInitialValue,
             linkAccount: linkAccount,
             country: country
         )

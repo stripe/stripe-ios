@@ -5,7 +5,6 @@
 //  Created by Yuki Tokuhiro on 3/26/23.
 //
 
-@_spi(STP) import StripePaymentsUI
 @_spi(STP) import StripeUICore
 import UIKit
 

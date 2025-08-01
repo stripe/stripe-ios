@@ -199,12 +199,7 @@ class PaymentSheetFormFactory {
             // We have two ways to create the form for a payment method
             // 1. Custom, one-off forms
             if paymentMethod == .card {
-                return makeCard(
-                    cardBrandChoiceEligible: cardBrandChoiceEligible,
-                    allowsLinkDefaultOptIn: allowsLinkDefaultOptIn,
-                    signupOptInFeatureEnabled: signupOptInFeatureEnabled,
-                    signupOptInInitialValue: signupOptInInitialValue
-                )
+                return makeCard()
             } else if paymentMethod == .USBankAccount {
                 return makeUSBankAccount(merchantName: configuration.merchantDisplayName)
             } else if paymentMethod == .UPI {
