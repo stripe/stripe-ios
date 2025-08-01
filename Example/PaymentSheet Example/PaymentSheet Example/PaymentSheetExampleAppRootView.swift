@@ -55,8 +55,8 @@ struct PaymentSheetExampleAppRootView: View {
         case walletButtonsView_swiftUI
         case addressCollection_swiftUI
 
-        case customerSheet_playground
         case paymentSheet_playground
+        case customerSheet_playground
 
         static var destinationsBySection: [Section: [NavigationDestination]] {
             var result: [Section: [NavigationDestination]] = [:]
@@ -82,8 +82,8 @@ struct PaymentSheetExampleAppRootView: View {
                      .walletButtonsView_swiftUI,
                      .addressCollection_swiftUI:
                     result[.examples]?.append(destination)
-                case .customerSheet_playground,
-                     .paymentSheet_playground:
+                case .paymentSheet_playground,
+                     .customerSheet_playground:
                     result[.testPlaygrounds]?.append(destination)
                 }
             }

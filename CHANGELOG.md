@@ -1,3 +1,6 @@
+## 24.18.1 2025-07-29
+* [Fixed] Improved Klarna payments when using Universal Links.
+
 ## 24.18.0 2025-07-28
 
 * [Added] Postal code validation for Canada and UK addresses

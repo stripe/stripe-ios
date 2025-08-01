@@ -160,14 +160,20 @@ extension PaymentSheet {
             completion(makePaymentSheetResult(for: status, error: error), nil)
         }
 
-        let additionalClientAttributionMetadata: [String: String] = {
+        let clientAttributionMetadata: STPClientAttributionMetadata = {
             switch intent {
             case .paymentIntent(let paymentIntent):
-                makePaymentIntentClientAttributionMetadata(paymentIntent, elementsSessionConfigId: elementsSession.sessionID)
+                return .init(elementsSessionConfigId: elementsSession.sessionID,
+                             paymentIntentCreationFlow: .standard,
+                             paymentMethodSelectionFlow: paymentIntent.automaticPaymentMethods?.enabled ?? false ? .automatic : .merchantSpecified)
             case .setupIntent(let setupIntent):
-                makeSetupIntentClientAttributionMetadata(setupIntent, elementsSessionConfigId: elementsSession.sessionID)
+                return .init(elementsSessionConfigId: elementsSession.sessionID,
+                             paymentIntentCreationFlow: .standard,
+                             paymentMethodSelectionFlow: setupIntent.automaticPaymentMethods?.enabled ?? false ? .automatic : .merchantSpecified)
             case .deferredIntent(let intentConfig):
-                makeDeferredClientAttributionMetadata(intentConfig, elementsSessionConfigId: elementsSession.sessionID)
+                return .init(elementsSessionConfigId: elementsSession.sessionID,
+                             paymentIntentCreationFlow: .deferred,
+                             paymentMethodSelectionFlow: intentConfig.paymentMethodTypes?.isEmpty ?? true ? .automatic : .merchantSpecified)
             }
         }()
 
@@ -202,6 +208,7 @@ extension PaymentSheet {
                 mobilePaymentElementFeatures: elementsSession.customerSessionMobilePaymentElementFeatures,
                 isSettingUp: intent.isSetupFutureUsageSet(for: paymentMethodType)
             )
+            confirmParams.setClientAttributionMetadata(clientAttributionMetadata: clientAttributionMetadata)
             switch intent {
             // MARK: ↪ PaymentIntent
             case .paymentIntent(let paymentIntent):
@@ -218,7 +225,6 @@ extension PaymentSheet {
                 paymentHandler.confirmPayment(
                     params,
                     with: authenticationContext,
-                    additionalClientAttributionMetadata: additionalClientAttributionMetadata,
                     completion: { actionStatus, paymentIntent, error in
                         if let paymentIntent {
                             setDefaultPaymentMethodIfNecessary(actionStatus: actionStatus, intent: .paymentIntent(paymentIntent), configuration: configuration, paymentMethodSetAsDefault: elementsSession.paymentMethodSetAsDefaultForPaymentSheet)
@@ -241,7 +247,6 @@ extension PaymentSheet {
                 paymentHandler.confirmSetupIntent(
                     setupIntentParams,
                     with: authenticationContext,
-                    additionalClientAttributionMetadata: additionalClientAttributionMetadata,
                     completion: { actionStatus, setupIntent, error in
                         if let setupIntent {
                             setDefaultPaymentMethodIfNecessary(actionStatus: actionStatus, intent: .setupIntent(setupIntent), configuration: configuration, paymentMethodSetAsDefault: elementsSession.paymentMethodSetAsDefaultForPaymentSheet)
@@ -264,7 +269,6 @@ extension PaymentSheet {
                     paymentHandler: paymentHandler,
                     isFlowController: isFlowController,
                     allowsSetAsDefaultPM: elementsSession.paymentMethodSetAsDefaultForPaymentSheet,
-                    additionalClientAttributionMetadata: additionalClientAttributionMetadata,
                     completion: completion
                 )
             }
@@ -327,6 +331,7 @@ extension PaymentSheet {
             // - paymentMethodParams: The params to use for the payment.
             // - linkAccount: The Link account used for payment. Will be logged out if present after payment completes, whether it was successful or not.
             let confirmWithPaymentMethodParams: (STPPaymentMethodParams, PaymentSheetLinkAccount?, Bool) -> Void = { paymentMethodParams, linkAccount, shouldSave in
+                paymentMethodParams.clientAttributionMetadata = clientAttributionMetadata
                 switch intent {
                 case .paymentIntent(let paymentIntent):
                     let paymentIntentParams = STPPaymentIntentParams(clientSecret: paymentIntent.clientSecret)
@@ -341,7 +346,6 @@ extension PaymentSheet {
                     paymentHandler.confirmPayment(
                         paymentIntentParams,
                         with: authenticationContext,
-                        additionalClientAttributionMetadata: additionalClientAttributionMetadata,
                         completion: { actionStatus, _, error in
                             paymentHandlerCompletion(actionStatus, error)
                             if actionStatus == .succeeded {
@@ -356,7 +360,6 @@ extension PaymentSheet {
                     paymentHandler.confirmSetupIntent(
                         setupIntentParams,
                         with: authenticationContext,
-                        additionalClientAttributionMetadata: additionalClientAttributionMetadata,
                         completion: { actionStatus, _, error in
                             paymentHandlerCompletion(actionStatus, error)
                             if actionStatus == .succeeded {
@@ -376,7 +379,6 @@ extension PaymentSheet {
                         authenticationContext: authenticationContext,
                         paymentHandler: paymentHandler,
                         isFlowController: isFlowController,
-                        additionalClientAttributionMetadata: additionalClientAttributionMetadata,
                         completion: { psResult, confirmationType in
                             if case .completed = psResult {
                                 linkAccount?.logout()
@@ -409,7 +411,6 @@ extension PaymentSheet {
                     paymentHandler.confirmPayment(
                         paymentIntentParams,
                         with: authenticationContext,
-                        additionalClientAttributionMetadata: additionalClientAttributionMetadata,
                         completion: { actionStatus, _, error in
                             if actionStatus == .succeeded {
                                 linkAccount?.logout()
@@ -425,7 +426,6 @@ extension PaymentSheet {
                     paymentHandler.confirmSetupIntent(
                         setupIntentParams,
                         with: authenticationContext,
-                        additionalClientAttributionMetadata: additionalClientAttributionMetadata,
                         completion: { actionStatus, _, error in
                             if actionStatus == .succeeded {
                                 linkAccount?.logout()
@@ -441,7 +441,6 @@ extension PaymentSheet {
                         authenticationContext: authenticationContext,
                         paymentHandler: paymentHandler,
                         isFlowController: isFlowController,
-                        additionalClientAttributionMetadata: additionalClientAttributionMetadata,
                         completion: { psResult, confirmationType in
                             if case .completed = psResult {
                                 linkAccount?.logout()
@@ -481,6 +480,7 @@ extension PaymentSheet {
                     STPPaymentMethodParams,
                     Bool
                 ) -> Void = { linkAccount, paymentMethodParams, shouldSave in
+                    paymentMethodParams.clientAttributionMetadata = clientAttributionMetadata
                     guard linkAccount.sessionState == .verified else {
                         // We don't support 2FA in the native mobile Link flow, so if 2FA is required then this is a no-op.
                         // Just fall through and don't save the card details to Link.
@@ -506,7 +506,7 @@ extension PaymentSheet {
                                     allowRedisplay: paymentMethodParams.allowRedisplay,
                                     expectedPaymentMethodType: paymentDetails.expectedPaymentMethodTypeForPassthroughMode(elementsSession),
                                     billingPhoneNumber: billingPhoneNumber,
-                                    additionalClientAttributionMetadata: additionalClientAttributionMetadata
+                                    clientAttributionMetadata: clientAttributionMetadata
                                 ) { result in
                                     switch result {
                                     case .success(let paymentDetailsShareResponse):
@@ -578,7 +578,7 @@ extension PaymentSheet {
                         allowRedisplay: nil,
                         expectedPaymentMethodType: paymentDetails.expectedPaymentMethodTypeForPassthroughMode(elementsSession),
                         billingPhoneNumber: confirmationExtras?.billingPhoneNumber,
-                        additionalClientAttributionMetadata: additionalClientAttributionMetadata
+                        clientAttributionMetadata: clientAttributionMetadata
                     ) { result in
                         switch result {
                         case .success(let paymentDetailsShareResponse):

@@ -22,7 +22,8 @@ class StripeAttestTest: XCTestCase {
         let expectation = self.expectation(description: "Wait for setup")
         // Reset storage
         Task { @MainActor in
-            await UserDefaults.standard.removeObject(forKey: self.stripeAttest.defaultsKeyForSetting(.lastAttestedDate))
+            await UserDefaults.standard.removeObject(forKey: self.stripeAttest.defaultsKeyForSetting(.dailyAttemptCount))
+            await UserDefaults.standard.removeObject(forKey: self.stripeAttest.defaultsKeyForSetting(.firstAttemptToday))
             await stripeAttest.resetKey()
             expectation.fulfill()
         }
@@ -40,17 +41,34 @@ class StripeAttestTest: XCTestCase {
         try! await self.mockAttestBackend.assertionTest(assertion: assertionHandle.assertion)
     }
 
-    func testCanOnlyAttestOncePerDayInProd() async {
-        // Create and attest a key
-        try! await stripeAttest.attest()
+    func testCanOnlyAttestThreeTimesPerDayInProd() async {
         let invalidKeyError = NSError(domain: DCErrorDomain, code: DCError.invalidKey.rawValue, userInfo: nil)
-        // But fail the assertion, causing the key to be reset
-        await mockAttestService.setShouldFailAssertionWithError(invalidKeyError)
+
+        // First 3 attempts should succeed
+        for i in 1...3 {
+            // Create and attest a key
+            try! await stripeAttest.attest()
+            // But fail the assertion, causing the key to be reset
+            await mockAttestService.setShouldFailAssertionWithError(invalidKeyError)
+            do {
+                _ = try await stripeAttest.assert()
+                XCTFail("Should not succeed on attempt \(i)")
+            } catch {
+                if i < 3 {
+                    // First 2 attempts should fail with shouldNotAttest (since we're re-attesting)
+                    XCTAssertEqual(error as! StripeAttest.AttestationError, StripeAttest.AttestationError.shouldNotAttest)
+                } else {
+                    // Third attempt should fail with attestationRateLimitExceeded
+                    XCTAssertEqual(error as! StripeAttest.AttestationError, StripeAttest.AttestationError.attestationRateLimitExceeded)
+                }
+            }
+        }
+
+        // Fourth attempt should hit rate limit
         do {
-            _ = try await stripeAttest.assert()
-            XCTFail("Should not succeed")
+            try await stripeAttest.attest()
+            XCTFail("Should not succeed on 4th attempt")
         } catch {
-            // Should get a rate limiting error when we try to generate the second key:
             XCTAssertEqual(error as! StripeAttest.AttestationError, StripeAttest.AttestationError.attestationRateLimitExceeded)
         }
     }
@@ -79,8 +97,9 @@ class StripeAttestTest: XCTestCase {
         do {
             // Create and attest a key
             try! await stripeAttest.attest()
-            // But it's an old key, so we'll be allowed to attest a new one
-            await UserDefaults.standard.set(Date.distantPast, forKey: self.stripeAttest.defaultsKeyForSetting(.lastAttestedDate))
+            // But it's an old key, so we'll be allowed to attest a new one (reset daily counters)
+            await UserDefaults.standard.set(Date.distantPast, forKey: self.stripeAttest.defaultsKeyForSetting(.firstAttemptToday))
+            await UserDefaults.standard.set(0, forKey: self.stripeAttest.defaultsKeyForSetting(.dailyAttemptCount))
             // Always fail the assertions and don't remember attestations:
             let invalidKeyError = NSError(domain: DCErrorDomain, code: DCError.invalidKey.rawValue, userInfo: nil)
             await mockAttestService.setShouldFailAssertionWithError(invalidKeyError)
@@ -106,8 +125,9 @@ class StripeAttestTest: XCTestCase {
     func testAssertionsNotRequiredInTestMode() async {
         // Configure a test merchant PK:
         await stripeAttest.apiClient!.publishableKey = "pk_test_abc123"
-        // And reset the last attestation date:
-        await UserDefaults.standard.removeObject(forKey: self.stripeAttest.defaultsKeyForSetting(.lastAttestedDate))
+        // And reset the attestation tracking:
+        await UserDefaults.standard.removeObject(forKey: self.stripeAttest.defaultsKeyForSetting(.dailyAttemptCount))
+        await UserDefaults.standard.removeObject(forKey: self.stripeAttest.defaultsKeyForSetting(.firstAttemptToday))
         // Fail the assertion, which will cause us to try to re-attest the key, but then the
         // assertions still won't work, so we'll send the testmode data instead.
         let invalidKeyError = NSError(domain: DCErrorDomain, code: DCError.invalidKey.rawValue, userInfo: nil)

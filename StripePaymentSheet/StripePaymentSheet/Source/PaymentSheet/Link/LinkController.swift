@@ -56,10 +56,7 @@ import UIKit
     private let analyticsHelper: PaymentSheetAnalyticsHelper
 
     private lazy var linkAccountService: LinkAccountServiceProtocol = {
-        LinkAccountService(
-            useMobileEndpoints: elementsSession.linkSettings?.useAttestationEndpoints ?? false,
-            sessionID: elementsSession.sessionID
-        )
+        LinkAccountService(elementsSession: elementsSession)
     }()
 
     private var selectedPaymentDetails: ConsumerPaymentDetails? {
@@ -404,7 +401,7 @@ import UIKit
 
     private static func lookupConsumer(
         email: String,
-        linkAccountService: LinkAccountServiceProtocol,
+        linkAccountService: any LinkAccountServiceProtocol,
         completion: @escaping (Result<PaymentSheetLinkAccount?, Error>) -> Void
     ) {
         linkAccountService.lookupAccount(

@@ -10,6 +10,7 @@ import SwiftUI
 
 class LinkInlineVerificationViewModel: ObservableObject {
     let account: PaymentSheetLinkAccount
+    let paymentMethodPreview: LinkPaymentMethodPreview?
     let textFieldController = OneTimeCodeTextFieldController()
     let appearance: PaymentSheet.Appearance
 
@@ -18,6 +19,7 @@ class LinkInlineVerificationViewModel: ObservableObject {
 
     init(account: PaymentSheetLinkAccount, appearance: PaymentSheet.Appearance) {
         self.account = account
+        self.paymentMethodPreview = .init(from: account.displayablePaymentDetails)
         self.appearance = appearance
     }
 

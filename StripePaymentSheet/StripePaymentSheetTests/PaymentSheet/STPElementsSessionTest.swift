@@ -65,6 +65,25 @@ class STPElementsSessionTest: XCTestCase {
         XCTAssertFalse(elementsSession.isApplePayEnabled)
     }
 
+    func testDecodedObjectFromAPIResponseMapping_merchantLogoUrl() {
+        // nil merchant_logo_url
+        var elementsSessionJson = STPTestUtils.jsonNamed("ElementsSession")!
+        elementsSessionJson["merchant_logo_url"] = nil
+        var elementsSession = STPElementsSession.decodedObject(fromAPIResponse: elementsSessionJson)!
+        XCTAssertNil(elementsSession.merchantLogoUrl)
+
+        // invalid URL string
+        elementsSessionJson["merchant_logo_url"] = "invalid url"
+        elementsSession = STPElementsSession.decodedObject(fromAPIResponse: elementsSessionJson)!
+        XCTAssertNil(elementsSession.merchantLogoUrl)
+
+        // valid URL string
+        elementsSessionJson["merchant_logo_url"] = "https://example.com/valid-logo.png"
+        elementsSession = STPElementsSession.decodedObject(fromAPIResponse: elementsSessionJson)!
+        XCTAssertNotNil(elementsSession.merchantLogoUrl)
+        XCTAssertEqual(elementsSession.merchantLogoUrl?.absoluteString, "https://example.com/valid-logo.png")
+    }
+
     func testMissingEPMResponseDoesntFireAnalytic() {
         // If STPElementsSession decodes a dict...
         var elementsSessionJson = STPTestUtils.jsonNamed("ElementsSession")!
