@@ -30,7 +30,7 @@ public extension PaymentSheet {
 
         /// The corner radius used for buttons, inputs, tabs in PaymentSheet
         /// - Note: The behavior of this property is consistent with the behavior of corner radius on `CALayer`
-        public var cornerRadius: CGFloat = 6.0
+        public var cornerRadius: CGFloat = NewDesignDetector.newDesignEnabled ? 16 : 4.0
 
         /// The border used for inputs and tabs in PaymentSheet
         /// - Note: The behavior of this property is consistent with the behavior of border width on `CALayer`
