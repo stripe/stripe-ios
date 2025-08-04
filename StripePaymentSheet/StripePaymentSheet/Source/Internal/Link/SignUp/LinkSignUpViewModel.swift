@@ -169,6 +169,7 @@ final class LinkSignUpViewModel: NSObject {
         linkAccount.signUp(
             with: phoneNumber,
             legalName: requiresNameCollection ? legalName : nil,
+            countryCode: nil,
             consentAction: .clicked_button_mobile_v1
         ) { [weak self] result in
             switch result {

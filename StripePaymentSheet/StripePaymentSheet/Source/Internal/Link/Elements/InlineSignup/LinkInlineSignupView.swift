@@ -53,7 +53,7 @@ final class LinkInlineSignupView: UIView {
         // Don't allow a default phone number in textFieldsOnly mode.
         // Otherwise, we'd imply consumer consent when it hasn't occurred.
         switch viewModel.mode {
-        case .checkbox, .checkboxWithDefaultOptIn:
+        case .checkbox, .checkboxWithDefaultOptIn, .signupOptIn:
             return PhoneNumberElement(
                 defaultCountryCode: viewModel.configuration.defaultBillingDetails.address.country,
                 defaultPhoneNumber: viewModel.configuration.defaultBillingDetails.phone,
@@ -80,7 +80,10 @@ final class LinkInlineSignupView: UIView {
         return phoneNumberElement
     }()
 
-    private(set) lazy var legalTermsElement: StaticElement = {
+    private(set) lazy var legalTermsElement: StaticElement? = {
+        guard viewModel.mode != .signupOptIn else {
+            return nil
+        }
         let legalView = LinkLegalTermsView(textAlignment: .left,
                                            mode: viewModel.mode,
                                            delegate: self)
@@ -132,11 +135,18 @@ final class LinkInlineSignupView: UIView {
             elements.append(contentsOf: [emailSection, phoneNumberSection, nameSection])
         case .textFieldsOnlyPhoneFirst:
             elements.append(contentsOf: [phoneNumberSection, emailSection, nameSection])
+        case .signupOptIn:
+            elements.append(checkboxElement)
         }
 
         let style: FormElement.Style = viewModel.showCheckbox ? .plain : .bordered
         let formElement = FormElement(elements: elements, style: style, theme: theme)
-        let containerFormElement = FormElement(elements: [formElement, legalTermsElement], theme: theme, customSpacing: [(formElement, ElementsUI.formSpacing - 4.0)])
+        let visibleElements: [Element?] = [formElement, legalTermsElement]
+        let containerFormElement = FormElement(
+            elements: visibleElements.compactMap { $0 },
+            theme: theme,
+            customSpacing: [(formElement, ElementsUI.formSpacing - 4.0)]
+        )
         return containerFormElement
     }()
 
@@ -213,10 +223,12 @@ final class LinkInlineSignupView: UIView {
         formElement.toggleChild(emailSection, show: viewModel.shouldShowEmailField, animated: animated)
         formElement.toggleChild(phoneNumberSection, show: viewModel.shouldShowPhoneField, animated: animated)
         formElement.toggleChild(nameSection, show: viewModel.shouldShowNameField, animated: animated)
-        formElement.toggleChild(legalTermsElement, show: viewModel.shouldShowLegalTerms, animated: animated)
+        if let legalTermsElement {
+            formElement.toggleChild(legalTermsElement, show: viewModel.shouldShowLegalTerms, animated: animated)
+        }
 
         switch viewModel.mode {
-        case .checkbox, .checkboxWithDefaultOptIn:
+        case .checkbox, .checkboxWithDefaultOptIn, .signupOptIn:
             // 2-way binding
             checkboxElement.isChecked = viewModel.saveCheckboxChecked
         case .textFieldsOnlyEmailFirst, .textFieldsOnlyPhoneFirst:
@@ -267,7 +279,7 @@ extension LinkInlineSignupView: ElementDelegate {
     func didUpdate(element: Element) {
         if element === checkboxElement {
             viewModel.saveCheckboxChecked = checkboxElement.isChecked
-            if checkboxElement.isChecked {
+            if checkboxElement.isChecked && viewModel.mode != .signupOptIn {
                 focusOnEmptyRequiredField()
             } else {
                 endEditing(true)

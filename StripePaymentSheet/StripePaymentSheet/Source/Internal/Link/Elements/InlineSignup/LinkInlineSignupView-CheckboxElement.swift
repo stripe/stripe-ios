@@ -45,7 +45,7 @@ extension LinkInlineSignupView {
 
             let text = {
                 switch mode {
-                case .checkboxWithDefaultOptIn:
+                case .checkboxWithDefaultOptIn, .signupOptIn:
                     return STPLocalizedString(
                         "Save my info for faster checkout with Link",
                         """
@@ -70,7 +70,7 @@ extension LinkInlineSignupView {
                     return String.Localized.pay_faster_at_$merchant_and_thousands_of_merchants(
                         merchantDisplayName: merchantName
                     )
-                case .checkboxWithDefaultOptIn:
+                case .checkboxWithDefaultOptIn, .signupOptIn:
                     return nil
                 }
             }()
