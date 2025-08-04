@@ -143,7 +143,7 @@ class CardScanningView: UIView {
     }
 
     func stopScanner() {
-        cardScanner?.stopWithError(nil)
+        cardScanner?.stop(didError: false)
     }
 
     @objc private func closeTapped() {
@@ -281,7 +281,7 @@ extension CardScanningView: STPCardScannerDelegate {
         self.delegate?.cardScanningViewShouldClose(self)
     }
 
-    func cardScanner(_ scanner: STPCardScanner, didError error: Error) {
+    func cardScannerDidError(_ scanner: STPCardScanner) {
         self.isDisplayingError = true
     }
 }

@@ -23,7 +23,7 @@ enum STPCardScannerError: Int {
 @available(macCatalyst 14.0, *)
 @objc protocol STPCardScannerDelegate {
     func cardScanner(_ scanner: STPCardScanner, didFinishWith cardParams: STPPaymentMethodCardParams?)
-    func cardScanner(_ scanner: STPCardScanner, didError error: Error)
+    func cardScannerDidError(_ scanner: STPCardScanner)
 }
 
 @available(macCatalyst 14.0, *)
@@ -38,9 +38,9 @@ class STPCardScanner: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate {
 
     // iOS will kill the app if it tries to request the camera without an NSCameraUsageDescription
     private static let cardScanningAvailableCameraHasUsageDescription = {
-        return
-            (Bundle.main.infoDictionary?["NSCameraUsageDescription"] != nil
-            || Bundle.main.localizedInfoDictionary?["NSCameraUsageDescription"] != nil)
+        let cameraUsageDescriptionExists = Bundle.main.infoDictionary?["NSCameraUsageDescription"] != nil
+        let localizedCameraUsageDescriptionExists = Bundle.main.localizedInfoDictionary?["NSCameraUsageDescription"] != nil
+        return cameraUsageDescriptionExists
     }()
 
     static var cardScanningAvailable: Bool {
@@ -115,20 +115,20 @@ class STPCardScanner: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate {
         feedbackGenerator?.prepare()
 
         captureSessionQueue?.async(execute: {
-            #if targetEnvironment(simulator)
-                // Camera not supported on Simulator
-                self.stopWithError(STPCardScanner.stp_cardScanningError())
-                return
-            #else
-                self.detectedNumbers = NSCountedSet()
-                self.detectedExpirations = NSCountedSet()
-                self.setupCamera()
-                DispatchQueue.main.async(execute: {
-                    self.cameraView?.captureSession = self.captureSession
-                    self.cameraView?.videoPreviewLayer.connection?.videoOrientation =
-                        self.videoOrientation
-                })
-            #endif
+#if targetEnvironment(simulator)
+            // Camera not supported on Simulator
+            self.stop(didError: true)
+            return
+#else
+            self.detectedNumbers = NSCountedSet()
+            self.detectedExpirations = NSCountedSet()
+            self.setupCamera()
+            DispatchQueue.main.async(execute: {
+                self.cameraView?.captureSession = self.captureSession
+                self.cameraView?.videoPreviewLayer.connection?.videoOrientation =
+                self.videoOrientation
+            })
+#endif
         })
     }
 
@@ -157,17 +157,6 @@ class STPCardScanner: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate {
     private var detectedExpirations = NSCountedSet()
     private var startTime: Date?
 
-    private static func stp_cardScanningError() -> Error {
-        let userInfo = [
-            NSLocalizedDescriptionKey: String.Localized.allow_camera_access,
-            STPError.errorMessageKey: "The camera couldn't be used.",
-        ]
-        return NSError(
-            domain: STPCardScannerErrorDomain,
-            code: STPCardScannerError.cameraNotAvailable.rawValue,
-            userInfo: userInfo)
-    }
-
     deinit {
         if isScanning {
             captureDevice?.unlockForConfiguration()
@@ -175,9 +164,9 @@ class STPCardScanner: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate {
         }
     }
 
-    func stopWithError(_ error: Error?) {
+    func stop(didError: Bool) {
         if isScanning {
-            finish(with: nil, error: error)
+            finish(with: nil, didError: didError)
         }
     }
 
@@ -190,7 +179,7 @@ class STPCardScanner: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate {
                 return
             }
             if error != nil {
-                strongSelf?.stopWithError(STPCardScanner.stp_cardScanningError())
+                strongSelf?.stop(didError: true)
                 return
             }
             strongSelf?.processVNRequest(request)
@@ -202,7 +191,7 @@ class STPCardScanner: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate {
                                                                     [.builtInTripleCamera, .builtInDualWideCamera, .builtInWideAngleCamera],
                                                                 mediaType: .video, position: .back)
         guard let captureDevice = discoverySession.devices.first else {
-            stopWithError(STPCardScanner.stp_cardScanningError())
+            stop(didError: true)
             return
         }
         self.captureDevice = captureDevice
@@ -214,7 +203,7 @@ class STPCardScanner: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate {
         do {
             deviceInput = try AVCaptureDeviceInput(device: captureDevice)
         } catch {
-            stopWithError(STPCardScanner.stp_cardScanningError())
+            stop(didError: true)
             return
         }
 
@@ -222,7 +211,7 @@ class STPCardScanner: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate {
             if captureSession?.canAddInput(deviceInput) ?? false {
                 captureSession?.addInput(deviceInput)
             } else {
-                stopWithError(STPCardScanner.stp_cardScanningError())
+                stop(didError: true)
                 return
             }
         }
@@ -242,7 +231,7 @@ class STPCardScanner: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate {
             if captureSession?.canAddOutput(videoDataOutput) ?? false {
                 captureSession?.addOutput(videoDataOutput)
             } else {
-                stopWithError(STPCardScanner.stp_cardScanningError())
+                stop(didError: true)
                 return
             }
         }
@@ -314,7 +303,7 @@ class STPCardScanner: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate {
                 } else if let sanitizedExpiration = STPStringUtils.sanitizedExpirationDateFromOCRString(recognizedText.string) {
                     handlePossibleExpirationDate(sanitizedExpiration)
                 } else if possibleNumber.count >= 4 && possibleNumber.count <= 6
-                    && STPStringUtils.stringMayContainExpirationDate(recognizedText.string)
+                            && STPStringUtils.stringMayContainExpirationDate(recognizedText.string)
                 {
                     // Try to parse anything that looks like an expiration date.
                     let expirationString = STPStringUtils.expirationDateString(
@@ -450,11 +439,11 @@ class STPCardScanner: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate {
                 params.expYear = NSNumber(
                     value: Int((topExpiration as! NSString).substring(from: 2)) ?? 0)
             }
-            finish(with: params, error: nil)
+            finish(with: params, didError: false)
         }
     }
 
-    private func finish(with params: STPPaymentMethodCardParams?, error: Error?) {
+    private func finish(with params: STPPaymentMethodCardParams?, didError: Bool) {
         var duration: TimeInterval = 0.0
         if let startTime = startTime {
             duration = Date().timeIntervalSince(startTime)
@@ -464,22 +453,22 @@ class STPCardScanner: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate {
         captureSession?.stopRunning()
 
         DispatchQueue.main.async(execute: {
-            switch (params, error) {
-            // if we completed with params...
+            switch (params, didError) {
+                // if we completed with params...
             case (let params?, _):
                 // log success and report scan completion
                 STPAnalyticsClient.sharedClient.logCardScanSucceeded(withDuration: duration)
                 self.delegate?.cardScanner(self, didFinishWith: params)
-            // if we completed with no params or error...
-            case (nil, nil):
+                // if we completed with no params or error...
+            case (nil, false):
                 // log cancellation and report scan completion
                 STPAnalyticsClient.sharedClient.logCardScanCancelled(withDuration: duration)
                 self.delegate?.cardScanner(self, didFinishWith: nil)
-            // if we errored...
-            case (nil, let error?):
+                // if we errored...
+            case (nil, true):
                 // log cancellation and report scan error
                 STPAnalyticsClient.sharedClient.logCardScanCancelled(withDuration: duration)
-                self.delegate?.cardScanner(self, didError: error)
+                self.delegate?.cardScannerDidError(self)
             }
             self.feedbackGenerator = nil
             DispatchQueue.main.async {
