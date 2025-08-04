@@ -49,7 +49,7 @@ public protocol CryptoOnrampCoordinatorProtocol {
     ///
     /// - Parameter info: The KYC info to attach to the Link user.
     /// - Throws an error if an error occurs.
-    func collectKYCData(info: KYCData) async throws
+    func collectKYCInfo(info: KycInfo) async throws
 }
 
 /// Coordinates headless Link user authentication and identity verification, leaving most of the UI to the client.
@@ -130,8 +130,7 @@ public final class CryptoOnrampCoordinator: CryptoOnrampCoordinatorProtocol {
         }
     }
 
-    public func collectKYCData(info: KYCData) async throws {
-        // TODO: implement
-        // /v1/crypto/internal/kyc_data_collection
+    public func collectKYCInfo(info: KycInfo) async throws {
+        try await apiClient.collectKycInfo(info: info)
     }
 }

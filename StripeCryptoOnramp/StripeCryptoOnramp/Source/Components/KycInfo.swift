@@ -1,5 +1,5 @@
 //
-//  KYCData.swift
+//  KycInfo.swift
 //  StripeCryptoOnramp
 //
 //  Created by Michael Liberatore on 7/30/25.
@@ -10,7 +10,7 @@ import Foundation
 
 /// Represents KYC information required for crypto operations.
 @_spi(CryptoOnrampSDKPreview)
-public struct KYCData: Equatable {
+public struct KycInfo: Equatable {
 
     /// Represents the three components (day, month, year) of a birth date.
     public struct DateOfBirth: Encodable, Equatable {
@@ -33,7 +33,7 @@ public struct KYCData: Equatable {
             month = calendar.component(.month, from: date)
             year = calendar.component(.year, from: date)
         }
-        
+
         /// Creates a new instance of `DateOfBirth`.
         /// - Parameters:
         ///   - day: The one- or two-digit day of the month (e.g. 31).
@@ -71,7 +71,7 @@ public struct KYCData: Equatable {
     public let birthCity: String?
 }
 
-extension KYCData: Encodable {
+extension KycInfo: Encodable {
 
     // MARK: - Encodable
 

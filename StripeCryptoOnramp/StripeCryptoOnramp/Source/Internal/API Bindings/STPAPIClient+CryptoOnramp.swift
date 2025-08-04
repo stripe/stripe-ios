@@ -48,7 +48,18 @@ extension STPAPIClient {
         }
     }
 
-    func collectKYCData(_ kycData: KYCData) async throws {
+    func collectKycInfo(info: KycInfo) async throws {
+        let endpoint = "crypto/internal/kyc_data_collection"
 
+        return try await withCheckedThrowingContinuation { continuation in
+            post(resource: endpoint, object: info) { (result: Result<KYCDataCollectionResponse, Error>) in
+                switch result {
+                case .success(let customer):
+                    continuation.resume()
+                case .failure(let error):
+                    continuation.resume(throwing: error)
+                }
+            }
+        }
     }
 }
