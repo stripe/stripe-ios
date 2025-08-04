@@ -28,6 +28,9 @@ extension StripeAPI {
             return PaymentsSDKVariant.paymentUserAgent
         }()
 
+        /// Radar options that may contain HCaptcha token
+        @_spi(STP) public var radarOptions: STPRadarOptions?
+
         /// Contains metadata with identifiers for the session and information about the integration
         @_spi(STP) public var clientAttributionMetadata: ClientAttributionMetadata = ClientAttributionMetadata()
 
