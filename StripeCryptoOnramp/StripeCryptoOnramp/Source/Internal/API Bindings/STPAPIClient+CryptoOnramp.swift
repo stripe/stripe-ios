@@ -47,4 +47,8 @@ extension STPAPIClient {
             }
         }
     }
+
+    func collectKYCData(_ kycData: KYCData) async throws {
+
+    }
 }
