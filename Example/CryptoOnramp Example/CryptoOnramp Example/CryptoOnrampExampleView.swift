@@ -11,6 +11,9 @@ import SwiftUI
 @_spi(CryptoOnrampSDKPreview)
 import StripeCryptoOnramp
 
+@_spi(STP)
+import StripePaymentSheet
+
 /// The main content view of the example CryptoOnramp app.
 struct CryptoOnrampExampleView: View {
     @State private var coordinator: CryptoOnrampCoordinator?

@@ -1,15 +1,14 @@
 //
-//  Appearance.swift
-//  StripeCryptoOnramp
+//  LinkAppearance.swift
+//  StripePaymentSheet
 //
 //  Created by Michael Liberatore on 7/14/25.
 //
 
-import StripePaymentSheet
 import UIKit
 
 // Customizable appearance-related configuration for Stripe-provided Link UI.
-@_spi(CryptoOnrampSDKPreview)
+@_spi(STP)
 public struct LinkAppearance {
 
     /// Configuration values for the primary button.
@@ -62,23 +61,6 @@ public struct LinkAppearance {
         self.primaryColor = primaryColor
         self.primaryButton = primaryButton
         self.style = style
-    }
-}
-
-extension LinkAppearance {
-    var toPaymentSheetAppearance: PaymentSheet.Appearance {
-        var appearance = PaymentSheet.Appearance.defaultLinkUIAppearance
-        if let primaryColor {
-            appearance.colors.primary = primaryColor
-            appearance.colors.brandText = primaryColor
-        }
-
-        if let primaryButton {
-            appearance.primaryButton.cornerRadius = primaryButton.cornerRadius
-            appearance.primaryButton.height = primaryButton.height
-        }
-
-        return appearance
     }
 }
 
