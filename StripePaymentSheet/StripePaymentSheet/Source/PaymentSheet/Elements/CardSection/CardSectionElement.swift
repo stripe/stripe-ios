@@ -78,7 +78,7 @@ final class CardSectionElement: ContainerElement {
         theme: ElementsAppearance = .default,
         analyticsHelper: PaymentSheetAnalyticsHelper?,
         cardBrandFilter: CardBrandFilter = .default,
-        opensCardScannerAutomatically: Bool,
+        opensCardScannerAutomatically: Bool
     ) {
         self.hostedSurface = hostedSurface
         self.theme = theme
