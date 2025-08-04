@@ -144,4 +144,6 @@
 
 "Your postal code is incomplete." = "Vaš poštanski broj nije kompletan.";
 
+"Your postal code is invalid." = "Vaš poštanski broj nevaljan je.";
+
 "ZIP" = "ZIP";
