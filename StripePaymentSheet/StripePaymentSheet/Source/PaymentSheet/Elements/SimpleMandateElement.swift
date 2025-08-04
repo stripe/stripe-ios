@@ -42,5 +42,10 @@ class SimpleMandateElement: PaymentMethodElement {
         self.customerAlreadySawMandate = customerAlreadySawMandate
     }
 
+    init(mandateText: NSAttributedString, customerAlreadySawMandate: Bool, theme: ElementsAppearance = .default) {
+        mandateTextView = SimpleMandateTextView(mandateText: mandateText, theme: theme)
+        self.customerAlreadySawMandate = customerAlreadySawMandate
+    }
+
     struct MandateNotDisplayedError: ElementValidationError { }
 }

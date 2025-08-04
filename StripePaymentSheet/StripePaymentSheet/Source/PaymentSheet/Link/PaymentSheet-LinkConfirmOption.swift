@@ -19,7 +19,7 @@ extension PaymentSheet {
         /// Signup for Link then pay.
         case signUp(
             account: PaymentSheetLinkAccount,
-            phoneNumber: PhoneNumber,
+            phoneNumber: PhoneNumber?,
             consentAction: PaymentSheetLinkAccount.ConsentAction,
             legalName: String?,
             intentConfirmParams: IntentConfirmParams

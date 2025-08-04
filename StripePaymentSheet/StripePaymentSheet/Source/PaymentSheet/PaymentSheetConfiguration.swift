@@ -424,6 +424,9 @@ extension PaymentSheet {
         /// The Link display mode.
         public var display: Display = .automatic
 
+        /// Whether missing billing details should be collected for existing Link payment methods.
+        @_spi(CollectMissingLinkBillingDetailsPreview) public var collectMissingBillingDetailsForExistingPaymentMethods: Bool = true
+
         /// Display configuration for Link
         public enum Display: String {
             /// Link will be displayed when available.
@@ -444,6 +447,14 @@ extension PaymentSheet {
             display: Display = .automatic
         ) {
             self.display = display
+        }
+
+        @_spi(CollectMissingLinkBillingDetailsPreview) public init(
+            display: Display = .automatic,
+            collectMissingBillingDetailsForExistingPaymentMethods: Bool = true
+        ) {
+            self.display = display
+            self.collectMissingBillingDetailsForExistingPaymentMethods = collectMissingBillingDetailsForExistingPaymentMethods
         }
     }
 

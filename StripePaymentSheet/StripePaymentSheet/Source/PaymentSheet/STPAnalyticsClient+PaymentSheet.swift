@@ -156,7 +156,7 @@ extension PaymentSheet.Appearance.EmbeddedPaymentElement.Row.Style {
         case .flatWithCheckmark:
             return "flat_with_checkmark"
         case .flatWithDisclosure:
-            return "flat_with_chevron"
+            return "flat_with_disclosure"
         }
     }
 }
