@@ -8,7 +8,7 @@
 import Foundation
 
 /// Values for STPRadarOptions
-@_spi(STP) public class STPRadarOptions: NSObject {
+class STPRadarOptions: NSObject {
     public var additionalAPIParameters: [AnyHashable: Any] = [:]
 
     @objc public var hCaptchaToken: String?
