@@ -1400,18 +1400,18 @@ extension STPPaymentMethodParams {
     }
 }
 
-// MARK: Passive HCaptcha
+// MARK: - Passive HCaptcha
 extension STPPaymentMethodParams {
-    @_spi(STP) public func startPassiveCaptcha(siteKey: String?, completion: (() -> Void)? = nil) {
+    @_spi(STP) public func startPassiveCaptcha(siteKey: String?, rqdata: String?, completion: (() -> Void)? = nil) {
         guard let siteKey,
-              let hCaptcha = try? HCaptcha(apiKey: siteKey, passiveApiKey: true, baseURL: URL(string: "http://localhost")) else {
+              let hcaptcha = try? HCaptcha(apiKey: siteKey, passiveApiKey: true, baseURL: URL(string: "http://localhost"), rqdata: rqdata) else {
             completion?()
             return
         }
-        hCaptcha.didFinishLoading {
-            hCaptcha.validate { result in
-                let hCaptchaToken = try? result.dematerialize()
-                self.radarOptions = STPRadarOptions(hCaptchaToken: hCaptchaToken)
+        hcaptcha.didFinishLoading {
+            hcaptcha.validate { result in
+                let hcaptchaToken = try? result.dematerialize()
+                self.radarOptions = STPRadarOptions(hcaptchaToken: hcaptchaToken)
                 completion?()
             }
         }

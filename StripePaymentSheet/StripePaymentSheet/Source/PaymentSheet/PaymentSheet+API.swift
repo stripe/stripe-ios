@@ -183,6 +183,8 @@ extension PaymentSheet {
                 let applePayContext = STPApplePayContext.create(
                     intent: intent,
                     configuration: configuration,
+                    hcaptchaSiteKey: elementsSession.passiveCaptcha?.siteKey,
+                    hcaptchaRqdata: elementsSession.passiveCaptcha?.rqData,
                     completion: completion
                 )
             else {
@@ -208,7 +210,7 @@ extension PaymentSheet {
                 isSettingUp: intent.isSetupFutureUsageSet(for: paymentMethodType)
             )
             confirmParams.setClientAttributionMetadata(clientAttributionMetadata: clientAttributionMetadata)
-            confirmParams.paymentMethodParams.startPassiveCaptcha(siteKey: elementsSession.passiveCaptcha?.siteKey) {
+            confirmParams.paymentMethodParams.startPassiveCaptcha(siteKey: elementsSession.passiveCaptcha?.siteKey, rqdata: elementsSession.passiveCaptcha?.rqData) {
                 switch intent {
                     // MARK: ↪ PaymentIntent
                 case .paymentIntent(let paymentIntent):
@@ -551,7 +553,7 @@ extension PaymentSheet {
                             mobilePaymentElementFeatures: elementsSession.customerSessionMobilePaymentElementFeatures,
                             isSettingUp: intent.isSetupFutureUsageSet(for: linkPaymentMethodType)
                         )
-                        intentConfirmParams.paymentMethodParams.startPassiveCaptcha(siteKey: elementsSession.passiveCaptcha?.siteKey) {
+                        intentConfirmParams.paymentMethodParams.startPassiveCaptcha(siteKey: elementsSession.passiveCaptcha?.siteKey, rqdata: elementsSession.passiveCaptcha?.rqData) {
                             createPaymentDetailsAndConfirm(linkAccount, intentConfirmParams.paymentMethodParams, intentConfirmParams.saveForFutureUseCheckboxState == .selected)
                         }
                     case .failure(let error as NSError):

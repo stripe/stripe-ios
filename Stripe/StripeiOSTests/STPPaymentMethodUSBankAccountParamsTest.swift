@@ -42,7 +42,7 @@ class STPPaymentMethodUSBankAccountParamsTest: STPNetworkStubbingTestCase {
             billingDetails: billingDetails,
             metadata: nil
         )
-        params.radarOptions = STPRadarOptions(hCaptchaToken: "hcaptcha_token")
+        params.radarOptions = STPRadarOptions(hcaptchaToken: "hcaptcha_token")
 
         let exp = expectation(description: "Payment Method US Bank Account create")
 

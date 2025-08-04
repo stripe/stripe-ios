@@ -32,7 +32,7 @@ class STPAPIClientStubbedTest: APIStubbedTestCase {
         }
         let e = expectation(description: "")
         let paymentMethodParams: STPPaymentMethodParams = ._testValidCardValue()
-        paymentMethodParams.radarOptions = STPRadarOptions(hCaptchaToken: "test_hcaptcha_token")
+        paymentMethodParams.radarOptions = STPRadarOptions(hcaptchaToken: "test_hcaptcha_token")
         sut.createPaymentMethod(with: paymentMethodParams) { _, _ in
             e.fulfill()
         }
@@ -54,7 +54,7 @@ class STPAPIClientStubbedTest: APIStubbedTestCase {
         }
         let e = expectation(description: "")
         let paymentMethodParams: STPPaymentMethodParams = ._testValidCardValue()
-        paymentMethodParams.radarOptions = STPRadarOptions(hCaptchaToken: nil)
+        paymentMethodParams.radarOptions = STPRadarOptions(hcaptchaToken: nil)
         sut.createPaymentMethod(with: paymentMethodParams) { _, _ in
             e.fulfill()
         }
@@ -76,7 +76,7 @@ class STPAPIClientStubbedTest: APIStubbedTestCase {
         }
         let e = expectation(description: "")
         let paymentMethodParams: STPPaymentMethodParams = ._testValidCardValue()
-        paymentMethodParams.radarOptions = STPRadarOptions(hCaptchaToken: "test_hcaptcha_token")
+        paymentMethodParams.radarOptions = STPRadarOptions(hcaptchaToken: "test_hcaptcha_token")
         let paymentIntentParams = STPPaymentIntentParams(clientSecret: "pi_123456_secret_654321")
         paymentIntentParams.paymentMethodParams = paymentMethodParams
         sut.confirmPaymentIntent(with: paymentIntentParams) { _, _ in
@@ -100,7 +100,7 @@ class STPAPIClientStubbedTest: APIStubbedTestCase {
         }
         let e = expectation(description: "")
         let paymentMethodParams: STPPaymentMethodParams = ._testValidCardValue()
-        paymentMethodParams.radarOptions = STPRadarOptions(hCaptchaToken: nil)
+        paymentMethodParams.radarOptions = STPRadarOptions(hcaptchaToken: nil)
         let paymentIntentParams = STPPaymentIntentParams(clientSecret: "pi_123456_secret_654321")
         paymentIntentParams.paymentMethodParams = paymentMethodParams
         sut.confirmPaymentIntent(with: paymentIntentParams) { _, _ in
@@ -124,7 +124,7 @@ class STPAPIClientStubbedTest: APIStubbedTestCase {
         }
         let e = expectation(description: "")
         let paymentMethodParams: STPPaymentMethodParams = ._testValidCardValue()
-        paymentMethodParams.radarOptions = STPRadarOptions(hCaptchaToken: "test_hcaptcha_token")
+        paymentMethodParams.radarOptions = STPRadarOptions(hcaptchaToken: "test_hcaptcha_token")
         let paymentIntentParams = STPPaymentIntentParams(clientSecret: "pi_123456_secret_654321")
         paymentIntentParams.paymentMethodParams = paymentMethodParams
         let setupIntentParams = STPSetupIntentConfirmParams(clientSecret: "seti_123456_secret_654321")
@@ -150,7 +150,7 @@ class STPAPIClientStubbedTest: APIStubbedTestCase {
         }
         let e = expectation(description: "")
         let paymentMethodParams: STPPaymentMethodParams = ._testValidCardValue()
-        paymentMethodParams.radarOptions = STPRadarOptions(hCaptchaToken: nil)
+        paymentMethodParams.radarOptions = STPRadarOptions(hcaptchaToken: nil)
         let setupIntentParams = STPSetupIntentConfirmParams(clientSecret: "seti_123456_secret_654321")
         setupIntentParams.paymentMethodParams = paymentMethodParams
         sut.confirmSetupIntent(with: setupIntentParams) { _, _ in

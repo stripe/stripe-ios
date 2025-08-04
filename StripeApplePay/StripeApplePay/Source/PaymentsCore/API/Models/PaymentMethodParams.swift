@@ -8,6 +8,7 @@
 
 import Foundation
 @_spi(STP) import StripeCore
+@_spi(STP) import StripePayments
 
 extension StripeAPI {
     /// An object representing parameters used to create a PaymentMethod object.
@@ -60,7 +61,7 @@ extension StripeAPI {
 
         /// :nodoc:
         @_spi(STP) public struct RadarOptions: UnknownFieldsEncodable {
-            @_spi(STP) public var hCaptchaToken: String?
+            @_spi(STP) public var hcaptchaToken: String?
             @_spi(STP) public var _additionalParametersStorage: NonEncodableParameters?
         }
 
@@ -107,13 +108,6 @@ extension StripeAPI {
             @_spi(STP) public var _additionalParametersStorage: NonEncodableParameters?
         }
 
-        /// Values for RadarOptions
-        @_spi(STP) public struct RadarOptions: UnknownFieldsEncodable {
-            /// The HCaptcha token from the passive HCaptcha
-            @_spi(STP) public var hCaptchaToken: String?
-            @_spi(STP) public var _additionalParametersStorage: NonEncodableParameters?
-        }
-
         @_spi(STP) public var _additionalParametersStorage: NonEncodableParameters?
     }
 }
@@ -131,5 +125,22 @@ extension StripeAPI.PaymentMethodParams.Card: CustomStringConvertible, CustomDeb
 
     @_spi(STP) public var customMirror: Mirror {
         return Mirror(reflecting: self.description)
+    }
+}
+
+// MARK: - Passive HCaptcha
+extension StripeAPI.PaymentMethodParams {
+    @_spi(STP) public func startPassiveCaptcha(siteKey: String?, rqdata: String?, completion: ((String?) -> Void)? = nil) {
+        guard let siteKey,
+              let hcaptcha = try? HCaptcha(apiKey: siteKey, passiveApiKey: true, baseURL: URL(string: "http://localhost"), rqdata: rqdata) else {
+            completion?(nil)
+            return
+        }
+        hcaptcha.didFinishLoading {
+            hcaptcha.validate { result in
+                let hcaptchaToken = try? result.dematerialize()
+                completion?(hcaptchaToken)
+            }
+        }
     }
 }
