@@ -9,7 +9,7 @@ import Foundation
 
 /// PassiveCaptcha, delivered in the `v1/elements/sessions` response.
 /// - Seealso: https://git.corp.stripe.com/stripe-internal/pay-server/blob/master/lib/elements/api/resources/elements_passive_captcha_resource.rb
-struct PassiveCaptcha: Decodable {
+struct PassiveCaptcha: Equatable, Hashable {
 
     let siteKey: String
     let rqData: String?
