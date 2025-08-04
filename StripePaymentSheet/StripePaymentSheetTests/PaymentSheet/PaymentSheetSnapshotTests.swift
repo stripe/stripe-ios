@@ -632,6 +632,17 @@ class PaymentSheetSnapshotTests: STPSnapshotTestCase {
         verify(paymentSheet.bottomSheetViewController.view!)
     }
 
+    func testPaymentSheet_disableTerms_deferredIntent() {
+        stubNewCustomerResponse()
+
+        let intentConfig = PaymentSheet.IntentConfiguration(mode: .payment(amount: 1000, currency: "USD", setupFutureUsage: .offSession),
+                                                            confirmHandler: confirmHandler(_:_:_:))
+        self.configuration.termsDisplay = [.card: .never]
+        preparePaymentSheet(intentConfig: intentConfig)
+        presentPaymentSheet(darkMode: false)
+        verify(paymentSheet.bottomSheetViewController.view!)
+    }
+
     func testPaymentSheetWithLink_deferredIntent() {
         stubSessions(fileMock: .elementsSessionsPaymentMethod_link_200)
         stubPaymentMethods(fileMock: .saved_payment_methods_200)
