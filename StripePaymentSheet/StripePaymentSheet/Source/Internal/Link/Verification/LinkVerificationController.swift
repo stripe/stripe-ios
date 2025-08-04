@@ -21,7 +21,8 @@ final class LinkVerificationController {
     init(
         mode: LinkVerificationView.Mode = .modal,
         linkAccount: PaymentSheetLinkAccount,
-        configuration: PaymentElementConfiguration
+        configuration: PaymentElementConfiguration,
+        appearance: LinkAppearance? = nil
     ) {
         self.verificationViewController = LinkVerificationViewController(mode: mode, linkAccount: linkAccount)
         verificationViewController.delegate = self

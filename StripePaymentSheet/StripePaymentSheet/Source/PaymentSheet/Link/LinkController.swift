@@ -53,6 +53,7 @@ import UIKit
     private let elementsSession: STPElementsSession
     private let intent: Intent
     private let configuration: PaymentElementConfiguration
+    private let appearance: LinkAppearance?
     private let analyticsHelper: PaymentSheetAnalyticsHelper
 
     private lazy var linkAccountService: LinkAccountServiceProtocol = {
@@ -95,6 +96,7 @@ import UIKit
         elementsSession: STPElementsSession,
         intent: Intent,
         configuration: PaymentElementConfiguration,
+        appearance: LinkAppearance?,
         analyticsHelper: PaymentSheetAnalyticsHelper
     ) {
         self.apiClient = apiClient
@@ -102,6 +104,7 @@ import UIKit
         self.elementsSession = elementsSession
         self.intent = intent
         self.configuration = configuration
+        self.appearance = appearance
         self.analyticsHelper = analyticsHelper
 
         LinkAccountContext.shared.addObserver(self, selector: #selector(onLinkAccountChange))
@@ -147,6 +150,7 @@ import UIKit
                     elementsSession: loadResult.elementsSession,
                     intent: loadResult.intent,
                     configuration: configuration,
+                    appearance: appearance,
                     analyticsHelper: analyticsHelper
                 )
                 completion(.success(controller))
@@ -225,7 +229,8 @@ import UIKit
         let verificationController = LinkVerificationController(
             mode: .modal,
             linkAccount: linkAccount,
-            configuration: configuration
+            configuration: configuration,
+            appearance: appearance
         )
 
         verificationController.present(from: viewController) { result in

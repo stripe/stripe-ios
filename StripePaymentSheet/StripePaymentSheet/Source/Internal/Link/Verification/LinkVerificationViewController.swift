@@ -35,6 +35,8 @@ final class LinkVerificationViewController: UIViewController {
     let mode: LinkVerificationView.Mode
     let linkAccount: PaymentSheetLinkAccount
 
+    private let appearance: LinkAppearance?
+
     private lazy var verificationView: LinkVerificationView = {
         guard linkAccount.redactedPhoneNumber != nil else {
             preconditionFailure("Verification(2FA) presented without a phone number on file")
@@ -56,10 +58,12 @@ final class LinkVerificationViewController: UIViewController {
 
     required init(
         mode: LinkVerificationView.Mode = .modal,
-        linkAccount: PaymentSheetLinkAccount
+        linkAccount: PaymentSheetLinkAccount,
+        appearance: LinkAppearance? = nil
     ) {
         self.mode = mode
         self.linkAccount = linkAccount
+        self.appearance = appearance
         super.init(nibName: nil, bundle: nil)
 
         if mode.requiresModalPresentation {
