@@ -60,7 +60,7 @@ extension StripeAPI {
 
         /// :nodoc:
         @_spi(STP) public struct RadarOptions: UnknownFieldsEncodable {
-            @_spi(STP) public var hCaptchaToken: String?
+            @_spi(STP) public var hcaptchaToken: String?
             @_spi(STP) public var _additionalParametersStorage: NonEncodableParameters?
         }
 
