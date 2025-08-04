@@ -70,6 +70,8 @@ final class LinkVerificationViewController: UIViewController {
             modalPresentationStyle = .custom
             transitioningDelegate = TransitioningDelegate.sharedDelegate
         }
+
+        appearance?.style.configure(self)
     }
 
     required init?(coder: NSCoder) {

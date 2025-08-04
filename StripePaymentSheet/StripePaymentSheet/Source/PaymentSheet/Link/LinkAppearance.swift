@@ -30,19 +30,6 @@ public struct LinkAppearance {
         }
     }
 
-    /// Style options for colors in the Link UI.
-    public enum Style {
-
-        /// (default) Link will automatically switch between light and dark mode compatible colors based on device settings.
-        case automatic
-
-        /// Link will always use colors appropriate for light mode UI.
-        case alwaysLight
-
-        /// Link will always use colors appropriate for dark mode UI.
-        case alwaysDark
-    }
-
     /// The primary color used in the Link UI. Defaults to the Link brand color.
     public let primaryColor: UIColor?
 
@@ -50,29 +37,16 @@ public struct LinkAppearance {
     public let primaryButton: PrimaryButtonConfiguration?
 
     /// Style options for colors in the Link UI.
-    public let style: Style
+    public let style: PaymentSheet.UserInterfaceStyle
 
     /// Creates a new instance of `LinkAppearance`.
     /// - Parameters:
     ///   - primaryColor: The primary color used in the Link UI. Defaults to the Link brand color.
     ///   - primaryButton: Configuration values for the primary button. Uses reasonable defaults if nothing is provided.
     ///   - style: Style options for colors in the Link UI.
-    public init(primaryColor: UIColor? = nil, primaryButton: PrimaryButtonConfiguration? = nil, style: Style = .automatic) {
+    public init(primaryColor: UIColor? = nil, primaryButton: PrimaryButtonConfiguration? = nil, style: PaymentSheet.UserInterfaceStyle = .automatic) {
         self.primaryColor = primaryColor
         self.primaryButton = primaryButton
         self.style = style
-    }
-}
-
-extension LinkAppearance.Style {
-    var toUserInterfaceStyle: PaymentSheet.UserInterfaceStyle {
-        switch self {
-        case .automatic:
-            return .automatic
-        case .alwaysLight:
-            return .alwaysLight
-        case .alwaysDark:
-            return .alwaysDark
-        }
     }
 }
