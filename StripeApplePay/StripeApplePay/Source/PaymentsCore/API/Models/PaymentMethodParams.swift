@@ -29,7 +29,7 @@ extension StripeAPI {
         }()
 
         /// Radar options that may contain HCaptcha token
-        @_spi(STP) public var radarOptions: STPRadarOptions?
+        @_spi(STP) public var radarOptions: RadarOptions?
 
         /// Contains metadata with identifiers for the session and information about the integration
         @_spi(STP) public var clientAttributionMetadata: ClientAttributionMetadata = ClientAttributionMetadata()
@@ -55,6 +55,12 @@ extension StripeAPI {
                     return nil
                 }
             }
+            @_spi(STP) public var _additionalParametersStorage: NonEncodableParameters?
+        }
+
+        /// :nodoc:
+        @_spi(STP) public struct RadarOptions: UnknownFieldsEncodable {
+            @_spi(STP) public var hCaptchaToken: String?
             @_spi(STP) public var _additionalParametersStorage: NonEncodableParameters?
         }
 

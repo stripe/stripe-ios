@@ -1,12 +1,22 @@
 //
-//  STPRadarOptions+Payments.swift
+//  STPRadarOptions.swift
 //  StripePayments
 //
-//  Created by Joyce Qin on 8/4/25.
+//  Created by Joyce Qin on 7/31/25.
 //
 
 import Foundation
-@_spi(STP) import StripeCore
+
+/// Values for STPRadarOptions
+@_spi(STP) public class STPRadarOptions: NSObject {
+    public var additionalAPIParameters: [AnyHashable: Any] = [:]
+
+    @objc public var hCaptchaToken: String?
+
+    public init(hCaptchaToken: String? = nil) {
+        self.hCaptchaToken = hCaptchaToken
+    }
+}
 
 // MARK: - STPFormEncodable
 
