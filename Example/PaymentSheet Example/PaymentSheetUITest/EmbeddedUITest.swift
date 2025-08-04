@@ -1088,6 +1088,39 @@ class EmbeddedUITests: PaymentSheetUITestCase {
         XCTAssertTrue(app.staticTexts["Success!"].waitForExistence(timeout: 25.0))
     }
 
+    func testMandateWithRowSelectionBehavior() {
+        // When rowSelectionBehavior = .immediateAction...
+        var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
+        settings.mode = .setup
+        settings.integrationType = .deferred_csc
+        settings.uiStyle = .embedded
+        settings.formSheetAction = .confirm
+        settings.applePayEnabled = .off
+        settings.rowSelectionBehavior = .immediateAction
+
+        loadPlayground(app, settings)
+        app.buttons["Present embedded payment element"].waitForExistenceAndTap()
+        app.buttons["Select payment method"].waitForExistenceAndTap()
+        app.buttons["Cash App Pay"].waitForExistenceAndTap()
+        // ...Embedded should show the mandate...
+        XCTAssertTrue(app.textViews.containing(NSPredicate(format: "label BEGINSWITH 'By continuing, you authorize Example, Inc. to debit your Cash App account for this payment'")).element.waitForExistence(timeout: 1))
+        // ...*in the form*...
+        XCTAssertTrue(app.buttons["Set up"].waitForExistenceAndTap())
+        // ...and confirming should show a webview (sanity check confirm works).
+        let webviewCloseButton = app.otherElements["TopBrowserBar"].buttons["Close"]
+        XCTAssertTrue(webviewCloseButton.waitForExistence(timeout: 10.0))
+
+        // When row selection behavior is default...
+        settings.rowSelectionBehavior = .default
+        loadPlayground(app, settings)
+        // ...Cash App Pay should not show the form and instead show the mandate in the embedded view
+        app.buttons["Present embedded payment element"].waitForExistenceAndTap()
+        app.buttons["Select payment method"].waitForExistenceAndTap()
+        app.buttons["Cash App Pay"].waitForExistenceAndTap()
+        XCTAssertTrue(app.textViews.containing(NSPredicate(format: "label BEGINSWITH 'By continuing, you authorize Example, Inc. to debit your Cash App account for this payment'")).element.waitForExistence(timeout: 1))
+        XCTAssertFalse(app.buttons["Set up"].exists)
+    }
+
     // Returning customers have two payment methods in a non-deterministic order.
     // Ensure state of payment method of label1 is selected prior to starting tests.
     func ensureSPMSelection(_ label1: String, insteadOf label2: String) {

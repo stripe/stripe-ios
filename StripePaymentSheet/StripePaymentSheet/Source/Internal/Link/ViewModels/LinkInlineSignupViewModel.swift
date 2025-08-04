@@ -17,7 +17,7 @@ protocol LinkInlineSignupViewModelDelegate: AnyObject {
 
 final class LinkInlineSignupViewModel {
     enum Action: Equatable {
-        case signupAndPay(account: PaymentSheetLinkAccount, phoneNumber: PhoneNumber, legalName: String?)
+        case signupAndPay(account: PaymentSheetLinkAccount, phoneNumber: PhoneNumber?, legalName: String?)
         case continueWithoutLink
     }
 
@@ -26,6 +26,7 @@ final class LinkInlineSignupViewModel {
         case checkboxWithDefaultOptIn // shows the Link inline signup with a pre-checked checkbox and a label showing the used signup data
         case textFieldsOnlyEmailFirst // shows the Link inline signup without the checkbox, email field first
         case textFieldsOnlyPhoneFirst // shows the Link inline signup without the checkbox, phone number field first
+        case signupOptIn // shows the Link signup opt-in with a checkbox
     }
 
     weak var delegate: LinkInlineSignupViewModelDelegate?
@@ -43,6 +44,7 @@ final class LinkInlineSignupViewModel {
     var saveCheckboxChecked: Bool = false {
         didSet {
             if saveCheckboxChecked != oldValue {
+                didInteractWithSaveCheckbox = true
                 notifyUpdate()
 
                 if saveCheckboxChecked, mode == .checkbox {
@@ -51,6 +53,8 @@ final class LinkInlineSignupViewModel {
             }
         }
     }
+
+    private var didInteractWithSaveCheckbox = false
 
     var emailAddress: String? {
         didSet {
@@ -105,6 +109,12 @@ final class LinkInlineSignupViewModel {
             return .implied_v0
         case .textFieldsOnlyPhoneFirst:
             return .implied_v0_0
+        case .signupOptIn:
+            if didInteractWithSaveCheckbox {
+                return .sign_up_opt_in_mobile_checked
+            } else {
+                return .sign_up_opt_in_mobile_prechecked
+            }
         }
     }
 
@@ -172,6 +182,8 @@ final class LinkInlineSignupViewModel {
         case .textFieldsOnlyPhoneFirst:
             // Only show email if the phone number field has contents
             return (phoneNumber?.isComplete ?? false)
+        case .signupOptIn:
+            return false
         }
     }
 
@@ -187,6 +199,8 @@ final class LinkInlineSignupViewModel {
             return false
         case .textFieldsOnlyPhoneFirst:
             return requiresNameCollection && phoneNumber?.isComplete ?? false
+        case .signupOptIn:
+            return false
         }
     }
 
@@ -205,6 +219,8 @@ final class LinkInlineSignupViewModel {
             return saveCheckboxChecked && (!defaultOptInInfoWasPrefilled || didAskToChangeSignupData) && !isExistingConsumer
         case .textFieldsOnlyPhoneFirst:
             return true
+        case .signupOptIn:
+            return false
         }
     }
 
@@ -216,6 +232,8 @@ final class LinkInlineSignupViewModel {
             return saveCheckboxChecked
         case .textFieldsOnlyPhoneFirst, .textFieldsOnlyEmailFirst:
             return true
+        case .signupOptIn:
+            return false
         }
     }
 
@@ -249,18 +267,19 @@ final class LinkInlineSignupViewModel {
 
         switch linkAccount.sessionState {
         case .requiresSignUp:
-            guard let phoneNumber = phoneNumber,
-                  phoneNumber.isComplete else {
+            guard phoneNumber?.isComplete == true || mode == .signupOptIn else {
                 return nil
             }
 
-            if requiresNameCollection && !legalNameProvided {
+            if mode != .signupOptIn && requiresNameCollection && !legalNameProvided {
                 return nil
             }
+
+            let phone = phoneNumber?.isComplete == true ? phoneNumber : nil
 
             return .signupAndPay(
                 account: linkAccount,
-                phoneNumber: phoneNumber,
+                phoneNumber: phone,
                 legalName: requiresNameCollection ? legalName : nil
             )
         case .verified, .requiresVerification:
@@ -274,14 +293,14 @@ final class LinkInlineSignupViewModel {
         switch mode {
         case .checkbox:
             return 16
-        case .checkboxWithDefaultOptIn, .textFieldsOnlyEmailFirst, .textFieldsOnlyPhoneFirst:
+        case .checkboxWithDefaultOptIn, .textFieldsOnlyEmailFirst, .textFieldsOnlyPhoneFirst, .signupOptIn:
             return 0
         }
     }
 
     var showCheckbox: Bool {
         switch mode {
-        case .checkbox, .checkboxWithDefaultOptIn:
+        case .checkbox, .checkboxWithDefaultOptIn, .signupOptIn:
             return true
         case .textFieldsOnlyEmailFirst, .textFieldsOnlyPhoneFirst:
             return false
@@ -292,7 +311,7 @@ final class LinkInlineSignupViewModel {
         switch mode {
         case .checkbox:
             return true
-        case .checkboxWithDefaultOptIn, .textFieldsOnlyEmailFirst, .textFieldsOnlyPhoneFirst:
+        case .checkboxWithDefaultOptIn, .textFieldsOnlyEmailFirst, .textFieldsOnlyPhoneFirst, .signupOptIn:
             return false
         }
     }
@@ -305,6 +324,9 @@ final class LinkInlineSignupViewModel {
             return true
         case .textFieldsOnlyPhoneFirst:
             return false
+        case .signupOptIn:
+            // Not applicable
+            return true
         }
     }
 
@@ -317,6 +339,9 @@ final class LinkInlineSignupViewModel {
         case .textFieldsOnlyEmailFirst:
             return false
         case .textFieldsOnlyPhoneFirst:
+            return true
+        case .signupOptIn:
+            // Not applicable
             return true
         }
     }
@@ -331,6 +356,9 @@ final class LinkInlineSignupViewModel {
         case .textFieldsOnlyPhoneFirst:
             // Already shown in the phone number field
             return false
+        case .signupOptIn:
+            // Not applicable
+            return false
         }
     }
 
@@ -339,6 +367,8 @@ final class LinkInlineSignupViewModel {
         showCheckbox: Bool,
         accountService: LinkAccountServiceProtocol,
         allowsDefaultOptIn: Bool,
+        signupOptInFeatureEnabled: Bool,
+        signupOptInInitialValue: Bool,
         linkAccount: PaymentSheetLinkAccount? = nil,
         country: String? = nil
     ) {
@@ -350,7 +380,9 @@ final class LinkInlineSignupViewModel {
            !email.isEmpty {
             emailWasPrefilled = true
         }
-        if showCheckbox {
+        if signupOptInFeatureEnabled && emailWasPrefilled {
+            self.mode = .signupOptIn
+        } else if showCheckbox {
             let allowsDefaultOptIn = allowsDefaultOptIn && country == "US"
             self.mode = allowsDefaultOptIn ? .checkboxWithDefaultOptIn : .checkbox
         } else {
@@ -360,7 +392,16 @@ final class LinkInlineSignupViewModel {
         self.legalName = configuration.defaultBillingDetails.name
         self.country = country
 
-        self.saveCheckboxChecked = mode == .checkboxWithDefaultOptIn
+        self.saveCheckboxChecked = {
+            switch mode {
+            case .checkbox, .textFieldsOnlyEmailFirst, .textFieldsOnlyPhoneFirst:
+                return false
+            case .checkboxWithDefaultOptIn:
+                return true
+            case .signupOptIn:
+                return signupOptInInitialValue
+            }
+        }()
     }
 }
 

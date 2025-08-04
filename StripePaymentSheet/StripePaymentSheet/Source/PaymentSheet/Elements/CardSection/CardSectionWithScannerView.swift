@@ -55,7 +55,7 @@ final class CardSectionWithScannerView: UIView {
 
         let stack = UIStackView(arrangedSubviews: [cardSectionTitleAndButton, cardSectionView, cardScanningView])
         stack.axis = .vertical
-        stack.spacing = ElementsUI.sectionSpacing
+        stack.spacing = ElementsUI.sectionElementInternalSpacing
         stack.setCustomSpacing(ElementsUI.formSpacing, after: cardSectionView)
         addAndPinSubview(stack)
     }
