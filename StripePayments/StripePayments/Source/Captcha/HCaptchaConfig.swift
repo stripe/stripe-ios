@@ -84,6 +84,9 @@ struct HCaptchaConfig: CustomDebugStringConvertible {
     /// The API key that will be sent to the HCaptcha API
     let apiKey: String
 
+    /// For passive apiKeys no user interaction required and HCaptcha stays invisible
+    let passiveApiKey: Bool
+
     /// Size of visible area
     let size: HCaptchaSize
 
@@ -127,6 +130,9 @@ struct HCaptchaConfig: CustomDebugStringConvertible {
 
     /// Custom theme JSON string.
     let customTheme: String?
+
+    /// A locale value to translate HCaptcha into a different language
+    let locale: Locale?
 
     /// Return actual theme value based on init params. It must return valid JS object.
     var actualTheme: String {
@@ -181,7 +187,9 @@ struct HCaptchaConfig: CustomDebugStringConvertible {
      Info.plist.
      - Throws: Rethrows any exceptions thrown by `String(contentsOfFile:)`
      */
-    init(apiKey: String?,
+    init(html: String = HCaptchaHtml.template,
+         apiKey: String?,
+         passiveApiKey: Bool?,
          infoPlistKey: String?,
          baseURL: URL?,
          infoPlistURL: URL?,
@@ -196,7 +204,8 @@ struct HCaptchaConfig: CustomDebugStringConvertible {
          imghost: URL?,
          host: String?,
          theme: String,
-         customTheme: String?) throws {
+         customTheme: String?,
+         locale: Locale?) throws {
         guard let apiKey = apiKey ?? infoPlistKey else {
             throw HCaptchaError.apiKeyNotFound
         }
@@ -217,8 +226,9 @@ struct HCaptchaConfig: CustomDebugStringConvertible {
             }
         }
 
-        self.html = HCaptchaHtml.template
+        self.html = html
         self.apiKey = apiKey
+        self.passiveApiKey = passiveApiKey ?? false
         self.size = size
         self.orientation = orientation
         self.baseURL = HCaptchaConfig.fixSchemeIfNeeded(for: domain)
@@ -232,13 +242,13 @@ struct HCaptchaConfig: CustomDebugStringConvertible {
         self.host = host
         self.theme = theme
         self.customTheme = customTheme
+        self.locale = locale
     }
 
     /**
      The JS API endpoint to be loaded onto the HTML file.
-     - parameter url: The URL to be fixed
      */
-    func getEndpointURL(locale: Locale? = nil) -> URL {
+    var actualEndpoint: URL {
         var result = URLComponents(url: jsSrc, resolvingAgainstBaseURL: false)!
         var queryItems = [
             URLQueryItem(name: "onload", value: "onloadCallback"),
