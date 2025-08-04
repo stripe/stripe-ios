@@ -16,6 +16,12 @@ extension PaymentSheetFormFactory {
         return SimpleMandateElement(mandateText: mandateText, customerAlreadySawMandate: customerAlreadySawMandate, theme: theme)
     }
 
+    func makeMandate(mandateText: NSAttributedString) -> SimpleMandateElement {
+        // If there was previous customer input, check if it displayed the mandate for this payment method
+        let customerAlreadySawMandate = previousCustomerInput?.didDisplayMandate ?? false
+        return SimpleMandateElement(mandateText: mandateText, customerAlreadySawMandate: customerAlreadySawMandate, theme: theme)
+    }
+
     func makeAUBECSMandate() -> StaticElement {
         return StaticElement(view: AUBECSLegalTermsView(configuration: configuration))
     }

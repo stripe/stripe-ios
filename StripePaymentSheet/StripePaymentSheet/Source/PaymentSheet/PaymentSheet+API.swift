@@ -488,7 +488,7 @@ extension PaymentSheet {
                         return
                     }
 
-                    linkAccount.createPaymentDetails(with: paymentMethodParams) { result in
+                    linkAccount.createPaymentDetails(with: paymentMethodParams, isDefault: false) { result in
                         switch result {
                         case .success(let paymentDetails):
                             // We need to explicitly pass the billing phone number to the share and payment method endpoints,
@@ -538,8 +538,22 @@ extension PaymentSheet {
                     linkController.present(from: authenticationContext.authenticationPresentingViewController(),
                                            completion: completion)
                 }
-            case .signUp(let linkAccount, let phoneNumber, let consentAction, let legalName, let intentConfirmParams):
-                linkAccount.signUp(with: phoneNumber, legalName: legalName, consentAction: consentAction) { result in
+            case .signUp(let linkAccount, let phoneNumberFromSignup, let consentAction, let legalName, let intentConfirmParams):
+                let billingDetails = intentConfirmParams.paymentMethodParams.billingDetails
+                let countryCode = billingDetails?.address?.country ?? elementsSession.countryCode
+
+                let phoneNumber = if elementsSession.linkSignupOptInFeatureEnabled {
+                    billingDetails?.phone.flatMap { PhoneNumber.fromE164($0) }
+                } else {
+                    phoneNumberFromSignup
+                }
+
+                linkAccount.signUp(
+                    with: phoneNumber,
+                    legalName: legalName,
+                    countryCode: countryCode,
+                    consentAction: consentAction
+                ) { result in
                     UserDefaults.standard.markLinkAsUsed()
                     switch result {
                     case .success:
