@@ -376,7 +376,7 @@ extension STPAPIClient {
             return "\(APIEndpointPaymentIntents)/\(secret)"
         } else {
             assert(
-                STPPaymentIntentParams.isClientSecretValid(secret),
+                STPPaymentIntentConfirmParams.isClientSecretValid(secret),
                 "`secret` format does not match expected client secret formatting."
             )
             let identifier = STPPaymentIntent.id(fromClientSecret: secret) ?? ""
@@ -495,15 +495,15 @@ extension STPAPIClient {
     /// @note Use the `confirmPayment:withAuthenticationContext:completion:` method on `STPPaymentHandler` instead
     /// of calling this method directly. It handles any authentication necessary for you. - seealso: https://stripe.com/docs/payments/3d-secure
     /// - Parameters:
-    ///   - paymentIntentParams:  The `STPPaymentIntentParams` to pass to `/confirm`
+    ///   - paymentIntentConfirmParams:  The `STPPaymentIntentConfirmParams` to pass to `/confirm`
     ///   - completion:           The callback to run with the returned PaymentIntent object, or an error.
     @objc(confirmPaymentIntentWithParams:completion:)
     public func confirmPaymentIntent(
-        with paymentIntentParams: STPPaymentIntentParams,
+        with paymentIntentConfirmParams: STPPaymentIntentConfirmParams,
         completion: @escaping STPPaymentIntentCompletionBlock
     ) {
         confirmPaymentIntent(
-            with: paymentIntentParams,
+            with: paymentIntentConfirmParams,
             expand: nil,
             completion: completion
         )
@@ -515,24 +515,24 @@ extension STPAPIClient {
     /// @note Use the `confirmPayment:withAuthenticationContext:completion:` method on `STPPaymentHandler` instead
     /// of calling this method directly. It handles any authentication necessary for you. - seealso: https://stripe.com/docs/payments/3d-secure
     /// - Parameters:
-    ///   - paymentIntentParams:  The `STPPaymentIntentParams` to pass to `/confirm`
+    ///   - paymentIntentConfirmParams:  The `STPPaymentIntentConfirmParams` to pass to `/confirm`
     ///   - expand:  An array of string keys to expand on the returned PaymentIntent object. These strings should match one or more of the parameter names that are marked as expandable. - seealso: https://stripe.com/docs/api/payment_intents/object
     ///   - completion:           The callback to run with the returned PaymentIntent object, or an error.
     @objc(confirmPaymentIntentWithParams:expand:completion:)
     public func confirmPaymentIntent(
-        with paymentIntentParams: STPPaymentIntentParams,
+        with paymentIntentConfirmParams: STPPaymentIntentConfirmParams,
         expand: [String]?,
         completion: @escaping STPPaymentIntentCompletionBlock
     ) {
         assert(
-            STPPaymentIntentParams.isClientSecretValid(paymentIntentParams.clientSecret),
+            STPPaymentIntentConfirmParams.isClientSecretValid(paymentIntentConfirmParams.clientSecret),
             "`paymentIntentParams.clientSecret` format does not match expected client secret formatting."
         )
 
-        let identifier = paymentIntentParams.stripeId ?? ""
+        let identifier = paymentIntentConfirmParams.stripeId ?? ""
         let type =
-            paymentIntentParams.paymentMethodParams?.rawTypeString
-            ?? paymentIntentParams.sourceParams?.rawTypeString
+            paymentIntentConfirmParams.paymentMethodParams?.rawTypeString
+            ?? paymentIntentConfirmParams.sourceParams?.rawTypeString
         STPAnalyticsClient.sharedClient.logPaymentIntentConfirmationAttempt(
             with: _stored_configuration,
             paymentMethodType: type,
@@ -541,7 +541,7 @@ extension STPAPIClient {
 
         let endpoint = "\(APIEndpointPaymentIntents)/\(identifier)/confirm"
 
-        var params = STPFormEncoder.dictionary(forObject: paymentIntentParams)
+        var params = STPFormEncoder.dictionary(forObject: paymentIntentConfirmParams)
         if var sourceParamsDict = params[SourceDataHash] as? [String: Any] {
             STPTelemetryClient.shared.addTelemetryFields(toParams: &sourceParamsDict)
             sourceParamsDict = Self.paramsAddingPaymentUserAgent(sourceParamsDict)

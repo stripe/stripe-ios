@@ -76,7 +76,7 @@ extension CashAppExampleViewController {
                 }
 
                 // 2. Confirm the payment and redirect the user to Cash App
-                let paymentIntentParams = STPPaymentIntentParams(clientSecret: clientSecret)
+                let paymentIntentParams = STPPaymentIntentConfirmParams(clientSecret: clientSecret)
                 paymentIntentParams.paymentMethodParams = STPPaymentMethodParams(
                     cashApp: STPPaymentMethodCashAppParams(),
                     billingDetails: nil,

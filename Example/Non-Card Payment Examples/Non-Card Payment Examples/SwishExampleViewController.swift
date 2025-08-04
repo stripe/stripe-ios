@@ -72,7 +72,7 @@ extension SwishExampleViewController {
                 }
 
                 // 2. Redirect your customer to Swish app.
-                let paymentIntentParams = STPPaymentIntentParams(clientSecret: clientSecret)
+                let paymentIntentParams = STPPaymentIntentConfirmParams(clientSecret: clientSecret)
                 paymentIntentParams.paymentMethodParams = STPPaymentMethodParams(
                     swish: STPPaymentMethodSwishParams(),
                     billingDetails: nil,

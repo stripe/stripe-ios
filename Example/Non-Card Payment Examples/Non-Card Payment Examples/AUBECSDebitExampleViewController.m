@@ -72,7 +72,7 @@ NS_ASSUME_NONNULL_BEGIN
             return;
         }
 
-        STPPaymentIntentParams *paymentIntentParams = [[STPPaymentIntentParams alloc] initWithClientSecret:clientSecret];
+        STPPaymentIntentConfirmParams *paymentIntentParams = [[STPPaymentIntentConfirmParams alloc] initWithClientSecret:clientSecret];
 
         paymentIntentParams.paymentMethodParams = params;
 

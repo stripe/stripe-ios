@@ -1187,7 +1187,7 @@ class PaymentSheetAPITest: STPNetworkStubbingTestCase {
 
     /// Setting SFU to `true` when a customer is set should set the parameter to `off_session`.
     func testPaymentIntentParamsWithSFUTrueAndCustomer() {
-        let paymentIntentParams = STPPaymentIntentParams(clientSecret: "")
+        let paymentIntentParams = STPPaymentIntentConfirmParams(clientSecret: "")
         paymentIntentParams.paymentMethodOptions = STPConfirmPaymentMethodOptions()
         paymentIntentParams.paymentMethodOptions?.setSetupFutureUsageIfNecessary(
             true,
@@ -1210,7 +1210,7 @@ class PaymentSheetAPITest: STPNetworkStubbingTestCase {
 
     /// Setting SFU to `false` when a customer is set should set the parameter to an empty string.
     func testPaymentIntentParamsWithSFUFalseAndCustomer() {
-        let paymentIntentParams = STPPaymentIntentParams(clientSecret: "")
+        let paymentIntentParams = STPPaymentIntentConfirmParams(clientSecret: "")
         paymentIntentParams.paymentMethodOptions = STPConfirmPaymentMethodOptions()
         paymentIntentParams.paymentMethodOptions?.setSetupFutureUsageIfNecessary(
             false,
@@ -1233,7 +1233,7 @@ class PaymentSheetAPITest: STPNetworkStubbingTestCase {
 
     /// Setting SFU to `true` when no customer is set shouldn't set the parameter.
     func testPaymentIntentParamsWithSFUTrueAndNoCustomer() {
-        let paymentIntentParams = STPPaymentIntentParams(clientSecret: "")
+        let paymentIntentParams = STPPaymentIntentConfirmParams(clientSecret: "")
         paymentIntentParams.paymentMethodOptions = STPConfirmPaymentMethodOptions()
         paymentIntentParams.paymentMethodOptions?.setSetupFutureUsageIfNecessary(
             false,
@@ -1247,7 +1247,7 @@ class PaymentSheetAPITest: STPNetworkStubbingTestCase {
 
     /// Setting SFU to `false` when no customer is set shouldn't set the parameter.
     func testPaymentIntentParamsWithSFUFalseAndNoCustomer() {
-        let paymentIntentParams = STPPaymentIntentParams(clientSecret: "")
+        let paymentIntentParams = STPPaymentIntentConfirmParams(clientSecret: "")
         paymentIntentParams.paymentMethodOptions = STPConfirmPaymentMethodOptions()
         paymentIntentParams.paymentMethodOptions?.setSetupFutureUsageIfNecessary(
             false,
