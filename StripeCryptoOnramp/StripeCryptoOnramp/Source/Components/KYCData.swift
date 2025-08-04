@@ -12,29 +12,63 @@ import Foundation
 @_spi(CryptoOnrampSDKPreview)
 public struct KYCData: Equatable {
 
+    /// Represents the three components (day, month, year) of a birth date.
+    public struct DateOfBirth: Encodable, Equatable {
+
+        /// The one- or two-digit day of the month (e.g. 31).
+        public let day: Int
+
+        /// The one- or two-digit month of the year (e.g. January = 1, December = 12).
+        public let month: Int
+
+        /// The four digit year (e.g. 2025).
+        public let year: Int
+
+        /// Creates a new instance of `DateOfBirth` using a `Date` in the specified `calendar`.
+        /// - Parameters:
+        ///   - date: The date from which to derive the date components.
+        ///   - calendar: The calendar to use in determining the date components. Defaults to `Calendar.current`.
+        public init(date: Date, calendar: Calendar = .current) {
+            day = calendar.component(.day, from: date)
+            month = calendar.component(.month, from: date)
+            year = calendar.component(.year, from: date)
+        }
+        
+        /// Creates a new instance of `DateOfBirth`.
+        /// - Parameters:
+        ///   - day: The one- or two-digit day of the month (e.g. 31).
+        ///   - month: The one- or two-digit month of the year (e.g. January = 1, December = 12).
+        ///   - year: The four digit year (e.g. 2025).
+        public init(day: Int, month: Int, year: Int) {
+            self.day = day
+            self.month = month
+            self.year = year
+        }
+    }
+
     /// The customer’s first name.
-    let firstName: String
+    public let firstName: String
 
     /// The customer’s last name.
-    let lastName: String
+    public let lastName: String
 
     /// The number associated with the customer’s id.
-    let idNumber: String?
+    public let idNumber: String?
 
     /// The type of id provided by the customer.
-    let idType: IdType?
+    public let idType: IdType?
 
     /// The address of the customer.
-    let address: PaymentSheet.Address
+    public let address: PaymentSheet.Address
 
     /// The customer’s date of birth.
-    let dateOfBirth: Date
+    public let dateOfBirth: DateOfBirth
 
     /// The country in which the customer was born.
-    let birthCountry: String?
+    public let birthCountry: String?
 
     /// The city in which the customer was born.
-    let birthCity: String?
+    public let birthCity: String?
 }
 
 extension KYCData: Encodable {
@@ -57,12 +91,6 @@ extension KYCData: Encodable {
         case dob
     }
 
-    private enum DOBKeys: String, CodingKey {
-        case day
-        case month
-        case year
-    }
-
     public func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)
 
@@ -78,15 +106,8 @@ extension KYCData: Encodable {
         try container.encodeIfPresent(address.postalCode, forKey: .zip)
         try container.encodeIfPresent(address.country, forKey: .country)
 
+        try container.encode(dateOfBirth, forKey: .dob)
         try container.encodeIfPresent(birthCountry, forKey: .birthCountry)
         try container.encodeIfPresent(birthCity, forKey: .birthCity)
-
-        // TODO: we’ll likely want to refine calendar usage here, as birth date will differ across time zones. Possibly let the client specify day, month, year instead of `Date`?.
-        var dobContainer = container.nestedContainer(keyedBy: DOBKeys.self, forKey: .dob)
-        let calendar = Calendar.current
-        let components = calendar.dateComponents([.day, .month, .year], from: dateOfBirth)
-        try dobContainer.encode(components.day, forKey: .day)
-        try dobContainer.encode(components.month, forKey: .month)
-        try dobContainer.encode(components.year, forKey: .year)
     }
 }
