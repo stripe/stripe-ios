@@ -24,7 +24,11 @@ final class LinkVerificationController {
         configuration: PaymentElementConfiguration,
         appearance: LinkAppearance? = nil
     ) {
-        self.verificationViewController = LinkVerificationViewController(mode: mode, linkAccount: linkAccount)
+        self.verificationViewController = LinkVerificationViewController(
+            mode: mode,
+            linkAccount: linkAccount,
+            appearance: appearance
+        )
         verificationViewController.delegate = self
         configuration.style.configure(verificationViewController)
     }
