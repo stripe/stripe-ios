@@ -58,6 +58,12 @@ extension StripeAPI {
             @_spi(STP) public var _additionalParametersStorage: NonEncodableParameters?
         }
 
+        /// :nodoc:
+        @_spi(STP) public struct RadarOptions: UnknownFieldsEncodable {
+            @_spi(STP) public var hCaptchaToken: String?
+            @_spi(STP) public var _additionalParametersStorage: NonEncodableParameters?
+        }
+
         // See https://docs.google.com/document/d/11wWdHwWzTJGe_29mHsk71fk-kG4lwvp8TLBBf4ws9JM/edit?usp=sharing
         @_spi(STP) public struct ClientAttributionMetadata: UnknownFieldsEncodable {
 
