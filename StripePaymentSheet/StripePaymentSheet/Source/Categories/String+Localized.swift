@@ -47,15 +47,6 @@ extension String.Localized {
         )
     }
 
-    static var save_your_payment_information_with_link: String {
-        STPLocalizedString(
-                "Save your payment information with Link, and securely check out in 1-click on Link-supported sites.",
-                """
-                Label describing the benefit of signing up for Link.
-                """
-                )
-    }
-
     static var save_for_future_payments: String {
         STPLocalizedString(
             "Save for future payments",
@@ -477,6 +468,20 @@ extension String.Localized {
         STPLocalizedString(
             "By providing your card information, you allow %@ to charge your card for future payments in accordance with their terms.",
             "Text displayed below a credit card entry form when the card will be saved to make future payments."
+        )
+    }
+
+    static var by_continuing_you_agree_to_save_your_information_to_merchant: String {
+        STPLocalizedString(
+            "By continuing, you agree to save your information for future purchases with %@.",
+            "Text displayed below a credit card entry form when the card will be saved with the merchant."
+        )
+    }
+
+    static var by_continuing_you_agree_to_save_your_information_to_merchant_and_link: String {
+        STPLocalizedString(
+            "By continuing, you agree to save your information for future purchases with %@ and <link>Link</link>. You also agree to Link's <terms>Terms</terms> and <privacy>Privacy</privacy>.",
+            "Text displayed below a credit card entry form when the card will be saved with the merchant and saved to Link."
         )
     }
 
