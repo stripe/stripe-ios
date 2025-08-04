@@ -11,10 +11,10 @@ import Foundation
 @_spi(STP) public class STPRadarOptions: NSObject {
     public var additionalAPIParameters: [AnyHashable: Any] = [:]
 
-    @objc public var hcaptchaToken: String?
+    @objc public var hCaptchaToken: String?
 
-    public init(hcaptchaToken: String?) {
-        self.hcaptchaToken = hcaptchaToken
+    public init(hCaptchaToken: String? = nil) {
+        self.hCaptchaToken = hCaptchaToken
     }
 }
 
@@ -30,7 +30,7 @@ extension STPRadarOptions: STPFormEncodable {
     @objc
     public class func propertyNamesToFormFieldNamesMapping() -> [String: String] {
         return [
-            NSStringFromSelector(#selector(getter: hcaptchaToken)): "hcaptcha_token",
+            NSStringFromSelector(#selector(getter: hCaptchaToken)): "hcaptcha_token",
         ]
     }
 }
