@@ -202,76 +202,77 @@ extension PaymentSheet {
                     return .unknown
                 }
             }()
-            // Set allow_redisplay on params
-            confirmParams.setAllowRedisplay(
-                mobilePaymentElementFeatures: elementsSession.customerSessionMobilePaymentElementFeatures,
-                isSettingUp: intent.isSetupFutureUsageSet(for: paymentMethodType)
-            )
-            confirmParams.setClientAttributionMetadata(clientAttributionMetadata: clientAttributionMetadata)
-            switch intent {
-            // MARK: ↪ PaymentIntent
-            case .paymentIntent(let paymentIntent):
-                let params = makePaymentIntentParams(
-                    confirmPaymentMethodType: .new(
-                        params: confirmParams.paymentMethodParams,
-                        paymentOptions: confirmParams.confirmPaymentMethodOptions,
-                        shouldSave: confirmParams.saveForFutureUseCheckboxState == .selected,
-                        shouldSetAsDefaultPM: confirmParams.setAsDefaultPM
-                    ),
-                    paymentIntent: paymentIntent,
-                    configuration: configuration
+            confirmParams.paymentMethodParams.getHCaptchaToken(siteKey: elementsSession.passiveCaptcha?.siteKey) {
+                // Set allow_redisplay on params
+                confirmParams.setAllowRedisplay(
+                    mobilePaymentElementFeatures: elementsSession.customerSessionMobilePaymentElementFeatures,
+                    isSettingUp: intent.isSetupFutureUsageSet(for: paymentMethodType)
                 )
-                paymentHandler.confirmPayment(
-                    params,
-                    with: authenticationContext,
-                    completion: { actionStatus, paymentIntent, error in
-                        if let paymentIntent {
-                            setDefaultPaymentMethodIfNecessary(actionStatus: actionStatus, intent: .paymentIntent(paymentIntent), configuration: configuration, paymentMethodSetAsDefault: elementsSession.paymentMethodSetAsDefaultForPaymentSheet)
+                confirmParams.setClientAttributionMetadata(clientAttributionMetadata: clientAttributionMetadata)
+                switch intent {
+                    // MARK: ↪ PaymentIntent
+                case .paymentIntent(let paymentIntent):
+                    let params = makePaymentIntentParams(
+                        confirmPaymentMethodType: .new(
+                            params: confirmParams.paymentMethodParams,
+                            paymentOptions: confirmParams.confirmPaymentMethodOptions,
+                            shouldSave: confirmParams.saveForFutureUseCheckboxState == .selected,
+                            shouldSetAsDefaultPM: confirmParams.setAsDefaultPM
+                        ),
+                        paymentIntent: paymentIntent,
+                        configuration: configuration
+                    )
+                    paymentHandler.confirmPayment(
+                        params,
+                        with: authenticationContext,
+                        completion: { actionStatus, paymentIntent, error in
+                            if let paymentIntent {
+                                setDefaultPaymentMethodIfNecessary(actionStatus: actionStatus, intent: .paymentIntent(paymentIntent), configuration: configuration, paymentMethodSetAsDefault: elementsSession.paymentMethodSetAsDefaultForPaymentSheet)
+                            }
+                            paymentHandlerCompletion(actionStatus, error)
                         }
-                        paymentHandlerCompletion(actionStatus, error)
-                    }
-                )
-            // MARK: ↪ SetupIntent
-            case .setupIntent(let setupIntent):
-                let setupIntentParams = makeSetupIntentParams(
-                    confirmPaymentMethodType: .new(
-                        params: confirmParams.paymentMethodParams,
-                        paymentOptions: confirmParams.confirmPaymentMethodOptions,
-                        shouldSave: false,
-                        shouldSetAsDefaultPM: confirmParams.setAsDefaultPM
-                    ),
-                    setupIntent: setupIntent,
-                    configuration: configuration
-                )
-                paymentHandler.confirmSetupIntent(
-                    setupIntentParams,
-                    with: authenticationContext,
-                    completion: { actionStatus, setupIntent, error in
-                        if let setupIntent {
-                            setDefaultPaymentMethodIfNecessary(actionStatus: actionStatus, intent: .setupIntent(setupIntent), configuration: configuration, paymentMethodSetAsDefault: elementsSession.paymentMethodSetAsDefaultForPaymentSheet)
+                    )
+                    // MARK: ↪ SetupIntent
+                case .setupIntent(let setupIntent):
+                    let setupIntentParams = makeSetupIntentParams(
+                        confirmPaymentMethodType: .new(
+                            params: confirmParams.paymentMethodParams,
+                            paymentOptions: confirmParams.confirmPaymentMethodOptions,
+                            shouldSave: false,
+                            shouldSetAsDefaultPM: confirmParams.setAsDefaultPM
+                        ),
+                        setupIntent: setupIntent,
+                        configuration: configuration
+                    )
+                    paymentHandler.confirmSetupIntent(
+                        setupIntentParams,
+                        with: authenticationContext,
+                        completion: { actionStatus, setupIntent, error in
+                            if let setupIntent {
+                                setDefaultPaymentMethodIfNecessary(actionStatus: actionStatus, intent: .setupIntent(setupIntent), configuration: configuration, paymentMethodSetAsDefault: elementsSession.paymentMethodSetAsDefaultForPaymentSheet)
+                            }
+                            paymentHandlerCompletion(actionStatus, error)
                         }
-                        paymentHandlerCompletion(actionStatus, error)
-                    }
-                )
-            // MARK: ↪ Deferred Intent
-            case .deferredIntent(let intentConfig):
-                handleDeferredIntentConfirmation(
-                    confirmType: .new(
-                        params: confirmParams.paymentMethodParams,
-                        paymentOptions: confirmParams.confirmPaymentMethodOptions,
-                        shouldSave: confirmParams.saveForFutureUseCheckboxState == .selected,
-                        shouldSetAsDefaultPM: confirmParams.setAsDefaultPM
-                    ),
-                    configuration: configuration,
-                    intentConfig: intentConfig,
-                    authenticationContext: authenticationContext,
-                    paymentHandler: paymentHandler,
-                    isFlowController: isFlowController,
-                    allowsSetAsDefaultPM: elementsSession.paymentMethodSetAsDefaultForPaymentSheet,
-                    completion: completion
-                )
+                    )
+                    // MARK: ↪ Deferred Intent
+                case .deferredIntent(let intentConfig):
+                    handleDeferredIntentConfirmation(
+                        confirmType: .new(
+                            params: confirmParams.paymentMethodParams,
+                            paymentOptions: confirmParams.confirmPaymentMethodOptions,
+                            shouldSave: confirmParams.saveForFutureUseCheckboxState == .selected,
+                            shouldSetAsDefaultPM: confirmParams.setAsDefaultPM
+                        ),
+                        configuration: configuration,
+                        intentConfig: intentConfig,
+                        authenticationContext: authenticationContext,
+                        paymentHandler: paymentHandler,
+                        isFlowController: isFlowController,
+                        allowsSetAsDefaultPM: elementsSession.paymentMethodSetAsDefaultForPaymentSheet,
+                        completion: completion
+                    )
+                }
             }
-
         // MARK: - Saved Payment Method
         case let .saved(paymentMethod, intentConfirmParamsFromSavedPaymentMethod):
             switch intent {
@@ -545,6 +546,9 @@ extension PaymentSheet {
                     case .success:
                         STPAnalyticsClient.sharedClient.logLinkSignupComplete()
                         let linkPaymentMethodType: STPPaymentMethodType = elementsSession.linkPassthroughModeEnabled ? intentConfirmParams.paymentMethodParams.type : .link
+                        if let passiveCaptcha = elementsSession.passiveCaptcha {
+                            intentConfirmParams.paymentMethodParams.getHCaptchaToken(siteKey: passiveCaptcha.siteKey)
+                        }
                         // Set allow_redisplay on params
                         intentConfirmParams.setAllowRedisplay(
                             mobilePaymentElementFeatures: elementsSession.customerSessionMobilePaymentElementFeatures,

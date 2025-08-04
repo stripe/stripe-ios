@@ -1398,3 +1398,21 @@ extension STPPaymentMethodParams {
         }
     }
 }
+
+// MARK: Passive HCaptcha
+extension STPPaymentMethodParams {
+    @_spi(STP) public func getHCaptchaToken(siteKey: String?, completion: (() -> Void)? = nil) {
+        guard let siteKey else {
+            completion?()
+            return
+        }
+        let hCaptcha = try? HCaptcha(apiKey: siteKey, passiveApiKey: true)
+        hCaptcha?.didFinishLoading {
+            hCaptcha?.validate { result in
+                let hCaptchaToken = try? result.dematerialize()
+                self.radarOptions = STPRadarOptions(hcaptchaToken: hCaptchaToken)
+                completion?()
+            }
+        }
+    }
+}
