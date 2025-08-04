@@ -363,7 +363,7 @@ class TextFieldElementCardTest: STPNetworkStubbingTestCase {
             theme: .default,
             analyticsHelper: ._testValue(),
             cardBrandFilter: .default,
-            opensCardScannerAutomatically: false,
+            opensCardScannerAutomatically: false
         )
         let textFieldElement = cardSection.panElement
 

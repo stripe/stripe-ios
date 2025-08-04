@@ -3460,7 +3460,7 @@ extension PaymentSheetUITestCase {
         if vertical {
             XCTAssertTrue(app.buttons["US bank account"].waitForExistenceAndTap())
         } else {
-            app.buttons["US bank account"].waitForExistenceAndTap()
+            XCTAssertTrue(scroll(collectionView: app.collectionViews.firstMatch, toFindCellWithId: "US bank account")?.waitForExistenceAndTap() ?? false)
         }
 
         // Fill out name and email fields

@@ -77,7 +77,7 @@ extension PaymentSheetFormFactory {
             theme: theme,
             analyticsHelper: analyticsHelper,
             cardBrandFilter: configuration.cardBrandFilter,
-            opensCardScannerAutomatically: configuration.opensCardScannerAutomatically,
+            opensCardScannerAutomatically: configuration.opensCardScannerAutomatically
         )
 
         let billingAddressSection: PaymentMethodElementWrapper<AddressSectionElement>? = {
