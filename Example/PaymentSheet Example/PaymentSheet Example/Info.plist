@@ -55,6 +55,8 @@
 	<false/>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
+	<key>UIDesignRequiresCompatibility</key>
+	<true/>
 	<key>NSCameraUsageDescription</key>
 	<string>Allow the app to scan cards.</string>
 	<key>UIApplicationSceneManifest</key>
