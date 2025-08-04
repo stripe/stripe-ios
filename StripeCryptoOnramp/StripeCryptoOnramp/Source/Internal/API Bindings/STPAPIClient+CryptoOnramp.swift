@@ -60,7 +60,8 @@ extension STPAPIClient {
         let endpoint = "crypto/internal/kyc_data_collection"
         let requestObject = KYCDataCollectionRequest(
             credentials: Credentials(consumerSessionClientSecret: consumerSessionClientSecret),
-            kycInfo: info
+            kycInfo: info,
+            calendar: .current
         )
 
         return try await withCheckedThrowingContinuation { continuation in

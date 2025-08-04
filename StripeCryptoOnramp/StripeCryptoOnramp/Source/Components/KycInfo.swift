@@ -12,40 +12,6 @@ import Foundation
 @_spi(CryptoOnrampSDKPreview)
 public struct KycInfo: Equatable {
 
-    /// Represents the three components (day, month, year) of a birth date.
-    public struct DateOfBirth: Encodable, Equatable {
-
-        /// The one- or two-digit day of the month (e.g. 31).
-        public let day: Int
-
-        /// The one- or two-digit month of the year (e.g. January = 1, December = 12).
-        public let month: Int
-
-        /// The four digit year (e.g. 2025).
-        public let year: Int
-
-        /// Creates a new instance of `DateOfBirth` using a `Date` in the specified `calendar`.
-        /// - Parameters:
-        ///   - date: The date from which to derive the date components.
-        ///   - calendar: The calendar to use in determining the date components. Defaults to `Calendar.current`.
-        public init(date: Date, calendar: Calendar = .current) {
-            day = calendar.component(.day, from: date)
-            month = calendar.component(.month, from: date)
-            year = calendar.component(.year, from: date)
-        }
-
-        /// Creates a new instance of `DateOfBirth`.
-        /// - Parameters:
-        ///   - day: The one- or two-digit day of the month (e.g. 31).
-        ///   - month: The one- or two-digit month of the year (e.g. January = 1, December = 12).
-        ///   - year: The four digit year (e.g. 2025).
-        public init(day: Int, month: Int, year: Int) {
-            self.day = day
-            self.month = month
-            self.year = year
-        }
-    }
-
     /// The customer’s first name.
     public let firstName: String
 
@@ -62,7 +28,7 @@ public struct KycInfo: Equatable {
     public let address: PaymentSheet.Address
 
     /// The customer’s date of birth.
-    public let dateOfBirth: DateOfBirth
+    public let dateOfBirth: Date
 
     /// The country in which the customer was born.
     public let birthCountry: String?
@@ -76,7 +42,7 @@ public struct KycInfo: Equatable {
         idNumber: String?,
         idType: IdType = .socialSecurityNumber,
         address: PaymentSheet.Address,
-        dateOfBirth: DateOfBirth,
+        dateOfBirth: Date,
         birthCountry: String?,
         birthCity: String?
     ) {
