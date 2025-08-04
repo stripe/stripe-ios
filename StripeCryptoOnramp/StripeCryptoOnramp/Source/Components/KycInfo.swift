@@ -56,7 +56,7 @@ public struct KycInfo: Equatable {
     public let idNumber: String?
 
     /// The type of id provided by the customer.
-    public let idType: IdType?
+    public let idType: IdType
 
     /// The address of the customer.
     public let address: PaymentSheet.Address
@@ -69,45 +69,24 @@ public struct KycInfo: Equatable {
 
     /// The city in which the customer was born.
     public let birthCity: String?
-}
 
-extension KycInfo: Encodable {
-
-    // MARK: - Encodable
-
-    private enum CodingKeys: String, CodingKey {
-        case firstName = "first_name"
-        case lastName = "last_name"
-        case idNumber = "id_number"
-        case idType = "id_type"
-        case line1
-        case line2
-        case city
-        case state
-        case zip
-        case country
-        case birthCountry = "birth_country"
-        case birthCity = "birth_city"
-        case dob
-    }
-
-    public func encode(to encoder: Encoder) throws {
-        var container = encoder.container(keyedBy: CodingKeys.self)
-
-        try container.encode(firstName, forKey: .firstName)
-        try container.encode(lastName, forKey: .lastName)
-        try container.encodeIfPresent(idNumber, forKey: .idNumber)
-        try container.encodeIfPresent(idType?.rawValue, forKey: .idType)
-
-        try container.encodeIfPresent(address.line1, forKey: .line1)
-        try container.encodeIfPresent(address.line2, forKey: .line2)
-        try container.encodeIfPresent(address.city, forKey: .city)
-        try container.encodeIfPresent(address.state, forKey: .state)
-        try container.encodeIfPresent(address.postalCode, forKey: .zip)
-        try container.encodeIfPresent(address.country, forKey: .country)
-
-        try container.encode(dateOfBirth, forKey: .dob)
-        try container.encodeIfPresent(birthCountry, forKey: .birthCountry)
-        try container.encodeIfPresent(birthCity, forKey: .birthCity)
+    public init(
+        firstName: String,
+        lastName: String,
+        idNumber: String?,
+        idType: IdType = .socialSecurityNumber,
+        address: PaymentSheet.Address,
+        dateOfBirth: DateOfBirth,
+        birthCountry: String?,
+        birthCity: String?
+    ) {
+        self.firstName = firstName
+        self.lastName = lastName
+        self.idNumber = idNumber
+        self.idType = idType
+        self.address = address
+        self.dateOfBirth = dateOfBirth
+        self.birthCountry = birthCountry
+        self.birthCity = birthCity
     }
 }

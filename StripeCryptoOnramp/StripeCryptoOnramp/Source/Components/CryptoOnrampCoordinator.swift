@@ -131,6 +131,6 @@ public final class CryptoOnrampCoordinator: CryptoOnrampCoordinatorProtocol {
     }
 
     public func collectKYCInfo(info: KycInfo) async throws {
-        try await apiClient.collectKycInfo(info: info)
+        try await apiClient.collectKycInfo(info: info, linkAccountInfo: linkAccountInfo)
     }
 }
