@@ -11,6 +11,7 @@ import Foundation
 class STPRadarOptions: NSObject {
     public var additionalAPIParameters: [AnyHashable: Any] = [:]
 
+    /// The HCaptcha token from the passive HCaptcha
     @objc public var hCaptchaToken: String?
 
     public init(hCaptchaToken: String? = nil) {

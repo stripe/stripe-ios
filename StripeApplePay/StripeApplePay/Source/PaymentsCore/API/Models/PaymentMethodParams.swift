@@ -28,6 +28,9 @@ extension StripeAPI {
             return PaymentsSDKVariant.paymentUserAgent
         }()
 
+        /// Radar options that may contain HCaptcha token
+        @_spi(STP) public var radarOptions: RadarOptions?
+
         /// Contains metadata with identifiers for the session and information about the integration
         @_spi(STP) public var clientAttributionMetadata: ClientAttributionMetadata = ClientAttributionMetadata()
 
@@ -95,6 +98,13 @@ extension StripeAPI {
                 self.paymentMethodSelectionFlow = paymentMethodSelectionFlow?.rawValue
             }
 
+            @_spi(STP) public var _additionalParametersStorage: NonEncodableParameters?
+        }
+
+        /// Values for RadarOptions
+        @_spi(STP) public struct RadarOptions: UnknownFieldsEncodable {
+            /// The HCaptcha token from the passive HCaptcha
+            @_spi(STP) public var hCaptchaToken: String?
             @_spi(STP) public var _additionalParametersStorage: NonEncodableParameters?
         }
 
