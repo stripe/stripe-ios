@@ -15,11 +15,6 @@ import Foundation
 import UIKit
 import Vision
 
-enum STPCardScannerError: Int {
-    /// Camera not available.
-    case cameraNotAvailable
-}
-
 @available(macCatalyst 14.0, *)
 @objc protocol STPCardScannerDelegate {
     func cardScanner(_ scanner: STPCardScanner, didFinishWith cardParams: STPPaymentMethodCardParams?)
@@ -34,7 +29,6 @@ class STPCardScanner: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate {
     private static let kSTPCardScanningMinimumValidScans = 2
     // Once one successful scan is found, we'll stop scanning after this many seconds.
     private static let kSTPCardScanningTimeout: TimeInterval = 0.6
-    private static let STPCardScannerErrorDomain = "STPCardScannerErrorDomain"
 
     // iOS will kill the app if it tries to request the camera without an NSCameraUsageDescription
     private static let cardScanningAvailableCameraHasUsageDescription = {
