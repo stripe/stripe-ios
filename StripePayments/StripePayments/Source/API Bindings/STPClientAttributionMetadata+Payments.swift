@@ -1,8 +1,8 @@
 //
-//  STPClientAttributionMetadata+STPFormEncodable.swift
+//  STPClientAttributionMetadata+Payments.swift
 //  StripePayments
 //
-//  Created by Joyce Qin on 7/31/25.
+//  Created by Joyce Qin on 8/4/25.
 //
 
 import Foundation
