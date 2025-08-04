@@ -140,10 +140,12 @@ import UIKit
     enum SettingsKeys: String {
         /// The ID of the attestation key stored in the keychain.
         case keyID = "STPAttestKeyID"
-        /// The last date we generated an attestation key, used for rate limiting.
-        case lastAttestedDate = "STPAttestKeyLastAttestedDate"
         /// Whether the current keyID key has been attested successfully.
         case successfullyAttested = "STPAttestKeySuccessfullyAttested"
+        /// The number of key generation attempts made today.
+        case dailyAttemptCount = "STPAttestKeyDailyAttemptCount"
+        /// The date of the first key generation attempt today.
+        case firstAttemptToday = "STPAttestKeyFirstAttemptToday"
     }
 
     private var storedKeyID: String? {
@@ -164,12 +166,21 @@ import UIKit
         }
     }
 
-    private var lastAttestedDate: Date? {
+    private var dailyAttemptCount: Int {
         get {
-            UserDefaults.standard.object(forKey: defaultsKeyForSetting(.lastAttestedDate)) as? Date
+            UserDefaults.standard.integer(forKey: defaultsKeyForSetting(.dailyAttemptCount))
         }
         set {
-            UserDefaults.standard.set(newValue, forKey: defaultsKeyForSetting(.lastAttestedDate))
+            UserDefaults.standard.set(newValue, forKey: defaultsKeyForSetting(.dailyAttemptCount))
+        }
+    }
+
+    private var firstAttemptToday: Date? {
+        get {
+            UserDefaults.standard.object(forKey: defaultsKeyForSetting(.firstAttemptToday)) as? Date
+        }
+        set {
+            UserDefaults.standard.set(newValue, forKey: defaultsKeyForSetting(.firstAttemptToday))
         }
     }
 
@@ -198,12 +209,12 @@ import UIKit
     /// The API client to use for network requests
     weak var apiClient: STPAPIClient?
 
-    /// The minimum time between key generation attempts.
+    /// The maximum number of key generation attempts allowed per day.
     /// This is a safeguard against generating keys too often, as each key generation
     /// permanently increases a counter for the device/app pair.
     /// We expect each device/app pair to generate one key *ever*.
     /// If this rate limit is being hit, something is wrong.
-    private static let minDurationBetweenKeyGenerationAttempts: TimeInterval = 60 * 60 * 24 // 24 hours
+    private static let maxKeyGenerationAttemptsPerDay: Int = 3
 
     /// Attest the current device key. Only perform this once per device key.
     /// You should not call this directly, it'll be called automatically during assert.
@@ -264,10 +275,26 @@ import UIKit
 
     func _attest() async throws {
         // It's dangerous to attest, as it increments a permanent counter for the device.
-        // First, make sure the last time we called this is more than 24 hours away from now.
-        // (Either in the future or the past, who knows what people are doing with their clocks)
-        if let lastGenerated = lastAttestedDate, abs(lastGenerated.timeIntervalSinceNow) < Self.minDurationBetweenKeyGenerationAttempts {
-            throw AttestationError.attestationRateLimitExceeded
+        // Check if we've reached the daily limit of attempts.
+        let now = Date()
+        let calendar = Calendar.current
+
+        // Check if this is a new day compared to the first attempt today
+        if let firstAttempt = firstAttemptToday {
+            if calendar.isDate(now, inSameDayAs: firstAttempt) {
+                // Same day - check if we've exceeded the limit
+                if dailyAttemptCount >= Self.maxKeyGenerationAttemptsPerDay {
+                    throw AttestationError.attestationRateLimitExceeded
+                }
+            } else {
+                // New day - reset counters
+                dailyAttemptCount = 0
+                firstAttemptToday = now
+            }
+        } else {
+            // First attempt ever - initialize
+            firstAttemptToday = now
+            dailyAttemptCount = 0
         }
 
         let keyId = try await self.getOrCreateKeyID()
@@ -294,7 +321,7 @@ import UIKit
                 // Being more relaxed about this also helps with users switching between
                 // a developer-signed app (which may be in the development attest environment)
                 // and a TestFlight/App Store/Enterprise app (which is always in the production attest environment)
-                lastAttestedDate = Date()
+                dailyAttemptCount += 1
             }
             try await appAttestBackend.attest(appId: appId, deviceId: deviceId, keyId: keyId, attestation: attestation)
             // Store the successful attestation

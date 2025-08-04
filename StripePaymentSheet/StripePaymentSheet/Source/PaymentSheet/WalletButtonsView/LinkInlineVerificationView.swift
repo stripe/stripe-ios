@@ -52,6 +52,7 @@ struct LinkInlineVerificationView: View {
                     Rectangle()
                         .fill(Color(uiColor: .separator))
                         .frame(width: Constants.separatorWidth, height: Constants.logoHeight)
+                        .cornerRadius(Constants.separatorWidth / 2)
 
                     HStack(spacing: Constants.paymentMehtodIconAndNumberSpacing) {
                         SwiftUI.Image(uiImage: paymentMethodPreview.icon)

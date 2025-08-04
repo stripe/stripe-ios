@@ -191,6 +191,8 @@ extension LinkInlineSignupElementSnapshotTests {
             showCheckbox: showCheckbox,
             accountService: MockAccountService(),
             allowsDefaultOptIn: allowsDefaultOptIn,
+            signupOptInFeatureEnabled: false,
+            signupOptInInitialValue: false,
             linkAccount: linkAccount,
             country: country
         )
