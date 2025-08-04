@@ -202,13 +202,13 @@ extension PaymentSheet {
                     return .unknown
                 }
             }()
-            confirmParams.paymentMethodParams.getHCaptchaToken(siteKey: elementsSession.passiveCaptcha?.siteKey) {
-                // Set allow_redisplay on params
-                confirmParams.setAllowRedisplay(
-                    mobilePaymentElementFeatures: elementsSession.customerSessionMobilePaymentElementFeatures,
-                    isSettingUp: intent.isSetupFutureUsageSet(for: paymentMethodType)
-                )
-                confirmParams.setClientAttributionMetadata(clientAttributionMetadata: clientAttributionMetadata)
+            // Set allow_redisplay on params
+            confirmParams.setAllowRedisplay(
+                mobilePaymentElementFeatures: elementsSession.customerSessionMobilePaymentElementFeatures,
+                isSettingUp: intent.isSetupFutureUsageSet(for: paymentMethodType)
+            )
+            confirmParams.setClientAttributionMetadata(clientAttributionMetadata: clientAttributionMetadata)
+            confirmParams.paymentMethodParams.startPassiveCaptcha(siteKey: elementsSession.passiveCaptcha?.siteKey) {
                 switch intent {
                     // MARK: ↪ PaymentIntent
                 case .paymentIntent(let paymentIntent):
@@ -546,15 +546,14 @@ extension PaymentSheet {
                     case .success:
                         STPAnalyticsClient.sharedClient.logLinkSignupComplete()
                         let linkPaymentMethodType: STPPaymentMethodType = elementsSession.linkPassthroughModeEnabled ? intentConfirmParams.paymentMethodParams.type : .link
-                        if let passiveCaptcha = elementsSession.passiveCaptcha {
-                            intentConfirmParams.paymentMethodParams.getHCaptchaToken(siteKey: passiveCaptcha.siteKey)
-                        }
                         // Set allow_redisplay on params
                         intentConfirmParams.setAllowRedisplay(
                             mobilePaymentElementFeatures: elementsSession.customerSessionMobilePaymentElementFeatures,
                             isSettingUp: intent.isSetupFutureUsageSet(for: linkPaymentMethodType)
                         )
-                        createPaymentDetailsAndConfirm(linkAccount, intentConfirmParams.paymentMethodParams, intentConfirmParams.saveForFutureUseCheckboxState == .selected)
+                        intentConfirmParams.paymentMethodParams.startPassiveCaptcha(siteKey: elementsSession.passiveCaptcha?.siteKey) {
+                            createPaymentDetailsAndConfirm(linkAccount, intentConfirmParams.paymentMethodParams, intentConfirmParams.saveForFutureUseCheckboxState == .selected)
+                        }
                     case .failure(let error as NSError):
                         STPAnalyticsClient.sharedClient.logLinkSignupFailure(error: error)
                         // Attempt to confirm directly with params as a fallback.
