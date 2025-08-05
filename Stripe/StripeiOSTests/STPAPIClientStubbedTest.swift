@@ -40,8 +40,15 @@ class STPAPIClientStubbedTest: APIStubbedTestCase {
 
     private func stubClientAttributionMetadata(base: String? = nil,
                                                shouldContainClientAttributionMetadata: Bool = true,
-                                               clientAttributionMetadata: STPClientAttributionMetadata = STPClientAttributionMetadata()) {
+                                               clientAttributionMetadata: STPClientAttributionMetadata = STPClientAttributionMetadata(),
+                                               urlPattern: String? = nil) {
         stub { urlRequest in
+            // If urlPattern is specified, only validate requests that match the pattern
+            if let urlPattern {
+                guard urlRequest.url?.absoluteString.contains(urlPattern) == true else {
+                    return false
+                }
+            }
             guard let queryItems = urlRequest.queryItems else {
                 return false
             }
@@ -116,9 +123,33 @@ class STPAPIClientStubbedTest: APIStubbedTestCase {
     func testCreateApplePayPaymentMethodWithClientAttributionMetadata() {
         let sut = stubbedAPIClient()
         AnalyticsHelper.shared.generateSessionID()
-        stubClientAttributionMetadata()
+        // Stub token creation call
+        stub { urlRequest in
+            return urlRequest.url?.absoluteString.contains("/tokens") ?? false
+        } response: { _ in
+            let tokenResponse = """
+                {
+                    "id": "tok_test_123",
+                    "object": "token",
+                    "used": false,
+                    "livemode": false,
+                    "created": 1234567890,
+                    "type": "card"
+                }
+                """
+            return HTTPStubsResponse(
+                data: Data(tokenResponse.utf8),
+                statusCode: 200,
+                headers: ["Content-Type": "application/json"]
+            )
+        }
+        let clientAttributionMetadata: STPClientAttributionMetadata = STPClientAttributionMetadata(elementsSessionConfigId: "elements_session_config_id", paymentIntentCreationFlow: .deferred, paymentMethodSelectionFlow: .automatic)
+        var paymentMethodParams: StripeAPI.PaymentMethodParams = StripeAPI.PaymentMethodParams(type: .card)
+        paymentMethodParams.clientAttributionMetadata = clientAttributionMetadata
+        // Stub payment method creation call
+        stubClientAttributionMetadata(clientAttributionMetadata: clientAttributionMetadata, urlPattern: "/payment_methods")
         let e = expectation(description: "")
-        StripeAPI.PaymentMethod.create(apiClient: sut, params: StripeAPI.PaymentMethodParams(type: .card)) { _ in
+        StripeAPI.PaymentMethod.create(apiClient: sut, params: paymentMethodParams) { _ in
             e.fulfill()
         }
         waitForExpectations(timeout: 10)
