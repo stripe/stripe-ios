@@ -29,6 +29,7 @@ class SimpleMandateTextView: UIView {
     convenience init(mandateText: NSAttributedString, theme: ElementsAppearance) {
         self.init(theme: theme)
         textView.attributedText = mandateText
+        applyTextViewStyle()
     }
 
     convenience init(mandateText: String, theme: ElementsAppearance) {

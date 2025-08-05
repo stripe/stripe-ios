@@ -70,8 +70,12 @@ class EmbeddedFormViewController: UIViewController {
         }
     }
 
+    var form: PaymentMethodElement {
+        return paymentMethodFormViewController.form
+    }
+
     var collectsUserInput: Bool {
-        return paymentMethodFormViewController.form.collectsUserInput
+        return form.collectsUserInput
     }
 
     enum Error: Swift.Error {

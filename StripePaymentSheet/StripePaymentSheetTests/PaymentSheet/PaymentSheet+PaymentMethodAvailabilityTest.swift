@@ -115,4 +115,72 @@ final class PaymentMethodAvailabilityTest: XCTestCase {
 
         XCTAssertFalse(isLinkEnabled, "Link should be disabled when display is set to .never")
     }
+
+    func testIsLinkSignupEnabled_enabled_for_linkSignupOptInFeatureEnabled_if_general_signup_disabled() {
+        // Lookup happened during initialization and an email was provided
+        LinkAccountContext.shared.account = ._testValue(email: "john@doe.com", isRegistered: false)
+
+        let elementsSession = STPElementsSession._testValue(
+            linkSettings: ._testValue(
+                disableSignup: true,
+                flags: ["link_sign_up_opt_in_feature_enabled": true]
+            )
+        )
+        let configuration = PaymentSheet.Configuration()
+        let isLinkSignupEnabled = PaymentSheet.isLinkSignupEnabled(elementsSession: elementsSession, configuration: configuration)
+
+        XCTAssertTrue(isLinkSignupEnabled, "Link inline signup should be enabled for linkSignupOptInFeatureEnabled even if general signup disabled")
+    }
+
+    func testIsLinkSignupEnabled_enabled_for_linkSignupOptInFeatureEnabled_if_email_provided() {
+        // Lookup happened during initialization and an email was provided
+        LinkAccountContext.shared.account = ._testValue(email: "john@doe.com", isRegistered: false)
+
+        let elementsSession = STPElementsSession._testValue(
+            linkSettings: ._testValue(flags: ["link_sign_up_opt_in_feature_enabled": true])
+        )
+        let configuration = PaymentSheet.Configuration()
+        let isLinkSignupEnabled = PaymentSheet.isLinkSignupEnabled(elementsSession: elementsSession, configuration: configuration)
+
+        XCTAssertTrue(isLinkSignupEnabled, "Link inline signup should be enabled for linkSignupOptInFeatureEnabled if an email was provided")
+    }
+
+    func testIsLinkSignupEnabled_disabled_for_linkSignupOptInFeatureEnabled_if_no_email_provided() {
+        // Lookup happened during initialization and no email was provided
+        LinkAccountContext.shared.account = nil
+
+        let elementsSession = STPElementsSession._testValue(
+            linkSettings: ._testValue(
+                disableSignup: true,
+                flags: ["link_sign_up_opt_in_feature_enabled": true]
+            )
+        )
+        let configuration = PaymentSheet.Configuration()
+        let isLinkSignupEnabled = PaymentSheet.isLinkSignupEnabled(elementsSession: elementsSession, configuration: configuration)
+
+        XCTAssertFalse(isLinkSignupEnabled, "Link inline signup should be disabled for linkSignupOptInFeatureEnabled if no email was provided")
+    }
+}
+
+private extension LinkSettings {
+    static func _testValue(
+        disableSignup: Bool = false,
+        flags: [String: Bool]? = nil
+    ) -> LinkSettings {
+        return .init(
+            fundingSources: [.card, .bankAccount],
+            popupWebviewOption: nil,
+            passthroughModeEnabled: true,
+            disableSignup: disableSignup,
+            suppress2FAModal: false,
+            disableFlowControllerRUX: true,
+            useAttestationEndpoints: true,
+            linkMode: .passthrough,
+            linkFlags: flags,
+            linkConsumerIncentive: nil,
+            linkDefaultOptIn: nil,
+            linkEnableDisplayableDefaultValuesInECE: nil,
+            allResponseFields: [:]
+        )
+    }
 }

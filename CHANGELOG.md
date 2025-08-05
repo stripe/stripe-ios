@@ -1,6 +1,8 @@
-## X.X.X
+## 24.19.0 2025-08-04
+
 ### PaymentSheet
 * [Fixed] Updated default spacing of form elements in PaymentSheet.
+* [Added] EmbeddedPaymentElement now shows mandates in a form sheet when `rowSelectionBehavior` is `immediateAction` and `embeddedViewDisplaysMandateText` is `true`. Previously, this configuration was an error.
 
 ## 24.18.1 2025-07-29
 * [Fixed] Improved Klarna payments when using Universal Links.
