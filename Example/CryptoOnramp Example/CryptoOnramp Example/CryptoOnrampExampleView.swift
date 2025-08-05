@@ -11,6 +11,9 @@ import SwiftUI
 @_spi(CryptoOnrampSDKPreview)
 import StripeCryptoOnramp
 
+@_spi(STP)
+import StripePaymentSheet
+
 /// The main content view of the example CryptoOnramp app.
 struct CryptoOnrampExampleView: View {
     @State private var coordinator: CryptoOnrampCoordinator?
@@ -92,7 +95,13 @@ struct CryptoOnrampExampleView: View {
         isLoading.wrappedValue = true
         Task {
             do {
-                let coordinator = try await CryptoOnrampCoordinator.create(appearance: .init())
+                let coordinator = try await CryptoOnrampCoordinator.create(
+                    appearance: LinkAppearance(
+                        primaryColor: .systemPink,
+                        primaryButton: .init(cornerRadius: 0, height: 200),
+                        style: .automatic
+                    )
+                )
 
                 await MainActor.run {
                     self.coordinator = coordinator
