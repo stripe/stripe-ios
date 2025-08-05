@@ -721,7 +721,7 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
             embeddedViewDisplaysMandateText: .on,
             rowSelectionBehavior: .default,
             cardBrandAcceptance: .all,
-            opensCardScannerAutomatically: .off
+            opensCardScannerAutomatically: .off,
             termsDisplay: .unset
         )
     }
