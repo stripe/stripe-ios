@@ -144,10 +144,6 @@ extension PayWithLinkViewController {
             return stackView
         }()
 
-        private var billingDetailsCollectionConfiguration: PaymentSheet.BillingDetailsCollectionConfiguration {
-            context.configuration.billingDetailsCollectionConfiguration
-        }
-
         #if !os(visionOS)
         private let feedbackGenerator = UINotificationFeedbackGenerator()
         #endif
