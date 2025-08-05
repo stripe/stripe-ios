@@ -57,6 +57,14 @@ final class STPAPIClientCryptoOnrampTests: APIStubbedTestCase {
             nationalities: [],
             residenceCountry: "US"
         )
+
+        // /v1/crypto/internal/start_identity_verification
+        static let startIdentityVerificationAPIPath = "/v1/crypto/internal/start_identity_verification"
+        static let startIdentityVerificationMockResponseObject = StartIdentityVerificationResponse(
+            id: "vs_1AbcdEF23gH4IJ5klMNoPqRs",
+            url: URL(string: "https://verify.stripe.com/start/test_12345")!,
+            ephemeralKey: "ek_test_12345"
+        )
     }
 
     private struct LinkAccountInfo: PaymentSheetLinkAccountInfoProtocol {
@@ -224,6 +232,54 @@ final class STPAPIClientCryptoOnrampTests: APIStubbedTestCase {
         var unverifiedLinkAccountInfo = Constant.validLinkAccountInfo
         unverifiedLinkAccountInfo.sessionState = .requiresVerification
         await XCTAssertThrowsErrorAsync(_ = try await apiClient.collectKycInfo(info: Constant.validKycInfo, linkAccountInfo: unverifiedLinkAccountInfo))
+    }
+
+    func testStartIdentityVerificationSuccess() async throws {
+        let mockResponseData = try JSONEncoder().encode(Constant.startIdentityVerificationMockResponseObject)
+
+        stub { request in
+            XCTAssertEqual(request.url?.path, Constant.startIdentityVerificationAPIPath)
+            XCTAssertEqual(request.httpMethod, "POST")
+
+            guard let httpBody = request.ohhttpStubs_httpBody else {
+                XCTFail("Expected an httpBody data but found none.")
+                return false
+            }
+
+            let parameters = String(data: httpBody, encoding: .utf8)?.parsedHTTPBodyDictionary ?? [:]
+
+            XCTAssertEqual(parameters.count, 2)
+            XCTAssertEqual(parameters["credentials[consumer_session_client_secret]"], Constant.requestSecret)
+            XCTAssertEqual(parameters["is_mobile"], "true")
+
+            return true
+        } response: { _ in
+            return HTTPStubsResponse(data: mockResponseData, statusCode: 200, headers: nil)
+        }
+
+        let apiClient = stubbedAPIClient()
+
+        do {
+            let response = try await apiClient.startIdentityVerification(linkAccountInfo: Constant.validLinkAccountInfo)
+            XCTAssertEqual(response.id, "vs_1AbcdEF23gH4IJ5klMNoPqRs")
+            XCTAssertEqual(response.url, URL(string: "https://verify.stripe.com/start/test_12345"))
+            XCTAssertEqual(response.ephemeralKey, "ek_test_12345")
+        } catch {
+            XCTFail("Expected a success response but got an error: \(error).")
+        }
+
+    }
+
+    func testStartIdentityVerificationThrowsWithInvalidArguments() async {
+        let apiClient = stubbedAPIClient()
+
+        var noSecretLinkAccountInfo = Constant.validLinkAccountInfo
+        noSecretLinkAccountInfo.consumerSessionClientSecret = nil
+        await XCTAssertThrowsErrorAsync(_ = try await apiClient.startIdentityVerification(linkAccountInfo: noSecretLinkAccountInfo))
+
+        var unverifiedLinkAccountInfo = Constant.validLinkAccountInfo
+        unverifiedLinkAccountInfo.sessionState = .requiresVerification
+        await XCTAssertThrowsErrorAsync(_ = try await apiClient.startIdentityVerification(linkAccountInfo: unverifiedLinkAccountInfo))
     }
 }
 
