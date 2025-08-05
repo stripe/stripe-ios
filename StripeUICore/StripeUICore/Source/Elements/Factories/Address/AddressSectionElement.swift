@@ -380,8 +380,9 @@ import UIKit
             initialElements.append(country)
         }
         initialElements.append(autoCompleteLine)
+        let emailElement: [Element?] = [email]
         let phoneElement: [Element?] = [phone]
-        addressSection.elements = (initialElements + addressFields + phoneElement).compactMap { $0 }
+        addressSection.elements = (initialElements + addressFields + emailElement + phoneElement).compactMap { $0 }
     }
 
     /// Returns `true` iff all **displayed** address fields match the given `address`, treating `nil` and "" as equal.
