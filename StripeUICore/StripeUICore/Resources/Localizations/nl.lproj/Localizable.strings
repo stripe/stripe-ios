@@ -144,4 +144,6 @@
 
 "Your postal code is incomplete." = "Je postcode is onvolledig.";
 
+"Your postal code is invalid." = "Uw postcode is ongeldig.";
+
 "ZIP" = "Postcode";

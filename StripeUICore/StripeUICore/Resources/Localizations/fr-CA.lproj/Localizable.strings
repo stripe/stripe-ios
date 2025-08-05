@@ -134,6 +134,8 @@
 
 "Your BLIK code is invalid." = "Votre code BLIK n'est pas valide.";
 
+"Your ZIP code is incomplete." = "Votre code postal est incomplet.";
+
 "Your ZIP code is invalid." = "Votre code postal n'est pas valide.";
 
 "Your email is invalid." = "Votre adresse de courriel n'est pas valide.";
@@ -141,5 +143,7 @@
 "Your payment information will not be saved." = "Vos informations de paiement ne seront pas enregistrées.";
 
 "Your postal code is incomplete." = "Votre code postal est incomplet.";
+
+"Your postal code is invalid." = "Votre code postal n'est pas valide.";
 
 "ZIP" = "Code postal";
