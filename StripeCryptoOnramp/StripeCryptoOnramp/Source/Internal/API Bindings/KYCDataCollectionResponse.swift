@@ -7,8 +7,8 @@
 
 import Foundation
 
-/// Decodable model representing a response from the `/v1/crypto/internal/kyc_data_collection` endpoint.
-struct KYCDataCollectionResponse: Decodable {
+/// Codable model representing a response from the `/v1/crypto/internal/kyc_data_collection` endpoint.
+struct KYCDataCollectionResponse: Codable {
     let personId: String
     let firstName: String
     let lastName: String
