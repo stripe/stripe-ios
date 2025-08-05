@@ -30,7 +30,7 @@ extension StripeAPI {
         }()
 
         /// Radar options that may contain HCaptcha token
-        @_spi(STP) public var radarOptions: RadarOptions?
+        @_spi(STP) var radarOptions: RadarOptions?
 
         /// Contains metadata with identifiers for the session and information about the integration
         @_spi(STP) public var clientAttributionMetadata: ClientAttributionMetadata = ClientAttributionMetadata()
