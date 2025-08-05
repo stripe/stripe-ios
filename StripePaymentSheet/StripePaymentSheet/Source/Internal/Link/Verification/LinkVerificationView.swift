@@ -38,6 +38,8 @@ final class LinkVerificationView: UIView {
 
     let linkAccount: PaymentSheetLinkAccountInfoProtocol
 
+    private let appearance: LinkAppearance?
+
     var sendingCode: Bool = false {
         didSet {
             resendCodeButton.isLoading = sendingCode
@@ -115,7 +117,7 @@ final class LinkVerificationView: UIView {
     }()
 
     private lazy var resendCodeButton: Button = {
-        let button = Button(configuration: .linkPlain(), title: STPLocalizedString(
+        let button = Button(configuration: .linkPlain(foregroundColor: appearance?.primaryColor ?? .linkTextBrand), title: STPLocalizedString(
             "Resend code",
             "Label for a button that re-sends the a login code when tapped"
         ))
@@ -130,9 +132,10 @@ final class LinkVerificationView: UIView {
         return logoutView
     }()
 
-    required init(mode: Mode, linkAccount: PaymentSheetLinkAccountInfoProtocol) {
+    required init(mode: Mode, linkAccount: PaymentSheetLinkAccountInfoProtocol, appearance: LinkAppearance? = nil) {
         self.mode = mode
         self.linkAccount = linkAccount
+        self.appearance = appearance
         super.init(frame: .zero)
         setupUI()
     }
