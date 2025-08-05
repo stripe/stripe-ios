@@ -123,7 +123,7 @@ extension PaymentSheetFormFactory {
         }
 
         let mandate: SimpleMandateElement? = {
-            if isSettingUp || signupOptInFeatureEnabled {
+            if isSettingUp || (showLinkInlineSignup && signupOptInFeatureEnabled) {
                 return makeMandate()
             }
             return nil
