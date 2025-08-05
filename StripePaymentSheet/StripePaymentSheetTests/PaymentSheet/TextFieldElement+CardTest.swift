@@ -362,7 +362,8 @@ class TextFieldElementCardTest: STPNetworkStubbingTestCase {
             hostedSurface: .paymentSheet,
             theme: .default,
             analyticsHelper: ._testValue(),
-            cardBrandFilter: .default
+            cardBrandFilter: .default,
+            opensCardScannerAutomatically: false
         )
         let textFieldElement = cardSection.panElement
 
