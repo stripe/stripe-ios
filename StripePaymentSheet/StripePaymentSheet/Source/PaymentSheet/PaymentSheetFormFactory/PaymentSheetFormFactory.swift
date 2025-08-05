@@ -1071,7 +1071,7 @@ private extension PaymentSheet.Address {
                 line2: line2,
                 postalCode: postalCode,
                 state: state
-            ),
+            )
         )
     }
 }
