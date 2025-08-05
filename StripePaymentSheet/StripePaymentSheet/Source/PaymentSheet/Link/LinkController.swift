@@ -131,7 +131,11 @@ import UIKit
     ) {
         Task {
             do {
-                let configuration = PaymentSheet.Configuration()
+                var configuration = PaymentSheet.Configuration()
+                if let appearance = appearance {
+                    configuration.style = appearance.style
+                }
+
                 let analyticsHelper = PaymentSheetAnalyticsHelper(integrationShape: .complete, configuration: configuration)
 
                 let loadResult = try await Self.loadElementsSession(
