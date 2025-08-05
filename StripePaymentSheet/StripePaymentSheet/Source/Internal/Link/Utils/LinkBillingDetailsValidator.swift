@@ -31,7 +31,7 @@ class LinkBillingDetailsValidator {
     func validate(
         _ consumerPaymentDetails: ConsumerPaymentDetails
     ) async -> ValidationResult {
-        guard consumerPaymentDetails.isMissingRequestedBillingDetails(for: context.configuration, in: linkAccount.currentSession) else {
+        guard isMissingRequestedBillingDetails(consumerPaymentDetails) else {
             // No additional billing details to collect.
             let confirmationExtras = LinkConfirmationExtras(billingPhoneNumber: nil)
             return .complete(updatedPaymentDetails: consumerPaymentDetails, confirmationExtras: confirmationExtras)
@@ -73,6 +73,20 @@ class LinkBillingDetailsValidator {
             // We're still missing fields. Prompt the user to fill them in.
             return .incomplete(partialPaymentDetails: effectivePaymentDetails)
         }
+    }
+
+    private func isMissingRequestedBillingDetails(_ paymentDetails: ConsumerPaymentDetails) -> Bool {
+        guard context.configuration.link.collectMissingBillingDetailsForExistingPaymentMethods else {
+            // Don't recollect even if details are missing
+            return false
+        }
+
+        let paymentDetailsAreSupported = paymentDetails.supports(
+            context.configuration.billingDetailsCollectionConfiguration,
+            in: linkAccount.currentSession
+        )
+
+        return !paymentDetailsAreSupported
     }
 
     private func updateBillingDetails(

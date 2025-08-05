@@ -33,9 +33,7 @@ extension UIViewController {
             let verificationController = LinkVerificationController(
                 mode: .inlineLogin,
                 linkAccount: linkAccount,
-                configuration: configuration,
-                elementsSession: elementsSession,
-                shouldLoadConsumerState: false
+                configuration: configuration
             )
 
             verificationController.present(from: bottomSheetController ?? self) { [weak self] result in

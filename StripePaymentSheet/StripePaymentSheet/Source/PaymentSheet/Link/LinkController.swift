@@ -234,9 +234,7 @@ import UIKit
             mode: .modal,
             linkAccount: linkAccount,
             configuration: configuration,
-            appearance: appearance,
-            elementsSession: elementsSession,
-            shouldLoadConsumerState: false
+            appearance: appearance
         )
 
         verificationController.present(from: viewController) { result in

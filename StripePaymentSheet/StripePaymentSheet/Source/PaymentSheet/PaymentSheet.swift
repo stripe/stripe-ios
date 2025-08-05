@@ -181,9 +181,7 @@ public class PaymentSheet {
                     let verificationController = LinkVerificationController(
                         mode: .inlineLogin,
                         linkAccount: linkAccount,
-                        configuration: self.configuration,
-                        elementsSession: loadResult.elementsSession,
-                        shouldLoadConsumerState: false
+                        configuration: self.configuration
                     )
 
                     verificationController.present(from: self.bottomSheetViewController) { result in

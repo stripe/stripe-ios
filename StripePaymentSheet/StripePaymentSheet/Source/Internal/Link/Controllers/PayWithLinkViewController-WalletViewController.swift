@@ -47,7 +47,11 @@ extension PayWithLinkViewController {
             guard let self else {
                 return
             }
-            self.confirm(confirmationExtras: .init())
+
+            let confirmationExtras = LinkConfirmationExtras(
+                billingPhoneNumber: self.makeEffectiveBillingDetails().phone
+            )
+            self.confirm(confirmationExtras: confirmationExtras)
         }
 
         private lazy var cancelButton: Button? = {
