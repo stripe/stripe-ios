@@ -17,7 +17,8 @@ struct StartIdentityVerificationResponse: Codable {
     let url: URL
 
     /// Used to authenticate the mobile Identity SDK.
-    let ephemeralKey: String
+    /// - NOTE: Present only if `is_mobile` was `true` in the request. `nil` otherwise.
+    let ephemeralKey: String?
 
     // MARK: - Codable
 
