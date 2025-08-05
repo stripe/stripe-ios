@@ -137,6 +137,10 @@ extension EmbeddedPaymentElement {
         /// Note: Card brand filtering is not currently supported by Link.
         public var cardBrandAcceptance: PaymentSheet.CardBrandAcceptance = .all
 
+        /// By default, the card form will provide a button to open the card scanner.
+        /// If true, the card form will instead initialize with the card scanner already open.
+        public var opensCardScannerAutomatically: Bool = false
+
         /// The view can display payment methods like “Card” that, when tapped, open a form sheet where customers enter their payment method details. The sheet has a button at the bottom. `FormSheetAction` enumerates the actions the button can perform.
         public enum FormSheetAction {
             /// The button says “Pay” or “Setup”. When tapped, we confirm the payment or setup in the form sheet.

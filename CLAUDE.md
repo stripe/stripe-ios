@@ -71,6 +71,10 @@ xcodebuild test -scheme StripePaymentSheet -workspace Stripe.xcworkspace -destin
 - **Record network tests**: Use `AllStripeFrameworks-NetworkRecordMode` scheme (will fail while recording) and a specific test case
 - **Run network tests**: Use `AllStripeFrameworks` scheme to verify recorded network tests
 
+### UI Tests
+- **Run UI tests**: Use `PaymentSheet Example` scheme with target `PaymentSheetUITest`
+- **Run specific UI test class**: `-only-testing:PaymentSheetUITest/YourTestClassName`
+
 ## Code Quality
 
 ### **IMPORTANT: Always Lint Before Committing**

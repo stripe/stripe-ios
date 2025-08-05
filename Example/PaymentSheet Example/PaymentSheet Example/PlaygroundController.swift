@@ -253,6 +253,9 @@ class PlaygroundController: ObservableObject {
         case .alwaysDark:
             configuration.style = .alwaysDark
         }
+
+        configuration.opensCardScannerAutomatically = settings.opensCardScannerAutomatically == .on
+
         return configuration
     }
 
@@ -347,6 +350,8 @@ class PlaygroundController: ObservableObject {
         case .allowVisa:
             configuration.cardBrandAcceptance = .allowed(brands: [.visa])
         }
+
+        configuration.opensCardScannerAutomatically = settings.opensCardScannerAutomatically == .on
 
         return configuration
     }
