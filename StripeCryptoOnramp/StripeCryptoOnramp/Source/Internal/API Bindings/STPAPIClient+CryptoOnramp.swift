@@ -48,7 +48,7 @@ extension STPAPIClient {
         }
     }
 
-    func collectKycInfo(info: KycInfo, linkAccountInfo: PaymentSheetLinkAccountInfoProtocol) async throws {
+    func collectKycInfo(info: KycInfo, linkAccountInfo: PaymentSheetLinkAccountInfoProtocol, calendar: Calendar = .current) async throws -> KYCDataCollectionResponse {
         guard let consumerSessionClientSecret = linkAccountInfo.consumerSessionClientSecret else {
             throw CryptoOnrampAPIError.missingConsumerSessionClientSecret
         }
@@ -61,17 +61,12 @@ extension STPAPIClient {
         let requestObject = KYCDataCollectionRequest(
             credentials: Credentials(consumerSessionClientSecret: consumerSessionClientSecret),
             kycInfo: info,
-            calendar: .current
+            calendar: calendar
         )
 
         return try await withCheckedThrowingContinuation { continuation in
-            post(resource: endpoint, object: requestObject) { (result: Result<KYCDataCollectionResponse, Error>) in
-                switch result {
-                case .success:
-                    continuation.resume()
-                case .failure(let error):
-                    continuation.resume(throwing: error)
-                }
+            post(resource: endpoint, object: requestObject) { result in
+                continuation.resume(with: result)
             }
         }
     }
