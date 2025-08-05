@@ -1,4 +1,4 @@
-## XX.YY.ZZ 2025-XX-YY
+## 24.19.0 2025-08-04
 
 ### PaymentSheet
 * [Fixed] Updated default spacing of form elements in PaymentSheet.
