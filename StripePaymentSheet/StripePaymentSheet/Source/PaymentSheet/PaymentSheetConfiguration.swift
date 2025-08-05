@@ -293,7 +293,7 @@ extension PaymentSheet {
         }
     }
     /// TermsDisplay controls how mandates or other legal agreements are displayed. Use 'never' to never display legal agreements.
-    /// The default setting is 'automatic', which cauess legal agreements to be shown only when necessary.
+    /// The default setting is 'automatic', which causes legal agreements to be shown only when necessary.
     public enum TermsDisplay {
         /// Show legal agreements only when necessary
         case automatic
