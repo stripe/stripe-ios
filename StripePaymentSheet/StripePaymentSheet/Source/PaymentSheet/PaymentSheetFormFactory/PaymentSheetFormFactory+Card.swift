@@ -76,8 +76,7 @@ extension PaymentSheetFormFactory {
             hostedSurface: .init(config: configuration),
             theme: theme,
             analyticsHelper: analyticsHelper,
-            cardBrandFilter: configuration.cardBrandFilter,
-            opensCardScannerAutomatically: configuration.opensCardScannerAutomatically
+            cardBrandFilter: configuration.cardBrandFilter
         )
 
         let billingAddressSection: PaymentMethodElementWrapper<AddressSectionElement>? = {
