@@ -162,6 +162,7 @@ public final class CryptoOnrampCoordinator: CryptoOnrampCoordinatorProtocol {
             verificationSessionId: response.id,
             ephemeralKeySecret: ephemeralKey,
             configuration: IdentityVerificationSheet.Configuration(
+                // TODO: fetch image from `elementsSession.merchantLogoUrl` and decide on a suitable fallback.
                 brandLogo: UIImage(systemName: "wallet.bifold")!
             )
         )
