@@ -1,3 +1,8 @@
+## X.X.X
+
+### PaymentSheet
+* [Fixed] The Apple Pay logo in `PaymentOptionDisplayData` no longer contains additional padding, bringing it in line with other payment method logos.
+
 ## 24.19.0 2025-08-04
 
 ### CustomerSheet
