@@ -167,9 +167,8 @@ public final class CryptoOnrampCoordinator: CryptoOnrampCoordinatorProtocol {
         )
 
         return try await withCheckedThrowingContinuation { continuation in
-            verificationSheet.present(
-                from: viewController,
-                completion: { result in
+            Task { @MainActor in
+                verificationSheet.present(from: viewController) { result in
                     switch result {
                     case .flowCompleted:
                         continuation.resume(returning: IdentityVerificationResult.completed)
@@ -179,7 +178,7 @@ public final class CryptoOnrampCoordinator: CryptoOnrampCoordinatorProtocol {
                         continuation.resume(throwing: error)
                     }
                 }
-            )
+            }
         }
     }
 }
