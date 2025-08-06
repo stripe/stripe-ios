@@ -14,7 +14,7 @@ import WebKit
   hCaptcha SDK facade (entry point)
 */
 @objc
-@_spi(STP) public class HCaptcha: NSObject {
+class HCaptcha: NSObject {
     fileprivate struct Constants {
         struct InfoDictKeys {
             static let APIKey = "HCaptchaKey"
@@ -139,7 +139,7 @@ import WebKit
      Starts the challenge validation
     */
     @objc
-    public func validate(on view: UIView? = nil, resetOnError: Bool = true, completion: @escaping (HCaptchaResult) -> Void) {
+    func validate(on view: UIView? = nil, resetOnError: Bool = true, completion: @escaping (HCaptchaResult) -> Void) {
         Log.debug(".validate on: \(String(describing: view)) resetOnError: \(resetOnError)")
 
         manager.shouldResetOnError = resetOnError
@@ -193,7 +193,7 @@ import WebKit
      finished loading when you set the closure.
     */
     @objc
-    public func didFinishLoading(_ closure: (() -> Void)?) {
+    func didFinishLoading(_ closure: (() -> Void)?) {
         Log.debug(".didFinishLoading")
         manager.onDidFinishLoading = closure
     }
@@ -238,11 +238,6 @@ import WebKit
     @objc
     convenience init(apiKey: String, passiveApiKey: Bool) throws {
         try self.init(apiKey: apiKey, passiveApiKey: passiveApiKey, locale: nil)
-    }
-
-    @objc
-    public convenience init(apiKey: String, passiveApiKey: Bool, baseURL: URL?, rqdata: String?) throws {
-        try self.init(apiKey: apiKey, passiveApiKey: passiveApiKey, baseURL: baseURL, size: .invisible, rqdata: rqdata)
     }
 
     @objc
