@@ -50,6 +50,11 @@ public protocol CryptoOnrampCoordinatorProtocol {
     /// - Parameter info: The KYC info to attach to the Link user.
     /// - Throws an error if an error occurs.
     func collectKYCInfo(info: KycInfo) async throws
+
+    /// Creates an identity verification session and launches the verification flow.
+    ///
+    /// - Returns: An `IdentityVerificationResult` representing the outcome of the verification process.
+    func promptForIdentityVerification() async throws -> IdentityVerificationResult
 }
 
 /// Coordinates headless Link user authentication and identity verification, leaving most of the UI to the client.
@@ -137,5 +142,13 @@ public final class CryptoOnrampCoordinator: CryptoOnrampCoordinatorProtocol {
 
     public func collectKYCInfo(info: KycInfo) async throws {
         try await apiClient.collectKycInfo(info: info, linkAccountInfo: linkAccountInfo)
+    }
+
+    public func promptForIdentityVerification() async throws -> IdentityVerificationResult {
+        let response = try await apiClient.startIdentityVerification(linkAccountInfo: linkAccountInfo)
+
+        // TODO: use the response to initialize the Identity SDK and show its UI to perform document upload, returning the appropriate `completed` or `canceled` result.
+        print(response)
+        return .canceled
     }
 }
