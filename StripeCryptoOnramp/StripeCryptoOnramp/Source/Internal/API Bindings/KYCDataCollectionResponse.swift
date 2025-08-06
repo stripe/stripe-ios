@@ -14,16 +14,16 @@ struct KYCDataCollectionResponse: Codable {
     let personId: String
 
     /// The user’s first name.
-    let firstName: String
+    let firstName: String?
 
     /// The user’s last name.
-    let lastName: String
+    let lastName: String?
 
     /// A list of the user’s nationalities, if any were provided.
-    let nationalities: [String]
+    let nationalities: [String]?
 
     /// The country in which the user currently resides.
-    let residenceCountry: String
+    let residenceCountry: String?
 
     // MARK: - Decodable
 
