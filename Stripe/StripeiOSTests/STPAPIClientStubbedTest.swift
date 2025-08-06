@@ -17,6 +17,148 @@ import XCTest
 @testable@_spi(STP) import StripePaymentSheet
 
 class STPAPIClientStubbedTest: APIStubbedTestCase {
+    func testCreatePaymentMethodWithRadarOptions() {
+        let sut = stubbedAPIClient()
+        stub { urlRequest in
+            guard let queryItems = urlRequest.queryItems else {
+                return false
+            }
+            XCTAssertTrue(queryItems.contains(where: { item in
+                item.name == "radar_options[hcaptcha_token]" && item.value == "test_hcaptcha_token"
+            }))
+            return true
+        } response: { _ in
+            return .init()
+        }
+        let e = expectation(description: "")
+        let paymentMethodParams: STPPaymentMethodParams = ._testValidCardValue()
+        paymentMethodParams.radarOptions = STPRadarOptions(hcaptchaToken: "test_hcaptcha_token")
+        sut.createPaymentMethod(with: paymentMethodParams) { _, _ in
+            e.fulfill()
+        }
+        waitForExpectations(timeout: 10)
+    }
+
+    func testCreatePaymentMethodWithoutRadarOptions() {
+        let sut = stubbedAPIClient()
+        stub { urlRequest in
+            guard let queryItems = urlRequest.queryItems else {
+                return false
+            }
+            XCTAssertFalse(queryItems.contains(where: { item in
+                item.name == "radar_options[hcaptcha_token]"
+            }))
+            return true
+        } response: { _ in
+            return .init()
+        }
+        let e = expectation(description: "")
+        let paymentMethodParams: STPPaymentMethodParams = ._testValidCardValue()
+        paymentMethodParams.radarOptions = STPRadarOptions(hcaptchaToken: nil)
+        sut.createPaymentMethod(with: paymentMethodParams) { _, _ in
+            e.fulfill()
+        }
+        waitForExpectations(timeout: 10)
+    }
+
+    func testConfirmPaymentIntentWithRadarOptions() {
+        let sut = stubbedAPIClient()
+        stub { urlRequest in
+            guard let queryItems = urlRequest.queryItems else {
+                return false
+            }
+            XCTAssertTrue(queryItems.contains(where: { item in
+                item.name == "payment_method_data[radar_options][hcaptcha_token]" && item.value == "test_hcaptcha_token"
+            }))
+            return true
+        } response: { _ in
+            return .init()
+        }
+        let e = expectation(description: "")
+        let paymentMethodParams: STPPaymentMethodParams = ._testValidCardValue()
+        paymentMethodParams.radarOptions = STPRadarOptions(hcaptchaToken: "test_hcaptcha_token")
+        let paymentIntentParams = STPPaymentIntentParams(clientSecret: "pi_123456_secret_654321")
+        paymentIntentParams.paymentMethodParams = paymentMethodParams
+        sut.confirmPaymentIntent(with: paymentIntentParams) { _, _ in
+            e.fulfill()
+        }
+        waitForExpectations(timeout: 10)
+    }
+
+    func testConfirmPaymentIntentWithoutRadarOptions() {
+        let sut = stubbedAPIClient()
+        stub { urlRequest in
+            guard let queryItems = urlRequest.queryItems else {
+                return false
+            }
+            XCTAssertFalse(queryItems.contains(where: { item in
+                item.name == "payment_method_data[radar_options][hcaptcha_token]"
+            }))
+            return true
+        } response: { _ in
+            return .init()
+        }
+        let e = expectation(description: "")
+        let paymentMethodParams: STPPaymentMethodParams = ._testValidCardValue()
+        paymentMethodParams.radarOptions = STPRadarOptions(hcaptchaToken: nil)
+        let paymentIntentParams = STPPaymentIntentParams(clientSecret: "pi_123456_secret_654321")
+        paymentIntentParams.paymentMethodParams = paymentMethodParams
+        sut.confirmPaymentIntent(with: paymentIntentParams) { _, _ in
+            e.fulfill()
+        }
+        waitForExpectations(timeout: 10)
+    }
+
+    func testConfirmSetupIntentWithRadarOptions() {
+        let sut = stubbedAPIClient()
+        stub { urlRequest in
+            guard let queryItems = urlRequest.queryItems else {
+                return false
+            }
+            XCTAssertTrue(queryItems.contains(where: { item in
+                item.name == "payment_method_data[radar_options][hcaptcha_token]" && item.value == "test_hcaptcha_token"
+            }))
+            return true
+        } response: { _ in
+            return .init()
+        }
+        let e = expectation(description: "")
+        let paymentMethodParams: STPPaymentMethodParams = ._testValidCardValue()
+        paymentMethodParams.radarOptions = STPRadarOptions(hcaptchaToken: "test_hcaptcha_token")
+        let paymentIntentParams = STPPaymentIntentParams(clientSecret: "pi_123456_secret_654321")
+        paymentIntentParams.paymentMethodParams = paymentMethodParams
+        let setupIntentParams = STPSetupIntentConfirmParams(clientSecret: "seti_123456_secret_654321")
+        setupIntentParams.paymentMethodParams = paymentMethodParams
+        sut.confirmSetupIntent(with: setupIntentParams) { _, _ in
+            e.fulfill()
+        }
+        waitForExpectations(timeout: 10)
+    }
+
+    func testConfirmSetupIntentWithoutRadarOptions() {
+        let sut = stubbedAPIClient()
+        stub { urlRequest in
+            guard let queryItems = urlRequest.queryItems else {
+                return false
+            }
+            XCTAssertFalse(queryItems.contains(where: { item in
+                item.name == "payment_method_data[radar_options][hcaptcha_token]"
+            }))
+            return true
+        } response: { _ in
+            return .init()
+        }
+        let e = expectation(description: "")
+        let paymentMethodParams: STPPaymentMethodParams = ._testValidCardValue()
+        paymentMethodParams.radarOptions = STPRadarOptions(hcaptchaToken: nil)
+        let setupIntentParams = STPSetupIntentConfirmParams(clientSecret: "seti_123456_secret_654321")
+        setupIntentParams.paymentMethodParams = paymentMethodParams
+        sut.confirmSetupIntent(with: setupIntentParams) { _, _ in
+            e.fulfill()
+        }
+        waitForExpectations(timeout: 10)
+    }
+
     func testCreatePaymentMethodWithAdditionalPaymentUserAgentValues() {
         let sut = stubbedAPIClient()
         stub { urlRequest in
@@ -40,8 +182,15 @@ class STPAPIClientStubbedTest: APIStubbedTestCase {
 
     private func stubClientAttributionMetadata(base: String? = nil,
                                                shouldContainClientAttributionMetadata: Bool = true,
-                                               clientAttributionMetadata: STPClientAttributionMetadata = STPClientAttributionMetadata()) {
+                                               clientAttributionMetadata: STPClientAttributionMetadata = STPClientAttributionMetadata(),
+                                               urlPattern: String? = nil) {
         stub { urlRequest in
+            // If urlPattern is specified, only validate requests that match the pattern
+            if let urlPattern {
+                guard urlRequest.url?.absoluteString.contains(urlPattern) == true else {
+                    return false
+                }
+            }
             guard let queryItems = urlRequest.queryItems else {
                 return false
             }
@@ -116,9 +265,33 @@ class STPAPIClientStubbedTest: APIStubbedTestCase {
     func testCreateApplePayPaymentMethodWithClientAttributionMetadata() {
         let sut = stubbedAPIClient()
         AnalyticsHelper.shared.generateSessionID()
-        stubClientAttributionMetadata()
+        // Stub token creation call
+        stub { urlRequest in
+            return urlRequest.url?.absoluteString.contains("/tokens") ?? false
+        } response: { _ in
+            let tokenResponse = """
+                {
+                    "id": "tok_test_123",
+                    "object": "token",
+                    "used": false,
+                    "livemode": false,
+                    "created": 1234567890,
+                    "type": "card"
+                }
+                """
+            return HTTPStubsResponse(
+                data: Data(tokenResponse.utf8),
+                statusCode: 200,
+                headers: ["Content-Type": "application/json"]
+            )
+        }
+        let clientAttributionMetadata: STPClientAttributionMetadata = STPClientAttributionMetadata(elementsSessionConfigId: "elements_session_config_id", paymentIntentCreationFlow: .deferred, paymentMethodSelectionFlow: .automatic)
+        var paymentMethodParams: StripeAPI.PaymentMethodParams = StripeAPI.PaymentMethodParams(type: .card)
+        paymentMethodParams.clientAttributionMetadata = clientAttributionMetadata
+        // Stub payment method creation call
+        stubClientAttributionMetadata(clientAttributionMetadata: clientAttributionMetadata, urlPattern: "/payment_methods")
         let e = expectation(description: "")
-        StripeAPI.PaymentMethod.create(apiClient: sut, params: StripeAPI.PaymentMethodParams(type: .card)) { _ in
+        StripeAPI.PaymentMethod.create(apiClient: sut, params: paymentMethodParams) { _ in
             e.fulfill()
         }
         waitForExpectations(timeout: 10)

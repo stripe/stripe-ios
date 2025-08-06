@@ -76,7 +76,8 @@ extension PaymentSheetFormFactory {
             hostedSurface: .init(config: configuration),
             theme: theme,
             analyticsHelper: analyticsHelper,
-            cardBrandFilter: configuration.cardBrandFilter
+            cardBrandFilter: configuration.cardBrandFilter,
+            opensCardScannerAutomatically: configuration.opensCardScannerAutomatically
         )
 
         let billingAddressSection: PaymentMethodElementWrapper<AddressSectionElement>? = {
@@ -122,8 +123,13 @@ extension PaymentSheetFormFactory {
         }
 
         let mandate: SimpleMandateElement? = {
-            if isSettingUp || signupOptInFeatureEnabled {
-                return makeMandate()
+            switch configuration.termsDisplayFor(paymentMethodType: .stripe(.card)) {
+            case .never:
+                return nil
+            case .automatic:
+                if isSettingUp || (showLinkInlineSignup && signupOptInFeatureEnabled)  {
+                    return makeMandate()
+                }
             }
             return nil
         }()

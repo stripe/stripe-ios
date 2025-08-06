@@ -53,6 +53,7 @@ import UIKit
     private let elementsSession: STPElementsSession
     private let intent: Intent
     private let configuration: PaymentElementConfiguration
+    private let appearance: LinkAppearance?
     private let analyticsHelper: PaymentSheetAnalyticsHelper
 
     private lazy var linkAccountService: LinkAccountServiceProtocol = {
@@ -95,6 +96,7 @@ import UIKit
         elementsSession: STPElementsSession,
         intent: Intent,
         configuration: PaymentElementConfiguration,
+        appearance: LinkAppearance?,
         analyticsHelper: PaymentSheetAnalyticsHelper
     ) {
         self.apiClient = apiClient
@@ -102,6 +104,7 @@ import UIKit
         self.elementsSession = elementsSession
         self.intent = intent
         self.configuration = configuration
+        self.appearance = appearance
         self.analyticsHelper = analyticsHelper
 
         LinkAccountContext.shared.addObserver(self, selector: #selector(onLinkAccountChange))
@@ -118,15 +121,21 @@ import UIKit
     ///
     /// - Parameter apiClient: The `STPAPIClient` instance for this controller. Defaults to `.shared`.
     /// - Parameter mode: The mode in which the Link payment method controller should operate, either `payment` or `setup`.
+    /// - Parameter appearance: Link UI-specific appearance overrides. If not specified, `PaymentSheet.Appearance` defaults are used.
     /// - Parameter completion: A closure that is called with the result of the creation. It returns a `LinkController` if successful, or an error if the creation failed.
     @_spi(STP) public static func create(
         apiClient: STPAPIClient = .shared,
         mode: LinkController.Mode,
+        appearance: LinkAppearance? = nil,
         completion: @escaping (Result<LinkController, Error>) -> Void
     ) {
         Task {
             do {
-                let configuration = PaymentSheet.Configuration()
+                var configuration = PaymentSheet.Configuration()
+                if let appearance = appearance {
+                    configuration.style = appearance.style
+                }
+
                 let analyticsHelper = PaymentSheetAnalyticsHelper(integrationShape: .complete, configuration: configuration)
 
                 let loadResult = try await Self.loadElementsSession(
@@ -145,6 +154,7 @@ import UIKit
                     elementsSession: loadResult.elementsSession,
                     intent: loadResult.intent,
                     configuration: configuration,
+                    appearance: appearance,
                     analyticsHelper: analyticsHelper
                 )
                 completion(.success(controller))
@@ -223,7 +233,8 @@ import UIKit
         let verificationController = LinkVerificationController(
             mode: .modal,
             linkAccount: linkAccount,
-            configuration: configuration
+            configuration: configuration,
+            appearance: appearance
         )
 
         verificationController.present(from: viewController) { result in
@@ -420,10 +431,15 @@ import UIKit
     ///
     /// - Parameter apiClient: The `STPAPIClient` instance for this controller. Defaults to `.shared`.
     /// - Parameter mode: The mode in which the Link payment method controller should operate, either `payment` or `setup`.
+    /// - Parameter appearance: Link UI-specific appearance overrides. If not specified, `PaymentSheet.Configuration` defaults are used.
     /// - Returns: A `LinkController` if successful, or throws an error if the creation failed.
-    static func create(apiClient: STPAPIClient = .shared, mode: LinkController.Mode) async throws -> LinkController {
+    static func create(
+        apiClient: STPAPIClient = .shared,
+        mode: LinkController.Mode,
+        appearance: LinkAppearance? = nil
+    ) async throws -> LinkController {
         return try await withCheckedThrowingContinuation { continuation in
-            create(apiClient: apiClient, mode: mode) { result in
+            create(apiClient: apiClient, mode: mode, appearance: appearance) { result in
                 switch result {
                 case .success(let controller):
                     continuation.resume(returning: controller)

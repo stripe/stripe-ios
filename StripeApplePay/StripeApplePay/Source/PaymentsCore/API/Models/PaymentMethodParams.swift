@@ -28,8 +28,11 @@ extension StripeAPI {
             return PaymentsSDKVariant.paymentUserAgent
         }()
 
+        /// Radar options that may contain HCaptcha token
+        @_spi(STP) var radarOptions: RadarOptions?
+
         /// Contains metadata with identifiers for the session and information about the integration
-        @_spi(STP) public var clientAttributionMetadata: ClientAttributionMetadata = ClientAttributionMetadata()
+        @_spi(STP) public var clientAttributionMetadata: STPClientAttributionMetadata = STPClientAttributionMetadata()
 
         /// :nodoc:
         @_spi(STP) public struct Card: UnknownFieldsEncodable {
@@ -55,46 +58,9 @@ extension StripeAPI {
             @_spi(STP) public var _additionalParametersStorage: NonEncodableParameters?
         }
 
-        // See https://docs.google.com/document/d/11wWdHwWzTJGe_29mHsk71fk-kG4lwvp8TLBBf4ws9JM/edit?usp=sharing
-        @_spi(STP) public struct ClientAttributionMetadata: UnknownFieldsEncodable {
-
-            public enum IntentCreationFlow: String {
-                case standard
-                case deferred
-            }
-
-            public enum PaymentMethodSelectionFlow: String {
-                case automatic
-                case merchantSpecified = "merchant_specified"
-            }
-
-            /// The identifier string for the session
-            let clientSessionId: String?
-            /// The identifier string for the elements session
-            var elementsSessionConfigId: String?
-            /// The source for the merchant integration
-            let merchantIntegrationSource: String
-            /// The subtype for the merchant integration
-            let merchantIntegrationSubtype: String
-            /// The version for the merchant integration
-            let merchantIntegrationVersion: String
-            /// The intent creation flow for the merchant integration. Can be `standard` or `deferred`
-            var paymentIntentCreationFlow: String?
-            /// The payment method selection for the merchant integration. Can be `automatic` or `merchant_specified`
-            var paymentMethodSelectionFlow: String?
-
-            public init(elementsSessionConfigId: String? = nil,
-                        paymentIntentCreationFlow: IntentCreationFlow? = nil,
-                        paymentMethodSelectionFlow: PaymentMethodSelectionFlow? = nil) {
-                self.clientSessionId = AnalyticsHelper.shared.sessionID
-                self.elementsSessionConfigId = elementsSessionConfigId
-                self.merchantIntegrationSource = "elements"
-                self.merchantIntegrationSubtype = "mobile"
-                self.merchantIntegrationVersion = "stripe-ios/\(StripeAPIConfiguration.STPSDKVersion)"
-                self.paymentIntentCreationFlow = paymentIntentCreationFlow?.rawValue
-                self.paymentMethodSelectionFlow = paymentMethodSelectionFlow?.rawValue
-            }
-
+        /// :nodoc:
+        @_spi(STP) public struct RadarOptions: UnknownFieldsEncodable {
+            @_spi(STP) public var hcaptchaToken: String?
             @_spi(STP) public var _additionalParametersStorage: NonEncodableParameters?
         }
 

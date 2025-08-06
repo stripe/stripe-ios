@@ -600,6 +600,18 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
         case alwaysLight
         case alwaysDark
     }
+    enum PaymentMethodTermsDisplay: String, PickerEnum {
+        static var enumName: String { "Card TermsDisplay" }
+        case unset
+        case automatic
+        case never
+    }
+
+    enum OpensCardScannerAutomatically: String, PickerEnum {
+        static let enumName: String = "opensCardScannerAutomatically"
+        case on
+        case off
+    }
 
     var uiStyle: UIStyle
     var layout: Layout
@@ -654,6 +666,8 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
     var embeddedViewDisplaysMandateText: DisplaysMandateTextEnabled
     var rowSelectionBehavior: RowSelectionBehavior
     var cardBrandAcceptance: CardBrandAcceptance
+    var opensCardScannerAutomatically: OpensCardScannerAutomatically
+    var termsDisplay: PaymentMethodTermsDisplay
 
     static func defaultValues() -> PaymentSheetTestPlaygroundSettings {
         return PaymentSheetTestPlaygroundSettings(
@@ -706,7 +720,9 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
             formSheetAction: .continue,
             embeddedViewDisplaysMandateText: .on,
             rowSelectionBehavior: .default,
-            cardBrandAcceptance: .all
+            cardBrandAcceptance: .all,
+            opensCardScannerAutomatically: .off,
+            termsDisplay: .unset
         )
     }
 

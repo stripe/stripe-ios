@@ -30,6 +30,8 @@ extension STPAPIClient {
             throw CryptoOnrampAPIError.missingConsumerSessionClientSecret
         }
 
+        try validateSessionState(using: linkAccountInfo)
+
         guard case .verified = linkAccountInfo.sessionState else {
             throw CryptoOnrampAPIError.linkAccountNotVerified
         }
@@ -37,14 +39,66 @@ extension STPAPIClient {
         let endpoint = "crypto/internal/customers"
         let requestObject = CustomerRequest(consumerSessionClientSecret: consumerSessionClientSecret)
         return try await withCheckedThrowingContinuation { continuation in
-            post(resource: endpoint, object: requestObject) { (result: Result<CustomerResponse, Error>) in
-                switch result {
-                case .success(let customer):
-                    continuation.resume(returning: customer)
-                case .failure(let error):
-                    continuation.resume(throwing: error)
-                }
+            post(resource: endpoint, object: requestObject) { result in
+                continuation.resume(with: result)
             }
+        }
+    }
+
+    /// Attaches the specific KYC info to the current Link user on the backend.
+    /// - Parameters:
+    ///   - info: The collected customer information.
+    ///   - linkAccountInfo: Information associated with the link account including the client secret and whether the account has been verified.
+    ///   - calendar: The calendar to use to convert the user’s date of birth (`KycInfo.dateOfBirth`) to components compatible with the API. Defaults to `calendar.current`.
+    /// - Returns: A response object containing the user’s identifier.
+    /// Throws if `linkAccountSessionState` is not verified, a client secret doesn’t exist, or if an API error occurs.
+    @discardableResult
+    func collectKycInfo(info: KycInfo, linkAccountInfo: PaymentSheetLinkAccountInfoProtocol, calendar: Calendar = .current) async throws -> KYCDataCollectionResponse {
+        guard let consumerSessionClientSecret = linkAccountInfo.consumerSessionClientSecret else {
+            throw CryptoOnrampAPIError.missingConsumerSessionClientSecret
+        }
+
+        try validateSessionState(using: linkAccountInfo)
+
+        let endpoint = "crypto/internal/kyc_data_collection"
+        let requestObject = KYCDataCollectionRequest(
+            credentials: Credentials(consumerSessionClientSecret: consumerSessionClientSecret),
+            kycInfo: info,
+            calendar: calendar
+        )
+
+        return try await withCheckedThrowingContinuation { continuation in
+            post(resource: endpoint, object: requestObject) { result in
+                continuation.resume(with: result)
+            }
+        }
+    }
+
+    /// Begins an identity verification session, providing the necessary data used to initialize the Identity SDK.
+    /// - Parameter linkAccountInfo: Information associated with the link account including the client secret and whether the account has been verified.
+    /// - Returns: API response that includes information used to initialize the Identity SDK.
+    func startIdentityVerification(linkAccountInfo: PaymentSheetLinkAccountInfoProtocol) async throws -> StartIdentityVerificationResponse {
+        guard let consumerSessionClientSecret = linkAccountInfo.consumerSessionClientSecret else {
+            throw CryptoOnrampAPIError.missingConsumerSessionClientSecret
+        }
+
+        try validateSessionState(using: linkAccountInfo)
+
+        let endpoint = "crypto/internal/start_identity_verification"
+        let requestObject = StartIdentityVerificationRequest(
+            consumerSessionClientSecret: consumerSessionClientSecret
+        )
+
+        return try await withCheckedThrowingContinuation { continuation in
+            post(resource: endpoint, object: requestObject) { result in
+                continuation.resume(with: result)
+            }
+        }
+    }
+
+    private func validateSessionState(using linkAccountInfo: PaymentSheetLinkAccountInfoProtocol) throws {
+        guard case .verified = linkAccountInfo.sessionState else {
+            throw CryptoOnrampAPIError.linkAccountNotVerified
         }
     }
 }

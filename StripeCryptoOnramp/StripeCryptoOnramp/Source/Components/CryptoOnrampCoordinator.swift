@@ -18,7 +18,7 @@ public protocol CryptoOnrampCoordinatorProtocol {
     /// - Parameter apiClient: The `STPAPIClient` instance for this coordinator. Defaults to `.shared`.
     /// - Parameter appearance: Customizable appearance-related configuration for any Stripe-provided UI.
     /// - Returns: A configured `CryptoOnrampCoordinator`.
-    static func create(apiClient: STPAPIClient, appearance: Appearance) async throws -> Self
+    static func create(apiClient: STPAPIClient, appearance: LinkAppearance) async throws -> Self
 
     /// Looks up whether the provided email is associated with an existing Link consumer.
     ///
@@ -44,6 +44,17 @@ public protocol CryptoOnrampCoordinatorProtocol {
     ///   If verification completes, a crypto customer ID will be included in the result.
     /// Throws if `lookupConsumer` was not called prior to this, or an API error occurs.
     func presentForVerification(from viewController: UIViewController) async throws -> VerificationResult
+
+    /// Attaches the specific KYC info to the current Link user. Requires an authenticated Link user.
+    ///
+    /// - Parameter info: The KYC info to attach to the Link user.
+    /// - Throws an error if an error occurs.
+    func collectKYCInfo(info: KycInfo) async throws
+
+    /// Creates an identity verification session and launches the verification flow.
+    ///
+    /// - Returns: An `IdentityVerificationResult` representing the outcome of the verification process.
+    func promptForIdentityVerification() async throws -> IdentityVerificationResult
 }
 
 /// Coordinates headless Link user authentication and identity verification, leaving most of the UI to the client.
@@ -59,7 +70,7 @@ public final class CryptoOnrampCoordinator: CryptoOnrampCoordinatorProtocol {
 
     private let linkController: LinkController
     private let apiClient: STPAPIClient
-    private let appearance: Appearance
+    private let appearance: LinkAppearance
 
     private var linkAccountInfo: PaymentSheetLinkAccountInfoProtocol {
         get async throws {
@@ -70,7 +81,7 @@ public final class CryptoOnrampCoordinator: CryptoOnrampCoordinatorProtocol {
         }
     }
 
-    private init(linkController: LinkController, apiClient: STPAPIClient = .shared, appearance: Appearance) {
+    private init(linkController: LinkController, apiClient: STPAPIClient = .shared, appearance: LinkAppearance) {
         self.linkController = linkController
         self.apiClient = apiClient
         self.appearance = appearance
@@ -78,8 +89,13 @@ public final class CryptoOnrampCoordinator: CryptoOnrampCoordinatorProtocol {
 
     // MARK: - CryptoOnrampCoordinatorProtocol
 
-    public static func create(apiClient: STPAPIClient = .shared, appearance: Appearance) async throws -> CryptoOnrampCoordinator {
-        let linkController = try await LinkController.create(apiClient: apiClient, mode: .payment)
+    public static func create(apiClient: STPAPIClient = .shared, appearance: LinkAppearance) async throws -> CryptoOnrampCoordinator {
+        let linkController = try await LinkController.create(
+            apiClient: apiClient,
+            mode: .payment,
+            appearance: appearance
+        )
+
         return CryptoOnrampCoordinator(
             linkController: linkController,
             apiClient: apiClient,
@@ -122,5 +138,17 @@ public final class CryptoOnrampCoordinator: CryptoOnrampCoordinatorProtocol {
             let customerId = try await apiClient.grantPartnerMerchantPermissions(with: linkAccountInfo).id
             return .completed(customerId: customerId)
         }
+    }
+
+    public func collectKYCInfo(info: KycInfo) async throws {
+        try await apiClient.collectKycInfo(info: info, linkAccountInfo: linkAccountInfo)
+    }
+
+    public func promptForIdentityVerification() async throws -> IdentityVerificationResult {
+        let response = try await apiClient.startIdentityVerification(linkAccountInfo: linkAccountInfo)
+
+        // TODO: use the response to initialize the Identity SDK and show its UI to perform document upload, returning the appropriate `completed` or `canceled` result.
+        print(response)
+        return .canceled
     }
 }

@@ -172,7 +172,9 @@ extension PaymentSheet {
         @_spi(DashboardOnly) public var disableWalletPaymentMethodFiltering: Bool = false
 
         /// Initializes a Configuration with default values
-        public init() {}
+        public init() {
+            validateConfiguration()
+        }
 
         /// Override country for test purposes
         @_spi(STP) public var userOverrideCountry: String?
@@ -219,8 +221,18 @@ extension PaymentSheet {
         /// Note: Card brand filtering is not currently supported by Link.
         public var cardBrandAcceptance: PaymentSheet.CardBrandAcceptance = .all
 
+        /// A map for specifying when legal agreements are displayed for each payment method type.
+        /// If the payment method is not specified in the list, the TermsDisplay value will default to `.automatic`.
+        /// Valid payment method types include:
+        /// .card
+        public var termsDisplay: [STPPaymentMethodType: PaymentSheet.TermsDisplay] = [:]
+
         /// Set to `true` if using a wallet buttons view. This changes a few behaviors of PaymentSheet (for example, wallet buttons will never be selected by default).
         @_spi(STP) public var willUseWalletButtonsView = false
+
+        /// By default, the card form will provide a button to open the card scanner.
+        /// If true, the card form will instead initialize with the card scanner already open.
+        public var opensCardScannerAutomatically: Bool = false
     }
 
     /// Defines the layout orientations available for displaying payment methods in PaymentSheet.
@@ -278,6 +290,24 @@ extension PaymentSheet {
                       "Argument looks like an Ephemeral Key secret, but expecting a CustomerSession client secret. See CustomerSession API: https://docs.stripe.com/api/customer_sessions/create")
             stpAssert(customerSessionClientSecret.hasPrefix("cuss_"),
                       "Argument does not look like a CustomerSession client secret. See CustomerSession API: https://docs.stripe.com/api/customer_sessions/create")
+        }
+    }
+    /// TermsDisplay controls how mandates or other legal agreements are displayed. Use 'never' to never display legal agreements.
+    /// The default setting is 'automatic', which causes legal agreements to be shown only when necessary.
+    public enum TermsDisplay {
+        /// Show legal agreements only when necessary
+        case automatic
+
+        /// Never show legal agreements
+        case never
+
+        var analyticValue: String {
+            switch self {
+            case .automatic:
+                return "automatic"
+            case .never:
+                return "never"
+            }
         }
     }
 
@@ -868,6 +898,15 @@ extension PaymentSheet.CustomerConfiguration {
             return legacy
         case .customerSession:
             return elementsSession?.customer?.customerSession.apiKey
+        }
+    }
+}
+extension PaymentSheet.Configuration {
+    private func validateConfiguration() {
+        for (paymentMethodType, _) in termsDisplay {
+            if paymentMethodType != .card {
+                stpAssertionFailure("PaymentSheet.Configuration termsDisplay contains unsupported payment method type: \(paymentMethodType)")
+            }
         }
     }
 }
