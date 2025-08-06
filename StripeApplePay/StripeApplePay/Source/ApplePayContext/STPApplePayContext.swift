@@ -582,7 +582,8 @@ public class STPApplePayContext: NSObject, PKPaymentAuthorizationControllerDeleg
             }
         }
 
-        startPassiveHCaptchaChallengeIfNecessary(siteKey: hcaptchaSiteKey, rqdata: hcaptchaRqdata) { hcaptchaToken in
+        Task {
+            let hcaptchaToken = await fetchPassiveHCaptchaToken(siteKey: hcaptchaSiteKey, rqdata: hcaptchaRqdata)
             // 1. Create PaymentMethod
             StripeAPI.PaymentMethod.create(apiClient: self.apiClient, payment: payment, hcaptchaToken: hcaptchaToken, clientAttributionMetadata: self.clientAttributionMetadata) { result in
                 guard let paymentMethod = try? result.get(), self.authorizationController != nil else {

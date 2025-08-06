@@ -183,7 +183,8 @@ extension PaymentSheet {
 
         // MARK: - New Payment Method
         case let .new(confirmParams):
-            startPassiveHCaptchaChallengeIfNecessary(siteKey: elementsSession.passiveCaptcha?.siteKey, rqdata: elementsSession.passiveCaptcha?.rqData) { hcaptchaToken in
+            Task {
+                let hcaptchaToken = await fetchPassiveHCaptchaToken(siteKey: elementsSession.passiveCaptcha?.siteKey, rqdata: elementsSession.passiveCaptcha?.rqData)
                 let paymentMethodType: STPPaymentMethodType = {
                     switch paymentOption.paymentMethodType {
                     case .stripe(let paymentMethodType):
@@ -322,7 +323,8 @@ extension PaymentSheet {
             // - paymentMethodParams: The params to use for the payment.
             // - linkAccount: The Link account used for payment. Will be logged out if present after payment completes, whether it was successful or not.
             let confirmWithPaymentMethodParams: (STPPaymentMethodParams, PaymentSheetLinkAccount?, Bool) -> Void = { paymentMethodParams, linkAccount, shouldSave in
-                startPassiveHCaptchaChallengeIfNecessary(siteKey: elementsSession.passiveCaptcha?.siteKey, rqdata: elementsSession.passiveCaptcha?.rqData) { hcaptchaToken in
+                Task {
+                    let hcaptchaToken = await fetchPassiveHCaptchaToken(siteKey: elementsSession.passiveCaptcha?.siteKey, rqdata: elementsSession.passiveCaptcha?.rqData)
                     paymentMethodParams.radarOptions = STPRadarOptions(hcaptchaToken: hcaptchaToken)
                     paymentMethodParams.clientAttributionMetadata = clientAttributionMetadata
                     switch intent {
