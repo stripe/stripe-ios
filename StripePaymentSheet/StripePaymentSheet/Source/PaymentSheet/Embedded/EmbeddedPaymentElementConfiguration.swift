@@ -141,6 +141,12 @@ extension EmbeddedPaymentElement {
         /// If true, the card form will instead initialize with the card scanner already open.
         public var opensCardScannerAutomatically: Bool = false
 
+        /// A map for specifying when legal agreements are displayed for each payment method type.
+        /// If the payment method is not specified in the list, the TermsDisplay value will default to `.automatic`.
+        /// Valid payment method types include:
+        /// .card
+        public var termsDisplay: [STPPaymentMethodType: PaymentSheet.TermsDisplay] = [:]
+
         /// The view can display payment methods like “Card” that, when tapped, open a form sheet where customers enter their payment method details. The sheet has a button at the bottom. `FormSheetAction` enumerates the actions the button can perform.
         public enum FormSheetAction {
             /// The button says “Pay” or “Setup”. When tapped, we confirm the payment or setup in the form sheet.
@@ -181,6 +187,18 @@ extension EmbeddedPaymentElement {
         public var rowSelectionBehavior: RowSelectionBehavior = .default
 
         /// Initializes a Configuration with default values
-        public init() {}
+        public init() {
+            validateConfiguration()
+        }
+    }
+}
+
+extension EmbeddedPaymentElement.Configuration {
+    private func validateConfiguration() {
+        for (paymentMethodType, _) in termsDisplay {
+            if paymentMethodType != .card {
+                stpAssertionFailure("EmbeddedPaymentElement.Configuration termsDisplay contains unsupported payment method type: \(paymentMethodType)")
+            }
+        }
     }
 }
