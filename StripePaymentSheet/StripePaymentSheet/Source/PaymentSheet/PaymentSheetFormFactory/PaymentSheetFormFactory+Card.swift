@@ -126,7 +126,7 @@ extension PaymentSheetFormFactory {
             case .never:
                 return nil
             case .automatic:
-                if isSettingUp || (showLinkInlineSignup && signupOptInFeatureEnabled)  {
+                if isSettingUp || shouldShowLinkSignupOptIn  {
                     return makeMandate()
                 }
             }
@@ -147,7 +147,7 @@ extension PaymentSheetFormFactory {
 
     private func makeMandate() -> SimpleMandateElement {
         let mandateText = Self.makeMandateText(
-            linkSignupOptInFeatureEnabled: signupOptInFeatureEnabled,
+            linkSignupOptInFeatureEnabled: shouldShowLinkSignupOptIn,
             shouldSaveToLink: signupOptInInitialValue,
             merchantName: configuration.merchantDisplayName
         )
