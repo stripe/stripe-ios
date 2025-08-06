@@ -28,6 +28,20 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
+               BlueprintIdentifier = "747C9FE1743C0B4444303569"
+               BuildableName = "StripeApplePay.framework"
+               BlueprintName = "StripeApplePay"
+               ReferencedContainer = "container:StripeApplePay/StripeApplePay.xcodeproj">
+            </BuildableReference>
+         </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "YES"
+            buildForProfiling = "YES"
+            buildForArchiving = "YES"
+            buildForAnalyzing = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
                BlueprintIdentifier = "B50782C89D54809DFFCF80D0"
                BuildableName = "StripeCameraCore.framework"
                BlueprintName = "StripeCameraCore"
@@ -74,20 +88,6 @@
                BuildableName = "StripePayments.framework"
                BlueprintName = "StripePayments"
                ReferencedContainer = "container:StripePayments/StripePayments.xcodeproj">
-            </BuildableReference>
-         </BuildActionEntry>
-         <BuildActionEntry
-            buildForTesting = "YES"
-            buildForRunning = "YES"
-            buildForProfiling = "YES"
-            buildForArchiving = "YES"
-            buildForAnalyzing = "YES">
-            <BuildableReference
-               BuildableIdentifier = "primary"
-               BlueprintIdentifier = "747C9FE1743C0B4444303569"
-               BuildableName = "StripeApplePay.framework"
-               BlueprintName = "StripeApplePay"
-               ReferencedContainer = "container:StripeApplePay/StripeApplePay.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
          <BuildActionEntry

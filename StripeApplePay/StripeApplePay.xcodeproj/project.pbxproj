@@ -21,6 +21,7 @@
 		4AA6A66246DD30798E5CC5F7 /* PaymentIntent+API.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93EAD8979A20E239E16257E4 /* PaymentIntent+API.swift */; };
 		4ADC5356764DC5E3F1C1D51B /* CardBrand.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8DBC2BC8C0A60983D0948A11 /* CardBrand.swift */; };
 		4B2DE4109D876CCBDC53C2A3 /* StripeCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 62ECC1AA5583E4104C073B63 /* StripeCore.framework */; };
+		7F3DA5B8E1FC4D7A9B2E8C6D /* StripePayments.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3A8E9F2C6D1B4A5E8F7C0D9B /* StripePayments.framework */; };
 		4CE57B5BF79D1515F27A18A3 /* Address.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF86CF1EFE4AC1A46F055202 /* Address.swift */; };
 		505A82AADE15E2B2B99C5D32 /* Token.swift in Sources */ = {isa = PBXBuildFile; fileRef = 594F0478E94E6FA2F551EA0A /* Token.swift */; };
 		526AE8381F232C9FEABFFDCD /* OHHTTPStubsSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 8ED017D12DE81D3ABD013768 /* OHHTTPStubsSwift */; };
@@ -105,6 +106,7 @@
 		5439AD0D1236F6A21EE93CB3 /* Blocks.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Blocks.swift; sourceTree = "<group>"; };
 		594F0478E94E6FA2F551EA0A /* Token.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Token.swift; sourceTree = "<group>"; };
 		62ECC1AA5583E4104C073B63 /* StripeCore.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = StripeCore.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		3A8E9F2C6D1B4A5E8F7C0D9B /* StripePayments.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = StripePayments.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		67711D1BC01BA83323EA1F6B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		6D1E8A9F849655BAC63DB2FD /* PaymentMethod.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentMethod.swift; sourceTree = "<group>"; };
 		7023208C7E3B3044F553DFDD /* STPApplePayContext+LegacySupport.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "STPApplePayContext+LegacySupport.swift"; sourceTree = "<group>"; };
@@ -138,6 +140,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				4B2DE4109D876CCBDC53C2A3 /* StripeCore.framework in Frameworks */,
+				7F3DA5B8E1FC4D7A9B2E8C6D /* StripePayments.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -262,6 +265,7 @@
 				29BFCC7B0FCEA743A857B51F /* StripeApplePay.framework */,
 				229446797CC5FB07DB344D81 /* StripeApplePayTests.xctest */,
 				62ECC1AA5583E4104C073B63 /* StripeCore.framework */,
+				3A8E9F2C6D1B4A5E8F7C0D9B /* StripePayments.framework */,
 				0FA663325484F2D515613494 /* StripeCoreTestUtils.framework */,
 			);
 			name = Products;

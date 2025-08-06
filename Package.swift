@@ -84,7 +84,7 @@ let package = Package(
         ),
         .target(
             name: "StripeApplePay",
-            dependencies: ["StripeCore"],
+            dependencies: ["StripeCore", "StripePayments"],
             path: "StripeApplePay/StripeApplePay",
             exclude: ["Info.plist"]
         ),
