@@ -35,7 +35,7 @@ public struct KycInfo: Equatable {
         lastName: String,
         idNumber: String?,
         address: PaymentSheet.Address,
-        dateOfBirth: Date,
+        dateOfBirth: Date
     ) {
         self.firstName = firstName
         self.lastName = lastName
