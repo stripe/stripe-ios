@@ -44,6 +44,7 @@ protocol PaymentElementConfiguration: PaymentMethodRequirementProvider {
     var linkPaymentMethodsOnly: Bool { get set }
     var paymentMethodLayout: PaymentSheet.PaymentMethodLayout { get }
     var opensCardScannerAutomatically: Bool { get set }
+    var termsDisplay: [STPPaymentMethodType: PaymentSheet.TermsDisplay] { get }
 }
 
 extension PaymentElementConfiguration {
@@ -86,6 +87,14 @@ extension PaymentElementConfiguration {
         }
 
         return billingDetails
+    }
+    func termsDisplayFor(paymentMethodType: PaymentSheet.PaymentMethodType?) -> PaymentSheet.TermsDisplay {
+        guard let paymentMethodType = paymentMethodType,
+              case .stripe(let stpPaymentMethodType) = paymentMethodType,
+              let termsDisplay = termsDisplay[stpPaymentMethodType] else {
+            return .automatic
+        }
+        return termsDisplay
     }
 }
 
