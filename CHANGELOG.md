@@ -1,3 +1,8 @@
+## x.x.x x-x-x
+
+### EmbeddedPaymentElement
+* [Changed] When using `EmbeddedPaymentElement.Configuration.FormSheetAction.confirm`, the completion block is now called with a `canceled` result if the user closes the form sheet without completing the transaction.
+
 ## 24.19.0 2025-08-04
 
 ### CustomerSheet
