@@ -347,10 +347,6 @@ extension STPElementsSession {
     var linkSignupOptInInitialValue: Bool {
         linkFlags["link_sign_up_opt_in_initial_value"] == true
     }
-
-    var isPassiveCaptchaEnabled: Bool {
-        return flags["elements_enable_passive_captcha"] ?? false
-    }
 }
 
 extension STPElementsSession {

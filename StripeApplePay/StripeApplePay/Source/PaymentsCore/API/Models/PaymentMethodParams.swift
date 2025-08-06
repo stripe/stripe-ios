@@ -8,7 +8,6 @@
 
 import Foundation
 @_spi(STP) import StripeCore
-@_spi(STP) import StripePayments
 
 extension StripeAPI {
     /// An object representing parameters used to create a PaymentMethod object.
@@ -28,9 +27,6 @@ extension StripeAPI {
         @_spi(STP) public var paymentUserAgent: String? = {
             return PaymentsSDKVariant.paymentUserAgent
         }()
-
-        /// Radar options that may contain HCaptcha token
-        @_spi(STP) var radarOptions: RadarOptions?
 
         /// Contains metadata with identifiers for the session and information about the integration
         @_spi(STP) public var clientAttributionMetadata: STPClientAttributionMetadata = STPClientAttributionMetadata()
@@ -56,12 +52,6 @@ extension StripeAPI {
                     return nil
                 }
             }
-            @_spi(STP) public var _additionalParametersStorage: NonEncodableParameters?
-        }
-
-        /// :nodoc:
-        @_spi(STP) public struct RadarOptions: UnknownFieldsEncodable {
-            @_spi(STP) public var hcaptchaToken: String?
             @_spi(STP) public var _additionalParametersStorage: NonEncodableParameters?
         }
 
