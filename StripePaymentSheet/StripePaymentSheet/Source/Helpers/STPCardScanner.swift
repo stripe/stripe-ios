@@ -17,7 +17,7 @@ import Vision
 
 @available(macCatalyst 14.0, *)
 @objc protocol STPCardScannerDelegate {
-    func cardScanner(_ scanner: STPCardScanner, didFinishWith cardParams: STPPaymentMethodCardParams?)
+    func cardScanner(_ scanner: STPCardScanner, didFinishWith cardParams: STPPaymentMethodCardParams)
     func cardScannerDidError(_ scanner: STPCardScanner)
 }
 
@@ -457,7 +457,6 @@ class STPCardScanner: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate {
             case (nil, false):
                 // log cancellation and report scan completion
                 STPAnalyticsClient.sharedClient.logCardScanCancelled(withDuration: duration)
-                self.delegate?.cardScanner(self, didFinishWith: nil)
                 // if we errored...
             case (nil, true):
                 // log cancellation and report scan error

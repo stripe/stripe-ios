@@ -275,10 +275,8 @@ class CardScanningView: UIView {
 @available(macCatalyst 14.0, *)
 extension CardScanningView: STPCardScannerDelegate {
 
-    func cardScanner(_ scanner: STPCardScanner, didFinishWith cardParams: STPPaymentMethodCardParams?) {
-        if let cardParams {
-            self.delegate?.cardScanningView(self, didScanCard: cardParams)
-        }
+    func cardScanner(_ scanner: STPCardScanner, didFinishWith cardParams: STPPaymentMethodCardParams) {
+        self.delegate?.cardScanningView(self, didScanCard: cardParams)
         self.delegate?.cardScanningViewShouldClose(self)
     }
 
