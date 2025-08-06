@@ -46,9 +46,7 @@ final class STPAPIClientCryptoOnrampTests: APIStubbedTestCase {
                 postalCode: "11201",
                 state: "New York"
             ),
-            dateOfBirth: Date(timeIntervalSince1970: 0),
-            birthCountry: "US",
-            birthCity: "Pittsburgh"
+            dateOfBirth: Date(timeIntervalSince1970: 0)
         )
         static let kycMockResponseObject = KYCDataCollectionResponse(
             personId: "person_1A2BcD345EFg6HiJ",
@@ -139,7 +137,7 @@ final class STPAPIClientCryptoOnrampTests: APIStubbedTestCase {
 
             let parameters = String(data: httpBody, encoding: .utf8)?.parsedHTTPBodyDictionary ?? [:]
 
-            XCTAssertEqual(parameters.count, 16)
+            XCTAssertEqual(parameters.count, 14)
             XCTAssertEqual(parameters["credentials[consumer_session_client_secret]"], Constant.requestSecret)
             XCTAssertEqual(parameters["first_name"], "John")
             XCTAssertEqual(parameters["last_name"], "Smith")
@@ -151,8 +149,6 @@ final class STPAPIClientCryptoOnrampTests: APIStubbedTestCase {
             XCTAssertEqual(parameters["state"], "New%20York")
             XCTAssertEqual(parameters["zip"], "11201")
             XCTAssertEqual(parameters["country"], "US")
-            XCTAssertEqual(parameters["birth_country"], "US")
-            XCTAssertEqual(parameters["birth_city"], "Pittsburgh")
             XCTAssertEqual(parameters["dob[day]"], "1")
             XCTAssertEqual(parameters["dob[month]"], "1")
             XCTAssertEqual(parameters["dob[year]"], "1970")

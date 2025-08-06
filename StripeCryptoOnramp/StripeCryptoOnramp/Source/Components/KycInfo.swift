@@ -30,27 +30,17 @@ public struct KycInfo: Equatable {
     /// The customer’s date of birth.
     public let dateOfBirth: Date
 
-    /// The country in which the customer was born.
-    public let birthCountry: String?
-
-    /// The city in which the customer was born.
-    public let birthCity: String?
-
     public init(
         firstName: String,
         lastName: String,
         idNumber: String?,
         address: PaymentSheet.Address,
         dateOfBirth: Date,
-        birthCountry: String?,
-        birthCity: String?
     ) {
         self.firstName = firstName
         self.lastName = lastName
         self.idNumber = idNumber
         self.address = address
         self.dateOfBirth = dateOfBirth
-        self.birthCountry = birthCountry
-        self.birthCity = birthCity
     }
 }
