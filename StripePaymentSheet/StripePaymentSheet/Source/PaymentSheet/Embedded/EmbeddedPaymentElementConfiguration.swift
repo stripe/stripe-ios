@@ -150,7 +150,7 @@ extension EmbeddedPaymentElement {
         /// The view can display payment methods like “Card” that, when tapped, open a form sheet where customers enter their payment method details. The sheet has a button at the bottom. `FormSheetAction` enumerates the actions the button can perform.
         public enum FormSheetAction {
             /// The button says “Pay” or “Setup”. When tapped, we confirm the payment or setup in the form sheet.
-            /// - Parameter completion: Called with the result of the payment or setup.
+            /// - Parameter completion: Called with the result of the payment or setup when the sheet is closed.
             case confirm(
                 completion: (EmbeddedPaymentElementResult) -> Void
             )
