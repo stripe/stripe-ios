@@ -184,6 +184,7 @@ extension STPApplePayContext {
         intent: Intent,
         configuration: PaymentElementConfiguration,
         hcaptchaSiteKey: String?,
+        hcaptchaRqdata: String?,
         clientAttributionMetadata: STPClientAttributionMetadata,
         completion: @escaping PaymentSheetResultCompletionBlock
     ) -> STPApplePayContext? {
@@ -210,6 +211,7 @@ extension STPApplePayContext {
             applePayContext.apiClient = configuration.apiClient
             applePayContext.returnUrl = configuration.returnURL
             applePayContext.hcaptchaSiteKey = hcaptchaSiteKey
+            applePayContext.hcaptchaRqdata = hcaptchaRqdata
             applePayContext.clientAttributionMetadata = clientAttributionMetadata
             return applePayContext
         } else {

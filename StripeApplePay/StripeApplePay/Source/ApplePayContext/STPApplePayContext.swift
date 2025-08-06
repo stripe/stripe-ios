@@ -275,8 +275,10 @@ public class STPApplePayContext: NSObject, PKPaymentAuthorizationControllerDeleg
     }
     /// Tracks where the call to confirm the PaymentIntent or SetupIntent happened.
     @_spi(STP) public var confirmType: ConfirmType?
-    /// The passive HCaptcha token
+    /// The HCaptcha api key
     @_spi(STP) public var hcaptchaSiteKey: String?
+    /// The HCaptcha rqdata
+    @_spi(STP) public var hcaptchaRqdata: String?
     /// Contains metadata with identifiers for the session and information about the integration
     @_spi(STP) public var clientAttributionMetadata: STPClientAttributionMetadata = STPClientAttributionMetadata()
 
@@ -580,7 +582,7 @@ public class STPApplePayContext: NSObject, PKPaymentAuthorizationControllerDeleg
             }
         }
 
-        startPassiveHCaptchaChallengeIfNecessary(siteKey: hcaptchaSiteKey, rqdata: nil) { hcaptchaToken in
+        startPassiveHCaptchaChallengeIfNecessary(siteKey: hcaptchaSiteKey, rqdata: hcaptchaRqdata) { hcaptchaToken in
             // 1. Create PaymentMethod
             StripeAPI.PaymentMethod.create(apiClient: self.apiClient, payment: payment, hcaptchaToken: hcaptchaToken, clientAttributionMetadata: self.clientAttributionMetadata) { result in
                 guard let paymentMethod = try? result.get(), self.authorizationController != nil else {
@@ -599,13 +601,13 @@ public class STPApplePayContext: NSObject, PKPaymentAuthorizationControllerDeleg
                                                           additionalNonPIIParams: [
                                                             "error_message": errorMessage
                                                           ])
-
+                        
                         self.analyticsClient.log(analytic: errorAnalytic, apiClient: self.apiClient)
                         handleFinalState(.error, nil, errorAnalytic)
                     }
                     return
                 }
-
+                
                 let paymentMethodCompletion: STPIntentClientSecretCompletionBlock = {
                     clientSecret,
                     intentCreationError in
@@ -621,14 +623,14 @@ public class STPApplePayContext: NSObject, PKPaymentAuthorizationControllerDeleg
                         handleFinalState(.error, intentCreationError, errorAnalytic)
                         return
                     }
-
+                    
                     guard clientSecret != STPApplePayContext.COMPLETE_WITHOUT_CONFIRMING_INTENT else {
                         self.confirmType = STPApplePayContext.ConfirmType.none
                         let analytic = Analytic(event: .applePayContextCompletePaymentFinished)
                         handleFinalState(.success, nil, analytic)
                         return
                     }
-
+                    
                     if StripeAPI.SetupIntentConfirmParams.isClientSecretValid(clientSecret) {
                         // 3a. Retrieve the SetupIntent and see if we need to confirm it client-side
                         StripeAPI.SetupIntent.get(apiClient: self.apiClient, clientSecret: clientSecret)
@@ -655,7 +657,7 @@ public class STPApplePayContext: NSObject, PKPaymentAuthorizationControllerDeleg
                                 }
                                 return
                             }
-
+                            
                             switch setupIntent.status {
                             case .requiresConfirmation, .requiresAction, .requiresPaymentMethod:
                                 self.confirmType = .client
@@ -667,7 +669,7 @@ public class STPApplePayContext: NSObject, PKPaymentAuthorizationControllerDeleg
                                 confirmParams.paymentMethod = paymentMethod.id
                                 confirmParams.useStripeSdk = true
                                 confirmParams.returnUrl = self.returnUrl
-
+                                
                                 StripeAPI.SetupIntent.confirm(
                                     apiClient: self.apiClient,
                                     params: confirmParams
@@ -738,14 +740,14 @@ public class STPApplePayContext: NSObject, PKPaymentAuthorizationControllerDeleg
                                 }
                                 return
                             }
-
+                            
                             if paymentIntent.confirmationMethod == .automatic
                                 && (paymentIntent.status == .requiresPaymentMethod
                                     || paymentIntent.status == .requiresConfirmation)
                             {
                                 self.confirmType = .client
                                 // 4b. Confirm the PaymentIntent
-
+                                
                                 var paymentIntentParams = StripeAPI.PaymentIntentParams(
                                     clientSecret: paymentIntentClientSecret
                                 )
@@ -756,9 +758,9 @@ public class STPApplePayContext: NSObject, PKPaymentAuthorizationControllerDeleg
                                 if paymentIntent.shipping != self._shippingDetails(from: payment) {
                                     paymentIntentParams.shipping = self._shippingDetails(from: payment)
                                 }
-
+                                
                                 self.paymentState = .pending  // After this point, we can't cancel
-
+                                
                                 // We don't use PaymentHandler because we can't handle next actions as-is - we'd need to dismiss the Apple Pay VC.
                                 StripeAPI.PaymentIntent.confirm(
                                     apiClient: self.apiClient,
