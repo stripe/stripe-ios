@@ -38,8 +38,8 @@ extension StripeAPI.PaymentMethod {
     @_spi(STP) public static func create(
         apiClient: STPAPIClient = .shared,
         payment: PKPayment,
-        hcaptchaSiteKey: String?,
-        hcaptchaRqdata: String?,
+        hcaptchaToken: String?,
+        clientAttributionMetadata: STPClientAttributionMetadata,
         completion: @escaping PaymentMethodCompletionBlock
     ) {
         StripeAPI.Token.create(apiClient: apiClient, payment: payment) { (result) in
@@ -56,10 +56,9 @@ extension StripeAPI.PaymentMethod {
             let billingDetails = StripeAPI.BillingDetails(from: payment)
             var paymentMethodParams = StripeAPI.PaymentMethodParams(type: .card, card: cardParams)
             paymentMethodParams.billingDetails = billingDetails
-            paymentMethodParams.startPassiveCaptcha(siteKey: hcaptchaSiteKey, rqdata: hcaptchaRqdata) { hcaptchaToken in
-                paymentMethodParams.radarOptions = .init(hcaptchaToken: hcaptchaToken)
-                Self.create(apiClient: apiClient, params: paymentMethodParams, completion: completion)
-            }
+            paymentMethodParams.radarOptions = .init(hcaptchaToken: hcaptchaToken)
+            paymentMethodParams.clientAttributionMetadata = clientAttributionMetadata
+            Self.create(apiClient: apiClient, params: paymentMethodParams, completion: completion)
         }
     }
 

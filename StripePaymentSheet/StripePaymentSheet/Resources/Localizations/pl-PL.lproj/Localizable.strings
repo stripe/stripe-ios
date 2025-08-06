@@ -60,6 +60,10 @@
 
 "By continuing, you agree to authorize payments pursuant to <terms>these terms</terms>." = "Kontynuując, wyrażasz zgodę na autoryzowanie płatności zgodnie z <terms>tymi warunkami</terms>.";
 
+"By continuing, you agree to save your information for future purchases with %@ and <link>Link</link>. You also agree to Link's <terms>Terms</terms> and <privacy>Privacy</privacy>." = "Kontynuując, wyrażasz zgodę na zapisywanie swoich danych na potrzeby przyszłych zakupów w firmie %@ i <link>Link</link>. Wyrażasz również zgodę na <terms>Warunki</terms> i <privacy>Politykę prywatności</privacy>.";
+
+"By continuing, you agree to save your information for future purchases with %@." = "Kontynuując, wyrażasz zgodę na zapisywanie swoich danych na potrzeby przyszłych zakupów w firmie %@.";
+
 "By continuing, you authorize %@ to automatically debit your Satispay Balance on a recurring basis in accordance with your purchase or subscription plan." = "Kontynuując, upoważniasz %@ do automatycznego obciążania Twojego salda Satispay w regularnych odstępach czasu, zgodnie z Twoim planem zakupu lub subskrypcji.";
 
 "By continuing, you authorize %@ to debit your Cash App account for this payment and future payments in accordance with %@'s terms, until this authorization is revoked. You can change this anytime in your Cash App Settings." = "Kontynuując, wyrażasz zgodę na obciążenie przez %1$@ Twojego konta Cash App kwotą tej płatności oraz przyszłych płatności zgodnie z warunkami %2$@ do momentu wycofania zgody. To ustawienie można zmienić w dowolnym momencie w ustawieniach Cash App.";
@@ -126,7 +130,7 @@
 
 "Failed to connect" = "Nie udało się połączyć";
 
-"Fast, secure, 1⁠-⁠click checkout" = "Szybka i bezpieczna finalizacja jednym kliknięciem";
+"Fast, secure checkout" = "Szybka i bezpieczna finalizacja transakcji";
 
 "For security, please re-enter your card’s security code." = "Ze względów bezpieczeństwa wprowadź ponownie kod bezpieczeństwa Twojej karty.";
 
@@ -188,6 +192,8 @@
 
 "Pay faster at %@ and thousands of businesses." = "Płać szybciej w %@ i tysiącach innych firm.";
 
+"Pay faster everywhere Link is accepted." = "Płać szybciej wszędzie tam, gdzie usługa Link jest akceptowana.";
+
 "Pay over time with %@" = "Zapłać później, korzystając z %@";
 
 "Pay over time with Affirm" = "Zapłać później za pomocą Affirm";
@@ -237,8 +243,6 @@
 "Save your bank account in just a few steps." = "Zapisz konto bankowe w kilku krokach.";
 
 "Save your info for secure 1-click checkout with Link" = "Zapisz informacje do bezpiecznej finalizacji jednym kliknięciem z Link";
-
-"Save your payment information with Link, and securely check out in 1-click on Link-supported sites." = "Zapisz informacje o płatnościach w Link i bezpiecznie finalizuj transakcje jednym kliknięciem na stronach obsługiwanych przez Link.";
 
 "Saved" = "Zapisano";
 

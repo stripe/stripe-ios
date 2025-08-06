@@ -60,6 +60,10 @@
 
 "By continuing, you agree to authorize payments pursuant to <terms>these terms</terms>." = "Continuând, sunteți de acord să autorizați plățile în conformitate cu <terms>acești termeni</terms>.";
 
+"By continuing, you agree to save your information for future purchases with %@ and <link>Link</link>. You also agree to Link's <terms>Terms</terms> and <privacy>Privacy</privacy>." = "Continuând, sunteți de acord să vă salvați informațiile pentru achiziții viitoare cu %@ și <link>Link</link>. De asemenea, sunteți de acord cu <terms>Termenii</terms> și <privacy>Confidențialitatea</privacy> Link.";
+
+"By continuing, you agree to save your information for future purchases with %@." = "Continuând, sunteți de acord să vă salvați informațiile pentru achiziții viitoare cu %@.";
+
 "By continuing, you authorize %@ to automatically debit your Satispay Balance on a recurring basis in accordance with your purchase or subscription plan." = "Continuând, autorizați %@ să vă debiteze automat soldul Satispay în mod recurent, în conformitate cu planul dvs. de achiziție sau de abonament.";
 
 "By continuing, you authorize %@ to debit your Cash App account for this payment and future payments in accordance with %@'s terms, until this authorization is revoked. You can change this anytime in your Cash App Settings." = "Continuând, autorizați %1$@ să debiteze contul dvs. Cash App pentru această plată și pentru plățile viitoare în conformitate cu termenii %2$@, până când această autorizație este revocată. Puteți schimba acest lucru oricând în setările Cash App.";
@@ -126,7 +130,7 @@
 
 "Failed to connect" = "Eroare de conexiune";
 
-"Fast, secure, 1⁠-⁠click checkout" = "Finalizare a comenzii sigură și rapidă cu un singur clic";
+"Fast, secure checkout" = "Finalizare comandă rapidă și sigură";
 
 "For security, please re-enter your card’s security code." = "Din motive de securitate, vă rugăm să introduceți din nou codul de securitate al cardului dvs.";
 
@@ -188,6 +192,8 @@
 
 "Pay faster at %@ and thousands of businesses." = "Plătiți mai rapid la %@ și la alte mii de întreprinderi.";
 
+"Pay faster everywhere Link is accepted." = "Plătiți mai repede oriunde este acceptat Link.";
+
 "Pay over time with %@" = "Folosiți ca metodă de plată de-a lungul timpului %@";
 
 "Pay over time with Affirm" = "Folosiți ca metodă de plată de-a lungul timpului Affirm";
@@ -237,8 +243,6 @@
 "Save your bank account in just a few steps." = "Salvați-vă contul bancar în doar câțiva pași.";
 
 "Save your info for secure 1-click checkout with Link" = "Salvați-vă informațiile pentru o finalizare securizată a comenzii cu un singur clic cu Link";
-
-"Save your payment information with Link, and securely check out in 1-click on Link-supported sites." = "Salvați-vă informațiile privind plata cu Link și finalizați comanda în siguranță cu un singur clic pe site-urile acceptate de Link.";
 
 "Saved" = "Carduri salvate";
 

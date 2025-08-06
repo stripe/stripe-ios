@@ -60,6 +60,10 @@
 
 "By continuing, you agree to authorize payments pursuant to <terms>these terms</terms>." = "Pokračovaním souhlasíte s autorizací plateb podle <terms>těchto podmínek</terms>.";
 
+"By continuing, you agree to save your information for future purchases with %@ and <link>Link</link>. You also agree to Link's <terms>Terms</terms> and <privacy>Privacy</privacy>." = "Pokračováním vyjadřujete souhlas s uložením vašich informací pro budoucí nákupy u %@ a pomocí služby <link>Link</link>. Také vyjadřujete souhlas s <terms>Podmínkami</terms> a <privacy>Ochranou osobních údajů</privacy> služby Link.";
+
+"By continuing, you agree to save your information for future purchases with %@." = "Pokračováním vyjadřujete souhlas s uložením vašich informací pro budoucí nákupy u %@.";
+
 "By continuing, you authorize %@ to automatically debit your Satispay Balance on a recurring basis in accordance with your purchase or subscription plan." = "Pokračováním opravňujete společnost %@ k automatickému opakovanému strhávání částky z vašeho zůstatku na účtu Satispay podle vaší objednávky nebo zvoleného předplatného.";
 
 "By continuing, you authorize %@ to debit your Cash App account for this payment and future payments in accordance with %@'s terms, until this authorization is revoked. You can change this anytime in your Cash App Settings." = "Pokračováním povolujete, %1$@ aby odepisovala z vašeho účtu Cash App tuto platbu a budoucí platby v souladu s podmínkami společnosti %2$@, dokud toto oprávnění neodvoláte. Toto oprávnění můžete kdykoli změnit v nastavení aplikace Cash App.";
@@ -126,7 +130,7 @@
 
 "Failed to connect" = "Nepodařilo se připojit";
 
-"Fast, secure, 1⁠-⁠click checkout" = "Rychlý, bezpečný přechod k pokladně 1 kliknutím";
+"Fast, secure checkout" = "Rychlé a bezpečné placení";
 
 "For security, please re-enter your card’s security code." = "Z bezpečnostních důvodů zadejte znovu bezpečnostní kód své karty.";
 
@@ -188,6 +192,8 @@
 
 "Pay faster at %@ and thousands of businesses." = "Plaťte rychleji u %@ a tisíců firem.";
 
+"Pay faster everywhere Link is accepted." = "Plaťte rychleji všude, kde je akceptována služba Link.";
+
 "Pay over time with %@" = "Platit průběžně pomocí %@";
 
 "Pay over time with Affirm" = "Platit průběžně pomocí Affirm";
@@ -237,8 +243,6 @@
 "Save your bank account in just a few steps." = "Uložte si svůj bankovní účet v několika málo krocích.";
 
 "Save your info for secure 1-click checkout with Link" = "Uložte své údaje pro pro bezpečné odbavení 1 kliknutím u Link";
-
-"Save your payment information with Link, and securely check out in 1-click on Link-supported sites." = "Uložte si platební údaje u Link a na stránkách podporovaných službou Link se bezpečně odbavte jedním kliknutím.";
 
 "Saved" = "Uloženo";
 

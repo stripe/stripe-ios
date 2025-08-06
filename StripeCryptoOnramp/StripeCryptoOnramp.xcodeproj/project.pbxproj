@@ -30,7 +30,6 @@
 		0BED9B662E255FD7009FFF76 /* StripePaymentSheet.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0BED9B652E255FD7009FFF76 /* StripePaymentSheet.framework */; };
 		0BED9B682E255FE8009FFF76 /* StripeIdentity.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0BED9B672E255FE8009FFF76 /* StripeIdentity.framework */; };
 		0BED9B6A2E255FF1009FFF76 /* StripeFinancialConnections.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0BED9B692E255FF1009FFF76 /* StripeFinancialConnections.framework */; };
-		0BED9B6C2E25796B009FFF76 /* Appearance.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BED9B6B2E257965009FFF76 /* Appearance.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -81,7 +80,6 @@
 		0BED9B652E255FD7009FFF76 /* StripePaymentSheet.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = StripePaymentSheet.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		0BED9B672E255FE8009FFF76 /* StripeIdentity.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = StripeIdentity.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		0BED9B692E255FF1009FFF76 /* StripeFinancialConnections.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = StripeFinancialConnections.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		0BED9B6B2E257965009FFF76 /* Appearance.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Appearance.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -223,7 +221,6 @@
 			isa = PBXGroup;
 			children = (
 				0B20053E2E318231008FCF8D /* VerificationResult.swift */,
-				0BED9B6B2E257965009FFF76 /* Appearance.swift */,
 				0BED9B612E255BC2009FFF76 /* CryptoOnrampCoordinator.swift */,
 			);
 			path = Components;
@@ -353,7 +350,6 @@
 				0BED9B622E255BC2009FFF76 /* CryptoOnrampCoordinator.swift in Sources */,
 				0B6DF34B2E297E0A008B1800 /* CustomerRequest.swift in Sources */,
 				0B6DF34D2E297E27008B1800 /* CustomerResponse.swift in Sources */,
-				0BED9B6C2E25796B009FFF76 /* Appearance.swift in Sources */,
 				0B83D9912E1EF6EF004F0115 /* Docs.docc in Sources */,
 				0B6DF3492E296E41008B1800 /* STPAPIClient+CryptoOnramp.swift in Sources */,
 				0B20053F2E318235008FCF8D /* VerificationResult.swift in Sources */,

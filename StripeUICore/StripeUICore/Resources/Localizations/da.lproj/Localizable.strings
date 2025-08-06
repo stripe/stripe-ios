@@ -144,4 +144,6 @@
 
 "Your postal code is incomplete." = "Dit postnummer er ikke fuldendt.";
 
+"Your postal code is invalid." = "Dit postnummer er ugyldigt.";
+
 "ZIP" = "ZIP";

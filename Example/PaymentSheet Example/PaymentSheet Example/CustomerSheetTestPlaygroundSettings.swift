@@ -155,6 +155,12 @@ public struct CustomerSheetTestPlaygroundSettings: Codable, Equatable {
         case allowVisa
     }
 
+    enum OpensCardScannerAutomatically: String, PickerEnum {
+        static let enumName: String = "opensCardScannerAutomatically"
+        case on
+        case off
+    }
+
     var customerMode: CustomerMode
     var customerId: String?
     var customerKeyType: CustomerKeyType
@@ -177,6 +183,7 @@ public struct CustomerSheetTestPlaygroundSettings: Codable, Equatable {
     var paymentMethodAllowRedisplayFilters: PaymentMethodAllowRedisplayFilters
     var paymentMethodSyncDefault: PaymentMethodSyncDefault
     var cardBrandAcceptance: CardBrandAcceptance
+    var opensCardScannerAutomatically: OpensCardScannerAutomatically
 
     static func defaultValues() -> CustomerSheetTestPlaygroundSettings {
         return CustomerSheetTestPlaygroundSettings(customerMode: .new,
@@ -199,7 +206,8 @@ public struct CustomerSheetTestPlaygroundSettings: Codable, Equatable {
                                                    paymentMethodRemoveLast: .enabled,
                                                    paymentMethodAllowRedisplayFilters: .always,
                                                    paymentMethodSyncDefault: .disabled,
-                                                   cardBrandAcceptance: .all)
+                                                   cardBrandAcceptance: .all,
+                                                   opensCardScannerAutomatically: .off)
     }
 
     var base64Data: String {

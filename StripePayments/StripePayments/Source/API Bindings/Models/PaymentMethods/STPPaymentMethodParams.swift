@@ -7,6 +7,7 @@
 //
 
 import Foundation
+@_spi(STP) import StripeCore
 import UIKit
 
 /// An object representing parameters used to create a PaymentMethod object.
@@ -114,7 +115,7 @@ public class STPPaymentMethodParams: NSObject, STPFormEncodable {
     @objc @_spi(STP) public var shopPay: STPPaymentMethodShopPayParams?
 
     /// Radar options that may contain HCaptcha token
-    @objc var radarOptions: STPRadarOptions?
+    @objc @_spi(STP) public var radarOptions: STPRadarOptions?
 
     /// Set of key-value pairs that you can attach to the PaymentMethod. This can be useful for storing additional information about the PaymentMethod in a structured format.
     @objc public var metadata: [String: String]?
@@ -1396,24 +1397,6 @@ extension STPPaymentMethodParams {
             break
         case .unknown:
             break
-        }
-    }
-}
-
-// MARK: - Passive HCaptcha
-extension STPPaymentMethodParams {
-    @_spi(STP) public func startPassiveCaptcha(siteKey: String?, rqdata: String?, completion: (() -> Void)? = nil) {
-        guard let siteKey,
-              let hcaptcha = try? HCaptcha(apiKey: siteKey, passiveApiKey: true, baseURL: URL(string: "http://localhost"), rqdata: rqdata) else {
-            completion?()
-            return
-        }
-        hcaptcha.didFinishLoading {
-            hcaptcha.validate { result in
-                let hcaptchaToken = try? result.dematerialize()
-                self.radarOptions = STPRadarOptions(hcaptchaToken: hcaptchaToken)
-                completion?()
-            }
         }
     }
 }

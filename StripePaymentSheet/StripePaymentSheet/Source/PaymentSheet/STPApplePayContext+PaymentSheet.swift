@@ -184,7 +184,7 @@ extension STPApplePayContext {
         intent: Intent,
         configuration: PaymentElementConfiguration,
         hcaptchaSiteKey: String?,
-        hcaptchaRqdata: String?,
+        clientAttributionMetadata: STPClientAttributionMetadata,
         completion: @escaping PaymentSheetResultCompletionBlock
     ) -> STPApplePayContext? {
         guard let applePay = configuration.applePay else {
@@ -210,7 +210,7 @@ extension STPApplePayContext {
             applePayContext.apiClient = configuration.apiClient
             applePayContext.returnUrl = configuration.returnURL
             applePayContext.hcaptchaSiteKey = hcaptchaSiteKey
-            applePayContext.hcaptchaRqdata = hcaptchaRqdata
+            applePayContext.clientAttributionMetadata = clientAttributionMetadata
             return applePayContext
         } else {
             // Delegate only deallocs when Apple Pay completes
