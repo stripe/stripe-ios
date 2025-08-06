@@ -1,5 +1,8 @@
 ## x.x.x x-x-x
 
+### PaymentSheet
+* [Fixed] The Apple Pay logo in `PaymentOptionDisplayData` no longer contains additional padding, bringing it in line with other payment method logos.
+
 ### EmbeddedPaymentElement
 * [Changed] When using `EmbeddedPaymentElement.Configuration.FormSheetAction.confirm`, the completion block is now called with a `canceled` result if the user closes the form sheet without completing the transaction.
 
