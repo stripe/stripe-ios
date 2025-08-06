@@ -86,6 +86,7 @@ final class PayWithLinkViewController: BottomSheetViewController {
         let shouldFinishOnClose: Bool
         let shouldShowSecondaryCta: Bool
         let launchedFromFlowController: Bool
+        let canSkipWalletAfterVerification: Bool
         let initiallySelectedPaymentDetailsID: String?
         let callToAction: ConfirmButton.CallToActionType
         var lastAddedPaymentDetails: ConsumerPaymentDetails?
@@ -110,6 +111,7 @@ final class PayWithLinkViewController: BottomSheetViewController {
         ///   - shouldFinishOnClose: Whether or not Link should finish with `.canceled` result instead of returning to Payment Sheet when the close button is tapped.
         ///   - shouldShowSecondaryCta: Whether or not a secondary CTA to pay another way should be shown.
         ///   - launchedFromFlowController: Whether the flow was opened from `FlowController`.
+        ///   - canSkipWalletAfterVerification: Whether or not we should try to skip showing the wallet after verification.
         ///   - initiallySelectedPaymentDetailsID: The ID of an initially selected payment method. This is set when opened instead of FlowController.
         ///   - callToAction: A custom CTA to display on the confirm button. If `nil`, will display `intent`'s default CTA.
         ///   - analyticsHelper: An instance of `AnalyticsHelper` to use for logging.
@@ -121,6 +123,7 @@ final class PayWithLinkViewController: BottomSheetViewController {
             shouldFinishOnClose: Bool,
             shouldShowSecondaryCta: Bool = true,
             launchedFromFlowController: Bool = false,
+            canSkipWalletAfterVerification: Bool,
             initiallySelectedPaymentDetailsID: String?,
             callToAction: ConfirmButton.CallToActionType?,
             analyticsHelper: PaymentSheetAnalyticsHelper
@@ -132,6 +135,7 @@ final class PayWithLinkViewController: BottomSheetViewController {
             self.shouldFinishOnClose = shouldFinishOnClose
             self.shouldShowSecondaryCta = shouldShowSecondaryCta
             self.launchedFromFlowController = launchedFromFlowController
+            self.canSkipWalletAfterVerification = canSkipWalletAfterVerification
             self.initiallySelectedPaymentDetailsID = initiallySelectedPaymentDetailsID
             self.callToAction = callToAction ?? .makeDefaultTypeForLink(intent: intent)
             self.analyticsHelper = analyticsHelper
@@ -140,8 +144,6 @@ final class PayWithLinkViewController: BottomSheetViewController {
 
     private var context: Context
     private var accountContext: LinkAccountContext = .shared
-
-    private let canSkipWalletAfterVerification: Bool
 
     private var linkAccount: PaymentSheetLinkAccount? {
         get { accountContext.account }
@@ -187,18 +189,17 @@ final class PayWithLinkViewController: BottomSheetViewController {
                 shouldFinishOnClose: shouldFinishOnClose,
                 shouldShowSecondaryCta: shouldShowSecondaryCta,
                 launchedFromFlowController: launchedFromFlowController,
+                canSkipWalletAfterVerification: canSkipWalletAfterVerification,
                 initiallySelectedPaymentDetailsID: initiallySelectedPaymentDetailsID,
                 callToAction: callToAction,
                 analyticsHelper: analyticsHelper
             ),
-            linkAccount: linkAccount,
-            canSkipWalletAfterVerification: canSkipWalletAfterVerification
+            linkAccount: linkAccount
         )
     }
 
-    private init(context: Context, linkAccount: PaymentSheetLinkAccount?, canSkipWalletAfterVerification: Bool) {
+    private init(context: Context, linkAccount: PaymentSheetLinkAccount?) {
         self.context = context
-        self.canSkipWalletAfterVerification = canSkipWalletAfterVerification
         let initialVC: BaseViewController = Self.initialVC(linkAccount: linkAccount, context: context)
 
         // Create a local variable that will hold the handler
@@ -408,7 +409,7 @@ private extension PayWithLinkViewController {
         for linkAccount: PaymentSheetLinkAccount,
         with paymentDetails: ConsumerPaymentDetails
     ) -> Bool {
-        return linkAccount.sessionState == .verified && canSkipWalletAfterVerification && paymentDetails.isValidCard
+        return linkAccount.sessionState == .verified && context.canSkipWalletAfterVerification && paymentDetails.isValidCard
     }
 
     private func fetchShippingAddress(
