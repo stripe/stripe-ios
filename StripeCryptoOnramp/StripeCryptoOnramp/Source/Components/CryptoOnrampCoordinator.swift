@@ -6,7 +6,10 @@
 //
 
 import Foundation
+
+@_spi(STP) import StripeIdentity
 @_spi(STP) import StripePaymentSheet
+
 import UIKit
 
 /// Protocol describing a type that coordinates headless Link user authentication, identity verification, and payment, leaving most of the associated UI up to the client.
@@ -53,8 +56,9 @@ public protocol CryptoOnrampCoordinatorProtocol {
 
     /// Creates an identity verification session and launches the verification flow.
     ///
+    /// - Parameter viewController: The view controller from which to present the verification flow.
     /// - Returns: An `IdentityVerificationResult` representing the outcome of the verification process.
-    func promptForIdentityVerification() async throws -> IdentityVerificationResult
+    func promptForIdentityVerification(from viewController: UIViewController) async throws -> IdentityVerificationResult
 }
 
 /// Coordinates headless Link user authentication and identity verification, leaving most of the UI to the client.
@@ -66,6 +70,9 @@ public final class CryptoOnrampCoordinator: CryptoOnrampCoordinatorProtocol {
 
         /// Phone number validation failed. Phone number should be in E.164 format (e.g., +12125551234).
         case invalidPhoneFormat
+
+        /// `ephemeralKey` is missing from the response after starting identity verification.
+        case missingEphemeralKey
     }
 
     private let linkController: LinkController
@@ -144,11 +151,35 @@ public final class CryptoOnrampCoordinator: CryptoOnrampCoordinatorProtocol {
         try await apiClient.collectKycInfo(info: info, linkAccountInfo: linkAccountInfo)
     }
 
-    public func promptForIdentityVerification() async throws -> IdentityVerificationResult {
+    public func promptForIdentityVerification(from viewController: UIViewController) async throws -> IdentityVerificationResult {
         let response = try await apiClient.startIdentityVerification(linkAccountInfo: linkAccountInfo)
 
-        // TODO: use the response to initialize the Identity SDK and show its UI to perform document upload, returning the appropriate `completed` or `canceled` result.
-        print(response)
-        return .canceled
+        guard let ephemeralKey = response.ephemeralKey else {
+            throw Error.missingEphemeralKey
+        }
+
+        let verificationSheet = IdentityVerificationSheet(
+            verificationSessionId: response.id,
+            ephemeralKeySecret: ephemeralKey,
+            configuration: IdentityVerificationSheet.Configuration(
+                brandLogo: UIImage(systemName: "wallet.bifold")!
+            )
+        )
+
+        return try await withCheckedThrowingContinuation { continuation in
+            verificationSheet.present(
+                from: viewController,
+                completion: { result in
+                    switch result {
+                    case .flowCompleted:
+                        continuation.resume(returning: IdentityVerificationResult.completed)
+                    case .flowCanceled:
+                        continuation.resume(returning: IdentityVerificationResult.canceled)
+                    case .flowFailed(let error):
+                        continuation.resume(throwing: error)
+                    }
+                }
+            )
+        }
     }
 }
