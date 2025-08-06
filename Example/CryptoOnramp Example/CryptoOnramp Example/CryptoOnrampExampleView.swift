@@ -20,7 +20,7 @@ struct CryptoOnrampExampleView: View {
     @State private var errorMessage: String?
     @State private var email: String = ""
     @State private var showRegistration: Bool = false
-    @State private var showSuccess: Bool = false
+    @State private var showAuthenticatedView: Bool = false
     @State private var authenticationCustomerId: String?
 
     @Environment(\.isLoading) private var isLoading
@@ -74,8 +74,8 @@ struct CryptoOnrampExampleView: View {
 
                     if let customerId = authenticationCustomerId {
                         HiddenNavigationLink(
-                            destination: SuccessView(message: "Authentication Successful!", customerId: customerId),
-                            isActive: $showSuccess
+                            destination: AuthenticatedView(customerId: customerId),
+                            isActive: $showAuthenticatedView
                         )
                     }
                 }
@@ -153,7 +153,7 @@ struct CryptoOnrampExampleView: View {
 
                             // Delay so the navigation link animation doesn’t get canceled.
                             DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
-                                showSuccess = true
+                                showAuthenticatedView = true
                             }
                         }
                     case .canceled:
