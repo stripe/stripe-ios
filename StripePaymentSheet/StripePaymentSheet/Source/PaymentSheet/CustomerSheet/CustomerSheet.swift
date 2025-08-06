@@ -127,7 +127,7 @@ public class CustomerSheet {
     }
 
     public func present(from presentingViewController: UIViewController,
-                        completion csCompletion: @escaping (CustomerSheetResult) -> Void
+                        completion csCompletion: @escaping @MainActor (CustomerSheetResult) -> Void
     ) {
         let loadingStartDate = Date()
         STPAnalyticsClient.sharedClient.logPaymentSheetEvent(event: self.initEvent)
@@ -152,14 +152,18 @@ public class CustomerSheet {
             let error = CustomerSheetError.unknown(
                 debugDescription: "presentingViewController is already presenting a view controller"
             )
-            csCompletion(.error(error))
+            Task { @MainActor in
+                csCompletion(.error(error))
+            }
             return
         }
         guard let customerSheetDataSource = createCustomerSheetDataSource() else {
             let error = CustomerSheetError.unknown(
                 debugDescription: "Unable to determine configuration"
             )
-            csCompletion(.error(error))
+            Task { @MainActor in
+                csCompletion(.error(error))
+            }
             return
         }
 
@@ -195,8 +199,8 @@ public class CustomerSheet {
                 STPAnalyticsClient.sharedClient.logPaymentSheetEvent(event: .customerSheetLoadFailed,
                                                                      duration: Date().timeIntervalSince(loadingStartDate),
                                                                      error: error)
-                csCompletion(.error(CustomerSheetError.errorFetchingSavedPaymentMethods(error)))
-                DispatchQueue.main.async {
+                Task { @MainActor in
+                    csCompletion(.error(CustomerSheetError.errorFetchingSavedPaymentMethods(error)))
                     self.bottomSheetViewController.dismiss(animated: true)
                 }
             }
