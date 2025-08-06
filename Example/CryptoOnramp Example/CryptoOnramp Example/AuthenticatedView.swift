@@ -22,38 +22,41 @@ struct AuthenticatedView: View {
     /// The customer id of the authenticated user.
     let customerId: String
 
+    @State private var errorMessage: String?
+    @State private var isIdentityVerificationComplete = false
+
+    @Environment(\.isLoading) private var isLoading
+
+    private var isVerifyIdentityButtonDisabled: Bool {
+        isLoading.wrappedValue
+    }
+
     // MARK: - View
     
     var body: some View {
         ScrollView {
             VStack(spacing: 20) {
-                Button("Verify Identity") {
-                    if let viewController = UIApplication.shared.findTopNavigationController() {
-                        Task {
-                            do {
-                                let result = try await coordinator.promptForIdentityVerification(from: viewController)
-                                switch result {
-                                case .completed:
-                                    await MainActor.run {
-                                        // TODO: implement
-                                    }
-                                case .canceled:
-                                    // do nothing, verification canceled.
-                                    break
-                                @unknown default:
-                                    // do nothing, verification canceled.
-                                    break
-                                }
-                            } catch {
-                                // TODO: implement
-                                //errorMessage = error.localizedDescription
-                            }
+                if isIdentityVerificationComplete {
+                    Text("Identity Verification Complete")
+                        .foregroundColor(.green)
+                        .frame(maxWidth: .infinity)
+                        .padding()
+                        .background {
+                            RoundedRectangle(cornerRadius: 8)
+                                .foregroundColor(.green.opacity(0.1))
                         }
-                    } else {
-                        // TODO: show error message
+                } else {
+                    Button("Verify Identity") {
+                        verifyIdentity()
                     }
+                    .buttonStyle(PrimaryButtonStyle())
+                    .disabled(isVerifyIdentityButtonDisabled)
+                    .opacity(isVerifyIdentityButtonDisabled ? 0.5 : 1)
                 }
-                .buttonStyle(PrimaryButtonStyle())
+
+                if let errorMessage {
+                    ErrorMessageView(message: errorMessage)
+                }
 
                 VStack(spacing: 8) {
                     Text("Customer ID")
@@ -74,6 +77,40 @@ struct AuthenticatedView: View {
         }
         .navigationTitle("Authenticated")
         .navigationBarTitleDisplayMode(.inline)
+    }
+
+    private func verifyIdentity() {
+        guard let viewController = UIApplication.shared.findTopNavigationController() else {
+            errorMessage = "Unable to find view controller to present from."
+            return
+        }
+
+        isLoading.wrappedValue = true
+        errorMessage = nil
+
+        Task {
+            do {
+                let result = try await coordinator.promptForIdentityVerification(from: viewController)
+                await MainActor.run {
+                    isLoading.wrappedValue = false
+                    switch result {
+                    case .completed:
+                        isIdentityVerificationComplete = true
+                        break
+                    case .canceled:
+                        // User canceled verification, no action needed.
+                        break
+                    @unknown default:
+                        break
+                    }
+                }
+            } catch {
+                await MainActor.run {
+                    isLoading.wrappedValue = false
+                    errorMessage = "Identity verification failed: \(error.localizedDescription)"
+                }
+            }
+        }
     }
 }
 
