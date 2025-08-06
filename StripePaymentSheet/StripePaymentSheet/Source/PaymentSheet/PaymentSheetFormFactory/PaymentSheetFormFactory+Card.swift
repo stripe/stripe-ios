@@ -127,9 +127,8 @@ extension PaymentSheetFormFactory {
             case .never:
                 return nil
             case .automatic:
-                if isSettingUp || signupOptInFeatureEnabled  {
+                if isSettingUp || (showLinkInlineSignup && signupOptInFeatureEnabled)  {
                     return makeMandate()
-
                 }
             }
             return nil
