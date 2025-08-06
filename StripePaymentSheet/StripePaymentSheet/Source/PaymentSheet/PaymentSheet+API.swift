@@ -324,6 +324,7 @@ extension PaymentSheet {
             let confirmWithPaymentMethodParams: (STPPaymentMethodParams, PaymentSheetLinkAccount?, Bool) -> Void = { paymentMethodParams, linkAccount, shouldSave in
                 Task {
                     let hcaptchaToken = await fetchPassiveHCaptchaToken(passiveCaptcha: elementsSession.passiveCaptcha)
+                    paymentMethodParams.radarOptions = STPRadarOptions(hcaptchaToken: hcaptchaToken)
                     paymentMethodParams.clientAttributionMetadata = clientAttributionMetadata
                     switch intent {
                     case .paymentIntent(let paymentIntent):
