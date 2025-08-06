@@ -79,8 +79,7 @@ extension STPAPIClient {
 
         let endpoint = "crypto/internal/start_identity_verification"
         let requestObject = StartIdentityVerificationRequest(
-            consumerSessionClientSecret: consumerSessionClientSecret,
-            isMobile: true
+            consumerSessionClientSecret: consumerSessionClientSecret
         )
 
         return try await withCheckedThrowingContinuation { continuation in

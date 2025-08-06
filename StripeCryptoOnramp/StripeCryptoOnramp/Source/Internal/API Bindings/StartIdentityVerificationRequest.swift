@@ -14,15 +14,13 @@ struct StartIdentityVerificationRequest: Encodable {
     let credentials: Credentials
 
     /// When `true`, the response will contain an `ephemeral_key` used to initialize the Identity SDK.
-    let isMobile: Bool
+    let isMobile: Bool = true
 
     /// Creates a new `StartIdentityVerificationRequest` instance.
     /// - Parameters:
     ///   - consumerSessionClientSecret: Contains credentials required to make the request.
-    ///   - isMobile: When `true`, the response will contain an `ephemeral_key` used to initialize the Identity SDK.
-    init(consumerSessionClientSecret: String, isMobile: Bool) {
+    init(consumerSessionClientSecret: String) {
         credentials = Credentials(consumerSessionClientSecret: consumerSessionClientSecret)
-        self.isMobile = isMobile
     }
 
     // MARK: - Encodable
