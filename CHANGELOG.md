@@ -1,3 +1,8 @@
+## 24.19.1 2025-08-06
+
+### CustomerSheet
+* [Fixed] Crash when opening CustomerSheet in SwiftUI with Dynamic Actor Isolation feature flag enabled
+
 ## 24.19.0 2025-08-04
 
 ### CustomerSheet
