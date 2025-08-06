@@ -32,7 +32,7 @@ struct AuthenticatedView: View {
     }
 
     // MARK: - View
-    
+
     var body: some View {
         ScrollView {
             VStack(spacing: 20) {
@@ -96,7 +96,6 @@ struct AuthenticatedView: View {
                     switch result {
                     case .completed:
                         isIdentityVerificationComplete = true
-                        break
                     case .canceled:
                         // User canceled verification, no action needed.
                         break
