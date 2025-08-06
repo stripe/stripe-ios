@@ -33,8 +33,6 @@ struct KYCDataCollectionRequest: Encodable {
         case state
         case zip
         case country
-        case birthCountry = "birth_country"
-        case birthCity = "birth_city"
         case dob
     }
 
@@ -54,9 +52,6 @@ struct KYCDataCollectionRequest: Encodable {
         try container.encodeIfPresent(kycInfo.address.state, forKey: .state)
         try container.encodeIfPresent(kycInfo.address.postalCode, forKey: .zip)
         try container.encodeIfPresent(kycInfo.address.country, forKey: .country)
-
-        try container.encodeIfPresent(kycInfo.birthCountry, forKey: .birthCountry)
-        try container.encodeIfPresent(kycInfo.birthCity, forKey: .birthCity)
 
         let dateOfBirth = DateOfBirth(from: kycInfo.dateOfBirth, calendar: calendar)
         try container.encode(dateOfBirth, forKey: .dob)
