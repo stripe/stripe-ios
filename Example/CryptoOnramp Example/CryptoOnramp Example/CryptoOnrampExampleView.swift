@@ -88,6 +88,9 @@ struct CryptoOnrampExampleView: View {
             .navigationBarTitleDisplayMode(.inline)
         }
         .onAppear {
+            guard coordinator == nil else {
+                return
+            }
             initializeCoordinator()
         }
     }
