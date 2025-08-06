@@ -70,13 +70,16 @@ struct CryptoOnrampExampleView: View {
                             destination: RegistrationView(coordinator: coordinator, email: email),
                             isActive: $showRegistration
                         )
-                    }
 
-                    if let customerId = authenticationCustomerId {
-                        HiddenNavigationLink(
-                            destination: AuthenticatedView(customerId: customerId),
-                            isActive: $showAuthenticatedView
-                        )
+                        if let customerId = authenticationCustomerId {
+                            HiddenNavigationLink(
+                                destination: AuthenticatedView(
+                                    coordinator: coordinator,
+                                    customerId: customerId
+                                ),
+                                isActive: $showAuthenticatedView
+                            )
+                        }
                     }
                 }
                 .padding()
