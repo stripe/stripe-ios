@@ -87,7 +87,7 @@ extension STPAPIClient {
     /// Registers the given crypto wallet address to the current Link account.
     /// - Parameters:
     ///   - linkAccountInfo: Information associated with the link account including the client secret and whether the account has been verified.
-    ///   -  walletAddress: The crypto wallet address to register.
+    ///   - walletAddress: The crypto wallet address to register.
     ///   - network: The crypto network for the wallet address.
     @discardableResult
     func collectWalletAddress(
