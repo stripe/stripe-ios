@@ -183,7 +183,7 @@ extension PaymentSheet {
         // MARK: - New Payment Method
         case let .new(confirmParams):
             Task {
-                let hcaptchaToken = await fetchPassiveHCaptchaToken(siteKey: elementsSession.passiveCaptcha?.siteKey, rqdata: elementsSession.passiveCaptcha?.rqData)
+                let hcaptchaToken = await fetchPassiveHCaptchaToken(passiveCaptcha: elementsSession.passiveCaptcha)
                 let paymentMethodType: STPPaymentMethodType = {
                     switch paymentOption.paymentMethodType {
                     case .stripe(let paymentMethodType):
@@ -323,8 +323,7 @@ extension PaymentSheet {
             // - linkAccount: The Link account used for payment. Will be logged out if present after payment completes, whether it was successful or not.
             let confirmWithPaymentMethodParams: (STPPaymentMethodParams, PaymentSheetLinkAccount?, Bool) -> Void = { paymentMethodParams, linkAccount, shouldSave in
                 Task {
-                    let hcaptchaToken = await fetchPassiveHCaptchaToken(siteKey: elementsSession.passiveCaptcha?.siteKey, rqdata: elementsSession.passiveCaptcha?.rqData)
-                    paymentMethodParams.radarOptions = STPRadarOptions(hcaptchaToken: hcaptchaToken)
+                    let hcaptchaToken = await fetchPassiveHCaptchaToken(passiveCaptcha: elementsSession.passiveCaptcha)
                     paymentMethodParams.clientAttributionMetadata = clientAttributionMetadata
                     switch intent {
                     case .paymentIntent(let paymentIntent):
@@ -475,6 +474,7 @@ extension PaymentSheet {
                     STPPaymentMethodParams,
                     Bool
                 ) -> Void = { linkAccount, paymentMethodParams, shouldSave in
+                    paymentMethodParams.clientAttributionMetadata = clientAttributionMetadata
                     guard linkAccount.sessionState == .verified else {
                         // We don't support 2FA in the native mobile Link flow, so if 2FA is required then this is a no-op.
                         // Just fall through and don't save the card details to Link.

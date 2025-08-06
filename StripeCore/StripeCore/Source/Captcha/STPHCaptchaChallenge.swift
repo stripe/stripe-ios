@@ -7,10 +7,10 @@
 
 import Foundation
 
-@_spi(STP) public func fetchPassiveHCaptchaToken(siteKey: String?, rqdata: String?) async -> String? {
+@_spi(STP) public func fetchPassiveHCaptchaToken(passiveCaptcha: PassiveCaptcha?) async -> String? {
     return await withCheckedContinuation { continuation in
-        guard let siteKey,
-          let hcaptcha = try? HCaptcha(apiKey: siteKey, passiveApiKey: true, baseURL: URL(string: "http://localhost"), rqdata: rqdata) else {
+        guard let passiveCaptcha,
+              let hcaptcha = try? HCaptcha(apiKey: passiveCaptcha.siteKey, passiveApiKey: true, baseURL: URL(string: "http://localhost"), rqdata: passiveCaptcha.rqData) else {
             continuation.resume(returning: nil)
             return
         }
