@@ -161,7 +161,7 @@ extension PaymentSheet {
         }
 
         let clientAttributionMetadata: STPClientAttributionMetadata = intent.clientAttributionMetadata(elementsSessionConfigId: elementsSession.sessionID)
-        
+
         switch paymentOption {
             // MARK: - Apple Pay
         case .applePay:
@@ -179,7 +179,7 @@ extension PaymentSheet {
                 return
             }
             applePayContext.presentApplePay()
-            
+
             // MARK: - New Payment Method
         case let .new(confirmParams):
             startPassiveHCaptchaChallengeIfNecessary(siteKey: elementsSession.passiveCaptcha?.siteKey, rqdata: elementsSession.passiveCaptcha?.rqData) { hcaptchaToken in
@@ -272,9 +272,9 @@ extension PaymentSheet {
                 ? intentConfirmParamsForDeferredIntent?.confirmPaymentMethodOptions
                 // PaymentSheet collects CVC in sheet:
                 : intentConfirmParamsFromSavedPaymentMethod?.confirmPaymentMethodOptions
-                
+
                 let paymentIntentParams = makePaymentIntentParams(confirmPaymentMethodType: .saved(paymentMethod, paymentOptions: paymentOptions), paymentIntent: paymentIntent, configuration: configuration)
-                
+
                 paymentHandler.confirmPayment(
                     paymentIntentParams,
                     with: authenticationContext,
@@ -442,7 +442,7 @@ extension PaymentSheet {
                     )
                 }
             }
-            
+
             let confirmWithPaymentDetails:
             (
                 PaymentSheetLinkAccount,
@@ -462,10 +462,10 @@ extension PaymentSheet {
                     completion(.failed(error: error), nil)
                     return
                 }
-                
+
                 confirmWithPaymentMethodParams(paymentMethodParams, linkAccount, shouldSave)
             }
-            
+
             let createPaymentDetailsAndConfirm:
             (
                 PaymentSheetLinkAccount,
@@ -478,19 +478,19 @@ extension PaymentSheet {
                     // We don't support 2FA in the native mobile Link flow, so if 2FA is required then this is a no-op.
                     // Just fall through and don't save the card details to Link.
                     STPAnalyticsClient.sharedClient.logLinkPopupSkipped()
-                    
+
                     // Attempt to confirm directly with params
                     confirmWithPaymentMethodParams(paymentMethodParams, linkAccount, shouldSave)
                     return
                 }
-                
+
                 linkAccount.createPaymentDetails(with: paymentMethodParams, isDefault: false) { result in
                     switch result {
                     case .success(let paymentDetails):
                         // We need to explicitly pass the billing phone number to the share and payment method endpoints,
                         // since it's not part of the consumer payment details.
                         let billingPhoneNumber = paymentMethodParams.billingDetails?.phone
-                        
+
                         if elementsSession.linkPassthroughModeEnabled {
                             // If passthrough mode, share payment details
                             linkAccount.sharePaymentDetails(
@@ -521,7 +521,7 @@ extension PaymentSheet {
                     }
                 }
             }
-            
+
             switch confirmOption {
             case .wallet:
                 let useNativeLink = deviceCanUseNativeLink(elementsSession: elementsSession, configuration: configuration)
@@ -538,13 +538,13 @@ extension PaymentSheet {
             case .signUp(let linkAccount, let phoneNumberFromSignup, let consentAction, let legalName, let intentConfirmParams):
                 let billingDetails = intentConfirmParams.paymentMethodParams.billingDetails
                 let countryCode = billingDetails?.address?.country ?? elementsSession.countryCode
-                
+
                 let phoneNumber = if elementsSession.linkSignupOptInFeatureEnabled {
                     billingDetails?.phone.flatMap { PhoneNumber.fromE164($0) }
                 } else {
                     phoneNumberFromSignup
                 }
-                
+
                 linkAccount.signUp(
                     with: phoneNumber,
                     legalName: legalName,
@@ -576,7 +576,7 @@ extension PaymentSheet {
                 confirmWithPaymentMethod(paymentMethod, nil, false)
             case .withPaymentDetails(let linkAccount, let paymentDetails, let confirmationExtras, _):
                 let shouldSave = false // always false, as we don't show a save-to-merchant checkbox in Link VC
-                
+
                 if elementsSession.linkPassthroughModeEnabled {
                     // allowRedisplay is nil since we are not saving a payment method.
                     linkAccount.sharePaymentDetails(
