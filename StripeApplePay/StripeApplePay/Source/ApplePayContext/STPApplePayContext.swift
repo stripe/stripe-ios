@@ -274,10 +274,8 @@ public class STPApplePayContext: NSObject, PKPaymentAuthorizationControllerDeleg
     }
     /// Tracks where the call to confirm the PaymentIntent or SetupIntent happened.
     @_spi(STP) public var confirmType: ConfirmType?
-    /// The HCaptcha api key
-    @_spi(STP) public var hcaptchaSiteKey: String?
-    /// The HCaptcha rqdata
-    @_spi(STP) public var hcaptchaRqdata: String?
+    /// The PassiveCaptcha object from the `/v1/elements/sessions` response
+    @_spi(STP) public var passiveCaptcha: PassiveCaptcha?
     /// Contains metadata with identifiers for the session and information about the integration
     @_spi(STP) public var clientAttributionMetadata: STPClientAttributionMetadata = STPClientAttributionMetadata()
 
@@ -582,7 +580,7 @@ public class STPApplePayContext: NSObject, PKPaymentAuthorizationControllerDeleg
         }
 
         Task {
-            let hcaptchaToken = await fetchPassiveHCaptchaToken(siteKey: hcaptchaSiteKey, rqdata: hcaptchaRqdata)
+            let hcaptchaToken = await fetchPassiveHCaptchaToken(siteKey: passiveCaptcha?.siteKey, rqdata: passiveCaptcha?.rqData)
             // 1. Create PaymentMethod
             StripeAPI.PaymentMethod.create(apiClient: self.apiClient, payment: payment, hcaptchaToken: hcaptchaToken, clientAttributionMetadata: self.clientAttributionMetadata) { result in
                 guard let paymentMethod = try? result.get(), self.authorizationController != nil else {
