@@ -690,7 +690,9 @@ struct UpdatePaymentDetailsParams {
             billingDetails: STPPaymentMethodBillingDetails? = nil,
             preferredNetwork: String? = nil
         )
-        // updating bank not supported
+        case bankAccount(
+            billingDetails: STPPaymentMethodBillingDetails
+        )
     }
 
     let isDefault: Bool?

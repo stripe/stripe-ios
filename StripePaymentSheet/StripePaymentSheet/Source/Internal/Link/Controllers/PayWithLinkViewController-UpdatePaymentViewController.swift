@@ -48,14 +48,14 @@ extension PayWithLinkViewController {
         private lazy var updateButton: ConfirmButton = .makeLinkButton(
             callToAction: isBillingDetailsUpdateFlow ? context.callToAction : .custom(title: String.Localized.update_card)
         ) { [weak self] in
-            self?.updateCard()
+            self?.updatePaymentMethod()
         }
 
         private lazy var errorLabel: UILabel = {
             return ElementsUI.makeErrorLabel(theme: LinkUI.appearance.asElementsTheme)
         }()
 
-        private lazy var cardEditElement = LinkPaymentMethodFormElement(
+        private lazy var paymentMethodEditElement = LinkPaymentMethodFormElement(
             paymentMethod: paymentMethod,
             configuration: makeConfiguration(),
             isBillingDetailsUpdateFlow: isBillingDetailsUpdateFlow
@@ -94,13 +94,13 @@ extension PayWithLinkViewController {
 
         override func viewDidLoad() {
             super.viewDidLoad()
-            self.cardEditElement.delegate = self
+            self.paymentMethodEditElement.delegate = self
             view.backgroundColor = .linkSurfacePrimary
             view.directionalLayoutMargins = LinkUI.contentMargins
             errorLabel.isHidden = true
 
             let stackView = UIStackView(arrangedSubviews: [
-                cardEditElement.view,
+                paymentMethodEditElement.view,
                 errorLabel,
                 thisIsYourDefaultLabel,
                 updateButton,
@@ -122,35 +122,36 @@ extension PayWithLinkViewController {
 
             if !paymentMethod.isDefault || isBillingDetailsUpdateFlow {
                 thisIsYourDefaultLabel.isHidden = true
-                stackView.setCustomSpacing(LinkUI.largeContentSpacing, after: cardEditElement.view)
+                stackView.setCustomSpacing(LinkUI.largeContentSpacing, after: paymentMethodEditElement.view)
             } else {
                 stackView.setCustomSpacing(LinkUI.extraLargeContentSpacing, after: thisIsYourDefaultLabel)
             }
 
-            updateButton.update(state: cardEditElement.validationState.isValid ? .enabled : .disabled)
+            updateButton.update(state: paymentMethodEditElement.validationState.isValid ? .enabled : .disabled)
         }
 
-        func updateCard() {
+        func updatePaymentMethod() {
             updateErrorLabel(for: nil)
 
-            guard let params = cardEditElement.params else {
-                stpAssertionFailure("Params are expected to be not `nil` when `updateCard()` is called.")
+            guard let params = paymentMethodEditElement.params else {
+                stpAssertionFailure("Params are expected to be not `nil` when `updatePaymentMethod()` is called.")
                 return
             }
 
-            cardEditElement.view.endEditing(true)
-            cardEditElement.view.isUserInteractionEnabled = false
+            guard let updateDetails = createUpdateDetails(for: params) else {
+                stpAssertionFailure("Update details are expected to be not `nil` when `updatePaymentMethod()` is called.")
+                return
+            }
+
+            paymentMethodEditElement.view.endEditing(true)
+            paymentMethodEditElement.view.isUserInteractionEnabled = false
             updateButton.update(state: .processing)
 
-            // When updating a card that is not the default and you send isDefault=false to the server you get
+            // When updating a payment method that is not the default and you send isDefault=false to the server you get
             // "Can't unset payment details when it's not the default", so send nil instead of false
             let updateParams = UpdatePaymentDetailsParams(
                 isDefault: params.setAsDefault ? true : nil,
-                details: .card(
-                    expiryDate: params.expiryDate,
-                    billingDetails: params.billingDetails,
-                    preferredNetwork: params.preferredNetwork
-                )
+                details: updateDetails
             )
 
             coordinator?.allowSheetDismissal(false)
@@ -184,7 +185,7 @@ extension PayWithLinkViewController {
                     }
                 case .failure(let error):
                     self.updateErrorLabel(for: error)
-                    self.cardEditElement.view.isUserInteractionEnabled = true
+                    self.paymentMethodEditElement.view.isUserInteractionEnabled = true
                     self.updateButton.update(state: .enabled)
                     coordinator?.allowSheetDismissal(true)
                 }
@@ -196,6 +197,20 @@ extension PayWithLinkViewController {
             errorLabel.setHiddenIfNecessary(error == nil)
         }
 
+        private func createUpdateDetails(for params: LinkPaymentMethodFormElement.Params) -> UpdatePaymentDetailsParams.DetailsType? {
+            switch paymentMethod.type {
+            case .card:
+                return .card(
+                    expiryDate: params.expiryDate,
+                    billingDetails: params.billingDetails,
+                    preferredNetwork: params.preferredNetwork
+                )
+            case .bankAccount:
+                return .bankAccount(billingDetails: params.billingDetails)
+            case .unparsable:
+                return nil
+            }
+        }
     }
 
 }
@@ -204,11 +219,11 @@ extension PayWithLinkViewController.UpdatePaymentViewController: ElementDelegate
 
     func didUpdate(element: Element) {
         updateErrorLabel(for: nil)
-        updateButton.update(state: cardEditElement.validationState.isValid ? .enabled : .disabled)
+        updateButton.update(state: paymentMethodEditElement.validationState.isValid ? .enabled : .disabled)
     }
 
     func continueToNextField(element: Element) {
-        updateButton.update(state: cardEditElement.validationState.isValid ? .enabled : .disabled)
+        updateButton.update(state: paymentMethodEditElement.validationState.isValid ? .enabled : .disabled)
     }
 
 }
