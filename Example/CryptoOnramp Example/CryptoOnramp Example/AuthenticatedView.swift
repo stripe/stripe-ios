@@ -126,29 +126,11 @@ struct AuthenticatedView: View {
     }
 }
 
-private struct AuthenticatedPreviewView: View {
-    @State var coordinator: CryptoOnrampCoordinator?
-    var body: some View {
-        NavigationView {
-            if let coordinator = coordinator {
-                AuthenticatedView(coordinator: coordinator, customerId: "cus_example123456789")
-            }
-        }
-        .onAppear {
-            STPAPIClient.shared.setUpPublishableKey()
-            Task {
-                let coordinator = try? await CryptoOnrampCoordinator.create(appearance: .init())
-
-                await MainActor.run {
-                    self.coordinator = coordinator
-                }
-            }
-        }
-    }
-}
-
 #Preview {
-    NavigationView {
-        AuthenticatedPreviewView()
+    PreviewWrapperView { coordinator in
+        AuthenticatedView(
+            coordinator: coordinator,
+            customerId: "cus_example123456789"
+        )
     }
 }

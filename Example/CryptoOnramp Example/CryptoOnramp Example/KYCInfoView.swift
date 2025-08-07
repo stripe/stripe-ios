@@ -225,29 +225,8 @@ struct KYCInfoView: View {
     }
 }
 
-private struct KYCInfoPreviewView: View {
-    @State var coordinator: CryptoOnrampCoordinator?
-    var body: some View {
-        NavigationView {
-            if let coordinator = coordinator {
-                KYCInfoView(coordinator: coordinator)
-            }
-        }
-        .onAppear {
-            STPAPIClient.shared.setUpPublishableKey()
-            Task {
-                let coordinator = try? await CryptoOnrampCoordinator.create(appearance: .init())
-
-                await MainActor.run {
-                    self.coordinator = coordinator
-                }
-            }
-        }
-    }
-}
-
 #Preview {
-    NavigationView {
-        KYCInfoPreviewView()
+    PreviewWrapperView { coordinator in
+        KYCInfoView(coordinator: coordinator)
     }
 }

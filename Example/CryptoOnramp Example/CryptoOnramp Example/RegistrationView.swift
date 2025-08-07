@@ -146,27 +146,11 @@ struct RegistrationView: View {
     }
 }
 
-private struct RegistrationPreviewView: View {
-    @State var coordinator: CryptoOnrampCoordinator?
-    var body: some View {
-        NavigationView {
-            if let coordinator = coordinator {
-                RegistrationView(coordinator: coordinator, email: "test@example.com")
-            }
-        }
-        .onAppear {
-            STPAPIClient.shared.setUpPublishableKey()
-            Task {
-                let coordinator = try? await CryptoOnrampCoordinator.create(appearance: .init())
-
-                await MainActor.run {
-                    self.coordinator = coordinator
-                }
-            }
-        }
-    }
-}
-
 #Preview {
-    RegistrationPreviewView()
+    PreviewWrapperView { coordinator in
+        RegistrationView(
+            coordinator: coordinator,
+            email: "test@example.com"
+        )
+    }
 }
