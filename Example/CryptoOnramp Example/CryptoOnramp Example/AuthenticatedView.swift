@@ -24,7 +24,7 @@ struct AuthenticatedView: View {
 
     @State private var errorMessage: String?
     @State private var isIdentityVerificationComplete = false
-    @State private var showKYCView: Bool = false
+    @State private var showKYCView = false
 
     @Environment(\.isLoading) private var isLoading
 
