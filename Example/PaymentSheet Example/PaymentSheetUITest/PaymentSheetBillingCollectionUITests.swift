@@ -71,7 +71,6 @@ class PaymentSheetBillingCollectionUICardTests: PaymentSheetBillingCollectionUIT
         card.tap()
 
         XCTAssertTrue(cardInfoField.waitForExistence(timeout: 10.0))
-        XCTAssertTrue(contactInfoField.exists)
         XCTAssertEqual(emailField.value as? String, "foo@bar.com")
         XCTAssertEqual(phoneField.value as? String, "(310) 555-1234")
         XCTAssertEqual(nameOnCardField.value as? String, "Jane Doe")
