@@ -9,13 +9,10 @@ import SwiftUI
 
 /// Convenience `View` that wraps a field on a form with a `headline` title.
 struct FormField<Content: View>: View {
+    private let title: String
 
-    /// The title displayed above the field.
-    let title: String
-
-    /// The content of the field itself.
     @ViewBuilder
-    let content: () -> Content
+    private let content: () -> Content
 
     /// Creates a new `FormField`.
     /// - Parameters:
