@@ -17,7 +17,6 @@ final class LinkPaymentMethodFormElementSnapshotTests: STPSnapshotTestCase {
 
     override func setUp() {
         super.setUp()
-        //        self.recordMode = true
 
         // `LinkPaymentMethodFormElement` depends on `AddressSectionElement`, which requires
         // address specs to be loaded in memory.
@@ -40,7 +39,7 @@ final class LinkPaymentMethodFormElementSnapshotTests: STPSnapshotTestCase {
     }
 
     func testBillingDetailsUpdate() {
-        let sut = makeSUT(isDefault: false, useCVCPlaceholder: true)
+        let sut = makeSUT(isDefault: false, isBillingDetailsUpdateFlow: true)
         verify(sut)
     }
 
@@ -48,7 +47,7 @@ final class LinkPaymentMethodFormElementSnapshotTests: STPSnapshotTestCase {
         let sut = makeSUT(isDefault: false, networks: ["cartes_bancaires", "visa"])
         verify(sut)
     }
-    
+
     func testBillingDetailsUpdateForBankAccount() {
         let sut = makeBankAccountSUT()
         verify(sut)
@@ -70,7 +69,7 @@ extension LinkPaymentMethodFormElementSnapshotTests {
 
     func makeSUT(
         isDefault: Bool,
-        useCVCPlaceholder: Bool = false,
+        isBillingDetailsUpdateFlow: Bool = false,
         networks: [String] = ["visa"]
     ) -> LinkPaymentMethodFormElement {
         let paymentMethod = ConsumerPaymentDetails(
@@ -95,7 +94,7 @@ extension LinkPaymentMethodFormElementSnapshotTests {
         return LinkPaymentMethodFormElement(
             paymentMethod: paymentMethod,
             configuration: PaymentSheet.Configuration(),
-            useCVCPlaceholder: useCVCPlaceholder
+            isBillingDetailsUpdateFlow: isBillingDetailsUpdateFlow
         )
     }
 
@@ -126,7 +125,7 @@ extension LinkPaymentMethodFormElementSnapshotTests {
         return LinkPaymentMethodFormElement(
             paymentMethod: paymentMethod,
             configuration: config,
-            useCVCPlaceholder: true
+            isBillingDetailsUpdateFlow: true
         )
     }
 }
