@@ -19,7 +19,7 @@ public struct KycInfo: Equatable {
     public let lastName: String
 
     /// The number associated with the customer’s id.
-    public let idNumber: String?
+    public let idNumber: String
 
     /// The type of id provided by the customer.
     public let idType: IdType = .socialSecurityNumber
@@ -33,7 +33,7 @@ public struct KycInfo: Equatable {
     public init(
         firstName: String,
         lastName: String,
-        idNumber: String?,
+        idNumber: String,
         address: PaymentSheet.Address,
         dateOfBirth: Date
     ) {

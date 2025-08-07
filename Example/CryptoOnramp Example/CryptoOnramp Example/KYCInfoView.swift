@@ -190,7 +190,7 @@ struct KYCInfoView: View {
         let kycInfo = KycInfo(
             firstName: firstName,
             lastName: lastName,
-            idNumber: idNumber.isEmpty ? nil : idNumber,
+            idNumber: idNumber,
             address: address,
             dateOfBirth: dateOfBirth
         )
