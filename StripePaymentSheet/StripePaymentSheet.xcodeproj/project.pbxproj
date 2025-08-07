@@ -102,6 +102,7 @@
 		31699A812BE183B30048677F /* DownloadManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31699A802BE183B30048677F /* DownloadManager.swift */; };
 		31699A832BE183D40048677F /* DownloadManagerTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31699A822BE183D40048677F /* DownloadManagerTest.swift */; };
 		316B33122B5F171C0008D2E5 /* UserDefaults+StripePaymentSheetTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 316B33112B5F171C0008D2E5 /* UserDefaults+StripePaymentSheetTest.swift */; };
+		317B56812E42C00F005EAFB1 /* PaymentSheetFormFactory+CardEmailPhoneFieldsTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 317B56802E42C00F005EAFB1 /* PaymentSheetFormFactory+CardEmailPhoneFieldsTest.swift */; };
 		3190006D2DFD32BF00B84F6C /* ECEBridgeTypes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3190006C2DFD32BF00B84F6C /* ECEBridgeTypes.swift */; };
 		31AD3BE72B0C2D080080C800 /* UIApplication+StripePaymentSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31AD3BE62B0C2D080080C800 /* UIApplication+StripePaymentSheet.swift */; };
 		31CC9B792CB5F69600E84A38 /* LinkNavigationBarSnapshotTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31CC9B712CB5F69600E84A38 /* LinkNavigationBarSnapshotTests.swift */; };
@@ -595,6 +596,7 @@
 		31699A802BE183B30048677F /* DownloadManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DownloadManager.swift; sourceTree = "<group>"; };
 		31699A822BE183D40048677F /* DownloadManagerTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DownloadManagerTest.swift; sourceTree = "<group>"; };
 		316B33112B5F171C0008D2E5 /* UserDefaults+StripePaymentSheetTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UserDefaults+StripePaymentSheetTest.swift"; sourceTree = "<group>"; };
+		317B56802E42C00F005EAFB1 /* PaymentSheetFormFactory+CardEmailPhoneFieldsTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "PaymentSheetFormFactory+CardEmailPhoneFieldsTest.swift"; sourceTree = "<group>"; };
 		3190006C2DFD32BF00B84F6C /* ECEBridgeTypes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ECEBridgeTypes.swift; sourceTree = "<group>"; };
 		31AD3BE62B0C2D080080C800 /* UIApplication+StripePaymentSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = "UIApplication+StripePaymentSheet.swift"; path = "StripePaymentSheet/Source/Categories/UIApplication+StripePaymentSheet.swift"; sourceTree = "<group>"; };
 		31CC9B6C2CB5F69600E84A38 /* ButtonLinkSnapshotTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ButtonLinkSnapshotTests.swift; sourceTree = "<group>"; };
@@ -1980,6 +1982,7 @@
 				615797752DFC9C2800BB9063 /* PaymentSheetFlowControllerTests.swift */,
 				4D595AA033BC84CB4E1C277F /* PaymentSheetFormFactorySnapshotTest.swift */,
 				A6C0EC1D4DC96A6917A2DFBA /* PaymentSheetFormFactoryTest.swift */,
+				317B56802E42C00F005EAFB1 /* PaymentSheetFormFactory+CardEmailPhoneFieldsTest.swift */,
 				6B76DBD02C530B6C0037CD63 /* PaymentSheetGDPRConfirmFlowTests.swift */,
 				B6BF12382C2F2E780033601E /* PaymentSheetImageTests.swift */,
 				0901281208BEB220D0B491A8 /* PaymentSheetLinkAccountTests.swift */,
@@ -2302,6 +2305,7 @@
 				2EC9C94DD8D62E4F4EFC8AB8 /* IntentStatusPollerTest.swift in Sources */,
 				4954E9712D96FA0C0061585F /* FCLiteImplementationTests.swift in Sources */,
 				ABC3A7CF6D5B21D0C9684A09 /* LinkPopupURLParserTests.swift in Sources */,
+				317B56812E42C00F005EAFB1 /* PaymentSheetFormFactory+CardEmailPhoneFieldsTest.swift in Sources */,
 				F94F6A157CEB937896B682D4 /* LinkURLGeneratorTests.swift in Sources */,
 				10A336F0F2331F22F1A0AC1B /* LinkStubs.swift in Sources */,
 				61C87E1E2CB81FAD001B7DA9 /* CardBrandFilterTests.swift in Sources */,
