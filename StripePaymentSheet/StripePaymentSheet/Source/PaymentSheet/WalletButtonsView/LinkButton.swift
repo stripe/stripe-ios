@@ -83,7 +83,6 @@ struct LinkButton: View {
 
                             Text(paymentMethodPreview.last4)
                                 .font(Font(scaledFont))
-                                .foregroundColor(Color(uiColor: .label))
                         }
                     } else {
                         Text(account.email)

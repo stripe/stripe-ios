@@ -83,6 +83,7 @@ extension UIViewController {
         payWithLinkController.presentForPaymentMethodSelection(
             from: self,
             initiallySelectedPaymentDetailsID: selectedPaymentDetailsID,
+            canSkipWalletAfterVerification: false,
             completion: callback
         )
     }

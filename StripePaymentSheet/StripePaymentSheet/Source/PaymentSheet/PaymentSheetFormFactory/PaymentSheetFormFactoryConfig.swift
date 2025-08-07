@@ -127,12 +127,12 @@ enum PaymentSheetFormFactoryConfig {
         }
     }
 
-    var opensCardScannerAutomatically: Bool {
+    func termsDisplayFor(paymentMethodType: PaymentSheet.PaymentMethodType) -> PaymentSheet.TermsDisplay {
         switch self {
-        case .customerSheet(let customerSheetConfiguration):
-            return customerSheetConfiguration.opensCardScannerAutomatically
-        case .paymentElement(let paymentElementConfiguration):
-            return paymentElementConfiguration.opensCardScannerAutomatically
+        case .paymentElement(let configuration):
+            return configuration.termsDisplayFor(paymentMethodType: paymentMethodType)
+        case .customerSheet:
+            return .automatic
         }
     }
 }

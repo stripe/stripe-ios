@@ -1,13 +1,16 @@
-## 24.19.0 2025-08-04
+## x.x.x x-x-x
 
-### CustomerSheet
-* [Added] `opensCardScannerAutomatically` configuration
-* [Changed] Form inputs are cached
+### PaymentSheet
+* [Fixed] The Apple Pay logo in `PaymentOptionDisplayData` no longer contains additional padding, bringing it in line with other payment method logos.
+
+### EmbeddedPaymentElement
+* [Changed] When using `EmbeddedPaymentElement.Configuration.FormSheetAction.confirm`, the completion block is now called with a `canceled` result if the user closes the form sheet without completing the transaction.
+
+## 24.19.0 2025-08-04
 
 ### PaymentSheet
 * [Fixed] Updated default spacing of form elements in PaymentSheet.
 * [Added] EmbeddedPaymentElement now shows mandates in a form sheet when `rowSelectionBehavior` is `immediateAction` and `embeddedViewDisplaysMandateText` is `true`. Previously, this configuration was an error.
-* [Added] `opensCardScannerAutomatically` configuration
 
 ## 24.18.1 2025-07-29
 * [Fixed] Improved Klarna payments when using Universal Links.
