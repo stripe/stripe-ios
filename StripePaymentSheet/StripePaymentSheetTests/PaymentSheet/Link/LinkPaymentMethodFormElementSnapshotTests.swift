@@ -70,6 +70,7 @@ extension LinkPaymentMethodFormElementSnapshotTests {
     func makeSUT(
         isDefault: Bool,
         isBillingDetailsUpdateFlow: Bool = false,
+        fullBillingDetails: Bool = false,
         networks: [String] = ["visa"]
     ) -> LinkPaymentMethodFormElement {
         let paymentMethod = ConsumerPaymentDetails(
@@ -91,9 +92,17 @@ extension LinkPaymentMethodFormElementSnapshotTests {
             isDefault: isDefault
         )
 
+        var configuration = PaymentSheet.Configuration()
+        if fullBillingDetails {
+            configuration.billingDetailsCollectionConfiguration.address = .full
+            configuration.billingDetailsCollectionConfiguration.email = .always
+            configuration.billingDetailsCollectionConfiguration.name = .always
+            configuration.billingDetailsCollectionConfiguration.phone = .always
+        }
+
         return LinkPaymentMethodFormElement(
             paymentMethod: paymentMethod,
-            configuration: PaymentSheet.Configuration(),
+            configuration: configuration,
             isBillingDetailsUpdateFlow: isBillingDetailsUpdateFlow
         )
     }
