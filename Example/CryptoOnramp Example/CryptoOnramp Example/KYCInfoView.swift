@@ -99,6 +99,7 @@ struct KYCInfoView: View {
                         DatePicker("", selection: $dateOfBirth, in: ...Self.today, displayedComponents: .date)
                             .datePickerStyle(WheelDatePickerStyle())
                             .labelsHidden()
+                            .frame(maxWidth: .infinity)
                     }
 
                     FormField("Address Line 1") {
