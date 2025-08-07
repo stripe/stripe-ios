@@ -122,11 +122,15 @@ extension PaymentSheetFormFactory {
         }
 
         let mandate: SimpleMandateElement? = {
+            if shouldShowLinkSignupOptIn {
+                // Respect this over all other configurations.
+                return makeMandate()
+            }
             switch configuration.termsDisplayFor(paymentMethodType: .stripe(.card)) {
             case .never:
                 return nil
             case .automatic:
-                if isSettingUp || shouldShowLinkSignupOptIn  {
+                if isSettingUp {
                     return makeMandate()
                 }
             }
