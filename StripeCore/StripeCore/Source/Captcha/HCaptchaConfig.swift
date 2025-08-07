@@ -293,7 +293,7 @@ struct HCaptchaConfig: CustomDebugStringConvertible {
 }
 
 // MARK: - Private Methods
-
+@available(iOSApplicationExtension, unavailable)
 private extension HCaptchaConfig {
     /**
      - parameter url: The URL to be fixed
