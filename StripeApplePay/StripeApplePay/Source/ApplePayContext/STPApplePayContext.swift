@@ -579,7 +579,6 @@ public class STPApplePayContext: NSObject, PKPaymentAuthorizationControllerDeleg
             }
         }
 
-        
         Task {
             let hcaptchaToken = await passiveCaptcha?.fetchPassiveHCaptchaToken()
             // 1. Create PaymentMethod
