@@ -1,5 +1,8 @@
 ## x.x.x x-x-x
 
+### StripeApplePay
+* [Fixed] Issue when deserializing intent when line1 is null
+
 ### PaymentSheet
 * [Fixed] The Apple Pay logo in `PaymentOptionDisplayData` no longer contains additional padding, bringing it in line with other payment method logos.
 
