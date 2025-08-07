@@ -214,13 +214,7 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
                 case .new(let confirmParams):
                     return confirmParams
                 case .link(let confirmOption):
-                    switch confirmOption {
-                    case .signUp(_, _, _, _, let intentConfirmParams):
-                        return intentConfirmParams
-                    case .wallet, .withPaymentDetails, .withPaymentMethod:
-                        // Handled elsewhere
-                        return nil
-                    }
+                    return confirmOption.signupConfirmParams
                 case .applePay, .external:
                     return nil
                 }
@@ -843,12 +837,7 @@ extension PaymentSheetVerticalViewController: VerticalPaymentMethodListViewContr
             } else if case let .saved(_, confirmParams) = previousPaymentOption {
                 return confirmParams
             } else if case let .link(confirmOption) = previousPaymentOption {
-                switch confirmOption {
-                case .signUp(_, _, _, _, let confirmParams):
-                    return confirmParams
-                case .wallet, .withPaymentMethod, .withPaymentDetails:
-                    return nil
-                }
+                return confirmOption.signupConfirmParams
             } else {
                 return nil
             }
