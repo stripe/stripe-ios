@@ -73,6 +73,13 @@ final class LinkPaymentMethodFormElement: Element {
         billingDetails.nonnil_address.state = billingAddressSection?.state?.rawData
         billingDetails.nonnil_address.postalCode = billingAddressSection?.postalCode?.text
 
+        if let phone = billingAddressSection?.phone?.phoneNumber?.string(as: .e164) {
+            billingDetails.phone = phone
+        }
+        if let email = billingAddressSection?.email?.text {
+            billingDetails.email = email
+        }
+
         let preferredNetwork = cardBrandDropdownElement?.element.selectedItem.rawData
 
         return Params(
@@ -103,18 +110,6 @@ final class LinkPaymentMethodFormElement: Element {
         return PhoneNumberElement(
             defaultCountryCode: configuration.defaultBillingDetails.address.country,
             defaultPhoneNumber: configuration.defaultBillingDetails.phone,
-            theme: theme
-        )
-    }()
-
-    private lazy var contactInformationSection: SectionElement? = {
-        let elements = ([emailElement, phoneElement] as [Element?]).compactMap { $0 }
-
-        guard elements.isEmpty == false else { return nil }
-
-        return SectionElement(
-            title: elements.count > 1 ? .Localized.contact_information : nil,
-            elements: elements,
             theme: theme
         )
     }()
@@ -201,7 +196,7 @@ final class LinkPaymentMethodFormElement: Element {
     )
 
     private lazy var formElement: FormElement = {
-        var elements: [Element?] = [contactInformationSection]
+        var elements: [Element?] = []
 
         if paymentMethod.type == .card {
             elements.append(cardSection)
@@ -245,7 +240,9 @@ final class LinkPaymentMethodFormElement: Element {
         )
 
         let additionalFields = AddressSectionElement.AdditionalFields(
-            name: showNameFieldInBillingAddressSection ? .enabled(isOptional: false) : .disabled
+            name: showNameFieldInBillingAddressSection ? .enabled(isOptional: false) : .disabled,
+            phone: configuration.billingDetailsCollectionConfiguration.phone == .always ? .enabled(isOptional: false) : .disabled,
+            email: configuration.billingDetailsCollectionConfiguration.email == .always ? .enabled(isOptional: false) : .disabled
         )
 
         return AddressSectionElement(
