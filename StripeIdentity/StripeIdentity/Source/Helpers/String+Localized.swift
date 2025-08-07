@@ -418,4 +418,61 @@ extension String.Localized {
             "Back of driver's license, passport, or government-issued photo ID"
         )
     }
+    
+    // MARK: - Document Type Combinations for scanning instructions
+    static var positionDriverLicenseOrPassport: String {
+        STPLocalizedString(
+            "Position your driver's license or passport in the center of the frame",
+            "Position your driver's license or passport in the center of the frame"
+        )
+    }
+    
+    static var flipDriverLicenseOrPassport: String {
+        STPLocalizedString(
+            "Flip your driver's license or passport over to the other side",
+            "Flip your driver's license or passport over to the other side"
+        )
+    }
+    
+    static var positionDriverLicenseOrGovernmentId: String {
+        STPLocalizedString(
+            "Position your driver's license or government-issued photo ID in the center of the frame",
+            "Position your driver's license or government-issued photo ID in the center of the frame"
+        )
+    }
+    
+    static var flipDriverLicenseOrGovernmentId: String {
+        STPLocalizedString(
+            "Flip your driver's license or government-issued photo ID over to the other side",
+            "Flip your driver's license or government-issued photo ID over to the other side"
+        )
+    }
+    
+    static var positionPassportOrGovernmentId: String {
+        STPLocalizedString(
+            "Position your passport or government-issued photo ID in the center of the frame",
+            "Position your passport or government-issued photo ID in the center of the frame"
+        )
+    }
+    
+    static var flipPassportOrGovernmentId: String {
+        STPLocalizedString(
+            "Flip your passport or government-issued photo ID over to the other side",
+            "Flip your passport or government-issued photo ID over to the other side"
+        )
+    }
+    
+    static var positionAllIdTypes: String {
+        STPLocalizedString(
+            "Position your driver's license, passport, or government-issued photo ID in the center of the frame",
+            "Position your driver's license, passport, or government-issued photo ID in the center of the frame"
+        )
+    }
+    
+    static var flipAllIdTypes: String {
+        STPLocalizedString(
+            "Flip your driver's license, passport, or government-issued photo ID over to the other side",
+            "Flip your driver's license, passport, or government-issued photo ID over to the other side"
+        )
+    }
 }
