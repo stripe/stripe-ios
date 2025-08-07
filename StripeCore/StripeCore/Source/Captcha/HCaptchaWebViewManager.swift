@@ -7,6 +7,7 @@ import WebKit
 
 /** Handles comunications with the webview containing the HCaptcha challenge.
  */
+@available(iOSApplicationExtension, unavailable)
 internal class HCaptchaWebViewManager: NSObject {
     enum JSCommand: String {
         case execute = "execute();"

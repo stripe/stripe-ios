@@ -36,4 +36,20 @@ import Foundation
         )
     }
 
+    @available(iOSApplicationExtension, unavailable)
+    @_spi(STP) public func fetchPassiveHCaptchaToken() async -> String? {
+        return await withCheckedContinuation { continuation in
+            guard let hcaptcha = try? HCaptcha(apiKey: siteKey, passiveApiKey: true, baseURL: URL(string: "http://localhost"), rqdata: rqData) else {
+                continuation.resume(returning: nil)
+                return
+            }
+            hcaptcha.didFinishLoading {
+                hcaptcha.validate { result in
+                    let token = try? result.dematerialize()
+                    continuation.resume(returning: token)
+                }
+            }
+        }
+    }
+
 }
