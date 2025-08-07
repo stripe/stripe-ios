@@ -212,6 +212,10 @@ extension PaymentSheet {
         else {
             return
         }
+        guard paymentIntentParams.setupFutureUsage == nil && paymentIntentParams.nonnil_paymentMethodOptions.setupFutureUsage(for: paymentMethodType) == nil else {
+            // If the PI params has SFU/PMO SFU set already, assume it was set to respect the checkbox, don't overwrite.
+           return
+        }
         // Set top-level SFU
         if let topLevelSFUValue {
             paymentIntentParams.setupFutureUsage = topLevelSFUValue.paymentIntentParamsValue
