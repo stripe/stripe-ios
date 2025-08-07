@@ -7,7 +7,7 @@
 
 import Foundation
 
-// MARK: - String Extension for CamelCase to Snake Case Conversion
+
 private extension String {
     /// Converts camelCase string to snake_case
     func camelCaseToSnakeCase() -> String {
@@ -21,10 +21,14 @@ private extension String {
     }
 }
 
+@available(iOS 15, *)
 @_spi(DashboardOnly)
+@_documentation(visibility: public)
 extension EmbeddedComponentManager {
+    @_documentation(visibility: public)
     public struct PaymentsListDefaultFiltersOptions: Equatable, Codable {
 
+        @_documentation(visibility: public)
         public enum AmountFilter: Equatable, Codable {
             case equals(Int)
             case greaterThan(Int)
@@ -41,6 +45,7 @@ extension EmbeddedComponentManager {
             }
         }
 
+        @_documentation(visibility: public)
         public enum DateFilter: Equatable, Codable {
             case before(Date)
             case after(Date)
@@ -56,6 +61,7 @@ extension EmbeddedComponentManager {
             }
         }
 
+        @_documentation(visibility: public)
         public enum Status: Codable, CaseIterable {
             case blocked
             case canceled
@@ -77,6 +83,7 @@ extension EmbeddedComponentManager {
             }
         }
 
+        @_documentation(visibility: public)
         public enum PaymentMethod: Codable, CaseIterable {
             case achCreditTransfer
             case achDebit
@@ -170,14 +177,19 @@ extension EmbeddedComponentManager {
             }
         }
 
+        @_documentation(visibility: public)
         public var amount: AmountFilter?
 
+        @_documentation(visibility: public)
         public var date: DateFilter?
 
+        @_documentation(visibility: public)
         public var status: [Status]?
 
+        @_documentation(visibility: public)
         public var paymentMethod: PaymentMethod?
 
+        @_documentation(visibility: public)
         public init() {}
     }
 }

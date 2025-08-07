@@ -16,13 +16,15 @@ public class PaymentsViewController: UIViewController {
 
     init(componentManager: EmbeddedComponentManager,
          loadContent: Bool,
-         analyticsClientFactory: ComponentAnalyticsClientFactory) {
+         analyticsClientFactory: ComponentAnalyticsClientFactory,
+         defaultFilters: EmbeddedComponentManager.PaymentsListDefaultFiltersOptions = .init()) {
         super.init(nibName: nil, bundle: nil)
         webVC = ConnectComponentWebViewController(
             componentManager: componentManager,
             componentType: .payments,
             loadContent: loadContent,
-            analyticsClientFactory: analyticsClientFactory
+            analyticsClientFactory: analyticsClientFactory,
+            fetchInitProps: { defaultFilters }
         ) { [weak self] error in
             guard let self else { return }
             delegate?.payments(self, didFailLoadWithError: error)
