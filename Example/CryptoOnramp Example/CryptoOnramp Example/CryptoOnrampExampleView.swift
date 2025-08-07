@@ -20,7 +20,7 @@ struct CryptoOnrampExampleView: View {
     @State private var errorMessage: String?
     @State private var email: String = ""
     @State private var showRegistration: Bool = false
-    @State private var showSuccess: Bool = false
+    @State private var showAuthenticatedView: Bool = false
     @State private var authenticationCustomerId: String?
 
     @Environment(\.isLoading) private var isLoading
@@ -70,13 +70,16 @@ struct CryptoOnrampExampleView: View {
                             destination: RegistrationView(coordinator: coordinator, email: email),
                             isActive: $showRegistration
                         )
-                    }
 
-                    if let customerId = authenticationCustomerId {
-                        HiddenNavigationLink(
-                            destination: SuccessView(message: "Authentication Successful!", customerId: customerId),
-                            isActive: $showSuccess
-                        )
+                        if let customerId = authenticationCustomerId {
+                            HiddenNavigationLink(
+                                destination: AuthenticatedView(
+                                    coordinator: coordinator,
+                                    customerId: customerId
+                                ),
+                                isActive: $showAuthenticatedView
+                            )
+                        }
                     }
                 }
                 .padding()
@@ -85,6 +88,9 @@ struct CryptoOnrampExampleView: View {
             .navigationBarTitleDisplayMode(.inline)
         }
         .onAppear {
+            guard coordinator == nil else {
+                return
+            }
             initializeCoordinator()
         }
     }
@@ -153,7 +159,7 @@ struct CryptoOnrampExampleView: View {
 
                             // Delay so the navigation link animation doesn’t get canceled.
                             DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
-                                showSuccess = true
+                                showAuthenticatedView = true
                             }
                         }
                     case .canceled:
