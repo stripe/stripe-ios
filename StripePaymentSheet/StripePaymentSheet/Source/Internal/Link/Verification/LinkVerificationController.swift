@@ -22,12 +22,14 @@ final class LinkVerificationController {
         mode: LinkVerificationView.Mode = .modal,
         linkAccount: PaymentSheetLinkAccount,
         configuration: PaymentElementConfiguration,
-        appearance: LinkAppearance? = nil
+        appearance: LinkAppearance? = nil,
+        allowLogoutInDialog: Bool = false
     ) {
         self.verificationViewController = LinkVerificationViewController(
             mode: mode,
             linkAccount: linkAccount,
-            appearance: appearance
+            appearance: appearance,
+            allowLogoutInDialog: allowLogoutInDialog
         )
         verificationViewController.delegate = self
         configuration.style.configure(verificationViewController)
