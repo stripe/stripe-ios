@@ -38,11 +38,7 @@ extension STPAPIClient {
 
         let endpoint = "crypto/internal/customers"
         let requestObject = CustomerRequest(consumerSessionClientSecret: consumerSessionClientSecret)
-        return try await withCheckedThrowingContinuation { continuation in
-            post(resource: endpoint, object: requestObject) { result in
-                continuation.resume(with: result)
-            }
-        }
+        return try await post(resource: endpoint, object: requestObject)
     }
 
     /// Attaches the specific KYC info to the current Link user on the backend.
@@ -67,11 +63,7 @@ extension STPAPIClient {
             calendar: calendar
         )
 
-        return try await withCheckedThrowingContinuation { continuation in
-            post(resource: endpoint, object: requestObject) { result in
-                continuation.resume(with: result)
-            }
-        }
+        return try await post(resource: endpoint, object: requestObject)
     }
 
     /// Begins an identity verification session, providing the necessary data used to initialize the Identity SDK.
@@ -89,16 +81,50 @@ extension STPAPIClient {
             consumerSessionClientSecret: consumerSessionClientSecret
         )
 
-        return try await withCheckedThrowingContinuation { continuation in
-            post(resource: endpoint, object: requestObject) { result in
-                continuation.resume(with: result)
-            }
+        return try await post(resource: endpoint, object: requestObject)
+    }
+
+    /// Registers the given crypto wallet address to the current Link account.
+    /// - Parameters:
+    ///   - linkAccountInfo: Information associated with the link account including the client secret and whether the account has been verified.
+    ///   - walletAddress: The crypto wallet address to register.
+    ///   - network: The crypto network for the wallet address.
+    @discardableResult
+    func collectWalletAddress(
+        walletAddress: String,
+        network: CryptoNetwork,
+        linkAccountInfo: PaymentSheetLinkAccountInfoProtocol
+    ) async throws -> RegisterWalletResponse {
+        guard let consumerSessionClientSecret = linkAccountInfo.consumerSessionClientSecret else {
+            throw CryptoOnrampAPIError.missingConsumerSessionClientSecret
         }
+
+        try validateSessionState(using: linkAccountInfo)
+
+        let endpoint = "crypto/internal/wallet"
+        let requestObject = RegisterWalletRequest(
+            walletAddress: walletAddress,
+            network: network,
+            consumerSessionClientSecret: consumerSessionClientSecret
+        )
+
+        return try await post(resource: endpoint, object: requestObject)
     }
 
     private func validateSessionState(using linkAccountInfo: PaymentSheetLinkAccountInfoProtocol) throws {
         guard case .verified = linkAccountInfo.sessionState else {
             throw CryptoOnrampAPIError.linkAccountNotVerified
+        }
+    }
+}
+
+private extension STPAPIClient {
+    /// Helper method to wrap the closure-based post method for Swift concurrency.
+    func post<T: Decodable>(resource: String, object: Encodable) async throws -> T {
+        return try await withCheckedThrowingContinuation { continuation in
+            post(resource: resource, object: object) { (result: Result<T, Error>) in
+                continuation.resume(with: result)
+            }
         }
     }
 }

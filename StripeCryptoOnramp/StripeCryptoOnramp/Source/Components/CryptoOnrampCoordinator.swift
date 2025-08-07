@@ -55,6 +55,12 @@ public protocol CryptoOnrampCoordinatorProtocol {
     ///
     /// - Returns: An `IdentityVerificationResult` representing the outcome of the verification process.
     func promptForIdentityVerification() async throws -> IdentityVerificationResult
+
+    /// Registers the given crypto wallet address to the current Link account.
+    ///
+    /// - Parameter walletAddress: The crypto wallet address to register.
+    /// - Parameter network: The crypto network for the wallet address.
+    func collectWalletAddress(walletAddress: String, network: CryptoNetwork) async throws
 }
 
 /// Coordinates headless Link user authentication and identity verification, leaving most of the UI to the client.
@@ -150,5 +156,13 @@ public final class CryptoOnrampCoordinator: CryptoOnrampCoordinatorProtocol {
         // TODO: use the response to initialize the Identity SDK and show its UI to perform document upload, returning the appropriate `completed` or `canceled` result.
         print(response)
         return .canceled
+    }
+
+    public func collectWalletAddress(walletAddress: String, network: CryptoNetwork) async throws {
+        try await apiClient.collectWalletAddress(
+            walletAddress: walletAddress,
+            network: network,
+            linkAccountInfo: linkAccountInfo
+        )
     }
 }
