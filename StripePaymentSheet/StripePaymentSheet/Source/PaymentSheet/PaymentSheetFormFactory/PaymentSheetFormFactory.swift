@@ -480,7 +480,7 @@ extension PaymentSheetFormFactory {
         }()
 
         let section = AddressSectionElement(
-            title: (includePhone || includeEmail) ? String.Localized.billing_address_lowercase : String.Localized.billing_details_lowercase,
+            title: (includePhone || includeEmail) ? String.Localized.billing_details_lowercase : String.Localized.billing_address_lowercase,
             countries: countries,
             addressSpecProvider: addressSpecProvider,
             defaults: defaultAddress,
