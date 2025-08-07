@@ -27,7 +27,7 @@ public struct AccountCollectionOptions: Equatable, Codable {
         // Without this specific encoder, Swift will encode as `only: {_0: ["requirement.name"]}` as opposed to `only: ["requirement.name"]`
         public func encode(to encoder: Encoder) throws {
             var container = encoder.container(keyedBy: CodingKeys.self)
-            
+
             switch self {
             case .only(let array):
                 try container.encode(array, forKey: .only)
