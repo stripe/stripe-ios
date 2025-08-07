@@ -75,7 +75,7 @@ class PaymentSheetBillingCollectionUICardTests: PaymentSheetBillingCollectionUIT
         XCTAssertEqual(emailField.value as? String, "foo@bar.com")
         XCTAssertEqual(phoneField.value as? String, "(310) 555-1234")
         XCTAssertEqual(nameOnCardField.value as? String, "Jane Doe")
-        XCTAssertTrue(billingDetailsField.exists)
+        XCTAssertTrue(billingAddressField.exists)
         XCTAssertEqual(countryField.value as? String, "United States")
         XCTAssertEqual(line1Field.value as? String, "510 Townsend St.")
         XCTAssertEqual(line2Field.value as? String, "")
