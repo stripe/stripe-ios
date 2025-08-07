@@ -223,24 +223,6 @@ struct KYCInfoView: View {
             .keyboardType(keyboardType)
             .focused($focusedField, equals: field)
     }
-
-    private struct FormField<Content: View>: View {
-        let title: String
-        let content: () -> Content
-
-        init(_ title: String, @ViewBuilder content: @escaping () -> Content) {
-            self.title = title
-            self.content = content
-        }
-
-        var body: some View {
-            VStack(alignment: .leading, spacing: 8) {
-                Text(title)
-                    .font(.headline)
-                content()
-            }
-        }
-    }
 }
 
 private struct KYCInfoPreviewView: View {
