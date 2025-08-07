@@ -269,6 +269,7 @@ class PaymentSheetFormFactoryCardEmailPhoneFieldsTest: XCTestCase {
         configuration.billingDetailsCollectionConfiguration.address = .automatic
         configuration.defaultBillingDetails.email = "test@example.com"
         configuration.defaultBillingDetails.phone = "+15555555555"
+        configuration.defaultBillingDetails.address = .init(city: "Onnet", country: "US", postalCode: "12345", state: "CA")
 
         let factory = PaymentSheetFormFactory(
             intent: ._testValue(),
@@ -278,7 +279,18 @@ class PaymentSheetFormFactoryCardEmailPhoneFieldsTest: XCTestCase {
             addressSpecProvider: dummyAddressSpecProvider
         )
 
-        let cardForm = factory.makeCard()
+        guard let cardForm = factory.makeCard() as? ContainerElement else {
+            XCTFail()
+            return
+        }
+        
+        // Find and fill card element
+        let cardElement = cardForm.elements.compactMap { element in
+            element as? CardSectionElement
+        }.first
+        cardElement?.panElement.setText("4242424242424242")
+        cardElement?.expiryElement.setText("12/34")
+        cardElement?.cvcElement.setText("123")
 
         // Needs to be valid to get billing details
         XCTAssertEqual(cardForm.validationState, .valid)
@@ -305,7 +317,19 @@ class PaymentSheetFormFactoryCardEmailPhoneFieldsTest: XCTestCase {
             addressSpecProvider: dummyAddressSpecProvider
         )
 
-        let cardForm = factory.makeCard()
+        guard let cardForm = factory.makeCard() as? ContainerElement else {
+            XCTFail()
+            return
+        }
+        
+        // Find and fill card element
+        let cardElement = cardForm.elements.compactMap { element in
+            element as? CardSectionElement
+        }.first
+        cardElement?.panElement.setText("4242424242424242")
+        cardElement?.expiryElement.setText("12/34")
+        cardElement?.cvcElement.setText("123")
+        
         let params = cardForm.updateParams(params: IntentConfirmParams(type: .stripe(.card)))
 
         // Needs to be valid to get billing details
@@ -321,7 +345,7 @@ class PaymentSheetFormFactoryCardEmailPhoneFieldsTest: XCTestCase {
         var configuration = PaymentSheet.Configuration()
         configuration.defaultBillingDetails.email = "billing@test.com"
         configuration.defaultBillingDetails.phone = "+17777777777"
-        configuration.defaultBillingDetails.address = .init(city: "Onnet", country: "US", postalCode: "12345", state: "CA")
+        configuration.defaultBillingDetails.address = .init(city: "Onnet", country: "US", line1: "Twoson", postalCode: "12345", state: "CA")
 
         let factory = PaymentSheetFormFactory(
             intent: ._testValue(),

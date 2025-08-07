@@ -520,6 +520,15 @@ extension PaymentSheetFormFactory {
             if let countryAPIPath {
                 params.paymentMethodParams.additionalAPIParameters[countryAPIPath] = section.selectedCountryCode
             }
+            if let phone = section.phone {
+                params.paymentMethodParams.nonnil_billingDetails.phone = phone.phoneNumber?.string(as: .e164)
+            }
+            if let email = section.email {
+                params.paymentMethodParams.nonnil_billingDetails.email = email.text
+            }
+            if let name = section.name {
+                params.paymentMethodParams.nonnil_billingDetails.name = name.text
+            }
             return params
         }
     }
