@@ -44,6 +44,25 @@ class LinkVerificationViewSnapshotTests: STPSnapshotTestCase {
         verify(sut)
     }
 
+    func testCustomColors() {
+        let appearance = LinkAppearance(
+            colors: .init(
+                primary: .systemTeal,
+                selectedBorder: .red
+            )
+        )
+        let sut = makeSUT(mode: .modal, appearance: appearance)
+        sut.codeField.value = "1234"
+
+        // Add to a window temporarily so becomeFirstResponder() works
+        let window = UIWindow(frame: UIScreen.main.bounds)
+        window.addSubview(sut)
+        window.makeKeyAndVisible()
+        sut.codeField.becomeFirstResponder()
+
+        verify(sut)
+    }
+
     func verify(
         _ view: LinkVerificationView,
         identifier: String? = nil,
@@ -66,7 +85,7 @@ extension LinkVerificationViewSnapshotTests {
         let consumerSessionClientSecret: String?
     }
 
-    func makeSUT(mode: LinkVerificationView.Mode) -> LinkVerificationView {
+    func makeSUT(mode: LinkVerificationView.Mode, appearance: LinkAppearance? = nil) -> LinkVerificationView {
         let sut = LinkVerificationView(
             mode: mode,
             linkAccount: LinkAccountStub(
@@ -76,7 +95,8 @@ extension LinkVerificationViewSnapshotTests {
                 sessionState: .verified,
                 consumerSessionClientSecret: nil
             ),
-            allowLogoutInDialog: false
+            allowLogoutInDialog: false,
+            appearance: appearance
         )
 
         sut.tintColor = .linkIconBrand
