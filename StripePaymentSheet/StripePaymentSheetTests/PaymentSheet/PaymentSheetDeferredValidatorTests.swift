@@ -118,10 +118,10 @@ final class PaymentSheetDeferredValidatorTests: XCTestCase {
             isFlowController: false
         )
 
-        let intentConfig_with_sfu_set = makeIntentConfiguration(topLevelSFU: .offSession, pmoSFU: nil)
+        let intentConfig_with_sfu_and_pmo_sfu_set = makeIntentConfiguration(topLevelSFU: .offSession, pmoSFU: .offSession)
         try PaymentSheetDeferredValidator.validate(
             paymentIntent: pi_without_pmo_sfu_or_sfu,
-            intentConfiguration: intentConfig_with_sfu_set,
+            intentConfiguration: intentConfig_with_sfu_and_pmo_sfu_set,
             paymentMethod: STPPaymentMethod._testCard(),
             isFlowController: false
         )
