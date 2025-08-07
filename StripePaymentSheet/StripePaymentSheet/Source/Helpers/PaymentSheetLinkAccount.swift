@@ -116,6 +116,10 @@ struct LinkPMDisplayDetails {
         return currentSession?.hasVerifiedSMSSession ?? false
     }
 
+    var isInSignupFlow: Bool {
+        currentSession?.isVerifiedForSignup ?? false
+    }
+
     private(set) var currentSession: ConsumerSession?
     let displayablePaymentDetails: ConsumerSession.DisplayablePaymentDetails?
 

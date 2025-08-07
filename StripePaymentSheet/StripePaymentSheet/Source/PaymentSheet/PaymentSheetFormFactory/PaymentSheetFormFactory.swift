@@ -50,11 +50,11 @@ class PaymentSheetFormFactory {
         guard !configuration.linkPaymentMethodsOnly else { return false }
         switch savePaymentMethodConsentBehavior {
         case .legacy:
-            return !isSettingUp && configuration.hasCustomer && paymentMethod.supportsSaveForFutureUseCheckbox()
+            return !shouldShowLinkSignupOptIn && !isSettingUp && configuration.hasCustomer && paymentMethod.supportsSaveForFutureUseCheckbox()
         case .paymentSheetWithCustomerSessionPaymentMethodSaveDisabled:
             return false
         case .paymentSheetWithCustomerSessionPaymentMethodSaveEnabled:
-            return configuration.hasCustomer && paymentMethod.supportsSaveForFutureUseCheckbox()
+            return !shouldShowLinkSignupOptIn && configuration.hasCustomer && paymentMethod.supportsSaveForFutureUseCheckbox()
         case .customerSheetWithCustomerSession:
             return false
         }
@@ -66,6 +66,10 @@ class PaymentSheetFormFactory {
 
     var theme: ElementsAppearance {
         return configuration.appearance.asElementsTheme
+    }
+
+    var shouldShowLinkSignupOptIn: Bool {
+        showLinkInlineCardSignup && signupOptInFeatureEnabled
     }
 
     private static let PayByBankDescriptionText = STPLocalizedString(
