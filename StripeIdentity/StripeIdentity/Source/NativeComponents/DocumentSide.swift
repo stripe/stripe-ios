@@ -48,7 +48,7 @@ enum DocumentSide: String {
             // Handle all three types
             return self == .front ? String.Localized.frontOfAllIdTypes : String.Localized.backOfAllIdTypes
         } else if localizedTypes.count == 1, let type = localizedTypes.first {
-            // Handle single type (existing behavior)
+            // Handle single type
             switch self {
             case .front:
                 return String(format: STPLocalizedString("Front of %@", "Title of ID document scanning screen when scanning the front of either a driver's license, passport, or government issued photo id "), type)

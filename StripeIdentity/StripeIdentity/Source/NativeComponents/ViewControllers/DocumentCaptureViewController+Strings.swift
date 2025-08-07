@@ -43,7 +43,7 @@ extension DocumentCaptureViewController {
             // Handle all three types for scanning instructions
             return side == .front ? String.Localized.positionAllIdTypes : String.Localized.flipAllIdTypes
         } else if localizedTypes.count == 1, let type = localizedTypes.first {
-            // Handle single type (existing behavior)
+            // Handle single type
             switch side {
             case .front:
                 return String(format: String.Localized.position_in_center, type)
