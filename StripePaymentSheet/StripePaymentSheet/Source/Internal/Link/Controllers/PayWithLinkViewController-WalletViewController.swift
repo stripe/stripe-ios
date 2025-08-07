@@ -144,10 +144,6 @@ extension PayWithLinkViewController {
             return stackView
         }()
 
-        private var billingDetailsCollectionConfiguration: PaymentSheet.BillingDetailsCollectionConfiguration {
-            context.configuration.billingDetailsCollectionConfiguration
-        }
-
         #if !os(visionOS)
         private let feedbackGenerator = UINotificationFeedbackGenerator()
         #endif
@@ -270,12 +266,21 @@ extension PayWithLinkViewController {
                     }
                 }
 
-                if isMissingRequestedBillingDetails(paymentDetails) && context.configuration.link.collectMissingBillingDetailsForExistingPaymentMethods {
-                    handleIncompleteBillingDetails(for: paymentDetails, with: confirmationExtras)
-                } else if context.launchedFromFlowController, let paymentMethod = viewModel.selectedPaymentMethod {
-                    coordinator?.handlePaymentDetailsSelected(paymentMethod, confirmationExtras: confirmationExtras)
-                } else {
-                    confirm(for: context.intent, with: paymentDetails, confirmationExtras: confirmationExtras)
+                Task {
+                    let billingDetailsValidator = LinkBillingDetailsValidator(linkAccount: linkAccount, context: context)
+                    let validationResult = await billingDetailsValidator.validate(paymentDetails)
+
+                    switch validationResult {
+                    case .complete(let updatedPaymentDetails, let confirmationExtras):
+                        viewModel.updatePaymentMethod(updatedPaymentDetails)
+                        if context.launchedFromFlowController {
+                            coordinator?.handlePaymentDetailsSelected(updatedPaymentDetails, confirmationExtras: confirmationExtras)
+                        } else {
+                            confirm(for: context.intent, with: updatedPaymentDetails, confirmationExtras: confirmationExtras)
+                        }
+                    case .incomplete(let partialPaymentDetails):
+                        collectRemainingBillingDetailsAndConfirm(for: partialPaymentDetails)
+                    }
                 }
             }
 
@@ -299,53 +304,6 @@ extension PayWithLinkViewController {
                 }
             } else {
                 confirmWithPaymentDetails(paymentDetails)
-            }
-        }
-
-        /// Returns whether the provided `paymentDetails` is missing any of the required billing details.
-        private func isMissingRequestedBillingDetails(_ paymentDetails: ConsumerPaymentDetails) -> Bool {
-            let paymentDetailsAreSupported = paymentDetails.supports(
-                billingDetailsCollectionConfiguration,
-                in: linkAccount.currentSession
-            )
-
-            return !paymentDetailsAreSupported
-        }
-
-        private func handleIncompleteBillingDetails(
-            for paymentDetails: ConsumerPaymentDetails,
-            with confirmationExtras: LinkConfirmationExtras
-        ) {
-            // Fill in missing fields with default values from the provided billing details and
-            // from the Link account.
-            let effectiveBillingDetails = makeEffectiveBillingDetails()
-
-            let effectivePaymentDetails = paymentDetails.update(
-                with: effectiveBillingDetails,
-                basedOn: billingDetailsCollectionConfiguration
-            )
-
-            let hasRequiredBillingDetailsNow = effectivePaymentDetails.supports(
-                billingDetailsCollectionConfiguration,
-                in: linkAccount.currentSession
-            )
-
-            if hasRequiredBillingDetailsNow {
-                // We have filled in all the missing fields. Now, update the payment details and confirm the intent.
-                viewModel.updateBillingDetails(
-                    paymentMethodID: paymentDetails.stripeID,
-                    billingAddress: effectivePaymentDetails.billingAddress,
-                    billingEmailAddress: effectiveBillingDetails.email
-                ) { [weak self] _ in
-                    // We need to pass the billing phone number explicitly, since it's not part of the billing details.
-                    let confirmationExtras = LinkConfirmationExtras(
-                        billingPhoneNumber: effectiveBillingDetails.phone
-                    )
-                    self?.confirm(confirmationExtras: confirmationExtras)
-                }
-            } else {
-                // We're still missing fields. Prompt the user to fill them in.
-                collectRemainingBillingDetailsAndConfirm(for: effectivePaymentDetails)
             }
         }
 

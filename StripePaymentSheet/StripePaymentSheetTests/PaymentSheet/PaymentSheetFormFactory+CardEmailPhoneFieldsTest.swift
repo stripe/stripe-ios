@@ -31,7 +31,7 @@ class PaymentSheetFormFactoryCardEmailPhoneFieldsTest: XCTestCase {
         configuration.billingDetailsCollectionConfiguration.email = .always
         configuration.billingDetailsCollectionConfiguration.phone = .always
         configuration.billingDetailsCollectionConfiguration.address = .automatic
-        
+
         let factory = PaymentSheetFormFactory(
             intent: ._testValue(),
             elementsSession: ._testCardValue(),
@@ -39,26 +39,26 @@ class PaymentSheetFormFactoryCardEmailPhoneFieldsTest: XCTestCase {
             paymentMethod: .stripe(.card),
             addressSpecProvider: dummyAddressSpecProvider
         )
-        
+
         let cardForm = factory.makeCard()
-        
+
         // Verify card form structure - should have card section, billing address section with email/phone, no separate contact info section
         guard let containerElement = cardForm as? ContainerElement else {
             XCTFail("Expected ContainerElement")
             return
         }
-        
+
         // Find the billing address section
         let billingAddressSectionWrapper = containerElement.elements.compactMap { element in
             element as? PaymentMethodElementWrapper<AddressSectionElement>
         }.first
         XCTAssertNotNil(billingAddressSectionWrapper, "Should have billing address section when address collection is .automatic")
-        
+
         // Verify email and phone are included in the billing address section
         let billingAddressSection = billingAddressSectionWrapper?.element
         XCTAssertNotNil(billingAddressSection?.email, "Email field should be included in billing address section")
         XCTAssertNotNil(billingAddressSection?.phone, "Phone field should be included in billing address section")
-        
+
         // Verify there's no separate contact information section
         let contactInfoSection = containerElement.elements.compactMap { element in
             element as? SectionElement
@@ -73,7 +73,7 @@ class PaymentSheetFormFactoryCardEmailPhoneFieldsTest: XCTestCase {
         configuration.billingDetailsCollectionConfiguration.email = .always
         configuration.billingDetailsCollectionConfiguration.phone = .always
         configuration.billingDetailsCollectionConfiguration.address = .full
-        
+
         let factory = PaymentSheetFormFactory(
             intent: ._testValue(),
             elementsSession: ._testCardValue(),
@@ -81,25 +81,25 @@ class PaymentSheetFormFactoryCardEmailPhoneFieldsTest: XCTestCase {
             paymentMethod: .stripe(.card),
             addressSpecProvider: dummyAddressSpecProvider
         )
-        
+
         let cardForm = factory.makeCard()
-        
+
         guard let containerElement = cardForm as? ContainerElement else {
             XCTFail("Expected ContainerElement")
             return
         }
-        
+
         // Find the billing address section
         let billingAddressSectionWrapper = containerElement.elements.compactMap { element in
             element as? PaymentMethodElementWrapper<AddressSectionElement>
         }.first
         XCTAssertNotNil(billingAddressSectionWrapper, "Should have billing address section when address collection is .full")
-        
+
         // Verify email and phone are included in the billing address section
         let billingAddressSection = billingAddressSectionWrapper?.element
         XCTAssertNotNil(billingAddressSection?.email, "Email field should be included in billing address section")
         XCTAssertNotNil(billingAddressSection?.phone, "Phone field should be included in billing address section")
-        
+
         // Verify there's no separate contact information section
         let contactInfoSection = containerElement.elements.compactMap { element in
             element as? SectionElement
@@ -114,7 +114,7 @@ class PaymentSheetFormFactoryCardEmailPhoneFieldsTest: XCTestCase {
         configuration.billingDetailsCollectionConfiguration.email = .always
         configuration.billingDetailsCollectionConfiguration.phone = .always
         configuration.billingDetailsCollectionConfiguration.address = .never
-        
+
         let factory = PaymentSheetFormFactory(
             intent: ._testValue(),
             elementsSession: ._testCardValue(),
@@ -122,20 +122,20 @@ class PaymentSheetFormFactoryCardEmailPhoneFieldsTest: XCTestCase {
             paymentMethod: .stripe(.card),
             addressSpecProvider: dummyAddressSpecProvider
         )
-        
+
         let cardForm = factory.makeCard()
-        
+
         guard let containerElement = cardForm as? ContainerElement else {
             XCTFail("Expected ContainerElement")
             return
         }
-        
+
         // Verify there's no billing address section
         let billingAddressSectionWrapper = containerElement.elements.compactMap { element in
             element as? PaymentMethodElementWrapper<AddressSectionElement>
         }.first
         XCTAssertNil(billingAddressSectionWrapper, "Should not have billing address section when address collection is .never")
-        
+
         // Verify there's a separate contact information section with email and phone
         let contactInfoSection = containerElement.elements.compactMap { element in
             element as? SectionElement
@@ -143,7 +143,7 @@ class PaymentSheetFormFactoryCardEmailPhoneFieldsTest: XCTestCase {
             section.title == String.Localized.contact_information
         }
         XCTAssertNotNil(contactInfoSection, "Should have separate contact information section when no billing address section")
-        
+
         // Find email and phone elements in contact info section
         let emailElement = contactInfoSection?.elements.compactMap { element in
             element as? PaymentMethodElementWrapper<TextFieldElement>
@@ -151,7 +151,7 @@ class PaymentSheetFormFactoryCardEmailPhoneFieldsTest: XCTestCase {
             wrapper.element.configuration.label == String.Localized.email
         }
         XCTAssertNotNil(emailElement, "Contact information section should contain email field")
-        
+
         let phoneElement = contactInfoSection?.elements.compactMap { element in
             element as? PaymentMethodElementWrapper<PhoneNumberElement>
         }.first
@@ -163,7 +163,7 @@ class PaymentSheetFormFactoryCardEmailPhoneFieldsTest: XCTestCase {
         configuration.billingDetailsCollectionConfiguration.email = .always
         configuration.billingDetailsCollectionConfiguration.phone = .never
         configuration.billingDetailsCollectionConfiguration.address = .never
-        
+
         let factory = PaymentSheetFormFactory(
             intent: ._testValue(),
             elementsSession: ._testCardValue(),
@@ -171,14 +171,14 @@ class PaymentSheetFormFactoryCardEmailPhoneFieldsTest: XCTestCase {
             paymentMethod: .stripe(.card),
             addressSpecProvider: dummyAddressSpecProvider
         )
-        
+
         let cardForm = factory.makeCard()
-        
+
         guard let containerElement = cardForm as? ContainerElement else {
             XCTFail("Expected ContainerElement")
             return
         }
-        
+
         // Verify there's a separate contact information section with only email
         let contactInfoSection = containerElement.elements.compactMap { element in
             element as? SectionElement
@@ -186,10 +186,10 @@ class PaymentSheetFormFactoryCardEmailPhoneFieldsTest: XCTestCase {
             section.title == String.Localized.contact_information
         }
         XCTAssertNotNil(contactInfoSection, "Should have contact information section with email")
-        
+
         // Should have exactly 1 element (email)
         XCTAssertEqual(contactInfoSection?.elements.count, 1, "Contact information section should have exactly 1 element (email)")
-        
+
         let emailElement = contactInfoSection?.elements.first as? PaymentMethodElementWrapper<TextFieldElement>
         XCTAssertEqual(emailElement?.element.configuration.label, String.Localized.email, "Should be email field")
     }
@@ -199,7 +199,7 @@ class PaymentSheetFormFactoryCardEmailPhoneFieldsTest: XCTestCase {
         configuration.billingDetailsCollectionConfiguration.email = .never
         configuration.billingDetailsCollectionConfiguration.phone = .always
         configuration.billingDetailsCollectionConfiguration.address = .never
-        
+
         let factory = PaymentSheetFormFactory(
             intent: ._testValue(),
             elementsSession: ._testCardValue(),
@@ -207,14 +207,14 @@ class PaymentSheetFormFactoryCardEmailPhoneFieldsTest: XCTestCase {
             paymentMethod: .stripe(.card),
             addressSpecProvider: dummyAddressSpecProvider
         )
-        
+
         let cardForm = factory.makeCard()
-        
+
         guard let containerElement = cardForm as? ContainerElement else {
             XCTFail("Expected ContainerElement")
             return
         }
-        
+
         // Verify there's a separate contact information section with only phone
         let contactInfoSection = containerElement.elements.compactMap { element in
             element as? SectionElement
@@ -222,10 +222,10 @@ class PaymentSheetFormFactoryCardEmailPhoneFieldsTest: XCTestCase {
             section.title == String.Localized.contact_information
         }
         XCTAssertNotNil(contactInfoSection, "Should have contact information section with phone")
-        
+
         // Should have exactly 1 element (phone)
         XCTAssertEqual(contactInfoSection?.elements.count, 1, "Contact information section should have exactly 1 element (phone)")
-        
+
         let phoneElement = contactInfoSection?.elements.first as? PaymentMethodElementWrapper<PhoneNumberElement>
         XCTAssertNotNil(phoneElement, "Should be phone field")
     }
@@ -235,7 +235,7 @@ class PaymentSheetFormFactoryCardEmailPhoneFieldsTest: XCTestCase {
         configuration.billingDetailsCollectionConfiguration.email = .never
         configuration.billingDetailsCollectionConfiguration.phone = .never
         configuration.billingDetailsCollectionConfiguration.address = .never
-        
+
         let factory = PaymentSheetFormFactory(
             intent: ._testValue(),
             elementsSession: ._testCardValue(),
@@ -243,14 +243,14 @@ class PaymentSheetFormFactoryCardEmailPhoneFieldsTest: XCTestCase {
             paymentMethod: .stripe(.card),
             addressSpecProvider: dummyAddressSpecProvider
         )
-        
+
         let cardForm = factory.makeCard()
-        
+
         guard let containerElement = cardForm as? ContainerElement else {
             XCTFail("Expected ContainerElement")
             return
         }
-        
+
         // Verify there's no contact information section
         let contactInfoSection = containerElement.elements.compactMap { element in
             element as? SectionElement
@@ -269,7 +269,7 @@ class PaymentSheetFormFactoryCardEmailPhoneFieldsTest: XCTestCase {
         configuration.billingDetailsCollectionConfiguration.address = .automatic
         configuration.defaultBillingDetails.email = "test@example.com"
         configuration.defaultBillingDetails.phone = "+15555555555"
-        
+
         let factory = PaymentSheetFormFactory(
             intent: ._testValue(),
             elementsSession: ._testCardValue(),
@@ -277,9 +277,9 @@ class PaymentSheetFormFactoryCardEmailPhoneFieldsTest: XCTestCase {
             paymentMethod: .stripe(.card),
             addressSpecProvider: dummyAddressSpecProvider
         )
-        
+
         let cardForm = factory.makeCard()
-        
+
         // Needs to be valid to get billing details
         XCTAssertEqual(cardForm.validationState, .valid)
 
@@ -296,7 +296,7 @@ class PaymentSheetFormFactoryCardEmailPhoneFieldsTest: XCTestCase {
         configuration.billingDetailsCollectionConfiguration.address = .never
         configuration.defaultBillingDetails.email = "contact@example.com"
         configuration.defaultBillingDetails.phone = "+16666666666"
-        
+
         let factory = PaymentSheetFormFactory(
             intent: ._testValue(),
             elementsSession: ._testCardValue(),
@@ -304,13 +304,13 @@ class PaymentSheetFormFactoryCardEmailPhoneFieldsTest: XCTestCase {
             paymentMethod: .stripe(.card),
             addressSpecProvider: dummyAddressSpecProvider
         )
-        
+
         let cardForm = factory.makeCard()
         let params = cardForm.updateParams(params: IntentConfirmParams(type: .stripe(.card)))
-        
+
         // Needs to be valid to get billing details
         XCTAssertEqual(cardForm.validationState, .valid)
-        
+
         XCTAssertEqual(params?.paymentMethodParams.billingDetails?.email, "contact@example.com")
         XCTAssertEqual(params?.paymentMethodParams.billingDetails?.phone, "+16666666666")
     }
@@ -322,7 +322,7 @@ class PaymentSheetFormFactoryCardEmailPhoneFieldsTest: XCTestCase {
         configuration.defaultBillingDetails.email = "billing@test.com"
         configuration.defaultBillingDetails.phone = "+17777777777"
         configuration.defaultBillingDetails.address = .init(city: "Onnet", country: "US", postalCode: "12345", state: "CA")
-        
+
         let factory = PaymentSheetFormFactory(
             intent: ._testValue(),
             elementsSession: ._testCardValue(),
@@ -330,18 +330,18 @@ class PaymentSheetFormFactoryCardEmailPhoneFieldsTest: XCTestCase {
             paymentMethod: .stripe(.card),
             addressSpecProvider: dummyAddressSpecProvider
         )
-        
+
         let billingAddressSection = factory.makeBillingAddressSection(
             collectionMode: .autoCompletable,
             countries: nil,
             includeEmail: true,
             includePhone: true
         )
-        
+
         // Verify email and phone fields are present
         XCTAssertNotNil(billingAddressSection.element.email, "Billing address section should have email field")
         XCTAssertNotNil(billingAddressSection.element.phone, "Billing address section should have phone field")
-        
+
         // Verify default values are set
         XCTAssertEqual(billingAddressSection.element.email?.text, "billing@test.com")
         XCTAssertEqual(billingAddressSection.element.phone?.phoneNumber?.string(as: .e164), "+17777777777")
@@ -360,14 +360,14 @@ class PaymentSheetFormFactoryCardEmailPhoneFieldsTest: XCTestCase {
             paymentMethod: .stripe(.card),
             addressSpecProvider: dummyAddressSpecProvider
         )
-        
+
         let billingAddressSection = factory.makeBillingAddressSection(
             collectionMode: .autoCompletable,
             countries: nil,
             includeEmail: false,
             includePhone: false
         )
-        
+
         // Verify email and phone fields are not present
         XCTAssertNil(billingAddressSection.element.email, "Billing address section should not have email field")
         XCTAssertNil(billingAddressSection.element.phone, "Billing address section should not have phone field")
@@ -380,7 +380,7 @@ class PaymentSheetFormFactoryCardEmailPhoneFieldsTest: XCTestCase {
         configuration.billingDetailsCollectionConfiguration.email = .always
         configuration.billingDetailsCollectionConfiguration.phone = .always
         configuration.billingDetailsCollectionConfiguration.address = .automatic
-        
+
         let factory = PaymentSheetFormFactory(
             intent: ._testValue(),
             elementsSession: ._testCardValue(),
@@ -388,22 +388,22 @@ class PaymentSheetFormFactoryCardEmailPhoneFieldsTest: XCTestCase {
             paymentMethod: .stripe(.card),
             addressSpecProvider: dummyAddressSpecProvider
         )
-        
+
         let cardForm = factory.makeCard()
-        
+
         // Initially invalid (no card number, email, phone, etc.)
         XCTAssertNotEqual(cardForm.validationState, .valid)
-        
+
         guard let containerElement = cardForm as? ContainerElement,
               let billingAddressSectionWrapper = containerElement.elements.compactMap({ $0 as? PaymentMethodElementWrapper<AddressSectionElement> }).first else {
             XCTFail("Could not find billing address section")
             return
         }
-        
+
         // Set valid email and phone
         billingAddressSectionWrapper.element.email?.setText("valid@example.com")
         billingAddressSectionWrapper.element.phone?.textFieldElement.setText("5555555555")
-        
+
         // And a postal code
         billingAddressSectionWrapper.element.postalCode?.setText("12345")
 
@@ -414,7 +414,7 @@ class PaymentSheetFormFactoryCardEmailPhoneFieldsTest: XCTestCase {
         cardElement?.panElement.setText("4242424242424242")
         cardElement?.expiryElement.setText("12/34")
         cardElement?.cvcElement.setText("123")
-        
+
         // Now should be valid
         XCTAssertEqual(cardForm.validationState, .valid)
     }

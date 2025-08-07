@@ -254,8 +254,7 @@ class PlaygroundController: ObservableObject {
             configuration.style = .alwaysDark
         }
 
-        configuration.opensCardScannerAutomatically = settings.opensCardScannerAutomatically == .on
-
+        configuration.termsDisplay = cardTermsDisplay
         return configuration
     }
 
@@ -351,7 +350,7 @@ class PlaygroundController: ObservableObject {
             configuration.cardBrandAcceptance = .allowed(brands: [.visa])
         }
 
-        configuration.opensCardScannerAutomatically = settings.opensCardScannerAutomatically == .on
+        configuration.termsDisplay = cardTermsDisplay
 
         return configuration
     }
@@ -459,6 +458,17 @@ class PlaygroundController: ObservableObject {
             return .init(customPaymentMethods: [customPaymentMethodType], customPaymentMethodConfirmHandler: handleCustomPaymentMethod(_:_:))
         case .off:
             return nil
+        }
+    }
+
+    var cardTermsDisplay: [STPPaymentMethodType: PaymentSheet.TermsDisplay] {
+        switch settings.termsDisplay {
+        case .unset:
+            return [:]
+        case .automatic:
+            return [.card: .automatic]
+        case .never:
+            return [.card: .never]
         }
     }
 
