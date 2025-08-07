@@ -1,25 +1,25 @@
 GET
-https:\/\/api\.stripe\.com\/v1\/payment_methods\?customer=cus_SkQRvYtbLZeVuX&type=card$
+https:\/\/api\.stripe\.com\/v1\/payment_methods\?customer=cus_SpCxGUFuy22Hso&type=card$
 200
 application/json
 Content-Type: application/json
 Access-Control-Allow-Origin: *
 x-stripe-priority-routing-enabled: true
-content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=S3Fah17FGlBAp4l2ELXUNP_o_vBaaxiDnpT-8psMNt9QghS3YTCBjWncGXTdSW-2pi7oz6UzL4Bet3vp
+content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=DE50QFpbdjZmkcf3gYGMA_nyHEsGvr_E_4915Sn047uaI1mG4phR8OJNVlV3UO0BP5_31J27eIfkCLcB
 x-wc: ABGHIJ
 access-control-allow-methods: GET, HEAD, PUT, PATCH, POST, DELETE
 Server: nginx
 access-control-expose-headers: Request-Id, Stripe-Manage-Version, Stripe-Should-Retry, X-Stripe-External-Auth-Required, X-Stripe-Privileged-Session-Required
 access-control-max-age: 300
 Cache-Control: no-cache, no-store
-Date: Sat, 26 Jul 2025 00:03:39 GMT
+Date: Thu, 07 Aug 2025 18:27:45 GMT
 stripe-version: 2020-08-27
 access-control-allow-credentials: true
 Content-Length: 1337
 x-stripe-routing-context-priority-tier: api-testmode
 Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
 Vary: Origin
-request-id: req_HQNjumluPAVgMC
+request-id: req_EY5GQhlcs9pvKg
 
 {
   "has_more" : false,
@@ -27,7 +27,7 @@ request-id: req_HQNjumluPAVgMC
   "data" : [
     {
       "object" : "payment_method",
-      "id" : "pm_1RovaPFY0qyl6XeWn0WvALiE",
+      "id" : "pm_1RtYXSFY0qyl6XeWGV0xzRyy",
       "billing_details" : {
         "email" : null,
         "phone" : null,
@@ -70,10 +70,10 @@ request-id: req_HQNjumluPAVgMC
         "country" : "US"
       },
       "livemode" : false,
-      "created" : 1753488217,
+      "created" : 1754591262,
       "allow_redisplay" : "always",
       "type" : "card",
-      "customer" : "cus_SkQRvYtbLZeVuX"
+      "customer" : "cus_SpCxGUFuy22Hso"
     }
   ],
   "url" : "\/v1\/payment_methods"

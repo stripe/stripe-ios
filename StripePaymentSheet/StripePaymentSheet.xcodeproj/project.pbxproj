@@ -348,6 +348,7 @@
 		B615E8752CA4CC38007D684C /* EmbeddedPaymentElementDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B615E8742CA4CC38007D684C /* EmbeddedPaymentElementDelegate.swift */; };
 		B61E2C202C5C44FE0045B5CF /* PaymentSheetAnalyticsHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = B61E2C1F2C5C44FE0045B5CF /* PaymentSheetAnalyticsHelper.swift */; };
 		B626EE932BF2872200B05B05 /* PaymentMethodTypeImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B626EE922BF2872200B05B05 /* PaymentMethodTypeImageView.swift */; };
+		B62988F32E4405D7004FC9AF /* STPPaymentIntentParams+PaymentSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = B62988F22E4405C0004FC9AF /* STPPaymentIntentParams+PaymentSheet.swift */; };
 		B63B2CF12BF8313D003810F3 /* VerticalPaymentMethodListViewControllerTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = B63B2CF02BF8313D003810F3 /* VerticalPaymentMethodListViewControllerTest.swift */; };
 		B63B2CF32BFBEE7B003810F3 /* VerticalPaymentMethodListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B63B2CF22BFBEE7B003810F3 /* VerticalPaymentMethodListViewController.swift */; };
 		B63B2CF52BFBEEAD003810F3 /* PaymentMethodFormViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B63B2CF42BFBEEAD003810F3 /* PaymentMethodFormViewController.swift */; };
@@ -860,6 +861,7 @@
 		B61E2C1F2C5C44FE0045B5CF /* PaymentSheetAnalyticsHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentSheetAnalyticsHelper.swift; sourceTree = "<group>"; };
 		B61FFE76D0960C7F1E34B405 /* PaymentSheetAppearance.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentSheetAppearance.swift; sourceTree = "<group>"; };
 		B626EE922BF2872200B05B05 /* PaymentMethodTypeImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentMethodTypeImageView.swift; sourceTree = "<group>"; };
+		B62988F22E4405C0004FC9AF /* STPPaymentIntentParams+PaymentSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "STPPaymentIntentParams+PaymentSheet.swift"; sourceTree = "<group>"; };
 		B63B2CF02BF8313D003810F3 /* VerticalPaymentMethodListViewControllerTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VerticalPaymentMethodListViewControllerTest.swift; sourceTree = "<group>"; };
 		B63B2CF22BFBEE7B003810F3 /* VerticalPaymentMethodListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VerticalPaymentMethodListViewController.swift; sourceTree = "<group>"; };
 		B63B2CF42BFBEEAD003810F3 /* PaymentMethodFormViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PaymentMethodFormViewController.swift; sourceTree = "<group>"; };
@@ -1849,9 +1851,10 @@
 		D7EDB52CAFCADAE69435C6A9 /* Categories */ = {
 			isa = PBXGroup;
 			children = (
+				312171712E0A6F33008AE798 /* AddressDetails+STPAddress.swift */,
 				22D82B65B5500E1E7B230A16 /* Data+SHA256.swift */,
 				80FCEDF102C8E6BCABFDF211 /* NSAttributedString+Stripe.swift */,
-				312171712E0A6F33008AE798 /* AddressDetails+STPAddress.swift */,
+				B62988F22E4405C0004FC9AF /* STPPaymentIntentParams+PaymentSheet.swift */,
 				813E88EE408666654EF835E2 /* STPPaymentMethod+PaymentSheet.swift */,
 				103844C9B831A4F01793C304 /* STPPaymentMethodParams+PaymentSheet.swift */,
 				B51F9A38D82C20E576DEF098 /* String+Localized.swift */,
@@ -2443,6 +2446,7 @@
 				61D946062D7901B400BFCD0C /* CustomPaymentMethod.swift in Sources */,
 				3EDFACA133567159875143C5 /* STPElementsSession.swift in Sources */,
 				49909A1C2D8AFA600031EC33 /* FCLiteApiClient.swift in Sources */,
+				B62988F32E4405D7004FC9AF /* STPPaymentIntentParams+PaymentSheet.swift in Sources */,
 				1BFC617EED154D32BFCADAE7 /* SeparatorLabel.swift in Sources */,
 				01D46644D87983FC4387B92C /* InstantDebitsOnlyFinancialConnectionsAuthManager.swift in Sources */,
 				367BB57FA826A82EEF074A70 /* PayWithLinkWebController.swift in Sources */,

@@ -717,6 +717,7 @@ extension PaymentSheet {
         let paymentOptions = params.paymentMethodOptions ?? STPConfirmPaymentMethodOptions()
         let currentSetupFutureUsage = paymentIntent.paymentMethodOptions?.setupFutureUsage(for: paymentMethodType)
         paymentOptions.setSetupFutureUsageIfNecessary(shouldSave, currentSetupFutureUsage: currentSetupFutureUsage, paymentMethodType: paymentMethodType, customer: configuration.customer)
+
         if let mandateData = mandateData {
             params.mandateData = mandateData
         }

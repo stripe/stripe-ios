@@ -8,6 +8,7 @@
 
 ### EmbeddedPaymentElement
 * [Changed] When using `EmbeddedPaymentElement.Configuration.FormSheetAction.confirm`, the completion block is now called with a `canceled` result if the user closes the form sheet without completing the transaction.
+* [Added] You no longer need to set the backend PaymentIntent setup_future_usage or payment_method_options setup_future_usage values to match the client's IntentConfiguration; the client will automatically configure this for you.
 
 ## 24.19.0 2025-08-04
 

@@ -1,25 +1,25 @@
 GET
-https:\/\/api\.stripe\.com\/v1\/payment_methods\?customer=cus_SkQS7WhIRBFZwx&type=card$
+https:\/\/api\.stripe\.com\/v1\/payment_methods\?customer=cus_SpBED2HZgF035j&type=card$
 200
 application/json
 Content-Type: application/json
 Access-Control-Allow-Origin: *
 x-stripe-priority-routing-enabled: true
-content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=wJO6mH4HtYNgmVm8lymarRQXFwM9pj_FGRN78_RpIc3wgQm5s483sCD18pM9VWRuiMKyYUGJwI9wZM_C
+content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=HSqQjRQBPUzLM9DE0GLsY2S6eFrknm52-ethUsr_UfiSYL09jcm8TyunHvw-avewTUhokXo86f-WW_Tu
 x-wc: ABGHIJ
 access-control-allow-methods: GET, HEAD, PUT, PATCH, POST, DELETE
 Server: nginx
 access-control-expose-headers: Request-Id, Stripe-Manage-Version, Stripe-Should-Retry, X-Stripe-External-Auth-Required, X-Stripe-Privileged-Session-Required
 access-control-max-age: 300
 Cache-Control: no-cache, no-store
-Date: Sat, 26 Jul 2025 00:04:44 GMT
+Date: Thu, 07 Aug 2025 16:40:51 GMT
 stripe-version: 2020-08-27
 access-control-allow-credentials: true
 Content-Length: 89
 x-stripe-routing-context-priority-tier: api-testmode
 Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
 Vary: Origin
-request-id: req_rHzHYa3TRaAHfg
+request-id: req_KKTR1t3IHScFc6
 
 {
   "has_more" : false,
