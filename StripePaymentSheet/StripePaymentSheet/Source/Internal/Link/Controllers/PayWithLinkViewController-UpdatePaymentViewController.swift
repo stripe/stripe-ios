@@ -58,7 +58,7 @@ extension PayWithLinkViewController {
         private lazy var cardEditElement = LinkPaymentMethodFormElement(
             paymentMethod: paymentMethod,
             configuration: makeConfiguration(),
-            useCVCPlaceholder: isBillingDetailsUpdateFlow
+            isBillingDetailsUpdateFlow: isBillingDetailsUpdateFlow
         )
 
         private func makeConfiguration() -> PaymentElementConfiguration {

@@ -47,7 +47,7 @@ final class LinkPaymentMethodFormElement: Element {
     }
 
     let paymentMethod: ConsumerPaymentDetails
-    let useCVCPlaceholder: Bool
+    let isBillingDetailsUpdateFlow: Bool
 
     let configuration: PaymentElementConfiguration
 
@@ -84,7 +84,7 @@ final class LinkPaymentMethodFormElement: Element {
 
         return Params(
             expiryDate: expiryDate,
-            cvc: useCVCPlaceholder ? nil : cvcElement.text,
+            cvc: isBillingDetailsUpdateFlow ? nil : cvcElement.text,
             billingDetails: billingDetails,
             setAsDefault: checkboxElement.checkboxButton.isSelected,
             preferredNetwork: preferredNetwork
@@ -102,11 +102,16 @@ final class LinkPaymentMethodFormElement: Element {
     private lazy var emailElement: TextFieldElement? = {
         guard configuration.billingDetailsCollectionConfiguration.email == .always else { return nil }
 
-        return TextFieldElement.makeEmail(defaultValue: configuration.defaultBillingDetails.email, theme: theme)
+        return TextFieldElement.makeEmail(
+            defaultValue: paymentMethod.billingEmailAddress ?? configuration.defaultBillingDetails.email,
+            theme: theme
+        )
     }()
 
     private lazy var phoneElement: PhoneNumberElement? = {
-        guard configuration.billingDetailsCollectionConfiguration.phone == .always else { return nil }
+        guard isBillingDetailsUpdateFlow && configuration.billingDetailsCollectionConfiguration.phone == .always else {
+            return nil
+        }
         return PhoneNumberElement(
             defaultCountryCode: configuration.defaultBillingDetails.address.country,
             defaultPhoneNumber: configuration.defaultBillingDetails.phone,
@@ -169,7 +174,7 @@ final class LinkPaymentMethodFormElement: Element {
     }()
 
     private lazy var cvcElement: TextFieldElement = {
-        let configuration: TextFieldElementConfiguration = if useCVCPlaceholder {
+        let configuration: TextFieldElementConfiguration = if isBillingDetailsUpdateFlow {
             TextFieldElement.CensoredCVCConfiguration(
                 brand: paymentMethod.cardDetails?.stpBrand ?? .unknown
             )
@@ -256,10 +261,10 @@ final class LinkPaymentMethodFormElement: Element {
         )
     }()
 
-    init(paymentMethod: ConsumerPaymentDetails, configuration: PaymentElementConfiguration, useCVCPlaceholder: Bool) {
+    init(paymentMethod: ConsumerPaymentDetails, configuration: PaymentElementConfiguration, isBillingDetailsUpdateFlow: Bool) {
         self.paymentMethod = paymentMethod
         self.configuration = configuration
-        self.useCVCPlaceholder = useCVCPlaceholder
+        self.isBillingDetailsUpdateFlow = isBillingDetailsUpdateFlow
 
         if let expiryDate = paymentMethod.cardDetails?.expiryDate {
             self.expiryDateElement.setText(expiryDate.displayString)
