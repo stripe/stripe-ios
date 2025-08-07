@@ -269,3 +269,27 @@
 /* Text for message of warning alert */
 "Your selfie images have not been saved. Do you want to leave?" = "Your selfie images have not been saved. Do you want to leave?";
 
+/* Front of driver's license or passport */
+"Front of driver's license or passport" = "Front of driver's license or passport";
+
+/* Back of driver's license or passport */
+"Back of driver's license or passport" = "Back of driver's license or passport";
+
+/* Front of driver's license or government-issued photo ID */
+"Front of driver's license or government-issued photo ID" = "Front of driver's license or government-issued photo ID";
+
+/* Back of driver's license or government-issued photo ID */
+"Back of driver's license or government-issued photo ID" = "Back of driver's license or government-issued photo ID";
+
+/* Front of passport or government-issued photo ID */
+"Front of passport or government-issued photo ID" = "Front of passport or government-issued photo ID";
+
+/* Back of passport or government-issued photo ID */
+"Back of passport or government-issued photo ID" = "Back of passport or government-issued photo ID";
+
+/* Front of driver's license, passport, or government-issued photo ID */
+"Front of driver's license, passport, or government-issued photo ID" = "Front of driver's license, passport, or government-issued photo ID";
+
+/* Back of driver's license, passport, or government-issued photo ID */
+"Back of driver's license, passport, or government-issued photo ID" = "Back of driver's license, passport, or government-issued photo ID";
+

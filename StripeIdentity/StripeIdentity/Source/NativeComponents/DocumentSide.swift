@@ -7,6 +7,7 @@
 //
 
 import Foundation
+@_spi(STP) import StripeCore
 
 enum DocumentSide: String {
     case front
@@ -28,22 +29,42 @@ enum DocumentSide: String {
             }
         }
 
-        if availableIDTypes.count == 1 {
-            let idType = availableIDTypes[0]
-
-            if let type = idType.uiIDType() {
+        // Convert ID types to localized strings
+        
+        let localizedTypes = availableIDTypes.compactMap { $0.uiIDType() }
+        
+        // Handle specific combinations
+        if localizedTypes.count == 2 {
+            if localizedTypes.contains(String.Localized.driverLicense) && localizedTypes.contains(String.Localized.passport) {
+                return self == .front ? String.Localized.frontOfDriverLicenseOrPassport : String.Localized.backOfDriverLicenseOrPassport
+            } else if localizedTypes.contains(String.Localized.driverLicense) && localizedTypes.contains(String.Localized.governmentIssuedId) {
+                return self == .front ? String.Localized.frontOfDriverLicenseOrGovernmentId : String.Localized.backOfDriverLicenseOrGovernmentId
+            } else if localizedTypes.contains(String.Localized.passport) && localizedTypes.contains(String.Localized.governmentIssuedId) {
+                return self == .front ? String.Localized.frontOfPassportOrGovernmentId : String.Localized.backOfPassportOrGovernmentId
+            } else {
+                // Fallback to generic approach for unexpected combinations
+                let combinedTypes = localizedTypes.joined(separator: " or ")
                 switch self {
                 case .front:
-                    return String(format: STPLocalizedString("Front of %@", "Title of ID document scanning screen when scanning the front of either a driver's license, passport, or government issued photo id "), type)
+                    return String(format: STPLocalizedString("Front of %@", "Title of ID document scanning screen when scanning the front of either a driver's license, passport, or government issued photo id "), combinedTypes)
                 case .back:
-                    return String(format: STPLocalizedString("Back of %@", "Title of ID document scanning screen when scanning the back of either a driver's license, passport, or government issued photo id"), type)
+                    return String(format: STPLocalizedString("Back of %@", "Title of ID document scanning screen when scanning the back of either a driver's license, passport, or government issued photo id"), combinedTypes)
                 }
-            } else {
-                return idDocument()
+            }
+        } else if localizedTypes.count == 3 {
+            // Handle all three types
+            return self == .front ? String.Localized.frontOfAllIdTypes : String.Localized.backOfAllIdTypes
+        } else if localizedTypes.count == 1, let type = localizedTypes.first {
+            // Handle single type (existing behavior)
+            switch self {
+            case .front:
+                return String(format: STPLocalizedString("Front of %@", "Title of ID document scanning screen when scanning the front of either a driver's license, passport, or government issued photo id "), type)
+            case .back:
+                return String(format: STPLocalizedString("Back of %@", "Title of ID document scanning screen when scanning the back of either a driver's license, passport, or government issued photo id"), type)
             }
         } else {
+            // Fallback to generic text
             return idDocument()
-
         }
     }
 }

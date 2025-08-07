@@ -362,4 +362,60 @@ extension String.Localized {
         )
     }
 
+    // MARK: - Document Type Combinations for DocumentSide titles
+    static var frontOfDriverLicenseOrPassport: String {
+        STPLocalizedString(
+            "Front of driver's license or passport",
+            "Front of driver's license or passport"
+        )
+    }
+    
+    static var backOfDriverLicenseOrPassport: String {
+        STPLocalizedString(
+            "Back of driver's license or passport",
+            "Back of driver's license or passport"
+        )
+    }
+    
+    static var frontOfDriverLicenseOrGovernmentId: String {
+        STPLocalizedString(
+            "Front of driver's license or government-issued photo ID",
+            "Front of driver's license or government-issued photo ID"
+        )
+    }
+    
+    static var backOfDriverLicenseOrGovernmentId: String {
+        STPLocalizedString(
+            "Back of driver's license or government-issued photo ID",
+            "Back of driver's license or government-issued photo ID"
+        )
+    }
+    
+    static var frontOfPassportOrGovernmentId: String {
+        STPLocalizedString(
+            "Front of passport or government-issued photo ID",
+            "Front of passport or government-issued photo ID"
+        )
+    }
+    
+    static var backOfPassportOrGovernmentId: String {
+        STPLocalizedString(
+            "Back of passport or government-issued photo ID",
+            "Back of passport or government-issued photo ID"
+        )
+    }
+    
+    static var frontOfAllIdTypes: String {
+        STPLocalizedString(
+            "Front of driver's license, passport, or government-issued photo ID",
+            "Front of driver's license, passport, or government-issued photo ID"
+        )
+    }
+    
+    static var backOfAllIdTypes: String {
+        STPLocalizedString(
+            "Back of driver's license, passport, or government-issued photo ID",
+            "Back of driver's license, passport, or government-issued photo ID"
+        )
+    }
 }
