@@ -16,9 +16,34 @@ extension DocumentCaptureViewController {
     }
 
     func scanningTextWithNoInput(availableIDTypes: [String], for side: DocumentSide) -> String {
-        let type = (availableIDTypes.count == 1) ? availableIDTypes[0].uiIDType() : nil
+        let localizedTypes = availableIDTypes.compactMap { $0.uiIDType() }
+        
+        func fallback() -> String {
+            switch side {
+            case .front:
+                return String.Localized.position_in_center_identity_card
+            case .back:
+                return String.Localized.flip_to_other_side_identity_card
+            }
 
-        if let type = type {
+        }
+        
+        // Handle specific combinations for scanning instructions
+        if localizedTypes.count == 2 {
+            if localizedTypes.contains(String.Localized.driverLicense) && localizedTypes.contains(String.Localized.passport) {
+                return side == .front ? String.Localized.positionDriverLicenseOrPassport : String.Localized.flipDriverLicenseOrPassport
+            } else if localizedTypes.contains(String.Localized.driverLicense) && localizedTypes.contains(String.Localized.governmentIssuedId) {
+                return side == .front ? String.Localized.positionDriverLicenseOrGovernmentId : String.Localized.flipDriverLicenseOrGovernmentId
+            } else if localizedTypes.contains(String.Localized.passport) && localizedTypes.contains(String.Localized.governmentIssuedId) {
+                return side == .front ? String.Localized.positionPassportOrGovernmentId : String.Localized.flipPassportOrGovernmentId
+            } else {
+                return fallback()
+            }
+        } else if localizedTypes.count == 3 {
+            // Handle all three types for scanning instructions
+            return side == .front ? String.Localized.positionAllIdTypes : String.Localized.flipAllIdTypes
+        } else if localizedTypes.count == 1, let type = localizedTypes.first {
+            // Handle single type
             switch side {
             case .front:
                 return String(format: String.Localized.position_in_center, type)
@@ -26,12 +51,8 @@ extension DocumentCaptureViewController {
                 return String(format: String.Localized.flip_to_other_side, type)
             }
         } else {
-            switch side {
-            case .front:
-                return String.Localized.position_in_center_identity_card
-            case .back:
-                return String.Localized.flip_to_other_side_identity_card
-            }
+            // Fallback to generic text
+            return fallback()
         }
     }
 
@@ -48,10 +69,8 @@ extension DocumentCaptureViewController {
             let matchesClassification = foundClassification.matchesDocument(side: side)
             let zoomLevel = idDetectorOutput.computeZoomLevel()
             switch (side, matchesClassification, zoomLevel) {
-            case (.front, false, _):
-                return String.Localized.position_in_center
-            case (.back, false, _):
-                return String.Localized.flip_to_other_side
+            case (.front, false, _), (.back, false, _):
+                return scanningTextWithNoInput(availableIDTypes: availableIDTypes, for: side)
             case (_, true, .ok):
                 return String.Localized.scanning
             case (_, true, .tooClose):
