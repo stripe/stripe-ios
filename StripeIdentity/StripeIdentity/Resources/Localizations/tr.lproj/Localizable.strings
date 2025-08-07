@@ -6,8 +6,6 @@
 
 "App Settings" = "Uygulama Ayarları";
 
-"Back identity card photo successfully uploaded" = "Kimliğin arka yüz fotoğrafı başarıyla yüklendi";
-
 "Back of identity card" = "Kimliğin arka yüzü";
 
 "Back of identity document" = "Kimlik belgesinin arka yüzü";
@@ -31,10 +29,6 @@
 "Details not visible" = "Ayrıntılar görünmüyor";
 
 "Flip your identity card over to the other side" = "Kimliğinizin diğer yüzünü çevirin";
-
-"Front identity card photo successfully uploaded" = "Kimliğin ön yüz fotoğrafı başarıyla yüklendi";
-
-"Front of identity card" = "Kimliğin ön yüzü";
 
 "Front of identity document" = "Kimlik belgesinin ön yüzü";
 
@@ -84,11 +78,7 @@
 
 "Photo Library" = "Fotoğraf Kitaplığı";
 
-"Please upload images of the front and back of your identity card" = "Lütfen kimlik belgenizin ön ve arka yüzlerinin fotoğraflarını yükleyin";
-
 "Position your face in the center of the frame." = "Yüzünüzü çerçevenin ortasına yerleştirin.";
-
-"Position your identity card in the center of the frame" = "Kimliğinizi çerçevenin ortasına yerleştirin";
 
 "Retake Photos" = "Fotoğrafları Tekrar Çek";
 
@@ -101,10 +91,6 @@
 "Select a location to upload the back of your identity document from" = "Kimlik belgenizin arka yüzünü yükleyeceğiniz konumu seçin";
 
 "Select a location to upload the front of your identity document from" = "Kimlik belgenizin ön yüzünü yükleyeceğiniz konumu seçin";
-
-"Select back identity card photo" = "Kimliğin arka yüz fotoğrafını seç";
-
-"Select front identity card photo" = "Kimliğin ön yüz fotoğrafını seç";
 
 "Selfie" = "Özçekim";
 
@@ -131,10 +117,6 @@
 "Upload a Photo" = "Fotoğraf Yükle";
 
 "Upload your photo ID" = "Fotoğraflı kimliğinizi yükleyin";
-
-"Uploading back identity card photo" = "Kimliğin arka yüz fotoğrafı yükleniyor";
-
-"Uploading front identity card photo" = "Kimliğin ön yüz fotoğrafı yükleniyor";
 
 "Verify your identity" = "Kimliğinizi doğrulayın";
 

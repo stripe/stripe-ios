@@ -6,8 +6,6 @@
 
 "App Settings" = "Postavke aplikacije";
 
-"Back identity card photo successfully uploaded" = "Fotografija stražnje strane osobne iskaznice je uspješno učitana";
-
 "Back of identity card" = "Stražnja strana osobne iskaznice";
 
 "Back of identity document" = "Stražnja strana identifikacijskog dokumenta";
@@ -31,10 +29,6 @@
 "Details not visible" = "Pojedinosti nisu vidljive";
 
 "Flip your identity card over to the other side" = "Okrenite svoju osobnu iskaznicu na drugu stranu";
-
-"Front identity card photo successfully uploaded" = "Fotografija prednje strane osobne iskaznice uspješno je učitana";
-
-"Front of identity card" = "Prednja strana osobne iskaznice";
 
 "Front of identity document" = "Prednja strana identifikacijskog dokumenta";
 
@@ -84,11 +78,7 @@
 
 "Photo Library" = "Biblioteka fotografija";
 
-"Please upload images of the front and back of your identity card" = "Molimo vas učitajte slike prednje i stražnje strane vaše osobne iskaznice";
-
 "Position your face in the center of the frame." = "Postavite svoje lice u središte okvira.";
-
-"Position your identity card in the center of the frame" = "Postavite svoju osobnu iskaznicu u sredinu okvira";
 
 "Retake Photos" = "Ponovo snimi fotografije";
 
@@ -101,10 +91,6 @@
 "Select a location to upload the back of your identity document from" = "Odaberite lokaciju s koje ćete učitati stražnju stranu svog dokumenta";
 
 "Select a location to upload the front of your identity document from" = "Odaberite lokaciju s koje ćete učitati prednju stranu svog dokumenta";
-
-"Select back identity card photo" = "Odaberite fotografiju stražnje strane osobne iskaznice";
-
-"Select front identity card photo" = "Odaberite fotografiju prednje strane osobne iskaznice";
 
 "Selfie" = "Selfie";
 
@@ -131,10 +117,6 @@
 "Upload a Photo" = "Učitaj fotografiju";
 
 "Upload your photo ID" = "Učitajte svoj identifikacijski dokument s fotografijom";
-
-"Uploading back identity card photo" = "Učitavanje fotografije stražnje strane osobne iskaznice";
-
-"Uploading front identity card photo" = "Učitavanje fotografije prednje strane osobne iskaznice";
 
 "Verify your identity" = "Potvrdite svoj identitet";
 

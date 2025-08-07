@@ -6,8 +6,6 @@
 
 "App Settings" = "App Settings";
 
-"Back identity card photo successfully uploaded" = "Back identity card photo successfully uploaded";
-
 "Back of identity card" = "Back of identity card";
 
 "Back of identity document" = "Back of identity document";
@@ -31,10 +29,6 @@
 "Details not visible" = "Details not visible";
 
 "Flip your identity card over to the other side" = "Flip your identity card over to the other side";
-
-"Front identity card photo successfully uploaded" = "Front identity card photo successfully uploaded";
-
-"Front of identity card" = "Front of identity card";
 
 "Front of identity document" = "Front of identity document";
 
@@ -84,11 +78,7 @@
 
 "Photo Library" = "Photo Library";
 
-"Please upload images of the front and back of your identity card" = "Please upload images of the front and back of your identity card";
-
 "Position your face in the center of the frame." = "Position your face in the centre of the frame.";
-
-"Position your identity card in the center of the frame" = "Position your identity card in the centre of the frame";
 
 "Retake Photos" = "Retake Photos";
 
@@ -101,10 +91,6 @@
 "Select a location to upload the back of your identity document from" = "Select a location to upload the back of your identity document from";
 
 "Select a location to upload the front of your identity document from" = "Select a location to upload the front of your identity document from";
-
-"Select back identity card photo" = "Select back identity card photo";
-
-"Select front identity card photo" = "Select front identity card photo";
 
 "Selfie" = "Selfie";
 
@@ -131,10 +117,6 @@
 "Upload a Photo" = "Upload a Photo";
 
 "Upload your photo ID" = "Upload your photo ID";
-
-"Uploading back identity card photo" = "Uploading back identity card photo";
-
-"Uploading front identity card photo" = "Uploading front identity card photo";
 
 "Verify your identity" = "Verify your identity";
 

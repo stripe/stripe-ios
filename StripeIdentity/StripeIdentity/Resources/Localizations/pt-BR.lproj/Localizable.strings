@@ -6,8 +6,6 @@
 
 "App Settings" = "Ajustes do aplicativo";
 
-"Back identity card photo successfully uploaded" = "Foto do verso da carteira de identidade carregada";
-
 "Back of identity card" = "Verso da identidade";
 
 "Back of identity document" = "Verso do documento de identificação";
@@ -31,10 +29,6 @@
 "Details not visible" = "Detalhes não visíveis";
 
 "Flip your identity card over to the other side" = "Vire a carteira de identidade para o outro lado";
-
-"Front identity card photo successfully uploaded" = "Foto da frente da carteira de identidade carregada";
-
-"Front of identity card" = "Frente da identidade";
 
 "Front of identity document" = "Frente do documento de identificação";
 
@@ -84,11 +78,7 @@
 
 "Photo Library" = "Fotos";
 
-"Please upload images of the front and back of your identity card" = "Carregue imagens (frente e verso) do seu documento de identidade";
-
 "Position your face in the center of the frame." = "Posicione seu rosto no centro do quadro.";
-
-"Position your identity card in the center of the frame" = "Posicione a carteira de identidade no centro do quadro";
 
 "Retake Photos" = "Tirar fotos novamente";
 
@@ -101,10 +91,6 @@
 "Select a location to upload the back of your identity document from" = "Selecione um local para carregar o verso do documento de identidade";
 
 "Select a location to upload the front of your identity document from" = "Selecione um local para carregar a frente do documento de identidade";
-
-"Select back identity card photo" = "Selecionar foto do verso da carteira de identidade";
-
-"Select front identity card photo" = "Selecionar foto da frente da carteira de identidade";
 
 "Selfie" = "Selfie";
 
@@ -131,10 +117,6 @@
 "Upload a Photo" = "Carregar uma foto";
 
 "Upload your photo ID" = "Carregue um documento de identificação com foto";
-
-"Uploading back identity card photo" = "Carregar foto do verso da carteira de identidade";
-
-"Uploading front identity card photo" = "Carregar foto da frente da carteira de identidade";
 
 "Verify your identity" = "Verifique sua identidade";
 

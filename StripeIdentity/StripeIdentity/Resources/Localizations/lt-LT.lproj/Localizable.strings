@@ -6,8 +6,6 @@
 
 "App Settings" = "Programos nustatymai";
 
-"Back identity card photo successfully uploaded" = "Sėkmingai įkelta asmens tapatybės kortelės galinės pusės nuotrauka";
-
 "Back of identity card" = "Asmens tapatybės kortelės galinė pusė";
 
 "Back of identity document" = "Tapatybės dokumento galinė pusė";
@@ -31,10 +29,6 @@
 "Details not visible" = "Nematyti detalių";
 
 "Flip your identity card over to the other side" = "Apverskite asmens tapatybės kortelę kita puse";
-
-"Front identity card photo successfully uploaded" = "Sėkmingai įkelta asmens tapatybės kortelės priekinės pusės nuotrauka";
-
-"Front of identity card" = "Asmens tapatybės kortelės priekinė pusė";
 
 "Front of identity document" = "Tapatybės dokumento priekinė pusė";
 
@@ -84,11 +78,7 @@
 
 "Photo Library" = "Nuotraukų biblioteka";
 
-"Please upload images of the front and back of your identity card" = "Įkelkite asmens tapatybės kortelės priekinės ir galinės pusės vaizdus";
-
 "Position your face in the center of the frame." = "Veidas turi būti rėmelio centre.";
-
-"Position your identity card in the center of the frame" = "Asmens tapatybės kortelė turi būti rėmelio centre";
 
 "Retake Photos" = "Perfotografuoti";
 
@@ -101,10 +91,6 @@
 "Select a location to upload the back of your identity document from" = "Pasirinkite vietą, iš kur įkelsite asmens tapatybės dokumento galinės pusės vaizdą";
 
 "Select a location to upload the front of your identity document from" = "Pasirinkite vietą, iš kur įkelsite asmens tapatybės dokumento priekinės pusės vaizdą";
-
-"Select back identity card photo" = "Pasirinkite asmens tapatybės kortelės galinės pusės nuotrauką";
-
-"Select front identity card photo" = "Pasirinkite asmens tapatybės kortelės priekinės pusės nuotrauką";
 
 "Selfie" = "Asmenukė";
 
@@ -131,10 +117,6 @@
 "Upload a Photo" = "Įkelti nuotrauką";
 
 "Upload your photo ID" = "Įkelkite savo asmens dokumento nuotrauką";
-
-"Uploading back identity card photo" = "Įkeliama asmens tapatybės kortelės galinės pusės nuotrauka";
-
-"Uploading front identity card photo" = "Įkeliama asmens tapatybės kortelės priekinės pusės nuotrauka";
 
 "Verify your identity" = "Patvirtinkite tapatybę";
 

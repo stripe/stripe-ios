@@ -6,8 +6,6 @@
 
 "App Settings" = "Paramètres de l'application";
 
-"Back identity card photo successfully uploaded" = "Photo du verso de la carte d'identité chargée";
-
 "Back of identity card" = "Verso de la carte d'identité";
 
 "Back of identity document" = "Verso de la pièce d'identité";
@@ -31,10 +29,6 @@
 "Details not visible" = "Détails non visibles";
 
 "Flip your identity card over to the other side" = "Retournez votre carte d'identité";
-
-"Front identity card photo successfully uploaded" = "Photo du recto de la carte d'identité chargée";
-
-"Front of identity card" = "Recto de la carte d'identité";
 
 "Front of identity document" = "Recto de la pièce d'identité";
 
@@ -84,11 +78,7 @@
 
 "Photo Library" = "Bibliothèque de photos";
 
-"Please upload images of the front and back of your identity card" = "Veuillez charger une photo du recto et du verso de votre carte d'identité";
-
 "Position your face in the center of the frame." = "Placez votre visage au centre du cadre.";
-
-"Position your identity card in the center of the frame" = "Placez votre carte d'identité au centre du cadre";
 
 "Retake Photos" = "Reprendre des photos";
 
@@ -101,10 +91,6 @@
 "Select a location to upload the back of your identity document from" = "Sélectionnez l'emplacement à partir duquel vous souhaitez charger le verso de votre pièce d'identité";
 
 "Select a location to upload the front of your identity document from" = "Sélectionnez l'emplacement à partir duquel vous souhaitez charger le recto de votre pièce d'identité";
-
-"Select back identity card photo" = "Sélectionner la photo du verso de la carte d'identité";
-
-"Select front identity card photo" = "Sélectionner la photo du recto de la carte d'identité";
 
 "Selfie" = "Selfie";
 
@@ -131,10 +117,6 @@
 "Upload a Photo" = "Charger une photo";
 
 "Upload your photo ID" = "Charger votre document d'identité avec photo";
-
-"Uploading back identity card photo" = "Chargement de la photo du verso de la carte d'identité";
-
-"Uploading front identity card photo" = "Chargement de la photo du recto de la carte d'identité";
 
 "Verify your identity" = "Vérifier votre identité";
 

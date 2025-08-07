@@ -6,8 +6,6 @@
 
 "App Settings" = "การตั้งค่าแอป";
 
-"Back identity card photo successfully uploaded" = "อัปโหลดรูปภาพด้านหลังของบัตรประจำตัวเรียบร้อยแล้ว";
-
 "Back of identity card" = "ด้านหลังของบัตรประจำตัว";
 
 "Back of identity document" = "ด้านหลังของเอกสารประจำตัว";
@@ -31,10 +29,6 @@
 "Details not visible" = "รายละเอียดไม่ชัดเจน";
 
 "Flip your identity card over to the other side" = "พลิกไปยังอีกด้านของบัตรประจำตัว";
-
-"Front identity card photo successfully uploaded" = "อัปโหลดรูปภาพด้านหน้าของบัตรประจำตัวเรียบร้อยแล้ว";
-
-"Front of identity card" = "ด้านหน้าของบัตรประจำตัว";
 
 "Front of identity document" = "ด้านหน้าของเอกสารประจำตัว";
 
@@ -84,11 +78,7 @@
 
 "Photo Library" = "คลังภาพ";
 
-"Please upload images of the front and back of your identity card" = "โปรดอัปโหลดรูปภาพด้านหน้าและด้านหลังของบัตรประจำตัว";
-
 "Position your face in the center of the frame." = "จัดตำแหน่งใบหน้าให้อยู่กลางเฟรม";
-
-"Position your identity card in the center of the frame" = "จัดตำแหน่งบัตรประจำตัวให้อยู่กลางเฟรม";
 
 "Retake Photos" = "ถ่ายภาพอีกครั้ง";
 
@@ -101,10 +91,6 @@
 "Select a location to upload the back of your identity document from" = "เลือกตำแหน่งที่จะทำการอัปโหลดรูปภาพด้านหลังของเอกสารประจำตัว";
 
 "Select a location to upload the front of your identity document from" = "เลือกตำแหน่งที่จะทำการอัปโหลดรูปภาพด้านหน้าของเอกสารประจำตัว";
-
-"Select back identity card photo" = "เลือกรูปภาพด้านหลังของบัตรประจำตัว";
-
-"Select front identity card photo" = "เลือกรูปภาพด้านหน้าของบัตรประจำตัว";
 
 "Selfie" = "เซลฟี";
 
@@ -131,10 +117,6 @@
 "Upload a Photo" = "อัปโหลดรูปภาพ";
 
 "Upload your photo ID" = "อัปโหลดบัตรประจำตัวของคุณ";
-
-"Uploading back identity card photo" = "กำลังอัปโหลดรูปภาพด้านหลังของบัตรประจำตัว";
-
-"Uploading front identity card photo" = "กำลังอัปโหลดรูปภาพด้านหน้าของบัตรประจำตัว";
 
 "Verify your identity" = "ยืนยันตัวตนของคุณ";
 
