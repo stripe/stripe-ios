@@ -309,6 +309,7 @@
 		41D17A612C5A7429007C6EE6 /* StripeiOS-Release.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = "StripeiOS-Release.xcconfig"; sourceTree = "<group>"; };
 		41D17A622C5A7429007C6EE6 /* StripeiOS-Shared.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = "StripeiOS-Shared.xcconfig"; sourceTree = "<group>"; };
 		41D17A632C5A7429007C6EE6 /* Version.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = Version.xcconfig; sourceTree = "<group>"; };
+		A4128BE72E450DFC00745749 /* PaymentsListDefaultFiltersOptions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentsListDefaultFiltersOptions.swift; sourceTree = "<group>"; };
 		E611A7172CE8372500B3F580 /* ActivityViewControllerWithoutPopover.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivityViewControllerWithoutPopover.swift; sourceTree = "<group>"; };
 		E6165CBE2CA7BF2200B76DA5 /* FetchInitComponentPropsMessageHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FetchInitComponentPropsMessageHandler.swift; sourceTree = "<group>"; };
 		E6165CC02CA7D09900B76DA5 /* FetchInitComponentPropsMessageHandlerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FetchInitComponentPropsMessageHandlerTests.swift; sourceTree = "<group>"; };
@@ -526,6 +527,7 @@
 		4161C27C2C9DB53C005BD67C /* Models */ = {
 			isa = PBXGroup;
 			children = (
+				A4128BE72E450DFC00745749 /* PaymentsListDefaultFiltersOptions.swift */,
 				4161C27D2C9DB566005BD67C /* AccountCollectionOptions.swift */,
 			);
 			path = Models;
