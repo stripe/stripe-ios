@@ -52,9 +52,7 @@ struct RegistrationView: View {
                         .frame(maxWidth: .infinity, alignment: .leading)
                 }
 
-                VStack(alignment: .leading, spacing: 8) {
-                    Text("Email")
-                        .font(.headline)
+                FormField("Email") {
                     Text(email)
                         .frame(maxWidth: .infinity, alignment: .leading)
                         .padding()
@@ -63,27 +61,21 @@ struct RegistrationView: View {
                         .foregroundColor(.secondary)
                 }
 
-                VStack(alignment: .leading, spacing: 8) {
-                    Text("Full Name (optional)")
-                        .font(.headline)
+                FormField("Full Name (optional)") {
                     TextField("Enter your full name", text: $fullName)
                         .textFieldStyle(RoundedBorderTextFieldStyle())
                         .autocapitalization(.words)
                         .focused($isFullNameFieldFocused)
                 }
 
-                VStack(alignment: .leading, spacing: 8) {
-                    Text("Phone Number")
-                        .font(.headline)
+                FormField("Phone Number") {
                     TextField("Enter phone number (e.g., +12125551234)", text: $phoneNumber)
                         .textFieldStyle(RoundedBorderTextFieldStyle())
                         .keyboardType(.phonePad)
                         .focused($isPhoneNumberFieldFocused)
                 }
 
-                VStack(alignment: .leading, spacing: 8) {
-                    Text("Country")
-                        .font(.headline)
+                FormField("Country") {
                     TextField("Country code", text: $country)
                         .textFieldStyle(RoundedBorderTextFieldStyle())
                         .autocapitalization(.allCharacters)

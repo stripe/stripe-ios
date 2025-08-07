@@ -36,9 +36,7 @@ struct CryptoOnrampExampleView: View {
         NavigationView {
             ScrollView {
                 VStack(spacing: 20) {
-                    VStack(alignment: .leading, spacing: 8) {
-                        Text("Email")
-                            .font(.headline)
+                    FormField("Email") {
                         TextField("Enter email address", text: $email)
                             .textFieldStyle(RoundedBorderTextFieldStyle())
                             .keyboardType(.emailAddress)
