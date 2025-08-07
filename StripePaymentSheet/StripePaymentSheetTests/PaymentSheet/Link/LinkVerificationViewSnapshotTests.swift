@@ -53,20 +53,7 @@ class LinkVerificationViewSnapshotTests: STPSnapshotTestCase {
         )
         let sut = makeSUT(mode: .modal, appearance: appearance)
         sut.codeField.value = "1234"
-
-        sut.autosizeHeight(width: 340)
-
-        // Add to a window temporarily so becomeFirstResponder() works
-        let window = UIWindow(frame: UIScreen.main.bounds)
-        window.addSubview(sut)
-        sut.frame = CGRect(x: 0, y: 0, width: 340, height: sut.frame.height)
-        window.makeKeyAndVisible()
-        sut.codeField.becomeFirstResponder()
-
-        STPSnapshotVerifyView(sut)
-
-        sut.removeFromSuperview()
-        window.isHidden = true
+        verify(sut)
     }
 
     func verify(
