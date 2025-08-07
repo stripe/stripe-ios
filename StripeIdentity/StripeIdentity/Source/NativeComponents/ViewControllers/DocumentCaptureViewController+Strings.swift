@@ -48,10 +48,8 @@ extension DocumentCaptureViewController {
             let matchesClassification = foundClassification.matchesDocument(side: side)
             let zoomLevel = idDetectorOutput.computeZoomLevel()
             switch (side, matchesClassification, zoomLevel) {
-            case (.front, false, _):
-                return String.Localized.position_in_center
-            case (.back, false, _):
-                return String.Localized.flip_to_other_side
+            case (.front, false, _), (.back, false, _):
+                return scanningTextWithNoInput(availableIDTypes: availableIDTypes, for: side)
             case (_, true, .ok):
                 return String.Localized.scanning
             case (_, true, .tooClose):
