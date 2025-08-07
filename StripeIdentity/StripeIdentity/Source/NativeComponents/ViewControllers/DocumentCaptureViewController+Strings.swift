@@ -18,6 +18,16 @@ extension DocumentCaptureViewController {
     func scanningTextWithNoInput(availableIDTypes: [String], for side: DocumentSide) -> String {
         let localizedTypes = availableIDTypes.compactMap { $0.uiIDType() }
         
+        func fallback() -> String {
+            switch side {
+            case .front:
+                return String.Localized.position_in_center_identity_card
+            case .back:
+                return String.Localized.flip_to_other_side_identity_card
+            }
+
+        }
+        
         // Handle specific combinations for scanning instructions
         if localizedTypes.count == 2 {
             if localizedTypes.contains(String.Localized.driverLicense) && localizedTypes.contains(String.Localized.passport) {
@@ -27,14 +37,7 @@ extension DocumentCaptureViewController {
             } else if localizedTypes.contains(String.Localized.passport) && localizedTypes.contains(String.Localized.governmentIssuedId) {
                 return side == .front ? String.Localized.positionPassportOrGovernmentId : String.Localized.flipPassportOrGovernmentId
             } else {
-                // Fallback to generic approach for unexpected combinations
-                let combinedTypes = localizedTypes.joined(separator: " or ")
-                switch side {
-                case .front:
-                    return String(format: String.Localized.position_in_center, combinedTypes)
-                case .back:
-                    return String(format: String.Localized.flip_to_other_side, combinedTypes)
-                }
+                return fallback()
             }
         } else if localizedTypes.count == 3 {
             // Handle all three types for scanning instructions
@@ -49,12 +52,7 @@ extension DocumentCaptureViewController {
             }
         } else {
             // Fallback to generic text
-            switch side {
-            case .front:
-                return String.Localized.position_in_center_identity_card
-            case .back:
-                return String.Localized.flip_to_other_side_identity_card
-            }
+            return fallback()
         }
     }
 

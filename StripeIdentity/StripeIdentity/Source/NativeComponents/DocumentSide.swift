@@ -30,7 +30,6 @@ enum DocumentSide: String {
         }
 
         // Convert ID types to localized strings
-        
         let localizedTypes = availableIDTypes.compactMap { $0.uiIDType() }
         
         // Handle specific combinations
@@ -42,14 +41,8 @@ enum DocumentSide: String {
             } else if localizedTypes.contains(String.Localized.passport) && localizedTypes.contains(String.Localized.governmentIssuedId) {
                 return self == .front ? String.Localized.frontOfPassportOrGovernmentId : String.Localized.backOfPassportOrGovernmentId
             } else {
-                // Fallback to generic approach for unexpected combinations
-                let combinedTypes = localizedTypes.joined(separator: " or ")
-                switch self {
-                case .front:
-                    return String(format: STPLocalizedString("Front of %@", "Title of ID document scanning screen when scanning the front of either a driver's license, passport, or government issued photo id "), combinedTypes)
-                case .back:
-                    return String(format: STPLocalizedString("Back of %@", "Title of ID document scanning screen when scanning the back of either a driver's license, passport, or government issued photo id"), combinedTypes)
-                }
+                // Fallback to generic text
+                return idDocument()
             }
         } else if localizedTypes.count == 3 {
             // Handle all three types
