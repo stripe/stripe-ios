@@ -283,7 +283,7 @@ class PaymentSheetFormFactoryCardEmailPhoneFieldsTest: XCTestCase {
             XCTFail()
             return
         }
-        
+
         // Find and fill card element
         let cardElement = cardForm.elements.compactMap { element in
             element as? CardSectionElement
@@ -321,7 +321,7 @@ class PaymentSheetFormFactoryCardEmailPhoneFieldsTest: XCTestCase {
             XCTFail()
             return
         }
-        
+
         // Find and fill card element
         let cardElement = cardForm.elements.compactMap { element in
             element as? CardSectionElement
@@ -329,7 +329,7 @@ class PaymentSheetFormFactoryCardEmailPhoneFieldsTest: XCTestCase {
         cardElement?.panElement.setText("4242424242424242")
         cardElement?.expiryElement.setText("12/34")
         cardElement?.cvcElement.setText("123")
-        
+
         let params = cardForm.updateParams(params: IntentConfirmParams(type: .stripe(.card)))
 
         // Needs to be valid to get billing details
