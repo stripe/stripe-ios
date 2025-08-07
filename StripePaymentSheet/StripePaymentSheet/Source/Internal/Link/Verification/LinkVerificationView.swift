@@ -39,6 +39,7 @@ final class LinkVerificationView: UIView {
     let linkAccount: PaymentSheetLinkAccountInfoProtocol
 
     private let appearance: LinkAppearance?
+    private let allowLogoutInDialog: Bool
 
     var sendingCode: Bool = false {
         didSet {
@@ -132,10 +133,16 @@ final class LinkVerificationView: UIView {
         return logoutView
     }()
 
-    required init(mode: Mode, linkAccount: PaymentSheetLinkAccountInfoProtocol, appearance: LinkAppearance? = nil) {
+    required init(
+        mode: Mode,
+        linkAccount: PaymentSheetLinkAccountInfoProtocol,
+        appearance: LinkAppearance? = nil,
+        allowLogoutInDialog: Bool
+    ) {
         self.mode = mode
         self.linkAccount = linkAccount
         self.appearance = appearance
+        self.allowLogoutInDialog = allowLogoutInDialog
         super.init(frame: .zero)
         setupUI()
     }
@@ -175,13 +182,19 @@ private extension LinkVerificationView {
     var arrangedSubViews: [UIView] {
         switch mode {
         case .modal, .inlineLogin:
-            return [
+            var views = [
                 header,
                 headingLabel,
                 bodyLabel,
                 codeFieldContainer,
                 resendCodeButton,
             ]
+
+            if allowLogoutInDialog {
+                views.append(logoutView)
+            }
+
+            return views
         case .embedded:
             return [
                 headingLabel,
