@@ -64,8 +64,6 @@ final class LinkPaymentMethodFormElement: Element {
         // with `collectionMode: .all`, because extra fields won't match what expected by Link.
         let billingDetails = STPPaymentMethodBillingDetails()
         billingDetails.name = billingAddressSection?.name?.text ?? nameElement?.text
-        billingDetails.email = emailElement?.text
-        billingDetails.phone = phoneElement?.phoneNumber?.string(as: .e164)
         billingDetails.nonnil_address.country = billingAddressSection?.selectedCountryCode
         billingDetails.nonnil_address.line1 = billingAddressSection?.line1?.text
         billingDetails.nonnil_address.line2 = billingAddressSection?.line2?.text
@@ -98,26 +96,6 @@ final class LinkPaymentMethodFormElement: Element {
         let collectsName = configuration.billingDetailsCollectionConfiguration.name == .always
         return !isCard && collectsName
     }
-
-    private lazy var emailElement: TextFieldElement? = {
-        guard configuration.billingDetailsCollectionConfiguration.email == .always else { return nil }
-
-        return TextFieldElement.makeEmail(
-            defaultValue: paymentMethod.billingEmailAddress ?? configuration.defaultBillingDetails.email,
-            theme: theme
-        )
-    }()
-
-    private lazy var phoneElement: PhoneNumberElement? = {
-        guard isBillingDetailsUpdateFlow && configuration.billingDetailsCollectionConfiguration.phone == .always else {
-            return nil
-        }
-        return PhoneNumberElement(
-            defaultCountryCode: configuration.defaultBillingDetails.address.country,
-            defaultPhoneNumber: configuration.defaultBillingDetails.phone,
-            theme: theme
-        )
-    }()
 
     private lazy var nameElement: TextFieldElement? = {
         guard configuration.billingDetailsCollectionConfiguration.name == .always else { return nil }
@@ -238,16 +216,32 @@ final class LinkPaymentMethodFormElement: Element {
     private lazy var billingAddressSection: AddressSectionElement? = {
         guard configuration.billingDetailsCollectionConfiguration.address != .never else { return nil }
 
+        let collectPhone = configuration.billingDetailsCollectionConfiguration.phone == .always && isBillingDetailsUpdateFlow
+        let collectEmail = configuration.billingDetailsCollectionConfiguration.email == .always
+
+        let phone: String? = if collectPhone {
+            configuration.defaultBillingDetails.phone
+        } else {
+            nil
+        }
+
+        let email: String? = if collectEmail {
+            paymentMethod.billingEmailAddress ?? configuration.defaultBillingDetails.email
+        } else {
+            nil
+        }
+
         let defaultBillingAddress = AddressSectionElement.AddressDetails(
             billingAddress: paymentMethod.billingAddress ?? .init(),
-            phone: nil,
-            name: paymentMethod.billingAddress?.name
+            phone: phone,
+            name: paymentMethod.billingAddress?.name,
+            email: email
         )
 
         let additionalFields = AddressSectionElement.AdditionalFields(
             name: showNameFieldInBillingAddressSection ? .enabled(isOptional: false) : .disabled,
-            phone: configuration.billingDetailsCollectionConfiguration.phone == .always ? .enabled(isOptional: false) : .disabled,
-            email: configuration.billingDetailsCollectionConfiguration.email == .always ? .enabled(isOptional: false) : .disabled
+            phone: collectPhone ? .enabled(isOptional: false) : .disabled,
+            email: collectEmail ? .enabled(isOptional: false) : .disabled
         )
 
         return AddressSectionElement(
