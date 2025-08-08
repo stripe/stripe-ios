@@ -19,17 +19,16 @@ app:
 trigger_map:
 - push_branch: master
   pipeline: main-trigger-pipeline
+  changed_files: '^(?!.*\.md$).*'
 - pull_request_source_branch: releases/*
   pipeline: releases-trigger-pipeline
 - pull_request_source_branch: '*'
   pipeline: main-trigger-pipeline
+  changed_files: '^(?!.*\.md$).*'
 pipelines:
   main-trigger-pipeline:
     stages:
     - stage-trigger-run-all: {}
-    triggers:
-      changed_files:
-        regex: "^(?!.*\\.md$).*" # Dont trigger CI on .md file changes
   releases-trigger-pipeline:
     stages:
     - stage-releases-run-all: {}
