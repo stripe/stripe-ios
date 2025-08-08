@@ -190,7 +190,7 @@ public class PaymentSheet {
                             self.presentPayWithNativeLinkController(from: self.bottomSheetViewController, intent: loadResult.intent, elementsSession: loadResult.elementsSession, shouldOfferApplePay: self.configuration.isApplePayEnabled, shouldFinishOnClose: false, onClose: {
                                 presentPaymentSheet()
                             })
-                        case .canceled:
+                        case .canceled, .switchAccount:
                             presentPaymentSheet()
                         case .failed:
                             // Error is logged within LinkVerificationViewController

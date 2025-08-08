@@ -42,9 +42,8 @@ class CustomerAddPaymentMethodViewController: UIViewController {
     // MARK: - Writable Properties
     private let configuration: CustomerSheet.Configuration
 
-    /// This caches forms for payment methods so that customers don't have to re-enter details
-    /// This assumes the form generated for a given PM type _does not change_ at any point after load.
-    let formCache = PaymentMethodFormCache()
+    // We are keeping usBankAccountInfo in memory to preserve state if the user switches payment method types
+    private var usBankAccountFormElement: USBankAccountPaymentMethodElement?
 
     /// Reference to the AddressSectionElement in the form, if present
     private var addressSectionElement: AddressSectionElement?
@@ -71,7 +70,6 @@ class CustomerAddPaymentMethodViewController: UIViewController {
         }
         switch overrideBuyButtonBehavior {
         case .LinkUSBankAccount:
-            let usBankAccountFormElement = formCache[.stripe(.USBankAccount)] as? USBankAccountPaymentMethodElement
             return usBankAccountFormElement?.canLinkAccount ?? false
         case .instantDebits:
             return false // instant debits is not supported for customer sheet
@@ -88,13 +86,18 @@ class CustomerAddPaymentMethodViewController: UIViewController {
     }
 
     private lazy var paymentMethodFormElement: PaymentMethodElement = {
-        if let cachedForm = formCache[selectedPaymentMethodType] {
-            return cachedForm
-        } else {
-            let element = makeElement(for: selectedPaymentMethodType)
-            formCache[selectedPaymentMethodType] = element
-            return element
+        if selectedPaymentMethodType == .stripe(.USBankAccount) {
+            if let usBankAccountFormElement {
+                // Use the cached form instead of creating a new one
+                return usBankAccountFormElement
+            } else {
+                // Cache the form
+                let element = self.makeElement(for: .stripe(.USBankAccount))
+                usBankAccountFormElement = element as? USBankAccountPaymentMethodElement
+                return element
+            }
         }
+        return makeElement(for: selectedPaymentMethodType)
     }()
 
     // MARK: - Views
@@ -228,12 +231,15 @@ class CustomerAddPaymentMethodViewController: UIViewController {
         }
     }
     private func updateFormElement() {
-        if let cachedForm = formCache[selectedPaymentMethodType] {
-            paymentMethodFormElement = cachedForm
+        if selectedPaymentMethodType == .stripe(.USBankAccount) {
+            if let usBankAccountFormElement {
+                paymentMethodFormElement = usBankAccountFormElement
+            } else {
+                paymentMethodFormElement = makeElement(for: .stripe(.USBankAccount))
+                usBankAccountFormElement = paymentMethodFormElement as? USBankAccountPaymentMethodElement
+            }
         } else {
-            let element = makeElement(for: selectedPaymentMethodType)
-            formCache[selectedPaymentMethodType] = element
-            paymentMethodFormElement = element
+            paymentMethodFormElement = makeElement(for: selectedPaymentMethodType)
         }
         updateUI()
         sendEventToSubviews(.viewDidAppear, from: view)

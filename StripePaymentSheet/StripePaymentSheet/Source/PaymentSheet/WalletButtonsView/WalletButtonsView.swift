@@ -162,6 +162,7 @@ import WebKit
                 from: WindowAuthenticationContext().authenticationPresentingViewController(),
                 initiallySelectedPaymentDetailsID: nil,
                 shouldShowSecondaryCta: false,
+                canSkipWalletAfterVerification: flowController.elementsSession.canSkipLinkWallet,
                 completion: { confirmOptions, _ in
                     guard let confirmOptions else {
                         self.orderedWallets = WalletButtonsView.determineAvailableWallets(for: flowController)

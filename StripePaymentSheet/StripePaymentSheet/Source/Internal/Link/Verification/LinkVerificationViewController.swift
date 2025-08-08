@@ -26,6 +26,8 @@ final class LinkVerificationViewController: UIViewController {
         case completed
         /// Verification was canceled by the user.
         case canceled
+        /// The user requested to switch to a different account.
+        case switchAccount
         /// Verification failed due to an unrecoverable error.
         case failed(Error)
     }
@@ -36,13 +38,19 @@ final class LinkVerificationViewController: UIViewController {
     let linkAccount: PaymentSheetLinkAccount
 
     private let appearance: LinkAppearance?
+    private let allowLogoutInDialog: Bool
 
     private lazy var verificationView: LinkVerificationView = {
         guard linkAccount.redactedPhoneNumber != nil else {
             preconditionFailure("Verification(2FA) presented without a phone number on file")
         }
 
-        let verificationView = LinkVerificationView(mode: mode, linkAccount: linkAccount, appearance: appearance)
+        let verificationView = LinkVerificationView(
+            mode: mode,
+            linkAccount: linkAccount,
+            appearance: appearance,
+            allowLogoutInDialog: allowLogoutInDialog
+        )
         verificationView.delegate = self
         verificationView.backgroundColor = .clear
         verificationView.translatesAutoresizingMaskIntoConstraints = false
@@ -59,11 +67,13 @@ final class LinkVerificationViewController: UIViewController {
     required init(
         mode: LinkVerificationView.Mode = .modal,
         linkAccount: PaymentSheetLinkAccount,
-        appearance: LinkAppearance? = nil
+        appearance: LinkAppearance? = nil,
+        allowLogoutInDialog: Bool = false
     ) {
         self.mode = mode
         self.linkAccount = linkAccount
         self.appearance = appearance
+        self.allowLogoutInDialog = allowLogoutInDialog
         super.init(nibName: nil, bundle: nil)
 
         if mode.requiresModalPresentation {
@@ -196,7 +206,7 @@ extension LinkVerificationViewController: LinkVerificationViewDelegate {
 
     func verificationViewLogout(_ view: LinkVerificationView) {
         STPAnalyticsClient.sharedClient.logLink2FACancel()
-        finish(withResult: .canceled)
+        finish(withResult: .switchAccount)
     }
 
     func verificationView(_ view: LinkVerificationView, didEnterCode code: String) {
