@@ -75,7 +75,8 @@ extension LinkVerificationViewSnapshotTests {
                 isRegistered: true,
                 sessionState: .verified,
                 consumerSessionClientSecret: nil
-            )
+            ),
+            allowLogoutInDialog: false
         )
 
         sut.tintColor = .linkIconBrand

@@ -29,6 +29,9 @@ import XCTest
     /// Disable this when testing the STPPaymentHandler "UnredirectableSessionDelegate" behavior.
     open var followRedirects = true
 
+    /// Tracks the current request number for better error reporting
+    private var requestCount = 0
+
     open override func setUp() {
         super.setUp()
 

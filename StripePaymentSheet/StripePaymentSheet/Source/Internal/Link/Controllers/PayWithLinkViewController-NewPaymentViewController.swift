@@ -50,6 +50,18 @@ extension PayWithLinkViewController {
             return button
         }()
 
+        private lazy var cancelButton: Button? = {
+            guard linkAccount.isInSignupFlow && context.launchedFromFlowController else {
+                return nil
+            }
+            let button = Button(
+                configuration: .linkPlain(),
+                title: context.secondaryButtonLabel
+            )
+            button.addTarget(self, action: #selector(cancelButtonTapped), for: .touchUpInside)
+            return button
+        }()
+
         private lazy var buttonContainer: UIStackView = {
             let vStack = UIStackView(arrangedSubviews: [confirmButton])
             vStack.axis = .vertical
@@ -58,6 +70,10 @@ extension PayWithLinkViewController {
             if shouldShowApplePayButton {
                 vStack.addArrangedSubview(separator)
                 vStack.addArrangedSubview(applePayButton)
+            }
+
+            if let cancelButton {
+                vStack.addArrangedSubview(cancelButton)
             }
 
             return vStack
@@ -278,6 +294,11 @@ extension PayWithLinkViewController {
         @objc
         func applePayButtonTapped(_ sender: PKPaymentButton) {
             coordinator?.confirmWithApplePay()
+        }
+
+        @objc
+        func cancelButtonTapped() {
+            coordinator?.cancel(shouldReturnToPaymentSheet: true)
         }
     }
 }
