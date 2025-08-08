@@ -35,18 +35,22 @@ import Foundation
             rqdata: rqdata
         )
     }
-
+    
     @_spi(STP) public static func fetchPassiveHCaptchaToken(passiveCaptcha: PassiveCaptcha?, completion: @escaping (String?) -> Void) {
         #if APPLICATION_EXTENSION_API_ONLY
         // In app extension builds, HCaptcha functionality is not available
         completion(nil)
         #else
+        // In test environments, HCaptcha WebView loading may hang, so return nil immediately
+        if STPAnalyticsClient.isUnitOrUITest {
+            completion(nil)
+            return
+        }
         guard let passiveCaptcha,
               let hcaptcha = try? HCaptcha(apiKey: passiveCaptcha.siteKey, passiveApiKey: true, baseURL: URL(string: "http://localhost"), rqdata: passiveCaptcha.rqdata) else {
             completion(nil)
             return
         }
-        
         hcaptcha.didFinishLoading {
             hcaptcha.validate { result in
                 let token = try? result.dematerialize()
