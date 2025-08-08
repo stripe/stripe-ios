@@ -11,6 +11,9 @@ import UIKit
 extension STPElementsSession {
 
     func enableFlowControllerRUX(for configuration: PaymentElementConfiguration) -> Bool {
+        guard PaymentSheet.isLinkEnabled(elementsSession: self, configuration: configuration) else {
+            return false
+        }
         let usesNative = deviceCanUseNativeLink(elementsSession: self, configuration: configuration)
         let disableFlowControllerRUX = linkSettings?.disableFlowControllerRUX ?? false
         return !disableFlowControllerRUX && usesNative
