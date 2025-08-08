@@ -13,6 +13,7 @@ import Foundation
  This may contain the validation token on success, or an error that may have occurred.
  */
 @objc
+@available(iOSApplicationExtension, unavailable)
 class HCaptchaResult: NSObject {
 
     /// Result token

@@ -7,6 +7,7 @@
 * [Fixed] Fixed an issue that caused EmbeddedPaymentElement to log broken layout constraints.
 * [Fixed] The Apple Pay logo in `PaymentOptionDisplayData` no longer contains additional padding, bringing it in line with other payment method logos.
 * [Changed] When phone number or email address collection is enabled, these fields will now appear in the billing details section instead of appearing above the card field.
+* [Added] Passive HCaptcha on payment method tokenization API requests.
 * [Added] Added `termsDisplay` in PaymentSheet.Configuration to control when legal agreements are displayed
 
 ### EmbeddedPaymentElement

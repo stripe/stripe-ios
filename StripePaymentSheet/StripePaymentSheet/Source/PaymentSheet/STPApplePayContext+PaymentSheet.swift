@@ -183,6 +183,7 @@ extension STPApplePayContext {
     static func create(
         intent: Intent,
         configuration: PaymentElementConfiguration,
+        passiveCaptcha: PassiveCaptcha?,
         clientAttributionMetadata: STPClientAttributionMetadata,
         completion: @escaping PaymentSheetResultCompletionBlock
     ) -> STPApplePayContext? {
@@ -208,6 +209,7 @@ extension STPApplePayContext {
             applePayContext.shippingDetails = makeShippingDetails(from: configuration)
             applePayContext.apiClient = configuration.apiClient
             applePayContext.returnUrl = configuration.returnURL
+            applePayContext.passiveCaptcha = passiveCaptcha
             applePayContext.clientAttributionMetadata = clientAttributionMetadata
             return applePayContext
         } else {
