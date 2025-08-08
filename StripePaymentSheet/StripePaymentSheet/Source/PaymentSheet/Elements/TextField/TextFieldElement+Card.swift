@@ -98,10 +98,10 @@ extension TextFieldElement {
             case invalidLuhn
             case disallowedBrand(brand: STPCardBrand)
 
-            func shouldDisplay(isUserEditing: Bool, userTappedConfirm: Bool) -> Bool {
+            func shouldDisplay(isUserEditing: Bool, displayEmptyFields: Bool) -> Bool {
                 switch self {
                 case .empty:
-                    return userTappedConfirm
+                    return displayEmptyFields
                 case .incomplete, .invalidLuhn:
                     return !isUserEditing
                 case .invalidBrand, .disallowedBrand:
@@ -283,9 +283,9 @@ extension TextFieldElement {
             case invalidMonth
             case invalid
 
-            public func shouldDisplay(isUserEditing: Bool, userTappedConfirm: Bool) -> Bool {
+            public func shouldDisplay(isUserEditing: Bool, displayEmptyFields: Bool) -> Bool {
                 switch self {
-                case .empty:                    return userTappedConfirm
+                case .empty:                    return displayEmptyFields
                 case .incomplete:               return !isUserEditing
                 case .expired, .invalidMonth, .invalid:   return true
                 }

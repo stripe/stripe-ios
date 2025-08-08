@@ -27,7 +27,7 @@ extension AddressSectionElement {
                 shouldShowClearButton: configuration.shouldShowClearButton,
                 editConfiguration: configuration.editConfiguration,
                 theme: theme,
-                userTappedConfirm: false
+                displayEmptyFields: false
             )
             let textFieldView = TextFieldView(viewModel: viewModel, delegate: self)
             textFieldView.isUserInteractionEnabled = false

@@ -39,7 +39,7 @@ extension TextFieldElement {
             }
         }
 
-        func shouldDisplay(isUserEditing: Bool, userTappedConfirm: Bool) -> Bool {
+        func shouldDisplay(isUserEditing: Bool, displayEmptyFields: Bool) -> Bool {
             switch self {
             case .incomplete, .invalidFormat:
                 return !isUserEditing

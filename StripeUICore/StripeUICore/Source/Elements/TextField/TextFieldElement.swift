@@ -37,12 +37,12 @@ import UIKit
     }
     private(set) var didReceiveAutofill: Bool = false
     /// When true, indicates the user tapped confirm button requesting validation feedback
-    var userTappedConfirm: Bool = false
+    var displayEmptyFields: Bool = false
     public var validationState: ElementValidationState {
         return .init(
             from: configuration.validate(text: text, isOptional: configuration.isOptional),
             isUserEditing: isEditing,
-            userTappedConfirm: userTappedConfirm
+            displayEmptyFields: displayEmptyFields
         )
     }
 
@@ -83,7 +83,7 @@ import UIKit
         let shouldShowClearButton: Bool
         let editConfiguration: EditConfiguration
         let theme: ElementsAppearance
-        let userTappedConfirm: Bool
+        let displayEmptyFields: Bool
     }
 
     var viewModel: ViewModel {
@@ -105,7 +105,7 @@ import UIKit
             shouldShowClearButton: configuration.shouldShowClearButton,
             editConfiguration: configuration.editConfiguration,
             theme: theme,
-            userTappedConfirm: userTappedConfirm
+            displayEmptyFields: displayEmptyFields
         )
     }
 
@@ -151,7 +151,7 @@ extension TextFieldElement: Element {
 
     /// Forces validation errors to be displayed, even if the user is currently editing
     public func showValidationErrors() {
-        userTappedConfirm = true
+        displayEmptyFields = true
         textFieldView.updateUI(with: viewModel)
         delegate?.didUpdate(element: self)
     }
