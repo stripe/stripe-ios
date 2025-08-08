@@ -43,6 +43,28 @@ final class LinkPaymentMethodFormElementSnapshotTests: STPSnapshotTestCase {
         verify(sut)
     }
 
+    func testBillingDetailsUpdateWithPartialBillingDetails() {
+        let sut = makeSUT(
+            isDefault: false,
+            isBillingDetailsUpdateFlow: true,
+            requestName: true,
+            requestPhone: true
+        )
+        verify(sut)
+    }
+
+    func testBillingDetailsUpdateWithFullBillingDetails() {
+        let sut = makeSUT(
+            isDefault: false,
+            isBillingDetailsUpdateFlow: true,
+            requestName: true,
+            requestPhone: true,
+            requestEmail: true,
+            requestFullAddress: true
+        )
+        verify(sut)
+    }
+
     func testCoBrandedCard() {
         let sut = makeSUT(isDefault: false, networks: ["cartes_bancaires", "visa"])
         verify(sut)
@@ -70,7 +92,10 @@ extension LinkPaymentMethodFormElementSnapshotTests {
     func makeSUT(
         isDefault: Bool,
         isBillingDetailsUpdateFlow: Bool = false,
-        fullBillingDetails: Bool = false,
+        requestName: Bool = false,
+        requestPhone: Bool = false,
+        requestEmail: Bool = false,
+        requestFullAddress: Bool = false,
         networks: [String] = ["visa"]
     ) -> LinkPaymentMethodFormElement {
         let paymentMethod = ConsumerPaymentDetails(
@@ -93,10 +118,16 @@ extension LinkPaymentMethodFormElementSnapshotTests {
         )
 
         var configuration = PaymentSheet.Configuration()
-        if fullBillingDetails {
+        if requestFullAddress {
             configuration.billingDetailsCollectionConfiguration.address = .full
+        }
+        if requestEmail {
             configuration.billingDetailsCollectionConfiguration.email = .always
+        }
+        if requestName {
             configuration.billingDetailsCollectionConfiguration.name = .always
+        }
+        if requestPhone {
             configuration.billingDetailsCollectionConfiguration.phone = .always
         }
 
