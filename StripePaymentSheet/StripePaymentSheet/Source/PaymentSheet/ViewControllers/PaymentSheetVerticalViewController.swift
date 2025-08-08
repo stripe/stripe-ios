@@ -701,7 +701,7 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
 
         pay(with: selectedPaymentOption)
     }
-    
+
     @objc func didTapPrimaryButtonWhenDisabled() {
         // When the disabled button is tapped, show validation errors on all form fields
         if let paymentMethodFormViewController {
