@@ -101,13 +101,12 @@ struct CryptoOnrampExampleView: View {
         isLoading.wrappedValue = true
         Task {
             do {
-                let coordinator = try await CryptoOnrampCoordinator.create(
-                    appearance: LinkAppearance(
-                        primaryColor: .systemPink,
-                        primaryButton: .init(cornerRadius: 0, height: 200),
-                        style: .automatic
-                    )
+                let appearance = LinkAppearance(
+                    colors: .init(primary: .systemPink, selectedBorder: .white),
+                    primaryButton: .init(cornerRadius: 0, height: 200),
+                    style: .alwaysDark
                 )
+                let coordinator = try await CryptoOnrampCoordinator.create(appearance: appearance)
 
                 await MainActor.run {
                     self.coordinator = coordinator

@@ -466,6 +466,15 @@ extension STPAPIClient {
             }
         }
 
+        if let details = updateParams.details, case .bankAccount(let billingDetails) = details {
+            parameters["billing_address"] = billingDetails.consumersAPIParams
+
+            if let billingEmailAddress = billingDetails.email {
+                // This email address needs to be lowercase or the API will reject it
+                parameters["billing_email_address"] = billingEmailAddress.lowercased()
+            }
+        }
+
         if let isDefault = updateParams.isDefault {
             parameters["is_default"] = isDefault
         }

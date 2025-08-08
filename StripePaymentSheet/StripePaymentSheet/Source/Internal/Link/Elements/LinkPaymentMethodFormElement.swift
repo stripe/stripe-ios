@@ -29,7 +29,7 @@ final class LinkPaymentMethodFormElement: Element {
     let collectsUserInput: Bool = true
 
     struct Params {
-        let expiryDate: CardExpiryDate
+        let expiryDate: CardExpiryDate?
         let cvc: String?
         let billingDetails: STPPaymentMethodBillingDetails
         let setAsDefault: Bool
@@ -54,8 +54,12 @@ final class LinkPaymentMethodFormElement: Element {
     let theme: ElementsAppearance = LinkUI.appearance.asElementsTheme
 
     var params: Params? {
-        guard validationState.isValid,
-              let expiryDate = CardExpiryDate(expiryDateElement.text) else {
+        guard validationState.isValid else {
+            return nil
+        }
+
+        let expiryDate = CardExpiryDate(expiryDateElement.text)
+        if paymentMethod.type == .card && expiryDate == nil {
             return nil
         }
 

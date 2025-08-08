@@ -128,11 +128,15 @@ extension PaymentSheetFormFactory {
         }
 
         let mandate: SimpleMandateElement? = {
+            if signupOptInFeatureEnabled {
+                // Respect this over all other configurations.
+                return makeMandate()
+            }
             switch configuration.termsDisplayFor(paymentMethodType: .stripe(.card)) {
             case .never:
                 return nil
             case .automatic:
-                if isSettingUp || shouldShowLinkSignupOptIn  {
+                if isSettingUp {
                     return makeMandate()
                 }
             }
@@ -152,9 +156,14 @@ extension PaymentSheetFormFactory {
     }
 
     private func makeMandate() -> SimpleMandateElement {
+        // It's possible that `signupOptInFeatureEnabled` is true, but the user has already used Link.
+        // This user would not see the signup opt-in toggle, but we still want to show the mandate.
+        // Therefore, always show the mandate if `signupOptInFeatureEnabled` is true, but only add
+        // the Link-specific terms if the signup opt-in toggle is actually visible via `shouldShowLinkSignupOptIn`.
+        let shouldSaveToLink = shouldShowLinkSignupOptIn && signupOptInInitialValue
         let mandateText = Self.makeMandateText(
-            linkSignupOptInFeatureEnabled: shouldShowLinkSignupOptIn,
-            shouldSaveToLink: signupOptInInitialValue,
+            linkSignupOptInFeatureEnabled: signupOptInFeatureEnabled,
+            shouldSaveToLink: shouldSaveToLink,
             merchantName: configuration.merchantDisplayName
         )
         return makeMandate(mandateText: mandateText)
