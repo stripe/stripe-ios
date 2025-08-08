@@ -279,7 +279,7 @@ public class STPPaymentHandler: NSObject {
             completion: confirmCompletionBlock
         )
     }
-    
+
     /// Confirms the PaymentIntent using the provided `params` and handles any next actions required to authenticate the PaymentIntent.
     /// - Parameters:
     ///   - params: The params used to confirm the PaymentIntent. Note that this method overrides the value of `paymentParams.useStripeSDK` to `@YES`.
@@ -352,7 +352,7 @@ public class STPPaymentHandler: NSObject {
         self.subhandler = subhandler
     }
     private var subhandler: STPPaymentHandler?
-    
+
     /// Handles any `nextAction` required to authenticate the PaymentIntent.
     /// Call this method if you are using server-side confirmation.
     /// - Parameters:
@@ -622,7 +622,7 @@ public class STPPaymentHandler: NSObject {
         }
         apiClient.confirmSetupIntent(with: params, expand: ["payment_method"], completion: confirmCompletionBlock)
     }
-    
+
     /// Confirms the SetupIntent using the provided parameters and handles any next actions required to authenticate the SetupIntent.
     /// - Parameters:
     ///   - params: The params used to confirm the SetupIntent. Note that this method overrides the value of `setupIntentConfirmParams.useStripeSDK` to `@YES`.
@@ -638,7 +638,7 @@ public class STPPaymentHandler: NSObject {
             }
         }
     }
-    
+
     /// Handles any `nextAction` required to authenticate the SetupIntent.
     /// Call this method if you are confirming the SetupIntent on your backend and get a status of requires_action.
     /// - Parameters:
@@ -656,7 +656,7 @@ public class STPPaymentHandler: NSObject {
             }
         }
     }
-    
+
     /// Handles any `nextAction` required to authenticate the SetupIntent.
     /// Call this method if you are confirming the SetupIntent on your backend and get a status of requires_action.
     /// - Parameters:
