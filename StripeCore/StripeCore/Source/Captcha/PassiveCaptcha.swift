@@ -35,7 +35,7 @@ import Foundation
             rqdata: rqdata
         )
     }
-    
+
     @_spi(STP) public static func fetchPassiveHCaptchaToken(passiveCaptcha: PassiveCaptcha?, completion: @escaping (String?) -> Void) {
         #if APPLICATION_EXTENSION_API_ONLY
         // In app extension builds, HCaptcha functionality is not available
