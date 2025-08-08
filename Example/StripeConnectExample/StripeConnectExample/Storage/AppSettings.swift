@@ -28,6 +28,8 @@ class AppSettings {
         static let onboardingSkipTermsOfService = "OnboardingSkipTermsOfService"
         static let onboardingFieldOption = "OnboardingFieldOption"
         static let onboardingFutureRequirements = "OnboardingFutureRequirements"
+        static let onboardingRequirementsOption = "OnboardingRequirementsOption"
+        static let onboardingRequirementsString = "OnboardingRequirementsString"
 
     }
 
@@ -56,13 +58,15 @@ class AppSettings {
 
     var onboardingSettings: OnboardingSettings {
         get {
-            let settings = OnboardingSettings(
+            var settings = OnboardingSettings(
                 fullTermsOfServiceString: defaults.string(forKey: Constants.onboardingTermsOfServiceURL),
                 recipientTermsOfServiceString: defaults.string(forKey: Constants.onboardingrecipientTermsOfServiceString),
                 privacyPolicyString: defaults.string(forKey: Constants.onboardingPrivacyPolicyString),
                 skipTermsOfService: .init(rawValue: defaults.string(forKey: Constants.onboardingSkipTermsOfService)) ?? .default,
                 fieldOption: .init(rawValue: defaults.string(forKey: Constants.onboardingFieldOption)) ?? .default,
-                futureRequirement: .init(rawValue: defaults.string(forKey: Constants.onboardingFutureRequirements)) ?? .default
+                futureRequirement: .init(rawValue: defaults.string(forKey: Constants.onboardingFutureRequirements)) ?? .default,
+                requirementsOption: .init(rawValue: defaults.string(forKey: Constants.onboardingRequirementsOption)) ?? .default,
+                requirementsString: defaults.string(forKey: Constants.onboardingRequirementsString)
             )
             return settings
         }
@@ -74,6 +78,10 @@ class AppSettings {
             defaults.setValue(newValue.skipTermsOfService.rawValue, forKey: Constants.onboardingSkipTermsOfService)
             defaults.setValue(newValue.fieldOption.rawValue, forKey: Constants.onboardingFieldOption)
             defaults.setValue(newValue.futureRequirement.rawValue, forKey: Constants.onboardingFutureRequirements)
+
+            defaults.setValue(newValue.requirementsOption.rawValue, forKey: Constants.onboardingRequirementsOption)
+            defaults.setValue(newValue.requirementsString, forKey: Constants.onboardingRequirementsString)
+
             defaults.synchronize()
         }
     }
