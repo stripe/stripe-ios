@@ -142,7 +142,13 @@ class MainViewController: UITableViewController {
             payoutsVC.delegate = self
             viewControllerToPresent = payoutsVC
         case .payments:
-            let paymentsVC = embeddedComponentManager.createPaymentsViewController()
+            // Use saved payments settings from AppSettings
+            let savedPaymentsSettings = AppSettings.shared.paymentsSettings
+            let defaultFilters = savedPaymentsSettings.paymentsListDefaultFiltersOptions
+
+            let paymentsVC = embeddedComponentManager.createPaymentsViewController(
+                defaultFilters: defaultFilters
+            )
             paymentsVC.delegate = self
             viewControllerToPresent = paymentsVC
         }

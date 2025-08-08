@@ -7,7 +7,6 @@
 
 import Foundation
 
-
 private extension String {
     /// Converts camelCase string to snake_case
     func camelCaseToSnakeCase() -> String {
@@ -30,18 +29,18 @@ extension EmbeddedComponentManager {
 
         @_documentation(visibility: public)
         public enum AmountFilter: Equatable, Codable {
-            case equals(Int)
-            case greaterThan(Int)
-            case lessThan(Int)
-            case between(lowerBound: Int, upperBound: Int)
+            case equals(Double)
+            case greaterThan(Double)
+            case lessThan(Double)
+            case between(lowerBound: Double, upperBound: Double)
 
             private enum CodingKeys: String, CodingKey {
                 case equals, greaterThan, lessThan, between
             }
 
             private struct BetweenAmount: Codable {
-                let lowerBound: Int
-                let upperBound: Int
+                let lowerBound: Double
+                let upperBound: Double
             }
 
             public func encode(to encoder: Encoder) throws {
