@@ -167,19 +167,20 @@ public class STPPaymentHandler: NSObject {
     /// Date at which `confirm` or `handleNextAction` is called. Used to report how long the call took.
     internal var startTime: Date?
 
-    /// Confirms the PaymentIntent with the provided parameters and handles any `nextAction` required
-    /// to authenticate the PaymentIntent.
-    /// Call this method if you are using automatic confirmation.  - seealso:https://stripe.com/docs/payments/accept-a-payment?platform=ios&ui=custom
+    // MARK: - PaymentIntent APIs
+    /// Confirms the PaymentIntent using the provided `params` and handles any next actions required to authenticate the PaymentIntent.
     /// - Parameters:
-    ///   - paymentParams: The params used to confirm the PaymentIntent. Note that this method overrides the value of `paymentParams.useStripeSDK` to `@YES`.
+    ///   - params: The params used to confirm the PaymentIntent. Note that this method overrides the value of `paymentParams.useStripeSDK` to `@YES`.
     ///   - authenticationContext: The authentication context used to authenticate the payment.
-    ///   - completion: The completion block. If the status returned is `STPPaymentHandlerActionStatusSucceeded`, the PaymentIntent status is not necessarily STPPaymentIntentStatusSucceeded (e.g. some bank payment methods take days before the PaymentIntent succeeds).
-    @objc(confirmPayment:withAuthenticationContext:completion:)
-    public func confirmPayment(
-        _ paymentParams: STPPaymentIntentParams,
-        with authenticationContext: STPAuthenticationContext,
+    ///   - completion: The completion block.
+    /// - Note: If the status returned is `STPPaymentHandlerActionStatus.succeeded`, the PaymentIntent status is not necessarily `STPPaymentIntentStatus.succeeded` (e.g. some bank payment methods take days before money moves and the PaymentIntent succeeds).
+    @objc(confirmPaymentIntentWithParams:authenticationContext:completion:)
+    public func confirmPaymentIntent(
+        params: STPPaymentIntentParams,
+        authenticationContext: STPAuthenticationContext,
         completion: @escaping STPPaymentHandlerActionPaymentIntentCompletionBlock
     ) {
+        let paymentParams = params
         let paymentIntentID = paymentParams.stripeId
         logConfirmPaymentIntentStarted(paymentIntentID: paymentIntentID, paymentParams: paymentParams)
         // Overwrite completion to send an analytic before calling the caller-supplied completion
@@ -277,21 +278,6 @@ public class STPPaymentHandler: NSObject {
             expand: ["payment_method"],
             completion: confirmCompletionBlock
         )
-    }
-
-    /// :nodoc:
-    @available(
-        *,
-        deprecated,
-        message: "Use confirmPayment(_:with:completion:) instead",
-        renamed: "confirmPayment(_:with:completion:)"
-    )
-    public func confirmPayment(
-        withParams: STPPaymentIntentParams,
-        authenticationContext: STPAuthenticationContext,
-        completion: @escaping STPPaymentHandlerActionPaymentIntentCompletionBlock
-    ) {
-        self.confirmPayment(withParams, with: authenticationContext, completion: completion)
     }
 
     @_spi(SharedPaymentToken) public func handleNextAction(
@@ -494,19 +480,20 @@ public class STPPaymentHandler: NSObject {
         }
     }
 
-    /// Confirms the SetupIntent with the provided parameters and handles any `nextAction` required
-    /// to authenticate the SetupIntent.
-    /// - seealso: https://stripe.com/docs/payments/save-during-payment?platform=ios
+    // MARK: - SetupIntent APIs
+    /// Confirms the SetupIntent using the provided parameters and handles any next actions required to authenticate the SetupIntent.
     /// - Parameters:
-    ///   - setupIntentConfirmParams: The params used to confirm the SetupIntent. Note that this method overrides the value of `setupIntentConfirmParams.useStripeSDK` to `@YES`.
+    ///   - params: The params used to confirm the SetupIntent. Note that this method overrides the value of `setupIntentConfirmParams.useStripeSDK` to `@YES`.
     ///   - authenticationContext: The authentication context used to authenticate the SetupIntent.
-    ///   - completion: The completion block. If the status returned is `STPPaymentHandlerActionStatusSucceeded`, the SetupIntent status will always be STPSetupIntentStatusSucceeded.
-            @objc(confirmSetupIntent:withAuthenticationContext:completion:)
+    ///   - completion: The completion block called when this method is finished.
+    /// - Note: If the status returned is `STPPaymentHandlerActionStatus.succeeded`, the SetupIntent status will always be `STPSetupIntentStatus.succeeded`.
+    @objc(confirmSetupIntentWithParams:authenticationContext:completion:)
     public func confirmSetupIntent(
-        _ setupIntentConfirmParams: STPSetupIntentConfirmParams,
-        with authenticationContext: STPAuthenticationContext,
+        params: STPSetupIntentConfirmParams,
+        authenticationContext: STPAuthenticationContext,
         completion: @escaping STPPaymentHandlerActionSetupIntentCompletionBlock
     ) {
+        let setupIntentConfirmParams = params
         let setupIntentID = STPSetupIntent.id(fromClientSecret: setupIntentConfirmParams.clientSecret)
         logConfirmSetupIntentStarted(setupIntentID: setupIntentID, confirmParams: setupIntentConfirmParams)
         // Overwrite completion to send an analytic before calling the caller-supplied completion
@@ -2621,4 +2608,28 @@ extension STPPaymentHandler {
     func present(_ authenticationViewController: UIViewController, completion: @escaping () -> Void)
     func dismiss(_ authenticationViewController: UIViewController, completion: (() -> Void)?)
     func presentPollingVCForAction(action: STPPaymentHandlerPaymentIntentActionParams, type: STPPaymentMethodType, safariViewController: SFSafariViewController?)
+}
+
+// MARK: - Deprecated public funcs
+
+extension STPPaymentHandler {
+    @available(*, deprecated, renamed: "confirmPaymentIntent(params:authenticationContext:completion:)", message: "")
+    @objc(confirmPayment:withAuthenticationContext:completion:)
+    public func confirmPayment(
+        _ paymentParams: STPPaymentIntentParams,
+        with authenticationContext: STPAuthenticationContext,
+        completion: @escaping STPPaymentHandlerActionPaymentIntentCompletionBlock
+    ) {
+        confirmPaymentIntent(params: paymentParams, authenticationContext: authenticationContext, completion: completion)
+    }
+
+    @available(*, deprecated, renamed: "confirmSetupIntent(params:authenticationContext:completion:)", message: "")
+    @objc(confirmSetupIntent:withAuthenticationContext:completion:)
+    public func confirmSetupIntent(
+        _ setupIntentConfirmParams: STPSetupIntentConfirmParams,
+        with authenticationContext: STPAuthenticationContext,
+        completion: @escaping STPPaymentHandlerActionSetupIntentCompletionBlock
+    ) {
+        confirmSetupIntent(params: setupIntentConfirmParams, authenticationContext: authenticationContext, completion: completion)
+    }
 }

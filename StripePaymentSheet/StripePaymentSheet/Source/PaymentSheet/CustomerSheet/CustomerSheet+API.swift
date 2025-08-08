@@ -65,8 +65,8 @@ extension CustomerSheet {
             setupIntentParams.returnURL = configuration.returnURL
             setupIntentParams.additionalAPIParameters = [ "expand": ["payment_method"]]
             paymentHandler.confirmSetupIntent(
-                setupIntentParams,
-                with: authenticationContext,
+                params: setupIntentParams,
+                authenticationContext: authenticationContext,
                 completion: paymentHandlerCompletion)
         } else {
             let errorAnalytic = ErrorAnalytic(event: .unexpectedCustomerSheetError,
