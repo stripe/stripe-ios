@@ -11,13 +11,16 @@ import SwiftUI
 @_spi(CryptoOnrampSDKPreview)
 import StripeCryptoOnramp
 
+@_spi(STP)
+import StripePaymentSheet
+
 /// The main content view of the example CryptoOnramp app.
 struct CryptoOnrampExampleView: View {
     @State private var coordinator: CryptoOnrampCoordinator?
     @State private var errorMessage: String?
     @State private var email: String = ""
     @State private var showRegistration: Bool = false
-    @State private var showSuccess: Bool = false
+    @State private var showAuthenticatedView: Bool = false
     @State private var authenticationCustomerId: String?
 
     @Environment(\.isLoading) private var isLoading
@@ -67,13 +70,16 @@ struct CryptoOnrampExampleView: View {
                             destination: RegistrationView(coordinator: coordinator, email: email),
                             isActive: $showRegistration
                         )
-                    }
 
-                    if let customerId = authenticationCustomerId {
-                        HiddenNavigationLink(
-                            destination: SuccessView(message: "Authentication Successful!", customerId: customerId),
-                            isActive: $showSuccess
-                        )
+                        if let customerId = authenticationCustomerId {
+                            HiddenNavigationLink(
+                                destination: AuthenticatedView(
+                                    coordinator: coordinator,
+                                    customerId: customerId
+                                ),
+                                isActive: $showAuthenticatedView
+                            )
+                        }
                     }
                 }
                 .padding()
@@ -82,6 +88,9 @@ struct CryptoOnrampExampleView: View {
             .navigationBarTitleDisplayMode(.inline)
         }
         .onAppear {
+            guard coordinator == nil else {
+                return
+            }
             initializeCoordinator()
         }
     }
@@ -92,7 +101,13 @@ struct CryptoOnrampExampleView: View {
         isLoading.wrappedValue = true
         Task {
             do {
-                let coordinator = try await CryptoOnrampCoordinator.create(appearance: .init())
+                let coordinator = try await CryptoOnrampCoordinator.create(
+                    appearance: LinkAppearance(
+                        primaryColor: .systemPink,
+                        primaryButton: .init(cornerRadius: 0, height: 200),
+                        style: .automatic
+                    )
+                )
 
                 await MainActor.run {
                     self.coordinator = coordinator
@@ -144,7 +159,7 @@ struct CryptoOnrampExampleView: View {
 
                             // Delay so the navigation link animation doesn’t get canceled.
                             DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
-                                showSuccess = true
+                                showAuthenticatedView = true
                             }
                         }
                     case .canceled:

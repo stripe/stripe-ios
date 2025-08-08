@@ -785,37 +785,6 @@ class EmbeddedPaymentElementTest: XCTestCase {
         }
     }
 
-    func testCreateFails_whenImmediateActionAndDisplayingMandate() async throws {
-        // Given an `immediateAction` configuration...
-        var config = configuration
-        config.embeddedViewDisplaysMandateText = false
-        config.rowSelectionBehavior = .immediateAction(didSelectPaymentOption: { /* no-op */ })
-        // ...that doesn't set `embeddedViewDisplaysMandateText = false`...
-        config.embeddedViewDisplaysMandateText = true
-
-        // ...creating the EmbeddedPaymentElement should fail
-        await XCTAssertThrowsErrorAsync(
-            _ = try await EmbeddedPaymentElement.create(
-                intentConfiguration: self.paymentIntentConfig,
-                configuration: config
-            )
-        )
-    }
-
-    func testCreateSucceeds_whenFlatWithDisclosureWithImmediateActionRowSelectionBehavior() async throws {
-        // Given an appearance with row.style = .flatWithDisclosure and a config with rowSelectionBehavior = .immediateAction
-        var config = configuration
-        config.appearance.embeddedPaymentElement.row.style = .flatWithDisclosure
-        config.embeddedViewDisplaysMandateText = false
-        config.rowSelectionBehavior = .immediateAction(didSelectPaymentOption: {})
-
-        // When we create an EmbeddedPaymentElement
-        _ = try await EmbeddedPaymentElement.create(
-            intentConfiguration: paymentIntentConfig,
-            configuration: config
-        )
-    }
-
     func testCancelingFormResetsPaymentOption() async throws {
         // Create our EmbeddedPaymentElement
         let sut = try await EmbeddedPaymentElement.create(
@@ -1045,6 +1014,40 @@ extension EmbeddedPaymentElementTest: EmbeddedPaymentElementDelegate {
 
     func embeddedPaymentElementWillPresent(embeddedPaymentElement: EmbeddedPaymentElement) {
         delegateWillPresentCalled = true
+    }
+
+    func testFormDismissWithConfirmFormSheetActionCallsCanceled() async throws {
+        // Given a configuration with formSheetAction = .confirm
+        var config = configuration
+        config.embeddedViewDisplaysMandateText = false
+
+        let expectation = expectation(description: "Completion handler called with .canceled")
+        config.formSheetAction = .confirm { result in
+            XCTAssertEqual(result, .canceled, "Expected completion to be called with .canceled when form is dismissed")
+            expectation.fulfill()
+        }
+
+        // Create our EmbeddedPaymentElement
+        let sut = try await EmbeddedPaymentElement.create(
+            intentConfiguration: paymentIntentConfig,
+            configuration: config
+        )
+        sut.delegate = self
+        sut.presentingViewController = UIViewController()
+
+        // Open a form by tapping on Card
+        sut.embeddedPaymentMethodsView.didTap(
+            rowButton: sut.embeddedPaymentMethodsView.getRowButton(accessibilityIdentifier: "Card")
+        )
+
+        // Verify the form is presented
+        XCTAssertNotNil(sut.selectedFormViewController, "Form should be presented after tapping Card")
+
+        // When the user cancels the form by dismissing it
+        sut.selectedFormViewController?.didTapOrSwipeToDismiss()
+
+        // Then the completion handler should be called with .canceled
+        await fulfillment(of: [expectation], timeout: 1.0)
     }
 }
 

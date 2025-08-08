@@ -144,4 +144,6 @@
 
 "Your postal code is incomplete." = "Введенный почтовый индекс неполон.";
 
+"Your postal code is invalid." = "Недействительный почтовый индекс.";
+
 "ZIP" = "Почтовый индекс";

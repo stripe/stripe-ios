@@ -28,18 +28,11 @@ extension StripeAPI {
             return PaymentsSDKVariant.paymentUserAgent
         }()
 
+        /// Radar options that may contain HCaptcha token
+        @_spi(STP) var radarOptions: RadarOptions?
+
         /// Contains metadata with identifiers for the session and information about the integration
-        @_spi(STP) public var clientAttributionMetadata: [String: String] = {
-            var clientAttributionMetadata = [
-                "merchant_integration_source": "elements",
-                "merchant_integration_subtype": "mobile",
-                "merchant_integration_version": "stripe-ios/\(StripeAPIConfiguration.STPSDKVersion)",
-            ]
-            if let clientSessionId = AnalyticsHelper.shared.sessionID {
-                clientAttributionMetadata["client_session_id"] = clientSessionId
-            }
-            return clientAttributionMetadata
-        }()
+        @_spi(STP) public var clientAttributionMetadata: STPClientAttributionMetadata = STPClientAttributionMetadata()
 
         /// :nodoc:
         @_spi(STP) public struct Card: UnknownFieldsEncodable {
@@ -62,6 +55,12 @@ extension StripeAPI {
                     return nil
                 }
             }
+            @_spi(STP) public var _additionalParametersStorage: NonEncodableParameters?
+        }
+
+        /// :nodoc:
+        @_spi(STP) public struct RadarOptions: UnknownFieldsEncodable {
+            @_spi(STP) public var hcaptchaToken: String?
             @_spi(STP) public var _additionalParametersStorage: NonEncodableParameters?
         }
 

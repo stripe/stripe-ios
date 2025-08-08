@@ -86,6 +86,7 @@ final class PayWithLinkViewController: BottomSheetViewController {
         let shouldFinishOnClose: Bool
         let shouldShowSecondaryCta: Bool
         let launchedFromFlowController: Bool
+        let canSkipWalletAfterVerification: Bool
         let initiallySelectedPaymentDetailsID: String?
         let callToAction: ConfirmButton.CallToActionType
         var lastAddedPaymentDetails: ConsumerPaymentDetails?
@@ -110,6 +111,7 @@ final class PayWithLinkViewController: BottomSheetViewController {
         ///   - shouldFinishOnClose: Whether or not Link should finish with `.canceled` result instead of returning to Payment Sheet when the close button is tapped.
         ///   - shouldShowSecondaryCta: Whether or not a secondary CTA to pay another way should be shown.
         ///   - launchedFromFlowController: Whether the flow was opened from `FlowController`.
+        ///   - canSkipWalletAfterVerification: Whether or not we should try to skip showing the wallet after verification.
         ///   - initiallySelectedPaymentDetailsID: The ID of an initially selected payment method. This is set when opened instead of FlowController.
         ///   - callToAction: A custom CTA to display on the confirm button. If `nil`, will display `intent`'s default CTA.
         ///   - analyticsHelper: An instance of `AnalyticsHelper` to use for logging.
@@ -121,6 +123,7 @@ final class PayWithLinkViewController: BottomSheetViewController {
             shouldFinishOnClose: Bool,
             shouldShowSecondaryCta: Bool = true,
             launchedFromFlowController: Bool = false,
+            canSkipWalletAfterVerification: Bool,
             initiallySelectedPaymentDetailsID: String?,
             callToAction: ConfirmButton.CallToActionType?,
             analyticsHelper: PaymentSheetAnalyticsHelper
@@ -132,6 +135,7 @@ final class PayWithLinkViewController: BottomSheetViewController {
             self.shouldFinishOnClose = shouldFinishOnClose
             self.shouldShowSecondaryCta = shouldShowSecondaryCta
             self.launchedFromFlowController = launchedFromFlowController
+            self.canSkipWalletAfterVerification = canSkipWalletAfterVerification
             self.initiallySelectedPaymentDetailsID = initiallySelectedPaymentDetailsID
             self.callToAction = callToAction ?? .makeDefaultTypeForLink(intent: intent)
             self.analyticsHelper = analyticsHelper
@@ -172,6 +176,7 @@ final class PayWithLinkViewController: BottomSheetViewController {
         shouldShowSecondaryCta: Bool = true,
         launchedFromFlowController: Bool = false,
         initiallySelectedPaymentDetailsID: String? = nil,
+        canSkipWalletAfterVerification: Bool,
         callToAction: ConfirmButton.CallToActionType? = nil,
         analyticsHelper: PaymentSheetAnalyticsHelper
     ) {
@@ -184,6 +189,7 @@ final class PayWithLinkViewController: BottomSheetViewController {
                 shouldFinishOnClose: shouldFinishOnClose,
                 shouldShowSecondaryCta: shouldShowSecondaryCta,
                 launchedFromFlowController: launchedFromFlowController,
+                canSkipWalletAfterVerification: canSkipWalletAfterVerification,
                 initiallySelectedPaymentDetailsID: initiallySelectedPaymentDetailsID,
                 callToAction: callToAction,
                 analyticsHelper: analyticsHelper
@@ -367,6 +373,24 @@ private extension PayWithLinkViewController {
                 // Ignore any errors that might happen here.
                 shippingAddressResponse = try? await shippingAddressResult
 
+                let defaultPaymentDetails = paymentDetails.first(where: \.isDefault) ?? paymentDetails.first
+
+                if let defaultPaymentDetails, canSkipWallet(for: linkAccount, with: defaultPaymentDetails) {
+                    let billingDetailsValidator = LinkBillingDetailsValidator(linkAccount: linkAccount, context: context)
+                    let validationResult = await billingDetailsValidator.validate(defaultPaymentDetails)
+
+                    switch validationResult {
+                    case .complete(let updatedPaymentDetails, let confirmationExtras):
+                        // We have valid payment details, so we can skip the wallet and return the selection to the caller.
+                        handlePaymentDetailsSelected(updatedPaymentDetails, confirmationExtras: confirmationExtras)
+                        return
+                    case .incomplete:
+                        // We don't have valid payment details since we need to recollect missing billing details,
+                        // so show the wallet.
+                        break
+                    }
+                }
+
                 presentAppropriateViewController(
                     with: linkAccount,
                     paymentDetails: paymentDetails
@@ -379,6 +403,13 @@ private extension PayWithLinkViewController {
                 )
             }
         }
+    }
+
+    private func canSkipWallet(
+        for linkAccount: PaymentSheetLinkAccount,
+        with paymentDetails: ConsumerPaymentDetails
+    ) -> Bool {
+        return linkAccount.sessionState == .verified && context.canSkipWalletAfterVerification && paymentDetails.isValidCard
     }
 
     private func fetchShippingAddress(
@@ -725,7 +756,7 @@ extension PayWithLinkViewController: PaymentSheetLinkAccountDelegate {
                                 return
                             }
                             completion(.success(newSession))
-                        case .canceled, .failed:
+                        case .canceled, .failed, .switchAccount:
                             completion(.failure(PaymentSheetError.unknown(debugDescription: "Authentication failed")))
                         }
                     }

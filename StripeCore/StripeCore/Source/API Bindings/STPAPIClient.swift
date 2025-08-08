@@ -249,24 +249,6 @@ import UIKit
         return client
     }
 
-    // See https://docs.google.com/document/d/11wWdHwWzTJGe_29mHsk71fk-kG4lwvp8TLBBf4ws9JM/edit?usp=sharing
-    @_spi(STP) public class func paramsAddingClientAttributionMetadata(
-        _ params: [String: Any]
-    ) -> [String: Any] {
-        stpAssert(
-            params["client_attribution_metadata"] == nil,
-            "Overwriting existing client_attribution_metadata"
-        )
-        var newParams = params
-        var clientAttributionMetadata = ["merchant_integration_source": "elements",
-                                         "merchant_integration_subtype": "mobile",
-                                         "merchant_integration_version": "stripe-ios/\(StripeAPIConfiguration.STPSDKVersion)", ]
-        if let clientSessionId = AnalyticsHelper.shared.sessionID {
-            clientAttributionMetadata["client_session_id"] = clientSessionId
-        }
-        newParams["client_attribution_metadata"] = clientAttributionMetadata
-        return newParams
-    }
 }
 
 private let APIVersion = "2020-08-27"

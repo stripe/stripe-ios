@@ -50,6 +50,10 @@ struct LinkButton: View {
         Constants.baseContentSpacing * scaleFactor
     }
 
+    private var scaledPaymentMethodPreviewSpacing: CGFloat {
+        scaledContentSpacing / 2 // Use tighter spacing between the icon and the last 4
+    }
+
     private var scaledFont: UIFont {
         let scaledSize = Constants.baseFontSize * scaleFactor
         return UIFont.systemFont(ofSize: scaledSize, weight: .medium)
@@ -68,11 +72,24 @@ struct LinkButton: View {
                     Rectangle()
                         .fill(Color(uiColor: .linkSeparatorOnPrimaryButton))
                         .frame(width: scaledSeparatorWidth, height: scaledContentHeight)
+                        .cornerRadius(scaledSeparatorWidth / 2)
 
-                    Text(account.email)
-                        .font(Font(scaledFont))
-                        .lineLimit(1)
-                        .truncationMode(.tail)
+                    if let paymentMethodPreview = viewModel.paymentMethodPreview {
+                        HStack(spacing: scaledPaymentMethodPreviewSpacing) {
+                            SwiftUI.Image(uiImage: paymentMethodPreview.icon)
+                                .resizable()
+                                .scaledToFit()
+                                .frame(height: scaledContentHeight)
+
+                            Text(paymentMethodPreview.last4)
+                                .font(Font(scaledFont))
+                        }
+                    } else {
+                        Text(account.email)
+                            .font(Font(scaledFont))
+                            .lineLimit(1)
+                            .truncationMode(.tail)
+                    }
                 }
             }
             .padding(.horizontal, LinkUI.contentSpacing)

@@ -126,8 +126,6 @@
 
 "Failed to connect" = "Kunne ikke koble til";
 
-"Fast, secure, 1⁠-⁠click checkout" = "Rask og sikker betaling med ett klikk";
-
 "For security, please re-enter your card’s security code." = "For sikkerhets skyld må du skrive inn sikkerhetskoden for kortet ditt på nytt.";
 
 "Get %@ back when you pay for the first time with your bank. <terms>See terms</terms>" = "Få %@ tilbake når du betaler for første gang med banken din.<terms>Se vilkår</terms>";
@@ -237,8 +235,6 @@
 "Save your bank account in just a few steps." = "Lagre bankkontoen din med bare noen få trinn.";
 
 "Save your info for secure 1-click checkout with Link" = "Lagre informasjonen din for sikker 1-klikk-utsjekking med Link";
-
-"Save your payment information with Link, and securely check out in 1-click on Link-supported sites." = "Lagre betalingsinformasjonen din med Link, og sjekk ut sikkert med ett klikk på Link-støttede nettsteder.";
 
 "Saved" = "Lagret";
 

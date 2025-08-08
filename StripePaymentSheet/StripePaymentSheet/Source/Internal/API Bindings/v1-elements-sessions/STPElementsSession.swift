@@ -58,6 +58,9 @@ import Foundation
     /// An ordered list of custom payment methods to display
     let customPaymentMethods: [CustomPaymentMethod]
 
+    /// An object that contains information for the passive captcha
+    let passiveCaptcha: PassiveCaptcha?
+
     let customer: ElementsCustomer?
 
     /// A flag that indicates that this instance was created as a best-effort
@@ -82,6 +85,7 @@ import Foundation
         isApplePayEnabled: Bool,
         externalPaymentMethods: [ExternalPaymentMethod],
         customPaymentMethods: [CustomPaymentMethod],
+        passiveCaptcha: PassiveCaptcha?,
         customer: ElementsCustomer?,
         isBackupInstance: Bool = false
     ) {
@@ -101,6 +105,7 @@ import Foundation
         self.isApplePayEnabled = isApplePayEnabled
         self.externalPaymentMethods = externalPaymentMethods
         self.customPaymentMethods = customPaymentMethods
+        self.passiveCaptcha = passiveCaptcha
         self.customer = customer
         self.isBackupInstance = isBackupInstance
         super.init()
@@ -145,6 +150,7 @@ import Foundation
             isApplePayEnabled: true,
             externalPaymentMethods: [],
             customPaymentMethods: [],
+            passiveCaptcha: nil,
             customer: nil,
             isBackupInstance: true
         )
@@ -201,6 +207,18 @@ extension STPElementsSession: STPAPIResponseDecodable {
             return epms
         }()
 
+        let passiveCaptcha: PassiveCaptcha? = {
+            let enablePassiveCaptcha = flags["elements_enable_passive_captcha"] ?? false
+            let passiveCaptchaKey = "passive_captcha"
+            guard enablePassiveCaptcha,
+                  let passiveCaptchaJSON = response[passiveCaptchaKey] as? [AnyHashable: Any],
+                  let passiveCaptcha = PassiveCaptcha.decoded(fromAPIResponse: passiveCaptchaJSON)
+            else {
+                return nil
+            }
+            return passiveCaptcha
+        }()
+
         let customPaymentMethods: [CustomPaymentMethod] = {
             let customPaymentMethodDataKey = "custom_payment_method_data"
             guard response[customPaymentMethodDataKey] != nil, !(response[customPaymentMethodDataKey] is NSNull) else {
@@ -239,6 +257,7 @@ extension STPElementsSession: STPAPIResponseDecodable {
             isApplePayEnabled: isApplePayEnabled,
             externalPaymentMethods: externalPaymentMethods,
             customPaymentMethods: customPaymentMethods,
+            passiveCaptcha: passiveCaptcha,
             customer: customer
         )
     }
@@ -319,6 +338,14 @@ extension STPElementsSession {
 
     var allowsLinkDefaultOptIn: Bool {
         linkFlags["link_mobile_disable_default_opt_in"] != true
+    }
+
+    var linkSignupOptInFeatureEnabled: Bool {
+        linkFlags["link_sign_up_opt_in_feature_enabled"] == true
+    }
+
+    var linkSignupOptInInitialValue: Bool {
+        linkFlags["link_sign_up_opt_in_initial_value"] == true
     }
 }
 

@@ -19,7 +19,7 @@ extension PaymentSheet {
         /// Signup for Link then pay.
         case signUp(
             account: PaymentSheetLinkAccount,
-            phoneNumber: PhoneNumber,
+            phoneNumber: PhoneNumber?,
             consentAction: PaymentSheetLinkAccount.ConsentAction,
             legalName: String?,
             intentConfirmParams: IntentConfirmParams
@@ -118,4 +118,12 @@ extension PaymentSheet.LinkConfirmOption {
         }
     }
 
+    var signupConfirmParams: IntentConfirmParams? {
+        switch self {
+        case .signUp(_, _, _, _, let intentConfirmParams):
+            return intentConfirmParams
+        case .wallet, .withPaymentDetails, .withPaymentMethod:
+            return nil
+        }
+    }
 }

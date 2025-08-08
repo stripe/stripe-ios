@@ -164,7 +164,8 @@ public extension PaymentSheet {
             /// Use this if you intend to only reuse the payment method when your customer is present in your checkout flow.
             case onSession = "on_session"
 
-            /// Use this if you do not intend to reuse this payment method and want to override the top-level setup_future_usage value for this payment method.
+            /// Use this if you do not intend to reuse this payment method and want to override the top-level `setup_future_usage` value for this payment method.
+            /// - Note: This value is only valid when used to set `PaymentMethodOptions.setupFutureUsageValues`.
             @_spi(PaymentMethodOptionsSetupFutureUsagePreview) case none = "none"
         }
 
