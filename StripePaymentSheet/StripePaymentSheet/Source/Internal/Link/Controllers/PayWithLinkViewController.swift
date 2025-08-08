@@ -756,7 +756,7 @@ extension PayWithLinkViewController: PaymentSheetLinkAccountDelegate {
                                 return
                             }
                             completion(.success(newSession))
-                        case .canceled, .failed:
+                        case .canceled, .failed, .switchAccount:
                             completion(.failure(PaymentSheetError.unknown(debugDescription: "Authentication failed")))
                         }
                     }
