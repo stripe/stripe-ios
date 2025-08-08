@@ -36,19 +36,24 @@ import Foundation
         )
     }
 
-    @available(iOSApplicationExtension, unavailable)
     @_spi(STP) public static func fetchPassiveHCaptchaToken(passiveCaptcha: PassiveCaptcha?, completion: @escaping (String?) -> Void) {
+        #if APPLICATION_EXTENSION_API_ONLY
+        // In app extension builds, HCaptcha functionality is not available
+        completion(nil)
+        #else
         guard let passiveCaptcha,
               let hcaptcha = try? HCaptcha(apiKey: passiveCaptcha.siteKey, passiveApiKey: true, baseURL: URL(string: "http://localhost"), rqdata: passiveCaptcha.rqdata) else {
             completion(nil)
             return
         }
+        
         hcaptcha.didFinishLoading {
             hcaptcha.validate { result in
                 let token = try? result.dematerialize()
                 completion(token)
             }
         }
+        #endif
     }
 
 }
