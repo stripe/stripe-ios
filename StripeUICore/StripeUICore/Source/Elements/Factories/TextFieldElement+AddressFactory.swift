@@ -169,7 +169,7 @@ import UIKit
             func validate(text: String, isOptional: Bool) -> ValidationState {
                 // validate non-empty
                 if text.isEmpty {
-                    return isOptional ? .valid : .invalid(Error.empty)
+                    return isOptional ? .valid : .invalid(Error.empty(localizedDescription: countryCode == "US" ? String.Localized.your_zip_is_incomplete : String.Localized.your_postal_code_is_incomplete))
                 }
                 // validate long enough
                 if text.count < minLength {

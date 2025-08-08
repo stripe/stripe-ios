@@ -137,6 +137,9 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
             appearance: configuration.appearance,
             didTap: { [weak self] in
                 self?.didTapPrimaryButton()
+            },
+            didTapWhenDisabled: { [weak self] in
+                self?.didTapPrimaryButtonWhenDisabled()
             }
         )
     }()
@@ -697,6 +700,13 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
         }
 
         pay(with: selectedPaymentOption)
+    }
+    
+    @objc func didTapPrimaryButtonWhenDisabled() {
+        // When the disabled button is tapped, show validation errors on all form fields
+        if let paymentMethodFormViewController {
+            paymentMethodFormViewController.form.showAllValidationErrors()
+        }
     }
 
     @objc func presentManageScreen() {

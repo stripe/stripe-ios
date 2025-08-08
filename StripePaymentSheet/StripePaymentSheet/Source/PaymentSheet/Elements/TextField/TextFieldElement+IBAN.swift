@@ -39,7 +39,7 @@ extension TextFieldElement {
             }
         }
 
-        func shouldDisplay(isUserEditing: Bool) -> Bool {
+        func shouldDisplay(isUserEditing: Bool, userTappedConfirm: Bool) -> Bool {
             switch self {
             case .incomplete, .invalidFormat:
                 return !isUserEditing
@@ -89,7 +89,7 @@ extension TextFieldElement {
         func validate(text: String, isOptional: Bool) -> ValidationState {
             let iBAN = text.uppercased()
             guard !iBAN.isEmpty else {
-                return isOptional ? .valid : .invalid(Error.empty)
+                return isOptional ? .valid : .invalid(Error.empty(localizedDescription: String.Localized.incompleteAccountNumber))
             }
 
             // Validate starts with a two-letter country code
@@ -199,7 +199,7 @@ extension TextFieldElement {
 
         func validate(text: String, isOptional: Bool) -> ValidationState {
             stpAssert(!editConfiguration.isEditable, "Validation assumes that the field is read-only")
-            return !lastFour.isEmpty ? .valid : .invalid(Error.empty)
+            return !lastFour.isEmpty ? .valid : .invalid(Error.empty(localizedDescription: String.Localized.incompleteAccountNumber))
         }
     }
 }

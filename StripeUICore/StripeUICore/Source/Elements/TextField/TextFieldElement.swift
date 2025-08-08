@@ -36,10 +36,13 @@ import UIKit
         }
     }
     private(set) var didReceiveAutofill: Bool = false
+    /// When true, indicates the user tapped confirm button requesting validation feedback
+    var userTappedConfirm: Bool = false
     public var validationState: ElementValidationState {
         return .init(
             from: configuration.validate(text: text, isOptional: configuration.isOptional),
-            isUserEditing: isEditing
+            isUserEditing: isEditing,
+            userTappedConfirm: userTappedConfirm
         )
     }
 
@@ -80,6 +83,7 @@ import UIKit
         let shouldShowClearButton: Bool
         let editConfiguration: EditConfiguration
         let theme: ElementsAppearance
+        let userTappedConfirm: Bool
     }
 
     var viewModel: ViewModel {
@@ -100,7 +104,8 @@ import UIKit
             accessoryView: configuration.accessoryView(for: text, theme: theme),
             shouldShowClearButton: configuration.shouldShowClearButton,
             editConfiguration: configuration.editConfiguration,
-            theme: theme
+            theme: theme,
+            userTappedConfirm: userTappedConfirm
         )
     }
 
@@ -142,6 +147,13 @@ extension TextFieldElement: Element {
     @discardableResult
     public func beginEditing() -> Bool {
         return textFieldView.textField.becomeFirstResponder()
+    }
+
+    /// Forces validation errors to be displayed, even if the user is currently editing
+    public func showValidationErrors() {
+        userTappedConfirm = true
+        textFieldView.updateUI(with: viewModel)
+        delegate?.didUpdate(element: self)
     }
 
     @discardableResult
