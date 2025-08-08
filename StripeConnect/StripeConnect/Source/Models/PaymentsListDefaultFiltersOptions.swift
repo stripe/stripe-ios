@@ -43,6 +43,20 @@ extension EmbeddedComponentManager {
                 let lowerBound: Int
                 let upperBound: Int
             }
+
+            public func encode(to encoder: Encoder) throws {
+                var container = encoder.container(keyedBy: CodingKeys.self)
+                switch self {
+                case .equals(let value):
+                    try container.encode(value, forKey: .equals)
+                case .greaterThan(let value):
+                    try container.encode(value, forKey: .greaterThan)
+                case .lessThan(let value):
+                    try container.encode(value, forKey: .lessThan)
+                case .between(let lowerBound, let upperBound):
+                    try container.encode(BetweenAmount(lowerBound: lowerBound, upperBound: upperBound), forKey: .between)
+                }
+            }
         }
 
         @_documentation(visibility: public)
@@ -56,8 +70,20 @@ extension EmbeddedComponentManager {
             }
 
             private struct BetweenDate: Codable {
-                let start: Date
-                let end: Date
+                let start: TimeInterval
+                let end: TimeInterval
+            }
+
+            public func encode(to encoder: Encoder) throws {
+                var container = encoder.container(keyedBy: CodingKeys.self)
+                switch self {
+                case .before(let date):
+                    try container.encode(date.timeIntervalSince1970 * 1000, forKey: .before)
+                case .after(let date):
+                    try container.encode(date.timeIntervalSince1970 * 1000, forKey: .after)
+                case .between(let start, let end):
+                    try container.encode(BetweenDate(start: start.timeIntervalSince1970 * 1000, end: end.timeIntervalSince1970 * 1000), forKey: .between)
+                }
             }
         }
 

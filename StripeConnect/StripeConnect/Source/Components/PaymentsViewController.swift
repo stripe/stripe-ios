@@ -10,6 +10,15 @@ import UIKit
 @_spi(DashboardOnly)
 @available(iOS 15, *)
 public class PaymentsViewController: UIViewController {
+
+    struct Props: Encodable {
+        let defaultFilters: EmbeddedComponentManager.PaymentsListDefaultFiltersOptions
+
+        enum CodingKeys: String, CodingKey {
+            case defaultFilters = "setDefaultFilters"
+        }
+    }
+
     private(set) var webVC: ConnectComponentWebViewController!
 
     public weak var delegate: PaymentsViewControllerDelegate?
@@ -23,9 +32,10 @@ public class PaymentsViewController: UIViewController {
             componentManager: componentManager,
             componentType: .payments,
             loadContent: loadContent,
-            analyticsClientFactory: analyticsClientFactory,
-            fetchInitProps: { defaultFilters }
-        ) { [weak self] error in
+            analyticsClientFactory: analyticsClientFactory
+        ) {
+            Props(defaultFilters: defaultFilters)
+        } didFailLoadWithError: { [weak self] error in
             guard let self else { return }
             delegate?.payments(self, didFailLoadWithError: error)
         }

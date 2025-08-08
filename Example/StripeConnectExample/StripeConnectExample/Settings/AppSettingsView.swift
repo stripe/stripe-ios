@@ -18,6 +18,7 @@ struct AppSettingsView: View {
     @State var selectedMerchant: MerchantInfo?
     @State var serverURLString: String = AppSettings.shared.selectedServerBaseURL
     @State var onboardingSettings = AppSettings.shared.onboardingSettings
+    @State var paymentsSettings = AppSettings.shared.paymentsSettings
     @State var presentationSettings = AppSettings.shared.presentationSettings
 
     var isCustomEndpointValid: Bool {
@@ -105,9 +106,17 @@ struct AppSettingsView: View {
                     }
 
                 NavigationLink {
+                    PaymentsSettingsView(paymentsSettings: $paymentsSettings)
+                } label: {
+                    Text("Payments")
+                        .font(.body)
+                        .foregroundColor(.primary)
+                }
+
+                NavigationLink {
                     PresentationSettingsView(presentationSettings: $presentationSettings)
                 } label: {
-                    Text("View Controller Options")
+                    Text("View controller options")
                         .font(.body)
                         .foregroundColor(.primary)
                 }
