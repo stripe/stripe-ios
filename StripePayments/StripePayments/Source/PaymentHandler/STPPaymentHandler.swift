@@ -323,8 +323,8 @@ public class STPPaymentHandler: NSObject {
 
         // Use the new handler to handle the next action
         subhandler.handleNextAction(
-            forPayment: clientSecret,
-            with: authenticationContext,
+            paymentIntentClientSecret: clientSecret,
+            authenticationContext: authenticationContext,
             returnURL: returnURL,
             completion: { action, paymentIntent, error in
                 completion(action, paymentIntent, error)
@@ -338,16 +338,16 @@ public class STPPaymentHandler: NSObject {
     private var subhandler: STPPaymentHandler?
 
     /// Handles any `nextAction` required to authenticate the PaymentIntent.
-    /// Call this method if you are using server-side confirmation.  - seealso: https://stripe.com/docs/payments/accept-a-payment?platform=ios&ui=custom
+    /// Call this method if you are using server-side confirmation.
     /// - Parameters:
     ///   - paymentIntentClientSecret: The client secret of the PaymentIntent to handle next actions for.
     ///   - authenticationContext: The authentication context used to authenticate the payment.
     ///   - returnURL: An optional URL to redirect your customer back to after they authenticate or cancel in a webview. This should match the returnURL you specified during PaymentIntent confirmation.
     ///   - completion: The completion block. If the status returned is `STPPaymentHandlerActionStatusSucceeded`, the PaymentIntent status is not necessarily STPPaymentIntentStatusSucceeded (e.g. some bank payment methods take days before the PaymentIntent succeeds).
-    @objc(handleNextActionForPayment:withAuthenticationContext:returnURL:completion:)
+    @objc(handleNextActionForPaymentIntent:authenticationContext:returnURL:completion:)
     public func handleNextAction(
-        forPayment paymentIntentClientSecret: String,
-        with authenticationContext: STPAuthenticationContext,
+        paymentIntentClientSecret: String,
+        authenticationContext: STPAuthenticationContext,
         returnURL: String?,
         completion: @escaping STPPaymentHandlerActionPaymentIntentCompletionBlock
     ) {
@@ -378,15 +378,6 @@ public class STPPaymentHandler: NSObject {
         }
     }
 
-    /// (Internal) Handles any `nextAction` required to authenticate the PaymentIntent.
-    /// Call this method if you are using server-side confirmation.  - seealso: https://stripe.com/docs/payments/accept-a-payment?platform=ios&ui=custom
-    /// - Parameters:
-    ///   - paymentIntent: The PaymentIntent to handle next actions for.
-    ///   - authenticationContext: The authentication context used to authenticate the payment.
-    ///   - returnURL: An optional URL to redirect your customer back to after they authenticate or cancel in a webview. This should match the returnURL you specified during PaymentIntent confirmation.
-    ///   - shouldSendStartAnalytic: Tracks whether STPPaymentHandler has already sent a start analytic for `handleNextAction` because this method was called from the other `handleNextAction`
-    ///   - completion: The completion block. If the status returned is `STPPaymentHandlerActionStatusSucceeded`, the PaymentIntent status is not necessarily STPPaymentIntentStatusSucceeded (e.g. some bank payment methods take days before the PaymentIntent succeeds).
-    /// - Note: The PaymentIntent must have been fetched with an expanded paymentMethod object (see how `handleNextAction(forPayment:)` does this).
     @_spi(STP) public func handleNextAction(
         for paymentIntent: STPPaymentIntent,
         with authenticationContext: STPAuthenticationContext,
@@ -604,10 +595,10 @@ public class STPPaymentHandler: NSObject {
     ///   - authenticationContext: The authentication context used to authenticate the SetupIntent.
     ///   - returnURL: An optional URL to redirect your customer back to after they authenticate or cancel in a webview. This should match the returnURL you specified during SetupIntent confirmation.
     ///   - completion: The completion block. If the status returned is `STPPaymentHandlerActionStatusSucceeded`, the SetupIntent status will always be  STPSetupIntentStatusSucceeded.
-    @objc(handleNextActionForSetupIntent:withAuthenticationContext:returnURL:completion:)
+    @objc(handleNextActionForSetupIntent:authenticationContext:returnURL:completion:)
     public func handleNextAction(
-        forSetupIntent setupIntentClientSecret: String,
-        with authenticationContext: STPAuthenticationContext,
+        setupIntentClientSecret: String,
+        authenticationContext: STPAuthenticationContext,
         returnURL: String?,
         completion: @escaping STPPaymentHandlerActionSetupIntentCompletionBlock
     ) {
@@ -2631,5 +2622,27 @@ extension STPPaymentHandler {
         completion: @escaping STPPaymentHandlerActionSetupIntentCompletionBlock
     ) {
         confirmSetupIntent(params: setupIntentConfirmParams, authenticationContext: authenticationContext, completion: completion)
+    }
+    
+    @available(*, deprecated, renamed: "handleNextAction(paymentIntentClientSecret:authenticationContext:completion:)", message: "")
+    @objc(handleNextActionForPayment:withAuthenticationContext:returnURL:completion:)
+    public func handleNextAction(
+        forPayment paymentIntentClientSecret: String,
+        with authenticationContext: STPAuthenticationContext,
+        returnURL: String?,
+        completion: @escaping STPPaymentHandlerActionPaymentIntentCompletionBlock
+    ) {
+        handleNextAction(paymentIntentClientSecret: paymentIntentClientSecret, authenticationContext: authenticationContext, returnURL: returnURL, completion: completion)
+    }
+    
+    @available(*, deprecated, renamed: "handleNextAction(setupIntentClientSecret:authenticationContext:completion:)", message: "")
+    @objc(handleNextActionForSetupIntent:withAuthenticationContext:returnURL:completion:)
+    public func handleNextAction(
+        forSetupIntent setupIntentClientSecret: String,
+        with authenticationContext: STPAuthenticationContext,
+        returnURL: String?,
+        completion: @escaping STPPaymentHandlerActionSetupIntentCompletionBlock
+    ) {
+        
     }
 }
