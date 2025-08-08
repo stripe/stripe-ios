@@ -29,7 +29,7 @@ pipelines:
     - stage-trigger-run-all: {}
     triggers:
       changed_files: 
-        - regex: ^(?!.*\.md$).* # Dont trigger CI on .md file changes
+        regex: ^(?!.*\.md$).* # Dont trigger CI on .md file changes
   releases-trigger-pipeline:
     stages:
     - stage-releases-run-all: {}
