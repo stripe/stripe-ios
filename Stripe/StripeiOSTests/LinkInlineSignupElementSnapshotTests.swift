@@ -138,6 +138,7 @@ extension LinkInlineSignupElementSnapshotTests {
             withEmail email: String?,
             emailSource: StripePaymentSheet.EmailSource,
             doNotLogConsumerFunnelEvent: Bool,
+            requestSurface: StripePaymentSheet.LinkRequestSurface = .default,
             completion: @escaping (Result<PaymentSheetLinkAccount?, Error>) -> Void
         ) {
             completion(
@@ -147,7 +148,8 @@ extension LinkInlineSignupElementSnapshotTests {
                         session: nil,
                         publishableKey: nil,
                         displayablePaymentDetails: nil,
-                        useMobileEndpoints: false
+                        useMobileEndpoints: false,
+                        requestSurface: requestSurface
                     )
                 )
             )
