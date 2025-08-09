@@ -21,7 +21,7 @@ class TextFieldElementIBANTest: XCTestCase {
 
     func testValidation() throws {
         let testcases: [String: TextFieldElement.ValidationState] = [
-            "": .invalid(Error.empty),
+            "": .invalid(Error.empty(localizedDescription: "")),
             "G": .invalid(IBANError.incomplete),
             "GB": .invalid(IBANError.incomplete),
             "GB1": .invalid(IBANError.incomplete),
