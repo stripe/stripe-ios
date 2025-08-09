@@ -50,11 +50,11 @@ class PaymentSheetFormFactory {
         guard !configuration.linkPaymentMethodsOnly else { return false }
         switch savePaymentMethodConsentBehavior {
         case .legacy:
-            return !isSettingUp && configuration.hasCustomer && paymentMethod.supportsSaveForFutureUseCheckbox()
+            return !shouldShowLinkSignupOptIn && !isSettingUp && configuration.hasCustomer && paymentMethod.supportsSaveForFutureUseCheckbox()
         case .paymentSheetWithCustomerSessionPaymentMethodSaveDisabled:
             return false
         case .paymentSheetWithCustomerSessionPaymentMethodSaveEnabled:
-            return configuration.hasCustomer && paymentMethod.supportsSaveForFutureUseCheckbox()
+            return !shouldShowLinkSignupOptIn && configuration.hasCustomer && paymentMethod.supportsSaveForFutureUseCheckbox()
         case .customerSheetWithCustomerSession:
             return false
         }
@@ -66,6 +66,10 @@ class PaymentSheetFormFactory {
 
     var theme: ElementsAppearance {
         return configuration.appearance.asElementsTheme
+    }
+
+    var shouldShowLinkSignupOptIn: Bool {
+        showLinkInlineCardSignup && signupOptInFeatureEnabled
     }
 
     private static let PayByBankDescriptionText = STPLocalizedString(
@@ -438,10 +442,12 @@ extension PaymentSheetFormFactory {
     func makeBillingAddressSection(
         collectionMode: AddressSectionElement.CollectionMode = .autoCompletable,
         countries: [String]? = nil,
-        countryAPIPath: String? = nil
+        countryAPIPath: String? = nil,
+        includeEmail: Bool = false,
+        includePhone: Bool = false
     ) -> PaymentMethodElementWrapper<AddressSectionElement> {
         let displayBillingSameAsShippingCheckbox: Bool
-        let defaultAddress: AddressSectionElement.AddressDetails
+        var defaultAddress: AddressSectionElement.AddressDetails
         if let shippingDetails = configuration.shippingDetails() {
             // If defaultBillingDetails and shippingDetails are both populated, prefer defaultBillingDetails
             displayBillingSameAsShippingCheckbox = defaultBillingDetails() == .init()
@@ -451,6 +457,14 @@ extension PaymentSheetFormFactory {
         } else {
             displayBillingSameAsShippingCheckbox = false
             defaultAddress = defaultBillingDetails().address.addressSectionDefaults
+        }
+
+        if includePhone {
+            defaultAddress.phone = defaultBillingDetails().phone
+        }
+
+        if includeEmail {
+            defaultAddress.email = defaultBillingDetails().email
         }
 
         // Determine the collection mode based on whether we have default values
@@ -470,14 +484,17 @@ extension PaymentSheetFormFactory {
         }()
 
         let section = AddressSectionElement(
-            title: String.Localized.billing_address_lowercase,
+            // TODO: Switch between "billing address" and "billing details" strings once the localizations have landed
+            title: (includePhone || includeEmail) ? String.Localized.billing_address_lowercase : String.Localized.billing_address_lowercase,
             countries: countries,
             addressSpecProvider: addressSpecProvider,
             defaults: defaultAddress,
             collectionMode: finalCollectionMode,
             additionalFields: .init(
+                phone: includePhone ? .enabled(isOptional: false) : .disabled,
+                email: includeEmail ? .enabled(isOptional: false) : .disabled,
                 billingSameAsShippingCheckbox: displayBillingSameAsShippingCheckbox
-                    ? .enabled(isOptional: false) : .disabled
+                ? .enabled(isOptional: false) : .disabled
             ),
             theme: theme
         )
@@ -507,6 +524,15 @@ extension PaymentSheetFormFactory {
             params.paymentMethodParams.nonnil_billingDetails.nonnil_address.country = section.selectedCountryCode
             if let countryAPIPath {
                 params.paymentMethodParams.additionalAPIParameters[countryAPIPath] = section.selectedCountryCode
+            }
+            if let phone = section.phone {
+                params.paymentMethodParams.nonnil_billingDetails.phone = phone.phoneNumber?.string(as: .e164)
+            }
+            if let email = section.email {
+                params.paymentMethodParams.nonnil_billingDetails.email = email.text
+            }
+            if let name = section.name {
+                params.paymentMethodParams.nonnil_billingDetails.name = name.text
             }
             return params
         }

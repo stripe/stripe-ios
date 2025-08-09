@@ -1015,6 +1015,40 @@ extension EmbeddedPaymentElementTest: EmbeddedPaymentElementDelegate {
     func embeddedPaymentElementWillPresent(embeddedPaymentElement: EmbeddedPaymentElement) {
         delegateWillPresentCalled = true
     }
+
+    func testFormDismissWithConfirmFormSheetActionCallsCanceled() async throws {
+        // Given a configuration with formSheetAction = .confirm
+        var config = configuration
+        config.embeddedViewDisplaysMandateText = false
+
+        let expectation = expectation(description: "Completion handler called with .canceled")
+        config.formSheetAction = .confirm { result in
+            XCTAssertEqual(result, .canceled, "Expected completion to be called with .canceled when form is dismissed")
+            expectation.fulfill()
+        }
+
+        // Create our EmbeddedPaymentElement
+        let sut = try await EmbeddedPaymentElement.create(
+            intentConfiguration: paymentIntentConfig,
+            configuration: config
+        )
+        sut.delegate = self
+        sut.presentingViewController = UIViewController()
+
+        // Open a form by tapping on Card
+        sut.embeddedPaymentMethodsView.didTap(
+            rowButton: sut.embeddedPaymentMethodsView.getRowButton(accessibilityIdentifier: "Card")
+        )
+
+        // Verify the form is presented
+        XCTAssertNotNil(sut.selectedFormViewController, "Form should be presented after tapping Card")
+
+        // When the user cancels the form by dismissing it
+        sut.selectedFormViewController?.didTapOrSwipeToDismiss()
+
+        // Then the completion handler should be called with .canceled
+        await fulfillment(of: [expectation], timeout: 1.0)
+    }
 }
 
 extension EmbeddedPaymentElement.UpdateResult: Equatable {

@@ -241,7 +241,7 @@ import UIKit
             switch result {
             case .completed:
                 completion(.success(.completed))
-            case .canceled:
+            case .canceled, .switchAccount:
                 completion(.success(.canceled))
             case .failed(let error):
                 completion(.failure(error))

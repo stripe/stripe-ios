@@ -38,22 +38,6 @@ extension PaymentSheetFormFactory {
         }
         defaultCheckbox?.view.isHidden = !saveCheckbox.element.isSelected
 
-        // Make section titled "Contact Information" w/ phone and email if merchant requires it.
-        let optionalPhoneAndEmailInformationSection: SectionElement? = {
-            let emailElement: Element? = configuration.billingDetailsCollectionConfiguration.email == .always ? makeEmail() : nil
-            let shouldIncludePhone = configuration.billingDetailsCollectionConfiguration.phone == .always
-            let phoneElement: Element? = shouldIncludePhone ? makePhone() : nil
-            let contactInformationElements = [emailElement, phoneElement].compactMap { $0 }
-            guard !contactInformationElements.isEmpty else {
-                return nil
-            }
-            return SectionElement(
-                title: .Localized.contact_information,
-                elements: contactInformationElements,
-                theme: theme
-            )
-        }()
-
         let previousCardInput = previousCustomerInput?.paymentMethodParams.card
         let formattedExpiry: String? = {
             guard let expiryMonth = previousCardInput?.expMonth?.intValue, let expiryYear = previousCardInput?.expYear?.intValue else {
@@ -76,19 +60,40 @@ extension PaymentSheetFormFactory {
             hostedSurface: .init(config: configuration),
             theme: theme,
             analyticsHelper: analyticsHelper,
-            cardBrandFilter: configuration.cardBrandFilter,
-            opensCardScannerAutomatically: configuration.opensCardScannerAutomatically
+            cardBrandFilter: configuration.cardBrandFilter
         )
+
+        let shouldIncludeEmail = configuration.billingDetailsCollectionConfiguration.email == .always
+        let shouldIncludePhone = configuration.billingDetailsCollectionConfiguration.phone == .always
 
         let billingAddressSection: PaymentMethodElementWrapper<AddressSectionElement>? = {
             switch configuration.billingDetailsCollectionConfiguration.address {
             case .automatic:
-                return makeBillingAddressSection(collectionMode: .countryAndPostal(), countries: nil)
+                return makeBillingAddressSection(collectionMode: .countryAndPostal(), countries: nil, includeEmail: shouldIncludeEmail, includePhone: shouldIncludePhone)
             case .full:
-                return makeBillingAddressSection(collectionMode: .autoCompletable, countries: nil)
+                return makeBillingAddressSection(collectionMode: .autoCompletable, countries: nil, includeEmail: shouldIncludeEmail, includePhone: shouldIncludePhone)
             case .never:
                 return nil
             }
+        }()
+
+        // Make section titled "Contact Information" w/ phone and email if merchant requires it and we didn't have a billing address section.
+        let optionalPhoneAndEmailInformationSection: SectionElement? = {
+            guard billingAddressSection == nil else {
+                // We already included this information in the billing address section.
+                return nil
+            }
+            let emailElement: Element? = shouldIncludeEmail ? makeEmail() : nil
+            let phoneElement: Element? = shouldIncludePhone ? makePhone() : nil
+            let contactInformationElements = [emailElement, phoneElement].compactMap { $0 }
+            guard !contactInformationElements.isEmpty else {
+                return nil
+            }
+            return SectionElement(
+                title: .Localized.contact_information,
+                elements: contactInformationElements,
+                theme: theme
+            )
         }()
 
         let phoneElement = optionalPhoneAndEmailInformationSection?.elements.compactMap {
@@ -123,11 +128,15 @@ extension PaymentSheetFormFactory {
         }
 
         let mandate: SimpleMandateElement? = {
+            if signupOptInFeatureEnabled {
+                // Respect this over all other configurations.
+                return makeMandate()
+            }
             switch configuration.termsDisplayFor(paymentMethodType: .stripe(.card)) {
             case .never:
                 return nil
             case .automatic:
-                if isSettingUp || (showLinkInlineSignup && signupOptInFeatureEnabled)  {
+                if isSettingUp {
                     return makeMandate()
                 }
             }
@@ -147,9 +156,14 @@ extension PaymentSheetFormFactory {
     }
 
     private func makeMandate() -> SimpleMandateElement {
+        // It's possible that `signupOptInFeatureEnabled` is true, but the user has already used Link.
+        // This user would not see the signup opt-in toggle, but we still want to show the mandate.
+        // Therefore, always show the mandate if `signupOptInFeatureEnabled` is true, but only add
+        // the Link-specific terms if the signup opt-in toggle is actually visible via `shouldShowLinkSignupOptIn`.
+        let shouldSaveToLink = shouldShowLinkSignupOptIn && signupOptInInitialValue
         let mandateText = Self.makeMandateText(
             linkSignupOptInFeatureEnabled: signupOptInFeatureEnabled,
-            shouldSaveToLink: signupOptInInitialValue,
+            shouldSaveToLink: shouldSaveToLink,
             merchantName: configuration.merchantDisplayName
         )
         return makeMandate(mandateText: mandateText)

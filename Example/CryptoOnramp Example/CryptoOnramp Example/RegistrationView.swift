@@ -27,7 +27,7 @@ struct RegistrationView: View {
     @State private var phoneNumber: String = ""
     @State private var country: String = "US"
     @State private var errorMessage: String?
-    @State private var showSuccess: Bool = false
+    @State private var showAuthenticatedView: Bool = false
     @State private var registrationCustomerId: String?
 
     @Environment(\.isLoading) private var isLoading
@@ -103,8 +103,8 @@ struct RegistrationView: View {
 
                 if let customerId = registrationCustomerId {
                     HiddenNavigationLink(
-                        destination: SuccessView(message: "Registration Successful!", customerId: customerId),
-                        isActive: $showSuccess
+                        destination: AuthenticatedView(coordinator: coordinator, customerId: customerId),
+                        isActive: $showAuthenticatedView
                     )
                 }
             }
@@ -132,7 +132,7 @@ struct RegistrationView: View {
 
                     // Delay so the navigation link animation doesn’t get canceled.
                     DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
-                        showSuccess = true
+                        showAuthenticatedView = true
                     }
                 }
             } catch {

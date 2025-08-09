@@ -258,7 +258,6 @@ private extension DropdownFieldElement {
 
         // Ensure the floating placeholder view updates immediately so the label doesn't overlap.
         pickerFieldView.setNeedsLayout()
-        pickerFieldView.layoutIfNeeded()
     }
 
 }

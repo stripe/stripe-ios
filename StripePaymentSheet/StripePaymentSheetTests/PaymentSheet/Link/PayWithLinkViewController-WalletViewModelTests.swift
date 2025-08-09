@@ -278,6 +278,7 @@ extension PayWithLinkViewController_WalletViewModelTests {
                 shouldOfferApplePay: false,
                 shouldFinishOnClose: false,
                 shouldShowSecondaryCta: shouldShowSecondaryCta,
+                canSkipWalletAfterVerification: false,
                 initiallySelectedPaymentDetailsID: nil,
                 callToAction: nil,
                 analyticsHelper: ._testValue()

@@ -456,13 +456,22 @@ extension STPAPIClient {
                 parameters["billing_address"] = billingDetails.consumersAPIParams
             }
 
-            if let billingEmailAddress = billingDetails?.email {
+            if let billingEmailAddress = billingDetails?.email, !billingEmailAddress.isEmpty {
                 // This email address needs to be lowercase or the API will reject it
                 parameters["billing_email_address"] = billingEmailAddress.lowercased()
             }
 
             if let preferredNetwork {
                 parameters["preferred_network"] = preferredNetwork
+            }
+        }
+
+        if let details = updateParams.details, case .bankAccount(let billingDetails) = details {
+            parameters["billing_address"] = billingDetails.consumersAPIParams
+
+            if let billingEmailAddress = billingDetails.email {
+                // This email address needs to be lowercase or the API will reject it
+                parameters["billing_email_address"] = billingEmailAddress.lowercased()
             }
         }
 

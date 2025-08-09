@@ -116,6 +116,10 @@ struct LinkPMDisplayDetails {
         return currentSession?.hasVerifiedSMSSession ?? false
     }
 
+    var isInSignupFlow: Bool {
+        currentSession?.isVerifiedForSignup ?? false
+    }
+
     private(set) var currentSession: ConsumerSession?
     let displayablePaymentDetails: ConsumerSession.DisplayablePaymentDetails?
 
@@ -686,7 +690,9 @@ struct UpdatePaymentDetailsParams {
             billingDetails: STPPaymentMethodBillingDetails? = nil,
             preferredNetwork: String? = nil
         )
-        // updating bank not supported
+        case bankAccount(
+            billingDetails: STPPaymentMethodBillingDetails
+        )
     }
 
     let isDefault: Bool?

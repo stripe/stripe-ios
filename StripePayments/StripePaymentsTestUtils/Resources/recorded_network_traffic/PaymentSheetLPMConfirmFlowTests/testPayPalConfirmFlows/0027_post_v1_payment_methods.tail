@@ -3,7 +3,7 @@ https:\/\/api\.stripe\.com\/v1\/payment_methods$
 200
 application/json
 access-control-allow-methods: GET, HEAD, PUT, PATCH, POST, DELETE
-content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=p5EXLP5n6cce0XgY59eU0uamm-YRwX4lzYKZRJkqd_uriuO1bSDx-iPIs-dFrOVLVak9L7IC4HFPGhJH
+content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=ssPwySOdAsNKKy-SM-DFQY-KDVnuSpcZ8xLoapyOMcynMG8xhGeZP62RD8TgsbEUZQSKrG3cB0U5BI3v
 Server: nginx
 Cache-Control: no-cache, no-store
 x-wc: ABGHIJ
@@ -12,18 +12,18 @@ Access-Control-Allow-Origin: *
 stripe-should-retry: false
 x-stripe-priority-routing-enabled: true
 x-stripe-routing-context-priority-tier: api-testmode
-request-id: req_8bpU7OnDixhI0M
+request-id: req_IQAX9iDOVKJumt
 Content-Length: 538
 Vary: Origin
-Date: Sat, 26 Jul 2025 03:13:52 GMT
-original-request: req_8bpU7OnDixhI0M
+Date: Thu, 07 Aug 2025 16:15:16 GMT
+original-request: req_IQAX9iDOVKJumt
 stripe-version: 2020-08-27
-idempotency-key: e3c7875d-3c06-4528-9b9b-2364644ef76b
+idempotency-key: 820fe0d1-5a66-48a1-8f93-37a062f67bd2
 access-control-expose-headers: Request-Id, Stripe-Manage-Version, Stripe-Should-Retry, X-Stripe-External-Auth-Required, X-Stripe-Privileged-Session-Required
 access-control-max-age: 300
 access-control-allow-credentials: true
 Content-Type: application/json
-X-Stripe-Mock-Request: allow_redisplay=unspecified&client_attribution_metadata\[client_session_id]=.*&client_attribution_metadata\[merchant_integration_source]=elements&client_attribution_metadata\[merchant_integration_subtype]=mobile&client_attribution_metadata\[merchant_integration_version]=.*&guid=.*&muid=.*&payment_user_agent=.*&sid=.*&type=paypal
+X-Stripe-Mock-Request: allow_redisplay=unspecified&client_attribution_metadata\[client_session_id]=.*&client_attribution_metadata\[elements_session_config_id]=.*&client_attribution_metadata\[merchant_integration_source]=elements&client_attribution_metadata\[merchant_integration_subtype]=mobile&client_attribution_metadata\[merchant_integration_version]=.*&client_attribution_metadata\[payment_intent_creation_flow]=deferred&client_attribution_metadata\[payment_method_selection_flow]=automatic&guid=.*&muid=.*&payment_user_agent=.*&sid=.*&type=paypal
 
 {
   "object" : "payment_method",
@@ -32,7 +32,7 @@ X-Stripe-Mock-Request: allow_redisplay=unspecified&client_attribution_metadata\[
     "payer_id" : null,
     "payer_email" : null
   },
-  "id" : "pm_1RoyYWKG6vc7r7YCMkih8PoY",
+  "id" : "pm_1RtWTIKG6vc7r7YCEqrb4dV4",
   "billing_details" : {
     "email" : null,
     "phone" : null,
@@ -48,7 +48,7 @@ X-Stripe-Mock-Request: allow_redisplay=unspecified&client_attribution_metadata\[
     }
   },
   "livemode" : false,
-  "created" : 1753499632,
+  "created" : 1754583316,
   "allow_redisplay" : "unspecified",
   "type" : "paypal",
   "customer" : null

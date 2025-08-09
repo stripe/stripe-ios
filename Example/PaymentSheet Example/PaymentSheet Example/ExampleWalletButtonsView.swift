@@ -243,7 +243,8 @@ class ExampleWalletButtonsModel: ObservableObject {
         // First, create customer and get customer session
         self.addDebugLog("Creating customer with SPT test backend...")
         let body = [
-            "customerId": nil, // Let backend create a new customer
+            "customerId": nil, // Let backend create a new customer if no email is passed
+            "customerEmail": email.nonEmpty,
             "isMobile": true,
         ] as [String: Any?]
         let json = try! JSONSerialization.data(withJSONObject: body, options: [])

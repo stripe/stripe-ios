@@ -521,9 +521,7 @@ extension RowButton {
     }
 
     static func makeForApplePay(appearance: PaymentSheet.Appearance, isEmbedded: Bool = false, didTap: @escaping DidTapClosure) -> RowButton {
-        // Apple Pay logo has built-in padding and ends up looking too small; compensate with insets
-        let applePayLogo = Image.apple_pay_mark.makeImage().withAlignmentRectInsets(UIEdgeInsets(top: 8, left: 8, bottom: 8, right: 8))
-        let imageView = UIImageView(image: applePayLogo)
+        let imageView = UIImageView(image: Image.apple_pay_mark.makeImage())
         imageView.contentMode = .scaleAspectFit
         return RowButton.create(appearance: appearance, type: .applePay, imageView: imageView, text: String.Localized.apple_pay, isEmbedded: isEmbedded, didTap: didTap)
     }

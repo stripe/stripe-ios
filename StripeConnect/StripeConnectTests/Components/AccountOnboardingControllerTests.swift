@@ -51,6 +51,7 @@ class AccountOnboardingControllerTests: XCTestCase {
                 var collectionOptions = AccountCollectionOptions()
                 collectionOptions.fields = .eventuallyDue
                 collectionOptions.futureRequirements = .include
+                collectionOptions.requirements = .only(["business_profile.mcc", "individual.first_name"])
                 return collectionOptions
             }()
         )
@@ -58,7 +59,7 @@ class AccountOnboardingControllerTests: XCTestCase {
         try await controller.webVC.webView.evaluateMessageWithReply(name: "fetchInitComponentProps",
                                                                     json: "{}",
                                                                     expectedResponse: """
-            {"setCollectionOptions":{"fields":"eventually_due","futureRequirements":"include"},"setFullTermsOfServiceUrl":"https:\\/\\/fullTermsOfServiceUrl.com","setPrivacyPolicyUrl":"https:\\/\\/privacyPolicyUrl.com","setRecipientTermsOfServiceUrl":"https:\\/\\/recipientTermsOfServiceUrl.com","setSkipTermsOfServiceCollection":true}
+            {"setCollectionOptions":{"fields":"eventually_due","futureRequirements":"include","requirements":{"only":["business_profile.mcc","individual.first_name"]}},"setFullTermsOfServiceUrl":"https:\\/\\/fullTermsOfServiceUrl.com","setPrivacyPolicyUrl":"https:\\/\\/privacyPolicyUrl.com","setRecipientTermsOfServiceUrl":"https:\\/\\/recipientTermsOfServiceUrl.com","setSkipTermsOfServiceCollection":true}
             """)
     }
 
