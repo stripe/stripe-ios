@@ -202,7 +202,8 @@ private extension LinkSignUpViewModel {
             self?.accountService.lookupAccount(
                 withEmail: emailAddress,
                 emailSource: .userAction,
-                doNotLogConsumerFunnelEvent: false
+                doNotLogConsumerFunnelEvent: false,
+                requestSurface: .default
             ) { result in
                 guard let self = self else { return }
 
