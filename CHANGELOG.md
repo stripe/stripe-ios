@@ -3,8 +3,6 @@
 ### CustomerSheet
 * [Fixed] Crash when opening CustomerSheet in SwiftUI with Dynamic Actor Isolation feature flag enabled
 
-## 24.19.0 2025-08-04
-
 ### StripeApplePay
 * [Fixed] Issue when deserializing intent when line1 is null
 
