@@ -33,7 +33,7 @@ public class CustomerSheet {
     private let integrationType: IntegrationType
     let configuration: CustomerSheet.Configuration
 
-    internal typealias CustomerSheetCompletion = (CustomerSheetResult) -> Void
+    internal typealias CustomerSheetCompletion = @MainActor (CustomerSheetResult) -> Void
 
     private var initEvent: STPAnalyticEvent {
         switch self.integrationType {
