@@ -177,6 +177,7 @@
 		49909A332D8B48820031EC33 /* FCLiteErrorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49909A322D8B48820031EC33 /* FCLiteErrorView.swift */; };
 		49909A352D8B48D40031EC33 /* FCLiteError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49909A342D8B48D40031EC33 /* FCLiteError.swift */; };
 		49909A372D8B5AA30031EC33 /* FCLiteModalPresentationWrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49909A362D8B5AA30031EC33 /* FCLiteModalPresentationWrapper.swift */; };
+		499E32A82E47982400575058 /* LinkRequestSurface.swift in Sources */ = {isa = PBXBuildFile; fileRef = 499E32A72E47982400575058 /* LinkRequestSurface.swift */; };
 		49B1F7CC2E1EC43300EA2593 /* LinkSignUpViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49B1F7CB2E1EC43300EA2593 /* LinkSignUpViewController.swift */; };
 		49B1F7CE2E1EC44500EA2593 /* LinkSignUpViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49B1F7CD2E1EC44500EA2593 /* LinkSignUpViewModel.swift */; };
 		49BCD44E2D9ECBEF003A6251 /* PaymentSheetAnalyticsExperimentsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49BCD44D2D9ECBEF003A6251 /* PaymentSheetAnalyticsExperimentsTests.swift */; };
@@ -671,6 +672,7 @@
 		49909A322D8B48820031EC33 /* FCLiteErrorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FCLiteErrorView.swift; sourceTree = "<group>"; };
 		49909A342D8B48D40031EC33 /* FCLiteError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FCLiteError.swift; sourceTree = "<group>"; };
 		49909A362D8B5AA30031EC33 /* FCLiteModalPresentationWrapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FCLiteModalPresentationWrapper.swift; sourceTree = "<group>"; };
+		499E32A72E47982400575058 /* LinkRequestSurface.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LinkRequestSurface.swift; sourceTree = "<group>"; };
 		49B1F7CB2E1EC43300EA2593 /* LinkSignUpViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LinkSignUpViewController.swift; sourceTree = "<group>"; };
 		49B1F7CD2E1EC44500EA2593 /* LinkSignUpViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LinkSignUpViewModel.swift; sourceTree = "<group>"; };
 		49BCD44D2D9ECBEF003A6251 /* PaymentSheetAnalyticsExperimentsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentSheetAnalyticsExperimentsTests.swift; sourceTree = "<group>"; };
@@ -1447,6 +1449,7 @@
 				F1E614E8481658A027599A92 /* STPAPIClient+Link.swift */,
 				B662953D2C63F6C2007B6B14 /* PaymentDetailsShareResponse.swift */,
 				441C3414745D483C9A47ED0B /* VerificationSession.swift */,
+				499E32A72E47982400575058 /* LinkRequestSurface.swift */,
 			);
 			path = Link;
 			sourceTree = "<group>";
@@ -2422,6 +2425,7 @@
 				6180A5C72C824377009D1536 /* RadioButton.swift in Sources */,
 				495D53122DF10A7B008B92F9 /* LinkProgressIndicatorView.swift in Sources */,
 				6180A5C12C8222A9009D1536 /* EmbeddedPaymentMethodsView.swift in Sources */,
+				499E32A82E47982400575058 /* LinkRequestSurface.swift in Sources */,
 				61C87E1B2CB818ED001B7DA9 /* CardBrandFilter.swift in Sources */,
 				49377F022DE4E4FD005CA805 /* BaseLinkHoldbackExperiment.swift in Sources */,
 				610EAAF02C0F5D9400124AB2 /* FormHeaderView.swift in Sources */,
