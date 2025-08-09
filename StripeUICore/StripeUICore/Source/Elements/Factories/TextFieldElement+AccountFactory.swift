@@ -28,7 +28,7 @@ import UIKit
 
             public func validate(text: String, isOptional: Bool) -> TextFieldElement.ValidationState {
                 if text.isEmpty {
-                    return isOptional ? .valid : .invalid(Error.empty)
+                    return isOptional ? .valid : .invalid(Error.empty(localizedDescription: String.Localized.incompleteBSBEntered))
                 }
 
                 let bsbNumber = BSBNumber(number: text)
@@ -66,7 +66,7 @@ import UIKit
 
             public func validate(text: String, isOptional: Bool) -> TextFieldElement.ValidationState {
                 if text.isEmpty {
-                    return isOptional ? .valid : .invalid(Error.empty)
+                    return isOptional ? .valid : .invalid(Error.empty(localizedDescription: String.Localized.incompleteAccountNumber))
                 }
                 return text.count >= minimumNumberOfDigits && text.count <= maximumNumberofDigits ? .valid : .invalid(AUBECSAccountNumberConfiguration.incompleteError)
             }
@@ -93,7 +93,7 @@ import UIKit
 
             public func validate(text: String, isOptional: Bool) -> TextFieldElement.ValidationState {
                 if text.isEmpty {
-                    return isOptional ? .valid : .invalid(Error.empty)
+                    return isOptional ? .valid : .invalid(Error.empty(localizedDescription: String.Localized.invalidSortCodeEntered))
                 }
 
                 let sortCode = SortCode(number: text)
@@ -129,7 +129,7 @@ import UIKit
 
             public func validate(text: String, isOptional: Bool) -> TextFieldElement.ValidationState {
                 if text.isEmpty {
-                    return isOptional ? .valid : .invalid(Error.empty)
+                    return isOptional ? .valid : .invalid(Error.empty(localizedDescription: String.Localized.incompleteAccountNumber))
                 }
                 return text.count == numberOfDigitsRequired ? .valid : .invalid(BacsAccountNumberConfiguration.incompleteError)
             }

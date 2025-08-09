@@ -131,6 +131,15 @@ extension Element {
             return [self]
         }
     }
+
+    /// Forces validation errors to be displayed on all TextFieldElements in this element's hierarchy
+    public func showAllValidationErrors() {
+        for element in getAllUnwrappedSubElements() {
+            if let textFieldElement = element as? TextFieldElement {
+                textFieldElement.showValidationErrors()
+            }
+        }
+    }
 }
 
 /// Helper protocol easily switch over `PaymentMethodElementWrapper`

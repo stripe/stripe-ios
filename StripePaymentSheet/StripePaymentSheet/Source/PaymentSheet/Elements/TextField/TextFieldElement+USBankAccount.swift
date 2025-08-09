@@ -33,7 +33,7 @@ extension TextFieldElement {
 
         func validate(text: String, isOptional: Bool) -> ValidationState {
             stpAssert(!editConfiguration.isEditable, "Validation assumes that the field is read-only")
-            return !lastFour.isEmpty ? .valid : .invalid(Error.empty)
+            return !lastFour.isEmpty ? .valid : .invalid(Error.empty(localizedDescription: ""))
         }
     }
 }

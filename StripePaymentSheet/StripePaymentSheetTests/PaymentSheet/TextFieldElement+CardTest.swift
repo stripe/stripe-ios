@@ -213,7 +213,7 @@ class TextFieldElementCardTest: STPNetworkStubbingTestCase {
     }
 
     func testCVCValidation() {
-        let emptyError = TextFieldElement.Error.empty
+        let emptyError = TextFieldElement.Error.empty(localizedDescription: "")
         let incompleteError = TextFieldElement.Error.incomplete(
             localizedDescription: .Localized.your_cards_security_code_is_incomplete
         )
@@ -270,7 +270,7 @@ class TextFieldElementCardTest: STPNetworkStubbingTestCase {
 
         let testcases: [String: ElementValidationState] = [
             // Test empty -> incomplete -> complete
-            "": .invalid(error: TextFieldElement.Error.empty, shouldDisplay: false),
+            "": .invalid(error: TextFieldElement.Error.empty(localizedDescription: ""), shouldDisplay: false),
             "0": .invalid(error: Error.incomplete, shouldDisplay: true),
             "1": .invalid(error: Error.incomplete, shouldDisplay: true),
             "12": .invalid(error: Error.incomplete, shouldDisplay: true),

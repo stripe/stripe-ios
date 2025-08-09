@@ -85,7 +85,7 @@ import Foundation
 
     public func validate(text: String, isOptional: Bool) -> TextFieldElement.ValidationState {
         guard !text.isEmpty else {
-            return isOptional ? .valid : .invalid(TextFieldElement.Error.empty)
+            return isOptional ? .valid : .invalid(TextFieldElement.Error.empty(localizedDescription: ""))
         }
 
         switch type {

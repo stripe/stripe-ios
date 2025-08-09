@@ -121,7 +121,7 @@ public extension TextFieldElementConfiguration {
 
     func validate(text: String, isOptional: Bool) -> TextFieldElement.ValidationState {
         if text.stp_stringByRemovingCharacters(from: .whitespacesAndNewlines).isEmpty {
-            return isOptional ? .valid : .invalid(TextFieldElement.Error.empty)
+            return isOptional ? .valid : .invalid(TextFieldElement.Error.empty(localizedDescription: ""))
         }
         return .valid
     }
