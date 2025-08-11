@@ -31,7 +31,8 @@ extension PayWithLinkViewController {
         private lazy var confirmButton: ConfirmButton = .makeLinkButton(
             callToAction: context.callToAction,
             // Use a compact button if we are also displaying the Apple Pay button.
-            compact: shouldShowApplePayButton
+            compact: shouldShowApplePayButton,
+            didTapWhenDisabled: didTapWhenDisabled
         ) { [weak self] in
             self?.confirm()
         }
@@ -175,6 +176,10 @@ extension PayWithLinkViewController {
             ])
 
             didUpdate(addPaymentMethodVC)
+        }
+
+        private func didTapWhenDisabled() {
+            addPaymentMethodVC.paymentMethodFormElement.showAllValidationErrors()
         }
 
         func confirm() {
