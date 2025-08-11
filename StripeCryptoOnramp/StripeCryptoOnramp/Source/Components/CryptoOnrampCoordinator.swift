@@ -168,8 +168,7 @@ public final class CryptoOnrampCoordinator: CryptoOnrampCoordinatorProtocol {
             verificationSessionId: response.id,
             ephemeralKeySecret: ephemeralKey,
             configuration: IdentityVerificationSheet.Configuration(
-                // TODO: fetch image from `elementsSession.merchantLogoUrl` and decide on a suitable fallback.
-                brandLogo: UIImage(systemName: "wallet.bifold")!
+                brandLogo: await fetchMerchantImageWithFallback()
             )
         )
 
@@ -195,5 +194,19 @@ public final class CryptoOnrampCoordinator: CryptoOnrampCoordinatorProtocol {
             network: network,
             linkAccountInfo: linkAccountInfo
         )
+    }
+}
+
+private extension CryptoOnrampCoordinator {
+    func fetchMerchantImageWithFallback() async -> UIImage {
+        guard let merchantLogoUrl = await linkController.merchantLogoUrl else {
+            return .wallet
+        }
+
+        do {
+            return try await DownloadManager.sharedManager.downloadImage(url: merchantLogoUrl)
+        } catch {
+            return .wallet
+        }
     }
 }
