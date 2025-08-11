@@ -104,6 +104,14 @@
 		49D233AB2E439FB200F51263 /* RegisterWalletResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegisterWalletResponse.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
+/* Begin PBXFileSystemSynchronizedRootGroup section */
+		0B7D05742E4A4D8200EE6BE2 /* Resources */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = Resources;
+			sourceTree = "<group>";
+		};
+/* End PBXFileSystemSynchronizedRootGroup section */
+
 /* Begin PBXFrameworksBuildPhase section */
 		0B4292822E1EC57600012FB8 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
@@ -190,6 +198,7 @@
 		0B83D98C2E1EF6EF004F0115 /* Source */ = {
 			isa = PBXGroup;
 			children = (
+				0B7D05742E4A4D8200EE6BE2 /* Resources */,
 				0BED9B602E255BB1009FFF76 /* Components */,
 				0B6DF3462E296DBB008B1800 /* Internal */,
 			);
@@ -285,6 +294,9 @@
 			buildRules = (
 			);
 			dependencies = (
+			);
+			fileSystemSynchronizedGroups = (
+				0B7D05742E4A4D8200EE6BE2 /* Resources */,
 			);
 			name = StripeCryptoOnramp;
 			packageProductDependencies = (
