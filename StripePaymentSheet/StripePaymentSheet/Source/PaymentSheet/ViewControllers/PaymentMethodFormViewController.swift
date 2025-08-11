@@ -99,7 +99,7 @@ class PaymentMethodFormViewController: UIViewController {
         configuration: PaymentElementConfiguration,
         headerView: UIView?,
         analyticsHelper: PaymentSheetAnalyticsHelper,
-        isLinkUI: Bool,
+        isLinkUI: Bool = false,
         delegate: PaymentMethodFormViewControllerDelegate
     ) {
         self.paymentMethodType = type
