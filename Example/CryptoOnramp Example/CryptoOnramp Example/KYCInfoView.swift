@@ -178,7 +178,7 @@ struct KYCInfoView: View {
         isLoading.wrappedValue = true
         errorMessage = nil
 
-        let address = PaymentSheet.Address(
+        let address = Address(
             city: city.isEmpty ? nil : city,
             country: country.isEmpty ? nil : country,
             line1: addressLine1.isEmpty ? nil : addressLine1,
