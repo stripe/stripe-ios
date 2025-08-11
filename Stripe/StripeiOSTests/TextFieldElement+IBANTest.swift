@@ -21,7 +21,7 @@ class TextFieldElementIBANTest: XCTestCase {
 
     func testValidation() throws {
         let testcases: [String: TextFieldElement.ValidationState] = [
-            "": .invalid(Error.empty(localizedDescription: "")),
+            "": .invalid(Error.empty(localizedDescription: "The IBAN you entered is incomplete.")),
             "G": .invalid(IBANError.incomplete),
             "GB": .invalid(IBANError.incomplete),
             "GB1": .invalid(IBANError.incomplete),

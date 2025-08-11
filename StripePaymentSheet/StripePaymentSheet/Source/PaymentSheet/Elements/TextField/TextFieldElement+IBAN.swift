@@ -42,7 +42,7 @@ extension TextFieldElement {
         func shouldDisplay(isUserEditing: Bool, displayEmptyFields: Bool) -> Bool {
             switch self {
             case .incomplete, .invalidFormat:
-                return !isUserEditing
+                return !isUserEditing || displayEmptyFields
             case .shouldStartWithCountryCode, .invalidCountryCode:
                 return true
             }

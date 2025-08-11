@@ -29,7 +29,7 @@ import Foundation
                 return displayEmptyFields
             case .incomplete, .invalid:
                 // Show validation if user finished editing
-                return !isUserEditing
+                return !isUserEditing || displayEmptyFields
             }
         }
 

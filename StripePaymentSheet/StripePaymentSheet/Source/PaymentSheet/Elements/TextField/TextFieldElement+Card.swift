@@ -103,7 +103,7 @@ extension TextFieldElement {
                 case .empty:
                     return displayEmptyFields
                 case .incomplete, .invalidLuhn:
-                    return !isUserEditing
+                    return !isUserEditing || displayEmptyFields
                 case .invalidBrand, .disallowedBrand:
                     return true
                 }
@@ -286,7 +286,7 @@ extension TextFieldElement {
             public func shouldDisplay(isUserEditing: Bool, displayEmptyFields: Bool) -> Bool {
                 switch self {
                 case .empty:                    return displayEmptyFields
-                case .incomplete:               return !isUserEditing
+                case .incomplete:               return !isUserEditing || displayEmptyFields
                 case .expired, .invalidMonth, .invalid:   return true
                 }
             }

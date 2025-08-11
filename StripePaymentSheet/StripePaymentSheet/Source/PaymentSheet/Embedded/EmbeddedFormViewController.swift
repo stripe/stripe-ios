@@ -388,6 +388,9 @@ class EmbeddedFormViewController: UIViewController {
 
     @objc func didTapPrimaryButtonWhenDisabled() {
         // When the disabled button is tapped, show validation errors on all form fields
+#if !os(visionOS)
+        UINotificationFeedbackGenerator().notificationOccurred(.error)
+#endif
         paymentMethodFormViewController.form.showAllValidationErrors()
     }
 }
