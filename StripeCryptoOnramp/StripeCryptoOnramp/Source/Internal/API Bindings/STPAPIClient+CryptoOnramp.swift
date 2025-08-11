@@ -111,6 +111,16 @@ extension STPAPIClient {
         return try await post(resource: endpoint, object: requestObject)
     }
 
+    func createPaymentToken(for paymentMethodId: String, linkAccountInfo: PaymentSheetLinkAccountInfoProtocol) async throws -> CreatePaymentTokenResponse {
+        guard let consumerSessionClientSecret = linkAccountInfo.consumerSessionClientSecret else {
+            throw CryptoOnrampAPIError.missingConsumerSessionClientSecret
+        }
+
+        let endpoint = "crypto/internal/payment_token"
+        let requestObject = CreatePaymentTokenRequest(id: paymentMethodId, consumerSessionClientSecret: consumerSessionClientSecret)
+        return try await post(resource: endpoint, object: requestObject)
+    }
+
     private func validateSessionState(using linkAccountInfo: PaymentSheetLinkAccountInfoProtocol) throws {
         guard case .verified = linkAccountInfo.sessionState else {
             throw CryptoOnrampAPIError.linkAccountNotVerified
