@@ -14,7 +14,7 @@ import StripeCryptoOnramp
 struct PaymentMethodCardView: View {
 
     /// The `PaymentMethodPreview` containing the details to render.
-    let preview: PaymentMethodSelectionResult.PaymentMethodPreview
+    let preview: PaymentMethodPreview
 
     // MARK: - View
 

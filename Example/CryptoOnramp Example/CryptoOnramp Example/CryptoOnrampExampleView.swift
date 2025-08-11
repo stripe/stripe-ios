@@ -71,11 +71,7 @@ struct CryptoOnrampExampleView: View {
 
                         if let customerId = authenticationCustomerId {
                             HiddenNavigationLink(
-                                destination: AuthenticatedView(
-                                    coordinator: coordinator,
-                                    customerId: customerId,
-                                    email: email
-                                ),
+                                destination: AuthenticatedView(coordinator: coordinator, customerId: customerId),
                                 isActive: $showAuthenticatedView
                             )
                         }

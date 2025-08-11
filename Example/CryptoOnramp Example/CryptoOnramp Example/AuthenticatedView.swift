@@ -22,13 +22,10 @@ struct AuthenticatedView: View {
     /// The customer id of the authenticated user.
     let customerId: String
 
-    /// The email address used earlier in the flow.
-    let email: String
-
     @State private var errorMessage: String?
     @State private var isIdentityVerificationComplete = false
     @State private var showKYCView = false
-    @State private var selectedPaymentMethod: PaymentMethodSelectionResult.PaymentMethodPreview?
+    @State private var selectedPaymentMethod: PaymentMethodPreview?
 
     @Environment(\.isLoading) private var isLoading
 
@@ -150,17 +147,10 @@ struct AuthenticatedView: View {
         errorMessage = nil
 
         Task {
-            let result = await coordinator.presentPaymentMethodSelector(from: viewController, email: email)
+            let preview = await coordinator.collectPaymentMethod(from: viewController)
             await MainActor.run {
                 isLoading.wrappedValue = false
-                switch result {
-                case .completed(let preview):
-                    selectedPaymentMethod = preview
-                case .canceled:
-                    break
-                @unknown default:
-                    break
-                }
+                selectedPaymentMethod = preview
             }
         }
     }
@@ -170,8 +160,7 @@ struct AuthenticatedView: View {
     PreviewWrapperView { coordinator in
         AuthenticatedView(
             coordinator: coordinator,
-            customerId: "cus_example123456789",
-            email: "test@example.com"
+            customerId: "cus_example123456789"
         )
     }
 }
