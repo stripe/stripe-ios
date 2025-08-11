@@ -1,5 +1,10 @@
 ## x.x.x x-x-x
 
+### PaymentSheet
+* [Changed] The form will now highlight incomplete fields when the user taps a disabled "Confirm" button.
+
+## x.x.x x-x-x
+
 ### StripeApplePay
 * [Fixed] Issue when deserializing intent when line1 is null
 
