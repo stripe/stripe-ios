@@ -48,8 +48,6 @@
 
 "To scan your card, allow camera access in Settings." = "Để quét thẻ của bạn, hãy cho phép truy cập camera trong mục Cài đặt.";
 
-"Your ZIP is invalid." = "Mã ZIP không hợp lệ";
-
 "Your card has expired." = "Thẻ đã hết hạn.";
 
 "Your card number is incomplete." = "Số thẻ chưa đầy đủ.";
@@ -67,8 +65,6 @@
 "Your card's security code is incomplete." = "Mã bảo mật trên thẻ chưa đầy đủ.";
 
 "Your card's security code is invalid." = "Mã bảo mật trên thẻ không hợp lệ.";
-
-"Your postal code is invalid." = "Mã bưu điện không hợp lệ.";
 
 "card number" = "số thẻ";
 

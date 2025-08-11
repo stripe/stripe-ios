@@ -134,7 +134,9 @@
 
 "Your BLIK code is invalid." = "Jūsų BLIK kodas netinkamas.";
 
-"Your ZIP is incomplete." = "Neišsamus jūsų pašto kodas.";
+"Your ZIP code is incomplete." = "Jūsų pašto kodas yra nepilnas.";
+
+"Your ZIP code is invalid." = "Jūsų pašto kodas netinkamas.";
 
 "Your email is invalid." = "Jūsų el. paštas yra neteisingas.";
 

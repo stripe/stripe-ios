@@ -293,5 +293,4 @@ class CardScanningView: UIView, STPCardScannerDelegate {
         super.willMove(toWindow: newWindow)
     }
 }
-
 #endif

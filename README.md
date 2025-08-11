@@ -27,7 +27,7 @@ Table of contents
    * [Card scanning](#Card-scanning)
    * [Contributing](#Contributing)
    * [Migrating](#Migrating-from-older-versions)
-   * [Code Stye](#Code-style)
+   * [Code Style](#Code-style)
    * [Licenses](#Licenses)
 
 <!--te-->

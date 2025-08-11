@@ -46,6 +46,7 @@
 		4161C2792C9DB1CE005BD67C /* StripeUICore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4161C2782C9DB1CE005BD67C /* StripeUICore.framework */; };
 		4161C27E2C9DB566005BD67C /* AccountCollectionOptions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4161C27D2C9DB566005BD67C /* AccountCollectionOptions.swift */; };
 		4161C28C2CA1B54E005BD67C /* OnSetterFunctionCalledMessageHandlerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4161C28B2CA1B54E005BD67C /* OnSetterFunctionCalledMessageHandlerTests.swift */; };
+		A4128BE82E450DFD00745749 /* PaymentsListDefaultFiltersOptions.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4128BE72E450DFC00745749 /* PaymentsListDefaultFiltersOptions.swift */; };
 		416D741D2D5D894E0058E030 /* CloseWebViewMessageHandlerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 416D741C2D5D894C0058E030 /* CloseWebViewMessageHandlerTests.swift */; };
 		416D741F2D5D8D120058E030 /* MobileInputReceivedSenderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 416D741E2D5D8D110058E030 /* MobileInputReceivedSenderTests.swift */; };
 		416E9E742C751A1A00A0B917 /* ConnectComponentWebViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 416E9E732C751A1A00A0B917 /* ConnectComponentWebViewController.swift */; };
@@ -55,6 +56,8 @@
 		416E9E842C76AE0A00A0B917 /* ComponentType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 416E9E832C76AE0900A0B917 /* ComponentType.swift */; };
 		416E9E862C76B35E00A0B917 /* PayoutsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 416E9E852C76B35E00A0B917 /* PayoutsViewController.swift */; };
 		416E9E892C76B36F00A0B917 /* PayoutsViewControllerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 416E9E872C76B36F00A0B917 /* PayoutsViewControllerTests.swift */; };
+		416E9E8A2C76B37000A0B917 /* PaymentsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 416E9E8B2C76B37000A0B917 /* PaymentsViewController.swift */; };
+		416E9E8C2C76B37100A0B917 /* PaymentsViewControllerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 416E9E8D2C76B37100A0B917 /* PaymentsViewControllerTests.swift */; };
 		416E9ECF2C77EAA400A0B917 /* EmbeddedComponentError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 416E9ECE2C77EAA400A0B917 /* EmbeddedComponentError.swift */; };
 		416E9ED42C77F90600A0B917 /* WKScriptMessage+extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 416E9ED32C77F90600A0B917 /* WKScriptMessage+extension.swift */; };
 		4171B1592C9A5EEC00547F7D /* AccountOnboardingController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4171B1582C9A5EEC00547F7D /* AccountOnboardingController.swift */; };
@@ -261,6 +264,8 @@
 		416E9E832C76AE0900A0B917 /* ComponentType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ComponentType.swift; sourceTree = "<group>"; };
 		416E9E852C76B35E00A0B917 /* PayoutsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PayoutsViewController.swift; sourceTree = "<group>"; };
 		416E9E872C76B36F00A0B917 /* PayoutsViewControllerTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PayoutsViewControllerTests.swift; sourceTree = "<group>"; };
+		416E9E8B2C76B37000A0B917 /* PaymentsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PaymentsViewController.swift; sourceTree = "<group>"; };
+		416E9E8D2C76B37100A0B917 /* PaymentsViewControllerTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PaymentsViewControllerTests.swift; sourceTree = "<group>"; };
 		416E9ECE2C77EAA400A0B917 /* EmbeddedComponentError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmbeddedComponentError.swift; sourceTree = "<group>"; };
 		416E9ED32C77F90600A0B917 /* WKScriptMessage+extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "WKScriptMessage+extension.swift"; sourceTree = "<group>"; };
 		4171B1582C9A5EEC00547F7D /* AccountOnboardingController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountOnboardingController.swift; sourceTree = "<group>"; };
@@ -305,6 +310,7 @@
 		41D17A612C5A7429007C6EE6 /* StripeiOS-Release.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = "StripeiOS-Release.xcconfig"; sourceTree = "<group>"; };
 		41D17A622C5A7429007C6EE6 /* StripeiOS-Shared.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = "StripeiOS-Shared.xcconfig"; sourceTree = "<group>"; };
 		41D17A632C5A7429007C6EE6 /* Version.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = Version.xcconfig; sourceTree = "<group>"; };
+		A4128BE72E450DFC00745749 /* PaymentsListDefaultFiltersOptions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentsListDefaultFiltersOptions.swift; sourceTree = "<group>"; };
 		E611A7172CE8372500B3F580 /* ActivityViewControllerWithoutPopover.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivityViewControllerWithoutPopover.swift; sourceTree = "<group>"; };
 		E6165CBE2CA7BF2200B76DA5 /* FetchInitComponentPropsMessageHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FetchInitComponentPropsMessageHandler.swift; sourceTree = "<group>"; };
 		E6165CC02CA7D09900B76DA5 /* FetchInitComponentPropsMessageHandlerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FetchInitComponentPropsMessageHandlerTests.swift; sourceTree = "<group>"; };
@@ -522,6 +528,7 @@
 		4161C27C2C9DB53C005BD67C /* Models */ = {
 			isa = PBXGroup;
 			children = (
+				A4128BE72E450DFC00745749 /* PaymentsListDefaultFiltersOptions.swift */,
 				4161C27D2C9DB566005BD67C /* AccountCollectionOptions.swift */,
 			);
 			path = Models;
@@ -536,6 +543,7 @@
 				E65691232CA52F8600E0DB00 /* NotificationBannerViewController.swift */,
 				E6F485F72C9E35A5000D914F /* PaymentDetailsViewController.swift */,
 				416E9E852C76B35E00A0B917 /* PayoutsViewController.swift */,
+				416E9E8B2C76B37000A0B917 /* PaymentsViewController.swift */,
 			);
 			path = Components;
 			sourceTree = "<group>";
@@ -548,6 +556,7 @@
 				E688ADFF2CADD8C400951D97 /* NotificationBannerViewControllerTests.swift */,
 				E6F485FD2C9E36B2000D914F /* PaymentDetailsViewControllerTests.swift */,
 				416E9E872C76B36F00A0B917 /* PayoutsViewControllerTests.swift */,
+				416E9E8D2C76B37100A0B917 /* PaymentsViewControllerTests.swift */,
 			);
 			path = Components;
 			sourceTree = "<group>";
@@ -1036,6 +1045,7 @@
 				413987CD2C63F34B001D375E /* MessageSender.swift in Sources */,
 				41BCCFF52C8B5A0A00797E01 /* CustomFontSourceWrapper.swift in Sources */,
 				4161C27E2C9DB566005BD67C /* AccountCollectionOptions.swift in Sources */,
+				A4128BE82E450DFD00745749 /* PaymentsListDefaultFiltersOptions.swift in Sources */,
 				413987CE2C63F34B001D375E /* UpdateConnectInstanceSender.swift in Sources */,
 				416E9ED42C77F90600A0B917 /* WKScriptMessage+extension.swift in Sources */,
 				E65691222CA52D5900E0DB00 /* StripeConnect+Exports.swift in Sources */,
@@ -1065,6 +1075,7 @@
 				41810D7A2C8A0AAD00F10EB7 /* CustomFontSource.swift in Sources */,
 				413987CA2C63F34B001D375E /* ScriptMessageHandler.swift in Sources */,
 				416E9E862C76B35E00A0B917 /* PayoutsViewController.swift in Sources */,
+				416E9E8A2C76B37000A0B917 /* PaymentsViewController.swift in Sources */,
 				E6660DA92CDC563C002A7631 /* AuthenticatedWebViewOpenedEvent.swift in Sources */,
 				41542A6B2C88B79E004E728E /* JSONSerialization+extension.swift in Sources */,
 				E6C5F5F62C9FEE0200861709 /* AccountManagementViewController.swift in Sources */,
@@ -1109,6 +1120,7 @@
 				410D0FD92C6D1F25009B0E26 /* UpdateConnectInstanceSenderTests.swift in Sources */,
 				E6F486092C9E8A40000D914F /* ConnectJSURLParamsTests.swift in Sources */,
 				416E9E892C76B36F00A0B917 /* PayoutsViewControllerTests.swift in Sources */,
+				416E9E8C2C76B37100A0B917 /* PaymentsViewControllerTests.swift in Sources */,
 				E6660DB72CDD99EF002A7631 /* MockComponentAnalyticsClient.swift in Sources */,
 				E6660DB12CDD8E25002A7631 /* ComponentAnalyticsClient+Mock.swift in Sources */,
 				E6660DC72CDE8F28002A7631 /* ScriptMessageHandlerTests.swift in Sources */,

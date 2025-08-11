@@ -60,6 +60,10 @@
 
 "By continuing, you agree to authorize payments pursuant to <terms>these terms</terms>." = "En continuar, accepteu autoritzar aquests pagaments segons <terms>aquests termes</terms>.";
 
+"By continuing, you agree to save your information for future purchases with %@ and <link>Link</link>. You also agree to Link's <terms>Terms</terms> and <privacy>Privacy</privacy>." = "En continuar, accepteu desar la vostra informació per a futures compres amb %@ i <link>Link</link>. Així mateix, accepteu les <terms>Condicions</terms> i la <privacy>Privadesa</privacy> de Link.";
+
+"By continuing, you agree to save your information for future purchases with %@." = "En continuar, accepteu desar la vostra informació per a futures compres amb %@.";
+
 "By continuing, you authorize %@ to automatically debit your Satispay Balance on a recurring basis in accordance with your purchase or subscription plan." = "En continuar, autoritzeu a %@ a debitar automàticament el vostre Saldo Satispay de manera periòdica, d'acord amb el vostre pla de compra o subscripció.";
 
 "By continuing, you authorize %@ to debit your Cash App account for this payment and future payments in accordance with %@'s terms, until this authorization is revoked. You can change this anytime in your Cash App Settings." = "En continuar, autoritzeu %1$@ a carregar aquest pagament i els pagaments futurs al compte de Cash App segons les condicions de %2$@ fins que es revoqui l'autorització. Podeu canviar això en qualsevol moment a la configuració de Cash App.";
@@ -126,7 +130,7 @@
 
 "Failed to connect" = "No s'ha pogut connectar";
 
-"Fast, secure, 1⁠-⁠click checkout" = "Pagament ràpid i segur amb 1 clic";
+"Fast, secure checkout" = "Finalització de la compra ràpida i segura";
 
 "For security, please re-enter your card’s security code." = "Per raons de seguretat, torna a introduir el codi de seguretat de la targeta.";
 
@@ -188,6 +192,8 @@
 
 "Pay faster at %@ and thousands of businesses." = "Pagueu més ràpidament a %@ i a milers de negocis.";
 
+"Pay faster everywhere Link is accepted." = "Pagueu més ràpid als llocs on s'accepta Link.";
+
 "Pay over time with %@" = "Pagueu a terminis amb %@";
 
 "Pay over time with Affirm" = "Paga a terminis amb Affirm";
@@ -237,8 +243,6 @@
 "Save your bank account in just a few steps." = "Deseu el compte bancari en uns pocs passos.";
 
 "Save your info for secure 1-click checkout with Link" = "Deseu la vostra informació per al pagament segur amb 1 clic amb Link";
-
-"Save your payment information with Link, and securely check out in 1-click on Link-supported sites." = "Deseu la vostra informació de pagament amb Link i pagueu amb seguretat en 1 clic als llocs compatibles.";
 
 "Saved" = "Desat";
 

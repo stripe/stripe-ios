@@ -9,14 +9,12 @@
 import Foundation
 @_spi(STP) import StripeCore
 import StripePayments
+@_spi(STP) import StripePaymentsUI
 @_spi(STP) import StripeUICore
 import UIKit
 
 extension PaymentSheetFormFactory {
-    func makeCard(
-        cardBrandChoiceEligible: Bool = false,
-        allowsLinkDefaultOptIn: Bool
-    ) -> PaymentMethodElement {
+    func makeCard() -> PaymentMethodElement {
         let showLinkInlineSignup = showLinkInlineCardSignup
         let defaultCheckbox: Element? = {
             guard allowsSetAsDefaultPM else {
@@ -39,22 +37,6 @@ extension PaymentSheetFormFactory {
             }
         }
         defaultCheckbox?.view.isHidden = !saveCheckbox.element.isSelected
-
-        // Make section titled "Contact Information" w/ phone and email if merchant requires it.
-        let optionalPhoneAndEmailInformationSection: SectionElement? = {
-            let emailElement: Element? = configuration.billingDetailsCollectionConfiguration.email == .always ? makeEmail() : nil
-            let shouldIncludePhone = configuration.billingDetailsCollectionConfiguration.phone == .always
-            let phoneElement: Element? = shouldIncludePhone ? makePhone() : nil
-            let contactInformationElements = [emailElement, phoneElement].compactMap { $0 }
-            guard !contactInformationElements.isEmpty else {
-                return nil
-            }
-            return SectionElement(
-                title: .Localized.contact_information,
-                elements: contactInformationElements,
-                theme: theme
-            )
-        }()
 
         let previousCardInput = previousCustomerInput?.paymentMethodParams.card
         let formattedExpiry: String? = {
@@ -81,15 +63,37 @@ extension PaymentSheetFormFactory {
             cardBrandFilter: configuration.cardBrandFilter
         )
 
+        let shouldIncludeEmail = configuration.billingDetailsCollectionConfiguration.email == .always
+        let shouldIncludePhone = configuration.billingDetailsCollectionConfiguration.phone == .always
+
         let billingAddressSection: PaymentMethodElementWrapper<AddressSectionElement>? = {
             switch configuration.billingDetailsCollectionConfiguration.address {
             case .automatic:
-                return makeBillingAddressSection(collectionMode: .countryAndPostal(), countries: nil)
+                return makeBillingAddressSection(collectionMode: .countryAndPostal(), countries: nil, includeEmail: shouldIncludeEmail, includePhone: shouldIncludePhone)
             case .full:
-                return makeBillingAddressSection(collectionMode: .autoCompletable, countries: nil)
+                return makeBillingAddressSection(collectionMode: .autoCompletable, countries: nil, includeEmail: shouldIncludeEmail, includePhone: shouldIncludePhone)
             case .never:
                 return nil
             }
+        }()
+
+        // Make section titled "Contact Information" w/ phone and email if merchant requires it and we didn't have a billing address section.
+        let optionalPhoneAndEmailInformationSection: SectionElement? = {
+            guard billingAddressSection == nil else {
+                // We already included this information in the billing address section.
+                return nil
+            }
+            let emailElement: Element? = shouldIncludeEmail ? makeEmail() : nil
+            let phoneElement: Element? = shouldIncludePhone ? makePhone() : nil
+            let contactInformationElements = [emailElement, phoneElement].compactMap { $0 }
+            guard !contactInformationElements.isEmpty else {
+                return nil
+            }
+            return SectionElement(
+                title: .Localized.contact_information,
+                elements: contactInformationElements,
+                theme: theme
+            )
         }()
 
         let phoneElement = optionalPhoneAndEmailInformationSection?.elements.compactMap {
@@ -116,15 +120,25 @@ extension PaymentSheetFormFactory {
                 country: countryCode,
                 showCheckbox: !shouldDisplaySaveCheckbox,
                 accountService: accountService,
-                allowsDefaultOptIn: allowsLinkDefaultOptIn
+                allowsDefaultOptIn: allowsLinkDefaultOptIn,
+                signupOptInFeatureEnabled: signupOptInFeatureEnabled,
+                signupOptInInitialValue: signupOptInInitialValue
             )
             elements.append(inlineSignupElement)
         }
 
         let mandate: SimpleMandateElement? = {
-            if isSettingUp {
-                return makeMandate(mandateText: String(format: .Localized.by_providing_your_card_information_text, configuration.merchantDisplayName))
-
+            if signupOptInFeatureEnabled {
+                // Respect this over all other configurations.
+                return makeMandate()
+            }
+            switch configuration.termsDisplayFor(paymentMethodType: .stripe(.card)) {
+            case .never:
+                return nil
+            case .automatic:
+                if isSettingUp {
+                    return makeMandate()
+                }
             }
             return nil
         }()
@@ -139,5 +153,54 @@ extension PaymentSheetFormFactory {
             elements: elements,
             theme: theme,
             customSpacing: customSpacing)
+    }
+
+    private func makeMandate() -> SimpleMandateElement {
+        // It's possible that `signupOptInFeatureEnabled` is true, but the user has already used Link.
+        // This user would not see the signup opt-in toggle, but we still want to show the mandate.
+        // Therefore, always show the mandate if `signupOptInFeatureEnabled` is true, but only add
+        // the Link-specific terms if the signup opt-in toggle is actually visible via `shouldShowLinkSignupOptIn`.
+        let shouldSaveToLink = shouldShowLinkSignupOptIn && signupOptInInitialValue
+        let mandateText = Self.makeMandateText(
+            linkSignupOptInFeatureEnabled: signupOptInFeatureEnabled,
+            shouldSaveToLink: shouldSaveToLink,
+            merchantName: configuration.merchantDisplayName
+        )
+        return makeMandate(mandateText: mandateText)
+    }
+
+    static func makeMandateText(
+        linkSignupOptInFeatureEnabled: Bool,
+        shouldSaveToLink: Bool,
+        merchantName: String
+    ) -> NSAttributedString {
+        let formatText = if linkSignupOptInFeatureEnabled {
+            if shouldSaveToLink {
+                String.Localized.by_continuing_you_agree_to_save_your_information_to_merchant_and_link
+            } else {
+                String.Localized.by_continuing_you_agree_to_save_your_information_to_merchant
+            }
+        } else {
+            String.Localized.by_providing_your_card_information_text
+        }
+
+        let terms = String(format: formatText, merchantName).removeTrailingDots()
+
+        if linkSignupOptInFeatureEnabled && shouldSaveToLink {
+            let links = [
+                "link": URL(string: "https://link.com")!,
+                "terms": URL(string: "https://link.com/terms")!,
+                "privacy": URL(string: "https://link.com/privacy")!,
+            ]
+            return STPStringUtils.applyLinksToString(template: terms, links: links)
+        } else {
+            return NSAttributedString(string: terms)
+        }
+    }
+}
+
+private extension String {
+    func removeTrailingDots() -> String {
+        return hasSuffix("..") ? String(dropLast()) : self
     }
 }

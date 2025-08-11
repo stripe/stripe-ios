@@ -213,7 +213,7 @@ struct ExampleLinkStandaloneComponentContent: View {
         }
 
         Task {
-            let paymentMethodPreview = await linkController.present(from: viewController, with: email)
+            let paymentMethodPreview = await linkController.collectPaymentMethod(from: viewController, with: email)
             self.paymentMethodPreview = paymentMethodPreview
         }
     }
@@ -497,7 +497,7 @@ struct PaymentMethodSheet: View {
         STPAPIClient.shared.publishableKey = "pk_test_51HvTI7Lu5o3P18Zp6t5AgBSkMvWoTtA0nyA7pVYDqpfLkRtWun7qZTYCOHCReprfLM464yaBeF72UFfB7cY9WG4a00ZnDtiC2C"
 
         Task {
-            let paymentMethodPreview = await linkController.present(from: viewController, with: email)
+            let paymentMethodPreview = await linkController.collectPaymentMethod(from: viewController, with: email)
             if paymentMethodPreview != nil {
                 DispatchQueue.main.async {
                     dismiss()

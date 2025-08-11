@@ -73,6 +73,17 @@ extension PaymentSheet {
         return true
     }
 
+    static func isLinkSignupEnabled(elementsSession: STPElementsSession, configuration: PaymentElementConfiguration) -> Bool {
+        guard isLinkEnabled(elementsSession: elementsSession, configuration: configuration) else {
+            return false
+        }
+        // A non-nil account indicates that a consumer lookup has taken place, meaning that we have a customer email
+        // via the billing details or customer session.
+        let enableOptIn = elementsSession.linkSignupOptInFeatureEnabled && LinkAccountContext.shared.account != nil
+        let enableSignup = !elementsSession.disableLinkSignup
+        return (enableSignup || enableOptIn) && elementsSession.supportsLinkCard
+    }
+
     /// An unordered list of paymentMethodTypes that can be used with Link in PaymentSheet
     /// - Note: This is a var because it depends on the authenticated Link user
     ///

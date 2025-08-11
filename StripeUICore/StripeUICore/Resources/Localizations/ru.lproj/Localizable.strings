@@ -134,12 +134,16 @@
 
 "Your BLIK code is invalid." = "Ваш код BLIK недействителен.";
 
-"Your ZIP is incomplete." = "Почтовый индекс введен не полностью.";
+"Your ZIP code is incomplete." = "Ваш почтовый индекс неполный.";
+
+"Your ZIP code is invalid." = "Ваш почтовый индекс недействителен.";
 
 "Your email is invalid." = "Недействительный адрес эл. почты.";
 
 "Your payment information will not be saved." = "Ваши платежные реквизиты не будут сохранены.";
 
 "Your postal code is incomplete." = "Введенный почтовый индекс неполон.";
+
+"Your postal code is invalid." = "Недействительный почтовый индекс.";
 
 "ZIP" = "Почтовый индекс";

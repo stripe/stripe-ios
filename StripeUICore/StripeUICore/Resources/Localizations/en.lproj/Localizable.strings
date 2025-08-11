@@ -216,8 +216,14 @@ Label of an address field */
 /* Error message for when postal code in form is incomplete */
 "Your postal code is incomplete." = "Your postal code is incomplete.";
 
+/* Error message for when postal code in form is invalid */
+"Your postal code is invalid." = "Your postal code is invalid.";
+
 /* Error message for when ZIP code in form is incomplete (US only) */
-"Your ZIP is incomplete." = "Your ZIP is incomplete.";
+"Your ZIP code is incomplete." = "Your ZIP code is incomplete.";
+
+/* Error message for when ZIP code in form is invalid (US only) */
+"Your ZIP code is invalid." = "Your ZIP code is invalid.";
 
 /* Label of an address field
 Short string for zip code (United States only)

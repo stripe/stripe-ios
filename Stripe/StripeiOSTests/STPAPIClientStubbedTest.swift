@@ -17,6 +17,148 @@ import XCTest
 @testable@_spi(STP) import StripePaymentSheet
 
 class STPAPIClientStubbedTest: APIStubbedTestCase {
+    func testCreatePaymentMethodWithRadarOptions() {
+        let sut = stubbedAPIClient()
+        stub { urlRequest in
+            guard let queryItems = urlRequest.queryItems else {
+                return false
+            }
+            XCTAssertTrue(queryItems.contains(where: { item in
+                item.name == "radar_options[hcaptcha_token]" && item.value == "test_hcaptcha_token"
+            }))
+            return true
+        } response: { _ in
+            return .init()
+        }
+        let e = expectation(description: "")
+        let paymentMethodParams: STPPaymentMethodParams = ._testValidCardValue()
+        paymentMethodParams.radarOptions = STPRadarOptions(hcaptchaToken: "test_hcaptcha_token")
+        sut.createPaymentMethod(with: paymentMethodParams) { _, _ in
+            e.fulfill()
+        }
+        waitForExpectations(timeout: 10)
+    }
+
+    func testCreatePaymentMethodWithoutRadarOptions() {
+        let sut = stubbedAPIClient()
+        stub { urlRequest in
+            guard let queryItems = urlRequest.queryItems else {
+                return false
+            }
+            XCTAssertFalse(queryItems.contains(where: { item in
+                item.name == "radar_options[hcaptcha_token]"
+            }))
+            return true
+        } response: { _ in
+            return .init()
+        }
+        let e = expectation(description: "")
+        let paymentMethodParams: STPPaymentMethodParams = ._testValidCardValue()
+        paymentMethodParams.radarOptions = STPRadarOptions(hcaptchaToken: nil)
+        sut.createPaymentMethod(with: paymentMethodParams) { _, _ in
+            e.fulfill()
+        }
+        waitForExpectations(timeout: 10)
+    }
+
+    func testConfirmPaymentIntentWithRadarOptions() {
+        let sut = stubbedAPIClient()
+        stub { urlRequest in
+            guard let queryItems = urlRequest.queryItems else {
+                return false
+            }
+            XCTAssertTrue(queryItems.contains(where: { item in
+                item.name == "payment_method_data[radar_options][hcaptcha_token]" && item.value == "test_hcaptcha_token"
+            }))
+            return true
+        } response: { _ in
+            return .init()
+        }
+        let e = expectation(description: "")
+        let paymentMethodParams: STPPaymentMethodParams = ._testValidCardValue()
+        paymentMethodParams.radarOptions = STPRadarOptions(hcaptchaToken: "test_hcaptcha_token")
+        let paymentIntentParams = STPPaymentIntentParams(clientSecret: "pi_123456_secret_654321")
+        paymentIntentParams.paymentMethodParams = paymentMethodParams
+        sut.confirmPaymentIntent(with: paymentIntentParams) { _, _ in
+            e.fulfill()
+        }
+        waitForExpectations(timeout: 10)
+    }
+
+    func testConfirmPaymentIntentWithoutRadarOptions() {
+        let sut = stubbedAPIClient()
+        stub { urlRequest in
+            guard let queryItems = urlRequest.queryItems else {
+                return false
+            }
+            XCTAssertFalse(queryItems.contains(where: { item in
+                item.name == "payment_method_data[radar_options][hcaptcha_token]"
+            }))
+            return true
+        } response: { _ in
+            return .init()
+        }
+        let e = expectation(description: "")
+        let paymentMethodParams: STPPaymentMethodParams = ._testValidCardValue()
+        paymentMethodParams.radarOptions = STPRadarOptions(hcaptchaToken: nil)
+        let paymentIntentParams = STPPaymentIntentParams(clientSecret: "pi_123456_secret_654321")
+        paymentIntentParams.paymentMethodParams = paymentMethodParams
+        sut.confirmPaymentIntent(with: paymentIntentParams) { _, _ in
+            e.fulfill()
+        }
+        waitForExpectations(timeout: 10)
+    }
+
+    func testConfirmSetupIntentWithRadarOptions() {
+        let sut = stubbedAPIClient()
+        stub { urlRequest in
+            guard let queryItems = urlRequest.queryItems else {
+                return false
+            }
+            XCTAssertTrue(queryItems.contains(where: { item in
+                item.name == "payment_method_data[radar_options][hcaptcha_token]" && item.value == "test_hcaptcha_token"
+            }))
+            return true
+        } response: { _ in
+            return .init()
+        }
+        let e = expectation(description: "")
+        let paymentMethodParams: STPPaymentMethodParams = ._testValidCardValue()
+        paymentMethodParams.radarOptions = STPRadarOptions(hcaptchaToken: "test_hcaptcha_token")
+        let paymentIntentParams = STPPaymentIntentParams(clientSecret: "pi_123456_secret_654321")
+        paymentIntentParams.paymentMethodParams = paymentMethodParams
+        let setupIntentParams = STPSetupIntentConfirmParams(clientSecret: "seti_123456_secret_654321")
+        setupIntentParams.paymentMethodParams = paymentMethodParams
+        sut.confirmSetupIntent(with: setupIntentParams) { _, _ in
+            e.fulfill()
+        }
+        waitForExpectations(timeout: 10)
+    }
+
+    func testConfirmSetupIntentWithoutRadarOptions() {
+        let sut = stubbedAPIClient()
+        stub { urlRequest in
+            guard let queryItems = urlRequest.queryItems else {
+                return false
+            }
+            XCTAssertFalse(queryItems.contains(where: { item in
+                item.name == "payment_method_data[radar_options][hcaptcha_token]"
+            }))
+            return true
+        } response: { _ in
+            return .init()
+        }
+        let e = expectation(description: "")
+        let paymentMethodParams: STPPaymentMethodParams = ._testValidCardValue()
+        paymentMethodParams.radarOptions = STPRadarOptions(hcaptchaToken: nil)
+        let setupIntentParams = STPSetupIntentConfirmParams(clientSecret: "seti_123456_secret_654321")
+        setupIntentParams.paymentMethodParams = paymentMethodParams
+        sut.confirmSetupIntent(with: setupIntentParams) { _, _ in
+            e.fulfill()
+        }
+        waitForExpectations(timeout: 10)
+    }
+
     func testCreatePaymentMethodWithAdditionalPaymentUserAgentValues() {
         let sut = stubbedAPIClient()
         stub { urlRequest in
@@ -38,6 +180,193 @@ class STPAPIClientStubbedTest: APIStubbedTestCase {
         waitForExpectations(timeout: 10)
     }
 
+    private func stubClientAttributionMetadata(base: String? = nil,
+                                               shouldContainClientAttributionMetadata: Bool = true,
+                                               clientAttributionMetadata: STPClientAttributionMetadata = STPClientAttributionMetadata(),
+                                               urlPattern: String? = nil) {
+        stub { urlRequest in
+            // If urlPattern is specified, only validate requests that match the pattern
+            if let urlPattern {
+                guard urlRequest.url?.absoluteString.contains(urlPattern) == true else {
+                    return false
+                }
+            }
+            guard let queryItems = urlRequest.queryItems else {
+                return false
+            }
+            XCTAssertEqual(queryItems.contains(where: { item in
+                if let base {
+                    return item.name == "\(base)[client_attribution_metadata][client_session_id]" && item.value == AnalyticsHelper.shared.sessionID
+                }
+                return item.name == "client_attribution_metadata[client_session_id]" && item.value == AnalyticsHelper.shared.sessionID
+            }), shouldContainClientAttributionMetadata)
+            XCTAssertEqual(queryItems.contains(where: { item in
+                if let base {
+                    return item.name == "\(base)[client_attribution_metadata][merchant_integration_source]" && item.value == "elements"
+                }
+                return item.name == "client_attribution_metadata[merchant_integration_source]" && item.value == "elements"
+            }), shouldContainClientAttributionMetadata)
+            XCTAssertEqual(queryItems.contains(where: { item in
+                if let base {
+                    return item.name == "\(base)[client_attribution_metadata][merchant_integration_subtype]" && item.value == "mobile"
+                }
+                return item.name == "client_attribution_metadata[merchant_integration_subtype]" && item.value == "mobile"
+            }), shouldContainClientAttributionMetadata)
+            XCTAssertEqual(queryItems.contains(where: { item in
+                if let base {
+                    return item.name == "\(base)[client_attribution_metadata][merchant_integration_version]" && item.value == "stripe-ios/\(StripeAPIConfiguration.STPSDKVersion)"
+                }
+                return item.name == "client_attribution_metadata[merchant_integration_version]" && item.value == "stripe-ios/\(StripeAPIConfiguration.STPSDKVersion)"
+            }), shouldContainClientAttributionMetadata)
+            if let elementsSessionConfigId = clientAttributionMetadata.elementsSessionConfigId {
+                XCTAssertEqual(queryItems.contains(where: { item in
+                    if let base {
+                        return item.name == "\(base)[client_attribution_metadata][elements_session_config_id]" && item.value == elementsSessionConfigId
+                    }
+                    return item.name == "client_attribution_metadata[elements_session_config_id]" && item.value == elementsSessionConfigId
+                }), shouldContainClientAttributionMetadata)
+            }
+            if let intentCreationFlow = clientAttributionMetadata.paymentIntentCreationFlow {
+                XCTAssertEqual(queryItems.contains(where: { item in
+                    if let base {
+                        return item.name == "\(base)[client_attribution_metadata][payment_intent_creation_flow]" && item.value == intentCreationFlow
+                    }
+                    return item.name == "client_attribution_metadata[payment_intent_creation_flow]" && item.value == intentCreationFlow
+                }), shouldContainClientAttributionMetadata)
+            }
+            if let paymentMethodSelectionFlow = clientAttributionMetadata.paymentMethodSelectionFlow {
+                XCTAssertEqual(queryItems.contains(where: { item in
+                    if let base {
+                        return item.name == "\(base)[client_attribution_metadata][payment_method_selection_flow]" && item.value == paymentMethodSelectionFlow
+                    }
+                    return item.name == "client_attribution_metadata[payment_method_selection_flow]" && item.value == paymentMethodSelectionFlow
+                }), shouldContainClientAttributionMetadata)
+            }
+            return true
+        } response: { _ in
+            return .init()
+        }
+    }
+
+    func testCreatePaymentMethodWithClientAttributionMetadata() {
+        let sut = stubbedAPIClient()
+        AnalyticsHelper.shared.generateSessionID()
+        let clientAttributionMetadata: STPClientAttributionMetadata = STPClientAttributionMetadata(elementsSessionConfigId: "elements_session_config_id", paymentIntentCreationFlow: .deferred, paymentMethodSelectionFlow: .automatic)
+        let paymentMethodParams: STPPaymentMethodParams = ._testValidCardValue()
+        paymentMethodParams.clientAttributionMetadata = clientAttributionMetadata
+        stubClientAttributionMetadata(clientAttributionMetadata: clientAttributionMetadata)
+        let e = expectation(description: "")
+        sut.createPaymentMethod(with: paymentMethodParams) { _, _ in
+            e.fulfill()
+        }
+        waitForExpectations(timeout: 10)
+    }
+
+    func testCreateApplePayPaymentMethodWithClientAttributionMetadata() {
+        let sut = stubbedAPIClient()
+        AnalyticsHelper.shared.generateSessionID()
+        // Stub token creation call
+        stub { urlRequest in
+            return urlRequest.url?.absoluteString.contains("/tokens") ?? false
+        } response: { _ in
+            let tokenResponse = """
+                {
+                    "id": "tok_test_123",
+                    "object": "token",
+                    "used": false,
+                    "livemode": false,
+                    "created": 1234567890,
+                    "type": "card"
+                }
+                """
+            return HTTPStubsResponse(
+                data: Data(tokenResponse.utf8),
+                statusCode: 200,
+                headers: ["Content-Type": "application/json"]
+            )
+        }
+        let clientAttributionMetadata: STPClientAttributionMetadata = STPClientAttributionMetadata(elementsSessionConfigId: "elements_session_config_id", paymentIntentCreationFlow: .deferred, paymentMethodSelectionFlow: .automatic)
+        var paymentMethodParams: StripeAPI.PaymentMethodParams = StripeAPI.PaymentMethodParams(type: .card)
+        paymentMethodParams.clientAttributionMetadata = clientAttributionMetadata
+        // Stub payment method creation call
+        stubClientAttributionMetadata(clientAttributionMetadata: clientAttributionMetadata, urlPattern: "/payment_methods")
+        let e = expectation(description: "")
+        StripeAPI.PaymentMethod.create(apiClient: sut, params: paymentMethodParams) { _ in
+            e.fulfill()
+        }
+        waitForExpectations(timeout: 10)
+    }
+
+    func testConfirmPaymentIntentWithClientAttributionMetadata() {
+        let sut = stubbedAPIClient()
+        AnalyticsHelper.shared.generateSessionID()
+        let clientAttributionMetadata: STPClientAttributionMetadata = STPClientAttributionMetadata(elementsSessionConfigId: "elements_session_config_id", paymentIntentCreationFlow: .deferred, paymentMethodSelectionFlow: .automatic)
+        stubClientAttributionMetadata(base: "payment_method_data", clientAttributionMetadata: clientAttributionMetadata)
+        let e = expectation(description: "")
+        let paymentMethodParams = STPPaymentMethodParams()
+        paymentMethodParams.clientAttributionMetadata = clientAttributionMetadata
+        let paymentIntentParams = STPPaymentIntentParams(clientSecret: "pi_123456_secret_654321")
+        paymentIntentParams.paymentMethodParams = paymentMethodParams
+        sut.confirmPaymentIntent(with: paymentIntentParams) { _, _ in
+            e.fulfill()
+        }
+        waitForExpectations(timeout: 10)
+    }
+
+    func testConfirmPaymentIntentWithoutClientAttributionMetadata() {
+        let sut = stubbedAPIClient()
+        AnalyticsHelper.shared.generateSessionID()
+        // We only want to include client_attribution_metadata on tokenization with payment method params
+        stubClientAttributionMetadata(base: "payment_method_data", shouldContainClientAttributionMetadata: false)
+        let e = expectation(description: "")
+        let paymentIntentParams = STPPaymentIntentParams(clientSecret: "pi_123456_secret_654321")
+        sut.confirmPaymentIntent(with: paymentIntentParams) { _, _ in
+            e.fulfill()
+        }
+        waitForExpectations(timeout: 10)
+    }
+
+    func testConfirmSetupIntentWithClientAttributionMetadata() {
+        let sut = stubbedAPIClient()
+        AnalyticsHelper.shared.generateSessionID()
+        let clientAttributionMetadata: STPClientAttributionMetadata = STPClientAttributionMetadata(elementsSessionConfigId: "elements_session_config_id", paymentIntentCreationFlow: .deferred, paymentMethodSelectionFlow: .automatic)
+        stubClientAttributionMetadata(base: "payment_method_data", shouldContainClientAttributionMetadata: true, clientAttributionMetadata: clientAttributionMetadata)
+        let e = expectation(description: "")
+        let paymentMethodParams = STPPaymentMethodParams()
+        paymentMethodParams.clientAttributionMetadata = clientAttributionMetadata
+        let setupIntentParams = STPSetupIntentConfirmParams(clientSecret: "seti_123456_secret_654321")
+        setupIntentParams.paymentMethodParams = paymentMethodParams
+        sut.confirmSetupIntent(with: setupIntentParams) { _, _ in
+            e.fulfill()
+        }
+        waitForExpectations(timeout: 10)
+    }
+
+    func testConfirmSetupIntentWithoutClientAttributionMetadata() {
+        let sut = stubbedAPIClient()
+        AnalyticsHelper.shared.generateSessionID()
+        // We only want to include client_attribution_metadata on tokenization with payment method params
+        stubClientAttributionMetadata(base: "payment_method_data", shouldContainClientAttributionMetadata: false)
+        let e = expectation(description: "")
+        let setupIntentParams = STPSetupIntentConfirmParams(clientSecret: "seti_123456_secret_654321")
+        sut.confirmSetupIntent(with: setupIntentParams) { _, _ in
+            e.fulfill()
+        }
+        waitForExpectations(timeout: 10)
+    }
+
+    func testSharePaymentDetailsWithClientAttributionMetadata() {
+        let sut = stubbedAPIClient()
+        AnalyticsHelper.shared.generateSessionID()
+        let clientAttributionMetadata: STPClientAttributionMetadata = STPClientAttributionMetadata(elementsSessionConfigId: "elements_session_config_id", paymentIntentCreationFlow: .deferred, paymentMethodSelectionFlow: .automatic)
+        stubClientAttributionMetadata(base: "payment_method_options", clientAttributionMetadata: clientAttributionMetadata)
+        let e = expectation(description: "")
+        sut.sharePaymentDetails(for: "consumer_session_client_secret", id: "id", consumerAccountPublishableKey: nil, allowRedisplay: nil, cvc: nil, expectedPaymentMethodType: nil, billingPhoneNumber: nil, clientAttributionMetadata: clientAttributionMetadata) { _ in
+            e.fulfill()
+        }
+        waitForExpectations(timeout: 10)
+    }
+
     func testSetupIntent_LinkAccountSessionForUSBankAccount() {
         let sut = stubbedAPIClient()
         stub { urlRequest in
@@ -49,7 +378,7 @@ class STPAPIClientStubbedTest: APIStubbedTestCase {
                 let body = String(data: data, encoding: .utf8)
             else {
                 return HTTPStubsResponse(
-                    data: "".data(using: .utf8)!,
+                    data: Data("".utf8),
                     statusCode: 400,
                     headers: nil
                 )
@@ -118,7 +447,7 @@ class STPAPIClientStubbedTest: APIStubbedTestCase {
                 let body = String(data: data, encoding: .utf8)
             else {
                 return HTTPStubsResponse(
-                    data: "".data(using: .utf8)!,
+                    data: Data("".utf8),
                     statusCode: 400,
                     headers: nil
                 )
@@ -152,7 +481,7 @@ class STPAPIClientStubbedTest: APIStubbedTestCase {
                 }
                 """
             return HTTPStubsResponse(
-                data: jsonText.data(using: .utf8)!,
+                data: Data(jsonText.utf8),
                 statusCode: 200,
                 headers: nil
             )
@@ -189,7 +518,7 @@ class STPAPIClientStubbedTest: APIStubbedTestCase {
                 let body = String(data: data, encoding: .utf8)
             else {
                 return HTTPStubsResponse(
-                    data: "".data(using: .utf8)!,
+                    data: Data("".utf8),
                     statusCode: 400,
                     headers: nil
                 )
@@ -221,7 +550,7 @@ class STPAPIClientStubbedTest: APIStubbedTestCase {
                 }
                 """
             return HTTPStubsResponse(
-                data: jsonText.data(using: .utf8)!,
+                data: Data(jsonText.utf8),
                 statusCode: 200,
                 headers: nil
             )
@@ -255,7 +584,7 @@ class STPAPIClientStubbedTest: APIStubbedTestCase {
                 let body = String(data: data, encoding: .utf8)
             else {
                 return HTTPStubsResponse(
-                    data: "".data(using: .utf8)!,
+                    data: Data("".utf8),
                     statusCode: 400,
                     headers: nil
                 )
@@ -288,7 +617,7 @@ class STPAPIClientStubbedTest: APIStubbedTestCase {
                 }
                 """
             return HTTPStubsResponse(
-                data: jsonText.data(using: .utf8)!,
+                data: Data(jsonText.utf8),
                 statusCode: 200,
                 headers: nil
             )

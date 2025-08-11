@@ -48,8 +48,6 @@
 
 "To scan your card, allow camera access in Settings." = "Untuk memindai kartu Anda, izinkan akses kamera di Pengaturan.";
 
-"Your ZIP is invalid." = "ZIP Anda tidak valid.";
-
 "Your card has expired." = "Kartu Anda telah kedaluwarsa.";
 
 "Your card number is incomplete." = "Nomor kartu Anda tidak lengkap.";
@@ -67,8 +65,6 @@
 "Your card's security code is incomplete." = "Kode keamanan kartu Anda tidak lengkap.";
 
 "Your card's security code is invalid." = "Kode keamanan kartu Anda tidak valid.";
-
-"Your postal code is invalid." = "Kode pos Anda tidak valid.";
 
 "card number" = "nomor kartu";
 

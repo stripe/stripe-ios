@@ -134,12 +134,16 @@
 
 "Your BLIK code is invalid." = "BLIK kodunuz geçersiz.";
 
-"Your ZIP is incomplete." = "Posta kodunuz eksik.";
+"Your ZIP code is incomplete." = "Posta kodunuz eksik.";
+
+"Your ZIP code is invalid." = "Posta kodunuz geçersiz.";
 
 "Your email is invalid." = "E-postanız geçersiz.";
 
 "Your payment information will not be saved." = "Ödeme bilgileriniz kaydedilmeyecek.";
 
 "Your postal code is incomplete." = "Posta kodunuz eksik.";
+
+"Your postal code is invalid." = "Posta kodunuz geçersiz.";
 
 "ZIP" = "Posta Kodu";

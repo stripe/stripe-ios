@@ -29,6 +29,9 @@ import XCTest
     /// Disable this when testing the STPPaymentHandler "UnredirectableSessionDelegate" behavior.
     open var followRedirects = true
 
+    /// Tracks the current request number for better error reporting
+    private var requestCount = 0
+
     open override func setUp() {
         super.setUp()
 
@@ -106,7 +109,11 @@ import XCTest
                         "app_version_key", // Current version of Xcode, for Alipay
 
                         "payment_user_agent", // Contains the SDK version number
-                        "pk_token_transaction_id", // Random string
+                        "pk_token_transaction_id", // Random string,
+                        "client_session_id", // Random string
+                        "merchant_integration_version", // Contains the SDK version number
+                        "elements_session_config_id", // Random string
+                        "hcaptcha_token", // Random string
                     ]
                     return replaceNondeterministicParams(escapedBody, componentsToFilter: componentsToFilter)
                 }

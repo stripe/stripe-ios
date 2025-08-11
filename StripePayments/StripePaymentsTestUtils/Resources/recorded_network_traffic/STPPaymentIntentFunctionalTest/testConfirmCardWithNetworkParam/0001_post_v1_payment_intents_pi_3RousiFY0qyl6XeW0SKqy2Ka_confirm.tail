@@ -1,0 +1,66 @@
+POST
+https:\/\/api\.stripe\.com\/v1\/payment_intents\/pi_3RousiFY0qyl6XeW0SKqy2Ka\/confirm$
+200
+application/json
+access-control-allow-methods: GET, HEAD, PUT, PATCH, POST, DELETE
+content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=NvhMSUr1c2hpM3JERRLwA4idHoE4zFrmBZfub035XlckEVcKQZ5d_CZouqO7Iy2mEb8J5ZNL26GBukJ9
+Server: nginx
+Cache-Control: no-cache, no-store
+x-wc: ABGHIJ
+Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
+Access-Control-Allow-Origin: *
+stripe-should-retry: false
+x-stripe-priority-routing-enabled: true
+x-stripe-routing-context-priority-tier: api-testmode
+request-id: req_QBTq3LSyztG1Ha
+Content-Length: 922
+Vary: Origin
+Date: Fri, 25 Jul 2025 23:18:29 GMT
+original-request: req_QBTq3LSyztG1Ha
+stripe-version: 2020-08-27
+idempotency-key: 91eac178-50fa-4f47-aee2-f88572815485
+access-control-expose-headers: Request-Id, Stripe-Manage-Version, Stripe-Should-Retry, X-Stripe-External-Auth-Required, X-Stripe-Privileged-Session-Required
+access-control-max-age: 300
+access-control-allow-credentials: true
+Content-Type: application/json
+X-Stripe-Mock-Request: client_secret=pi_3RousiFY0qyl6XeW0SKqy2Ka_secret_XoujBcK1Md6jyY4KU44s3IhSn&payment_method_data\[allow_redisplay]=unspecified&payment_method_data\[card]\[cvc]=123&payment_method_data\[card]\[exp_month]=7&payment_method_data\[card]\[exp_year]=2040&payment_method_data\[card]\[number]=4242424242424242&payment_method_data\[client_attribution_metadata]\[merchant_integration_source]=elements&payment_method_data\[client_attribution_metadata]\[merchant_integration_subtype]=mobile&payment_method_data\[client_attribution_metadata]\[merchant_integration_version]=.*&payment_method_data\[guid]=.*&payment_method_data\[muid]=.*&payment_method_data\[payment_user_agent]=.*&payment_method_data\[sid]=.*&payment_method_data\[type]=card&payment_method_options\[card]\[network]=visa
+
+{
+  "payment_method_configuration_details" : null,
+  "canceled_at" : null,
+  "source" : null,
+  "amount" : 100,
+  "capture_method" : "automatic",
+  "livemode" : false,
+  "shipping" : null,
+  "status" : "succeeded",
+  "object" : "payment_intent",
+  "currency" : "usd",
+  "last_payment_error" : null,
+  "amount_subtotal" : 100,
+  "automatic_payment_methods" : null,
+  "cancellation_reason" : null,
+  "next_action" : null,
+  "total_details" : {
+    "amount_discount" : 0,
+    "amount_tip" : null,
+    "amount_tax" : 0
+  },
+  "payment_method" : "pm_1RousiFY0qyl6XeWxcCKPX5p",
+  "client_secret" : "pi_3RousiFY0qyl6XeW0SKqy2Ka_secret_XoujBcK1Md6jyY4KU44s3IhSn",
+  "id" : "pi_3RousiFY0qyl6XeW0SKqy2Ka",
+  "confirmation_method" : "automatic",
+  "amount_details" : {
+    "tip" : {
+
+    }
+  },
+  "processing" : null,
+  "receipt_email" : null,
+  "payment_method_types" : [
+    "card"
+  ],
+  "setup_future_usage" : null,
+  "created" : 1753485508,
+  "description" : null
+}

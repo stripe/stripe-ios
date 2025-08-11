@@ -38,6 +38,9 @@ final class LinkVerificationView: UIView {
 
     let linkAccount: PaymentSheetLinkAccountInfoProtocol
 
+    private let appearance: LinkAppearance?
+    private let allowLogoutInDialog: Bool
+
     var sendingCode: Bool = false {
         didSet {
             resendCodeButton.isLoading = sendingCode
@@ -92,7 +95,7 @@ final class LinkVerificationView: UIView {
             ),
             theme: LinkUI.appearance.asElementsTheme
         )
-        codeField.tintColor = LinkUI.appearance.colors.selectedComponentBorder
+        codeField.tintColor = appearance?.colors?.selectedBorder ?? LinkUI.appearance.colors.selectedComponentBorder
         codeField.addTarget(self, action: #selector(oneTimeCodeFieldChanged(_:)), for: .valueChanged)
         return codeField
     }()
@@ -115,7 +118,7 @@ final class LinkVerificationView: UIView {
     }()
 
     private lazy var resendCodeButton: Button = {
-        let button = Button(configuration: .linkPlain(), title: STPLocalizedString(
+        let button = Button(configuration: .linkPlain(foregroundColor: appearance?.colors?.primary ?? .linkTextBrand), title: STPLocalizedString(
             "Resend code",
             "Label for a button that re-sends the a login code when tapped"
         ))
@@ -130,9 +133,16 @@ final class LinkVerificationView: UIView {
         return logoutView
     }()
 
-    required init(mode: Mode, linkAccount: PaymentSheetLinkAccountInfoProtocol) {
+    required init(
+        mode: Mode,
+        linkAccount: PaymentSheetLinkAccountInfoProtocol,
+        appearance: LinkAppearance? = nil,
+        allowLogoutInDialog: Bool
+    ) {
         self.mode = mode
         self.linkAccount = linkAccount
+        self.appearance = appearance
+        self.allowLogoutInDialog = allowLogoutInDialog
         super.init(frame: .zero)
         setupUI()
     }
@@ -172,13 +182,19 @@ private extension LinkVerificationView {
     var arrangedSubViews: [UIView] {
         switch mode {
         case .modal, .inlineLogin:
-            return [
+            var views = [
                 header,
                 headingLabel,
                 bodyLabel,
                 codeFieldContainer,
                 resendCodeButton,
             ]
+
+            if allowLogoutInDialog {
+                views.append(logoutView)
+            }
+
+            return views
         case .embedded:
             return [
                 headingLabel,

@@ -177,7 +177,6 @@ final class EmbeddedFormViewControllerSnapshotTests: STPSnapshotTestCase {
         sut.updateErrorLabel(for: MockError())
         verify(sut)
     }
-
 }
 
 extension EmbeddedFormViewControllerSnapshotTests: EmbeddedFormViewControllerDelegate {

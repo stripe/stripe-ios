@@ -28,6 +28,12 @@ extension StripeAPI {
             return PaymentsSDKVariant.paymentUserAgent
         }()
 
+        /// Radar options that may contain HCaptcha token
+        @_spi(STP) var radarOptions: RadarOptions?
+
+        /// Contains metadata with identifiers for the session and information about the integration
+        @_spi(STP) public var clientAttributionMetadata: STPClientAttributionMetadata = STPClientAttributionMetadata()
+
         /// :nodoc:
         @_spi(STP) public struct Card: UnknownFieldsEncodable {
             /// The card number, as a string without any separators. Ex. "4242424242424242"
@@ -49,6 +55,12 @@ extension StripeAPI {
                     return nil
                 }
             }
+            @_spi(STP) public var _additionalParametersStorage: NonEncodableParameters?
+        }
+
+        /// :nodoc:
+        @_spi(STP) public struct RadarOptions: UnknownFieldsEncodable {
+            @_spi(STP) public var hcaptchaToken: String?
             @_spi(STP) public var _additionalParametersStorage: NonEncodableParameters?
         }
 

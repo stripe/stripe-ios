@@ -21,6 +21,7 @@ extension UIViewController {
 
     func presentNativeLink(
         selectedPaymentDetailsID: String?,
+        linkAccount: PaymentSheetLinkAccount? = LinkAccountContext.shared.account,
         configuration: PaymentElementConfiguration,
         intent: Intent,
         elementsSession: STPElementsSession,
@@ -28,16 +29,21 @@ extension UIViewController {
         verificationDismissed: (() -> Void)? = nil,
         callback: @escaping (_ confirmOption: PaymentSheet.LinkConfirmOption?, _ shouldReturnToPaymentSheet: Bool) -> Void
     ) {
-        let linkAccount = LinkAccountContext.shared.account
-
         if let linkAccount, linkAccount.sessionState == .requiresVerification {
             let verificationController = LinkVerificationController(
                 mode: .inlineLogin,
                 linkAccount: linkAccount,
-                configuration: configuration
+                configuration: configuration,
+                allowLogoutInDialog: true
             )
 
             verificationController.present(from: bottomSheetController ?? self) { [weak self] result in
+                if case .switchAccount = result {
+                    // The user logged out in the dialog. Clear the account, but still open the Link flow
+                    // to allow them to sign into another account.
+                    LinkAccountContext.shared.account = nil
+                }
+
                 guard let self, case .completed = result else {
                     verificationDismissed?()
                     return
@@ -84,6 +90,7 @@ extension UIViewController {
         payWithLinkController.presentForPaymentMethodSelection(
             from: self,
             initiallySelectedPaymentDetailsID: selectedPaymentDetailsID,
+            canSkipWalletAfterVerification: false,
             completion: callback
         )
     }

@@ -85,6 +85,7 @@ final class PaymentSheetAnalyticsExperimentsTests: XCTestCase {
             linkFlags: nil,
             linkConsumerIncentive: nil,
             linkDefaultOptIn: .full,
+            linkEnableDisplayableDefaultValuesInECE: nil,
             allResponseFields: [:]
         )
         let experimentsData = ExperimentsData(
@@ -106,6 +107,7 @@ final class PaymentSheetAnalyticsExperimentsTests: XCTestCase {
             email: "email",
             session: nil,
             publishableKey: nil,
+            displayablePaymentDetails: nil,
             useMobileEndpoints: true
         )
 
@@ -151,6 +153,7 @@ final class PaymentSheetAnalyticsExperimentsTests: XCTestCase {
             linkFlags: nil,
             linkConsumerIncentive: nil,
             linkDefaultOptIn: .optional,
+            linkEnableDisplayableDefaultValuesInECE: nil,
             allResponseFields: [:]
         )
         let experimentsData = ExperimentsData(
@@ -171,6 +174,7 @@ final class PaymentSheetAnalyticsExperimentsTests: XCTestCase {
             email: "email",
             session: LinkStubs.consumerSession(),
             publishableKey: nil,
+            displayablePaymentDetails: nil,
             useMobileEndpoints: true
         )
 

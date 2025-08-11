@@ -57,12 +57,53 @@ class STPElementsSessionTest: XCTestCase {
         XCTAssertEqual(elementsSession.allResponseFields as NSDictionary, elementsSessionJson as NSDictionary)
     }
 
+    func testDecodedObjectFromAPIResponseMapping_passiveCaptcha() {
+        var elementsSessionJson = STPTestUtils.jsonNamed("ElementsSession")!
+        elementsSessionJson["flags"] = ["elements_enable_passive_captcha": true]
+        elementsSessionJson["passive_captcha"] = ["site_key": "20000000-ffff-ffff-ffff-000000000002", "rqdata": nil]
+
+        var elementsSession = STPElementsSession.decodedObject(fromAPIResponse: elementsSessionJson)!
+        XCTAssertNotNil(elementsSession.passiveCaptcha)
+
+        elementsSessionJson["passive_captcha"] = ["site_key": "20000000-ffff-ffff-ffff-000000000002"]
+        elementsSession = STPElementsSession.decodedObject(fromAPIResponse: elementsSessionJson)!
+        XCTAssertNotNil(elementsSession.passiveCaptcha)
+
+        elementsSessionJson["passive_captcha"] = ["rqdata": "data"]
+        elementsSession = STPElementsSession.decodedObject(fromAPIResponse: elementsSessionJson)!
+        XCTAssertNil(elementsSession.passiveCaptcha)
+
+        elementsSessionJson["flags"] = ["elements_enable_passive_captcha": false]
+        elementsSessionJson["passive_captcha"] = ["site_key": "20000000-ffff-ffff-ffff-000000000002", "rqdata": nil]
+        elementsSession = STPElementsSession.decodedObject(fromAPIResponse: elementsSessionJson)!
+        XCTAssertNil(elementsSession.passiveCaptcha)
+    }
+
     func testDecodedObjectFromAPIResponseMapping_applePayPreferenceDisabled() {
         var elementsSessionJson = STPTestUtils.jsonNamed("ElementsSession")!
         elementsSessionJson["apple_pay_preference"] = "disabled"
         let elementsSession = STPElementsSession.decodedObject(fromAPIResponse: elementsSessionJson)!
 
         XCTAssertFalse(elementsSession.isApplePayEnabled)
+    }
+
+    func testDecodedObjectFromAPIResponseMapping_merchantLogoUrl() {
+        // nil merchant_logo_url
+        var elementsSessionJson = STPTestUtils.jsonNamed("ElementsSession")!
+        elementsSessionJson["merchant_logo_url"] = nil
+        var elementsSession = STPElementsSession.decodedObject(fromAPIResponse: elementsSessionJson)!
+        XCTAssertNil(elementsSession.merchantLogoUrl)
+
+        // invalid URL string
+        elementsSessionJson["merchant_logo_url"] = "invalid url"
+        elementsSession = STPElementsSession.decodedObject(fromAPIResponse: elementsSessionJson)!
+        XCTAssertNil(elementsSession.merchantLogoUrl)
+
+        // valid URL string
+        elementsSessionJson["merchant_logo_url"] = "https://example.com/valid-logo.png"
+        elementsSession = STPElementsSession.decodedObject(fromAPIResponse: elementsSessionJson)!
+        XCTAssertNotNil(elementsSession.merchantLogoUrl)
+        XCTAssertEqual(elementsSession.merchantLogoUrl?.absoluteString, "https://example.com/valid-logo.png")
     }
 
     func testMissingEPMResponseDoesntFireAnalytic() {

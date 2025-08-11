@@ -41,13 +41,17 @@ final class LinkInlineSignupElement: Element {
         country: String?,
         showCheckbox: Bool,
         accountService: LinkAccountServiceProtocol,
-        allowsDefaultOptIn: Bool
+        allowsDefaultOptIn: Bool,
+        signupOptInFeatureEnabled: Bool,
+        signupOptInInitialValue: Bool
     ) {
         self.init(viewModel: LinkInlineSignupViewModel(
             configuration: configuration,
             showCheckbox: showCheckbox,
             accountService: accountService,
             allowsDefaultOptIn: allowsDefaultOptIn,
+            signupOptInFeatureEnabled: signupOptInFeatureEnabled,
+            signupOptInInitialValue: signupOptInInitialValue,
             linkAccount: linkAccount,
             country: country
         ))

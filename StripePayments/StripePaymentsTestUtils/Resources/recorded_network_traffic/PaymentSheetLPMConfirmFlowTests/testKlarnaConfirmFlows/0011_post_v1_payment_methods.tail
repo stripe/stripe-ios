@@ -3,34 +3,34 @@ https:\/\/api\.stripe\.com\/v1\/payment_methods$
 200
 application/json
 access-control-allow-methods: GET, HEAD, PUT, PATCH, POST, DELETE
-content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=-wcK2RMl2ILnqTFuC85UKcsZyDAjkZRGow8IQLVQPg2-ZXumPBd_-nFXmiuhkC3yyTYtMaeo-FAN2a8W
+content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=go810UHmKPEiZouwIEYD-z-Pi7DPosImkzMlx2d_9jjracb8gQdvsaeGcbZgB5K-JZ8gLRNTwadiVcXi
 Server: nginx
 Cache-Control: no-cache, no-store
-x-wc: ABGHI
+x-wc: ABGHIJ
 Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
 Access-Control-Allow-Origin: *
 stripe-should-retry: false
 x-stripe-priority-routing-enabled: true
 x-stripe-routing-context-priority-tier: api-testmode
-request-id: req_akxLHqlp2N89SN
+request-id: req_w6lHKXQUOgxaji
 Content-Length: 477
 Vary: Origin
-Date: Tue, 03 Jun 2025 21:00:47 GMT
-original-request: req_akxLHqlp2N89SN
+Date: Thu, 07 Aug 2025 16:14:21 GMT
+original-request: req_w6lHKXQUOgxaji
 stripe-version: 2020-08-27
-idempotency-key: a662e18b-1d61-4365-9cab-35ccbd1873ed
+idempotency-key: eebae361-56d0-43c1-9f0e-a0aa7f3e2a60
 access-control-expose-headers: Request-Id, Stripe-Manage-Version, Stripe-Should-Retry, X-Stripe-External-Auth-Required, X-Stripe-Privileged-Session-Required
 access-control-max-age: 300
 access-control-allow-credentials: true
 Content-Type: application/json
-X-Stripe-Mock-Request: allow_redisplay=unspecified&billing_details%5Baddress%5D%5Bcountry%5D=US&billing_details%5Bemail%5D=foo%40bar\.com&guid=.*&muid=.*&payment_user_agent=.*&sid=.*&type=klarna
+X-Stripe-Mock-Request: allow_redisplay=unspecified&billing_details%5Baddress%5D%5Bcountry%5D=US&billing_details%5Bemail%5D=foo%40bar\.com&client_attribution_metadata\[client_session_id]=.*&client_attribution_metadata\[elements_session_config_id]=.*&client_attribution_metadata\[merchant_integration_source]=elements&client_attribution_metadata\[merchant_integration_subtype]=mobile&client_attribution_metadata\[merchant_integration_version]=.*&client_attribution_metadata\[payment_intent_creation_flow]=deferred&client_attribution_metadata\[payment_method_selection_flow]=automatic&guid=.*&muid=.*&payment_user_agent=.*&sid=.*&type=klarna
 
 {
   "object" : "payment_method",
   "klarna" : {
 
   },
-  "id" : "pm_1RW1wxFY0qyl6XeWp2Ez9X8g",
+  "id" : "pm_1RtWSPFY0qyl6XeWo6uovRAL",
   "billing_details" : {
     "email" : "foo@bar.com",
     "phone" : null,
@@ -46,7 +46,7 @@ X-Stripe-Mock-Request: allow_redisplay=unspecified&billing_details%5Baddress%5D%
     }
   },
   "livemode" : false,
-  "created" : 1748984447,
+  "created" : 1754583261,
   "allow_redisplay" : "unspecified",
   "type" : "klarna",
   "customer" : null

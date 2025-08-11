@@ -81,6 +81,13 @@ extension ConsumerPaymentDetails {
 
         return true
     }
+
+    var isValidCard: Bool {
+        guard case let .card(cardDetails) = details else {
+            return false
+        }
+        return !cardDetails.hasExpired && !cardDetails.shouldRecollectCardCVC
+    }
 }
 
 // MARK: - Details

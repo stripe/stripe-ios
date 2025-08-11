@@ -60,6 +60,10 @@
 
 "By continuing, you agree to authorize payments pursuant to <terms>these terms</terms>." = "Εάν συνεχίσετε, συμφωνείτε να εξουσιοδοτείτε πληρωμές με βάση <terms>αυτούς τους όρους</terms>.";
 
+"By continuing, you agree to save your information for future purchases with %@ and <link>Link</link>. You also agree to Link's <terms>Terms</terms> and <privacy>Privacy</privacy>." = "Συνεχίζοντας, συμφωνείτε να αποθηκεύσετε τις πληροφορίες σας για μελλοντικές αγορές με το %@ και <link>Link</link>. Συμφωνείτε επίσης με τους <terms>Όρους</terms> και το <privacy>Απόρρητο</privacy> του Link.";
+
+"By continuing, you agree to save your information for future purchases with %@." = "Συνεχίζοντας, συμφωνείτε να αποθηκεύσετε τις πληροφορίες σας για μελλοντικές αγορές με το %@.";
+
 "By continuing, you authorize %@ to automatically debit your Satispay Balance on a recurring basis in accordance with your purchase or subscription plan." = "Συνεχίζοντας, εξουσιοδοτείτε το %@ να χρεώνει αυτόματα το Υπόλοιπο Satispay σε επαναλαμβανόμενη βάση σύμφωνα με το πρόγραμμα αγοράς ή συνδρομής σας.";
 
 "By continuing, you authorize %@ to debit your Cash App account for this payment and future payments in accordance with %@'s terms, until this authorization is revoked. You can change this anytime in your Cash App Settings." = "Συνεχίζοντας, εξουσιοδοτείτε την %1$@ να χρεώσει τον λογαριασμό σας Cash App για αυτήν την πληρωμή και μελλοντικές πληρωμές σύμφωνα με τους όρους της %2$@, μέχρι να ανακληθεί αυτή η εξουσιοδότηση. Μπορείτε να αλλάξετε αυτήν την επιλογή οποιαδήποτε στιγμή στις ρυθμίσεις Cash App.";
@@ -126,7 +130,7 @@
 
 "Failed to connect" = "Δεν ήταν δυνατή η σύνδεση";
 
-"Fast, secure, 1⁠-⁠click checkout" = "Γρήγορη και ασφαλής ολοκλήρωση αγοράς με 1 κλικ";
+"Fast, secure checkout" = "Γρήγορο, ασφαλές ταμείο";
 
 "For security, please re-enter your card’s security code." = "Για λόγους ασφάλειας, εισαγάγετε πάλι τον κωδικό ασφαλείας της κάρτας σας.";
 
@@ -188,6 +192,8 @@
 
 "Pay faster at %@ and thousands of businesses." = "Ταχύτερες πληρωμές στην %@ και σε χιλιάδες επιχειρήσεις.";
 
+"Pay faster everywhere Link is accepted." = "Πληρώστε γρηγορότερα όπου γίνεται δεκτό το Link.";
+
 "Pay over time with %@" = "Πληρωμή σταδιακά με %@";
 
 "Pay over time with Affirm" = "Πληρωμή σταδιακά με Affirm";
@@ -237,8 +243,6 @@
 "Save your bank account in just a few steps." = "Αποθηκεύστε τον τραπεζικό λογαριασμό σας με λίγα μόνο βήματα.";
 
 "Save your info for secure 1-click checkout with Link" = "Αποθήκευση των στοιχείων σας για ασφαλή ολοκλήρωση αγοράς με 1 κλικ μέσω Link";
-
-"Save your payment information with Link, and securely check out in 1-click on Link-supported sites." = "Αποθηκεύστε τα στοιχεία πληρωμής σας με το Link, για ασφαλή ολοκλήρωση αγοράς με 1 κλικ στους ιστότοπους που υποστηρίζονται από το Link.";
 
 "Saved" = "Αποθηκεύτηκε";
 

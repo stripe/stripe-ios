@@ -412,7 +412,11 @@ extension RowButton {
 
     static func makeRowButtonSublabel(text: String?, appearance: PaymentSheet.Appearance, isEmbedded: Bool) -> UILabel {
         let sublabel = UILabel()
-        sublabel.font = appearance.scaledFont(for: appearance.font.base.regular, style: .caption1, maximumPointSize: 20)
+        if isEmbedded, let customFont = appearance.embeddedPaymentElement.row.subtitleFont {
+            sublabel.font = customFont
+        } else {
+            sublabel.font = appearance.scaledFont(for: appearance.font.base.regular, style: .caption1, maximumPointSize: 20)
+        }
         sublabel.numberOfLines = 1
         sublabel.adjustsFontSizeToFitWidth = true
         sublabel.adjustsFontForContentSizeCategory = true
@@ -517,9 +521,7 @@ extension RowButton {
     }
 
     static func makeForApplePay(appearance: PaymentSheet.Appearance, isEmbedded: Bool = false, didTap: @escaping DidTapClosure) -> RowButton {
-        // Apple Pay logo has built-in padding and ends up looking too small; compensate with insets
-        let applePayLogo = Image.apple_pay_mark.makeImage().withAlignmentRectInsets(UIEdgeInsets(top: 8, left: 8, bottom: 8, right: 8))
-        let imageView = UIImageView(image: applePayLogo)
+        let imageView = UIImageView(image: Image.apple_pay_mark.makeImage())
         imageView.contentMode = .scaleAspectFit
         return RowButton.create(appearance: appearance, type: .applePay, imageView: imageView, text: String.Localized.apple_pay, isEmbedded: isEmbedded, didTap: didTap)
     }

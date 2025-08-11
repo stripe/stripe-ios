@@ -7,7 +7,7 @@
 
 import StripeCoreTestUtils
 @_spi(STP) @testable import StripePayments
-@_spi(CustomPaymentMethodsBeta) @_spi(AppearanceAPIAdditionsPreview) @_spi(CustomEmbeddedDisclosureImagePreview) @testable import StripePaymentSheet
+@_spi(STP) @_spi(CustomPaymentMethodsBeta) @_spi(AppearanceAPIAdditionsPreview) @_spi(CustomEmbeddedDisclosureImagePreview) @testable import StripePaymentSheet
 @testable import StripePaymentsTestUtils
 @_spi(STP) @testable import StripeUICore
 import XCTest
@@ -1414,7 +1414,11 @@ class EmbeddedPaymentMethodsViewSnapshotTests: STPSnapshotTestCase {
 }
 
 extension PaymentSheetLinkAccount {
-    static func _testValue(email: String, isRegistered: Bool = true) -> PaymentSheetLinkAccount {
+    static func _testValue(
+        email: String,
+        isRegistered: Bool = true,
+        displayablePaymentDetails: ConsumerSession.DisplayablePaymentDetails? = nil
+    ) -> PaymentSheetLinkAccount {
         var session: ConsumerSession?
         if isRegistered {
             session = ConsumerSession(
@@ -1433,6 +1437,7 @@ extension PaymentSheetLinkAccount {
             email: email,
             session: session,
             publishableKey: "pk_123",
+            displayablePaymentDetails: displayablePaymentDetails,
             useMobileEndpoints: true
         )
     }

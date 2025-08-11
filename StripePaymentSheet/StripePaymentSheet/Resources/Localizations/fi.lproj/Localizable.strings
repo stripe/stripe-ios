@@ -126,8 +126,6 @@
 
 "Failed to connect" = "Yhteyden muodostaminen epäonnistui";
 
-"Fast, secure, 1⁠-⁠click checkout" = "Nopea, turvallinen kerran napsautettava maksaminen";
-
 "For security, please re-enter your card’s security code." = "Turvallisuussyistä sinun on annettava korttisi turvakoodi uudelleen.";
 
 "Get %@ back when you pay for the first time with your bank. <terms>See terms</terms>" = "Saat %@ takaisin, kun maksat ensimmäistä kertaa pankillasi. <terms>Katso ehdot</terms>";
@@ -237,8 +235,6 @@
 "Save your bank account in just a few steps." = "Tallenna pankkitilisi vain muutamassa vaiheessa.";
 
 "Save your info for secure 1-click checkout with Link" = "Tallenna tiedot turvalliselle yhden napsautuksen maksamiselle Link-palvelulla";
-
-"Save your payment information with Link, and securely check out in 1-click on Link-supported sites." = "Tallenna maksutiedot Link-palveluun ja maksa turvallisesti yhdellä napsautuksella Link-palvelun tukemilla sivustoilla.";
 
 "Saved" = "Tallennettu";
 

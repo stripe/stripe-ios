@@ -53,6 +53,7 @@ class PaymentSheetFlowControllerTests: XCTestCase {
             email: "user@example.com",
             session: LinkStubs.consumerSession(),
             publishableKey: nil,
+            displayablePaymentDetails: nil,
             apiClient: STPAPIClient(publishableKey: STPTestingDefaultPublishableKey),
             useMobileEndpoints: false
         )

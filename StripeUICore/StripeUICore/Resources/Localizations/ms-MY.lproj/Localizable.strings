@@ -134,12 +134,16 @@
 
 "Your BLIK code is invalid." = "Kod BLIK anda tidak sah.";
 
-"Your ZIP is incomplete." = "Kod ZIP anda tidak lengkap.";
+"Your ZIP code is incomplete." = "Poskod ZIP tidak lengkap.";
+
+"Your ZIP code is invalid." = "Poskod anda tidak sah.";
 
 "Your email is invalid." = "E-mel anda tidak sah.";
 
 "Your payment information will not be saved." = "Maklumat pembayaran anda tidak akan disimpan.";
 
 "Your postal code is incomplete." = "Poskod anda tidak lengkap.";
+
+"Your postal code is invalid." = "Poskod anda tidak sah.";
 
 "ZIP" = "ZIP";

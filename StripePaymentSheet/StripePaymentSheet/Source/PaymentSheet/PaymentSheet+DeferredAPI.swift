@@ -65,9 +65,17 @@ extension PaymentSheet {
                 }
 
                 // 2b. Otherwise, call the standard confirmHandler
+                let shouldSavePaymentMethod: Bool = {
+                    // If `confirmType.shouldSave` is true, that means the customer has decided to save by checking the checkbox.
+                    if confirmType.shouldSave {
+                        return true
+                    }
+                    // Otherwise, set shouldSavePaymentMethod according to the IntentConfiguration SFU/PMO SFU values
+                    return getShouldSavePaymentMethodValue(for: paymentMethod.type, intentConfiguration: intentConfig)
+                }()
                 let clientSecret = try await fetchIntentClientSecretFromMerchant(intentConfig: intentConfig,
                                                                                  paymentMethod: paymentMethod,
-                                                                                 shouldSavePaymentMethod: confirmType.shouldSave)
+                                                                                 shouldSavePaymentMethod: shouldSavePaymentMethod)
                 guard clientSecret != IntentConfiguration.COMPLETE_WITHOUT_CONFIRMING_INTENT else {
                     // Force close PaymentSheet and early exit
                     completion(.completed, STPAnalyticsClient.DeferredIntentConfirmationType.completeWithoutConfirmingIntent)
@@ -97,6 +105,8 @@ extension PaymentSheet {
                             configuration: configuration,
                             mandateData: mandateData
                         )
+                        // Set top-level SFU and PMO SFU to match the intent config
+                        setSetupFutureUsage(for: paymentMethod.type, intentConfiguration: intentConfig, on: paymentIntentParams)
 
                         paymentHandler.confirmPayment(
                             paymentIntentParams,
@@ -191,5 +201,60 @@ extension PaymentSheet {
             paymentUserAgentValues.append("autopm")
         }
         return paymentUserAgentValues
+    }
+
+    /// Sets PMO SFU or SFU on the given `paymentIntentParams` object if the given `intentConfiguration` has SFU set / PMO SFU set for the given `paymentMethodType`.
+    /// See https://docs.google.com/document/d/1AW8j-cJ9ZW5h-LapzXOYrrE2b1XtmVo_SnvbNf-asOU
+    static func setSetupFutureUsage(for paymentMethodType: STPPaymentMethodType, intentConfiguration: IntentConfiguration, on paymentIntentParams: STPPaymentIntentParams) {
+        // We only set SFU/PMO SFU for PaymentIntents
+        guard
+            case let .payment(amount: _, currency: _, setupFutureUsage: topLevelSFUValue, captureMethod: _, paymentMethodOptions: paymentMethodOptions) = intentConfiguration.mode
+        else {
+            return
+        }
+        guard paymentIntentParams.setupFutureUsage == nil && paymentIntentParams.nonnil_paymentMethodOptions.setupFutureUsage(for: paymentMethodType) == nil else {
+            // If the PI params has SFU/PMO SFU set already, assume it was set to respect the checkbox, don't overwrite.
+           return
+        }
+        // Set top-level SFU
+        if let topLevelSFUValue {
+            paymentIntentParams.setupFutureUsage = topLevelSFUValue.paymentIntentParamsValue
+        }
+        // Set PMO SFU for the PM type
+        if let pmoSFUValues = paymentMethodOptions?.setupFutureUsageValues, let pmoSFUValue = pmoSFUValues[paymentMethodType] {
+            // e.g. payment_method_options["card"]["setup_future_usage"] = "off_session"
+            paymentIntentParams.nonnil_paymentMethodOptions.additionalAPIParameters[paymentMethodType.identifier] = ["setup_future_usage": pmoSFUValue.rawValue]
+        }
+    }
+
+    /// Returns `true` if the PMO SFU / SFU value in the IntentConfiguration requires the PM to be saved.
+    /// See https://docs.google.com/document/d/1AW8j-cJ9ZW5h-LapzXOYrrE2b1XtmVo_SnvbNf-asOU
+    static func getShouldSavePaymentMethodValue(for paymentMethodType: STPPaymentMethodType, intentConfiguration: IntentConfiguration) -> Bool {
+        // We only respect SFU/PMO SFU IntentConfiguration for PaymentIntents
+        guard
+            case let .payment(amount: _, currency: _, setupFutureUsage: topLevelSFUValue, captureMethod: _, paymentMethodOptions: paymentMethodOptions) = intentConfiguration.mode
+        else {
+            return false
+        }
+        // If PMO SFU for the PM type is set, use that value
+        if let pmoSFUValues = paymentMethodOptions?.setupFutureUsageValues, let pmoSFUValue = pmoSFUValues[paymentMethodType] {
+            return pmoSFUValue == .offSession || pmoSFUValue == .onSession
+        }
+        // Otherwise, if top-level SFU is set, use that value
+        if let topLevelSFUValue {
+            return topLevelSFUValue == .offSession || topLevelSFUValue == .onSession
+        }
+        // Otherwise, there is no SFU / PMO SFU set for the PM and it shouldn't be saved
+        return false
+    }
+}
+
+extension PaymentSheet.IntentConfiguration.SetupFutureUsage {
+    var paymentIntentParamsValue: STPPaymentIntentSetupFutureUsage {
+        switch self {
+        case .none: return .none
+        case .offSession: return .offSession
+        case .onSession: return .onSession
+        }
     }
 }

@@ -60,6 +60,10 @@
 
 "By continuing, you agree to authorize payments pursuant to <terms>these terms</terms>." = "Ved at fortsætte accepterer du at godkende betalinger i henhold til <terms>disse vilkår</terms>.";
 
+"By continuing, you agree to save your information for future purchases with %@ and <link>Link</link>. You also agree to Link's <terms>Terms</terms> and <privacy>Privacy</privacy>." = "Ved at fortsætte accepterer du at gemme dine oplysninger til senere køb med %@ og <link>Link</link>Du accepterer også Links <terms>vilkår</terms> og <privacy>politik om beskyttelse af personlige oplysninger</privacy>.";
+
+"By continuing, you agree to save your information for future purchases with %@." = "Ved at fortsætte accepterer du at gemme dine oplysninger til senere køb med %@.";
+
 "By continuing, you authorize %@ to automatically debit your Satispay Balance on a recurring basis in accordance with your purchase or subscription plan." = "Ved at fortsætte giver du %@ tilladelse til automatisk at debitere din Satispay-saldo på tilbagevendende basis i overensstemmelse med din købs- eller abonnementsplan.";
 
 "By continuing, you authorize %@ to debit your Cash App account for this payment and future payments in accordance with %@'s terms, until this authorization is revoked. You can change this anytime in your Cash App Settings." = "Ved at fortsætte giver du %1$@ tilladelse til at debitere din Cash App-konto for denne betaling og fremtidige betalinger i overensstemmelse med %2$@s vilkår, indtil denne tilladelse tilbagekaldes. Du kan til enhver tid ændre dette i dine Cash App-indstillinger.";
@@ -126,7 +130,7 @@
 
 "Failed to connect" = "Kunne ikke oprette forbindelse";
 
-"Fast, secure, 1⁠-⁠click checkout" = "Hurtig og sikker betaling med ét klik";
+"Fast, secure checkout" = "Hurtig og sikker betaling";
 
 "For security, please re-enter your card’s security code." = "Af hensyn til sikkerheden skal du indtaste dit korts sikkerhedskode igen.";
 
@@ -188,6 +192,8 @@
 
 "Pay faster at %@ and thousands of businesses." = "Betal hurtigere hos %@ og tusinder af virksomheder.";
 
+"Pay faster everywhere Link is accepted." = "Betal hurtigere alle steder, hvor Link accepteres.";
+
 "Pay over time with %@" = "Betal over tid med %@";
 
 "Pay over time with Affirm" = "Betal over tid med Affirm";
@@ -237,8 +243,6 @@
 "Save your bank account in just a few steps." = "Gem din bankkonto med blot nogle få trin.";
 
 "Save your info for secure 1-click checkout with Link" = "Gem dine oplysninger om sikker betaling med 1 klik med Link";
-
-"Save your payment information with Link, and securely check out in 1-click on Link-supported sites." = "Gem dine betalingsoplysninger med Link, og betal sikkert med et enkelt klik på sider, der understøtter Link.";
 
 "Saved" = "Gemt";
 
