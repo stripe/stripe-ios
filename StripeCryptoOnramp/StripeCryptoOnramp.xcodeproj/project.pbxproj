@@ -31,6 +31,7 @@
 		0BA705082E4132640044B483 /* KYCDataCollectionResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BA705072E4132640044B483 /* KYCDataCollectionResponse.swift */; };
 		0BA7050A2E413D6B0044B483 /* KYCDataCollectionRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BA705092E413D6B0044B483 /* KYCDataCollectionRequest.swift */; };
 		0BA7050C2E413DA40044B483 /* Credentials.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BA7050B2E413DA40044B483 /* Credentials.swift */; };
+		0BB716442E4A5BCC002F17B8 /* Address.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BB716432E4A5BCC002F17B8 /* Address.swift */; };
 		0BED9B622E255BC2009FFF76 /* CryptoOnrampCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BED9B612E255BC2009FFF76 /* CryptoOnrampCoordinator.swift */; };
 		0BED9B642E255FB8009FFF76 /* StripeUICore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0BED9B632E255FB8009FFF76 /* StripeUICore.framework */; };
 		0BED9B662E255FD7009FFF76 /* StripePaymentSheet.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0BED9B652E255FD7009FFF76 /* StripePaymentSheet.framework */; };
@@ -92,6 +93,7 @@
 		0BA705072E4132640044B483 /* KYCDataCollectionResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KYCDataCollectionResponse.swift; sourceTree = "<group>"; };
 		0BA705092E413D6B0044B483 /* KYCDataCollectionRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KYCDataCollectionRequest.swift; sourceTree = "<group>"; };
 		0BA7050B2E413DA40044B483 /* Credentials.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Credentials.swift; sourceTree = "<group>"; };
+		0BB716432E4A5BCC002F17B8 /* Address.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Address.swift; sourceTree = "<group>"; };
 		0BED9B612E255BC2009FFF76 /* CryptoOnrampCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CryptoOnrampCoordinator.swift; sourceTree = "<group>"; };
 		0BED9B632E255FB8009FFF76 /* StripeUICore.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = StripeUICore.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		0BED9B652E255FD7009FFF76 /* StripePaymentSheet.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = StripePaymentSheet.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -255,6 +257,7 @@
 				0BF41E8A2E3AB84800CA4171 /* IdType.swift */,
 				0B649EE12E4293AB00AFAFB1 /* IdentityVerificationResult.swift */,
 				49D233A72E439EB900F51263 /* CryptoNetwork.swift */,
+				0BB716432E4A5BCC002F17B8 /* Address.swift */,
 			);
 			path = Components;
 			sourceTree = "<group>";
@@ -380,6 +383,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0BB716442E4A5BCC002F17B8 /* Address.swift in Sources */,
 				0B649EE22E4293AB00AFAFB1 /* IdentityVerificationResult.swift in Sources */,
 				0BED9B622E255BC2009FFF76 /* CryptoOnrampCoordinator.swift in Sources */,
 				49D233AA2E439FAA00F51263 /* RegisterWalletRequest.swift in Sources */,

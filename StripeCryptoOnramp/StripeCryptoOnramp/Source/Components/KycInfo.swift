@@ -25,16 +25,23 @@ public struct KycInfo: Equatable {
     public let idType: IdType = .socialSecurityNumber
 
     /// The address of the customer.
-    public let address: PaymentSheet.Address
+    public let address: Address
 
     /// The customer’s date of birth.
     public let dateOfBirth: Date
 
+    /// Creates a new instance of `KycInfo`.
+    /// - Parameters:
+    ///   - firstName: The customer’s first name.
+    ///   - lastName: The customer’s last name.
+    ///   - idNumber: The number associated with the customer’s id.
+    ///   - address: The address of the customer.
+    ///   - dateOfBirth: The customer’s date of birth.
     public init(
         firstName: String,
         lastName: String,
         idNumber: String,
-        address: PaymentSheet.Address,
+        address: Address,
         dateOfBirth: Date
     ) {
         self.firstName = firstName
