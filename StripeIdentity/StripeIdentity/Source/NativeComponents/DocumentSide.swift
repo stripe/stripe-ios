@@ -31,7 +31,7 @@ enum DocumentSide: String {
 
         // Convert ID types to localized strings
         let localizedTypes = availableIDTypes.compactMap { $0.uiIDType() }
-        
+
         // Handle specific combinations
         if localizedTypes.count == 2 {
             if localizedTypes.contains(String.Localized.driverLicense) && localizedTypes.contains(String.Localized.passport) {

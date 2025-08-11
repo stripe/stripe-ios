@@ -17,7 +17,7 @@ extension DocumentCaptureViewController {
 
     func scanningTextWithNoInput(availableIDTypes: [String], for side: DocumentSide) -> String {
         let localizedTypes = availableIDTypes.compactMap { $0.uiIDType() }
-        
+
         func fallback() -> String {
             switch side {
             case .front:
@@ -27,7 +27,7 @@ extension DocumentCaptureViewController {
             }
 
         }
-        
+
         // Handle specific combinations for scanning instructions
         if localizedTypes.count == 2 {
             if localizedTypes.contains(String.Localized.driverLicense) && localizedTypes.contains(String.Localized.passport) {
