@@ -156,10 +156,14 @@ public final class EmbeddedComponentManager {
     }
 
     @_spi(DashboardOnly)
-    public func createPaymentsViewController() -> PaymentsViewController {
+    @_documentation(visibility: public)
+    public func createPaymentsViewController(
+        defaultFilters: EmbeddedComponentManager.PaymentsListDefaultFiltersOptions = .init()
+    ) -> PaymentsViewController {
         .init(componentManager: self,
               loadContent: shouldLoadContent,
-              analyticsClientFactory: analyticsClientFactory)
+              analyticsClientFactory: analyticsClientFactory,
+              defaultFilters: defaultFilters)
     }
 
     /// Used to keep reference of all web views associated with this component manager.
