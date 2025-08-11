@@ -24,10 +24,11 @@ struct AuthenticatedView: View {
 
     @State private var errorMessage: String?
     @State private var isIdentityVerificationComplete = false
+    @State private var showKYCView = false
 
     @Environment(\.isLoading) private var isLoading
 
-    private var isVerifyIdentityButtonDisabled: Bool {
+    private var shouldDisableButtons: Bool {
         isLoading.wrappedValue
     }
 
@@ -50,9 +51,16 @@ struct AuthenticatedView: View {
                         verifyIdentity()
                     }
                     .buttonStyle(PrimaryButtonStyle())
-                    .disabled(isVerifyIdentityButtonDisabled)
-                    .opacity(isVerifyIdentityButtonDisabled ? 0.5 : 1)
+                    .disabled(shouldDisableButtons)
+                    .opacity(shouldDisableButtons ? 0.5 : 1)
                 }
+
+                Button("Submit KYC Information") {
+                    showKYCView = true
+                }
+                .buttonStyle(PrimaryButtonStyle())
+                .disabled(shouldDisableButtons)
+                .opacity(shouldDisableButtons ? 0.5 : 1)
 
                 if let errorMessage {
                     ErrorMessageView(message: errorMessage)
@@ -72,6 +80,11 @@ struct AuthenticatedView: View {
                 .padding()
                 .background(Color.secondary.opacity(0.1))
                 .cornerRadius(8)
+
+                HiddenNavigationLink(
+                    destination: KYCInfoView(coordinator: coordinator),
+                    isActive: $showKYCView
+                )
             }
             .padding()
         }
@@ -113,29 +126,11 @@ struct AuthenticatedView: View {
     }
 }
 
-private struct AuthenticatedPreviewView: View {
-    @State var coordinator: CryptoOnrampCoordinator?
-    var body: some View {
-        NavigationView {
-            if let coordinator = coordinator {
-                AuthenticatedView(coordinator: coordinator, customerId: "cus_example123456789")
-            }
-        }
-        .onAppear {
-            STPAPIClient.shared.setUpPublishableKey()
-            Task {
-                let coordinator = try? await CryptoOnrampCoordinator.create(appearance: .init())
-
-                await MainActor.run {
-                    self.coordinator = coordinator
-                }
-            }
-        }
-    }
-}
-
 #Preview {
-    NavigationView {
-        AuthenticatedPreviewView()
+    PreviewWrapperView { coordinator in
+        AuthenticatedView(
+            coordinator: coordinator,
+            customerId: "cus_example123456789"
+        )
     }
 }
