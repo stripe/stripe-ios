@@ -65,6 +65,13 @@ public protocol CryptoOnrampCoordinatorProtocol {
     /// - Parameter walletAddress: The crypto wallet address to register.
     /// - Parameter network: The crypto network for the wallet address.
     func collectWalletAddress(walletAddress: String, network: CryptoNetwork) async throws
+
+    /// Presents the user with the ability to select a payment method.
+    /// - Parameters:
+    ///   - viewController: The view controller from which to present the payment method selector.
+    ///   - email: The email address to pre-fill in the presented sheet. If `nil`, the email field will be empty.
+    /// - Returns: The result of the selection. Returns `completed` if the user selected a payment method with an associated `PaymentMethodPreview` describing the selected method, or `canceled` if they didn’t complete selection.
+    func presentPaymentMethodSelector(from viewController: UIViewController, email: String) async -> PaymentMethodSelectionResult
 }
 
 /// Coordinates headless Link user authentication and identity verification, leaving most of the UI to the client.
@@ -194,6 +201,14 @@ public final class CryptoOnrampCoordinator: CryptoOnrampCoordinatorProtocol {
             network: network,
             linkAccountInfo: linkAccountInfo
         )
+    }
+
+    public func presentPaymentMethodSelector(from viewController: UIViewController, email: String) async -> PaymentMethodSelectionResult {
+        if let result = await linkController.collectPaymentMethod(from: viewController, with: email) {
+            return .completed(.init(icon: result.icon, label: result.label, sublabel: result.sublabel))
+        } else {
+            return .canceled
+        }
     }
 }
 

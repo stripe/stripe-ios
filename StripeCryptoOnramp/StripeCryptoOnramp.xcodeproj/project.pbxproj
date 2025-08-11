@@ -10,6 +10,7 @@
 		0B20053F2E318235008FCF8D /* VerificationResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B20053E2E318231008FCF8D /* VerificationResult.swift */; };
 		0B34E23F2E2020E20072FC89 /* StripeCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0B34E23E2E2020E20072FC89 /* StripeCore.framework */; };
 		0B4292912E1EC57700012FB8 /* StripeCryptoOnramp.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0B4292852E1EC57600012FB8 /* StripeCryptoOnramp.framework */; };
+		0B49B6AF2E4A7945003E6393 /* PaymentMethodSelectionResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B49B6AE2E4A7945003E6393 /* PaymentMethodSelectionResult.swift */; };
 		0B649EDE2E428F5A00AFAFB1 /* StartIdentityVerificationRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B649EDD2E428F5A00AFAFB1 /* StartIdentityVerificationRequest.swift */; };
 		0B649EE02E428F6400AFAFB1 /* StartIdentityVerificationResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B649EDF2E428F6400AFAFB1 /* StartIdentityVerificationResponse.swift */; };
 		0B649EE22E4293AB00AFAFB1 /* IdentityVerificationResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B649EE12E4293AB00AFAFB1 /* IdentityVerificationResult.swift */; };
@@ -73,6 +74,7 @@
 		0B34E23E2E2020E20072FC89 /* StripeCore.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = StripeCore.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		0B4292852E1EC57600012FB8 /* StripeCryptoOnramp.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = StripeCryptoOnramp.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		0B4292902E1EC57700012FB8 /* StripeCryptoOnrampTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = StripeCryptoOnrampTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		0B49B6AE2E4A7945003E6393 /* PaymentMethodSelectionResult.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentMethodSelectionResult.swift; sourceTree = "<group>"; };
 		0B649EDD2E428F5A00AFAFB1 /* StartIdentityVerificationRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StartIdentityVerificationRequest.swift; sourceTree = "<group>"; };
 		0B649EDF2E428F6400AFAFB1 /* StartIdentityVerificationResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StartIdentityVerificationResponse.swift; sourceTree = "<group>"; };
 		0B649EE12E4293AB00AFAFB1 /* IdentityVerificationResult.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IdentityVerificationResult.swift; sourceTree = "<group>"; };
@@ -267,6 +269,7 @@
 				0B649EE12E4293AB00AFAFB1 /* IdentityVerificationResult.swift */,
 				49D233A72E439EB900F51263 /* CryptoNetwork.swift */,
 				0BB716432E4A5BCC002F17B8 /* Address.swift */,
+				0B49B6AE2E4A7945003E6393 /* PaymentMethodSelectionResult.swift */,
 			);
 			path = Components;
 			sourceTree = "<group>";
@@ -404,6 +407,7 @@
 				49D233AC2E439FB200F51263 /* RegisterWalletResponse.swift in Sources */,
 				0B6DF34B2E297E0A008B1800 /* CustomerRequest.swift in Sources */,
 				0B6DF34D2E297E27008B1800 /* CustomerResponse.swift in Sources */,
+				0B49B6AF2E4A7945003E6393 /* PaymentMethodSelectionResult.swift in Sources */,
 				0BF41E8B2E3AB84800CA4171 /* IdType.swift in Sources */,
 				0BA7050C2E413DA40044B483 /* Credentials.swift in Sources */,
 				0B83D9912E1EF6EF004F0115 /* Docs.docc in Sources */,
