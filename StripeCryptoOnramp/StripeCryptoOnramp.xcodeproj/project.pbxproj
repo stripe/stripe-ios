@@ -396,7 +396,6 @@
 				0BA7050A2E413D6B0044B483 /* KYCDataCollectionRequest.swift in Sources */,
 				0B649EE02E428F6400AFAFB1 /* StartIdentityVerificationResponse.swift in Sources */,
 				49D233A82E439EB900F51263 /* CryptoNetwork.swift in Sources */,
-				0BA7050A2E413D6B0044B483 /* KYCDataCollectionRequest.swift in Sources */,
 				0B20053F2E318235008FCF8D /* VerificationResult.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
