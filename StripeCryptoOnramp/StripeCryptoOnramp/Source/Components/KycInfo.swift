@@ -6,7 +6,6 @@
 //
 
 import Foundation
-@_spi(STP) import StripePaymentSheet
 
 /// Represents KYC information required for crypto operations.
 @_spi(CryptoOnrampSDKPreview)
