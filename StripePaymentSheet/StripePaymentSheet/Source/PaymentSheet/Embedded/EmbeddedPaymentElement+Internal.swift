@@ -465,6 +465,10 @@ extension EmbeddedPaymentElement: EmbeddedFormViewControllerDelegate {
         guard let _paymentOption, let displayData = paymentOption else {
             return (false, nil)
         }
+        // We don't show the change button for the disclosure style since it doesn't have a selected state
+        guard configuration.appearance.embeddedPaymentElement.row.style != .flatWithDisclosure else {
+            return (false, nil)
+        }
         // Show change button for new PMs that have a valid form
         let shouldShowChangeButton: Bool = {
             if case .new = type, selectedFormViewController != nil {
