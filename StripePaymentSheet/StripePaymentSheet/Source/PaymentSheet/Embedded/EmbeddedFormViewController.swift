@@ -150,6 +150,7 @@ class EmbeddedFormViewController: UIViewController {
             configuration: configuration,
             headerView: headerView,
             analyticsHelper: analyticsHelper,
+            isLinkUI: false,
             delegate: self
         )
     }()

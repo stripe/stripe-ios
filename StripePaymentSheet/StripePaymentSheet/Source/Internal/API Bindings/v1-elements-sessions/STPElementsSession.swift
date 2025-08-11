@@ -340,6 +340,11 @@ extension STPElementsSession {
         linkFlags["link_mobile_disable_default_opt_in"] != true
     }
 
+    var combinedReuseAndLinkMandateEnabled: Bool {
+        // This (now poorly named) feature flag impacts whether the combined mandate is supposed to be used.
+        linkSignupOptInFeatureEnabled
+    }
+
     var linkSignupOptInFeatureEnabled: Bool {
         linkFlags["link_sign_up_opt_in_feature_enabled"] == true
     }
