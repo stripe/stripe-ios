@@ -249,6 +249,8 @@ public class STPPaymentHandler: NSObject {
 
         let confirmCompletionBlock: STPPaymentIntentCompletionBlock = { paymentIntent, error in
             guard let strongSelf = weakSelf else {
+                assertionFailure("STPPaymentHandler became nil during `confirmPayment`!")
+                wrappedCompletion(.failed, nil, nil)
                 return
             }
             if let paymentIntent = paymentIntent,

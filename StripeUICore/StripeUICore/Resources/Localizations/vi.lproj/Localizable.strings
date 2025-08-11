@@ -134,12 +134,16 @@
 
 "Your BLIK code is invalid." = "Mã BLIK của quý vị không hợp lệ.";
 
-"Your ZIP is incomplete." = "Mã ZIP chưa đầy đủ.";
+"Your ZIP code is incomplete." = "Mã ZIP của bạn không đầy đủ.";
+
+"Your ZIP code is invalid." = "Mã bưu điện của bạn không hợp lệ.";
 
 "Your email is invalid." = "Email của quý vị không hợp lệ.";
 
 "Your payment information will not be saved." = "Thông tin thanh toán của bạn sẽ không lưu lại.";
 
 "Your postal code is incomplete." = "Mã bưu điện chưa đầy đủ.";
+
+"Your postal code is invalid." = "Mã bưu chính của bạn không hợp lệ.";
 
 "ZIP" = "ZIP";

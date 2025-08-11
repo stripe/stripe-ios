@@ -212,6 +212,45 @@ class LinkInlineSignupViewModelTests: STPNetworkStubbingTestCase {
         XCTAssertTrue(sut.shouldShowEmailField)
         XCTAssertTrue(sut.shouldShowPhoneField)
     }
+
+    func test_signupOptIn_shows_no_fields() {
+        let sut = makeSUT(
+            country: "US",
+            showCheckbox: true,
+            hasAccountObject: true,
+            allowsDefaultOptIn: true,
+            signupOptInFeatureEnabled: true,
+            signupOptInInitialValue: true
+        )
+        XCTAssertFalse(sut.shouldShowDefaultOptInView)
+        XCTAssertFalse(sut.shouldShowEmailField)
+        XCTAssertFalse(sut.shouldShowPhoneField)
+        XCTAssertFalse(sut.shouldShowNameField)
+    }
+
+    func test_signupOptIn_prechecked() {
+        let sut = makeSUT(
+            country: "US",
+            showCheckbox: true,
+            hasAccountObject: true,
+            allowsDefaultOptIn: true,
+            signupOptInFeatureEnabled: true,
+            signupOptInInitialValue: true
+        )
+        XCTAssertTrue(sut.saveCheckboxChecked)
+    }
+
+    func test_signupOptIn_not_prechecked() {
+        let sut = makeSUT(
+            country: "US",
+            showCheckbox: true,
+            hasAccountObject: true,
+            allowsDefaultOptIn: true,
+            signupOptInFeatureEnabled: true,
+            signupOptInInitialValue: false
+        )
+        XCTAssertFalse(sut.saveCheckboxChecked)
+    }
 }
 
 extension LinkInlineSignupViewModelTests {
@@ -234,6 +273,7 @@ extension LinkInlineSignupViewModelTests {
                             email: "user@example.com",
                             session: nil,
                             publishableKey: nil,
+                            displayablePaymentDetails: nil,
                             useMobileEndpoints: false
                         )
                     )
@@ -252,17 +292,27 @@ extension LinkInlineSignupViewModelTests {
         showCheckbox: Bool,
         hasAccountObject: Bool = false,
         shouldFailLookup: Bool = false,
-        allowsDefaultOptIn: Bool = false
+        allowsDefaultOptIn: Bool = false,
+        signupOptInFeatureEnabled: Bool = false,
+        signupOptInInitialValue: Bool = false
     ) -> LinkInlineSignupViewModel {
         let linkAccount: PaymentSheetLinkAccount? = hasAccountObject
-            ? PaymentSheetLinkAccount(email: "user@example.com", session: nil, publishableKey: nil, useMobileEndpoints: false)
-            : nil
+        ? PaymentSheetLinkAccount(
+            email: "user@example.com",
+            session: nil,
+            publishableKey: nil,
+            displayablePaymentDetails: nil,
+            useMobileEndpoints: false
+        )
+        : nil
 
         return LinkInlineSignupViewModel(
             configuration: PaymentSheet.Configuration(),
             showCheckbox: showCheckbox,
             accountService: MockAccountService(shouldFailLookup: shouldFailLookup),
             allowsDefaultOptIn: allowsDefaultOptIn,
+            signupOptInFeatureEnabled: signupOptInFeatureEnabled,
+            signupOptInInitialValue: signupOptInInitialValue,
             linkAccount: linkAccount,
             country: country
         )

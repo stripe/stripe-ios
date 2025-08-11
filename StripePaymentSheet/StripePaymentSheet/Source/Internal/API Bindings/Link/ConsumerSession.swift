@@ -100,6 +100,7 @@ extension ConsumerSession {
         for email: String?,
         emailSource: EmailSource?,
         sessionID: String,
+        customerID: String?,
         with apiClient: STPAPIClient = STPAPIClient.shared,
         cookieStore: LinkCookieStore = LinkSecureCookieStore.shared,
         useMobileEndpoints: Bool,
@@ -110,6 +111,7 @@ extension ConsumerSession {
             for: email,
             emailSource: emailSource,
             sessionID: sessionID,
+            customerID: customerID,
             cookieStore: cookieStore,
             useMobileEndpoints: useMobileEndpoints,
             doNotLogConsumerFunnelEvent: doNotLogConsumerFunnelEvent,
@@ -119,7 +121,7 @@ extension ConsumerSession {
 
     class func signUp(
         email: String,
-        phoneNumber: String,
+        phoneNumber: String?,
         locale: Locale = .autoupdatingCurrent,
         legalName: String?,
         countryCode: String?,
@@ -144,6 +146,7 @@ extension ConsumerSession {
         paymentMethodParams: STPPaymentMethodParams,
         with apiClient: STPAPIClient = STPAPIClient.shared,
         consumerAccountPublishableKey: String?,
+        isDefault: Bool = false,
         completion: @escaping (Result<ConsumerPaymentDetails, Error>) -> Void
     ) {
         guard paymentMethodParams.type == .card,
@@ -168,6 +171,7 @@ extension ConsumerSession {
             cardParams: cardParams,
             billingEmailAddress: billingEmailAddress,
             billingDetails: paymentMethodParams.nonnil_billingDetails,
+            isDefault: isDefault,
             consumerAccountPublishableKey: consumerAccountPublishableKey,
             completion: completion)
     }
@@ -293,6 +297,7 @@ extension ConsumerSession {
         expectedPaymentMethodType: String?,
         billingPhoneNumber: String?,
         consumerAccountPublishableKey: String?,
+        clientAttributionMetadata: STPClientAttributionMetadata,
         completion: @escaping (Result<PaymentDetailsShareResponse, Error>) -> Void
     ) {
         apiClient.sharePaymentDetails(
@@ -303,6 +308,7 @@ extension ConsumerSession {
             cvc: cvc,
             expectedPaymentMethodType: expectedPaymentMethodType,
             billingPhoneNumber: billingPhoneNumber,
+            clientAttributionMetadata: clientAttributionMetadata,
             completion: completion)
     }
 

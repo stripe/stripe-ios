@@ -3,7 +3,7 @@ https:\/\/api\.stripe\.com\/v1\/payment_methods$
 200
 application/json
 access-control-allow-methods: GET, HEAD, PUT, PATCH, POST, DELETE
-content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=ellSJiuLKVxQPjlbAQdIETGhjWFhiWApZVUhZKP7KVsygOtDgd82my0Kwb0OYOJ-FnFNR7z-NpvYxfyC
+content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=mq8bO2VzYGoVOS61OzhntjE-p7xUvmOJ0OfULSLpWGfqqwG-MQfi7OEZyACQGb52QtCOBwabNCES9SGL
 Server: nginx
 Cache-Control: no-cache, no-store
 x-wc: ABGHIJ
@@ -12,22 +12,22 @@ Access-Control-Allow-Origin: *
 stripe-should-retry: false
 x-stripe-priority-routing-enabled: true
 x-stripe-routing-context-priority-tier: api-testmode
-request-id: req_v0uc2kSKde2v1F
+request-id: req_1PNkStXhoHMRDe
 Content-Length: 462
 Vary: Origin
-Date: Thu, 10 Jul 2025 03:24:48 GMT
-original-request: req_v0uc2kSKde2v1F
+Date: Thu, 07 Aug 2025 16:18:51 GMT
+original-request: req_1PNkStXhoHMRDe
 stripe-version: 2020-08-27
-idempotency-key: d42e5b68-086a-41bf-a261-f314642bbf70
+idempotency-key: 828d1c32-a5e1-45db-922f-a448b7a6efa0
 access-control-expose-headers: Request-Id, Stripe-Manage-Version, Stripe-Should-Retry, X-Stripe-External-Auth-Required, X-Stripe-Privileged-Session-Required
 access-control-max-age: 300
 access-control-allow-credentials: true
 Content-Type: application/json
-X-Stripe-Mock-Request: allow_redisplay=unspecified&guid=.*&muid=.*&payment_user_agent=.*&sid=.*&type=zip
+X-Stripe-Mock-Request: allow_redisplay=unspecified&client_attribution_metadata\[client_session_id]=.*&client_attribution_metadata\[elements_session_config_id]=.*&client_attribution_metadata\[merchant_integration_source]=elements&client_attribution_metadata\[merchant_integration_subtype]=mobile&client_attribution_metadata\[merchant_integration_version]=.*&client_attribution_metadata\[payment_intent_creation_flow]=deferred&client_attribution_metadata\[payment_method_selection_flow]=automatic&guid=.*&muid=.*&payment_user_agent=.*&sid=.*&type=zip
 
 {
   "object" : "payment_method",
-  "id" : "pm_1RjB6KF7QokQdxByqG19WMiD",
+  "id" : "pm_1RtWWlF7QokQdxBykZqzQZut",
   "billing_details" : {
     "email" : null,
     "phone" : null,
@@ -43,7 +43,7 @@ X-Stripe-Mock-Request: allow_redisplay=unspecified&guid=.*&muid=.*&payment_user_
     }
   },
   "livemode" : false,
-  "created" : 1752117888,
+  "created" : 1754583531,
   "allow_redisplay" : "unspecified",
   "type" : "zip",
   "customer" : null,

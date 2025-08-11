@@ -115,10 +115,12 @@ extension EmbeddedPaymentElement {
             formCache: formCache,
             delegate: delegate
         )
-        guard formViewController.collectsUserInput else {
+
+        if Self.shouldShowForm(formViewController.form, configuration: configuration) {
+            return formViewController
+        } else {
             return nil
         }
-        return formViewController
     }
 }
 
@@ -151,6 +153,7 @@ extension EmbeddedPaymentElement: EmbeddedPaymentMethodsViewDelegate {
     }
 
     func embeddedPaymentMethodsViewDidTapPaymentMethodRow() {
+        // 😓 Note: This method depends on `embeddedPaymentMethodsViewDidUpdateSelection` being called *before* this method is called when a row is tapped.
         guard let selectedFormViewController else {
             // If the current selection has no form VC, simply alert the merchant of the selection if they are using immediateAction
             if case .immediateAction(let didSelectPaymentOption) = configuration.rowSelectionBehavior {
@@ -433,7 +436,11 @@ extension EmbeddedPaymentElement: EmbeddedFormViewControllerDelegate {
             }
         }
 
-        embeddedFormViewController.dismiss(animated: true)
+        embeddedFormViewController.dismiss(animated: true) {
+            if case let .confirm(completion) = self.configuration.formSheetAction {
+                completion(.canceled)
+            }
+        }
     }
 
     func embeddedFormViewControllerDidContinue(_ embeddedFormViewController: EmbeddedFormViewController) {
@@ -569,14 +576,6 @@ extension EmbeddedPaymentElement {
     static func validateRowSelectionConfiguration(configuration: Configuration) throws {
         switch configuration.rowSelectionBehavior {
         case .immediateAction:
-            if configuration.embeddedViewDisplaysMandateText {
-                switch configuration.formSheetAction {
-                case .continue:
-                    throw PaymentSheetError.integrationError(nonPIIDebugDescription: "Your integration must set `embeddedViewDisplaysMandateText` to false and display the mandate (`embeddedPaymentElement.paymentOption.mandateText`) to the customer near your buy button when `rowSelectionBehavior = .immediateAction`")
-                case .confirm:
-                    throw PaymentSheetError.integrationError(nonPIIDebugDescription: "Your integration must set `embeddedViewDisplaysMandateText` to false and display the mandate (`embeddedPaymentElement.paymentOption.mandateText`) to the customer before confirming the payment or setup when `rowSelectionBehavior = .immediateAction`")
-                }
-            }
             if case .confirm = configuration.formSheetAction, configuration.applePay != nil || configuration.customer != nil {
                 // Fail init if the merchant is using immediateAction and confirm form sheet action along w/ either a Customer or Apple Pay configuration
                 throw PaymentSheetError.integrationError(nonPIIDebugDescription: "Using .immediateAction with .confirm form sheet action is not supported when Apple Pay or a customer configuration is provided. Use .default row selection behavior or disable Apple Pay and saved payment methods.")
@@ -588,17 +587,33 @@ extension EmbeddedPaymentElement {
             }
         }
     }
+
+    /// - Returns: Whether or not we should show the given `form` for the given `configuration`.
+    nonisolated static func shouldShowForm(_ form: PaymentMethodElement, configuration: EmbeddedPaymentElement.Configuration) -> Bool {
+        // If the form collects user input, we definitely show it.
+        if form.collectsUserInput {
+            return true
+        }
+
+        // By default, we don't show or use form VCs if they don't collect user input
+        // However: When `rowSelectionBehavior` is `immediateAction` and `embeddedViewDisplaysMandateText` is `true` and the customer selects a PM that has no form but has a mandate, there's a problem.
+        // We'd normally show the mandate in the embedded view, but `immediateAction` implies the merchant will immediately confirm or move the customer to a different screen before they can see or consent to the mandate.
+        // We therefore show a form with the mandate text and proceed as normal as if it were any other PM with a form (customer can continue or confirm in the sheet).
+        let paymentMethodHasNoFormAndHasAMandate = form.collectsUserInput == false && form.getMandateText() != nil
+        if
+            case .immediateAction = configuration.rowSelectionBehavior,
+            configuration.embeddedViewDisplaysMandateText,
+            paymentMethodHasNoFormAndHasAMandate
+        {
+            return true
+        } else {
+            return false
+        }
+    }
+
 }
 
-// TODO(porter) When we use Xcode 16 on CI do this instead of `STPAuthenticationContextWrapper`
-// @retroactive is not supported in Xcode 15
-// extension UIViewController: @retroactive STPAuthenticationContext {
-//    public func authenticationPresentingViewController() -> UIViewController {
-//        return self
-//    }
-// }
-
-final class STPAuthenticationContextWrapper: UIViewController {
+final class PaymentSheetAuthenticationContextViewController: UIViewController {
     let _presentingViewController: UIViewController
     let appearance: PaymentSheet.Appearance
 
@@ -616,7 +631,7 @@ final class STPAuthenticationContextWrapper: UIViewController {
     }
 }
 
-extension STPAuthenticationContextWrapper: PaymentSheetAuthenticationContext {
+extension PaymentSheetAuthenticationContextViewController: PaymentSheetAuthenticationContext {
 
     func present(_ authenticationViewController: UIViewController, completion: @escaping () -> Void) {
         DispatchQueue.main.async {

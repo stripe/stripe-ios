@@ -68,7 +68,7 @@ final class PaymentSheetLinkAccountTests: APIStubbedTestCase {
             return urlRequest.url?.absoluteString.contains("consumers/payment_details/list") ?? false
         } response: { urlRequest in
             // Check to make sure we've passed the correct secret key
-            let body = String(decoding: urlRequest.httpBodyOrBodyStream!, as: UTF8.self)
+            let body = String(data: urlRequest.httpBodyOrBodyStream ?? Data(), encoding: .utf8) ?? ""
             if !body.contains("unexpired_key") {
                 // If it isn't the unexpired key, force a refresh by sending the correct error:
                 let errorResponse = [
@@ -151,6 +151,7 @@ extension PaymentSheetLinkAccountTests {
             email: "user@example.com",
             session: LinkStubs.consumerSession(),
             publishableKey: nil,
+            displayablePaymentDetails: nil,
             apiClient: STPAPIClient(publishableKey: STPTestingDefaultPublishableKey),
             useMobileEndpoints: false
         )

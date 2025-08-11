@@ -47,6 +47,7 @@ extension STPElementsSession {
         unactivatedPaymentMethodTypes: [STPPaymentMethodType] = [],
         countryCode: String? = nil,
         merchantCountryCode: String? = nil,
+        merchantLogoUrl: URL? = nil,
         linkSettings: LinkSettings? = nil,
         experimentsData: ExperimentsData? = nil,
         flags: [String: Bool] = [:],
@@ -55,6 +56,7 @@ extension STPElementsSession {
         isApplePayEnabled: Bool = true,
         externalPaymentMethods: [ExternalPaymentMethod] = [],
         customPaymentMethods: [CustomPaymentMethod] = [],
+        passiveCaptcha: PassiveCaptcha? = nil,
         customer: ElementsCustomer? = nil,
         isBackupInstance: Bool = false
     ) -> STPElementsSession {
@@ -66,6 +68,7 @@ extension STPElementsSession {
             unactivatedPaymentMethodTypes: unactivatedPaymentMethodTypes,
             countryCode: countryCode,
             merchantCountryCode: merchantCountryCode,
+            merchantLogoUrl: merchantLogoUrl,
             linkSettings: linkSettings,
             experimentsData: experimentsData,
             flags: flags,
@@ -74,6 +77,7 @@ extension STPElementsSession {
             isApplePayEnabled: isApplePayEnabled,
             externalPaymentMethods: externalPaymentMethods,
             customPaymentMethods: customPaymentMethods,
+            passiveCaptcha: passiveCaptcha,
             customer: customer
         )
     }

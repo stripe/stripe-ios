@@ -134,12 +134,16 @@
 
 "Your BLIK code is invalid." = "BLIK-koodi ei kelpaa.";
 
-"Your ZIP is incomplete." = "Postinumero on puutteellinen.";
+"Your ZIP code is incomplete." = "Postinumerosi on puutteellinen.";
+
+"Your ZIP code is invalid." = "Postinumero ei ole kelvollinen.";
 
 "Your email is invalid." = "Sähköposti on virheellinen.";
 
 "Your payment information will not be saved." = "Maksutietojasi ei tallenneta.";
 
 "Your postal code is incomplete." = "Postinumero on puutteellinen.";
+
+"Your postal code is invalid." = "Postinumerosi on virheellinen.";
 
 "ZIP" = "Postinumero";

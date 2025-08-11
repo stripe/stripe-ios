@@ -107,20 +107,14 @@ final class PaymentSheetLoader {
                     )
                     analyticsHelper.logExposure(experiment: linkGlobalHoldbackExperiment)
 
-                    // Only log Link AB Test if Link is enabled
-                    if PaymentSheet.isLinkEnabled(
-                        elementsSession: elementsSession,
-                        configuration: configuration
-                    ) {
-                        let linkAbTestExperiment = LinkABTest(
-                            arbId: arbId,
-                            session: elementsSession,
-                            configuration: configuration,
-                            linkAccount: linkAccount,
-                            integrationShape: analyticsHelper.integrationShape
-                        )
-                        analyticsHelper.logExposure(experiment: linkAbTestExperiment)
-                    }
+                    let linkAbTestExperiment = LinkABTest(
+                        arbId: arbId,
+                        session: elementsSession,
+                        configuration: configuration,
+                        linkAccount: linkAccount,
+                        integrationShape: analyticsHelper.integrationShape
+                    )
+                    analyticsHelper.logExposure(experiment: linkAbTestExperiment)
                 }
 
                 // Filter out payment methods that the PI/SI or PaymentSheet doesn't support

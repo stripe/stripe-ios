@@ -134,12 +134,16 @@
 
 "Your BLIK code is invalid." = "Ο κωδικός σας BLIK δεν είναι έγκυρος.";
 
-"Your ZIP is incomplete." = "Ο ταχυδρομικός σας κώδικας είναι ελλιπής.";
+"Your ZIP code is incomplete." = "Ο ταχυδρομικός κώδικας είναι ελλιπής.";
+
+"Your ZIP code is invalid." = "Ο ταχυδρομικός κώδικας δεν είναι έγκυρος.";
 
 "Your email is invalid." = "Η διεύθυνση email σας δεν είναι έγκυρη.";
 
 "Your payment information will not be saved." = "Τα στοιχεία πληρωμής δε θα αποθηκευτούν.";
 
 "Your postal code is incomplete." = "Ο ταχυδρομικός κώδικάς σας είναι ελλιπής.";
+
+"Your postal code is invalid." = "Ο ταχυδρομικός κώδικας είναι μη έγκυρος.";
 
 "ZIP" = "Τ.Κ.";

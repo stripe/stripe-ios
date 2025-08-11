@@ -126,8 +126,6 @@
 
 "Failed to connect" = "เชื่อมต่อไม่สำเร็จ";
 
-"Fast, secure, 1⁠-⁠click checkout" = "การชำระเงินที่รวดเร็วและปลอดภัยในคลิกเดียว";
-
 "For security, please re-enter your card’s security code." = "โปรดป้อนรหัสรักษาความปลอดภัยของบัตรอีกครั้งเพื่อความปลอดภัย";
 
 "Get %@ back when you pay for the first time with your bank. <terms>See terms</terms>" = "รับคืน %@ เมื่อชำระครั้งแรกผ่านธนาคาร <terms>ดูข้อกำหนด</terms>";
@@ -237,8 +235,6 @@
 "Save your bank account in just a few steps." = "บันทึกข้อมูลบัญชีธนาคารภายในไม่กี่ขั้นตอน";
 
 "Save your info for secure 1-click checkout with Link" = "บันทึกข้อมูลของคุณไว้เพื่อการชำระเงินที่ปลอดภัยในคลิกเดียวด้วย Link";
-
-"Save your payment information with Link, and securely check out in 1-click on Link-supported sites." = "บันทึกข้อมูลการชำระเงินของคุณด้วย Link แล้วชำระเงินอย่างปลอดภัยในคลิกเดียวบนเว็บไซต์ที่ Link รองรับ";
 
 "Saved" = "บันทึกแล้ว";
 

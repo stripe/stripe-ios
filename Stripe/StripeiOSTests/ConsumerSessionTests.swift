@@ -33,6 +33,7 @@ class ConsumerSessionTests: STPNetworkStubbingTestCase {
             for: nil,
             emailSource: .customerEmail,
             sessionID: "abc123",
+            customerID: nil,
             with: apiClient,
             useMobileEndpoints: false,
             doNotLogConsumerFunnelEvent: false
@@ -66,6 +67,7 @@ class ConsumerSessionTests: STPNetworkStubbingTestCase {
             for: "mobile-payments-sdk-ci+a-consumer@stripe.com",
             emailSource: .customerEmail,
             sessionID: "abc123",
+            customerID: nil,
             with: apiClient,
             useMobileEndpoints: false,
             doNotLogConsumerFunnelEvent: false
@@ -98,6 +100,7 @@ class ConsumerSessionTests: STPNetworkStubbingTestCase {
             for: "mobile-payments-sdk-ci+not-a-consumer+\(UUID())@stripe.com",
             emailSource: .customerEmail,
             sessionID: "abc123",
+            customerID: nil,
             with: apiClient,
             useMobileEndpoints: false,
             doNotLogConsumerFunnelEvent: false

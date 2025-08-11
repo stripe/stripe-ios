@@ -134,12 +134,16 @@
 
 "Your BLIK code is invalid." = "BLIK-koden er ugyldig.";
 
-"Your ZIP is incomplete." = "ZIP er ufullstendig.";
+"Your ZIP code is incomplete." = "Postnummeret ditt er ufullstendig.";
+
+"Your ZIP code is invalid." = "Postnummeret ditt er ugyldig.";
 
 "Your email is invalid." = "E-posten din er ugyldig.";
 
 "Your payment information will not be saved." = "Betalingsinformasjonen din lagres ikke.";
 
 "Your postal code is incomplete." = "Postnummeret er ufullstendig.";
+
+"Your postal code is invalid." = "Postnummeret ditt er ugyldig.";
 
 "ZIP" = "ZIP";

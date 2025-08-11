@@ -60,6 +60,10 @@
 
 "By continuing, you agree to authorize payments pursuant to <terms>these terms</terms>." = "A folytatással elfogadja, hogy engedélyezi a kifizetéseket ezen <terms>feltételek</terms> szerint.";
 
+"By continuing, you agree to save your information for future purchases with %@ and <link>Link</link>. You also agree to Link's <terms>Terms</terms> and <privacy>Privacy</privacy>." = "A folytatással Ön beleegyezik abba, hogy adatait elmenti a jövőbeni vásárlásokhoz itt: %@ és <link>Link</link>. Ön elfogadja a Link <terms>feltételeit</terms> és <privacy>adatvédelmi szabályzatát</privacy>.";
+
+"By continuing, you agree to save your information for future purchases with %@." = "A folytatással Ön beleegyezik abba, hogy adatait elmenti a jövőbeni vásárlásokhoz itt: %@.";
+
 "By continuing, you authorize %@ to automatically debit your Satispay Balance on a recurring basis in accordance with your purchase or subscription plan." = "A folytatással felhatalmazza a(z) %@-t, hogy a vásárlási vagy előfizetési csomagjának megfelelően rendszeresen automatikusan megterhelje Satispay egyenlegét.";
 
 "By continuing, you authorize %@ to debit your Cash App account for this payment and future payments in accordance with %@'s terms, until this authorization is revoked. You can change this anytime in your Cash App Settings." = "Ha folytatja, azzal engedélyezi, hogy a(z) %1$@ megterhelje a Cash App számláját ezzel a fizetéssel, és jövőbeli fizetésekkel a(z) %2$@ feltételeinek megfelelően, ameddig az engedélyt vissza nem vonja. Ezt bármikor megváltoztathatja a Cash App beállításaiban.";
@@ -124,7 +128,7 @@
 
 "Failed to connect" = "Nem sikerült csatlakozni";
 
-"Fast, secure, 1⁠-⁠click checkout" = "Gyors, biztonságos, egykattintásos fizetés";
+"Fast, secure checkout" = "Gyors és biztonságos fizetés";
 
 "For security, please re-enter your card’s security code." = "Biztonsági okból adja meg újra kártyája biztonsági kódját.";
 
@@ -186,6 +190,8 @@
 
 "Pay faster at %@ and thousands of businesses." = "Gyorsabban fizethet a(z) %@ számára és még ezernyi vállalkozásnak.";
 
+"Pay faster everywhere Link is accepted." = "Gyorsabban fizethet mindenhol, ahol a Linket elfogadják.";
+
 "Pay over time with %@" = "Fizessen később a következővel: %@";
 
 "Pay over time with Affirm" = "Fizetés később az Affirmmel";
@@ -235,8 +241,6 @@
 "Save your bank account in just a few steps." = "Mentse el egyszerűen bankszámláját.";
 
 "Save your info for secure 1-click checkout with Link" = "Mentse el az adatait a biztonságos egykattintásos fizetéshez a Linkkel";
-
-"Save your payment information with Link, and securely check out in 1-click on Link-supported sites." = "Mentse fizetési adatait a Linkbe, hogy biztonságosan fizessen egy kattintással a Link által támogatott oldalakon.";
 
 "Saved" = "Mentett";
 

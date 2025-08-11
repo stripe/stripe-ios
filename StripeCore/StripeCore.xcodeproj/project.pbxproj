@@ -98,6 +98,7 @@
 		9843D9B7D886C373C7AC71E4 /* NSMutableURLRequest+Stripe.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2BD3D02EBA8A732A9C832925 /* NSMutableURLRequest+Stripe.swift */; };
 		9DCBC08C182ED76A962961E7 /* NSURLComponents+Stripe.swift in Sources */ = {isa = PBXBuildFile; fileRef = D475CD59778FAC1028670AB5 /* NSURLComponents+Stripe.swift */; };
 		9FBA50345D53E82AA974F672 /* STPAPIClient+FileUpload.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4FC2FC535DAF9B340F9EA75 /* STPAPIClient+FileUpload.swift */; };
+		A3E0F5DF2E3C8A0B00C9E5F7 /* STPClientAttributionMetadata.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3E0F5DE2E3C8A0B00C9E5F7 /* STPClientAttributionMetadata.swift */; };
 		A454F368C505B2D80F0D8B19 /* PluginDetector.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6CDBCD70CB220014972B49A5 /* PluginDetector.swift */; };
 		A4DBBFD379C4E0120BD25C56 /* STPAPIClient+EmptyResponseTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC70CDF482E22A29B11466F7 /* STPAPIClient+EmptyResponseTest.swift */; };
 		A50CB2ACAC1DCF9539D76F25 /* NSArray+StripeCoreTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F2949BE5129DC4BBCD69B05 /* NSArray+StripeCoreTest.swift */; };
@@ -317,6 +318,7 @@
 		9D4EB9EA1128F9DA9120BB04 /* ru */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ru; path = ru.lproj/Localizable.strings; sourceTree = "<group>"; };
 		9E415507B0152B07796114CC /* NSError+Stripe.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSError+Stripe.swift"; sourceTree = "<group>"; };
 		A0FBC76F73C3791701072BBA /* sk-SK */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "sk-SK"; path = "sk-SK.lproj/Localizable.strings"; sourceTree = "<group>"; };
+		A3E0F5DE2E3C8A0B00C9E5F7 /* STPClientAttributionMetadata.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = STPClientAttributionMetadata.swift; sourceTree = "<group>"; };
 		A4336F071B0CE13306C8EB93 /* StripeAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StripeAPI.swift; sourceTree = "<group>"; };
 		A466F6075DCC39D5A976FB22 /* STPTelemetryClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = STPTelemetryClient.swift; sourceTree = "<group>"; };
 		A4E4C534285F49A97A04D2B8 /* UIView+StripeCoreTestingUtils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIView+StripeCoreTestingUtils.swift"; sourceTree = "<group>"; };
@@ -646,6 +648,7 @@
 				2F1BFF01B1EA57F6EA7BFBF1 /* StripeAPIConfiguration+Version.swift */,
 				FEC0AF5BF0A4799D2C0C7445 /* StripeError.swift */,
 				BCF062352C38A5173260C46A /* StripeServiceError.swift */,
+				A3E0F5DE2E3C8A0B00C9E5F7 /* STPClientAttributionMetadata.swift */,
 			);
 			path = "API Bindings";
 			sourceTree = "<group>";
@@ -1042,6 +1045,7 @@
 				31DEFE4C2D02C25A00E6E507 /* StripeAttestBackend.swift in Sources */,
 				87274985CE5E750FA8D34648 /* EmptyResponse.swift in Sources */,
 				6A52ABC06783A90B9E339948 /* StripeFile.swift in Sources */,
+				A3E0F5DF2E3C8A0B00C9E5F7 /* STPClientAttributionMetadata.swift in Sources */,
 				6A05FB472BCF24370001D128 /* FinancialConnectionsLinkedBank.swift in Sources */,
 				9FBA50345D53E82AA974F672 /* STPAPIClient+FileUpload.swift in Sources */,
 				31AD3BDC2B0C23E40080C800 /* Locale+StripeCore.swift in Sources */,

@@ -60,6 +60,10 @@
 
 "By continuing, you agree to authorize payments pursuant to <terms>these terms</terms>." = "繼續操作即表示您同意按照<terms>這些條款</terms>授權付款。";
 
+"By continuing, you agree to save your information for future purchases with %@ and <link>Link</link>. You also agree to Link's <terms>Terms</terms> and <privacy>Privacy</privacy>." = "繼續即表示您同意儲存您的資訊，以便將來透過 %@ 和 Link 進行 <link>購買</link>。您也同意 Link 的<terms>條款</terms>和<privacy>隱私政策</privacy>。";
+
+"By continuing, you agree to save your information for future purchases with %@." = "繼續即表示您同意儲存您的資訊,以便將來透過 %@ 進行購買。";
+
 "By continuing, you authorize %@ to automatically debit your Satispay Balance on a recurring basis in accordance with your purchase or subscription plan." = "一旦繼續，即表示您授權 %@ 根據您的購買或訂閱計劃，定期從您的 Satispay 結餘自動扣款。";
 
 "By continuing, you authorize %@ to debit your Cash App account for this payment and future payments in accordance with %@'s terms, until this authorization is revoked. You can change this anytime in your Cash App Settings." = "繼續操作，即表示您授權 %1$@ 按照 %2$@ 的條款從您的 Cash App 賬戶中扣取該款項及未來的款項，直至撤銷授權。您可以隨時在 Cash App 設置中進行修改。";
@@ -126,7 +130,7 @@
 
 "Failed to connect" = "連接失敗";
 
-"Fast, secure, 1⁠-⁠click checkout" = "快速安全地一鍵結賬";
+"Fast, secure checkout" = "快速、安全的結帳";
 
 "For security, please re-enter your card’s security code." = "出於安全原因，請重新輸入您的銀行卡的安全碼。";
 
@@ -188,6 +192,8 @@
 
 "Pay faster at %@ and thousands of businesses." = "在 %@ 及数千商家那里更快支付。";
 
+"Pay faster everywhere Link is accepted." = "在接受 Link 的任何地方可以更快速支付。";
+
 "Pay over time with %@" = "用 %@ 慢慢支付";
 
 "Pay over time with Affirm" = "用 Affirm 慢慢支付";
@@ -237,8 +243,6 @@
 "Save your bank account in just a few steps." = "幾步儲存您的銀行賬戶。";
 
 "Save your info for secure 1-click checkout with Link" = "儲存您的資訊，用 Link 安全地一鍵結賬";
-
-"Save your payment information with Link, and securely check out in 1-click on Link-supported sites." = "用 Link 儲存您的支付資訊，並在支援 Link 的網站上一鍵安全結賬。";
 
 "Saved" = "已儲存";
 

@@ -92,6 +92,12 @@
 /* Text providing link to terms for ACH payments */
 "By continuing, you agree to authorize payments pursuant to <terms>these terms</terms>." = "By continuing, you agree to authorize payments pursuant to <terms>these terms</terms>.";
 
+/* Text displayed below a credit card entry form when the card will be saved with the merchant and saved to Link. */
+"By continuing, you agree to save your information for future purchases with %@ and <link>Link</link>. You also agree to Link's <terms>Terms</terms> and <privacy>Privacy</privacy>." = "By continuing, you agree to save your information for future purchases with %@ and <link>Link</link>. You also agree to Link's <terms>Terms</terms> and <privacy>Privacy</privacy>.";
+
+/* Text displayed below a credit card entry form when the card will be saved with the merchant. */
+"By continuing, you agree to save your information for future purchases with %@." = "By continuing, you agree to save your information for future purchases with %@.";
+
 /* Satispay mandate text */
 "By continuing, you authorize %@ to automatically debit your Satispay Balance on a recurring basis in accordance with your purchase or subscription plan." = "By continuing, you authorize %@ to automatically debit your Satispay Balance on a recurring basis in accordance with your purchase or subscription plan.";
 
@@ -190,7 +196,7 @@ with the transaction. */
 "Failed to connect" = "Failed to connect";
 
 /* Title for the Link signup screen */
-"Fast, secure, 1⁠-⁠click checkout" = "Fast, secure, 1⁠-⁠click checkout";
+"Fast, secure checkout" = "Fast, secure checkout";
 
 /* A text notice shown when the user selects a card that requires
 re-entering the security code (CVV/CVC). */
@@ -291,6 +297,9 @@ Pay faster at {Merchant Name} and thousands of businesses
 e.g, 'Pay faster at Example, Inc. and thousands of businesses.' */
 "Pay faster at %@ and thousands of businesses." = "Pay faster at %@ and thousands of businesses.";
 
+/* Subtitle for the Link signup screen */
+"Pay faster everywhere Link is accepted." = "Pay faster everywhere Link is accepted.";
+
 /* Pay over time with Affirm copy */
 "Pay over time with %@" = "Pay over time with %@";
 
@@ -365,9 +374,6 @@ to be saved and used in future checkout sessions. */
 /* Label for a checkbox that when checked allows the payment information
 to be saved and used in future checkout sessions. */
 "Save your info for secure 1-click checkout with Link" = "Save your info for secure 1-click checkout with Link";
-
-/* Label describing the benefit of signing up for Link. */
-"Save your payment information with Link, and securely check out in 1-click on Link-supported sites." = "Save your payment information with Link, and securely check out in 1-click on Link-supported sites.";
 
 /* Title shown above a button that represents the customer's saved payment method e.g., a saved credit card or bank account. */
 "Saved" = "Saved";

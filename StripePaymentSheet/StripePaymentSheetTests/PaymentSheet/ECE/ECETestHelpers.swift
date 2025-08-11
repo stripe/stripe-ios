@@ -131,13 +131,41 @@ class MockWKNavigationResponse: WKNavigationResponse {
 }
 
 @available(iOS 16.0, *)
+class MockWKSecurityOrigin: NSObject {
+    private let _host: String
+    private let _protocol: String
+    private let _port: Int
+
+    init(host: String, protocol: String = "https", port: Int = 443) {
+        self._host = host
+        self._protocol = `protocol`
+        self._port = port
+        super.init()
+    }
+
+    @objc var host: String {
+        return _host
+    }
+
+    @objc var `protocol`: String {
+        return _protocol
+    }
+
+    @objc var port: Int {
+        return _port
+    }
+}
+
+@available(iOS 16.0, *)
 class MockWKFrameInfo: WKFrameInfo {
     private let _request: URLRequest
     private let _isMainFrame: Bool
+    private let _securityOrigin: NSObject
 
-    init(request: URLRequest, isMainFrame: Bool = true) {
+    init(request: URLRequest, isMainFrame: Bool = true, securityOrigin: NSObject? = nil) {
         self._request = request
         self._isMainFrame = isMainFrame
+        self._securityOrigin = securityOrigin ?? MockWKSecurityOrigin(host: "pay.stripe.com")
         super.init()
     }
 
@@ -147,6 +175,10 @@ class MockWKFrameInfo: WKFrameInfo {
 
     override var isMainFrame: Bool {
         return _isMainFrame
+    }
+
+    override var securityOrigin: WKSecurityOrigin {
+        return unsafeBitCast(_securityOrigin, to: WKSecurityOrigin.self)
     }
 }
 
@@ -379,10 +411,16 @@ class MockExpressCheckoutWebviewDelegate: ExpressCheckoutWebviewDelegate {
 class MockWKScriptMessage: WKScriptMessage {
     private let _name: String
     private let _body: Any
+    private let _frameInfo: WKFrameInfo
 
-    init(name: String, body: Any) {
+    init(name: String, body: Any, frameInfo: WKFrameInfo? = nil) {
         self._name = name
         self._body = body
+        self._frameInfo = frameInfo ?? MockWKFrameInfo(
+            request: URLRequest(url: URL(string: "https://pay.stripe.com")!),
+            isMainFrame: true,
+            securityOrigin: MockWKSecurityOrigin(host: "pay.stripe.com")
+        )
         super.init()
     }
 
@@ -392,6 +430,10 @@ class MockWKScriptMessage: WKScriptMessage {
 
     override var body: Any {
         return _body
+    }
+
+    override var frameInfo: WKFrameInfo {
+        return _frameInfo
     }
 }
 

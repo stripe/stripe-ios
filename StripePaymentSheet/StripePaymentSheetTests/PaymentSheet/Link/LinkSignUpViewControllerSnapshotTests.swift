@@ -51,6 +51,7 @@ extension LinkSignUpViewControllerSnapshotTests {
                 email: email ?? "",
                 session: session,
                 publishableKey: nil,
+                displayablePaymentDetails: nil,
                 useMobileEndpoints: false
             ),
             defaultBillingDetails: nil

@@ -1,4 +1,36 @@
+## x.x.x x-x-x
+
+### StripeApplePay
+* [Fixed] Issue when deserializing intent when line1 is null
+
+### PaymentSheet
+* [Fixed] Fixed an issue that caused EmbeddedPaymentElement to log broken layout constraints.
+* [Fixed] The Apple Pay logo in `PaymentOptionDisplayData` no longer contains additional padding, bringing it in line with other payment method logos.
+* [Changed] When phone number or email address collection is enabled, these fields will now appear in the billing details section instead of appearing above the card field.
+* [Added] Added `termsDisplay` in PaymentSheet.Configuration to control when legal agreements are displayed
+
+### EmbeddedPaymentElement
+* [Changed] When using `EmbeddedPaymentElement.Configuration.FormSheetAction.confirm`, the completion block is now called with a `canceled` result if the user closes the form sheet without completing the transaction.
+* [Added] You no longer need to set the backend PaymentIntent setup_future_usage or payment_method_options setup_future_usage values to match the client's IntentConfiguration; the client will automatically configure this for you.
+
+## 24.19.0 2025-08-04
+
+### PaymentSheet
+* [Fixed] Updated default spacing of form elements in PaymentSheet.
+* [Added] EmbeddedPaymentElement now shows mandates in a form sheet when `rowSelectionBehavior` is `immediateAction` and `embeddedViewDisplaysMandateText` is `true`. Previously, this configuration was an error.
+
+## 24.18.1 2025-07-29
+* [Fixed] Improved Klarna payments when using Universal Links.
+
+## 24.18.0 2025-07-28
+
+* [Added] Postal code validation for Canada and UK addresses
+
+### PaymentSheet
+* [Added] Added `Appearance.EmbeddedPaymentElement.Row.subtitleFont` to customize the font of EmbeddedPaymentElement payment method row subtitles.
+
 ## 24.17.0 2025-07-21
+
 ### PaymentSheet
 * [Fixed] EmbeddedPaymentElement now errors when `configuration.rowSelectionBehavior` is `.immediateAction` and `configuration.embeddedViewDisplaysMandateText` is `true` to ensure integrations display legal mandate text to the customer.
 * [Deprecated] Carthage is no longer officially supported. We will continue to publish binaries to the GitHub releases page for Carthage, but we will no longer test using the Carthage CLI tool.
@@ -16,6 +48,7 @@
 * [Removed] Removed nn-NO (Norwegian Nynorsk) localization. Norwegian users can continue using nb (Norwegian Bokmål) localization.
 
 ## 24.16.2 2025-07-07
+
 ### PaymentSheet
 * [Added] Address autocomplete functionality when collecting full billing details in payment method forms.
 * [Fixed] Form error text not respecting Appearance API font settings

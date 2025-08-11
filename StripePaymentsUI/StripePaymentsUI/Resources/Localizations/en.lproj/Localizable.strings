@@ -31,6 +31,9 @@
 /* Billing address section title for card form entry. */
 "Billing address" = "Billing address";
 
+/* Billing details section title for card form entry. */
+"Billing details" = "Billing details";
+
 /* Placeholder text for BSB Number entry field for BECS Debit. */
 "BSB" = "BSB";
 
@@ -108,10 +111,4 @@
 
 /* Error message for card entry form when CVC is invalid */
 "Your card's security code is invalid." = "Your card's security code is invalid.";
-
-/* Error message for when postal code in form is invalid */
-"Your postal code is invalid." = "Your postal code is invalid.";
-
-/* Error message for when postal code in form is invalid (US only) */
-"Your ZIP is invalid." = "Your ZIP is invalid.";
 

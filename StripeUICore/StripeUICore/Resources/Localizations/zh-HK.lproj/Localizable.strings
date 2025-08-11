@@ -134,12 +134,16 @@
 
 "Your BLIK code is invalid." = "您的 BLIK 代碼無效。";
 
-"Your ZIP is incomplete." = "您的郵區編號不完整。";
+"Your ZIP code is incomplete." = "您的郵遞區號不完整。";
+
+"Your ZIP code is invalid." = "您的郵遞區號是無效的。";
 
 "Your email is invalid." = "您的電郵地址無效。";
 
 "Your payment information will not be saved." = "不會儲存您的付款資訊。";
 
 "Your postal code is incomplete." = "您的郵區編號不完整。";
+
+"Your postal code is invalid." = "您的郵政編碼無效。";
 
 "ZIP" = "郵區編號";

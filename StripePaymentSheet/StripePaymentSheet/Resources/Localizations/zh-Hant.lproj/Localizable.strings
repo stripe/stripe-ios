@@ -122,8 +122,6 @@
 
 "Failed to connect" = "連接失敗";
 
-"Fast, secure, 1⁠-⁠click checkout" = "快速安全地一鍵結帳";
-
 "For security, please re-enter your card’s security code." = "出於安全原因，請重新輸入您的金融卡的安全碼。";
 
 "Get %@ back when you pay for the first time with your bank. <terms>See terms</terms>" = "透過您的銀行首次支付時獲得 %@ 的返現。<terms>查看條款</terms>";
@@ -233,8 +231,6 @@
 "Save your bank account in just a few steps." = "幾步儲存您的銀行帳戶。";
 
 "Save your info for secure 1-click checkout with Link" = "儲存您的資訊，用 Link 安全地一鍵結帳";
-
-"Save your payment information with Link, and securely check out in 1-click on Link-supported sites." = "用 Link 儲存您的支付資訊，並在支援 Link 的網站上一鍵安全結帳。";
 
 "Saved" = "已儲存";
 

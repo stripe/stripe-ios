@@ -21,7 +21,6 @@ struct ExampleWalletButtonsContainerView: View {
     @State private var email: String = ""
     @State private var shopId: String = "69293637654"
     @State private var linkInlineVerificationEnabled: Bool = PaymentSheet.LinkFeatureFlags.enableLinkInlineVerification
-    @State private var useSPTTestBackend: Bool = false
     @State private var appearance: PaymentSheet.Appearance = PaymentSheet.Appearance()
     @State private var showingAppearancePlayground = false
 
@@ -50,8 +49,6 @@ struct ExampleWalletButtonsContainerView: View {
                         .onChange(of: linkInlineVerificationEnabled) { newValue in
                             PaymentSheet.LinkFeatureFlags.enableLinkInlineVerification = newValue
                         }
-
-                    Toggle("Use SPT test backend", isOn: $useSPTTestBackend)
 
                     Button("Customize Appearance") {
                         showingAppearancePlayground = true
@@ -85,7 +82,6 @@ struct ExampleWalletButtonsContainerView: View {
                         ExampleWalletButtonsView(
                             email: email,
                             shopId: shopId,
-                            useSPTTestBackend: useSPTTestBackend,
                             appearance: appearance,
                             shopPayTestingOptions: ShopPayTestingOptions(
                                 billingAddressRequired: billingAddressRequired,
@@ -110,8 +106,8 @@ struct ExampleWalletButtonsView: View {
     @ObservedObject var model: ExampleWalletButtonsModel
     @State var isConfirmingPayment = false
 
-    init(email: String, shopId: String, useSPTTestBackend: Bool, appearance: PaymentSheet.Appearance = PaymentSheet.Appearance(), shopPayTestingOptions: ShopPayTestingOptions = ShopPayTestingOptions()) {
-        self.model = ExampleWalletButtonsModel(email: email, shopId: shopId, useSPTTestBackend: useSPTTestBackend, appearance: appearance, shopPayTestingOptions: shopPayTestingOptions)
+    init(email: String, shopId: String, appearance: PaymentSheet.Appearance = PaymentSheet.Appearance(), shopPayTestingOptions: ShopPayTestingOptions = ShopPayTestingOptions()) {
+        self.model = ExampleWalletButtonsModel(email: email, shopId: shopId, appearance: appearance, shopPayTestingOptions: shopPayTestingOptions)
     }
 
     var body: some View {
@@ -204,7 +200,6 @@ struct WalletButtonsFlowControllerView: View {
 class ExampleWalletButtonsModel: ObservableObject {
     let email: String
     let shopId: String
-    let useSPTTestBackend: Bool
     let appearance: PaymentSheet.Appearance
     let shopPayTestingOptions: ShopPayTestingOptions
 
@@ -216,10 +211,9 @@ class ExampleWalletButtonsModel: ObservableObject {
     @Published var isProcessing: Bool = false
     @Published var debugLogs: [String] = []
 
-    init(email: String, shopId: String, useSPTTestBackend: Bool, appearance: PaymentSheet.Appearance, shopPayTestingOptions: ShopPayTestingOptions = ShopPayTestingOptions()) {
+    init(email: String, shopId: String, appearance: PaymentSheet.Appearance, shopPayTestingOptions: ShopPayTestingOptions = ShopPayTestingOptions()) {
         self.email = email
         self.shopId = shopId
-        self.useSPTTestBackend = useSPTTestBackend
         self.appearance = appearance
         self.shopPayTestingOptions = shopPayTestingOptions
     }
@@ -241,104 +235,16 @@ class ExampleWalletButtonsModel: ObservableObject {
 
     func preparePaymentSheet() {
         self.addDebugLog("Preparing payment sheet...")
-        if useSPTTestBackend {
-            self.addDebugLog("Using SPT test backend")
-            preparePaymentSheetWithSPTTestBackend()
-        } else {
-            self.addDebugLog("Using original backend")
-            preparePaymentSheetWithOriginalBackend()
-        }
-    }
-
-    private func preparePaymentSheetWithOriginalBackend() {
-        // MARK: Fetch the PaymentIntent and Customer information from the backend
-        self.addDebugLog("Creating customer with original backend...")
-        let body = [
-            "mode": "payment",
-            "merchant_country_code": "US",
-            "customer_email": self.email,
-            "amount": "5000",
-            "currency": "usd",
-            "customer": "new",
-            "customer_key_type": "customer_session",
-            "customer_session_component_name": "mobile_payment_element",
-            "customer_session_payment_method_save": "enabled",
-            "customer_session_payment_method_remove": "enabled",
-            "customer_session_payment_method_remove_last": "enabled",
-            "customer_session_payment_method_redisplay": "enabled",
-        ] as [String: Any]
-        let json = try! JSONSerialization.data(withJSONObject: body, options: [])
-
-        var request = URLRequest(url: backendCheckoutUrl)
-        request.httpMethod = "POST"
-        request.httpBody = json
-        request.setValue("application/json", forHTTPHeaderField: "Content-type")
-        let task = URLSession.shared.dataTask(
-            with: request,
-            completionHandler: { [weak self] (data, _, error) in
-                guard let data = data,
-                    let json = try? JSONSerialization.jsonObject(with: data, options: [])
-                        as? [String: Any],
-                    let customerId = json["customerId"] as? String,
-                    let customerSessionClientSecret = json["customerSessionClientSecret"] as? String,
-                    let paymentIntentClientSecret = json["intentClientSecret"] as? String,
-                    let publishableKey = json["publishableKey"] as? String
-                else {
-                    self?.addDebugLog("Error creating customer with original backend: \(error?.localizedDescription ?? "Unknown error")")
-                    return
-                }
-
-                self?.addDebugLog("Customer created successfully with original backend: \(customerId)")
-
-                // MARK: Set your Stripe publishable key - this allows the SDK to make requests to Stripe for your account
-                STPAPIClient.shared.publishableKey = publishableKey
-
-                // MARK: Create a PaymentSheet instance
-                var configuration = PaymentSheet.Configuration()
-                configuration.defaultBillingDetails.email = self?.email ?? ""
-                configuration.merchantDisplayName = "Example, Inc."
-                configuration.applePay = .init(
-                    merchantId: "merchant.com.stripe.umbrella.test", // Be sure to use your own merchant ID here!
-                    merchantCountryCode: "US",
-                    customHandlers: .init(paymentRequestHandler: { paymentRequest in
-                        paymentRequest.requiredShippingContactFields = [.postalAddress, .emailAddress]
-                        return paymentRequest
-                    })
-                )
-                configuration.shopPay = self?.shopPayConfiguration
-                configuration.customer = .init(id: customerId, customerSessionClientSecret: customerSessionClientSecret)
-                configuration.returnURL = "payments-example://stripe-redirect"
-                configuration.willUseWalletButtonsView = true
-                configuration.appearance = self?.appearance ?? PaymentSheet.Appearance()
-
-                self?.addDebugLog("Creating PaymentSheet FlowController with original backend...")
-                PaymentSheet.FlowController.create(
-                    intentConfiguration: .init(sharedPaymentTokenSessionWithMode: .payment(amount: 1000, currency: "USD", setupFutureUsage: nil, captureMethod: .automatic, paymentMethodOptions: nil), sellerDetails: .init(networkId: "stripe", externalId: "acct_1HvTI7Lu5o3P18Zp"), paymentMethodTypes: ["card", "shop_pay"], preparePaymentMethodHandler: { [weak self] paymentMethod, address in
-                        self?.addDebugLog("PaymentMethod prepared: \(paymentMethod.stripeId)")
-                        self?.addDebugLog("Address: \(address)")
-                        self?.onCompletion(result: .completed)
-                    }),
-                    configuration: configuration
-                ) { [weak self] result in
-                    switch result {
-                    case .failure(let error):
-                        self?.addDebugLog("FlowController creation error: \(error)")
-                    case .success(let paymentSheetFlowController):
-                        self?.addDebugLog("FlowController created successfully with original backend")
-                        DispatchQueue.main.async {
-                            self?.paymentSheetFlowController = paymentSheetFlowController
-                        }
-                    }
-                }
-            })
-        task.resume()
+        self.addDebugLog("Using SPT test backend")
+        preparePaymentSheetWithSPTTestBackend()
     }
 
     private func preparePaymentSheetWithSPTTestBackend() {
         // First, create customer and get customer session
         self.addDebugLog("Creating customer with SPT test backend...")
         let body = [
-            "customerId": nil, // Let backend create a new customer
+            "customerId": nil, // Let backend create a new customer if no email is passed
+            "customerEmail": email.nonEmpty,
             "isMobile": true,
         ] as [String: Any?]
         let json = try! JSONSerialization.data(withJSONObject: body, options: [])

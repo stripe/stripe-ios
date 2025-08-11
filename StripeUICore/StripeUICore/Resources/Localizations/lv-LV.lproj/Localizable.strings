@@ -134,12 +134,16 @@
 
 "Your BLIK code is invalid." = "Jūsu BLIK kods nav derīgs.";
 
-"Your ZIP is incomplete." = "Pasta indekss nav pilnīgs.";
+"Your ZIP code is incomplete." = "Jūsu pasta indekss nav pilnīgs.";
+
+"Your ZIP code is invalid." = "Pasta indekss nav derīgs.";
 
 "Your email is invalid." = "E-pasta adrese nav derīga.";
 
 "Your payment information will not be saved." = "Jūsu maksājuma informācija nav saglabāta.";
 
 "Your postal code is incomplete." = "Pasta indekss nav pilnīgs.";
+
+"Your postal code is invalid." = "Jūsu pasta indekss ir nederīgs.";
 
 "ZIP" = "Pasta ind.";

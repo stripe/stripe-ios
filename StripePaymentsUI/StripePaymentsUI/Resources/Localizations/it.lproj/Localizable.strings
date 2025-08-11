@@ -48,8 +48,6 @@
 
 "To scan your card, allow camera access in Settings." = "Per scansionare la carta, concedi l'accesso alla fotocamera in Impostazioni.";
 
-"Your ZIP is invalid." = "Il CAP non è valido.";
-
 "Your card has expired." = "La tua carta è scaduta.";
 
 "Your card number is incomplete." = "Il numero della carta è incompleto.";
@@ -67,8 +65,6 @@
 "Your card's security code is incomplete." = "Il codice di sicurezza della carta è incompleto.";
 
 "Your card's security code is invalid." = "Il codice di sicurezza della carta non è valido.";
-
-"Your postal code is invalid." = "Il codice postale non è valido.";
 
 "card number" = "numero carta";
 

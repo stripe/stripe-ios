@@ -11,10 +11,12 @@
 @_spi(STP) import StripeUICore
 import UIKit
 
-protocol PaymentSheetLinkAccountInfoProtocol {
-    var email: String { get }
-    var redactedPhoneNumber: String? { get }
-    var isRegistered: Bool { get }
+@_spi(STP) public protocol PaymentSheetLinkAccountInfoProtocol {
+    @_spi(STP) var email: String { get }
+    @_spi(STP) var redactedPhoneNumber: String? { get }
+    @_spi(STP) var isRegistered: Bool { get }
+    @_spi(STP) var sessionState: PaymentSheetLinkAccount.SessionState { get }
+    @_spi(STP) var consumerSessionClientSecret: String? { get }
 }
 
 struct LinkPMDisplayDetails {
@@ -60,6 +62,12 @@ struct LinkPMDisplayDetails {
 
         // Crypto onramp, email and phone number are entered, a sign up button is tapped
         case entered_phone_number_email_clicked_signup_crypto_onramp = "entered_phone_number_email_clicked_signup_crypto_onramp"
+
+        // Checkbox pre-checked, signup data inferred from billing details or customer information
+        case sign_up_opt_in_mobile_prechecked = "sign_up_opt_in_mobile_prechecked"
+
+        // Checkbox checked, signup data inferred from billing details or customer information
+        case sign_up_opt_in_mobile_checked = "sign_up_opt_in_mobile_checked"
     }
 
     // Dependencies
@@ -108,12 +116,18 @@ struct LinkPMDisplayDetails {
         return currentSession?.hasVerifiedSMSSession ?? false
     }
 
+    var isInSignupFlow: Bool {
+        currentSession?.isVerifiedForSignup ?? false
+    }
+
     private(set) var currentSession: ConsumerSession?
+    let displayablePaymentDetails: ConsumerSession.DisplayablePaymentDetails?
 
     init(
         email: String,
         session: ConsumerSession?,
         publishableKey: String?,
+        displayablePaymentDetails: ConsumerSession.DisplayablePaymentDetails?,
         apiClient: STPAPIClient = .shared,
         cookieStore: LinkCookieStore = LinkSecureCookieStore.shared,
         useMobileEndpoints: Bool
@@ -121,28 +135,30 @@ struct LinkPMDisplayDetails {
         self.email = email
         self.currentSession = session
         self.publishableKey = publishableKey
+        self.displayablePaymentDetails = displayablePaymentDetails
         self.apiClient = apiClient
         self.cookieStore = cookieStore
         self.useMobileEndpoints = useMobileEndpoints
     }
 
     func signUp(
-        with phoneNumber: PhoneNumber,
+        with phoneNumber: PhoneNumber?,
         legalName: String?,
+        countryCode: String?,
         consentAction: ConsentAction,
         completion: @escaping (Result<Void, Error>) -> Void
     ) {
         signUp(
-            with: phoneNumber.string(as: .e164),
+            with: phoneNumber?.string(as: .e164),
             legalName: legalName,
-            countryCode: phoneNumber.countryCode,
+            countryCode: phoneNumber?.countryCode ?? countryCode,
             consentAction: consentAction,
             completion: completion
         )
     }
 
     func signUp(
-        with phoneNumber: String,
+        with phoneNumber: String?,
         legalName: String?,
         countryCode: String?,
         consentAction: ConsentAction,
@@ -272,6 +288,7 @@ struct LinkPMDisplayDetails {
 
     func createPaymentDetails(
         with paymentMethodParams: STPPaymentMethodParams,
+        isDefault: Bool,
         completion: @escaping (Result<ConsumerPaymentDetails, Error>) -> Void
     ) {
         retryingOnAuthError(completion: completion) { completionRetryingOnAuthErrors in
@@ -287,6 +304,7 @@ struct LinkPMDisplayDetails {
                 paymentMethodParams: paymentMethodParams,
                 with: self.apiClient,
                 consumerAccountPublishableKey: self.publishableKey,
+                isDefault: isDefault,
                 completion: completionRetryingOnAuthErrors
             )
         }
@@ -430,6 +448,7 @@ struct LinkPMDisplayDetails {
         allowRedisplay: STPPaymentMethodAllowRedisplay?,
         expectedPaymentMethodType: String?,
         billingPhoneNumber: String?,
+        clientAttributionMetadata: STPClientAttributionMetadata,
         completion: @escaping (Result<PaymentDetailsShareResponse, Error>
     ) -> Void) {
         retryingOnAuthError(completion: completion) { [apiClient, publishableKey] completionRetryingOnAuthErrors in
@@ -450,6 +469,7 @@ struct LinkPMDisplayDetails {
                 expectedPaymentMethodType: expectedPaymentMethodType,
                 billingPhoneNumber: billingPhoneNumber,
                 consumerAccountPublishableKey: publishableKey,
+                clientAttributionMetadata: clientAttributionMetadata,
                 completion: completionRetryingOnAuthErrors
             )
         }
@@ -670,7 +690,9 @@ struct UpdatePaymentDetailsParams {
             billingDetails: STPPaymentMethodBillingDetails? = nil,
             preferredNetwork: String? = nil
         )
-        // updating bank not supported
+        case bankAccount(
+            billingDetails: STPPaymentMethodBillingDetails
+        )
     }
 
     let isDefault: Bool?

@@ -60,6 +60,10 @@
 
 "By continuing, you agree to authorize payments pursuant to <terms>these terms</terms>." = "Dengan melanjutkan, Anda berarti setuju untuk mengotorisasi pembayaran sesuai dengan <terms>ketentuan-ketentuan berikut</terms>.";
 
+"By continuing, you agree to save your information for future purchases with %@ and <link>Link</link>. You also agree to Link's <terms>Terms</terms> and <privacy>Privacy</privacy>." = "Dengan melanjutkan, Anda setuju untuk menyimpan informasi Anda untuk pembelian di masa mendatang dengan %@ dan <link>Link</link>. Anda juga menyetujui <terms>Ketentuan</terms> dan <privacy>Privasi</privacy> Link.";
+
+"By continuing, you agree to save your information for future purchases with %@." = "Dengan melanjutkan, Anda setuju untuk menyimpan informasi Anda untuk pembelian di masa mendatang dengan %@.";
+
 "By continuing, you authorize %@ to automatically debit your Satispay Balance on a recurring basis in accordance with your purchase or subscription plan." = "Dengan melanjutkan, Anda mengizinkan %@ untuk secara otomatis mendebit Saldo Satispay Anda secara berkala sesuai dengan paket pembelian atau langganan Anda.";
 
 "By continuing, you authorize %@ to debit your Cash App account for this payment and future payments in accordance with %@'s terms, until this authorization is revoked. You can change this anytime in your Cash App Settings." = "Dengan melanjutkan, berarti Anda memberi %1$@ otorisasi untuk mendebit akun Cash App Anda bagi pembayaran ini dan pembayaran mendatang sesuai dengan ketentuan %2$@, hingga otorisasi ini dicabut. Anda dapat mengubahnya kapan saja di Pengaturan Cash App.";
@@ -126,7 +130,7 @@
 
 "Failed to connect" = "Gagal menghubungkan";
 
-"Fast, secure, 1⁠-⁠click checkout" = "Checkout sekali klik yang aman dan cepat";
+"Fast, secure checkout" = "Checkout yang cepat dan aman";
 
 "For security, please re-enter your card’s security code." = "Untuk keamanan, masukkan lagi kode keamanan kartu Anda.";
 
@@ -188,6 +192,8 @@
 
 "Pay faster at %@ and thousands of businesses." = "Bayar lebih cepat di %@ dan ribuan bisnis.";
 
+"Pay faster everywhere Link is accepted." = "Bayar lebih cepat di mana saja Link diterima.";
+
 "Pay over time with %@" = "Bayar dengan jangka waktu dengan %@";
 
 "Pay over time with Affirm" = "Bayar seiring waktu dengan Affirm";
@@ -237,8 +243,6 @@
 "Save your bank account in just a few steps." = "Simpan rekening bank Anda hanya dalam beberapa langkah.";
 
 "Save your info for secure 1-click checkout with Link" = "Simpan info Anda untuk checkout aman dengan 1 klik dengan Link";
-
-"Save your payment information with Link, and securely check out in 1-click on Link-supported sites." = "Simpan informasi pembayaran Anda dengan Link, dan proses pembayaran secara aman dalam sekali klik pada situs yang didukung Link.";
 
 "Saved" = "Disimpan";
 

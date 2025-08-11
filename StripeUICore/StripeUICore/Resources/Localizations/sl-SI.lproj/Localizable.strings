@@ -134,12 +134,16 @@
 
 "Your BLIK code is invalid." = "Vaša koda BLIK ni veljavna.";
 
-"Your ZIP is incomplete." = "Vaša poštna številka ni popolna.";
+"Your ZIP code is incomplete." = "Vaša poštna številka je nepopolna.";
+
+"Your ZIP code is invalid." = "Vaša poštna številka ni veljavna.";
 
 "Your email is invalid." = "Vaš e-poštni naslov ni veljaven.";
 
 "Your payment information will not be saved." = "Vaši podatki o plačilo ne bodo shranjeni.";
 
 "Your postal code is incomplete." = "Vaša poštna številka ni popolna.";
+
+"Your postal code is invalid." = "Vaša poštna številka je neveljavna.";
 
 "ZIP" = "Poštna številka";

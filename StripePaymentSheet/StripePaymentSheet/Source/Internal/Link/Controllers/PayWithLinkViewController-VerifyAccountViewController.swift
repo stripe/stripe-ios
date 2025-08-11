@@ -68,7 +68,7 @@ extension PayWithLinkViewController.VerifyAccountViewController: LinkVerificatio
         switch result {
         case .completed:
             coordinator?.accountUpdated(linkAccount)
-        case .canceled:
+        case .canceled, .switchAccount:
             coordinator?.logout(cancel: false)
         case .failed(let error):
             let alertController = UIAlertController(

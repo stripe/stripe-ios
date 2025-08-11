@@ -60,6 +60,10 @@
 
 "By continuing, you agree to authorize payments pursuant to <terms>these terms</terms>." = "Продължавайки, Вие се съгласявате да удостоверявате плащания съгласно <terms>тези условия</terms>.";
 
+"By continuing, you agree to save your information for future purchases with %@ and <link>Link</link>. You also agree to Link's <terms>Terms</terms> and <privacy>Privacy</privacy>." = "Продължавайки, вие се съгласявате да запазите информацията си за бъдещи покупки с %@ и <link>Link</link>. Също така се съгласявате и с <terms>Условията за ползване</terms> и <privacy>поверителност</privacy> на Link.";
+
+"By continuing, you agree to save your information for future purchases with %@." = "Продължавайки, вие се съгласявате да запазите информацията си за бъдещи покупки с %@.";
+
 "By continuing, you authorize %@ to automatically debit your Satispay Balance on a recurring basis in accordance with your purchase or subscription plan." = "Ако продължите, вие разрешавате на %@ автоматично да дебитира вашия баланс в Satispay на периодична основа в съответствие с вашата покупка или абонаментен план.";
 
 "By continuing, you authorize %@ to debit your Cash App account for this payment and future payments in accordance with %@'s terms, until this authorization is revoked. You can change this anytime in your Cash App Settings." = "Продължавайки, Вие упълномощавате %1$@ да дебитира Вашата сметка в Cash App за това плащане и за бъдещи плащания в съответствие с условията на %2$@, докато това упълномощаване не бъде оттеглено. Можете да промените това по всяко време в настройките на Cash App.";
@@ -126,7 +130,7 @@
 
 "Failed to connect" = "Неуспешно свързване";
 
-"Fast, secure, 1⁠-⁠click checkout" = "Бързо, защитено финализиране на плащане с 1 щракване";
+"Fast, secure checkout" = "Бързо и сигурно финализиране на плащане";
 
 "For security, please re-enter your card’s security code." = "От съображения за сигурност, моля, въведете отново защитния код на Вашата банкова карта.";
 
@@ -188,6 +192,8 @@
 
 "Pay faster at %@ and thousands of businesses." = "Плащайте по-бързо в %@ и хиляди други фирми.";
 
+"Pay faster everywhere Link is accepted." = "Плащайте по-бързо навсякъде, където се приема Link.";
+
 "Pay over time with %@" = "Плащане на разсрочени вноски с %@";
 
 "Pay over time with Affirm" = "Плащане на разсрочени вноски с Affirm";
@@ -237,8 +243,6 @@
 "Save your bank account in just a few steps." = "Запазете банковата си сметка само с няколко стъпки.";
 
 "Save your info for secure 1-click checkout with Link" = "Запазете Вашата информация за сигурно плащане с едно щракване с Link";
-
-"Save your payment information with Link, and securely check out in 1-click on Link-supported sites." = "Запазете информацията си за плащане с Link и сигурно финализирайте плащания с 1 щракване в сайтовете, поддържани от Link.";
 
 "Saved" = "Запазено";
 

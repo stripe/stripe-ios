@@ -44,7 +44,7 @@ final class LinkSignUpViewController: UIViewController {
         label.numberOfLines = 0
         label.textAlignment = .center
         label.text = STPLocalizedString(
-            "Fast, secure, 1⁠-⁠click checkout",
+            "Fast, secure checkout",
             "Title for the Link signup screen"
         )
         return label
@@ -57,7 +57,10 @@ final class LinkSignUpViewController: UIViewController {
         label.adjustsFontForContentSizeCategory = true
         label.numberOfLines = 0
         label.textAlignment = .center
-        label.text = String.Localized.save_your_payment_information_with_link
+        label.text = STPLocalizedString(
+            "Pay faster everywhere Link is accepted.",
+            "Subtitle for the Link signup screen"
+        )
         return label
     }()
 

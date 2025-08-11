@@ -48,8 +48,6 @@
 
 "To scan your card, allow camera access in Settings." = "要掃描您的銀行卡，在「設置」中啟用照相機。";
 
-"Your ZIP is invalid." = "您的郵區編號無效。";
-
 "Your card has expired." = "您的銀行卡已過期。";
 
 "Your card number is incomplete." = "您的銀行卡號不完整。";
@@ -67,8 +65,6 @@
 "Your card's security code is incomplete." = "您的銀行卡的安全碼不完整。";
 
 "Your card's security code is invalid." = "您的銀行卡的安全碼無效。";
-
-"Your postal code is invalid." = "您的郵區編號無效。";
 
 "card number" = "卡號";
 

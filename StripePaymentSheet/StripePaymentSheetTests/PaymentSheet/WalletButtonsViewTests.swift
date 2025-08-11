@@ -21,6 +21,7 @@ class WalletButtonsViewTests: XCTestCase {
             unactivatedPaymentMethodTypes: [],
             countryCode: nil,
             merchantCountryCode: nil,
+            merchantLogoUrl: nil,
             linkSettings: nil,
             experimentsData: nil,
             flags: [:],
@@ -29,6 +30,7 @@ class WalletButtonsViewTests: XCTestCase {
             isApplePayEnabled: true,
             externalPaymentMethods: [],
             customPaymentMethods: [],
+            passiveCaptcha: nil,
             customer: nil
         )
 
@@ -58,6 +60,7 @@ class WalletButtonsViewTests: XCTestCase {
             unactivatedPaymentMethodTypes: [],
             countryCode: nil,
             merchantCountryCode: nil,
+            merchantLogoUrl: nil,
             linkSettings: nil,
             experimentsData: nil,
             flags: [:],
@@ -66,6 +69,7 @@ class WalletButtonsViewTests: XCTestCase {
             isApplePayEnabled: true,
             externalPaymentMethods: [],
             customPaymentMethods: [],
+            passiveCaptcha: nil,
             customer: nil
         )
 
@@ -95,6 +99,7 @@ class WalletButtonsViewTests: XCTestCase {
             unactivatedPaymentMethodTypes: [],
             countryCode: nil,
             merchantCountryCode: nil,
+            merchantLogoUrl: nil,
             linkSettings: nil,
             experimentsData: nil,
             flags: [:],
@@ -103,6 +108,7 @@ class WalletButtonsViewTests: XCTestCase {
             isApplePayEnabled: true,
             externalPaymentMethods: [],
             customPaymentMethods: [],
+            passiveCaptcha: nil,
             customer: nil
         )
 
@@ -132,6 +138,7 @@ class WalletButtonsViewTests: XCTestCase {
             unactivatedPaymentMethodTypes: [],
             countryCode: nil,
             merchantCountryCode: nil,
+            merchantLogoUrl: nil,
             linkSettings: nil,
             experimentsData: nil,
             flags: [:],
@@ -140,6 +147,7 @@ class WalletButtonsViewTests: XCTestCase {
             isApplePayEnabled: true,
             externalPaymentMethods: [],
             customPaymentMethods: [],
+            passiveCaptcha: nil,
             customer: nil
         )
 
@@ -178,6 +186,7 @@ class WalletButtonsViewTests: XCTestCase {
             unactivatedPaymentMethodTypes: [],
             countryCode: nil,
             merchantCountryCode: nil,
+            merchantLogoUrl: nil,
             linkSettings: nil,
             experimentsData: nil,
             flags: [:],
@@ -186,6 +195,7 @@ class WalletButtonsViewTests: XCTestCase {
             isApplePayEnabled: true,
             externalPaymentMethods: [],
             customPaymentMethods: [],
+            passiveCaptcha: nil,
             customer: nil
         )
 

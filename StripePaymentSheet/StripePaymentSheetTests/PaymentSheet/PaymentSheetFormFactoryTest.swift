@@ -1836,7 +1836,13 @@ class PaymentSheetFormFactoryTest: XCTestCase {
                 elementsSession: ._testValue(intent: intent, isLinkPassthroughModeEnabled: false),
                 configuration: .paymentElement(configuration),
                 paymentMethod: .stripe(.card),
-                linkAccount: PaymentSheetLinkAccount(email: "example@example.com", session: nil, publishableKey: nil, useMobileEndpoints: false),
+                linkAccount: PaymentSheetLinkAccount(
+                    email: "example@example.com",
+                    session: nil,
+                    publishableKey: nil,
+                    displayablePaymentDetails: nil,
+                    useMobileEndpoints: false
+                ),
                 accountService: LinkAccountService._testValue(),
                 analyticsHelper: ._testValue(analyticsClient: analyticsClient)
             ).make()
@@ -1850,6 +1856,52 @@ class PaymentSheetFormFactoryTest: XCTestCase {
 
         let linkForm_deferred_pi_pmo_sfu_card_none = makeForm(intent: ._testDeferredIntent(paymentMethodTypes: [.link, .card], paymentMethodOptionsSetupFutureUsage: [.link: .offSession, .card: .none]))
         XCTAssertTrue(linkForm_deferred_pi_pmo_sfu_card_none.getMandateElement() != nil)
+
+        let linkForm_deferred_pi_top_level_sfu_pmo_sfu_none_card_sfu = makeForm(intent: ._testDeferredIntent(paymentMethodTypes: [.link, .card], setupFutureUsage: .offSession, paymentMethodOptionsSetupFutureUsage: [.link: .none, .card: .offSession]))
+        XCTAssertTrue(linkForm_deferred_pi_top_level_sfu_pmo_sfu_none_card_sfu.getMandateElement() == nil)
+    }
+
+    func testLinkPMModeCardFormDoesNotContainMandateText() {
+        let expectation = expectation(description: "Load specs")
+        AddressSpecProvider.shared.loadAddressSpecs {
+            FormSpecProvider.shared.load { _ in
+                expectation.fulfill()
+            }
+        }
+        waitForExpectations(timeout: 1)
+
+        var configuration = PaymentSheet.Configuration._testValue_MostPermissive()
+        configuration.customer = .init(id: "id", ephemeralKeySecret: "ek")
+        configuration.linkPaymentMethodsOnly = true
+        configuration.termsDisplay = [.card: .never]
+        let analyticsClient = STPAnalyticsClient()
+
+        func makeForm(intent: Intent) -> PaymentMethodElement {
+            return PaymentSheetFormFactory(
+                intent: intent,
+                elementsSession: ._testValue(intent: intent, isLinkPassthroughModeEnabled: false),
+                configuration: .paymentElement(configuration),
+                paymentMethod: .stripe(.card),
+                linkAccount: PaymentSheetLinkAccount(
+                    email: "example@example.com",
+                    session: nil,
+                    publishableKey: nil,
+                    displayablePaymentDetails: nil,
+                    useMobileEndpoints: false
+                ),
+                accountService: LinkAccountService._testValue(),
+                analyticsHelper: ._testValue(analyticsClient: analyticsClient)
+            ).make()
+        }
+        // Below tests show that only link's PMO SFU is being checked and not card
+        let linkForm_pi_pmo_sfu_card_none = makeForm(intent: ._testPaymentIntent(paymentMethodTypes: [.link, .card], paymentMethodOptionsSetupFutureUsage: [.link: "off_session", .card: "none"]))
+        XCTAssertTrue(linkForm_pi_pmo_sfu_card_none.getMandateElement() == nil)
+
+        let linkForm_pi_top_level_sfu_pmo_sfu_none_card_unset = makeForm(intent: ._testPaymentIntent(paymentMethodTypes: [.link, .card], setupFutureUsage: .offSession, paymentMethodOptionsSetupFutureUsage: [.link: "none"]))
+        XCTAssertTrue(linkForm_pi_top_level_sfu_pmo_sfu_none_card_unset.getMandateElement() == nil)
+
+        let linkForm_deferred_pi_pmo_sfu_card_none = makeForm(intent: ._testDeferredIntent(paymentMethodTypes: [.link, .card], paymentMethodOptionsSetupFutureUsage: [.link: .offSession, .card: .none]))
+        XCTAssertTrue(linkForm_deferred_pi_pmo_sfu_card_none.getMandateElement() == nil)
 
         let linkForm_deferred_pi_top_level_sfu_pmo_sfu_none_card_sfu = makeForm(intent: ._testDeferredIntent(paymentMethodTypes: [.link, .card], setupFutureUsage: .offSession, paymentMethodOptionsSetupFutureUsage: [.link: .none, .card: .offSession]))
         XCTAssertTrue(linkForm_deferred_pi_top_level_sfu_pmo_sfu_none_card_sfu.getMandateElement() == nil)
@@ -1874,7 +1926,13 @@ class PaymentSheetFormFactoryTest: XCTestCase {
                 elementsSession: ._testValue(intent: intent, isLinkPassthroughModeEnabled: true),
                 configuration: .paymentElement(configuration),
                 paymentMethod: .stripe(.card),
-                linkAccount: PaymentSheetLinkAccount(email: "example@example.com", session: nil, publishableKey: nil, useMobileEndpoints: false),
+                linkAccount: PaymentSheetLinkAccount(
+                    email: "example@example.com",
+                    session: nil,
+                    publishableKey: nil,
+                    displayablePaymentDetails: nil,
+                    useMobileEndpoints: false
+                ),
                 accountService: LinkAccountService._testValue(),
                 analyticsHelper: ._testValue(analyticsClient: analyticsClient)
             ).make()
@@ -1888,6 +1946,50 @@ class PaymentSheetFormFactoryTest: XCTestCase {
 
         let cardForm_deferred_pi_pmo_sfu_link_none = makeForm(intent: ._testDeferredIntent(paymentMethodTypes: [.link, .card], paymentMethodOptionsSetupFutureUsage: [.card: .offSession, .link: .none]))
         XCTAssertTrue(cardForm_deferred_pi_pmo_sfu_link_none.getMandateElement() != nil)
+
+        let cardForm_deferred_pi_top_level_sfu_pmo_sfu_none_link_sfu = makeForm(intent: ._testDeferredIntent(paymentMethodTypes: [.link, .card], setupFutureUsage: .offSession, paymentMethodOptionsSetupFutureUsage: [.card: .none, .link: .offSession]))
+        XCTAssertTrue(cardForm_deferred_pi_top_level_sfu_pmo_sfu_none_link_sfu.getMandateElement() == nil)
+    }
+    func testLinkPassthroughModeCardFormDoesNotContainMandateText() {
+        let expectation = expectation(description: "Load specs")
+        AddressSpecProvider.shared.loadAddressSpecs {
+            FormSpecProvider.shared.load { _ in
+                expectation.fulfill()
+            }
+        }
+        waitForExpectations(timeout: 1)
+
+        var configuration = PaymentSheet.Configuration._testValue_MostPermissive()
+        configuration.customer = .init(id: "id", ephemeralKeySecret: "ek")
+        configuration.termsDisplay = [.card: .never]
+        let analyticsClient = STPAnalyticsClient()
+
+        func makeForm(intent: Intent) -> PaymentMethodElement {
+            return PaymentSheetFormFactory(
+                intent: intent,
+                elementsSession: ._testValue(intent: intent, isLinkPassthroughModeEnabled: true),
+                configuration: .paymentElement(configuration),
+                paymentMethod: .stripe(.card),
+                linkAccount: PaymentSheetLinkAccount(
+                    email: "example@example.com",
+                    session: nil,
+                    publishableKey: nil,
+                    displayablePaymentDetails: nil,
+                    useMobileEndpoints: false
+                ),
+                accountService: LinkAccountService._testValue(),
+                analyticsHelper: ._testValue(analyticsClient: analyticsClient)
+            ).make()
+        }
+        // Below tests show that only cards's PMO SFU is being checked and not link
+        let cardForm_pi_pmo_sfu_link_none = makeForm(intent: ._testPaymentIntent(paymentMethodTypes: [.link, .card], paymentMethodOptionsSetupFutureUsage: [.card: "off_session", .link: "none"]))
+        XCTAssertTrue(cardForm_pi_pmo_sfu_link_none.getMandateElement() == nil)
+
+        let cardForm_pi_top_level_sfu_pmo_sfu_none_link_unset = makeForm(intent: ._testPaymentIntent(paymentMethodTypes: [.link, .card], setupFutureUsage: .offSession, paymentMethodOptionsSetupFutureUsage: [.card: "none"]))
+        XCTAssertTrue(cardForm_pi_top_level_sfu_pmo_sfu_none_link_unset.getMandateElement() == nil)
+
+        let cardForm_deferred_pi_pmo_sfu_link_none = makeForm(intent: ._testDeferredIntent(paymentMethodTypes: [.link, .card], paymentMethodOptionsSetupFutureUsage: [.card: .offSession, .link: .none]))
+        XCTAssertTrue(cardForm_deferred_pi_pmo_sfu_link_none.getMandateElement() == nil)
 
         let cardForm_deferred_pi_top_level_sfu_pmo_sfu_none_link_sfu = makeForm(intent: ._testDeferredIntent(paymentMethodTypes: [.link, .card], setupFutureUsage: .offSession, paymentMethodOptionsSetupFutureUsage: [.card: .none, .link: .offSession]))
         XCTAssertTrue(cardForm_deferred_pi_top_level_sfu_pmo_sfu_none_link_sfu.getMandateElement() == nil)
@@ -1936,6 +2038,52 @@ class PaymentSheetFormFactoryTest: XCTestCase {
 
         let cardForm_si = makeForm(intent: ._testSetupIntent(paymentMethodTypes: [.card]))
         XCTAssertTrue(cardForm_si.getMandateElement() != nil)
+    }
+
+    func testCardFormDoesNotContainMandateText() {
+        let expectation = expectation(description: "Load specs")
+        AddressSpecProvider.shared.loadAddressSpecs {
+            FormSpecProvider.shared.load { _ in
+                expectation.fulfill()
+            }
+        }
+        waitForExpectations(timeout: 1)
+
+        var configuration = PaymentSheet.Configuration._testValue_MostPermissive()
+        configuration.customer = .init(id: "id", ephemeralKeySecret: "ek")
+        configuration.termsDisplay = [.card: .never]
+        let analyticsClient = STPAnalyticsClient()
+
+        func makeForm(intent: Intent) -> PaymentMethodElement {
+            return PaymentSheetFormFactory(
+                intent: intent,
+                elementsSession: ._testValue(intent: intent),
+                configuration: .paymentElement(configuration),
+                paymentMethod: .stripe(.card),
+                accountService: LinkAccountService._testValue(),
+                analyticsHelper: ._testValue(analyticsClient: analyticsClient)
+            ).make()
+        }
+        let cardForm_pi = makeForm(intent: ._testPaymentIntent(paymentMethodTypes: [.card]))
+        XCTAssertTrue(cardForm_pi.getMandateElement() == nil)
+
+        let cardForm_pi_sfu = makeForm(intent: ._testPaymentIntent(paymentMethodTypes: [.card], setupFutureUsage: .offSession))
+        XCTAssertTrue(cardForm_pi_sfu.getMandateElement() == nil)
+
+        let cardForm_pi_pmo_sfu = makeForm(intent: ._testPaymentIntent(paymentMethodTypes: [.card], paymentMethodOptionsSetupFutureUsage: [.card: "off_session"]))
+        XCTAssertTrue(cardForm_pi_pmo_sfu.getMandateElement() == nil)
+
+        let cardForm_pi_top_level_sfu_pmo_sfu_none = makeForm(intent: ._testPaymentIntent(paymentMethodTypes: [.card], setupFutureUsage: .offSession, paymentMethodOptionsSetupFutureUsage: [.card: "none"]))
+        XCTAssertTrue(cardForm_pi_top_level_sfu_pmo_sfu_none.getMandateElement() == nil)
+
+        let cardForm_deferred_pi_pmo_sfu = makeForm(intent: ._testDeferredIntent(paymentMethodTypes: [.card], paymentMethodOptionsSetupFutureUsage: [.card: .offSession]))
+        XCTAssertTrue(cardForm_deferred_pi_pmo_sfu.getMandateElement() == nil)
+
+        let cardForm_deferred_pi_top_level_sfu_pmo_sfu_none = makeForm(intent: ._testDeferredIntent(paymentMethodTypes: [.card], setupFutureUsage: .offSession, paymentMethodOptionsSetupFutureUsage: [.card: .none]))
+        XCTAssertTrue(cardForm_deferred_pi_top_level_sfu_pmo_sfu_none.getMandateElement() == nil)
+
+        let cardForm_si = makeForm(intent: ._testSetupIntent(paymentMethodTypes: [.card]))
+        XCTAssertTrue(cardForm_si.getMandateElement() == nil)
     }
 
     func testiDEALFormContainsMandateText() {

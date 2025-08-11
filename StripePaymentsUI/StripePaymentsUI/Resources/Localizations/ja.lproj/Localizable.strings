@@ -48,8 +48,6 @@
 
 "To scan your card, allow camera access in Settings." = "カードをスキャンするには、設定でカメラへのアクセスを許可してください。";
 
-"Your ZIP is invalid." = "郵便番号が無効です。";
-
 "Your card has expired." = "カードの有効期限が切れています。";
 
 "Your card number is incomplete." = "カード番号に不備があります。";
@@ -67,8 +65,6 @@
 "Your card's security code is incomplete." = "カードのセキュリティコードに不備があります。";
 
 "Your card's security code is invalid." = "カードのセキュリティコードが無効です。";
-
-"Your postal code is invalid." = "郵便番号が無効です";
 
 "card number" = "カード番号";
 
