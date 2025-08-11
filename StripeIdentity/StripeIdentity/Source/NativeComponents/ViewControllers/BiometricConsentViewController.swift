@@ -12,7 +12,9 @@ import UIKit
 
 final class BiometricConsentViewController: IdentityFlowViewController {
 
+    private let contentContainer = UIView()
     private let multilineContent = MultilineIconLabelHTMLView()
+    private let privacyPolicyView = HTMLTextView()
 
     let brandLogo: UIImage
     let consentContent: StripeAPI.VerificationPageStaticContentConsentPage
@@ -21,6 +23,7 @@ final class BiometricConsentViewController: IdentityFlowViewController {
         static let contentHorizontalPadding: CGFloat = 32
         static let contentTopPadding: CGFloat = 16
         static let contentBottomPadding: CGFloat = 8
+        static let privacyPolicyTopPadding: CGFloat = 24
     }
 
     private var consentSelection: Bool?
@@ -110,17 +113,10 @@ final class BiometricConsentViewController: IdentityFlowViewController {
                 titleText: consentContent.title
             ),
             contentViewModel: .init(
-                view: multilineContent,
+                view: contentContainer,
                 inset: .init(top: Style.contentTopPadding, leading: Style.contentHorizontalPadding, bottom: Style.contentBottomPadding, trailing: Style.contentHorizontalPadding)
             ),
             buttons: buttons,
-            buttonTopContentViewModel: .init(
-                text: consentContent.privacyPolicy,
-                style: .html(makeStyle: IdentityFlowView.privacyPolicyLineContentStyle),
-                didOpenURL: { [weak self] url in
-                    self?.openInSafariViewController(url: url)
-                }
-            ),
             scrollViewDelegate: self,
             flowViewDelegate: self
         )
@@ -134,6 +130,10 @@ final class BiometricConsentViewController: IdentityFlowViewController {
         self.brandLogo = brandLogo
         self.consentContent = consentContent
         super.init(sheetController: sheetController, analyticsScreenName: .biometricConsent)
+        
+        // Set up the content container with both main content and privacy policy
+        setupContentContainer()
+        
         // If HTML fails to render, throw error since it's unacceptable to not
         // display consent copy
         try multilineContent.configure(
@@ -145,6 +145,17 @@ final class BiometricConsentViewController: IdentityFlowViewController {
                 self?.presentBottomsheet(withUrl: url)
             }
         )
+        
+        // Configure privacy policy content to be part of scrollable content
+        try privacyPolicyView.configure(
+            with: .init(
+                text: consentContent.privacyPolicy,
+                style: .html(makeStyle: IdentityFlowView.privacyPolicyLineContentStyle),
+                didOpenURL: { [weak self] url in
+                    self?.openInSafariViewController(url: url)
+                }
+            )
+        )
 
         updateUI()
     }
@@ -153,6 +164,25 @@ final class BiometricConsentViewController: IdentityFlowViewController {
         coder: NSCoder
     ) {
         fatalError("init(coder:) has not been implemented")
+    }
+    
+    private func setupContentContainer() {
+        contentContainer.addSubview(multilineContent)
+        contentContainer.addSubview(privacyPolicyView)
+        
+        multilineContent.translatesAutoresizingMaskIntoConstraints = false
+        privacyPolicyView.translatesAutoresizingMaskIntoConstraints = false
+        
+        NSLayoutConstraint.activate([
+            multilineContent.topAnchor.constraint(equalTo: contentContainer.topAnchor),
+            multilineContent.leadingAnchor.constraint(equalTo: contentContainer.leadingAnchor),
+            multilineContent.trailingAnchor.constraint(equalTo: contentContainer.trailingAnchor),
+            
+            privacyPolicyView.topAnchor.constraint(equalTo: multilineContent.bottomAnchor, constant: Style.privacyPolicyTopPadding),
+            privacyPolicyView.leadingAnchor.constraint(equalTo: contentContainer.leadingAnchor),
+            privacyPolicyView.trailingAnchor.constraint(equalTo: contentContainer.trailingAnchor),
+            privacyPolicyView.bottomAnchor.constraint(equalTo: contentContainer.bottomAnchor)
+        ])
     }
 }
 
