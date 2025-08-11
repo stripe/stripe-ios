@@ -32,4 +32,3 @@ public struct PaymentMethodPreview {
         self.sublabel = sublabel
     }
 }
-
