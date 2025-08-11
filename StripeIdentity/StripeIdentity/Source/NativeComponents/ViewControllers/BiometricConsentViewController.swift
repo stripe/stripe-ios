@@ -179,8 +179,9 @@ final class BiometricConsentViewController: IdentityFlowViewController {
             multilineContent.trailingAnchor.constraint(equalTo: contentContainer.trailingAnchor),
             
             privacyPolicyView.topAnchor.constraint(equalTo: multilineContent.bottomAnchor, constant: Style.privacyPolicyTopPadding),
-            privacyPolicyView.leadingAnchor.constraint(equalTo: contentContainer.leadingAnchor),
-            privacyPolicyView.trailingAnchor.constraint(equalTo: contentContainer.trailingAnchor),
+            privacyPolicyView.leadingAnchor.constraint(greaterThanOrEqualTo: contentContainer.leadingAnchor),
+            privacyPolicyView.trailingAnchor.constraint(lessThanOrEqualTo: contentContainer.trailingAnchor),
+            privacyPolicyView.centerXAnchor.constraint(equalTo: contentContainer.centerXAnchor),
             privacyPolicyView.bottomAnchor.constraint(equalTo: contentContainer.bottomAnchor)
         ])
     }
