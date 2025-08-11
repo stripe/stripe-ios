@@ -241,6 +241,8 @@ class ConfirmButton: UIView {
         } else if case .disabled = state {
             // When the disabled button is tapped, trigger validation error display
             didTapWhenDisabled()
+            // Resign first responder (as we would if the button was disabled)
+            superview?.endEditing(true)
         }
     }
 

@@ -790,7 +790,7 @@ class CustomerSheetUITest: XCTestCase {
         expField.tap()
         expField.typeText(XCUIKeyboardKey.delete.rawValue)
         expField.typeText(XCUIKeyboardKey.delete.rawValue)
-        XCTAssertTrue(app.buttons["Save"].waitForExistenceAndTap(timeout: 3.0))
+        XCTAssertTrue(app.buttons["Save"].waitForExistence(timeout: 3.0))
         XCTAssertTrue(app.staticTexts["Your card's expiration date is incomplete."].waitForExistence(timeout: 3.0))
 
         // Test expired card
