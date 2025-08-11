@@ -259,4 +259,3 @@ extension BiometricConsentViewController: IdentityFlowViewDelegate {
         }
     }
 }
-
