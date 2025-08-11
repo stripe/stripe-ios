@@ -12,7 +12,14 @@ import UIKit
 
 final class BiometricConsentViewController: IdentityFlowViewController {
 
-    private let contentContainer = UIView()
+    private let contentStackView: UIStackView = {
+        let stackView = UIStackView()
+        stackView.axis = .vertical
+        stackView.alignment = .fill
+        stackView.spacing = 24
+        return stackView
+    }()
+    
     private let multilineContent = MultilineIconLabelHTMLView()
     private let privacyPolicyView = HTMLTextView()
 
@@ -23,7 +30,6 @@ final class BiometricConsentViewController: IdentityFlowViewController {
         static let contentHorizontalPadding: CGFloat = 32
         static let contentTopPadding: CGFloat = 16
         static let contentBottomPadding: CGFloat = 8
-        static let privacyPolicyTopPadding: CGFloat = 24
     }
 
     private var consentSelection: Bool?
@@ -113,7 +119,7 @@ final class BiometricConsentViewController: IdentityFlowViewController {
                 titleText: consentContent.title
             ),
             contentViewModel: .init(
-                view: contentContainer,
+                view: contentStackView,
                 inset: .init(top: Style.contentTopPadding, leading: Style.contentHorizontalPadding, bottom: Style.contentBottomPadding, trailing: Style.contentHorizontalPadding)
             ),
             buttons: buttons,
@@ -131,8 +137,8 @@ final class BiometricConsentViewController: IdentityFlowViewController {
         self.consentContent = consentContent
         super.init(sheetController: sheetController, analyticsScreenName: .biometricConsent)
         
-        // Set up the content container with both main content and privacy policy
-        setupContentContainer()
+        // Set up the content stack view with both main content and privacy policy
+        setupContentStackView()
         
         // If HTML fails to render, throw error since it's unacceptable to not
         // display consent copy
@@ -166,24 +172,23 @@ final class BiometricConsentViewController: IdentityFlowViewController {
         fatalError("init(coder:) has not been implemented")
     }
     
-    private func setupContentContainer() {
-        contentContainer.addSubview(multilineContent)
-        contentContainer.addSubview(privacyPolicyView)
+    private func setupContentStackView() {
+        contentStackView.addArrangedSubview(multilineContent)
         
-        multilineContent.translatesAutoresizingMaskIntoConstraints = false
+        // Create a container for the privacy policy with centered alignment
+        let privacyPolicyContainer = UIView()
+        privacyPolicyContainer.addSubview(privacyPolicyView)
         privacyPolicyView.translatesAutoresizingMaskIntoConstraints = false
         
         NSLayoutConstraint.activate([
-            multilineContent.topAnchor.constraint(equalTo: contentContainer.topAnchor),
-            multilineContent.leadingAnchor.constraint(equalTo: contentContainer.leadingAnchor),
-            multilineContent.trailingAnchor.constraint(equalTo: contentContainer.trailingAnchor),
-            
-            privacyPolicyView.topAnchor.constraint(equalTo: multilineContent.bottomAnchor, constant: Style.privacyPolicyTopPadding),
-            privacyPolicyView.leadingAnchor.constraint(greaterThanOrEqualTo: contentContainer.leadingAnchor),
-            privacyPolicyView.trailingAnchor.constraint(lessThanOrEqualTo: contentContainer.trailingAnchor),
-            privacyPolicyView.centerXAnchor.constraint(equalTo: contentContainer.centerXAnchor),
-            privacyPolicyView.bottomAnchor.constraint(equalTo: contentContainer.bottomAnchor)
+            privacyPolicyView.topAnchor.constraint(equalTo: privacyPolicyContainer.topAnchor),
+            privacyPolicyView.leadingAnchor.constraint(greaterThanOrEqualTo: privacyPolicyContainer.leadingAnchor),
+            privacyPolicyView.trailingAnchor.constraint(lessThanOrEqualTo: privacyPolicyContainer.trailingAnchor),
+            privacyPolicyView.centerXAnchor.constraint(equalTo: privacyPolicyContainer.centerXAnchor),
+            privacyPolicyView.bottomAnchor.constraint(equalTo: privacyPolicyContainer.bottomAnchor)
         ])
+        
+        contentStackView.addArrangedSubview(privacyPolicyContainer)
     }
 }
 
