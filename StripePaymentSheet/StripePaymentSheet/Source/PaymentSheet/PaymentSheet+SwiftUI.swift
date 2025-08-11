@@ -57,7 +57,7 @@ extension View {
     /// Presents a sheet for a customer to select a payment option.
     /// - Parameter isPresented: A binding to whether the sheet is presented.
     /// - Parameter paymentSheetFlowController: A PaymentSheet.FlowController to present.
-    /// - Parameter onSheetDismissed: Called after the payment options sheet is dismissed. The didCancel parameter indicates whether the user cancelled (true) or selected a payment method (false).
+    /// - Parameter onSheetDismissed: Called after the payment options sheet is dismissed. The didCancel parameter is "true" if the user canceled the sheet (e.g. by tapping the close button or tapping outside the sheet), and "false" if they tapped the primary ("Continue") button.
     public func paymentOptionsSheet(
         isPresented: Binding<Bool>,
         paymentSheetFlowController: PaymentSheet.FlowController,
@@ -181,7 +181,7 @@ extension PaymentSheet.FlowController {
         /// A button which presents a sheet for a customer to select a payment method.
         /// This is a convenience wrapper for the .paymentOptionsSheet() ViewModifier.
         /// - Parameter paymentSheetFlowController: A PaymentSheet.FlowController to present.
-        /// - Parameter onSheetDismissed: Called after the payment options sheet is dismissed. The didCancel parameter indicates whether the user cancelled (true) or selected a payment method (false).
+        /// - Parameter onSheetDismissed: Called after the payment options sheet is dismissed. The didCancel parameter is "true" if the user canceled the sheet (e.g. by tapping the close button or tapping outside the sheet), and "false" if they tapped the primary ("Continue") button.
         /// - Parameter content: The content of the view.
         public init(
             paymentSheetFlowController: PaymentSheet.FlowController,

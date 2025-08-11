@@ -399,7 +399,7 @@ extension PaymentSheet {
 
         /// Presents a sheet for a customer to select a payment option.
         /// - Parameter presentingViewController: The view controller to present the payment options sheet from
-        /// - Parameter completion: Called after the sheet is dismissed. The didCancel parameter indicates whether the user cancelled (true) or selected a payment method (false)
+        /// - Parameter completion: Called after the sheet is dismissed. The didCancel parameter is "true" if the user canceled the sheet (e.g. by tapping the close button or tapping outside the sheet), and "false" if they tapped the primary ("Continue") button.
         public func presentPaymentOptions(
             from presentingViewController: UIViewController,
             completion: ((_ didCancel: Bool) -> Void)? = nil
