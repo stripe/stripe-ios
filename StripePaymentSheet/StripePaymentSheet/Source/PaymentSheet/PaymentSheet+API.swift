@@ -366,7 +366,7 @@ extension PaymentSheet {
                         paymentHandler: paymentHandler,
                         isFlowController: isFlowController,
                         completion: { psResult, confirmationType in
-                            if case .completed = psResult {
+                            if case .completed = psResult, intentConfig.preparePaymentMethodHandler == nil {
                                 linkAccount?.logout()
                             }
                             completion(psResult, confirmationType)
@@ -428,7 +428,7 @@ extension PaymentSheet {
                         paymentHandler: paymentHandler,
                         isFlowController: isFlowController,
                         completion: { psResult, confirmationType in
-                            if case .completed = psResult {
+                            if case .completed = psResult, intentConfig.preparePaymentMethodHandler == nil {
                                 linkAccount?.logout()
                             }
                             completion(psResult, confirmationType)
