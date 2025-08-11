@@ -69,15 +69,30 @@ extension DownloadManager {
 
         if let updateHandler {
             Task {
-                await downloadImageAsync(url: url, placeholder: placeholder, updateHandler: updateHandler)
+                if let image = try? await downloadImageSkippingCacheRead(url: url) {
+                    updateHandler(image)
+                }
             }
         }
         // Immediately return the cached image or a placeholder. When the download operation completes `updateHandler` will be called with the downloaded image.
         return cachedImage ?? placeholder
     }
 
-    // Common download function
-    private func downloadImage(url: URL, placeholder: UIImage) async -> UIImage {
+    /// Downloads an image from a provided URL asynchronously.
+    /// - Parameter url: The URL from which to download the image.
+    /// - Returns: The downloaded image.
+    /// Throws if an error occurs while downloading the image.
+    public func downloadImage(url: URL) async throws -> UIImage {
+        if let cachedImage = imageCacheLock.withLock( { imageCache[url] }) {
+            return cachedImage
+        }
+
+        return try await downloadImageSkippingCacheRead(url: url)
+    }
+
+    // Common download functions
+
+    private func downloadImageSkippingCacheRead(url: URL) async throws -> UIImage {
         do {
             let (data, _) = try await session.data(from: url)
             let image = try UIImage.from(imageData: data) // Throws a Error.failedToMakeImageFromData
@@ -94,15 +109,7 @@ extension DownloadManager {
                                               error: error,
                                               additionalNonPIIParams: ["url": url.absoluteString])
             analyticsClient.log(analytic: errorAnalytic)
-            return placeholder
-        }
-    }
-
-    private func downloadImageAsync(url: URL, placeholder: UIImage, updateHandler: UpdateImageHandler) async {
-        let image = await downloadImage(url: url, placeholder: placeholder)
-        // Only invoke the `updateHandler` if the fetched image differs from the placeholder we already vended
-        if !image.isEqualToImage(image: placeholder) {
-            updateHandler(image)
+            throw error
         }
     }
 
