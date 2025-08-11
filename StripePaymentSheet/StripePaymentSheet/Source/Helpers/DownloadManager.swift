@@ -140,10 +140,6 @@ extension DownloadManager {
 
 // MARK: UIImage helpers
 private extension UIImage {
-    func isEqualToImage(image: UIImage) -> Bool {
-        return self.pngData() == image.pngData()
-    }
-
     static func from(imageData: Data) throws -> UIImage {
         #if os(visionOS)
         let scale = 1.0
