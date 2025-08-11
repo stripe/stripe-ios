@@ -199,16 +199,14 @@ public final class CryptoOnrampCoordinator: CryptoOnrampCoordinatorProtocol {
 
 private extension CryptoOnrampCoordinator {
     func fetchMerchantImageWithFallback() async -> UIImage {
-        // TODO: obtain a more permanent fallback image, and remove force unwrapping.
-        let fallbackImage = UIImage(systemName: "wallet.bifold")!
         guard let merchantLogoUrl = await linkController.merchantLogoUrl else {
-            return fallbackImage
+            return .wallet
         }
 
         do {
             return try await DownloadManager.sharedManager.downloadImage(url: merchantLogoUrl)
         } catch {
-            return fallbackImage
+            return .wallet
         }
     }
 }
