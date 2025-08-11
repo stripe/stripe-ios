@@ -73,7 +73,8 @@ struct CryptoOnrampExampleView: View {
                             HiddenNavigationLink(
                                 destination: AuthenticatedView(
                                     coordinator: coordinator,
-                                    customerId: customerId
+                                    customerId: customerId,
+                                    email: email
                                 ),
                                 isActive: $showAuthenticatedView
                             )
@@ -100,9 +101,9 @@ struct CryptoOnrampExampleView: View {
         Task {
             do {
                 let appearance = LinkAppearance(
-                    colors: .init(primary: .systemPink, selectedBorder: .white),
+                    colors: .init(primary: .systemPink, selectedBorder: .black),
                     primaryButton: .init(cornerRadius: 0, height: 200),
-                    style: .alwaysDark
+                    style: .automatic
                 )
                 let coordinator = try await CryptoOnrampCoordinator.create(appearance: appearance)
 

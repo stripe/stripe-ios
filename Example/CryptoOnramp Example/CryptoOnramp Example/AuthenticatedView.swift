@@ -22,9 +22,13 @@ struct AuthenticatedView: View {
     /// The customer id of the authenticated user.
     let customerId: String
 
+    /// The email address used earlier in the flow.
+    let email: String
+
     @State private var errorMessage: String?
     @State private var isIdentityVerificationComplete = false
     @State private var showKYCView = false
+    @State private var selectedPaymentMethod: PaymentMethodSelectionResult.PaymentMethodPreview?
 
     @Environment(\.isLoading) private var isLoading
 
@@ -64,6 +68,17 @@ struct AuthenticatedView: View {
 
                 if let errorMessage {
                     ErrorMessageView(message: errorMessage)
+                }
+
+                if let selectedPaymentMethod {
+                    PaymentMethodCardView(preview: selectedPaymentMethod)
+                } else {
+                    Button("Select Payment Method") {
+                        presentPaymentMethodSelector()
+                    }
+                    .buttonStyle(PrimaryButtonStyle())
+                    .disabled(shouldDisableButtons)
+                    .opacity(shouldDisableButtons ? 0.5 : 1)
                 }
 
                 VStack(spacing: 8) {
@@ -124,13 +139,39 @@ struct AuthenticatedView: View {
             }
         }
     }
+
+    private func presentPaymentMethodSelector() {
+        guard let viewController = UIApplication.shared.findTopNavigationController() else {
+            errorMessage = "Unable to find view controller to present from."
+            return
+        }
+
+        isLoading.wrappedValue = true
+        errorMessage = nil
+
+        Task {
+            let result = await coordinator.presentPaymentMethodSelector(from: viewController, email: email)
+            await MainActor.run {
+                isLoading.wrappedValue = false
+                switch result {
+                case .completed(let preview):
+                    selectedPaymentMethod = preview
+                case .canceled:
+                    break
+                @unknown default:
+                    break
+                }
+            }
+        }
+    }
 }
 
 #Preview {
     PreviewWrapperView { coordinator in
         AuthenticatedView(
             coordinator: coordinator,
-            customerId: "cus_example123456789"
+            customerId: "cus_example123456789",
+            email: "test@example.com"
         )
     }
 }

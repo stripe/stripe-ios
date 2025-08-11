@@ -95,7 +95,11 @@ struct RegistrationView: View {
 
                 if let customerId = registrationCustomerId {
                     HiddenNavigationLink(
-                        destination: AuthenticatedView(coordinator: coordinator, customerId: customerId),
+                        destination: AuthenticatedView(
+                            coordinator: coordinator,
+                            customerId: customerId,
+                            email: email
+                        ),
                         isActive: $showAuthenticatedView
                     )
                 }

@@ -23,6 +23,17 @@ public enum PaymentMethodSelectionResult {
 
         /// Details about the selected payment method. This will typically render the display name of the payment method followed by the last four digits, e.g. `Visa Credit •••• 4242`.
         public let sublabel: String?
+
+        /// Creates a new instance of `PaymentMethodPreview`.
+        /// - Parameters:
+        ///   - icon: The icon to render in your screen.
+        ///   - label: The label to render in your screen.
+        ///   - sublabel: Details about the selected payment method. This will typically render the display name of the payment method followed by the last four digits, e.g. `Visa Credit •••• 4242`.
+        public init(icon: UIImage, label: String, sublabel: String?) {
+            self.icon = icon
+            self.label = label
+            self.sublabel = sublabel
+        }
     }
 
     /// The user has completed selection of a payment method. The payment method preview is attached.
