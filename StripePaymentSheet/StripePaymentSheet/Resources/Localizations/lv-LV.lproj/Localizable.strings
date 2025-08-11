@@ -60,6 +60,10 @@
 
 "By continuing, you agree to authorize payments pursuant to <terms>these terms</terms>." = "Turpinot, jūs piekrītat autorizēt maksājumus saskaņā ar <terms>šiem noteikumiem</terms>.";
 
+"By continuing, you agree to save your information for future purchases with %@ and <link>Link</link>. You also agree to Link's <terms>Terms</terms> and <privacy>Privacy</privacy>." = "Turpinot, jūs piekrītat saglabāt savu informāciju turpmākiem pirkumiem ar %@ un <link>Saite</link>. Jūs arī piekrītat saites <terms>Noteikumiem</terms> un <privacy>Konfidencialitātei</privacy>.";
+
+"By continuing, you agree to save your information for future purchases with %@." = "Turpinot jūs piekrītat saglabāt savu informāciju turpmākiem pirkumiem ar %@.";
+
 "By continuing, you authorize %@ to automatically debit your Satispay Balance on a recurring basis in accordance with your purchase or subscription plan." = "Turpinot jūs pilnvarojat %@ automātiski un regulāri iekasēt maksājumus no jūsu Satispay konta atlikuma saskaņā ar jūsu pirkuma vai abonementa plānu.";
 
 "By continuing, you authorize %@ to debit your Cash App account for this payment and future payments in accordance with %@'s terms, until this authorization is revoked. You can change this anytime in your Cash App Settings." = "Turpinot, jūs atļaujat %1$@ iekasēt no jūsu Cash App konta par šo un turpmākiem maksājumiem saskaņā ar %2$@ noteikumiem, līdz šī atļauja netiek atsaukta. To varat mainīt jebkurā laikā Cash App iestatījumos.";
@@ -126,6 +130,8 @@
 
 "Failed to connect" = "Neizdevās izveidot savienojumu";
 
+"Fast, secure checkout" = "Ātra un droša norēķināšanās";
+
 "For security, please re-enter your card’s security code." = "Drošības nolūkos atkārtoti ievadiet kartes drošības kodu.";
 
 "Get %@ back when you pay for the first time with your bank. <terms>See terms</terms>" = "Saņemiet %@ atmaksu, maksājot pirmo reizi ar savu banku. <terms>Skatīt noteikumus</terms>";
@@ -185,6 +191,8 @@
 "Pay another way" = "Maksāt citā veidā";
 
 "Pay faster at %@ and thousands of businesses." = "Maksājiet ātrāk %@ un tūkstošiem citos uzņēmumos.";
+
+"Pay faster everywhere Link is accepted." = "Maksājiet ātrāk visur, kur tiek pieņemta saite.";
 
 "Pay over time with %@" = "Maksāt pakāpeniski ar %@";
 
