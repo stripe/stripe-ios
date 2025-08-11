@@ -366,7 +366,7 @@ extension PaymentSheet {
                         paymentHandler: paymentHandler,
                         isFlowController: isFlowController,
                         completion: { psResult, confirmationType in
-                            if shouldLogOutOfLink(result: psResult, elementsSession: elementsSession, intentConfig: intentConfig) {
+                            if shouldLogOutOfLink(result: psResult, elementsSession: elementsSession) {
                                 linkAccount?.logout()
                             }
                             completion(psResult, confirmationType)
@@ -428,7 +428,7 @@ extension PaymentSheet {
                         paymentHandler: paymentHandler,
                         isFlowController: isFlowController,
                         completion: { psResult, confirmationType in
-                            if shouldLogOutOfLink(result: psResult, elementsSession: elementsSession, intentConfig: intentConfig) {
+                            if shouldLogOutOfLink(result: psResult, elementsSession: elementsSession) {
                                 linkAccount?.logout()
                             }
                             completion(psResult, confirmationType)
@@ -778,13 +778,13 @@ extension PaymentSheet {
 
     private static func shouldLogOutOfLink(
         result: PaymentSheetResult,
-        elementsSession: STPElementsSession,
-        intentConfig: PaymentSheet.IntentConfiguration
+        elementsSession: STPElementsSession
     ) -> Bool {
         guard case .completed = result else {
             return false
         }
-        return elementsSession.linkSettings?.useAttestationEndpoints != true && intentConfig.preparePaymentMethodHandler == nil
+        // Only log out non-verified merchants.
+        return elementsSession.linkSettings?.useAttestationEndpoints != true
     }
 }
 
