@@ -60,6 +60,10 @@
 
 "By continuing, you agree to authorize payments pursuant to <terms>these terms</terms>." = "Jätkates nõustute maksete autoriseerimisega vastavalt nendele <terms>tingimustele</terms>.";
 
+"By continuing, you agree to save your information for future purchases with %@ and <link>Link</link>. You also agree to Link's <terms>Terms</terms> and <privacy>Privacy</privacy>." = "Jätkates nõustute salvestama oma andmed tulevaste ostude jaoks %@ ja <link>Link</link>. Samuti nõustute Linki <terms>tingimuste</terms> ja <privacy>privaatsusega</privacy>.";
+
+"By continuing, you agree to save your information for future purchases with %@." = "Jätkates nõustute salvestama oma teabe tulevaste ostude jaoks %@.";
+
 "By continuing, you authorize %@ to automatically debit your Satispay Balance on a recurring basis in accordance with your purchase or subscription plan." = "Jätkates annate loa, et %@ debiteerib regulaarselt teie Satispay Balance'i kontot vastavalt teie ostule või tellimusplaanile.";
 
 "By continuing, you authorize %@ to debit your Cash App account for this payment and future payments in accordance with %@'s terms, until this authorization is revoked. You can change this anytime in your Cash App Settings." = "Jätkamisel volitate %1$@ debiteerima teie Cash Appi kontot selle makse ja tulevaste maksete eest vastavalt ettevõtte %2$@ tingimustele, kuni see volitus tühistatakse. Saate seda igal ajal oma Cash rakenduse seadetes muuta.";
@@ -126,6 +130,8 @@
 
 "Failed to connect" = "Ühendamine ebaõnnestus";
 
+"Fast, secure checkout" = "Kiire ja turvaline kassa";
+
 "For security, please re-enter your card’s security code." = "Turvalisuse huvides sisestage palun uuesti oma kaardi turvakood.";
 
 "Get %@ back when you pay for the first time with your bank. <terms>See terms</terms>" = "Saate %@ tagasi, kui maksate esimest korda oma panga kaudu. <terms>Vaata tingimusi</terms>";
@@ -185,6 +191,8 @@
 "Pay another way" = "Maksa muul viisil";
 
 "Pay faster at %@ and thousands of businesses." = "Makske kiiremini kaupleja %@ lehel ja tuhandetel teistel saitidel.";
+
+"Pay faster everywhere Link is accepted." = "Makske kiiremini kõikjal, kus Link on aktsepteeritud.";
 
 "Pay over time with %@" = "Maksa aja jooksul makseviisiga %@";
 

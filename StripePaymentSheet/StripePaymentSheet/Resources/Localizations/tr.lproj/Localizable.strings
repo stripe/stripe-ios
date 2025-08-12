@@ -60,6 +60,10 @@
 
 "By continuing, you agree to authorize payments pursuant to <terms>these terms</terms>." = "Devam ettiğinizde ödemeleri <terms>bu koşullara</terms> göre yetkilendirmeyi kabul etmiş olursunuz.";
 
+"By continuing, you agree to save your information for future purchases with %@ and <link>Link</link>. You also agree to Link's <terms>Terms</terms> and <privacy>Privacy</privacy>." = "Devam ederek, bilgilerinizi gelecekteki %@ satın alımları için kaydetmeyi kabul etmiş olursunuz ve <link>Link</link>Ayrıca Link'in <terms>Koşulları</terms> ve <privacy>Gizlilik</privacy> hükümlerini kabul etmiş olursunuz.";
+
+"By continuing, you agree to save your information for future purchases with %@." = "Devam ederek, bilgilerinizi gelecekteki %@ satın alımları için kaydetmeyi kabul etmiş olursunuz.";
+
 "By continuing, you authorize %@ to automatically debit your Satispay Balance on a recurring basis in accordance with your purchase or subscription plan." = "Devam ederek, %@ tarafından Satispay Bakiyenizin satın alma veya abonelik planınıza uygun olarak yinelenen bir şekilde otomatik olarak borçlandırılmasına izin verirsiniz.";
 
 "By continuing, you authorize %@ to debit your Cash App account for this payment and future payments in accordance with %@'s terms, until this authorization is revoked. You can change this anytime in your Cash App Settings." = "Devam ederek %1$@ şirketinin bu ödeme ve gelecekteki ödemeler için Cash Uygulaması hesabınızı %2$@ şirketinin şartlarına uygun olarak borçlandırmasına izin vermiş olursunuz. Bu durum, izin iptal edilene kadar geçerli olur. İstediğiniz zaman Cash Uygulamasının Ayarlarından bu izni değiştirebilirsiniz.";
@@ -126,6 +130,8 @@
 
 "Failed to connect" = "Bağlantı başarısız.";
 
+"Fast, secure checkout" = "Hızlı, güvenli ödeme";
+
 "For security, please re-enter your card’s security code." = "Güvenliğinizin sağlanması için lütfen kartınızın güvenlik kodunu tekrar girin.";
 
 "Get %@ back when you pay for the first time with your bank. <terms>See terms</terms>" = "Bankanızla ilk kez ödeme yaptığınızda %@ tutarını geri alın. <terms>Şartları görün</terms>";
@@ -185,6 +191,8 @@
 "Pay another way" = "Başka bir ödeme şekli kullanın";
 
 "Pay faster at %@ and thousands of businesses." = "%@ ve binlerce işletmede daha hızlı ödeme yapın.";
+
+"Pay faster everywhere Link is accepted." = "Link'in kabul edildiği her yerde daha hızlı ödeme yapın.";
 
 "Pay over time with %@" = "%@ ile zaman içinde ödeyin";
 

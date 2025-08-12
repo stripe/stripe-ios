@@ -60,6 +60,10 @@
 
 "By continuing, you agree to authorize payments pursuant to <terms>these terms</terms>." = "Jatkamalla hyväksyt maksujen valtuutuksen <terms>näiden ehtojen mukaisesti</terms>.";
 
+"By continuing, you agree to save your information for future purchases with %@ and <link>Link</link>. You also agree to Link's <terms>Terms</terms> and <privacy>Privacy</privacy>." = "Jatkamalla hyväksyt, että tietosi tallennetaan tulevia ostoksia varten tahon %@ kanssa ja <link>Linkin kanssa</link>. Hyväksyt myös Linkin <terms>ehdot</terms> ja <privacy>tietosuojakäytännön</privacy>.";
+
+"By continuing, you agree to save your information for future purchases with %@." = "Jatkamalla hyväksyt, että tietosi tallennetaan tulevia ostoksia varten tahon %@ kanssa.";
+
 "By continuing, you authorize %@ to automatically debit your Satispay Balance on a recurring basis in accordance with your purchase or subscription plan." = "Kun jatkat, %@ voi veloittaa Satispay-saldoasi automaattisesti ja toistuvasti osto- tai tilaussuunnitelmasi mukaisesti.";
 
 "By continuing, you authorize %@ to debit your Cash App account for this payment and future payments in accordance with %@'s terms, until this authorization is revoked. You can change this anytime in your Cash App Settings." = "Jatkamalla valtuutat kauppiaan %1$@ veloittamaan Cash App -tiliäsi tälle ja tuleville maksuille kauppiaan %2$@ ehtojen mukaisesti, kunnes tämä todennus peruutetaan. Voit muuttaa tätä milloin tahansa Cash App -asetuksista.";
@@ -126,6 +130,8 @@
 
 "Failed to connect" = "Yhteyden muodostaminen epäonnistui";
 
+"Fast, secure checkout" = "Nopea, turvallinen maksaminen";
+
 "For security, please re-enter your card’s security code." = "Turvallisuussyistä sinun on annettava korttisi turvakoodi uudelleen.";
 
 "Get %@ back when you pay for the first time with your bank. <terms>See terms</terms>" = "Saat %@ takaisin, kun maksat ensimmäistä kertaa pankillasi. <terms>Katso ehdot</terms>";
@@ -185,6 +191,8 @@
 "Pay another way" = "Maksa toisella tavalla";
 
 "Pay faster at %@ and thousands of businesses." = "Maksa nopeammin kohteessa %@ ja tuhansissa muissa paikoissa.";
+
+"Pay faster everywhere Link is accepted." = "Maksa nopeammin kaikkialla, missä Link hyväksytään.";
 
 "Pay over time with %@" = "Maksa aikanaan kohteella %@";
 
