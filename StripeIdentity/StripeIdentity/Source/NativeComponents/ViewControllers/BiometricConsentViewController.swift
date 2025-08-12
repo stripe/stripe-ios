@@ -174,7 +174,7 @@ final class BiometricConsentViewController: IdentityFlowViewController {
 
     private func setupContentStackView() {
         contentStackView.addArrangedSubview(multilineContent)
-        
+
         // Create a container for the privacy policy with centered alignment
         let privacyPolicyContainer = UIView()
         privacyPolicyContainer.addSubview(privacyPolicyView)
