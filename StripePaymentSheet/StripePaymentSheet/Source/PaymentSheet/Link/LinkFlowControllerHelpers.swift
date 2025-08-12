@@ -26,6 +26,7 @@ extension UIViewController {
         intent: Intent,
         elementsSession: STPElementsSession,
         analyticsHelper: PaymentSheetAnalyticsHelper,
+        supportedPaymentMethodTypes: [LinkPaymentMethodType] = LinkPaymentMethodType.allCases,
         verificationDismissed: (() -> Void)? = nil,
         callback: @escaping (_ confirmOption: PaymentSheet.LinkConfirmOption?, _ shouldReturnToPaymentSheet: Bool) -> Void
     ) {
@@ -55,6 +56,7 @@ extension UIViewController {
                     elementsSession: elementsSession,
                     configuration: configuration,
                     analyticsHelper: analyticsHelper,
+                    supportedPaymentMethodTypes: supportedPaymentMethodTypes,
                     callback: callback
                 )
             }
@@ -65,6 +67,7 @@ extension UIViewController {
                 elementsSession: elementsSession,
                 configuration: configuration,
                 analyticsHelper: analyticsHelper,
+                supportedPaymentMethodTypes: supportedPaymentMethodTypes,
                 callback: callback
             )
         }
@@ -76,6 +79,7 @@ extension UIViewController {
         elementsSession: STPElementsSession,
         configuration: PaymentElementConfiguration,
         analyticsHelper: PaymentSheetAnalyticsHelper,
+        supportedPaymentMethodTypes: [LinkPaymentMethodType],
         callback: @escaping (_ confirmOption: PaymentSheet.LinkConfirmOption?, _ shouldReturnToPaymentSheet: Bool) -> Void
     ) {
         let payWithLinkController = PayWithNativeLinkController(
@@ -84,7 +88,8 @@ extension UIViewController {
             elementsSession: elementsSession,
             configuration: configuration,
             logPayment: false,
-            analyticsHelper: analyticsHelper
+            analyticsHelper: analyticsHelper,
+            supportedPaymentMethodTypes: supportedPaymentMethodTypes
         )
 
         payWithLinkController.presentForPaymentMethodSelection(

@@ -89,6 +89,7 @@ final class PayWithLinkViewController: BottomSheetViewController {
         let canSkipWalletAfterVerification: Bool
         let initiallySelectedPaymentDetailsID: String?
         let callToAction: ConfirmButton.CallToActionType
+        let supportedPaymentMethodTypes: [LinkPaymentMethodType]
         var lastAddedPaymentDetails: ConsumerPaymentDetails?
         var analyticsHelper: PaymentSheetAnalyticsHelper
 
@@ -114,6 +115,7 @@ final class PayWithLinkViewController: BottomSheetViewController {
         ///   - canSkipWalletAfterVerification: Whether or not we should try to skip showing the wallet after verification.
         ///   - initiallySelectedPaymentDetailsID: The ID of an initially selected payment method. This is set when opened instead of FlowController.
         ///   - callToAction: A custom CTA to display on the confirm button. If `nil`, will display `intent`'s default CTA.
+        ///   - supportedPaymentMethodTypes: The payment method types to support in the Link sheet. Defaults to all available types.
         ///   - analyticsHelper: An instance of `AnalyticsHelper` to use for logging.
         init(
             intent: Intent,
@@ -126,6 +128,7 @@ final class PayWithLinkViewController: BottomSheetViewController {
             canSkipWalletAfterVerification: Bool,
             initiallySelectedPaymentDetailsID: String?,
             callToAction: ConfirmButton.CallToActionType?,
+            supportedPaymentMethodTypes: [LinkPaymentMethodType] = LinkPaymentMethodType.allCases,
             analyticsHelper: PaymentSheetAnalyticsHelper
         ) {
             self.intent = intent
@@ -138,6 +141,7 @@ final class PayWithLinkViewController: BottomSheetViewController {
             self.canSkipWalletAfterVerification = canSkipWalletAfterVerification
             self.initiallySelectedPaymentDetailsID = initiallySelectedPaymentDetailsID
             self.callToAction = callToAction ?? .makeDefaultTypeForLink(intent: intent)
+            self.supportedPaymentMethodTypes = supportedPaymentMethodTypes
             self.analyticsHelper = analyticsHelper
         }
     }
@@ -178,7 +182,8 @@ final class PayWithLinkViewController: BottomSheetViewController {
         initiallySelectedPaymentDetailsID: String? = nil,
         canSkipWalletAfterVerification: Bool,
         callToAction: ConfirmButton.CallToActionType? = nil,
-        analyticsHelper: PaymentSheetAnalyticsHelper
+        analyticsHelper: PaymentSheetAnalyticsHelper,
+        supportedPaymentMethodTypes: [LinkPaymentMethodType] = LinkPaymentMethodType.allCases
     ) {
         self.init(
             context: Context(
@@ -192,6 +197,7 @@ final class PayWithLinkViewController: BottomSheetViewController {
                 canSkipWalletAfterVerification: canSkipWalletAfterVerification,
                 initiallySelectedPaymentDetailsID: initiallySelectedPaymentDetailsID,
                 callToAction: callToAction,
+                supportedPaymentMethodTypes: supportedPaymentMethodTypes,
                 analyticsHelper: analyticsHelper
             ),
             linkAccount: linkAccount
@@ -353,9 +359,20 @@ private extension PayWithLinkViewController {
             return
         }
 
-        let supportedPaymentDetailsTypes = linkAccount
+        // Determine eligible payment method types
+        let allSupportedPaymentDetailsTypes = linkAccount
             .supportedPaymentDetailsTypes(for: context.elementsSession)
-            .toSortedArray()
+
+        let filteredSupportedPaymentDetailsTypes = allSupportedPaymentDetailsTypes
+            .intersection(context.supportedPaymentMethodTypes.detailsTypes)
+
+        let supportedPaymentDetailsTypes: [ConsumerPaymentDetails.DetailsType]
+        if !filteredSupportedPaymentDetailsTypes.isEmpty {
+            supportedPaymentDetailsTypes = filteredSupportedPaymentDetailsTypes.toSortedArray()
+        } else {
+            // Card is the default payment method type when no other type is available.
+            supportedPaymentDetailsTypes = [.card]
+        }
 
         Task { @MainActor in
             async let paymentDetailsResult = linkAccount.listPaymentDetails(
