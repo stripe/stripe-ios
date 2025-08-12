@@ -1,4 +1,4 @@
-## x.x.x x-x-x
+## 24.20.0 2025-08-11
 
 ### StripeApplePay
 * [Fixed] Issue when deserializing intent when line1 is null
