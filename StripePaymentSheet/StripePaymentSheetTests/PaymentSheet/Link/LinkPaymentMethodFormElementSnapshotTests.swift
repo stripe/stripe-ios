@@ -145,7 +145,8 @@ extension LinkPaymentMethodFormElementSnapshotTests {
                 bankAccount: .init(
                     iconCode: nil,
                     name: "Stripe Bank",
-                    last4: "6789"
+                    last4: "6789",
+                    country: "COUNTRY_US"
                 )
             ),
             billingAddress: BillingAddress(
