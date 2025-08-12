@@ -47,12 +47,13 @@ final class LinkMandateView: UIView {
         fatalError("init(coder:) has not been implemented")
     }
 
-    func setText(_ text: NSMutableAttributedString) {
+    func setText(_ text: NSAttributedString) {
         textView.attributedText = formattedLegalText(text)
         textView.applyStyle()
     }
 
-    private func formattedLegalText(_ formattedString: NSMutableAttributedString) -> NSAttributedString {
+    private func formattedLegalText(_ formattedString: NSAttributedString) -> NSAttributedString {
+        let mutableString = NSMutableAttributedString(attributedString: formattedString)
         let paragraphStyle = NSMutableParagraphStyle()
         paragraphStyle.alignment = .center
         paragraphStyle.lineSpacing = LinkUI.lineSpacing(
@@ -60,7 +61,7 @@ final class LinkMandateView: UIView {
             textStyle: .caption
         )
 
-        formattedString.addAttributes([.paragraphStyle: paragraphStyle], range: formattedString.extent)
+        mutableString.addAttributes([.paragraphStyle: paragraphStyle], range: mutableString.extent)
 
         return formattedString
     }

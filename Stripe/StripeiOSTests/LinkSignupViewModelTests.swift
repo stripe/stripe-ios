@@ -262,6 +262,7 @@ extension LinkInlineSignupViewModelTests {
             withEmail email: String?,
             emailSource: StripePaymentSheet.EmailSource,
             doNotLogConsumerFunnelEvent: Bool,
+            requestSurface: StripePaymentSheet.LinkRequestSurface = .default,
             completion: @escaping (Result<PaymentSheetLinkAccount?, Error>) -> Void
         ) {
             if shouldFailLookup {
@@ -274,7 +275,8 @@ extension LinkInlineSignupViewModelTests {
                             session: nil,
                             publishableKey: nil,
                             displayablePaymentDetails: nil,
-                            useMobileEndpoints: false
+                            useMobileEndpoints: false,
+                            requestSurface: requestSurface
                         )
                     )
                 )
