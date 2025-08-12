@@ -218,7 +218,6 @@ final class PayWithLinkViewController: BottomSheetViewController {
                 callToAction: callToAction,
                 supportedPaymentMethodTypes: supportedPaymentMethodTypes,
                 analyticsHelper: analyticsHelper,
-                supportedPaymentMethodTypes: supportedPaymentMethodTypes,
                 linkAppearance: linkAppearance
             ),
             linkAccount: linkAccount
