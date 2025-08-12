@@ -1,3 +1,8 @@
+## x.x.x x-x-x
+
+### PaymentSheet
+* [Changed] The form will now highlight incomplete fields when the user taps a disabled "Confirm" button.
+
 ## 24.20.0 2025-08-11
 
 ### StripeApplePay

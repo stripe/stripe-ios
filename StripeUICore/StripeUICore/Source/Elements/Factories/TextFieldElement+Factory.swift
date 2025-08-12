@@ -89,7 +89,7 @@ import UIKit
 
         public func validate(text: String, isOptional: Bool) -> ValidationState {
             if text.isEmpty {
-                return isOptional ? .valid : .invalid(Error.empty)
+                return isOptional ? .valid : .invalid(Error.empty(localizedDescription: String.Localized.invalid_email))
             }
             if STPEmailAddressValidator.stringIsValidEmailAddress(text) {
                 return .valid
@@ -119,7 +119,7 @@ import UIKit
 
         public func validate(text: String, isOptional: Bool) -> ValidationState {
             guard !text.isEmpty else {
-                return isOptional ? .valid : .invalid(Error.empty)
+                return isOptional ? .valid : .invalid(Error.empty(localizedDescription: String.Localized.invalid_upi_id))
             }
 
             return STPVPANumberValidator.stringIsValidVPANumber(text) ? .valid : .invalid(invalidError)
@@ -146,7 +146,7 @@ import UIKit
 
         public func validate(text: String, isOptional: Bool) -> ValidationState {
             guard !text.isEmpty else {
-                return isOptional ? .valid : .invalid(Error.empty)
+                return isOptional ? .valid : .invalid(Error.empty(localizedDescription: String.Localized.invalid_blik_code))
             }
             return STPBlikCodeValidator.stringIsValidBlikCode(text) ?.valid: .invalid(invalidError)
         }
@@ -175,7 +175,7 @@ import UIKit
 
         public func validate(text: String, isOptional: Bool) -> ValidationState {
             guard !text.isEmpty else {
-                return isOptional ? .valid : .invalid(Error.empty)
+                return isOptional ? .valid : .invalid(Error.empty(localizedDescription: String.Localized.incomplete_phone_number))
             }
             guard text.count > 9 else {
                 return .invalid(incompleteError)
@@ -214,7 +214,7 @@ import UIKit
 
         public func validate(text: String, isOptional: Bool) -> TextFieldElement.ValidationState {
             if text.isEmpty {
-                return isOptional ? .valid : .invalid(Error.empty)
+                return isOptional ? .valid : .invalid(Error.empty(localizedDescription: String.Localized.incomplete_phone_number))
             }
 
             if let phoneNumber = PhoneNumber(number: text, countryCode: countryCodeProvider()) {
