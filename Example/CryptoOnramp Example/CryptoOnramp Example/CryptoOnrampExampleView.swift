@@ -99,9 +99,15 @@ struct CryptoOnrampExampleView: View {
         isLoading.wrappedValue = true
         Task {
             do {
+                let lavenderColor = UIColor(
+                    red: 171/255.0,
+                    green: 159/255.0,
+                    blue: 242/255.0,
+                    alpha: 1.0
+                )
                 let appearance = LinkAppearance(
-                    colors: .init(primary: .systemPurple, selectedBorder: .separator),
-                    primaryButton: .init(cornerRadius: 32, height: 80),
+                    colors: .init(primary: lavenderColor, selectedBorder: .label),
+                    primaryButton: .init(cornerRadius: 16, height: 56),
                     style: .automatic
                 )
                 let coordinator = try await CryptoOnrampCoordinator.create(appearance: appearance)
