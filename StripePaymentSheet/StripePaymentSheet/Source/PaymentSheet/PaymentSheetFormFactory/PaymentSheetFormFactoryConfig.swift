@@ -131,7 +131,7 @@ enum PaymentSheetFormFactoryConfig {
         switch self {
         case .customerSheet(let customerSheetConfiguration):
             return customerSheetConfiguration.opensCardScannerAutomatically
-        case .paymentElement(let paymentElementConfiguration):
+        case .paymentElement(let paymentElementConfiguration, _):
             return paymentElementConfiguration.opensCardScannerAutomatically
         }
     }
