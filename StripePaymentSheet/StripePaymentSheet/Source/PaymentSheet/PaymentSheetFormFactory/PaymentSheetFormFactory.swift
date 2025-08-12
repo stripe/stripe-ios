@@ -28,6 +28,7 @@ class PaymentSheetFormFactory {
     let addressSpecProvider: AddressSpecProvider
     let showLinkInlineCardSignup: Bool
     let linkAccount: PaymentSheetLinkAccount?
+    let linkAppearance: LinkAppearance?
     let accountService: LinkAccountServiceProtocol?
     let previousCustomerInput: IntentConfirmParams?
 
@@ -86,7 +87,8 @@ class PaymentSheetFormFactory {
         addressSpecProvider: AddressSpecProvider = .shared,
         linkAccount: PaymentSheetLinkAccount? = nil,
         accountService: LinkAccountServiceProtocol,
-        analyticsHelper: PaymentSheetAnalyticsHelper?
+        analyticsHelper: PaymentSheetAnalyticsHelper?,
+        linkAppearance: LinkAppearance? = nil
     ) {
 
         /// Whether or not the card form should show the link inline signup checkbox
@@ -138,7 +140,9 @@ class PaymentSheetFormFactory {
                   signupOptInInitialValue: elementsSession.linkSignupOptInInitialValue,
                   isFirstSavedPaymentMethod: elementsSession.customer?.paymentMethods.isEmpty ?? true,
                   analyticsHelper: analyticsHelper,
-                  paymentMethodIncentive: elementsSession.incentive)
+                  paymentMethodIncentive: elementsSession.incentive,
+                  linkAppearance: linkAppearance
+        )
     }
 
     required init(
@@ -161,7 +165,8 @@ class PaymentSheetFormFactory {
         signupOptInInitialValue: Bool = false,
         isFirstSavedPaymentMethod: Bool = true,
         analyticsHelper: PaymentSheetAnalyticsHelper?,
-        paymentMethodIncentive: PaymentMethodIncentive?
+        paymentMethodIncentive: PaymentMethodIncentive?,
+        linkAppearance: LinkAppearance? = nil,
     ) {
         self.configuration = configuration
         self.paymentMethod = paymentMethod
@@ -188,6 +193,7 @@ class PaymentSheetFormFactory {
         self.isFirstSavedPaymentMethod = isFirstSavedPaymentMethod
         self.analyticsHelper = analyticsHelper
         self.paymentMethodIncentive = paymentMethodIncentive
+        self.linkAppearance = linkAppearance
     }
 
     func make() -> PaymentMethodElement {
@@ -203,7 +209,7 @@ class PaymentSheetFormFactory {
             // We have two ways to create the form for a payment method
             // 1. Custom, one-off forms
             if paymentMethod == .card {
-                return makeCard()
+                return makeCard(linkAppearance: linkAppearance)
             } else if paymentMethod == .USBankAccount {
                 return makeUSBankAccount(merchantName: configuration.merchantDisplayName)
             } else if paymentMethod == .UPI {

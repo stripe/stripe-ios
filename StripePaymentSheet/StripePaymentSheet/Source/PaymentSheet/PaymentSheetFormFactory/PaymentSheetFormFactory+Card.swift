@@ -14,7 +14,7 @@ import StripePayments
 import UIKit
 
 extension PaymentSheetFormFactory {
-    func makeCard() -> PaymentMethodElement {
+    func makeCard(linkAppearance: LinkAppearance? = nil) -> PaymentMethodElement {
         let showLinkInlineSignup = showLinkInlineCardSignup
         let defaultCheckbox: Element? = {
             guard allowsSetAsDefaultPM else {
@@ -60,7 +60,8 @@ extension PaymentSheetFormFactory {
             hostedSurface: .init(config: configuration),
             theme: theme,
             analyticsHelper: analyticsHelper,
-            cardBrandFilter: configuration.cardBrandFilter
+            cardBrandFilter: configuration.cardBrandFilter,
+            linkAppearance: linkAppearance
         )
 
         let shouldIncludeEmail = configuration.billingDetailsCollectionConfiguration.email == .always
