@@ -33,8 +33,6 @@ extension ConfirmButton {
                 let verticalMargin = LinkUI.verticalMarginForPrimaryButton(withDesiredHeight: desiredHeight)
                 directionalLayoutMargins.top = verticalMargin
                 directionalLayoutMargins.bottom = verticalMargin
-
-                appearance.primaryButton.cornerRadius = 2
             }
         }
 
