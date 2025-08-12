@@ -243,7 +243,7 @@ import UIKit
         }
 
         let verificationController = LinkVerificationController(
-            mode: .modal,
+            mode: .inlineLogin,
             linkAccount: linkAccount,
             configuration: configuration,
             appearance: appearance

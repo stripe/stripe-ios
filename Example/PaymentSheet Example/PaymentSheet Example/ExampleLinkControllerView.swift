@@ -518,7 +518,7 @@ struct ExampleLinkControllerView: View {
         }
     }
 
-        private func resetLinkController() {
+    private func resetLinkController() {
         // Clear all state
         linkController = nil
         errorMessage = nil

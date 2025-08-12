@@ -13,14 +13,12 @@ import Foundation
 }
 
 extension Array where Element == LinkPaymentMethodType {
-    /// Converts an array of `LinkPaymentMethodType` to a set of `ConsumerPaymentDetails.DetailsType`
     var detailsTypes: Set<ConsumerPaymentDetails.DetailsType> {
         Set(map(\.detailsType))
     }
 }
 
 private extension LinkPaymentMethodType {
-    /// Converts a `LinkPaymentMethodType` to `ConsumerPaymentDetails.DetailsType`
     var detailsType: ConsumerPaymentDetails.DetailsType {
         switch self {
         case .card:
