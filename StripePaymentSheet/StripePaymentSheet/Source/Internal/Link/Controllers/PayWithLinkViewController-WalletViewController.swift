@@ -638,7 +638,7 @@ extension PayWithLinkViewController.WalletViewController: LinkPaymentMethodPicke
         _ pickerView: LinkPaymentMethodPicker,
         sourceRect: CGRect
     ) {
-        let supportedPaymentDetailsTypes = linkAccount.supportedPaymentDetailsTypes(for: context.elementsSession)
+        let supportedPaymentDetailsTypes = context.getSupportedPaymentDetailsTypes(linkAccount: linkAccount)
 
         let bankAndCard = [ConsumerPaymentDetails.DetailsType.bankAccount, .card]
         if bankAndCard.allSatisfy(supportedPaymentDetailsTypes.contains) {

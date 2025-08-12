@@ -104,6 +104,20 @@ final class PayWithLinkViewController: BottomSheetViewController {
             }
         }
 
+        /// Returns the supported payment details types for the current Link account, filtered by the supportedPaymentMethodTypes.
+        /// Returns [.card] as fallback if no types are supported after filtering.
+        func getSupportedPaymentDetailsTypes(linkAccount: PaymentSheetLinkAccount) -> Set<ConsumerPaymentDetails.DetailsType> {
+            let allSupportedPaymentDetailsTypes = linkAccount.supportedPaymentDetailsTypes(for: elementsSession)
+            let filteredSupportedPaymentDetailsTypes = allSupportedPaymentDetailsTypes.intersection(supportedPaymentMethodTypes.detailsTypes)
+
+            if !filteredSupportedPaymentDetailsTypes.isEmpty {
+                return filteredSupportedPaymentDetailsTypes
+            } else {
+                // Card is the default payment method type when no other type is available.
+                return [.card]
+            }
+        }
+
         /// Creates a new Context object.
         /// - Parameters:
         ///   - intent: Intent.
@@ -202,8 +216,8 @@ final class PayWithLinkViewController: BottomSheetViewController {
                 canSkipWalletAfterVerification: canSkipWalletAfterVerification,
                 initiallySelectedPaymentDetailsID: initiallySelectedPaymentDetailsID,
                 callToAction: callToAction,
-                analyticsHelper: analyticsHelper,
                 supportedPaymentMethodTypes: supportedPaymentMethodTypes,
+                analyticsHelper: analyticsHelper,
                 linkAppearance: linkAppearance
             ),
             linkAccount: linkAccount
@@ -365,20 +379,8 @@ private extension PayWithLinkViewController {
             return
         }
 
-        // Determine eligible payment method types
-        let allSupportedPaymentDetailsTypes = linkAccount
-            .supportedPaymentDetailsTypes(for: context.elementsSession)
-
-        let filteredSupportedPaymentDetailsTypes = allSupportedPaymentDetailsTypes
-            .intersection(context.supportedPaymentMethodTypes.detailsTypes)
-
-        let supportedPaymentDetailsTypes: [ConsumerPaymentDetails.DetailsType]
-        if !filteredSupportedPaymentDetailsTypes.isEmpty {
-            supportedPaymentDetailsTypes = filteredSupportedPaymentDetailsTypes.toSortedArray()
-        } else {
-            // Card is the default payment method type when no other type is available.
-            supportedPaymentDetailsTypes = [.card]
-        }
+        let supportedPaymentDetailsTypesSet = context.getSupportedPaymentDetailsTypes(linkAccount: linkAccount)
+        let supportedPaymentDetailsTypes = supportedPaymentDetailsTypesSet.toSortedArray()
 
         Task { @MainActor in
             async let paymentDetailsResult = linkAccount.listPaymentDetails(
@@ -449,12 +451,30 @@ private extension PayWithLinkViewController {
     ) {
         let viewController: BottomSheetContentViewController
         if paymentDetails.isEmpty {
-            let addPaymentMethodVC = NewPaymentViewController(
-                linkAccount: linkAccount,
-                context: context,
-                isAddingFirstPaymentMethod: true
-            )
-            viewController = addPaymentMethodVC
+            // Check if only bank accounts are supported - if so, launch Financial Connections directly
+            let supportedTypes = context.getSupportedPaymentDetailsTypes(linkAccount: linkAccount)
+            if supportedTypes == [.bankAccount] {
+                startFinancialConnections { [weak self] result in
+                    guard let self else { return }
+                    switch result {
+                    case .completed:
+                        self.loadAndPresentWallet()
+                    case .canceled:
+                        self.cancel(shouldReturnToPaymentSheet: false)
+                    case .failed(let error):
+                        self.finish(withResult: .failed(error: error), deferredIntentConfirmationType: nil)
+                    }
+                }
+                // Show a loading view while Financial Connections is being prepared
+                viewController = LoaderViewController(context: context)
+            } else {
+                let addPaymentMethodVC = NewPaymentViewController(
+                    linkAccount: linkAccount,
+                    context: context,
+                    isAddingFirstPaymentMethod: true
+                )
+                viewController = addPaymentMethodVC
+            }
         } else {
             let walletViewController = WalletViewController(
                 linkAccount: linkAccount,
