@@ -57,7 +57,7 @@ class AddPaymentMethodViewController: UIViewController {
     private let analyticsHelper: PaymentSheetAnalyticsHelper
     var previousCustomerInput: IntentConfirmParams?
 
-    private var paymentMethodFormElement: PaymentMethodElement {
+    var paymentMethodFormElement: PaymentMethodElement {
         paymentMethodFormViewController.form
     }
 

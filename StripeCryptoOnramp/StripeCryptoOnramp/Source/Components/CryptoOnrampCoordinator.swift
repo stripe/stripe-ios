@@ -111,7 +111,8 @@ public final class CryptoOnrampCoordinator: CryptoOnrampCoordinatorProtocol {
         let linkController = try await LinkController.create(
             apiClient: apiClient,
             mode: .payment,
-            appearance: appearance
+            appearance: appearance,
+            requestSurface: .cryptoOnramp
         )
 
         return CryptoOnrampCoordinator(
