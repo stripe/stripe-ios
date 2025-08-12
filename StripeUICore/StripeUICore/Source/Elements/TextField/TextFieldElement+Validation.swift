@@ -17,7 +17,6 @@ import Foundation
     /// A general-purpose TextFieldValidationError.
     /// If it doesn't suit your text field's needs, create a new enum instead of modifying this one!
     @frozen enum Error: TextFieldValidationError, Equatable {
-        /// An empty text field differs from incomplete in that it never displays an error.
         case empty(localizedDescription: String)
         case incomplete(localizedDescription: String)
         case invalid(localizedDescription: String)
