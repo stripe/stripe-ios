@@ -60,6 +60,10 @@
 
 "By continuing, you agree to authorize payments pursuant to <terms>these terms</terms>." = "계속하면 <terms>해당 약관</terms>에 따라 결제를 승인하는 데 동의하는 것입니다.";
 
+"By continuing, you agree to save your information for future purchases with %@ and <link>Link</link>. You also agree to Link's <terms>Terms</terms> and <privacy>Privacy</privacy>." = "계속 진행하시면, 향후 구매 시 사용하기 위해 귀하의 정보를 %@ 및 <link>Link</link>에 저장하는 데 동의하는 것입니다. 또한 Link의 <terms>약관</terms> 및 <privacy>개인정보정책</privacy>에 동의하시는 것입니다.";
+
+"By continuing, you agree to save your information for future purchases with %@." = "계속 진행하시면, 향후 구매 시 사용하기 위해 귀하의 정보를 %@에 저장하는 데 동의하시는 것입니다.";
+
 "By continuing, you authorize %@ to automatically debit your Satispay Balance on a recurring basis in accordance with your purchase or subscription plan." = "계속 진행함으로써 귀하는 %@이(가) 귀하의 구매 또는 구독 플랜에 따라 귀하의 Satispay 잔고에서 정기적으로 자동 출금하도록 승인하는 것입니다.";
 
 "By continuing, you authorize %@ to debit your Cash App account for this payment and future payments in accordance with %@'s terms, until this authorization is revoked. You can change this anytime in your Cash App Settings." = "계속하면 이 승인이 취소될 때까지 %2$@의 약관에 따라 이 결제 및 향후 결제에 대해 %1$@이(가) Cash App 계좌에서 인출하도록 승인하는 것입니다. 이는 Cash App 설정에서 언제든지 변경할 수 있습니다.";
@@ -124,6 +128,8 @@
 
 "Failed to connect" = "연결 실패";
 
+"Fast, secure checkout" = "빠르고 안전한 체크아웃";
+
 "For security, please re-enter your card’s security code." = "보안을 위해 카드의 보안 코드를 다시 입력하십시오.";
 
 "Get %@ back when you pay for the first time with your bank. <terms>See terms</terms>" = "은행으로 처음 결제할 때 %@의 금액을 돌려받으십시오. <terms>약관 참조</terms>";
@@ -183,6 +189,8 @@
 "Pay another way" = "다른 방법으로 결제";
 
 "Pay faster at %@ and thousands of businesses." = "%@사를 비롯하여 수많은 비즈니스에서 더 빠르게 결제할 수 있습니다.";
+
+"Pay faster everywhere Link is accepted." = "Link가 허용되는 모든 곳에서 더 빠르게 결제하십시오.";
 
 "Pay over time with %@" = "%@으로 할부 결제";
 
