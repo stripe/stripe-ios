@@ -129,7 +129,7 @@ final class PayWithLinkViewController: BottomSheetViewController {
             initiallySelectedPaymentDetailsID: String?,
             callToAction: ConfirmButton.CallToActionType?,
             analyticsHelper: PaymentSheetAnalyticsHelper,
-            linkAppearance: LinkAppearance?
+            linkAppearance: LinkAppearance? = nil
         ) {
             self.intent = intent
             self.elementsSession = elementsSession
