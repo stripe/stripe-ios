@@ -85,6 +85,8 @@ struct LinkPMDisplayDetails {
     var phoneNumberUsedInSignup: String?
     var nameUsedInSignup: String?
 
+    var collectedCVCs: [String: String] = [:]
+
     @_spi(STP) public let email: String
 
     @_spi(STP) public var redactedPhoneNumber: String? {

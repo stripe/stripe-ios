@@ -211,6 +211,10 @@ extension PayWithLinkViewController {
                 context: context,
                 paymentMethods: paymentMethods
             )
+
+            if let selectedPaymentMethod, let cvc = linkAccount.collectedCVCs[selectedPaymentMethod.stripeID] {
+                self.cvc = cvc
+            }
         }
 
         func deletePaymentMethod(at index: Int, completion: @escaping (Result<Void, Error>) -> Void) {
