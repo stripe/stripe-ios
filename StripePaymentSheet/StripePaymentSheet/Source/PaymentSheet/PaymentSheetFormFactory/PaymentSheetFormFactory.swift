@@ -93,7 +93,7 @@ class PaymentSheetFormFactory {
 
         /// Whether or not the card form should show the link inline signup checkbox
         let showLinkInlineCardSignup: Bool = {
-            guard case .paymentElement(let configuration) = configuration else {
+            guard case .paymentElement(let configuration, _) = configuration else {
                 return false
             }
 
