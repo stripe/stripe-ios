@@ -192,6 +192,10 @@ extension PayWithLinkViewController {
         }
 
         var confirmButtonStatus: ConfirmButton.Status {
+            if selectedPaymentMethod == nil {
+                return .disabled
+            }
+
             if !selectedPaymentMethodIsSupported {
                 // Selected payment method not supported
                 return .disabled

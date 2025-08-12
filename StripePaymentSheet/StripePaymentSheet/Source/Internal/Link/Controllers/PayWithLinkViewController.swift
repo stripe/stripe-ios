@@ -223,8 +223,12 @@ final class PayWithLinkViewController: BottomSheetViewController {
                 callToAction: callToAction,
                 supportedPaymentMethodTypes: supportedPaymentMethodTypes,
                 analyticsHelper: analyticsHelper,
+<<<<<<< HEAD
                 linkAppearance: linkAppearance,
                 linkConfiguration: linkConfiguration
+=======
+                linkAppearance: linkAppearance
+>>>>>>> ca29f4ac00e (Launch right into FC if no banks are available)
             ),
             linkAccount: linkAccount
         )
