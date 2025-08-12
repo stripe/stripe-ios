@@ -35,6 +35,7 @@ extension PayWithLinkViewController {
             paymentPicker.supportedPaymentMethodTypes = viewModel.supportedPaymentMethodTypes
             paymentPicker.billingDetails = context.configuration.defaultBillingDetails
             paymentPicker.billingDetailsCollectionConfiguration = context.configuration.billingDetailsCollectionConfiguration
+            paymentPicker.linkAppearance = viewModel.linkAppearance
             return paymentPicker
         }()
 
