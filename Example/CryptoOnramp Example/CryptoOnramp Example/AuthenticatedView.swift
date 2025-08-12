@@ -25,6 +25,7 @@ struct AuthenticatedView: View {
     @State private var errorMessage: String?
     @State private var isIdentityVerificationComplete = false
     @State private var showKYCView = false
+    @State private var selectedPaymentMethod: PaymentMethodPreview?
 
     @Environment(\.isLoading) private var isLoading
 
@@ -64,6 +65,17 @@ struct AuthenticatedView: View {
 
                 if let errorMessage {
                     ErrorMessageView(message: errorMessage)
+                }
+
+                if let selectedPaymentMethod {
+                    PaymentMethodCardView(preview: selectedPaymentMethod)
+                } else {
+                    Button("Select Payment Method") {
+                        presentPaymentMethodSelector()
+                    }
+                    .buttonStyle(PrimaryButtonStyle())
+                    .disabled(shouldDisableButtons)
+                    .opacity(shouldDisableButtons ? 0.5 : 1)
                 }
 
                 VStack(spacing: 8) {
@@ -121,6 +133,24 @@ struct AuthenticatedView: View {
                     isLoading.wrappedValue = false
                     errorMessage = "Identity verification failed: \(error.localizedDescription)"
                 }
+            }
+        }
+    }
+
+    private func presentPaymentMethodSelector() {
+        guard let viewController = UIApplication.shared.findTopNavigationController() else {
+            errorMessage = "Unable to find view controller to present from."
+            return
+        }
+
+        isLoading.wrappedValue = true
+        errorMessage = nil
+
+        Task {
+            let preview = await coordinator.collectPaymentMethod(from: viewController)
+            await MainActor.run {
+                isLoading.wrappedValue = false
+                selectedPaymentMethod = preview
             }
         }
     }
