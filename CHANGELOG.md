@@ -15,9 +15,14 @@
 
 ## 24.19.0 2025-08-04
 
+### CustomerSheet
+* [Added] `opensCardScannerAutomatically` configuration
+* [Changed] Form inputs are cached
+
 ### PaymentSheet
 * [Fixed] Updated default spacing of form elements in PaymentSheet.
 * [Added] EmbeddedPaymentElement now shows mandates in a form sheet when `rowSelectionBehavior` is `immediateAction` and `embeddedViewDisplaysMandateText` is `true`. Previously, this configuration was an error.
+* [Added] `opensCardScannerAutomatically` configuration
 
 ## 24.18.1 2025-07-29
 * [Fixed] Improved Klarna payments when using Universal Links.
