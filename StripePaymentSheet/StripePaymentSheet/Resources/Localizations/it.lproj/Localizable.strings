@@ -60,6 +60,10 @@
 
 "By continuing, you agree to authorize payments pursuant to <terms>these terms</terms>." = "Se continui, accetti di autorizzare i pagamenti conformemente ai <terms>questi termini</terms>.";
 
+"By continuing, you agree to save your information for future purchases with %@ and <link>Link</link>. You also agree to Link's <terms>Terms</terms> and <privacy>Privacy</privacy>." = "Continuando, accetti di salvare le tue informazioni per acquisti futuri con %@ e <link>Link</link>Accetti inoltre i <terms>Termini</terms> e la <privacy>Privacy</privacy> di Link.";
+
+"By continuing, you agree to save your information for future purchases with %@." = "Continuando, accetti di salvare le tue informazioni per acquisti futuri con %@.";
+
 "By continuing, you authorize %@ to automatically debit your Satispay Balance on a recurring basis in accordance with your purchase or subscription plan." = "Continuando, autorizzi %@ a effettuare addebiti sul tuo saldo Satispay su base ricorrente in base al tuo piano di acquisto o abbonamento.";
 
 "By continuing, you authorize %@ to debit your Cash App account for this payment and future payments in accordance with %@'s terms, until this authorization is revoked. You can change this anytime in your Cash App Settings." = "Continuando, autorizzi %1$@ ad addebitare questo pagamento e i pagamenti futuri sul tuo conto Cash App conformemente ai termini di %2$@, fino alla revoca di tale autorizzazione. Puoi modificarla in qualsiasi momento nelle impostazioni di Cash app.";
@@ -126,6 +130,8 @@
 
 "Failed to connect" = "Connessione non riuscita";
 
+"Fast, secure checkout" = "Checkout veloce e sicuro";
+
 "For security, please re-enter your card’s security code." = "Per motivi di sicurezza inserisci di nuovo il codice di sicurezza della tua carta.";
 
 "Get %@ back when you pay for the first time with your bank. <terms>See terms</terms>" = "Ti restituiamo %@ quando effettui il primo pagamento con la tua banca. <terms>Consulta i termini</terms>";
@@ -185,6 +191,8 @@
 "Pay another way" = "Paga in altro modo";
 
 "Pay faster at %@ and thousands of businesses." = "Paga più velocemente su %@ e migliaia di esercenti.";
+
+"Pay faster everywhere Link is accepted." = "Paga più velocemente ovunque Link sia accettato.";
 
 "Pay over time with %@" = "Paga nel tempo con %@";
 

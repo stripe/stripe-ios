@@ -60,6 +60,10 @@
 
 "By continuing, you agree to authorize payments pursuant to <terms>these terms</terms>." = "Meta tkompli tkun qed taqbel li tawtorizza l-pagamenti skont <terms>dar-regoli</terms>.";
 
+"By continuing, you agree to save your information for future purchases with %@ and <link>Link</link>. You also agree to Link's <terms>Terms</terms> and <privacy>Privacy</privacy>." = "Billi tkompli, taqbel li tissejvja l-informazzjoni tiegħek għal xiri futur ma' %@ u <link>Link</link>. Inti taqbel ukoll mat-<terms>Termini</terms> u <privacy>l-Privatezza</privacy> ta’ Link.";
+
+"By continuing, you agree to save your information for future purchases with %@." = "Billi tkompli, taqbel li tissejvja l-informazzjoni tiegħek għal xiri futur ma' %@.";
+
 "By continuing, you authorize %@ to automatically debit your Satispay Balance on a recurring basis in accordance with your purchase or subscription plan." = "Billi tkompli, tawtorizza lil %@ biex awtomatikament tiddebita l-Bilanċ ta’ Satispay tiegħek fuq bażi rikorrenti skont il-pjan tax-xiri jew l-abbonament tiegħek.";
 
 "By continuing, you authorize %@ to debit your Cash App account for this payment and future payments in accordance with %@'s terms, until this authorization is revoked. You can change this anytime in your Cash App Settings." = "Meta tkompli tkun qed tagħti permess lil %1$@ biex, sakemm dal-permess jitneħħa, tkun tista' tiġbor il-flus mill-kont Cash App tiegħek għal dal-pagament u għall-pagamenti tal-ġejjieni skont ir-regoli ta' %2$@. Tista' tibdel dil-ħaġa meta trid mill-Għażliet ta' Cash App.";
@@ -126,6 +130,8 @@
 
 "Failed to connect" = "Ma nistgħux naqbdu";
 
+"Fast, secure checkout" = "Ħlas għax-xirja veloċi u sigur";
+
 "For security, please re-enter your card’s security code." = "Għal raġunijiet ta' sigurtà, jekk jogħġbok erġa' daħħal il-kodiċi tas-sigurtà tal-karta tiegħek.";
 
 "Get %@ back when you pay for the first time with your bank. <terms>See terms</terms>" = "Ikseb %@ lura meta tħallas bil-bank għall-ewwel darba. <terms>Aqra r-regoli</terms>";
@@ -185,6 +191,8 @@
 "Pay another way" = "Ħallas mod ieħor";
 
 "Pay faster at %@ and thousands of businesses." = "Ħallas lil %@ u lil eluf ta' negozji oħra iktar malajr.";
+
+"Pay faster everywhere Link is accepted." = "Ħallas aktar malajr kullimkien fejn Link huwa aċċettat.";
 
 "Pay over time with %@" = "Ħallas bin-nifs grazzi għal %@";
 

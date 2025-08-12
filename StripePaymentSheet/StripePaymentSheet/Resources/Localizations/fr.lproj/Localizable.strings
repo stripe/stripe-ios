@@ -60,6 +60,10 @@
 
 "By continuing, you agree to authorize payments pursuant to <terms>these terms</terms>." = "En continuant, vous autorisez les paiements conformément à <terms>ces conditions</terms>.";
 
+"By continuing, you agree to save your information for future purchases with %@ and <link>Link</link>. You also agree to Link's <terms>Terms</terms> and <privacy>Privacy</privacy>." = "En continuant, vous acceptez d'enregistrer vos informations pour de futurs achats avec %@ et <link>Link</link>. Vous acceptez également les <terms>Conditions</terms> et la <privacy>Politique de confidentialité</privacy> de Link.";
+
+"By continuing, you agree to save your information for future purchases with %@." = "En continuant, vous acceptez d'enregistrer vos informations pour de futurs achats avec %@.";
+
 "By continuing, you authorize %@ to automatically debit your Satispay Balance on a recurring basis in accordance with your purchase or subscription plan." = "En continuant, vous autorisez %@ à débiter automatiquement votre solde Satispay de manière récurrente conformément à votre plan d'achat ou d'abonnement.";
 
 "By continuing, you authorize %@ to debit your Cash App account for this payment and future payments in accordance with %@'s terms, until this authorization is revoked. You can change this anytime in your Cash App Settings." = "En continuant, vous autorisez %1$@ à débiter votre compte Cash App pour ce paiement et les paiements futurs, conformément aux conditions de %2$@, jusqu'à la révocation de cette autorisation. Vous pouvez modifier cela à tout moment dans les paramètres de Cash App.";
@@ -126,6 +130,8 @@
 
 "Failed to connect" = "Échec de la connexion";
 
+"Fast, secure checkout" = "Paiement rapide et sécurisé";
+
 "For security, please re-enter your card’s security code." = "Pour des raisons de sécurité, veuillez ressaisir le code de sécurité de votre carte bancaire.";
 
 "Get %@ back when you pay for the first time with your bank. <terms>See terms</terms>" = "Bénéficiez de %@ de cashback en payant pour la première fois avec votre compte bancaire. <terms>Afficher les conditions</terms>";
@@ -185,6 +191,8 @@
 "Pay another way" = "Utiliser un autre moyen de paiement";
 
 "Pay faster at %@ and thousands of businesses." = "Réglez plus rapidement après du marchand %@ et de milliers d'autres entreprises.";
+
+"Pay faster everywhere Link is accepted." = "Réglez plus rapidement vos achats partout où Link est accepté.";
 
 "Pay over time with %@" = "Payer par versements échelonnés avec %@";
 

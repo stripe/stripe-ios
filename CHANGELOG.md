@@ -1,8 +1,9 @@
-## X.X.X
+## x.x.x x-x-x
+
 ### PaymentSheet
 * [Added] Added new `presentPaymentOptions` APIs for UIKit and SwiftUI with a `didCancel` bool in the completion handler, making it possible to differentiate between a user closing FlowController and selecting a payment option. ([#5202](https://github.com/stripe/stripe-ios/pull/5202))
 
-## x.x.x x-x-x
+## 24.20.0 2025-08-11
 
 ### StripeApplePay
 * [Fixed] Issue when deserializing intent when line1 is null
@@ -32,7 +33,6 @@
 
 ### PaymentSheet
 * [Added] Added `Appearance.EmbeddedPaymentElement.Row.subtitleFont` to customize the font of EmbeddedPaymentElement payment method row subtitles.
->>>>>>> origin/master
 
 ## 24.17.0 2025-07-21
 
