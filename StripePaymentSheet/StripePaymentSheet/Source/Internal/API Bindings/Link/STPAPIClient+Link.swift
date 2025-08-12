@@ -23,6 +23,7 @@ extension STPAPIClient {
         cookieStore: LinkCookieStore,
         useMobileEndpoints: Bool,
         doNotLogConsumerFunnelEvent: Bool,
+        requestSurface: LinkRequestSurface = .default,
         completion: @escaping (Result<ConsumerSession.LookupResponse, Error>) -> Void
     ) {
         Task {
@@ -30,7 +31,7 @@ extension STPAPIClient {
             let mobileEndpoint = "consumers/mobile/sessions/lookup"
 
             var parameters: [String: Any] = [
-                "request_surface": "ios_payment_element",
+                "request_surface": requestSurface.rawValue,
                 "session_id": sessionID,
             ]
             parameters["customer_id"] = customerID
@@ -91,6 +92,7 @@ extension STPAPIClient {
         countryCode: String?,
         consentAction: String?,
         useMobileEndpoints: Bool,
+        requestSurface: LinkRequestSurface = .default,
         completion: @escaping (Result<ConsumerSession.SessionWithPublishableKey, Error>) -> Void
     ) {
         Task {
@@ -98,7 +100,7 @@ extension STPAPIClient {
             let modernEndpoint = "consumers/mobile/sign_up"
 
             var parameters: [String: Any] = [
-                "request_surface": "ios_payment_element",
+                "request_surface": requestSurface.rawValue,
                 "email_address": email.lowercased(),
                 "locale": locale.toLanguageTag(),
             ]
@@ -174,6 +176,7 @@ extension STPAPIClient {
         billingDetails: STPPaymentMethodBillingDetails,
         isDefault: Bool,
         consumerAccountPublishableKey: String?,
+        requestSurface: LinkRequestSurface = .default,
         completion: @escaping (Result<ConsumerPaymentDetails, Error>) -> Void
     ) {
         createPaymentDetails(
@@ -183,6 +186,7 @@ extension STPAPIClient {
             billingDetails: billingDetails,
             isDefault: isDefault,
             consumerAccountPublishableKey: consumerAccountPublishableKey,
+            requestSurface: requestSurface,
             completion: completion
         )
     }
@@ -194,6 +198,7 @@ extension STPAPIClient {
         billingDetails: STPPaymentMethodBillingDetails,
         isDefault: Bool,
         consumerAccountPublishableKey: String?,
+        requestSurface: LinkRequestSurface = .default,
         completion: @escaping (Result<ConsumerPaymentDetails, Error>) -> Void
     ) {
         let endpoint: String = "consumers/payment_details"
@@ -202,7 +207,7 @@ extension STPAPIClient {
 
         let parameters: [String: Any] = [
             "credentials": ["consumer_session_client_secret": consumerSessionClientSecret],
-            "request_surface": "ios_payment_element",
+            "request_surface": requestSurface.rawValue,
             "type": "card",
             "card": rawCardParams,
             "billing_email_address": billingEmailAddress,
@@ -224,13 +229,14 @@ extension STPAPIClient {
         linkedAccountId: String,
         consumerAccountPublishableKey: String?,
         isDefault: Bool,
+        requestSurface: LinkRequestSurface = .default,
         completion: @escaping (Result<ConsumerPaymentDetails, Error>) -> Void
     ) {
         let endpoint: String = "consumers/payment_details"
 
         let parameters: [String: Any] = [
             "credentials": ["consumer_session_client_secret": consumerSessionClientSecret],
-            "request_surface": "ios_payment_element",
+            "request_surface": requestSurface.rawValue,
             "bank_account": [
                 "account": linkedAccountId,
             ],
@@ -294,6 +300,7 @@ extension STPAPIClient {
         consumerAccountPublishableKey: String?,
         linkMode: LinkMode? = nil,
         intentToken: String? = nil,
+        requestSurface: LinkRequestSurface = .default,
         completion: @escaping (Result<LinkAccountSession, Error>) -> Void
     ) {
         let endpoint: String = "consumers/link_account_sessions"
@@ -302,7 +309,7 @@ extension STPAPIClient {
             "credentials": [
                 "consumer_session_client_secret": consumerSessionClientSecret,
             ],
-            "request_surface": "ios_payment_element",
+            "request_surface": requestSurface.rawValue,
         ]
         parameters["link_mode"] = linkMode?.rawValue
         parameters["intent_token"] = intentToken
@@ -325,13 +332,14 @@ extension STPAPIClient {
         expectedPaymentMethodType: String?,
         billingPhoneNumber: String?,
         clientAttributionMetadata: STPClientAttributionMetadata,
+        requestSurface: LinkRequestSurface = .default,
         completion: @escaping (Result<PaymentDetailsShareResponse, Error>) -> Void
     ) {
         let endpoint: String = "consumers/payment_details/share"
 
         var parameters: [String: Any] = [
             "credentials": ["consumer_session_client_secret": consumerSessionClientSecret],
-            "request_surface": "ios_payment_element",
+            "request_surface": requestSurface.rawValue,
             "expand": ["payment_method"],
             "id": id,
         ]
@@ -371,13 +379,14 @@ extension STPAPIClient {
         for consumerSessionClientSecret: String,
         supportedPaymentDetailsTypes: [ConsumerPaymentDetails.DetailsType],
         consumerAccountPublishableKey: String?,
+        requestSurface: LinkRequestSurface = .default,
         completion: @escaping (Result<[ConsumerPaymentDetails], Error>) -> Void
     ) {
         let endpoint: String = "consumers/payment_details/list"
 
         let parameters: [String: Any] = [
             "credentials": ["consumer_session_client_secret": consumerSessionClientSecret],
-            "request_surface": "ios_payment_element",
+            "request_surface": requestSurface.rawValue,
             "types": supportedPaymentDetailsTypes.map(\.rawValue),
         ]
 
@@ -393,12 +402,13 @@ extension STPAPIClient {
     func listShippingAddress(
         for consumerSessionClientSecret: String,
         consumerAccountPublishableKey: String?,
+        requestSurface: LinkRequestSurface = .default,
         completion: @escaping (Result<ShippingAddressesResponse, Error>) -> Void
     ) {
         let endPoint = "consumers/shipping_addresses/list"
         let parameters: [String: Any] = [
             "credentials": ["consumer_session_client_secret": consumerSessionClientSecret],
-            "request_surface": "ios_payment_element",
+            "request_surface": requestSurface.rawValue,
         ]
         post(
             resource: endPoint,
@@ -413,13 +423,14 @@ extension STPAPIClient {
         for consumerSessionClientSecret: String,
         id: String,
         consumerAccountPublishableKey: String?,
+        requestSurface: LinkRequestSurface = .default,
         completion: @escaping (Result<Void, Error>) -> Void
     ) {
         let endpoint: String = "consumers/payment_details/\(id)"
 
         let parameters: [String: Any] = [
             "credentials": ["consumer_session_client_secret": consumerSessionClientSecret],
-            "request_surface": "ios_payment_element",
+            "request_surface": requestSurface.rawValue,
         ]
 
         APIRequest<STPEmptyStripeResponse>.delete(
@@ -437,13 +448,14 @@ extension STPAPIClient {
         id: String,
         updateParams: UpdatePaymentDetailsParams,
         consumerAccountPublishableKey: String?,
+        requestSurface: LinkRequestSurface = .default,
         completion: @escaping (Result<ConsumerPaymentDetails, Error>) -> Void
     ) {
         let endpoint: String = "consumers/payment_details/\(id)"
 
         var parameters: [String: Any] = [
             "credentials": ["consumer_session_client_secret": consumerSessionClientSecret],
-            "request_surface": "ios_payment_element",
+            "request_surface": requestSurface.rawValue,
         ]
 
         if let details = updateParams.details, case .card(let expiryDate, let billingDetails, let preferredNetwork) = details {
@@ -491,6 +503,7 @@ extension STPAPIClient {
         consumerSessionClientSecret: String,
         cookieStore: LinkCookieStore,
         consumerAccountPublishableKey: String?,
+        requestSurface: LinkRequestSurface = .default,
         completion: @escaping (Result<ConsumerSession, Error>) -> Void
     ) {
         let endpoint: String = "consumers/sessions/log_out"
@@ -499,7 +512,7 @@ extension STPAPIClient {
             "credentials": [
                 "consumer_session_client_secret": consumerSessionClientSecret,
             ],
-            "request_surface": "ios_payment_element",
+            "request_surface": requestSurface.rawValue,
         ]
 
         makeConsumerSessionRequest(
@@ -517,6 +530,7 @@ extension STPAPIClient {
         locale: Locale,
         cookieStore: LinkCookieStore,
         consumerAccountPublishableKey: String?,
+        requestSurface: LinkRequestSurface = .default,
         completion: @escaping (Result<ConsumerSession, Error>) -> Void
     ) {
 
@@ -535,6 +549,7 @@ extension STPAPIClient {
             "credentials": ["consumer_session_client_secret": consumerSessionClientSecret],
             "type": typeString,
             "locale": locale.toLanguageTag(),
+            "request_surface": requestSurface.rawValue,
         ]
 
         makeConsumerSessionRequest(
@@ -551,6 +566,7 @@ extension STPAPIClient {
         with code: String,
         cookieStore: LinkCookieStore,
         consumerAccountPublishableKey: String?,
+        requestSurface: LinkRequestSurface = .default,
         completion: @escaping (Result<ConsumerSession, Error>) -> Void
     ) {
         let endpoint: String = "consumers/sessions/confirm_verification"
@@ -559,7 +575,7 @@ extension STPAPIClient {
             "credentials": ["consumer_session_client_secret": consumerSessionClientSecret],
             "type": "SMS",
             "code": code,
-            "request_surface": "ios_payment_element",
+            "request_surface": requestSurface.rawValue,
         ]
 
         makeConsumerSessionRequest(
