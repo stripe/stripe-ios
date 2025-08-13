@@ -74,7 +74,13 @@ public protocol CryptoOnrampCoordinatorProtocol {
     /// - Returns: A `PaymentMethodPreview` if the user selected a payment method, or `nil` otherwise.
     func collectPaymentMethod(from viewController: UIViewController) async -> PaymentMethodPreview?
 
-    func selectApplePay(using paymentRequest: PKPaymentRequest, from viewController: UIViewController) async throws -> ApplePayPaymentStatus
+    /// Presents the Apple Pay interface to initiate checkout. Intended to be called in response to tapping a `PKPaymentButton` or `PayWithApplePayButton`.
+    /// - Parameters:
+    ///   - paymentRequest: Represents the request for payment using Apple Pay.
+    ///   - viewController: The view controller from which to present the Apple Pay interface.
+    /// - Returns: A payment status indicating whether the payment request was successful or canceled.
+    /// Throws if an error occurs accepting the payment request.
+    func presentApplePay(using paymentRequest: PKPaymentRequest, from viewController: UIViewController) async throws -> ApplePayPaymentStatus
 }
 
 /// Coordinates headless Link user authentication and identity verification, leaving most of the UI to the client.
@@ -219,7 +225,7 @@ public final class CryptoOnrampCoordinator: NSObject, CryptoOnrampCoordinatorPro
     }
 
     @MainActor
-    public func selectApplePay(using paymentRequest: PKPaymentRequest, from viewController: UIViewController) async throws -> ApplePayPaymentStatus {
+    public func presentApplePay(using paymentRequest: PKPaymentRequest, from viewController: UIViewController) async throws -> ApplePayPaymentStatus {
         try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<ApplePayPaymentStatus, Swift.Error>) in
             guard let context = STPApplePayContext(paymentRequest: paymentRequest, delegate: self) else {
                 continuation.resume(throwing: ApplePayPaymentStatus.Error.applePayFallbackError)

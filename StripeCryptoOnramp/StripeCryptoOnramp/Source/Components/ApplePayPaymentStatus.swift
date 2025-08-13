@@ -5,7 +5,7 @@
 //  Created by Michael Liberatore on 8/13/25.
 //
 
-/// Possible return statuses from `CryptoOnrampCoordinator.selectApplePay(using:from)`.
+/// Possible return statuses from `CryptoOnrampCoordinator.presentApplePay(using:from)`.
 @_spi(CryptoOnrampSDKPreview)
 public enum ApplePayPaymentStatus {
 

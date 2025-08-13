@@ -102,6 +102,10 @@ struct AuthenticatedView: View {
                         PaymentMethodCardView(preview: selectedPaymentMethod)
                     } else {
                         VStack(spacing: 8) {
+                            // Note: Apple Pay does not require iOS 16, but the native SwiftUI
+                            // `PayWithApplePayButton` does, which we're using in this example.
+                            // For earlier OS versions, use `PKPaymentButton` in UIKit, optionally
+                            // wrapping it in a `UIViewRepresentable` for SwiftUI.
                             if #available(iOS 16.0, *), StripeAPI.deviceSupportsApplePay() {
                                 PayWithApplePayButton(.plain) {
                                     presentApplePay()
@@ -209,7 +213,7 @@ struct AuthenticatedView: View {
 
         Task {
             do {
-                let result = try await coordinator.selectApplePay(using: request, from: viewController)
+                let result = try await coordinator.presentApplePay(using: request, from: viewController)
                 await MainActor.run {
                     isLoading.wrappedValue = false
 
