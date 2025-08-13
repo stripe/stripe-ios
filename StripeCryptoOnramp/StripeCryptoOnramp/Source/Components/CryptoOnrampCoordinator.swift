@@ -6,7 +6,10 @@
 //
 
 import Foundation
+import PassKit
+import Stripe
 
+@_spi(STP) import StripeApplePay
 @_spi(STP) import StripeIdentity
 @_spi(STP) import StripePaymentSheet
 
@@ -70,11 +73,13 @@ public protocol CryptoOnrampCoordinatorProtocol {
     /// - Parameter viewController: The view controller from which to present the Link sheet.
     /// - Returns: A `PaymentMethodPreview` if the user selected a payment method, or `nil` otherwise.
     func collectPaymentMethod(from viewController: UIViewController) async -> PaymentMethodPreview?
+
+    func selectApplePay(using paymentRequest: PKPaymentRequest, from viewController: UIViewController) async
 }
 
 /// Coordinates headless Link user authentication and identity verification, leaving most of the UI to the client.
 @_spi(CryptoOnrampSDKPreview)
-public final class CryptoOnrampCoordinator: CryptoOnrampCoordinatorProtocol {
+public final class CryptoOnrampCoordinator: NSObject, CryptoOnrampCoordinatorProtocol {
 
     /// A subset of errors that may be thrown by `CryptoOnrampCoordinator` APIs.
     public enum Error: Swift.Error {
@@ -89,6 +94,8 @@ public final class CryptoOnrampCoordinator: CryptoOnrampCoordinatorProtocol {
     private let linkController: LinkController
     private let apiClient: STPAPIClient
     private let appearance: LinkAppearance
+    private var applePayPaymentMethod: STPPaymentMethod?
+    private var applePayCompletionContinuation: CheckedContinuation<Void, Never>?
 
     private var linkAccountInfo: PaymentSheetLinkAccountInfoProtocol {
         get async throws {
@@ -209,6 +216,40 @@ public final class CryptoOnrampCoordinator: CryptoOnrampCoordinatorProtocol {
         } else {
             return nil
         }
+    }
+
+    @MainActor
+    public func selectApplePay(using paymentRequest: PKPaymentRequest, from viewController: UIViewController) async {
+        await withCheckedContinuation { (continuation: CheckedContinuation<Void, Never>) in
+            guard let context = STPApplePayContext(paymentRequest: paymentRequest, delegate: self) else {
+                continuation.resume()
+                return
+            }
+
+            // Retain the continuation until we receive a completion delegate callback.
+            self.applePayCompletionContinuation = continuation
+            context.presentApplePay()
+        }
+    }
+}
+
+extension CryptoOnrampCoordinator: STPApplePayContextDelegate {
+
+    // MARK: - STPApplePayContextDelegate
+
+    public func applePayContext(
+        _ context: STPApplePayContext,
+        didCreatePaymentMethod paymentMethod: STPPaymentMethod,
+        paymentInformation: PKPayment,
+        completion: @escaping STPIntentClientSecretCompletionBlock
+    ) {
+        self.applePayPaymentMethod = paymentMethod
+        completion(STPApplePayContext.COMPLETE_WITHOUT_CONFIRMING_INTENT, nil)
+    }
+
+    public func applePayContext(_ context: STPApplePayContext, didCompleteWith status: STPPaymentStatus, error: Swift.Error?) {
+        applePayCompletionContinuation?.resume()
+        applePayCompletionContinuation = nil
     }
 }
 
