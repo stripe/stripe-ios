@@ -28,6 +28,16 @@ extension PayWithLinkViewController {
             linkAccount.email
         }
 
+        private lazy var theme: ElementsAppearance = {
+            var theme = LinkUI.appearance.asElementsTheme
+
+            if let primaryColor = viewModel.linkAppearance?.colors?.primary {
+                theme.colors.primary = primaryColor
+            }
+
+            return theme
+        }()
+
         private lazy var paymentPicker: LinkPaymentMethodPicker = {
             let paymentPicker = LinkPaymentMethodPicker()
             paymentPicker.delegate = self
@@ -88,12 +98,12 @@ extension PayWithLinkViewController {
                     return self?.viewModel.cardBrand ?? .unknown
             })
 
-            return TextFieldElement(configuration: configuration, theme: LinkUI.appearance.asElementsTheme)
+            return TextFieldElement(configuration: configuration, theme: theme)
         }()
 
         private lazy var expiryDateElement: TextFieldElement = {
             let configuration = TextFieldElement.ExpiryDateConfiguration()
-            return TextFieldElement(configuration: configuration, theme: LinkUI.appearance.asElementsTheme)
+            return TextFieldElement(configuration: configuration, theme: theme)
         }()
 
         private lazy var expiredCardNoticeView: LinkNoticeView = {
@@ -105,8 +115,8 @@ extension PayWithLinkViewController {
         private lazy var cardDetailsRecollectionSection: SectionElement = {
             let sectionElement = SectionElement(
                 elements: [
-                    SectionElement.MultiElementRow([expiryDateElement, cvcElement], theme: LinkUI.appearance.asElementsTheme)
-                ], theme: LinkUI.appearance.asElementsTheme
+                    SectionElement.MultiElementRow([expiryDateElement, cvcElement], theme: theme)
+                ], theme: theme
             )
             sectionElement.delegate = self
             return sectionElement
@@ -124,7 +134,7 @@ extension PayWithLinkViewController {
         }()
 
         private lazy var errorLabel: UILabel = {
-            let label = ElementsUI.makeErrorLabel(theme: LinkUI.appearance.asElementsTheme)
+            let label = ElementsUI.makeErrorLabel(theme: theme)
             label.textAlignment = .center
             label.isHidden = true
             return label
