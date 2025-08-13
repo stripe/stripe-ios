@@ -54,6 +54,7 @@ final class PayWithNativeLinkController {
     let configuration: PaymentElementConfiguration
     let logPayment: Bool
     let analyticsHelper: PaymentSheetAnalyticsHelper
+    let supportedPaymentMethodTypes: [LinkPaymentMethodType]
 
     init(
         mode: Mode,
@@ -61,7 +62,8 @@ final class PayWithNativeLinkController {
         elementsSession: STPElementsSession,
         configuration: PaymentElementConfiguration,
         logPayment: Bool = true,
-        analyticsHelper: PaymentSheetAnalyticsHelper
+        analyticsHelper: PaymentSheetAnalyticsHelper,
+        supportedPaymentMethodTypes: [LinkPaymentMethodType] = LinkPaymentMethodType.allCases
     ) {
         self.mode = mode
         self.intent = intent
@@ -69,6 +71,7 @@ final class PayWithNativeLinkController {
         self.elementsSession = elementsSession
         self.configuration = configuration
         self.analyticsHelper = analyticsHelper
+        self.supportedPaymentMethodTypes = supportedPaymentMethodTypes
         self.paymentHandler = .init(apiClient: configuration.apiClient)
     }
 
@@ -150,7 +153,8 @@ final class PayWithNativeLinkController {
                 initiallySelectedPaymentDetailsID: initiallySelectedPaymentDetailsID,
                 canSkipWalletAfterVerification: canSkipWalletAfterVerification,
                 callToAction: callToAction,
-                analyticsHelper: self.analyticsHelper
+                analyticsHelper: self.analyticsHelper,
+                supportedPaymentMethodTypes: self.supportedPaymentMethodTypes
             )
 
             payWithLinkVC.payWithLinkDelegate = self

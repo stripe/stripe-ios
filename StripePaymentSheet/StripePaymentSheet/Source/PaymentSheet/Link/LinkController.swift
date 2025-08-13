@@ -243,7 +243,7 @@ import UIKit
         }
 
         let verificationController = LinkVerificationController(
-            mode: .modal,
+            mode: .inlineLogin,
             linkAccount: linkAccount,
             configuration: configuration,
             appearance: appearance
@@ -265,10 +265,12 @@ import UIKit
     ///
     /// - Parameter presentingViewController: The view controller from which to present the Link sheet.
     /// - Parameter email: The email address to pre-fill in the Link sheet. If `nil`, the email field will be empty.
+    /// - Parameter supportedPaymentMethodTypes: The payment method types to support in the Link sheet. Defaults to all available types.
     /// - Parameter completion: A closure that is called when the user has selected a payment method or canceled the sheet. If the user selects a payment method, the `paymentMethodPreview` will be updated accordingly.
     @_spi(STP) public func collectPaymentMethod(
         from presentingViewController: UIViewController,
         with email: String?,
+        supportedPaymentMethodTypes: [LinkPaymentMethodType] = LinkPaymentMethodType.allCases,
         completion: @escaping () -> Void
     ) {
         var configuration = self.configuration
@@ -283,7 +285,8 @@ import UIKit
             configuration: configuration,
             intent: intent,
             elementsSession: elementsSession,
-            analyticsHelper: analyticsHelper
+            analyticsHelper: analyticsHelper,
+            supportedPaymentMethodTypes: supportedPaymentMethodTypes
         ) { [weak self] confirmOption, shouldClearSelection in
             guard let confirmOption else {
                 if shouldClearSelection {
@@ -537,11 +540,12 @@ import UIKit
     ///
     /// - Parameter presentingViewController: The view controller from which to present the Link sheet.
     /// - Parameter email: The email address to pre-fill in the Link sheet. If `nil`, the email field will be empty.
+    /// - Parameter supportedPaymentMethodTypes: The payment method types to support in the Link sheet. Defaults to all available types.
     /// - Returns: A `PaymentMethodPreview` if the user selected a payment method, or `nil` otherwise.
-    func collectPaymentMethod(from presentingViewController: UIViewController, with email: String?) async -> LinkController.PaymentMethodPreview? {
+    func collectPaymentMethod(from presentingViewController: UIViewController, with email: String?, supportedPaymentMethodTypes: [LinkPaymentMethodType] = LinkPaymentMethodType.allCases) async -> LinkController.PaymentMethodPreview? {
         return await withCheckedContinuation { continuation in
             DispatchQueue.main.async {
-                self.collectPaymentMethod(from: presentingViewController, with: email) { [weak self] in
+                self.collectPaymentMethod(from: presentingViewController, with: email, supportedPaymentMethodTypes: supportedPaymentMethodTypes) { [weak self] in
                     guard let self else { return }
                     continuation.resume(returning: self.paymentMethodPreview)
                 }
