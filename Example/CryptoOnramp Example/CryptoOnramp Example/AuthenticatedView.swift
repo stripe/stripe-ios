@@ -88,7 +88,6 @@ struct AuthenticatedView: View {
                 .background(Color.secondary.opacity(0.1))
                 .cornerRadius(8)
 
-
                 if let errorMessage {
                     ErrorMessageView(message: errorMessage)
                 }
