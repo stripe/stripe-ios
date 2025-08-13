@@ -58,12 +58,6 @@ final class LinkVerificationViewController: UIViewController {
         return verificationView
     }()
 
-    private lazy var activityIndicator: ActivityIndicator = {
-        let activityIndicator = ActivityIndicator(size: .large)
-        activityIndicator.translatesAutoresizingMaskIntoConstraints = false
-        return activityIndicator
-    }()
-
     required init(
         mode: LinkVerificationView.Mode = .modal,
         linkAccount: PaymentSheetLinkAccount,
@@ -93,7 +87,6 @@ final class LinkVerificationViewController: UIViewController {
         view.backgroundColor = .systemBackground
 
         view.addSubview(verificationView)
-        view.addSubview(activityIndicator)
 
         NSLayoutConstraint.activate([
             // Verification view
@@ -102,9 +95,6 @@ final class LinkVerificationViewController: UIViewController {
             verificationView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             verificationView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             verificationView.widthAnchor.constraint(equalTo: view.widthAnchor),
-            // Activity indicator
-            activityIndicator.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            activityIndicator.centerYAnchor.constraint(equalTo: view.centerYAnchor),
         ])
 
         if mode.requiresModalPresentation {
@@ -124,17 +114,11 @@ final class LinkVerificationViewController: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
 
-        activityIndicator.startAnimating()
-
         if linkAccount.sessionState == .requiresVerification {
-            verificationView.isHidden = true
-
             linkAccount.startVerification { [weak self] result in
                 switch result {
                 case .success(let collectOTP):
                     if collectOTP {
-                        self?.activityIndicator.stopAnimating()
-                        self?.verificationView.isHidden = false
                         self?.verificationView.codeField.becomeFirstResponder()
                     } else {
                         // No OTP collection is required.
