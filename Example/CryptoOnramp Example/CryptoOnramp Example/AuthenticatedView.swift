@@ -94,7 +94,7 @@ struct AuthenticatedView: View {
                 }
 
                 VStack(alignment: .leading, spacing: 12) {
-                    Text("Checkout")
+                    Text("Check Out")
                         .font(.headline)
                         .foregroundColor(.secondary)
 
@@ -126,6 +126,7 @@ struct AuthenticatedView: View {
                         }
                     }
                 }
+                .frame(maxWidth: .infinity)
                 .padding()
                 .background(Color.secondary.opacity(0.1))
                 .cornerRadius(8)
