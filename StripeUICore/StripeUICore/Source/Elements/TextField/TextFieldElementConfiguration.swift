@@ -121,7 +121,17 @@ public extension TextFieldElementConfiguration {
 
     func validate(text: String, isOptional: Bool) -> TextFieldElement.ValidationState {
         if text.stp_stringByRemovingCharacters(from: .whitespacesAndNewlines).isEmpty {
-            return isOptional ? .valid : .invalid(TextFieldElement.Error.empty(localizedDescription: ""))
+            return isOptional ? .valid : .invalid(
+                TextFieldElement.Error.empty(
+                    localizedDescription: String(
+                        format: STPLocalizedString(
+                            "%@ is incomplete.",
+                            "Error message for a generic text field when the input is incomplete. E.g. 'Name on card is incomplete'"
+                        ),
+                        label
+                    )
+                )
+            )
         }
         return .valid
     }
