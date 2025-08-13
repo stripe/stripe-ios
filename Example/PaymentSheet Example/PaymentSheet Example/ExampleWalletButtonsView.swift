@@ -113,10 +113,18 @@ struct ExampleWalletButtonsView: View {
     var body: some View {
         if #available(iOS 16.0, *) {
             VStack {
-                if let flowController = model.paymentSheetFlowController, !model.isProcessing {
+                if let flowController = model.paymentSheetFlowController {
+                    let isProcessing = Binding {
+                        model.isProcessing
+                    } set: { _ in
+                        // Ignore anything set by FlowController, since `PreparePaymentMethodHandler`
+                        // has a mind of its own.
+                    }
+
                     WalletButtonsFlowControllerView(
                         flowController: flowController,
-                        isConfirmingPayment: $isConfirmingPayment,
+                        isProcessing: isProcessing,
+                        purchase: { model.isProcessing = true },
                         onCompletion: model.onCompletion
                     )
                 } else if model.paymentResult == nil {
@@ -154,7 +162,8 @@ struct ExampleWalletButtonsView: View {
 @available(iOS 16.0, *)
 struct WalletButtonsFlowControllerView: View {
     @ObservedObject var flowController: PaymentSheet.FlowController
-    @Binding var isConfirmingPayment: Bool
+    @Binding var isProcessing: Bool
+    let purchase: () -> Void
     let onCompletion: (PaymentSheetResult) -> Void
 
     var body: some View {
@@ -169,22 +178,18 @@ struct WalletButtonsFlowControllerView: View {
             ExamplePaymentOptionView(
                 paymentOptionDisplayData: flowController.paymentOption)
         }
-        Button(action: {
-            // If you need to update the PaymentIntent's amount, you should do it here and
-            // set the `isConfirmingPayment` binding after your update completes.
-            isConfirmingPayment = true
-        }) {
-            if isConfirmingPayment {
+        Button(action: purchase) {
+            if isProcessing {
                 ExampleLoadingView()
             } else {
                 ExamplePaymentButtonView()
             }
         }.paymentConfirmationSheet(
-            isConfirming: $isConfirmingPayment,
+            isConfirming: $isProcessing,
             paymentSheetFlowController: flowController,
             onCompletion: onCompletion
         )
-        .disabled(flowController.paymentOption == nil || isConfirmingPayment)
+        .disabled(flowController.paymentOption == nil || isProcessing)
         if let paymentOption = flowController.paymentOption {
             VStack {
                 Text("Payment option label: \(paymentOption.label)")
@@ -293,7 +298,6 @@ class ExampleWalletButtonsModel: ObservableObject {
                 self?.addDebugLog("Creating PaymentSheet FlowController...")
                 PaymentSheet.FlowController.create(
                     intentConfiguration: .init(sharedPaymentTokenSessionWithMode: .payment(amount: 9999, currency: "USD", setupFutureUsage: nil, captureMethod: .automatic, paymentMethodOptions: nil), sellerDetails: .init(networkId: "stripe", externalId: "acct_1HvTI7Lu5o3P18Zp"), paymentMethodTypes: ["card", "shop_pay"], preparePaymentMethodHandler: { [weak self] paymentMethod, address in
-                        self?.isProcessing = true
                         self?.addDebugLog("PaymentMethod prepared: \(paymentMethod.stripeId)")
                         self?.addDebugLog("Address: \(address)")
                         // Create the payment intent on the rough-lying-carriage backend
@@ -337,7 +341,20 @@ class ExampleWalletButtonsModel: ObservableObject {
                     let json = try? JSONSerialization.jsonObject(with: data, options: [])
                         as? [String: Any]
                 else {
-                    self?.addDebugLog("Error creating payment intent: \(error?.localizedDescription ?? "Unknown error")")
+                    DispatchQueue.main.async {
+                        self?.isProcessing = false
+                        self?.addDebugLog("Error creating payment intent: \(error?.localizedDescription ?? "Unknown error")")
+                        self?.setResultAfterSPTConfirmation(error: error ?? PaymentSheetError.unknown(debugDescription: "Unknown error"))
+                    }
+                    return
+                }
+
+                if let stripeError = NSError.stp_error(fromStripeResponse: json) {
+                    DispatchQueue.main.async {
+                        self?.isProcessing = false
+                        self?.addDebugLog("Error creating payment intent: \(error?.localizedDescription ?? "Unknown error")")
+                        self?.setResultAfterSPTConfirmation(error: stripeError)
+                    }
                     return
                 }
 
@@ -360,7 +377,7 @@ class ExampleWalletButtonsModel: ObservableObject {
                         if status == .succeeded {
                             self?.addDebugLog("Payment completed successfully after handling next action")
                             DispatchQueue.main.async {
-                                self?.onCompletion(result: .completed)
+                                self?.setResultAfterSPTConfirmation(error: nil)
                             }
                         } else if status == .failed {
                             self?.addDebugLog("Payment failed after handling next action")
@@ -380,7 +397,7 @@ class ExampleWalletButtonsModel: ObservableObject {
                     self?.addDebugLog("Payment intent created: \(paymentIntentID)")
                     DispatchQueue.main.async {
                         self?.isProcessing = false
-                        self?.onCompletion(result: .completed)
+                        self?.setResultAfterSPTConfirmation(error: nil)
                     }
                 }
             })
@@ -396,15 +413,16 @@ class ExampleWalletButtonsModel: ObservableObject {
             self.paymentResult = .failed(error: NSError(domain: "TestMode", code: -1, userInfo: [NSLocalizedDescriptionKey: "Simulated payment failure for testing"]))
             return
         }
+    }
 
-        // Only set the result if it hasn't been set by the payment handler
-        if self.paymentResult == nil {
-            self.paymentResult = result
-        }
-
-        // MARK: Demo cleanup
-        if case .completed = result {
-            cleanupDemo()
+    private func setResultAfterSPTConfirmation(error: Error?) {
+        DispatchQueue.main.async {
+            if let error {
+                self.paymentResult = .failed(error: error)
+            } else {
+                self.paymentResult = .completed
+                self.cleanupDemo()
+            }
         }
     }
 
