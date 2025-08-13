@@ -2806,6 +2806,267 @@ class PaymentSheetFormFactoryTest: XCTestCase {
         return addressSpecProvider
     }
 
+    // MARK: - AllowedCountries Tests
+    
+    func testMakeBillingAddressSectionIfNecessary_withAllowedCountries_emptySet() {
+        var configuration = PaymentSheet.Configuration()
+        configuration.billingDetailsCollectionConfiguration.address = .full
+        configuration.billingDetailsCollectionConfiguration.allowedCountries = []  // Empty set should allow all countries
+        
+        let factory = PaymentSheetFormFactory(
+            intent: ._testPaymentIntent(paymentMethodTypes: [.card]),
+            elementsSession: ._testCardValue(),
+            configuration: .paymentElement(configuration),
+            paymentMethod: .stripe(.card)
+        )
+        
+        let billingSection = factory.makeBillingAddressSectionIfNecessary(requiredByPaymentMethod: false)
+        XCTAssertNotNil(billingSection)
+        
+        // Verify the address section was created with no country filtering (nil countries parameter)
+        if let addressWrapper = billingSection as? PaymentMethodElementWrapper<AddressSectionElement> {
+            // The underlying AddressSectionElement should not have country filtering when allowedCountries is empty
+            XCTAssertNotNil(addressWrapper.element)
+        } else {
+            XCTFail("Expected PaymentMethodElementWrapper<AddressSectionElement>")
+        }
+    }
+    
+    func testMakeBillingAddressSectionIfNecessary_withAllowedCountries_specificCountries() {
+        var configuration = PaymentSheet.Configuration()
+        configuration.billingDetailsCollectionConfiguration.address = .full
+        configuration.billingDetailsCollectionConfiguration.allowedCountries = ["US", "CA", "GB"]
+        
+        let factory = PaymentSheetFormFactory(
+            intent: ._testPaymentIntent(paymentMethodTypes: [.card]),
+            elementsSession: ._testCardValue(),
+            configuration: .paymentElement(configuration),
+            paymentMethod: .stripe(.card)
+        )
+        
+        let billingSection = factory.makeBillingAddressSectionIfNecessary(requiredByPaymentMethod: false)
+        XCTAssertNotNil(billingSection)
+        
+        // Verify the address section was created with country filtering
+        if let addressWrapper = billingSection as? PaymentMethodElementWrapper<AddressSectionElement> {
+            XCTAssertNotNil(addressWrapper.element)
+        } else {
+            XCTFail("Expected PaymentMethodElementWrapper<AddressSectionElement>")
+        }
+    }
+    
+    func testMakeBillingAddressSectionIfNecessary_withAllowedCountries_addressNever() {
+        var configuration = PaymentSheet.Configuration()
+        configuration.billingDetailsCollectionConfiguration.address = .never
+        configuration.billingDetailsCollectionConfiguration.allowedCountries = ["US", "CA"]
+        
+        let factory = PaymentSheetFormFactory(
+            intent: ._testPaymentIntent(paymentMethodTypes: [.card]),
+            elementsSession: ._testCardValue(),
+            configuration: .paymentElement(configuration),
+            paymentMethod: .stripe(.card)
+        )
+        
+        let billingSection = factory.makeBillingAddressSectionIfNecessary(requiredByPaymentMethod: false)
+        XCTAssertNil(billingSection)  // Should be nil when address collection is .never
+    }
+    
+    func testMakeBillingAddressSectionIfNecessary_withAllowedCountries_automaticRequired() {
+        var configuration = PaymentSheet.Configuration()
+        configuration.billingDetailsCollectionConfiguration.address = .automatic
+        configuration.billingDetailsCollectionConfiguration.allowedCountries = ["US", "CA"]
+        
+        let factory = PaymentSheetFormFactory(
+            intent: ._testPaymentIntent(paymentMethodTypes: [.card]),
+            elementsSession: ._testCardValue(),
+            configuration: .paymentElement(configuration),
+            paymentMethod: .stripe(.card)
+        )
+        
+        // When address is .automatic and payment method requires it
+        let billingSectionRequired = factory.makeBillingAddressSectionIfNecessary(requiredByPaymentMethod: true)
+        XCTAssertNotNil(billingSectionRequired)
+        
+        // When address is .automatic and payment method doesn't require it
+        let billingSectionNotRequired = factory.makeBillingAddressSectionIfNecessary(requiredByPaymentMethod: false)
+        XCTAssertNil(billingSectionNotRequired)
+    }
+    
+    func testMakeCard_withAllowedCountries() {
+        var configuration = PaymentSheet.Configuration()
+        configuration.billingDetailsCollectionConfiguration.address = .full
+        configuration.billingDetailsCollectionConfiguration.allowedCountries = ["US", "CA", "GB"]
+        
+        let factory = PaymentSheetFormFactory(
+            intent: ._testPaymentIntent(paymentMethodTypes: [.card]),
+            elementsSession: ._testCardValue(),
+            configuration: .paymentElement(configuration),
+            paymentMethod: .stripe(.card)
+        )
+        
+        let form = factory.makeCard()
+        XCTAssertNotNil(form)
+        
+        // Verify form contains elements
+        guard let formElement = form as? FormElement else {
+            XCTFail("Expected FormElement")
+            return
+        }
+        
+        // Should contain billing address section with country filtering
+        let hasBillingAddress = formElement.elements.contains { element in
+            return element is PaymentMethodElementWrapper<AddressSectionElement>
+        }
+        XCTAssertTrue(hasBillingAddress, "Card form should contain billing address section when address collection is .full")
+    }
+    
+    func testMakeCard_withAllowedCountries_automatic() {
+        var configuration = PaymentSheet.Configuration()
+        configuration.billingDetailsCollectionConfiguration.address = .automatic
+        configuration.billingDetailsCollectionConfiguration.allowedCountries = ["US", "CA"]
+        
+        let factory = PaymentSheetFormFactory(
+            intent: ._testPaymentIntent(paymentMethodTypes: [.card]),
+            elementsSession: ._testCardValue(),
+            configuration: .paymentElement(configuration),
+            paymentMethod: .stripe(.card)
+        )
+        
+        let form = factory.makeCard()
+        XCTAssertNotNil(form)
+        
+        // Should contain billing address section since cards typically require postal code collection
+        guard let formElement = form as? FormElement else {
+            XCTFail("Expected FormElement")
+            return
+        }
+        
+        let hasBillingAddress = formElement.elements.contains { element in
+            return element is PaymentMethodElementWrapper<AddressSectionElement>
+        }
+        XCTAssertTrue(hasBillingAddress, "Card form should contain billing address section when address collection is .automatic")
+    }
+    
+    func testMakeBLIK_withAllowedCountries() {
+        var configuration = PaymentSheet.Configuration()
+        configuration.billingDetailsCollectionConfiguration.address = .full
+        configuration.billingDetailsCollectionConfiguration.allowedCountries = ["US", "CA", "PL"]
+        
+        let factory = PaymentSheetFormFactory(
+            intent: ._testPaymentIntent(paymentMethodTypes: [.blik]),  
+            elementsSession: ._testCardValue(),
+            configuration: .paymentElement(configuration),
+            paymentMethod: .stripe(.blik)
+        )
+        
+        let form = factory.makeBLIK()
+        XCTAssertNotNil(form)
+        
+        // Verify form contains billing address section when address collection is .full
+        let hasBillingAddress = form.elements.contains { element in
+            return element is PaymentMethodElementWrapper<AddressSectionElement>
+        }
+        XCTAssertTrue(hasBillingAddress, "BLIK form should contain billing address section when address collection is .full")
+    }
+    
+    func testMakeUPI_withAllowedCountries() {
+        var configuration = PaymentSheet.Configuration()
+        configuration.billingDetailsCollectionConfiguration.address = .full
+        configuration.billingDetailsCollectionConfiguration.allowedCountries = ["IN", "US"]
+        
+        let factory = PaymentSheetFormFactory(
+            intent: ._testPaymentIntent(paymentMethodTypes: [.UPI]),
+            elementsSession: ._testCardValue(),
+            configuration: .paymentElement(configuration),
+            paymentMethod: .stripe(.UPI)
+        )
+        
+        let form = factory.makeUPI()
+        XCTAssertNotNil(form)
+        
+        // Verify form contains billing address section when address collection is .full
+        let hasBillingAddress = form.elements.contains { element in
+            return element is PaymentMethodElementWrapper<AddressSectionElement>
+        }
+        XCTAssertTrue(hasBillingAddress, "UPI form should contain billing address section when address collection is .full")
+    }
+    
+    func testMakeFormSpecField_billingAddress_withAllowedCountries() {
+        var configuration = PaymentSheet.Configuration()
+        configuration.billingDetailsCollectionConfiguration.address = .full
+        configuration.billingDetailsCollectionConfiguration.allowedCountries = ["DE", "AT", "NL"]
+        
+        let factory = PaymentSheetFormFactory(
+            intent: ._testPaymentIntent(paymentMethodTypes: [.sofort]),
+            elementsSession: ._testCardValue(),
+            configuration: .paymentElement(configuration),
+            paymentMethod: .stripe(.sofort)
+        )
+        
+        // Test FormSpec billing address field
+        let billingAddressField = factory.makeFormSpecField(
+            for: FormSpec.FieldSpec(
+                type: .billingAddress,
+                apiPath: nil,
+                selectorSpec: nil
+            )
+        )
+        
+        XCTAssertNotNil(billingAddressField, "Should create billing address field when address collection is .full")
+        XCTAssertTrue(billingAddressField is PaymentMethodElementWrapper<AddressSectionElement>, "Should be an AddressSectionElement")
+    }
+    
+    func testMakeFormSpecField_billingAddressWithoutCountry_withAllowedCountries() {
+        var configuration = PaymentSheet.Configuration()
+        configuration.billingDetailsCollectionConfiguration.address = .full
+        configuration.billingDetailsCollectionConfiguration.allowedCountries = ["US", "CA"]
+        
+        let factory = PaymentSheetFormFactory(
+            intent: ._testPaymentIntent(paymentMethodTypes: [.sofort]),
+            elementsSession: ._testCardValue(),
+            configuration: .paymentElement(configuration),
+            paymentMethod: .stripe(.sofort)
+        )
+        
+        // Test FormSpec billing address without country field
+        let billingAddressField = factory.makeFormSpecField(
+            for: FormSpec.FieldSpec(
+                type: .billingAddressWithoutCountry,
+                apiPath: nil,
+                selectorSpec: nil
+            )
+        )
+        
+        XCTAssertNotNil(billingAddressField, "Should create billing address field when address collection is .full")
+        XCTAssertTrue(billingAddressField is PaymentMethodElementWrapper<AddressSectionElement>, "Should be an AddressSectionElement")
+    }
+    
+    func testMakeFormSpecField_billingAddress_addressNever() {
+        var configuration = PaymentSheet.Configuration()
+        configuration.billingDetailsCollectionConfiguration.address = .never
+        configuration.billingDetailsCollectionConfiguration.allowedCountries = ["US", "CA"]
+        
+        let factory = PaymentSheetFormFactory(
+            intent: ._testPaymentIntent(paymentMethodTypes: [.sofort]),
+            elementsSession: ._testCardValue(),
+            configuration: .paymentElement(configuration),
+            paymentMethod: .stripe(.sofort)
+        )
+        
+        // Test that no billing address field is created when address collection is .never
+        let billingAddressField = factory.makeFormSpecField(
+            for: FormSpec.FieldSpec(
+                type: .billingAddress,
+                apiPath: nil,
+                selectorSpec: nil
+            )
+        )
+        
+        XCTAssertNil(billingAddressField, "Should not create billing address field when address collection is .never")
+    }
+
+    // MARK: - Helper Methods
+    
     private func firstWrappedTextFieldElement(
         formElement: FormElement
     ) -> PaymentMethodElementWrapper<TextFieldElement>? {

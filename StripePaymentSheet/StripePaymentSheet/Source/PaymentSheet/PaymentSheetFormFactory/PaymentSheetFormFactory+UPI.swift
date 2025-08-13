@@ -17,7 +17,7 @@ extension PaymentSheetFormFactory {
     func makeUPI() -> FormElement {
         let contactInformationElement = makeContactInformationSection(nameRequiredByPaymentMethod: false, emailRequiredByPaymentMethod: false, phoneRequiredByPaymentMethod: false)
         let billingAddressElement = configuration.billingDetailsCollectionConfiguration.address == .full
-            ? makeBillingAddressSection(countries: nil)
+            ? makeBillingAddressSection(countries: configuration.billingDetailsCollectionConfiguration.allowedCountries.isEmpty ? nil : Array(configuration.billingDetailsCollectionConfiguration.allowedCountries))
             : nil
         let phoneElement = contactInformationElement?.elements.compactMap {
             $0 as? PaymentMethodElementWrapper<PhoneNumberElement>

@@ -681,7 +681,7 @@ extension PaymentSheetFormFactory {
 
         let phoneElement = configuration.billingDetailsCollectionConfiguration.phone == .always ? makePhone() : nil
         let addressElement = configuration.billingDetailsCollectionConfiguration.address == .full
-        ? makeBillingAddressSection(collectionMode: .autoCompletable, countries: nil)
+        ? makeBillingAddressSection(collectionMode: .autoCompletable, countries: configuration.billingDetailsCollectionConfiguration.allowedCountries.isEmpty ? nil : Array(configuration.billingDetailsCollectionConfiguration.allowedCountries))
             : nil
         connectBillingDetailsFields(
             countryElement: nil,
@@ -931,7 +931,10 @@ extension PaymentSheetFormFactory {
     func makeBillingAddressSectionIfNecessary(requiredByPaymentMethod: Bool) -> Element? {
         if configuration.billingDetailsCollectionConfiguration.address == .full
             || (configuration.billingDetailsCollectionConfiguration.address == .automatic && requiredByPaymentMethod) {
-           return makeBillingAddressSection()
+            let countries = configuration.billingDetailsCollectionConfiguration.allowedCountries.isEmpty 
+                ? nil 
+                : Array(configuration.billingDetailsCollectionConfiguration.allowedCountries)
+           return makeBillingAddressSection(countries: countries)
         } else {
             return nil
         }

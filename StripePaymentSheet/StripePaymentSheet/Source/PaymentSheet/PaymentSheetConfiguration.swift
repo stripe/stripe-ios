@@ -784,6 +784,10 @@ extension PaymentSheet {
         ///
         /// If `false` (the default), those values will only be used to prefill the corresponding fields in the form.
         public var attachDefaultsToPaymentMethod = false
+
+        /// A set of two-letter country codes representing countries the customers can select.
+        /// If the set is empty (the default), we display all countries.
+        public var allowedCountries: Set<String> = []
     }
 
     /// Configuration for external payment methods

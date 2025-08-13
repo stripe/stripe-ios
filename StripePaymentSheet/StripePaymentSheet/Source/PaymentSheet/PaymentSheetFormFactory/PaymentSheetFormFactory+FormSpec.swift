@@ -163,11 +163,11 @@ extension PaymentSheetFormFactory {
             return configuration.billingDetailsCollectionConfiguration.phone == .always ? makePhone() : nil
         case .billingAddress:
             return configuration.billingDetailsCollectionConfiguration.address == .full
-                ? makeBillingAddressSection(countries: nil)
+                ? makeBillingAddressSection(countries: configuration.billingDetailsCollectionConfiguration.allowedCountries.isEmpty ? nil : Array(configuration.billingDetailsCollectionConfiguration.allowedCountries))
                 : nil
         case .billingAddressWithoutCountry:
             return configuration.billingDetailsCollectionConfiguration.address == .full
-                ? makeBillingAddressSection(collectionMode: .noCountry, countries: nil)
+                ? makeBillingAddressSection(collectionMode: .noCountry, countries: configuration.billingDetailsCollectionConfiguration.allowedCountries.isEmpty ? nil : Array(configuration.billingDetailsCollectionConfiguration.allowedCountries))
                 : nil
         case .unknown: return nil
         }
