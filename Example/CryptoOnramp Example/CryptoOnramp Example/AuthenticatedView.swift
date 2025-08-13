@@ -113,12 +113,12 @@ struct AuthenticatedView: View {
                                 .cornerRadius(8)
                                 .disabled(shouldDisableButtons)
                                 .opacity(shouldDisableButtons ? 0.5 : 1)
-                            }
 
-                            Text("or")
-                                .font(.footnote)
-                                .bold()
-                                .foregroundColor(.secondary)
+                                Text("or")
+                                    .font(.footnote)
+                                    .bold()
+                                    .foregroundColor(.secondary)
+                            }
 
                             Button("Select Payment Method") {
                                 presentPaymentMethodSelector()
