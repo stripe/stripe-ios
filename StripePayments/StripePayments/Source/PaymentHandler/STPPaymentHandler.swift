@@ -757,7 +757,8 @@ public class STPPaymentHandler: NSObject {
             .bacsDebit,  // Bacs Debit takes 2-3 business days
             .AUBECSDebit,
             .sofort,
-            .USBankAccount:
+            .USBankAccount,
+            .paperCheck:
             return true
 
         // Synchronous
