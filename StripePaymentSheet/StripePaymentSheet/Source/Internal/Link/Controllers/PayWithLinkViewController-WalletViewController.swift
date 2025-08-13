@@ -524,7 +524,8 @@ private extension PayWithLinkViewController.WalletViewController {
             linkAccount: linkAccount,
             context: context,
             paymentMethod: paymentMethod,
-            isBillingDetailsUpdateFlow: false
+            isBillingDetailsUpdateFlow: false,
+            linkAppearance: viewModel.linkAppearance
         )
         updatePaymentMethodVC.delegate = self
 
@@ -536,7 +537,8 @@ private extension PayWithLinkViewController.WalletViewController {
             linkAccount: linkAccount,
             context: context,
             paymentMethod: paymentMethod,
-            isBillingDetailsUpdateFlow: true
+            isBillingDetailsUpdateFlow: true,
+            linkAppearance: viewModel.linkAppearance
         )
         updatePaymentMethodVC.delegate = self
 

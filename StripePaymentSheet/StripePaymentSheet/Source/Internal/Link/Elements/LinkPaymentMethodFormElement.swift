@@ -48,10 +48,21 @@ final class LinkPaymentMethodFormElement: Element {
 
     let paymentMethod: ConsumerPaymentDetails
     let isBillingDetailsUpdateFlow: Bool
+    let linkAppearance: LinkAppearance?
 
     let configuration: PaymentElementConfiguration
 
     let theme: ElementsAppearance = LinkUI.appearance.asElementsTheme
+
+    private lazy var linkAppearanceTheme: ElementsAppearance? = {
+        guard let primaryColor = linkAppearance?.colors?.primary else {
+            return nil
+        }
+
+        var adjustedTheme = theme
+        adjustedTheme.colors.primary = primaryColor
+        return adjustedTheme
+    }()
 
     var params: Params? {
         guard validationState.isValid else {
@@ -168,7 +179,7 @@ final class LinkPaymentMethodFormElement: Element {
             )
         }
 
-        return TextFieldElement(configuration: configuration, theme: theme)
+        return TextFieldElement(configuration: configuration, theme: linkAppearanceTheme ?? theme)
     }()
 
     private lazy var expiryDateElement = TextFieldElement(
@@ -259,10 +270,11 @@ final class LinkPaymentMethodFormElement: Element {
         )
     }()
 
-    init(paymentMethod: ConsumerPaymentDetails, configuration: PaymentElementConfiguration, isBillingDetailsUpdateFlow: Bool) {
+    init(paymentMethod: ConsumerPaymentDetails, configuration: PaymentElementConfiguration, isBillingDetailsUpdateFlow: Bool, linkAppearance: LinkAppearance?) {
         self.paymentMethod = paymentMethod
         self.configuration = configuration
         self.isBillingDetailsUpdateFlow = isBillingDetailsUpdateFlow
+        self.linkAppearance = linkAppearance
 
         if let expiryDate = paymentMethod.cardDetails?.expiryDate {
             self.expiryDateElement.setText(expiryDate.displayString)
