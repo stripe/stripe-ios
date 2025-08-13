@@ -52,16 +52,14 @@ final class LinkPaymentMethodFormElement: Element {
 
     let configuration: PaymentElementConfiguration
 
-    let theme: ElementsAppearance = LinkUI.appearance.asElementsTheme
+    private lazy var theme: ElementsAppearance = {
+        var theme = LinkUI.appearance.asElementsTheme
 
-    private lazy var linkAppearanceTheme: ElementsAppearance? = {
-        guard let primaryColor = linkAppearance?.colors?.primary else {
-            return nil
+        if let primaryColor = linkAppearance?.colors?.primary {
+            theme.colors.primary = primaryColor
         }
 
-        var adjustedTheme = theme
-        adjustedTheme.colors.primary = primaryColor
-        return adjustedTheme
+        return theme
     }()
 
     var params: Params? {
@@ -179,7 +177,7 @@ final class LinkPaymentMethodFormElement: Element {
             )
         }
 
-        return TextFieldElement(configuration: configuration, theme: linkAppearanceTheme ?? theme)
+        return TextFieldElement(configuration: configuration, theme: theme)
     }()
 
     private lazy var expiryDateElement = TextFieldElement(
