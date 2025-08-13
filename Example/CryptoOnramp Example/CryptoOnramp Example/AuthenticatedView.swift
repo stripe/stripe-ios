@@ -26,6 +26,7 @@ struct AuthenticatedView: View {
     @State private var isIdentityVerificationComplete = false
     @State private var showKYCView = false
     @State private var selectedPaymentMethod: PaymentMethodPreview?
+    @State private var cryptoPaymentToken: String?
 
     @Environment(\.isLoading) private var isLoading
 
@@ -69,6 +70,13 @@ struct AuthenticatedView: View {
 
                 if let selectedPaymentMethod {
                     PaymentMethodCardView(preview: selectedPaymentMethod)
+
+                    Button("Create Crypto Payment Token") {
+                        createCryptoPaymentToken()
+                    }
+                    .buttonStyle(PrimaryButtonStyle())
+                    .disabled(shouldDisableButtons)
+                    .opacity(shouldDisableButtons ? 0.5 : 1)
                 } else {
                     Button("Select Payment Method") {
                         presentPaymentMethodSelector()
@@ -92,6 +100,23 @@ struct AuthenticatedView: View {
                 .padding()
                 .background(Color.secondary.opacity(0.1))
                 .cornerRadius(8)
+
+                if let cryptoPaymentToken {
+                    VStack(spacing: 8) {
+                        Text("Crypto Payment Token")
+                            .font(.headline)
+                            .foregroundColor(.secondary)
+                            .padding(.horizontal)
+
+                        Text(cryptoPaymentToken)
+                            .font(.subheadline.monospaced())
+                            .foregroundColor(.secondary)
+                            .padding(.horizontal)
+                    }
+                    .padding()
+                    .background(Color.blue.opacity(0.1))
+                    .cornerRadius(8)
+                }
 
                 HiddenNavigationLink(
                     destination: KYCInfoView(coordinator: coordinator),
@@ -151,6 +176,26 @@ struct AuthenticatedView: View {
             await MainActor.run {
                 isLoading.wrappedValue = false
                 selectedPaymentMethod = preview
+            }
+        }
+    }
+
+    private func createCryptoPaymentToken() {
+        isLoading.wrappedValue = true
+        errorMessage = nil
+
+        Task {
+            do {
+                let token = try await coordinator.createCryptoPaymentToken()
+                await MainActor.run {
+                    isLoading.wrappedValue = false
+                    cryptoPaymentToken = token
+                }
+            } catch {
+                await MainActor.run {
+                    isLoading.wrappedValue = false
+                    errorMessage = "Create crypto payment token failed: \(error.localizedDescription)"
+                }
             }
         }
     }

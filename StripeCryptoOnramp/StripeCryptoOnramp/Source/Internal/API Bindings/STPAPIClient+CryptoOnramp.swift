@@ -117,7 +117,10 @@ extension STPAPIClient {
         }
 
         let endpoint = "crypto/internal/payment_token"
-        let requestObject = CreatePaymentTokenRequest(id: paymentMethodId, consumerSessionClientSecret: consumerSessionClientSecret)
+        let requestObject = CreatePaymentTokenRequest(
+            paymentMethod: paymentMethodId,
+            consumerSessionClientSecret: consumerSessionClientSecret
+        )
         return try await post(resource: endpoint, object: requestObject)
     }
 

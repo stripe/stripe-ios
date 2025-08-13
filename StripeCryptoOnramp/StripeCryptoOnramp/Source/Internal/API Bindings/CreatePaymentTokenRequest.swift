@@ -10,13 +10,13 @@ import Foundation
 /// Encodable model passed to the `/v1/crypto/internal/payment_token` endpoint.
 struct CreatePaymentTokenRequest: Encodable {
     /// The crypto wallet address to register.
-    let id: String
+    let paymentMethod: String
 
     /// Contains credentials required to make the request.
     let credentials: Credentials
 
-    init(id: String, consumerSessionClientSecret: String) {
-        self.id = id
+    init(paymentMethod: String, consumerSessionClientSecret: String) {
+        self.paymentMethod = paymentMethod
         self.credentials = Credentials(consumerSessionClientSecret: consumerSessionClientSecret)
     }
 }
