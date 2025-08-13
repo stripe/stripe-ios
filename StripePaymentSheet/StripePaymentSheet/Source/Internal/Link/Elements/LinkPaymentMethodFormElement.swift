@@ -48,7 +48,7 @@ final class LinkPaymentMethodFormElement: Element {
 
     let paymentMethod: ConsumerPaymentDetails
     let isBillingDetailsUpdateFlow: Bool
-    let linkAppearance: LinkAppearance?
+    private let linkAppearance: LinkAppearance?
 
     let configuration: PaymentElementConfiguration
 
@@ -268,7 +268,7 @@ final class LinkPaymentMethodFormElement: Element {
         )
     }()
 
-    init(paymentMethod: ConsumerPaymentDetails, configuration: PaymentElementConfiguration, isBillingDetailsUpdateFlow: Bool, linkAppearance: LinkAppearance?) {
+    init(paymentMethod: ConsumerPaymentDetails, configuration: PaymentElementConfiguration, isBillingDetailsUpdateFlow: Bool, linkAppearance: LinkAppearance? = nil) {
         self.paymentMethod = paymentMethod
         self.configuration = configuration
         self.isBillingDetailsUpdateFlow = isBillingDetailsUpdateFlow
