@@ -1,6 +1,7 @@
 ## x.x.x x-x-x
 
 ### PaymentSheet
+* [Added] Added new `presentPaymentOptions` APIs for UIKit and SwiftUI with a `didCancel` bool in the completion handler, making it possible to differentiate between a user closing FlowController and selecting a payment option. ([#5202](https://github.com/stripe/stripe-ios/pull/5202))
 * [Changed] The form will now highlight incomplete fields when the user taps a disabled "Confirm" button.
 
 ## 24.20.0 2025-08-11
