@@ -39,66 +39,92 @@ struct AuthenticatedView: View {
     var body: some View {
         ScrollView {
             VStack(spacing: 20) {
-                if isIdentityVerificationComplete {
-                    Text("Identity Verification Complete")
-                        .foregroundColor(.green)
-                        .frame(maxWidth: .infinity)
-                        .padding()
-                        .background {
-                            RoundedRectangle(cornerRadius: 8)
-                                .foregroundColor(.green.opacity(0.1))
+                VStack(alignment: .leading, spacing: 12) {
+                    Text("Customer Information")
+                        .font(.headline)
+                        .foregroundColor(.secondary)
+
+                    // Identity and KYC actions within the section
+                    if isIdentityVerificationComplete {
+                        Text("Identity Verification Complete")
+                            .foregroundColor(.green)
+                            .frame(maxWidth: .infinity)
+                            .padding()
+                            .background {
+                                RoundedRectangle(cornerRadius: 8)
+                                    .foregroundColor(.green.opacity(0.1))
+                            }
+                    } else {
+                        Button("Verify Identity") {
+                            verifyIdentity()
                         }
-                } else {
-                    Button("Verify Identity") {
-                        verifyIdentity()
+                        .buttonStyle(PrimaryButtonStyle())
+                        .disabled(shouldDisableButtons)
+                        .opacity(shouldDisableButtons ? 0.5 : 1)
+                    }
+
+                    Button("Submit KYC Information") {
+                        showKYCView = true
                     }
                     .buttonStyle(PrimaryButtonStyle())
                     .disabled(shouldDisableButtons)
                     .opacity(shouldDisableButtons ? 0.5 : 1)
-                }
 
-                Button("Submit KYC Information") {
-                    showKYCView = true
+                    HStack(spacing: 4) {
+                        Spacer()
+
+                        Text("Customer ID:")
+                            .font(.footnote)
+                            .bold()
+                            .foregroundColor(.secondary)
+                        Text(customerId)
+                            .font(.footnote.monospaced())
+                            .foregroundColor(.secondary)
+
+                        Spacer()
+                    }
                 }
-                .buttonStyle(PrimaryButtonStyle())
-                .disabled(shouldDisableButtons)
-                .opacity(shouldDisableButtons ? 0.5 : 1)
+                .padding()
+                .background(Color.secondary.opacity(0.1))
+                .cornerRadius(8)
+
 
                 if let errorMessage {
                     ErrorMessageView(message: errorMessage)
                 }
 
-                if let selectedPaymentMethod {
-                    PaymentMethodCardView(preview: selectedPaymentMethod)
-                } else {
-                    Button("Select Payment Method") {
-                        presentPaymentMethodSelector()
-                    }
-                    .buttonStyle(PrimaryButtonStyle())
-                    .disabled(shouldDisableButtons)
-                    .opacity(shouldDisableButtons ? 0.5 : 1)
-
-                    if #available(iOS 16.0, *), StripeAPI.deviceSupportsApplePay() {
-                        PayWithApplePayButton(.plain) {
-                            presentApplePay()
-                        }
-                        .frame(height: 45)
-                        .frame(maxWidth: .infinity)
-                        .disabled(shouldDisableButtons)
-                        .opacity(shouldDisableButtons ? 0.5 : 1)
-                    }
-                }
-
-                VStack(spacing: 8) {
-                    Text("Customer ID")
+                VStack(alignment: .leading, spacing: 12) {
+                    Text("Payment Method")
                         .font(.headline)
                         .foregroundColor(.secondary)
-                        .padding(.horizontal)
 
-                    Text(customerId)
-                        .font(.subheadline.monospaced())
-                        .foregroundColor(.secondary)
-                        .padding(.horizontal)
+                    if let selectedPaymentMethod {
+                        PaymentMethodCardView(preview: selectedPaymentMethod)
+                    } else {
+                        VStack(spacing: 8) {
+                            if #available(iOS 16.0, *), StripeAPI.deviceSupportsApplePay() {
+                                PayWithApplePayButton(.plain) {
+                                    presentApplePay()
+                                }
+                                .frame(height: 52)
+                                .cornerRadius(8)
+                                .disabled(shouldDisableButtons)
+                                .opacity(shouldDisableButtons ? 0.5 : 1)
+                            }
+
+                            Text("or")
+                                .font(.footnote)
+                                .bold()
+                                .foregroundColor(.secondary)
+
+                            Button("Select Payment Method") {
+                                presentPaymentMethodSelector()
+                            }
+                            .buttonStyle(PrimaryButtonStyle())
+                            .disabled(shouldDisableButtons)
+                            .opacity(shouldDisableButtons ? 0.5 : 1)
+                        }
+                    }
                 }
                 .padding()
                 .background(Color.secondary.opacity(0.1))
