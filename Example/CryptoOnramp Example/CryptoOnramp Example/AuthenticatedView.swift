@@ -5,6 +5,7 @@
 //  Created by Michael Liberatore on 8/6/25.
 //
 
+import PassKit
 import SwiftUI
 
 @_spi(CryptoOnrampSDKPreview)
@@ -76,6 +77,16 @@ struct AuthenticatedView: View {
                     .buttonStyle(PrimaryButtonStyle())
                     .disabled(shouldDisableButtons)
                     .opacity(shouldDisableButtons ? 0.5 : 1)
+
+                    if #available(iOS 16.0, *), StripeAPI.deviceSupportsApplePay() {
+                        PayWithApplePayButton(.plain) {
+                            presentApplePay()
+                        }
+                        .frame(height: 45)
+                        .frame(maxWidth: .infinity)
+                        .disabled(shouldDisableButtons)
+                        .opacity(shouldDisableButtons ? 0.5 : 1)
+                    }
                 }
 
                 VStack(spacing: 8) {
@@ -151,6 +162,48 @@ struct AuthenticatedView: View {
             await MainActor.run {
                 isLoading.wrappedValue = false
                 selectedPaymentMethod = preview
+            }
+        }
+    }
+
+    private func presentApplePay() {
+        guard let viewController = UIApplication.shared.findTopNavigationController() else {
+            errorMessage = "Unable to find view controller to present from."
+            return
+        }
+
+        let request = StripeAPI.paymentRequest(withMerchantIdentifier: "com.example.merchant", country: "US", currency: "USD")
+        request.paymentSummaryItems = [
+            PKPaymentSummaryItem(label: "Example", amount: NSDecimalNumber(string: "1.00"))
+        ]
+
+        isLoading.wrappedValue = true
+        errorMessage = nil
+
+        Task {
+            do {
+                let result = try await coordinator.selectApplePay(using: request, from: viewController)
+                await MainActor.run {
+                    isLoading.wrappedValue = false
+
+                    switch result {
+                    case .success:
+                        self.selectedPaymentMethod = PaymentMethodPreview(
+                            icon: UIImage(systemName: "apple.logo")?.withRenderingMode(.alwaysTemplate) ?? .init(),
+                            label: "Apple Pay",
+                            sublabel: nil
+                        )
+                    case .canceled:
+                        break
+                    @unknown default:
+                        break
+                    }
+                }
+            } catch {
+                await MainActor.run {
+                    isLoading.wrappedValue = false
+                    errorMessage = "Apple Pay failed: \(error.localizedDescription)"
+                }
             }
         }
     }
