@@ -135,4 +135,13 @@ enum PaymentSheetFormFactoryConfig {
             return .automatic
         }
     }
+
+    var customerEphemeralKeySecret: String? {
+        switch self {
+        case .paymentElement(let config):
+            return config.customer?.ephemeralKeySecret
+        case .customerSheet:
+            return nil // CustomerSheet uses CustomerSession, not ephemeralKeySecret
+        }
+    }
 }

@@ -245,6 +245,7 @@
 		630A3B22BC5C176928538511 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B7188D37BDE69B56D8223046 /* Main.storyboard */; };
 		648FDD85FD6ECDA1BBC71D45 /* CustomerSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83FA9C54257694EC0F205A5C /* CustomerSheet.swift */; };
 		64DE5688E4FBE92E1F49810C /* ExternalPaymentMethod.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2BFA5FA03C7093654EC6926F /* ExternalPaymentMethod.swift */; };
+		651881412E45560B0038D776 /* PaperCheckCaptureElement.swift in Sources */ = {isa = PBXBuildFile; fileRef = 651881402E45560B0038D776 /* PaperCheckCaptureElement.swift */; };
 		68E3CF21A7E1525CA05BA260 /* ConnectionsElement.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7908AA934EC34644090431D5 /* ConnectionsElement.swift */; };
 		68F13446778AF2CAA631ACDE /* PaymentSheet+DeferredAPITest.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA8F7F2824DFC78268ED6459 /* PaymentSheet+DeferredAPITest.swift */; };
 		694A3B36AC19FC1F87EF0CB1 /* CustomerSheetPaymentMethodAvailabilityTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F42DA5892E8E4C28D434AEA7 /* CustomerSheetPaymentMethodAvailabilityTests.swift */; };
@@ -744,6 +745,7 @@
 		62CE362B80042827F47ABC3F /* AffirmCopyLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AffirmCopyLabel.swift; sourceTree = "<group>"; };
 		64C8F350CDB5A29F62E86592 /* FlowControllerStateTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlowControllerStateTests.swift; sourceTree = "<group>"; };
 		64D658AC15478BF1E0A76B9D /* TestModeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestModeView.swift; sourceTree = "<group>"; };
+		651881402E45560B0038D776 /* PaperCheckCaptureElement.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaperCheckCaptureElement.swift; sourceTree = "<group>"; };
 		668A2F2E20F846FDAFEC1217 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		67A8D073B075B32BECCD905A /* form_specs.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = form_specs.json; sourceTree = "<group>"; };
 		68C3318ED094D63626740234 /* InstantDebitsOnlyFinancialConnectionsAuthManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InstantDebitsOnlyFinancialConnectionsAuthManager.swift; sourceTree = "<group>"; };
@@ -1504,6 +1506,7 @@
 				B4F147A0A9C8DF64A45107D8 /* PaymentMethodElement */,
 				02C402D5A354EE0595227557 /* TextField */,
 				7908AA934EC34644090431D5 /* ConnectionsElement.swift */,
+				651881402E45560B0038D776 /* PaperCheckCaptureElement.swift */,
 				6CCB22C60E716A575DA8180A /* SimpleMandateElement.swift */,
 			);
 			path = Elements;
@@ -2435,6 +2438,7 @@
 				3E2279C28944A87EC6472101 /* STPAPIClient+Link.swift in Sources */,
 				B8A7575878C5124CF5482097 /* VerificationSession.swift in Sources */,
 				6185901B2D5BF1D200D533D6 /* RowButtonFlatWithRadioView.swift in Sources */,
+				651881412E45560B0038D776 /* PaperCheckCaptureElement.swift in Sources */,
 				31CC9BA72CB610A300E84A38 /* ConfirmButton+Link.swift in Sources */,
 				9326393E775D29F8C661624B /* STPAPIClient+PaymentSheet.swift in Sources */,
 				AA3A96D74B1659CB5725E95F /* CardExpiryDate.swift in Sources */,

@@ -236,6 +236,8 @@ class PaymentSheetFormFactory {
                 return makeBoleto()
             } else if paymentMethod == .swish {
                 return makeSwish()
+            } else if paymentMethod == .paperCheck {
+                return makePaperCheck()
             }
 
             guard let spec = FormSpecProvider.shared.formSpec(for: paymentMethod.identifier) else {
@@ -720,6 +722,60 @@ extension PaymentSheetFormFactory {
         )
         let billingDetails = makeBillingAddressSectionIfNecessary(requiredByPaymentMethod: false)
         return FormElement(elements: [contactInfoSection, billingDetails], theme: theme)
+    }
+
+    func makePaperCheck() -> PaymentMethodElement {
+        let contactSection: Element? = makeContactInformationSection(
+            nameRequiredByPaymentMethod: false,
+            emailRequiredByPaymentMethod: false,
+            phoneRequiredByPaymentMethod: false
+        )
+
+        let billingSection: Element? = makeBillingAddressSectionIfNecessary(requiredByPaymentMethod: false)
+
+        let paperCheckSection = makePaperCheckCaptureSection()
+
+        let elements: [Element?] = [contactSection, paperCheckSection, billingSection]
+        return FormElement(
+            autoSectioningElements: elements.compactMap { $0 },
+            theme: theme
+        )
+    }
+
+    func makePaperCheckCaptureSection() -> PaymentMethodElementWrapper<PaperCheckCaptureElement> {
+        let element = PaperCheckCaptureElement(
+            theme: theme,
+            previousImages: previousCustomerInput?.paperCheckImages,
+            ephemeralKeySecret: configuration.customerEphemeralKeySecret
+        ) { _, _, _, _ in
+            // This closure will be called when images are captured
+        }
+
+        return PaymentMethodElementWrapper(element) { element, params in
+            // Create paper check params with paper check ID as token
+            let paperCheckParams = STPPaymentMethodPaperCheckParams()
+
+            // Use the paper check ID as the token (as requested by user)
+            paperCheckParams.token = element.paperCheckId
+
+            // Add additional parameters for file IDs and paper check info
+            if let frontFileId = element.frontFileId {
+                paperCheckParams.additionalAPIParameters["front_file"] = frontFileId
+            }
+            if let backFileId = element.backFileId {
+                paperCheckParams.additionalAPIParameters["back_file"] = backFileId
+            }
+            if let paperCheckId = element.paperCheckId {
+                paperCheckParams.additionalAPIParameters["paper_check_id"] = paperCheckId
+            }
+
+            params.paymentMethodParams.paperCheck = paperCheckParams
+
+            // Store images for later reference if needed
+            params.paperCheckImages = PaperCheckImages(frontImage: element.frontImage, backImage: element.backImage)
+
+            return params
+        }
     }
 
     // Only show checkbox for PI+SFU & Setup Intent
