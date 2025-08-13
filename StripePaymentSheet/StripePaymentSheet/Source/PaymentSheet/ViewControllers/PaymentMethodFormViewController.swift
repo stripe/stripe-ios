@@ -122,7 +122,7 @@ class PaymentMethodFormViewController: UIViewController {
                 linkAccount: LinkAccountContext.shared.account,
                 accountService: LinkAccountService(apiClient: configuration.apiClient, elementsSession: elementsSession),
                 analyticsHelper: analyticsHelper,
-                linkAppearance: linkAppearance,
+                linkAppearance: linkAppearance
             ).make()
             self.formCache[type] = form
         }

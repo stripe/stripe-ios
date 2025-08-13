@@ -166,7 +166,7 @@ class PaymentSheetFormFactory {
         isFirstSavedPaymentMethod: Bool = true,
         analyticsHelper: PaymentSheetAnalyticsHelper?,
         paymentMethodIncentive: PaymentMethodIncentive?,
-        linkAppearance: LinkAppearance? = nil,
+        linkAppearance: LinkAppearance? = nil
     ) {
         self.configuration = configuration
         self.paymentMethod = paymentMethod
