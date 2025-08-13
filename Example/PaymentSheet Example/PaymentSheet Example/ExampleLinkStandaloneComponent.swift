@@ -32,7 +32,7 @@ struct ExampleLinkStandaloneComponent: View {
             }
         }
         .onAppear {
-            STPAPIClient.shared.publishableKey = "pk_test_51HvTI7Lu5o3P18Zp6t5AgBSkMvWoTtA0nyA7pVYDqpfLkRtWun7qZTYCOHCReprfLM464yaBeF72UFfB7cY9WG4a00ZnDtiC2C"
+            STPAPIClient.shared.publishableKey = "pk_test_51Rtc1uHi8weFL2MI0Bk69MoHZv5Dr1uBAjM23ZuvZdbSfZ9hb8BtoyRTsdVwZGtm6XPuMyNdAXp9Kqf3oGGHQzws00ro5dRhat"
 
             Task {
                 do {
@@ -494,7 +494,7 @@ struct PaymentMethodSheet: View {
             return
         }
 
-        STPAPIClient.shared.publishableKey = "pk_test_51HvTI7Lu5o3P18Zp6t5AgBSkMvWoTtA0nyA7pVYDqpfLkRtWun7qZTYCOHCReprfLM464yaBeF72UFfB7cY9WG4a00ZnDtiC2C"
+        STPAPIClient.shared.publishableKey = "pk_test_51Rtc1uHi8weFL2MI0Bk69MoHZv5Dr1uBAjM23ZuvZdbSfZ9hb8BtoyRTsdVwZGtm6XPuMyNdAXp9Kqf3oGGHQzws00ro5dRhat"
 
         Task {
             let paymentMethodPreview = await linkController.collectPaymentMethod(from: viewController, with: email)

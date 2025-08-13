@@ -231,4 +231,4 @@ extension STPAPIClient {
 
 }
 
-private let FileUploadURL = "https://uploads.stripe.com/v1/files"
+private let FileUploadURL = "https://martingordon-upload.tunnel.stripe.me/v1/files"

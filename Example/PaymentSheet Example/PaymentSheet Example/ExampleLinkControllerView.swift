@@ -273,7 +273,7 @@ struct ExampleLinkControllerView: View {
     }
 
     private func initializeLinkController() {
-        STPAPIClient.shared.publishableKey = "pk_test_51K9W3OHMaDsveWq0oLP0ZjldetyfHIqyJcz27k2BpMGHxu9v9Cei2tofzoHncPyk3A49jMkFEgTOBQyAMTUffRLa00xzzARtZO"
+        STPAPIClient.shared.publishableKey = "pk_test_51Rtc1uHi8weFL2MI0Bk69MoHZv5Dr1uBAjM23ZuvZdbSfZ9hb8BtoyRTsdVwZGtm6XPuMyNdAXp9Kqf3oGGHQzws00ro5dRhat"
 
         isLoading = true
         errorMessage = nil

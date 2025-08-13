@@ -252,7 +252,7 @@ import UIKit
 }
 
 private let APIVersion = "2020-08-27"
-private let APIBaseURL = "https://api.stripe.com/v1"
+private let APIBaseURL = "https://qa-api.stripe.com/v1"
 
 // MARK: Modern bindings
 extension STPAPIClient {

@@ -269,7 +269,7 @@ class ExampleWalletButtonsModel: ObservableObject {
 
                 // MARK: Set your Stripe publishable key for rough-lying-carriage backend
                 // Using test publishable key - in production, this should come from the backend
-                STPAPIClient.shared.publishableKey = "pk_test_51LsBpsAoVfWZ5CNZi82L5ALZB9C89AyblMIWBHERPJRvSTaLYjaTsjT7hMeVRuXzTIc9VkkiZQ59KqXqVxYL7Rn600Homq7UPk"
+                STPAPIClient.shared.publishableKey = "pk_test_51Rtc1uHi8weFL2MI0Bk69MoHZv5Dr1uBAjM23ZuvZdbSfZ9hb8BtoyRTsdVwZGtm6XPuMyNdAXp9Kqf3oGGHQzws00ro5dRhat"
 
                 // MARK: Create a PaymentSheet instance
                 var configuration = PaymentSheet.Configuration()

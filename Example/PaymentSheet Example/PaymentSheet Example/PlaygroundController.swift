@@ -829,7 +829,7 @@ extension PlaygroundController {
             DispatchQueue.main.async {
                 AnalyticsLogObserver.shared.analyticsLog.removeAll()
                 self.lastPaymentResult = nil
-                self.clientSecret = json["intentClientSecret"]
+                self.clientSecret = json["paymentIntent"]
                 self.ephemeralKey = json["customerEphemeralKeySecret"]
                 self.customerId = json["customerId"]
                 self.customerSessionClientSecret = json["customerSessionClientSecret"]

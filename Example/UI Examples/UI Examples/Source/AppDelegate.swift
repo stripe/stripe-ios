@@ -19,7 +19,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?
     ) -> Bool {
         // STPTestingPublishableKey
-        STPAPIClient.shared.publishableKey = "pk_test_ErsyMEOTudSjQR8hh0VrQr5X008sBXGOu6"
+        STPAPIClient.shared.publishableKey = "pk_test_51Rtc1uHi8weFL2MIE8v5WY8TbzfKP7K1dQhQ9HWfixl5A3ZzF8vOjG6x0SjPFGpJ1nYKHXrggWEQ4x2tkHRyFGXW00Q9n3nEPu"
 
         let rootVC = BrowseViewController()
         let navController = UINavigationController(rootViewController: rootVC)
