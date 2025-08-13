@@ -31,7 +31,8 @@ final class CardSectionElement: ContainerElement {
                 opensCardScannerAutomatically: opensCardScannerAutomatically,
                 delegate: self,
                 theme: theme,
-                analyticsHelper: analyticsHelper
+                analyticsHelper: analyticsHelper,
+                linkAppearance: linkAppearance
             )
         } else {
             return cardSection.view
@@ -44,6 +45,8 @@ final class CardSectionElement: ContainerElement {
     let analyticsHelper: PaymentSheetAnalyticsHelper?
     let cardBrandFilter: CardBrandFilter
     private let opensCardScannerAutomatically: Bool
+
+    private let linkAppearance: LinkAppearance?
 
     struct DefaultValues {
         internal init(name: String? = nil, pan: String? = nil, cvc: String? = nil, expiry: String? = nil) {
@@ -78,7 +81,8 @@ final class CardSectionElement: ContainerElement {
         theme: ElementsAppearance = .default,
         analyticsHelper: PaymentSheetAnalyticsHelper?,
         cardBrandFilter: CardBrandFilter = .default,
-        opensCardScannerAutomatically: Bool
+        opensCardScannerAutomatically: Bool,
+        linkAppearance: LinkAppearance? = nil
     ) {
         self.hostedSurface = hostedSurface
         self.theme = theme
@@ -158,6 +162,7 @@ final class CardSectionElement: ContainerElement {
         self.expiryElement = expiryElement.element
         self.preferredNetworks = preferredNetworks
         self.lastPanElementValidationState = panElement.validationState
+        self.linkAppearance = linkAppearance
         cardSection.delegate = self
     }
 

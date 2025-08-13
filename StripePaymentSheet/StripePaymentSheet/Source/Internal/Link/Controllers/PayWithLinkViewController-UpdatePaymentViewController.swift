@@ -47,6 +47,7 @@ extension PayWithLinkViewController {
 
         private lazy var updateButton: ConfirmButton = .makeLinkButton(
             callToAction: isBillingDetailsUpdateFlow ? context.callToAction : .custom(title: String.Localized.update_card),
+            linkAppearance: context.linkAppearance,
             didTapWhenDisabled: didTapWhenDisabled
         ) { [weak self] in
             self?.updatePaymentMethod()

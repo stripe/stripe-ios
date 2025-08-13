@@ -24,7 +24,7 @@ extension PaymentSheetFormFactory {
         }
     }
 
-    func makeCard() -> PaymentMethodElement {
+    func makeCard(linkAppearance: LinkAppearance? = nil) -> PaymentMethodElement {
         let showLinkInlineSignup = showLinkInlineCardSignup
         let defaultCheckbox: Element? = {
             guard allowsSetAsDefaultPM else {
@@ -71,7 +71,8 @@ extension PaymentSheetFormFactory {
             theme: theme,
             analyticsHelper: analyticsHelper,
             cardBrandFilter: configuration.cardBrandFilter,
-            opensCardScannerAutomatically: configuration.opensCardScannerAutomatically
+            opensCardScannerAutomatically: configuration.opensCardScannerAutomatically,
+            linkAppearance: linkAppearance
         )
 
         let shouldIncludeEmail = configuration.billingDetailsCollectionConfiguration.email == .always
