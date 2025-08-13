@@ -6,7 +6,10 @@
 //
 
 import Foundation
+import PassKit
+import Stripe
 
+@_spi(STP) import StripeApplePay
 @_spi(STP) import StripeIdentity
 @_spi(STP) import StripePaymentSheet
 
@@ -70,11 +73,19 @@ public protocol CryptoOnrampCoordinatorProtocol {
     /// - Parameter viewController: The view controller from which to present the Link sheet.
     /// - Returns: A `PaymentMethodPreview` if the user selected a payment method, or `nil` otherwise.
     func collectPaymentMethod(from viewController: UIViewController) async -> PaymentMethodPreview?
+
+    /// Presents the Apple Pay interface to initiate checkout. Intended to be called in response to tapping a `PKPaymentButton` or `PayWithApplePayButton`.
+    /// - Parameters:
+    ///   - paymentRequest: Represents the request for payment using Apple Pay.
+    ///   - viewController: The view controller from which to present the Apple Pay interface.
+    /// - Returns: A payment status indicating whether the payment request was successful or canceled.
+    /// Throws if an error occurs accepting the payment request.
+    func presentApplePay(using paymentRequest: PKPaymentRequest, from viewController: UIViewController) async throws -> ApplePayPaymentStatus
 }
 
 /// Coordinates headless Link user authentication and identity verification, leaving most of the UI to the client.
 @_spi(CryptoOnrampSDKPreview)
-public final class CryptoOnrampCoordinator: CryptoOnrampCoordinatorProtocol {
+public final class CryptoOnrampCoordinator: NSObject, CryptoOnrampCoordinatorProtocol {
 
     /// A subset of errors that may be thrown by `CryptoOnrampCoordinator` APIs.
     public enum Error: Swift.Error {
@@ -89,6 +100,8 @@ public final class CryptoOnrampCoordinator: CryptoOnrampCoordinatorProtocol {
     private let linkController: LinkController
     private let apiClient: STPAPIClient
     private let appearance: LinkAppearance
+    private var applePayPaymentMethod: STPPaymentMethod?
+    private var applePayCompletionContinuation: CheckedContinuation<ApplePayPaymentStatus, Swift.Error>?
 
     private var linkAccountInfo: PaymentSheetLinkAccountInfoProtocol {
         get async throws {
@@ -209,6 +222,50 @@ public final class CryptoOnrampCoordinator: CryptoOnrampCoordinatorProtocol {
         } else {
             return nil
         }
+    }
+
+    @MainActor
+    public func presentApplePay(using paymentRequest: PKPaymentRequest, from viewController: UIViewController) async throws -> ApplePayPaymentStatus {
+        try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<ApplePayPaymentStatus, Swift.Error>) in
+            guard let context = STPApplePayContext(paymentRequest: paymentRequest, delegate: self) else {
+                continuation.resume(throwing: ApplePayPaymentStatus.Error.applePayFallbackError)
+                return
+            }
+
+            // Retain the continuation until we receive a completion delegate callback.
+            self.applePayCompletionContinuation = continuation
+            context.presentApplePay()
+        }
+    }
+}
+
+extension CryptoOnrampCoordinator: STPApplePayContextDelegate {
+
+    // MARK: - STPApplePayContextDelegate
+
+    public func applePayContext(
+        _ context: STPApplePayContext,
+        didCreatePaymentMethod paymentMethod: STPPaymentMethod,
+        paymentInformation: PKPayment,
+        completion: @escaping STPIntentClientSecretCompletionBlock
+    ) {
+        self.applePayPaymentMethod = paymentMethod
+        completion(STPApplePayContext.COMPLETE_WITHOUT_CONFIRMING_INTENT, nil)
+    }
+
+    public func applePayContext(_ context: STPApplePayContext, didCompleteWith status: STPPaymentStatus, error: Swift.Error?) {
+        switch status {
+        case .success:
+            applePayCompletionContinuation?.resume(returning: .success)
+        case .userCancellation:
+            applePayCompletionContinuation?.resume(returning: .canceled)
+        case .error:
+            applePayCompletionContinuation?.resume(throwing: error ?? ApplePayPaymentStatus.Error.applePayFallbackError)
+        @unknown default:
+            applePayCompletionContinuation?.resume(throwing: error ?? ApplePayPaymentStatus.Error.applePayFallbackError)
+        }
+
+        applePayCompletionContinuation = nil
     }
 }
 
