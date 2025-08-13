@@ -127,6 +127,18 @@ final class PaymentSheetLoader {
                             elementsSession: elementsSession
                         )
                     }
+                    .filter { paymentMethod in
+                        // Filter by allowed countries if specified
+                        let allowedCountries = configuration.billingDetailsCollectionConfiguration.allowedCountries
+                        guard !allowedCountries.isEmpty else { return true } // Empty set means all countries allowed
+                        
+                        guard let billingCountry = paymentMethod.billingDetails?.address?.country else {
+                            // Show payment methods without billing country data (conservative approach)
+                            return true
+                        }
+                        
+                        return allowedCountries.contains(billingCountry)
+                    }
 
                 let isLinkEnabled = PaymentSheet.isLinkEnabled(elementsSession: elementsSession, configuration: configuration)
                 let isApplePayEnabled = PaymentSheet.isApplePayEnabled(elementsSession: elementsSession, configuration: configuration)

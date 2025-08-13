@@ -452,7 +452,7 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
                 return ["US", "CA", "GB", "AU", "DE"]
             }
         }
-        
+
         var displayName: String {
             switch self {
             case .all:

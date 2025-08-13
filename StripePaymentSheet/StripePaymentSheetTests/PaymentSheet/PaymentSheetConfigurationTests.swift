@@ -117,7 +117,7 @@ class PaymentSheetConfigurationTests: XCTestCase {
             attachDefaultsToPaymentMethod: true,
             allowedCountries: ["US", "CA"]
         )
-        
+
         XCTAssertEqual(configuration.name, .always)
         XCTAssertEqual(configuration.phone, .never)
         XCTAssertEqual(configuration.email, .automatic)
@@ -130,7 +130,7 @@ class PaymentSheetConfigurationTests: XCTestCase {
         let configuration = PaymentSheet.BillingDetailsCollectionConfiguration(
             allowedCountries: ["US"]
         )
-        
+
         XCTAssertEqual(configuration.allowedCountries, ["US"])
         XCTAssertEqual(configuration.allowedCountries.count, 1)
         XCTAssertTrue(configuration.allowedCountries.contains("US"))
@@ -141,7 +141,7 @@ class PaymentSheetConfigurationTests: XCTestCase {
         let configuration = PaymentSheet.BillingDetailsCollectionConfiguration(
             allowedCountries: ["US", "US", "CA", "CA", "GB"]
         )
-        
+
         XCTAssertEqual(configuration.allowedCountries.count, 3)
         XCTAssertTrue(configuration.allowedCountries.contains("US"))
         XCTAssertTrue(configuration.allowedCountries.contains("CA"))
@@ -161,7 +161,7 @@ class PaymentSheetConfigurationTests: XCTestCase {
             name: .always,
             allowedCountries: ["US", "GB"]  // Different countries
         )
-        
+
         XCTAssertEqual(config1, config2)  // Order shouldn't matter for sets
         XCTAssertNotEqual(config1, config3)  // Different countries should not be equal
     }
@@ -169,11 +169,11 @@ class PaymentSheetConfigurationTests: XCTestCase {
     func testBillingDetailsCollectionConfiguration_allowedCountries_mutability() {
         var configuration = PaymentSheet.BillingDetailsCollectionConfiguration()
         XCTAssertTrue(configuration.allowedCountries.isEmpty)
-        
+
         // Test that we can modify the set after initialization
         configuration.allowedCountries = ["US", "CA", "GB"]
         XCTAssertEqual(configuration.allowedCountries, ["US", "CA", "GB"])
-        
+
         // Test that we can clear it
         configuration.allowedCountries = []
         XCTAssertTrue(configuration.allowedCountries.isEmpty)

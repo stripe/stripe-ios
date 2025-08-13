@@ -77,8 +77,8 @@ extension PaymentSheetFormFactory {
         let shouldIncludePhone = configuration.billingDetailsCollectionConfiguration.phone == .always
 
         let billingAddressSection: PaymentMethodElementWrapper<AddressSectionElement>? = {
-            let countries = configuration.billingDetailsCollectionConfiguration.allowedCountries.isEmpty 
-                ? nil 
+            let countries = configuration.billingDetailsCollectionConfiguration.allowedCountries.isEmpty
+                ? nil
                 : Array(configuration.billingDetailsCollectionConfiguration.allowedCountries)
             switch configuration.billingDetailsCollectionConfiguration.address {
             case .automatic:

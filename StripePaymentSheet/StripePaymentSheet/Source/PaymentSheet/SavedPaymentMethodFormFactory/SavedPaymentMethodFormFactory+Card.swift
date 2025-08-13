@@ -78,8 +78,8 @@ extension SavedPaymentMethodFormFactory {
             guard configuration.canUpdate else {
                 return nil
             }
-            let countries = configuration.billingDetailsCollectionConfiguration.allowedCountries.isEmpty 
-                ? nil 
+            let countries = configuration.billingDetailsCollectionConfiguration.allowedCountries.isEmpty
+                ? nil
                 : Array(configuration.billingDetailsCollectionConfiguration.allowedCountries)
             switch configuration.billingDetailsCollectionConfiguration.address {
             case .automatic:
