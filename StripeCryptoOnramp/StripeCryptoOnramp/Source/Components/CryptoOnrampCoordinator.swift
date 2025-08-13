@@ -65,6 +65,11 @@ public protocol CryptoOnrampCoordinatorProtocol {
     /// - Parameter walletAddress: The crypto wallet address to register.
     /// - Parameter network: The crypto network for the wallet address.
     func collectWalletAddress(walletAddress: String, network: CryptoNetwork) async throws
+
+    /// Presents the Link sheet to collect a customer's payment method.
+    /// - Parameter viewController: The view controller from which to present the Link sheet.
+    /// - Returns: A `PaymentMethodPreview` if the user selected a payment method, or `nil` otherwise.
+    func collectPaymentMethod(from viewController: UIViewController) async -> PaymentMethodPreview?
 }
 
 /// Coordinates headless Link user authentication and identity verification, leaving most of the UI to the client.
@@ -106,7 +111,8 @@ public final class CryptoOnrampCoordinator: CryptoOnrampCoordinatorProtocol {
         let linkController = try await LinkController.create(
             apiClient: apiClient,
             mode: .payment,
-            appearance: appearance
+            appearance: appearance,
+            requestSurface: .cryptoOnramp
         )
 
         return CryptoOnrampCoordinator(
@@ -194,6 +200,15 @@ public final class CryptoOnrampCoordinator: CryptoOnrampCoordinatorProtocol {
             network: network,
             linkAccountInfo: linkAccountInfo
         )
+    }
+
+    public func collectPaymentMethod(from viewController: UIViewController) async -> PaymentMethodPreview? {
+        let email = try? await linkAccountInfo.email
+        if let result = await linkController.collectPaymentMethod(from: viewController, with: email) {
+            return PaymentMethodPreview(icon: result.icon, label: result.label, sublabel: result.sublabel)
+        } else {
+            return nil
+        }
     }
 }
 

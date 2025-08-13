@@ -14,6 +14,16 @@ import StripePayments
 import UIKit
 
 extension PaymentSheetFormFactory {
+
+    private var isLinkUI: Bool {
+        switch configuration {
+        case .paymentElement(_, let isLinkUI):
+            return isLinkUI
+        case .customerSheet:
+            return false
+        }
+    }
+
     func makeCard() -> PaymentMethodElement {
         let showLinkInlineSignup = showLinkInlineCardSignup
         let defaultCheckbox: Element? = {
@@ -113,7 +123,7 @@ extension PaymentSheetFormFactory {
             defaultCheckbox,
         ]
 
-        if case .paymentElement(let configuration) = configuration, let accountService, showLinkInlineSignup {
+        if case .paymentElement(let configuration, _) = configuration, let accountService, showLinkInlineSignup {
             let inlineSignupElement = LinkInlineSignupElement(
                 configuration: configuration,
                 linkAccount: linkAccount,
@@ -130,14 +140,20 @@ extension PaymentSheetFormFactory {
         let mandate: SimpleMandateElement? = {
             if signupOptInFeatureEnabled {
                 // Respect this over all other configurations.
-                return makeMandate()
+                //
+                // It's possible that `signupOptInFeatureEnabled` is true, but the user has already used Link.
+                // This user would not see the signup opt-in toggle, but we still want to show the mandate.
+                // Therefore, always show the mandate if `signupOptInFeatureEnabled` is true, but only add
+                // the Link-specific terms if the signup opt-in toggle is actually visible via `shouldShowLinkSignupOptIn`.
+                let isSaveToLinkCheckboxChecked = shouldShowLinkSignupOptIn && signupOptInInitialValue
+                return makeMandate(shouldSaveToLink: !isLinkUI && isSaveToLinkCheckboxChecked)
             }
             switch configuration.termsDisplayFor(paymentMethodType: .stripe(.card)) {
             case .never:
                 return nil
             case .automatic:
                 if isSettingUp {
-                    return makeMandate()
+                    return makeMandate(shouldSaveToLink: false)
                 }
             }
             return nil
@@ -155,14 +171,9 @@ extension PaymentSheetFormFactory {
             customSpacing: customSpacing)
     }
 
-    private func makeMandate() -> SimpleMandateElement {
-        // It's possible that `signupOptInFeatureEnabled` is true, but the user has already used Link.
-        // This user would not see the signup opt-in toggle, but we still want to show the mandate.
-        // Therefore, always show the mandate if `signupOptInFeatureEnabled` is true, but only add
-        // the Link-specific terms if the signup opt-in toggle is actually visible via `shouldShowLinkSignupOptIn`.
-        let shouldSaveToLink = shouldShowLinkSignupOptIn && signupOptInInitialValue
+    private func makeMandate(shouldSaveToLink: Bool) -> SimpleMandateElement {
         let mandateText = Self.makeMandateText(
-            linkSignupOptInFeatureEnabled: signupOptInFeatureEnabled,
+            useCombinedReuseAndLinkSignupText: signupOptInFeatureEnabled,
             shouldSaveToLink: shouldSaveToLink,
             merchantName: configuration.merchantDisplayName
         )
@@ -170,11 +181,11 @@ extension PaymentSheetFormFactory {
     }
 
     static func makeMandateText(
-        linkSignupOptInFeatureEnabled: Bool,
+        useCombinedReuseAndLinkSignupText: Bool,
         shouldSaveToLink: Bool,
         merchantName: String
     ) -> NSAttributedString {
-        let formatText = if linkSignupOptInFeatureEnabled {
+        let formatText = if useCombinedReuseAndLinkSignupText {
             if shouldSaveToLink {
                 String.Localized.by_continuing_you_agree_to_save_your_information_to_merchant_and_link
             } else {
@@ -186,7 +197,7 @@ extension PaymentSheetFormFactory {
 
         let terms = String(format: formatText, merchantName).removeTrailingDots()
 
-        if linkSignupOptInFeatureEnabled && shouldSaveToLink {
+        if useCombinedReuseAndLinkSignupText && shouldSaveToLink {
             let links = [
                 "link": URL(string: "https://link.com")!,
                 "terms": URL(string: "https://link.com/terms")!,

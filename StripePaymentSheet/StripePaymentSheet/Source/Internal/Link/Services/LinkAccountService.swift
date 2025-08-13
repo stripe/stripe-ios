@@ -26,11 +26,13 @@ protocol LinkAccountServiceProtocol {
     ///   - email: Email address associated with the account.
     ///   - emailSource: Details on the source of the email used.
     ///   - doNotLogConsumerFunnelEvent: Whether or not this lookup call should be logged backend side.
+    ///   - requestSurface: The request surface to use for the API call. `.default` will map to `ios_payment_element`.
     ///   - completion: Completion block.
     func lookupAccount(
         withEmail email: String?,
         emailSource: EmailSource,
         doNotLogConsumerFunnelEvent: Bool,
+        requestSurface: LinkRequestSurface,
         completion: @escaping (Result<PaymentSheetLinkAccount?, Error>) -> Void
     )
 }
@@ -82,6 +84,7 @@ final class LinkAccountService: LinkAccountServiceProtocol {
         withEmail email: String?,
         emailSource: EmailSource,
         doNotLogConsumerFunnelEvent: Bool,
+        requestSurface: LinkRequestSurface = .default,
         completion: @escaping (Result<PaymentSheetLinkAccount?, Error>) -> Void
     ) {
         guard LinkEmailHelper.canLookupEmail(email) else {
@@ -96,7 +99,8 @@ final class LinkAccountService: LinkAccountServiceProtocol {
             customerID: customerID,
             with: apiClient,
             useMobileEndpoints: useMobileEndpoints,
-            doNotLogConsumerFunnelEvent: doNotLogConsumerFunnelEvent
+            doNotLogConsumerFunnelEvent: doNotLogConsumerFunnelEvent,
+            requestSurface: requestSurface
         ) { [apiClient] result in
             switch result {
             case .success(let lookupResponse):
@@ -110,7 +114,8 @@ final class LinkAccountService: LinkAccountServiceProtocol {
                             publishableKey: session.publishableKey,
                             displayablePaymentDetails: session.displayablePaymentDetails,
                             apiClient: apiClient,
-                            useMobileEndpoints: self.useMobileEndpoints
+                            useMobileEndpoints: self.useMobileEndpoints,
+                            requestSurface: requestSurface
                         )
                     ))
                 case .notFound:
@@ -122,7 +127,8 @@ final class LinkAccountService: LinkAccountServiceProtocol {
                                 publishableKey: nil,
                                 displayablePaymentDetails: nil,
                                 apiClient: self.apiClient,
-                                useMobileEndpoints: self.useMobileEndpoints
+                                useMobileEndpoints: self.useMobileEndpoints,
+                                requestSurface: requestSurface
                             )
                         ))
                     } else {

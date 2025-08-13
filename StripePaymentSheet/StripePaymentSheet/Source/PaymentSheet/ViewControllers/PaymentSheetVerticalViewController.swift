@@ -137,6 +137,9 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
             appearance: configuration.appearance,
             didTap: { [weak self] in
                 self?.didTapPrimaryButton()
+            },
+            didTapWhenDisabled: { [weak self] in
+                self?.didTapPrimaryButtonWhenDisabled()
             }
         )
     }()
@@ -698,6 +701,16 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
         pay(with: selectedPaymentOption)
     }
 
+    @objc func didTapPrimaryButtonWhenDisabled() {
+        // When the disabled button is tapped, show validation errors on all form fields
+#if !os(visionOS)
+        UINotificationFeedbackGenerator().notificationOccurred(.error)
+#endif
+        if let paymentMethodFormViewController {
+            paymentMethodFormViewController.form.showAllValidationErrors()
+        }
+    }
+
     @objc func presentManageScreen() {
         error = nil
         // Special case, only 1 card remaining, skip showing the list and show update view controller
@@ -894,6 +907,7 @@ extension PaymentSheetVerticalViewController: VerticalPaymentMethodListViewContr
             configuration: configuration,
             headerView: headerView,
             analyticsHelper: analyticsHelper,
+            isLinkUI: false,
             delegate: self
         )
     }
