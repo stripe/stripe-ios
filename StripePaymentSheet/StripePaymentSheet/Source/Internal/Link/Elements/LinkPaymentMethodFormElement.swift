@@ -218,10 +218,13 @@ final class LinkPaymentMethodFormElement: Element {
     }()
 
     private lazy var billingAddressSection: AddressSectionElement? = {
-        guard configuration.billingDetailsCollectionConfiguration.address != .never else { return nil }
-
         let collectPhone = configuration.billingDetailsCollectionConfiguration.phone == .always && isBillingDetailsUpdateFlow
         let collectEmail = configuration.billingDetailsCollectionConfiguration.email == .always
+        let collectAddress = configuration.billingDetailsCollectionConfiguration.address != .never || paymentMethod.type == .card
+
+        guard collectPhone || collectEmail || collectAddress else {
+            return nil
+        }
 
         let phone: String? = if collectPhone {
             configuration.defaultBillingDetails.phone
