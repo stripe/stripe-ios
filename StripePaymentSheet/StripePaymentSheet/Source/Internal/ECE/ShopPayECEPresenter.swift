@@ -256,12 +256,7 @@ extension ShopPayECEPresenter: ExpressCheckoutWebviewDelegate {
         // Convert to dictionary and add Shop Pay specific fields
         var response = try ECEBridgeTypes.encode(clickConfig)
 
-        let businessName = {
-            guard case .deferredIntent(let intentConfig) = flowController.intent else {
-                return flowController.configuration.merchantDisplayName
-            }
-            return intentConfig.sellerDetails?.businessName ?? flowController.configuration.merchantDisplayName
-        }()
+        let businessName = flowController.intent.sellerDetails?.businessName ?? flowController.configuration.merchantDisplayName
 
         // Add Shop Pay specific configuration
         response["billingAddressRequired"] = shopPayConfiguration.billingAddressRequired

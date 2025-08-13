@@ -231,12 +231,7 @@ extension STPApplePayContext {
         paymentRequest.requiredBillingContactFields = makeRequiredBillingDetails(from: configuration)
         paymentRequest.requiredShippingContactFields = makeRequiredShippingDetails(from: configuration)
 
-        let label = {
-            guard case .deferredIntent(let intentConfig) = intent else {
-                return configuration.merchantDisplayName
-            }
-            return intentConfig.sellerDetails?.businessName ?? configuration.merchantDisplayName
-        }()
+        let label = intent.sellerDetails?.businessName ?? configuration.merchantDisplayName
 
         if let paymentSummaryItems = applePay.paymentSummaryItems {
             // Use the merchant supplied paymentSummaryItems
