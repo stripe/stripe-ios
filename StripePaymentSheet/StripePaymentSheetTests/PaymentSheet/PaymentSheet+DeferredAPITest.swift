@@ -240,7 +240,8 @@ final class PaymentSheet_DeferredAPITest: STPNetworkStubbingTestCase {
 
         let sellerDetails = PaymentSheet.IntentConfiguration.SellerDetails(
             networkId: "test_network_id",
-            externalId: "test_external_id"
+            externalId: "test_external_id",
+            businessName: "Till's Pills"
         )
 
         let intentConfig = PaymentSheet.IntentConfiguration(
@@ -299,7 +300,7 @@ final class PaymentSheet_DeferredAPITest: STPNetworkStubbingTestCase {
 
         let intentConfig = PaymentSheet.IntentConfiguration(
             sharedPaymentTokenSessionWithMode: .payment(amount: 1000, currency: "USD"),
-            sellerDetails: PaymentSheet.IntentConfiguration.SellerDetails(networkId: "test_network", externalId: "test_external"),
+            sellerDetails: PaymentSheet.IntentConfiguration.SellerDetails(networkId: "test_network", externalId: "test_external", businessName: "Till's Pills"),
             preparePaymentMethodHandler: preparePaymentMethodHandler
         )
 
@@ -360,7 +361,7 @@ final class PaymentSheet_DeferredAPITest: STPNetworkStubbingTestCase {
 
         let intentConfig = PaymentSheet.IntentConfiguration(
             sharedPaymentTokenSessionWithMode: .setup(currency: "USD"),
-            sellerDetails: PaymentSheet.IntentConfiguration.SellerDetails(networkId: "test_network", externalId: "test_external"),
+            sellerDetails: PaymentSheet.IntentConfiguration.SellerDetails(networkId: "test_network", externalId: "test_external", businessName: "Till's Pills"),
             preparePaymentMethodHandler: preparePaymentMethodHandler
         )
 
@@ -449,7 +450,7 @@ final class PaymentSheet_DeferredAPITest: STPNetworkStubbingTestCase {
 
         var intentConfig = PaymentSheet.IntentConfiguration(
             sharedPaymentTokenSessionWithMode: .payment(amount: 1000, currency: "USD"),
-            sellerDetails: PaymentSheet.IntentConfiguration.SellerDetails(networkId: "test_network", externalId: "test_external"),
+            sellerDetails: PaymentSheet.IntentConfiguration.SellerDetails(networkId: "test_network", externalId: "test_external", businessName: "Till's Pills"),
             preparePaymentMethodHandler: preparePaymentMethodHandler
         )
 
