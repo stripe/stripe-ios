@@ -94,7 +94,7 @@ struct AuthenticatedView: View {
                 }
 
                 VStack(alignment: .leading, spacing: 12) {
-                    Text("Payment Method")
+                    Text("Checkout")
                         .font(.headline)
                         .foregroundColor(.secondary)
 
