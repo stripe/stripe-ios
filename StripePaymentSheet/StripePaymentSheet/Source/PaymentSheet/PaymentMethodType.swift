@@ -313,7 +313,7 @@ extension PaymentSheet {
                     case .cardPresent, .blik, .weChatPay, .grabPay, .FPX, .giropay, .przelewy24, .EPS,
                         .netBanking, .OXXO, .afterpayClearpay, .UPI, .link, .affirm, .paynow, .zip, .alma,
                         .mobilePay, .unknown, .alipay, .konbini, .promptPay, .swish, .twint, .multibanco,
-                        .sunbit, .billie, .crypto, .shopPay:
+                        .sunbit, .billie, .crypto, .shopPay, .paperCheck:
                         return [.unsupportedForSetup]
                     @unknown default:
                         return [.unsupportedForSetup]
@@ -333,7 +333,7 @@ extension PaymentSheet {
                             .userSupportsDelayedPaymentMethods, .financialConnectionsSDK,
                             .validUSBankVerificationMethod,
                         ]
-                    case .OXXO, .boleto, .AUBECSDebit, .SEPADebit, .konbini, .multibanco:
+                    case .OXXO, .boleto, .AUBECSDebit, .SEPADebit, .konbini, .multibanco, .paperCheck:
                         return [.userSupportsDelayedPaymentMethods]
                     case .bacsDebit, .sofort:
                         return [.returnURL, .userSupportsDelayedPaymentMethods]

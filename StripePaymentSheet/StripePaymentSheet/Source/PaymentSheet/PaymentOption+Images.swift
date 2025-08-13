@@ -207,7 +207,7 @@ extension STPPaymentMethodType {
                 return .pm_type_paypal
             case .AUBECSDebit:
                 return .pm_type_aubecsdebit
-            case .USBankAccount:
+            case .USBankAccount, .paperCheck:
                 switch iconStyle {
                 case .filled:
                     return .pm_type_us_bank

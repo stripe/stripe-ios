@@ -113,6 +113,8 @@ public class STPPaymentMethodParams: NSObject, STPFormEncodable {
     @objc public var multibanco: STPPaymentMethodMultibancoParams?
     /// If this is a ShopPay PaymentMethod, this contains additional details.
     @objc @_spi(STP) public var shopPay: STPPaymentMethodShopPayParams?
+    /// If this is a Paper Check PaymentMethod, this contains additional details.
+    @objc public var paperCheck: STPPaymentMethodPaperCheckParams?
 
     /// Radar options that may contain HCaptcha token
     @objc var radarOptions: STPRadarOptions?
@@ -845,6 +847,8 @@ public class STPPaymentMethodParams: NSObject, STPFormEncodable {
         case .paynow, .zip, .mobilePay, .konbini, .promptPay, .twint:
             // No parameters
             break
+        case .paperCheck:
+            self.paperCheck = STPPaymentMethodPaperCheckParams()
         // All reusable PaymentMethods go below:
         case .SEPADebit,
             .bacsDebit,
@@ -1392,6 +1396,8 @@ extension STPPaymentMethodParams {
             multibanco = STPPaymentMethodMultibancoParams()
         case .shopPay:
             shopPay = STPPaymentMethodShopPayParams()
+        case .paperCheck:
+            paperCheck = STPPaymentMethodPaperCheckParams()
         case .cardPresent, .paynow, .zip, .konbini, .promptPay, .twint:
             // These payment methods don't have any params
             break

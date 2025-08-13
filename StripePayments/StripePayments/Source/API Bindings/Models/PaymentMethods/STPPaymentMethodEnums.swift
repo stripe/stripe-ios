@@ -98,6 +98,9 @@ import Foundation
     case multibanco
     /// A ShopPay payment method
     @_spi(STP) case shopPay
+    /// A Paper Check payment method
+    case paperCheck
+
     /// An unknown type.
     case unknown
 
@@ -194,6 +197,8 @@ import Foundation
             return "Multibanco"
         case .shopPay:
             return "ShopPay"
+        case .paperCheck:
+            return STPLocalizedString("US paper check", "Payment Method type name for US paper check payments.")
         case .cardPresent,
             .unknown:
             return STPLocalizedString("Unknown", "Default missing source type label")
@@ -293,6 +298,8 @@ import Foundation
             return "multibanco"
         case .shopPay:
             return "shop_pay"
+        case .paperCheck:
+            return "paper_check"
         }
     }
 
