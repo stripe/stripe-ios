@@ -74,7 +74,7 @@ public protocol CryptoOnrampCoordinatorProtocol {
     /// - Returns: A `PaymentMethodPreview` if the user selected a payment method, or `nil` otherwise.
     func collectPaymentMethod(from viewController: UIViewController) async -> PaymentMethodPreview?
 
-    func selectApplePay(using paymentRequest: PKPaymentRequest, from viewController: UIViewController) async
+    func selectApplePay(using paymentRequest: PKPaymentRequest, from viewController: UIViewController) async throws -> ApplePayPaymentStatus
 }
 
 /// Coordinates headless Link user authentication and identity verification, leaving most of the UI to the client.
@@ -95,7 +95,7 @@ public final class CryptoOnrampCoordinator: NSObject, CryptoOnrampCoordinatorPro
     private let apiClient: STPAPIClient
     private let appearance: LinkAppearance
     private var applePayPaymentMethod: STPPaymentMethod?
-    private var applePayCompletionContinuation: CheckedContinuation<Void, Never>?
+    private var applePayCompletionContinuation: CheckedContinuation<ApplePayPaymentStatus, Swift.Error>?
 
     private var linkAccountInfo: PaymentSheetLinkAccountInfoProtocol {
         get async throws {
@@ -219,10 +219,10 @@ public final class CryptoOnrampCoordinator: NSObject, CryptoOnrampCoordinatorPro
     }
 
     @MainActor
-    public func selectApplePay(using paymentRequest: PKPaymentRequest, from viewController: UIViewController) async {
-        await withCheckedContinuation { (continuation: CheckedContinuation<Void, Never>) in
+    public func selectApplePay(using paymentRequest: PKPaymentRequest, from viewController: UIViewController) async throws -> ApplePayPaymentStatus {
+        try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<ApplePayPaymentStatus, Swift.Error>) in
             guard let context = STPApplePayContext(paymentRequest: paymentRequest, delegate: self) else {
-                continuation.resume()
+                continuation.resume(throwing: ApplePayPaymentStatus.Error.applePayFallbackError)
                 return
             }
 
@@ -248,7 +248,17 @@ extension CryptoOnrampCoordinator: STPApplePayContextDelegate {
     }
 
     public func applePayContext(_ context: STPApplePayContext, didCompleteWith status: STPPaymentStatus, error: Swift.Error?) {
-        applePayCompletionContinuation?.resume()
+        switch status {
+        case .success:
+            applePayCompletionContinuation?.resume(returning: .success)
+        case .userCancellation:
+            applePayCompletionContinuation?.resume(returning: .canceled)
+        case .error:
+            applePayCompletionContinuation?.resume(throwing: error ?? ApplePayPaymentStatus.Error.applePayFallbackError)
+        @unknown default:
+            applePayCompletionContinuation?.resume(throwing: error ?? ApplePayPaymentStatus.Error.applePayFallbackError)
+        }
+
         applePayCompletionContinuation = nil
     }
 }
