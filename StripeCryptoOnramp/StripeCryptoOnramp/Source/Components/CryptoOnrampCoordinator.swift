@@ -70,6 +70,10 @@ public protocol CryptoOnrampCoordinatorProtocol {
     /// - Parameter viewController: The view controller from which to present the Link sheet.
     /// - Returns: A `PaymentMethodPreview` if the user selected a payment method, or `nil` otherwise.
     func collectPaymentMethod(from viewController: UIViewController) async -> PaymentMethodPreview?
+
+    /// Creates a crypto payment token for the selected payment method.
+    /// - Returns: The crypto payment token ID.
+    func createCryptoPaymentToken() async throws -> String
 }
 
 /// Coordinates headless Link user authentication and identity verification, leaving most of the UI to the client.
@@ -209,6 +213,15 @@ public final class CryptoOnrampCoordinator: CryptoOnrampCoordinatorProtocol {
         } else {
             return nil
         }
+    }
+
+    public func createCryptoPaymentToken() async throws -> String {
+        let paymentMethod = try await linkController.createPaymentMethod()
+        let paymentTokenResult = try await apiClient.createPaymentToken(
+            for: paymentMethod.stripeId,
+            linkAccountInfo: linkAccountInfo
+        )
+        return paymentTokenResult.id
     }
 }
 
