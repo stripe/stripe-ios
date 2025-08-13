@@ -6,8 +6,6 @@
 
 "App Settings" = "Rakenduse sätted";
 
-"Back identity card photo successfully uploaded" = "ID-kaardi tagakülje foto üleslaadimine õnnestus";
-
 "Back of identity card" = "ID-kaardi tagakülg";
 
 "Back of identity document" = "Isikut tõendava dokumendi tagakülg";
@@ -31,10 +29,6 @@
 "Details not visible" = "Üksikasjad pole nähtaval";
 
 "Flip your identity card over to the other side" = "Pöörake ID-kaart ümber";
-
-"Front identity card photo successfully uploaded" = "ID-kaardi esikülje foto üleslaadimine õnnestus";
-
-"Front of identity card" = "ID-kaardi esikülg";
 
 "Front of identity document" = "Isikut tõendava dokumendi esikülg";
 
@@ -84,11 +78,7 @@
 
 "Photo Library" = "Fototeek";
 
-"Please upload images of the front and back of your identity card" = "Laadige üles oma ID-kaardi esi- ja tagakülje pildid";
-
 "Position your face in the center of the frame." = "Jälgige, et nägu oleks raami keskel.";
-
-"Position your identity card in the center of the frame" = "Jälgige, et ID-kaart oleks raami keskel";
 
 "Retake Photos" = "Tee fotod uuesti";
 
@@ -101,10 +91,6 @@
 "Select a location to upload the back of your identity document from" = "Valige asukoht, kust laadida üles oma isikut tõendava dokumendi tagakülg";
 
 "Select a location to upload the front of your identity document from" = "Valige asukoht, kust laadida üles oma isikut tõendava dokumendi esikülg";
-
-"Select back identity card photo" = "Vali ID-kaardi tagakülje foto";
-
-"Select front identity card photo" = "Vali ID-kaardi esikülje foto";
 
 "Selfie" = "Selfi";
 
@@ -131,10 +117,6 @@
 "Upload a Photo" = "Laadi foto üles";
 
 "Upload your photo ID" = "Laadige üles fotoga isikut tõendav dokument";
-
-"Uploading back identity card photo" = "ID-kaardi tagakülje foto üleslaadimine";
-
-"Uploading front identity card photo" = "ID-kaardi esikülje foto üleslaadimine";
 
 "Verify your identity" = "Kinnitage oma isik";
 

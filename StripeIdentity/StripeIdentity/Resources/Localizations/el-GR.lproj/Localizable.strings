@@ -6,8 +6,6 @@
 
 "App Settings" = "Ρυθμίσεις εφαρμογής";
 
-"Back identity card photo successfully uploaded" = "Η φωτογραφία της πίσω πλευράς της ταυτότητας στάλθηκε με επιτυχία";
-
 "Back of identity card" = "Πίσω πλευρά ταυτότητας";
 
 "Back of identity document" = "Πίσω πλευρά εγγράφου ταυτότητας";
@@ -31,10 +29,6 @@
 "Details not visible" = "Οι λεπτομέρειες δεν είναι ορατές";
 
 "Flip your identity card over to the other side" = "Γυρίστε την ταυτότητά σας από την άλλη πλευρά";
-
-"Front identity card photo successfully uploaded" = "Η φωτογραφία της μπροστινής πλευράς της ταυτότητας στάλθηκε με επιτυχία";
-
-"Front of identity card" = "Μπροστινή πλευρά ταυτότητας";
 
 "Front of identity document" = "Μπροστινή πλευρά εγγράφου ταυτότητας";
 
@@ -84,11 +78,7 @@
 
 "Photo Library" = "Βιβλιοθήκη φωτογραφιών";
 
-"Please upload images of the front and back of your identity card" = "Αποστείλετε εικόνες της μπροστινής και της πίσω πλευράς της ταυτότητάς σας";
-
 "Position your face in the center of the frame." = "Τοποθετήστε το πρόσωπό σας στο κέντρο του πλαισίου.";
-
-"Position your identity card in the center of the frame" = "Τοποθετήστε την ταυτότητά σας στο κέντρο του πλαισίου";
 
 "Retake Photos" = "Λήψη φωτογραφιών εκ νέου";
 
@@ -101,10 +91,6 @@
 "Select a location to upload the back of your identity document from" = "Επιλέξτε την τοποθεσία από την οποία θα αποστείλετε την πίσω πλευρά του εγγράφου ταυτότητάς σας";
 
 "Select a location to upload the front of your identity document from" = "Επιλέξτε την τοποθεσία από την οποία θα αποστείλετε την μπροστινή πλευρά του εγγράφου ταυτότητάς σας";
-
-"Select back identity card photo" = "Επιλογή φωτογραφίας πίσω πλευράς ταυτότητας";
-
-"Select front identity card photo" = "Επιλογή φωτογραφίας μπροστινής πλευράς ταυτότητας";
 
 "Selfie" = "Selfie";
 
@@ -131,10 +117,6 @@
 "Upload a Photo" = "Αποστολή φωτογραφίας";
 
 "Upload your photo ID" = "Αποστείλετε την ταυτότητα με φωτογραφία";
-
-"Uploading back identity card photo" = "Αποστολή φωτογραφίας πίσω πλευράς ταυτότητας";
-
-"Uploading front identity card photo" = "Αποστολή φωτογραφίας μπροστινής πλευράς ταυτότητας";
 
 "Verify your identity" = "Επαληθεύστε την ταυτότητά σας";
 
