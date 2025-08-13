@@ -477,7 +477,7 @@ class ShopPayECEPresenterTests: XCTestCase {
         XCTAssertEqual(response["shopId"] as? String, "test_shop_123")
 
         let business = response["business"] as? [String: String]
-        XCTAssertEqual(business?["name"], "Test Merchant")
+        XCTAssertEqual(business?["name"], "Till's Pills")
 
         let allowedCountries = response["allowedShippingCountries"] as? [String]
         XCTAssertEqual(allowedCountries, ["US", "CA"])
