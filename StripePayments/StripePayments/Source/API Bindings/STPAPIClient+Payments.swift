@@ -841,14 +841,8 @@ extension STPAPIClient {
             completion(paymentMethod, error)
         }
     }
-
-    /// Creates a PaymentMethod object with the provided params object.
-    /// - seealso: https://stripe.com/docs/api/payment_methods/create
-    /// - Parameters:
-    ///   - paymentMethodParams:  The `STPPaymentMethodParams` to pass to `/v1/payment_methods`.  Cannot be nil.
-    ///   - additionalPaymentUserAgentValues:  A list of values to append to the `payment_user_agent` parameter sent in the request. e.g. `["deferred-intent", "autopm"]` will append "; deferred-intent; autopm" to the `payment_user_agent`.
-    /// - Returns: the returned PaymentMethod object.
-    public func createPaymentMethod(with paymentMethodParams: STPPaymentMethodParams, additionalPaymentUserAgentValues: [String]) async throws -> STPPaymentMethod {
+    
+    @_spi(STP) public func createPaymentMethod(with paymentMethodParams: STPPaymentMethodParams, additionalPaymentUserAgentValues: [String]) async throws -> STPPaymentMethod {
         return try await withCheckedThrowingContinuation({ continuation in
             createPaymentMethod(with: paymentMethodParams, additionalPaymentUserAgentValues: additionalPaymentUserAgentValues) { paymentMethod, error in
                 if let paymentMethod = paymentMethod {
@@ -860,6 +854,16 @@ extension STPAPIClient {
         })
     }
 
+    /// Creates a PaymentMethod object with the provided params object.
+    /// - seealso: https://stripe.com/docs/api/payment_methods/create
+    /// - Parameters:
+    ///   - paymentMethodParams:  The `STPPaymentMethodParams` to pass to `/v1/payment_methods`.  Cannot be nil.
+    ///   - additionalPaymentUserAgentValues:  A list of values to append to the `payment_user_agent` parameter sent in the request. e.g. `["deferred-intent", "autopm"]` will append "; deferred-intent; autopm" to the `payment_user_agent`.
+    /// - Returns: the returned PaymentMethod object.
+    public func createPaymentMethod(with paymentMethodParams: STPPaymentMethodParams) async throws -> STPPaymentMethod {
+        return try await createPaymentMethod(with: paymentMethodParams, additionalPaymentUserAgentValues: [])
+    }
+    
     /// Updates a PaymentMethod object with the provided params object.
     /// - seealso: https://stripe.com/docs/api/payment_methods/update
     /// - Parameters:

@@ -376,10 +376,7 @@ import UIKit
                     allowRedisplay: nil
                 )!
                 paymentMethodParams.clientAttributionMetadata = clientAttributionMetadata
-                let paymentMethod = try await apiClient.createPaymentMethod(
-                    with: paymentMethodParams,
-                    additionalPaymentUserAgentValues: []
-                )
+                let paymentMethod = try await apiClient.createPaymentMethod(with: paymentMethodParams)
                 completion(.success(paymentMethod))
             } catch {
                 completion(.failure(error))
