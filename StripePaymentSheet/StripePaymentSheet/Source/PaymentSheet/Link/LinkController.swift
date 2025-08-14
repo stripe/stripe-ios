@@ -10,6 +10,7 @@ import UIKit
 
 @_spi(STP) import StripeCore
 @_spi(STP) import StripePayments
+@_spi(STP) import StripePaymentsUI
 @_spi(STP) import StripeUICore
 
 /// A controller that presents a Link sheet to collect a customer's payment method.
@@ -78,7 +79,7 @@ import UIKit
                 return
             }
             paymentMethodPreview = .init(
-                icon: Self.linkIcon,
+                icon: iconForPaymentDetails(selectedPaymentDetails),
                 label: STPPaymentMethodType.link.displayName,
                 sublabel: selectedPaymentDetails.linkPaymentDetailsFormattedString
             )
@@ -124,6 +125,22 @@ import UIKit
     }
 
     @_spi(STP) public static var linkIcon: UIImage = Image.link_icon.makeImage()
+
+    private func iconForPaymentDetails(_ paymentDetails: ConsumerPaymentDetails) -> UIImage {
+        guard let appearance, appearance.reduceLinkBranding else {
+            return Self.linkIcon
+        }
+
+        switch paymentDetails.details {
+        case .card(let card):
+            return STPImageLibrary.cardBrandImage(for: card.stpBrand)
+        case .bankAccount(let bankAccount):
+            let iconCode = PaymentSheetImageLibrary.bankIconCode(for: bankAccount.name)
+            return PaymentSheetImageLibrary.bankIcon(for: iconCode, iconStyle: .filled)
+        case .unparsable:
+            return Self.linkIcon
+        }
+    }
 
     /// Creates a `LinkController` for the specified `mode`.
     ///

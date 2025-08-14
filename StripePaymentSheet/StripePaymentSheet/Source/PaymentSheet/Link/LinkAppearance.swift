@@ -57,18 +57,25 @@ public struct LinkAppearance {
     /// Style options for colors in the Link UI.
     public let style: PaymentSheet.UserInterfaceStyle
 
+    /// When true, reduces Link branding in payment method previews by showing payment
+    /// method-specific icons (e.g., Visa, Mastercard) instead of the Link icon.
+    public let reduceLinkBranding: Bool
+
     /// Creates a new instance of `LinkAppearance`.
     /// - Parameters:
     ///   - colors: Custom colors used throughout the Link UI. Defaults to Link colors.
     ///   - primaryButton: Configuration values for the primary button. Uses reasonable defaults if nothing is provided.
     ///   - style: Style options for colors in the Link UI.
+    ///   - reduceLinkBranding: When true, reduces Link branding by showing payment method-specific icons. Defaults to false.
     public init(
         colors: Colors? = nil,
         primaryButton: PrimaryButtonConfiguration? = nil,
-        style: PaymentSheet.UserInterfaceStyle = .automatic
+        style: PaymentSheet.UserInterfaceStyle = .automatic,
+        reduceLinkBranding: Bool = false
     ) {
         self.colors = colors
         self.primaryButton = primaryButton
         self.style = style
+        self.reduceLinkBranding = reduceLinkBranding
     }
 }
