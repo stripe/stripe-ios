@@ -32,17 +32,31 @@ extension AppDelegate {
         guard let constraint = notification.object as? NSLayoutConstraint else {
             return
         }
+        let window = UIApplication.shared.windows.first(where: { $0.isKeyWindow })
+        // Ignore broken constraints that existed at the time of writing this - please try to fix newly introduced ones instead of ignoring!
+        // Sometimes the broken constraint references something that is unique, in which case we can ignore it easily
         let ignoredBrokenConstraints = [
             "STP_Internal_LinkMoreInfoView", // https://jira.corp.stripe.com/browse/RUN_MOBILESDK-4562
+
             "_UIRemoteKeyboardPlaceholderView", // Broken constraints in Apple's keyboard; unclear how it's our fault
             "SystemInputAssistantView", // Same as ^
         ]
         guard !ignoredBrokenConstraints.contains(where: { constraint.debugDescription.contains($0) }) else {
             return
         }
+        // In other cases a broken constraint is generic, and we need to look at the hierarchy to avoid ignoring more than we intend
+        let recursiveDescription = window?.value(forKey: "recursiveDescription") as! String
+        if
+            recursiveDescription.contains("STP_Internal_LinkSheetNavigationBar") && constraint.debugDescription.contains("UISV-spanning-boundary") ||
+            recursiveDescription.contains("STP_Internal_LinkSheetNavigationBar") && constraint.debugDescription.contains("UIButton") ||
+            recursiveDescription.contains("STP_Internal_LinkSheetNavigationBar") && constraint.debugDescription.contains("UILabel")
+        {
+            // https://jira.corp.stripe.com/browse/LINK_MOBILE-199
+            return
+        }
         let alert = UIAlertController(title: "Broken constraint!", message: "\(constraint)\nPlease fix it or file a bug!", preferredStyle: .alert)
         alert.addAction(UIAlertAction(title: "OK", style: .default))
-        UIApplication.shared.windows.first(where: { $0.isKeyWindow })?.rootViewController?.findTopMostPresentedViewController().present(alert, animated: true)
+        window?.rootViewController?.findTopMostPresentedViewController().present(alert, animated: true)
     }
 }
 
