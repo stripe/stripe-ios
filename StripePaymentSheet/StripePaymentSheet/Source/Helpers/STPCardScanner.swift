@@ -17,7 +17,9 @@ import Vision
 
 @available(macCatalyst 14.0, *)
 @objc protocol STPCardScannerDelegate {
+    // Called when the scanner has successfully scanned a card
     func cardScanner(_ scanner: STPCardScanner, didFinishWith cardParams: STPPaymentMethodCardParams)
+    // Called when the scanner has encountered an error
     func cardScannerDidError(_ scanner: STPCardScanner)
 }
 
@@ -96,6 +98,7 @@ class STPCardScanner: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate {
         deviceOrientation = UIDevice.current.orientation
     }
 
+    // Starts, but does not open, the scanner
     func start() {
         if isScanning {
             return
@@ -158,6 +161,7 @@ class STPCardScanner: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate {
         }
     }
 
+    // Stops, but does not close, the scanner
     func stop(didError: Bool) {
         if isScanning {
             finish(with: nil, didError: didError)
@@ -448,17 +452,14 @@ class STPCardScanner: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate {
 
         DispatchQueue.main.async(execute: {
             switch (params, didError) {
-                // if we completed with params...
-            case (let params?, _):
+            case (let params?, _): // if we completed with params...
                 // log success and report scan completion
                 STPAnalyticsClient.sharedClient.logCardScanSucceeded(withDuration: duration)
                 self.delegate?.cardScanner(self, didFinishWith: params)
-                // if we completed with no params or error...
-            case (nil, false):
+            case (nil, false): // if we completed with no params or error...
                 // log cancellation and report scan completion
                 STPAnalyticsClient.sharedClient.logCardScanCancelled(withDuration: duration)
-                // if we errored...
-            case (nil, true):
+            case (nil, true): // if we errored...
                 // log cancellation and report scan error
                 STPAnalyticsClient.sharedClient.logCardScanCancelled(withDuration: duration)
                 self.delegate?.cardScannerDidError(self)

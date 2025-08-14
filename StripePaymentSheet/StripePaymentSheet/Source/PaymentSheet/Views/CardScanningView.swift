@@ -27,7 +27,9 @@ private class CardScanningEasilyTappableButton: UIButton {
 /// For internal SDK use only
 @available(macCatalyst 14.0, *)
 protocol STP_Internal_CardScanningViewDelegate: AnyObject {
+    // Called when a card is successfully scanned to pass card parameters
     func cardScanningView(_ cardScanningView: CardScanningView, didScanCard cardParams: STPPaymentMethodCardParams)
+    // Called when the card scanning view should close, e.g. when the user taps the close button or a card is scanned
     func cardScanningViewShouldClose(_ cardScanningView: CardScanningView)
 }
 
@@ -138,10 +140,12 @@ class CardScanningView: UIView {
         ])
     }
 
+    // Starts, but does not open, the scanner
     func startScanner() {
         cardScanner?.start()
     }
 
+    // Stops, but does not close, the scanner
     func stopScanner() {
         cardScanner?.stop(didError: false)
     }
@@ -156,6 +160,11 @@ class CardScanningView: UIView {
     // The shape layers don't animate cleanly during setHidden,
     // so let's use a snapshot view instead.
     func prepDismissAnimation() {
+        // We should never already have a snapshot view.
+        guard snapshotView == nil else {
+            assertionFailure("CardScanningView already has a snapshotView")
+            return
+        }
         if let snapshot = snapshotView(afterScreenUpdates: true) {
             self.addSubview(snapshot)
             self.snapshotView = snapshot

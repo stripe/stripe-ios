@@ -62,12 +62,26 @@ final class CardSectionWithScannerView: UIView {
         } else {
             cardScanningView.isHidden = true
         }
+
+        // add observer for keyboard so that we can hide the card scanner when the keyboard appears
+        NotificationCenter.default.addObserver(self,
+                                               selector: #selector(hideCardScanner),
+                                               name: UIResponder.keyboardWillShowNotification,
+                                               object: nil)
+    }
+
+    deinit {
+        NotificationCenter.default.removeObserver(self)
     }
 
     override func willMove(toWindow newWindow: UIWindow?) {
         // We wait until the view is added to the window to start the scanner
         //  since it may be initialized without being displayed
-        if opensCardScannerAutomatically {
+        if newWindow == nil {
+            // If the view is being removed, we stop the scanner
+            cardScanningView.stopScanner()
+        } else if cardScanningView.isHidden == false {
+            // If the view is being added and the scanner is visible, we start the scanner
             cardScanningView.startScanner()
         }
         super.willMove(toWindow: newWindow)
@@ -95,7 +109,11 @@ final class CardSectionWithScannerView: UIView {
         becomeFirstResponder()
     }
 
-    private func hideCardScanner() {
+    @objc private func hideCardScanner() {
+        // Disregard is the scanner is already hidden
+        guard self.cardScanningView.isHidden == false else {
+            return
+        }
         self.cardScanningView.prepDismissAnimation()
         UIView.animate(withDuration: 0.3, delay: 0, usingSpringWithDamping: 1.0, initialSpringVelocity: 0.3, options: [.curveEaseInOut]) {
             self.cardScanButton.alpha = 1
@@ -117,11 +135,6 @@ final class CardSectionWithScannerView: UIView {
     override var canBecomeFirstResponder: Bool {
         return true
     }
-
-    override func resignFirstResponder() -> Bool {
-        cardScanningView.stopScanner()
-        return super.resignFirstResponder()
-    }
 }
 
 @available(macCatalyst 14.0, *)
@@ -138,6 +151,7 @@ extension CardSectionWithScannerView: STP_Internal_CardScanningViewDelegate {
 
 // MARK: - CardFormElementViewDelegate
 protocol CardSectionWithScannerViewDelegate: AnyObject {
+    // Called when a card is scanned successfully
     func didScanCard(cardParams: STPPaymentMethodCardParams)
 }
 
