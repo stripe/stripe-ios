@@ -49,5 +49,4 @@ class LinkBadgeViewSnapshotTest: STPSnapshotTestCase {
         sut.bounds = CGRect(origin: .zero, size: size)
         STPSnapshotVerifyView(sut, identifier: identifier, file: file, line: line)
     }
-
 }
