@@ -2,7 +2,6 @@
 
 ### CustomerSheet
 * [Added] `opensCardScannerAutomatically` configuration
-* [Changed] Form inputs are cached
 
 ### PaymentSheet
 * [Added] `opensCardScannerAutomatically` configuration
