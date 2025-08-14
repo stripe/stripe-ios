@@ -99,6 +99,11 @@ extension PayWithLinkViewController {
             var configuration = context.configuration
             configuration.linkPaymentMethodsOnly = true
             configuration.appearance = LinkUI.appearance
+
+            if let primaryColorOverride = context.linkAppearance?.colors?.primary {
+                configuration.appearance.colors.primary = primaryColorOverride
+            }
+
             configuration.cardBrandAcceptance = context.elementsSession.linkCardBrandFilteringEnabled ? configuration.cardBrandAcceptance : .all
 
             let effectiveBillingDetails = configuration.effectiveBillingDetails(for: linkAccount)
