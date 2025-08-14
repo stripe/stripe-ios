@@ -31,5 +31,5 @@ verbose: true
 
 build_arguments:
   - -destination
-  - 'generic/platform=iOS Simulator'
+  - 'generic/platform=iPhone 16 (18.4)'
   
