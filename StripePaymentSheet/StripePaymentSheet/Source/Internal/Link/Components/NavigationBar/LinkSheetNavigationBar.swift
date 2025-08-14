@@ -97,8 +97,10 @@ class LinkSheetNavigationBar: SheetNavigationBar {
     }
 
     override func createBackButton() -> UIButton {
+        let image = Image.icon_x_standalone.makeImage(template: true)
+        let resizedImage = Image.icon_chevron_left_standalone.makeImage(template: true).resized(to: CGSize(width: LinkUI.navigationBarButtonContentSize, height: LinkUI.navigationBarButtonContentSize))
         return Self.createButton(
-            with: Image.icon_chevron_left_standalone.makeImage(template: true),
+            with: resizedImage ?? image,
             accessibilityLabel: String.Localized.back,
             accessibilityIdentifier: "UIButton.Back",
             appearance: appearance
