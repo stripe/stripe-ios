@@ -182,6 +182,12 @@ extension PayWithLinkViewController {
         }
 
         private func didTapWhenDisabled() {
+            // Clear any previous confirmation error
+            updateErrorLabel(for: nil)
+
+#if !os(visionOS)
+            UINotificationFeedbackGenerator().notificationOccurred(.error)
+#endif
             addPaymentMethodVC.paymentMethodFormElement.showAllValidationErrors()
         }
 

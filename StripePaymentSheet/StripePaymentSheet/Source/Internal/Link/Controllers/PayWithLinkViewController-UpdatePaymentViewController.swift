@@ -54,12 +54,13 @@ extension PayWithLinkViewController {
         }
 
         private func didTapWhenDisabled() {
-            guard case let .invalid(error, _) = paymentMethodEditElement.validationState else {
-                return
-            }
+            // Clear any previous confirmation error
+            updateErrorLabel(for: nil)
 
-            errorLabel.text = error.localizedDescription
-            errorLabel.isHidden = false
+#if !os(visionOS)
+            UINotificationFeedbackGenerator().notificationOccurred(.error)
+#endif
+            paymentMethodEditElement.showAllValidationErrors()
         }
 
         private lazy var errorLabel: UILabel = {

@@ -273,6 +273,9 @@ final class LinkPaymentMethodFormElement: Element {
         self.checkboxElement.checkboxButton.isHidden = true
     }
 
+    func showAllValidationErrors() {
+        formElement.showAllValidationErrors()
+    }
 }
 
 extension LinkPaymentMethodFormElement: ElementDelegate {
