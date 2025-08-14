@@ -2996,7 +2996,7 @@ class PaymentSheetFormFactoryTest: XCTestCase {
     // TODO: Re-enable when makeFormSpecField is available or create alternative tests
 
     // MARK: - Saved Payment Method Country Filtering Tests
-    
+
     private func createMockPaymentMethod(id: String, country: String?) -> STPPaymentMethod {
         // Create mock payment method data that matches API response structure
         var mockData: [String: Any] = [
@@ -3007,18 +3007,18 @@ class PaymentSheetFormFactoryTest: XCTestCase {
                 "brand": "visa",
                 "last4": "4242",
                 "exp_month": 12,
-                "exp_year": 2025
-            ]
+                "exp_year": 2025,
+            ],
         ]
-        
+
         if let country = country {
             mockData["billing_details"] = [
                 "address": [
                     "country": country
-                ]
+                ],
             ]
         }
-        
+
         return STPPaymentMethod.decodedObject(fromAPIResponse: mockData)!
     }
 
