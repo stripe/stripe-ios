@@ -181,7 +181,7 @@ extension PayWithLinkViewController {
                 containerView.addArrangedSubview(cancelButton)
             }
 
-            contentView.addAndPinSubview(containerView)
+            contentView.addAndPinSubview(containerView, insets: .insets(bottom: 35))
 
             // If the initially selected payment method is not supported, we should automatically
             // expand the payment picker to hint the user to pick another payment method.
