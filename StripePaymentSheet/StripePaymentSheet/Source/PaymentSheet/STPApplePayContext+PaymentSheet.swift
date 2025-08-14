@@ -230,6 +230,9 @@ extension STPApplePayContext {
         )
         paymentRequest.requiredBillingContactFields = makeRequiredBillingDetails(from: configuration)
         paymentRequest.requiredShippingContactFields = makeRequiredShippingDetails(from: configuration)
+
+        let label = intent.sellerDetails?.businessName ?? configuration.merchantDisplayName
+
         if let paymentSummaryItems = applePay.paymentSummaryItems {
             // Use the merchant supplied paymentSummaryItems
             paymentRequest.paymentSummaryItems = paymentSummaryItems
@@ -241,11 +244,11 @@ extension STPApplePayContext {
                     currency: intent.currency
                 )
                 paymentRequest.paymentSummaryItems = [
-                    PKPaymentSummaryItem(label: configuration.merchantDisplayName, amount: decimalAmount, type: .final),
+                    PKPaymentSummaryItem(label: label, amount: decimalAmount, type: .final),
                 ]
             } else {
                 paymentRequest.paymentSummaryItems = [
-                    PKPaymentSummaryItem(label: configuration.merchantDisplayName, amount: .zero, type: .pending),
+                    PKPaymentSummaryItem(label: label, amount: .zero, type: .pending),
                 ]
             }
         }

@@ -1,6 +1,10 @@
 ## x.x.x x-x-x
 
+### CustomerSheet
+* [Added] `opensCardScannerAutomatically` configuration
+
 ### PaymentSheet
+* [Added] `opensCardScannerAutomatically` configuration
 * [Added] Added new `presentPaymentOptions` APIs for UIKit and SwiftUI with a `didCancel` bool in the completion handler, making it possible to differentiate between a user closing FlowController and selecting a payment option. ([#5202](https://github.com/stripe/stripe-ios/pull/5202))
 * [Changed] The form will now highlight incomplete fields when the user taps a disabled "Confirm" button.
 
