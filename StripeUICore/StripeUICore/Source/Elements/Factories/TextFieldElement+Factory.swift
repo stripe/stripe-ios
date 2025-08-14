@@ -15,7 +15,7 @@ import UIKit
     // MARK: - Name
     struct NameConfiguration: TextFieldElementConfiguration {
         @frozen public enum NameType {
-            case given, family, full, onAccount
+            case given, family, full, onAccount, onCard
         }
 
         let type: NameType
@@ -29,8 +29,28 @@ import UIKit
                 return .givenName
             case .family:
                 return .familyName
-            case .full, .onAccount:
+            case .full, .onAccount, .onCard:
                 return .name
+            }
+        }
+
+        public var invalidInputErrorLabel: String {
+            switch type {
+            case .given:
+                // TODO: Localize
+                return "First name is incomplete."
+            case .family:
+                // TODO: Localize
+                return "Last name is incomplete."
+            case .full:
+                // TODO: Localize
+                return "Full name is incomplete."
+            case .onAccount:
+                // TODO: Localize
+                return "Name on account is incomplete."
+            case .onCard:
+                // TODO: Localize
+                return "Name on card is incomplete."
             }
         }
 
@@ -61,12 +81,19 @@ import UIKit
                 return String.Localized.full_name
             case .onAccount:
                 return String.Localized.nameOnAccount
+            case .onCard:
+                // TODO: Localize
+                return "Name on card"
             }
         }
     }
 
     static func makeName(label: String? = nil, defaultValue: String?, theme: ElementsAppearance = .default) -> TextFieldElement {
         return TextFieldElement(configuration: NameConfiguration(type: .full, defaultValue: defaultValue, label: label), theme: theme)
+    }
+
+    static func makeName(type: NameConfiguration.NameType, defaultValue: String?, theme: ElementsAppearance = .default) -> TextFieldElement {
+        return TextFieldElement(configuration: NameConfiguration(type: type, defaultValue: defaultValue), theme: theme)
     }
 
     // MARK: - Email
