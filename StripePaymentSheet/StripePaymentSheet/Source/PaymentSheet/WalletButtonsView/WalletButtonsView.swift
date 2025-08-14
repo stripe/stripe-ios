@@ -15,24 +15,50 @@ import WebKit
         case shopPay
     }
 
+    @_spi(STP) public struct ButtonThemes {
+        @_spi(STP) public var link: ButtonThemes.Link
+
+        @_spi(STP) public enum Link {
+            case green
+            case white
+        }
+
+        @_spi(STP) public init(link: ButtonThemes.Link = .white) {
+            self.link = link
+        }
+    }
+
+    @_spi(STP) public struct Configuration {
+        @_spi(STP) public var buttonThemes: ButtonThemes
+
+        @_spi(STP) public init(buttonThemes: ButtonThemes = .init()) {
+            self.buttonThemes = buttonThemes
+        }
+    }
+
     let flowController: PaymentSheet.FlowController
     let confirmHandler: (PaymentSheetResult) -> Void
+    let configuration: Configuration
     @State var orderedWallets: [ExpressType]
 
     @_spi(STP) public init(flowController: PaymentSheet.FlowController,
+                           configuration: Configuration = Configuration(),
                            confirmHandler: @escaping (PaymentSheetResult) -> Void) {
         self.confirmHandler = confirmHandler
         self.flowController = flowController
+        self.configuration = configuration
 
         let wallets = WalletButtonsView.determineAvailableWallets(for: flowController)
         self._orderedWallets = State(initialValue: wallets)
     }
 
     init(flowController: PaymentSheet.FlowController,
+         configuration: Configuration = Configuration(),
          confirmHandler: @escaping (PaymentSheetResult) -> Void,
          orderedWallets: [ExpressType]) {
         self.flowController = flowController
         self.confirmHandler = confirmHandler
+        self.configuration = configuration
         self._orderedWallets = State(initialValue: orderedWallets)
     }
 
@@ -55,6 +81,7 @@ import WebKit
                         )
                     case .link:
                         LinkButton(
+                            theme: configuration.buttonThemes.link,
                             height: flowController.configuration.appearance.primaryButton.height,
                             cornerRadius: flowController.configuration.appearance.primaryButton.cornerRadius ?? flowController.configuration.appearance.cornerRadius,
                             action: completion
