@@ -75,7 +75,7 @@ import Foundation
 
     /// Returns a localized user-facing message for a given error code.
     /// This method can be used to display an appropriate error message to the user.
-    /// - Parameter errorCode: The error code string from Stripe API (e.g., "incorrect_number", "card_declined", "insufficient_funds")
+    /// - Parameter errorCode: The error code string from Stripe API (e.g., "incorrect_number", "card_declined")
     /// - Returns: A localized error message, or nil if the error code is not recognized
     @objc public static func localizedUserMessage(forErrorCode errorCode: String) -> String? {
         return NSError.Utils.localizedMessage(fromAPIErrorCode: errorCode)
