@@ -330,11 +330,16 @@ extension AddressViewController {
                 populateAddressSection(with: .init(from: billingAddress))
             }
         } else {
-            // Populate with shipping address (defaultValues) when unchecked, or clear if no shipping address
+            // Always clear when unchecked first
+            clearAddressSection()
+
+            // Then optionally populate with shipping address (defaultValues) if they exist and are different from billing
             if !configuration.defaultValues.address.isEmpty && isAddressCompatible(configuration.defaultValues) {
-                populateAddressSection(with: .init(from: configuration.defaultValues))
-            } else {
-                clearAddressSection()
+                // Only populate with default values if they're different from billing address
+                if let billingAddress = configuration.billingAddress,
+                   configuration.defaultValues.address != billingAddress.address {
+                    populateAddressSection(with: .init(from: configuration.defaultValues))
+                }
             }
         }
     }
