@@ -18,6 +18,7 @@ final class LinkHintMessageView: UIView {
         static let cornerRadius: CGFloat = LinkUI.cornerRadius
         static let minimumHeight: CGFloat = LinkUI.minimumButtonHeight
     }
+
     var text: String? {
         get {
             return textLabel.text
@@ -26,6 +27,7 @@ final class LinkHintMessageView: UIView {
             textLabel.text = newValue
         }
     }
+
     private lazy var iconView: UIImageView = {
         let imageView = UIImageView()
         imageView.tintColor = .linkIconTertiary
@@ -48,6 +50,7 @@ final class LinkHintMessageView: UIView {
         label.numberOfLines = 0
         return label
     }()
+
     init(message: String) {
         super.init(frame: .zero)
         setupUI()
@@ -68,6 +71,7 @@ final class LinkHintMessageView: UIView {
         stackView.isLayoutMarginsRelativeArrangement = true
         stackView.directionalLayoutMargins = Constants.margins
         stackView.translatesAutoresizingMaskIntoConstraints = false
+
         addSubview(stackView)
         NSLayoutConstraint.activate([
             stackView.leadingAnchor.constraint(equalTo: leadingAnchor),
@@ -79,6 +83,7 @@ final class LinkHintMessageView: UIView {
 
         heightAnchor.constraint(greaterThanOrEqualToConstant: Constants.minimumHeight).isActive = true
     }
+
     private func configureImage() {
         iconView.image = Image.icon_info.makeImage(template: true)
     }
