@@ -3038,7 +3038,7 @@ class PaymentSheetFormFactoryTest: XCTestCase {
             guard !allowedCountries.isEmpty else { return true }
 
             guard let billingCountry = paymentMethod.billingDetails?.address?.country else {
-                return true
+                return false
             }
 
             return allowedCountries.contains(billingCountry)
@@ -3066,7 +3066,7 @@ class PaymentSheetFormFactoryTest: XCTestCase {
             guard !allowedCountries.isEmpty else { return true }
 
             guard let billingCountry = paymentMethod.billingDetails?.address?.country else {
-                return true
+                return false
             }
 
             return allowedCountries.contains(billingCountry)
@@ -3094,17 +3094,17 @@ class PaymentSheetFormFactoryTest: XCTestCase {
             guard !allowedCountries.isEmpty else { return true }
 
             guard let billingCountry = paymentMethod.billingDetails?.address?.country else {
-                // Conservative approach: show payment methods without country data
-                return true
+                // Hide payment methods without billing country data when filtering is active
+                return false
             }
 
             return allowedCountries.contains(billingCountry)
         }
 
-        // Should show: pmWithCountry (US) + all PMs without country data (conservative approach)
-        XCTAssertEqual(filteredPMs.count, 2, "Should show US payment method and all without country data")
+        // Should show only: pmWithCountry (US), hide PMs without country data
+        XCTAssertEqual(filteredPMs.count, 1, "Should show only US payment method, hide those without country data")
         XCTAssertTrue(filteredPMs.contains { $0.stripeId == "pm_with_country" })
-        XCTAssertTrue(filteredPMs.contains { $0.stripeId == "pm_no_billing" })
+        XCTAssertFalse(filteredPMs.contains { $0.stripeId == "pm_no_billing" })
     }
 
     func testSavedPaymentMethods_countryFiltering_excludesDisallowedCountry() {
@@ -3124,7 +3124,7 @@ class PaymentSheetFormFactoryTest: XCTestCase {
             guard !allowedCountries.isEmpty else { return true }
 
             guard let billingCountry = paymentMethod.billingDetails?.address?.country else {
-                return true
+                return false
             }
 
             return allowedCountries.contains(billingCountry)
@@ -3152,7 +3152,7 @@ class PaymentSheetFormFactoryTest: XCTestCase {
             guard !allowedCountries.isEmpty else { return true }
 
             guard let billingCountry = paymentMethod.billingDetails?.address?.country else {
-                return true
+                return false
             }
 
             return allowedCountries.contains(billingCountry)

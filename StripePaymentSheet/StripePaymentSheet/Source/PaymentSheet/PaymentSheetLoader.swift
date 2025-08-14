@@ -133,8 +133,8 @@ final class PaymentSheetLoader {
                         guard !allowedCountries.isEmpty else { return true } // Empty set means all countries allowed
 
                         guard let billingCountry = paymentMethod.billingDetails?.address?.country else {
-                            // Show payment methods without billing country data (conservative approach)
-                            return true
+                            // Hide payment methods without billing country data when filtering is active
+                            return false
                         }
 
                         return allowedCountries.contains(billingCountry)
