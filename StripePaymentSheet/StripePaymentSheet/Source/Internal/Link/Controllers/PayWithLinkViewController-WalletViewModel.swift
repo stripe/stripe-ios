@@ -313,7 +313,7 @@ extension PayWithLinkViewController {
         }
 
         func isPaymentMethodSupported(paymentMethod: ConsumerPaymentDetails?) -> Bool {
-            paymentMethod?.isSupported(linkAccount: linkAccount, elementsSession: context.elementsSession, cardBrandFilter: context.configuration.cardBrandFilter) ?? false
+            paymentMethod?.isSupported(linkAccount: linkAccount, elementsSession: context.elementsSession, configuration: context.configuration, cardBrandFilter: context.configuration.cardBrandFilter) ?? false
         }
     }
 }
