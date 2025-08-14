@@ -31,5 +31,5 @@ verbose: true
 
 build_arguments:
   - -destination
-  - 'generic/platform=iOS Simulator'
+  - 'id=30339133-FBE6-4B7C-B243-10B66583590D'
   
