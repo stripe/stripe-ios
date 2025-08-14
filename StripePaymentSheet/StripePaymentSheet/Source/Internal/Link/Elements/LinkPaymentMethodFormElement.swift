@@ -105,7 +105,7 @@ final class LinkPaymentMethodFormElement: Element {
         guard configuration.billingDetailsCollectionConfiguration.name == .always else { return nil }
 
         return TextFieldElement.makeName(
-            label: STPLocalizedString("Name on card", "Label for name on card field"),
+            type: .onCard,
             defaultValue: paymentMethod.billingAddress?.name,
             theme: theme)
     }()

@@ -91,11 +91,11 @@ final class CardSectionElement: ContainerElement {
         self.opensCardScannerAutomatically = opensCardScannerAutomatically
         let nameElement = collectName
             ? PaymentMethodElementWrapper(
-                TextFieldElement.NameConfiguration(
-                    type: .full,
+                TextFieldElement.makeName(
+                    type: .onCard,
                     defaultValue: defaultValues.name,
-                    label: STPLocalizedString("Name on card", "Label for name on card field")),
-                theme: theme
+                    theme: theme
+                )
             ) { field, params in
                 params.paymentMethodParams.nonnil_billingDetails.name = field.text
                 return params

@@ -41,6 +41,11 @@ import UIKit
     var editConfiguration: EditConfiguration { get }
 
     /**
+     Error label to use when the input is invalid.
+     */
+    var invalidInputErrorLabel: String { get }
+
+    /**
      Validate the text.
      
      - Parameter isOptional: Whether or not the text field's value is optional.
@@ -102,6 +107,10 @@ public extension TextFieldElementConfiguration {
         return nil
     }
 
+    var invalidInputErrorLabel: String {
+        return "Complete all required fields."
+    }
+
     // Hide clear button by default
     var shouldShowClearButton: Bool {
         return false
@@ -121,7 +130,7 @@ public extension TextFieldElementConfiguration {
 
     func validate(text: String, isOptional: Bool) -> TextFieldElement.ValidationState {
         if text.stp_stringByRemovingCharacters(from: .whitespacesAndNewlines).isEmpty {
-            return isOptional ? .valid : .invalid(TextFieldElement.Error.empty(localizedDescription: ""))
+            return isOptional ? .valid : .invalid(TextFieldElement.Error.empty(localizedDescription: invalidInputErrorLabel))
         }
         return .valid
     }
