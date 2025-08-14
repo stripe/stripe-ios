@@ -108,7 +108,8 @@ struct CryptoOnrampExampleView: View {
                 let appearance = LinkAppearance(
                     colors: .init(primary: lavenderColor, selectedBorder: .label),
                     primaryButton: .init(cornerRadius: 16, height: 56),
-                    style: .automatic
+                    style: .automatic,
+                    reduceLinkBranding: true
                 )
                 let coordinator = try await CryptoOnrampCoordinator.create(appearance: appearance)
 
