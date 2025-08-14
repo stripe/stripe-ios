@@ -11,7 +11,6 @@ import UIKit
 /// For internal SDK use only
 @objc(STP_Internal_LinkHintMessageView)
 final class LinkHintMessageView: UIView {
-
     private struct Constants {
         static let spacing: CGFloat = LinkUI.smallContentSpacing
         static let margins: NSDirectionalEdgeInsets = LinkUI.compactButtonMargins
@@ -19,7 +18,6 @@ final class LinkHintMessageView: UIView {
         static let cornerRadius: CGFloat = LinkUI.cornerRadius
         static let minimumHeight: CGFloat = LinkUI.minimumButtonHeight
     }
-
     var text: String? {
         get {
             return textLabel.text
@@ -28,14 +26,12 @@ final class LinkHintMessageView: UIView {
             textLabel.text = newValue
         }
     }
-
     private lazy var iconView: UIImageView = {
         let imageView = UIImageView()
         imageView.tintColor = .linkIconTertiary
         imageView.contentMode = .scaleAspectFit
         imageView.setContentHuggingPriority(.required, for: .horizontal)
         imageView.setContentCompressionResistancePriority(.required, for: .horizontal)
-
         NSLayoutConstraint.activate([
             imageView.widthAnchor.constraint(equalToConstant: Constants.iconSize.width),
             imageView.heightAnchor.constraint(equalToConstant: Constants.iconSize.height),
@@ -52,7 +48,6 @@ final class LinkHintMessageView: UIView {
         label.numberOfLines = 0
         return label
     }()
-
     init(message: String) {
         super.init(frame: .zero)
         setupUI()
@@ -74,19 +69,16 @@ final class LinkHintMessageView: UIView {
         stackView.directionalLayoutMargins = Constants.margins
         stackView.translatesAutoresizingMaskIntoConstraints = false
         addSubview(stackView)
-
         NSLayoutConstraint.activate([
             stackView.leadingAnchor.constraint(equalTo: leadingAnchor),
             stackView.trailingAnchor.constraint(equalTo: trailingAnchor),
             stackView.centerYAnchor.constraint(equalTo: centerYAnchor),
         ])
-
         backgroundColor = .linkSurfaceSecondary
         layer.cornerRadius = Constants.cornerRadius
 
         heightAnchor.constraint(greaterThanOrEqualToConstant: Constants.minimumHeight).isActive = true
     }
-
     private func configureImage() {
         iconView.image = Image.icon_info.makeImage(template: true)
     }
