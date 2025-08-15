@@ -12,7 +12,7 @@ import StripePaymentsTestUtils
 import XCTest
 
 class STPBankAccountFunctionalTest: STPNetworkStubbingTestCase {
-    func testCreateAndRetreiveBankAccountToken() {
+    func testCreateAndRetreiveBankAccountToken() async throws {
         let bankAccount = STPBankAccountParams()
         bankAccount.accountNumber = "000123456789"
         bankAccount.routingNumber = "110000000"
@@ -37,8 +37,8 @@ class STPBankAccountFunctionalTest: STPNetworkStubbingTestCase {
             XCTAssertEqual("Jimmy bob", token?.bankAccount?.accountHolderName)
             XCTAssertEqual(token?.bankAccount?.accountHolderType, STPBankAccountHolderType.company)
         }
-
-        waitForExpectations(timeout: STPTestingNetworkRequestTimeout, handler: nil)
+        _ = try await client.createToken(withBankAccount: bankAccount)
+        await fulfillment(of: [expectation])
     }
 
     func testInvalidKey() {

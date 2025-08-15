@@ -44,8 +44,9 @@ extension STPAPIClient {
 extension STPAPIClient {
     /// Converts an STPBankAccount object into a Stripe token using the Stripe API.
     /// - Parameters:
-    ///   - bankAccount: The user's bank account details. Cannot be nil. - seealso: https://stripe.com/docs/api#create_bank_account_token
+    ///   - bankAccount: The user's bank account details.
     ///   - completion:  The callback to run with the returned Stripe token (and any errors that may have occurred).
+    /// - Seealso: [Stripe API reference](https://stripe.com/docs/api#create_bank_account_token)
     @objc(createTokenWithBankAccount:completion:)
     public func createToken(
         withBankAccount bankAccount: STPBankAccountParams,
@@ -55,6 +56,27 @@ extension STPAPIClient {
         STPTelemetryClient.shared.addTelemetryFields(toParams: &params)
         createToken(withParameters: params, completion: completion)
         STPTelemetryClient.shared.sendTelemetryData()
+    }
+
+    /// Converts an `STPBankAccount` object into a Stripe token using the Stripe API.
+    /// - Parameters:
+    ///   - bankAccount: The user's bank account details.
+    /// - Returns: A Stripe token.
+    /// - Throws: The error that occurred making the Stripe API request.
+    /// - Seealso: [Stripe API reference](https://stripe.com/docs/api#create_bank_account_token)
+    public func createToken(
+        withBankAccount bankAccount: STPBankAccountParams
+    ) async throws -> STPToken {
+        return try await withCheckedThrowingContinuation { continuation in
+            createToken(withBankAccount: bankAccount) { result, error in
+                guard let result else {
+                    let error = error ?? NSError.stp_genericErrorOccurredError()
+                    continuation.resume(throwing: error)
+                    return
+                }
+                continuation.resume(returning: result)
+            }
+        }
     }
 }
 
