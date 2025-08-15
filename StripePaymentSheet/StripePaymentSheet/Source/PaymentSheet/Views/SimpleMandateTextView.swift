@@ -13,7 +13,7 @@ import UIKit
 @objc(STP_Internal_SimpleMandateTextView)
 class SimpleMandateTextView: UIView {
     private let theme: ElementsAppearance
-    private let centered: Bool
+    private let textAlignment: NSTextAlignment
     var viewDidAppear: Bool = false
     let textView: UITextView = UITextView()
     var attributedText: NSAttributedString? {
@@ -29,22 +29,22 @@ class SimpleMandateTextView: UIView {
 
     convenience init(
         mandateText: NSAttributedString,
-        centered: Bool,
+        textAlignment: NSTextAlignment = .natural,
         theme: ElementsAppearance
     ) {
-        self.init(theme: theme, centered: centered)
+        self.init(theme: theme, textAlignment: textAlignment)
         textView.attributedText = mandateText
         applyTextViewStyle()
     }
 
     convenience init(mandateText: String, theme: ElementsAppearance) {
-        self.init(theme: theme, centered: false)
+        self.init(theme: theme, textAlignment: .natural)
         textView.text = mandateText
     }
 
-    required init(theme: ElementsAppearance, centered: Bool = false) {
+    required init(theme: ElementsAppearance, textAlignment: NSTextAlignment = .natural) {
         self.theme = theme
-        self.centered = centered
+        self.textAlignment = textAlignment
         super.init(frame: .zero)
         installConstraints()
         applyTextViewStyle()
@@ -70,7 +70,7 @@ class SimpleMandateTextView: UIView {
         // These two lines remove insets that are on UITextViews by default
         textView.textContainerInset = .zero
         textView.textContainer.lineFragmentPadding = 0
-        textView.textAlignment = centered ? .center : .natural
+        textView.textAlignment = textAlignment
     }
 }
 

@@ -45,10 +45,10 @@ class SimpleMandateElement: PaymentMethodElement {
     init(
         mandateText: NSAttributedString,
         customerAlreadySawMandate: Bool,
-        centered: Bool,
+        textAlignment: NSTextAlignment,
         theme: ElementsAppearance = .default
     ) {
-        mandateTextView = SimpleMandateTextView(mandateText: mandateText, centered: centered, theme: theme)
+        mandateTextView = SimpleMandateTextView(mandateText: mandateText, textAlignment: textAlignment, theme: theme)
         self.customerAlreadySawMandate = customerAlreadySawMandate
     }
 
