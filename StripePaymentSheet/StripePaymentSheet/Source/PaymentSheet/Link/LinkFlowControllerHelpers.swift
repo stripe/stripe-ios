@@ -28,6 +28,7 @@ extension UIViewController {
         analyticsHelper: PaymentSheetAnalyticsHelper,
         supportedPaymentMethodTypes: [LinkPaymentMethodType] = LinkPaymentMethodType.allCases,
         linkAppearance: LinkAppearance? = nil,
+        linkConfiguration: LinkConfiguration? = nil,
         verificationDismissed: (() -> Void)? = nil,
         callback: @escaping (_ confirmOption: PaymentSheet.LinkConfirmOption?, _ shouldReturnToPaymentSheet: Bool) -> Void
     ) {
@@ -60,6 +61,7 @@ extension UIViewController {
                     analyticsHelper: analyticsHelper,
                     supportedPaymentMethodTypes: supportedPaymentMethodTypes,
                     linkAppearance: linkAppearance,
+                    linkConfiguration: linkConfiguration,
                     callback: callback
                 )
             }
@@ -72,6 +74,7 @@ extension UIViewController {
                 analyticsHelper: analyticsHelper,
                 supportedPaymentMethodTypes: supportedPaymentMethodTypes,
                 linkAppearance: linkAppearance,
+                linkConfiguration: linkConfiguration,
                 callback: callback
             )
         }
@@ -85,6 +88,7 @@ extension UIViewController {
         analyticsHelper: PaymentSheetAnalyticsHelper,
         supportedPaymentMethodTypes: [LinkPaymentMethodType],
         linkAppearance: LinkAppearance? = nil,
+        linkConfiguration: LinkConfiguration? = nil,
         callback: @escaping (_ confirmOption: PaymentSheet.LinkConfirmOption?, _ shouldReturnToPaymentSheet: Bool) -> Void
     ) {
         let payWithLinkController = PayWithNativeLinkController(
@@ -95,7 +99,8 @@ extension UIViewController {
             logPayment: false,
             analyticsHelper: analyticsHelper,
             supportedPaymentMethodTypes: supportedPaymentMethodTypes,
-            linkAppearance: linkAppearance
+            linkAppearance: linkAppearance,
+            linkConfiguration: linkConfiguration
         )
 
         payWithLinkController.presentForPaymentMethodSelection(

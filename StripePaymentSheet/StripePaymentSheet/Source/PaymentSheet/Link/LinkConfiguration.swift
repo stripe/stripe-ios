@@ -7,7 +7,7 @@
 
 import Foundation
 
-/// Configuration for Link behavior and content provided by integrating SDKs.
+/// Injectible configuration for Link behavior and content.
 @_spi(STP)
 public struct LinkConfiguration {
 
