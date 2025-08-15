@@ -38,4 +38,20 @@ extension ApplicationURLOpener {
     }
 }
 
-extension UIApplication: ApplicationURLOpener {}
+extension UIApplication: ApplicationURLOpener {
+    func open(
+        _ url: URL,
+        options: [UIApplication.OpenExternalURLOptionsKey: Any],
+        completionHandler completion: OpenCompletionHandler?
+    ) {
+        let bridgedCompletion: ((Bool) -> Void)? = completion.map { handler in
+            { success in
+                Task { @MainActor in
+                    handler(success)
+                }
+            }
+        }
+
+        self.open(url, options: options, completionHandler: bridgedCompletion)
+    }
+}
