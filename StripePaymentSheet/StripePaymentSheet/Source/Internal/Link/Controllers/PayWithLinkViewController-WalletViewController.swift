@@ -112,6 +112,15 @@ extension PayWithLinkViewController {
             return noticeView
         }()
 
+        private lazy var debitCardHintView: LinkHintMessageView? = {
+            guard let hintMessage = viewModel.linkConfiguration?.hintMessage,
+                  !hintMessage.isEmpty,
+                  context.elementsSession.shouldShowPreferDebitCardHint else {
+                return nil
+            }
+            return LinkHintMessageView(message: hintMessage)
+        }()
+
         private lazy var cardDetailsRecollectionSection: SectionElement = {
             let sectionElement = SectionElement(
                 elements: [
@@ -123,11 +132,15 @@ extension PayWithLinkViewController {
         }()
 
         private lazy var paymentPickerContainerView: UIStackView = {
-            let stackView = UIStackView(arrangedSubviews: [
-                paymentPicker,
-                mandateView,
-                expiredCardNoticeView,
-            ])
+            var arrangedSubviews: [UIView] = [paymentPicker]
+
+            if let debitCardHintView = debitCardHintView {
+                arrangedSubviews.append(debitCardHintView)
+            }
+
+            arrangedSubviews.append(contentsOf: [mandateView, expiredCardNoticeView])
+
+            let stackView = UIStackView(arrangedSubviews: arrangedSubviews)
             stackView.axis = .vertical
             stackView.spacing = LinkUI.contentSpacing
             return stackView
