@@ -438,7 +438,7 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
         case all
         case usOnly = "us_only"
         case northAmerica = "north_america"
-        case fiveCountries = "five_countries"
+        case someEuropeanCountries = "some_european_countries"
 
         var countries: Set<String> {
             switch self {
@@ -448,8 +448,8 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
                 return ["US"]
             case .northAmerica:
                 return ["US", "CA", "MX"]
-            case .fiveCountries:
-                return ["US", "CA", "GB", "AU", "DE"]
+            case .someEuropeanCountries:
+                return ["FR", "DE", "IT", "ES"]
             }
         }
 
@@ -461,8 +461,8 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
                 return "US Only"
             case .northAmerica:
                 return "North America (US, CA, MX)"
-            case .fiveCountries:
-                return "5 Countries (US, CA, GB, AU, DE)"
+            case .someEuropeanCountries:
+                return "Some Europe (FR, DE, IT, ES)"
             }
         }
     }
