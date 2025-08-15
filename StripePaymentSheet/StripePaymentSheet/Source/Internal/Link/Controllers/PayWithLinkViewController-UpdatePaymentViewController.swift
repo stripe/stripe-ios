@@ -46,9 +46,21 @@ extension PayWithLinkViewController {
         }()
 
         private lazy var updateButton: ConfirmButton = .makeLinkButton(
-            callToAction: isBillingDetailsUpdateFlow ? context.callToAction : .custom(title: String.Localized.update_card)
+            callToAction: isBillingDetailsUpdateFlow ? context.callToAction : .custom(title: String.Localized.update_card),
+            linkAppearance: context.linkAppearance,
+            didTapWhenDisabled: didTapWhenDisabled
         ) { [weak self] in
             self?.updatePaymentMethod()
+        }
+
+        private func didTapWhenDisabled() {
+            // Clear any previous confirmation error
+            updateErrorLabel(for: nil)
+
+#if !os(visionOS)
+            UINotificationFeedbackGenerator().notificationOccurred(.error)
+#endif
+            paymentMethodEditElement.showAllValidationErrors()
         }
 
         private lazy var errorLabel: UILabel = {
@@ -111,14 +123,7 @@ extension PayWithLinkViewController {
             stackView.isLayoutMarginsRelativeArrangement = true
             stackView.directionalLayoutMargins = LinkUI.contentMargins
             stackView.translatesAutoresizingMaskIntoConstraints = false
-            contentView.addSubview(stackView)
-
-            NSLayoutConstraint.activate([
-                contentView.topAnchor.constraint(equalTo: stackView.topAnchor),
-                contentView.leadingAnchor.constraint(equalTo: stackView.leadingAnchor),
-                contentView.trailingAnchor.constraint(equalTo: stackView.trailingAnchor),
-                contentView.bottomAnchor.constraint(equalTo: stackView.bottomAnchor),
-            ])
+            contentView.addAndPinSubview(stackView, insets: .insets(bottom: 35))
 
             if !paymentMethod.isDefault || isBillingDetailsUpdateFlow {
                 thisIsYourDefaultLabel.isHidden = true

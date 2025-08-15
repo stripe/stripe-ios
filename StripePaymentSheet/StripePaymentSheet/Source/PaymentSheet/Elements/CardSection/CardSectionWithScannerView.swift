@@ -24,7 +24,7 @@ final class CardSectionWithScannerView: UIView {
     let cardSectionView: UIView
     let analyticsHelper: PaymentSheetAnalyticsHelper?
     lazy var cardScanButton: UIButton = {
-        let button = UIButton.makeCardScanButton(theme: theme)
+        let button = UIButton.makeCardScanButton(theme: theme, linkAppearance: linkAppearance)
         button.addTarget(self, action: #selector(didTapCardScanButton), for: .touchUpInside)
         return button
     }()
@@ -36,12 +36,14 @@ final class CardSectionWithScannerView: UIView {
     }()
     weak var delegate: CardSectionWithScannerViewDelegate?
     private let theme: ElementsAppearance
+    private let linkAppearance: LinkAppearance?
 
-    init(cardSectionView: UIView, delegate: CardSectionWithScannerViewDelegate, theme: ElementsAppearance = .default, analyticsHelper: PaymentSheetAnalyticsHelper?) {
+    init(cardSectionView: UIView, delegate: CardSectionWithScannerViewDelegate, theme: ElementsAppearance = .default, analyticsHelper: PaymentSheetAnalyticsHelper?, linkAppearance: LinkAppearance? = nil) {
         self.cardSectionView = cardSectionView
         self.delegate = delegate
         self.theme = theme
         self.analyticsHelper = analyticsHelper
+        self.linkAppearance = linkAppearance
         super.init(frame: .zero)
         installConstraints()
     }
