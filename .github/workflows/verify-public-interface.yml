@@ -2,11 +2,6 @@ name: Verify public interface
 on:
   pull_request:
     types: [opened, labeled, unlabeled, synchronize]
-    paths:
-      - '**/*.swift'
-      - '!StripeFinancialConnections/**'
-      - '!StripeIdentity/**'
-      - '!StripeConnections/**'
 
 jobs:
   public-api-check:
