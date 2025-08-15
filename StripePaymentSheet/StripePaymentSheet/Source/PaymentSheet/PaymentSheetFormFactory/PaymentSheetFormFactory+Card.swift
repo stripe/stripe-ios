@@ -15,7 +15,7 @@ import UIKit
 
 extension PaymentSheetFormFactory {
 
-    private var isLinkUI: Bool {
+    var isLinkUI: Bool {
         switch configuration {
         case .paymentElement(_, let isLinkUI):
             return isLinkUI
