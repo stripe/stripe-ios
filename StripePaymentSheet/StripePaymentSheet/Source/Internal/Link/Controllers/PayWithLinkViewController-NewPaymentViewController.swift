@@ -157,7 +157,7 @@ extension PayWithLinkViewController {
             stackView.setCustomSpacing(LinkUI.extraLargeContentSpacing, after: addPaymentMethodVC.view)
             stackView.translatesAutoresizingMaskIntoConstraints = false
 
-            contentView.addAndPinSubviewToSafeArea(stackView)
+            contentView.addAndPinSubview(stackView, insets: .insets(bottom: LinkUI.appearance.formInsets.bottom))
 
             NSLayoutConstraint.activate([
                 errorLabel.leadingAnchor.constraint(
@@ -179,6 +179,8 @@ extension PayWithLinkViewController {
             ])
 
             didUpdate(addPaymentMethodVC)
+            stackView.setNeedsLayout()
+            stackView.layoutIfNeeded()
         }
 
         private func didTapWhenDisabled() {
