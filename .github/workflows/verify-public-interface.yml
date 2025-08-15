@@ -20,6 +20,9 @@ jobs:
         with:
             fetch-depth: 0
 
+      - name: Setup Xcode
+        run: sudo xcode-select -s /Applications/Xcode_16.4.app/Contents/Developer
+
       - name: Build frameworks and compare interfaces
         id: build-frameworks-compare-interface
         run: |

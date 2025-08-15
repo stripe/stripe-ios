@@ -66,6 +66,9 @@ public extension PaymentSheet {
         @_spi(AppearanceAPIAdditionsPreview)
         public var sectionSpacing: CGFloat = 12.0
 
+        /// A test property
+        public var test: Bool = false
+
         /// The visual style for icons displayed in PaymentSheet
         @_spi(AppearanceAPIAdditionsPreview)
         public var iconStyle: IconStyle = .filled
