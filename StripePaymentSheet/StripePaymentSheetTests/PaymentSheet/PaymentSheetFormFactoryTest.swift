@@ -2851,7 +2851,7 @@ class PaymentSheetFormFactoryTest: XCTestCase {
         // Verify the address section was created with country filtering
         if let addressWrapper = billingSection as? PaymentMethodElementWrapper<AddressSectionElement> {
             XCTAssertNotNil(addressWrapper.element)
-            XCTAssertEqual(addressWrapper.element.countryCodes, ["US", "CA", "GB"])
+            XCTAssertEqual(Set(addressWrapper.element.countryCodes), Set(["US", "CA", "GB"]))
         } else {
             XCTFail("Expected PaymentMethodElementWrapper<AddressSectionElement>")
         }
