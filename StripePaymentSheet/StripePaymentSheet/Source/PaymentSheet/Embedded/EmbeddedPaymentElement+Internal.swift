@@ -484,7 +484,7 @@ extension EmbeddedPaymentElement: EmbeddedFormViewControllerDelegate {
         if let sublabel {
             embeddedPaymentMethodsView.selectedRowButton?.setSublabel(text: sublabel)
         }
-        
+
         embeddedPaymentMethodsView.selectedRowChangeButtonState = (shouldShowChangeButton, sublabel)
     }
 }
