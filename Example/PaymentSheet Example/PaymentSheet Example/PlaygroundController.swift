@@ -255,6 +255,7 @@ class PlaygroundController: ObservableObject {
             configuration.style = .alwaysDark
         }
 
+        configuration.opensCardScannerAutomatically = settings.opensCardScannerAutomatically == .on
         configuration.termsDisplay = cardTermsDisplay
         return configuration
     }
@@ -352,6 +353,7 @@ class PlaygroundController: ObservableObject {
             configuration.cardBrandAcceptance = .allowed(brands: [.visa])
         }
 
+        configuration.opensCardScannerAutomatically = settings.opensCardScannerAutomatically == .on
         configuration.termsDisplay = cardTermsDisplay
 
         return configuration

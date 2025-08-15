@@ -99,6 +99,12 @@ final class LinkPaymentMethodPicker: UIView {
         }
     }
 
+    var linkAppearance: LinkAppearance? {
+        didSet {
+            updateTintColors()
+        }
+    }
+
     /// Calculates the maximum width required for the header labels.
     static let widthForHeaderLabels: CGFloat = {
         let font = LinkUI.font(forTextStyle: .bodyEmphasized)
@@ -172,10 +178,8 @@ final class LinkPaymentMethodPicker: UIView {
 
         layer.cornerRadius = 16
         layer.borderColor = UIColor.linkBorderDefault.cgColor
-        tintColor = .linkIconBrand
+        updateTintColors()
         backgroundColor = .linkSurfaceSecondary
-
-        addPaymentMethodButton.tintColor = .linkTextBrand
 
         headerView.addTarget(self, action: #selector(onHeaderTapped(_:)), for: .touchUpInside)
         headerView.layer.zPosition = 1
@@ -217,6 +221,12 @@ final class LinkPaymentMethodPicker: UIView {
         } else {
             stackView.hideArrangedSubview(at: listViewIndex, animated: animated)
         }
+    }
+
+    private func updateTintColors() {
+        let linkAppearancePrimaryColor = linkAppearance?.colors?.primary
+        tintColor = linkAppearancePrimaryColor ?? .linkIconBrand
+        addPaymentMethodButton.tintColor = linkAppearancePrimaryColor ?? .linkTextBrand
     }
 }
 

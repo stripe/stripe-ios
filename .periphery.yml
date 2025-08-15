@@ -7,7 +7,6 @@ workspace: Stripe.xcworkspace
 
 schemes:
   - AllStripeFrameworks
-  - StripeConnect
 
 targets:
   - Stripe3DS2
@@ -32,5 +31,5 @@ verbose: true
 
 build_arguments:
   - -destination
-  - 'generic/platform=iOS Simulator'
+  - 'generic/platform=iPhone 16 (18.4)'
   
