@@ -68,6 +68,7 @@ final class ConsumerPaymentDetails: Decodable {
 extension ConsumerPaymentDetails {
     func isSupported(linkAccount: PaymentSheetLinkAccount,
                      elementsSession: STPElementsSession,
+                     configuration: PaymentElementConfiguration,
                      cardBrandFilter: CardBrandFilter) -> Bool {
         guard linkAccount.supportedPaymentDetailsTypes(for: elementsSession).contains(type) else {
             return false
@@ -79,7 +80,33 @@ extension ConsumerPaymentDetails {
             return false
         }
 
+        if !isSupportedForAllowedCountries(configuration.billingDetailsCollectionConfiguration.allowedCountries) {
+            return false
+        }
+
         return true
+    }
+
+    private func isSupportedForAllowedCountries(_ allowedCountries: Set<String>) -> Bool {
+        guard !allowedCountries.isEmpty else {
+            // No filtering required
+            return true
+        }
+
+        switch details {
+        case .card:
+            // If the merchant is filtering, only allow cards with a billing country
+            if let country = billingAddress?.countryCode {
+                return allowedCountries.contains(country)
+            } else {
+                return false
+            }
+        case .bankAccount:
+            // These are US bank accounts, so only check for US country code
+            return allowedCountries.contains("US")
+        case .unparsable:
+            return false
+        }
     }
 
     var isValidCard: Bool {

@@ -24,6 +24,7 @@
 		312AE70A2D2C8A7C0091E5AF /* MockAppAttestService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31C5137D2CFE660A00A429C3 /* MockAppAttestService.swift */; };
 		31AD3BDC2B0C23E40080C800 /* Locale+StripeCore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31AD3BDB2B0C23E40080C800 /* Locale+StripeCore.swift */; };
 		31C5137C2CFE65DB00A429C3 /* StripeAttestTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31C5137B2CFE65D600A429C3 /* StripeAttestTest.swift */; };
+		31C8DFE82E4E98F500A90186 /* STPErrorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31C8DFE72E4E98F500A90186 /* STPErrorTests.swift */; };
 		31CDFC302BA372B200B3DD91 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = 31CDFC2F2BA372B200B3DD91 /* PrivacyInfo.xcprivacy */; };
 		31DEFE4C2D02C25A00E6E507 /* StripeAttestBackend.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31DEFE4B2D02C25A00E6E507 /* StripeAttestBackend.swift */; };
 		31DEFE4E2D02C27000E6E507 /* AppAttestService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31DEFE4D2D02C27000E6E507 /* AppAttestService.swift */; };
@@ -232,6 +233,7 @@
 		31AD3BDB2B0C23E40080C800 /* Locale+StripeCore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Locale+StripeCore.swift"; sourceTree = "<group>"; };
 		31C5137B2CFE65D600A429C3 /* StripeAttestTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StripeAttestTest.swift; sourceTree = "<group>"; };
 		31C5137D2CFE660A00A429C3 /* MockAppAttestService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockAppAttestService.swift; sourceTree = "<group>"; };
+		31C8DFE72E4E98F500A90186 /* STPErrorTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = STPErrorTests.swift; sourceTree = "<group>"; };
 		31CDFC2F2BA372B200B3DD91 /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
 		31DEFE4B2D02C25A00E6E507 /* StripeAttestBackend.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StripeAttestBackend.swift; sourceTree = "<group>"; };
 		31DEFE4D2D02C27000E6E507 /* AppAttestService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppAttestService.swift; sourceTree = "<group>"; };
@@ -454,6 +456,7 @@
 			children = (
 				7F2E1D80D0342CF09CB05415 /* URLEncoderTest.swift */,
 				49ECDA402CA340E100F647F0 /* AsyncTests.swift */,
+				31C8DFE72E4E98F500A90186 /* STPErrorTests.swift */,
 			);
 			path = Helpers;
 			sourceTree = "<group>";
@@ -1026,6 +1029,7 @@
 				49EFC64E2D95A6FD007172B9 /* HostedAuthUrlBuilderTests.swift in Sources */,
 				0A78AD04075C43A4059C344E /* STPAnalyticsClientTest.swift in Sources */,
 				934CCB00769674F13192A126 /* Dictionary+StripeTests.swift in Sources */,
+				31C8DFE82E4E98F500A90186 /* STPErrorTests.swift in Sources */,
 				31C5137C2CFE65DB00A429C3 /* StripeAttestTest.swift in Sources */,
 				E6EF91C32CB9DC410082DD1B /* Locale+StripeTests.swift in Sources */,
 				49ECDA412CA340E100F647F0 /* AsyncTests.swift in Sources */,

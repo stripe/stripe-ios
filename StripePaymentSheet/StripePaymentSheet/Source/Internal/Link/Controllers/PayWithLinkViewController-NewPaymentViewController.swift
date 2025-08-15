@@ -31,7 +31,9 @@ extension PayWithLinkViewController {
         private lazy var confirmButton: ConfirmButton = .makeLinkButton(
             callToAction: context.callToAction,
             // Use a compact button if we are also displaying the Apple Pay button.
-            compact: shouldShowApplePayButton
+            compact: shouldShowApplePayButton,
+            linkAppearance: context.linkAppearance,
+            didTapWhenDisabled: didTapWhenDisabled
         ) { [weak self] in
             self?.confirm()
         }
@@ -87,7 +89,9 @@ extension PayWithLinkViewController {
                 paymentMethodTypes: [.stripe(.card)],
                 formCache: .init(), // We don't want to share a form cache with the containing PaymentSheet
                 analyticsHelper: context.analyticsHelper,
-                delegate: self
+                isLinkUI: true,
+                delegate: self,
+                linkAppearance: context.linkAppearance
             )
         }()
 
@@ -153,7 +157,7 @@ extension PayWithLinkViewController {
             stackView.setCustomSpacing(LinkUI.extraLargeContentSpacing, after: addPaymentMethodVC.view)
             stackView.translatesAutoresizingMaskIntoConstraints = false
 
-            contentView.addAndPinSubviewToSafeArea(stackView)
+            contentView.addAndPinSubview(stackView, insets: .insets(bottom: LinkUI.appearance.formInsets.bottom))
 
             NSLayoutConstraint.activate([
                 errorLabel.leadingAnchor.constraint(
@@ -175,6 +179,18 @@ extension PayWithLinkViewController {
             ])
 
             didUpdate(addPaymentMethodVC)
+            stackView.setNeedsLayout()
+            stackView.layoutIfNeeded()
+        }
+
+        private func didTapWhenDisabled() {
+            // Clear any previous confirmation error
+            updateErrorLabel(for: nil)
+
+#if !os(visionOS)
+            UINotificationFeedbackGenerator().notificationOccurred(.error)
+#endif
+            addPaymentMethodVC.paymentMethodFormElement.showAllValidationErrors()
         }
 
         func confirm() {

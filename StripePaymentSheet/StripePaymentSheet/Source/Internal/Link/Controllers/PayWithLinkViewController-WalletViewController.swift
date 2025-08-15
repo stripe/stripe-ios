@@ -35,14 +35,16 @@ extension PayWithLinkViewController {
             paymentPicker.supportedPaymentMethodTypes = viewModel.supportedPaymentMethodTypes
             paymentPicker.billingDetails = context.configuration.defaultBillingDetails
             paymentPicker.billingDetailsCollectionConfiguration = context.configuration.billingDetailsCollectionConfiguration
+            paymentPicker.linkAppearance = viewModel.linkAppearance
             return paymentPicker
         }()
 
-        private lazy var mandateView = LinkMandateView(delegate: self)
+        private lazy var mandateView = LinkMandateView(delegate: self, linkAppearance: viewModel.linkAppearance)
 
         private lazy var confirmButton = ConfirmButton.makeLinkButton(
             callToAction: viewModel.confirmButtonCallToAction,
-            compact: viewModel.shouldUseCompactConfirmButton
+            compact: viewModel.shouldUseCompactConfirmButton,
+            linkAppearance: viewModel.linkAppearance
         ) { [weak self] in
             guard let self else {
                 return
@@ -179,7 +181,7 @@ extension PayWithLinkViewController {
                 containerView.addArrangedSubview(cancelButton)
             }
 
-            contentView.addAndPinSubview(containerView)
+            contentView.addAndPinSubview(containerView, insets: .insets(bottom: 35))
 
             // If the initially selected payment method is not supported, we should automatically
             // expand the payment picker to hint the user to pick another payment method.

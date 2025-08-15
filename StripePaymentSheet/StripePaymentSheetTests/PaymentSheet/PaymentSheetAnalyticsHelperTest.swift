@@ -668,7 +668,7 @@ final class PaymentSheetAnalyticsHelperTest: XCTestCase {
         analyticsClient._testLogHistory.removeAll()
         let sptIntentConfig = PaymentSheet.IntentConfiguration(
             sharedPaymentTokenSessionWithMode: .payment(amount: 1000, currency: "usd"),
-            sellerDetails: PaymentSheet.IntentConfiguration.SellerDetails(networkId: "stripe", externalId: "test"),
+            sellerDetails: PaymentSheet.IntentConfiguration.SellerDetails(networkId: "stripe", externalId: "test", businessName: "Till's Pills"),
             paymentMethodTypes: ["card"],
             preparePaymentMethodHandler: { _, _ in
                 // Empty handler for test

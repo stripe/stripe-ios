@@ -7,7 +7,7 @@
 
 @testable import StripeApplePay
 @_spi(STP) import StripeCore
-@testable @_spi(PaymentMethodOptionsSetupFutureUsagePreview) import StripePaymentSheet
+@testable @_spi(PaymentMethodOptionsSetupFutureUsagePreview) @_spi(SharedPaymentToken) import StripePaymentSheet
 @testable import StripePaymentsTestUtils
 import XCTest
 
@@ -239,6 +239,59 @@ final class STPApplePayContext_PaymentSheetTest: XCTestCase {
         XCTAssertFalse(sut.requiredBillingContactFields.contains(.phoneNumber))
         XCTAssertFalse(sut.requiredShippingContactFields.contains(.emailAddress))
         XCTAssertTrue(sut.requiredShippingContactFields.contains(.phoneNumber))
+    }
+
+    func testCreatePaymentRequest_label_normalIntent() {
+        var configuration = configuration
+        configuration.merchantDisplayName = "Merchant Name"
+        let intent = Intent._testValue()
+        let sut = STPApplePayContext.createPaymentRequest(intent: intent, configuration: configuration, applePay: applePayConfiguration)
+        XCTAssertEqual(sut.paymentSummaryItems[0].label, "Merchant Name")
+    }
+
+    func testCreatePaymentRequest_label_deferredIntentWithoutSellerDetails() {
+        var configuration = configuration
+        configuration.merchantDisplayName = "Merchant Name"
+        let deferredIntent = Intent.deferredIntent(
+            intentConfig: .init(
+                mode: .payment(amount: 2345, currency: "USD"),
+                confirmHandler: dummyDeferredConfirmHandler
+            )
+        )
+        let sut = STPApplePayContext.createPaymentRequest(intent: deferredIntent, configuration: configuration, applePay: applePayConfiguration)
+        XCTAssertEqual(sut.paymentSummaryItems[0].label, "Merchant Name")
+    }
+
+    func testCreatePaymentRequest_label_sptDeferredIntentWithoutSellerDetails() {
+        var configuration = configuration
+        configuration.merchantDisplayName = "Merchant Name"
+        let deferredIntent = Intent.deferredIntent(
+            intentConfig: .init(
+                sharedPaymentTokenSessionWithMode: .payment(amount: 2345, currency: "USD"),
+                sellerDetails: nil,
+                preparePaymentMethodHandler: { _, _ in /* no-op */ }
+            )
+        )
+        let sut = STPApplePayContext.createPaymentRequest(intent: deferredIntent, configuration: configuration, applePay: applePayConfiguration)
+        XCTAssertEqual(sut.paymentSummaryItems[0].label, "Merchant Name")
+    }
+
+    func testCreatePaymentRequest_label_sptDeferredIntentWithSellerDetails() {
+        var configuration = configuration
+        configuration.merchantDisplayName = "Merchant Name"
+        let deferredIntent = Intent.deferredIntent(
+            intentConfig: .init(
+                sharedPaymentTokenSessionWithMode: .payment(amount: 2345, currency: "USD"),
+                sellerDetails: .init(
+                    networkId: "networkID",
+                    externalId: "externalID",
+                    businessName: "Something different from the merchant name"
+                ),
+                preparePaymentMethodHandler: { _, _ in /* no-op */ }
+            )
+        )
+        let sut = STPApplePayContext.createPaymentRequest(intent: deferredIntent, configuration: configuration, applePay: applePayConfiguration)
+        XCTAssertEqual(sut.paymentSummaryItems[0].label, "Something different from the merchant name")
     }
 }
 

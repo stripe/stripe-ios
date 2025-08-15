@@ -60,6 +60,10 @@
 
 "By continuing, you agree to authorize payments pursuant to <terms>these terms</terms>." = "Tęsdami sutinkate autorizuoti mokėjimus pagal šias <terms>sąlygas</terms>.";
 
+"By continuing, you agree to save your information for future purchases with %@ and <link>Link</link>. You also agree to Link's <terms>Terms</terms> and <privacy>Privacy</privacy>." = "Tęsdami sutinkate išsaugoti savo informaciją būsimiems pirkimams naudojant %@ ir <link>Nuoroda</link>. Taip pat sutinkate su „Link“ <terms>Sąlygomis</terms> ir <privacy>Privatumo politika</privacy>.";
+
+"By continuing, you agree to save your information for future purchases with %@." = "Tęsdami sutinkate išsaugoti savo informaciją būsimiems pirkiniams naudojant %@.";
+
 "By continuing, you authorize %@ to automatically debit your Satispay Balance on a recurring basis in accordance with your purchase or subscription plan." = "Tęsdami jūs suteikiate leidimą %@ automatiškai nurašyti lėšas nuo jūsų „Satispay Balance“ likučio periodiškai, pagal jūsų pirkimo arba prenumeratos planą.";
 
 "By continuing, you authorize %@ to debit your Cash App account for this payment and future payments in accordance with %@'s terms, until this authorization is revoked. You can change this anytime in your Cash App Settings." = "Tęsdami įgaliojate \"%1$@\" nurašyti mokestį nuo jūsų \"Cash App\" sąskaitos už šį mokėjimą ir būsimuosius mokėjimus pagal \"%2$@\" sąlygas, kol šis įgaliojimas bus atšauktas. Galite bet kada tai pakeisti \"Cash App\" nuostatose.";
@@ -126,6 +130,8 @@
 
 "Failed to connect" = "Nepavyko prisijungti";
 
+"Fast, secure checkout" = "Greitas ir saugus pirkimo užbaigimas";
+
 "For security, please re-enter your card’s security code." = "Saugumo sumetimais dar kartą įveskite kortelės saugumo kodą.";
 
 "Get %@ back when you pay for the first time with your bank. <terms>See terms</terms>" = "Atgaukite %@ pirmą kartą mokėdami per savo banką. <terms>Žr. sąlygas</terms>";
@@ -185,6 +191,8 @@
 "Pay another way" = "Mokėkite kitu būdu";
 
 "Pay faster at %@ and thousands of businesses." = "Mokėkite greičiau \"%@\" ir daugybei kitų įmonių.";
+
+"Pay faster everywhere Link is accepted." = "Mokėkite greičiau visur, kur priimama „Link“.";
 
 "Pay over time with %@" = "Mokėkite vėliau naudodami %@";
 
