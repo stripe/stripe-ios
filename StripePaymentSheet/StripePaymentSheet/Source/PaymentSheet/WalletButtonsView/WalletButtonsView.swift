@@ -12,7 +12,6 @@ import WebKit
     enum ExpressType: Hashable {
         case applePay
         case link
-        case linkInlineVerification(PaymentSheetLinkAccount)
         case shopPay
     }
 
@@ -60,12 +59,6 @@ import WebKit
                             cornerRadius: flowController.configuration.appearance.primaryButton.cornerRadius ?? flowController.configuration.appearance.cornerRadius,
                             action: completion
                         )
-                    case .linkInlineVerification(let account):
-                        LinkInlineVerificationView(
-                            account: account,
-                            appearance: flowController.configuration.appearance,
-                            onComplete: completion
-                        )
                     case .shopPay:
                         ShopPayButton(
                             height: flowController.configuration.appearance.primaryButton.height,
@@ -93,35 +86,12 @@ import WebKit
         // Determine available wallets and their order from elementsSession
         var wallets: [ExpressType] = []
 
-        // Always show Link at the top if it's enabled, regardless of orderedPaymentMethodTypesAndWallets
-        if PaymentSheet.isLinkEnabled(
-            elementsSession: flowController.elementsSession,
-            configuration: flowController.configuration
-        ) {
-            let canUseLinkInlineVerification: Bool = {
-                let featureFlagEnabled = PaymentSheet.LinkFeatureFlags.enableLinkInlineVerification
-                let canUseNativeLink = deviceCanUseNativeLink(
-                    elementsSession: flowController.elementsSession,
-                    configuration: flowController.configuration
-                )
-                return featureFlagEnabled && canUseNativeLink
-            }()
-
-            if canUseLinkInlineVerification,
-               let linkAccount = LinkAccountContext.shared.account,
-               linkAccount.sessionState == .requiresVerification {
-                wallets.append(.linkInlineVerification(linkAccount))
-            } else {
-                wallets.append(.link)
-            }
-        }
-
-        // Add other wallets based on their order in orderedPaymentMethodTypesAndWallets
         for type in flowController.elementsSession.orderedPaymentMethodTypesAndWallets {
             switch type {
             case "link":
-                // Skip Link here since we already added it at the top if enabled
-                continue
+                if PaymentSheet.isLinkEnabled(elementsSession: flowController.elementsSession, configuration: flowController.configuration) {
+                    wallets.append(.link)
+                }
             case "apple_pay":
                 if PaymentSheet.isApplePayEnabled(elementsSession: flowController.elementsSession, configuration: flowController.configuration) {
                     wallets.append(.applePay)
@@ -132,6 +102,12 @@ import WebKit
                 continue
             }
         }
+
+        if flowController.elementsSession.linkPassthroughModeEnabled {
+            // Link in passthrough mode won't be in `orderedPaymentMethodTypesAndWallets`, so we append it.
+            wallets.append(.link)
+        }
+
         return wallets
     }
 
@@ -150,7 +126,7 @@ import WebKit
             ) { result, _ in
                 confirmHandler(result)
             }
-        case .link, .linkInlineVerification:
+        case .link:
             let linkController = PayWithNativeLinkController(
                 mode: .paymentMethodSelection,
                 intent: flowController.intent,
