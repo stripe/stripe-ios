@@ -450,7 +450,7 @@ extension EmbeddedPaymentElement: EmbeddedFormViewControllerDelegate {
     }
 
     // Updates whether or not the change button shows and what sublabel (if any) the selected row button shows
-    private func updateChangeButtonAndSublabelState(for type: RowButtonType) {
+    func updateChangeButtonAndSublabelState(for type: RowButtonType) {
         guard let _paymentOption,
               let displayData = paymentOption,
               case .new = type,
