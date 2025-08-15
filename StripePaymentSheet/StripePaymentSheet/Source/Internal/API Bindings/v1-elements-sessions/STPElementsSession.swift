@@ -345,6 +345,10 @@ extension STPElementsSession {
         linkSignupOptInFeatureEnabled
     }
 
+    var isAlwaysShowingReuseMandate: Bool {
+        linkSignupOptInFeatureEnabled
+    }
+
     var linkSignupOptInFeatureEnabled: Bool {
         linkFlags["link_sign_up_opt_in_feature_enabled"] == true
     }
