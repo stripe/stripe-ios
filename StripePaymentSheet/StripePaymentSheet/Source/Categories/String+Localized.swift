@@ -480,7 +480,7 @@ extension String.Localized {
 
     static var by_continuing_you_agree_to_save_your_information_to_merchant_and_link: String {
         STPLocalizedString(
-            "By continuing, you agree to save your information for future purchases with %@ and <link>Link</link> (see <terms>Terms</terms> and <privacy>Privacy</privacy>).",
+            "By continuing, you agree to save your information for future purchases with %@ and <link>Link</link> according to Link <terms>terms</terms> and <privacy>privacy</privacy>.",
             "Text displayed below a credit card entry form when the card will be saved with the merchant and saved to Link."
         )
     }
