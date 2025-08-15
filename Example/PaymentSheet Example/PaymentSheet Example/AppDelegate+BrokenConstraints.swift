@@ -45,7 +45,7 @@ extension AppDelegate {
             return
         }
         // In other cases a broken constraint is generic, and we need to look at the hierarchy to avoid ignoring more than we intend
-        let recursiveDescription = window?.value(forKey: "recursiveDescription") as! String
+        let recursiveDescription = window?.value(forKey: "recursiveDescription") as? String ?? ""
         if
             recursiveDescription.contains("STP_Internal_LinkSheetNavigationBar") && constraint.debugDescription.contains("UISV-spanning-boundary") ||
             recursiveDescription.contains("STP_Internal_LinkSheetNavigationBar") && constraint.debugDescription.contains("UIButton") ||
