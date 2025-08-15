@@ -34,9 +34,15 @@
 		0BA5FE452E32AD5100D44BFE /* StripeCore.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = StripeCore.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
-/* Begin PBXFileSystemSynchronizedRootGroup section */
-		0BA5FE342E32A11600D44BFE /* CryptoOnramp Example */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = "CryptoOnramp Example"; sourceTree = "<group>"; };
-/* End PBXFileSystemSynchronizedRootGroup section */
+/* Begin PBXGroup section */
+		0BA5FE342E32A11600D44BFE /* CryptoOnramp Example */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = "CryptoOnramp Example";
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
 		0BA5FE2F2E32A11600D44BFE /* Frameworks */ = {
