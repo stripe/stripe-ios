@@ -17,7 +17,6 @@ import UIKit
 @available(iOS 15.0, *)
 struct CustomerSheetTestPlayground: View {
     @StateObject var playgroundController: CustomerSheetTestPlaygroundController
-    @StateObject var analyticsLogObserver: AnalyticsLogObserver = .shared
 
     init(settings: CustomerSheetTestPlaygroundSettings) {
         _playgroundController = StateObject(wrappedValue: CustomerSheetTestPlaygroundController(settings: settings))
@@ -29,9 +28,6 @@ struct CustomerSheetTestPlayground: View {
                 VStack {
                     Group {
                         HStack {
-                            if ProcessInfo.processInfo.environment["UITesting"] != nil {
-                                AnalyticsLogForTesting(analyticsLog: $analyticsLogObserver.analyticsLog)
-                            }
                             Text("Backend").font(.headline)
                             Spacer()
                             Button {
@@ -75,7 +71,6 @@ struct CustomerSheetTestPlayground: View {
                         SettingView(setting: $playgroundController.settings.autoreload)
                         TextField("headerTextForSelectionScreen", text: headerTextForSelectionScreenBinding)
                         SettingView(setting: $playgroundController.settings.allowsRemovalOfLastSavedPaymentMethod)
-                        SettingView(setting: $playgroundController.settings.opensCardScannerAutomatically)
                         HStack {
                             Text("Macros").font(.headline)
                             Spacer()

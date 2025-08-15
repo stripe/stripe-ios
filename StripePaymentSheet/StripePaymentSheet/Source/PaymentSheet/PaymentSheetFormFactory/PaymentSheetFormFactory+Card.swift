@@ -71,7 +71,6 @@ extension PaymentSheetFormFactory {
             theme: theme,
             analyticsHelper: analyticsHelper,
             cardBrandFilter: configuration.cardBrandFilter,
-            opensCardScannerAutomatically: configuration.opensCardScannerAutomatically,
             linkAppearance: linkAppearance
         )
 
