@@ -687,7 +687,7 @@ extension PaymentSheetFormFactory {
 
         let phoneElement = configuration.billingDetailsCollectionConfiguration.phone == .always ? makePhone() : nil
         let addressElement = configuration.billingDetailsCollectionConfiguration.address == .full
-        ? makeBillingAddressSection(collectionMode: .autoCompletable, countries: configuration.billingDetailsCollectionConfiguration.allowedCountries.isEmpty ? nil : Array(configuration.billingDetailsCollectionConfiguration.allowedCountries))
+        ? makeBillingAddressSection(collectionMode: .autoCompletable, countries: configuration.billingDetailsCollectionConfiguration.allowedCountriesArray)
             : nil
         connectBillingDetailsFields(
             countryElement: nil,
@@ -1176,5 +1176,11 @@ extension STPPaymentMethodAddress {
         line2 = address.line2
         postalCode = address.postalCode
         state = address.state
+    }
+}
+
+extension PaymentSheet.BillingDetailsCollectionConfiguration {
+    var allowedCountriesArray: [String]? {
+        allowedCountries.isEmpty ? nil : Array(allowedCountries)
     }
 }
