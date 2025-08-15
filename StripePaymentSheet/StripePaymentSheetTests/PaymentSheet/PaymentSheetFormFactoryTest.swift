@@ -2827,6 +2827,7 @@ class PaymentSheetFormFactoryTest: XCTestCase {
         if let addressWrapper = billingSection as? PaymentMethodElementWrapper<AddressSectionElement> {
             // The underlying AddressSectionElement should not have country filtering when allowedCountries is empty
             XCTAssertNotNil(addressWrapper.element)
+            XCTAssert(addressWrapper.element.countryCodes.count > 50) // afaik there are at least 50
         } else {
             XCTFail("Expected PaymentMethodElementWrapper<AddressSectionElement>")
         }
@@ -2850,6 +2851,7 @@ class PaymentSheetFormFactoryTest: XCTestCase {
         // Verify the address section was created with country filtering
         if let addressWrapper = billingSection as? PaymentMethodElementWrapper<AddressSectionElement> {
             XCTAssertNotNil(addressWrapper.element)
+            XCTAssertEqual(addressWrapper.element.countryCodes, ["US", "CA", "GB"])
         } else {
             XCTFail("Expected PaymentMethodElementWrapper<AddressSectionElement>")
         }
@@ -2991,10 +2993,6 @@ class PaymentSheetFormFactoryTest: XCTestCase {
         XCTAssertTrue(hasBillingAddress, "UPI form should contain billing address section when address collection is .full")
     }
 
-    // These tests are commented out because makeFormSpecField method doesn't exist in current implementation
-    // They were testing FormSpec field creation with allowed countries filtering
-    // TODO: Re-enable when makeFormSpecField is available or create alternative tests
-
     // MARK: - Saved Payment Method Country Filtering Tests
 
     private func createMockPaymentMethod(id: String, country: String?) -> STPPaymentMethod {
@@ -3060,16 +3058,9 @@ class PaymentSheetFormFactoryTest: XCTestCase {
         var configuration = PaymentSheet.Configuration()
         configuration.billingDetailsCollectionConfiguration.allowedCountries = ["US", "CA"]
 
-        // Filter payment methods using the same logic as PaymentSheetLoader
-        let filteredPMs = savedPaymentMethods.filter { paymentMethod in
-            let allowedCountries = configuration.billingDetailsCollectionConfiguration.allowedCountries
-            guard !allowedCountries.isEmpty else { return true }
-
-            guard let billingCountry = paymentMethod.billingDetails?.address?.country else {
-                return false
-            }
-
-            return allowedCountries.contains(billingCountry)
+        // Filter payment methods using PaymentSheetLoader logic
+        let filteredPMs = savedPaymentMethods.filter {
+            PaymentSheetLoader.shouldIncludePaymentMethod($0, allowedCountries: configuration.billingDetailsCollectionConfiguration.allowedCountries)
         }
 
         XCTAssertEqual(filteredPMs.count, 2, "Should only show payment methods from allowed countries")
@@ -3118,16 +3109,9 @@ class PaymentSheetFormFactoryTest: XCTestCase {
         var configuration = PaymentSheet.Configuration()
         configuration.billingDetailsCollectionConfiguration.allowedCountries = ["US", "DE"]
 
-        // Filter payment methods using the same logic as PaymentSheetLoader
-        let filteredPMs = savedPaymentMethods.filter { paymentMethod in
-            let allowedCountries = configuration.billingDetailsCollectionConfiguration.allowedCountries
-            guard !allowedCountries.isEmpty else { return true }
-
-            guard let billingCountry = paymentMethod.billingDetails?.address?.country else {
-                return false
-            }
-
-            return allowedCountries.contains(billingCountry)
+        // Filter payment methods using PaymentSheetLoader logic
+        let filteredPMs = savedPaymentMethods.filter {
+            PaymentSheetLoader.shouldIncludePaymentMethod($0, allowedCountries: configuration.billingDetailsCollectionConfiguration.allowedCountries)
         }
 
         XCTAssertEqual(filteredPMs.count, 2, "Should exclude JP payment method")
@@ -3146,16 +3130,9 @@ class PaymentSheetFormFactoryTest: XCTestCase {
         var configuration = PaymentSheet.Configuration()
         configuration.billingDetailsCollectionConfiguration.allowedCountries = ["US"]
 
-        // Filter payment methods using the same logic as PaymentSheetLoader
-        let filteredPMs = savedPaymentMethods.filter { paymentMethod in
-            let allowedCountries = configuration.billingDetailsCollectionConfiguration.allowedCountries
-            guard !allowedCountries.isEmpty else { return true }
-
-            guard let billingCountry = paymentMethod.billingDetails?.address?.country else {
-                return false
-            }
-
-            return allowedCountries.contains(billingCountry)
+        // Filter payment methods using PaymentSheetLoader logic
+        let filteredPMs = savedPaymentMethods.filter {
+            PaymentSheetLoader.shouldIncludePaymentMethod($0, allowedCountries: configuration.billingDetailsCollectionConfiguration.allowedCountries)
         }
 
         XCTAssertEqual(filteredPMs.count, 1, "Should only show US payment method")
