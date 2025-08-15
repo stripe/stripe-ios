@@ -290,7 +290,8 @@ import UIKit
             intent: intent,
             elementsSession: elementsSession,
             analyticsHelper: analyticsHelper,
-            linkAppearance: appearance
+            linkAppearance: appearance,
+            linkConfiguration: linkConfiguration
         ) { [weak self] confirmOption, shouldClearSelection in
             guard let confirmOption else {
                 if shouldClearSelection {
@@ -321,21 +322,21 @@ import UIKit
 
         let clientAttributionMetadata: STPClientAttributionMetadata = intent.clientAttributionMetadata(elementsSessionConfigId: elementsSession.sessionID)
 
-            if elementsSession.linkPassthroughModeEnabled {
-                createPaymentMethodInPassthroughMode(
-                    paymentDetails: selectedPaymentDetails,
-                    consumerSessionClientSecret: consumerSessionClientSecret,
-                    clientAttributionMetadata: clientAttributionMetadata,
-                    completion: completion
-                )
-            } else {
-                createPaymentMethodInPaymentMethodMode(
-                    paymentDetails: selectedPaymentDetails,
-                    linkAccount: linkAccount,
-                    clientAttributionMetadata: clientAttributionMetadata,
-                    completion: completion
-                )
-            }
+        if elementsSession.linkPassthroughModeEnabled {
+            createPaymentMethodInPassthroughMode(
+                paymentDetails: selectedPaymentDetails,
+                consumerSessionClientSecret: consumerSessionClientSecret,
+                clientAttributionMetadata: clientAttributionMetadata,
+                completion: completion
+            )
+        } else {
+            createPaymentMethodInPaymentMethodMode(
+                paymentDetails: selectedPaymentDetails,
+                linkAccount: linkAccount,
+                clientAttributionMetadata: clientAttributionMetadata,
+                completion: completion
+            )
+        }
     }
 
     // MARK: - Private methods
