@@ -26,6 +26,7 @@ extension UIViewController {
         intent: Intent,
         elementsSession: STPElementsSession,
         analyticsHelper: PaymentSheetAnalyticsHelper,
+        linkAppearance: LinkAppearance? = nil,
         verificationDismissed: (() -> Void)? = nil,
         callback: @escaping (_ confirmOption: PaymentSheet.LinkConfirmOption?, _ shouldReturnToPaymentSheet: Bool) -> Void
     ) {
@@ -34,6 +35,7 @@ extension UIViewController {
                 mode: .inlineLogin,
                 linkAccount: linkAccount,
                 configuration: configuration,
+                appearance: linkAppearance,
                 allowLogoutInDialog: true
             )
 
@@ -55,6 +57,7 @@ extension UIViewController {
                     elementsSession: elementsSession,
                     configuration: configuration,
                     analyticsHelper: analyticsHelper,
+                    linkAppearance: linkAppearance,
                     callback: callback
                 )
             }
@@ -65,6 +68,7 @@ extension UIViewController {
                 elementsSession: elementsSession,
                 configuration: configuration,
                 analyticsHelper: analyticsHelper,
+                linkAppearance: linkAppearance,
                 callback: callback
             )
         }
@@ -76,6 +80,7 @@ extension UIViewController {
         elementsSession: STPElementsSession,
         configuration: PaymentElementConfiguration,
         analyticsHelper: PaymentSheetAnalyticsHelper,
+        linkAppearance: LinkAppearance? = nil,
         callback: @escaping (_ confirmOption: PaymentSheet.LinkConfirmOption?, _ shouldReturnToPaymentSheet: Bool) -> Void
     ) {
         let payWithLinkController = PayWithNativeLinkController(
@@ -84,7 +89,8 @@ extension UIViewController {
             elementsSession: elementsSession,
             configuration: configuration,
             logPayment: false,
-            analyticsHelper: analyticsHelper
+            analyticsHelper: analyticsHelper,
+            linkAppearance: linkAppearance
         )
 
         payWithLinkController.presentForPaymentMethodSelection(

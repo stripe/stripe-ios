@@ -26,7 +26,14 @@ final class CardSectionElement: ContainerElement {
     lazy var view: UIView = {
         #if !os(visionOS)
         if #available(iOS 13.0, macCatalyst 14, *), STPCardScanner.cardScanningAvailable {
-            return CardSectionWithScannerView(cardSectionView: cardSection.view, delegate: self, theme: theme, analyticsHelper: analyticsHelper)
+            return CardSectionWithScannerView(
+                cardSectionView: cardSection.view,
+                opensCardScannerAutomatically: opensCardScannerAutomatically,
+                delegate: self,
+                theme: theme,
+                analyticsHelper: analyticsHelper,
+                linkAppearance: linkAppearance
+            )
         } else {
             return cardSection.view
         }
@@ -37,6 +44,9 @@ final class CardSectionElement: ContainerElement {
     let cardSection: SectionElement
     let analyticsHelper: PaymentSheetAnalyticsHelper?
     let cardBrandFilter: CardBrandFilter
+    private let opensCardScannerAutomatically: Bool
+
+    private let linkAppearance: LinkAppearance?
 
     struct DefaultValues {
         internal init(name: String? = nil, pan: String? = nil, cvc: String? = nil, expiry: String? = nil) {
@@ -70,12 +80,15 @@ final class CardSectionElement: ContainerElement {
         hostedSurface: HostedSurface,
         theme: ElementsAppearance = .default,
         analyticsHelper: PaymentSheetAnalyticsHelper?,
-        cardBrandFilter: CardBrandFilter = .default
+        cardBrandFilter: CardBrandFilter = .default,
+        opensCardScannerAutomatically: Bool,
+        linkAppearance: LinkAppearance? = nil
     ) {
         self.hostedSurface = hostedSurface
         self.theme = theme
         self.analyticsHelper = analyticsHelper
         self.cardBrandFilter = cardBrandFilter
+        self.opensCardScannerAutomatically = opensCardScannerAutomatically
         let nameElement = collectName
             ? PaymentMethodElementWrapper(
                 TextFieldElement.NameConfiguration(
@@ -149,6 +162,7 @@ final class CardSectionElement: ContainerElement {
         self.expiryElement = expiryElement.element
         self.preferredNetworks = preferredNetworks
         self.lastPanElementValidationState = panElement.validationState
+        self.linkAppearance = linkAppearance
         cardSection.delegate = self
     }
 

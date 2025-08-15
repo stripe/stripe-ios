@@ -27,6 +27,7 @@ struct PaymentMethodCardView: View {
                     .frame(width: 24, height: 24)
                     .padding(8)
                     .background(.white.opacity(0.3))
+                    .foregroundColor(.white)
                     .clipShape(RoundedRectangle(cornerRadius: 6))
 
                 Text(preview.label)

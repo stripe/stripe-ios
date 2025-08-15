@@ -364,12 +364,13 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
         }
         // If there's no previous paymentMethodListViewController:
         // 1. Default to the customer's default if it will be displayed
+        //    But don't treat it as a potential default if WalletButtonsView is in use
         func willDisplay(customerDefault: CustomerPaymentOption) -> Bool {
             switch customerDefault {
             case .applePay:
-                return isFlowController && shouldShowApplePayInList
+                return isFlowController && shouldShowApplePayInList && !configuration.willUseWalletButtonsView
             case .link:
-                return isFlowController && shouldShowLinkInList
+                return isFlowController && shouldShowLinkInList && !configuration.willUseWalletButtonsView
             case .stripeId(let stripeId):
                 guard let savedSelection = savedPaymentMethods.first else {
                     return false
@@ -392,8 +393,8 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
             }
         }
 
-        // 2. Default to Apple Pay
-        if shouldShowApplePayInList {
+        // 2. Default to Apple Pay if WalletButtonsView is not in use
+        if shouldShowApplePayInList && !configuration.willUseWalletButtonsView {
             return .applePay
         }
 

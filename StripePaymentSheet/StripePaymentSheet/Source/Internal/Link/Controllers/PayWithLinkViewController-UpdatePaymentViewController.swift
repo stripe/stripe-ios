@@ -47,18 +47,20 @@ extension PayWithLinkViewController {
 
         private lazy var updateButton: ConfirmButton = .makeLinkButton(
             callToAction: isBillingDetailsUpdateFlow ? context.callToAction : .custom(title: String.Localized.update_card),
+            linkAppearance: context.linkAppearance,
             didTapWhenDisabled: didTapWhenDisabled
         ) { [weak self] in
             self?.updatePaymentMethod()
         }
 
         private func didTapWhenDisabled() {
-            guard case let .invalid(error, _) = paymentMethodEditElement.validationState else {
-                return
-            }
+            // Clear any previous confirmation error
+            updateErrorLabel(for: nil)
 
-            errorLabel.text = error.localizedDescription
-            errorLabel.isHidden = false
+#if !os(visionOS)
+            UINotificationFeedbackGenerator().notificationOccurred(.error)
+#endif
+            paymentMethodEditElement.showAllValidationErrors()
         }
 
         private lazy var errorLabel: UILabel = {

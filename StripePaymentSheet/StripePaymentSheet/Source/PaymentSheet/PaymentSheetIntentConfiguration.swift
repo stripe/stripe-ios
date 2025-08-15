@@ -46,10 +46,12 @@ public extension PaymentSheet {
         @_spi(SharedPaymentToken) public struct SellerDetails {
             public let networkId: String
             public let externalId: String
+            public let businessName: String
 
-            public init(networkId: String, externalId: String) {
+            public init(networkId: String, externalId: String, businessName: String) {
                 self.networkId = networkId
                 self.externalId = externalId
+                self.businessName = businessName
             }
         }
 
