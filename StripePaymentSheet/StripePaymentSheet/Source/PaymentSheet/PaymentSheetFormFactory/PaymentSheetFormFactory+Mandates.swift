@@ -19,7 +19,7 @@ extension PaymentSheetFormFactory {
     func makeMandate(mandateText: NSAttributedString) -> SimpleMandateElement {
         // If there was previous customer input, check if it displayed the mandate for this payment method
         let customerAlreadySawMandate = previousCustomerInput?.didDisplayMandate ?? false
-        return SimpleMandateElement(mandateText: mandateText, customerAlreadySawMandate: customerAlreadySawMandate, theme: theme)
+        return SimpleMandateElement(mandateText: mandateText, customerAlreadySawMandate: customerAlreadySawMandate, centered: isLinkUI, theme: theme)
     }
 
     func makeAUBECSMandate() -> StaticElement {

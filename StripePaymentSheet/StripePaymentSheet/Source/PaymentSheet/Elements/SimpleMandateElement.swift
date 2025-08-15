@@ -42,8 +42,13 @@ class SimpleMandateElement: PaymentMethodElement {
         self.customerAlreadySawMandate = customerAlreadySawMandate
     }
 
-    init(mandateText: NSAttributedString, customerAlreadySawMandate: Bool, theme: ElementsAppearance = .default) {
-        mandateTextView = SimpleMandateTextView(mandateText: mandateText, theme: theme)
+    init(
+        mandateText: NSAttributedString,
+        customerAlreadySawMandate: Bool,
+        centered: Bool,
+        theme: ElementsAppearance = .default
+    ) {
+        mandateTextView = SimpleMandateTextView(mandateText: mandateText, centered: centered, theme: theme)
         self.customerAlreadySawMandate = customerAlreadySawMandate
     }
 
