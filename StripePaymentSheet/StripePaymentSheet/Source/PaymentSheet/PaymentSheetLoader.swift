@@ -127,6 +127,7 @@ final class PaymentSheetLoader {
                             elementsSession: elementsSession
                         )
                     }
+                    .filter { Self.shouldIncludePaymentMethod($0, allowedCountries: configuration.billingDetailsCollectionConfiguration.allowedCountries) }
 
                 let isLinkEnabled = PaymentSheet.isLinkEnabled(elementsSession: elementsSession, configuration: configuration)
                 let isApplePayEnabled = PaymentSheet.isApplePayEnabled(elementsSession: elementsSession, configuration: configuration)
@@ -439,5 +440,22 @@ final class PaymentSheetLoader {
                 continuation.resume(returning: paymentMethods)
             }
         }
+    }
+
+    /// Determines if a saved payment method should be included based on allowed countries filtering
+    /// - Parameters:
+    ///   - paymentMethod: The payment method to evaluate
+    ///   - allowedCountries: Set of allowed country codes (empty set means all countries allowed)
+    /// - Returns: `true` if the payment method should be included, `false` otherwise
+    static func shouldIncludePaymentMethod(_ paymentMethod: STPPaymentMethod, allowedCountries: Set<String>) -> Bool {
+        // Empty set means all countries are allowed (no filtering)
+        guard !allowedCountries.isEmpty else { return true }
+
+        // Hide payment methods without billing country data when filtering is active
+        guard let billingCountry = paymentMethod.billingDetails?.address?.country else {
+            return false
+        }
+
+        return allowedCountries.contains(billingCountry)
     }
 }

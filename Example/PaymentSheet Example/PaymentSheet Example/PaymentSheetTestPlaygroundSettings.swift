@@ -432,6 +432,40 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
         case never
         case full
     }
+    enum BillingDetailsAllowedCountries: String, PickerEnum {
+        static var enumName: String { "Allowed Countries" }
+
+        case all
+        case usOnly = "us_only"
+        case northAmerica = "north_america"
+        case fiveCountries = "five_countries"
+
+        var countries: Set<String> {
+            switch self {
+            case .all:
+                return []  // Empty set means all countries
+            case .usOnly:
+                return ["US"]
+            case .northAmerica:
+                return ["US", "CA", "MX"]
+            case .fiveCountries:
+                return ["US", "CA", "GB", "AU", "DE"]
+            }
+        }
+
+        var displayName: String {
+            switch self {
+            case .all:
+                return "All Countries"
+            case .usOnly:
+                return "US Only"
+            case .northAmerica:
+                return "North America (US, CA, MX)"
+            case .fiveCountries:
+                return "5 Countries (US, CA, GB, AU, DE)"
+            }
+        }
+    }
     enum Autoreload: String, PickerEnum {
         static var enumName: String { "Autoreload" }
 
@@ -656,6 +690,7 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
     var collectEmail: BillingDetailsEmail
     var collectPhone: BillingDetailsPhone
     var collectAddress: BillingDetailsAddress
+    var allowedCountries: BillingDetailsAllowedCountries
     var formSheetAction: FormSheetAction
     var embeddedViewDisplaysMandateText: DisplaysMandateTextEnabled
     var rowSelectionBehavior: RowSelectionBehavior
@@ -710,6 +745,7 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
             collectEmail: .automatic,
             collectPhone: .automatic,
             collectAddress: .automatic,
+            allowedCountries: .all,
             formSheetAction: .continue,
             embeddedViewDisplaysMandateText: .on,
             rowSelectionBehavior: .default,

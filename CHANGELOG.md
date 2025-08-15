@@ -5,6 +5,7 @@
 
 ### PaymentSheet
 * [Added] Added new `presentPaymentOptions` APIs for UIKit and SwiftUI with a `didCancel` bool in the completion handler, making it possible to differentiate between a user closing FlowController and selecting a payment option. ([#5202](https://github.com/stripe/stripe-ios/pull/5202))
+* [Added] Added a new `allowedCountries` API to PaymentSheetConfiguration, enabling users to only allow billing addresses in certain countries.
 * [Fixed] Fixed Dynamic Actor Isolation crash in SwiftUI when using completion handlers with Swift 6 or Dynamic Actor Isolation feature flag enabled. Thanks @BrentMifsud! ([#5269](https://github.com/stripe/stripe-ios/issues/5269))
 * [Changed] The form will now highlight incomplete fields when the user taps a disabled "Confirm" button.
 

@@ -175,6 +175,7 @@ struct PaymentSheetTestPlayground: View {
                         SettingView(setting: $playgroundController.settings.collectEmail)
                         SettingView(setting: $playgroundController.settings.collectPhone)
                         SettingView(setting: $playgroundController.settings.collectAddress)
+                        SettingView(setting: $playgroundController.settings.allowedCountries)
                     }
 
                     if playgroundController.settings.uiStyle == .embedded {
