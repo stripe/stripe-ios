@@ -186,7 +186,7 @@ struct PaymentSheetExampleAppRootView: View {
         case .customerSheet_playground:
             CustomerSheetTestPlayground(settings: CustomerSheetTestPlaygroundController.settingsFromDefaults() ?? .defaultValues())
         case .paymentSheet_playground:
-            PaymentSheetTestPlayground(settings: PlaygroundController.settingsFromDefaults() ?? .defaultValues(), appearance: PaymentSheet.Appearance.default)
+            PaymentSheetTestPlayground(settings: PlaygroundController.settingsFromDefaults() ?? .defaultValues(), appearance: PlaygroundController.appearanceFromDefaults() ?? .default)
         case .none:
             EmptyView()
         }
