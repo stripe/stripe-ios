@@ -96,6 +96,88 @@ class PaymentSheetConfigurationTests: XCTestCase {
         let key = customerConfig.ephemeralKeySecretBasedOn(elementsSession: .elementsSessionWithCustomerSessionForPaymentSheet(apiKey: "ek_11223344"))
         XCTAssertEqual(key, "ek_11223344")
     }
+
+    func testBillingDetailsCollectionConfiguration_allowedCountries_default() {
+        let configuration = PaymentSheet.BillingDetailsCollectionConfiguration()
+        XCTAssertTrue(configuration.allowedCountries.isEmpty)
+    }
+
+    func testBillingDetailsCollectionConfiguration_allowedCountries_custom() {
+        let allowedCountries: Set<String> = ["US", "CA", "GB"]
+        let configuration = PaymentSheet.BillingDetailsCollectionConfiguration(allowedCountries: allowedCountries)
+        XCTAssertEqual(configuration.allowedCountries, allowedCountries)
+    }
+
+    func testBillingDetailsCollectionConfiguration_allowedCountries_initialization() {
+        let configuration = PaymentSheet.BillingDetailsCollectionConfiguration(
+            name: .always,
+            phone: .never,
+            email: .automatic,
+            address: .full,
+            attachDefaultsToPaymentMethod: true,
+            allowedCountries: ["US", "CA"]
+        )
+
+        XCTAssertEqual(configuration.name, .always)
+        XCTAssertEqual(configuration.phone, .never)
+        XCTAssertEqual(configuration.email, .automatic)
+        XCTAssertEqual(configuration.address, .full)
+        XCTAssertTrue(configuration.attachDefaultsToPaymentMethod)
+        XCTAssertEqual(configuration.allowedCountries, ["US", "CA"])
+    }
+
+    func testBillingDetailsCollectionConfiguration_allowedCountries_singleCountry() {
+        let configuration = PaymentSheet.BillingDetailsCollectionConfiguration(
+            allowedCountries: ["US"]
+        )
+
+        XCTAssertEqual(configuration.allowedCountries, ["US"])
+        XCTAssertEqual(configuration.allowedCountries.count, 1)
+        XCTAssertTrue(configuration.allowedCountries.contains("US"))
+    }
+
+    func testBillingDetailsCollectionConfiguration_allowedCountries_duplicatesRemoved() {
+        // Set should automatically remove duplicates
+        let configuration = PaymentSheet.BillingDetailsCollectionConfiguration(
+            allowedCountries: ["US", "US", "CA", "CA", "GB"]
+        )
+
+        XCTAssertEqual(configuration.allowedCountries.count, 3)
+        XCTAssertTrue(configuration.allowedCountries.contains("US"))
+        XCTAssertTrue(configuration.allowedCountries.contains("CA"))
+        XCTAssertTrue(configuration.allowedCountries.contains("GB"))
+    }
+
+    func testBillingDetailsCollectionConfiguration_allowedCountries_equatable() {
+        let config1 = PaymentSheet.BillingDetailsCollectionConfiguration(
+            name: .always,
+            allowedCountries: ["US", "CA"]
+        )
+        let config2 = PaymentSheet.BillingDetailsCollectionConfiguration(
+            name: .always,
+            allowedCountries: ["CA", "US"]  // Different order, but same set
+        )
+        let config3 = PaymentSheet.BillingDetailsCollectionConfiguration(
+            name: .always,
+            allowedCountries: ["US", "GB"]  // Different countries
+        )
+
+        XCTAssertEqual(config1, config2)  // Order shouldn't matter for sets
+        XCTAssertNotEqual(config1, config3)  // Different countries should not be equal
+    }
+
+    func testBillingDetailsCollectionConfiguration_allowedCountries_mutability() {
+        var configuration = PaymentSheet.BillingDetailsCollectionConfiguration()
+        XCTAssertTrue(configuration.allowedCountries.isEmpty)
+
+        // Test that we can modify the set after initialization
+        configuration.allowedCountries = ["US", "CA", "GB"]
+        XCTAssertEqual(configuration.allowedCountries, ["US", "CA", "GB"])
+
+        // Test that we can clear it
+        configuration.allowedCountries = []
+        XCTAssertTrue(configuration.allowedCountries.isEmpty)
+    }
 }
 
 extension STPElementsSession {
