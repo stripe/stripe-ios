@@ -40,6 +40,7 @@ import Foundation
     @_spi(STP) public let linkConsumerIncentive: LinkConsumerIncentive?
     @_spi(STP) public let linkDefaultOptIn: LinkDefaultOptIn?
     @_spi(STP) public let linkEnableDisplayableDefaultValuesInECE: Bool?
+    @_spi(STP) public let linkShowPreferDebitCardHint: Bool?
 
     @_spi(STP) public let allResponseFields: [AnyHashable: Any]
 
@@ -56,6 +57,7 @@ import Foundation
         linkConsumerIncentive: LinkConsumerIncentive?,
         linkDefaultOptIn: LinkDefaultOptIn?,
         linkEnableDisplayableDefaultValuesInECE: Bool?,
+        linkShowPreferDebitCardHint: Bool?,
         allResponseFields: [AnyHashable: Any]
     ) {
         self.fundingSources = fundingSources
@@ -70,6 +72,7 @@ import Foundation
         self.linkConsumerIncentive = linkConsumerIncentive
         self.linkDefaultOptIn = linkDefaultOptIn
         self.linkEnableDisplayableDefaultValuesInECE = linkEnableDisplayableDefaultValuesInECE
+        self.linkShowPreferDebitCardHint = linkShowPreferDebitCardHint
         self.allResponseFields = allResponseFields
     }
 
@@ -95,6 +98,7 @@ import Foundation
         let linkMode = (response["link_mode"] as? String).flatMap { LinkMode(rawValue: $0) }
         let linkDefaultOptIn = (response["link_default_opt_in"] as? String).flatMap { LinkDefaultOptIn(rawValue: $0) }
         let linkEnableDisplayableDefaultValuesInECE = response["link_enable_displayable_default_values_in_ece"] as? Bool ?? false
+        let linkShowPreferDebitCardHint = response["link_show_prefer_debit_card_hint"] as? Bool ?? false
 
         let linkIncentivesEnabled = UserDefaults.standard.bool(forKey: "FINANCIAL_CONNECTIONS_INSTANT_DEBITS_INCENTIVES")
         let linkConsumerIncentive: LinkConsumerIncentive? = if linkIncentivesEnabled {
@@ -125,6 +129,7 @@ import Foundation
             linkConsumerIncentive: linkConsumerIncentive,
             linkDefaultOptIn: linkDefaultOptIn,
             linkEnableDisplayableDefaultValuesInECE: linkEnableDisplayableDefaultValuesInECE,
+            linkShowPreferDebitCardHint: linkShowPreferDebitCardHint,
             allResponseFields: response
         ) as? Self
     }

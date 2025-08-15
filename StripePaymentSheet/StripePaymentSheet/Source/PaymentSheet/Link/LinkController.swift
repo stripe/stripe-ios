@@ -54,6 +54,7 @@ import UIKit
     private let intent: Intent
     private let configuration: PaymentElementConfiguration
     private let appearance: LinkAppearance?
+    private let linkConfiguration: LinkConfiguration?
     private let analyticsHelper: PaymentSheetAnalyticsHelper
     private let requestSurface: LinkRequestSurface
 
@@ -103,6 +104,7 @@ import UIKit
         intent: Intent,
         configuration: PaymentElementConfiguration,
         appearance: LinkAppearance?,
+        linkConfiguration: LinkConfiguration?,
         analyticsHelper: PaymentSheetAnalyticsHelper,
         requestSurface: LinkRequestSurface
     ) {
@@ -112,6 +114,7 @@ import UIKit
         self.intent = intent
         self.configuration = configuration
         self.appearance = appearance
+        self.linkConfiguration = linkConfiguration
         self.analyticsHelper = analyticsHelper
         self.requestSurface = requestSurface
 
@@ -130,12 +133,14 @@ import UIKit
     /// - Parameter apiClient: The `STPAPIClient` instance for this controller. Defaults to `.shared`.
     /// - Parameter mode: The mode in which the Link payment method controller should operate, either `payment` or `setup`.
     /// - Parameter appearance: Link UI-specific appearance overrides. If not specified, `PaymentSheet.Appearance` defaults are used.
+    /// - Parameter linkConfiguration: Configuration for Link behavior and content. If not specified, default behavior is used.
     /// - Parameter requestSurface: The request surface to use for API calls. Defaults to `ios_payment_element`.
     /// - Parameter completion: A closure that is called with the result of the creation. It returns a `LinkController` if successful, or an error if the creation failed.
     @_spi(STP) public static func create(
         apiClient: STPAPIClient = .shared,
         mode: LinkController.Mode,
         appearance: LinkAppearance? = nil,
+        linkConfiguration: LinkConfiguration? = nil,
         requestSurface: LinkRequestSurface = .default,
         completion: @escaping (Result<LinkController, Error>) -> Void
     ) {
@@ -165,6 +170,7 @@ import UIKit
                     intent: loadResult.intent,
                     configuration: configuration,
                     appearance: appearance,
+                    linkConfiguration: linkConfiguration,
                     analyticsHelper: analyticsHelper,
                     requestSurface: requestSurface
                 )
@@ -315,21 +321,21 @@ import UIKit
 
         let clientAttributionMetadata: STPClientAttributionMetadata = intent.clientAttributionMetadata(elementsSessionConfigId: elementsSession.sessionID)
 
-        if elementsSession.linkPassthroughModeEnabled {
-            createPaymentMethodInPassthroughMode(
-                paymentDetails: selectedPaymentDetails,
-                consumerSessionClientSecret: consumerSessionClientSecret,
-                clientAttributionMetadata: clientAttributionMetadata,
-                completion: completion
-            )
-        } else {
-            createPaymentMethodInPaymentMethodMode(
-                paymentDetails: selectedPaymentDetails,
-                linkAccount: linkAccount,
-                clientAttributionMetadata: clientAttributionMetadata,
-                completion: completion
-            )
-        }
+            if elementsSession.linkPassthroughModeEnabled {
+                createPaymentMethodInPassthroughMode(
+                    paymentDetails: selectedPaymentDetails,
+                    consumerSessionClientSecret: consumerSessionClientSecret,
+                    clientAttributionMetadata: clientAttributionMetadata,
+                    completion: completion
+                )
+            } else {
+                createPaymentMethodInPaymentMethodMode(
+                    paymentDetails: selectedPaymentDetails,
+                    linkAccount: linkAccount,
+                    clientAttributionMetadata: clientAttributionMetadata,
+                    completion: completion
+                )
+            }
     }
 
     // MARK: - Private methods
@@ -447,16 +453,18 @@ import UIKit
     /// - Parameter apiClient: The `STPAPIClient` instance for this controller. Defaults to `.shared`.
     /// - Parameter mode: The mode in which the Link payment method controller should operate, either `payment` or `setup`.
     /// - Parameter appearance: Link UI-specific appearance overrides. If not specified, `PaymentSheet.Configuration` defaults are used.
+    /// - Parameter linkConfiguration: Configuration for Link behavior and content. If not specified, default behavior is used.
     /// - Parameter requestSurface: The request surface to use for API calls. Defaults to `ios_payment_element`.
     /// - Returns: A `LinkController` if successful, or throws an error if the creation failed.
     static func create(
         apiClient: STPAPIClient = .shared,
         mode: LinkController.Mode,
         appearance: LinkAppearance? = nil,
+        linkConfiguration: LinkConfiguration? = nil,
         requestSurface: LinkRequestSurface = .default
     ) async throws -> LinkController {
         return try await withCheckedThrowingContinuation { continuation in
-            create(apiClient: apiClient, mode: mode, appearance: appearance, requestSurface: requestSurface) { result in
+            create(apiClient: apiClient, mode: mode, appearance: appearance, linkConfiguration: linkConfiguration, requestSurface: requestSurface) { result in
                 switch result {
                 case .success(let controller):
                     continuation.resume(returning: controller)

@@ -56,6 +56,7 @@ final class PayWithNativeLinkController {
     let analyticsHelper: PaymentSheetAnalyticsHelper
 
     private let linkAppearance: LinkAppearance?
+    private let linkConfiguration: LinkConfiguration?
 
     init(
         mode: Mode,
@@ -64,7 +65,8 @@ final class PayWithNativeLinkController {
         configuration: PaymentElementConfiguration,
         logPayment: Bool = true,
         analyticsHelper: PaymentSheetAnalyticsHelper,
-        linkAppearance: LinkAppearance? = nil
+        linkAppearance: LinkAppearance? = nil,
+        linkConfiguration: LinkConfiguration? = nil
     ) {
         self.mode = mode
         self.intent = intent
@@ -74,6 +76,7 @@ final class PayWithNativeLinkController {
         self.analyticsHelper = analyticsHelper
         self.paymentHandler = .init(apiClient: configuration.apiClient)
         self.linkAppearance = linkAppearance
+        self.linkConfiguration = linkConfiguration
     }
 
     func presentAsBottomSheet(
@@ -155,7 +158,8 @@ final class PayWithNativeLinkController {
                 canSkipWalletAfterVerification: canSkipWalletAfterVerification,
                 callToAction: callToAction,
                 analyticsHelper: self.analyticsHelper,
-                linkAppearance: self.linkAppearance
+                linkAppearance: self.linkAppearance,
+                linkConfiguration: self.linkConfiguration
             )
 
             payWithLinkVC.payWithLinkDelegate = self
