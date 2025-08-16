@@ -18,8 +18,6 @@ private let spinnerMoveToCenterAnimationDuration = 0.35
 private let checkmarkStrokeDuration = 0.2
 
 /// Buy button or Apple Pay
-/// For internal SDK use only
-@objc(STP_Internal_ConfirmButton)
 class ConfirmButton: UIView {
     let applePayButtonType: PKPaymentButtonType
 

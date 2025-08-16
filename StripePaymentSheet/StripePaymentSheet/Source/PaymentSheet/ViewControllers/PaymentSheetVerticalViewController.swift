@@ -304,12 +304,9 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
             self.mandateView.setHiddenIfNecessary(newMandateText == nil)
             let hasLabelInStackView = newMandateText != nil || self.errorLabel.text != nil
             if self.isViewLoaded, hadLabelInStackView != hasLabelInStackView {
-                NSLayoutConstraint.deactivate([
-                    self.stackView.bottomAnchor.constraint(equalTo: self.primaryButton.topAnchor, constant: hadLabelInStackView ? -20 : -32)
-                ])
-                NSLayoutConstraint.activate([
-                    self.stackView.bottomAnchor.constraint(equalTo: self.primaryButton.topAnchor, constant: hasLabelInStackView ? -20 : -32)
-                ])
+                self.primaryButtonTopAnchorConstraint.isActive = false
+                self.primaryButtonTopAnchorConstraint = self.stackView.bottomAnchor.constraint(equalTo: self.primaryButton.topAnchor, constant: hasLabelInStackView ? -20 : -32)
+                self.primaryButtonTopAnchorConstraint.isActive = true
             }
         }
     }
@@ -469,6 +466,7 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
         fatalError("init(coder:) has not been implemented")
     }
 
+    var primaryButtonTopAnchorConstraint: NSLayoutConstraint!
     // MARK: - UIViewController Methods
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -491,6 +489,7 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
             subview.translatesAutoresizingMaskIntoConstraints = false
             view.addSubview(subview)
         }
+        primaryButtonTopAnchorConstraint = stackView.bottomAnchor.constraint(equalTo: primaryButton.topAnchor, constant: mandateView.attributedText == nil && errorLabel.text == nil ? -32 : -20)
         NSLayoutConstraint.activate([
             stackView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             stackView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
@@ -498,7 +497,7 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
             primaryButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -configuration.appearance.formInsets.trailing),
 
             stackView.topAnchor.constraint(equalTo: view.topAnchor),
-            stackView.bottomAnchor.constraint(equalTo: primaryButton.topAnchor, constant: mandateView.attributedText == nil && errorLabel.text == nil ? -32 : -20),
+            primaryButtonTopAnchorConstraint,
             primaryButton.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -configuration.appearance.formInsets.bottom),
         ])
     }
