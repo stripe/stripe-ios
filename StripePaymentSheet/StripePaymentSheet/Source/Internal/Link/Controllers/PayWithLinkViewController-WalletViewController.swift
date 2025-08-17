@@ -113,9 +113,7 @@ extension PayWithLinkViewController {
         }()
 
         private lazy var debitCardHintView: LinkHintMessageView? = {
-            guard let hintMessage = viewModel.linkConfiguration?.hintMessage,
-                  !hintMessage.isEmpty,
-                  context.elementsSession.shouldShowPreferDebitCardHint else {
+            guard let hintMessage = viewModel.debitCardHintIfSupported(for: linkAccount) else {
                 return nil
             }
             return LinkHintMessageView(message: hintMessage)
