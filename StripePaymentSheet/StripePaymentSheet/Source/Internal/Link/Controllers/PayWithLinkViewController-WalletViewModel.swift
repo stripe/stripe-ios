@@ -161,10 +161,6 @@ extension PayWithLinkViewController {
             return context.linkAppearance
         }
 
-        var linkConfiguration: LinkConfiguration? {
-            return context.linkConfiguration
-        }
-
         var cancelButtonConfiguration: Button.Configuration? {
             context.shouldShowSecondaryCta ? .linkPlain(foregroundColor: linkAppearance?.colors?.primary ?? .linkTextBrand) : nil
         }
