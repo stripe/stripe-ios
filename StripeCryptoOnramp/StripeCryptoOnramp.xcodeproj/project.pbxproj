@@ -47,6 +47,9 @@
 		49D233A82E439EB900F51263 /* CryptoNetwork.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49D233A72E439EB900F51263 /* CryptoNetwork.swift */; };
 		49D233AA2E439FAA00F51263 /* RegisterWalletRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49D233A92E439FAA00F51263 /* RegisterWalletRequest.swift */; };
 		49D233AC2E439FB200F51263 /* RegisterWalletResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49D233AB2E439FB200F51263 /* RegisterWalletResponse.swift */; };
+		49D73DF32E4E499F00E35F1F /* StripeCryptoOnrampBundleLocator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49D73DF22E4E499F00E35F1F /* StripeCryptoOnrampBundleLocator.swift */; };
+		49D73DF52E4E49C300E35F1F /* STPLocalizedString+StripeCryptoOnramp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49D73DF42E4E49C300E35F1F /* STPLocalizedString+StripeCryptoOnramp.swift */; };
+		49D73DF92E4E49EC00E35F1F /* String+Localized.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49D73DF82E4E49EC00E35F1F /* String+Localized.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -114,6 +117,9 @@
 		49D233A72E439EB900F51263 /* CryptoNetwork.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CryptoNetwork.swift; sourceTree = "<group>"; };
 		49D233A92E439FAA00F51263 /* RegisterWalletRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegisterWalletRequest.swift; sourceTree = "<group>"; };
 		49D233AB2E439FB200F51263 /* RegisterWalletResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegisterWalletResponse.swift; sourceTree = "<group>"; };
+		49D73DF22E4E499F00E35F1F /* StripeCryptoOnrampBundleLocator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StripeCryptoOnrampBundleLocator.swift; sourceTree = "<group>"; };
+		49D73DF42E4E49C300E35F1F /* STPLocalizedString+StripeCryptoOnramp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "STPLocalizedString+StripeCryptoOnramp.swift"; sourceTree = "<group>"; };
+		49D73DF82E4E49EC00E35F1F /* String+Localized.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+Localized.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -175,6 +181,9 @@
 				0B63C98D2E4CF8C1005D8BD2 /* ApplePayPaymentStatus.swift */,
 				0B089E6A2E5386C9007D160E /* SelectedPaymentSource.swift */,
 				0B6DF3472E296E2F008B1800 /* API Bindings */,
+				49D73DF22E4E499F00E35F1F /* StripeCryptoOnrampBundleLocator.swift */,
+				49D73DF42E4E49C300E35F1F /* STPLocalizedString+StripeCryptoOnramp.swift */,
+				49D73DF82E4E49EC00E35F1F /* String+Localized.swift */,
 			);
 			path = Internal;
 			sourceTree = "<group>";
@@ -422,13 +431,16 @@
 				0B6DF34B2E297E0A008B1800 /* CustomerRequest.swift in Sources */,
 				0B089E692E5378F7007D160E /* PaymentMethodType.swift in Sources */,
 				0B089E6B2E5386C9007D160E /* SelectedPaymentSource.swift in Sources */,
+				49D73DF52E4E49C300E35F1F /* STPLocalizedString+StripeCryptoOnramp.swift in Sources */,
 				0B6DF34D2E297E27008B1800 /* CustomerResponse.swift in Sources */,
 				0BF41E8B2E3AB84800CA4171 /* IdType.swift in Sources */,
 				0BA7050C2E413DA40044B483 /* Credentials.swift in Sources */,
 				0B83D9912E1EF6EF004F0115 /* Docs.docc in Sources */,
 				0B6DF3492E296E41008B1800 /* STPAPIClient+CryptoOnramp.swift in Sources */,
+				49D73DF92E4E49EC00E35F1F /* String+Localized.swift in Sources */,
 				0B649EDE2E428F5A00AFAFB1 /* StartIdentityVerificationRequest.swift in Sources */,
 				0BA7050A2E413D6B0044B483 /* KYCDataCollectionRequest.swift in Sources */,
+				49D73DF32E4E499F00E35F1F /* StripeCryptoOnrampBundleLocator.swift in Sources */,
 				0B649EE02E428F6400AFAFB1 /* StartIdentityVerificationResponse.swift in Sources */,
 				49D233A82E439EB900F51263 /* CryptoNetwork.swift in Sources */,
 				0B49B6B52E4A9213003E6393 /* PaymentMethodPreview.swift in Sources */,

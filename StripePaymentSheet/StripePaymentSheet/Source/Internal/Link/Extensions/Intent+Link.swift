@@ -62,6 +62,10 @@ extension STPElementsSession {
     var linkFlags: [String: Bool] {
         linkSettings?.linkFlags ?? [:]
     }
+
+    var shouldShowPreferDebitCardHint: Bool {
+        linkSettings?.linkShowPreferDebitCardHint ?? false
+    }
 }
 
 extension Intent {

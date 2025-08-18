@@ -10,6 +10,7 @@ import PassKit
 import Stripe
 
 @_spi(STP) import StripeApplePay
+@_spi(STP) import StripeCore
 @_spi(STP) import StripeIdentity
 @_spi(STP) import StripePaymentSheet
 @_spi(STP) import StripePaymentsUI
@@ -113,6 +114,10 @@ public final class CryptoOnrampCoordinator: NSObject, CryptoOnrampCoordinatorPro
         }
     }
 
+    private static let linkConfiguration: LinkConfiguration = LinkConfiguration(
+        hintMessage: String.Localized.debitIsMostLikelyToBeAccepted
+    )
+
     private init(linkController: LinkController, apiClient: STPAPIClient = .shared, appearance: LinkAppearance) {
         self.linkController = linkController
         self.apiClient = apiClient
@@ -126,6 +131,7 @@ public final class CryptoOnrampCoordinator: NSObject, CryptoOnrampCoordinatorPro
             apiClient: apiClient,
             mode: .payment,
             appearance: appearance,
+            linkConfiguration: Self.linkConfiguration,
             requestSurface: .cryptoOnramp
         )
 
