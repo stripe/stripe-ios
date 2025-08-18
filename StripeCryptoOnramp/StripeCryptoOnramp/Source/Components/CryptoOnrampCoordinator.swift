@@ -102,9 +102,6 @@ public final class CryptoOnrampCoordinator: NSObject, CryptoOnrampCoordinatorPro
     private var applePayCompletionContinuation: CheckedContinuation<ApplePayPaymentStatus, Swift.Error>?
     private var selectedPaymentSource: SelectedPaymentSource?
 
-    /// Represents the selected payment method, set after successfully calling `collectPaymentMethod(type:from:)`.
-    public private(set) var paymentMethodPreview: PaymentMethodPreview?
-
     private var linkAccountInfo: PaymentSheetLinkAccountInfoProtocol {
         get async throws {
             guard let linkAccount = await linkController.linkAccount else {
@@ -240,7 +237,6 @@ public final class CryptoOnrampCoordinator: NSObject, CryptoOnrampCoordinatorPro
                 supportedPaymentMethodTypes: [supportedPaymentMethodType]
             ) else {
                 selectedPaymentSource = nil
-                paymentMethodPreview = nil
                 return nil
             }
 
@@ -250,20 +246,39 @@ public final class CryptoOnrampCoordinator: NSObject, CryptoOnrampCoordinatorPro
                 sublabel: result.sublabel
             )
             selectedPaymentSource = .link
-            paymentMethodPreview = preview
             return preview
         case .applePay(let paymentRequest):
             // This presents Apple Pay and fills `applePayPaymentMethod` + `paymentMethodPreview` in the delegate.
             let status = try await presentApplePay(using: paymentRequest, from: viewController)
             switch status {
             case .success:
-                guard paymentMethodPreview != nil, case .applePay = selectedPaymentSource else {
+                guard case let .applePay(paymentMethod) = selectedPaymentSource else {
                     throw LinkController.IntegrationError.noPaymentMethodSelected
                 }
+
+                // Build a reasonable preview for the underlying Apple Pay payment method:
+                let icon = STPImageLibrary.applePayCardImage()
+                let label = String.Localized.apple_pay
+                let sublabel: String? = {
+                    if let card = paymentMethod.card, let last4 = card.last4 {
+                        let brand = STPCard.string(from: card.brand)
+                        let formattedMessage = STPLocalizationUtils.localizedStripeString(
+                            forKey: "%1$@ •••• %2$@",
+                            bundleLocator: StripePaymentSheetBundleLocator.self
+                        )
+                        return String(format: formattedMessage, brand, last4)
+                    }
+                    return nil
+                }()
+
+                let paymentMethodPreview = PaymentMethodPreview(
+                    icon: icon,
+                    label: label,
+                    sublabel: sublabel
+                )
                 return paymentMethodPreview
             case .canceled:
                 selectedPaymentSource = nil
-                paymentMethodPreview = nil
                 return nil
             }
         }
@@ -280,27 +295,6 @@ extension CryptoOnrampCoordinator: STPApplePayContextDelegate {
         paymentInformation: PKPayment,
         completion: @escaping STPIntentClientSecretCompletionBlock
     ) {
-        // Build a reasonable preview for the underlying Apple Pay payment method:
-        let icon = STPImageLibrary.applePayCardImage()
-        let label = String.Localized.apple_pay
-        let sublabel: String? = {
-            if let card = paymentMethod.card, let last4 = card.last4 {
-                let brand = STPCard.string(from: card.brand)
-                let formattedMessage = STPLocalizationUtils.localizedStripeString(
-                    forKey: "%1$@ •••• %2$@",
-                    bundleLocator: StripePaymentSheetBundleLocator.self
-                )
-                return String(format: formattedMessage, brand, last4)
-            }
-            return nil
-        }()
-
-        paymentMethodPreview = PaymentMethodPreview(
-            icon: icon,
-            label: label,
-            sublabel: sublabel
-        )
-
         selectedPaymentSource = .applePay(paymentMethod)
 
         completion(STPApplePayContext.COMPLETE_WITHOUT_CONFIRMING_INTENT, nil)
