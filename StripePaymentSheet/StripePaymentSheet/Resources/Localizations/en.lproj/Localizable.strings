@@ -128,6 +128,9 @@
 /* Mandate text with link to terms when saving a bank account payment method to a merchant (merchant name replaces %@). */
 "By saving your bank account for %@ you agree to authorize payments pursuant to <terms>these terms</terms>." = "By saving your bank account for %@ you agree to authorize payments pursuant to <terms>these terms</terms>.";
 
+/* Text providing link to terms for bank payments */
+"By submitting your order to %@ you agree to authorize payments pursuant to <terms>these terms</terms>." = "By submitting your order to %@ you agree to authorize payments pursuant to <terms>these terms</terms>.";
+
 /* Button text on a screen asking the user to approve a payment */
 "Cancel and pay another way" = "Cancel and pay another way";
 
