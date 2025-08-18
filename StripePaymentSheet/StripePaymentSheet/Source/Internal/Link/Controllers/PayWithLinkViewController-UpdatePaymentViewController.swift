@@ -31,6 +31,8 @@ extension PayWithLinkViewController {
         /// If that is the case, we will immediately confirm the intent after updating the payment method.
         let isBillingDetailsUpdateFlow: Bool
 
+        private let linkAppearance: LinkAppearance?
+
         private lazy var thisIsYourDefaultLabel: UILabel = {
             let label = UILabel()
             label.font = LinkUI.font(forTextStyle: .bodyEmphasized)
@@ -70,7 +72,8 @@ extension PayWithLinkViewController {
         private lazy var paymentMethodEditElement = LinkPaymentMethodFormElement(
             paymentMethod: paymentMethod,
             configuration: makeConfiguration(),
-            isBillingDetailsUpdateFlow: isBillingDetailsUpdateFlow
+            isBillingDetailsUpdateFlow: isBillingDetailsUpdateFlow,
+            linkAppearance: linkAppearance
         )
 
         private func makeConfiguration() -> PaymentElementConfiguration {
@@ -87,7 +90,8 @@ extension PayWithLinkViewController {
             linkAccount: PaymentSheetLinkAccount,
             context: Context,
             paymentMethod: ConsumerPaymentDetails,
-            isBillingDetailsUpdateFlow: Bool
+            isBillingDetailsUpdateFlow: Bool,
+            linkAppearance: LinkAppearance? = nil
         ) {
             self.linkAccount = linkAccount
             self.intent = context.intent
@@ -95,6 +99,7 @@ extension PayWithLinkViewController {
             self.configuration.linkPaymentMethodsOnly = true
             self.paymentMethod = paymentMethod
             self.isBillingDetailsUpdateFlow = isBillingDetailsUpdateFlow
+            self.linkAppearance = linkAppearance
 
             let title: String = isBillingDetailsUpdateFlow ? String.Localized.confirm_payment_details : String.Localized.update_card
             super.init(context: context, navigationTitle: title)
