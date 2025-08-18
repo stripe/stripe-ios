@@ -5,6 +5,8 @@
 //  Created by Michael Liberatore on 8/13/25.
 //
 
+import Foundation
+
 /// Possible return statuses from `CryptoOnrampCoordinator.presentApplePay(using:from)`.
 enum ApplePayPaymentStatus {
 
