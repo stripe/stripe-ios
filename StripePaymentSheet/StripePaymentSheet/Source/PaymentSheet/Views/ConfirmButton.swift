@@ -110,6 +110,7 @@ class ConfirmButton: UIView {
         return button
     }()
     private let didTap: () -> Void
+    private let didTapWhenDisabled: () -> Void
     private let appearance: PaymentSheet.Appearance
 
     // MARK: Init
@@ -120,7 +121,8 @@ class ConfirmButton: UIView {
         callToAction: CallToActionType,
         applePayButtonType: PKPaymentButtonType = .plain,
         appearance: PaymentSheet.Appearance = PaymentSheet.Appearance.default,
-        didTap: @escaping () -> Void
+        didTap: @escaping () -> Void,
+        didTapWhenDisabled: @escaping () -> Void = {}
     ) {
         self.state = state
         self.style = style
@@ -128,6 +130,7 @@ class ConfirmButton: UIView {
         self.applePayButtonType = applePayButtonType
         self.appearance = appearance
         self.didTap = didTap
+        self.didTapWhenDisabled = didTapWhenDisabled
         super.init(frame: .zero)
 
         directionalLayoutMargins = NSDirectionalEdgeInsets(top: 10, leading: 16, bottom: 10, trailing: 16)
@@ -209,7 +212,7 @@ class ConfirmButton: UIView {
         }
 
         // Enable/disable
-        isUserInteractionEnabled = state == .enabled
+        isUserInteractionEnabled = (state == .enabled || state == .disabled)
 
         // Update the buy button; it has its own presentation logic
         self.buyButton.update(status: state, callToAction: callToAction, animated: animated)
@@ -235,6 +238,11 @@ class ConfirmButton: UIView {
     private func handleTap() {
         if case .enabled = state {
             didTap()
+        } else if case .disabled = state {
+            // When the disabled button is tapped, trigger validation error display
+            didTapWhenDisabled()
+            // Resign first responder (as we would if the button was disabled)
+            superview?.endEditing(true)
         }
     }
 

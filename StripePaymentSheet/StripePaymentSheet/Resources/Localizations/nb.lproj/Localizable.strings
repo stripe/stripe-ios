@@ -60,6 +60,10 @@
 
 "By continuing, you agree to authorize payments pursuant to <terms>these terms</terms>." = "Ved å fortsette godtar du å autorisere betalinger i samsvar med <terms>disse vilkårene</terms>.";
 
+"By continuing, you agree to save your information for future purchases with %@ and <link>Link</link>. You also agree to Link's <terms>Terms</terms> and <privacy>Privacy</privacy>." = "Ved å fortsette godtar du å lagre informasjonen din for fremtidige kjøp med %@ og <link>Link</link>. Du godtar også Links <terms>vilkår</terms> og <privacy>personvern</privacy>.";
+
+"By continuing, you agree to save your information for future purchases with %@." = "Ved å fortsette godtar du å lagre informasjonen din for fremtidige kjøp med %@.";
+
 "By continuing, you authorize %@ to automatically debit your Satispay Balance on a recurring basis in accordance with your purchase or subscription plan." = "Ved å fortsette autoriserer du %@ til automatisk å debitere din Satispay-saldo på regelmessig basis i samsvar med kjøpet ditt eller abonnementsplanen din.";
 
 "By continuing, you authorize %@ to debit your Cash App account for this payment and future payments in accordance with %@'s terms, until this authorization is revoked. You can change this anytime in your Cash App Settings." = "Ved å fortsette, godkjenner du at %1$@ belaster Cash App-kontoen din for denne og fremtidige betalinger, i henhold til vilkårene fra %2$@, frem til autorisasjonen er tilbakekalt. Du kan når som helst endre dette i Cash App-innstillingene.";
@@ -126,6 +130,8 @@
 
 "Failed to connect" = "Kunne ikke koble til";
 
+"Fast, secure checkout" = "Rask og sikker utsjekking";
+
 "For security, please re-enter your card’s security code." = "For sikkerhets skyld må du skrive inn sikkerhetskoden for kortet ditt på nytt.";
 
 "Get %@ back when you pay for the first time with your bank. <terms>See terms</terms>" = "Få %@ tilbake når du betaler for første gang med banken din.<terms>Se vilkår</terms>";
@@ -185,6 +191,8 @@
 "Pay another way" = "Betal på en annen måte";
 
 "Pay faster at %@ and thousands of businesses." = "Betal raskere hos %@ og hos tusenvis av bedrifter.";
+
+"Pay faster everywhere Link is accepted." = "Betal raskere overalt hvor Link aksepteres.";
 
 "Pay over time with %@" = "Betal over tid med%@";
 

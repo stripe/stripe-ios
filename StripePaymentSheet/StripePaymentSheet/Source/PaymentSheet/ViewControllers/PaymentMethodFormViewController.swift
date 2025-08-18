@@ -99,7 +99,9 @@ class PaymentMethodFormViewController: UIViewController {
         configuration: PaymentElementConfiguration,
         headerView: UIView?,
         analyticsHelper: PaymentSheetAnalyticsHelper,
-        delegate: PaymentMethodFormViewControllerDelegate
+        isLinkUI: Bool = false,
+        delegate: PaymentMethodFormViewControllerDelegate,
+        linkAppearance: LinkAppearance? = nil
     ) {
         self.paymentMethodType = type
         self.intent = intent
@@ -114,12 +116,13 @@ class PaymentMethodFormViewController: UIViewController {
             self.form = PaymentSheetFormFactory(
                 intent: intent,
                 elementsSession: elementsSession,
-                configuration: .paymentElement(configuration),
+                configuration: .paymentElement(configuration, isLinkUI: isLinkUI),
                 paymentMethod: paymentMethodType,
                 previousCustomerInput: previousCustomerInput,
                 linkAccount: LinkAccountContext.shared.account,
                 accountService: LinkAccountService(apiClient: configuration.apiClient, elementsSession: elementsSession),
-                analyticsHelper: analyticsHelper
+                analyticsHelper: analyticsHelper,
+                linkAppearance: linkAppearance
             ).make()
             self.formCache[type] = form
         }
@@ -233,7 +236,7 @@ extension PaymentMethodFormViewController: ElementDelegate {
         if let linkSignup = form.linkInlineSignupElement, let mandateElement = form.mandateElement {
             // Update the mandate with or without Link
             let text = PaymentSheetFormFactory.makeMandateText(
-                linkSignupOptInFeatureEnabled: linkSignup.viewModel.mode == .signupOptIn,
+                useCombinedReuseAndLinkSignupText: linkSignup.viewModel.mode == .signupOptIn,
                 shouldSaveToLink: linkSignup.viewModel.saveCheckboxChecked,
                 merchantName: configuration.merchantDisplayName
             )

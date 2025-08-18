@@ -60,6 +60,10 @@
 
 "By continuing, you agree to authorize payments pursuant to <terms>these terms</terms>." = "Продолжая, вы соглашаетесь авторизовать платежи в соответствии с <terms>этими условиями</terms>.";
 
+"By continuing, you agree to save your information for future purchases with %@ and <link>Link</link>. You also agree to Link's <terms>Terms</terms> and <privacy>Privacy</privacy>." = "Продолжая, вы соглашаетесь сохранить вашу информацию для будущих покупок через %@ и <link>Link</link>. Вы также соглашаетесь с <terms>условиями</terms> и <privacy>политикой конфиденциальности</privacy> Link.";
+
+"By continuing, you agree to save your information for future purchases with %@." = "Продолжая, вы соглашаетесь сохранить вашу информацию для будущих покупок через %@.";
+
 "By continuing, you authorize %@ to automatically debit your Satispay Balance on a recurring basis in accordance with your purchase or subscription plan." = "Продолжая, вы разрешаете %@ автоматически списывать средства с баланса Satispay на регулярной основе в соответствии с вашим планом покупки или подписки.";
 
 "By continuing, you authorize %@ to debit your Cash App account for this payment and future payments in accordance with %@'s terms, until this authorization is revoked. You can change this anytime in your Cash App Settings." = "Продолжая, вы уполномочиваете компанию %1$@ списывать с вашего счета Cash App суммы в соответствии с этим, а также будущими платежами согласно условиям компании %2$@, пока это разрешение не будет отозвано. Отозвать разрешение можно в любой момент в настройках приложения Cash App.";
@@ -126,6 +130,8 @@
 
 "Failed to connect" = "Не удалось подключиться";
 
+"Fast, secure checkout" = "Быстрое и безопасное оформление заказа";
+
 "For security, please re-enter your card’s security code." = "В целях безопасности введите заново код CVV/CVC карты.";
 
 "Get %@ back when you pay for the first time with your bank. <terms>See terms</terms>" = "Получите возврат в сумме %@, когда впервые оплатите заказ с банковского счета. <terms>См. условия</terms>";
@@ -185,6 +191,8 @@
 "Pay another way" = "Оплатить другим способом";
 
 "Pay faster at %@ and thousands of businesses." = "Ускоренная оплата продавцу %@ и тысячам других предприятий.";
+
+"Pay faster everywhere Link is accepted." = "Платите быстрее везде, где принимают Link.";
 
 "Pay over time with %@" = "Оплатить в рассрочку с помощью %@";
 

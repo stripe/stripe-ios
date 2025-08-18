@@ -20,7 +20,7 @@ extension View {
     public func paymentSheet(
         isPresented: Binding<Bool>,
         paymentSheet: PaymentSheet,
-        onCompletion: @escaping (PaymentSheetResult) -> Void
+        onCompletion: @escaping @MainActor (PaymentSheetResult) -> Void
     ) -> some View {
         STPAnalyticsClient.sharedClient.addClass(toProductUsageIfNecessary: SwiftUIProduct.self)
         return self.modifier(
@@ -48,6 +48,29 @@ extension View {
                 paymentSheetFlowController: paymentSheetFlowController,
                 action: .presentPaymentOptions,
                 optionsCompletion: onSheetDismissed,
+                optionsCompletionWithResult: nil,
+                paymentCompletion: nil
+            )
+        )
+    }
+
+    /// Presents a sheet for a customer to select a payment option.
+    /// - Parameter isPresented: A binding to whether the sheet is presented.
+    /// - Parameter paymentSheetFlowController: A PaymentSheet.FlowController to present.
+    /// - Parameter onSheetDismissed: Called after the payment options sheet is dismissed. The didCancel parameter is "true" if the user canceled the sheet (e.g. by tapping the close button or tapping outside the sheet), and "false" if they tapped the primary ("Continue") button.
+    public func paymentOptionsSheet(
+        isPresented: Binding<Bool>,
+        paymentSheetFlowController: PaymentSheet.FlowController,
+        onSheetDismissed: ((_ didCancel: Bool) -> Void)?
+    ) -> some View {
+        STPAnalyticsClient.sharedClient.addClass(toProductUsageIfNecessary: SwiftUIProduct.self)
+        return self.modifier(
+            PaymentSheet.PaymentSheetFlowControllerPresentationModifier(
+                isPresented: isPresented,
+                paymentSheetFlowController: paymentSheetFlowController,
+                action: .presentPaymentOptions,
+                optionsCompletion: nil,
+                optionsCompletionWithResult: onSheetDismissed,
                 paymentCompletion: nil
             )
         )
@@ -60,7 +83,7 @@ extension View {
     public func paymentConfirmationSheet(
         isConfirming: Binding<Bool>,
         paymentSheetFlowController: PaymentSheet.FlowController,
-        onCompletion: @escaping (PaymentSheetResult) -> Void
+        onCompletion: @escaping @MainActor (PaymentSheetResult) -> Void
     ) -> some View {
         self.modifier(
             PaymentSheet.PaymentSheetFlowControllerPresentationModifier(
@@ -68,6 +91,7 @@ extension View {
                 paymentSheetFlowController: paymentSheetFlowController,
                 action: .confirm,
                 optionsCompletion: nil,
+                optionsCompletionWithResult: nil,
                 paymentCompletion: onCompletion
             )
         )
@@ -81,7 +105,7 @@ extension View {
     public func paymentConfirmationSheet(
         isConfirmingPayment: Binding<Bool>,
         paymentSheetFlowController: PaymentSheet.FlowController,
-        onCompletion: @escaping (PaymentSheetResult) -> Void
+        onCompletion: @escaping @MainActor (PaymentSheetResult) -> Void
     ) -> some View {
         return paymentConfirmationSheet(
             isConfirming: isConfirmingPayment,
@@ -99,7 +123,7 @@ extension PaymentSheet {
     /// - Parameter content: The content of the view.
     public struct PaymentButton<Content: View>: View {
         private let paymentSheet: PaymentSheet
-        private let onCompletion: (PaymentSheetResult) -> Void
+        private let onCompletion: @MainActor (PaymentSheetResult) -> Void
         private let content: Content
 
         @State private var showingPaymentSheet = false
@@ -107,7 +131,7 @@ extension PaymentSheet {
         /// Initialize a `PaymentButton` with required parameters.
         public init(
             paymentSheet: PaymentSheet,
-            onCompletion: @escaping (PaymentSheetResult) -> Void,
+            onCompletion: @escaping @MainActor (PaymentSheetResult) -> Void,
             @ViewBuilder content: () -> Content
         ) {
             self.paymentSheet = paymentSheet
@@ -136,7 +160,8 @@ extension PaymentSheet.FlowController {
     /// - Parameter content: The content of the view.
     public struct PaymentOptionsButton<Content: View>: View {
         private let paymentSheetFlowController: PaymentSheet.FlowController
-        private let onSheetDismissed: () -> Void
+        private let onSheetDismissed: (() -> Void)?
+        private let onSheetDismissedWithResult: ((_ didCancel: Bool) -> Void)?
         private let content: Content
 
         @State private var showingPaymentSheet = false
@@ -149,6 +174,23 @@ extension PaymentSheet.FlowController {
         ) {
             self.paymentSheetFlowController = paymentSheetFlowController
             self.onSheetDismissed = onSheetDismissed
+            self.onSheetDismissedWithResult = nil
+            self.content = content()
+        }
+
+        /// A button which presents a sheet for a customer to select a payment method.
+        /// This is a convenience wrapper for the .paymentOptionsSheet() ViewModifier.
+        /// - Parameter paymentSheetFlowController: A PaymentSheet.FlowController to present.
+        /// - Parameter onSheetDismissed: Called after the payment options sheet is dismissed. The didCancel parameter is "true" if the user canceled the sheet (e.g. by tapping the close button or tapping outside the sheet), and "false" if they tapped the primary ("Continue") button.
+        /// - Parameter content: The content of the view.
+        public init(
+            paymentSheetFlowController: PaymentSheet.FlowController,
+            onSheetDismissed: @escaping (_ didCancel: Bool) -> Void,
+            @ViewBuilder content: () -> Content
+        ) {
+            self.paymentSheetFlowController = paymentSheetFlowController
+            self.onSheetDismissed = nil
+            self.onSheetDismissedWithResult = onSheetDismissed
             self.content = content()
         }
 
@@ -157,10 +199,12 @@ extension PaymentSheet.FlowController {
                 showingPaymentSheet = true
             }) {
                 content
-            }.paymentOptionsSheet(
+            }
+            .paymentOptionsSheet(
                 isPresented: $showingPaymentSheet,
                 paymentSheetFlowController: paymentSheetFlowController,
-                onSheetDismissed: onSheetDismissed)
+                onSheetDismissed: onSheetDismissedWithResult ?? { _ in onSheetDismissed?() }
+            )
         }
     }
 
@@ -175,7 +219,7 @@ extension PaymentSheet.FlowController {
     /// - Parameter content: The content of the view.
     public struct ConfirmButton<Content: View>: View {
         private let paymentSheetFlowController: PaymentSheet.FlowController
-        private let onCompletion: (PaymentSheetResult) -> Void
+        private let onCompletion: @MainActor (PaymentSheetResult) -> Void
         private let content: Content
 
         @State private var showingPaymentSheet = false
@@ -183,7 +227,7 @@ extension PaymentSheet.FlowController {
         /// Initialize a `ConfirmPaymentButton` with required parameters.
         public init(
             paymentSheetFlowController: PaymentSheet.FlowController,
-            onCompletion: @escaping (PaymentSheetResult) -> Void,
+            onCompletion: @escaping @MainActor (PaymentSheetResult) -> Void,
             @ViewBuilder content: () -> Content
         ) {
             self.paymentSheetFlowController = paymentSheetFlowController
@@ -208,7 +252,7 @@ extension PaymentSheet {
     struct PaymentSheetPresenter: UIViewRepresentable {
         @Binding var presented: Bool
         weak var paymentSheet: PaymentSheet?
-        let onCompletion: (PaymentSheetResult) -> Void
+        let onCompletion: @MainActor (PaymentSheetResult) -> Void
 
         func makeCoordinator() -> Coordinator {
             return Coordinator(parent: self)
@@ -260,7 +304,9 @@ extension PaymentSheet {
 
                 parent.paymentSheet?.present(from: presenter) { (result: PaymentSheetResult) in
                     self.parent.presented = false
-                    self.parent.onCompletion(result)
+                    Task { @MainActor in
+                        self.parent.onCompletion(result)
+                    }
                 }
             }
         }
@@ -271,7 +317,8 @@ extension PaymentSheet {
         weak var paymentSheetFlowController: PaymentSheet.FlowController?
         let action: FlowControllerAction
         let optionsCompletion: (() -> Void)?
-        let paymentCompletion: ((PaymentSheetResult) -> Void)?
+        let optionsCompletionWithResult: ((_ didCancel: Bool) -> Void)?
+        let paymentCompletion: (@MainActor (PaymentSheetResult) -> Void)?
 
         func makeCoordinator() -> Coordinator {
             return Coordinator(parent: self)
@@ -325,12 +372,21 @@ extension PaymentSheet {
                 case .confirm:
                     parent.paymentSheetFlowController?.confirm(from: presenter) { (result) in
                         self.parent.presented = false
-                        self.parent.paymentCompletion?(result)
+                        Task { @MainActor in
+                            self.parent.paymentCompletion?(result)
+                        }
                     }
                 case .presentPaymentOptions:
-                    parent.paymentSheetFlowController?.presentPaymentOptions(from: presenter) {
-                        self.parent.presented = false
-                        self.parent.optionsCompletion?()
+                    if let completionWithResult = parent.optionsCompletionWithResult {
+                        parent.paymentSheetFlowController?.presentPaymentOptions(from: presenter) { didCancel in
+                            self.parent.presented = false
+                            completionWithResult(didCancel)
+                        }
+                    } else {
+                        parent.paymentSheetFlowController?.presentPaymentOptions(from: presenter) {
+                            self.parent.presented = false
+                            self.parent.optionsCompletion?()
+                        }
                     }
                 }
             }
@@ -340,7 +396,7 @@ extension PaymentSheet {
     struct PaymentSheetPresentationModifier: ViewModifier {
         @Binding var isPresented: Bool
         let paymentSheet: PaymentSheet
-        let onCompletion: (PaymentSheetResult) -> Void
+        let onCompletion: @MainActor (PaymentSheetResult) -> Void
 
         func body(content: Content) -> some View {
             content.background(
@@ -363,6 +419,7 @@ extension PaymentSheet {
         let paymentSheetFlowController: PaymentSheet.FlowController
         let action: FlowControllerAction
         let optionsCompletion: (() -> Void)?
+        let optionsCompletionWithResult: ((_ didCancel: Bool) -> Void)?
         let paymentCompletion: ((PaymentSheetResult) -> Void)?
 
         func body(content: Content) -> some View {
@@ -372,6 +429,7 @@ extension PaymentSheet {
                     paymentSheetFlowController: paymentSheetFlowController,
                     action: action,
                     optionsCompletion: optionsCompletion,
+                    optionsCompletionWithResult: optionsCompletionWithResult,
                     paymentCompletion: paymentCompletion
                 )
             )

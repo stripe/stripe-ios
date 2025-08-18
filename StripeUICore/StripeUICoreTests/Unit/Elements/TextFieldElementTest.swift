@@ -38,9 +38,9 @@ class TextFieldElementTest: XCTestCase {
 
     func testEmptyStringsFailDefaultConfigurationValidation() {
         let sut = Configuration()
-        XCTAssertEqual(sut.validate(text: "", isOptional: false), .invalid(TextFieldElement.Error.empty))
-        XCTAssertEqual(sut.validate(text: " ", isOptional: false), .invalid(TextFieldElement.Error.empty))
-        XCTAssertEqual(sut.validate(text: " \n", isOptional: false), .invalid(TextFieldElement.Error.empty))
+        XCTAssertEqual(sut.validate(text: "", isOptional: false), .invalid(TextFieldElement.Error.empty(localizedDescription: "")))
+        XCTAssertEqual(sut.validate(text: " ", isOptional: false), .invalid(TextFieldElement.Error.empty(localizedDescription: "")))
+        XCTAssertEqual(sut.validate(text: " \n", isOptional: false), .invalid(TextFieldElement.Error.empty(localizedDescription: "")))
 
     }
 

@@ -192,8 +192,12 @@ extension PaymentSheet {
                     billingDetails = confirmParams.paymentMethodParams.billingDetails?.toPaymentSheetBillingDetails()
                     shippingDetails = nil
                 case .link(let option):
+                    if case let .signUp(_, _, _, _, confirmParams) = option {
+                        labels = Labels(label: confirmParams.expandedPaymentSheetLabel, sublabel: confirmParams.paymentSheetSublabel)
+                    } else {
+                        labels = Labels(label: STPPaymentMethodType.link.displayName, sublabel: option.paymentSheetSubLabel)
+                    }
                     label = option.paymentSheetLabel
-                    labels = Labels(label: STPPaymentMethodType.link.displayName, sublabel: option.paymentSheetSubLabel)
                     paymentMethodType = option.paymentMethodType
                     billingDetails = option.billingDetails?.toPaymentSheetBillingDetails()
                     shippingDetails = option.shippingAddress
@@ -220,7 +224,7 @@ extension PaymentSheet {
         lazy var paymentHandler: STPPaymentHandler = { STPPaymentHandler(apiClient: configuration.apiClient) }()
         var viewController: FlowControllerViewControllerProtocol
 
-        private var presentPaymentOptionsCompletion: (() -> Void)?
+        private var presentPaymentOptionsCompletionWithResult: ((Bool) -> Void)?
         private var didDismissLinkVerificationDialog: Bool = false
 
         // If a WalletButtonsView is currently visible
@@ -391,10 +395,23 @@ extension PaymentSheet {
             from presentingViewController: UIViewController,
             completion: (() -> Void)? = nil
         ) {
+            // Call the version with the didCancel parameter, but ignore the didCancel result
+            presentPaymentOptions(from: presentingViewController) { _ in
+                completion?()
+            }
+        }
+
+        /// Presents a sheet for a customer to select a payment option.
+        /// - Parameter presentingViewController: The view controller to present the payment options sheet from
+        /// - Parameter completion: Called after the sheet is dismissed. The didCancel parameter is "true" if the user canceled the sheet (e.g. by tapping the close button or tapping outside the sheet), and "false" if they tapped the primary ("Continue") button.
+        public func presentPaymentOptions(
+            from presentingViewController: UIViewController,
+            completion: ((_ didCancel: Bool) -> Void)? = nil
+        ) {
             switch latestUpdateContext?.status {
             case .inProgress, .failed:
                 assertionFailure("Cannot call presentPaymentOptions when the last update call has not yet finished or failed.")
-                completion?()
+                completion?(true)
                 return
             default:
                 break
@@ -402,17 +419,17 @@ extension PaymentSheet {
 
             guard presentingViewController.presentedViewController == nil else {
                 assertionFailure("presentingViewController is already presenting a view controller")
-                completion?()
+                completion?(true)
                 return
             }
 
             // Overwrite completion closure to retain self until called
-            let wrappedCompletion: () -> Void = {
+            let wrappedCompletion: (Bool) -> Void = { didCancel in
                 self.updatePaymentOption()
-                completion?()
-                self.presentPaymentOptionsCompletion = nil
+                completion?(didCancel)
+                self.presentPaymentOptionsCompletionWithResult = nil
             }
-            presentPaymentOptionsCompletion = wrappedCompletion
+            presentPaymentOptionsCompletionWithResult = wrappedCompletion
 
             let showPaymentOptions: () -> Void = { [weak self] in
                 guard let self = self else { return }
@@ -466,7 +483,7 @@ extension PaymentSheet {
                     return
                 }
 
-                self.presentPaymentOptionsCompletion?()
+                self.presentPaymentOptionsCompletionWithResult?(false)
                 self.isPresented = false
             }
 
@@ -712,7 +729,7 @@ extension PaymentSheet.FlowController: FlowControllerViewControllerDelegate {
             self.didPresentAndContinue = true
         }
         flowControllerViewController.dismiss(animated: true) {
-            self.presentPaymentOptionsCompletion?()
+            self.presentPaymentOptionsCompletionWithResult?(didCancel)
             self.updatePaymentOption()
             self.isPresented = false
         }

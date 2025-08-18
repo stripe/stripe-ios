@@ -27,7 +27,7 @@ struct RegistrationView: View {
     @State private var phoneNumber: String = ""
     @State private var country: String = "US"
     @State private var errorMessage: String?
-    @State private var showSuccess: Bool = false
+    @State private var showAuthenticatedView: Bool = false
     @State private var registrationCustomerId: String?
 
     @Environment(\.isLoading) private var isLoading
@@ -52,9 +52,7 @@ struct RegistrationView: View {
                         .frame(maxWidth: .infinity, alignment: .leading)
                 }
 
-                VStack(alignment: .leading, spacing: 8) {
-                    Text("Email")
-                        .font(.headline)
+                FormField("Email") {
                     Text(email)
                         .frame(maxWidth: .infinity, alignment: .leading)
                         .padding()
@@ -63,27 +61,21 @@ struct RegistrationView: View {
                         .foregroundColor(.secondary)
                 }
 
-                VStack(alignment: .leading, spacing: 8) {
-                    Text("Full Name (optional)")
-                        .font(.headline)
+                FormField("Full Name (optional)") {
                     TextField("Enter your full name", text: $fullName)
                         .textFieldStyle(RoundedBorderTextFieldStyle())
                         .autocapitalization(.words)
                         .focused($isFullNameFieldFocused)
                 }
 
-                VStack(alignment: .leading, spacing: 8) {
-                    Text("Phone Number")
-                        .font(.headline)
+                FormField("Phone Number") {
                     TextField("Enter phone number (e.g., +12125551234)", text: $phoneNumber)
                         .textFieldStyle(RoundedBorderTextFieldStyle())
                         .keyboardType(.phonePad)
                         .focused($isPhoneNumberFieldFocused)
                 }
 
-                VStack(alignment: .leading, spacing: 8) {
-                    Text("Country")
-                        .font(.headline)
+                FormField("Country") {
                     TextField("Country code", text: $country)
                         .textFieldStyle(RoundedBorderTextFieldStyle())
                         .autocapitalization(.allCharacters)
@@ -103,8 +95,8 @@ struct RegistrationView: View {
 
                 if let customerId = registrationCustomerId {
                     HiddenNavigationLink(
-                        destination: SuccessView(message: "Registration Successful!", customerId: customerId),
-                        isActive: $showSuccess
+                        destination: AuthenticatedView(coordinator: coordinator, customerId: customerId),
+                        isActive: $showAuthenticatedView
                     )
                 }
             }
@@ -132,7 +124,7 @@ struct RegistrationView: View {
 
                     // Delay so the navigation link animation doesn’t get canceled.
                     DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
-                        showSuccess = true
+                        showAuthenticatedView = true
                     }
                 }
             } catch {
@@ -154,27 +146,11 @@ struct RegistrationView: View {
     }
 }
 
-private struct RegistrationPreviewView: View {
-    @State var coordinator: CryptoOnrampCoordinator?
-    var body: some View {
-        NavigationView {
-            if let coordinator = coordinator {
-                RegistrationView(coordinator: coordinator, email: "test@example.com")
-            }
-        }
-        .onAppear {
-            STPAPIClient.shared.setUpPublishableKey()
-            Task {
-                let coordinator = try? await CryptoOnrampCoordinator.create(appearance: .init())
-
-                await MainActor.run {
-                    self.coordinator = coordinator
-                }
-            }
-        }
-    }
-}
-
 #Preview {
-    RegistrationPreviewView()
+    PreviewWrapperView { coordinator in
+        RegistrationView(
+            coordinator: coordinator,
+            email: "test@example.com"
+        )
+    }
 }

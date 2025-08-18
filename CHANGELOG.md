@@ -1,10 +1,29 @@
 ## x.x.x x-x-x
 
+### CustomerSheet
+* [Fixed] Fixed Dynamic Actor Isolation crash in SwiftUI when using completion handlers with Swift 6 or Dynamic Actor Isolation feature flag enabled. Thanks @BrentMifsud! ([#5269](https://github.com/stripe/stripe-ios/issues/5269))
+
 ### PaymentSheet
+* [Added] Added new `presentPaymentOptions` APIs for UIKit and SwiftUI with a `didCancel` bool in the completion handler, making it possible to differentiate between a user closing FlowController and selecting a payment option. ([#5202](https://github.com/stripe/stripe-ios/pull/5202))
+* [Added] Added a new `allowedCountries` API to PaymentSheetConfiguration, enabling users to only allow billing addresses in certain countries.
+* [Fixed] Fixed Dynamic Actor Isolation crash in SwiftUI when using completion handlers with Swift 6 or Dynamic Actor Isolation feature flag enabled. Thanks @BrentMifsud! ([#5269](https://github.com/stripe/stripe-ios/issues/5269))
+* [Changed] The form will now highlight incomplete fields when the user taps a disabled "Confirm" button.
+* [Added] `STPError.localizedUserMessage(forErrorCode:)` will translates common Stripe API error codes to localized strings.
+
+## 24.20.0 2025-08-11
+
+### StripeApplePay
+* [Fixed] Issue when deserializing intent when line1 is null
+
+### PaymentSheet
+* [Fixed] Fixed an issue that caused EmbeddedPaymentElement to log broken layout constraints.
 * [Fixed] The Apple Pay logo in `PaymentOptionDisplayData` no longer contains additional padding, bringing it in line with other payment method logos.
+* [Changed] When phone number or email address collection is enabled, these fields will now appear in the billing details section instead of appearing above the card field.
+* [Added] Added `termsDisplay` in PaymentSheet.Configuration to control when legal agreements are displayed
 
 ### EmbeddedPaymentElement
 * [Changed] When using `EmbeddedPaymentElement.Configuration.FormSheetAction.confirm`, the completion block is now called with a `canceled` result if the user closes the form sheet without completing the transaction.
+* [Added] You no longer need to set the backend PaymentIntent setup_future_usage or payment_method_options setup_future_usage values to match the client's IntentConfiguration; the client will automatically configure this for you.
 
 ## 24.19.0 2025-08-04
 

@@ -29,15 +29,17 @@ final class LinkMandateView: UIView {
     }
 
     weak var delegate: LinkMandateViewDelegate?
+    private let linkTextColor: UIColor
 
     private lazy var textView: UITextView = {
         let textView = UITextView()
         textView.delegate = self
-        textView.applyStyle()
+        textView.applyStyle(linkTextColor: linkTextColor)
         return textView
     }()
 
-    init(delegate: LinkMandateViewDelegate? = nil) {
+    init(delegate: LinkMandateViewDelegate? = nil, linkAppearance: LinkAppearance? = nil) {
+        linkTextColor = linkAppearance?.colors?.primary ?? .linkTextBrand
         super.init(frame: .zero)
         self.delegate = delegate
         addAndPinSubview(textView)
@@ -47,12 +49,13 @@ final class LinkMandateView: UIView {
         fatalError("init(coder:) has not been implemented")
     }
 
-    func setText(_ text: NSMutableAttributedString) {
+    func setText(_ text: NSAttributedString) {
         textView.attributedText = formattedLegalText(text)
-        textView.applyStyle()
+        textView.applyStyle(linkTextColor: linkTextColor)
     }
 
-    private func formattedLegalText(_ formattedString: NSMutableAttributedString) -> NSAttributedString {
+    private func formattedLegalText(_ formattedString: NSAttributedString) -> NSAttributedString {
+        let mutableString = NSMutableAttributedString(attributedString: formattedString)
         let paragraphStyle = NSMutableParagraphStyle()
         paragraphStyle.alignment = .center
         paragraphStyle.lineSpacing = LinkUI.lineSpacing(
@@ -60,7 +63,7 @@ final class LinkMandateView: UIView {
             textStyle: .caption
         )
 
-        formattedString.addAttributes([.paragraphStyle: paragraphStyle], range: formattedString.extent)
+        mutableString.addAttributes([.paragraphStyle: paragraphStyle], range: mutableString.extent)
 
         return formattedString
     }
@@ -87,7 +90,7 @@ extension LinkMandateView: UITextViewDelegate {
 
 private extension UITextView {
 
-    func applyStyle() {
+    func applyStyle(linkTextColor: UIColor) {
         isScrollEnabled = false
         isEditable = false
         backgroundColor = .clear
@@ -98,7 +101,7 @@ private extension UITextView {
         clipsToBounds = false
         adjustsFontForContentSizeCategory = true
         linkTextAttributes = [
-            .foregroundColor: UIColor.linkTextBrand
+            .foregroundColor: linkTextColor
         ]
         font = LinkUI.font(forTextStyle: .caption)
     }

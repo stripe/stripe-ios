@@ -63,6 +63,14 @@ final class STPAPIClientCryptoOnrampTests: APIStubbedTestCase {
             url: URL(string: "https://verify.stripe.com/start/test_12345")!,
             ephemeralKey: "ek_test_12345"
         )
+
+        // /v1/crypto/internal/wallet
+        static let collectWalletAddressAPIPath = "/v1/crypto/internal/wallet"
+        static let validWalletAddress = "1A1zP1eP5QGefi2DMPTfTL5SLmv7DivfNa"
+        static let validNetwork = CryptoNetwork.bitcoin
+        static let registerWalletMockResponseObject = RegisterWalletResponse(
+            id: "ccw_12345"
+        )
     }
 
     private struct LinkAccountInfo: PaymentSheetLinkAccountInfoProtocol {
@@ -276,6 +284,90 @@ final class STPAPIClientCryptoOnrampTests: APIStubbedTestCase {
         var unverifiedLinkAccountInfo = Constant.validLinkAccountInfo
         unverifiedLinkAccountInfo.sessionState = .requiresVerification
         await XCTAssertThrowsErrorAsync(_ = try await apiClient.startIdentityVerification(linkAccountInfo: unverifiedLinkAccountInfo))
+    }
+
+    func testCollectWalletAddressSuccess() async throws {
+        let mockResponseData = try JSONEncoder().encode(Constant.registerWalletMockResponseObject)
+
+        stub { request in
+            XCTAssertEqual(request.url?.path, Constant.collectWalletAddressAPIPath)
+            XCTAssertEqual(request.httpMethod, "POST")
+
+            guard let httpBody = request.ohhttpStubs_httpBody else {
+                XCTFail("Expected an httpBody data but found none.")
+                return false
+            }
+
+            let parameters = String(data: httpBody, encoding: .utf8)?.parsedHTTPBodyDictionary ?? [:]
+
+            XCTAssertEqual(parameters.count, 3)
+            XCTAssertEqual(parameters["credentials[consumer_session_client_secret]"], Constant.requestSecret)
+            XCTAssertEqual(parameters["wallet_address"], Constant.validWalletAddress)
+            XCTAssertEqual(parameters["network"], Constant.validNetwork.rawValue)
+
+            return true
+        } response: { _ in
+            return HTTPStubsResponse(data: mockResponseData, statusCode: 200, headers: nil)
+        }
+
+        let apiClient = stubbedAPIClient()
+
+        do {
+            let response = try await apiClient.collectWalletAddress(
+                walletAddress: Constant.validWalletAddress,
+                network: Constant.validNetwork,
+                linkAccountInfo: Constant.validLinkAccountInfo
+            )
+            XCTAssertEqual(response.id, Constant.registerWalletMockResponseObject.id)
+        } catch {
+            XCTFail("Expected a success response but got an error: \(error).")
+        }
+    }
+
+    func testCollectWalletAddressFailure() async {
+        stub { request in
+            XCTAssertEqual(request.url?.path, Constant.collectWalletAddressAPIPath)
+            return true
+        } response: { _ in
+            return HTTPStubsResponse(error: NSError(domain: Constant.errorDomain, code: 400))
+        }
+
+        let apiClient = stubbedAPIClient()
+
+        do {
+            _ = try await apiClient.collectWalletAddress(
+                walletAddress: Constant.validWalletAddress,
+                network: Constant.validNetwork,
+                linkAccountInfo: Constant.validLinkAccountInfo
+            )
+            XCTFail("Expected failure but got success.")
+        } catch {
+            XCTAssertEqual((error as NSError).domain, Constant.errorDomain)
+        }
+    }
+
+    func testCollectWalletAddressThrowsWithInvalidArguments() async {
+        let apiClient = stubbedAPIClient()
+
+        var noSecretLinkAccountInfo = Constant.validLinkAccountInfo
+        noSecretLinkAccountInfo.consumerSessionClientSecret = nil
+        await XCTAssertThrowsErrorAsync(
+            _ = try await apiClient.collectWalletAddress(
+                walletAddress: Constant.validWalletAddress,
+                network: Constant.validNetwork,
+                linkAccountInfo: noSecretLinkAccountInfo
+            )
+        )
+
+        var unverifiedLinkAccountInfo = Constant.validLinkAccountInfo
+        unverifiedLinkAccountInfo.sessionState = .requiresVerification
+        await XCTAssertThrowsErrorAsync(
+            _ = try await apiClient.collectWalletAddress(
+                walletAddress: Constant.validWalletAddress,
+                network: Constant.validNetwork,
+                linkAccountInfo: unverifiedLinkAccountInfo
+            )
+        )
     }
 }
 

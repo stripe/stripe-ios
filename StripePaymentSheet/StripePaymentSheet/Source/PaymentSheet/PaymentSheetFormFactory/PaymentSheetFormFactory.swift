@@ -28,6 +28,7 @@ class PaymentSheetFormFactory {
     let addressSpecProvider: AddressSpecProvider
     let showLinkInlineCardSignup: Bool
     let linkAccount: PaymentSheetLinkAccount?
+    let linkAppearance: LinkAppearance?
     let accountService: LinkAccountServiceProtocol?
     let previousCustomerInput: IntentConfirmParams?
 
@@ -50,11 +51,11 @@ class PaymentSheetFormFactory {
         guard !configuration.linkPaymentMethodsOnly else { return false }
         switch savePaymentMethodConsentBehavior {
         case .legacy:
-            return !isSettingUp && configuration.hasCustomer && paymentMethod.supportsSaveForFutureUseCheckbox()
+            return !shouldShowLinkSignupOptIn && !isSettingUp && configuration.hasCustomer && paymentMethod.supportsSaveForFutureUseCheckbox()
         case .paymentSheetWithCustomerSessionPaymentMethodSaveDisabled:
             return false
         case .paymentSheetWithCustomerSessionPaymentMethodSaveEnabled:
-            return configuration.hasCustomer && paymentMethod.supportsSaveForFutureUseCheckbox()
+            return !shouldShowLinkSignupOptIn && configuration.hasCustomer && paymentMethod.supportsSaveForFutureUseCheckbox()
         case .customerSheetWithCustomerSession:
             return false
         }
@@ -66,6 +67,10 @@ class PaymentSheetFormFactory {
 
     var theme: ElementsAppearance {
         return configuration.appearance.asElementsTheme
+    }
+
+    var shouldShowLinkSignupOptIn: Bool {
+        showLinkInlineCardSignup && signupOptInFeatureEnabled
     }
 
     private static let PayByBankDescriptionText = STPLocalizedString(
@@ -82,12 +87,13 @@ class PaymentSheetFormFactory {
         addressSpecProvider: AddressSpecProvider = .shared,
         linkAccount: PaymentSheetLinkAccount? = nil,
         accountService: LinkAccountServiceProtocol,
-        analyticsHelper: PaymentSheetAnalyticsHelper?
+        analyticsHelper: PaymentSheetAnalyticsHelper?,
+        linkAppearance: LinkAppearance? = nil
     ) {
 
         /// Whether or not the card form should show the link inline signup checkbox
         let showLinkInlineCardSignup: Bool = {
-            guard case .paymentElement(let configuration) = configuration else {
+            guard case .paymentElement(let configuration, _) = configuration else {
                 return false
             }
 
@@ -134,7 +140,9 @@ class PaymentSheetFormFactory {
                   signupOptInInitialValue: elementsSession.linkSignupOptInInitialValue,
                   isFirstSavedPaymentMethod: elementsSession.customer?.paymentMethods.isEmpty ?? true,
                   analyticsHelper: analyticsHelper,
-                  paymentMethodIncentive: elementsSession.incentive)
+                  paymentMethodIncentive: elementsSession.incentive,
+                  linkAppearance: linkAppearance
+        )
     }
 
     required init(
@@ -157,7 +165,8 @@ class PaymentSheetFormFactory {
         signupOptInInitialValue: Bool = false,
         isFirstSavedPaymentMethod: Bool = true,
         analyticsHelper: PaymentSheetAnalyticsHelper?,
-        paymentMethodIncentive: PaymentMethodIncentive?
+        paymentMethodIncentive: PaymentMethodIncentive?,
+        linkAppearance: LinkAppearance? = nil
     ) {
         self.configuration = configuration
         self.paymentMethod = paymentMethod
@@ -184,6 +193,7 @@ class PaymentSheetFormFactory {
         self.isFirstSavedPaymentMethod = isFirstSavedPaymentMethod
         self.analyticsHelper = analyticsHelper
         self.paymentMethodIncentive = paymentMethodIncentive
+        self.linkAppearance = linkAppearance
     }
 
     func make() -> PaymentMethodElement {
@@ -199,7 +209,7 @@ class PaymentSheetFormFactory {
             // We have two ways to create the form for a payment method
             // 1. Custom, one-off forms
             if paymentMethod == .card {
-                return makeCard()
+                return makeCard(linkAppearance: linkAppearance)
             } else if paymentMethod == .USBankAccount {
                 return makeUSBankAccount(merchantName: configuration.merchantDisplayName)
             } else if paymentMethod == .UPI {
@@ -438,10 +448,12 @@ extension PaymentSheetFormFactory {
     func makeBillingAddressSection(
         collectionMode: AddressSectionElement.CollectionMode = .autoCompletable,
         countries: [String]? = nil,
-        countryAPIPath: String? = nil
+        countryAPIPath: String? = nil,
+        includeEmail: Bool = false,
+        includePhone: Bool = false
     ) -> PaymentMethodElementWrapper<AddressSectionElement> {
         let displayBillingSameAsShippingCheckbox: Bool
-        let defaultAddress: AddressSectionElement.AddressDetails
+        var defaultAddress: AddressSectionElement.AddressDetails
         if let shippingDetails = configuration.shippingDetails() {
             // If defaultBillingDetails and shippingDetails are both populated, prefer defaultBillingDetails
             displayBillingSameAsShippingCheckbox = defaultBillingDetails() == .init()
@@ -451,6 +463,14 @@ extension PaymentSheetFormFactory {
         } else {
             displayBillingSameAsShippingCheckbox = false
             defaultAddress = defaultBillingDetails().address.addressSectionDefaults
+        }
+
+        if includePhone {
+            defaultAddress.phone = defaultBillingDetails().phone
+        }
+
+        if includeEmail {
+            defaultAddress.email = defaultBillingDetails().email
         }
 
         // Determine the collection mode based on whether we have default values
@@ -470,14 +490,17 @@ extension PaymentSheetFormFactory {
         }()
 
         let section = AddressSectionElement(
-            title: String.Localized.billing_address_lowercase,
+            // TODO: Switch between "billing address" and "billing details" strings once the localizations have landed
+            title: (includePhone || includeEmail) ? String.Localized.billing_address_lowercase : String.Localized.billing_address_lowercase,
             countries: countries,
             addressSpecProvider: addressSpecProvider,
             defaults: defaultAddress,
             collectionMode: finalCollectionMode,
             additionalFields: .init(
+                phone: includePhone ? .enabled(isOptional: false) : .disabled,
+                email: includeEmail ? .enabled(isOptional: false) : .disabled,
                 billingSameAsShippingCheckbox: displayBillingSameAsShippingCheckbox
-                    ? .enabled(isOptional: false) : .disabled
+                ? .enabled(isOptional: false) : .disabled
             ),
             theme: theme
         )
@@ -507,6 +530,15 @@ extension PaymentSheetFormFactory {
             params.paymentMethodParams.nonnil_billingDetails.nonnil_address.country = section.selectedCountryCode
             if let countryAPIPath {
                 params.paymentMethodParams.additionalAPIParameters[countryAPIPath] = section.selectedCountryCode
+            }
+            if let phone = section.phone {
+                params.paymentMethodParams.nonnil_billingDetails.phone = phone.phoneNumber?.string(as: .e164)
+            }
+            if let email = section.email {
+                params.paymentMethodParams.nonnil_billingDetails.email = email.text
+            }
+            if let name = section.name {
+                params.paymentMethodParams.nonnil_billingDetails.name = name.text
             }
             return params
         }
@@ -655,7 +687,7 @@ extension PaymentSheetFormFactory {
 
         let phoneElement = configuration.billingDetailsCollectionConfiguration.phone == .always ? makePhone() : nil
         let addressElement = configuration.billingDetailsCollectionConfiguration.address == .full
-        ? makeBillingAddressSection(collectionMode: .autoCompletable, countries: nil)
+        ? makeBillingAddressSection(collectionMode: .autoCompletable, countries: configuration.billingDetailsCollectionConfiguration.allowedCountriesArray)
             : nil
         connectBillingDetailsFields(
             countryElement: nil,
@@ -905,7 +937,10 @@ extension PaymentSheetFormFactory {
     func makeBillingAddressSectionIfNecessary(requiredByPaymentMethod: Bool) -> Element? {
         if configuration.billingDetailsCollectionConfiguration.address == .full
             || (configuration.billingDetailsCollectionConfiguration.address == .automatic && requiredByPaymentMethod) {
-           return makeBillingAddressSection()
+            let countries = configuration.billingDetailsCollectionConfiguration.allowedCountries.isEmpty
+                ? nil
+                : Array(configuration.billingDetailsCollectionConfiguration.allowedCountries)
+           return makeBillingAddressSection(countries: countries)
         } else {
             return nil
         }
@@ -1141,5 +1176,11 @@ extension STPPaymentMethodAddress {
         line2 = address.line2
         postalCode = address.postalCode
         state = address.state
+    }
+}
+
+extension PaymentSheet.BillingDetailsCollectionConfiguration {
+    var allowedCountriesArray: [String]? {
+        allowedCountries.isEmpty ? nil : Array(allowedCountries)
     }
 }

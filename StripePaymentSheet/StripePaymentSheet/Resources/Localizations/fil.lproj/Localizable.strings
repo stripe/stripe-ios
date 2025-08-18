@@ -60,6 +60,10 @@
 
 "By continuing, you agree to authorize payments pursuant to <terms>these terms</terms>." = "Sa pagpapatuloy, sumasang-ayon ka na pahintulutan ang mga pagbabayad alinsunod sa <terms>mga tuntuning ito</terms>.";
 
+"By continuing, you agree to save your information for future purchases with %@ and <link>Link</link>. You also agree to Link's <terms>Terms</terms> and <privacy>Privacy</privacy>." = "Sa pagpapatuloy, sumasang-ayon kang i-save ang iyong impormasyon para sa mga pagbili sa hinaharap sa %@ at <link>Link</link>. Sumasang-ayon ka rin sa <terms>Mga Tuntunin</terms> at <privacy>Privacy</privacy> ng Link.";
+
+"By continuing, you agree to save your information for future purchases with %@." = "Sa pagpapatuloy, sumasang-ayon kang i-save ang iyong impormasyon para sa mga pagbili sa hinaharap sa %@.";
+
 "By continuing, you authorize %@ to automatically debit your Satispay Balance on a recurring basis in accordance with your purchase or subscription plan." = "Sa pagpapatuloy, pinahihintulutan mo ang %@ na awtomatikong i-debit ang Satispay Balance mo nang paulit-ulit alinsunod sa plano sa pagbili o subscription mo.";
 
 "By continuing, you authorize %@ to debit your Cash App account for this payment and future payments in accordance with %@'s terms, until this authorization is revoked. You can change this anytime in your Cash App Settings." = "Sa pagpapatuloy, binibigyan mo ng awtorisasyon ang %1$@ na i-debit ang iyong Cash App account para sa pagbabayad na ito at sa mga pagbabayad sa hinaharap alinsunod sa mga tuntunin ng  %2$@, hanggang bawiin mo ang awtorisasyong ito. Maaari mong palitan ito sa anumang oras sa iyong Cash App Settings.";
@@ -126,6 +130,8 @@
 
 "Failed to connect" = "Nabigong kumonekta";
 
+"Fast, secure checkout" = "Mabilis at ligtas na pag-checkout";
+
 "For security, please re-enter your card’s security code." = "Para sa seguridad, pakilagay muli ang security code ng iyong kard.";
 
 "Get %@ back when you pay for the first time with your bank. <terms>See terms</terms>" = "Bawiin ang %@ kapag nagbayad ka sa unang pagkakataon gamit ang iyong bangko. <terms>Tingnan ang mga tuntunin</terms>";
@@ -185,6 +191,8 @@
 "Pay another way" = "Magbayad sa ibang paraan";
 
 "Pay faster at %@ and thousands of businesses." = "Magbayad nang mas mabilis sa %@ at sa libu-libong mga negosyo.";
+
+"Pay faster everywhere Link is accepted." = "Magbayad nang mas mabilis kahit saan tinatanggap ang Link.";
 
 "Pay over time with %@" = "Magbayad ng over time gamit ang %@";
 

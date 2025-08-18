@@ -137,6 +137,9 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
             appearance: configuration.appearance,
             didTap: { [weak self] in
                 self?.didTapPrimaryButton()
+            },
+            didTapWhenDisabled: { [weak self] in
+                self?.didTapPrimaryButtonWhenDisabled()
             }
         )
     }()
@@ -213,9 +216,8 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
                     }
                 case .new(let confirmParams):
                     return confirmParams
-                case .link:
-                    // Handled elsewhere
-                    return nil
+                case .link(let confirmOption):
+                    return confirmOption.signupConfirmParams
                 case .applePay, .external:
                     return nil
                 }
@@ -362,12 +364,13 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
         }
         // If there's no previous paymentMethodListViewController:
         // 1. Default to the customer's default if it will be displayed
+        //    But don't treat it as a potential default if WalletButtonsView is in use
         func willDisplay(customerDefault: CustomerPaymentOption) -> Bool {
             switch customerDefault {
             case .applePay:
-                return isFlowController && shouldShowApplePayInList
+                return isFlowController && shouldShowApplePayInList && !configuration.willUseWalletButtonsView
             case .link:
-                return isFlowController && shouldShowLinkInList
+                return isFlowController && shouldShowLinkInList && !configuration.willUseWalletButtonsView
             case .stripeId(let stripeId):
                 guard let savedSelection = savedPaymentMethods.first else {
                     return false
@@ -390,8 +393,8 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
             }
         }
 
-        // 2. Default to Apple Pay
-        if shouldShowApplePayInList {
+        // 2. Default to Apple Pay if WalletButtonsView is not in use
+        if shouldShowApplePayInList && !configuration.willUseWalletButtonsView {
             return .applePay
         }
 
@@ -699,6 +702,16 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
         pay(with: selectedPaymentOption)
     }
 
+    @objc func didTapPrimaryButtonWhenDisabled() {
+        // When the disabled button is tapped, show validation errors on all form fields
+#if !os(visionOS)
+        UINotificationFeedbackGenerator().notificationOccurred(.error)
+#endif
+        if let paymentMethodFormViewController {
+            paymentMethodFormViewController.form.showAllValidationErrors()
+        }
+    }
+
     @objc func presentManageScreen() {
         error = nil
         // Special case, only 1 card remaining, skip showing the list and show update view controller
@@ -837,6 +850,8 @@ extension PaymentSheetVerticalViewController: VerticalPaymentMethodListViewContr
                 return confirmParams
             } else if case let .saved(_, confirmParams) = previousPaymentOption {
                 return confirmParams
+            } else if case let .link(confirmOption) = previousPaymentOption {
+                return confirmOption.signupConfirmParams
             } else {
                 return nil
             }
@@ -893,6 +908,7 @@ extension PaymentSheetVerticalViewController: VerticalPaymentMethodListViewContr
             configuration: configuration,
             headerView: headerView,
             analyticsHelper: analyticsHelper,
+            isLinkUI: false,
             delegate: self
         )
     }

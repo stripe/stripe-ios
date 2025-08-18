@@ -6,7 +6,13 @@
 //
 
 import Foundation
+import PassKit
+import Stripe
+
+@_spi(STP) import StripeApplePay
+@_spi(STP) import StripeIdentity
 @_spi(STP) import StripePaymentSheet
+
 import UIKit
 
 /// Protocol describing a type that coordinates headless Link user authentication, identity verification, and payment, leaving most of the associated UI up to the client.
@@ -53,24 +59,49 @@ public protocol CryptoOnrampCoordinatorProtocol {
 
     /// Creates an identity verification session and launches the verification flow.
     ///
+    /// - Parameter viewController: The view controller from which to present the verification flow.
     /// - Returns: An `IdentityVerificationResult` representing the outcome of the verification process.
-    func promptForIdentityVerification() async throws -> IdentityVerificationResult
+    func promptForIdentityVerification(from viewController: UIViewController) async throws -> IdentityVerificationResult
+
+    /// Registers the given crypto wallet address to the current Link account.
+    ///
+    /// - Parameter walletAddress: The crypto wallet address to register.
+    /// - Parameter network: The crypto network for the wallet address.
+    func collectWalletAddress(walletAddress: String, network: CryptoNetwork) async throws
+
+    /// Presents the Link sheet to collect a customer's payment method.
+    /// - Parameter viewController: The view controller from which to present the Link sheet.
+    /// - Returns: A `PaymentMethodPreview` if the user selected a payment method, or `nil` otherwise.
+    func collectPaymentMethod(from viewController: UIViewController) async -> PaymentMethodPreview?
+
+    /// Presents the Apple Pay interface to initiate checkout. Intended to be called in response to tapping a `PKPaymentButton` or `PayWithApplePayButton`.
+    /// - Parameters:
+    ///   - paymentRequest: Represents the request for payment using Apple Pay.
+    ///   - viewController: The view controller from which to present the Apple Pay interface.
+    /// - Returns: A payment status indicating whether the payment request was successful or canceled.
+    /// Throws if an error occurs accepting the payment request.
+    func presentApplePay(using paymentRequest: PKPaymentRequest, from viewController: UIViewController) async throws -> ApplePayPaymentStatus
 }
 
 /// Coordinates headless Link user authentication and identity verification, leaving most of the UI to the client.
 @_spi(CryptoOnrampSDKPreview)
-public final class CryptoOnrampCoordinator: CryptoOnrampCoordinatorProtocol {
+public final class CryptoOnrampCoordinator: NSObject, CryptoOnrampCoordinatorProtocol {
 
     /// A subset of errors that may be thrown by `CryptoOnrampCoordinator` APIs.
     public enum Error: Swift.Error {
 
         /// Phone number validation failed. Phone number should be in E.164 format (e.g., +12125551234).
         case invalidPhoneFormat
+
+        /// `ephemeralKey` is missing from the response after starting identity verification.
+        case missingEphemeralKey
     }
 
     private let linkController: LinkController
     private let apiClient: STPAPIClient
     private let appearance: LinkAppearance
+    private var applePayPaymentMethod: STPPaymentMethod?
+    private var applePayCompletionContinuation: CheckedContinuation<ApplePayPaymentStatus, Swift.Error>?
 
     private var linkAccountInfo: PaymentSheetLinkAccountInfoProtocol {
         get async throws {
@@ -93,7 +124,8 @@ public final class CryptoOnrampCoordinator: CryptoOnrampCoordinatorProtocol {
         let linkController = try await LinkController.create(
             apiClient: apiClient,
             mode: .payment,
-            appearance: appearance
+            appearance: appearance,
+            requestSurface: .cryptoOnramp
         )
 
         return CryptoOnrampCoordinator(
@@ -144,11 +176,109 @@ public final class CryptoOnrampCoordinator: CryptoOnrampCoordinatorProtocol {
         try await apiClient.collectKycInfo(info: info, linkAccountInfo: linkAccountInfo)
     }
 
-    public func promptForIdentityVerification() async throws -> IdentityVerificationResult {
+    public func promptForIdentityVerification(from viewController: UIViewController) async throws -> IdentityVerificationResult {
         let response = try await apiClient.startIdentityVerification(linkAccountInfo: linkAccountInfo)
 
-        // TODO: use the response to initialize the Identity SDK and show its UI to perform document upload, returning the appropriate `completed` or `canceled` result.
-        print(response)
-        return .canceled
+        guard let ephemeralKey = response.ephemeralKey else {
+            throw Error.missingEphemeralKey
+        }
+
+        let verificationSheet = IdentityVerificationSheet(
+            verificationSessionId: response.id,
+            ephemeralKeySecret: ephemeralKey,
+            configuration: IdentityVerificationSheet.Configuration(
+                brandLogo: await fetchMerchantImageWithFallback()
+            )
+        )
+
+        return try await withCheckedThrowingContinuation { continuation in
+            Task { @MainActor in
+                verificationSheet.present(from: viewController) { result in
+                    switch result {
+                    case .flowCompleted:
+                        continuation.resume(returning: IdentityVerificationResult.completed)
+                    case .flowCanceled:
+                        continuation.resume(returning: IdentityVerificationResult.canceled)
+                    case .flowFailed(let error):
+                        continuation.resume(throwing: error)
+                    }
+                }
+            }
+        }
+    }
+
+    public func collectWalletAddress(walletAddress: String, network: CryptoNetwork) async throws {
+        try await apiClient.collectWalletAddress(
+            walletAddress: walletAddress,
+            network: network,
+            linkAccountInfo: linkAccountInfo
+        )
+    }
+
+    public func collectPaymentMethod(from viewController: UIViewController) async -> PaymentMethodPreview? {
+        let email = try? await linkAccountInfo.email
+        if let result = await linkController.collectPaymentMethod(from: viewController, with: email) {
+            return PaymentMethodPreview(icon: result.icon, label: result.label, sublabel: result.sublabel)
+        } else {
+            return nil
+        }
+    }
+
+    @MainActor
+    public func presentApplePay(using paymentRequest: PKPaymentRequest, from viewController: UIViewController) async throws -> ApplePayPaymentStatus {
+        try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<ApplePayPaymentStatus, Swift.Error>) in
+            guard let context = STPApplePayContext(paymentRequest: paymentRequest, delegate: self) else {
+                continuation.resume(throwing: ApplePayPaymentStatus.Error.applePayFallbackError)
+                return
+            }
+
+            // Retain the continuation until we receive a completion delegate callback.
+            self.applePayCompletionContinuation = continuation
+            context.presentApplePay()
+        }
+    }
+}
+
+extension CryptoOnrampCoordinator: STPApplePayContextDelegate {
+
+    // MARK: - STPApplePayContextDelegate
+
+    public func applePayContext(
+        _ context: STPApplePayContext,
+        didCreatePaymentMethod paymentMethod: STPPaymentMethod,
+        paymentInformation: PKPayment,
+        completion: @escaping STPIntentClientSecretCompletionBlock
+    ) {
+        self.applePayPaymentMethod = paymentMethod
+        completion(STPApplePayContext.COMPLETE_WITHOUT_CONFIRMING_INTENT, nil)
+    }
+
+    public func applePayContext(_ context: STPApplePayContext, didCompleteWith status: STPPaymentStatus, error: Swift.Error?) {
+        switch status {
+        case .success:
+            applePayCompletionContinuation?.resume(returning: .success)
+        case .userCancellation:
+            applePayCompletionContinuation?.resume(returning: .canceled)
+        case .error:
+            applePayCompletionContinuation?.resume(throwing: error ?? ApplePayPaymentStatus.Error.applePayFallbackError)
+        @unknown default:
+            applePayCompletionContinuation?.resume(throwing: error ?? ApplePayPaymentStatus.Error.applePayFallbackError)
+        }
+
+        applePayCompletionContinuation = nil
+    }
+}
+
+private extension CryptoOnrampCoordinator {
+    func fetchMerchantImageWithFallback() async -> UIImage {
+        guard let merchantLogoUrl = await linkController.merchantLogoUrl else {
+            return .wallet
+        }
+
+        do {
+            return try await DownloadManager.sharedManager.downloadImage(url: merchantLogoUrl)
+        } catch {
+            return .wallet
+        }
     }
 }

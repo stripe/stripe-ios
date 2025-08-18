@@ -366,7 +366,7 @@ extension PaymentSheet {
                         paymentHandler: paymentHandler,
                         isFlowController: isFlowController,
                         completion: { psResult, confirmationType in
-                            if case .completed = psResult {
+                            if shouldLogOutOfLink(result: psResult, elementsSession: elementsSession) {
                                 linkAccount?.logout()
                             }
                             completion(psResult, confirmationType)
@@ -428,7 +428,7 @@ extension PaymentSheet {
                         paymentHandler: paymentHandler,
                         isFlowController: isFlowController,
                         completion: { psResult, confirmationType in
-                            if case .completed = psResult {
+                            if shouldLogOutOfLink(result: psResult, elementsSession: elementsSession) {
                                 linkAccount?.logout()
                             }
                             completion(psResult, confirmationType)
@@ -718,6 +718,7 @@ extension PaymentSheet {
         let paymentOptions = params.paymentMethodOptions ?? STPConfirmPaymentMethodOptions()
         let currentSetupFutureUsage = paymentIntent.paymentMethodOptions?.setupFutureUsage(for: paymentMethodType)
         paymentOptions.setSetupFutureUsageIfNecessary(shouldSave, currentSetupFutureUsage: currentSetupFutureUsage, paymentMethodType: paymentMethodType, customer: configuration.customer)
+
         if let mandateData = mandateData {
             params.mandateData = mandateData
         }
@@ -774,6 +775,17 @@ extension PaymentSheet {
         }
         params.returnURL = configuration.returnURL
         return params
+    }
+
+    private static func shouldLogOutOfLink(
+        result: PaymentSheetResult,
+        elementsSession: STPElementsSession
+    ) -> Bool {
+        guard case .completed = result else {
+            return false
+        }
+        // Only log out non-verified merchants.
+        return elementsSession.linkSettings?.useAttestationEndpoints != true
     }
 }
 

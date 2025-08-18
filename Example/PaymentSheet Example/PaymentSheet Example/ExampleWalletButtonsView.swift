@@ -243,7 +243,8 @@ class ExampleWalletButtonsModel: ObservableObject {
         // First, create customer and get customer session
         self.addDebugLog("Creating customer with SPT test backend...")
         let body = [
-            "customerId": nil, // Let backend create a new customer
+            "customerId": nil, // Let backend create a new customer if no email is passed
+            "customerEmail": email.nonEmpty,
             "isMobile": true,
         ] as [String: Any?]
         let json = try! JSONSerialization.data(withJSONObject: body, options: [])
@@ -291,7 +292,7 @@ class ExampleWalletButtonsModel: ObservableObject {
 
                 self?.addDebugLog("Creating PaymentSheet FlowController...")
                 PaymentSheet.FlowController.create(
-                    intentConfiguration: .init(sharedPaymentTokenSessionWithMode: .payment(amount: 9999, currency: "USD", setupFutureUsage: nil, captureMethod: .automatic, paymentMethodOptions: nil), sellerDetails: .init(networkId: "stripe", externalId: "acct_1HvTI7Lu5o3P18Zp"), paymentMethodTypes: ["card", "shop_pay"], preparePaymentMethodHandler: { [weak self] paymentMethod, address in
+                    intentConfiguration: .init(sharedPaymentTokenSessionWithMode: .payment(amount: 9999, currency: "USD", setupFutureUsage: nil, captureMethod: .automatic, paymentMethodOptions: nil), sellerDetails: .init(networkId: "stripe", externalId: "acct_1HvTI7Lu5o3P18Zp", businessName: "Till's Pills"), paymentMethodTypes: ["card", "shop_pay"], preparePaymentMethodHandler: { [weak self] paymentMethod, address in
                         self?.isProcessing = true
                         self?.addDebugLog("PaymentMethod prepared: \(paymentMethod.stripeId)")
                         self?.addDebugLog("Address: \(address)")

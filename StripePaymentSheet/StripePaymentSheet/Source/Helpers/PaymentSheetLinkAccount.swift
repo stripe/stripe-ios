@@ -75,6 +75,7 @@ struct LinkPMDisplayDetails {
     let cookieStore: LinkCookieStore
 
     let useMobileEndpoints: Bool
+    let requestSurface: LinkRequestSurface
 
     /// Publishable key of the Consumer Account.
     private(set) var publishableKey: String?
@@ -116,6 +117,10 @@ struct LinkPMDisplayDetails {
         return currentSession?.hasVerifiedSMSSession ?? false
     }
 
+    var isInSignupFlow: Bool {
+        currentSession?.isVerifiedForSignup ?? false
+    }
+
     private(set) var currentSession: ConsumerSession?
     let displayablePaymentDetails: ConsumerSession.DisplayablePaymentDetails?
 
@@ -126,7 +131,8 @@ struct LinkPMDisplayDetails {
         displayablePaymentDetails: ConsumerSession.DisplayablePaymentDetails?,
         apiClient: STPAPIClient = .shared,
         cookieStore: LinkCookieStore = LinkSecureCookieStore.shared,
-        useMobileEndpoints: Bool
+        useMobileEndpoints: Bool,
+        requestSurface: LinkRequestSurface = .default
     ) {
         self.email = email
         self.currentSession = session
@@ -135,6 +141,7 @@ struct LinkPMDisplayDetails {
         self.apiClient = apiClient
         self.cookieStore = cookieStore
         self.useMobileEndpoints = useMobileEndpoints
+        self.requestSurface = requestSurface
     }
 
     func signUp(
@@ -179,7 +186,8 @@ struct LinkPMDisplayDetails {
             countryCode: countryCode,
             consentAction: consentAction.rawValue,
             useMobileEndpoints: useMobileEndpoints,
-            with: apiClient
+            with: apiClient,
+            requestSurface: requestSurface
         ) { [weak self] result in
             switch result {
             case .success(let signupResponse):
@@ -215,7 +223,8 @@ struct LinkPMDisplayDetails {
         session.startVerification(
             with: apiClient,
             cookieStore: cookieStore,
-            consumerAccountPublishableKey: publishableKey
+            consumerAccountPublishableKey: publishableKey,
+            requestSurface: requestSurface
         ) { [weak self] result in
             switch result {
             case .success(let newSession):
@@ -247,7 +256,8 @@ struct LinkPMDisplayDetails {
             with: oneTimePasscode,
             with: apiClient,
             cookieStore: cookieStore,
-            consumerAccountPublishableKey: publishableKey
+            consumerAccountPublishableKey: publishableKey,
+            requestSurface: requestSurface
         ) { [weak self] result in
             switch result {
             case .success(let verifiedSession):
@@ -277,6 +287,7 @@ struct LinkPMDisplayDetails {
 
             session.createLinkAccountSession(
                 consumerAccountPublishableKey: self.publishableKey,
+                requestSurface: self.requestSurface,
                 completion: completionRetryingOnAuthErrors
             )
         }
@@ -301,6 +312,7 @@ struct LinkPMDisplayDetails {
                 with: self.apiClient,
                 consumerAccountPublishableKey: self.publishableKey,
                 isDefault: isDefault,
+                requestSurface: self.requestSurface,
                 completion: completionRetryingOnAuthErrors
             )
         }
@@ -322,6 +334,7 @@ struct LinkPMDisplayDetails {
                 linkedAccountId: linkedAccountId,
                 consumerAccountPublishableKey: self.publishableKey,
                 isDefault: isDefault,
+                requestSurface: self.requestSurface,
                 completion: completionRetryingOnAuthErrors
             )
         }
@@ -357,6 +370,7 @@ struct LinkPMDisplayDetails {
                 with: self.apiClient,
                 supportedPaymentDetailsTypes: supportedTypes,
                 consumerAccountPublishableKey: self.publishableKey,
+                requestSurface: self.requestSurface,
                 completion: completionRetryingOnAuthErrors
             )
         }
@@ -385,7 +399,7 @@ struct LinkPMDisplayDetails {
                 return
             }
 
-            session.listShippingAddress(with: self.apiClient, consumerAccountPublishableKey: self.publishableKey, completion: completionRetryingOnAuthErrors)
+            session.listShippingAddress(with: self.apiClient, consumerAccountPublishableKey: self.publishableKey, requestSurface: self.requestSurface, completion: completionRetryingOnAuthErrors)
         }
     }
 
@@ -406,6 +420,7 @@ struct LinkPMDisplayDetails {
                 with: self.apiClient,
                 id: id,
                 consumerAccountPublishableKey: self.publishableKey,
+                requestSurface: self.requestSurface,
                 completion: completionRetryingOnAuthErrors
             )
         }
@@ -433,6 +448,7 @@ struct LinkPMDisplayDetails {
                 id: id,
                 updateParams: updateParams,
                 consumerAccountPublishableKey: publishableKey,
+                requestSurface: self.requestSurface,
                 completion: completionRetryingOnAuthErrors
             )
         }
@@ -466,6 +482,7 @@ struct LinkPMDisplayDetails {
                 billingPhoneNumber: billingPhoneNumber,
                 consumerAccountPublishableKey: publishableKey,
                 clientAttributionMetadata: clientAttributionMetadata,
+                requestSurface: self.requestSurface,
                 completion: completionRetryingOnAuthErrors
             )
         }
@@ -475,7 +492,7 @@ struct LinkPMDisplayDetails {
         guard let session = currentSession else {
             return
         }
-        session.logout(with: apiClient, consumerAccountPublishableKey: publishableKey) { _ in
+        session.logout(with: apiClient, consumerAccountPublishableKey: publishableKey, requestSurface: requestSurface) { _ in
             // We don't need to do anything if this fails, the key will expire automatically.
         }
     }
@@ -686,7 +703,9 @@ struct UpdatePaymentDetailsParams {
             billingDetails: STPPaymentMethodBillingDetails? = nil,
             preferredNetwork: String? = nil
         )
-        // updating bank not supported
+        case bankAccount(
+            billingDetails: STPPaymentMethodBillingDetails
+        )
     }
 
     let isDefault: Bool?

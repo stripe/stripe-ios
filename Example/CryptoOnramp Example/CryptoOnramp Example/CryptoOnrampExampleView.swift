@@ -20,7 +20,7 @@ struct CryptoOnrampExampleView: View {
     @State private var errorMessage: String?
     @State private var email: String = ""
     @State private var showRegistration: Bool = false
-    @State private var showSuccess: Bool = false
+    @State private var showAuthenticatedView: Bool = false
     @State private var authenticationCustomerId: String?
 
     @Environment(\.isLoading) private var isLoading
@@ -36,9 +36,7 @@ struct CryptoOnrampExampleView: View {
         NavigationView {
             ScrollView {
                 VStack(spacing: 20) {
-                    VStack(alignment: .leading, spacing: 8) {
-                        Text("Email")
-                            .font(.headline)
+                    FormField("Email") {
                         TextField("Enter email address", text: $email)
                             .textFieldStyle(RoundedBorderTextFieldStyle())
                             .keyboardType(.emailAddress)
@@ -70,13 +68,16 @@ struct CryptoOnrampExampleView: View {
                             destination: RegistrationView(coordinator: coordinator, email: email),
                             isActive: $showRegistration
                         )
-                    }
 
-                    if let customerId = authenticationCustomerId {
-                        HiddenNavigationLink(
-                            destination: SuccessView(message: "Authentication Successful!", customerId: customerId),
-                            isActive: $showSuccess
-                        )
+                        if let customerId = authenticationCustomerId {
+                            HiddenNavigationLink(
+                                destination: AuthenticatedView(
+                                    coordinator: coordinator,
+                                    customerId: customerId
+                                ),
+                                isActive: $showAuthenticatedView
+                            )
+                        }
                     }
                 }
                 .padding()
@@ -85,6 +86,9 @@ struct CryptoOnrampExampleView: View {
             .navigationBarTitleDisplayMode(.inline)
         }
         .onAppear {
+            guard coordinator == nil else {
+                return
+            }
             initializeCoordinator()
         }
     }
@@ -95,13 +99,19 @@ struct CryptoOnrampExampleView: View {
         isLoading.wrappedValue = true
         Task {
             do {
-                let coordinator = try await CryptoOnrampCoordinator.create(
-                    appearance: LinkAppearance(
-                        primaryColor: .systemPink,
-                        primaryButton: .init(cornerRadius: 0, height: 200),
-                        style: .automatic
-                    )
+                let lavenderColor = UIColor(
+                    red: 171/255.0,
+                    green: 159/255.0,
+                    blue: 242/255.0,
+                    alpha: 1.0
                 )
+                let appearance = LinkAppearance(
+                    colors: .init(primary: lavenderColor, selectedBorder: .label),
+                    primaryButton: .init(cornerRadius: 16, height: 56),
+                    style: .automatic,
+                    reduceLinkBranding: true
+                )
+                let coordinator = try await CryptoOnrampCoordinator.create(appearance: appearance)
 
                 await MainActor.run {
                     self.coordinator = coordinator
@@ -153,7 +163,7 @@ struct CryptoOnrampExampleView: View {
 
                             // Delay so the navigation link animation doesn’t get canceled.
                             DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
-                                showSuccess = true
+                                showAuthenticatedView = true
                             }
                         }
                     case .canceled:

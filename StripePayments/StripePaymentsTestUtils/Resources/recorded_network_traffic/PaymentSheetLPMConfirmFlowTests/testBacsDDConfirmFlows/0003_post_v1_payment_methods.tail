@@ -3,7 +3,7 @@ https:\/\/api\.stripe\.com\/v1\/payment_methods$
 200
 application/json
 access-control-allow-methods: GET, HEAD, PUT, PATCH, POST, DELETE
-content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=sMt1O2ytEhPVZnb2DpzMeBNErzf_kW2Pt896cp_I_BQho_wA6apyOazfza0_orlJajbns4J-ZXlpZwhe
+content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=qF4V4jkULvgXD35R03WRA_GUiNmpNM705Wh2vy4TFmwK1OdHghZjST4yjyC0BCbPqaf2z69mRXzSPVN3
 Server: nginx
 Cache-Control: no-cache, no-store
 x-wc: ABGHIJ
@@ -12,22 +12,22 @@ Access-Control-Allow-Origin: *
 stripe-should-retry: false
 x-stripe-priority-routing-enabled: true
 x-stripe-routing-context-priority-tier: api-testmode
-request-id: req_1zuWR1EFxX43Oz
+request-id: req_56fORw2nftoiQ2
 Content-Length: 606
 Vary: Origin
-Date: Sat, 26 Jul 2025 03:10:29 GMT
-original-request: req_1zuWR1EFxX43Oz
+Date: Thu, 07 Aug 2025 16:11:19 GMT
+original-request: req_56fORw2nftoiQ2
 stripe-version: 2020-08-27
-idempotency-key: cbb0e308-4099-4839-980b-14c1947f945c
+idempotency-key: e14f4d4d-426f-41e3-be36-ca4bef2f9182
 access-control-expose-headers: Request-Id, Stripe-Manage-Version, Stripe-Should-Retry, X-Stripe-External-Auth-Required, X-Stripe-Privileged-Session-Required
 access-control-max-age: 300
 access-control-allow-credentials: true
 Content-Type: application/json
-X-Stripe-Mock-Request: allow_redisplay=unspecified&bacs_debit\[account_number]=00012345&bacs_debit\[sort_code]=108800&billing_details\[address]\[city]=South%20San%20Francisco&billing_details\[address]\[country]=US&billing_details\[address]\[line1]=354%20Oyster%20Point%20Blvd&billing_details\[address]\[line2]=&billing_details\[address]\[postal_code]=94080&billing_details\[address]\[state]=CA&billing_details\[email]=f%40z\.c&billing_details\[name]=Foo&client_attribution_metadata\[client_session_id]=.*&client_attribution_metadata\[merchant_integration_source]=elements&client_attribution_metadata\[merchant_integration_subtype]=mobile&client_attribution_metadata\[merchant_integration_version]=.*&guid=.*&muid=.*&payment_user_agent=.*&sid=.*&type=bacs_debit
+X-Stripe-Mock-Request: allow_redisplay=unspecified&bacs_debit\[account_number]=00012345&bacs_debit\[sort_code]=108800&billing_details\[address]\[city]=South%20San%20Francisco&billing_details\[address]\[country]=US&billing_details\[address]\[line1]=354%20Oyster%20Point%20Blvd&billing_details\[address]\[line2]=&billing_details\[address]\[postal_code]=94080&billing_details\[address]\[state]=CA&billing_details\[email]=f%40z\.c&billing_details\[name]=Foo&client_attribution_metadata\[client_session_id]=.*&client_attribution_metadata\[elements_session_config_id]=.*&client_attribution_metadata\[merchant_integration_source]=elements&client_attribution_metadata\[merchant_integration_subtype]=mobile&client_attribution_metadata\[merchant_integration_version]=.*&client_attribution_metadata\[payment_intent_creation_flow]=deferred&client_attribution_metadata\[payment_method_selection_flow]=automatic&guid=.*&muid=.*&payment_user_agent=.*&sid=.*&type=bacs_debit
 
 {
   "object" : "payment_method",
-  "id" : "pm_1RoyVFGoesj9fw9QfXDD7j7u",
+  "id" : "pm_1RtWPTGoesj9fw9QZ17zn22W",
   "billing_details" : {
     "email" : "f@z.c",
     "phone" : null,
@@ -49,7 +49,7 @@ X-Stripe-Mock-Request: allow_redisplay=unspecified&bacs_debit\[account_number]=0
     "sort_code" : "108800"
   },
   "allow_redisplay" : "unspecified",
-  "created" : 1753499429,
+  "created" : 1754583079,
   "customer" : null,
   "type" : "bacs_debit"
 }

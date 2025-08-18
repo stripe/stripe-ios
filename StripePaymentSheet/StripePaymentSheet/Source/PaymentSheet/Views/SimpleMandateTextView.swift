@@ -13,6 +13,7 @@ import UIKit
 @objc(STP_Internal_SimpleMandateTextView)
 class SimpleMandateTextView: UIView {
     private let theme: ElementsAppearance
+    private let textAlignment: NSTextAlignment
     var viewDidAppear: Bool = false
     let textView: UITextView = UITextView()
     var attributedText: NSAttributedString? {
@@ -26,19 +27,24 @@ class SimpleMandateTextView: UIView {
         }
     }
 
-    convenience init(mandateText: NSAttributedString, theme: ElementsAppearance) {
-        self.init(theme: theme)
+    convenience init(
+        mandateText: NSAttributedString,
+        textAlignment: NSTextAlignment = .natural,
+        theme: ElementsAppearance
+    ) {
+        self.init(theme: theme, textAlignment: textAlignment)
         textView.attributedText = mandateText
         applyTextViewStyle()
     }
 
     convenience init(mandateText: String, theme: ElementsAppearance) {
-        self.init(theme: theme)
+        self.init(theme: theme, textAlignment: .natural)
         textView.text = mandateText
     }
 
-    required init(theme: ElementsAppearance) {
+    required init(theme: ElementsAppearance, textAlignment: NSTextAlignment = .natural) {
         self.theme = theme
+        self.textAlignment = textAlignment
         super.init(frame: .zero)
         installConstraints()
         applyTextViewStyle()
@@ -64,7 +70,7 @@ class SimpleMandateTextView: UIView {
         // These two lines remove insets that are on UITextViews by default
         textView.textContainerInset = .zero
         textView.textContainer.lineFragmentPadding = 0
-        textView.textAlignment = .natural
+        textView.textAlignment = textAlignment
     }
 }
 
