@@ -54,6 +54,12 @@ enum LinkUI {
         return max(height, minimumButtonHeight)
     }
 
+    static func verticalMarginForPrimaryButton(withDesiredHeight height: CGFloat) -> CGFloat {
+        let desiredHeight = max(height, minimumButtonHeight)
+        let marginHeight = (desiredHeight - minimumLabelHeight) / 2.0
+        return max(0, marginHeight)
+    }
+
     // MARK: - Margins
 
     static let buttonMargins: NSDirectionalEdgeInsets = .insets(amount: 16)

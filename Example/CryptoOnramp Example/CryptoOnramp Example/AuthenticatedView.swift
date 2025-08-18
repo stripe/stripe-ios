@@ -5,6 +5,7 @@
 //  Created by Michael Liberatore on 8/6/25.
 //
 
+import PassKit
 import SwiftUI
 
 @_spi(CryptoOnrampSDKPreview)
@@ -24,10 +25,12 @@ struct AuthenticatedView: View {
 
     @State private var errorMessage: String?
     @State private var isIdentityVerificationComplete = false
+    @State private var showKYCView = false
+    @State private var selectedPaymentMethod: PaymentMethodPreview?
 
     @Environment(\.isLoading) private var isLoading
 
-    private var isVerifyIdentityButtonDisabled: Bool {
+    private var shouldDisableButtons: Bool {
         isLoading.wrappedValue
     }
 
@@ -36,42 +39,105 @@ struct AuthenticatedView: View {
     var body: some View {
         ScrollView {
             VStack(spacing: 20) {
-                if isIdentityVerificationComplete {
-                    Text("Identity Verification Complete")
-                        .foregroundColor(.green)
-                        .frame(maxWidth: .infinity)
-                        .padding()
-                        .background {
-                            RoundedRectangle(cornerRadius: 8)
-                                .foregroundColor(.green.opacity(0.1))
+                VStack(alignment: .leading, spacing: 12) {
+                    Text("Customer Information")
+                        .font(.headline)
+                        .foregroundColor(.secondary)
+
+                    // Identity and KYC actions within the section
+                    if isIdentityVerificationComplete {
+                        Text("Identity Verification Complete")
+                            .foregroundColor(.green)
+                            .frame(maxWidth: .infinity)
+                            .padding()
+                            .background {
+                                RoundedRectangle(cornerRadius: 8)
+                                    .foregroundColor(.green.opacity(0.1))
+                            }
+                    } else {
+                        Button("Verify Identity") {
+                            verifyIdentity()
                         }
-                } else {
-                    Button("Verify Identity") {
-                        verifyIdentity()
+                        .buttonStyle(PrimaryButtonStyle())
+                        .disabled(shouldDisableButtons)
+                        .opacity(shouldDisableButtons ? 0.5 : 1)
+                    }
+
+                    Button("Submit KYC Information") {
+                        showKYCView = true
                     }
                     .buttonStyle(PrimaryButtonStyle())
-                    .disabled(isVerifyIdentityButtonDisabled)
-                    .opacity(isVerifyIdentityButtonDisabled ? 0.5 : 1)
+                    .disabled(shouldDisableButtons)
+                    .opacity(shouldDisableButtons ? 0.5 : 1)
+
+                    HStack(spacing: 4) {
+                        Spacer()
+
+                        Text("Customer ID:")
+                            .font(.footnote)
+                            .bold()
+                            .foregroundColor(.secondary)
+                        Text(customerId)
+                            .font(.footnote.monospaced())
+                            .foregroundColor(.secondary)
+
+                        Spacer()
+                    }
                 }
+                .padding()
+                .background(Color.secondary.opacity(0.1))
+                .cornerRadius(8)
 
                 if let errorMessage {
                     ErrorMessageView(message: errorMessage)
                 }
 
-                VStack(spacing: 8) {
-                    Text("Customer ID")
+                VStack(alignment: .leading, spacing: 12) {
+                    Text("Check Out")
                         .font(.headline)
                         .foregroundColor(.secondary)
-                        .padding(.horizontal)
 
-                    Text(customerId)
-                        .font(.subheadline.monospaced())
-                        .foregroundColor(.secondary)
-                        .padding(.horizontal)
+                    if let selectedPaymentMethod {
+                        PaymentMethodCardView(preview: selectedPaymentMethod)
+                    } else {
+                        VStack(spacing: 8) {
+                            // Note: Apple Pay does not require iOS 16, but the native SwiftUI
+                            // `PayWithApplePayButton` does, which we're using in this example.
+                            // For earlier OS versions, use `PKPaymentButton` in UIKit, optionally
+                            // wrapping it in a `UIViewRepresentable` for SwiftUI.
+                            if #available(iOS 16.0, *), StripeAPI.deviceSupportsApplePay() {
+                                PayWithApplePayButton(.plain) {
+                                    presentApplePay()
+                                }
+                                .frame(height: 52)
+                                .cornerRadius(8)
+                                .disabled(shouldDisableButtons)
+                                .opacity(shouldDisableButtons ? 0.5 : 1)
+
+                                Text("or")
+                                    .font(.footnote)
+                                    .bold()
+                                    .foregroundColor(.secondary)
+                            }
+
+                            Button("Select Payment Method") {
+                                presentPaymentMethodSelector()
+                            }
+                            .buttonStyle(PrimaryButtonStyle())
+                            .disabled(shouldDisableButtons)
+                            .opacity(shouldDisableButtons ? 0.5 : 1)
+                        }
+                    }
                 }
+                .frame(maxWidth: .infinity)
                 .padding()
                 .background(Color.secondary.opacity(0.1))
                 .cornerRadius(8)
+
+                HiddenNavigationLink(
+                    destination: KYCInfoView(coordinator: coordinator),
+                    isActive: $showKYCView
+                )
             }
             .padding()
         }
@@ -111,23 +177,62 @@ struct AuthenticatedView: View {
             }
         }
     }
-}
 
-private struct AuthenticatedPreviewView: View {
-    @State var coordinator: CryptoOnrampCoordinator?
-    var body: some View {
-        NavigationView {
-            if let coordinator = coordinator {
-                AuthenticatedView(coordinator: coordinator, customerId: "cus_example123456789")
+    private func presentPaymentMethodSelector() {
+        guard let viewController = UIApplication.shared.findTopNavigationController() else {
+            errorMessage = "Unable to find view controller to present from."
+            return
+        }
+
+        isLoading.wrappedValue = true
+        errorMessage = nil
+
+        Task {
+            let preview = await coordinator.collectPaymentMethod(from: viewController)
+            await MainActor.run {
+                isLoading.wrappedValue = false
+                selectedPaymentMethod = preview
             }
         }
-        .onAppear {
-            STPAPIClient.shared.setUpPublishableKey()
-            Task {
-                let coordinator = try? await CryptoOnrampCoordinator.create(appearance: .init())
+    }
 
+    private func presentApplePay() {
+        guard let viewController = UIApplication.shared.findTopNavigationController() else {
+            errorMessage = "Unable to find view controller to present from."
+            return
+        }
+
+        let request = StripeAPI.paymentRequest(withMerchantIdentifier: "com.example.merchant", country: "US", currency: "USD")
+        request.paymentSummaryItems = [
+            PKPaymentSummaryItem(label: "Example", amount: NSDecimalNumber(string: "1.00"))
+        ]
+
+        isLoading.wrappedValue = true
+        errorMessage = nil
+
+        Task {
+            do {
+                let result = try await coordinator.presentApplePay(using: request, from: viewController)
                 await MainActor.run {
-                    self.coordinator = coordinator
+                    isLoading.wrappedValue = false
+
+                    switch result {
+                    case .success:
+                        self.selectedPaymentMethod = PaymentMethodPreview(
+                            icon: UIImage(systemName: "apple.logo")?.withRenderingMode(.alwaysTemplate) ?? .init(),
+                            label: "Apple Pay",
+                            sublabel: nil
+                        )
+                    case .canceled:
+                        break
+                    @unknown default:
+                        break
+                    }
+                }
+            } catch {
+                await MainActor.run {
+                    isLoading.wrappedValue = false
+                    errorMessage = "Apple Pay failed: \(error.localizedDescription)"
                 }
             }
         }
@@ -135,7 +240,10 @@ private struct AuthenticatedPreviewView: View {
 }
 
 #Preview {
-    NavigationView {
-        AuthenticatedPreviewView()
+    PreviewWrapperView { coordinator in
+        AuthenticatedView(
+            coordinator: coordinator,
+            customerId: "cus_example123456789"
+        )
     }
 }

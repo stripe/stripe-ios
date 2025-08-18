@@ -240,7 +240,7 @@ class TextFieldView: UIView {
 
         // Update text and border color
         if case .invalid(let error) = viewModel.validationState,
-           error.shouldDisplay(isUserEditing: textField.isEditing) {
+           error.shouldDisplay(isUserEditing: textField.isEditing, displayEmptyFields: viewModel.displayEmptyFields) {
             layer.borderColor = viewModel.theme.colors.danger.cgColor
             textField.textColor = viewModel.theme.colors.danger
             errorIconView.alpha = 1

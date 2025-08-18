@@ -19,7 +19,7 @@ extension PayWithLinkViewController {
         override func viewDidLoad() {
             super.viewDidLoad()
 
-            activityIndicator.tintColor = .linkIconBrand
+            activityIndicator.tintColor = context.linkAppearance?.colors?.primary ?? .linkIconBrand
             activityIndicator.translatesAutoresizingMaskIntoConstraints = false
             view.addSubview(activityIndicator)
 

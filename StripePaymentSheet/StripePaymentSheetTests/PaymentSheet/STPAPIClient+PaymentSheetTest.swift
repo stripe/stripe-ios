@@ -166,7 +166,7 @@ class STPAPIClient_PaymentSheetTest: XCTestCase {
     }
 
         func testElementsSessionParameters_DeferredPayment_WithSellerDetails() throws {
-        let sellerDetails = PaymentSheet.IntentConfiguration.SellerDetails(networkId: "network_123", externalId: "external_456")
+        let sellerDetails = PaymentSheet.IntentConfiguration.SellerDetails(networkId: "network_123", externalId: "external_456", businessName: "Till's Pills")
         let intentConfig = PaymentSheet.IntentConfiguration(
             sharedPaymentTokenSessionWithMode: .payment(amount: 2000, currency: "USD"),
             sellerDetails: sellerDetails,

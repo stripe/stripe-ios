@@ -49,7 +49,7 @@ struct CustomerSession: Equatable, Hashable {
 
             mobilePaymentElementComponent = MobilePaymentElementComponent(enabled: true,
                                                                           features: MobilePaymentElementComponentFeature(paymentMethodSave: paymentMethodSave == "enabled",
-                                                                                                                         paymentMethodRemove: paymentMethodRemove == "enabled",
+                                                                                                                         paymentMethodRemove: paymentMethodRemove == "enabled" || paymentMethodRemove == "partial",
                                                                                                                          paymentMethodRemoveLast: paymentMethodRemoveLast == "enabled",
                                                                                                                          paymentMethodSaveAllowRedisplayOverride: allowRedisplayOverrideValue,
                                                                                                                          paymentMethodSetAsDefault: paymentMethodSetAsDefault == "enabled"))
@@ -68,7 +68,7 @@ struct CustomerSession: Equatable, Hashable {
             let paymentMethodRemoveLast = customerSheetFeaturesDict["payment_method_remove_last"] as? String ?? "enabled"
             let paymentMethodSyncDefault = customerSheetFeaturesDict["payment_method_sync_default"] as? String ?? "disabled"
             customerSheetComponent = CustomerSheetComponent(enabled: true,
-                                                            features: CustomerSheetComponentFeature(paymentMethodRemove: paymentMethodRemove == "enabled",
+                                                            features: CustomerSheetComponentFeature(paymentMethodRemove: paymentMethodRemove == "enabled" || paymentMethodRemove == "partial",
                                                                                                     paymentMethodRemoveLast: paymentMethodRemoveLast == "enabled",
                                                                                                     paymentMethodSyncDefault: paymentMethodSyncDefault == "enabled"))
         } else {

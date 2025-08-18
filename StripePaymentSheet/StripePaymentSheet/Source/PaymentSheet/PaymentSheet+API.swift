@@ -358,7 +358,8 @@ extension PaymentSheet {
                                     linkAccount?.logout()
                                 }
                             }
-                        )
+                        }
+                    )
                     case .deferredIntent(let intentConfig):
                         handleDeferredIntentConfirmation(
                             confirmType: .new(
@@ -372,15 +373,13 @@ extension PaymentSheet {
                             paymentHandler: paymentHandler,
                             isFlowController: isFlowController,
                             completion: { psResult, confirmationType in
-                                if case .completed = psResult {
+                                if shouldLogOutOfLink(result: psResult, elementsSession: elementsSession) {
                                     linkAccount?.logout()
                                 }
-                                completion(psResult, confirmationType)
-                            }
-                        )
+                            )
+                        }
                     }
                 }
-            }
             let confirmWithPaymentMethod: (STPPaymentMethod, PaymentSheetLinkAccount?, Bool) -> Void = { paymentMethod, linkAccount, shouldSave in
                 let mandateCustomerAcceptanceParams = STPMandateCustomerAcceptanceParams()
                 let onlineParams = STPMandateOnlineParams(ipAddress: "", userAgent: "")
@@ -435,7 +434,7 @@ extension PaymentSheet {
                         paymentHandler: paymentHandler,
                         isFlowController: isFlowController,
                         completion: { psResult, confirmationType in
-                            if case .completed = psResult {
+                            if shouldLogOutOfLink(result: psResult, elementsSession: elementsSession) {
                                 linkAccount?.logout()
                             }
                             completion(psResult, confirmationType)
@@ -781,6 +780,17 @@ extension PaymentSheet {
         }
         params.returnURL = configuration.returnURL
         return params
+    }
+
+    private static func shouldLogOutOfLink(
+        result: PaymentSheetResult,
+        elementsSession: STPElementsSession
+    ) -> Bool {
+        guard case .completed = result else {
+            return false
+        }
+        // Only log out non-verified merchants.
+        return elementsSession.linkSettings?.useAttestationEndpoints != true
     }
 }
 

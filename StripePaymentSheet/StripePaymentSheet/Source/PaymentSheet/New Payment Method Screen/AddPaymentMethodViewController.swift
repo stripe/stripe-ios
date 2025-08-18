@@ -55,15 +55,17 @@ class AddPaymentMethodViewController: UIViewController {
     private let configuration: PaymentElementConfiguration
     private let formCache: PaymentMethodFormCache
     private let analyticsHelper: PaymentSheetAnalyticsHelper
+    private let linkAppearance: LinkAppearance?
+    private let isLinkUI: Bool
     var previousCustomerInput: IntentConfirmParams?
 
-    private var paymentMethodFormElement: PaymentMethodElement {
+    var paymentMethodFormElement: PaymentMethodElement {
         paymentMethodFormViewController.form
     }
 
     // MARK: - Views
     private lazy var paymentMethodFormViewController: PaymentMethodFormViewController = {
-        let pmFormVC = PaymentMethodFormViewController(type: selectedPaymentMethodType, intent: intent, elementsSession: elementsSession, previousCustomerInput: previousCustomerInput, formCache: formCache, configuration: configuration, headerView: nil, analyticsHelper: analyticsHelper, delegate: self)
+        let pmFormVC = PaymentMethodFormViewController(type: selectedPaymentMethodType, intent: intent, elementsSession: elementsSession, previousCustomerInput: previousCustomerInput, formCache: formCache, configuration: configuration, headerView: nil, analyticsHelper: analyticsHelper, isLinkUI: isLinkUI, delegate: self, linkAppearance: linkAppearance)
         // Only use the previous customer input in the very first load, to avoid overwriting customer input
         previousCustomerInput = nil
         return pmFormVC
@@ -105,7 +107,9 @@ class AddPaymentMethodViewController: UIViewController {
         paymentMethodTypes: [PaymentSheet.PaymentMethodType],
         formCache: PaymentMethodFormCache,
         analyticsHelper: PaymentSheetAnalyticsHelper,
-        delegate: AddPaymentMethodViewControllerDelegate? = nil
+        isLinkUI: Bool = false,
+        delegate: AddPaymentMethodViewControllerDelegate? = nil,
+        linkAppearance: LinkAppearance? = nil
     ) {
         if paymentMethodTypes.isEmpty {
             let errorAnalytic = ErrorAnalytic(event: .unexpectedPaymentSheetError,
@@ -121,6 +125,8 @@ class AddPaymentMethodViewController: UIViewController {
         self.delegate = delegate
         self.formCache = formCache
         self.analyticsHelper = analyticsHelper
+        self.isLinkUI = isLinkUI
+        self.linkAppearance = linkAppearance
         super.init(nibName: nil, bundle: nil)
     }
 
@@ -185,7 +191,9 @@ class AddPaymentMethodViewController: UIViewController {
                 configuration: configuration,
                 headerView: nil,
                 analyticsHelper: analyticsHelper,
-                delegate: self
+                isLinkUI: isLinkUI,
+                delegate: self,
+                linkAppearance: linkAppearance
             )
         }
         updateUI()

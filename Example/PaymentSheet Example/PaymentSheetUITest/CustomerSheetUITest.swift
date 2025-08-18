@@ -908,6 +908,42 @@ class CustomerSheetUITest: XCTestCase {
         XCTAssertEqual(zipCode, "12345")
         XCTAssertEqual(country, "United States")
     }
+
+    func testCachesFormDetails() throws {
+        var settings = CustomerSheetTestPlaygroundSettings.defaultValues()
+        settings.customerMode = .new
+        loadPlayground(app, settings)
+
+        app.staticTexts["None"].waitForExistenceAndTap(timeout: timeout)
+
+        // Tap Add button to open the form
+        app.staticTexts["+ Add"].waitForExistenceAndTap(timeout: timeout)
+
+        // Start entering card details
+        let cardNumberField = app.textFields["Card number"]
+        cardNumberField.waitForExistenceAndTap(timeout: timeout)
+        cardNumberField.typeText("4")
+        app.toolbars.buttons["Done"].tap()
+
+        // Switch to bank form
+        app.staticTexts["US bank account"].waitForExistenceAndTap(timeout: timeout)
+        let nameField = app.textFields["Full name"]
+        nameField.waitForExistenceAndTap(timeout: timeout)
+        nameField.typeText("H")
+
+        // Switch bank to card form and verify that input is still there
+        app.staticTexts["Card"].waitForExistenceAndTap(timeout: timeout)
+        // Hack - we do this twice since the first tap only dismisses the keyboard
+        app.staticTexts["Card"].waitForExistenceAndTap(timeout: timeout)
+        let cardInput = app.textFields["Card number"].value as? String
+        XCTAssertTrue(cardInput?.hasPrefix("4") == true, "Card number field should preserve entered data")
+
+        // Switch back to bank form and verify that input is still there
+        app.staticTexts["US bank account"].waitForExistenceAndTap(timeout: timeout)
+        let bankInput = app.textFields["Full name"].value as? String
+        XCTAssertTrue(bankInput?.hasPrefix("H") == true, "Bank name field should preserve entered data")
+    }
+
     // MARK: - Helpers
 
     func presentCSAndAddCardFrom(buttonLabel: String, cardNumber: String? = nil, tapAdd: Bool = true) {

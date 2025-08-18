@@ -43,7 +43,7 @@ struct KYCDataCollectionRequest: Encodable {
         try container.encode(kycInfo.firstName, forKey: .firstName)
         try container.encode(kycInfo.lastName, forKey: .lastName)
 
-        try container.encodeIfPresent(kycInfo.idNumber, forKey: .idNumber)
+        try container.encode(kycInfo.idNumber, forKey: .idNumber)
         try container.encode(kycInfo.idType.rawValue, forKey: .idType)
 
         try container.encodeIfPresent(kycInfo.address.line1, forKey: .line1)
@@ -52,23 +52,6 @@ struct KYCDataCollectionRequest: Encodable {
         try container.encodeIfPresent(kycInfo.address.state, forKey: .state)
         try container.encodeIfPresent(kycInfo.address.postalCode, forKey: .zip)
         try container.encodeIfPresent(kycInfo.address.country, forKey: .country)
-
-        let dateOfBirth = DateOfBirth(from: kycInfo.dateOfBirth, calendar: calendar)
-        try container.encode(dateOfBirth, forKey: .dob)
-    }
-}
-
-/// Intermediate model for custom `Date` encoding.
-/// - Note:`StripeJSONEncoder` does not implement `nestedContainer(keyedBy:)` to keep the implementation contained in `KYCDataCollectionRequest`, so we use a separate model to split apart the date components.
-private struct DateOfBirth: Encodable {
-    let day: Int
-    let month: Int
-    let year: Int
-
-    init(from date: Date, calendar: Calendar) {
-        let components = calendar.dateComponents([.day, .month, .year], from: date)
-        self.day = components.day ?? 0
-        self.month = components.month ?? 0
-        self.year = components.year ?? 0
+        try container.encode(kycInfo.dateOfBirth, forKey: .dob)
     }
 }
