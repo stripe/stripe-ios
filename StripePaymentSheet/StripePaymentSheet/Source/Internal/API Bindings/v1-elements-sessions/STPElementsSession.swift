@@ -340,12 +340,9 @@ extension STPElementsSession {
         linkFlags["link_mobile_disable_default_opt_in"] != true
     }
 
-    var combinedReuseAndLinkMandateEnabled: Bool {
-        // This (now poorly named) feature flag impacts whether the combined mandate is supposed to be used.
-        linkSignupOptInFeatureEnabled
-    }
-
-    var isAlwaysShowingReuseMandate: Bool {
+    var alwaysSaveForFutureUse: Bool {
+        // When this (now poorly named) feature flag is enabled for a merchant, we always show the reuse mandate,
+        // since the merchant will save the payment method for future use.
         linkSignupOptInFeatureEnabled
     }
 

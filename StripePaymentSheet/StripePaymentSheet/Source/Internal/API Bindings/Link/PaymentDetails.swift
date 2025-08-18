@@ -320,6 +320,14 @@ extension ConsumerPaymentDetails.Details {
     }
 }
 
+// MARK: - Details.BankAccount - Helpers
+extension ConsumerPaymentDetails.Details.BankAccount {
+    var asPassthroughPaymentMethodType: STPPaymentMethodType? {
+        // We don't support non-US bank accounts today.
+        country == "COUNTRY_US" ? .USBankAccount : nil
+    }
+}
+
 extension ConsumerPaymentDetails {
     var paymentSheetLabel: String {
         switch details {

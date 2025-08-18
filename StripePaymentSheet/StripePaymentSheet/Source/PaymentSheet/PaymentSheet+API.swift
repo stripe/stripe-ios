@@ -849,9 +849,7 @@ private extension ConsumerPaymentDetails {
                 let expectedPaymentMethodType = expectedPaymentMethodTypeForPassthroughMode(elementsSession)
 
                 if expectedPaymentMethodType == "bank_account" {
-                    // We don't support non-US bank accounts today.
-                    let bankAccountCountry = bankAccountDetails?.country
-                    return bankAccountCountry == "COUNTRY_US" ? .USBankAccount : .unknown
+                    return bankAccountDetails?.asPassthroughPaymentMethodType ?? .unknown
                 } else if expectedPaymentMethodType == "card" {
                     return .card
                 } else {
@@ -862,8 +860,7 @@ private extension ConsumerPaymentDetails {
             }
         }()
 
-        // Either SFU or special feature flag enabled
-        let shouldSaveForFutureUse = intent.isSetupFutureUsageSet(for: paymentMethodType) || elementsSession.isAlwaysShowingReuseMandate
+        let shouldSaveForFutureUse = intent.isSetupFutureUsageSet(for: paymentMethodType) || elementsSession.alwaysSaveForFutureUse
 
         if shouldSaveForFutureUse {
             return allowRedisplayOverride ?? .limited
