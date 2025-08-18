@@ -94,6 +94,9 @@ public final class CryptoOnrampCoordinator: NSObject, CryptoOnrampCoordinatorPro
 
         /// `ephemeralKey` is missing from the response after starting identity verification.
         case missingEphemeralKey
+
+        /// An unexpected error occurred between successfully presenting Apple Pay, and making use of the collected details. `selectedPaymentSource` was not set to an expected value.
+        case invalidSelectedPaymentSource
     }
 
     private let linkController: LinkController
@@ -253,7 +256,7 @@ public final class CryptoOnrampCoordinator: NSObject, CryptoOnrampCoordinatorPro
             switch status {
             case .success:
                 guard case let .applePay(paymentMethod) = selectedPaymentSource else {
-                    throw LinkController.IntegrationError.noPaymentMethodSelected
+                    throw Error.invalidSelectedPaymentSource
                 }
 
                 // Build a reasonable preview for the underlying Apple Pay payment method:
@@ -272,7 +275,7 @@ public final class CryptoOnrampCoordinator: NSObject, CryptoOnrampCoordinatorPro
                     label: label,
                     sublabel: sublabel
                 )
-                
+
                 return paymentMethodPreview
             case .canceled:
                 selectedPaymentSource = nil
