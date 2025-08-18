@@ -27,7 +27,7 @@ extension PaymentSheet {
                 // 1. Create PM if necessary
                 let paymentMethod: STPPaymentMethod
                 switch confirmType {
-                case let .saved(savedPaymentMethod, _):
+                case let .saved(savedPaymentMethod, _, _):
                     paymentMethod = savedPaymentMethod
                 case let .new(params, paymentOptions, newPaymentMethod, shouldSave, shouldSetAsDefaultPM):
                     if let newPaymentMethod {

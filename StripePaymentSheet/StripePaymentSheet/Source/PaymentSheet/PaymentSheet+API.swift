@@ -270,7 +270,7 @@ extension PaymentSheet {
                     // PaymentSheet collects CVC in sheet:
                     : intentConfirmParamsFromSavedPaymentMethod?.confirmPaymentMethodOptions
 
-                let paymentIntentParams = makePaymentIntentParams(confirmPaymentMethodType: .saved(paymentMethod, paymentOptions: paymentOptions), paymentIntent: paymentIntent, configuration: configuration)
+                let paymentIntentParams = makePaymentIntentParams(confirmPaymentMethodType: .saved(paymentMethod, paymentOptions: paymentOptions, clientAttributionMetadata: clientAttributionMetadata), paymentIntent: paymentIntent, configuration: configuration)
 
                 paymentHandler.confirmPayment(
                     paymentIntentParams,
@@ -282,7 +282,7 @@ extension PaymentSheet {
             // MARK: ↪ SetupIntent
             case .setupIntent(let setupIntent):
                 let setupIntentParams = makeSetupIntentParams(
-                    confirmPaymentMethodType: .saved(paymentMethod, paymentOptions: nil),
+                    confirmPaymentMethodType: .saved(paymentMethod, paymentOptions: nil, clientAttributionMetadata: clientAttributionMetadata),
                     setupIntent: setupIntent,
                     configuration: configuration
                 )
@@ -301,7 +301,7 @@ extension PaymentSheet {
                     // PaymentSheet collects CVC in sheet:
                     : intentConfirmParamsFromSavedPaymentMethod?.confirmPaymentMethodOptions
                 handleDeferredIntentConfirmation(
-                    confirmType: .saved(paymentMethod, paymentOptions: paymentOptions),
+                    confirmType: .saved(paymentMethod, paymentOptions: paymentOptions, clientAttributionMetadata: clientAttributionMetadata),
                     configuration: configuration,
                     intentConfig: intentConfig,
                     authenticationContext: authenticationContext,
@@ -421,7 +421,7 @@ extension PaymentSheet {
                     )
                 case .deferredIntent(let intentConfig):
                     handleDeferredIntentConfirmation(
-                        confirmType: .saved(paymentMethod, paymentOptions: nil),
+                        confirmType: .saved(paymentMethod, paymentOptions: nil, clientAttributionMetadata: clientAttributionMetadata),
                         configuration: configuration,
                         intentConfig: intentConfig,
                         authenticationContext: authenticationContext,
@@ -661,7 +661,7 @@ extension PaymentSheet {
     }
 
     enum ConfirmPaymentMethodType {
-        case saved(STPPaymentMethod, paymentOptions: STPConfirmPaymentMethodOptions?)
+        case saved(STPPaymentMethod, paymentOptions: STPConfirmPaymentMethodOptions?, clientAttributionMetadata: STPClientAttributionMetadata?)
         /// - paymentMethod: Pass this if you created a PaymentMethod already (e.g. for the deferred flow).
         case new(params: STPPaymentMethodParams, paymentOptions: STPConfirmPaymentMethodOptions, paymentMethod: STPPaymentMethod? = nil, shouldSave: Bool, shouldSetAsDefaultPM: Bool? = nil)
         var shouldSave: Bool {
@@ -684,12 +684,13 @@ extension PaymentSheet {
         let shouldSave: Bool
         let paymentMethodType: STPPaymentMethodType
         switch confirmPaymentMethodType {
-        case .saved(let paymentMethod, let paymentMethodOptions):
+        case .saved(let paymentMethod, let paymentMethodOptions, let clientAttributionMetadata):
             shouldSave = false
             paymentMethodType = paymentMethod.type
             params = STPPaymentIntentParams(clientSecret: paymentIntent.clientSecret, paymentMethodType: paymentMethod.type)
             params.paymentMethodOptions = paymentMethodOptions
             params.paymentMethodId = paymentMethod.stripeId
+            params.clientAttributionMetadata = clientAttributionMetadata
         case let .new(paymentMethodParams, paymentMethodoptions, paymentMethod, _shouldSave, shouldSetAsDefaultPM):
             shouldSave = _shouldSave
             if let paymentMethod = paymentMethod {
@@ -738,13 +739,13 @@ extension PaymentSheet {
     ) -> STPSetupIntentConfirmParams {
         let params: STPSetupIntentConfirmParams
         switch confirmPaymentMethodType {
-        case let .saved(paymentMethod, _):
+        case let .saved(paymentMethod, _, clientAttributionMetadata):
             params = STPSetupIntentConfirmParams(
                 clientSecret: setupIntent.clientSecret,
                 paymentMethodType: paymentMethod.type
             )
             params.paymentMethodID = paymentMethod.stripeId
-
+            params.clientAttributionMetadata = clientAttributionMetadata
         case let .new(paymentMethodParams, _, paymentMethod, _, shouldSetAsDefaultPM):
             if let paymentMethod {
                 params = STPSetupIntentConfirmParams(
