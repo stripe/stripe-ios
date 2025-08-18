@@ -169,6 +169,7 @@ extension PaymentSheet {
                 let applePayContext = STPApplePayContext.create(
                     intent: intent,
                     configuration: configuration,
+                    passiveCaptcha: elementsSession.passiveCaptcha,
                     clientAttributionMetadata: clientAttributionMetadata,
                     completion: completion
                 )
