@@ -12,6 +12,11 @@ import Foundation
 public struct KycInfo: Equatable {
 
     /// Represents a fixed date using simple components (day, month, year).
+    /// For example, March 31st, 1975 would be:
+    ///
+    /// ```
+    /// DateOfBirth(day: 31, month: 3, year: 1975)
+    /// ```
     public struct DateOfBirth: Encodable, Equatable {
 
         /// The day of birth.
