@@ -80,6 +80,13 @@ public protocol CryptoOnrampCoordinatorProtocol {
     /// Throws an error if presentation or payment method collection fails.
     @MainActor
     func collectPaymentMethod(type: PaymentMethodType, from viewController: UIViewController) async throws -> PaymentMethodPreview?
+
+    /// Creates a crypto payment token for the payment method currently selected on the coordinator.
+    /// Call after a successful `collectPaymentMethod(...)`.
+    ///
+    /// - Returns: The crypto payment token ID.
+    /// Throws an error if no payment method has been selected, the Link account is not verified, required session credentials are missing, the payment method creation fails, or a network/API error occurs.
+    func createCryptoPaymentToken() async throws -> String
 }
 
 /// Coordinates headless Link user authentication and identity verification, leaving most of the UI to the client.
@@ -283,6 +290,25 @@ public final class CryptoOnrampCoordinator: NSObject, CryptoOnrampCoordinatorPro
                 return nil
             }
         }
+    }
+
+    public func createCryptoPaymentToken() async throws -> String {
+        guard let selectedPaymentSource else {
+            throw LinkController.IntegrationError.noPaymentMethodSelected
+        }
+
+        let paymentMethod = switch selectedPaymentSource {
+        case .link:
+            try await linkController.createPaymentMethod()
+        case .applePay(let paymentMethod):
+            paymentMethod
+        }
+
+        let token = try await apiClient.createCryptoPaymentToken(
+            for: paymentMethod.stripeId,
+            linkAccountInfo: linkAccountInfo
+        )
+        return token.id
     }
 }
 
