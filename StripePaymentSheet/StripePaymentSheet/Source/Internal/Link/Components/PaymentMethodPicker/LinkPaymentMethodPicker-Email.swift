@@ -17,6 +17,8 @@ extension LinkPaymentMethodPicker {
             static let insets = NSDirectionalEdgeInsets(top: 20, leading: 20, bottom: 20, trailing: 26)
         }
 
+        private let linkConfiguration: LinkConfiguration?
+
         var accountEmail: String? {
             didSet {
                 userEmailLabel.text = accountEmail
@@ -69,11 +71,13 @@ extension LinkPaymentMethodPicker {
         }()
 
         private lazy var stackView: UIStackView = {
-            let stackView = UIStackView(arrangedSubviews: [
-                emailLabel,
-                userEmailLabel,
-                menuButton,
-            ])
+            var arrangedSubviews: [UIView] = [emailLabel, userEmailLabel]
+
+            if linkConfiguration?.allowLogout != false {
+                arrangedSubviews.append(menuButton)
+            }
+
+            let stackView = UIStackView(arrangedSubviews: arrangedSubviews)
 
             stackView.axis = .horizontal
             stackView.spacing = Constants.contentSpacing
@@ -92,7 +96,8 @@ extension LinkPaymentMethodPicker {
             return stackView
         }()
 
-        override init(frame: CGRect) {
+        init(linkConfiguration: LinkConfiguration? = nil) {
+            self.linkConfiguration = linkConfiguration
             super.init(frame: .zero)
             addAndPinSubview(stackView)
 
@@ -107,7 +112,8 @@ extension LinkPaymentMethodPicker {
         }
 
         override func hitTest(_ point: CGPoint, with event: UIEvent?) -> UIView? {
-            if menuButtonFrame.contains(point) {
+            // Only check menu button hit test if logout is allowed.
+            if linkConfiguration?.allowLogout != false && menuButtonFrame.contains(point) {
                 return menuButton
             }
 

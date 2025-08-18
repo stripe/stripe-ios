@@ -114,7 +114,8 @@ public final class CryptoOnrampCoordinator: NSObject, CryptoOnrampCoordinatorPro
     }
 
     private static let linkConfiguration: LinkConfiguration = LinkConfiguration(
-        hintMessage: String.Localized.debitIsMostLikelyToBeAccepted
+        hintMessage: String.Localized.debitIsMostLikelyToBeAccepted,
+        allowLogout: false
     )
 
     private init(linkController: LinkController, apiClient: STPAPIClient = .shared, appearance: LinkAppearance) {
