@@ -10,9 +10,9 @@ import PassKit
 import Stripe
 
 @_spi(STP) import StripeApplePay
-@_spi(STP) import StripePaymentsUI
 @_spi(STP) import StripeIdentity
 @_spi(STP) import StripePaymentSheet
+@_spi(STP) import StripePaymentsUI
 
 import UIKit
 
