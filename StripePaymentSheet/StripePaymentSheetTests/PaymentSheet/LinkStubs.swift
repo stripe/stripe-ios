@@ -63,7 +63,7 @@ extension LinkStubs {
             ),
             ConsumerPaymentDetails(
                 stripeID: "3",
-                details: .bankAccount(bankAccount: .init(iconCode: nil, name: "test", last4: "1234")),
+                details: .bankAccount(bankAccount: .init(iconCode: nil, name: "test", last4: "1234", country: "COUNTRY_US")),
                 billingAddress: nil,
                 billingEmailAddress: nil,
                 nickname: nil,
