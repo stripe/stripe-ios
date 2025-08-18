@@ -173,7 +173,12 @@ struct PaymentSheetExampleAppRootView: View {
         case .embeddedPaymentElement_swiftUI:
             MyEmbeddedCheckoutView()
         case .walletButtonsView_swiftUI:
-            ExampleWalletButtonsContainerView()
+            if #available(iOS 16.0, *) {
+                ExampleWalletButtonsContainerView()
+            } else {
+                Text("Sorry, only available on >= iOS 16.0")
+                    .font(.title2)
+            }
         case .addressCollection_swiftUI:
             if #available(iOS 15.0, *) {
                 AddressElementExampleView()

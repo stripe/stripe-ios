@@ -17,12 +17,14 @@ struct ShopPayTestingOptions {
     var simulatePaymentFailed: Bool = false
 }
 
+@available(iOS 16.0, *)
 struct ExampleWalletButtonsContainerView: View {
     @State private var email: String = ""
     @State private var shopId: String = "69293637654"
     @State private var linkInlineVerificationEnabled: Bool = PaymentSheet.LinkFeatureFlags.enableLinkInlineVerification
     @State private var appearance: PaymentSheet.Appearance = PaymentSheet.Appearance()
     @State private var showingAppearancePlayground = false
+    @State private var linkButtonTheme: WalletButtonsView.ButtonThemes.Link = .white
 
     // Shop Pay testing options
     @State private var billingAddressRequired: Bool = false
@@ -52,6 +54,19 @@ struct ExampleWalletButtonsContainerView: View {
 
                     Button("Customize Appearance") {
                         showingAppearancePlayground = true
+                    }
+
+                    Picker("Link button theme", selection: $linkButtonTheme) {
+                        ForEach([WalletButtonsView.ButtonThemes.Link.white, WalletButtonsView.ButtonThemes.Link.green], id: \.self) { theme in
+                            switch theme {
+                            case .white:
+                                Text("White")
+                            case .green:
+                                Text("Green")
+                            @unknown default:
+                                Text("Unknown Theme")
+                            }
+                        }
                     }
                 }
 
@@ -83,6 +98,9 @@ struct ExampleWalletButtonsContainerView: View {
                             email: email,
                             shopId: shopId,
                             appearance: appearance,
+                            configuration: WalletButtonsView.Configuration(
+                                buttonThemes: .init(link: linkButtonTheme)
+                            ),
                             shopPayTestingOptions: ShopPayTestingOptions(
                                 billingAddressRequired: billingAddressRequired,
                                 emailRequired: emailRequired,
@@ -102,12 +120,19 @@ struct ExampleWalletButtonsContainerView: View {
     }
 }
 
+@available(iOS 16.0, *)
 struct ExampleWalletButtonsView: View {
     @ObservedObject var model: ExampleWalletButtonsModel
     @State var isConfirmingPayment = false
 
-    init(email: String, shopId: String, appearance: PaymentSheet.Appearance = PaymentSheet.Appearance(), shopPayTestingOptions: ShopPayTestingOptions = ShopPayTestingOptions()) {
-        self.model = ExampleWalletButtonsModel(email: email, shopId: shopId, appearance: appearance, shopPayTestingOptions: shopPayTestingOptions)
+    init(
+        email: String,
+        shopId: String,
+        appearance: PaymentSheet.Appearance = PaymentSheet.Appearance(),
+        configuration: WalletButtonsView.Configuration,
+        shopPayTestingOptions: ShopPayTestingOptions = ShopPayTestingOptions()
+    ) {
+        self.model = ExampleWalletButtonsModel(email: email, shopId: shopId, appearance: appearance, configuration: configuration, shopPayTestingOptions: shopPayTestingOptions)
     }
 
     var body: some View {
@@ -117,6 +142,7 @@ struct ExampleWalletButtonsView: View {
                     WalletButtonsFlowControllerView(
                         flowController: flowController,
                         isConfirmingPayment: $isConfirmingPayment,
+                        configuration: model.configuration,
                         onCompletion: model.onCompletion
                     )
                 } else if model.paymentResult == nil {
@@ -155,11 +181,15 @@ struct ExampleWalletButtonsView: View {
 struct WalletButtonsFlowControllerView: View {
     @ObservedObject var flowController: PaymentSheet.FlowController
     @Binding var isConfirmingPayment: Bool
+    let configuration: WalletButtonsView.Configuration
     let onCompletion: (PaymentSheetResult) -> Void
 
     var body: some View {
         if flowController.paymentOption == nil {
-            WalletButtonsView(flowController: flowController) { _ in }
+            WalletButtonsView(
+                flowController: flowController,
+                configuration: configuration
+            ) { _ in }
                 .padding(.horizontal)
         }
         PaymentSheet.FlowController.PaymentOptionsButton(
@@ -197,10 +227,12 @@ struct WalletButtonsFlowControllerView: View {
     }
 }
 
+@available(iOS 16.0, *)
 class ExampleWalletButtonsModel: ObservableObject {
     let email: String
     let shopId: String
     let appearance: PaymentSheet.Appearance
+    let configuration: WalletButtonsView.Configuration
     let shopPayTestingOptions: ShopPayTestingOptions
 
     let backendCheckoutUrl = URL(string: "https://stp-mobile-playground-backend-v7.stripedemos.com/checkout")!
@@ -211,10 +243,11 @@ class ExampleWalletButtonsModel: ObservableObject {
     @Published var isProcessing: Bool = false
     @Published var debugLogs: [String] = []
 
-    init(email: String, shopId: String, appearance: PaymentSheet.Appearance, shopPayTestingOptions: ShopPayTestingOptions = ShopPayTestingOptions()) {
+    init(email: String, shopId: String, appearance: PaymentSheet.Appearance, configuration: WalletButtonsView.Configuration, shopPayTestingOptions: ShopPayTestingOptions = ShopPayTestingOptions()) {
         self.email = email
         self.shopId = shopId
         self.appearance = appearance
+        self.configuration = configuration
         self.shopPayTestingOptions = shopPayTestingOptions
     }
 
