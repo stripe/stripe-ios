@@ -51,10 +51,10 @@ import Foundation
             completion(nil)
             return
         }
-        
+
         var hasCompleted = false
         let timeoutDuration: TimeInterval = 10.0
-        
+
         // Set up timeout timer
         DispatchQueue.main.asyncAfter(deadline: .now() + timeoutDuration) {
             if !hasCompleted {
@@ -63,7 +63,7 @@ import Foundation
                 completion(nil)
             }
         }
-        
+
         hcaptcha.didFinishLoading {
             hcaptcha.validate { result in
                 hasCompleted = true
