@@ -52,6 +52,7 @@ enum Image: String, CaseIterable, ImageMaker {
     case icon_checkmark = "icon_checkmark"
     case icon_chevron_left = "icon_chevron_left"
     case icon_chevron_right = "icon_chevron_right"
+    case icon_info = "icon_info"
     case icon_lock = "icon_lock"
     case icon_menu = "icon_menu"
     case icon_menu_horizontal = "icon_menu_horizontal"

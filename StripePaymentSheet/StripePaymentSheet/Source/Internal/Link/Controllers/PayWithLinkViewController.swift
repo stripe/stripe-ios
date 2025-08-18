@@ -93,6 +93,7 @@ final class PayWithLinkViewController: BottomSheetViewController {
         var lastAddedPaymentDetails: ConsumerPaymentDetails?
         var analyticsHelper: PaymentSheetAnalyticsHelper
         let linkAppearance: LinkAppearance?
+        let linkConfiguration: LinkConfiguration?
 
         var isDismissible: Bool = true
 
@@ -133,6 +134,7 @@ final class PayWithLinkViewController: BottomSheetViewController {
         ///   - supportedPaymentMethodTypes: The payment method types to support in the Link sheet. Defaults to all available types.
         ///   - analyticsHelper: An instance of `AnalyticsHelper` to use for logging.
         ///   - linkAppearance: Optional appearance overrides for Link UI.
+        ///   - linkConfiguration: Configuration for Link behavior and content.
         init(
             intent: Intent,
             elementsSession: STPElementsSession,
@@ -146,7 +148,8 @@ final class PayWithLinkViewController: BottomSheetViewController {
             callToAction: ConfirmButton.CallToActionType?,
             supportedPaymentMethodTypes: [LinkPaymentMethodType] = LinkPaymentMethodType.allCases,
             analyticsHelper: PaymentSheetAnalyticsHelper,
-            linkAppearance: LinkAppearance? = nil
+            linkAppearance: LinkAppearance? = nil,
+            linkConfiguration: LinkConfiguration? = nil
         ) {
             self.intent = intent
             self.elementsSession = elementsSession
@@ -161,6 +164,7 @@ final class PayWithLinkViewController: BottomSheetViewController {
             self.supportedPaymentMethodTypes = supportedPaymentMethodTypes
             self.analyticsHelper = analyticsHelper
             self.linkAppearance = linkAppearance
+            self.linkConfiguration = linkConfiguration
         }
     }
 
@@ -202,7 +206,8 @@ final class PayWithLinkViewController: BottomSheetViewController {
         callToAction: ConfirmButton.CallToActionType? = nil,
         analyticsHelper: PaymentSheetAnalyticsHelper,
         supportedPaymentMethodTypes: [LinkPaymentMethodType] = LinkPaymentMethodType.allCases,
-        linkAppearance: LinkAppearance? = nil
+        linkAppearance: LinkAppearance? = nil,
+        linkConfiguration: LinkConfiguration? = nil
     ) {
         self.init(
             context: Context(
@@ -218,7 +223,8 @@ final class PayWithLinkViewController: BottomSheetViewController {
                 callToAction: callToAction,
                 supportedPaymentMethodTypes: supportedPaymentMethodTypes,
                 analyticsHelper: analyticsHelper,
-                linkAppearance: linkAppearance
+                linkAppearance: linkAppearance,
+                linkConfiguration: linkConfiguration
             ),
             linkAccount: linkAccount
         )
