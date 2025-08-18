@@ -311,7 +311,8 @@ import UIKit
             analyticsHelper: analyticsHelper,
             supportedPaymentMethodTypes: supportedPaymentMethodTypes,
             linkAppearance: appearance,
-            linkConfiguration: linkConfiguration
+            linkConfiguration: linkConfiguration,
+            shouldShowSecondaryCta: false
         ) { [weak self] confirmOption, shouldClearSelection in
             guard let confirmOption else {
                 if shouldClearSelection {
