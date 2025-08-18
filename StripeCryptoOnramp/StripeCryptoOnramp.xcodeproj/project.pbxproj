@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		0B089E692E5378F7007D160E /* PaymentMethodType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B089E682E5378F7007D160E /* PaymentMethodType.swift */; };
 		0B20053F2E318235008FCF8D /* VerificationResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B20053E2E318231008FCF8D /* VerificationResult.swift */; };
 		0B34E23F2E2020E20072FC89 /* StripeCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0B34E23E2E2020E20072FC89 /* StripeCore.framework */; };
 		0B4292912E1EC57700012FB8 /* StripeCryptoOnramp.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0B4292852E1EC57600012FB8 /* StripeCryptoOnramp.framework */; };
@@ -72,6 +73,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		0B089E682E5378F7007D160E /* PaymentMethodType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentMethodType.swift; sourceTree = "<group>"; };
 		0B20053E2E318231008FCF8D /* VerificationResult.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VerificationResult.swift; sourceTree = "<group>"; };
 		0B34E23E2E2020E20072FC89 /* StripeCore.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = StripeCore.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		0B4292852E1EC57600012FB8 /* StripeCryptoOnramp.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = StripeCryptoOnramp.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -277,6 +279,7 @@
 				49D233A72E439EB900F51263 /* CryptoNetwork.swift */,
 				0BB716432E4A5BCC002F17B8 /* Address.swift */,
 				0B49B6B42E4A9213003E6393 /* PaymentMethodPreview.swift */,
+				0B089E682E5378F7007D160E /* PaymentMethodType.swift */,
 			);
 			path = Components;
 			sourceTree = "<group>";
@@ -414,6 +417,7 @@
 				0BA705082E4132640044B483 /* KYCDataCollectionResponse.swift in Sources */,
 				49D233AC2E439FB200F51263 /* RegisterWalletResponse.swift in Sources */,
 				0B6DF34B2E297E0A008B1800 /* CustomerRequest.swift in Sources */,
+				0B089E692E5378F7007D160E /* PaymentMethodType.swift in Sources */,
 				0B6DF34D2E297E27008B1800 /* CustomerResponse.swift in Sources */,
 				0BF41E8B2E3AB84800CA4171 /* IdType.swift in Sources */,
 				0BA7050C2E413DA40044B483 /* Credentials.swift in Sources */,
