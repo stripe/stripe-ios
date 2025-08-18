@@ -379,7 +379,6 @@ public final class CryptoOnrampCoordinator: NSObject, CryptoOnrampCoordinatorPro
                             // so that the checkoutSessionHandler is called again.
                             continue
                         } else {
-                            // Some type of failure
                             return .failed(CheckoutError.paymentFailed)
                         }
                     }
