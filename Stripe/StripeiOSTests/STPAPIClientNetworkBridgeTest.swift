@@ -32,11 +32,11 @@ class StripeAPIBridgeNetworkTest: STPNetworkStubbingTestCase {
         params.country = "US"
 
         client?.createToken(withBankAccount: params) { token, error in
+            XCTAssertTrue(Thread.isMainThread)
             XCTAssertNotNil(token)
             XCTAssertNil(error)
             exp.fulfill()
         }
-
         waitForExpectations(timeout: STPTestingNetworkRequestTimeout, handler: nil)
     }
 
@@ -46,6 +46,7 @@ class StripeAPIBridgeNetworkTest: STPNetworkStubbingTestCase {
         let exp = expectation(description: "Create token")
 
         client?.createToken(withPersonalIDNumber: "123456789") { token, error in
+            XCTAssertTrue(Thread.isMainThread)
             XCTAssertNotNil(token)
             XCTAssertNil(error)
             exp.fulfill()
@@ -58,6 +59,7 @@ class StripeAPIBridgeNetworkTest: STPNetworkStubbingTestCase {
         let exp = expectation(description: "Create SSN")
 
         client?.createToken(withSSNLast4: "1234") { token, error in
+            XCTAssertTrue(Thread.isMainThread)
             XCTAssertNotNil(token)
             XCTAssertNil(error)
             exp.fulfill()
@@ -74,6 +76,7 @@ class StripeAPIBridgeNetworkTest: STPNetworkStubbingTestCase {
         companyParams.name = "Company"
         let params = STPConnectAccountParams(company: companyParams)
         client?.createToken(withConnectAccount: params) { token, error in
+            XCTAssertTrue(Thread.isMainThread)
             XCTAssertNotNil(token)
             XCTAssertNil(error)
             exp.fulfill()
@@ -92,6 +95,7 @@ class StripeAPIBridgeNetworkTest: STPNetworkStubbingTestCase {
             compatibleWith: nil)!
 
         client?.uploadImage(image, purpose: .disputeEvidence) { file, error in
+            XCTAssertTrue(Thread.isMainThread)
             XCTAssertNotNil(file)
             XCTAssertNil(error)
             exp.fulfill()
@@ -111,6 +115,7 @@ class StripeAPIBridgeNetworkTest: STPNetworkStubbingTestCase {
         params.cvc = "123"
 
         client?.createToken(withCard: params) { token, error in
+            XCTAssertTrue(Thread.isMainThread)
             XCTAssertNotNil(token)
             XCTAssertNil(error)
             exp.fulfill()
@@ -123,6 +128,7 @@ class StripeAPIBridgeNetworkTest: STPNetworkStubbingTestCase {
         let exp = expectation(description: "CVC Update")
 
         client?.createToken(forCVCUpdate: "123") { token, error in
+            XCTAssertTrue(Thread.isMainThread)
             XCTAssertNotNil(token)
             XCTAssertNil(error)
             exp.fulfill()
@@ -179,9 +185,11 @@ class StripeAPIBridgeNetworkTest: STPNetworkStubbingTestCase {
 
         let testClient = STPTestingAPIClient.shared()
         testClient.createPaymentIntent(withParams: nil) { [self] clientSecret, error in
+            XCTAssertTrue(Thread.isMainThread)
             XCTAssertNil(error)
 
             client?.retrievePaymentIntent(withClientSecret: clientSecret!) { pi, error2 in
+                XCTAssertTrue(Thread.isMainThread)
                 XCTAssertNotNil(pi)
                 XCTAssertNil(error2)
                 exp.fulfill()
@@ -215,6 +223,7 @@ class StripeAPIBridgeNetworkTest: STPNetworkStubbingTestCase {
             params.paymentMethodParams = STPPaymentMethodParams(card: card, billingDetails: nil, metadata: nil)
 
             client?.confirmPaymentIntent(with: params) { pi, error2 in
+                XCTAssertTrue(Thread.isMainThread)
                 XCTAssertNotNil(pi)
                 XCTAssertNil(error2)
                 exp.fulfill()
@@ -264,6 +273,7 @@ class StripeAPIBridgeNetworkTest: STPNetworkStubbingTestCase {
             XCTAssertNil(error)
 
             client?.retrieveSetupIntent(withClientSecret: clientSecret!) { si, error2 in
+                XCTAssertTrue(Thread.isMainThread)
                 XCTAssertNotNil(si)
                 XCTAssertNil(error2)
                 exp.fulfill()
@@ -290,6 +300,7 @@ class StripeAPIBridgeNetworkTest: STPNetworkStubbingTestCase {
             params.paymentMethodParams = STPPaymentMethodParams(card: card, billingDetails: nil, metadata: nil)
 
             client?.confirmSetupIntent(with: params) { si, error2 in
+                XCTAssertTrue(Thread.isMainThread)
                 XCTAssertNotNil(si)
                 XCTAssertNil(error2)
                 exp.fulfill()
@@ -330,6 +341,7 @@ class StripeAPIBridgeNetworkTest: STPNetworkStubbingTestCase {
         let params = STPPaymentMethodParams(card: card, billingDetails: nil, metadata: nil)
 
         client?.createPaymentMethod(with: params) { pm, error in
+            XCTAssertTrue(Thread.isMainThread)
             XCTAssertNotNil(pm)
             XCTAssertNil(error)
             exp.fulfill()
@@ -349,6 +361,7 @@ class StripeAPIBridgeNetworkTest: STPNetworkStubbingTestCase {
         FraudDetectionData.shared.sidCreationDate = Date()
 
         client?.createRadarSession { session, error in
+            XCTAssertTrue(Thread.isMainThread)
             XCTAssertNotNil(session)
             XCTAssertNil(error)
             exp.fulfill()
@@ -365,6 +378,7 @@ class StripeAPIBridgeNetworkTest: STPNetworkStubbingTestCase {
         let exp3 = expectation(description: "CreatePM")
         let payment = STPFixtures.applePayPayment()
         client?.createToken(with: payment) { token, error in
+            XCTAssertTrue(Thread.isMainThread)
             // The certificate used to sign our fake Apple Pay test payment is invalid, which makes sense.
             // Expect an error.
             XCTAssertNil(token)
@@ -396,6 +410,7 @@ class StripeAPIBridgeNetworkTest: STPNetworkStubbingTestCase {
         params.cvc = "123"
 
         client?.createToken(withCard: params) { token, error in
+            XCTAssertTrue(Thread.isMainThread)
             XCTAssertNil(token)
             XCTAssertNotNil(error)
             XCTAssertNotNil(STPAPIClient.pkPaymentError(forStripeError: error))
