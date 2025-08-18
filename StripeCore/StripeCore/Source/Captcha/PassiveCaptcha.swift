@@ -51,8 +51,22 @@ import Foundation
             completion(nil)
             return
         }
+        
+        var hasCompleted = false
+        let timeoutDuration: TimeInterval = 10.0
+        
+        // Set up timeout timer
+        DispatchQueue.main.asyncAfter(deadline: .now() + timeoutDuration) {
+            if !hasCompleted {
+                // Send analytics for timeout
+                STPAnalyticsClient.sharedClient.logPassiveCaptchaTimeout(siteKey: passiveCaptcha.siteKey)
+                completion(nil)
+            }
+        }
+        
         hcaptcha.didFinishLoading {
             hcaptcha.validate { result in
+                hasCompleted = true
                 let token = try? result.dematerialize()
                 completion(token)
             }
@@ -60,4 +74,12 @@ import Foundation
         #endif
     }
 
+}
+
+extension STPAnalyticsClient {
+    func logPassiveCaptchaTimeout(siteKey: String) {
+        log(
+            analytic: GenericAnalytic(event: .passiveCaptchaTimeout, params: ["site_key": siteKey])
+        )
+    }
 }
