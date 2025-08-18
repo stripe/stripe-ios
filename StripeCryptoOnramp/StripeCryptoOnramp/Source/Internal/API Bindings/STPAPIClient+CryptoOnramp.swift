@@ -111,6 +111,20 @@ extension STPAPIClient {
         return try await post(resource: endpoint, object: requestObject)
     }
 
+    /// Retrieves the PaymentIntent from an onramp session.
+    /// - Parameters:
+    ///   - sessionId: The onramp session identifier.
+    ///   - sessionClientSecret: The onramp session client secret.
+    /// - Returns: The PaymentIntent associated with the onramp session.
+    func retrievePaymentIntentFromOnrampSession(
+        sessionId: String,
+        sessionClientSecret: String
+    ) async throws -> STPPaymentIntent {
+        let endpoint = "crypto/internal/onramp_session"
+        let parameters = ["crypto_onramp_session": sessionId, "client_secret": sessionClientSecret]
+        return try await APIRequest<STPPaymentIntent>.getWith(self, endpoint: endpoint, parameters: parameters)
+    }
+
     private func validateSessionState(using linkAccountInfo: PaymentSheetLinkAccountInfoProtocol) throws {
         guard case .verified = linkAccountInfo.sessionState else {
             throw CryptoOnrampAPIError.linkAccountNotVerified
