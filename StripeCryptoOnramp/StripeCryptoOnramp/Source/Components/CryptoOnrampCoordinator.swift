@@ -489,13 +489,13 @@ private extension CryptoOnrampCoordinator {
     func mapIntentToCheckoutResult(_ intent: STPPaymentIntent) -> CheckoutResult? {
         switch intent.status {
         case .succeeded:
-            return .completed
+            .completed
         case .requiresPaymentMethod:
-            return .failed(CheckoutError.paymentFailed)
+            .failed(CheckoutError.paymentFailed)
         case .requiresAction:
-            return nil
+            nil
         default:
-            return .failed(CheckoutError.paymentFailed)
+            .failed(CheckoutError.paymentFailed)
         }
     }
 }
