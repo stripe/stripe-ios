@@ -107,7 +107,6 @@ struct AuthenticatedView: View {
                         .buttonStyle(PrimaryButtonStyle())
                         .disabled(shouldDisableButtons)
                         .opacity(shouldDisableButtons ? 0.5 : 1)
-
                     } else {
                         VStack(spacing: 8) {
                             // Note: Apple Pay does not require iOS 16, but the native SwiftUI
@@ -241,6 +240,7 @@ struct AuthenticatedView: View {
             }
         }
     }
+
     private func presentApplePay() {
         guard let viewController = UIApplication.shared.findTopNavigationController() else {
             errorMessage = "Unable to find view controller to present from."
