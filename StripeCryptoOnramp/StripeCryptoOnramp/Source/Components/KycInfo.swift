@@ -11,6 +11,30 @@ import Foundation
 @_spi(CryptoOnrampSDKPreview)
 public struct KycInfo: Equatable {
 
+    /// Represents a fixed date using simple components (day, month, year).
+    public struct DateOfBirth: Encodable, Equatable {
+
+        /// The day of birth.
+        public let day: Int
+
+        /// The month of birth.
+        public let month: Int
+
+        /// The year of birth.
+        public let year: Int
+
+        /// Creates a new `DateOfBirth`.
+        /// - Parameters:
+        ///   - day: The day of birth.
+        ///   - month: The month of birth.
+        ///   - year: The year of birth.
+        public init(day: Int, month: Int, year: Int) {
+            self.day = day
+            self.month = month
+            self.year = year
+        }
+    }
+
     /// The customer’s first name.
     public let firstName: String
 
@@ -27,7 +51,7 @@ public struct KycInfo: Equatable {
     public let address: Address
 
     /// The customer’s date of birth.
-    public let dateOfBirth: Date
+    public let dateOfBirth: DateOfBirth
 
     /// Creates a new instance of `KycInfo`.
     /// - Parameters:
@@ -41,7 +65,7 @@ public struct KycInfo: Equatable {
         lastName: String,
         idNumber: String,
         address: Address,
-        dateOfBirth: Date
+        dateOfBirth: DateOfBirth
     ) {
         self.firstName = firstName
         self.lastName = lastName
