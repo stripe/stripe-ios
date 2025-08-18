@@ -169,7 +169,6 @@ extension PaymentSheet {
                 let applePayContext = STPApplePayContext.create(
                     intent: intent,
                     configuration: configuration,
-                    passiveCaptcha: elementsSession.passiveCaptcha,
                     clientAttributionMetadata: clientAttributionMetadata,
                     completion: completion
                 )
@@ -358,8 +357,7 @@ extension PaymentSheet {
                                     linkAccount?.logout()
                                 }
                             }
-                        }
-                    )
+                        )
                     case .deferredIntent(let intentConfig):
                         handleDeferredIntentConfirmation(
                             confirmType: .new(
@@ -376,10 +374,11 @@ extension PaymentSheet {
                                 if shouldLogOutOfLink(result: psResult, elementsSession: elementsSession) {
                                     linkAccount?.logout()
                                 }
-                            )
-                        }
+                            }
+                        )
                     }
                 }
+            }
             let confirmWithPaymentMethod: (STPPaymentMethod, PaymentSheetLinkAccount?, Bool) -> Void = { paymentMethod, linkAccount, shouldSave in
                 let mandateCustomerAcceptanceParams = STPMandateCustomerAcceptanceParams()
                 let onlineParams = STPMandateOnlineParams(ipAddress: "", userAgent: "")
