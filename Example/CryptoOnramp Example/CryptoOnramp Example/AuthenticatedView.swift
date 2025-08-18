@@ -113,15 +113,17 @@ struct AuthenticatedView: View {
                                 .cornerRadius(8)
                                 .disabled(shouldDisableButtons)
                                 .opacity(shouldDisableButtons ? 0.5 : 1)
-
-                                Text("or")
-                                    .font(.footnote)
-                                    .bold()
-                                    .foregroundColor(.secondary)
                             }
 
-                            Button("Select Payment Method") {
-                                presentPaymentMethodSelector()
+                            Button("Debit or Credit Card") {
+                                presentPaymentMethodSelector(for: .card)
+                            }
+                            .buttonStyle(PrimaryButtonStyle())
+                            .disabled(shouldDisableButtons)
+                            .opacity(shouldDisableButtons ? 0.5 : 1)
+
+                            Button("Bank Account") {
+                                presentPaymentMethodSelector(for: .bankAccount)
                             }
                             .buttonStyle(PrimaryButtonStyle())
                             .disabled(shouldDisableButtons)
@@ -178,7 +180,7 @@ struct AuthenticatedView: View {
         }
     }
 
-    private func presentPaymentMethodSelector() {
+    private func presentPaymentMethodSelector(for type: PaymentMethodType) {
         guard let viewController = UIApplication.shared.findTopNavigationController() else {
             errorMessage = "Unable to find view controller to present from."
             return
@@ -188,10 +190,17 @@ struct AuthenticatedView: View {
         errorMessage = nil
 
         Task {
-            let preview = await coordinator.collectPaymentMethod(from: viewController)
-            await MainActor.run {
-                isLoading.wrappedValue = false
-                selectedPaymentMethod = preview
+            do {
+                let preview = try await coordinator.collectPaymentMethod(type: type, from: viewController)
+                await MainActor.run {
+                    isLoading.wrappedValue = false
+                    selectedPaymentMethod = preview
+                }
+            } catch {
+                await MainActor.run {
+                    isLoading.wrappedValue = false
+                    errorMessage = "Payment method selection failed: \(error.localizedDescription)"
+                }
             }
         }
     }
@@ -212,22 +221,10 @@ struct AuthenticatedView: View {
 
         Task {
             do {
-                let result = try await coordinator.presentApplePay(using: request, from: viewController)
+                let result = try await coordinator.collectPaymentMethod(type: .applePay(paymentRequest: request), from: viewController)
                 await MainActor.run {
                     isLoading.wrappedValue = false
-
-                    switch result {
-                    case .success:
-                        self.selectedPaymentMethod = PaymentMethodPreview(
-                            icon: UIImage(systemName: "apple.logo")?.withRenderingMode(.alwaysTemplate) ?? .init(),
-                            label: "Apple Pay",
-                            sublabel: nil
-                        )
-                    case .canceled:
-                        break
-                    @unknown default:
-                        break
-                    }
+                    selectedPaymentMethod = result
                 }
             } catch {
                 await MainActor.run {
