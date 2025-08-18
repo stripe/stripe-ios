@@ -125,6 +125,11 @@ extension STPAPIClient {
         return try await APIRequest<STPPaymentIntent>.getWith(self, endpoint: endpoint, parameters: parameters)
     }
 
+    func createPaymentToken(for paymentMethodId: String, linkAccountInfo: PaymentSheetLinkAccountInfoProtocol) async throws -> CreatePaymentTokenResponse {
+        // TODO: incorporate the implementation found at https://github.com/stripe/stripe-ios/pull/5302 once merged.
+        return CreatePaymentTokenResponse(id: "todo_123")
+    }
+
     private func validateSessionState(using linkAccountInfo: PaymentSheetLinkAccountInfoProtocol) throws {
         guard case .verified = linkAccountInfo.sessionState else {
             throw CryptoOnrampAPIError.linkAccountNotVerified

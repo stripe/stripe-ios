@@ -321,13 +321,11 @@ public final class CryptoOnrampCoordinator: NSObject, CryptoOnrampCoordinatorPro
             paymentMethod
         }
 
-        // TODO: incorporate Mat’s implementation from https://github.com/stripe/stripe-ios/pull/5302
-        return ""
-//        let token = try await apiClient.createCryptoPaymentToken(
-//            for: paymentMethod.stripeId,
-//            linkAccountInfo: linkAccountInfo
-//        )
-//        return token.id
+        let token = try await apiClient.createPaymentToken(
+            for: paymentMethod.stripeId,
+            linkAccountInfo: linkAccountInfo
+        )
+        return token.id
     }
 
     public func performCheckout(
