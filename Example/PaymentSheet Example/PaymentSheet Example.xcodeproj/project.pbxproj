@@ -66,6 +66,7 @@
 		AEC3BC636297A0D3E2DDF522 /* MockFiles in Resources */ = {isa = PBXBuildFile; fileRef = 9496755DA1916325D38ECB2F /* MockFiles */; };
 		B36A24145C97D73C981DDBAC /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F4B26C754925F8D2A5183B2E /* Main.storyboard */; };
 		B615E86F2CA4B267007D684C /* ExampleEmbeddedElementCheckoutViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B615E86E2CA4B266007D684C /* ExampleEmbeddedElementCheckoutViewController.swift */; };
+		B62CAE812E4D15C200CB3A5F /* AppDelegate+BrokenConstraints.swift in Sources */ = {isa = PBXBuildFile; fileRef = B62CAE802E4D15B300CB3A5F /* AppDelegate+BrokenConstraints.swift */; };
 		B641A4192C2BA25D00AE654A /* PaymentSheetVerticalUITest.swift in Sources */ = {isa = PBXBuildFile; fileRef = B641A4182C2BA25D00AE654A /* PaymentSheetVerticalUITest.swift */; };
 		B661D3BA2E29C1F6008A9368 /* AppearancePlaygroundView+EmbeddedPaymentElement.swift in Sources */ = {isa = PBXBuildFile; fileRef = B661D3B92E29C1F6008A9368 /* AppearancePlaygroundView+EmbeddedPaymentElement.swift */; };
 		B6CA975C2C486DE700DAE441 /* PaymentSheetLPMUITest.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6CA975B2C486DE700DAE441 /* PaymentSheetLPMUITest.swift */; };
@@ -278,6 +279,7 @@
 		B33D2066D7BA7984CABC23A5 /* zh-HK */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-HK"; path = "zh-HK.lproj/LaunchScreen.strings"; sourceTree = "<group>"; };
 		B54E58F2CA450CF49ECD5637 /* CustomerSheetTestPlaygroundController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomerSheetTestPlaygroundController.swift; sourceTree = "<group>"; };
 		B615E86E2CA4B266007D684C /* ExampleEmbeddedElementCheckoutViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ExampleEmbeddedElementCheckoutViewController.swift; sourceTree = "<group>"; };
+		B62CAE802E4D15B300CB3A5F /* AppDelegate+BrokenConstraints.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AppDelegate+BrokenConstraints.swift"; sourceTree = "<group>"; };
 		B641A4182C2BA25D00AE654A /* PaymentSheetVerticalUITest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentSheetVerticalUITest.swift; sourceTree = "<group>"; };
 		B661D3B92E29C1F6008A9368 /* AppearancePlaygroundView+EmbeddedPaymentElement.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AppearancePlaygroundView+EmbeddedPaymentElement.swift"; sourceTree = "<group>"; };
 		B69C155A2B9FDCBD009CE667 /* PaymentSheet Example.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = "PaymentSheet Example.entitlements"; path = "PaymentSheet Example/PaymentSheet Example.entitlements"; sourceTree = "<group>"; };
@@ -475,6 +477,7 @@
 				31CDFC2B2BA36F5B00B3DD91 /* PrivacyInfo.xcprivacy */,
 				132709C10C0114D239ED3FE9 /* Resources */,
 				05E317C6C8459B147C041D93 /* AppDelegate.swift */,
+				B62CAE802E4D15B300CB3A5F /* AppDelegate+BrokenConstraints.swift */,
 				5D025413F3246E241A1DFE5C /* AppearancePlaygroundView.swift */,
 				B661D3B92E29C1F6008A9368 /* AppearancePlaygroundView+EmbeddedPaymentElement.swift */,
 				6BFE613C2D407C3B0094DFE2 /* CustomerSessionPlaygroundView.swift */,
@@ -738,6 +741,7 @@
 				49ABCC732E2FFFCA00C3BBF4 /* ExampleLinkControllerView.swift in Sources */,
 				61B2532E2D52C4F1008CFC96 /* ExampleSwiftUIEmbeddedPaymentElement.swift in Sources */,
 				6BFE613D2D407C420094DFE2 /* CustomerSessionPlaygroundView.swift in Sources */,
+				B62CAE812E4D15C200CB3A5F /* AppDelegate+BrokenConstraints.swift in Sources */,
 				4694B03B08B7DA9706A2ED9D /* AppearancePlaygroundView.swift in Sources */,
 				B661D3BA2E29C1F6008A9368 /* AppearancePlaygroundView+EmbeddedPaymentElement.swift in Sources */,
 				CB6F8F872E04545D003551D5 /* ExampleLinkStandaloneComponent.swift in Sources */,
