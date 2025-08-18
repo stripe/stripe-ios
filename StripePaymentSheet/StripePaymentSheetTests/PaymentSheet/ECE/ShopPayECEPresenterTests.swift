@@ -70,7 +70,7 @@ class ShopPayECEPresenterTests: XCTestCase {
 
         // Create mock flow controller
         let intentConfig = PaymentSheet.IntentConfiguration(sharedPaymentTokenSessionWithMode: .payment(amount: 100, currency: "USD", setupFutureUsage: nil, captureMethod: .automatic, paymentMethodOptions: nil),
-                                                                 sellerDetails: .init(networkId: "abc123", externalId: "abc123")) { _, _ in
+                                                                 sellerDetails: .init(networkId: "abc123", externalId: "abc123", businessName: "Till's Pills")) { _, _ in
             // Nothing
         }
         let intent = Intent.deferredIntent(intentConfig: intentConfig)
@@ -477,7 +477,7 @@ class ShopPayECEPresenterTests: XCTestCase {
         XCTAssertEqual(response["shopId"] as? String, "test_shop_123")
 
         let business = response["business"] as? [String: String]
-        XCTAssertEqual(business?["name"], "Test Merchant")
+        XCTAssertEqual(business?["name"], "Till's Pills")
 
         let allowedCountries = response["allowedShippingCountries"] as? [String]
         XCTAssertEqual(allowedCountries, ["US", "CA"])
@@ -634,7 +634,7 @@ class ShopPayECEPresenterTests: XCTestCase {
         // Given - Create a configuration with preparePaymentMethodHandler (more realistic for Shop Pay)
         let successfulIntentConfig = PaymentSheet.IntentConfiguration(
             sharedPaymentTokenSessionWithMode: PaymentSheet.IntentConfiguration.Mode.payment(amount: 1000, currency: "USD"),
-            sellerDetails: PaymentSheet.IntentConfiguration.SellerDetails(networkId: "abc123", externalId: "abc123"),
+            sellerDetails: PaymentSheet.IntentConfiguration.SellerDetails(networkId: "abc123", externalId: "abc123", businessName: "Till's Pills"),
             preparePaymentMethodHandler: { _, _ in
                 // Shop Pay flow - just prepare the payment method, no additional confirmation needed
             }

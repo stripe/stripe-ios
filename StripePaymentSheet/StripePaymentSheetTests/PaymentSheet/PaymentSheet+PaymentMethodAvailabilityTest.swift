@@ -162,7 +162,7 @@ final class PaymentMethodAvailabilityTest: XCTestCase {
     }
 }
 
-private extension LinkSettings {
+extension LinkSettings {
     static func _testValue(
         disableSignup: Bool = false,
         flags: [String: Bool]? = nil

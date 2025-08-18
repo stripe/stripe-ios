@@ -64,10 +64,21 @@ extension PayWithLinkViewController {
         }
 
         /// The mandate text to show.
-        var mandate: NSMutableAttributedString? {
+        var mandate: NSAttributedString? {
             switch selectedPaymentMethod?.details {
             case .card:
-                guard context.intent.isSetupFutureUsageSet(for: context.elementsSession.linkPassthroughModeEnabled ? .card : .link) else { return nil }
+                if context.elementsSession.combinedReuseAndLinkMandateEnabled {
+                    // Use the updated mandate text that can mention both payment method reuse and Link signup.
+                    // Since the user is already signed up for Link, we don't need to save to Link.
+                    return PaymentSheetFormFactory.makeMandateText(
+                        useCombinedReuseAndLinkSignupText: true,
+                        shouldSaveToLink: false,
+                        merchantName: context.configuration.merchantDisplayName
+                    )
+                }
+                guard context.intent.isSetupFutureUsageSet(for: context.elementsSession.linkPassthroughModeEnabled ? .card : .link) else {
+                    return nil
+                }
                 let string = String(format: .Localized.by_providing_your_card_information_text, context.configuration.merchantDisplayName)
                 return NSMutableAttributedString(string: string)
             case .bankAccount:
@@ -128,8 +139,12 @@ extension PayWithLinkViewController {
             return shouldShowApplePayButton
         }
 
+        var linkAppearance: LinkAppearance? {
+            return context.linkAppearance
+        }
+
         var cancelButtonConfiguration: Button.Configuration? {
-            context.shouldShowSecondaryCta ? .linkPlain() : nil
+            context.shouldShowSecondaryCta ? .linkPlain(foregroundColor: linkAppearance?.colors?.primary ?? .linkTextBrand) : nil
         }
 
         /// Whether or not we must re-collect the card CVC.
@@ -302,7 +317,7 @@ extension PayWithLinkViewController {
         }
 
         func isPaymentMethodSupported(paymentMethod: ConsumerPaymentDetails?) -> Bool {
-            paymentMethod?.isSupported(linkAccount: linkAccount, elementsSession: context.elementsSession, cardBrandFilter: context.configuration.cardBrandFilter) ?? false
+            paymentMethod?.isSupported(linkAccount: linkAccount, elementsSession: context.elementsSession, configuration: context.configuration, cardBrandFilter: context.configuration.cardBrandFilter) ?? false
         }
     }
 }

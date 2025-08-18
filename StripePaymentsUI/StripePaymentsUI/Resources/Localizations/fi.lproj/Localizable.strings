@@ -22,6 +22,8 @@
 
 "Billing address" = "Laskutusosoite";
 
+"Billing details" = "Laskutustiedot";
+
 "CVC" = "CVC-tunnus";
 
 "Card information" = "Kortin tiedot";

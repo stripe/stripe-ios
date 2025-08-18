@@ -60,6 +60,10 @@
 
 "By continuing, you agree to authorize payments pursuant to <terms>these terms</terms>." = "Ako nastavite, pristajete na autorizaciju plaćanja u skladu s <terms>ovim uvjetima</terms>.";
 
+"By continuing, you agree to save your information for future purchases with %@ and <link>Link</link>. You also agree to Link's <terms>Terms</terms> and <privacy>Privacy</privacy>." = "Nastavkom pristajete spremiti svoje podatke za buduće kupnje uz %@ i <link>Link</link>. također se slažete s <terms>Uvjetima</terms> i <privacy>Privatnosti</privacy> društva Link.";
+
+"By continuing, you agree to save your information for future purchases with %@." = "Nastavkom pristajete spremiti svoje podatke za buduće kupnje uz %@.";
+
 "By continuing, you authorize %@ to automatically debit your Satispay Balance on a recurring basis in accordance with your purchase or subscription plan." = "Nastavkom ovlašćujete da %@ automatski tereti vaš saldo Satispay na ponavljajućoj osnovi u skladu s vašim planom kupnje ili pretplate.";
 
 "By continuing, you authorize %@ to debit your Cash App account for this payment and future payments in accordance with %@'s terms, until this authorization is revoked. You can change this anytime in your Cash App Settings." = "Ako nastavite, autorizirate %1$@ da tereti vaš račun Cash App za ovo plaćanje i buduća plaćanja u skladu s uvjetima poduzeća %2$@, dok se ova autorizacija ne opozove. Ovo možete promijeniti bilo kada u postavkama aplikacije Cash App.";
@@ -126,6 +130,8 @@
 
 "Failed to connect" = "Povezivanje nije uspjelo";
 
+"Fast, secure checkout" = "Brzo i sigurno izvršenje plaćanja";
+
 "For security, please re-enter your card’s security code." = "Radi sigurnosti, ponovno unesite sigurnosni kod vaše kartice.";
 
 "Get %@ back when you pay for the first time with your bank. <terms>See terms</terms>" = "Dobit ćete %@ povrat kada prvi put platite bankovnim prijenosom. <terms>Pogledajte uvjete</terms>";
@@ -185,6 +191,8 @@
 "Pay another way" = "Platite na drugi način";
 
 "Pay faster at %@ and thousands of businesses." = "Platite brže na %@ i tisućama drugih stranica.";
+
+"Pay faster everywhere Link is accepted." = "Plaćajte brže svugdje gdje je Link prihvaćen.";
 
 "Pay over time with %@" = "Platite u ratama koristeći %@";
 

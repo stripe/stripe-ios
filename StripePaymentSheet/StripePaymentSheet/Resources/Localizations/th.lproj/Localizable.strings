@@ -60,6 +60,10 @@
 
 "By continuing, you agree to authorize payments pursuant to <terms>these terms</terms>." = "การดำเนินการต่อหมายความว่าคุณตกลงที่จะอนุมัติการชำระเงินซึ่งดำเนินการตาม<terms>ข้อกำหนดเหล่านี้</terms>";
 
+"By continuing, you agree to save your information for future purchases with %@ and <link>Link</link>. You also agree to Link's <terms>Terms</terms> and <privacy>Privacy</privacy>." = "เมื่อดำเนินการต่อ จะถือว่าคุณตกลงที่จะบันทึกข้อมูลไว้สำหรับการซื้อด้วย %@ ในอนาคต และ <link>Link</link>คุณยังยอมรับ<terms>ข้อกำหนด</terms>และ<privacy>ความเป็นส่วนตัว</privacy>ของ Link ด้วย";
+
+"By continuing, you agree to save your information for future purchases with %@." = "เมื่อดำเนินการต่อ จะถือว่าคุณตกลงที่จะบันทึกข้อมูลไว้สําหรับการซื้อด้วย %@ ในอนาคต";
+
 "By continuing, you authorize %@ to automatically debit your Satispay Balance on a recurring basis in accordance with your purchase or subscription plan." = "การดำเนินการต่อแปลว่าคุณอนุญาตให้ %@ หักเงินจากยอดเงิน Satispay ของคุณโดยอัตโนมัติตามระยะเวลาที่กำหนดตามแผนการซื้อหรือการสมัครสมาชิกของคุณ";
 
 "By continuing, you authorize %@ to debit your Cash App account for this payment and future payments in accordance with %@'s terms, until this authorization is revoked. You can change this anytime in your Cash App Settings." = "การดำเนินการต่อ หมายความว่าคุณอนุญาตให้ %1$@ ฝากเงินเข้าบัญชี Cash App ของคุณสำหรับการชำระเงินรายการนี้ และการชำระเงินในอนาคตโดยสอดคล้องกับข้อกำหนดของ %2$@ จนกว่าจะมีการเพิกถอนการอนุญาต คุณสามารถเปลี่ยนแปลงการตั้งค่านี้ได้ทุกเมื่อในการตั้งค่า Cash App";
@@ -126,6 +130,8 @@
 
 "Failed to connect" = "เชื่อมต่อไม่สำเร็จ";
 
+"Fast, secure checkout" = "การชำระเงินที่รวดเร็วและปลอดภัย";
+
 "For security, please re-enter your card’s security code." = "โปรดป้อนรหัสรักษาความปลอดภัยของบัตรอีกครั้งเพื่อความปลอดภัย";
 
 "Get %@ back when you pay for the first time with your bank. <terms>See terms</terms>" = "รับคืน %@ เมื่อชำระครั้งแรกผ่านธนาคาร <terms>ดูข้อกำหนด</terms>";
@@ -185,6 +191,8 @@
 "Pay another way" = "ชำระด้วยวิธีอื่น";
 
 "Pay faster at %@ and thousands of businesses." = "ชำระเงินใน %@ และธุรกิจอีกนับพันแห่งได้เร็วขึ้น";
+
+"Pay faster everywhere Link is accepted." = "ชำระเงินได้รวดเร็วขึ้นในทุกที่ที่รองรับ Link";
 
 "Pay over time with %@" = "ทยอยชำระเงินด้วย Affirm%@";
 

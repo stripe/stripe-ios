@@ -60,6 +60,10 @@
 
 "By continuing, you agree to authorize payments pursuant to <terms>these terms</terms>." = "Bằng việc tiếp tục, bạn đồng ý cho phép thanh toán tuân theo <terms>các điều khoản này</terms>.";
 
+"By continuing, you agree to save your information for future purchases with %@ and <link>Link</link>. You also agree to Link's <terms>Terms</terms> and <privacy>Privacy</privacy>." = "Bằng cách tiếp tục, bạn đồng ý lưu thông tin của mình cho các giao dịch mua trong tương lai với %@ và <link>Link</link>. Bạn cũng đồng ý với <terms>Điều khoản</terms> và <privacy>Quyền riêng tư</privacy> của Link.";
+
+"By continuing, you agree to save your information for future purchases with %@." = "Bằng cách tiếp tục, bạn đồng ý lưu thông tin của mình cho các giao dịch mua trong tương lai với %@.";
+
 "By continuing, you authorize %@ to automatically debit your Satispay Balance on a recurring basis in accordance with your purchase or subscription plan." = "Bằng việc tiếp tục, bạn cho phép %@ tự động ghi nợ Số dư Satispay của bạn theo chu kỳ định kỳ dựa trên gói mua hoặc gói đăng ký của bạn.";
 
 "By continuing, you authorize %@ to debit your Cash App account for this payment and future payments in accordance with %@'s terms, until this authorization is revoked. You can change this anytime in your Cash App Settings." = "Bằng cách tiếp tục, quý vị ủy quyền cho %1$@ ghi nợ tài khoản Cash App của quý vị cho khoản thanh toán này và các khoản thanh toán trong tương lai theo các điều khoản của %2$@, cho đến khi ủy quyền này bị thu hồi. Quý vị có thể thay đổi điều này bất cứ lúc nào trong mục Cài đặt của Cash App.";
@@ -126,6 +130,8 @@
 
 "Failed to connect" = "Không thể kết nối";
 
+"Fast, secure checkout" = "Thanh toán nhanh chóng, an toàn";
+
 "For security, please re-enter your card’s security code." = "Vì lý do bảo mật, vui lòng nhập lại mã bảo mật của thẻ của bạn.";
 
 "Get %@ back when you pay for the first time with your bank. <terms>See terms</terms>" = "Được hoàn %@ khi thanh toán lần đầu tiên với ngân hàng. <terms>Xem điều khoản</terms>";
@@ -185,6 +191,8 @@
 "Pay another way" = "Thanh toán theo cách khác";
 
 "Pay faster at %@ and thousands of businesses." = "Thanh toán nhanh hơn tại %@ và hàng ngàn doanh nghiệp.";
+
+"Pay faster everywhere Link is accepted." = "Thanh toán nhanh hơn ở mọi nơi chấp nhận Link.";
 
 "Pay over time with %@" = "Trả dần bằng %@";
 
