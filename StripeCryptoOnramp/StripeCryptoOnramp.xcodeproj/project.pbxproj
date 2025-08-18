@@ -192,6 +192,9 @@
 				49D73DF82E4E49EC00E35F1F /* String+Localized.swift */,
 				0B089E6E2E53935B007D160E /* CheckoutError.swift */,
 				0B6DF3472E296E2F008B1800 /* API Bindings */,
+				49D73DF22E4E499F00E35F1F /* StripeCryptoOnrampBundleLocator.swift */,
+				49D73DF42E4E49C300E35F1F /* STPLocalizedString+StripeCryptoOnramp.swift */,
+				49D73DF82E4E49EC00E35F1F /* String+Localized.swift */,
 			);
 			path = Internal;
 			sourceTree = "<group>";
