@@ -83,10 +83,7 @@ extension PayWithLinkViewController {
                 return NSMutableAttributedString(string: string)
             case .bankAccount:
                 // Instant debit mandate should be shown when paying with bank account.
-                return PaymentSheetFormFactory.makeBankMandateText(
-                    useUpdatedCopy: context.elementsSession.combinedReuseAndLinkMandateEnabled,
-                    sellerName: context.intent.sellerDetails?.businessName
-                )
+                return PaymentSheetFormFactory.makeBankMandateText(sellerName: context.intent.sellerDetails?.businessName)
             default:
                 return nil
             }

@@ -548,13 +548,10 @@ extension PaymentSheetFormFactory {
         }
     }
 
-    static func makeBankMandateText(
-        useUpdatedCopy: Bool,
-        sellerName: String?
-    ) -> NSAttributedString {
+    static func makeBankMandateText(sellerName: String?) -> NSAttributedString {
         let links = ["terms": URL(string: "https://link.com/terms/ach-authorization")!]
 
-        let string = if let sellerName, useUpdatedCopy {
+        let string = if let sellerName {
             String(
                 format: String.Localized.bank_continue_mandate_text_with_seller,
                 sellerName
@@ -903,7 +900,6 @@ extension PaymentSheetFormFactory {
             addressElement: addressElement,
             incentive: incentive,
             isPaymentIntent: isPaymentIntent,
-            useUpdatedMandate: signupOptInFeatureEnabled,
             sellerName: sellerName,
             appearance: configuration.appearance
         )

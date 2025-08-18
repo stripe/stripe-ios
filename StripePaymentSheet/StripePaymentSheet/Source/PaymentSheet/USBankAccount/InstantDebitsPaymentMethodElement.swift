@@ -38,7 +38,6 @@ final class InstantDebitsPaymentMethodElement: ContainerElement {
     private let theme: ElementsAppearance
     var presentingViewControllerDelegate: PresentingViewControllerDelegate?
     private let incentive: PaymentMethodIncentive?
-    private let useUpdatedMandate: Bool
     private let sellerName: String?
 
     var delegate: ElementDelegate?
@@ -47,12 +46,7 @@ final class InstantDebitsPaymentMethodElement: ContainerElement {
     }
     var mandateString: NSMutableAttributedString? {
         let string: NSMutableAttributedString? = if linkedBank != nil {
-            NSMutableAttributedString(
-                attributedString: PaymentSheetFormFactory.makeBankMandateText(
-                    useUpdatedCopy: useUpdatedMandate,
-                    sellerName: sellerName
-                )
-            )
+            NSMutableAttributedString(attributedString: PaymentSheetFormFactory.makeBankMandateText(sellerName: sellerName))
         } else {
             nil
         }
@@ -191,7 +185,6 @@ final class InstantDebitsPaymentMethodElement: ContainerElement {
         addressElement: PaymentMethodElementWrapper<AddressSectionElement>?,
         incentive: PaymentMethodIncentive?,
         isPaymentIntent: Bool,
-        useUpdatedMandate: Bool,
         sellerName: String?,
         appearance: PaymentSheet.Appearance = .default
     ) {
@@ -221,7 +214,6 @@ final class InstantDebitsPaymentMethodElement: ContainerElement {
             label.textContainer.lineFragmentPadding = 0
             return StaticElement(view: label)
         }
-        self.useUpdatedMandate = useUpdatedMandate
         self.sellerName = sellerName
 
         let allElements: [Element?] = [
