@@ -7,6 +7,7 @@
 
 import Foundation
 
+/// The result of a call to `CryptoOnrampCoordinator.performCheckout()`.
 @_spi(CryptoOnrampSDKPreview)
 public enum CheckoutResult {
 
