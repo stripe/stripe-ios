@@ -98,6 +98,24 @@ extension PayWithLinkViewController {
             mandate != nil
         }
 
+        /// Returns a hint message, if it is supported.
+        /// - The `link_show_prefer_debit_card_hint` flag must be enabled.
+        /// - A non-empty hint message must exist in the `LinkConfiguration`.
+        /// - Cards are a supported payment types.
+        func debitCardHintIfSupported(for linkAccount: PaymentSheetLinkAccount) -> String? {
+            let flagEnabled = context.elementsSession.shouldShowPreferDebitCardHint
+            let hintMessage = context.linkConfiguration?.hintMessage
+            let hasHintMessage = hintMessage?.isEmpty == false
+            let supportedPaymentDetailTypes = context.getSupportedPaymentDetailsTypes(linkAccount: linkAccount)
+            let supportsCards = supportedPaymentDetailTypes.contains(.card)
+
+            if flagEnabled && hasHintMessage && supportsCards {
+                return hintMessage
+            } else {
+                return nil
+            }
+        }
+
         var noticeText: String? {
             if shouldRecollectCardExpiryDate {
                 return STPLocalizedString(
@@ -139,8 +157,12 @@ extension PayWithLinkViewController {
             return shouldShowApplePayButton
         }
 
+        var linkAppearance: LinkAppearance? {
+            return context.linkAppearance
+        }
+
         var cancelButtonConfiguration: Button.Configuration? {
-            context.shouldShowSecondaryCta ? .linkPlain() : nil
+            context.shouldShowSecondaryCta ? .linkPlain(foregroundColor: linkAppearance?.colors?.primary ?? .linkTextBrand) : nil
         }
 
         /// Whether or not we must re-collect the card CVC.
@@ -313,7 +335,7 @@ extension PayWithLinkViewController {
         }
 
         func isPaymentMethodSupported(paymentMethod: ConsumerPaymentDetails?) -> Bool {
-            paymentMethod?.isSupported(linkAccount: linkAccount, elementsSession: context.elementsSession, cardBrandFilter: context.configuration.cardBrandFilter) ?? false
+            paymentMethod?.isSupported(linkAccount: linkAccount, elementsSession: context.elementsSession, configuration: context.configuration, cardBrandFilter: context.configuration.cardBrandFilter) ?? false
         }
     }
 }

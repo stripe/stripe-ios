@@ -28,6 +28,16 @@ extension PayWithLinkViewController {
             linkAccount.email
         }
 
+        private lazy var theme: ElementsAppearance = {
+            var theme = LinkUI.appearance.asElementsTheme
+
+            if let primaryColor = viewModel.linkAppearance?.colors?.primary {
+                theme.colors.primary = primaryColor
+            }
+
+            return theme
+        }()
+
         private lazy var paymentPicker: LinkPaymentMethodPicker = {
             let paymentPicker = LinkPaymentMethodPicker()
             paymentPicker.delegate = self
@@ -35,14 +45,16 @@ extension PayWithLinkViewController {
             paymentPicker.supportedPaymentMethodTypes = viewModel.supportedPaymentMethodTypes
             paymentPicker.billingDetails = context.configuration.defaultBillingDetails
             paymentPicker.billingDetailsCollectionConfiguration = context.configuration.billingDetailsCollectionConfiguration
+            paymentPicker.linkAppearance = viewModel.linkAppearance
             return paymentPicker
         }()
 
-        private lazy var mandateView = LinkMandateView(delegate: self)
+        private lazy var mandateView = LinkMandateView(delegate: self, linkAppearance: viewModel.linkAppearance)
 
         private lazy var confirmButton = ConfirmButton.makeLinkButton(
             callToAction: viewModel.confirmButtonCallToAction,
-            compact: viewModel.shouldUseCompactConfirmButton
+            compact: viewModel.shouldUseCompactConfirmButton,
+            linkAppearance: viewModel.linkAppearance
         ) { [weak self] in
             guard let self else {
                 return
@@ -86,12 +98,12 @@ extension PayWithLinkViewController {
                     return self?.viewModel.cardBrand ?? .unknown
             })
 
-            return TextFieldElement(configuration: configuration, theme: LinkUI.appearance.asElementsTheme)
+            return TextFieldElement(configuration: configuration, theme: theme)
         }()
 
         private lazy var expiryDateElement: TextFieldElement = {
             let configuration = TextFieldElement.ExpiryDateConfiguration()
-            return TextFieldElement(configuration: configuration, theme: LinkUI.appearance.asElementsTheme)
+            return TextFieldElement(configuration: configuration, theme: theme)
         }()
 
         private lazy var expiredCardNoticeView: LinkNoticeView = {
@@ -100,29 +112,40 @@ extension PayWithLinkViewController {
             return noticeView
         }()
 
+        private lazy var debitCardHintView: LinkHintMessageView? = {
+            guard let hintMessage = viewModel.debitCardHintIfSupported(for: linkAccount) else {
+                return nil
+            }
+            return LinkHintMessageView(message: hintMessage)
+        }()
+
         private lazy var cardDetailsRecollectionSection: SectionElement = {
             let sectionElement = SectionElement(
                 elements: [
-                    SectionElement.MultiElementRow([expiryDateElement, cvcElement], theme: LinkUI.appearance.asElementsTheme)
-                ], theme: LinkUI.appearance.asElementsTheme
+                    SectionElement.MultiElementRow([expiryDateElement, cvcElement], theme: theme)
+                ], theme: theme
             )
             sectionElement.delegate = self
             return sectionElement
         }()
 
         private lazy var paymentPickerContainerView: UIStackView = {
-            let stackView = UIStackView(arrangedSubviews: [
-                paymentPicker,
-                mandateView,
-                expiredCardNoticeView,
-            ])
+            var arrangedSubviews: [UIView] = [paymentPicker]
+
+            if let debitCardHintView = debitCardHintView {
+                arrangedSubviews.append(debitCardHintView)
+            }
+
+            arrangedSubviews.append(contentsOf: [mandateView, expiredCardNoticeView])
+
+            let stackView = UIStackView(arrangedSubviews: arrangedSubviews)
             stackView.axis = .vertical
             stackView.spacing = LinkUI.contentSpacing
             return stackView
         }()
 
         private lazy var errorLabel: UILabel = {
-            let label = ElementsUI.makeErrorLabel(theme: LinkUI.appearance.asElementsTheme)
+            let label = ElementsUI.makeErrorLabel(theme: theme)
             label.textAlignment = .center
             label.isHidden = true
             return label
@@ -179,7 +202,7 @@ extension PayWithLinkViewController {
                 containerView.addArrangedSubview(cancelButton)
             }
 
-            contentView.addAndPinSubview(containerView)
+            contentView.addAndPinSubview(containerView, insets: .insets(bottom: 35))
 
             // If the initially selected payment method is not supported, we should automatically
             // expand the payment picker to hint the user to pick another payment method.
@@ -522,7 +545,8 @@ private extension PayWithLinkViewController.WalletViewController {
             linkAccount: linkAccount,
             context: context,
             paymentMethod: paymentMethod,
-            isBillingDetailsUpdateFlow: false
+            isBillingDetailsUpdateFlow: false,
+            linkAppearance: viewModel.linkAppearance
         )
         updatePaymentMethodVC.delegate = self
 
@@ -534,7 +558,8 @@ private extension PayWithLinkViewController.WalletViewController {
             linkAccount: linkAccount,
             context: context,
             paymentMethod: paymentMethod,
-            isBillingDetailsUpdateFlow: true
+            isBillingDetailsUpdateFlow: true,
+            linkAppearance: viewModel.linkAppearance
         )
         updatePaymentMethodVC.delegate = self
 
@@ -636,7 +661,7 @@ extension PayWithLinkViewController.WalletViewController: LinkPaymentMethodPicke
         _ pickerView: LinkPaymentMethodPicker,
         sourceRect: CGRect
     ) {
-        let supportedPaymentDetailsTypes = linkAccount.supportedPaymentDetailsTypes(for: context.elementsSession)
+        let supportedPaymentDetailsTypes = context.getSupportedPaymentDetailsTypes(linkAccount: linkAccount)
 
         let bankAndCard = [ConsumerPaymentDetails.DetailsType.bankAccount, .card]
         if bankAndCard.allSatisfy(supportedPaymentDetailsTypes.contains) {

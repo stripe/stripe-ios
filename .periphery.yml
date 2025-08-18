@@ -7,7 +7,6 @@ workspace: Stripe.xcworkspace
 
 schemes:
   - AllStripeFrameworks
-  - StripeConnect
 
 targets:
   - Stripe3DS2

@@ -15,7 +15,7 @@ import UIKit
 
 extension PaymentSheetFormFactory {
 
-    private var isLinkUI: Bool {
+    var isLinkUI: Bool {
         switch configuration {
         case .paymentElement(_, let isLinkUI):
             return isLinkUI
@@ -24,7 +24,7 @@ extension PaymentSheetFormFactory {
         }
     }
 
-    func makeCard() -> PaymentMethodElement {
+    func makeCard(linkAppearance: LinkAppearance? = nil) -> PaymentMethodElement {
         let showLinkInlineSignup = showLinkInlineCardSignup
         let defaultCheckbox: Element? = {
             guard allowsSetAsDefaultPM else {
@@ -70,18 +70,22 @@ extension PaymentSheetFormFactory {
             hostedSurface: .init(config: configuration),
             theme: theme,
             analyticsHelper: analyticsHelper,
-            cardBrandFilter: configuration.cardBrandFilter
+            cardBrandFilter: configuration.cardBrandFilter,
+            linkAppearance: linkAppearance
         )
 
         let shouldIncludeEmail = configuration.billingDetailsCollectionConfiguration.email == .always
         let shouldIncludePhone = configuration.billingDetailsCollectionConfiguration.phone == .always
 
         let billingAddressSection: PaymentMethodElementWrapper<AddressSectionElement>? = {
+            let countries = configuration.billingDetailsCollectionConfiguration.allowedCountries.isEmpty
+                ? nil
+                : Array(configuration.billingDetailsCollectionConfiguration.allowedCountries)
             switch configuration.billingDetailsCollectionConfiguration.address {
             case .automatic:
-                return makeBillingAddressSection(collectionMode: .countryAndPostal(), countries: nil, includeEmail: shouldIncludeEmail, includePhone: shouldIncludePhone)
+                return makeBillingAddressSection(collectionMode: .countryAndPostal(), countries: countries, includeEmail: shouldIncludeEmail, includePhone: shouldIncludePhone)
             case .full:
-                return makeBillingAddressSection(collectionMode: .autoCompletable, countries: nil, includeEmail: shouldIncludeEmail, includePhone: shouldIncludePhone)
+                return makeBillingAddressSection(collectionMode: .autoCompletable, countries: countries, includeEmail: shouldIncludeEmail, includePhone: shouldIncludePhone)
             case .never:
                 return nil
             }

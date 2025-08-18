@@ -187,6 +187,14 @@ struct KYCInfoView: View {
             state: state.isEmpty ? nil : state
         )
 
+        let dateOfBirthComponents = Calendar.current.dateComponents([.day, .month, .year], from: dateOfBirth)
+
+        let dateOfBirth = KycInfo.DateOfBirth(
+            day: dateOfBirthComponents.day ?? 0,
+            month: dateOfBirthComponents.month ?? 0,
+            year: dateOfBirthComponents.year ?? 0
+        )
+
         let kycInfo = KycInfo(
             firstName: firstName,
             lastName: lastName,

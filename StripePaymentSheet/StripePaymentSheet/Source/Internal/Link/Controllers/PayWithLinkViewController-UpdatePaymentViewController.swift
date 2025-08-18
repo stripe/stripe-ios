@@ -31,6 +31,8 @@ extension PayWithLinkViewController {
         /// If that is the case, we will immediately confirm the intent after updating the payment method.
         let isBillingDetailsUpdateFlow: Bool
 
+        private let linkAppearance: LinkAppearance?
+
         private lazy var thisIsYourDefaultLabel: UILabel = {
             let label = UILabel()
             label.font = LinkUI.font(forTextStyle: .bodyEmphasized)
@@ -47,18 +49,20 @@ extension PayWithLinkViewController {
 
         private lazy var updateButton: ConfirmButton = .makeLinkButton(
             callToAction: isBillingDetailsUpdateFlow ? context.callToAction : .custom(title: String.Localized.update_card),
+            linkAppearance: context.linkAppearance,
             didTapWhenDisabled: didTapWhenDisabled
         ) { [weak self] in
             self?.updatePaymentMethod()
         }
 
         private func didTapWhenDisabled() {
-            guard case let .invalid(error, _) = paymentMethodEditElement.validationState else {
-                return
-            }
+            // Clear any previous confirmation error
+            updateErrorLabel(for: nil)
 
-            errorLabel.text = error.localizedDescription
-            errorLabel.isHidden = false
+#if !os(visionOS)
+            UINotificationFeedbackGenerator().notificationOccurred(.error)
+#endif
+            paymentMethodEditElement.showAllValidationErrors()
         }
 
         private lazy var errorLabel: UILabel = {
@@ -68,7 +72,8 @@ extension PayWithLinkViewController {
         private lazy var paymentMethodEditElement = LinkPaymentMethodFormElement(
             paymentMethod: paymentMethod,
             configuration: makeConfiguration(),
-            isBillingDetailsUpdateFlow: isBillingDetailsUpdateFlow
+            isBillingDetailsUpdateFlow: isBillingDetailsUpdateFlow,
+            linkAppearance: linkAppearance
         )
 
         private func makeConfiguration() -> PaymentElementConfiguration {
@@ -85,7 +90,8 @@ extension PayWithLinkViewController {
             linkAccount: PaymentSheetLinkAccount,
             context: Context,
             paymentMethod: ConsumerPaymentDetails,
-            isBillingDetailsUpdateFlow: Bool
+            isBillingDetailsUpdateFlow: Bool,
+            linkAppearance: LinkAppearance? = nil
         ) {
             self.linkAccount = linkAccount
             self.intent = context.intent
@@ -93,6 +99,7 @@ extension PayWithLinkViewController {
             self.configuration.linkPaymentMethodsOnly = true
             self.paymentMethod = paymentMethod
             self.isBillingDetailsUpdateFlow = isBillingDetailsUpdateFlow
+            self.linkAppearance = linkAppearance
 
             let title: String = isBillingDetailsUpdateFlow ? String.Localized.confirm_payment_details : String.Localized.update_card
             super.init(context: context, navigationTitle: title)
@@ -121,14 +128,7 @@ extension PayWithLinkViewController {
             stackView.isLayoutMarginsRelativeArrangement = true
             stackView.directionalLayoutMargins = LinkUI.contentMargins
             stackView.translatesAutoresizingMaskIntoConstraints = false
-            contentView.addSubview(stackView)
-
-            NSLayoutConstraint.activate([
-                contentView.topAnchor.constraint(equalTo: stackView.topAnchor),
-                contentView.leadingAnchor.constraint(equalTo: stackView.leadingAnchor),
-                contentView.trailingAnchor.constraint(equalTo: stackView.trailingAnchor),
-                contentView.bottomAnchor.constraint(equalTo: stackView.bottomAnchor),
-            ])
+            contentView.addAndPinSubview(stackView, insets: .insets(bottom: 35))
 
             if !paymentMethod.isDefault || isBillingDetailsUpdateFlow {
                 thisIsYourDefaultLabel.isHidden = true

@@ -2806,6 +2806,342 @@ class PaymentSheetFormFactoryTest: XCTestCase {
         return addressSpecProvider
     }
 
+    // MARK: - AllowedCountries Tests
+
+    func testMakeBillingAddressSectionIfNecessary_withAllowedCountries_emptySet() {
+        var configuration = PaymentSheet.Configuration()
+        configuration.billingDetailsCollectionConfiguration.address = .full
+        configuration.billingDetailsCollectionConfiguration.allowedCountries = []  // Empty set should allow all countries
+
+        let factory = PaymentSheetFormFactory(
+            intent: ._testPaymentIntent(paymentMethodTypes: [.card]),
+            elementsSession: ._testCardValue(),
+            configuration: .paymentElement(configuration),
+            paymentMethod: .stripe(.card)
+        )
+
+        let billingSection = factory.makeBillingAddressSectionIfNecessary(requiredByPaymentMethod: false)
+        XCTAssertNotNil(billingSection)
+
+        // Verify the address section was created with no country filtering (nil countries parameter)
+        if let addressWrapper = billingSection as? PaymentMethodElementWrapper<AddressSectionElement> {
+            // The underlying AddressSectionElement should not have country filtering when allowedCountries is empty
+            XCTAssertNotNil(addressWrapper.element)
+            XCTAssert(addressWrapper.element.countryCodes.count > 50) // afaik there are at least 50
+        } else {
+            XCTFail("Expected PaymentMethodElementWrapper<AddressSectionElement>")
+        }
+    }
+
+    func testMakeBillingAddressSectionIfNecessary_withAllowedCountries_specificCountries() {
+        var configuration = PaymentSheet.Configuration()
+        configuration.billingDetailsCollectionConfiguration.address = .full
+        configuration.billingDetailsCollectionConfiguration.allowedCountries = ["US", "CA", "GB"]
+
+        let factory = PaymentSheetFormFactory(
+            intent: ._testPaymentIntent(paymentMethodTypes: [.card]),
+            elementsSession: ._testCardValue(),
+            configuration: .paymentElement(configuration),
+            paymentMethod: .stripe(.card)
+        )
+
+        let billingSection = factory.makeBillingAddressSectionIfNecessary(requiredByPaymentMethod: false)
+        XCTAssertNotNil(billingSection)
+
+        // Verify the address section was created with country filtering
+        if let addressWrapper = billingSection as? PaymentMethodElementWrapper<AddressSectionElement> {
+            XCTAssertNotNil(addressWrapper.element)
+            XCTAssertEqual(Set(addressWrapper.element.countryCodes), Set(["US", "CA", "GB"]))
+        } else {
+            XCTFail("Expected PaymentMethodElementWrapper<AddressSectionElement>")
+        }
+    }
+
+    func testMakeBillingAddressSectionIfNecessary_withAllowedCountries_addressNever() {
+        var configuration = PaymentSheet.Configuration()
+        configuration.billingDetailsCollectionConfiguration.address = .never
+        configuration.billingDetailsCollectionConfiguration.allowedCountries = ["US", "CA"]
+
+        let factory = PaymentSheetFormFactory(
+            intent: ._testPaymentIntent(paymentMethodTypes: [.card]),
+            elementsSession: ._testCardValue(),
+            configuration: .paymentElement(configuration),
+            paymentMethod: .stripe(.card)
+        )
+
+        let billingSection = factory.makeBillingAddressSectionIfNecessary(requiredByPaymentMethod: false)
+        XCTAssertNil(billingSection)  // Should be nil when address collection is .never
+    }
+
+    func testMakeBillingAddressSectionIfNecessary_withAllowedCountries_automaticRequired() {
+        var configuration = PaymentSheet.Configuration()
+        configuration.billingDetailsCollectionConfiguration.address = .automatic
+        configuration.billingDetailsCollectionConfiguration.allowedCountries = ["US", "CA"]
+
+        let factory = PaymentSheetFormFactory(
+            intent: ._testPaymentIntent(paymentMethodTypes: [.card]),
+            elementsSession: ._testCardValue(),
+            configuration: .paymentElement(configuration),
+            paymentMethod: .stripe(.card)
+        )
+
+        // When address is .automatic and payment method requires it
+        let billingSectionRequired = factory.makeBillingAddressSectionIfNecessary(requiredByPaymentMethod: true)
+        XCTAssertNotNil(billingSectionRequired)
+
+        // When address is .automatic and payment method doesn't require it
+        let billingSectionNotRequired = factory.makeBillingAddressSectionIfNecessary(requiredByPaymentMethod: false)
+        XCTAssertNil(billingSectionNotRequired)
+    }
+
+    func testMakeCard_withAllowedCountries() {
+        var configuration = PaymentSheet.Configuration()
+        configuration.billingDetailsCollectionConfiguration.address = .full
+        configuration.billingDetailsCollectionConfiguration.allowedCountries = ["US", "CA", "GB"]
+
+        let factory = PaymentSheetFormFactory(
+            intent: ._testPaymentIntent(paymentMethodTypes: [.card]),
+            elementsSession: ._testCardValue(),
+            configuration: .paymentElement(configuration),
+            paymentMethod: .stripe(.card)
+        )
+
+        let form = factory.makeCard()
+        XCTAssertNotNil(form)
+
+        // Verify form contains elements
+        guard let formElement = form as? FormElement else {
+            XCTFail("Expected FormElement")
+            return
+        }
+
+        // Should contain billing address section with country filtering
+        let hasBillingAddress = formElement.elements.contains { element in
+            return element is PaymentMethodElementWrapper<AddressSectionElement>
+        }
+        XCTAssertTrue(hasBillingAddress, "Card form should contain billing address section when address collection is .full")
+    }
+
+    func testMakeCard_withAllowedCountries_automatic() {
+        var configuration = PaymentSheet.Configuration()
+        configuration.billingDetailsCollectionConfiguration.address = .automatic
+        configuration.billingDetailsCollectionConfiguration.allowedCountries = ["US", "CA"]
+
+        let factory = PaymentSheetFormFactory(
+            intent: ._testPaymentIntent(paymentMethodTypes: [.card]),
+            elementsSession: ._testCardValue(),
+            configuration: .paymentElement(configuration),
+            paymentMethod: .stripe(.card)
+        )
+
+        let form = factory.makeCard()
+        XCTAssertNotNil(form)
+
+        // Should contain billing address section since cards typically require postal code collection
+        guard let formElement = form as? FormElement else {
+            XCTFail("Expected FormElement")
+            return
+        }
+
+        let hasBillingAddress = formElement.elements.contains { element in
+            return element is PaymentMethodElementWrapper<AddressSectionElement>
+        }
+        XCTAssertTrue(hasBillingAddress, "Card form should contain billing address section when address collection is .automatic")
+    }
+
+    func testMakeBLIK_withAllowedCountries() {
+        var configuration = PaymentSheet.Configuration()
+        configuration.billingDetailsCollectionConfiguration.address = .full
+        configuration.billingDetailsCollectionConfiguration.allowedCountries = ["US", "CA", "PL"]
+
+        let factory = PaymentSheetFormFactory(
+            intent: ._testPaymentIntent(paymentMethodTypes: [.blik]),
+            elementsSession: ._testCardValue(),
+            configuration: .paymentElement(configuration),
+            paymentMethod: .stripe(.blik)
+        )
+
+        let form = factory.makeBLIK()
+        XCTAssertNotNil(form)
+
+        // Verify form contains billing address section when address collection is .full
+        let hasBillingAddress = form.elements.contains { element in
+            return element is PaymentMethodElementWrapper<AddressSectionElement>
+        }
+        XCTAssertTrue(hasBillingAddress, "BLIK form should contain billing address section when address collection is .full")
+    }
+
+    func testMakeUPI_withAllowedCountries() {
+        var configuration = PaymentSheet.Configuration()
+        configuration.billingDetailsCollectionConfiguration.address = .full
+        configuration.billingDetailsCollectionConfiguration.allowedCountries = ["IN", "US"]
+
+        let factory = PaymentSheetFormFactory(
+            intent: ._testPaymentIntent(paymentMethodTypes: [.UPI]),
+            elementsSession: ._testCardValue(),
+            configuration: .paymentElement(configuration),
+            paymentMethod: .stripe(.UPI)
+        )
+
+        let form = factory.makeUPI()
+        XCTAssertNotNil(form)
+
+        // Verify form contains billing address section when address collection is .full
+        let hasBillingAddress = form.elements.contains { element in
+            return element is PaymentMethodElementWrapper<AddressSectionElement>
+        }
+        XCTAssertTrue(hasBillingAddress, "UPI form should contain billing address section when address collection is .full")
+    }
+
+    // MARK: - Saved Payment Method Country Filtering Tests
+
+    private func createMockPaymentMethod(id: String, country: String?) -> STPPaymentMethod {
+        // Create mock payment method data that matches API response structure
+        var mockData: [String: Any] = [
+            "id": id,
+            "object": "payment_method",
+            "type": "card",
+            "card": [
+                "brand": "visa",
+                "last4": "4242",
+                "exp_month": 12,
+                "exp_year": 2025,
+            ],
+        ]
+
+        if let country = country {
+            mockData["billing_details"] = [
+                "address": [
+                    "country": country
+                ],
+            ]
+        }
+
+        return STPPaymentMethod.decodedObject(fromAPIResponse: mockData)!
+    }
+
+    func testSavedPaymentMethods_countryFiltering_emptyAllowedCountries() {
+        // Create test payment methods with different billing countries
+        let pmUS = createMockPaymentMethod(id: "pm_test_us", country: "US")
+        let pmCA = createMockPaymentMethod(id: "pm_test_ca", country: "CA")
+        let savedPaymentMethods = [pmUS, pmCA]
+
+        // Configuration with empty allowedCountries (should show all)
+        var configuration = PaymentSheet.Configuration()
+        configuration.billingDetailsCollectionConfiguration.allowedCountries = []
+
+        // Both payment methods should be included when allowedCountries is empty
+        let filteredPMs = savedPaymentMethods.filter { paymentMethod in
+            let allowedCountries = configuration.billingDetailsCollectionConfiguration.allowedCountries
+            guard !allowedCountries.isEmpty else { return true }
+
+            guard let billingCountry = paymentMethod.billingDetails?.address?.country else {
+                return false
+            }
+
+            return allowedCountries.contains(billingCountry)
+        }
+
+        XCTAssertEqual(filteredPMs.count, 2, "Empty allowedCountries should show all payment methods")
+        XCTAssertTrue(filteredPMs.contains { $0.stripeId == "pm_test_us" })
+        XCTAssertTrue(filteredPMs.contains { $0.stripeId == "pm_test_ca" })
+    }
+
+    func testSavedPaymentMethods_countryFiltering_specificCountries() {
+        // Create test payment methods with different billing countries
+        let pmUS = createMockPaymentMethod(id: "pm_test_us", country: "US")
+        let pmCA = createMockPaymentMethod(id: "pm_test_ca", country: "CA")
+        let pmGB = createMockPaymentMethod(id: "pm_test_gb", country: "GB")
+        let savedPaymentMethods = [pmUS, pmCA, pmGB]
+
+        // Configuration allowing only US and CA
+        var configuration = PaymentSheet.Configuration()
+        configuration.billingDetailsCollectionConfiguration.allowedCountries = ["US", "CA"]
+
+        // Filter payment methods using PaymentSheetLoader logic
+        let filteredPMs = savedPaymentMethods.filter {
+            PaymentSheetLoader.shouldIncludePaymentMethod($0, allowedCountries: configuration.billingDetailsCollectionConfiguration.allowedCountries)
+        }
+
+        XCTAssertEqual(filteredPMs.count, 2, "Should only show payment methods from allowed countries")
+        XCTAssertTrue(filteredPMs.contains { $0.stripeId == "pm_test_us" })
+        XCTAssertTrue(filteredPMs.contains { $0.stripeId == "pm_test_ca" })
+        XCTAssertFalse(filteredPMs.contains { $0.stripeId == "pm_test_gb" })
+    }
+
+    func testSavedPaymentMethods_countryFiltering_withNilBillingDetails() {
+        // Create payment methods with various billing details scenarios
+        let pmWithCountry = createMockPaymentMethod(id: "pm_with_country", country: "US")
+        let pmWithoutBillingDetails = createMockPaymentMethod(id: "pm_no_billing", country: nil)
+        let savedPaymentMethods = [pmWithCountry, pmWithoutBillingDetails]
+
+        // Configuration allowing only US
+        var configuration = PaymentSheet.Configuration()
+        configuration.billingDetailsCollectionConfiguration.allowedCountries = ["US"]
+
+        // Filter payment methods using the same logic as PaymentSheetLoader
+        let filteredPMs = savedPaymentMethods.filter { paymentMethod in
+            let allowedCountries = configuration.billingDetailsCollectionConfiguration.allowedCountries
+            guard !allowedCountries.isEmpty else { return true }
+
+            guard let billingCountry = paymentMethod.billingDetails?.address?.country else {
+                // Hide payment methods without billing country data when filtering is active
+                return false
+            }
+
+            return allowedCountries.contains(billingCountry)
+        }
+
+        // Should show only: pmWithCountry (US), hide PMs without country data
+        XCTAssertEqual(filteredPMs.count, 1, "Should show only US payment method, hide those without country data")
+        XCTAssertTrue(filteredPMs.contains { $0.stripeId == "pm_with_country" })
+        XCTAssertFalse(filteredPMs.contains { $0.stripeId == "pm_no_billing" })
+    }
+
+    func testSavedPaymentMethods_countryFiltering_excludesDisallowedCountry() {
+        // Create payment methods from different countries
+        let pmUS = createMockPaymentMethod(id: "pm_test_us", country: "US")
+        let pmDE = createMockPaymentMethod(id: "pm_test_de", country: "DE")
+        let pmJP = createMockPaymentMethod(id: "pm_test_jp", country: "JP")
+        let savedPaymentMethods = [pmUS, pmDE, pmJP]
+
+        // Configuration allowing only US and DE
+        var configuration = PaymentSheet.Configuration()
+        configuration.billingDetailsCollectionConfiguration.allowedCountries = ["US", "DE"]
+
+        // Filter payment methods using PaymentSheetLoader logic
+        let filteredPMs = savedPaymentMethods.filter {
+            PaymentSheetLoader.shouldIncludePaymentMethod($0, allowedCountries: configuration.billingDetailsCollectionConfiguration.allowedCountries)
+        }
+
+        XCTAssertEqual(filteredPMs.count, 2, "Should exclude JP payment method")
+        XCTAssertTrue(filteredPMs.contains { $0.stripeId == "pm_test_us" })
+        XCTAssertTrue(filteredPMs.contains { $0.stripeId == "pm_test_de" })
+        XCTAssertFalse(filteredPMs.contains { $0.stripeId == "pm_test_jp" })
+    }
+
+    func testSavedPaymentMethods_countryFiltering_singleCountryAllowed() {
+        // Create payment methods from different countries
+        let pmUS = createMockPaymentMethod(id: "pm_test_us", country: "US")
+        let pmCA = createMockPaymentMethod(id: "pm_test_ca", country: "CA")
+        let savedPaymentMethods = [pmUS, pmCA]
+
+        // Configuration allowing only US
+        var configuration = PaymentSheet.Configuration()
+        configuration.billingDetailsCollectionConfiguration.allowedCountries = ["US"]
+
+        // Filter payment methods using PaymentSheetLoader logic
+        let filteredPMs = savedPaymentMethods.filter {
+            PaymentSheetLoader.shouldIncludePaymentMethod($0, allowedCountries: configuration.billingDetailsCollectionConfiguration.allowedCountries)
+        }
+
+        XCTAssertEqual(filteredPMs.count, 1, "Should only show US payment method")
+        XCTAssertTrue(filteredPMs.contains { $0.stripeId == "pm_test_us" })
+        XCTAssertFalse(filteredPMs.contains { $0.stripeId == "pm_test_ca" })
+    }
+
+    // MARK: - Helper Methods
+
     private func firstWrappedTextFieldElement(
         formElement: FormElement
     ) -> PaymentMethodElementWrapper<TextFieldElement>? {

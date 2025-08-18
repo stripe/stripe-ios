@@ -22,6 +22,7 @@ struct ExampleLinkControllerView: View {
     @State private var statusMessage: String?
     @State private var authenticationResult: String?
     @State private var userExists: Bool?
+    @State private var selectedPaymentMethodTypes: Set<LinkPaymentMethodType> = Set(LinkPaymentMethodType.allCases)
     @FocusState private var isEmailFieldFocused: Bool
 
     var body: some View {
@@ -100,19 +101,40 @@ struct ExampleLinkControllerView: View {
                         verifyUserButton
 
                         collectPaymentMethodButton
+
+                        // Payment Method Types Configuration - only show when user lookup has been performed
+                        if userExists != nil {
+                            VStack(alignment: .leading, spacing: 16) {
+                                Text("Supported Payment Method Types")
+                                    .font(.headline)
+
+                                VStack(spacing: 8) {
+                                    ForEach(LinkPaymentMethodType.allCases, id: \.self) { paymentMethodType in
+                                        HStack {
+                                            Button(action: {
+                                                togglePaymentMethodType(paymentMethodType)
+                                            }) {
+                                                HStack {
+                                                    Image(systemName: selectedPaymentMethodTypes.contains(paymentMethodType) ? "checkmark.square.fill" : "square")
+                                                        .foregroundColor(selectedPaymentMethodTypes.contains(paymentMethodType) ? .blue : .gray)
+                                                    Text(paymentMethodType.displayName)
+                                                        .foregroundColor(.primary)
+                                                    Spacer()
+                                                }
+                                            }
+                                            .buttonStyle(PlainButtonStyle())
+                                        }
+                                    }
+                                }
+                            }
+                            .padding()
+                            .background(Color.gray.opacity(0.1))
+                            .cornerRadius(8)
+                        }
+
                         createPaymentMethodButton
 
                         resetButton
-                    }
-
-                    // Status Messages
-                    if let statusMessage = statusMessage {
-                        Text(statusMessage)
-                            .font(.subheadline)
-                            .foregroundColor(.blue)
-                            .padding()
-                            .background(Color.blue.opacity(0.1))
-                            .cornerRadius(8)
                     }
 
                     if let errorMessage = errorMessage {
@@ -453,7 +475,8 @@ struct ExampleLinkControllerView: View {
 
         let paymentMethodPreview = await linkController.collectPaymentMethod(
             from: rootViewController,
-            with: email
+            with: email,
+            supportedPaymentMethodTypes: Array(selectedPaymentMethodTypes)
         )
 
         await MainActor.run {
@@ -506,8 +529,17 @@ struct ExampleLinkControllerView: View {
         fullName = ""
         phone = ""
         country = "US"
+        selectedPaymentMethodTypes = Set(LinkPaymentMethodType.allCases)
 
         initializeLinkController()
+    }
+
+    private func togglePaymentMethodType(_ paymentMethodType: LinkPaymentMethodType) {
+        if selectedPaymentMethodTypes.contains(paymentMethodType) {
+            selectedPaymentMethodTypes.remove(paymentMethodType)
+        } else {
+            selectedPaymentMethodTypes.insert(paymentMethodType)
+        }
     }
 
     private func findViewController() -> UIViewController? {
@@ -633,6 +665,17 @@ struct TertiaryButtonStyle: ButtonStyle {
             .frame(maxWidth: .infinity)
             .padding()
             .background(Color.clear)
+    }
+}
+
+extension LinkPaymentMethodType {
+    var displayName: String {
+        switch self {
+        case .card:
+            return "Card"
+        case .bankAccount:
+            return "Bank Account"
+        }
     }
 }
 

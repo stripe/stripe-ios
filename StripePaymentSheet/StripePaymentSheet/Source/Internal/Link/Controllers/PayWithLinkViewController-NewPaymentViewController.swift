@@ -32,6 +32,7 @@ extension PayWithLinkViewController {
             callToAction: context.callToAction,
             // Use a compact button if we are also displaying the Apple Pay button.
             compact: shouldShowApplePayButton,
+            linkAppearance: context.linkAppearance,
             didTapWhenDisabled: didTapWhenDisabled
         ) { [weak self] in
             self?.confirm()
@@ -89,7 +90,8 @@ extension PayWithLinkViewController {
                 formCache: .init(), // We don't want to share a form cache with the containing PaymentSheet
                 analyticsHelper: context.analyticsHelper,
                 isLinkUI: true,
-                delegate: self
+                delegate: self,
+                linkAppearance: context.linkAppearance
             )
         }()
 
@@ -97,6 +99,11 @@ extension PayWithLinkViewController {
             var configuration = context.configuration
             configuration.linkPaymentMethodsOnly = true
             configuration.appearance = LinkUI.appearance
+
+            if let primaryColorOverride = context.linkAppearance?.colors?.primary {
+                configuration.appearance.colors.primary = primaryColorOverride
+            }
+
             configuration.cardBrandAcceptance = context.elementsSession.linkCardBrandFilteringEnabled ? configuration.cardBrandAcceptance : .all
 
             let effectiveBillingDetails = configuration.effectiveBillingDetails(for: linkAccount)
@@ -155,7 +162,7 @@ extension PayWithLinkViewController {
             stackView.setCustomSpacing(LinkUI.extraLargeContentSpacing, after: addPaymentMethodVC.view)
             stackView.translatesAutoresizingMaskIntoConstraints = false
 
-            contentView.addAndPinSubviewToSafeArea(stackView)
+            contentView.addAndPinSubview(stackView, insets: .insets(bottom: LinkUI.appearance.formInsets.bottom))
 
             NSLayoutConstraint.activate([
                 errorLabel.leadingAnchor.constraint(
@@ -177,9 +184,17 @@ extension PayWithLinkViewController {
             ])
 
             didUpdate(addPaymentMethodVC)
+            stackView.setNeedsLayout()
+            stackView.layoutIfNeeded()
         }
 
         private func didTapWhenDisabled() {
+            // Clear any previous confirmation error
+            updateErrorLabel(for: nil)
+
+#if !os(visionOS)
+            UINotificationFeedbackGenerator().notificationOccurred(.error)
+#endif
             addPaymentMethodVC.paymentMethodFormElement.showAllValidationErrors()
         }
 

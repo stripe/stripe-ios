@@ -54,6 +54,10 @@ final class PayWithNativeLinkController {
     let configuration: PaymentElementConfiguration
     let logPayment: Bool
     let analyticsHelper: PaymentSheetAnalyticsHelper
+    let supportedPaymentMethodTypes: [LinkPaymentMethodType]
+
+    private let linkAppearance: LinkAppearance?
+    private let linkConfiguration: LinkConfiguration?
 
     init(
         mode: Mode,
@@ -61,7 +65,10 @@ final class PayWithNativeLinkController {
         elementsSession: STPElementsSession,
         configuration: PaymentElementConfiguration,
         logPayment: Bool = true,
-        analyticsHelper: PaymentSheetAnalyticsHelper
+        analyticsHelper: PaymentSheetAnalyticsHelper,
+        supportedPaymentMethodTypes: [LinkPaymentMethodType] = LinkPaymentMethodType.allCases,
+        linkAppearance: LinkAppearance? = nil,
+        linkConfiguration: LinkConfiguration? = nil
     ) {
         self.mode = mode
         self.intent = intent
@@ -69,7 +76,10 @@ final class PayWithNativeLinkController {
         self.elementsSession = elementsSession
         self.configuration = configuration
         self.analyticsHelper = analyticsHelper
+        self.supportedPaymentMethodTypes = supportedPaymentMethodTypes
         self.paymentHandler = .init(apiClient: configuration.apiClient)
+        self.linkAppearance = linkAppearance
+        self.linkConfiguration = linkConfiguration
     }
 
     func presentAsBottomSheet(
@@ -150,7 +160,10 @@ final class PayWithNativeLinkController {
                 initiallySelectedPaymentDetailsID: initiallySelectedPaymentDetailsID,
                 canSkipWalletAfterVerification: canSkipWalletAfterVerification,
                 callToAction: callToAction,
-                analyticsHelper: self.analyticsHelper
+                analyticsHelper: self.analyticsHelper,
+                supportedPaymentMethodTypes: self.supportedPaymentMethodTypes,
+                linkAppearance: self.linkAppearance,
+                linkConfiguration: self.linkConfiguration
             )
 
             payWithLinkVC.payWithLinkDelegate = self
