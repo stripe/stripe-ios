@@ -10,6 +10,7 @@ import PassKit
 import Stripe
 
 @_spi(STP) import StripeApplePay
+@_spi(STP) import StripePaymentsUI
 @_spi(STP) import StripeIdentity
 @_spi(STP) import StripePaymentSheet
 
@@ -69,18 +70,15 @@ public protocol CryptoOnrampCoordinatorProtocol {
     /// - Parameter network: The crypto network for the wallet address.
     func collectWalletAddress(walletAddress: String, network: CryptoNetwork) async throws
 
-    /// Presents the Link sheet to collect a customer's payment method.
-    /// - Parameter viewController: The view controller from which to present the Link sheet.
-    /// - Returns: A `PaymentMethodPreview` if the user selected a payment method, or `nil` otherwise.
-    func collectPaymentMethod(from viewController: UIViewController) async -> PaymentMethodPreview?
-
-    /// Presents the Apple Pay interface to initiate checkout. Intended to be called in response to tapping a `PKPaymentButton` or `PayWithApplePayButton`.
+    /// Presents UI to collect/select a payment method of the given type.
+    ///
     /// - Parameters:
-    ///   - paymentRequest: Represents the request for payment using Apple Pay.
-    ///   - viewController: The view controller from which to present the Apple Pay interface.
-    /// - Returns: A payment status indicating whether the payment request was successful or canceled.
-    /// Throws if an error occurs accepting the payment request.
-    func presentApplePay(using paymentRequest: PKPaymentRequest, from viewController: UIViewController) async throws -> ApplePayPaymentStatus
+    ///   - type: The payment method type to collect. For `.card` and `.bankAccount`, this presents Link. For `.applePay(paymentRequest:)`, this presents Apple Pay using the provided `PKPaymentRequest`.
+    ///   - viewController: The view controller from which to present the UI.
+    /// - Returns: A `PaymentMethodPreview` describing the user’s selection, or `nil` if the user cancels.
+    /// Throws an error if presentation or payment method collection fails.
+    @MainActor
+    func collectPaymentMethod(type: PaymentMethodType, from viewController: UIViewController) async throws -> PaymentMethodPreview?
 }
 
 /// Coordinates headless Link user authentication and identity verification, leaving most of the UI to the client.
@@ -97,11 +95,19 @@ public final class CryptoOnrampCoordinator: NSObject, CryptoOnrampCoordinatorPro
         case missingEphemeralKey
     }
 
+    private enum SelectedPaymentSource {
+        case link
+        case applePay(STPPaymentMethod)
+    }
+
     private let linkController: LinkController
     private let apiClient: STPAPIClient
     private let appearance: LinkAppearance
-    private var applePayPaymentMethod: STPPaymentMethod?
     private var applePayCompletionContinuation: CheckedContinuation<ApplePayPaymentStatus, Swift.Error>?
+    private var selectedPaymentSource: SelectedPaymentSource?
+
+    /// Represents the selected payment method, set after successfully calling `collectPaymentMethod(type:from:)`.
+    public private(set) var paymentMethodPreview: PaymentMethodPreview?
 
     private var linkAccountInfo: PaymentSheetLinkAccountInfoProtocol {
         get async throws {
@@ -215,26 +221,50 @@ public final class CryptoOnrampCoordinator: NSObject, CryptoOnrampCoordinatorPro
         )
     }
 
-    public func collectPaymentMethod(from viewController: UIViewController) async -> PaymentMethodPreview? {
-        let email = try? await linkAccountInfo.email
-        if let result = await linkController.collectPaymentMethod(from: viewController, with: email) {
-            return PaymentMethodPreview(icon: result.icon, label: result.label, sublabel: result.sublabel)
-        } else {
-            return nil
-        }
-    }
-
     @MainActor
-    public func presentApplePay(using paymentRequest: PKPaymentRequest, from viewController: UIViewController) async throws -> ApplePayPaymentStatus {
-        try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<ApplePayPaymentStatus, Swift.Error>) in
-            guard let context = STPApplePayContext(paymentRequest: paymentRequest, delegate: self) else {
-                continuation.resume(throwing: ApplePayPaymentStatus.Error.applePayFallbackError)
-                return
+    public func collectPaymentMethod(
+        type: PaymentMethodType,
+        from viewController: UIViewController
+    ) async throws -> PaymentMethodPreview? {
+        switch type {
+        case .card, .bankAccount:
+            let email = try? await linkAccountInfo.email
+            guard let supportedPaymentMethodType = type.linkPaymentMethodType else {
+                return nil
             }
 
-            // Retain the continuation until we receive a completion delegate callback.
-            self.applePayCompletionContinuation = continuation
-            context.presentApplePay()
+            guard let result = await linkController.collectPaymentMethod(
+                from: viewController,
+                with: email,
+                supportedPaymentMethodTypes: [supportedPaymentMethodType]
+            ) else {
+                selectedPaymentSource = nil
+                paymentMethodPreview = nil
+                return nil
+            }
+
+            let preview = PaymentMethodPreview(
+                icon: result.icon,
+                label: result.label,
+                sublabel: result.sublabel
+            )
+            selectedPaymentSource = .link
+            paymentMethodPreview = preview
+            return preview
+        case .applePay(let paymentRequest):
+            // This presents Apple Pay and fills `applePayPaymentMethod` + `paymentMethodPreview` in the delegate.
+            let status = try await presentApplePay(using: paymentRequest, from: viewController)
+            switch status {
+            case .success:
+                guard paymentMethodPreview != nil, case .applePay = selectedPaymentSource else {
+                    throw LinkController.IntegrationError.noPaymentMethodSelected
+                }
+                return paymentMethodPreview
+            case .canceled:
+                selectedPaymentSource = nil
+                paymentMethodPreview = nil
+                return nil
+            }
         }
     }
 }
@@ -249,7 +279,29 @@ extension CryptoOnrampCoordinator: STPApplePayContextDelegate {
         paymentInformation: PKPayment,
         completion: @escaping STPIntentClientSecretCompletionBlock
     ) {
-        self.applePayPaymentMethod = paymentMethod
+        // Build a reasonable preview for the underlying Apple Pay payment method:
+        let icon = STPImageLibrary.applePayCardImage()
+        let label = String.Localized.apple_pay
+        let sublabel: String? = {
+            if let card = paymentMethod.card, let last4 = card.last4 {
+                let brand = STPCard.string(from: card.brand)
+                let formattedMessage = STPLocalizationUtils.localizedStripeString(
+                    forKey: "%1$@ •••• %2$@",
+                    bundleLocator: StripePaymentSheetBundleLocator.self
+                )
+                return String(format: formattedMessage, brand, last4)
+            }
+            return nil
+        }()
+
+        paymentMethodPreview = PaymentMethodPreview(
+            icon: icon,
+            label: label,
+            sublabel: sublabel
+        )
+
+        selectedPaymentSource = .applePay(paymentMethod)
+
         completion(STPApplePayContext.COMPLETE_WITHOUT_CONFIRMING_INTENT, nil)
     }
 
@@ -279,6 +331,20 @@ private extension CryptoOnrampCoordinator {
             return try await DownloadManager.sharedManager.downloadImage(url: merchantLogoUrl)
         } catch {
             return .wallet
+        }
+    }
+
+    @MainActor
+    private func presentApplePay(using paymentRequest: PKPaymentRequest, from viewController: UIViewController) async throws -> ApplePayPaymentStatus {
+        try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<ApplePayPaymentStatus, Swift.Error>) in
+            guard let context = STPApplePayContext(paymentRequest: paymentRequest, delegate: self) else {
+                continuation.resume(throwing: ApplePayPaymentStatus.Error.applePayFallbackError)
+                return
+            }
+
+            // Retain the continuation until we receive a completion delegate callback.
+            self.applePayCompletionContinuation = continuation
+            context.presentApplePay()
         }
     }
 }
