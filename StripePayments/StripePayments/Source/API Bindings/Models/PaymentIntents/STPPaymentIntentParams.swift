@@ -156,7 +156,7 @@ public class STPPaymentIntentParams: NSObject {
     @objc public var shipping: STPPaymentIntentShippingDetailsParams?
 
     /// Contains metadata with identifiers for the session and information about the integration
-    @objc @_spi(STP) public var clientAttributionMetadata: STPClientAttributionMetadata? = nil
+    @objc @_spi(STP) public var clientAttributionMetadata: STPClientAttributionMetadata?
 
     /// The URL to redirect your customer back to after they authenticate or cancel
     /// their payment on the payment method’s app or site.

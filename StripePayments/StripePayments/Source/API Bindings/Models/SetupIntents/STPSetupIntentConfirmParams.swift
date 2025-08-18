@@ -94,7 +94,7 @@ public class STPSetupIntentConfirmParams: NSObject, NSCopying, STPFormEncodable 
     }
 
     /// Contains metadata with identifiers for the session and information about the integration
-    @objc @_spi(STP) public var clientAttributionMetadata: STPClientAttributionMetadata? = nil
+    @objc @_spi(STP) public var clientAttributionMetadata: STPClientAttributionMetadata?
 
     override convenience init() {
         // Not a valid clientSecret, but at least it'll be non-null
