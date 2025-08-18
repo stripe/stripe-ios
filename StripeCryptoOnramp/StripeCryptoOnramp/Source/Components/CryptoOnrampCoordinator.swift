@@ -123,11 +123,6 @@ public final class CryptoOnrampCoordinator: NSObject, CryptoOnrampCoordinatorPro
         case invalidSelectedPaymentSource
     }
 
-    private enum SelectedPaymentSource {
-        case link
-        case applePay(STPPaymentMethod)
-    }
-
     private let linkController: LinkController
     private let apiClient: STPAPIClient
     private let appearance: LinkAppearance
