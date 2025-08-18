@@ -260,15 +260,11 @@ public final class CryptoOnrampCoordinator: NSObject, CryptoOnrampCoordinatorPro
                 let icon = STPImageLibrary.applePayCardImage()
                 let label = String.Localized.apple_pay
                 let sublabel: String? = {
-                    if let card = paymentMethod.card, let last4 = card.last4 {
-                        let brand = STPCard.string(from: card.brand)
-                        let formattedMessage = STPLocalizationUtils.localizedStripeString(
-                            forKey: "%1$@ •••• %2$@",
-                            bundleLocator: StripePaymentSheetBundleLocator.self
-                        )
-                        return String(format: formattedMessage, brand, last4)
+                    if let card = paymentMethod.card {
+                        return String.Localized.redactedCardDetails(using: card)
+                    } else {
+                        return nil
                     }
-                    return nil
                 }()
 
                 let paymentMethodPreview = PaymentMethodPreview(
@@ -276,6 +272,7 @@ public final class CryptoOnrampCoordinator: NSObject, CryptoOnrampCoordinatorPro
                     label: label,
                     sublabel: sublabel
                 )
+                
                 return paymentMethodPreview
             case .canceled:
                 selectedPaymentSource = nil
