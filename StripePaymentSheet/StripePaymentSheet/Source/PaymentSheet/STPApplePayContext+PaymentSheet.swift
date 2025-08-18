@@ -183,7 +183,6 @@ extension STPApplePayContext {
     static func create(
         intent: Intent,
         configuration: PaymentElementConfiguration,
-        passiveCaptcha: PassiveCaptcha?,
         clientAttributionMetadata: STPClientAttributionMetadata,
         completion: @escaping PaymentSheetResultCompletionBlock
     ) -> STPApplePayContext? {
@@ -209,7 +208,6 @@ extension STPApplePayContext {
             applePayContext.shippingDetails = makeShippingDetails(from: configuration)
             applePayContext.apiClient = configuration.apiClient
             applePayContext.returnUrl = configuration.returnURL
-            applePayContext.passiveCaptcha = passiveCaptcha
             applePayContext.clientAttributionMetadata = clientAttributionMetadata
             return applePayContext
         } else {
@@ -232,6 +230,9 @@ extension STPApplePayContext {
         )
         paymentRequest.requiredBillingContactFields = makeRequiredBillingDetails(from: configuration)
         paymentRequest.requiredShippingContactFields = makeRequiredShippingDetails(from: configuration)
+
+        let label = intent.sellerDetails?.businessName ?? configuration.merchantDisplayName
+
         if let paymentSummaryItems = applePay.paymentSummaryItems {
             // Use the merchant supplied paymentSummaryItems
             paymentRequest.paymentSummaryItems = paymentSummaryItems
@@ -243,11 +244,11 @@ extension STPApplePayContext {
                     currency: intent.currency
                 )
                 paymentRequest.paymentSummaryItems = [
-                    PKPaymentSummaryItem(label: configuration.merchantDisplayName, amount: decimalAmount, type: .final),
+                    PKPaymentSummaryItem(label: label, amount: decimalAmount, type: .final),
                 ]
             } else {
                 paymentRequest.paymentSummaryItems = [
-                    PKPaymentSummaryItem(label: configuration.merchantDisplayName, amount: .zero, type: .pending),
+                    PKPaymentSummaryItem(label: label, amount: .zero, type: .pending),
                 ]
             }
         }

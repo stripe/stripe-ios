@@ -13,7 +13,6 @@ import WebKit
 /** Widget display mode
  */
 @objc
-@available(iOSApplicationExtension, unavailable)
 enum HCaptchaSize: Int, RawRepresentable {
     case invisible
     case compact
@@ -49,7 +48,6 @@ enum HCaptchaSize: Int, RawRepresentable {
 /** Widget orientation mode
  */
 @objc
-@available(iOSApplicationExtension, unavailable)
 enum HCaptchaOrientation: Int, RawRepresentable {
     case portrait
     case landscape
@@ -79,7 +77,6 @@ enum HCaptchaOrientation: Int, RawRepresentable {
 
 /** Internal data model to keep SDK init params
  */
-@available(iOSApplicationExtension, unavailable)
 struct HCaptchaConfig: CustomDebugStringConvertible {
     /// The raw unformated HTML file content
     let html: String
@@ -293,7 +290,7 @@ struct HCaptchaConfig: CustomDebugStringConvertible {
 }
 
 // MARK: - Private Methods
-@available(iOSApplicationExtension, unavailable)
+
 private extension HCaptchaConfig {
     /**
      - parameter url: The URL to be fixed

@@ -20,16 +20,6 @@ target 'CocoapodsTest' do
     installer.pods_project.build_configurations.each do |config|
       config.build_settings['GCC_TREAT_WARNINGS_AS_ERRORS'] = 'YES'
     end
-    
-    # Set APPLICATION_EXTENSION_API_ONLY for StripeCore when building for app extensions
-    installer.pods_project.targets.each do |target|
-      if target.name == 'StripeCore'
-        target.build_configurations.each do |config|
-          # Set the flag to enable conditional compilation
-          config.build_settings['SWIFT_ACTIVE_COMPILATION_CONDITIONS'] = '$(inherited) APPLICATION_EXTENSION_API_ONLY'
-        end
-      end
-    end
   end
 
   target 'CocoapodsTestTests' do

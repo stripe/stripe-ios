@@ -37,7 +37,6 @@ extension StripeAPI.PaymentMethod {
     @_spi(STP) public static func create(
         apiClient: STPAPIClient = .shared,
         payment: PKPayment,
-        hcaptchaToken: String?,
         clientAttributionMetadata: STPClientAttributionMetadata,
         completion: @escaping PaymentMethodCompletionBlock
     ) {
@@ -55,7 +54,6 @@ extension StripeAPI.PaymentMethod {
             let billingDetails = StripeAPI.BillingDetails(from: payment)
             var paymentMethodParams = StripeAPI.PaymentMethodParams(type: .card, card: cardParams)
             paymentMethodParams.billingDetails = billingDetails
-            paymentMethodParams.radarOptions = .init(hcaptchaToken: hcaptchaToken)
             paymentMethodParams.clientAttributionMetadata = clientAttributionMetadata
             Self.create(apiClient: apiClient, params: paymentMethodParams, completion: completion)
         }

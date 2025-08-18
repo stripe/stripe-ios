@@ -8,7 +8,7 @@
 
 import Foundation
 @testable import StripePayments
-@available(iOSApplicationExtension, unavailable)
+
 extension HCaptchaConfig {
     init(html: String = HCaptchaHtml.template,
          apiKey: String? = UUID().uuidString,

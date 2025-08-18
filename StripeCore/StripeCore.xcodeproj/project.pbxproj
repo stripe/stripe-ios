@@ -24,6 +24,7 @@
 		312AE70A2D2C8A7C0091E5AF /* MockAppAttestService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31C5137D2CFE660A00A429C3 /* MockAppAttestService.swift */; };
 		31AD3BDC2B0C23E40080C800 /* Locale+StripeCore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31AD3BDB2B0C23E40080C800 /* Locale+StripeCore.swift */; };
 		31C5137C2CFE65DB00A429C3 /* StripeAttestTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31C5137B2CFE65D600A429C3 /* StripeAttestTest.swift */; };
+		31C8DFE82E4E98F500A90186 /* STPErrorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31C8DFE72E4E98F500A90186 /* STPErrorTests.swift */; };
 		31CDFC302BA372B200B3DD91 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = 31CDFC2F2BA372B200B3DD91 /* PrivacyInfo.xcprivacy */; };
 		31DEFE4C2D02C25A00E6E507 /* StripeAttestBackend.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31DEFE4B2D02C25A00E6E507 /* StripeAttestBackend.swift */; };
 		31DEFE4E2D02C27000E6E507 /* AppAttestService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31DEFE4D2D02C27000E6E507 /* AppAttestService.swift */; };
@@ -99,21 +100,6 @@
 		9DCBC08C182ED76A962961E7 /* NSURLComponents+Stripe.swift in Sources */ = {isa = PBXBuildFile; fileRef = D475CD59778FAC1028670AB5 /* NSURLComponents+Stripe.swift */; };
 		9FBA50345D53E82AA974F672 /* STPAPIClient+FileUpload.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4FC2FC535DAF9B340F9EA75 /* STPAPIClient+FileUpload.swift */; };
 		A3E0F5DF2E3C8A0B00C9E5F7 /* STPClientAttributionMetadata.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3E0F5DE2E3C8A0B00C9E5F7 /* STPClientAttributionMetadata.swift */; };
-		A3E0F6E52E43D98D00C9E5F7 /* String+Dict.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3E0F6E32E43D98D00C9E5F7 /* String+Dict.swift */; };
-		A3E0F6E62E43D98D00C9E5F7 /* HCaptchaLog.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3E0F6DD2E43D98D00C9E5F7 /* HCaptchaLog.swift */; };
-		A3E0F6E72E43D98D00C9E5F7 /* HCaptchaError.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3E0F6DA2E43D98D00C9E5F7 /* HCaptchaError.swift */; };
-		A3E0F6E82E43D98D00C9E5F7 /* HCaptchaWebViewManager+WKNavigationDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3E0F6E12E43D98D00C9E5F7 /* HCaptchaWebViewManager+WKNavigationDelegate.swift */; };
-		A3E0F6E92E43D98D00C9E5F7 /* HCaptchaHtml.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3E0F6DC2E43D98D00C9E5F7 /* HCaptchaHtml.swift */; };
-		A3E0F6EA2E43D98D00C9E5F7 /* HCaptchaWebViewManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3E0F6E02E43D98D00C9E5F7 /* HCaptchaWebViewManager.swift */; };
-		A3E0F6EB2E43D98D00C9E5F7 /* DispatchQueue+Throttle.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3E0F6D52E43D98D00C9E5F7 /* DispatchQueue+Throttle.swift */; };
-		A3E0F6EC2E43D98D00C9E5F7 /* HCaptchaURLOpener.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3E0F6DF2E43D98D00C9E5F7 /* HCaptchaURLOpener.swift */; };
-		A3E0F6ED2E43D98D00C9E5F7 /* HCaptchaResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3E0F6DE2E43D98D00C9E5F7 /* HCaptchaResult.swift */; };
-		A3E0F6EE2E43D98D00C9E5F7 /* HCaptchaDebugInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3E0F6D82E43D98D00C9E5F7 /* HCaptchaDebugInfo.swift */; };
-		A3E0F6EF2E43D98D00C9E5F7 /* HCaptchaEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3E0F6DB2E43D98D00C9E5F7 /* HCaptchaEvent.swift */; };
-		A3E0F6F02E43D98D00C9E5F7 /* HCaptcha.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3E0F6D62E43D98D00C9E5F7 /* HCaptcha.swift */; };
-		A3E0F6F12E43D98D00C9E5F7 /* HCaptchaDecoder.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3E0F6D92E43D98D00C9E5F7 /* HCaptchaDecoder.swift */; };
-		A3E0F6F22E43D98D00C9E5F7 /* HCaptchaConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3E0F6D72E43D98D00C9E5F7 /* HCaptchaConfig.swift */; };
-		A3E0F7042E43F71C00C9E5F7 /* PassiveCaptcha.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3E0F7032E43F71C00C9E5F7 /* PassiveCaptcha.swift */; };
 		A454F368C505B2D80F0D8B19 /* PluginDetector.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6CDBCD70CB220014972B49A5 /* PluginDetector.swift */; };
 		A4DBBFD379C4E0120BD25C56 /* STPAPIClient+EmptyResponseTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC70CDF482E22A29B11466F7 /* STPAPIClient+EmptyResponseTest.swift */; };
 		A50CB2ACAC1DCF9539D76F25 /* NSArray+StripeCoreTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F2949BE5129DC4BBCD69B05 /* NSArray+StripeCoreTest.swift */; };
@@ -247,6 +233,7 @@
 		31AD3BDB2B0C23E40080C800 /* Locale+StripeCore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Locale+StripeCore.swift"; sourceTree = "<group>"; };
 		31C5137B2CFE65D600A429C3 /* StripeAttestTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StripeAttestTest.swift; sourceTree = "<group>"; };
 		31C5137D2CFE660A00A429C3 /* MockAppAttestService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockAppAttestService.swift; sourceTree = "<group>"; };
+		31C8DFE72E4E98F500A90186 /* STPErrorTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = STPErrorTests.swift; sourceTree = "<group>"; };
 		31CDFC2F2BA372B200B3DD91 /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
 		31DEFE4B2D02C25A00E6E507 /* StripeAttestBackend.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StripeAttestBackend.swift; sourceTree = "<group>"; };
 		31DEFE4D2D02C27000E6E507 /* AppAttestService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppAttestService.swift; sourceTree = "<group>"; };
@@ -334,33 +321,6 @@
 		9E415507B0152B07796114CC /* NSError+Stripe.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSError+Stripe.swift"; sourceTree = "<group>"; };
 		A0FBC76F73C3791701072BBA /* sk-SK */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "sk-SK"; path = "sk-SK.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		A3E0F5DE2E3C8A0B00C9E5F7 /* STPClientAttributionMetadata.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = STPClientAttributionMetadata.swift; sourceTree = "<group>"; };
-		A3E0F6D52E43D98D00C9E5F7 /* DispatchQueue+Throttle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "DispatchQueue+Throttle.swift"; sourceTree = "<group>"; };
-		A3E0F6D62E43D98D00C9E5F7 /* HCaptcha.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HCaptcha.swift; sourceTree = "<group>"; };
-		A3E0F6D72E43D98D00C9E5F7 /* HCaptchaConfig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HCaptchaConfig.swift; sourceTree = "<group>"; };
-		A3E0F6D82E43D98D00C9E5F7 /* HCaptchaDebugInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HCaptchaDebugInfo.swift; sourceTree = "<group>"; };
-		A3E0F6D92E43D98D00C9E5F7 /* HCaptchaDecoder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HCaptchaDecoder.swift; sourceTree = "<group>"; };
-		A3E0F6DA2E43D98D00C9E5F7 /* HCaptchaError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HCaptchaError.swift; sourceTree = "<group>"; };
-		A3E0F6DB2E43D98D00C9E5F7 /* HCaptchaEvent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HCaptchaEvent.swift; sourceTree = "<group>"; };
-		A3E0F6DC2E43D98D00C9E5F7 /* HCaptchaHtml.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HCaptchaHtml.swift; sourceTree = "<group>"; };
-		A3E0F6DD2E43D98D00C9E5F7 /* HCaptchaLog.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HCaptchaLog.swift; sourceTree = "<group>"; };
-		A3E0F6DE2E43D98D00C9E5F7 /* HCaptchaResult.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HCaptchaResult.swift; sourceTree = "<group>"; };
-		A3E0F6DF2E43D98D00C9E5F7 /* HCaptchaURLOpener.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HCaptchaURLOpener.swift; sourceTree = "<group>"; };
-		A3E0F6E02E43D98D00C9E5F7 /* HCaptchaWebViewManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HCaptchaWebViewManager.swift; sourceTree = "<group>"; };
-		A3E0F6E12E43D98D00C9E5F7 /* HCaptchaWebViewManager+WKNavigationDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "HCaptchaWebViewManager+WKNavigationDelegate.swift"; sourceTree = "<group>"; };
-		A3E0F6E32E43D98D00C9E5F7 /* String+Dict.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+Dict.swift"; sourceTree = "<group>"; };
-		A3E0F6F32E43D9BA00C9E5F7 /* HCaptchaConfig+Helpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "HCaptchaConfig+Helpers.swift"; sourceTree = "<group>"; };
-		A3E0F6F42E43D9BA00C9E5F7 /* HCaptchaDecoder+Helper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "HCaptchaDecoder+Helper.swift"; sourceTree = "<group>"; };
-		A3E0F6F52E43D9BA00C9E5F7 /* HCaptchaError+Equatable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "HCaptchaError+Equatable.swift"; sourceTree = "<group>"; };
-		A3E0F6F62E43D9BA00C9E5F7 /* HCaptchaWebViewManager+Helpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "HCaptchaWebViewManager+Helpers.swift"; sourceTree = "<group>"; };
-		A3E0F6F82E43D9BA00C9E5F7 /* DispatchQueue__Tests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DispatchQueue__Tests.swift; sourceTree = "<group>"; };
-		A3E0F6F92E43D9BA00C9E5F7 /* HCaptcha__Bench.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HCaptcha__Bench.swift; sourceTree = "<group>"; };
-		A3E0F6FA2E43D9BA00C9E5F7 /* HCaptcha__Config__Tests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HCaptcha__Config__Tests.swift; sourceTree = "<group>"; };
-		A3E0F6FB2E43D9BA00C9E5F7 /* HCaptcha__Tests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HCaptcha__Tests.swift; sourceTree = "<group>"; };
-		A3E0F6FC2E43D9BA00C9E5F7 /* HCaptchaDecoder__Tests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HCaptchaDecoder__Tests.swift; sourceTree = "<group>"; };
-		A3E0F6FD2E43D9BA00C9E5F7 /* HCaptchaResult__Tests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HCaptchaResult__Tests.swift; sourceTree = "<group>"; };
-		A3E0F6FE2E43D9BA00C9E5F7 /* HCaptchaWebViewManager__HTML__Tests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HCaptchaWebViewManager__HTML__Tests.swift; sourceTree = "<group>"; };
-		A3E0F6FF2E43D9BA00C9E5F7 /* HCaptchaWebViewManager__Tests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HCaptchaWebViewManager__Tests.swift; sourceTree = "<group>"; };
-		A3E0F7032E43F71C00C9E5F7 /* PassiveCaptcha.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PassiveCaptcha.swift; sourceTree = "<group>"; };
 		A4336F071B0CE13306C8EB93 /* StripeAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StripeAPI.swift; sourceTree = "<group>"; };
 		A466F6075DCC39D5A976FB22 /* STPTelemetryClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = STPTelemetryClient.swift; sourceTree = "<group>"; };
 		A4E4C534285F49A97A04D2B8 /* UIView+StripeCoreTestingUtils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIView+StripeCoreTestingUtils.swift"; sourceTree = "<group>"; };
@@ -496,6 +456,7 @@
 			children = (
 				7F2E1D80D0342CF09CB05415 /* URLEncoderTest.swift */,
 				49ECDA402CA340E100F647F0 /* AsyncTests.swift */,
+				31C8DFE72E4E98F500A90186 /* STPErrorTests.swift */,
 			);
 			path = Helpers;
 			sourceTree = "<group>";
@@ -769,66 +730,8 @@
 				4A2CD3EB30A5C54998ED92DD /* Mock Files */,
 				EA55726A0FE74A4D90A10C01 /* Info.plist */,
 				4927CAB82D95AC4C0024EA30 /* Connections Bindings */,
-				A3E0F7002E43D9BA00C9E5F7 /* Captcha */,
 			);
 			path = StripeCoreTests;
-			sourceTree = "<group>";
-		};
-		A3E0F6E22E43D98D00C9E5F7 /* Rx */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = Rx;
-			sourceTree = "<group>";
-		};
-		A3E0F6E42E43D98D00C9E5F7 /* Captcha */ = {
-			isa = PBXGroup;
-			children = (
-				A3E0F6D52E43D98D00C9E5F7 /* DispatchQueue+Throttle.swift */,
-				A3E0F6D62E43D98D00C9E5F7 /* HCaptcha.swift */,
-				A3E0F6D72E43D98D00C9E5F7 /* HCaptchaConfig.swift */,
-				A3E0F6D82E43D98D00C9E5F7 /* HCaptchaDebugInfo.swift */,
-				A3E0F6D92E43D98D00C9E5F7 /* HCaptchaDecoder.swift */,
-				A3E0F6DA2E43D98D00C9E5F7 /* HCaptchaError.swift */,
-				A3E0F6DB2E43D98D00C9E5F7 /* HCaptchaEvent.swift */,
-				A3E0F6DC2E43D98D00C9E5F7 /* HCaptchaHtml.swift */,
-				A3E0F6DD2E43D98D00C9E5F7 /* HCaptchaLog.swift */,
-				A3E0F6DE2E43D98D00C9E5F7 /* HCaptchaResult.swift */,
-				A3E0F6DF2E43D98D00C9E5F7 /* HCaptchaURLOpener.swift */,
-				A3E0F6E02E43D98D00C9E5F7 /* HCaptchaWebViewManager.swift */,
-				A3E0F6E12E43D98D00C9E5F7 /* HCaptchaWebViewManager+WKNavigationDelegate.swift */,
-				A3E0F6E22E43D98D00C9E5F7 /* Rx */,
-				A3E0F6E32E43D98D00C9E5F7 /* String+Dict.swift */,
-				A3E0F7032E43F71C00C9E5F7 /* PassiveCaptcha.swift */,
-			);
-			path = Captcha;
-			sourceTree = "<group>";
-		};
-		A3E0F6F72E43D9BA00C9E5F7 /* Helpers */ = {
-			isa = PBXGroup;
-			children = (
-				A3E0F6F32E43D9BA00C9E5F7 /* HCaptchaConfig+Helpers.swift */,
-				A3E0F6F42E43D9BA00C9E5F7 /* HCaptchaDecoder+Helper.swift */,
-				A3E0F6F52E43D9BA00C9E5F7 /* HCaptchaError+Equatable.swift */,
-				A3E0F6F62E43D9BA00C9E5F7 /* HCaptchaWebViewManager+Helpers.swift */,
-			);
-			path = Helpers;
-			sourceTree = "<group>";
-		};
-		A3E0F7002E43D9BA00C9E5F7 /* Captcha */ = {
-			isa = PBXGroup;
-			children = (
-				A3E0F6F72E43D9BA00C9E5F7 /* Helpers */,
-				A3E0F6F82E43D9BA00C9E5F7 /* DispatchQueue__Tests.swift */,
-				A3E0F6F92E43D9BA00C9E5F7 /* HCaptcha__Bench.swift */,
-				A3E0F6FA2E43D9BA00C9E5F7 /* HCaptcha__Config__Tests.swift */,
-				A3E0F6FB2E43D9BA00C9E5F7 /* HCaptcha__Tests.swift */,
-				A3E0F6FC2E43D9BA00C9E5F7 /* HCaptchaDecoder__Tests.swift */,
-				A3E0F6FD2E43D9BA00C9E5F7 /* HCaptchaResult__Tests.swift */,
-				A3E0F6FE2E43D9BA00C9E5F7 /* HCaptchaWebViewManager__HTML__Tests.swift */,
-				A3E0F6FF2E43D9BA00C9E5F7 /* HCaptchaWebViewManager__Tests.swift */,
-			);
-			path = Captcha;
 			sourceTree = "<group>";
 		};
 		A42B59A6A0D70019833D6562 /* Source */ = {
@@ -837,7 +740,6 @@
 				310E6B5A2C580BFB006A03EC /* Attestation */,
 				66BA4CFF0FEE2E4813FB4D31 /* Analytics */,
 				6D488D8BF0ADC365242F73C8 /* API Bindings */,
-				A3E0F6E42E43D98D00C9E5F7 /* Captcha */,
 				59A858862FE8D4B90A5D930F /* Categories */,
 				E701DB3E90EB6EA0A1A8B54E /* Coder */,
 				4AD775367138C40FE2C98BAF /* Connections Bindings */,
@@ -1127,6 +1029,7 @@
 				49EFC64E2D95A6FD007172B9 /* HostedAuthUrlBuilderTests.swift in Sources */,
 				0A78AD04075C43A4059C344E /* STPAnalyticsClientTest.swift in Sources */,
 				934CCB00769674F13192A126 /* Dictionary+StripeTests.swift in Sources */,
+				31C8DFE82E4E98F500A90186 /* STPErrorTests.swift in Sources */,
 				31C5137C2CFE65DB00A429C3 /* StripeAttestTest.swift in Sources */,
 				E6EF91C32CB9DC410082DD1B /* Locale+StripeTests.swift in Sources */,
 				49ECDA412CA340E100F647F0 /* AsyncTests.swift in Sources */,
@@ -1192,23 +1095,8 @@
 				71CD1AE29AA09552DF61131E /* StripeJSONShared.swift in Sources */,
 				6ED5C41DBDAB475BF1119E98 /* UnknownFields.swift in Sources */,
 				772292156A4A80CEA9D9C487 /* FinancialConnectionsSDKInterface.swift in Sources */,
-				A3E0F7042E43F71C00C9E5F7 /* PassiveCaptcha.swift in Sources */,
 				5553D952F91D193D453D777D /* Async.swift in Sources */,
 				CAF857D45689FBEF17627E80 /* BundleLocatorProtocol.swift in Sources */,
-				A3E0F6E52E43D98D00C9E5F7 /* String+Dict.swift in Sources */,
-				A3E0F6E62E43D98D00C9E5F7 /* HCaptchaLog.swift in Sources */,
-				A3E0F6E72E43D98D00C9E5F7 /* HCaptchaError.swift in Sources */,
-				A3E0F6E82E43D98D00C9E5F7 /* HCaptchaWebViewManager+WKNavigationDelegate.swift in Sources */,
-				A3E0F6E92E43D98D00C9E5F7 /* HCaptchaHtml.swift in Sources */,
-				A3E0F6EA2E43D98D00C9E5F7 /* HCaptchaWebViewManager.swift in Sources */,
-				A3E0F6EB2E43D98D00C9E5F7 /* DispatchQueue+Throttle.swift in Sources */,
-				A3E0F6EC2E43D98D00C9E5F7 /* HCaptchaURLOpener.swift in Sources */,
-				A3E0F6ED2E43D98D00C9E5F7 /* HCaptchaResult.swift in Sources */,
-				A3E0F6EE2E43D98D00C9E5F7 /* HCaptchaDebugInfo.swift in Sources */,
-				A3E0F6EF2E43D98D00C9E5F7 /* HCaptchaEvent.swift in Sources */,
-				A3E0F6F02E43D98D00C9E5F7 /* HCaptcha.swift in Sources */,
-				A3E0F6F12E43D98D00C9E5F7 /* HCaptchaDecoder.swift in Sources */,
-				A3E0F6F22E43D98D00C9E5F7 /* HCaptchaConfig.swift in Sources */,
 				59CA874015261241AC255907 /* FileDownloader.swift in Sources */,
 				45DAE581F74EF7E11C64212B /* InstallMethod.swift in Sources */,
 				096274D0729AA8849FAD103C /* PaymentsSDKVariant.swift in Sources */,

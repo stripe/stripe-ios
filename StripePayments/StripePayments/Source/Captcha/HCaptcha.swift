@@ -14,7 +14,6 @@ import WebKit
   hCaptcha SDK facade (entry point)
 */
 @objc
-@available(iOSApplicationExtension, unavailable)
 class HCaptcha: NSObject {
     fileprivate struct Constants {
         struct InfoDictKeys {

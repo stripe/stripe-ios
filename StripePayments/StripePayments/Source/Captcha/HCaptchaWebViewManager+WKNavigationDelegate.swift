@@ -8,7 +8,6 @@
 import Foundation
 import WebKit
 
-@available(iOSApplicationExtension, unavailable)
 extension HCaptchaWebViewManager: WKNavigationDelegate {
     func webView(_ webView: WKWebView, decidePolicyFor navigationAction: WKNavigationAction) async -> WKNavigationActionPolicy {
         if navigationAction.targetFrame == nil, let url = navigationAction.request.url, urlOpener.canOpenURL(url) {

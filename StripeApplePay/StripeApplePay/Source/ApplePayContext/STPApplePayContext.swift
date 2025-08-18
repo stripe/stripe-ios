@@ -274,8 +274,6 @@ public class STPApplePayContext: NSObject, PKPaymentAuthorizationControllerDeleg
     }
     /// Tracks where the call to confirm the PaymentIntent or SetupIntent happened.
     @_spi(STP) public var confirmType: ConfirmType?
-    /// The PassiveCaptcha object from the `/v1/elements/sessions` response
-    @_spi(STP) public var passiveCaptcha: PassiveCaptcha?
     /// Contains metadata with identifiers for the session and information about the integration
     @_spi(STP) public var clientAttributionMetadata: STPClientAttributionMetadata = STPClientAttributionMetadata()
 
@@ -579,261 +577,259 @@ public class STPApplePayContext: NSObject, PKPaymentAuthorizationControllerDeleg
             }
         }
 
-        PassiveCaptcha.fetchPassiveHCaptchaToken(passiveCaptcha: passiveCaptcha) { hcaptchaToken in
-            // 1. Create PaymentMethod
-            StripeAPI.PaymentMethod.create(apiClient: self.apiClient, payment: payment, hcaptchaToken: hcaptchaToken, clientAttributionMetadata: self.clientAttributionMetadata) { result in
-                guard let paymentMethod = try? result.get(), self.authorizationController != nil else {
-                    if case .failure(let error) = result {
-                        let errorMessage = "Failed on token creation"
-                        let errorAnalytic = ErrorAnalytic(event: .unexpectedApplePayError,
-                                                          error: error,
-                                                          additionalNonPIIParams: [
-                                                            "error_message": errorMessage
-                                                          ])
-                        handleFinalState(.error, error, errorAnalytic)
-                    } else {
-                        let errorMessage = "Failed while creating paymentMethod due to internal error"
-                        let errorAnalytic = ErrorAnalytic(event: .unexpectedApplePayError,
-                                                          error: InternalError.invalidState,
-                                                          additionalNonPIIParams: [
-                                                            "error_message": errorMessage
-                                                          ])
+        // 1. Create PaymentMethod
+        StripeAPI.PaymentMethod.create(apiClient: apiClient, payment: payment, clientAttributionMetadata: clientAttributionMetadata) { result in
+            guard let paymentMethod = try? result.get(), self.authorizationController != nil else {
+                if case .failure(let error) = result {
+                    let errorMessage = "Failed on token creation"
+                    let errorAnalytic = ErrorAnalytic(event: .unexpectedApplePayError,
+                                                      error: error,
+                                                      additionalNonPIIParams: [
+                                                        "error_message": errorMessage
+                                                      ])
+                    handleFinalState(.error, error, errorAnalytic)
+                } else {
+                    let errorMessage = "Failed while creating paymentMethod due to internal error"
+                    let errorAnalytic = ErrorAnalytic(event: .unexpectedApplePayError,
+                                                      error: InternalError.invalidState,
+                                                      additionalNonPIIParams: [
+                                                        "error_message": errorMessage
+                                                      ])
 
-                        self.analyticsClient.log(analytic: errorAnalytic, apiClient: self.apiClient)
-                        handleFinalState(.error, nil, errorAnalytic)
-                    }
+                    self.analyticsClient.log(analytic: errorAnalytic, apiClient: self.apiClient)
+                    handleFinalState(.error, nil, errorAnalytic)
+                }
+                return
+            }
+
+            let paymentMethodCompletion: STPIntentClientSecretCompletionBlock = {
+                clientSecret,
+                intentCreationError in
+                guard let clientSecret = clientSecret, intentCreationError == nil,
+                    self.authorizationController != nil
+                else {
+                    let errorMessage = "Failed on payment method completion"
+                    let errorAnalytic = ErrorAnalytic(event: .unexpectedApplePayError,
+                                                      error: InternalError.invalidState,
+                                                      additionalNonPIIParams: [
+                                                        "error_message": errorMessage,
+                                                      ])
+                    handleFinalState(.error, intentCreationError, errorAnalytic)
                     return
                 }
 
-                let paymentMethodCompletion: STPIntentClientSecretCompletionBlock = {
-                    clientSecret,
-                    intentCreationError in
-                    guard let clientSecret = clientSecret, intentCreationError == nil,
-                          self.authorizationController != nil
-                    else {
-                        let errorMessage = "Failed on payment method completion"
-                        let errorAnalytic = ErrorAnalytic(event: .unexpectedApplePayError,
-                                                          error: InternalError.invalidState,
-                                                          additionalNonPIIParams: [
-                                                            "error_message": errorMessage,
-                                                          ])
-                        handleFinalState(.error, intentCreationError, errorAnalytic)
-                        return
-                    }
+                guard clientSecret != STPApplePayContext.COMPLETE_WITHOUT_CONFIRMING_INTENT else {
+                    self.confirmType = STPApplePayContext.ConfirmType.none
+                    let analytic = Analytic(event: .applePayContextCompletePaymentFinished)
+                    handleFinalState(.success, nil, analytic)
+                    return
+                }
 
-                    guard clientSecret != STPApplePayContext.COMPLETE_WITHOUT_CONFIRMING_INTENT else {
-                        self.confirmType = STPApplePayContext.ConfirmType.none
-                        let analytic = Analytic(event: .applePayContextCompletePaymentFinished)
-                        handleFinalState(.success, nil, analytic)
-                        return
-                    }
-
-                    if StripeAPI.SetupIntentConfirmParams.isClientSecretValid(clientSecret) {
-                        // 3a. Retrieve the SetupIntent and see if we need to confirm it client-side
-                        StripeAPI.SetupIntent.get(apiClient: self.apiClient, clientSecret: clientSecret)
-                        {
-                            result in
-                            guard let setupIntent = try? result.get(),
-                                  self.authorizationController != nil
-                            else {
-                                let errorMessage = "Failed on retrieving setup intent"
-                                if case .failure(let error) = result {
-                                    let errorAnalytic = ErrorAnalytic(event: .unexpectedApplePayError,
-                                                                      error: error,
-                                                                      additionalNonPIIParams: [
-                                                                        "error_message": errorMessage,
-                                                                      ])
-                                    handleFinalState(.error, error, errorAnalytic)
-                                } else {
-                                    let errorAnalytic = ErrorAnalytic(event: .unexpectedApplePayError,
-                                                                      error: InternalError.invalidState,
-                                                                      additionalNonPIIParams: [
-                                                                        "error_message": errorMessage,
-                                                                      ])
-                                    handleFinalState(.error, nil, errorAnalytic)
-                                }
-                                return
-                            }
-
-                            switch setupIntent.status {
-                            case .requiresConfirmation, .requiresAction, .requiresPaymentMethod:
-                                self.confirmType = .client
-                                // 4a. Confirm the SetupIntent
-                                self.paymentState = .pending  // After this point, we can't cancel
-                                var confirmParams = StripeAPI.SetupIntentConfirmParams(
-                                    clientSecret: clientSecret
-                                )
-                                confirmParams.paymentMethod = paymentMethod.id
-                                confirmParams.useStripeSdk = true
-                                confirmParams.returnUrl = self.returnUrl
-
-                                StripeAPI.SetupIntent.confirm(
-                                    apiClient: self.apiClient,
-                                    params: confirmParams
-                                ) {
-                                    result in
-                                    guard let setupIntent = try? result.get(),
-                                          self.authorizationController != nil,
-                                          setupIntent.status == .succeeded
-                                    else {
-                                        let errorMessage = "Failed on confirming setup intent"
-                                        if case .failure(let error) = result {
-                                            let errorAnalytic = ErrorAnalytic(event: .unexpectedApplePayError,
-                                                                              error: error,
-                                                                              additionalNonPIIParams: [
-                                                                                "error_message": errorMessage,
-                                                                              ])
-                                            handleFinalState(.error, error, errorAnalytic)
-                                        } else {
-                                            let errorAnalytic = ErrorAnalytic(event: .unexpectedApplePayError,
-                                                                              error: InternalError.invalidState,
-                                                                              additionalNonPIIParams: [
-                                                                                "error_message": errorMessage,
-                                                                              ])
-                                            handleFinalState(.error, nil, errorAnalytic)
-                                        }
-                                        return
-                                    }
-                                    handleFinalState(.success, nil, Analytic(event: .applePayContextCompletePaymentFinished))
-                                }
-                            case .succeeded:
-                                self.confirmType = .server
-                                handleFinalState(.success, nil, Analytic(event: .applePayContextCompletePaymentFinished))
-                            case .canceled, .processing, .unknown, .unparsable, .none:
-                                let errorMessage = "The SetupIntent is in an unexpected state: \(setupIntent.status!)"
+                if StripeAPI.SetupIntentConfirmParams.isClientSecretValid(clientSecret) {
+                    // 3a. Retrieve the SetupIntent and see if we need to confirm it client-side
+                    StripeAPI.SetupIntent.get(apiClient: self.apiClient, clientSecret: clientSecret)
+                    {
+                        result in
+                        guard let setupIntent = try? result.get(),
+                            self.authorizationController != nil
+                        else {
+                            let errorMessage = "Failed on retrieving setup intent"
+                            if case .failure(let error) = result {
                                 let errorAnalytic = ErrorAnalytic(event: .unexpectedApplePayError,
-                                                                  error: InternalError.invalidState,
+                                                                  error: error,
                                                                   additionalNonPIIParams: [
                                                                     "error_message": errorMessage,
                                                                   ])
-                                handleFinalState(.error, Self.makeUnknownError(message: errorMessage), errorAnalytic)
-                            }
-                        }
-                    } else {
-                        let paymentIntentClientSecret = clientSecret
-                        // 3b. Retrieve the PaymentIntent and see if we need to confirm it client-side
-                        StripeAPI.PaymentIntent.get(
-                            apiClient: self.apiClient,
-                            clientSecret: paymentIntentClientSecret
-                        ) { result in
-                            guard let paymentIntent = try? result.get(),
-                                  self.authorizationController != nil
-                            else {
-                                let errorMessage = "Failed on retrieving payment intent"
-                                if case .failure(let error) = result {
-                                    let errorAnalytic = ErrorAnalytic(event: .unexpectedApplePayError,
-                                                                      error: error,
-                                                                      additionalNonPIIParams: [
-                                                                        "error_message": errorMessage,
-                                                                      ])
-                                    handleFinalState(.error, error, errorAnalytic)
-                                } else {
-                                    let errorAnalytic = ErrorAnalytic(event: .unexpectedApplePayError,
-                                                                      error: InternalError.invalidState,
-                                                                      additionalNonPIIParams: [
-                                                                        "error_message": errorMessage,
-                                                                      ])
-                                    handleFinalState(.error, nil, errorAnalytic)
-                                }
-                                return
-                            }
-
-                            if paymentIntent.confirmationMethod == .automatic
-                                && (paymentIntent.status == .requiresPaymentMethod
-                                    || paymentIntent.status == .requiresConfirmation)
-                            {
-                                self.confirmType = .client
-                                // 4b. Confirm the PaymentIntent
-
-                                var paymentIntentParams = StripeAPI.PaymentIntentParams(
-                                    clientSecret: paymentIntentClientSecret
-                                )
-                                paymentIntentParams.paymentMethod = paymentMethod.id
-                                paymentIntentParams.useStripeSdk = true
-                                // If a merchant attaches shipping to the PI on their server, the /confirm endpoint will error if we update shipping with a “requires secret key” error message.
-                                // To accommodate this, don't attach if our shipping is the same as the PI's shipping
-                                if paymentIntent.shipping != self._shippingDetails(from: payment) {
-                                    paymentIntentParams.shipping = self._shippingDetails(from: payment)
-                                }
-
-                                self.paymentState = .pending  // After this point, we can't cancel
-
-                                // We don't use PaymentHandler because we can't handle next actions as-is - we'd need to dismiss the Apple Pay VC.
-                                StripeAPI.PaymentIntent.confirm(
-                                    apiClient: self.apiClient,
-                                    params: paymentIntentParams
-                                ) {
-                                    result in
-                                    guard let postConfirmPI = try? result.get(),
-                                          postConfirmPI.status == .succeeded
-                                            || postConfirmPI.status == .requiresCapture
-                                    else {
-                                        let errorMessage = "Failed on confirming payment intent"
-                                        if case .failure(let error) = result {
-                                            let errorAnalytic = ErrorAnalytic(event: .unexpectedApplePayError,
-                                                                              error: error,
-                                                                              additionalNonPIIParams: [
-                                                                                "error_message": errorMessage,
-                                                                              ])
-                                            handleFinalState(.error, error, errorAnalytic)
-                                        } else {
-                                            let errorAnalytic = ErrorAnalytic(event: .unexpectedApplePayError,
-                                                                              error: InternalError.invalidState,
-                                                                              additionalNonPIIParams: [
-                                                                                "error_message": errorMessage,
-                                                                              ])
-                                            handleFinalState(.error, nil, errorAnalytic)
-                                        }
-                                        return
-                                    }
-                                    handleFinalState(.success, nil, Analytic(event: .applePayContextCompletePaymentFinished))
-                                }
-                            } else if paymentIntent.status == .succeeded
-                                        || paymentIntent.status == .requiresCapture
-                            {
-                                self.confirmType = .server
-                                handleFinalState(.success, nil, Analytic(event: .applePayContextCompletePaymentFinished))
+                                handleFinalState(.error, error, errorAnalytic)
                             } else {
-                                let errorMessage = "The PaymentIntent is in an unexpected state. If you pass confirmation_method = manual when creating the PaymentIntent, also pass confirm = true.  If server-side confirmation fails, double check you are passing the error back to the client."
                                 let errorAnalytic = ErrorAnalytic(event: .unexpectedApplePayError,
                                                                   error: InternalError.invalidState,
                                                                   additionalNonPIIParams: [
                                                                     "error_message": errorMessage,
                                                                   ])
-                                let unknownError = Self.makeUnknownError(message: errorMessage)
-                                handleFinalState(.error, unknownError, errorAnalytic)
+                                handleFinalState(.error, nil, errorAnalytic)
                             }
+                            return
+                        }
+
+                        switch setupIntent.status {
+                        case .requiresConfirmation, .requiresAction, .requiresPaymentMethod:
+                            self.confirmType = .client
+                            // 4a. Confirm the SetupIntent
+                            self.paymentState = .pending  // After this point, we can't cancel
+                            var confirmParams = StripeAPI.SetupIntentConfirmParams(
+                                clientSecret: clientSecret
+                            )
+                            confirmParams.paymentMethod = paymentMethod.id
+                            confirmParams.useStripeSdk = true
+                            confirmParams.returnUrl = self.returnUrl
+
+                            StripeAPI.SetupIntent.confirm(
+                                apiClient: self.apiClient,
+                                params: confirmParams
+                            ) {
+                                result in
+                                guard let setupIntent = try? result.get(),
+                                    self.authorizationController != nil,
+                                    setupIntent.status == .succeeded
+                                else {
+                                    let errorMessage = "Failed on confirming setup intent"
+                                    if case .failure(let error) = result {
+                                        let errorAnalytic = ErrorAnalytic(event: .unexpectedApplePayError,
+                                                                          error: error,
+                                                                          additionalNonPIIParams: [
+                                                                            "error_message": errorMessage,
+                                                                          ])
+                                        handleFinalState(.error, error, errorAnalytic)
+                                    } else {
+                                        let errorAnalytic = ErrorAnalytic(event: .unexpectedApplePayError,
+                                                                          error: InternalError.invalidState,
+                                                                          additionalNonPIIParams: [
+                                                                            "error_message": errorMessage,
+                                                                          ])
+                                        handleFinalState(.error, nil, errorAnalytic)
+                                    }
+                                    return
+                                }
+                                handleFinalState(.success, nil, Analytic(event: .applePayContextCompletePaymentFinished))
+                            }
+                        case .succeeded:
+                            self.confirmType = .server
+                            handleFinalState(.success, nil, Analytic(event: .applePayContextCompletePaymentFinished))
+                        case .canceled, .processing, .unknown, .unparsable, .none:
+                            let errorMessage = "The SetupIntent is in an unexpected state: \(setupIntent.status!)"
+                            let errorAnalytic = ErrorAnalytic(event: .unexpectedApplePayError,
+                                                              error: InternalError.invalidState,
+                                                              additionalNonPIIParams: [
+                                                                "error_message": errorMessage,
+                                                              ])
+                            handleFinalState(.error, Self.makeUnknownError(message: errorMessage), errorAnalytic)
+                        }
+                    }
+                } else {
+                    let paymentIntentClientSecret = clientSecret
+                    // 3b. Retrieve the PaymentIntent and see if we need to confirm it client-side
+                    StripeAPI.PaymentIntent.get(
+                        apiClient: self.apiClient,
+                        clientSecret: paymentIntentClientSecret
+                    ) { result in
+                        guard let paymentIntent = try? result.get(),
+                            self.authorizationController != nil
+                        else {
+                            let errorMessage = "Failed on retrieving payment intent"
+                            if case .failure(let error) = result {
+                                let errorAnalytic = ErrorAnalytic(event: .unexpectedApplePayError,
+                                                                  error: error,
+                                                                  additionalNonPIIParams: [
+                                                                    "error_message": errorMessage,
+                                                                  ])
+                                handleFinalState(.error, error, errorAnalytic)
+                            } else {
+                                let errorAnalytic = ErrorAnalytic(event: .unexpectedApplePayError,
+                                                                  error: InternalError.invalidState,
+                                                                  additionalNonPIIParams: [
+                                                                    "error_message": errorMessage,
+                                                                  ])
+                                handleFinalState(.error, nil, errorAnalytic)
+                            }
+                            return
+                        }
+
+                        if paymentIntent.confirmationMethod == .automatic
+                            && (paymentIntent.status == .requiresPaymentMethod
+                                || paymentIntent.status == .requiresConfirmation)
+                        {
+                            self.confirmType = .client
+                            // 4b. Confirm the PaymentIntent
+
+                            var paymentIntentParams = StripeAPI.PaymentIntentParams(
+                                clientSecret: paymentIntentClientSecret
+                            )
+                            paymentIntentParams.paymentMethod = paymentMethod.id
+                            paymentIntentParams.useStripeSdk = true
+                            // If a merchant attaches shipping to the PI on their server, the /confirm endpoint will error if we update shipping with a “requires secret key” error message.
+                            // To accommodate this, don't attach if our shipping is the same as the PI's shipping
+                            if paymentIntent.shipping != self._shippingDetails(from: payment) {
+                                paymentIntentParams.shipping = self._shippingDetails(from: payment)
+                            }
+
+                            self.paymentState = .pending  // After this point, we can't cancel
+
+                            // We don't use PaymentHandler because we can't handle next actions as-is - we'd need to dismiss the Apple Pay VC.
+                            StripeAPI.PaymentIntent.confirm(
+                                apiClient: self.apiClient,
+                                params: paymentIntentParams
+                            ) {
+                                result in
+                                guard let postConfirmPI = try? result.get(),
+                                    postConfirmPI.status == .succeeded
+                                        || postConfirmPI.status == .requiresCapture
+                                else {
+                                    let errorMessage = "Failed on confirming payment intent"
+                                    if case .failure(let error) = result {
+                                        let errorAnalytic = ErrorAnalytic(event: .unexpectedApplePayError,
+                                                                          error: error,
+                                                                          additionalNonPIIParams: [
+                                                                            "error_message": errorMessage,
+                                                                          ])
+                                        handleFinalState(.error, error, errorAnalytic)
+                                    } else {
+                                        let errorAnalytic = ErrorAnalytic(event: .unexpectedApplePayError,
+                                                                          error: InternalError.invalidState,
+                                                                          additionalNonPIIParams: [
+                                                                            "error_message": errorMessage,
+                                                                          ])
+                                        handleFinalState(.error, nil, errorAnalytic)
+                                    }
+                                    return
+                                }
+                                handleFinalState(.success, nil, Analytic(event: .applePayContextCompletePaymentFinished))
+                            }
+                        } else if paymentIntent.status == .succeeded
+                            || paymentIntent.status == .requiresCapture
+                        {
+                            self.confirmType = .server
+                            handleFinalState(.success, nil, Analytic(event: .applePayContextCompletePaymentFinished))
+                        } else {
+                            let errorMessage = "The PaymentIntent is in an unexpected state. If you pass confirmation_method = manual when creating the PaymentIntent, also pass confirm = true.  If server-side confirmation fails, double check you are passing the error back to the client."
+                            let errorAnalytic = ErrorAnalytic(event: .unexpectedApplePayError,
+                                                              error: InternalError.invalidState,
+                                                              additionalNonPIIParams: [
+                                                                "error_message": errorMessage,
+                                                              ])
+                            let unknownError = Self.makeUnknownError(message: errorMessage)
+                            handleFinalState(.error, unknownError, errorAnalytic)
                         }
                     }
                 }
-                // 2. Fetch PaymentIntent/SetupIntent client secret from delegate
-                let legacyDelegateSelector = NSSelectorFromString(
-                    "applePayContext:didCreatePaymentMethod:paymentInformation:completion:"
-                )
-                if let delegate = self.delegate {
-                    if let delegate = delegate as? ApplePayContextDelegate {
-                        delegate.applePayContext(
-                            self,
-                            didCreatePaymentMethod: paymentMethod,
-                            paymentInformation: payment,
-                            completion: paymentMethodCompletion
-                        )
-                    } else if delegate.responds(to: legacyDelegateSelector),
-                              let helperClass = NSClassFromString("STPApplePayContextLegacyHelper")
-                    {
-                        let legacyStorage = _stpinternal_ApplePayContextDidCreatePaymentMethodStorage(
-                            delegate: delegate,
-                            context: self,
-                            paymentMethod: paymentMethod,
-                            paymentInformation: payment,
-                            completion: paymentMethodCompletion
-                        )
-                        helperClass.performDidCreatePaymentMethod(legacyStorage)
-                    } else {
-                        assertionFailure(
-                            "An STPApplePayContext's delegate must conform to ApplePayContextDelegate or STPApplePayContextDelegate."
-                        )
-                    }
+            }
+            // 2. Fetch PaymentIntent/SetupIntent client secret from delegate
+            let legacyDelegateSelector = NSSelectorFromString(
+                "applePayContext:didCreatePaymentMethod:paymentInformation:completion:"
+            )
+            if let delegate = self.delegate {
+                if let delegate = delegate as? ApplePayContextDelegate {
+                    delegate.applePayContext(
+                        self,
+                        didCreatePaymentMethod: paymentMethod,
+                        paymentInformation: payment,
+                        completion: paymentMethodCompletion
+                    )
+                } else if delegate.responds(to: legacyDelegateSelector),
+                    let helperClass = NSClassFromString("STPApplePayContextLegacyHelper")
+                {
+                    let legacyStorage = _stpinternal_ApplePayContextDidCreatePaymentMethodStorage(
+                        delegate: delegate,
+                        context: self,
+                        paymentMethod: paymentMethod,
+                        paymentInformation: payment,
+                        completion: paymentMethodCompletion
+                    )
+                    helperClass.performDidCreatePaymentMethod(legacyStorage)
+                } else {
+                    assertionFailure(
+                        "An STPApplePayContext's delegate must conform to ApplePayContextDelegate or STPApplePayContextDelegate."
+                    )
                 }
             }
         }

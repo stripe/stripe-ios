@@ -47,6 +47,18 @@
 		2E23BD28752B622F86149CA9 /* iOSSnapshotTestCase in Frameworks */ = {isa = PBXBuildFile; platformFilters = (ios, maccatalyst, ); productRef = 0DADFCFCE303263FBB27102B /* iOSSnapshotTestCase */; };
 		2E5D133D1E203027C08DEDF0 /* STPPaymentMethodAUBECSDebit.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BB1D8D7ABB0AC1B87FC0057 /* STPPaymentMethodAUBECSDebit.swift */; };
 		2EF5C661CF25482E6CC14FE9 /* STPInternalAPIResponseDecodable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01FC96365AFC2C12A12CF9B1 /* STPInternalAPIResponseDecodable.swift */; };
+		311E57E22BFBF3D4005B16DE /* DispatchQueue__Tests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 311E57DA2BFBF3D4005B16DE /* DispatchQueue__Tests.swift */; };
+		311E57E32BFBF3D4005B16DE /* HCaptchaDecoder__Tests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 311E57DB2BFBF3D4005B16DE /* HCaptchaDecoder__Tests.swift */; };
+		311E57E42BFBF3D4005B16DE /* HCaptcha__Bench.swift in Sources */ = {isa = PBXBuildFile; fileRef = 311E57DC2BFBF3D4005B16DE /* HCaptcha__Bench.swift */; };
+		311E57E52BFBF3D4005B16DE /* HCaptchaResult__Tests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 311E57DD2BFBF3D4005B16DE /* HCaptchaResult__Tests.swift */; };
+		311E57E62BFBF3D4005B16DE /* HCaptchaWebViewManager__HTML__Tests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 311E57DE2BFBF3D4005B16DE /* HCaptchaWebViewManager__HTML__Tests.swift */; };
+		311E57E72BFBF3D4005B16DE /* HCaptcha__Config__Tests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 311E57DF2BFBF3D4005B16DE /* HCaptcha__Config__Tests.swift */; };
+		311E57E82BFBF3D4005B16DE /* HCaptchaWebViewManager__Tests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 311E57E02BFBF3D4005B16DE /* HCaptchaWebViewManager__Tests.swift */; };
+		311E57E92BFBF3D4005B16DE /* HCaptcha__Tests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 311E57E12BFBF3D4005B16DE /* HCaptcha__Tests.swift */; };
+		311E57EF2BFBF3E9005B16DE /* HCaptchaConfig+Helpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 311E57EA2BFBF3E9005B16DE /* HCaptchaConfig+Helpers.swift */; };
+		311E57F02BFBF3E9005B16DE /* HCaptchaDecoder+Helper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 311E57EB2BFBF3E9005B16DE /* HCaptchaDecoder+Helper.swift */; };
+		311E57F12BFBF3E9005B16DE /* HCaptchaError+Equatable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 311E57EC2BFBF3E9005B16DE /* HCaptchaError+Equatable.swift */; };
+		311E57F22BFBF3E9005B16DE /* HCaptchaWebViewManager+Helpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 311E57ED2BFBF3E9005B16DE /* HCaptchaWebViewManager+Helpers.swift */; };
 		311E57F42BFBF50C005B16DE /* mock.html in Resources */ = {isa = PBXBuildFile; fileRef = 311E57F32BFBF50C005B16DE /* mock.html */; };
 		311E57FC2BFBF662005B16DE /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 311E57FB2BFBF662005B16DE /* AppDelegate.swift */; };
 		311E57FE2BFBF662005B16DE /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 311E57FD2BFBF662005B16DE /* SceneDelegate.swift */; };
@@ -57,6 +69,20 @@
 		311E580D2BFBF688005B16DE /* StripePayments.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 14358A02B8BB13A20E0047DB /* StripePayments.framework */; };
 		313F5F852B0BE60E00BD98A9 /* Docs.docc in Sources */ = {isa = PBXBuildFile; fileRef = 313F5F842B0BE60E00BD98A9 /* Docs.docc */; };
 		318FA6D5C77D81BB953FE3E2 /* STPIntentActionAlipayHandleRedirect.swift in Sources */ = {isa = PBXBuildFile; fileRef = DEECA909F82BFB3F8960F1EA /* STPIntentActionAlipayHandleRedirect.swift */; };
+		31B7F54D2BD1D4E500BF1015 /* HCaptchaWebViewManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31B7F53C2BD1D4E400BF1015 /* HCaptchaWebViewManager.swift */; };
+		31B7F54E2BD1D4E500BF1015 /* HCaptchaHtml.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31B7F53D2BD1D4E400BF1015 /* HCaptchaHtml.swift */; };
+		31B7F54F2BD1D4E500BF1015 /* DispatchQueue+Throttle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31B7F53E2BD1D4E400BF1015 /* DispatchQueue+Throttle.swift */; };
+		31B7F5502BD1D4E500BF1015 /* HCaptchaDecoder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31B7F53F2BD1D4E400BF1015 /* HCaptchaDecoder.swift */; };
+		31B7F5512BD1D4E500BF1015 /* String+Dict.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31B7F5402BD1D4E400BF1015 /* String+Dict.swift */; };
+		31B7F5522BD1D4E500BF1015 /* HCaptchaResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31B7F5412BD1D4E400BF1015 /* HCaptchaResult.swift */; };
+		31B7F5532BD1D4E500BF1015 /* HCaptchaLog.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31B7F5422BD1D4E400BF1015 /* HCaptchaLog.swift */; };
+		31B7F5542BD1D4E500BF1015 /* HCaptchaConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31B7F5432BD1D4E400BF1015 /* HCaptchaConfig.swift */; };
+		31B7F5552BD1D4E500BF1015 /* HCaptcha.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31B7F5442BD1D4E400BF1015 /* HCaptcha.swift */; };
+		31B7F5562BD1D4E500BF1015 /* HCaptchaDebugInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31B7F5452BD1D4E400BF1015 /* HCaptchaDebugInfo.swift */; };
+		31B7F5582BD1D4E500BF1015 /* HCaptchaEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31B7F5472BD1D4E400BF1015 /* HCaptchaEvent.swift */; };
+		31B7F5592BD1D4E500BF1015 /* HCaptchaError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31B7F5482BD1D4E400BF1015 /* HCaptchaError.swift */; };
+		31B7F55A2BD1D4E500BF1015 /* HCaptchaWebViewManager+WKNavigationDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31B7F5492BD1D4E500BF1015 /* HCaptchaWebViewManager+WKNavigationDelegate.swift */; };
+		31B7F55C2BD1D4E500BF1015 /* HCaptchaURLOpener.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31B7F54C2BD1D4E500BF1015 /* HCaptchaURLOpener.swift */; };
 		32656FE9F07F8B06AAE991E9 /* STPIntentActionSwishHandleRedirect.swift in Sources */ = {isa = PBXBuildFile; fileRef = ABAD953EBD6D159886F1C1E4 /* STPIntentActionSwishHandleRedirect.swift */; };
 		342EB5BE156C8431AEB1FD3F /* STPPaymentMethodPrzelewy24Params.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9F62603F7B02487027BFB14 /* STPPaymentMethodPrzelewy24Params.swift */; };
 		34B8762E977C25C6F715C7C6 /* STPPaymentMethodBancontactParams.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D99D2C6C436F6FAFB3960EE /* STPPaymentMethodBancontactParams.swift */; };
@@ -165,6 +191,7 @@
 		A3E0F5292E318CCB00C9E5F7 /* STPIntentAutomaticPaymentMethods.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3E0F5282E318CCB00C9E5F7 /* STPIntentAutomaticPaymentMethods.swift */; };
 		A3E0F6532E415DA700C9E5F7 /* STPRadarOptions.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3E0F6522E415DA700C9E5F7 /* STPRadarOptions.swift */; };
 		A3E0F66D2E417A8100C9E5F7 /* STPClientAttributionMetadata+Payments.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3E0F66C2E417A8100C9E5F7 /* STPClientAttributionMetadata+Payments.swift */; };
+		A3E0F7D62E53749F00C9E5F7 /* PassiveCaptcha.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3E0F7D52E53749F00C9E5F7 /* PassiveCaptcha.swift */; };
 		A4A4810685F8A6EEADA77955 /* XCTest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9EE713DECC09F6AEE37E96F7 /* XCTest.framework */; };
 		A597225EF1B685E0C6D60EE5 /* STPPaymentMethodGrabPay.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53061ED71F9E2162BEE5DF21 /* STPPaymentMethodGrabPay.swift */; };
 		A654AC171329ED0CAF201AA6 /* STPPaymentMethodCashAppParams.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E9E200FB06201CCAE7BB434 /* STPPaymentMethodCashAppParams.swift */; };
@@ -402,6 +429,18 @@
 		30084144A82FEC59D4791CCE /* STPSetupIntentLastSetupError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = STPSetupIntentLastSetupError.swift; sourceTree = "<group>"; };
 		308953794DB842423BE6D1F5 /* StripePaymentsObjcTestUtils.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = StripePaymentsObjcTestUtils.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		30F69252A9AF5E376F43EA20 /* STPMandateCustomerAcceptanceParams.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = STPMandateCustomerAcceptanceParams.swift; sourceTree = "<group>"; };
+		311E57DA2BFBF3D4005B16DE /* DispatchQueue__Tests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DispatchQueue__Tests.swift; sourceTree = "<group>"; };
+		311E57DB2BFBF3D4005B16DE /* HCaptchaDecoder__Tests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HCaptchaDecoder__Tests.swift; sourceTree = "<group>"; };
+		311E57DC2BFBF3D4005B16DE /* HCaptcha__Bench.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HCaptcha__Bench.swift; sourceTree = "<group>"; };
+		311E57DD2BFBF3D4005B16DE /* HCaptchaResult__Tests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HCaptchaResult__Tests.swift; sourceTree = "<group>"; };
+		311E57DE2BFBF3D4005B16DE /* HCaptchaWebViewManager__HTML__Tests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HCaptchaWebViewManager__HTML__Tests.swift; sourceTree = "<group>"; };
+		311E57DF2BFBF3D4005B16DE /* HCaptcha__Config__Tests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HCaptcha__Config__Tests.swift; sourceTree = "<group>"; };
+		311E57E02BFBF3D4005B16DE /* HCaptchaWebViewManager__Tests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HCaptchaWebViewManager__Tests.swift; sourceTree = "<group>"; };
+		311E57E12BFBF3D4005B16DE /* HCaptcha__Tests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HCaptcha__Tests.swift; sourceTree = "<group>"; };
+		311E57EA2BFBF3E9005B16DE /* HCaptchaConfig+Helpers.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "HCaptchaConfig+Helpers.swift"; sourceTree = "<group>"; };
+		311E57EB2BFBF3E9005B16DE /* HCaptchaDecoder+Helper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "HCaptchaDecoder+Helper.swift"; sourceTree = "<group>"; };
+		311E57EC2BFBF3E9005B16DE /* HCaptchaError+Equatable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "HCaptchaError+Equatable.swift"; sourceTree = "<group>"; };
+		311E57ED2BFBF3E9005B16DE /* HCaptchaWebViewManager+Helpers.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "HCaptchaWebViewManager+Helpers.swift"; sourceTree = "<group>"; };
 		311E57F32BFBF50C005B16DE /* mock.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = mock.html; sourceTree = "<group>"; };
 		311E57F92BFBF662005B16DE /* StripePaymentsTestHostApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = StripePaymentsTestHostApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		311E57FB2BFBF662005B16DE /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -412,6 +451,20 @@
 		311E58072BFBF663005B16DE /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		311E58092BFBF663005B16DE /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		313F5F842B0BE60E00BD98A9 /* Docs.docc */ = {isa = PBXFileReference; lastKnownFileType = folder.documentationcatalog; path = Docs.docc; sourceTree = "<group>"; };
+		31B7F53C2BD1D4E400BF1015 /* HCaptchaWebViewManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HCaptchaWebViewManager.swift; sourceTree = "<group>"; };
+		31B7F53D2BD1D4E400BF1015 /* HCaptchaHtml.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HCaptchaHtml.swift; sourceTree = "<group>"; };
+		31B7F53E2BD1D4E400BF1015 /* DispatchQueue+Throttle.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "DispatchQueue+Throttle.swift"; sourceTree = "<group>"; };
+		31B7F53F2BD1D4E400BF1015 /* HCaptchaDecoder.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HCaptchaDecoder.swift; sourceTree = "<group>"; };
+		31B7F5402BD1D4E400BF1015 /* String+Dict.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "String+Dict.swift"; sourceTree = "<group>"; };
+		31B7F5412BD1D4E400BF1015 /* HCaptchaResult.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HCaptchaResult.swift; sourceTree = "<group>"; };
+		31B7F5422BD1D4E400BF1015 /* HCaptchaLog.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HCaptchaLog.swift; sourceTree = "<group>"; };
+		31B7F5432BD1D4E400BF1015 /* HCaptchaConfig.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HCaptchaConfig.swift; sourceTree = "<group>"; };
+		31B7F5442BD1D4E400BF1015 /* HCaptcha.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HCaptcha.swift; sourceTree = "<group>"; };
+		31B7F5452BD1D4E400BF1015 /* HCaptchaDebugInfo.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HCaptchaDebugInfo.swift; sourceTree = "<group>"; };
+		31B7F5472BD1D4E400BF1015 /* HCaptchaEvent.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HCaptchaEvent.swift; sourceTree = "<group>"; };
+		31B7F5482BD1D4E400BF1015 /* HCaptchaError.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HCaptchaError.swift; sourceTree = "<group>"; };
+		31B7F5492BD1D4E500BF1015 /* HCaptchaWebViewManager+WKNavigationDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "HCaptchaWebViewManager+WKNavigationDelegate.swift"; sourceTree = "<group>"; };
+		31B7F54C2BD1D4E500BF1015 /* HCaptchaURLOpener.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HCaptchaURLOpener.swift; sourceTree = "<group>"; };
 		31CBA061716922E978337D26 /* STPSetupIntentConfirmParams.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = STPSetupIntentConfirmParams.swift; sourceTree = "<group>"; };
 		31E9110C4EB3A3D185DC8D00 /* STPPaymentIntentParams.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = STPPaymentIntentParams.swift; sourceTree = "<group>"; };
 		3413DC6380ADC49B79FA0D71 /* STPIntentActionKonbiniDisplayDetails.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = STPIntentActionKonbiniDisplayDetails.swift; sourceTree = "<group>"; };
@@ -548,6 +601,7 @@
 		A3E0F5282E318CCB00C9E5F7 /* STPIntentAutomaticPaymentMethods.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = STPIntentAutomaticPaymentMethods.swift; sourceTree = "<group>"; };
 		A3E0F6522E415DA700C9E5F7 /* STPRadarOptions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = STPRadarOptions.swift; sourceTree = "<group>"; };
 		A3E0F66C2E417A8100C9E5F7 /* STPClientAttributionMetadata+Payments.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "STPClientAttributionMetadata+Payments.swift"; sourceTree = "<group>"; };
+		A3E0F7D52E53749F00C9E5F7 /* PassiveCaptcha.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PassiveCaptcha.swift; sourceTree = "<group>"; };
 		A808C34CAC5E742359A02301 /* STPSourceSEPADebitDetails.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = STPSourceSEPADebitDetails.swift; sourceTree = "<group>"; };
 		A8B78EDF21E929236F89ADCB /* id */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = id; path = id.lproj/Localizable.strings; sourceTree = "<group>"; };
 		A93D74B51EA12509851F76A5 /* STPPaymentMethodiDEAL.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = STPPaymentMethodiDEAL.swift; sourceTree = "<group>"; };
@@ -770,6 +824,33 @@
 			path = StripePayments;
 			sourceTree = "<group>";
 		};
+		311E57D92BFBF3B7005B16DE /* Captcha */ = {
+			isa = PBXGroup;
+			children = (
+				311E57EE2BFBF3E9005B16DE /* Helpers */,
+				311E57DA2BFBF3D4005B16DE /* DispatchQueue__Tests.swift */,
+				311E57DC2BFBF3D4005B16DE /* HCaptcha__Bench.swift */,
+				311E57DF2BFBF3D4005B16DE /* HCaptcha__Config__Tests.swift */,
+				311E57E12BFBF3D4005B16DE /* HCaptcha__Tests.swift */,
+				311E57DB2BFBF3D4005B16DE /* HCaptchaDecoder__Tests.swift */,
+				311E57DD2BFBF3D4005B16DE /* HCaptchaResult__Tests.swift */,
+				311E57DE2BFBF3D4005B16DE /* HCaptchaWebViewManager__HTML__Tests.swift */,
+				311E57E02BFBF3D4005B16DE /* HCaptchaWebViewManager__Tests.swift */,
+			);
+			path = Captcha;
+			sourceTree = "<group>";
+		};
+		311E57EE2BFBF3E9005B16DE /* Helpers */ = {
+			isa = PBXGroup;
+			children = (
+				311E57EA2BFBF3E9005B16DE /* HCaptchaConfig+Helpers.swift */,
+				311E57EB2BFBF3E9005B16DE /* HCaptchaDecoder+Helper.swift */,
+				311E57EC2BFBF3E9005B16DE /* HCaptchaError+Equatable.swift */,
+				311E57ED2BFBF3E9005B16DE /* HCaptchaWebViewManager+Helpers.swift */,
+			);
+			path = Helpers;
+			sourceTree = "<group>";
+		};
 		311E57FA2BFBF662005B16DE /* StripePaymentsTestHostApp */ = {
 			isa = PBXGroup;
 			children = (
@@ -782,6 +863,36 @@
 				311E58092BFBF663005B16DE /* Info.plist */,
 			);
 			path = StripePaymentsTestHostApp;
+			sourceTree = "<group>";
+		};
+		31B7F53B2BD1D48800BF1015 /* Captcha */ = {
+			isa = PBXGroup;
+			children = (
+				31B7F53E2BD1D4E400BF1015 /* DispatchQueue+Throttle.swift */,
+				31B7F5442BD1D4E400BF1015 /* HCaptcha.swift */,
+				31B7F5432BD1D4E400BF1015 /* HCaptchaConfig.swift */,
+				31B7F5452BD1D4E400BF1015 /* HCaptchaDebugInfo.swift */,
+				31B7F53F2BD1D4E400BF1015 /* HCaptchaDecoder.swift */,
+				31B7F5482BD1D4E400BF1015 /* HCaptchaError.swift */,
+				31B7F5472BD1D4E400BF1015 /* HCaptchaEvent.swift */,
+				31B7F53D2BD1D4E400BF1015 /* HCaptchaHtml.swift */,
+				31B7F5422BD1D4E400BF1015 /* HCaptchaLog.swift */,
+				31B7F5412BD1D4E400BF1015 /* HCaptchaResult.swift */,
+				31B7F54C2BD1D4E500BF1015 /* HCaptchaURLOpener.swift */,
+				31B7F53C2BD1D4E400BF1015 /* HCaptchaWebViewManager.swift */,
+				31B7F5492BD1D4E500BF1015 /* HCaptchaWebViewManager+WKNavigationDelegate.swift */,
+				A3E0F7D52E53749F00C9E5F7 /* PassiveCaptcha.swift */,
+				31B7F54B2BD1D4E500BF1015 /* Rx */,
+				31B7F5402BD1D4E400BF1015 /* String+Dict.swift */,
+			);
+			path = Captcha;
+			sourceTree = "<group>";
+		};
+		31B7F54B2BD1D4E500BF1015 /* Rx */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Rx;
 			sourceTree = "<group>";
 		};
 		3D76A22F29DA377FEAC740D7 /* Analytics */ = {
@@ -858,6 +969,7 @@
 		5945A05F8C61551C1D4A013C /* Source */ = {
 			isa = PBXGroup;
 			children = (
+				31B7F53B2BD1D48800BF1015 /* Captcha */,
 				DD78CC2F04F493810045211F /* API Bindings */,
 				68BC1175D7D6D0AC3B871934 /* Categories */,
 				D2402C80F5D774F12342CC59 /* Helpers */,
@@ -956,6 +1068,7 @@
 		9B75653A857383561112C72D /* StripePaymentsTests */ = {
 			isa = PBXGroup;
 			children = (
+				311E57D92BFBF3B7005B16DE /* Captcha */,
 				E697F4BF96E20E6EB766A762 /* Info.plist */,
 				311E57F32BFBF50C005B16DE /* mock.html */,
 				F4E97EEB6FFF42428F389A23 /* STPAnalyticsClient+StripePayments.swift */,
@@ -1527,7 +1640,19 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				311E57E92BFBF3D4005B16DE /* HCaptcha__Tests.swift in Sources */,
+				311E57EF2BFBF3E9005B16DE /* HCaptchaConfig+Helpers.swift in Sources */,
+				311E57E72BFBF3D4005B16DE /* HCaptcha__Config__Tests.swift in Sources */,
+				311E57F22BFBF3E9005B16DE /* HCaptchaWebViewManager+Helpers.swift in Sources */,
+				311E57E52BFBF3D4005B16DE /* HCaptchaResult__Tests.swift in Sources */,
 				E41DEAD4308F273B8B192FAB /* STPAnalyticsClient+StripePayments.swift in Sources */,
+				311E57F12BFBF3E9005B16DE /* HCaptchaError+Equatable.swift in Sources */,
+				311E57E32BFBF3D4005B16DE /* HCaptchaDecoder__Tests.swift in Sources */,
+				311E57E42BFBF3D4005B16DE /* HCaptcha__Bench.swift in Sources */,
+				311E57E62BFBF3D4005B16DE /* HCaptchaWebViewManager__HTML__Tests.swift in Sources */,
+				311E57E22BFBF3D4005B16DE /* DispatchQueue__Tests.swift in Sources */,
+				311E57F02BFBF3E9005B16DE /* HCaptchaDecoder+Helper.swift in Sources */,
+				311E57E82BFBF3D4005B16DE /* HCaptchaWebViewManager__Tests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1582,6 +1707,7 @@
 				98D4EC200247138A4AC89DB5 /* STPPaymentIntentShippingDetailsAddress.swift in Sources */,
 				D7A66D12E933BD2ABBB59148 /* STPPaymentIntentShippingDetailsAddressParams.swift in Sources */,
 				5571DEA0B75A19184E69813F /* STPPaymentIntentShippingDetailsParams.swift in Sources */,
+				31B7F5522BD1D4E500BF1015 /* HCaptchaResult.swift in Sources */,
 				77990E2F33FBDB74AEC3D410 /* STPPaymentIntentSourceAction.swift in Sources */,
 				C0B54A6D4B079A65F7DA6772 /* STPPaymentIntentSourceActionAuthorizeWithURL.swift in Sources */,
 				7309D5A475371AF0BF93E608 /* STPPaymentMethod.swift in Sources */,
@@ -1593,6 +1719,7 @@
 				2E5D133D1E203027C08DEDF0 /* STPPaymentMethodAUBECSDebit.swift in Sources */,
 				EC587986A9D69C5A5B180879 /* STPPaymentMethodAUBECSDebitParams.swift in Sources */,
 				A90639B7690FA9A8C5267561 /* STPPaymentMethodAffirm.swift in Sources */,
+				31B7F5592BD1D4E500BF1015 /* HCaptchaError.swift in Sources */,
 				610DB7FAF395AEBE6CBEFAC8 /* STPPaymentMethodAffirmParams.swift in Sources */,
 				0A0F8D842C98441D08F8D14E /* STPPaymentMethodAfterpayClearpay.swift in Sources */,
 				7D1A50DC86AA9993EB1640E9 /* STPPaymentMethodAfterpayClearpayParams.swift in Sources */,
@@ -1603,8 +1730,10 @@
 				6F3835CEBF9618207F8332AA /* STPPaymentMethodBacsDebit.swift in Sources */,
 				2BFBE84BD5718D4D8D4718D8 /* STPPaymentMethodBacsDebitParams.swift in Sources */,
 				17083CBB3962C5ADB155EEF4 /* STPPaymentMethodBancontact.swift in Sources */,
+				31B7F5502BD1D4E500BF1015 /* HCaptchaDecoder.swift in Sources */,
 				6BA4B9162BF3E0C900D1F21D /* STPPaymentMethodMobilePay.swift in Sources */,
 				34B8762E977C25C6F715C7C6 /* STPPaymentMethodBancontactParams.swift in Sources */,
+				31B7F54F2BD1D4E500BF1015 /* DispatchQueue+Throttle.swift in Sources */,
 				754AA58F8D3AE8431E01D47E /* STPPaymentMethodBoleto.swift in Sources */,
 				01328A80E436C968E4545922 /* STPPaymentMethodBoletoParams.swift in Sources */,
 				0F425B8D48AF9AFAD1F2215C /* STPPaymentMethodCard.swift in Sources */,
@@ -1612,6 +1741,7 @@
 				8DC22AD0DCB12D4320685EEB /* STPPaymentMethodCardNetworks.swift in Sources */,
 				A6C0955AD8E96027B675DE73 /* STPPaymentMethodCardNetworksParams.swift in Sources */,
 				9B0CB20827FD677EB3A21105 /* STPPaymentMethodCardParams.swift in Sources */,
+				31B7F54D2BD1D4E500BF1015 /* HCaptchaWebViewManager.swift in Sources */,
 				8C32D6C0D9CA9423FB305383 /* STPPaymentMethodCardPresent.swift in Sources */,
 				CFF09B0AF845EABFBDF4DB73 /* STPPaymentMethodCardWallet.swift in Sources */,
 				A3D7AB30E65C972E13F93439 /* STPPaymentMethodCardWalletMasterpass.swift in Sources */,
@@ -1642,6 +1772,7 @@
 				75C5CAAE1A4FE2A3D8646A9C /* STPPaymentMethodOXXOParams.swift in Sources */,
 				9BB8120998A4FCBF683BD001 /* STPPaymentMethodPayPal.swift in Sources */,
 				0921022765F92309BE302A47 /* STPPaymentMethodPayPalParams.swift in Sources */,
+				31B7F5542BD1D4E500BF1015 /* HCaptchaConfig.swift in Sources */,
 				FF4920D38DBE96BC82EC8CCF /* STPPaymentMethodPrzelewy24.swift in Sources */,
 				342EB5BE156C8431AEB1FD3F /* STPPaymentMethodPrzelewy24Params.swift in Sources */,
 				FFD569688769F8C95916582B /* STPPaymentMethodRevolutPay.swift in Sources */,
@@ -1653,6 +1784,7 @@
 				AFDC58A9765E19DC00DB7DA1 /* STPPaymentMethodSofortParams.swift in Sources */,
 				D339D772209088E8AC6BA873 /* STPPaymentMethodSwish.swift in Sources */,
 				79E6E73D03A875C96D3A0E1D /* STPPaymentMethodSwishParams.swift in Sources */,
+				31B7F5562BD1D4E500BF1015 /* HCaptchaDebugInfo.swift in Sources */,
 				BA5F60D575E6973BAA44EB4D /* STPPaymentMethodThreeDSecureUsage.swift in Sources */,
 				C20F8A272C0D8869FDF376BB /* STPPaymentMethodUPI.swift in Sources */,
 				F34C04E0C2A142C8CC05D902 /* STPPaymentMethodUPIParams.swift in Sources */,
@@ -1684,6 +1816,7 @@
 				F86AF35CBA2995BFC5544D32 /* STPRadarSession.swift in Sources */,
 				1AAFC737B6AA7CD6D1A83374 /* STPToken.swift in Sources */,
 				C1CC9D5BB7236FE08EAB168C /* STPiDEALBank.swift in Sources */,
+				31B7F55A2BD1D4E500BF1015 /* HCaptchaWebViewManager+WKNavigationDelegate.swift in Sources */,
 				ABDEED56ECE545675F5C3534 /* STPSetupIntent.swift in Sources */,
 				FDB1D6CBBF6A9BD4D53F3A82 /* STPSetupIntentConfirmParams.swift in Sources */,
 				64407AEF1246EE91037E4073 /* STPSetupIntentEnums.swift in Sources */,
@@ -1694,6 +1827,7 @@
 				3C9D065CBF635F3F5B9FBEA7 /* STPIntentAction.swift in Sources */,
 				318FA6D5C77D81BB953FE3E2 /* STPIntentActionAlipayHandleRedirect.swift in Sources */,
 				5D0D293AA8E98B21A4E519B2 /* STPIntentActionBoletoDisplayDetails.swift in Sources */,
+				31B7F55C2BD1D4E500BF1015 /* HCaptchaURLOpener.swift in Sources */,
 				79C31AF3B129472DE50A73F7 /* STPIntentActionCashAppRedirectToApp.swift in Sources */,
 				1430CDF3A9BD4E125CFCD6DD /* STPIntentActionKonbiniDisplayDetails.swift in Sources */,
 				51A5F7214C5244B62A06DCEA /* STPIntentActionOXXODisplayDetails.swift in Sources */,
@@ -1704,6 +1838,8 @@
 				32656FE9F07F8B06AAE991E9 /* STPIntentActionSwishHandleRedirect.swift in Sources */,
 				8EB5A0156D519AF6E3723084 /* STPIntentActionVerifyWithMicrodeposits.swift in Sources */,
 				E2F60512657160C05151F465 /* STPIntentActionWeChatPayRedirectToApp.swift in Sources */,
+				31B7F5512BD1D4E500BF1015 /* String+Dict.swift in Sources */,
+				31B7F5532BD1D4E500BF1015 /* HCaptchaLog.swift in Sources */,
 				2B4DBC9AA9284BE1805C2A05 /* STPMandateCustomerAcceptanceParams.swift in Sources */,
 				54D34D415DF33EA011588584 /* STPMandateDataParams.swift in Sources */,
 				81AB693615F0AFD4EBBA38EB /* STPMandateOnlineParams.swift in Sources */,
@@ -1749,6 +1885,7 @@
 				A3E0F66D2E417A8100C9E5F7 /* STPClientAttributionMetadata+Payments.swift in Sources */,
 				2EF5C661CF25482E6CC14FE9 /* STPInternalAPIResponseDecodable.swift in Sources */,
 				DD67E6BCE76BE4073A26326D /* STPPaymentMethodListDeserializer.swift in Sources */,
+				31B7F5552BD1D4E500BF1015 /* HCaptcha.swift in Sources */,
 				E9D0230BC95ECBC088FF8E10 /* STPSourcePoller.swift in Sources */,
 				B472CF82B4F1CE69F308DC68 /* Analytic+Payments.swift in Sources */,
 				8021C790E703EE5BF74DD2C5 /* STPAnalyticsClient+Payments.swift in Sources */,
@@ -1758,6 +1895,7 @@
 				9893D9DC84A0AB2AA2230555 /* NSDecimalNumber+Stripe_Currency.swift in Sources */,
 				493FAADB2D5D2F75001B2C71 /* STPBankAccountCollectorUserInterfaceStyle.swift in Sources */,
 				84DF21A5711A6CB12B2EDBCA /* NSDictionary+Stripe.swift in Sources */,
+				A3E0F7D62E53749F00C9E5F7 /* PassiveCaptcha.swift in Sources */,
 				BBC2EEFCD179683318E96CF0 /* NSString+Stripe.swift in Sources */,
 				FB33420154165650EAD32165 /* STPAPIClient+PaymentsCore.swift in Sources */,
 				BDE125EECCFD1E99CA93B887 /* ConnectionsSDKAvailability.swift in Sources */,
@@ -1767,9 +1905,11 @@
 				F26537B65F934C33B122697D /* STPThreeDSButtonCustomization.swift in Sources */,
 				6BE5D7C3F86951E73DAAEB6B /* STPThreeDSCustomizationSettings.swift in Sources */,
 				E15AF2A98601482762212A18 /* STPThreeDSFooterCustomization.swift in Sources */,
+				31B7F54E2BD1D4E500BF1015 /* HCaptchaHtml.swift in Sources */,
 				CB28DBAD2DBD452A008DD7DF /* STPConfirmLinkOptions.swift in Sources */,
 				71A589E7CCAEA272B9CC37AB /* STPThreeDSLabelCustomization.swift in Sources */,
 				AC555A609E63E94BCAA468C5 /* STPThreeDSNavigationBarCustomization.swift in Sources */,
+				31B7F5582BD1D4E500BF1015 /* HCaptchaEvent.swift in Sources */,
 				D38818756D495C674E53AE6D /* STPThreeDSSelectionCustomization.swift in Sources */,
 				A3237EE0F57C848B708AE505 /* STPThreeDSTextFieldCustomization.swift in Sources */,
 				4C9A78FBE900C635CC3AA400 /* STPThreeDSUICustomization.swift in Sources */,

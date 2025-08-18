@@ -9,7 +9,7 @@
 import Foundation
 @testable import StripePayments
 import WebKit
-@available(iOSApplicationExtension, unavailable)
+
 extension HCaptchaWebViewManager {
     private static let unformattedHTML: String! = {
         Bundle(for: HCaptchaWebViewManager__Tests.self)
