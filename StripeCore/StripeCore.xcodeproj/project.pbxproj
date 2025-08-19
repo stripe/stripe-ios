@@ -106,6 +106,7 @@
 		A62AEDF871AC89489FE19A13 /* ServerErrorMapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = C188AD8AE244CD6076679095 /* ServerErrorMapper.swift */; };
 		A987DFFA404EBD0788DAB21A /* UIImage+StripeCoreTestingUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1678E0A16D46DA2B4D3B3ECD /* UIImage+StripeCoreTestingUtils.swift */; };
 		AE26BFFBE9B1242E10CA052F /* STPAnalyticsClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1DD5B6F1152FD1C4A508A103 /* STPAnalyticsClient.swift */; };
+		B0CB16F42DD2729700CBE850 /* RequestConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0CB16F32DD2729200CBE850 /* RequestConfiguration.swift */; };
 		B35FD03DD246CC4DD6C4F3C0 /* Decimal+StripeCore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 06A516593E48DCFD5D98D702 /* Decimal+StripeCore.swift */; };
 		B644BC402BB234D6001FA436 /* STPAssert.swift in Sources */ = {isa = PBXBuildFile; fileRef = B644BC3F2BB234D6001FA436 /* STPAssert.swift */; };
 		B67F2CA22BAB8B690011E34A /* AnalyticLoggableErrorV2.swift in Sources */ = {isa = PBXBuildFile; fileRef = B67F2CA12BAB8B690011E34A /* AnalyticLoggableErrorV2.swift */; };
@@ -336,6 +337,7 @@
 		AD027F7695EC6F59CF32F4B9 /* StripeJSONEncoder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StripeJSONEncoder.swift; sourceTree = "<group>"; };
 		AF1FC608B88ACEA4C7438866 /* zh-Hant */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hant"; path = "zh-Hant.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		AF82F68E8D3A8286FD31DB13 /* APIStubbedTestCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIStubbedTestCase.swift; sourceTree = "<group>"; };
+		B0CB16F32DD2729200CBE850 /* RequestConfiguration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RequestConfiguration.swift; sourceTree = "<group>"; };
 		B3CA4B1855BF8D2F08F275A9 /* Error_SerializeForLoggingTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Error_SerializeForLoggingTest.swift; sourceTree = "<group>"; };
 		B3F73CA77397EAE70480FF25 /* et-EE */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "et-EE"; path = "et-EE.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		B644BC3F2BB234D6001FA436 /* STPAssert.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = STPAssert.swift; sourceTree = "<group>"; };
@@ -773,6 +775,7 @@
 		C2430C1558B85CB4E87334A9 /* Models */ = {
 			isa = PBXGroup;
 			children = (
+				B0CB16F32DD2729200CBE850 /* RequestConfiguration.swift */,
 				00D8E07F0DDBA1577A52156C /* EmptyResponse.swift */,
 				73CE623A81057C4063A1E0C4 /* StripeFile.swift */,
 			);
@@ -1101,6 +1104,7 @@
 				45DAE581F74EF7E11C64212B /* InstallMethod.swift in Sources */,
 				096274D0729AA8849FAD103C /* PaymentsSDKVariant.swift in Sources */,
 				49E8CE2A2CD146CE0009DFBB /* KeyedEncodingContainer+Extensions.swift in Sources */,
+				B0CB16F42DD2729700CBE850 /* RequestConfiguration.swift in Sources */,
 				DA5A05459309B9B77ACDD736 /* STPDeviceUtils.swift in Sources */,
 				31DEFE4E2D02C27000E6E507 /* AppAttestService.swift in Sources */,
 				4910B9282C3D8F3F00B030D4 /* Result+Extensions.swift in Sources */,

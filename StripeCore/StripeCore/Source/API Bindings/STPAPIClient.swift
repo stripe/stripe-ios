@@ -260,6 +260,7 @@ extension STPAPIClient {
     @_spi(STP) public func get<T: Decodable>(
         resource: String,
         parameters: [String: Any],
+        requestConfiguration: STPRequestConfiguration? = nil,
         ephemeralKeySecret: String? = nil,
         consumerPublishableKey: String? = nil,
         completion: @escaping (
@@ -269,6 +270,7 @@ extension STPAPIClient {
         request(
             method: .get,
             parameters: parameters,
+            requestConfiguration: requestConfiguration,
             ephemeralKeySecret: ephemeralKeySecret,
             consumerPublishableKey: consumerPublishableKey,
             resource: resource,
@@ -280,6 +282,7 @@ extension STPAPIClient {
     @_spi(STP) public func get<T: Decodable>(
         url: URL,
         parameters: [String: Any],
+        requestConfiguration: STPRequestConfiguration? = nil,
         ephemeralKeySecret: String? = nil,
         consumerPublishableKey: String? = nil,
         completion: @escaping (
@@ -292,6 +295,7 @@ extension STPAPIClient {
             ephemeralKeySecret: ephemeralKeySecret,
             consumerPublishableKey: consumerPublishableKey,
             url: url,
+            requestConfiguration: requestConfiguration,
             completion: completion
         )
     }
@@ -302,12 +306,14 @@ extension STPAPIClient {
     @_spi(STP) public func get<T: Decodable>(
         resource: String,
         parameters: [String: Any],
+        requestConfiguration: STPRequestConfiguration? = nil,
         ephemeralKeySecret: String? = nil,
         consumerPublishableKey: String? = nil
     ) -> Promise<T> {
         return request(
             method: .get,
             parameters: parameters,
+            requestConfiguration: requestConfiguration,
             ephemeralKeySecret: ephemeralKeySecret,
             consumerPublishableKey: consumerPublishableKey,
             resource: resource
@@ -318,6 +324,7 @@ extension STPAPIClient {
     @_spi(STP) public func post<T: Decodable>(
         resource: String,
         parameters: [String: Any],
+        requestConfiguration: STPRequestConfiguration? = nil,
         ephemeralKeySecret: String? = nil,
         consumerPublishableKey: String? = nil,
         completion: @escaping (Result<T, Error>) -> Void
@@ -325,6 +332,7 @@ extension STPAPIClient {
         request(
             method: .post,
             parameters: parameters,
+            requestConfiguration: requestConfiguration,
             ephemeralKeySecret: ephemeralKeySecret,
             consumerPublishableKey: consumerPublishableKey,
             resource: resource,
@@ -336,6 +344,7 @@ extension STPAPIClient {
     @_spi(STP) public func post<T: Decodable>(
         url: URL,
         parameters: [String: Any],
+        requestConfiguration: STPRequestConfiguration? = nil,
         ephemeralKeySecret: String? = nil,
         consumerPublishableKey: String? = nil,
         completion: @escaping (Result<T, Error>) -> Void
@@ -346,6 +355,7 @@ extension STPAPIClient {
             ephemeralKeySecret: ephemeralKeySecret,
             consumerPublishableKey: consumerPublishableKey,
             url: url,
+            requestConfiguration: requestConfiguration,
             completion: completion
         )
     }
@@ -356,12 +366,14 @@ extension STPAPIClient {
     @_spi(STP) public func post<T: Decodable>(
         resource: String,
         parameters: [String: Any],
+        requestConfiguration: STPRequestConfiguration? = nil,
         ephemeralKeySecret: String? = nil,
         consumerPublishableKey: String? = nil
     ) -> Promise<T> {
         return request(
             method: .post,
             parameters: parameters,
+            requestConfiguration: requestConfiguration,
             ephemeralKeySecret: ephemeralKeySecret,
             consumerPublishableKey: consumerPublishableKey,
             resource: resource
@@ -371,6 +383,7 @@ extension STPAPIClient {
     func request<T: Decodable>(
         method: HTTPMethod,
         parameters: [String: Any],
+        requestConfiguration: STPRequestConfiguration?,
         ephemeralKeySecret: String?,
         consumerPublishableKey: String?,
         resource: String
@@ -379,6 +392,7 @@ extension STPAPIClient {
         self.request(
             method: method,
             parameters: parameters,
+            requestConfiguration: requestConfiguration,
             ephemeralKeySecret: ephemeralKeySecret,
             consumerPublishableKey: consumerPublishableKey,
             resource: resource
@@ -391,6 +405,7 @@ extension STPAPIClient {
     func request<T: Decodable>(
         method: HTTPMethod,
         parameters: [String: Any],
+        requestConfiguration: STPRequestConfiguration?,
         ephemeralKeySecret: String?,
         consumerPublishableKey: String?,
         resource: String,
@@ -403,6 +418,7 @@ extension STPAPIClient {
             ephemeralKeySecret: ephemeralKeySecret,
             consumerPublishableKey: consumerPublishableKey,
             url: url,
+            requestConfiguration: requestConfiguration,
             completion: completion
         )
     }
@@ -413,6 +429,7 @@ extension STPAPIClient {
         ephemeralKeySecret: String?,
         consumerPublishableKey: String?,
         url: URL,
+        requestConfiguration: STPRequestConfiguration? = nil,
         completion: @escaping (Result<T, Error>) -> Void
     ) {
         var request = configuredRequest(for: url)
@@ -448,7 +465,7 @@ extension STPAPIClient {
             request.setValue(nil, forHTTPHeaderField: "Stripe-Account")
         }
 
-        self.sendRequest(request: request, completion: completion)
+        self.sendRequest(request: request, requestConfiguration: requestConfiguration, completion: completion)
     }
 
     /// Make a POST request using the passed Encodable object.
@@ -523,10 +540,12 @@ extension STPAPIClient {
 
     func sendRequest<T: Decodable>(
         request: URLRequest,
+        requestConfiguration: STPRequestConfiguration? = nil,
         completion: @escaping (Result<T, Error>) -> Void
     ) {
         urlSession.stp_performDataTask(
             with: request,
+            requestConfiguration: requestConfiguration,
             completionHandler: { (data, response, error) in
                 DispatchQueue.main.async {
                     completion(

@@ -295,4 +295,21 @@ class APIRequestTest: STPNetworkStubbingTestCase {
         wait(for: [e], timeout: 5.0)
         StripeAPI.maxRetries = oldMaxRetries
     }
+
+    func test429NoBackoffWhenConfigurationDisabled() {
+        let oldMaxRetries = StripeAPI.maxRetries
+        StripeAPI.maxRetries = 2
+        var inProgress = true
+
+        let e = expectation(description: "Request completed")
+        APIRequest<AnyAPIResponse>.getWith(apiClient, endpoint: "status/429", parameters: [:], requestConfiguration: STPRequestConfiguration(retryOn429: false)) {
+            (_, response, _) in
+            XCTAssertEqual(response?.statusCode, 429)
+            e.fulfill()
+        }
+
+        // We expect this request to return ~immediately, so we set a timeout lower than the highest
+        // amount of backoff.
+        wait(for: [e], timeout: 5.0)
+    }
 }

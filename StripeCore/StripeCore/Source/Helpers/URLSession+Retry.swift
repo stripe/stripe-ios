@@ -11,12 +11,14 @@ import Foundation
 extension URLSession {
     @_spi(STP) public func stp_performDataTask(
         with request: URLRequest,
+        requestConfiguration: STPRequestConfiguration? = nil,
         completionHandler: @escaping (Data?, URLResponse?, Error?) -> Void,
         retryCount: Int = StripeAPI.maxRetries
     ) {
         let task = dataTask(with: request) { (data, response, error) in
             if let httpResponse = response as? HTTPURLResponse,
                 httpResponse.statusCode == 429,
+                requestConfiguration?.retryOn429 ?? true,
                 retryCount > 0
             {
                 // Add some backoff time with a little bit of jitter:

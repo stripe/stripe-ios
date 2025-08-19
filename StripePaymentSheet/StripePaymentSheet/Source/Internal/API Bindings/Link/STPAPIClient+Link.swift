@@ -67,6 +67,7 @@ extension STPAPIClient {
             post(
                 resource: useMobileEndpoints ? mobileEndpoint : legacyEndpoint,
                 parameters: parameters,
+                requestConfiguration: STPRequestConfiguration(retryOn429: false),
                 ephemeralKeySecret: publishableKey
             ) { (result: Result<ConsumerSession.LookupResponse, Error>) in
                 Task { @MainActor in

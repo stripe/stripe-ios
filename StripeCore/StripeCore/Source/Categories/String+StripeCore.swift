@@ -20,7 +20,7 @@ import Foundation
     public var nonEmpty: String? {
         stringIfHasContentsElseNil(self)
     }
-    
+
     @_spi(STP) public var sanitizedKey: String {
         return (self.isSecretKey || self.hasPrefix("uk_"))
             ? "[REDACTED_LIVE_KEY]" : self
