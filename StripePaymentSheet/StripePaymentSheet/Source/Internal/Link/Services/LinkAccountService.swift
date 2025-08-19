@@ -35,6 +35,18 @@ protocol LinkAccountServiceProtocol {
         requestSurface: LinkRequestSurface,
         completion: @escaping (Result<PaymentSheetLinkAccount?, Error>) -> Void
     )
+
+    /// Authorizes a Link auth intent to retrieve the associated consumer session.
+    ///
+    /// - Parameters:
+    ///   - linkAuthIntentId: The Link auth intent ID to authorize.
+    ///   - requestSurface: The request surface to use for the API call. `.default` will map to `ios_payment_element`.
+    ///   - completion: Completion block.
+    func authorizeAccount(
+        withLinkAuthIntentId linkAuthIntentId: String,
+        requestSurface: LinkRequestSurface,
+        completion: @escaping (Result<PaymentSheetLinkAccount?, Error>) -> Void
+    )
 }
 
 final class LinkAccountService: LinkAccountServiceProtocol {
@@ -139,6 +151,43 @@ final class LinkAccountService: LinkAccountServiceProtocol {
                 }
             case .failure(let error):
                 STPAnalyticsClient.sharedClient.logLinkAccountLookupFailure(error: error)
+                completion(.failure(error))
+            }
+        }
+    }
+
+    func authorizeAccount(
+        withLinkAuthIntentId linkAuthIntentId: String,
+        requestSurface: LinkRequestSurface = .default,
+        completion: @escaping (Result<PaymentSheetLinkAccount?, Error>) -> Void
+    ) {
+        ConsumerSession.lookupLinkAuthIntent(
+            linkAuthIntentID: linkAuthIntentId,
+            sessionID: sessionID,
+            customerID: customerID,
+            with: apiClient,
+            useMobileEndpoints: useMobileEndpoints,
+            requestSurface: requestSurface
+        ) { [apiClient] result in
+            switch result {
+            case .success(let lookupResponse):
+                switch lookupResponse.responseType {
+                case .found(let session):
+                    completion(.success(
+                        PaymentSheetLinkAccount(
+                            email: session.consumerSession.emailAddress,
+                            session: session.consumerSession,
+                            publishableKey: session.publishableKey,
+                            displayablePaymentDetails: session.displayablePaymentDetails,
+                            apiClient: apiClient,
+                            useMobileEndpoints: self.useMobileEndpoints,
+                            requestSurface: requestSurface
+                        )
+                    ))
+                case .notFound, .noAvailableLookupParams:
+                    completion(.success(nil))
+                }
+            case .failure(let error):
                 completion(.failure(error))
             }
         }

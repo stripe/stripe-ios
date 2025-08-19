@@ -218,6 +218,27 @@ import UIKit
         }
     }
 
+    /// Authorizes a Link auth intent and retrieves the associated consumer session.
+    ///
+    /// - Parameter linkAuthIntentId: The Link auth intent ID to authorize.
+    /// - Parameter completion: A closure that is called with the result of the authorization.
+    @_spi(STP) public func authorize(linkAuthIntentId: String, completion: @escaping (Result<Void, Error>) -> Void) {
+        Self.authorize(
+            linkAuthIntentId: linkAuthIntentId,
+            linkAccountService: linkAccountService,
+            requestSurface: requestSurface
+        ) { result in
+            switch result {
+            case .success(let linkAccount):
+                LinkAccountContext.shared.account = linkAccount
+                // TODO: Implement remaining work to gather OAuth consent from the user
+                completion(.success(()))
+            case .failure(let error):
+                completion(.failure(error))
+            }
+        }
+    }
+
     /// Registers a new Link user with the provided details.
     /// `lookupConsumer` must be called before this.
     ///
@@ -470,6 +491,19 @@ import UIKit
         )
     }
 
+    private static func authorize(
+        linkAuthIntentId: String,
+        linkAccountService: any LinkAccountServiceProtocol,
+        requestSurface: LinkRequestSurface,
+        completion: @escaping (Result<PaymentSheetLinkAccount?, Error>) -> Void
+    ) {
+        linkAccountService.authorizeAccount(
+            withLinkAuthIntentId: linkAuthIntentId,
+            requestSurface: requestSurface,
+            completion: completion
+        )
+    }
+
     @objc
     private func onLinkAccountChange(_ notification: Notification) {
         DispatchQueue.main.async { [weak self] in
@@ -518,6 +552,22 @@ import UIKit
                 switch result {
                 case .success(let isExistingLinkConsumer):
                     continuation.resume(returning: isExistingLinkConsumer)
+                case .failure(let error):
+                    continuation.resume(throwing: error)
+                }
+            }
+        }
+    }
+
+    /// Authorizes a Link auth intent and retrieves the associated consumer session.
+    ///
+    /// - Parameter linkAuthIntentId: The Link auth intent ID to authorize.
+    func authorize(linkAuthIntentId: String) async throws {
+        try await withCheckedThrowingContinuation { continuation in
+            authorize(linkAuthIntentId: linkAuthIntentId) { result in
+                switch result {
+                case .success:
+                    continuation.resume(returning: ())
                 case .failure(let error):
                     continuation.resume(throwing: error)
                 }
