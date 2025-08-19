@@ -5,6 +5,8 @@
 //  Created by Michael Liberatore on 8/19/25.
 //
 
+import Foundation
+
 struct CustomerInformationResponse: Decodable {
     struct Verification: Decodable {
         let errors: [String]
