@@ -26,15 +26,13 @@ private class CardScanningEasilyTappableButton: UIButton {
 
 /// For internal SDK use only
 @available(macCatalyst 14.0, *)
-@objc protocol STP_Internal_CardScanningViewDelegate: NSObjectProtocol {
-    func cardScanningView(
-        _ cardScanningView: CardScanningView, didFinishWith cardParams: STPPaymentMethodCardParams?)
+protocol STP_Internal_CardScanningViewDelegate: AnyObject {
+    func cardScanningViewShouldClose(_ cardScanningView: CardScanningView, cardParams: STPPaymentMethodCardParams?)
 }
 
 /// For internal SDK use only
-@objc(STP_Internal_CardScanningView)
 @available(macCatalyst 14.0, *)
-class CardScanningView: UIView, STPCardScannerDelegate {
+class CardScanningView: UIView {
     private(set) weak var cameraView: STPCameraView?
 
     weak var delegate: STP_Internal_CardScanningViewDelegate?
@@ -48,18 +46,6 @@ class CardScanningView: UIView, STPCardScannerDelegate {
     private var isDisplayingError = false {
         didSet {
             errorLabel.isHidden = !isDisplayingError
-        }
-    }
-
-    func cardScanner(
-        _ scanner: STPCardScanner,
-        didFinishWith cardParams: STPPaymentMethodCardParams?,
-        error: Error?
-    ) {
-        if error != nil {
-            self.isDisplayingError = true
-        } else {
-            self.delegate?.cardScanningView(self, didFinishWith: cardParams)
         }
     }
 
@@ -154,19 +140,17 @@ class CardScanningView: UIView, STPCardScannerDelegate {
         ])
     }
 
-    func start() {
+    func startScanner() {
         cardScanner?.start()
     }
 
-    func stop() {
-        if isDisplayingError {
-            self.delegate?.cardScanningView(self, didFinishWith: nil)
-        }
-        cardScanner?.stop()
+    func stopAndCloseScanner() {
+        cardScanner?.cancel()
+        delegate?.cardScanningViewShouldClose(self, cardParams: nil)
     }
 
     @objc private func closeTapped() {
-        self.stop()
+        stopAndCloseScanner()
     }
 
     var snapshotView: UIView?
@@ -285,12 +269,17 @@ class CardScanningView: UIView, STPCardScannerDelegate {
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
     }
+}
 
-    override func willMove(toWindow newWindow: UIWindow?) {
-        if newWindow == nil {
-            stop()
-        }
-        super.willMove(toWindow: newWindow)
+@available(macCatalyst 14.0, *)
+extension CardScanningView: STPCardScannerDelegate {
+
+    func cardScanner(_ scanner: STPCardScanner, didCompleteWith cardParams: StripePayments.STPPaymentMethodCardParams) {
+        delegate?.cardScanningViewShouldClose(self, cardParams: cardParams)
+    }
+
+    func cardScannerDidError(_ scanner: STPCardScanner) {
+        isDisplayingError = true
     }
 }
 #endif

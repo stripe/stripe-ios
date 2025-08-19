@@ -65,7 +65,7 @@ final class CardSectionWithScannerView: UIView {
     @objc func didTapCardScanButton() {
         analyticsHelper?.logFormInteracted(paymentMethodTypeIdentifier: "card")
         setCardScanVisible(true)
-        cardScanningView.start()
+        cardScanningView.startScanner()
         becomeFirstResponder()
     }
 
@@ -88,15 +88,16 @@ final class CardSectionWithScannerView: UIView {
         return true
     }
 
+    // If the keyboard is shown or we move off screen the card scanner should be stopped
     override func resignFirstResponder() -> Bool {
-        cardScanningView.stop()
+        cardScanningView.stopAndCloseScanner()
         return super.resignFirstResponder()
     }
 }
 
 @available(macCatalyst 14.0, *)
 extension CardSectionWithScannerView: STP_Internal_CardScanningViewDelegate {
-    func cardScanningView(_ cardScanningView: CardScanningView, didFinishWith cardParams: STPPaymentMethodCardParams?) {
+    func cardScanningViewShouldClose(_ cardScanningView: CardScanningView, cardParams: StripePayments.STPPaymentMethodCardParams?) {
         setCardScanVisible(false)
         if let cardParams = cardParams {
             self.delegate?.didScanCard(cardParams: cardParams)
