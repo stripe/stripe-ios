@@ -142,15 +142,10 @@ extension PaymentSheetFormFactory {
         }
 
         let mandate: SimpleMandateElement? = {
-            if signupOptInFeatureEnabled {
-                // Respect this over all other configurations.
-                //
-                // It's possible that `signupOptInFeatureEnabled` is true, but the user has already used Link.
-                // This user would not see the signup opt-in toggle, but we still want to show the mandate.
-                // Therefore, always show the mandate if `signupOptInFeatureEnabled` is true, but only add
-                // the Link-specific terms if the signup opt-in toggle is actually visible via `shouldShowLinkSignupOptIn`.
-                let isSaveToLinkCheckboxChecked = shouldShowLinkSignupOptIn && signupOptInInitialValue
-                return makeMandate(shouldSaveToLink: !isLinkUI && isSaveToLinkCheckboxChecked)
+            if forceSaveFutureUseBehavior {
+                // Respect this over all other configurations, since we're forcing SFU behavior and thus need to show a mandate.
+                let isSaveToLinkCheckboxChecked = showLinkInlineSignup && signupOptInFeatureEnabled && signupOptInInitialValue
+                return makeMandate(shouldSaveToLink: isSaveToLinkCheckboxChecked)
             }
             switch configuration.termsDisplayFor(paymentMethodType: .stripe(.card)) {
             case .never:
@@ -176,46 +171,18 @@ extension PaymentSheetFormFactory {
     }
 
     private func makeMandate(shouldSaveToLink: Bool) -> SimpleMandateElement {
-        let mandateText = Self.makeMandateText(
-            useCombinedReuseAndLinkSignupText: signupOptInFeatureEnabled,
-            shouldSaveToLink: shouldSaveToLink,
-            merchantName: configuration.merchantDisplayName
-        )
+        let shouldSaveToLink = shouldSaveToLink && !isLinkUI
+        let variant: MandateVariant = forceSaveFutureUseBehavior
+            ? .updated(shouldSignUpToLink: shouldSaveToLink)
+            : .original
+        let mandateText = Self.makeMandateText(variant: variant, merchantName: configuration.merchantDisplayName)
         return makeMandate(mandateText: mandateText)
     }
 
     static func makeMandateText(
-        useCombinedReuseAndLinkSignupText: Bool,
-        shouldSaveToLink: Bool,
+        variant: MandateVariant,
         merchantName: String
     ) -> NSAttributedString {
-        let formatText = if useCombinedReuseAndLinkSignupText {
-            if shouldSaveToLink {
-                String.Localized.by_continuing_you_agree_to_save_your_information_to_merchant_and_link
-            } else {
-                String.Localized.by_continuing_you_agree_to_save_your_information_to_merchant
-            }
-        } else {
-            String.Localized.by_providing_your_card_information_text
-        }
-
-        let terms = String(format: formatText, merchantName).removeTrailingDots()
-
-        if useCombinedReuseAndLinkSignupText && shouldSaveToLink {
-            let links = [
-                "link": URL(string: "https://link.com")!,
-                "terms": URL(string: "https://link.com/terms")!,
-                "privacy": URL(string: "https://link.com/privacy")!,
-            ]
-            return STPStringUtils.applyLinksToString(template: terms, links: links)
-        } else {
-            return NSAttributedString(string: terms)
-        }
-    }
-}
-
-private extension String {
-    func removeTrailingDots() -> String {
-        return hasSuffix("..") ? String(dropLast()) : self
+        return variant.create(forMerchant: merchantName)
     }
 }

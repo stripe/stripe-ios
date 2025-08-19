@@ -233,11 +233,11 @@ extension PaymentMethodFormViewController: ElementDelegate {
             }
         }
 
-        if let linkSignup = form.linkInlineSignupElement, let mandateElement = form.mandateElement {
-            // Update the mandate with or without Link
+        if let linkSignup = form.linkInlineSignupElement, linkSignup.viewModel.mode == .signupOptIn, let mandateElement = form.mandateElement {
+            // Update the mandate based on the checkbox state
+            let variant = MandateVariant.updated(shouldSignUpToLink: linkSignup.viewModel.saveCheckboxChecked)
             let text = PaymentSheetFormFactory.makeMandateText(
-                useCombinedReuseAndLinkSignupText: linkSignup.viewModel.mode == .signupOptIn,
-                shouldSaveToLink: linkSignup.viewModel.saveCheckboxChecked,
+                variant: variant,
                 merchantName: configuration.merchantDisplayName
             )
             mandateElement.mandateTextView.attributedText = text
