@@ -11,7 +11,6 @@ import UIKit
 /// For internal SDK use only
 @objc(STP_Internal_LinkHintMessageView)
 final class LinkHintMessageView: UIView {
-
     private struct Constants {
         static let spacing: CGFloat = LinkUI.smallContentSpacing
         static let margins: NSDirectionalEdgeInsets = LinkUI.compactButtonMargins
@@ -35,7 +34,6 @@ final class LinkHintMessageView: UIView {
         imageView.contentMode = .scaleAspectFit
         imageView.setContentHuggingPriority(.required, for: .horizontal)
         imageView.setContentCompressionResistancePriority(.required, for: .horizontal)
-
         NSLayoutConstraint.activate([
             imageView.widthAnchor.constraint(equalToConstant: Constants.iconSize.width),
             imageView.heightAnchor.constraint(equalToConstant: Constants.iconSize.height),
@@ -73,14 +71,13 @@ final class LinkHintMessageView: UIView {
         stackView.isLayoutMarginsRelativeArrangement = true
         stackView.directionalLayoutMargins = Constants.margins
         stackView.translatesAutoresizingMaskIntoConstraints = false
-        addSubview(stackView)
 
+        addSubview(stackView)
         NSLayoutConstraint.activate([
             stackView.leadingAnchor.constraint(equalTo: leadingAnchor),
             stackView.trailingAnchor.constraint(equalTo: trailingAnchor),
             stackView.centerYAnchor.constraint(equalTo: centerYAnchor),
         ])
-
         backgroundColor = .linkSurfaceSecondary
         layer.cornerRadius = Constants.cornerRadius
 

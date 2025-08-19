@@ -39,7 +39,7 @@ extension PayWithLinkViewController {
         }()
 
         private lazy var paymentPicker: LinkPaymentMethodPicker = {
-            let paymentPicker = LinkPaymentMethodPicker()
+            let paymentPicker = LinkPaymentMethodPicker(linkConfiguration: context.linkConfiguration)
             paymentPicker.delegate = self
             paymentPicker.dataSource = self
             paymentPicker.supportedPaymentMethodTypes = viewModel.supportedPaymentMethodTypes
