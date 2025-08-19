@@ -32,7 +32,6 @@ extension UIColor {
     static let linkTextTertiary: UIColor = neutral500
     static let linkTextBrand: UIColor = dynamic(light: brand600, dark: brand200)
     static let linkTextCritical: UIColor = critical600
-    static let linkTextOnPrimary: UIColor = neutral900
 
     // Icon colors
     static let linkIconPrimary: UIColor = dynamic(light: neutral900, dark: neutral100)

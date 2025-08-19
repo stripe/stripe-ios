@@ -10,7 +10,7 @@ import SwiftUI
 
 @available(iOS 16.0, *)
 struct LinkButton: View {
-    fileprivate enum Constants {
+    private enum Constants {
         static let defaultButtonHeight: CGFloat = 44
         static let baseContentHeight: CGFloat = 18
         static let baseSeparatorWidth: CGFloat = 1
@@ -19,25 +19,18 @@ struct LinkButton: View {
         static let minScaleFactor: CGFloat = 0.7
         static let maxScaleFactor: CGFloat = 1.5
         static let minWidth: CGFloat = 180
-        static let whiteButtonBorderColor = Color(red: 212/255, green: 212/255, blue: 212/255, opacity: 1)
-        static let whiteButtonDividerColor = Color(red: 0, green: 0, blue: 0, opacity: 0.12)
-        static let whiteButtonForegroundColor = Color(red: 13/255, green: 13/255, blue: 13/255, opacity: 1)
+        static let borderColor = Color(red: 212/255, green: 212/255, blue: 212/255, opacity: 1)
+        static let dividerColor = Color(red: 0, green: 0, blue: 0, opacity: 0.12)
+        static let foregroundColor = Color(red: 13/255, green: 13/255, blue: 13/255, opacity: 1)
+        static let backgroundColor = Color.white
     }
 
     @StateObject private var viewModel: LinkButtonViewModel
     private let action: () -> Void
     private let height: CGFloat
     private let cornerRadius: CGFloat
-    private let theme: WalletButtonsView.ButtonThemes.Link
 
-    init(
-        theme: WalletButtonsView.ButtonThemes.Link,
-        height: CGFloat = Constants.defaultButtonHeight,
-        cornerRadius: CGFloat = Constants.defaultButtonHeight / 2,
-        viewModel: LinkButtonViewModel = LinkButtonViewModel(),
-        action: @escaping () -> Void
-    ) {
-        self.theme = theme
+    init(height: CGFloat = Constants.defaultButtonHeight, cornerRadius: CGFloat = Constants.defaultButtonHeight / 2, viewModel: LinkButtonViewModel = LinkButtonViewModel(), action: @escaping () -> Void) {
         self.height = height
         self.cornerRadius = cornerRadius
         self._viewModel = StateObject(wrappedValue: viewModel)
@@ -74,7 +67,7 @@ struct LinkButton: View {
     var body: some View {
         Button(action: action) {
             HStack(spacing: scaledContentSpacing) {
-                SwiftUI.Image(uiImage: theme.image.makeImage(template: false))
+                SwiftUI.Image(uiImage: Image.link_logo.makeImage(template: false))
                     .resizable()
                     .scaledToFit()
                     .frame(height: scaledContentHeight)
@@ -82,7 +75,7 @@ struct LinkButton: View {
 
                 if let account = viewModel.account {
                     Rectangle()
-                        .fill(theme.dividerColor)
+                        .fill(Constants.dividerColor)
                         .frame(width: scaledSeparatorWidth, height: scaledContentHeight)
                         .cornerRadius(scaledSeparatorWidth / 2)
 
@@ -105,69 +98,18 @@ struct LinkButton: View {
                 }
             }
             .padding(.horizontal, LinkUI.contentSpacing)
-            .foregroundColor(theme.foregroundColor)
+            .foregroundColor(Constants.foregroundColor)
             .frame(height: scaledContentHeight)
             .frame(minWidth: Constants.minWidth, maxWidth: .infinity)
         }
         .frame(maxWidth: .infinity)
         .frame(height: height)
-        .background(theme.backgroundColor)
+        .background(Constants.backgroundColor)
         .overlay {
-            if let borderColor = theme.borderColor {
-                RoundedRectangle(cornerRadius: cornerRadius)
-                    .stroke(borderColor, lineWidth: 1)
-            }
+            RoundedRectangle(cornerRadius: cornerRadius)
+                .stroke(Constants.borderColor, lineWidth: 1)
         }
         .cornerRadius(cornerRadius)
-    }
-}
-
-@available(iOS 16.0, *)
-private extension WalletButtonsView.ButtonThemes.Link {
-
-    var image: Image {
-        switch self {
-        case .green:
-            return Image.link_logo_bw
-        case .white:
-            return Image.link_logo
-        }
-    }
-
-    var borderColor: Color? {
-        switch self {
-        case .green:
-            return nil
-        case .white:
-            return LinkButton.Constants.whiteButtonBorderColor
-        }
-    }
-
-    var dividerColor: Color {
-        switch self {
-        case .green:
-            return Color(uiColor: .linkSeparatorOnPrimaryButton)
-        case .white:
-            return LinkButton.Constants.whiteButtonDividerColor
-        }
-    }
-
-    var foregroundColor: Color? {
-        switch self {
-        case .green:
-            return Color(uiColor: .linkTextOnPrimary)
-        case .white:
-            return LinkButton.Constants.whiteButtonForegroundColor
-        }
-    }
-
-    var backgroundColor: Color {
-        switch self {
-        case .green:
-            return Color(uiColor: .linkIconBrand)
-        case .white:
-            return Color.white
-        }
     }
 }
 
@@ -192,7 +134,7 @@ private struct LinkButtonPreview: View {
     }
 
     var body: some View {
-        LinkButton(theme: .white, viewModel: viewModel, action: {})
+        LinkButton(viewModel: viewModel, action: {})
             .padding(.horizontal)
     }
 }
