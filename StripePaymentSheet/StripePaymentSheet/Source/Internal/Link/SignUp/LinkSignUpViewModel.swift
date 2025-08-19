@@ -202,6 +202,7 @@ private extension LinkSignUpViewModel {
             self?.accountService.lookupAccount(
                 withEmail: emailAddress,
                 emailSource: .userAction,
+                linkAuthIntentId: nil,
                 doNotLogConsumerFunnelEvent: false,
                 requestSurface: .default
             ) { result in

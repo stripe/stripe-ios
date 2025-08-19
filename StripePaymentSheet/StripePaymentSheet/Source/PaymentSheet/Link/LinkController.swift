@@ -201,11 +201,17 @@ import UIKit
     /// Looks up whether the provided email is associated with an existing Link consumer.
     ///
     /// - Parameter email: The email address to look up.
+    /// - Parameter linkAuthIntentId: Optional Link auth intent ID to pass to the API.
     /// - Parameter completion: A closure that is called with the result of the lookup. It returns `true` if the email is associated with a registered Link consumer, or `false` otherwise.
-    @_spi(STP) public func lookupConsumer(with email: String, completion: @escaping (Result<Bool, Error>) -> Void) {
+    @_spi(STP) public func lookupConsumer(
+        with email: String,
+        linkAuthIntentId: String? = nil,
+        completion: @escaping (Result<Bool, Error>) -> Void
+    ) {
         Self.lookupConsumer(
             email: email,
             linkAccountService: linkAccountService,
+            linkAuthIntentId: linkAuthIntentId,
             requestSurface: requestSurface
         ) { result in
             switch result {
@@ -445,6 +451,7 @@ import UIKit
     private static func lookupConsumer(
         email: String,
         linkAccountService: any LinkAccountServiceProtocol,
+        linkAuthIntentId: String?,
         requestSurface: LinkRequestSurface,
         completion: @escaping (Result<PaymentSheetLinkAccount?, Error>) -> Void
     ) {
@@ -452,6 +459,7 @@ import UIKit
             withEmail: email,
             // TODO: Check that this is the right email source to pass in
             emailSource: .customerEmail,
+            linkAuthIntentId: linkAuthIntentId,
             // TODO: Confirm which value to pass here to not cause experiment issues
             doNotLogConsumerFunnelEvent: false,
             requestSurface: requestSurface,
@@ -500,10 +508,11 @@ import UIKit
     /// Looks up whether the provided email is associated with an existing Link consumer.
     ///
     /// - Parameter email: The email address to look up.
+    /// - Parameter linkAuthIntentId: Optional Link auth intent ID to pass to the API.
     /// - Returns: Returns `true` if the email is associated with an existing Link consumer, or `false` otherwise.
-    func lookupConsumer(with email: String) async throws -> Bool {
+    func lookupConsumer(with email: String, linkAuthIntentId: String? = nil) async throws -> Bool {
         try await withCheckedThrowingContinuation { continuation in
-            lookupConsumer(with: email) { result in
+            lookupConsumer(with: email, linkAuthIntentId: linkAuthIntentId) { result in
                 switch result {
                 case .success(let isExistingLinkConsumer):
                     continuation.resume(returning: isExistingLinkConsumer)

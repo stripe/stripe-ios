@@ -20,6 +20,7 @@ extension STPAPIClient {
         emailSource: EmailSource?,
         sessionID: String,
         customerID: String?,
+        linkAuthIntentId: String? = nil,
         cookieStore: LinkCookieStore,
         useMobileEndpoints: Bool,
         doNotLogConsumerFunnelEvent: Bool,
@@ -35,6 +36,7 @@ extension STPAPIClient {
                 "session_id": sessionID,
             ]
             parameters["customer_id"] = customerID
+            parameters["link_auth_intent_id"] = linkAuthIntentId
             if doNotLogConsumerFunnelEvent {
                 parameters["do_not_log_consumer_funnel_event"] = true
             }

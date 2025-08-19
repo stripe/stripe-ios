@@ -26,11 +26,13 @@ protocol LinkAccountServiceProtocol {
     ///   - email: Email address associated with the account.
     ///   - emailSource: Details on the source of the email used.
     ///   - doNotLogConsumerFunnelEvent: Whether or not this lookup call should be logged backend side.
+    ///   - linkAuthIntentId: Optional Link auth intent ID to pass to the API.
     ///   - requestSurface: The request surface to use for the API call. `.default` will map to `ios_payment_element`.
     ///   - completion: Completion block.
     func lookupAccount(
         withEmail email: String?,
         emailSource: EmailSource,
+        linkAuthIntentId: String?,
         doNotLogConsumerFunnelEvent: Bool,
         requestSurface: LinkRequestSurface,
         completion: @escaping (Result<PaymentSheetLinkAccount?, Error>) -> Void
@@ -83,6 +85,7 @@ final class LinkAccountService: LinkAccountServiceProtocol {
     func lookupAccount(
         withEmail email: String?,
         emailSource: EmailSource,
+        linkAuthIntentId: String? = nil,
         doNotLogConsumerFunnelEvent: Bool,
         requestSurface: LinkRequestSurface = .default,
         completion: @escaping (Result<PaymentSheetLinkAccount?, Error>) -> Void
@@ -97,6 +100,7 @@ final class LinkAccountService: LinkAccountServiceProtocol {
             emailSource: emailSource,
             sessionID: sessionID,
             customerID: customerID,
+            linkAuthIntentId: linkAuthIntentId,
             with: apiClient,
             useMobileEndpoints: useMobileEndpoints,
             doNotLogConsumerFunnelEvent: doNotLogConsumerFunnelEvent,
