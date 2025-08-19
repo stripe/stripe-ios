@@ -31,6 +31,7 @@ public protocol CryptoOnrampCoordinatorProtocol {
     /// Looks up whether the provided email is associated with an existing Link consumer.
     ///
     /// - Parameter email: The email address to look up.
+    /// - Parameter linkAuthIntentId: The optional Link auth intent ID for the associated account.
     /// - Returns: Returns `true` if the email is associated with an existing Link consumer, or `false` otherwise.
     func lookupConsumer(with email: String, linkAuthIntentId: String?) async throws -> Bool
 

@@ -201,7 +201,7 @@ import UIKit
     /// Looks up whether the provided email is associated with an existing Link consumer.
     ///
     /// - Parameter email: The email address to look up.
-    /// - Parameter linkAuthIntentId: Optional Link auth intent ID to pass to the API.
+    /// - Parameter linkAuthIntentId: The optional Link auth intent ID for the associated account.
     /// - Parameter completion: A closure that is called with the result of the lookup. It returns `true` if the email is associated with a registered Link consumer, or `false` otherwise.
     @_spi(STP) public func lookupConsumer(
         with email: String,

@@ -26,7 +26,7 @@ protocol LinkAccountServiceProtocol {
     ///   - email: Email address associated with the account.
     ///   - emailSource: Details on the source of the email used.
     ///   - doNotLogConsumerFunnelEvent: Whether or not this lookup call should be logged backend side.
-    ///   - linkAuthIntentId: Optional Link auth intent ID to pass to the API.
+    ///   - linkAuthIntentId: The optional Link auth intent ID for the associated account.
     ///   - requestSurface: The request surface to use for the API call. `.default` will map to `ios_payment_element`.
     ///   - completion: Completion block.
     func lookupAccount(
