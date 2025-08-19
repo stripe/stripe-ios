@@ -19,7 +19,7 @@ struct LinkButton: View {
         static let minScaleFactor: CGFloat = 0.7
         static let maxScaleFactor: CGFloat = 1.5
         static let minWidth: CGFloat = 180
-        static let borderColor = Color(red: 212/255, green: 212/255, blue: 212/255, opacity: 1)
+        static let borderColor = Color(red: 13/255, green: 13/255, blue: 13/255, opacity: 0.1)
         static let dividerColor = Color(red: 0, green: 0, blue: 0, opacity: 0.12)
         static let foregroundColor = Color(red: 13/255, green: 13/255, blue: 13/255, opacity: 1)
         static let backgroundColor = Color.white
