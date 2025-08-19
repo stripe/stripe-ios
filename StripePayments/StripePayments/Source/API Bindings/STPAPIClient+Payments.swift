@@ -816,13 +816,15 @@ extension STPAPIClient {
         with paymentMethodParams: STPPaymentMethodParams,
         completion: @escaping STPPaymentMethodCompletionBlock
     ) {
-        createPaymentMethod(with: paymentMethodParams, additionalPaymentUserAgentValues: [], completion: completion)
+        createPaymentMethod(with: paymentMethodParams, additionalPaymentUserAgentValues: [], overridePublishableKey: nil, completion: completion)
     }
 
     /// - Parameter additionalPaymentUserAgentValues: A list of values to append to the `payment_user_agent` parameter sent in the request. e.g. `["deferred-intent", "autopm"]` will append "; deferred-intent; autopm" to the `payment_user_agent`.
+    /// - Parameter overridePublishableKey: Optional publishable key to use for this request instead of the client's default key.
     func createPaymentMethod(
         with paymentMethodParams: STPPaymentMethodParams,
         additionalPaymentUserAgentValues: [String] = [],
+        overridePublishableKey: String? = nil,
         completion: @escaping STPPaymentMethodCompletionBlock
     ) {
         STPAnalyticsClient.sharedClient.logPaymentMethodCreationAttempt(
@@ -833,9 +835,15 @@ extension STPAPIClient {
         var parameters = STPFormEncoder.dictionary(forObject: paymentMethodParams)
         parameters = Self.paramsAddingPaymentUserAgent(parameters, additionalValues: additionalPaymentUserAgentValues)
         STPTelemetryClient.shared.addTelemetryFields(toParams: &parameters)
+
+        let additionalHeaders = overridePublishableKey != nil
+            ? authorizationHeader(using: overridePublishableKey)
+            : [:]
+
         APIRequest<STPPaymentMethod>.post(
             with: self,
             endpoint: APIEndpointPaymentMethods,
+            additionalHeaders: additionalHeaders,
             parameters: parameters
         ) { paymentMethod, _, error in
             completion(paymentMethod, error)
@@ -849,15 +857,38 @@ extension STPAPIClient {
     ///   - additionalPaymentUserAgentValues:  A list of values to append to the `payment_user_agent` parameter sent in the request. e.g. `["deferred-intent", "autopm"]` will append "; deferred-intent; autopm" to the `payment_user_agent`.
     /// - Returns: the returned PaymentMethod object.
     public func createPaymentMethod(with paymentMethodParams: STPPaymentMethodParams, additionalPaymentUserAgentValues: [String]) async throws -> STPPaymentMethod {
-        return try await withCheckedThrowingContinuation({ continuation in
-            createPaymentMethod(with: paymentMethodParams, additionalPaymentUserAgentValues: additionalPaymentUserAgentValues) { paymentMethod, error in
+        return try await createPaymentMethod(
+            with: paymentMethodParams,
+            additionalPaymentUserAgentValues: additionalPaymentUserAgentValues,
+            overridePublishableKey: nil
+        )
+    }
+
+    /// Creates a PaymentMethod object with the provided params object and optional override publishable key.
+    /// - seealso: https://stripe.com/docs/api/payment_methods/create
+    /// - Parameters:
+    ///   - paymentMethodParams:  The `STPPaymentMethodParams` to pass to `/v1/payment_methods`.  Cannot be nil.
+    ///   - additionalPaymentUserAgentValues:  A list of values to append to the `payment_user_agent` parameter sent in the request. e.g. `["deferred-intent", "autopm"]` will append "; deferred-intent; autopm" to the `payment_user_agent`.
+    ///   - overridePublishableKey: Optional publishable key to use for this request instead of the client's default key.
+    /// - Returns: the returned PaymentMethod object.
+    @_spi(STP) public func createPaymentMethod(
+        with paymentMethodParams: STPPaymentMethodParams,
+        additionalPaymentUserAgentValues: [String] = [],
+        overridePublishableKey: String? = nil
+    ) async throws -> STPPaymentMethod {
+        return try await withCheckedThrowingContinuation { continuation in
+            createPaymentMethod(
+                with: paymentMethodParams,
+                additionalPaymentUserAgentValues: additionalPaymentUserAgentValues,
+                overridePublishableKey: overridePublishableKey
+            ) { paymentMethod, error in
                 if let paymentMethod = paymentMethod {
-                    continuation.resume(with: .success(paymentMethod))
+                    continuation.resume(returning: paymentMethod)
                 } else {
-                    continuation.resume(with: .failure(error ?? NSError.stp_genericFailedToParseResponseError()))
+                    continuation.resume(throwing: error ?? NSError.stp_genericFailedToParseResponseError())
                 }
             }
-        })
+        }
     }
 
     /// Updates a PaymentMethod object with the provided params object.

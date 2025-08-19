@@ -329,8 +329,13 @@ import UIKit
 
     /// Creates a [STPPaymentMethod] from the selected Link payment method preview.
     ///
-    /// - Parameter completion: A closure that is called with the result of the payment method creation. It returns a `STPPaymentMethod` if successful, or an error if the payment method could not be created.
-    @_spi(STP) public func createPaymentMethod(completion: @escaping (Result<STPPaymentMethod, Error>) -> Void) {
+    /// - Parameters:
+    ///   - overridePublishableKey: Optional publishable key to use for the API request.
+    ///   - completion: A closure that is called with the result of the payment method creation. It returns a `STPPaymentMethod` if successful, or an error if the payment method could not be created.
+    @_spi(STP) public func createPaymentMethod(
+        overridePublishableKey: String? = nil,
+        completion: @escaping (Result<STPPaymentMethod, Error>) -> Void
+    ) {
         guard let selectedPaymentDetails else {
             completion(.failure(IntegrationError.noPaymentMethodSelected))
             return
@@ -347,6 +352,7 @@ import UIKit
             createPaymentMethodInPassthroughMode(
                 paymentDetails: selectedPaymentDetails,
                 consumerSessionClientSecret: consumerSessionClientSecret,
+                overridePublishableKey: overridePublishableKey,
                 clientAttributionMetadata: clientAttributionMetadata,
                 completion: completion
             )
@@ -354,6 +360,7 @@ import UIKit
             createPaymentMethodInPaymentMethodMode(
                 paymentDetails: selectedPaymentDetails,
                 linkAccount: linkAccount,
+                overridePublishableKey: overridePublishableKey,
                 clientAttributionMetadata: clientAttributionMetadata,
                 completion: completion
             )
@@ -365,6 +372,7 @@ import UIKit
     private func createPaymentMethodInPassthroughMode(
         paymentDetails: ConsumerPaymentDetails,
         consumerSessionClientSecret: String,
+        overridePublishableKey: String?,
         clientAttributionMetadata: STPClientAttributionMetadata,
         completion: @escaping (Result<STPPaymentMethod, Error>) -> Void
     ) {
@@ -372,7 +380,7 @@ import UIKit
         apiClient.sharePaymentDetails(
             for: consumerSessionClientSecret,
             id: paymentDetails.stripeID,
-            consumerAccountPublishableKey: nil,
+            consumerAccountPublishableKey: overridePublishableKey,
             allowRedisplay: nil,
             cvc: paymentDetails.cvc,
             expectedPaymentMethodType: nil,
@@ -391,6 +399,7 @@ import UIKit
     private func createPaymentMethodInPaymentMethodMode(
         paymentDetails: ConsumerPaymentDetails,
         linkAccount: PaymentSheetLinkAccount,
+        overridePublishableKey: String?,
         clientAttributionMetadata: STPClientAttributionMetadata,
         completion: @escaping (Result<STPPaymentMethod, Error>) -> Void
     ) {
@@ -404,9 +413,10 @@ import UIKit
                     allowRedisplay: nil
                 )!
                 paymentMethodParams.clientAttributionMetadata = clientAttributionMetadata
+
                 let paymentMethod = try await apiClient.createPaymentMethod(
                     with: paymentMethodParams,
-                    additionalPaymentUserAgentValues: []
+                    overridePublishableKey: overridePublishableKey
                 )
                 completion(.success(paymentMethod))
             } catch {
@@ -582,10 +592,11 @@ import UIKit
     }
 
     /// Creates a [STPPaymentMethod] from the selected Link payment method preview.
+    /// - Parameter overridePublishableKey: Optional publishable key to use for the API request.
     /// - Returns: A `STPPaymentMethod` if successful, or throws an error if the payment method could not be created.
-    func createPaymentMethod() async throws -> STPPaymentMethod {
+    func createPaymentMethod(overridePublishableKey: String? = nil) async throws -> STPPaymentMethod {
         return try await withCheckedThrowingContinuation { continuation in
-            createPaymentMethod { result in
+            createPaymentMethod(overridePublishableKey: overridePublishableKey) { result in
                 switch result {
                 case .success(let paymentMethod):
                     continuation.resume(returning: paymentMethod)

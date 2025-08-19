@@ -27,6 +27,7 @@ struct AuthenticatedView: View {
     @State private var isIdentityVerificationComplete = false
     @State private var showKYCView = false
     @State private var selectedPaymentMethod: PaymentMethodPreview?
+    @State private var cryptoPaymentToken: String?
 
     @Environment(\.isLoading) private var isLoading
 
@@ -99,6 +100,11 @@ struct AuthenticatedView: View {
 
                     if let selectedPaymentMethod {
                         PaymentMethodCardView(preview: selectedPaymentMethod)
+
+                        Button("Create crypto payment token") {
+                            createCryptoPaymentToken()
+                        }
+                        .buttonStyle(PrimaryButtonStyle())
                     } else {
                         VStack(spacing: 8) {
                             // Note: Apple Pay does not require iOS 16, but the native SwiftUI
@@ -230,6 +236,26 @@ struct AuthenticatedView: View {
                 await MainActor.run {
                     isLoading.wrappedValue = false
                     errorMessage = "Apple Pay failed: \(error.localizedDescription)"
+                }
+            }
+        }
+    }
+
+    private func createCryptoPaymentToken() {
+        isLoading.wrappedValue = true
+        errorMessage = nil
+
+        Task {
+            do {
+                let token = try await coordinator.createCryptoPaymentToken()
+                await MainActor.run {
+                    isLoading.wrappedValue = false
+                    cryptoPaymentToken = token
+                }
+            } catch {
+                await MainActor.run {
+                    isLoading.wrappedValue = false
+                    errorMessage = "Create crypto payment token failed: \(error.localizedDescription)"
                 }
             }
         }

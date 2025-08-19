@@ -361,13 +361,16 @@ extension STPAPIClient {
             parameters["billing_phone"] = billingPhoneNumber
         }
 
+        let customHeaders: [String: String] = consumerAccountPublishableKey != nil
+            ? authorizationHeader(using: consumerAccountPublishableKey)
+            : [:]
         APIRequest<PaymentDetailsShareResponse>.post(
             with: self,
             endpoint: endpoint,
+            additionalHeaders: customHeaders,
             parameters: parameters
         ) { paymentDetailsShareResponse, _, error in
             guard let paymentDetailsShareResponse else {
-                stpAssert(error != nil)
                 completion(.failure(error ?? NSError.stp_genericConnectionError()))
                 return
             }
