@@ -130,13 +130,8 @@ struct RegistrationView: View {
             } catch {
                 await MainActor.run {
                     isLoading.wrappedValue = false
-                    if let cryptoError = error as? CryptoOnrampCoordinator.Error {
-                        switch cryptoError {
-                        case .invalidPhoneFormat:
-                            errorMessage = "Invalid phone format. Please use E.164 format (e.g., +12125551234)"
-                        @unknown default:
-                            errorMessage = "An unknown error occurred. Please try again later."
-                        }
+                    if let cryptoError = error as? CryptoOnrampCoordinator.Error, case .invalidPhoneFormat = cryptoError {
+                        errorMessage = "Invalid phone format. Please use E.164 format (e.g., +12125551234)"
                     } else {
                         errorMessage = "Registration failed: \(error.localizedDescription)"
                     }

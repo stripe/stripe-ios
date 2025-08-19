@@ -57,6 +57,7 @@ final class PayWithNativeLinkController {
     let supportedPaymentMethodTypes: [LinkPaymentMethodType]
 
     private let linkAppearance: LinkAppearance?
+    private let linkConfiguration: LinkConfiguration?
 
     init(
         mode: Mode,
@@ -66,7 +67,8 @@ final class PayWithNativeLinkController {
         logPayment: Bool = true,
         analyticsHelper: PaymentSheetAnalyticsHelper,
         supportedPaymentMethodTypes: [LinkPaymentMethodType] = LinkPaymentMethodType.allCases,
-        linkAppearance: LinkAppearance? = nil
+        linkAppearance: LinkAppearance? = nil,
+        linkConfiguration: LinkConfiguration? = nil
     ) {
         self.mode = mode
         self.intent = intent
@@ -77,6 +79,7 @@ final class PayWithNativeLinkController {
         self.supportedPaymentMethodTypes = supportedPaymentMethodTypes
         self.paymentHandler = .init(apiClient: configuration.apiClient)
         self.linkAppearance = linkAppearance
+        self.linkConfiguration = linkConfiguration
     }
 
     func presentAsBottomSheet(
@@ -159,7 +162,8 @@ final class PayWithNativeLinkController {
                 callToAction: callToAction,
                 analyticsHelper: self.analyticsHelper,
                 supportedPaymentMethodTypes: self.supportedPaymentMethodTypes,
-                linkAppearance: self.linkAppearance
+                linkAppearance: self.linkAppearance,
+                linkConfiguration: self.linkConfiguration
             )
 
             payWithLinkVC.payWithLinkDelegate = self
