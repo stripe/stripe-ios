@@ -162,6 +162,10 @@ extension PaymentSheet {
 
         let clientAttributionMetadata: STPClientAttributionMetadata = intent.clientAttributionMetadata(elementsSessionConfigId: elementsSession.sessionID)
 
+        let isSettingUp: (STPPaymentMethodType) -> Bool = { paymentMethodType in
+            intent.isSetupFutureUsageSet(for: paymentMethodType) || elementsSession.alwaysSaveForFutureUse
+        }
+
         switch paymentOption {
         // MARK: - Apple Pay
         case .applePay:
@@ -192,7 +196,7 @@ extension PaymentSheet {
             // Set allow_redisplay on params
             confirmParams.setAllowRedisplay(
                 mobilePaymentElementFeatures: elementsSession.customerSessionMobilePaymentElementFeatures,
-                isSettingUp: intent.isSetupFutureUsageSet(for: paymentMethodType)
+                isSettingUp: isSettingUp(paymentMethodType)
             )
             confirmParams.setClientAttributionMetadata(clientAttributionMetadata: clientAttributionMetadata)
             switch intent {
@@ -552,7 +556,7 @@ extension PaymentSheet {
                         // Set allow_redisplay on params
                         intentConfirmParams.setAllowRedisplay(
                             mobilePaymentElementFeatures: elementsSession.customerSessionMobilePaymentElementFeatures,
-                            isSettingUp: intent.isSetupFutureUsageSet(for: linkPaymentMethodType)
+                            isSettingUp: isSettingUp(linkPaymentMethodType)
                         )
                         createPaymentDetailsAndConfirm(linkAccount, intentConfirmParams.paymentMethodParams, intentConfirmParams.saveForFutureUseCheckboxState == .selected)
                     case .failure(let error as NSError):
@@ -560,7 +564,7 @@ extension PaymentSheet {
                         // Attempt to confirm directly with params as a fallback.
                         intentConfirmParams.setAllowRedisplay(
                             mobilePaymentElementFeatures: elementsSession.customerSessionMobilePaymentElementFeatures,
-                            isSettingUp: intent.isSetupFutureUsageSet(for: intentConfirmParams.paymentMethodParams.type)
+                            isSettingUp: isSettingUp(intentConfirmParams.paymentMethodParams.type)
                         )
                         confirmWithPaymentMethodParams(intentConfirmParams.paymentMethodParams, linkAccount, intentConfirmParams.saveForFutureUseCheckboxState == .selected)
                     }
@@ -569,7 +573,10 @@ extension PaymentSheet {
                 confirmWithPaymentMethod(paymentMethod, nil, false)
             case .withPaymentDetails(let linkAccount, let paymentDetails, let confirmationExtras, _):
                 let shouldSave = false // always false, as we don't show a save-to-merchant checkbox in Link VC
-                let allowRedisplay = paymentDetails.computeAllowRedisplay(elementsSession: elementsSession, intent: intent)
+                let allowRedisplay = paymentDetails.computeAllowRedisplay(
+                    elementsSession: elementsSession,
+                    isSettingUp: isSettingUp
+                )
 
                 if elementsSession.linkPassthroughModeEnabled {
                     linkAccount.sharePaymentDetails(
@@ -836,7 +843,7 @@ private extension ConsumerPaymentDetails {
 
     func computeAllowRedisplay(
         elementsSession: STPElementsSession,
-        intent: Intent
+        isSettingUp: (STPPaymentMethodType) -> Bool
     ) -> STPPaymentMethodAllowRedisplay? {
         guard let mobilePaymentElementFeatures = elementsSession.customerSessionMobilePaymentElementFeatures else {
             return nil
@@ -860,9 +867,7 @@ private extension ConsumerPaymentDetails {
             }
         }()
 
-        let shouldSaveForFutureUse = intent.isSetupFutureUsageSet(for: paymentMethodType) || elementsSession.alwaysSaveForFutureUse
-
-        if shouldSaveForFutureUse {
+        if isSettingUp(paymentMethodType) {
             return allowRedisplayOverride ?? .limited
         } else {
             return .unspecified
