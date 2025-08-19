@@ -7,6 +7,7 @@
 //
 
 import Combine
+import FinancialConnectionsLite
 import Foundation
 @_spi(STP) import StripeCore
 @_spi(STP) @_spi(v25) import StripeFinancialConnections
@@ -289,6 +290,8 @@ final class PlaygroundViewModel: ObservableObject {
             }
         case .paymentElement:
             setupPaymentElement()
+        case .fcLite:
+            setupFcLite()
         }
     }
 
@@ -337,6 +340,50 @@ final class PlaygroundViewModel: ObservableObject {
                 presentAlert(for: error)
             }
 
+            DispatchQueue.main.async {
+                self.isLoading = false
+            }
+        }
+    }
+
+    private func setupFcLite() {
+        isLoading = true
+        SetupPlayground(
+            configurationDictionary: playgroundConfiguration.configurationDictionary
+        ) { [weak self] setupPlaygroundResponse in
+            guard let self else { return }
+            if let setupPlaygroundResponse {
+                if let error = setupPlaygroundResponse["error"] {
+                    print("**** Error in playground setup response: \(error)")
+                    return
+                }
+
+                guard let clientSecret = setupPlaygroundResponse["client_secret"] else {
+                    print("**** No client_secret in response")
+                    return
+                }
+                guard let publishableKey = setupPlaygroundResponse["publishable_key"] else {
+                    print("**** No publishable_key in response")
+                    return
+                }
+
+                DispatchQueue.main.async {
+                    let topMostViewController = UIViewController.topMostViewController()!
+                    let fc = FinancialConnectionsLite(
+                        clientSecret: clientSecret,
+                        publishableKey: publishableKey,
+                        returnUrl: URL(string: "financial-connections-example://redirect")!
+                    )
+                    fc.present(from: topMostViewController) { result in
+                        print("**** ", result)
+                    }
+                }
+            } else {
+                UIAlertController.showAlert(
+                    title: "Playground App Setup Failed",
+                    message: "Try clearing 'Custom Keys' or delete & re-install the app."
+                )
+            }
             DispatchQueue.main.async {
                 self.isLoading = false
             }
