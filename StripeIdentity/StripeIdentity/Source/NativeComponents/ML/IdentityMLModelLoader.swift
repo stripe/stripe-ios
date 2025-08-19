@@ -89,7 +89,7 @@ final class IdentityMLModelLoader: IdentityMLModelLoaderProtocol {
         // Since the models are unlikely to be used after the user has finished
         // verifying their identity, cache them to a temp directory so the
         // system will delete them when it needs the space.
-        
+
         let cachesDirectory: URL
         if #available(iOS 16.0, *) {
             cachesDirectory = URL.cachesDirectory
