@@ -7,14 +7,15 @@
 
 import Foundation
 
+/// Client API for an example merchant backend.
 final class APIClient {
     static let shared = APIClient()
 
     private let session: URLSession
     private let baseURL = URL(string: "https://crypto-onramp-example.stripedemos.com")!
-
-    let jsonDecoder: JSONDecoder
-    let jsonEncoder: JSONEncoder
+    private let jsonDecoder: JSONDecoder
+    private let jsonEncoder: JSONEncoder
+    private(set) var authToken: String?
 
     private init(session: URLSession = .shared) {
         self.session = session
@@ -30,23 +31,34 @@ final class APIClient {
         self.jsonEncoder = encoder
     }
 
-    enum HTTPMethod: String { case GET, POST, PUT, DELETE, PATCH }
+    enum HTTPMethod: String {
+        case GET
+        case POST
+    }
 
     enum APIError: Error, LocalizedError {
         case httpError(status: Int, message: String)
+        case missingAuthToken
 
         var errorDescription: String? {
             switch self {
             case .httpError(let status, let message):
                 return "HTTP \(status): \(message)"
+            case .missingAuthToken:
+                return "Missing Authorization token"
             }
         }
+    }
+
+    func setAuthToken(_ token: String?) {
+        self.authToken = token
     }
 
     func request<T: Decodable, Body: Encodable>(
         _ path: String,
         method: HTTPMethod = .GET,
         body: Body? = nil,
+        bearerToken: String? = nil,
         headers: [String: String] = [:]
     ) async throws -> T {
         var urlRequest = URLRequest(url: baseURL.appendingPathComponent(path))
@@ -60,6 +72,41 @@ final class APIClient {
 
         headers.forEach { key, value in
             urlRequest.addValue(value, forHTTPHeaderField: key)
+        }
+
+        if let bearerToken {
+            urlRequest.addValue("Bearer \(bearerToken)", forHTTPHeaderField: "Authorization")
+        }
+
+        let (data, response) = try await session.data(for: urlRequest)
+        guard let httpResponse = response as? HTTPURLResponse else {
+            throw URLError(.badServerResponse)
+        }
+
+        guard (200...299).contains(httpResponse.statusCode) else {
+            let message = String(data: data, encoding: .utf8) ?? "Unknown error"
+            throw APIError.httpError(status: httpResponse.statusCode, message: message)
+        }
+
+        return try jsonDecoder.decode(T.self, from: data)
+    }
+
+    func request<T: Decodable>(
+        _ path: String,
+        method: HTTPMethod = .GET,
+        bearerToken: String? = nil,
+        headers: [String: String] = [:]
+    ) async throws -> T {
+        var urlRequest = URLRequest(url: baseURL.appendingPathComponent(path))
+        urlRequest.httpMethod = method.rawValue
+        urlRequest.addValue("application/json", forHTTPHeaderField: "Accept")
+
+        headers.forEach { key, value in
+            urlRequest.addValue(value, forHTTPHeaderField: key)
+        }
+
+        if let bearerToken {
+            urlRequest.addValue("Bearer \(bearerToken)", forHTTPHeaderField: "Authorization")
         }
 
         let (data, response) = try await session.data(for: urlRequest)
