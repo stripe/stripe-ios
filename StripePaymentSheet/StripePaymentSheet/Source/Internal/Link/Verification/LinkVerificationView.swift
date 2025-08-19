@@ -47,6 +47,22 @@ final class LinkVerificationView: UIView {
         }
     }
 
+    // Indicates whether we are currently verifying the entered OTP code.
+    // When true, we show a spinner and hide the resend button.
+    var isVerifying: Bool = false {
+        didSet {
+            resendCodeButton.isHidden = isVerifying
+            logoutView.button.isEnabled = !isVerifying
+
+            if isVerifying {
+                verifyingActivityIndicator.isHidden = false
+                verifyingActivityIndicator.startAnimating()
+            } else {
+                verifyingActivityIndicator.stopAnimating()
+            }
+        }
+    }
+
     var errorMessage: String? {
         didSet {
             errorLabel.text = errorMessage
@@ -127,6 +143,36 @@ final class LinkVerificationView: UIView {
         return button
     }()
 
+    private lazy var verifyingActivityIndicator: ActivityIndicator = {
+        let indicator = ActivityIndicator(size: .medium)
+        indicator.color = appearance?.colors?.primary ?? .linkTextBrand
+        indicator.hidesWhenStopped = true
+        indicator.isHidden = true
+        return indicator
+    }()
+
+    private lazy var actionContainer: UIView = {
+        let container = UIView()
+        container.translatesAutoresizingMaskIntoConstraints = false
+
+        resendCodeButton.translatesAutoresizingMaskIntoConstraints = false
+        verifyingActivityIndicator.translatesAutoresizingMaskIntoConstraints = false
+
+        container.addSubview(resendCodeButton)
+        container.addSubview(verifyingActivityIndicator)
+
+        NSLayoutConstraint.activate([
+            resendCodeButton.centerXAnchor.constraint(equalTo: container.centerXAnchor),
+            resendCodeButton.centerYAnchor.constraint(equalTo: container.centerYAnchor),
+            verifyingActivityIndicator.centerXAnchor.constraint(equalTo: container.centerXAnchor),
+            verifyingActivityIndicator.centerYAnchor.constraint(equalTo: container.centerYAnchor),
+            // Keep container height equal to the button's height so swapping content does not change layout height
+            container.heightAnchor.constraint(equalTo: resendCodeButton.heightAnchor),
+        ])
+
+        return container
+    }()
+
     private lazy var logoutView: LogoutView = {
         let logoutView = LogoutView(linkAccount: linkAccount)
         logoutView.button.addTarget(self, action: #selector(didTapOnLogout(_:)), for: .touchUpInside)
@@ -187,7 +233,7 @@ private extension LinkVerificationView {
                 headingLabel,
                 bodyLabel,
                 codeFieldContainer,
-                resendCodeButton,
+                actionContainer,
             ]
 
             if allowLogoutInDialog {
@@ -200,7 +246,7 @@ private extension LinkVerificationView {
                 headingLabel,
                 bodyLabel,
                 codeFieldContainer,
-                resendCodeButton,
+                actionContainer,
                 logoutView,
             ]
         }
@@ -219,7 +265,7 @@ private extension LinkVerificationView {
         stackView.setCustomSpacing(Constants.edgeMargin, after: header)
         stackView.setCustomSpacing(LinkUI.extraLargeContentSpacing, after: bodyLabel)
         stackView.setCustomSpacing(LinkUI.extraLargeContentSpacing, after: codeFieldContainer)
-        stackView.setCustomSpacing(LinkUI.largeContentSpacing, after: resendCodeButton)
+        stackView.setCustomSpacing(LinkUI.largeContentSpacing, after: actionContainer)
 
         addSubview(stackView)
 

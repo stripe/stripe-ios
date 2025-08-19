@@ -40,6 +40,14 @@ final class LinkVerificationViewController: UIViewController {
     private let appearance: LinkAppearance?
     private let allowLogoutInDialog: Bool
 
+    private var pendingVerificationCode: String?
+
+    private var isVerifyingCode: Bool = false {
+        didSet {
+            verificationView.isVerifying = isVerifyingCode
+        }
+    }
+
     private lazy var verificationView: LinkVerificationView = {
         guard linkAccount.redactedPhoneNumber != nil else {
             preconditionFailure("Verification(2FA) presented without a phone number on file")
@@ -114,23 +122,30 @@ final class LinkVerificationViewController: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
 
+        // Always focus the OTP field immediately on appear.
+        verificationView.codeField.becomeFirstResponder()
+
         if linkAccount.sessionState == .requiresVerification {
             linkAccount.startVerification { [weak self] result in
+                guard let self = self else { return }
                 switch result {
                 case .success(let collectOTP):
                     if collectOTP {
-                        self?.verificationView.codeField.becomeFirstResponder()
+                        // If the user already entered a full code while we were starting verification,
+                        // trigger verify now. This should only ever happen in test mode.
+                        if let code = self.pendingVerificationCode {
+                            self.pendingVerificationCode = nil
+                            self.startVerify(with: code)
+                        }
                     } else {
                         // No OTP collection is required.
-                        self?.finish(withResult: .completed)
+                        self.finish(withResult: .completed)
                     }
                 case .failure(let error):
                     STPAnalyticsClient.sharedClient.logLink2FAStartFailure()
-                    self?.finish(withResult: .failed(error))
+                    self.finish(withResult: .failed(error))
                 }
             }
-        } else {
-            verificationView.codeField.becomeFirstResponder()
         }
     }
 
@@ -196,19 +211,34 @@ extension LinkVerificationViewController: LinkVerificationViewDelegate {
     func verificationView(_ view: LinkVerificationView, didEnterCode code: String) {
         view.codeField.resignFirstResponder()
 
+        guard linkAccount.hasStartedSMSVerification else {
+            // If startVerification is still in progress, hold the code and verify once it completes.
+            pendingVerificationCode = code
+            return
+        }
+
+        startVerify(with: code)
+    }
+
+    private func startVerify(with code: String) {
+        guard !isVerifyingCode else { return }
+        isVerifyingCode = true
+
         linkAccount.verify(with: code) { [weak self] result in
+            guard let self = self else { return }
+            self.isVerifyingCode = false
+
             switch result {
             case .success:
-                self?.finish(withResult: .completed)
+                self.finish(withResult: .completed)
                 STPAnalyticsClient.sharedClient.logLink2FAComplete()
             case .failure(let error):
-                view.codeField.performInvalidCodeAnimation()
-                view.errorMessage = LinkUtils.getLocalizedErrorMessage(from: error)
+                self.verificationView.codeField.performInvalidCodeAnimation()
+                self.verificationView.errorMessage = LinkUtils.getLocalizedErrorMessage(from: error)
                 STPAnalyticsClient.sharedClient.logLink2FAFailure()
             }
         }
     }
-
 }
 
 extension LinkVerificationViewController {
@@ -218,7 +248,6 @@ extension LinkVerificationViewController {
         LinkAccountService.defaultCookieStore.delete(key: .lastSignupEmail)
         delegate?.verificationController(self, didFinishWithResult: result)
     }
-
 }
 
 // MARK: - Transitioning Delegate
