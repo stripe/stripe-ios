@@ -19,7 +19,6 @@ struct LinkButton: View {
         static let minScaleFactor: CGFloat = 0.7
         static let maxScaleFactor: CGFloat = 1.5
         static let minWidth: CGFloat = 180
-        static let borderColor = Color(red: 13/255, green: 13/255, blue: 13/255, opacity: 0.1)
         static let dividerColor = Color(red: 0, green: 0, blue: 0, opacity: 0.12)
         static let foregroundColor = Color(red: 13/255, green: 13/255, blue: 13/255, opacity: 1)
         static let backgroundColor = Color.white
@@ -29,10 +28,18 @@ struct LinkButton: View {
     private let action: () -> Void
     private let height: CGFloat
     private let cornerRadius: CGFloat
+    private let borderColor: UIColor
 
-    init(height: CGFloat = Constants.defaultButtonHeight, cornerRadius: CGFloat = Constants.defaultButtonHeight / 2, viewModel: LinkButtonViewModel = LinkButtonViewModel(), action: @escaping () -> Void) {
+    init(
+        height: CGFloat = Constants.defaultButtonHeight,
+        cornerRadius: CGFloat = Constants.defaultButtonHeight / 2,
+        viewModel: LinkButtonViewModel = LinkButtonViewModel(),
+        borderColor: UIColor,
+        action: @escaping () -> Void
+    ) {
         self.height = height
         self.cornerRadius = cornerRadius
+        self.borderColor = borderColor
         self._viewModel = StateObject(wrappedValue: viewModel)
         self.action = action
     }
@@ -107,7 +114,7 @@ struct LinkButton: View {
         .background(Constants.backgroundColor)
         .overlay {
             RoundedRectangle(cornerRadius: cornerRadius)
-                .stroke(Constants.borderColor, lineWidth: 1)
+                .stroke(Color(uiColor: borderColor), lineWidth: 1)
         }
         .cornerRadius(cornerRadius)
     }
@@ -134,7 +141,7 @@ private struct LinkButtonPreview: View {
     }
 
     var body: some View {
-        LinkButton(viewModel: viewModel, action: {})
+        LinkButton(viewModel: viewModel, borderColor: .red, action: {})
             .padding(.horizontal)
     }
 }
