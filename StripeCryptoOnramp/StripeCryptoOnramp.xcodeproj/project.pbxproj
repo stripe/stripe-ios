@@ -47,6 +47,7 @@
 		0BED9B6A2E255FF1009FFF76 /* StripeFinancialConnections.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0BED9B692E255FF1009FFF76 /* StripeFinancialConnections.framework */; };
 		0BF41E892E3AB82E00CA4171 /* KycInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BF41E882E3AB82E00CA4171 /* KycInfo.swift */; };
 		0BF41E8B2E3AB84800CA4171 /* IdType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BF41E8A2E3AB84800CA4171 /* IdType.swift */; };
+		4907AF512E54B80000F0C49D /* PlatformSettingsResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4907AF502E54B80000F0C49D /* PlatformSettingsResponse.swift */; };
 		49D233A82E439EB900F51263 /* CryptoNetwork.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49D233A72E439EB900F51263 /* CryptoNetwork.swift */; };
 		49D233AA2E439FAA00F51263 /* RegisterWalletRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49D233A92E439FAA00F51263 /* RegisterWalletRequest.swift */; };
 		49D233AC2E439FB200F51263 /* RegisterWalletResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49D233AB2E439FB200F51263 /* RegisterWalletResponse.swift */; };
@@ -120,6 +121,7 @@
 		0BED9B692E255FF1009FFF76 /* StripeFinancialConnections.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = StripeFinancialConnections.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		0BF41E882E3AB82E00CA4171 /* KycInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KycInfo.swift; sourceTree = "<group>"; };
 		0BF41E8A2E3AB84800CA4171 /* IdType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IdType.swift; sourceTree = "<group>"; };
+		4907AF502E54B80000F0C49D /* PlatformSettingsResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlatformSettingsResponse.swift; sourceTree = "<group>"; };
 		49D233A72E439EB900F51263 /* CryptoNetwork.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CryptoNetwork.swift; sourceTree = "<group>"; };
 		49D233A92E439FAA00F51263 /* RegisterWalletRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegisterWalletRequest.swift; sourceTree = "<group>"; };
 		49D233AB2E439FB200F51263 /* RegisterWalletResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegisterWalletResponse.swift; sourceTree = "<group>"; };
@@ -213,6 +215,7 @@
 				0B649EDF2E428F6400AFAFB1 /* StartIdentityVerificationResponse.swift */,
 				49D233A92E439FAA00F51263 /* RegisterWalletRequest.swift */,
 				49D233AB2E439FB200F51263 /* RegisterWalletResponse.swift */,
+				4907AF502E54B80000F0C49D /* PlatformSettingsResponse.swift */,
 			);
 			path = "API Bindings";
 			sourceTree = "<group>";

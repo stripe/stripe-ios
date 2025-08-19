@@ -160,6 +160,9 @@ public final class CryptoOnrampCoordinator: NSObject, CryptoOnrampCoordinatorPro
             requestSurface: .cryptoOnramp
         )
 
+        let platformSettings = try await apiClient.getPlatformSettings()
+        apiClient.publishableKey = platformSettings.publishableKey
+
         return CryptoOnrampCoordinator(
             linkController: linkController,
             apiClient: apiClient,

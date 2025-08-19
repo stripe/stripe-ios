@@ -130,6 +130,14 @@ extension STPAPIClient {
         return CreatePaymentTokenResponse(id: "todo_123")
     }
 
+    /// Retrieves platform settings for the crypto onramp service.
+    /// - Returns: Platform settings including the publishable key.
+    /// Throws if an API error occurs.
+    func getPlatformSettings() async throws -> PlatformSettingsResponse {
+        let endpoint = "crypto/internal/platform_settings"
+        return try await get(resource: endpoint)
+    }
+
     private func validateSessionState(using linkAccountInfo: PaymentSheetLinkAccountInfoProtocol) throws {
         guard case .verified = linkAccountInfo.sessionState else {
             throw CryptoOnrampAPIError.linkAccountNotVerified
@@ -142,6 +150,15 @@ private extension STPAPIClient {
     func post<T: Decodable>(resource: String, object: Encodable) async throws -> T {
         return try await withCheckedThrowingContinuation { continuation in
             post(resource: resource, object: object) { (result: Result<T, Error>) in
+                continuation.resume(with: result)
+            }
+        }
+    }
+
+    /// Helper method to wrap the closure-based get method for Swift concurrency.
+    func get<T: Decodable>(resource: String, parameters: [String: Any] = [:]) async throws -> T {
+        return try await withCheckedThrowingContinuation { continuation in
+            get(resource: resource, parameters: parameters) { (result: Result<T, Error>) in
                 continuation.resume(with: result)
             }
         }
