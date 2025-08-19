@@ -26,6 +26,8 @@ struct CryptoOnrampExampleView: View {
     @Environment(\.isLoading) private var isLoading
     @FocusState private var isEmailFieldFocused: Bool
 
+    private let apiClient = APIClient.shared
+
     private var isNextButtonDisabled: Bool {
         isLoading.wrappedValue || email.isEmpty || coordinator == nil
     }
@@ -131,7 +133,11 @@ struct CryptoOnrampExampleView: View {
         isLoading.wrappedValue = true
         Task {
             do {
-                let lookupResult = try await coordinator.lookupConsumer(with: email)
+                let authResponse = try await apiClient.authenticateUser(with: email)
+                let lookupResult = try await coordinator.lookupConsumer(
+                    with: email,
+                    linkAuthIntentId: authResponse.data.id
+                )
                 await MainActor.run {
                     errorMessage = nil
                     isLoading.wrappedValue = false

@@ -32,7 +32,7 @@ public protocol CryptoOnrampCoordinatorProtocol {
     ///
     /// - Parameter email: The email address to look up.
     /// - Returns: Returns `true` if the email is associated with an existing Link consumer, or `false` otherwise.
-    func lookupConsumer(with email: String) async throws -> Bool
+    func lookupConsumer(with email: String, linkAuthIntentId: String?) async throws -> Bool
 
     /// Registers a new Link user with the provided details.
     /// `lookupConsumer` must be called before this.
@@ -143,8 +143,8 @@ public final class CryptoOnrampCoordinator: NSObject, CryptoOnrampCoordinatorPro
         )
     }
 
-    public func lookupConsumer(with email: String) async throws -> Bool {
-        return try await linkController.lookupConsumer(with: email)
+    public func lookupConsumer(with email: String, linkAuthIntentId: String? = nil) async throws -> Bool {
+        return try await linkController.lookupConsumer(with: email, linkAuthIntentId: linkAuthIntentId)
     }
 
     public func registerLinkUser(fullName: String?, phone: String, country: String) async throws -> String {
