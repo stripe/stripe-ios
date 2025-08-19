@@ -19,7 +19,8 @@ class ShopPayECEPresenter: NSObject, UIAdaptivePresentationControllerDelegate {
     private weak var presentingViewController: UIViewController?
     private var didReceiveECEClick: Bool = false
     private let analyticsHelper: PaymentSheetAnalyticsHelper
-
+    private var customHeightPresentationController: CustomHeightPresentationController?
+    private let popupPageRatio: CGFloat = 0.85
     init(
         flowController: PaymentSheet.FlowController,
         configuration: PaymentSheet.ShopPayConfiguration,
@@ -46,9 +47,10 @@ class ShopPayECEPresenter: NSObject, UIAdaptivePresentationControllerDelegate {
                                       delegate: self)
 
         eceVC.expressCheckoutWebviewDelegate = self
+        eceVC.keyboardDelegate = self
         self.eceViewController = eceVC
 
-        let transitionDelegate = FixedHeightTransitionDelegate(heightRatio: 0.85)
+        let transitionDelegate = CustomHeightTransitionDelegate(presentationHeight: .custom(popupPageRatio))
         eceVC.transitioningDelegate = transitionDelegate
         eceVC.modalPresentationStyle = .custom
         eceVC.view.layer.cornerRadius = self.flowController.configuration.appearance.cornerRadius
@@ -56,6 +58,9 @@ class ShopPayECEPresenter: NSObject, UIAdaptivePresentationControllerDelegate {
         eceVC.view.clipsToBounds = true
         viewController.present(eceVC, animated: true)
         eceVC.presentationController?.delegate = self
+
+        // Store reference to the presentation controller for keyboard adjustments
+        self.customHeightPresentationController = eceVC.presentationController as? CustomHeightPresentationController
         // retain self while presented
         self.confirmHandler = { result in
             confirmHandler(result)
@@ -401,5 +406,17 @@ extension ShopPayECEPresenter: ExpressCheckoutWebviewDelegate {
 
     private func calculateTotal(lineItems: [PaymentSheet.ShopPayConfiguration.LineItem]) -> Int {
         return lineItems.reduce(0) { $0 + $1.amount }
+    }
+}
+
+// MARK: - ECEKeyboardDelegate
+@available(iOS 16.0, *)
+extension ShopPayECEPresenter: ECEKeyboardDelegate {
+    func eceViewController(_ controller: ECEViewController, keyboardWillShowWithHeight height: CGFloat) {
+        customHeightPresentationController?.updateHeightForKeyboard(.full, animated: true)
+    }
+
+    func eceViewController(_ controller: ECEViewController, keyboardWillHide: Void) {
+        customHeightPresentationController?.updateHeightForKeyboard(.custom(popupPageRatio), animated: true)
     }
 }

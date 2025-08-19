@@ -257,8 +257,8 @@
 		6A529F76ECB33C9154314C1F /* STPAnalyticsClient+LUXE.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83B5AAA4347A6918EC267210 /* STPAnalyticsClient+LUXE.swift */; };
 		6A5997192BC88E28002A44CB /* InstantDebitsPaymentMethodElement.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A5997182BC88E28002A44CB /* InstantDebitsPaymentMethodElement.swift */; };
 		6B0E5AE72C08F4B5008AAFBE /* IntentConfirmParamsTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B0E5AE62C08F4B5008AAFBE /* IntentConfirmParamsTest.swift */; };
-		6B1657542E16DDF500E0EC06 /* FixedHeightPresentationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B1657532E16DDED00E0EC06 /* FixedHeightPresentationController.swift */; };
-		6B1657562E16DE2E00E0EC06 /* FixedHeightTransitionDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B1657552E16DE2D00E0EC06 /* FixedHeightTransitionDelegate.swift */; };
+		6B1657542E16DDF500E0EC06 /* CustomHeightPresentationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B1657532E16DDED00E0EC06 /* CustomHeightPresentationController.swift */; };
+		6B1657562E16DE2E00E0EC06 /* CustomHeightTransitionDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B1657552E16DE2D00E0EC06 /* CustomHeightTransitionDelegate.swift */; };
 		6B28A6B62BE9494500B47DBF /* CustomerSheetDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B28A6B52BE9494500B47DBF /* CustomerSheetDataSource.swift */; };
 		6B28A6B92BE9712500B47DBF /* CustomerSessionAdapter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B28A6B82BE9712500B47DBF /* CustomerSessionAdapter.swift */; };
 		6B31B9B82B9019730064E210 /* ElementsCustomer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B31B9B72B9019730064E210 /* ElementsCustomer.swift */; };
@@ -764,8 +764,8 @@
 		6A065CEE8A7BCE60FC9D50BF /* el-GR */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "el-GR"; path = "el-GR.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		6A5997182BC88E28002A44CB /* InstantDebitsPaymentMethodElement.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InstantDebitsPaymentMethodElement.swift; sourceTree = "<group>"; };
 		6B0E5AE62C08F4B5008AAFBE /* IntentConfirmParamsTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IntentConfirmParamsTest.swift; sourceTree = "<group>"; };
-		6B1657532E16DDED00E0EC06 /* FixedHeightPresentationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FixedHeightPresentationController.swift; sourceTree = "<group>"; };
-		6B1657552E16DE2D00E0EC06 /* FixedHeightTransitionDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FixedHeightTransitionDelegate.swift; sourceTree = "<group>"; };
+		6B1657532E16DDED00E0EC06 /* CustomHeightPresentationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomHeightPresentationController.swift; sourceTree = "<group>"; };
+		6B1657552E16DE2D00E0EC06 /* CustomHeightTransitionDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomHeightTransitionDelegate.swift; sourceTree = "<group>"; };
 		6B28A6B52BE9494500B47DBF /* CustomerSheetDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomerSheetDataSource.swift; sourceTree = "<group>"; };
 		6B28A6B82BE9712500B47DBF /* CustomerSessionAdapter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomerSessionAdapter.swift; sourceTree = "<group>"; };
 		6B31B9B72B9019730064E210 /* ElementsCustomer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ElementsCustomer.swift; sourceTree = "<group>"; };
@@ -1107,8 +1107,8 @@
 		310B6D922DFBB31B009CA85D /* ECE */ = {
 			isa = PBXGroup;
 			children = (
-				6B1657552E16DE2D00E0EC06 /* FixedHeightTransitionDelegate.swift */,
-				6B1657532E16DDED00E0EC06 /* FixedHeightPresentationController.swift */,
+				6B1657552E16DE2D00E0EC06 /* CustomHeightTransitionDelegate.swift */,
+				6B1657532E16DDED00E0EC06 /* CustomHeightPresentationController.swift */,
 				3190006C2DFD32BF00B84F6C /* ECEBridgeTypes.swift */,
 				310B6D952DFBB323009CA85D /* ECEViewController.swift */,
 				310B6D9B2DFBD456009CA85D /* ECEIndexHtml.swift */,
@@ -2466,7 +2466,7 @@
 				6BA8D3362B0C1F9B008C51FF /* CVCReconfirmationViewController.swift in Sources */,
 				B6CACC9E2CB8B90700682ECE /* EmbeddedPaymentElement+Internal.swift in Sources */,
 				A4FF52567582E9774AE13348 /* PaymentDetails.swift in Sources */,
-				6B1657562E16DE2E00E0EC06 /* FixedHeightTransitionDelegate.swift in Sources */,
+				6B1657562E16DE2E00E0EC06 /* CustomHeightTransitionDelegate.swift in Sources */,
 				3E2279C28944A87EC6472101 /* STPAPIClient+Link.swift in Sources */,
 				B8A7575878C5124CF5482097 /* VerificationSession.swift in Sources */,
 				6185901B2D5BF1D200D533D6 /* RowButtonFlatWithRadioView.swift in Sources */,
@@ -2595,7 +2595,7 @@
 				8D4951AE0D793D01528F352D /* PaymentMethodTypeCollectionView.swift in Sources */,
 				2CE83364A23B4E3BAFD447CA /* WalletHeaderView.swift in Sources */,
 				99B171DC60405D4822819E0E /* PaymentMethodType.swift in Sources */,
-				6B1657542E16DDF500E0EC06 /* FixedHeightPresentationController.swift in Sources */,
+				6B1657542E16DDF500E0EC06 /* CustomHeightPresentationController.swift in Sources */,
 				F29DF2AD08718147C299D2C3 /* PaymentOption+Images.swift in Sources */,
 				49B1F7CE2E1EC44500EA2593 /* LinkSignUpViewModel.swift in Sources */,
 				49909A312D8B48710031EC33 /* FCLiteContainerViewController.swift in Sources */,

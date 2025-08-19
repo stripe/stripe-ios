@@ -22,6 +22,12 @@ protocol ECEViewControllerDelegate: AnyObject {
     func didCancel()
 }
 
+@available(iOS 16.0, *)
+protocol ECEKeyboardDelegate: AnyObject {
+    func eceViewController(_ controller: ECEViewController, keyboardWillShowWithHeight height: CGFloat)
+    func eceViewController(_ controller: ECEViewController, keyboardWillHide: Void)
+}
+
 // Custom errors for Express Checkout operations
 enum ExpressCheckoutError: LocalizedError {
     case invalidShippingRate(rateId: String)
@@ -43,6 +49,7 @@ class ECEViewController: UIViewController {
     let shopId: String
     let customerSessionClientSecret: String
     private weak var delegate: ECEViewControllerDelegate?
+    weak var keyboardDelegate: ECEKeyboardDelegate?
 
     init(apiClient: STPAPIClient,
          shopId: String,
@@ -95,6 +102,20 @@ class ECEViewController: UIViewController {
         // Add the tiny 1x1 webview as a hidden subview
         view.addSubview(webView)
         loadECE()
+
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(keyboardWillShow(_:)),
+            name: UIResponder.keyboardWillShowNotification,
+            object: nil
+        )
+
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(keyboardWillHide(_:)),
+            name: UIResponder.keyboardWillHideNotification,
+            object: nil
+        )
     }
 
     private func setupWebView() {
@@ -229,6 +250,23 @@ class ECEViewController: UIViewController {
     private func isValidMessageOrigin(_ message: WKScriptMessage) -> Bool {
         // Only allow messages from pay.stripe.com
         return message.frameInfo.securityOrigin.host == "pay.stripe.com"
+    }
+
+    @objc func keyboardWillShow(_ notification: Notification) {
+        // Keyboard is about to appear
+        if let keyboardFrame = notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? CGRect {
+            let keyboardHeight = keyboardFrame.height
+            // Notify delegate about keyboard appearance
+            keyboardDelegate?.eceViewController(self, keyboardWillShowWithHeight: keyboardHeight)
+        }
+    }
+
+    @objc func keyboardWillHide(_ notification: Notification) {
+        // Notify delegate about keyboard disappearance
+        keyboardDelegate?.eceViewController(self, keyboardWillHide: ())
+    }
+    deinit {
+        NotificationCenter.default.removeObserver(self)
     }
 }
 

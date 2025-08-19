@@ -1,16 +1,32 @@
 //
-//  FixedHeightPresentationController.swift
+//  CustomHeightPresentationController.swift
 //  StripePaymentSheet
 //
 import UIKit
 
-class FixedHeightPresentationController: UIPresentationController {
+class CustomHeightPresentationController: UIPresentationController {
+    enum PresentationHeight {
+        case full
+        case custom(CGFloat)
+    }
+    private var presentationHeight: PresentationHeight
 
-    private let heightRatio: CGFloat
-
-    init(heightRatio: CGFloat, presentedViewController: UIViewController, presenting: UIViewController?) {
-        self.heightRatio = heightRatio
+    init(presentationHeight: PresentationHeight, presentedViewController: UIViewController, presenting: UIViewController?) {
+        self.presentationHeight = presentationHeight
+        
         super.init(presentedViewController: presentedViewController, presenting: presenting)
+    }
+
+    func updateHeightForKeyboard(_ presentationHeight: PresentationHeight, animated: Bool = true) {
+        self.presentationHeight = presentationHeight
+
+        if animated {
+            UIView.animate(withDuration: 0.3, delay: 0, options: [.curveEaseInOut]) {
+                self.presentedView?.frame = self.frameOfPresentedViewInContainerView
+            }
+        } else {
+            presentedView?.frame = frameOfPresentedViewInContainerView
+        }
     }
 
     // Optional overlay view for dimming the background
@@ -28,7 +44,14 @@ class FixedHeightPresentationController: UIPresentationController {
     override var frameOfPresentedViewInContainerView: CGRect {
         guard let containerView = containerView else { return .zero }
 
-        let height = containerView.bounds.height * heightRatio
+        var height: CGFloat = 0
+        switch presentationHeight {
+        case .custom(let heightRatio):
+            height = containerView.bounds.height * heightRatio
+        case .full:
+            height = containerView.bounds.height * 0.94
+        }
+
         return CGRect(
             x: 0,
             y: containerView.bounds.height - height,
