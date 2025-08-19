@@ -29,6 +29,7 @@ extension UIViewController {
         supportedPaymentMethodTypes: [LinkPaymentMethodType] = LinkPaymentMethodType.allCases,
         linkAppearance: LinkAppearance? = nil,
         linkConfiguration: LinkConfiguration? = nil,
+        shouldShowSecondaryCta: Bool = true,
         verificationDismissed: (() -> Void)? = nil,
         callback: @escaping (_ confirmOption: PaymentSheet.LinkConfirmOption?, _ shouldReturnToPaymentSheet: Bool) -> Void
     ) {
@@ -75,6 +76,7 @@ extension UIViewController {
                 supportedPaymentMethodTypes: supportedPaymentMethodTypes,
                 linkAppearance: linkAppearance,
                 linkConfiguration: linkConfiguration,
+                shouldShowSecondaryCta: shouldShowSecondaryCta,
                 callback: callback
             )
         }
@@ -89,6 +91,7 @@ extension UIViewController {
         supportedPaymentMethodTypes: [LinkPaymentMethodType],
         linkAppearance: LinkAppearance? = nil,
         linkConfiguration: LinkConfiguration? = nil,
+        shouldShowSecondaryCta: Bool = true,
         callback: @escaping (_ confirmOption: PaymentSheet.LinkConfirmOption?, _ shouldReturnToPaymentSheet: Bool) -> Void
     ) {
         let payWithLinkController = PayWithNativeLinkController(
@@ -106,6 +109,7 @@ extension UIViewController {
         payWithLinkController.presentForPaymentMethodSelection(
             from: self,
             initiallySelectedPaymentDetailsID: selectedPaymentDetailsID,
+            shouldShowSecondaryCta: shouldShowSecondaryCta,
             canSkipWalletAfterVerification: false,
             completion: callback
         )
