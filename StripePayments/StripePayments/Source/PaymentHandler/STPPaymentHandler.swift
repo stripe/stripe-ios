@@ -2306,7 +2306,7 @@ extension STPPaymentHandler: SFSafariViewControllerDelegate {
         self.analyticsClient.logURLRedirectNextActionCompleted(
             with: currentAction?.apiClient._stored_configuration,
             intentID: currentAction?.intentStripeID,
-            usesWebAuthSession: true
+            usesWebAuthSession: false
         )
     }
 }
