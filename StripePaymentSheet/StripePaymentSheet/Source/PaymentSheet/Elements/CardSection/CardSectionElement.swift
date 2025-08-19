@@ -25,10 +25,18 @@ final class CardSectionElement: ContainerElement {
     weak var delegate: ElementDelegate?
     lazy var view: UIView = {
         #if !os(visionOS)
-        if #available(iOS 13.0, macCatalyst 14, *), STPCardScanner.cardScanningAvailable {
-            return CardSectionWithScannerView(cardSectionView: cardSection.view, delegate: self, theme: theme, analyticsHelper: analyticsHelper, linkAppearance: linkAppearance)
+        if false { // TODO: gate whether or not we should use the new scanner using opensCardScannerAutomatically
+            if #available(iOS 13.0, macCatalyst 14, *), STPCardScanner.cardScanningAvailable {
+                return CardSectionWithScannerView(cardSectionView: cardSection.view, delegate: self, theme: theme, analyticsHelper: analyticsHelper, linkAppearance: linkAppearance)
+            } else {
+                return cardSection.view
+            }
         } else {
-            return cardSection.view
+            if #available(iOS 13.0, macCatalyst 14, *), OldSTPCardScanner.cardScanningAvailable {
+                return OldCardSectionWithScannerView(cardSectionView: cardSection.view, delegate: self, theme: theme, analyticsHelper: analyticsHelper, linkAppearance: linkAppearance)
+            } else {
+                return cardSection.view
+            }
         }
         #else
             return cardSection.view
@@ -314,7 +322,27 @@ internal func cardParams(for intentParams: IntentConfirmParams) -> STPPaymentMet
 // MARK: - CardSectionWithScannerViewDelegate
 
 extension CardSectionElement: CardSectionWithScannerViewDelegate {
-    func didScanCard(cardParams: STPPaymentMethodCardParams) {
+    func didScanCard(_ cardSectionWithScannerView: CardSectionWithScannerView, cardParams: StripePayments.STPPaymentMethodCardParams) {
+        let expiryString: String = {
+            guard let expMonth = cardParams.expMonth, let expYear = cardParams.expYear else {
+                return ""
+            }
+            return String(format: "%02d%02d", expMonth.intValue, expYear.intValue)
+        }()
+
+        // Populate the fields with the card params we scanned
+        panElement.setText(cardParams.number ?? "")
+        expiryElement.setText(expiryString)
+
+        // Slightly hacky way to focus the next un-populated field
+        if let lastCompletedElement = [panElement, expiryElement].last(where: { !$0.text.isEmpty }) {
+            lastCompletedElement.delegate?.continueToNextField(element: lastCompletedElement)
+        }
+    }
+}
+
+extension CardSectionElement: OldCardSectionWithScannerViewDelegate {
+    func didScanCard(_ oldCardSectionWithScannerView: OldCardSectionWithScannerView, cardParams: StripePayments.STPPaymentMethodCardParams) {
         let expiryString: String = {
             guard let expMonth = cardParams.expMonth, let expYear = cardParams.expYear else {
                 return ""

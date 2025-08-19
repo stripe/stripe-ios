@@ -19,8 +19,8 @@ import UIKit
  */
 /// For internal SDK use only
 @available(macCatalyst 14.0, *)
-@objc(STP_Internal_CardSectionWithScannerView)
-final class CardSectionWithScannerView: UIView {
+@objc(OldSTP_Internal_CardSectionWithScannerView)
+final class OldCardSectionWithScannerView: UIView {
     let cardSectionView: UIView
     let analyticsHelper: PaymentSheetAnalyticsHelper?
     lazy var cardScanButton: UIButton = {
@@ -28,17 +28,17 @@ final class CardSectionWithScannerView: UIView {
         button.addTarget(self, action: #selector(didTapCardScanButton), for: .touchUpInside)
         return button
     }()
-    lazy var cardScanningView: CardScanningView = {
-        let scanningView = CardScanningView()
+    lazy var cardScanningView: OldCardScanningView = {
+        let scanningView = OldCardScanningView()
         scanningView.isHidden = true
         scanningView.delegate = self
         return scanningView
     }()
-    weak var delegate: CardSectionWithScannerViewDelegate?
+    weak var delegate: OldCardSectionWithScannerViewDelegate?
     private let theme: ElementsAppearance
     private let linkAppearance: LinkAppearance?
 
-    init(cardSectionView: UIView, delegate: CardSectionWithScannerViewDelegate, theme: ElementsAppearance = .default, analyticsHelper: PaymentSheetAnalyticsHelper?, linkAppearance: LinkAppearance? = nil) {
+    init(cardSectionView: UIView, delegate: OldCardSectionWithScannerViewDelegate, theme: ElementsAppearance = .default, analyticsHelper: PaymentSheetAnalyticsHelper?, linkAppearance: LinkAppearance? = nil) {
         self.cardSectionView = cardSectionView
         self.delegate = delegate
         self.theme = theme
@@ -95,8 +95,8 @@ final class CardSectionWithScannerView: UIView {
 }
 
 @available(macCatalyst 14.0, *)
-extension CardSectionWithScannerView: STP_Internal_CardScanningViewDelegate {
-    func cardScanningView(_ cardScanningView: CardScanningView, didFinishWith cardParams: STPPaymentMethodCardParams?) {
+extension OldCardSectionWithScannerView: OldSTP_Internal_CardScanningViewDelegate {
+    func cardScanningView(_ cardScanningView: OldCardScanningView, didFinishWith cardParams: STPPaymentMethodCardParams?) {
         setCardScanVisible(false)
         if let cardParams = cardParams {
             self.delegate?.didScanCard(self, cardParams: cardParams)
@@ -105,8 +105,8 @@ extension CardSectionWithScannerView: STP_Internal_CardScanningViewDelegate {
 }
 
 // MARK: - CardFormElementViewDelegate
-protocol CardSectionWithScannerViewDelegate: AnyObject {
-    func didScanCard(_ cardSectionWithScannerView: CardSectionWithScannerView, cardParams: STPPaymentMethodCardParams)
+protocol OldCardSectionWithScannerViewDelegate: AnyObject {
+    func didScanCard(_ oldCardSectionWithScannerView: OldCardSectionWithScannerView, cardParams: STPPaymentMethodCardParams)
 }
 
 #endif
