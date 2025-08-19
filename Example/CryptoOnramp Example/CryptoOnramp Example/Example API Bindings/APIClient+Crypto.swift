@@ -28,6 +28,11 @@ extension APIClient {
             .pageSize(50),
         ])
     }
+
+    func createOnrampSession(requestObject: CreateOnrampSessionRequest) async throws -> CreateOnrampSessionResponse {
+        guard let token = authToken else { throw APIError.missingAuthToken }
+        return try await request("create_onramp_session", method: .POST, body: requestObject, bearerToken: token)
+    }
 }
 
 private extension URLQueryItem {
