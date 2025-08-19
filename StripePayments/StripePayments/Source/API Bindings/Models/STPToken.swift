@@ -42,7 +42,7 @@ public class STPToken: NSObject, STPAPIResponseDecodable, STPSourceProtocol {
     /// The bank account details that were used to create the token. Will only be set if the token was created with a bank account, otherwise it will be nil.
     @objc public private(set) var bankAccount: STPBankAccount?
     /// When the token was created.
-    @objc public private(set) var created: Date?
+    @objc public private(set) var created: Date = Date(timeIntervalSince1970: TimeInterval(0))
     @objc public private(set) var allResponseFields: [AnyHashable: Any] = [:]
 
     // MARK: - Description
@@ -89,11 +89,8 @@ public class STPToken: NSObject, STPAPIResponseDecodable, STPSourceProtocol {
             return false
         }
 
-        if let created1 = object.created {
-            return livemode == object.livemode && type == object.type && (tokenId == object.tokenId)
-                && created == created1 && (card == object.card)
-        }
-        return false
+        return livemode == object.livemode && type == object.type && (tokenId == object.tokenId)
+            && created == object.created && (card == object.card)
     }
 
     // MARK: - STPSourceProtocol

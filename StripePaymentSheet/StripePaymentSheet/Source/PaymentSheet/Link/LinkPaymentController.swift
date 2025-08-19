@@ -478,7 +478,7 @@ import UIKit
                     }
                 }
             case .deferredIntent(let intentConfiguration):
-                let paymentMethod = STPPaymentMethod(stripeId: paymentMethodId, type: .link)
+                let paymentMethod = STPPaymentMethod(stripeId: paymentMethodId, created: Date(), type: .link)
                 PaymentSheet
                     .handleDeferredIntentConfirmation(
                         confirmType: .saved(paymentMethod, paymentOptions: nil),
