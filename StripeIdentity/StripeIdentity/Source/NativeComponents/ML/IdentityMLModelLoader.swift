@@ -89,14 +89,18 @@ final class IdentityMLModelLoader: IdentityMLModelLoaderProtocol {
         // Since the models are unlikely to be used after the user has finished
         // verifying their identity, cache them to a temp directory so the
         // system will delete them when it needs the space.
-        let tempDirectory = URL(
-            fileURLWithPath: NSTemporaryDirectory(),
-            isDirectory: true
-        )
+        
+        let cachesDirectory: URL
+        if #available(iOS 16.0, *) {
+            cachesDirectory = URL.cachesDirectory
+        } else {
+            let paths = FileManager.default.urls(for: .cachesDirectory, in: .userDomainMask)
+            cachesDirectory = paths.first ?? URL(fileURLWithPath: NSTemporaryDirectory())
+        }
 
         // Create a name-spaced subdirectory inside the temp directory so
         // we don't clash with any other files the app is storing here.
-        let cacheDirectory = tempDirectory.appendingPathComponent(
+        let cacheDirectory = cachesDirectory.appendingPathComponent(
             IdentityMLModelLoader.cacheDirectoryName
         )
 
@@ -109,7 +113,7 @@ final class IdentityMLModelLoader: IdentityMLModelLoaderProtocol {
             return cacheDirectory
         } catch {
             // If creating the subdirectory fails, use temp directory directly
-            return tempDirectory
+            return cacheDirectory
         }
     }
 
