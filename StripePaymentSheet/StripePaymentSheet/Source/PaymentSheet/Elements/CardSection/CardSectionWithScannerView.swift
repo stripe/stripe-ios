@@ -78,23 +78,27 @@ final class CardSectionWithScannerView: UIView {
 
     @objc func didTapCardScanButton() {
         analyticsHelper?.logFormInteracted(paymentMethodTypeIdentifier: "card")
-        setCardScanVisible(true)
+        showCardScanner()
         cardScanningView.startScanner()
         becomeFirstResponder()
     }
-
-    private func setCardScanVisible(_ isCardScanVisible: Bool) {
-        if !isCardScanVisible {
-            self.cardScanningView.prepDismissAnimation()
-        }
+    
+    private func hideCardScanner() {
+        self.cardScanningView.prepDismissAnimation()
         UIView.animate(withDuration: 0.3, delay: 0, usingSpringWithDamping: 1.0, initialSpringVelocity: 0.3, options: [.curveEaseInOut]) {
-            self.cardScanButton.alpha = isCardScanVisible ? 0 : 1
-            self.cardScanningView.setHiddenIfNecessary(!isCardScanVisible)
+            self.cardScanButton.alpha = 1
+            self.cardScanningView.setHiddenIfNecessary(true)
             self.layoutIfNeeded()
         } completion: { _ in
-            if !isCardScanVisible {
-                self.cardScanningView.completeDismissAnimation()
-            }
+            self.cardScanningView.completeDismissAnimation()
+        }
+    }
+    
+    private func showCardScanner() {
+        UIView.animate(withDuration: 0.3, delay: 0, usingSpringWithDamping: 1.0, initialSpringVelocity: 0.3, options: [.curveEaseInOut]) {
+            self.cardScanButton.alpha = 0
+            self.cardScanningView.setHiddenIfNecessary(false)
+            self.layoutIfNeeded()
         }
     }
 
@@ -125,8 +129,8 @@ final class CardSectionWithScannerView: UIView {
 @available(macCatalyst 14.0, *)
 extension CardSectionWithScannerView: STP_Internal_CardScanningViewDelegate {
     func cardScanningViewShouldClose(_ cardScanningView: CardScanningView, cardParams: StripePayments.STPPaymentMethodCardParams?) {
-        setCardScanVisible(false)
-        if let cardParams = cardParams {
+        hideCardScanner()
+        if let cardParams {
             self.delegate?.didScanCard(cardParams: cardParams)
         }
     }
