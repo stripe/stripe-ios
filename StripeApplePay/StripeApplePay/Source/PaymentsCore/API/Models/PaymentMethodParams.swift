@@ -32,7 +32,7 @@ extension StripeAPI {
         @_spi(STP) var radarOptions: RadarOptions?
 
         /// Contains metadata with identifiers for the session and information about the integration
-        @_spi(STP) public var clientAttributionMetadata: STPClientAttributionMetadata?
+        @_spi(STP) public var clientAttributionMetadata: STPClientAttributionMetadata = STPClientAttributionMetadata()
 
         /// :nodoc:
         @_spi(STP) public struct Card: UnknownFieldsEncodable {
