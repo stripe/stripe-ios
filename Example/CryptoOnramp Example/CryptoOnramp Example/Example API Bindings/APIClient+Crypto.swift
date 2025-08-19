@@ -17,7 +17,7 @@ extension APIClient {
         guard let token = authToken else { throw APIError.missingAuthToken }
         return try await request("customer_wallets", bearerToken: token, queryItems: [
             .cryptoCustomerToken(cryptoCustomerToken),
-            .pageSize(50)
+            .pageSize(50),
         ])
     }
 
@@ -25,7 +25,7 @@ extension APIClient {
         guard let token = authToken else { throw APIError.missingAuthToken }
         return try await request("payment_tokens", bearerToken: token, queryItems: [
             .cryptoCustomerToken(cryptoCustomerToken),
-            .pageSize(50)
+            .pageSize(50),
         ])
     }
 }
@@ -39,4 +39,3 @@ private extension URLQueryItem {
         URLQueryItem(name: "limit", value: String(value))
     }
 }
-
