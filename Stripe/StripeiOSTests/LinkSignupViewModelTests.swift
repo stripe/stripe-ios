@@ -262,6 +262,7 @@ extension LinkInlineSignupViewModelTests {
             withEmail email: String?,
             emailSource: StripePaymentSheet.EmailSource,
             doNotLogConsumerFunnelEvent: Bool,
+            linkAuthIntentId: String? = nil,
             requestSurface: StripePaymentSheet.LinkRequestSurface = .default,
             completion: @escaping (Result<PaymentSheetLinkAccount?, Error>) -> Void
         ) {
