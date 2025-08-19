@@ -29,13 +29,6 @@ class STPCardScanner: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate {
     private static let minimumValidScans = 2
     private static let scanningTimeout: TimeInterval = 0.6
 
-    // Represents the result of a card scanning session
-    enum Result {
-        case cancelled // The user cancelled the scan
-        case error // An error occurred during scanning
-        case success(STPPaymentMethodCardParams) // The scan was successful and contains card parameters
-    }
-
     // iOS will kill the app if it tries to request the camera without an NSCameraUsageDescription
     private static let cardScanningAvailableCameraHasUsageDescription = {
         return
