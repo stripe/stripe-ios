@@ -393,6 +393,11 @@ public final class CryptoOnrampCoordinator: NSObject, CryptoOnrampCoordinatorPro
             return .failed(error)
         }
     }
+
+    private func getPlatformKey() async throws -> String {
+        let platformSettings = try await apiClient.getPlatformSettings(linkAccountInfo: linkAccountInfo)
+        return platformSettings.publishableKey
+    }
 }
 
 extension CryptoOnrampCoordinator: STPApplePayContextDelegate {
