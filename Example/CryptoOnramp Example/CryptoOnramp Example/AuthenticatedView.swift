@@ -26,6 +26,7 @@ struct AuthenticatedView: View {
     @State private var errorMessage: String?
     @State private var isIdentityVerificationComplete = false
     @State private var showKYCView = false
+    @State private var showAttachWalletSheet = false
     @State private var selectedPaymentMethod: PaymentMethodPreview?
     @State private var cryptoPaymentToken: String?
 
@@ -66,6 +67,13 @@ struct AuthenticatedView: View {
 
                     Button("Submit KYC Information") {
                         showKYCView = true
+                    }
+                    .buttonStyle(PrimaryButtonStyle())
+                    .disabled(shouldDisableButtons)
+                    .opacity(shouldDisableButtons ? 0.5 : 1)
+
+                    Button("Attach Wallet Address") {
+                        showAttachWalletSheet = true
                     }
                     .buttonStyle(PrimaryButtonStyle())
                     .disabled(shouldDisableButtons)
@@ -163,6 +171,9 @@ struct AuthenticatedView: View {
         }
         .navigationTitle("Authenticated")
         .navigationBarTitleDisplayMode(.inline)
+        .sheet(isPresented: $showAttachWalletSheet) {
+            AttachWalletAddressView(coordinator: coordinator)
+        }
     }
 
     private func verifyIdentity() {
