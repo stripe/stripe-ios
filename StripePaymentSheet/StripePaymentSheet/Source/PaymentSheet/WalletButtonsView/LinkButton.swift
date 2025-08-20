@@ -19,9 +19,6 @@ struct LinkButton: View {
         static let minScaleFactor: CGFloat = 0.7
         static let maxScaleFactor: CGFloat = 1.5
         static let minWidth: CGFloat = 180
-        static let dividerColor = Color(red: 0, green: 0, blue: 0, opacity: 0.12)
-        static let foregroundColor = Color(red: 13/255, green: 13/255, blue: 13/255, opacity: 1)
-        static let backgroundColor = Color.white
     }
 
     @StateObject private var viewModel: LinkButtonViewModel
@@ -82,7 +79,7 @@ struct LinkButton: View {
 
                 if let account = viewModel.account {
                     Rectangle()
-                        .fill(Constants.dividerColor)
+                        .fill(Color(uiColor: .linkExpressCheckoutButtonDivider))
                         .frame(width: scaledSeparatorWidth, height: scaledContentHeight)
                         .cornerRadius(scaledSeparatorWidth / 2)
 
@@ -105,13 +102,13 @@ struct LinkButton: View {
                 }
             }
             .padding(.horizontal, LinkUI.contentSpacing)
-            .foregroundColor(Constants.foregroundColor)
+            .foregroundColor(Color(uiColor: .linkExpressCheckoutButtonForeground))
             .frame(height: scaledContentHeight)
             .frame(minWidth: Constants.minWidth, maxWidth: .infinity)
         }
         .frame(maxWidth: .infinity)
         .frame(height: height)
-        .background(Constants.backgroundColor)
+        .background(Color(uiColor: .linkExpressCheckoutButtonBackground))
         .overlay {
             RoundedRectangle(cornerRadius: cornerRadius)
                 .stroke(Color(uiColor: borderColor), lineWidth: 1)
