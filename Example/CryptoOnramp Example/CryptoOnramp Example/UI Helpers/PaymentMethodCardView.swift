@@ -46,6 +46,7 @@ struct PaymentMethodCardView: View {
             }
         }
         .aspectRatio(1.6 / 1, contentMode: .fit)
+        .frame(maxHeight: 180)
         .padding()
         .background(
             LinearGradient(

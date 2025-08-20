@@ -95,7 +95,11 @@ struct AuthenticatedView: View {
                         .foregroundColor(.secondary)
 
                     if let selectedPaymentMethod {
-                        PaymentMethodCardView(preview: selectedPaymentMethod)
+                        HStack {
+                            Spacer()
+                            PaymentMethodCardView(preview: selectedPaymentMethod)
+                            Spacer()
+                        }
 
                         Button("Create crypto payment token") {
                             createCryptoPaymentToken()
