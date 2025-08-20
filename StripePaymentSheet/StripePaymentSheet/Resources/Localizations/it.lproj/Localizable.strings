@@ -60,6 +60,8 @@
 
 "By continuing, you agree to authorize payments pursuant to <terms>these terms</terms>." = "Se continui, accetti di autorizzare i pagamenti conformemente ai <terms>questi termini</terms>.";
 
+"By continuing, you agree to save your information for future purchases with %@ and <link>Link</link>. You also agree to Link's <terms>Terms</terms> and <privacy>Privacy</privacy>." = "Continuando, accetti di salvare le tue informazioni per acquisti futuri con %@ e <link>Link</link>Accetti inoltre i <terms>Termini</terms> e la <privacy>Privacy</privacy> di Link.";
+
 "By continuing, you agree to save your information for future purchases with %@." = "Continuando, accetti di salvare le tue informazioni per acquisti futuri con %@.";
 
 "By continuing, you authorize %@ to automatically debit your Satispay Balance on a recurring basis in accordance with your purchase or subscription plan." = "Continuando, autorizzi %@ a effettuare addebiti sul tuo saldo Satispay su base ricorrente in base al tuo piano di acquisto o abbonamento.";
