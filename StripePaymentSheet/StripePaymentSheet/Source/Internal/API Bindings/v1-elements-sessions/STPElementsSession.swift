@@ -334,7 +334,7 @@ extension STPElementsSession {
     func paymentMethodRemoveIsPartialForCustomerSheet() -> Bool {
         let isParital = false
         if let customerSession = customer?.customerSession {
-            if customerSession.mobilePaymentElementComponent.enabled,
+            if customerSession.customerSheetComponent.enabled,
                let features = customerSession.customerSheetComponent.features {
                 return features.paymentMethodRemove == .partial
             }
