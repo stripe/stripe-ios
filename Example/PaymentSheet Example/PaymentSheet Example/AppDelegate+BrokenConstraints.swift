@@ -40,6 +40,8 @@ extension AppDelegate {
 
             "_UIRemoteKeyboardPlaceholderView", // Broken constraints in Apple's keyboard; unclear how it's our fault
             "SystemInputAssistantView", // Same as ^
+            "verticalSeparatorWidth' separator|.width == 0.333333", // Apple broken UIAlert constraint - oddly they never log this either; maybe they also have an ignorelist!
+            "UISV-spacing' H:[_UIInterfaceActionCustomViewRepresentationView:", // Same as ^
         ]
         guard !ignoredBrokenConstraints.contains(where: { constraint.debugDescription.contains($0) }) else {
             return
