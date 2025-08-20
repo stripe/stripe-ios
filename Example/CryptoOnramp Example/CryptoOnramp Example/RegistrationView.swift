@@ -118,6 +118,9 @@ struct RegistrationView: View {
                     country: country
                 )
 
+                // Authenticate with the demo merchant backend as well.
+                _ = try await APIClient.shared.authenticateUser(with: email)
+
                 await MainActor.run {
                     isLoading.wrappedValue = false
                     registrationCustomerId = customerId

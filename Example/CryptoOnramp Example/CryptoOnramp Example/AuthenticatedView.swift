@@ -31,6 +31,11 @@ struct AuthenticatedView: View {
     @State private var selectedPaymentMethod: PaymentMethodPreview?
     @State private var cryptoPaymentToken: String?
 
+    @State private var wallets: [CustomerWalletsResponse.Wallet] = []
+    @State private var selectedWalletId: String?
+    @State private var lastAttachedAddress: String?
+    @State private var lastAttachedNetwork: CryptoNetwork?
+
     @Environment(\.isLoading) private var isLoading
 
     private var shouldDisableButtons: Bool {
@@ -73,23 +78,12 @@ struct AuthenticatedView: View {
                     .disabled(shouldDisableButtons)
                     .opacity(shouldDisableButtons ? 0.5 : 1)
 
-                    if isWalletAttached {
-                        Text("Wallet Successfully Attached")
-                            .foregroundColor(.green)
-                            .frame(maxWidth: .infinity)
-                            .padding()
-                            .background {
-                                RoundedRectangle(cornerRadius: 8)
-                                    .foregroundColor(.green.opacity(0.1))
-                            }
-                    } else {
-                        Button("Attach Wallet Address") {
-                            showAttachWalletSheet = true
-                        }
-                        .buttonStyle(PrimaryButtonStyle())
-                        .disabled(shouldDisableButtons)
-                        .opacity(shouldDisableButtons ? 0.5 : 1)
+                    Button("Attach Wallet Address") {
+                        showAttachWalletSheet = true
                     }
+                    .buttonStyle(PrimaryButtonStyle())
+                    .disabled(shouldDisableButtons)
+                    .opacity(shouldDisableButtons ? 0.5 : 1)
 
                     HStack(spacing: 4) {
                         Text("Customer ID:")
@@ -104,6 +98,27 @@ struct AuthenticatedView: View {
                 .padding()
                 .background(Color.secondary.opacity(0.1))
                 .cornerRadius(8)
+
+                
+                if !wallets.isEmpty {
+                    VStack(alignment: .leading, spacing: 12) {
+                        Text("Selected Wallet")
+                            .font(.headline)
+                            .foregroundColor(.secondary)
+
+                        Picker("Wallet", selection: $selectedWalletId) {
+                            ForEach(wallets, id: \.id) { wallet in
+                                Text("\(wallet.network.localizedCapitalized): \(wallet.walletAddress.prefix(5))…")
+                                    .tag(wallet.id)
+                            }
+                        }
+                        .pickerStyle(.menu)
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                    }
+                    .padding()
+                    .background(Color.secondary.opacity(0.1))
+                    .cornerRadius(8)
+                }
 
                 if let errorMessage {
                     ErrorMessageView(message: errorMessage)
@@ -184,7 +199,18 @@ struct AuthenticatedView: View {
         .navigationTitle("Authenticated")
         .navigationBarTitleDisplayMode(.inline)
         .sheet(isPresented: $showAttachWalletSheet) {
-            AttachWalletAddressView(coordinator: coordinator, isWalletAttached: $isWalletAttached)
+            AttachWalletAddressView(
+                coordinator: coordinator,
+                isWalletAttached: $isWalletAttached,
+                onWalletAttached: { address, network in
+                    lastAttachedAddress = address
+                    lastAttachedNetwork = network
+                    refreshWalletsAndSelectIfNeeded()
+                }
+            )
+        }
+        .onAppear {
+            refreshWalletsAndSelectIfNeeded()
         }
     }
 
@@ -271,6 +297,33 @@ struct AuthenticatedView: View {
                 await MainActor.run {
                     isLoading.wrappedValue = false
                     errorMessage = "Apple Pay failed: \(error.localizedDescription)"
+                }
+            }
+        }
+    }
+
+    private func refreshWalletsAndSelectIfNeeded() {
+        Task {
+            do {
+                let response = try await APIClient.shared.fetchCustomerWallets(cryptoCustomerToken: customerId)
+                await MainActor.run {
+                    wallets = response.data
+
+                    if let lastAddress = lastAttachedAddress, let lastNetwork = lastAttachedNetwork {
+                        if let match = wallets.first(where: {
+                            $0.walletAddress == lastAddress && $0.network == lastNetwork.rawValue
+                        }) {
+                            selectedWalletId = match.id
+                        } else {
+                            selectedWalletId = wallets.first?.id
+                        }
+                    } else if selectedWalletId == nil {
+                        selectedWalletId = wallets.first?.id
+                    }
+                }
+            } catch {
+                await MainActor.run {
+                    errorMessage = "Failed to fetch wallets: \(error.localizedDescription)"
                 }
             }
         }
