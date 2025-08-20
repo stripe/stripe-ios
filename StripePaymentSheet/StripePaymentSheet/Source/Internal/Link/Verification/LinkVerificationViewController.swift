@@ -130,27 +130,23 @@ final class LinkVerificationViewController: UIViewController {
 
         activityIndicator.startAnimating()
 
-        if linkAccount.sessionState == .requiresVerification {
-            verificationView.isHidden = true
+        verificationView.isHidden = true
 
-            linkAccount.startVerification { [weak self] result in
-                switch result {
-                case .success(let collectOTP):
-                    if collectOTP {
-                        self?.activityIndicator.stopAnimating()
-                        self?.verificationView.isHidden = false
-                        self?.verificationView.codeField.becomeFirstResponder()
-                    } else {
-                        // No OTP collection is required.
-                        self?.finish(withResult: .completed)
-                    }
-                case .failure(let error):
-                    STPAnalyticsClient.sharedClient.logLink2FAStartFailure()
-                    self?.finish(withResult: .failed(error))
+        linkAccount.startVerification { [weak self] result in
+            switch result {
+            case .success(let collectOTP):
+                if collectOTP {
+                    self?.activityIndicator.stopAnimating()
+                    self?.verificationView.isHidden = false
+                    self?.verificationView.codeField.becomeFirstResponder()
+                } else {
+                    // No OTP collection is required.
+                    self?.finish(withResult: .completed)
                 }
+            case .failure(let error):
+                STPAnalyticsClient.sharedClient.logLink2FAStartFailure()
+                self?.finish(withResult: .failed(error))
             }
-        } else {
-            verificationView.codeField.becomeFirstResponder()
         }
     }
 
