@@ -34,7 +34,7 @@ extension APIClient {
         return try await request("create_onramp_session", method: .POST, body: requestObject, bearerToken: token)
     }
 
-    func fetchQuote(requestObject: QuoteRequest) async throws -> QuoteResponse {
+    func createQuote(requestObject: QuoteRequest) async throws -> QuoteResponse {
         guard let token = authToken else { throw APIError.missingAuthToken }
         return try await request("quote", method: .POST, body: requestObject, bearerToken: token)
     }
