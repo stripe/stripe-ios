@@ -19,6 +19,9 @@ struct AttachWalletAddressView: View {
     /// The coordinator used to submit the wallet address.
     let coordinator: CryptoOnrampCoordinator
 
+    /// Binding to inform presenting view that a wallet was successfully attached.
+    @Binding var isWalletAttached: Bool
+
     @State private var walletAddress: String = "0x4242424242424242424242424242424242424242"
     @State private var selectedNetwork: CryptoNetwork = .ethereum
     @State private var errorMessage: String?
@@ -105,6 +108,7 @@ struct AttachWalletAddressView: View {
                 try await coordinator.collectWalletAddress(walletAddress: address, network: selectedNetwork)
                 await MainActor.run {
                     isLoading.wrappedValue = false
+                    isWalletAttached = true
                     dismiss()
                 }
             } catch {
@@ -119,6 +123,6 @@ struct AttachWalletAddressView: View {
 
 #Preview {
     PreviewWrapperView { coordinator in
-        AttachWalletAddressView(coordinator: coordinator)
+        AttachWalletAddressView(coordinator: coordinator, isWalletAttached: .constant(false))
     }
 }
