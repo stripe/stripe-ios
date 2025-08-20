@@ -1,5 +1,13 @@
+//
+//  CheckoutResponse.swift
+//  CryptoOnramp Example
+//
+//  Created by Michael Liberatore on 8/20/25.
+//
+
 import Foundation
 
+/// The response format for `/quote` matches that of `/checkout`, so we use the same underlying model.
 typealias QuoteResponse = CheckoutResponse
 
 struct CheckoutResponse: Decodable {
@@ -46,4 +54,3 @@ struct CheckoutResponse: Decodable {
     let transactionDetails: TransactionDetails
     let uiMode: String
 }
-
