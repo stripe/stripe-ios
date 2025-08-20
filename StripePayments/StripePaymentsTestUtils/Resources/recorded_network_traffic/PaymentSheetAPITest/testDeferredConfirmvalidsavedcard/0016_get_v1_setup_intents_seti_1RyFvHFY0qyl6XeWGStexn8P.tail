@@ -1,34 +1,34 @@
 GET
-https:\/\/api\.stripe\.com\/v1\/setup_intents\/seti_1RovPpFY0qyl6XeWR5ltP8Om\?client_secret=seti_1RovPpFY0qyl6XeWR5ltP8Om_secret_SkQG06qo1z2hx65a9isDRCL2XCijvI9&expand%5B0%5D=payment_method$
+https:\/\/api\.stripe\.com\/v1\/setup_intents\/seti_1RyFvHFY0qyl6XeWGStexn8P\?client_secret=seti_1RyFvHFY0qyl6XeWGStexn8P_secret_Su43O7cFrZOA1wcRJ7FYeKLEBGJcGF9&expand%5B0%5D=payment_method$
 200
 application/json
 Content-Type: application/json
 Access-Control-Allow-Origin: *
 x-stripe-priority-routing-enabled: true
-content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=5LHSq9GNfcnsSyI2NJWUGGna-x6o6gfznuEQl0Wf_KsLRJNzcj1nN9gYI-B-yBcFGKzzcJgoBIEA5ag8
+content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=4tPWiCK-BG_oURXJi9Omxlz2VBxYWqr8buae-IEWsJYCdWlkWnGNcqZiEA8wQybGSeDMDEP1_vK3wHzu
 x-wc: ABGHIJ
 access-control-allow-methods: GET, HEAD, PUT, PATCH, POST, DELETE
 Server: nginx
 access-control-expose-headers: Request-Id, Stripe-Manage-Version, Stripe-Should-Retry, X-Stripe-External-Auth-Required, X-Stripe-Privileged-Session-Required
 access-control-max-age: 300
 Cache-Control: no-cache, no-store
-Date: Fri, 25 Jul 2025 23:52:42 GMT
+Date: Wed, 20 Aug 2025 17:35:44 GMT
 stripe-version: 2020-08-27
 access-control-allow-credentials: true
 Content-Length: 1601
 x-stripe-routing-context-priority-tier: api-testmode
 Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
 Vary: Origin
-request-id: req_33sCroJtP3mhxn
+request-id: req_eHkTeogbOlPy8f
 
 {
-  "id" : "seti_1RovPpFY0qyl6XeWR5ltP8Om",
+  "id" : "seti_1RyFvHFY0qyl6XeWGStexn8P",
   "description" : null,
   "next_action" : null,
   "livemode" : false,
   "payment_method" : {
     "object" : "payment_method",
-    "id" : "pm_1RovPpFY0qyl6XeWgr9rISMw",
+    "id" : "pm_1RyFvHFY0qyl6XeWhGLftcAU",
     "billing_details" : {
       "email" : null,
       "phone" : null,
@@ -70,7 +70,7 @@ request-id: req_33sCroJtP3mhxn
       "country" : "US"
     },
     "livemode" : false,
-    "created" : 1753487561,
+    "created" : 1755711343,
     "allow_redisplay" : "unspecified",
     "type" : "card",
     "customer" : null
@@ -82,8 +82,8 @@ request-id: req_33sCroJtP3mhxn
   ],
   "object" : "setup_intent",
   "last_setup_error" : null,
-  "created" : 1753487561,
-  "client_secret" : "seti_1RovPpFY0qyl6XeWR5ltP8Om_secret_SkQG06qo1z2hx65a9isDRCL2XCijvI9",
+  "created" : 1755711343,
+  "client_secret" : "seti_1RyFvHFY0qyl6XeWGStexn8P_secret_Su43O7cFrZOA1wcRJ7FYeKLEBGJcGF9",
   "automatic_payment_methods" : null,
   "cancellation_reason" : null,
   "status" : "succeeded"
