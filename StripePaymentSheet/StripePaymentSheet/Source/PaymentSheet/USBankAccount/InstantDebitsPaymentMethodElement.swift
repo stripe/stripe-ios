@@ -45,26 +45,23 @@ final class InstantDebitsPaymentMethodElement: ContainerElement {
         return formElement.view
     }
     var mandateString: NSMutableAttributedString? {
-        let string: NSMutableAttributedString? = if linkedBank != nil {
-            NSMutableAttributedString(attributedString: PaymentSheetFormFactory.makeBankMandateText(sellerName: sellerName))
-        } else {
-            nil
-        }
-        if let string {
-            let style = NSMutableParagraphStyle()
-            style.alignment = .center
-            string.addAttributes(
-                [
-                    .paragraphStyle: style,
-                    .font: UIFont.preferredFont(forTextStyle: .footnote),
-                    .foregroundColor: theme.colors.secondaryText,
-                ],
-                range: NSRange(location: 0, length: string.length)
-            )
-            return string
-        } else {
+        guard linkedBank != nil else {
+            // Only show the mandate after the user has connected their bank account
             return nil
         }
+
+        let string = NSMutableAttributedString(attributedString: PaymentSheetFormFactory.makeBankMandateText(sellerName: sellerName))
+        let style = NSMutableParagraphStyle()
+        style.alignment = .center
+        string.addAttributes(
+            [
+                .paragraphStyle: style,
+                .font: UIFont.preferredFont(forTextStyle: .footnote),
+                .foregroundColor: theme.colors.secondaryText,
+            ],
+            range: NSRange(location: 0, length: string.length)
+        )
+        return string
     }
 
     var name: String? {
