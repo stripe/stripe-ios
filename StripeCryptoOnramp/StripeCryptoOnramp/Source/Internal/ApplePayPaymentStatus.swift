@@ -5,9 +5,10 @@
 //  Created by Michael Liberatore on 8/13/25.
 //
 
+import Foundation
+
 /// Possible return statuses from `CryptoOnrampCoordinator.presentApplePay(using:from)`.
-@_spi(CryptoOnrampSDKPreview)
-public enum ApplePayPaymentStatus {
+enum ApplePayPaymentStatus {
 
     /// Attempt to use Apple Pay resulted in success.
     case success
@@ -16,7 +17,7 @@ public enum ApplePayPaymentStatus {
     case canceled
 }
 
-public extension ApplePayPaymentStatus {
+extension ApplePayPaymentStatus {
 
     /// Encapsulates a fallback error in the unlikely event that Apple Pay fails without a specified error.
     enum Error: Swift.Error {

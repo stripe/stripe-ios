@@ -297,20 +297,34 @@ extension ConsumerPaymentDetails.Details {
         let iconCode: String?
         let name: String
         let last4: String
+        let country: String
 
         private enum CodingKeys: String, CodingKey {
             case iconCode = "bankIconCode"
             case name = "bankName"
             case last4
+            case country
         }
 
-        init(iconCode: String?,
-             name: String,
-             last4: String) {
+        init(
+            iconCode: String?,
+            name: String,
+            last4: String,
+            country: String
+        ) {
             self.iconCode = iconCode
             self.name = name
             self.last4 = last4
+            self.country = country
         }
+    }
+}
+
+// MARK: - Details.BankAccount - Helpers
+extension ConsumerPaymentDetails.Details.BankAccount {
+    var asPassthroughPaymentMethodType: STPPaymentMethodType? {
+        // We don't support non-US bank accounts today.
+        country == "COUNTRY_US" ? .USBankAccount : nil
     }
 }
 

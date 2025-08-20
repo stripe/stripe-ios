@@ -139,7 +139,7 @@ final class LinkPaymentMethodPicker: UIView {
         return stackView
     }()
 
-    private let emailView = EmailView()
+    private let emailView: EmailView
     private let separatorView = LinkSeparatorView()
     private let headerView = Header()
 
@@ -162,7 +162,8 @@ final class LinkPaymentMethodPicker: UIView {
 
     private let addPaymentMethodButton = AddButton()
 
-    override init(frame: CGRect) {
+    init(linkConfiguration: LinkConfiguration? = nil) {
+        self.emailView = EmailView(linkConfiguration: linkConfiguration)
         super.init(frame: .zero)
         addAndPinSubview(stackView)
         setup()
