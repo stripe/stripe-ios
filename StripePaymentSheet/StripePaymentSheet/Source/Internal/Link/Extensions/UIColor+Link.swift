@@ -79,7 +79,7 @@ extension UIColor {
     static let linkToastBackground: UIColor = brand900
 
     static let linkExpressCheckoutButtonDivider: UIColor = UIColor(red: 0, green: 0, blue: 0, alpha: 0.12)
-    static let linkExpressCheckoutButtonForeground: UIColor = UIColor(red: 0, green: 0, blue: 0, alpha: 0.12)
+    static let linkExpressCheckoutButtonForeground: UIColor = UIColor(red: 13/255, green: 13/255, blue: 13/255, alpha: 1)
     static let linkExpressCheckoutButtonBackground: UIColor = .white
 }
 
