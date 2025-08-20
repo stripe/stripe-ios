@@ -60,7 +60,7 @@
 
 "By continuing, you agree to authorize payments pursuant to <terms>these terms</terms>." = "繼續操作即表示您同意按照<terms>這些條款</terms>授權付款。";
 
-"By continuing, you agree to save your information for future purchases with %@ and <link>Link</link>. You also agree to Link's <terms>Terms</terms> and <privacy>Privacy</privacy>." = "繼續即表示您同意儲存您的資訊，以便將來透過 %@ 和 Link 進行 <link>購買</link>。您也同意 Link 的<terms>條款</terms>和<privacy>隱私政策</privacy>。";
+"By continuing, you agree to save your information for future purchases with %@ and <link>Link</link> according to Link <terms>terms</terms> and <privacy>privacy</privacy>." = "繼續即表示您同意儲存您的個人資料，以便將來 <link>根據 Link <terms>條款</terms>與<privacy>私隱政策</privacy></link> 透過 Link 購物。";
 
 "By continuing, you agree to save your information for future purchases with %@." = "繼續即表示您同意儲存您的資訊,以便將來透過 %@ 進行購買。";
 
