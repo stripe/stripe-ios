@@ -313,6 +313,20 @@ class STPAPIClientStubbedTest: APIStubbedTestCase {
         waitForExpectations(timeout: 10)
     }
 
+    func testConfirmPaymentIntentWithTopLevelClientAttributionMetadata() {
+        let sut = stubbedAPIClient()
+        AnalyticsHelper.shared.generateSessionID()
+        let clientAttributionMetadata: STPClientAttributionMetadata = STPClientAttributionMetadata(elementsSessionConfigId: "elements_session_config_id", paymentIntentCreationFlow: .deferred, paymentMethodSelectionFlow: .automatic)
+        stubClientAttributionMetadata(clientAttributionMetadata: clientAttributionMetadata)
+        let e = expectation(description: "")
+        let paymentIntentParams = STPPaymentIntentParams(clientSecret: "pi_123456_secret_654321")
+        paymentIntentParams.clientAttributionMetadata = clientAttributionMetadata
+        sut.confirmPaymentIntent(with: paymentIntentParams) { _, _ in
+            e.fulfill()
+        }
+        waitForExpectations(timeout: 10)
+    }
+
     func testConfirmPaymentIntentWithoutClientAttributionMetadata() {
         let sut = stubbedAPIClient()
         AnalyticsHelper.shared.generateSessionID()
@@ -336,6 +350,20 @@ class STPAPIClientStubbedTest: APIStubbedTestCase {
         paymentMethodParams.clientAttributionMetadata = clientAttributionMetadata
         let setupIntentParams = STPSetupIntentConfirmParams(clientSecret: "seti_123456_secret_654321")
         setupIntentParams.paymentMethodParams = paymentMethodParams
+        sut.confirmSetupIntent(with: setupIntentParams) { _, _ in
+            e.fulfill()
+        }
+        waitForExpectations(timeout: 10)
+    }
+
+    func testConfirmSetupIntentWithTopLevelClientAttributionMetadata() {
+        let sut = stubbedAPIClient()
+        AnalyticsHelper.shared.generateSessionID()
+        let clientAttributionMetadata: STPClientAttributionMetadata = STPClientAttributionMetadata(elementsSessionConfigId: "elements_session_config_id", paymentIntentCreationFlow: .deferred, paymentMethodSelectionFlow: .automatic)
+        stubClientAttributionMetadata(clientAttributionMetadata: clientAttributionMetadata)
+        let e = expectation(description: "")
+        let setupIntentParams = STPSetupIntentConfirmParams(clientSecret: "seti_123456_secret_654321")
+        setupIntentParams.clientAttributionMetadata = clientAttributionMetadata
         sut.confirmSetupIntent(with: setupIntentParams) { _, _ in
             e.fulfill()
         }
