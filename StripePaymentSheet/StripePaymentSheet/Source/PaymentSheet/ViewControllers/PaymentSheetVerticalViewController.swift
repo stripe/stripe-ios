@@ -82,7 +82,7 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
     let walletButtonsShownExternally: Bool
     var error: Swift.Error?
     var isPaymentInFlight: Bool = false
-    private var savedPaymentMethods: [STPPaymentMethod]
+    private(set) var savedPaymentMethods: [STPPaymentMethod]
     let isFlowController: Bool
     /// Previous customer input - in FlowController's `update` flow, this is the customer input prior to `update`, used so we can restore their state in this VC.
     private var previousPaymentOption: PaymentOption?
