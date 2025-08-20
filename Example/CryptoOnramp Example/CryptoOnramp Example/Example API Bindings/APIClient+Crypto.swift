@@ -43,6 +43,12 @@ extension APIClient {
         guard let token = authToken else { throw APIError.missingAuthToken }
         return try await request("checkout", method: .POST, body: requestObject, bearerToken: token)
     }
+
+    func fetchSessionStatus(cryptoOnrampSessionId: String) async throws -> SessionStatusResponse {
+        guard let token = authToken else { throw APIError.missingAuthToken }
+        let path = "session_status/\(cryptoOnrampSessionId)"
+        return try await request(path, bearerToken: token)
+    }
 }
 
 private extension URLQueryItem {
