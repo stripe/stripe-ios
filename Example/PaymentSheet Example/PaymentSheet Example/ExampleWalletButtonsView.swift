@@ -4,7 +4,7 @@
 //
 
 @_spi(STP) @_spi(SharedPaymentToken) import StripePayments
-@_spi(STP) @_spi(SharedPaymentToken) @_spi(CustomerSessionBetaAccess) @_spi(AppearanceAPIAdditionsPreview) @_spi(PaymentMethodOptionsSetupFutureUsagePreview) import StripePaymentSheet
+@_spi(STP) @_spi(SharedPaymentToken) @_spi(CustomerSessionBetaAccess) @_spi(AppearanceAPIAdditionsPreview) import StripePaymentSheet
 import SwiftUI
 
 struct ShopPayTestingOptions {
@@ -259,8 +259,8 @@ class ExampleWalletButtonsModel: ObservableObject {
                 guard let data = data,
                     let json = try? JSONSerialization.jsonObject(with: data, options: [])
                         as? [String: Any],
-                    let customerId = "cus_Su6vwxk5wK3ROB" as? String,
-                    let customerSessionClientSecret = "cuss_secret_Su6vmFDWwtLL86ZKNl0iGOx8CIBQa6LvQO9hk57fCgHlmzF" as? String
+                    let customerId = json["customerId"] as? String,
+                    let customerSessionClientSecret = json["customerSessionClientSecret"] as? String
                 else {
                     self?.addDebugLog("Error creating customer: \(error?.localizedDescription ?? "Unknown error")")
                     return
@@ -285,14 +285,14 @@ class ExampleWalletButtonsModel: ObservableObject {
                     })
                 )
                 configuration.shopPay = self?.shopPayConfiguration
-                configuration.customer = .init(id: "cus_Su6vwxk5wK3ROB", customerSessionClientSecret: "cuss_secret_Su6vmFDWwtLL86ZKNl0iGOx8CIBQa6LvQO9hk57fCgHlmzF")
+                configuration.customer = .init(id: customerId, customerSessionClientSecret: customerSessionClientSecret)
                 configuration.returnURL = "payments-example://stripe-redirect"
                 configuration.willUseWalletButtonsView = true
                 configuration.appearance = self?.appearance ?? PaymentSheet.Appearance()
 
                 self?.addDebugLog("Creating PaymentSheet FlowController...")
                 PaymentSheet.FlowController.create(
-                    intentConfiguration: .init(sharedPaymentTokenSessionWithMode: .payment(amount: 9999, currency: "USD", setupFutureUsage: nil, captureMethod: .automatic, paymentMethodOptions: .some(.init(setupFutureUsageValues: [.card: .offSession]))), sellerDetails: .init(networkId: "stripe", externalId: "acct_1HvTI7Lu5o3P18Zp", businessName: "Till's Pills"), paymentMethodTypes: ["card", "shop_pay"], preparePaymentMethodHandler: { [weak self] paymentMethod, address in
+                    intentConfiguration: .init(sharedPaymentTokenSessionWithMode: .payment(amount: 9999, currency: "USD", setupFutureUsage: nil, captureMethod: .automatic, paymentMethodOptions: nil), sellerDetails: .init(networkId: "stripe", externalId: "acct_1HvTI7Lu5o3P18Zp", businessName: "Till's Pills"), paymentMethodTypes: ["card", "shop_pay"], preparePaymentMethodHandler: { [weak self] paymentMethod, address in
                         self?.isProcessing = true
                         self?.addDebugLog("PaymentMethod prepared: \(paymentMethod.stripeId)")
                         self?.addDebugLog("Address: \(address)")
