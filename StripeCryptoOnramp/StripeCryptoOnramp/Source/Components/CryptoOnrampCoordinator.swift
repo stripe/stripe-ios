@@ -314,12 +314,17 @@ public final class CryptoOnrampCoordinator: NSObject, CryptoOnrampCoordinatorPro
             throw Error.invalidSelectedPaymentSource
         }
 
-        let paymentMethod = switch selectedPaymentSource {
-        case .link:
-            try await linkController.createPaymentMethod()
-        case .applePay(let paymentMethod):
-            paymentMethod
-        }
+        let paymentMethod: STPPaymentMethod = try await {
+            switch selectedPaymentSource {
+            case .link:
+                let platformPublishableKey = try await getPlatformKey()
+                return try await linkController.createPaymentMethod(
+                    overridePublishableKey: platformPublishableKey
+                )
+            case .applePay(let applePayPaymentMethod):
+                return applePayPaymentMethod
+            }
+        }()
 
         let token = try await apiClient.createPaymentToken(
             for: paymentMethod.stripeId,
@@ -393,6 +398,11 @@ public final class CryptoOnrampCoordinator: NSObject, CryptoOnrampCoordinatorPro
             return .failed(error)
         }
     }
+
+    private func getPlatformKey() async throws -> String {
+        let platformSettings = try await apiClient.getPlatformSettings(linkAccountInfo: linkAccountInfo)
+        return platformSettings.publishableKey
+    }
 }
 
 extension CryptoOnrampCoordinator: STPApplePayContextDelegate {
@@ -447,9 +457,20 @@ private extension CryptoOnrampCoordinator {
                 return
             }
 
-            // Retain the continuation until we receive a completion delegate callback.
-            self.applePayCompletionContinuation = continuation
-            context.presentApplePay()
+            Task {
+                do {
+                    // Configure Apple Pay context to use platform publishable key
+                    let platformPublishableKey = try await getPlatformKey()
+                    let platformApiClient = STPAPIClient(publishableKey: platformPublishableKey)
+                    context.apiClient = platformApiClient
+
+                    // Retain the continuation until we receive a completion delegate callback.
+                    self.applePayCompletionContinuation = continuation
+                    context.presentApplePay()
+                } catch {
+                    continuation.resume(throwing: error)
+                }
+            }
         }
     }
 

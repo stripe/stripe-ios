@@ -125,9 +125,43 @@ extension STPAPIClient {
         return try await APIRequest<STPPaymentIntent>.getWith(self, endpoint: endpoint, parameters: parameters)
     }
 
-    func createPaymentToken(for paymentMethodId: String, linkAccountInfo: PaymentSheetLinkAccountInfoProtocol) async throws -> CreatePaymentTokenResponse {
-        // TODO: incorporate the implementation found at https://github.com/stripe/stripe-ios/pull/5302 once merged.
-        return CreatePaymentTokenResponse(id: "todo_123")
+    /// Creates a crypto payment token from a given payment method and consumer.
+    /// - Parameters:
+    ///   - paymentMethodId: The originating payment method ID.
+    ///   - linkAccountInfo: Information associated with the link account including the client secret.
+    /// - Returns: The created crypto payment token.
+    /// Throws if an API error occurs.
+    func createPaymentToken(
+        for paymentMethodId: String,
+        linkAccountInfo: PaymentSheetLinkAccountInfoProtocol
+    ) async throws -> CreatePaymentTokenResponse {
+        guard let consumerSessionClientSecret = linkAccountInfo.consumerSessionClientSecret else {
+            throw CryptoOnrampAPIError.missingConsumerSessionClientSecret
+        }
+
+        let endpoint = "crypto/internal/payment_token"
+        let requestObject = CreatePaymentTokenRequest(
+            paymentMethod: paymentMethodId,
+            consumerSessionClientSecret: consumerSessionClientSecret
+        )
+        return try await post(resource: endpoint, object: requestObject)
+    }
+
+    /// Retrieves platform settings for the crypto onramp service.
+    /// - Parameter linkAccountInfo: Information associated with the link account including the client secret.
+    /// - Returns: Platform settings including the publishable key.
+    /// Throws if an API error occurs.
+    func getPlatformSettings(
+        linkAccountInfo: PaymentSheetLinkAccountInfoProtocol
+    ) async throws -> PlatformSettingsResponse {
+        let endpoint = "crypto/internal/platform_settings"
+
+        var parameters: [String: Any] = [:]
+        if let consumerSessionClientSecret = linkAccountInfo.consumerSessionClientSecret {
+            parameters["credentials"] = ["consumer_session_client_secret": consumerSessionClientSecret]
+        }
+
+        return try await get(resource: endpoint, parameters: parameters)
     }
 
     private func validateSessionState(using linkAccountInfo: PaymentSheetLinkAccountInfoProtocol) throws {
@@ -142,6 +176,15 @@ private extension STPAPIClient {
     func post<T: Decodable>(resource: String, object: Encodable) async throws -> T {
         return try await withCheckedThrowingContinuation { continuation in
             post(resource: resource, object: object) { (result: Result<T, Error>) in
+                continuation.resume(with: result)
+            }
+        }
+    }
+
+    /// Helper method to wrap the closure-based get method for Swift concurrency.
+    func get<T: Decodable>(resource: String, parameters: [String: Any] = [:]) async throws -> T {
+        return try await withCheckedThrowingContinuation { continuation in
+            get(resource: resource, parameters: parameters) { (result: Result<T, Error>) in
                 continuation.resume(with: result)
             }
         }

@@ -47,6 +47,8 @@
 		0BED9B6A2E255FF1009FFF76 /* StripeFinancialConnections.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0BED9B692E255FF1009FFF76 /* StripeFinancialConnections.framework */; };
 		0BF41E892E3AB82E00CA4171 /* KycInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BF41E882E3AB82E00CA4171 /* KycInfo.swift */; };
 		0BF41E8B2E3AB84800CA4171 /* IdType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BF41E8A2E3AB84800CA4171 /* IdType.swift */; };
+		490D4AAE2E552D6F00FAF4FF /* PlatformSettingsResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4907AF502E54B80000F0C49D /* PlatformSettingsResponse.swift */; };
+		490D4AC72E5541A600FAF4FF /* CreatePaymentTokenRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 490D4AC62E5541A600FAF4FF /* CreatePaymentTokenRequest.swift */; };
 		49D233A82E439EB900F51263 /* CryptoNetwork.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49D233A72E439EB900F51263 /* CryptoNetwork.swift */; };
 		49D233AA2E439FAA00F51263 /* RegisterWalletRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49D233A92E439FAA00F51263 /* RegisterWalletRequest.swift */; };
 		49D233AC2E439FB200F51263 /* RegisterWalletResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49D233AB2E439FB200F51263 /* RegisterWalletResponse.swift */; };
@@ -120,6 +122,8 @@
 		0BED9B692E255FF1009FFF76 /* StripeFinancialConnections.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = StripeFinancialConnections.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		0BF41E882E3AB82E00CA4171 /* KycInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KycInfo.swift; sourceTree = "<group>"; };
 		0BF41E8A2E3AB84800CA4171 /* IdType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IdType.swift; sourceTree = "<group>"; };
+		4907AF502E54B80000F0C49D /* PlatformSettingsResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlatformSettingsResponse.swift; sourceTree = "<group>"; };
+		490D4AC62E5541A600FAF4FF /* CreatePaymentTokenRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreatePaymentTokenRequest.swift; sourceTree = "<group>"; };
 		49D233A72E439EB900F51263 /* CryptoNetwork.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CryptoNetwork.swift; sourceTree = "<group>"; };
 		49D233A92E439FAA00F51263 /* RegisterWalletRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegisterWalletRequest.swift; sourceTree = "<group>"; };
 		49D233AB2E439FB200F51263 /* RegisterWalletResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegisterWalletResponse.swift; sourceTree = "<group>"; };
@@ -186,12 +190,11 @@
 			children = (
 				0B63C98D2E4CF8C1005D8BD2 /* ApplePayPaymentStatus.swift */,
 				0B089E6A2E5386C9007D160E /* SelectedPaymentSource.swift */,
+				0B089E6E2E53935B007D160E /* CheckoutError.swift */,
 				0B6DF3472E296E2F008B1800 /* API Bindings */,
 				49D73DF22E4E499F00E35F1F /* StripeCryptoOnrampBundleLocator.swift */,
 				49D73DF42E4E49C300E35F1F /* STPLocalizedString+StripeCryptoOnramp.swift */,
 				49D73DF82E4E49EC00E35F1F /* String+Localized.swift */,
-				0B089E6E2E53935B007D160E /* CheckoutError.swift */,
-				0B6DF3472E296E2F008B1800 /* API Bindings */,
 			);
 			path = Internal;
 			sourceTree = "<group>";
@@ -199,8 +202,9 @@
 		0B6DF3472E296E2F008B1800 /* API Bindings */ = {
 			isa = PBXGroup;
 			children = (
-				0B089E822E53B254007D160E /* CreatePaymentTokenResponse.swift */,
 				0B6DF3482E296E38008B1800 /* STPAPIClient+CryptoOnramp.swift */,
+				0B089E822E53B254007D160E /* CreatePaymentTokenResponse.swift */,
+				490D4AC62E5541A600FAF4FF /* CreatePaymentTokenRequest.swift */,
 				0B6DF34C2E297E22008B1800 /* CustomerResponse.swift */,
 				0B6DF34A2E297E0A008B1800 /* CustomerRequest.swift */,
 				0BA705072E4132640044B483 /* KYCDataCollectionResponse.swift */,
@@ -210,6 +214,7 @@
 				0B649EDF2E428F6400AFAFB1 /* StartIdentityVerificationResponse.swift */,
 				49D233A92E439FAA00F51263 /* RegisterWalletRequest.swift */,
 				49D233AB2E439FB200F51263 /* RegisterWalletResponse.swift */,
+				4907AF502E54B80000F0C49D /* PlatformSettingsResponse.swift */,
 			);
 			path = "API Bindings";
 			sourceTree = "<group>";
@@ -442,6 +447,7 @@
 				0B6DF34B2E297E0A008B1800 /* CustomerRequest.swift in Sources */,
 				0B089E692E5378F7007D160E /* PaymentMethodType.swift in Sources */,
 				0B089E6B2E5386C9007D160E /* SelectedPaymentSource.swift in Sources */,
+				490D4AC72E5541A600FAF4FF /* CreatePaymentTokenRequest.swift in Sources */,
 				49D73DF52E4E49C300E35F1F /* STPLocalizedString+StripeCryptoOnramp.swift in Sources */,
 				0B6DF34D2E297E27008B1800 /* CustomerResponse.swift in Sources */,
 				0BF41E8B2E3AB84800CA4171 /* IdType.swift in Sources */,
@@ -452,6 +458,7 @@
 				49D73DF92E4E49EC00E35F1F /* String+Localized.swift in Sources */,
 				0B649EDE2E428F5A00AFAFB1 /* StartIdentityVerificationRequest.swift in Sources */,
 				0BA7050A2E413D6B0044B483 /* KYCDataCollectionRequest.swift in Sources */,
+				490D4AAE2E552D6F00FAF4FF /* PlatformSettingsResponse.swift in Sources */,
 				49D73DF32E4E499F00E35F1F /* StripeCryptoOnrampBundleLocator.swift in Sources */,
 				0B649EE02E428F6400AFAFB1 /* StartIdentityVerificationResponse.swift in Sources */,
 				49D233A82E439EB900F51263 /* CryptoNetwork.swift in Sources */,
