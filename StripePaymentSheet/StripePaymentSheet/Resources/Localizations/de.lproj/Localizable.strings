@@ -60,7 +60,7 @@
 
 "By continuing, you agree to authorize payments pursuant to <terms>these terms</terms>." = "Indem Sie fortfahren, akzeptieren Sie die Autorisierung von Zahlungen gemäß <terms>diesen Bedingungen</terms>.";
 
-"By continuing, you agree to save your information for future purchases with %@ and <link>Link</link>. You also agree to Link's <terms>Terms</terms> and <privacy>Privacy</privacy>." = "Indem Sie fortfahren, stimmen Sie zu, dass Ihre Informationen für zukünftige Einkäufe bei %@ und <link>Link</link>gespeichert werden. Sie stimmen außerdem den <terms>Konditionen</terms> und den <privacy>Datenschutzrichtlinien</privacy> von Link zu.";
+"By continuing, you agree to save your information for future purchases with %@ and <link>Link</link> according to Link <terms>terms</terms> and <privacy>privacy</privacy>." = "Indem Sie fortfahren, stimmen Sie zu, dass Ihre Informationen für zukünftige Einkäufe bei %@ und <link>Link</link> gemäß den <terms>Konditionen</terms> und dem <privacy>Datenschutz</privacy> von Link gespeichert werden.";
 
 "By continuing, you agree to save your information for future purchases with %@." = "Indem Sie fortfahren, stimmen Sie zu, dass Ihre Informationen für zukünftige Einkäufe bei %@ gespeichert werden.";
 

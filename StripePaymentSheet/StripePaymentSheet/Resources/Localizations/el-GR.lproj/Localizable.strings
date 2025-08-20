@@ -60,7 +60,7 @@
 
 "By continuing, you agree to authorize payments pursuant to <terms>these terms</terms>." = "Εάν συνεχίσετε, συμφωνείτε να εξουσιοδοτείτε πληρωμές με βάση <terms>αυτούς τους όρους</terms>.";
 
-"By continuing, you agree to save your information for future purchases with %@ and <link>Link</link>. You also agree to Link's <terms>Terms</terms> and <privacy>Privacy</privacy>." = "Συνεχίζοντας, συμφωνείτε να αποθηκεύσετε τις πληροφορίες σας για μελλοντικές αγορές με το %@ και <link>Link</link>. Συμφωνείτε επίσης με τους <terms>Όρους</terms> και το <privacy>Απόρρητο</privacy> του Link.";
+"By continuing, you agree to save your information for future purchases with %@ and <link>Link</link> according to Link <terms>terms</terms> and <privacy>privacy</privacy>." = "Συνεχίζοντας, συμφωνείτε να αποθηκεύσετε τις πληροφορίες σας για μελλοντικές αγορές με το %@ και <link>Link</link> σύμφωνα με τους <terms>όρους</terms> και το <privacy>απόρρητο</privacy> του Link.";
 
 "By continuing, you agree to save your information for future purchases with %@." = "Συνεχίζοντας, συμφωνείτε να αποθηκεύσετε τις πληροφορίες σας για μελλοντικές αγορές με το %@.";
 
