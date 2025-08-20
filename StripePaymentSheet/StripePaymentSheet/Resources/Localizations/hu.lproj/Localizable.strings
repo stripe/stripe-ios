@@ -82,6 +82,8 @@
 
 "By saving your bank account for %@ you agree to authorize payments pursuant to <terms>these terms</terms>." = "Azzal, hogy elmenti a bankszámlát a(z) %@ számára, beleegyezik a kifizetések engedélyezésébe ezen <terms>feltételek</terms> szerint.";
 
+"By submitting your order to %@ you agree to authorize payments pursuant to <terms>these terms</terms>." = "A megrendelésének a(z) %@ részére történő elküldésével Ön beleegyezik abba, hogy engedélyezi a fizetéseket a <terms>jelen feltételek</terms> szerint.";
+
 "CPF/CPNJ" = "CPF/CPNJ";
 
 "Cancel and pay another way" = "Szakítsa meg, és fizessen más módon";

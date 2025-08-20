@@ -84,6 +84,8 @@
 
 "By saving your bank account for %@ you agree to authorize payments pursuant to <terms>these terms</terms>." = "Dengan menyimpan akaun bank anda untuk %@, anda bersetuju untuk mengizinkan pembayaran menurut <terms>terma ini</terms>.";
 
+"By submitting your order to %@ you agree to authorize payments pursuant to <terms>these terms</terms>." = "Dengan menghantar pesanan anda kepada %@ anda bersetuju untuk mengizinkan pembayaran mengikut <terms>terma-terma ini</terms>.";
+
 "CPF/CPNJ" = "CPF/CPNJ";
 
 "Cancel and pay another way" = "Batalkan dan bayar dengan cara lain";

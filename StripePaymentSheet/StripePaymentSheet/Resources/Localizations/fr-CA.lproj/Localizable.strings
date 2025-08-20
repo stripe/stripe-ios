@@ -84,6 +84,8 @@
 
 "By saving your bank account for %@ you agree to authorize payments pursuant to <terms>these terms</terms>." = "En enregistrant votre compte bancaire pour %@, vous autorisez les paiements conformément à <terms>ces conditions</terms>.";
 
+"By submitting your order to %@ you agree to authorize payments pursuant to <terms>these terms</terms>." = "En envoyant votre commande à %@, vous autorisez les paiements en vertu des <terms>présentes conditions</terms>.";
+
 "CPF/CPNJ" = "CPF/CNPJ";
 
 "Cancel and pay another way" = "Annuler et utiliser un autre moyen de paiement";

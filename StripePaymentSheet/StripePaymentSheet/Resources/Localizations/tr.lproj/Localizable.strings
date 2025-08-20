@@ -84,6 +84,8 @@
 
 "By saving your bank account for %@ you agree to authorize payments pursuant to <terms>these terms</terms>." = "%@ için banka hesabınızı kaydettiğinizde ödemeleri <terms>bu koşullara</terms> göre yetkilendirmeyi kabul etmiş olursunuz.";
 
+"By submitting your order to %@ you agree to authorize payments pursuant to <terms>these terms</terms>." = "Siparişinizi %@’ye göndererek ödemeleri <terms>bu koşullara</terms> uygun olarak yetkilendirmeyi kabul etmiş olursunuz.";
+
 "CPF/CPNJ" = "CPF/CPNJ";
 
 "Cancel and pay another way" = "İptal edip başka bir yöntemle ödeyin";

@@ -84,6 +84,8 @@
 
 "By saving your bank account for %@ you agree to authorize payments pursuant to <terms>these terms</terms>." = "Meta tissejvja l-kont tal-bank tiegħek għal %@ tkun qed taqbel li tawtorizza l-pagamenti skont <terms>dar-regoli</terms>.";
 
+"By submitting your order to %@ you agree to authorize payments pursuant to <terms>these terms</terms>." = "Billi tissottometti l-ordni tiegħek lil %@ inti taqbel li tawtorizza pagamenti skont <terms>dawn it-termini</terms>.";
+
 "CPF/CPNJ" = "CPF/CPNJ";
 
 "Cancel and pay another way" = "Ikkanċella u ħallas mod ieħor";
