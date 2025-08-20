@@ -3,7 +3,7 @@ https:\/\/api\.stripe\.com\/v1\/payment_methods$
 200
 application/json
 access-control-allow-methods: GET, HEAD, PUT, PATCH, POST, DELETE
-content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=ifuNqmrnsIh313w6S4576NVcqBlPNs4PIUE0NHmkzxvuMzWwYfeDRjQ0o1LFYJE_8HSS9HSIe27vuW7Q
+content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=BFP2M1fQc27K26d5HAMWUnYyTSybBy6Ps9-EPxRGXUjV4Q-QMgNP2kspitAbhD_v_wkbkkbZ_ML5Bt_D
 Server: nginx
 Cache-Control: no-cache, no-store
 x-wc: ABGHIJ
@@ -12,22 +12,22 @@ Access-Control-Allow-Origin: *
 stripe-should-retry: false
 x-stripe-priority-routing-enabled: true
 x-stripe-routing-context-priority-tier: api-testmode
-request-id: req_d0S5tHQzt3XGVc
+request-id: req_nME65vpOyum8fQ
 Content-Length: 643
 Vary: Origin
-Date: Fri, 25 Jul 2025 23:24:49 GMT
-original-request: req_d0S5tHQzt3XGVc
+Date: Tue, 19 Aug 2025 17:59:31 GMT
+original-request: req_nME65vpOyum8fQ
 stripe-version: 2020-08-27
-idempotency-key: d7cd8c3f-c572-40db-96ce-68f41c1490f2
+idempotency-key: 2ff42c17-8a5d-4b46-91a6-3673dd085163
 access-control-expose-headers: Request-Id, Stripe-Manage-Version, Stripe-Should-Retry, X-Stripe-External-Auth-Required, X-Stripe-Privileged-Session-Required
 access-control-max-age: 300
 access-control-allow-credentials: true
 Content-Type: application/json
-X-Stripe-Mock-Request: allow_redisplay=unspecified&bacs_debit\[account_number]=00012345&bacs_debit\[sort_code]=108800&billing_details\[address]\[city]=London&billing_details\[address]\[country]=GB&billing_details\[address]\[line1]=Stripe%2C%207th%20Floor%20The%20Bower%20Warehouse&billing_details\[address]\[postal_code]=EC1V%209NR&billing_details\[email]=email%40email\.com&billing_details\[name]=Isaac%20Asimov&billing_details\[phone]=555-555-5555&client_attribution_metadata\[merchant_integration_source]=elements&client_attribution_metadata\[merchant_integration_subtype]=mobile&client_attribution_metadata\[merchant_integration_version]=.*&guid=.*&muid=.*&payment_user_agent=.*&sid=.*&type=bacs_debit
+X-Stripe-Mock-Request: allow_redisplay=unspecified&bacs_debit\[account_number]=00012345&bacs_debit\[sort_code]=108800&billing_details\[address]\[city]=London&billing_details\[address]\[country]=GB&billing_details\[address]\[line1]=Stripe%2C%207th%20Floor%20The%20Bower%20Warehouse&billing_details\[address]\[postal_code]=EC1V%209NR&billing_details\[email]=email%40email\.com&billing_details\[name]=Isaac%20Asimov&billing_details\[phone]=555-555-5555&guid=.*&muid=.*&payment_user_agent=.*&sid=.*&type=bacs_debit
 
 {
   "object" : "payment_method",
-  "id" : "pm_1RouyrL6pqDH2fDJ2qVkPWdc",
+  "id" : "pm_1RxtolL6pqDH2fDJJNTRWKxn",
   "billing_details" : {
     "email" : "email@email.com",
     "phone" : "555-555-5555",
@@ -49,7 +49,7 @@ X-Stripe-Mock-Request: allow_redisplay=unspecified&bacs_debit\[account_number]=0
     "sort_code" : "108800"
   },
   "allow_redisplay" : "unspecified",
-  "created" : 1753485889,
+  "created" : 1755626371,
   "customer" : null,
   "type" : "bacs_debit"
 }
