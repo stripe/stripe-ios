@@ -125,9 +125,20 @@ extension STPAPIClient {
         return try await APIRequest<STPPaymentIntent>.getWith(self, endpoint: endpoint, parameters: parameters)
     }
 
-    func createPaymentToken(for paymentMethodId: String, linkAccountInfo: PaymentSheetLinkAccountInfoProtocol) async throws -> CreatePaymentTokenResponse {
-        // TODO: incorporate the implementation found at https://github.com/stripe/stripe-ios/pull/5302 once merged.
-        return CreatePaymentTokenResponse(id: "todo_123")
+    func createPaymentToken(
+        for paymentMethodId: String,
+        linkAccountInfo: PaymentSheetLinkAccountInfoProtocol
+    ) async throws -> CreatePaymentTokenResponse {
+        guard let consumerSessionClientSecret = linkAccountInfo.consumerSessionClientSecret else {
+            throw CryptoOnrampAPIError.missingConsumerSessionClientSecret
+        }
+
+        let endpoint = "crypto/internal/payment_token"
+        let requestObject = CreatePaymentTokenRequest(
+            paymentMethod: paymentMethodId,
+            consumerSessionClientSecret: consumerSessionClientSecret
+        )
+        return try await post(resource: endpoint, object: requestObject)
     }
 
     /// Retrieves platform settings for the crypto onramp service.
