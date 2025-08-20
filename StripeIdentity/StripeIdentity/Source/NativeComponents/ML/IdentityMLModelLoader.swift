@@ -95,7 +95,7 @@ final class IdentityMLModelLoader: IdentityMLModelLoaderProtocol {
             cachesDirectory = URL.cachesDirectory
         } else {
             let paths = FileManager.default.urls(for: .cachesDirectory, in: .userDomainMask)
-            cachesDirectory = paths.first ?? URL(fileURLWithPath: NSTemporaryDirectory())
+            cachesDirectory = paths.first ?? URL(fileURLWithPath: NSTemporaryDirectory(), isDirectory: true)
         }
 
         // Create a name-spaced subdirectory inside the temp directory so
