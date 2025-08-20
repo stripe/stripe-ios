@@ -95,29 +95,40 @@ struct AuthenticatedView: View {
                         .foregroundColor(.secondary)
 
                     if let selectedPaymentMethod {
-                        HStack {
-                            Spacer()
-                            PaymentMethodCardView(preview: selectedPaymentMethod)
-                            Spacer()
-                        }
+                        VStack(spacing: 12) {
+                            HStack {
+                                Spacer()
+                                PaymentMethodCardView(preview: selectedPaymentMethod)
+                                Spacer()
+                            }
 
-                        Button("Create crypto payment token") {
-                            createCryptoPaymentToken()
-                        }
-                        .buttonStyle(PrimaryButtonStyle())
+                            Button("Create crypto payment token") {
+                                createCryptoPaymentToken()
+                            }
+                            .buttonStyle(PrimaryButtonStyle())
 
-                        if let cryptoPaymentToken {
-                            HStack(spacing: 4) {
-                                Text("Crypto payment token:")
-                                    .font(.footnote)
-                                    .bold()
+                            if let cryptoPaymentToken {
+                                HStack(spacing: 4) {
+                                    Text("Crypto payment token:")
+                                        .font(.footnote)
+                                        .bold()
+                                        .foregroundColor(.secondary)
+                                    Text(cryptoPaymentToken)
+                                        .font(.footnote.monospaced())
+                                        .foregroundColor(.secondary)
+                                }
+                            } else {
+                                Divider()
+
+                                Text("Change Payment Method")
+                                    .font(.subheadline)
                                     .foregroundColor(.secondary)
-                                Text(cryptoPaymentToken)
-                                    .font(.footnote.monospaced())
-                                    .foregroundColor(.secondary)
+                                    .frame(maxWidth: .infinity, alignment: .leading)
                             }
                         }
-                    } else {
+                    }
+
+                    if cryptoPaymentToken == nil {
                         VStack(spacing: 8) {
                             // Note: Apple Pay does not require iOS 16, but the native SwiftUI
                             // `PayWithApplePayButton` does, which we're using in this example.
