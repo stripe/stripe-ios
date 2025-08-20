@@ -36,7 +36,7 @@ struct AttachWalletAddressView: View {
             ScrollView {
                 VStack(spacing: 20) {
                     VStack(alignment: .leading, spacing: 8) {
-                        Text("Attach a wallet address to your Link account.")
+                        Text("Attach a wallet address to your account.")
                             .font(.subheadline)
                             .foregroundColor(.secondary)
                             .frame(maxWidth: .infinity, alignment: .leading)
@@ -53,7 +53,7 @@ struct AttachWalletAddressView: View {
                     FormField("Network") {
                         Picker("Network", selection: $selectedNetwork) {
                             ForEach(CryptoNetwork.allCases, id: \.rawValue) { network in
-                                Text(network.rawValue.uppercased()).tag(network)
+                                Text(network.rawValue.localizedCapitalized).tag(network)
                             }
                         }
                         .pickerStyle(.menu)
@@ -63,21 +63,23 @@ struct AttachWalletAddressView: View {
                     if let errorMessage {
                         ErrorMessageView(message: errorMessage)
                     }
-
-                    Button("Submit") {
-                        submit()
-                    }
-                    .buttonStyle(PrimaryButtonStyle())
-                    .disabled(isSubmitDisabled)
-                    .opacity(isSubmitDisabled ? 0.5 : 1)
                 }
                 .padding()
             }
-.navigationTitle("Wallet Address")
+            .navigationTitle("Wallet Address")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
-                    Button("Close") { dismiss() }
+                    Button("Cancel") {
+                        dismiss()
+                    }
+                }
+                ToolbarItem(placement: .confirmationAction) {
+                    Button("Submit") {
+                        submit()
+                    }
+                    .disabled(isSubmitDisabled)
+                    .opacity(isSubmitDisabled ? 0.5 : 1)
                 }
             }
         }
@@ -120,4 +122,3 @@ struct AttachWalletAddressView: View {
         AttachWalletAddressView(coordinator: coordinator)
     }
 }
-
