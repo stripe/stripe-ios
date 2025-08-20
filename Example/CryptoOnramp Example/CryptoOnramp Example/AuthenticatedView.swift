@@ -142,6 +142,23 @@ struct AuthenticatedView: View {
                 .background(Color.secondary.opacity(0.1))
                 .cornerRadius(8)
 
+                if let cryptoPaymentToken {
+                    VStack(spacing: 8) {
+                        Text("Crypto Payment Token")
+                            .font(.headline)
+                            .foregroundColor(.secondary)
+                            .padding(.horizontal)
+
+                        Text(cryptoPaymentToken)
+                            .font(.subheadline.monospaced())
+                            .foregroundColor(.secondary)
+                            .padding(.horizontal)
+                    }
+                    .padding()
+                    .background(Color.blue.opacity(0.1))
+                    .cornerRadius(8)
+                }
+
                 HiddenNavigationLink(
                     destination: KYCInfoView(coordinator: coordinator),
                     isActive: $showKYCView

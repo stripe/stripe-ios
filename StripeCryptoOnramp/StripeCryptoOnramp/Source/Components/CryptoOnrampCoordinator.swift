@@ -314,16 +314,17 @@ public final class CryptoOnrampCoordinator: NSObject, CryptoOnrampCoordinatorPro
             throw Error.invalidSelectedPaymentSource
         }
 
-        let paymentMethod: STPPaymentMethod
-        switch selectedPaymentSource {
-        case .link:
-            let platformPublishableKey = try await getPlatformKey()
-            paymentMethod = try await linkController.createPaymentMethod(
-                overridePublishableKey: platformPublishableKey
-            )
-        case .applePay(let applePayPaymentMethod):
-            paymentMethod = applePayPaymentMethod
-        }
+        let paymentMethod: STPPaymentMethod = try await {
+            switch selectedPaymentSource {
+            case .link:
+                let platformPublishableKey = try await getPlatformKey()
+                return try await linkController.createPaymentMethod(
+                    overridePublishableKey: platformPublishableKey
+                )
+            case .applePay(let applePayPaymentMethod):
+                return applePayPaymentMethod
+            }
+        }()
 
         let token = try await apiClient.createPaymentToken(
             for: paymentMethod.stripeId,

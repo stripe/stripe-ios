@@ -202,9 +202,9 @@
 		0B6DF3472E296E2F008B1800 /* API Bindings */ = {
 			isa = PBXGroup;
 			children = (
+				0B6DF3482E296E38008B1800 /* STPAPIClient+CryptoOnramp.swift */,
 				0B089E822E53B254007D160E /* CreatePaymentTokenResponse.swift */,
 				490D4AC62E5541A600FAF4FF /* CreatePaymentTokenRequest.swift */,
-				0B6DF3482E296E38008B1800 /* STPAPIClient+CryptoOnramp.swift */,
 				0B6DF34C2E297E22008B1800 /* CustomerResponse.swift */,
 				0B6DF34A2E297E0A008B1800 /* CustomerRequest.swift */,
 				0BA705072E4132640044B483 /* KYCDataCollectionResponse.swift */,

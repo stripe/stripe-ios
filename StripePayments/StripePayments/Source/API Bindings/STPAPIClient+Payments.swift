@@ -820,7 +820,7 @@ extension STPAPIClient {
     }
 
     /// - Parameter additionalPaymentUserAgentValues: A list of values to append to the `payment_user_agent` parameter sent in the request. e.g. `["deferred-intent", "autopm"]` will append "; deferred-intent; autopm" to the `payment_user_agent`.
-    /// - Parameter overridePublishableKey: Optional publishable key to use for this request instead of the client's default key.
+    /// - Parameter overridePublishableKey: Optional publishable key to use for this request instead of the default key.
     func createPaymentMethod(
         with paymentMethodParams: STPPaymentMethodParams,
         additionalPaymentUserAgentValues: [String] = [],
@@ -869,7 +869,7 @@ extension STPAPIClient {
     /// - Parameters:
     ///   - paymentMethodParams:  The `STPPaymentMethodParams` to pass to `/v1/payment_methods`.  Cannot be nil.
     ///   - additionalPaymentUserAgentValues:  A list of values to append to the `payment_user_agent` parameter sent in the request. e.g. `["deferred-intent", "autopm"]` will append "; deferred-intent; autopm" to the `payment_user_agent`.
-    ///   - overridePublishableKey: Optional publishable key to use for this request instead of the client's default key.
+    ///   - overridePublishableKey: Optional publishable key to use for this request instead of the default key.
     /// - Returns: the returned PaymentMethod object.
     @_spi(STP) public func createPaymentMethod(
         with paymentMethodParams: STPPaymentMethodParams,
@@ -883,9 +883,9 @@ extension STPAPIClient {
                 overridePublishableKey: overridePublishableKey
             ) { paymentMethod, error in
                 if let paymentMethod = paymentMethod {
-                    continuation.resume(returning: paymentMethod)
+                    continuation.resume(with: .success(paymentMethod))
                 } else {
-                    continuation.resume(throwing: error ?? NSError.stp_genericFailedToParseResponseError())
+                    continuation.resume(with: .failure(error ?? NSError.stp_genericFailedToParseResponseError()))
                 }
             }
         }

@@ -125,6 +125,12 @@ extension STPAPIClient {
         return try await APIRequest<STPPaymentIntent>.getWith(self, endpoint: endpoint, parameters: parameters)
     }
 
+    /// Creates a crypto payment token from a given payment method and consumer.
+    /// - Parameters:
+    ///   - paymentMethodId: The originating payment method ID.
+    ///   - linkAccountInfo: Information associated with the link account including the client secret.
+    /// - Returns: The created crypto payment token.
+    /// Throws if an API error occurs.
     func createPaymentToken(
         for paymentMethodId: String,
         linkAccountInfo: PaymentSheetLinkAccountInfoProtocol
@@ -142,21 +148,15 @@ extension STPAPIClient {
     }
 
     /// Retrieves platform settings for the crypto onramp service.
-    /// - Parameters:
-    ///   - linkAccountInfo: Information associated with the link account including the client secret.
-    ///   - countryHint: Country code hint if the caller knows the user's KYC region.
+    /// - Parameter linkAccountInfo: Information associated with the link account including the client secret.
     /// - Returns: Platform settings including the publishable key.
     /// Throws if an API error occurs.
     func getPlatformSettings(
-        linkAccountInfo: PaymentSheetLinkAccountInfoProtocol,
-        countryHint: String = "US"
+        linkAccountInfo: PaymentSheetLinkAccountInfoProtocol
     ) async throws -> PlatformSettingsResponse {
         let endpoint = "crypto/internal/platform_settings"
 
-        var parameters: [String: Any] = [
-            "country_hint": countryHint
-        ]
-
+        var parameters: [String: Any] = [:]
         if let consumerSessionClientSecret = linkAccountInfo.consumerSessionClientSecret {
             parameters["credentials"] = ["consumer_session_client_secret": consumerSessionClientSecret]
         }
