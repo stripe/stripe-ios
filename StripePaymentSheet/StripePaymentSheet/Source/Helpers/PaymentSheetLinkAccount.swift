@@ -201,13 +201,6 @@ struct LinkPMDisplayDetails {
     }
 
     func startVerification(completion: @escaping (Result<Bool, Error>) -> Void) {
-        guard case .requiresVerification = sessionState else {
-            DispatchQueue.main.async {
-                completion(.success(false))
-            }
-            return
-        }
-
         guard let session = currentSession else {
             stpAssertionFailure()
             DispatchQueue.main.async {
