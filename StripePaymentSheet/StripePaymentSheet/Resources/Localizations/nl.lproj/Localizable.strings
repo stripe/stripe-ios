@@ -60,6 +60,10 @@
 
 "By continuing, you agree to authorize payments pursuant to <terms>these terms</terms>." = "Als je doorgaat, ga je ermee akkoord betalingen in overeenstemming met <terms>deze voorwaarden</terms> te autoriseren.";
 
+"By continuing, you agree to save your information for future purchases with %@ and <link>Link</link> according to Link <terms>terms</terms> and <privacy>privacy</privacy>." = "Door verder te gaan, ga je ermee akkoord dat jouw informatie wordt opgeslagen voor toekomstige aankopen bij %@ en <link>Link</link> volgens Link <terms>voorwaarden</terms> en <privacy>privacy</privacy>.";
+
+"By continuing, you agree to save your information for future purchases with %@." = "Door verder te gaan, ga je ermee akkoord jouw informatie op te slaan voor toekomstige aankopen bij %@.";
+
 "By continuing, you authorize %@ to automatically debit your Satispay Balance on a recurring basis in accordance with your purchase or subscription plan." = "Door verder te gaan, machtigt u %@ om automatisch uw Satispay-saldo op terugkerende basis af te schrijven in overeenstemming met uw aankoop- of abonnementsplan.";
 
 "By continuing, you authorize %@ to debit your Cash App account for this payment and future payments in accordance with %@'s terms, until this authorization is revoked. You can change this anytime in your Cash App Settings." = "Als je doorgaat, geef je %1$@ toestemming om deze betaling en toekomstige betalingen in rekening te brengen op je Cash App-account, in overeenstemming met de voorwaarden van %2$@, totdat je deze toestemming intrekt. Je kunt dit op elk moment wijzigen via je Cash App-instellingen.";
@@ -128,6 +132,8 @@
 
 "Failed to connect" = "Kan geen verbinding maken";
 
+"Fast, secure checkout" = "Snel, beveiligd afrekenproces";
+
 "For security, please re-enter your card’s security code." = "Voer uit veiligheidsoverwegingen de beveiligingscode van je betaalkaart opnieuw in.";
 
 "Get %@ back when you pay for the first time with your bank. <terms>See terms</terms>" = "Krijg %@ terug wanneer je voor de eerste keer via je bank betaalt. <terms>Zie voorwaarden</terms>";
@@ -187,6 +193,8 @@
 "Pay another way" = "Betalen op een andere manier";
 
 "Pay faster at %@ and thousands of businesses." = "Reken sneller af bij %@ en duizenden andere bedrijven.";
+
+"Pay faster everywhere Link is accepted." = "Betaal sneller, overal waar Link wordt geaccepteerd.";
 
 "Pay over time with %@" = "Betalen in termijnen met %@";
 

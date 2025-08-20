@@ -60,7 +60,7 @@
 
 "By continuing, you agree to authorize payments pursuant to <terms>these terms</terms>." = "Genom att fortsätta samtycker du till att godkänna betalningar i enlighet med dessa <terms>villkor</terms>.";
 
-"By continuing, you agree to save your information for future purchases with %@ and <link>Link</link>. You also agree to Link's <terms>Terms</terms> and <privacy>Privacy</privacy>." = "Genom att fortsätta godkänner du att dina uppgifter sparas för framtida köp hos %@ och <link>Link</link>. Du samtycker också till Links <terms>villkor</terms> och <privacy>integritet</privacy>.";
+"By continuing, you agree to save your information for future purchases with %@ and <link>Link</link> according to Link <terms>terms</terms> and <privacy>privacy</privacy>." = "Genom att fortsätta godkänner du att dina uppgifter sparas för framtida köp hos %@ och <link>Link</link> enligt Links <terms>villkor</terms> och <privacy>integritetspolicy</privacy>.";
 
 "By continuing, you agree to save your information for future purchases with %@." = "Genom att fortsätta godkänner du att dina uppgifter sparas för framtida köp hos %@.";
 
