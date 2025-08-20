@@ -72,8 +72,6 @@ struct AuthenticatedView: View {
                     .opacity(shouldDisableButtons ? 0.5 : 1)
 
                     HStack(spacing: 4) {
-                        Spacer()
-
                         Text("Customer ID:")
                             .font(.footnote)
                             .bold()
@@ -81,8 +79,6 @@ struct AuthenticatedView: View {
                         Text(customerId)
                             .font(.footnote.monospaced())
                             .foregroundColor(.secondary)
-
-                        Spacer()
                     }
                 }
                 .padding()
@@ -105,6 +101,18 @@ struct AuthenticatedView: View {
                             createCryptoPaymentToken()
                         }
                         .buttonStyle(PrimaryButtonStyle())
+
+                        if let cryptoPaymentToken {
+                            HStack(spacing: 4) {
+                                Text("Crypto payment token:")
+                                    .font(.footnote)
+                                    .bold()
+                                    .foregroundColor(.secondary)
+                                Text(cryptoPaymentToken)
+                                    .font(.footnote.monospaced())
+                                    .foregroundColor(.secondary)
+                            }
+                        }
                     } else {
                         VStack(spacing: 8) {
                             // Note: Apple Pay does not require iOS 16, but the native SwiftUI
@@ -141,23 +149,6 @@ struct AuthenticatedView: View {
                 .padding()
                 .background(Color.secondary.opacity(0.1))
                 .cornerRadius(8)
-
-                if let cryptoPaymentToken {
-                    VStack(spacing: 8) {
-                        Text("Crypto Payment Token")
-                            .font(.headline)
-                            .foregroundColor(.secondary)
-                            .padding(.horizontal)
-
-                        Text(cryptoPaymentToken)
-                            .font(.subheadline.monospaced())
-                            .foregroundColor(.secondary)
-                            .padding(.horizontal)
-                    }
-                    .padding()
-                    .background(Color.blue.opacity(0.1))
-                    .cornerRadius(8)
-                }
 
                 HiddenNavigationLink(
                     destination: KYCInfoView(coordinator: coordinator),
