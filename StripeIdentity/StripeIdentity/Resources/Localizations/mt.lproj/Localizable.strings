@@ -6,8 +6,6 @@
 
 "App Settings" = "Għażliet tal-App";
 
-"Back identity card photo successfully uploaded" = "Ir-ritratt tan-naħa ta' wara tal-karta tal-identità ttella'";
-
 "Back of identity card" = "In-naħa ta' wara tal-karta tal-identità";
 
 "Back of identity document" = "In-naħa ta' wara tad-dokument tal-identità";
@@ -31,10 +29,6 @@
 "Details not visible" = "Id-dettalji ma jidhrux";
 
 "Flip your identity card over to the other side" = "Dawwar il-karta tal-identità tiegħek";
-
-"Front identity card photo successfully uploaded" = "Ir-ritratt tan-naħa ta' quddiem tal-karta tal-identità ttella'";
-
-"Front of identity card" = "In-naħa ta' quddiem tal-karta tal-identità";
 
 "Front of identity document" = "In-naħa ta' quddiem tad-dokument tal-identità";
 
@@ -84,11 +78,7 @@
 
 "Photo Library" = "Ġabra tar-Ritratti";
 
-"Please upload images of the front and back of your identity card" = "Jekk jogħġbok tella' r-ritratti tan-naħa ta' quddiem u ta' wara tal-karta tal-identità tiegħek";
-
 "Position your face in the center of the frame." = "Qiegħed wiċċek f'nofs il-gwarniċ.";
-
-"Position your identity card in the center of the frame" = "Qiegħed il-karta tal-identità tiegħek f'nofs il-gwarniċ";
 
 "Retake Photos" = "Erġa' ħu r-ritratti";
 
@@ -101,10 +91,6 @@
 "Select a location to upload the back of your identity document from" = "Agħżel il-post minn fejn tixtieq ittella' n-naħa ta' wara tad-dokument tal-identità";
 
 "Select a location to upload the front of your identity document from" = "Agħżel il-post minn fejn tixtieq ittella' n-naħa ta' quddiem tad-dokument tal-identità";
-
-"Select back identity card photo" = "Agħżel ir-ritratt tan-naħa ta' wara tal-karta tal-identità";
-
-"Select front identity card photo" = "Agħżel ir-ritratt tan-naħa ta' quddiem tal-karta tal-identità";
 
 "Selfie" = "Stessu";
 
@@ -131,10 +117,6 @@
 "Upload a Photo" = "Tella' Ritratt";
 
 "Upload your photo ID" = "Tella' d-dokument tal-identità b'ritratt tiegħek";
-
-"Uploading back identity card photo" = "Qed ittella' r-ritratt tan-naħa ta' wara tal-kartà tal-identità";
-
-"Uploading front identity card photo" = "Qed ittella' r-ritratt tan-naħa ta' quddiem tal-karta tal-identità";
 
 "Verify your identity" = "Ivverifika l-identità tiegħek";
 

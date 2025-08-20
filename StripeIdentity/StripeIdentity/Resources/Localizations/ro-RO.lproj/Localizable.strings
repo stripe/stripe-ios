@@ -6,8 +6,6 @@
 
 "App Settings" = "Setările aplicației";
 
-"Back identity card photo successfully uploaded" = "Fotografia verso-ului cărții de identitate a fost încărcată cu succes";
-
 "Back of identity card" = "Verso-ul cărții de identitate";
 
 "Back of identity document" = "Spatele documentului de identitate";
@@ -31,10 +29,6 @@
 "Details not visible" = "Datele nu sunt vizibile";
 
 "Flip your identity card over to the other side" = "Întoarceți cartea de identitate pe partea cealaltă";
-
-"Front identity card photo successfully uploaded" = "Fotografia părții frontale a cărții de identitate a fost încărcată cu succes";
-
-"Front of identity card" = "Partea frontală a cărții de identitate";
 
 "Front of identity document" = "Partea frontală a documentului de identitate";
 
@@ -84,11 +78,7 @@
 
 "Photo Library" = "Galerie foto";
 
-"Please upload images of the front and back of your identity card" = "Vă rugăm să încărcați imagini cu partea frontală și verso-ul cărții dvs. de identitate";
-
 "Position your face in the center of the frame." = "Poziționați-vă fața în centrul cadrului.";
-
-"Position your identity card in the center of the frame" = "Poziționați-vă cartea de identitate în centrul cadrului";
 
 "Retake Photos" = "Faceți din nou fotografii";
 
@@ -101,10 +91,6 @@
 "Select a location to upload the back of your identity document from" = "Selectați o locație din care să încărcați verso-ului documentului dvs. de identitate";
 
 "Select a location to upload the front of your identity document from" = "Selectați o locație din care să încărcați partea frontală a documentului dvs. de identitate";
-
-"Select back identity card photo" = "Selectați fotografia verso-ului cărții de identitate";
-
-"Select front identity card photo" = "Selectați fotografia părții frontale a cărții de identitate";
 
 "Selfie" = "Selfie";
 
@@ -131,10 +117,6 @@
 "Upload a Photo" = "Încărcați o fotografie";
 
 "Upload your photo ID" = "Încărcați documentul de identitate cu fotografie";
-
-"Uploading back identity card photo" = "Se încarcă fotografia verso-ului cărții de identitate";
-
-"Uploading front identity card photo" = "Se încarcă fotografia părții frontale a cărții de identitate";
 
 "Verify your identity" = "Verificați-vă identitatea";
 

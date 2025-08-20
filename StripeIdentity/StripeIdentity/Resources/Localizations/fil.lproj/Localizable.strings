@@ -6,8 +6,6 @@
 
 "App Settings" = "Mga Setting ng App";
 
-"Back identity card photo successfully uploaded" = "Tagumpay na na-upload ang larawan ng likod ng kard ng pagkakakilanlan";
-
 "Back of identity card" = "Likod ng kard ng pagkakakilanlan";
 
 "Back of identity document" = "Likod ng dokumento ng pagkakakilanlan";
@@ -31,10 +29,6 @@
 "Details not visible" = "Hindi nakikita ang mga detalye";
 
 "Flip your identity card over to the other side" = "Baliktarin ang iyong kard ng pagkakakilanlan";
-
-"Front identity card photo successfully uploaded" = "Tagumpay na na-upload ang larawan ng harap ng kard ng pagkakakilanlan";
-
-"Front of identity card" = "Harap ng card ng pagkakakilanlan";
 
 "Front of identity document" = "Harap ng dokumento ng pagkakakilanlan";
 
@@ -84,11 +78,7 @@
 
 "Photo Library" = "Library ng Larawan";
 
-"Please upload images of the front and back of your identity card" = "Mangyaring i-upload ang mga imahe ng harap at likod ng iyong card ng pagkakakilanlan";
-
 "Position your face in the center of the frame." = "Iposisyon ang iyong mukha sa gitna ng frame.";
-
-"Position your identity card in the center of the frame" = "Iposisyon ang iyong kard ng pagkakakilanlan sa gitna ng frame";
 
 "Retake Photos" = "Kunan Muli Ang Mga Larawan";
 
@@ -101,10 +91,6 @@
 "Select a location to upload the back of your identity document from" = "Pumili ng lokasyon kung saan i-a-upload ang likod ng iyong dokumento ng pagkakakilanlan";
 
 "Select a location to upload the front of your identity document from" = "Pumili ng lokasyon kung saan i-a-upload ang harap ng iyong dokumento ng pagkakakilanlan";
-
-"Select back identity card photo" = "Pumili ng larawan ng likod ng kard ng pagkakakilanlan";
-
-"Select front identity card photo" = "Pumili ng larawan ng harap ng kard ng pagkakakilanlan";
 
 "Selfie" = "Selfie";
 
@@ -131,10 +117,6 @@
 "Upload a Photo" = "Mag-upload ng Larawan";
 
 "Upload your photo ID" = "I-upload ang iyong photo ID";
-
-"Uploading back identity card photo" = "Ina-upload ang larawan ng likod ng card ng pagkakakilanlan";
-
-"Uploading front identity card photo" = "Ina-upload ang larawan ng harap ng kard ng pagkakakilanlan";
 
 "Verify your identity" = "Patunayan ang iyong pagkakakilanlan";
 
