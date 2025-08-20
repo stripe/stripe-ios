@@ -51,22 +51,10 @@ struct RegistrationView: View {
         ScrollView {
             VStack(spacing: 20) {
                 VStack(alignment: .leading, spacing: 8) {
-                    if isRegistrationComplete {
-                        Text("Registration Complete")
-                            .font(.subheadline)
-                            .foregroundColor(.green)
-                            .frame(maxWidth: .infinity, alignment: .leading)
-
-                        Text("Please complete verification to continue")
-                            .font(.footnote)
-                            .foregroundColor(.secondary)
-                            .frame(maxWidth: .infinity, alignment: .leading)
-                    } else {
-                        Text("Finish setting up your new account")
-                            .font(.subheadline)
-                            .foregroundColor(.secondary)
-                            .frame(maxWidth: .infinity, alignment: .leading)
-                    }
+                    Text("Finish setting up your new account")
+                        .font(.subheadline)
+                        .foregroundColor(.secondary)
+                        .frame(maxWidth: .infinity, alignment: .leading)
                 }
 
                 FormField("Email") {
@@ -101,7 +89,9 @@ struct RegistrationView: View {
 
                 if isRegistrationComplete {
                     Button("Retry Verification") {
-                        retryVerification()
+                        Task {
+                            await verify()
+                        }
                     }
                     .buttonStyle(PrimaryButtonStyle())
                     .disabled(shouldDisableButtons)
@@ -138,7 +128,7 @@ struct RegistrationView: View {
 
         Task {
             do {
-                let registrationCustomerId = try await coordinator.registerLinkUser(
+                try await coordinator.registerLinkUser(
                     fullName: fullName.isEmpty ? nil : fullName,
                     phone: phoneNumber,
                     country: country
@@ -146,24 +136,9 @@ struct RegistrationView: View {
 
                 await MainActor.run {
                     isRegistrationComplete = true
-                    self.registrationCustomerId = registrationCustomerId
                 }
 
-                if let verifiedCustomerId = await presentVerification(using: coordinator) {
-                    await MainActor.run {
-                        isLoading.wrappedValue = false
-                        self.registrationCustomerId = verifiedCustomerId
-
-                        // Delay so the navigation link animation doesn't get canceled.
-                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
-                            showAuthenticatedView = true
-                        }
-                    }
-                } else {
-                    await MainActor.run {
-                        isLoading.wrappedValue = false
-                    }
-                }
+                await verify()
             } catch {
                 await MainActor.run {
                     isLoading.wrappedValue = false
@@ -206,25 +181,25 @@ struct RegistrationView: View {
         }
     }
 
-    private func retryVerification() {
-        isLoading.wrappedValue = true
-        errorMessage = nil
+    private func verify() async {
+        await MainActor.run {
+            isLoading.wrappedValue = true
+            errorMessage = nil
+        }
 
-        Task {
-            if let verifiedCustomerId = await presentVerification(using: coordinator) {
-                await MainActor.run {
-                    isLoading.wrappedValue = false
-                    registrationCustomerId = verifiedCustomerId
+        if let customerId = await presentVerification(using: coordinator) {
+            await MainActor.run {
+                isLoading.wrappedValue = false
+                self.registrationCustomerId = customerId
 
-                    // Delay so the navigation link animation doesn't get canceled.
-                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
-                        showAuthenticatedView = true
-                    }
+                // Delay so the navigation link animation doesn't get canceled.
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
+                    showAuthenticatedView = true
                 }
-            } else {
-                await MainActor.run {
-                    isLoading.wrappedValue = false
-                }
+            }
+        } else {
+            await MainActor.run {
+                isLoading.wrappedValue = false
             }
         }
     }
