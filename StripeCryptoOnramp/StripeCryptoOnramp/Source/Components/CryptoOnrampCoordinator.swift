@@ -347,7 +347,8 @@ public final class CryptoOnrampCoordinator: NSObject, CryptoOnrampCoordinatorPro
                 return .failed(CheckoutError.missingPaymentMethod)
             }
 
-            while true {
+            let maximumAttempts = 3
+            for _ in 0..<maximumAttempts {
                 // Have the merchant attempt to check out by calling the crypto /checkout endpoint on their backend
                 do {
                     let newSessionClientSecret = try await checkoutSessionHandler(paymentMethod)
