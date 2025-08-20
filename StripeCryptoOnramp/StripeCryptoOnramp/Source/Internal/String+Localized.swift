@@ -7,8 +7,8 @@
 
 import Foundation
 @_spi(STP) import StripeCore
-@_spi(STP) import StripeUICore
 import StripePayments
+@_spi(STP) import StripeUICore
 
 extension String.Localized {
     static var debitIsMostLikelyToBeAccepted: String {
