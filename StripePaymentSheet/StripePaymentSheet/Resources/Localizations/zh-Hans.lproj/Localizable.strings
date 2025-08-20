@@ -84,6 +84,8 @@
 
 "By saving your bank account for %@ you agree to authorize payments pursuant to <terms>these terms</terms>." = "保存您的 %@ 银行账户即表示您同意按照<terms>这些条款</terms>授权付款。";
 
+"By submitting your order to %@ you agree to authorize payments pursuant to <terms>these terms</terms>." = "向 %@ 提交您的订单即表示您同意按照<terms>这些条款</terms>授权付款。";
+
 "CPF/CPNJ" = "CPF/CPNJ";
 
 "Cancel and pay another way" = "取消并用另一方式支付";

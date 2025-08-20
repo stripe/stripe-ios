@@ -83,11 +83,7 @@ extension PayWithLinkViewController {
                 return NSMutableAttributedString(string: string)
             case .bankAccount:
                 // Instant debit mandate should be shown when paying with bank account.
-                let string = String.Localized.bank_continue_mandate_text
-                return STPStringUtils.applyLinksToString(
-                    template: string,
-                    links: ["terms": URL(string: "https://link.com/terms/ach-authorization")!]
-                )
+                return PaymentSheetFormFactory.makeBankMandateText(sellerName: context.intent.sellerDetails?.businessName)
             default:
                 return nil
             }

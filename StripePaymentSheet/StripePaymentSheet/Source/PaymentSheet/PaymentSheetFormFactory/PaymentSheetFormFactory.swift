@@ -45,6 +45,7 @@ class PaymentSheetFormFactory {
     let isFirstSavedPaymentMethod: Bool
     let analyticsHelper: PaymentSheetAnalyticsHelper?
     let paymentMethodIncentive: PaymentMethodIncentive?
+    let sellerName: String?
 
     var shouldDisplaySaveCheckbox: Bool {
         // Don't show the save checkbox in Link
@@ -141,7 +142,8 @@ class PaymentSheetFormFactory {
                   isFirstSavedPaymentMethod: elementsSession.customer?.paymentMethods.isEmpty ?? true,
                   analyticsHelper: analyticsHelper,
                   paymentMethodIncentive: elementsSession.incentive,
-                  linkAppearance: linkAppearance
+                  linkAppearance: linkAppearance,
+                  sellerName: intent.sellerDetails?.businessName
         )
     }
 
@@ -166,7 +168,8 @@ class PaymentSheetFormFactory {
         isFirstSavedPaymentMethod: Bool = true,
         analyticsHelper: PaymentSheetAnalyticsHelper?,
         paymentMethodIncentive: PaymentMethodIncentive?,
-        linkAppearance: LinkAppearance? = nil
+        linkAppearance: LinkAppearance? = nil,
+        sellerName: String? = nil
     ) {
         self.configuration = configuration
         self.paymentMethod = paymentMethod
@@ -194,6 +197,7 @@ class PaymentSheetFormFactory {
         self.analyticsHelper = analyticsHelper
         self.paymentMethodIncentive = paymentMethodIncentive
         self.linkAppearance = linkAppearance
+        self.sellerName = sellerName
     }
 
     func make() -> PaymentMethodElement {
@@ -544,6 +548,24 @@ extension PaymentSheetFormFactory {
         }
     }
 
+    static func makeBankMandateText(sellerName: String?) -> NSAttributedString {
+        let links = ["terms": URL(string: "https://link.com/terms/ach-authorization")!]
+
+        let string = if let sellerName {
+            String(
+                format: String.Localized.bank_continue_mandate_text_with_seller,
+                sellerName
+            )
+        } else {
+            String.Localized.bank_continue_mandate_text
+        }
+
+        return STPStringUtils.applyLinksToString(
+            template: string,
+            links: links
+        )
+    }
+
     // MARK: - PaymentMethod form definitions
 
     func makeSofort(spec: FormSpec) -> PaymentMethodElement {
@@ -878,6 +900,7 @@ extension PaymentSheetFormFactory {
             addressElement: addressElement,
             incentive: incentive,
             isPaymentIntent: isPaymentIntent,
+            sellerName: sellerName,
             appearance: configuration.appearance
         )
 
