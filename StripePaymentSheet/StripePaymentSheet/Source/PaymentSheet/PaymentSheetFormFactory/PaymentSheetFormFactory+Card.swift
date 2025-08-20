@@ -144,15 +144,14 @@ extension PaymentSheetFormFactory {
         let mandate: SimpleMandateElement? = {
             if forceSaveFutureUseBehavior {
                 // Respect this over all other configurations, since we're forcing SFU behavior and thus need to show a mandate.
-                let isSaveToLinkCheckboxChecked = showLinkInlineSignup && signupOptInFeatureEnabled && signupOptInInitialValue
-                return makeMandate(shouldSaveToLink: isSaveToLinkCheckboxChecked)
+                return makeMandate()
             }
             switch configuration.termsDisplayFor(paymentMethodType: .stripe(.card)) {
             case .never:
                 return nil
             case .automatic:
                 if isSettingUp {
-                    return makeMandate(shouldSaveToLink: false)
+                    return makeMandate()
                 }
             }
             return nil
@@ -170,10 +169,11 @@ extension PaymentSheetFormFactory {
             customSpacing: customSpacing)
     }
 
-    private func makeMandate(shouldSaveToLink: Bool) -> SimpleMandateElement {
-        let shouldSaveToLink = shouldSaveToLink && !isLinkUI
+    private func makeMandate() -> SimpleMandateElement {
+        let shouldCheckSignupCheckbox = showLinkInlineCardSignup && signupOptInFeatureEnabled && signupOptInInitialValue
+        let shouldSignUpToLink = shouldCheckSignupCheckbox && !isLinkUI
         let variant: MandateVariant = forceSaveFutureUseBehavior
-            ? .updated(shouldSignUpToLink: shouldSaveToLink)
+            ? .updated(shouldSignUpToLink: shouldSignUpToLink)
             : .original
         let mandateText = Self.makeMandateText(variant: variant, merchantName: configuration.merchantDisplayName)
         return makeMandate(mandateText: mandateText)
