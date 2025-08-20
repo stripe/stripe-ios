@@ -380,7 +380,8 @@ import UIKit
         apiClient.sharePaymentDetails(
             for: consumerSessionClientSecret,
             id: paymentDetails.stripeID,
-            consumerAccountPublishableKey: overridePublishableKey,
+            consumerAccountPublishableKey: nil,
+            overridePublishableKey: overridePublishableKey,
             allowRedisplay: nil,
             cvc: paymentDetails.cvc,
             expectedPaymentMethodType: nil,

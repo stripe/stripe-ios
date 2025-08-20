@@ -327,6 +327,7 @@ extension STPAPIClient {
         for consumerSessionClientSecret: String,
         id: String,
         consumerAccountPublishableKey: String?,
+        overridePublishableKey: String? = nil,
         allowRedisplay: STPPaymentMethodAllowRedisplay?,
         cvc: String?,
         expectedPaymentMethodType: String?,
@@ -361,11 +362,10 @@ extension STPAPIClient {
             parameters["billing_phone"] = billingPhoneNumber
         }
 
-        let additionalHeaders: [String: String] = if let consumerAccountPublishableKey {
-            authorizationHeader(using: consumerAccountPublishableKey)
-        } else {
-            [:]
-        }
+        let additionalHeaders = overridePublishableKey != nil
+            ? authorizationHeader(using: overridePublishableKey)
+            : [:]
+
         APIRequest<PaymentDetailsShareResponse>.post(
             with: self,
             endpoint: endpoint,
