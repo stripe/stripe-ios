@@ -7,9 +7,10 @@
 
 import Foundation
 @_spi(STP) import StripeCore
+@_spi(STP) import StripeUICore
 import StripePayments
 
-@_spi(STP) extension String.Localized {
+extension String.Localized {
     static var debitIsMostLikelyToBeAccepted: String {
         return STPLocalizedString(
             "Debit cards are most likely to be accepted.",
@@ -23,10 +24,6 @@ import StripePayments
             return nil
         }
 
-        let formattedMessage = STPLocalizedString(
-            "%1$@ •••• %2$@",
-            "Card preview details displaying the last four digits: {card brand} •••• {last 4} e.g. 'Visa •••• 3155'"
-        )
-        return String(format: formattedMessage, brand, last4)
+        return String(format: card_details_xxxx, brand, last4)
     }
 }
