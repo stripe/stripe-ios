@@ -1,13 +1,8 @@
-//
-//  QuoteResponse.swift
-//  CryptoOnramp Example
-//
-//  Created by Michael Liberatore on 8/20/25.
-//
-
 import Foundation
 
-struct QuoteResponse: Decodable {
+typealias QuoteResponse = CheckoutResponse
+
+struct CheckoutResponse: Decodable {
     struct TransactionDetails: Decodable {
         struct Fees: Decodable {
             let networkFeeAmount: String

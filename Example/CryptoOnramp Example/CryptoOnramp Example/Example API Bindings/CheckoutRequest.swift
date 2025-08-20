@@ -1,13 +1,8 @@
-//
-//  QuoteRequest.swift
-//  CryptoOnramp Example
-//
-//  Created by Michael Liberatore on 8/20/25.
-//
-
 import Foundation
 
-struct QuoteRequest: Encodable {
+typealias QuoteRequest = CheckoutRequest
+
+struct CheckoutRequest: Encodable {
     let cryptoOnrampSessionId: String
 
     enum CodingKeys: String, CodingKey {

@@ -38,6 +38,11 @@ extension APIClient {
         guard let token = authToken else { throw APIError.missingAuthToken }
         return try await request("quote", method: .POST, body: requestObject, bearerToken: token)
     }
+
+    func checkout(requestObject: CheckoutRequest) async throws -> CheckoutResponse {
+        guard let token = authToken else { throw APIError.missingAuthToken }
+        return try await request("checkout", method: .POST, body: requestObject, bearerToken: token)
+    }
 }
 
 private extension URLQueryItem {
