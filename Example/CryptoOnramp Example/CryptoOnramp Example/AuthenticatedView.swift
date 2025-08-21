@@ -441,7 +441,7 @@ struct AuthenticatedView: View {
     }
 
     private func checkout(
-        with onrampSessionResponse: CreateOnrampSessionResponse
+        with onrampSessionResponse: CreateOnrampSessionResponse,
         paymentToken: String
     ) {
         isLoading.wrappedValue = true
@@ -455,7 +455,7 @@ struct AuthenticatedView: View {
                     sessionClientSecret: onrampSessionResponse.clientSecret,
                     authenticationContext: authenticationContext,
                     checkoutSessionHandler: { _ in
-
+                        return ""
                     }
                 )
 
