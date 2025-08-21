@@ -20,7 +20,7 @@ import UIKit
 /// A coordinator that facilitates the crypto onramp process including user authentication, identity verification, payment collection, and checkouts.
 protocol CryptoOnrampCoordinatorProtocol {
 
-    /// Creates a `CryptoOnrampCoordinator` to facilitate authentication, identity verification, and payment collection, and checkouts.
+    /// Creates a `CryptoOnrampCoordinator` to facilitate authentication, identity verification, payment collection, and checkouts.
     ///
     /// - Parameter apiClient: The `STPAPIClient` instance for this coordinator. Defaults to `.shared`.
     /// - Parameter appearance: Customizable appearance-related configuration for any Stripe-provided UI.
@@ -49,12 +49,12 @@ protocol CryptoOnrampCoordinatorProtocol {
     ) async throws -> String
 
     /// Presents Link UI to authenticate an existing Link user.
-    /// `lookupConsumer` must be called before this.
+    /// `hasLinkAccount` must be called before this.
     ///
     /// - Parameter viewController: The view controller from which to present the authentication flow.
     /// - Returns: A `AuthenticationResult` indicating whether authentication was completed or canceled.
     ///   If authentication completes, a crypto customer ID will be included in the result.
-    /// Throws if `lookupConsumer` was not called prior to this, or an API error occurs after the view controller is presented.
+    /// Throws if `hasLinkAccount` was not called prior to this, or an API error occurs after the view controller is presented.
     func authenticateUser(from viewController: UIViewController) async throws -> AuthenticationResult
 
     /// Attaches the specific KYC info to the current Link user. Requires an authenticated Link user.
