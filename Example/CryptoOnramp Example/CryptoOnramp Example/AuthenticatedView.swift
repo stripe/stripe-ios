@@ -30,6 +30,7 @@ struct AuthenticatedView: View {
     @State private var isWalletAttached = false
     @State private var selectedPaymentMethod: PaymentMethodPreview?
     @State private var cryptoPaymentToken: String?
+    @State private var lastOnrampSessionId: String?
 
     @State private var wallets: [CustomerWalletsResponse.Wallet] = []
     @State private var selectedWalletId: String?
@@ -40,6 +41,10 @@ struct AuthenticatedView: View {
 
     private var shouldDisableButtons: Bool {
         isLoading.wrappedValue
+    }
+
+    private var isCreateOnrampAvailable: Bool {
+        selectedPaymentMethod != nil && cryptoPaymentToken != nil && selectedWalletId != nil
     }
 
     // MARK: - View
@@ -123,6 +128,18 @@ struct AuthenticatedView: View {
                     ErrorMessageView(message: errorMessage)
                 }
 
+                if let lastOnrampSessionId {
+                    HStack(spacing: 4) {
+                        Text("Onramp Session:")
+                            .font(.footnote)
+                            .bold()
+                            .foregroundColor(.secondary)
+                        Text(lastOnrampSessionId)
+                            .font(.footnote.monospaced())
+                            .foregroundColor(.secondary)
+                    }
+                }
+
                 VStack(alignment: .leading, spacing: 12) {
                     Text("Check Out")
                         .font(.headline)
@@ -142,6 +159,15 @@ struct AuthenticatedView: View {
                             .buttonStyle(PrimaryButtonStyle())
 
                             if let cryptoPaymentToken {
+                                if isCreateOnrampAvailable {
+                                    Button("Create Onramp Session") {
+                                        createOnrampSession()
+                                    }
+                                    .buttonStyle(PrimaryButtonStyle())
+                                    .disabled(shouldDisableButtons)
+                                    .opacity(shouldDisableButtons ? 0.5 : 1)
+                                }
+
                                 HStack(spacing: 4) {
                                     Text("Crypto payment token:")
                                         .font(.footnote)
@@ -359,6 +385,42 @@ struct AuthenticatedView: View {
                 await MainActor.run {
                     isLoading.wrappedValue = false
                     errorMessage = "Create crypto payment token failed: \(error.localizedDescription)"
+                }
+            }
+        }
+    }
+
+    private func createOnrampSession() {
+        guard let cryptoPaymentToken, let selectedWalletId,
+              let wallet = wallets.first(where: { $0.id == selectedWalletId }) else {
+            return
+        }
+
+        isLoading.wrappedValue = true
+        errorMessage = nil
+
+        let request = CreateOnrampSessionRequest(
+            paymentToken: cryptoPaymentToken,
+            sourceAmount: 10, // <--- hardcoded for demo
+            sourceCurrency: "usd", // <--- hardcoded for demo
+            destinationCurrency: "usdc", // <--- hardcoded for demo
+            destinationNetwork: wallet.network,
+            walletAddress: wallet.walletAddress,
+            cryptoCustomerId: customerId,
+            customerIpAddress: "192.168.4.198" // <--- hardcoded for demo
+        )
+
+        Task {
+            do {
+                let response = try await APIClient.shared.createOnrampSession(requestObject: request)
+                await MainActor.run {
+                    isLoading.wrappedValue = false
+                    lastOnrampSessionId = response.id
+                }
+            } catch {
+                await MainActor.run {
+                    isLoading.wrappedValue = false
+                    errorMessage = "Create onramp session failed: \(error.localizedDescription)"
                 }
             }
         }
