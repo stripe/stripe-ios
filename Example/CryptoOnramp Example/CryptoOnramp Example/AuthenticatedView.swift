@@ -210,7 +210,7 @@ struct AuthenticatedView: View {
 
         Task {
             do {
-                let result = try await coordinator.promptForIdentityVerification(from: viewController)
+                let result = try await coordinator.verifyIdentity(from: viewController)
                 await MainActor.run {
                     isLoading.wrappedValue = false
                     switch result {
