@@ -40,6 +40,7 @@ class PaymentSheetFormFactory {
     let savePaymentMethodConsentBehavior: SavePaymentMethodConsentBehavior
     let allowsSetAsDefaultPM: Bool
     let allowsLinkDefaultOptIn: Bool
+    let forceSaveFutureUseBehavior: Bool
     let signupOptInFeatureEnabled: Bool
     let signupOptInInitialValue: Bool
     let isFirstSavedPaymentMethod: Bool
@@ -52,11 +53,11 @@ class PaymentSheetFormFactory {
         guard !configuration.linkPaymentMethodsOnly else { return false }
         switch savePaymentMethodConsentBehavior {
         case .legacy:
-            return !shouldShowLinkSignupOptIn && !isSettingUp && configuration.hasCustomer && paymentMethod.supportsSaveForFutureUseCheckbox()
+            return !signupOptInFeatureEnabled && !isSettingUp && configuration.hasCustomer && paymentMethod.supportsSaveForFutureUseCheckbox()
         case .paymentSheetWithCustomerSessionPaymentMethodSaveDisabled:
             return false
         case .paymentSheetWithCustomerSessionPaymentMethodSaveEnabled:
-            return !shouldShowLinkSignupOptIn && configuration.hasCustomer && paymentMethod.supportsSaveForFutureUseCheckbox()
+            return !signupOptInFeatureEnabled && configuration.hasCustomer && paymentMethod.supportsSaveForFutureUseCheckbox()
         case .customerSheetWithCustomerSession:
             return false
         }
@@ -68,10 +69,6 @@ class PaymentSheetFormFactory {
 
     var theme: ElementsAppearance {
         return configuration.appearance.asElementsTheme
-    }
-
-    var shouldShowLinkSignupOptIn: Bool {
-        showLinkInlineCardSignup && signupOptInFeatureEnabled
     }
 
     private static let PayByBankDescriptionText = STPLocalizedString(
@@ -137,6 +134,7 @@ class PaymentSheetFormFactory {
                   savePaymentMethodConsentBehavior: elementsSession.savePaymentMethodConsentBehavior,
                   allowsSetAsDefaultPM: elementsSession.paymentMethodSetAsDefaultForPaymentSheet,
                   allowsLinkDefaultOptIn: elementsSession.allowsLinkDefaultOptIn,
+                  forceSaveFutureUseBehavior: elementsSession.forceSaveFutureUseBehaviorAndNewMandateText,
                   signupOptInFeatureEnabled: elementsSession.linkSignupOptInFeatureEnabled,
                   signupOptInInitialValue: elementsSession.linkSignupOptInInitialValue,
                   isFirstSavedPaymentMethod: elementsSession.customer?.paymentMethods.isEmpty ?? true,
@@ -163,6 +161,7 @@ class PaymentSheetFormFactory {
         savePaymentMethodConsentBehavior: SavePaymentMethodConsentBehavior,
         allowsSetAsDefaultPM: Bool = false,
         allowsLinkDefaultOptIn: Bool = false,
+        forceSaveFutureUseBehavior: Bool = false,
         signupOptInFeatureEnabled: Bool = false,
         signupOptInInitialValue: Bool = false,
         isFirstSavedPaymentMethod: Bool = true,
@@ -191,6 +190,7 @@ class PaymentSheetFormFactory {
         self.savePaymentMethodConsentBehavior = savePaymentMethodConsentBehavior
         self.allowsSetAsDefaultPM = allowsSetAsDefaultPM
         self.allowsLinkDefaultOptIn = allowsLinkDefaultOptIn
+        self.forceSaveFutureUseBehavior = forceSaveFutureUseBehavior
         self.signupOptInFeatureEnabled = signupOptInFeatureEnabled
         self.signupOptInInitialValue = signupOptInInitialValue
         self.isFirstSavedPaymentMethod = isFirstSavedPaymentMethod
