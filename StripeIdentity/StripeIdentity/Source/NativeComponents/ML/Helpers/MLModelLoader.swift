@@ -95,9 +95,8 @@ final class MLModelLoader {
                 let compilePromise = Promise<MLModel>()
                 compilePromise.fulfill { [weak self] in
                     
-                    var tries = 0
-                    
-                    func model() throws -> MLModel {
+                    var compileAttempts = 0
+                    func compiledModel() throws -> URL {
                         do {
                             let tmpCompiledURL = try MLModel.compileModel(at: tmpFileURL)
                             let compiledURL =
@@ -105,16 +104,28 @@ final class MLModelLoader {
                                 compiledModel: tmpCompiledURL,
                                 downloadedFrom: remoteURL
                             ) ?? tmpCompiledURL
-                            
-                            let model = try MLModel(contentsOf: compiledURL)
-                            
-                            return model
                         }
                         catch {
-                            if tries > 2 {
+                            if compileAttempts > 2 {
                                 throw error
                             } else {
-                                tries += 1
+                                return try compiledModel()
+                            }
+                        }
+                    }
+                    
+                    let compiledURL = try compiledModel()
+                    
+                    var modelLoadAttempts = 0
+                    func model() throws -> MLModel {
+                        do {
+                            return try MLModel(contentsOf: compiledURL)
+                        }
+                        catch {
+                            if modelLoadAttempts > 2 {
+                                throw error
+                            } else {
+                                modelLoadAttempts += 1
                                 return try model()
                             }
                         }
@@ -126,7 +137,7 @@ final class MLModelLoader {
                 return compilePromise
             }.observe(on: loadPromiseCacheQueue) { [weak self] result in
                 returnedPromise.fullfill(with: result)
-
+                print("")
                 // Remove from promise cache
                 self?.loadPromiseCacheQueue.async { [weak self] in
                     self?.loadPromiseCache.removeValue(forKey: remoteURL)
