@@ -132,7 +132,6 @@ struct AuthenticatedView: View {
                     ErrorMessageView(message: errorMessage)
                 }
 
-
                 VStack(alignment: .leading, spacing: 12) {
                     Text("Check Out")
                         .font(.headline)
