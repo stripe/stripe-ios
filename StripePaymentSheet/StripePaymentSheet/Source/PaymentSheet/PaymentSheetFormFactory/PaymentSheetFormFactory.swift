@@ -47,6 +47,7 @@ class PaymentSheetFormFactory {
     let analyticsHelper: PaymentSheetAnalyticsHelper?
     let paymentMethodIncentive: PaymentMethodIncentive?
     let sellerName: String?
+    let previousLinkInlineSignupAction: LinkInlineSignupViewModel.Action?
 
     var shouldDisplaySaveCheckbox: Bool {
         // Don't show the save checkbox in Link
@@ -86,7 +87,8 @@ class PaymentSheetFormFactory {
         linkAccount: PaymentSheetLinkAccount? = nil,
         accountService: LinkAccountServiceProtocol,
         analyticsHelper: PaymentSheetAnalyticsHelper?,
-        linkAppearance: LinkAppearance? = nil
+        linkAppearance: LinkAppearance? = nil,
+        previousLinkInlineSignupAction: LinkInlineSignupViewModel.Action? = nil
     ) {
 
         /// Whether or not the card form should show the link inline signup checkbox
@@ -141,7 +143,8 @@ class PaymentSheetFormFactory {
                   analyticsHelper: analyticsHelper,
                   paymentMethodIncentive: elementsSession.incentive,
                   linkAppearance: linkAppearance,
-                  sellerName: intent.sellerDetails?.businessName
+                  sellerName: intent.sellerDetails?.businessName,
+                  previousLinkInlineSignupAction: previousLinkInlineSignupAction
         )
     }
 
@@ -168,7 +171,8 @@ class PaymentSheetFormFactory {
         analyticsHelper: PaymentSheetAnalyticsHelper?,
         paymentMethodIncentive: PaymentMethodIncentive?,
         linkAppearance: LinkAppearance? = nil,
-        sellerName: String? = nil
+        sellerName: String? = nil,
+        previousLinkInlineSignupAction: LinkInlineSignupViewModel.Action? = nil
     ) {
         self.configuration = configuration
         self.paymentMethod = paymentMethod
@@ -198,6 +202,7 @@ class PaymentSheetFormFactory {
         self.paymentMethodIncentive = paymentMethodIncentive
         self.linkAppearance = linkAppearance
         self.sellerName = sellerName
+        self.previousLinkInlineSignupAction = previousLinkInlineSignupAction
     }
 
     func make() -> PaymentMethodElement {

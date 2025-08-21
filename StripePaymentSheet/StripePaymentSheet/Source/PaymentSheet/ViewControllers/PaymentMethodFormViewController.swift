@@ -101,7 +101,8 @@ class PaymentMethodFormViewController: UIViewController {
         analyticsHelper: PaymentSheetAnalyticsHelper,
         isLinkUI: Bool = false,
         delegate: PaymentMethodFormViewControllerDelegate,
-        linkAppearance: LinkAppearance? = nil
+        linkAppearance: LinkAppearance? = nil,
+        previousLinkInlineSignupAction: LinkInlineSignupViewModel.Action? = nil
     ) {
         self.paymentMethodType = type
         self.intent = intent
@@ -122,7 +123,8 @@ class PaymentMethodFormViewController: UIViewController {
                 linkAccount: LinkAccountContext.shared.account,
                 accountService: LinkAccountService(apiClient: configuration.apiClient, elementsSession: elementsSession),
                 analyticsHelper: analyticsHelper,
-                linkAppearance: linkAppearance
+                linkAppearance: linkAppearance,
+                previousLinkInlineSignupAction: previousLinkInlineSignupAction
             ).make()
             self.formCache[type] = form
         }
