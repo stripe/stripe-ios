@@ -236,7 +236,6 @@
 		0B83D98C2E1EF6EF004F0115 /* Source */ = {
 			isa = PBXGroup;
 			children = (
-				0B7D05742E4A4D8200EE6BE2 /* Resources */,
 				0BED9B602E255BB1009FFF76 /* Components */,
 				0B6DF3462E296DBB008B1800 /* Internal */,
 			);
@@ -246,6 +245,7 @@
 		0B83D98F2E1EF6EF004F0115 /* StripeCryptoOnramp */ = {
 			isa = PBXGroup;
 			children = (
+				0B7D05742E4A4D8200EE6BE2 /* Resources */,
 				0B83D98C2E1EF6EF004F0115 /* Source */,
 				0B83D98D2E1EF6EF004F0115 /* StripeCryptoOnramp.h */,
 				0B83D98E2E1EF6EF004F0115 /* Docs.docc */,
