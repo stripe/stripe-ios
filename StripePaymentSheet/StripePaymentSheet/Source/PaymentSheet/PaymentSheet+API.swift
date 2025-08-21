@@ -163,7 +163,7 @@ extension PaymentSheet {
         let clientAttributionMetadata: STPClientAttributionMetadata = intent.clientAttributionMetadata(elementsSessionConfigId: elementsSession.sessionID)
 
         let isSettingUp: (STPPaymentMethodType) -> Bool = { paymentMethodType in
-            intent.isSetupFutureUsageSet(for: paymentMethodType) || elementsSession.alwaysSaveForFutureUse
+            intent.isSetupFutureUsageSet(for: paymentMethodType) || elementsSession.forceSaveFutureUseBehaviorAndNewMandateText
         }
 
         switch paymentOption {

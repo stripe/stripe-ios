@@ -855,6 +855,13 @@ extension PaymentSheetVerticalViewController: VerticalPaymentMethodListViewContr
                 return nil
             }
         }()
+        let previousLinkInlineSignupAction: LinkInlineSignupViewModel.Action? = {
+            if case let .link(confirmOption) = previousPaymentOption {
+                return confirmOption.signupAction
+            } else {
+                return nil
+            }
+        }()
         let headerView: UIView = {
             let incentive = paymentMethodListViewController?.incentive?.takeIfAppliesTo(paymentMethodType)
             let currentForm = formCache[paymentMethodType]
@@ -908,7 +915,8 @@ extension PaymentSheetVerticalViewController: VerticalPaymentMethodListViewContr
             headerView: headerView,
             analyticsHelper: analyticsHelper,
             isLinkUI: false,
-            delegate: self
+            delegate: self,
+            previousLinkInlineSignupAction: previousLinkInlineSignupAction
         )
     }
 

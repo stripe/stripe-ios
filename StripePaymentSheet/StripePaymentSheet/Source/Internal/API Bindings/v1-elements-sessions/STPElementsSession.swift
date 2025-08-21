@@ -340,10 +340,8 @@ extension STPElementsSession {
         linkFlags["link_mobile_disable_default_opt_in"] != true
     }
 
-    var alwaysSaveForFutureUse: Bool {
-        // When this (now poorly named) feature flag is enabled for a merchant, we always show the reuse mandate,
-        // since the merchant will save the payment method for future use.
-        linkSignupOptInFeatureEnabled
+    var forceSaveFutureUseBehaviorAndNewMandateText: Bool {
+        flags["elements_mobile_force_setup_future_use_behavior_and_new_mandate_text"] == true
     }
 
     var linkSignupOptInFeatureEnabled: Bool {

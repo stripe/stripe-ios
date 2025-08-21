@@ -101,7 +101,8 @@ class PaymentMethodFormViewController: UIViewController {
         analyticsHelper: PaymentSheetAnalyticsHelper,
         isLinkUI: Bool = false,
         delegate: PaymentMethodFormViewControllerDelegate,
-        linkAppearance: LinkAppearance? = nil
+        linkAppearance: LinkAppearance? = nil,
+        previousLinkInlineSignupAction: LinkInlineSignupViewModel.Action? = nil
     ) {
         self.paymentMethodType = type
         self.intent = intent
@@ -122,7 +123,8 @@ class PaymentMethodFormViewController: UIViewController {
                 linkAccount: LinkAccountContext.shared.account,
                 accountService: LinkAccountService(apiClient: configuration.apiClient, elementsSession: elementsSession),
                 analyticsHelper: analyticsHelper,
-                linkAppearance: linkAppearance
+                linkAppearance: linkAppearance,
+                previousLinkInlineSignupAction: previousLinkInlineSignupAction
             ).make()
             self.formCache[type] = form
         }
@@ -233,11 +235,11 @@ extension PaymentMethodFormViewController: ElementDelegate {
             }
         }
 
-        if let linkSignup = form.linkInlineSignupElement, let mandateElement = form.mandateElement {
-            // Update the mandate with or without Link
+        if let linkSignup = form.linkInlineSignupElement, linkSignup.viewModel.mode == .signupOptIn, let mandateElement = form.mandateElement {
+            // Update the mandate based on the checkbox state
+            let variant = MandateVariant.updated(shouldSignUpToLink: linkSignup.viewModel.saveCheckboxChecked)
             let text = PaymentSheetFormFactory.makeMandateText(
-                useCombinedReuseAndLinkSignupText: linkSignup.viewModel.mode == .signupOptIn,
-                shouldSaveToLink: linkSignup.viewModel.saveCheckboxChecked,
+                variant: variant,
                 merchantName: configuration.merchantDisplayName
             )
             mandateElement.mandateTextView.attributedText = text
