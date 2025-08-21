@@ -374,7 +374,7 @@ extension PaymentSheet {
                         authenticationContext: authenticationContext,
                         paymentHandler: paymentHandler,
                         isFlowController: isFlowController,
-                        completion: { psResult, confirmationType in
+                        completion: { psResult, _ in
                             if shouldLogOutOfLink(result: psResult, elementsSession: elementsSession) {
                                 linkAccount?.logout()
                             }
