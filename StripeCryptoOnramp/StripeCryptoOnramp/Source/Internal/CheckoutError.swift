@@ -19,6 +19,9 @@ enum CheckoutError: Error {
     /// The user canceled the payment.
     case userCanceled
 
+    /// The maximum number of attempts to complete the payment has been exceeded.
+    case maximumAttemptsExceeded
+
     /// An unexpected error occurred.
     case unexpectedError
 }

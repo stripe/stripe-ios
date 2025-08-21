@@ -12,6 +12,7 @@ import Stripe
 @_spi(STP) import StripeApplePay
 @_spi(STP) import StripeCore
 @_spi(STP) import StripeIdentity
+@_spi(STP) import StripePayments
 @_spi(STP) import StripePaymentSheet
 @_spi(STP) import StripePaymentsUI
 
@@ -102,7 +103,7 @@ protocol CryptoOnrampCoordinatorProtocol {
     ///   - sessionId: The onramp session identifier.
     ///   - sessionClientSecret: The onramp session client secret.
     ///   - authenticationContext: The authentication context used to handle any required next actions.
-    ///   - checkoutSessionHandler: An async closure that attempts to check out with the provided payment method on the merchant's backend.
+    ///   - checkoutSessionHandler: An async closure that attempts to check out with the provided crypto payment token on the merchant's backend.
     ///     The closure should return the updated session client secret on success, or throw an Error on failure.
     /// - Returns: A `CheckoutResult` indicating whether the checkout succeeded or failed.
     func performCheckout(
@@ -110,7 +111,7 @@ protocol CryptoOnrampCoordinatorProtocol {
         sessionId: String,
         sessionClientSecret: String,
         authenticationContext: STPAuthenticationContext,
-        checkoutSessionHandler: @escaping (_ paymentMethod: STPPaymentMethod) async throws -> String
+        checkoutSessionHandler: @escaping (_ cryptoPaymentToken: String) async throws -> String
     ) async -> CheckoutResult
 }
 
@@ -367,65 +368,53 @@ public final class CryptoOnrampCoordinator: NSObject, CryptoOnrampCoordinatorPro
         sessionId: String,
         sessionClientSecret: String,
         authenticationContext: STPAuthenticationContext,
-        checkoutSessionHandler: @escaping (_ paymentMethod: STPPaymentMethod) async throws -> String
+        checkoutSessionHandler: @escaping (_ cryptoPaymentToken: String) async throws -> String
     ) async -> CheckoutResult {
-        do {
-            // First, retrieve the `PaymentIntent` from the onramp session.
-            let paymentIntent = try await apiClient.retrievePaymentIntentFromOnrampSession(
-                sessionId: sessionId,
-                sessionClientSecret: sessionClientSecret
-            )
+        let maximumAttempts = 3
+        for _ in 0..<maximumAttempts {
+            // Have the merchant attempt to check out by calling the crypto /checkout endpoint on their backend
+            do {
+                let newSessionClientSecret = try await checkoutSessionHandler(cryptoPaymentToken)
 
-            // Get the payment method from the PaymentIntent - this should be populated based on the crypto payment token.
-            guard let paymentMethod = paymentIntent.paymentMethod else {
-                return .failed(CheckoutError.missingPaymentMethod)
-            }
+                // First, get the onramp session to extract the payment_intent_client_secret
+                let onrampSession = try await apiClient.getOnrampSession(
+                    sessionId: sessionId,
+                    sessionClientSecret: newSessionClientSecret
+                )
 
-            let maximumAttempts = 3
-            for _ in 0..<maximumAttempts {
-                // Have the merchant attempt to check out by calling the crypto /checkout endpoint on their backend
-                do {
-                    let newSessionClientSecret = try await checkoutSessionHandler(paymentMethod)
+                // Then retrieve the PaymentIntent using the client secret
+                let paymentIntent = try await retrievePaymentIntent(withClientSecret: onrampSession.paymentIntentClientSecret)
 
-                    // Check if the intent is completed by retrieving the updated `STPPaymentIntent`.
-                    let updatedPaymentIntent = try await apiClient.retrievePaymentIntentFromOnrampSession(
-                        sessionId: sessionId,
-                        sessionClientSecret: newSessionClientSecret
-                    )
-
-                    // Map the intent status to a checkout result.
-                    if let result = mapIntentToCheckoutResult(updatedPaymentIntent) {
-                        // We have a result, so return that to the merchant
-                        return result
-                    }
-
-                    // We have no result yet, since there's a `next_action` to handle.
-                    let handledIntentResult = await handleNextAction(
-                        for: updatedPaymentIntent,
-                        with: authenticationContext
-                    )
-
-                    switch handledIntentResult {
-                    case .failure(let error):
-                        return .failed(error)
-                    case .success(let finalIntent):
-                        if finalIntent.status == .succeeded || finalIntent.status == .requiresCapture {
-                            // The intent is completed. We need to run the loop again,
-                            // so that the checkoutSessionHandler is called again.
-                            continue
-                        } else {
-                            return .failed(CheckoutError.paymentFailed)
-                        }
-                    }
-                } catch {
-                    return .failed(error)
+                // Map the intent status to a checkout result.
+                if let result = mapIntentToCheckoutResult(paymentIntent) {
+                    // We have a result, so return that to the merchant
+                    return result
                 }
-            }
 
-            return .failed(CheckoutError.unexpectedError)
-        } catch {
-            return .failed(error)
+                // We have no result yet, since there's a `next_action` to handle.
+                let handledIntentResult = await handleNextAction(
+                    for: paymentIntent,
+                    with: authenticationContext
+                )
+
+                switch handledIntentResult {
+                case .failure(let error):
+                    return .failed(error)
+                case .success(let finalIntent):
+                    if finalIntent.status == .succeeded || finalIntent.status == .requiresCapture {
+                        // The intent is completed. We need to run the loop again,
+                        // so that the checkoutSessionHandler is called again.
+                        continue
+                    } else {
+                        return .failed(CheckoutError.paymentFailed)
+                    }
+                }
+            } catch {
+                return .failed(error)
+            }
         }
+
+        return .failed(CheckoutError.maximumAttemptsExceeded)
     }
 
     private func getPlatformKey() async throws -> String {
@@ -530,6 +519,21 @@ private extension CryptoOnrampCoordinator {
                     continuation.resume(returning: .failure(error ?? CheckoutError.paymentFailed))
                 @unknown default:
                     continuation.resume(returning: .failure(CheckoutError.unexpectedError))
+                }
+            }
+        }
+    }
+
+    /// Retrieves a PaymentIntent using the provided client secret.
+    private func retrievePaymentIntent(withClientSecret clientSecret: String) async throws -> STPPaymentIntent {
+        return try await withCheckedThrowingContinuation { continuation in
+            apiClient.retrievePaymentIntent(withClientSecret: clientSecret) { paymentIntent, error in
+                if let error = error {
+                    continuation.resume(throwing: error)
+                } else if let paymentIntent = paymentIntent {
+                    continuation.resume(returning: paymentIntent)
+                } else {
+                    continuation.resume(throwing: CheckoutError.unexpectedError)
                 }
             }
         }
