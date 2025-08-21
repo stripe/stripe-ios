@@ -24,6 +24,15 @@ extension PaymentSheetFormFactory {
         }
     }
 
+    var previouslyHadLinkSignupSelected: Bool {
+        switch previousLinkInlineSignupAction {
+        case .signupAndPay:
+            return true
+        default:
+            return false
+        }
+    }
+
     func makeCard(linkAppearance: LinkAppearance? = nil) -> PaymentMethodElement {
         let showLinkInlineSignup = showLinkInlineCardSignup
         let defaultCheckbox: Element? = {
@@ -128,6 +137,8 @@ extension PaymentSheetFormFactory {
         ]
 
         if case .paymentElement(let configuration, _) = configuration, let accountService, showLinkInlineSignup {
+            // Restore the signup state on recreation
+            let signupOptInInitialValue = signupOptInInitialValue || previouslyHadLinkSignupSelected
             let inlineSignupElement = LinkInlineSignupElement(
                 configuration: configuration,
                 linkAccount: linkAccount,
