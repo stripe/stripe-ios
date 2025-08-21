@@ -28,7 +28,7 @@ struct AuthenticatedView: View {
     @State private var showKYCView = false
     @State private var showAttachWalletSheet = false
     @State private var isWalletAttached = false
-    @State private var selectedPaymentMethod: PaymentMethodPreview?
+    @State private var selectedPaymentMethod: PaymentMethodDisplayData?
     @State private var cryptoPaymentToken: String?
 
     @Environment(\.isLoading) private var isLoading

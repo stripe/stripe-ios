@@ -560,7 +560,7 @@ import UIKit
     /// `lookupConsumer` must be called before this.
     ///
     /// - Parameter viewController: The view controller from which to present the verification flow.
-    /// - Returns: A `VerificationResult` indicating whether verification was completed or canceled.
+    /// - Returns: A `AuthenticationResult` indicating whether verification was completed or canceled.
     /// Throws if `lookupConsumer` was not called prior to this, or an API error occurs.
     func presentForVerification(from viewController: UIViewController) async throws -> VerificationResult {
         try await withCheckedThrowingContinuation { continuation in
@@ -580,7 +580,7 @@ import UIKit
     /// - Parameter presentingViewController: The view controller from which to present the Link sheet.
     /// - Parameter email: The email address to pre-fill in the Link sheet. If `nil`, the email field will be empty.
     /// - Parameter supportedPaymentMethodTypes: The payment method types to support in the Link sheet. Defaults to all available types.
-    /// - Returns: A `PaymentMethodPreview` if the user selected a payment method, or `nil` otherwise.
+    /// - Returns: A `PaymentMethodDisplayData` if the user selected a payment method, or `nil` otherwise.
     func collectPaymentMethod(from presentingViewController: UIViewController, with email: String?, supportedPaymentMethodTypes: [LinkPaymentMethodType] = LinkPaymentMethodType.allCases) async -> LinkController.PaymentMethodPreview? {
         return await withCheckedContinuation { continuation in
             DispatchQueue.main.async {
