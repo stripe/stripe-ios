@@ -377,6 +377,7 @@ extension PaymentSheet {
                         loadResult: loadResult,
                         analyticsHelper: analyticsHelper
                     )
+
                     if let passiveCaptcha = loadResult.elementsSession.passiveCaptcha {
                         flowController.passiveCaptchaChallenge = PassiveCaptchaChallenge(passiveCaptcha: passiveCaptcha)
                     }

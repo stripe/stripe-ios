@@ -316,6 +316,7 @@ extension PaymentSheet: PaymentSheetViewControllerDelegate {
                 }
             }
         }
+
         if case .applePay = paymentOption {
             // Don't present the Apple Pay sheet on top of the Payment Sheet
             paymentSheetViewController.dismiss(animated: true) {

@@ -202,7 +202,7 @@ extension PaymentSheet {
             confirmParams.paymentMethodParams.radarOptions = radarOptions
             confirmParams.setClientAttributionMetadata(clientAttributionMetadata: clientAttributionMetadata)
             switch intent {
-                // MARK: ↪ PaymentIntent
+            // MARK: ↪ PaymentIntent
             case .paymentIntent(let paymentIntent):
                 let params = makePaymentIntentParams(
                     confirmPaymentMethodType: .new(
@@ -224,7 +224,7 @@ extension PaymentSheet {
                         paymentHandlerCompletion(actionStatus, error)
                     }
                 )
-                // MARK: ↪ SetupIntent
+            // MARK: ↪ SetupIntent
             case .setupIntent(let setupIntent):
                 let setupIntentParams = makeSetupIntentParams(
                     confirmPaymentMethodType: .new(
@@ -246,7 +246,7 @@ extension PaymentSheet {
                         paymentHandlerCompletion(actionStatus, error)
                     }
                 )
-                // MARK: ↪ Deferred Intent
+            // MARK: ↪ Deferred Intent
             case .deferredIntent(let intentConfig):
                 handleDeferredIntentConfirmation(
                     confirmType: .new(
@@ -374,10 +374,11 @@ extension PaymentSheet {
                         authenticationContext: authenticationContext,
                         paymentHandler: paymentHandler,
                         isFlowController: isFlowController,
-                        completion: { psResult, _ in
+                        completion: { psResult, confirmationType in
                             if shouldLogOutOfLink(result: psResult, elementsSession: elementsSession) {
                                 linkAccount?.logout()
                             }
+                            completion(psResult, confirmationType)
                         }
                     )
                 }
