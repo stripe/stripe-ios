@@ -85,10 +85,11 @@ class STPAPIClient_EmptyResponseTest: XCTestCase {
     /// Should result in a success.
     func testEmptyResponse_NoError() throws {
         let responseData = try JSONSerialization.data(withJSONObject: [:], options: [])
+        let response = HTTPURLResponse(url: URL(string: "http://foo.bar")!, statusCode: 200, httpVersion: nil, headerFields: nil)
         let result: Result<EmptyResponse, Error> = STPAPIClient.decodeResponse(
             data: responseData,
             error: nil,
-            response: nil
+            response: response
         )
 
         guard case .success = result else {
