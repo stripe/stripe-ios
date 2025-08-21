@@ -21,12 +21,17 @@ extension PayWithLinkViewController {
 
             activityIndicator.tintColor = context.linkAppearance?.colors?.primary ?? .linkIconBrand
             activityIndicator.translatesAutoresizingMaskIntoConstraints = false
-            view.addSubview(activityIndicator)
+
+            let containerView = UIView()
+            containerView.translatesAutoresizingMaskIntoConstraints = false
+            containerView.addSubview(activityIndicator)
+
+            contentView.addAndPinSubview(containerView, insets: .insets(bottom: LinkUI.bottomInset))
 
             NSLayoutConstraint.activate([
-                activityIndicator.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-                activityIndicator.centerYAnchor.constraint(equalTo: view.centerYAnchor),
-                self.view.heightAnchor.constraint(equalToConstant: LoadingViewController.Constants.defaultLoadingViewHeight),
+                activityIndicator.centerXAnchor.constraint(equalTo: containerView.centerXAnchor),
+                activityIndicator.centerYAnchor.constraint(equalTo: containerView.centerYAnchor),
+                containerView.heightAnchor.constraint(equalToConstant: LoadingViewController.Constants.defaultLoadingViewHeight - LinkUI.bottomInset),
             ])
         }
 
@@ -34,7 +39,5 @@ extension PayWithLinkViewController {
             super.viewWillAppear(animated)
             activityIndicator.startAnimating()
         }
-
     }
-
 }
