@@ -39,6 +39,8 @@ struct AuthenticatedView: View {
 
     @State private var authenticationContext = WindowAuthenticationContext()
 
+    @State private var checkoutSucceeded = false
+
     @Environment(\.isLoading) private var isLoading
 
     private var shouldDisableButtons: Bool {
@@ -162,8 +164,12 @@ struct AuthenticatedView: View {
                                 }
 
                                 if let onrampSessionResponse {
-                                    Button("Create Onramp Session") {
-                                        checkout(withSessionId: onrampSessionId)
+                                    let details = onrampSessionResponse.transactionDetails
+                                    Button("Check Out | \(details.sourceAmount) \(details.sourceCurrency.localizedUppercase)") {
+                                        checkout(
+                                            with: onrampSessionResponse,
+                                            paymentToken: cryptoPaymentToken
+                                        )
                                     }
                                     .buttonStyle(PrimaryButtonStyle())
                                     .disabled(shouldDisableButtons)
@@ -448,25 +454,27 @@ struct AuthenticatedView: View {
         errorMessage = nil
 
         Task {
-            do {
-                let response = try await coordinator.performCheckout(
-                    cryptoPaymentToken: paymentToken,
-                    sessionId: onrampSessionResponse.id,
-                    sessionClientSecret: onrampSessionResponse.clientSecret,
-                    authenticationContext: authenticationContext,
-                    checkoutSessionHandler: { _ in
-                        return ""
-                    }
-                )
+            let checkoutResult = await coordinator.performCheckout(
+                cryptoPaymentToken: paymentToken,
+                sessionId: onrampSessionResponse.id,
+                sessionClientSecret: onrampSessionResponse.clientSecret,
+                authenticationContext: authenticationContext,
+                checkoutSessionHandler: { _ in
+                    let result = try await APIClient.shared.checkout(requestObject: .init(cryptoOnrampSessionId: onrampSessionResponse.id))
+                    return  result.clientSecret
+                }
+            )
 
-                await MainActor.run {
-                    isLoading.wrappedValue = false
-                }
-            } catch {
-                await MainActor.run {
-                    isLoading.wrappedValue = false
+            await MainActor.run {
+                switch checkoutResult {
+                case .completed:
+                    checkoutSucceeded = true
+                case .failed(let error):
                     errorMessage = "Checkout failed: \(error.localizedDescription)"
+                @unknown default:
+                    break
                 }
+                isLoading.wrappedValue = false
             }
         }
     }
