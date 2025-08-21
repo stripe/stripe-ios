@@ -90,17 +90,49 @@ final class MLModelLoader {
             // If the model failed to load because it was corrupted, delete the artifact
             try? FileManager.default.removeItem(at: cachedModel)
 
-            self.fileDownloader.downloadFileTemporarily(from: remoteURL).chained(on: loadPromiseCacheQueue) {
+            self.fileDownloader.downloadFileTemporarily(from: remoteURL, into: FileManager.default.cachesDirectoryURL()).chained(on: loadPromiseCacheQueue) {
                 [weak self] tmpFileURL -> Promise<MLModel> in
                 let compilePromise = Promise<MLModel>()
                 compilePromise.fulfill { [weak self] in
-                    let tmpCompiledURL = try MLModel.compileModel(at: tmpFileURL)
-                    let compiledURL =
-                        self?.cache(
-                            compiledModel: tmpCompiledURL,
-                            downloadedFrom: remoteURL
-                        ) ?? tmpCompiledURL
-                    return try MLModel(contentsOf: compiledURL)
+                    
+                    var compileAttempts = 0
+                    func compiledModel() throws -> URL {
+                        do {
+                            let tmpCompiledURL = try MLModel.compileModel(at: tmpFileURL)
+                            return self?.cache(
+                                compiledModel: tmpCompiledURL,
+                                downloadedFrom: remoteURL
+                            ) ?? tmpCompiledURL
+                        }
+                        catch {
+                            if compileAttempts > 2 {
+                                throw error
+                            } else {
+                                compileAttempts += 1
+                                return try compiledModel()
+                            }
+                        }
+                    }
+                    
+                    let compiledURL = try compiledModel()
+                    
+                    var modelLoadAttempts = 0
+                    func model() throws -> MLModel {
+                        do {
+                            return try MLModel(contentsOf: compiledURL)
+                        }
+                        catch {
+                            if modelLoadAttempts > 2 {
+                                throw error
+                            } else {
+                                modelLoadAttempts += 1
+                                return try model()
+                            }
+                        }
+                        
+                    }
+                    
+                    return try model()
                 }
                 return compilePromise
             }.observe(on: loadPromiseCacheQueue) { [weak self] result in
