@@ -111,18 +111,18 @@ extension STPAPIClient {
         return try await post(resource: endpoint, object: requestObject)
     }
 
-    /// Retrieves the PaymentIntent from an onramp session.
+    /// Retrieves an onramp session.
     /// - Parameters:
     ///   - sessionId: The onramp session identifier.
     ///   - sessionClientSecret: The onramp session client secret.
-    /// - Returns: The PaymentIntent associated with the onramp session.
-    func retrievePaymentIntentFromOnrampSession(
+    /// - Returns: The onramp session details.
+    func getOnrampSession(
         sessionId: String,
         sessionClientSecret: String
-    ) async throws -> STPPaymentIntent {
+    ) async throws -> OnrampSessionResponse {
         let endpoint = "crypto/internal/onramp_session"
         let parameters = ["crypto_onramp_session": sessionId, "client_secret": sessionClientSecret]
-        return try await APIRequest<STPPaymentIntent>.getWith(self, endpoint: endpoint, parameters: parameters)
+        return try await get(resource: endpoint, parameters: parameters)
     }
 
     /// Creates a crypto payment token from a given payment method and consumer.
