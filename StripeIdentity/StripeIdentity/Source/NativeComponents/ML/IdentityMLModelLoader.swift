@@ -90,13 +90,7 @@ final class IdentityMLModelLoader: IdentityMLModelLoaderProtocol {
         // verifying their identity, cache them to a temp directory so the
         // system will delete them when it needs the space.
 
-        let cachesDirectory: URL
-        if #available(iOS 16.0, *) {
-            cachesDirectory = URL.cachesDirectory
-        } else {
-            let paths = FileManager.default.urls(for: .cachesDirectory, in: .userDomainMask)
-            cachesDirectory = paths.first ?? URL(fileURLWithPath: NSTemporaryDirectory(), isDirectory: true)
-        }
+        let cachesDirectory: URL = FileManager.cachesDirectoryURL()
 
         // Create a name-spaced subdirectory inside the temp directory so
         // we don't clash with any other files the app is storing here.
