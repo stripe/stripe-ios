@@ -109,6 +109,7 @@ final class MLModelLoader {
                             if compileAttempts > 2 {
                                 throw error
                             } else {
+                                compileAttempts += 1
                                 return try compiledModel()
                             }
                         }
