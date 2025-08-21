@@ -132,7 +132,7 @@ struct CryptoOnrampExampleView: View {
         isLoading.wrappedValue = true
         Task {
             do {
-                let lookupResult = try await coordinator.lookupConsumer(with: email)
+                let lookupResult = try await coordinator.hasLinkAccount(with: email)
                 await MainActor.run {
                     errorMessage = nil
                     isLoading.wrappedValue = false
@@ -156,7 +156,7 @@ struct CryptoOnrampExampleView: View {
         if let viewController = UIApplication.shared.findTopNavigationController() {
             Task {
                 do {
-                    let result = try await coordinator.presentForVerification(from: viewController)
+                    let result = try await coordinator.authenticateUser(from: viewController)
                     switch result {
                     case .completed(customerId: let customerId):
                         await MainActor.run {

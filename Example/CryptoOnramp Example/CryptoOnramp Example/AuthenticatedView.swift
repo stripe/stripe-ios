@@ -28,7 +28,7 @@ struct AuthenticatedView: View {
     @State private var showKYCView = false
     @State private var showAttachWalletSheet = false
     @State private var isWalletAttached = false
-    @State private var selectedPaymentMethod: PaymentMethodPreview?
+    @State private var selectedPaymentMethod: PaymentMethodDisplayData?
     @State private var cryptoPaymentToken: String?
 
     @Environment(\.isLoading) private var isLoading
@@ -210,7 +210,7 @@ struct AuthenticatedView: View {
 
         Task {
             do {
-                let result = try await coordinator.promptForIdentityVerification(from: viewController)
+                let result = try await coordinator.verifyIdentity(from: viewController)
                 await MainActor.run {
                     isLoading.wrappedValue = false
                     switch result {
