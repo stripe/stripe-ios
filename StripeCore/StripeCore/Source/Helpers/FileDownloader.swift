@@ -25,7 +25,7 @@ import Foundation
     /// resolve to the temporary local file location where the file was downloaded to.
     ///
     /// - Parameter remoteURL: The URL to download the file from.
-    public func downloadFileTemporarily(from remoteURL: URL) -> Future<URL> {
+    public func downloadFileTemporarily(from remoteURL: URL, into directory: URL = FileManager.default.temporaryDirectory) -> Future<URL> {
         let promise = Promise<URL>()
 
         let request = URLRequest(url: remoteURL)
@@ -41,11 +41,11 @@ import Foundation
             }
 
             // Move the file to a temporary cache directory after generating a unique name to avoid conflicts.
-            let fileManager = FileManager.default
             let uniqueFileName = "\(UUID().uuidString)_" + remoteURL.lastPathComponent
-            let temporaryFileURL = fileManager.temporaryDirectory.appendingPathComponent(uniqueFileName)
+            let temporaryFileURL = directory.appendingPathComponent(uniqueFileName)
 
             do {
+                let fileManager = FileManager.default
                 try fileManager.moveItem(at: url, to: temporaryFileURL)
             } catch {
                 return promise.reject(with: error)

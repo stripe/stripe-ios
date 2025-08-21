@@ -6,7 +6,7 @@
 //
 
 extension FileManager {
-    static func cachesDirectoryURL() -> URL {
+    func cachesDirectoryURL() -> URL {
         let cachesDirectory: URL
         if #available(iOS 16.0, *) {
             cachesDirectory = URL.cachesDirectory

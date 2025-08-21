@@ -90,7 +90,7 @@ final class MLModelLoader {
             // If the model failed to load because it was corrupted, delete the artifact
             try? FileManager.default.removeItem(at: cachedModel)
 
-            self.fileDownloader.downloadFileTemporarily(from: remoteURL).chained(on: loadPromiseCacheQueue) {
+            self.fileDownloader.downloadFileTemporarily(from: remoteURL, into: FileManager.default.cachesDirectoryURL()).chained(on: loadPromiseCacheQueue) {
                 [weak self] tmpFileURL -> Promise<MLModel> in
                 let compilePromise = Promise<MLModel>()
                 compilePromise.fulfill { [weak self] in

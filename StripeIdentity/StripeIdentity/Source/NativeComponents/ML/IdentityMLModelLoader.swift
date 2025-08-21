@@ -90,7 +90,7 @@ final class IdentityMLModelLoader: IdentityMLModelLoaderProtocol {
         // verifying their identity, cache them to a temp directory so the
         // system will delete them when it needs the space.
 
-        let cachesDirectory: URL = FileManager.cachesDirectoryURL()
+        let cachesDirectory: URL = FileManager.default.cachesDirectoryURL()
 
         // Create a name-spaced subdirectory inside the temp directory so
         // we don't clash with any other files the app is storing here.
