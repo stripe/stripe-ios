@@ -436,7 +436,7 @@ struct AuthenticatedView: View {
             destinationNetwork: wallet.network,
             walletAddress: wallet.walletAddress,
             cryptoCustomerId: customerId,
-            customerIpAddress: "192.168.4.198" // <--- hardcoded for demo
+            customerIpAddress: "39.131.174.122" // <--- hardcoded for demo
         )
 
         Task {
