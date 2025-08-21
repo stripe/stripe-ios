@@ -99,8 +99,7 @@ final class MLModelLoader {
                     func compiledModel() throws -> URL {
                         do {
                             let tmpCompiledURL = try MLModel.compileModel(at: tmpFileURL)
-                            let compiledURL =
-                            self?.cache(
+                            return self?.cache(
                                 compiledModel: tmpCompiledURL,
                                 downloadedFrom: remoteURL
                             ) ?? tmpCompiledURL
