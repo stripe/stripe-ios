@@ -99,7 +99,6 @@ struct AuthenticatedView: View {
                 .background(Color.secondary.opacity(0.1))
                 .cornerRadius(8)
 
-                
                 if !wallets.isEmpty {
                     VStack(alignment: .leading, spacing: 12) {
                         Text("Selected Wallet")
