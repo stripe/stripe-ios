@@ -80,7 +80,7 @@ import Foundation
                             hasCompleted = true
                             continuation.resume(returning: token)
                         } catch {
-                            STPAnalyticsClient.sharedClient.logPassiveCaptchaError(error: error,siteKey: siteKey)
+                            STPAnalyticsClient.sharedClient.logPassiveCaptchaError(error: error, siteKey: siteKey)
                             hasCompleted = true
                             continuation.resume(returning: nil)
                         }
