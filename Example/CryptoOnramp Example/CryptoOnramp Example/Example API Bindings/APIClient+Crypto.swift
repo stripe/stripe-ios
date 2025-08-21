@@ -28,6 +28,27 @@ extension APIClient {
             .pageSize(50),
         ])
     }
+
+    func createOnrampSession(requestObject: CreateOnrampSessionRequest) async throws -> CreateOnrampSessionResponse {
+        guard let token = authToken else { throw APIError.missingAuthToken }
+        return try await request("create_onramp_session", method: .POST, body: requestObject, bearerToken: token)
+    }
+
+    func createQuote(requestObject: QuoteRequest) async throws -> QuoteResponse {
+        guard let token = authToken else { throw APIError.missingAuthToken }
+        return try await request("quote", method: .POST, body: requestObject, bearerToken: token)
+    }
+
+    func checkout(requestObject: CheckoutRequest) async throws -> CheckoutResponse {
+        guard let token = authToken else { throw APIError.missingAuthToken }
+        return try await request("checkout", method: .POST, body: requestObject, bearerToken: token)
+    }
+
+    func fetchSessionStatus(cryptoOnrampSessionId: String) async throws -> SessionStatusResponse {
+        guard let token = authToken else { throw APIError.missingAuthToken }
+        let path = "session_status/\(cryptoOnrampSessionId)"
+        return try await request(path, bearerToken: token)
+    }
 }
 
 private extension URLQueryItem {
