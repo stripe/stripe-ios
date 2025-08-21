@@ -94,13 +94,34 @@ final class MLModelLoader {
                 [weak self] tmpFileURL -> Promise<MLModel> in
                 let compilePromise = Promise<MLModel>()
                 compilePromise.fulfill { [weak self] in
-                    let tmpCompiledURL = try MLModel.compileModel(at: tmpFileURL)
-                    let compiledURL =
-                        self?.cache(
-                            compiledModel: tmpCompiledURL,
-                            downloadedFrom: remoteURL
-                        ) ?? tmpCompiledURL
-                    return try MLModel(contentsOf: compiledURL)
+                    
+                    var tries = 0
+                    
+                    func model() throws -> MLModel {
+                        do {
+                            let tmpCompiledURL = try MLModel.compileModel(at: tmpFileURL)
+                            let compiledURL =
+                            self?.cache(
+                                compiledModel: tmpCompiledURL,
+                                downloadedFrom: remoteURL
+                            ) ?? tmpCompiledURL
+                            
+                            let model = try MLModel(contentsOf: compiledURL)
+                            
+                            return model
+                        }
+                        catch {
+                            if tries > 2 {
+                                throw error
+                            } else {
+                                tries += 1
+                                return try model()
+                            }
+                        }
+                        
+                    }
+                    
+                    return try model()
                 }
                 return compilePromise
             }.observe(on: loadPromiseCacheQueue) { [weak self] result in
