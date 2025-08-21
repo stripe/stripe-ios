@@ -138,7 +138,7 @@ final class MLModelLoader {
                 return compilePromise
             }.observe(on: loadPromiseCacheQueue) { [weak self] result in
                 returnedPromise.fullfill(with: result)
-                print("")
+
                 // Remove from promise cache
                 self?.loadPromiseCacheQueue.async { [weak self] in
                     self?.loadPromiseCache.removeValue(forKey: remoteURL)
