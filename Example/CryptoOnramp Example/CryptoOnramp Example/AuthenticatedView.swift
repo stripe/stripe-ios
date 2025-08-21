@@ -464,15 +464,12 @@ struct AuthenticatedView: View {
 
         Task {
             let checkoutResult = await coordinator.performCheckout(
-                cryptoPaymentToken: paymentToken,
-                sessionId: onrampSessionResponse.id,
-                sessionClientSecret: onrampSessionResponse.clientSecret,
-                authenticationContext: authenticationContext,
-                checkoutSessionHandler: { _ in
-                    let result = try await APIClient.shared.checkout(requestObject: .init(cryptoOnrampSessionId: onrampSessionResponse.id))
-                    return  result.clientSecret
-                }
-            )
+                onrampSessionId: onrampSessionResponse.id,
+                authenticationContext: authenticationContext
+            ) {
+                let result = try await APIClient.shared.checkout(requestObject: .init(cryptoOnrampSessionId: onrampSessionResponse.id))
+                return  result.clientSecret
+            }
 
             await MainActor.run {
                 switch checkoutResult {
