@@ -30,12 +30,14 @@ struct AuthenticatedView: View {
     @State private var isWalletAttached = false
     @State private var selectedPaymentMethod: PaymentMethodDisplayData?
     @State private var cryptoPaymentToken: String?
-    @State private var onrampSessionId: String?
+    @State private var onrampSessionResponse: CreateOnrampSessionResponse?
 
     @State private var wallets: [CustomerWalletsResponse.Wallet] = []
     @State private var selectedWalletId: String?
     @State private var lastAttachedAddress: String?
     @State private var lastAttachedNetwork: CryptoNetwork?
+
+    @State private var authenticationContext = WindowAuthenticationContext()
 
     @Environment(\.isLoading) private var isLoading
 
@@ -159,7 +161,7 @@ struct AuthenticatedView: View {
                                     .opacity(shouldDisableButtons ? 0.5 : 1)
                                 }
 
-                                if let onrampSessionId {
+                                if let onrampSessionResponse {
                                     Button("Create Onramp Session") {
                                         checkout(withSessionId: onrampSessionId)
                                     }
@@ -178,13 +180,13 @@ struct AuthenticatedView: View {
                                         .foregroundColor(.secondary)
                                 }
 
-                                if let onrampSessionId {
+                                if let onrampSessionResponse {
                                     HStack(alignment: .firstTextBaseline, spacing: 4) {
                                         Text("Onramp Session:")
                                             .font(.footnote)
                                             .bold()
                                             .foregroundColor(.secondary)
-                                        Text(onrampSessionId)
+                                        Text(onrampSessionResponse.id)
                                             .font(.footnote.monospaced())
                                             .foregroundColor(.secondary)
                                     }
@@ -427,7 +429,7 @@ struct AuthenticatedView: View {
                 let response = try await APIClient.shared.createOnrampSession(requestObject: request)
                 await MainActor.run {
                     isLoading.wrappedValue = false
-                    onrampSessionId = response.id
+                    onrampSessionResponse = response
                 }
             } catch {
                 await MainActor.run {
@@ -438,10 +440,42 @@ struct AuthenticatedView: View {
         }
     }
 
-    private func checkout(withSessionId sessionId: String) {
+    private func checkout(
+        with onrampSessionResponse: CreateOnrampSessionResponse
+        paymentToken: String
+    ) {
+        isLoading.wrappedValue = true
+        errorMessage = nil
 
+        Task {
+            do {
+                let response = try await coordinator.performCheckout(
+                    cryptoPaymentToken: paymentToken,
+                    sessionId: onrampSessionResponse.id,
+                    sessionClientSecret: onrampSessionResponse.clientSecret,
+                    authenticationContext: authenticationContext,
+                    checkoutSessionHandler: { _ in
+
+                    }
+                )
+
+                await MainActor.run {
+                    isLoading.wrappedValue = false
+                }
+            } catch {
+                await MainActor.run {
+                    isLoading.wrappedValue = false
+                    errorMessage = "Checkout failed: \(error.localizedDescription)"
+                }
+            }
+        }
     }
+}
 
+private class WindowAuthenticationContext: NSObject, STPAuthenticationContext {
+    public func authenticationPresentingViewController() -> UIViewController {
+        UIApplication.shared.findTopNavigationController() ?? UIViewController()
+    }
 }
 
 #Preview {
