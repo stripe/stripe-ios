@@ -363,4 +363,13 @@ import Foundation
             "Shown in a dropdown picker next to a card brand that is not accepted by a merchant. E.g. \"Visa (not accepted)\""
        )
     }
+
+    // MARK: - Payment preview
+
+    static var card_details_xxxx: String {
+        STPLocalizedString(
+            "%1$@ •••• %2$@",
+            "Card preview details displaying the last four digits: {card brand} •••• {last 4} e.g. 'Visa •••• 3155'"
+        )
+    }
 }

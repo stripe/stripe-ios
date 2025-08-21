@@ -108,6 +108,8 @@ extension STPAPIClient {
             if let phoneNumber {
                 parameters["phone_number"] = phoneNumber
                 parameters["country_inferring_method"] = "PHONE_NUMBER"
+            } else {
+                parameters["country_inferring_method"] = "BILLING_ADDRESS"
             }
 
             if let legalName = legalName {

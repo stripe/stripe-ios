@@ -67,12 +67,11 @@ extension PayWithLinkViewController {
         var mandate: NSAttributedString? {
             switch selectedPaymentMethod?.details {
             case .card:
-                if context.elementsSession.alwaysSaveForFutureUse {
+                if context.elementsSession.forceSaveFutureUseBehaviorAndNewMandateText {
                     // Use the updated mandate text that can mention both payment method reuse and Link signup.
                     // Since the user is already signed up for Link, we don't need to save to Link.
                     return PaymentSheetFormFactory.makeMandateText(
-                        useCombinedReuseAndLinkSignupText: true,
-                        shouldSaveToLink: false,
+                        variant: .updated(shouldSignUpToLink: false),
                         merchantName: context.configuration.merchantDisplayName
                     )
                 }

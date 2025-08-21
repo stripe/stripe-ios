@@ -40,23 +40,25 @@ class PaymentSheetFormFactory {
     let savePaymentMethodConsentBehavior: SavePaymentMethodConsentBehavior
     let allowsSetAsDefaultPM: Bool
     let allowsLinkDefaultOptIn: Bool
+    let forceSaveFutureUseBehavior: Bool
     let signupOptInFeatureEnabled: Bool
     let signupOptInInitialValue: Bool
     let isFirstSavedPaymentMethod: Bool
     let analyticsHelper: PaymentSheetAnalyticsHelper?
     let paymentMethodIncentive: PaymentMethodIncentive?
     let sellerName: String?
+    let previousLinkInlineSignupAction: LinkInlineSignupViewModel.Action?
 
     var shouldDisplaySaveCheckbox: Bool {
         // Don't show the save checkbox in Link
         guard !configuration.linkPaymentMethodsOnly else { return false }
         switch savePaymentMethodConsentBehavior {
         case .legacy:
-            return !shouldShowLinkSignupOptIn && !isSettingUp && configuration.hasCustomer && paymentMethod.supportsSaveForFutureUseCheckbox()
+            return !signupOptInFeatureEnabled && !isSettingUp && configuration.hasCustomer && paymentMethod.supportsSaveForFutureUseCheckbox()
         case .paymentSheetWithCustomerSessionPaymentMethodSaveDisabled:
             return false
         case .paymentSheetWithCustomerSessionPaymentMethodSaveEnabled:
-            return !shouldShowLinkSignupOptIn && configuration.hasCustomer && paymentMethod.supportsSaveForFutureUseCheckbox()
+            return !signupOptInFeatureEnabled && configuration.hasCustomer && paymentMethod.supportsSaveForFutureUseCheckbox()
         case .customerSheetWithCustomerSession:
             return false
         }
@@ -68,10 +70,6 @@ class PaymentSheetFormFactory {
 
     var theme: ElementsAppearance {
         return configuration.appearance.asElementsTheme
-    }
-
-    var shouldShowLinkSignupOptIn: Bool {
-        showLinkInlineCardSignup && signupOptInFeatureEnabled
     }
 
     private static let PayByBankDescriptionText = STPLocalizedString(
@@ -89,7 +87,8 @@ class PaymentSheetFormFactory {
         linkAccount: PaymentSheetLinkAccount? = nil,
         accountService: LinkAccountServiceProtocol,
         analyticsHelper: PaymentSheetAnalyticsHelper?,
-        linkAppearance: LinkAppearance? = nil
+        linkAppearance: LinkAppearance? = nil,
+        previousLinkInlineSignupAction: LinkInlineSignupViewModel.Action? = nil
     ) {
 
         /// Whether or not the card form should show the link inline signup checkbox
@@ -137,13 +136,15 @@ class PaymentSheetFormFactory {
                   savePaymentMethodConsentBehavior: elementsSession.savePaymentMethodConsentBehavior,
                   allowsSetAsDefaultPM: elementsSession.paymentMethodSetAsDefaultForPaymentSheet,
                   allowsLinkDefaultOptIn: elementsSession.allowsLinkDefaultOptIn,
+                  forceSaveFutureUseBehavior: elementsSession.forceSaveFutureUseBehaviorAndNewMandateText,
                   signupOptInFeatureEnabled: elementsSession.linkSignupOptInFeatureEnabled,
                   signupOptInInitialValue: elementsSession.linkSignupOptInInitialValue,
                   isFirstSavedPaymentMethod: elementsSession.customer?.paymentMethods.isEmpty ?? true,
                   analyticsHelper: analyticsHelper,
                   paymentMethodIncentive: elementsSession.incentive,
                   linkAppearance: linkAppearance,
-                  sellerName: intent.sellerDetails?.businessName
+                  sellerName: intent.sellerDetails?.businessName,
+                  previousLinkInlineSignupAction: previousLinkInlineSignupAction
         )
     }
 
@@ -163,13 +164,15 @@ class PaymentSheetFormFactory {
         savePaymentMethodConsentBehavior: SavePaymentMethodConsentBehavior,
         allowsSetAsDefaultPM: Bool = false,
         allowsLinkDefaultOptIn: Bool = false,
+        forceSaveFutureUseBehavior: Bool = false,
         signupOptInFeatureEnabled: Bool = false,
         signupOptInInitialValue: Bool = false,
         isFirstSavedPaymentMethod: Bool = true,
         analyticsHelper: PaymentSheetAnalyticsHelper?,
         paymentMethodIncentive: PaymentMethodIncentive?,
         linkAppearance: LinkAppearance? = nil,
-        sellerName: String? = nil
+        sellerName: String? = nil,
+        previousLinkInlineSignupAction: LinkInlineSignupViewModel.Action? = nil
     ) {
         self.configuration = configuration
         self.paymentMethod = paymentMethod
@@ -191,6 +194,7 @@ class PaymentSheetFormFactory {
         self.savePaymentMethodConsentBehavior = savePaymentMethodConsentBehavior
         self.allowsSetAsDefaultPM = allowsSetAsDefaultPM
         self.allowsLinkDefaultOptIn = allowsLinkDefaultOptIn
+        self.forceSaveFutureUseBehavior = forceSaveFutureUseBehavior
         self.signupOptInFeatureEnabled = signupOptInFeatureEnabled
         self.signupOptInInitialValue = signupOptInInitialValue
         self.isFirstSavedPaymentMethod = isFirstSavedPaymentMethod
@@ -198,6 +202,7 @@ class PaymentSheetFormFactory {
         self.paymentMethodIncentive = paymentMethodIncentive
         self.linkAppearance = linkAppearance
         self.sellerName = sellerName
+        self.previousLinkInlineSignupAction = previousLinkInlineSignupAction
     }
 
     func make() -> PaymentMethodElement {

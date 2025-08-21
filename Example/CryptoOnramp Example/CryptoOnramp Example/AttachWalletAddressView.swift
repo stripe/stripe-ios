@@ -104,7 +104,7 @@ struct AttachWalletAddressView: View {
 
         Task {
             do {
-                try await coordinator.collectWalletAddress(walletAddress: address, network: selectedNetwork)
+                try await coordinator.registerWalletAddress(walletAddress: address, network: selectedNetwork)
                 await MainActor.run {
                     isLoading.wrappedValue = false
                     isWalletAttached = true

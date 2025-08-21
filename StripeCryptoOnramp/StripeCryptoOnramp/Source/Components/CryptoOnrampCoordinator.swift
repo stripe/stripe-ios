@@ -17,69 +17,77 @@ import Stripe
 
 import UIKit
 
-/// Protocol describing a type that coordinates headless Link user authentication, identity verification, and payment, leaving most of the associated UI up to the client.
-@_spi(CryptoOnrampSDKPreview)
-public protocol CryptoOnrampCoordinatorProtocol {
+/// A coordinator that facilitates the crypto onramp process including user authentication, identity verification, payment collection, and checkouts.
+protocol CryptoOnrampCoordinatorProtocol {
 
-    /// Creates a `CryptoOnrampCoordinator` to facilitate authentication, identity verification, and payment.
+    /// Creates a `CryptoOnrampCoordinator` to facilitate authentication, identity verification, payment collection, and checkouts.
     ///
     /// - Parameter apiClient: The `STPAPIClient` instance for this coordinator. Defaults to `.shared`.
     /// - Parameter appearance: Customizable appearance-related configuration for any Stripe-provided UI.
     /// - Returns: A configured `CryptoOnrampCoordinator`.
     static func create(apiClient: STPAPIClient, appearance: LinkAppearance) async throws -> Self
 
-    /// Looks up whether the provided email is associated with an existing Link consumer.
+    /// Whether or not the provided email is associated with an existing Link consumer.
     ///
     /// - Parameter email: The email address to look up.
     /// - Returns: Returns `true` if the email is associated with an existing Link consumer, or `false` otherwise.
-    func lookupConsumer(with email: String) async throws -> Bool
+    func hasLinkAccount(with email: String) async throws -> Bool
 
     /// Registers a new Link user with the provided details.
-    /// `lookupConsumer` must be called before this.
     ///
-    /// - Parameter fullName: The full name of the user.
+    /// - Parameter email: The user's email to be used for signup.
+    /// - Parameter fullName: The full name of the user. A name should be collected if the user is located outside of the US, otherwise it is optional.
     /// - Parameter phone: The phone number of the user. Phone number must be in E.164 format (e.g., +12125551234), otherwise an error will be thrown.
-    /// - Parameter country: The country code of the user.
+    /// - Parameter country: The two-letter country code of the user (ISO 3166-1 alpha-2).
     /// - Returns: The crypto customer ID.
-    /// Throws if `lookupConsumer` was not called prior to this, or an API error occurs.
-    func registerLinkUser(fullName: String?, phone: String, country: String) async throws -> String
+    /// Throws if email is already associated with a Link user, or an API error occurs.
+    func registerLinkUser(
+        email: String,
+        fullName: String?,
+        phone: String,
+        country: String
+    ) async throws -> String
 
-    /// Presents the Link verification flow for an existing user.
-    /// `lookupConsumer` must be called before this.
+    /// Presents Link UI to authenticate an existing Link user.
+    /// `hasLinkAccount` must be called before this.
     ///
-    /// - Parameter viewController: The view controller from which to present the verification flow.
-    /// - Returns: A `VerificationResult` indicating whether verification was completed or canceled.
-    ///   If verification completes, a crypto customer ID will be included in the result.
-    /// Throws if `lookupConsumer` was not called prior to this, or an API error occurs.
-    func presentForVerification(from viewController: UIViewController) async throws -> VerificationResult
+    /// - Parameter viewController: The view controller from which to present the authentication flow.
+    /// - Returns: A `AuthenticationResult` indicating whether authentication was completed or canceled.
+    ///   If authentication completes, a crypto customer ID will be included in the result.
+    /// Throws if `hasLinkAccount` was not called prior to this, or an API error occurs after the view controller is presented.
+    func authenticateUser(from viewController: UIViewController) async throws -> AuthenticationResult
 
     /// Attaches the specific KYC info to the current Link user. Requires an authenticated Link user.
     ///
     /// - Parameter info: The KYC info to attach to the Link user.
-    /// - Throws an error if an error occurs.
-    func collectKYCInfo(info: KycInfo) async throws
+    /// Throws if an authenticated Link user is not available, or an API error occurs.
+    func attachKYCInfo(info: KycInfo) async throws
 
-    /// Creates an identity verification session and launches the verification flow.
+    /// Creates an identity verification session and launches the document verification flow.
+    /// Requires an authenticated Link user.
     ///
-    /// - Parameter viewController: The view controller from which to present the verification flow.
-    /// - Returns: An `IdentityVerificationResult` representing the outcome of the verification process.
-    func promptForIdentityVerification(from viewController: UIViewController) async throws -> IdentityVerificationResult
+    /// - Parameter viewController: The view controller from which to present the document verification flow.
+    /// - Returns: An `IdentityVerificationResult` representing the outcome of the document verification process.
+    /// Throws if an authenticated Link user is not available, or an API error occurs.
+    func verifyIdentity(from viewController: UIViewController) async throws -> IdentityVerificationResult
 
     /// Registers the given crypto wallet address to the current Link account.
+    /// Requires an authenticated Link user.
     ///
     /// - Parameter walletAddress: The crypto wallet address to register.
     /// - Parameter network: The crypto network for the wallet address.
-    func collectWalletAddress(walletAddress: String, network: CryptoNetwork) async throws
+    /// Throws if an authenticated Link user is not available, or an API error occurs.
+    func registerWalletAddress(walletAddress: String, network: CryptoNetwork) async throws
 
     /// Presents UI to collect/select a payment method of the given type.
     ///
     /// - Parameters:
     ///   - type: The payment method type to collect. For `.card` and `.bankAccount`, this presents Link. For `.applePay(paymentRequest:)`, this presents Apple Pay using the provided `PKPaymentRequest`.
     ///   - viewController: The view controller from which to present the UI.
-    /// - Returns: A `PaymentMethodPreview` describing the user’s selection, or `nil` if the user cancels.
+    /// - Returns: A `PaymentMethodDisplayData` describing the user’s selection, or `nil` if the user cancels.
     /// Throws an error if presentation or payment method collection fails.
     @MainActor
-    func collectPaymentMethod(type: PaymentMethodType, from viewController: UIViewController) async throws -> PaymentMethodPreview?
+    func collectPaymentMethod(type: PaymentMethodType, from viewController: UIViewController) async throws -> PaymentMethodDisplayData?
 
     /// Creates a crypto payment token for the payment method currently selected on the coordinator.
     /// Call after a successful `collectPaymentMethod(...)`.
@@ -115,6 +123,9 @@ public final class CryptoOnrampCoordinator: NSObject, CryptoOnrampCoordinatorPro
 
         /// Phone number validation failed. Phone number should be in E.164 format (e.g., +12125551234).
         case invalidPhoneFormat
+
+        /// A Link account already exists for the provided email address.
+        case linkAccountAlreadyExists
 
         /// `ephemeralKey` is missing from the response after starting identity verification.
         case missingEphemeralKey
@@ -167,11 +178,29 @@ public final class CryptoOnrampCoordinator: NSObject, CryptoOnrampCoordinatorPro
         )
     }
 
-    public func lookupConsumer(with email: String) async throws -> Bool {
+    public func hasLinkAccount(with email: String) async throws -> Bool {
         return try await linkController.lookupConsumer(with: email)
     }
 
-    public func registerLinkUser(fullName: String?, phone: String, country: String) async throws -> String {
+    public func registerLinkUser(
+        email: String,
+        fullName: String?,
+        phone: String,
+        country: String
+    ) async throws -> String {
+        // Short-circuit if a registered Link account is already available,
+        // or a Link account already exists for the provided email.
+        if let linkAccount = await linkController.linkAccount {
+            if linkAccount.isRegistered {
+                throw Error.linkAccountAlreadyExists
+            }
+        } else {
+            let hasExistingAccount = try await hasLinkAccount(with: email)
+            if hasExistingAccount {
+                throw Error.linkAccountAlreadyExists
+            }
+        }
+
         do {
             try await linkController.registerLinkUser(
                 fullName: fullName,
@@ -193,7 +222,7 @@ public final class CryptoOnrampCoordinator: NSObject, CryptoOnrampCoordinatorPro
         return try await apiClient.grantPartnerMerchantPermissions(with: linkAccountInfo).id
     }
 
-    public func presentForVerification(from viewController: UIViewController) async throws -> VerificationResult {
+    public func authenticateUser(from viewController: UIViewController) async throws -> AuthenticationResult {
         let verificationResult = try await linkController.presentForVerification(from: viewController)
         switch verificationResult {
         case .canceled:
@@ -204,11 +233,11 @@ public final class CryptoOnrampCoordinator: NSObject, CryptoOnrampCoordinatorPro
         }
     }
 
-    public func collectKYCInfo(info: KycInfo) async throws {
+    public func attachKYCInfo(info: KycInfo) async throws {
         try await apiClient.collectKycInfo(info: info, linkAccountInfo: linkAccountInfo)
     }
 
-    public func promptForIdentityVerification(from viewController: UIViewController) async throws -> IdentityVerificationResult {
+    public func verifyIdentity(from viewController: UIViewController) async throws -> IdentityVerificationResult {
         let response = try await apiClient.startIdentityVerification(linkAccountInfo: linkAccountInfo)
 
         guard let ephemeralKey = response.ephemeralKey else {
@@ -239,7 +268,7 @@ public final class CryptoOnrampCoordinator: NSObject, CryptoOnrampCoordinatorPro
         }
     }
 
-    public func collectWalletAddress(walletAddress: String, network: CryptoNetwork) async throws {
+    public func registerWalletAddress(walletAddress: String, network: CryptoNetwork) async throws {
         try await apiClient.collectWalletAddress(
             walletAddress: walletAddress,
             network: network,
@@ -251,7 +280,7 @@ public final class CryptoOnrampCoordinator: NSObject, CryptoOnrampCoordinatorPro
     public func collectPaymentMethod(
         type: PaymentMethodType,
         from viewController: UIViewController
-    ) async throws -> PaymentMethodPreview? {
+    ) async throws -> PaymentMethodDisplayData? {
         switch type {
         case .card, .bankAccount:
             let email = try? await linkAccountInfo.email
@@ -268,7 +297,7 @@ public final class CryptoOnrampCoordinator: NSObject, CryptoOnrampCoordinatorPro
                 return nil
             }
 
-            let preview = PaymentMethodPreview(
+            let preview = PaymentMethodDisplayData(
                 icon: result.icon,
                 label: result.label,
                 sublabel: result.sublabel
@@ -295,7 +324,7 @@ public final class CryptoOnrampCoordinator: NSObject, CryptoOnrampCoordinatorPro
                     }
                 }()
 
-                let paymentMethodPreview = PaymentMethodPreview(
+                let paymentMethodPreview = PaymentMethodDisplayData(
                     icon: icon,
                     label: label,
                     sublabel: sublabel
