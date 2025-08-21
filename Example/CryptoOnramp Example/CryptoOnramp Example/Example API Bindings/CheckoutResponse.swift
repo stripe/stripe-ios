@@ -23,7 +23,7 @@ struct CheckoutResponse: Decodable {
         let fees: Fees
         let lastError: String?
         let lockWalletAddress: Bool
-        let quoteExpiration: String
+        let quoteExpiration: Date
         let sourceCurrency: String
         let sourceExchangeAmount: String
         let supportedDestinationCurrencies: [String]

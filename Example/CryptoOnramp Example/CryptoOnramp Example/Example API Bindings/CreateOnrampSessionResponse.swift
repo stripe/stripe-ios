@@ -7,10 +7,6 @@
 
 import Foundation
 
-/// The response format for `/quote` and `/checkout` match that of `/create_onramp_session`.
-typealias QuoteResponse = CreateOnrampSessionResponse
-typealias CheckoutResponse = CreateOnrampSessionResponse
-
 struct CreateOnrampSessionResponse: Decodable {
     struct TransactionDetails: Decodable {
         struct Fees: Decodable {
