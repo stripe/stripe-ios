@@ -26,6 +26,8 @@ struct AuthenticatedView: View {
     @State private var errorMessage: String?
     @State private var isIdentityVerificationComplete = false
     @State private var showKYCView = false
+    @State private var showAttachWalletSheet = false
+    @State private var isWalletAttached = false
     @State private var selectedPaymentMethod: PaymentMethodPreview?
     @State private var cryptoPaymentToken: String?
 
@@ -70,6 +72,24 @@ struct AuthenticatedView: View {
                     .buttonStyle(PrimaryButtonStyle())
                     .disabled(shouldDisableButtons)
                     .opacity(shouldDisableButtons ? 0.5 : 1)
+
+                    if isWalletAttached {
+                        Text("Wallet Successfully Attached")
+                            .foregroundColor(.green)
+                            .frame(maxWidth: .infinity)
+                            .padding()
+                            .background {
+                                RoundedRectangle(cornerRadius: 8)
+                                    .foregroundColor(.green.opacity(0.1))
+                            }
+                    } else {
+                        Button("Attach Wallet Address") {
+                            showAttachWalletSheet = true
+                        }
+                        .buttonStyle(PrimaryButtonStyle())
+                        .disabled(shouldDisableButtons)
+                        .opacity(shouldDisableButtons ? 0.5 : 1)
+                    }
 
                     HStack(spacing: 4) {
                         Text("Customer ID:")
@@ -174,6 +194,9 @@ struct AuthenticatedView: View {
         }
         .navigationTitle("Authenticated")
         .navigationBarTitleDisplayMode(.inline)
+        .sheet(isPresented: $showAttachWalletSheet) {
+            AttachWalletAddressView(coordinator: coordinator, isWalletAttached: $isWalletAttached)
+        }
     }
 
     private func verifyIdentity() {

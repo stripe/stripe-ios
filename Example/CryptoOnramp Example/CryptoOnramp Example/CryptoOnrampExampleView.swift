@@ -85,6 +85,7 @@ struct CryptoOnrampExampleView: View {
             .navigationTitle("CryptoOnramp Example")
             .navigationBarTitleDisplayMode(.inline)
         }
+        .navigationViewStyle(.stack)
         .onAppear {
             guard coordinator == nil else {
                 return
