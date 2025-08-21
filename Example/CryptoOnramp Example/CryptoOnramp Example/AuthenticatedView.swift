@@ -314,10 +314,14 @@ struct AuthenticatedView: View {
     }
 
     private func refreshWalletsAndSelectIfNeeded() {
+        isLoading.wrappedValue = true
+        errorMessage = nil
+
         Task {
             do {
                 let response = try await APIClient.shared.fetchCustomerWallets(cryptoCustomerToken: customerId)
                 await MainActor.run {
+                    isLoading.wrappedValue = false
                     wallets = response.data
 
                     if let lastAddress = lastAttachedAddress, let lastNetwork = lastAttachedNetwork {
@@ -334,6 +338,7 @@ struct AuthenticatedView: View {
                 }
             } catch {
                 await MainActor.run {
+                    isLoading.wrappedValue = false
                     errorMessage = "Failed to fetch wallets: \(error.localizedDescription)"
                 }
             }
