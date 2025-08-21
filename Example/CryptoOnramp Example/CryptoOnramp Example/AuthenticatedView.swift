@@ -163,7 +163,16 @@ struct AuthenticatedView: View {
                                     .opacity(shouldDisableButtons ? 0.5 : 1)
                                 }
 
-                                if let onrampSessionResponse {
+                                if checkoutSucceeded {
+                                    Text("Checkout Succeeded!")
+                                        .foregroundColor(.green)
+                                        .frame(maxWidth: .infinity)
+                                        .padding()
+                                        .background {
+                                            RoundedRectangle(cornerRadius: 8)
+                                                .foregroundColor(.green.opacity(0.1))
+                                        }
+                                } else if let onrampSessionResponse {
                                     let details = onrampSessionResponse.transactionDetails
                                     Button("Check Out | \(details.sourceAmount) \(details.sourceCurrency.localizedUppercase)") {
                                         checkout(
