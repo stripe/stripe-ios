@@ -40,8 +40,9 @@ public protocol CryptoOnrampCoordinatorProtocol {
     /// - Parameter fullName: The full name of the user.
     /// - Parameter phone: The phone number of the user. Phone number must be in E.164 format (e.g., +12125551234), otherwise an error will be thrown.
     /// - Parameter country: The country code of the user.
-    /// - Returns: The crypto customer ID.
+    /// - Returns: The crypto customer ID, which can be discarded in favor of prompting the user for verification.
     /// Throws if `lookupConsumer` was not called prior to this, or an API error occurs.
+    @discardableResult
     func registerLinkUser(fullName: String?, phone: String, country: String) async throws -> String
 
     /// Presents the Link verification flow for an existing user.
@@ -171,6 +172,7 @@ public final class CryptoOnrampCoordinator: NSObject, CryptoOnrampCoordinatorPro
         return try await linkController.lookupConsumer(with: email)
     }
 
+    @discardableResult
     public func registerLinkUser(fullName: String?, phone: String, country: String) async throws -> String {
         do {
             try await linkController.registerLinkUser(

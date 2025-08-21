@@ -158,7 +158,7 @@ struct CryptoOnrampExampleView: View {
                 do {
                     let result = try await coordinator.presentForVerification(from: viewController)
                     switch result {
-                    case .completed(customerId: let customerId):
+                    case .completed(let customerId):
                         await MainActor.run {
                             authenticationCustomerId = customerId
 
