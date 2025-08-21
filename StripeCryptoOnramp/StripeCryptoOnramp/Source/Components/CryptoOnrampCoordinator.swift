@@ -102,14 +102,14 @@ protocol CryptoOnrampCoordinatorProtocol {
     ///   - onrampSessionId: The onramp session identifier.
     ///   - authenticationContext: The authentication context used to handle any required next actions (e.g., 3DS authentication).
     ///   - onrampSessionClientSecretProvider: An async closure that calls your backend to perform a checkout.
-    ///     Your backend should call Stripe's `/v1/crypto/onramp_sessions/:id/checkout` endpoint with the onramp session ID.
+    ///     Your backend should call Stripe's `/v1/crypto/onramp_sessions/:id/checkout` endpoint with the provided onramp session ID.
     ///     The closure should return the onramp session client secret on success, or throw an Error on failure.
     ///     This closure may be called twice: once initially, and once more after handling any required authentication.
     /// - Returns: A `CheckoutResult` indicating whether the checkout succeeded or failed.
     func performCheckout(
         onrampSessionId: String,
         authenticationContext: STPAuthenticationContext,
-        onrampSessionClientSecretProvider: @escaping () async throws -> String
+        onrampSessionClientSecretProvider: @escaping (_ onrampSessionId: String) async throws -> String
     ) async -> CheckoutResult
 }
 
@@ -364,7 +364,7 @@ public final class CryptoOnrampCoordinator: NSObject, CryptoOnrampCoordinatorPro
     public func performCheckout(
         onrampSessionId: String,
         authenticationContext: STPAuthenticationContext,
-        onrampSessionClientSecretProvider: @escaping () async throws -> String
+        onrampSessionClientSecretProvider: @escaping (_ onrampSessionId: String) async throws -> String
     ) async -> CheckoutResult {
         do {
             // First, attempt to check out and get the PaymentIntent
@@ -520,9 +520,9 @@ private extension CryptoOnrampCoordinator {
     /// Performs checkout and retrieves the resulting PaymentIntent.
     private func performCheckoutAndRetrievePaymentIntent(
         onrampSessionId: String,
-        onrampSessionClientSecretProvider: @escaping () async throws -> String
+        onrampSessionClientSecretProvider: @escaping (_ onrampSessionId: String) async throws -> String
     ) async throws -> STPPaymentIntent {
-        let onrampSessionClientSecret = try await onrampSessionClientSecretProvider()
+        let onrampSessionClientSecret = try await onrampSessionClientSecretProvider(onrampSessionId)
 
         // Get the onramp session to extract the payment_intent_client_secret
         let onrampSession = try await apiClient.getOnrampSession(
