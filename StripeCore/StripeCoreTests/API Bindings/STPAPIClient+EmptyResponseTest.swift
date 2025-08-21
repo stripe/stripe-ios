@@ -62,6 +62,24 @@ class STPAPIClient_EmptyResponseTest: XCTestCase {
         }
     }
 
+    /// 429 response code with empty response.
+    ///
+    /// Should result in failure.
+    func test429() throws {
+        let responseData = try JSONSerialization.data(withJSONObject: [:], options: [])
+        let response = HTTPURLResponse(url: URL(string: "http://foo.bar")!, statusCode: 429, httpVersion: nil, headerFields: nil)
+        let result: Result<EmptyResponse, Error> = STPAPIClient.decodeResponse(
+            data: responseData,
+            error: nil,
+            response: response
+        )
+
+        guard case .failure = result else {
+            XCTFail("The request should not have succeeded")
+            return
+        }
+    }
+
     /// Response is an empty response; Error is nil.
     ///
     /// Should result in a success.
