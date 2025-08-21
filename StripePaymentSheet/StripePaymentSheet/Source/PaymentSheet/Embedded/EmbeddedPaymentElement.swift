@@ -356,6 +356,8 @@ public final class EmbeddedPaymentElement {
 
     internal private(set) lazy var paymentHandler: STPPaymentHandler = STPPaymentHandler(apiClient: configuration.apiClient)
 
+    internal var passiveCaptchaChallenge: PassiveCaptchaChallenge?
+
     internal init(
         configuration: Configuration,
         loadResult: PaymentSheetLoader.LoadResult,
@@ -373,6 +375,9 @@ public final class EmbeddedPaymentElement {
             self.delegate?.embeddedPaymentElementDidUpdateHeight(embeddedPaymentElement: self)
         }
         self.lastUpdatedPaymentOption = paymentOption
+        if let passiveCaptcha = loadResult.elementsSession.passiveCaptcha {
+            self.passiveCaptchaChallenge = PassiveCaptchaChallenge(passiveCaptcha: passiveCaptcha)
+        }
     }
 }
 

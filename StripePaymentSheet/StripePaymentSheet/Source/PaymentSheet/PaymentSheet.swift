@@ -153,6 +153,9 @@ public class PaymentSheet {
         ) { result in
             switch result {
             case .success(let loadResult):
+                if let passiveCaptcha = loadResult.elementsSession.passiveCaptcha {
+                    self.passiveCaptchaChallenge = PassiveCaptchaChallenge(passiveCaptcha: passiveCaptcha)
+                }
                 let presentPaymentSheet: () -> Void = {
                     // Set the PaymentSheetViewController as the content of our bottom sheet
                     let paymentSheetVC: PaymentSheetViewControllerProtocol = {
@@ -265,6 +268,8 @@ public class PaymentSheet {
     }()
 
     let analyticsHelper: PaymentSheetAnalyticsHelper
+
+    private var passiveCaptchaChallenge: PassiveCaptchaChallenge?
 }
 
 extension PaymentSheet: PaymentSheetViewControllerDelegate {
@@ -276,38 +281,41 @@ extension PaymentSheet: PaymentSheetViewControllerDelegate {
     ) {
         let presentingViewController = paymentSheetViewController.presentingViewController
         let confirm: (@escaping (PaymentSheetResult, StripeCore.STPAnalyticsClient.DeferredIntentConfirmationType?) -> Void) -> Void = { completion in
-            PaymentSheet.confirm(
-                configuration: self.configuration,
-                authenticationContext: self.bottomSheetViewController,
-                intent: paymentSheetViewController.intent,
-                elementsSession: paymentSheetViewController.elementsSession,
-                paymentOption: paymentOption,
-                paymentHandler: self.paymentHandler,
-                integrationShape: .complete,
-                analyticsHelper: self.analyticsHelper
-            ) { result, deferredIntentConfirmationType in
-                if case let .failed(error) = result {
-                    self.mostRecentError = error
-                }
-
-                if case .link = paymentOption {
-                    // End special Link blur animation before calling completion
-                    switch result {
-                    case .canceled, .failed:
-                        self.bottomSheetViewController.removeBlurEffect(animated: true) {
-                            completion(result, deferredIntentConfirmationType)
-                        }
-                    case .completed:
-                        self.bottomSheetViewController.transitionSpinnerToComplete(animated: true) {
-                            completion(result, deferredIntentConfirmationType)
-                        }
+            Task { @MainActor in
+                let hcaptchaToken = await self.passiveCaptchaChallenge?.fetchToken()
+                PaymentSheet.confirm(
+                    configuration: self.configuration,
+                    authenticationContext: self.bottomSheetViewController,
+                    intent: paymentSheetViewController.intent,
+                    elementsSession: paymentSheetViewController.elementsSession,
+                    paymentOption: paymentOption,
+                    paymentHandler: self.paymentHandler,
+                    integrationShape: .complete,
+                    hcaptchaToken: hcaptchaToken,
+                    analyticsHelper: self.analyticsHelper
+                ) { result, deferredIntentConfirmationType in
+                    if case let .failed(error) = result {
+                        self.mostRecentError = error
                     }
-                } else {
-                    completion(result, deferredIntentConfirmationType)
+
+                    if case .link = paymentOption {
+                        // End special Link blur animation before calling completion
+                        switch result {
+                        case .canceled, .failed:
+                            self.bottomSheetViewController.removeBlurEffect(animated: true) {
+                                completion(result, deferredIntentConfirmationType)
+                            }
+                        case .completed:
+                            self.bottomSheetViewController.transitionSpinnerToComplete(animated: true) {
+                                completion(result, deferredIntentConfirmationType)
+                            }
+                        }
+                    } else {
+                        completion(result, deferredIntentConfirmationType)
+                    }
                 }
             }
         }
-
         if case .applePay = paymentOption {
             // Don't present the Apple Pay sheet on top of the Payment Sheet
             paymentSheetViewController.dismiss(animated: true) {
@@ -317,7 +325,7 @@ extension PaymentSheet: PaymentSheetViewControllerDelegate {
                         // We dismissed the Payment Sheet to show the Apple Pay sheet
                         // Bring it back if it didn't succeed
                         presentingViewController?.presentAsBottomSheet(self.bottomSheetViewController,
-                                                                  appearance: self.configuration.appearance)
+                                                                       appearance: self.configuration.appearance)
                     }
                     completion(result, deferredIntentConfirmationType)
                 }

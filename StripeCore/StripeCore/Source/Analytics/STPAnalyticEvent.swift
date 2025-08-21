@@ -302,5 +302,8 @@ import Foundation
     case shopPayWebviewCancelled = "mc_shoppay_webview_cancelled"
 
     // MARK: - Captcha
+    case passiveCaptchaInit = "elements.captcha.passive.init"
+    case passiveCaptchaSuccess = "elements.captcha.passive.success"
+    case passiveCaptchaError = "elements.captcha.passive.error"
     case passiveCaptchaTimeout = "elements.captcha.passive.timeout"
 }

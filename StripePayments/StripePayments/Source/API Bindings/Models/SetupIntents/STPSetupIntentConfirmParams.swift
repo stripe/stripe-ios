@@ -83,6 +83,8 @@ public class STPSetupIntentConfirmParams: NSObject, NSCopying, STPFormEncodable 
         }
     }
     private var _mandateData: STPMandateDataParams?
+    /// Radar options that may contain HCaptcha token
+    @objc @_spi(STP) public var radarOptions: STPRadarOptions?
 
     internal var _paymentMethodType: STPPaymentMethodType?
     @_spi(STP) public var paymentMethodType: STPPaymentMethodType? {
@@ -112,6 +114,8 @@ public class STPSetupIntentConfirmParams: NSObject, NSCopying, STPFormEncodable 
             "setAsDefaultPM = \(setAsDefaultPM ?? 0)",
             // Mandate
             "mandateData = \(String(describing: mandateData))",
+            // RadarOptions
+            "radarOptions = \(String(describing: radarOptions))",
             // Additional params set by app
             "additionalAPIParameters = \(additionalAPIParameters )",
         ]
@@ -133,6 +137,7 @@ public class STPSetupIntentConfirmParams: NSObject, NSCopying, STPFormEncodable 
         copy.returnURL = returnURL
         copy.useStripeSDK = useStripeSDK
         copy.mandateData = mandateData
+        copy.radarOptions = radarOptions
         copy.additionalAPIParameters = additionalAPIParameters
 
         return copy
@@ -152,6 +157,7 @@ public class STPSetupIntentConfirmParams: NSObject, NSCopying, STPFormEncodable 
             NSStringFromSelector(#selector(getter: returnURL)): "return_url",
             NSStringFromSelector(#selector(getter: useStripeSDK)): "use_stripe_sdk",
             NSStringFromSelector(#selector(getter: mandateData)): "mandate_data",
+            NSStringFromSelector(#selector(getter: radarOptions)): "radar_options",
         ]
     }
 

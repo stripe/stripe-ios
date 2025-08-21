@@ -151,6 +151,9 @@ public class STPPaymentIntentParams: NSObject {
     /// - seealso: STPConfirmPaymentMethodOptions
     @objc public var paymentMethodOptions: STPConfirmPaymentMethodOptions?
 
+    /// Radar options that may contain HCaptcha token
+    @objc @_spi(STP) public var radarOptions: STPRadarOptions?
+
     /// Shipping information.
     @objc public var shipping: STPPaymentIntentShippingDetailsParams?
 
@@ -210,6 +213,8 @@ public class STPPaymentIntentParams: NSObject {
             "mandateData = \(String(describing: mandateData))",
             // PaymentMethodOptions
             "paymentMethodOptions = @\(String(describing: paymentMethodOptions))",
+            // RadarOptions
+            "radarOptions = @\(String(describing: radarOptions))",
             // Additional params set by app
             "additionalAPIParameters = \(additionalAPIParameters)",
         ]
@@ -261,6 +266,7 @@ extension STPPaymentIntentParams: STPFormEncodable {
             NSStringFromSelector(#selector(getter: useStripeSDK)): "use_stripe_sdk",
             NSStringFromSelector(#selector(getter: mandateData)): "mandate_data",
             NSStringFromSelector(#selector(getter: paymentMethodOptions)): "payment_method_options",
+            NSStringFromSelector(#selector(getter: radarOptions)): "radar_options",
             NSStringFromSelector(#selector(getter: shipping)): "shipping",
         ]
     }
@@ -282,6 +288,7 @@ extension STPPaymentIntentParams: NSCopying {
         copy.receiptEmail = receiptEmail
         copy.savePaymentMethod = savePaymentMethod
         copy.setAsDefaultPM = setAsDefaultPM
+        copy.radarOptions = radarOptions
         copy.returnURL = returnURL
         copy.setupFutureUsage = setupFutureUsage
         copy.useStripeSDK = useStripeSDK
