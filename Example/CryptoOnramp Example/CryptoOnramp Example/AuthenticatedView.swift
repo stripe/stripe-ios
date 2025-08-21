@@ -30,7 +30,7 @@ struct AuthenticatedView: View {
     @State private var isWalletAttached = false
     @State private var selectedPaymentMethod: PaymentMethodDisplayData?
     @State private var cryptoPaymentToken: String?
-    @State private var lastOnrampSessionId: String?
+    @State private var onrampSessionId: String?
 
     @State private var wallets: [CustomerWalletsResponse.Wallet] = []
     @State private var selectedWalletId: String?
@@ -90,7 +90,7 @@ struct AuthenticatedView: View {
                     .disabled(shouldDisableButtons)
                     .opacity(shouldDisableButtons ? 0.5 : 1)
 
-                    HStack(spacing: 4) {
+                    HStack(alignment: .firstTextBaseline, spacing: 4) {
                         Text("Customer ID:")
                             .font(.footnote)
                             .bold()
@@ -128,17 +128,6 @@ struct AuthenticatedView: View {
                     ErrorMessageView(message: errorMessage)
                 }
 
-                if let lastOnrampSessionId {
-                    HStack(spacing: 4) {
-                        Text("Onramp Session:")
-                            .font(.footnote)
-                            .bold()
-                            .foregroundColor(.secondary)
-                        Text(lastOnrampSessionId)
-                            .font(.footnote.monospaced())
-                            .foregroundColor(.secondary)
-                    }
-                }
 
                 VStack(alignment: .leading, spacing: 12) {
                     Text("Check Out")
@@ -157,6 +146,8 @@ struct AuthenticatedView: View {
                                 createCryptoPaymentToken()
                             }
                             .buttonStyle(PrimaryButtonStyle())
+                            .disabled(shouldDisableButtons)
+                            .opacity(shouldDisableButtons ? 0.5 : 1)
 
                             if let cryptoPaymentToken {
                                 if isCreateOnrampAvailable {
@@ -168,7 +159,16 @@ struct AuthenticatedView: View {
                                     .opacity(shouldDisableButtons ? 0.5 : 1)
                                 }
 
-                                HStack(spacing: 4) {
+                                if let onrampSessionId {
+                                    Button("Create Onramp Session") {
+                                        checkout(withSessionId: onrampSessionId)
+                                    }
+                                    .buttonStyle(PrimaryButtonStyle())
+                                    .disabled(shouldDisableButtons)
+                                    .opacity(shouldDisableButtons ? 0.5 : 1)
+                                }
+
+                                HStack(alignment: .firstTextBaseline, spacing: 4) {
                                     Text("Crypto payment token:")
                                         .font(.footnote)
                                         .bold()
@@ -176,6 +176,18 @@ struct AuthenticatedView: View {
                                     Text(cryptoPaymentToken)
                                         .font(.footnote.monospaced())
                                         .foregroundColor(.secondary)
+                                }
+
+                                if let onrampSessionId {
+                                    HStack(alignment: .firstTextBaseline, spacing: 4) {
+                                        Text("Onramp Session:")
+                                            .font(.footnote)
+                                            .bold()
+                                            .foregroundColor(.secondary)
+                                        Text(onrampSessionId)
+                                            .font(.footnote.monospaced())
+                                            .foregroundColor(.secondary)
+                                    }
                                 }
                             } else {
                                 Divider()
@@ -415,7 +427,7 @@ struct AuthenticatedView: View {
                 let response = try await APIClient.shared.createOnrampSession(requestObject: request)
                 await MainActor.run {
                     isLoading.wrappedValue = false
-                    lastOnrampSessionId = response.id
+                    onrampSessionId = response.id
                 }
             } catch {
                 await MainActor.run {
@@ -425,6 +437,11 @@ struct AuthenticatedView: View {
             }
         }
     }
+
+    private func checkout(withSessionId sessionId: String) {
+
+    }
+
 }
 
 #Preview {
