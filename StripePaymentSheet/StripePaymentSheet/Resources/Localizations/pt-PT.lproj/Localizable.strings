@@ -60,7 +60,7 @@
 
 "By continuing, you agree to authorize payments pursuant to <terms>these terms</terms>." = "Ao continuar, concorda em autorizar pagamentos de acordo com <terms>estas condições</terms>.";
 
-"By continuing, you agree to save your information for future purchases with %@ and <link>Link</link>. You also agree to Link's <terms>Terms</terms> and <privacy>Privacy</privacy>." = "Ao continuar, concorda guardar as suas informações para compras futuras com %@ e <link>Link</link>Concorda também com as <terms>Condições</terms> e a <privacy>Política de Privacidade</privacy> da Link.";
+"By continuing, you agree to save your information for future purchases with %@ and <link>Link</link> according to Link <terms>terms</terms> and <privacy>privacy</privacy>." = "Ao continuar, concorda guardar as suas informações para compras futuras com %@ e <link>Link</link> de acordo com as <terms>condições</terms> e a <privacy>privacidade</privacy> da Link.";
 
 "By continuing, you agree to save your information for future purchases with %@." = "Ao continuar, concorda guardar as suas informações para compras futuras com %@.";
 
@@ -83,6 +83,8 @@
 "By providing your phone number, you agree to create a Link account and save your payment info to Link, according to the Link <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Ao fornecer o seu número de telefone, concorda em criar uma conta Link e guardar as suas informações de pagamento no Link, de acordo com as <terms>condições</terms> e a <privacy>política de privacidade</privacy> do Link.";
 
 "By saving your bank account for %@ you agree to authorize payments pursuant to <terms>these terms</terms>." = "Ao guardar a sua conta bancária para %@, concorda em autorizar pagamentos de acordo com <terms>estas condições</terms>.";
+
+"By submitting your order to %@ you agree to authorize payments pursuant to <terms>these terms</terms>." = "Ao submeter o seu pedido a %@, concorda em autorizar pagamentos de acordo com <terms>estas condições</terms>.";
 
 "CPF/CPNJ" = "CPF/CPNJ";
 

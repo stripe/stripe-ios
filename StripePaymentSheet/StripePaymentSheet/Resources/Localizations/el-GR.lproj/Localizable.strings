@@ -60,7 +60,7 @@
 
 "By continuing, you agree to authorize payments pursuant to <terms>these terms</terms>." = "Εάν συνεχίσετε, συμφωνείτε να εξουσιοδοτείτε πληρωμές με βάση <terms>αυτούς τους όρους</terms>.";
 
-"By continuing, you agree to save your information for future purchases with %@ and <link>Link</link>. You also agree to Link's <terms>Terms</terms> and <privacy>Privacy</privacy>." = "Συνεχίζοντας, συμφωνείτε να αποθηκεύσετε τις πληροφορίες σας για μελλοντικές αγορές με το %@ και <link>Link</link>. Συμφωνείτε επίσης με τους <terms>Όρους</terms> και το <privacy>Απόρρητο</privacy> του Link.";
+"By continuing, you agree to save your information for future purchases with %@ and <link>Link</link> according to Link <terms>terms</terms> and <privacy>privacy</privacy>." = "Συνεχίζοντας, συμφωνείτε να αποθηκεύσετε τις πληροφορίες σας για μελλοντικές αγορές με το %@ και <link>Link</link> σύμφωνα με τους <terms>όρους</terms> και το <privacy>απόρρητο</privacy> του Link.";
 
 "By continuing, you agree to save your information for future purchases with %@." = "Συνεχίζοντας, συμφωνείτε να αποθηκεύσετε τις πληροφορίες σας για μελλοντικές αγορές με το %@.";
 
@@ -83,6 +83,8 @@
 "By providing your phone number, you agree to create a Link account and save your payment info to Link, according to the Link <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Αν παράσχετε τον αριθμό τηλεφώνου σας, συμφωνείτε να δημιουργηθεί ένας λογαριασμός στο Link και να αποθηκευτούν τα στοιχεία πληρωμής σας στο Link, σύμφωνα με τους <terms>Όρους</terms> και την <privacy>Πολιτική απορρήτου</privacy> του Link.";
 
 "By saving your bank account for %@ you agree to authorize payments pursuant to <terms>these terms</terms>." = "Αποθηκεύοντας τον τραπεζικό λογαριασμό σας για την %@, συμφωνείτε να εξουσιοδοτείτε πληρωμές σύμφωνα με <terms>αυτούς τους όρους</terms>.";
+
+"By submitting your order to %@ you agree to authorize payments pursuant to <terms>these terms</terms>." = "Υποβάλλοντας την παραγγελία σας σε %@, συμφωνείτε στην εξουσιοδότηση πληρωμών σύμφωνα με <terms>αυτούς τους όρους</terms>.";
 
 "CPF/CPNJ" = "CPF/CPNJ";
 

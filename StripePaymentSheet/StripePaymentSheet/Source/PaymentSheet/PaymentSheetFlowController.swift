@@ -219,8 +219,8 @@ extension PaymentSheet {
         @Published public private(set) var paymentOption: PaymentOptionDisplayData?
 
         // MARK: - Private properties
-        var intent: Intent { viewController.intent }
-        var elementsSession: STPElementsSession { viewController.elementsSession }
+        var intent: Intent { viewController.loadResult.intent }
+        var elementsSession: STPElementsSession { viewController.loadResult.elementsSession }
         lazy var paymentHandler: STPPaymentHandler = { STPPaymentHandler(apiClient: configuration.apiClient) }()
         var viewController: FlowControllerViewControllerProtocol
 
@@ -636,9 +636,16 @@ extension PaymentSheet {
 
         func updateForWalletButtonsView() {
             // Recreate the view controller
+            // Use the original load result, but w/ updated saved PMs to avoid e.g. deleting PMs, then having this method be called and showing the deleted PMs again.
+            let updatedLoadResult = PaymentSheetLoader.LoadResult(
+                intent: viewController.loadResult.intent,
+                elementsSession: viewController.loadResult.elementsSession,
+                savedPaymentMethods: viewController.savedPaymentMethods, // Note: not using load result!
+                paymentMethodTypes: viewController.loadResult.paymentMethodTypes
+            )
             self.viewController = Self.makeViewController(
                 configuration: self.configuration,
-                loadResult: self.viewController.loadResult,
+                loadResult: updatedLoadResult,
                 analyticsHelper: analyticsHelper,
                 walletButtonsShownExternally: self.walletButtonsShownExternally,
                 previousLinkConfirmOption: self.viewController.linkConfirmOption,
@@ -779,11 +786,12 @@ class AuthenticationContext: NSObject, PaymentSheetAuthenticationContext {
 /// All the things FlowController needs from its UIViewController.
 internal protocol FlowControllerViewControllerProtocol: BottomSheetContentViewController {
     var error: Error? { get }
-    var intent: Intent { get }
-    var elementsSession: STPElementsSession { get }
+    /// The load result that we used to initialize.
+    var loadResult: PaymentSheetLoader.LoadResult { get }
+    /// The up to date list of saved payment methods.
+    var savedPaymentMethods: [STPPaymentMethod] { get }
     var linkConfirmOption: PaymentSheet.LinkConfirmOption? { get set }
     var selectedPaymentOption: PaymentOption? { get }
-    var loadResult: PaymentSheetLoader.LoadResult { get }
     /// The type of the Stripe payment method that's currently selected in the UI for new and saved PMs. Returns nil Apple Pay and .stripe(.link) for Link.
     /// Note that, unlike selectedPaymentOption, this is non-nil even if the PM form is invalid.
     var selectedPaymentMethodType: PaymentSheet.PaymentMethodType? { get }

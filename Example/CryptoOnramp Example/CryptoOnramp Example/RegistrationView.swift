@@ -113,10 +113,14 @@ struct RegistrationView: View {
         Task {
             do {
                 let customerId = try await coordinator.registerLinkUser(
+                    email: email,
                     fullName: fullName.isEmpty ? nil : fullName,
                     phone: phoneNumber,
                     country: country
                 )
+
+                // Authenticate with the demo merchant backend as well.
+                _ = try await APIClient.shared.authenticateUser(with: email)
 
                 await MainActor.run {
                     isLoading.wrappedValue = false

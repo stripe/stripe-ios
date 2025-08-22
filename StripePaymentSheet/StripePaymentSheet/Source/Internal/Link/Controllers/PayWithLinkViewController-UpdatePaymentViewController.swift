@@ -128,7 +128,7 @@ extension PayWithLinkViewController {
             stackView.isLayoutMarginsRelativeArrangement = true
             stackView.directionalLayoutMargins = LinkUI.contentMargins
             stackView.translatesAutoresizingMaskIntoConstraints = false
-            contentView.addAndPinSubview(stackView, insets: .insets(bottom: 35))
+            contentView.addAndPinSubview(stackView, insets: .insets(bottom: LinkUI.bottomInset))
 
             if !paymentMethod.isDefault || isBillingDetailsUpdateFlow {
                 thisIsYourDefaultLabel.isHidden = true

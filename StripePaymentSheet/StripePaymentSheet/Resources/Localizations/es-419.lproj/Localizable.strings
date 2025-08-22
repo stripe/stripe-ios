@@ -60,7 +60,7 @@
 
 "By continuing, you agree to authorize payments pursuant to <terms>these terms</terms>." = "Al continuar, aceptas autorizar pagos conforme a <terms>estas condiciones</terms>.";
 
-"By continuing, you agree to save your information for future purchases with %@ and <link>Link</link>. You also agree to Link's <terms>Terms</terms> and <privacy>Privacy</privacy>." = "Al continuar, aceptas guardar tu información para futuras compras con %@ y <link>Link</link>. También aceptas las <terms>Condiciones</terms> y la <privacy>Política de privacidad</privacy> de Link.";
+"By continuing, you agree to save your information for future purchases with %@ and <link>Link</link> according to Link <terms>terms</terms> and <privacy>privacy</privacy>." = "Al continuar, aceptas guardar tu información para futuras compras con %@ y <link>Link</link> de acuerdo con las <terms>Condiciones</terms> y <privacy>privacidad</privacy> de Link.";
 
 "By continuing, you agree to save your information for future purchases with %@." = "Al continuar, aceptas guardar tu información para futuras compras con %@.";
 
@@ -83,6 +83,8 @@
 "By providing your phone number, you agree to create a Link account and save your payment info to Link, according to the Link <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Al proporcionar tu número de teléfono, aceptas crear una cuenta de Link y guardar tus datos de pago en Link, conforme a las <terms>Condiciones</terms> y la <privacy>Política de privacidad</privacy> de Link.";
 
 "By saving your bank account for %@ you agree to authorize payments pursuant to <terms>these terms</terms>." = "Al guardar tu cuenta bancaria para %@, aceptas autorizar pagos conforme a estas <terms>condiciones</terms>.";
+
+"By submitting your order to %@ you agree to authorize payments pursuant to <terms>these terms</terms>." = "Al enviarle tu pedido a %@, aceptas autorizar pagos conforme a <terms>estas Condiciones</terms>.";
 
 "CPF/CPNJ" = "CPF/CPNJ";
 
