@@ -220,24 +220,22 @@ extension PayWithNativeLinkController: PayWithLinkViewControllerDelegate {
         with paymentOption: PaymentOption,
         completion: @escaping (PaymentSheetResult, STPAnalyticsClient.DeferredIntentConfirmationType?) -> Void
     ) {
-        Task { @MainActor in
-            PaymentSheet.confirm(
-                configuration: configuration,
-                authenticationContext: payWithLinkViewController,
-                intent: intent,
-                elementsSession: elementsSession,
-                paymentOption: paymentOption,
-                paymentHandler: paymentHandler,
-                hcaptchaToken: hcaptchaToken,
-                analyticsHelper: analyticsHelper,
-                completion: { result, confirmationType in
-                    if self.logPayment {
-                        self.analyticsHelper.logPayment(paymentOption: paymentOption, result: result, deferredIntentConfirmationType: confirmationType)
-                    }
-                    completion(result, confirmationType)
+        PaymentSheet.confirm(
+            configuration: configuration,
+            authenticationContext: payWithLinkViewController,
+            intent: intent,
+            elementsSession: elementsSession,
+            paymentOption: paymentOption,
+            paymentHandler: paymentHandler,
+            hcaptchaToken: hcaptchaToken,
+            analyticsHelper: analyticsHelper,
+            completion: { result, confirmationType in
+                if self.logPayment {
+                    self.analyticsHelper.logPayment(paymentOption: paymentOption, result: result, deferredIntentConfirmationType: confirmationType)
                 }
-            )
-        }
+                completion(result, confirmationType)
+            }
+        )
     }
 
     func payWithLinkViewControllerDidCancel(_ payWithLinkViewController: PayWithLinkViewController, shouldReturnToPaymentSheet: Bool) {

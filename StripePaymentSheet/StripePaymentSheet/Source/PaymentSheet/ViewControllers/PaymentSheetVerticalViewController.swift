@@ -12,7 +12,6 @@
 import UIKit
 
 class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewControllerProtocol, PaymentSheetViewControllerProtocol {
-
     enum Error: Swift.Error {
         case missingPaymentMethodListViewController
         case missingContentViewController
@@ -526,14 +525,14 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
 
     private func presentLinkInFlowController() {
         Task { @MainActor in
-            let token = await passiveCaptchaChallenge?.fetchToken()
+            let hcaptchaToken = await passiveCaptchaChallenge?.fetchToken()
             presentNativeLink(
                 selectedPaymentDetailsID: nil,
                 configuration: configuration,
                 intent: intent,
                 elementsSession: elementsSession,
                 analyticsHelper: analyticsHelper,
-                hcaptchaToken: token,
+                hcaptchaToken: hcaptchaToken,
                 callback: { [weak self] confirmOption, _ in
                     guard let self else { return }
                     self.linkConfirmOption = confirmOption

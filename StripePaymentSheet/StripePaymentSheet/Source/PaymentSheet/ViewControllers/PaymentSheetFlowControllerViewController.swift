@@ -293,14 +293,14 @@ class PaymentSheetFlowControllerViewController: UIViewController, FlowController
 
     private func presentLink() {
         Task { @MainActor in
-            let token = await passiveCaptchaChallenge?.fetchToken()
+            let hcaptchaToken = await passiveCaptchaChallenge?.fetchToken()
             presentNativeLink(
                 selectedPaymentDetailsID: selectedPaymentOption?.currentLinkPaymentMethod,
                 configuration: configuration,
                 intent: intent,
                 elementsSession: elementsSession,
                 analyticsHelper: analyticsHelper,
-                hcaptchaToken: token
+                hcaptchaToken: hcaptchaToken
             ) { [weak self] confirmOption, _ in
                 guard let self else { return }
                 self.linkConfirmOption = confirmOption
