@@ -180,6 +180,7 @@ extension LinkSettings {
             linkConsumerIncentive: nil,
             linkDefaultOptIn: nil,
             linkEnableDisplayableDefaultValuesInECE: nil,
+            linkShowPreferDebitCardHint: nil,
             allResponseFields: [:]
         )
     }

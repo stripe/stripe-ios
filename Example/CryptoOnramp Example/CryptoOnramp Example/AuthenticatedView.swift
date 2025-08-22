@@ -26,7 +26,10 @@ struct AuthenticatedView: View {
     @State private var errorMessage: String?
     @State private var isIdentityVerificationComplete = false
     @State private var showKYCView = false
-    @State private var selectedPaymentMethod: PaymentMethodPreview?
+    @State private var showAttachWalletSheet = false
+    @State private var isWalletAttached = false
+    @State private var selectedPaymentMethod: PaymentMethodDisplayData?
+    @State private var cryptoPaymentToken: String?
 
     @Environment(\.isLoading) private var isLoading
 
@@ -70,9 +73,25 @@ struct AuthenticatedView: View {
                     .disabled(shouldDisableButtons)
                     .opacity(shouldDisableButtons ? 0.5 : 1)
 
-                    HStack(spacing: 4) {
-                        Spacer()
+                    if isWalletAttached {
+                        Text("Wallet Successfully Attached")
+                            .foregroundColor(.green)
+                            .frame(maxWidth: .infinity)
+                            .padding()
+                            .background {
+                                RoundedRectangle(cornerRadius: 8)
+                                    .foregroundColor(.green.opacity(0.1))
+                            }
+                    } else {
+                        Button("Attach Wallet Address") {
+                            showAttachWalletSheet = true
+                        }
+                        .buttonStyle(PrimaryButtonStyle())
+                        .disabled(shouldDisableButtons)
+                        .opacity(shouldDisableButtons ? 0.5 : 1)
+                    }
 
+                    HStack(spacing: 4) {
                         Text("Customer ID:")
                             .font(.footnote)
                             .bold()
@@ -80,8 +99,6 @@ struct AuthenticatedView: View {
                         Text(customerId)
                             .font(.footnote.monospaced())
                             .foregroundColor(.secondary)
-
-                        Spacer()
                     }
                 }
                 .padding()
@@ -98,8 +115,40 @@ struct AuthenticatedView: View {
                         .foregroundColor(.secondary)
 
                     if let selectedPaymentMethod {
-                        PaymentMethodCardView(preview: selectedPaymentMethod)
-                    } else {
+                        VStack(spacing: 12) {
+                            HStack {
+                                Spacer()
+                                PaymentMethodCardView(preview: selectedPaymentMethod)
+                                Spacer()
+                            }
+
+                            Button("Create crypto payment token") {
+                                createCryptoPaymentToken()
+                            }
+                            .buttonStyle(PrimaryButtonStyle())
+
+                            if let cryptoPaymentToken {
+                                HStack(spacing: 4) {
+                                    Text("Crypto payment token:")
+                                        .font(.footnote)
+                                        .bold()
+                                        .foregroundColor(.secondary)
+                                    Text(cryptoPaymentToken)
+                                        .font(.footnote.monospaced())
+                                        .foregroundColor(.secondary)
+                                }
+                            } else {
+                                Divider()
+
+                                Text("Change Payment Method")
+                                    .font(.subheadline)
+                                    .foregroundColor(.secondary)
+                                    .frame(maxWidth: .infinity, alignment: .leading)
+                            }
+                        }
+                    }
+
+                    if cryptoPaymentToken == nil {
                         VStack(spacing: 8) {
                             // Note: Apple Pay does not require iOS 16, but the native SwiftUI
                             // `PayWithApplePayButton` does, which we're using in this example.
@@ -113,15 +162,17 @@ struct AuthenticatedView: View {
                                 .cornerRadius(8)
                                 .disabled(shouldDisableButtons)
                                 .opacity(shouldDisableButtons ? 0.5 : 1)
-
-                                Text("or")
-                                    .font(.footnote)
-                                    .bold()
-                                    .foregroundColor(.secondary)
                             }
 
-                            Button("Select Payment Method") {
-                                presentPaymentMethodSelector()
+                            Button("Debit or Credit Card") {
+                                presentPaymentMethodSelector(for: .card)
+                            }
+                            .buttonStyle(PrimaryButtonStyle())
+                            .disabled(shouldDisableButtons)
+                            .opacity(shouldDisableButtons ? 0.5 : 1)
+
+                            Button("Bank Account") {
+                                presentPaymentMethodSelector(for: .bankAccount)
                             }
                             .buttonStyle(PrimaryButtonStyle())
                             .disabled(shouldDisableButtons)
@@ -143,6 +194,9 @@ struct AuthenticatedView: View {
         }
         .navigationTitle("Authenticated")
         .navigationBarTitleDisplayMode(.inline)
+        .sheet(isPresented: $showAttachWalletSheet) {
+            AttachWalletAddressView(coordinator: coordinator, isWalletAttached: $isWalletAttached)
+        }
     }
 
     private func verifyIdentity() {
@@ -156,7 +210,7 @@ struct AuthenticatedView: View {
 
         Task {
             do {
-                let result = try await coordinator.promptForIdentityVerification(from: viewController)
+                let result = try await coordinator.verifyIdentity(from: viewController)
                 await MainActor.run {
                     isLoading.wrappedValue = false
                     switch result {
@@ -178,7 +232,7 @@ struct AuthenticatedView: View {
         }
     }
 
-    private func presentPaymentMethodSelector() {
+    private func presentPaymentMethodSelector(for type: PaymentMethodType) {
         guard let viewController = UIApplication.shared.findTopNavigationController() else {
             errorMessage = "Unable to find view controller to present from."
             return
@@ -188,10 +242,17 @@ struct AuthenticatedView: View {
         errorMessage = nil
 
         Task {
-            let preview = await coordinator.collectPaymentMethod(from: viewController)
-            await MainActor.run {
-                isLoading.wrappedValue = false
-                selectedPaymentMethod = preview
+            do {
+                let preview = try await coordinator.collectPaymentMethod(type: type, from: viewController)
+                await MainActor.run {
+                    isLoading.wrappedValue = false
+                    selectedPaymentMethod = preview
+                }
+            } catch {
+                await MainActor.run {
+                    isLoading.wrappedValue = false
+                    errorMessage = "Payment method selection failed: \(error.localizedDescription)"
+                }
             }
         }
     }
@@ -212,27 +273,35 @@ struct AuthenticatedView: View {
 
         Task {
             do {
-                let result = try await coordinator.presentApplePay(using: request, from: viewController)
+                let result = try await coordinator.collectPaymentMethod(type: .applePay(paymentRequest: request), from: viewController)
                 await MainActor.run {
                     isLoading.wrappedValue = false
-
-                    switch result {
-                    case .success:
-                        self.selectedPaymentMethod = PaymentMethodPreview(
-                            icon: UIImage(systemName: "apple.logo")?.withRenderingMode(.alwaysTemplate) ?? .init(),
-                            label: "Apple Pay",
-                            sublabel: nil
-                        )
-                    case .canceled:
-                        break
-                    @unknown default:
-                        break
-                    }
+                    selectedPaymentMethod = result
                 }
             } catch {
                 await MainActor.run {
                     isLoading.wrappedValue = false
                     errorMessage = "Apple Pay failed: \(error.localizedDescription)"
+                }
+            }
+        }
+    }
+
+    private func createCryptoPaymentToken() {
+        isLoading.wrappedValue = true
+        errorMessage = nil
+
+        Task {
+            do {
+                let token = try await coordinator.createCryptoPaymentToken()
+                await MainActor.run {
+                    isLoading.wrappedValue = false
+                    cryptoPaymentToken = token
+                }
+            } catch {
+                await MainActor.run {
+                    isLoading.wrappedValue = false
+                    errorMessage = "Create crypto payment token failed: \(error.localizedDescription)"
                 }
             }
         }

@@ -55,6 +55,7 @@ import UIKit
     private let intent: Intent
     private let configuration: PaymentElementConfiguration
     private let appearance: LinkAppearance?
+    private let linkConfiguration: LinkConfiguration?
     private let analyticsHelper: PaymentSheetAnalyticsHelper
     private let requestSurface: LinkRequestSurface
 
@@ -104,6 +105,7 @@ import UIKit
         intent: Intent,
         configuration: PaymentElementConfiguration,
         appearance: LinkAppearance?,
+        linkConfiguration: LinkConfiguration?,
         analyticsHelper: PaymentSheetAnalyticsHelper,
         requestSurface: LinkRequestSurface
     ) {
@@ -113,6 +115,7 @@ import UIKit
         self.intent = intent
         self.configuration = configuration
         self.appearance = appearance
+        self.linkConfiguration = linkConfiguration
         self.analyticsHelper = analyticsHelper
         self.requestSurface = requestSurface
 
@@ -147,12 +150,14 @@ import UIKit
     /// - Parameter apiClient: The `STPAPIClient` instance for this controller. Defaults to `.shared`.
     /// - Parameter mode: The mode in which the Link payment method controller should operate, either `payment` or `setup`.
     /// - Parameter appearance: Link UI-specific appearance overrides. If not specified, `PaymentSheet.Appearance` defaults are used.
+    /// - Parameter linkConfiguration: Configuration for Link behavior and content. If not specified, default behavior is used.
     /// - Parameter requestSurface: The request surface to use for API calls. Defaults to `ios_payment_element`.
     /// - Parameter completion: A closure that is called with the result of the creation. It returns a `LinkController` if successful, or an error if the creation failed.
     @_spi(STP) public static func create(
         apiClient: STPAPIClient = .shared,
         mode: LinkController.Mode,
         appearance: LinkAppearance? = nil,
+        linkConfiguration: LinkConfiguration? = nil,
         requestSurface: LinkRequestSurface = .default,
         completion: @escaping (Result<LinkController, Error>) -> Void
     ) {
@@ -182,6 +187,7 @@ import UIKit
                     intent: loadResult.intent,
                     configuration: configuration,
                     appearance: appearance,
+                    linkConfiguration: linkConfiguration,
                     analyticsHelper: analyticsHelper,
                     requestSurface: requestSurface
                 )
@@ -304,7 +310,9 @@ import UIKit
             elementsSession: elementsSession,
             analyticsHelper: analyticsHelper,
             supportedPaymentMethodTypes: supportedPaymentMethodTypes,
-            linkAppearance: appearance
+            linkAppearance: appearance,
+            linkConfiguration: linkConfiguration,
+            shouldShowSecondaryCta: false
         ) { [weak self] confirmOption, shouldClearSelection in
             guard let confirmOption else {
                 if shouldClearSelection {
@@ -321,8 +329,13 @@ import UIKit
 
     /// Creates a [STPPaymentMethod] from the selected Link payment method preview.
     ///
-    /// - Parameter completion: A closure that is called with the result of the payment method creation. It returns a `STPPaymentMethod` if successful, or an error if the payment method could not be created.
-    @_spi(STP) public func createPaymentMethod(completion: @escaping (Result<STPPaymentMethod, Error>) -> Void) {
+    /// - Parameters:
+    ///   - overridePublishableKey: Optional publishable key to use for the API request.
+    ///   - completion: A closure that is called with the result of the payment method creation. It returns a `STPPaymentMethod` if successful, or an error if the payment method could not be created.
+    @_spi(STP) public func createPaymentMethod(
+        overridePublishableKey: String? = nil,
+        completion: @escaping (Result<STPPaymentMethod, Error>) -> Void
+    ) {
         guard let selectedPaymentDetails else {
             completion(.failure(IntegrationError.noPaymentMethodSelected))
             return
@@ -339,6 +352,7 @@ import UIKit
             createPaymentMethodInPassthroughMode(
                 paymentDetails: selectedPaymentDetails,
                 consumerSessionClientSecret: consumerSessionClientSecret,
+                overridePublishableKey: overridePublishableKey,
                 clientAttributionMetadata: clientAttributionMetadata,
                 completion: completion
             )
@@ -346,6 +360,7 @@ import UIKit
             createPaymentMethodInPaymentMethodMode(
                 paymentDetails: selectedPaymentDetails,
                 linkAccount: linkAccount,
+                overridePublishableKey: overridePublishableKey,
                 clientAttributionMetadata: clientAttributionMetadata,
                 completion: completion
             )
@@ -357,6 +372,7 @@ import UIKit
     private func createPaymentMethodInPassthroughMode(
         paymentDetails: ConsumerPaymentDetails,
         consumerSessionClientSecret: String,
+        overridePublishableKey: String?,
         clientAttributionMetadata: STPClientAttributionMetadata,
         completion: @escaping (Result<STPPaymentMethod, Error>) -> Void
     ) {
@@ -365,6 +381,7 @@ import UIKit
             for: consumerSessionClientSecret,
             id: paymentDetails.stripeID,
             consumerAccountPublishableKey: nil,
+            overridePublishableKey: overridePublishableKey,
             allowRedisplay: nil,
             cvc: paymentDetails.cvc,
             expectedPaymentMethodType: nil,
@@ -383,6 +400,7 @@ import UIKit
     private func createPaymentMethodInPaymentMethodMode(
         paymentDetails: ConsumerPaymentDetails,
         linkAccount: PaymentSheetLinkAccount,
+        overridePublishableKey: String?,
         clientAttributionMetadata: STPClientAttributionMetadata,
         completion: @escaping (Result<STPPaymentMethod, Error>) -> Void
     ) {
@@ -396,9 +414,10 @@ import UIKit
                     allowRedisplay: nil
                 )!
                 paymentMethodParams.clientAttributionMetadata = clientAttributionMetadata
+
                 let paymentMethod = try await apiClient.createPaymentMethod(
                     with: paymentMethodParams,
-                    additionalPaymentUserAgentValues: []
+                    overridePublishableKey: overridePublishableKey
                 )
                 completion(.success(paymentMethod))
             } catch {
@@ -467,16 +486,18 @@ import UIKit
     /// - Parameter apiClient: The `STPAPIClient` instance for this controller. Defaults to `.shared`.
     /// - Parameter mode: The mode in which the Link payment method controller should operate, either `payment` or `setup`.
     /// - Parameter appearance: Link UI-specific appearance overrides. If not specified, `PaymentSheet.Configuration` defaults are used.
+    /// - Parameter linkConfiguration: Configuration for Link behavior and content. If not specified, default behavior is used.
     /// - Parameter requestSurface: The request surface to use for API calls. Defaults to `ios_payment_element`.
     /// - Returns: A `LinkController` if successful, or throws an error if the creation failed.
     static func create(
         apiClient: STPAPIClient = .shared,
         mode: LinkController.Mode,
         appearance: LinkAppearance? = nil,
+        linkConfiguration: LinkConfiguration? = nil,
         requestSurface: LinkRequestSurface = .default
     ) async throws -> LinkController {
         return try await withCheckedThrowingContinuation { continuation in
-            create(apiClient: apiClient, mode: mode, appearance: appearance, requestSurface: requestSurface) { result in
+            create(apiClient: apiClient, mode: mode, appearance: appearance, linkConfiguration: linkConfiguration, requestSurface: requestSurface) { result in
                 switch result {
                 case .success(let controller):
                     continuation.resume(returning: controller)
@@ -539,7 +560,7 @@ import UIKit
     /// `lookupConsumer` must be called before this.
     ///
     /// - Parameter viewController: The view controller from which to present the verification flow.
-    /// - Returns: A `VerificationResult` indicating whether verification was completed or canceled.
+    /// - Returns: A `AuthenticationResult` indicating whether verification was completed or canceled.
     /// Throws if `lookupConsumer` was not called prior to this, or an API error occurs.
     func presentForVerification(from viewController: UIViewController) async throws -> VerificationResult {
         try await withCheckedThrowingContinuation { continuation in
@@ -559,7 +580,7 @@ import UIKit
     /// - Parameter presentingViewController: The view controller from which to present the Link sheet.
     /// - Parameter email: The email address to pre-fill in the Link sheet. If `nil`, the email field will be empty.
     /// - Parameter supportedPaymentMethodTypes: The payment method types to support in the Link sheet. Defaults to all available types.
-    /// - Returns: A `PaymentMethodPreview` if the user selected a payment method, or `nil` otherwise.
+    /// - Returns: A `PaymentMethodDisplayData` if the user selected a payment method, or `nil` otherwise.
     func collectPaymentMethod(from presentingViewController: UIViewController, with email: String?, supportedPaymentMethodTypes: [LinkPaymentMethodType] = LinkPaymentMethodType.allCases) async -> LinkController.PaymentMethodPreview? {
         return await withCheckedContinuation { continuation in
             DispatchQueue.main.async {
@@ -572,10 +593,11 @@ import UIKit
     }
 
     /// Creates a [STPPaymentMethod] from the selected Link payment method preview.
+    /// - Parameter overridePublishableKey: Optional publishable key to use for the API request.
     /// - Returns: A `STPPaymentMethod` if successful, or throws an error if the payment method could not be created.
-    func createPaymentMethod() async throws -> STPPaymentMethod {
+    func createPaymentMethod(overridePublishableKey: String? = nil) async throws -> STPPaymentMethod {
         return try await withCheckedThrowingContinuation { continuation in
-            createPaymentMethod { result in
+            createPaymentMethod(overridePublishableKey: overridePublishableKey) { result in
                 switch result {
                 case .success(let paymentMethod):
                     continuation.resume(returning: paymentMethod)

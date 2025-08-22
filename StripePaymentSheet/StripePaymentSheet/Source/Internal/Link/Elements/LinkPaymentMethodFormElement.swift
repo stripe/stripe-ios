@@ -265,6 +265,7 @@ final class LinkPaymentMethodFormElement: Element {
 
         return AddressSectionElement(
             title: String.Localized.billing_address_lowercase,
+            countries: isBillingDetailsUpdateFlow ? configuration.billingDetailsCollectionConfiguration.allowedCountriesArray : nil,
             defaults: defaultBillingAddress,
             collectionMode: configuration.billingDetailsCollectionConfiguration.address == .full
                 ? .all()

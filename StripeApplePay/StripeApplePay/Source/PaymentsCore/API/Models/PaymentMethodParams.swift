@@ -29,7 +29,7 @@ extension StripeAPI {
         }()
 
         /// Contains metadata with identifiers for the session and information about the integration
-        @_spi(STP) public var clientAttributionMetadata: STPClientAttributionMetadata = STPClientAttributionMetadata()
+        @_spi(STP) public var clientAttributionMetadata: STPClientAttributionMetadata?
 
         /// :nodoc:
         @_spi(STP) public struct Card: UnknownFieldsEncodable {

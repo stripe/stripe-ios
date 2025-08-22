@@ -38,40 +38,30 @@ final class InstantDebitsPaymentMethodElement: ContainerElement {
     private let theme: ElementsAppearance
     var presentingViewControllerDelegate: PresentingViewControllerDelegate?
     private let incentive: PaymentMethodIncentive?
+    private let sellerName: String?
 
     var delegate: ElementDelegate?
     var view: UIView {
         return formElement.view
     }
     var mandateString: NSMutableAttributedString? {
-        var string: String?
-        if linkedBank != nil {
-            string = String.Localized.bank_continue_mandate_text
-        } else {
-            string = nil
-        }
-        if let string {
-            let links = [
-                "terms": URL(string: "https://link.com/terms/ach-authorization")!,
-            ]
-            let mutableString = STPStringUtils.applyLinksToString(
-                template: string,
-                links: links
-            )
-            let style = NSMutableParagraphStyle()
-            style.alignment = .center
-            mutableString.addAttributes(
-                [
-                    .paragraphStyle: style,
-                    .font: UIFont.preferredFont(forTextStyle: .footnote),
-                    .foregroundColor: theme.colors.secondaryText,
-                ],
-                range: NSRange(location: 0, length: mutableString.length)
-            )
-            return mutableString
-        } else {
+        guard linkedBank != nil else {
+            // Only show the mandate after the user has connected their bank account
             return nil
         }
+
+        let string = NSMutableAttributedString(attributedString: PaymentSheetFormFactory.makeBankMandateText(sellerName: sellerName))
+        let style = NSMutableParagraphStyle()
+        style.alignment = .center
+        string.addAttributes(
+            [
+                .paragraphStyle: style,
+                .font: UIFont.preferredFont(forTextStyle: .footnote),
+                .foregroundColor: theme.colors.secondaryText,
+            ],
+            range: NSRange(location: 0, length: string.length)
+        )
+        return string
     }
 
     var name: String? {
@@ -192,6 +182,7 @@ final class InstantDebitsPaymentMethodElement: ContainerElement {
         addressElement: PaymentMethodElementWrapper<AddressSectionElement>?,
         incentive: PaymentMethodIncentive?,
         isPaymentIntent: Bool,
+        sellerName: String?,
         appearance: PaymentSheet.Appearance = .default
     ) {
         let theme = appearance.asElementsTheme
@@ -220,6 +211,7 @@ final class InstantDebitsPaymentMethodElement: ContainerElement {
             label.textContainer.lineFragmentPadding = 0
             return StaticElement(view: label)
         }
+        self.sellerName = sellerName
 
         let allElements: [Element?] = [
             subtitleElement,

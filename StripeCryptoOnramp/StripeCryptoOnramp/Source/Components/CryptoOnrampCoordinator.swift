@@ -10,77 +10,108 @@ import PassKit
 import Stripe
 
 @_spi(STP) import StripeApplePay
+@_spi(STP) import StripeCore
 @_spi(STP) import StripeIdentity
 @_spi(STP) import StripePaymentSheet
+@_spi(STP) import StripePaymentsUI
 
 import UIKit
 
-/// Protocol describing a type that coordinates headless Link user authentication, identity verification, and payment, leaving most of the associated UI up to the client.
-@_spi(CryptoOnrampSDKPreview)
-public protocol CryptoOnrampCoordinatorProtocol {
+/// A coordinator that facilitates the crypto onramp process including user authentication, identity verification, payment collection, and checkouts.
+protocol CryptoOnrampCoordinatorProtocol {
 
-    /// Creates a `CryptoOnrampCoordinator` to facilitate authentication, identity verification, and payment.
+    /// Creates a `CryptoOnrampCoordinator` to facilitate authentication, identity verification, payment collection, and checkouts.
     ///
     /// - Parameter apiClient: The `STPAPIClient` instance for this coordinator. Defaults to `.shared`.
     /// - Parameter appearance: Customizable appearance-related configuration for any Stripe-provided UI.
     /// - Returns: A configured `CryptoOnrampCoordinator`.
     static func create(apiClient: STPAPIClient, appearance: LinkAppearance) async throws -> Self
 
-    /// Looks up whether the provided email is associated with an existing Link consumer.
+    /// Whether or not the provided email is associated with an existing Link consumer.
     ///
     /// - Parameter email: The email address to look up.
     /// - Returns: Returns `true` if the email is associated with an existing Link consumer, or `false` otherwise.
-    func lookupConsumer(with email: String) async throws -> Bool
+    func hasLinkAccount(with email: String) async throws -> Bool
 
     /// Registers a new Link user with the provided details.
-    /// `lookupConsumer` must be called before this.
     ///
-    /// - Parameter fullName: The full name of the user.
+    /// - Parameter email: The user's email to be used for signup.
+    /// - Parameter fullName: The full name of the user. A name should be collected if the user is located outside of the US, otherwise it is optional.
     /// - Parameter phone: The phone number of the user. Phone number must be in E.164 format (e.g., +12125551234), otherwise an error will be thrown.
-    /// - Parameter country: The country code of the user.
+    /// - Parameter country: The two-letter country code of the user (ISO 3166-1 alpha-2).
     /// - Returns: The crypto customer ID.
-    /// Throws if `lookupConsumer` was not called prior to this, or an API error occurs.
-    func registerLinkUser(fullName: String?, phone: String, country: String) async throws -> String
+    /// Throws if email is already associated with a Link user, or an API error occurs.
+    func registerLinkUser(
+        email: String,
+        fullName: String?,
+        phone: String,
+        country: String
+    ) async throws -> String
 
-    /// Presents the Link verification flow for an existing user.
-    /// `lookupConsumer` must be called before this.
+    /// Presents Link UI to authenticate an existing Link user.
+    /// `hasLinkAccount` must be called before this.
     ///
-    /// - Parameter viewController: The view controller from which to present the verification flow.
-    /// - Returns: A `VerificationResult` indicating whether verification was completed or canceled.
-    ///   If verification completes, a crypto customer ID will be included in the result.
-    /// Throws if `lookupConsumer` was not called prior to this, or an API error occurs.
-    func presentForVerification(from viewController: UIViewController) async throws -> VerificationResult
+    /// - Parameter viewController: The view controller from which to present the authentication flow.
+    /// - Returns: A `AuthenticationResult` indicating whether authentication was completed or canceled.
+    ///   If authentication completes, a crypto customer ID will be included in the result.
+    /// Throws if `hasLinkAccount` was not called prior to this, or an API error occurs after the view controller is presented.
+    func authenticateUser(from viewController: UIViewController) async throws -> AuthenticationResult
 
     /// Attaches the specific KYC info to the current Link user. Requires an authenticated Link user.
     ///
     /// - Parameter info: The KYC info to attach to the Link user.
-    /// - Throws an error if an error occurs.
-    func collectKYCInfo(info: KycInfo) async throws
+    /// Throws if an authenticated Link user is not available, or an API error occurs.
+    func attachKYCInfo(info: KycInfo) async throws
 
-    /// Creates an identity verification session and launches the verification flow.
+    /// Creates an identity verification session and launches the document verification flow.
+    /// Requires an authenticated Link user.
     ///
-    /// - Parameter viewController: The view controller from which to present the verification flow.
-    /// - Returns: An `IdentityVerificationResult` representing the outcome of the verification process.
-    func promptForIdentityVerification(from viewController: UIViewController) async throws -> IdentityVerificationResult
+    /// - Parameter viewController: The view controller from which to present the document verification flow.
+    /// - Returns: An `IdentityVerificationResult` representing the outcome of the document verification process.
+    /// Throws if an authenticated Link user is not available, or an API error occurs.
+    func verifyIdentity(from viewController: UIViewController) async throws -> IdentityVerificationResult
 
     /// Registers the given crypto wallet address to the current Link account.
+    /// Requires an authenticated Link user.
     ///
     /// - Parameter walletAddress: The crypto wallet address to register.
     /// - Parameter network: The crypto network for the wallet address.
-    func collectWalletAddress(walletAddress: String, network: CryptoNetwork) async throws
+    /// Throws if an authenticated Link user is not available, or an API error occurs.
+    func registerWalletAddress(walletAddress: String, network: CryptoNetwork) async throws
 
-    /// Presents the Link sheet to collect a customer's payment method.
-    /// - Parameter viewController: The view controller from which to present the Link sheet.
-    /// - Returns: A `PaymentMethodPreview` if the user selected a payment method, or `nil` otherwise.
-    func collectPaymentMethod(from viewController: UIViewController) async -> PaymentMethodPreview?
-
-    /// Presents the Apple Pay interface to initiate checkout. Intended to be called in response to tapping a `PKPaymentButton` or `PayWithApplePayButton`.
+    /// Presents UI to collect/select a payment method of the given type.
+    ///
     /// - Parameters:
-    ///   - paymentRequest: Represents the request for payment using Apple Pay.
-    ///   - viewController: The view controller from which to present the Apple Pay interface.
-    /// - Returns: A payment status indicating whether the payment request was successful or canceled.
-    /// Throws if an error occurs accepting the payment request.
-    func presentApplePay(using paymentRequest: PKPaymentRequest, from viewController: UIViewController) async throws -> ApplePayPaymentStatus
+    ///   - type: The payment method type to collect. For `.card` and `.bankAccount`, this presents Link. For `.applePay(paymentRequest:)`, this presents Apple Pay using the provided `PKPaymentRequest`.
+    ///   - viewController: The view controller from which to present the UI.
+    /// - Returns: A `PaymentMethodDisplayData` describing the user’s selection, or `nil` if the user cancels.
+    /// Throws an error if presentation or payment method collection fails.
+    @MainActor
+    func collectPaymentMethod(type: PaymentMethodType, from viewController: UIViewController) async throws -> PaymentMethodDisplayData?
+
+    /// Creates a crypto payment token for the payment method currently selected on the coordinator.
+    /// Call after a successful `collectPaymentMethod(...)`.
+    ///
+    /// - Returns: The crypto payment token ID.
+    /// Throws an error if no payment method has been selected, the Link account is not verified, required session credentials are missing, the payment method creation fails, or a network/API error occurs.
+    func createCryptoPaymentToken() async throws -> String
+
+    /// Performs the checkout using the provided crypto payment token and onramp session details.
+    /// - Parameters:
+    ///   - cryptoPaymentToken: The crypto payment token to use for checkout.
+    ///   - sessionId: The onramp session identifier.
+    ///   - sessionClientSecret: The onramp session client secret.
+    ///   - authenticationContext: The authentication context used to handle any required next actions.
+    ///   - checkoutSessionHandler: An async closure that attempts to check out with the provided payment method on the merchant's backend.
+    ///     The closure should return the updated session client secret on success, or throw an Error on failure.
+    /// - Returns: A `CheckoutResult` indicating whether the checkout succeeded or failed.
+    func performCheckout(
+        cryptoPaymentToken: String,
+        sessionId: String,
+        sessionClientSecret: String,
+        authenticationContext: STPAuthenticationContext,
+        checkoutSessionHandler: @escaping (_ paymentMethod: STPPaymentMethod) async throws -> String
+    ) async -> CheckoutResult
 }
 
 /// Coordinates headless Link user authentication and identity verification, leaving most of the UI to the client.
@@ -93,15 +124,21 @@ public final class CryptoOnrampCoordinator: NSObject, CryptoOnrampCoordinatorPro
         /// Phone number validation failed. Phone number should be in E.164 format (e.g., +12125551234).
         case invalidPhoneFormat
 
+        /// A Link account already exists for the provided email address.
+        case linkAccountAlreadyExists
+
         /// `ephemeralKey` is missing from the response after starting identity verification.
         case missingEphemeralKey
+
+        /// An unexpected error occurred internally. `selectedPaymentSource` was not set to an expected value.
+        case invalidSelectedPaymentSource
     }
 
     private let linkController: LinkController
     private let apiClient: STPAPIClient
     private let appearance: LinkAppearance
-    private var applePayPaymentMethod: STPPaymentMethod?
     private var applePayCompletionContinuation: CheckedContinuation<ApplePayPaymentStatus, Swift.Error>?
+    private var selectedPaymentSource: SelectedPaymentSource?
 
     private var linkAccountInfo: PaymentSheetLinkAccountInfoProtocol {
         get async throws {
@@ -111,6 +148,11 @@ public final class CryptoOnrampCoordinator: NSObject, CryptoOnrampCoordinatorPro
             return linkAccount
         }
     }
+
+    private static let linkConfiguration: LinkConfiguration = LinkConfiguration(
+        hintMessage: String.Localized.debitIsMostLikelyToBeAccepted,
+        allowLogout: false
+    )
 
     private init(linkController: LinkController, apiClient: STPAPIClient = .shared, appearance: LinkAppearance) {
         self.linkController = linkController
@@ -125,6 +167,7 @@ public final class CryptoOnrampCoordinator: NSObject, CryptoOnrampCoordinatorPro
             apiClient: apiClient,
             mode: .payment,
             appearance: appearance,
+            linkConfiguration: Self.linkConfiguration,
             requestSurface: .cryptoOnramp
         )
 
@@ -135,11 +178,29 @@ public final class CryptoOnrampCoordinator: NSObject, CryptoOnrampCoordinatorPro
         )
     }
 
-    public func lookupConsumer(with email: String) async throws -> Bool {
+    public func hasLinkAccount(with email: String) async throws -> Bool {
         return try await linkController.lookupConsumer(with: email)
     }
 
-    public func registerLinkUser(fullName: String?, phone: String, country: String) async throws -> String {
+    public func registerLinkUser(
+        email: String,
+        fullName: String?,
+        phone: String,
+        country: String
+    ) async throws -> String {
+        // Short-circuit if a registered Link account is already available,
+        // or a Link account already exists for the provided email.
+        if let linkAccount = await linkController.linkAccount {
+            if linkAccount.isRegistered {
+                throw Error.linkAccountAlreadyExists
+            }
+        } else {
+            let hasExistingAccount = try await hasLinkAccount(with: email)
+            if hasExistingAccount {
+                throw Error.linkAccountAlreadyExists
+            }
+        }
+
         do {
             try await linkController.registerLinkUser(
                 fullName: fullName,
@@ -161,7 +222,7 @@ public final class CryptoOnrampCoordinator: NSObject, CryptoOnrampCoordinatorPro
         return try await apiClient.grantPartnerMerchantPermissions(with: linkAccountInfo).id
     }
 
-    public func presentForVerification(from viewController: UIViewController) async throws -> VerificationResult {
+    public func authenticateUser(from viewController: UIViewController) async throws -> AuthenticationResult {
         let verificationResult = try await linkController.presentForVerification(from: viewController)
         switch verificationResult {
         case .canceled:
@@ -172,11 +233,11 @@ public final class CryptoOnrampCoordinator: NSObject, CryptoOnrampCoordinatorPro
         }
     }
 
-    public func collectKYCInfo(info: KycInfo) async throws {
+    public func attachKYCInfo(info: KycInfo) async throws {
         try await apiClient.collectKycInfo(info: info, linkAccountInfo: linkAccountInfo)
     }
 
-    public func promptForIdentityVerification(from viewController: UIViewController) async throws -> IdentityVerificationResult {
+    public func verifyIdentity(from viewController: UIViewController) async throws -> IdentityVerificationResult {
         let response = try await apiClient.startIdentityVerification(linkAccountInfo: linkAccountInfo)
 
         guard let ephemeralKey = response.ephemeralKey else {
@@ -207,7 +268,7 @@ public final class CryptoOnrampCoordinator: NSObject, CryptoOnrampCoordinatorPro
         }
     }
 
-    public func collectWalletAddress(walletAddress: String, network: CryptoNetwork) async throws {
+    public func registerWalletAddress(walletAddress: String, network: CryptoNetwork) async throws {
         try await apiClient.collectWalletAddress(
             walletAddress: walletAddress,
             network: network,
@@ -215,27 +276,161 @@ public final class CryptoOnrampCoordinator: NSObject, CryptoOnrampCoordinatorPro
         )
     }
 
-    public func collectPaymentMethod(from viewController: UIViewController) async -> PaymentMethodPreview? {
-        let email = try? await linkAccountInfo.email
-        if let result = await linkController.collectPaymentMethod(from: viewController, with: email) {
-            return PaymentMethodPreview(icon: result.icon, label: result.label, sublabel: result.sublabel)
-        } else {
-            return nil
+    @MainActor
+    public func collectPaymentMethod(
+        type: PaymentMethodType,
+        from viewController: UIViewController
+    ) async throws -> PaymentMethodDisplayData? {
+        switch type {
+        case .card, .bankAccount:
+            let email = try? await linkAccountInfo.email
+            guard let supportedPaymentMethodType = type.linkPaymentMethodType else {
+                return nil
+            }
+
+            guard let result = await linkController.collectPaymentMethod(
+                from: viewController,
+                with: email,
+                supportedPaymentMethodTypes: [supportedPaymentMethodType]
+            ) else {
+                selectedPaymentSource = nil
+                return nil
+            }
+
+            let preview = PaymentMethodDisplayData(
+                icon: result.icon,
+                label: result.label,
+                sublabel: result.sublabel
+            )
+            selectedPaymentSource = .link
+            return preview
+        case .applePay(let paymentRequest):
+            // This presents Apple Pay and fills `applePayPaymentMethod` + `paymentMethodPreview` in the delegate.
+            let status = try await presentApplePay(using: paymentRequest, from: viewController)
+            switch status {
+            case .success:
+                guard case let .applePay(paymentMethod) = selectedPaymentSource else {
+                    throw Error.invalidSelectedPaymentSource
+                }
+
+                // Build a reasonable preview for the underlying Apple Pay payment method:
+                let icon = STPImageLibrary.applePayCardImage()
+                let label = String.Localized.apple_pay
+                let sublabel: String? = {
+                    if let card = paymentMethod.card {
+                        return String.Localized.redactedCardDetails(using: card)
+                    } else {
+                        return nil
+                    }
+                }()
+
+                let paymentMethodPreview = PaymentMethodDisplayData(
+                    icon: icon,
+                    label: label,
+                    sublabel: sublabel
+                )
+
+                return paymentMethodPreview
+            case .canceled:
+                selectedPaymentSource = nil
+                return nil
+            }
         }
     }
 
-    @MainActor
-    public func presentApplePay(using paymentRequest: PKPaymentRequest, from viewController: UIViewController) async throws -> ApplePayPaymentStatus {
-        try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<ApplePayPaymentStatus, Swift.Error>) in
-            guard let context = STPApplePayContext(paymentRequest: paymentRequest, delegate: self) else {
-                continuation.resume(throwing: ApplePayPaymentStatus.Error.applePayFallbackError)
-                return
+    public func createCryptoPaymentToken() async throws -> String {
+        guard let selectedPaymentSource else {
+            throw Error.invalidSelectedPaymentSource
+        }
+
+        let paymentMethod: STPPaymentMethod = try await {
+            switch selectedPaymentSource {
+            case .link:
+                let platformPublishableKey = try await getPlatformKey()
+                return try await linkController.createPaymentMethod(
+                    overridePublishableKey: platformPublishableKey
+                )
+            case .applePay(let applePayPaymentMethod):
+                return applePayPaymentMethod
+            }
+        }()
+
+        let token = try await apiClient.createPaymentToken(
+            for: paymentMethod.stripeId,
+            linkAccountInfo: linkAccountInfo
+        )
+        return token.id
+    }
+
+    public func performCheckout(
+        cryptoPaymentToken: String,
+        sessionId: String,
+        sessionClientSecret: String,
+        authenticationContext: STPAuthenticationContext,
+        checkoutSessionHandler: @escaping (_ paymentMethod: STPPaymentMethod) async throws -> String
+    ) async -> CheckoutResult {
+        do {
+            // First, retrieve the `PaymentIntent` from the onramp session.
+            let paymentIntent = try await apiClient.retrievePaymentIntentFromOnrampSession(
+                sessionId: sessionId,
+                sessionClientSecret: sessionClientSecret
+            )
+
+            // Get the payment method from the PaymentIntent - this should be populated based on the crypto payment token.
+            guard let paymentMethod = paymentIntent.paymentMethod else {
+                return .failed(CheckoutError.missingPaymentMethod)
             }
 
-            // Retain the continuation until we receive a completion delegate callback.
-            self.applePayCompletionContinuation = continuation
-            context.presentApplePay()
+            let maximumAttempts = 3
+            for _ in 0..<maximumAttempts {
+                // Have the merchant attempt to check out by calling the crypto /checkout endpoint on their backend
+                do {
+                    let newSessionClientSecret = try await checkoutSessionHandler(paymentMethod)
+
+                    // Check if the intent is completed by retrieving the updated `STPPaymentIntent`.
+                    let updatedPaymentIntent = try await apiClient.retrievePaymentIntentFromOnrampSession(
+                        sessionId: sessionId,
+                        sessionClientSecret: newSessionClientSecret
+                    )
+
+                    // Map the intent status to a checkout result.
+                    if let result = mapIntentToCheckoutResult(updatedPaymentIntent) {
+                        // We have a result, so return that to the merchant
+                        return result
+                    }
+
+                    // We have no result yet, since there's a `next_action` to handle.
+                    let handledIntentResult = await handleNextAction(
+                        for: updatedPaymentIntent,
+                        with: authenticationContext
+                    )
+
+                    switch handledIntentResult {
+                    case .failure(let error):
+                        return .failed(error)
+                    case .success(let finalIntent):
+                        if finalIntent.status == .succeeded || finalIntent.status == .requiresCapture {
+                            // The intent is completed. We need to run the loop again,
+                            // so that the checkoutSessionHandler is called again.
+                            continue
+                        } else {
+                            return .failed(CheckoutError.paymentFailed)
+                        }
+                    }
+                } catch {
+                    return .failed(error)
+                }
+            }
+
+            return .failed(CheckoutError.unexpectedError)
+        } catch {
+            return .failed(error)
         }
+    }
+
+    private func getPlatformKey() async throws -> String {
+        let platformSettings = try await apiClient.getPlatformSettings(linkAccountInfo: linkAccountInfo)
+        return platformSettings.publishableKey
     }
 }
 
@@ -249,7 +444,8 @@ extension CryptoOnrampCoordinator: STPApplePayContextDelegate {
         paymentInformation: PKPayment,
         completion: @escaping STPIntentClientSecretCompletionBlock
     ) {
-        self.applePayPaymentMethod = paymentMethod
+        selectedPaymentSource = .applePay(paymentMethod)
+
         completion(STPApplePayContext.COMPLETE_WITHOUT_CONFIRMING_INTENT, nil)
     }
 
@@ -279,6 +475,77 @@ private extension CryptoOnrampCoordinator {
             return try await DownloadManager.sharedManager.downloadImage(url: merchantLogoUrl)
         } catch {
             return .wallet
+        }
+    }
+
+    @MainActor
+    func presentApplePay(using paymentRequest: PKPaymentRequest, from viewController: UIViewController) async throws -> ApplePayPaymentStatus {
+        try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<ApplePayPaymentStatus, Swift.Error>) in
+            guard let context = STPApplePayContext(paymentRequest: paymentRequest, delegate: self) else {
+                continuation.resume(throwing: ApplePayPaymentStatus.Error.applePayFallbackError)
+                return
+            }
+
+            Task {
+                do {
+                    // Configure Apple Pay context to use platform publishable key
+                    let platformPublishableKey = try await getPlatformKey()
+                    let platformApiClient = STPAPIClient(publishableKey: platformPublishableKey)
+                    context.apiClient = platformApiClient
+
+                    // Retain the continuation until we receive a completion delegate callback.
+                    self.applePayCompletionContinuation = continuation
+                    context.presentApplePay()
+                } catch {
+                    continuation.resume(throwing: error)
+                }
+            }
+        }
+    }
+
+    /// Handles the next action for an `STPPaymentIntent` using `STPPaymentHandler`.
+    func handleNextAction(
+        for intent: STPPaymentIntent,
+        with authenticationContext: STPAuthenticationContext
+    ) async -> Result<STPPaymentIntent, Swift.Error> {
+        return await withCheckedContinuation { continuation in
+            let paymentHandler = STPPaymentHandler.sharedHandler
+
+            paymentHandler.handleNextAction(
+                for: intent,
+                with: authenticationContext,
+                returnURL: nil,
+                shouldSendAnalytic: true
+            ) { status, paymentIntent, error in
+                switch status {
+                case .succeeded:
+                    if let paymentIntent = paymentIntent {
+                        continuation.resume(returning: .success(paymentIntent))
+                    } else {
+                        continuation.resume(returning: .failure(CheckoutError.unexpectedError))
+                    }
+                case .canceled:
+                    continuation.resume(returning: .failure(CheckoutError.userCanceled))
+                case .failed:
+                    continuation.resume(returning: .failure(error ?? CheckoutError.paymentFailed))
+                @unknown default:
+                    continuation.resume(returning: .failure(CheckoutError.unexpectedError))
+                }
+            }
+        }
+    }
+
+    /// Maps a PaymentIntent status to a CheckoutResult, or returns nil if more handling is needed.
+    func mapIntentToCheckoutResult(_ intent: STPPaymentIntent) -> CheckoutResult? {
+        switch intent.status {
+        case .succeeded:
+            .completed
+        case .requiresPaymentMethod:
+            .failed(CheckoutError.paymentFailed)
+        case .requiresAction:
+            nil
+        default:
+            .failed(CheckoutError.paymentFailed)
         }
     }
 }

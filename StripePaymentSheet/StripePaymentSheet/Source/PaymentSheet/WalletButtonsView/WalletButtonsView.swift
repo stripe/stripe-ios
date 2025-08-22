@@ -57,6 +57,7 @@ import WebKit
                         LinkButton(
                             height: flowController.configuration.appearance.primaryButton.height,
                             cornerRadius: flowController.configuration.appearance.primaryButton.cornerRadius ?? flowController.configuration.appearance.cornerRadius,
+                            borderColor: flowController.configuration.appearance.colors.componentBorder,
                             action: completion
                         )
                     case .shopPay:

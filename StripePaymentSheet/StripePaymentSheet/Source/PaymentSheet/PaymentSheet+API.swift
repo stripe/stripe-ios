@@ -167,6 +167,10 @@ extension PaymentSheet {
         let radarOptions: STPRadarOptions = STPRadarOptions(hcaptchaToken: hcaptchaToken)
         let clientAttributionMetadata: STPClientAttributionMetadata = intent.clientAttributionMetadata(elementsSessionConfigId: elementsSession.sessionID)
 
+        let isSettingUp: (STPPaymentMethodType) -> Bool = { paymentMethodType in
+            intent.isSetupFutureUsageSet(for: paymentMethodType) || elementsSession.forceSaveFutureUseBehaviorAndNewMandateText
+        }
+
         switch paymentOption {
         // MARK: - Apple Pay
         case .applePay:
@@ -197,7 +201,7 @@ extension PaymentSheet {
             // Set allow_redisplay on params
             confirmParams.setAllowRedisplay(
                 mobilePaymentElementFeatures: elementsSession.customerSessionMobilePaymentElementFeatures,
-                isSettingUp: intent.isSetupFutureUsageSet(for: paymentMethodType)
+                isSettingUp: isSettingUp(paymentMethodType)
             )
             confirmParams.paymentMethodParams.radarOptions = radarOptions
             confirmParams.setClientAttributionMetadata(clientAttributionMetadata: clientAttributionMetadata)
@@ -564,7 +568,7 @@ extension PaymentSheet {
                         // Set allow_redisplay on params
                         intentConfirmParams.setAllowRedisplay(
                             mobilePaymentElementFeatures: elementsSession.customerSessionMobilePaymentElementFeatures,
-                            isSettingUp: intent.isSetupFutureUsageSet(for: linkPaymentMethodType)
+                            isSettingUp: isSettingUp(linkPaymentMethodType)
                         )
                         createPaymentDetailsAndConfirm(linkAccount, intentConfirmParams.paymentMethodParams, intentConfirmParams.saveForFutureUseCheckboxState == .selected)
                     case .failure(let error as NSError):
@@ -572,7 +576,7 @@ extension PaymentSheet {
                         // Attempt to confirm directly with params as a fallback.
                         intentConfirmParams.setAllowRedisplay(
                             mobilePaymentElementFeatures: elementsSession.customerSessionMobilePaymentElementFeatures,
-                            isSettingUp: intent.isSetupFutureUsageSet(for: intentConfirmParams.paymentMethodParams.type)
+                            isSettingUp: isSettingUp(intentConfirmParams.paymentMethodParams.type)
                         )
                         confirmWithPaymentMethodParams(intentConfirmParams.paymentMethodParams, linkAccount, intentConfirmParams.saveForFutureUseCheckboxState == .selected)
                     }
@@ -581,13 +585,16 @@ extension PaymentSheet {
                 confirmWithPaymentMethod(paymentMethod, nil, false)
             case .withPaymentDetails(let linkAccount, let paymentDetails, let confirmationExtras, _):
                 let shouldSave = false // always false, as we don't show a save-to-merchant checkbox in Link VC
+                let allowRedisplay = paymentDetails.computeAllowRedisplay(
+                    elementsSession: elementsSession,
+                    isSettingUp: isSettingUp
+                )
 
                 if elementsSession.linkPassthroughModeEnabled {
-                    // allowRedisplay is nil since we are not saving a payment method.
                     linkAccount.sharePaymentDetails(
                         id: paymentDetails.stripeID,
                         cvc: paymentDetails.cvc,
-                        allowRedisplay: nil,
+                        allowRedisplay: allowRedisplay,
                         expectedPaymentMethodType: paymentDetails.expectedPaymentMethodTypeForPassthroughMode(elementsSession),
                         billingPhoneNumber: confirmationExtras?.billingPhoneNumber,
                         clientAttributionMetadata: clientAttributionMetadata
@@ -601,7 +608,7 @@ extension PaymentSheet {
                         }
                     }
                 } else {
-                    confirmWithPaymentDetails(linkAccount, paymentDetails, paymentDetails.cvc, confirmationExtras?.billingPhoneNumber, shouldSave, nil)
+                    confirmWithPaymentDetails(linkAccount, paymentDetails, paymentDetails.cvc, confirmationExtras?.billingPhoneNumber, shouldSave, allowRedisplay)
                 }
             }
         case let .external(externalPaymentOption, billingDetails):
@@ -825,6 +832,15 @@ private func isEqual(_ lhs: STPPaymentIntentShippingDetails?, _ rhs: STPPaymentI
 
 private extension ConsumerPaymentDetails {
 
+    var bankAccountDetails: ConsumerPaymentDetails.Details.BankAccount? {
+        switch details {
+        case .bankAccount(let bankAccount):
+            return bankAccount
+        case .card, .unparsable:
+            return nil
+        }
+    }
+
     func expectedPaymentMethodTypeForPassthroughMode(
         _ elementsSession: STPElementsSession
     ) -> String? {
@@ -837,6 +853,39 @@ private extension ConsumerPaymentDetails {
             let canAcceptACH = elementsSession.orderedPaymentMethodTypes.contains(.USBankAccount)
             let isLinkCardBrand = elementsSession.linkSettings?.linkMode?.isPantherPayment ?? false
             return isLinkCardBrand && !canAcceptACH ? "card" : "bank_account"
+        }
+    }
+
+    func computeAllowRedisplay(
+        elementsSession: STPElementsSession,
+        isSettingUp: (STPPaymentMethodType) -> Bool
+    ) -> STPPaymentMethodAllowRedisplay? {
+        guard let mobilePaymentElementFeatures = elementsSession.customerSessionMobilePaymentElementFeatures else {
+            return nil
+        }
+
+        let allowRedisplayOverride = mobilePaymentElementFeatures.paymentMethodSaveAllowRedisplayOverride
+
+        let paymentMethodType: STPPaymentMethodType = {
+            if elementsSession.linkPassthroughModeEnabled {
+                let expectedPaymentMethodType = expectedPaymentMethodTypeForPassthroughMode(elementsSession)
+
+                if expectedPaymentMethodType == "bank_account" {
+                    return bankAccountDetails?.asPassthroughPaymentMethodType ?? .unknown
+                } else if expectedPaymentMethodType == "card" {
+                    return .card
+                } else {
+                    return .unknown
+                }
+            } else {
+                return .link
+            }
+        }()
+
+        if isSettingUp(paymentMethodType) {
+            return allowRedisplayOverride ?? .limited
+        } else {
+            return .unspecified
         }
     }
 }
