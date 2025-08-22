@@ -153,9 +153,8 @@ public class PaymentSheet {
         ) { result in
             switch result {
             case .success(let loadResult):
-                if let passiveCaptcha = loadResult.elementsSession.passiveCaptcha {
-                    self.passiveCaptchaChallenge = PassiveCaptchaChallenge(passiveCaptcha: passiveCaptcha)
-                }
+                self.passiveCaptchaChallenge = PassiveCaptchaChallenge(passiveCaptcha: loadResult.elementsSession.passiveCaptcha)
+                Task { await self.passiveCaptchaChallenge?.start() }
                 let presentPaymentSheet: () -> Void = {
                     // Set the PaymentSheetViewController as the content of our bottom sheet
                     let paymentSheetVC: PaymentSheetViewControllerProtocol = {
@@ -269,7 +268,7 @@ public class PaymentSheet {
 
     let analyticsHelper: PaymentSheetAnalyticsHelper
 
-    private var passiveCaptchaChallenge: PassiveCaptchaChallenge?
+    var passiveCaptchaChallenge: PassiveCaptchaChallenge?
 }
 
 extension PaymentSheet: PaymentSheetViewControllerDelegate {

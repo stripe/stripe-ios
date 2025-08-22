@@ -12,6 +12,7 @@
 import UIKit
 
 class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewControllerProtocol, PaymentSheetViewControllerProtocol {
+
     enum Error: Swift.Error {
         case missingPaymentMethodListViewController
         case missingContentViewController
@@ -110,6 +111,8 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
     private lazy var savedPaymentMethodManager: SavedPaymentMethodManager = {
         SavedPaymentMethodManager(configuration: configuration, elementsSession: elementsSession)
     }()
+
+    var passiveCaptchaChallenge: StripePayments.PassiveCaptchaChallenge?
 
     // MARK: - UI properties
 
@@ -522,18 +525,22 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
     }
 
     private func presentLinkInFlowController() {
-        presentNativeLink(
-            selectedPaymentDetailsID: nil,
-            configuration: configuration,
-            intent: intent,
-            elementsSession: elementsSession,
-            analyticsHelper: analyticsHelper,
-            callback: { [weak self] confirmOption, _ in
-                guard let self else { return }
-                self.linkConfirmOption = confirmOption
-                self.flowControllerDelegate?.flowControllerViewControllerShouldClose(self, didCancel: false)
-            }
-        )
+        Task { @MainActor in
+            let token = await passiveCaptchaChallenge?.fetchToken()
+            presentNativeLink(
+                selectedPaymentDetailsID: nil,
+                configuration: configuration,
+                intent: intent,
+                elementsSession: elementsSession,
+                analyticsHelper: analyticsHelper,
+                hcaptchaToken: token,
+                callback: { [weak self] confirmOption, _ in
+                    guard let self else { return }
+                    self.linkConfirmOption = confirmOption
+                    self.flowControllerDelegate?.flowControllerViewControllerShouldClose(self, didCancel: false)
+                }
+            )
+        }
     }
 
     var didSendLogShow: Bool = false

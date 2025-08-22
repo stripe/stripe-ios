@@ -293,9 +293,9 @@ extension PaymentSheet {
             self.analyticsHelper.logInitialized()
             self.viewController = Self.makeViewController(configuration: configuration, loadResult: loadResult, analyticsHelper: analyticsHelper, walletButtonsShownExternally: self.walletButtonsShownExternally)
             self.viewController.flowControllerDelegate = self
-            if let passiveCaptcha = loadResult.elementsSession.passiveCaptcha {
-                self.passiveCaptchaChallenge = PassiveCaptchaChallenge(passiveCaptcha: passiveCaptcha)
-            }
+            self.passiveCaptchaChallenge = PassiveCaptchaChallenge(passiveCaptcha: loadResult.elementsSession.passiveCaptcha)
+            Task { await self.passiveCaptchaChallenge?.start() }
+            self.viewController.passiveCaptchaChallenge = self.passiveCaptchaChallenge
             updatePaymentOption()
         }
 
@@ -491,15 +491,19 @@ extension PaymentSheet {
                 self.isPresented = false
             }
 
-            presentingViewController.presentNativeLink(
-                selectedPaymentDetailsID: selectedPaymentDetailsID,
-                configuration: configuration,
-                intent: intent,
-                elementsSession: elementsSession,
-                analyticsHelper: analyticsHelper,
-                verificationDismissed: verificationDismissed,
-                callback: completionCallback
-            )
+            Task { @MainActor in
+                let hcaptchaToken = await self.passiveCaptchaChallenge?.fetchToken()
+                presentingViewController.presentNativeLink(
+                    selectedPaymentDetailsID: selectedPaymentDetailsID,
+                    configuration: configuration,
+                    intent: intent,
+                    elementsSession: elementsSession,
+                    analyticsHelper: analyticsHelper,
+                    verificationDismissed: verificationDismissed,
+                    hcaptchaToken: hcaptchaToken,
+                    callback: completionCallback
+                )
+            }
         }
 
         /// Completes the payment or setup.
@@ -804,6 +808,7 @@ internal protocol FlowControllerViewControllerProtocol: BottomSheetContentViewCo
     /// Note that, unlike selectedPaymentOption, this is non-nil even if the PM form is invalid.
     var selectedPaymentMethodType: PaymentSheet.PaymentMethodType? { get }
     var flowControllerDelegate: FlowControllerViewControllerDelegate? { get set }
+    var passiveCaptchaChallenge: PassiveCaptchaChallenge? { get set }
 }
 
 extension PaymentOption {

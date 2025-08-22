@@ -48,8 +48,6 @@ final class PayWithNativeLinkController {
 
     private var selfRetainer: PayWithNativeLinkController?
 
-    private var passiveCaptchaChallenge: PassiveCaptchaChallenge?
-
     let mode: Mode
     let intent: Intent
     let elementsSession: STPElementsSession
@@ -60,6 +58,7 @@ final class PayWithNativeLinkController {
 
     private let linkAppearance: LinkAppearance?
     private let linkConfiguration: LinkConfiguration?
+    private let hcaptchaToken: String?
 
     init(
         mode: Mode,
@@ -70,7 +69,8 @@ final class PayWithNativeLinkController {
         analyticsHelper: PaymentSheetAnalyticsHelper,
         supportedPaymentMethodTypes: [LinkPaymentMethodType] = LinkPaymentMethodType.allCases,
         linkAppearance: LinkAppearance? = nil,
-        linkConfiguration: LinkConfiguration? = nil
+        linkConfiguration: LinkConfiguration? = nil,
+        hcaptchaToken: String? = nil
     ) {
         self.mode = mode
         self.intent = intent
@@ -82,9 +82,7 @@ final class PayWithNativeLinkController {
         self.paymentHandler = .init(apiClient: configuration.apiClient)
         self.linkAppearance = linkAppearance
         self.linkConfiguration = linkConfiguration
-        if let passiveCaptcha = elementsSession.passiveCaptcha {
-            self.passiveCaptchaChallenge = PassiveCaptchaChallenge(passiveCaptcha: passiveCaptcha)
-        }
+        self.hcaptchaToken = hcaptchaToken
     }
 
     func presentAsBottomSheet(
@@ -222,8 +220,7 @@ extension PayWithNativeLinkController: PayWithLinkViewControllerDelegate {
         with paymentOption: PaymentOption,
         completion: @escaping (PaymentSheetResult, STPAnalyticsClient.DeferredIntentConfirmationType?) -> Void
     ) {
-        Task {
-            let hcaptchaToken = await self.passiveCaptchaChallenge?.fetchToken()
+        Task { @MainActor in
             PaymentSheet.confirm(
                 configuration: configuration,
                 authenticationContext: payWithLinkViewController,
@@ -280,22 +277,19 @@ extension PayWithNativeLinkController: PayWithLinkWebControllerDelegate {
         elementsSession: STPElementsSession,
         with paymentOption: PaymentOption
     ) {
-        Task {
-            let hcaptchaToken = await self.passiveCaptchaChallenge?.fetchToken()
-            PaymentSheet.confirm(
-                configuration: configuration,
-                authenticationContext: payWithLinkWebController,
-                intent: intent,
-                elementsSession: elementsSession,
-                paymentOption: paymentOption,
-                paymentHandler: paymentHandler,
-                integrationShape: .complete,
-                hcaptchaToken: hcaptchaToken,
-                analyticsHelper: analyticsHelper
-            ) { result, deferredIntentConfirmationType in
-                self.completion?(.full(result: result, deferredIntentConfirmationType: deferredIntentConfirmationType, didFinish: true))
-                self.selfRetainer = nil
-            }
+        PaymentSheet.confirm(
+            configuration: configuration,
+            authenticationContext: payWithLinkWebController,
+            intent: intent,
+            elementsSession: elementsSession,
+            paymentOption: paymentOption,
+            paymentHandler: paymentHandler,
+            integrationShape: .complete,
+            hcaptchaToken: hcaptchaToken,
+            analyticsHelper: analyticsHelper
+        ) { result, deferredIntentConfirmationType in
+            self.completion?(.full(result: result, deferredIntentConfirmationType: deferredIntentConfirmationType, didFinish: true))
+            self.selfRetainer = nil
         }
     }
 

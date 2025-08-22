@@ -27,17 +27,15 @@ final class PayWithLinkController {
     let configuration: PaymentElementConfiguration
     let analyticsHelper: PaymentSheetAnalyticsHelper
 
-    private var passiveCaptchaChallenge: PassiveCaptchaChallenge?
+    private let hcaptchaToken: String?
 
-    init(intent: Intent, elementsSession: STPElementsSession, configuration: PaymentElementConfiguration, analyticsHelper: PaymentSheetAnalyticsHelper) {
+    init(intent: Intent, elementsSession: STPElementsSession, configuration: PaymentElementConfiguration, analyticsHelper: PaymentSheetAnalyticsHelper, hcaptchaToken: String?) {
         self.intent = intent
         self.elementsSession = elementsSession
         self.configuration = configuration
         self.paymentHandler = .init(apiClient: configuration.apiClient)
         self.analyticsHelper = analyticsHelper
-        if let passiveCaptcha = elementsSession.passiveCaptcha {
-            self.passiveCaptchaChallenge = PassiveCaptchaChallenge(passiveCaptcha: passiveCaptcha)
-        }
+        self.hcaptchaToken = hcaptchaToken
     }
 
     func present(
@@ -64,22 +62,19 @@ extension PayWithLinkController: PayWithLinkWebControllerDelegate {
         elementsSession: STPElementsSession,
         with paymentOption: PaymentOption
     ) {
-        Task {
-            let hcaptchaToken = await self.passiveCaptchaChallenge?.fetchToken()
-            PaymentSheet.confirm(
-                configuration: self.configuration,
-                authenticationContext: payWithLinkWebController,
-                intent: intent,
-                elementsSession: elementsSession,
-                paymentOption: paymentOption,
-                paymentHandler: self.paymentHandler,
-                integrationShape: .complete,
-                hcaptchaToken: hcaptchaToken,
-                analyticsHelper: self.analyticsHelper
-            ) { result, deferredIntentConfirmationType in
-                self.completion?(result, deferredIntentConfirmationType)
-                self.selfRetainer = nil
-            }
+        PaymentSheet.confirm(
+            configuration: configuration,
+            authenticationContext: payWithLinkWebController,
+            intent: intent,
+            elementsSession: elementsSession,
+            paymentOption: paymentOption,
+            paymentHandler: paymentHandler,
+            integrationShape: .complete,
+            hcaptchaToken: hcaptchaToken,
+            analyticsHelper: analyticsHelper
+        ) { result, deferredIntentConfirmationType in
+            self.completion?(result, deferredIntentConfirmationType)
+            self.selfRetainer = nil
         }
     }
 
