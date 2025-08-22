@@ -50,17 +50,7 @@ import Foundation
     }
 
     @_spi(STP) public func start() {
-        startIfNeeded()
-    }
-
-    @_spi(STP) public func fetchToken() async -> String? {
-        startIfNeeded()
-        return await validationTask?.value
-    }
-
-    private func startIfNeeded() {
         guard let passiveCaptcha, validationTask == nil else { return }
-
         do {
             let hcaptcha = try HCaptcha(apiKey: passiveCaptcha.siteKey,
                                        passiveApiKey: true,
@@ -110,6 +100,13 @@ import Foundation
         } catch {
             STPAnalyticsClient.sharedClient.logPassiveCaptchaError(error: error, siteKey: passiveCaptcha.siteKey)
         }
+    }
+
+    @_spi(STP) public func fetchToken() async -> String? {
+        if validationTask == nil {
+            start()
+        }
+        return await validationTask?.value
     }
 }
 
