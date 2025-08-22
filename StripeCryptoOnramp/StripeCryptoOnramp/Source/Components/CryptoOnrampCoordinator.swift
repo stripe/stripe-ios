@@ -139,6 +139,9 @@ public final class CryptoOnrampCoordinator: NSObject, CryptoOnrampCoordinatorPro
     private var applePayCompletionContinuation: CheckedContinuation<ApplePayPaymentStatus, Swift.Error>?
     private var selectedPaymentSource: SelectedPaymentSource?
 
+    /// Dedicated API client configured with the platform publishable key
+    private var platformApiClient: STPAPIClient?
+
     private var linkAccountInfo: PaymentSheetLinkAccountInfoProtocol {
         get async throws {
             guard let linkAccount = await linkController.linkAccount else {
@@ -345,9 +348,9 @@ public final class CryptoOnrampCoordinator: NSObject, CryptoOnrampCoordinatorPro
         let paymentMethod: STPPaymentMethod = try await {
             switch selectedPaymentSource {
             case .link:
-                let platformPublishableKey = try await getPlatformKey()
+                let platformApiClient = try await getPlatformApiClient()
                 return try await linkController.createPaymentMethod(
-                    overridePublishableKey: platformPublishableKey
+                    overridePublishableKey: platformApiClient.publishableKey
                 )
             case .applePay(let applePayPaymentMethod):
                 return applePayPaymentMethod
@@ -409,11 +412,6 @@ public final class CryptoOnrampCoordinator: NSObject, CryptoOnrampCoordinatorPro
             return .failed(error)
         }
     }
-
-    private func getPlatformKey() async throws -> String {
-        let platformSettings = try await apiClient.getPlatformSettings(linkAccountInfo: linkAccountInfo)
-        return platformSettings.publishableKey
-    }
 }
 
 extension CryptoOnrampCoordinator: STPApplePayContextDelegate {
@@ -470,9 +468,8 @@ private extension CryptoOnrampCoordinator {
 
             Task {
                 do {
-                    // Configure Apple Pay context to use platform publishable key
-                    let platformPublishableKey = try await getPlatformKey()
-                    let platformApiClient = STPAPIClient(publishableKey: platformPublishableKey)
+                    // Configure Apple Pay context to use platform API client
+                    let platformApiClient = try await getPlatformApiClient()
                     context.apiClient = platformApiClient
 
                     // Retain the continuation until we receive a completion delegate callback.
@@ -517,6 +514,20 @@ private extension CryptoOnrampCoordinator {
         }
     }
 
+    /// Returns a dedicated API client configured with the platform publishable key.
+    /// Caches the API client after first creation to avoid repeated API calls.
+    private func getPlatformApiClient() async throws -> STPAPIClient {
+        if let platformApiClient {
+            return platformApiClient
+        }
+
+        // Fetch platform settings and create API client
+        let platformSettings = try await apiClient.getPlatformSettings(linkAccountInfo: linkAccountInfo)
+        let newPlatformApiClient = STPAPIClient(publishableKey: platformSettings.publishableKey)
+        platformApiClient = newPlatformApiClient
+        return newPlatformApiClient
+    }
+
     /// Performs checkout and retrieves the resulting PaymentIntent.
     private func performCheckoutAndRetrievePaymentIntent(
         onrampSessionId: String,
@@ -536,8 +547,10 @@ private extension CryptoOnrampCoordinator {
 
     /// Retrieves a PaymentIntent using the provided client secret.
     private func retrievePaymentIntent(withClientSecret clientSecret: String) async throws -> STPPaymentIntent {
+        let platformApiClient = try await getPlatformApiClient()
+
         return try await withCheckedThrowingContinuation { continuation in
-            apiClient.retrievePaymentIntent(withClientSecret: clientSecret) { paymentIntent, error in
+            platformApiClient.retrievePaymentIntent(withClientSecret: clientSecret) { paymentIntent, error in
                 if let error = error {
                     continuation.resume(throwing: error)
                 } else if let paymentIntent = paymentIntent {
