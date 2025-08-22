@@ -244,7 +244,7 @@ class PaymentSheetStandardUITests: PaymentSheetUITestCase {
         XCTAssertEqual(
             analyticsLog.map({ $0[string: "event"] }),
             // fraud detection telemetry should not be sent in tests, so it should report an API failure
-            ["mc_load_started", "link.account_lookup.complete", "mc_load_succeeded", "fraud_detection_data_repository.api_failure", "mc_custom_init_customer_applepay", "mc_custom_sheet_savedpm_show"]
+            ["mc_load_started", "link.account_lookup.complete", "mc_load_succeeded", "fraud_detection_data_repository.api_failure", "mc_custom_init_customer_applepay", "elements.captcha.passive.init", "mc_custom_sheet_savedpm_show"]
         )
         // `mc_load_succeeded` event `selected_lpm` should be "apple_pay", the default payment method.
         XCTAssertEqual(analyticsLog[2][string: "selected_lpm"], "apple_pay")
@@ -622,7 +622,7 @@ class PaymentSheetDeferredUITests: PaymentSheetUITestCase {
             // Ignore luxe_* analytics since there are a lot and I'm not sure if they're the same every time
             analyticsLog.map({ $0[string: "event"] }).filter({ $0 != "luxe_image_selector_icon_from_bundle" && $0 != "luxe_image_selector_icon_downloaded" }),
             // fraud detection telemetry should not be sent in tests, so it should report an API failure
-            ["mc_complete_init_applepay", "mc_load_started", "mc_load_succeeded", "fraud_detection_data_repository.api_failure", "mc_complete_sheet_newpm_show", "mc_lpms_render", "mc_form_shown"]
+            ["mc_complete_init_applepay", "mc_load_started", "mc_load_succeeded", "fraud_detection_data_repository.api_failure", "elements.captcha.passive.init", "mc_complete_sheet_newpm_show", "mc_lpms_render", "mc_form_shown"]
         )
         XCTAssertEqual(analyticsLog.last?[string: "selected_lpm"], "card")
 

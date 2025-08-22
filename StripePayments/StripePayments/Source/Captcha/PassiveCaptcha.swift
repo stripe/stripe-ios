@@ -46,7 +46,6 @@ import Foundation
 
     public init(passiveCaptcha: PassiveCaptcha, testTimeout: UInt64? = nil) {
         self.passiveCaptcha = passiveCaptcha
-
         do {
             self.hcaptcha = try HCaptcha(apiKey: passiveCaptcha.siteKey,
                                             passiveApiKey: true,
@@ -58,9 +57,15 @@ import Foundation
             STPAnalyticsClient.sharedClient.logPassiveCaptchaError(error: error, siteKey: passiveCaptcha.siteKey)
         }
 
-        if let hcaptcha = self.hcaptcha, !STPAnalyticsClient.isUnitOrUITest || testTimeout != nil {
+        if let hcaptcha = self.hcaptcha,
+           !STPAnalyticsClient.isUnitOrUITest || testTimeout != nil {
             let siteKey = passiveCaptcha.siteKey
-            let timeoutNs: UInt64 = testTimeout ?? 6_000_000_000
+            let timeoutNs: UInt64 = {
+                if let testTimeout {
+                    return testTimeout
+                }
+                return STPAnalyticsClient.isUnitOrUITest ? 0 : 6_000_000_000
+            }()
             self.validationTask = Task<String?, Never> { [hcaptcha, siteKey, timeoutNs] () -> String? in
                 return await withCheckedContinuation { (continuation: CheckedContinuation<String?, Never>) in
                     var hasCompleted: Bool = false
