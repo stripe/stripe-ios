@@ -398,6 +398,7 @@ extension PaymentSheet {
                     paymentOptions.setSetupFutureUsageIfNecessary(shouldSave, currentSetupFutureUsage: currentSetupFutureUsage, paymentMethodType: paymentMethodType, customer: configuration.customer)
                     paymentIntentParams.paymentMethodOptions = paymentOptions
                     paymentIntentParams.mandateData = mandateData
+                    paymentIntentParams.clientAttributionMetadata = clientAttributionMetadata
                     paymentHandler.confirmPayment(
                         paymentIntentParams,
                         with: authenticationContext,
@@ -413,6 +414,7 @@ extension PaymentSheet {
                     setupIntentParams.paymentMethodID = paymentMethod.stripeId
                     setupIntentParams.returnURL = configuration.returnURL
                     setupIntentParams.mandateData = mandateData
+                    setupIntentParams.clientAttributionMetadata = clientAttributionMetadata
                     paymentHandler.confirmSetupIntent(
                         setupIntentParams,
                         with: authenticationContext,
