@@ -62,45 +62,42 @@ import Foundation
     @_spi(STP) public func fetchToken() async -> String? {
         guard let hcaptcha = self.hcaptcha else { return nil }
         let siteKey = self.passiveCaptcha.siteKey
+        let timeoutNs = self.timeoutNs
 
-        return await withTaskGroup(of: String?.self) { group in
-            // Validation
-            group.addTask {
-                await withCheckedContinuation { continuation in
-                    hcaptcha.didFinishLoading {
-                        hcaptcha.validate { result in
-                            do {
-                                let token = try result.dematerialize()
-                                if !Task.isCancelled {
-                                    STPAnalyticsClient.sharedClient.logPassiveCaptchaSuccess(siteKey: siteKey)
-                                }
-                                continuation.resume(returning: token)
-                            } catch {
-                                if !Task.isCancelled {
-                                    STPAnalyticsClient.sharedClient.logPassiveCaptchaError(error: error, siteKey: siteKey)
-                                }
-                                continuation.resume(returning: nil)
-                            }
+        return await withCheckedContinuation { continuation in
+            var resumed = false
+
+            let timeoutTask = Task { @MainActor in
+                do {
+                    try await Task.sleep(nanoseconds: timeoutNs)
+                } catch {
+                    return
+                }
+                if resumed { return }
+                resumed = true
+                STPAnalyticsClient.sharedClient.logPassiveCaptchaTimeout(siteKey: siteKey)
+                continuation.resume(returning: nil)
+            }
+
+            hcaptcha.didFinishLoading {
+                hcaptcha.validate { result in
+                    Task { @MainActor in
+                        if resumed { return }
+                        do {
+                            let token = try result.dematerialize()
+                            resumed = true
+                            STPAnalyticsClient.sharedClient.logPassiveCaptchaSuccess(siteKey: siteKey)
+                            timeoutTask.cancel()
+                            continuation.resume(returning: token)
+                        } catch {
+                            resumed = true
+                            STPAnalyticsClient.sharedClient.logPassiveCaptchaError(error: error, siteKey: siteKey)
+                            timeoutTask.cancel()
+                            continuation.resume(returning: nil)
                         }
                     }
                 }
             }
-
-            // Timeout
-            group.addTask {
-                try? await Task.sleep(nanoseconds: self.timeoutNs)
-                if !Task.isCancelled {
-                    STPAnalyticsClient.sharedClient.logPassiveCaptchaTimeout(siteKey: siteKey)
-                }
-                return nil
-            }
-
-            if let result = await group.next() {
-                group.cancelAll()
-                return result
-            }
-            group.cancelAll()
-            return nil
         }
     }
 }
