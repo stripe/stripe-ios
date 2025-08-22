@@ -13,7 +13,7 @@ import StripeCryptoOnramp
 @_spi(STP)
 import StripePaymentSheet
 
-/// A view used to collect KYC (Know Your Customer) data and exercise the `CryptoOnrampCoordinator’s` `collectKYCInfo(info:)` functionality.
+/// A view used to collect KYC (Know Your Customer) data and exercise the `CryptoOnrampCoordinator's` `attachKYCInfo(info:)` functionality.
 struct KYCInfoView: View {
 
     /// The coordinator to use to submit KYC information.
@@ -205,7 +205,7 @@ struct KYCInfoView: View {
 
         Task {
             do {
-                try await coordinator.collectKYCInfo(info: kycInfo)
+                try await coordinator.attachKYCInfo(info: kycInfo)
                 await MainActor.run {
                     isLoading.wrappedValue = false
                     isKYCComplete = true

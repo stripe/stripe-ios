@@ -60,7 +60,7 @@
 
 "By continuing, you agree to authorize payments pursuant to <terms>these terms</terms>." = "Pokračovaním súhlasíte s autorizáciou platieb podľa <terms>týchto podmienok</terms>.";
 
-"By continuing, you agree to save your information for future purchases with %@ and <link>Link</link>. You also agree to Link's <terms>Terms</terms> and <privacy>Privacy</privacy>." = "Pokračovaním súhlasíte s uložením svojich údajov pre budúce nákupy v spoločnosti %@ a <link>službe Link</link>Súhlasíte aj s <terms>podmienkami</terms> a <privacy>zásadami ochrany osobných údajov</privacy> služby Link.";
+"By continuing, you agree to save your information for future purchases with %@ and <link>Link</link> according to Link <terms>terms</terms> and <privacy>privacy</privacy>." = "Pokračovaním súhlasíte s uložením svojich údajov pre budúce nákupy v spoločnosti %@ a <link>službe Link</link> podľa <terms>podmienok</terms> a <privacy>zásad ochrany osobných údajov</privacy> služby Link.";
 
 "By continuing, you agree to save your information for future purchases with %@." = "Pokračovaním súhlasíte s uložením svojich údajov pre budúce nákupy v spoločnosti %@.";
 
@@ -83,6 +83,8 @@
 "By providing your phone number, you agree to create a Link account and save your payment info to Link, according to the Link <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Poskytnutím svojho telefónneho čísla súhlasíte s vytvorením účtu Link a s uložením svojich platobných informácií do služby Link podľa <terms>podmienok</terms> a <privacy>zásad ochrany osobných údajov</privacy> služby Link.";
 
 "By saving your bank account for %@ you agree to authorize payments pursuant to <terms>these terms</terms>." = "Uložením bankového účtu pre spoločnosť %@ súhlasíte s autorizáciou platieb podľa <terms>týchto podmienok</terms>.";
+
+"By submitting your order to %@ you agree to authorize payments pursuant to <terms>these terms</terms>." = "Odoslaním objednávky na %@ súhlasíte s autorizáciou platieb podľa <terms>týchto podmienok</terms>.";
 
 "CPF/CPNJ" = "CPF/CPNJ";
 

@@ -60,7 +60,7 @@
 
 "By continuing, you agree to authorize payments pursuant to <terms>these terms</terms>." = "Dengan meneruskan langkah, anda bersetuju untuk mengizinkan pembayaran menurut <terms>terma ini</terms>";
 
-"By continuing, you agree to save your information for future purchases with %@ and <link>Link</link>. You also agree to Link's <terms>Terms</terms> and <privacy>Privacy</privacy>." = "Dengan meneruskan, anda bersetuju untuk menyimpan maklumat anda bagi pembelian masa hadapan dengan %@ dan <link>Link</link>. Anda juga bersetuju dengan <terms>Terma</terms> dan <privacy>Privasi</privacy> Link.";
+"By continuing, you agree to save your information for future purchases with %@ and <link>Link</link> according to Link <terms>terms</terms> and <privacy>privacy</privacy>." = "Dengan meneruskan, anda bersetuju untuk menyimpan maklumat anda bagi pembelian masa hadapan dengan %@ dan <link>Link</link> menurut <terms>terma</terms> Dan <privacy>privasi</privacy> Link.";
 
 "By continuing, you agree to save your information for future purchases with %@." = "Dengan meneruskan, anda bersetuju untuk menyimpan maklumat anda untuk pembelian masa hadapan dengan %@.";
 
@@ -83,6 +83,8 @@
 "By providing your phone number, you agree to create a Link account and save your payment info to Link, according to the Link <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Dengan memberikan nombor telefon anda, anda bersetuju untuk mencipta akaun Link dan menyimpan maklumat pembayaran anda di Link, menurut <terms>Terma</terms> dan <privacy>Dasar Privasi</privacy> Link.";
 
 "By saving your bank account for %@ you agree to authorize payments pursuant to <terms>these terms</terms>." = "Dengan menyimpan akaun bank anda untuk %@, anda bersetuju untuk mengizinkan pembayaran menurut <terms>terma ini</terms>.";
+
+"By submitting your order to %@ you agree to authorize payments pursuant to <terms>these terms</terms>." = "Dengan menghantar pesanan anda kepada %@ anda bersetuju untuk mengizinkan pembayaran mengikut <terms>terma-terma ini</terms>.";
 
 "CPF/CPNJ" = "CPF/CPNJ";
 

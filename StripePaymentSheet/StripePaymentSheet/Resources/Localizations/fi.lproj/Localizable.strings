@@ -60,7 +60,7 @@
 
 "By continuing, you agree to authorize payments pursuant to <terms>these terms</terms>." = "Jatkamalla hyväksyt maksujen valtuutuksen <terms>näiden ehtojen mukaisesti</terms>.";
 
-"By continuing, you agree to save your information for future purchases with %@ and <link>Link</link>. You also agree to Link's <terms>Terms</terms> and <privacy>Privacy</privacy>." = "Jatkamalla hyväksyt, että tietosi tallennetaan tulevia ostoksia varten tahon %@ kanssa ja <link>Linkin kanssa</link>. Hyväksyt myös Linkin <terms>ehdot</terms> ja <privacy>tietosuojakäytännön</privacy>.";
+"By continuing, you agree to save your information for future purchases with %@ and <link>Link</link> according to Link <terms>terms</terms> and <privacy>privacy</privacy>." = "Jatkamalla hyväksyt, että tietosi tallennetaan tulevia ostoksia varten tahon %@ ja <link>Linkin kanssa</link> Linkin <terms>ehtojen</terms> ja <privacy>tietosuojakäytännön</privacy> mukaisesti.";
 
 "By continuing, you agree to save your information for future purchases with %@." = "Jatkamalla hyväksyt, että tietosi tallennetaan tulevia ostoksia varten tahon %@ kanssa.";
 
@@ -83,6 +83,8 @@
 "By providing your phone number, you agree to create a Link account and save your payment info to Link, according to the Link <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Antamalla puhelinnumerosi hyväksyt Link-tilin luomisen ja tallennat maksutietosi Link-palveluun Link-<terms>ehtojen</terms> ja <privacy>tietosuojaselosteen</privacy> mukaisesti.";
 
 "By saving your bank account for %@ you agree to authorize payments pursuant to <terms>these terms</terms>." = "Tallentamalla pankkitilisi yritykselle %@, hyväksyt maksujen valtuutuksen <terms>näiden ehtojen mukaisesti</terms>.";
+
+"By submitting your order to %@ you agree to authorize payments pursuant to <terms>these terms</terms>." = "Lähettämällä tilauksesi yritykselle %@, valtuutat maksut <terms>näiden ehtojen</terms> mukaisesti.";
 
 "CPF/CPNJ" = "CPF/CPNJ";
 

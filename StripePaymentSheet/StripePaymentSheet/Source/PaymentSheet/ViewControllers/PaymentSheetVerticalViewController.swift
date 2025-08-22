@@ -82,7 +82,7 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
     let walletButtonsShownExternally: Bool
     var error: Swift.Error?
     var isPaymentInFlight: Bool = false
-    private var savedPaymentMethods: [STPPaymentMethod]
+    private(set) var savedPaymentMethods: [STPPaymentMethod]
     let isFlowController: Bool
     /// Previous customer input - in FlowController's `update` flow, this is the customer input prior to `update`, used so we can restore their state in this VC.
     private var previousPaymentOption: PaymentOption?
@@ -855,6 +855,13 @@ extension PaymentSheetVerticalViewController: VerticalPaymentMethodListViewContr
                 return nil
             }
         }()
+        let previousLinkInlineSignupAction: LinkInlineSignupViewModel.Action? = {
+            if case let .link(confirmOption) = previousPaymentOption {
+                return confirmOption.signupAction
+            } else {
+                return nil
+            }
+        }()
         let headerView: UIView = {
             let incentive = paymentMethodListViewController?.incentive?.takeIfAppliesTo(paymentMethodType)
             let currentForm = formCache[paymentMethodType]
@@ -908,7 +915,8 @@ extension PaymentSheetVerticalViewController: VerticalPaymentMethodListViewContr
             headerView: headerView,
             analyticsHelper: analyticsHelper,
             isLinkUI: false,
-            delegate: self
+            delegate: self,
+            previousLinkInlineSignupAction: previousLinkInlineSignupAction
         )
     }
 

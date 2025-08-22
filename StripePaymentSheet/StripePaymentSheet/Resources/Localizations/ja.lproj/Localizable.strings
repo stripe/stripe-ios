@@ -60,7 +60,7 @@
 
 "By continuing, you agree to authorize payments pursuant to <terms>these terms</terms>." = "続行すると、<terms>これらの規約</terms>に従って支払いをオーソリすることに同意したものとみなされます。";
 
-"By continuing, you agree to save your information for future purchases with %@ and <link>Link</link>. You also agree to Link's <terms>Terms</terms> and <privacy>Privacy</privacy>." = "続行することで、今後の購入のために情報を保存することに同意したことになります <link>Link</link>.また、リンクの<terms>規約</terms>と<privacy>プライバシー</privacy>にも同意するものとします。";
+"By continuing, you agree to save your information for future purchases with %@ and <link>Link</link> according to Link <terms>terms</terms> and <privacy>privacy</privacy>." = "続行することで、今後の購入のために情報を保存することに同意したことになります <link>Link</link> リンク<terms>規約</terms>および<privacy>プライバシー</privacy>に従うことになります。";
 
 "By continuing, you agree to save your information for future purchases with %@." = "続行することで、あなたは、%@ での今後の購入のために情報を保存することに同意したことになります。";
 
@@ -83,6 +83,8 @@
 "By providing your phone number, you agree to create a Link account and save your payment info to Link, according to the Link <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "電話番号を入力することにより、お客様は Link の<terms>規約</terms>と<privacy>プライバシーポリシー</privacy>に従って Link アカウントを作成し、お支払い情報を Link に保存することに同意したとみなされます。";
 
 "By saving your bank account for %@ you agree to authorize payments pursuant to <terms>these terms</terms>." = "%@ の銀行口座を保存すると、<terms>これらの規約</terms>に従って支払いをオーソリすることに同意したものと見なされます。";
+
+"By submitting your order to %@ you agree to authorize payments pursuant to <terms>these terms</terms>." = "%@ に注文を送信することにより、<terms>これらの規約</terms> に従って決済を承認することに同意したものとみなされます。";
 
 "CPF/CPNJ" = "CPF/CPNJ";
 

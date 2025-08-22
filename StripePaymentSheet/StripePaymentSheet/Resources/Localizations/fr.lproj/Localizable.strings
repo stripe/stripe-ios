@@ -60,7 +60,7 @@
 
 "By continuing, you agree to authorize payments pursuant to <terms>these terms</terms>." = "En continuant, vous autorisez les paiements conformément à <terms>ces conditions</terms>.";
 
-"By continuing, you agree to save your information for future purchases with %@ and <link>Link</link>. You also agree to Link's <terms>Terms</terms> and <privacy>Privacy</privacy>." = "En continuant, vous acceptez d'enregistrer vos informations pour de futurs achats avec %@ et <link>Link</link>. Vous acceptez également les <terms>Conditions</terms> et la <privacy>Politique de confidentialité</privacy> de Link.";
+"By continuing, you agree to save your information for future purchases with %@ and <link>Link</link> according to Link <terms>terms</terms> and <privacy>privacy</privacy>." = "En continuant, vous acceptez d'enregistrer vos informations pour de futurs achats avec %@ et <link>Link</link> conformément aux <terms>conditions</terms> et à la <privacy>confidentialité</privacy> de Link.";
 
 "By continuing, you agree to save your information for future purchases with %@." = "En continuant, vous acceptez d'enregistrer vos informations pour de futurs achats avec %@.";
 
@@ -83,6 +83,8 @@
 "By providing your phone number, you agree to create a Link account and save your payment info to Link, according to the Link <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "En indiquant votre numéro de téléphone, vous acceptez de créer un compte Link et d'enregistrer vos informations de paiement sur Link, conformément aux <terms>Conditions</terms> de Link et à sa <privacy>Politique de confidentialité</privacy>.";
 
 "By saving your bank account for %@ you agree to authorize payments pursuant to <terms>these terms</terms>." = "En enregistrant votre compte bancaire pour %@, vous autorisez les paiements conformément à <terms>ces conditions</terms>.";
+
+"By submitting your order to %@ you agree to authorize payments pursuant to <terms>these terms</terms>." = "En soumettant votre commande à %@, vous autoriser les paiements conformément à <terms>ces conditions</terms>.";
 
 "CPF/CPNJ" = "CPF/CNPJ";
 

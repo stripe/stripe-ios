@@ -10,11 +10,11 @@ import SwiftUI
 @_spi(CryptoOnrampSDKPreview)
 import StripeCryptoOnramp
 
-/// A view that displays the information from `PaymentMethodSelectionResult.PaymentMethodPreview`
+/// A view that displays the information from `PaymentMethodSelectionResult.PaymentMethodDisplayData`
 struct PaymentMethodCardView: View {
 
-    /// The `PaymentMethodPreview` containing the details to render.
-    let preview: PaymentMethodPreview
+    /// The `PaymentMethodDisplayData` containing the details to render.
+    let preview: PaymentMethodDisplayData
 
     // MARK: - View
 
@@ -46,7 +46,7 @@ struct PaymentMethodCardView: View {
             }
         }
         .aspectRatio(1.6 / 1, contentMode: .fit)
-        .frame(maxWidth: 280)
+        .frame(maxHeight: 180)
         .padding()
         .background(
             LinearGradient(

@@ -85,6 +85,7 @@ struct CryptoOnrampExampleView: View {
             .navigationTitle("CryptoOnramp Example")
             .navigationBarTitleDisplayMode(.inline)
         }
+        .navigationViewStyle(.stack)
         .onAppear {
             guard coordinator == nil else {
                 return
@@ -131,7 +132,12 @@ struct CryptoOnrampExampleView: View {
         isLoading.wrappedValue = true
         Task {
             do {
-                let lookupResult = try await coordinator.lookupConsumer(with: email)
+                let lookupResult = try await coordinator.hasLinkAccount(with: email)
+                if lookupResult {
+                    // Authenticate with the demo merchant backend as well.
+                    let laiId = try await APIClient.shared.authenticateUser(with: email).data.id
+                    print( "Successfully authenticated user with demo backend. Id: \(laiId)")
+                }
                 await MainActor.run {
                     errorMessage = nil
                     isLoading.wrappedValue = false
@@ -155,7 +161,7 @@ struct CryptoOnrampExampleView: View {
         if let viewController = UIApplication.shared.findTopNavigationController() {
             Task {
                 do {
-                    let result = try await coordinator.presentForVerification(from: viewController)
+                    let result = try await coordinator.authenticateUser(from: viewController)
                     switch result {
                     case .completed(customerId: let customerId):
                         await MainActor.run {

@@ -111,6 +111,59 @@ extension STPAPIClient {
         return try await post(resource: endpoint, object: requestObject)
     }
 
+    /// Retrieves the PaymentIntent from an onramp session.
+    /// - Parameters:
+    ///   - sessionId: The onramp session identifier.
+    ///   - sessionClientSecret: The onramp session client secret.
+    /// - Returns: The PaymentIntent associated with the onramp session.
+    func retrievePaymentIntentFromOnrampSession(
+        sessionId: String,
+        sessionClientSecret: String
+    ) async throws -> STPPaymentIntent {
+        let endpoint = "crypto/internal/onramp_session"
+        let parameters = ["crypto_onramp_session": sessionId, "client_secret": sessionClientSecret]
+        return try await APIRequest<STPPaymentIntent>.getWith(self, endpoint: endpoint, parameters: parameters)
+    }
+
+    /// Creates a crypto payment token from a given payment method and consumer.
+    /// - Parameters:
+    ///   - paymentMethodId: The originating payment method ID.
+    ///   - linkAccountInfo: Information associated with the link account including the client secret.
+    /// - Returns: The created crypto payment token.
+    /// Throws if an API error occurs.
+    func createPaymentToken(
+        for paymentMethodId: String,
+        linkAccountInfo: PaymentSheetLinkAccountInfoProtocol
+    ) async throws -> CreatePaymentTokenResponse {
+        guard let consumerSessionClientSecret = linkAccountInfo.consumerSessionClientSecret else {
+            throw CryptoOnrampAPIError.missingConsumerSessionClientSecret
+        }
+
+        let endpoint = "crypto/internal/payment_token"
+        let requestObject = CreatePaymentTokenRequest(
+            paymentMethod: paymentMethodId,
+            consumerSessionClientSecret: consumerSessionClientSecret
+        )
+        return try await post(resource: endpoint, object: requestObject)
+    }
+
+    /// Retrieves platform settings for the crypto onramp service.
+    /// - Parameter linkAccountInfo: Information associated with the link account including the client secret.
+    /// - Returns: Platform settings including the publishable key.
+    /// Throws if an API error occurs.
+    func getPlatformSettings(
+        linkAccountInfo: PaymentSheetLinkAccountInfoProtocol
+    ) async throws -> PlatformSettingsResponse {
+        let endpoint = "crypto/internal/platform_settings"
+
+        var parameters: [String: Any] = [:]
+        if let consumerSessionClientSecret = linkAccountInfo.consumerSessionClientSecret {
+            parameters["credentials"] = ["consumer_session_client_secret": consumerSessionClientSecret]
+        }
+
+        return try await get(resource: endpoint, parameters: parameters)
+    }
+
     private func validateSessionState(using linkAccountInfo: PaymentSheetLinkAccountInfoProtocol) throws {
         guard case .verified = linkAccountInfo.sessionState else {
             throw CryptoOnrampAPIError.linkAccountNotVerified
@@ -123,6 +176,15 @@ private extension STPAPIClient {
     func post<T: Decodable>(resource: String, object: Encodable) async throws -> T {
         return try await withCheckedThrowingContinuation { continuation in
             post(resource: resource, object: object) { (result: Result<T, Error>) in
+                continuation.resume(with: result)
+            }
+        }
+    }
+
+    /// Helper method to wrap the closure-based get method for Swift concurrency.
+    func get<T: Decodable>(resource: String, parameters: [String: Any] = [:]) async throws -> T {
+        return try await withCheckedThrowingContinuation { continuation in
+            get(resource: resource, parameters: parameters) { (result: Result<T, Error>) in
                 continuation.resume(with: result)
             }
         }

@@ -60,7 +60,7 @@
 
 "By continuing, you agree to authorize payments pursuant to <terms>these terms</terms>." = "Tęsdami sutinkate autorizuoti mokėjimus pagal šias <terms>sąlygas</terms>.";
 
-"By continuing, you agree to save your information for future purchases with %@ and <link>Link</link>. You also agree to Link's <terms>Terms</terms> and <privacy>Privacy</privacy>." = "Tęsdami sutinkate išsaugoti savo informaciją būsimiems pirkimams naudojant %@ ir <link>Nuoroda</link>. Taip pat sutinkate su „Link“ <terms>Sąlygomis</terms> ir <privacy>Privatumo politika</privacy>.";
+"By continuing, you agree to save your information for future purchases with %@ and <link>Link</link> according to Link <terms>terms</terms> and <privacy>privacy</privacy>." = "Tęsdami sutinkate išsaugoti savo informaciją būsimiems pirkimams naudojant %@ ir <link>„Link“</link> pagal „Link“ <terms>Sąlygas</terms> ir <privacy>Privatumo politiką</privacy>.";
 
 "By continuing, you agree to save your information for future purchases with %@." = "Tęsdami sutinkate išsaugoti savo informaciją būsimiems pirkiniams naudojant %@.";
 
@@ -83,6 +83,8 @@
 "By providing your phone number, you agree to create a Link account and save your payment info to Link, according to the Link <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Pateikdami savo telefono numerį sutinkate susikurti \"Link\" paskyrą bei įrašyti savo mokėjimo informaciją į \"Link\" pagal \"Link\" <terms>sąlygas</terms> ir <privacy>privatumo politiką</privacy>.";
 
 "By saving your bank account for %@ you agree to authorize payments pursuant to <terms>these terms</terms>." = "Išsaugodami savo banko sąskaitą %@, sutinkate autorizuoti mokėjimus pagal šias <terms>sąlygas</terms>.";
+
+"By submitting your order to %@ you agree to authorize payments pursuant to <terms>these terms</terms>." = "Pateikdami užsakymą %@, sutinkate mokėjimus autorizuoti pagal <terms>šias sąlygas</terms>.";
 
 "CPF/CPNJ" = "CPF/CPNJ";
 

@@ -80,6 +80,8 @@ enum LinkUI {
 
     static let tinyContentSpacing: CGFloat = 4
 
+    static let bottomInset: CGFloat = 35
+
     // MARK: - Navigation bar
 
     static let navigationBarHeight: CGFloat = 70

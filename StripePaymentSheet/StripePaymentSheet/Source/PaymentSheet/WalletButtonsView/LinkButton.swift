@@ -25,10 +25,18 @@ struct LinkButton: View {
     private let action: () -> Void
     private let height: CGFloat
     private let cornerRadius: CGFloat
+    private let borderColor: UIColor
 
-    init(height: CGFloat = Constants.defaultButtonHeight, cornerRadius: CGFloat = Constants.defaultButtonHeight / 2, viewModel: LinkButtonViewModel = LinkButtonViewModel(), action: @escaping () -> Void) {
+    init(
+        height: CGFloat = Constants.defaultButtonHeight,
+        cornerRadius: CGFloat = Constants.defaultButtonHeight / 2,
+        viewModel: LinkButtonViewModel = LinkButtonViewModel(),
+        borderColor: UIColor,
+        action: @escaping () -> Void
+    ) {
         self.height = height
         self.cornerRadius = cornerRadius
+        self.borderColor = borderColor
         self._viewModel = StateObject(wrappedValue: viewModel)
         self.action = action
     }
@@ -63,14 +71,15 @@ struct LinkButton: View {
     var body: some View {
         Button(action: action) {
             HStack(spacing: scaledContentSpacing) {
-                SwiftUI.Image(uiImage: Image.link_logo_bw.makeImage(template: false))
+                SwiftUI.Image(uiImage: Image.link_logo.makeImage(template: false))
                     .resizable()
                     .scaledToFit()
                     .frame(height: scaledContentHeight)
+                    .environment(\.colorScheme, .light)
 
                 if let account = viewModel.account {
                     Rectangle()
-                        .fill(Color(uiColor: .linkSeparatorOnPrimaryButton))
+                        .fill(Color(uiColor: .linkExpressCheckoutButtonDivider))
                         .frame(width: scaledSeparatorWidth, height: scaledContentHeight)
                         .cornerRadius(scaledSeparatorWidth / 2)
 
@@ -93,13 +102,17 @@ struct LinkButton: View {
                 }
             }
             .padding(.horizontal, LinkUI.contentSpacing)
-            .foregroundColor(Color(uiColor: .linkTextOnPrimary))
+            .foregroundColor(Color(uiColor: .linkExpressCheckoutButtonForeground))
             .frame(height: scaledContentHeight)
             .frame(minWidth: Constants.minWidth, maxWidth: .infinity)
         }
         .frame(maxWidth: .infinity)
         .frame(height: height)
-        .background(Color(uiColor: .linkIconBrand))
+        .background(Color(uiColor: .linkExpressCheckoutButtonBackground))
+        .overlay {
+            RoundedRectangle(cornerRadius: cornerRadius)
+                .stroke(Color(uiColor: borderColor), lineWidth: 1)
+        }
         .cornerRadius(cornerRadius)
     }
 }
@@ -125,7 +138,7 @@ private struct LinkButtonPreview: View {
     }
 
     var body: some View {
-        LinkButton(viewModel: viewModel, action: {})
+        LinkButton(viewModel: viewModel, borderColor: .red, action: {})
             .padding(.horizontal)
     }
 }
