@@ -61,15 +61,9 @@ import Foundation
 
     @_spi(STP) public func fetchToken() async -> String? {
         let validationTask: Task<String?, Never> = Task<String?, Never> { [weak self] in
-            guard let self, let hcaptcha = await self.hcaptcha else { return nil }
+            guard let self, let hcaptcha = await self.hcaptcha, !STPAnalyticsClient.isSimulatorOrTest || self.testTimeout != nil else { return nil }
             let siteKey = await self.passiveCaptcha.siteKey
-            let timeoutNs: UInt64 = {
-                if let testTimeout = self.testTimeout {
-                    return testTimeout
-                } else {
-                    return STPAnalyticsClient.isSimulatorOrTest ? 1_000_000 : 6_000_000_000
-                }
-            }()
+            let timeoutNs: UInt64 = self.testTimeout ?? 6_000_000_000
             return await withCheckedContinuation { continuation in
                 var hasCompleted: Bool = false
                 let timeoutTask = Task { @MainActor in
