@@ -20,7 +20,7 @@ class PassiveCaptchaTests: XCTestCase {
 
     func testPassiveCaptchaTimeout() async {
         let passiveCaptcha = PassiveCaptcha(siteKey: "143aadb6-fb60-4ab6-b128-f7fe53426d4a", rqdata: nil)
-        let shortTimeoutNs: UInt64 = 1_000_000 // 1ms
+        let shortTimeoutNs: UInt64 = 0
         let passiveCaptchaChallenge = PassiveCaptchaChallenge(passiveCaptcha: passiveCaptcha, testTimeout: shortTimeoutNs)
         let hcaptchaToken = await passiveCaptchaChallenge.fetchToken()
         XCTAssertNil(hcaptchaToken)
