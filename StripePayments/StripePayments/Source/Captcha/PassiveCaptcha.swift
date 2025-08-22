@@ -72,28 +72,35 @@ import Foundation
             }()
             return await withCheckedContinuation { continuation in
                 var hasCompleted: Bool = false
-                Task {
-                    try? await Task.sleep(nanoseconds: timeoutNs)
-                    if !hasCompleted {
-                        STPAnalyticsClient.sharedClient.logPassiveCaptchaTimeout(siteKey: siteKey)
-                        hasCompleted = true
-                        continuation.resume(returning: nil)
+                let timeoutTask = Task { @MainActor in
+                    do {
+                        try await Task.sleep(nanoseconds: timeoutNs)
+                    } catch {
+                        return
                     }
+                    if hasCompleted { return }
+                    hasCompleted = true
+                    STPAnalyticsClient.sharedClient.logPassiveCaptchaTimeout(siteKey: siteKey)
+                    continuation.resume(returning: nil)
                 }
                 hcaptcha.didFinishLoading {
                     hcaptcha.validate { result in
-                        do {
-                            let token = try result.dematerialize()
-                            STPAnalyticsClient.sharedClient.logPassiveCaptchaSuccess(siteKey: siteKey)
-                            hasCompleted = true
-                            continuation.resume(returning: token)
-                        } catch {
-                            STPAnalyticsClient.sharedClient.logPassiveCaptchaError(error: error, siteKey: siteKey)
-                            hasCompleted = true
-                            continuation.resume(returning: nil)
+                        Task { @MainActor in
+                            if hasCompleted { return }
+                            do {
+                                let token = try result.dematerialize()
+                                hasCompleted = true
+                                STPAnalyticsClient.sharedClient.logPassiveCaptchaSuccess(siteKey: siteKey)
+                                timeoutTask.cancel()
+                                continuation.resume(returning: token)
+                            } catch {
+                                hasCompleted = true
+                                STPAnalyticsClient.sharedClient.logPassiveCaptchaError(error: error, siteKey: siteKey)
+                                timeoutTask.cancel()
+                                continuation.resume(returning: nil)
+                            }
                         }
                     }
-
                 }
             }
 
