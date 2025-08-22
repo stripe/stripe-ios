@@ -160,7 +160,7 @@ class APIRequestTest: STPNetworkStubbingTestCase {
     func testParseResponseWithReturnedError() {
         let expectation = self.expectation(description: "parseResponse")
 
-        let httpURLResponse = HTTPURLResponse()
+        let httpURLResponse = HTTPURLResponse(url: URL(string: "https://api.stripe.com/v1/some_endpoint")!, statusCode: 400, httpVersion: nil, headerFields: nil)
         let json = [
             "error": [
                 "type": "invalid_request_error",
@@ -170,7 +170,7 @@ class APIRequestTest: STPNetworkStubbingTestCase {
         ]
         let body = try? JSONSerialization.data(withJSONObject: json, options: [])
         let errorParameter: NSError? = nil
-        let expectedError = NSError.stp_error(fromStripeResponse: json)
+        let expectedError = NSError.stp_error(fromStripeResponse: json, httpResponse: httpURLResponse)
 
         APIRequest<STPCard>.parseResponse(
             httpURLResponse,
@@ -178,7 +178,7 @@ class APIRequestTest: STPNetworkStubbingTestCase {
             body: body,
             error: errorParameter
         ) { (object: STPCard?, response, error) in
-            guard let error = error, let expectedError = expectedError else {
+            guard let error else {
                 XCTFail()
                 return
             }
@@ -194,11 +194,10 @@ class APIRequestTest: STPNetworkStubbingTestCase {
     func testParseResponseWithMissingError() {
         let expectation = self.expectation(description: "parseResponse")
 
-        let httpURLResponse = HTTPURLResponse()
+        let httpURLResponse = HTTPURLResponse(url: URL(string: "https://api.stripe.com/v1/some_endpoint")!, statusCode: 400, httpVersion: nil, headerFields: nil)
         let json: [AnyHashable: Any] = [:]
         let body = try? JSONSerialization.data(withJSONObject: json, options: [])
         let errorParameter: NSError? = nil
-        let expectedError = NSError.stp_genericFailedToParseResponseError()
 
         APIRequest<STPCard>.parseResponse(
             httpURLResponse,
@@ -206,13 +205,16 @@ class APIRequestTest: STPNetworkStubbingTestCase {
             body: body,
             error: errorParameter
         ) { (object: STPCard?, response, error) in
-            guard let error = error else {
+            guard let error = error as? NSError else {
                 XCTFail()
                 return
             }
             XCTAssertNil(object)
             XCTAssertEqual(response, httpURLResponse)
-            XCTAssertEqual(error as NSError, expectedError as NSError)
+            XCTAssertEqual(error.domain, STPError.stripeDomain)
+            XCTAssertNil(error.userInfo[STPError.errorMessageKey])
+            XCTAssertEqual(error.localizedDescription, "There was an unexpected error -- try again in a few seconds")
+            XCTAssertEqual(error.userInfo[STPError.httpStatusCodeKey] as? Int, 400)
             expectation.fulfill()
         }
 

@@ -516,6 +516,7 @@ class PaymentSheetLoaderStubbedTest: APIStubbedTestCase {
     }
 
     func testSendsErrorAnalytic() {
+        // If v1/elements/session and the fallback fail to load...
         let analyticsClient = STPAnalyticsClient()
         stub { urlRequest in
             return urlRequest.url?.absoluteString.contains("/v1/elements/sessions") ?? false
@@ -543,7 +544,7 @@ class PaymentSheetLoaderStubbedTest: APIStubbedTestCase {
             case .failure:
                 break
             }
-            // Should send a load failure analytic
+            // ...we should send a load failure analytic
             let analyticEvent = analyticsClient._testLogHistory.last
             XCTAssertEqual(analyticEvent?["event"] as? String, STPAnalyticEvent.paymentSheetLoadFailed.rawValue)
             XCTAssertEqual(analyticEvent?["error_type"] as? String, "NSURLErrorDomain")
