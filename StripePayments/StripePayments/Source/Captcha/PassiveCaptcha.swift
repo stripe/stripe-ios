@@ -40,24 +40,21 @@ import Foundation
 }
 
 @_spi(STP) public actor PassiveCaptchaChallenge {
-    private let passiveCaptcha: PassiveCaptcha
-    private let hcaptcha: HCaptcha?
     private let validationTask: Task<String?, Never>?
 
     public init(passiveCaptcha: PassiveCaptcha, testTimeout: UInt64? = nil) {
-        self.passiveCaptcha = passiveCaptcha
+        var hcaptcha: HCaptcha?
         do {
-            self.hcaptcha = try HCaptcha(apiKey: passiveCaptcha.siteKey,
+            hcaptcha = try HCaptcha(apiKey: passiveCaptcha.siteKey,
                                             passiveApiKey: true,
                                             rqdata: passiveCaptcha.rqdata,
                                             host: "stripecdn.com")
             STPAnalyticsClient.sharedClient.logPassiveCaptchaInit(siteKey: passiveCaptcha.siteKey)
         } catch {
-            self.hcaptcha = nil
             STPAnalyticsClient.sharedClient.logPassiveCaptchaError(error: error, siteKey: passiveCaptcha.siteKey)
         }
 
-        if let hcaptcha = self.hcaptcha,
+        if let hcaptcha,
            !STPAnalyticsClient.isUnitOrUITest || testTimeout != nil {
             let siteKey = passiveCaptcha.siteKey
             let timeoutNs: UInt64 = {
