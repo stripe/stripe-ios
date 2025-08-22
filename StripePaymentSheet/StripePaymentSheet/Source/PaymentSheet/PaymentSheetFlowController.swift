@@ -293,6 +293,9 @@ extension PaymentSheet {
             self.analyticsHelper.logInitialized()
             self.viewController = Self.makeViewController(configuration: configuration, loadResult: loadResult, analyticsHelper: analyticsHelper, walletButtonsShownExternally: self.walletButtonsShownExternally)
             self.viewController.flowControllerDelegate = self
+            if let passiveCaptcha = loadResult.elementsSession.passiveCaptcha {
+                self.passiveCaptchaChallenge = PassiveCaptchaChallenge(passiveCaptcha: passiveCaptcha)
+            }
             updatePaymentOption()
         }
 
@@ -378,9 +381,6 @@ extension PaymentSheet {
                         analyticsHelper: analyticsHelper
                     )
 
-                    if let passiveCaptcha = loadResult.elementsSession.passiveCaptcha {
-                        flowController.passiveCaptchaChallenge = PassiveCaptchaChallenge(passiveCaptcha: passiveCaptcha)
-                    }
                     // Synchronously pre-load image into cache.
                     // Accessing flowController.paymentOption has the side-effect of ensuring its `image` property is loaded (e.g. from the internet instead of disk) before we call the completion handler.
                     _ = flowController.paymentOption
@@ -557,7 +557,7 @@ extension PaymentSheet {
             }
 
             func confirm() {
-                Task {
+                Task { @MainActor in
                     let hcaptchaToken = await self.passiveCaptchaChallenge?.fetchToken()
                     PaymentSheet.confirm(
                         configuration: configuration,
