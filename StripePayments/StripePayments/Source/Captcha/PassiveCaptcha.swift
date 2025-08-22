@@ -58,7 +58,7 @@ import Foundation
             STPAnalyticsClient.sharedClient.logPassiveCaptchaError(error: error, siteKey: passiveCaptcha.siteKey)
         }
 
-        if let hcaptcha = self.hcaptcha, (!STPAnalyticsClient.isUnitOrUITest || testTimeout != nil) {
+        if let hcaptcha = self.hcaptcha, !STPAnalyticsClient.isUnitOrUITest || testTimeout != nil {
             let siteKey = passiveCaptcha.siteKey
             let timeoutNs: UInt64 = testTimeout ?? 6_000_000_000
             self.validationTask = Task<String?, Never> { [hcaptcha, siteKey, timeoutNs] () -> String? in
