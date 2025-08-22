@@ -89,7 +89,7 @@ import Foundation
                 return nil
             }
 
-            let result = await group.next()
+            let result = await group.next() ?? nil
             group.cancelAll()
             return result
         }
