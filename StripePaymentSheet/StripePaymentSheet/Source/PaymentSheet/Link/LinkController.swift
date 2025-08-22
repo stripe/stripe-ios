@@ -36,6 +36,15 @@ import UIKit
         case canceled
     }
 
+    @frozen @_spi(STP) public enum AuthorizeResult {
+        /// Authorization was consented by the user.
+        case consented
+        /// Authorization was denied by the user.
+        case denied
+        /// The authorization flow was canceled by the user.
+        case canceled
+    }
+
     /// Errors specific incorrect integrations with LinkController
     @_spi(STP) public enum IntegrationError: Error {
         case noPaymentMethodSelected
@@ -221,18 +230,23 @@ import UIKit
     /// Authorizes a Link auth intent and retrieves the associated consumer session.
     ///
     /// - Parameter linkAuthIntentId: The Link auth intent ID to authorize.
+    /// - Parameter viewController: The view controller from which to present the authorization flow.
     /// - Parameter completion: A closure that is called with the result of the authorization.
-    @_spi(STP) public func authorize(linkAuthIntentId: String, completion: @escaping (Result<Void, Error>) -> Void) {
+    @_spi(STP) public func authorize(
+        linkAuthIntentId: String,
+        from viewController: UIViewController,
+        completion: @escaping (Result<AuthorizeResult, Error>) -> Void
+    ) {
         Self.authorize(
             linkAuthIntentId: linkAuthIntentId,
             linkAccountService: linkAccountService,
             requestSurface: requestSurface
         ) { result in
             switch result {
-            case .success(let linkAccount):
-                LinkAccountContext.shared.account = linkAccount
+            case .success(let authorizeAccountResult):
+                LinkAccountContext.shared.account = authorizeAccountResult?.linkAccount
                 // TODO: Implement remaining work to gather OAuth consent from the user
-                completion(.success(()))
+                completion(.success(.consented))
             case .failure(let error):
                 completion(.failure(error))
             }
@@ -495,7 +509,7 @@ import UIKit
         linkAuthIntentId: String,
         linkAccountService: any LinkAccountServiceProtocol,
         requestSurface: LinkRequestSurface,
-        completion: @escaping (Result<PaymentSheetLinkAccount?, Error>) -> Void
+        completion: @escaping (Result<LinkAccountService.AuthorizeAccountResult?, Error>) -> Void
     ) {
         linkAccountService.authorizeAccount(
             withLinkAuthIntentId: linkAuthIntentId,
@@ -562,12 +576,12 @@ import UIKit
     /// Authorizes a Link auth intent and retrieves the associated consumer session.
     ///
     /// - Parameter linkAuthIntentId: The Link auth intent ID to authorize.
-    func authorize(linkAuthIntentId: String) async throws {
+    func authorize(linkAuthIntentId: String, from viewController: UIViewController) async throws -> AuthorizeResult {
         try await withCheckedThrowingContinuation { continuation in
-            authorize(linkAuthIntentId: linkAuthIntentId) { result in
+            authorize(linkAuthIntentId: linkAuthIntentId, from: viewController) { result in
                 switch result {
-                case .success:
-                    continuation.resume(returning: ())
+                case .success(let authorizeResult):
+                    continuation.resume(returning: authorizeResult)
                 case .failure(let error):
                     continuation.resume(throwing: error)
                 }

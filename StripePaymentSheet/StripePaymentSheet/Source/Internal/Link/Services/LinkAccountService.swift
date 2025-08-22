@@ -45,11 +45,16 @@ protocol LinkAccountServiceProtocol {
     func authorizeAccount(
         withLinkAuthIntentId linkAuthIntentId: String,
         requestSurface: LinkRequestSurface,
-        completion: @escaping (Result<PaymentSheetLinkAccount?, Error>) -> Void
+        completion: @escaping (Result<LinkAccountService.AuthorizeAccountResult?, Error>) -> Void
     )
 }
 
 final class LinkAccountService: LinkAccountServiceProtocol {
+
+    struct AuthorizeAccountResult {
+        let linkAccount: PaymentSheetLinkAccount?
+        let consentViewModel: LinkConsentViewModel?
+    }
 
     let apiClient: STPAPIClient
     let cookieStore: LinkCookieStore
@@ -159,7 +164,7 @@ final class LinkAccountService: LinkAccountServiceProtocol {
     func authorizeAccount(
         withLinkAuthIntentId linkAuthIntentId: String,
         requestSurface: LinkRequestSurface = .default,
-        completion: @escaping (Result<PaymentSheetLinkAccount?, Error>) -> Void
+        completion: @escaping (Result<AuthorizeAccountResult?, Error>) -> Void
     ) {
         ConsumerSession.lookupLinkAuthIntent(
             linkAuthIntentID: linkAuthIntentId,
@@ -173,17 +178,21 @@ final class LinkAccountService: LinkAccountServiceProtocol {
             case .success(let lookupResponse):
                 switch lookupResponse.responseType {
                 case .found(let session):
-                    completion(.success(
-                        PaymentSheetLinkAccount(
-                            email: session.consumerSession.emailAddress,
-                            session: session.consumerSession,
-                            publishableKey: session.publishableKey,
-                            displayablePaymentDetails: session.displayablePaymentDetails,
-                            apiClient: apiClient,
-                            useMobileEndpoints: self.useMobileEndpoints,
-                            requestSurface: requestSurface
-                        )
-                    ))
+                    let linkAccount = PaymentSheetLinkAccount(
+                        email: session.consumerSession.emailAddress,
+                        session: session.consumerSession,
+                        publishableKey: session.publishableKey,
+                        displayablePaymentDetails: session.displayablePaymentDetails,
+                        apiClient: apiClient,
+                        useMobileEndpoints: self.useMobileEndpoints,
+                        requestSurface: requestSurface
+                    )
+                    let consentViewModel = LinkConsentViewModel(
+                        email: session.consumerSession.emailAddress,
+                        merchantLogoURL: nil,
+                        dataModel: session.consentDataModel
+                    )
+                    completion(.success(AuthorizeAccountResult(linkAccount: linkAccount, consentViewModel: consentViewModel)))
                 case .notFound, .noAvailableLookupParams:
                     completion(.success(nil))
                 }

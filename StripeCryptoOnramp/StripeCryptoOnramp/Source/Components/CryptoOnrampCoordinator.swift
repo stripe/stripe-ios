@@ -48,6 +48,13 @@ protocol CryptoOnrampCoordinatorProtocol {
         country: String
     ) async throws -> String
 
+    /// Authorizes a Link auth intent and retrieves the associated consumer session.
+    /// - Parameters:
+    ///   - linkAuthIntentId: The Link auth intent ID to authorize.
+    ///   - viewController: The view controller from which to present the authorization flow.
+    /// - Returns: The result of the authorization.
+    func authorize(linkAuthIntentId: String, from viewController: UIViewController) async throws -> AuthorizeResult
+
     /// Presents Link UI to authenticate an existing Link user.
     /// `hasLinkAccount` must be called before this.
     ///
@@ -220,6 +227,15 @@ public final class CryptoOnrampCoordinator: NSObject, CryptoOnrampCoordinatorPro
             }
         }
         return try await apiClient.grantPartnerMerchantPermissions(with: linkAccountInfo).id
+    }
+
+    public func authorize(linkAuthIntentId: String, from viewController: UIViewController) async throws -> AuthorizeResult {
+        let authorizeResult = try await linkController.authorize(linkAuthIntentId: linkAuthIntentId, from: viewController)
+        switch authorizeResult {
+        case .consented: return .consented
+        case .denied: return .denied
+        case .canceled: return .canceled
+        }
     }
 
     public func authenticateUser(from viewController: UIViewController) async throws -> AuthenticationResult {
