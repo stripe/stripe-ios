@@ -614,16 +614,21 @@ extension STPAPIClient {
         cookieStore: LinkCookieStore,
         consumerAccountPublishableKey: String?,
         requestSurface: LinkRequestSurface = .default,
+        consentGranted: Bool? = nil,
         completion: @escaping (Result<ConsumerSession, Error>) -> Void
     ) {
         let endpoint: String = "consumers/sessions/confirm_verification"
 
-        let parameters: [String: Any] = [
+        var parameters: [String: Any] = [
             "credentials": ["consumer_session_client_secret": consumerSessionClientSecret],
             "type": "SMS",
             "code": code,
             "request_surface": requestSurface.rawValue,
         ]
+
+        if let consentGranted, consentGranted {
+            parameters["consent_granted"] = consentGranted
+        }
 
         makeConsumerSessionRequest(
             endpoint: endpoint,

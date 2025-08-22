@@ -10,8 +10,8 @@ import Foundation
 @_spi(CryptoOnrampSDKPreview)
 public enum AuthorizeResult {
 
-    /// Authorization was consented by the user.
-    case consented
+    /// Authorization was consented by the user. The customer ID is attached.
+    case consented(customerId: String)
 
     /// Authorization was denied by the user.
     case denied

@@ -14,6 +14,7 @@ extension LinkVerificationView {
 
     final class LogoutView: UIView {
         let linkAccount: PaymentSheetLinkAccountInfoProtocol
+        private let appearance: LinkAppearance?
 
         private lazy var label: UILabel = {
             let label = UILabel()
@@ -27,16 +28,22 @@ extension LinkVerificationView {
         }()
 
         private(set) lazy var button: Button = {
-            let button = Button(configuration: .linkPlain(), title: STPLocalizedString(
-                "Not you?",
-                "Title for a button that allows the user to use a different email in the signup flow."
-            ))
+            let button = Button(
+                configuration: .linkPlain(
+                    foregroundColor: appearance?.colors?.primary ?? .linkTextBrand
+                ),
+                title: STPLocalizedString(
+                    "Not you?",
+                    "Title for a button that allows the user to use a different email in the signup flow."
+                )
+            )
             button.configuration.font = LinkUI.font(forTextStyle: .bodyEmphasized)
             return button
         }()
 
-        init(linkAccount: PaymentSheetLinkAccountInfoProtocol) {
+        init(linkAccount: PaymentSheetLinkAccountInfoProtocol, appearance: LinkAppearance?) {
             self.linkAccount = linkAccount
+            self.appearance = appearance
             super.init(frame: .zero)
             setupUI()
         }

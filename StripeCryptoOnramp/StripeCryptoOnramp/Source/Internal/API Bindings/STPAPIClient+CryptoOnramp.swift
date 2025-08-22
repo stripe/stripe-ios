@@ -32,10 +32,6 @@ extension STPAPIClient {
 
         try validateSessionState(using: linkAccountInfo)
 
-        guard case .verified = linkAccountInfo.sessionState else {
-            throw CryptoOnrampAPIError.linkAccountNotVerified
-        }
-
         let endpoint = "crypto/internal/customers"
         let requestObject = CustomerRequest(consumerSessionClientSecret: consumerSessionClientSecret)
         return try await post(resource: endpoint, object: requestObject)

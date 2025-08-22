@@ -16,28 +16,28 @@ struct AuthenticateUserRequest: Encodable {
         case oauthScopes = "oauth_scopes"
     }
 
-    init(email: String, oauthScopes: [String] = AuthenticateUserRequest.allScopes) {
+    init(email: String, oauthScopes: [String] = OAuthScopes.inlineScope) {
         self.email = email
         self.oauthScopes = oauthScopes.joined(separator: ",")
     }
 }
 
-extension AuthenticateUserRequest {
-    static let allScopes: [String] = [
-        "userinfo:read",
-        "userinfo.addresses:read",
-        "kyc.status:read",
-        "kyc:write",
-        "kyc:read",
-        "kyc:share",
-        "auth.persist_login:read",
-        "payment_methods:read",
-        "payment_methods.bank_accounts:read",
-        "read_email",
-        "read_phone",
-        "share_full_name",
-        "share_full_name",
-        "share_email",
-        "share_address",
-    ]
+private enum OAuthScopes: String, CaseIterable {
+    static let inlineScope: [String] = [OAuthScopes.userinfoRead.rawValue]
+    static let allScopes: [String] = Self.allCases.map(\.rawValue)
+
+    case userinfoRead = "userinfo:read"
+    case userinfoAddressesRead = "userinfo.addresses:read"
+    case kycStatusRead = "kyc.status:read"
+    case kycWrite = "kyc:write"
+    case kycRead = "kyc:read"
+    case kycShare = "kyc:share"
+    case authPersistLoginRead = "auth.persist_login:read"
+    case paymentMethodsRead = "payment_methods:read"
+    case paymentMethodsBankAccountsRead = "payment_methods.bank_accounts:read"
+    case readEmail = "read_email"
+    case readPhone = "read_phone"
+    case shareFullName = "share_full_name"
+    case shareEmail = "share_email"
+    case shareAddress = "share_address"
 }

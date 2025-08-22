@@ -241,12 +241,21 @@ import UIKit
             linkAuthIntentId: linkAuthIntentId,
             linkAccountService: linkAccountService,
             requestSurface: requestSurface
-        ) { result in
+        ) { [weak self] result in
             switch result {
             case .success(let authorizeAccountResult):
-                LinkAccountContext.shared.account = authorizeAccountResult?.linkAccount
-                // TODO: Implement remaining work to gather OAuth consent from the user
-                completion(.success(.consented))
+                self?.linkAccount = authorizeAccountResult?.linkAccount
+
+                // Check if consent is required
+                if let consentViewModel = authorizeAccountResult?.consentViewModel {
+                    self?.presentVerificationWithConsent(
+                        consentViewModel: consentViewModel,
+                        from: viewController,
+                        completion: completion
+                    )
+                } else {
+                    completion(.success(.consented))
+                }
             case .failure(let error):
                 completion(.failure(error))
             }
@@ -315,6 +324,40 @@ import UIKit
                 completion(.success(.canceled))
             case .failed(let error):
                 completion(.failure(error))
+            }
+        }
+    }
+
+    /// Presents the Link verification flow with consent information.
+    /// - Parameter consentViewModel: The consent view model containing consent data to display.
+    /// - Parameter viewController: The view controller from which to present the verification flow.
+    /// - Parameter completion: A closure that is called with the result of the authorization.
+    private func presentVerificationWithConsent(
+        consentViewModel: LinkConsentViewModel,
+        from viewController: UIViewController,
+        completion: @escaping (Result<AuthorizeResult, Error>) -> Void
+    ) {
+        guard let linkAccount, linkAccount.sessionState == .requiresVerification else {
+            completion(.failure(IntegrationError.noActiveLinkConsumer))
+            return
+        }
+
+        let verificationController = LinkVerificationController(
+            mode: .inlineLogin,
+            linkAccount: linkAccount,
+            configuration: configuration,
+            appearance: appearance,
+            consentViewModel: consentViewModel
+        )
+
+        verificationController.present(from: viewController) { result in
+            switch result {
+            case .completed:
+                completion(.success(.consented))
+            case .canceled:
+                completion(.success(.canceled))
+            case .switchAccount, .failed:
+                completion(.success(.denied))
             }
         }
     }

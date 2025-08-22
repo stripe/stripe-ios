@@ -232,9 +232,13 @@ public final class CryptoOnrampCoordinator: NSObject, CryptoOnrampCoordinatorPro
     public func authorize(linkAuthIntentId: String, from viewController: UIViewController) async throws -> AuthorizeResult {
         let authorizeResult = try await linkController.authorize(linkAuthIntentId: linkAuthIntentId, from: viewController)
         switch authorizeResult {
-        case .consented: return .consented
-        case .denied: return .denied
-        case .canceled: return .canceled
+        case .consented:
+            let customerId = try await apiClient.grantPartnerMerchantPermissions(with: linkAccountInfo).id
+            return .consented(customerId: customerId)
+        case .denied:
+            return .denied
+        case .canceled:
+            return .canceled
         }
     }
 

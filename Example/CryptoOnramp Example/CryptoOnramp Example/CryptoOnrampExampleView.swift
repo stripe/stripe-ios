@@ -133,19 +133,12 @@ struct CryptoOnrampExampleView: View {
         Task {
             do {
                 let lookupResult = try await coordinator.hasLinkAccount(with: email)
-                if lookupResult, let viewController = UIApplication.shared.findTopNavigationController() {
-                    // Authenticate with the demo merchant backend as well.
-                    let laiId = try await APIClient.shared.authenticateUser(with: email).data.id
-                    print( "Successfully authenticated user with demo backend. Id: \(laiId)")
-                    let authorizeResult = try await coordinator.authorize(linkAuthIntentId: laiId, from: viewController)
-                    print(authorizeResult)
-                }
                 await MainActor.run {
                     errorMessage = nil
                     isLoading.wrappedValue = false
 
                     if lookupResult {
-                        presentVerification(using: coordinator)
+                        presentAuthorization(using: coordinator)
                     } else {
                         showRegistration = true
                     }
@@ -159,13 +152,16 @@ struct CryptoOnrampExampleView: View {
         }
     }
 
-    private func presentVerification(using coordinator: CryptoOnrampCoordinator) {
+    private func presentAuthorization(using coordinator: CryptoOnrampCoordinator) {
         if let viewController = UIApplication.shared.findTopNavigationController() {
             Task {
                 do {
-                    let result = try await coordinator.authenticateUser(from: viewController)
-                    switch result {
-                    case .completed(customerId: let customerId):
+                    let laiId = try await APIClient.shared.authenticateUser(with: email).data.id
+                    print( "Successfully authenticated user with demo backend. Id: \(laiId)")
+                    let authorizeResult = try await coordinator.authorize(linkAuthIntentId: laiId, from: viewController)
+
+                    switch authorizeResult {
+                    case .consented(let customerId):
                         await MainActor.run {
                             authenticationCustomerId = customerId
 
@@ -174,11 +170,13 @@ struct CryptoOnrampExampleView: View {
                                 showAuthenticatedView = true
                             }
                         }
+                    case .denied:
+                        errorMessage = "Consent rejected"
                     case .canceled:
-                        // do nothing, verification canceled.
+                        // do nothing, authorization canceled.
                         break
                     @unknown default:
-                        // do nothing, verification canceled.
+                        // do nothing, authorization canceled.
                         break
                     }
                 } catch {

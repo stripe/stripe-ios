@@ -40,6 +40,7 @@ final class LinkVerificationView: UIView {
 
     private let appearance: LinkAppearance?
     private let allowLogoutInDialog: Bool
+    private let consentViewModel: LinkConsentViewModel?
 
     var sendingCode: Bool = false {
         didSet {
@@ -128,21 +129,38 @@ final class LinkVerificationView: UIView {
     }()
 
     private lazy var logoutView: LogoutView = {
-        let logoutView = LogoutView(linkAccount: linkAccount)
+        let logoutView = LogoutView(linkAccount: linkAccount, appearance: appearance)
         logoutView.button.addTarget(self, action: #selector(didTapOnLogout(_:)), for: .touchUpInside)
         return logoutView
+    }()
+
+    private lazy var consentDisclaimerLabel: UILabel? = {
+        guard case .inline(let inlineConsent) = consentViewModel else {
+            return nil
+        }
+
+        let label = UILabel()
+        label.numberOfLines = 0
+        label.textAlignment = .center
+        label.font = LinkUI.font(forTextStyle: .caption)
+        label.textColor = .linkTextTertiary
+        label.text = inlineConsent.disclaimer
+        label.adjustsFontForContentSizeCategory = true
+        return label
     }()
 
     required init(
         mode: Mode,
         linkAccount: PaymentSheetLinkAccountInfoProtocol,
         appearance: LinkAppearance? = nil,
-        allowLogoutInDialog: Bool
+        allowLogoutInDialog: Bool,
+        consentViewModel: LinkConsentViewModel? = nil
     ) {
         self.mode = mode
         self.linkAccount = linkAccount
         self.appearance = appearance
         self.allowLogoutInDialog = allowLogoutInDialog
+        self.consentViewModel = consentViewModel
         super.init(frame: .zero)
         setupUI()
     }
@@ -194,15 +212,27 @@ private extension LinkVerificationView {
                 views.append(logoutView)
             }
 
+            // Add consent disclaimer at the bottom if present
+            if let consentLabel = consentDisclaimerLabel {
+                views.append(consentLabel)
+            }
+
             return views
         case .embedded:
-            return [
+            var views = [
                 headingLabel,
                 bodyLabel,
                 codeFieldContainer,
                 resendCodeButton,
                 logoutView,
             ]
+
+            // Add consent disclaimer at the bottom if present
+            if let consentLabel = consentDisclaimerLabel {
+                views.append(consentLabel)
+            }
+
+            return views
         }
     }
 
@@ -219,7 +249,14 @@ private extension LinkVerificationView {
         stackView.setCustomSpacing(Constants.edgeMargin, after: header)
         stackView.setCustomSpacing(LinkUI.extraLargeContentSpacing, after: bodyLabel)
         stackView.setCustomSpacing(LinkUI.extraLargeContentSpacing, after: codeFieldContainer)
-        stackView.setCustomSpacing(LinkUI.largeContentSpacing, after: resendCodeButton)
+
+        if consentDisclaimerLabel != nil {
+            if allowLogoutInDialog {
+                stackView.setCustomSpacing(LinkUI.largeContentSpacing, after: logoutView)
+            } else {
+                stackView.setCustomSpacing(LinkUI.largeContentSpacing, after: resendCodeButton)
+            }
+        }
 
         addSubview(stackView)
 
@@ -234,6 +271,14 @@ private extension LinkVerificationView {
             codeFieldContainer.leadingAnchor.constraint(equalTo: stackView.leadingAnchor),
             codeFieldContainer.trailingAnchor.constraint(equalTo: stackView.trailingAnchor),
         ]
+
+        // Add constraints for consent disclaimer if present
+        if let consentLabel = consentDisclaimerLabel {
+            constraints.append(contentsOf: [
+                consentLabel.leadingAnchor.constraint(equalTo: stackView.leadingAnchor),
+                consentLabel.trailingAnchor.constraint(equalTo: stackView.trailingAnchor),
+            ])
+        }
 
         if mode.requiresModalPresentation {
             constraints.append(contentsOf: [
