@@ -71,10 +71,14 @@ import Foundation
                         hcaptcha.validate { result in
                             do {
                                 let token = try result.dematerialize()
-                                STPAnalyticsClient.sharedClient.logPassiveCaptchaSuccess(siteKey: siteKey)
+                                if !Task.isCancelled {
+                                    STPAnalyticsClient.sharedClient.logPassiveCaptchaSuccess(siteKey: siteKey)
+                                }
                                 continuation.resume(returning: token)
                             } catch {
-                                STPAnalyticsClient.sharedClient.logPassiveCaptchaError(error: error, siteKey: siteKey)
+                                if !Task.isCancelled {
+                                    STPAnalyticsClient.sharedClient.logPassiveCaptchaError(error: error, siteKey: siteKey)
+                                }
                                 continuation.resume(returning: nil)
                             }
                         }
@@ -85,13 +89,18 @@ import Foundation
             // Timeout
             group.addTask {
                 try? await Task.sleep(nanoseconds: self.timeoutNs)
-                STPAnalyticsClient.sharedClient.logPassiveCaptchaTimeout(siteKey: siteKey)
+                if !Task.isCancelled {
+                    STPAnalyticsClient.sharedClient.logPassiveCaptchaTimeout(siteKey: siteKey)
+                }
                 return nil
             }
 
-            let result = await group.next()
+            if let result = await group.next() {
+                group.cancelAll()
+                return result
+            }
             group.cancelAll()
-            return result ?? nil
+            return nil
         }
     }
 }
