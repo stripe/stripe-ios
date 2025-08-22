@@ -42,9 +42,9 @@ import Foundation
 @_spi(STP) public actor PassiveCaptchaChallenge {
     private let passiveCaptcha: PassiveCaptcha
     private let hcaptcha: HCaptcha?
-    private let timeoutNs: UInt64
+    private let testTimeout: UInt64?
 
-    public init(passiveCaptcha: PassiveCaptcha, timeoutNs: UInt64 = 6_000_000_000) {
+    public init(passiveCaptcha: PassiveCaptcha, testTimeout: UInt64? = nil) {
         self.passiveCaptcha = passiveCaptcha
         do {
             self.hcaptcha = try HCaptcha(apiKey: passiveCaptcha.siteKey,
@@ -56,49 +56,49 @@ import Foundation
             self.hcaptcha = nil
             STPAnalyticsClient.sharedClient.logPassiveCaptchaError(error: error, siteKey: passiveCaptcha.siteKey)
         }
-        self.timeoutNs = timeoutNs
+        self.testTimeout = testTimeout
     }
 
     @_spi(STP) public func fetchToken() async -> String? {
-        guard let hcaptcha = self.hcaptcha else { return nil }
-        let siteKey = self.passiveCaptcha.siteKey
-        let timeoutNs = self.timeoutNs
-
-        return await withCheckedContinuation { continuation in
-            var resumed = false
-
-            let timeoutTask = Task { @MainActor in
-                do {
-                    try await Task.sleep(nanoseconds: timeoutNs)
-                } catch {
-                    return
+        let validationTask: Task<String?, Never> = Task<String?, Never> { [weak self] in
+            guard let self, let hcaptcha = await self.hcaptcha else { return nil }
+            let siteKey = await self.passiveCaptcha.siteKey
+            let timeoutNs: UInt64 = {
+                if let testTimeout = self.testTimeout {
+                    return testTimeout
+                } else {
+                    return STPAnalyticsClient.isSimulatorOrTest ? 1_000_000 : 6_000_000_000
                 }
-                if resumed { return }
-                resumed = true
-                STPAnalyticsClient.sharedClient.logPassiveCaptchaTimeout(siteKey: siteKey)
-                continuation.resume(returning: nil)
-            }
-
-            hcaptcha.didFinishLoading {
-                hcaptcha.validate { result in
-                    Task { @MainActor in
-                        if resumed { return }
+            }()
+            return await withCheckedContinuation { continuation in
+                var hasCompleted: Bool = false
+                Task {
+                    try? await Task.sleep(nanoseconds: timeoutNs)
+                    if !hasCompleted {
+                        STPAnalyticsClient.sharedClient.logPassiveCaptchaTimeout(siteKey: siteKey)
+                        hasCompleted = true
+                        continuation.resume(returning: nil)
+                    }
+                }
+                hcaptcha.didFinishLoading {
+                    hcaptcha.validate { result in
                         do {
                             let token = try result.dematerialize()
-                            resumed = true
                             STPAnalyticsClient.sharedClient.logPassiveCaptchaSuccess(siteKey: siteKey)
-                            timeoutTask.cancel()
+                            hasCompleted = true
                             continuation.resume(returning: token)
                         } catch {
-                            resumed = true
                             STPAnalyticsClient.sharedClient.logPassiveCaptchaError(error: error, siteKey: siteKey)
-                            timeoutTask.cancel()
+                            hasCompleted = true
                             continuation.resume(returning: nil)
                         }
                     }
+
                 }
             }
+
         }
+        return await validationTask.value
     }
 }
 
@@ -127,3 +127,4 @@ extension STPAnalyticsClient {
         )
     }
 }
+
