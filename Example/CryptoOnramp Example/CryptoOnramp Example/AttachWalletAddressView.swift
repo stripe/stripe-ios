@@ -22,6 +22,9 @@ struct AttachWalletAddressView: View {
     /// Binding to inform presenting view that a wallet was successfully attached.
     @Binding var isWalletAttached: Bool
 
+    /// Callback invoked on successful attach with the address and network used.
+    let onWalletAttached: ((String, CryptoNetwork) -> Void)?
+
     @State private var walletAddress: String = "0x4242424242424242424242424242424242424242"
     @State private var selectedNetwork: CryptoNetwork = .ethereum
     @State private var errorMessage: String?
@@ -109,6 +112,7 @@ struct AttachWalletAddressView: View {
                 await MainActor.run {
                     isLoading.wrappedValue = false
                     isWalletAttached = true
+                    onWalletAttached?(address, selectedNetwork)
                     dismiss()
                 }
             } catch {
@@ -123,6 +127,6 @@ struct AttachWalletAddressView: View {
 
 #Preview {
     PreviewWrapperView { coordinator in
-        AttachWalletAddressView(coordinator: coordinator, isWalletAttached: .constant(false))
+        AttachWalletAddressView(coordinator: coordinator, isWalletAttached: .constant(false), onWalletAttached: nil)
     }
 }

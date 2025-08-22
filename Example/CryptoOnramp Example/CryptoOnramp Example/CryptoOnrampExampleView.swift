@@ -133,6 +133,11 @@ struct CryptoOnrampExampleView: View {
         Task {
             do {
                 let lookupResult = try await coordinator.hasLinkAccount(with: email)
+                if lookupResult {
+                    // Authenticate with the demo merchant backend as well.
+                    let laiId = try await APIClient.shared.authenticateUser(with: email).data.id
+                    print( "Successfully authenticated user with demo backend. Id: \(laiId)")
+                }
                 await MainActor.run {
                     errorMessage = nil
                     isLoading.wrappedValue = false
