@@ -107,6 +107,9 @@ import UIKit
         elementsSession.merchantLogoUrl
     }
 
+    /// Completion handler for full consent screen
+    private var fullConsentCompletion: ((Result<AuthorizeResult, Error>) -> Void)?
+
     private init(
         apiClient: STPAPIClient = .shared,
         mode: Mode,
@@ -406,9 +409,13 @@ import UIKit
                                 completion: completion
                             )
                             return
-                        case .full:
-                            // Handle full consent flow (not implemented in this change)
-                            completion(.success(.consented))
+                        case .full(let fullConsentViewModel):
+                            // Present full consent screen
+                            self?.presentFullConsentScreen(
+                                consentViewModel: fullConsentViewModel,
+                                from: viewController,
+                                completion: completion
+                            )
                         case .none:
                             // Present verification without consent
                             self?.presentForVerification(from: viewController, completion: { result in
@@ -577,6 +584,46 @@ import UIKit
         DispatchQueue.main.async { [weak self] in
             let linkAccount = notification.object as? PaymentSheetLinkAccount
             self?.linkAccount = linkAccount
+        }
+    }
+
+    /// Presents the full consent screen for authorization
+    private func presentFullConsentScreen(
+        consentViewModel: LinkConsentViewModel.FullConsentViewModel,
+        from viewController: UIViewController,
+        completion: @escaping (Result<AuthorizeResult, Error>) -> Void
+    ) {
+        let fullConsentViewController = LinkFullConsentViewController(
+            consentViewModel: consentViewModel
+        )
+
+        fullConsentViewController.delegate = self
+
+        let bottomSheetViewController = BottomSheetViewController(
+            contentViewController: fullConsentViewController,
+            appearance: configuration.appearance,
+            isTestMode: false,
+            didCancelNative3DS2: {}
+        )
+
+        // Store completion handler for use in delegate method
+        self.fullConsentCompletion = completion
+
+        viewController.presentAsBottomSheet(bottomSheetViewController, appearance: configuration.appearance)
+    }
+}
+
+// MARK: - LinkFullConsentViewControllerDelegate
+
+extension LinkController: LinkFullConsentViewControllerDelegate {
+    func fullConsentViewController(
+        _ controller: LinkFullConsentViewController,
+        didFinishWithResult result: LinkController.AuthorizeResult
+    ) {
+        controller.dismiss(animated: true) { [weak self] in
+            guard let self, let completion = self.fullConsentCompletion else { return }
+            self.fullConsentCompletion = nil
+            completion(.success(result))
         }
     }
 }
