@@ -51,7 +51,7 @@ struct LinkButton: View {
     }
 
     private var scaledSeparatorWidth: CGFloat {
-        max(Constants.baseSeparatorWidth * scaleFactor, 1) // Ensure separator is always visible
+        max(Constants.baseSeparatorWidth * scaleFactor, 0.5) // Ensure separator is always visible
     }
 
     private var scaledContentSpacing: CGFloat {
