@@ -45,7 +45,7 @@ protocol LinkAccountServiceProtocol {
     func lookupLinkAuthIntent(
         linkAuthIntentID: String,
         requestSurface: LinkRequestSurface,
-        completion: @escaping (Result<PaymentSheetLinkAccount?, Error>) -> Void
+        completion: @escaping (Result<LookupLinkAuthIntentResponse?, Error>) -> Void
     )
 }
 
@@ -56,6 +56,7 @@ final class LinkAccountService: LinkAccountServiceProtocol {
     let sessionID: String
     let customerID: String?
     let useMobileEndpoints: Bool
+    let merchantLogoUrl: URL?
 
     /// The default cookie store used by new instances of the service.
     static var defaultCookieStore: LinkCookieStore = LinkSecureCookieStore.shared
@@ -73,7 +74,8 @@ final class LinkAccountService: LinkAccountServiceProtocol {
             useMobileEndpoints: elementsSession.linkSettings?.useAttestationEndpoints ?? false,
             sessionID: elementsSession.sessionID,
             customerID: elementsSession.customer?.customerSession.customer,
-            shouldPassCustomerIdToLookup: shouldPassCustomerIdToLookup
+            shouldPassCustomerIdToLookup: shouldPassCustomerIdToLookup,
+            merchantLogoUrl: elementsSession.merchantLogoUrl
         )
     }
 
@@ -83,13 +85,15 @@ final class LinkAccountService: LinkAccountServiceProtocol {
         useMobileEndpoints: Bool,
         sessionID: String,
         customerID: String?,
-        shouldPassCustomerIdToLookup: Bool
+        shouldPassCustomerIdToLookup: Bool,
+        merchantLogoUrl: URL?
     ) {
         self.apiClient = apiClient
         self.cookieStore = cookieStore
         self.useMobileEndpoints = useMobileEndpoints
         self.sessionID = sessionID
         self.customerID = shouldPassCustomerIdToLookup ? customerID : nil
+        self.merchantLogoUrl = merchantLogoUrl
     }
 
     func lookupAccount(
@@ -177,7 +181,7 @@ final class LinkAccountService: LinkAccountServiceProtocol {
     func lookupLinkAuthIntent(
         linkAuthIntentID: String,
         requestSurface: LinkRequestSurface = .default,
-        completion: @escaping (Result<PaymentSheetLinkAccount?, Error>) -> Void
+        completion: @escaping (Result<LookupLinkAuthIntentResponse?, Error>) -> Void
     ) {
         ConsumerSession.lookupLinkAuthIntent(
             linkAuthIntentID: linkAuthIntentID,
@@ -187,23 +191,29 @@ final class LinkAccountService: LinkAccountServiceProtocol {
             cookieStore: cookieStore,
             useMobileEndpoints: useMobileEndpoints,
             requestSurface: requestSurface
-        ) { [apiClient] result in
+        ) { [weak self, apiClient] result in
+            guard let self else { return }
             switch result {
             case .success(let lookupResponse):
                 STPAnalyticsClient.sharedClient.logLinkAccountLookupComplete(lookupResult: lookupResponse.responseType)
                 switch lookupResponse.responseType {
                 case .found(let session):
-                    completion(.success(
-                        PaymentSheetLinkAccount(
-                            email: session.consumerSession.emailAddress,
-                            session: session.consumerSession,
-                            publishableKey: session.publishableKey,
-                            displayablePaymentDetails: session.displayablePaymentDetails,
-                            apiClient: apiClient,
-                            useMobileEndpoints: self.useMobileEndpoints,
-                            requestSurface: requestSurface
-                        )
-                    ))
+                    let linkAccount = PaymentSheetLinkAccount(
+                        email: session.consumerSession.emailAddress,
+                        session: session.consumerSession,
+                        publishableKey: session.publishableKey,
+                        displayablePaymentDetails: session.displayablePaymentDetails,
+                        apiClient: apiClient,
+                        useMobileEndpoints: self.useMobileEndpoints,
+                        requestSurface: requestSurface
+                    )
+                    let consentViewModel = LinkConsentViewModel(
+                        email: session.consumerSession.emailAddress,
+                        merchantLogoURL: self.merchantLogoUrl,
+                        dataModel: session.consentDataModel
+                    )
+                    let response = LookupLinkAuthIntentResponse(linkAccount: linkAccount, consentViewModel: consentViewModel)
+                    completion(.success(response))
                 case .notFound:
                     completion(.success(nil))
                 case .noAvailableLookupParams:
