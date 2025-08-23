@@ -319,6 +319,10 @@ workflows:
         machine_type_id: g2.mac.large
   framework-tests-xcode26:
     steps:
+    - script@1:
+        inputs:
+        - content: asdf local ruby 3.3
+        title: switch to ruby 3.3
     - fastlane@3:
         inputs:
         - lane: preflight
