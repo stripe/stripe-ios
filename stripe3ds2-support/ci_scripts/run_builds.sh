@@ -9,15 +9,23 @@ function die {
   exit 1
 }
 
+if [[ $# -eq 2 ]]; then
+    TEST_DEVICE=$1
+    TEST_VERSION=$2
+else
+    TEST_DEVICE="iPhone 12 mini"
+    TEST_VERSION="16.4"
+fi
+
 # Execute builds
-info "Executing build (iPhone 12 mini, iOS 16.4)..."
+info "Executing build (${TEST_DEVICE}, iOS ${TEST_VERSION})..."
 
 xcodebuild build \
   -quiet \
   -project "Stripe3DS2/Stripe3DS2.xcodeproj" \
   -scheme "Stripe3DS2" \
   -sdk "iphonesimulator" \
-  -destination "platform=iOS Simulator,name=iPhone 12 mini,OS=16.4"
+  -destination "platform=iOS Simulator,name=${TEST_DEVICE},OS=${TEST_VERSION}"
 
 exit_code="${PIPESTATUS[0]}"
 

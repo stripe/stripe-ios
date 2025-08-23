@@ -329,7 +329,7 @@ workflows:
         title: fastlane preflight
     - fastlane@3:
         inputs:
-        - lane: threeds2_tests
+        - lane: threeds2_tests_26
         title: fastlane threeds2_tests
     - xcode-test@4:
         inputs:
