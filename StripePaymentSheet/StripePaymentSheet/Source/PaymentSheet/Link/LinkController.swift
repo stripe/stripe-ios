@@ -375,7 +375,7 @@ import UIKit
             )
         }
     }
-    
+
     /// Authorizes a Link auth intent and retrieves the associated consumer session.
     ///
     /// - Parameter linkAuthIntentId: The Link auth intent ID to authorize.
@@ -391,8 +391,18 @@ import UIKit
             requestSurface: requestSurface
         ) { result in
             switch result {
-            case .success(let linkAccount):
-                if let linkAccount {
+            case .success(let response):
+                if let response {
+                    self.linkAccount = response.linkAccount
+                    switch response.consentViewModel {
+                    case .full:
+                        print("Full consent required")
+                    case .inline:
+                        print("Inline consent required")
+                    case .none:
+                        print("No consent required")
+                    }
+
                     // For now, we just return consented if we successfully looked up an account
                     completion(.success(.consented))
                 } else {
@@ -562,7 +572,7 @@ import UIKit
             }
         }
     }
-    
+
     /// Authorizes a Link auth intent and retrieves the associated consumer session.
     ///
     /// - Parameter linkAuthIntentId: The Link auth intent ID to authorize.
