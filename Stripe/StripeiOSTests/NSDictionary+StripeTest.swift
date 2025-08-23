@@ -246,9 +246,17 @@ class Dictionary_StripeTest: XCTestCase {
             [
                 "a": "https://example.com",
                 "b": "not a url",
+                "f": "",
             ] as [AnyHashable: Any]
         XCTAssertEqual(dict.stp_url(forKey: "a"), URL(string: "https://example.com"))
+
+        // Change in behavior for iOS17: https://developer.apple.com/documentation/foundation/url/init(string:)
+#if compiler(<6.2)
         XCTAssertNil(dict.stp_url(forKey: "b"))
+#else
+        XCTAssertEqual(dict.stp_url(forKey: "b"), URL(string: "not%20a%20url"))
+#endif
+        XCTAssertNil(dict.stp_url(forKey: "f"))
         XCTAssertNil(dict.stp_url(forKey: "c"))
     }
 }
