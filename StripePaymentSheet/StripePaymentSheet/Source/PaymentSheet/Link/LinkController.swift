@@ -389,22 +389,46 @@ import UIKit
         linkAccountService.lookupLinkAuthIntent(
             linkAuthIntentID: linkAuthIntentId,
             requestSurface: requestSurface
-        ) { result in
+        ) { [weak self] result in
             switch result {
             case .success(let response):
                 if let response {
-                    self.linkAccount = response.linkAccount
-                    switch response.consentViewModel {
-                    case .full:
-                        print("Full consent required")
-                    case .inline:
-                        print("Inline consent required")
-                    case .none:
-                        print("No consent required")
-                    }
+                    self?.linkAccount = response.linkAccount
 
-                    // For now, we just return consented if we successfully looked up an account
-                    completion(.success(.consented))
+                    // Check if verification is required
+                    if !response.linkAccount.hasCompletedSMSVerification {
+                        // Present verification flow with consent view model for inline consent
+                        switch response.consentViewModel {
+                        case .inline:
+                            self?.presentVerificationWithConsent(
+                                from: viewController,
+                                consentViewModel: response.consentViewModel,
+                                completion: completion
+                            )
+                            return
+                        case .full:
+                            // Handle full consent flow (not implemented in this change)
+                            completion(.success(.consented))
+                        case .none:
+                            // Present verification without consent
+                            self?.presentForVerification(from: viewController, completion: { result in
+                                switch result {
+                                case .success(let verificationResult):
+                                    switch verificationResult {
+                                    case .completed:
+                                        completion(.success(.consented))
+                                    case .canceled:
+                                        completion(.success(.canceled))
+                                    }
+                                case .failure(let error):
+                                    completion(.failure(error))
+                                }
+                            })
+                        }
+                    } else {
+                        // Account doesn't require verification
+                        completion(.success(.consented))
+                    }
                 } else {
                     // No account found for this auth intent ID
                     completion(.success(.denied))
@@ -415,40 +439,31 @@ import UIKit
         }
     }
 
-    /// Authorizes a Link auth intent and retrieves the associated consumer session.
-    ///
-    /// - Parameter linkAuthIntentId: The Link auth intent ID to authorize.
-    /// - Parameter viewController: The view controller from which to present the authorization flow.
-    /// - Parameter completion: A closure that is called with the result of the authorization.
-    @_spi(STP) public func authorize(
-        linkAuthIntentId: String,
+    private func presentVerificationWithConsent(
         from viewController: UIViewController,
-        completion: @escaping (Result<AuthorizationResult, Error>) -> Void
+        consentViewModel: LinkConsentViewModel?,
+        completion: @escaping (Result<AuthorizeResult, Error>) -> Void
     ) {
-        linkAccountService.lookupLinkAuthIntent(
-            linkAuthIntentID: linkAuthIntentId,
-            requestSurface: requestSurface
-        ) { result in
-            switch result {
-            case .success(let response):
-                if let response {
-                    self.linkAccount = response.linkAccount
-                    switch response.consentViewModel {
-                    case .full:
-                        print("Full consent required")
-                    case .inline:
-                        print("Inline consent required")
-                    case .none:
-                        print("No consent required")
-                    }
+        guard let linkAccount else {
+            completion(.failure(IntegrationError.noActiveLinkConsumer))
+            return
+        }
 
-                    // For now, we just return consented if we successfully looked up an account
-                    completion(.success(.consented))
-                } else {
-                    // No account found for this auth intent ID
-                    completion(.success(.denied))
-                }
-            case .failure(let error):
+        let verificationController = LinkVerificationController(
+            mode: .inlineLogin,
+            linkAccount: linkAccount,
+            configuration: configuration,
+            appearance: appearance,
+            consentViewModel: consentViewModel
+        )
+
+        verificationController.present(from: viewController) { result in
+            switch result {
+            case .completed:
+                completion(.success(.consented))
+            case .canceled, .switchAccount:
+                completion(.success(.canceled))
+            case .failed(let error):
                 completion(.failure(error))
             }
         }

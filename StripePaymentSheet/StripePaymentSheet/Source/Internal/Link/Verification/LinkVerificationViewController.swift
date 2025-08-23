@@ -39,6 +39,7 @@ final class LinkVerificationViewController: UIViewController {
 
     private let appearance: LinkAppearance?
     private let allowLogoutInDialog: Bool
+    private let consentViewModel: LinkConsentViewModel?
 
     private lazy var verificationView: LinkVerificationView = {
         guard linkAccount.redactedPhoneNumber != nil else {
@@ -49,7 +50,8 @@ final class LinkVerificationViewController: UIViewController {
             mode: mode,
             linkAccount: linkAccount,
             appearance: appearance,
-            allowLogoutInDialog: allowLogoutInDialog
+            allowLogoutInDialog: allowLogoutInDialog,
+            consentViewModel: consentViewModel
         )
         verificationView.delegate = self
         verificationView.backgroundColor = .clear
@@ -68,12 +70,14 @@ final class LinkVerificationViewController: UIViewController {
         mode: LinkVerificationView.Mode = .modal,
         linkAccount: PaymentSheetLinkAccount,
         appearance: LinkAppearance? = nil,
-        allowLogoutInDialog: Bool = false
+        allowLogoutInDialog: Bool = false,
+        consentViewModel: LinkConsentViewModel? = nil
     ) {
         self.mode = mode
         self.linkAccount = linkAccount
         self.appearance = appearance
         self.allowLogoutInDialog = allowLogoutInDialog
+        self.consentViewModel = consentViewModel
         super.init(nibName: nil, bundle: nil)
 
         if mode.requiresModalPresentation {
