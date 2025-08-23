@@ -402,7 +402,7 @@ workflows:
     - deploy-to-bitrise-io@2: {}
     - save-spm-cache@1: {}
     before_run:
-    - prep_all
+    - prep_all_26
     after_run: []
     meta:
       bitrise.io:
@@ -618,6 +618,39 @@ workflows:
     - xcode-start-simulator@0:
         inputs:
         - destination: $DEFAULT_TEST_DEVICE
+    - set-env-var@0:
+        inputs:
+        - destination_keys: CONFIGURATION_BUILD_DIR
+        - value: $BITRISE_SOURCE_DIR/stpbuild/products
+        title: Set CONFIGURATION_BUILD_DIR
+    - set-env-var@0:
+        inputs:
+        - destination_keys: CONFIGURATION_TEMP_DIR
+        - value: $BITRISE_SOURCE_DIR/stpbuild/intermediates
+        title: Set CONFIGURATION_TEMP_DIR
+    - script@1:
+        inputs:
+        - content: bundle config set path 'vendor/bundle'
+        is_always_run: true
+        title: Set Bundler to use local vendor directory
+    - git-clone@8.2:
+        inputs:
+        - clone_depth: "1"
+    - restore-cache@2.4:
+        inputs:
+        - key: bundle-cache-{{ checksum "Gemfile.lock" }}
+    - bundler@0: {}
+    - save-cache@1:
+        inputs:
+        - key: bundle-cache-{{ checksum "Gemfile.lock" }}
+        - paths: |
+            vendor
+    - restore-spm-cache@2.1: {}
+  prep_all_26:
+    steps:
+    - xcode-start-simulator@0:
+        inputs:
+        - destination: $DEFAULT_TEST_DEVICE_26_0
     - set-env-var@0:
         inputs:
         - destination_keys: CONFIGURATION_BUILD_DIR
