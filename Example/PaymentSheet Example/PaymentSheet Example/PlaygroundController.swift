@@ -176,6 +176,7 @@ class PlaygroundController: ObservableObject {
         configuration.applePay = applePayConfiguration
         configuration.link = linkConfiguration
         configuration.customer = customerConfiguration
+        NewDesignDetector.allowNewDesign = settings.enableIOS26Changes == .on
         configuration.appearance = appearance
         if settings.userOverrideCountry != .off {
             configuration.userOverrideCountry = settings.userOverrideCountry.rawValue
@@ -291,6 +292,7 @@ class PlaygroundController: ObservableObject {
         configuration.merchantDisplayName = "Example, Inc."
         configuration.applePay = applePayConfiguration
         configuration.customer = customerConfiguration
+        NewDesignDetector.allowNewDesign = settings.enableIOS26Changes == .on
         configuration.appearance = appearance
         if settings.userOverrideCountry != .off {
             configuration.userOverrideCountry = settings.userOverrideCountry.rawValue
