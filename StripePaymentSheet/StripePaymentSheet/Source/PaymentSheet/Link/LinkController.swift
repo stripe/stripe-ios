@@ -469,22 +469,6 @@ import UIKit
         }
     }
 
-    private func presentForVerificationInAuthorize(
-        from viewController: UIViewController,
-        completion: @escaping (Result<AuthorizeResult, Error>) -> Void
-    ) {
-        presentForVerification(from: viewController) { result in
-            switch result {
-            case .success(.completed):
-                completion(.success(.consented))
-            case .success(.canceled):
-                completion(.success(.canceled))
-            case .failure(let error):
-                completion(.failure(error))
-            }
-        }
-    }
-
     // MARK: - Private methods
 
     private func createPaymentMethodInPassthroughMode(
