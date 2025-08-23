@@ -216,7 +216,15 @@ extension LinkVerificationViewController: LinkVerificationViewDelegate {
     func verificationView(_ view: LinkVerificationView, didEnterCode code: String) {
         view.codeField.resignFirstResponder()
 
-        linkAccount.verify(with: code) { [weak self] result in
+        // Check if inline consent was shown
+        let consentGranted: Bool?
+        if case .inline = consentViewModel {
+            consentGranted = true
+        } else {
+            consentGranted = nil
+        }
+
+        linkAccount.verify(with: code, consentGranted: consentGranted) { [weak self] result in
             switch result {
             case .success:
                 self?.finish(withResult: .completed)
