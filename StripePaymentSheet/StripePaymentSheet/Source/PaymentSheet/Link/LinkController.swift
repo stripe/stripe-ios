@@ -389,45 +389,6 @@ import UIKit
         linkAccountService.lookupLinkAuthIntent(
             linkAuthIntentID: linkAuthIntentId,
             requestSurface: requestSurface
-        ) { result in
-            switch result {
-            case .success(let response):
-                if let response {
-                    self.linkAccount = response.linkAccount
-                    switch response.consentViewModel {
-                    case .full:
-                        print("Full consent required")
-                    case .inline:
-                        print("Inline consent required")
-                    case .none:
-                        print("No consent required")
-                    }
-
-                    // For now, we just return consented if we successfully looked up an account
-                    completion(.success(.consented))
-                } else {
-                    // No account found for this auth intent ID
-                    completion(.success(.denied))
-                }
-            case .failure(let error):
-                completion(.failure(error))
-            }
-        }
-    }
-
-    /// Authorizes a Link auth intent and retrieves the associated consumer session.
-    ///
-    /// - Parameter linkAuthIntentId: The Link auth intent ID to authorize.
-    /// - Parameter viewController: The view controller from which to present the authorization flow.
-    /// - Parameter completion: A closure that is called with the result of the authorization.
-    @_spi(STP) public func authorize(
-        linkAuthIntentId: String,
-        from viewController: UIViewController,
-        completion: @escaping (Result<AuthorizationResult, Error>) -> Void
-    ) {
-        linkAccountService.lookupLinkAuthIntent(
-            linkAuthIntentID: linkAuthIntentId,
-            requestSurface: requestSurface
         ) { [weak self] result in
             switch result {
             case .success(let response):
@@ -481,7 +442,7 @@ import UIKit
     private func presentVerificationWithConsent(
         from viewController: UIViewController,
         consentViewModel: LinkConsentViewModel?,
-        completion: @escaping (Result<AuthorizationResult, Error>) -> Void
+        completion: @escaping (Result<AuthorizeResult, Error>) -> Void
     ) {
         guard let linkAccount else {
             completion(.failure(IntegrationError.noActiveLinkConsumer))
