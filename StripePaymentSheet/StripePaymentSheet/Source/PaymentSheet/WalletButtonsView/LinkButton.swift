@@ -51,7 +51,7 @@ struct LinkButton: View {
     }
 
     private var scaledSeparatorWidth: CGFloat {
-        max(Constants.baseSeparatorWidth * scaleFactor, 0.5) // Ensure separator is always visible
+        max(Constants.baseSeparatorWidth * scaleFactor, 1) // Ensure separator is always visible
     }
 
     private var scaledContentSpacing: CGFloat {
@@ -111,6 +111,7 @@ struct LinkButton: View {
         .background(Color(uiColor: .linkExpressCheckoutButtonBackground))
         .overlay {
             RoundedRectangle(cornerRadius: cornerRadius)
+                .inset(by: 0.5)
                 .stroke(Color(uiColor: borderColor), lineWidth: 1)
         }
         .cornerRadius(cornerRadius)
