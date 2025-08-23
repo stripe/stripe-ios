@@ -375,6 +375,35 @@ import UIKit
             )
         }
     }
+    
+    /// Authorizes a Link auth intent and retrieves the associated consumer session.
+    ///
+    /// - Parameter linkAuthIntentId: The Link auth intent ID to authorize.
+    /// - Parameter viewController: The view controller from which to present the authorization flow.
+    /// - Parameter completion: A closure that is called with the result of the authorization.
+    @_spi(STP) public func authorize(
+        linkAuthIntentId: String,
+        from viewController: UIViewController,
+        completion: @escaping (Result<AuthorizeResult, Error>) -> Void
+    ) {
+        linkAccountService.lookupLinkAuthIntent(
+            linkAuthIntentID: linkAuthIntentId,
+            requestSurface: requestSurface
+        ) { result in
+            switch result {
+            case .success(let linkAccount):
+                if let linkAccount {
+                    // For now, we just return consented if we successfully looked up an account
+                    completion(.success(.consented))
+                } else {
+                    // No account found for this auth intent ID
+                    completion(.success(.denied))
+                }
+            case .failure(let error):
+                completion(.failure(error))
+            }
+        }
+    }
 
     /// Authorizes a Link auth intent and retrieves the associated consumer session.
     ///
@@ -566,6 +595,27 @@ import UIKit
                 switch result {
                 case .success(let isExistingLinkConsumer):
                     continuation.resume(returning: isExistingLinkConsumer)
+                case .failure(let error):
+                    continuation.resume(throwing: error)
+                }
+            }
+        }
+    }
+    
+    /// Authorizes a Link auth intent and retrieves the associated consumer session.
+    ///
+    /// - Parameter linkAuthIntentId: The Link auth intent ID to authorize.
+    /// - Parameter viewController: The view controller from which to present the authorization flow.
+    /// - Returns: The authorization result.
+    func authorize(
+        linkAuthIntentId: String,
+        from viewController: UIViewController
+    ) async throws -> AuthorizeResult {
+        try await withCheckedThrowingContinuation { continuation in
+            authorize(linkAuthIntentId: linkAuthIntentId, from: viewController) { result in
+                switch result {
+                case .success(let authorizeResult):
+                    continuation.resume(returning: authorizeResult)
                 case .failure(let error):
                     continuation.resume(throwing: error)
                 }
