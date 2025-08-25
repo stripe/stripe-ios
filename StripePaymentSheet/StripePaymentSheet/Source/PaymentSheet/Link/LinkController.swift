@@ -601,6 +601,31 @@ import UIKit
         )
     }
 
+    private func updateConsentStatus(
+        consentGranted: Bool,
+        completion: @escaping (Result<AuthorizeResult, Error>) -> Void
+    ) {
+        guard let linkAccount, let consumerSessionClientSecret = linkAccount.consumerSessionClientSecret else {
+            completion(.failure(IntegrationError.noActiveLinkConsumer))
+            return
+        }
+
+        apiClient.updateConsentStatus(
+            consentGranted: consentGranted,
+            consumerSessionClientSecret: consumerSessionClientSecret,
+            consumerPublishableKey: linkAccount.publishableKey,
+            completion: { result in
+                switch result {
+                case .success:
+                    let result: AuthorizeResult = consentGranted ? .consented : .denied
+                    completion(.success(result))
+                case .failure(let error):
+                    completion(.failure(error))
+                }
+            }
+        )
+    }
+
     @objc
     private func onLinkAccountChange(_ notification: Notification) {
         DispatchQueue.main.async { [weak self] in
@@ -645,7 +670,15 @@ extension LinkController: LinkFullConsentViewControllerDelegate {
         controller.dismiss(animated: true) { [weak self] in
             guard let self, let completion = self.fullConsentCompletion else { return }
             self.fullConsentCompletion = nil
-            completion(.success(result))
+
+            switch result {
+            case .consented:
+                updateConsentStatus(consentGranted: true, completion: completion)
+            case .denied:
+                updateConsentStatus(consentGranted: false, completion: completion)
+            case .canceled:
+                completion(.success(.canceled))
+            }
         }
     }
 }
