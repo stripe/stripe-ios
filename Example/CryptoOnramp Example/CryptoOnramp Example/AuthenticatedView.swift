@@ -460,7 +460,7 @@ struct AuthenticatedView: View {
         Task {
             do {
                 // Refresh the quote before checking out, as it has a short expiry window.
-                try await APIClient.shared.refreshQuote(onrampSessionId:  onrampSessionResponse.id)
+                try await APIClient.shared.refreshQuote(onrampSessionId: onrampSessionResponse.id)
 
                 let checkoutResult = await coordinator.performCheckout(
                     onrampSessionId: onrampSessionResponse.id,
