@@ -8,7 +8,7 @@
 import Foundation
 
 /// Represents KYC information required for crypto operations.
-@_spi(CryptoOnrampSDKPreview)
+@_spi(STP)
 public struct KycInfo: Equatable {
 
     /// Represents a fixed date using simple components (day, month, year).

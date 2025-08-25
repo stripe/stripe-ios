@@ -114,7 +114,7 @@ protocol CryptoOnrampCoordinatorProtocol {
 }
 
 /// Coordinates headless Link user authentication and identity verification, leaving most of the UI to the client.
-@_spi(CryptoOnrampSDKPreview)
+@_spi(STP)
 public final class CryptoOnrampCoordinator: NSObject, CryptoOnrampCoordinatorProtocol {
 
     /// A subset of errors that may be thrown by `CryptoOnrampCoordinator` APIs.
