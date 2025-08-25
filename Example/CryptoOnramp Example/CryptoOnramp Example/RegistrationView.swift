@@ -23,6 +23,9 @@ struct RegistrationView: View {
     /// The email address associated with the new account being registered.
     let email: String
 
+    /// The OAuth scopes selected for authentication.
+    let selectedScopes: [OAuthScopes]
+
     @State private var fullName: String = ""
     @State private var phoneNumber: String = ""
     @State private var country: String = "US"
@@ -120,7 +123,10 @@ struct RegistrationView: View {
                 )
 
                 // Authenticate with the demo merchant backend as well.
-                _ = try await APIClient.shared.authenticateUser(with: email)
+                _ = try await APIClient.shared.authenticateUser(
+                    with: email,
+                    oauthScopes: selectedScopes
+                )
 
                 await MainActor.run {
                     isLoading.wrappedValue = false
@@ -149,7 +155,8 @@ struct RegistrationView: View {
     PreviewWrapperView { coordinator in
         RegistrationView(
             coordinator: coordinator,
-            email: "test@example.com"
+            email: "test@example.com",
+            selectedScopes: OAuthScopes.inlineScope
         )
     }
 }

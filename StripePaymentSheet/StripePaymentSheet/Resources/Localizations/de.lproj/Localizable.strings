@@ -288,6 +288,8 @@
 
 "This is your default" = "Dies ist Ihre Standard-Methode";
 
+"This payment method will be removed but will remain available for %@ subscriptions." = "Diese Zahlungsmethode wird entfernt, bleibt jedoch für %@ Abos verfügbar.";
+
 "Too many attempts. Please try again in a few minutes." = "Zu viele Versuche. Versuchen Sie es in ein paar Minuten noch einmal.";
 
 "Unavailable for this purchase" = "Nicht verfügbar für diesen Kauf";

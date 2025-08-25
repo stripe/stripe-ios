@@ -288,6 +288,8 @@
 
 "This is your default" = "Toto je výchozí nastavení";
 
+"This payment method will be removed but will remain available for %@ subscriptions." = "Tato platební metoda bude odebrána, ale zůstane dostupná pro předplatné %@.";
+
 "Too many attempts. Please try again in a few minutes." = "Příliš mnoho pokusů. Zkuste to prosím za pár minut znovu.";
 
 "Unavailable for this purchase" = "Není k dispozici pro tento nákup";

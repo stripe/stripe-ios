@@ -7,6 +7,7 @@
 //
 
 import Foundation
+@_spi(STP) import StripeCore
 
 /// An object representing parameters to confirm a SetupIntent object.
 /// For example, you would confirm a SetupIntent when a customer hits the “Save” button on a payment method management view in your app.
@@ -94,6 +95,9 @@ public class STPSetupIntentConfirmParams: NSObject, NSCopying, STPFormEncodable 
         return paymentMethodParams?.type
     }
 
+    /// Contains metadata with identifiers for the session and information about the integration
+    @objc @_spi(STP) public var clientAttributionMetadata: STPClientAttributionMetadata?
+
     override convenience init() {
         // Not a valid clientSecret, but at least it'll be non-null
         self.init(clientSecret: "")
@@ -116,6 +120,8 @@ public class STPSetupIntentConfirmParams: NSObject, NSCopying, STPFormEncodable 
             "mandateData = \(String(describing: mandateData))",
             // RadarOptions
             "radarOptions = \(String(describing: radarOptions))",
+            // ClientAttributionMetadata
+            "clientAttributionMetadata = @\(String(describing: clientAttributionMetadata))",
             // Additional params set by app
             "additionalAPIParameters = \(additionalAPIParameters )",
         ]
@@ -138,6 +144,7 @@ public class STPSetupIntentConfirmParams: NSObject, NSCopying, STPFormEncodable 
         copy.useStripeSDK = useStripeSDK
         copy.mandateData = mandateData
         copy.radarOptions = radarOptions
+        copy.clientAttributionMetadata = clientAttributionMetadata
         copy.additionalAPIParameters = additionalAPIParameters
 
         return copy
@@ -158,6 +165,7 @@ public class STPSetupIntentConfirmParams: NSObject, NSCopying, STPFormEncodable 
             NSStringFromSelector(#selector(getter: useStripeSDK)): "use_stripe_sdk",
             NSStringFromSelector(#selector(getter: mandateData)): "mandate_data",
             NSStringFromSelector(#selector(getter: radarOptions)): "radar_options",
+            NSStringFromSelector(#selector(getter: clientAttributionMetadata)): "client_attribution_metadata",
         ]
     }
 

@@ -288,6 +288,8 @@
 
 "This is your default" = "Dan il-metodu tal-pagament standard tiegħek";
 
+"This payment method will be removed but will remain available for %@ subscriptions." = "Dan il-metodu ta' pagament se jitneħħa iżda se jibqa' disponibbli għal abbonamenti ta' %@.";
+
 "Too many attempts. Please try again in a few minutes." = "Ippruvajt wisq drabi. Jekk jogħġbok erġa' pprova wara ftit minuti.";
 
 "Unavailable for this purchase" = "Mhux disponibbli għal dix-xirja";
