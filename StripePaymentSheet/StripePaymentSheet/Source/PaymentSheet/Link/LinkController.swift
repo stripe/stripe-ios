@@ -379,7 +379,13 @@ import UIKit
         }
     }
 
-    /// Authorizes a Link auth intent and retrieves the associated consumer session.
+    /// Authorizes a Link auth intent, handling verification and consent flows as needed.
+    ///
+    /// This method will present verification if the account requires verification, and consent screens
+    /// if consent is required. The flow adapts based on the auth intent configuration:
+    /// - Inline consent: Presents verification with embedded consent
+    /// - Full consent: Presents verification (if needed) followed by a dedicated consent screen
+    /// - No consent: Presents verification only (if needed)
     ///
     /// - Parameter linkAuthIntentId: The Link auth intent ID to authorize.
     /// - Parameter viewController: The view controller from which to present the authorization flow.
@@ -398,32 +404,27 @@ import UIKit
                 if let response {
                     self?.linkAccount = response.linkAccount
 
-                    // Check if verification is required
+                    // If verification is required, present verification flow
                     if !response.linkAccount.hasCompletedSMSVerification {
-                        // Present verification flow with consent view model for inline consent
-                        switch response.consentViewModel {
-                        case .inline:
+                        if case .inline = response.consentViewModel {
                             self?.presentVerificationWithConsent(
                                 from: viewController,
                                 consentViewModel: response.consentViewModel,
                                 completion: completion
                             )
                             return
-                        case .full(let fullConsentViewModel):
-                            // Present full consent screen
-                            self?.presentFullConsentScreen(
-                                consentViewModel: fullConsentViewModel,
-                                from: viewController,
-                                completion: completion
-                            )
-                        case .none:
-                            // Present verification without consent
-                            self?.presentForVerification(from: viewController, completion: { result in
+                        } else {
+                            self?.presentForVerification(from: viewController, completion: { [weak self] result in
                                 switch result {
                                 case .success(let verificationResult):
                                     switch verificationResult {
                                     case .completed:
-                                        completion(.success(.consented))
+                                        // After verification, check for full consent
+                                        self?.presentFullConsentIfNeeded(
+                                            consentViewModel: response.consentViewModel,
+                                            from: viewController,
+                                            completion: completion
+                                        )
                                     case .canceled:
                                         completion(.success(.canceled))
                                     }
@@ -431,19 +432,40 @@ import UIKit
                                     completion(.failure(error))
                                 }
                             })
+                            return
                         }
-                    } else {
-                        // Account doesn't require verification
-                        completion(.success(.consented))
                     }
+
+                    // No verification required, check for full consent
+                    self?.presentFullConsentIfNeeded(
+                        consentViewModel: response.consentViewModel,
+                        from: viewController,
+                        completion: completion
+                    )
                 } else {
                     // No account found for this auth intent ID
-                    completion(.success(.denied))
+                    completion(.failure(IntegrationError.noActiveLinkConsumer))
                 }
             case .failure(let error):
                 completion(.failure(error))
             }
         }
+    }
+
+    private func presentFullConsentIfNeeded(
+        consentViewModel: LinkConsentViewModel?,
+        from viewController: UIViewController,
+        completion: @escaping (Result<AuthorizeResult, Error>) -> Void
+    ) {
+        guard case .full(let fullConsentViewModel) = consentViewModel else {
+            completion(.success(.consented))
+            return
+        }
+        presentFullConsentScreen(
+            consentViewModel: fullConsentViewModel,
+            from: viewController,
+            completion: completion
+        )
     }
 
     private func presentVerificationWithConsent(
@@ -674,7 +696,13 @@ extension LinkController: LinkFullConsentViewControllerDelegate {
         }
     }
 
-    /// Authorizes a Link auth intent and retrieves the associated consumer session.
+    /// Authorizes a Link auth intent, handling verification and consent flows as needed.
+    ///
+    /// This method will present verification if the account requires verification, and consent screens
+    /// if consent is required. The flow adapts based on the auth intent configuration:
+    /// - Inline consent: Presents verification with embedded consent
+    /// - Full consent: Presents verification (if needed) followed by a dedicated consent screen
+    /// - No consent: Presents verification only (if needed)
     ///
     /// - Parameter linkAuthIntentId: The Link auth intent ID to authorize.
     /// - Parameter viewController: The view controller from which to present the authorization flow.
