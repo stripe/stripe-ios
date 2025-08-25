@@ -482,7 +482,7 @@ struct AuthenticatedView: View {
 }
 
 private class WindowAuthenticationContext: NSObject, STPAuthenticationContext {
-    public func authenticationPresentingViewController() -> UIViewController {
+    func authenticationPresentingViewController() -> UIViewController {
         UIApplication.shared.findTopNavigationController() ?? UIViewController()
     }
 }
