@@ -13,7 +13,7 @@ import Foundation
 // We use snake case to make long names easier to read.
 extension String.Localized {
     static var loading: String {
-        return STPLocalizedString("Loading", "Status while screen is loading")
+        return STPLocalizedString("Raising the anchor...", "Status while screen is loading")
     }
 
     // MARK: - Additional Info fields

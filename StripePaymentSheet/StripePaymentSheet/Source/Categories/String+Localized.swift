@@ -14,7 +14,7 @@ import Foundation
 extension String.Localized {
     static var add_new_payment_method: String {
         STPLocalizedString(
-            "Add new payment method",
+            "Add new doubloons",
             "Text for a button that, when tapped, displays another screen where the customer can add payment method details"
         )
     }
@@ -73,7 +73,7 @@ extension String.Localized {
     }
 
     static var pay_with_link: String {
-        STPLocalizedString("Pay with Link", "Text for the 'Pay with Link' button. 'Link' is a Stripe brand, please do not translate the word 'Link'.")
+        STPLocalizedString("Pay with ye treasure map", "Text for the 'Pay with Link' button. 'Link' is a Stripe brand, please do not translate the word 'Link'.")
     }
 
     static var bank_continue_mandate_text: String {
@@ -85,7 +85,7 @@ extension String.Localized {
     }
 
     static var back: String {
-        STPLocalizedString("Back", "Text for back button")
+        STPLocalizedString("Return to harbor", "Text for back button")
     }
 
     static var manage_bank_account: String {
@@ -153,7 +153,7 @@ extension String.Localized {
 
     static var save: String {
        STPLocalizedString(
-           "Save",
+           "Stash it away",
            "Label on a button that when tapped, updates a card brand."
        )
     }
@@ -253,7 +253,7 @@ extension String.Localized {
 
     static var payment_failed: String {
         STPLocalizedString(
-            "Payment failed",
+            "The treasure was lost at sea",
             "Text on a screen that indicates a payment has failed"
         )
     }
@@ -351,7 +351,7 @@ extension String.Localized {
 
     static var select_payment_method: String {
         STPLocalizedString(
-            "Select payment method",
+            "Choose yer plunder",
             "Title shown above a view containing the customer's payment methods"
         )
     }
@@ -379,7 +379,7 @@ extension String.Localized {
 
     static var new_payment_method: String {
         STPLocalizedString(
-            "New payment method",
+            "New treasure chest",
             "Title shown above a section containing payment methods that a customer can choose to pay with e.g. card, bank account, etc."
         )
     }
@@ -407,7 +407,7 @@ extension String.Localized {
 
     static var add_card: String {
         STPLocalizedString(
-            "Add card",
+            "Add yer doubloons",
             "Title shown above a view allowing the customer to save their first card."
         )
     }
@@ -494,7 +494,7 @@ extension String.Localized {
     }
 
     static var confirm: String {
-        STPLocalizedString("Confirm", "Title used for various UIs, including a button that confirms entered payment details or the selection of a payment method.")
+        STPLocalizedString("Hoist the colors", "Title used for various UIs, including a button that confirms entered payment details or the selection of a payment method.")
     }
 
     static var bank: String {

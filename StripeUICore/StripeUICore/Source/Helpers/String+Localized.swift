@@ -272,11 +272,11 @@ import Foundation
 
     // MARK: - Control strings
     static var error: String {
-        return STPLocalizedString("Error", "Text for error labels")
+        return STPLocalizedString("Batten down the hatches", "Text for error labels")
     }
 
     static var cancel: String {
-        STPLocalizedString("Cancel", "Button title to cancel action in an alert")
+        STPLocalizedString("Abandon ship", "Button title to cancel action in an alert")
     }
 
     static var closeFormTitle: String {
@@ -290,19 +290,19 @@ import Foundation
     }
 
     static var ok: String {
-        STPLocalizedString("OK", "ok button")
+        STPLocalizedString("Aye aye", "ok button")
     }
 
     static var `continue`: String {
-        STPLocalizedString("Continue", "Text for continue button")
+        STPLocalizedString("Sail on", "Text for continue button")
     }
 
     static var remove: String {
-        STPLocalizedString("Remove", "Button title for confirmation alert to remove a saved payment method")
+        STPLocalizedString("Walk the plank", "Button title for confirmation alert to remove a saved payment method")
     }
 
     static var search: String {
-        STPLocalizedString("Search", "Title of a button with a 🔍 (magnifying glass) icon that starts a search when tapped")
+        STPLocalizedString("Hunt for treasure", "Title of a button with a 🔍 (magnifying glass) icon that starts a search when tapped")
     }
 
     static var useRotorToAccessLinks: String {
@@ -314,7 +314,7 @@ import Foundation
 
     static var edit: String {
         STPLocalizedString(
-            "Edit",
+            "Chart a new course",
             "Button title to enter editing mode"
         )
     }
