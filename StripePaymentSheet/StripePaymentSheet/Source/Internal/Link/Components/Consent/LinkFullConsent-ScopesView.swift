@@ -119,6 +119,7 @@ final class LinkFullConsentScopesView: UIView {
         return containerView
     }
 
+    #if !os(visionOS)
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
         super.traitCollectionDidChange(previousTraitCollection)
 
@@ -126,6 +127,7 @@ final class LinkFullConsentScopesView: UIView {
             layer.borderColor = UIColor.linkSurfaceTertiary.cgColor
         }
     }
+    #endif
 }
 
 private extension UIImageView {
