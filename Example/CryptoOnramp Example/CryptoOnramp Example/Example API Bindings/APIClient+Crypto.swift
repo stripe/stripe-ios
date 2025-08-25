@@ -34,14 +34,15 @@ extension APIClient {
         return try await request("create_onramp_session", method: .POST, body: requestObject, bearerToken: token)
     }
 
-    func createQuote(requestObject: QuoteRequest) async throws -> QuoteResponse {
+    @discardableResult
+    func refreshQuote(onrampSessionId: String) async throws -> QuoteResponse {
         guard let token = authToken else { throw APIError.missingAuthToken }
-        return try await request("quote", method: .POST, body: requestObject, bearerToken: token)
+        return try await request("quote", method: .POST, body: QuoteRequest(cryptoOnrampSessionId: onrampSessionId), bearerToken: token)
     }
 
-    func checkout(requestObject: CheckoutRequest) async throws -> CheckoutResponse {
+    func checkout(onrampSessionId: String) async throws -> CheckoutResponse {
         guard let token = authToken else { throw APIError.missingAuthToken }
-        return try await request("checkout", method: .POST, body: requestObject, bearerToken: token)
+        return try await request("checkout", method: .POST, body: CheckoutRequest(cryptoOnrampSessionId: onrampSessionId), bearerToken: token)
     }
 
     func fetchSessionStatus(cryptoOnrampSessionId: String) async throws -> SessionStatusResponse {

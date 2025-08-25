@@ -25,8 +25,8 @@ struct AttachWalletAddressView: View {
     /// Callback invoked on successful attach with the address and network used.
     let onWalletAttached: ((String, CryptoNetwork) -> Void)?
 
-    @State private var walletAddress: String = "0x4242424242424242424242424242424242424242"
-    @State private var selectedNetwork: CryptoNetwork = .ethereum
+    @State private var walletAddress: String = ""
+    @State private var selectedNetwork: CryptoNetwork = .solana
     @State private var errorMessage: String?
 
     @Environment(\.isLoading) private var isLoading
@@ -90,12 +90,8 @@ struct AttachWalletAddressView: View {
             }
         }
         .onAppear {
-            // Focus and select the text so the user can quickly delete the default address if needed.
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.6) {
                 walletFieldFocused = true
-                DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-                    UIApplication.shared.sendAction(#selector(UIResponder.selectAll(_:)), to: nil, from: nil, for: nil)
-                }
             }
         }
     }
