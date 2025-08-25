@@ -51,24 +51,23 @@ import Foundation
 
     @_spi(STP) public func start() {
         guard let passiveCaptcha, validationTask == nil else { return }
-        do {
-            let hcaptcha = try HCaptcha(apiKey: passiveCaptcha.siteKey,
-                                       passiveApiKey: true,
-                                       rqdata: passiveCaptcha.rqdata,
-                                       host: "stripecdn.com")
-            STPAnalyticsClient.sharedClient.logPassiveCaptchaInit(siteKey: passiveCaptcha.siteKey)
-            let siteKey = passiveCaptcha.siteKey
+        let timeoutNs: UInt64 = {
+            if let testTimeout {
+                return testTimeout
+            }
+            return STPAnalyticsClient.isUnitOrUITest ? 0 : 6_000_000_000
+        }()
 
-            let timeoutNs: UInt64 = {
-                if let testTimeout {
-                    return testTimeout
-                }
-                return STPAnalyticsClient.isUnitOrUITest ? 0 : 6_000_000_000
-            }()
+        validationTask = Task<String?, Never> { [siteKey = passiveCaptcha.siteKey, rqdata = passiveCaptcha.rqdata, timeoutNs] () -> String? in
+            do {
+                let hcaptcha = try HCaptcha(apiKey: siteKey,
+                                            passiveApiKey: true,
+                                            rqdata: rqdata,
+                                            host: "stripecdn.com")
+                STPAnalyticsClient.sharedClient.logPassiveCaptchaInit(siteKey: siteKey)
 
-            validationTask = Task<String?, Never> { [hcaptcha, siteKey, timeoutNs] () -> String? in
                 return await withCheckedContinuation { (continuation: CheckedContinuation<String?, Never>) in
-                    var hasCompleted: Bool = false
+                    var hasCompleted = false
                     let timeoutTask = Task { @MainActor in
                         try? await Task.sleep(nanoseconds: timeoutNs)
                         if hasCompleted { return }
@@ -76,6 +75,7 @@ import Foundation
                         STPAnalyticsClient.sharedClient.logPassiveCaptchaTimeout(siteKey: siteKey)
                         continuation.resume(returning: nil)
                     }
+
                     hcaptcha.didFinishLoading {
                         hcaptcha.validate { result in
                             Task { @MainActor in
@@ -96,9 +96,10 @@ import Foundation
                         }
                     }
                 }
+            } catch {
+                STPAnalyticsClient.sharedClient.logPassiveCaptchaError(error: error, siteKey: siteKey)
+                return nil
             }
-        } catch {
-            STPAnalyticsClient.sharedClient.logPassiveCaptchaError(error: error, siteKey: passiveCaptcha.siteKey)
         }
     }
 
