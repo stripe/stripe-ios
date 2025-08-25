@@ -102,14 +102,14 @@ protocol CryptoOnrampCoordinatorProtocol {
     ///   - onrampSessionId: The onramp session identifier.
     ///   - authenticationContext: The authentication context used to handle any required next actions (e.g., 3DS authentication).
     ///   - onrampSessionClientSecretProvider: An async closure that calls your backend to perform a checkout.
-    ///     Your backend should call Stripe's `/v1/crypto/onramp_sessions/:id/checkout` endpoint with the onramp session ID.
+    ///     Your backend should call Stripe's `/v1/crypto/onramp_sessions/:id/checkout` endpoint with the provided onramp session ID.
     ///     The closure should return the onramp session client secret on success, or throw an Error on failure.
     ///     This closure may be called twice: once initially, and once more after handling any required authentication.
     /// - Returns: A `CheckoutResult` indicating whether the checkout succeeded or failed.
     func performCheckout(
         onrampSessionId: String,
         authenticationContext: STPAuthenticationContext,
-        onrampSessionClientSecretProvider: @escaping () async throws -> String
+        onrampSessionClientSecretProvider: @escaping (_ onrampSessionId: String) async throws -> String
     ) async -> CheckoutResult
 }
 
@@ -138,6 +138,9 @@ public final class CryptoOnrampCoordinator: NSObject, CryptoOnrampCoordinatorPro
     private let appearance: LinkAppearance
     private var applePayCompletionContinuation: CheckedContinuation<ApplePayPaymentStatus, Swift.Error>?
     private var selectedPaymentSource: SelectedPaymentSource?
+
+    /// Dedicated API client configured with the platform publishable key
+    private var platformApiClient: STPAPIClient?
 
     private var linkAccountInfo: PaymentSheetLinkAccountInfoProtocol {
         get async throws {
@@ -345,9 +348,9 @@ public final class CryptoOnrampCoordinator: NSObject, CryptoOnrampCoordinatorPro
         let paymentMethod: STPPaymentMethod = try await {
             switch selectedPaymentSource {
             case .link:
-                let platformPublishableKey = try await getPlatformKey()
+                let platformApiClient = try await getPlatformApiClient()
                 return try await linkController.createPaymentMethod(
-                    overridePublishableKey: platformPublishableKey
+                    overridePublishableKey: platformApiClient.publishableKey
                 )
             case .applePay(let applePayPaymentMethod):
                 return applePayPaymentMethod
@@ -364,7 +367,7 @@ public final class CryptoOnrampCoordinator: NSObject, CryptoOnrampCoordinatorPro
     public func performCheckout(
         onrampSessionId: String,
         authenticationContext: STPAuthenticationContext,
-        onrampSessionClientSecretProvider: @escaping () async throws -> String
+        onrampSessionClientSecretProvider: @escaping (_ onrampSessionId: String) async throws -> String
     ) async -> CheckoutResult {
         do {
             // First, attempt to check out and get the PaymentIntent
@@ -408,11 +411,6 @@ public final class CryptoOnrampCoordinator: NSObject, CryptoOnrampCoordinatorPro
         } catch {
             return .failed(error)
         }
-    }
-
-    private func getPlatformKey() async throws -> String {
-        let platformSettings = try await apiClient.getPlatformSettings(linkAccountInfo: linkAccountInfo)
-        return platformSettings.publishableKey
     }
 }
 
@@ -470,9 +468,8 @@ private extension CryptoOnrampCoordinator {
 
             Task {
                 do {
-                    // Configure Apple Pay context to use platform publishable key
-                    let platformPublishableKey = try await getPlatformKey()
-                    let platformApiClient = STPAPIClient(publishableKey: platformPublishableKey)
+                    // Configure Apple Pay context to use platform API client
+                    let platformApiClient = try await getPlatformApiClient()
                     context.apiClient = platformApiClient
 
                     // Retain the continuation until we receive a completion delegate callback.
@@ -517,12 +514,26 @@ private extension CryptoOnrampCoordinator {
         }
     }
 
+    /// Returns a dedicated API client configured with the platform publishable key.
+    /// Caches the API client after first creation to avoid repeated API calls.
+    private func getPlatformApiClient() async throws -> STPAPIClient {
+        if let platformApiClient {
+            return platformApiClient
+        }
+
+        // Fetch platform settings and create API client
+        let platformSettings = try await apiClient.getPlatformSettings(linkAccountInfo: linkAccountInfo)
+        let newPlatformApiClient = STPAPIClient(publishableKey: platformSettings.publishableKey)
+        platformApiClient = newPlatformApiClient
+        return newPlatformApiClient
+    }
+
     /// Performs checkout and retrieves the resulting PaymentIntent.
     private func performCheckoutAndRetrievePaymentIntent(
         onrampSessionId: String,
-        onrampSessionClientSecretProvider: @escaping () async throws -> String
+        onrampSessionClientSecretProvider: @escaping (_ onrampSessionId: String) async throws -> String
     ) async throws -> STPPaymentIntent {
-        let onrampSessionClientSecret = try await onrampSessionClientSecretProvider()
+        let onrampSessionClientSecret = try await onrampSessionClientSecretProvider(onrampSessionId)
 
         // Get the onramp session to extract the payment_intent_client_secret
         let onrampSession = try await apiClient.getOnrampSession(
@@ -536,8 +547,10 @@ private extension CryptoOnrampCoordinator {
 
     /// Retrieves a PaymentIntent using the provided client secret.
     private func retrievePaymentIntent(withClientSecret clientSecret: String) async throws -> STPPaymentIntent {
+        let platformApiClient = try await getPlatformApiClient()
+
         return try await withCheckedThrowingContinuation { continuation in
-            apiClient.retrievePaymentIntent(withClientSecret: clientSecret) { paymentIntent, error in
+            platformApiClient.retrievePaymentIntent(withClientSecret: clientSecret) { paymentIntent, error in
                 if let error = error {
                     continuation.resume(throwing: error)
                 } else if let paymentIntent = paymentIntent {
