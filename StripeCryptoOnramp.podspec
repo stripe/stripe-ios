@@ -18,11 +18,8 @@ Pod::Spec.new do |s|
   s.swift_version                  = '5.0'
   s.source_files                   = 'StripeCryptoOnramp/StripeCryptoOnramp/**/*.swift'
   s.ios.resource_bundle            = { 'StripeCryptoOnrampBundle' => 'StripeCryptoOnramp/StripeCryptoOnramp/Resources/**/*.{lproj,json,png,xcassets}' }
-  s.dependency                     'StripeCore', "#{s.version}"
+  s.dependency                     'Stripe', "#{s.version}"
   s.dependency                     'StripeUICore', "#{s.version}"
-  s.dependency                     'StripeApplePay', "#{s.version}"
-  s.dependency                     'StripePayments', "#{s.version}"
-  s.dependency                     'StripePaymentsUI', "#{s.version}"
   s.dependency                     'StripePaymentSheet', "#{s.version}"
   s.dependency                     'StripeIdentity', "#{s.version}"
 end
