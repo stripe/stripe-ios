@@ -384,7 +384,7 @@ import UIKit
     @_spi(STP) public func authorize(
         linkAuthIntentId: String,
         from viewController: UIViewController,
-        completion: @escaping (Result<AuthorizeResult, Error>) -> Void
+        completion: @escaping (Result<AuthorizationResult, Error>) -> Void
     ) {
         linkAccountService.lookupLinkAuthIntent(
             linkAuthIntentID: linkAuthIntentId,
@@ -674,7 +674,7 @@ import UIKit
     func authorize(
         linkAuthIntentId: String,
         from viewController: UIViewController
-    ) async throws -> AuthorizeResult {
+    ) async throws -> AuthorizationResult {
         try await withCheckedThrowingContinuation { continuation in
             authorize(linkAuthIntentId: linkAuthIntentId, from: viewController) { result in
                 switch result {
