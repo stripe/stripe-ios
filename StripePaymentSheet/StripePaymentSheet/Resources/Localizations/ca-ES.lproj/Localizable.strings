@@ -286,6 +286,8 @@
 
 "This is your default" = "Aquesta és l'opció per defecte";
 
+"This payment method will be removed but will remain available for %@ subscriptions." = "Aquesta forma de pagament se suprimirà, però continuarà disponible per a les subscripcions del %@.";
+
 "Too many attempts. Please try again in a few minutes." = "Massa intents. Torneu-ho a provar d'aquí uns minuts.";
 
 "Unavailable for this purchase" = "No disponible per a aquesta compra";

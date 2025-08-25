@@ -286,6 +286,8 @@
 
 "This is your default" = "Aceasta este setarea dvs. implicită";
 
+"This payment method will be removed but will remain available for %@ subscriptions." = "Această metodă de plată va fi eliminată, dar va rămâne disponibilă pentru abonamentele %@.";
+
 "Too many attempts. Please try again in a few minutes." = "Prea multe încercări. Vă rugăm să încercați din nou în câteva minute.";
 
 "Unavailable for this purchase" = "Nu este disponibilă pentru această achiziție";

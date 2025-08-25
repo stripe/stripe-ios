@@ -286,6 +286,8 @@
 
 "This is your default" = "Αυτή είναι η προεπιλογή σας";
 
+"This payment method will be removed but will remain available for %@ subscriptions." = "Αυτή η μέθοδος πληρωμής θα καταργηθεί, αλλά θα παραμείνει διαθέσιμη για %@ συνδρομές.";
+
 "Too many attempts. Please try again in a few minutes." = "Πραγματοποιήθηκαν πολλές προσπάθειες. Δοκιμάστε ξανά σε λίγα λεπτά.";
 
 "Unavailable for this purchase" = "Δεν είναι διαθέσιμο για αυτήν την αγορά";

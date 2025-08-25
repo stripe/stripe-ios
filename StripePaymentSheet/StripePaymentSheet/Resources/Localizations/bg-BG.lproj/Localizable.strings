@@ -286,6 +286,8 @@
 
 "This is your default" = "Това е настройката по подразбиране.";
 
+"This payment method will be removed but will remain available for %@ subscriptions." = "Този метод на плащане ще бъде премахнат, но ще остане наличен за абонаменти %@.";
+
 "Too many attempts. Please try again in a few minutes." = "Твърде много опити. Моля, опитайте отново след няколко минути.";
 
 "Unavailable for this purchase" = "Недостъпно за тази покупка";

@@ -284,6 +284,8 @@
 
 "This is your default" = "這是您的預設支付方式";
 
+"This payment method will be removed but will remain available for %@ subscriptions." = "此支付方式將被移除，但仍適用於 %@ 項訂閱。";
+
 "Too many attempts. Please try again in a few minutes." = "嘗試次數過多。請幾分鐘後重試。";
 
 "Unavailable for this purchase" = "無法完成這筆訂單";

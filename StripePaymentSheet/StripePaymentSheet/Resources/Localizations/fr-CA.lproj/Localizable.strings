@@ -286,6 +286,8 @@
 
 "This is your default" = "Votre moyen de paiement par défaut";
 
+"This payment method will be removed but will remain available for %@ subscriptions." = "Ce mode de paiement sera supprimé mais restera disponible pour les abonnements %@.";
+
 "Too many attempts. Please try again in a few minutes." = "Vous avez effectué un nombre trop élevé de tentatives. Veuillez réessayer dans quelques minutes.";
 
 "Unavailable for this purchase" = "Indisponible pour cet achat";

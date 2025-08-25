@@ -286,6 +286,8 @@
 
 "This is your default" = "Tas ir jūsu noklusējums";
 
+"This payment method will be removed but will remain available for %@ subscriptions." = "Šis maksājuma veids tiks noņemts, bet joprojām būs pieejams %@ abonementiem.";
+
 "Too many attempts. Please try again in a few minutes." = "Pārāk daudz mēģinājumu. Mēģiniet vēlreiz pēc dažām minūtēm.";
 
 "Unavailable for this purchase" = "Nav pieejams šim pirkumam";

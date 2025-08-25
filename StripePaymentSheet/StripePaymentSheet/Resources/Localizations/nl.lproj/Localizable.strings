@@ -286,6 +286,8 @@
 
 "This is your default" = "Dit is je standaard";
 
+"This payment method will be removed but will remain available for %@ subscriptions." = "Deze betaalmethode wordt verwijderd, maar blijft beschikbaar voor %@ abonnementen.";
+
 "Too many attempts. Please try again in a few minutes." = "Te veel pogingen. Probeer het over een paar minuten opnieuw.";
 
 "Unavailable for this purchase" = "Niet beschikbaar voor deze aankoop";

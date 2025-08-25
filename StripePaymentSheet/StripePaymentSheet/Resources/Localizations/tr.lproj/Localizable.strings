@@ -286,6 +286,8 @@
 
 "This is your default" = "Bu varsayılan ödeme yönteminizdir";
 
+"This payment method will be removed but will remain available for %@ subscriptions." = "Bu ödeme yöntemi kaldırılacak ancak %@ abonelikleri için kullanılabilir kalacaktır.";
+
 "Too many attempts. Please try again in a few minutes." = "Çok fazla deneme yapıldı. Lütfen birkaç dakika içinde tekrar deneyin.";
 
 "Unavailable for this purchase" = "Bu satın alım için kullanılamaz";

@@ -286,6 +286,8 @@
 
 "This is your default" = "To je vaš privzeti način plačila";
 
+"This payment method will be removed but will remain available for %@ subscriptions." = "Ta način plačila bo odstranjen, vendar bo še naprej na voljo za naročnine %@.";
+
 "Too many attempts. Please try again in a few minutes." = "Preveč poskusov. Poskusite znova čez nekaj minut.";
 
 "Unavailable for this purchase" = "Ni na voljo za ta nakup";

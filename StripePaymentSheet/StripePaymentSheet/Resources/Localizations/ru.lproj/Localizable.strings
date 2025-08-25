@@ -286,6 +286,8 @@
 
 "This is your default" = "Это ваше значение по умолчанию";
 
+"This payment method will be removed but will remain available for %@ subscriptions." = "Этот способ оплаты будет удален, но останется доступным для подписок (%@).";
+
 "Too many attempts. Please try again in a few minutes." = "Превышено разрешенное число попыток. Попробуйте еще раз через несколько минут.";
 
 "Unavailable for this purchase" = "Не предусмотрено для этой покупки";

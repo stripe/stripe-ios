@@ -286,6 +286,8 @@
 
 "This is your default" = "Tämä on oletusarvoinen";
 
+"This payment method will be removed but will remain available for %@ subscriptions." = "Tämä maksutapa poistetaan, mutta se on edelleen käytettävissä %@ tilauksissa.";
+
 "Too many attempts. Please try again in a few minutes." = "Liian monta yritystä. Kokeile uudelleen muutaman minuutin kuluttua.";
 
 "Unavailable for this purchase" = "Ei käytettävissä tälle ostolle";

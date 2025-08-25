@@ -286,6 +286,8 @@
 
 "This is your default" = "This is your default";
 
+"This payment method will be removed but will remain available for %@ subscriptions." = "This payment method will be removed but will remain available for %@ subscriptions.";
+
 "Too many attempts. Please try again in a few minutes." = "Too many attempts. Please try again in a few minutes.";
 
 "Unavailable for this purchase" = "Unavailable for this purchase";

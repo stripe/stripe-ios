@@ -286,6 +286,8 @@
 
 "This is your default" = "これはデフォルトです";
 
+"This payment method will be removed but will remain available for %@ subscriptions." = "この決済手段は削除されますが、%@ のサブスクリプションでは引き続き使用できます。";
+
 "Too many attempts. Please try again in a few minutes." = "試行回数が多すぎます。数分後に再度お試しください。";
 
 "Unavailable for this purchase" = "この購入には利用できません";
