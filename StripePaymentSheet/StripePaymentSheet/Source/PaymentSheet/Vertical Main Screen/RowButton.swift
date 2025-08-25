@@ -379,7 +379,7 @@ extension RowButton {
         imageView.contentMode = .scaleAspectFit
         let tallestRowButton = RowButton.create(appearance: appearance, type: .new(paymentMethodType: .stripe(.afterpayClearpay)), imageView: imageView, text: "Dummy text", subtext: "Dummy subtext", isEmbedded: isEmbedded) { _ in }
         let size = tallestRowButton.systemLayoutSizeFitting(.init(width: 320, height: UIView.noIntrinsicMetric))
-        return size.height
+        return NewDesignDetector.newDesignEnabled ? 48 : size.height
     }
 
     static func makeRowButtonLabel(text: String, appearance: PaymentSheet.Appearance, isEmbedded: Bool) -> UILabel {

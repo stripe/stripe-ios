@@ -36,6 +36,7 @@ struct PaymentSheetTestPlayground: View {
                 .autocorrectionDisabled()
                 .textInputAutocapitalization(.never)
         }
+        SettingView(setting: $playgroundController.settings.enableIOS26Changes)
         Group {
             if playgroundController.settings.merchantCountryCode == .US {
                 SettingView(setting: linkEnabledModeBinding)
