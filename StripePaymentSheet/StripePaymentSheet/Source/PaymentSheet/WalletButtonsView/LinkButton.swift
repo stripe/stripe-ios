@@ -111,6 +111,7 @@ struct LinkButton: View {
         .background(Color(uiColor: .linkExpressCheckoutButtonBackground))
         .overlay {
             RoundedRectangle(cornerRadius: cornerRadius)
+                .inset(by: 0.5)
                 .stroke(Color(uiColor: borderColor), lineWidth: 1)
         }
         .cornerRadius(cornerRadius)
