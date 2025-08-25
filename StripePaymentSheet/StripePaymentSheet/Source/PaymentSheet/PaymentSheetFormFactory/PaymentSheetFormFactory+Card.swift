@@ -148,6 +148,7 @@ extension PaymentSheetFormFactory {
                 allowsDefaultOptIn: allowsLinkDefaultOptIn,
                 signupOptInFeatureEnabled: signupOptInFeatureEnabled,
                 signupOptInInitialValue: signupOptInInitialValue
+                // TODO: Use correct consent action
             )
             elements.append(inlineSignupElement)
         }
