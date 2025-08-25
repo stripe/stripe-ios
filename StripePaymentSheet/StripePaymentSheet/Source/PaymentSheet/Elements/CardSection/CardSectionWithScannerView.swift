@@ -30,7 +30,6 @@ final class CardSectionWithScannerView: UIView {
     }()
     lazy var cardScanningView: CardScanningView = {
         let scanningView = CardScanningView()
-        scanningView.isHidden = true
         scanningView.delegate = self
         return scanningView
     }()
@@ -38,7 +37,14 @@ final class CardSectionWithScannerView: UIView {
     private let theme: ElementsAppearance
     private let linkAppearance: LinkAppearance?
 
-    init(cardSectionView: UIView, delegate: CardSectionWithScannerViewDelegate, theme: ElementsAppearance = .default, analyticsHelper: PaymentSheetAnalyticsHelper?, linkAppearance: LinkAppearance? = nil) {
+    init(
+        cardSectionView: UIView,
+        opensCardScannerAutomatically: Bool,
+        delegate: CardSectionWithScannerViewDelegate,
+        theme: ElementsAppearance = .default,
+        analyticsHelper: PaymentSheetAnalyticsHelper?,
+        linkAppearance: LinkAppearance? = nil
+    ) {
         self.cardSectionView = cardSectionView
         self.delegate = delegate
         self.theme = theme
@@ -46,6 +52,12 @@ final class CardSectionWithScannerView: UIView {
         self.linkAppearance = linkAppearance
         super.init(frame: .zero)
         installConstraints()
+
+        if opensCardScannerAutomatically {
+            cardScanButton.alpha = 0
+        } else {
+            cardScanningView.isHidden = true
+        }
     }
 
     required init?(coder: NSCoder) { fatalError("init(coder:) has not been implemented") }
@@ -91,6 +103,14 @@ final class CardSectionWithScannerView: UIView {
     override func resignFirstResponder() -> Bool {
         cardScanningView.stop()
         return super.resignFirstResponder()
+    }
+
+    override func willMove(toWindow newWindow: UIWindow?) {
+        if newWindow != nil && !cardScanningView.isHidden {
+            cardScanningView.start()
+            becomeFirstResponder()
+        }
+        super.willMove(toWindow: newWindow)
     }
 }
 

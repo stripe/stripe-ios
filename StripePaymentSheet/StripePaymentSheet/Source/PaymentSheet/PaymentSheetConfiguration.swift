@@ -227,6 +227,10 @@ extension PaymentSheet {
         /// .card
         public var termsDisplay: [STPPaymentMethodType: PaymentSheet.TermsDisplay] = [:]
 
+        /// By default, the card form will provide a button to open the card scanner.
+        /// If true, the card form will instead initialize with the card scanner already open.
+        public var opensCardScannerAutomatically: Bool = false
+
         /// Set to `true` if using a wallet buttons view. This changes a few behaviors of PaymentSheet (for example, wallet buttons will never be selected by default).
         @_spi(STP) public var willUseWalletButtonsView = false
     }
