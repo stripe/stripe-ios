@@ -465,8 +465,8 @@ struct AuthenticatedView: View {
             let checkoutResult = await coordinator.performCheckout(
                 onrampSessionId: onrampSessionResponse.id,
                 authenticationContext: authenticationContext
-            ) {
-                let result = try await APIClient.shared.checkout(requestObject: .init(cryptoOnrampSessionId: onrampSessionResponse.id))
+            ) { onrampSessionId in
+                let result = try await APIClient.shared.checkout(requestObject: .init(cryptoOnrampSessionId: onrampSessionId))
                 return  result.clientSecret
             }
 
