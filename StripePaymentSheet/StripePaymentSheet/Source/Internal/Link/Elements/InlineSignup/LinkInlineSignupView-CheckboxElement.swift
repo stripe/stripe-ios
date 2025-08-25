@@ -6,9 +6,11 @@
 //  Copyright © 2022 Stripe, Inc. All rights reserved.
 //
 
-@_spi(STP) import StripeCore
-@_spi(STP) import StripeUICore
 import UIKit
+
+@_spi(STP) import StripeCore
+@_spi(STP) import StripePaymentsUI
+@_spi(STP) import StripeUICore
 
 extension LinkInlineSignupView {
 
@@ -72,6 +74,70 @@ extension LinkInlineSignupView {
                 }
             }()
 
+            let leadingIcon: NSTextAttachment? = {
+                guard mode == .signupOptIn else {
+                    return nil
+                }
+                let iconImage = Image.link_logo_new.makeImage(template: true)
+                let iconImageAttachment = NSTextAttachment()
+
+                let font = LinkUI.font(forTextStyle: .caption)
+                let targetHeight = font.capHeight * 1.3
+                let aspectRatio = iconImage.size.width / iconImage.size.height
+                let targetWidth = targetHeight * aspectRatio
+
+                iconImageAttachment.bounds = CGRect(
+                    x: 0,
+                    y: (font.capHeight - targetHeight).rounded() / 2,
+                    width: targetWidth,
+                    height: targetHeight
+                )
+                iconImageAttachment.image = iconImage
+                return iconImageAttachment
+            }()
+
+            let result: NSAttributedString = {
+                if let leadingIcon {
+                    // Handle the case with a Link logo
+                    let linkRange = (text as NSString).range(of: "Link")
+                    if linkRange.location != NSNotFound {
+                        let mutableResult = NSMutableAttributedString(string: text)
+
+                        // Create the paragraph style
+                        let paragraphStyle = NSMutableParagraphStyle()
+                        paragraphStyle.lineSpacing = LinkUI.lineSpacing(
+                            fromRelativeHeight: 1.0,
+                            textStyle: .caption
+                        )
+
+                        // Replace "Link" with the icon
+                        let attachmentString = NSAttributedString(attachment: leadingIcon)
+                        mutableResult.replaceCharacters(in: linkRange, with: NSAttributedString(attachment: leadingIcon))
+
+                        mutableResult.addAttributes(
+                            [
+                                .paragraphStyle: paragraphStyle,
+                                .foregroundColor: UIColor.red,
+                            ],
+                            range: NSRange(location: 0, length: mutableResult.length)
+                        )
+
+                        return mutableResult
+                    }
+                }
+
+                // Default case: just use the formatted text without icon
+                let formattedString = NSMutableAttributedString(string: text)
+                let paragraphStyle = NSMutableParagraphStyle()
+                paragraphStyle.lineSpacing = LinkUI.lineSpacing(
+                    fromRelativeHeight: 1.0,
+                    textStyle: .caption
+                )
+                formattedString.addAttributes([.paragraphStyle: paragraphStyle], range: NSRange(location: 0, length: formattedString.length))
+
+                return formattedString
+            }()
+
             let description: String? = {
                 switch mode {
                 case .checkbox, .textFieldsOnlyEmailFirst, .textFieldsOnlyPhoneFirst:
@@ -84,7 +150,7 @@ extension LinkInlineSignupView {
             }()
 
             let checkbox = CheckboxButton(
-                text: text,
+                attributedText: result,
                 description: description,
                 theme: appearanceCopy.asElementsTheme,
                 alwaysEmphasizeText: true
