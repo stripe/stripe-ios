@@ -267,6 +267,7 @@
 		6B50BCF02C29F888009702FB /* CustomerSavedPaymentMethodsCollectionViewControllerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B50BCEF2C29F888009702FB /* CustomerSavedPaymentMethodsCollectionViewControllerTests.swift */; };
 		6B76DBD12C530B6C0037CD63 /* PaymentSheetGDPRConfirmFlowTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B76DBD02C530B6C0037CD63 /* PaymentSheetGDPRConfirmFlowTests.swift */; };
 		6B7E675071649AE3047D388C /* PaymentSheetFormFactoryConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A21CC86104388EFE07CB37D /* PaymentSheetFormFactoryConfig.swift */; };
+		6B8110682E5661D700FEC2EC /* STPPaymentMethodRemove.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B8110672E5661D400FEC2EC /* STPPaymentMethodRemove.swift */; };
 		6B9CFA972D7B64FE001A3C13 /* STPPaymentMethod+PaymentSheetTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B9CFA962D7B64F5001A3C13 /* STPPaymentMethod+PaymentSheetTests.swift */; };
 		6BA8D3342B0C1F79008C51FF /* CVCRecollectionElement.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6BA8D3332B0C1F79008C51FF /* CVCRecollectionElement.swift */; };
 		6BA8D3362B0C1F9B008C51FF /* CVCReconfirmationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6BA8D3352B0C1F9B008C51FF /* CVCReconfirmationViewController.swift */; };
@@ -775,6 +776,7 @@
 		6B50BCEF2C29F888009702FB /* CustomerSavedPaymentMethodsCollectionViewControllerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomerSavedPaymentMethodsCollectionViewControllerTests.swift; sourceTree = "<group>"; };
 		6B680A2FF197F612D065F16C /* PaymentSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentSheet.swift; sourceTree = "<group>"; };
 		6B76DBD02C530B6C0037CD63 /* PaymentSheetGDPRConfirmFlowTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentSheetGDPRConfirmFlowTests.swift; sourceTree = "<group>"; };
+		6B8110672E5661D400FEC2EC /* STPPaymentMethodRemove.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = STPPaymentMethodRemove.swift; sourceTree = "<group>"; };
 		6B9A346A7A4290BAA7BCA1A2 /* PaymentMethodTypeCollectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentMethodTypeCollectionView.swift; sourceTree = "<group>"; };
 		6B9CFA962D7B64F5001A3C13 /* STPPaymentMethod+PaymentSheetTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "STPPaymentMethod+PaymentSheetTests.swift"; sourceTree = "<group>"; };
 		6BA8D3332B0C1F79008C51FF /* CVCRecollectionElement.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CVCRecollectionElement.swift; sourceTree = "<group>"; };
@@ -1071,6 +1073,7 @@
 		1B84E8DA16EA02948055C084 /* v1-elements-sessions */ = {
 			isa = PBXGroup;
 			children = (
+				6B8110672E5661D400FEC2EC /* STPPaymentMethodRemove.swift */,
 				2BFA5FA03C7093654EC6926F /* ExternalPaymentMethod.swift */,
 				61D946052D7901B400BFCD0C /* CustomPaymentMethod.swift */,
 				CC3498CF4AEAA8F169616CDF /* STPCardBrandChoice.swift */,
@@ -2422,6 +2425,7 @@
 				B66D70FA2C54086600DECB3D /* HostedSurface.swift in Sources */,
 				4E5A3324BBD882A780925E2B /* STPAnalyticsClient+Address.swift in Sources */,
 				0FB52E5B87B1854B28362BF3 /* STPAnalyticsClient+CustomerSheet.swift in Sources */,
+				6B8110682E5661D700FEC2EC /* STPPaymentMethodRemove.swift in Sources */,
 				6A529F76ECB33C9154314C1F /* STPAnalyticsClient+LUXE.swift in Sources */,
 				61D842892CADE4B9009D2D51 /* PaymentElementConfiguration.swift in Sources */,
 				06976DDC67A61176FC54AA76 /* Data+SHA256.swift in Sources */,

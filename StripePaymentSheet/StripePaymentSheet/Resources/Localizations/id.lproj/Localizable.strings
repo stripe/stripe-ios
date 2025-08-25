@@ -288,6 +288,8 @@
 
 "This is your default" = "Ini default Anda";
 
+"This payment method will be removed but will remain available for %@ subscriptions." = "Metode pembayaran ini akan dihapus tetapi akan tetap tersedia untuk langganan %@.";
+
 "Too many attempts. Please try again in a few minutes." = "Terlalu banyak percobaan. Cobalah lagi sebentar lagi.";
 
 "Unavailable for this purchase" = "Tidak tersedia untuk pembelian ini";

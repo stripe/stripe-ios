@@ -278,12 +278,23 @@ extension STPElementsSession {
         if let customerSession = customer?.customerSession {
             if customerSession.mobilePaymentElementComponent.enabled,
                let features = customerSession.mobilePaymentElementComponent.features {
-                allowsRemovalOfPaymentMethods = features.paymentMethodRemove
+                allowsRemovalOfPaymentMethods = features.paymentMethodRemove == .enabled || features.paymentMethodRemove == .partial
             }
         } else {
             allowsRemovalOfPaymentMethods = true
         }
         return allowsRemovalOfPaymentMethods
+    }
+
+    func paymentMethodRemoveIsPartialForPaymentSheet() -> Bool {
+        let isParital = false
+        if let customerSession = customer?.customerSession {
+            if customerSession.mobilePaymentElementComponent.enabled,
+               let features = customerSession.mobilePaymentElementComponent.features {
+                return features.paymentMethodRemove == .partial
+            }
+        }
+        return isParital
     }
 
     func paymentMethodRemoveLast(configuration: PaymentElementConfiguration) -> Bool{
@@ -313,12 +324,22 @@ extension STPElementsSession {
         if let customerSession = customer?.customerSession {
             if customerSession.customerSheetComponent.enabled,
                let features = customerSession.customerSheetComponent.features {
-                allowsRemovalOfPaymentMethods = features.paymentMethodRemove
+                allowsRemovalOfPaymentMethods = features.paymentMethodRemove == .enabled || features.paymentMethodRemove == .partial
             }
         } else {
             allowsRemovalOfPaymentMethods = true
         }
         return allowsRemovalOfPaymentMethods
+    }
+    func paymentMethodRemoveIsPartialForCustomerSheet() -> Bool {
+        let isParital = false
+        if let customerSession = customer?.customerSession {
+            if customerSession.customerSheetComponent.enabled,
+               let features = customerSession.customerSheetComponent.features {
+                return features.paymentMethodRemove == .partial
+            }
+        }
+        return isParital
     }
     var paymentMethodRemoveLastForCustomerSheet: Bool {
         return customer?.customerSession.customerSheetComponent.features?.paymentMethodRemoveLast ?? true

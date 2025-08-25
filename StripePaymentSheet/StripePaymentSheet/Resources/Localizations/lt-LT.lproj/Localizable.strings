@@ -288,6 +288,8 @@
 
 "This is your default" = "Tai jūsų numatytasis mokėjimo būdas";
 
+"This payment method will be removed but will remain available for %@ subscriptions." = "Šis mokėjimo būdas bus pašalintas, tačiau ir toliau bus galima naudotis %@ prenumeratomis.";
+
 "Too many attempts. Please try again in a few minutes." = "Per daug bandymų. Bandykite dar kartą po kelių minučių.";
 
 "Unavailable for this purchase" = "Šiam pirkiniui nepasiekiama";

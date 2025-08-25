@@ -288,6 +288,8 @@
 
 "This is your default" = "这是您的默认地址";
 
+"This payment method will be removed but will remain available for %@ subscriptions." = "此支付方式将被移除，但仍可用于 %@ 订阅。";
+
 "Too many attempts. Please try again in a few minutes." = "尝试次数过多。请几分钟后重试。";
 
 "Unavailable for this purchase" = "无法完成这笔订单";

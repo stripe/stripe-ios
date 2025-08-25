@@ -288,6 +288,8 @@
 
 "This is your default" = "Đây là thông tin mặc định của bạn";
 
+"This payment method will be removed but will remain available for %@ subscriptions." = "Phương thức thanh toán này sẽ bị xóa nhưng sẽ vẫn khả dụng cho các gói đăng ký %@.";
+
 "Too many attempts. Please try again in a few minutes." = "Đã thử quá nhiều lần. Vui lòng thử lại sau vài phút.";
 
 "Unavailable for this purchase" = "Không khả dụng cho giao dịch mua hàng này";

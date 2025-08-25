@@ -288,6 +288,8 @@
 
 "This is your default" = "Toto je váš predvolený spôsob platby";
 
+"This payment method will be removed but will remain available for %@ subscriptions." = "Tento spôsob platby sa odstráni, ale ostane k dispozícii pre predplatné %@.";
+
 "Too many attempts. Please try again in a few minutes." = "Príliš veľa pokusov. Skúste to znova o niekoľko minút.";
 
 "Unavailable for this purchase" = "Nie je k dispozícii pre tento nákup";

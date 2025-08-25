@@ -60,6 +60,8 @@
 
 "By continuing, you agree to authorize payments pursuant to <terms>these terms</terms>." = "Se continui, accetti di autorizzare i pagamenti conformemente ai <terms>questi termini</terms>.";
 
+"By continuing, you agree to save your information for future purchases with %@ and <link>Link</link> according to Link <terms>terms</terms> and <privacy>privacy</privacy>." = "Continuando, accetti di salvare le tue informazioni per acquisti futuri con %@ e <link>Link</link> secondo i <terms>Termini</terms> e la <privacy>privacy</privacy> di Link.";
+
 "By continuing, you agree to save your information for future purchases with %@." = "Continuando, accetti di salvare le tue informazioni per acquisti futuri con %@.";
 
 "By continuing, you authorize %@ to automatically debit your Satispay Balance on a recurring basis in accordance with your purchase or subscription plan." = "Continuando, autorizzi %@ a effettuare addebiti sul tuo saldo Satispay su base ricorrente in base al tuo piano di acquisto o abbonamento.";
@@ -283,6 +285,8 @@
 "This card has expired. Update your card info or choose a different payment method." = "La carta è scaduta. Aggiorna i dati della carta o scegli un altro metodo di pagamento.";
 
 "This is your default" = "È la tua impostazione predefinita";
+
+"This payment method will be removed but will remain available for %@ subscriptions." = "Questo metodo di pagamento sarà rimosso, ma rimarrà disponibile per gli abbonamenti %@.";
 
 "Too many attempts. Please try again in a few minutes." = "Troppi tentativi. Riprova tra qualche minuto.";
 
