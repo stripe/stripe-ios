@@ -65,6 +65,7 @@ enum Image: String, CaseIterable, ImageMaker {
 
     // Link
     case back_button = "back_button"
+    case business_placeholder = "business_placeholder"
     case icon_cancel = "icon_cancel"
     case icon_link_success = "icon_link_success"
     case icon_link_error = "icon_link_error"
