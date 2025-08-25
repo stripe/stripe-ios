@@ -201,6 +201,18 @@ modules:
       - StripeCore
   size_report: true
 
+- podspec: StripeCryptoOnramp.podspec
+  scheme: StripeCryptoOnramp
+  framework_name: StripeCryptoOnramp
+  localization_dir: StripeCryptoOnramp/StripeCryptoOnramp
+  supports_catalyst: false
+  docs:
+    output: docs/stripecryptoonramp
+    readme: StripeCryptoOnramp/README.md
+    include:
+      - StripeCore
+  size_report: true
+
 # All podspecs that get pushed to Cocoapods in the order of dependencies such
 # that a pods dependencies must appear before it in the list.
 # This is the order that podspecs will be pushed to `pod trunk`.
@@ -217,3 +229,4 @@ pod_push_order:
 - StripeCardScan.podspec
 - StripeFinancialConnections.podspec
 - StripeConnect.podspec
+- StripeCryptoOnramp.podspec
