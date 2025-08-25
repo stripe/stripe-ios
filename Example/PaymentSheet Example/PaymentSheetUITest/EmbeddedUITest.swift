@@ -20,8 +20,9 @@ class EmbeddedUITests: PaymentSheetUITestCase {
 
         let cardButton = app.buttons["Card"]
         XCTAssertTrue(cardButton.waitForExistence(timeout: 10))
+        // filter out async passive captcha logs
         let startupLog = analyticsLog.compactMap({ $0[string: "event"] })
-            .filter({ !$0.starts(with: "luxe") })
+            .filter({ !$0.starts(with: "luxe") }).filter({ !$0.starts(with: "elements.captcha.passive") })
         XCTAssertEqual(
             startupLog,
             // fraud detection telemetry should not be sent in tests, so it should report an API failure

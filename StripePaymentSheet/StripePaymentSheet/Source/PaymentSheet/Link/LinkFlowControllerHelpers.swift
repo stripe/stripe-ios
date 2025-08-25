@@ -31,6 +31,7 @@ extension UIViewController {
         linkConfiguration: LinkConfiguration? = nil,
         shouldShowSecondaryCta: Bool = true,
         verificationDismissed: (() -> Void)? = nil,
+        hcaptchaToken: String? = nil,
         callback: @escaping (_ confirmOption: PaymentSheet.LinkConfirmOption?, _ shouldReturnToPaymentSheet: Bool) -> Void
     ) {
         if let linkAccount, linkAccount.sessionState == .requiresVerification {
@@ -77,6 +78,7 @@ extension UIViewController {
                 linkAppearance: linkAppearance,
                 linkConfiguration: linkConfiguration,
                 shouldShowSecondaryCta: shouldShowSecondaryCta,
+                hcaptchaToken: hcaptchaToken,
                 callback: callback
             )
         }
@@ -92,6 +94,7 @@ extension UIViewController {
         linkAppearance: LinkAppearance? = nil,
         linkConfiguration: LinkConfiguration? = nil,
         shouldShowSecondaryCta: Bool = true,
+        hcaptchaToken: String? = nil,
         callback: @escaping (_ confirmOption: PaymentSheet.LinkConfirmOption?, _ shouldReturnToPaymentSheet: Bool) -> Void
     ) {
         let payWithLinkController = PayWithNativeLinkController(
@@ -103,7 +106,8 @@ extension UIViewController {
             analyticsHelper: analyticsHelper,
             supportedPaymentMethodTypes: supportedPaymentMethodTypes,
             linkAppearance: linkAppearance,
-            linkConfiguration: linkConfiguration
+            linkConfiguration: linkConfiguration,
+            hcaptchaToken: hcaptchaToken
         )
 
         payWithLinkController.presentForPaymentMethodSelection(

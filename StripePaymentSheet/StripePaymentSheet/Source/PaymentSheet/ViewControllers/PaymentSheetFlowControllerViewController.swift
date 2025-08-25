@@ -22,6 +22,7 @@ class PaymentSheetFlowControllerViewController: UIViewController, FlowController
     let formCache: PaymentMethodFormCache = .init()
     let analyticsHelper: PaymentSheetAnalyticsHelper
     let loadResult: PaymentSheetLoader.LoadResult
+    var passiveCaptchaChallenge: PassiveCaptchaChallenge?
     var savedPaymentMethods: [STPPaymentMethod] {
         return savedPaymentOptionsViewController.savedPaymentMethods
     }
@@ -291,16 +292,20 @@ class PaymentSheetFlowControllerViewController: UIViewController, FlowController
     }
 
     private func presentLink() {
-        presentNativeLink(
-            selectedPaymentDetailsID: selectedPaymentOption?.currentLinkPaymentMethod,
-            configuration: configuration,
-            intent: intent,
-            elementsSession: elementsSession,
-            analyticsHelper: analyticsHelper
-        ) { [weak self] confirmOption, _ in
-            guard let self else { return }
-            self.linkConfirmOption = confirmOption
-            self.flowControllerDelegate?.flowControllerViewControllerShouldClose(self, didCancel: false)
+        Task { @MainActor in
+            let hcaptchaToken = await passiveCaptchaChallenge?.fetchToken()
+            presentNativeLink(
+                selectedPaymentDetailsID: selectedPaymentOption?.currentLinkPaymentMethod,
+                configuration: configuration,
+                intent: intent,
+                elementsSession: elementsSession,
+                analyticsHelper: analyticsHelper,
+                hcaptchaToken: hcaptchaToken
+            ) { [weak self] confirmOption, _ in
+                guard let self else { return }
+                self.linkConfirmOption = confirmOption
+                self.flowControllerDelegate?.flowControllerViewControllerShouldClose(self, didCancel: false)
+            }
         }
     }
 

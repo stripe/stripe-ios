@@ -278,6 +278,7 @@ extension PaymentSheet {
 
         private var isPresented = false
         private(set) var didPresentAndContinue: Bool = false
+        private var passiveCaptchaChallenge: PassiveCaptchaChallenge?
         let analyticsHelper: PaymentSheetAnalyticsHelper
 
         // MARK: - Initializer (Internal)
@@ -292,6 +293,9 @@ extension PaymentSheet {
             self.analyticsHelper.logInitialized()
             self.viewController = Self.makeViewController(configuration: configuration, loadResult: loadResult, analyticsHelper: analyticsHelper, walletButtonsShownExternally: self.walletButtonsShownExternally)
             self.viewController.flowControllerDelegate = self
+            self.passiveCaptchaChallenge = PassiveCaptchaChallenge(passiveCaptcha: loadResult.elementsSession.passiveCaptcha)
+            self.viewController.passiveCaptchaChallenge = self.passiveCaptchaChallenge
+            Task { await self.passiveCaptchaChallenge?.start() }
             updatePaymentOption()
         }
 
@@ -487,15 +491,19 @@ extension PaymentSheet {
                 self.isPresented = false
             }
 
-            presentingViewController.presentNativeLink(
-                selectedPaymentDetailsID: selectedPaymentDetailsID,
-                configuration: configuration,
-                intent: intent,
-                elementsSession: elementsSession,
-                analyticsHelper: analyticsHelper,
-                verificationDismissed: verificationDismissed,
-                callback: completionCallback
-            )
+            Task { @MainActor in
+                let hcaptchaToken = await self.passiveCaptchaChallenge?.fetchToken()
+                presentingViewController.presentNativeLink(
+                    selectedPaymentDetailsID: selectedPaymentDetailsID,
+                    configuration: configuration,
+                    intent: intent,
+                    elementsSession: elementsSession,
+                    analyticsHelper: analyticsHelper,
+                    verificationDismissed: verificationDismissed,
+                    hcaptchaToken: hcaptchaToken,
+                    callback: completionCallback
+                )
+            }
         }
 
         /// Completes the payment or setup.
@@ -553,27 +561,31 @@ extension PaymentSheet {
             }
 
             func confirm() {
-                PaymentSheet.confirm(
-                    configuration: configuration,
-                    authenticationContext: authenticationContext,
-                    intent: intent,
-                    elementsSession: elementsSession,
-                    paymentOption: paymentOption,
-                    paymentHandler: paymentHandler,
-                    integrationShape: .flowController,
-                    analyticsHelper: analyticsHelper
-                ) { [analyticsHelper, configuration] result, deferredIntentConfirmationType in
-                    analyticsHelper.logPayment(
+                Task { @MainActor in
+                    let hcaptchaToken = await self.passiveCaptchaChallenge?.fetchToken()
+                    PaymentSheet.confirm(
+                        configuration: configuration,
+                        authenticationContext: authenticationContext,
+                        intent: intent,
+                        elementsSession: elementsSession,
                         paymentOption: paymentOption,
-                        result: result,
-                        deferredIntentConfirmationType: deferredIntentConfirmationType
-                    )
-                    if case .completed = result, case .link = paymentOption {
-                        // Remember Link as default payment method for users who just created an account.
-                        CustomerPaymentOption.setDefaultPaymentMethod(.link, forCustomer: configuration.customer?.id)
-                    }
+                        paymentHandler: paymentHandler,
+                        integrationShape: .flowController,
+                        hcaptchaToken: hcaptchaToken,
+                        analyticsHelper: analyticsHelper
+                    ) { [analyticsHelper, configuration] result, deferredIntentConfirmationType in
+                        analyticsHelper.logPayment(
+                            paymentOption: paymentOption,
+                            result: result,
+                            deferredIntentConfirmationType: deferredIntentConfirmationType
+                        )
+                        if case .completed = result, case .link = paymentOption {
+                            // Remember Link as default payment method for users who just created an account.
+                            CustomerPaymentOption.setDefaultPaymentMethod(.link, forCustomer: configuration.customer?.id)
+                        }
 
-                    completion(result)
+                        completion(result)
+                    }
                 }
             }
         }
@@ -796,6 +808,7 @@ internal protocol FlowControllerViewControllerProtocol: BottomSheetContentViewCo
     /// Note that, unlike selectedPaymentOption, this is non-nil even if the PM form is invalid.
     var selectedPaymentMethodType: PaymentSheet.PaymentMethodType? { get }
     var flowControllerDelegate: FlowControllerViewControllerDelegate? { get set }
+    var passiveCaptchaChallenge: PassiveCaptchaChallenge? { get set }
 }
 
 extension PaymentOption {

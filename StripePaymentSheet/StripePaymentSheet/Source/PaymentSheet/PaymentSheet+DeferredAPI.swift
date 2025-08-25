@@ -19,6 +19,7 @@ extension PaymentSheet {
         isFlowController: Bool,
         allowsSetAsDefaultPM: Bool = false,
         mandateData: STPMandateDataParams? = nil,
+        radarOptions: STPRadarOptions? = nil,
         completion: @escaping (PaymentSheetResult, STPAnalyticsClient.DeferredIntentConfirmationType?) -> Void
     ) {
         Task { @MainActor in
@@ -103,7 +104,8 @@ extension PaymentSheet {
                             confirmPaymentMethodType: confirmType,
                             paymentIntent: paymentIntent,
                             configuration: configuration,
-                            mandateData: mandateData
+                            mandateData: mandateData,
+                            radarOptions: radarOptions
                         )
                         // Set top-level SFU and PMO SFU to match the intent config
                         setSetupFutureUsage(for: paymentMethod.type, intentConfiguration: intentConfig, on: paymentIntentParams)
@@ -135,7 +137,8 @@ extension PaymentSheet {
                             confirmPaymentMethodType: confirmType,
                             setupIntent: setupIntent,
                             configuration: configuration,
-                            mandateData: mandateData
+                            mandateData: mandateData,
+                            radarOptions: radarOptions
                         )
                         paymentHandler.confirmSetupIntent(
                             setupIntentParams,
