@@ -268,7 +268,10 @@ extension PayWithLinkViewController {
                 .toSortedArray()
 
             // Fire and forget; ignore any errors that might happen here.
-            linkAccount.listPaymentDetails(supportedTypes: supportedPaymentDetailsTypes) { [weak self] result in
+            linkAccount.listPaymentDetails(
+                supportedTypes: supportedPaymentDetailsTypes,
+                shouldRetryOnAuthError: true
+            ) { [weak self] result in
                 if case .success(let paymentDetails) = result {
                     self?.viewModel.updatePaymentMethods(paymentDetails)
                 }

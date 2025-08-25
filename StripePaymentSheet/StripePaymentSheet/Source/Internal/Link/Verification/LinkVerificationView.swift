@@ -260,18 +260,10 @@ extension LinkVerificationView.Mode {
     }
 
     var headingText: String {
-        switch self {
-        case .modal:
-            return STPLocalizedString(
-                "Use your saved info to check out faster",
-                "Two factor authentication screen heading"
-            )
-        case .inlineLogin, .embedded:
-            return STPLocalizedString(
-                "Confirm it's you",
-                "Two factor authentication screen heading"
-            )
-        }
+        return STPLocalizedString(
+            "Confirm it's you",
+            "Two factor authentication screen heading"
+        )
     }
 
     var bodyFont: UIFont {

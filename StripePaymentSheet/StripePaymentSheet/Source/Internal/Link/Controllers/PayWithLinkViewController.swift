@@ -390,7 +390,8 @@ private extension PayWithLinkViewController {
 
         Task { @MainActor in
             async let paymentDetailsResult = linkAccount.listPaymentDetails(
-                supportedTypes: supportedPaymentDetailsTypes
+                supportedTypes: supportedPaymentDetailsTypes,
+                shouldRetryOnAuthError: false
             )
 
             async let shippingAddressResult = fetchShippingAddress(
@@ -427,11 +428,40 @@ private extension PayWithLinkViewController {
                     paymentDetails: paymentDetails
                 )
             } catch {
+                if error.isLinkAuthError {
+                    // Ask the user to verify the session again, as it might have expired.
+                    if let updatedAccount = await attemptReauthentication() {
+                        setViewControllers([VerifyAccountViewController(linkAccount: updatedAccount, context: context)])
+                        return
+                    }
+                }
+
                 payWithLinkDelegate?.payWithLinkViewControllerDidFinish(
                     self,
                     result: PaymentSheetResult.failed(error: error),
                     deferredIntentConfirmationType: nil
                 )
+            }
+        }
+    }
+
+    private func attemptReauthentication() async -> PaymentSheetLinkAccount? {
+        // Tell the LinkAccountService to lookup again
+        let accountService = LinkAccountService(apiClient: context.configuration.apiClient, elementsSession: context.elementsSession)
+
+        return await withCheckedContinuation { continuation in
+            accountService.lookupAccount(
+                withEmail: linkAccount?.email,
+                emailSource: .prefilledEmail,
+                doNotLogConsumerFunnelEvent: false
+            ) { result in
+                switch result {
+                case .success(let account):
+                    self.linkAccount = account
+                    continuation.resume(returning: account)
+                case .failure:
+                    continuation.resume(returning: nil)
+                }
             }
         }
     }
@@ -448,7 +478,7 @@ private extension PayWithLinkViewController {
         shouldFetch: Bool
     ) async throws -> ShippingAddressesResponse? {
         guard shouldFetch else { return nil }
-        return try await account.listShippingAddress()
+        return try await account.listShippingAddress(shouldRetryOnAuthError: false)
     }
 
     private func presentAppropriateViewController(
