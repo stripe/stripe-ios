@@ -43,6 +43,7 @@ final class LinkFullConsentEmailView: UIView {
         layer.cornerRadius = bounds.height / 2
     }
 
+    #if !os(visionOS)
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
         super.traitCollectionDidChange(previousTraitCollection)
 
@@ -50,4 +51,5 @@ final class LinkFullConsentEmailView: UIView {
             layer.borderColor = UIColor.linkSurfaceTertiary.cgColor
         }
     }
+    #endif
 }
