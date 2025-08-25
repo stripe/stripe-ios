@@ -78,22 +78,10 @@ extension LinkInlineSignupView {
                 guard mode == .signupOptIn else {
                     return nil
                 }
-                let iconImage = Image.link_logo_new.makeImage(template: true)
-                let iconImageAttachment = NSTextAttachment()
-
-                let font = LinkUI.font(forTextStyle: .caption)
-                let targetHeight = font.capHeight * 1.3
-                let aspectRatio = iconImage.size.width / iconImage.size.height
-                let targetWidth = targetHeight * aspectRatio
-
-                iconImageAttachment.bounds = CGRect(
-                    x: 0,
-                    y: (font.capHeight - targetHeight).rounded() / 2,
-                    width: targetWidth,
-                    height: targetHeight
+                return LinkUI.inlineLogo(
+                    withScale: 1.4,
+                    forFont: appearance.asElementsTheme.fonts.footnoteEmphasis
                 )
-                iconImageAttachment.image = iconImage
-                return iconImageAttachment
             }()
 
             let result: NSAttributedString = {
