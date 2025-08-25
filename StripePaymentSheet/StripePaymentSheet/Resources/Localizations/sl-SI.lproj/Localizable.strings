@@ -1,5 +1,3 @@
-"%1$@ •••• %2$@" = "%1$@ •••• %2$@";
-
 "+ Add" = "+ Dodaj";
 
 "Add US bank account" = "Dodaj bančni račun v ZDA";
@@ -299,8 +297,6 @@
 "Update payment method" = "Posodobite način plačila";
 
 "Use billing address for shipping" = "Naslov za račun uporabi kot naslov za pošiljanje";
-
-"Use your saved info to check out faster" = "Uporabite svoje shranjene podatke za hitrejšo izvedbo plačila";
 
 "View more" = "Prikaži več";
 

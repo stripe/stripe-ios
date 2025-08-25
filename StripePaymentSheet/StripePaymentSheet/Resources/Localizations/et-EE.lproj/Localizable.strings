@@ -1,5 +1,3 @@
-"%1$@ •••• %2$@" = "%1$@ •••• %2$@";
-
 "+ Add" = "+ lisa";
 
 "Add US bank account" = "Lisa Ameerika Ühendriikide pangakonto";
@@ -299,8 +297,6 @@
 "Update payment method" = "Uuenda makseviisi";
 
 "Use billing address for shipping" = "Kasutage saatmiseks arveldusaadressi";
-
-"Use your saved info to check out faster" = "Kasutage oma salvestatud teavet kiiremaks makse lõpuleviimiseks";
 
 "View more" = "Kuva rohkem";
 

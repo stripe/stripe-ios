@@ -1,5 +1,3 @@
-"%1$@ •••• %2$@" = "%1$@ •••• %2$@";
-
 "+ Add" = "+ Pridėti";
 
 "Add US bank account" = "Pridėti JAV banko sąskaitą";
@@ -299,8 +297,6 @@
 "Update payment method" = "Atnaujinti mokėjimo būdą";
 
 "Use billing address for shipping" = "Atsiskaitymo adresą naudoti siuntimui";
-
-"Use your saved info to check out faster" = "Naudokite išsaugotą informaciją, kad atsiskaitytumėte greičiau";
 
 "View more" = "Peržiūrėti daugiau";
 

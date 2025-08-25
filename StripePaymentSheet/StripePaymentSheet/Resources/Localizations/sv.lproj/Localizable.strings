@@ -1,5 +1,3 @@
-"%1$@ •••• %2$@" = "%1$@ •••• %2$@";
-
 "+ Add" = "+ Lägg till";
 
 "Add US bank account" = "Lägg till amerikanskt bankkonto";
@@ -288,7 +286,7 @@
 
 "This is your default" = "Detta är din standardbetalningsmetod";
 
-"This payment method will be removed but will remain available for %@ subscriptions." = "Den här betalningsmetoden kommer att tas bort, men förblir tillgänglig för %@ abonnemang..";
+"This payment method will be removed but will remain available for %@ subscriptions." = "Den här betalningsmetoden kommer att tas bort, men förblir tillgänglig för %@ abonnemang.";
 
 "Too many attempts. Please try again in a few minutes." = "För många försök. Försök igen om några minuter.";
 
@@ -299,8 +297,6 @@
 "Update payment method" = "Uppdatera betalningsmetod";
 
 "Use billing address for shipping" = "Använd faktureringsadress för leverans";
-
-"Use your saved info to check out faster" = "Använd din sparade information för att betala snabbare";
 
 "View more" = "Visa mer";
 

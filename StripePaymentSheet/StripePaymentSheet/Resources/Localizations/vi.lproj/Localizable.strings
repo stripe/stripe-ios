@@ -1,5 +1,3 @@
-"%1$@ •••• %2$@" = "%1$@ •••• %2$@";
-
 "+ Add" = "+ Thêm";
 
 "Add US bank account" = "Thêm tài khoản ngân hàng Hoa Kỳ";
@@ -299,8 +297,6 @@
 "Update payment method" = "Cập nhật phương thức thanh toán";
 
 "Use billing address for shipping" = "Sử dụng địa chỉ thanh toán cho việc giao hàng";
-
-"Use your saved info to check out faster" = "Sử dụng thông tin đã lưu của bạn để thanh toán nhanh hơn";
 
 "View more" = "Xem thêm";
 

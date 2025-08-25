@@ -1,5 +1,3 @@
-"%1$@ •••• %2$@" = "%1$@ •••• %2$@";
-
 "+ Add" = "+ Hinzufügen";
 
 "Add US bank account" = "Konto einer US-Bank hinzufügen";
@@ -299,8 +297,6 @@
 "Update payment method" = "Zahlungsmethode ändern";
 
 "Use billing address for shipping" = "Rechnungsadresse für den Versand verwenden";
-
-"Use your saved info to check out faster" = "Nutzen Sie Ihre gespeicherten Angaben, um den Kauf schneller abzuschließen.";
 
 "View more" = "Mehr anzeigen";
 

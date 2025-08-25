@@ -1,5 +1,3 @@
-"%1$@ •••• %2$@" = "%1$@ •••• %2$@";
-
 "+ Add" = "+ 追加";
 
 "Add US bank account" = "アメリカの銀行口座を追加";
@@ -299,8 +297,6 @@
 "Update payment method" = "決済手段の更新";
 
 "Use billing address for shipping" = "請求先住所を配送先として使用";
-
-"Use your saved info to check out faster" = "保存された情報を使用して迅速に決済";
 
 "View more" = "さらに表示";
 
