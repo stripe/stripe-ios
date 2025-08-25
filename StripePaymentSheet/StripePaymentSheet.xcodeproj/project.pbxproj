@@ -178,6 +178,9 @@
 		49909A352D8B48D40031EC33 /* FCLiteError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49909A342D8B48D40031EC33 /* FCLiteError.swift */; };
 		49909A372D8B5AA30031EC33 /* FCLiteModalPresentationWrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49909A362D8B5AA30031EC33 /* FCLiteModalPresentationWrapper.swift */; };
 		499E32A82E47982400575058 /* LinkRequestSurface.swift in Sources */ = {isa = PBXBuildFile; fileRef = 499E32A72E47982400575058 /* LinkRequestSurface.swift */; };
+		49A11F3D2E5A21BA002ECED5 /* LinkConsentDataModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49A11F3C2E5A21BA002ECED5 /* LinkConsentDataModel.swift */; };
+		49A11F3F2E5A226D002ECED5 /* LinkConsentViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49A11F3E2E5A226D002ECED5 /* LinkConsentViewModel.swift */; };
+		49A11F412E5A229C002ECED5 /* LookupLinkAuthIntentResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49A11F402E5A229C002ECED5 /* LookupLinkAuthIntentResponse.swift */; };
 		49B1F7CC2E1EC43300EA2593 /* LinkSignUpViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49B1F7CB2E1EC43300EA2593 /* LinkSignUpViewController.swift */; };
 		49B1F7CE2E1EC44500EA2593 /* LinkSignUpViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49B1F7CD2E1EC44500EA2593 /* LinkSignUpViewModel.swift */; };
 		49B699A02E4B761B0000B67C /* LinkPaymentMethodType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49B6999F2E4B761B0000B67C /* LinkPaymentMethodType.swift */; };
@@ -680,6 +683,9 @@
 		49909A342D8B48D40031EC33 /* FCLiteError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FCLiteError.swift; sourceTree = "<group>"; };
 		49909A362D8B5AA30031EC33 /* FCLiteModalPresentationWrapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FCLiteModalPresentationWrapper.swift; sourceTree = "<group>"; };
 		499E32A72E47982400575058 /* LinkRequestSurface.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LinkRequestSurface.swift; sourceTree = "<group>"; };
+		49A11F3C2E5A21BA002ECED5 /* LinkConsentDataModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LinkConsentDataModel.swift; sourceTree = "<group>"; };
+		49A11F3E2E5A226D002ECED5 /* LinkConsentViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LinkConsentViewModel.swift; sourceTree = "<group>"; };
+		49A11F402E5A229C002ECED5 /* LookupLinkAuthIntentResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LookupLinkAuthIntentResponse.swift; sourceTree = "<group>"; };
 		49B1F7CB2E1EC43300EA2593 /* LinkSignUpViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LinkSignUpViewController.swift; sourceTree = "<group>"; };
 		49B1F7CD2E1EC44500EA2593 /* LinkSignUpViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LinkSignUpViewModel.swift; sourceTree = "<group>"; };
 		49B6999F2E4B761B0000B67C /* LinkPaymentMethodType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LinkPaymentMethodType.swift; sourceTree = "<group>"; };
@@ -1477,6 +1483,8 @@
 				441C3414745D483C9A47ED0B /* VerificationSession.swift */,
 				499E32A72E47982400575058 /* LinkRequestSurface.swift */,
 				49B6999F2E4B761B0000B67C /* LinkPaymentMethodType.swift */,
+				49A11F3C2E5A21BA002ECED5 /* LinkConsentDataModel.swift */,
+				49A11F402E5A229C002ECED5 /* LookupLinkAuthIntentResponse.swift */,
 			);
 			path = Link;
 			sourceTree = "<group>";
@@ -1851,6 +1859,7 @@
 			isa = PBXGroup;
 			children = (
 				7910B57E6FD99F2AFCA4DAC2 /* LinkInlineSignupViewModel.swift */,
+				49A11F3E2E5A226D002ECED5 /* LinkConsentViewModel.swift */,
 			);
 			path = ViewModels;
 			sourceTree = "<group>";
@@ -2498,6 +2507,7 @@
 				3147CEC12CC080570067B5E4 /* LinkCookieStore.swift in Sources */,
 				CB28DBAF2DBD57BB008DD7DF /* SavedPaymentMethodFormFactory+Link.swift in Sources */,
 				3147CEC22CC080570067B5E4 /* LinkSecureCookieStore.swift in Sources */,
+				49A11F412E5A229C002ECED5 /* LookupLinkAuthIntentResponse.swift in Sources */,
 				258A75AF2E5393186C8850CA /* LinkEmailElement.swift in Sources */,
 				A0317DBB2DC2CD88003EF979 /* RowButtonFlatWithDisclosure.swift in Sources */,
 				EDE71E0BEDD94FB1101F3C10 /* FormElement+Link.swift in Sources */,
@@ -2540,7 +2550,9 @@
 				31699A812BE183B30048677F /* DownloadManager.swift in Sources */,
 				C113FE145760C5CE94536872 /* CustomerPaymentOption.swift in Sources */,
 				B615E8712CA4CBEE007D684C /* EmbeddedPaymentElement.swift in Sources */,
+				49A11F3F2E5A226D002ECED5 /* LinkConsentViewModel.swift in Sources */,
 				466755A0F05CB0EF281E9FAF /* UserDefaults+StripePaymentSheet.swift in Sources */,
+				49A11F3D2E5A21BA002ECED5 /* LinkConsentDataModel.swift in Sources */,
 				FC72575C4CCAF5E317C5D299 /* CustomerAddPaymentMethodViewController.swift in Sources */,
 				9750C45BC44F4D0F3207A795 /* CustomerSavedPaymentMethodsCollectionViewController.swift in Sources */,
 				3EC4378036CBFDB6183E5F3C /* CustomerSavedPaymentMethodsViewController.swift in Sources */,
