@@ -461,9 +461,6 @@ the heading the screen itself. */
 /* Label for checkbox in address form allowing user to use billing address */
 "Use billing address for shipping" = "Use billing address for shipping";
 
-/* Two factor authentication screen heading */
-"Use your saved info to check out faster" = "Use your saved info to check out faster";
-
 /* Text shown on a button that displays a customer's default saved payment method. When tapped, it opens a screen that shows all of the customer's saved payment methods. */
 "View more" = "View more";
 
