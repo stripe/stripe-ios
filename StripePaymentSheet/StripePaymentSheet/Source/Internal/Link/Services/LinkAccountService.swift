@@ -35,6 +35,18 @@ protocol LinkAccountServiceProtocol {
         requestSurface: LinkRequestSurface,
         completion: @escaping (Result<PaymentSheetLinkAccount?, Error>) -> Void
     )
+
+    /// Looks up an account by Link Auth Intent ID.
+    ///
+    /// - Parameters:
+    ///   - linkAuthIntentID: The Link Auth Intent ID to look up.
+    ///   - requestSurface: The request surface to use for the API call. `.default` will map to `ios_payment_element`.
+    ///   - completion: Completion block.
+    func lookupLinkAuthIntent(
+        linkAuthIntentID: String,
+        requestSurface: LinkRequestSurface,
+        completion: @escaping (Result<PaymentSheetLinkAccount?, Error>) -> Void
+    )
 }
 
 final class LinkAccountService: LinkAccountServiceProtocol {
@@ -154,5 +166,53 @@ final class LinkAccountService: LinkAccountServiceProtocol {
 
     func getLastSignUpEmail() -> String? {
         return cookieStore.read(key: .lastSignupEmail)
+    }
+
+    /// Looks up an account by Link Auth Intent ID.
+    ///
+    /// - Parameters:
+    ///   - linkAuthIntentID: The Link Auth Intent ID to look up.
+    ///   - requestSurface: The request surface to use for the API call. `.default` will map to `ios_payment_element`.
+    ///   - completion: Completion block.
+    func lookupLinkAuthIntent(
+        linkAuthIntentID: String,
+        requestSurface: LinkRequestSurface = .default,
+        completion: @escaping (Result<PaymentSheetLinkAccount?, Error>) -> Void
+    ) {
+        ConsumerSession.lookupLinkAuthIntent(
+            linkAuthIntentID: linkAuthIntentID,
+            sessionID: sessionID,
+            customerID: customerID,
+            with: apiClient,
+            cookieStore: cookieStore,
+            useMobileEndpoints: useMobileEndpoints,
+            requestSurface: requestSurface
+        ) { [apiClient] result in
+            switch result {
+            case .success(let lookupResponse):
+                STPAnalyticsClient.sharedClient.logLinkAccountLookupComplete(lookupResult: lookupResponse.responseType)
+                switch lookupResponse.responseType {
+                case .found(let session):
+                    completion(.success(
+                        PaymentSheetLinkAccount(
+                            email: session.consumerSession.emailAddress,
+                            session: session.consumerSession,
+                            publishableKey: session.publishableKey,
+                            displayablePaymentDetails: session.displayablePaymentDetails,
+                            apiClient: apiClient,
+                            useMobileEndpoints: self.useMobileEndpoints,
+                            requestSurface: requestSurface
+                        )
+                    ))
+                case .notFound:
+                    completion(.success(nil))
+                case .noAvailableLookupParams:
+                    completion(.success(nil))
+                }
+            case .failure(let error):
+                STPAnalyticsClient.sharedClient.logLinkAccountLookupFailure(error: error)
+                completion(.failure(error))
+            }
+        }
     }
 }

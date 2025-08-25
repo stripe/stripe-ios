@@ -155,6 +155,25 @@ extension LinkInlineSignupElementSnapshotTests {
             )
         }
 
+        func lookupLinkAuthIntent(
+            linkAuthIntentID: String,
+            requestSurface: StripePaymentSheet.LinkRequestSurface = .default,
+            completion: @escaping (Result<PaymentSheetLinkAccount?, Error>) -> Void
+        ) {
+            completion(
+                .success(
+                    PaymentSheetLinkAccount(
+                        email: "user@example.com",
+                        session: nil,
+                        publishableKey: nil,
+                        displayablePaymentDetails: nil,
+                        useMobileEndpoints: false,
+                        requestSurface: requestSurface
+                    )
+                )
+            )
+        }
+
         func hasEmailLoggedOut(email: String) -> Bool {
             // TODO(porter): Determine if we want to implement this in tests
             return false
