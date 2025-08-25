@@ -47,6 +47,14 @@ Generate new localized screenshots
 
 
 
+### ios threeds2_tests_26
+
+```sh
+[bundle exec] fastlane ios threeds2_tests_26
+```
+
+
+
 ### ios stripeios_tests
 
 ```sh
