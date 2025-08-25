@@ -8,7 +8,7 @@
 import PassKit
 import SwiftUI
 
-@_spi(CryptoOnrampSDKPreview)
+@_spi(STP)
 import StripeCryptoOnramp
 
 @_spi(STP)

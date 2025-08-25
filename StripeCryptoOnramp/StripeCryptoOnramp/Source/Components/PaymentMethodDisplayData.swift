@@ -9,7 +9,7 @@ import Foundation
 import UIKit
 
 /// Represents the payment method currently selected by the user.
-@_spi(CryptoOnrampSDKPreview)
+@_spi(STP)
 public struct PaymentMethodDisplayData {
 
     /// The payment method icon to render in your screen.

@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-@_spi(CryptoOnrampSDKPreview)
+@_spi(STP)
 import StripeCryptoOnramp
 
 /// A view that displays the information from `PaymentMethodSelectionResult.PaymentMethodDisplayData`
