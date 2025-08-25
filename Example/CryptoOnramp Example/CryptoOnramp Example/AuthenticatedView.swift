@@ -8,7 +8,7 @@
 import PassKit
 import SwiftUI
 
-@_spi(CryptoOnrampSDKPreview)
+@_spi(STP)
 import StripeCryptoOnramp
 
 @_spi(STP)
@@ -30,11 +30,16 @@ struct AuthenticatedView: View {
     @State private var isWalletAttached = false
     @State private var selectedPaymentMethod: PaymentMethodDisplayData?
     @State private var cryptoPaymentToken: String?
+    @State private var onrampSessionResponse: CreateOnrampSessionResponse?
 
     @State private var wallets: [CustomerWalletsResponse.Wallet] = []
     @State private var selectedWalletId: String?
     @State private var lastAttachedAddress: String?
     @State private var lastAttachedNetwork: CryptoNetwork?
+
+    @State private var authenticationContext = WindowAuthenticationContext()
+
+    @State private var checkoutSucceeded = false
 
     @Environment(\.isLoading) private var isLoading
 
@@ -85,7 +90,7 @@ struct AuthenticatedView: View {
                     .disabled(shouldDisableButtons)
                     .opacity(shouldDisableButtons ? 0.5 : 1)
 
-                    HStack(spacing: 4) {
+                    HStack(alignment: .firstTextBaseline, spacing: 4) {
                         Text("Customer ID:")
                             .font(.footnote)
                             .bold()
@@ -140,9 +145,42 @@ struct AuthenticatedView: View {
                                 createCryptoPaymentToken()
                             }
                             .buttonStyle(PrimaryButtonStyle())
+                            .disabled(shouldDisableButtons)
+                            .opacity(shouldDisableButtons ? 0.5 : 1)
 
                             if let cryptoPaymentToken {
-                                HStack(spacing: 4) {
+                                if let selectedWalletId {
+                                    Button("Create Onramp Session") {
+                                        createOnrampSession(withCryptoPaymentToken: cryptoPaymentToken, selectedWalletId: selectedWalletId)
+                                    }
+                                    .buttonStyle(PrimaryButtonStyle())
+                                    .disabled(shouldDisableButtons)
+                                    .opacity(shouldDisableButtons ? 0.5 : 1)
+                                }
+
+                                if checkoutSucceeded {
+                                    Text("Checkout Succeeded!")
+                                        .foregroundColor(.green)
+                                        .frame(maxWidth: .infinity)
+                                        .padding()
+                                        .background {
+                                            RoundedRectangle(cornerRadius: 8)
+                                                .foregroundColor(.green.opacity(0.1))
+                                        }
+                                } else if let onrampSessionResponse {
+                                    let details = onrampSessionResponse.transactionDetails
+                                    Button("Check Out | \(details.sourceAmount) \(details.sourceCurrency.localizedUppercase)") {
+                                        checkout(
+                                            with: onrampSessionResponse,
+                                            paymentToken: cryptoPaymentToken
+                                        )
+                                    }
+                                    .buttonStyle(PrimaryButtonStyle())
+                                    .disabled(shouldDisableButtons)
+                                    .opacity(shouldDisableButtons ? 0.5 : 1)
+                                }
+
+                                HStack(alignment: .firstTextBaseline, spacing: 4) {
                                     Text("Crypto payment token:")
                                         .font(.footnote)
                                         .bold()
@@ -150,6 +188,18 @@ struct AuthenticatedView: View {
                                     Text(cryptoPaymentToken)
                                         .font(.footnote.monospaced())
                                         .foregroundColor(.secondary)
+                                }
+
+                                if let onrampSessionResponse {
+                                    HStack(alignment: .firstTextBaseline, spacing: 4) {
+                                        Text("Onramp Session:")
+                                            .font(.footnote)
+                                            .bold()
+                                            .foregroundColor(.secondary)
+                                        Text(onrampSessionResponse.id)
+                                            .font(.footnote.monospaced())
+                                            .foregroundColor(.secondary)
+                                    }
                                 }
                             } else {
                                 Divider()
@@ -362,6 +412,88 @@ struct AuthenticatedView: View {
                 }
             }
         }
+    }
+
+    private func createOnrampSession(withCryptoPaymentToken cryptoPaymentToken: String, selectedWalletId: String) {
+        guard let wallet = wallets.first(where: { $0.id == selectedWalletId }) else {
+            errorMessage = "Unable to find a match for the selected wallet. Please re-select a wallet and try again."
+            return
+        }
+
+        isLoading.wrappedValue = true
+        errorMessage = nil
+
+        let request = CreateOnrampSessionRequest(
+            paymentToken: cryptoPaymentToken,
+            sourceAmount: 10, // <--- hardcoded for demo
+            sourceCurrency: "usd", // <--- hardcoded for demo
+            destinationCurrency: "usdc", // <--- hardcoded for demo
+            destinationNetwork: wallet.network,
+            walletAddress: wallet.walletAddress,
+            cryptoCustomerId: customerId,
+            customerIpAddress: "39.131.174.122" // <--- hardcoded for demo
+        )
+
+        Task {
+            do {
+                let response = try await APIClient.shared.createOnrampSession(requestObject: request)
+                await MainActor.run {
+                    isLoading.wrappedValue = false
+                    onrampSessionResponse = response
+                }
+            } catch {
+                await MainActor.run {
+                    isLoading.wrappedValue = false
+                    errorMessage = "Create onramp session failed: \(error.localizedDescription)"
+                }
+            }
+        }
+    }
+
+    private func checkout(
+        with onrampSessionResponse: CreateOnrampSessionResponse,
+        paymentToken: String
+    ) {
+        isLoading.wrappedValue = true
+        errorMessage = nil
+
+        Task {
+            do {
+                // Refresh the quote before checking out, as it has a short expiry window.
+                try await APIClient.shared.refreshQuote(onrampSessionId: onrampSessionResponse.id)
+
+                let checkoutResult = await coordinator.performCheckout(
+                    onrampSessionId: onrampSessionResponse.id,
+                    authenticationContext: authenticationContext
+                ) { onrampSessionId in
+                    let result = try await APIClient.shared.checkout(onrampSessionId: onrampSessionId)
+                    return  result.clientSecret
+                }
+
+                await MainActor.run {
+                    switch checkoutResult {
+                    case .completed:
+                        checkoutSucceeded = true
+                    case .failed(let error):
+                        errorMessage = "Checkout failed: \(error.localizedDescription)"
+                    @unknown default:
+                        break
+                    }
+                    isLoading.wrappedValue = false
+                }
+            } catch {
+                await MainActor.run {
+                    errorMessage = "Checkout failed while refreshing quote: \(error.localizedDescription)"
+                    isLoading.wrappedValue = false
+                }
+            }
+        }
+    }
+}
+
+private class WindowAuthenticationContext: NSObject, STPAuthenticationContext {
+    func authenticationPresentingViewController() -> UIViewController {
+        UIApplication.shared.findTopNavigationController() ?? UIViewController()
     }
 }
 

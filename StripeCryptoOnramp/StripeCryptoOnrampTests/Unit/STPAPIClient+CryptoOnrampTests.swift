@@ -7,7 +7,7 @@
 
 import StripeCore
 import StripeCoreTestUtils
-@testable @_spi(CryptoOnrampSDKPreview) import StripeCryptoOnramp
+@testable @_spi(STP) import StripeCryptoOnramp
 @_spi(STP) import StripePaymentSheet
 
 import OHHTTPStubs

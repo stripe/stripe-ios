@@ -7,7 +7,6 @@
 
 import Foundation
 import PassKit
-import Stripe
 
 @_spi(STP) import StripeApplePay
 @_spi(STP) import StripeCore
@@ -114,7 +113,7 @@ protocol CryptoOnrampCoordinatorProtocol {
 }
 
 /// Coordinates headless Link user authentication and identity verification, leaving most of the UI to the client.
-@_spi(CryptoOnrampSDKPreview)
+@_spi(STP)
 public final class CryptoOnrampCoordinator: NSObject, CryptoOnrampCoordinatorProtocol {
 
     /// A subset of errors that may be thrown by `CryptoOnrampCoordinator` APIs.
@@ -345,20 +344,21 @@ public final class CryptoOnrampCoordinator: NSObject, CryptoOnrampCoordinatorPro
             throw Error.invalidSelectedPaymentSource
         }
 
-        let paymentMethod: STPPaymentMethod = try await {
+        let paymentMethodId: String = try await {
             switch selectedPaymentSource {
             case .link:
                 let platformApiClient = try await getPlatformApiClient()
-                return try await linkController.createPaymentMethod(
+                let paymentMethod = try await linkController.createPaymentMethod(
                     overridePublishableKey: platformApiClient.publishableKey
                 )
-            case .applePay(let applePayPaymentMethod):
-                return applePayPaymentMethod
+                return paymentMethod.stripeId
+            case .applePay(let paymentMethod):
+                return paymentMethod.id
             }
         }()
 
         let token = try await apiClient.createPaymentToken(
-            for: paymentMethod.stripeId,
+            for: paymentMethodId,
             linkAccountInfo: linkAccountInfo
         )
         return token.id
@@ -414,13 +414,13 @@ public final class CryptoOnrampCoordinator: NSObject, CryptoOnrampCoordinatorPro
     }
 }
 
-extension CryptoOnrampCoordinator: STPApplePayContextDelegate {
+extension CryptoOnrampCoordinator: ApplePayContextDelegate {
 
-    // MARK: - STPApplePayContextDelegate
+    // MARK: - ApplePayContextDelegate
 
     public func applePayContext(
         _ context: STPApplePayContext,
-        didCreatePaymentMethod paymentMethod: STPPaymentMethod,
+        didCreatePaymentMethod paymentMethod: StripeAPI.PaymentMethod,
         paymentInformation: PKPayment,
         completion: @escaping STPIntentClientSecretCompletionBlock
     ) {
@@ -429,7 +429,7 @@ extension CryptoOnrampCoordinator: STPApplePayContextDelegate {
         completion(STPApplePayContext.COMPLETE_WITHOUT_CONFIRMING_INTENT, nil)
     }
 
-    public func applePayContext(_ context: STPApplePayContext, didCompleteWith status: STPPaymentStatus, error: Swift.Error?) {
+    public func applePayContext(_ context: STPApplePayContext, didCompleteWith status: STPApplePayContext.PaymentStatus, error: Swift.Error?) {
         switch status {
         case .success:
             applePayCompletionContinuation?.resume(returning: .success)

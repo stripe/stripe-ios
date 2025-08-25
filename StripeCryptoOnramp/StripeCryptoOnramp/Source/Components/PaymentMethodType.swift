@@ -9,7 +9,7 @@ import PassKit
 @_spi(STP) import StripePaymentSheet
 
 /// Represents possible payment types that can be collected for checkout.
-@_spi(CryptoOnrampSDKPreview)
+@_spi(STP)
 public enum PaymentMethodType {
 
     /// Card-based payment, such as a credit or debit card.
