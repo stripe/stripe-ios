@@ -58,7 +58,7 @@ final class CardSectionWithScannerView: UIView {
         if opensCardScannerAutomatically {
             cardScanButton.alpha = 0
         } else {
-            cardScanningView.isHidden = true
+            cardScanningView.setHiddenIfNecessary(true)
         }
     }
 
