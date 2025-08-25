@@ -442,7 +442,7 @@ import UIKit
     private func presentVerificationWithConsent(
         from viewController: UIViewController,
         consentViewModel: LinkConsentViewModel?,
-        completion: @escaping (Result<AuthorizeResult, Error>) -> Void
+        completion: @escaping (Result<AuthorizationResult, Error>) -> Void
     ) {
         guard let linkAccount else {
             completion(.failure(IntegrationError.noActiveLinkConsumer))
@@ -620,27 +620,6 @@ import UIKit
                 switch result {
                 case .success(let isExistingLinkConsumer):
                     continuation.resume(returning: isExistingLinkConsumer)
-                case .failure(let error):
-                    continuation.resume(throwing: error)
-                }
-            }
-        }
-    }
-
-    /// Authorizes a Link auth intent and retrieves the associated consumer session.
-    ///
-    /// - Parameter linkAuthIntentId: The Link auth intent ID to authorize.
-    /// - Parameter viewController: The view controller from which to present the authorization flow.
-    /// - Returns: The authorization result.
-    func authorize(
-        linkAuthIntentId: String,
-        from viewController: UIViewController
-    ) async throws -> AuthorizationResult {
-        try await withCheckedThrowingContinuation { continuation in
-            authorize(linkAuthIntentId: linkAuthIntentId, from: viewController) { result in
-                switch result {
-                case .success(let authorizeResult):
-                    continuation.resume(returning: authorizeResult)
                 case .failure(let error):
                     continuation.resume(throwing: error)
                 }
