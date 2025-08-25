@@ -361,7 +361,7 @@ struct LinkPMDisplayDetails {
 
     func listPaymentDetails(
         supportedTypes: [ConsumerPaymentDetails.DetailsType],
-        shouldRetryOnAuthError: Bool,
+        shouldRetryOnAuthError: Bool = true,
         completion: @escaping (Result<[ConsumerPaymentDetails], Error>) -> Void
     ) {
         retryingOnAuthError(
