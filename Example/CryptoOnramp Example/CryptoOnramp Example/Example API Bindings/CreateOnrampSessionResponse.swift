@@ -7,6 +7,10 @@
 
 import Foundation
 
+/// The response format for `/checkout` and `/quote` matches that of `/create_onramp_session`, so we use the same underlying model.
+typealias CheckoutResponse = CreateOnrampSessionResponse
+typealias QuoteResponse = CreateOnrampSessionResponse
+
 struct CreateOnrampSessionResponse: Decodable {
     struct TransactionDetails: Decodable {
         struct Fees: Decodable {
@@ -15,16 +19,16 @@ struct CreateOnrampSessionResponse: Decodable {
         }
 
         let destinationCurrency: String
-        let destinationExchangeAmount: String
+        let destinationAmount: String
         let destinationNetwork: String
         let fees: Fees
         let lastError: String?
         let lockWalletAddress: Bool
-        let quoteExpiration: String
+        let quoteExpiration: Date
         let sourceCurrency: String
-        let sourceExchangeAmount: String
-        let supportedDestinationCurrencies: [String]
-        let supportedDestinationNetworks: [String]
+        let sourceAmount: String
+        let destinationCurrencies: [String]
+        let destinationNetworks: [String]
         let transactionId: String?
         let transactionLimit: Int
         let walletAddress: String
@@ -40,7 +44,7 @@ struct CreateOnrampSessionResponse: Decodable {
     let isApplePay: Bool
     let kycDetailsProvided: Bool
     let livemode: Bool
-    let metadata: [String: String]
+    let metadata: [String: String]?
     let paymentMethod: String
     let preferredPaymentMethod: String?
     let preferredRegion: String?
