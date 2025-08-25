@@ -91,12 +91,14 @@ final class LinkFullConsentScopesView: UIView {
         headerLabel.numberOfLines = 0
         textStackView.addArrangedSubview(headerLabel)
 
-        let descriptionLabel = UILabel()
-        descriptionLabel.text = description
-        descriptionLabel.font = LinkUI.font(forTextStyle: .caption)
-        descriptionLabel.textColor = .linkTextSecondary
-        descriptionLabel.numberOfLines = 0
-        textStackView.addArrangedSubview(descriptionLabel)
+        if !description.isEmpty {
+            let descriptionLabel = UILabel()
+            descriptionLabel.text = description
+            descriptionLabel.font = LinkUI.font(forTextStyle: .caption)
+            descriptionLabel.textColor = .linkTextSecondary
+            descriptionLabel.numberOfLines = 0
+            textStackView.addArrangedSubview(descriptionLabel)
+        }
 
         containerView.addSubview(iconContainerView)
         containerView.addSubview(textStackView)
@@ -113,7 +115,21 @@ final class LinkFullConsentScopesView: UIView {
             textStackView.leadingAnchor.constraint(equalTo: iconContainerView.trailingAnchor, constant: LinkUI.contentSpacing),
             textStackView.trailingAnchor.constraint(equalTo: containerView.trailingAnchor),
             textStackView.topAnchor.constraint(equalTo: containerView.topAnchor),
-            textStackView.bottomAnchor.constraint(equalTo: containerView.bottomAnchor),
+            textStackView.bottomAnchor.constraint(lessThanOrEqualTo: containerView.bottomAnchor),
+
+            iconContainerView.bottomAnchor.constraint(lessThanOrEqualTo: containerView.bottomAnchor),
+        ])
+
+        // Set up priority constraints to ensure proper bottom padding
+        let textBottomConstraint = containerView.bottomAnchor.constraint(equalTo: textStackView.bottomAnchor)
+        textBottomConstraint.priority = UILayoutPriority.defaultHigh
+
+        let iconBottomConstraint = containerView.bottomAnchor.constraint(equalTo: iconContainerView.bottomAnchor)
+        iconBottomConstraint.priority = UILayoutPriority.defaultHigh
+
+        NSLayoutConstraint.activate([
+            textBottomConstraint,
+            iconBottomConstraint,
         ])
 
         return containerView

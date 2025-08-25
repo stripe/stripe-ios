@@ -11,7 +11,7 @@ import UIKit
 protocol LinkFullConsentViewControllerDelegate: AnyObject {
     @MainActor func fullConsentViewController(
         _ controller: LinkFullConsentViewController,
-        didFinishWithResult result: LinkController.AuthorizeResult
+        didFinishWithResult result: LinkController.AuthorizationResult
     )
 }
 

@@ -108,7 +108,7 @@ import UIKit
     }
 
     /// Completion handler for full consent screen
-    private var fullConsentCompletion: ((Result<AuthorizeResult, Error>) -> Void)?
+    private var fullConsentCompletion: ((Result<AuthorizationResult, Error>) -> Void)?
 
     private init(
         apiClient: STPAPIClient = .shared,
@@ -455,7 +455,7 @@ import UIKit
     private func presentFullConsentIfNeeded(
         consentViewModel: LinkConsentViewModel?,
         from viewController: UIViewController,
-        completion: @escaping (Result<AuthorizeResult, Error>) -> Void
+        completion: @escaping (Result<AuthorizationResult, Error>) -> Void
     ) {
         guard case .full(let fullConsentViewModel) = consentViewModel else {
             completion(.success(.consented))
@@ -603,7 +603,7 @@ import UIKit
 
     private func updateConsentStatus(
         consentGranted: Bool,
-        completion: @escaping (Result<AuthorizeResult, Error>) -> Void
+        completion: @escaping (Result<AuthorizationResult, Error>) -> Void
     ) {
         guard let linkAccount, let consumerSessionClientSecret = linkAccount.consumerSessionClientSecret else {
             completion(.failure(IntegrationError.noActiveLinkConsumer))
@@ -614,10 +614,12 @@ import UIKit
             consentGranted: consentGranted,
             consumerSessionClientSecret: consumerSessionClientSecret,
             consumerPublishableKey: linkAccount.publishableKey,
-            completion: { result in
+            completion: { [weak self] result in
+                guard let self else { return }
                 switch result {
                 case .success:
-                    let result: AuthorizeResult = consentGranted ? .consented : .denied
+                    LinkAccountContext.shared.account = self.linkAccount
+                    let result: AuthorizationResult = consentGranted ? .consented : .denied
                     completion(.success(result))
                 case .failure(let error):
                     completion(.failure(error))
@@ -638,7 +640,7 @@ import UIKit
     private func presentFullConsentScreen(
         consentViewModel: LinkConsentViewModel.FullConsentViewModel,
         from viewController: UIViewController,
-        completion: @escaping (Result<AuthorizeResult, Error>) -> Void
+        completion: @escaping (Result<AuthorizationResult, Error>) -> Void
     ) {
         let fullConsentViewController = LinkFullConsentViewController(
             consentViewModel: consentViewModel
@@ -665,7 +667,7 @@ import UIKit
 extension LinkController: LinkFullConsentViewControllerDelegate {
     func fullConsentViewController(
         _ controller: LinkFullConsentViewController,
-        didFinishWithResult result: LinkController.AuthorizeResult
+        didFinishWithResult result: LinkController.AuthorizationResult
     ) {
         controller.dismiss(animated: true) { [weak self] in
             guard let self, let completion = self.fullConsentCompletion else { return }
