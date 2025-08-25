@@ -1,5 +1,3 @@
-"%1$@ •••• %2$@" = "%1$@ •••• %2$@";
-
 "+ Add" = "+ 添加";
 
 "Add US bank account" = "添加美国银行账户";
@@ -288,6 +286,8 @@
 
 "This is your default" = "这是您的默认地址";
 
+"This payment method will be removed but will remain available for %@ subscriptions." = "此支付方式将被移除，但仍可用于 %@ 订阅。";
+
 "Too many attempts. Please try again in a few minutes." = "尝试次数过多。请几分钟后重试。";
 
 "Unavailable for this purchase" = "无法完成这笔订单";
@@ -297,8 +297,6 @@
 "Update payment method" = "更新支付方式";
 
 "Use billing address for shipping" = "使用账单地址作为配送地址";
-
-"Use your saved info to check out faster" = "用您保存的信息，更快结账";
 
 "View more" = "查看更多";
 

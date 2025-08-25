@@ -1,5 +1,3 @@
-"%1$@ •••• %2$@" = "%1$@ •••• %2$@";
-
 "+ Add" = "+ 添加";
 
 "Add US bank account" = "添加美國銀行賬戶";
@@ -59,6 +57,8 @@
 "By continuing you agree to the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "繼續即表示您同意<terms>條款</terms>和<privacy>私隱權政策</privacy>。";
 
 "By continuing, you agree to authorize payments pursuant to <terms>these terms</terms>." = "繼續操作即表示您同意按照<terms>這些條款</terms>授權付款。";
+
+"By continuing, you agree to save your information for future purchases with %@ and <link>Link</link> according to Link <terms>terms</terms> and <privacy>privacy</privacy>." = "繼續即表示您同意儲存您的個人資料，以便將來根據 <link>Link</link> <terms>條款</terms>與<privacy>私隱政策</privacy> 透過 %@ 和 Link 購物";
 
 "By continuing, you agree to save your information for future purchases with %@." = "繼續即表示您同意儲存您的資訊,以便將來透過 %@ 進行購買。";
 
@@ -286,6 +286,8 @@
 
 "This is your default" = "這是您的預設支付方式";
 
+"This payment method will be removed but will remain available for %@ subscriptions." = "此支付方式將被移除，但仍適用於 %@ 項訂閱。";
+
 "Too many attempts. Please try again in a few minutes." = "嘗試次數過多。請幾分鐘後重試。";
 
 "Unavailable for this purchase" = "無法完成這筆訂單";
@@ -295,8 +297,6 @@
 "Update payment method" = "更新支付方式";
 
 "Use billing address for shipping" = "使用帳單地址作為送貨地址";
-
-"Use your saved info to check out faster" = "用您儲存的資訊，更快結賬";
 
 "View more" = "查看更多";
 

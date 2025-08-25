@@ -6,7 +6,7 @@
 //
 
 /// The result after a user has been presented with Link authentication UI.
-@_spi(CryptoOnrampSDKPreview)
+@_spi(STP)
 public enum AuthenticationResult {
 
     /// Authentication was completed successfully. The customer ID is attached.

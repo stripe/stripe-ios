@@ -1,5 +1,3 @@
-"%1$@ •••• %2$@" = "%1$@ •••• %2$@";
-
 "+ Add" = "+ Add";
 
 "Add US bank account" = "Add US bank account";
@@ -288,6 +286,8 @@
 
 "This is your default" = "This is your default";
 
+"This payment method will be removed but will remain available for %@ subscriptions." = "This payment method will be removed but will remain available for %@ subscriptions.";
+
 "Too many attempts. Please try again in a few minutes." = "Too many attempts. Please try again in a few minutes.";
 
 "Unavailable for this purchase" = "Unavailable for this purchase";
@@ -297,8 +297,6 @@
 "Update payment method" = "Update payment method";
 
 "Use billing address for shipping" = "Use billing address for shipping";
-
-"Use your saved info to check out faster" = "Use your saved info to check out faster";
 
 "View more" = "View more";
 

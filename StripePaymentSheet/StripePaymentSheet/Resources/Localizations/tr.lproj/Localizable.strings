@@ -1,5 +1,3 @@
-"%1$@ •••• %2$@" = "%1$@ •••• %2$@";
-
 "+ Add" = "+ Ekle";
 
 "Add US bank account" = "ABD banka hesabı ekleyin";
@@ -288,6 +286,8 @@
 
 "This is your default" = "Bu varsayılan ödeme yönteminizdir";
 
+"This payment method will be removed but will remain available for %@ subscriptions." = "Bu ödeme yöntemi kaldırılacak ancak %@ abonelikleri için kullanılabilir kalacaktır.";
+
 "Too many attempts. Please try again in a few minutes." = "Çok fazla deneme yapıldı. Lütfen birkaç dakika içinde tekrar deneyin.";
 
 "Unavailable for this purchase" = "Bu satın alım için kullanılamaz";
@@ -297,8 +297,6 @@
 "Update payment method" = "Ödeme yöntemini güncelleyin";
 
 "Use billing address for shipping" = "Gönderim için fatura adresini kullanın";
-
-"Use your saved info to check out faster" = "Kayıtlı bilgilerinizi kullanarak daha hızlı ödeme yapabilirsiniz";
 
 "View more" = "Daha fazla göster";
 

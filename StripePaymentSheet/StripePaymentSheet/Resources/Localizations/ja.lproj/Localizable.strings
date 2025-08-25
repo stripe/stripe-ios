@@ -1,5 +1,3 @@
-"%1$@ •••• %2$@" = "%1$@ •••• %2$@";
-
 "+ Add" = "+ 追加";
 
 "Add US bank account" = "アメリカの銀行口座を追加";
@@ -288,6 +286,8 @@
 
 "This is your default" = "これはデフォルトです";
 
+"This payment method will be removed but will remain available for %@ subscriptions." = "この決済手段は削除されますが、%@ のサブスクリプションでは引き続き使用できます。";
+
 "Too many attempts. Please try again in a few minutes." = "試行回数が多すぎます。数分後に再度お試しください。";
 
 "Unavailable for this purchase" = "この購入には利用できません";
@@ -297,8 +297,6 @@
 "Update payment method" = "決済手段の更新";
 
 "Use billing address for shipping" = "請求先住所を配送先として使用";
-
-"Use your saved info to check out faster" = "保存された情報を使用して迅速に決済";
 
 "View more" = "さらに表示";
 

@@ -1,5 +1,3 @@
-"%1$@ •••• %2$@" = "%1$@ •••• %2$@";
-
 "+ Add" = "+ Toevoegen";
 
 "Add US bank account" = "Amerikaanse bankrekening toevoegen";
@@ -288,6 +286,8 @@
 
 "This is your default" = "Dit is je standaard";
 
+"This payment method will be removed but will remain available for %@ subscriptions." = "Deze betaalmethode wordt verwijderd, maar blijft beschikbaar voor %@ abonnementen.";
+
 "Too many attempts. Please try again in a few minutes." = "Te veel pogingen. Probeer het over een paar minuten opnieuw.";
 
 "Unavailable for this purchase" = "Niet beschikbaar voor deze aankoop";
@@ -297,8 +297,6 @@
 "Update payment method" = "Betaalmethode bijwerken";
 
 "Use billing address for shipping" = "Gebruik factuuradres voor verzending";
-
-"Use your saved info to check out faster" = "Gebruik je opgeslagen gegevens om sneller af te rekenen";
 
 "View more" = "Meer weergeven";
 

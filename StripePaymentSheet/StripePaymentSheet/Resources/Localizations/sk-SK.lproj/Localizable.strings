@@ -1,5 +1,3 @@
-"%1$@ •••• %2$@" = "%1$@ •••• %2$@";
-
 "+ Add" = "+ Pridať";
 
 "Add US bank account" = "Pridať americký bankový účet";
@@ -288,6 +286,8 @@
 
 "This is your default" = "Toto je váš predvolený spôsob platby";
 
+"This payment method will be removed but will remain available for %@ subscriptions." = "Tento spôsob platby sa odstráni, ale ostane k dispozícii pre predplatné %@.";
+
 "Too many attempts. Please try again in a few minutes." = "Príliš veľa pokusov. Skúste to znova o niekoľko minút.";
 
 "Unavailable for this purchase" = "Nie je k dispozícii pre tento nákup";
@@ -297,8 +297,6 @@
 "Update payment method" = "Aktualizovať spôsob platby";
 
 "Use billing address for shipping" = "Použiť fakturačnú adresu na doručenie";
-
-"Use your saved info to check out faster" = "Použite vaše uložené údaje a plaťte rýchlejšie";
 
 "View more" = "Zobraziť viac";
 

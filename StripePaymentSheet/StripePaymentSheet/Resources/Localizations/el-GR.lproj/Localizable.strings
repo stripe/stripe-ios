@@ -1,5 +1,3 @@
-"%1$@ •••• %2$@" = "%1$@ •••• %2$@";
-
 "+ Add" = "+ Προσθήκη";
 
 "Add US bank account" = "Προσθήκη τραπεζικού λογαριασμού στις Ηνωμένες Πολιτείες";
@@ -288,6 +286,8 @@
 
 "This is your default" = "Αυτή είναι η προεπιλογή σας";
 
+"This payment method will be removed but will remain available for %@ subscriptions." = "Αυτή η μέθοδος πληρωμής θα καταργηθεί, αλλά θα παραμείνει διαθέσιμη για %@ συνδρομές.";
+
 "Too many attempts. Please try again in a few minutes." = "Πραγματοποιήθηκαν πολλές προσπάθειες. Δοκιμάστε ξανά σε λίγα λεπτά.";
 
 "Unavailable for this purchase" = "Δεν είναι διαθέσιμο για αυτήν την αγορά";
@@ -297,8 +297,6 @@
 "Update payment method" = "Ενημέρωση μεθόδου πληρωμής";
 
 "Use billing address for shipping" = "Χρήση διεύθυνσης χρέωσης για αποστολή";
-
-"Use your saved info to check out faster" = "Χρησιμοποιήστε τα αποθηκευμένα στοιχεία σας για τη συντομότερη ολοκλήρωση της αγοράς";
 
 "View more" = "Προβολή περισσότερων";
 

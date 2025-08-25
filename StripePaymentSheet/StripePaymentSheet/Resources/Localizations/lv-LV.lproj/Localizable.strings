@@ -1,5 +1,3 @@
-"%1$@ •••• %2$@" = "%1$@ •••• %2$@";
-
 "+ Add" = "+ Pievienot";
 
 "Add US bank account" = "Pievienot ASV bankas kontu";
@@ -288,6 +286,8 @@
 
 "This is your default" = "Tas ir jūsu noklusējums";
 
+"This payment method will be removed but will remain available for %@ subscriptions." = "Šis maksājuma veids tiks noņemts, bet joprojām būs pieejams %@ abonementiem.";
+
 "Too many attempts. Please try again in a few minutes." = "Pārāk daudz mēģinājumu. Mēģiniet vēlreiz pēc dažām minūtēm.";
 
 "Unavailable for this purchase" = "Nav pieejams šim pirkumam";
@@ -297,8 +297,6 @@
 "Update payment method" = "Atjaunināt maksājuma veidu";
 
 "Use billing address for shipping" = "Piegādei izmantot norēķinu adresi";
-
-"Use your saved info to check out faster" = "Izmantojiet saglabāto informāciju, lai norēķinātos ātrāk";
 
 "View more" = "Skatīt vairāk";
 

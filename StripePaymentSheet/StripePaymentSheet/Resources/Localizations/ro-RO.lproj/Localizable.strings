@@ -1,5 +1,3 @@
-"%1$@ •••• %2$@" = "%1$@ •••• %2$@";
-
 "+ Add" = "+ Adăugare";
 
 "Add US bank account" = "Adăugați un cont bancar din SUA";
@@ -288,6 +286,8 @@
 
 "This is your default" = "Aceasta este setarea dvs. implicită";
 
+"This payment method will be removed but will remain available for %@ subscriptions." = "Această metodă de plată va fi eliminată, dar va rămâne disponibilă pentru abonamentele %@.";
+
 "Too many attempts. Please try again in a few minutes." = "Prea multe încercări. Vă rugăm să încercați din nou în câteva minute.";
 
 "Unavailable for this purchase" = "Nu este disponibilă pentru această achiziție";
@@ -297,8 +297,6 @@
 "Update payment method" = "Actualizare metodă de plată";
 
 "Use billing address for shipping" = "Utilizați adresa de facturare pentru expediere";
-
-"Use your saved info to check out faster" = "Folosiți informațiile dvs. salvate pentru a finaliza comanda mai rapid";
 
 "View more" = "Vizualizați mai multe";
 

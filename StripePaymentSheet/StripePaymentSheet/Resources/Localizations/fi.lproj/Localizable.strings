@@ -1,5 +1,3 @@
-"%1$@ •••• %2$@" = "%1$@ •••• %2$@";
-
 "+ Add" = "+ Lisää";
 
 "Add US bank account" = "Lisää yhdysvaltalainen pankkitili";
@@ -288,6 +286,8 @@
 
 "This is your default" = "Tämä on oletusarvoinen";
 
+"This payment method will be removed but will remain available for %@ subscriptions." = "Tämä maksutapa poistetaan, mutta se on edelleen käytettävissä %@ tilauksissa.";
+
 "Too many attempts. Please try again in a few minutes." = "Liian monta yritystä. Kokeile uudelleen muutaman minuutin kuluttua.";
 
 "Unavailable for this purchase" = "Ei käytettävissä tälle ostolle";
@@ -297,8 +297,6 @@
 "Update payment method" = "Päivitä maksutapa";
 
 "Use billing address for shipping" = "Käytä laskutusosoitetta toimituksessa";
-
-"Use your saved info to check out faster" = "Käytä tallennettuja tietoja nopeampaan maksamiseen";
 
 "View more" = "Näytä lisää";
 

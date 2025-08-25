@@ -1,4 +1,4 @@
-## x.x.x x-x-x
+## 24.21.0 2025-08-25
 
 ### CustomerSheet
 * [Fixed] Fixed Dynamic Actor Isolation crash in SwiftUI when using completion handlers with Swift 6 or Dynamic Actor Isolation feature flag enabled. Thanks @BrentMifsud! ([#5269](https://github.com/stripe/stripe-ios/issues/5269))

@@ -1,5 +1,3 @@
-"%1$@ •••• %2$@" = "%1$@ •••• %2$@";
-
 "+ Add" = "+ Legg til";
 
 "Add US bank account" = "Legg til bankkonto i USA";
@@ -288,6 +286,8 @@
 
 "This is your default" = "Dette er standarden din";
 
+"This payment method will be removed but will remain available for %@ subscriptions." = "Denne betalingsmåten vil bli fjernet, men vil fortsatt være tilgjengelig for %@ abonnementer.";
+
 "Too many attempts. Please try again in a few minutes." = "For mange forsøk. Prøv på nytt om noen få minutter.";
 
 "Unavailable for this purchase" = "Utilgjengelig for dette kjøpet";
@@ -297,8 +297,6 @@
 "Update payment method" = "Oppdater betalingsmetode";
 
 "Use billing address for shipping" = "Bruk faktureringsadressen for frakt";
-
-"Use your saved info to check out faster" = "Bruk den lagrede informasjonen din til å betale raskere";
 
 "View more" = "Se mer";
 

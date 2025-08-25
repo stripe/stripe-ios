@@ -1,5 +1,3 @@
-"%1$@ •••• %2$@" = "%1$@ •••• %2$@";
-
 "+ Add" = "+ Tambah";
 
 "Add US bank account" = "Tambah akaun bank AS";
@@ -288,6 +286,8 @@
 
 "This is your default" = "Ini tetapan asal anda";
 
+"This payment method will be removed but will remain available for %@ subscriptions." = "Kaedah pembayaran ini akan dialih keluar tetapi akan kekal tersedia untuk langganan %@.";
+
 "Too many attempts. Please try again in a few minutes." = "Terlalu banyak percubaan. Sila cuba lagi dalam beberapa minit.";
 
 "Unavailable for this purchase" = "Tidak tersedia untuk pembelian ini";
@@ -297,8 +297,6 @@
 "Update payment method" = "Kemas kinikan kaedah pembayaran";
 
 "Use billing address for shipping" = "Gunakan alamat pengebilan untuk penghantaran";
-
-"Use your saved info to check out faster" = "Gunakan maklumat anda yang tersimpan untuk keluar dan bayar dengan lebih cepat";
 
 "View more" = "Lihat lebih banyak";
 

@@ -252,7 +252,7 @@ final class PaymentSheet_DeferredAPITest: STPNetworkStubbingTestCase {
 
         // When
         PaymentSheet.handleDeferredIntentConfirmation(
-            confirmType: .saved(testPaymentMethod, paymentOptions: nil),
+            confirmType: .saved(testPaymentMethod, paymentOptions: nil, clientAttributionMetadata: nil),
             configuration: configuration,
             intentConfig: intentConfig,
             authenticationContext: TestAuthenticationContext(),
@@ -367,7 +367,7 @@ final class PaymentSheet_DeferredAPITest: STPNetworkStubbingTestCase {
 
         // When
         PaymentSheet.handleDeferredIntentConfirmation(
-            confirmType: .saved(testPaymentMethod, paymentOptions: nil),
+            confirmType: .saved(testPaymentMethod, paymentOptions: nil, clientAttributionMetadata: nil),
             configuration: configuration,
             intentConfig: intentConfig,
             authenticationContext: TestAuthenticationContext(),
@@ -414,7 +414,7 @@ final class PaymentSheet_DeferredAPITest: STPNetworkStubbingTestCase {
 
         // When
         PaymentSheet.handleDeferredIntentConfirmation(
-            confirmType: .saved(testPaymentMethod, paymentOptions: nil),
+            confirmType: .saved(testPaymentMethod, paymentOptions: nil, clientAttributionMetadata: nil),
             configuration: configuration,
             intentConfig: intentConfig,
             authenticationContext: TestAuthenticationContext(),
@@ -463,7 +463,7 @@ final class PaymentSheet_DeferredAPITest: STPNetworkStubbingTestCase {
 
         // When
         PaymentSheet.handleDeferredIntentConfirmation(
-            confirmType: .saved(testPaymentMethod, paymentOptions: nil),
+            confirmType: .saved(testPaymentMethod, paymentOptions: nil, clientAttributionMetadata: nil),
             configuration: configuration,
             intentConfig: intentConfig,
             authenticationContext: TestAuthenticationContext(),

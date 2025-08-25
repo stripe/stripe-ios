@@ -8,7 +8,7 @@
 import Foundation
 
 /// Encapsulates the possible return values for `CryptoOnrampCoordinator.promptForIdentityVerification()`.
-@_spi(CryptoOnrampSDKPreview)
+@_spi(STP)
 public enum IdentityVerificationResult {
 
     /// The user has completed uploading their documents.

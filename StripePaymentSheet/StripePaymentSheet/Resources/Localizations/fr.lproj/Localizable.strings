@@ -1,5 +1,3 @@
-"%1$@ •••• %2$@" = "%1$@ •••• %2$@";
-
 "+ Add" = "+ Ajouter";
 
 "Add US bank account" = "Ajouter un compte bancaire américain";
@@ -288,6 +286,8 @@
 
 "This is your default" = "Votre moyen de paiement par défaut";
 
+"This payment method will be removed but will remain available for %@ subscriptions." = "Ce moyen de paiement sera supprimé mais restera disponible pour les Abonnements %@.";
+
 "Too many attempts. Please try again in a few minutes." = "Vous avez effectué un nombre trop élevé de tentatives. Veuillez réessayer dans quelques minutes.";
 
 "Unavailable for this purchase" = "Indisponible pour cet achat";
@@ -297,8 +297,6 @@
 "Update payment method" = "Mettre à jour le moyen de paiement";
 
 "Use billing address for shipping" = "Utiliser l'adresse de facturation pour l'expédition";
-
-"Use your saved info to check out faster" = "Utilisez vos informations enregistrées pour payer plus rapidement";
 
 "View more" = "Afficher plus";
 
