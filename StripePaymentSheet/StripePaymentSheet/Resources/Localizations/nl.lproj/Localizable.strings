@@ -1,5 +1,3 @@
-"%1$@ •••• %2$@" = "%1$@ •••• %2$@";
-
 "+ Add" = "+ Toevoegen";
 
 "Add US bank account" = "Amerikaanse bankrekening toevoegen";
@@ -299,8 +297,6 @@
 "Update payment method" = "Betaalmethode bijwerken";
 
 "Use billing address for shipping" = "Gebruik factuuradres voor verzending";
-
-"Use your saved info to check out faster" = "Gebruik je opgeslagen gegevens om sneller af te rekenen";
 
 "View more" = "Meer weergeven";
 

@@ -1,5 +1,3 @@
-"%1$@ •••• %2$@" = "%1$@ •••• %2$@";
-
 "+ Add" = "+ Tambahkan";
 
 "Add US bank account" = "Tambahkan rekening bank AS";
@@ -299,8 +297,6 @@
 "Update payment method" = "Perbarui metode pembayaran";
 
 "Use billing address for shipping" = "Gunakan alamat penagihan untuk pengiriman";
-
-"Use your saved info to check out faster" = "Gunakan info yang tersimpan untuk memproses pembayaran dengan lebih cepat";
 
 "View more" = "Lihat selengkapnya";
 

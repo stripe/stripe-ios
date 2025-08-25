@@ -1,5 +1,3 @@
-"%1$@ •••• %2$@" = "%1$@ •••• %2$@";
-
 "+ Add" = "+ Pridať";
 
 "Add US bank account" = "Pridať americký bankový účet";
@@ -299,8 +297,6 @@
 "Update payment method" = "Aktualizovať spôsob platby";
 
 "Use billing address for shipping" = "Použiť fakturačnú adresu na doručenie";
-
-"Use your saved info to check out faster" = "Použite vaše uložené údaje a plaťte rýchlejšie";
 
 "View more" = "Zobraziť viac";
 

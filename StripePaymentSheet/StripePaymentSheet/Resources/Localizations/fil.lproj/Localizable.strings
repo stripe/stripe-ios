@@ -1,5 +1,3 @@
-"%1$@ •••• %2$@" = "%1$@ •••• %2$@";
-
 "+ Add" = "+Magdagdag";
 
 "Add US bank account" = "Magdagdag ng account sa bangko ng US";
@@ -299,8 +297,6 @@
 "Update payment method" = "I-update ang paraan ng pagbabayad";
 
 "Use billing address for shipping" = "Gamitin ang billing address para sa pagpapadala";
-
-"Use your saved info to check out faster" = "Gamitin ang iyong naka-save na impormayon para mas mabilis na mag-check out";
 
 "View more" = "Tingnan ang higit pa";
 
