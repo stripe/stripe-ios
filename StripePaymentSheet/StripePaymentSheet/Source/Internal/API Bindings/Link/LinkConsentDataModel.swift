@@ -48,10 +48,10 @@ struct LinkConsentDataModel: Decodable {
     }
 
     let consentPane: ConsentPane?
-    let consentSections: ConsentSection?
+    let consentSection: ConsentSection?
 
     enum CodingKeys: String, CodingKey {
         case consentPane = "consent_pane"
-        case consentSections = "consent_section"
+        case consentSection = "consent_section"
     }
 }

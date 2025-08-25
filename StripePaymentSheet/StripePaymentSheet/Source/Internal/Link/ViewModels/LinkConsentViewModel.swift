@@ -44,7 +44,7 @@ enum LinkConsentViewModel {
                     allowButtonLabel: consentPane.allowButtonLabel
                 )
             )
-        } else if let consentSection = dataModel.consentSections {
+        } else if let consentSection = dataModel.consentSection {
             self = .inline(
                 InlineConsentViewModel(disclaimer: consentSection.disclaimer)
             )
