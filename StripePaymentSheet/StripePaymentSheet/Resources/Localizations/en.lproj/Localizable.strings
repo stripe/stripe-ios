@@ -442,6 +442,9 @@ is not supported by the merchant */
 /* Text of a label indicating that a payment method is the default. */
 "This is your default" = "This is your default";
 
+/* Content for alert popup prompting if they want to remove a payment method when using payment_method_remove == .partial. %@ is replaced by the merchant name */
+"This payment method will be removed but will remain available for %@ subscriptions." = "This payment method will be removed but will remain available for %@ subscriptions.";
+
 /* Error message shown when the user enters an incorrect verification code too many times. */
 "Too many attempts. Please try again in a few minutes." = "Too many attempts. Please try again in a few minutes.";
 

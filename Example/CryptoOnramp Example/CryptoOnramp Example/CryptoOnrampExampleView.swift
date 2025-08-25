@@ -19,6 +19,7 @@ struct CryptoOnrampExampleView: View {
     @State private var coordinator: CryptoOnrampCoordinator?
     @State private var errorMessage: String?
     @State private var email: String = ""
+    @State private var selectedScopes: Set<OAuthScopes> = Set(OAuthScopes.inlineScope)
     @State private var showRegistration: Bool = false
     @State private var showAuthenticatedView: Bool = false
     @State private var authenticationCustomerId: String?
@@ -51,6 +52,16 @@ struct CryptoOnrampExampleView: View {
                             }
                     }
 
+                    OAuthScopeSelector(
+                        selectedScopes: $selectedScopes,
+                        onInlineScopesSelected: {
+                            selectedScopes = Set(OAuthScopes.inlineScope)
+                        },
+                        onAllScopesSelected: {
+                            selectedScopes = Set(OAuthScopes.allScopes)
+                        }
+                    )
+
                     Button("Next") {
                         isEmailFieldFocused = false
                         lookupConsumerAndContinue()
@@ -65,7 +76,11 @@ struct CryptoOnrampExampleView: View {
 
                     if let coordinator {
                         HiddenNavigationLink(
-                            destination: RegistrationView(coordinator: coordinator, email: email),
+                            destination: RegistrationView(
+                                coordinator: coordinator,
+                                email: email,
+                                selectedScopes: Array(selectedScopes)
+                            ),
                             isActive: $showRegistration
                         )
 
@@ -135,7 +150,10 @@ struct CryptoOnrampExampleView: View {
                 let lookupResult = try await coordinator.hasLinkAccount(with: email)
                 if lookupResult {
                     // Authenticate with the demo merchant backend as well.
-                    let laiId = try await APIClient.shared.authenticateUser(with: email).data.id
+                    let laiId = try await APIClient.shared.authenticateUser(
+                        with: email,
+                        oauthScopes: Array(selectedScopes)
+                    ).data.id
                     print( "Successfully authenticated user with demo backend. Id: \(laiId)")
                 }
                 await MainActor.run {
@@ -186,6 +204,74 @@ struct CryptoOnrampExampleView: View {
         } else {
             errorMessage = "Unable to find view controller to present from."
         }
+    }
+}
+
+struct OAuthScopeSelector: View {
+    @Binding var selectedScopes: Set<OAuthScopes>
+    let onInlineScopesSelected: () -> Void
+    let onAllScopesSelected: () -> Void
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 12) {
+            HStack {
+                Text("OAuth Scopes")
+                    .font(.headline)
+                    .foregroundColor(.primary)
+
+                Spacer()
+
+                HStack(spacing: 8) {
+                    Button("Inline") {
+                        onInlineScopesSelected()
+                    }
+                    .buttonStyle(.bordered)
+                    .controlSize(.small)
+
+                    Button("All") {
+                        onAllScopesSelected()
+                    }
+                    .buttonStyle(.bordered)
+                    .controlSize(.small)
+                }
+            }
+
+            LazyVGrid(columns: [GridItem()], spacing: 8) {
+                ForEach(OAuthScopes.allCases, id: \.self) { scope in
+                    Button(action: {
+                        if selectedScopes.contains(scope) {
+                            selectedScopes.remove(scope)
+                        } else {
+                            selectedScopes.insert(scope)
+                        }
+                    }) {
+                        HStack(spacing: 4) {
+                            Image(systemName: selectedScopes.contains(scope) ? "checkmark.circle.fill" : "circle")
+                                .foregroundColor(selectedScopes.contains(scope) ? .blue : .gray)
+                                .font(.system(size: 14))
+
+                            Text(scope.rawValue)
+                                .font(.system(.caption, design: .monospaced))
+                                .foregroundColor(.primary)
+                                .multilineTextAlignment(.leading)
+                        }
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .padding(.horizontal, 8)
+                        .padding(.vertical, 4)
+                        .background(
+                            RoundedRectangle(cornerRadius: 6)
+                                .fill(selectedScopes.contains(scope) ? Color.blue.opacity(0.1) : Color.gray.opacity(0.05))
+                        )
+                    }
+                    .buttonStyle(.plain)
+                }
+            }
+        }
+        .padding()
+        .background(
+            RoundedRectangle(cornerRadius: 8)
+                .fill(Color.gray.opacity(0.05))
+        )
     }
 }
 

@@ -288,6 +288,8 @@
 
 "This is your default" = "See on teie vaikimisi makseviis";
 
+"This payment method will be removed but will remain available for %@ subscriptions." = "See makseviis eemaldatakse, kuid jääb %@ kordustellimuste jaoks saadavale.";
+
 "Too many attempts. Please try again in a few minutes." = "Liiga palju katseid. Proovige paari minuti pärast uuesti.";
 
 "Unavailable for this purchase" = "Pole selle ostu puhul saadaval";

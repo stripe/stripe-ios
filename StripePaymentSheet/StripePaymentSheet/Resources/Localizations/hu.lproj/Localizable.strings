@@ -286,6 +286,8 @@
 
 "This is your default" = "Ez az alapértelmezett";
 
+"This payment method will be removed but will remain available for %@ subscriptions." = "Ez a fizetési mód eltávolításra kerül, de továbbra is elérhető marad %@ előfizetések esetén.";
+
 "Too many attempts. Please try again in a few minutes." = "Túl sok kísérlet. Próbálja meg újra néhány perc múlva.";
 
 "Unavailable for this purchase" = "Nem érhető el ennél a vásárlásnál";

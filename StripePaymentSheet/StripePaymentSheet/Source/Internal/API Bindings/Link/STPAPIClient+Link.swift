@@ -27,9 +27,6 @@ extension STPAPIClient {
         completion: @escaping (Result<ConsumerSession.LookupResponse, Error>) -> Void
     ) {
         Task {
-            let legacyEndpoint = "consumers/sessions/lookup"
-            let mobileEndpoint = "consumers/mobile/sessions/lookup"
-
             var parameters: [String: Any] = [
                 "request_surface": requestSurface.rawValue,
                 "session_id": sessionID,
@@ -51,35 +48,77 @@ extension STPAPIClient {
                 return
             }
 
-            let requestAssertionHandle: StripeAttest.AssertionHandle? = await {
-                if useMobileEndpoints {
-                    do {
-                        let assertionHandle = try await stripeAttest.assert()
-                        parameters = parameters.merging(assertionHandle.assertion.requestFields) { (_, new) in new }
-                        return assertionHandle
-                    } catch {
-                        // If we can't get an assertion, we'll try the request anyway. It may fail.
-                    }
-                }
-                return nil
-            }()
-
-            post(
-                resource: useMobileEndpoints ? mobileEndpoint : legacyEndpoint,
+            await performConsumerLookup(
                 parameters: parameters,
-                ephemeralKeySecret: publishableKey
-            ) { (result: Result<ConsumerSession.LookupResponse, Error>) in
-                Task { @MainActor in
-                    // If there's an assertion error, send it to StripeAttest
-                    if useMobileEndpoints,
-                       case .failure(let error) = result,
-                       StripeAttest.isLinkAssertionError(error: error) {
-                        await self.stripeAttest.receivedAssertionError(error)
-                    }
-                    // Mark the assertion handle as completed
-                    requestAssertionHandle?.complete()
-                    completion(result)
+                useMobileEndpoints: useMobileEndpoints,
+                completion: completion
+            )
+        }
+    }
+
+    func lookupLinkAuthIntent(
+        linkAuthIntentID: String,
+        sessionID: String,
+        customerID: String?,
+        cookieStore: LinkCookieStore,
+        useMobileEndpoints: Bool,
+        requestSurface: LinkRequestSurface = .default,
+        completion: @escaping (Result<ConsumerSession.LookupResponse, Error>) -> Void
+    ) {
+        Task {
+            var parameters: [String: Any] = [
+                "request_surface": requestSurface.rawValue,
+                "session_id": sessionID,
+                "link_auth_intent_id": linkAuthIntentID,
+            ]
+            parameters["customer_id"] = customerID
+
+            await performConsumerLookup(
+                parameters: parameters,
+                useMobileEndpoints: useMobileEndpoints,
+                completion: completion
+            )
+        }
+    }
+
+    private func performConsumerLookup(
+        parameters: [String: Any],
+        useMobileEndpoints: Bool,
+        completion: @escaping (Result<ConsumerSession.LookupResponse, Error>) -> Void
+    ) async {
+        let legacyEndpoint = "consumers/sessions/lookup"
+        let mobileEndpoint = "consumers/mobile/sessions/lookup"
+
+        var mutableParameters = parameters
+
+        let requestAssertionHandle: StripeAttest.AssertionHandle? = await {
+            if useMobileEndpoints {
+                do {
+                    let assertionHandle = try await stripeAttest.assert()
+                    mutableParameters = mutableParameters.merging(assertionHandle.assertion.requestFields) { (_, new) in new }
+                    return assertionHandle
+                } catch {
+                    // If we can't get an assertion, we'll try the request anyway. It may fail.
                 }
+            }
+            return nil
+        }()
+
+        post(
+            resource: useMobileEndpoints ? mobileEndpoint : legacyEndpoint,
+            parameters: mutableParameters,
+            ephemeralKeySecret: publishableKey
+        ) { (result: Result<ConsumerSession.LookupResponse, Error>) in
+            Task { @MainActor in
+                // If there's an assertion error, send it to StripeAttest
+                if useMobileEndpoints,
+                   case .failure(let error) = result,
+                   StripeAttest.isLinkAssertionError(error: error) {
+                    await self.stripeAttest.receivedAssertionError(error)
+                }
+                // Mark the assertion handle as completed
+                requestAssertionHandle?.complete()
+                completion(result)
             }
         }
     }

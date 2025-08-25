@@ -603,7 +603,11 @@ extension SavedPaymentOptionsViewController: PaymentOptionCellDelegate {
                                                                            isCBCEligible: paymentMethod.isCoBrandedCard && cbcEligible,
                                                                            allowsSetAsDefaultPM: configuration.allowsSetAsDefaultPM,
                                                                            isDefault: isDefaultPaymentMethod(savedPaymentMethodId: paymentMethod.stripeId))
-        let editVc = UpdatePaymentMethodViewController(removeSavedPaymentMethodMessage: configuration.removeSavedPaymentMethodMessage,
+        let removeSavedPaymentMethodMessage = UpdatePaymentMethodViewController.resolveRemoveMessage(
+            removeSavedPaymentMethodMessage: configuration.removeSavedPaymentMethodMessage,
+            paymentMethodRemoveIsPartial: elementsSession.paymentMethodRemoveIsPartialForPaymentSheet(),
+            merchantName: configuration.merchantDisplayName)
+        let editVc = UpdatePaymentMethodViewController(removeSavedPaymentMethodMessage: removeSavedPaymentMethodMessage,
                                                        isTestMode: configuration.isTestMode,
                                                        configuration: updateConfig)
         editVc.delegate = self

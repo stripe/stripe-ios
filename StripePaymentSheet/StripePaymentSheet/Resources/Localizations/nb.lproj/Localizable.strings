@@ -288,6 +288,8 @@
 
 "This is your default" = "Dette er standarden din";
 
+"This payment method will be removed but will remain available for %@ subscriptions." = "Denne betalingsmåten vil bli fjernet, men vil fortsatt være tilgjengelig for %@ abonnementer.";
+
 "Too many attempts. Please try again in a few minutes." = "For mange forsøk. Prøv på nytt om noen få minutter.";
 
 "Unavailable for this purchase" = "Utilgjengelig for dette kjøpet";

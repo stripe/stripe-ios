@@ -1163,7 +1163,7 @@ class PaymentSheetAPITest: STPNetworkStubbingTestCase {
         var config = configuration
         // ...PaymentSheet should set shipping params on /confirm
         XCTAssertNotNil(PaymentSheet.makeShippingParams(for: pi, configuration: config))
-        XCTAssertNotNil(PaymentSheet.makePaymentIntentParams(confirmPaymentMethodType: .saved(STPFixtures.paymentMethod(), paymentOptions: nil), paymentIntent: pi, configuration: config).shipping)
+        XCTAssertNotNil(PaymentSheet.makePaymentIntentParams(confirmPaymentMethodType: .saved(STPFixtures.paymentMethod(), paymentOptions: nil, clientAttributionMetadata: nil), paymentIntent: pi, configuration: config).shipping)
 
         // However, if the PI and config have the same shipping...
         config.shippingDetails = {
@@ -1182,7 +1182,7 @@ class PaymentSheetAPITest: STPNetworkStubbingTestCase {
         }
         // ...PaymentSheet should not set shipping params on /confirm
         XCTAssertNil(PaymentSheet.makeShippingParams(for: pi, configuration: config))
-        XCTAssertNil(PaymentSheet.makePaymentIntentParams(confirmPaymentMethodType: .saved(STPFixtures.paymentMethod(), paymentOptions: nil), paymentIntent: pi, configuration: config).shipping)
+        XCTAssertNil(PaymentSheet.makePaymentIntentParams(confirmPaymentMethodType: .saved(STPFixtures.paymentMethod(), paymentOptions: nil, clientAttributionMetadata: nil), paymentIntent: pi, configuration: config).shipping)
     }
 
     /// Setting SFU to `true` when a customer is set should set the parameter to `off_session`.
@@ -1268,7 +1268,7 @@ class PaymentSheetAPITest: STPNetworkStubbingTestCase {
         var configuration = PaymentSheet.Configuration._testValue_MostPermissive()
         configuration.customer = .init(id: "id", ephemeralKeySecret: "ek")
 
-        let confirmType: PaymentSheet.ConfirmPaymentMethodType = .saved(examplePaymentMethod, paymentOptions: paymentOptions)
+        let confirmType: PaymentSheet.ConfirmPaymentMethodType = .saved(examplePaymentMethod, paymentOptions: paymentOptions, clientAttributionMetadata: nil)
 
         let pi_params = PaymentSheet.makePaymentIntentParams(confirmPaymentMethodType: confirmType,
                                                              paymentIntent: STPFixtures.paymentIntent(),
@@ -1287,7 +1287,7 @@ class PaymentSheetAPITest: STPNetworkStubbingTestCase {
         let confirmTypes: [PaymentSheet.ConfirmPaymentMethodType] = [
             .new(params: examplePaymentMethodParams, paymentOptions: paymentOptions, shouldSave: false),
             .new(params: examplePaymentMethodParams, paymentOptions: paymentOptions, paymentMethod: examplePaymentMethod, shouldSave: false),
-            .saved(examplePaymentMethod, paymentOptions: paymentOptions),
+            .saved(examplePaymentMethod, paymentOptions: paymentOptions, clientAttributionMetadata: nil),
         ]
         for confirmType in confirmTypes {
             let pi_params = PaymentSheet.makePaymentIntentParams(

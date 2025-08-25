@@ -288,6 +288,8 @@
 
 "This is your default" = "Ovo je vaša zadana vrijednost";
 
+"This payment method will be removed but will remain available for %@ subscriptions." = "Ovaj način plaćanja bit će uklonjen, ali će ostati dostupan za pretplate %@.";
+
 "Too many attempts. Please try again in a few minutes." = "Previše pokušaja. Pokušajte ponovno za nekoliko minuta.";
 
 "Unavailable for this purchase" = "Nije dostupno za ovu kupnju";

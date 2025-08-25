@@ -288,6 +288,8 @@
 
 "This is your default" = "นี่คือค่าเริ่มต้นของคุณ";
 
+"This payment method will be removed but will remain available for %@ subscriptions." = "วิธีการชำระเงินนี้จะถูกนำออกไปแต่จะยังคงใช้ได้สำหรับการชำระเงินตามรอบบิล %@";
+
 "Too many attempts. Please try again in a few minutes." = "ลองหลายครั้งเกินไป โปรดลองใหม่ในอีกสักครู่";
 
 "Unavailable for this purchase" = "ใช้กับการซื้อรายการนี้ไม่ได้";
