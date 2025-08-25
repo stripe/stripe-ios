@@ -7,8 +7,8 @@
 
 import Foundation
 
-@_spi(CryptoOnrampSDKPreview)
-public enum AuthorizeResult {
+@_spi(STP)
+public enum AuthorizationResult {
 
     /// Authorization was consented by the user. The customer ID is attached.
     case consented(customerId: String)
