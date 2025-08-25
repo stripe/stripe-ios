@@ -47,10 +47,6 @@ struct AuthenticatedView: View {
         isLoading.wrappedValue
     }
 
-    private var isCreateOnrampAvailable: Bool {
-        selectedPaymentMethod != nil && cryptoPaymentToken != nil && selectedWalletId != nil
-    }
-
     // MARK: - View
 
     var body: some View {
@@ -153,9 +149,9 @@ struct AuthenticatedView: View {
                             .opacity(shouldDisableButtons ? 0.5 : 1)
 
                             if let cryptoPaymentToken {
-                                if isCreateOnrampAvailable {
+                                if let selectedWalletId {
                                     Button("Create Onramp Session") {
-                                        createOnrampSession()
+                                        createOnrampSession(withCryptoPaymentToken: cryptoPaymentToken, selectedWalletId: selectedWalletId)
                                     }
                                     .buttonStyle(PrimaryButtonStyle())
                                     .disabled(shouldDisableButtons)
@@ -418,9 +414,9 @@ struct AuthenticatedView: View {
         }
     }
 
-    private func createOnrampSession() {
-        guard let cryptoPaymentToken, let selectedWalletId,
-              let wallet = wallets.first(where: { $0.id == selectedWalletId }) else {
+    private func createOnrampSession(withCryptoPaymentToken cryptoPaymentToken: String, selectedWalletId: String) {
+        guard let wallet = wallets.first(where: { $0.id == selectedWalletId }) else {
+            errorMessage = "Unable to find a match for the selected wallet. Please re-select a wallet and try again."
             return
         }
 
