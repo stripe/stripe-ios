@@ -14,6 +14,7 @@ import PassKit
 @_spi(STP) import StripePayments
 @_spi(STP) import StripePaymentSheet
 @_spi(STP) import StripePaymentsUI
+@_spi(STP) import StripeUICore
 
 import UIKit
 
@@ -448,13 +449,13 @@ extension CryptoOnrampCoordinator: ApplePayContextDelegate {
 private extension CryptoOnrampCoordinator {
     func fetchMerchantImageWithFallback() async -> UIImage {
         guard let merchantLogoUrl = await linkController.merchantLogoUrl else {
-            return .wallet
+            return Image.wallet.makeImage()
         }
 
         do {
             return try await DownloadManager.sharedManager.downloadImage(url: merchantLogoUrl)
         } catch {
-            return .wallet
+            return Image.wallet.makeImage()
         }
     }
 
