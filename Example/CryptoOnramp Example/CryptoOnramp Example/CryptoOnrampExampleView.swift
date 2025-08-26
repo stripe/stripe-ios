@@ -19,7 +19,7 @@ struct CryptoOnrampExampleView: View {
     @State private var coordinator: CryptoOnrampCoordinator?
     @State private var errorMessage: String?
     @State private var email: String = ""
-    @State private var selectedScopes: Set<OAuthScopes> = Set(OAuthScopes.inlineScope)
+    @State private var selectedScopes: Set<OAuthScopes> = Set(OAuthScopes.onrampScope)
     @State private var showRegistration: Bool = false
     @State private var showAuthenticatedView: Bool = false
     @State private var authenticationCustomerId: String?
@@ -54,8 +54,8 @@ struct CryptoOnrampExampleView: View {
 
                     OAuthScopeSelector(
                         selectedScopes: $selectedScopes,
-                        onInlineScopesSelected: {
-                            selectedScopes = Set(OAuthScopes.inlineScope)
+                        onOnrampScopesSelected: {
+                            selectedScopes = Set(OAuthScopes.onrampScope)
                         },
                         onAllScopesSelected: {
                             selectedScopes = Set(OAuthScopes.allScopes)
@@ -209,7 +209,7 @@ struct CryptoOnrampExampleView: View {
 
 struct OAuthScopeSelector: View {
     @Binding var selectedScopes: Set<OAuthScopes>
-    let onInlineScopesSelected: () -> Void
+    let onOnrampScopesSelected: () -> Void
     let onAllScopesSelected: () -> Void
 
     var body: some View {
@@ -222,8 +222,8 @@ struct OAuthScopeSelector: View {
                 Spacer()
 
                 HStack(spacing: 8) {
-                    Button("Inline") {
-                        onInlineScopesSelected()
+                    Button("Onramp") {
+                        onOnrampScopesSelected()
                     }
                     .buttonStyle(.bordered)
                     .controlSize(.small)

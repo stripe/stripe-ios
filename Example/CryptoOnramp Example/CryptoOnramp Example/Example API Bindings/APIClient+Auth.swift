@@ -10,7 +10,7 @@ import Foundation
 extension APIClient {
     func authenticateUser(
         with email: String,
-        oauthScopes: [OAuthScopes] = OAuthScopes.inlineScope
+        oauthScopes: [OAuthScopes] = OAuthScopes.onrampScope
     ) async throws -> AuthenticateUserResponse {
         let response: AuthenticateUserResponse = try await request(
             "auth_intent/create",
