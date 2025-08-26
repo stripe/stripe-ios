@@ -32,6 +32,7 @@ struct RegistrationView: View {
     @State private var errorMessage: String?
     @State private var showAuthenticatedView: Bool = false
     @State private var registrationCustomerId: String?
+    @State private var isRegistrationComplete: Bool = false
 
     @Environment(\.isLoading) private var isLoading
 
@@ -41,6 +42,10 @@ struct RegistrationView: View {
 
     private var isRegisterButtonDisabled: Bool {
         isLoading.wrappedValue || phoneNumber.isEmpty
+    }
+
+    private var shouldDisableButtons: Bool {
+        isLoading.wrappedValue
     }
 
     // MARK: - View
@@ -85,12 +90,23 @@ struct RegistrationView: View {
                         .focused($isCountryFieldFocused)
                 }
 
-                Button("Register") {
-                    registerUser()
+                if isRegistrationComplete {
+                    Button("Retry Verification") {
+                        Task {
+                            await verify()
+                        }
+                    }
+                    .buttonStyle(PrimaryButtonStyle())
+                    .disabled(shouldDisableButtons)
+                    .opacity(shouldDisableButtons ? 0.5 : 1)
+                } else {
+                    Button("Register") {
+                        registerUser()
+                    }
+                    .buttonStyle(PrimaryButtonStyle())
+                    .disabled(isRegisterButtonDisabled)
+                    .opacity(isRegisterButtonDisabled ? 0.5 : 1)
                 }
-                .buttonStyle(PrimaryButtonStyle())
-                .disabled(isRegisterButtonDisabled)
-                .opacity(isRegisterButtonDisabled ? 0.5 : 1)
 
                 if let errorMessage {
                     ErrorMessageView(message: errorMessage)
@@ -115,7 +131,7 @@ struct RegistrationView: View {
 
         Task {
             do {
-                let customerId = try await coordinator.registerLinkUser(
+                try await coordinator.registerLinkUser(
                     email: email,
                     fullName: fullName.isEmpty ? nil : fullName,
                     phone: phoneNumber,
@@ -128,24 +144,68 @@ struct RegistrationView: View {
                     oauthScopes: selectedScopes
                 )
 
-                await MainActor.run {
-                    isLoading.wrappedValue = false
-                    registrationCustomerId = customerId
-
-                    // Delay so the navigation link animation doesn’t get canceled.
-                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
-                        showAuthenticatedView = true
-                    }
-                }
+                await verify()
             } catch {
                 await MainActor.run {
                     isLoading.wrappedValue = false
+                    isRegistrationComplete = false
                     if let cryptoError = error as? CryptoOnrampCoordinator.Error, case .invalidPhoneFormat = cryptoError {
                         errorMessage = "Invalid phone format. Please use E.164 format (e.g., +12125551234)"
                     } else {
                         errorMessage = "Registration failed: \(error.localizedDescription)"
                     }
                 }
+            }
+        }
+    }
+
+    private func presentVerification(using coordinator: CryptoOnrampCoordinator) async -> String? {
+        if let viewController = UIApplication.shared.findTopNavigationController() {
+            do {
+                let result = try await coordinator.authenticateUser(from: viewController)
+
+                switch result {
+                case .completed(let customerId):
+                    return customerId
+                case .canceled:
+                    return nil
+                @unknown default:
+                    return nil
+                }
+            } catch {
+                await MainActor.run {
+                    errorMessage = error.localizedDescription
+                }
+                return nil
+            }
+        } else {
+            await MainActor.run {
+                errorMessage = "Unable to find view controller to present from."
+            }
+            return nil
+        }
+    }
+
+    private func verify() async {
+        await MainActor.run {
+            isLoading.wrappedValue = true
+            errorMessage = nil
+        }
+
+        if let customerId = await presentVerification(using: coordinator) {
+            await MainActor.run {
+                isLoading.wrappedValue = false
+                isRegistrationComplete = true
+                self.registrationCustomerId = customerId
+
+                // Delay so the navigation link animation doesn't get canceled.
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
+                    showAuthenticatedView = true
+                }
+            }
+        } else {
+            await MainActor.run {
+                isLoading.wrappedValue = false
             }
         }
     }

@@ -42,6 +42,7 @@ protocol CryptoOnrampCoordinatorProtocol {
     /// - Parameter country: The two-letter country code of the user (ISO 3166-1 alpha-2).
     /// - Returns: The crypto customer ID.
     /// Throws if email is already associated with a Link user, or an API error occurs.
+    @discardableResult
     func registerLinkUser(
         email: String,
         fullName: String?,
@@ -191,6 +192,7 @@ public final class CryptoOnrampCoordinator: NSObject, CryptoOnrampCoordinatorPro
         return try await linkController.lookupConsumer(with: email)
     }
 
+    @discardableResult
     public func registerLinkUser(
         email: String,
         fullName: String?,

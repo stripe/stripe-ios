@@ -190,7 +190,7 @@ struct CryptoOnrampExampleView: View {
                 do {
                     let result = try await coordinator.authorize(linkAuthIntentId: linkAuthIntentId, from: viewController)
                     switch result {
-                    case .consented(customerId: let customerId):
+                    case .consented(let customerId):
                         await MainActor.run {
                             authenticationCustomerId = customerId
 

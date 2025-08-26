@@ -268,7 +268,7 @@ import UIKit
         from viewController: UIViewController,
         completion: @escaping (Result<VerificationResult, Error>) -> Void
     ) {
-        guard let linkAccount, linkAccount.sessionState == .requiresVerification else {
+        guard let linkAccount else {
             let error = IntegrationError.noActiveLinkConsumer
             completion(.failure(error))
             return
