@@ -45,7 +45,15 @@ extension LinkInlineSignupView {
 
             let text = {
                 switch mode {
-                case .checkboxWithDefaultOptIn, .signupOptIn:
+                case .signupOptIn:
+                    return STPLocalizedString(
+                        "Create an account with Link for faster checkout across the web",
+                        """
+                        Label for a checkbox that when checked allows the payment information
+                        to be saved and used in future checkout sessions.
+                        """
+                    )
+                case .checkboxWithDefaultOptIn:
                     return STPLocalizedString(
                         "Save my info for faster checkout with Link",
                         """
