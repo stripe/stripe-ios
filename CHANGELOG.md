@@ -1,3 +1,11 @@
+## x.x.x x-x-x
+
+### CustomerSheet
+* [Added] `opensCardScannerAutomatically` configuration
+
+### PaymentSheet
+* [Added] `opensCardScannerAutomatically` configuration
+
 ## 24.21.0 2025-08-25
 
 ### CustomerSheet
