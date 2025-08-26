@@ -81,6 +81,14 @@ class LinkInlineSignupElementSnapshotTests: STPSnapshotTestCase {
         verify(sut)
     }
 
+    func testSignupOptInFeatureEnabled_unchecked() {
+        let sut = makeSUT(
+            linkAccountEmailAddress: "unknown@stripe.com",
+            signupOptInFeatureEnabled: true
+        )
+        verify(sut)
+    }
+
     // MARK: Textfield only mode
 
     func testDefaultState_textFieldsOnly() {
@@ -189,7 +197,8 @@ extension LinkInlineSignupElementSnapshotTests {
         preFillName: String? = nil,
         preFillPhone: String? = nil,
         showCheckbox: Bool = true,
-        allowsDefaultOptIn: Bool = false
+        allowsDefaultOptIn: Bool = false,
+        signupOptInFeatureEnabled: Bool = false
     ) -> LinkInlineSignupElement {
         var configuration = PaymentSheet.Configuration()
         configuration.merchantDisplayName = "[Merchant]"
@@ -213,7 +222,7 @@ extension LinkInlineSignupElementSnapshotTests {
             showCheckbox: showCheckbox,
             accountService: MockAccountService(),
             allowsDefaultOptIn: allowsDefaultOptIn,
-            signupOptInFeatureEnabled: false,
+            signupOptInFeatureEnabled: signupOptInFeatureEnabled,
             signupOptInInitialValue: false,
             linkAccount: linkAccount,
             country: country
