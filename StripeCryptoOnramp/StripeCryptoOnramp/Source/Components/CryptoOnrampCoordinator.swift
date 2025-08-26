@@ -58,6 +58,13 @@ protocol CryptoOnrampCoordinatorProtocol {
     /// Throws if `hasLinkAccount` was not called prior to this, or an API error occurs after the view controller is presented.
     func authenticateUser(from viewController: UIViewController) async throws -> AuthenticationResult
 
+    /// Authorizes a Link auth intent and authenticates the user if necessary.
+    /// - Parameters:
+    ///   - linkAuthIntentId: The Link auth intent ID to authorize.
+    ///   - viewController: The view controller from which to present the authentication flow.
+    /// - Returns: The result of the authorization.
+    func authorize(linkAuthIntentId: String, from viewController: UIViewController) async throws -> AuthorizationResult
+
     /// Attaches the specific KYC info to the current Link user. Requires an authenticated Link user.
     ///
     /// - Parameter info: The KYC info to attach to the Link user.
@@ -232,6 +239,17 @@ public final class CryptoOnrampCoordinator: NSObject, CryptoOnrampCoordinatorPro
         case .completed:
             let customerId = try await apiClient.grantPartnerMerchantPermissions(with: linkAccountInfo).id
             return .completed(customerId: customerId)
+        }
+    }
+
+    public func authorize(linkAuthIntentId: String, from viewController: UIViewController) async throws -> AuthorizationResult {
+        let authorizeResult = try await linkController.authorize(linkAuthIntentId: linkAuthIntentId, from: viewController)
+        switch authorizeResult {
+        case .consented:
+            let customerId = try await apiClient.grantPartnerMerchantPermissions(with: linkAccountInfo).id
+            return .consented(customerId: customerId)
+        case .denied: return .denied
+        case .canceled: return .canceled
         }
     }
 

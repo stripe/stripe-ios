@@ -245,6 +245,7 @@ extension ConsumerSession {
         cookieStore: LinkCookieStore = LinkSecureCookieStore.shared,
         consumerAccountPublishableKey: String?,
         requestSurface: LinkRequestSurface = .default,
+        consentGranted: Bool? = nil,
         completion: @escaping (Result<ConsumerSession, Error>) -> Void
     ) {
         apiClient.confirmSMSVerification(
@@ -253,6 +254,7 @@ extension ConsumerSession {
             cookieStore: cookieStore,
             consumerAccountPublishableKey: consumerAccountPublishableKey,
             requestSurface: requestSurface,
+            consentGranted: consentGranted,
             completion: completion)
     }
 
