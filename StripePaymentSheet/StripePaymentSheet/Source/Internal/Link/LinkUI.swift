@@ -255,7 +255,7 @@ extension LinkUI {
         let contentWidth = contentHeight * aspectRatio
 
         // The asset includes letterform that's slightly inset, so we try to account for this.
-        let assetInset: CGFloat = contentHeight * 0.13
+        let assetInset: CGFloat = contentHeight * 0.12
 
         iconImageAttachment.bounds = CGRect(
             x: 0,

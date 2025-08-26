@@ -79,7 +79,7 @@ extension LinkInlineSignupView {
                     return nil
                 }
                 return LinkUI.inlineLogo(
-                    withScale: 1.4,
+                    withScale: 1.3,
                     forFont: appearance.asElementsTheme.fonts.footnoteEmphasis
                 )
             }()
