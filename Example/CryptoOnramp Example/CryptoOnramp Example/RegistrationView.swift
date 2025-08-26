@@ -156,7 +156,7 @@ struct RegistrationView: View {
         RegistrationView(
             coordinator: coordinator,
             email: "test@example.com",
-            selectedScopes: OAuthScopes.inlineScope
+            selectedScopes: OAuthScopes.onrampScope
         )
     }
 }
