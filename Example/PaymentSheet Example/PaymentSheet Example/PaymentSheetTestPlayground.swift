@@ -308,7 +308,7 @@ struct PaymentSheetTestPlayground: View {
         Binding<PaymentSheetTestPlaygroundSettings.EnableIOS26Changes> {
             return playgroundController.settings.enableIOS26Changes
         } set: { newValue in
-            NewDesignDetector.allowNewDesign = newValue == .on
+            LiquidGlassDetector.allowNewDesign = newValue == .on
             playgroundController.appearance = PaymentSheet.Appearance()
             playgroundController.settings.enableIOS26Changes = newValue
         }

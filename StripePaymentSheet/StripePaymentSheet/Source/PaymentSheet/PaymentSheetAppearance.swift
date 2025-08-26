@@ -30,7 +30,7 @@ public extension PaymentSheet {
 
         /// The corner radius used for buttons, inputs, tabs in PaymentSheet
         /// - Note: The behavior of this property is consistent with the behavior of corner radius on `CALayer`
-        public var cornerRadius: CGFloat = NewDesignDetector.newDesignEnabled ? 16.0 : 6.0
+        public var cornerRadius: CGFloat = LiquidGlassDetector.isEnabled ? 16.0 : 6.0
 
         /// The border used for inputs and tabs in PaymentSheet
         /// - Note: The behavior of this property is consistent with the behavior of border width on `CALayer`
@@ -51,7 +51,7 @@ public extension PaymentSheet {
         /// The corner radius used for Mobile Payment Element sheets
         /// - Note: The behavior of this property is consistent with the behavior of corner radius on `CALayer`
         @_spi(AppearanceAPIAdditionsPreview)
-        public var sheetCornerRadius: CGFloat = NewDesignDetector.newDesignEnabled ? 34.0 : 12.0
+        public var sheetCornerRadius: CGFloat = LiquidGlassDetector.isEnabled ? 34.0 : 12.0
 
         /// The insets used for all text fields in PaymentSheet
         /// - Note: Controls the internal padding within text fields for more manual control over text field spacing
