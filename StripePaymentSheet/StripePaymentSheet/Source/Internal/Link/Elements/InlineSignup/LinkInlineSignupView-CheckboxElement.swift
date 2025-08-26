@@ -6,11 +6,10 @@
 //  Copyright © 2022 Stripe, Inc. All rights reserved.
 //
 
-import UIKit
-
 @_spi(STP) import StripeCore
 @_spi(STP) import StripePaymentsUI
 @_spi(STP) import StripeUICore
+import UIKit
 
 extension LinkInlineSignupView {
 
@@ -103,10 +102,7 @@ extension LinkInlineSignupView {
                         mutableResult.replaceCharacters(in: linkRange, with: NSAttributedString(attachment: leadingIcon))
 
                         mutableResult.addAttributes(
-                            [
-                                .paragraphStyle: paragraphStyle,
-                                .foregroundColor: UIColor.red,
-                            ],
+                            [.paragraphStyle: paragraphStyle],
                             range: NSRange(location: 0, length: mutableResult.length)
                         )
 

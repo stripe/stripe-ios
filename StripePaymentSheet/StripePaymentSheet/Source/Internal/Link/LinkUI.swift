@@ -247,7 +247,7 @@ extension LinkUI {
         withScale scale: CGFloat,
         forFont font: UIFont
     ) -> NSTextAttachment {
-        let iconImage = Image.link_logo_new.makeImage(template: true)
+        let iconImage = Image.link_logo_tintable.makeImage(template: true)
         let iconImageAttachment = NSTextAttachment()
 
         let contentHeight = font.capHeight * scale
