@@ -36,6 +36,15 @@ import UIKit
         case canceled
     }
 
+    @frozen @_spi(STP) public enum AuthorizationResult {
+        /// Authorization was consented by the user.
+        case consented
+        /// Authorization was denied by the user.
+        case denied
+        /// The authorization flow was canceled by the user.
+        case canceled
+    }
+
     /// Errors specific incorrect integrations with LinkController
     @_spi(STP) public enum IntegrationError: Error {
         case noPaymentMethodSelected
@@ -367,6 +376,45 @@ import UIKit
         }
     }
 
+    /// Authorizes a Link auth intent and retrieves the associated consumer session.
+    ///
+    /// - Parameter linkAuthIntentId: The Link auth intent ID to authorize.
+    /// - Parameter viewController: The view controller from which to present the authorization flow.
+    /// - Parameter completion: A closure that is called with the result of the authorization.
+    @_spi(STP) public func authorize(
+        linkAuthIntentId: String,
+        from viewController: UIViewController,
+        completion: @escaping (Result<AuthorizationResult, Error>) -> Void
+    ) {
+        linkAccountService.lookupLinkAuthIntent(
+            linkAuthIntentID: linkAuthIntentId,
+            requestSurface: requestSurface
+        ) { result in
+            switch result {
+            case .success(let response):
+                if let response {
+                    self.linkAccount = response.linkAccount
+                    switch response.consentViewModel {
+                    case .full:
+                        print("Full consent required")
+                    case .inline:
+                        print("Inline consent required")
+                    case .none:
+                        print("No consent required")
+                    }
+
+                    // For now, we just return consented if we successfully looked up an account
+                    completion(.success(.consented))
+                } else {
+                    // No account found for this auth intent ID
+                    completion(.success(.denied))
+                }
+            case .failure(let error):
+                completion(.failure(error))
+            }
+        }
+    }
+
     // MARK: - Private methods
 
     private func createPaymentMethodInPassthroughMode(
@@ -518,6 +566,27 @@ import UIKit
                 switch result {
                 case .success(let isExistingLinkConsumer):
                     continuation.resume(returning: isExistingLinkConsumer)
+                case .failure(let error):
+                    continuation.resume(throwing: error)
+                }
+            }
+        }
+    }
+
+    /// Authorizes a Link auth intent and retrieves the associated consumer session.
+    ///
+    /// - Parameter linkAuthIntentId: The Link auth intent ID to authorize.
+    /// - Parameter viewController: The view controller from which to present the authorization flow.
+    /// - Returns: The authorization result.
+    func authorize(
+        linkAuthIntentId: String,
+        from viewController: UIViewController
+    ) async throws -> AuthorizationResult {
+        try await withCheckedThrowingContinuation { continuation in
+            authorize(linkAuthIntentId: linkAuthIntentId, from: viewController) { result in
+                switch result {
+                case .success(let authorizeResult):
+                    continuation.resume(returning: authorizeResult)
                 case .failure(let error):
                     continuation.resume(throwing: error)
                 }
