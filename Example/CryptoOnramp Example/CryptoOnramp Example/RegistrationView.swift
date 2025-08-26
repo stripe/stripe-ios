@@ -144,10 +144,6 @@ struct RegistrationView: View {
                     oauthScopes: selectedScopes
                 )
 
-                await MainActor.run {
-                    isRegistrationComplete = true
-                }
-
                 await verify()
             } catch {
                 await MainActor.run {
@@ -167,7 +163,6 @@ struct RegistrationView: View {
         if let viewController = UIApplication.shared.findTopNavigationController() {
             do {
                 let result = try await coordinator.authenticateUser(from: viewController)
-                isLoading.wrappedValue = false
 
                 switch result {
                 case .completed(let customerId):
@@ -200,6 +195,7 @@ struct RegistrationView: View {
         if let customerId = await presentVerification(using: coordinator) {
             await MainActor.run {
                 isLoading.wrappedValue = false
+                isRegistrationComplete = true
                 self.registrationCustomerId = customerId
 
                 // Delay so the navigation link animation doesn't get canceled.
