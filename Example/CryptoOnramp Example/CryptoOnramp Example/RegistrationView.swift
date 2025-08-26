@@ -93,7 +93,7 @@ struct RegistrationView: View {
                 if isRegistrationComplete {
                     Button("Retry Verification") {
                         Task {
-                            await verify()
+                            try await verify()
                         }
                     }
                     .buttonStyle(PrimaryButtonStyle())
@@ -138,13 +138,7 @@ struct RegistrationView: View {
                     country: country
                 )
 
-                // Authenticate with the demo merchant backend as well.
-                _ = try await APIClient.shared.authenticateUser(
-                    with: email,
-                    oauthScopes: selectedScopes
-                )
-
-                await verify()
+                try await verify()
             } catch {
                 await MainActor.run {
                     isLoading.wrappedValue = false
@@ -159,14 +153,50 @@ struct RegistrationView: View {
         }
     }
 
-    private func presentVerification(using coordinator: CryptoOnrampCoordinator) async -> String? {
+    private func verify() async throws {
+        // Authenticate with the demo merchant backend as well.
+        let response = try await APIClient.shared.authenticateUser(
+            with: email,
+            oauthScopes: selectedScopes
+        )
+        let laiId = response.data.id
+
+        await MainActor.run {
+            isLoading.wrappedValue = true
+            errorMessage = nil
+        }
+
+        if let customerId = await presentAuthorization(laiId: laiId, using: coordinator) {
+            await MainActor.run {
+                isLoading.wrappedValue = false
+                isRegistrationComplete = true
+                self.registrationCustomerId = customerId
+
+                // Delay so the navigation link animation doesn't get canceled.
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
+                    showAuthenticatedView = true
+                }
+            }
+        } else {
+            await MainActor.run {
+                isLoading.wrappedValue = false
+            }
+        }
+    }
+
+    private func presentAuthorization(laiId: String, using coordinator: CryptoOnrampCoordinator) async -> String? {
         if let viewController = UIApplication.shared.findTopNavigationController() {
             do {
-                let result = try await coordinator.authenticateUser(from: viewController)
+                let result = try await coordinator.authorize(linkAuthIntentId: laiId, from: viewController)
 
                 switch result {
-                case .completed(let customerId):
+                case .consented(let customerId):
                     return customerId
+                case .denied:
+                    await MainActor.run {
+                        errorMessage = "Consent rejected"
+                    }
+                    return nil
                 case .canceled:
                     return nil
                 @unknown default:
@@ -183,30 +213,6 @@ struct RegistrationView: View {
                 errorMessage = "Unable to find view controller to present from."
             }
             return nil
-        }
-    }
-
-    private func verify() async {
-        await MainActor.run {
-            isLoading.wrappedValue = true
-            errorMessage = nil
-        }
-
-        if let customerId = await presentVerification(using: coordinator) {
-            await MainActor.run {
-                isLoading.wrappedValue = false
-                isRegistrationComplete = true
-                self.registrationCustomerId = customerId
-
-                // Delay so the navigation link animation doesn't get canceled.
-                DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
-                    showAuthenticatedView = true
-                }
-            }
-        } else {
-            await MainActor.run {
-                isLoading.wrappedValue = false
-            }
         }
     }
 }
