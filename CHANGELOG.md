@@ -1,3 +1,8 @@
+## 24.21.1 2025-08-26
+
+### PaymentSheet
+* [Changed] Updated copy for Link signup opt-in UI
+
 ## 24.21.0 2025-08-25
 
 ### CustomerSheet
