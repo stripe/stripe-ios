@@ -458,34 +458,24 @@ struct AuthenticatedView: View {
         errorMessage = nil
 
         Task {
-            do {
-                // Refresh the quote before checking out, as it has a short expiry window.
-                try await APIClient.shared.refreshQuote(onrampSessionId: onrampSessionResponse.id)
+            let checkoutResult = await coordinator.performCheckout(
+                onrampSessionId: onrampSessionResponse.id,
+                authenticationContext: authenticationContext
+            ) { onrampSessionId in
+                let result = try await APIClient.shared.checkout(onrampSessionId: onrampSessionId)
+                return  result.clientSecret
+            }
 
-                let checkoutResult = await coordinator.performCheckout(
-                    onrampSessionId: onrampSessionResponse.id,
-                    authenticationContext: authenticationContext
-                ) { onrampSessionId in
-                    let result = try await APIClient.shared.checkout(onrampSessionId: onrampSessionId)
-                    return  result.clientSecret
+            await MainActor.run {
+                switch checkoutResult {
+                case .completed:
+                    checkoutSucceeded = true
+                case .failed(let error):
+                    errorMessage = "Checkout failed: \(error.localizedDescription)"
+                @unknown default:
+                    break
                 }
-
-                await MainActor.run {
-                    switch checkoutResult {
-                    case .completed:
-                        checkoutSucceeded = true
-                    case .failed(let error):
-                        errorMessage = "Checkout failed: \(error.localizedDescription)"
-                    @unknown default:
-                        break
-                    }
-                    isLoading.wrappedValue = false
-                }
-            } catch {
-                await MainActor.run {
-                    errorMessage = "Checkout failed while refreshing quote: \(error.localizedDescription)"
-                    isLoading.wrappedValue = false
-                }
+                isLoading.wrappedValue = false
             }
         }
     }

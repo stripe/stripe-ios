@@ -120,18 +120,6 @@ final class LinkFullConsentScopesView: UIView {
             iconContainerView.bottomAnchor.constraint(lessThanOrEqualTo: containerView.bottomAnchor),
         ])
 
-        // Set up priority constraints to ensure proper bottom padding
-        let textBottomConstraint = containerView.bottomAnchor.constraint(equalTo: textStackView.bottomAnchor)
-        textBottomConstraint.priority = UILayoutPriority.defaultHigh
-
-        let iconBottomConstraint = containerView.bottomAnchor.constraint(equalTo: iconContainerView.bottomAnchor)
-        iconBottomConstraint.priority = UILayoutPriority.defaultHigh
-
-        NSLayoutConstraint.activate([
-            textBottomConstraint,
-            iconBottomConstraint,
-        ])
-
         return containerView
     }
 

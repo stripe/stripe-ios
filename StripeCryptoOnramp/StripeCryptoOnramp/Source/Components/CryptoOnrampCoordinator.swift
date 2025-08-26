@@ -403,7 +403,7 @@ public final class CryptoOnrampCoordinator: NSObject, CryptoOnrampCoordinatorPro
             }
 
             // Handle any required next action (e.g., 3DS authentication)
-            let handledIntentResult = await handleNextAction(
+            let handledIntentResult = try await handleNextAction(
                 for: paymentIntent,
                 with: authenticationContext
             )
@@ -507,10 +507,11 @@ private extension CryptoOnrampCoordinator {
     func handleNextAction(
         for intent: STPPaymentIntent,
         with authenticationContext: STPAuthenticationContext
-    ) async -> Result<STPPaymentIntent, Swift.Error> {
-        return await withCheckedContinuation { continuation in
-            let paymentHandler = STPPaymentHandler.sharedHandler
+    ) async throws -> Result<STPPaymentIntent, Swift.Error> {
+        let platformApiClient = try await getPlatformApiClient()
+        let paymentHandler = STPPaymentHandler(apiClient: platformApiClient)
 
+        return await withCheckedContinuation { continuation in
             paymentHandler.handleNextAction(
                 for: intent,
                 with: authenticationContext,
@@ -571,7 +572,10 @@ private extension CryptoOnrampCoordinator {
         let platformApiClient = try await getPlatformApiClient()
 
         return try await withCheckedThrowingContinuation { continuation in
-            platformApiClient.retrievePaymentIntent(withClientSecret: clientSecret) { paymentIntent, error in
+            platformApiClient.retrievePaymentIntent(
+                withClientSecret: clientSecret,
+                expand: ["payment_method"]
+            ) { paymentIntent, error in
                 if let error = error {
                     continuation.resume(throwing: error)
                 } else if let paymentIntent = paymentIntent {

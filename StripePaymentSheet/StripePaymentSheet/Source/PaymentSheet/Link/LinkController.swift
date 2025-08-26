@@ -379,17 +379,16 @@ import UIKit
         }
     }
 
-    /// Authorizes a Link auth intent, handling verification and consent flows as needed.
+    /// Authorizes a Link auth intent, handling verification and OAuth consent flows as needed.
     ///
     /// This method will present verification if the account requires verification, and consent screens
-    /// if consent is required. The flow adapts based on the auth intent configuration:
-    /// - Inline consent: Presents verification with embedded consent
-    /// - Full consent: Presents verification (if needed) followed by a dedicated consent screen
-    /// - No consent: Presents verification only (if needed)
+    /// if consent is required.
     ///
     /// - Parameter linkAuthIntentId: The Link auth intent ID to authorize.
     /// - Parameter viewController: The view controller from which to present the authorization flow.
-    /// - Parameter completion: A closure that is called with the result of the authorization.
+    /// - Returns: The result of the authorization. Either the user consented / rejected OAuth consent, or canceled the flow.
+    ///   If authorization completes, a crypto customer ID will be included in the result.
+    /// - Throws: An error if no Link account associated with the Link auth intent is found, or an API error occurs.
     @_spi(STP) public func authorize(
         linkAuthIntentId: String,
         from viewController: UIViewController,
@@ -486,9 +485,11 @@ import UIKit
             consentViewModel: consentViewModel
         )
 
-        verificationController.present(from: viewController) { result in
+        verificationController.present(from: viewController) { [weak self] result in
+            guard let self else { return }
             switch result {
             case .completed:
+                LinkAccountContext.shared.account = self.linkAccount
                 completion(.success(.consented))
             case .canceled, .switchAccount:
                 completion(.success(.canceled))
@@ -636,7 +637,6 @@ import UIKit
         }
     }
 
-    /// Presents the full consent screen for authorization
     private func presentFullConsentScreen(
         consentViewModel: LinkConsentViewModel.FullConsentViewModel,
         from viewController: UIViewController,
@@ -738,27 +738,6 @@ extension LinkController: LinkFullConsentViewControllerDelegate {
     /// - Inline consent: Presents verification with embedded consent
     /// - Full consent: Presents verification (if needed) followed by a dedicated consent screen
     /// - No consent: Presents verification only (if needed)
-    ///
-    /// - Parameter linkAuthIntentId: The Link auth intent ID to authorize.
-    /// - Parameter viewController: The view controller from which to present the authorization flow.
-    /// - Returns: The authorization result.
-    func authorize(
-        linkAuthIntentId: String,
-        from viewController: UIViewController
-    ) async throws -> AuthorizationResult {
-        try await withCheckedThrowingContinuation { continuation in
-            authorize(linkAuthIntentId: linkAuthIntentId, from: viewController) { result in
-                switch result {
-                case .success(let authorizeResult):
-                    continuation.resume(returning: authorizeResult)
-                case .failure(let error):
-                    continuation.resume(throwing: error)
-                }
-            }
-        }
-    }
-
-    /// Authorizes a Link auth intent and retrieves the associated consumer session.
     ///
     /// - Parameter linkAuthIntentId: The Link auth intent ID to authorize.
     /// - Parameter viewController: The view controller from which to present the authorization flow.
