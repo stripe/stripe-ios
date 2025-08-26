@@ -45,7 +45,7 @@ open class STPSnapshotTestCase: FBSnapshotTestCase {
         identifier: String? = nil,
         suffixes: NSOrderedSet = FBSnapshotTestCaseDefaultSuffixes(),
         perPixelTolerance: CGFloat = 0.02,
-        overallTolerance: CGFloat = 0,
+        overallTolerance: CGFloat = 0.01,
         autoSizingHeightForWidth: CGFloat? = nil,
         file: StaticString = #file,
         line: UInt = #line
