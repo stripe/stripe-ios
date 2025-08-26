@@ -332,7 +332,6 @@
 		A3B2F2B82CF1343F00C0E88C /* SavedPaymentMethodFormFactory+USBankAccount.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3B2F2B72CF1343F00C0E88C /* SavedPaymentMethodFormFactory+USBankAccount.swift */; };
 		A3B2F2BA2CF134B500C0E88C /* SavedPaymentMethodFormFactory+SEPADebit.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3B2F2B92CF134B500C0E88C /* SavedPaymentMethodFormFactory+SEPADebit.swift */; };
 		A3BE1C242D4161DC0061632C /* RemoveButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3BE1C232D4161DC0061632C /* RemoveButton.swift */; };
-		A3E0F5F92E407A0400C9E5F7 /* PassiveCaptcha.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3E0F5F82E407A0400C9E5F7 /* PassiveCaptcha.swift */; };
 		A4CD99B2032CBFA7F957B1B8 /* String+AutoComplete.swift in Sources */ = {isa = PBXBuildFile; fileRef = 982014B36F49D902CD04AF5C /* String+AutoComplete.swift */; };
 		A4FF52567582E9774AE13348 /* PaymentDetails.swift in Sources */ = {isa = PBXBuildFile; fileRef = 981F958E99945A0318D47BBF /* PaymentDetails.swift */; };
 		A59432E765A72CEE2C36E0EF /* PaymentSheetFormFactory+Card.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1CF41D601B198DC37337940C /* PaymentSheetFormFactory+Card.swift */; };
@@ -850,7 +849,6 @@
 		A3B2F2B72CF1343F00C0E88C /* SavedPaymentMethodFormFactory+USBankAccount.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SavedPaymentMethodFormFactory+USBankAccount.swift"; sourceTree = "<group>"; };
 		A3B2F2B92CF134B500C0E88C /* SavedPaymentMethodFormFactory+SEPADebit.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SavedPaymentMethodFormFactory+SEPADebit.swift"; sourceTree = "<group>"; };
 		A3BE1C232D4161DC0061632C /* RemoveButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoveButton.swift; sourceTree = "<group>"; };
-		A3E0F5F82E407A0400C9E5F7 /* PassiveCaptcha.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PassiveCaptcha.swift; sourceTree = "<group>"; };
 		A49D0A50ECFA7A4A5FC40878 /* ca-ES */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "ca-ES"; path = "ca-ES.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		A5012364ED0F2EEC6EC2AB52 /* PaymentMethodElementWrapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentMethodElementWrapper.swift; sourceTree = "<group>"; };
 		A5E8DD8761B4C52B143038C4 /* LinkInlineSignupElement.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LinkInlineSignupElement.swift; sourceTree = "<group>"; };
@@ -1079,7 +1077,6 @@
 				2BFA5FA03C7093654EC6926F /* ExternalPaymentMethod.swift */,
 				61D946052D7901B400BFCD0C /* CustomPaymentMethod.swift */,
 				CC3498CF4AEAA8F169616CDF /* STPCardBrandChoice.swift */,
-				A3E0F5F82E407A0400C9E5F7 /* PassiveCaptcha.swift */,
 				5CA2D5E6CAA2990D88F64A4D /* STPElementsSession.swift */,
 				6B31B9B72B9019730064E210 /* ElementsCustomer.swift */,
 				6B31B9B92B90FCE60064E210 /* CustomerSession.swift */,
@@ -2700,7 +2697,6 @@
 				4926B9E22D9C66250049A43E /* ExperimentData.swift in Sources */,
 				EA712D67C03385B9AD80288C /* Appearance+FontScaling.swift in Sources */,
 				B667BF0B2BF2B7C60050EFD8 /* RowButton.swift in Sources */,
-				A3E0F5F92E407A0400C9E5F7 /* PassiveCaptcha.swift in Sources */,
 				BBA94A936D05C7DA2721F557 /* BacsDDMandateView.swift in Sources */,
 				B8A217F26AAEC592B9B0D2E1 /* CardScanButton.swift in Sources */,
 				436A212E364FD78C3745DDA3 /* CardScanningView.swift in Sources */,
