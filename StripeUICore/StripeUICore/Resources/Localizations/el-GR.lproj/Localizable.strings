@@ -1,3 +1,5 @@
+"%1$@ •••• %2$@" = "%1$@ •••• %2$@";
+
 "%@ (optional)" = "%@ (προαιρετικό)";
 
 "(not accepted)" = "(μη αποδεκτή)";
@@ -143,5 +145,7 @@
 "Your payment information will not be saved." = "Τα στοιχεία πληρωμής δε θα αποθηκευτούν.";
 
 "Your postal code is incomplete." = "Ο ταχυδρομικός κώδικάς σας είναι ελλιπής.";
+
+"Your postal code is invalid." = "Ο ταχυδρομικός κώδικάς σας δεν είναι έγκυρος.";
 
 "ZIP" = "Τ.Κ.";

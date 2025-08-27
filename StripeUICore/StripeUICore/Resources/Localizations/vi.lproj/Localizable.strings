@@ -1,3 +1,5 @@
+"%1$@ •••• %2$@" = "%1$@ •••• %2$@";
+
 "%@ (optional)" = "%@ (tùy chọn)";
 
 "(not accepted)" = "(không được chấp nhận)";
@@ -143,5 +145,7 @@
 "Your payment information will not be saved." = "Thông tin thanh toán của bạn sẽ không lưu lại.";
 
 "Your postal code is incomplete." = "Mã bưu điện chưa đầy đủ.";
+
+"Your postal code is invalid." = "Mã bưu điện không hợp lệ.";
 
 "ZIP" = "ZIP";

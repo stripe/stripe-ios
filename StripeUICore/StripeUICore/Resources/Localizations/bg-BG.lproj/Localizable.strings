@@ -1,3 +1,5 @@
+"%1$@ •••• %2$@" = "%1$@••••%2$@";
+
 "%@ (optional)" = "%@ (по желание)";
 
 "(not accepted)" = "(не се приема)";
@@ -143,5 +145,7 @@
 "Your payment information will not be saved." = "Вашата информация за плащане няма да бъде запазена.";
 
 "Your postal code is incomplete." = "Вашият пощенски код е непълен.";
+
+"Your postal code is invalid." = "Вашият пощенски код е невалиден.";
 
 "ZIP" = "п.к.";

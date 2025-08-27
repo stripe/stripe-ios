@@ -1,3 +1,5 @@
+"%1$@ •••• %2$@" = "%1$@ •••• %2$@";
+
 "%@ (optional)" = "%@（可選）";
 
 "(not accepted)" = "（未接受）";
@@ -143,5 +145,7 @@
 "Your payment information will not be saved." = "不會儲存您的付款資訊。";
 
 "Your postal code is incomplete." = "您的郵區編號不完整。";
+
+"Your postal code is invalid." = "您的郵區編號無效。";
 
 "ZIP" = "郵區編號";

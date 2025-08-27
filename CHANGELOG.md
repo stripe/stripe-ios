@@ -1,3 +1,13 @@
+## 24.22.0 2025-08-27
+
+### StripeCryptoOnramp
+* [Added] Additional APIs and improvements to support the development of the React Native StripeCryptoOnramp SDK.
+
+## 24.21.2 2025-08-27
+
+### PaymentSheet
+* [Changed] Updated translations for Link signup opt-in copy
+
 ## 24.21.1 2025-08-26
 
 ### PaymentSheet
