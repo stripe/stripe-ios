@@ -62,7 +62,10 @@ class BottomSheetViewController: UIViewController, BottomSheetPresentable {
         }
         set {
             let maxContentOffset = scrollView.contentSize.height - scrollView.bounds.height
-            let newContentOffset = maxContentOffset * newValue
+            var newContentOffset = maxContentOffset * newValue
+            if LiquidGlassDetector.isEnabled {
+                newContentOffset -= SheetNavigationBar.height
+            }
             scrollView.setContentOffset(CGPoint(x: 0, y: newContentOffset), animated: false)
         }
     }
@@ -334,19 +337,32 @@ class BottomSheetViewController: UIViewController, BottomSheetPresentable {
             navigationBarContainerView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             navigationBarContainerView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
 
-            scrollView.topAnchor.constraint(equalTo: navigationBarContainerView.bottomAnchor),
             scrollView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
             scrollView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
             bottomAnchor,
         ])
+
+        if LiquidGlassDetector.isEnabled {
+            NSLayoutConstraint.activate([
+                // Allow scroll view to extend under the navigation bar for blur effect
+                scrollView.topAnchor.constraint(equalTo: view.topAnchor),
+            ])
+            // Add top content inset so content doesn't get hidden behind the navigation bar
+            scrollView.contentInset.top = SheetNavigationBar.height
+        } else {
+            NSLayoutConstraint.activate([
+                scrollView.topAnchor.constraint(equalTo: navigationBarContainerView.bottomAnchor)
+            ])
+        }
 
         contentContainerView.translatesAutoresizingMaskIntoConstraints = false
         contentContainerView.directionalLayoutMargins = appearance.formInsets
         scrollView.addSubview(contentContainerView)
 
         // Give the scroll view a desired height
-        let scrollViewHeightConstraint = scrollView.heightAnchor.constraint(
-            equalTo: scrollView.contentLayoutGuide.heightAnchor)
+        let constantOffsetForNavigationBar = LiquidGlassDetector.isEnabled ? SheetNavigationBar.height : 0
+        let scrollViewHeightConstraint = scrollView.heightAnchor.constraint(equalTo: scrollView.contentLayoutGuide.heightAnchor,
+                                                                            constant: constantOffsetForNavigationBar)
         scrollViewHeightConstraint.priority = .fittingSizeLevel
         self.scrollViewHeightConstraint = scrollViewHeightConstraint
 
