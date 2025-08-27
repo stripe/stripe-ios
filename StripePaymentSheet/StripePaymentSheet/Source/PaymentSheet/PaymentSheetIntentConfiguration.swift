@@ -34,6 +34,11 @@ public extension PaymentSheet {
             _ shouldSavePaymentMethod: Bool,
             _ intentCreationCallback: @escaping ((Result<String, Error>) -> Void)
         ) -> Void
+        
+        public typealias ConfirmationTokenConfirmHandler = (
+            _ confirmationToken: STPConfirmationToken,
+            _ intentCreationCallback: @escaping ((Result<String, Error>) -> Void)
+        ) -> Void
 
         /// Called when the payment is confirmed in a shared payment token session.
         /// Returns `paymentMethod` and `shippingAddress` info, which can be passed to the backend for confirmation.
@@ -74,6 +79,22 @@ public extension PaymentSheet {
             self.onBehalfOf = onBehalfOf
             self.paymentMethodConfigurationId = paymentMethodConfigurationId
             self.confirmHandler = confirmHandler
+            self.requireCVCRecollection = requireCVCRecollection
+            self.sellerDetails = nil
+            validate()
+        }
+        
+        public init(mode: Mode,
+                    paymentMethodTypes: [String]? = nil,
+                    onBehalfOf: String? = nil,
+                    paymentMethodConfigurationId: String? = nil,
+                    confirmHandler: @escaping ConfirmationTokenConfirmHandler,
+                    requireCVCRecollection: Bool = false) {
+            self.mode = mode
+            self.paymentMethodTypes = paymentMethodTypes
+            self.onBehalfOf = onBehalfOf
+            self.paymentMethodConfigurationId = paymentMethodConfigurationId
+            self.confirmationTokenConfirmHandler = confirmHandler
             self.requireCVCRecollection = requireCVCRecollection
             self.sellerDetails = nil
             validate()
@@ -121,7 +142,9 @@ public extension PaymentSheet {
 
         /// Called when the customer confirms payment.
         /// See the documentation for `ConfirmHandler` for more details.
-        public var confirmHandler: ConfirmHandler
+        public var confirmHandler: ConfirmHandler?
+        
+        public var confirmationTokenConfirmHandler: ConfirmationTokenConfirmHandler?
 
         /// Replacement for confirmHandler in sharedPaymentTokenSession flows. Not publicly available.
         var preparePaymentMethodHandler: PreparePaymentMethodHandler?

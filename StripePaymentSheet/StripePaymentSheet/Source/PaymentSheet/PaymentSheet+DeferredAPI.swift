@@ -23,59 +23,138 @@ extension PaymentSheet {
     ) {
         Task { @MainActor in
             do {
-                var confirmType = confirmType
-                // 1. Create PM if necessary
-                let paymentMethod: STPPaymentMethod
-                switch confirmType {
-                case let .saved(savedPaymentMethod, _):
-                    paymentMethod = savedPaymentMethod
-                case let .new(params, paymentOptions, newPaymentMethod, shouldSave, shouldSetAsDefaultPM):
-                    if let newPaymentMethod {
-                        let errorAnalytic = ErrorAnalytic(event: .unexpectedPaymentSheetConfirmationError,
-                                                          error: PaymentSheetError.unexpectedNewPaymentMethod,
-                                                          additionalNonPIIParams: ["payment_method_type": newPaymentMethod.type])
-                        STPAnalyticsClient.sharedClient.log(analytic: errorAnalytic)
-                    }
-                    stpAssert(newPaymentMethod == nil)
-                    paymentMethod = try await configuration.apiClient.createPaymentMethod(with: params, additionalPaymentUserAgentValues: makeDeferredPaymentUserAgentValue(intentConfiguration: intentConfig))
-                    confirmType = .new(params: params, paymentOptions: paymentOptions, paymentMethod: paymentMethod, shouldSave: shouldSave, shouldSetAsDefaultPM: shouldSetAsDefaultPM)
-                }
-
-                // 2a. If we have a preparePaymentMethodHandler, use the shared payment token session flow
-                if let preparePaymentMethodHandler = intentConfig.preparePaymentMethodHandler {
-                    // For shared payment token sessions, call the preparePaymentMethodHandler and complete successfully
-                    // Note: Shipping address is passed for Apple Pay in STPApplePayContext+PaymentSheet.swift.
-                    // For other payment methods, get shipping address from configuration.
-                    let shippingAddress = configuration.shippingDetails()?.stpAddress
-
-                    // Try to create a radar session for the payment method before calling the handler
-                    configuration.apiClient.createSavedPaymentMethodRadarSession(paymentMethodId: paymentMethod.stripeId) { _, error in
-                        // If radar session creation fails, just continue with the payment method directly
-                        if let error {
-                            // Log the error but don't fail the payment
-                            let errorAnalytic = ErrorAnalytic(event: .savedPaymentMethodRadarSessionFailure, error: error)
-                            STPAnalyticsClient.sharedClient.log(analytic: errorAnalytic, apiClient: configuration.apiClient)
+                var clientSecret: String = ""
+                var paymentMethod: STPPaymentMethod!
+                
+                if let _ = intentConfig.confirmHandler {
+                    var confirmType = confirmType
+                    // 1. Create PM if necessary
+                    switch confirmType {
+                    case let .saved(savedPaymentMethod, _):
+                        paymentMethod = savedPaymentMethod
+                    case let .new(params, paymentOptions, newPaymentMethod, shouldSave, shouldSetAsDefaultPM):
+                        if let newPaymentMethod {
+                            let errorAnalytic = ErrorAnalytic(event: .unexpectedPaymentSheetConfirmationError,
+                                                              error: PaymentSheetError.unexpectedNewPaymentMethod,
+                                                              additionalNonPIIParams: ["payment_method_type": newPaymentMethod.type])
+                            STPAnalyticsClient.sharedClient.log(analytic: errorAnalytic)
                         }
-
-                        // Call the handler regardless of radar session success/failure
-                        preparePaymentMethodHandler(paymentMethod, shippingAddress)
-                        completion(.completed, STPAnalyticsClient.DeferredIntentConfirmationType.completeWithoutConfirmingIntent)
+                        stpAssert(newPaymentMethod == nil)
+                        paymentMethod = try await configuration.apiClient.createPaymentMethod(with: params, additionalPaymentUserAgentValues: makeDeferredPaymentUserAgentValue(intentConfiguration: intentConfig))
+                        confirmType = .new(params: params, paymentOptions: paymentOptions, paymentMethod: paymentMethod, shouldSave: shouldSave, shouldSetAsDefaultPM: shouldSetAsDefaultPM)
                     }
-                    return
-                }
-
-                // 2b. Otherwise, call the standard confirmHandler
-                let shouldSavePaymentMethod: Bool = {
-                    // If `confirmType.shouldSave` is true, that means the customer has decided to save by checking the checkbox.
-                    if confirmType.shouldSave {
-                        return true
+                    
+                    // 2a. If we have a preparePaymentMethodHandler, use the shared payment token session flow
+                    if let preparePaymentMethodHandler = intentConfig.preparePaymentMethodHandler {
+                        // For shared payment token sessions, call the preparePaymentMethodHandler and complete successfully
+                        // Note: Shipping address is passed for Apple Pay in STPApplePayContext+PaymentSheet.swift.
+                        // For other payment methods, get shipping address from configuration.
+                        let shippingAddress = configuration.shippingDetails()?.stpAddress
+                        
+                        // Try to create a radar session for the payment method before calling the handler
+                        configuration.apiClient.createSavedPaymentMethodRadarSession(paymentMethodId: paymentMethod.stripeId) { _, error in
+                            // If radar session creation fails, just continue with the payment method directly
+                            if let error {
+                                // Log the error but don't fail the payment
+                                let errorAnalytic = ErrorAnalytic(event: .savedPaymentMethodRadarSessionFailure, error: error)
+                                STPAnalyticsClient.sharedClient.log(analytic: errorAnalytic, apiClient: configuration.apiClient)
+                            }
+                            
+                            // Call the handler regardless of radar session success/failure
+                            preparePaymentMethodHandler(paymentMethod, shippingAddress)
+                            completion(.completed, STPAnalyticsClient.DeferredIntentConfirmationType.completeWithoutConfirmingIntent)
+                        }
+                        return
                     }
-                    // Otherwise, set shouldSavePaymentMethod according to the IntentConfiguration SFU/PMO SFU values
-                    return getShouldSavePaymentMethodValue(for: paymentMethod.type, intentConfiguration: intentConfig)
-                }()
-                let clientSecret = try await fetchIntentClientSecretFromMerchant(intentConfig: intentConfig,
+                    
+                    // 2b. Otherwise, call the standard confirmHandler
+                    let shouldSavePaymentMethod: Bool = {
+                        // If `confirmType.shouldSave` is true, that means the customer has decided to save by checking the checkbox.
+                        if confirmType.shouldSave {
+                            return true
+                        }
+                        // Otherwise, set shouldSavePaymentMethod according to the IntentConfiguration SFU/PMO SFU values
+                        return getShouldSavePaymentMethodValue(for: paymentMethod.type, intentConfiguration: intentConfig)
+                    }()
+                    clientSecret = try await fetchIntentClientSecretFromMerchant(intentConfig: intentConfig,
                                                                                  paymentMethod: paymentMethod,
                                                                                  shouldSavePaymentMethod: shouldSavePaymentMethod)
+                } else if let _ = intentConfig.confirmationTokenConfirmHandler {
+                    // 1. Create confirmation token parameters based on payment method type
+                    let confirmationTokenParams: STPConfirmationTokenParams
+                    
+                    switch confirmType {
+                    case let .saved(savedPaymentMethod, _):
+                        // For saved payment methods, reference the existing payment method by ID
+                        confirmationTokenParams = STPConfirmationTokenParams()
+                        confirmationTokenParams.paymentMethod = savedPaymentMethod.stripeId
+                        paymentMethod = savedPaymentMethod
+                        
+                    case let .new(params, _, newPaymentMethod, _, _):
+                        // For new payment methods, create payment method data from params
+                        if let newPaymentMethod {
+                            let errorAnalytic = ErrorAnalytic(event: .unexpectedPaymentSheetConfirmationError,
+                                                              error: PaymentSheetError.unexpectedNewPaymentMethod,
+                                                              additionalNonPIIParams: ["payment_method_type": newPaymentMethod.type])
+                            STPAnalyticsClient.sharedClient.log(analytic: errorAnalytic)
+                        }
+                        stpAssert(newPaymentMethod == nil)
+                        
+                        // Create payment method first to get the payment method object for later use
+                        paymentMethod = try await configuration.apiClient.createPaymentMethod(with: params, additionalPaymentUserAgentValues: makeDeferredPaymentUserAgentValue(intentConfiguration: intentConfig))
+                        
+                        // Create confirmation token params with payment method data
+                        let paymentMethodData = STPConfirmationTokenPaymentMethodData(from: params)
+                        confirmationTokenParams = STPConfirmationTokenParams(paymentMethodData: paymentMethodData)
+                    }
+                    
+                    // 2. Configure additional confirmation token parameters
+                    // Set return URL
+//                    confirmationTokenParams.returnURL = configuration.returnURL
+                    
+                    // Set shipping details from configuration
+                    if let shippingDetails = STPPaymentIntentShippingDetailsParams(paymentSheetConfiguration: configuration) {
+                        confirmationTokenParams.shipping = shippingDetails
+                    }
+                    
+                    // Set setup future usage based on intent configuration
+                    let shouldSavePaymentMethod: Bool = {
+                        // If `confirmType.shouldSave` is true, that means the customer has decided to save by checking the checkbox.
+                        if confirmType.shouldSave {
+                            return true
+                        }
+                        // Otherwise, set shouldSavePaymentMethod according to the IntentConfiguration SFU/PMO SFU values
+                        return getShouldSavePaymentMethodValue(for: paymentMethod.type, intentConfiguration: intentConfig)
+                    }()
+                    
+                    // Set setup future usage based on the intent configuration mode
+                    switch intentConfig.mode {
+                    case let .payment(_, _, setupFutureUsage, _, _):
+                        if shouldSavePaymentMethod {
+                            // Use the setup future usage from intent config if available, otherwise default to offSession
+                            confirmationTokenParams.setupFutureUsage = setupFutureUsage?.paymentIntentParamsValue ?? .offSession
+                        }
+                    case let .setup(_, setupFutureUsage):
+                        // For setup intents, use the setup future usage from the intent config
+                        confirmationTokenParams.setupFutureUsage = setupFutureUsage.paymentIntentParamsValue
+                    }
+                    
+                    
+                    // 3. Create confirmation token via API
+                    let confirmationToken = try await configuration.apiClient.createConfirmationToken(
+                        with: confirmationTokenParams,
+                        additionalPaymentUserAgentValues: makeDeferredPaymentUserAgentValue(intentConfiguration: intentConfig)
+                    )
+                    
+                    // 4. Call merchant's confirmation handler to get client secret
+                    clientSecret = try await fetchIntentClientSecretFromMerchant(
+                        intentConfig: intentConfig,
+                        confirmationToken: confirmationToken
+                    )
+                }
+                
+                
+                // Keep the same
                 guard clientSecret != IntentConfiguration.COMPLETE_WITHOUT_CONFIRMING_INTENT else {
                     // Force close PaymentSheet and early exit
                     completion(.completed, STPAnalyticsClient.DeferredIntentConfirmationType.completeWithoutConfirmingIntent)
@@ -164,7 +243,7 @@ extension PaymentSheet {
 
     // MARK: - Helper methods
 
-    /// Convenience method that converts a STPPayymentHandlerActionStatus + error into a PaymentSheetResult
+    /// Convenience method that converts a STPPaymentHandlerActionStatus + error into a PaymentSheetResult
     static func makePaymentSheetResult(for status: STPPaymentHandlerActionStatus, error: Error?) -> PaymentSheetResult {
         switch status {
         case .succeeded:
@@ -186,7 +265,20 @@ extension PaymentSheet {
     ) async throws -> String {
         try await withCheckedThrowingContinuation { continuation in
             Task { @MainActor in
-                intentConfig.confirmHandler(paymentMethod, shouldSavePaymentMethod) { result in
+                intentConfig.confirmHandler?(paymentMethod, shouldSavePaymentMethod) { result in
+                    continuation.resume(with: result)
+                }
+            }
+        }
+    }
+    
+    static func fetchIntentClientSecretFromMerchant(
+        intentConfig: IntentConfiguration,
+        confirmationToken: STPConfirmationToken
+    ) async throws -> String {
+        try await withCheckedThrowingContinuation { continuation in
+            Task { @MainActor in
+                intentConfig.confirmationTokenConfirmHandler?(confirmationToken) { result in
                     continuation.resume(with: result)
                 }
             }

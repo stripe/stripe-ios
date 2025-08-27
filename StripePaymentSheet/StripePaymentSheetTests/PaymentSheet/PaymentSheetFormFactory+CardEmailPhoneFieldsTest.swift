@@ -2,7 +2,7 @@
 //  PaymentSheetFormFactory+CardEmailPhoneFieldsTest.swift
 //  StripePaymentSheetTests
 //
-//  Created by Claude Code on 8/5/25.
+//  Created by Nick Porter on 8/5/25.
 //
 
 import XCTest

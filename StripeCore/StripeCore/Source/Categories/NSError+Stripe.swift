@@ -93,6 +93,42 @@ extension NSError {
         )
     }
 
+    @objc @_spi(STP) public class func stp_confirmationTokenMissingPaymentMethodDataError() -> NSError {
+        let userInfo = [
+            NSLocalizedDescriptionKey: "Payment method data is required for ConfirmationToken creation.",
+            STPError.errorMessageKey: "Payment method data cannot be nil when creating a ConfirmationToken.",
+        ]
+        return NSError(
+            domain: STPError.stripeDomain,
+            code: STPErrorCode.invalidRequestError.rawValue,
+            userInfo: userInfo
+        )
+    }
+
+    @objc @_spi(STP) public class func stp_confirmationTokenUnsupportedPaymentMethodTypeError() -> NSError {
+        let userInfo = [
+            NSLocalizedDescriptionKey: "The payment method type is not supported for ConfirmationToken creation.",
+            STPError.errorMessageKey: "Only supported payment method types can be used when creating a ConfirmationToken.",
+        ]
+        return NSError(
+            domain: STPError.stripeDomain,
+            code: STPErrorCode.invalidRequestError.rawValue,
+            userInfo: userInfo
+        )
+    }
+
+    @objc @_spi(STP) public class func stp_confirmationTokenInvalidReturnURLError() -> NSError {
+        let userInfo = [
+            NSLocalizedDescriptionKey: "The return URL format is invalid.",
+            STPError.errorMessageKey: "The return URL must be a valid URL string.",
+        ]
+        return NSError(
+            domain: STPError.stripeDomain,
+            code: STPErrorCode.invalidRequestError.rawValue,
+            userInfo: userInfo
+        )
+    }
+
     // TODO(davide): We'll want to move these into StripePayments, once it exists.
 
     // MARK: Strings

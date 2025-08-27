@@ -394,8 +394,12 @@ class PlaygroundController: ObservableObject {
         if settings.apmsEnabled == .off {
             paymentMethodTypes = self.paymentMethodTypes
         }
-        let confirmHandler: PaymentSheet.IntentConfiguration.ConfirmHandler = { [weak self] in
-            self?.confirmHandler($0, $1, $2)
+//        let confirmHandler: PaymentSheet.IntentConfiguration.ConfirmHandler = { [weak self] in
+//            self?.confirmHandler($0, $1, $2)
+//        }
+        
+        let confirmationTokenConfirmHandler: PaymentSheet.IntentConfiguration.ConfirmationTokenConfirmHandler = { [weak self] token, callback in
+            self?.confirmHandler(token, false, callback)
         }
 
         switch settings.mode {
@@ -404,7 +408,7 @@ class PlaygroundController: ObservableObject {
                 mode: .payment(amount: settings.amount.rawValue, currency: settings.currency.rawValue, setupFutureUsage: nil, paymentMethodOptions: settings.paymentMethodOptionsSetupFutureUsage.makePaymentMethodOptions()),
                 paymentMethodTypes: paymentMethodTypes,
                 paymentMethodConfigurationId: settings.paymentMethodConfigurationId,
-                confirmHandler: confirmHandler,
+                confirmHandler: confirmationTokenConfirmHandler,
                 requireCVCRecollection: settings.requireCVCRecollection == .on
             )
         case .paymentWithSetup:
@@ -412,7 +416,7 @@ class PlaygroundController: ObservableObject {
                 mode: .payment(amount: settings.amount.rawValue, currency: settings.currency.rawValue, setupFutureUsage: .offSession, paymentMethodOptions: settings.paymentMethodOptionsSetupFutureUsage.makePaymentMethodOptions()),
                 paymentMethodTypes: paymentMethodTypes,
                 paymentMethodConfigurationId: settings.paymentMethodConfigurationId,
-                confirmHandler: confirmHandler,
+                confirmHandler: confirmationTokenConfirmHandler,
                 requireCVCRecollection: settings.requireCVCRecollection == .on
             )
         case .setup:
@@ -420,7 +424,7 @@ class PlaygroundController: ObservableObject {
                 mode: .setup(currency: settings.currency.rawValue, setupFutureUsage: .offSession),
                 paymentMethodTypes: paymentMethodTypes,
                 paymentMethodConfigurationId: settings.paymentMethodConfigurationId,
-                confirmHandler: confirmHandler
+                confirmHandler: confirmationTokenConfirmHandler
             )
         }
     }
@@ -957,13 +961,13 @@ extension PlaygroundController {
     }
 
     // Deferred confirmation handler
-    func confirmHandler(_ paymentMethod: STPPaymentMethod,
+    func confirmHandler(_ paymentMethod: STPConfirmationToken,
                         _ shouldSavePaymentMethod: Bool,
                         _ intentCreationCallback: @escaping (Result<String, Error>) -> Void) {
         // Sanity check the payment method
-        if paymentMethod.type == .card {
-            assert(paymentMethod.card != nil)
-        }
+//        if paymentMethod.type == .card {
+//            assert(paymentMethod.card != nil)
+//        }
 
         switch settings.integrationType {
         case .deferred_mp:

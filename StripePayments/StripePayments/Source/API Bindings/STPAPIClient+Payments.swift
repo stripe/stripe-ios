@@ -939,6 +939,97 @@ extension STPAPIClient {
     }
 }
 
+// MARK: Confirmation Tokens
+
+/// STPAPIClient extensions for working with ConfirmationToken objects.
+extension STPAPIClient {
+    /// Creates a ConfirmationToken object with the provided params object.
+    /// - seealso: https://stripe.com/docs/api/confirmation_tokens/create
+    /// - Parameters:
+    ///   - confirmationTokenParams:  The `STPConfirmationTokenParams` to pass to `/v1/confirmation_tokens`.  Cannot be nil.
+    ///   - completion:               The callback to run with the returned ConfirmationToken object, or an error.
+    @objc(createConfirmationTokenWithParams:completion:)
+    public func createConfirmationToken(
+        with confirmationTokenParams: STPConfirmationTokenParams,
+        completion: @escaping STPConfirmationTokenCompletionBlock
+    ) {
+        createConfirmationToken(with: confirmationTokenParams, additionalPaymentUserAgentValues: [], overridePublishableKey: nil, completion: completion)
+    }
+
+    /// - Parameter additionalPaymentUserAgentValues: A list of values to append to the `payment_user_agent` parameter sent in the request. e.g. `["deferred-intent", "autopm"]` will append "; deferred-intent; autopm" to the `payment_user_agent`.
+    /// - Parameter overridePublishableKey: Optional publishable key to use for this request instead of the default key.
+    func createConfirmationToken(
+        with confirmationTokenParams: STPConfirmationTokenParams,
+        additionalPaymentUserAgentValues: [String] = [],
+        overridePublishableKey: String? = nil,
+        completion: @escaping STPConfirmationTokenCompletionBlock
+    ) {
+        STPAnalyticsClient.sharedClient.logConfirmationTokenCreationAttempt(
+            with: _stored_configuration
+        )
+        var parameters = STPFormEncoder.dictionary(forObject: confirmationTokenParams)
+        if var paymentMethodParamsDict = parameters[PaymentMethodDataHash] as? [String: Any] {
+            STPTelemetryClient.shared.addTelemetryFields(toParams: &paymentMethodParamsDict)
+            paymentMethodParamsDict = Self.paramsAddingPaymentUserAgent(paymentMethodParamsDict)
+            parameters[PaymentMethodDataHash] = paymentMethodParamsDict
+        }
+        let additionalHeaders = overridePublishableKey != nil
+            ? authorizationHeader(using: overridePublishableKey)
+            : [:]
+
+        APIRequest<STPConfirmationToken>.post(
+            with: self,
+            endpoint: APIEndpointConfirmationTokens,
+            additionalHeaders: additionalHeaders,
+            parameters: parameters
+        ) { confirmationToken, _, error in
+            completion(confirmationToken, error)
+        }
+    }
+
+    /// Creates a ConfirmationToken object with the provided params object.
+    /// - seealso: https://stripe.com/docs/api/confirmation_tokens/create
+    /// - Parameters:
+    ///   - confirmationTokenParams: The `STPConfirmationTokenParams` to pass to `/v1/confirmation_tokens`.  Cannot be nil.
+    ///   - additionalPaymentUserAgentValues: A list of values to append to the `payment_user_agent` parameter sent in the request. e.g. `["deferred-intent", "autopm"]` will append "; deferred-intent; autopm" to the `payment_user_agent`.
+    /// - Returns: the returned ConfirmationToken object.
+    public func createConfirmationToken(with confirmationTokenParams: STPConfirmationTokenParams, additionalPaymentUserAgentValues: [String]) async throws -> STPConfirmationToken {
+        return try await createConfirmationToken(
+            with: confirmationTokenParams,
+            additionalPaymentUserAgentValues: additionalPaymentUserAgentValues,
+            overridePublishableKey: nil
+        )
+    }
+
+    /// Creates a ConfirmationToken object with the provided params object and optional override publishable key.
+    /// - seealso: https://stripe.com/docs/api/confirmation_tokens/create
+    /// - Parameters:
+    ///   - confirmationTokenParams: The `STPConfirmationTokenParams` to pass to `/v1/confirmation_tokens`.  Cannot be nil.
+    ///   - additionalPaymentUserAgentValues: A list of values to append to the `payment_user_agent` parameter sent in the request. e.g. `["deferred-intent", "autopm"]` will append "; deferred-intent; autopm" to the `payment_user_agent`.
+    ///   - overridePublishableKey: Optional publishable key to use for this request instead of the default key.
+    /// - Returns: the returned ConfirmationToken object.
+    @_spi(STP) public func createConfirmationToken(
+        with confirmationTokenParams: STPConfirmationTokenParams,
+        additionalPaymentUserAgentValues: [String] = [],
+        overridePublishableKey: String? = nil
+    ) async throws -> STPConfirmationToken {
+        return try await withCheckedThrowingContinuation { continuation in
+            createConfirmationToken(
+                with: confirmationTokenParams,
+                additionalPaymentUserAgentValues: additionalPaymentUserAgentValues,
+                overridePublishableKey: overridePublishableKey
+            ) { confirmationToken, error in
+                if let confirmationToken = confirmationToken {
+                    continuation.resume(with: .success(confirmationToken))
+                } else {
+                    continuation.resume(with: .failure(error ?? NSError.stp_genericFailedToParseResponseError()))
+                }
+            }
+        }
+    }
+
+}
+
 // MARK: - ThreeDS2
 extension STPAPIClient {
     /// Kicks off 3DS2 authentication.
@@ -1499,6 +1590,7 @@ private let APIEndpointSources = "sources"
 private let APIEndpointPaymentIntents = "payment_intents"
 private let APIEndpointSetupIntents = "setup_intents"
 @_spi(STP) public let APIEndpointPaymentMethods = "payment_methods"
+private let APIEndpointConfirmationTokens = "confirmation_tokens"
 private let APIEndpointElementsCustomers = "elements/customers"
 private let APIEndpointElementsPaymentMethods = "elements/payment_methods"
 private let APIEndpoint3DS2 = "3ds2"

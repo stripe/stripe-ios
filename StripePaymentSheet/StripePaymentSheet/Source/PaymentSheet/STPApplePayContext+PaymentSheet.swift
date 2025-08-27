@@ -89,9 +89,10 @@ private class ApplePayContextClosureDelegate: NSObject, ApplePayContextDelegate 
                 return
             }
 
+            // TODO(porter) Confirmation token apple pay
             // Regular deferred intent flow
             let shouldSavePaymentMethod = false // Apple Pay doesn't present the customer the choice to choose to save their payment method
-            intentConfig.confirmHandler(stpPaymentMethod, shouldSavePaymentMethod) { result in
+            intentConfig.confirmHandler?(stpPaymentMethod, shouldSavePaymentMethod) { result in
                 switch result {
                 case .success(let clientSecret):
                     guard clientSecret != PaymentSheet.IntentConfiguration.COMPLETE_WITHOUT_CONFIRMING_INTENT else {

@@ -67,6 +67,11 @@ public typealias STPPaymentMethodCompletionBlock = (STPPaymentMethod?, Error?) -
 ///   - paymentMethods: An array of PaymentMethod from the response. Will be nil if an error occurs. - seealso: STPPaymentMethod
 ///   - error: The error returned from the response, or nil if none occurs. - seealso: StripeError.h for possible values.
 public typealias STPPaymentMethodsCompletionBlock = ([STPPaymentMethod]?, Error?) -> Void
+/// A callback to be run with a ConfirmationToken response from the Stripe API.
+/// - Parameters:
+///   - confirmationToken: The Stripe ConfirmationToken from the response. Will be nil if an error occurs. - seealso: STPConfirmationToken
+///   - error: The error returned from the response, or nil if none occurs. - seealso: StripeError.h for possible values.
+public typealias STPConfirmationTokenCompletionBlock = (STPConfirmationToken?, Error?) -> Void
 
 /// A callback to be run with a file response from the Stripe API.
 /// - Parameters:
@@ -90,9 +95,9 @@ public typealias STPCustomerCompletionBlock = (STPCustomer?, Error?) -> Void
     case errorVerificationExpired
     /// The verification object has been attempted too many times
     case errorVerificationTooManyAttempts
-    /// An error occured while retrieving the ephemeral key
+    /// An error occurred while retrieving the ephemeral key
     case ephemeralKeyError
-    /// An unknown error occured
+    /// An unknown error occurred
     case unknownError
 }
 
@@ -115,7 +120,7 @@ public typealias STPPaymentStatusBlock = (STPPaymentStatus, Error?) -> Void
 ///
 /// - Parameters:
 ///    - radarSession: The RadarSession object.
-///    - error: The error that occured, if any.
+///    - error: The error that occurred, if any.
 public typealias STPRadarSessionCompletionBlock = (STPRadarSession?, Error?) -> Void
 
 /// An empty block, called with no arguments, returning nothing.
