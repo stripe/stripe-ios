@@ -229,11 +229,11 @@ class SheetNavigationBar: UIView {
         button.tintColor = appearance.colors.icon
         button.accessibilityLabel = String.Localized.back
         button.accessibilityIdentifier = "UIButton.Back"
+        #if compiler(>=6.2)
         if LiquidGlassDetector.isEnabled {
-            if #available(iOS 26.0, *) {
-                button.configuration = .glass()
-            }
+            button.configuration = .glass()
         }
+        #endif
         return button
     }
 
@@ -243,11 +243,11 @@ class SheetNavigationBar: UIView {
         button.tintColor = appearance.colors.icon
         button.accessibilityLabel = String.Localized.close
         button.accessibilityIdentifier = "UIButton.Close"
+        #if compiler(>=6.2)
         if LiquidGlassDetector.isEnabled {
-            if #available(iOS 26.0, *) {
-                button.configuration = .glass()
-            }
+            button.configuration = .glass()
         }
+        #endif
         return button
     }
 }
@@ -287,10 +287,10 @@ extension UIButton {
         titleLabel?.textAlignment = .right
         titleLabel?.font = appearance.scaledFont(for: appearance.font.base.medium, size: 14, maximumPointSize: 22)
         accessibilityIdentifier = "edit_saved_button"
+        #if compiler(>=6.2)
         if LiquidGlassDetector.isEnabled {
-            if #available(iOS 26.0, *) {
-                configuration = .glass()
-            }
+            configuration = .glass()
         }
+        #endif
     }
 }
