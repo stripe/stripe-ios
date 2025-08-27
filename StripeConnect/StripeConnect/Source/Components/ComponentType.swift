@@ -17,4 +17,5 @@ enum ComponentType: String, Encodable {
     /// Show details of a given payment and allow users to manage disputes and perform refunds.
     case paymentDetails = "payment-details"
     case notificationBanner = "notification-banner"
+    case scanCheck = "stripe-connect-scan-check"
 }

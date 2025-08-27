@@ -156,6 +156,13 @@ public final class EmbeddedComponentManager {
               loadContent: shouldLoadContent,
               analyticsClientFactory: analyticsClientFactory)
     }
+    
+    @_spi(DashboardOnly)
+    public func createScanCheckViewController() -> ScanCheckViewController {
+        .init(componentManager: self,
+              loadContent: shouldLoadContent,
+              analyticsClientFactory: analyticsClientFactory)
+    }
 
     /// Used to keep reference of all web views associated with this component manager.
     /// - Parameters:
