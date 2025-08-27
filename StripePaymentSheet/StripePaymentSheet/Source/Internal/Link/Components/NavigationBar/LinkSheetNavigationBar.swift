@@ -97,8 +97,18 @@ class LinkSheetNavigationBar: SheetNavigationBar {
     }
 
     override func createBackButton() -> UIButton {
-        let image = Image.icon_x_standalone.makeImage(template: true)
-        let resizedImage = Image.icon_chevron_left_standalone.makeImage(template: true).resized(to: CGSize(width: LinkUI.navigationBarButtonContentSize, height: LinkUI.navigationBarButtonContentSize))
+        let image = Image.icon_chevron_left_standalone.makeImage(template: true)
+        var resizedImage: UIImage?
+
+        if !LiquidGlassDetector.isEnabled {
+            resizedImage = image.resized(
+                to: CGSize(
+                    width: LinkUI.navigationBarButtonContentSize,
+                    height: LinkUI.navigationBarButtonContentSize
+                )
+            )
+        }
+
         return Self.createButton(
             with: resizedImage ?? image,
             accessibilityLabel: String.Localized.back,
@@ -119,7 +129,17 @@ class LinkSheetNavigationBar: SheetNavigationBar {
         appearance: PaymentSheet.Appearance
     ) -> UIButton {
         let image = Image.icon_x_standalone.makeImage(template: true)
-        let resizedImage = Image.icon_x_standalone.makeImage(template: true).resized(to: CGSize(width: LinkUI.navigationBarButtonContentSize, height: LinkUI.navigationBarButtonContentSize))
+        var resizedImage: UIImage?
+
+        if !LiquidGlassDetector.isEnabled {
+            resizedImage = image.resized(
+                to: CGSize(
+                    width: LinkUI.navigationBarButtonContentSize,
+                    height: LinkUI.navigationBarButtonContentSize
+                )
+            )
+        }
+
         return createButton(
             with: resizedImage ?? image,
             accessibilityLabel: String.Localized.close,
@@ -137,6 +157,10 @@ class LinkSheetNavigationBar: SheetNavigationBar {
         let button = SheetNavigationButton(type: .custom)
         let size = LinkUI.navigationBarButtonSize
 
+        if #available(iOS 26.0, *), LiquidGlassDetector.isEnabled {
+            button.configuration = .glass()
+        }
+
         // Create circular background
         button.backgroundColor = .linkSurfaceSecondary
         button.layer.cornerRadius = size / 2
@@ -149,10 +173,13 @@ class LinkSheetNavigationBar: SheetNavigationBar {
 
         // Constrain the button size
         button.translatesAutoresizingMaskIntoConstraints = false
-        NSLayoutConstraint.activate([
-            button.widthAnchor.constraint(equalToConstant: size),
-            button.heightAnchor.constraint(equalToConstant: size),
-        ])
+
+        if !LiquidGlassDetector.isEnabled {
+            NSLayoutConstraint.activate([
+                button.widthAnchor.constraint(equalToConstant: size),
+                button.heightAnchor.constraint(equalToConstant: size),
+            ])
+        }
 
         return button
     }

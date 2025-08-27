@@ -123,6 +123,9 @@ final class LinkSignUpViewController: UIViewController {
         button.addTarget(self, action: #selector(didTapSignUpButton(_:)), for: .touchUpInside)
         button.adjustsFontForContentSizeCategory = true
         button.isEnabled = false
+        if #available(iOS 26.0, *), LiquidGlassDetector.isEnabled {
+            button.cornerConfiguration = .capsule()
+        }
         return button
     }()
 

@@ -25,9 +25,11 @@ enum LinkUI {
 
     // MARK: - Corner radii
 
-    static let largeCornerRadius: CGFloat = 24
+    static let largeCornerRadius: CGFloat = LiquidGlassDetector.isEnabled ? 34 : 24
 
-    static let cornerRadius: CGFloat = 12
+    static let slightlyLargerCornerRadius: CGFloat = LiquidGlassDetector.isEnabled ? 26 : 16
+
+    static let cornerRadius: CGFloat = LiquidGlassDetector.isEnabled ? 16 : 12
 
     static let mediumCornerRadius: CGFloat = 8
 
@@ -86,7 +88,7 @@ enum LinkUI {
 
     static let navigationBarHeight: CGFloat = 70
 
-    static let navigationBarButtonSize: CGFloat = 32
+    static let navigationBarButtonSize: CGFloat = LiquidGlassDetector.isEnabled ? 48 : 32
 
     static let navigationBarButtonContentSize: CGFloat = 12
 
@@ -200,7 +202,7 @@ extension LinkUI {
 
     static let appearance: PaymentSheet.Appearance = {
         var appearance = PaymentSheet.Appearance.default
-        appearance.cornerRadius = LinkUI.cornerRadius
+        appearance.cornerRadius = LinkUI.slightlyLargerCornerRadius
         appearance.colors.primary = .linkBorderSelected
         appearance.colors.background = .linkSurfacePrimary
 
