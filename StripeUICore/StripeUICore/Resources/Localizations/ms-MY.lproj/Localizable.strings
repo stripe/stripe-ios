@@ -1,3 +1,5 @@
+"%1$@ •••• %2$@" = "%1$@ •••• %2$@";
+
 "%@ (optional)" = "%@ (opsyenal)";
 
 "(not accepted)" = "(tidak diterima)";
@@ -143,5 +145,7 @@
 "Your payment information will not be saved." = "Maklumat pembayaran anda tidak akan disimpan.";
 
 "Your postal code is incomplete." = "Poskod anda tidak lengkap.";
+
+"Your postal code is invalid." = "Poskod anda tidak sah.";
 
 "ZIP" = "ZIP";

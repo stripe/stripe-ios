@@ -49,9 +49,9 @@
 		0BF41E8B2E3AB84800CA4171 /* IdType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BF41E8A2E3AB84800CA4171 /* IdType.swift */; };
 		490D4AAE2E552D6F00FAF4FF /* PlatformSettingsResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4907AF502E54B80000F0C49D /* PlatformSettingsResponse.swift */; };
 		490D4AC72E5541A600FAF4FF /* CreatePaymentTokenRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 490D4AC62E5541A600FAF4FF /* CreatePaymentTokenRequest.swift */; };
+		49A11F432E5A295B002ECED5 /* AuthorizeResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49A11F422E5A295B002ECED5 /* AuthorizeResult.swift */; };
 		49B34BBB2E5D0ACC0067E44F /* Image.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49B34BBA2E5D0ACC0067E44F /* Image.swift */; };
 		49B7F6882E57988D0053C83B /* OnrampSessionResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49B7F6872E57988D0053C83B /* OnrampSessionResponse.swift */; };
-		49A11F432E5A295B002ECED5 /* AuthorizeResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49A11F422E5A295B002ECED5 /* AuthorizeResult.swift */; };
 		49D233A82E439EB900F51263 /* CryptoNetwork.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49D233A72E439EB900F51263 /* CryptoNetwork.swift */; };
 		49D233AA2E439FAA00F51263 /* RegisterWalletRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49D233A92E439FAA00F51263 /* RegisterWalletRequest.swift */; };
 		49D233AC2E439FB200F51263 /* RegisterWalletResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49D233AB2E439FB200F51263 /* RegisterWalletResponse.swift */; };
@@ -127,9 +127,9 @@
 		0BF41E8A2E3AB84800CA4171 /* IdType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IdType.swift; sourceTree = "<group>"; };
 		4907AF502E54B80000F0C49D /* PlatformSettingsResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlatformSettingsResponse.swift; sourceTree = "<group>"; };
 		490D4AC62E5541A600FAF4FF /* CreatePaymentTokenRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreatePaymentTokenRequest.swift; sourceTree = "<group>"; };
+		49A11F422E5A295B002ECED5 /* AuthorizeResult.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthorizeResult.swift; sourceTree = "<group>"; };
 		49B34BBA2E5D0ACC0067E44F /* Image.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Image.swift; sourceTree = "<group>"; };
 		49B7F6872E57988D0053C83B /* OnrampSessionResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnrampSessionResponse.swift; sourceTree = "<group>"; };
-		49A11F422E5A295B002ECED5 /* AuthorizeResult.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthorizeResult.swift; sourceTree = "<group>"; };
 		49D233A72E439EB900F51263 /* CryptoNetwork.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CryptoNetwork.swift; sourceTree = "<group>"; };
 		49D233A92E439FAA00F51263 /* RegisterWalletRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegisterWalletRequest.swift; sourceTree = "<group>"; };
 		49D233AB2E439FB200F51263 /* RegisterWalletResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegisterWalletResponse.swift; sourceTree = "<group>"; };
@@ -438,6 +438,9 @@
 				th,
 				fil,
 				vi,
+				it,
+				"fr-CA",
+				"pt-BR",
 			);
 			mainGroup = 0B42927B2E1EC57600012FB8;
 			minimizedProjectReferenceProxies = 1;
