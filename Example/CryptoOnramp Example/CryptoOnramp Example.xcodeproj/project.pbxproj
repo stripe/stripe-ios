@@ -72,7 +72,6 @@
 		0BA5FE322E32A11600D44BFE /* CryptoOnramp Example.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "CryptoOnramp Example.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		0BA5FE412E32AB9E00D44BFE /* StripeCryptoOnramp.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = StripeCryptoOnramp.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		0BA5FE452E32AD5100D44BFE /* StripeCore.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = StripeCore.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		49C234032E5E94710090CD60 /* CryptoOnrampExample.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = CryptoOnrampExample.entitlements; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -107,7 +106,6 @@
 			children = (
 				0BA5FE342E32A11600D44BFE /* CryptoOnramp Example */,
 				0BA5FE402E32AB9E00D44BFE /* Frameworks */,
-				49C234032E5E94710090CD60 /* CryptoOnrampExample.entitlements */,
 				0BA5FE332E32A11600D44BFE /* Products */,
 			);
 			sourceTree = "<group>";
@@ -344,6 +342,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = "CryptoOnramp Example/CryptoOnramp Example.entitlements";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = Y28TH9SHX7;
@@ -374,6 +373,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = "CryptoOnramp Example/CryptoOnramp Example.entitlements";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = Y28TH9SHX7;
