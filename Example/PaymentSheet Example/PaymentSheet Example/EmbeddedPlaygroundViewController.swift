@@ -117,13 +117,17 @@ class EmbeddedPlaygroundViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         observePlaygroundController()
-        self.view.backgroundColor = UIColor(dynamicProvider: { traitCollection in
-            if traitCollection.userInterfaceStyle == .dark {
-                return .secondarySystemBackground
-            }
-
-            return .systemBackground
-        })
+        if LiquidGlassDetector.isEnabled {
+            let appearace = PaymentSheet.Appearance()
+            self.view.backgroundColor = appearace.colors.background
+        } else {
+            self.view.backgroundColor = UIColor(dynamicProvider: { traitCollection in
+                if traitCollection.userInterfaceStyle == .dark {
+                    return .secondarySystemBackground
+                }
+                return .systemBackground
+            })
+        }
 
         setupLoadingIndicator()
         loadingIndicator.startAnimating()

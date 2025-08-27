@@ -9,13 +9,22 @@ import Foundation
 @_spi(STP) import StripeUICore
 import UIKit
 
+protocol SelectableRectangle: UIView {
+    var isSelected: Bool { get set }
+}
+
 /// A `RowButton` subclass that presents floating button style.
 final class RowButtonFloating: RowButton {
     // MARK: - Subviews
 
     /// The shadow view that manages corner radius and shadows and selection border
-    private lazy var shadowRoundedRect: ShadowedRoundedRectangle = {
-        ShadowedRoundedRectangle(appearance: appearance)
+    private lazy var selectableRectangle: SelectableRectangle = {
+        if #available(iOS 26.0, *),
+           LiquidGlassDetector.isEnabled {
+            return CapsuleRectangle(appearance: appearance)
+        } else {
+            return ShadowedRoundedRectangle(appearance: appearance)
+        }
     }()
     /// The vertical top and bottom padding to be used. Floating uses different values for insets based on if it is used in embedded or vertical mode
     private var insets: CGFloat {
@@ -28,7 +37,7 @@ final class RowButtonFloating: RowButton {
 
     override func updateSelectedState() {
         super.updateSelectedState()
-        shadowRoundedRect.isSelected = isSelected
+        selectableRectangle.isSelected = isSelected
     }
 
     private lazy var arrangedLabelAndSubLabel: UIView = {
@@ -68,7 +77,7 @@ final class RowButtonFloating: RowButton {
     }()
 
     override func setupUI() {
-        addAndPinSubview(shadowRoundedRect)
+        addAndPinSubview(selectableRectangle)
 
         let horizontalStackView = UIStackView(arrangedSubviews: [arrangedLabelAndSubLabel,
                                                                  defaultBadgeLabel,
@@ -91,7 +100,7 @@ final class RowButtonFloating: RowButton {
         let imageViewBottomConstraint = imageView.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -14)
         imageViewBottomConstraint.priority = .defaultLow
 
-        let imageViewLeadingConstant = isEmbedded ? appearance.embeddedPaymentElement.row.paymentMethodIconLayoutMargins.leading : 12
+        let imageViewLeadingConstant = imageViewLeadingConstant()
         let imageViewTrailingConstant = isEmbedded ? appearance.embeddedPaymentElement.row.paymentMethodIconLayoutMargins.trailing : 12
 
         NSLayoutConstraint.activate([
@@ -113,10 +122,33 @@ final class RowButtonFloating: RowButton {
             horizontalStackView.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -insets),
         ])
     }
+    func imageViewLeadingConstant() -> CGFloat {
+        if isEmbedded {
+            return appearance.embeddedPaymentElement.row.paymentMethodIconLayoutMargins.leading
+        }
+        return LiquidGlassDetector.isEnabled ? 16 : 12
+    }
+
+    override func makeSameHeightAsOtherRowButtonsIfNecessary() {
+        // Don't do this if we are flat_with_checkmark or flat_with_chevron style and have an accessory view - this row button is allowed to be taller than the rest
+        if isFlatWithCheckmarkOrChevronStyle && isDisplayingAccessoryView {
+            heightConstraint?.isActive = false
+            return
+        }
+
+        // If iOS 26+, use the specific height for floating buttons
+        if LiquidGlassDetector.isEnabled {
+            heightConstraint = heightAnchor.constraint(equalToConstant: 64.0)
+            heightConstraint?.isActive = true
+            return
+        }
+
+        super.makeSameHeightAsOtherRowButtonsIfNecessary()
+    }
 
     override func handleEvent(_ event: STPEvent) {
         // Don't make the rounded rect look disabled
-        let filteredSubviews = subviews.filter { !($0 === shadowRoundedRect) }
+        let filteredSubviews = subviews.filter { !($0 === selectableRectangle) }
 
         switch event {
         case .shouldEnableUserInteraction:

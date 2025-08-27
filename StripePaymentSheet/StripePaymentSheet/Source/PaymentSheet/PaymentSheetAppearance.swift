@@ -143,7 +143,10 @@ public extension PaymentSheet {
             #if os(visionOS)
             public var background: UIColor = .clear
             #else
-            public var background: UIColor = .systemBackground
+            public var background: UIColor = LiquidGlassDetector.isEnabled
+                                            ? UIColor.dynamic(light: UIColor(hex: 0xF2F2F7),
+                                                              dark: UIColor(hex: 0x1C1C1E))
+                                            : .systemBackground
             #endif
 
             /// The color used for the background of inputs, tabs, and other components
