@@ -104,7 +104,7 @@ import WebKit
             }
         }
 
-        if flowController.elementsSession.linkPassthroughModeEnabled {
+        if flowController.elementsSession.linkPassthroughModeEnabled && PaymentSheet.isLinkEnabled(elementsSession: flowController.elementsSession, configuration: flowController.configuration) {
             // Link in passthrough mode won't be in `orderedPaymentMethodTypesAndWallets`, so we append it.
             wallets.append(.link)
         }
