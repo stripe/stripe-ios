@@ -34,7 +34,7 @@ final class SectionView: UIView {
 
     init(viewModel: SectionViewModel) {
         self.viewModel = viewModel
-        self.containerView = SectionContainerView(views: viewModel.views, theme: viewModel.theme)
+        self.containerView = SectionContainerView(views: viewModel.views, allowLiquidGlassCornerRadius: viewModel.allowLiquidGlassCornerRadius, theme: viewModel.theme)
         super.init(frame: .zero)
 
         let stack = UIStackView(arrangedSubviews: [titleLabel, containerView, errorOrSubLabel])
@@ -142,9 +142,11 @@ final class SectionView: UIView {
     // For highlighted borders, apply a custom `UIBezierPath` border for smoother corners.
     private func applyHighlightedBorder(with configuration: HighlightBorderConfiguration) {
         containerView.layer.borderWidth = 0
+        containerView.layer.cornerRadius = configuration.cornerRadius
 
         selectedBorderLayer.strokeColor = configuration.color.cgColor
         selectedBorderLayer.lineWidth = configuration.width
+        selectedBorderLayer.cornerRadius = configuration.cornerRadius
 
         if selectedBorderLayer.superlayer != containerView.layer {
             containerView.layer.addSublayer(selectedBorderLayer)

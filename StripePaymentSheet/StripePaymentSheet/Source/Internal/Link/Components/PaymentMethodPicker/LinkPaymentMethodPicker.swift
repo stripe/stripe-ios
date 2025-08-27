@@ -177,7 +177,7 @@ final class LinkPaymentMethodPicker: UIView {
         clipsToBounds = true
         accessibilityIdentifier = "Stripe.Link.PaymentMethodPicker"
 
-        layer.cornerRadius = 16
+        layer.cornerRadius = LinkUI.cornerRadius
         layer.borderColor = UIColor.linkBorderDefault.cgColor
         updateTintColors()
         backgroundColor = .linkSurfaceSecondary
@@ -246,7 +246,7 @@ private extension LinkPaymentMethodPicker {
         delegate?.paymentDetailsPickerDidTapOnAddPayment(self, sourceRect: sourceRect)
     }
 
-    @objc func didTapOnAccountMenuItem(_ sender: AddButton) {
+    @objc func didTapOnAccountMenuItem(_ sender: UIButton) {
         let sourceRect = sender.convert(sender.bounds, to: self)
         delegate?.didTapOnAccountMenuItem(self, sourceRect: sourceRect)
     }
