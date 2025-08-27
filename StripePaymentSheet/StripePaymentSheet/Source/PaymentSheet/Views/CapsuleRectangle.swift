@@ -37,7 +37,9 @@ class CapsuleRectangle: UIView, SelectableRectangle {
         } else {
             roundedRectangle.backgroundColor = appearance.colors.componentBackground.disabledColor
         }
+        #if compiler(>=6.2)
         roundedRectangle.cornerConfiguration = .capsule()
+        #endif
 
         // Border
         if isSelected {
