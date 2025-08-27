@@ -338,7 +338,7 @@ struct AuthenticatedView: View {
             return
         }
 
-        let request = StripeAPI.paymentRequest(withMerchantIdentifier: "com.example.merchant", country: "US", currency: "USD")
+        let request = StripeAPI.paymentRequest(withMerchantIdentifier: "merchant.com.stripe.umbrella.test", country: "US", currency: "USD")
         request.paymentSummaryItems = [
             PKPaymentSummaryItem(label: "Example", amount: NSDecimalNumber(string: "1.00"))
         ]
