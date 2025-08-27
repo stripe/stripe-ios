@@ -82,7 +82,7 @@ final class LinkFullConsentScopesView: UIView {
         textStackView.translatesAutoresizingMaskIntoConstraints = false
         textStackView.axis = .vertical
         textStackView.spacing = 2
-        textStackView.alignment = .leading
+        textStackView.alignment = .fill
 
         let headerLabel = UILabel()
         headerLabel.text = header
@@ -115,9 +115,7 @@ final class LinkFullConsentScopesView: UIView {
             textStackView.leadingAnchor.constraint(equalTo: iconContainerView.trailingAnchor, constant: LinkUI.contentSpacing),
             textStackView.trailingAnchor.constraint(equalTo: containerView.trailingAnchor),
             textStackView.topAnchor.constraint(equalTo: containerView.topAnchor),
-            textStackView.bottomAnchor.constraint(lessThanOrEqualTo: containerView.bottomAnchor),
-
-            iconContainerView.bottomAnchor.constraint(lessThanOrEqualTo: containerView.bottomAnchor),
+            textStackView.bottomAnchor.constraint(equalTo: containerView.bottomAnchor),
         ])
 
         return containerView
