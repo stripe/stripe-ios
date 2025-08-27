@@ -639,6 +639,26 @@ extension STPAPIClient {
         )
     }
 
+    func updateConsentStatus(
+        consentGranted: Bool,
+        consumerSessionClientSecret: String,
+        consumerPublishableKey: String?,
+        completion: @escaping (Result<EmptyResponse, Error>) -> Void
+    ) {
+        let endpoint: String = "consumers/sessions/consent_update"
+
+        let parameters: [String: Any] = [
+            "credentials": ["consumer_session_client_secret": consumerSessionClientSecret],
+            "consent_granted": consentGranted,
+        ]
+
+        post(
+            resource: endpoint,
+            parameters: parameters,
+            consumerPublishableKey: consumerPublishableKey,
+            completion: completion
+        )
+    }
 }
 
 // TODO(ramont): Remove this after switching to modern bindings.

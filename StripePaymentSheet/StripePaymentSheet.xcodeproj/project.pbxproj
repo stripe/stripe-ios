@@ -181,6 +181,11 @@
 		49A11F3D2E5A21BA002ECED5 /* LinkConsentDataModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49A11F3C2E5A21BA002ECED5 /* LinkConsentDataModel.swift */; };
 		49A11F3F2E5A226D002ECED5 /* LinkConsentViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49A11F3E2E5A226D002ECED5 /* LinkConsentViewModel.swift */; };
 		49A11F412E5A229C002ECED5 /* LookupLinkAuthIntentResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49A11F402E5A229C002ECED5 /* LookupLinkAuthIntentResponse.swift */; };
+		49A11F452E5A3805002ECED5 /* LinkFullConsentViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49A11F442E5A3805002ECED5 /* LinkFullConsentViewController.swift */; };
+		49A11F532E5BB16B002ECED5 /* LinkFullConsent-EmailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49A11F522E5BB16B002ECED5 /* LinkFullConsent-EmailView.swift */; };
+		49A11F552E5BB193002ECED5 /* LinkFullConsent-HeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49A11F542E5BB193002ECED5 /* LinkFullConsent-HeaderView.swift */; };
+		49A11F572E5BB1B4002ECED5 /* LinkFullConsent-ScopesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49A11F562E5BB1B4002ECED5 /* LinkFullConsent-ScopesView.swift */; };
+		49A11F592E5BB1CE002ECED5 /* LinkFullConsent-FooterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49A11F582E5BB1CE002ECED5 /* LinkFullConsent-FooterView.swift */; };
 		49B1F7CC2E1EC43300EA2593 /* LinkSignUpViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49B1F7CB2E1EC43300EA2593 /* LinkSignUpViewController.swift */; };
 		49B1F7CE2E1EC44500EA2593 /* LinkSignUpViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49B1F7CD2E1EC44500EA2593 /* LinkSignUpViewModel.swift */; };
 		49B699A02E4B761B0000B67C /* LinkPaymentMethodType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49B6999F2E4B761B0000B67C /* LinkPaymentMethodType.swift */; };
@@ -686,6 +691,11 @@
 		49A11F3C2E5A21BA002ECED5 /* LinkConsentDataModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LinkConsentDataModel.swift; sourceTree = "<group>"; };
 		49A11F3E2E5A226D002ECED5 /* LinkConsentViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LinkConsentViewModel.swift; sourceTree = "<group>"; };
 		49A11F402E5A229C002ECED5 /* LookupLinkAuthIntentResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LookupLinkAuthIntentResponse.swift; sourceTree = "<group>"; };
+		49A11F442E5A3805002ECED5 /* LinkFullConsentViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LinkFullConsentViewController.swift; sourceTree = "<group>"; };
+		49A11F522E5BB16B002ECED5 /* LinkFullConsent-EmailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "LinkFullConsent-EmailView.swift"; sourceTree = "<group>"; };
+		49A11F542E5BB193002ECED5 /* LinkFullConsent-HeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "LinkFullConsent-HeaderView.swift"; sourceTree = "<group>"; };
+		49A11F562E5BB1B4002ECED5 /* LinkFullConsent-ScopesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "LinkFullConsent-ScopesView.swift"; sourceTree = "<group>"; };
+		49A11F582E5BB1CE002ECED5 /* LinkFullConsent-FooterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "LinkFullConsent-FooterView.swift"; sourceTree = "<group>"; };
 		49B1F7CB2E1EC43300EA2593 /* LinkSignUpViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LinkSignUpViewController.swift; sourceTree = "<group>"; };
 		49B1F7CD2E1EC44500EA2593 /* LinkSignUpViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LinkSignUpViewModel.swift; sourceTree = "<group>"; };
 		49B6999F2E4B761B0000B67C /* LinkPaymentMethodType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LinkPaymentMethodType.swift; sourceTree = "<group>"; };
@@ -1213,6 +1223,7 @@
 				31CC9B8B2CB5F74A00E84A38 /* Notice */,
 				3147CEC92CC1BF550067B5E4 /* PaymentMethodPicker */,
 				31CC9B942CB5F74A00E84A38 /* Toast */,
+				497FDA442E5BEDD700CA82A5 /* Consent */,
 			);
 			path = Components;
 			sourceTree = "<group>";
@@ -1313,6 +1324,18 @@
 				49E908B22DDE107600D5BDBF /* LinkABTest.swift */,
 			);
 			path = Experiments;
+			sourceTree = "<group>";
+		};
+		497FDA442E5BEDD700CA82A5 /* Consent */ = {
+			isa = PBXGroup;
+			children = (
+				49A11F442E5A3805002ECED5 /* LinkFullConsentViewController.swift */,
+				49A11F542E5BB193002ECED5 /* LinkFullConsent-HeaderView.swift */,
+				49A11F522E5BB16B002ECED5 /* LinkFullConsent-EmailView.swift */,
+				49A11F562E5BB1B4002ECED5 /* LinkFullConsent-ScopesView.swift */,
+				49A11F582E5BB1CE002ECED5 /* LinkFullConsent-FooterView.swift */,
+			);
+			path = Consent;
 			sourceTree = "<group>";
 		};
 		49909A142D8AF9660031EC33 /* FC Lite */ = {
@@ -2444,6 +2467,7 @@
 				31CC9B972CB5F74A00E84A38 /* LinkSheetNavigationBar.swift in Sources */,
 				31CC9B982CB5F74A00E84A38 /* LinkNoticeView.swift in Sources */,
 				315673E72CD3024F00BA08BC /* PaymentSheet+Link.swift in Sources */,
+				49A11F552E5BB193002ECED5 /* LinkFullConsent-HeaderView.swift in Sources */,
 				31CC9B9A2CB5F74A00E84A38 /* LinkToast.swift in Sources */,
 				31CC9B9C2CB5F74A00E84A38 /* LinkBadgeView.swift in Sources */,
 				108846A3D8EFD1D4DCC0DDBC /* NSAttributedString+Stripe.swift in Sources */,
@@ -2468,6 +2492,7 @@
 				499E32A82E47982400575058 /* LinkRequestSurface.swift in Sources */,
 				61C87E1B2CB818ED001B7DA9 /* CardBrandFilter.swift in Sources */,
 				49377F022DE4E4FD005CA805 /* BaseLinkHoldbackExperiment.swift in Sources */,
+				49A11F572E5BB1B4002ECED5 /* LinkFullConsent-ScopesView.swift in Sources */,
 				610EAAF02C0F5D9400124AB2 /* FormHeaderView.swift in Sources */,
 				40806EF506CB719299FC90CC /* STPLocalizedString.swift in Sources */,
 				71132CE036C3EE0655ECD2DB /* STPStringUtils.swift in Sources */,
@@ -2619,6 +2644,7 @@
 				49B1F7CE2E1EC44500EA2593 /* LinkSignUpViewModel.swift in Sources */,
 				49909A312D8B48710031EC33 /* FCLiteContainerViewController.swift in Sources */,
 				49909A1E2D8AFAB70031EC33 /* FCLiteManifest.swift in Sources */,
+				49A11F532E5BB16B002ECED5 /* LinkFullConsent-EmailView.swift in Sources */,
 				6107F5462D4C389800905BD8 /* EmbeddedViewRepresentable.swift in Sources */,
 				820C3EDE61ADBFE4DA1E9A98 /* PaymentSheet+API.swift in Sources */,
 				294AE0A8838786ACABE6BCF2 /* PaymentSheet+DeferredAPI.swift in Sources */,
@@ -2676,6 +2702,7 @@
 				CF2AD2C7F761C46AE559E563 /* SavedPaymentOptionsViewController.swift in Sources */,
 				CBBE13E32E5639FA000CB977 /* MandateVariant.swift in Sources */,
 				418007102DE0EB85000FEB87 /* ShippingAddressesResponse.swift in Sources */,
+				49A11F592E5BB1CE002ECED5 /* LinkFullConsent-FooterView.swift in Sources */,
 				F4EA474D60D0889E7D48E1CF /* BankAccountInfoView.swift in Sources */,
 				057A899F4123F3716F2AC0FA /* USBankAccountPaymentMethodElement.swift in Sources */,
 				985DAA770BC0289D24A5999C /* AddressSearchResult.swift in Sources */,
@@ -2701,6 +2728,7 @@
 				D203D701AF400680AF0F82F8 /* AUBECSMandate.swift in Sources */,
 				D792BA37B04E5A3AD30E37CF /* AffirmCopyLabel.swift in Sources */,
 				CBECCB382DB1BA4100EF0875 /* PaymentMethodWithLinkDetails.swift in Sources */,
+				49A11F452E5A3805002ECED5 /* LinkFullConsentViewController.swift in Sources */,
 				CB46EF4B2CED1BDA00E9A7F2 /* PromoBadgeView.swift in Sources */,
 				9BFC22175CF85F58B8B8792A /* AfterpayPriceBreakdownView.swift in Sources */,
 				CBFA0B272E423D8000F82378 /* LinkBillingDetailsValidator.swift in Sources */,

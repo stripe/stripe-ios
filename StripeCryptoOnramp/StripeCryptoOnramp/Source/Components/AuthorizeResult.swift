@@ -1,5 +1,5 @@
 //
-//  AuthorizeResult.swift
+//  AuthorizationResult.swift
 //  StripeCryptoOnramp
 //
 //  Created by Mat Schmid on 8/23/25.

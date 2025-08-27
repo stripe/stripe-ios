@@ -23,6 +23,12 @@ enum LinkConsentViewModel {
         let disclaimer: String?
         let denyButtonLabel: String?
         let allowButtonLabel: String
+
+        var scopesSectionIfNotEmpty: LinkConsentDataModel.ConsentPane.ScopesSection? {
+            guard let scopesSection else { return nil }
+            guard !scopesSection.scopes.isEmpty else { return nil }
+            return scopesSection
+        }
     }
 
     init?(
