@@ -1,3 +1,5 @@
+"%1$@ •••• %2$@" = "%1$@ •••• %2$@";
+
 "%@ (optional)" = "%@ (campo facoltativo)";
 
 "(not accepted)" = "(non accettata)";
@@ -143,5 +145,7 @@
 "Your payment information will not be saved." = "I dati di pagamento non verranno salvati.";
 
 "Your postal code is incomplete." = "Il codice postale è incompleto.";
+
+"Your postal code is invalid." = "Il codice postale non è valido.";
 
 "ZIP" = "ZIP";

@@ -1,3 +1,5 @@
+"%1$@ •••• %2$@" = "%1$@ •••• %2$@";
+
 "%@ (optional)" = "%@ (nav obligāti)";
 
 "(not accepted)" = "(netiek pieņemts)";
@@ -143,5 +145,7 @@
 "Your payment information will not be saved." = "Jūsu maksājuma informācija nav saglabāta.";
 
 "Your postal code is incomplete." = "Pasta indekss nav pilnīgs.";
+
+"Your postal code is invalid." = "Pasta indekss nav derīgs.";
 
 "ZIP" = "Pasta ind.";
