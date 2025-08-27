@@ -62,14 +62,11 @@ final class LinkFullConsentFooterView: UIView {
         let stackView = UIStackView()
         stackView.axis = .horizontal
         stackView.spacing = Self.buttonSpacing
-        stackView.distribution = .fill
+        stackView.distribution = .fillEqually
 
         if denyButtonLabel != nil {
             stackView.addArrangedSubview(rejectButton)
             stackView.addArrangedSubview(consentButton)
-
-            // Make sure the two buttons have equal width
-            rejectButton.widthAnchor.constraint(equalTo: consentButton.widthAnchor).isActive = true
         } else {
             stackView.addArrangedSubview(consentButton)
         }

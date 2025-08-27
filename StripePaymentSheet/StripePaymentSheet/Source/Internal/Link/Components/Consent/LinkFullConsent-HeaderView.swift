@@ -78,17 +78,14 @@ final class LinkFullConsentHeaderView: UIView {
 // MARK: - UIImageView Extension
 
 private extension UIImageView {
-    /// Asynchronously loads and sets an image from a URL with optional rendering mode
-    func setImage(from url: URL, renderingMode: UIImage.RenderingMode? = nil) {
+    func setImage(from url: URL) {
         Task {
             guard let image = try? await DownloadManager.sharedManager.downloadImage(url: url) else {
                 return
             }
 
-            let finalImage = renderingMode.map { image.withRenderingMode($0) } ?? image
-
             await MainActor.run {
-                self.image = finalImage
+                self.image = image
             }
         }
     }
