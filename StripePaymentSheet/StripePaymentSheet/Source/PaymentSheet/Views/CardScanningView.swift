@@ -168,7 +168,11 @@ class CardScanningView: UIView, STPCardScannerDelegate {
     // The shape layers don't animate cleanly during setHidden,
     // so let's use a snapshot view instead.
     func prepDismissAnimation() {
-        if let snapshot = snapshotView(afterScreenUpdates: true) {
+        // Taking a snapshot while the view is offscreen can result in layout issues,
+        //    and is unnecessary since we won't show an animation in this case
+        guard window != nil else { return }
+
+        if let snapshot = snapshotView(afterScreenUpdates: false) {
             self.addSubview(snapshot)
             self.snapshotView = snapshot
         }
