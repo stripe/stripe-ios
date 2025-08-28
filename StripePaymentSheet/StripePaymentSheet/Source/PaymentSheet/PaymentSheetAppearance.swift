@@ -35,7 +35,7 @@ public extension PaymentSheet {
         /// The border used for inputs and tabs in PaymentSheet
         /// - Note: The thickness of divider lines between input fields also uses `borderWidth` for consistency, with a minimum thickness of 0.5.
         /// - Note: The behavior of this property is consistent with the behavior of border width on `CALayer`
-        public var borderWidth: CGFloat = 1.0
+        public var borderWidth: CGFloat = LiquidGlassDetector.isEnabled ? 0 : 1.0
 
         /// The border width used for selected buttons and tabs in PaymentSheet
         /// - Note: If `nil`, defaults to  `borderWidth * 1.5`
