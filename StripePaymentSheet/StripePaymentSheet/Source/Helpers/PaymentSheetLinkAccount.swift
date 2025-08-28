@@ -201,13 +201,6 @@ struct LinkPMDisplayDetails {
     }
 
     func startVerification(completion: @escaping (Result<Bool, Error>) -> Void) {
-        guard case .requiresVerification = sessionState else {
-            DispatchQueue.main.async {
-                completion(.success(false))
-            }
-            return
-        }
-
         guard let session = currentSession else {
             stpAssertionFailure()
             DispatchQueue.main.async {
@@ -236,7 +229,11 @@ struct LinkPMDisplayDetails {
         }
     }
 
-    func verify(with oneTimePasscode: String, completion: @escaping (Result<Void, Error>) -> Void) {
+    func verify(
+        with oneTimePasscode: String,
+        consentGranted: Bool? = nil,
+        completion: @escaping (Result<Void, Error>) -> Void
+    ) {
         guard case .requiresVerification = sessionState,
             hasStartedSMSVerification,
             let session = currentSession
@@ -257,7 +254,8 @@ struct LinkPMDisplayDetails {
             with: apiClient,
             cookieStore: cookieStore,
             consumerAccountPublishableKey: publishableKey,
-            requestSurface: requestSurface
+            requestSurface: requestSurface,
+            consentGranted: consentGranted
         ) { [weak self] result in
             switch result {
             case .success(let verifiedSession):

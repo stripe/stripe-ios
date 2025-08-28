@@ -1,3 +1,5 @@
+"%1$@ •••• %2$@" = "%1$@ •••• %2$@";
+
 "%@ (optional)" = "%@ (ระบุหรือไม่ก็ได้)";
 
 "(not accepted)" = "(ไม่รองรับ)";
@@ -143,5 +145,7 @@
 "Your payment information will not be saved." = "ข้อมูลการชำระเงินของคุณจะไม่ได้รับการบันทึก";
 
 "Your postal code is incomplete." = "รหัสไปรษณีย์ไม่ครบถ้วน";
+
+"Your postal code is invalid." = "รหัสไปรษณีย์ไม่ถูกต้อง";
 
 "ZIP" = "รหัสไปรษณีย์";

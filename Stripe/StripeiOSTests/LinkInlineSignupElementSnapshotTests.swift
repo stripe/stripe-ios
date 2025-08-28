@@ -81,6 +81,14 @@ class LinkInlineSignupElementSnapshotTests: STPSnapshotTestCase {
         verify(sut)
     }
 
+    func testSignupOptInFeatureEnabled_unchecked() {
+        let sut = makeSUT(
+            linkAccountEmailAddress: "unknown@stripe.com",
+            signupOptInFeatureEnabled: true
+        )
+        verify(sut)
+    }
+
     // MARK: Textfield only mode
 
     func testDefaultState_textFieldsOnly() {
@@ -158,20 +166,21 @@ extension LinkInlineSignupElementSnapshotTests {
         func lookupLinkAuthIntent(
             linkAuthIntentID: String,
             requestSurface: StripePaymentSheet.LinkRequestSurface = .default,
-            completion: @escaping (Result<PaymentSheetLinkAccount?, Error>) -> Void
+            completion: @escaping (Result<StripePaymentSheet.LookupLinkAuthIntentResponse?, Error>) -> Void
         ) {
-            completion(
-                .success(
-                    PaymentSheetLinkAccount(
-                        email: "user@example.com",
-                        session: nil,
-                        publishableKey: nil,
-                        displayablePaymentDetails: nil,
-                        useMobileEndpoints: false,
-                        requestSurface: requestSurface
-                    )
-                )
+            let linkAccount = PaymentSheetLinkAccount(
+                email: "user@example.com",
+                session: nil,
+                publishableKey: nil,
+                displayablePaymentDetails: nil,
+                useMobileEndpoints: false,
+                requestSurface: requestSurface
             )
+            let response = StripePaymentSheet.LookupLinkAuthIntentResponse(
+                linkAccount: linkAccount,
+                consentViewModel: nil
+            )
+            completion(.success(response))
         }
 
         func hasEmailLoggedOut(email: String) -> Bool {
@@ -188,7 +197,8 @@ extension LinkInlineSignupElementSnapshotTests {
         preFillName: String? = nil,
         preFillPhone: String? = nil,
         showCheckbox: Bool = true,
-        allowsDefaultOptIn: Bool = false
+        allowsDefaultOptIn: Bool = false,
+        signupOptInFeatureEnabled: Bool = false
     ) -> LinkInlineSignupElement {
         var configuration = PaymentSheet.Configuration()
         configuration.merchantDisplayName = "[Merchant]"
@@ -212,7 +222,7 @@ extension LinkInlineSignupElementSnapshotTests {
             showCheckbox: showCheckbox,
             accountService: MockAccountService(),
             allowsDefaultOptIn: allowsDefaultOptIn,
-            signupOptInFeatureEnabled: false,
+            signupOptInFeatureEnabled: signupOptInFeatureEnabled,
             signupOptInInitialValue: false,
             linkAccount: linkAccount,
             country: country

@@ -286,23 +286,24 @@ extension LinkInlineSignupViewModelTests {
         func lookupLinkAuthIntent(
             linkAuthIntentID: String,
             requestSurface: StripePaymentSheet.LinkRequestSurface = .default,
-            completion: @escaping (Result<PaymentSheetLinkAccount?, Error>) -> Void
+            completion: @escaping (Result<StripePaymentSheet.LookupLinkAuthIntentResponse?, Error>) -> Void
         ) {
             if shouldFailLookup {
                 completion(.failure(NSError.stp_genericConnectionError()))
             } else {
-                completion(
-                    .success(
-                        PaymentSheetLinkAccount(
-                            email: "user@example.com",
-                            session: nil,
-                            publishableKey: nil,
-                            displayablePaymentDetails: nil,
-                            useMobileEndpoints: false,
-                            requestSurface: requestSurface
-                        )
-                    )
+                let linkAccount = PaymentSheetLinkAccount(
+                    email: "user@example.com",
+                    session: nil,
+                    publishableKey: nil,
+                    displayablePaymentDetails: nil,
+                    useMobileEndpoints: false,
+                    requestSurface: requestSurface
                 )
+                let response = StripePaymentSheet.LookupLinkAuthIntentResponse(
+                    linkAccount: linkAccount,
+                    consentViewModel: nil
+                )
+                completion(.success(response))
             }
         }
 

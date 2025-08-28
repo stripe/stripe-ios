@@ -1,3 +1,5 @@
+"%1$@ •••• %2$@" = "%1$@ •••• %2$@";
+
 "%@ (optional)" = "%@ (volitelné)";
 
 "(not accepted)" = "(nepřijímá se)";
@@ -143,5 +145,7 @@
 "Your payment information will not be saved." = "Vaše platební údaje nebudou uloženy.";
 
 "Your postal code is incomplete." = "Vaše poštovní směrovací číslo je neúplné.";
+
+"Your postal code is invalid." = "Poštovní směrovací číslo je neplatné";
 
 "ZIP" = "PSČ";

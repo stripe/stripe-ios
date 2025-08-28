@@ -7,6 +7,7 @@
 //
 
 @_spi(STP) import StripeCore
+@_spi(STP) import StripePaymentsUI
 @_spi(STP) import StripeUICore
 import UIKit
 
@@ -45,7 +46,15 @@ extension LinkInlineSignupView {
 
             let text = {
                 switch mode {
-                case .checkboxWithDefaultOptIn, .signupOptIn:
+                case .signupOptIn:
+                    return STPLocalizedString(
+                        "Create an account with Link for faster checkout across the web",
+                        """
+                        Label for a checkbox that when checked allows the payment information
+                        to be saved and used in future checkout sessions.
+                        """
+                    )
+                case .checkboxWithDefaultOptIn:
                     return STPLocalizedString(
                         "Save my info for faster checkout with Link",
                         """
@@ -64,6 +73,55 @@ extension LinkInlineSignupView {
                 }
             }()
 
+            let leadingIcon: NSTextAttachment? = {
+                guard mode == .signupOptIn else {
+                    return nil
+                }
+                return LinkUI.inlineLogo(
+                    withScale: 1.3,
+                    forFont: appearance.asElementsTheme.fonts.footnoteEmphasis
+                )
+            }()
+
+            let result: NSAttributedString = {
+                if let leadingIcon {
+                    // Handle the case with a Link logo
+                    let linkRange = (text as NSString).range(of: "Link")
+                    if linkRange.location != NSNotFound {
+                        let mutableResult = NSMutableAttributedString(string: text)
+
+                        // Create the paragraph style
+                        let paragraphStyle = NSMutableParagraphStyle()
+                        paragraphStyle.lineSpacing = LinkUI.lineSpacing(
+                            fromRelativeHeight: 1.0,
+                            textStyle: .caption
+                        )
+
+                        // Replace "Link" with the icon
+                        let attachmentString = NSAttributedString(attachment: leadingIcon)
+                        mutableResult.replaceCharacters(in: linkRange, with: NSAttributedString(attachment: leadingIcon))
+
+                        mutableResult.addAttributes(
+                            [.paragraphStyle: paragraphStyle],
+                            range: NSRange(location: 0, length: mutableResult.length)
+                        )
+
+                        return mutableResult
+                    }
+                }
+
+                // Default case: just use the formatted text without icon
+                let formattedString = NSMutableAttributedString(string: text)
+                let paragraphStyle = NSMutableParagraphStyle()
+                paragraphStyle.lineSpacing = LinkUI.lineSpacing(
+                    fromRelativeHeight: 1.0,
+                    textStyle: .caption
+                )
+                formattedString.addAttributes([.paragraphStyle: paragraphStyle], range: NSRange(location: 0, length: formattedString.length))
+
+                return formattedString
+            }()
+
             let description: String? = {
                 switch mode {
                 case .checkbox, .textFieldsOnlyEmailFirst, .textFieldsOnlyPhoneFirst:
@@ -76,7 +134,7 @@ extension LinkInlineSignupView {
             }()
 
             let checkbox = CheckboxButton(
-                text: text,
+                attributedText: result,
                 description: description,
                 theme: appearanceCopy.asElementsTheme,
                 alwaysEmphasizeText: true

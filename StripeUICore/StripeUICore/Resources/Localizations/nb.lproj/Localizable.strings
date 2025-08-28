@@ -1,3 +1,5 @@
+"%1$@ •••• %2$@" = "%1$@ •••• %2$@";
+
 "%@ (optional)" = "%@ (valgfritt)";
 
 "(not accepted)" = "(ikke godtatt)";
@@ -143,5 +145,7 @@
 "Your payment information will not be saved." = "Betalingsinformasjonen din lagres ikke.";
 
 "Your postal code is incomplete." = "Postnummeret er ufullstendig.";
+
+"Your postal code is invalid." = "Postnummeret er ugyldig.";
 
 "ZIP" = "ZIP";

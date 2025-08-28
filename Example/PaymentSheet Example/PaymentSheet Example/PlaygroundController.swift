@@ -1047,7 +1047,11 @@ extension PlaygroundController: STPAnalyticsClientDelegate {
 
 extension PlaygroundController {
     func serializeSettingsToNSUserDefaults() {
-        let settingsData = try! JSONEncoder().encode(settings)
+        // Never save changes for iOS26 since we have to set allowNewDesign based on a flag that isn't ready during boot time.
+        var settingsWithoutiOS26 = settings
+        settingsWithoutiOS26.enableIOS26Changes = .off
+
+        let settingsData = try! JSONEncoder().encode(settingsWithoutiOS26)
         UserDefaults.standard.set(settingsData, forKey: PaymentSheetTestPlaygroundSettings.nsUserDefaultsKey)
 
         if let customerId {

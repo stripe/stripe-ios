@@ -238,3 +238,32 @@ extension LinkUI {
     }()
 
 }
+
+// MARK: - Appearance
+
+extension LinkUI {
+
+    static func inlineLogo(
+        withScale scale: CGFloat,
+        forFont font: UIFont
+    ) -> NSTextAttachment {
+        let iconImage = Image.link_logo_tintable.makeImage(template: true)
+        let iconImageAttachment = NSTextAttachment()
+
+        let contentHeight = font.capHeight * scale
+        let aspectRatio = iconImage.size.width / iconImage.size.height
+        let contentWidth = contentHeight * aspectRatio
+
+        // The asset includes letterform that's slightly inset, so we try to account for this.
+        let assetInset: CGFloat = contentHeight * 0.12
+
+        iconImageAttachment.bounds = CGRect(
+            x: 0,
+            y: -assetInset,
+            width: contentWidth,
+            height: contentHeight
+        )
+        iconImageAttachment.image = iconImage
+        return iconImageAttachment
+    }
+}

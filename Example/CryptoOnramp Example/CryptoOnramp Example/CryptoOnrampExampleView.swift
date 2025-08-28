@@ -19,10 +19,11 @@ struct CryptoOnrampExampleView: View {
     @State private var coordinator: CryptoOnrampCoordinator?
     @State private var errorMessage: String?
     @State private var email: String = ""
-    @State private var selectedScopes: Set<OAuthScopes> = Set(OAuthScopes.inlineScope)
+    @State private var selectedScopes: Set<OAuthScopes> = Set(OAuthScopes.onrampScope)
     @State private var showRegistration: Bool = false
     @State private var showAuthenticatedView: Bool = false
     @State private var authenticationCustomerId: String?
+    @State private var linkAuthIntentId: String?
 
     @Environment(\.isLoading) private var isLoading
     @FocusState private var isEmailFieldFocused: Bool
@@ -54,8 +55,8 @@ struct CryptoOnrampExampleView: View {
 
                     OAuthScopeSelector(
                         selectedScopes: $selectedScopes,
-                        onInlineScopesSelected: {
-                            selectedScopes = Set(OAuthScopes.inlineScope)
+                        onOnrampScopesSelected: {
+                            selectedScopes = Set(OAuthScopes.onrampScope)
                         },
                         onAllScopesSelected: {
                             selectedScopes = Set(OAuthScopes.allScopes)
@@ -148,17 +149,20 @@ struct CryptoOnrampExampleView: View {
         Task {
             do {
                 let lookupResult = try await coordinator.hasLinkAccount(with: email)
+                let laiId: String?
                 if lookupResult {
-                    // Authenticate with the demo merchant backend as well.
-                    let laiId = try await APIClient.shared.authenticateUser(
-                        with: email,
-                        oauthScopes: Array(selectedScopes)
-                    ).data.id
-                    print( "Successfully authenticated user with demo backend. Id: \(laiId)")
+                    // Get Link Auth Intent ID from the demo merchant backend.
+                    let response = try await APIClient.shared.authenticateUser(with: email, oauthScopes: Array(selectedScopes))
+                    laiId = response.data.id
+                    print( "Successfully got Link Auth Intent ID from demo backend. Id: \(laiId!)")
+                } else {
+                    laiId = nil
                 }
+
                 await MainActor.run {
                     errorMessage = nil
                     isLoading.wrappedValue = false
+                    linkAuthIntentId = laiId
 
                     if lookupResult {
                         presentVerification(using: coordinator)
@@ -176,29 +180,40 @@ struct CryptoOnrampExampleView: View {
     }
 
     private func presentVerification(using coordinator: CryptoOnrampCoordinator) {
+        guard let linkAuthIntentId = linkAuthIntentId else {
+            errorMessage = "No Link Auth Intent ID available for authorization."
+            return
+        }
+
         if let viewController = UIApplication.shared.findTopNavigationController() {
             Task {
                 do {
-                    let result = try await coordinator.authenticateUser(from: viewController)
+                    let result = try await coordinator.authorize(linkAuthIntentId: linkAuthIntentId, from: viewController)
                     switch result {
-                    case .completed(customerId: let customerId):
+                    case .consented(let customerId):
                         await MainActor.run {
                             authenticationCustomerId = customerId
 
-                            // Delay so the navigation link animation doesn’t get canceled.
+                            // Delay so the navigation link animation doesn't get canceled.
                             DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
                                 showAuthenticatedView = true
                             }
                         }
+                    case .denied:
+                        await MainActor.run {
+                            errorMessage = "Authorization was denied."
+                        }
                     case .canceled:
-                        // do nothing, verification canceled.
+                        // do nothing, authorization canceled.
                         break
                     @unknown default:
-                        // do nothing, verification canceled.
+                        // do nothing, authorization canceled.
                         break
                     }
                 } catch {
-                    errorMessage = error.localizedDescription
+                    await MainActor.run {
+                        errorMessage = error.localizedDescription
+                    }
                 }
             }
         } else {
@@ -209,7 +224,7 @@ struct CryptoOnrampExampleView: View {
 
 struct OAuthScopeSelector: View {
     @Binding var selectedScopes: Set<OAuthScopes>
-    let onInlineScopesSelected: () -> Void
+    let onOnrampScopesSelected: () -> Void
     let onAllScopesSelected: () -> Void
 
     var body: some View {
@@ -222,8 +237,8 @@ struct OAuthScopeSelector: View {
                 Spacer()
 
                 HStack(spacing: 8) {
-                    Button("Inline") {
-                        onInlineScopesSelected()
+                    Button("Onramp") {
+                        onOnrampScopesSelected()
                     }
                     .buttonStyle(.bordered)
                     .controlSize(.small)

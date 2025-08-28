@@ -1,3 +1,5 @@
+"%1$@ •••• %2$@" = "%1$@ •••• %2$@";
+
 "%@ (optional)" = "%@ (isteğe bağlı)";
 
 "(not accepted)" = "(kabul edilmedi)";
@@ -143,5 +145,7 @@
 "Your payment information will not be saved." = "Ödeme bilgileriniz kaydedilmeyecek.";
 
 "Your postal code is incomplete." = "Posta kodunuz eksik.";
+
+"Your postal code is invalid." = "Posta kodunuz geçersiz.";
 
 "ZIP" = "Posta Kodu";

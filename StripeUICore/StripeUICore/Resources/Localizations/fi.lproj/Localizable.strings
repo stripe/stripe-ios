@@ -1,3 +1,5 @@
+"%1$@ •••• %2$@" = "%1$@ •••• %2$@";
+
 "%@ (optional)" = "%@ (valinnainen)";
 
 "(not accepted)" = "(ei hyväksytty)";
@@ -143,5 +145,7 @@
 "Your payment information will not be saved." = "Maksutietojasi ei tallenneta.";
 
 "Your postal code is incomplete." = "Postinumero on puutteellinen.";
+
+"Your postal code is invalid." = "Postinumeroon virheellinen.";
 
 "ZIP" = "Postinumero";

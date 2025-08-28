@@ -243,8 +243,8 @@ class ExampleWalletButtonsModel: ObservableObject {
         // First, create customer and get customer session
         self.addDebugLog("Creating customer with SPT test backend...")
         let body = [
-            "customerId": nil, // Let backend create a new customer if no email is passed
-            "customerEmail": email.nonEmpty,
+            "customerId": nil,
+            "customerEmail": email.nonEmpty ?? "test-\(UUID().uuidString)@stripe.com",
             "isMobile": true,
         ] as [String: Any?]
         let json = try! JSONSerialization.data(withJSONObject: body, options: [])
@@ -274,7 +274,6 @@ class ExampleWalletButtonsModel: ObservableObject {
 
                 // MARK: Create a PaymentSheet instance
                 var configuration = PaymentSheet.Configuration()
-                configuration.defaultBillingDetails.email = self?.email ?? ""
                 configuration.merchantDisplayName = "Rough Lying Carriage, Inc."
                 configuration.applePay = .init(
                     merchantId: "merchant.com.stripe.umbrella.test", // Be sure to use your own merchant ID here!

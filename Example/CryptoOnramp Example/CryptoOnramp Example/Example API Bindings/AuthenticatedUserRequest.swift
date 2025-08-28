@@ -16,12 +16,8 @@ struct AuthenticateUserRequest: Encodable {
         case oauthScopes = "oauth_scopes"
     }
 
-    init(email: String, oauthScopes: [OAuthScopes] = OAuthScopes.inlineScope) {
+    init(email: String, oauthScopes: [OAuthScopes] = OAuthScopes.onrampScope) {
         self.email = email
-
-        // `manage_crypto_onramp` is required for our use cases, so we hardcode it into the request.
-        let scopes = oauthScopes.map(\.rawValue) + ["manage_crypto_onramp"]
-
-        self.oauthScopes = scopes.joined(separator: ",")
+        self.oauthScopes = oauthScopes.map(\.rawValue).joined(separator: ",")
     }
 }

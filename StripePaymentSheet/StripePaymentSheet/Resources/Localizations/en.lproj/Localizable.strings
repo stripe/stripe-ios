@@ -174,6 +174,10 @@ with the transaction. */
 /* Label for CPF/CPNJ (Brazil tax ID) field */
 "CPF/CPNJ" = "CPF/CPNJ";
 
+/* Label for a checkbox that when checked allows the payment information
+to be saved and used in future checkout sessions. */
+"Create an account with Link for faster checkout across the web" = "Create an account with Link for faster checkout across the web";
+
 /* Label shown in the payment type picker describing a card payment */
 "Debit or credit card" = "Debit or credit card";
 

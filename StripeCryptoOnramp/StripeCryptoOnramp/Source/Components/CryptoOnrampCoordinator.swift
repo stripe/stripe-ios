@@ -42,6 +42,7 @@ protocol CryptoOnrampCoordinatorProtocol {
     /// - Parameter country: The two-letter country code of the user (ISO 3166-1 alpha-2).
     /// - Returns: The crypto customer ID.
     /// Throws if email is already associated with a Link user, or an API error occurs.
+    @discardableResult
     func registerLinkUser(
         email: String,
         fullName: String?,
@@ -57,6 +58,13 @@ protocol CryptoOnrampCoordinatorProtocol {
     ///   If authentication completes, a crypto customer ID will be included in the result.
     /// Throws if `hasLinkAccount` was not called prior to this, or an API error occurs after the view controller is presented.
     func authenticateUser(from viewController: UIViewController) async throws -> AuthenticationResult
+
+    /// Authorizes a Link auth intent and authenticates the user if necessary.
+    /// - Parameters:
+    ///   - linkAuthIntentId: The Link auth intent ID to authorize.
+    ///   - viewController: The view controller from which to present the authentication flow.
+    /// - Returns: The result of the authorization.
+    func authorize(linkAuthIntentId: String, from viewController: UIViewController) async throws -> AuthorizationResult
 
     /// Attaches the specific KYC info to the current Link user. Requires an authenticated Link user.
     ///
@@ -184,6 +192,7 @@ public final class CryptoOnrampCoordinator: NSObject, CryptoOnrampCoordinatorPro
         return try await linkController.lookupConsumer(with: email)
     }
 
+    @discardableResult
     public func registerLinkUser(
         email: String,
         fullName: String?,
@@ -232,6 +241,17 @@ public final class CryptoOnrampCoordinator: NSObject, CryptoOnrampCoordinatorPro
         case .completed:
             let customerId = try await apiClient.grantPartnerMerchantPermissions(with: linkAccountInfo).id
             return .completed(customerId: customerId)
+        }
+    }
+
+    public func authorize(linkAuthIntentId: String, from viewController: UIViewController) async throws -> AuthorizationResult {
+        let authorizeResult = try await linkController.authorize(linkAuthIntentId: linkAuthIntentId, from: viewController)
+        switch authorizeResult {
+        case .consented:
+            let customerId = try await apiClient.grantPartnerMerchantPermissions(with: linkAccountInfo).id
+            return .consented(customerId: customerId)
+        case .denied: return .denied
+        case .canceled: return .canceled
         }
     }
 
@@ -383,7 +403,7 @@ public final class CryptoOnrampCoordinator: NSObject, CryptoOnrampCoordinatorPro
             }
 
             // Handle any required next action (e.g., 3DS authentication)
-            let handledIntentResult = await handleNextAction(
+            let handledIntentResult = try await handleNextAction(
                 for: paymentIntent,
                 with: authenticationContext
             )
@@ -487,10 +507,11 @@ private extension CryptoOnrampCoordinator {
     func handleNextAction(
         for intent: STPPaymentIntent,
         with authenticationContext: STPAuthenticationContext
-    ) async -> Result<STPPaymentIntent, Swift.Error> {
-        return await withCheckedContinuation { continuation in
-            let paymentHandler = STPPaymentHandler.sharedHandler
+    ) async throws -> Result<STPPaymentIntent, Swift.Error> {
+        let platformApiClient = try await getPlatformApiClient()
+        let paymentHandler = STPPaymentHandler(apiClient: platformApiClient)
 
+        return await withCheckedContinuation { continuation in
             paymentHandler.handleNextAction(
                 for: intent,
                 with: authenticationContext,
@@ -551,7 +572,10 @@ private extension CryptoOnrampCoordinator {
         let platformApiClient = try await getPlatformApiClient()
 
         return try await withCheckedThrowingContinuation { continuation in
-            platformApiClient.retrievePaymentIntent(withClientSecret: clientSecret) { paymentIntent, error in
+            platformApiClient.retrievePaymentIntent(
+                withClientSecret: clientSecret,
+                expand: ["payment_method"]
+            ) { paymentIntent, error in
                 if let error = error {
                     continuation.resume(throwing: error)
                 } else if let paymentIntent = paymentIntent {

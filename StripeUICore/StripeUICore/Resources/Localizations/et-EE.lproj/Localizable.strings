@@ -1,3 +1,5 @@
+"%1$@ •••• %2$@" = "%1$@ •••• %2$@";
+
 "%@ (optional)" = "%@ (valikuline)";
 
 "(not accepted)" = "(pole aktsepteeritud)";
@@ -143,5 +145,7 @@
 "Your payment information will not be saved." = "Teie makseteavet ei salvestata.";
 
 "Your postal code is incomplete." = "Sihtnumber on puudulik.";
+
+"Your postal code is invalid." = "Teie sihtnumber on kehtetu.";
 
 "ZIP" = "Sihtnr";

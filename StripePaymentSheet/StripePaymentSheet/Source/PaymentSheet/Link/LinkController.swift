@@ -36,6 +36,15 @@ import UIKit
         case canceled
     }
 
+    @frozen @_spi(STP) public enum AuthorizationResult {
+        /// Authorization was consented by the user.
+        case consented
+        /// Authorization was denied by the user.
+        case denied
+        /// The authorization flow was canceled by the user.
+        case canceled
+    }
+
     /// Errors specific incorrect integrations with LinkController
     @_spi(STP) public enum IntegrationError: Error {
         case noPaymentMethodSelected
@@ -97,6 +106,9 @@ import UIKit
     @_spi(STP) public var merchantLogoUrl: URL? {
         elementsSession.merchantLogoUrl
     }
+
+    /// Completion handler for full consent screen
+    private var fullConsentCompletion: ((Result<AuthorizationResult, Error>) -> Void)?
 
     private init(
         apiClient: STPAPIClient = .shared,
@@ -259,7 +271,7 @@ import UIKit
         from viewController: UIViewController,
         completion: @escaping (Result<VerificationResult, Error>) -> Void
     ) {
-        guard let linkAccount, linkAccount.sessionState == .requiresVerification else {
+        guard let linkAccount else {
             let error = IntegrationError.noActiveLinkConsumer
             completion(.failure(error))
             return
@@ -367,6 +379,126 @@ import UIKit
         }
     }
 
+    /// Authorizes a Link auth intent, handling verification and OAuth consent flows as needed.
+    ///
+    /// This method will present verification if the account requires verification, and consent screens
+    /// if consent is required.
+    ///
+    /// - Parameter linkAuthIntentId: The Link auth intent ID to authorize.
+    /// - Parameter viewController: The view controller from which to present the authorization flow.
+    /// - Returns: The result of the authorization. Either the user consented / rejected OAuth consent, or canceled the flow.
+    ///   If authorization completes, a crypto customer ID will be included in the result.
+    /// - Throws: An error if no Link account associated with the Link auth intent is found, or an API error occurs.
+    @_spi(STP) public func authorize(
+        linkAuthIntentId: String,
+        from viewController: UIViewController,
+        completion: @escaping (Result<AuthorizationResult, Error>) -> Void
+    ) {
+        linkAccountService.lookupLinkAuthIntent(
+            linkAuthIntentID: linkAuthIntentId,
+            requestSurface: requestSurface
+        ) { [weak self] result in
+            switch result {
+            case .success(let response):
+                if let response {
+                    self?.linkAccount = response.linkAccount
+
+                    // If verification is required, present verification flow
+                    if !response.linkAccount.hasCompletedSMSVerification {
+                        if case .inline = response.consentViewModel {
+                            self?.presentVerificationWithConsent(
+                                from: viewController,
+                                consentViewModel: response.consentViewModel,
+                                completion: completion
+                            )
+                            return
+                        } else {
+                            self?.presentForVerification(from: viewController, completion: { [weak self] result in
+                                switch result {
+                                case .success(let verificationResult):
+                                    switch verificationResult {
+                                    case .completed:
+                                        // After verification, check for full consent
+                                        self?.presentFullConsentIfNeeded(
+                                            consentViewModel: response.consentViewModel,
+                                            from: viewController,
+                                            completion: completion
+                                        )
+                                    case .canceled:
+                                        completion(.success(.canceled))
+                                    }
+                                case .failure(let error):
+                                    completion(.failure(error))
+                                }
+                            })
+                            return
+                        }
+                    }
+
+                    // No verification required, check for full consent
+                    self?.presentFullConsentIfNeeded(
+                        consentViewModel: response.consentViewModel,
+                        from: viewController,
+                        completion: completion
+                    )
+                } else {
+                    // No account found for this auth intent ID
+                    completion(.failure(IntegrationError.noActiveLinkConsumer))
+                }
+            case .failure(let error):
+                completion(.failure(error))
+            }
+        }
+    }
+
+    private func presentFullConsentIfNeeded(
+        consentViewModel: LinkConsentViewModel?,
+        from viewController: UIViewController,
+        completion: @escaping (Result<AuthorizationResult, Error>) -> Void
+    ) {
+        guard case .full(let fullConsentViewModel) = consentViewModel else {
+            completion(.success(.consented))
+            return
+        }
+        presentFullConsentScreen(
+            consentViewModel: fullConsentViewModel,
+            from: viewController,
+            completion: completion
+        )
+    }
+
+    private func presentVerificationWithConsent(
+        from viewController: UIViewController,
+        consentViewModel: LinkConsentViewModel?,
+        completion: @escaping (Result<AuthorizationResult, Error>) -> Void
+    ) {
+        guard let linkAccount else {
+            completion(.failure(IntegrationError.noActiveLinkConsumer))
+            return
+        }
+
+        let verificationController = LinkVerificationController(
+            mode: .inlineLogin,
+            linkAccount: linkAccount,
+            configuration: configuration,
+            appearance: appearance,
+            consentViewModel: consentViewModel
+        )
+
+        verificationController.present(from: viewController) { [weak self] result in
+            guard let self else { return }
+            switch result {
+            case .completed:
+                LinkAccountContext.shared.account = self.linkAccount
+                completion(.success(.consented))
+            case .canceled, .switchAccount:
+                completion(.success(.canceled))
+            case .failed(let error):
+                completion(.failure(error))
+            }
+        }
+    }
+
     // MARK: - Private methods
 
     private func createPaymentMethodInPassthroughMode(
@@ -470,11 +602,85 @@ import UIKit
         )
     }
 
+    private func updateConsentStatus(
+        consentGranted: Bool,
+        completion: @escaping (Result<AuthorizationResult, Error>) -> Void
+    ) {
+        guard let linkAccount, let consumerSessionClientSecret = linkAccount.consumerSessionClientSecret else {
+            completion(.failure(IntegrationError.noActiveLinkConsumer))
+            return
+        }
+
+        apiClient.updateConsentStatus(
+            consentGranted: consentGranted,
+            consumerSessionClientSecret: consumerSessionClientSecret,
+            consumerPublishableKey: linkAccount.publishableKey,
+            completion: { [weak self] result in
+                guard let self else { return }
+                switch result {
+                case .success:
+                    LinkAccountContext.shared.account = self.linkAccount
+                    let result: AuthorizationResult = consentGranted ? .consented : .denied
+                    completion(.success(result))
+                case .failure(let error):
+                    completion(.failure(error))
+                }
+            }
+        )
+    }
+
     @objc
     private func onLinkAccountChange(_ notification: Notification) {
         DispatchQueue.main.async { [weak self] in
             let linkAccount = notification.object as? PaymentSheetLinkAccount
             self?.linkAccount = linkAccount
+        }
+    }
+
+    private func presentFullConsentScreen(
+        consentViewModel: LinkConsentViewModel.FullConsentViewModel,
+        from viewController: UIViewController,
+        completion: @escaping (Result<AuthorizationResult, Error>) -> Void
+    ) {
+        let fullConsentViewController = LinkFullConsentViewController(
+            consentViewModel: consentViewModel
+        )
+
+        fullConsentViewController.delegate = self
+
+        let bottomSheetViewController = BottomSheetViewController(
+            contentViewController: fullConsentViewController,
+            appearance: configuration.appearance,
+            isTestMode: false,
+            didCancelNative3DS2: {}
+        )
+
+        // Store completion handler for use in delegate method
+        self.fullConsentCompletion = completion
+
+        viewController.presentAsBottomSheet(bottomSheetViewController, appearance: configuration.appearance)
+    }
+}
+
+// MARK: - LinkFullConsentViewControllerDelegate
+
+extension LinkController: LinkFullConsentViewControllerDelegate {
+    func fullConsentViewController(
+        _ controller: LinkFullConsentViewController,
+        didFinishWithResult result: LinkController.AuthorizationResult
+    ) {
+        controller.dismiss(animated: true) { [weak self] in
+            guard let self, let completion = self.fullConsentCompletion else { return }
+            self.fullConsentCompletion = nil
+
+            switch result {
+            case .consented:
+                updateConsentStatus(consentGranted: true, completion: completion)
+            case .denied:
+                updateConsentStatus(consentGranted: false, completion: completion)
+            case .canceled:
+                completion(.success(.canceled))
+            }
         }
     }
 }
@@ -518,6 +724,33 @@ import UIKit
                 switch result {
                 case .success(let isExistingLinkConsumer):
                     continuation.resume(returning: isExistingLinkConsumer)
+                case .failure(let error):
+                    continuation.resume(throwing: error)
+                }
+            }
+        }
+    }
+
+    /// Authorizes a Link auth intent, handling verification and consent flows as needed.
+    ///
+    /// This method will present verification if the account requires verification, and consent screens
+    /// if consent is required. The flow adapts based on the auth intent configuration:
+    /// - Inline consent: Presents verification with embedded consent
+    /// - Full consent: Presents verification (if needed) followed by a dedicated consent screen
+    /// - No consent: Presents verification only (if needed)
+    ///
+    /// - Parameter linkAuthIntentId: The Link auth intent ID to authorize.
+    /// - Parameter viewController: The view controller from which to present the authorization flow.
+    /// - Returns: The authorization result.
+    func authorize(
+        linkAuthIntentId: String,
+        from viewController: UIViewController
+    ) async throws -> AuthorizationResult {
+        try await withCheckedThrowingContinuation { continuation in
+            authorize(linkAuthIntentId: linkAuthIntentId, from: viewController) { result in
+                switch result {
+                case .success(let authorizeResult):
+                    continuation.resume(returning: authorizeResult)
                 case .failure(let error):
                     continuation.resume(throwing: error)
                 }
