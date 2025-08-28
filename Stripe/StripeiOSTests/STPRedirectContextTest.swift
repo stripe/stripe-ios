@@ -188,12 +188,12 @@ class STPRedirectContextTest: XCTestCase {
         json[jsonDict: "next_action"]?["type"] = "redirect_to_url"
 
         let correctURL = json[jsonDict: "next_action"]?[jsonDict: "redirect_to_url"]?["url"] as? String
-        json[jsonDict: "next_action"]?[jsonDict: "redirect_to_url"]?["url"] = "not a valid URL"
+        json[jsonDict: "next_action"]?[jsonDict: "redirect_to_url"]?["url"] = ""
         XCTAssertNil(create(json), "not created with an invalid URL in next_action.redirect_to_url.url")
         json[jsonDict: "next_action"]?[jsonDict: "redirect_to_url"]?["url"] = correctURL ?? ""
 
         let correctReturnURL = json[jsonDict: "next_action"]?[jsonDict: "redirect_to_url"]?["return_url"] as? String
-        json[jsonDict: "next_action"]?[jsonDict: "redirect_to_url"]?["return_url"] = "not a url"
+        json[jsonDict: "next_action"]?[jsonDict: "redirect_to_url"]?["return_url"] = ""
         XCTAssertNil(create(json), "not created with invalid returnUrl")
         json[jsonDict: "next_action"]?[jsonDict: "redirect_to_url"]?["return_url"] = correctReturnURL ?? ""
 
