@@ -501,20 +501,9 @@ import UIKit
             return
         }
 
-        // TODO: Can these come with the backend response?
-        let consumerSessionWithExistingVerificationSessions = ConsumerSession(
-            clientSecret: consumerSession.clientSecret,
-            emailAddress: consumerSession.emailAddress,
-            redactedFormattedPhoneNumber: consumerSession.redactedFormattedPhoneNumber,
-            unredactedPhoneNumber: consumerSession.unredactedPhoneNumber,
-            phoneNumberCountry: consumerSession.phoneNumberCountry,
-            verificationSessions: linkAccount.currentSession?.verificationSessions ?? [],
-            supportedPaymentDetailsTypes: consumerSession.supportedPaymentDetailsTypes
-        )
-
         self.linkAccount = PaymentSheetLinkAccount(
             email: linkAccount.email,
-            session: consumerSessionWithExistingVerificationSessions,
+            session: consumerSession,
             publishableKey: linkAccount.publishableKey,
             displayablePaymentDetails: linkAccount.displayablePaymentDetails,
             apiClient: linkAccount.apiClient,
