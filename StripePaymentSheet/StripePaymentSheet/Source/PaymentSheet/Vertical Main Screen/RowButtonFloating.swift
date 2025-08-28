@@ -17,7 +17,7 @@ protocol SelectableRectangle: UIView {
 final class RowButtonFloating: RowButton {
     // MARK: - Subviews
 
-    /// The shadow view that manages corner radius and shadows and selection border
+    /// The view that manages corner radius and shadows and selection border
     private lazy var selectableRectangle: SelectableRectangle = {
         if #available(iOS 26.0, *),
            LiquidGlassDetector.isEnabled {
