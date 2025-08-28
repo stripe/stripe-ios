@@ -62,11 +62,7 @@ class BottomSheetViewController: UIViewController, BottomSheetPresentable {
         }
         set {
             let maxContentOffset = scrollView.contentSize.height - scrollView.bounds.height
-            var newContentOffset = maxContentOffset * newValue
-            if LiquidGlassDetector.isEnabled {
-                let offsetWithBarHeight = newContentOffset - SheetNavigationBar.height
-                newContentOffset = max(scrollView.contentOffset.y, offsetWithBarHeight)
-            }
+            let newContentOffset = maxContentOffset * newValue
             scrollView.setContentOffset(CGPoint(x: 0, y: newContentOffset), animated: false)
         }
     }
