@@ -53,11 +53,14 @@ open class STPSnapshotTestCase: FBSnapshotTestCase {
                 return "iOS26"
             }
         }()
-        // identifier is appended to the image filename e.g. "reference_{test name}_{identifier}"
+        // We run snapshot tests on iOS 26 and iOS 16. Most of the time, the snapshots are the same between iOS versions.
+        // It's a pain to redundantly verify/re-record 2 images for every new/failed test when they're identical.
+        // To avoid that, each test only uses a single reference image if they're the same between iOS versions.
+        // Tests that have differences between iOS versions have separate reference images for each iOS version.
         let identifier: String? = {
+            // Note: identifier is appended to the image filename e.g. "reference_{test name}_{identifier}"
             if recordMode {
                 // Record the reference image according to our specific iOS version
-                // Long-term - always record the image using an identifier containing the specific ios version (eg "test_foo_iOS26"
                 return isIOS26 ? iOS26Identifier : identifier
             } else {
                 func hasReferenceImage(for identifier: String?) -> Bool {
@@ -72,7 +75,7 @@ open class STPSnapshotTestCase: FBSnapshotTestCase {
                     // If we're on iOS 26 and have a reference image specific to iOS 26, verify using that.
                     return iOS26Identifier
                 } else {
-                    // Otherwise, use the non-iOS-version-specific reference image
+                    // Otherwise, verify using the non-iOS-version-specific reference image
                     return identifier
                 }
             }
@@ -107,52 +110,3 @@ open class STPSnapshotTestCase: XCTestCase {
     }
 }
 #endif
-
-public extension STPSnapshotTestCase {
-    // Copy and pasted from FBSnapshotVerifyViewOrLayer and modified to return an error instead of XCTFail.
-    private func _STPSnapshotVerifyViewOrLayer(
-        _ viewOrLayer: AnyObject,
-        identifier: String? = nil,
-        suffixes: NSOrderedSet = FBSnapshotTestCaseDefaultSuffixes(),
-        perPixelTolerance: CGFloat = 0,
-        overallTolerance: CGFloat = 0,
-        file: StaticString = #file,
-        line: UInt = #line
-    ) -> Error? {
-        let envReferenceImageDirectory = self.getReferenceImageDirectory(withDefault: nil)
-        let envImageDiffDirectory = self.getImageDiffDirectory(withDefault: nil)
-        var error: NSError?
-        var comparisonSuccess = false
-
-        for suffix in suffixes {
-            let referenceImagesDirectory = "\(envReferenceImageDirectory)\(suffix)"
-            let imageDiffDirectory = envImageDiffDirectory
-            if viewOrLayer.isKind(of: UIView.self) {
-                do {
-                    try compareSnapshot(of: viewOrLayer as! UIView, referenceImagesDirectory: referenceImagesDirectory, imageDiffDirectory: imageDiffDirectory, identifier: identifier, perPixelTolerance: perPixelTolerance, overallTolerance: overallTolerance)
-                    comparisonSuccess = true
-                } catch let error1 as NSError {
-                    error = error1
-                    comparisonSuccess = false
-                }
-            } else if viewOrLayer.isKind(of: CALayer.self) {
-                do {
-                    try compareSnapshot(of: viewOrLayer as! CALayer, referenceImagesDirectory: referenceImagesDirectory, imageDiffDirectory: imageDiffDirectory, identifier: identifier, perPixelTolerance: perPixelTolerance, overallTolerance: overallTolerance)
-                    comparisonSuccess = true
-                } catch let error1 as NSError {
-                    error = error1
-                    comparisonSuccess = false
-                }
-            } else {
-                assertionFailure("Only UIView and CALayer classes can be snapshotted")
-            }
-
-            assert(recordMode == false, message: "Test ran in record mode. Reference image is now saved. Disable record mode to perform an actual snapshot comparison!", file: file, line: line)
-
-            if comparisonSuccess || recordMode {
-                break
-            }
-        }
-        return error
-    }
-}
