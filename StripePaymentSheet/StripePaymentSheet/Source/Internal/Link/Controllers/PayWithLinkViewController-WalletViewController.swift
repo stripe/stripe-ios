@@ -263,8 +263,8 @@ extension PayWithLinkViewController {
         }
 
         func reloadPaymentDetails(completion: (() -> Void)?) {
-            let supportedPaymentDetailsTypes = linkAccount
-                .supportedPaymentDetailsTypes(for: context.elementsSession)
+            let supportedPaymentDetailsTypes = context
+                .getSupportedPaymentDetailsTypes(linkAccount: linkAccount)
                 .toSortedArray()
 
             // Fire and forget; ignore any errors that might happen here.

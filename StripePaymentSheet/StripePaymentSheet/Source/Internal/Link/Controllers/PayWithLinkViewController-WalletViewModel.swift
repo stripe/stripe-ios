@@ -35,7 +35,7 @@ extension PayWithLinkViewController {
         }
 
         var supportedPaymentMethodTypes: Set<ConsumerPaymentDetails.DetailsType> {
-            return linkAccount.supportedPaymentDetailsTypes(for: context.elementsSession)
+            return context.getSupportedPaymentDetailsTypes(linkAccount: linkAccount)
         }
 
         var cvc: String? {
