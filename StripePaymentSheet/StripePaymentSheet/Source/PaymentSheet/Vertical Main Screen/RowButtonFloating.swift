@@ -15,12 +15,16 @@ final class RowButtonFloating: RowButton {
 
     /// The view that manages corner radius and shadows and selection border
     private lazy var selectableRectangle: SelectableRectangle = {
+        #if !os(visionOS)
         if #available(iOS 26.0, *),
            LiquidGlassDetector.isEnabled {
             return CapsuleRectangle(appearance: appearance)
         } else {
             return ShadowedRoundedRectangle(appearance: appearance)
         }
+        #else
+        return ShadowedRoundedRectangle(appearance: appearance)
+        #endif
     }()
     /// The vertical top and bottom padding to be used. Floating uses different values for insets based on if it is used in embedded or vertical mode
     private var contentInsets: CGFloat {
