@@ -74,7 +74,7 @@ public extension PaymentSheet {
         /// - Note: Increasing this value increases the height of each floating payment method row
         /// - Note: This only applies to non-embedded integrations (i.e., regular PaymentSheet)
         @_spi(AppearanceAPIAdditionsPreview)
-        public var verticalModeRowPadding: CGFloat = 4.0 {
+        public var verticalModeRowPadding: CGFloat = LiquidGlassDetector.isEnabled ? 16.0 : 4.0 {
             didSet {
                 guard verticalModeRowPadding >= 0.0 else {
                     assertionFailure("verticalModeRowPadding must be a non-negative value")
@@ -143,7 +143,10 @@ public extension PaymentSheet {
             #if os(visionOS)
             public var background: UIColor = .clear
             #else
-            public var background: UIColor = .systemBackground
+            public var background: UIColor = LiquidGlassDetector.isEnabled
+                                            ? UIColor.dynamic(light: UIColor(hex: 0xF2F2F7),
+                                                              dark: UIColor(hex: 0x1C1C1E))
+                                            : .systemBackground
             #endif
 
             /// The color used for the background of inputs, tabs, and other components
