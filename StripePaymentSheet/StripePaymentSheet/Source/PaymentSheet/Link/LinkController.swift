@@ -467,6 +467,59 @@ import UIKit
         )
     }
 
+    @_spi(STP) public func updatePhoneNumber(
+        to phoneNumber: String,
+        completion: @escaping (Result<Void, Error>) -> Void
+    ) {
+        guard let linkAccount = LinkAccountContext.shared.account, let consumerSessionClientSecret = linkAccount.currentSession?.clientSecret else {
+            completion(.failure(IntegrationError.noActiveLinkConsumer))
+            return
+        }
+
+        apiClient.updatePhoneNumber(
+            consumerSessionClientSecret: consumerSessionClientSecret,
+            consumerAccountPublishableKey: linkAccount.publishableKey,
+            phoneNumber: phoneNumber,
+            requestSurface: requestSurface
+        ) { [weak self] result in
+            switch result {
+            case .success(let consumerSession):
+                self?.updateLinkAccount(with: consumerSession)
+                completion(.success(()))
+            case .failure(let error):
+                completion(.failure(error))
+            }
+        }
+    }
+
+    private func updateLinkAccount(with consumerSession: ConsumerSession) {
+        guard let linkAccount else {
+            return
+        }
+
+        // TODO: Can these come with the backend response?
+        let consumerSessionWithExistingVerificationSessions = ConsumerSession(
+            clientSecret: consumerSession.clientSecret,
+            emailAddress: consumerSession.emailAddress,
+            redactedFormattedPhoneNumber: consumerSession.redactedFormattedPhoneNumber,
+            unredactedPhoneNumber: consumerSession.unredactedPhoneNumber,
+            phoneNumberCountry: consumerSession.phoneNumberCountry,
+            verificationSessions: linkAccount.currentSession?.verificationSessions ?? [],
+            supportedPaymentDetailsTypes: consumerSession.supportedPaymentDetailsTypes
+        )
+
+        self.linkAccount = PaymentSheetLinkAccount(
+            email: linkAccount.email,
+            session: consumerSessionWithExistingVerificationSessions,
+            publishableKey: linkAccount.publishableKey,
+            displayablePaymentDetails: linkAccount.displayablePaymentDetails,
+            apiClient: linkAccount.apiClient,
+            cookieStore: linkAccount.cookieStore,
+            useMobileEndpoints: linkAccount.useMobileEndpoints,
+            requestSurface: linkAccount.requestSurface
+        )
+    }
+
     private func presentVerificationWithConsent(
         from viewController: UIViewController,
         consentViewModel: LinkConsentViewModel?,
@@ -834,6 +887,19 @@ extension LinkController: LinkFullConsentViewControllerDelegate {
                 switch result {
                 case .success(let paymentMethod):
                     continuation.resume(returning: paymentMethod)
+                case .failure(let error):
+                    continuation.resume(throwing: error)
+                }
+            }
+        }
+    }
+
+    func updatePhoneNumber(to phoneNumber: String) async throws {
+        return try await withCheckedThrowingContinuation { continuation in
+            updatePhoneNumber(to: phoneNumber) { result in
+                switch result {
+                case .success:
+                    continuation.resume(returning: ())
                 case .failure(let error):
                     continuation.resume(throwing: error)
                 }

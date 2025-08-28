@@ -233,6 +233,10 @@ public final class CryptoOnrampCoordinator: NSObject, CryptoOnrampCoordinatorPro
         return try await apiClient.grantPartnerMerchantPermissions(with: linkAccountInfo).id
     }
 
+    public func updatePhoneNumber(to phoneNumber: String) async throws {
+        try await linkController.updatePhoneNumber(to: phoneNumber)
+    }
+
     public func authenticateUser(from viewController: UIViewController) async throws -> AuthenticationResult {
         let verificationResult = try await linkController.presentForVerification(from: viewController)
         switch verificationResult {
