@@ -458,24 +458,31 @@ struct AuthenticatedView: View {
         errorMessage = nil
 
         Task {
-            let checkoutResult = await coordinator.performCheckout(
-                onrampSessionId: onrampSessionResponse.id,
-                authenticationContext: authenticationContext
-            ) { onrampSessionId in
-                let result = try await APIClient.shared.checkout(onrampSessionId: onrampSessionId)
-                return  result.clientSecret
-            }
-
-            await MainActor.run {
-                switch checkoutResult {
-                case .completed:
-                    checkoutSucceeded = true
-                case .failed(let error):
-                    errorMessage = "Checkout failed: \(error.localizedDescription)"
-                @unknown default:
-                    break
+            do {
+                let checkoutResult = try await coordinator.performCheckout(
+                    onrampSessionId: onrampSessionResponse.id,
+                    authenticationContext: authenticationContext
+                ) { onrampSessionId in
+                    let result = try await APIClient.shared.checkout(onrampSessionId: onrampSessionId)
+                    return  result.clientSecret
                 }
-                isLoading.wrappedValue = false
+
+                await MainActor.run {
+                    switch checkoutResult {
+                    case .completed:
+                        checkoutSucceeded = true
+                    case .canceled:
+                        break
+                    @unknown default:
+                        break
+                    }
+                    isLoading.wrappedValue = false
+                }
+            } catch {
+                await MainActor.run {
+                    errorMessage = "Checkout failed: \(error.localizedDescription)"
+                    isLoading.wrappedValue = false
+                }
             }
         }
     }

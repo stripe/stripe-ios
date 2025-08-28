@@ -113,12 +113,13 @@ protocol CryptoOnrampCoordinatorProtocol {
     ///     Your backend should call Stripe's `/v1/crypto/onramp_sessions/:id/checkout` endpoint with the provided onramp session ID.
     ///     The closure should return the onramp session client secret on success, or throw an Error on failure.
     ///     This closure may be called twice: once initially, and once more after handling any required authentication.
-    /// - Returns: A `CheckoutResult` indicating whether the checkout succeeded or failed.
+    /// - Returns: A `CheckoutResult` indicating whether the checkout succeeded or was canceled.
+    /// Throws if handling required actions fails, or an API error occurs.
     func performCheckout(
         onrampSessionId: String,
         authenticationContext: STPAuthenticationContext,
         onrampSessionClientSecretProvider: @escaping (_ onrampSessionId: String) async throws -> String
-    ) async -> CheckoutResult
+    ) async throws -> CheckoutResult
 }
 
 /// Coordinates headless Link user authentication and identity verification, leaving most of the UI to the client.
@@ -389,48 +390,44 @@ public final class CryptoOnrampCoordinator: NSObject, CryptoOnrampCoordinatorPro
         onrampSessionId: String,
         authenticationContext: STPAuthenticationContext,
         onrampSessionClientSecretProvider: @escaping (_ onrampSessionId: String) async throws -> String
-    ) async -> CheckoutResult {
-        do {
-            // First, attempt to check out and get the PaymentIntent
-            let paymentIntent = try await performCheckoutAndRetrievePaymentIntent(
-                onrampSessionId: onrampSessionId,
-                onrampSessionClientSecretProvider: onrampSessionClientSecretProvider
-            )
+    ) async throws -> CheckoutResult {
+        // First, attempt to check out and get the PaymentIntent
+        let paymentIntent = try await performCheckoutAndRetrievePaymentIntent(
+            onrampSessionId: onrampSessionId,
+            onrampSessionClientSecretProvider: onrampSessionClientSecretProvider
+        )
 
-            // Check if the intent is already complete
-            if let result = mapIntentToCheckoutResult(paymentIntent) {
-                return result
-            }
+        // Check if the intent is already complete
+        if let result = try mapIntentToCheckoutResult(paymentIntent) {
+            return result
+        }
 
-            // Handle any required next action (e.g., 3DS authentication)
-            let handledIntentResult = try await handleNextAction(
-                for: paymentIntent,
-                with: authenticationContext
-            )
+        // Handle any required next action (e.g., 3DS authentication)
+        let handledIntentResult = try await handleNextAction(
+            for: paymentIntent,
+            with: authenticationContext
+        )
 
-            switch handledIntentResult {
-            case .success(let finalIntent):
-                if finalIntent.status == .succeeded || finalIntent.status == .requiresCapture {
-                    // After successful next_action handling, attempt checkout again to complete the payment
-                    let finalPaymentIntent = try await performCheckoutAndRetrievePaymentIntent(
-                        onrampSessionId: onrampSessionId,
-                        onrampSessionClientSecretProvider: onrampSessionClientSecretProvider
-                    )
+        switch handledIntentResult {
+        case .paymentIntent(let finalIntent):
+            if finalIntent.status == .succeeded || finalIntent.status == .requiresCapture {
+                // After successful next_action handling, attempt checkout again to complete the payment
+                let finalPaymentIntent = try await performCheckoutAndRetrievePaymentIntent(
+                    onrampSessionId: onrampSessionId,
+                    onrampSessionClientSecretProvider: onrampSessionClientSecretProvider
+                )
 
-                    // Map the final PaymentIntent status to a checkout result
-                    if let checkoutResult = mapIntentToCheckoutResult(finalPaymentIntent) {
-                        return checkoutResult
-                    } else {
-                        return .failed(CheckoutError.paymentFailed)
-                    }
+                // Map the final PaymentIntent status to a checkout result
+                if let checkoutResult = try mapIntentToCheckoutResult(finalPaymentIntent) {
+                    return checkoutResult
                 } else {
-                    return .failed(CheckoutError.paymentFailed)
+                    throw CheckoutError.paymentFailed
                 }
-            case .failure(let error):
-                return .failed(error)
+            } else {
+                throw CheckoutError.paymentFailed
             }
-        } catch {
-            return .failed(error)
+        case .canceled:
+            return .canceled
         }
     }
 }
@@ -464,6 +461,12 @@ extension CryptoOnrampCoordinator: ApplePayContextDelegate {
 
         applePayCompletionContinuation = nil
     }
+}
+
+/// Possible results from `handleNextAction()`.
+private enum NextActionResult {
+    case paymentIntent(STPPaymentIntent)
+    case canceled
 }
 
 private extension CryptoOnrampCoordinator {
@@ -507,11 +510,11 @@ private extension CryptoOnrampCoordinator {
     func handleNextAction(
         for intent: STPPaymentIntent,
         with authenticationContext: STPAuthenticationContext
-    ) async throws -> Result<STPPaymentIntent, Swift.Error> {
+    ) async throws -> NextActionResult {
         let platformApiClient = try await getPlatformApiClient()
         let paymentHandler = STPPaymentHandler(apiClient: platformApiClient)
 
-        return await withCheckedContinuation { continuation in
+        return try await withCheckedThrowingContinuation { continuation in
             paymentHandler.handleNextAction(
                 for: intent,
                 with: authenticationContext,
@@ -521,16 +524,16 @@ private extension CryptoOnrampCoordinator {
                 switch status {
                 case .succeeded:
                     if let paymentIntent {
-                        continuation.resume(returning: .success(paymentIntent))
+                        continuation.resume(returning: .paymentIntent(paymentIntent))
                     } else {
-                        continuation.resume(returning: .failure(CheckoutError.unexpectedError))
+                        continuation.resume(throwing: CheckoutError.unexpectedError)
                     }
                 case .canceled:
-                    continuation.resume(returning: .failure(CheckoutError.userCanceled))
+                    continuation.resume(returning: .canceled)
                 case .failed:
-                    continuation.resume(returning: .failure(error ?? CheckoutError.paymentFailed))
+                    continuation.resume(throwing: error ?? CheckoutError.paymentFailed)
                 @unknown default:
-                    continuation.resume(returning: .failure(CheckoutError.unexpectedError))
+                    continuation.resume(throwing: CheckoutError.unexpectedError)
                 }
             }
         }
@@ -588,16 +591,16 @@ private extension CryptoOnrampCoordinator {
     }
 
     /// Maps a PaymentIntent status to a CheckoutResult, or returns nil if more handling is needed.
-    func mapIntentToCheckoutResult(_ intent: STPPaymentIntent) -> CheckoutResult? {
+    func mapIntentToCheckoutResult(_ intent: STPPaymentIntent) throws -> CheckoutResult? {
         switch intent.status {
         case .succeeded:
-            .completed
+            return .completed
         case .requiresPaymentMethod:
-            .failed(CheckoutError.paymentFailed)
+            throw CheckoutError.paymentFailed
         case .requiresAction:
-            nil
+            return nil
         default:
-            .failed(CheckoutError.paymentFailed)
+            throw CheckoutError.paymentFailed
         }
     }
 }
