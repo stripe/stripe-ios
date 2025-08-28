@@ -6,8 +6,6 @@
 
 "App Settings" = "Alkalmazásbeállítások";
 
-"Back identity card photo successfully uploaded" = "Személyazonosító igazolvány hátlapfotója sikeresen feltöltve";
-
 "Back of identity card" = "Személyazonosító igazolvány hátlapja";
 
 "Back of identity document" = "Személyazonosító okmány hátulja";
@@ -31,10 +29,6 @@
 "Details not visible" = "A részletek nem láthatók";
 
 "Flip your identity card over to the other side" = "Fordítsa személyazonosító igazolványát a másik oldalára";
-
-"Front identity card photo successfully uploaded" = "Személyazonosító igazolvány előlapfotója sikeresen feltöltve";
-
-"Front of identity card" = "Személyazonosító igazolvány előlapja";
 
 "Front of identity document" = "Személyazonosító okmány eleje";
 
@@ -84,11 +78,7 @@
 
 "Photo Library" = "Képek";
 
-"Please upload images of the front and back of your identity card" = "Töltse fel a személyazonosító igazolványának előlapját és hátlapját";
-
 "Position your face in the center of the frame." = "Igazítsa az arcát a kép közepére.";
-
-"Position your identity card in the center of the frame" = "Igazítsa személyazonosító igazolványát a kép közepére";
 
 "Retake Photos" = "Fényképek megismétlése";
 
@@ -101,10 +91,6 @@
 "Select a location to upload the back of your identity document from" = "Válassza ki, hogy honnan szeretné feltölteni a személyazonosító okmányának hátlapját";
 
 "Select a location to upload the front of your identity document from" = "Válassza ki, hogy honnan szeretné feltölteni a személyazonosító okmányának előlapját";
-
-"Select back identity card photo" = "Személyazonosító igazolvány hátlapfotójának kiválasztása";
-
-"Select front identity card photo" = "Személyazonosító igazolvány előlapfotójának kiválasztása";
 
 "Selfie" = "Szelfi";
 
@@ -131,10 +117,6 @@
 "Upload a Photo" = "Fotó feltöltése";
 
 "Upload your photo ID" = "Fényképes azonosító igazolvány feltöltése";
-
-"Uploading back identity card photo" = "Személyazonosító igazolvány hátlapfotójának feltöltése";
-
-"Uploading front identity card photo" = "Személyazonosító igazolvány előlapfotójának feltöltése";
 
 "Verify your identity" = "A személyazonosság igazolása";
 

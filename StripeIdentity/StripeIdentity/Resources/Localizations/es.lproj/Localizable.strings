@@ -6,8 +6,6 @@
 
 "App Settings" = "Configuración de la aplicación";
 
-"Back identity card photo successfully uploaded" = "La foto del reverso del documento de identidad se ha cargado correctamente";
-
 "Back of identity card" = "Reverso del documento de identidad";
 
 "Back of identity document" = "Reverso del documento de identidad";
@@ -31,10 +29,6 @@
 "Details not visible" = "No se ven los datos";
 
 "Flip your identity card over to the other side" = "Gira tu documento de identidad hacia el lado contrario";
-
-"Front identity card photo successfully uploaded" = "La foto del anverso del documento de identidad se ha cargado correctamente";
-
-"Front of identity card" = "Anverso del documento de identidad";
 
 "Front of identity document" = "Anverso del documento de identidad";
 
@@ -84,11 +78,7 @@
 
 "Photo Library" = "Biblioteca de fotos";
 
-"Please upload images of the front and back of your identity card" = "Carga las imágenes del anverso y el reverso de tu documento de identidad";
-
 "Position your face in the center of the frame." = "Coloca la cara en el centro del marco.";
-
-"Position your identity card in the center of the frame" = "Coloca el documento de identidad en el centro del marco";
 
 "Retake Photos" = "Volver a sacar las fotos";
 
@@ -101,10 +91,6 @@
 "Select a location to upload the back of your identity document from" = "Selecciona una ubicación desde la que cargar el reverso de tu documento de identidad";
 
 "Select a location to upload the front of your identity document from" = "Selecciona una ubicación desde la que cargar el anverso de tu documento de identidad";
-
-"Select back identity card photo" = "Selecciona la foto del reverso del documento de identidad";
-
-"Select front identity card photo" = "Selecciona la foto del anverso del documento de identidad";
 
 "Selfie" = "Selfie";
 
@@ -131,10 +117,6 @@
 "Upload a Photo" = "Cargar una foto";
 
 "Upload your photo ID" = "Sube tu documento de identidad con foto";
-
-"Uploading back identity card photo" = "Cargando la foto del reverso del documento de identidad";
-
-"Uploading front identity card photo" = "Cargando la foto del anverso del documento de identidad";
 
 "Verify your identity" = "Verifica tu identidad";
 

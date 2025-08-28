@@ -6,8 +6,6 @@
 
 "App Settings" = "App-instellingen";
 
-"Back identity card photo successfully uploaded" = "Foto van achterkant van identiteitskaart is geüpload";
-
 "Back of identity card" = "Achterkant van identiteitskaart";
 
 "Back of identity document" = "Achterkant van identiteitsbewijs";
@@ -31,10 +29,6 @@
 "Details not visible" = "Details niet zichtbaar";
 
 "Flip your identity card over to the other side" = "Draai je identiteitskaart om, zodat de andere kant zichtbaar is";
-
-"Front identity card photo successfully uploaded" = "Foto van voorkant van identiteitskaart is geüpload";
-
-"Front of identity card" = "Voorkant van identiteitskaart";
 
 "Front of identity document" = "Voorkant van identiteitsbewijs";
 
@@ -84,11 +78,7 @@
 
 "Photo Library" = "Fotobibliotheek";
 
-"Please upload images of the front and back of your identity card" = "Upload afbeeldingen van de voor- en achterkant van je identiteitskaart";
-
 "Position your face in the center of the frame." = "Houd je gezicht in het midden van het frame.";
-
-"Position your identity card in the center of the frame" = "Plaats je identiteitskaart midden in het frame";
 
 "Retake Photos" = "Nieuwe foto's maken";
 
@@ -101,10 +91,6 @@
 "Select a location to upload the back of your identity document from" = "Selecteer een locatie vanwaar je de achterkant van je identiteitsbewijs wilt uploaden";
 
 "Select a location to upload the front of your identity document from" = "Selecteer een locatie vanwaar je de voorkant van je identiteitsbewijs wilt uploaden";
-
-"Select back identity card photo" = "Foto van achterkant van identiteitskaart selecteren";
-
-"Select front identity card photo" = "Foto van voorkant van identiteitskaart selecteren";
 
 "Selfie" = "Selfie";
 
@@ -131,10 +117,6 @@
 "Upload a Photo" = "Een foto uploaden";
 
 "Upload your photo ID" = "Je identiteitsbewijs uploaden";
-
-"Uploading back identity card photo" = "Foto van achterkant van identiteitskaart uploaden";
-
-"Uploading front identity card photo" = "Foto van voorkant van identiteitskaart uploaden";
 
 "Verify your identity" = "Je identiteit verifiëren";
 
