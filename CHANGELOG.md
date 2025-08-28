@@ -1,10 +1,11 @@
-## x.x.x x-x-x
+## XX.YY.ZZ 2025-XX-YY
 
 ### CustomerSheet
 * [Added] `opensCardScannerAutomatically` configuration
 
 ### PaymentSheet
 * [Added] `opensCardScannerAutomatically` configuration
+* [Fixed] Setting `appearance.borderWidth = 0` previously caused the thickness of divider lines between input fields to also be 0, causing them to disappear. They now have a minimum thickness of 0.5.
 
 ### EmbeddedPaymentElement
 * [Added] `opensCardScannerAutomatically` configuration

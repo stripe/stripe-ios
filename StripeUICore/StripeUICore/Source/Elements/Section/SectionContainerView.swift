@@ -241,11 +241,13 @@ extension SectionContainerView {
 
 // MARK: - StackViewWithSeparator
 
+/// Builds the primary stack view that contains all others.
 private func buildStackView(views: [UIView], theme: ElementsAppearance = .default) -> StackViewWithSeparator {
     let stackView = StackViewWithSeparator(arrangedSubviews: views)
     stackView.axis = .vertical
-    stackView.spacing = theme.borderWidth
+    stackView.spacing = theme.separatorWidth
     stackView.separatorColor = theme.colors.divider
+    stackView.borderWidth = theme.borderWidth
     stackView.borderColor = theme.colors.border
     stackView.borderCornerRadius = theme.cornerRadius
     stackView.customBackgroundColor = theme.colors.componentBackground
