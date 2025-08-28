@@ -36,7 +36,7 @@ final class RowButtonFloating: RowButton {
     }
 
     private var imageViewMargin: CGFloat {
-        return 10
+        return 10 + contentInsets
     }
 
     private var imageViewLeadingConstant: CGFloat {
@@ -118,7 +118,7 @@ final class RowButtonFloating: RowButton {
             imageView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: imageViewLeadingConstant),
             imageView.topAnchor.constraint(greaterThanOrEqualTo: topAnchor, constant: imageViewMargin),
             imageView.bottomAnchor.constraint(lessThanOrEqualTo: bottomAnchor, constant: -imageViewMargin),
-            imageView.heightAnchor.constraint(lessThanOrEqualToConstant: 20),
+            imageView.heightAnchor.constraint(equalToConstant: 20),
             imageView.widthAnchor.constraint(equalToConstant: 24),
             imageView.centerYAnchor.constraint(equalTo: centerYAnchor),
             imageViewBottomConstraint,
