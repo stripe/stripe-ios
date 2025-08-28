@@ -81,18 +81,12 @@ extension STPIntentActionRedirectToURL: STPAPIResponseDecodable {
     @objc
     public class func decodedObject(fromAPIResponse response: [AnyHashable: Any]?) -> Self? {
         guard let dict = response,
-            let urlString = dict["url"] as? String,
-            let url = URL(string: urlString)
+              let url = dict.stp_url(forKey: "url")
         else {
             return nil
         }
 
-        let returnURL: URL?
-        if let returnURLString = dict["return_url"] as? String {
-            returnURL = URL(string: returnURLString)
-        } else {
-            returnURL = nil
-        }
+        let returnURL = dict.stp_url(forKey: "return_url")
 
         return STPIntentActionRedirectToURL(
             url: url,
