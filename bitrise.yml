@@ -38,7 +38,7 @@ stages:
   stage-trigger-run-all:
     workflows:
     - framework-tests: {}
-    - framework-tests-xcode26: {}
+    - framework-tests-ios26: {}
     - test-builds-xcode-16: {}
     - test-builds-vision: {}
     - install-tests: {}
@@ -226,6 +226,82 @@ workflows:
     - deploy-to-bitrise-io@2: {}
     envs:
     - DEFAULT_TEST_DEVICE: platform=iOS Simulator,name=iPhone 12 mini,OS=16.4
+  framework_tests_shared:
+    steps:
+    - xcode-test@4:
+        inputs:
+        - destination: $DEFAULT_TEST_DEVICE
+        - test_repetition_mode: retry_on_failure
+        - maximum_test_repetitions: "2"
+        - scheme: StripeiOS
+    - xcode-test@4:
+        inputs:
+        - destination: $DEFAULT_TEST_DEVICE
+        - test_repetition_mode: retry_on_failure
+        - maximum_test_repetitions: "2"
+        - scheme: StripePayments
+    - xcode-test@4:
+        inputs:
+        - destination: $DEFAULT_TEST_DEVICE
+        - test_repetition_mode: retry_on_failure
+        - maximum_test_repetitions: "2"
+        - scheme: StripePaymentsUI
+    - xcode-test@4:
+        inputs:
+        - destination: $DEFAULT_TEST_DEVICE
+        - test_repetition_mode: retry_on_failure
+        - maximum_test_repetitions: "2"
+        - scheme: StripePaymentSheet
+    - xcode-test@4:
+        inputs:
+        - destination: $DEFAULT_TEST_DEVICE
+        - test_repetition_mode: retry_on_failure
+        - maximum_test_repetitions: "2"
+        - scheme: StripeCameraCore
+    - xcode-test@4:
+        inputs:
+        - destination: $DEFAULT_TEST_DEVICE
+        - test_repetition_mode: retry_on_failure
+        - maximum_test_repetitions: "2"
+        - scheme: StripeCore
+    - xcode-test@4:
+        inputs:
+        - destination: $DEFAULT_TEST_DEVICE
+        - test_repetition_mode: retry_on_failure
+        - maximum_test_repetitions: "2"
+        - scheme: StripeConnect
+    - xcode-test@4:
+        inputs:
+        - destination: $DEFAULT_TEST_DEVICE
+        - test_repetition_mode: retry_on_failure
+        - maximum_test_repetitions: "2"
+        - scheme: StripeIdentity
+    - xcode-test@4:
+        inputs:
+        - destination: $DEFAULT_TEST_DEVICE
+        - test_repetition_mode: retry_on_failure
+        - maximum_test_repetitions: "2"
+        - scheme: StripeFinancialConnections
+    - xcode-test@4:
+        inputs:
+        - destination: $DEFAULT_TEST_DEVICE
+        - test_repetition_mode: retry_on_failure
+        - maximum_test_repetitions: "2"
+        - scheme: StripeCardScan
+    - xcode-test@4:
+        inputs:
+        - destination: $DEFAULT_TEST_DEVICE
+        - test_repetition_mode: retry_on_failure
+        - maximum_test_repetitions: "2"
+        - scheme: StripeApplePay
+    - xcode-test@4:
+        inputs:
+        - destination: $DEFAULT_TEST_DEVICE
+        - test_repetition_mode: retry_on_failure
+        - maximum_test_repetitions: "2"
+        - scheme: StripeUICore
+    - deploy-to-bitrise-io@2: {}
+    - save-spm-cache@1: {}
   framework-tests:
     steps:
     - fastlane@3:
@@ -236,88 +312,16 @@ workflows:
         inputs:
         - lane: threeds2_tests
         title: fastlane threeds2_tests
-    - xcode-test@4:
-        inputs:
-        - destination: $DEFAULT_TEST_DEVICE
-        - test_repetition_mode: retry_on_failure
-        - maximum_test_repetitions: "2"
-        - scheme: StripeiOS
-    - xcode-test@4:
-        inputs:
-        - destination: $DEFAULT_TEST_DEVICE
-        - test_repetition_mode: retry_on_failure
-        - maximum_test_repetitions: "2"
-        - scheme: StripePayments
-    - xcode-test@4:
-        inputs:
-        - destination: $DEFAULT_TEST_DEVICE
-        - test_repetition_mode: retry_on_failure
-        - maximum_test_repetitions: "2"
-        - scheme: StripePaymentsUI
-    - xcode-test@4:
-        inputs:
-        - destination: $DEFAULT_TEST_DEVICE
-        - test_repetition_mode: retry_on_failure
-        - maximum_test_repetitions: "2"
-        - scheme: StripePaymentSheet
-    - xcode-test@4:
-        inputs:
-        - destination: $DEFAULT_TEST_DEVICE
-        - test_repetition_mode: retry_on_failure
-        - maximum_test_repetitions: "2"
-        - scheme: StripeCameraCore
-    - xcode-test@4:
-        inputs:
-        - destination: $DEFAULT_TEST_DEVICE
-        - test_repetition_mode: retry_on_failure
-        - maximum_test_repetitions: "2"
-        - scheme: StripeCore
-    - xcode-test@4:
-        inputs:
-        - destination: $DEFAULT_TEST_DEVICE
-        - test_repetition_mode: retry_on_failure
-        - maximum_test_repetitions: "2"
-        - scheme: StripeConnect
-    - xcode-test@4:
-        inputs:
-        - destination: $DEFAULT_TEST_DEVICE
-        - test_repetition_mode: retry_on_failure
-        - maximum_test_repetitions: "2"
-        - scheme: StripeIdentity
-    - xcode-test@4:
-        inputs:
-        - destination: $DEFAULT_TEST_DEVICE
-        - test_repetition_mode: retry_on_failure
-        - maximum_test_repetitions: "2"
-        - scheme: StripeFinancialConnections
-    - xcode-test@4:
-        inputs:
-        - destination: $DEFAULT_TEST_DEVICE
-        - test_repetition_mode: retry_on_failure
-        - maximum_test_repetitions: "2"
-        - scheme: StripeCardScan
-    - xcode-test@4:
-        inputs:
-        - destination: $DEFAULT_TEST_DEVICE
-        - test_repetition_mode: retry_on_failure
-        - maximum_test_repetitions: "2"
-        - scheme: StripeApplePay
-    - xcode-test@4:
-        inputs:
-        - destination: $DEFAULT_TEST_DEVICE
-        - test_repetition_mode: retry_on_failure
-        - maximum_test_repetitions: "2"
-        - scheme: StripeUICore
-    - deploy-to-bitrise-io@2: {}
-    - save-spm-cache@1: {}
     before_run:
     - prep_all
+    - framework_tests_shared
     after_run: []
     meta:
       bitrise.io:
         stack: osx-xcode-16.0.x
         machine_type_id: g2.mac.large
-  framework-tests-xcode26:
+  framework-tests-ios26:
+    # Only runs unit tests (no threeds2_tests) for iOS 26 compatibility
     steps:
     - script@1:
         inputs:
@@ -327,83 +331,12 @@ workflows:
         inputs:
         - lane: preflight
         title: fastlane preflight
-    - xcode-test@4:
-        inputs:
-        - destination: $DEFAULT_TEST_DEVICE_26_0
-        - test_repetition_mode: retry_on_failure
-        - maximum_test_repetitions: "2"
-        - scheme: StripeiOS
-    - xcode-test@4:
-        inputs:
-        - destination: $DEFAULT_TEST_DEVICE_26_0
-        - test_repetition_mode: retry_on_failure
-        - maximum_test_repetitions: "2"
-        - scheme: StripePayments
-    - xcode-test@4:
-        inputs:
-        - destination: $DEFAULT_TEST_DEVICE_26_0
-        - test_repetition_mode: retry_on_failure
-        - maximum_test_repetitions: "2"
-        - scheme: StripePaymentsUI
-    - xcode-test@4:
-        inputs:
-        - destination: $DEFAULT_TEST_DEVICE_26_0
-        - test_repetition_mode: retry_on_failure
-        - maximum_test_repetitions: "2"
-        - scheme: StripePaymentSheet
-    - xcode-test@4:
-        inputs:
-        - destination: $DEFAULT_TEST_DEVICE_26_0
-        - test_repetition_mode: retry_on_failure
-        - maximum_test_repetitions: "2"
-        - scheme: StripeCameraCore
-    - xcode-test@4:
-        inputs:
-        - destination: $DEFAULT_TEST_DEVICE_26_0
-        - test_repetition_mode: retry_on_failure
-        - maximum_test_repetitions: "2"
-        - scheme: StripeCore
-    - xcode-test@4:
-        inputs:
-        - destination: $DEFAULT_TEST_DEVICE_26_0
-        - test_repetition_mode: retry_on_failure
-        - maximum_test_repetitions: "2"
-        - scheme: StripeConnect
-    - xcode-test@4:
-        inputs:
-        - destination: $DEFAULT_TEST_DEVICE_26_0
-        - test_repetition_mode: retry_on_failure
-        - maximum_test_repetitions: "2"
-        - scheme: StripeIdentity
-    - xcode-test@4:
-        inputs:
-        - destination: $DEFAULT_TEST_DEVICE_26_0
-        - test_repetition_mode: retry_on_failure
-        - maximum_test_repetitions: "2"
-        - scheme: StripeFinancialConnections
-    - xcode-test@4:
-        inputs:
-        - destination: $DEFAULT_TEST_DEVICE_26_0
-        - test_repetition_mode: retry_on_failure
-        - maximum_test_repetitions: "2"
-        - scheme: StripeCardScan
-    - xcode-test@4:
-        inputs:
-        - destination: $DEFAULT_TEST_DEVICE_26_0
-        - test_repetition_mode: retry_on_failure
-        - maximum_test_repetitions: "2"
-        - scheme: StripeApplePay
-    - xcode-test@4:
-        inputs:
-        - destination: $DEFAULT_TEST_DEVICE_26_0
-        - test_repetition_mode: retry_on_failure
-        - maximum_test_repetitions: "2"
-        - scheme: StripeUICore
-    - deploy-to-bitrise-io@2: {}
-    - save-spm-cache@1: {}
     before_run:
     - prep_all_26
+    - framework_tests_shared
     after_run: []
+    envs:
+    - DEFAULT_TEST_DEVICE: $DEFAULT_TEST_DEVICE_26_0
     meta:
       bitrise.io:
         stack: osx-xcode-26.0.x-edge
@@ -613,7 +546,7 @@ workflows:
     - prep_all
     envs:
     - DEFAULT_TEST_DEVICE: platform=iOS Simulator,name=iPhone 12 mini,OS=16.4
-  prep_all:
+  prep_all_shared:
     steps:
     - xcode-start-simulator@0:
         inputs:
@@ -646,39 +579,14 @@ workflows:
         - paths: |
             vendor
     - restore-spm-cache@2.1: {}
+  prep_all:
+    before_run:
+    - prep_all_shared
   prep_all_26:
-    steps:
-    - xcode-start-simulator@0:
-        inputs:
-        - destination: $DEFAULT_TEST_DEVICE_26_0
-    - set-env-var@0:
-        inputs:
-        - destination_keys: CONFIGURATION_BUILD_DIR
-        - value: $BITRISE_SOURCE_DIR/stpbuild/products
-        title: Set CONFIGURATION_BUILD_DIR
-    - set-env-var@0:
-        inputs:
-        - destination_keys: CONFIGURATION_TEMP_DIR
-        - value: $BITRISE_SOURCE_DIR/stpbuild/intermediates
-        title: Set CONFIGURATION_TEMP_DIR
-    - script@1:
-        inputs:
-        - content: bundle config set path 'vendor/bundle'
-        is_always_run: true
-        title: Set Bundler to use local vendor directory
-    - git-clone@8.2:
-        inputs:
-        - clone_depth: "1"
-    - restore-cache@2.4:
-        inputs:
-        - key: bundle-cache-{{ checksum "Gemfile.lock" }}
-    - bundler@0: {}
-    - save-cache@1:
-        inputs:
-        - key: bundle-cache-{{ checksum "Gemfile.lock" }}
-        - paths: |
-            vendor
-    - restore-spm-cache@2.1: {}
+    before_run:
+    - prep_all_shared
+    envs:
+    - DEFAULT_TEST_DEVICE: $DEFAULT_TEST_DEVICE_26_0
   size-report:
     steps:
     - script@1:
