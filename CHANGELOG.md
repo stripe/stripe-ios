@@ -1,3 +1,14 @@
+## x.x.x x-x-x
+
+### CustomerSheet
+* [Added] `opensCardScannerAutomatically` configuration
+
+### PaymentSheet
+* [Added] `opensCardScannerAutomatically` configuration
+
+### EmbeddedPaymentElement
+* [Added] `opensCardScannerAutomatically` configuration
+
 ## 24.22.0 2025-08-27
 
 ### StripeCryptoOnramp
