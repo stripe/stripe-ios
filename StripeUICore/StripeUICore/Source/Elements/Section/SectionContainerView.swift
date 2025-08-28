@@ -12,7 +12,8 @@ import UIKit
 /**
  A rounded, lightly shadowed container view with a thin border.
  You can put views like TextFieldView inside it.
- 
+ It displays its views in a vertical stack with dividers between them.
+
  - Note: This class sets the borderWidth, color, cornerRadius, etc. of its subviews.
  
  For internal SDK use only
@@ -35,6 +36,7 @@ class SectionContainerView: UIView {
         return view
     }()
 
+    /// The list of views to display in a vertical stack
     private(set) var views: [UIView]
     private let theme: ElementsAppearance
 
@@ -128,11 +130,12 @@ class SectionContainerView: UIView {
 
     // MARK: - Internal methods
     func updateUI(newViews: [UIView]? = nil) {
-        if !LiquidGlassDetector.isEnabled {
+        if LiquidGlassDetector.isEnabled, #available(iOS 26, *) {
+            cornerConfiguration =  .uniformCorners(radius: 26)
+        } else {
             layer.applyShadow(shadow: theme.shadow)
+            layer.cornerRadius = theme.cornerRadius
         }
-        layer.cornerRadius = theme.cornerRadius
-
         if isUserInteractionEnabled || UITraitCollection.current.isDarkMode {
             backgroundColor = theme.colors.componentBackground
         } else {
@@ -249,6 +252,7 @@ extension SectionContainerView {
 // MARK: - StackViewWithSeparator
 
 /// Builds the primary stack view that contains all others.
+/// ⚠️ Don't modify stackView properties outside of this or it won't carry over when we call `buildStackView` again in `updateUI`
 private func buildStackView(views: [UIView], theme: ElementsAppearance = .default) -> StackViewWithSeparator {
     let stackView = StackViewWithSeparator(arrangedSubviews: views)
     stackView.axis = .vertical
@@ -256,9 +260,26 @@ private func buildStackView(views: [UIView], theme: ElementsAppearance = .defaul
     stackView.separatorColor = theme.colors.divider
     stackView.borderWidth = theme.borderWidth
     stackView.borderColor = theme.colors.border
-    stackView.borderCornerRadius = theme.cornerRadius
     stackView.customBackgroundColor = theme.colors.componentBackground
     stackView.drawBorder = true
     stackView.hideShadow = true // Shadow is handled by `SectionContainerView`
+    if LiquidGlassDetector.isEnabled, #available(iOS 26.0, *) {
+        stackView.cornerConfiguration = .capsule()
+        stackView.isLayoutMarginsRelativeArrangement = true
+        stackView.directionalLayoutMargins = .insets(amount: 4)
+    } else {
+        stackView.borderCornerRadius = theme.cornerRadius
+    }
+    // Set up corner radius / corner configuration
+    if LiquidGlassDetector.isEnabled, #available(iOS 26.0, *) {
+        if views.count == 1 {
+            stackView.backgroundView.cornerConfiguration = .capsule()
+        } else {
+            stackView.backgroundView.cornerConfiguration = .uniformCorners(radius: 26)
+        }
+    } else {
+        stackView.borderCornerRadius = theme.cornerRadius
+    }
+
     return stackView
 }
