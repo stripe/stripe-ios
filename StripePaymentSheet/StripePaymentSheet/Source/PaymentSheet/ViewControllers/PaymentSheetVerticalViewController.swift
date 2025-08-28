@@ -159,7 +159,7 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
         loadResult: PaymentSheetLoader.LoadResult,
         isFlowController: Bool,
         analyticsHelper: PaymentSheetAnalyticsHelper,
-        walletButtonsShownExternally: Bool = false,
+        walletButtonsViewState: PaymentSheet.WalletButtonsViewState = .hidden,
         previousPaymentOption: PaymentOption? = nil
     ) {
         // Only call loadResult.intent.cvcRecollectionEnabled once per load
@@ -174,10 +174,10 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
         self.isFlowController = isFlowController
         self.savedPaymentMethods = loadResult.savedPaymentMethods
         self.paymentMethodTypes = loadResult.paymentMethodTypes
-        self.walletButtonsShownExternally = walletButtonsShownExternally
-        self.shouldShowApplePayInList = PaymentSheet.isApplePayEnabled(elementsSession: elementsSession, configuration: configuration) && isFlowController && !walletButtonsShownExternally
+        self.walletButtonsShownExternally = walletButtonsViewState.isVisible
+        self.shouldShowApplePayInList = PaymentSheet.isApplePayEnabled(elementsSession: elementsSession, configuration: configuration) && isFlowController && !walletButtonsViewState.showApplePay
         // Edge case: If Apple Pay isn't in the list, show Link as a wallet button and not in the list
-        self.shouldShowLinkInList = PaymentSheet.isLinkEnabled(elementsSession: elementsSession, configuration: configuration) && isFlowController && shouldShowApplePayInList && !walletButtonsShownExternally
+        self.shouldShowLinkInList = PaymentSheet.isLinkEnabled(elementsSession: elementsSession, configuration: configuration) && isFlowController && (shouldShowApplePayInList || walletButtonsViewState.showApplePay) && !walletButtonsViewState.showLink
         self.analyticsHelper = analyticsHelper
         super.init(nibName: nil, bundle: nil)
 
