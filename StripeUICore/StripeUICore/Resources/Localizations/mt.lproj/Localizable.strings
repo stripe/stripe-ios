@@ -1,3 +1,5 @@
+"%1$@ •••• %2$@" = "%1$@ •••• %2$@";
+
 "%@ (optional)" = "%@ (mhux obbligatorja)";
 
 "(not accepted)" = "(ma tistax tintuża)";
@@ -143,5 +145,7 @@
 "Your payment information will not be saved." = "L-informazzjoni tal-pagament tiegħek mhux se tiġi merfugħa.";
 
 "Your postal code is incomplete." = "Il-kodiċi postali tiegħek mhux komplut.";
+
+"Your postal code is invalid." = "Il-kodiċi postali tiegħek mhux validu.";
 
 "ZIP" = "Kodiċi Postali";

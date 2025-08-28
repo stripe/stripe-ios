@@ -1,3 +1,5 @@
+"%1$@ •••• %2$@" = "%1$@ •••• %2$@";
+
 "%@ (optional)" = "%@(선택 사항)";
 
 "(not accepted)" = "(허용되지 않음)";
@@ -143,5 +145,7 @@
 "Your payment information will not be saved." = "귀하의 결제 정보가 저장되지 않습니다.";
 
 "Your postal code is incomplete." = "우편번호가 불완전합니다.";
+
+"Your postal code is invalid." = "우편번호가 유효하지 않습니다.";
 
 "ZIP" = "우편번호";
