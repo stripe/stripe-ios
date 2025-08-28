@@ -336,6 +336,23 @@ extension PaymentMethodFormViewController {
         let linkMode = elementsSession.linkSettings?.linkMode
         let billingDetails = instantDebitsFormElement?.billingDetails
 
+        let paymentMethodType: STPPaymentMethodType = elementsSession.linkPassthroughModeEnabled ? .card : .link
+        let isSettingUp = intent.isSetupFutureUsageSet(for: paymentMethodType) || elementsSession.forceSaveFutureUseBehaviorAndNewMandateText
+
+        let allowRedisplay: STPPaymentMethodAllowRedisplay? = {
+            guard let mobilePaymentElementFeatures = elementsSession.customerSessionMobilePaymentElementFeatures else {
+                return nil
+            }
+
+            let allowRedisplayOverride = mobilePaymentElementFeatures.paymentMethodSaveAllowRedisplayOverride
+
+            if isSettingUp {
+                return allowRedisplayOverride ?? .limited
+            } else {
+                return .unspecified
+            }
+        }()
+
         return ElementsSessionContext(
             amount: intent.amount,
             currency: intent.currency,
@@ -343,7 +360,8 @@ extension PaymentMethodFormViewController {
             intentId: intentId,
             linkMode: linkMode,
             billingDetails: billingDetails,
-            eligibleForIncentive: instantDebitsFormElement?.displayableIncentive != nil
+            eligibleForIncentive: instantDebitsFormElement?.displayableIncentive != nil,
+            allowRedisplay: allowRedisplay?.stringValue
         )
     }
 
