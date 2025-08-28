@@ -72,7 +72,7 @@ class SectionContainerView: UIView {
         for row in visibleRows {
             // Pull out any Element views nested inside a MultiElementRowView
             for view in (row as? MultiElementRowView)?.views ?? [row] {
-                if #available(iOS 26.0, *) {
+                if LiquidGlassDetector.isEnabled, #available(iOS 26.0, *) {
                     view.cornerConfiguration = .capsule()
                 } else {
                     view.layer.cornerRadius = theme.cornerRadius
@@ -128,7 +128,9 @@ class SectionContainerView: UIView {
 
     // MARK: - Internal methods
     func updateUI(newViews: [UIView]? = nil) {
-        layer.applyShadow(shadow: theme.shadow)
+        if !LiquidGlassDetector.isEnabled {
+            layer.applyShadow(shadow: theme.shadow)
+        }
         layer.cornerRadius = theme.cornerRadius
 
         if isUserInteractionEnabled || UITraitCollection.current.isDarkMode {
