@@ -68,25 +68,30 @@ class SectionContainerView: UIView {
         // Set up each subviews border corners
         // Do this in layoutSubviews to update when views appear or disappear
         let visibleRows = stackView.arrangedSubviews.filter { !$0.isHidden }
-        // 1. Reset all border corners to be square
+        // 1. Reset all border corners to respect `appearance.cornerRadius` but be hidden
         for row in visibleRows {
             // Pull out any Element views nested inside a MultiElementRowView
             for view in (row as? MultiElementRowView)?.views ?? [row] {
-                view.layer.cornerRadius = theme.cornerRadius
+                if #available(iOS 26.0, *) {
+                    view.cornerConfiguration = .capsule()
+                } else {
+                    view.layer.cornerRadius = theme.cornerRadius
+                }
                 view.layer.maskedCorners = []
                 view.layer.shadowOpacity = 0.0
                 view.layer.borderWidth = 0
                 view.layer.masksToBounds = true
             }
         }
-        // 2. Round the top-most view's top corners
+
+        // 2. Un-hide the top-most view's top corners
         if let multiElementRowView = visibleRows.first as? MultiElementRowView {
             multiElementRowView.views.first?.layer.maskedCorners.insert([.layerMinXMinYCorner])
             multiElementRowView.views.last?.layer.maskedCorners.insert([.layerMaxXMinYCorner])
         } else {
             visibleRows.first?.layer.maskedCorners.insert([.layerMinXMinYCorner, .layerMaxXMinYCorner])
         }
-        // 3. Round the bottom-most view's bottom corners
+        // 3. Un-hide the bottom-most view's bottom corners
         if let multiElementRowView = visibleRows.last as? MultiElementRowView {
             multiElementRowView.views.first?.layer.maskedCorners.insert([.layerMinXMaxYCorner])
             multiElementRowView.views.last?.layer.maskedCorners.insert([.layerMaxXMaxYCorner])
