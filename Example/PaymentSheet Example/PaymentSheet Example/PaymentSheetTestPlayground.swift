@@ -6,6 +6,7 @@
 //
 
 @_spi(STP) import StripePaymentSheet
+@_spi(STP) import StripeUICore
 import SwiftUI
 
 @available(iOS 15.0, *)
