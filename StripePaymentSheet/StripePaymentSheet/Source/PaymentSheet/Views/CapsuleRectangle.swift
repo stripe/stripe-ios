@@ -8,6 +8,10 @@
 @_spi(STP) import StripeUICore
 import UIKit
 
+protocol SelectableRectangle: UIView {
+    var isSelected: Bool { get set }
+}
+
 @available(iOS 26.0, *)
 class CapsuleRectangle: UIView, SelectableRectangle {
     private let roundedRectangle: UIView

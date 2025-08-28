@@ -9,10 +9,6 @@ import Foundation
 @_spi(STP) import StripeUICore
 import UIKit
 
-protocol SelectableRectangle: UIView {
-    var isSelected: Bool { get set }
-}
-
 /// A `RowButton` subclass that presents floating button style.
 final class RowButtonFloating: RowButton {
     // MARK: - Subviews
@@ -27,12 +23,23 @@ final class RowButtonFloating: RowButton {
         }
     }()
     /// The vertical top and bottom padding to be used. Floating uses different values for insets based on if it is used in embedded or vertical mode
-    private var insets: CGFloat {
+    private var contentInsets: CGFloat {
         guard isEmbedded else {
             return appearance.verticalModeRowPadding // Configurable insets for vertical mode
         }
 
         return appearance.embeddedPaymentElement.row.additionalInsets
+    }
+
+    private var imageViewMargin: CGFloat {
+        return 10
+    }
+
+    private var imageViewLeadingConstant: CGFloat {
+        if isEmbedded {
+            return appearance.embeddedPaymentElement.row.paymentMethodIconLayoutMargins.leading
+        }
+        return LiquidGlassDetector.isEnabled ? 16 : 12
     }
 
     override func updateSelectedState() {
@@ -100,50 +107,26 @@ final class RowButtonFloating: RowButton {
         let imageViewBottomConstraint = imageView.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -14)
         imageViewBottomConstraint.priority = .defaultLow
 
-        let imageViewLeadingConstant = imageViewLeadingConstant()
         let imageViewTrailingConstant = isEmbedded ? appearance.embeddedPaymentElement.row.paymentMethodIconLayoutMargins.trailing : 12
 
         NSLayoutConstraint.activate([
             // Image view constraints
             imageView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: imageViewLeadingConstant),
-            imageView.topAnchor.constraint(greaterThanOrEqualTo: topAnchor, constant: 10 + insets),
-            imageView.bottomAnchor.constraint(lessThanOrEqualTo: bottomAnchor, constant: -10 - insets),
-            imageView.heightAnchor.constraint(equalToConstant: 20),
+            imageView.topAnchor.constraint(greaterThanOrEqualTo: topAnchor, constant: imageViewMargin),
+            imageView.bottomAnchor.constraint(lessThanOrEqualTo: bottomAnchor, constant: -imageViewMargin),
+            imageView.heightAnchor.constraint(lessThanOrEqualToConstant: 20),
             imageView.widthAnchor.constraint(equalToConstant: 24),
             imageView.centerYAnchor.constraint(equalTo: centerYAnchor),
             imageViewBottomConstraint,
             imageViewTopConstraint,
 
-            // Label constraints
+            // Content constraints - use configurable insets for the main content area
             horizontalStackView.leadingAnchor.constraint(equalTo: imageView.trailingAnchor, constant: imageViewTrailingConstant),
             horizontalStackView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -12),
             horizontalStackView.centerYAnchor.constraint(equalTo: centerYAnchor),
-            horizontalStackView.topAnchor.constraint(equalTo: topAnchor, constant: insets),
-            horizontalStackView.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -insets),
+            horizontalStackView.topAnchor.constraint(equalTo: topAnchor, constant: contentInsets),
+            horizontalStackView.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -contentInsets),
         ])
-    }
-    func imageViewLeadingConstant() -> CGFloat {
-        if isEmbedded {
-            return appearance.embeddedPaymentElement.row.paymentMethodIconLayoutMargins.leading
-        }
-        return LiquidGlassDetector.isEnabled ? 16 : 12
-    }
-
-    override func makeSameHeightAsOtherRowButtonsIfNecessary() {
-        // Don't do this if we are flat_with_checkmark or flat_with_chevron style and have an accessory view - this row button is allowed to be taller than the rest
-        if isFlatWithCheckmarkOrChevronStyle && isDisplayingAccessoryView {
-            heightConstraint?.isActive = false
-            return
-        }
-
-        // If iOS 26+, use the specific height for floating buttons
-        if LiquidGlassDetector.isEnabled {
-            heightConstraint = heightAnchor.constraint(equalToConstant: 64.0)
-            heightConstraint?.isActive = true
-            return
-        }
-
-        super.makeSameHeightAsOtherRowButtonsIfNecessary()
     }
 
     override func handleEvent(_ event: STPEvent) {

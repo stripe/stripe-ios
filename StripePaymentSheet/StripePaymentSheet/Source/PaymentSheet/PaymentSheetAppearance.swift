@@ -74,7 +74,7 @@ public extension PaymentSheet {
         /// - Note: Increasing this value increases the height of each floating payment method row
         /// - Note: This only applies to non-embedded integrations (i.e., regular PaymentSheet)
         @_spi(AppearanceAPIAdditionsPreview)
-        public var verticalModeRowPadding: CGFloat = 4.0 {
+        public var verticalModeRowPadding: CGFloat = LiquidGlassDetector.isEnabled ? 16.0 : 4.0 {
             didSet {
                 guard verticalModeRowPadding >= 0.0 else {
                     assertionFailure("verticalModeRowPadding must be a non-negative value")
