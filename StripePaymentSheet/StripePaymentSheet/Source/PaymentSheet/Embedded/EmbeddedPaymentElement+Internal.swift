@@ -481,7 +481,7 @@ extension EmbeddedPaymentElement: EmbeddedFormViewControllerDelegate {
                 return nil
             }
         }()
-        // If we don't have a sublabel, don't overwrite the existing one
+        // Only overwrite the existing sublabel if we have a new one
         if let sublabel {
             embeddedPaymentMethodsView.selectedRowButton?.setSublabel(text: sublabel)
         }
