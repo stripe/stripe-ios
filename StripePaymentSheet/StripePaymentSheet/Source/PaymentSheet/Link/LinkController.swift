@@ -467,6 +467,10 @@ import UIKit
         )
     }
 
+    /// Updates the phone number for the current Link user.
+    ///
+    /// - Parameter phoneNumber: The phone number of the user. Phone number must be in E.164 format (e.g., +12125551234).
+    /// Throws if an authenticated Link user is not available, phone number format is invalid, or an API error occurs.
     @_spi(STP) public func updatePhoneNumber(
         to phoneNumber: String,
         completion: @escaping (Result<Void, Error>) -> Void
@@ -894,6 +898,10 @@ extension LinkController: LinkFullConsentViewControllerDelegate {
         }
     }
 
+    /// Updates the phone number for the current Link user.
+    ///
+    /// - Parameter phoneNumber: The phone number of the user. Phone number must be in E.164 format (e.g., +12125551234).
+    /// Throws if an authenticated Link user is not available, phone number format is invalid, or an API error occurs.
     func updatePhoneNumber(to phoneNumber: String) async throws {
         return try await withCheckedThrowingContinuation { continuation in
             updatePhoneNumber(to: phoneNumber) { result in
