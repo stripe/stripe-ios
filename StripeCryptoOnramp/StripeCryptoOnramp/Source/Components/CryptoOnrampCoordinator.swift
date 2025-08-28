@@ -113,8 +113,8 @@ protocol CryptoOnrampCoordinatorProtocol {
     ///     Your backend should call Stripe's `/v1/crypto/onramp_sessions/:id/checkout` endpoint with the provided onramp session ID.
     ///     The closure should return the onramp session client secret on success, or throw an Error on failure.
     ///     This closure may be called twice: once initially, and once more after handling any required authentication.
-    /// - Returns: A `CheckoutResult` indicating whether the checkout succeeded or failed.
-    /// Throws an error if checkout fails.
+    /// - Returns: A `CheckoutResult` indicating whether the checkout succeeded or was canceled.
+    /// Throws if handling required actions fails, or an API error occurs.
     func performCheckout(
         onrampSessionId: String,
         authenticationContext: STPAuthenticationContext,
