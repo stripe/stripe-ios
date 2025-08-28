@@ -170,6 +170,7 @@ class TextFieldView: UIView {
             addAndPinSubview(transparentMaskView)
         }
         hStack = UIStackView(arrangedSubviews: [textFieldView, errorIconView, clearButton, accessoryContainerView])
+//        hStack.backgroundColor = .blue
         clearButton.setContentHuggingPriority(.required, for: .horizontal)
         clearButton.setContentCompressionResistancePriority(textField.contentCompressionResistancePriority(for: .horizontal) + 1,
                                                             for: .horizontal)
@@ -181,7 +182,12 @@ class TextFieldView: UIView {
                                                                        for: .horizontal)
         hStack.alignment = .center
         hStack.spacing = 6
+        //.insets(top: 4, leading: 20, bottom: 4, trailing: 11)) -- items over by some amount
         addAndPinSubview(hStack, insets: viewModel.theme.textFieldInsets)
+        NSLayoutConstraint.activate([
+            hStack.heightAnchor.constraint(equalToConstant: 52),
+            textFieldView.heightAnchor.constraint(equalToConstant: 52)
+        ])
     }
 
     @objc private func clearText() {

@@ -1152,7 +1152,7 @@ extension PaymentSheet.Appearance {
         theme.sectionSpacing = sectionSpacing
 
         var fonts = ElementsAppearance.Font()
-        fonts.subheadline = scaledFont(for: font.base.regular, style: .subheadline, maximumPointSize: 20)
+        fonts.subheadline = scaledFont(for: font.base.regular, style: .subheadline, maximumPointSize: 20, additionalScaling: 5.0)
         fonts.subheadlineBold = scaledFont(for: font.base.bold, style: .subheadline, maximumPointSize: 20)
         fonts.sectionHeader = scaledFont(for: font.base.medium, style: .footnote, maximumPointSize: 18)
         fonts.caption = scaledFont(for: font.base.regular, style: .caption1, maximumPointSize: 20)

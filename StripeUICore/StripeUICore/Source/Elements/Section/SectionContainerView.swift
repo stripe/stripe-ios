@@ -246,10 +246,12 @@ private func buildStackView(views: [UIView], theme: ElementsAppearance = .defaul
     stackView.axis = .vertical
     stackView.spacing = theme.borderWidth
     stackView.separatorColor = theme.colors.divider
-    stackView.borderColor = theme.colors.border
+    if !LiquidGlassDetector.isEnabled {
+        stackView.borderColor = theme.colors.border
+    }
     stackView.borderCornerRadius = theme.cornerRadius
     stackView.customBackgroundColor = theme.colors.componentBackground
-    stackView.drawBorder = true
+    stackView.drawBorder = !LiquidGlassDetector.isEnabled
     stackView.hideShadow = true // Shadow is handled by `SectionContainerView`
     return stackView
 }

@@ -16,7 +16,9 @@ import UIKit
     public static let contentViewInsets: NSDirectionalEdgeInsets = .insets(top: 4, leading: 11, bottom: 4, trailing: 11)
     public static let fieldBorderColor: UIColor = .systemGray3
     public static let fieldBorderWidth: CGFloat = 1
-    public static let textFieldFont: UIFont = UIFontMetrics(forTextStyle: .body).scaledFont(for: .systemFont(ofSize: 14))
+    public static let textFieldFont: UIFont = UIFontMetrics(forTextStyle: .body).scaledFont(for: .systemFont(ofSize: 32))
+    //LiquidGlassDetector.isEnabled ? UIFontMetrics(forTextStyle: .body).scaledFont(for: .systemFont(ofSize: 32))
+//                                                                            : UIFontMetrics(forTextStyle: .body).scaledFont(for: .systemFont(ofSize: 14))
     public static let sectionTitleFont: UIFont = UIFontMetrics(forTextStyle: .body).scaledFont(for: .systemFont(ofSize: 13, weight: .semibold))
     /// The spacing between elements of a SectionElement
     public static let sectionElementInternalSpacing: CGFloat = 8

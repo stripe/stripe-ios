@@ -56,9 +56,9 @@ extension AppDelegate {
             // https://jira.corp.stripe.com/browse/LINK_MOBILE-199
             return
         }
-        let alert = UIAlertController(title: "Broken constraint!", message: "\(constraint)\nPlease fix it or file a bug!", preferredStyle: .alert)
-        alert.addAction(UIAlertAction(title: "OK", style: .default))
-        window?.rootViewController?.findTopMostPresentedViewController().present(alert, animated: true)
+//        let alert = UIAlertController(title: "Broken constraint!", message: "\(constraint)\nPlease fix it or file a bug!", preferredStyle: .alert)
+//        alert.addAction(UIAlertAction(title: "OK", style: .default))
+//        window?.rootViewController?.findTopMostPresentedViewController().present(alert, animated: true)
     }
 }
 

@@ -43,6 +43,9 @@ class FloatingPlaceholderTextFieldView: UIView {
         self.theme = theme
         super.init(frame: .zero)
         isAccessibilityElement = true
+//        backgroundColor = .red
+//        self.textField.backgroundColor = .yellow
+//        self.placeholderLabel.backgroundColor = .green
         installConstraints()
     }
 
