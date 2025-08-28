@@ -10,6 +10,10 @@ import UIKit
 extension AppDelegate {
     /// - Note: Only call this **once**!
     func catchBrokenConstraints() {
+        if #available(iOS 26.0, *) {
+            // TODO(iOS26): Something is broken, I think the swizzled method changed slightly
+            return
+        }
         let sel = NSSelectorFromString("engine:willBreakConstraint:dueToMutuallyExclusiveConstraints:")
         let method = class_getInstanceMethod(UIView.self, sel)!
         let impl = method_getImplementation(method)
