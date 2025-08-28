@@ -79,7 +79,7 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
     let elementsSession: STPElementsSession
     let formCache: PaymentMethodFormCache = .init()
     let analyticsHelper: PaymentSheetAnalyticsHelper
-    let walletButtonsShownExternally: Bool
+    let walletButtonsShownExternally: [String]
     var error: Swift.Error?
     var isPaymentInFlight: Bool = false
     private(set) var savedPaymentMethods: [STPPaymentMethod]
@@ -159,7 +159,7 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
         loadResult: PaymentSheetLoader.LoadResult,
         isFlowController: Bool,
         analyticsHelper: PaymentSheetAnalyticsHelper,
-        walletButtonsShownExternally: Bool = false,
+        walletButtonsShownExternally: [String] = [],
         previousPaymentOption: PaymentOption? = nil
     ) {
         // Only call loadResult.intent.cvcRecollectionEnabled once per load
@@ -175,9 +175,9 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
         self.savedPaymentMethods = loadResult.savedPaymentMethods
         self.paymentMethodTypes = loadResult.paymentMethodTypes
         self.walletButtonsShownExternally = walletButtonsShownExternally
-        self.shouldShowApplePayInList = PaymentSheet.isApplePayEnabled(elementsSession: elementsSession, configuration: configuration) && isFlowController && !walletButtonsShownExternally
+        self.shouldShowApplePayInList = PaymentSheet.isApplePayEnabled(elementsSession: elementsSession, configuration: configuration) && isFlowController && !walletButtonsShownExternally.contains("apple_pay")
         // Edge case: If Apple Pay isn't in the list, show Link as a wallet button and not in the list
-        self.shouldShowLinkInList = PaymentSheet.isLinkEnabled(elementsSession: elementsSession, configuration: configuration) && isFlowController && shouldShowApplePayInList && !walletButtonsShownExternally
+        self.shouldShowLinkInList = PaymentSheet.isLinkEnabled(elementsSession: elementsSession, configuration: configuration) && isFlowController && (shouldShowApplePayInList || walletButtonsShownExternally.contains("apple_pay")) && !walletButtonsShownExternally.contains("link")
         self.analyticsHelper = analyticsHelper
         super.init(nibName: nil, bundle: nil)
 
@@ -417,7 +417,7 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
     func makePaymentMethodListViewController(selection: RowButtonType?) -> VerticalPaymentMethodListViewController {
         var initialSelection = selection ?? calculateInitialSelection()
         // If Apple Pay or Link is selected, but wallet buttons should be shown externally, then don't select any default option.
-        if (configuration.willUseWalletButtonsView || walletButtonsShownExternally) && (initialSelection == .applePay || initialSelection == .link) {
+        if (configuration.willUseWalletButtonsView || !walletButtonsShownExternally.isEmpty) && (initialSelection == .applePay || initialSelection == .link) {
             initialSelection = nil
         }
         let savedPaymentMethodAccessoryType = RowButton.RightAccessoryButton.getAccessoryButtonType(
@@ -446,10 +446,10 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
 
     func makeWalletHeaderView() -> UIView? {
         var walletOptions: PaymentSheetViewController.WalletHeaderView.WalletOptions = []
-        if PaymentSheet.isApplePayEnabled(elementsSession: elementsSession, configuration: configuration) && !shouldShowApplePayInList && !walletButtonsShownExternally {
+        if PaymentSheet.isApplePayEnabled(elementsSession: elementsSession, configuration: configuration) && !shouldShowApplePayInList && walletButtonsShownExternally.isEmpty {
             walletOptions.insert(.applePay)
         }
-        if PaymentSheet.isLinkEnabled(elementsSession: elementsSession, configuration: configuration) && !shouldShowLinkInList && !walletButtonsShownExternally {
+        if PaymentSheet.isLinkEnabled(elementsSession: elementsSession, configuration: configuration) && !shouldShowLinkInList && walletButtonsShownExternally.isEmpty {
             walletOptions.insert(.link)
         }
         guard !walletOptions.isEmpty else {

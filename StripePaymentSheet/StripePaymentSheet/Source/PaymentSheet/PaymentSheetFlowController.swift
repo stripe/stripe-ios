@@ -228,7 +228,7 @@ extension PaymentSheet {
         private var didDismissLinkVerificationDialog: Bool = false
 
         // If a WalletButtonsView is currently visible
-        var walletButtonsShownExternally: Bool = false {
+        var walletButtonsViewState: WalletButtonsViewState = .hidden {
             didSet {
                 // Update payment method options
                 self.updateForWalletButtonsView()
@@ -291,7 +291,12 @@ extension PaymentSheet {
             self.configuration = configuration
             self.analyticsHelper = analyticsHelper
             self.analyticsHelper.logInitialized()
-            self.viewController = Self.makeViewController(configuration: configuration, loadResult: loadResult, analyticsHelper: analyticsHelper, walletButtonsShownExternally: self.walletButtonsShownExternally)
+            self.viewController = Self.makeViewController(
+                configuration: configuration,
+                loadResult: loadResult,
+                analyticsHelper: analyticsHelper,
+                walletButtonsShownExternally: self.walletButtonsViewState.visibleButtons
+            )
             self.viewController.flowControllerDelegate = self
             self.passiveCaptchaChallenge = PassiveCaptchaChallenge(passiveCaptcha: loadResult.elementsSession.passiveCaptcha)
             self.viewController.passiveCaptchaChallenge = self.passiveCaptchaChallenge
@@ -628,7 +633,7 @@ extension PaymentSheet {
                         configuration: self.configuration,
                         loadResult: loadResult,
                         analyticsHelper: analyticsHelper,
-                        walletButtonsShownExternally: walletButtonsShownExternally,
+                        walletButtonsShownExternally: walletButtonsViewState.visibleButtons,
                         previousPaymentOption: self.internalPaymentOption
                     )
                     self.viewController.flowControllerDelegate = self
@@ -659,7 +664,7 @@ extension PaymentSheet {
                 configuration: self.configuration,
                 loadResult: updatedLoadResult,
                 analyticsHelper: analyticsHelper,
-                walletButtonsShownExternally: self.walletButtonsShownExternally,
+                walletButtonsShownExternally: self.walletButtonsViewState.visibleButtons,
                 previousLinkConfirmOption: self.viewController.linkConfirmOption,
                 previousPaymentOption: self.internalPaymentOption
             )
@@ -703,7 +708,7 @@ extension PaymentSheet {
             configuration: Configuration,
             loadResult: PaymentSheetLoader.LoadResult,
             analyticsHelper: PaymentSheetAnalyticsHelper,
-            walletButtonsShownExternally: Bool,
+            walletButtonsShownExternally: [String],
             previousLinkConfirmOption: LinkConfirmOption? = nil,
             previousPaymentOption: PaymentOption? = nil
         ) -> FlowControllerViewControllerProtocol {
@@ -728,6 +733,20 @@ extension PaymentSheet {
             }
             controller.linkConfirmOption = previousLinkConfirmOption
             return controller
+        }
+    }
+
+    enum WalletButtonsViewState {
+        case visible(allowedWallets: [String])
+        case hidden
+
+        var visibleButtons: [String] {
+            switch self {
+            case .visible(let allowedWallets):
+                return allowedWallets
+            case .hidden:
+                return []
+            }
         }
     }
 }
