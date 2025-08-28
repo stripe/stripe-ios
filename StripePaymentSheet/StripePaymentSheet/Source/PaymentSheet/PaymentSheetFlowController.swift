@@ -291,12 +291,7 @@ extension PaymentSheet {
             self.configuration = configuration
             self.analyticsHelper = analyticsHelper
             self.analyticsHelper.logInitialized()
-            self.viewController = Self.makeViewController(
-                configuration: configuration,
-                loadResult: loadResult,
-                analyticsHelper: analyticsHelper,
-                walletButtonsShownExternally: self.walletButtonsViewState.visibleButtons
-            )
+            self.viewController = Self.makeViewController(configuration: configuration, loadResult: loadResult, analyticsHelper: analyticsHelper, walletButtonsViewState: self.walletButtonsViewState)
             self.viewController.flowControllerDelegate = self
             self.passiveCaptchaChallenge = PassiveCaptchaChallenge(passiveCaptcha: loadResult.elementsSession.passiveCaptcha)
             self.viewController.passiveCaptchaChallenge = self.passiveCaptchaChallenge
@@ -633,7 +628,7 @@ extension PaymentSheet {
                         configuration: self.configuration,
                         loadResult: loadResult,
                         analyticsHelper: analyticsHelper,
-                        walletButtonsShownExternally: walletButtonsViewState.visibleButtons,
+                        walletButtonsViewState: walletButtonsViewState,
                         previousPaymentOption: self.internalPaymentOption
                     )
                     self.viewController.flowControllerDelegate = self
@@ -664,7 +659,7 @@ extension PaymentSheet {
                 configuration: self.configuration,
                 loadResult: updatedLoadResult,
                 analyticsHelper: analyticsHelper,
-                walletButtonsShownExternally: self.walletButtonsViewState.visibleButtons,
+                walletButtonsViewState: self.walletButtonsViewState,
                 previousLinkConfirmOption: self.viewController.linkConfirmOption,
                 previousPaymentOption: self.internalPaymentOption
             )
@@ -708,7 +703,7 @@ extension PaymentSheet {
             configuration: Configuration,
             loadResult: PaymentSheetLoader.LoadResult,
             analyticsHelper: PaymentSheetAnalyticsHelper,
-            walletButtonsShownExternally: [String],
+            walletButtonsViewState: PaymentSheet.WalletButtonsViewState,
             previousLinkConfirmOption: LinkConfirmOption? = nil,
             previousPaymentOption: PaymentOption? = nil
         ) -> FlowControllerViewControllerProtocol {
@@ -727,7 +722,7 @@ extension PaymentSheet {
                     loadResult: loadResult,
                     isFlowController: true,
                     analyticsHelper: analyticsHelper,
-                    walletButtonsShownExternally: walletButtonsShownExternally,
+                    walletButtonsViewState: walletButtonsViewState,
                     previousPaymentOption: previousPaymentOption
                 )
             }
@@ -740,13 +735,30 @@ extension PaymentSheet {
         case visible(allowedWallets: [String])
         case hidden
 
-        var visibleButtons: [String] {
+        var isVisible: Bool {
+            switch self {
+            case .visible:
+                return true
+            case .hidden:
+                return false
+            }
+        }
+
+        private var visibleButtons: [String] {
             switch self {
             case .visible(let allowedWallets):
                 return allowedWallets
             case .hidden:
                 return []
             }
+        }
+
+        var showApplePay: Bool {
+            visibleButtons.contains("apple_pay")
+        }
+
+        var showLink: Bool {
+            visibleButtons.contains("link")
         }
     }
 }
