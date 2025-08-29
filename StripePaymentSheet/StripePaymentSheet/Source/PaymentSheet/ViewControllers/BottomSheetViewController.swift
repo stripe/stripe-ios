@@ -428,10 +428,12 @@ class BottomSheetViewController: UIViewController, BottomSheetPresentable {
                 if notification.name == UIResponder.keyboardWillHideNotification {
                     bottomAnchor.constant = 0
                 } else {
+                    #if !os(visionOS)
                     if #available(iOS 26.0, *), let inputAccessoryView = self.view.firstResponder()?.inputAccessoryView {
                         // On iOS 26, the input accessory view is transparent, so we don't want shift the content above it.
                        keyboardInViewHeight -= inputAccessoryView.frame.height
                     }
+                    #endif
                     bottomAnchor.constant = -keyboardInViewHeight
                 }
 
