@@ -417,7 +417,7 @@ class BottomSheetViewController: UIViewController, BottomSheetPresentable {
                 else {
                     return
                 }
-                
+
                 let keyboardViewEndFrame = self.view.convert(keyboardScreenEndFrame, from: self.view.window)
                 var keyboardInViewHeight = self.view.bounds.intersection(keyboardViewEndFrame).height
                 // Account for edge case where keyboard is taller than our view
