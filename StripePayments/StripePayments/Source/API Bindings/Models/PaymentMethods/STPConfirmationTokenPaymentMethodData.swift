@@ -15,7 +15,7 @@ import UIKit
 /// - seealso: https://stripe.com/docs/api/confirmation_tokens/create#create_confirmation_token-payment_method_data
 public class STPConfirmationTokenPaymentMethodData: NSObject, STPFormEncodable {
     private var _additionalAPIParameters: [AnyHashable: Any] = [:]
-    
+
     /// The type of payment method.
     @objc public var type: STPPaymentMethodType {
         get {
@@ -27,7 +27,7 @@ public class STPConfirmationTokenPaymentMethodData: NSObject, STPFormEncodable {
             }
         }
     }
-    
+
     /// The raw underlying type string sent to the server.
     /// Generally you should use `type` instead unless you have a reason not to.
     /// You can use this if you want to create a param of a type not yet supported
@@ -35,21 +35,21 @@ public class STPConfirmationTokenPaymentMethodData: NSObject, STPFormEncodable {
     /// Setting this to a value not known by the SDK causes `type` to
     /// return `STPPaymentMethodTypeUnknown`
     @objc public var rawTypeString: String?
-    
+
     /// Billing information associated with the PaymentMethod that may be used or required by particular types of payment methods.
     @objc public var billingDetails: STPPaymentMethodBillingDetails?
-    
+
     /// This field indicates whether this payment method can be shown again to its customer in a checkout flow
     @objc public var allowRedisplay: STPPaymentMethodAllowRedisplay = .unspecified
-    
+
     /// Set of key-value pairs that you can attach to the PaymentMethod. This can be useful for storing additional information about the PaymentMethod in a structured format.
     @objc public var metadata: [String: String]?
-    
+
     /// Radar options that may contain HCaptcha token
     @objc var radarOptions: STPRadarOptions?
-    
+
     // MARK: - Payment Method Type-Specific Properties
-    
+
     /// If this is a card PaymentMethod, this contains the user's card details.
     @objc public var card: STPPaymentMethodCardParams?
     /// If this is an ACSS Debit PaymentMethod, this contains details about the ACSS Debit payment method.
@@ -118,9 +118,9 @@ public class STPConfirmationTokenPaymentMethodData: NSObject, STPFormEncodable {
     @objc public var usBankAccount: STPPaymentMethodUSBankAccountParams?
     /// If this is a WeChat Pay PaymentMethod, this contains additional details.
     @objc var weChatPay: STPPaymentMethodWeChatPayParams?
-    
+
     // MARK: - Convenience Initializers
-    
+
     /// Creates confirmation token payment method data for a card PaymentMethod.
     /// - Parameters:
     ///   - card: An object containing the user's card details.
@@ -141,7 +141,7 @@ public class STPConfirmationTokenPaymentMethodData: NSObject, STPFormEncodable {
         self.allowRedisplay = allowRedisplay
         self.metadata = metadata
     }
-    
+
     /// Creates confirmation token payment method data for a SEPA Debit PaymentMethod.
     /// - Parameters:
     ///   - sepaDebit: An object containing the SEPA bank debit details.
@@ -162,7 +162,7 @@ public class STPConfirmationTokenPaymentMethodData: NSObject, STPFormEncodable {
         self.allowRedisplay = allowRedisplay
         self.metadata = metadata
     }
-    
+
     /// Creates confirmation token payment method data for a US Bank Account PaymentMethod.
     /// - Parameters:
     ///   - usBankAccount: An object containing additional US bank account details
@@ -183,7 +183,7 @@ public class STPConfirmationTokenPaymentMethodData: NSObject, STPFormEncodable {
         self.allowRedisplay = allowRedisplay
         self.metadata = metadata
     }
-    
+
     /// Creates confirmation token payment method data from existing payment method parameters.
     /// - Parameter paymentMethodParams: The payment method parameters to convert
     @objc
@@ -195,7 +195,7 @@ public class STPConfirmationTokenPaymentMethodData: NSObject, STPFormEncodable {
         self.allowRedisplay = paymentMethodParams.allowRedisplay
         self.metadata = paymentMethodParams.metadata
         self.radarOptions = paymentMethodParams.radarOptions
-        
+
         // Copy type-specific parameters
         self.card = paymentMethodParams.card
         self.alipay = paymentMethodParams.alipay
@@ -231,7 +231,7 @@ public class STPConfirmationTokenPaymentMethodData: NSObject, STPFormEncodable {
         self.billie = paymentMethodParams.billie
         self.satispay = paymentMethodParams.satispay
     }
-    
+
     /// :nodoc:
     @objc public override var description: String {
         let props = [
@@ -246,14 +246,14 @@ public class STPConfirmationTokenPaymentMethodData: NSObject, STPFormEncodable {
         ]
         return "<\(props.joined(separator: "; "))>"
     }
-    
+
     // MARK: - STPFormEncodable
-    
+
     @objc
     public static func rootObjectName() -> String? {
         return nil
     }
-    
+
     @objc
     public static func propertyNamesToFormFieldNamesMapping() -> [String: String] {
         return [
@@ -262,7 +262,7 @@ public class STPConfirmationTokenPaymentMethodData: NSObject, STPFormEncodable {
             NSStringFromSelector(#selector(getter: allowRedisplayRawString)): "allow_redisplay",
             NSStringFromSelector(#selector(getter: metadata)): "metadata",
             NSStringFromSelector(#selector(getter: radarOptions)): "radar_options",
-            
+
             // Payment method type-specific fields
             NSStringFromSelector(#selector(getter: card)): "card",
             NSStringFromSelector(#selector(getter: acssDebit)): "acss_debit",
@@ -300,7 +300,7 @@ public class STPConfirmationTokenPaymentMethodData: NSObject, STPFormEncodable {
             NSStringFromSelector(#selector(getter: weChatPay)): "wechat_pay",
         ]
     }
-    
+
     @objc public var additionalAPIParameters: [AnyHashable: Any] {
         get {
             return _additionalAPIParameters
@@ -309,7 +309,7 @@ public class STPConfirmationTokenPaymentMethodData: NSObject, STPFormEncodable {
             _additionalAPIParameters = newValue
         }
     }
-    
+
     @objc internal var allowRedisplayRawString: String? {
         return allowRedisplay.stringValue
     }

@@ -259,6 +259,7 @@ extension PaymentSheet {
                     paymentHandler: paymentHandler,
                     isFlowController: isFlowController,
                     allowsSetAsDefaultPM: elementsSession.paymentMethodSetAsDefaultForPaymentSheet,
+                    elementsSession: elementsSession,
                     completion: completion
                 )
             }
@@ -311,6 +312,7 @@ extension PaymentSheet {
                     authenticationContext: authenticationContext,
                     paymentHandler: paymentHandler,
                     isFlowController: isFlowController,
+                    elementsSession: elementsSession,
                     completion: completion
                 )
             }
@@ -369,6 +371,7 @@ extension PaymentSheet {
                         authenticationContext: authenticationContext,
                         paymentHandler: paymentHandler,
                         isFlowController: isFlowController,
+                        elementsSession: elementsSession,
                         completion: { psResult, confirmationType in
                             if shouldLogOutOfLink(result: psResult, elementsSession: elementsSession) {
                                 linkAccount?.logout()
@@ -431,6 +434,7 @@ extension PaymentSheet {
                         authenticationContext: authenticationContext,
                         paymentHandler: paymentHandler,
                         isFlowController: isFlowController,
+                        elementsSession: elementsSession,
                         completion: { psResult, confirmationType in
                             if shouldLogOutOfLink(result: psResult, elementsSession: elementsSession) {
                                 linkAccount?.logout()

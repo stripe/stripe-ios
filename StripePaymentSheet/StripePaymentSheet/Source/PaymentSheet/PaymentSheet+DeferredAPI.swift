@@ -19,13 +19,14 @@ extension PaymentSheet {
         isFlowController: Bool,
         allowsSetAsDefaultPM: Bool = false,
         mandateData: STPMandateDataParams? = nil,
+        elementsSession: STPElementsSession?,
         completion: @escaping (PaymentSheetResult, STPAnalyticsClient.DeferredIntentConfirmationType?) -> Void
     ) {
         Task { @MainActor in
             do {
                 var clientSecret: String = ""
                 var paymentMethod: STPPaymentMethod!
-                
+                var confirmationToken: STPConfirmationToken!
                 if let _ = intentConfig.confirmHandler {
                     var confirmType = confirmType
                     // 1. Create PM if necessary
@@ -43,14 +44,14 @@ extension PaymentSheet {
                         paymentMethod = try await configuration.apiClient.createPaymentMethod(with: params, additionalPaymentUserAgentValues: makeDeferredPaymentUserAgentValue(intentConfiguration: intentConfig))
                         confirmType = .new(params: params, paymentOptions: paymentOptions, paymentMethod: paymentMethod, shouldSave: shouldSave, shouldSetAsDefaultPM: shouldSetAsDefaultPM)
                     }
-                    
+
                     // 2a. If we have a preparePaymentMethodHandler, use the shared payment token session flow
                     if let preparePaymentMethodHandler = intentConfig.preparePaymentMethodHandler {
                         // For shared payment token sessions, call the preparePaymentMethodHandler and complete successfully
                         // Note: Shipping address is passed for Apple Pay in STPApplePayContext+PaymentSheet.swift.
                         // For other payment methods, get shipping address from configuration.
                         let shippingAddress = configuration.shippingDetails()?.stpAddress
-                        
+
                         // Try to create a radar session for the payment method before calling the handler
                         configuration.apiClient.createSavedPaymentMethodRadarSession(paymentMethodId: paymentMethod.stripeId) { _, error in
                             // If radar session creation fails, just continue with the payment method directly
@@ -59,14 +60,14 @@ extension PaymentSheet {
                                 let errorAnalytic = ErrorAnalytic(event: .savedPaymentMethodRadarSessionFailure, error: error)
                                 STPAnalyticsClient.sharedClient.log(analytic: errorAnalytic, apiClient: configuration.apiClient)
                             }
-                            
+
                             // Call the handler regardless of radar session success/failure
                             preparePaymentMethodHandler(paymentMethod, shippingAddress)
                             completion(.completed, STPAnalyticsClient.DeferredIntentConfirmationType.completeWithoutConfirmingIntent)
                         }
                         return
                     }
-                    
+
                     // 2b. Otherwise, call the standard confirmHandler
                     let shouldSavePaymentMethod: Bool = {
                         // If `confirmType.shouldSave` is true, that means the customer has decided to save by checking the checkbox.
@@ -82,14 +83,14 @@ extension PaymentSheet {
                 } else if let _ = intentConfig.confirmationTokenConfirmHandler {
                     // 1. Create confirmation token parameters based on payment method type
                     let confirmationTokenParams: STPConfirmationTokenParams
-                    
+
                     switch confirmType {
                     case let .saved(savedPaymentMethod, _):
                         // For saved payment methods, reference the existing payment method by ID
                         confirmationTokenParams = STPConfirmationTokenParams()
                         confirmationTokenParams.paymentMethod = savedPaymentMethod.stripeId
                         paymentMethod = savedPaymentMethod
-                        
+
                     case let .new(params, _, newPaymentMethod, _, _):
                         // For new payment methods, create payment method data from params
                         if let newPaymentMethod {
@@ -99,61 +100,58 @@ extension PaymentSheet {
                             STPAnalyticsClient.sharedClient.log(analytic: errorAnalytic)
                         }
                         stpAssert(newPaymentMethod == nil)
-                        
-                        // Create payment method first to get the payment method object for later use
-                        paymentMethod = try await configuration.apiClient.createPaymentMethod(with: params, additionalPaymentUserAgentValues: makeDeferredPaymentUserAgentValue(intentConfiguration: intentConfig))
-                        
+
                         // Create confirmation token params with payment method data
                         let paymentMethodData = STPConfirmationTokenPaymentMethodData(from: params)
                         confirmationTokenParams = STPConfirmationTokenParams(paymentMethodData: paymentMethodData)
+                        confirmationTokenParams.paymentMethodData?.allowRedisplay = .always
+
+                        // Set setup future usage based on intent configuration
+                        let shouldSavePaymentMethod: Bool = {
+                            // If `confirmType.shouldSave` is true, that means the customer has decided to save by checking the checkbox.
+                            if confirmType.shouldSave {
+                                return true
+                            }
+                            // Otherwise, set shouldSavePaymentMethod according to the IntentConfiguration SFU/PMO SFU values
+                            return getShouldSavePaymentMethodValue(for: paymentMethodData.type, intentConfiguration: intentConfig)
+                        }()
+
+                        // Set setup future usage based on the intent configuration mode
+                        switch intentConfig.mode {
+                        case let .payment(_, _, setupFutureUsage, _, _):
+                            if shouldSavePaymentMethod {
+                                // Use the setup future usage from intent config if available, otherwise default to offSession
+                                confirmationTokenParams.setupFutureUsage = setupFutureUsage?.paymentIntentParamsValue ?? .offSession
+                            }
+                        case let .setup(_, setupFutureUsage):
+                            // For setup intents, use the setup future usage from the intent config
+                            confirmationTokenParams.setupFutureUsage = setupFutureUsage.paymentIntentParamsValue
+                        }
                     }
-                    
+
                     // 2. Configure additional confirmation token parameters
                     // Set return URL
 //                    confirmationTokenParams.returnURL = configuration.returnURL
-                    
+
                     // Set shipping details from configuration
                     if let shippingDetails = STPPaymentIntentShippingDetailsParams(paymentSheetConfiguration: configuration) {
                         confirmationTokenParams.shipping = shippingDetails
                     }
-                    
-                    // Set setup future usage based on intent configuration
-                    let shouldSavePaymentMethod: Bool = {
-                        // If `confirmType.shouldSave` is true, that means the customer has decided to save by checking the checkbox.
-                        if confirmType.shouldSave {
-                            return true
-                        }
-                        // Otherwise, set shouldSavePaymentMethod according to the IntentConfiguration SFU/PMO SFU values
-                        return getShouldSavePaymentMethodValue(for: paymentMethod.type, intentConfiguration: intentConfig)
-                    }()
-                    
-                    // Set setup future usage based on the intent configuration mode
-                    switch intentConfig.mode {
-                    case let .payment(_, _, setupFutureUsage, _, _):
-                        if shouldSavePaymentMethod {
-                            // Use the setup future usage from intent config if available, otherwise default to offSession
-                            confirmationTokenParams.setupFutureUsage = setupFutureUsage?.paymentIntentParamsValue ?? .offSession
-                        }
-                    case let .setup(_, setupFutureUsage):
-                        // For setup intents, use the setup future usage from the intent config
-                        confirmationTokenParams.setupFutureUsage = setupFutureUsage.paymentIntentParamsValue
-                    }
-                    
-                    
+
                     // 3. Create confirmation token via API
-                    let confirmationToken = try await configuration.apiClient.createConfirmationToken(
+                    confirmationToken = try await configuration.apiClient.createConfirmationToken(
                         with: confirmationTokenParams,
-                        additionalPaymentUserAgentValues: makeDeferredPaymentUserAgentValue(intentConfiguration: intentConfig)
+                        additionalPaymentUserAgentValues: makeDeferredPaymentUserAgentValue(intentConfiguration: intentConfig),
+                        ephemeralKeySecret: paymentMethod == nil ? nil : configuration.customer?.ephemeralKeySecretBasedOn(elementsSession: elementsSession)
                     )
-                    
+
                     // 4. Call merchant's confirmation handler to get client secret
                     clientSecret = try await fetchIntentClientSecretFromMerchant(
                         intentConfig: intentConfig,
                         confirmationToken: confirmationToken
                     )
                 }
-                
-                
+
                 // Keep the same
                 guard clientSecret != IntentConfiguration.COMPLETE_WITHOUT_CONFIRMING_INTENT else {
                     // Force close PaymentSheet and early exit
@@ -177,15 +175,18 @@ extension PaymentSheet {
                     // Check if it needs confirmation
                     if [STPPaymentIntentStatus.requiresPaymentMethod, STPPaymentIntentStatus.requiresConfirmation].contains(paymentIntent.status) {
                         // 4a. Client-side confirmation
-                        try PaymentSheetDeferredValidator.validate(paymentIntent: paymentIntent, intentConfiguration: intentConfig, paymentMethod: paymentMethod, isFlowController: isFlowController)
-                        let paymentIntentParams = makePaymentIntentParams(
-                            confirmPaymentMethodType: confirmType,
-                            paymentIntent: paymentIntent,
-                            configuration: configuration,
-                            mandateData: mandateData
-                        )
+//                        try PaymentSheetDeferredValidator.validate(paymentIntent: paymentIntent, intentConfiguration: intentConfig, paymentMethod: paymentMethod, isFlowController: isFlowController)
+//                        let paymentIntentParams = makePaymentIntentParams(
+//                            confirmPaymentMethodType: confirmType,
+//                            paymentIntent: paymentIntent,
+//                            configuration: configuration,
+//                            mandateData: mandateData
+//                        )
+                        
+                        let paymentIntentParams = STPPaymentIntentParams(clientSecret: paymentIntent.clientSecret)
+                        paymentIntentParams.confirmationToken = confirmationToken.stripeId
                         // Set top-level SFU and PMO SFU to match the intent config
-                        setSetupFutureUsage(for: paymentMethod.type, intentConfiguration: intentConfig, on: paymentIntentParams)
+//                        setSetupFutureUsage(for: paymentMethod.type, intentConfiguration: intentConfig, on: paymentIntentParams)
 
                         paymentHandler.confirmPayment(
                             paymentIntentParams,
@@ -195,7 +196,6 @@ extension PaymentSheet {
                         }
                     } else {
                         // 4b. Server-side confirmation
-                        try PaymentSheetDeferredValidator.validatePaymentMethod(intentPaymentMethod: paymentIntent.paymentMethod, paymentMethod: paymentMethod)
                         assert(!allowsSetAsDefaultPM, "(Debug-build-only error) The default payment methods feature is not yet supported with deferred intents. Please contact us if you'd like to use this feature via a Github issue on stripe-ios.")
                         paymentHandler.handleNextAction(
                             for: paymentIntent,
@@ -271,7 +271,7 @@ extension PaymentSheet {
             }
         }
     }
-    
+
     static func fetchIntentClientSecretFromMerchant(
         intentConfig: IntentConfiguration,
         confirmationToken: STPConfirmationToken

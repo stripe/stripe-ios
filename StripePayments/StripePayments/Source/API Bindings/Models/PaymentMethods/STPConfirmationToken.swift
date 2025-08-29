@@ -15,50 +15,49 @@ import UIKit
 public class STPConfirmationToken: NSObject, STPAPIResponseDecodable {
     /// Unique identifier for the object (e.g. `ctoken_...`).
     @objc private(set) public var stripeId: String
-    
+
     /// String representing the object's type. Always `"confirmation_token"`.
     @objc private(set) public var object: String
-    
+
     /// Time at which the object was created. Measured in seconds since the Unix epoch.
     @objc private(set) public var created: Date
-    
+
     /// Time at which this ConfirmationToken expires and can no longer be used to confirm a PaymentIntent or SetupIntent.
     @objc private(set) public var expiresAt: Date?
-    
+
     /// `true` if the object exists in live mode or the value `false` if the object exists in test mode.
     @objc private(set) public var liveMode = false
-    
+
     /// Data used for generating a Mandate.
     private(set) public var mandateData: STPConfirmationToken.MandateData?
-    
+
     /// ID of the PaymentIntent this token was used to confirm.
     @objc private(set) public var paymentIntentId: String?
-    
+
     /// ID of the SetupIntent this token was used to confirm.
     @objc private(set) public var setupIntentId: String?
-    
+
     /// Payment-method-specific configuration captured on the token.
     private(set) public var paymentMethodOptions: STPConfirmationToken.PaymentMethodOptions?
-    
+
     /// Non-PII preview of payment details captured by the Payment Element.
     private(set) public var paymentMethodPreview: STPConfirmationToken.PaymentMethodPreview?
-    
+
     /// Return URL used to confirm the intent for redirect-based methods.
     @objc private(set) public var returnURL: String?
-    
+
     /// Indicates intent to reuse the payment method.
     @objc private(set) public var setupFutureUsage: STPPaymentIntentSetupFutureUsage
-    
+
     /// Shipping information collected on this token.
     @objc private(set) public var shipping: STPPaymentIntentShippingDetails?
-    
+
     /// Indicates whether Stripe SDK is used to handle confirmation flow.
     @objc private(set) public var useStripeSDK = false
-    
-    
+
     /// :nodoc:
     @objc private(set) public var allResponseFields: [AnyHashable: Any] = [:]
-    
+
     /// :nodoc:
     @objc public override var description: String {
         let props = [
@@ -83,7 +82,7 @@ public class STPConfirmationToken: NSObject, STPAPIResponseDecodable {
         ]
         return "<\(props.joined(separator: "; "))>"
     }
-    
+
     internal init(
         stripeId: String,
         object: String,
@@ -118,7 +117,7 @@ public class STPConfirmationToken: NSObject, STPAPIResponseDecodable {
         self.allResponseFields = allResponseFields
         super.init()
     }
-    
+
     // MARK: - STPAPIResponseDecodable
     public static func decodedObject(fromAPIResponse response: [AnyHashable: Any]?) -> Self? {
         guard let response = response,
@@ -127,7 +126,7 @@ public class STPConfirmationToken: NSObject, STPAPIResponseDecodable {
               let createdTimestamp = response["created"] as? TimeInterval else {
             return nil
         }
-        
+
         let created = Date(timeIntervalSince1970: createdTimestamp)
         let expiresAt = (response["expires_at"] as? TimeInterval).map { Date(timeIntervalSince1970: $0) }
         let liveMode = response["livemode"] as? Bool ?? false
@@ -135,32 +134,32 @@ public class STPConfirmationToken: NSObject, STPAPIResponseDecodable {
         let setupIntentId = response["setup_intent"] as? String
         let returnURL = response["return_url"] as? String
         let useStripeSDK = response["use_stripe_sdk"] as? Bool ?? false
-        
+
         var setupFutureUsage: STPPaymentIntentSetupFutureUsage = .none
         if let setupFutureUsageString = response["setup_future_usage"] as? String {
             setupFutureUsage = STPPaymentIntentSetupFutureUsage.init(string: setupFutureUsageString)
         }
-        
+
         var mandateData: STPConfirmationToken.MandateData?
         if let mandateDataDict = response["mandate_data"] as? [AnyHashable: Any] {
             mandateData = STPConfirmationToken.MandateData.decodedObject(fromAPIResponse: mandateDataDict)
         }
-        
+
         var paymentMethodOptions: STPConfirmationToken.PaymentMethodOptions?
         if let paymentMethodOptionsDict = response["payment_method_options"] as? [AnyHashable: Any] {
             paymentMethodOptions = STPConfirmationToken.PaymentMethodOptions.decodedObject(fromAPIResponse: paymentMethodOptionsDict)
         }
-        
+
         var paymentMethodPreview: STPConfirmationToken.PaymentMethodPreview?
         if let paymentMethodPreviewDict = response["payment_method_preview"] as? [AnyHashable: Any] {
             paymentMethodPreview = STPConfirmationToken.PaymentMethodPreview.decodedObject(fromAPIResponse: paymentMethodPreviewDict)
         }
-        
+
         var shipping: STPPaymentIntentShippingDetails?
         if let shippingDict = response["shipping"] as? [AnyHashable: Any] {
             shipping = STPPaymentIntentShippingDetails.decodedObject(fromAPIResponse: shippingDict)
         }
-        
+
         return STPConfirmationToken(
             stripeId: stripeId,
             object: object,
@@ -188,185 +187,152 @@ extension STPConfirmationToken {
     public struct MandateData: Equatable {
         /// Customer acceptance information for the mandate.
         public let customerAcceptance: MandateCustomerAcceptance
-        
-        internal init(customerAcceptance: MandateCustomerAcceptance) {
-            self.customerAcceptance = customerAcceptance
-        }
-        
+
         static func decodedObject(fromAPIResponse response: [AnyHashable: Any]?) -> MandateData? {
             guard let response = response,
                   let customerAcceptanceDict = response["customer_acceptance"] as? [AnyHashable: Any],
                   let customerAcceptance = MandateCustomerAcceptance.decodedObject(fromAPIResponse: customerAcceptanceDict) else {
                 return nil
             }
-            
+
             return MandateData(customerAcceptance: customerAcceptance)
         }
     }
-    
+
     /// Customer acceptance information for the mandate.
     public struct MandateCustomerAcceptance: Equatable {
         /// The type of customer acceptance information.
         public let type: String
         /// Online acceptance details if accepted online.
         public let online: MandateOnline?
-        
-        internal init(type: String, online: MandateOnline?) {
-            self.type = type
-            self.online = online
-        }
-        
+
         static func decodedObject(fromAPIResponse response: [AnyHashable: Any]?) -> MandateCustomerAcceptance? {
             guard let response = response,
                   let type = response["type"] as? String else {
                 return nil
             }
-            
+
             var online: MandateOnline?
             if let onlineDict = response["online"] as? [AnyHashable: Any] {
                 online = MandateOnline.decodedObject(fromAPIResponse: onlineDict)
             }
-            
+
             return MandateCustomerAcceptance(type: type, online: online)
         }
     }
-    
+
     /// Online acceptance details for the mandate.
     public struct MandateOnline: Equatable {
         /// IP address of the customer when they accepted the mandate.
         public let ipAddress: String?
         /// User agent of the customer when they accepted the mandate.
         public let userAgent: String?
-        
-        internal init(ipAddress: String?, userAgent: String?) {
-            self.ipAddress = ipAddress
-            self.userAgent = userAgent
-        }
-        
+
         static func decodedObject(fromAPIResponse response: [AnyHashable: Any]?) -> MandateOnline? {
             guard let response = response else {
                 return nil
             }
-            
+
             let ipAddress = response["ip_address"] as? String
             let userAgent = response["user_agent"] as? String
-            
+
             return MandateOnline(ipAddress: ipAddress, userAgent: userAgent)
         }
     }
-    
+
     /// Payment-method-specific configuration for the ConfirmationToken.
     public struct PaymentMethodOptions: Equatable {
         /// Card-specific options.
         public let card: CardOptions?
-        
-        internal init(card: CardOptions?) {
-            self.card = card
-        }
-        
+
         static func decodedObject(fromAPIResponse response: [AnyHashable: Any]?) -> PaymentMethodOptions? {
             guard let response = response else {
                 return nil
             }
-            
+
             var card: CardOptions?
             if let cardDict = response["card"] as? [AnyHashable: Any] {
                 card = CardOptions.decodedObject(fromAPIResponse: cardDict)
             }
-            
+
             return PaymentMethodOptions(card: card)
         }
     }
-    
+
     /// Card-specific options for the ConfirmationToken.
     public struct CardOptions: Equatable {
         /// CVC token for the card.
         public let cvcToken: String?
         /// Installment configuration for the card.
         public let installments: CardInstallments?
-        
-        internal init(cvcToken: String?, installments: CardInstallments?) {
-            self.cvcToken = cvcToken
-            self.installments = installments
-        }
-        
+
         static func decodedObject(fromAPIResponse response: [AnyHashable: Any]?) -> CardOptions? {
             guard let response = response else {
                 return nil
             }
-            
+
             let cvcToken = response["cvc_token"] as? String
-            
+
             var installments: CardInstallments?
             if let installmentsDict = response["installments"] as? [AnyHashable: Any] {
                 installments = CardInstallments.decodedObject(fromAPIResponse: installmentsDict)
             }
-            
+
             return CardOptions(cvcToken: cvcToken, installments: installments)
         }
     }
-    
+
     /// Card installment configuration.
     public struct CardInstallments: Equatable {
         /// Installment plan configuration.
         public let plan: CardInstallmentsPlan?
-        
-        internal init(plan: CardInstallmentsPlan?) {
-            self.plan = plan
-        }
-        
+
         static func decodedObject(fromAPIResponse response: [AnyHashable: Any]?) -> CardInstallments? {
             guard let response = response else {
                 return nil
             }
-            
+
             var plan: CardInstallmentsPlan?
             if let planDict = response["plan"] as? [AnyHashable: Any] {
                 plan = CardInstallmentsPlan.decodedObject(fromAPIResponse: planDict)
             }
-            
+
             return CardInstallments(plan: plan)
         }
     }
-    
+
     /// Card installment plan configuration.
     public struct CardInstallmentsPlan: Equatable {
         /// Interval for installment payments.
         public enum Interval: String { case month }
         /// Type of installment plan.
         public enum PlanType: String { case fixedCount = "fixed_count", bonus, revolving }
-        
+
         /// Number of installments.
         public let count: Int?
         /// Interval between installments.
         public let interval: Interval?
         /// Type of installment plan.
         public let type: PlanType
-        
-        internal init(count: Int?, interval: Interval?, type: PlanType) {
-            self.count = count
-            self.interval = interval
-            self.type = type
-        }
-        
+
         static func decodedObject(fromAPIResponse response: [AnyHashable: Any]?) -> CardInstallmentsPlan? {
             guard let response = response,
                   let typeString = response["type"] as? String,
                   let type = PlanType(rawValue: typeString) else {
                 return nil
             }
-            
+
             let count = response["count"] as? Int
-            
+
             var interval: Interval?
             if let intervalString = response["interval"] as? String {
                 interval = Interval(rawValue: intervalString)
             }
-            
+
             return CardInstallmentsPlan(count: count, interval: interval, type: type)
         }
     }
-    
+
     /// Preview of payment method details captured by the ConfirmationToken.
     public struct PaymentMethodPreview: Equatable {
         /// Type of the payment method.
@@ -377,7 +343,7 @@ extension STPConfirmationToken {
         public let allowRedisplay: STPPaymentMethodAllowRedisplay
         /// The ID of the Customer to which this PaymentMethod is saved. Nil when the PaymentMethod has not been saved to a Customer.
         public let customerId: String?
-        
+
         // Payment method type-specific properties
         /// If this is a card PaymentMethod, this contains additional details.
         public let card: STPPaymentMethodCard?
@@ -453,7 +419,7 @@ extension STPConfirmationToken {
         public let multibanco: STPPaymentMethodMultibanco?
         /// If this is a MobilePay PaymentMethod, this contains additional details.
         public let mobilePay: STPPaymentMethodMobilePay?
-        
+
         internal init(
             type: STPPaymentMethodType,
             billingDetails: STPPaymentMethodBillingDetails?,
@@ -539,24 +505,24 @@ extension STPConfirmationToken {
             self.multibanco = multibanco
             self.mobilePay = mobilePay
         }
-        
+
         static func decodedObject(fromAPIResponse response: [AnyHashable: Any]?) -> PaymentMethodPreview? {
             guard let response = response,
                   let typeString = response["type"] as? String else {
                 return nil
             }
-            
+
             let dict = response.stp_dictionaryByRemovingNulls()
             let type = STPPaymentMethod.type(from: typeString)
-            
+
             var billingDetails: STPPaymentMethodBillingDetails?
             if let billingDetailsDict = dict.stp_dictionary(forKey: "billing_details") {
                 billingDetails = STPPaymentMethodBillingDetails.decodedObject(fromAPIResponse: billingDetailsDict)
             }
-            
+
             let allowRedisplay = STPPaymentMethod.allowRedisplay(from: dict.stp_string(forKey: "allow_redisplay") ?? "")
             let customerId = dict.stp_string(forKey: "customer")
-            
+
             // Parse type-specific payment method details using existing decoders
             let card = STPPaymentMethodCard.decodedObject(fromAPIResponse: dict.stp_dictionary(forKey: "card"))
             let alipay = STPPaymentMethodAlipay.decodedObject(fromAPIResponse: dict.stp_dictionary(forKey: "alipay"))
@@ -595,7 +561,7 @@ extension STPConfirmationToken {
             let crypto = STPPaymentMethodCrypto.decodedObject(fromAPIResponse: dict.stp_dictionary(forKey: "crypto"))
             let multibanco = STPPaymentMethodMultibanco.decodedObject(fromAPIResponse: dict.stp_dictionary(forKey: "multibanco"))
             let mobilePay = STPPaymentMethodMobilePay.decodedObject(fromAPIResponse: dict.stp_dictionary(forKey: "mobilepay"))
-            
+
             return PaymentMethodPreview(
                 type: type,
                 billingDetails: billingDetails,
@@ -640,7 +606,7 @@ extension STPConfirmationToken {
                 mobilePay: mobilePay
             )
         }
-        
+
         public static func == (lhs: PaymentMethodPreview, rhs: PaymentMethodPreview) -> Bool {
             return lhs.type == rhs.type &&
                    lhs.billingDetails == rhs.billingDetails &&

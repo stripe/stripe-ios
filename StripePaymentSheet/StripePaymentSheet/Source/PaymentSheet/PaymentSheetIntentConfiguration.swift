@@ -34,7 +34,16 @@ public extension PaymentSheet {
             _ shouldSavePaymentMethod: Bool,
             _ intentCreationCallback: @escaping ((Result<String, Error>) -> Void)
         ) -> Void
-        
+
+        /// Called when the customer confirms payment.
+        /// Your implementation should follow the [guide](https://stripe.com/docs/payments/finalize-payments-on-the-server) to create (and optionally confirm) PaymentIntent or SetupIntent on your server and call the `intentCreationCallback` with its client secret or an error if one occurred.
+        /// - Note: You must create the PaymentIntent or SetupIntent with the same values used as the `IntentConfiguration` e.g. the same amount, currency, etc.
+        /// - Parameters:
+        ///   - paymentMethod: The `STPPaymentMethod` representing the customer's payment details.
+        ///   If your server needs the payment method, send `paymentMethod.stripeId` to your server and have it fetch the PaymentMethod object. Otherwise, you can ignore this. Don't send other properties besides the ID to your server.
+        ///   - shouldSavePaymentMethod: This is `true` if the customer selected the "Save this payment method for future use" checkbox.
+        ///     If you confirm the PaymentIntent on your server, set `setup_future_usage` on the PaymentIntent to `off_session` if this is `true`. Otherwise, ignore this parameter.
+        ///   - intentCreationCallback: Call this with the `client_secret` of the PaymentIntent or SetupIntent created by your server or the error that occurred. If you're using PaymentSheet, the error's localizedDescription will be displayed to the customer in the sheet. If you're using PaymentSheet.FlowController, the `confirm` method fails with the error.
         public typealias ConfirmationTokenConfirmHandler = (
             _ confirmationToken: STPConfirmationToken,
             _ intentCreationCallback: @escaping ((Result<String, Error>) -> Void)
@@ -83,7 +92,7 @@ public extension PaymentSheet {
             self.sellerDetails = nil
             validate()
         }
-        
+
         public init(mode: Mode,
                     paymentMethodTypes: [String]? = nil,
                     onBehalfOf: String? = nil,
@@ -143,7 +152,7 @@ public extension PaymentSheet {
         /// Called when the customer confirms payment.
         /// See the documentation for `ConfirmHandler` for more details.
         public var confirmHandler: ConfirmHandler?
-        
+
         public var confirmationTokenConfirmHandler: ConfirmationTokenConfirmHandler?
 
         /// Replacement for confirmHandler in sharedPaymentTokenSession flows. Not publicly available.

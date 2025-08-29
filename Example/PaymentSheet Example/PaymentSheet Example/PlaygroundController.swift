@@ -397,7 +397,7 @@ class PlaygroundController: ObservableObject {
 //        let confirmHandler: PaymentSheet.IntentConfiguration.ConfirmHandler = { [weak self] in
 //            self?.confirmHandler($0, $1, $2)
 //        }
-        
+
         let confirmationTokenConfirmHandler: PaymentSheet.IntentConfiguration.ConfirmationTokenConfirmHandler = { [weak self] token, callback in
             self?.confirmHandler(token, false, callback)
         }

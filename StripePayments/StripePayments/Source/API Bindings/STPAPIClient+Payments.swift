@@ -951,17 +951,18 @@ extension STPAPIClient {
     @objc(createConfirmationTokenWithParams:completion:)
     public func createConfirmationToken(
         with confirmationTokenParams: STPConfirmationTokenParams,
+
         completion: @escaping STPConfirmationTokenCompletionBlock
     ) {
-        createConfirmationToken(with: confirmationTokenParams, additionalPaymentUserAgentValues: [], overridePublishableKey: nil, completion: completion)
+        createConfirmationToken(with: confirmationTokenParams, additionalPaymentUserAgentValues: [], ephemeralKeySecret: nil, completion: completion)
     }
 
     /// - Parameter additionalPaymentUserAgentValues: A list of values to append to the `payment_user_agent` parameter sent in the request. e.g. `["deferred-intent", "autopm"]` will append "; deferred-intent; autopm" to the `payment_user_agent`.
-    /// - Parameter overridePublishableKey: Optional publishable key to use for this request instead of the default key.
+    /// - Parameter ephemeralKeySecret: Optional ephemeral key secret to use for authentication.
     func createConfirmationToken(
         with confirmationTokenParams: STPConfirmationTokenParams,
         additionalPaymentUserAgentValues: [String] = [],
-        overridePublishableKey: String? = nil,
+        ephemeralKeySecret: String? = nil,
         completion: @escaping STPConfirmationTokenCompletionBlock
     ) {
         STPAnalyticsClient.sharedClient.logConfirmationTokenCreationAttempt(
@@ -973,8 +974,8 @@ extension STPAPIClient {
             paymentMethodParamsDict = Self.paramsAddingPaymentUserAgent(paymentMethodParamsDict)
             parameters[PaymentMethodDataHash] = paymentMethodParamsDict
         }
-        let additionalHeaders = overridePublishableKey != nil
-            ? authorizationHeader(using: overridePublishableKey)
+        let additionalHeaders = ephemeralKeySecret != nil
+            ? authorizationHeader(using: ephemeralKeySecret!)
             : [:]
 
         APIRequest<STPConfirmationToken>.post(
@@ -997,27 +998,27 @@ extension STPAPIClient {
         return try await createConfirmationToken(
             with: confirmationTokenParams,
             additionalPaymentUserAgentValues: additionalPaymentUserAgentValues,
-            overridePublishableKey: nil
+            ephemeralKeySecret: nil
         )
     }
 
-    /// Creates a ConfirmationToken object with the provided params object and optional override publishable key.
+    /// Creates a ConfirmationToken object with the provided params object and optional ephemeral key.
     /// - seealso: https://stripe.com/docs/api/confirmation_tokens/create
     /// - Parameters:
     ///   - confirmationTokenParams: The `STPConfirmationTokenParams` to pass to `/v1/confirmation_tokens`.  Cannot be nil.
     ///   - additionalPaymentUserAgentValues: A list of values to append to the `payment_user_agent` parameter sent in the request. e.g. `["deferred-intent", "autopm"]` will append "; deferred-intent; autopm" to the `payment_user_agent`.
-    ///   - overridePublishableKey: Optional publishable key to use for this request instead of the default key.
+    ///   - ephemeralKeySecret: Optional ephemeral key secret to use for authentication.
     /// - Returns: the returned ConfirmationToken object.
     @_spi(STP) public func createConfirmationToken(
         with confirmationTokenParams: STPConfirmationTokenParams,
         additionalPaymentUserAgentValues: [String] = [],
-        overridePublishableKey: String? = nil
+        ephemeralKeySecret: String? = nil
     ) async throws -> STPConfirmationToken {
         return try await withCheckedThrowingContinuation { continuation in
             createConfirmationToken(
                 with: confirmationTokenParams,
                 additionalPaymentUserAgentValues: additionalPaymentUserAgentValues,
-                overridePublishableKey: overridePublishableKey
+                ephemeralKeySecret: ephemeralKeySecret
             ) { confirmationToken, error in
                 if let confirmationToken = confirmationToken {
                     continuation.resume(with: .success(confirmationToken))

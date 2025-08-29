@@ -86,7 +86,8 @@ final class PaymentSheet_DeferredAPITest: STPNetworkStubbingTestCase {
             intentConfig: intentConfig,
             authenticationContext: TestAuthenticationContext(),
             paymentHandler: paymentHandler,
-            isFlowController: false
+            isFlowController: false,
+            elementsSession: nil
         ) { _, _ in
             expectation.fulfill()
         }

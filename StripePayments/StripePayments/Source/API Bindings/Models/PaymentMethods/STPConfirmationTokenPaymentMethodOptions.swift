@@ -12,24 +12,24 @@ import Foundation
 /// Payment-method-specific configuration for a ConfirmationToken.
 /// - seealso: https://stripe.com/docs/api/confirmation_tokens
 public class STPConfirmationTokenPaymentMethodOptions: NSObject, STPFormEncodable {
-    
+
     /// Configuration for any card payments confirmed using this ConfirmationToken.
     @objc public var card: STPConfirmationTokenCardOptions?
-    
+
     /// Additional API parameters
     @objc public var additionalAPIParameters: [AnyHashable: Any] = [:]
-    
+
     public override init() {
         super.init()
     }
-    
+
     /// Convenience initializer for card-specific options.
     /// - Parameter card: Card payment method options
     @objc public convenience init(card: STPConfirmationTokenCardOptions?) {
         self.init()
         self.card = card
     }
-    
+
     /// :nodoc:
     @objc public override var description: String {
         let props = [
@@ -38,14 +38,14 @@ public class STPConfirmationTokenPaymentMethodOptions: NSObject, STPFormEncodabl
         ]
         return "<\(props.joined(separator: "; "))>"
     }
-    
+
     // MARK: - STPFormEncodable
-    
+
     @objc
     public static func rootObjectName() -> String? {
         return nil
     }
-    
+
     @objc
     public static func propertyNamesToFormFieldNamesMapping() -> [String: String] {
         return [
@@ -56,24 +56,24 @@ public class STPConfirmationTokenPaymentMethodOptions: NSObject, STPFormEncodabl
 
 /// Card-specific options for ConfirmationToken.
 public class STPConfirmationTokenCardOptions: NSObject, STPFormEncodable {
-    
+
     /// Installment configuration for payments confirmed using this ConfirmationToken.
     @objc public var installments: STPConfirmationTokenInstallments?
-    
+
     /// Additional API parameters
     @objc public var additionalAPIParameters: [AnyHashable: Any] = [:]
-    
+
     public override init() {
         super.init()
     }
-    
+
     /// Convenience initializer for card options with installments.
     /// - Parameter installments: Installment configuration
     @objc public convenience init(installments: STPConfirmationTokenInstallments?) {
         self.init()
         self.installments = installments
     }
-    
+
     /// :nodoc:
     @objc public override var description: String {
         let props = [
@@ -82,14 +82,14 @@ public class STPConfirmationTokenCardOptions: NSObject, STPFormEncodable {
         ]
         return "<\(props.joined(separator: "; "))>"
     }
-    
+
     // MARK: - STPFormEncodable
-    
+
     @objc
     public static func rootObjectName() -> String? {
         return nil
     }
-    
+
     @objc
     public static func propertyNamesToFormFieldNamesMapping() -> [String: String] {
         return [
@@ -100,24 +100,24 @@ public class STPConfirmationTokenCardOptions: NSObject, STPFormEncodable {
 
 /// Installment configuration for ConfirmationToken card payments.
 public class STPConfirmationTokenInstallments: NSObject, STPFormEncodable {
-    
+
     /// The selected installment plan to use for this payment attempt.
     @objc public var plan: STPConfirmationTokenInstallmentsPlan?
-    
+
     /// Additional API parameters
     @objc public var additionalAPIParameters: [AnyHashable: Any] = [:]
-    
+
     public override init() {
         super.init()
     }
-    
+
     /// Convenience initializer for installments with a plan.
     /// - Parameter plan: The installment plan
     @objc public convenience init(plan: STPConfirmationTokenInstallmentsPlan?) {
         self.init()
         self.plan = plan
     }
-    
+
     /// :nodoc:
     @objc public override var description: String {
         let props = [
@@ -126,14 +126,14 @@ public class STPConfirmationTokenInstallments: NSObject, STPFormEncodable {
         ]
         return "<\(props.joined(separator: "; "))>"
     }
-    
+
     // MARK: - STPFormEncodable
-    
+
     @objc
     public static func rootObjectName() -> String? {
         return nil
     }
-    
+
     @objc
     public static func propertyNamesToFormFieldNamesMapping() -> [String: String] {
         return [
@@ -144,35 +144,35 @@ public class STPConfirmationTokenInstallments: NSObject, STPFormEncodable {
 
 /// Installment plan configuration for ConfirmationToken.
 public class STPConfirmationTokenInstallmentsPlan: NSObject, STPFormEncodable {
-    
+
     /// Type of installment plan.
     public enum PlanType: String, CaseIterable {
         case fixedCount = "fixed_count"
-        case bonus = "bonus" 
+        case bonus = "bonus"
         case revolving = "revolving"
     }
-    
+
     /// Interval between installment payments.
     public enum Interval: String, CaseIterable {
         case month = "month"
     }
-    
+
     /// Type of installment plan (required).
     @objc public var type: STPConfirmationTokenInstallmentsPlanType = .unknown
-    
+
     /// For fixed_count installment plans, the number of installment payments.
     @objc public var count: NSNumber?
-    
+
     /// For fixed_count installment plans, the interval between installment payments.
     @objc public var interval: STPConfirmationTokenInstallmentsPlanInterval = .unknown
-    
+
     /// Additional API parameters storage
     private var _additionalAPIParameters: [AnyHashable: Any] = [:]
-    
+
     public override init() {
         super.init()
     }
-    
+
     /// Convenience initializer for installment plan.
     /// - Parameters:
     ///   - type: Type of installment plan
@@ -184,7 +184,7 @@ public class STPConfirmationTokenInstallmentsPlan: NSObject, STPFormEncodable {
         self.count = count
         self.interval = interval
     }
-    
+
     /// :nodoc:
     @objc public override var description: String {
         let props = [
@@ -195,23 +195,23 @@ public class STPConfirmationTokenInstallmentsPlan: NSObject, STPFormEncodable {
         ]
         return "<\(props.joined(separator: "; "))>"
     }
-    
+
     // MARK: - STPFormEncodable
-    
+
     @objc
     public static func rootObjectName() -> String? {
         return nil
     }
-    
+
     @objc
     public static func propertyNamesToFormFieldNamesMapping() -> [String: String] {
         return [:]
     }
-    
+
     @objc public var additionalAPIParameters: [AnyHashable: Any] {
         get {
             var params = _additionalAPIParameters
-            
+
             // Add type
             switch type {
             case .fixedCount:
@@ -223,12 +223,12 @@ public class STPConfirmationTokenInstallmentsPlan: NSObject, STPFormEncodable {
             case .unknown:
                 break
             }
-            
+
             // Add count if provided
             if let count = count {
                 params["count"] = count
             }
-            
+
             // Add interval
             switch interval {
             case .month:
@@ -236,7 +236,7 @@ public class STPConfirmationTokenInstallmentsPlan: NSObject, STPFormEncodable {
             case .unknown:
                 break
             }
-            
+
             return params
         }
         set {

@@ -72,6 +72,12 @@ public class STPPaymentIntentParams: NSObject {
     /// @note alternative to `sourceParams`
     @objc public var sourceId: String?
 
+    /// ID of the ConfirmationToken used to confirm this PaymentIntent.
+    /// If the provided ConfirmationToken contains properties that are also being provided in this request,
+    /// such as `paymentMethod`, then the values in this request will take precedence.
+    /// @note alternative to `paymentMethodParams`, `paymentMethodId`, `sourceParams`, `sourceId`
+    @objc public var confirmationToken: String?
+
     /// Email address that the receipt for the resulting payment will be sent to.
     @objc public var receiptEmail: String?
 
@@ -204,6 +210,8 @@ public class STPPaymentIntentParams: NSObject {
             // PaymentMethod
             "paymentMethodId = \(String(describing: paymentMethodId))",
             "paymentMethodParams = \(String(describing: paymentMethodParams))",
+            // ConfirmationToken
+            "confirmationToken = \(String(describing: confirmationToken))",
             // Set as default payment method
             "setAsDefaultPM = \(String(describing: setAsDefaultPM?.boolValue))",
             // Mandate
@@ -251,6 +259,7 @@ extension STPPaymentIntentParams: STPFormEncodable {
             NSStringFromSelector(#selector(getter: clientSecret)): "client_secret",
             NSStringFromSelector(#selector(getter: paymentMethodParams)): "payment_method_data",
             NSStringFromSelector(#selector(getter: paymentMethodId)): "payment_method",
+            NSStringFromSelector(#selector(getter: confirmationToken)): "confirmation_token",
             NSStringFromSelector(#selector(getter: setupFutureUsageRawString)): "setup_future_usage",
             NSStringFromSelector(#selector(getter: sourceParams)): "source_data",
             NSStringFromSelector(#selector(getter: sourceId)): "source",
@@ -277,6 +286,7 @@ extension STPPaymentIntentParams: NSCopying {
         copy.paymentMethodParams = paymentMethodParams
         copy._paymentMethodType = _paymentMethodType
         copy.paymentMethodId = paymentMethodId
+        copy.confirmationToken = confirmationToken
         copy.sourceParams = sourceParams
         copy.sourceId = sourceId
         copy.receiptEmail = receiptEmail
