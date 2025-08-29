@@ -417,7 +417,7 @@ class BottomSheetViewController: UIViewController, BottomSheetPresentable {
                 else {
                     return
                 }
-
+                
                 let keyboardViewEndFrame = self.view.convert(keyboardScreenEndFrame, from: self.view.window)
                 var keyboardInViewHeight = self.view.bounds.intersection(keyboardViewEndFrame).height
                 // Account for edge case where keyboard is taller than our view
@@ -428,6 +428,10 @@ class BottomSheetViewController: UIViewController, BottomSheetPresentable {
                 if notification.name == UIResponder.keyboardWillHideNotification {
                     bottomAnchor.constant = 0
                 } else {
+                    if #available(iOS 26.0, *), let inputAccessoryView = self.view.firstResponder()?.inputAccessoryView {
+                        // On iOS 26, the input accessory view is transparent, so we don't want shift the content above it.
+                       keyboardInViewHeight -= inputAccessoryView.frame.height
+                    }
                     bottomAnchor.constant = -keyboardInViewHeight
                 }
 
