@@ -386,14 +386,8 @@ extension PaymentSheet {
                 missingRequirements.formUnion(requirements)
             }
 
-            // - US Bank Account is *not* an available payment method.
-            if elementsSession.orderedPaymentMethodTypes.contains(.USBankAccount) {
-                missingRequirements.insert(.unexpectedUsBankAccount)
-            }
-
-            // - Link Funding Sources contains Bank Account.
-            if elementsSession.linkFundingSources?.contains(.bankAccount) == false {
-                missingRequirements.insert(.linkFundingSourcesMissingBankAccount)
+            if let linkSettings = elementsSession.linkSettings, linkSettings.instantDebitsOnboardingDisabled {
+                missingRequirements.insert(.instantDebitsDisabledForOnboarding)
             }
 
             // - We collect an email, or a default non-empty email has been provided.
@@ -436,14 +430,8 @@ extension PaymentSheet {
                 missingRequirements.formUnion(requirements)
             }
 
-            // - Link Funding Sources contains Bank Account.
-            if elementsSession.linkFundingSources?.contains(.bankAccount) == false {
-                missingRequirements.insert(.linkFundingSourcesMissingBankAccount)
-            }
-
-            // - US Bank Account is *not* an available payment method.
-            if elementsSession.orderedPaymentMethodTypes.contains(.USBankAccount) {
-                missingRequirements.insert(.unexpectedUsBankAccount)
+            if let linkSettings = elementsSession.linkSettings, linkSettings.instantDebitsOnboardingDisabled {
+                missingRequirements.insert(.instantDebitsDisabledForOnboarding)
             }
 
             // - We collect an email, or a default non-empty email has been provided.
