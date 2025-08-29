@@ -606,7 +606,7 @@ class PaymentSheetPaymentMethodTypeTest: XCTestCase {
         )
 
         let expectedDebugDescription = """
-        \t* Instant Bank Payments are disabled for new users.
+        \t* The Bank tab is configured to be hidden for your account.
         """
         XCTAssertEqual(availability.debugDescription, expectedDebugDescription)
     }
@@ -808,7 +808,7 @@ class PaymentSheetPaymentMethodTypeTest: XCTestCase {
         )
 
         let expectedDebugDescription = """
-        \t* Instant Bank Payments are disabled for new users.
+        \t* The Bank tab is configured to be hidden for your account.
         """
         XCTAssertEqual(availability.debugDescription, expectedDebugDescription)
     }
