@@ -74,8 +74,8 @@ class SectionContainerView: UIView {
         for row in visibleRows {
             // Pull out any Element views nested inside a MultiElementRowView
             for view in (row as? MultiElementRowView)?.views ?? [row] {
-                if LiquidGlassDetector.isEnabled, #available(iOS 26.0, *) {
-                    view.cornerConfiguration = .capsule()
+                if LiquidGlassDetector.isEnabled {
+                    view.ios26_applyCapsuleCornerConfiguration()
                 } else {
                     view.layer.cornerRadius = theme.cornerRadius
                 }
@@ -131,7 +131,7 @@ class SectionContainerView: UIView {
     // MARK: - Internal methods
     func updateUI(newViews: [UIView]? = nil) {
         if LiquidGlassDetector.isEnabled, #available(iOS 26, *) {
-            cornerConfiguration =  .uniformCorners(radius: 26)
+            ios26_applyDefaultCornerConfiguration()
         } else {
             layer.applyShadow(shadow: theme.shadow)
             layer.cornerRadius = theme.cornerRadius
@@ -263,19 +263,19 @@ private func buildStackView(views: [UIView], theme: ElementsAppearance = .defaul
     stackView.customBackgroundColor = theme.colors.componentBackground
     stackView.drawBorder = true
     stackView.hideShadow = true // Shadow is handled by `SectionContainerView`
-    if LiquidGlassDetector.isEnabled, #available(iOS 26.0, *) {
-        stackView.cornerConfiguration = .capsule()
+    if LiquidGlassDetector.isEnabled {
+        stackView.ios26_applyCapsuleCornerConfiguration()
         stackView.isLayoutMarginsRelativeArrangement = true
         stackView.directionalLayoutMargins = .insets(amount: 4)
     } else {
         stackView.borderCornerRadius = theme.cornerRadius
     }
     // Set up corner radius / corner configuration
-    if LiquidGlassDetector.isEnabled, #available(iOS 26.0, *) {
+    if LiquidGlassDetector.isEnabled {
         if views.count == 1 {
-            stackView.backgroundView.cornerConfiguration = .capsule()
+            stackView.backgroundView.ios26_applyCapsuleCornerConfiguration()
         } else {
-            stackView.backgroundView.cornerConfiguration = .uniformCorners(radius: 26)
+            stackView.backgroundView.ios26_applyDefaultCornerConfiguration()
         }
     } else {
         stackView.borderCornerRadius = theme.cornerRadius
