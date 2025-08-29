@@ -6,8 +6,8 @@
 //
 
 import Foundation
-import UIKit
 @_spi(STP) import StripeCore
+import UIKit
 
 // Our SDK runs inside a user's app, we can't explicitly opt into or out of the new "Liquid Glass" design.
 // Instead, we'll do our best to detect which design to use, and adjust the default UI spacing and icons accordingly.
