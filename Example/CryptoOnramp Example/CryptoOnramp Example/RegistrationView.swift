@@ -33,7 +33,6 @@ struct RegistrationView: View {
     @State private var showAuthenticatedView: Bool = false
     @State private var registrationCustomerId: String?
     @State private var isRegistrationComplete: Bool = false
-    @State private var didVerifyAfterRegistration: Bool = false
     @State private var showUpdatePhoneNumberSheet: Bool = false
     @State private var updatePhoneNumberInput: String = ""
 
@@ -48,7 +47,7 @@ struct RegistrationView: View {
     }
 
     private var isUpdatePhoneNumberButtonDisabled: Bool {
-        !isRegistrationComplete || didVerifyAfterRegistration
+        !isRegistrationComplete
     }
 
     private var shouldDisableButtons: Bool {
@@ -98,7 +97,7 @@ struct RegistrationView: View {
                 }
 
                 if isRegistrationComplete {
-                    Button(didVerifyAfterRegistration ? "Retry Verification" : "Verify") {
+                    Button("Authenticate") {
                         Task {
                             try await verify()
                         }
@@ -115,17 +114,9 @@ struct RegistrationView: View {
                     .opacity(isRegisterButtonDisabled ? 0.5 : 1)
                 }
 
-                if !didVerifyAfterRegistration {
-                    Button("Update Phone Number") {
-                        showUpdatePhoneNumberSheet = true
-                    }
-                    .buttonStyle(PrimaryButtonStyle())
-                    .disabled(isUpdatePhoneNumberButtonDisabled)
-                    .opacity(isUpdatePhoneNumberButtonDisabled ? 0.5 : 1)
-                }
-
-                Button("Continue to authenticated view") {
-                    showAuthenticatedView = true
+                Button("Update Phone Number") {
+                    updatePhoneNumberInput = phoneNumber
+                    showUpdatePhoneNumberSheet = true
                 }
                 .buttonStyle(PrimaryButtonStyle())
                 .disabled(isUpdatePhoneNumberButtonDisabled)
@@ -206,8 +197,12 @@ struct RegistrationView: View {
         if let customerId = await presentAuthorization(laiId: laiId, using: coordinator) {
             await MainActor.run {
                 isLoading.wrappedValue = false
-                didVerifyAfterRegistration = true
                 self.registrationCustomerId = customerId
+
+                // Delay so the navigation link animation doesn't get canceled.
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
+                    showAuthenticatedView = true
+                }
             }
         } else {
             await MainActor.run {
