@@ -261,9 +261,8 @@ class STPPinManagementServiceFunctionalTest: APIStubbedTestCase {
             verificationId: "iv_token",
             oneTimeCode: "123456"
         ) { _, status, _ in
-            if status == .errorVerificationAlreadyRedeemed {
-                expectation.fulfill()
-            }
+            XCTAssertEqual(status, .errorVerificationAlreadyRedeemed)
+            expectation.fulfill()
         }
         waitForExpectations(timeout: 5.0, handler: nil)
     }
