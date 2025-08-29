@@ -38,15 +38,19 @@ import UIKit
 @_spi(STP) extension UIView {
     @_spi(STP) public func ios26_applyCapsuleCornerConfiguration() {
         stpAssert(LiquidGlassDetector.isEnabled)
-#if swift(>=6.2)
-        cornerConfiguration = .capsule()
+#if canImport(DeclaredAgeRange) // Hack to check if we're compiling w/ the iOS 26 SDK
+        if #available(iOS 26.0, *) {
+            cornerConfiguration = .capsule()
+        }
 #endif
     }
 
     @_spi(STP) public func ios26_applyDefaultCornerConfiguration() {
         stpAssert(LiquidGlassDetector.isEnabled)
-#if swift(>=6.2)
-        cornerConfiguration = .uniformCorners(radius: 26)
+#if canImport(DeclaredAgeRange) // Hack to check if we're compiling w/ the iOS 26 SDK
+        if #available(iOS 26.0, *) {
+            cornerConfiguration = .uniformCorners(radius: 26)
+        }
 #endif
     }
 }

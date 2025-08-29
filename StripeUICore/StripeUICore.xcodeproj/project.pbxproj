@@ -90,7 +90,7 @@
 		B106FCB3D7C3DE7C40F0AE5C /* AddressSectionElementTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = C55F7532752871E779F47278 /* AddressSectionElementTest.swift */; };
 		B1B177526E04EE65A9D1C64A /* DynamicHeightContainerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B9E7CFED5747279A5976D7BA /* DynamicHeightContainerView.swift */; };
 		B6107E5E2D6E116417D22DD9 /* StripeUICoreBundleLocator.swift in Sources */ = {isa = PBXBuildFile; fileRef = E68363D1C6BB6468AC1DDA4C /* StripeUICoreBundleLocator.swift */; };
-		B65F5B032E60C5EB001425CC /* LiquidGlassDetector.swift in Sources */ = {isa = PBXBuildFile; fileRef = B65F5B022E60C5EB001425CC /* LiquidGlassDetector.swift */; };
+		B65F5B032E60C5EB001425CC /* LiquidGlassHelpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = B65F5B022E60C5EB001425CC /* LiquidGlassHelpers.swift */; };
 		BC40443B2A2F7130351589A7 /* NSAttributedString+StripeUICore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B8AFA3891DA214D9FBEF650 /* NSAttributedString+StripeUICore.swift */; };
 		BE42104922DCA4DCB3919DD4 /* AddressSectionElement.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B5CCD5D11A49D48D8D21C62 /* AddressSectionElement.swift */; };
 		BEB4F0E3B6218CA3E5DE95F9 /* STPBlikCodeValidatorTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2055BFB32FE9CF519DC25C8F /* STPBlikCodeValidatorTest.swift */; };
@@ -271,7 +271,7 @@
 		B2161853A89C273B745B8A60 /* el-GR */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "el-GR"; path = "el-GR.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		B274D6A71A11DA7B98D502AA /* DateFieldElement.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateFieldElement.swift; sourceTree = "<group>"; };
 		B32FABC26C892C74FD444E88 /* TextFieldFormatterTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextFieldFormatterTest.swift; sourceTree = "<group>"; };
-		B65F5B022E60C5EB001425CC /* LiquidGlassDetector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LiquidGlassDetector.swift; sourceTree = "<group>"; };
+		B65F5B022E60C5EB001425CC /* LiquidGlassHelpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LiquidGlassHelpers.swift; sourceTree = "<group>"; };
 		B6737026DF19C8D10AE8114A /* SectionElement+MultiElementRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SectionElement+MultiElementRow.swift"; sourceTree = "<group>"; };
 		B844EED0578B990F4772CD01 /* AddressSpecProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddressSpecProvider.swift; sourceTree = "<group>"; };
 		B871CED2EB8A1F7EEC0FE087 /* pl-PL */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "pl-PL"; path = "pl-PL.lproj/Localizable.strings"; sourceTree = "<group>"; };
@@ -528,7 +528,7 @@
 				E657F1ABE46BA5C0692D9D41 /* CompatibleColor.swift */,
 				A681C4DEAE7B35B4DC0BD0FB /* ImageMaker.swift */,
 				FB5A05E653BFD01FF65E193C /* InputFormColors.swift */,
-				B65F5B022E60C5EB001425CC /* LiquidGlassDetector.swift */,
+				B65F5B022E60C5EB001425CC /* LiquidGlassHelpers.swift */,
 				EA00332BBDCE27F6F5A615C4 /* RegionCodeProvider.swift */,
 				72394C7783071B1C6ED82A48 /* StackViewWithSeparator.swift */,
 				A4F4CE2A0B16DA57DB249227 /* STPLocalizedString.swift */,
@@ -934,7 +934,7 @@
 				62601F856C41CFA1C7A8B18F /* UIView+StripeUICore.swift in Sources */,
 				614197FD2D944A3200529A5F /* SubtitleElement.swift in Sources */,
 				D47D77A0B82DC6AE15E0A74E /* UIViewController+StripeUICore.swift in Sources */,
-				B65F5B032E60C5EB001425CC /* LiquidGlassDetector.swift in Sources */,
+				B65F5B032E60C5EB001425CC /* LiquidGlassHelpers.swift in Sources */,
 				4CD207111219BF250A400ACC /* UIWindow+StripeUICore.swift in Sources */,
 				778BACD1A29BEDEE21ED3FBE /* ActivityIndicator.swift in Sources */,
 				FDF52A43A01CD72D4B5A2CA9 /* Button.swift in Sources */,
