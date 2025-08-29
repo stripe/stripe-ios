@@ -344,8 +344,6 @@ class BottomSheetViewController: UIViewController, BottomSheetPresentable {
                 // Allow scroll view to extend under the navigation bar for blur effect
                 scrollView.topAnchor.constraint(equalTo: view.topAnchor),
             ])
-            // Add top content inset so content doesn't get hidden behind the navigation bar
-            scrollView.contentInset.top = SheetNavigationBar.height
         } else {
             NSLayoutConstraint.activate([
                 scrollView.topAnchor.constraint(equalTo: navigationBarContainerView.bottomAnchor)
@@ -357,16 +355,17 @@ class BottomSheetViewController: UIViewController, BottomSheetPresentable {
         scrollView.addSubview(contentContainerView)
 
         // Give the scroll view a desired height
-        let constantOffsetForNavigationBar = LiquidGlassDetector.isEnabled ? SheetNavigationBar.height : 0
-        let scrollViewHeightConstraint = scrollView.heightAnchor.constraint(equalTo: scrollView.contentLayoutGuide.heightAnchor,
-                                                                            constant: constantOffsetForNavigationBar)
+        let scrollViewHeightConstraint = scrollView.heightAnchor.constraint(equalTo: scrollView.contentLayoutGuide.heightAnchor)
         scrollViewHeightConstraint.priority = .fittingSizeLevel
         self.scrollViewHeightConstraint = scrollViewHeightConstraint
+
+        // Move the contentContainerView to start below the sheet
+        let topOffset = LiquidGlassDetector.isEnabled ? SheetNavigationBar.height : 0.0
 
         NSLayoutConstraint.activate([
             contentContainerView.leadingAnchor.constraint(equalTo: scrollView.contentLayoutGuide.leadingAnchor),
             contentContainerView.trailingAnchor.constraint(equalTo: scrollView.contentLayoutGuide.trailingAnchor),
-            contentContainerView.topAnchor.constraint(equalTo: scrollView.contentLayoutGuide.topAnchor),
+            contentContainerView.topAnchor.constraint(equalTo: scrollView.contentLayoutGuide.topAnchor, constant: topOffset),
             contentContainerView.bottomAnchor.constraint(equalTo: scrollView.contentLayoutGuide.bottomAnchor),
             contentContainerView.widthAnchor.constraint(equalTo: scrollView.frameLayoutGuide.widthAnchor),
             scrollViewHeightConstraint,
