@@ -543,6 +543,12 @@ class PlaygroundController: ObservableObject {
 
     private var subscribers: Set<AnyCancellable> = []
 
+    convenience init() {
+        let settings = Self.settingsFromDefaults() ?? .defaultValues()
+        let appearance = Self.appearanceFromDefaults() ?? .default
+        self.init(settings: settings, appearance: appearance)
+    }
+
     init(settings: PaymentSheetTestPlaygroundSettings, appearance: PaymentSheet.Appearance) {
         // Enable experimental payment methods.
         //        PaymentSheet.supportedPaymentMethods += [.link]
