@@ -173,7 +173,7 @@ public final class CryptoOnrampCoordinator: NSObject, CryptoOnrampCoordinatorPro
 
     // MARK: - CryptoOnrampCoordinatorProtocol
 
-    public static func create(apiClient: STPAPIClient = .shared, appearance: LinkAppearance) async throws -> CryptoOnrampCoordinator {
+    public static func create(apiClient: STPAPIClient = .shared, appearance: LinkAppearance = .init()) async throws -> CryptoOnrampCoordinator {
         let linkController = try await LinkController.create(
             apiClient: apiClient,
             mode: .payment,

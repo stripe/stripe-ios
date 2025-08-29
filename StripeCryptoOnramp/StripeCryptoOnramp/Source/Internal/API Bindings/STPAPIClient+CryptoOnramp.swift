@@ -5,6 +5,7 @@
 //  Created by Michael Liberatore on 7/17/25.
 //
 
+import Foundation
 @_spi(STP) import StripeCore
 @_spi(STP) import StripePaymentSheet
 
