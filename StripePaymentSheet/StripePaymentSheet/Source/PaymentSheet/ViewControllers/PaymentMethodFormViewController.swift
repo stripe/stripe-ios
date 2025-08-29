@@ -336,6 +336,10 @@ extension PaymentMethodFormViewController {
         let linkMode = elementsSession.linkSettings?.linkMode
         let billingDetails = instantDebitsFormElement?.billingDetails
 
+        let paymentMethodType: STPPaymentMethodType = elementsSession.useCardPaymentMethodTypeForIBP ? .card : .USBankAccount
+        let isSettingUp = intent.isSetupFutureUsageSet(for: paymentMethodType) || elementsSession.forceSaveFutureUseBehaviorAndNewMandateText
+        let allowRedisplay = elementsSession.computeAllowRedisplay(isSettingUp: isSettingUp)
+
         return ElementsSessionContext(
             amount: intent.amount,
             currency: intent.currency,
@@ -343,7 +347,8 @@ extension PaymentMethodFormViewController {
             intentId: intentId,
             linkMode: linkMode,
             billingDetails: billingDetails,
-            eligibleForIncentive: instantDebitsFormElement?.displayableIncentive != nil
+            eligibleForIncentive: instantDebitsFormElement?.displayableIncentive != nil,
+            allowRedisplay: allowRedisplay?.stringValue
         )
     }
 

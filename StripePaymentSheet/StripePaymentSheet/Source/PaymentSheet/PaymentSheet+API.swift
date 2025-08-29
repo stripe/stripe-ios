@@ -854,9 +854,7 @@ private extension ConsumerPaymentDetails {
         case .unparsable:
             return nil
         case .bankAccount:
-            let canAcceptACH = elementsSession.orderedPaymentMethodTypes.contains(.USBankAccount)
-            let isLinkCardBrand = elementsSession.linkSettings?.linkMode?.isPantherPayment ?? false
-            return isLinkCardBrand && !canAcceptACH ? "card" : "bank_account"
+            return elementsSession.useCardPaymentMethodTypeForIBP ? "card" : "bank_account"
         }
     }
 
@@ -864,12 +862,6 @@ private extension ConsumerPaymentDetails {
         elementsSession: STPElementsSession,
         isSettingUp: (STPPaymentMethodType) -> Bool
     ) -> STPPaymentMethodAllowRedisplay? {
-        guard let mobilePaymentElementFeatures = elementsSession.customerSessionMobilePaymentElementFeatures else {
-            return nil
-        }
-
-        let allowRedisplayOverride = mobilePaymentElementFeatures.paymentMethodSaveAllowRedisplayOverride
-
         let paymentMethodType: STPPaymentMethodType = {
             if elementsSession.linkPassthroughModeEnabled {
                 let expectedPaymentMethodType = expectedPaymentMethodTypeForPassthroughMode(elementsSession)
@@ -886,10 +878,6 @@ private extension ConsumerPaymentDetails {
             }
         }()
 
-        if isSettingUp(paymentMethodType) {
-            return allowRedisplayOverride ?? .limited
-        } else {
-            return .unspecified
-        }
+        return elementsSession.computeAllowRedisplay(isSettingUp: isSettingUp(paymentMethodType))
     }
 }
