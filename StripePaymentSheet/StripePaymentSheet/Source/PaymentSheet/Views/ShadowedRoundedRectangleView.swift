@@ -30,18 +30,6 @@ class ShadowedRoundedRectangle: UIView, SelectableRectangle {
         }
     }
 
-    var effectiveCornerRadius: CGFloat {
-        // Matches the formula used by `PKPaymentButton` for calculating
-        // the effective corner radius. The effective corner radius is snapped
-        // to half the button's height if the corner radius is
-        // greater or equals than approx. 1/3 of the height (`threshold`).
-        let threshold = 0.32214
-
-        return appearance.cornerRadius >= bounds.height * threshold
-        ? bounds.height / 2
-        : appearance.cornerRadius
-    }
-
     /// All mutations to this class should route to this single method to update the UI
     private func update() {
         // Background color
@@ -52,12 +40,12 @@ class ShadowedRoundedRectangle: UIView, SelectableRectangle {
         }
 
         // Corner radius
-        roundedRectangle.layer.cornerRadius = effectiveCornerRadius
-        layer.cornerRadius = effectiveCornerRadius
+        roundedRectangle.layer.cornerRadius = appearance.cornerRadius
+        layer.cornerRadius = appearance.cornerRadius
 
         // Shadow
         layer.applyShadow(shadow: appearance.asElementsTheme.shadow)
-        layer.shadowPath = UIBezierPath(roundedRect: bounds, cornerRadius: effectiveCornerRadius).cgPath
+        layer.shadowPath = UIBezierPath(rect: bounds).cgPath
 
         // Border
         if isSelected {
@@ -82,17 +70,6 @@ class ShadowedRoundedRectangle: UIView, SelectableRectangle {
         super.init(frame: .zero)
         addAndPinSubview(roundedRectangle)
         update()
-    }
-
-    override func layoutSubviews() {
-        super.layoutSubviews()
-        applyCornerRadius()
-    }
-
-    func applyCornerRadius() {
-        layer.cornerRadius = effectiveCornerRadius
-        roundedRectangle.layer.cornerRadius = effectiveCornerRadius
-        layer.shadowPath = UIBezierPath(roundedRect: bounds, cornerRadius: effectiveCornerRadius).cgPath
     }
 
     #if !os(visionOS)

@@ -33,6 +33,7 @@ public extension PaymentSheet {
         public var cornerRadius: CGFloat = LiquidGlassDetector.isEnabled ? 16.0 : 6.0
 
         /// The border used for inputs and tabs in PaymentSheet
+        /// - Note: The thickness of divider lines between input fields also uses `borderWidth` for consistency, with a minimum thickness of 0.5.
         /// - Note: The behavior of this property is consistent with the behavior of border width on `CALayer`
         public var borderWidth: CGFloat = 1.0
 
