@@ -214,7 +214,7 @@ extension PaymentSheet {
             case .invalidEmailCollectionConfiguration:
                 return "The provided configuration must either collect an email, or a default email must be provided. See https://docs.stripe.com/payments/payment-element/control-billing-details-collection"
             case .instantDebitsDisabledForOnboarding:
-                return "Instant Bank Payments are disabled for new users."
+                return "The Bank tab is configured to be hidden for your account."
             }
         }
     }
