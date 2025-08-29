@@ -28,9 +28,11 @@ class CustomerSheetTestPlaygroundController: ObservableObject {
         self.settings = settings
         self.currentlyRenderedSettings = .defaultValues()
         $settings
-            .sink { newValue in
-            if !self.isLoading && newValue.autoreload == .on {
-                self.load()
+            .sink { [weak self] newValue in
+                if let isLoading = self?.isLoading,
+                   !isLoading,
+                   newValue.autoreload == .on {
+                self?.load()
             }
         }.store(in: &subscribers)
     }
@@ -68,10 +70,10 @@ class CustomerSheetTestPlaygroundController: ObservableObject {
 
     func appearanceButtonTapped() {
         if #available(iOS 14.0, *) {
-            let vc = UIHostingController(rootView: AppearancePlaygroundView(appearance: appearance, doneAction: { updatedAppearance in
-                self.appearance = updatedAppearance
-                self.rootViewController.dismiss(animated: true, completion: nil)
-                self.load()
+            let vc = UIHostingController(rootView: AppearancePlaygroundView(appearance: appearance, doneAction: { [weak self] updatedAppearance in
+                self?.appearance = updatedAppearance
+                self?.rootViewController.dismiss(animated: true, completion: nil)
+                self?.load()
             }))
             rootViewController.present(vc, animated: true, completion: nil)
         } else {
@@ -82,7 +84,9 @@ class CustomerSheetTestPlaygroundController: ObservableObject {
     }
 
     func presentCustomerSheet() {
-        customerSheet?.present(from: rootViewController, completion: { result in
+        customerSheet?.present(from: rootViewController, completion: { [weak self] result in
+            guard let self else { return }
+
             switch result {
             case .selected(let paymentOptionSelection), .canceled(let paymentOptionSelection):
                 self.paymentOptionSelection = paymentOptionSelection
@@ -156,7 +160,8 @@ class CustomerSheetTestPlaygroundController: ObservableObject {
     func createCustomerSheet(configuration: CustomerSheet.Configuration,
                              customerId: String,
                              customerSessionClientSecret: String?) -> CustomerSheet {
-        let intentConfiguration = CustomerSheet.IntentConfiguration(setupIntentClientSecretProvider: {
+        let intentConfiguration = CustomerSheet.IntentConfiguration(setupIntentClientSecretProvider: { [weak self] in
+            guard let self else { throw NSError(domain: "", code: 0) }
             return try await self.backend.createSetupIntent(customerId: customerId, merchantCountryCode: self.settings.merchantCountryCode.rawValue)
         })
         return CustomerSheet(configuration: configuration,

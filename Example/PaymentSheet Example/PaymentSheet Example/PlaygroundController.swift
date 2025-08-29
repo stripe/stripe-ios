@@ -562,20 +562,20 @@ class PlaygroundController: ObservableObject {
         self.appearance = appearance
         self.currentlyRenderedSettings = .defaultValues()
 
-        $settings.removeDuplicates().sink { newValue in
+        $settings.removeDuplicates().sink { [weak self] newValue in
             if newValue.autoreload == .on {
                 // This closure is called *before* `settings` is updated! Wait until the next run loop before calling `load`
                 DispatchQueue.main.async {
-                    self.load()
+                    self?.load()
                 }
             }
             if newValue.shakeAmbiguousViews == .on {
-                self.ambiguousViewTimer?.invalidate()
-                self.ambiguousViewTimer = .scheduledTimer(withTimeInterval: 5.0, repeats: true, block: { _ in
-                    self.checkForAmbiguousViews()
+                self?.ambiguousViewTimer?.invalidate()
+                self?.ambiguousViewTimer = .scheduledTimer(withTimeInterval: 5.0, repeats: true, block: { _ in
+                    self?.checkForAmbiguousViews()
                 })
             } else {
-                self.ambiguousViewTimer?.invalidate()
+                self?.ambiguousViewTimer?.invalidate()
             }
 
             // Hack to enable incentives in Instant Debits
