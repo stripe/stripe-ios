@@ -209,6 +209,20 @@ def build_from_branch(branch, dir, target_name)
   build(dir, target_name)
 end
 
+def product_exists_on_branch(branch, product_name)
+  Dir.chdir(@project_dir) do
+    # Use system() to avoid the script's backtick redefinition that exits on failure
+    package_swift_content = ""
+    if system("git show #{branch}:Package.swift > /tmp/package_swift_check 2>/dev/null")
+      package_swift_content = File.read("/tmp/package_swift_check")
+      File.delete("/tmp/package_swift_check")
+    end
+    return package_swift_content.include?("name: \"#{product_name}\"")
+  end
+rescue
+  return false
+end
+
 def check_size(modules, measure_branch, base_branch)
   # Try to check out the branches - this will fail if there are unstaged changes,
   # so this also helps prevent us from unintentionally messing up any uncommitted work:
@@ -245,6 +259,18 @@ def check_size(modules, measure_branch, base_branch)
       max_compressed_size = m['size_report']['max_compressed_size'] 
       max_uncompressed_size = m['size_report']['max_uncompressed_size']
       max_incremental_uncompressed_size = m['size_report']['max_incremental_uncompressed_size']
+    end
+
+    # Check if the SPM product exists on the current measure branch
+    if !product_exists_on_branch(measure_branch, sdk)
+      puts "#{sdk} is not available as SPM product on #{measure_branch}, skipping (this is expected for modules not yet added to SPM)".yellow
+      next
+    end
+
+    # Check if this is a new SPM product that doesn't exist on base branch
+    if !base_branch.nil? && !product_exists_on_branch(base_branch, sdk)
+      puts "#{sdk} is not available as SPM product on #{base_branch}, skipping size comparison (this is expected for new modules)".yellow
+      next
     end
 
     begin
