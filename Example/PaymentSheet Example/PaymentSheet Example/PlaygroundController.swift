@@ -408,7 +408,7 @@ class PlaygroundController: ObservableObject {
                 mode: .payment(amount: settings.amount.rawValue, currency: settings.currency.rawValue, setupFutureUsage: nil, paymentMethodOptions: settings.paymentMethodOptionsSetupFutureUsage.makePaymentMethodOptions()),
                 paymentMethodTypes: paymentMethodTypes,
                 paymentMethodConfigurationId: settings.paymentMethodConfigurationId,
-                confirmHandler: confirmationTokenConfirmHandler,
+                confirmationTokenConfirmHandler: confirmationTokenConfirmHandler,
                 requireCVCRecollection: settings.requireCVCRecollection == .on
             )
         case .paymentWithSetup:
@@ -416,7 +416,7 @@ class PlaygroundController: ObservableObject {
                 mode: .payment(amount: settings.amount.rawValue, currency: settings.currency.rawValue, setupFutureUsage: .offSession, paymentMethodOptions: settings.paymentMethodOptionsSetupFutureUsage.makePaymentMethodOptions()),
                 paymentMethodTypes: paymentMethodTypes,
                 paymentMethodConfigurationId: settings.paymentMethodConfigurationId,
-                confirmHandler: confirmationTokenConfirmHandler,
+                confirmationTokenConfirmHandler: confirmationTokenConfirmHandler,
                 requireCVCRecollection: settings.requireCVCRecollection == .on
             )
         case .setup:
@@ -424,7 +424,7 @@ class PlaygroundController: ObservableObject {
                 mode: .setup(currency: settings.currency.rawValue, setupFutureUsage: .offSession),
                 paymentMethodTypes: paymentMethodTypes,
                 paymentMethodConfigurationId: settings.paymentMethodConfigurationId,
-                confirmHandler: confirmationTokenConfirmHandler
+                confirmationTokenConfirmHandler: confirmationTokenConfirmHandler
             )
         }
     }

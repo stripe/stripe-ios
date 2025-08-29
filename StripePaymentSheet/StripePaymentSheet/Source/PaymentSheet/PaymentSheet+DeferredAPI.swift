@@ -131,7 +131,7 @@ extension PaymentSheet {
 
                     // 2. Configure additional confirmation token parameters
                     // Set return URL
-//                    confirmationTokenParams.returnURL = configuration.returnURL
+                    confirmationTokenParams.returnURL = configuration.returnURL
 
                     // Set shipping details from configuration
                     if let shippingDetails = STPPaymentIntentShippingDetailsParams(paymentSheetConfiguration: configuration) {
