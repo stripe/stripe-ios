@@ -82,7 +82,7 @@ extension LinkPaymentMethodPicker {
             stackView.axis = .horizontal
             stackView.spacing = Constants.contentSpacing
             stackView.distribution = .fill
-            stackView.alignment = .leading
+            stackView.alignment = .center
             stackView.directionalLayoutMargins = Constants.insets
             stackView.isLayoutMarginsRelativeArrangement = true
 
@@ -105,6 +105,16 @@ extension LinkPaymentMethodPicker {
             accessibilityTraits = .staticText
             accessibilityLabel = userEmailLabel.text
             accessibilityHint = String.Localized.email
+
+            if LiquidGlassDetector.isEnabled {
+                NSLayoutConstraint.activate([
+                    // Vertically center the content
+                    stackView.centerYAnchor.constraint(equalTo: centerYAnchor),
+
+                    // Add minimum height constraint
+                    heightAnchor.constraint(greaterThanOrEqualToConstant: 64),
+                ])
+            }
         }
 
         required init?(coder: NSCoder) {
