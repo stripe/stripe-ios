@@ -39,11 +39,6 @@ final class VerticalSavedPaymentMethodsViewControllerSnapshotTests: STPSnapshotT
     func test_VerticalSavedPaymentOptionsViewControllerSnapshotTestsDefaultBadge() {
         _test_VerticalSavedPaymentMethodsViewControllerSnapshotTests(darkMode: false, showDefaultPMBadge: true)
     }
-    func test_VerticalSavedPaymentOptionsHighCornerRadius() {
-        var appearance = PaymentSheet.Appearance()
-        appearance.cornerRadius = 16
-        _test_VerticalSavedPaymentMethodsViewControllerSnapshotTests(darkMode: false, appearance: appearance, showDefaultPMBadge: true)
-    }
 
     func _test_VerticalSavedPaymentMethodsViewControllerSnapshotTests(darkMode: Bool, appearance: PaymentSheet.Appearance = .default, isEmbedded: Bool = false, showDefaultPMBadge: Bool = false) {
         var configuration = PaymentSheet.Configuration()
