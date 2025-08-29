@@ -6,6 +6,8 @@
 //
 
 import Foundation
+@_spi(STP) import StripeCore
+import UIKit
 
 // Our SDK runs inside a user's app, we can't explicitly opt into or out of the new "Liquid Glass" design.
 // Instead, we'll do our best to detect which design to use, and adjust the default UI spacing and icons accordingly.
@@ -29,5 +31,26 @@ import Foundation
         #endif
         // Otherwise, use the old design
         return false
+    }
+}
+
+// MARK: - UIView Liquid Glass helpers
+@_spi(STP) extension UIView {
+    @_spi(STP) public func ios26_applyCapsuleCornerConfiguration() {
+        stpAssert(LiquidGlassDetector.isEnabled)
+#if compiler(>=6.2)
+        if #available(iOS 26.0, *) {
+            cornerConfiguration = .capsule()
+        }
+#endif
+    }
+
+    @_spi(STP) public func ios26_applyDefaultCornerConfiguration() {
+        stpAssert(LiquidGlassDetector.isEnabled)
+#if compiler(>=6.2)
+        if #available(iOS 26.0, *) {
+            cornerConfiguration = .uniformCorners(radius: 26)
+        }
+#endif
     }
 }
