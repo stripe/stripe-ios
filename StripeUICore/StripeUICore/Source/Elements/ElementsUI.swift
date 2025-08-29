@@ -86,6 +86,10 @@ import UIKit
     public var fonts = Font()
     public var colors = Color()
 
+    /// The thickness of divider lines between elements in a section uses `borderWidth` for consistency, with a minimum thickness of 0.5.
+    public var separatorWidth: CGFloat {
+        borderWidth > 0 ? borderWidth : 0.5
+    }
     public var borderWidth = ElementsUI.fieldBorderWidth
     public var cornerRadius = ElementsUI.defaultCornerRadius
     public var shadow: Shadow? = Shadow()

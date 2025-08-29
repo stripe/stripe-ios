@@ -36,13 +36,18 @@ import UIKit
         }
     }
 
-    /// Commonly referred to as `borderWidth`
+    /// Controls the separator width between subviews
     public override var spacing: CGFloat {
         didSet {
-            backgroundView.layer.borderWidth = spacing
             separatorLayer.lineWidth = spacing
             layoutMargins = UIEdgeInsets(
                 top: spacing, left: spacing, bottom: spacing, right: spacing)
+        }
+    }
+
+    public var borderWidth: CGFloat = 0 {
+        didSet {
+            backgroundView.layer.borderWidth = borderWidth
         }
     }
 
