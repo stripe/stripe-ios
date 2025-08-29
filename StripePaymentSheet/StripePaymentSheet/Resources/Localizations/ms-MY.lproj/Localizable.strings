@@ -1,5 +1,3 @@
-"%1$@ •••• %2$@" = "%1$@ •••• %2$@";
-
 "+ Add" = "+ Tambah";
 
 "Add US bank account" = "Tambah akaun bank AS";
@@ -60,7 +58,7 @@
 
 "By continuing, you agree to authorize payments pursuant to <terms>these terms</terms>." = "Dengan meneruskan langkah, anda bersetuju untuk mengizinkan pembayaran menurut <terms>terma ini</terms>";
 
-"By continuing, you agree to save your information for future purchases with %@ and <link>Link</link>. You also agree to Link's <terms>Terms</terms> and <privacy>Privacy</privacy>." = "Dengan meneruskan, anda bersetuju untuk menyimpan maklumat anda bagi pembelian masa hadapan dengan %@ dan <link>Link</link>. Anda juga bersetuju dengan <terms>Terma</terms> dan <privacy>Privasi</privacy> Link.";
+"By continuing, you agree to save your information for future purchases with %@ and <link>Link</link> according to Link <terms>terms</terms> and <privacy>privacy</privacy>." = "Dengan meneruskan, anda bersetuju untuk menyimpan maklumat anda bagi pembelian masa hadapan dengan %@ dan <link>Link</link> menurut <terms>terma</terms> Dan <privacy>privasi</privacy> Link.";
 
 "By continuing, you agree to save your information for future purchases with %@." = "Dengan meneruskan, anda bersetuju untuk menyimpan maklumat anda untuk pembelian masa hadapan dengan %@.";
 
@@ -83,6 +81,8 @@
 "By providing your phone number, you agree to create a Link account and save your payment info to Link, according to the Link <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Dengan memberikan nombor telefon anda, anda bersetuju untuk mencipta akaun Link dan menyimpan maklumat pembayaran anda di Link, menurut <terms>Terma</terms> dan <privacy>Dasar Privasi</privacy> Link.";
 
 "By saving your bank account for %@ you agree to authorize payments pursuant to <terms>these terms</terms>." = "Dengan menyimpan akaun bank anda untuk %@, anda bersetuju untuk mengizinkan pembayaran menurut <terms>terma ini</terms>.";
+
+"By submitting your order to %@ you agree to authorize payments pursuant to <terms>these terms</terms>." = "Dengan menghantar pesanan anda kepada %@ anda bersetuju untuk mengizinkan pembayaran mengikut <terms>terma-terma ini</terms>.";
 
 "CPF/CPNJ" = "CPF/CPNJ";
 
@@ -113,6 +113,8 @@
 "Contact information" = "Maklumat hubungan";
 
 "Continue another way" = "Teruskan dengan cara lain";
+
+"Create an account with Link for faster checkout across the web" = "Buat akaun dengan Link untuk proses bayar dan keluar lebih pantas di seluruh web";
 
 "Debit or credit card" = "Kad debit atau kredit";
 
@@ -286,6 +288,8 @@
 
 "This is your default" = "Ini tetapan asal anda";
 
+"This payment method will be removed but will remain available for %@ subscriptions." = "Kaedah pembayaran ini akan dialih keluar tetapi akan kekal tersedia untuk langganan %@.";
+
 "Too many attempts. Please try again in a few minutes." = "Terlalu banyak percubaan. Sila cuba lagi dalam beberapa minit.";
 
 "Unavailable for this purchase" = "Tidak tersedia untuk pembelian ini";
@@ -295,8 +299,6 @@
 "Update payment method" = "Kemas kinikan kaedah pembayaran";
 
 "Use billing address for shipping" = "Gunakan alamat pengebilan untuk penghantaran";
-
-"Use your saved info to check out faster" = "Gunakan maklumat anda yang tersimpan untuk keluar dan bayar dengan lebih cepat";
 
 "View more" = "Lihat lebih banyak";
 

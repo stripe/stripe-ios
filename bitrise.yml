@@ -38,6 +38,7 @@ stages:
     workflows:
     - framework-tests: {}
     - test-builds-xcode-16: {}
+    - test-builds-xcode-26: {}
     - test-builds-vision: {}
     - install-tests: {}
     - lint-tests: {}
@@ -54,6 +55,8 @@ stages:
     - framework-tests-no-mocks: {}
     - test-builds-xcode-16: {}
     - test-builds-xcode-16-release: {}
+    - test-builds-xcode-26: {}
+    - test-builds-xcode-26-release: {}
     - test-builds-vision: {}
     - deploy-docs: {}
     - install-tests: {}
@@ -364,6 +367,31 @@ workflows:
       bitrise.io:
         stack: osx-xcode-16.0.x
         machine_type_id: g2.mac.large
+  test-builds-xcode-26:
+    steps:
+    - xcode-build-for-test@2:
+        inputs:
+        - scheme: AllStripeFrameworks
+        - destination: generic/platform=iOS Simulator
+    - deploy-to-bitrise-io@2: {}
+    envs:
+    - DEFAULT_TEST_DEVICE: platform=iOS Simulator,name=iPhone 16,OS=26.0
+    before_run:
+    - prep_all
+    meta:
+      bitrise.io:
+        stack: osx-xcode-26.0.x-edge
+  test-builds-xcode-26-release:
+    steps:
+    - script@1:
+        inputs:
+        - content: xcodebuild build -workspace "Stripe.xcworkspace" -scheme "AllStripeFrameworks" -configuration "Release" -sdk "iphonesimulator" | xcpretty
+        title: Build release builds
+    before_run:
+    - prep_all
+    meta:
+      bitrise.io:
+        stack: osx-xcode-26.0.x-edge
   test-builds-vision:
     steps:
     - xcode-build-for-test@2:

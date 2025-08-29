@@ -27,9 +27,6 @@ extension STPAPIClient {
         completion: @escaping (Result<ConsumerSession.LookupResponse, Error>) -> Void
     ) {
         Task {
-            let legacyEndpoint = "consumers/sessions/lookup"
-            let mobileEndpoint = "consumers/mobile/sessions/lookup"
-
             var parameters: [String: Any] = [
                 "request_surface": requestSurface.rawValue,
                 "session_id": sessionID,
@@ -51,35 +48,77 @@ extension STPAPIClient {
                 return
             }
 
-            let requestAssertionHandle: StripeAttest.AssertionHandle? = await {
-                if useMobileEndpoints {
-                    do {
-                        let assertionHandle = try await stripeAttest.assert()
-                        parameters = parameters.merging(assertionHandle.assertion.requestFields) { (_, new) in new }
-                        return assertionHandle
-                    } catch {
-                        // If we can't get an assertion, we'll try the request anyway. It may fail.
-                    }
-                }
-                return nil
-            }()
-
-            post(
-                resource: useMobileEndpoints ? mobileEndpoint : legacyEndpoint,
+            await performConsumerLookup(
                 parameters: parameters,
-                ephemeralKeySecret: publishableKey
-            ) { (result: Result<ConsumerSession.LookupResponse, Error>) in
-                Task { @MainActor in
-                    // If there's an assertion error, send it to StripeAttest
-                    if useMobileEndpoints,
-                       case .failure(let error) = result,
-                       StripeAttest.isLinkAssertionError(error: error) {
-                        await self.stripeAttest.receivedAssertionError(error)
-                    }
-                    // Mark the assertion handle as completed
-                    requestAssertionHandle?.complete()
-                    completion(result)
+                useMobileEndpoints: useMobileEndpoints,
+                completion: completion
+            )
+        }
+    }
+
+    func lookupLinkAuthIntent(
+        linkAuthIntentID: String,
+        sessionID: String,
+        customerID: String?,
+        cookieStore: LinkCookieStore,
+        useMobileEndpoints: Bool,
+        requestSurface: LinkRequestSurface = .default,
+        completion: @escaping (Result<ConsumerSession.LookupResponse, Error>) -> Void
+    ) {
+        Task {
+            var parameters: [String: Any] = [
+                "request_surface": requestSurface.rawValue,
+                "session_id": sessionID,
+                "link_auth_intent_id": linkAuthIntentID,
+            ]
+            parameters["customer_id"] = customerID
+
+            await performConsumerLookup(
+                parameters: parameters,
+                useMobileEndpoints: useMobileEndpoints,
+                completion: completion
+            )
+        }
+    }
+
+    private func performConsumerLookup(
+        parameters: [String: Any],
+        useMobileEndpoints: Bool,
+        completion: @escaping (Result<ConsumerSession.LookupResponse, Error>) -> Void
+    ) async {
+        let legacyEndpoint = "consumers/sessions/lookup"
+        let mobileEndpoint = "consumers/mobile/sessions/lookup"
+
+        var mutableParameters = parameters
+
+        let requestAssertionHandle: StripeAttest.AssertionHandle? = await {
+            if useMobileEndpoints {
+                do {
+                    let assertionHandle = try await stripeAttest.assert()
+                    mutableParameters = mutableParameters.merging(assertionHandle.assertion.requestFields) { (_, new) in new }
+                    return assertionHandle
+                } catch {
+                    // If we can't get an assertion, we'll try the request anyway. It may fail.
                 }
+            }
+            return nil
+        }()
+
+        post(
+            resource: useMobileEndpoints ? mobileEndpoint : legacyEndpoint,
+            parameters: mutableParameters,
+            ephemeralKeySecret: publishableKey
+        ) { (result: Result<ConsumerSession.LookupResponse, Error>) in
+            Task { @MainActor in
+                // If there's an assertion error, send it to StripeAttest
+                if useMobileEndpoints,
+                   case .failure(let error) = result,
+                   StripeAttest.isLinkAssertionError(error: error) {
+                    await self.stripeAttest.receivedAssertionError(error)
+                }
+                // Mark the assertion handle as completed
+                requestAssertionHandle?.complete()
+                completion(result)
             }
         }
     }
@@ -108,6 +147,8 @@ extension STPAPIClient {
             if let phoneNumber {
                 parameters["phone_number"] = phoneNumber
                 parameters["country_inferring_method"] = "PHONE_NUMBER"
+            } else {
+                parameters["country_inferring_method"] = "BILLING_ADDRESS"
             }
 
             if let legalName = legalName {
@@ -327,6 +368,7 @@ extension STPAPIClient {
         for consumerSessionClientSecret: String,
         id: String,
         consumerAccountPublishableKey: String?,
+        overridePublishableKey: String? = nil,
         allowRedisplay: STPPaymentMethodAllowRedisplay?,
         cvc: String?,
         expectedPaymentMethodType: String?,
@@ -361,9 +403,14 @@ extension STPAPIClient {
             parameters["billing_phone"] = billingPhoneNumber
         }
 
+        let additionalHeaders = overridePublishableKey != nil
+            ? authorizationHeader(using: overridePublishableKey)
+            : [:]
+
         APIRequest<PaymentDetailsShareResponse>.post(
             with: self,
             endpoint: endpoint,
+            additionalHeaders: additionalHeaders,
             parameters: parameters
         ) { paymentDetailsShareResponse, _, error in
             guard let paymentDetailsShareResponse else {
@@ -567,16 +614,21 @@ extension STPAPIClient {
         cookieStore: LinkCookieStore,
         consumerAccountPublishableKey: String?,
         requestSurface: LinkRequestSurface = .default,
+        consentGranted: Bool? = nil,
         completion: @escaping (Result<ConsumerSession, Error>) -> Void
     ) {
         let endpoint: String = "consumers/sessions/confirm_verification"
 
-        let parameters: [String: Any] = [
+        var parameters: [String: Any] = [
             "credentials": ["consumer_session_client_secret": consumerSessionClientSecret],
             "type": "SMS",
             "code": code,
             "request_surface": requestSurface.rawValue,
         ]
+
+        if let consentGranted {
+            parameters["consent_granted"] = consentGranted
+        }
 
         makeConsumerSessionRequest(
             endpoint: endpoint,
@@ -587,6 +639,26 @@ extension STPAPIClient {
         )
     }
 
+    func updateConsentStatus(
+        consentGranted: Bool,
+        consumerSessionClientSecret: String,
+        consumerPublishableKey: String?,
+        completion: @escaping (Result<EmptyResponse, Error>) -> Void
+    ) {
+        let endpoint: String = "consumers/sessions/consent_update"
+
+        let parameters: [String: Any] = [
+            "credentials": ["consumer_session_client_secret": consumerSessionClientSecret],
+            "consent_granted": consentGranted,
+        ]
+
+        post(
+            resource: endpoint,
+            parameters: parameters,
+            consumerPublishableKey: consumerPublishableKey,
+            completion: completion
+        )
+    }
 }
 
 // TODO(ramont): Remove this after switching to modern bindings.

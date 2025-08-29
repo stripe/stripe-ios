@@ -603,7 +603,11 @@ extension SavedPaymentOptionsViewController: PaymentOptionCellDelegate {
                                                                            isCBCEligible: paymentMethod.isCoBrandedCard && cbcEligible,
                                                                            allowsSetAsDefaultPM: configuration.allowsSetAsDefaultPM,
                                                                            isDefault: isDefaultPaymentMethod(savedPaymentMethodId: paymentMethod.stripeId))
-        let editVc = UpdatePaymentMethodViewController(removeSavedPaymentMethodMessage: configuration.removeSavedPaymentMethodMessage,
+        let removeSavedPaymentMethodMessage = UpdatePaymentMethodViewController.resolveRemoveMessage(
+            removeSavedPaymentMethodMessage: configuration.removeSavedPaymentMethodMessage,
+            paymentMethodRemoveIsPartial: elementsSession.paymentMethodRemoveIsPartialForPaymentSheet(),
+            merchantName: configuration.merchantDisplayName)
+        let editVc = UpdatePaymentMethodViewController(removeSavedPaymentMethodMessage: removeSavedPaymentMethodMessage,
                                                        isTestMode: configuration.isTestMode,
                                                        configuration: updateConfig)
         editVc.delegate = self
@@ -862,16 +866,12 @@ private extension LinkPaymentDetails {
 
 private func makeCardRemovalMessage(brand: STPCardBrand, last4: String) -> (title: String, message: String) {
     let brandString = STPCardBrandUtilities.stringFrom(brand) ?? ""
-    let formattedMessage = STPLocalizedString(
-        "%1$@ •••• %2$@",
-        "Content for alert popup prompting to confirm removing a saved card. {card brand} •••• {last 4} e.g. 'Visa •••• 3155'"
-    )
     return (
         title: STPLocalizedString(
             "Remove card?",
             "Title for confirmation alert to remove a card"
         ),
-        message: String(format: formattedMessage, brandString, last4)
+        message: String(format: String.Localized.card_details_xxxx, brandString, last4)
     )
 }
 

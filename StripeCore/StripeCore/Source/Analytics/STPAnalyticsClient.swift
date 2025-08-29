@@ -86,7 +86,7 @@ import UIKit
         #endif
     }
 
-    static var isUnitOrUITest: Bool {
+    public static var isUnitOrUITest: Bool {
         return NSClassFromString("XCTest") != nil || ProcessInfo.processInfo.environment["UITesting"] != nil
     }
 

@@ -8,7 +8,7 @@
 import PassKit
 import SwiftUI
 
-@_spi(CryptoOnrampSDKPreview)
+@_spi(STP)
 import StripeCryptoOnramp
 
 @_spi(STP)
@@ -26,7 +26,20 @@ struct AuthenticatedView: View {
     @State private var errorMessage: String?
     @State private var isIdentityVerificationComplete = false
     @State private var showKYCView = false
-    @State private var selectedPaymentMethod: PaymentMethodPreview?
+    @State private var showAttachWalletSheet = false
+    @State private var isWalletAttached = false
+    @State private var selectedPaymentMethod: PaymentMethodDisplayData?
+    @State private var cryptoPaymentToken: String?
+    @State private var onrampSessionResponse: CreateOnrampSessionResponse?
+
+    @State private var wallets: [CustomerWalletsResponse.Wallet] = []
+    @State private var selectedWalletId: String?
+    @State private var lastAttachedAddress: String?
+    @State private var lastAttachedNetwork: CryptoNetwork?
+
+    @State private var authenticationContext = WindowAuthenticationContext()
+
+    @State private var checkoutSucceeded = false
 
     @Environment(\.isLoading) private var isLoading
 
@@ -70,9 +83,14 @@ struct AuthenticatedView: View {
                     .disabled(shouldDisableButtons)
                     .opacity(shouldDisableButtons ? 0.5 : 1)
 
-                    HStack(spacing: 4) {
-                        Spacer()
+                    Button("Attach Wallet Address") {
+                        showAttachWalletSheet = true
+                    }
+                    .buttonStyle(PrimaryButtonStyle())
+                    .disabled(shouldDisableButtons)
+                    .opacity(shouldDisableButtons ? 0.5 : 1)
 
+                    HStack(alignment: .firstTextBaseline, spacing: 4) {
                         Text("Customer ID:")
                             .font(.footnote)
                             .bold()
@@ -80,13 +98,31 @@ struct AuthenticatedView: View {
                         Text(customerId)
                             .font(.footnote.monospaced())
                             .foregroundColor(.secondary)
-
-                        Spacer()
                     }
                 }
                 .padding()
                 .background(Color.secondary.opacity(0.1))
                 .cornerRadius(8)
+
+                if !wallets.isEmpty {
+                    VStack(alignment: .leading, spacing: 12) {
+                        Text("Selected Wallet")
+                            .font(.headline)
+                            .foregroundColor(.secondary)
+
+                        Picker("Wallet", selection: $selectedWalletId) {
+                            ForEach(wallets, id: \.id) { wallet in
+                                Text("\(wallet.network.localizedCapitalized): \(wallet.walletAddress.prefix(5))…")
+                                    .tag(wallet.id)
+                            }
+                        }
+                        .pickerStyle(.menu)
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                    }
+                    .padding()
+                    .background(Color.secondary.opacity(0.1))
+                    .cornerRadius(8)
+                }
 
                 if let errorMessage {
                     ErrorMessageView(message: errorMessage)
@@ -98,8 +134,85 @@ struct AuthenticatedView: View {
                         .foregroundColor(.secondary)
 
                     if let selectedPaymentMethod {
-                        PaymentMethodCardView(preview: selectedPaymentMethod)
-                    } else {
+                        VStack(spacing: 12) {
+                            HStack {
+                                Spacer()
+                                PaymentMethodCardView(preview: selectedPaymentMethod)
+                                Spacer()
+                            }
+
+                            Button("Create crypto payment token") {
+                                createCryptoPaymentToken()
+                            }
+                            .buttonStyle(PrimaryButtonStyle())
+                            .disabled(shouldDisableButtons)
+                            .opacity(shouldDisableButtons ? 0.5 : 1)
+
+                            if let cryptoPaymentToken {
+                                if let selectedWalletId {
+                                    Button("Create Onramp Session") {
+                                        createOnrampSession(withCryptoPaymentToken: cryptoPaymentToken, selectedWalletId: selectedWalletId)
+                                    }
+                                    .buttonStyle(PrimaryButtonStyle())
+                                    .disabled(shouldDisableButtons)
+                                    .opacity(shouldDisableButtons ? 0.5 : 1)
+                                }
+
+                                if checkoutSucceeded {
+                                    Text("Checkout Succeeded!")
+                                        .foregroundColor(.green)
+                                        .frame(maxWidth: .infinity)
+                                        .padding()
+                                        .background {
+                                            RoundedRectangle(cornerRadius: 8)
+                                                .foregroundColor(.green.opacity(0.1))
+                                        }
+                                } else if let onrampSessionResponse {
+                                    let details = onrampSessionResponse.transactionDetails
+                                    Button("Check Out | \(details.sourceAmount) \(details.sourceCurrency.localizedUppercase)") {
+                                        checkout(
+                                            with: onrampSessionResponse,
+                                            paymentToken: cryptoPaymentToken
+                                        )
+                                    }
+                                    .buttonStyle(PrimaryButtonStyle())
+                                    .disabled(shouldDisableButtons)
+                                    .opacity(shouldDisableButtons ? 0.5 : 1)
+                                }
+
+                                HStack(alignment: .firstTextBaseline, spacing: 4) {
+                                    Text("Crypto payment token:")
+                                        .font(.footnote)
+                                        .bold()
+                                        .foregroundColor(.secondary)
+                                    Text(cryptoPaymentToken)
+                                        .font(.footnote.monospaced())
+                                        .foregroundColor(.secondary)
+                                }
+
+                                if let onrampSessionResponse {
+                                    HStack(alignment: .firstTextBaseline, spacing: 4) {
+                                        Text("Onramp Session:")
+                                            .font(.footnote)
+                                            .bold()
+                                            .foregroundColor(.secondary)
+                                        Text(onrampSessionResponse.id)
+                                            .font(.footnote.monospaced())
+                                            .foregroundColor(.secondary)
+                                    }
+                                }
+                            } else {
+                                Divider()
+
+                                Text("Change Payment Method")
+                                    .font(.subheadline)
+                                    .foregroundColor(.secondary)
+                                    .frame(maxWidth: .infinity, alignment: .leading)
+                            }
+                        }
+                    }
+
+                    if cryptoPaymentToken == nil {
                         VStack(spacing: 8) {
                             // Note: Apple Pay does not require iOS 16, but the native SwiftUI
                             // `PayWithApplePayButton` does, which we're using in this example.
@@ -113,15 +226,17 @@ struct AuthenticatedView: View {
                                 .cornerRadius(8)
                                 .disabled(shouldDisableButtons)
                                 .opacity(shouldDisableButtons ? 0.5 : 1)
-
-                                Text("or")
-                                    .font(.footnote)
-                                    .bold()
-                                    .foregroundColor(.secondary)
                             }
 
-                            Button("Select Payment Method") {
-                                presentPaymentMethodSelector()
+                            Button("Debit or Credit Card") {
+                                presentPaymentMethodSelector(for: .card)
+                            }
+                            .buttonStyle(PrimaryButtonStyle())
+                            .disabled(shouldDisableButtons)
+                            .opacity(shouldDisableButtons ? 0.5 : 1)
+
+                            Button("Bank Account") {
+                                presentPaymentMethodSelector(for: .bankAccount)
                             }
                             .buttonStyle(PrimaryButtonStyle())
                             .disabled(shouldDisableButtons)
@@ -143,6 +258,20 @@ struct AuthenticatedView: View {
         }
         .navigationTitle("Authenticated")
         .navigationBarTitleDisplayMode(.inline)
+        .sheet(isPresented: $showAttachWalletSheet) {
+            AttachWalletAddressView(
+                coordinator: coordinator,
+                isWalletAttached: $isWalletAttached,
+                onWalletAttached: { address, network in
+                    lastAttachedAddress = address
+                    lastAttachedNetwork = network
+                    refreshWalletsAndSelectIfNeeded()
+                }
+            )
+        }
+        .onAppear {
+            refreshWalletsAndSelectIfNeeded()
+        }
     }
 
     private func verifyIdentity() {
@@ -156,7 +285,7 @@ struct AuthenticatedView: View {
 
         Task {
             do {
-                let result = try await coordinator.promptForIdentityVerification(from: viewController)
+                let result = try await coordinator.verifyIdentity(from: viewController)
                 await MainActor.run {
                     isLoading.wrappedValue = false
                     switch result {
@@ -178,7 +307,7 @@ struct AuthenticatedView: View {
         }
     }
 
-    private func presentPaymentMethodSelector() {
+    private func presentPaymentMethodSelector(for type: PaymentMethodType) {
         guard let viewController = UIApplication.shared.findTopNavigationController() else {
             errorMessage = "Unable to find view controller to present from."
             return
@@ -188,10 +317,17 @@ struct AuthenticatedView: View {
         errorMessage = nil
 
         Task {
-            let preview = await coordinator.collectPaymentMethod(from: viewController)
-            await MainActor.run {
-                isLoading.wrappedValue = false
-                selectedPaymentMethod = preview
+            do {
+                let preview = try await coordinator.collectPaymentMethod(type: type, from: viewController)
+                await MainActor.run {
+                    isLoading.wrappedValue = false
+                    selectedPaymentMethod = preview
+                }
+            } catch {
+                await MainActor.run {
+                    isLoading.wrappedValue = false
+                    errorMessage = "Payment method selection failed: \(error.localizedDescription)"
+                }
             }
         }
     }
@@ -212,22 +348,10 @@ struct AuthenticatedView: View {
 
         Task {
             do {
-                let result = try await coordinator.presentApplePay(using: request, from: viewController)
+                let result = try await coordinator.collectPaymentMethod(type: .applePay(paymentRequest: request), from: viewController)
                 await MainActor.run {
                     isLoading.wrappedValue = false
-
-                    switch result {
-                    case .success:
-                        self.selectedPaymentMethod = PaymentMethodPreview(
-                            icon: UIImage(systemName: "apple.logo")?.withRenderingMode(.alwaysTemplate) ?? .init(),
-                            label: "Apple Pay",
-                            sublabel: nil
-                        )
-                    case .canceled:
-                        break
-                    @unknown default:
-                        break
-                    }
+                    selectedPaymentMethod = result
                 }
             } catch {
                 await MainActor.run {
@@ -236,6 +360,137 @@ struct AuthenticatedView: View {
                 }
             }
         }
+    }
+
+    private func refreshWalletsAndSelectIfNeeded() {
+        isLoading.wrappedValue = true
+        errorMessage = nil
+
+        Task {
+            do {
+                let response = try await APIClient.shared.fetchCustomerWallets(cryptoCustomerToken: customerId)
+                await MainActor.run {
+                    isLoading.wrappedValue = false
+                    wallets = response.data
+
+                    if let lastAddress = lastAttachedAddress, let lastNetwork = lastAttachedNetwork {
+                        if let match = wallets.first(where: {
+                            $0.walletAddress == lastAddress && $0.network == lastNetwork.rawValue
+                        }) {
+                            selectedWalletId = match.id
+                        } else {
+                            selectedWalletId = wallets.first?.id
+                        }
+                    } else if selectedWalletId == nil {
+                        selectedWalletId = wallets.first?.id
+                    }
+                }
+            } catch {
+                await MainActor.run {
+                    isLoading.wrappedValue = false
+                    errorMessage = "Failed to fetch wallets: \(error.localizedDescription)"
+                }
+            }
+        }
+    }
+
+    private func createCryptoPaymentToken() {
+        isLoading.wrappedValue = true
+        errorMessage = nil
+
+        Task {
+            do {
+                let token = try await coordinator.createCryptoPaymentToken()
+                await MainActor.run {
+                    isLoading.wrappedValue = false
+                    cryptoPaymentToken = token
+                }
+            } catch {
+                await MainActor.run {
+                    isLoading.wrappedValue = false
+                    errorMessage = "Create crypto payment token failed: \(error.localizedDescription)"
+                }
+            }
+        }
+    }
+
+    private func createOnrampSession(withCryptoPaymentToken cryptoPaymentToken: String, selectedWalletId: String) {
+        guard let wallet = wallets.first(where: { $0.id == selectedWalletId }) else {
+            errorMessage = "Unable to find a match for the selected wallet. Please re-select a wallet and try again."
+            return
+        }
+
+        isLoading.wrappedValue = true
+        errorMessage = nil
+
+        let request = CreateOnrampSessionRequest(
+            paymentToken: cryptoPaymentToken,
+            sourceAmount: 10, // <--- hardcoded for demo
+            sourceCurrency: "usd", // <--- hardcoded for demo
+            destinationCurrency: "usdc", // <--- hardcoded for demo
+            destinationNetwork: wallet.network,
+            walletAddress: wallet.walletAddress,
+            cryptoCustomerId: customerId,
+            customerIpAddress: "39.131.174.122" // <--- hardcoded for demo
+        )
+
+        Task {
+            do {
+                let response = try await APIClient.shared.createOnrampSession(requestObject: request)
+                await MainActor.run {
+                    isLoading.wrappedValue = false
+                    onrampSessionResponse = response
+                }
+            } catch {
+                await MainActor.run {
+                    isLoading.wrappedValue = false
+                    errorMessage = "Create onramp session failed: \(error.localizedDescription)"
+                }
+            }
+        }
+    }
+
+    private func checkout(
+        with onrampSessionResponse: CreateOnrampSessionResponse,
+        paymentToken: String
+    ) {
+        isLoading.wrappedValue = true
+        errorMessage = nil
+
+        Task {
+            do {
+                let checkoutResult = try await coordinator.performCheckout(
+                    onrampSessionId: onrampSessionResponse.id,
+                    authenticationContext: authenticationContext
+                ) { onrampSessionId in
+                    let result = try await APIClient.shared.checkout(onrampSessionId: onrampSessionId)
+                    return  result.clientSecret
+                }
+
+                await MainActor.run {
+                    switch checkoutResult {
+                    case .completed:
+                        checkoutSucceeded = true
+                    case .canceled:
+                        break
+                    @unknown default:
+                        break
+                    }
+                    isLoading.wrappedValue = false
+                }
+            } catch {
+                await MainActor.run {
+                    errorMessage = "Checkout failed: \(error.localizedDescription)"
+                    isLoading.wrappedValue = false
+                }
+            }
+        }
+    }
+}
+
+private class WindowAuthenticationContext: NSObject, STPAuthenticationContext {
+    func authenticationPresentingViewController() -> UIViewController {
+        UIApplication.shared.findTopNavigationController() ?? UIViewController()
     }
 }
 

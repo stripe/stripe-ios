@@ -7,7 +7,7 @@ on:
 
 jobs:
   dead-code-check:
-    if: false
+    if: ${{ !contains(github.event.pull_request.labels.*.name, 'skip dead code check') }}
     runs-on: macos-15
     permissions:
       pull-requests: write
@@ -17,6 +17,9 @@ jobs:
         uses: actions/checkout@v2
         with:
           fetch-depth: 0
+
+      - name: Setup Xcode
+        run: sudo xcode-select -s /Applications/Xcode_16.4.app/Contents/Developer
 
       - name: Install Periphery
         run: brew install peripheryapp/periphery/periphery

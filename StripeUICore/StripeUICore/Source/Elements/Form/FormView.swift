@@ -19,6 +19,8 @@ import UIKit
     private let stackView: UIStackView
     public init(viewModel: FormElement.ViewModel) {
         if viewModel.bordered {
+            // This is a hack we should refactor one day - it turns FormView into a SectionView.
+            // Its only user - LinkInlineSignupElement - should use a SectionView instead, or its own custom view.
             let stack = StackViewWithSeparator(arrangedSubviews: viewModel.elements)
             self.stackView = stack
             stack.drawBorder = true
@@ -26,7 +28,8 @@ import UIKit
             stack.separatorColor = viewModel.theme.colors.divider
             stack.borderColor = viewModel.theme.colors.border
             stack.borderCornerRadius = viewModel.theme.cornerRadius
-            stack.spacing = viewModel.theme.borderWidth
+            stack.spacing = viewModel.theme.separatorWidth
+            stack.borderWidth = viewModel.theme.borderWidth
             stack.hideShadow = true
             stack.layer.applyShadow(shadow: viewModel.theme.shadow)
             stack.axis = .vertical

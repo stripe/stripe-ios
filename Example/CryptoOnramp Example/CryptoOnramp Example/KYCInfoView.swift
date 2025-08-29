@@ -7,13 +7,13 @@
 
 import SwiftUI
 
-@_spi(CryptoOnrampSDKPreview)
+@_spi(STP)
 import StripeCryptoOnramp
 
 @_spi(STP)
 import StripePaymentSheet
 
-/// A view used to collect KYC (Know Your Customer) data and exercise the `CryptoOnrampCoordinator’s` `collectKYCInfo(info:)` functionality.
+/// A view used to collect KYC (Know Your Customer) data and exercise the `CryptoOnrampCoordinator's` `attachKYCInfo(info:)` functionality.
 struct KYCInfoView: View {
 
     /// The coordinator to use to submit KYC information.
@@ -187,6 +187,14 @@ struct KYCInfoView: View {
             state: state.isEmpty ? nil : state
         )
 
+        let dateOfBirthComponents = Calendar.current.dateComponents([.day, .month, .year], from: dateOfBirth)
+
+        let dateOfBirth = KycInfo.DateOfBirth(
+            day: dateOfBirthComponents.day ?? 0,
+            month: dateOfBirthComponents.month ?? 0,
+            year: dateOfBirthComponents.year ?? 0
+        )
+
         let kycInfo = KycInfo(
             firstName: firstName,
             lastName: lastName,
@@ -197,7 +205,7 @@ struct KYCInfoView: View {
 
         Task {
             do {
-                try await coordinator.collectKYCInfo(info: kycInfo)
+                try await coordinator.attachKYCInfo(info: kycInfo)
                 await MainActor.run {
                     isLoading.wrappedValue = false
                     isKYCComplete = true

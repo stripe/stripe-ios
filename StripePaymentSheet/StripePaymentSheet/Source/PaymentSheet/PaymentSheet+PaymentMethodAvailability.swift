@@ -74,13 +74,10 @@ extension PaymentSheet {
     }
 
     static func isLinkSignupEnabled(elementsSession: STPElementsSession, configuration: PaymentElementConfiguration) -> Bool {
-        guard isLinkEnabled(elementsSession: elementsSession, configuration: configuration) else {
-            return false
-        }
+        let enableSignup = isLinkEnabled(elementsSession: elementsSession, configuration: configuration) && !elementsSession.disableLinkSignup
         // A non-nil account indicates that a consumer lookup has taken place, meaning that we have a customer email
         // via the billing details or customer session.
         let enableOptIn = elementsSession.linkSignupOptInFeatureEnabled && LinkAccountContext.shared.account != nil
-        let enableSignup = !elementsSession.disableLinkSignup
         return (enableSignup || enableOptIn) && elementsSession.supportsLinkCard
     }
 

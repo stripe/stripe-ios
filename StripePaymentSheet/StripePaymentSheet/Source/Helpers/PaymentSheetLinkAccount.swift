@@ -201,13 +201,6 @@ struct LinkPMDisplayDetails {
     }
 
     func startVerification(completion: @escaping (Result<Bool, Error>) -> Void) {
-        guard case .requiresVerification = sessionState else {
-            DispatchQueue.main.async {
-                completion(.success(false))
-            }
-            return
-        }
-
         guard let session = currentSession else {
             stpAssertionFailure()
             DispatchQueue.main.async {
@@ -236,7 +229,11 @@ struct LinkPMDisplayDetails {
         }
     }
 
-    func verify(with oneTimePasscode: String, completion: @escaping (Result<Void, Error>) -> Void) {
+    func verify(
+        with oneTimePasscode: String,
+        consentGranted: Bool? = nil,
+        completion: @escaping (Result<Void, Error>) -> Void
+    ) {
         guard case .requiresVerification = sessionState,
             hasStartedSMSVerification,
             let session = currentSession
@@ -257,7 +254,8 @@ struct LinkPMDisplayDetails {
             with: apiClient,
             cookieStore: cookieStore,
             consumerAccountPublishableKey: publishableKey,
-            requestSurface: requestSurface
+            requestSurface: requestSurface,
+            consentGranted: consentGranted
         ) { [weak self] result in
             switch result {
             case .success(let verifiedSession):
@@ -341,10 +339,14 @@ struct LinkPMDisplayDetails {
     }
 
     func listPaymentDetails(
-        supportedTypes: [ConsumerPaymentDetails.DetailsType]
+        supportedTypes: [ConsumerPaymentDetails.DetailsType],
+        shouldRetryOnAuthError: Bool = true
     ) async throws -> [ConsumerPaymentDetails] {
         return try await withCheckedThrowingContinuation { continuation in
-            listPaymentDetails(supportedTypes: supportedTypes) { result in
+            listPaymentDetails(
+                supportedTypes: supportedTypes,
+                shouldRetryOnAuthError: shouldRetryOnAuthError
+            ) { result in
                 switch result {
                 case .success(let details):
                     continuation.resume(returning: details)
@@ -357,9 +359,13 @@ struct LinkPMDisplayDetails {
 
     func listPaymentDetails(
         supportedTypes: [ConsumerPaymentDetails.DetailsType],
+        shouldRetryOnAuthError: Bool = true,
         completion: @escaping (Result<[ConsumerPaymentDetails], Error>) -> Void
     ) {
-        retryingOnAuthError(completion: completion) { completionRetryingOnAuthErrors in
+        retryingOnAuthError(
+            shouldRetry: shouldRetryOnAuthError,
+            completion: completion
+        ) { completionRetryingOnAuthErrors in
             guard let session = self.currentSession else {
                 stpAssertionFailure()
                 completion(.failure(PaymentSheetError.unknown(debugDescription: "Paying with Link without valid session")))
@@ -376,9 +382,11 @@ struct LinkPMDisplayDetails {
         }
     }
 
-    func listShippingAddress() async throws -> ShippingAddressesResponse {
+    func listShippingAddress(
+        shouldRetryOnAuthError: Bool = true
+    ) async throws -> ShippingAddressesResponse {
         return try await withCheckedThrowingContinuation { continuation in
-            listShippingAddress { result in
+            listShippingAddress(shouldRetryOnAuthError: shouldRetryOnAuthError) { result in
                 switch result {
                 case .success(let response):
                     continuation.resume(returning: response)
@@ -390,9 +398,13 @@ struct LinkPMDisplayDetails {
     }
 
     func listShippingAddress(
+        shouldRetryOnAuthError: Bool = true,
         completion: @escaping (Result<ShippingAddressesResponse, Error>) -> Void
     ) {
-        retryingOnAuthError(completion: completion) { completionRetryingOnAuthErrors in
+        retryingOnAuthError(
+            shouldRetry: shouldRetryOnAuthError,
+            completion: completion
+        ) { completionRetryingOnAuthErrors in
             guard let session = self.currentSession else {
                 stpAssertionFailure()
                 completion(.failure(PaymentSheetError.unknown(debugDescription: "Paying with Link without valid session")))
@@ -528,6 +540,7 @@ private extension PaymentSheetLinkAccount {
     /// Attempts attempts a request using apiCall. If the session
     /// is invalid, refresh it and re-attempt the apiCall.
     func retryingOnAuthError<T>(
+        shouldRetry: Bool = true,
         completion: @escaping CompletionBlock<T>,
         apiCall: @escaping (@escaping CompletionBlock<T>) -> Void
     ) {
@@ -536,16 +549,7 @@ private extension PaymentSheetLinkAccount {
             case .success:
                 completion(result)
             case .failure(let error as NSError):
-                let isAuthError: Bool = {
-                    if let stripeError = error as? StripeError,
-                    case let .apiError(stripeAPIError) = stripeError,
-                       stripeAPIError.code == "consumer_session_credentials_invalid" {
-                        return true
-                    }
-                    return false
-                }()
-
-                if isAuthError {
+                if error.isLinkAuthError && shouldRetry {
                     self?.refreshSession { refreshSessionResult in
                         switch refreshSessionResult {
                         case .success(let refreshedSession):

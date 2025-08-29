@@ -147,8 +147,13 @@ import UIKit
         setText(text)
     }
 
-    public convenience init(attributedText: NSAttributedString, description: String? = nil, theme: ElementsAppearance = .default) {
-        self.init(description: description, theme: theme)
+    public convenience init(
+        attributedText: NSAttributedString,
+        description: String? = nil,
+        theme: ElementsAppearance = .default,
+        alwaysEmphasizeText: Bool = false
+    ) {
+        self.init(description: description, theme: theme, alwaysEmphasizeText: alwaysEmphasizeText)
         setAttributedText(attributedText)
     }
 

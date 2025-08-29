@@ -1,12 +1,41 @@
-## x.x.x x-x-x
+## XX.YY.ZZ 2025-XX-YY
+
+### CustomerSheet
+* [Added] `opensCardScannerAutomatically` configuration
+
+### PaymentSheet
+* [Added] `opensCardScannerAutomatically` configuration
+* [Fixed] Setting `appearance.borderWidth = 0` previously caused the thickness of divider lines between input fields to also be 0, causing them to disappear. They now have a minimum thickness of 0.5.
+
+### EmbeddedPaymentElement
+* [Added] `opensCardScannerAutomatically` configuration
+
+## 24.22.0 2025-08-27
+
+### StripeCryptoOnramp
+* [Added] Additional APIs and improvements to support the development of the React Native StripeCryptoOnramp SDK.
+
+## 24.21.2 2025-08-27
+
+### PaymentSheet
+* [Changed] Updated translations for Link signup opt-in copy
+
+## 24.21.1 2025-08-26
+
+### PaymentSheet
+* [Changed] Updated copy for Link signup opt-in UI
+
+## 24.21.0 2025-08-25
 
 ### CustomerSheet
 * [Fixed] Fixed Dynamic Actor Isolation crash in SwiftUI when using completion handlers with Swift 6 or Dynamic Actor Isolation feature flag enabled. Thanks @BrentMifsud! ([#5269](https://github.com/stripe/stripe-ios/issues/5269))
 
 ### PaymentSheet
 * [Added] Added new `presentPaymentOptions` APIs for UIKit and SwiftUI with a `didCancel` bool in the completion handler, making it possible to differentiate between a user closing FlowController and selecting a payment option. ([#5202](https://github.com/stripe/stripe-ios/pull/5202))
+* [Added] Added a new `allowedCountries` API to PaymentSheetConfiguration, enabling users to only allow billing addresses in certain countries.
 * [Fixed] Fixed Dynamic Actor Isolation crash in SwiftUI when using completion handlers with Swift 6 or Dynamic Actor Isolation feature flag enabled. Thanks @BrentMifsud! ([#5269](https://github.com/stripe/stripe-ios/issues/5269))
 * [Changed] The form will now highlight incomplete fields when the user taps a disabled "Confirm" button.
+* [Added] `STPError.localizedUserMessage(forErrorCode:)` will translates common Stripe API error codes to localized strings.
 
 ## 24.20.0 2025-08-11
 

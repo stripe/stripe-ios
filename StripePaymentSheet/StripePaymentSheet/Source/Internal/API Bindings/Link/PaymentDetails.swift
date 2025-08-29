@@ -68,6 +68,7 @@ final class ConsumerPaymentDetails: Decodable {
 extension ConsumerPaymentDetails {
     func isSupported(linkAccount: PaymentSheetLinkAccount,
                      elementsSession: STPElementsSession,
+                     configuration: PaymentElementConfiguration,
                      cardBrandFilter: CardBrandFilter) -> Bool {
         guard linkAccount.supportedPaymentDetailsTypes(for: elementsSession).contains(type) else {
             return false
@@ -79,7 +80,33 @@ extension ConsumerPaymentDetails {
             return false
         }
 
+        if !isSupportedForAllowedCountries(configuration.billingDetailsCollectionConfiguration.allowedCountries) {
+            return false
+        }
+
         return true
+    }
+
+    private func isSupportedForAllowedCountries(_ allowedCountries: Set<String>) -> Bool {
+        guard !allowedCountries.isEmpty else {
+            // No filtering required
+            return true
+        }
+
+        switch details {
+        case .card:
+            // If the merchant is filtering, only allow cards with a billing country
+            if let country = billingAddress?.countryCode {
+                return allowedCountries.contains(country)
+            } else {
+                return false
+            }
+        case .bankAccount:
+            // These are US bank accounts, so only check for US country code
+            return allowedCountries.contains("US")
+        case .unparsable:
+            return false
+        }
     }
 
     var isValidCard: Bool {
@@ -270,20 +297,34 @@ extension ConsumerPaymentDetails.Details {
         let iconCode: String?
         let name: String
         let last4: String
+        let country: String
 
         private enum CodingKeys: String, CodingKey {
             case iconCode = "bankIconCode"
             case name = "bankName"
             case last4
+            case country
         }
 
-        init(iconCode: String?,
-             name: String,
-             last4: String) {
+        init(
+            iconCode: String?,
+            name: String,
+            last4: String,
+            country: String
+        ) {
             self.iconCode = iconCode
             self.name = name
             self.last4 = last4
+            self.country = country
         }
+    }
+}
+
+// MARK: - Details.BankAccount - Helpers
+extension ConsumerPaymentDetails.Details.BankAccount {
+    var asPassthroughPaymentMethodType: STPPaymentMethodType? {
+        // We don't support non-US bank accounts today.
+        country == "COUNTRY_US" ? .USBankAccount : nil
     }
 }
 

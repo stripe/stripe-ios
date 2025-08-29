@@ -7,6 +7,7 @@
 //
 
 import Foundation
+@_spi(STP) import StripeCore
 
 /// An object representing parameters used to confirm a PaymentIntent object.
 /// A PaymentIntent must have a PaymentMethod or Source associated in order to successfully confirm it.
@@ -151,8 +152,14 @@ public class STPPaymentIntentParams: NSObject {
     /// - seealso: STPConfirmPaymentMethodOptions
     @objc public var paymentMethodOptions: STPConfirmPaymentMethodOptions?
 
+    /// Radar options that may contain HCaptcha token
+    @objc @_spi(STP) public var radarOptions: STPRadarOptions?
+
     /// Shipping information.
     @objc public var shipping: STPPaymentIntentShippingDetailsParams?
+
+    /// Contains metadata with identifiers for the session and information about the integration
+    @objc @_spi(STP) public var clientAttributionMetadata: STPClientAttributionMetadata?
 
     /// The URL to redirect your customer back to after they authenticate or cancel
     /// their payment on the payment method’s app or site.
@@ -210,6 +217,10 @@ public class STPPaymentIntentParams: NSObject {
             "mandateData = \(String(describing: mandateData))",
             // PaymentMethodOptions
             "paymentMethodOptions = @\(String(describing: paymentMethodOptions))",
+            // RadarOptions
+            "radarOptions = @\(String(describing: radarOptions))",
+            // ClientAttributionMetadata
+            "clientAttributionMetadata = @\(String(describing: clientAttributionMetadata))",
             // Additional params set by app
             "additionalAPIParameters = \(additionalAPIParameters)",
         ]
@@ -262,6 +273,8 @@ extension STPPaymentIntentParams: STPFormEncodable {
             NSStringFromSelector(#selector(getter: mandateData)): "mandate_data",
             NSStringFromSelector(#selector(getter: paymentMethodOptions)): "payment_method_options",
             NSStringFromSelector(#selector(getter: shipping)): "shipping",
+            NSStringFromSelector(#selector(getter: radarOptions)): "radar_options",
+            NSStringFromSelector(#selector(getter: clientAttributionMetadata)): "client_attribution_metadata",
         ]
     }
 }
@@ -282,12 +295,15 @@ extension STPPaymentIntentParams: NSCopying {
         copy.receiptEmail = receiptEmail
         copy.savePaymentMethod = savePaymentMethod
         copy.setAsDefaultPM = setAsDefaultPM
+        copy.radarOptions = radarOptions
         copy.returnURL = returnURL
         copy.setupFutureUsage = setupFutureUsage
         copy.useStripeSDK = useStripeSDK
         copy.mandateData = mandateData
         copy.paymentMethodOptions = paymentMethodOptions
         copy.shipping = shipping
+        copy.radarOptions = radarOptions
+        copy.clientAttributionMetadata = clientAttributionMetadata
         copy.additionalAPIParameters = additionalAPIParameters
 
         return copy

@@ -3,7 +3,7 @@ https:\/\/api\.stripe\.com\/v1\/payment_methods$
 200
 application/json
 access-control-allow-methods: GET, HEAD, PUT, PATCH, POST, DELETE
-content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=B1mFoJXfh8VyVvOcPfDUJllNtbKpQO4vJRgI70zj_nR5ckJpljQgwVBMki9bYuEnuV6ayv12FeRbbMXq
+content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=tlJceEuaopDjXPbMj2UYsbrsMWpa3Srq1mz2qk1mLAwZhT_l7P4nmwcu-ProQbh1hYjxloD2Fae94Doq
 Server: nginx
 Cache-Control: no-cache, no-store
 x-wc: ABGHIJ
@@ -12,22 +12,22 @@ Access-Control-Allow-Origin: *
 stripe-should-retry: false
 x-stripe-priority-routing-enabled: true
 x-stripe-routing-context-priority-tier: api-testmode
-request-id: req_BSGYU4hIaYIn9V
+request-id: req_LMIcmM40aKhoD2
 Content-Length: 474
 Vary: Origin
-Date: Fri, 25 Jul 2025 23:25:48 GMT
-original-request: req_BSGYU4hIaYIn9V
+Date: Tue, 19 Aug 2025 18:00:55 GMT
+original-request: req_LMIcmM40aKhoD2
 stripe-version: 2020-08-27
-idempotency-key: 8441c7dd-2407-4d2a-9aba-55596c888ed2
+idempotency-key: 4cc52a47-8515-4a94-8147-b49d1e3ee162
 access-control-expose-headers: Request-Id, Stripe-Manage-Version, Stripe-Should-Retry, X-Stripe-External-Auth-Required, X-Stripe-Privileged-Session-Required
 access-control-max-age: 300
 access-control-allow-credentials: true
 Content-Type: application/json
-X-Stripe-Mock-Request: allow_redisplay=unspecified&client_attribution_metadata\[merchant_integration_source]=elements&client_attribution_metadata\[merchant_integration_subtype]=mobile&client_attribution_metadata\[merchant_integration_version]=.*&guid=.*&muid=.*&payment_user_agent=.*&sid=.*&type=mobilepay
+X-Stripe-Mock-Request: allow_redisplay=unspecified&guid=.*&muid=.*&payment_user_agent=.*&sid=.*&type=mobilepay
 
 {
   "object" : "payment_method",
-  "id" : "pm_1RouzoFY0qyl6XeWHsGftekM",
+  "id" : "pm_1Rxtq7FY0qyl6XeWzN5cs4nD",
   "billing_details" : {
     "email" : null,
     "phone" : null,
@@ -46,7 +46,7 @@ X-Stripe-Mock-Request: allow_redisplay=unspecified&client_attribution_metadata\[
   "mobilepay" : {
 
   },
-  "created" : 1753485948,
+  "created" : 1755626455,
   "allow_redisplay" : "unspecified",
   "type" : "mobilepay",
   "customer" : null

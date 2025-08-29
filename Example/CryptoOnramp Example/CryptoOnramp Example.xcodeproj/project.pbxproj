@@ -7,6 +7,26 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		0B44B3F12E576ECD00B58655 /* StripePaymentSheet.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0B44B3F02E576ECD00B58655 /* StripePaymentSheet.framework */; };
+		0B44B3F22E576ECD00B58655 /* StripePaymentSheet.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 0B44B3F02E576ECD00B58655 /* StripePaymentSheet.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		0B44B3F42E576F1500B58655 /* Stripe3DS2.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0B44B3F32E576F1500B58655 /* Stripe3DS2.framework */; };
+		0B44B3F52E576F1500B58655 /* Stripe3DS2.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 0B44B3F32E576F1500B58655 /* Stripe3DS2.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		0B44B3F72E576F4100B58655 /* StripeApplePay.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0B44B3F62E576F4100B58655 /* StripeApplePay.framework */; };
+		0B44B3F82E576F4100B58655 /* StripeApplePay.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 0B44B3F62E576F4100B58655 /* StripeApplePay.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		0B44B3FA2E576F6C00B58655 /* StripePayments.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0B44B3F92E576F6C00B58655 /* StripePayments.framework */; };
+		0B44B3FB2E576F6C00B58655 /* StripePayments.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 0B44B3F92E576F6C00B58655 /* StripePayments.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		0B44B3FD2E576F9500B58655 /* StripePaymentsUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0B44B3FC2E576F9500B58655 /* StripePaymentsUI.framework */; };
+		0B44B3FE2E576F9500B58655 /* StripePaymentsUI.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 0B44B3FC2E576F9500B58655 /* StripePaymentsUI.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		0B44B4002E576FAD00B58655 /* StripeUICore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0B44B3FF2E576FAD00B58655 /* StripeUICore.framework */; };
+		0B44B4012E576FAD00B58655 /* StripeUICore.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 0B44B3FF2E576FAD00B58655 /* StripeUICore.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		0B44B4032E576FC700B58655 /* StripeFinancialConnections.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0B44B4022E576FC700B58655 /* StripeFinancialConnections.framework */; };
+		0B44B4042E576FC700B58655 /* StripeFinancialConnections.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 0B44B4022E576FC700B58655 /* StripeFinancialConnections.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		0B44B4062E576FEC00B58655 /* StripeIdentity.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0B44B4052E576FEC00B58655 /* StripeIdentity.framework */; };
+		0B44B4072E576FEC00B58655 /* StripeIdentity.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 0B44B4052E576FEC00B58655 /* StripeIdentity.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		0B44B4092E57700600B58655 /* Stripe.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0B44B4082E57700600B58655 /* Stripe.framework */; };
+		0B44B40A2E57700600B58655 /* Stripe.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 0B44B4082E57700600B58655 /* Stripe.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		0B44B40C2E57702B00B58655 /* StripeCameraCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0B44B40B2E57702B00B58655 /* StripeCameraCore.framework */; };
+		0B44B40D2E57702B00B58655 /* StripeCameraCore.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 0B44B40B2E57702B00B58655 /* StripeCameraCore.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		0BA5FE422E32AB9E00D44BFE /* StripeCryptoOnramp.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0BA5FE412E32AB9E00D44BFE /* StripeCryptoOnramp.framework */; };
 		0BA5FE432E32AB9E00D44BFE /* StripeCryptoOnramp.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 0BA5FE412E32AB9E00D44BFE /* StripeCryptoOnramp.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		0BA5FE462E32AD5100D44BFE /* StripeCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0BA5FE452E32AD5100D44BFE /* StripeCore.framework */; };
@@ -20,8 +40,18 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
+				0B44B4042E576FC700B58655 /* StripeFinancialConnections.framework in Embed Frameworks */,
+				0B44B4072E576FEC00B58655 /* StripeIdentity.framework in Embed Frameworks */,
+				0B44B4012E576FAD00B58655 /* StripeUICore.framework in Embed Frameworks */,
+				0B44B40D2E57702B00B58655 /* StripeCameraCore.framework in Embed Frameworks */,
+				0B44B3FE2E576F9500B58655 /* StripePaymentsUI.framework in Embed Frameworks */,
+				0B44B3FB2E576F6C00B58655 /* StripePayments.framework in Embed Frameworks */,
 				0BA5FE472E32AD5100D44BFE /* StripeCore.framework in Embed Frameworks */,
 				0BA5FE432E32AB9E00D44BFE /* StripeCryptoOnramp.framework in Embed Frameworks */,
+				0B44B3F82E576F4100B58655 /* StripeApplePay.framework in Embed Frameworks */,
+				0B44B3F22E576ECD00B58655 /* StripePaymentSheet.framework in Embed Frameworks */,
+				0B44B40A2E57700600B58655 /* Stripe.framework in Embed Frameworks */,
+				0B44B3F52E576F1500B58655 /* Stripe3DS2.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -29,6 +59,16 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		0B44B3F02E576ECD00B58655 /* StripePaymentSheet.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = StripePaymentSheet.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		0B44B3F32E576F1500B58655 /* Stripe3DS2.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = Stripe3DS2.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		0B44B3F62E576F4100B58655 /* StripeApplePay.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = StripeApplePay.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		0B44B3F92E576F6C00B58655 /* StripePayments.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = StripePayments.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		0B44B3FC2E576F9500B58655 /* StripePaymentsUI.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = StripePaymentsUI.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		0B44B3FF2E576FAD00B58655 /* StripeUICore.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = StripeUICore.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		0B44B4022E576FC700B58655 /* StripeFinancialConnections.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = StripeFinancialConnections.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		0B44B4052E576FEC00B58655 /* StripeIdentity.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = StripeIdentity.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		0B44B4082E57700600B58655 /* Stripe.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = Stripe.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		0B44B40B2E57702B00B58655 /* StripeCameraCore.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = StripeCameraCore.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		0BA5FE322E32A11600D44BFE /* CryptoOnramp Example.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "CryptoOnramp Example.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		0BA5FE412E32AB9E00D44BFE /* StripeCryptoOnramp.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = StripeCryptoOnramp.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		0BA5FE452E32AD5100D44BFE /* StripeCore.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = StripeCore.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -43,8 +83,18 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0B44B4032E576FC700B58655 /* StripeFinancialConnections.framework in Frameworks */,
+				0B44B4062E576FEC00B58655 /* StripeIdentity.framework in Frameworks */,
+				0B44B4002E576FAD00B58655 /* StripeUICore.framework in Frameworks */,
+				0B44B40C2E57702B00B58655 /* StripeCameraCore.framework in Frameworks */,
+				0B44B3FD2E576F9500B58655 /* StripePaymentsUI.framework in Frameworks */,
+				0B44B3FA2E576F6C00B58655 /* StripePayments.framework in Frameworks */,
 				0BA5FE462E32AD5100D44BFE /* StripeCore.framework in Frameworks */,
 				0BA5FE422E32AB9E00D44BFE /* StripeCryptoOnramp.framework in Frameworks */,
+				0B44B3F72E576F4100B58655 /* StripeApplePay.framework in Frameworks */,
+				0B44B3F12E576ECD00B58655 /* StripePaymentSheet.framework in Frameworks */,
+				0B44B4092E57700600B58655 /* Stripe.framework in Frameworks */,
+				0B44B3F42E576F1500B58655 /* Stripe3DS2.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -71,6 +121,16 @@
 		0BA5FE402E32AB9E00D44BFE /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				0B44B40B2E57702B00B58655 /* StripeCameraCore.framework */,
+				0B44B4082E57700600B58655 /* Stripe.framework */,
+				0B44B4052E576FEC00B58655 /* StripeIdentity.framework */,
+				0B44B4022E576FC700B58655 /* StripeFinancialConnections.framework */,
+				0B44B3FF2E576FAD00B58655 /* StripeUICore.framework */,
+				0B44B3FC2E576F9500B58655 /* StripePaymentsUI.framework */,
+				0B44B3F92E576F6C00B58655 /* StripePayments.framework */,
+				0B44B3F62E576F4100B58655 /* StripeApplePay.framework */,
+				0B44B3F32E576F1500B58655 /* Stripe3DS2.framework */,
+				0B44B3F02E576ECD00B58655 /* StripePaymentSheet.framework */,
 				0BA5FE452E32AD5100D44BFE /* StripeCore.framework */,
 				0BA5FE412E32AB9E00D44BFE /* StripeCryptoOnramp.framework */,
 			);
@@ -299,7 +359,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = "com.stripe.CryptoOnramp-Example";
+				PRODUCT_BUNDLE_IDENTIFIER = com.stripe.CryptoOnrampExample;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
@@ -329,7 +389,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = "com.stripe.CryptoOnramp-Example";
+				PRODUCT_BUNDLE_IDENTIFIER = com.stripe.CryptoOnrampExample;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;

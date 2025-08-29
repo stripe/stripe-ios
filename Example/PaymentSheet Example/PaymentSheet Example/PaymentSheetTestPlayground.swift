@@ -5,7 +5,8 @@
 //  Created by David Estes on 5/31/23.
 //
 
-import StripePaymentSheet
+@_spi(STP) import StripePaymentSheet
+@_spi(STP) import StripeUICore
 import SwiftUI
 
 @available(iOS 15.0, *)
@@ -40,6 +41,7 @@ struct PaymentSheetTestPlayground: View {
                 .autocorrectionDisabled()
                 .textInputAutocapitalization(.never)
         }
+        SettingView(setting: enableIos26Binding)
         Group {
             if playgroundController.settings.merchantCountryCode == .US {
                 SettingView(setting: linkEnabledModeBinding)
@@ -61,6 +63,7 @@ struct PaymentSheetTestPlayground: View {
         SettingView(setting: $playgroundController.settings.shakeAmbiguousViews)
         SettingView(setting: $playgroundController.settings.instantDebitsIncentives)
         SettingView(setting: $playgroundController.settings.fcLiteEnabled)
+        SettingView(setting: $playgroundController.settings.opensCardScannerAutomatically)
         SettingView(setting: $playgroundController.settings.termsDisplay)
     }
 
@@ -179,6 +182,7 @@ struct PaymentSheetTestPlayground: View {
                         SettingView(setting: $playgroundController.settings.collectEmail)
                         SettingView(setting: $playgroundController.settings.collectPhone)
                         SettingView(setting: $playgroundController.settings.collectAddress)
+                        SettingPickerView(setting: $playgroundController.settings.allowedCountries)
                     }
 
                     if playgroundController.settings.uiStyle == .embedded {
@@ -304,6 +308,15 @@ struct PaymentSheetTestPlayground: View {
                 playgroundController.settings.uiStyle = .paymentSheet
             }
             playgroundController.settings.integrationType = newIntegrationType
+        }
+    }
+    var enableIos26Binding: Binding<PaymentSheetTestPlaygroundSettings.EnableIOS26Changes> {
+        Binding<PaymentSheetTestPlaygroundSettings.EnableIOS26Changes> {
+            return playgroundController.settings.enableIOS26Changes
+        } set: { newValue in
+            LiquidGlassDetector.allowNewDesign = newValue == .on
+            playgroundController.appearance = PaymentSheet.Appearance()
+            playgroundController.settings.enableIOS26Changes = newValue
         }
     }
 }

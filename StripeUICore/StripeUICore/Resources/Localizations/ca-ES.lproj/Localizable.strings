@@ -1,3 +1,5 @@
+"%1$@ •••• %2$@" = "%1$@ •••• %2$@";
+
 "%@ (optional)" = "%@ (opcional)";
 
 "(not accepted)" = "(no s'accepta)";
@@ -144,6 +146,6 @@
 
 "Your postal code is incomplete." = "El teu codi postal no està complet.";
 
-"Your postal code is invalid." = "El codi postal no és vàlid.";
+"Your postal code is invalid." = "El teu codi postal no és vàlid.";
 
 "ZIP" = "ZIP";

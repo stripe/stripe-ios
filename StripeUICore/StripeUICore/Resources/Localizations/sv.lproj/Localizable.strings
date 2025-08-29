@@ -1,3 +1,5 @@
+"%1$@ •••• %2$@" = "%1$@ •••• %2$@";
+
 "%@ (optional)" = "%@ (valfritt)";
 
 "(not accepted)" = "(accepteras inte)";
@@ -144,6 +146,6 @@
 
 "Your postal code is incomplete." = "Ditt postnummer är ofullständigt.";
 
-"Your postal code is invalid." = "Postnumret är ogiltigt.";
+"Your postal code is invalid." = "Ditt postnummer är ogiltigt.";
 
 "ZIP" = "Postkod";

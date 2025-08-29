@@ -278,12 +278,23 @@ extension STPElementsSession {
         if let customerSession = customer?.customerSession {
             if customerSession.mobilePaymentElementComponent.enabled,
                let features = customerSession.mobilePaymentElementComponent.features {
-                allowsRemovalOfPaymentMethods = features.paymentMethodRemove
+                allowsRemovalOfPaymentMethods = features.paymentMethodRemove == .enabled || features.paymentMethodRemove == .partial
             }
         } else {
             allowsRemovalOfPaymentMethods = true
         }
         return allowsRemovalOfPaymentMethods
+    }
+
+    func paymentMethodRemoveIsPartialForPaymentSheet() -> Bool {
+        let isParital = false
+        if let customerSession = customer?.customerSession {
+            if customerSession.mobilePaymentElementComponent.enabled,
+               let features = customerSession.mobilePaymentElementComponent.features {
+                return features.paymentMethodRemove == .partial
+            }
+        }
+        return isParital
     }
 
     func paymentMethodRemoveLast(configuration: PaymentElementConfiguration) -> Bool{
@@ -313,12 +324,22 @@ extension STPElementsSession {
         if let customerSession = customer?.customerSession {
             if customerSession.customerSheetComponent.enabled,
                let features = customerSession.customerSheetComponent.features {
-                allowsRemovalOfPaymentMethods = features.paymentMethodRemove
+                allowsRemovalOfPaymentMethods = features.paymentMethodRemove == .enabled || features.paymentMethodRemove == .partial
             }
         } else {
             allowsRemovalOfPaymentMethods = true
         }
         return allowsRemovalOfPaymentMethods
+    }
+    func paymentMethodRemoveIsPartialForCustomerSheet() -> Bool {
+        let isParital = false
+        if let customerSession = customer?.customerSession {
+            if customerSession.customerSheetComponent.enabled,
+               let features = customerSession.customerSheetComponent.features {
+                return features.paymentMethodRemove == .partial
+            }
+        }
+        return isParital
     }
     var paymentMethodRemoveLastForCustomerSheet: Bool {
         return customer?.customerSession.customerSheetComponent.features?.paymentMethodRemoveLast ?? true
@@ -340,9 +361,8 @@ extension STPElementsSession {
         linkFlags["link_mobile_disable_default_opt_in"] != true
     }
 
-    var combinedReuseAndLinkMandateEnabled: Bool {
-        // This (now poorly named) feature flag impacts whether the combined mandate is supposed to be used.
-        linkSignupOptInFeatureEnabled
+    var forceSaveFutureUseBehaviorAndNewMandateText: Bool {
+        flags["elements_mobile_force_setup_future_use_behavior_and_new_mandate_text"] == true
     }
 
     var linkSignupOptInFeatureEnabled: Bool {

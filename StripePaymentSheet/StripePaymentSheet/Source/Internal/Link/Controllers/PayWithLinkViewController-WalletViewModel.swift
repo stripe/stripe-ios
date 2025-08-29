@@ -35,7 +35,7 @@ extension PayWithLinkViewController {
         }
 
         var supportedPaymentMethodTypes: Set<ConsumerPaymentDetails.DetailsType> {
-            return linkAccount.supportedPaymentDetailsTypes(for: context.elementsSession)
+            return context.getSupportedPaymentDetailsTypes(linkAccount: linkAccount)
         }
 
         var cvc: String? {
@@ -67,12 +67,11 @@ extension PayWithLinkViewController {
         var mandate: NSAttributedString? {
             switch selectedPaymentMethod?.details {
             case .card:
-                if context.elementsSession.combinedReuseAndLinkMandateEnabled {
+                if context.elementsSession.forceSaveFutureUseBehaviorAndNewMandateText {
                     // Use the updated mandate text that can mention both payment method reuse and Link signup.
                     // Since the user is already signed up for Link, we don't need to save to Link.
                     return PaymentSheetFormFactory.makeMandateText(
-                        useCombinedReuseAndLinkSignupText: true,
-                        shouldSaveToLink: false,
+                        variant: .updated(shouldSignUpToLink: false),
                         merchantName: context.configuration.merchantDisplayName
                     )
                 }
@@ -83,11 +82,7 @@ extension PayWithLinkViewController {
                 return NSMutableAttributedString(string: string)
             case .bankAccount:
                 // Instant debit mandate should be shown when paying with bank account.
-                let string = String.Localized.bank_continue_mandate_text
-                return STPStringUtils.applyLinksToString(
-                    template: string,
-                    links: ["terms": URL(string: "https://link.com/terms/ach-authorization")!]
-                )
+                return PaymentSheetFormFactory.makeBankMandateText(sellerName: context.intent.sellerDetails?.businessName)
             default:
                 return nil
             }
@@ -96,6 +91,24 @@ extension PayWithLinkViewController {
         /// Whether or not the view should show the mandate text.
         var shouldShowMandate: Bool {
             mandate != nil
+        }
+
+        /// Returns a hint message, if it is supported.
+        /// - The `link_show_prefer_debit_card_hint` flag must be enabled.
+        /// - A non-empty hint message must exist in the `LinkConfiguration`.
+        /// - Cards are a supported payment types.
+        func debitCardHintIfSupported(for linkAccount: PaymentSheetLinkAccount) -> String? {
+            let flagEnabled = context.elementsSession.shouldShowPreferDebitCardHint
+            let hintMessage = context.linkConfiguration?.hintMessage
+            let hasHintMessage = hintMessage?.isEmpty == false
+            let supportedPaymentDetailTypes = context.getSupportedPaymentDetailsTypes(linkAccount: linkAccount)
+            let supportsCards = supportedPaymentDetailTypes.contains(.card)
+
+            if flagEnabled && hasHintMessage && supportsCards {
+                return hintMessage
+            } else {
+                return nil
+            }
         }
 
         var noticeText: String? {
@@ -317,7 +330,7 @@ extension PayWithLinkViewController {
         }
 
         func isPaymentMethodSupported(paymentMethod: ConsumerPaymentDetails?) -> Bool {
-            paymentMethod?.isSupported(linkAccount: linkAccount, elementsSession: context.elementsSession, cardBrandFilter: context.configuration.cardBrandFilter) ?? false
+            paymentMethod?.isSupported(linkAccount: linkAccount, elementsSession: context.elementsSession, configuration: context.configuration, cardBrandFilter: context.configuration.cardBrandFilter) ?? false
         }
     }
 }

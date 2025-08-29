@@ -46,8 +46,8 @@ class WalletButtonsViewTests: XCTestCase {
         // Initialize wallet buttons view
         let view = WalletButtonsView(flowController: flowController) { _ in }
 
-        // Verify Link appears first when enabled, regardless of server ordering
-        XCTAssertEqual(view.orderedWallets, [.link, .applePay])
+        // Verify order is same as server ordering
+        XCTAssertEqual(view.orderedWallets, [.applePay, .link])
     }
 
     func testWalletButtonsWithLinkAndApplePayButApplePayDisabled() {
@@ -128,7 +128,7 @@ class WalletButtonsViewTests: XCTestCase {
         XCTAssertEqual(view.orderedWallets, [])
     }
 
-    func testLinkAlwaysAppearsFirstWhenEnabled() {
+    func testLinkRespectsOrderInPaymentMethodMode() {
         // Create mock elements session with Link ordered after Apple Pay and Shop Pay
         let elementsSession = STPElementsSession(
             allResponseFields: [:],
@@ -172,8 +172,56 @@ class WalletButtonsViewTests: XCTestCase {
         // Initialize wallet buttons view
         let view = WalletButtonsView(flowController: flowController) { _ in }
 
-        // Verify Link appears first, despite being last in server ordering
-        XCTAssertEqual(view.orderedWallets, [.link, .applePay, .shopPay])
+        // Verify Link appears like in server ordering
+        XCTAssertEqual(view.orderedWallets, [.applePay, .shopPay, .link])
+    }
+
+    func testLinkIsAppendedInPassthroughMode() {
+        // Create mock elements session with Link ordered after Apple Pay and Shop Pay
+        let elementsSession = STPElementsSession(
+            allResponseFields: [:],
+            sessionID: "test_session",
+            orderedPaymentMethodTypes: [.card],
+            orderedPaymentMethodTypesAndWallets: ["apple_pay", "shop_pay"],
+            unactivatedPaymentMethodTypes: [],
+            countryCode: nil,
+            merchantCountryCode: nil,
+            merchantLogoUrl: nil,
+            linkSettings: LinkSettings._testValue(),
+            experimentsData: nil,
+            flags: [:],
+            paymentMethodSpecs: nil,
+            cardBrandChoice: nil,
+            isApplePayEnabled: true,
+            externalPaymentMethods: [],
+            customPaymentMethods: [],
+            passiveCaptcha: nil,
+            customer: nil
+        )
+
+        // Create mock flow controller
+        var psConfig = PaymentSheet.Configuration()
+        psConfig.applePay = .init(merchantId: "test_merchant_id", merchantCountryCode: "US")
+        psConfig.shopPay = PaymentSheet.ShopPayConfiguration(
+            billingAddressRequired: false,
+            emailRequired: false,
+            shippingAddressRequired: false,
+            lineItems: [],
+            shippingRates: [],
+            shopId: "test_shop_123",
+            allowedShippingCountries: ["US"]
+        )
+        let intentConfig = PaymentSheet.IntentConfiguration(mode: .payment(amount: 1000, currency: "usd", setupFutureUsage: nil, captureMethod: .automatic, paymentMethodOptions: nil)) { _, _, _ in }
+        let intent = Intent.deferredIntent(intentConfig: intentConfig)
+        let loadResult = PaymentSheetLoader.LoadResult(intent: intent, elementsSession: elementsSession, savedPaymentMethods: [], paymentMethodTypes: [])
+        let analyticsHelper = PaymentSheetAnalyticsHelper(integrationShape: .complete, configuration: psConfig)
+        let flowController = PaymentSheet.FlowController(configuration: psConfig, loadResult: loadResult, analyticsHelper: analyticsHelper)
+
+        // Initialize wallet buttons view
+        let view = WalletButtonsView(flowController: flowController) { _ in }
+
+        // Verify Link is appended
+        XCTAssertEqual(view.orderedWallets, [.applePay, .shopPay, .link])
     }
 
     func testLinkNotShownWhenDisabled() {

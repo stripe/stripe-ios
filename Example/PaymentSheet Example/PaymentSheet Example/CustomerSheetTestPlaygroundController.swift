@@ -4,6 +4,7 @@
 //
 
 import Combine
+@_spi(STP) import StripeCore
 @_spi(STP) @_spi(CustomerSessionBetaAccess) import StripePaymentSheet
 import SwiftUI
 
@@ -147,6 +148,7 @@ class CustomerSheetTestPlaygroundController: ObservableObject {
         case .allowVisa:
             configuration.cardBrandAcceptance = .allowed(brands: [.visa])
         }
+        configuration.opensCardScannerAutomatically = settings.opensCardScannerAutomatically == .on
 
         return configuration
     }
@@ -255,6 +257,12 @@ extension CustomerSheetTestPlaygroundController {
             }
 
             STPAPIClient.shared.publishableKey = publishableKey
+
+            // Clear analytics log and set up delegate for UI tests
+            DispatchQueue.main.async {
+                AnalyticsLogObserver.shared.analyticsLog.removeAll()
+            }
+            STPAnalyticsClient.sharedClient.delegate = self
 
             let configuration = self.customerSheetConfiguration()
             if let ephemeralKey {
@@ -382,5 +390,14 @@ class CustomerSheetBackend {
             throw NSError(domain: "test", code: 0, userInfo: nil) // Throw more specific error
         }
         return secret
+    }
+}
+
+// MARK: - STPAnalyticsClientDelegate
+extension CustomerSheetTestPlaygroundController: STPAnalyticsClientDelegate {
+    func analyticsClientDidLog(analyticsClient: StripeCore.STPAnalyticsClient, payload: [String: Any]) {
+        DispatchQueue.main.async {
+            AnalyticsLogObserver.shared.analyticsLog.append(payload)
+        }
     }
 }

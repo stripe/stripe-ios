@@ -7,6 +7,7 @@
 //
 
 import Foundation
+@_spi(STP) import StripeCore
 
 /// An object representing parameters to confirm a SetupIntent object.
 /// For example, you would confirm a SetupIntent when a customer hits the “Save” button on a payment method management view in your app.
@@ -83,6 +84,8 @@ public class STPSetupIntentConfirmParams: NSObject, NSCopying, STPFormEncodable 
         }
     }
     private var _mandateData: STPMandateDataParams?
+    /// Radar options that may contain HCaptcha token
+    @objc @_spi(STP) public var radarOptions: STPRadarOptions?
 
     internal var _paymentMethodType: STPPaymentMethodType?
     @_spi(STP) public var paymentMethodType: STPPaymentMethodType? {
@@ -91,6 +94,9 @@ public class STPSetupIntentConfirmParams: NSObject, NSCopying, STPFormEncodable 
         }
         return paymentMethodParams?.type
     }
+
+    /// Contains metadata with identifiers for the session and information about the integration
+    @objc @_spi(STP) public var clientAttributionMetadata: STPClientAttributionMetadata?
 
     override convenience init() {
         // Not a valid clientSecret, but at least it'll be non-null
@@ -112,6 +118,10 @@ public class STPSetupIntentConfirmParams: NSObject, NSCopying, STPFormEncodable 
             "setAsDefaultPM = \(setAsDefaultPM ?? 0)",
             // Mandate
             "mandateData = \(String(describing: mandateData))",
+            // RadarOptions
+            "radarOptions = \(String(describing: radarOptions))",
+            // ClientAttributionMetadata
+            "clientAttributionMetadata = @\(String(describing: clientAttributionMetadata))",
             // Additional params set by app
             "additionalAPIParameters = \(additionalAPIParameters )",
         ]
@@ -133,6 +143,8 @@ public class STPSetupIntentConfirmParams: NSObject, NSCopying, STPFormEncodable 
         copy.returnURL = returnURL
         copy.useStripeSDK = useStripeSDK
         copy.mandateData = mandateData
+        copy.radarOptions = radarOptions
+        copy.clientAttributionMetadata = clientAttributionMetadata
         copy.additionalAPIParameters = additionalAPIParameters
 
         return copy
@@ -152,6 +164,8 @@ public class STPSetupIntentConfirmParams: NSObject, NSCopying, STPFormEncodable 
             NSStringFromSelector(#selector(getter: returnURL)): "return_url",
             NSStringFromSelector(#selector(getter: useStripeSDK)): "use_stripe_sdk",
             NSStringFromSelector(#selector(getter: mandateData)): "mandate_data",
+            NSStringFromSelector(#selector(getter: radarOptions)): "radar_options",
+            NSStringFromSelector(#selector(getter: clientAttributionMetadata)): "client_attribution_metadata",
         ]
     }
 

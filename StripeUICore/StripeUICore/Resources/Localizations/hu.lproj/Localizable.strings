@@ -1,3 +1,5 @@
+"%1$@ •••• %2$@" = "%1$@ •••• %2$@";
+
 "%@ (optional)" = "%@ (nem kötelező)";
 
 "(not accepted)" = "(nem elfogadott)";
@@ -144,6 +146,6 @@
 
 "Your postal code is incomplete." = "Az irányítószám hiányos.";
 
-"Your postal code is invalid." = "Az irányítószáma érvénytelen.";
+"Your postal code is invalid." = "Az irányítószám érvénytelen.";
 
 "ZIP" = "Irányítószám";

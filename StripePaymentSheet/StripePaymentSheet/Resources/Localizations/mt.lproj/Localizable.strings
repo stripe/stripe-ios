@@ -1,5 +1,3 @@
-"%1$@ •••• %2$@" = "%1$@ •••• %2$@";
-
 "+ Add" = "+ Żid";
 
 "Add US bank account" = "Żid kont tal-bank ibbażat ġewwa l-Istati Uniti tal-Amerka";
@@ -60,7 +58,7 @@
 
 "By continuing, you agree to authorize payments pursuant to <terms>these terms</terms>." = "Meta tkompli tkun qed taqbel li tawtorizza l-pagamenti skont <terms>dar-regoli</terms>.";
 
-"By continuing, you agree to save your information for future purchases with %@ and <link>Link</link>. You also agree to Link's <terms>Terms</terms> and <privacy>Privacy</privacy>." = "Billi tkompli, taqbel li tissejvja l-informazzjoni tiegħek għal xiri futur ma' %@ u <link>Link</link>. Inti taqbel ukoll mat-<terms>Termini</terms> u <privacy>l-Privatezza</privacy> ta’ Link.";
+"By continuing, you agree to save your information for future purchases with %@ and <link>Link</link> according to Link <terms>terms</terms> and <privacy>privacy</privacy>." = "Billi tkompli, int taqbel li tissejvja l-informazzjoni tiegħek għal xirjiet futuri ma' %@ u <link>Ħolqa</link> skont il-Ħolqa <terms>termini</terms> u <privacy>privatezza</privacy>.";
 
 "By continuing, you agree to save your information for future purchases with %@." = "Billi tkompli, taqbel li tissejvja l-informazzjoni tiegħek għal xiri futur ma' %@.";
 
@@ -83,6 +81,8 @@
 "By providing your phone number, you agree to create a Link account and save your payment info to Link, according to the Link <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Meta tagħti n-numru tal-mowbajl tiegħek, tkun qed taqbel li toħloq kont Link u li terfa' l-informazzjoni tal-pagament tiegħek ma' Link, skont ir-<terms>Regoli</terms> u l-<privacy>Politika tal-Privatezza</privacy> ta' Link.";
 
 "By saving your bank account for %@ you agree to authorize payments pursuant to <terms>these terms</terms>." = "Meta tissejvja l-kont tal-bank tiegħek għal %@ tkun qed taqbel li tawtorizza l-pagamenti skont <terms>dar-regoli</terms>.";
+
+"By submitting your order to %@ you agree to authorize payments pursuant to <terms>these terms</terms>." = "Billi tissottometti l-ordni tiegħek lil %@ inti taqbel li tawtorizza pagamenti skont <terms>dawn it-termini</terms>.";
 
 "CPF/CPNJ" = "CPF/CPNJ";
 
@@ -113,6 +113,8 @@
 "Contact information" = "Id-dettalji tal-kuntatt";
 
 "Continue another way" = "Kompli mod ieħor";
+
+"Create an account with Link for faster checkout across the web" = "Oħloq kont ma’ Link għal pagament aktar mgħaġġel fuq il-web";
 
 "Debit or credit card" = "Karta tad-debitu jew tal-kreditu";
 
@@ -286,6 +288,8 @@
 
 "This is your default" = "Dan il-metodu tal-pagament standard tiegħek";
 
+"This payment method will be removed but will remain available for %@ subscriptions." = "Dan il-metodu ta' pagament se jitneħħa iżda se jibqa' disponibbli għal abbonamenti ta' %@.";
+
 "Too many attempts. Please try again in a few minutes." = "Ippruvajt wisq drabi. Jekk jogħġbok erġa' pprova wara ftit minuti.";
 
 "Unavailable for this purchase" = "Mhux disponibbli għal dix-xirja";
@@ -295,8 +299,6 @@
 "Update payment method" = "Ibdel il-metodu tal-pagament";
 
 "Use billing address for shipping" = "Uża l-indirizz tal-ħlas għall-kunsinna";
-
-"Use your saved info to check out faster" = "Uża l-informazzjoni li għandek merfugħa biex tħallas iktar malajr";
 
 "View more" = "Uri iktar";
 

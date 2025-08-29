@@ -8,7 +8,7 @@
 import StripeCore
 import SwiftUI
 
-@_spi(CryptoOnrampSDKPreview)
+@_spi(STP)
 import StripeCryptoOnramp
 
 @_spi(STP)
@@ -19,9 +19,11 @@ struct CryptoOnrampExampleView: View {
     @State private var coordinator: CryptoOnrampCoordinator?
     @State private var errorMessage: String?
     @State private var email: String = ""
+    @State private var selectedScopes: Set<OAuthScopes> = Set(OAuthScopes.onrampScope)
     @State private var showRegistration: Bool = false
     @State private var showAuthenticatedView: Bool = false
     @State private var authenticationCustomerId: String?
+    @State private var linkAuthIntentId: String?
 
     @Environment(\.isLoading) private var isLoading
     @FocusState private var isEmailFieldFocused: Bool
@@ -51,6 +53,16 @@ struct CryptoOnrampExampleView: View {
                             }
                     }
 
+                    OAuthScopeSelector(
+                        selectedScopes: $selectedScopes,
+                        onOnrampScopesSelected: {
+                            selectedScopes = Set(OAuthScopes.onrampScope)
+                        },
+                        onAllScopesSelected: {
+                            selectedScopes = Set(OAuthScopes.allScopes)
+                        }
+                    )
+
                     Button("Next") {
                         isEmailFieldFocused = false
                         lookupConsumerAndContinue()
@@ -65,7 +77,11 @@ struct CryptoOnrampExampleView: View {
 
                     if let coordinator {
                         HiddenNavigationLink(
-                            destination: RegistrationView(coordinator: coordinator, email: email),
+                            destination: RegistrationView(
+                                coordinator: coordinator,
+                                email: email,
+                                selectedScopes: Array(selectedScopes)
+                            ),
                             isActive: $showRegistration
                         )
 
@@ -85,6 +101,7 @@ struct CryptoOnrampExampleView: View {
             .navigationTitle("CryptoOnramp Example")
             .navigationBarTitleDisplayMode(.inline)
         }
+        .navigationViewStyle(.stack)
         .onAppear {
             guard coordinator == nil else {
                 return
@@ -131,10 +148,21 @@ struct CryptoOnrampExampleView: View {
         isLoading.wrappedValue = true
         Task {
             do {
-                let lookupResult = try await coordinator.lookupConsumer(with: email)
+                let lookupResult = try await coordinator.hasLinkAccount(with: email)
+                let laiId: String?
+                if lookupResult {
+                    // Get Link Auth Intent ID from the demo merchant backend.
+                    let response = try await APIClient.shared.authenticateUser(with: email, oauthScopes: Array(selectedScopes))
+                    laiId = response.data.id
+                    print( "Successfully got Link Auth Intent ID from demo backend. Id: \(laiId!)")
+                } else {
+                    laiId = nil
+                }
+
                 await MainActor.run {
                     errorMessage = nil
                     isLoading.wrappedValue = false
+                    linkAuthIntentId = laiId
 
                     if lookupResult {
                         presentVerification(using: coordinator)
@@ -152,34 +180,113 @@ struct CryptoOnrampExampleView: View {
     }
 
     private func presentVerification(using coordinator: CryptoOnrampCoordinator) {
+        guard let linkAuthIntentId = linkAuthIntentId else {
+            errorMessage = "No Link Auth Intent ID available for authorization."
+            return
+        }
+
         if let viewController = UIApplication.shared.findTopNavigationController() {
             Task {
                 do {
-                    let result = try await coordinator.presentForVerification(from: viewController)
+                    let result = try await coordinator.authorize(linkAuthIntentId: linkAuthIntentId, from: viewController)
                     switch result {
-                    case .completed(customerId: let customerId):
+                    case .consented(let customerId):
                         await MainActor.run {
                             authenticationCustomerId = customerId
 
-                            // Delay so the navigation link animation doesn’t get canceled.
+                            // Delay so the navigation link animation doesn't get canceled.
                             DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
                                 showAuthenticatedView = true
                             }
                         }
+                    case .denied:
+                        await MainActor.run {
+                            errorMessage = "Authorization was denied."
+                        }
                     case .canceled:
-                        // do nothing, verification canceled.
+                        // do nothing, authorization canceled.
                         break
                     @unknown default:
-                        // do nothing, verification canceled.
+                        // do nothing, authorization canceled.
                         break
                     }
                 } catch {
-                    errorMessage = error.localizedDescription
+                    await MainActor.run {
+                        errorMessage = error.localizedDescription
+                    }
                 }
             }
         } else {
             errorMessage = "Unable to find view controller to present from."
         }
+    }
+}
+
+struct OAuthScopeSelector: View {
+    @Binding var selectedScopes: Set<OAuthScopes>
+    let onOnrampScopesSelected: () -> Void
+    let onAllScopesSelected: () -> Void
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 12) {
+            HStack {
+                Text("OAuth Scopes")
+                    .font(.headline)
+                    .foregroundColor(.primary)
+
+                Spacer()
+
+                HStack(spacing: 8) {
+                    Button("Onramp") {
+                        onOnrampScopesSelected()
+                    }
+                    .buttonStyle(.bordered)
+                    .controlSize(.small)
+
+                    Button("All") {
+                        onAllScopesSelected()
+                    }
+                    .buttonStyle(.bordered)
+                    .controlSize(.small)
+                }
+            }
+
+            LazyVGrid(columns: [GridItem()], spacing: 8) {
+                ForEach(OAuthScopes.allCases, id: \.self) { scope in
+                    Button(action: {
+                        if selectedScopes.contains(scope) {
+                            selectedScopes.remove(scope)
+                        } else {
+                            selectedScopes.insert(scope)
+                        }
+                    }) {
+                        HStack(spacing: 4) {
+                            Image(systemName: selectedScopes.contains(scope) ? "checkmark.circle.fill" : "circle")
+                                .foregroundColor(selectedScopes.contains(scope) ? .blue : .gray)
+                                .font(.system(size: 14))
+
+                            Text(scope.rawValue)
+                                .font(.system(.caption, design: .monospaced))
+                                .foregroundColor(.primary)
+                                .multilineTextAlignment(.leading)
+                        }
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .padding(.horizontal, 8)
+                        .padding(.vertical, 4)
+                        .background(
+                            RoundedRectangle(cornerRadius: 6)
+                                .fill(selectedScopes.contains(scope) ? Color.blue.opacity(0.1) : Color.gray.opacity(0.05))
+                        )
+                    }
+                    .buttonStyle(.plain)
+                }
+            }
+        }
+        .padding()
+        .background(
+            RoundedRectangle(cornerRadius: 8)
+                .fill(Color.gray.opacity(0.05))
+        )
     }
 }
 

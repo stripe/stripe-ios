@@ -1,5 +1,3 @@
-"%1$@ •••• %2$@" = "%1$@ •••• %2$@";
-
 "+ Add" = "+ Toevoegen";
 
 "Add US bank account" = "Amerikaanse bankrekening toevoegen";
@@ -60,6 +58,10 @@
 
 "By continuing, you agree to authorize payments pursuant to <terms>these terms</terms>." = "Als je doorgaat, ga je ermee akkoord betalingen in overeenstemming met <terms>deze voorwaarden</terms> te autoriseren.";
 
+"By continuing, you agree to save your information for future purchases with %@ and <link>Link</link> according to Link <terms>terms</terms> and <privacy>privacy</privacy>." = "Door verder te gaan, ga je ermee akkoord dat jouw informatie wordt opgeslagen voor toekomstige aankopen bij %@ en <link>Link</link> volgens Link <terms>voorwaarden</terms> en <privacy>privacy</privacy>.";
+
+"By continuing, you agree to save your information for future purchases with %@." = "Door verder te gaan, ga je ermee akkoord jouw informatie op te slaan voor toekomstige aankopen bij %@.";
+
 "By continuing, you authorize %@ to automatically debit your Satispay Balance on a recurring basis in accordance with your purchase or subscription plan." = "Door verder te gaan, machtigt u %@ om automatisch uw Satispay-saldo op terugkerende basis af te schrijven in overeenstemming met uw aankoop- of abonnementsplan.";
 
 "By continuing, you authorize %@ to debit your Cash App account for this payment and future payments in accordance with %@'s terms, until this authorization is revoked. You can change this anytime in your Cash App Settings." = "Als je doorgaat, geef je %1$@ toestemming om deze betaling en toekomstige betalingen in rekening te brengen op je Cash App-account, in overeenstemming met de voorwaarden van %2$@, totdat je deze toestemming intrekt. Je kunt dit op elk moment wijzigen via je Cash App-instellingen.";
@@ -79,6 +81,8 @@
 "By providing your phone number, you agree to create a Link account and save your payment info to Link, according to the Link <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Door je telefoonnummer te verstrekken, ga je ermee akkoord dat er een Link-account wordt gemaakt en dat je betaalgegevens worden opgeslagen naar Link, volgens de <terms>voorwaarden</terms> en het <privacy>privacybeleid</privacy> van Link.";
 
 "By saving your bank account for %@ you agree to authorize payments pursuant to <terms>these terms</terms>." = "Als je je bankrekening voor %@ opslaat, ga je ermee akkoord betalingen in overeenstemming met <terms>deze voorwaarden</terms> te autoriseren.";
+
+"By submitting your order to %@ you agree to authorize payments pursuant to <terms>these terms</terms>." = "Door je bestelling te plaatsen bij %@, autoriseer je betalingen in overeenstemming met <terms>deze voorwaarden</terms>.";
 
 "CPF/CPNJ" = "CPF/CPNJ";
 
@@ -110,6 +114,8 @@
 
 "Continue another way" = "Op een andere manier doorgaan";
 
+"Create an account with Link for faster checkout across the web" = "Maak een account aan bij Link om sneller te kunnen afrekenen op het internet.";
+
 "Debit or credit card" = "Debitcard of creditcard";
 
 "Default" = "Standaard";
@@ -125,6 +131,8 @@
 "FPX Bank" = "FPX Bank";
 
 "Failed to connect" = "Kan geen verbinding maken";
+
+"Fast, secure checkout" = "Snel, beveiligd afrekenproces";
 
 "For security, please re-enter your card’s security code." = "Voer uit veiligheidsoverwegingen de beveiligingscode van je betaalkaart opnieuw in.";
 
@@ -185,6 +193,8 @@
 "Pay another way" = "Betalen op een andere manier";
 
 "Pay faster at %@ and thousands of businesses." = "Reken sneller af bij %@ en duizenden andere bedrijven.";
+
+"Pay faster everywhere Link is accepted." = "Betaal sneller, overal waar Link wordt geaccepteerd.";
 
 "Pay over time with %@" = "Betalen in termijnen met %@";
 
@@ -278,6 +288,8 @@
 
 "This is your default" = "Dit is je standaard";
 
+"This payment method will be removed but will remain available for %@ subscriptions." = "Deze betaalmethode wordt verwijderd, maar blijft beschikbaar voor %@ abonnementen.";
+
 "Too many attempts. Please try again in a few minutes." = "Te veel pogingen. Probeer het over een paar minuten opnieuw.";
 
 "Unavailable for this purchase" = "Niet beschikbaar voor deze aankoop";
@@ -287,8 +299,6 @@
 "Update payment method" = "Betaalmethode bijwerken";
 
 "Use billing address for shipping" = "Gebruik factuuradres voor verzending";
-
-"Use your saved info to check out faster" = "Gebruik je opgeslagen gegevens om sneller af te rekenen";
 
 "View more" = "Meer weergeven";
 

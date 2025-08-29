@@ -242,7 +242,8 @@ class PaymentSheetStandardUITests: PaymentSheetUITestCase {
 
         app.buttons["Apple Pay, apple_pay"].waitForExistenceAndTap(timeout: 30) // Should default to Apple Pay
         XCTAssertEqual(
-            analyticsLog.map({ $0[string: "event"] }),
+            // filter out async passive captcha logs
+            analyticsLog.map({ $0[string: "event"] }).filter({ !($0?.starts(with: "elements.captcha.passive") ?? false) }),
             // fraud detection telemetry should not be sent in tests, so it should report an API failure
             ["mc_load_started", "link.account_lookup.complete", "mc_load_succeeded", "fraud_detection_data_repository.api_failure", "mc_custom_init_customer_applepay", "mc_custom_sheet_savedpm_show"]
         )
@@ -603,6 +604,49 @@ class PaymentSheetStandardUITests: PaymentSheetUITestCase {
         app.buttons["+ Add"].waitForExistenceAndTap()
         _testHorizontalPreservesFormDetails()
     }
+
+    func testCardScannerOpensAutomatically() throws {
+        var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
+        settings.opensCardScannerAutomatically = .on
+
+        loadPlayground(app, settings)
+        app.buttons["Present PaymentSheet"].waitForExistenceAndTap()
+
+        // Verify STPCardScanner is NOT in analytics product_usage when sheet is open but card form hasn't been opened
+        let initialProductUsage = analyticsLog.last!["product_usage"] as! [String]
+        XCTAssertFalse(initialProductUsage.contains("STPCardScanner"), "STPCardScanner should not be in product_usage before opening card form")
+
+        // Open the card form
+        app.buttons["Card"].waitForExistenceAndTap()
+
+        // Wait for the close card scanner button to appear, which indicates the scanner is open and analytics updated
+        let closeScannerButton = app.buttons["Close card scanner"]
+        XCTAssertTrue(closeScannerButton.waitForExistence(timeout: 10.0), "Close card scanner button should appear when scanner opens")
+
+        // Verify STPCardScanner IS in analytics product_usage after opening card form
+        let updatedProductUsage = analyticsLog.last!["product_usage"] as! [String]
+        XCTAssertTrue(updatedProductUsage.contains("STPCardScanner"), "STPCardScanner should be in product_usage after opening card form")
+
+        // Close the card scanner
+        closeScannerButton.tap()
+
+        // Verify card scanner is closed
+        XCTAssertFalse(closeScannerButton.waitForExistence(timeout: 2.0), "Card scanner should be closed after tapping close button")
+
+        // Verify we can open the scanner again using the scan button
+        let scanCardButton = app.buttons["Scan card"]
+        XCTAssertTrue(scanCardButton.waitForExistence(timeout: 5.0), "Scan card button should exist")
+        scanCardButton.tap()
+        XCTAssertTrue(closeScannerButton.waitForExistence(timeout: 10.0), "Card scanner should open when tapping scan button")
+
+        // Verify that editing a form field closes the scanner
+        let cardNumberField = app.textFields["Card number"]
+        XCTAssertTrue(cardNumberField.waitForExistence(timeout: 10.0), "Card number field should exist")
+        cardNumberField.tap()
+
+        // Verify scanner is closed after editing form field
+        XCTAssertFalse(closeScannerButton.exists, "Card scanner should be closed when editing form fields")
+    }
 }
 
 class PaymentSheetDeferredUITests: PaymentSheetUITestCase {
@@ -620,7 +664,8 @@ class PaymentSheetDeferredUITests: PaymentSheetUITestCase {
 
         XCTAssertEqual(
             // Ignore luxe_* analytics since there are a lot and I'm not sure if they're the same every time
-            analyticsLog.map({ $0[string: "event"] }).filter({ $0 != "luxe_image_selector_icon_from_bundle" && $0 != "luxe_image_selector_icon_downloaded" }),
+            // filter out async passive captcha logs
+            analyticsLog.map({ $0[string: "event"] }).filter({ $0 != "luxe_image_selector_icon_from_bundle" && $0 != "luxe_image_selector_icon_downloaded" && !($0?.starts(with: "elements.captcha.passive") ?? false) }),
             // fraud detection telemetry should not be sent in tests, so it should report an API failure
             ["mc_complete_init_applepay", "mc_load_started", "mc_load_succeeded", "fraud_detection_data_repository.api_failure", "mc_complete_sheet_newpm_show", "mc_lpms_render", "mc_form_shown"]
         )
