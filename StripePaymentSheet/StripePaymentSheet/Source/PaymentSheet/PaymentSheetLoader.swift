@@ -227,7 +227,7 @@ final class PaymentSheetLoader {
         // Lookup Link account if Link is enabled or the holdback killswitch is not enabled.
         // Note: When the holdback experiment is over, we can ignore the killswitch and only lookup when Link is enabled.
         let isLinkEnabled = PaymentSheet.isLinkEnabled(elementsSession: elementsSession, configuration: configuration)
-        let isLookupForHoldbackEnabled = elementsSession.flags["elements_disable_link_global_holdback_lookup"] != true
+        let isLookupForHoldbackEnabled = elementsSession.shouldLookupForLinkHoldbackExperiment
 
         guard isLinkEnabled || isLookupForHoldbackEnabled else {
             return nil
