@@ -190,10 +190,6 @@ final class PayWithLinkViewController: BottomSheetViewController {
         LinkUI.largeCornerRadius
     }
 
-    override var constantOffsetForNavigationBar: CGFloat {
-        LiquidGlassDetector.isEnabled ? LinkUI.navigationBarHeight : 0
-    }
-
     private var isBailingToWebFlow: Bool = false
 
     convenience init(

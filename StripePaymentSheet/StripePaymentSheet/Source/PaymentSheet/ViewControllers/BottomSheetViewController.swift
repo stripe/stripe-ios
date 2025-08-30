@@ -33,10 +33,6 @@ class BottomSheetViewController: UIViewController, BottomSheetPresentable {
         BottomSheetTransitioningDelegate.appearance.sheetCornerRadius
     }
 
-    var constantOffsetForNavigationBar: CGFloat {
-        LiquidGlassDetector.isEnabled ? SheetNavigationBar.height : 0
-    }
-
     // MARK: - Views
     lazy var scrollView: UIScrollView = {
         let scrollView = UIScrollView()
@@ -45,7 +41,6 @@ class BottomSheetViewController: UIViewController, BottomSheetPresentable {
         scrollView.keyboardDismissMode = .onDrag
         #endif
         scrollView.delegate = self
-        scrollView.backgroundColor = appearance.colors.background
         return scrollView
     }()
 
@@ -349,8 +344,6 @@ class BottomSheetViewController: UIViewController, BottomSheetPresentable {
                 // Allow scroll view to extend under the navigation bar for blur effect
                 scrollView.topAnchor.constraint(equalTo: view.topAnchor),
             ])
-            // Add top content inset so content doesn't get hidden behind the navigation bar
-            scrollView.contentInset.top = constantOffsetForNavigationBar
         } else {
             NSLayoutConstraint.activate([
                 scrollView.topAnchor.constraint(equalTo: navigationBarContainerView.bottomAnchor)
@@ -362,8 +355,7 @@ class BottomSheetViewController: UIViewController, BottomSheetPresentable {
         scrollView.addSubview(contentContainerView)
 
         // Give the scroll view a desired height
-        let scrollViewHeightConstraint = scrollView.heightAnchor.constraint(equalTo: scrollView.contentLayoutGuide.heightAnchor,
-                                                                            constant: constantOffsetForNavigationBar)
+        let scrollViewHeightConstraint = scrollView.heightAnchor.constraint(equalTo: scrollView.contentLayoutGuide.heightAnchor)
         scrollViewHeightConstraint.priority = .fittingSizeLevel
         self.scrollViewHeightConstraint = scrollViewHeightConstraint
 
