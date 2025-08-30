@@ -249,8 +249,9 @@ final class LinkInlineSignupView: UIView {
         layer.cornerRadius = cornerRadius
 
         // If the borders are hidden give Link a default 1.0 border that contrasts with the background color
-        if viewModel.configuration.appearance.borderWidth == 0.0 ||
-            viewModel.configuration.appearance.colors.componentBorder.rgba.alpha == 0.0 {
+        let hasInvisibleBorder = viewModel.configuration.appearance.borderWidth == 0.0 ||
+            viewModel.configuration.appearance.colors.componentBorder.rgba.alpha == 0.0
+        if viewModel.bordered && hasInvisibleBorder {
             layer.borderWidth = 1.0
             layer.borderColor = borderColor.cgColor
         }
