@@ -113,7 +113,8 @@ extension STPElementsSession {
         paymentMethods: [[AnyHashable: Any]]? = nil,
         linkUseAttestation: Bool? = nil,
         linkSuppress2FA: Bool? = nil,
-        hasLinkConsumerIncentive: Bool = false
+        hasLinkConsumerIncentive: Bool = false,
+        linkSupportedPaymentMethodsOnboardingEnabled: [String] = ["CARD"]
     ) -> STPElementsSession {
         var json = STPTestUtils.jsonNamed("ElementsSession")!
         json[jsonDict: "payment_method_preference"]?["ordered_payment_method_types"] = paymentMethodTypes
@@ -182,6 +183,8 @@ extension STPElementsSession {
             json[jsonDict: "link_settings"]!["link_mobile_disable_signup"] = disableLinkSignup
         }
 
+        json[jsonDict: "link_settings"]!["link_supported_payment_methods_onboarding_enabled"] = linkSupportedPaymentMethodsOnboardingEnabled
+
         let elementsSession = STPElementsSession.decodedObject(fromAPIResponse: json)!
         return elementsSession
     }
@@ -193,7 +196,8 @@ extension STPElementsSession {
         linkFundingSources: Set<LinkSettings.FundingSource> = [],
         defaultPaymentMethod: String? = nil,
         paymentMethods: [[AnyHashable: Any]]? = nil,
-        allowsSetAsDefaultPM: Bool = false
+        allowsSetAsDefaultPM: Bool = false,
+        linkSupportedPaymentMethodsOnboardingEnabled: [String] = ["CARD"]
     ) -> STPElementsSession {
         let paymentMethodTypes: [String] = {
             switch intent {
@@ -227,7 +231,8 @@ extension STPElementsSession {
             linkMode: linkMode,
             linkFundingSources: linkFundingSources,
             defaultPaymentMethod: defaultPaymentMethod,
-            paymentMethods: paymentMethods
+            paymentMethods: paymentMethods,
+            linkSupportedPaymentMethodsOnboardingEnabled: linkSupportedPaymentMethodsOnboardingEnabled
         )
     }
 }
