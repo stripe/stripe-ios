@@ -310,7 +310,7 @@ final class LinkInlineSignupViewModel {
     var bordered: Bool {
         switch mode {
         case .checkbox:
-            return true
+            return !LiquidGlassDetector.isEnabled
         case .checkboxWithDefaultOptIn, .textFieldsOnlyEmailFirst, .textFieldsOnlyPhoneFirst, .signupOptIn:
             return false
         }

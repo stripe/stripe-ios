@@ -139,8 +139,14 @@ final class LinkInlineSignupView: UIView {
             elements.append(checkboxElement)
         }
 
+        // TODO: Figure out section border
+
         let style: FormElement.Style = viewModel.showCheckbox ? .plain : .bordered
-        let formElement = FormElement(elements: elements, style: style, theme: theme)
+        let formElement = FormElement(
+            elements: elements,
+            style: style,
+            theme: theme
+        )
         let visibleElements: [Element?] = [formElement, legalTermsElement]
         let containerFormElement = FormElement(
             elements: visibleElements.compactMap { $0 },
@@ -238,10 +244,14 @@ final class LinkInlineSignupView: UIView {
     }
 
     private func updateAppearance() {
-        backgroundColor = viewModel.configuration.appearance.colors.background
+        if LiquidGlassDetector.isEnabled {
+            backgroundColor = viewModel.configuration.appearance.colors.componentBackground
+        } else {
+            backgroundColor = viewModel.configuration.appearance.colors.background
+        }
 
-        var cornerRadius = viewModel.configuration.appearance.cornerRadius
-        if !viewModel.bordered {
+        var cornerRadius = LiquidGlassDetector.isEnabled ? 26.0 : viewModel.configuration.appearance.cornerRadius
+        if !viewModel.bordered && !LiquidGlassDetector.isEnabled {
             // If we're not bordered, the content is right at the border of the view.
             // Remove corner radius so that we don't cut off anything.
             cornerRadius = 0
