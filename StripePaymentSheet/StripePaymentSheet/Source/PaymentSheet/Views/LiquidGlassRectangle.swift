@@ -2,19 +2,20 @@
 //  CapsuleRectangleView.swift
 //  StripePaymentSheet
 //
-//  Created by John Woo on 8/26/25.
-//
 
 @_spi(STP) import StripeUICore
 import UIKit
 
 protocol SelectableRectangle: UIView {
+    var appearance: PaymentSheet.Appearance { get set }
     var isSelected: Bool { get set }
+    var isEnabled: Bool { get set }
 }
 
 @available(iOS 26.0, *)
-class CapsuleRectangle: UIView, SelectableRectangle {
+class LiquidGlassRectangle: UIView, SelectableRectangle {
     private let roundedRectangle: UIView
+    private let isCapsule: Bool
     var appearance: PaymentSheet.Appearance {
         didSet {
             update()
@@ -41,9 +42,12 @@ class CapsuleRectangle: UIView, SelectableRectangle {
         } else {
             roundedRectangle.backgroundColor = appearance.colors.componentBackground.disabledColor
         }
-        #if compiler(>=6.2)
-        roundedRectangle.cornerConfiguration = .capsule()
-        #endif
+
+        if isCapsule {
+            roundedRectangle.ios26_applyCapsuleCornerConfiguration()
+        } else {
+            roundedRectangle.ios26_applyDefaultCornerConfiguration()
+        }
 
         // Border
         if isSelected {
@@ -61,8 +65,9 @@ class CapsuleRectangle: UIView, SelectableRectangle {
         }
     }
 
-    required init(appearance: PaymentSheet.Appearance) {
+    required init(appearance: PaymentSheet.Appearance, isCapsule: Bool) {
         self.appearance = appearance
+        self.isCapsule = isCapsule
         roundedRectangle = UIView()
         roundedRectangle.layer.masksToBounds = true
         super.init(frame: .zero)
