@@ -45,8 +45,8 @@ import Foundation
 
     @_spi(STP) public let allResponseFields: [AnyHashable: Any]
 
-    @_spi(STP) public var instantDebitsOnboardingDisabled: Bool {
-        !linkSupportedPaymentMethodsOnboardingEnabled.contains("INSTANT_DEBITS")
+    @_spi(STP) public var instantDebitsOnboardingEnabled: Bool {
+        linkSupportedPaymentMethodsOnboardingEnabled.contains("INSTANT_DEBITS")
     }
 
     @_spi(STP) public init(

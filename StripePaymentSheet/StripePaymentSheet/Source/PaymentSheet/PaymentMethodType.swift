@@ -386,7 +386,7 @@ extension PaymentSheet {
                 missingRequirements.formUnion(requirements)
             }
 
-            if let linkSettings = elementsSession.linkSettings, linkSettings.instantDebitsOnboardingDisabled {
+            if elementsSession.linkSettings?.instantDebitsOnboardingEnabled != true {
                 missingRequirements.insert(.instantDebitsDisabledForOnboarding)
             }
 
@@ -430,7 +430,7 @@ extension PaymentSheet {
                 missingRequirements.formUnion(requirements)
             }
 
-            if let linkSettings = elementsSession.linkSettings, linkSettings.instantDebitsOnboardingDisabled {
+            if elementsSession.linkSettings?.instantDebitsOnboardingEnabled != true {
                 missingRequirements.insert(.instantDebitsDisabledForOnboarding)
             }
 
