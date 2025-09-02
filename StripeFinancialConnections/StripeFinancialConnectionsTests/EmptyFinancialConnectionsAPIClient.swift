@@ -261,7 +261,8 @@ class EmptyFinancialConnectionsAPIClient: FinancialConnectionsAPI {
         paymentDetailsId: String,
         expectedPaymentMethodType: String,
         billingEmail: String?,
-        billingPhone: String?
+        billingPhone: String?,
+        allowRedisplay: String?
     ) -> Future<FinancialConnectionsSharePaymentDetails> {
         Promise<StripeFinancialConnections.FinancialConnectionsSharePaymentDetails>()
     }
@@ -269,7 +270,8 @@ class EmptyFinancialConnectionsAPIClient: FinancialConnectionsAPI {
     func paymentMethods(
         consumerSessionClientSecret: String,
         paymentDetailsId: String,
-        billingDetails: ElementsSessionContext.BillingDetails?
+        billingDetails: ElementsSessionContext.BillingDetails?,
+        allowRedisplay: String?
     ) -> StripeCore.Future<StripeFinancialConnections.LinkBankPaymentMethod> {
         Promise<StripeFinancialConnections.LinkBankPaymentMethod>()
     }
