@@ -24,12 +24,6 @@ class PaymentSheetSnapshotTests: STPSnapshotTestCase {
 
     var paymentSheet: PaymentSheet!
 
-    private var window: UIWindow {
-        let window = UIWindow(frame: CGRect(x: 0, y: 0, width: 428, height: 1026))
-        window.isHidden = false
-        return window
-    }
-
     private var configuration = PaymentSheet.Configuration()
 
     // Change this to true to hit the real glitch backend. This may be required
@@ -1134,11 +1128,14 @@ class PaymentSheetSnapshotTests: STPSnapshotTestCase {
     func presentPaymentSheet(darkMode: Bool, preferredContentSizeCategory: UIContentSizeCategory = .large) {
         let vc = UIViewController()
         let navController = UINavigationController(rootViewController: vc)
-        let testWindow = self.window
+        let window = UIWindow(frame: CGRect(x: 0, y: 0, width: 428, height: 1026))
+        window.isHidden = false
         if darkMode {
-            testWindow.overrideUserInterfaceStyle = .dark
+            window.overrideUserInterfaceStyle = .dark
         }
-        testWindow.rootViewController = navController
+        window.rootViewController = navController
+        window.layoutIfNeeded() // unclear why but w/o this vc.view.window is nil
+        window.makeKeyAndVisible()
 
         // Wait a turn of the runloop for the RVC to attach to the window, then present PaymentSheet
         DispatchQueue.main.async {
@@ -1158,7 +1155,14 @@ class PaymentSheetSnapshotTests: STPSnapshotTestCase {
         let loadFinishedExpectation = XCTestExpectation(description: "Load finished")
         func pollForLoadingFinished() {
             if !(paymentSheet.bottomSheetViewController.contentStack.first is LoadingViewController) {
-                loadFinishedExpectation.fulfill()
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.1)  {
+                    self.paymentSheet.bottomSheetViewController.presentationController!.overrideTraitCollection = UITraitCollection(
+                        preferredContentSizeCategory: preferredContentSizeCategory
+                    )
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.1)  {
+                        loadFinishedExpectation.fulfill()
+                    }
+                }
             } else {
                 DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) { [weak self] in
                     guard self != nil else { return }
@@ -1168,10 +1172,6 @@ class PaymentSheetSnapshotTests: STPSnapshotTestCase {
         }
         pollForLoadingFinished()
         wait(for: [loadFinishedExpectation], timeout: 5)
-
-        paymentSheet.bottomSheetViewController.presentationController!.overrideTraitCollection = UITraitCollection(
-            preferredContentSizeCategory: preferredContentSizeCategory
-        )
     }
 
     private func sleepInBackground(numSeconds: TimeInterval) {
@@ -1191,6 +1191,7 @@ class PaymentSheetSnapshotTests: STPSnapshotTestCase {
         STPSnapshotVerifyView(
             view,
             identifier: identifier,
+            overallTolerance: 0.01, // unfortunately on iOS 26 w/ XCode beta 7 there are *sometimes* differences as large as ~0.003%.
             file: file,
             line: line
         )
