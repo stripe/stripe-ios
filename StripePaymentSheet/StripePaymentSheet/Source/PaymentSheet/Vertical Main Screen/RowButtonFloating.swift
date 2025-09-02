@@ -17,8 +17,8 @@ final class RowButtonFloating: RowButton {
     private lazy var selectableRectangle: SelectableRectangle = {
         #if !os(visionOS)
         if #available(iOS 26.0, *),
-           LiquidGlassDetector.isEnabled {
-            return CapsuleRectangle(appearance: appearance)
+           LiquidGlassDetector.isEnabled && !isEmbedded {
+            return LiquidGlassRectangle(appearance: appearance, isCapsule: true)
         } else {
             return ShadowedRoundedRectangle(appearance: appearance)
         }
