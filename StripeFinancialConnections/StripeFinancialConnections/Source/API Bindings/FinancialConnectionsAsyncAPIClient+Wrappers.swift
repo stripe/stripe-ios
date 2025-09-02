@@ -449,7 +449,8 @@ extension FinancialConnectionsAsyncAPIClient: FinancialConnectionsAPI {
         paymentDetailsId: String,
         expectedPaymentMethodType: String,
         billingEmail: String?,
-        billingPhone: String?
+        billingPhone: String?,
+        allowRedisplay: String?
     ) -> Future<FinancialConnectionsSharePaymentDetails> {
         wrapAsyncToFuture {
             try await self.sharePaymentDetails(
@@ -457,7 +458,8 @@ extension FinancialConnectionsAsyncAPIClient: FinancialConnectionsAPI {
                 paymentDetailsId: paymentDetailsId,
                 expectedPaymentMethodType: expectedPaymentMethodType,
                 billingEmail: billingEmail,
-                billingPhone: billingPhone
+                billingPhone: billingPhone,
+                allowRedisplay: allowRedisplay
             )
         }
     }
@@ -465,13 +467,15 @@ extension FinancialConnectionsAsyncAPIClient: FinancialConnectionsAPI {
     func paymentMethods(
         consumerSessionClientSecret: String,
         paymentDetailsId: String,
-        billingDetails: ElementsSessionContext.BillingDetails?
+        billingDetails: ElementsSessionContext.BillingDetails?,
+        allowRedisplay: String?
     ) -> Future<LinkBankPaymentMethod> {
         wrapAsyncToFuture {
             try await self.paymentMethods(
                 consumerSessionClientSecret: consumerSessionClientSecret,
                 paymentDetailsId: paymentDetailsId,
-                billingDetails: billingDetails
+                billingDetails: billingDetails,
+                allowRedisplay: allowRedisplay
             )
         }
     }

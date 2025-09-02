@@ -406,3 +406,25 @@ extension STPElementsSession {
         return true
     }
 }
+
+extension STPElementsSession {
+    func computeAllowRedisplay(isSettingUp: Bool) -> STPPaymentMethodAllowRedisplay? {
+        guard let customerSessionMobilePaymentElementFeatures else {
+            return nil
+        }
+
+        let allowRedisplayOverride = customerSessionMobilePaymentElementFeatures.paymentMethodSaveAllowRedisplayOverride
+
+        if isSettingUp {
+            return allowRedisplayOverride ?? .limited
+        } else {
+            return .unspecified
+        }
+    }
+
+    var useCardPaymentMethodTypeForIBP: Bool {
+        let canAcceptACH = orderedPaymentMethodTypes.contains(.USBankAccount)
+        let isLinkCardBrand = linkSettings?.linkMode?.isPantherPayment ?? false
+        return isLinkCardBrand && !canAcceptACH
+    }
+}
