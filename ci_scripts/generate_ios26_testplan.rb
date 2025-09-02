@@ -3,25 +3,26 @@
 require 'json'
 require 'find'
 
-class IOS26TestPlanGenerator
+class IOS26TestPlanGeneratorV2
   def initialize
     @test_plan_file = File.join(File.dirname(__dir__), 'Stripe', 'AllStripeFrameworks-iOS26.xctestplan')
     @tests_by_target = {}
   end
 
   def generate
-    log_info "Starting iOS 26 test plan generation..."
+    log_info "Starting iOS 26 test plan generation (v2)..."
     
-    test_files = find_test_files
+    # Find all files containing @iOS26
+    annotated_files = find_annotated_files
     
-    if test_files.empty?
-      log_warning "No Swift test files found"
+    if annotated_files.empty?
+      log_warning "No files with @iOS26 annotations found"
       return
     end
     
-    log_info "Found #{test_files.length} test files to scan"
+    log_info "Found #{annotated_files.length} files with @iOS26 annotations"
     
-    test_files.each { |file| process_swift_file(file) }
+    annotated_files.each { |file| process_annotated_file(file) }
     
     write_test_plan
     log_results
@@ -29,29 +30,28 @@ class IOS26TestPlanGenerator
 
   private
 
-  def find_test_files
-    test_files = []
-    
+  def find_annotated_files
+    files = []
     Find.find('.') do |path|
       next unless path.end_with?('.swift')
       next unless path.include?('/Test') || path.include?('Test.swift') || path.include?('Tests.swift')
       
-      test_files << path
+      # Check if file contains @iOS26 annotation
+      if File.read(path, encoding: 'UTF-8').include?('// @iOS26')
+        files << path
+      end
+    rescue => e
+      log_warning "Could not read file #{path}: #{e.message}"
     end
     
-    test_files.sort
+    files.sort
   end
 
-  def process_swift_file(file_path)
+  def process_annotated_file(file_path)
     log_info "Processing: #{file_path}"
     
-    content = File.read(file_path)
-    class_name = extract_class_name(content)
-    
-    unless class_name
-      log_info "  ↳ No test class found, skipping"
-      return
-    end
+    content = File.read(file_path, encoding: 'UTF-8')
+    lines = content.lines
     
     # Determine target name from file path
     target_name = determine_test_target(file_path)
@@ -60,21 +60,14 @@ class IOS26TestPlanGenerator
       return
     end
     
-    log_info "  ↳ Found test class: #{class_name} (target: #{target_name})"
-    
     # Initialize target array if needed
     @tests_by_target[target_name] ||= []
     
-    if class_marked_as_ios26?(content)
-      log_info "  ↳ Entire class marked with @iOS26"
-      add_all_test_methods(content, class_name, target_name)
-    else
-      individual_tests = find_individual_ios26_tests(content, class_name)
-      if individual_tests.any?
-        log_info "  ↳ Found #{individual_tests.length} individual @iOS26 test methods"
-        @tests_by_target[target_name].concat(individual_tests)
-      else
-        log_info "  ↳ No @iOS26 annotations found"
+    # Process each @iOS26 annotation
+    lines.each_with_index do |line, index|
+      if line.match?(/\/\/\s*@iOS26/)
+        log_info "  ↳ Found @iOS26 annotation at line #{index + 1}"
+        process_ios26_annotation(lines, index, target_name, file_path)
       end
     end
 
@@ -82,44 +75,60 @@ class IOS26TestPlanGenerator
     log_warning "Could not process file #{file_path}: #{e.message}"
   end
 
-  def extract_class_name(content)
-    match = content.match(/class\s+(\w*Tests?)\s*:\s*\w*TestCase/)
-    match ? match[1] : nil
-  end
-
-  def class_marked_as_ios26?(content)
-    # Look for @iOS26 comment before class declaration
-    content.match?(/\/\/\s*@iOS26.*?class\s+\w*Tests?\s*:/m)
-  end
-
-  def find_individual_ios26_tests(content, class_name)
-    tests = []
-    lines = content.lines
-    
-    lines.each_with_index do |line, index|
-      # Check if this line has @iOS26 annotation
-      if line.match?(/\/\/\s*@iOS26/)
-        # Look for test method in next few lines (skip empty lines and comments)
-        (index + 1...lines.length).each do |i|
-          next_line = lines[i].strip
-          
-          # Skip empty lines and comments
-          next if next_line.empty? || next_line.start_with?('//')
-          
-          # Check if it's a test method
-          if match = next_line.match(/func\s+(test\w*)\s*\(\)/)
-            test_method = match[1]
-            tests << "#{class_name}/#{test_method}()"
-            break
-          else
-            # If we hit non-test code, stop looking
-            break
-          end
+  def process_ios26_annotation(lines, annotation_index, target_name, file_path)
+    # Look ahead from the @iOS26 comment to find what it annotates
+    (annotation_index + 1...lines.length).each do |i|
+      line = lines[i].strip
+      
+      # Skip empty lines and comments
+      next if line.empty? || line.start_with?('//')
+      
+      # Check if it's a class
+      if class_match = line.match(/class\s+(\w*Tests?)\s*:\s*\w*TestCase/)
+        class_name = class_match[1]
+        log_info "    ↳ Class annotation: #{class_name}"
+        add_all_test_methods_from_content(lines.join, class_name, target_name)
+        break
+      
+      # Check if it's a test method
+      elsif method_match = line.match(/func\s+(test\w*)\s*\(\)/)
+        method_name = method_match[1]
+        # Get the class name for this method
+        class_name = find_class_name_for_method(lines, i)
+        if class_name
+          test_identifier = "#{class_name}/#{method_name}()"
+          log_info "    ↳ Method annotation: #{test_identifier}"
+          @tests_by_target[target_name] << test_identifier
+        else
+          log_warning "    ↳ Could not find class name for method #{method_name}"
         end
+        break
+      
+      # If we hit something else that's not a comment or empty line, stop looking
+      else
+        log_info "    ↳ @iOS26 not followed by class or test method: #{line}"
+        break
       end
     end
-    
-    tests
+  end
+
+  def find_class_name_for_method(lines, method_index)
+    # Search backwards from method to find the class declaration
+    (0...method_index).reverse_each do |i|
+      line = lines[i].strip
+      if class_match = line.match(/class\s+(\w*Tests?)\s*:\s*\w*TestCase/)
+        return class_match[1]
+      end
+    end
+    nil
+  end
+
+  def add_all_test_methods_from_content(content, class_name, target_name)
+    test_methods = content.scan(/func\s+(test\w*)\s*\(\)/).flatten
+    test_methods.each do |method|
+      @tests_by_target[target_name] << "#{class_name}/#{method}()"
+    end
+    log_info "    ↳ Added #{test_methods.length} test methods from class #{class_name}"
   end
 
   def determine_test_target(file_path)
@@ -159,13 +168,6 @@ class IOS26TestPlanGenerator
       "StripeiOSTests"
     else
       nil
-    end
-  end
-
-  def add_all_test_methods(content, class_name, target_name)
-    test_methods = content.scan(/func\s+(test\w*)\s*\(\)/).flatten
-    test_methods.each do |method|
-      @tests_by_target[target_name] << "#{class_name}/#{method}()"
     end
   end
 
@@ -238,7 +240,6 @@ end
 
 # Run the generator
 if __FILE__ == $0
-  generator = IOS26TestPlanGenerator.new
+  generator = IOS26TestPlanGeneratorV2.new
   generator.generate
 end
-

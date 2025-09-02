@@ -214,7 +214,7 @@
             ActionType = "Xcode.IDEStandardExecutionActionsCore.ExecutionActionType.ShellScriptAction">
             <ActionContent
                title = "Run Script"
-               scriptText = "cd &quot;$SRCROOT/..&quot;&#10;ruby ci_scripts/generate_ios26_testplan.rb&#10;"
+               scriptText = "cd &quot;$SRCROOT/..&quot;&#10;echo &quot;Started at: $(date)&quot; | tee /tmp/generate_ios26_testplan.log&#10;ruby ci_scripts/generate_ios26_testplan.rb | tee -a /tmp/generate_ios26_testplan.log&#10;"
                shellToInvoke = "/bin/bash">
                <EnvironmentBuildable>
                   <BuildableReference
