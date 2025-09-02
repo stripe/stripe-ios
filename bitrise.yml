@@ -401,6 +401,8 @@ workflows:
         inputs:
         - content: xcodebuild build -workspace "Stripe.xcworkspace" -scheme "AllStripeFrameworks" -configuration "Release" -sdk "iphonesimulator" | xcpretty
         title: Build release builds
+    envs:
+    - DEFAULT_TEST_DEVICE: platform=iOS Simulator,name=iPhone 16,OS=26.0
     before_run:
     - prep_all
     meta:
