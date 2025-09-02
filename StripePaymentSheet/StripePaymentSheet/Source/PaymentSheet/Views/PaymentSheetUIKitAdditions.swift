@@ -22,7 +22,7 @@ enum PaymentSheetUI {
 #if os(visionOS)
     static let navBarPadding: CGFloat = 30
 #else
-    static let navBarPadding = defaultPadding
+    static let navBarPadding = LiquidGlassDetector.isEnabled ? 16 : defaultPadding
 #endif
 
     static let defaultSheetMargins: NSDirectionalEdgeInsets = .insets(
