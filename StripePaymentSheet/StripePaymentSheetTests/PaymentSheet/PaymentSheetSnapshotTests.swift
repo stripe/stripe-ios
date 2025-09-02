@@ -16,7 +16,6 @@ import XCTest
 @_spi(AppearanceAPIAdditionsPreview) @testable import StripePaymentSheet
 @_spi(STP)@testable import StripeUICore
 
-// @iOS26
 class PaymentSheetSnapshotTests: STPSnapshotTestCase {
 
     private let backendCheckoutUrl = URL(
@@ -1140,6 +1139,7 @@ class PaymentSheetSnapshotTests: STPSnapshotTestCase {
             testWindow.overrideUserInterfaceStyle = .dark
         }
         testWindow.rootViewController = navController
+
         // Wait a turn of the runloop for the RVC to attach to the window, then present PaymentSheet
         DispatchQueue.main.async {
             self.paymentSheet.present(from: vc) { result in
