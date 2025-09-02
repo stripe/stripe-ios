@@ -17,6 +17,7 @@ import XCTest
 @MainActor
 class AddressViewControllerRepresentableSnapshotTest: STPSnapshotTestCase {
 
+    // @iOS26
     func testAddressElementView() async throws {
         var configuration = AddressElement.Configuration()
         configuration.apiClient = STPAPIClient(publishableKey: STPTestingDefaultPublishableKey)
