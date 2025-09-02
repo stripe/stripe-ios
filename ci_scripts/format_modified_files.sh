@@ -53,6 +53,15 @@ export SCRIPT_INPUT_FILE_COUNT=$count
 
 if [ "$count" -ne 0 ]; then
   swiftlint --fix --use-script-input-files --config .swiftlint.yml
+
+  # Re-stage the formatted files
+  for ((i=0; i<count; i++)); do
+    file_var="SCRIPT_INPUT_FILE_$i"
+    file_path="${!file_var}"
+    if [ -f "$file_path" ]; then
+      git add "$file_path"
+    fi
+  done
 fi
 
 EXIT_CODE=$?
