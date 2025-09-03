@@ -2811,7 +2811,7 @@ class PaymentSheetLinkUITests: PaymentSheetUITestCase {
 
         try fillCardData(app)
 
-        app.switches["Save your info for secure 1-click checkout with Link"].tap()
+        app.switches["Save my info for faster checkout with Link"].tap()
 
         let emailField = app.textFields["Email"]
         emailField.tap()
@@ -3028,7 +3028,7 @@ class PaymentSheetLinkUITests: PaymentSheetUITestCase {
         }
 
         if mode == .checkbox {
-            app.switches["Save your info for secure 1-click checkout with Link"].tap()
+            app.switches["Save my info for faster checkout with Link"].tap()
         }
 
         let emailField = app.textFields["Email"]
@@ -3051,7 +3051,7 @@ class PaymentSheetLinkUITests: PaymentSheetUITestCase {
 
     private func assertLinkInlineSignupNotShown() {
         // Ensure checkbox is not shown for checkbox mode
-        XCTAssertFalse(app.switches["Save your info for secure 1-click checkout with Link"].waitForExistence(timeout: 2))
+        XCTAssertFalse(app.switches["Save my info for faster checkout with Link"].waitForExistence(timeout: 2))
         // Ensure email is not shown for field consent mode
         XCTAssertFalse(app.textFields["Email"].waitForExistence(timeout: 3))
     }
