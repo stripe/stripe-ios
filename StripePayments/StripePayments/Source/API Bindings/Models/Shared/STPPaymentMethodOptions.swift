@@ -79,10 +79,12 @@ extension STPPaymentMethodOptions {
         @_spi(STP) public static func decodedObject(
             fromAPIResponse response: [AnyHashable: Any]?
         ) -> Self? {
+            guard let response else { return nil }
+
             return Card(
-                requireCvcRecollection: response?["require_cvc_recollection"] as? Bool,
-                cvcToken: response?["cvc_token"] as? String,
-                allResponseFields: response ?? [:]
+                requireCvcRecollection: response["require_cvc_recollection"] as? Bool,
+                cvcToken: response["cvc_token"] as? String,
+                allResponseFields: response
             ) as? Self
         }
     }
