@@ -1139,6 +1139,7 @@ class PaymentSheetSnapshotTests: STPSnapshotTestCase {
             testWindow.overrideUserInterfaceStyle = .dark
         }
         testWindow.rootViewController = navController
+
         // Wait a turn of the runloop for the RVC to attach to the window, then present PaymentSheet
         DispatchQueue.main.async {
             self.paymentSheet.present(from: vc) { result in
