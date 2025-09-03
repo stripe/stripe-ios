@@ -528,7 +528,7 @@ final class PaymentSheetLoaderTest: STPNetworkStubbingTestCase {
                 currency: "USD",
                 paymentMethodOptions: .init(setupFutureUsageValues: [
                     .cardPresent: .offSession,
-                    .OXXO: .offSession
+                    .OXXO: .offSession,
                 ]
                 )
             ),
