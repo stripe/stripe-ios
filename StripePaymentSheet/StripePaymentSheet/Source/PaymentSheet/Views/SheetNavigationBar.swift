@@ -70,37 +70,6 @@ class SheetNavigationBar: UIView {
     let testModeView = TestModeView()
     let appearance: PaymentSheet.Appearance
 
-    // Custom gradient blur view for liquid glass effect
-    private lazy var gradientBlurView: GradientBlurEffectView = {
-        let blurEffect = UIBlurEffect(style: .systemMaterial)
-        let backgroundColor = appearance.colors.background
-
-        // Create gradient mask: white = visible, clear = hidden
-        let gradientColors: [CGColor] = [
-            UIColor.white.withAlphaComponent(0.6).cgColor,
-            UIColor.white.withAlphaComponent(0.55).cgColor,
-            UIColor.white.withAlphaComponent(0.50).cgColor,
-            UIColor.white.withAlphaComponent(0.45).cgColor,
-            UIColor.white.withAlphaComponent(0.40).cgColor,
-            UIColor.white.withAlphaComponent(0.35).cgColor,
-            UIColor.white.withAlphaComponent(0.30).cgColor,
-            UIColor.white.withAlphaComponent(0.25).cgColor,
-            UIColor.white.withAlphaComponent(0.20).cgColor,
-            UIColor.white.withAlphaComponent(0.15).cgColor,
-            UIColor.white.withAlphaComponent(0.05).cgColor,  // 0.05: Basically not visible
-        ]
-
-        let gradientView = GradientBlurEffectView(
-            effect: blurEffect,
-            colors: gradientColors,
-            locations: [0.0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0],
-            startPoint: CGPoint(x: 0, y: 0),  // Top
-            endPoint: CGPoint(x: 0, y: 1)     // Bottom
-        )
-        gradientView.alpha = 1.0  // Always visible - gradient itself handles the fade
-        return gradientView
-    }()
-
     override var isUserInteractionEnabled: Bool {
         didSet {
             // Explicitly disable buttons to update their appearance
@@ -117,18 +86,7 @@ class SheetNavigationBar: UIView {
         super.init(frame: .zero)
 
         #if !os(visionOS)
-        // Add gradient blur view as background
-        if LiquidGlassDetector.isEnabled {
-            gradientBlurView.translatesAutoresizingMaskIntoConstraints = false
-            addSubview(gradientBlurView)
-            NSLayoutConstraint.activate([
-                // Gradient blur view constraints
-                gradientBlurView.leadingAnchor.constraint(equalTo: leadingAnchor),
-                gradientBlurView.trailingAnchor.constraint(equalTo: trailingAnchor),
-                gradientBlurView.topAnchor.constraint(equalTo: topAnchor),
-                gradientBlurView.bottomAnchor.constraint(equalTo: bottomAnchor),
-            ])
-        } else {
+        if !LiquidGlassDetector.isEnabled {
             backgroundColor = appearance.colors.background.withAlphaComponent(0.9)
         }
         #endif
@@ -251,33 +209,6 @@ class SheetNavigationBar: UIView {
         }
         #endif
         return button
-    }
-}
-
-/// Custom view that combines UIBlurEffect with a gradient mask for liquid glass effect
-class GradientBlurEffectView: UIVisualEffectView {
-    private let gradientLayer = CAGradientLayer()
-
-    init(effect: UIBlurEffect, colors: [CGColor], locations: [NSNumber], startPoint: CGPoint, endPoint: CGPoint) {
-        super.init(effect: effect)
-
-        // Configure the gradient layer as a mask
-        gradientLayer.colors = colors
-        gradientLayer.locations = locations
-        gradientLayer.startPoint = startPoint
-        gradientLayer.endPoint = endPoint
-
-        // Use the gradient as a mask on the entire view instead of adding as sublayer
-        self.layer.mask = gradientLayer
-    }
-
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-
-    override func layoutSubviews() {
-        super.layoutSubviews()
-        gradientLayer.frame = self.bounds
     }
 }
 
