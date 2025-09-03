@@ -16,6 +16,7 @@ import XCTest
 @_spi(AppearanceAPIAdditionsPreview) @testable import StripePaymentSheet
 @_spi(STP)@testable import StripeUICore
 
+// @iOS26
 class PaymentSheetSnapshotTests: STPSnapshotTestCase {
 
     private let backendCheckoutUrl = URL(
