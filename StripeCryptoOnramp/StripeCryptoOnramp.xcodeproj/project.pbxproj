@@ -49,6 +49,9 @@
 		0BF41E8B2E3AB84800CA4171 /* IdType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BF41E8A2E3AB84800CA4171 /* IdType.swift */; };
 		490D4AAE2E552D6F00FAF4FF /* PlatformSettingsResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4907AF502E54B80000F0C49D /* PlatformSettingsResponse.swift */; };
 		490D4AC72E5541A600FAF4FF /* CreatePaymentTokenRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 490D4AC62E5541A600FAF4FF /* CreatePaymentTokenRequest.swift */; };
+		49B34BBB2E5D0ACC0067E44F /* Image.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49B34BBA2E5D0ACC0067E44F /* Image.swift */; };
+		49B7F6882E57988D0053C83B /* OnrampSessionResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49B7F6872E57988D0053C83B /* OnrampSessionResponse.swift */; };
+		49A11F432E5A295B002ECED5 /* AuthorizeResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49A11F422E5A295B002ECED5 /* AuthorizeResult.swift */; };
 		49D233A82E439EB900F51263 /* CryptoNetwork.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49D233A72E439EB900F51263 /* CryptoNetwork.swift */; };
 		49D233AA2E439FAA00F51263 /* RegisterWalletRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49D233A92E439FAA00F51263 /* RegisterWalletRequest.swift */; };
 		49D233AC2E439FB200F51263 /* RegisterWalletResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49D233AB2E439FB200F51263 /* RegisterWalletResponse.swift */; };
@@ -124,6 +127,9 @@
 		0BF41E8A2E3AB84800CA4171 /* IdType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IdType.swift; sourceTree = "<group>"; };
 		4907AF502E54B80000F0C49D /* PlatformSettingsResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlatformSettingsResponse.swift; sourceTree = "<group>"; };
 		490D4AC62E5541A600FAF4FF /* CreatePaymentTokenRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreatePaymentTokenRequest.swift; sourceTree = "<group>"; };
+		49B34BBA2E5D0ACC0067E44F /* Image.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Image.swift; sourceTree = "<group>"; };
+		49B7F6872E57988D0053C83B /* OnrampSessionResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnrampSessionResponse.swift; sourceTree = "<group>"; };
+		49A11F422E5A295B002ECED5 /* AuthorizeResult.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthorizeResult.swift; sourceTree = "<group>"; };
 		49D233A72E439EB900F51263 /* CryptoNetwork.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CryptoNetwork.swift; sourceTree = "<group>"; };
 		49D233A92E439FAA00F51263 /* RegisterWalletRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegisterWalletRequest.swift; sourceTree = "<group>"; };
 		49D233AB2E439FB200F51263 /* RegisterWalletResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegisterWalletResponse.swift; sourceTree = "<group>"; };
@@ -195,6 +201,7 @@
 				49D73DF22E4E499F00E35F1F /* StripeCryptoOnrampBundleLocator.swift */,
 				49D73DF42E4E49C300E35F1F /* STPLocalizedString+StripeCryptoOnramp.swift */,
 				49D73DF82E4E49EC00E35F1F /* String+Localized.swift */,
+				49B34BBA2E5D0ACC0067E44F /* Image.swift */,
 			);
 			path = Internal;
 			sourceTree = "<group>";
@@ -215,6 +222,7 @@
 				49D233A92E439FAA00F51263 /* RegisterWalletRequest.swift */,
 				49D233AB2E439FB200F51263 /* RegisterWalletResponse.swift */,
 				4907AF502E54B80000F0C49D /* PlatformSettingsResponse.swift */,
+				49B7F6872E57988D0053C83B /* OnrampSessionResponse.swift */,
 			);
 			path = "API Bindings";
 			sourceTree = "<group>";
@@ -298,6 +306,7 @@
 			isa = PBXGroup;
 			children = (
 				0B20053E2E318231008FCF8D /* AuthenticationResult.swift */,
+				49A11F422E5A295B002ECED5 /* AuthorizeResult.swift */,
 				0BED9B612E255BC2009FFF76 /* CryptoOnrampCoordinator.swift */,
 				0BF41E882E3AB82E00CA4171 /* KycInfo.swift */,
 				0BF41E8A2E3AB84800CA4171 /* IdType.swift */,
@@ -393,45 +402,42 @@
 			knownRegions = (
 				en,
 				Base,
-				"sk-SK",
-				nl,
-				ko,
-				de,
 				es,
-				th,
-				"pt-PT",
-				da,
-				"ro-RO",
 				"zh-Hans",
-				"cs-CZ",
-				id,
-				"ms-MY",
-				"et-EE",
-				vi,
-				hu,
-				ru,
-				"sl-SI",
-				"lv-LV",
-				sv,
 				"en-GB",
-				"zh-HK",
-				it,
-				"lt-LT",
-				"ca-ES",
-				"es-419",
 				"el-GR",
-				"fr-CA",
-				"pt-BR",
+				"ms-MY",
+				ru,
+				nl,
+				"es-419",
+				de,
 				fr,
-				fi,
-				hr,
-				fil,
 				ja,
+				"pt-PT",
+				sv,
+				"ca-ES",
+				"ro-RO",
+				"lv-LV",
+				"et-EE",
 				mt,
-				"pl-PL",
 				"bg-BG",
-				tr,
+				"lt-LT",
+				fi,
+				id,
+				"pl-PL",
+				hu,
+				"cs-CZ",
 				nb,
+				"sk-SK",
+				hr,
+				"sl-SI",
+				da,
+				ko,
+				"zh-HK",
+				tr,
+				th,
+				fil,
+				vi,
 			);
 			mainGroup = 0B42927B2E1EC57600012FB8;
 			minimizedProjectReferenceProxies = 1;
@@ -476,12 +482,14 @@
 			files = (
 				0BB716442E4A5BCC002F17B8 /* Address.swift in Sources */,
 				0B649EE22E4293AB00AFAFB1 /* IdentityVerificationResult.swift in Sources */,
+				49B7F6882E57988D0053C83B /* OnrampSessionResponse.swift in Sources */,
 				0B089E832E53B25A007D160E /* CreatePaymentTokenResponse.swift in Sources */,
 				0BED9B622E255BC2009FFF76 /* CryptoOnrampCoordinator.swift in Sources */,
 				49D233AA2E439FAA00F51263 /* RegisterWalletRequest.swift in Sources */,
 				0B63C98E2E4CF8CD005D8BD2 /* ApplePayPaymentStatus.swift in Sources */,
 				0BF41E892E3AB82E00CA4171 /* KycInfo.swift in Sources */,
 				0BA705082E4132640044B483 /* KYCDataCollectionResponse.swift in Sources */,
+				49B34BBB2E5D0ACC0067E44F /* Image.swift in Sources */,
 				49D233AC2E439FB200F51263 /* RegisterWalletResponse.swift in Sources */,
 				0B6DF34B2E297E0A008B1800 /* CustomerRequest.swift in Sources */,
 				0B089E692E5378F7007D160E /* PaymentMethodType.swift in Sources */,
@@ -493,6 +501,7 @@
 				0BA7050C2E413DA40044B483 /* Credentials.swift in Sources */,
 				0B83D9912E1EF6EF004F0115 /* Docs.docc in Sources */,
 				0B089E6D2E5392F1007D160E /* CheckoutResult.swift in Sources */,
+				49A11F432E5A295B002ECED5 /* AuthorizeResult.swift in Sources */,
 				0B6DF3492E296E41008B1800 /* STPAPIClient+CryptoOnramp.swift in Sources */,
 				49D73DF92E4E49EC00E35F1F /* String+Localized.swift in Sources */,
 				0B649EDE2E428F5A00AFAFB1 /* StartIdentityVerificationRequest.swift in Sources */,
