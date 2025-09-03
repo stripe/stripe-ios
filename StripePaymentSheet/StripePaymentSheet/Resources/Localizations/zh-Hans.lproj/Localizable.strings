@@ -128,6 +128,8 @@
 
 "Enter the code sent to %@ to use your saved information." = "输入发送到 %@ 的验证码来使用您保存的信息。";
 
+"Enter the code sent to %@." = "请输入发送至 %s 的验证码。";
+
 "FPX Bank" = "FPX 银行";
 
 "Failed to connect" = "连接失败";

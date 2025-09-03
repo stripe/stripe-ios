@@ -128,6 +128,8 @@
 
 "Enter the code sent to %@ to use your saved information." = "Skriv inn koden som ble sendt til %@ for å bruke den lagrede informasjonen.";
 
+"Enter the code sent to %@." = "Angi koden som er sendt til %s.";
+
 "FPX Bank" = "FPX Bank";
 
 "Failed to connect" = "Kunne ikke koble til";

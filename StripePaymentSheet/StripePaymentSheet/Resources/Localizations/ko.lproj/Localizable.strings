@@ -126,6 +126,8 @@
 
 "Enter the code sent to %@ to use your saved information." = "저장된 정보를 사용하려면 %@(으)로 보낸 코드를 입력하십시오.";
 
+"Enter the code sent to %@." = "%s번으로 보낸 코드를 입력해 주십시오.";
+
 "FPX Bank" = "FPX 은행";
 
 "Failed to connect" = "연결 실패";
