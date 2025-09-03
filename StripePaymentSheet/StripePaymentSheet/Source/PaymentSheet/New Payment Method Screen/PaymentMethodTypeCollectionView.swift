@@ -25,7 +25,9 @@ class PaymentMethodTypeCollectionView: UICollectionView {
 
     // MARK: - Constants
     internal static let paymentMethodLogoSize: CGSize = CGSize(width: UIView.noIntrinsicMetric, height: 12)
-    internal static let cellHeight: CGFloat = LiquidGlassDetector.isEnabled ? 64 : 52
+    internal static var cellHeight: CGFloat {
+        return LiquidGlassDetector.isEnabled ? 64 : 52
+    }
     internal static let minInteritemSpacing: CGFloat = 12
 
     let reuseIdentifier: String = "PaymentMethodTypeCollectionView.PaymentTypeCell"

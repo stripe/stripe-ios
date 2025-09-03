@@ -19,7 +19,9 @@ protocol SheetNavigationBarDelegate: AnyObject {
 /// For internal SDK use only
 @objc(STP_Internal_SheetNavigationBar)
 class SheetNavigationBar: UIView {
-    static let height: CGFloat = LiquidGlassDetector.isEnabled ? 76 : 52
+    static var height: CGFloat {
+        return LiquidGlassDetector.isEnabled ? 76 : 52
+    }
     weak var delegate: SheetNavigationBarDelegate?
     fileprivate lazy var leftItemsStackView: UIStackView = {
         let stack = UIStackView(arrangedSubviews: [dummyView, closeButtonLeft, backButton, testModeView])
