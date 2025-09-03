@@ -18,7 +18,7 @@ import UIKit
     @objc public var paymentMethod: String?
 
     /// Payment method details for the ConfirmationToken.
-    @objc public var paymentMethodData: STPPaymentMethodData?
+    @objc public var paymentMethodData: STPPaymentMethodParams?
 
     /// Payment-method-specific configuration for this ConfirmationToken.
     @objc public var paymentMethodOptions: STPPaymentMethodOptions?
