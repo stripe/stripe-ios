@@ -10,13 +10,13 @@ class IOS26TestPlanGeneratorV2
   end
 
   def generate
-    log_info "Starting iOS 26 test plan generation (v2)..."
+    log_info "Starting iOS 26 test plan generation..."
     
     # Find all files containing @iOS26
     annotated_files = find_annotated_files
     
     if annotated_files.empty?
-      log_warning "No files with @iOS26 annotations found"
+      log_info "No files with @iOS26 annotations found"
       return
     end
     
@@ -41,7 +41,8 @@ class IOS26TestPlanGeneratorV2
         files << path
       end
     rescue => e
-      log_warning "Could not read file #{path}: #{e.message}"
+      log_error "Could not read file #{path}: #{e.message}"
+      exit 1
     end
     
     files.sort
@@ -56,8 +57,8 @@ class IOS26TestPlanGeneratorV2
     # Determine target name from file path
     target_name = determine_test_target(file_path)
     unless target_name
-      log_info "  ↳ Could not determine test target for #{file_path}"
-      return
+      log_error "  ↳ Could not determine test target for #{file_path}"
+      exit 1
     end
     
     # Initialize target array if needed
@@ -71,9 +72,10 @@ class IOS26TestPlanGeneratorV2
       end
     end
 
-  rescue => e
-    log_warning "Could not process file #{file_path}: #{e.message}"
-  end
+    rescue => e
+      log_error "Could not process file #{file_path}: #{e.message}"
+      exit 1
+    end
 
   def process_ios26_annotation(lines, annotation_index, target_name, file_path)
     # Look ahead from the @iOS26 comment to find what it annotates
@@ -100,13 +102,15 @@ class IOS26TestPlanGeneratorV2
           log_info "    ↳ Method annotation: #{test_identifier}"
           @tests_by_target[target_name] << test_identifier
         else
-          log_warning "    ↳ Could not find class name for method #{method_name}"
+          log_error "    ↳ Could not find class name for method #{method_name}"
+          exit 1
         end
         break
       
       # If we hit something else that's not a comment or empty line, stop looking
       else
-        log_info "    ↳ @iOS26 not followed by class or test method: #{line}"
+        log_error "    ↳ @iOS26 not followed by class or test method: #{line}"
+        exit 1
         break
       end
     end
@@ -212,7 +216,7 @@ class IOS26TestPlanGeneratorV2
           end
         end
       else
-        log_warning "No @iOS26 tests found."
+        log_info "No @iOS26 tests found."
       end
     else
       log_error "Failed to write test plan file"
