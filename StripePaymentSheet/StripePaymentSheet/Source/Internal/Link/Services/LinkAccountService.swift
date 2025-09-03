@@ -205,7 +205,8 @@ final class LinkAccountService: LinkAccountServiceProtocol {
                         displayablePaymentDetails: session.displayablePaymentDetails,
                         apiClient: apiClient,
                         useMobileEndpoints: self.useMobileEndpoints,
-                        requestSurface: requestSurface
+                        requestSurface: requestSurface,
+                        createdFromAuthIntentID: true
                     )
                     let consentViewModel = LinkConsentViewModel(
                         email: session.consumerSession.emailAddress,
