@@ -19,7 +19,9 @@ protocol SheetNavigationBarDelegate: AnyObject {
 /// For internal SDK use only
 @objc(STP_Internal_SheetNavigationBar)
 class SheetNavigationBar: UIView {
-    static let height: CGFloat = LiquidGlassDetector.isEnabled ? 64 : 52
+    static var height: CGFloat {
+        return LiquidGlassDetector.isEnabled ? 76 : 52
+    }
     weak var delegate: SheetNavigationBarDelegate?
     fileprivate lazy var leftItemsStackView: UIStackView = {
         let stack = UIStackView(arrangedSubviews: [dummyView, closeButtonLeft, backButton, testModeView])
@@ -183,13 +185,17 @@ class SheetNavigationBar: UIView {
 
     func createBackButton() -> UIButton {
         let button = SheetNavigationButton(type: .custom)
-        button.setImage(Image.icon_chevron_left_standalone.makeImage(template: true), for: .normal)
+        let image = Image.icon_chevron_left_standalone.makeImage(template: true)
+        button.setImage(image, for: .normal)
         button.tintColor = appearance.colors.icon
         button.accessibilityLabel = String.Localized.back
         button.accessibilityIdentifier = "UIButton.Back"
         #if compiler(>=6.2)
         if #available(iOS 26.0, *),
            LiquidGlassDetector.isEnabled {
+            // Setting to 20x20 w/ glass results in a button that is sized to 44x44 with .glass()
+            let resizedImage = image.resized(to: CGSize(width: 20, height: 20))
+            button.setImage(resizedImage, for: .normal)
             button.configuration = .glass()
         }
         #endif
@@ -198,13 +204,17 @@ class SheetNavigationBar: UIView {
 
     func createCloseButton() -> UIButton {
         let button = SheetNavigationButton(type: .custom)
-        button.setImage(Image.icon_x_standalone.makeImage(template: true), for: .normal)
+        let image = Image.icon_x_standalone.makeImage(template: true)
+        button.setImage(image, for: .normal)
         button.tintColor = appearance.colors.icon
         button.accessibilityLabel = String.Localized.close
         button.accessibilityIdentifier = "UIButton.Close"
         #if compiler(>=6.2)
         if #available(iOS 26.0, *),
            LiquidGlassDetector.isEnabled{
+            // Setting to 20x20 w/ glass results in a button that is sized to 44x44 with .glass()
+            let resizedImage = image.resized(to: CGSize(width: 20, height: 20))
+            button.setImage(resizedImage, for: .normal)
             button.configuration = .glass()
         }
         #endif
