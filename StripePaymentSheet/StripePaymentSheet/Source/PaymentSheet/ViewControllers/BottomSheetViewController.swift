@@ -349,6 +349,7 @@ class BottomSheetViewController: UIViewController, BottomSheetPresentable {
                 scrollView.topAnchor.constraint(equalTo: navigationBarContainerView.bottomAnchor)
             ])
         }
+        #if compiler(>=6.2)
         // Allow content that is scrolled under the navigation bar to be blurred
         if #available(iOS 26.0, *),
            LiquidGlassDetector.isEnabled {
@@ -357,6 +358,7 @@ class BottomSheetViewController: UIViewController, BottomSheetPresentable {
                 interaction.edge = .top
                 navigationBarContainerView.addInteraction(interaction)
         }
+        #endif
 
         contentContainerView.translatesAutoresizingMaskIntoConstraints = false
         contentContainerView.directionalLayoutMargins = appearance.formInsets
