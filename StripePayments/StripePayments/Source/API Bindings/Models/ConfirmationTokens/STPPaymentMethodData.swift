@@ -2,7 +2,7 @@
 //  STPConfirmationTokenPaymentMethodData.swift
 //  StripePayments
 //
-//  Created by Nick Porter on 8/25/25.
+//  Created by Nick Porter on 9/2/25.
 //  Copyright © 2025 Stripe, Inc. All rights reserved.
 //
 
@@ -13,7 +13,7 @@ import UIKit
 /// An object representing payment method data used to create a ConfirmationToken object.
 /// This represents the `payment_method_data` field in the ConfirmationToken API.
 /// - seealso: https://stripe.com/docs/api/confirmation_tokens/create#create_confirmation_token-payment_method_data
-public class STPPaymentMethodData: NSObject, STPFormEncodable {
+@_spi(ConfirmationTokensPublicPreview) public class STPPaymentMethodData: NSObject, STPFormEncodable {
     private var _additionalAPIParameters: [AnyHashable: Any] = [:]
 
     /// The type of payment method.
@@ -236,7 +236,7 @@ public class STPPaymentMethodData: NSObject, STPFormEncodable {
     @objc public override var description: String {
         let props = [
             // Object
-            String(format: "%@: %p", NSStringFromClass(STPConfirmationTokenPaymentMethodData.self), self),
+            String(format: "%@: %p", NSStringFromClass(STPPaymentMethodData.self), self),
             // ConfirmationToken payment method data details
             "type = \(String(describing: type))",
             "billingDetails = \(String(describing: billingDetails))",

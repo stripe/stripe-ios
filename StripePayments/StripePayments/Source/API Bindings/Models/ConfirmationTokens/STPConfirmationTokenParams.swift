@@ -32,31 +32,8 @@ import UIKit
     /// Shipping information to include with the ConfirmationToken.
     @objc public var shipping: STPPaymentIntentShippingDetailsParams?
 
-    /// Convenience initializer for creating a ConfirmationToken with payment method data.
-    /// - Parameters:
-    ///   - paymentMethodData: Payment method details for the ConfirmationToken. Cannot be nil.
-    ///   - returnURL: Return URL for redirect-based payment methods. Can be nil.
-    @objc public convenience init(
-        paymentMethodData: STPPaymentMethodData,
-        returnURL: String? = nil
-    ) {
-        self.init()
-        self.paymentMethodData = paymentMethodData
-        self.returnURL = returnURL
-    }
-
-    /// Convenience initializer for creating a ConfirmationToken from existing PaymentMethodParams.
-    /// - Parameters:
-    ///   - paymentMethodParams: Existing payment method parameters to convert
-    ///   - returnURL: Return URL for redirect-based payment methods. Can be nil.
-    @objc public convenience init(
-        paymentMethodParams: STPPaymentMethodParams,
-        returnURL: String? = nil
-    ) {
-        self.init()
-        self.paymentMethodData = STPPaymentMethodData(from: paymentMethodParams)
-        self.returnURL = returnURL
-    }
+    /// Details about the Mandate to create.
+    @objc public var mandateData: STPMandateDataParams?
 
     /// :nodoc:
     @objc public override var description: String {
@@ -70,6 +47,7 @@ import UIKit
             "returnURL = \(returnURL ?? "")",
             "setupFutureUsage = \(String(describing: setupFutureUsage))",
             "shipping = \(String(describing: shipping))",
+            "mandateData = \(String(describing: mandateData))",
         ]
         return "<\(props.joined(separator: "; "))>"
     }
@@ -89,6 +67,7 @@ import UIKit
             NSStringFromSelector(#selector(getter: paymentMethodOptions)): "payment_method_options",
             NSStringFromSelector(#selector(getter: returnURL)): "return_url",
             NSStringFromSelector(#selector(getter: shipping)): "shipping",
+            NSStringFromSelector(#selector(getter: mandateData)): "mandate_data",
         ]
     }
 
