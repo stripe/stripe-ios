@@ -24,6 +24,7 @@ class STPConfirmationTokenParamsTest: XCTestCase {
         XCTAssertEqual(params.setupFutureUsage, STPPaymentIntentSetupFutureUsage.none)
         XCTAssertNil(params.shipping)
         XCTAssertNil(params.mandateData)
+        XCTAssertNil(params.setAsDefaultPM)
         XCTAssertNotNil(params.additionalAPIParameters)
         XCTAssertEqual(params.additionalAPIParameters.count, 0)
     }
@@ -72,6 +73,7 @@ class STPConfirmationTokenParamsTest: XCTestCase {
         XCTAssertTrue(description.contains("setupFutureUsage"))
         XCTAssertTrue(description.contains("shipping"))
         XCTAssertTrue(description.contains("mandateData"))
+        XCTAssertTrue(description.contains("setAsDefaultPM"))
     }
 
     func testDescriptionWithPopulatedProperties() {
@@ -119,6 +121,7 @@ class STPConfirmationTokenParamsTest: XCTestCase {
         XCTAssertEqual(mapping["returnURL"], "return_url")
         XCTAssertEqual(mapping["shipping"], "shipping")
         XCTAssertEqual(mapping["mandateData"], "mandate_data")
+        XCTAssertEqual(mapping["setAsDefaultPM"], "set_as_default_payment_method")
     }
 
     // MARK: - Individual Property Tests
@@ -188,6 +191,21 @@ class STPConfirmationTokenParamsTest: XCTestCase {
         XCTAssertNil(params.mandateData)
     }
 
+    func testSetAsDefaultPMProperty() {
+        let params = STPConfirmationTokenParams()
+
+        XCTAssertNil(params.setAsDefaultPM)
+
+        params.setAsDefaultPM = NSNumber(value: true)
+        XCTAssertEqual(params.setAsDefaultPM, NSNumber(value: true))
+
+        params.setAsDefaultPM = NSNumber(value: false)
+        XCTAssertEqual(params.setAsDefaultPM, NSNumber(value: false))
+
+        params.setAsDefaultPM = nil
+        XCTAssertNil(params.setAsDefaultPM)
+    }
+
     // MARK: - Additional API Parameters Tests
 
     func testAdditionalAPIParameters() {
@@ -213,6 +231,21 @@ class STPConfirmationTokenParamsTest: XCTestCase {
 
         let apiParams = params.additionalAPIParameters
         XCTAssertNil(apiParams["setup_future_usage"])
+    }
+
+    func testAdditionalAPIParametersWithSetAsDefaultPM() {
+        let params = STPConfirmationTokenParams()
+        params.setAsDefaultPM = NSNumber(value: true)
+
+        let apiParams = params.additionalAPIParameters
+        XCTAssertEqual(apiParams["set_as_default_payment_method"] as? NSNumber, NSNumber(value: true))
+    }
+
+    func testAdditionalAPIParametersWithoutSetAsDefaultPM() {
+        let params = STPConfirmationTokenParams()
+
+        let apiParams = params.additionalAPIParameters
+        XCTAssertNil(apiParams["set_as_default_payment_method"])
     }
 
     // MARK: - Form Encoding Integration Tests
@@ -248,6 +281,11 @@ class STPConfirmationTokenParamsTest: XCTestCase {
         XCTAssertEqual(encoded["return_url"] as? String, "https://example.com/return")
         XCTAssertEqual(encoded["setup_future_usage"] as? String, "on_session")
         XCTAssertNotNil(encoded["mandate_data"])
+
+        // Test with setAsDefaultPM
+        params.setAsDefaultPM = NSNumber(value: true)
+        let encodedWithDefault = STPFormEncoder.dictionary(forObject: params)
+        XCTAssertEqual(encodedWithDefault["set_as_default_payment_method"] as? NSNumber, NSNumber(value: true))
     }
 
     // MARK: - Real-World Usage Pattern Tests
@@ -277,12 +315,17 @@ class STPConfirmationTokenParamsTest: XCTestCase {
         XCTAssertNotNil(params.shipping)
         XCTAssertEqual(params.setupFutureUsage, STPPaymentIntentSetupFutureUsage.offSession)
 
+        // Add setAsDefaultPM
+        params.setAsDefaultPM = NSNumber(value: true)
+        XCTAssertNotNil(params.setAsDefaultPM)
+
         // Verify form encoding works
         let encoded = STPFormEncoder.dictionary(forObject: params)
         XCTAssertNotNil(encoded["payment_method_data"])
         XCTAssertNotNil(encoded["mandate_data"])
         XCTAssertNotNil(encoded["shipping"])
         XCTAssertEqual(encoded["setup_future_usage"] as? String, "off_session")
+        XCTAssertEqual(encoded["set_as_default_payment_method"] as? NSNumber, NSNumber(value: true))
     }
 
     func testPropertyMutationAfterInit() {
@@ -340,5 +383,8 @@ class STPConfirmationTokenParamsTest: XCTestCase {
 
         // setup_future_usage should not be present when .none
         XCTAssertNil(encoded["setup_future_usage"])
+
+        // set_as_default_payment_method should not be present when nil
+        XCTAssertNil(encoded["set_as_default_payment_method"])
     }
 }

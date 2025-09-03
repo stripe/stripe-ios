@@ -33,6 +33,10 @@ import Foundation
     /// Details about the Mandate to create.
     @objc public var mandateData: STPMandateDataParams?
 
+    /// `@YES` to set this ConfirmationToken's PaymentMethod as the associated Customer's default
+    /// This should be a boolean NSNumber, so that it can be `nil`
+    @objc @_spi(STP) public var setAsDefaultPM: NSNumber?
+
     /// :nodoc:
     @objc public override var description: String {
         let props = [
@@ -46,6 +50,7 @@ import Foundation
             "setupFutureUsage = \(String(describing: setupFutureUsage))",
             "shipping = \(String(describing: shipping))",
             "mandateData = \(String(describing: mandateData))",
+            "setAsDefaultPM = \(String(describing: setAsDefaultPM))",
         ]
         return "<\(props.joined(separator: "; "))>"
     }
@@ -66,6 +71,7 @@ import Foundation
             NSStringFromSelector(#selector(getter: returnURL)): "return_url",
             NSStringFromSelector(#selector(getter: shipping)): "shipping",
             NSStringFromSelector(#selector(getter: mandateData)): "mandate_data",
+            NSStringFromSelector(#selector(getter: setAsDefaultPM)): "set_as_default_payment_method",
         ]
     }
 
@@ -75,6 +81,10 @@ import Foundation
             // Only include setup_future_usage if it has a valid string value (not .none or .unknown)
             if let stringValue = setupFutureUsage.stringValue {
                 params["setup_future_usage"] = stringValue
+            }
+            // Only include set_as_default_payment_method if it has a value
+            if let setAsDefault = setAsDefaultPM {
+                params["set_as_default_payment_method"] = setAsDefault
             }
             return params
         }
