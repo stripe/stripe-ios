@@ -1130,13 +1130,12 @@ class PaymentSheetSnapshotTests: STPSnapshotTestCase {
         let vc = UIViewController()
         let navController = UINavigationController(rootViewController: vc)
         let window = UIWindow(frame: CGRect(x: 0, y: 0, width: 428, height: 1026))
-        window.isHidden = false
+        window.isHidden = false // Without this line PaymentSheet is rendered too tall; unclear why since `false` is the default
         if darkMode {
             window.overrideUserInterfaceStyle = .dark
         }
         window.rootViewController = navController
         window.layoutIfNeeded() // unclear why but w/o this vc.view.window is nil
-        window.makeKeyAndVisible()
 
         // Wait a turn of the runloop for the RVC to attach to the window, then present PaymentSheet
         DispatchQueue.main.async {
@@ -1156,14 +1155,7 @@ class PaymentSheetSnapshotTests: STPSnapshotTestCase {
         let loadFinishedExpectation = XCTestExpectation(description: "Load finished")
         func pollForLoadingFinished() {
             if !(paymentSheet.bottomSheetViewController.contentStack.first is LoadingViewController) {
-                DispatchQueue.main.asyncAfter(deadline: .now() + 0.1)  {
-                    self.paymentSheet.bottomSheetViewController.presentationController!.overrideTraitCollection = UITraitCollection(
-                        preferredContentSizeCategory: preferredContentSizeCategory
-                    )
-                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.1)  {
-                        loadFinishedExpectation.fulfill()
-                    }
-                }
+                loadFinishedExpectation.fulfill()
             } else {
                 DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) { [weak self] in
                     guard self != nil else { return }
@@ -1173,6 +1165,9 @@ class PaymentSheetSnapshotTests: STPSnapshotTestCase {
         }
         pollForLoadingFinished()
         wait(for: [loadFinishedExpectation], timeout: 5)
+        paymentSheet.bottomSheetViewController.presentationController!.overrideTraitCollection = UITraitCollection(
+            preferredContentSizeCategory: preferredContentSizeCategory
+        )
     }
 
     private func sleepInBackground(numSeconds: TimeInterval) {
