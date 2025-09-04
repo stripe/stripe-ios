@@ -85,8 +85,8 @@ class STPAPIClientConfirmationTokensTest: XCTestCase {
     }
 
     func testCreateConfirmationTokenWithCustomer() async throws {
-        // Create a customer and ephemeral key
-        let customerAndEphemeralKey = try await STPTestingAPIClient.shared().fetchCustomerAndEphemeralKey(
+        // Create a customer and customer session
+        let customerAndCustomerSession = try await STPTestingAPIClient.shared().fetchCustomerAndCustomerSessionClientSecret(
             customerID: nil,
             merchantCountry: "us"
         )
@@ -110,10 +110,10 @@ class STPAPIClientConfirmationTokensTest: XCTestCase {
         confirmationTokenParams.returnURL = "https://example.com/return"
         confirmationTokenParams.setupFutureUsage = .offSession
 
-        // Test with ephemeral key
+        // Test with customer session
         let confirmationToken = try await apiClient.createConfirmationToken(
             with: confirmationTokenParams,
-            ephemeralKeySecret: customerAndEphemeralKey.ephemeralKeySecret
+            ephemeralKeySecret: customerAndCustomerSession.customerSessionClientSecret
         )
 
         // Verify the response
@@ -206,8 +206,8 @@ class STPAPIClientConfirmationTokensTest: XCTestCase {
     }
 
     func testCreateConfirmationTokenWithAttachedPaymentMethod() async throws {
-        // Create a new EK for the Customer
-        let customerAndEphemeralKey = try await STPTestingAPIClient.shared().fetchCustomerAndEphemeralKey(
+        // Create a new customer session for the Customer
+        let customerAndCustomerSession = try await STPTestingAPIClient.shared().fetchCustomerAndCustomerSessionClientSecret(
             customerID: nil,
             merchantCountry: "us"
         )
@@ -230,8 +230,8 @@ class STPAPIClientConfirmationTokensTest: XCTestCase {
         // Attach the payment method to the customer
         try await apiClient.attachPaymentMethod(
             paymentMethod.stripeId,
-            customerID: customerAndEphemeralKey.customer,
-            ephemeralKeySecret: customerAndEphemeralKey.ephemeralKeySecret
+            customerID: customerAndCustomerSession.customer,
+            ephemeralKeySecret: customerAndCustomerSession.customerSessionClientSecret
         )
         
         // Create confirmation token with attached payment method
@@ -242,7 +242,7 @@ class STPAPIClientConfirmationTokensTest: XCTestCase {
         
         let confirmationToken = try await apiClient.createConfirmationToken(
             with: confirmationTokenParams,
-            ephemeralKeySecret: customerAndEphemeralKey.ephemeralKeySecret
+            ephemeralKeySecret: customerAndCustomerSession.customerSessionClientSecret
         )
         
         // Verify the response
@@ -254,13 +254,13 @@ class STPAPIClientConfirmationTokensTest: XCTestCase {
         // Clean up: detach the payment method from the customer
         try await apiClient.detachPaymentMethod(
             paymentMethod.stripeId,
-            fromCustomerUsing: customerAndEphemeralKey.ephemeralKeySecret
+            fromCustomerUsing: customerAndCustomerSession.customerSessionClientSecret
         )
     }
 
     func testCreateConfirmationTokenWithSetAsDefaultPaymentMethod() async throws {
-        // Create a new customer and ephemeral key
-        let customerAndEphemeralKey = try await STPTestingAPIClient.shared().fetchCustomerAndEphemeralKey(
+        // Create a new customer and customer session
+        let customerAndCustomerSession = try await STPTestingAPIClient.shared().fetchCustomerAndCustomerSessionClientSecret(
             customerID: nil,
             merchantCountry: "us"
         )
@@ -285,10 +285,10 @@ class STPAPIClientConfirmationTokensTest: XCTestCase {
         confirmationTokenParams.setupFutureUsage = .offSession
         confirmationTokenParams.setAsDefaultPM = NSNumber(value: true)
         
-        // Create confirmation token with ephemeral key
+        // Create confirmation token with customer session
         let confirmationToken = try await apiClient.createConfirmationToken(
             with: confirmationTokenParams,
-            ephemeralKeySecret: customerAndEphemeralKey.ephemeralKeySecret
+            ephemeralKeySecret: customerAndCustomerSession.customerSessionClientSecret
         )
         
         // Verify the response
