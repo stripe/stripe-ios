@@ -208,16 +208,15 @@ extension STPElementsSession: STPAPIResponseDecodable {
         }()
 
         let passiveCaptcha: PassiveCaptcha? = {
-            return PassiveCaptcha(siteKey: "143aadb6-fb60-4ab6-b128-f7fe53426d4a", rqdata: nil)
-//            let enablePassiveCaptcha = flags["elements_enable_passive_captcha"] ?? false
-//            let passiveCaptchaKey = "passive_captcha"
-//            guard enablePassiveCaptcha,
-//                  let passiveCaptchaJSON = response[passiveCaptchaKey] as? [AnyHashable: Any],
-//                  let passiveCaptcha = PassiveCaptcha.decoded(fromAPIResponse: passiveCaptchaJSON)
-//            else {
-//                return nil
-//            }
-//            return passiveCaptcha
+            let enablePassiveCaptcha = flags["elements_enable_passive_captcha"] ?? false
+            let passiveCaptchaKey = "passive_captcha"
+            guard enablePassiveCaptcha,
+                  let passiveCaptchaJSON = response[passiveCaptchaKey] as? [AnyHashable: Any],
+                  let passiveCaptcha = PassiveCaptcha.decoded(fromAPIResponse: passiveCaptchaJSON)
+            else {
+                return nil
+            }
+            return passiveCaptcha
         }()
 
         let customPaymentMethods: [CustomPaymentMethod] = {
