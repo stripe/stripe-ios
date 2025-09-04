@@ -900,7 +900,8 @@ extension FinancialConnectionsAsyncAPIClient {
         paymentDetailsId: String,
         expectedPaymentMethodType: String,
         billingEmail: String?,
-        billingPhone: String?
+        billingPhone: String?,
+        allowRedisplay: String?
     ) async throws -> FinancialConnectionsSharePaymentDetails {
         var parameters: [String: Any] = [
             "request_surface": requestSurface,
@@ -920,6 +921,10 @@ extension FinancialConnectionsAsyncAPIClient {
             parameters["billing_phone"] = billingPhone
         }
 
+        if let allowRedisplay {
+            parameters["allow_redisplay"] = allowRedisplay
+        }
+
         let parametersWithFraudDetection = await updateAndApplyFraudDetection(to: parameters)
         return try await post(endpoint: .sharePaymentDetails, parameters: parametersWithFraudDetection)
     }
@@ -927,7 +932,8 @@ extension FinancialConnectionsAsyncAPIClient {
     func paymentMethods(
         consumerSessionClientSecret: String,
         paymentDetailsId: String,
-        billingDetails: ElementsSessionContext.BillingDetails?
+        billingDetails: ElementsSessionContext.BillingDetails?,
+        allowRedisplay: String?
     ) async throws -> LinkBankPaymentMethod {
         var parameters: [String: Any] = [
             "link": [
@@ -942,6 +948,10 @@ extension FinancialConnectionsAsyncAPIClient {
         if let billingDetails {
             let encodedBillingAddress = try Self.encodeAsParameters(billingDetails)
             parameters["billing_details"] = encodedBillingAddress
+        }
+
+        if let allowRedisplay {
+            parameters["allow_redisplay"] = allowRedisplay
         }
 
         let parametersWithFraudDetection = await updateAndApplyFraudDetection(to: parameters)

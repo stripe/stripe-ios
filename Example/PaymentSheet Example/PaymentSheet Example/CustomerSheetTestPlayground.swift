@@ -11,6 +11,7 @@ import Contacts
 import Foundation
 import PassKit
 import StripePaymentSheet
+@_spi(STP) import StripeUICore
 import SwiftUI
 import UIKit
 
@@ -72,6 +73,7 @@ struct CustomerSheetTestPlayground: View {
                         SettingView(setting: $playgroundController.settings.defaultBillingAddress)
                         SettingView(setting: $playgroundController.settings.preferredNetworksEnabled)
                         SettingView(setting: $playgroundController.settings.cardBrandAcceptance)
+                        SettingView(setting: enableiOS26ChangesBinding)
                         SettingView(setting: $playgroundController.settings.autoreload)
                         TextField("headerTextForSelectionScreen", text: headerTextForSelectionScreenBinding)
                         SettingView(setting: $playgroundController.settings.allowsRemovalOfLastSavedPaymentMethod)
@@ -108,6 +110,16 @@ struct CustomerSheetTestPlayground: View {
                 .environmentObject(playgroundController)
         }
     }
+    var enableiOS26ChangesBinding: Binding<CustomerSheetTestPlaygroundSettings.EnableIOS26Changes> {
+        Binding<CustomerSheetTestPlaygroundSettings.EnableIOS26Changes> {
+            return playgroundController.settings.enableIOS26Changes
+        } set: { newValue in
+            LiquidGlassDetector.allowNewDesign = newValue == .on
+            playgroundController.appearance = PaymentSheet.Appearance()
+            playgroundController.settings.enableIOS26Changes = newValue
+        }
+    }
+
     var customerKeyTypeBinding: Binding<CustomerSheetTestPlaygroundSettings.CustomerKeyType> {
         Binding<CustomerSheetTestPlaygroundSettings.CustomerKeyType> {
             return playgroundController.settings.customerKeyType

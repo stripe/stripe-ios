@@ -25,7 +25,11 @@
             "payment_method": "link_instant_debits",
         },
         "incentive_display_text": "$5",
-    }
+    },
+    "link_supported_payment_methods_onboarding_enabled": [
+        "CARD",
+        "INSTANT_DEBITS",
+    ]
   },
   "merchant_country": "US",
   "merchant_currency": "usd",

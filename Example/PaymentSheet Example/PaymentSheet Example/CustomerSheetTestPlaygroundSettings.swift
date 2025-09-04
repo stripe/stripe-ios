@@ -155,6 +155,13 @@ public struct CustomerSheetTestPlaygroundSettings: Codable, Equatable {
         case allowVisa
     }
 
+    enum EnableIOS26Changes: String, PickerEnum {
+        static var enumName: String { "Enable iOS26 changes" }
+
+        case on
+        case off
+    }
+
     enum OpensCardScannerAutomatically: String, PickerEnum {
         static let enumName: String = "opensCardScannerAutomatically"
         case on
@@ -168,6 +175,7 @@ public struct CustomerSheetTestPlaygroundSettings: Codable, Equatable {
     var applePay: ApplePay
     var headerTextForSelectionScreen: String?
     var defaultBillingAddress: DefaultBillingAddress
+    var enableIOS26Changes: EnableIOS26Changes
     var autoreload: Autoreload
 
     var attachDefaults: BillingDetailsAttachDefaults
@@ -193,6 +201,7 @@ public struct CustomerSheetTestPlaygroundSettings: Codable, Equatable {
                                                    applePay: .on,
                                                    headerTextForSelectionScreen: nil,
                                                    defaultBillingAddress: .off,
+                                                   enableIOS26Changes: .off,
                                                    autoreload: .on,
                                                    attachDefaults: .off,
                                                    collectName: .automatic,
