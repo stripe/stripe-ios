@@ -1501,18 +1501,15 @@ extension STPAPIClient {
     /// - seealso: https://stripe.com/docs/api/confirmation_tokens/create
     /// - Parameters:
     ///   - confirmationTokenParams:  The `STPConfirmationTokenParams` to pass to `/v1/confirmation_tokens`.  Cannot be nil.
-    ///   - additionalPaymentUserAgentValues: Additional payment user agent values to send with the request.
     ///   - ephemeralKeySecret: The ephemeral key secret to use for authentication if working with customer-scoped objects.
     /// - Returns: The created ConfirmationToken object.
     @_spi(ConfirmationTokensPublicPreview) public func createConfirmationToken(
         with confirmationTokenParams: STPConfirmationTokenParams,
-        additionalPaymentUserAgentValues: [String] = [],
         ephemeralKeySecret: String? = nil
     ) async throws -> STPConfirmationToken {
         return try await withCheckedThrowingContinuation { continuation in
             createConfirmationToken(
                 with: confirmationTokenParams,
-                additionalPaymentUserAgentValues: additionalPaymentUserAgentValues,
                 ephemeralKeySecret: ephemeralKeySecret
             ) { confirmationToken, error in
                 guard let confirmationToken = confirmationToken else {
@@ -1526,7 +1523,6 @@ extension STPAPIClient {
 
     func createConfirmationToken(
         with confirmationTokenParams: STPConfirmationTokenParams,
-        additionalPaymentUserAgentValues: [String] = [],
         ephemeralKeySecret: String? = nil,
         completion: @escaping STPConfirmationTokenCompletionBlock
     ) {
