@@ -7,6 +7,7 @@
 
 @testable@_spi(STP) import StripeCore
 @testable@_spi(STP)@_spi(ConfirmationTokensPublicPreview) import StripePayments
+@testable @_spi(STP) @_spi(CustomerSessionBetaAccess) import StripePaymentSheet
 @testable import StripePaymentsTestUtils
 import XCTest
 
@@ -90,6 +91,27 @@ class STPAPIClientConfirmationTokensTest: XCTestCase {
             customerID: nil,
             merchantCountry: "us"
         )
+        
+        // Get elements session to access the ephemeral key
+        var configuration = PaymentSheet.Configuration()
+        configuration.customer = PaymentSheet.CustomerConfiguration(
+            id: customerAndCustomerSession.customer,
+            customerSessionClientSecret: customerAndCustomerSession.customerSessionClientSecret
+        )
+        let elementsSession = try await apiClient.retrieveDeferredElementsSession(
+            withIntentConfig: .init(mode: .setup(currency: "usd", setupFutureUsage: .offSession),
+                                    confirmHandler: { _, _, _ in
+                                        // no-op
+                                    }),
+            clientDefaultPaymentMethod: nil,
+            configuration: configuration
+        )
+        
+        // Get ephemeral key from customer session
+        guard let ephemeralKey = elementsSession.customer?.customerSession.apiKey else {
+            XCTFail("Failed to get ephemeral key from customer session")
+            return
+        }
 
         // Create payment method params
         let cardParams = STPPaymentMethodCardParams()
@@ -110,10 +132,10 @@ class STPAPIClientConfirmationTokensTest: XCTestCase {
         confirmationTokenParams.returnURL = "https://example.com/return"
         confirmationTokenParams.setupFutureUsage = .offSession
 
-        // Test with customer session
+        // Test with customer session ephemeral key
         let confirmationToken = try await apiClient.createConfirmationToken(
             with: confirmationTokenParams,
-            ephemeralKeySecret: customerAndCustomerSession.customerSessionClientSecret
+            ephemeralKeySecret: ephemeralKey
         )
 
         // Verify the response
@@ -209,8 +231,30 @@ class STPAPIClientConfirmationTokensTest: XCTestCase {
         // Create a new customer session for the Customer
         let customerAndCustomerSession = try await STPTestingAPIClient.shared().fetchCustomerAndCustomerSessionClientSecret(
             customerID: nil,
-            merchantCountry: "us"
+            merchantCountry: "us",
+            paymentMethodSave: true
         )
+        
+        // Get elements session to access the ephemeral key
+        var configuration = PaymentSheet.Configuration()
+        configuration.customer = PaymentSheet.CustomerConfiguration(
+            id: customerAndCustomerSession.customer,
+            customerSessionClientSecret: customerAndCustomerSession.customerSessionClientSecret
+        )
+        let elementsSession = try await apiClient.retrieveDeferredElementsSession(
+            withIntentConfig: .init(mode: .setup(currency: "usd", setupFutureUsage: .offSession),
+                                    confirmHandler: { _, _, _ in
+                                        // no-op
+                                    }),
+            clientDefaultPaymentMethod: nil,
+            configuration: configuration
+        )
+        
+        // Get ephemeral key from customer session
+        guard let ephemeralKey = elementsSession.customer?.customerSession.apiKey else {
+            XCTFail("Failed to get ephemeral key from customer session")
+            return
+        }
         
         // Create a new payment method
         let cardParams = STPPaymentMethodCardParams()
@@ -231,7 +275,7 @@ class STPAPIClientConfirmationTokensTest: XCTestCase {
         try await apiClient.attachPaymentMethod(
             paymentMethod.stripeId,
             customerID: customerAndCustomerSession.customer,
-            ephemeralKeySecret: customerAndCustomerSession.customerSessionClientSecret
+            ephemeralKeySecret: ephemeralKey
         )
         
         // Create confirmation token with attached payment method
@@ -242,7 +286,7 @@ class STPAPIClientConfirmationTokensTest: XCTestCase {
         
         let confirmationToken = try await apiClient.createConfirmationToken(
             with: confirmationTokenParams,
-            ephemeralKeySecret: customerAndCustomerSession.customerSessionClientSecret
+            ephemeralKeySecret: ephemeralKey
         )
         
         // Verify the response
@@ -254,7 +298,8 @@ class STPAPIClientConfirmationTokensTest: XCTestCase {
         // Clean up: detach the payment method from the customer
         try await apiClient.detachPaymentMethod(
             paymentMethod.stripeId,
-            fromCustomerUsing: customerAndCustomerSession.customerSessionClientSecret
+            fromCustomerUsing: ephemeralKey,
+            withCustomerSessionClientSecret: customerAndCustomerSession.customerSessionClientSecret
         )
     }
 
@@ -262,8 +307,30 @@ class STPAPIClientConfirmationTokensTest: XCTestCase {
         // Create a new customer and customer session
         let customerAndCustomerSession = try await STPTestingAPIClient.shared().fetchCustomerAndCustomerSessionClientSecret(
             customerID: nil,
-            merchantCountry: "us"
+            merchantCountry: "us",
+            paymentMethodSave: true, paymentMethodSetAsDefault: true
         )
+        
+        // Get elements session to access the ephemeral key
+        var configuration = PaymentSheet.Configuration()
+        configuration.customer = PaymentSheet.CustomerConfiguration(
+            id: customerAndCustomerSession.customer,
+            customerSessionClientSecret: customerAndCustomerSession.customerSessionClientSecret
+        )
+        let elementsSession = try await apiClient.retrieveDeferredElementsSession(
+            withIntentConfig: .init(mode: .setup(currency: "usd", setupFutureUsage: .offSession),
+                                    confirmHandler: { _, _, _ in
+                                        // no-op
+                                    }),
+            clientDefaultPaymentMethod: nil,
+            configuration: configuration
+        )
+        
+        // Get ephemeral key from customer session
+        guard let ephemeralKey = elementsSession.customer?.customerSession.apiKey else {
+            XCTFail("Failed to get ephemeral key from customer session")
+            return
+        }
         
         // Create payment method params
         let cardParams = STPPaymentMethodCardParams()
@@ -285,10 +352,10 @@ class STPAPIClientConfirmationTokensTest: XCTestCase {
         confirmationTokenParams.setupFutureUsage = .offSession
         confirmationTokenParams.setAsDefaultPM = NSNumber(value: true)
         
-        // Create confirmation token with customer session
+        // Create confirmation token with customer session ephemeral key
         let confirmationToken = try await apiClient.createConfirmationToken(
             with: confirmationTokenParams,
-            ephemeralKeySecret: customerAndCustomerSession.customerSessionClientSecret
+            ephemeralKeySecret: ephemeralKey
         )
         
         // Verify the response
