@@ -38,7 +38,7 @@ class RemoveButton: UIButton {
         let font = appearance.primaryButton.font ?? appearance.scaledFont(for: appearance.font.base.medium, style: .callout, maximumPointSize: 25)
         if LiquidGlassDetector.isEnabled, #available(iOS 15.0, *) { // iOS 15 available check is redundant but makes compiler happy 🤠
             ios26_applyCapsuleCornerConfiguration()
-            
+
             var config = UIButton.Configuration.plain()
             config.baseBackgroundColor = .clear
             let strokeWidth = appearance.selectedBorderWidth ?? appearance.borderWidth * 1.5
