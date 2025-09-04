@@ -128,8 +128,8 @@ final class UpdatePaymentMethodViewController: UIViewController {
         return button
     }()
 
-    private lazy var removeButton: NewRemoveButton = {
-        let button = NewRemoveButton(title: .Localized.remove, appearance: configuration.appearance)
+    private lazy var removeButton: RemoveButton = {
+        let button = RemoveButton(title: .Localized.remove, appearance: configuration.appearance)
         button.addTarget(self, action: #selector(removePaymentMethod), for: .touchUpInside)
         button.isHidden = !configuration.canRemove
         return button
