@@ -10,6 +10,7 @@
 //
 
 @_spi(STP) import StripeCore
+@_spi(STP) import StripeUICore
 import SwiftUI
 
 extension View {
@@ -277,7 +278,7 @@ extension PaymentSheet {
                     case (false, false):
                         break
                     case (false, true):
-                        guard let viewController = findViewController(for: view) else {
+                        guard let viewController = view.findViewController() else {
                             parent.presented = false
                             return
                         }
@@ -300,7 +301,7 @@ extension PaymentSheet {
             }
 
             func presentPaymentSheet(on controller: UIViewController) {
-                let presenter = findViewControllerPresenter(from: controller)
+                let presenter = controller.findViewControllerPresenter()
 
                 parent.paymentSheet?.present(from: presenter) { (result: PaymentSheetResult) in
                     self.parent.presented = false
@@ -343,7 +344,7 @@ extension PaymentSheet {
                     case (false, false):
                         break
                     case (false, true):
-                        guard let viewController = findViewController(for: view) else {
+                        guard let viewController = view.findViewController() else {
                             parent.presented = false
                             return
                         }
@@ -366,7 +367,7 @@ extension PaymentSheet {
             }
 
             func presentPaymentSheet(on controller: UIViewController) {
-                let presenter = findViewControllerPresenter(from: controller)
+                let presenter = controller.findViewControllerPresenter()
 
                 switch parent.action {
                 case .confirm:
@@ -435,49 +436,6 @@ extension PaymentSheet {
             )
         }
     }
-}
-
-// MARK: - Helper functions
-
-func findViewControllerPresenter(from uiViewController: UIViewController) -> UIViewController {
-    // Note: creating a UIViewController inside here results in a nil window
-
-    // This is a bit of a hack: We traverse the view hierarchy looking for the most reasonable VC to present from.
-    // A VC hosted within a SwiftUI cell, for example, doesn't have a parent, so we need to find the UIWindow.
-    var presentingViewController: UIViewController =
-        uiViewController.view.window?.rootViewController ?? uiViewController
-
-    // Find the most-presented UIViewController
-    while let presented = presentingViewController.presentedViewController {
-        presentingViewController = presented
-    }
-
-    return presentingViewController
-}
-
-func findViewController(for uiView: UIView) -> UIViewController? {
-    if let nextResponder = uiView.next as? UIViewController {
-        return nextResponder
-    } else if let nextResponder = uiView.next as? UIView {
-        return findViewController(for: nextResponder)
-    } else {
-        // Can't find a view, attempt to grab the top most view controller
-        return topMostViewController()
-    }
-}
-
-func topMostViewController() -> UIViewController? {
-    guard let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
-          let window = windowScene.windows.first(where: { $0.isKeyWindow }) else { return nil }
-
-    var topController: UIViewController? = window.rootViewController
-
-    // Traverse presented view controllers to find the top most view controller
-    while let presentedViewController = topController?.presentedViewController {
-        topController = presentedViewController
-    }
-
-    return topController
 }
 
 // Helper class to track SwiftUI usage
