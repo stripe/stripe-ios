@@ -128,6 +128,8 @@
 
 "Enter the code sent to %@ to use your saved information." = "Norėdami naudoti savo išsaugotą informaciją, įveskite %@ gautą kodą.";
 
+"Enter the code sent to %@." = "Įveskite kodą, išsiųstą %s.";
+
 "FPX Bank" = "FPX bankas";
 
 "Failed to connect" = "Nepavyko prisijungti";

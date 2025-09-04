@@ -76,6 +76,7 @@ struct LinkPMDisplayDetails {
 
     let useMobileEndpoints: Bool
     let requestSurface: LinkRequestSurface
+    let createdFromAuthIntentID: Bool
 
     /// Publishable key of the Consumer Account.
     private(set) var publishableKey: String?
@@ -132,7 +133,8 @@ struct LinkPMDisplayDetails {
         apiClient: STPAPIClient = .shared,
         cookieStore: LinkCookieStore = LinkSecureCookieStore.shared,
         useMobileEndpoints: Bool,
-        requestSurface: LinkRequestSurface = .default
+        requestSurface: LinkRequestSurface = .default,
+        createdFromAuthIntentID: Bool = false
     ) {
         self.email = email
         self.currentSession = session
@@ -142,6 +144,7 @@ struct LinkPMDisplayDetails {
         self.cookieStore = cookieStore
         self.useMobileEndpoints = useMobileEndpoints
         self.requestSurface = requestSurface
+        self.createdFromAuthIntentID = createdFromAuthIntentID
     }
 
     func signUp(
@@ -549,7 +552,7 @@ private extension PaymentSheetLinkAccount {
             case .success:
                 completion(result)
             case .failure(let error as NSError):
-                if error.isLinkAuthError && shouldRetry {
+                if error.isLinkAuthError && shouldRetry && self?.createdFromAuthIntentID != true {
                     self?.refreshSession { refreshSessionResult in
                         switch refreshSessionResult {
                         case .success(let refreshedSession):

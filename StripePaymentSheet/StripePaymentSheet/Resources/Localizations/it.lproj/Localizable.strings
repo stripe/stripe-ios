@@ -128,6 +128,8 @@
 
 "Enter the code sent to %@ to use your saved information." = "Inserisci il codice inviato a %@ per utilizzare i tuoi dati salvati.";
 
+"Enter the code sent to %@." = "Inserisci il codice inviato al numero %s.";
+
 "FPX Bank" = "Banca FBX";
 
 "Failed to connect" = "Connessione non riuscita";

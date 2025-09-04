@@ -116,6 +116,8 @@
 
 "Enter the code sent to %@ to use your saved information." = "輸入發送到 %@ 的驗證碼來使用您儲存的資訊。";
 
+"Enter the code sent to %@." = "請輸入傳送至 %s 的驗證碼。";
+
 "FPX Bank" = "FPX Bank";
 
 "Failed to connect" = "連接失敗";
