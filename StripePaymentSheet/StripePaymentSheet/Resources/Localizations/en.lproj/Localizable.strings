@@ -191,7 +191,7 @@ to be saved and used in future checkout sessions. */
 "Enter address manually" = "Enter address manually";
 
 /* Instructs the user to enter the code sent to their phone number in order to login to Link */
-"Enter the code sent to %@ to use your saved information." = "Enter the code sent to %@ to use your saved information.";
+"Enter the code sent to %@." = "Enter the code sent to %@.";
 
 /* Label title for EPS Bank */
 "EPS Bank" = "EPS Bank";

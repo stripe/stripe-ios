@@ -128,6 +128,8 @@
 
 "Enter the code sent to %@ to use your saved information." = "Ievadiet kodu, kas tika nosūtīts uz %@, lai izmantotu jūsu saglabāto informāciju.";
 
+"Enter the code sent to %@." = "Ievadiet kodu, kas nosūtīts uz %s.";
+
 "FPX Bank" = "FPX banka";
 
 "Failed to connect" = "Neizdevās izveidot savienojumu";
