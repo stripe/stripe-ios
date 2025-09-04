@@ -88,19 +88,25 @@ class RemoveButton: UIView {
     }
 
     private func setupBackgroundColors() {
+        // This is a liquid glass only style
         guard LiquidGlassDetector.isEnabled else { return }
 
         // We create a translucent mask to place on top of the background color
         // This allows us to dynamically generate an appropriate fill color
         //    based on the Appearance API without requiring new values
         // In the future we should consider adding a new Appearance API value
-        let backgroundBaseColor = UIColor.dynamic(light: appearance.colors.background, dark: appearance.colors.danger)
-        let colorMaskForLight = UIColor.black.withAlphaComponent(0.08)
-        let colorMaskForDark = appearance.colors.background.withAlphaComponent(0.85)
-        let maskColor = UIColor.dynamic(light: colorMaskForLight, dark: colorMaskForDark)
-
-        backgroundMaskView.backgroundColor = maskColor
-        backgroundColor = backgroundBaseColor
+        // We test the brightness of the background color to choose a ligtht or dark style
+        if appearance.colors.background.isBright {
+            let backgroundBaseColor = appearance.colors.background
+            let maskColor = UIColor.black.withAlphaComponent(0.08)
+            backgroundMaskView.backgroundColor = maskColor
+            backgroundColor = backgroundBaseColor
+        } else {
+            let backgroundBaseColor = appearance.colors.danger
+            let maskColor = appearance.colors.background.withAlphaComponent(0.85)
+            backgroundMaskView.backgroundColor = maskColor
+            backgroundColor = backgroundBaseColor
+        }
     }
 
     @objc private func buttonTouchDown(_: UIButton) {
