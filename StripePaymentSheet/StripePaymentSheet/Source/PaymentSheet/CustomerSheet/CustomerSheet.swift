@@ -241,6 +241,7 @@ public class CustomerSheet {
                                                                                 paymentMethodSyncDefault: paymentMethodSyncDefault,
                                                                                 allowsRemovalOfLastSavedPaymentMethod: allowsRemovalOfLastSavedPaymentMethod,
                                                                                 cbcEligible: cbcEligible,
+                                                                                passiveCaptchaChallenge: self.passiveCaptchaChallenge,
                                                                                 csCompletion: self.csCompletion,
                                                                                 delegate: self)
             self.bottomSheetViewController.setViewControllers([savedPaymentSheetVC])
