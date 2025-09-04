@@ -25,7 +25,9 @@ class PaymentMethodTypeCollectionView: UICollectionView {
 
     // MARK: - Constants
     internal static let paymentMethodLogoSize: CGSize = CGSize(width: UIView.noIntrinsicMetric, height: 12)
-    internal static let cellHeight: CGFloat = 52
+    internal static var cellHeight: CGFloat {
+        return LiquidGlassDetector.isEnabled ? 64 : 52
+    }
     internal static let minInteritemSpacing: CGFloat = 12
 
     let reuseIdentifier: String = "PaymentMethodTypeCollectionView.PaymentTypeCell"
@@ -214,8 +216,17 @@ extension PaymentMethodTypeCollectionView {
         private lazy var promoBadge: PromoBadgeView = {
             PromoBadgeView(appearance: appearance, tinyMode: true)
         }()
-        private lazy var shadowRoundedRectangle: ShadowedRoundedRectangle = {
-            return ShadowedRoundedRectangle(appearance: appearance)
+        private lazy var selectableRectangle: SelectableRectangle = {
+            #if !os(visionOS)
+            if #available(iOS 26.0, *),
+               LiquidGlassDetector.isEnabled {
+                return LiquidGlassRectangle(appearance: appearance, isCapsule: false)
+            } else {
+                return ShadowedRoundedRectangle(appearance: appearance)
+            }
+            #else
+                return ShadowedRoundedRectangle(appearance: appearance)
+            #endif
         }()
         lazy var paymentMethodLogoWidthConstraint: NSLayoutConstraint = {
             paymentMethodLogo.widthAnchor.constraint(equalToConstant: 0)
@@ -243,31 +254,31 @@ extension PaymentMethodTypeCollectionView {
             super.init(frame: frame)
 
             [paymentMethodLogo, label, promoBadge].forEach {
-                shadowRoundedRectangle.addSubview($0)
+                selectableRectangle.addSubview($0)
                 $0.translatesAutoresizingMaskIntoConstraints = false
             }
 
             isAccessibilityElement = true
-            contentView.addAndPinSubview(shadowRoundedRectangle)
-            shadowRoundedRectangle.frame = bounds
+            contentView.addAndPinSubview(selectableRectangle)
+            selectableRectangle.frame = bounds
 
             NSLayoutConstraint.activate([
                 paymentMethodLogo.topAnchor.constraint(
-                    equalTo: shadowRoundedRectangle.topAnchor, constant: 12),
+                    equalTo: selectableRectangle.topAnchor, constant: LiquidGlassDetector.isEnabled ? 16 : 12),
                 paymentMethodLogo.leadingAnchor.constraint(
-                    equalTo: shadowRoundedRectangle.leadingAnchor, constant: 12),
+                    equalTo: selectableRectangle.leadingAnchor, constant: LiquidGlassDetector.isEnabled ? 16 : 12),
                 paymentMethodLogo.heightAnchor.constraint(
                     equalToConstant: PaymentMethodTypeCollectionView.paymentMethodLogoSize.height),
                 paymentMethodLogoWidthConstraint,
 
                 label.topAnchor.constraint(equalTo: paymentMethodLogo.bottomAnchor, constant: 4),
                 label.bottomAnchor.constraint(
-                    equalTo: shadowRoundedRectangle.bottomAnchor, constant: -8),
+                    equalTo: selectableRectangle.bottomAnchor, constant: -8),
                 label.leadingAnchor.constraint(equalTo: paymentMethodLogo.leadingAnchor),
-                label.trailingAnchor.constraint(equalTo: shadowRoundedRectangle.trailingAnchor, constant: -12), // should be -const of paymentMethodLogo leftAnchor
+                label.trailingAnchor.constraint(equalTo: selectableRectangle.trailingAnchor, constant: -12), // should be -const of paymentMethodLogo leftAnchor
 
                 promoBadge.centerYAnchor.constraint(equalTo: paymentMethodLogo.centerYAnchor),
-                promoBadge.trailingAnchor.constraint(equalTo: shadowRoundedRectangle.trailingAnchor, constant: -12),
+                promoBadge.trailingAnchor.constraint(equalTo: selectableRectangle.trailingAnchor, constant: -12),
             ])
 
             contentView.layer.cornerRadius = appearance.cornerRadius
@@ -321,7 +332,7 @@ extension PaymentMethodTypeCollectionView {
         var paymentMethodTypeOfCurrentImage: PaymentSheet.PaymentMethodType = .stripe(.unknown)
         private func update() {
             contentView.layer.cornerRadius = appearance.cornerRadius
-            shadowRoundedRectangle.appearance = appearance
+            selectableRectangle.appearance = appearance
             label.text = paymentMethodType.displayName
 
             label.font = appearance.scaledFont(for: appearance.font.base.medium, style: .footnote, maximumPointSize: 20)
@@ -349,7 +360,7 @@ extension PaymentMethodTypeCollectionView {
                 promoBadge.setText(promoBadgeText)
             }
 
-            shadowRoundedRectangle.isSelected = isSelected
+            selectableRectangle.isSelected = isSelected
             // Set text color
             label.textColor = appearance.colors.componentText
             accessibilityLabel = label.text

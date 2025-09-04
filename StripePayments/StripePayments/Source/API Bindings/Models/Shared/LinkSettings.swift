@@ -41,8 +41,13 @@ import Foundation
     @_spi(STP) public let linkDefaultOptIn: LinkDefaultOptIn?
     @_spi(STP) public let linkEnableDisplayableDefaultValuesInECE: Bool?
     @_spi(STP) public let linkShowPreferDebitCardHint: Bool?
+    @_spi(STP) public let linkSupportedPaymentMethodsOnboardingEnabled: [String]
 
     @_spi(STP) public let allResponseFields: [AnyHashable: Any]
+
+    @_spi(STP) public var instantDebitsOnboardingEnabled: Bool {
+        linkSupportedPaymentMethodsOnboardingEnabled.contains("INSTANT_DEBITS")
+    }
 
     @_spi(STP) public init(
         fundingSources: Set<FundingSource>,
@@ -58,6 +63,7 @@ import Foundation
         linkDefaultOptIn: LinkDefaultOptIn?,
         linkEnableDisplayableDefaultValuesInECE: Bool?,
         linkShowPreferDebitCardHint: Bool?,
+        linkSupportedPaymentMethodsOnboardingEnabled: [String],
         allResponseFields: [AnyHashable: Any]
     ) {
         self.fundingSources = fundingSources
@@ -73,6 +79,7 @@ import Foundation
         self.linkDefaultOptIn = linkDefaultOptIn
         self.linkEnableDisplayableDefaultValuesInECE = linkEnableDisplayableDefaultValuesInECE
         self.linkShowPreferDebitCardHint = linkShowPreferDebitCardHint
+        self.linkSupportedPaymentMethodsOnboardingEnabled = linkSupportedPaymentMethodsOnboardingEnabled
         self.allResponseFields = allResponseFields
     }
 
@@ -109,6 +116,8 @@ import Foundation
             nil
         }
 
+        let linkSupportedPaymentMethodsOnboardingEnabled = response["link_supported_payment_methods_onboarding_enabled"] as? [String] ?? []
+
         // Collect the flags for the URL generator
         let linkFlags = response.reduce(into: [String: Bool]()) { partialResult, element in
             if let key = element.key as? String, let value = element.value as? Bool {
@@ -130,6 +139,7 @@ import Foundation
             linkDefaultOptIn: linkDefaultOptIn,
             linkEnableDisplayableDefaultValuesInECE: linkEnableDisplayableDefaultValuesInECE,
             linkShowPreferDebitCardHint: linkShowPreferDebitCardHint,
+            linkSupportedPaymentMethodsOnboardingEnabled: linkSupportedPaymentMethodsOnboardingEnabled,
             allResponseFields: response
         ) as? Self
     }

@@ -1,4 +1,4 @@
-## XX.YY.ZZ 2025-XX-YY
+## 24.23.0 2025-09-02
 
 ### CustomerSheet
 * [Added] `opensCardScannerAutomatically` configuration
