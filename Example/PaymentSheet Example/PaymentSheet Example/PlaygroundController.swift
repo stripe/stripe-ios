@@ -518,7 +518,7 @@ class PlaygroundController: ObservableObject {
     var customerSessionClientSecret: String?
     var paymentMethodTypes: [String]?
     var addressViewController: AddressViewController?
-    var appearance = PaymentSheet.Appearance.default
+    var appearance: PaymentSheet.Appearance
     var currentDataTask: URLSessionDataTask?
 
     var checkoutEndpoint: String {
@@ -1053,11 +1053,7 @@ extension PlaygroundController: STPAnalyticsClientDelegate {
 
 extension PlaygroundController {
     func serializeSettingsToNSUserDefaults() {
-        // Never save changes for iOS26 since we have to set allowNewDesign based on a flag that isn't ready during boot time.
-        var settingsWithoutiOS26 = settings
-        settingsWithoutiOS26.enableIOS26Changes = .off
-
-        let settingsData = try! JSONEncoder().encode(settingsWithoutiOS26)
+        let settingsData = try! JSONEncoder().encode(settings)
         UserDefaults.standard.set(settingsData, forKey: PaymentSheetTestPlaygroundSettings.nsUserDefaultsKey)
 
         if let customerId {

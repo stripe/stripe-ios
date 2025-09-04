@@ -13,8 +13,26 @@ public extension PaymentSheet {
 
     /// Describes the appearance of PaymentSheet
     struct Appearance: Equatable {
+        private static var _liquidGlassDesignEnabled: Bool = true
+
+        static public var liquidGlassDesignEnabled: Bool {
+            get {
+                return _liquidGlassDesignEnabled
+            }
+            set {
+                if !LiquidGlassDetector.canExecute {
+                    _liquidGlassDesignEnabled = false
+                } else {
+                    LiquidGlassDetector.allowNewDesign = newValue
+                    _liquidGlassDesignEnabled = newValue
+                }
+            }
+        }
+
         /// The default appearance for PaymentSheet
-        public static let `default` = Appearance()
+        public static var `default`: Appearance {
+            return Appearance()
+        }
 
         /// Creates a `PaymentSheet.Appearance` with default values
         public init() {}
