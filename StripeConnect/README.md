@@ -9,7 +9,7 @@ Use Connect embedded components to add connected account dashboard functionality
 * [Requirements](#Requirements)
 * [Getting started](#Getting-started)
    * [Integration](#Integration)
-   * [Example](Example)
+   * [Example](#Example)
 * [Manual linking](#Manual-linking)
 
 <!--te-->
