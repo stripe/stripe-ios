@@ -72,7 +72,7 @@ private enum CaptchaResult {
                                     passiveApiKey: true,
                                      rqdata: passiveCaptcha.rqdata,
                                     host: "stripecdn.com")
-        
+
         } catch {
             let duration = Date().timeIntervalSince(startTime)
             STPAnalyticsClient.sharedClient.logPassiveCaptchaError(error: error, siteKey: passiveCaptcha.siteKey, duration: duration)
@@ -134,7 +134,7 @@ private enum CaptchaResult {
             return nil
         }
     }
-    
+
     private func setValidationComplete() {
         isValidationComplete = true
     }
