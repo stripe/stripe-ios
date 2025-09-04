@@ -12,6 +12,7 @@ import XCTest
 
 @testable@_spi(STP) import StripePaymentSheet
 
+// @iOS26
 final class LinkSignUpViewControllerSnapshotTests: STPSnapshotTestCase {
     func testEmptyView() throws {
         let sut = try makeSUT(email: nil)
