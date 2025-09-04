@@ -122,7 +122,7 @@ public typealias STPRadarSessionCompletionBlock = (STPRadarSession?, Error?) -> 
 /// - Parameters:
 ///   - confirmationToken: The Stripe ConfirmationToken from the response. Will be nil if an error occurs. - seealso: STPConfirmationToken
 ///   - error: The error returned from the response, or nil if none occurs. - seealso: StripeError.h for possible values.
-@_spi(ConfirmationTokensPublicPreview) public typealias STPConfirmationTokenCompletionBlock = (STPConfirmationToken?, Error?) -> Void
+@_spi(STP) public typealias STPConfirmationTokenCompletionBlock = (STPConfirmationToken?, Error?) -> Void
 
 /// An empty block, called with no arguments, returning nothing.
 public typealias STPVoidBlock = () -> Void
