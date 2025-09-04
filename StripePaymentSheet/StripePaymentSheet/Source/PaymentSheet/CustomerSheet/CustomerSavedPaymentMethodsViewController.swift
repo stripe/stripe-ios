@@ -639,7 +639,7 @@ class CustomerSavedPaymentMethodsViewController: UIViewController {
                             }
                             return
                         }
-                        
+
                         guard let updatedSavedPaymentMethods = await self.fetchSavedPaymentMethods() else {
                             // PM is attached, but failed to refresh payment methods
                             // Sheet will dismiss and payment method will be unselected
@@ -647,14 +647,14 @@ class CustomerSavedPaymentMethodsViewController: UIViewController {
                             self.handleDismissSheet(shouldDismissImmediately: true)
                             return
                         }
-                        
+
                         self.savedPaymentMethods = updatedSavedPaymentMethods
                         self.lastSavedPaymentMethod = paymentMethod
-                        
+
                         let customerPaymentOption = CustomerPaymentOption(value: paymentMethod.stripeId)
                         self.reinitSavedPaymentOptionsViewController(mostRecentlyAddedPaymentMethod: customerPaymentOption)
                         self.processingInFlight = false
-                        
+
                         self.mode = .selectingSaved
                         self.updateUI(animated: true)
                         self.reinitAddPaymentMethodViewController()
