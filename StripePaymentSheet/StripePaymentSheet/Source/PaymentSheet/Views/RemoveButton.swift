@@ -17,7 +17,7 @@ import UIKit
 
 /// Remove button
 /// For internal SDK use only
-@objc(STP_Internal_NewRemoveButton)
+@objc(STP_Internal_RemoveButton)
 class RemoveButton: UIView {
     private let appearance: PaymentSheet.Appearance
     private let backgroundMaskView: UIView
@@ -30,7 +30,10 @@ class RemoveButton: UIView {
         )
     }
 
-    init(title: String = .Localized.remove, appearance: PaymentSheet.Appearance = PaymentSheet.Appearance.default) {
+    init(
+        title: String = .Localized.remove,
+        appearance: PaymentSheet.Appearance = PaymentSheet.Appearance.default
+    ) {
         self.appearance = appearance
         self.backgroundMaskView = UIView(frame: .zero)
         self.button = UIButton(frame: .zero)
@@ -87,6 +90,10 @@ class RemoveButton: UIView {
     private func setupBackgroundColors() {
         guard LiquidGlassDetector.isEnabled else { return }
 
+        // We create a translucent mask to place on top of the background color
+        // This allows us to dynamically generate an appropriate fill color
+        //    based on the Appearance API without requiring new values
+        // In the future we should consider adding a new Appearance API value
         let backgroundBaseColor = UIColor.dynamic(light: appearance.colors.background, dark: appearance.colors.danger)
         let colorMaskForLight = UIColor.black.withAlphaComponent(0.08)
         let colorMaskForDark = appearance.colors.background.withAlphaComponent(0.85)
