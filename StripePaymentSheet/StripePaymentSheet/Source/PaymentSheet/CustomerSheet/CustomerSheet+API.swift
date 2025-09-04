@@ -15,6 +15,7 @@ extension CustomerSheet {
         intent: Intent,
         elementsSession: STPElementsSession,
         paymentOption: PaymentOption,
+        hcaptchaToken: String? = nil,
         completion: @escaping (InternalCustomerSheetResult) -> Void
     ) {
         CustomerSheet.confirm(intent: intent,
@@ -23,6 +24,7 @@ extension CustomerSheet {
                               configuration: configuration,
                               paymentHandler: self.paymentHandler,
                               authenticationContext: self.bottomSheetViewController,
+                              hcaptchaToken: hcaptchaToken,
                               completion: completion)
     }
     static func confirm(
@@ -32,6 +34,7 @@ extension CustomerSheet {
         configuration: CustomerSheet.Configuration,
         paymentHandler: STPPaymentHandler,
         authenticationContext: STPAuthenticationContext,
+        hcaptchaToken: String?,
         completion: @escaping (InternalCustomerSheetResult) -> Void
     ) {
         let paymentHandlerCompletion: (STPPaymentHandlerActionStatus, NSObject?, NSError?) -> Void =
@@ -55,6 +58,7 @@ extension CustomerSheet {
         if case .new(let confirmParams) = paymentOption,
            case .setupIntent(let setupIntent) = intent {
             confirmParams.setAllowRedisplayForCustomerSheet(elementsSession.savePaymentMethodConsentBehaviorForCustomerSheet())
+            confirmParams.paymentMethodParams.radarOptions = STPRadarOptions(hcaptchaToken: hcaptchaToken)
             confirmParams.setClientAttributionMetadata(clientAttributionMetadata: STPClientAttributionMetadata(elementsSessionConfigId: elementsSession.sessionID))
             let setupIntentParams = STPSetupIntentConfirmParams(clientSecret: setupIntent.clientSecret)
             setupIntentParams.paymentMethodParams = confirmParams.paymentMethodParams

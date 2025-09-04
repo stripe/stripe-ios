@@ -303,7 +303,8 @@ import Foundation
 
     // MARK: - Captcha
     case passiveCaptchaInit = "elements.captcha.passive.init"
+    case passiveCaptchaExecute = "elements.captcha.passive.execute"
     case passiveCaptchaSuccess = "elements.captcha.passive.success"
     case passiveCaptchaError = "elements.captcha.passive.error"
-    case passiveCaptchaTimeout = "elements.captcha.passive.timeout"
+    case passiveCaptchaAttach = "elements.captcha.passive.attach"
 }
