@@ -15,6 +15,11 @@ import Foundation
     let siteKey: String
     let rqdata: String?
 
+    public init(siteKey: String, rqdata: String?) {
+        self.siteKey = siteKey
+        self.rqdata = rqdata
+    }
+
     /// Helper method to decode the `v1/elements/sessions` response's `passive_captcha` hash.
     /// - Parameter response: The value of the `passive_captcha` key in the `v1/elements/sessions` response.
     public static func decoded(

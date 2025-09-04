@@ -34,7 +34,7 @@ extension CustomerSheet {
         configuration: CustomerSheet.Configuration,
         paymentHandler: STPPaymentHandler,
         authenticationContext: STPAuthenticationContext,
-        hcaptchaToken: String?,
+        hcaptchaToken: String? = nil,
         completion: @escaping (InternalCustomerSheetResult) -> Void
     ) {
         let paymentHandlerCompletion: (STPPaymentHandlerActionStatus, NSObject?, NSError?) -> Void =
