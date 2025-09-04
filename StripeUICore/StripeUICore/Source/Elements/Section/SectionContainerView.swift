@@ -263,13 +263,6 @@ private func buildStackView(views: [UIView], theme: ElementsAppearance = .defaul
     stackView.customBackgroundColor = theme.colors.componentBackground
     stackView.drawBorder = true
     stackView.hideShadow = true // Shadow is handled by `SectionContainerView`
-    if LiquidGlassDetector.isEnabled {
-        stackView.ios26_applyCapsuleCornerConfiguration()
-        stackView.isLayoutMarginsRelativeArrangement = true
-        stackView.directionalLayoutMargins = .insets(amount: 4)
-    } else {
-        stackView.borderCornerRadius = theme.cornerRadius
-    }
     // Set up corner radius / corner configuration
     if LiquidGlassDetector.isEnabled {
         if views.count == 1 {
