@@ -1,174 +1,207 @@
 {
-  "configurations" : [
+  "configurations": [
     {
-      "id" : "7F02C2E0-51C2-4525-BF7A-06D22C6E514A",
-      "name" : "Configuration 1",
-      "options" : {
-
-      }
+      "id": "7F02C2E0-51C2-4525-BF7A-06D22C6E514A",
+      "name": "Configuration 1",
+      "options": {}
     }
   ],
-  "defaultOptions" : {
-    "environmentVariableEntries" : [
+  "defaultOptions": {
+    "environmentVariableEntries": [
       {
-        "key" : "FB_REFERENCE_IMAGE_DIR",
-        "value" : "$(SOURCE_ROOT)\/..\/Tests\/ReferenceImages"
+        "key": "FB_REFERENCE_IMAGE_DIR",
+        "value": "$(SOURCE_ROOT)/../Tests/ReferenceImages"
       }
     ],
-    "targetForVariableExpansion" : {
-      "containerPath" : "container:Stripe\/Stripe.xcodeproj",
-      "identifier" : "ADF894AA8F6022D9BED17346",
-      "name" : "StripeiOS"
+    "targetForVariableExpansion": {
+      "containerPath": "container:Stripe/Stripe.xcodeproj",
+      "identifier": "ADF894AA8F6022D9BED17346",
+      "name": "StripeiOS"
     }
   },
-  "testTargets" : [
+  "testTargets": [
     {
-      "selectedTests" : [
-
-      ],
-      "target" : {
-        "containerPath" : "container:StripeIdentity\/StripeIdentity.xcodeproj",
-        "identifier" : "5883CCEAA4C73E1DB1F0D3A5",
-        "name" : "StripeIdentityTests"
+      "selectedTests": [],
+      "target": {
+        "containerPath": "container:StripeIdentity/StripeIdentity.xcodeproj",
+        "identifier": "5883CCEAA4C73E1DB1F0D3A5",
+        "name": "StripeIdentityTests"
       }
     },
     {
-      "selectedTests" : [
-        "PaymentSheetFlowControllerViewControllerSnapshotTests\/testCVCRecollectionScreen()",
-        "PaymentSheetFlowControllerViewControllerSnapshotTests\/testCVVRecollectionScreen()",
-        "PaymentSheetFlowControllerViewControllerSnapshotTests\/testDirectToCardScan()",
-        "PaymentSheetFlowControllerViewControllerSnapshotTests\/testNewScreen_customCTA()",
-        "PaymentSheetFlowControllerViewControllerSnapshotTests\/testSavedScreen_SEPA_debit()",
-        "PaymentSheetFlowControllerViewControllerSnapshotTests\/testSavedScreen_card()",
-        "PaymentSheetFlowControllerViewControllerSnapshotTests\/testSavedScreen_customCTA()",
-        "PaymentSheetFlowControllerViewControllerSnapshotTests\/testSavedScreen_us_bank_account()"
+      "selectedTests": [
+        "PaymentSheetFlowControllerViewControllerSnapshotTests/testCVCRecollectionScreen()",
+        "PaymentSheetFlowControllerViewControllerSnapshotTests/testCVVRecollectionScreen()",
+        "PaymentSheetFlowControllerViewControllerSnapshotTests/testDirectToCardScan()",
+        "PaymentSheetFlowControllerViewControllerSnapshotTests/testNewScreen_customCTA()",
+        "PaymentSheetFlowControllerViewControllerSnapshotTests/testSavedScreen_SEPA_debit()",
+        "PaymentSheetFlowControllerViewControllerSnapshotTests/testSavedScreen_card()",
+        "PaymentSheetFlowControllerViewControllerSnapshotTests/testSavedScreen_customCTA()",
+        "PaymentSheetFlowControllerViewControllerSnapshotTests/testSavedScreen_us_bank_account()",
+        "PaymentSheetSnapshotTests/testPaymentMethodLayoutAutomatic()",
+        "PaymentSheetSnapshotTests/testPaymentMethodLayoutVertical()",
+        "PaymentSheetSnapshotTests/testPaymentSheet()",
+        "PaymentSheetSnapshotTests/testPaymentSheetAppearance()",
+        "PaymentSheetSnapshotTests/testPaymentSheetBorderWidth()",
+        "PaymentSheetSnapshotTests/testPaymentSheetCVCRecollection()",
+        "PaymentSheetSnapshotTests/testPaymentSheetColors()",
+        "PaymentSheetSnapshotTests/testPaymentSheetCornerRadius()",
+        "PaymentSheetSnapshotTests/testPaymentSheetCustom()",
+        "PaymentSheetSnapshotTests/testPaymentSheetCustomAppearance()",
+        "PaymentSheetSnapshotTests/testPaymentSheetCustomApplePayCta()",
+        "PaymentSheetSnapshotTests/testPaymentSheetCustomBorderWidth()",
+        "PaymentSheetSnapshotTests/testPaymentSheetCustomColors()",
+        "PaymentSheetSnapshotTests/testPaymentSheetCustomCornerRadius()",
+        "PaymentSheetSnapshotTests/testPaymentSheetCustomDarkMode()",
+        "PaymentSheetSnapshotTests/testPaymentSheetCustomDynamicType()",
+        "PaymentSheetSnapshotTests/testPaymentSheetCustomFont()",
+        "PaymentSheetSnapshotTests/testPaymentSheetCustomFontsWithSizeScaleFactor()",
+        "PaymentSheetSnapshotTests/testPaymentSheetCustomNilShadows()",
+        "PaymentSheetSnapshotTests/testPaymentSheetCustomPrimaryButton()",
+        "PaymentSheetSnapshotTests/testPaymentSheetCustomPrimaryButtonAndApplePayCta()",
+        "PaymentSheetSnapshotTests/testPaymentSheetCustomPrimaryButtonLabel()",
+        "PaymentSheetSnapshotTests/testPaymentSheetCustomSectionSpacing()",
+        "PaymentSheetSnapshotTests/testPaymentSheetCustomShadow()",
+        "PaymentSheetSnapshotTests/testPaymentSheetCustomSheetCornerRadius()",
+        "PaymentSheetSnapshotTests/testPaymentSheetCustomSheetCornerRadiusLarge()",
+        "PaymentSheetSnapshotTests/testPaymentSheetCustomTextFieldInsets()",
+        "PaymentSheetSnapshotTests/testPaymentSheetCustomTextFieldInsetsAsymmetric()",
+        "PaymentSheetSnapshotTests/testPaymentSheetCustomTextFieldInsetsWithThemedAppearance()",
+        "PaymentSheetSnapshotTests/testPaymentSheetDarkMode()",
+        "PaymentSheetSnapshotTests/testPaymentSheetDynamicType()",
+        "PaymentSheetSnapshotTests/testPaymentSheetFont()",
+        "PaymentSheetSnapshotTests/testPaymentSheetIconStyleOutlined()",
+        "PaymentSheetSnapshotTests/testPaymentSheetIconStyleOutlined_vertical()",
+        "PaymentSheetSnapshotTests/testPaymentSheetNewCustomHeadlineFont()",
+        "PaymentSheetSnapshotTests/testPaymentSheetNilShadows()",
+        "PaymentSheetSnapshotTests/testPaymentSheetPrimaryButton()",
+        "PaymentSheetSnapshotTests/testPaymentSheetPrimaryButtonAppearance()",
+        "PaymentSheetSnapshotTests/testPaymentSheetShadow()",
+        "PaymentSheetSnapshotTests/testPaymentSheetShadowRoundsCorners()",
+        "PaymentSheetSnapshotTests/testPaymentSheetSingleLPM()",
+        "PaymentSheetSnapshotTests/testPaymentSheetSingleLPM_noApplePay()",
+        "PaymentSheetSnapshotTests/testPaymentSheetTextFieldInsets()",
+        "PaymentSheetSnapshotTests/testPaymentSheetTextFieldInsetsAsymmetric()",
+        "PaymentSheetSnapshotTests/testPaymentSheetTextFieldInsetsDarkMode()",
+        "PaymentSheetSnapshotTests/testPaymentSheetTextFieldInsetsDynamicType()",
+        "PaymentSheetSnapshotTests/testPaymentSheetTextFieldInsetsLarge()",
+        "PaymentSheetSnapshotTests/testPaymentSheetTextFieldInsetsWithColors()",
+        "PaymentSheetSnapshotTests/testPaymentSheetTextFieldInsetsWithFormInsets()",
+        "PaymentSheetSnapshotTests/testPaymentSheetTextFieldInsetsWithShadow()",
+        "PaymentSheetSnapshotTests/testPaymentSheetTextFieldInsetsZero()",
+        "PaymentSheetSnapshotTests/testPaymentSheetWithLink()",
+        "PaymentSheetSnapshotTests/testPaymentSheetWithLinkAppearance()",
+        "PaymentSheetSnapshotTests/testPaymentSheetWithLinkDarkMode()",
+        "PaymentSheetSnapshotTests/testPaymentSheetWithLinkExistingCustomer()",
+        "PaymentSheetSnapshotTests/testPaymentSheetWithLinkHiddenBorders()",
+        "PaymentSheetSnapshotTests/testPaymentSheetWithLinkSignupDisabled()",
+        "PaymentSheetSnapshotTests/testPaymentSheetWithLink_deferredIntent()",
+        "PaymentSheetSnapshotTests/testPaymentSheet_LPM_InstantDebits_only_promotion()",
+        "PaymentSheetSnapshotTests/testPaymentSheet_deferredIntent()",
+        "PaymentSheetSnapshotTests/testPaymentSheet_disableTerms_deferredIntent()"
       ],
-      "target" : {
-        "containerPath" : "container:StripePaymentSheet\/StripePaymentSheet.xcodeproj",
-        "identifier" : "9A93AB1D98A0A1EC6ADEA65D",
-        "name" : "StripePaymentSheetTests"
+      "target": {
+        "containerPath": "container:StripePaymentSheet/StripePaymentSheet.xcodeproj",
+        "identifier": "9A93AB1D98A0A1EC6ADEA65D",
+        "name": "StripePaymentSheetTests"
       }
     },
     {
-      "selectedTests" : [
-
-      ],
-      "target" : {
-        "containerPath" : "container:Stripe3DS2\/Stripe3DS2.xcodeproj",
-        "identifier" : "F2D50FA32F27498F56CD08DD",
-        "name" : "Stripe3DS2Tests"
+      "selectedTests": [],
+      "target": {
+        "containerPath": "container:Stripe3DS2/Stripe3DS2.xcodeproj",
+        "identifier": "F2D50FA32F27498F56CD08DD",
+        "name": "Stripe3DS2Tests"
       }
     },
     {
-      "selectedTests" : [
-
-      ],
-      "target" : {
-        "containerPath" : "container:Stripe3DS2\/Stripe3DS2.xcodeproj",
-        "identifier" : "7DA168BC86CE957505FA091B",
-        "name" : "Stripe3DS2DemoUITests"
+      "selectedTests": [],
+      "target": {
+        "containerPath": "container:Stripe3DS2/Stripe3DS2.xcodeproj",
+        "identifier": "7DA168BC86CE957505FA091B",
+        "name": "Stripe3DS2DemoUITests"
       }
     },
     {
-      "selectedTests" : [
-
-      ],
-      "target" : {
-        "containerPath" : "container:StripeConnect\/StripeConnect.xcodeproj",
-        "identifier" : "41D17A492C5A73A7007C6EE6",
-        "name" : "StripeConnectTests"
+      "selectedTests": [],
+      "target": {
+        "containerPath": "container:StripeConnect/StripeConnect.xcodeproj",
+        "identifier": "41D17A492C5A73A7007C6EE6",
+        "name": "StripeConnectTests"
       }
     },
     {
-      "selectedTests" : [
-
-      ],
-      "target" : {
-        "containerPath" : "container:StripePaymentsUI\/StripePaymentsUI.xcodeproj",
-        "identifier" : "CFDEE20ADA9F0099259938AF",
-        "name" : "StripePaymentsUITests"
+      "selectedTests": [],
+      "target": {
+        "containerPath": "container:StripePaymentsUI/StripePaymentsUI.xcodeproj",
+        "identifier": "CFDEE20ADA9F0099259938AF",
+        "name": "StripePaymentsUITests"
       }
     },
     {
-      "selectedTests" : [
-
-      ],
-      "target" : {
-        "containerPath" : "container:StripeApplePay\/StripeApplePay.xcodeproj",
-        "identifier" : "ACAFA21CF224F80EFAEFDC2F",
-        "name" : "StripeApplePayTests"
+      "selectedTests": [],
+      "target": {
+        "containerPath": "container:StripeApplePay/StripeApplePay.xcodeproj",
+        "identifier": "ACAFA21CF224F80EFAEFDC2F",
+        "name": "StripeApplePayTests"
       }
     },
     {
-      "selectedTests" : [
-
-      ],
-      "target" : {
-        "containerPath" : "container:StripeCardScan\/StripeCardScan.xcodeproj",
-        "identifier" : "DCC6FFCFBE0B51B33F4CBB26",
-        "name" : "StripeCardScanTests"
+      "selectedTests": [],
+      "target": {
+        "containerPath": "container:StripeCardScan/StripeCardScan.xcodeproj",
+        "identifier": "DCC6FFCFBE0B51B33F4CBB26",
+        "name": "StripeCardScanTests"
       }
     },
     {
-      "selectedTests" : [
-
-      ],
-      "target" : {
-        "containerPath" : "container:StripeCore\/StripeCore.xcodeproj",
-        "identifier" : "03B50F59824D1D18AA073D57",
-        "name" : "StripeCoreTests"
+      "selectedTests": [],
+      "target": {
+        "containerPath": "container:StripeCore/StripeCore.xcodeproj",
+        "identifier": "03B50F59824D1D18AA073D57",
+        "name": "StripeCoreTests"
       }
     },
     {
-      "selectedTests" : [
-
-      ],
-      "target" : {
-        "containerPath" : "container:Stripe\/Stripe.xcodeproj",
-        "identifier" : "8BE23AD5D9A3D939AF46F31E",
-        "name" : "StripeiOSTests"
+      "selectedTests": [],
+      "target": {
+        "containerPath": "container:Stripe/Stripe.xcodeproj",
+        "identifier": "8BE23AD5D9A3D939AF46F31E",
+        "name": "StripeiOSTests"
       }
     },
     {
-      "selectedTests" : [
-
-      ],
-      "target" : {
-        "containerPath" : "container:StripePayments\/StripePayments.xcodeproj",
-        "identifier" : "82D53FD79169DC5CBF54660A",
-        "name" : "StripePaymentsTests"
+      "selectedTests": [],
+      "target": {
+        "containerPath": "container:StripePayments/StripePayments.xcodeproj",
+        "identifier": "82D53FD79169DC5CBF54660A",
+        "name": "StripePaymentsTests"
       }
     },
     {
-      "selectedTests" : [
-
-      ],
-      "target" : {
-        "containerPath" : "container:StripeUICore\/StripeUICore.xcodeproj",
-        "identifier" : "A4B3F8AEF10396425E1A79D0",
-        "name" : "StripeUICoreTests"
+      "selectedTests": [],
+      "target": {
+        "containerPath": "container:StripeUICore/StripeUICore.xcodeproj",
+        "identifier": "A4B3F8AEF10396425E1A79D0",
+        "name": "StripeUICoreTests"
       }
     },
     {
-      "selectedTests" : [
-
-      ],
-      "target" : {
-        "containerPath" : "container:StripeCameraCore\/StripeCameraCore.xcodeproj",
-        "identifier" : "F3DED9AB60FDAB786A737384",
-        "name" : "StripeCameraCoreTests"
+      "selectedTests": [],
+      "target": {
+        "containerPath": "container:StripeCameraCore/StripeCameraCore.xcodeproj",
+        "identifier": "F3DED9AB60FDAB786A737384",
+        "name": "StripeCameraCoreTests"
       }
     },
     {
-      "selectedTests" : [
-
-      ],
-      "target" : {
-        "containerPath" : "container:StripeFinancialConnections\/StripeFinancialConnections.xcodeproj",
-        "identifier" : "DF72D31B68363878FC1604CF",
-        "name" : "StripeFinancialConnectionsTests"
+      "selectedTests": [],
+      "target": {
+        "containerPath": "container:StripeFinancialConnections/StripeFinancialConnections.xcodeproj",
+        "identifier": "DF72D31B68363878FC1604CF",
+        "name": "StripeFinancialConnectionsTests"
       }
     }
   ],
-  "version" : 1
+  "version": 1
 }

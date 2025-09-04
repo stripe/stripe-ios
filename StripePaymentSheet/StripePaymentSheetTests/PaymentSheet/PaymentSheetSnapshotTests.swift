@@ -16,6 +16,7 @@ import XCTest
 @_spi(AppearanceAPIAdditionsPreview) @testable import StripePaymentSheet
 @_spi(STP)@testable import StripeUICore
 
+// @iOS26
 class PaymentSheetSnapshotTests: STPSnapshotTestCase {
 
     private let backendCheckoutUrl = URL(
@@ -23,12 +24,6 @@ class PaymentSheetSnapshotTests: STPSnapshotTestCase {
     )!
 
     var paymentSheet: PaymentSheet!
-
-    private var window: UIWindow {
-        let window = UIWindow(frame: CGRect(x: 0, y: 0, width: 428, height: 1026))
-        window.isHidden = false
-        return window
-    }
 
     private var configuration = PaymentSheet.Configuration()
 
@@ -1134,11 +1129,13 @@ class PaymentSheetSnapshotTests: STPSnapshotTestCase {
     func presentPaymentSheet(darkMode: Bool, preferredContentSizeCategory: UIContentSizeCategory = .large) {
         let vc = UIViewController()
         let navController = UINavigationController(rootViewController: vc)
-        let testWindow = self.window
+        let window = UIWindow(frame: CGRect(x: 0, y: 0, width: 428, height: 1026))
+        window.isHidden = false // Without this line PaymentSheet is rendered too tall; unclear why since `false` is the default
         if darkMode {
-            testWindow.overrideUserInterfaceStyle = .dark
+            window.overrideUserInterfaceStyle = .dark
         }
-        testWindow.rootViewController = navController
+        window.rootViewController = navController
+        window.layoutIfNeeded() // unclear why but w/o this vc.view.window is nil
 
         // Wait a turn of the runloop for the RVC to attach to the window, then present PaymentSheet
         DispatchQueue.main.async {
@@ -1168,7 +1165,6 @@ class PaymentSheetSnapshotTests: STPSnapshotTestCase {
         }
         pollForLoadingFinished()
         wait(for: [loadFinishedExpectation], timeout: 5)
-
         paymentSheet.bottomSheetViewController.presentationController!.overrideTraitCollection = UITraitCollection(
             preferredContentSizeCategory: preferredContentSizeCategory
         )
@@ -1191,6 +1187,7 @@ class PaymentSheetSnapshotTests: STPSnapshotTestCase {
         STPSnapshotVerifyView(
             view,
             identifier: identifier,
+            overallTolerance: 0.01, // unfortunately on iOS 26 w/ XCode beta 7 there are *sometimes* differences as large as ~0.003%.
             file: file,
             line: line
         )
