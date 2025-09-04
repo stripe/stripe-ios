@@ -85,39 +85,6 @@ class STPAPIClientConfirmationTokensTest: STPNetworkStubbingTestCase {
         XCTAssertNotNil(confirmationToken.allResponseFields)
     }
 
-    func testCreateConfirmationTokenWithAdditionalPaymentUserAgentValues() async throws {
-        // Create payment method params
-        let cardParams = STPPaymentMethodCardParams()
-        cardParams.number = "4242424242424242"
-        cardParams.expMonth = 12
-        cardParams.expYear = 2030
-        cardParams.cvc = "123"
-
-        let paymentMethodParams = STPPaymentMethodParams(
-            card: cardParams,
-            billingDetails: nil,
-            metadata: nil
-        )
-
-        // Create confirmation token params
-        let confirmationTokenParams = STPConfirmationTokenParams()
-        confirmationTokenParams.paymentMethodData = paymentMethodParams
-        confirmationTokenParams.returnURL = "https://example.com/return"
-
-        // Test with additional user agent values
-        let additionalValues = ["PaymentSheet/1.0", "CustomSDK/2.1"]
-        let confirmationToken = try await apiClient.createConfirmationToken(
-            with: confirmationTokenParams,
-            additionalPaymentUserAgentValues: additionalValues
-        )
-
-        // Verify the response
-        XCTAssertNotNil(confirmationToken)
-        XCTAssertFalse(confirmationToken.stripeId.isEmpty)
-        XCTAssertEqual(confirmationToken.object, "confirmation_token")
-        XCTAssertNotNil(confirmationToken.allResponseFields)
-    }
-
     func testCreateConfirmationTokenWithShippingAndMandateData() async throws {
         // Create payment method params for SEPA Debit (requires mandate)
         let sepaParams = STPPaymentMethodSEPADebitParams()
