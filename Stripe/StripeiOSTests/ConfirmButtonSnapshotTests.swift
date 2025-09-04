@@ -15,6 +15,7 @@ import UIKit
 @testable@_spi(STP) import StripeCore
 @testable@_spi(STP) import StripePaymentSheet
 
+// @iOS26
 class ConfirmButtonSnapshotTests: STPSnapshotTestCase {
 
     func testConfirmButton() {
