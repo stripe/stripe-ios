@@ -15,11 +15,6 @@ import Foundation
     let siteKey: String
     let rqdata: String?
 
-    public init(siteKey: String, rqdata: String?) {
-        self.siteKey = siteKey
-        self.rqdata = rqdata
-    }
-
     /// Helper method to decode the `v1/elements/sessions` response's `passive_captcha` hash.
     /// - Parameter response: The value of the `passive_captcha` key in the `v1/elements/sessions` response.
     public static func decoded(
@@ -74,7 +69,7 @@ private enum CaptchaResult {
         }()
 
         validationTask = Task<String?, Never> { [siteKey = passiveCaptcha.siteKey, timeoutNs, weak self] () -> String? in
-            STPAnalyticsClient.sharedClient.logPassiveCaptchaInit(siteKey: passiveCaptcha.siteKey)
+            STPAnalyticsClient.sharedClient.logPassiveCaptchaInit(siteKey: siteKey)
             do {
                 let hcaptcha = try HCaptcha(apiKey: passiveCaptcha.siteKey,
                                         passiveApiKey: true,
@@ -124,7 +119,7 @@ private enum CaptchaResult {
                 }
                 return nil
             } catch {
-                STPAnalyticsClient.sharedClient.logPassiveCaptchaError(error: error, siteKey: passiveCaptcha.siteKey, duration: 0)
+                STPAnalyticsClient.sharedClient.logPassiveCaptchaError(error: error, siteKey: siteKey, duration: 0)
                 return nil
             }
         }
