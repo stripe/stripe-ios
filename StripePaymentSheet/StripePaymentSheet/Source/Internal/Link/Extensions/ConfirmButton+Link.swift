@@ -12,6 +12,7 @@ extension ConfirmButton {
 
     static func makeLinkButton(
         callToAction: CallToActionType,
+        showProcessingLabel: Bool,
         compact: Bool = false,
         linkAppearance: LinkAppearance? = nil,
         didTapWhenDisabled: @escaping () -> Void = {},
@@ -41,6 +42,7 @@ extension ConfirmButton {
 
         let button = ConfirmButton(
             callToAction: callToAction,
+            showProcessingLabel: showProcessingLabel,
             appearance: appearance,
             didTap: didTap,
             didTapWhenDisabled: didTapWhenDisabled

@@ -128,6 +128,8 @@
 
 "Enter the code sent to %@ to use your saved information." = "";
 
+"Enter the code sent to %@." = "Introduïu el codi que us hem enviat a %s.";
+
 "FPX Bank" = "Banc FPX";
 
 "Failed to connect" = "No s'ha pogut connectar";

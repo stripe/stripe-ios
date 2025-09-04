@@ -310,7 +310,7 @@ extension LinkVerificationView.Mode {
 
     func bodyText(redactedPhoneNumber: String) -> String {
         let format = STPLocalizedString(
-            "Enter the code sent to %@ to use your saved information.",
+            "Enter the code sent to %@.",
             "Instructs the user to enter the code sent to their phone number in order to login to Link"
         )
         return String(format: format, redactedPhoneNumber)

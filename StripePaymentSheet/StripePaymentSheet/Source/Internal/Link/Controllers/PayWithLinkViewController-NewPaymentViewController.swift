@@ -30,6 +30,7 @@ extension PayWithLinkViewController {
 
         private lazy var confirmButton: ConfirmButton = .makeLinkButton(
             callToAction: context.callToAction,
+            showProcessingLabel: context.showProcessingLabel,
             // Use a compact button if we are also displaying the Apple Pay button.
             compact: shouldShowApplePayButton,
             linkAppearance: context.linkAppearance,

@@ -128,6 +128,8 @@
 
 "Enter the code sent to %@ to use your saved information." = "Chcete-li použít uložené informace, zadejte kód zaslaný na číslo %@.";
 
+"Enter the code sent to %@." = "Zadejte kód zaslaný %s.";
+
 "FPX Bank" = "Banka FPX";
 
 "Failed to connect" = "Nepodařilo se připojit";
