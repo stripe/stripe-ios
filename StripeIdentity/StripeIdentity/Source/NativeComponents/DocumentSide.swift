@@ -51,9 +51,9 @@ enum DocumentSide: String {
             // Handle single type
             switch self {
             case .front:
-                return String(format: STPLocalizedString("Front of %@", "Title of ID document scanning screen when scanning the front of either a driver's license, passport, or government issued photo id "), type)
+                return String(format: String.Localized.frontOfSpecificDocument, type)
             case .back:
-                return String(format: STPLocalizedString("Back of %@", "Title of ID document scanning screen when scanning the back of either a driver's license, passport, or government issued photo id"), type)
+                return String(format: String.Localized.backOfSpecificDocument, type)
             }
         } else {
             // Fallback to generic text

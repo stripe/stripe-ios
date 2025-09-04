@@ -34,30 +34,18 @@ extension DocumentFileUploadViewController {
         func baseCase() -> String {
             switch side {
             case .front:
-                return STPLocalizedString(
-                    "Select front identity document photo",
-                    "Accessibility label to select a photo of front of identity document"
-                )
+                return String.Localized.selectFrontIdentityDocumentPhoto
             case .back:
-                return STPLocalizedString(
-                    "Select back identity document photo",
-                    "Accessibility label to select a photo of back of identity document"
-                )
+                return String.Localized.selectBackIdentityDocumentPhoto
             }
         }
 
         if availableIDTypes.count == 1, let idType = availableIDTypes[0].uiIDType() {
             switch side {
             case .front:
-                return String(format: STPLocalizedString(
-                    "Select front %@ photo",
-                    "Accessibility label to select a photo of front of driver's license, passport, or government issued photo id"
-                ), idType)
+                return String(format: String.Localized.selectFrontSpecificDocumentPhoto, idType)
             case .back:
-                return String(format: STPLocalizedString(
-                    "Select back %@ photo",
-                    "Accessibility label to select a photo of back of driver's license, passport, or government issued photo id"
-                ), idType)
+                return String(format: String.Localized.selectBackSpecificDocumentPhoto, idType)
             }
         }
 
@@ -69,30 +57,18 @@ extension DocumentFileUploadViewController {
         func baseCase() -> String {
             switch side {
             case .front:
-                return STPLocalizedString(
-                    "Uploading front identity document photo",
-                    "Accessibility label while photo of front of identity document is uploading"
-                )
+                return String.Localized.uploadingFrontIdentityDocumentPhoto
             case .back:
-                return STPLocalizedString(
-                    "Uploading back identity document photo",
-                    "Accessibility label while photo of back of identity document is uploading"
-                )
+                return String.Localized.uploadingBackIdentityDocumentPhoto
             }
         }
 
         if availableIDTypes.count == 1, let idType = availableIDTypes[0].uiIDType() {
             switch side {
             case .front:
-                return String(format: STPLocalizedString(
-                    "Uploading front %@ photo",
-                    "Accessibility label while photo of front of driver's license, passport, or government issued photo id is uploading"
-                ), idType)
+                return String(format: String.Localized.uploadingFrontSpecificDocumentPhoto, idType)
             case .back:
-                return String(format: STPLocalizedString(
-                    "Uploading back %@ photo",
-                    "Accessibility label while photo of back of driver's license, passport, or government issued photo id is uploading"
-                ), idType)
+                return String(format: String.Localized.uploadingBackSpecificDocumentPhoto, idType)
             }
         }
 
@@ -104,30 +80,18 @@ extension DocumentFileUploadViewController {
         func baseCase() -> String {
             switch side {
             case .front:
-                return STPLocalizedString(
-                    "Front identity document photo successfully uploaded",
-                    "Accessibility label when front identity document photo has successfully uploaded"
-                )
+                return String.Localized.frontIdentityDocumentPhotoUploadedSuccessfully
             case .back:
-                return STPLocalizedString(
-                    "Back identity document photo successfully uploaded",
-                    "Accessibility label when back identity document photo has successfully uploaded"
-                )
+                return String.Localized.backIdentityDocumentPhotoUploadedSuccessfully
             }
         }
 
         if availableIDTypes.count == 1, let idType = availableIDTypes[0].uiIDType() {
             switch side {
             case .front:
-                return String(format: STPLocalizedString(
-                    "Front %@ photo successfully uploaded",
-                    "Accessibility label when front driver's license, passport, or government issued photo id photo has successfully uploaded"
-                ), idType)
+                return String(format: String.Localized.frontSpecificDocumentPhotoUploadedSuccessfully, idType)
             case .back:
-                return String(format: STPLocalizedString(
-                    "Back %@ photo successfully uploaded",
-                    "Accessibility label when back driver's license, passport, or government issued photo id photo has successfully uploaded"
-                ), idType)
+                return String(format: String.Localized.backSpecificDocumentPhotoUploadedSuccessfully, idType)
             }
         }
 

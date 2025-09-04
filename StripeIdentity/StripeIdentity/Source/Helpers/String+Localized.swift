@@ -312,6 +312,115 @@ extension String.Localized {
         )
     }
 
+    static var uploadYourSpecificDocument: String {
+        STPLocalizedString(
+            "Upload your %@",
+            "Title of document upload screen"
+        )
+    }
+
+    // MARK: - Document Selection Accessibility Labels
+    static var selectFrontSpecificDocumentPhoto: String {
+        STPLocalizedString(
+            "Select front %@ photo",
+            "Accessibility label to select a photo of front of driver's license, passport, or government issued photo id"
+        )
+    }
+
+    static var selectBackSpecificDocumentPhoto: String {
+        STPLocalizedString(
+            "Select back %@ photo",
+            "Accessibility label to select a photo of back of driver's license, passport, or government issued photo id"
+        )
+    }
+
+    static var selectFrontIdentityDocumentPhoto: String {
+        STPLocalizedString(
+            "Select front identity document photo",
+            "Accessibility label to select a photo of front of identity document"
+        )
+    }
+
+    static var selectBackIdentityDocumentPhoto: String {
+        STPLocalizedString(
+            "Select back identity document photo",
+            "Accessibility label to select a photo of back of identity document"
+        )
+    }
+
+    // MARK: - Document Upload Accessibility Labels
+    static var uploadingFrontSpecificDocumentPhoto: String {
+        STPLocalizedString(
+            "Uploading front %@ photo",
+            "Accessibility label while photo of front of driver's license, passport, or government issued photo id is uploading"
+        )
+    }
+
+    static var uploadingBackSpecificDocumentPhoto: String {
+        STPLocalizedString(
+            "Uploading back %@ photo",
+            "Accessibility label while photo of back of driver's license, passport, or government issued photo id is uploading"
+        )
+    }
+
+    static var uploadingFrontIdentityDocumentPhoto: String {
+        STPLocalizedString(
+            "Uploading front identity document photo",
+            "Accessibility label while photo of front of identity document is uploading"
+        )
+    }
+
+    static var uploadingBackIdentityDocumentPhoto: String {
+        STPLocalizedString(
+            "Uploading back identity document photo",
+            "Accessibility label while photo of back of identity document is uploading"
+        )
+    }
+
+    // MARK: - Document Upload Success Accessibility Labels
+    static var frontSpecificDocumentPhotoUploadedSuccessfully: String {
+        STPLocalizedString(
+            "Front %@ photo successfully uploaded",
+            "Accessibility label when front driver's license, passport, or government issued photo id photo has successfully uploaded"
+        )
+    }
+
+    static var backSpecificDocumentPhotoUploadedSuccessfully: String {
+        STPLocalizedString(
+            "Back %@ photo successfully uploaded",
+            "Accessibility label when back driver's license, passport, or government issued photo id photo has successfully uploaded"
+        )
+    }
+
+    static var frontIdentityDocumentPhotoUploadedSuccessfully: String {
+        STPLocalizedString(
+            "Front identity document photo successfully uploaded",
+            "Accessibility label when front identity document photo has successfully uploaded"
+        )
+    }
+
+    static var backIdentityDocumentPhotoUploadedSuccessfully: String {
+        STPLocalizedString(
+            "Back identity document photo successfully uploaded",
+            "Accessibility label when back identity document photo has successfully uploaded"
+        )
+    }
+
+    // MARK: - Document Side Titles 
+    static var frontOfSpecificDocument: String {
+        STPLocalizedString(
+            "Front of %@",
+            "Title of ID document scanning screen when scanning the front of either a driver's license, passport, or government issued photo id "
+        )
+    }
+
+    static var backOfSpecificDocument: String {
+        STPLocalizedString(
+            "Back of %@",
+            "Title of ID document scanning screen when scanning the back of either a driver's license, passport, or government issued photo id"
+        )
+    }
+
     // MARK: - DocumentWarmup
     static var documentFrontWarmupTitle: String {
         STPLocalizedString(
