@@ -265,11 +265,7 @@ private func buildStackView(views: [UIView], theme: ElementsAppearance = .defaul
     stackView.hideShadow = true // Shadow is handled by `SectionContainerView`
     // Set up corner radius / corner configuration
     if LiquidGlassDetector.isEnabled {
-        if views.count == 1 {
-            stackView.backgroundView.ios26_applyCapsuleCornerConfiguration()
-        } else {
-            stackView.backgroundView.ios26_applyDefaultCornerConfiguration()
-        }
+        stackView.backgroundView.ios26_applyDefaultCornerConfiguration()
     } else {
         stackView.borderCornerRadius = theme.cornerRadius
     }
