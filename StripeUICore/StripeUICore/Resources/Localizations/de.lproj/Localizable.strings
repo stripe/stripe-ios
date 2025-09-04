@@ -1,3 +1,5 @@
+"%1$@ •••• %2$@" = "%1$@ •••• %2$@";
+
 "%@ (optional)" = "%@ (optional)";
 
 "(not accepted)" = "(nicht akzeptiert)";
@@ -144,6 +146,6 @@
 
 "Your postal code is incomplete." = "Postleitzahl ist unvollständig.";
 
-"Your postal code is invalid." = "Ihre Postleitzahl ist ungültig.";
+"Your postal code is invalid." = "Postleitzahl ist ungültig";
 
 "ZIP" = "ZIP";

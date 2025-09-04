@@ -1,3 +1,5 @@
+"%1$@ •••• %2$@" = "%1$@ •••• %2$@";
+
 "%@ (optional)" = "%@(opsyonal)";
 
 "(not accepted)" = "(hindi tinatanggap)";
@@ -144,6 +146,6 @@
 
 "Your postal code is incomplete." = "Ang iyong postal code ay di kumpleto.";
 
-"Your postal code is invalid." = "Hindi valid ang postal code mo.";
+"Your postal code is invalid." = "Ang iyong postal code ay di balido.";
 
 "ZIP" = "ZIP";

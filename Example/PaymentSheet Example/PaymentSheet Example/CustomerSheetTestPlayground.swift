@@ -11,12 +11,14 @@ import Contacts
 import Foundation
 import PassKit
 import StripePaymentSheet
+@_spi(STP) import StripeUICore
 import SwiftUI
 import UIKit
 
 @available(iOS 15.0, *)
 struct CustomerSheetTestPlayground: View {
     @StateObject var playgroundController: CustomerSheetTestPlaygroundController
+    @StateObject var analyticsLogObserver: AnalyticsLogObserver = .shared
 
     init(settings: CustomerSheetTestPlaygroundSettings) {
         _playgroundController = StateObject(wrappedValue: CustomerSheetTestPlaygroundController(settings: settings))
@@ -28,6 +30,9 @@ struct CustomerSheetTestPlayground: View {
                 VStack {
                     Group {
                         HStack {
+                            if ProcessInfo.processInfo.environment["UITesting"] != nil {
+                                AnalyticsLogForTesting(analyticsLog: $analyticsLogObserver.analyticsLog)
+                            }
                             Text("Backend").font(.headline)
                             Spacer()
                             Button {
@@ -68,9 +73,11 @@ struct CustomerSheetTestPlayground: View {
                         SettingView(setting: $playgroundController.settings.defaultBillingAddress)
                         SettingView(setting: $playgroundController.settings.preferredNetworksEnabled)
                         SettingView(setting: $playgroundController.settings.cardBrandAcceptance)
+                        SettingView(setting: enableiOS26ChangesBinding)
                         SettingView(setting: $playgroundController.settings.autoreload)
                         TextField("headerTextForSelectionScreen", text: headerTextForSelectionScreenBinding)
                         SettingView(setting: $playgroundController.settings.allowsRemovalOfLastSavedPaymentMethod)
+                        SettingView(setting: $playgroundController.settings.opensCardScannerAutomatically)
                         HStack {
                             Text("Macros").font(.headline)
                             Spacer()
@@ -103,6 +110,16 @@ struct CustomerSheetTestPlayground: View {
                 .environmentObject(playgroundController)
         }
     }
+    var enableiOS26ChangesBinding: Binding<CustomerSheetTestPlaygroundSettings.EnableIOS26Changes> {
+        Binding<CustomerSheetTestPlaygroundSettings.EnableIOS26Changes> {
+            return playgroundController.settings.enableIOS26Changes
+        } set: { newValue in
+            LiquidGlassDetector.allowNewDesign = newValue == .on
+            playgroundController.appearance = PaymentSheet.Appearance()
+            playgroundController.settings.enableIOS26Changes = newValue
+        }
+    }
+
     var customerKeyTypeBinding: Binding<CustomerSheetTestPlaygroundSettings.CustomerKeyType> {
         Binding<CustomerSheetTestPlaygroundSettings.CustomerKeyType> {
             return playgroundController.settings.customerKeyType

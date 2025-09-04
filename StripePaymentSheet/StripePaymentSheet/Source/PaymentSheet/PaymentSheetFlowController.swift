@@ -219,16 +219,16 @@ extension PaymentSheet {
         @Published public private(set) var paymentOption: PaymentOptionDisplayData?
 
         // MARK: - Private properties
-        var intent: Intent { viewController.intent }
-        var elementsSession: STPElementsSession { viewController.elementsSession }
+        var intent: Intent { viewController.loadResult.intent }
+        var elementsSession: STPElementsSession { viewController.loadResult.elementsSession }
         lazy var paymentHandler: STPPaymentHandler = { STPPaymentHandler(apiClient: configuration.apiClient) }()
         var viewController: FlowControllerViewControllerProtocol
 
-        private var presentPaymentOptionsCompletion: (() -> Void)?
+        private var presentPaymentOptionsCompletionWithResult: ((Bool) -> Void)?
         private var didDismissLinkVerificationDialog: Bool = false
 
         // If a WalletButtonsView is currently visible
-        var walletButtonsShownExternally: Bool = false {
+        var walletButtonsViewState: WalletButtonsViewState = .hidden {
             didSet {
                 // Update payment method options
                 self.updateForWalletButtonsView()
@@ -278,6 +278,7 @@ extension PaymentSheet {
 
         private var isPresented = false
         private(set) var didPresentAndContinue: Bool = false
+        private var passiveCaptchaChallenge: PassiveCaptchaChallenge?
         let analyticsHelper: PaymentSheetAnalyticsHelper
 
         // MARK: - Initializer (Internal)
@@ -290,8 +291,11 @@ extension PaymentSheet {
             self.configuration = configuration
             self.analyticsHelper = analyticsHelper
             self.analyticsHelper.logInitialized()
-            self.viewController = Self.makeViewController(configuration: configuration, loadResult: loadResult, analyticsHelper: analyticsHelper, walletButtonsShownExternally: self.walletButtonsShownExternally)
+            self.viewController = Self.makeViewController(configuration: configuration, loadResult: loadResult, analyticsHelper: analyticsHelper, walletButtonsViewState: self.walletButtonsViewState)
             self.viewController.flowControllerDelegate = self
+            self.passiveCaptchaChallenge = PassiveCaptchaChallenge(passiveCaptcha: loadResult.elementsSession.passiveCaptcha)
+            self.viewController.passiveCaptchaChallenge = self.passiveCaptchaChallenge
+            Task { await self.passiveCaptchaChallenge?.start() }
             updatePaymentOption()
         }
 
@@ -395,10 +399,23 @@ extension PaymentSheet {
             from presentingViewController: UIViewController,
             completion: (() -> Void)? = nil
         ) {
+            // Call the version with the didCancel parameter, but ignore the didCancel result
+            presentPaymentOptions(from: presentingViewController) { _ in
+                completion?()
+            }
+        }
+
+        /// Presents a sheet for a customer to select a payment option.
+        /// - Parameter presentingViewController: The view controller to present the payment options sheet from
+        /// - Parameter completion: Called after the sheet is dismissed. The didCancel parameter is "true" if the user canceled the sheet (e.g. by tapping the close button or tapping outside the sheet), and "false" if they tapped the primary ("Continue") button.
+        public func presentPaymentOptions(
+            from presentingViewController: UIViewController,
+            completion: ((_ didCancel: Bool) -> Void)? = nil
+        ) {
             switch latestUpdateContext?.status {
             case .inProgress, .failed:
                 assertionFailure("Cannot call presentPaymentOptions when the last update call has not yet finished or failed.")
-                completion?()
+                completion?(true)
                 return
             default:
                 break
@@ -406,17 +423,17 @@ extension PaymentSheet {
 
             guard presentingViewController.presentedViewController == nil else {
                 assertionFailure("presentingViewController is already presenting a view controller")
-                completion?()
+                completion?(true)
                 return
             }
 
             // Overwrite completion closure to retain self until called
-            let wrappedCompletion: () -> Void = {
+            let wrappedCompletion: (Bool) -> Void = { didCancel in
                 self.updatePaymentOption()
-                completion?()
-                self.presentPaymentOptionsCompletion = nil
+                completion?(didCancel)
+                self.presentPaymentOptionsCompletionWithResult = nil
             }
-            presentPaymentOptionsCompletion = wrappedCompletion
+            presentPaymentOptionsCompletionWithResult = wrappedCompletion
 
             let showPaymentOptions: () -> Void = { [weak self] in
                 guard let self = self else { return }
@@ -470,19 +487,23 @@ extension PaymentSheet {
                     return
                 }
 
-                self.presentPaymentOptionsCompletion?()
+                self.presentPaymentOptionsCompletionWithResult?(false)
                 self.isPresented = false
             }
 
-            presentingViewController.presentNativeLink(
-                selectedPaymentDetailsID: selectedPaymentDetailsID,
-                configuration: configuration,
-                intent: intent,
-                elementsSession: elementsSession,
-                analyticsHelper: analyticsHelper,
-                verificationDismissed: verificationDismissed,
-                callback: completionCallback
-            )
+            Task { @MainActor in
+                let hcaptchaToken = await self.passiveCaptchaChallenge?.fetchToken()
+                presentingViewController.presentNativeLink(
+                    selectedPaymentDetailsID: selectedPaymentDetailsID,
+                    configuration: configuration,
+                    intent: intent,
+                    elementsSession: elementsSession,
+                    analyticsHelper: analyticsHelper,
+                    verificationDismissed: verificationDismissed,
+                    hcaptchaToken: hcaptchaToken,
+                    callback: completionCallback
+                )
+            }
         }
 
         /// Completes the payment or setup.
@@ -540,27 +561,31 @@ extension PaymentSheet {
             }
 
             func confirm() {
-                PaymentSheet.confirm(
-                    configuration: configuration,
-                    authenticationContext: authenticationContext,
-                    intent: intent,
-                    elementsSession: elementsSession,
-                    paymentOption: paymentOption,
-                    paymentHandler: paymentHandler,
-                    integrationShape: .flowController,
-                    analyticsHelper: analyticsHelper
-                ) { [analyticsHelper, configuration] result, deferredIntentConfirmationType in
-                    analyticsHelper.logPayment(
+                Task { @MainActor in
+                    let hcaptchaToken = await self.passiveCaptchaChallenge?.fetchToken()
+                    PaymentSheet.confirm(
+                        configuration: configuration,
+                        authenticationContext: authenticationContext,
+                        intent: intent,
+                        elementsSession: elementsSession,
                         paymentOption: paymentOption,
-                        result: result,
-                        deferredIntentConfirmationType: deferredIntentConfirmationType
-                    )
-                    if case .completed = result, case .link = paymentOption {
-                        // Remember Link as default payment method for users who just created an account.
-                        CustomerPaymentOption.setDefaultPaymentMethod(.link, forCustomer: configuration.customer?.id)
-                    }
+                        paymentHandler: paymentHandler,
+                        integrationShape: .flowController,
+                        hcaptchaToken: hcaptchaToken,
+                        analyticsHelper: analyticsHelper
+                    ) { [analyticsHelper, configuration] result, deferredIntentConfirmationType in
+                        analyticsHelper.logPayment(
+                            paymentOption: paymentOption,
+                            result: result,
+                            deferredIntentConfirmationType: deferredIntentConfirmationType
+                        )
+                        if case .completed = result, case .link = paymentOption {
+                            // Remember Link as default payment method for users who just created an account.
+                            CustomerPaymentOption.setDefaultPaymentMethod(.link, forCustomer: configuration.customer?.id)
+                        }
 
-                    completion(result)
+                        completion(result)
+                    }
                 }
             }
         }
@@ -603,7 +628,7 @@ extension PaymentSheet {
                         configuration: self.configuration,
                         loadResult: loadResult,
                         analyticsHelper: analyticsHelper,
-                        walletButtonsShownExternally: walletButtonsShownExternally,
+                        walletButtonsViewState: walletButtonsViewState,
                         previousPaymentOption: self.internalPaymentOption
                     )
                     self.viewController.flowControllerDelegate = self
@@ -623,11 +648,18 @@ extension PaymentSheet {
 
         func updateForWalletButtonsView() {
             // Recreate the view controller
+            // Use the original load result, but w/ updated saved PMs to avoid e.g. deleting PMs, then having this method be called and showing the deleted PMs again.
+            let updatedLoadResult = PaymentSheetLoader.LoadResult(
+                intent: viewController.loadResult.intent,
+                elementsSession: viewController.loadResult.elementsSession,
+                savedPaymentMethods: viewController.savedPaymentMethods, // Note: not using load result!
+                paymentMethodTypes: viewController.loadResult.paymentMethodTypes
+            )
             self.viewController = Self.makeViewController(
                 configuration: self.configuration,
-                loadResult: self.viewController.loadResult,
+                loadResult: updatedLoadResult,
                 analyticsHelper: analyticsHelper,
-                walletButtonsShownExternally: self.walletButtonsShownExternally,
+                walletButtonsViewState: self.walletButtonsViewState,
                 previousLinkConfirmOption: self.viewController.linkConfirmOption,
                 previousPaymentOption: self.internalPaymentOption
             )
@@ -671,7 +703,7 @@ extension PaymentSheet {
             configuration: Configuration,
             loadResult: PaymentSheetLoader.LoadResult,
             analyticsHelper: PaymentSheetAnalyticsHelper,
-            walletButtonsShownExternally: Bool,
+            walletButtonsViewState: PaymentSheet.WalletButtonsViewState,
             previousLinkConfirmOption: LinkConfirmOption? = nil,
             previousPaymentOption: PaymentOption? = nil
         ) -> FlowControllerViewControllerProtocol {
@@ -690,12 +722,43 @@ extension PaymentSheet {
                     loadResult: loadResult,
                     isFlowController: true,
                     analyticsHelper: analyticsHelper,
-                    walletButtonsShownExternally: walletButtonsShownExternally,
+                    walletButtonsViewState: walletButtonsViewState,
                     previousPaymentOption: previousPaymentOption
                 )
             }
             controller.linkConfirmOption = previousLinkConfirmOption
             return controller
+        }
+    }
+
+    enum WalletButtonsViewState {
+        case visible(allowedWallets: [String])
+        case hidden
+
+        var isVisible: Bool {
+            switch self {
+            case .visible:
+                return true
+            case .hidden:
+                return false
+            }
+        }
+
+        private var visibleButtons: [String] {
+            switch self {
+            case .visible(let allowedWallets):
+                return allowedWallets
+            case .hidden:
+                return []
+            }
+        }
+
+        var showApplePay: Bool {
+            visibleButtons.contains("apple_pay")
+        }
+
+        var showLink: Bool {
+            visibleButtons.contains("link")
         }
     }
 }
@@ -716,7 +779,7 @@ extension PaymentSheet.FlowController: FlowControllerViewControllerDelegate {
             self.didPresentAndContinue = true
         }
         flowControllerViewController.dismiss(animated: true) {
-            self.presentPaymentOptionsCompletion?()
+            self.presentPaymentOptionsCompletionWithResult?(didCancel)
             self.updatePaymentOption()
             self.isPresented = false
         }
@@ -766,15 +829,17 @@ class AuthenticationContext: NSObject, PaymentSheetAuthenticationContext {
 /// All the things FlowController needs from its UIViewController.
 internal protocol FlowControllerViewControllerProtocol: BottomSheetContentViewController {
     var error: Error? { get }
-    var intent: Intent { get }
-    var elementsSession: STPElementsSession { get }
+    /// The load result that we used to initialize.
+    var loadResult: PaymentSheetLoader.LoadResult { get }
+    /// The up to date list of saved payment methods.
+    var savedPaymentMethods: [STPPaymentMethod] { get }
     var linkConfirmOption: PaymentSheet.LinkConfirmOption? { get set }
     var selectedPaymentOption: PaymentOption? { get }
-    var loadResult: PaymentSheetLoader.LoadResult { get }
     /// The type of the Stripe payment method that's currently selected in the UI for new and saved PMs. Returns nil Apple Pay and .stripe(.link) for Link.
     /// Note that, unlike selectedPaymentOption, this is non-nil even if the PM form is invalid.
     var selectedPaymentMethodType: PaymentSheet.PaymentMethodType? { get }
     var flowControllerDelegate: FlowControllerViewControllerDelegate? { get set }
+    var passiveCaptchaChallenge: PassiveCaptchaChallenge? { get set }
 }
 
 extension PaymentOption {

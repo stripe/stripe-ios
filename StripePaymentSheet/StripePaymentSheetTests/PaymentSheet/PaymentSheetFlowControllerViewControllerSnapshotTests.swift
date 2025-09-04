@@ -12,6 +12,7 @@ import StripeCoreTestUtils
 
 import XCTest
 
+// @iOS26
 final class PaymentSheetFlowControllerViewControllerSnapshotTests: STPSnapshotTestCase {
     func makeTestLoadResult(savedPaymentMethods: [STPPaymentMethod]) -> PaymentSheetLoader.LoadResult {
         return .init(
@@ -119,4 +120,35 @@ final class PaymentSheetFlowControllerViewControllerSnapshotTests: STPSnapshotTe
         STPSnapshotVerifyView(sut.view)
     }
 
+    func testDirectToCardScan() {
+        let expectation = expectation(description: "Load specs")
+        AddressSpecProvider.shared.loadAddressSpecs {
+            FormSpecProvider.shared.load { _ in
+                expectation.fulfill()
+            }
+        }
+        waitForExpectations(timeout: 1)
+
+        var configuration: PaymentSheet.Configuration = PaymentSheet.Configuration()
+        configuration.returnURL = "https://foo.com"
+        configuration.opensCardScannerAutomatically = true
+
+        let loadResult = PaymentSheetLoader.LoadResult(
+            intent: ._testValue(),
+            elementsSession: ._testValue(
+                paymentMethodTypes: ["card"],
+                isLinkPassthroughModeEnabled: false
+            ),
+            savedPaymentMethods: [],
+            paymentMethodTypes: [.stripe(.card)]
+        )
+
+        let sut = PaymentSheetFlowControllerViewController(
+            configuration: configuration,
+            loadResult: loadResult,
+            analyticsHelper: ._testValue()
+        )
+        sut.view.autosizeHeight(width: 375)
+        STPSnapshotVerifyView(sut.view)
+    }
 }

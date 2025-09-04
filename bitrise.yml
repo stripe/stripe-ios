@@ -5,6 +5,7 @@ app:
   envs:
   - FASTLANE_XCODE_LIST_TIMEOUT: "120"
   - DEFAULT_TEST_DEVICE: platform=iOS Simulator,name=iPhone 12 mini,OS=16.4
+  - DEFAULT_TEST_DEVICE_26_0: platform=iOS Simulator,name=iPhone 12 mini,OS=26.0
   - BITRISE_PROJECT_PATH: Stripe.xcworkspace
   - GIT_AUTHOR_NAME: Bitrise CI
   - GIT_AUTHOR_EMAIL: mobile-sdk-team@stripe.com
@@ -37,7 +38,9 @@ stages:
   stage-trigger-run-all:
     workflows:
     - framework-tests: {}
+    - framework-tests-ios-26: {}
     - test-builds-xcode-16: {}
+    - test-builds-xcode-26: {}
     - test-builds-vision: {}
     - install-tests: {}
     - lint-tests: {}
@@ -52,8 +55,11 @@ stages:
   stage-releases-run-all:
     workflows:
     - framework-tests-no-mocks: {}
+    - framework-tests-ios-26: {}
     - test-builds-xcode-16: {}
     - test-builds-xcode-16-release: {}
+    - test-builds-xcode-26: {}
+    - test-builds-xcode-26-release: {}
     - test-builds-vision: {}
     - deploy-docs: {}
     - install-tests: {}
@@ -230,82 +236,96 @@ workflows:
         inputs:
         - lane: preflight
         title: fastlane preflight
+        is_always_run: true
     - fastlane@3:
         inputs:
         - lane: threeds2_tests
         title: fastlane threeds2_tests
+        is_always_run: true
     - xcode-test@4:
         inputs:
         - destination: $DEFAULT_TEST_DEVICE
         - test_repetition_mode: retry_on_failure
         - maximum_test_repetitions: "2"
         - scheme: StripeiOS
+        is_always_run: true
     - xcode-test@4:
         inputs:
         - destination: $DEFAULT_TEST_DEVICE
         - test_repetition_mode: retry_on_failure
         - maximum_test_repetitions: "2"
         - scheme: StripePayments
+        is_always_run: true
     - xcode-test@4:
         inputs:
         - destination: $DEFAULT_TEST_DEVICE
         - test_repetition_mode: retry_on_failure
         - maximum_test_repetitions: "2"
         - scheme: StripePaymentsUI
+        is_always_run: true
     - xcode-test@4:
         inputs:
         - destination: $DEFAULT_TEST_DEVICE
         - test_repetition_mode: retry_on_failure
         - maximum_test_repetitions: "2"
         - scheme: StripePaymentSheet
+        is_always_run: true
     - xcode-test@4:
         inputs:
         - destination: $DEFAULT_TEST_DEVICE
         - test_repetition_mode: retry_on_failure
         - maximum_test_repetitions: "2"
         - scheme: StripeCameraCore
+        is_always_run: true
     - xcode-test@4:
         inputs:
         - destination: $DEFAULT_TEST_DEVICE
         - test_repetition_mode: retry_on_failure
         - maximum_test_repetitions: "2"
         - scheme: StripeCore
+        is_always_run: true
     - xcode-test@4:
         inputs:
         - destination: $DEFAULT_TEST_DEVICE
         - test_repetition_mode: retry_on_failure
         - maximum_test_repetitions: "2"
         - scheme: StripeConnect
+        is_always_run: true
     - xcode-test@4:
         inputs:
         - destination: $DEFAULT_TEST_DEVICE
         - test_repetition_mode: retry_on_failure
         - maximum_test_repetitions: "2"
         - scheme: StripeIdentity
+        is_always_run: true
     - xcode-test@4:
         inputs:
         - destination: $DEFAULT_TEST_DEVICE
         - test_repetition_mode: retry_on_failure
         - maximum_test_repetitions: "2"
         - scheme: StripeFinancialConnections
+        is_always_run: true
     - xcode-test@4:
         inputs:
         - destination: $DEFAULT_TEST_DEVICE
         - test_repetition_mode: retry_on_failure
         - maximum_test_repetitions: "2"
         - scheme: StripeCardScan
+        is_always_run: true
     - xcode-test@4:
         inputs:
         - destination: $DEFAULT_TEST_DEVICE
         - test_repetition_mode: retry_on_failure
         - maximum_test_repetitions: "2"
         - scheme: StripeApplePay
+        is_always_run: true
     - xcode-test@4:
         inputs:
         - destination: $DEFAULT_TEST_DEVICE
         - test_repetition_mode: retry_on_failure
         - maximum_test_repetitions: "2"
         - scheme: StripeUICore
+        is_always_run: true
     - deploy-to-bitrise-io@2: {}
     - save-spm-cache@1: {}
     before_run:
@@ -315,6 +335,26 @@ workflows:
       bitrise.io:
         stack: osx-xcode-16.0.x
         machine_type_id: g2.mac.large
+  framework-tests-ios-26:
+    steps:
+    - xcode-test@4:
+        inputs:
+        - destination: $DEFAULT_TEST_DEVICE_26_0
+        - test_repetition_mode: retry_on_failure
+        - maximum_test_repetitions: "2"
+        - scheme: AllStripeFrameworks-iOS26
+    - deploy-to-bitrise-io@2: {}
+    - save-spm-cache@1: {}
+    before_run:
+    - prep_all
+    after_run:
+    - notify_ci
+    meta:
+      bitrise.io:
+        stack: osx-xcode-26.0.x-edge
+        machine_type_id: g2.mac.large
+    envs:
+    - DEFAULT_TEST_DEVICE: $DEFAULT_TEST_DEVICE_26_0
   framework-tests-no-mocks:
     steps:
     - fastlane@3:
@@ -364,6 +404,33 @@ workflows:
       bitrise.io:
         stack: osx-xcode-16.0.x
         machine_type_id: g2.mac.large
+  test-builds-xcode-26:
+    steps:
+    - xcode-build-for-test@2:
+        inputs:
+        - scheme: AllStripeFrameworks
+        - destination: generic/platform=iOS Simulator
+    - deploy-to-bitrise-io@2: {}
+    envs:
+    - DEFAULT_TEST_DEVICE: platform=iOS Simulator,name=iPhone 16,OS=26.0
+    before_run:
+    - prep_all
+    meta:
+      bitrise.io:
+        stack: osx-xcode-26.0.x-edge
+  test-builds-xcode-26-release:
+    steps:
+    - script@1:
+        inputs:
+        - content: xcodebuild build -workspace "Stripe.xcworkspace" -scheme "AllStripeFrameworks" -configuration "Release" -sdk "iphonesimulator" | xcpretty
+        title: Build release builds
+    envs:
+    - DEFAULT_TEST_DEVICE: platform=iOS Simulator,name=iPhone 16,OS=26.0
+    before_run:
+    - prep_all
+    meta:
+      bitrise.io:
+        stack: osx-xcode-26.0.x-edge
   test-builds-vision:
     steps:
     - xcode-build-for-test@2:

@@ -10,14 +10,12 @@ import StripePaymentSheet
 import UIKit
 
 class AppDelegate: UIResponder, UIApplicationDelegate {
-    var window: UIWindow?
-
     func application(
         _ application: UIApplication,
         didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?
     ) -> Bool {
         // Override point for customization after application launch.
-        #if targetEnvironment(simulator)
+#if targetEnvironment(simulator)
         if ProcessInfo.processInfo.environment["UITesting"] != nil {
             // Disable hardware keyboards in CI:
             let setHardwareLayout = NSSelectorFromString("setHardwareLayout:")
@@ -32,7 +30,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             // Speed up animations for quicker CI times
             UIApplication.shared.windows.first(where: { $0.isKeyWindow })?.layer.speed = 100
         }
-        #endif
+#endif
+        catchBrokenConstraints()
 
         return true
     }
@@ -57,5 +56,4 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // If any sessions were discarded while the application was not running, this will be called shortly after application:didFinishLaunchingWithOptions.
         // Use this method to release any resources that were specific to the discarded scenes, as they will not return.
     }
-
 }

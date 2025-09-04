@@ -67,19 +67,22 @@ extension PaymentSheet {
         shouldFinishOnClose: Bool,
         onClose: (() -> Void)? = nil
     ) {
-        let payWithNativeLink = PayWithNativeLinkController(mode: .full, intent: intent, elementsSession: elementsSession, configuration: configuration, analyticsHelper: analyticsHelper)
+        Task { @MainActor in
+            let hcaptchaToken = await self.passiveCaptchaChallenge?.fetchToken()
+            let payWithNativeLink = PayWithNativeLinkController(mode: .full, intent: intent, elementsSession: elementsSession, configuration: configuration, analyticsHelper: analyticsHelper, hcaptchaToken: hcaptchaToken)
 
-        payWithNativeLink.presentAsBottomSheet(from: presentingController, shouldOfferApplePay: shouldOfferApplePay, shouldFinishOnClose: shouldFinishOnClose, completion: { result, _, didFinish in
-            if case let .failed(error) = result {
-                self.mostRecentError = error
-            }
+            payWithNativeLink.presentAsBottomSheet(from: presentingController, shouldOfferApplePay: shouldOfferApplePay, shouldFinishOnClose: shouldFinishOnClose, completion: { result, _, didFinish in
+                if case let .failed(error) = result {
+                    self.mostRecentError = error
+                }
 
-            if didFinish {
-                self.completion?(result)
-            }
+                if didFinish {
+                    self.completion?(result)
+                }
 
-            onClose?()
-        })
+                onClose?()
+            })
+        }
     }
 }
 

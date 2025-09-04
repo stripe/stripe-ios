@@ -86,6 +86,8 @@ final class PaymentSheetAnalyticsExperimentsTests: XCTestCase {
             linkConsumerIncentive: nil,
             linkDefaultOptIn: .full,
             linkEnableDisplayableDefaultValuesInECE: nil,
+            linkShowPreferDebitCardHint: nil,
+            linkSupportedPaymentMethodsOnboardingEnabled: ["CARD"],
             allResponseFields: [:]
         )
         let experimentsData = ExperimentsData(
@@ -154,6 +156,8 @@ final class PaymentSheetAnalyticsExperimentsTests: XCTestCase {
             linkConsumerIncentive: nil,
             linkDefaultOptIn: .optional,
             linkEnableDisplayableDefaultValuesInECE: nil,
+            linkShowPreferDebitCardHint: nil,
+            linkSupportedPaymentMethodsOnboardingEnabled: ["CARD"],
             allResponseFields: [:]
         )
         let experimentsData = ExperimentsData(

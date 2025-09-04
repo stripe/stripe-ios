@@ -20,7 +20,7 @@ class TextFieldElementAddressFactoryTest: XCTestCase {
 
         // MARK: Required
         let requiredTestcases: [String: ValidationState] = [
-            "": .invalid(TextFieldElement.Error.empty),
+            "": .invalid(TextFieldElement.Error.empty(localizedDescription: "")),
             "0": .valid,
             "A": .valid,
             "; foo": .valid,
@@ -46,7 +46,7 @@ class TextFieldElementAddressFactoryTest: XCTestCase {
 
         // MARK: Required
         let requiredTestcases: [String: ValidationState] = [
-            "": .invalid(TextFieldElement.Error.empty),
+            "": .invalid(TextFieldElement.Error.empty(localizedDescription: "")),
             "f": .invalid(email.invalidError),
             "f@": .invalid(email.invalidError),
             "f@z": .invalid(email.invalidError),
@@ -77,7 +77,7 @@ class TextFieldElementAddressFactoryTest: XCTestCase {
         config.test(text: "12345", isOptional: false, matches: .valid)
 
         // invalid cases
-        config.test(text: "", isOptional: false, matches: .invalid(TextFieldElement.Error.empty))
+        config.test(text: "", isOptional: false, matches: .invalid(TextFieldElement.Error.empty(localizedDescription: "")))
         config.test(text: "1234", isOptional: false, matches: .invalid(TextFieldElement.Error.incomplete(localizedDescription: String.Localized.your_zip_is_incomplete)))
         config.test(text: "9411", isOptional: false, matches: .invalid(TextFieldElement.Error.incomplete(localizedDescription: String.Localized.your_zip_is_incomplete)))
         config.test(text: "abcde", isOptional: false, matches: .invalid(TextFieldElement.Error.invalid(localizedDescription: String.Localized.your_zip_is_invalid)))
@@ -119,7 +119,7 @@ class TextFieldElementAddressFactoryTest: XCTestCase {
         config.test(text: "A0A0A0", isOptional: false, matches: .valid)
 
         // invalid cases
-        config.test(text: "", isOptional: false, matches: .invalid(TextFieldElement.Error.empty))
+        config.test(text: "", isOptional: false, matches: .invalid(TextFieldElement.Error.empty(localizedDescription: "")))
         config.test(text: "AAA AAA", isOptional: false, matches: .invalid(TextFieldElement.Error.invalid(localizedDescription: String.Localized.your_postal_code_is_invalid)))
         config.test(text: "AAAAAA", isOptional: false, matches: .invalid(TextFieldElement.Error.invalid(localizedDescription: String.Localized.your_postal_code_is_invalid)))
         config.test(text: "1N8E8R", isOptional: false, matches: .invalid(TextFieldElement.Error.invalid(localizedDescription: String.Localized.your_postal_code_is_invalid)))
@@ -139,7 +139,7 @@ class TextFieldElementAddressFactoryTest: XCTestCase {
         config.test(text: "11111", isOptional: false, matches: .valid)
 
         // Invalid cases
-        config.test(text: "", isOptional: false, matches: .invalid(TextFieldElement.Error.empty))
+        config.test(text: "", isOptional: false, matches: .invalid(TextFieldElement.Error.empty(localizedDescription: "")))
     }
 
     // MARK: - Phone Number

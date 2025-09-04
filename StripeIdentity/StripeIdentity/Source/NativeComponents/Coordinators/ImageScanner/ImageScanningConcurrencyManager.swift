@@ -57,6 +57,9 @@ final class ImageScanningConcurrencyManager: ImageScanningConcurrencyManagerProt
     /// Semaphore used to block the current thread until detectors have completed
     private let semaphore: DispatchSemaphore
 
+    private var amountOfFutures = 0
+    private var futureQueue: DispatchQueue = DispatchQueue(label: "com.stripe.identity.concurrent-image-scanner.futures")
+
     private let analyticsClient: IdentityAnalyticsClient
     private let sheetController: VerificationSheetControllerProtocol
 
@@ -67,6 +70,14 @@ final class ImageScanningConcurrencyManager: ImageScanningConcurrencyManagerProt
         self.analyticsClient = sheetController.analyticsClient
         self.sheetController = sheetController
         self.semaphore = DispatchSemaphore(value: maxConcurrentScans)
+    }
+
+    deinit {
+        futureQueue.sync {
+            for _ in 0..<amountOfFutures {
+                self.semaphore.signal()
+            }
+        }
     }
 
     /// Scans a camera frame and calls a completion block with the scanned output
@@ -116,12 +127,17 @@ final class ImageScanningConcurrencyManager: ImageScanningConcurrencyManagerProt
         }
 
         semaphore.wait()
-
-        scanner.scanImage(
+        let future = scanner.scanImage(
             pixelBuffer: pixelBuffer,
             sampleBuffer: sampleBuffer,
             cameraProperties: cameraProperties
-        ).observe(on: concurrentQueue) { result in
+        )
+
+        futureQueue.sync {
+            self.amountOfFutures += 1
+        }
+
+        future.observe(on: concurrentQueue) { result in
             switch result {
             case .success(let scannerOutput):
                 wrappedCompletion(scannerOutput)
@@ -138,7 +154,11 @@ final class ImageScanningConcurrencyManager: ImageScanningConcurrencyManagerProt
                 self?.perfNumFramesScanned += 1
             }
 
-            self.semaphore.signal()
+            self.futureQueue.sync {
+                self.amountOfFutures -= 1
+                self.semaphore.signal()
+            }
+
         }
     }
 

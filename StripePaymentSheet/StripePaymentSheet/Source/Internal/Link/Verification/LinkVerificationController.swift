@@ -23,13 +23,15 @@ final class LinkVerificationController {
         linkAccount: PaymentSheetLinkAccount,
         configuration: PaymentElementConfiguration,
         appearance: LinkAppearance? = nil,
-        allowLogoutInDialog: Bool = false
+        allowLogoutInDialog: Bool = false,
+        consentViewModel: LinkConsentViewModel? = nil
     ) {
         self.verificationViewController = LinkVerificationViewController(
             mode: mode,
             linkAccount: linkAccount,
             appearance: appearance,
-            allowLogoutInDialog: allowLogoutInDialog
+            allowLogoutInDialog: allowLogoutInDialog,
+            consentViewModel: consentViewModel
         )
         verificationViewController.delegate = self
         configuration.style.configure(verificationViewController)

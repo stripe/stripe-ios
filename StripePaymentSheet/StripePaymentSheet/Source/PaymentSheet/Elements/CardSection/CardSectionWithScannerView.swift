@@ -24,26 +24,42 @@ final class CardSectionWithScannerView: UIView {
     let cardSectionView: UIView
     let analyticsHelper: PaymentSheetAnalyticsHelper?
     lazy var cardScanButton: UIButton = {
-        let button = UIButton.makeCardScanButton(theme: theme)
+        let button = UIButton.makeCardScanButton(theme: theme, linkAppearance: linkAppearance)
         button.addTarget(self, action: #selector(didTapCardScanButton), for: .touchUpInside)
         return button
     }()
     lazy var cardScanningView: CardScanningView = {
         let scanningView = CardScanningView()
-        scanningView.isHidden = true
         scanningView.delegate = self
         return scanningView
     }()
+    private let opensCardScannerAutomatically: Bool
     weak var delegate: CardSectionWithScannerViewDelegate?
     private let theme: ElementsAppearance
+    private let linkAppearance: LinkAppearance?
 
-    init(cardSectionView: UIView, delegate: CardSectionWithScannerViewDelegate, theme: ElementsAppearance = .default, analyticsHelper: PaymentSheetAnalyticsHelper?) {
+    init(
+        cardSectionView: UIView,
+        opensCardScannerAutomatically: Bool,
+        delegate: CardSectionWithScannerViewDelegate,
+        theme: ElementsAppearance = .default,
+        analyticsHelper: PaymentSheetAnalyticsHelper?,
+        linkAppearance: LinkAppearance? = nil
+    ) {
         self.cardSectionView = cardSectionView
+        self.opensCardScannerAutomatically = opensCardScannerAutomatically
         self.delegate = delegate
         self.theme = theme
         self.analyticsHelper = analyticsHelper
+        self.linkAppearance = linkAppearance
         super.init(frame: .zero)
         installConstraints()
+
+        if opensCardScannerAutomatically {
+            cardScanButton.alpha = 0
+        } else {
+            cardScanningView.setHiddenIfNecessary(true)
+        }
     }
 
     required init?(coder: NSCoder) { fatalError("init(coder:) has not been implemented") }
@@ -87,8 +103,21 @@ final class CardSectionWithScannerView: UIView {
     }
 
     override func resignFirstResponder() -> Bool {
+        // If we leave the screen or an input field is focused, we close the scanner
         cardScanningView.stop()
         return super.resignFirstResponder()
+    }
+
+    override func willMove(toWindow newWindow: UIWindow?) {
+        // We wait until we are added to the screen to start the scanner instead of at initialization
+        // If cardScanningView.start() is called when it is already started, nothing will happen
+        // The opensCardScannerAutomatically check is redudant since this should only apply in that case,
+        //    but it adds a bit of extra safety. This can be removed in the future.
+        if newWindow != nil && !cardScanningView.isHidden && opensCardScannerAutomatically {
+            cardScanningView.start()
+            becomeFirstResponder()
+        }
+        super.willMove(toWindow: newWindow)
     }
 }
 

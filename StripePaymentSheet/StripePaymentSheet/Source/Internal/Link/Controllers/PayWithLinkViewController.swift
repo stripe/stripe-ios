@@ -89,8 +89,11 @@ final class PayWithLinkViewController: BottomSheetViewController {
         let canSkipWalletAfterVerification: Bool
         let initiallySelectedPaymentDetailsID: String?
         let callToAction: ConfirmButton.CallToActionType
+        let supportedPaymentMethodTypes: [LinkPaymentMethodType]
         var lastAddedPaymentDetails: ConsumerPaymentDetails?
         var analyticsHelper: PaymentSheetAnalyticsHelper
+        let linkAppearance: LinkAppearance?
+        let linkConfiguration: LinkConfiguration?
 
         var isDismissible: Bool = true
 
@@ -99,6 +102,27 @@ final class PayWithLinkViewController: BottomSheetViewController {
                 String.Localized.pay_another_way
             } else {
                 String.Localized.continue_another_way
+            }
+        }
+
+        var showProcessingLabel: Bool {
+            // If launched from FlowController for payment method selection (and not confirmation), we don't
+            // want to show the "Processing…" label, as that label implies that the transaction is being
+            // completed, which is not the case.
+            !launchedFromFlowController
+        }
+
+        /// Returns the supported payment details types for the current Link account, filtered by the supportedPaymentMethodTypes.
+        /// Returns [.card] as fallback if no types are supported after filtering.
+        func getSupportedPaymentDetailsTypes(linkAccount: PaymentSheetLinkAccount) -> Set<ConsumerPaymentDetails.DetailsType> {
+            let allSupportedPaymentDetailsTypes = linkAccount.supportedPaymentDetailsTypes(for: elementsSession)
+            let filteredSupportedPaymentDetailsTypes = allSupportedPaymentDetailsTypes.intersection(supportedPaymentMethodTypes.detailsTypes)
+
+            if !filteredSupportedPaymentDetailsTypes.isEmpty {
+                return filteredSupportedPaymentDetailsTypes
+            } else {
+                // Card is the default payment method type when no other type is available.
+                return [.card]
             }
         }
 
@@ -114,7 +138,10 @@ final class PayWithLinkViewController: BottomSheetViewController {
         ///   - canSkipWalletAfterVerification: Whether or not we should try to skip showing the wallet after verification.
         ///   - initiallySelectedPaymentDetailsID: The ID of an initially selected payment method. This is set when opened instead of FlowController.
         ///   - callToAction: A custom CTA to display on the confirm button. If `nil`, will display `intent`'s default CTA.
+        ///   - supportedPaymentMethodTypes: The payment method types to support in the Link sheet. Defaults to all available types.
         ///   - analyticsHelper: An instance of `AnalyticsHelper` to use for logging.
+        ///   - linkAppearance: Optional appearance overrides for Link UI.
+        ///   - linkConfiguration: Configuration for Link behavior and content.
         init(
             intent: Intent,
             elementsSession: STPElementsSession,
@@ -126,7 +153,10 @@ final class PayWithLinkViewController: BottomSheetViewController {
             canSkipWalletAfterVerification: Bool,
             initiallySelectedPaymentDetailsID: String?,
             callToAction: ConfirmButton.CallToActionType?,
-            analyticsHelper: PaymentSheetAnalyticsHelper
+            supportedPaymentMethodTypes: [LinkPaymentMethodType] = LinkPaymentMethodType.allCases,
+            analyticsHelper: PaymentSheetAnalyticsHelper,
+            linkAppearance: LinkAppearance? = nil,
+            linkConfiguration: LinkConfiguration? = nil
         ) {
             self.intent = intent
             self.elementsSession = elementsSession
@@ -138,7 +168,10 @@ final class PayWithLinkViewController: BottomSheetViewController {
             self.canSkipWalletAfterVerification = canSkipWalletAfterVerification
             self.initiallySelectedPaymentDetailsID = initiallySelectedPaymentDetailsID
             self.callToAction = callToAction ?? .makeDefaultTypeForLink(intent: intent)
+            self.supportedPaymentMethodTypes = supportedPaymentMethodTypes
             self.analyticsHelper = analyticsHelper
+            self.linkAppearance = linkAppearance
+            self.linkConfiguration = linkConfiguration
         }
     }
 
@@ -178,7 +211,10 @@ final class PayWithLinkViewController: BottomSheetViewController {
         initiallySelectedPaymentDetailsID: String? = nil,
         canSkipWalletAfterVerification: Bool,
         callToAction: ConfirmButton.CallToActionType? = nil,
-        analyticsHelper: PaymentSheetAnalyticsHelper
+        analyticsHelper: PaymentSheetAnalyticsHelper,
+        supportedPaymentMethodTypes: [LinkPaymentMethodType] = LinkPaymentMethodType.allCases,
+        linkAppearance: LinkAppearance? = nil,
+        linkConfiguration: LinkConfiguration? = nil
     ) {
         self.init(
             context: Context(
@@ -192,7 +228,10 @@ final class PayWithLinkViewController: BottomSheetViewController {
                 canSkipWalletAfterVerification: canSkipWalletAfterVerification,
                 initiallySelectedPaymentDetailsID: initiallySelectedPaymentDetailsID,
                 callToAction: callToAction,
-                analyticsHelper: analyticsHelper
+                supportedPaymentMethodTypes: supportedPaymentMethodTypes,
+                analyticsHelper: analyticsHelper,
+                linkAppearance: linkAppearance,
+                linkConfiguration: linkConfiguration
             ),
             linkAccount: linkAccount
         )
@@ -353,13 +392,13 @@ private extension PayWithLinkViewController {
             return
         }
 
-        let supportedPaymentDetailsTypes = linkAccount
-            .supportedPaymentDetailsTypes(for: context.elementsSession)
-            .toSortedArray()
+        let supportedPaymentDetailsTypesSet = context.getSupportedPaymentDetailsTypes(linkAccount: linkAccount)
+        let supportedPaymentDetailsTypes = supportedPaymentDetailsTypesSet.toSortedArray()
 
         Task { @MainActor in
             async let paymentDetailsResult = linkAccount.listPaymentDetails(
-                supportedTypes: supportedPaymentDetailsTypes
+                supportedTypes: supportedPaymentDetailsTypes,
+                shouldRetryOnAuthError: false
             )
 
             async let shippingAddressResult = fetchShippingAddress(
@@ -396,11 +435,40 @@ private extension PayWithLinkViewController {
                     paymentDetails: paymentDetails
                 )
             } catch {
+                if error.isLinkAuthError {
+                    // Ask the user to verify the session again, as it might have expired.
+                    if let updatedAccount = await attemptReauthentication() {
+                        setViewControllers([VerifyAccountViewController(linkAccount: updatedAccount, context: context)])
+                        return
+                    }
+                }
+
                 payWithLinkDelegate?.payWithLinkViewControllerDidFinish(
                     self,
                     result: PaymentSheetResult.failed(error: error),
                     deferredIntentConfirmationType: nil
                 )
+            }
+        }
+    }
+
+    private func attemptReauthentication() async -> PaymentSheetLinkAccount? {
+        // Tell the LinkAccountService to lookup again
+        let accountService = LinkAccountService(apiClient: context.configuration.apiClient, elementsSession: context.elementsSession)
+
+        return await withCheckedContinuation { continuation in
+            accountService.lookupAccount(
+                withEmail: linkAccount?.email,
+                emailSource: .prefilledEmail,
+                doNotLogConsumerFunnelEvent: false
+            ) { result in
+                switch result {
+                case .success(let account):
+                    self.linkAccount = account
+                    continuation.resume(returning: account)
+                case .failure:
+                    continuation.resume(returning: nil)
+                }
             }
         }
     }
@@ -417,7 +485,7 @@ private extension PayWithLinkViewController {
         shouldFetch: Bool
     ) async throws -> ShippingAddressesResponse? {
         guard shouldFetch else { return nil }
-        return try await account.listShippingAddress()
+        return try await account.listShippingAddress(shouldRetryOnAuthError: false)
     }
 
     private func presentAppropriateViewController(
@@ -426,12 +494,30 @@ private extension PayWithLinkViewController {
     ) {
         let viewController: BottomSheetContentViewController
         if paymentDetails.isEmpty {
-            let addPaymentMethodVC = NewPaymentViewController(
-                linkAccount: linkAccount,
-                context: context,
-                isAddingFirstPaymentMethod: true
-            )
-            viewController = addPaymentMethodVC
+            // Check if only bank accounts are supported - if so, launch Financial Connections directly
+            let supportedTypes = context.getSupportedPaymentDetailsTypes(linkAccount: linkAccount)
+            if supportedTypes == [.bankAccount] {
+                startFinancialConnections { [weak self] result in
+                    guard let self else { return }
+                    switch result {
+                    case .completed:
+                        self.loadAndPresentWallet()
+                    case .canceled:
+                        self.cancel(shouldReturnToPaymentSheet: false)
+                    case .failed(let error):
+                        self.finish(withResult: .failed(error: error), deferredIntentConfirmationType: nil)
+                    }
+                }
+                // Show a loading view while Financial Connections is being prepared
+                viewController = LoaderViewController(context: context)
+            } else {
+                let addPaymentMethodVC = NewPaymentViewController(
+                    linkAccount: linkAccount,
+                    context: context,
+                    isAddingFirstPaymentMethod: true
+                )
+                viewController = addPaymentMethodVC
+            }
         } else {
             let walletViewController = WalletViewController(
                 linkAccount: linkAccount,

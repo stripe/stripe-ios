@@ -1,5 +1,3 @@
-"%1$@ •••• %2$@" = "%1$@ •••• %2$@";
-
 "+ Add" = "+ Tilføj";
 
 "Add US bank account" = "Tilføj amerikansk bankkonto";
@@ -60,7 +58,7 @@
 
 "By continuing, you agree to authorize payments pursuant to <terms>these terms</terms>." = "Ved at fortsætte accepterer du at godkende betalinger i henhold til <terms>disse vilkår</terms>.";
 
-"By continuing, you agree to save your information for future purchases with %@ and <link>Link</link>. You also agree to Link's <terms>Terms</terms> and <privacy>Privacy</privacy>." = "Ved at fortsætte accepterer du at gemme dine oplysninger til senere køb med %@ og <link>Link</link>Du accepterer også Links <terms>vilkår</terms> og <privacy>politik om beskyttelse af personlige oplysninger</privacy>.";
+"By continuing, you agree to save your information for future purchases with %@ and <link>Link</link> according to Link <terms>terms</terms> and <privacy>privacy</privacy>." = "Ved at fortsætte accepterer du at gemme dine oplysninger til senere køb hos %@ og <link>Link</link> ifølge Links <terms>vilkår</terms> og <privacy>privatlivspolitik</privacy>.";
 
 "By continuing, you agree to save your information for future purchases with %@." = "Ved at fortsætte accepterer du at gemme dine oplysninger til senere køb med %@.";
 
@@ -83,6 +81,8 @@
 "By providing your phone number, you agree to create a Link account and save your payment info to Link, according to the Link <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Når du angiver dit telefonnummer, accepterer du at oprette en Link-konto og gemme dine betalingsoplysninger på Link i henhold til Links <terms>Vilkår</terms> og <privacy>Privatlivspolitik</privacy>.";
 
 "By saving your bank account for %@ you agree to authorize payments pursuant to <terms>these terms</terms>." = "Ved at gemme din bankkonto for %@ accepterer du at godkende betalinger i henhold til <terms>disse vilkår</terms>.";
+
+"By submitting your order to %@ you agree to authorize payments pursuant to <terms>these terms</terms>." = "Ved at indsende din ordre til %@ accepterer du at autorisere betalinger i henhold til <terms>disse vilkår</terms>.";
 
 "CPF/CPNJ" = "CPF/CPNJ";
 
@@ -114,6 +114,8 @@
 
 "Continue another way" = "Fortsæt på en anden måde";
 
+"Create an account with Link for faster checkout across the web" = "Opret en konto med Link for gøre betaling hurtigere på hele internettet";
+
 "Debit or credit card" = "Debet- eller kreditkort";
 
 "Default" = "Standard";
@@ -125,6 +127,8 @@
 "Enter address manually" = "Indtast adresse manuelt";
 
 "Enter the code sent to %@ to use your saved information." = "Indtast koden, der blev sendt til %@, for at bruge dine gemte oplysninger.";
+
+"Enter the code sent to %@." = "Indtast den kode, der blev sendt til %s.";
 
 "FPX Bank" = "FPX Bank";
 
@@ -286,6 +290,8 @@
 
 "This is your default" = "Dette er din standard";
 
+"This payment method will be removed but will remain available for %@ subscriptions." = "Denne betalingsmetode vil blive fjernet, men vil fortsat være tilgængelig for %@-abonnementer.";
+
 "Too many attempts. Please try again in a few minutes." = "For mange forsøg. Prøv igen om et par minutter.";
 
 "Unavailable for this purchase" = "Ikke tilgængelig for dette køb";
@@ -295,8 +301,6 @@
 "Update payment method" = "Opdater betalingsmetode";
 
 "Use billing address for shipping" = "Brug faktureringsadresse til forsendelse";
-
-"Use your saved info to check out faster" = "Brug dine gemte oplysninger til hurtigere betaling";
 
 "View more" = "Vis mere";
 

@@ -1,6 +1,3 @@
-/* Content for alert popup prompting to confirm removing a saved card. {card brand} •••• {last 4} e.g. 'Visa •••• 3155' */
-"%1$@ •••• %2$@" = "%1$@ •••• %2$@";
-
 /* Text for a button that, when tapped, displays another screen where the customer can add payment method details */
 "+ Add" = "+ Add";
 
@@ -93,7 +90,7 @@
 "By continuing, you agree to authorize payments pursuant to <terms>these terms</terms>." = "By continuing, you agree to authorize payments pursuant to <terms>these terms</terms>.";
 
 /* Text displayed below a credit card entry form when the card will be saved with the merchant and saved to Link. */
-"By continuing, you agree to save your information for future purchases with %@ and <link>Link</link>. You also agree to Link's <terms>Terms</terms> and <privacy>Privacy</privacy>." = "By continuing, you agree to save your information for future purchases with %@ and <link>Link</link>. You also agree to Link's <terms>Terms</terms> and <privacy>Privacy</privacy>.";
+"By continuing, you agree to save your information for future purchases with %@ and <link>Link</link> according to Link <terms>terms</terms> and <privacy>privacy</privacy>." = "By continuing, you agree to save your information for future purchases with %@ and <link>Link</link> according to Link <terms>terms</terms> and <privacy>privacy</privacy>.";
 
 /* Text displayed below a credit card entry form when the card will be saved with the merchant. */
 "By continuing, you agree to save your information for future purchases with %@." = "By continuing, you agree to save your information for future purchases with %@.";
@@ -127,6 +124,9 @@
 
 /* Mandate text with link to terms when saving a bank account payment method to a merchant (merchant name replaces %@). */
 "By saving your bank account for %@ you agree to authorize payments pursuant to <terms>these terms</terms>." = "By saving your bank account for %@ you agree to authorize payments pursuant to <terms>these terms</terms>.";
+
+/* Text providing link to terms for bank payments */
+"By submitting your order to %@ you agree to authorize payments pursuant to <terms>these terms</terms>." = "By submitting your order to %@ you agree to authorize payments pursuant to <terms>these terms</terms>.";
 
 /* Button text on a screen asking the user to approve a payment */
 "Cancel and pay another way" = "Cancel and pay another way";
@@ -174,6 +174,10 @@ with the transaction. */
 /* Label for CPF/CPNJ (Brazil tax ID) field */
 "CPF/CPNJ" = "CPF/CPNJ";
 
+/* Label for a checkbox that when checked allows the payment information
+to be saved and used in future checkout sessions. */
+"Create an account with Link for faster checkout across the web" = "Create an account with Link for faster checkout across the web";
+
 /* Label shown in the payment type picker describing a card payment */
 "Debit or credit card" = "Debit or credit card";
 
@@ -187,7 +191,7 @@ with the transaction. */
 "Enter address manually" = "Enter address manually";
 
 /* Instructs the user to enter the code sent to their phone number in order to login to Link */
-"Enter the code sent to %@ to use your saved information." = "Enter the code sent to %@ to use your saved information.";
+"Enter the code sent to %@." = "Enter the code sent to %@.";
 
 /* Label title for EPS Bank */
 "EPS Bank" = "EPS Bank";
@@ -442,6 +446,9 @@ is not supported by the merchant */
 /* Text of a label indicating that a payment method is the default. */
 "This is your default" = "This is your default";
 
+/* Content for alert popup prompting if they want to remove a payment method when using payment_method_remove == .partial. %@ is replaced by the merchant name */
+"This payment method will be removed but will remain available for %@ subscriptions." = "This payment method will be removed but will remain available for %@ subscriptions.";
+
 /* Error message shown when the user enters an incorrect verification code too many times. */
 "Too many attempts. Please try again in a few minutes." = "Too many attempts. Please try again in a few minutes.";
 
@@ -457,9 +464,6 @@ the heading the screen itself. */
 
 /* Label for checkbox in address form allowing user to use billing address */
 "Use billing address for shipping" = "Use billing address for shipping";
-
-/* Two factor authentication screen heading */
-"Use your saved info to check out faster" = "Use your saved info to check out faster";
 
 /* Text shown on a button that displays a customer's default saved payment method. When tapped, it opens a screen that shows all of the customer's saved payment methods. */
 "View more" = "View more";

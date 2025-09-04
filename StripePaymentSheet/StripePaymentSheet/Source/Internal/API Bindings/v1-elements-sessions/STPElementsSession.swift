@@ -278,12 +278,23 @@ extension STPElementsSession {
         if let customerSession = customer?.customerSession {
             if customerSession.mobilePaymentElementComponent.enabled,
                let features = customerSession.mobilePaymentElementComponent.features {
-                allowsRemovalOfPaymentMethods = features.paymentMethodRemove
+                allowsRemovalOfPaymentMethods = features.paymentMethodRemove == .enabled || features.paymentMethodRemove == .partial
             }
         } else {
             allowsRemovalOfPaymentMethods = true
         }
         return allowsRemovalOfPaymentMethods
+    }
+
+    func paymentMethodRemoveIsPartialForPaymentSheet() -> Bool {
+        let isParital = false
+        if let customerSession = customer?.customerSession {
+            if customerSession.mobilePaymentElementComponent.enabled,
+               let features = customerSession.mobilePaymentElementComponent.features {
+                return features.paymentMethodRemove == .partial
+            }
+        }
+        return isParital
     }
 
     func paymentMethodRemoveLast(configuration: PaymentElementConfiguration) -> Bool{
@@ -313,12 +324,22 @@ extension STPElementsSession {
         if let customerSession = customer?.customerSession {
             if customerSession.customerSheetComponent.enabled,
                let features = customerSession.customerSheetComponent.features {
-                allowsRemovalOfPaymentMethods = features.paymentMethodRemove
+                allowsRemovalOfPaymentMethods = features.paymentMethodRemove == .enabled || features.paymentMethodRemove == .partial
             }
         } else {
             allowsRemovalOfPaymentMethods = true
         }
         return allowsRemovalOfPaymentMethods
+    }
+    func paymentMethodRemoveIsPartialForCustomerSheet() -> Bool {
+        let isParital = false
+        if let customerSession = customer?.customerSession {
+            if customerSession.customerSheetComponent.enabled,
+               let features = customerSession.customerSheetComponent.features {
+                return features.paymentMethodRemove == .partial
+            }
+        }
+        return isParital
     }
     var paymentMethodRemoveLastForCustomerSheet: Bool {
         return customer?.customerSession.customerSheetComponent.features?.paymentMethodRemoveLast ?? true
@@ -338,6 +359,10 @@ extension STPElementsSession {
 
     var allowsLinkDefaultOptIn: Bool {
         linkFlags["link_mobile_disable_default_opt_in"] != true
+    }
+
+    var forceSaveFutureUseBehaviorAndNewMandateText: Bool {
+        flags["elements_mobile_force_setup_future_use_behavior_and_new_mandate_text"] == true
     }
 
     var linkSignupOptInFeatureEnabled: Bool {
@@ -379,5 +404,27 @@ extension STPElementsSession {
             return false
         }
         return true
+    }
+}
+
+extension STPElementsSession {
+    func computeAllowRedisplay(isSettingUp: Bool) -> STPPaymentMethodAllowRedisplay? {
+        guard let customerSessionMobilePaymentElementFeatures else {
+            return nil
+        }
+
+        let allowRedisplayOverride = customerSessionMobilePaymentElementFeatures.paymentMethodSaveAllowRedisplayOverride
+
+        if isSettingUp {
+            return allowRedisplayOverride ?? .limited
+        } else {
+            return .unspecified
+        }
+    }
+
+    var useCardPaymentMethodTypeForIBP: Bool {
+        let canAcceptACH = orderedPaymentMethodTypes.contains(.USBankAccount)
+        let isLinkCardBrand = linkSettings?.linkMode?.isPantherPayment ?? false
+        return isLinkCardBrand && !canAcceptACH
     }
 }

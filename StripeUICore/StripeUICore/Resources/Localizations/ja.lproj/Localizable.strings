@@ -1,3 +1,5 @@
+"%1$@ •••• %2$@" = "%1$@ •••• %2$@";
+
 "%@ (optional)" = "%@ (オプション)";
 
 "(not accepted)" = "(受け付けられません)";
@@ -144,6 +146,6 @@
 
 "Your postal code is incomplete." = "郵便番号の入力に不備があります。";
 
-"Your postal code is invalid." = "郵便番号が無効です。";
+"Your postal code is invalid." = "郵便番号が無効です";
 
 "ZIP" = "郵便番号";

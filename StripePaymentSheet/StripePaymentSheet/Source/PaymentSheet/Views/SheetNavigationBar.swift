@@ -19,7 +19,9 @@ protocol SheetNavigationBarDelegate: AnyObject {
 /// For internal SDK use only
 @objc(STP_Internal_SheetNavigationBar)
 class SheetNavigationBar: UIView {
-    static let height: CGFloat = 52
+    static var height: CGFloat {
+        return LiquidGlassDetector.isEnabled ? 76 : 52
+    }
     weak var delegate: SheetNavigationBarDelegate?
     fileprivate lazy var leftItemsStackView: UIStackView = {
         let stack = UIStackView(arrangedSubviews: [dummyView, closeButtonLeft, backButton, testModeView])
@@ -84,9 +86,13 @@ class SheetNavigationBar: UIView {
         testModeView.isHidden = !isTestMode
         self.appearance = appearance
         super.init(frame: .zero)
+
         #if !os(visionOS)
-        backgroundColor = appearance.colors.background.withAlphaComponent(0.9)
+        if !LiquidGlassDetector.isEnabled {
+            backgroundColor = appearance.colors.background.withAlphaComponent(0.9)
+        }
         #endif
+
         [leftItemsStackView, closeButtonRight, additionalButton].forEach {
             $0.translatesAutoresizingMaskIntoConstraints = false
             addSubview($0)
@@ -169,27 +175,49 @@ class SheetNavigationBar: UIView {
     }
 
     func setShadowHidden(_ isHidden: Bool) {
-        layer.shadowPath = CGPath(rect: bounds, transform: nil)
-        layer.shadowOpacity = isHidden ? 0 : 0.1
-        layer.shadowColor = UIColor.black.cgColor
-        layer.shadowOffset = CGSize(width: 0, height: 2)
+        if !LiquidGlassDetector.isEnabled {
+            layer.shadowPath = CGPath(rect: bounds, transform: nil)
+            layer.shadowOpacity = isHidden ? 0 : 0.1
+            layer.shadowColor = UIColor.black.cgColor
+            layer.shadowOffset = CGSize(width: 0, height: 2)
+        }
     }
 
     func createBackButton() -> UIButton {
         let button = SheetNavigationButton(type: .custom)
-        button.setImage(Image.icon_chevron_left_standalone.makeImage(template: true), for: .normal)
+        let image = Image.icon_chevron_left_standalone.makeImage(template: true)
+        button.setImage(image, for: .normal)
         button.tintColor = appearance.colors.icon
         button.accessibilityLabel = String.Localized.back
         button.accessibilityIdentifier = "UIButton.Back"
+        #if compiler(>=6.2)
+        if #available(iOS 26.0, *),
+           LiquidGlassDetector.isEnabled {
+            // Setting to 20x20 w/ glass results in a button that is sized to 44x44 with .glass()
+            let resizedImage = image.resized(to: CGSize(width: 20, height: 20))
+            button.setImage(resizedImage, for: .normal)
+            button.configuration = .glass()
+        }
+        #endif
         return button
     }
 
     func createCloseButton() -> UIButton {
         let button = SheetNavigationButton(type: .custom)
-        button.setImage(Image.icon_x_standalone.makeImage(template: true), for: .normal)
+        let image = Image.icon_x_standalone.makeImage(template: true)
+        button.setImage(image, for: .normal)
         button.tintColor = appearance.colors.icon
         button.accessibilityLabel = String.Localized.close
         button.accessibilityIdentifier = "UIButton.Close"
+        #if compiler(>=6.2)
+        if #available(iOS 26.0, *),
+           LiquidGlassDetector.isEnabled{
+            // Setting to 20x20 w/ glass results in a button that is sized to 44x44 with .glass()
+            let resizedImage = image.resized(to: CGSize(width: 20, height: 20))
+            button.setImage(resizedImage, for: .normal)
+            button.configuration = .glass()
+        }
+        #endif
         return button
     }
 }
@@ -202,5 +230,11 @@ extension UIButton {
         titleLabel?.textAlignment = .right
         titleLabel?.font = appearance.scaledFont(for: appearance.font.base.medium, size: 14, maximumPointSize: 22)
         accessibilityIdentifier = "edit_saved_button"
+        #if compiler(>=6.2)
+        if #available(iOS 26.0, *),
+           LiquidGlassDetector.isEnabled {
+            configuration = .glass()
+        }
+        #endif
     }
 }

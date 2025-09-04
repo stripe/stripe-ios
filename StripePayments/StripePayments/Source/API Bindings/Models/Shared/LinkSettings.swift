@@ -40,8 +40,14 @@ import Foundation
     @_spi(STP) public let linkConsumerIncentive: LinkConsumerIncentive?
     @_spi(STP) public let linkDefaultOptIn: LinkDefaultOptIn?
     @_spi(STP) public let linkEnableDisplayableDefaultValuesInECE: Bool?
+    @_spi(STP) public let linkShowPreferDebitCardHint: Bool?
+    @_spi(STP) public let linkSupportedPaymentMethodsOnboardingEnabled: [String]
 
     @_spi(STP) public let allResponseFields: [AnyHashable: Any]
+
+    @_spi(STP) public var instantDebitsOnboardingEnabled: Bool {
+        linkSupportedPaymentMethodsOnboardingEnabled.contains("INSTANT_DEBITS")
+    }
 
     @_spi(STP) public init(
         fundingSources: Set<FundingSource>,
@@ -56,6 +62,8 @@ import Foundation
         linkConsumerIncentive: LinkConsumerIncentive?,
         linkDefaultOptIn: LinkDefaultOptIn?,
         linkEnableDisplayableDefaultValuesInECE: Bool?,
+        linkShowPreferDebitCardHint: Bool?,
+        linkSupportedPaymentMethodsOnboardingEnabled: [String],
         allResponseFields: [AnyHashable: Any]
     ) {
         self.fundingSources = fundingSources
@@ -70,6 +78,8 @@ import Foundation
         self.linkConsumerIncentive = linkConsumerIncentive
         self.linkDefaultOptIn = linkDefaultOptIn
         self.linkEnableDisplayableDefaultValuesInECE = linkEnableDisplayableDefaultValuesInECE
+        self.linkShowPreferDebitCardHint = linkShowPreferDebitCardHint
+        self.linkSupportedPaymentMethodsOnboardingEnabled = linkSupportedPaymentMethodsOnboardingEnabled
         self.allResponseFields = allResponseFields
     }
 
@@ -95,6 +105,7 @@ import Foundation
         let linkMode = (response["link_mode"] as? String).flatMap { LinkMode(rawValue: $0) }
         let linkDefaultOptIn = (response["link_default_opt_in"] as? String).flatMap { LinkDefaultOptIn(rawValue: $0) }
         let linkEnableDisplayableDefaultValuesInECE = response["link_enable_displayable_default_values_in_ece"] as? Bool ?? false
+        let linkShowPreferDebitCardHint = response["link_show_prefer_debit_card_hint"] as? Bool ?? false
 
         let linkIncentivesEnabled = UserDefaults.standard.bool(forKey: "FINANCIAL_CONNECTIONS_INSTANT_DEBITS_INCENTIVES")
         let linkConsumerIncentive: LinkConsumerIncentive? = if linkIncentivesEnabled {
@@ -104,6 +115,8 @@ import Foundation
         } else {
             nil
         }
+
+        let linkSupportedPaymentMethodsOnboardingEnabled = response["link_supported_payment_methods_onboarding_enabled"] as? [String] ?? []
 
         // Collect the flags for the URL generator
         let linkFlags = response.reduce(into: [String: Bool]()) { partialResult, element in
@@ -125,6 +138,8 @@ import Foundation
             linkConsumerIncentive: linkConsumerIncentive,
             linkDefaultOptIn: linkDefaultOptIn,
             linkEnableDisplayableDefaultValuesInECE: linkEnableDisplayableDefaultValuesInECE,
+            linkShowPreferDebitCardHint: linkShowPreferDebitCardHint,
+            linkSupportedPaymentMethodsOnboardingEnabled: linkSupportedPaymentMethodsOnboardingEnabled,
             allResponseFields: response
         ) as? Self
     }

@@ -1,5 +1,3 @@
-"%1$@ •••• %2$@" = "%1$@ •••• %2$@";
-
 "+ Add" = "Agregar otro";
 
 "Add US bank account" = "Agrega una cuenta bancaria de EE. UU.";
@@ -60,6 +58,10 @@
 
 "By continuing, you agree to authorize payments pursuant to <terms>these terms</terms>." = "Al continuar, aceptas autorizar pagos conforme a <terms>estas condiciones</terms>.";
 
+"By continuing, you agree to save your information for future purchases with %@ and <link>Link</link> according to Link <terms>terms</terms> and <privacy>privacy</privacy>." = "Al continuar, aceptas guardar tu información para futuras compras con %@ y <link>Link</link> de acuerdo con las <terms>Condiciones</terms> y <privacy>privacidad</privacy> de Link.";
+
+"By continuing, you agree to save your information for future purchases with %@." = "Al continuar, aceptas guardar tu información para futuras compras con %@.";
+
 "By continuing, you authorize %@ to automatically debit your Satispay Balance on a recurring basis in accordance with your purchase or subscription plan." = "Si continuas, autorizas a %@ a debitar automáticamente su Saldo de Satispay de forma recurrente de acuerdo con tu plan de compra o suscripción.";
 
 "By continuing, you authorize %@ to debit your Cash App account for this payment and future payments in accordance with %@'s terms, until this authorization is revoked. You can change this anytime in your Cash App Settings." = "Si continúas, autorizas a %1$@ a que cargue en tu cuenta de Cash App este pago y futuros pagos conforme a las condiciones de %2$@ hasta que se revoque esta autorización. Puedes cambiarla en cualquier momento en la configuración de Cash App.";
@@ -79,6 +81,8 @@
 "By providing your phone number, you agree to create a Link account and save your payment info to Link, according to the Link <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Al proporcionar tu número de teléfono, aceptas crear una cuenta de Link y guardar tus datos de pago en Link, conforme a las <terms>Condiciones</terms> y la <privacy>Política de privacidad</privacy> de Link.";
 
 "By saving your bank account for %@ you agree to authorize payments pursuant to <terms>these terms</terms>." = "Al guardar tu cuenta bancaria para %@, aceptas autorizar pagos conforme a estas <terms>condiciones</terms>.";
+
+"By submitting your order to %@ you agree to authorize payments pursuant to <terms>these terms</terms>." = "Al enviarle tu pedido a %@, aceptas autorizar pagos conforme a <terms>estas Condiciones</terms>.";
 
 "CPF/CPNJ" = "CPF/CPNJ";
 
@@ -110,6 +114,8 @@
 
 "Continue another way" = "Continúa de otra manera";
 
+"Create an account with Link for faster checkout across the web" = "Crea una cuenta con un enlace para que el proceso de compra sea más rápido en toda la Web";
+
 "Debit or credit card" = "Tarjeta de débito o crédito";
 
 "Default" = "Predeterminado";
@@ -122,9 +128,13 @@
 
 "Enter the code sent to %@ to use your saved information." = "Introduce el código enviado a %@ para usar la información guardada.";
 
+"Enter the code sent to %@." = "Introduce el código enviado a %s.";
+
 "FPX Bank" = "Banco para FPX";
 
 "Failed to connect" = "Error al establecer conexión";
+
+"Fast, secure checkout" = "Proceso de compra rápido y seguro";
 
 "For security, please re-enter your card’s security code." = "Por razones de seguridad, vuelve a ingresar el código de seguridad de tu tarjeta.";
 
@@ -185,6 +195,8 @@
 "Pay another way" = "Pagar de otra manera";
 
 "Pay faster at %@ and thousands of businesses." = "Paga más rápido en %@ y miles de negocios.";
+
+"Pay faster everywhere Link is accepted." = "Paga más rápido en todos los comercios que acepten Link.";
 
 "Pay over time with %@" = "Paga a lo largo del tiempo con %@";
 
@@ -278,6 +290,8 @@
 
 "This is your default" = "Tu método predeterminado";
 
+"This payment method will be removed but will remain available for %@ subscriptions." = "Este método de pago se eliminará, pero seguirá disponible para las suscripciones de %@.";
+
 "Too many attempts. Please try again in a few minutes." = "Se hicieron demasiados intentos. Vuelve a intentarlo en unos minutos.";
 
 "Unavailable for this purchase" = "No disponible para esta compra";
@@ -287,8 +301,6 @@
 "Update payment method" = "Actualizar método de pago";
 
 "Use billing address for shipping" = "Usar dirección de facturación para el envío";
-
-"Use your saved info to check out faster" = "Utiliza la información guardada para finalizar la compra más rápido";
 
 "View more" = "Ver más";
 

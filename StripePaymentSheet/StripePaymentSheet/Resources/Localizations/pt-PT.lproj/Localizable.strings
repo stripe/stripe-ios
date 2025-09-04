@@ -1,5 +1,3 @@
-"%1$@ •••• %2$@" = "%1$@ •••• %2$@";
-
 "+ Add" = "+ Adicionar";
 
 "Add US bank account" = "Adicionar conta bancária nos EUA";
@@ -60,7 +58,7 @@
 
 "By continuing, you agree to authorize payments pursuant to <terms>these terms</terms>." = "Ao continuar, concorda em autorizar pagamentos de acordo com <terms>estas condições</terms>.";
 
-"By continuing, you agree to save your information for future purchases with %@ and <link>Link</link>. You also agree to Link's <terms>Terms</terms> and <privacy>Privacy</privacy>." = "Ao continuar, concorda guardar as suas informações para compras futuras com %@ e <link>Link</link>Concorda também com as <terms>Condições</terms> e a <privacy>Política de Privacidade</privacy> da Link.";
+"By continuing, you agree to save your information for future purchases with %@ and <link>Link</link> according to Link <terms>terms</terms> and <privacy>privacy</privacy>." = "Ao continuar, concorda guardar as suas informações para compras futuras com %@ e <link>Link</link> de acordo com as <terms>condições</terms> e a <privacy>privacidade</privacy> da Link.";
 
 "By continuing, you agree to save your information for future purchases with %@." = "Ao continuar, concorda guardar as suas informações para compras futuras com %@.";
 
@@ -83,6 +81,8 @@
 "By providing your phone number, you agree to create a Link account and save your payment info to Link, according to the Link <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Ao fornecer o seu número de telefone, concorda em criar uma conta Link e guardar as suas informações de pagamento no Link, de acordo com as <terms>condições</terms> e a <privacy>política de privacidade</privacy> do Link.";
 
 "By saving your bank account for %@ you agree to authorize payments pursuant to <terms>these terms</terms>." = "Ao guardar a sua conta bancária para %@, concorda em autorizar pagamentos de acordo com <terms>estas condições</terms>.";
+
+"By submitting your order to %@ you agree to authorize payments pursuant to <terms>these terms</terms>." = "Ao submeter o seu pedido a %@, concorda em autorizar pagamentos de acordo com <terms>estas condições</terms>.";
 
 "CPF/CPNJ" = "CPF/CPNJ";
 
@@ -114,6 +114,8 @@
 
 "Continue another way" = "Continuar de outra forma";
 
+"Create an account with Link for faster checkout across the web" = "Crie uma conta com o Link para uma finalização de compra mais rápida na Web";
+
 "Debit or credit card" = "Cartão de débito ou crédito";
 
 "Default" = "Predefinido";
@@ -125,6 +127,8 @@
 "Enter address manually" = "Introduzir endereço manualmente";
 
 "Enter the code sent to %@ to use your saved information." = "Introduza o código enviado para %@ para utilizar as suas informações guardadas.";
+
+"Enter the code sent to %@." = "Introduza o código enviado para %s.";
 
 "FPX Bank" = "Banco FPX";
 
@@ -286,6 +290,8 @@
 
 "This is your default" = "Este é o seu método predefinido";
 
+"This payment method will be removed but will remain available for %@ subscriptions." = "Este método de pagamento será removido, mas continuará disponível para subscrições %@.";
+
 "Too many attempts. Please try again in a few minutes." = "Demasiadas tentativas. Tente novamente dentro de alguns minutos.";
 
 "Unavailable for this purchase" = "Indisponível para esta compra";
@@ -295,8 +301,6 @@
 "Update payment method" = "Atualizar método de pagamento";
 
 "Use billing address for shipping" = "Utilizar endereço de faturação para envio";
-
-"Use your saved info to check out faster" = "Utilizar as suas informações guardadas para finalizar compras mais rapidamente";
 
 "View more" = "Ver mais";
 

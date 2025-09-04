@@ -162,10 +162,11 @@ final class PaymentMethodAvailabilityTest: XCTestCase {
     }
 }
 
-private extension LinkSettings {
+extension LinkSettings {
     static func _testValue(
         disableSignup: Bool = false,
-        flags: [String: Bool]? = nil
+        flags: [String: Bool]? = nil,
+        linkSupportedPaymentMethodsOnboardingEnabled: [String] = ["CARD"]
     ) -> LinkSettings {
         return .init(
             fundingSources: [.card, .bankAccount],
@@ -180,6 +181,8 @@ private extension LinkSettings {
             linkConsumerIncentive: nil,
             linkDefaultOptIn: nil,
             linkEnableDisplayableDefaultValuesInECE: nil,
+            linkShowPreferDebitCardHint: nil,
+            linkSupportedPaymentMethodsOnboardingEnabled: linkSupportedPaymentMethodsOnboardingEnabled,
             allResponseFields: [:]
         )
     }

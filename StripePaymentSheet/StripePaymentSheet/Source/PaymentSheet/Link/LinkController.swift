@@ -10,6 +10,7 @@ import UIKit
 
 @_spi(STP) import StripeCore
 @_spi(STP) import StripePayments
+@_spi(STP) import StripePaymentsUI
 @_spi(STP) import StripeUICore
 
 /// A controller that presents a Link sheet to collect a customer's payment method.
@@ -35,6 +36,15 @@ import UIKit
         case canceled
     }
 
+    @frozen @_spi(STP) public enum AuthorizationResult {
+        /// Authorization was consented by the user.
+        case consented
+        /// Authorization was denied by the user.
+        case denied
+        /// The authorization flow was canceled by the user.
+        case canceled
+    }
+
     /// Errors specific incorrect integrations with LinkController
     @_spi(STP) public enum IntegrationError: Error {
         case noPaymentMethodSelected
@@ -54,7 +64,9 @@ import UIKit
     private let intent: Intent
     private let configuration: PaymentElementConfiguration
     private let appearance: LinkAppearance?
+    private let linkConfiguration: LinkConfiguration?
     private let analyticsHelper: PaymentSheetAnalyticsHelper
+    private let requestSurface: LinkRequestSurface
 
     private lazy var linkAccountService: LinkAccountServiceProtocol = {
         LinkAccountService(elementsSession: elementsSession)
@@ -77,7 +89,7 @@ import UIKit
                 return
             }
             paymentMethodPreview = .init(
-                icon: Self.linkIcon,
+                icon: iconForPaymentDetails(selectedPaymentDetails),
                 label: STPPaymentMethodType.link.displayName,
                 sublabel: selectedPaymentDetails.linkPaymentDetailsFormattedString
             )
@@ -95,6 +107,9 @@ import UIKit
         elementsSession.merchantLogoUrl
     }
 
+    /// Completion handler for full consent screen
+    private var fullConsentCompletion: ((Result<AuthorizationResult, Error>) -> Void)?
+
     private init(
         apiClient: STPAPIClient = .shared,
         mode: Mode,
@@ -102,7 +117,9 @@ import UIKit
         intent: Intent,
         configuration: PaymentElementConfiguration,
         appearance: LinkAppearance?,
-        analyticsHelper: PaymentSheetAnalyticsHelper
+        linkConfiguration: LinkConfiguration?,
+        analyticsHelper: PaymentSheetAnalyticsHelper,
+        requestSurface: LinkRequestSurface
     ) {
         self.apiClient = apiClient
         self.mode = mode
@@ -110,7 +127,9 @@ import UIKit
         self.intent = intent
         self.configuration = configuration
         self.appearance = appearance
+        self.linkConfiguration = linkConfiguration
         self.analyticsHelper = analyticsHelper
+        self.requestSurface = requestSurface
 
         LinkAccountContext.shared.addObserver(self, selector: #selector(onLinkAccountChange))
     }
@@ -122,16 +141,36 @@ import UIKit
 
     @_spi(STP) public static var linkIcon: UIImage = Image.link_icon.makeImage()
 
+    private func iconForPaymentDetails(_ paymentDetails: ConsumerPaymentDetails) -> UIImage {
+        guard let appearance, appearance.reduceLinkBranding else {
+            return Self.linkIcon
+        }
+
+        switch paymentDetails.details {
+        case .card(let card):
+            return STPImageLibrary.cardBrandImage(for: card.stpBrand)
+        case .bankAccount(let bankAccount):
+            let iconCode = PaymentSheetImageLibrary.bankIconCode(for: bankAccount.name)
+            return PaymentSheetImageLibrary.bankIcon(for: iconCode, iconStyle: .filled)
+        case .unparsable:
+            return Self.linkIcon
+        }
+    }
+
     /// Creates a `LinkController` for the specified `mode`.
     ///
     /// - Parameter apiClient: The `STPAPIClient` instance for this controller. Defaults to `.shared`.
     /// - Parameter mode: The mode in which the Link payment method controller should operate, either `payment` or `setup`.
     /// - Parameter appearance: Link UI-specific appearance overrides. If not specified, `PaymentSheet.Appearance` defaults are used.
+    /// - Parameter linkConfiguration: Configuration for Link behavior and content. If not specified, default behavior is used.
+    /// - Parameter requestSurface: The request surface to use for API calls. Defaults to `ios_payment_element`.
     /// - Parameter completion: A closure that is called with the result of the creation. It returns a `LinkController` if successful, or an error if the creation failed.
     @_spi(STP) public static func create(
         apiClient: STPAPIClient = .shared,
         mode: LinkController.Mode,
         appearance: LinkAppearance? = nil,
+        linkConfiguration: LinkConfiguration? = nil,
+        requestSurface: LinkRequestSurface = .default,
         completion: @escaping (Result<LinkController, Error>) -> Void
     ) {
         Task {
@@ -160,7 +199,9 @@ import UIKit
                     intent: loadResult.intent,
                     configuration: configuration,
                     appearance: appearance,
-                    analyticsHelper: analyticsHelper
+                    linkConfiguration: linkConfiguration,
+                    analyticsHelper: analyticsHelper,
+                    requestSurface: requestSurface
                 )
                 completion(.success(controller))
             } catch {
@@ -176,7 +217,8 @@ import UIKit
     @_spi(STP) public func lookupConsumer(with email: String, completion: @escaping (Result<Bool, Error>) -> Void) {
         Self.lookupConsumer(
             email: email,
-            linkAccountService: linkAccountService
+            linkAccountService: linkAccountService,
+            requestSurface: requestSurface
         ) { result in
             switch result {
             case .success(let linkAccount):
@@ -229,14 +271,14 @@ import UIKit
         from viewController: UIViewController,
         completion: @escaping (Result<VerificationResult, Error>) -> Void
     ) {
-        guard let linkAccount, linkAccount.sessionState == .requiresVerification else {
+        guard let linkAccount else {
             let error = IntegrationError.noActiveLinkConsumer
             completion(.failure(error))
             return
         }
 
         let verificationController = LinkVerificationController(
-            mode: .modal,
+            mode: .inlineLogin,
             linkAccount: linkAccount,
             configuration: configuration,
             appearance: appearance
@@ -258,10 +300,12 @@ import UIKit
     ///
     /// - Parameter presentingViewController: The view controller from which to present the Link sheet.
     /// - Parameter email: The email address to pre-fill in the Link sheet. If `nil`, the email field will be empty.
+    /// - Parameter supportedPaymentMethodTypes: The payment method types to support in the Link sheet. Defaults to all available types.
     /// - Parameter completion: A closure that is called when the user has selected a payment method or canceled the sheet. If the user selects a payment method, the `paymentMethodPreview` will be updated accordingly.
     @_spi(STP) public func collectPaymentMethod(
         from presentingViewController: UIViewController,
         with email: String?,
+        supportedPaymentMethodTypes: [LinkPaymentMethodType] = LinkPaymentMethodType.allCases,
         completion: @escaping () -> Void
     ) {
         var configuration = self.configuration
@@ -276,7 +320,11 @@ import UIKit
             configuration: configuration,
             intent: intent,
             elementsSession: elementsSession,
-            analyticsHelper: analyticsHelper
+            analyticsHelper: analyticsHelper,
+            supportedPaymentMethodTypes: supportedPaymentMethodTypes,
+            linkAppearance: appearance,
+            linkConfiguration: linkConfiguration,
+            shouldShowSecondaryCta: false
         ) { [weak self] confirmOption, shouldClearSelection in
             guard let confirmOption else {
                 if shouldClearSelection {
@@ -293,8 +341,13 @@ import UIKit
 
     /// Creates a [STPPaymentMethod] from the selected Link payment method preview.
     ///
-    /// - Parameter completion: A closure that is called with the result of the payment method creation. It returns a `STPPaymentMethod` if successful, or an error if the payment method could not be created.
-    @_spi(STP) public func createPaymentMethod(completion: @escaping (Result<STPPaymentMethod, Error>) -> Void) {
+    /// - Parameters:
+    ///   - overridePublishableKey: Optional publishable key to use for the API request.
+    ///   - completion: A closure that is called with the result of the payment method creation. It returns a `STPPaymentMethod` if successful, or an error if the payment method could not be created.
+    @_spi(STP) public func createPaymentMethod(
+        overridePublishableKey: String? = nil,
+        completion: @escaping (Result<STPPaymentMethod, Error>) -> Void
+    ) {
         guard let selectedPaymentDetails else {
             completion(.failure(IntegrationError.noPaymentMethodSelected))
             return
@@ -311,6 +364,7 @@ import UIKit
             createPaymentMethodInPassthroughMode(
                 paymentDetails: selectedPaymentDetails,
                 consumerSessionClientSecret: consumerSessionClientSecret,
+                overridePublishableKey: overridePublishableKey,
                 clientAttributionMetadata: clientAttributionMetadata,
                 completion: completion
             )
@@ -318,9 +372,130 @@ import UIKit
             createPaymentMethodInPaymentMethodMode(
                 paymentDetails: selectedPaymentDetails,
                 linkAccount: linkAccount,
+                overridePublishableKey: overridePublishableKey,
                 clientAttributionMetadata: clientAttributionMetadata,
                 completion: completion
             )
+        }
+    }
+
+    /// Authorizes a Link auth intent, handling verification and OAuth consent flows as needed.
+    ///
+    /// This method will present verification if the account requires verification, and consent screens
+    /// if consent is required.
+    ///
+    /// - Parameter linkAuthIntentId: The Link auth intent ID to authorize.
+    /// - Parameter viewController: The view controller from which to present the authorization flow.
+    /// - Returns: The result of the authorization. Either the user consented / rejected OAuth consent, or canceled the flow.
+    ///   If authorization completes, a crypto customer ID will be included in the result.
+    /// - Throws: An error if no Link account associated with the Link auth intent is found, or an API error occurs.
+    @_spi(STP) public func authorize(
+        linkAuthIntentId: String,
+        from viewController: UIViewController,
+        completion: @escaping (Result<AuthorizationResult, Error>) -> Void
+    ) {
+        linkAccountService.lookupLinkAuthIntent(
+            linkAuthIntentID: linkAuthIntentId,
+            requestSurface: requestSurface
+        ) { [weak self] result in
+            switch result {
+            case .success(let response):
+                if let response {
+                    self?.linkAccount = response.linkAccount
+
+                    // If verification is required, present verification flow
+                    if !response.linkAccount.hasCompletedSMSVerification {
+                        if case .inline = response.consentViewModel {
+                            self?.presentVerificationWithConsent(
+                                from: viewController,
+                                consentViewModel: response.consentViewModel,
+                                completion: completion
+                            )
+                            return
+                        } else {
+                            self?.presentForVerification(from: viewController, completion: { [weak self] result in
+                                switch result {
+                                case .success(let verificationResult):
+                                    switch verificationResult {
+                                    case .completed:
+                                        // After verification, check for full consent
+                                        self?.presentFullConsentIfNeeded(
+                                            consentViewModel: response.consentViewModel,
+                                            from: viewController,
+                                            completion: completion
+                                        )
+                                    case .canceled:
+                                        completion(.success(.canceled))
+                                    }
+                                case .failure(let error):
+                                    completion(.failure(error))
+                                }
+                            })
+                            return
+                        }
+                    }
+
+                    // No verification required, check for full consent
+                    self?.presentFullConsentIfNeeded(
+                        consentViewModel: response.consentViewModel,
+                        from: viewController,
+                        completion: completion
+                    )
+                } else {
+                    // No account found for this auth intent ID
+                    completion(.failure(IntegrationError.noActiveLinkConsumer))
+                }
+            case .failure(let error):
+                completion(.failure(error))
+            }
+        }
+    }
+
+    private func presentFullConsentIfNeeded(
+        consentViewModel: LinkConsentViewModel?,
+        from viewController: UIViewController,
+        completion: @escaping (Result<AuthorizationResult, Error>) -> Void
+    ) {
+        guard case .full(let fullConsentViewModel) = consentViewModel else {
+            completion(.success(.consented))
+            return
+        }
+        presentFullConsentScreen(
+            consentViewModel: fullConsentViewModel,
+            from: viewController,
+            completion: completion
+        )
+    }
+
+    private func presentVerificationWithConsent(
+        from viewController: UIViewController,
+        consentViewModel: LinkConsentViewModel?,
+        completion: @escaping (Result<AuthorizationResult, Error>) -> Void
+    ) {
+        guard let linkAccount else {
+            completion(.failure(IntegrationError.noActiveLinkConsumer))
+            return
+        }
+
+        let verificationController = LinkVerificationController(
+            mode: .inlineLogin,
+            linkAccount: linkAccount,
+            configuration: configuration,
+            appearance: appearance,
+            consentViewModel: consentViewModel
+        )
+
+        verificationController.present(from: viewController) { [weak self] result in
+            guard let self else { return }
+            switch result {
+            case .completed:
+                LinkAccountContext.shared.account = self.linkAccount
+                completion(.success(.consented))
+            case .canceled, .switchAccount:
+                completion(.success(.canceled))
+            case .failed(let error):
+                completion(.failure(error))
+            }
         }
     }
 
@@ -329,6 +504,7 @@ import UIKit
     private func createPaymentMethodInPassthroughMode(
         paymentDetails: ConsumerPaymentDetails,
         consumerSessionClientSecret: String,
+        overridePublishableKey: String?,
         clientAttributionMetadata: STPClientAttributionMetadata,
         completion: @escaping (Result<STPPaymentMethod, Error>) -> Void
     ) {
@@ -337,6 +513,7 @@ import UIKit
             for: consumerSessionClientSecret,
             id: paymentDetails.stripeID,
             consumerAccountPublishableKey: nil,
+            overridePublishableKey: overridePublishableKey,
             allowRedisplay: nil,
             cvc: paymentDetails.cvc,
             expectedPaymentMethodType: nil,
@@ -355,6 +532,7 @@ import UIKit
     private func createPaymentMethodInPaymentMethodMode(
         paymentDetails: ConsumerPaymentDetails,
         linkAccount: PaymentSheetLinkAccount,
+        overridePublishableKey: String?,
         clientAttributionMetadata: STPClientAttributionMetadata,
         completion: @escaping (Result<STPPaymentMethod, Error>) -> Void
     ) {
@@ -368,9 +546,10 @@ import UIKit
                     allowRedisplay: nil
                 )!
                 paymentMethodParams.clientAttributionMetadata = clientAttributionMetadata
+
                 let paymentMethod = try await apiClient.createPaymentMethod(
                     with: paymentMethodParams,
-                    additionalPaymentUserAgentValues: []
+                    overridePublishableKey: overridePublishableKey
                 )
                 completion(.success(paymentMethod))
             } catch {
@@ -409,6 +588,7 @@ import UIKit
     private static func lookupConsumer(
         email: String,
         linkAccountService: any LinkAccountServiceProtocol,
+        requestSurface: LinkRequestSurface,
         completion: @escaping (Result<PaymentSheetLinkAccount?, Error>) -> Void
     ) {
         linkAccountService.lookupAccount(
@@ -417,7 +597,35 @@ import UIKit
             emailSource: .customerEmail,
             // TODO: Confirm which value to pass here to not cause experiment issues
             doNotLogConsumerFunnelEvent: false,
+            requestSurface: requestSurface,
             completion: completion
+        )
+    }
+
+    private func updateConsentStatus(
+        consentGranted: Bool,
+        completion: @escaping (Result<AuthorizationResult, Error>) -> Void
+    ) {
+        guard let linkAccount, let consumerSessionClientSecret = linkAccount.consumerSessionClientSecret else {
+            completion(.failure(IntegrationError.noActiveLinkConsumer))
+            return
+        }
+
+        apiClient.updateConsentStatus(
+            consentGranted: consentGranted,
+            consumerSessionClientSecret: consumerSessionClientSecret,
+            consumerPublishableKey: linkAccount.publishableKey,
+            completion: { [weak self] result in
+                guard let self else { return }
+                switch result {
+                case .success:
+                    LinkAccountContext.shared.account = self.linkAccount
+                    let result: AuthorizationResult = consentGranted ? .consented : .denied
+                    completion(.success(result))
+                case .failure(let error):
+                    completion(.failure(error))
+                }
+            }
         )
     }
 
@@ -426,6 +634,53 @@ import UIKit
         DispatchQueue.main.async { [weak self] in
             let linkAccount = notification.object as? PaymentSheetLinkAccount
             self?.linkAccount = linkAccount
+        }
+    }
+
+    private func presentFullConsentScreen(
+        consentViewModel: LinkConsentViewModel.FullConsentViewModel,
+        from viewController: UIViewController,
+        completion: @escaping (Result<AuthorizationResult, Error>) -> Void
+    ) {
+        let fullConsentViewController = LinkFullConsentViewController(
+            consentViewModel: consentViewModel
+        )
+
+        fullConsentViewController.delegate = self
+
+        let bottomSheetViewController = BottomSheetViewController(
+            contentViewController: fullConsentViewController,
+            appearance: configuration.appearance,
+            isTestMode: false,
+            didCancelNative3DS2: {}
+        )
+
+        // Store completion handler for use in delegate method
+        self.fullConsentCompletion = completion
+
+        viewController.presentAsBottomSheet(bottomSheetViewController, appearance: configuration.appearance)
+    }
+}
+
+// MARK: - LinkFullConsentViewControllerDelegate
+
+extension LinkController: LinkFullConsentViewControllerDelegate {
+    func fullConsentViewController(
+        _ controller: LinkFullConsentViewController,
+        didFinishWithResult result: LinkController.AuthorizationResult
+    ) {
+        controller.dismiss(animated: true) { [weak self] in
+            guard let self, let completion = self.fullConsentCompletion else { return }
+            self.fullConsentCompletion = nil
+
+            switch result {
+            case .consented:
+                updateConsentStatus(consentGranted: true, completion: completion)
+            case .denied:
+                updateConsentStatus(consentGranted: false, completion: completion)
+            case .canceled:
+                completion(.success(.canceled))
+            }
         }
     }
 }
@@ -437,14 +692,18 @@ import UIKit
     /// - Parameter apiClient: The `STPAPIClient` instance for this controller. Defaults to `.shared`.
     /// - Parameter mode: The mode in which the Link payment method controller should operate, either `payment` or `setup`.
     /// - Parameter appearance: Link UI-specific appearance overrides. If not specified, `PaymentSheet.Configuration` defaults are used.
+    /// - Parameter linkConfiguration: Configuration for Link behavior and content. If not specified, default behavior is used.
+    /// - Parameter requestSurface: The request surface to use for API calls. Defaults to `ios_payment_element`.
     /// - Returns: A `LinkController` if successful, or throws an error if the creation failed.
     static func create(
         apiClient: STPAPIClient = .shared,
         mode: LinkController.Mode,
-        appearance: LinkAppearance? = nil
+        appearance: LinkAppearance? = nil,
+        linkConfiguration: LinkConfiguration? = nil,
+        requestSurface: LinkRequestSurface = .default
     ) async throws -> LinkController {
         return try await withCheckedThrowingContinuation { continuation in
-            create(apiClient: apiClient, mode: mode, appearance: appearance) { result in
+            create(apiClient: apiClient, mode: mode, appearance: appearance, linkConfiguration: linkConfiguration, requestSurface: requestSurface) { result in
                 switch result {
                 case .success(let controller):
                     continuation.resume(returning: controller)
@@ -465,6 +724,33 @@ import UIKit
                 switch result {
                 case .success(let isExistingLinkConsumer):
                     continuation.resume(returning: isExistingLinkConsumer)
+                case .failure(let error):
+                    continuation.resume(throwing: error)
+                }
+            }
+        }
+    }
+
+    /// Authorizes a Link auth intent, handling verification and consent flows as needed.
+    ///
+    /// This method will present verification if the account requires verification, and consent screens
+    /// if consent is required. The flow adapts based on the auth intent configuration:
+    /// - Inline consent: Presents verification with embedded consent
+    /// - Full consent: Presents verification (if needed) followed by a dedicated consent screen
+    /// - No consent: Presents verification only (if needed)
+    ///
+    /// - Parameter linkAuthIntentId: The Link auth intent ID to authorize.
+    /// - Parameter viewController: The view controller from which to present the authorization flow.
+    /// - Returns: The authorization result.
+    func authorize(
+        linkAuthIntentId: String,
+        from viewController: UIViewController
+    ) async throws -> AuthorizationResult {
+        try await withCheckedThrowingContinuation { continuation in
+            authorize(linkAuthIntentId: linkAuthIntentId, from: viewController) { result in
+                switch result {
+                case .success(let authorizeResult):
+                    continuation.resume(returning: authorizeResult)
                 case .failure(let error):
                     continuation.resume(throwing: error)
                 }
@@ -507,7 +793,7 @@ import UIKit
     /// `lookupConsumer` must be called before this.
     ///
     /// - Parameter viewController: The view controller from which to present the verification flow.
-    /// - Returns: A `VerificationResult` indicating whether verification was completed or canceled.
+    /// - Returns: A `AuthenticationResult` indicating whether verification was completed or canceled.
     /// Throws if `lookupConsumer` was not called prior to this, or an API error occurs.
     func presentForVerification(from viewController: UIViewController) async throws -> VerificationResult {
         try await withCheckedThrowingContinuation { continuation in
@@ -526,11 +812,12 @@ import UIKit
     ///
     /// - Parameter presentingViewController: The view controller from which to present the Link sheet.
     /// - Parameter email: The email address to pre-fill in the Link sheet. If `nil`, the email field will be empty.
-    /// - Returns: A `PaymentMethodPreview` if the user selected a payment method, or `nil` otherwise.
-    func collectPaymentMethod(from presentingViewController: UIViewController, with email: String?) async -> LinkController.PaymentMethodPreview? {
+    /// - Parameter supportedPaymentMethodTypes: The payment method types to support in the Link sheet. Defaults to all available types.
+    /// - Returns: A `PaymentMethodDisplayData` if the user selected a payment method, or `nil` otherwise.
+    func collectPaymentMethod(from presentingViewController: UIViewController, with email: String?, supportedPaymentMethodTypes: [LinkPaymentMethodType] = LinkPaymentMethodType.allCases) async -> LinkController.PaymentMethodPreview? {
         return await withCheckedContinuation { continuation in
             DispatchQueue.main.async {
-                self.collectPaymentMethod(from: presentingViewController, with: email) { [weak self] in
+                self.collectPaymentMethod(from: presentingViewController, with: email, supportedPaymentMethodTypes: supportedPaymentMethodTypes) { [weak self] in
                     guard let self else { return }
                     continuation.resume(returning: self.paymentMethodPreview)
                 }
@@ -539,10 +826,11 @@ import UIKit
     }
 
     /// Creates a [STPPaymentMethod] from the selected Link payment method preview.
+    /// - Parameter overridePublishableKey: Optional publishable key to use for the API request.
     /// - Returns: A `STPPaymentMethod` if successful, or throws an error if the payment method could not be created.
-    func createPaymentMethod() async throws -> STPPaymentMethod {
+    func createPaymentMethod(overridePublishableKey: String? = nil) async throws -> STPPaymentMethod {
         return try await withCheckedThrowingContinuation { continuation in
-            createPaymentMethod { result in
+            createPaymentMethod(overridePublishableKey: overridePublishableKey) { result in
                 switch result {
                 case .success(let paymentMethod):
                     continuation.resume(returning: paymentMethod)

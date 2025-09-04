@@ -14,7 +14,26 @@ import StripePayments
 import UIKit
 
 extension PaymentSheetFormFactory {
-    func makeCard() -> PaymentMethodElement {
+
+    var isLinkUI: Bool {
+        switch configuration {
+        case .paymentElement(_, let isLinkUI):
+            return isLinkUI
+        case .customerSheet:
+            return false
+        }
+    }
+
+    var previouslyHadLinkSignupSelected: Bool {
+        switch previousLinkInlineSignupAction {
+        case .signupAndPay:
+            return true
+        default:
+            return false
+        }
+    }
+
+    func makeCard(linkAppearance: LinkAppearance? = nil) -> PaymentMethodElement {
         let showLinkInlineSignup = showLinkInlineCardSignup
         let defaultCheckbox: Element? = {
             guard allowsSetAsDefaultPM else {
@@ -60,18 +79,23 @@ extension PaymentSheetFormFactory {
             hostedSurface: .init(config: configuration),
             theme: theme,
             analyticsHelper: analyticsHelper,
-            cardBrandFilter: configuration.cardBrandFilter
+            cardBrandFilter: configuration.cardBrandFilter,
+            opensCardScannerAutomatically: configuration.opensCardScannerAutomatically,
+            linkAppearance: linkAppearance
         )
 
         let shouldIncludeEmail = configuration.billingDetailsCollectionConfiguration.email == .always
         let shouldIncludePhone = configuration.billingDetailsCollectionConfiguration.phone == .always
 
         let billingAddressSection: PaymentMethodElementWrapper<AddressSectionElement>? = {
+            let countries = configuration.billingDetailsCollectionConfiguration.allowedCountries.isEmpty
+                ? nil
+                : Array(configuration.billingDetailsCollectionConfiguration.allowedCountries)
             switch configuration.billingDetailsCollectionConfiguration.address {
             case .automatic:
-                return makeBillingAddressSection(collectionMode: .countryAndPostal(), countries: nil, includeEmail: shouldIncludeEmail, includePhone: shouldIncludePhone)
+                return makeBillingAddressSection(collectionMode: .countryAndPostal(), countries: countries, includeEmail: shouldIncludeEmail, includePhone: shouldIncludePhone)
             case .full:
-                return makeBillingAddressSection(collectionMode: .autoCompletable, countries: nil, includeEmail: shouldIncludeEmail, includePhone: shouldIncludePhone)
+                return makeBillingAddressSection(collectionMode: .autoCompletable, countries: countries, includeEmail: shouldIncludeEmail, includePhone: shouldIncludePhone)
             case .never:
                 return nil
             }
@@ -113,7 +137,9 @@ extension PaymentSheetFormFactory {
             defaultCheckbox,
         ]
 
-        if case .paymentElement(let configuration) = configuration, let accountService, showLinkInlineSignup {
+        if case .paymentElement(let configuration, _) = configuration, let accountService, showLinkInlineSignup {
+            // Restore the signup state on recreation
+            let signupOptInInitialValue = signupOptInInitialValue || previouslyHadLinkSignupSelected
             let inlineSignupElement = LinkInlineSignupElement(
                 configuration: configuration,
                 linkAccount: linkAccount,
@@ -128,8 +154,8 @@ extension PaymentSheetFormFactory {
         }
 
         let mandate: SimpleMandateElement? = {
-            if signupOptInFeatureEnabled {
-                // Respect this over all other configurations.
+            if forceSaveFutureUseBehavior {
+                // Respect this over all other configurations, since we're forcing SFU behavior and thus need to show a mandate.
                 return makeMandate()
             }
             switch configuration.termsDisplayFor(paymentMethodType: .stripe(.card)) {
@@ -156,51 +182,19 @@ extension PaymentSheetFormFactory {
     }
 
     private func makeMandate() -> SimpleMandateElement {
-        // It's possible that `signupOptInFeatureEnabled` is true, but the user has already used Link.
-        // This user would not see the signup opt-in toggle, but we still want to show the mandate.
-        // Therefore, always show the mandate if `signupOptInFeatureEnabled` is true, but only add
-        // the Link-specific terms if the signup opt-in toggle is actually visible via `shouldShowLinkSignupOptIn`.
-        let shouldSaveToLink = shouldShowLinkSignupOptIn && signupOptInInitialValue
-        let mandateText = Self.makeMandateText(
-            linkSignupOptInFeatureEnabled: signupOptInFeatureEnabled,
-            shouldSaveToLink: shouldSaveToLink,
-            merchantName: configuration.merchantDisplayName
-        )
+        let shouldCheckSignupCheckbox = showLinkInlineCardSignup && signupOptInFeatureEnabled && signupOptInInitialValue
+        let shouldSignUpToLink = shouldCheckSignupCheckbox && !isLinkUI
+        let variant: MandateVariant = forceSaveFutureUseBehavior
+            ? .updated(shouldSignUpToLink: shouldSignUpToLink)
+            : .original
+        let mandateText = Self.makeMandateText(variant: variant, merchantName: configuration.merchantDisplayName)
         return makeMandate(mandateText: mandateText)
     }
 
     static func makeMandateText(
-        linkSignupOptInFeatureEnabled: Bool,
-        shouldSaveToLink: Bool,
+        variant: MandateVariant,
         merchantName: String
     ) -> NSAttributedString {
-        let formatText = if linkSignupOptInFeatureEnabled {
-            if shouldSaveToLink {
-                String.Localized.by_continuing_you_agree_to_save_your_information_to_merchant_and_link
-            } else {
-                String.Localized.by_continuing_you_agree_to_save_your_information_to_merchant
-            }
-        } else {
-            String.Localized.by_providing_your_card_information_text
-        }
-
-        let terms = String(format: formatText, merchantName).removeTrailingDots()
-
-        if linkSignupOptInFeatureEnabled && shouldSaveToLink {
-            let links = [
-                "link": URL(string: "https://link.com")!,
-                "terms": URL(string: "https://link.com/terms")!,
-                "privacy": URL(string: "https://link.com/privacy")!,
-            ]
-            return STPStringUtils.applyLinksToString(template: terms, links: links)
-        } else {
-            return NSAttributedString(string: terms)
-        }
-    }
-}
-
-private extension String {
-    func removeTrailingDots() -> String {
-        return hasSuffix("..") ? String(dropLast()) : self
+        return variant.create(forMerchant: merchantName)
     }
 }

@@ -1,5 +1,3 @@
-"%1$@ •••• %2$@" = "%1$@ •••• %2$@";
-
 "+ Add" = "+ Добавить";
 
 "Add US bank account" = "Добавить банковский счет в США";
@@ -60,6 +58,10 @@
 
 "By continuing, you agree to authorize payments pursuant to <terms>these terms</terms>." = "Продолжая, вы соглашаетесь авторизовать платежи в соответствии с <terms>этими условиями</terms>.";
 
+"By continuing, you agree to save your information for future purchases with %@ and <link>Link</link> according to Link <terms>terms</terms> and <privacy>privacy</privacy>." = "Продолжая, вы соглашаетесь сохранить свою информацию для будущих покупок через %@ и <link>Link</link> в соответствии с <terms>условиями</terms> и <privacy>политикой конфиденциальности</privacy> Link.";
+
+"By continuing, you agree to save your information for future purchases with %@." = "Продолжая, вы соглашаетесь сохранить вашу информацию для будущих покупок через %@.";
+
 "By continuing, you authorize %@ to automatically debit your Satispay Balance on a recurring basis in accordance with your purchase or subscription plan." = "Продолжая, вы разрешаете %@ автоматически списывать средства с баланса Satispay на регулярной основе в соответствии с вашим планом покупки или подписки.";
 
 "By continuing, you authorize %@ to debit your Cash App account for this payment and future payments in accordance with %@'s terms, until this authorization is revoked. You can change this anytime in your Cash App Settings." = "Продолжая, вы уполномочиваете компанию %1$@ списывать с вашего счета Cash App суммы в соответствии с этим, а также будущими платежами согласно условиям компании %2$@, пока это разрешение не будет отозвано. Отозвать разрешение можно в любой момент в настройках приложения Cash App.";
@@ -79,6 +81,8 @@
 "By providing your phone number, you agree to create a Link account and save your payment info to Link, according to the Link <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Предоставляя свой номер телефона, вы соглашаетесь создать учетную запись Link и сохранить свои платежные реквизиты в Link в соответствии с <terms>Условиями</terms> и <privacy>Политикой конфиденциальности</privacy>.";
 
 "By saving your bank account for %@ you agree to authorize payments pursuant to <terms>these terms</terms>." = "Сохраняя реквизиты своего банковского счета у %@, вы соглашаетесь авторизовать платежи в соответствии с <terms>этими условиями</terms>.";
+
+"By submitting your order to %@ you agree to authorize payments pursuant to <terms>these terms</terms>." = "Отправляя заказ в %@, вы соглашаетесь разрешить платежи в соответствии с <terms>этими условиями</terms>.";
 
 "CPF/CPNJ" = "CPF/CPNJ";
 
@@ -110,6 +114,8 @@
 
 "Continue another way" = "Продолжить другим способом";
 
+"Create an account with Link for faster checkout across the web" = "Создайте учетную запись в Link для более быстрого оформления заказов в Интернете";
+
 "Debit or credit card" = "Дебетовая или кредитная карта";
 
 "Default" = "По умолчанию";
@@ -122,9 +128,13 @@
 
 "Enter the code sent to %@ to use your saved information." = "Чтобы использовать ранее сохраненные данные, введите код, отправленный на %@.";
 
+"Enter the code sent to %@." = "Введите код, отправленный на %s.";
+
 "FPX Bank" = "Банк FPX";
 
 "Failed to connect" = "Не удалось подключиться";
+
+"Fast, secure checkout" = "Быстрое и безопасное оформление заказа";
 
 "For security, please re-enter your card’s security code." = "В целях безопасности введите заново код CVV/CVC карты.";
 
@@ -185,6 +195,8 @@
 "Pay another way" = "Оплатить другим способом";
 
 "Pay faster at %@ and thousands of businesses." = "Ускоренная оплата продавцу %@ и тысячам других предприятий.";
+
+"Pay faster everywhere Link is accepted." = "Платите быстрее везде, где принимают Link.";
 
 "Pay over time with %@" = "Оплатить в рассрочку с помощью %@";
 
@@ -278,6 +290,8 @@
 
 "This is your default" = "Это ваше значение по умолчанию";
 
+"This payment method will be removed but will remain available for %@ subscriptions." = "Этот способ оплаты будет удален, но останется доступным для подписок (%@).";
+
 "Too many attempts. Please try again in a few minutes." = "Превышено разрешенное число попыток. Попробуйте еще раз через несколько минут.";
 
 "Unavailable for this purchase" = "Не предусмотрено для этой покупки";
@@ -287,8 +301,6 @@
 "Update payment method" = "Обновить способ оплаты";
 
 "Use billing address for shipping" = "Использовать для доставки адрес для выставления счетов";
-
-"Use your saved info to check out faster" = "Используйте сохраненные данные для ускоренного оформления покупок";
 
 "View more" = "Показать ещё";
 

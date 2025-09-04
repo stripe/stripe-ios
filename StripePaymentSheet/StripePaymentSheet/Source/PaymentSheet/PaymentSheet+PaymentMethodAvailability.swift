@@ -74,13 +74,10 @@ extension PaymentSheet {
     }
 
     static func isLinkSignupEnabled(elementsSession: STPElementsSession, configuration: PaymentElementConfiguration) -> Bool {
-        guard isLinkEnabled(elementsSession: elementsSession, configuration: configuration) else {
-            return false
-        }
+        let enableSignup = isLinkEnabled(elementsSession: elementsSession, configuration: configuration) && !elementsSession.disableLinkSignup
         // A non-nil account indicates that a consumer lookup has taken place, meaning that we have a customer email
         // via the billing details or customer session.
         let enableOptIn = elementsSession.linkSignupOptInFeatureEnabled && LinkAccountContext.shared.account != nil
-        let enableSignup = !elementsSession.disableLinkSignup
         return (enableSignup || enableOptIn) && elementsSession.supportsLinkCard
     }
 
@@ -189,14 +186,11 @@ extension PaymentSheet {
         /// Requires a valid us bank verification method
         case validUSBankVerificationMethod
 
-        /// The `us_bank_account` payment method is preventing this payment method from being shown.
-        case unexpectedUsBankAccount
-
         /// The email collection configuration is invalid for this payment method.
         case invalidEmailCollectionConfiguration
 
-        /// The Stripe account is not configured for bank payments.
-        case linkFundingSourcesMissingBankAccount
+        /// The Bank payment method is disabled.
+        case instantDebitsDisabledForOnboarding
 
         /// A helpful description for developers to better understand requirements so they can debug why payment methods are not present
         var debugDescription: String {
@@ -217,12 +211,10 @@ extension PaymentSheet {
                 return "financialConnectionsSDK: The FinancialConnections SDK must be linked. See https://stripe.com/docs/payments/accept-a-payment?platform=ios&ui=payment-sheet#ios-ach"
             case .validUSBankVerificationMethod:
                 return "Requires a valid US bank verification method."
-            case .unexpectedUsBankAccount:
-                return "The list of payment method types includes 'us_bank_account', which prevents the 'Bank' tab from being displayed."
             case .invalidEmailCollectionConfiguration:
                 return "The provided configuration must either collect an email, or a default email must be provided. See https://docs.stripe.com/payments/payment-element/control-billing-details-collection"
-            case .linkFundingSourcesMissingBankAccount:
-                return "Your account isn't set up to process Instant Bank Payments. Reach out to Stripe support."
+            case .instantDebitsDisabledForOnboarding:
+                return "The Bank tab is configured to be hidden for your account."
             }
         }
     }

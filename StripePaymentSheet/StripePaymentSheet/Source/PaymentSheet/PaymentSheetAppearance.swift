@@ -33,8 +33,9 @@ public extension PaymentSheet {
         public var cornerRadius: CGFloat = 6.0
 
         /// The border used for inputs and tabs in PaymentSheet
+        /// - Note: The thickness of divider lines between input fields also uses `borderWidth` for consistency, with a minimum thickness of 0.5.
         /// - Note: The behavior of this property is consistent with the behavior of border width on `CALayer`
-        public var borderWidth: CGFloat = 1.0
+        public var borderWidth: CGFloat = LiquidGlassDetector.isEnabled ? 0 : 1.0
 
         /// The border width used for selected buttons and tabs in PaymentSheet
         /// - Note: If `nil`, defaults to  `borderWidth * 1.5`
@@ -51,7 +52,7 @@ public extension PaymentSheet {
         /// The corner radius used for Mobile Payment Element sheets
         /// - Note: The behavior of this property is consistent with the behavior of corner radius on `CALayer`
         @_spi(AppearanceAPIAdditionsPreview)
-        public var sheetCornerRadius: CGFloat = 12.0
+        public var sheetCornerRadius: CGFloat = LiquidGlassDetector.isEnabled ? 34.0 : 12.0
 
         /// The insets used for all text fields in PaymentSheet
         /// - Note: Controls the internal padding within text fields for more manual control over text field spacing
@@ -74,7 +75,7 @@ public extension PaymentSheet {
         /// - Note: Increasing this value increases the height of each floating payment method row
         /// - Note: This only applies to non-embedded integrations (i.e., regular PaymentSheet)
         @_spi(AppearanceAPIAdditionsPreview)
-        public var verticalModeRowPadding: CGFloat = 4.0 {
+        public var verticalModeRowPadding: CGFloat = LiquidGlassDetector.isEnabled ? 16.0 : 4.0 {
             didSet {
                 guard verticalModeRowPadding >= 0.0 else {
                     assertionFailure("verticalModeRowPadding must be a non-negative value")
@@ -143,7 +144,10 @@ public extension PaymentSheet {
             #if os(visionOS)
             public var background: UIColor = .clear
             #else
-            public var background: UIColor = .systemBackground
+            public var background: UIColor = LiquidGlassDetector.isEnabled
+                                            ? UIColor.dynamic(light: UIColor(hex: 0xF2F2F7),
+                                                              dark: UIColor(hex: 0x1C1C1E))
+                                            : .systemBackground
             #endif
 
             /// The color used for the background of inputs, tabs, and other components

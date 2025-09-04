@@ -208,6 +208,7 @@ class CustomerSavedPaymentMethodsCollectionViewControllerTests: XCTestCase {
                                                                                  showApplePay: false,
                                                                                  allowsRemovalOfLastSavedPaymentMethod: allowsRemovalOfLastSavedPaymentMethod,
                                                                                  paymentMethodRemove: paymentMethodRemove,
+                                                                                 paymentMethodRemoveIsPartial: false,
                                                                                  paymentMethodUpdate: paymentMethodUpdate,
                                                                                  paymentMethodSyncDefault: paymentMethodSyncDefault,
                                                                                  isTestMode: true)

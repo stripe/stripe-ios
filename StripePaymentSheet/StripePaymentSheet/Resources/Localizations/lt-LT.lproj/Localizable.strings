@@ -1,5 +1,3 @@
-"%1$@ •••• %2$@" = "%1$@ •••• %2$@";
-
 "+ Add" = "+ Pridėti";
 
 "Add US bank account" = "Pridėti JAV banko sąskaitą";
@@ -60,6 +58,10 @@
 
 "By continuing, you agree to authorize payments pursuant to <terms>these terms</terms>." = "Tęsdami sutinkate autorizuoti mokėjimus pagal šias <terms>sąlygas</terms>.";
 
+"By continuing, you agree to save your information for future purchases with %@ and <link>Link</link> according to Link <terms>terms</terms> and <privacy>privacy</privacy>." = "Tęsdami sutinkate išsaugoti savo informaciją būsimiems pirkimams naudojant %@ ir <link>„Link“</link> pagal „Link“ <terms>Sąlygas</terms> ir <privacy>Privatumo politiką</privacy>.";
+
+"By continuing, you agree to save your information for future purchases with %@." = "Tęsdami sutinkate išsaugoti savo informaciją būsimiems pirkiniams naudojant %@.";
+
 "By continuing, you authorize %@ to automatically debit your Satispay Balance on a recurring basis in accordance with your purchase or subscription plan." = "Tęsdami jūs suteikiate leidimą %@ automatiškai nurašyti lėšas nuo jūsų „Satispay Balance“ likučio periodiškai, pagal jūsų pirkimo arba prenumeratos planą.";
 
 "By continuing, you authorize %@ to debit your Cash App account for this payment and future payments in accordance with %@'s terms, until this authorization is revoked. You can change this anytime in your Cash App Settings." = "Tęsdami įgaliojate \"%1$@\" nurašyti mokestį nuo jūsų \"Cash App\" sąskaitos už šį mokėjimą ir būsimuosius mokėjimus pagal \"%2$@\" sąlygas, kol šis įgaliojimas bus atšauktas. Galite bet kada tai pakeisti \"Cash App\" nuostatose.";
@@ -79,6 +81,8 @@
 "By providing your phone number, you agree to create a Link account and save your payment info to Link, according to the Link <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Pateikdami savo telefono numerį sutinkate susikurti \"Link\" paskyrą bei įrašyti savo mokėjimo informaciją į \"Link\" pagal \"Link\" <terms>sąlygas</terms> ir <privacy>privatumo politiką</privacy>.";
 
 "By saving your bank account for %@ you agree to authorize payments pursuant to <terms>these terms</terms>." = "Išsaugodami savo banko sąskaitą %@, sutinkate autorizuoti mokėjimus pagal šias <terms>sąlygas</terms>.";
+
+"By submitting your order to %@ you agree to authorize payments pursuant to <terms>these terms</terms>." = "Pateikdami užsakymą %@, sutinkate mokėjimus autorizuoti pagal <terms>šias sąlygas</terms>.";
 
 "CPF/CPNJ" = "CPF/CPNJ";
 
@@ -110,6 +114,8 @@
 
 "Continue another way" = "Tęsti kitu būdu";
 
+"Create an account with Link for faster checkout across the web" = "Sukurkite paskyrą naudodami „Link”, kad galėtumėte greičiau atsiskaityti žiniatinklyje";
+
 "Debit or credit card" = "Debeto arba kredito kortelė";
 
 "Default" = "Numatytasis";
@@ -122,9 +128,13 @@
 
 "Enter the code sent to %@ to use your saved information." = "Norėdami naudoti savo išsaugotą informaciją, įveskite %@ gautą kodą.";
 
+"Enter the code sent to %@." = "Įveskite kodą, išsiųstą %s.";
+
 "FPX Bank" = "FPX bankas";
 
 "Failed to connect" = "Nepavyko prisijungti";
+
+"Fast, secure checkout" = "Greitas ir saugus pirkimo užbaigimas";
 
 "For security, please re-enter your card’s security code." = "Saugumo sumetimais dar kartą įveskite kortelės saugumo kodą.";
 
@@ -185,6 +195,8 @@
 "Pay another way" = "Mokėkite kitu būdu";
 
 "Pay faster at %@ and thousands of businesses." = "Mokėkite greičiau \"%@\" ir daugybei kitų įmonių.";
+
+"Pay faster everywhere Link is accepted." = "Mokėkite greičiau visur, kur priimama „Link“.";
 
 "Pay over time with %@" = "Mokėkite vėliau naudodami %@";
 
@@ -278,6 +290,8 @@
 
 "This is your default" = "Tai jūsų numatytasis mokėjimo būdas";
 
+"This payment method will be removed but will remain available for %@ subscriptions." = "Šis mokėjimo būdas bus pašalintas, tačiau ir toliau bus galima naudotis %@ prenumeratomis.";
+
 "Too many attempts. Please try again in a few minutes." = "Per daug bandymų. Bandykite dar kartą po kelių minučių.";
 
 "Unavailable for this purchase" = "Šiam pirkiniui nepasiekiama";
@@ -287,8 +301,6 @@
 "Update payment method" = "Atnaujinti mokėjimo būdą";
 
 "Use billing address for shipping" = "Atsiskaitymo adresą naudoti siuntimui";
-
-"Use your saved info to check out faster" = "Naudokite išsaugotą informaciją, kad atsiskaitytumėte greičiau";
 
 "View more" = "Peržiūrėti daugiau";
 

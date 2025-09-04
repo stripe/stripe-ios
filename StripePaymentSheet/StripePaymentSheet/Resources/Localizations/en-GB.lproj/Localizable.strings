@@ -1,5 +1,3 @@
-"%1$@ •••• %2$@" = "%1$@ •••• %2$@";
-
 "+ Add" = "+ Add";
 
 "Add US bank account" = "Add US bank account";
@@ -60,6 +58,10 @@
 
 "By continuing, you agree to authorize payments pursuant to <terms>these terms</terms>." = "By continuing, you agree to authorize payments pursuant to <terms>these terms</terms>.";
 
+"By continuing, you agree to save your information for future purchases with %@ and <link>Link</link> according to Link <terms>terms</terms> and <privacy>privacy</privacy>." = "By continuing, you agree to save your information for future purchases with %@ and <link>Link</link> according to Link <terms>terms</terms> and <privacy>privacy</privacy>.";
+
+"By continuing, you agree to save your information for future purchases with %@." = "By continuing, you agree to save your information for future purchases with %@.";
+
 "By continuing, you authorize %@ to automatically debit your Satispay Balance on a recurring basis in accordance with your purchase or subscription plan." = "By continuing, you authorise %@ to automatically debit your Satispay Balance on a recurring basis in accordance with your purchase or subscription plan.";
 
 "By continuing, you authorize %@ to debit your Cash App account for this payment and future payments in accordance with %@'s terms, until this authorization is revoked. You can change this anytime in your Cash App Settings." = "By continuing, you authorize %1$@ to debit your Cash App account for this payment and future payments in accordance with %2$@'s terms, until this authorization is revoked. You can change this anytime in your Cash App Settings.";
@@ -79,6 +81,8 @@
 "By providing your phone number, you agree to create a Link account and save your payment info to Link, according to the Link <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "By providing your phone number, you agree to create a Link account and save your payment info to Link, according to the Link <terms>Terms</terms> and <privacy>Privacy Policy</privacy>.";
 
 "By saving your bank account for %@ you agree to authorize payments pursuant to <terms>these terms</terms>." = "By saving your bank account for %@ you agree to authorize payments pursuant to <terms>these terms</terms>.";
+
+"By submitting your order to %@ you agree to authorize payments pursuant to <terms>these terms</terms>." = "By submitting your order to %@ you agree to authorise payments pursuant to <terms>these terms</terms>.";
 
 "CPF/CPNJ" = "CPF/CPNJ";
 
@@ -110,6 +114,8 @@
 
 "Continue another way" = "Continue another way";
 
+"Create an account with Link for faster checkout across the web" = "Create an account with Link for faster checkout across the web";
+
 "Debit or credit card" = "Debit or credit card";
 
 "Default" = "Default";
@@ -122,9 +128,13 @@
 
 "Enter the code sent to %@ to use your saved information." = "Enter the code sent to %@ to use your saved information.";
 
+"Enter the code sent to %@." = "Enter the code sent to %s.";
+
 "FPX Bank" = "FPX Bank";
 
 "Failed to connect" = "Failed to connect";
+
+"Fast, secure checkout" = "Fast, secure checkout";
 
 "For security, please re-enter your card’s security code." = "For security, please re-enter your card’s security code.";
 
@@ -185,6 +195,8 @@
 "Pay another way" = "Pay another way";
 
 "Pay faster at %@ and thousands of businesses." = "Pay faster at %@ and thousands of businesses.";
+
+"Pay faster everywhere Link is accepted." = "Pay faster everywhere Link is accepted.";
 
 "Pay over time with %@" = "Pay over time with %@";
 
@@ -278,6 +290,8 @@
 
 "This is your default" = "This is your default";
 
+"This payment method will be removed but will remain available for %@ subscriptions." = "This payment method will be removed but will remain available for %@ subscriptions.";
+
 "Too many attempts. Please try again in a few minutes." = "Too many attempts. Please try again in a few minutes.";
 
 "Unavailable for this purchase" = "Unavailable for this purchase";
@@ -287,8 +301,6 @@
 "Update payment method" = "Update payment method";
 
 "Use billing address for shipping" = "Use billing address for shipping";
-
-"Use your saved info to check out faster" = "Use your saved info to check out faster";
 
 "View more" = "View more";
 

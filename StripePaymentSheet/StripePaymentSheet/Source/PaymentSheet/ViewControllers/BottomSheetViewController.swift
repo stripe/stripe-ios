@@ -221,9 +221,6 @@ class BottomSheetViewController: UIViewController, BottomSheetPresentable {
         contentContainerView.addArrangedSubview(self.contentViewController.view)
         if let presentationController = rootParent.presentationController as? BottomSheetPresentationController {
             presentationController.forceFullHeight = newContentViewController.requiresFullScreen
-
-            // Force layout pass to apply safe area insets
-            presentationController.containerView?.layoutIfNeeded()
         }
 
         contentContainerView.layoutIfNeeded()
@@ -337,26 +334,48 @@ class BottomSheetViewController: UIViewController, BottomSheetPresentable {
             navigationBarContainerView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             navigationBarContainerView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
 
-            scrollView.topAnchor.constraint(equalTo: navigationBarContainerView.bottomAnchor),
             scrollView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
             scrollView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
             bottomAnchor,
         ])
+
+        if LiquidGlassDetector.isEnabled {
+            NSLayoutConstraint.activate([
+                // Allow scroll view to extend under the navigation bar for blur effect
+                scrollView.topAnchor.constraint(equalTo: view.topAnchor),
+            ])
+        } else {
+            NSLayoutConstraint.activate([
+                scrollView.topAnchor.constraint(equalTo: navigationBarContainerView.bottomAnchor)
+            ])
+        }
+        #if compiler(>=6.2)
+        // Allow content that is scrolled under the navigation bar to be blurred
+        if #available(iOS 26.0, *),
+           LiquidGlassDetector.isEnabled {
+                let interaction = UIScrollEdgeElementContainerInteraction()
+                interaction.scrollView = scrollView
+                interaction.edge = .top
+                navigationBarContainerView.addInteraction(interaction)
+        }
+        #endif
 
         contentContainerView.translatesAutoresizingMaskIntoConstraints = false
         contentContainerView.directionalLayoutMargins = appearance.formInsets
         scrollView.addSubview(contentContainerView)
 
         // Give the scroll view a desired height
-        let scrollViewHeightConstraint = scrollView.heightAnchor.constraint(
-            equalTo: scrollView.contentLayoutGuide.heightAnchor)
+        let scrollViewHeightConstraint = scrollView.heightAnchor.constraint(equalTo: scrollView.contentLayoutGuide.heightAnchor)
         scrollViewHeightConstraint.priority = .fittingSizeLevel
         self.scrollViewHeightConstraint = scrollViewHeightConstraint
+
+        // Move the contentContainerView to start below the sheet
+        let topOffset = LiquidGlassDetector.isEnabled ? SheetNavigationBar.height : 0.0
 
         NSLayoutConstraint.activate([
             contentContainerView.leadingAnchor.constraint(equalTo: scrollView.contentLayoutGuide.leadingAnchor),
             contentContainerView.trailingAnchor.constraint(equalTo: scrollView.contentLayoutGuide.trailingAnchor),
-            contentContainerView.topAnchor.constraint(equalTo: scrollView.contentLayoutGuide.topAnchor),
+            contentContainerView.topAnchor.constraint(equalTo: scrollView.contentLayoutGuide.topAnchor, constant: topOffset),
             contentContainerView.bottomAnchor.constraint(equalTo: scrollView.contentLayoutGuide.bottomAnchor),
             contentContainerView.widthAnchor.constraint(equalTo: scrollView.frameLayoutGuide.widthAnchor),
             scrollViewHeightConstraint,
@@ -431,6 +450,12 @@ class BottomSheetViewController: UIViewController, BottomSheetPresentable {
                 if notification.name == UIResponder.keyboardWillHideNotification {
                     bottomAnchor.constant = 0
                 } else {
+                    #if !os(visionOS)
+                    if #available(iOS 26.0, *), let inputAccessoryView = self.view.firstResponder()?.inputAccessoryView {
+                        // On iOS 26, the input accessory view is transparent, so we don't want shift the content above it.
+                       keyboardInViewHeight -= inputAccessoryView.frame.height
+                    }
+                    #endif
                     bottomAnchor.constant = -keyboardInViewHeight
                 }
 

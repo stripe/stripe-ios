@@ -34,6 +34,7 @@ class CustomerSavedPaymentMethodsViewController: UIViewController {
     let configuration: CustomerSheet.Configuration
     let customerSheetDataSource: CustomerSheetDataSource
     let paymentMethodRemove: Bool
+    let paymentMethodRemoveIsPartial: Bool
     let paymentMethodUpdate: Bool
     let paymentMethodSyncDefault: Bool
     let allowsRemovalOfLastSavedPaymentMethod: Bool
@@ -111,6 +112,7 @@ class CustomerSavedPaymentMethodsViewController: UIViewController {
                 showApplePay: showApplePay,
                 allowsRemovalOfLastSavedPaymentMethod: allowsRemovalOfLastSavedPaymentMethod,
                 paymentMethodRemove: paymentMethodRemove,
+                paymentMethodRemoveIsPartial: paymentMethodRemoveIsPartial,
                 paymentMethodUpdate: paymentMethodUpdate,
                 paymentMethodSyncDefault: paymentMethodSyncDefault,
                 isTestMode: configuration.apiClient.isTestmode
@@ -155,6 +157,7 @@ class CustomerSavedPaymentMethodsViewController: UIViewController {
         customerSheetDataSource: CustomerSheetDataSource,
         isApplePayEnabled: Bool,
         paymentMethodRemove: Bool,
+        paymentMethodRemoveIsPartial: Bool,
         paymentMethodUpdate: Bool,
         paymentMethodSyncDefault: Bool,
         allowsRemovalOfLastSavedPaymentMethod: Bool,
@@ -169,6 +172,7 @@ class CustomerSavedPaymentMethodsViewController: UIViewController {
         self.customerSheetDataSource = customerSheetDataSource
         self.isApplePayEnabled = isApplePayEnabled
         self.paymentMethodRemove = paymentMethodRemove
+        self.paymentMethodRemoveIsPartial = paymentMethodRemoveIsPartial
         self.paymentMethodUpdate = paymentMethodUpdate
         self.paymentMethodSyncDefault = paymentMethodSyncDefault
         self.allowsRemovalOfLastSavedPaymentMethod = allowsRemovalOfLastSavedPaymentMethod
@@ -675,6 +679,7 @@ class CustomerSavedPaymentMethodsViewController: UIViewController {
                 showApplePay: showApplePay,
                 allowsRemovalOfLastSavedPaymentMethod: allowsRemovalOfLastSavedPaymentMethod,
                 paymentMethodRemove: paymentMethodRemove,
+                paymentMethodRemoveIsPartial: paymentMethodRemoveIsPartial,
                 paymentMethodUpdate: paymentMethodUpdate,
                 paymentMethodSyncDefault: paymentMethodSyncDefault,
                 isTestMode: configuration.apiClient.isTestmode

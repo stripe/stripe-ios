@@ -1,5 +1,3 @@
-"%1$@ •••• %2$@" = "%1$@ •••• %2$@";
-
 "+ Add" = "+ เพิ่ม";
 
 "Add US bank account" = "เพิ่มบัญชีธนาคารในสหรัฐอเมริกา";
@@ -60,6 +58,10 @@
 
 "By continuing, you agree to authorize payments pursuant to <terms>these terms</terms>." = "การดำเนินการต่อหมายความว่าคุณตกลงที่จะอนุมัติการชำระเงินซึ่งดำเนินการตาม<terms>ข้อกำหนดเหล่านี้</terms>";
 
+"By continuing, you agree to save your information for future purchases with %@ and <link>Link</link> according to Link <terms>terms</terms> and <privacy>privacy</privacy>." = "เมื่อดำเนินการต่อ แสดงว่าคุณยินยอมที่จะบันทึกข้อมูลไว้สำหรับการซื้อด้วย %@ ในอนาคต และ <link>Link</link> ตาม<terms>ข้อกำหนด</terms>และ<privacy>ความเป็นส่วนตัว</privacy>ของ Link";
+
+"By continuing, you agree to save your information for future purchases with %@." = "เมื่อดำเนินการต่อ จะถือว่าคุณตกลงที่จะบันทึกข้อมูลไว้สําหรับการซื้อด้วย %@ ในอนาคต";
+
 "By continuing, you authorize %@ to automatically debit your Satispay Balance on a recurring basis in accordance with your purchase or subscription plan." = "การดำเนินการต่อแปลว่าคุณอนุญาตให้ %@ หักเงินจากยอดเงิน Satispay ของคุณโดยอัตโนมัติตามระยะเวลาที่กำหนดตามแผนการซื้อหรือการสมัครสมาชิกของคุณ";
 
 "By continuing, you authorize %@ to debit your Cash App account for this payment and future payments in accordance with %@'s terms, until this authorization is revoked. You can change this anytime in your Cash App Settings." = "การดำเนินการต่อ หมายความว่าคุณอนุญาตให้ %1$@ ฝากเงินเข้าบัญชี Cash App ของคุณสำหรับการชำระเงินรายการนี้ และการชำระเงินในอนาคตโดยสอดคล้องกับข้อกำหนดของ %2$@ จนกว่าจะมีการเพิกถอนการอนุญาต คุณสามารถเปลี่ยนแปลงการตั้งค่านี้ได้ทุกเมื่อในการตั้งค่า Cash App";
@@ -79,6 +81,8 @@
 "By providing your phone number, you agree to create a Link account and save your payment info to Link, according to the Link <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "การให้หมายเลขโทรศัพท์หมายความว่าคุณยินยอมที่จะสร้างบัญชี Link และบันทึกข้อมูลการชำระเงินไปยัง Link ตาม<terms>ข้อกำหนด</terms>และ<privacy>เงื่อนไข</privacy>ของ Link";
 
 "By saving your bank account for %@ you agree to authorize payments pursuant to <terms>these terms</terms>." = "การบันทึกบัญชีธนาคารของ %@ หมายความว่าคุณตกลงที่จะอนุมัติการชำระเงินซึ่งดำเนินการตาม<terms>ข้อกำหนดเหล่านี้</terms>";
+
+"By submitting your order to %@ you agree to authorize payments pursuant to <terms>these terms</terms>." = "การส่งคำสั่งซื้อให้ %@ หมายความว่าคุณตกลงที่จะอนุมัติการชำระเงินตาม<terms>ข้อกำหนดเหล่านี้</terms>";
 
 "CPF/CPNJ" = "AU Direct Debit";
 
@@ -110,6 +114,8 @@
 
 "Continue another way" = "ดำเนินการต่อด้วยวิธีอื่น";
 
+"Create an account with Link for faster checkout across the web" = "สร้างบัญชีด้วย Link เพื่อการชำระเงินบนเว็บที่รวดเร็วขึ้น";
+
 "Debit or credit card" = "บัตรเดบิตหรือบัตรเครดิต";
 
 "Default" = "ค่าเริ่มต้น";
@@ -122,9 +128,13 @@
 
 "Enter the code sent to %@ to use your saved information." = "ป้อนรหัสยืนยันที่ส่งไปยัง %@ เพื่อใช้ข้อมูลที่บันทึกไว้";
 
+"Enter the code sent to %@." = "ป้อนรหัสที่เราส่งให้ที่ %s";
+
 "FPX Bank" = "FPX Bank";
 
 "Failed to connect" = "เชื่อมต่อไม่สำเร็จ";
+
+"Fast, secure checkout" = "การชำระเงินที่รวดเร็วและปลอดภัย";
 
 "For security, please re-enter your card’s security code." = "โปรดป้อนรหัสรักษาความปลอดภัยของบัตรอีกครั้งเพื่อความปลอดภัย";
 
@@ -185,6 +195,8 @@
 "Pay another way" = "ชำระด้วยวิธีอื่น";
 
 "Pay faster at %@ and thousands of businesses." = "ชำระเงินใน %@ และธุรกิจอีกนับพันแห่งได้เร็วขึ้น";
+
+"Pay faster everywhere Link is accepted." = "ชำระเงินได้รวดเร็วขึ้นในทุกที่ที่รองรับ Link";
 
 "Pay over time with %@" = "ทยอยชำระเงินด้วย Affirm%@";
 
@@ -278,6 +290,8 @@
 
 "This is your default" = "นี่คือค่าเริ่มต้นของคุณ";
 
+"This payment method will be removed but will remain available for %@ subscriptions." = "วิธีการชำระเงินนี้จะถูกนำออกไปแต่จะยังคงใช้ได้สำหรับการชำระเงินตามรอบบิล %@";
+
 "Too many attempts. Please try again in a few minutes." = "ลองหลายครั้งเกินไป โปรดลองใหม่ในอีกสักครู่";
 
 "Unavailable for this purchase" = "ใช้กับการซื้อรายการนี้ไม่ได้";
@@ -287,8 +301,6 @@
 "Update payment method" = "อัปเดตวิธีการชำระเงิน";
 
 "Use billing address for shipping" = "ใช้ที่อยู่เรียกเก็บเงินสำหรับการจัดส่ง";
-
-"Use your saved info to check out faster" = "ใช้ข้อมูลที่บันทึกไว้เพื่อให้ชำระเงินได้รวดเร็วขึ้น";
 
 "View more" = "ดูเพิ่มเติม";
 

@@ -10,7 +10,7 @@
 import UIKit
 
 /// The shadowed rounded rectangle that our cells use to display content
-class ShadowedRoundedRectangle: UIView {
+class ShadowedRoundedRectangle: UIView, SelectableRectangle {
     private let roundedRectangle: UIView
     var appearance: PaymentSheet.Appearance {
         didSet {

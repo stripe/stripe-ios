@@ -40,6 +40,7 @@ final class LinkVerificationView: UIView {
 
     private let appearance: LinkAppearance?
     private let allowLogoutInDialog: Bool
+    private let consentViewModel: LinkConsentViewModel?
 
     var sendingCode: Bool = false {
         didSet {
@@ -133,16 +134,33 @@ final class LinkVerificationView: UIView {
         return logoutView
     }()
 
+    private lazy var consentDisclaimerLabel: UILabel? = {
+        guard case .inline(let inlineConsent) = consentViewModel else {
+            return nil
+        }
+
+        let label = UILabel()
+        label.numberOfLines = 0
+        label.textAlignment = .center
+        label.font = LinkUI.font(forTextStyle: .caption)
+        label.textColor = .linkTextTertiary
+        label.text = inlineConsent.disclaimer
+        label.adjustsFontForContentSizeCategory = true
+        return label
+    }()
+
     required init(
         mode: Mode,
         linkAccount: PaymentSheetLinkAccountInfoProtocol,
         appearance: LinkAppearance? = nil,
-        allowLogoutInDialog: Bool
+        allowLogoutInDialog: Bool,
+        consentViewModel: LinkConsentViewModel? = nil
     ) {
         self.mode = mode
         self.linkAccount = linkAccount
         self.appearance = appearance
         self.allowLogoutInDialog = allowLogoutInDialog
+        self.consentViewModel = consentViewModel
         super.init(frame: .zero)
         setupUI()
     }
@@ -190,19 +208,29 @@ private extension LinkVerificationView {
                 resendCodeButton,
             ]
 
+            if let consentDisclaimerLabel = consentDisclaimerLabel {
+                views.append(consentDisclaimerLabel)
+            }
+
             if allowLogoutInDialog {
                 views.append(logoutView)
             }
 
             return views
         case .embedded:
-            return [
+            var views = [
                 headingLabel,
                 bodyLabel,
                 codeFieldContainer,
                 resendCodeButton,
-                logoutView,
             ]
+
+            if let consentDisclaimerLabel = consentDisclaimerLabel {
+                views.append(consentDisclaimerLabel)
+            }
+
+            views.append(logoutView)
+            return views
         }
     }
 
@@ -220,6 +248,11 @@ private extension LinkVerificationView {
         stackView.setCustomSpacing(LinkUI.extraLargeContentSpacing, after: bodyLabel)
         stackView.setCustomSpacing(LinkUI.extraLargeContentSpacing, after: codeFieldContainer)
         stackView.setCustomSpacing(LinkUI.largeContentSpacing, after: resendCodeButton)
+
+        // Add spacing after consent disclaimer if present
+        if let consentDisclaimerLabel = consentDisclaimerLabel {
+            stackView.setCustomSpacing(LinkUI.largeContentSpacing, after: consentDisclaimerLabel)
+        }
 
         addSubview(stackView)
 
@@ -260,18 +293,10 @@ extension LinkVerificationView.Mode {
     }
 
     var headingText: String {
-        switch self {
-        case .modal:
-            return STPLocalizedString(
-                "Use your saved info to check out faster",
-                "Two factor authentication screen heading"
-            )
-        case .inlineLogin, .embedded:
-            return STPLocalizedString(
-                "Confirm it's you",
-                "Two factor authentication screen heading"
-            )
-        }
+        return STPLocalizedString(
+            "Confirm it's you",
+            "Two factor authentication screen heading"
+        )
     }
 
     var bodyFont: UIFont {
@@ -285,7 +310,7 @@ extension LinkVerificationView.Mode {
 
     func bodyText(redactedPhoneNumber: String) -> String {
         let format = STPLocalizedString(
-            "Enter the code sent to %@ to use your saved information.",
+            "Enter the code sent to %@.",
             "Instructs the user to enter the code sent to their phone number in order to login to Link"
         )
         return String(format: format, redactedPhoneNumber)
