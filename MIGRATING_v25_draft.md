@@ -1,4 +1,2 @@
-### Financial Connections
-* [Added] Added an async versions of `present(from:)` and `presentForToken(from:)`.
 ### Payments
 * [Changed] `linkedAccount` on `STPPaymentMethodUSBankAccount` has been renamed to `financialConnectionsAccount`.
