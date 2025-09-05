@@ -190,15 +190,12 @@ class SheetNavigationBar: UIView {
         button.tintColor = appearance.colors.icon
         button.accessibilityLabel = String.Localized.back
         button.accessibilityIdentifier = "UIButton.Back"
-        #if compiler(>=6.2)
-        if #available(iOS 26.0, *),
-           LiquidGlassDetector.isEnabled {
+        if LiquidGlassDetector.isEnabled {
             // Setting to 20x20 w/ glass results in a button that is sized to 44x44 with .glass()
             let resizedImage = image.resized(to: CGSize(width: 20, height: 20))
             button.setImage(resizedImage, for: .normal)
-            button.configuration = .glass()
+            button.ios26_applyGlassConfiguration()
         }
-        #endif
         return button
     }
 
@@ -209,15 +206,12 @@ class SheetNavigationBar: UIView {
         button.tintColor = appearance.colors.icon
         button.accessibilityLabel = String.Localized.close
         button.accessibilityIdentifier = "UIButton.Close"
-        #if compiler(>=6.2)
-        if #available(iOS 26.0, *),
-           LiquidGlassDetector.isEnabled{
+        if LiquidGlassDetector.isEnabled{
             // Setting to 20x20 w/ glass results in a button that is sized to 44x44 with .glass()
             let resizedImage = image.resized(to: CGSize(width: 20, height: 20))
             button.setImage(resizedImage, for: .normal)
-            button.configuration = .glass()
+            button.ios26_applyGlassConfiguration()
         }
-        #endif
         return button
     }
 }
@@ -230,11 +224,8 @@ extension UIButton {
         titleLabel?.textAlignment = .right
         titleLabel?.font = appearance.scaledFont(for: appearance.font.base.medium, size: 14, maximumPointSize: 22)
         accessibilityIdentifier = "edit_saved_button"
-        #if compiler(>=6.2)
-        if #available(iOS 26.0, *),
-           LiquidGlassDetector.isEnabled {
-            configuration = .glass()
+        if LiquidGlassDetector.isEnabled {
+            ios26_applyGlassConfiguration()
         }
-        #endif
     }
 }

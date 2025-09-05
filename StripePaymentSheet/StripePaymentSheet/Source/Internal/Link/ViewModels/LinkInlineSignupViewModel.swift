@@ -6,10 +6,10 @@
 //  Copyright © 2022 Stripe, Inc. All rights reserved.
 //
 
-import Foundation
 @_spi(STP) import StripeCore
 @_spi(STP) import StripePayments
 @_spi(STP) import StripeUICore
+import UIKit
 
 protocol LinkInlineSignupViewModelDelegate: AnyObject {
     func signupViewModelDidUpdate(_ viewModel: LinkInlineSignupViewModel)
@@ -298,21 +298,46 @@ final class LinkInlineSignupViewModel {
         }
     }
 
-    var showCheckbox: Bool {
+    var bordered: Bool {
         switch mode {
-        case .checkbox, .checkboxWithDefaultOptIn, .signupOptIn:
-            return true
-        case .textFieldsOnlyEmailFirst, .textFieldsOnlyPhoneFirst:
+        case .checkbox:
+            return !LiquidGlassDetector.isEnabled
+        case .checkboxWithDefaultOptIn, .textFieldsOnlyEmailFirst, .textFieldsOnlyPhoneFirst, .signupOptIn:
             return false
         }
     }
 
-    var bordered: Bool {
+    var containerBackground: UIColor {
         switch mode {
         case .checkbox:
-            return true
+            if LiquidGlassDetector.isEnabled {
+                return configuration.appearance.colors.componentBackground
+            } else {
+                return configuration.appearance.colors.background
+            }
         case .checkboxWithDefaultOptIn, .textFieldsOnlyEmailFirst, .textFieldsOnlyPhoneFirst, .signupOptIn:
-            return false
+            return configuration.appearance.colors.background
+        }
+    }
+
+    var containerCornerRadius: CGFloat {
+        switch mode {
+        case .checkbox:
+            return LiquidGlassDetector.isEnabled ? LinkUI.cornerRadius : configuration.appearance.cornerRadius
+        case .checkboxWithDefaultOptIn, .textFieldsOnlyEmailFirst, .textFieldsOnlyPhoneFirst, .signupOptIn:
+            // The content is right at the border of the view. Remove the corner radius so that we don't cut off anything.
+            return 0
+        }
+    }
+
+    var combinedEmailNameSectionBorderWidth: CGFloat {
+        let borderWidth = configuration.appearance.borderWidth
+        switch mode {
+        case .checkbox:
+            // Make sure we always display at least some border around the section, which is nested in a component
+            return max(borderWidth, 1.0)
+        case .checkboxWithDefaultOptIn, .textFieldsOnlyEmailFirst, .textFieldsOnlyPhoneFirst, .signupOptIn:
+            return borderWidth
         }
     }
 
