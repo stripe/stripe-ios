@@ -14,11 +14,14 @@ extension AppSettings {
         [
             .default,
             .customFont,
+            .darkMode,
             .dynamicColors,
+            .forest,
             .hotDog,
             .link,
             .oceanBreeze,
             .ogre,
+            .retro,
         ]
     }
 
@@ -247,6 +250,110 @@ extension AppearanceInfo {
         var appearance = EmbeddedComponentManager.Appearance()
         appearance.typography.font = UIFont(name: "Handjet-Regular", size: UIFont.systemFontSize)
         return .init(displayName: "Custom Font", appearance: appearance)
+    }
+
+    static var darkMode: AppearanceInfo {
+        var appearance = EmbeddedComponentManager.Appearance()
+        
+        appearance.colors.primary = UIColor(red: 0/255, green: 133/255, blue: 255/255, alpha: 1)
+        appearance.colors.text = UIColor(red: 201/255, green: 206/255, blue: 216/255, alpha: 1)
+        appearance.colors.background = UIColor(red: 20/255, green: 23/255, blue: 29/255, alpha: 1)
+        appearance.colors.secondaryText = UIColor(red: 140/255, green: 153/255, blue: 173/255, alpha: 1)
+        appearance.colors.border = UIColor(red: 43/255, green: 48/255, blue: 57/255, alpha: 1)
+        appearance.colors.danger = UIColor(red: 242/255, green: 49/255, blue: 84/255, alpha: 1)
+        appearance.colors.offsetBackground = UIColor(red: 27/255, green: 30/255, blue: 37/255, alpha: 1)
+        appearance.colors.actionSecondaryText = UIColor(red: 201/255, green: 206/255, blue: 216/255, alpha: 1)
+        
+        appearance.buttonSecondary.colorBackground = UIColor(red: 43/255, green: 48/255, blue: 57/255, alpha: 1)
+        appearance.buttonSecondary.colorText = UIColor(red: 201/255, green: 206/255, blue: 216/255, alpha: 1)
+        
+        appearance.badgeNeutral.colorBackground = UIColor(red: 27/255, green: 30/255, blue: 37/255, alpha: 1)
+        appearance.badgeNeutral.colorBorder = UIColor(red: 43/255, green: 48/255, blue: 57/255, alpha: 1)
+        appearance.badgeNeutral.colorText = UIColor(red: 140/255, green: 153/255, blue: 173/255, alpha: 1)
+        
+        appearance.badgeSuccess.colorBackground = UIColor(red: 21/255, green: 34/255, blue: 7/255, alpha: 1)
+        appearance.badgeSuccess.colorBorder = UIColor(red: 32/255, green: 54/255, blue: 12/255, alpha: 1)
+        appearance.badgeSuccess.colorText = UIColor(red: 62/255, green: 174/255, blue: 32/255, alpha: 1)
+        
+        appearance.badgeWarning.colorBackground = UIColor(red: 64/255, green: 10/255, blue: 0/255, alpha: 1)
+        appearance.badgeWarning.colorBorder = UIColor(red: 95/255, green: 20/255, blue: 0/255, alpha: 1)
+        appearance.badgeWarning.colorText = UIColor(red: 242/255, green: 116/255, blue: 0/255, alpha: 1)
+        
+        appearance.badgeDanger.colorBackground = UIColor(red: 66/255, green: 3/255, blue: 32/255, alpha: 1)
+        appearance.badgeDanger.colorBorder = UIColor(red: 97/255, green: 9/255, blue: 45/255, alpha: 1)
+        appearance.badgeDanger.colorText = UIColor(red: 244/255, green: 107/255, blue: 125/255, alpha: 1)
+        
+        return .init(displayName: "Dark mode", appearance: appearance)
+    }
+
+    static var forest: AppearanceInfo {
+        var appearance = EmbeddedComponentManager.Appearance()
+        
+        appearance.colors.primary = UIColor(red: 83/255, green: 125/255, blue: 93/255, alpha: 1)
+        appearance.colors.background = UIColor(red: 255/255, green: 253/255, blue: 246/255, alpha: 1)
+        appearance.colors.secondaryText = UIColor(red: 135/255, green: 134/255, blue: 130/255, alpha: 1)
+        appearance.colors.border = UIColor(red: 214/255, green: 214/255, blue: 214/255, alpha: 1)
+        appearance.colors.danger = UIColor(red: 236/255, green: 82/255, blue: 40/255, alpha: 1)
+        appearance.colors.offsetBackground = UIColor(red: 250/255, green: 246/255, blue: 233/255, alpha: 1)
+        
+        appearance.buttonSecondary.colorBackground = UIColor(red: 222/255, green: 236/255, blue: 212/255, alpha: 1)
+        appearance.buttonSecondary.colorText = UIColor(red: 83/255, green: 125/255, blue: 93/255, alpha: 1)
+        
+        appearance.badgeNeutral.colorBackground = UIColor(red: 245/255, green: 236/255, blue: 213/255, alpha: 1)
+        appearance.badgeNeutral.colorBorder = UIColor(red: 245/255, green: 236/255, blue: 213/255, alpha: 1)
+        
+        appearance.badgeSuccess.colorBackground = UIColor(red: 222/255, green: 236/255, blue: 212/255, alpha: 1)
+        appearance.badgeSuccess.colorBorder = UIColor(red: 222/255, green: 236/255, blue: 212/255, alpha: 1)
+        appearance.badgeSuccess.colorText = UIColor(red: 83/255, green: 125/255, blue: 93/255, alpha: 1)
+        
+        appearance.badgeWarning.colorBackground = UIColor(red: 251/255, green: 218/255, blue: 177/255, alpha: 1)
+        appearance.badgeWarning.colorBorder = UIColor(red: 251/255, green: 218/255, blue: 177/255, alpha: 1)
+        appearance.badgeWarning.colorText = UIColor(red: 117/255, green: 31/255, blue: 0/255, alpha: 1)
+        
+        appearance.badgeDanger.colorBackground = UIColor(red: 236/255, green: 82/255, blue: 40/255, alpha: 1)
+        appearance.badgeDanger.colorBorder = UIColor(red: 236/255, green: 82/255, blue: 40/255, alpha: 1)
+        appearance.badgeDanger.colorText = UIColor(red: 255/255, green: 255/255, blue: 255/255, alpha: 1)
+        
+        appearance.cornerRadius.base = 24
+        
+        return .init(displayName: "Forest", appearance: appearance)
+    }
+
+    static var retro: AppearanceInfo {
+        var appearance = EmbeddedComponentManager.Appearance()
+        
+        appearance.colors.primary = UIColor(red: 0/255, green: 128/255, blue: 128/255, alpha: 1)
+        appearance.colors.text = UIColor(red: 0/255, green: 0/255, blue: 0/255, alpha: 1)
+        appearance.colors.background = UIColor(red: 230/255, green: 230/255, blue: 230/255, alpha: 1)
+        appearance.colors.secondaryText = UIColor(red: 87/255, green: 87/255, blue: 87/255, alpha: 1)
+        appearance.colors.border = UIColor(red: 87/255, green: 87/255, blue: 87/255, alpha: 1)
+        appearance.colors.offsetBackground = UIColor(red: 255/255, green: 255/255, blue: 255/255, alpha: 1)
+        appearance.colors.actionSecondaryText = UIColor(red: 87/255, green: 87/255, blue: 87/255, alpha: 1)
+        
+        appearance.buttonSecondary.colorBackground = UIColor(red: 195/255, green: 195/255, blue: 195/255, alpha: 1)
+        appearance.buttonSecondary.colorText = UIColor(red: 0/255, green: 0/255, blue: 0/255, alpha: 1)
+        
+        appearance.badgeNeutral.colorBackground = UIColor(red: 68/255, green: 68/255, blue: 68/255, alpha: 1)
+        appearance.badgeNeutral.colorBorder = UIColor(red: 68/255, green: 68/255, blue: 68/255, alpha: 1)
+        appearance.badgeNeutral.colorText = UIColor(red: 255/255, green: 255/255, blue: 255/255, alpha: 1)
+        
+        appearance.badgeSuccess.colorBackground = UIColor(red: 0/255, green: 128/255, blue: 128/255, alpha: 1)
+        appearance.badgeSuccess.colorBorder = UIColor(red: 0/255, green: 128/255, blue: 128/255, alpha: 1)
+        appearance.badgeSuccess.colorText = UIColor(red: 255/255, green: 255/255, blue: 255/255, alpha: 1)
+        
+        appearance.badgeWarning.colorBackground = UIColor(red: 223/255, green: 223/255, blue: 96/255, alpha: 1)
+        appearance.badgeWarning.colorBorder = UIColor(red: 223/255, green: 223/255, blue: 96/255, alpha: 1)
+        appearance.badgeWarning.colorText = UIColor(red: 105/255, green: 105/255, blue: 28/255, alpha: 1)
+        
+        appearance.badgeDanger.colorBackground = UIColor(red: 227/255, green: 95/255, blue: 95/255, alpha: 1)
+        appearance.badgeDanger.colorBorder = UIColor(red: 227/255, green: 95/255, blue: 95/255, alpha: 1)
+        appearance.badgeDanger.colorText = UIColor(red: 255/255, green: 255/255, blue: 255/255, alpha: 1)
+        
+        appearance.typography.font = UIFont(name: "Courier", size: UIFont.systemFontSize) ?? UIFont.monospacedSystemFont(ofSize: UIFont.systemFontSize, weight: .regular)
+        
+        appearance.cornerRadius.base = 0
+        
+        return .init(displayName: "Retro", appearance: appearance)
     }
 }
 
