@@ -233,18 +233,18 @@ extension PaymentSheet {
 
         /// Set to `true` if using a wallet buttons view. This changes a few behaviors of PaymentSheet (for example, wallet buttons will never be selected by default).
         @_spi(STP) public var willUseWalletButtonsView = false
-        
+
         /// When using WalletButtonsView, configures payment method visibility across available surfaces.
         @_spi(STP) public var walletButtonVisibility: WalletButtonVisibility = WalletButtonVisibility()
     }
-    
+
     /// When using WalletButtonsView, configures payment method visibility across available surfaces.
     @_spi(STP) public struct WalletButtonVisibility {
         /// Configure wallet button visibility in PaymentSheet, FlowController, or Embedded Payment Element.
         @_spi(STP) public var paymentElement: [ExpressType: Visibility] = [:]
         /// Configure wallet button visibility in Wallet Buttons View.
         @_spi(STP) public var walletButtonsView: [ExpressType: Visibility] = [:]
-        
+
         @_spi(STP) public enum Visibility {
             /// (Default) Stripe will manage which surface shows this payment method. For example, if an Apple Pay button is currently visibile in WalletButtonsView, it will not appear in the PaymentSheet list.
             case automatic
@@ -253,16 +253,16 @@ extension PaymentSheet {
             /// This payment method will never appear in the selected surface.
             case never
         }
-        
+
         @_spi(STP) public enum ExpressType: String, Hashable, CaseIterable {
             case applePay = "apple_pay"
             case link = "link"
             case shopPay = "shop_pay"
         }
-        
+
         @_spi(STP) public init() {}
     }
-    
+
     /// Defines the layout orientations available for displaying payment methods in PaymentSheet.
     public enum PaymentMethodLayout {
         /// Payment methods are arranged horizontally. Users can swipe left or right to navigate through different payment methods.

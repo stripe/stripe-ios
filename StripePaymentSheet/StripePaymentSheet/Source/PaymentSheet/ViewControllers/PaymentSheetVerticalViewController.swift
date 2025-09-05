@@ -185,7 +185,7 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
         // Only use the previous customer input for the first form shown
         self.previousPaymentOption = nil
     }
-    
+
     static func walletButtonsViewAllowsExpressType(_ expressType: PaymentSheet.WalletButtonVisibility.ExpressType, walletButtonsViewState: PaymentSheet.WalletButtonsViewState, configuration: PaymentSheet.Configuration) -> Bool {
         if !configuration.willUseWalletButtonsView {
             // Wallet buttons view isn't around, so allow any types
