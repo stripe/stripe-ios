@@ -222,10 +222,14 @@ extension PaymentMethodTypeCollectionView {
         // To repro issue: Launch PS with Appearance.liquidGlassDesignEnabled == true, then launch with
         //                 Appearance.liquidGlassDesignEnabled == false
         private lazy var _liquidGlassRectangle: SelectableRectangle = {
+            #if !os(visionOS)
             if #available(iOS 26.0, *) {
                 return LiquidGlassRectangle(appearance: appearance, isCapsule: false)
             }
             return _shadowedRoundedRectangle
+            #else
+            return _shadowedRoundedRectangle
+            #endif
         }()
         private lazy var _shadowedRoundedRectangle: SelectableRectangle = {
             return ShadowedRoundedRectangle(appearance: appearance)
