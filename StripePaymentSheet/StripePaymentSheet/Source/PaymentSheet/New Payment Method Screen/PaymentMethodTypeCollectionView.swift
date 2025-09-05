@@ -216,18 +216,33 @@ extension PaymentMethodTypeCollectionView {
         private lazy var promoBadge: PromoBadgeView = {
             PromoBadgeView(appearance: appearance, tinyMode: true)
         }()
-        private lazy var selectableRectangle: SelectableRectangle = {
+
+        // Store liquidGlassRectangle and shadowedRoundedRectangle separately because
+        // instances of PaymentTypeCell can stick around when turning on/off Appearance.liquidGlassDesignEnabled
+        // To repro issue: Launch PS with Appearance.liquidGlassDesignEnabled == true, then launch with
+        //                 Appearance.liquidGlassDesignEnabled == false
+        private lazy var _liquidGlassRectangle: SelectableRectangle = {
+            if #available(iOS 26.0, *) {
+                return LiquidGlassRectangle(appearance: appearance, isCapsule: false)
+            }
+            return _shadowedRoundedRectangle
+        }()
+        private lazy var _shadowedRoundedRectangle: SelectableRectangle = {
+            return ShadowedRoundedRectangle(appearance: appearance)
+        }()
+
+        private var selectableRectangle: SelectableRectangle {
             #if !os(visionOS)
             if #available(iOS 26.0, *),
                LiquidGlassDetector.isEnabled {
-                return LiquidGlassRectangle(appearance: appearance, isCapsule: false)
+                return _liquidGlassRectangle
             } else {
-                return ShadowedRoundedRectangle(appearance: appearance)
+                return _shadowedRoundedRectangle
             }
             #else
-                return ShadowedRoundedRectangle(appearance: appearance)
+            return _shadowedRoundedRectangle
             #endif
-        }()
+        }
         lazy var paymentMethodLogoWidthConstraint: NSLayoutConstraint = {
             paymentMethodLogo.widthAnchor.constraint(equalToConstant: 0)
         }()
