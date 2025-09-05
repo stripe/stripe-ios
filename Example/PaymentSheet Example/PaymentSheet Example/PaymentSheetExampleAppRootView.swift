@@ -46,6 +46,7 @@ struct PaymentSheetExampleAppRootView: View {
     }
 
     private func oniOS26Enabled(_ isEnabled: Bool) {
+        PlaygroundController.clearAppearanceFromDefaults()
         PaymentSheet.Appearance.liquidGlassDesignEnabled = isEnabled
     }
 

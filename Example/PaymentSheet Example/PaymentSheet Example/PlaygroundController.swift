@@ -1091,6 +1091,9 @@ extension PlaygroundController {
         }
         return nil
     }
+    static func clearAppearanceFromDefaults() {
+        UserDefaults.standard.removeObject(forKey: PaymentSheetTestPlaygroundSettings.nsUserDefaultsAppearanceKey)
+    }
 
     func loadLastSavedCustomer() {
         if let customerIdData = UserDefaults.standard.value(forKey: PaymentSheetTestPlaygroundSettings.nsUserDefaultsCustomerIDKey) as? Data {
