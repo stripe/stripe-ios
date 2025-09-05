@@ -28,9 +28,13 @@ import UIKit
     // MARK: - Initializers
 
     public init(delegate: DoneButtonToolbarDelegate?, showCancelButton: Bool = false, theme: ElementsAppearance = .default) {
-        // Initializing w/ an arbitrary frame stops autolayout from complaining on the first layout pass
-        super.init(frame: CGRect(x: 0, y: 0, width: 100, height: 44))
 
+        // TODO: Change this to do this any time we are running on iOS26 & not opted out of UIDesignRequiresCompatibility
+        let needsAdditionalHeightBetweenKeyboard = LiquidGlassDetector.isEnabled
+        let height = needsAdditionalHeightBetweenKeyboard ? 52 : 44
+
+        // Initializing w/ an arbitrary frame stops autolayout from complaining on the first layout pass
+        super.init(frame: CGRect(x: 0, y: 0, width: 100, height: height))
         self.doneButtonToolbarDelegate = delegate
 
         let doneButton = UIBarButtonItem(
@@ -52,7 +56,9 @@ import UIKit
         }
 
         setItems(items, animated: false)
-        sizeToFit()
+        if !needsAdditionalHeightBetweenKeyboard {
+            sizeToFit()
+        }
         setContentHuggingPriority(.defaultLow, for: .horizontal)
     }
 
