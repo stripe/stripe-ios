@@ -225,6 +225,8 @@ private func buildStackView(views: [UIView], theme: ElementsAppearance = .defaul
     stackView.separatorColor = theme.colors.divider
     stackView.customBackgroundColor = theme.colors.componentBackground
     stackView.drawBorder = true
+    stackView.borderWidth = theme.borderWidth
+    stackView.borderColor = theme.colors.border
     stackView.hideShadow = true // Shadow is handled by `SectionContainerView`
     return stackView
 }
