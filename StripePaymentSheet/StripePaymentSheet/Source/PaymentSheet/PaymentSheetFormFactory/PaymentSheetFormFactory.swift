@@ -1146,7 +1146,7 @@ extension PaymentSheet.Appearance {
         colors.danger = self.colors.danger
 
         theme.borderWidth = borderWidth
-        theme.cornerRadius = cornerRadius
+        theme.cornerRadius = cornerRadius ?? defaultCornerRadius
         theme.shadow = shadow.asElementThemeShadow
         theme.textFieldInsets = textFieldInsets
         theme.sectionSpacing = sectionSpacing

@@ -281,7 +281,7 @@ extension PaymentMethodTypeCollectionView {
                 promoBadge.trailingAnchor.constraint(equalTo: selectableRectangle.trailingAnchor, constant: -12),
             ])
 
-            contentView.layer.cornerRadius = appearance.cornerRadius
+            contentView.layer.cornerRadius = appearance.cornerRadius ?? appearance.defaultCornerRadius
             clipsToBounds = false
             layer.masksToBounds = false
 
@@ -331,7 +331,7 @@ extension PaymentMethodTypeCollectionView {
         // MARK: - Private Methods
         var paymentMethodTypeOfCurrentImage: PaymentSheet.PaymentMethodType = .stripe(.unknown)
         private func update() {
-            contentView.layer.cornerRadius = appearance.cornerRadius
+            contentView.layer.cornerRadius = appearance.cornerRadius ?? appearance.defaultCornerRadius
             selectableRectangle.appearance = appearance
             label.text = paymentMethodType.displayName
 

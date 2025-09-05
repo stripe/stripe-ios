@@ -75,7 +75,7 @@ class ConfirmButton: UIView {
         }
     }
 
-    lazy var cornerRadius: CGFloat = appearance.primaryButton.cornerRadius ?? appearance.cornerRadius {
+    lazy var cornerRadius: CGFloat = appearance.primaryButton.cornerRadius ?? appearance.cornerRadius ?? appearance.defaultCornerRadius {
         didSet {
             applyCornerRadius()
         }

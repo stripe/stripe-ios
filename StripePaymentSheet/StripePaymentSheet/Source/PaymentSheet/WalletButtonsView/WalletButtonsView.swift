@@ -55,20 +55,20 @@ import WebKit
                     case .applePay:
                         ApplePayButton(
                             height: flowController.configuration.appearance.primaryButton.height,
-                            cornerRadius: flowController.configuration.appearance.primaryButton.cornerRadius ?? flowController.configuration.appearance.cornerRadius,
+                            cornerRadius: flowController.configuration.appearance.primaryButton.cornerRadius ?? flowController.configuration.appearance.cornerRadius ?? flowController.configuration.appearance.defaultCornerRadius,
                             action: completion
                         )
                     case .link:
                         LinkButton(
                             height: flowController.configuration.appearance.primaryButton.height,
-                            cornerRadius: flowController.configuration.appearance.primaryButton.cornerRadius ?? flowController.configuration.appearance.cornerRadius,
+                            cornerRadius: flowController.configuration.appearance.primaryButton.cornerRadius ?? flowController.configuration.appearance.cornerRadius ?? flowController.configuration.appearance.defaultCornerRadius,
                             borderColor: flowController.configuration.appearance.colors.componentBorder,
                             action: completion
                         )
                     case .shopPay:
                         ShopPayButton(
                             height: flowController.configuration.appearance.primaryButton.height,
-                            cornerRadius: flowController.configuration.appearance.primaryButton.cornerRadius ?? flowController.configuration.appearance.cornerRadius
+                            cornerRadius: flowController.configuration.appearance.primaryButton.cornerRadius ?? flowController.configuration.appearance.cornerRadius ?? flowController.configuration.appearance.defaultCornerRadius
                         ) {
                             Task {
                                 checkoutTapped(.shopPay)
