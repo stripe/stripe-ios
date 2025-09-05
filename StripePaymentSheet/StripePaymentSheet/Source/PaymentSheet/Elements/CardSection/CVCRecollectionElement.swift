@@ -18,7 +18,9 @@ final class CVCRecollectionElement: ContainerElement {
     let collectsUserInput: Bool = true
 
     enum Mode {
+        /// Has a title. Doesn't have an information view.
         case inputOnly
+        /// Doesn't have a title. Has an information view.
         case detailedWithInput
     }
     weak var delegate: ElementDelegate?
