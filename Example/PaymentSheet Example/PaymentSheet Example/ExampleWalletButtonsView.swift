@@ -64,7 +64,7 @@ struct ExampleWalletButtonsContainerView: View {
                     }
                 }
 
-                Section("Wallet Button Visibility - PaymentElement") {
+                Section("Wallet Button Visibility") {
                     Group {
                         VStack(alignment: .leading) {
                             Text("Apple Pay in PaymentElement")
@@ -88,9 +88,6 @@ struct ExampleWalletButtonsContainerView: View {
                             .pickerStyle(SegmentedPickerStyle())
                         }
                     }
-                }
-
-                Section("Wallet Button Visibility - WalletButtonsView") {
                     Group {
                         VStack(alignment: .leading) {
                             Text("Apple Pay in WalletButtonsView")
@@ -364,17 +361,20 @@ class ExampleWalletButtonsModel: ObservableObject {
         let task = URLSession.shared.dataTask(
             with: request,
             completionHandler: { [weak self] (data, _, error) in
+                guard let self else {
+                    return
+                }
                 guard let data = data,
                     let json = try? JSONSerialization.jsonObject(with: data, options: [])
                         as? [String: Any],
                     let customerId = json["customerId"] as? String,
                     let customerSessionClientSecret = json["customerSessionClientSecret"] as? String
                 else {
-                    self?.addDebugLog("Error creating customer: \(error?.localizedDescription ?? "Unknown error")")
+                    self.addDebugLog("Error creating customer: \(error?.localizedDescription ?? "Unknown error")")
                     return
                 }
 
-                self?.addDebugLog("Customer created successfully: \(customerId)")
+                self.addDebugLog("Customer created successfully: \(customerId)")
 
                 // MARK: Set your Stripe publishable key for rough-lying-carriage backend
                 // Using test publishable key - in production, this should come from the backend
@@ -391,28 +391,20 @@ class ExampleWalletButtonsModel: ObservableObject {
                         return paymentRequest
                     })
                 )
-                configuration.shopPay = self?.shopPayConfiguration
+                configuration.shopPay = self.shopPayConfiguration
                 configuration.customer = .init(id: customerId, customerSessionClientSecret: customerSessionClientSecret)
                 configuration.returnURL = "payments-example://stripe-redirect"
                 configuration.willUseWalletButtonsView = true
-                configuration.appearance = self?.appearance ?? PaymentSheet.Appearance()
-                configuration.link = .init(display: self?.disableLink == true ? .never : .automatic)
+                configuration.appearance = self.appearance ?? PaymentSheet.Appearance()
+                configuration.link = .init(display: self.disableLink == true ? .never : .automatic)
 
                 // Configure wallet button visibility
-                if let self = self {
-                    configuration.walletButtonVisibility.paymentElement[.applePay] = self.applePayVisibilityInPaymentElement
-                    configuration.walletButtonVisibility.paymentElement[.link] = self.linkVisibilityInPaymentElement
-                    configuration.walletButtonVisibility.walletButtonsView[.applePay] = self.applePayVisibilityInWalletButtonsView
-                    configuration.walletButtonVisibility.walletButtonsView[.link] = self.linkVisibilityInWalletButtonsView
+                configuration.walletButtonVisibility.paymentElement[.applePay] = self.applePayVisibilityInPaymentElement
+                configuration.walletButtonVisibility.paymentElement[.link] = self.linkVisibilityInPaymentElement
+                configuration.walletButtonVisibility.walletButtonsView[.applePay] = self.applePayVisibilityInWalletButtonsView
+                configuration.walletButtonVisibility.walletButtonsView[.link] = self.linkVisibilityInWalletButtonsView
 
-                    // Log the configured visibility settings for debugging
-                    self.addDebugLog("[WALLET VISIBILITY] Apple Pay PaymentElement: \(self.applePayVisibilityInPaymentElement)")
-                    self.addDebugLog("[WALLET VISIBILITY] Link PaymentElement: \(self.linkVisibilityInPaymentElement)")
-                    self.addDebugLog("[WALLET VISIBILITY] Apple Pay WalletButtonsView: \(self.applePayVisibilityInWalletButtonsView)")
-                    self.addDebugLog("[WALLET VISIBILITY] Link WalletButtonsView: \(self.linkVisibilityInWalletButtonsView)")
-                }
-
-                self?.addDebugLog("Creating PaymentSheet FlowController...")
+                self.addDebugLog("Creating PaymentSheet FlowController...")
                 PaymentSheet.FlowController.create(
                     intentConfiguration: .init(sharedPaymentTokenSessionWithMode: .payment(amount: 9999, currency: "USD", setupFutureUsage: nil, captureMethod: .automatic, paymentMethodOptions: nil), sellerDetails: .init(networkId: "stripe", externalId: "acct_1HvTI7Lu5o3P18Zp", businessName: "Till's Pills"), paymentMethodTypes: ["card", "shop_pay"], preparePaymentMethodHandler: { [weak self] paymentMethod, address in
                         self?.isProcessing = true
@@ -542,7 +534,11 @@ class ExampleWalletButtonsModel: ObservableObject {
         let twoWeeks = PaymentSheet.ShopPayConfiguration.DeliveryEstimate.DeliveryEstimateUnit(value: 2, unit: .week)
 
         let shippingRates: [PaymentSheet.ShopPayConfiguration.ShippingRate] = [
-
+            .init(id: "immediate", amount: 1099, displayName: "2-hour", deliveryEstimate: .unstructured("Get your item in 2 hours")),
+            .init(id: "fast", amount: 500, displayName: "Expedited", deliveryEstimate: .structured(minimum: twoBusinessDays, maximum: fiveBusinessDays)),
+            .init(id: "regular", amount: 200, displayName: "Standard", deliveryEstimate: .structured(minimum: nil, maximum: sevenBusinessDays)),
+            .init(id: "no_rush", amount: 100, displayName: "No Rush", deliveryEstimate: .structured(minimum: twoWeeks, maximum: nil)),
+            .init(id: "no_estimate", amount: 0, displayName: "Free (No estimate)", deliveryEstimate: nil),
         ]
 
         let handlers = PaymentSheet.ShopPayConfiguration.Handlers(
