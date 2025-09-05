@@ -36,7 +36,20 @@ class RemoveButton: UIButton {
         directionalLayoutMargins = NSDirectionalEdgeInsets(top: 10, leading: 16, bottom: 10, trailing: 16)
 
         let font = appearance.primaryButton.font ?? appearance.scaledFont(for: appearance.font.base.medium, style: .callout, maximumPointSize: 25)
-        if #available(iOS 15.0, *) {
+        if LiquidGlassDetector.isEnabled, #available(iOS 15.0, *) { // iOS 15 available check is redundant but needed so compiler allows button config API 🤠
+            ios26_applyCapsuleCornerConfiguration()
+
+            var config = UIButton.Configuration.plain()
+            config.baseBackgroundColor = .clear
+            let strokeWidth = appearance.selectedBorderWidth ?? appearance.borderWidth * 1.5
+            // The UI breaks if stroke with <= 0, so default to 1.5. Follows pattern from LiquidGlassRectangle
+            // Workaround:  Use layer.borderWidth because background.strokeWidth isn't compatible with .capsule()
+            layer.borderWidth = strokeWidth > 0 ? strokeWidth : 1.5
+            layer.borderColor = appearance.colors.danger.cgColor
+            config.titleAlignment = .center
+            config.attributedTitle = AttributedString(title, attributes: AttributeContainer([.font: font, .foregroundColor: appearance.colors.danger]))
+            configuration = config
+        } else if #available(iOS 15.0, *) {
             var config = UIButton.Configuration.bordered()
             config.baseBackgroundColor = .clear
             config.background.cornerRadius = appearance.primaryButton.cornerRadius ?? appearance.cornerRadius
