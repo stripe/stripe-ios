@@ -39,10 +39,20 @@ import Foundation
 
 }
 
+private enum CaptchaResult {
+    case success(String)
+    case error(Error)
+}
+
 @_spi(STP) public actor PassiveCaptchaChallenge {
+    enum Error: Swift.Error {
+        case timeout
+    }
+
     private let passiveCaptcha: PassiveCaptcha?
     private var validationTask: Task<String?, Never>?
     private let testTimeout: UInt64?
+    private var isValidationComplete = false
 
     public init(passiveCaptcha: PassiveCaptcha?, testTimeout: UInt64? = nil) {
         self.passiveCaptcha = passiveCaptcha
@@ -55,58 +65,80 @@ import Foundation
             if let testTimeout {
                 return testTimeout
             }
-            return STPAnalyticsClient.isUnitOrUITest ? 0 : 6_000_000_000
+            return STPAnalyticsClient.isUnitOrUITest ? 0 : 8_000_000_000
         }()
 
-        validationTask = Task<String?, Never> { [siteKey = passiveCaptcha.siteKey, rqdata = passiveCaptcha.rqdata, timeoutNs] () -> String? in
+        validationTask = Task<String?, Never> { [siteKey = passiveCaptcha.siteKey, timeoutNs, weak self] () -> String? in
+            STPAnalyticsClient.sharedClient.logPassiveCaptchaInit(siteKey: siteKey)
             do {
-                let hcaptcha = try HCaptcha(apiKey: siteKey,
-                                            passiveApiKey: true,
-                                            rqdata: rqdata,
-                                            host: "stripecdn.com")
-                STPAnalyticsClient.sharedClient.logPassiveCaptchaInit(siteKey: siteKey)
-
-                return await withCheckedContinuation { (continuation: CheckedContinuation<String?, Never>) in
-                    var hasCompleted = false
-                    let timeoutTask = Task { @MainActor in
-                        try? await Task.sleep(nanoseconds: timeoutNs)
-                        if hasCompleted { return }
-                        hasCompleted = true
-                        STPAnalyticsClient.sharedClient.logPassiveCaptchaTimeout(siteKey: siteKey)
-                        continuation.resume(returning: nil)
-                    }
-
-                    hcaptcha.didFinishLoading {
-                        hcaptcha.validate { result in
-                            Task { @MainActor in
-                                if hasCompleted { return }
-                                do {
-                                    let token = try result.dematerialize()
-                                    hasCompleted = true
-                                    STPAnalyticsClient.sharedClient.logPassiveCaptchaSuccess(siteKey: siteKey)
-                                    timeoutTask.cancel()
-                                    continuation.resume(returning: token)
-                                } catch {
-                                    hasCompleted = true
-                                    STPAnalyticsClient.sharedClient.logPassiveCaptchaError(error: error, siteKey: siteKey)
-                                    timeoutTask.cancel()
-                                    continuation.resume(returning: nil)
+                let hcaptcha = try HCaptcha(apiKey: passiveCaptcha.siteKey,
+                                        passiveApiKey: true,
+                                         rqdata: passiveCaptcha.rqdata,
+                                        host: "stripecdn.com")
+                STPAnalyticsClient.sharedClient.logPassiveCaptchaExecute(siteKey: siteKey)
+                let startTime = Date()
+                let result = await withTaskGroup(of: CaptchaResult.self) { group in
+                    // Add hcaptcha task
+                    group.addTask {
+                        let result = await withCheckedContinuation { (continuation: CheckedContinuation<CaptchaResult, Never>) in
+                            hcaptcha.didFinishLoading {
+                                hcaptcha.validate { result in
+                                    do {
+                                        let token = try result.dematerialize()
+                                        continuation.resume(returning: .success(token))
+                                    } catch {
+                                        continuation.resume(returning: .error(error))
+                                    }
                                 }
                             }
                         }
+                        return result
                     }
+                    // Add timeout task
+                    group.addTask {
+                        try? await Task.sleep(nanoseconds: timeoutNs)
+                        return .error(Error.timeout)
+                    }
+                    // Wait for first completion and cancel remaining tasks
+                    let result = await group.next()
+                    group.cancelAll()
+                    return result
                 }
+                // Mark as complete
+                await self?.setValidationComplete()
+                let duration = Date().timeIntervalSince(startTime) * 1000
+                switch result {
+                case .success(let token):
+                    STPAnalyticsClient.sharedClient.logPassiveCaptchaSuccess(siteKey: siteKey, duration: duration)
+                    return token
+                case .error(let error):
+                    STPAnalyticsClient.sharedClient.logPassiveCaptchaError(error: error, siteKey: siteKey, duration: duration)
+                    return nil
+                default:
+                    stpAssertionFailure("Unexpected result: \(String(describing: result))")
+                }
+                return nil
             } catch {
-                STPAnalyticsClient.sharedClient.logPassiveCaptchaError(error: error, siteKey: siteKey)
+                STPAnalyticsClient.sharedClient.logPassiveCaptchaError(error: error, siteKey: siteKey, duration: 0)
                 return nil
             }
         }
     }
 
+    private func setValidationComplete() {
+        isValidationComplete = true
+    }
+
     @_spi(STP) public func fetchToken() async -> String? {
+        guard let siteKey = passiveCaptcha?.siteKey else { return nil }
+        var isReady: Bool
         if validationTask == nil {
             start()
+            isReady = false
+        } else {
+            isReady = isValidationComplete
         }
+        STPAnalyticsClient.sharedClient.logPassiveCaptchaAttach(siteKey: siteKey, isReady: isReady)
         return await validationTask?.value
     }
 }
@@ -118,21 +150,27 @@ extension STPAnalyticsClient {
         )
     }
 
-    func logPassiveCaptchaSuccess(siteKey: String) {
+    func logPassiveCaptchaExecute(siteKey: String) {
         log(
-            analytic: GenericAnalytic(event: .passiveCaptchaSuccess, params: ["site_key": siteKey])
+            analytic: GenericAnalytic(event: .passiveCaptchaExecute, params: ["site_key": siteKey])
         )
     }
 
-    func logPassiveCaptchaError(error: Error, siteKey: String) {
+    func logPassiveCaptchaSuccess(siteKey: String, duration: TimeInterval) {
         log(
-            analytic: ErrorAnalytic(event: .passiveCaptchaError, error: error, additionalNonPIIParams: ["site_key": siteKey])
+            analytic: GenericAnalytic(event: .passiveCaptchaSuccess, params: ["site_key": siteKey, "duration": duration])
         )
     }
 
-    func logPassiveCaptchaTimeout(siteKey: String) {
+    func logPassiveCaptchaError(error: Error, siteKey: String, duration: TimeInterval) {
         log(
-            analytic: GenericAnalytic(event: .passiveCaptchaTimeout, params: ["site_key": siteKey])
+            analytic: ErrorAnalytic(event: .passiveCaptchaError, error: error, additionalNonPIIParams: ["site_key": siteKey, "duration": duration])
+        )
+    }
+
+    func logPassiveCaptchaAttach(siteKey: String, isReady: Bool) {
+        log(
+            analytic: GenericAnalytic(event: .passiveCaptchaAttach, params: ["site_key": siteKey, "is_ready": isReady])
         )
     }
 }
