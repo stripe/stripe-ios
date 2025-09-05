@@ -6,8 +6,6 @@
 
 "App Settings" = "应用设置";
 
-"Back identity card photo successfully uploaded" = "身份证背面照片已成功上传";
-
 "Back of identity card" = "身份证背面";
 
 "Back of identity document" = "身份证件背面";
@@ -31,10 +29,6 @@
 "Details not visible" = "细节不可见";
 
 "Flip your identity card over to the other side" = "将身份证翻到另一面";
-
-"Front identity card photo successfully uploaded" = "身份证正面照片已成功上传";
-
-"Front of identity card" = "身份证正面";
 
 "Front of identity document" = "身份证件正面";
 
@@ -84,11 +78,7 @@
 
 "Photo Library" = "照片库";
 
-"Please upload images of the front and back of your identity card" = "请上传您的身份证正反面的照片";
-
 "Position your face in the center of the frame." = "将脸放在画面正中间。";
-
-"Position your identity card in the center of the frame" = "将身份证放在画面正中间";
 
 "Retake Photos" = "重新拍照";
 
@@ -101,10 +91,6 @@
 "Select a location to upload the back of your identity document from" = "选择一个位置，从那里您上传您的身份证的背面";
 
 "Select a location to upload the front of your identity document from" = "选择一个位置，从那里您上传您的身份证的正面";
-
-"Select back identity card photo" = "选择身份证背面照片";
-
-"Select front identity card photo" = "选择身份证正面照片";
 
 "Selfie" = "自拍照";
 
@@ -131,10 +117,6 @@
 "Upload a Photo" = "上传一张照片";
 
 "Upload your photo ID" = "上传您的带照片身份证件";
-
-"Uploading back identity card photo" = "正在上传身份证背面照片";
-
-"Uploading front identity card photo" = "正在上传身份证正面照片";
 
 "Verify your identity" = "验证您的身份";
 

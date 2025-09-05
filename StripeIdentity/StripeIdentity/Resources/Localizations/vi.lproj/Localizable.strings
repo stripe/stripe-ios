@@ -6,8 +6,6 @@
 
 "App Settings" = "Cài đặt Ứng dụng";
 
-"Back identity card photo successfully uploaded" = "Đã thành công tải lên ảnh mặt sau thẻ căn cước";
-
 "Back of identity card" = "Mặt sau thẻ căn cước";
 
 "Back of identity document" = "Mặt sau giấy tờ nhận dạng";
@@ -31,10 +29,6 @@
 "Details not visible" = "Không thấy rõ thông tin chi tiết";
 
 "Flip your identity card over to the other side" = "Lật thẻ căn cước của bạn sang mặt khác";
-
-"Front identity card photo successfully uploaded" = "Đã thành công tải lên ảnh mặt trước thẻ căn cước";
-
-"Front of identity card" = "Mặt trước thẻ căn cước";
 
 "Front of identity document" = "Mặt trước giấy tờ nhận dạng";
 
@@ -84,11 +78,7 @@
 
 "Photo Library" = "Thư viện ảnh";
 
-"Please upload images of the front and back of your identity card" = "Vui lòng tải lên hình ảnh mặt trước và mặt sau của thẻ căn cước";
-
 "Position your face in the center of the frame." = "Đặt khuôn mặt của bạn ở giữa khung hình.";
-
-"Position your identity card in the center of the frame" = "Đặt thẻ căn cước của bạn ở giữa khung hình";
 
 "Retake Photos" = "Chụp lại ảnh";
 
@@ -101,10 +91,6 @@
 "Select a location to upload the back of your identity document from" = "Chọn một vị trí để tải lên mặt sau giấy tờ tùy thân của bạn";
 
 "Select a location to upload the front of your identity document from" = "Chọn một vị trí để tải lên mặt trước giấy tờ tùy thân của bạn";
-
-"Select back identity card photo" = "Chọn ảnh mặt sau thẻ căn cước";
-
-"Select front identity card photo" = "Chọn ảnh mặt trước thẻ căn cước";
 
 "Selfie" = "Selfie";
 
@@ -131,10 +117,6 @@
 "Upload a Photo" = "Tải lên ảnh";
 
 "Upload your photo ID" = "Tải lên ID có ảnh của bạn";
-
-"Uploading back identity card photo" = "Đang tải lên ảnh mặt sau thẻ căn cước";
-
-"Uploading front identity card photo" = "Đang tải lên ảnh mặt trước thẻ căn cước";
 
 "Verify your identity" = "Xác minh danh tính của bạn";
 
