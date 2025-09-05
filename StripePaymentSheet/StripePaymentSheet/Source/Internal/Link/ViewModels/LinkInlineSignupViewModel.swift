@@ -383,7 +383,6 @@ final class LinkInlineSignupViewModel {
         if signupOptInFeatureEnabled && emailWasPrefilled {
             self.mode = .signupOptIn
         } else if showCheckbox {
-            let allowsDefaultOptIn = allowsDefaultOptIn && country == "US"
             self.mode = allowsDefaultOptIn ? .checkboxWithDefaultOptIn : .checkbox
         } else {
             // If we don't show a checkbox *and* we have a prefilled email, show the phone field first.
