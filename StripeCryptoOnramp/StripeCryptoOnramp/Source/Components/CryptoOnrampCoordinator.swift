@@ -410,7 +410,7 @@ public final class CryptoOnrampCoordinator: NSObject, CryptoOnrampCoordinatorPro
 
         switch handledIntentResult {
         case .paymentIntent(let finalIntent):
-            if finalIntent.status == .succeeded || finalIntent.status == .requiresCapture {
+            if finalIntent.checkoutResult?.success == true {
                 // After successful next_action handling, attempt checkout again to complete the payment
                 let finalPaymentIntent = try await performCheckoutAndRetrievePaymentIntent(
                     onrampSessionId: onrampSessionId,
@@ -592,15 +592,23 @@ private extension CryptoOnrampCoordinator {
 
     /// Maps a PaymentIntent status to a CheckoutResult, or returns nil if more handling is needed.
     func mapIntentToCheckoutResult(_ intent: STPPaymentIntent) throws -> CheckoutResult? {
-        switch intent.status {
-        case .succeeded:
-            return .completed
+        return try intent.checkoutResult?.get()
+    }
+}
+
+private extension STPPaymentIntent {
+    var checkoutResult: Result<CheckoutResult, CheckoutError>? {
+        switch status {
+        case .succeeded, .requiresCapture:
+            return .success(.completed)
+        case .processing:
+            return paymentMethod?.type == .USBankAccount ? .success(.completed) : .failure(.paymentFailed)
         case .requiresPaymentMethod:
-            throw CheckoutError.paymentFailed
+            return .failure(.paymentFailed)
         case .requiresAction:
             return nil
         default:
-            throw CheckoutError.paymentFailed
+            return .failure(.paymentFailed)
         }
     }
 }
