@@ -5,8 +5,8 @@
 //  Created by Vardges Avetisyan on 11/22/21.
 //
 
-import Foundation
 @_spi(STP) import StripeUICore
+import UIKit
 
 /// The canonical set of all image files in the `StripeFinancialConnections` module.
 /// This helps us avoid duplicates and automatically test that all images load properly
@@ -31,4 +31,22 @@ enum Image: String, ImageMaker {
     case testmode
     case warning_triangle
     case bullet
+}
+
+extension UIImage {
+    func applyFinancialConnectionsBackButtonEdgeInsets() -> UIImage {
+        if #unavailable(iOS 26.0) {
+            return withAlignmentRectInsets(UIEdgeInsets(top: 0, left: -13, bottom: -2, right: 0))
+        } else {
+            return self
+        }
+    }
+}
+
+extension UIBarButtonItem {
+    func applyFinancialConnectionsCloseButtonEdgeInsets() {
+        if #unavailable(iOS 26.0) {
+            imageInsets = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 5)
+        }
+    }
 }
