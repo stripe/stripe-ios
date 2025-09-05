@@ -13,7 +13,7 @@ public extension PaymentSheet {
 
     /// Describes the appearance of PaymentSheet
     struct Appearance: Equatable {
-        private static var _liquidGlassDesignEnabled: Bool = true
+        private static var _liquidGlassDesignEnabled: Bool = false
 
         static public var liquidGlassDesignEnabled: Bool {
             get {
