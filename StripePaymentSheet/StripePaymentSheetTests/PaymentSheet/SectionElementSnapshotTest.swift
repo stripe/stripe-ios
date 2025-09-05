@@ -27,11 +27,6 @@ final class SectionElementSnapshotTest: STPSnapshotTestCase {
         return appearance.asElementsTheme
     }
 
-    override func setUp() {
-        super.setUp()
-        recordMode = true
-    }
-
     // ☠️ WARNING: The "with_borders" snapshots are missing borders at the corners - this is a snapshot-test-only-bug and does not repro on simulator/device.
     func testDisabledState() {
         func _test(borders: Bool) {
