@@ -53,6 +53,7 @@ extension PayWithLinkViewController {
 
         private lazy var confirmButton = ConfirmButton.makeLinkButton(
             callToAction: viewModel.confirmButtonCallToAction,
+            showProcessingLabel: context.showProcessingLabel,
             compact: viewModel.shouldUseCompactConfirmButton,
             linkAppearance: viewModel.linkAppearance
         ) { [weak self] in

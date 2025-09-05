@@ -189,6 +189,10 @@ extension STPAPIClient {
         parameters["type"] = "deferred_intent"
         parameters["locale"] = Locale.current.toLanguageTag()
 
+        if let sessionId = AnalyticsHelper.shared.sessionID {
+            parameters["mobile_session_id"] = sessionId
+        }
+
         if let customerSessionClientSecret {
             parameters["customer_session_client_secret"] = customerSessionClientSecret.clientSecret
         }
@@ -230,6 +234,10 @@ extension STPAPIClient {
         parameters["expand"] = ["payment_method_preference.setup_intent.payment_method"]
 
         parameters["locale"] = Locale.current.toLanguageTag()
+
+        if let sessionId = AnalyticsHelper.shared.sessionID {
+            parameters["mobile_session_id"] = sessionId
+        }
 
         if let customerSessionClientSecret {
             parameters["customer_session_client_secret"] = customerSessionClientSecret.clientSecret
