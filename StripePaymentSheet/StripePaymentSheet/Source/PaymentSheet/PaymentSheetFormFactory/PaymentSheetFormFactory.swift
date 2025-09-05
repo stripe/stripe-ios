@@ -108,7 +108,7 @@ class PaymentSheetFormFactory {
             }
 
             let isAccountNotRegisteredOrMissing = linkAccount.flatMap({ !$0.isRegistered }) ?? true
-            return isAccountNotRegisteredOrMissing && !UserDefaults.standard.customerHasUsedLink
+            return isAccountNotRegisteredOrMissing && (!UserDefaults.standard.customerHasUsedLink || configuration.apiClient.isTestmode)
         }()
         let paymentMethodType: STPPaymentMethodType = {
             if linkAccount != nil, configuration.linkPaymentMethodsOnly, !elementsSession.linkPassthroughModeEnabled {
