@@ -235,21 +235,28 @@ extension PaymentSheet {
         @_spi(STP) public var willUseWalletButtonsView = false
 
         /// When using WalletButtonsView, configures payment method visibility across available surfaces.
-        @_spi(STP) public var walletButtonVisibility: WalletButtonVisibility = WalletButtonVisibility()
+        @_spi(STP) public var walletButtonsVisibility: WalletButtonsVisibility = WalletButtonsVisibility()
     }
 
     /// When using WalletButtonsView, configures payment method visibility across available surfaces.
-    @_spi(STP) public struct WalletButtonVisibility {
+    @_spi(STP) public struct WalletButtonsVisibility {
         /// Configure wallet button visibility in PaymentSheet, FlowController, or Embedded Payment Element.
-        @_spi(STP) public var paymentElement: [ExpressType: Visibility] = [:]
+        @_spi(STP) public var paymentElement: [ExpressType: PaymentElementVisibility] = [:]
         /// Configure wallet button visibility in Wallet Buttons View.
-        @_spi(STP) public var walletButtonsView: [ExpressType: Visibility] = [:]
+        @_spi(STP) public var walletButtonsView: [ExpressType: WalletButtonsViewVisibility] = [:]
 
-        @_spi(STP) public enum Visibility {
-            /// (Default) Stripe will manage which surface shows this payment method. For example, if an Apple Pay button is currently visibile in WalletButtonsView, it will not appear in the PaymentSheet list.
+        @_spi(STP) public enum PaymentElementVisibility {
+            /// (Default) Stripe will manage which surface shows this payment method. For example, if an Apple Pay button is currently visible in WalletButtonsView, it will not appear in the PaymentSheet list.
             case automatic
             /// This payment method, if available for this payment, will always appear in the selected surface.
             case always
+            /// This payment method will never appear in the selected surface.
+            case never
+        }
+
+        @_spi(STP) public enum WalletButtonsViewVisibility {
+            /// (Default) Stripe will manage which surface shows this payment method. For example, if an Apple Pay button is currently visible in WalletButtonsView, it will not appear in the PaymentSheet list.
+            case automatic
             /// This payment method will never appear in the selected surface.
             case never
         }

@@ -7,7 +7,7 @@ import PassKit
 import SwiftUI
 import WebKit
 
-typealias ExpressType = PaymentSheet.WalletButtonVisibility.ExpressType
+typealias ExpressType = PaymentSheet.WalletButtonsVisibility.ExpressType
 
 @available(iOS 16.0, *)
 @_spi(STP) public struct WalletButtonsView: View {
@@ -89,7 +89,7 @@ typealias ExpressType = PaymentSheet.WalletButtonVisibility.ExpressType
         var wallets: [ExpressType] = []
 
         func appendIfAllowed(_ wallet: ExpressType) {
-            let visibility = flowController.configuration.walletButtonVisibility.walletButtonsView[wallet] ?? .automatic
+            let visibility = flowController.configuration.walletButtonsVisibility.walletButtonsView[wallet] ?? .automatic
             if visibility != .never {
                 wallets.append(wallet)
             }

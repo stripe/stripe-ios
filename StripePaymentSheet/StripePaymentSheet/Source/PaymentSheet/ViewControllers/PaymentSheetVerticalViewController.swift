@@ -186,12 +186,12 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
         self.previousPaymentOption = nil
     }
 
-    static func walletButtonsViewAllowsExpressType(_ expressType: PaymentSheet.WalletButtonVisibility.ExpressType, walletButtonsViewState: PaymentSheet.WalletButtonsViewState, configuration: PaymentSheet.Configuration) -> Bool {
+    static func walletButtonsViewAllowsExpressType(_ expressType: PaymentSheet.WalletButtonsVisibility.ExpressType, walletButtonsViewState: PaymentSheet.WalletButtonsViewState, configuration: PaymentSheet.Configuration) -> Bool {
         if !configuration.willUseWalletButtonsView {
             // Wallet buttons view isn't around, so allow any types
             return true
         }
-        if let config = configuration.walletButtonVisibility.paymentElement[expressType] {
+        if let config = configuration.walletButtonsVisibility.paymentElement[expressType] {
             if config == .always {
                 return true
             }
@@ -443,8 +443,8 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
         // If Apple Pay or Link is selected, but wallet buttons should be shown externally, then don't select any default option.
         if (configuration.willUseWalletButtonsView || walletButtonsShownExternally) &&
             (
-                (initialSelection == .applePay && configuration.walletButtonVisibility.paymentElement[.applePay] != .always) ||
-                initialSelection == .link && configuration.walletButtonVisibility.paymentElement[.link] != .always) {
+                (initialSelection == .applePay && configuration.walletButtonsVisibility.paymentElement[.applePay] != .always) ||
+                initialSelection == .link && configuration.walletButtonsVisibility.paymentElement[.link] != .always) {
             initialSelection = nil
         }
         let savedPaymentMethodAccessoryType = RowButton.RightAccessoryButton.getAccessoryButtonType(

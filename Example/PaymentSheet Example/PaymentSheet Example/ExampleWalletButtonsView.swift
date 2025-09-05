@@ -26,10 +26,10 @@ struct ExampleWalletButtonsContainerView: View {
     @State private var disableLink = false
 
     // Wallet button visibility options
-    @State private var applePayVisibilityInPaymentElement: PaymentSheet.WalletButtonVisibility.Visibility = .automatic
-    @State private var linkVisibilityInPaymentElement: PaymentSheet.WalletButtonVisibility.Visibility = .automatic
-    @State private var applePayVisibilityInWalletButtonsView: PaymentSheet.WalletButtonVisibility.Visibility = .automatic
-    @State private var linkVisibilityInWalletButtonsView: PaymentSheet.WalletButtonVisibility.Visibility = .automatic
+    @State private var applePayVisibilityInPaymentElement: PaymentSheet.WalletButtonsVisibility.PaymentElementVisibility = .automatic
+    @State private var linkVisibilityInPaymentElement: PaymentSheet.WalletButtonsVisibility.PaymentElementVisibility = .automatic
+    @State private var applePayVisibilityInWalletButtonsView: PaymentSheet.WalletButtonsVisibility.WalletButtonsViewVisibility = .automatic
+    @State private var linkVisibilityInWalletButtonsView: PaymentSheet.WalletButtonsVisibility.WalletButtonsViewVisibility = .automatic
 
     // Shop Pay testing options
     @State private var billingAddressRequired: Bool = false
@@ -70,9 +70,9 @@ struct ExampleWalletButtonsContainerView: View {
                             Text("Apple Pay in PaymentElement")
                                 .font(.subheadline)
                             Picker("Apple Pay PaymentElement", selection: $applePayVisibilityInPaymentElement) {
-                                Text("Automatic").tag(PaymentSheet.WalletButtonVisibility.Visibility.automatic)
-                                Text("Always").tag(PaymentSheet.WalletButtonVisibility.Visibility.always)
-                                Text("Never").tag(PaymentSheet.WalletButtonVisibility.Visibility.never)
+                                Text("Automatic").tag(PaymentSheet.WalletButtonsVisibility.PaymentElementVisibility.automatic)
+                                Text("Always").tag(PaymentSheet.WalletButtonsVisibility.PaymentElementVisibility.always)
+                                Text("Never").tag(PaymentSheet.WalletButtonsVisibility.PaymentElementVisibility.never)
                             }
                             .pickerStyle(SegmentedPickerStyle())
                         }
@@ -81,9 +81,9 @@ struct ExampleWalletButtonsContainerView: View {
                             Text("Link in PaymentElement")
                                 .font(.subheadline)
                             Picker("Link PaymentElement", selection: $linkVisibilityInPaymentElement) {
-                                Text("Automatic").tag(PaymentSheet.WalletButtonVisibility.Visibility.automatic)
-                                Text("Always").tag(PaymentSheet.WalletButtonVisibility.Visibility.always)
-                                Text("Never").tag(PaymentSheet.WalletButtonVisibility.Visibility.never)
+                                Text("Automatic").tag(PaymentSheet.WalletButtonsVisibility.PaymentElementVisibility.automatic)
+                                Text("Always").tag(PaymentSheet.WalletButtonsVisibility.PaymentElementVisibility.always)
+                                Text("Never").tag(PaymentSheet.WalletButtonsVisibility.PaymentElementVisibility.never)
                             }
                             .pickerStyle(SegmentedPickerStyle())
                         }
@@ -93,9 +93,8 @@ struct ExampleWalletButtonsContainerView: View {
                             Text("Apple Pay in WalletButtonsView")
                                 .font(.subheadline)
                             Picker("Apple Pay WalletButtonsView", selection: $applePayVisibilityInWalletButtonsView) {
-                                Text("Automatic").tag(PaymentSheet.WalletButtonVisibility.Visibility.automatic)
-                                Text("Always").tag(PaymentSheet.WalletButtonVisibility.Visibility.always)
-                                Text("Never").tag(PaymentSheet.WalletButtonVisibility.Visibility.never)
+                                Text("Automatic").tag(PaymentSheet.WalletButtonsVisibility.WalletButtonsViewVisibility.automatic)
+                                Text("Never").tag(PaymentSheet.WalletButtonsVisibility.WalletButtonsViewVisibility.never)
                             }
                             .pickerStyle(SegmentedPickerStyle())
                         }
@@ -104,9 +103,8 @@ struct ExampleWalletButtonsContainerView: View {
                             Text("Link in WalletButtonsView")
                                 .font(.subheadline)
                             Picker("Link WalletButtonsView", selection: $linkVisibilityInWalletButtonsView) {
-                                Text("Automatic").tag(PaymentSheet.WalletButtonVisibility.Visibility.automatic)
-                                Text("Always").tag(PaymentSheet.WalletButtonVisibility.Visibility.always)
-                                Text("Never").tag(PaymentSheet.WalletButtonVisibility.Visibility.never)
+                                Text("Automatic").tag(PaymentSheet.WalletButtonsVisibility.WalletButtonsViewVisibility.automatic)
+                                Text("Never").tag(PaymentSheet.WalletButtonsVisibility.WalletButtonsViewVisibility.never)
                             }
                             .pickerStyle(SegmentedPickerStyle())
                         }
@@ -174,10 +172,10 @@ struct ExampleWalletButtonsView: View {
         shopId: String,
         disableLink: Bool,
         appearance: PaymentSheet.Appearance = PaymentSheet.Appearance(),
-        applePayVisibilityInPaymentElement: PaymentSheet.WalletButtonVisibility.Visibility = .automatic,
-        linkVisibilityInPaymentElement: PaymentSheet.WalletButtonVisibility.Visibility = .automatic,
-        applePayVisibilityInWalletButtonsView: PaymentSheet.WalletButtonVisibility.Visibility = .automatic,
-        linkVisibilityInWalletButtonsView: PaymentSheet.WalletButtonVisibility.Visibility = .automatic,
+        applePayVisibilityInPaymentElement: PaymentSheet.WalletButtonsVisibility.PaymentElementVisibility = .automatic,
+        linkVisibilityInPaymentElement: PaymentSheet.WalletButtonsVisibility.PaymentElementVisibility = .automatic,
+        applePayVisibilityInWalletButtonsView: PaymentSheet.WalletButtonsVisibility.WalletButtonsViewVisibility = .automatic,
+        linkVisibilityInWalletButtonsView: PaymentSheet.WalletButtonsVisibility.WalletButtonsViewVisibility = .automatic,
         shopPayTestingOptions: ShopPayTestingOptions = ShopPayTestingOptions()
     ) {
         self.model = ExampleWalletButtonsModel(
@@ -287,10 +285,10 @@ class ExampleWalletButtonsModel: ObservableObject {
     let shopId: String
     let disableLink: Bool
     let appearance: PaymentSheet.Appearance
-    let applePayVisibilityInPaymentElement: PaymentSheet.WalletButtonVisibility.Visibility
-    let linkVisibilityInPaymentElement: PaymentSheet.WalletButtonVisibility.Visibility
-    let applePayVisibilityInWalletButtonsView: PaymentSheet.WalletButtonVisibility.Visibility
-    let linkVisibilityInWalletButtonsView: PaymentSheet.WalletButtonVisibility.Visibility
+    let applePayVisibilityInPaymentElement: PaymentSheet.WalletButtonsVisibility.PaymentElementVisibility
+    let linkVisibilityInPaymentElement: PaymentSheet.WalletButtonsVisibility.PaymentElementVisibility
+    let applePayVisibilityInWalletButtonsView: PaymentSheet.WalletButtonsVisibility.WalletButtonsViewVisibility
+    let linkVisibilityInWalletButtonsView: PaymentSheet.WalletButtonsVisibility.WalletButtonsViewVisibility
     let shopPayTestingOptions: ShopPayTestingOptions
 
     let backendCheckoutUrl = URL(string: "https://stp-mobile-playground-backend-v7.stripedemos.com/checkout")!
@@ -306,10 +304,10 @@ class ExampleWalletButtonsModel: ObservableObject {
         shopId: String,
         disableLink: Bool,
         appearance: PaymentSheet.Appearance,
-        applePayVisibilityInPaymentElement: PaymentSheet.WalletButtonVisibility.Visibility,
-        linkVisibilityInPaymentElement: PaymentSheet.WalletButtonVisibility.Visibility,
-        applePayVisibilityInWalletButtonsView: PaymentSheet.WalletButtonVisibility.Visibility,
-        linkVisibilityInWalletButtonsView: PaymentSheet.WalletButtonVisibility.Visibility,
+        applePayVisibilityInPaymentElement: PaymentSheet.WalletButtonsVisibility.PaymentElementVisibility,
+        linkVisibilityInPaymentElement: PaymentSheet.WalletButtonsVisibility.PaymentElementVisibility,
+        applePayVisibilityInWalletButtonsView: PaymentSheet.WalletButtonsVisibility.WalletButtonsViewVisibility,
+        linkVisibilityInWalletButtonsView: PaymentSheet.WalletButtonsVisibility.WalletButtonsViewVisibility,
         shopPayTestingOptions: ShopPayTestingOptions = ShopPayTestingOptions()
     ) {
         self.email = email
@@ -399,10 +397,10 @@ class ExampleWalletButtonsModel: ObservableObject {
                 configuration.link = .init(display: self.disableLink == true ? .never : .automatic)
 
                 // Configure wallet button visibility
-                configuration.walletButtonVisibility.paymentElement[.applePay] = self.applePayVisibilityInPaymentElement
-                configuration.walletButtonVisibility.paymentElement[.link] = self.linkVisibilityInPaymentElement
-                configuration.walletButtonVisibility.walletButtonsView[.applePay] = self.applePayVisibilityInWalletButtonsView
-                configuration.walletButtonVisibility.walletButtonsView[.link] = self.linkVisibilityInWalletButtonsView
+                configuration.walletButtonsVisibility.paymentElement[.applePay] = self.applePayVisibilityInPaymentElement
+                configuration.walletButtonsVisibility.paymentElement[.link] = self.linkVisibilityInPaymentElement
+                configuration.walletButtonsVisibility.walletButtonsView[.applePay] = self.applePayVisibilityInWalletButtonsView
+                configuration.walletButtonsVisibility.walletButtonsView[.link] = self.linkVisibilityInWalletButtonsView
 
                 self.addDebugLog("Creating PaymentSheet FlowController...")
                 PaymentSheet.FlowController.create(
