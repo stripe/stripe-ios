@@ -31,7 +31,7 @@ class CVCRecollectionView: UIView {
         stackView.spacing = 0
         stackView.axis = .horizontal
         stackView.layer.borderWidth = appearance.borderWidth
-        stackView.layer.cornerRadius = appearance.cornerRadius
+        stackView.layer.cornerRadius = appearance.cornerRadius ?? appearance.defaultCornerRadius
         stackView.layer.borderColor = appearance.colors.componentBorder.cgColor
         return stackView
     }()

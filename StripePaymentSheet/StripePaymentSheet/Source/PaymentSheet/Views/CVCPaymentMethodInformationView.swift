@@ -34,7 +34,7 @@ class CVCPaymentMethodInformationView: UIView {
     lazy var transparentMaskView: UIView = {
         let view = UIView()
         view.backgroundColor = appearance.colors.componentBackground.translucentMaskColor
-        view.layer.cornerRadius = appearance.cornerRadius
+        view.layer.cornerRadius = appearance.cornerRadius ?? appearance.defaultCornerRadius
         view.layer.maskedCorners = [.layerMinXMinYCorner, .layerMinXMaxYCorner]
         return view
     }()
@@ -47,7 +47,7 @@ class CVCPaymentMethodInformationView: UIView {
         installConstraints()
 
         self.backgroundColor = appearance.colors.componentBackground
-        self.layer.cornerRadius = appearance.cornerRadius
+        self.layer.cornerRadius = appearance.cornerRadius ?? appearance.defaultCornerRadius
         self.layer.maskedCorners = [.layerMinXMinYCorner, .layerMinXMaxYCorner]
     }
 

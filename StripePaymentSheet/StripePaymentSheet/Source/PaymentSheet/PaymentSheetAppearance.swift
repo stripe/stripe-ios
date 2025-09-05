@@ -30,7 +30,7 @@ public extension PaymentSheet {
 
         /// The corner radius used for buttons, inputs, tabs in PaymentSheet
         /// - Note: The behavior of this property is consistent with the behavior of corner radius on `CALayer`
-        public var cornerRadius: CGFloat = 6.0
+        public var cornerRadius: CGFloat?
 
         /// The border used for inputs and tabs in PaymentSheet
         /// - Note: The thickness of divider lines between input fields also uses `borderWidth` for consistency, with a minimum thickness of 0.5.
@@ -426,5 +426,9 @@ public extension PaymentSheet.Appearance {
 extension PaymentSheet.Appearance {
     var topFormInsets: NSDirectionalEdgeInsets {
         return .insets(top: formInsets.top, leading: formInsets.leading, trailing: formInsets.trailing)
+    }
+
+    var defaultCornerRadius: CGFloat {
+        return LiquidGlassDetector.isEnabled ? 26.0 : 6.0
     }
 }

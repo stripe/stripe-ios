@@ -39,7 +39,7 @@ class RemoveButton: UIButton {
         if #available(iOS 15.0, *) {
             var config = UIButton.Configuration.bordered()
             config.baseBackgroundColor = .clear
-            config.background.cornerRadius = appearance.primaryButton.cornerRadius ?? appearance.cornerRadius
+            config.background.cornerRadius = appearance.primaryButton.cornerRadius ?? appearance.cornerRadius ?? appearance.defaultCornerRadius
             config.background.strokeWidth = appearance.selectedBorderWidth ?? appearance.borderWidth * 1.5
             config.background.strokeColor = appearance.colors.danger
             config.titleAlignment = .center
@@ -50,7 +50,7 @@ class RemoveButton: UIButton {
             setTitleColor(appearance.colors.danger.disabledColor, for: .highlighted)
             layer.borderColor = appearance.colors.danger.cgColor
             layer.borderWidth = appearance.selectedBorderWidth ?? appearance.borderWidth * 1.5
-            layer.cornerRadius = appearance.primaryButton.cornerRadius ?? appearance.cornerRadius
+            layer.cornerRadius = appearance.primaryButton.cornerRadius ?? appearance.cornerRadius ?? appearance.defaultCornerRadius
             setTitle(title, for: .normal)
             titleLabel?.textAlignment = .center
             titleLabel?.font = font

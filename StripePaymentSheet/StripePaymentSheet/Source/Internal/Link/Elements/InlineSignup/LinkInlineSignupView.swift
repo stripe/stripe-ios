@@ -240,7 +240,7 @@ final class LinkInlineSignupView: UIView {
     private func updateAppearance() {
         backgroundColor = viewModel.configuration.appearance.colors.background
 
-        var cornerRadius = viewModel.configuration.appearance.cornerRadius
+        var cornerRadius = viewModel.configuration.appearance.cornerRadius ?? viewModel.configuration.appearance.defaultCornerRadius
         if !viewModel.bordered {
             // If we're not bordered, the content is right at the border of the view.
             // Remove corner radius so that we don't cut off anything.

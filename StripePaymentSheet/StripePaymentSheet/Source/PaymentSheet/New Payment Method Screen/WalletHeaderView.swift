@@ -63,7 +63,7 @@ extension PaymentSheetViewController {
 
         private lazy var payWithLinkButton: PayWithLinkButton = {
             let button = PayWithLinkButton()
-            button.cornerRadius = appearance.cornerRadius
+            button.cornerRadius = appearance.cornerRadius ?? appearance.defaultCornerRadius
             button.accessibilityIdentifier = "pay_with_link_button"
             button.addTarget(self, action: #selector(handleTapPayWithLink), for: .touchUpInside)
             return button
@@ -163,7 +163,7 @@ extension PaymentSheetViewController {
                 button.heightAnchor.constraint(equalToConstant: Constants.applePayButtonHeight)
             ])
 
-            button.cornerRadius = appearance.cornerRadius
+            button.cornerRadius = appearance.cornerRadius ?? appearance.defaultCornerRadius
 
             return button
         }
