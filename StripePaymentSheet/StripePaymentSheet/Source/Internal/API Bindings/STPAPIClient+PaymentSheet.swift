@@ -55,12 +55,22 @@ extension STPAPIClient {
                     deferredIntent["payment_method_configuration"] = ["id": paymentMethodConfigurationId]
                 }
                 switch intentConfig.mode {
-                case .payment(let amount, let currency, let setupFutureUsage, let captureMethod, _):
+                case .payment(let amount, let currency, let setupFutureUsage, let captureMethod, let paymentMethodOptions):
                     deferredIntent["mode"] = "payment"
                     deferredIntent["amount"] = amount
                     deferredIntent["currency"] = currency
                     deferredIntent["setup_future_usage"] = setupFutureUsage?.rawValue
                     deferredIntent["capture_method"] = captureMethod.rawValue
+                    if let paymentMethodOptions,
+                       let setupFutureUsageValues = paymentMethodOptions.setupFutureUsageValues {
+                        var paymentMethodOptionsDict = [String: Any]()
+                        for (paymentMethodType, setupFutureUsageValue) in setupFutureUsageValues {
+                            paymentMethodOptionsDict[paymentMethodType.identifier] = [
+                                "setup_future_usage": setupFutureUsageValue.rawValue
+                            ]
+                        }
+                        deferredIntent["payment_method_options"] = paymentMethodOptionsDict
+                    }
                 case .setup(let currency, let setupFutureUsage):
                     deferredIntent["mode"] = "setup"
                     deferredIntent["currency"] = currency

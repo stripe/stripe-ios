@@ -1,0 +1,30 @@
+GET
+https:\/\/api\.stripe\.com\/v1\/elements\/sessions\?deferred_intent%5Bamount%5D=1000&deferred_intent%5Bcapture_method%5D=automatic&deferred_intent%5Bcurrency%5D=USD&deferred_intent%5Bmode%5D=payment&deferred_intent%5Bpayment_method_options%5D%5Bcard_present%5D%5Bsetup_future_usage%5D=off_session&deferred_intent%5Bpayment_method_options%5D%5Boxxo%5D%5Bsetup_future_usage%5D=off_session&deferred_intent%5Bpayment_method_types%5D%5B0%5D=card_present&deferred_intent%5Bpayment_method_types%5D%5B1%5D=oxxo&key=pk_test_ErsyMEOTudSjQR8hh0VrQr5X008sBXGOu6&locale=en-US&mobile_app_id=com\.stripe\.StripeiOSTestHostApp&type=deferred_intent$
+400
+application/json
+Content-Type: application/json
+Access-Control-Allow-Origin: *
+x-stripe-priority-routing-enabled: true
+content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=b7hjjXhOlTG0nr-PXN1lrwN1yqzCEMDBwE1e5UKYwrh8IpRd7QdfCBNOHlkaEhaiuRM5iY_HUfiUgvXn
+x-wc: ABGHIJ
+access-control-allow-methods: GET, HEAD, PUT, PATCH, POST, DELETE
+Server: nginx
+access-control-expose-headers: Request-Id, Stripe-Manage-Version, Stripe-Should-Retry, X-Stripe-External-Auth-Required, X-Stripe-Privileged-Session-Required
+access-control-max-age: 300
+Cache-Control: no-cache, no-store
+Date: Wed, 03 Sep 2025 00:00:39 GMT
+stripe-version: 2020-08-27
+access-control-allow-credentials: true
+Content-Length: 211
+x-stripe-routing-context-priority-tier: api-testmode
+Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
+Vary: Origin
+request-id: req_KnsjK6PQh9CDHK
+
+{
+  "error" : {
+    "message" : "The value provided for setup_future_usage (off_session) is not supported for oxxo.",
+    "param" : "deferred_intent.payment_method_types",
+    "type" : "invalid_request_error"
+  }
+}
