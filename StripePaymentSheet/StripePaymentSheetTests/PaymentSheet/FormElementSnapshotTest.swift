@@ -105,15 +105,12 @@ extension AddressSectionElement {
 }
 
 struct ExampleTextFieldElementConfiguration: TextFieldElementConfiguration {
-    var defaultValue: String?
     var label: String = "Label"
-    func maxLength(for text: String) -> Int { "default value".count }
 }
 
 struct ExampleReadOnlyTextFieldElementConfiguration: TextFieldElementConfiguration {
-    var defaultValue: String?
+    var defaultValue: String? = "Example default value"
     var label: String = "Label"
-    func maxLength(for text: String) -> Int { "default value".count }
     var editConfiguration: EditConfiguration = .readOnly
 }
 

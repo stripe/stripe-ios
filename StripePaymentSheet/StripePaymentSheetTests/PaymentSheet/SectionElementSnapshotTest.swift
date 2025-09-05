@@ -27,24 +27,12 @@ final class SectionElementSnapshotTest: STPSnapshotTestCase {
         return appearance.asElementsTheme
     }
 
-    struct MockTextFieldElementConfiguration: TextFieldElementConfiguration {
-        var defaultValue: String?
-        var label: String = "Label"
-        func maxLength(for text: String) -> Int { "default value".count }
-    }
-
-    struct MockReadOnlyTextFieldElementConfiguration: TextFieldElementConfiguration {
-        var defaultValue: String?
-        var label: String = "Label"
-        func maxLength(for text: String) -> Int { "default value".count }
-        var editConfiguration: EditConfiguration = .readOnly
-    }
-
     override func setUp() {
         super.setUp()
         recordMode = true
     }
 
+    // ☠️ WARNING: The "with_borders" snapshots are missing borders at the corners - this is a snapshot-test-only-bug and does not repro on simulator/device.
     func testDisabledState() {
         func _test(borders: Bool) {
             appearance.borderWidth = borders ? 1 : 0
