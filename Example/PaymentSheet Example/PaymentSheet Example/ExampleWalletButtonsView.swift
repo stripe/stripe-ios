@@ -23,8 +23,13 @@ struct ExampleWalletButtonsContainerView: View {
     @State private var linkInlineVerificationEnabled: Bool = PaymentSheet.LinkFeatureFlags.enableLinkInlineVerification
     @State private var appearance: PaymentSheet.Appearance = PaymentSheet.Appearance()
     @State private var showingAppearancePlayground = false
-    @State private var hideLinkECE = false
     @State private var disableLink = false
+    
+    // Wallet button visibility options
+    @State private var applePayVisibilityInPaymentElement: PaymentSheet.WalletButtonVisibility.Visibility = .automatic
+    @State private var linkVisibilityInPaymentElement: PaymentSheet.WalletButtonVisibility.Visibility = .automatic
+    @State private var applePayVisibilityInWalletButtonsView: PaymentSheet.WalletButtonVisibility.Visibility = .automatic
+    @State private var linkVisibilityInWalletButtonsView: PaymentSheet.WalletButtonVisibility.Visibility = .automatic
 
     // Shop Pay testing options
     @State private var billingAddressRequired: Bool = false
@@ -52,12 +57,62 @@ struct ExampleWalletButtonsContainerView: View {
                             PaymentSheet.LinkFeatureFlags.enableLinkInlineVerification = newValue
                         }
 
-                    Toggle("Hide Link ECE", isOn: $hideLinkECE)
-
                     Toggle("Disable Link", isOn: $disableLink)
 
                     Button("Customize Appearance") {
                         showingAppearancePlayground = true
+                    }
+                }
+                
+                Section("Wallet Button Visibility - PaymentElement") {
+                    Group {
+                        VStack(alignment: .leading) {
+                            Text("Apple Pay in PaymentElement")
+                                .font(.subheadline)
+                            Picker("Apple Pay PaymentElement", selection: $applePayVisibilityInPaymentElement) {
+                                Text("Automatic").tag(PaymentSheet.WalletButtonVisibility.Visibility.automatic)
+                                Text("Always").tag(PaymentSheet.WalletButtonVisibility.Visibility.always)
+                                Text("Never").tag(PaymentSheet.WalletButtonVisibility.Visibility.never)
+                            }
+                            .pickerStyle(SegmentedPickerStyle())
+                        }
+                        
+                        VStack(alignment: .leading) {
+                            Text("Link in PaymentElement")
+                                .font(.subheadline)
+                            Picker("Link PaymentElement", selection: $linkVisibilityInPaymentElement) {
+                                Text("Automatic").tag(PaymentSheet.WalletButtonVisibility.Visibility.automatic)
+                                Text("Always").tag(PaymentSheet.WalletButtonVisibility.Visibility.always)
+                                Text("Never").tag(PaymentSheet.WalletButtonVisibility.Visibility.never)
+                            }
+                            .pickerStyle(SegmentedPickerStyle())
+                        }
+                    }
+                }
+                
+                Section("Wallet Button Visibility - WalletButtonsView") {
+                    Group {
+                        VStack(alignment: .leading) {
+                            Text("Apple Pay in WalletButtonsView")
+                                .font(.subheadline)
+                            Picker("Apple Pay WalletButtonsView", selection: $applePayVisibilityInWalletButtonsView) {
+                                Text("Automatic").tag(PaymentSheet.WalletButtonVisibility.Visibility.automatic)
+                                Text("Always").tag(PaymentSheet.WalletButtonVisibility.Visibility.always)
+                                Text("Never").tag(PaymentSheet.WalletButtonVisibility.Visibility.never)
+                            }
+                            .pickerStyle(SegmentedPickerStyle())
+                        }
+                        
+                        VStack(alignment: .leading) {
+                            Text("Link in WalletButtonsView")
+                                .font(.subheadline)
+                            Picker("Link WalletButtonsView", selection: $linkVisibilityInWalletButtonsView) {
+                                Text("Automatic").tag(PaymentSheet.WalletButtonVisibility.Visibility.automatic)
+                                Text("Always").tag(PaymentSheet.WalletButtonVisibility.Visibility.always)
+                                Text("Never").tag(PaymentSheet.WalletButtonVisibility.Visibility.never)
+                            }
+                            .pickerStyle(SegmentedPickerStyle())
+                        }
                     }
                 }
 
@@ -88,9 +143,12 @@ struct ExampleWalletButtonsContainerView: View {
                         ExampleWalletButtonsView(
                             email: email,
                             shopId: shopId,
-                            hideLinkECE: hideLinkECE,
                             disableLink: disableLink,
                             appearance: appearance,
+                            applePayVisibilityInPaymentElement: applePayVisibilityInPaymentElement,
+                            linkVisibilityInPaymentElement: linkVisibilityInPaymentElement,
+                            applePayVisibilityInWalletButtonsView: applePayVisibilityInWalletButtonsView,
+                            linkVisibilityInWalletButtonsView: linkVisibilityInWalletButtonsView,
                             shopPayTestingOptions: ShopPayTestingOptions(
                                 billingAddressRequired: billingAddressRequired,
                                 emailRequired: emailRequired,
@@ -114,8 +172,28 @@ struct ExampleWalletButtonsView: View {
     @ObservedObject var model: ExampleWalletButtonsModel
     @State var isConfirmingPayment = false
 
-    init(email: String, shopId: String, hideLinkECE: Bool, disableLink: Bool, appearance: PaymentSheet.Appearance = PaymentSheet.Appearance(), shopPayTestingOptions: ShopPayTestingOptions = ShopPayTestingOptions()) {
-        self.model = ExampleWalletButtonsModel(email: email, shopId: shopId, hideLinkECE: hideLinkECE, disableLink: disableLink, appearance: appearance, shopPayTestingOptions: shopPayTestingOptions)
+    init(
+        email: String, 
+        shopId: String,
+        disableLink: Bool, 
+        appearance: PaymentSheet.Appearance = PaymentSheet.Appearance(), 
+        applePayVisibilityInPaymentElement: PaymentSheet.WalletButtonVisibility.Visibility = .automatic,
+        linkVisibilityInPaymentElement: PaymentSheet.WalletButtonVisibility.Visibility = .automatic,
+        applePayVisibilityInWalletButtonsView: PaymentSheet.WalletButtonVisibility.Visibility = .automatic,
+        linkVisibilityInWalletButtonsView: PaymentSheet.WalletButtonVisibility.Visibility = .automatic,
+        shopPayTestingOptions: ShopPayTestingOptions = ShopPayTestingOptions()
+    ) {
+        self.model = ExampleWalletButtonsModel(
+            email: email, 
+            shopId: shopId,
+            disableLink: disableLink, 
+            appearance: appearance, 
+            applePayVisibilityInPaymentElement: applePayVisibilityInPaymentElement,
+            linkVisibilityInPaymentElement: linkVisibilityInPaymentElement,
+            applePayVisibilityInWalletButtonsView: applePayVisibilityInWalletButtonsView,
+            linkVisibilityInWalletButtonsView: linkVisibilityInWalletButtonsView,
+            shopPayTestingOptions: shopPayTestingOptions
+        )
     }
 
     var body: some View {
@@ -125,7 +203,6 @@ struct ExampleWalletButtonsView: View {
                     WalletButtonsFlowControllerView(
                         flowController: flowController,
                         isConfirmingPayment: $isConfirmingPayment,
-                        walletsToShow: model.hideLinkECE ? [.applePay, .shopPay] : [.applePay, .shopPay, .link],
                         onCompletion: model.onCompletion
                     )
                 } else if model.paymentResult == nil {
@@ -164,14 +241,12 @@ struct ExampleWalletButtonsView: View {
 struct WalletButtonsFlowControllerView: View {
     @ObservedObject var flowController: PaymentSheet.FlowController
     @Binding var isConfirmingPayment: Bool
-    let walletsToShow: Set<WalletButtonsView.ExpressType>
     let onCompletion: (PaymentSheetResult) -> Void
 
     var body: some View {
         if flowController.paymentOption == nil {
             WalletButtonsView(
-                flowController: flowController,
-                walletsToShow: walletsToShow
+                flowController: flowController
             ) { _ in }
                 .padding(.horizontal)
         }
@@ -213,9 +288,12 @@ struct WalletButtonsFlowControllerView: View {
 class ExampleWalletButtonsModel: ObservableObject {
     let email: String
     let shopId: String
-    let hideLinkECE: Bool
     let disableLink: Bool
     let appearance: PaymentSheet.Appearance
+    let applePayVisibilityInPaymentElement: PaymentSheet.WalletButtonVisibility.Visibility
+    let linkVisibilityInPaymentElement: PaymentSheet.WalletButtonVisibility.Visibility
+    let applePayVisibilityInWalletButtonsView: PaymentSheet.WalletButtonVisibility.Visibility
+    let linkVisibilityInWalletButtonsView: PaymentSheet.WalletButtonVisibility.Visibility
     let shopPayTestingOptions: ShopPayTestingOptions
 
     let backendCheckoutUrl = URL(string: "https://stp-mobile-playground-backend-v7.stripedemos.com/checkout")!
@@ -226,12 +304,25 @@ class ExampleWalletButtonsModel: ObservableObject {
     @Published var isProcessing: Bool = false
     @Published var debugLogs: [String] = []
 
-    init(email: String, shopId: String, hideLinkECE: Bool, disableLink: Bool, appearance: PaymentSheet.Appearance, shopPayTestingOptions: ShopPayTestingOptions = ShopPayTestingOptions()) {
+    init(
+        email: String, 
+        shopId: String,
+        disableLink: Bool, 
+        appearance: PaymentSheet.Appearance, 
+        applePayVisibilityInPaymentElement: PaymentSheet.WalletButtonVisibility.Visibility,
+        linkVisibilityInPaymentElement: PaymentSheet.WalletButtonVisibility.Visibility,
+        applePayVisibilityInWalletButtonsView: PaymentSheet.WalletButtonVisibility.Visibility,
+        linkVisibilityInWalletButtonsView: PaymentSheet.WalletButtonVisibility.Visibility,
+        shopPayTestingOptions: ShopPayTestingOptions = ShopPayTestingOptions()
+    ) {
         self.email = email
         self.shopId = shopId
-        self.hideLinkECE = hideLinkECE
         self.disableLink = disableLink
         self.appearance = appearance
+        self.applePayVisibilityInPaymentElement = applePayVisibilityInPaymentElement
+        self.linkVisibilityInPaymentElement = linkVisibilityInPaymentElement
+        self.applePayVisibilityInWalletButtonsView = applePayVisibilityInWalletButtonsView
+        self.linkVisibilityInWalletButtonsView = linkVisibilityInWalletButtonsView
         self.shopPayTestingOptions = shopPayTestingOptions
     }
 
@@ -306,6 +397,20 @@ class ExampleWalletButtonsModel: ObservableObject {
                 configuration.willUseWalletButtonsView = true
                 configuration.appearance = self?.appearance ?? PaymentSheet.Appearance()
                 configuration.link = .init(display: self?.disableLink == true ? .never : .automatic)
+                
+                // Configure wallet button visibility
+                if let self = self {
+                    configuration.walletButtonVisibility.paymentElement[.applePay] = self.applePayVisibilityInPaymentElement
+                    configuration.walletButtonVisibility.paymentElement[.link] = self.linkVisibilityInPaymentElement
+                    configuration.walletButtonVisibility.walletButtonsView[.applePay] = self.applePayVisibilityInWalletButtonsView
+                    configuration.walletButtonVisibility.walletButtonsView[.link] = self.linkVisibilityInWalletButtonsView
+                    
+                    // Log the configured visibility settings for debugging
+                    self.addDebugLog("[WALLET VISIBILITY] Apple Pay PaymentElement: \(self.applePayVisibilityInPaymentElement)")
+                    self.addDebugLog("[WALLET VISIBILITY] Link PaymentElement: \(self.linkVisibilityInPaymentElement)")
+                    self.addDebugLog("[WALLET VISIBILITY] Apple Pay WalletButtonsView: \(self.applePayVisibilityInWalletButtonsView)")
+                    self.addDebugLog("[WALLET VISIBILITY] Link WalletButtonsView: \(self.linkVisibilityInWalletButtonsView)")
+                }
 
                 self?.addDebugLog("Creating PaymentSheet FlowController...")
                 PaymentSheet.FlowController.create(
@@ -437,11 +542,7 @@ class ExampleWalletButtonsModel: ObservableObject {
         let twoWeeks = PaymentSheet.ShopPayConfiguration.DeliveryEstimate.DeliveryEstimateUnit(value: 2, unit: .week)
 
         let shippingRates: [PaymentSheet.ShopPayConfiguration.ShippingRate] = [
-            .init(id: "immediate", amount: 1099, displayName: "2-hour", deliveryEstimate: .unstructured("Get your item in 2 hours")),
-            .init(id: "fast", amount: 500, displayName: "Expedited", deliveryEstimate: .structured(minimum: twoBusinessDays, maximum: fiveBusinessDays)),
-            .init(id: "regular", amount: 200, displayName: "Standard", deliveryEstimate: .structured(minimum: nil, maximum: sevenBusinessDays)),
-            .init(id: "no_rush", amount: 100, displayName: "No Rush", deliveryEstimate: .structured(minimum: twoWeeks, maximum: nil)),
-            .init(id: "no_estimate", amount: 0, displayName: "Free (No estimate)", deliveryEstimate: nil),
+            
         ]
 
         let handlers = PaymentSheet.ShopPayConfiguration.Handlers(
@@ -522,7 +623,7 @@ class ExampleWalletButtonsModel: ObservableObject {
             lineItems: [.init(name: "Golden Potato", amount: 500),
                         .init(name: "Silver Potato", amount: 345),
                         .init(name: "Tax", amount: 200),
-                        .init(name: "Shipping", amount: shippingRates.first!.amount), ],
+                        .init(name: "Shipping", amount: shippingRates.first?.amount ?? 0), ],
             shippingRates: shippingRates,
             shopId: self.shopId,
             allowedShippingCountries: allowedCountries,

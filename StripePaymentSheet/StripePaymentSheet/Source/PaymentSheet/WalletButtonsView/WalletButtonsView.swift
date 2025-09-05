@@ -7,27 +7,21 @@ import PassKit
 import SwiftUI
 import WebKit
 
+typealias ExpressType = PaymentSheet.WalletButtonVisibility.ExpressType
+
 @available(iOS 16.0, *)
 @_spi(STP) public struct WalletButtonsView: View {
-    @_spi(STP) public enum ExpressType: String, Hashable, CaseIterable {
-        case applePay = "apple_pay"
-        case link = "link"
-        case shopPay = "shop_pay"
-    }
 
     let flowController: PaymentSheet.FlowController
     let confirmHandler: (PaymentSheetResult) -> Void
-    let walletsToShow: Set<ExpressType>
     @State var orderedWallets: [ExpressType]
 
     @_spi(STP) public init(flowController: PaymentSheet.FlowController,
-                           walletsToShow: Set<ExpressType> = Set(),
                            confirmHandler: @escaping (PaymentSheetResult) -> Void) {
         self.confirmHandler = confirmHandler
         self.flowController = flowController
-        self.walletsToShow = walletsToShow.isEmpty ? Set(ExpressType.allCases) : walletsToShow
 
-        let wallets = WalletButtonsView.determineAvailableWallets(for: flowController, allowedWallets: walletsToShow)
+        let wallets = WalletButtonsView.determineAvailableWallets(for: flowController)
         self._orderedWallets = State(initialValue: wallets)
     }
 
@@ -37,7 +31,6 @@ import WebKit
          orderedWallets: [ExpressType]) {
         self.flowController = flowController
         self.confirmHandler = confirmHandler
-        self.walletsToShow = Set(orderedWallets)
         self._orderedWallets = State(initialValue: orderedWallets)
     }
 
@@ -80,7 +73,7 @@ import WebKit
             .frame(maxWidth: .infinity)
             .animation(.easeInOut, value: orderedWallets)
             .onAppear {
-                let allowedWallets = walletsToShow.isEmpty ? Set(ExpressType.allCases) : walletsToShow
+                let allowedWallets = Set(orderedWallets)
                 flowController.walletButtonsViewState = .visible(allowedWallets: allowedWallets.map(\.rawValue))
             }
             .onDisappear {
@@ -90,14 +83,14 @@ import WebKit
     }
 
     private static func determineAvailableWallets(
-        for flowController: PaymentSheet.FlowController,
-        allowedWallets: Set<ExpressType>
+        for flowController: PaymentSheet.FlowController
     ) -> [ExpressType] {
         // Determine available wallets and their order from elementsSession
         var wallets: [ExpressType] = []
 
         func appendIfAllowed(_ wallet: ExpressType) {
-            if allowedWallets.isEmpty || allowedWallets.contains(wallet) {
+            let visibility = flowController.configuration.walletButtonVisibility.walletButtonsView[wallet] ?? .automatic
+            if visibility != .never {
                 wallets.append(wallet)
             }
         }
@@ -113,9 +106,7 @@ import WebKit
                     appendIfAllowed(.applePay)
                 }
             case "shop_pay":
-                if allowedWallets.isEmpty || allowedWallets.contains(.shopPay) {
-                    appendIfAllowed(.shopPay)
-                }
+                appendIfAllowed(.shopPay)
             default:
                 continue
             }
