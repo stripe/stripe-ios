@@ -202,10 +202,7 @@ extension SectionContainerView: EventHandler {
 
 extension SectionContainerView {
     class MultiElementRowView: UIView {
-        let views: [UIView]
-
         init(views: [UIView], theme: ElementsAppearance = .default) {
-            self.views = views
             super.init(frame: .zero)
             let stackView = buildStackView(views: views, theme: theme)
             stackView.axis = .horizontal
