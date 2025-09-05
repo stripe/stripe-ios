@@ -130,10 +130,10 @@ class SectionContainerView: UIView {
 
     // MARK: - Internal methods
     func updateUI(newViews: [UIView]? = nil) {
-        if LiquidGlassDetector.isEnabled, #available(iOS 26, *) {
+        layer.applyShadow(shadow: theme.shadow)
+        if LiquidGlassDetector.isEnabled {
             ios26_applyDefaultCornerConfiguration()
         } else {
-            layer.applyShadow(shadow: theme.shadow)
             layer.cornerRadius = theme.cornerRadius
         }
         if isUserInteractionEnabled || UITraitCollection.current.isDarkMode {
