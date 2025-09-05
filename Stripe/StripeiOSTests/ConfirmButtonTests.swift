@@ -16,6 +16,7 @@ import XCTest
 
 class ConfirmButtonTests: XCTestCase {
 
+    // @iOS26
     func testBuyButtonShouldAutomaticallyAdjustItsForegroundColor() {
         let testCases: [(background: UIColor, foreground: UIColor)] = [
             // Dark backgrounds
