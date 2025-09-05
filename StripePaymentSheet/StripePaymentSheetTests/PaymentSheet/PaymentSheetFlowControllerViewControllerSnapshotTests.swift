@@ -16,7 +16,11 @@ import XCTest
 final class PaymentSheetFlowControllerViewControllerSnapshotTests: STPSnapshotTestCase {
     override func setUp() {
         super.setUp()
-        PaymentSheet.Appearance.liquidGlassDesignEnabled = true
+        if #available(iOS 26.0, *) {
+            PaymentSheet.Appearance.liquidGlassDesignEnabled = true
+        } else {
+            PaymentSheet.Appearance.liquidGlassDesignEnabled = false
+        }
     }
     func makeTestLoadResult(savedPaymentMethods: [STPPaymentMethod]) -> PaymentSheetLoader.LoadResult {
         return .init(

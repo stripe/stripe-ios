@@ -13,7 +13,7 @@ import UIKit
 import XCTest
 
 @_spi(STP)@testable import StripeCore
-@_spi(AppearanceAPIAdditionsPreview) @testable import StripePaymentSheet
+@_spi(AppearanceAPIAdditionsPreview) @_spi(STP) @testable import StripePaymentSheet
 @_spi(STP)@testable import StripeUICore
 
 // @iOS26
@@ -33,6 +33,12 @@ class PaymentSheetSnapshotTests: STPSnapshotTestCase {
     override func setUp() {
         super.setUp()
 //        recordMode = true
+
+        if #available(iOS 26.0, *) {
+            PaymentSheet.Appearance.liquidGlassDesignEnabled = true
+        } else {
+            PaymentSheet.Appearance.liquidGlassDesignEnabled = false
+        }
 
         configuration = PaymentSheet.Configuration()
         configuration.merchantDisplayName = "Example, Inc."
