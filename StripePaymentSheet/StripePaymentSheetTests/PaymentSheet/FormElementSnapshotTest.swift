@@ -19,11 +19,6 @@ final class FormElementSnapshotTest: STPSnapshotTestCase {
         return appearance.asElementsTheme
     }
 
-    override func setUp() {
-        super.setUp()
-        recordMode = true
-    }
-
     func testDefaultTheme() {
         let formElement = makeExampleFormElement()
         verify(formElement)
