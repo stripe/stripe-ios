@@ -50,7 +50,6 @@ class SectionContainerView: UIView {
         self.theme = theme
         super.init(frame: .zero)
         addAndPinSubview(bottomPinningContainerView)
-        clipsToBounds = true // Prevents subview disabled background from extending outside the corners
         updateUI()
     }
 
@@ -223,8 +222,17 @@ private func buildStackView(views: [UIView], theme: ElementsAppearance = .defaul
     stackView.axis = .vertical
     stackView.spacing = theme.separatorWidth
     stackView.separatorColor = theme.colors.divider
+    stackView.borderWidth = theme.borderWidth
+    stackView.borderColor = theme.colors.border
     stackView.customBackgroundColor = theme.colors.componentBackground
     stackView.drawBorder = true
     stackView.hideShadow = true // Shadow is handled by `SectionContainerView`
+    if LiquidGlassDetector.isEnabled {
+        // Since StackViewWithSeparator draws its own borders on its `backgroundView`, we must apply the corner radius to the background view.
+        stackView.backgroundView.ios26_applyDefaultCornerConfiguration()
+    } else {
+        stackView.borderCornerRadius = theme.cornerRadius
+    }
+    stackView.clipsToBounds = true // Prevents subviews (specifically, TextFieldView's `transparentMaskView`) from extending outside the corners.
     return stackView
 }
