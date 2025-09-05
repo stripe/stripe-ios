@@ -15,7 +15,7 @@ public extension PaymentSheet {
     struct Appearance: Equatable {
         private static var _liquidGlassDesignEnabled: Bool = false
 
-        static public var liquidGlassDesignEnabled: Bool {
+        @_spi(STP) static public var liquidGlassDesignEnabled: Bool {
             get {
                 return _liquidGlassDesignEnabled
             }
