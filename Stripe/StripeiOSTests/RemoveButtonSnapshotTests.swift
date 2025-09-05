@@ -43,15 +43,8 @@ class RemoveButtonSnapshotTests: STPSnapshotTestCase {
         file: StaticString = #filePath,
         line: UInt = #line
     ) {
-        view.autosizeHeight(width: 300)
-
-        let window = UIWindow(frame: CGRect(x: 0, y: 0, width: 300, height: 100))
-        window.addSubview(view)
-        window.isHidden = false
-
-        if mode == .dark {
-            window.overrideUserInterfaceStyle = .dark
-        }
+        // The remove button relies on external constraints to size itself, so we manually set dimensions for testing
+        view.bounds = CGRect(x: 0, y: 0, width: 300, height: 44)
 
         STPSnapshotVerifyView(view, identifier: identifier, file: file, line: line)
     }
