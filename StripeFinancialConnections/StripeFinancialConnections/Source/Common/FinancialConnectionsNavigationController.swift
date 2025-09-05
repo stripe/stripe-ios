@@ -130,7 +130,7 @@ extension FinancialConnectionsNavigationController {
         let backButtonImage = Image
             .back_arrow
             .makeImage(template: false)
-            .withAlignmentRectInsets(UIEdgeInsets(top: 0, left: -13, bottom: -2, right: 0))
+            .applyFinancialConnectionsBackButtonEdgeInsets()
         let appearance = UINavigationBarAppearance()
         appearance.setBackIndicatorImage(backButtonImage, transitionMaskImage: backButtonImage)
         appearance.backgroundColor = FinancialConnectionsAppearance.Colors.background
