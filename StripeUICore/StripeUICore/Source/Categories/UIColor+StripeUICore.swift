@@ -148,7 +148,7 @@ import UIKit
 
     /// Returns a translucent mask based on the brightness of the color
     var translucentMaskColor: UIColor {
-        let alpha: CGFloat = 0.04
+        let alpha: CGFloat = LiquidGlassDetector.isEnabled ? 0.08 : 0.04
         let colorMaskForLight = UIColor.black.withAlphaComponent(alpha)
         let colorMaskForDark = UIColor.white.withAlphaComponent(alpha)
 

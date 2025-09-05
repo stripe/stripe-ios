@@ -40,14 +40,14 @@ import UIKit
     public override var spacing: CGFloat {
         didSet {
             separatorLayer.lineWidth = spacing
-            layoutMargins = UIEdgeInsets(
-                top: spacing, left: spacing, bottom: spacing, right: spacing)
         }
     }
 
     public var borderWidth: CGFloat = 0 {
         didSet {
             backgroundView.layer.borderWidth = borderWidth
+            layoutMargins = UIEdgeInsets(
+                top: borderWidth, left: borderWidth, bottom: borderWidth, right: borderWidth)
         }
     }
 
