@@ -2,7 +2,7 @@
 
 ### CustomerSheet
 * [Added] `opensCardScannerAutomatically` configuration
-
+* [Added] just testing ci
 ### PaymentSheet
 * [Added] `opensCardScannerAutomatically` configuration
 * [Fixed] Setting `appearance.borderWidth = 0` previously caused the thickness of divider lines between input fields to also be 0, causing them to disappear. They now have a minimum thickness of 0.5.
