@@ -241,8 +241,10 @@ extension PaymentSheet {
     /// When using WalletButtonsView, configures payment method visibility across available surfaces.
     @_spi(STP) public struct WalletButtonsVisibility {
         /// Configure wallet button visibility in PaymentSheet, FlowController, or Embedded Payment Element.
+        /// If a field is empty, the default behavior is `.automatic`.
         @_spi(STP) public var paymentElement: [ExpressType: PaymentElementVisibility] = [:]
         /// Configure wallet button visibility in Wallet Buttons View.
+        /// If a field is empty, the default behavior is `.automatic`.
         @_spi(STP) public var walletButtonsView: [ExpressType: WalletButtonsViewVisibility] = [:]
 
         @_spi(STP) public enum PaymentElementVisibility {
