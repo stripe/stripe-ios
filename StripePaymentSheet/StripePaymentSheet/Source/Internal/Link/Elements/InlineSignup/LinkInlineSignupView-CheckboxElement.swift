@@ -54,7 +54,7 @@ extension LinkInlineSignupView {
                         to be saved and used in future checkout sessions.
                         """
                     )
-                case .checkboxWithDefaultOptIn:
+                case .checkbox, .checkboxWithDefaultOptIn:
                     return STPLocalizedString(
                         "Save my info for faster checkout with Link",
                         """
@@ -62,7 +62,7 @@ extension LinkInlineSignupView {
                         to be saved and used in future checkout sessions.
                         """
                     )
-                case .checkbox, .textFieldsOnlyEmailFirst, .textFieldsOnlyPhoneFirst:
+                case .textFieldsOnlyEmailFirst, .textFieldsOnlyPhoneFirst:
                     return STPLocalizedString(
                         "Save your info for secure 1-click checkout with Link",
                         """

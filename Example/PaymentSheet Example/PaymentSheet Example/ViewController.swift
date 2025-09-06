@@ -26,7 +26,7 @@ class ViewController: UIViewController {
     }
     @IBSegueAction func showSwiftUITestPlayground(_ coder: NSCoder) -> UIViewController? {
         if #available(iOS 15.0, *) {
-            return UIHostingController(coder: coder, rootView: PaymentSheetTestPlayground(settings: PlaygroundController.settingsFromDefaults() ?? .defaultValues(), appearance: PlaygroundController.appearanceFromDefaults() ?? PaymentSheet.Appearance.default))
+            return UIHostingController(coder: coder, rootView: PaymentSheetTestPlayground())
         } else {
             fatalError(">= iOS 15.0 required")
         }
@@ -34,7 +34,7 @@ class ViewController: UIViewController {
 
     @IBSegueAction func showSwiftUICustomerSheetTestPlayground(_ coder: NSCoder) -> UIViewController? {
         if #available(iOS 15.0, *) {
-            return UIHostingController(coder: coder, rootView: CustomerSheetTestPlayground(settings: CustomerSheetTestPlaygroundController.settingsFromDefaults() ?? .defaultValues()))
+            return UIHostingController(coder: coder, rootView: CustomerSheetTestPlayground())
         } else {
             fatalError(">= iOS 15.0 required")
         }

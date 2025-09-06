@@ -69,6 +69,18 @@ extension STPAnalyticsClient {
             )
         )
     }
+
+    func logConfirmationTokenCreationAttempt(
+        with configuration: NSObject?
+    ) {
+        log(
+            analytic: GenericPaymentAnalytic(
+                event: .confirmationTokenCreation,
+                paymentConfiguration: configuration,
+                additionalParams: [:]
+            )
+        )
+    }
 }
 
 // MARK: - Confirmation
