@@ -13,8 +13,29 @@ public extension PaymentSheet {
 
     /// Describes the appearance of PaymentSheet
     struct Appearance: Equatable {
+        /// Determines if the iOS 26 Liquid Glass design is allowed. This changes the navigation bar to be glassy and changes the default values of:
+        /// cornerRadius, borderWidth, shadow, sheetCornerRadius, verticalModeRowPadding, and colors.background
+        /// The default value is `true` on >= iOS 26 when compiling with >= Xcode 26
+        /// - Note: This must be set before initializing `PaymentSheet.Appearance`
+        /// - Note: This is ignored on < iOS 26, < Xcode 26, or if the Info.plist UIDesignRequiresCompatibility is true.
+        @_spi(STP) static public var isLiquidGlassAllowed: Bool {
+            get {
+                return LiquidGlassDetector.isNewDesignAllowed
+            }
+            set {
+                LiquidGlassDetector.isNewDesignAllowed = newValue
+            }
+        }
+
+        /// Describes if iOS 26 Liquid Glass has been enabled
+        @_spi(STP) public var isLiquidGlassEnabled: Bool {
+            return LiquidGlassDetector.isEnabled
+        }
+
         /// The default appearance for PaymentSheet
-        public static let `default` = Appearance()
+        public static var `default`: Appearance {
+            return Appearance()
+        }
 
         /// Creates a `PaymentSheet.Appearance` with default values
         public init() {}

@@ -3,11 +3,13 @@
 //  PaymentSheet Example
 //
 
-import StripePaymentSheet
+@_spi(STP) import StripePaymentSheet
 import SwiftUI
 
 @available(iOS 15.0, *)
 struct PaymentSheetExampleAppRootView: View {
+    @State private var isLiquidGlassAllowed = false
+
     private var destinationsBySection: [Section: [NavigationDestination]] {
         NavigationDestination.destinationsBySection
     }
@@ -15,6 +17,16 @@ struct PaymentSheetExampleAppRootView: View {
     var body: some View {
         NavigationView {
             Form {
+                SwiftUI.Section("iOS 26 Features") {
+                    HStack {
+                        Text("isAllowed")
+                        Spacer()
+                        Toggle("", isOn: $isLiquidGlassAllowed)
+                            .onChange(of: isLiquidGlassAllowed) { isAllowed in
+                                onIsLiquidGlassAllowedChange(isAllowed)
+                            }
+                    }
+                }
                 ForEach(Section.allCases, id: \.self) { section in
                     SwiftUI.Section(section.rawValue) {
                         ForEach(destinationsBySection[section] ?? [], id: \.self) { destination in
@@ -31,6 +43,11 @@ struct PaymentSheetExampleAppRootView: View {
         }
         .navigationTitle("Examples")
         .navigationBarTitleDisplayMode(.inline)
+    }
+
+    private func onIsLiquidGlassAllowedChange(_ isAllowed: Bool) {
+        PlaygroundController.clearAppearanceFromDefaults()
+        PaymentSheet.Appearance.isLiquidGlassAllowed = isAllowed
     }
 
     enum Section: String, CaseIterable {
