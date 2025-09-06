@@ -8,7 +8,7 @@ import SwiftUI
 
 @available(iOS 15.0, *)
 struct PaymentSheetExampleAppRootView: View {
-    @State private var isIOS26FeatureEnabled = false
+    @State private var isLiquidGlassAllowed = false
 
     private var destinationsBySection: [Section: [NavigationDestination]] {
         NavigationDestination.destinationsBySection
@@ -19,11 +19,11 @@ struct PaymentSheetExampleAppRootView: View {
             Form {
                 SwiftUI.Section("iOS 26 Features") {
                     HStack {
-                        Text("Enabled")
+                        Text("isAllowed")
                         Spacer()
-                        Toggle("", isOn: $isIOS26FeatureEnabled)
-                            .onChange(of: isIOS26FeatureEnabled) { isEnabled in
-                                oniOS26Enabled(isEnabled)
+                        Toggle("", isOn: $isLiquidGlassAllowed)
+                            .onChange(of: isLiquidGlassAllowed) { isAllowed in
+                                onIsLiquidGlassAllowedChange(isAllowed)
                             }
                     }
                 }
@@ -45,9 +45,9 @@ struct PaymentSheetExampleAppRootView: View {
         .navigationBarTitleDisplayMode(.inline)
     }
 
-    private func oniOS26Enabled(_ isEnabled: Bool) {
+    private func onIsLiquidGlassAllowedChange(_ isAllowed: Bool) {
         PlaygroundController.clearAppearanceFromDefaults()
-        PaymentSheet.Appearance.liquidGlassDesignEnabled = isEnabled
+        PaymentSheet.Appearance.isLiquidGlassAllowed = isAllowed
     }
 
     enum Section: String, CaseIterable {

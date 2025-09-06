@@ -12,8 +12,7 @@ import UIKit
 // Our SDK runs inside a user's app, we can't explicitly opt into or out of the new "Liquid Glass" design.
 // Instead, we'll do our best to detect which design to use, and adjust the default UI spacing and icons accordingly.
 @_spi(STP) public class LiquidGlassDetector {
-    /// A feature flag during development of iOS 26 features, only `true` for testing.
-    @_spi(STP) public static var allowNewDesign: Bool = false
+    @_spi(STP) public static var isNewDesignAllowed: Bool = false // TODO: This will default to `true` when launched
 
     @_spi(STP) public static var canExecute: Bool {
         // If the app was built with Xcode 26 or later (which includes Swift compiler 6.2)...
@@ -32,7 +31,7 @@ import UIKit
     }
 
     @_spi(STP) public static var isEnabled: Bool {
-        return canExecute && allowNewDesign
+        return canExecute && isNewDesignAllowed
     }
 }
 
