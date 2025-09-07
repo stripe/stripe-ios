@@ -98,6 +98,7 @@ class SectionContainerView: UIView {
     // MARK: - Internal methods
     func updateUI(newViews: [UIView]? = nil) {
         layer.applyShadow(shadow: theme.shadow)
+        // We apply corner radius here so that our shadow uses it too.
         if LiquidGlassDetector.isEnabled {
             ios26_applyDefaultCornerConfiguration()
         } else {
@@ -233,6 +234,13 @@ private func buildStackView(views: [UIView], theme: ElementsAppearance = .defaul
     } else {
         stackView.borderCornerRadius = theme.cornerRadius
     }
-    stackView.clipsToBounds = true // Prevents subviews (specifically, TextFieldView's `transparentMaskView`) from extending outside the corners.
+    // Prevent subviews (specifically, TextFieldView's `transparentMaskView`) from extending outside the corners:
+    stackView.clipsToBounds = true
+    // Note that stackview's subviews are not subviews of the `backgroundView`, so we have to round the stackview's corners too :(
+    if LiquidGlassDetector.isEnabled {
+        stackView.ios26_applyDefaultCornerConfiguration()
+    } else {
+        stackView.layer.cornerRadius = theme.cornerRadius
+    }
     return stackView
 }
