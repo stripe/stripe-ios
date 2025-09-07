@@ -204,11 +204,28 @@ extension SectionContainerView {
     class MultiElementRowView: UIView {
         init(views: [UIView], theme: ElementsAppearance = .default) {
             super.init(frame: .zero)
-            let stackView = buildStackView(views: views, theme: theme)
+
+            // Add dividers between the views
+            func createDivider() -> UIView {
+                let divider = UIView.makeSpacerView(width: theme.separatorWidth)
+                divider.backgroundColor = theme.colors.divider
+                divider.translatesAutoresizingMaskIntoConstraints = false
+                return divider
+            }
+            let viewsWithDividersBetweenEach = views.enumerated().flatMap { index, view in
+                index == views.count - 1 ? [view] : [view, createDivider()]
+            }
+
+            // Make the stackview
+            let stackView = UIStackView(arrangedSubviews: viewsWithDividersBetweenEach)
             stackView.axis = .horizontal
-            stackView.drawBorder = false
-            stackView.distribution = .fillEqually
+            stackView.distribution = .fill
             addAndPinSubview(stackView)
+
+            // Make all views equal width
+            for i in 1..<views.count {
+                views[i].widthAnchor.constraint(equalTo: views[0].widthAnchor).isActive = true
+            }
         }
         required init?(coder: NSCoder) { fatalError("init(coder:) has not been implemented") }
     }
