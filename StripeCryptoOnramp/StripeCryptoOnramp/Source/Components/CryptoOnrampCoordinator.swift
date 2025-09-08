@@ -50,6 +50,12 @@ protocol CryptoOnrampCoordinatorProtocol {
         country: String
     ) async throws -> String
 
+    /// Updates the phone number for the current Link user.
+    ///
+    /// - Parameter phoneNumber: The phone number of the user. Phone number must be in E.164 format (e.g., +12125551234).
+    /// Throws if an authenticated Link user is not available, phone number format is invalid, or an API error occurs.
+    func updatePhoneNumber(to phoneNumber: String) async throws
+
     /// Presents Link UI to authenticate an existing Link user.
     /// `hasLinkAccount` must be called before this.
     ///
@@ -232,6 +238,10 @@ public final class CryptoOnrampCoordinator: NSObject, CryptoOnrampCoordinatorPro
             }
         }
         return try await apiClient.grantPartnerMerchantPermissions(with: linkAccountInfo).id
+    }
+
+    public func updatePhoneNumber(to phoneNumber: String) async throws {
+        try await linkController.updatePhoneNumber(to: phoneNumber)
     }
 
     public func authenticateUser(from viewController: UIViewController) async throws -> AuthenticationResult {
