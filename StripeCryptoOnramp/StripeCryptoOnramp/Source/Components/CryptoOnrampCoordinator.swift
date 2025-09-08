@@ -126,6 +126,10 @@ protocol CryptoOnrampCoordinatorProtocol {
         authenticationContext: STPAuthenticationContext,
         onrampSessionClientSecretProvider: @escaping (_ onrampSessionId: String) async throws -> String
     ) async throws -> CheckoutResult
+
+    /// Logs out the current Link user, if any.
+    /// Throws if an API error occurs.
+    func logOut() async throws
 }
 
 /// Coordinates headless Link user authentication and identity verification, leaving most of the UI to the client.
@@ -439,6 +443,10 @@ public final class CryptoOnrampCoordinator: NSObject, CryptoOnrampCoordinatorPro
         case .canceled:
             return .canceled
         }
+    }
+
+    public func logOut() async throws {
+        try await linkController.logOut()
     }
 }
 
