@@ -11,28 +11,29 @@ import UIKit
 
 @testable@_spi(STP) import StripePaymentSheet
 
+// @iOS26
 class PaymentMethodTypeCollectionViewCellSnapshotTests: STPSnapshotTestCase {
-    
+
     func test_withPromoBadge() {
         let cell = PaymentMethodTypeCollectionView.PaymentTypeCell()
         cell.paymentMethodType = .instantDebits
         cell.promoBadgeText = "$5"
         verify(cell)
     }
-    
+
     func test_withPromoBadge_customAppearance() {
         var appearance = PaymentSheet.Appearance()
         appearance.cornerRadius = 2
         appearance.primaryButton.successTextColor = .black
         appearance.primaryButton.successBackgroundColor = .red
-        
+
         let cell = PaymentMethodTypeCollectionView.PaymentTypeCell()
         cell.paymentMethodType = .instantDebits
         cell.appearance = appearance
         cell.promoBadgeText = "$5"
         verify(cell)
     }
-    
+
     func verify(
         _ cell: UICollectionViewCell,
         identifier: String? = nil,
@@ -53,7 +54,7 @@ private class CellWrapperView: UIView {
         cell.frame = self.bounds
         addSubview(cell)
     }
-    
+
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
