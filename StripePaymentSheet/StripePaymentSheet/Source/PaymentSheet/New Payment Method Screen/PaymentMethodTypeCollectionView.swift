@@ -225,7 +225,7 @@ extension PaymentMethodTypeCollectionView {
                 return ShadowedRoundedRectangle(appearance: appearance)
             }
             #else
-            return ShadowedRoundedRectangle(appearance: appearance)
+                return ShadowedRoundedRectangle(appearance: appearance)
             #endif
         }()
         lazy var paymentMethodLogoWidthConstraint: NSLayoutConstraint = {
