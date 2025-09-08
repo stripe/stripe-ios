@@ -33,6 +33,8 @@ struct RegistrationView: View {
     @State private var showAuthenticatedView: Bool = false
     @State private var registrationCustomerId: String?
     @State private var isRegistrationComplete: Bool = false
+    @State private var showUpdatePhoneNumberSheet: Bool = false
+    @State private var updatePhoneNumberInput: String = ""
 
     @Environment(\.isLoading) private var isLoading
 
@@ -41,7 +43,11 @@ struct RegistrationView: View {
     @FocusState private var isCountryFieldFocused: Bool
 
     private var isRegisterButtonDisabled: Bool {
-        isLoading.wrappedValue || phoneNumber.isEmpty
+        isLoading.wrappedValue || phoneNumber.isEmpty || registrationCustomerId != nil
+    }
+
+    private var isUpdatePhoneNumberButtonDisabled: Bool {
+        !isRegistrationComplete
     }
 
     private var shouldDisableButtons: Bool {
@@ -91,7 +97,7 @@ struct RegistrationView: View {
                 }
 
                 if isRegistrationComplete {
-                    Button("Retry Verification") {
+                    Button("Authenticate") {
                         Task {
                             try await verify()
                         }
@@ -108,6 +114,14 @@ struct RegistrationView: View {
                     .opacity(isRegisterButtonDisabled ? 0.5 : 1)
                 }
 
+                Button("Update Phone Number") {
+                    updatePhoneNumberInput = phoneNumber
+                    showUpdatePhoneNumberSheet = true
+                }
+                .buttonStyle(PrimaryButtonStyle())
+                .disabled(isUpdatePhoneNumberButtonDisabled)
+                .opacity(isUpdatePhoneNumberButtonDisabled ? 0.5 : 1)
+
                 if let errorMessage {
                     ErrorMessageView(message: errorMessage)
                 }
@@ -123,6 +137,17 @@ struct RegistrationView: View {
         }
         .navigationTitle("Registration")
         .navigationBarTitleDisplayMode(.inline)
+        .alert("Update phone number", isPresented: $showUpdatePhoneNumberSheet) {
+            TextField("New phone number", text: $updatePhoneNumberInput)
+                .textContentType(.telephoneNumber)
+                .keyboardType(.phonePad)
+            Button("Submit") {
+                updatePhoneNumber(to: updatePhoneNumberInput)
+            }
+            Button("Cancel", role: .cancel) {
+                updatePhoneNumberInput = ""
+            }
+        }
     }
 
     private func registerUser() {
@@ -138,7 +163,10 @@ struct RegistrationView: View {
                     country: country
                 )
 
-                try await verify()
+                await MainActor.run {
+                    isLoading.wrappedValue = false
+                    isRegistrationComplete = true
+                }
             } catch {
                 await MainActor.run {
                     isLoading.wrappedValue = false
@@ -169,7 +197,6 @@ struct RegistrationView: View {
         if let customerId = await presentAuthorization(laiId: laiId, using: coordinator) {
             await MainActor.run {
                 isLoading.wrappedValue = false
-                isRegistrationComplete = true
                 self.registrationCustomerId = customerId
 
                 // Delay so the navigation link animation doesn't get canceled.
@@ -213,6 +240,25 @@ struct RegistrationView: View {
                 errorMessage = "Unable to find view controller to present from."
             }
             return nil
+        }
+    }
+
+    private func updatePhoneNumber(to phoneNumber: String) {
+        isLoading.wrappedValue = true
+        Task {
+            do {
+                try await coordinator.updatePhoneNumber(to: phoneNumber)
+                await MainActor.run {
+                    isLoading.wrappedValue = false
+                    updatePhoneNumberInput = ""
+                    self.phoneNumber = phoneNumber
+                }
+            } catch {
+                await MainActor.run {
+                    isLoading.wrappedValue = false
+                    errorMessage = "Updating phone number failed: \(error.localizedDescription)"
+                }
+            }
         }
     }
 }
