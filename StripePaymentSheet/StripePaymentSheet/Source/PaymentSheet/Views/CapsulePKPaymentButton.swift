@@ -10,7 +10,7 @@ import PassKit
 
 @_spi(STP) import StripeUICore
 
-// PKPaymentButton does work with the corner configuration API.
+// PKPaymentButton doesn't work with the corner configuration API.
 // Instead, we add a capsule shaped mask to get the correct appearance.
 final class CapsulePKPaymentButton: PKPaymentButton {
     override func layoutSubviews() {
