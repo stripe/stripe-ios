@@ -54,6 +54,10 @@ class BottomSheetViewController: UIViewController, BottomSheetPresentable {
 
     private(set) var contentStack: [BottomSheetContentViewController] = []
 
+    var navigationBarHeight: CGFloat {
+        SheetNavigationBar.height
+    }
+
     /// Content offset of the scroll view as a percentage (0 - 1.0) of the total height.
     var contentOffsetPercentage: CGFloat {
         get {
@@ -372,7 +376,7 @@ class BottomSheetViewController: UIViewController, BottomSheetPresentable {
         self.scrollViewHeightConstraint = scrollViewHeightConstraint
 
         // Move the contentContainerView to start below the sheet
-        let topOffset = LiquidGlassDetector.isEnabled ? SheetNavigationBar.height : 0.0
+        let topOffset = LiquidGlassDetector.isEnabled ? navigationBarHeight : 0.0
 
         NSLayoutConstraint.activate([
             contentContainerView.leadingAnchor.constraint(equalTo: scrollView.contentLayoutGuide.leadingAnchor),
