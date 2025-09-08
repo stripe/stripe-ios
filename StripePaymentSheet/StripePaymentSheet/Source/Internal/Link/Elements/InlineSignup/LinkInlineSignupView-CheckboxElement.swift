@@ -38,12 +38,10 @@ extension LinkInlineSignupView {
         }
 
         private lazy var checkboxButton: CheckboxButton = {
-            // Make the checkbox in Link use background color as it's background instead of componentBackground
             var appearanceCopy = appearance
             if LiquidGlassDetector.isEnabled {
+                // Make the checkbox in Link use the same background color as its container, which is componentBackground
                 appearanceCopy.colors.background = appearance.colors.componentBackground
-            } else {
-                appearanceCopy.colors.componentBackground = appearance.colors.background
             }
             // Force the border to match the passed in borderColor
             appearanceCopy.colors.componentBorder = borderColor
