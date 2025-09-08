@@ -79,9 +79,22 @@ class AutoCompleteViewController: UIViewController {
         tableView.tableFooterView = UIView()
         return tableView
     }()
-    lazy var manualEntryButton: UIButton = {
-        let button = UIButton.makeManualEntryButton(appearance: configuration.appearance)
-        button.addTarget(self, action: #selector(manualEntryButtonTapped), for: .touchUpInside)
+    lazy var manualEntryButton: ConfirmButton = {
+        var manualEntryButtonAppearance = configuration.appearance
+        manualEntryButtonAppearance.primaryButton.backgroundColor = UIColor(dynamicProvider: { traitCollection in
+            if traitCollection.isDarkMode {
+                return manualEntryButtonAppearance.colors.componentBackground
+            }
+
+            return manualEntryButtonAppearance.colors.background.darken(by: 0.07)
+        })
+        let button = ConfirmButton(
+            callToAction: .custom(title: .Localized.enter_address_manually),
+            appearance: manualEntryButtonAppearance
+        ) { [weak self] in
+            self?.manualEntryButtonTapped()
+        }
+
         return button
     }()
     lazy var separatorView: UIView = {
@@ -138,7 +151,19 @@ class AutoCompleteViewController: UIViewController {
         super.viewDidLoad()
         view.backgroundColor = configuration.appearance.colors.background
 
-        let stackView = UIStackView(arrangedSubviews: [formStackView, errorLabel, separatorView, tableView, manualEntryButton])
+        let buttonContainer = UIView()
+          buttonContainer.addSubview(manualEntryButton)
+          manualEntryButton.translatesAutoresizingMaskIntoConstraints = false
+          NSLayoutConstraint.activate([
+              manualEntryButton.leadingAnchor.constraint(equalTo: buttonContainer.leadingAnchor, constant:
+          configuration.appearance.formInsets.leading),
+              manualEntryButton.trailingAnchor.constraint(equalTo: buttonContainer.trailingAnchor, constant:
+          -configuration.appearance.formInsets.trailing),
+              manualEntryButton.topAnchor.constraint(equalTo: buttonContainer.topAnchor),
+              manualEntryButton.bottomAnchor.constraint(equalTo: buttonContainer.bottomAnchor, constant: -8)
+          ])
+
+        let stackView = UIStackView(arrangedSubviews: [formStackView, errorLabel, separatorView, tableView, buttonContainer])
         stackView.spacing = PaymentSheetUI.defaultPadding
         stackView.axis = .vertical
         stackView.setCustomSpacing(24, after: formStackView) // hardcoded from figma value
@@ -155,7 +180,6 @@ class AutoCompleteViewController: UIViewController {
             stackView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
             stackView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
             separatorView.heightAnchor.constraint(equalToConstant: 0.33),
-            manualEntryButton.heightAnchor.constraint(equalToConstant: manualEntryButton.frame.size.height),
         ])
 
     }
