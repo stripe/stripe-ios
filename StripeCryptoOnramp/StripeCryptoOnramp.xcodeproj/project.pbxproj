@@ -373,6 +373,8 @@
 			);
 			name = StripeCryptoOnrampTests;
 			packageProductDependencies = (
+				0B6DF3512E298A6B008B1800 /* OHHTTPStubs */,
+				0B6DF3522E298A6B008B1800 /* OHHTTPStubsSwift */,
 			);
 			productName = StripeCryptoOnrampTests;
 			productReference = 0B4292902E1EC57700012FB8 /* StripeCryptoOnrampTests.xctest */;
@@ -791,6 +793,30 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		4F61305FDEA93605909A59B7 /* XCRemoteSwiftPackageReference "OHHTTPStubs" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/davidme-stripe/OHHTTPStubs";
+			requirement = {
+				branch = "stripe-mock";
+				kind = branch;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		0B6DF3512E298A6B008B1800 /* OHHTTPStubs */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 4F61305FDEA93605909A59B7 /* XCRemoteSwiftPackageReference "OHHTTPStubs" */;
+			productName = OHHTTPStubs;
+		};
+		0B6DF3522E298A6B008B1800 /* OHHTTPStubsSwift */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 4F61305FDEA93605909A59B7 /* XCRemoteSwiftPackageReference "OHHTTPStubs" */;
+			productName = OHHTTPStubsSwift;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 0B42927C2E1EC57600012FB8 /* Project object */;
 }
