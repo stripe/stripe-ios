@@ -81,6 +81,7 @@ class AutoCompleteViewController: UIViewController {
     }()
     lazy var manualEntryButton: ConfirmButton = {
         var manualEntryButtonAppearance = configuration.appearance
+        manualEntryButtonAppearance.primaryButton.textColor = configuration.appearance.colors.primary
         manualEntryButtonAppearance.primaryButton.backgroundColor = UIColor(dynamicProvider: { traitCollection in
             if traitCollection.isDarkMode {
                 return manualEntryButtonAppearance.colors.componentBackground
