@@ -13,12 +13,9 @@ public extension PaymentSheet {
 
     /// Describes the appearance of PaymentSheet
     struct Appearance: Equatable {
-        /// Determines if the iOS 26 Liquid Glass design is allowed. This changes the navigation bar to be glassy and changes the default values of:
-        /// cornerRadius, borderWidth, shadow, sheetCornerRadius, verticalModeRowPadding, and colors.background
-        /// The default value is `true` on >= iOS 26 when compiling with >= Xcode 26
-        /// - Note: This must be set before initializing `PaymentSheet.Appearance`
-        /// - Note: This is ignored on < iOS 26, < Xcode 26, or if the Info.plist UIDesignRequiresCompatibility is true.
-        @_spi(STP) static public var isLiquidGlassAllowed: Bool {
+        /// Determines if the iOS 26 Liquid Glass design is allowed. Use this to opt-out of the iOS 26 Liquid Glass design by
+        /// setting this to false before initializing `PaymentSheet.Appearance`
+        @_spi(STP) public static var isLiquidGlassAllowed: Bool {
             get {
                 return LiquidGlassDetector.isNewDesignAllowed
             }
@@ -27,8 +24,13 @@ public extension PaymentSheet {
             }
         }
 
-        /// Describes if iOS 26 Liquid Glass has been enabled
-        @_spi(STP) public var isLiquidGlassEnabled: Bool {
+        /// Describes if iOS 26 Liquid Glass has been enabled. When enabled, it changes the navigation bar to be glassy and changes:
+        /// the default values of: cornerRadius, borderWidth, shadow, sheetCornerRadius, verticalModeRowPadding, textFieldInsets
+        /// and colors.background
+        /// The default value is `true` on >= iOS 26 when compiling with >= Xcode 26.
+        /// - Note: To opt-out set isLiquidGlassAllowed to `false` before initializing `PaymentSheet.Appearance`
+        /// - Note: This will be false on < iOS 26, < Xcode 26, or if the Info.plist UIDesignRequiresCompatibility is true.
+        @_spi(STP) public static var isLiquidGlassEnabled: Bool {
             return LiquidGlassDetector.isEnabled
         }
 
