@@ -1055,7 +1055,8 @@ extension PlaygroundController {
     func serializeSettingsToNSUserDefaults() {
         // Never save changes for iOS26 since we have to set allowNewDesign based on a flag that isn't ready during boot time.
         var settingsWithoutiOS26 = settings
-        settingsWithoutiOS26.enableIOS26Changes = .off
+        settingsWithoutiOS26.enableLiquidGlass = .off
+        settingsWithoutiOS26.enableLiquidGlassNavigation = .off
 
         let settingsData = try! JSONEncoder().encode(settingsWithoutiOS26)
         UserDefaults.standard.set(settingsData, forKey: PaymentSheetTestPlaygroundSettings.nsUserDefaultsKey)

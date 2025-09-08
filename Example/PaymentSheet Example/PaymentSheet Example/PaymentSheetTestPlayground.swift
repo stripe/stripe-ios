@@ -41,7 +41,8 @@ struct PaymentSheetTestPlayground: View {
                 .autocorrectionDisabled()
                 .textInputAutocapitalization(.never)
         }
-        SettingView(setting: enableIos26Binding)
+        SettingView(setting: enableLiquidGlassBinding)
+        SettingView(setting: enableLiquidGlassNavBinding)
         Group {
             if playgroundController.settings.merchantCountryCode == .US {
                 SettingView(setting: linkEnabledModeBinding)
@@ -310,15 +311,36 @@ struct PaymentSheetTestPlayground: View {
             playgroundController.settings.integrationType = newIntegrationType
         }
     }
-    var enableIos26Binding: Binding<PaymentSheetTestPlaygroundSettings.EnableIOS26Changes> {
-        Binding<PaymentSheetTestPlaygroundSettings.EnableIOS26Changes> {
-            return playgroundController.settings.enableIOS26Changes
+    var enableLiquidGlassBinding: Binding<PaymentSheetTestPlaygroundSettings.EnableLiquidGlass> {
+        Binding<PaymentSheetTestPlaygroundSettings.EnableLiquidGlass> {
+            return playgroundController.settings.enableLiquidGlass
         } set: { newValue in
-            LiquidGlassDetector.allowNewDesign = newValue == .on
+            guard #available(iOS 26.0, *) else {
+                return
+            }
+            LiquidGlassDetector.allowNewDesign = false
             playgroundController.appearance = PaymentSheet.Appearance()
-            playgroundController.settings.enableIOS26Changes = newValue
+            if newValue == .on {
+                playgroundController.appearance.applyLiquidGlass()
+                playgroundController.settings.enableLiquidGlassNavigation = .on
+            }
+            playgroundController.settings.enableLiquidGlass = newValue
         }
     }
+
+    var enableLiquidGlassNavBinding: Binding<PaymentSheetTestPlaygroundSettings.EnableLiquidGlassNavigation> {
+        Binding<PaymentSheetTestPlaygroundSettings.EnableLiquidGlassNavigation> {
+            return playgroundController.settings.enableLiquidGlassNavigation
+        } set: { newValue in
+            guard #available(iOS 26.0, *) else {
+                return
+            }
+            playgroundController.appearance = PaymentSheet.Appearance()
+            playgroundController.appearance.navigationBarStyle = newValue == .on ? .glass : .plain
+            playgroundController.settings.enableLiquidGlassNavigation = newValue
+        }
+    }
+
 }
 
 extension View {

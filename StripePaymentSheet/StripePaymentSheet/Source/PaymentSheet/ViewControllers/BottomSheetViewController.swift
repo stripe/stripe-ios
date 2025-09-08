@@ -55,7 +55,7 @@ class BottomSheetViewController: UIViewController, BottomSheetPresentable {
     private(set) var contentStack: [BottomSheetContentViewController] = []
 
     var navigationBarHeight: CGFloat {
-        SheetNavigationBar.height
+        SheetNavigationBar.height(appearance: appearance)
     }
 
     /// Content offset of the scroll view as a percentage (0 - 1.0) of the total height.
@@ -105,6 +105,13 @@ class BottomSheetViewController: UIViewController, BottomSheetPresentable {
 
     let isTestMode: Bool
     let appearance: PaymentSheet.Appearance
+
+    var isUsingGlassNavBar: Bool {
+        guard #available(iOS 26.0, *) else {
+            return false
+        }
+        return LiquidGlassDetector.canRun && appearance.navigationBarStyle == .glass
+    }
 
     private var contentViewController: BottomSheetContentViewController
 
@@ -342,7 +349,7 @@ class BottomSheetViewController: UIViewController, BottomSheetPresentable {
             bottomAnchor,
         ])
 
-        if LiquidGlassDetector.isEnabled {
+        if isUsingGlassNavBar {
             NSLayoutConstraint.activate([
                 // Allow scroll view to extend under the navigation bar for blur effect
                 scrollView.topAnchor.constraint(equalTo: view.topAnchor),
@@ -355,7 +362,7 @@ class BottomSheetViewController: UIViewController, BottomSheetPresentable {
         #if compiler(>=6.2)
         // Allow content that is scrolled under the navigation bar to be blurred
         if #available(iOS 26.0, *),
-           LiquidGlassDetector.isEnabled {
+           isUsingGlassNavBar {
             let interaction = UIScrollEdgeElementContainerInteraction()
             interaction.scrollView = scrollView
             interaction.edge = .top
@@ -376,7 +383,7 @@ class BottomSheetViewController: UIViewController, BottomSheetPresentable {
         self.scrollViewHeightConstraint = scrollViewHeightConstraint
 
         // Move the contentContainerView to start below the sheet
-        let topOffset = LiquidGlassDetector.isEnabled ? navigationBarHeight : 0.0
+        let topOffset = isUsingGlassNavBar ? navigationBarHeight : 0.0
 
         NSLayoutConstraint.activate([
             contentContainerView.leadingAnchor.constraint(equalTo: scrollView.contentLayoutGuide.leadingAnchor),

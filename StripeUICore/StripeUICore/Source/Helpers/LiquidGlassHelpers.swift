@@ -39,7 +39,6 @@ import UIKit
 #endif
         return false
     }
-
 }
 
 // MARK: - UIView Liquid Glass helpers
@@ -66,7 +65,6 @@ import UIKit
 // MARK: - Button Liquid Glass helpers
 @_spi(STP) extension UIButton {
     @_spi(STP) public func ios26_applyGlassConfiguration() {
-        stpAssert(LiquidGlassDetector.isEnabled)
 #if compiler(>=6.2)
         if #available(iOS 26.0, *) {
             configuration = .glass()
