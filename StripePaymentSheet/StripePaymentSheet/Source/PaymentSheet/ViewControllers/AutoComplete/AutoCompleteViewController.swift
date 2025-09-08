@@ -160,7 +160,7 @@ class AutoCompleteViewController: UIViewController {
               manualEntryButton.trailingAnchor.constraint(equalTo: buttonContainer.trailingAnchor, constant:
           -configuration.appearance.formInsets.trailing),
               manualEntryButton.topAnchor.constraint(equalTo: buttonContainer.topAnchor),
-              manualEntryButton.bottomAnchor.constraint(equalTo: buttonContainer.bottomAnchor, constant: -8)
+              manualEntryButton.bottomAnchor.constraint(equalTo: buttonContainer.bottomAnchor, constant: -8),
           ])
 
         let stackView = UIStackView(arrangedSubviews: [formStackView, errorLabel, separatorView, tableView, buttonContainer])
