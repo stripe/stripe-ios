@@ -84,7 +84,8 @@ struct CryptoOnrampExampleView: View {
                             destination: RegistrationView(
                                 coordinator: coordinator,
                                 email: email,
-                                selectedScopes: Array(selectedScopes)
+                                selectedScopes: Array(selectedScopes),
+                                livemode: livemode
                             ),
                             isActive: $showRegistration
                         )
@@ -163,7 +164,11 @@ struct CryptoOnrampExampleView: View {
                 let laiId: String?
                 if lookupResult {
                     // Get Link Auth Intent ID from the demo merchant backend.
-                    let response = try await APIClient.shared.authenticateUser(with: email, oauthScopes: Array(selectedScopes))
+                    let response = try await APIClient.shared.authenticateUser(
+                        with: email,
+                        oauthScopes: Array(selectedScopes),
+                        livemode: livemode
+                    )
                     laiId = response.data.id
                     print( "Successfully got Link Auth Intent ID from demo backend. Id: \(laiId!)")
                 } else {

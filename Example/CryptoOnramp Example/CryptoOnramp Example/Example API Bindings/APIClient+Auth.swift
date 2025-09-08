@@ -10,12 +10,17 @@ import Foundation
 extension APIClient {
     func authenticateUser(
         with email: String,
-        oauthScopes: [OAuthScopes] = OAuthScopes.onrampScope
+        oauthScopes: [OAuthScopes] = OAuthScopes.onrampScope,
+        livemode: Bool
     ) async throws -> AuthenticateUserResponse {
         let response: AuthenticateUserResponse = try await request(
             "auth_intent/create",
             method: .POST,
-            body: AuthenticateUserRequest(email: email, oauthScopes: oauthScopes)
+            body: AuthenticateUserRequest(
+                email: email,
+                oauthScopes: oauthScopes,
+                livemode: livemode
+            )
         )
         setAuthToken(response.token)
         return response
