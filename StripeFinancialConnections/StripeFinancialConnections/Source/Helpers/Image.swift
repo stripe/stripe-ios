@@ -35,17 +35,17 @@ enum Image: String, ImageMaker {
 
 extension UIImage {
     func applyFinancialConnectionsBackButtonEdgeInsets() -> UIImage {
-        if #unavailable(iOS 26.0) {
-            return withAlignmentRectInsets(UIEdgeInsets(top: 0, left: -13, bottom: -2, right: 0))
-        } else {
+        if FinancialConnectionsLiquidGlassDetector.isEnabled {
             return self
+        } else {
+            return withAlignmentRectInsets(UIEdgeInsets(top: 0, left: -13, bottom: -2, right: 0))
         }
     }
 }
 
 extension UIBarButtonItem {
     func applyFinancialConnectionsCloseButtonEdgeInsets() {
-        if #unavailable(iOS 26.0) {
+        if !FinancialConnectionsLiquidGlassDetector.isEnabled {
             imageInsets = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 5)
         }
     }
