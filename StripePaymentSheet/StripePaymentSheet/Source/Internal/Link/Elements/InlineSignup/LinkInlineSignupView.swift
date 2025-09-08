@@ -30,6 +30,7 @@ final class LinkInlineSignupView: UIView {
         var themeCopy = theme
         themeCopy.borderWidth = viewModel.combinedEmailNameSectionBorderWidth
         if LiquidGlassDetector.isEnabled && viewModel.mode == .checkbox {
+            // TODO: This doesn't have any impact yet; waiting for another pull request to be merged first
             // Use a smaller corner radius than the container
             themeCopy.cornerRadius = LinkUI.nestedInlineSignupSectionCornerRadius
         }
@@ -121,7 +122,6 @@ final class LinkInlineSignupView: UIView {
     private lazy var combinedEmailNameSection: Element = {
         return SectionElement(
             elements: combinedEmailNameSectionElements,
-            allowLiquidGlassCornerRadius: viewModel.mode != .checkbox,
             theme: combinedEmailNameSectionTheme
         )
     }()

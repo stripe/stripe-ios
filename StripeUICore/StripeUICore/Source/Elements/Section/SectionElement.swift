@@ -20,7 +20,6 @@ import UIKit
         return SectionView(viewModel: viewModel)
     }()
     private let selectionBehavior: SelectionBehavior
-    private let allowLiquidGlassCornerRadius: Bool
     var isViewInitialized: Bool = false
     var errorText: String? {
         // Find the first element that's 1. invalid and 2. has a displayable error
@@ -38,7 +37,6 @@ import UIKit
             errorText: errorText,
             subLabel: subLabel,
             selectionBehavior: selectionBehavior,
-            allowLiquidGlassCornerRadius: allowLiquidGlassCornerRadius,
             theme: theme
         )
     }
@@ -69,7 +67,6 @@ import UIKit
         let errorText: String?
         var subLabel: String?
         let selectionBehavior: SelectionBehavior
-        let allowLiquidGlassCornerRadius: Bool
         let theme: ElementsAppearance
     }
 
@@ -79,13 +76,11 @@ import UIKit
         title: String? = nil,
         elements: [Element],
         selectionBehavior: SelectionBehavior = .default,
-        allowLiquidGlassCornerRadius: Bool = true,
         theme: ElementsAppearance = .default
     ) {
         self.title = title
         self.elements = elements
         self.selectionBehavior = selectionBehavior
-        self.allowLiquidGlassCornerRadius = allowLiquidGlassCornerRadius
         self.theme = theme
         elements.forEach {
             $0.delegate = self

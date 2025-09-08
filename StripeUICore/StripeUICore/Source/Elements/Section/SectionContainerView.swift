@@ -32,13 +32,12 @@ class SectionContainerView: UIView {
     }()
 
     lazy var stackView: StackViewWithSeparator = {
-        let view = buildStackView(views: views, allowLiquidGlassCornerRadius: allowLiquidGlassCornerRadius, theme: theme)
+        let view = buildStackView(views: views, theme: theme)
         return view
     }()
 
     /// The list of views to display in a vertical stack
     private(set) var views: [UIView]
-    private let allowLiquidGlassCornerRadius: Bool
     private let theme: ElementsAppearance
 
     // MARK: - Initializers
@@ -46,13 +45,8 @@ class SectionContainerView: UIView {
     /**
      - Parameter views: A list of views to display in a row. To display multiple elements in a single row, put them inside a `MultiElementRowView`.
      */
-    init(
-        views: [UIView],
-        allowLiquidGlassCornerRadius: Bool = true,
-        theme: ElementsAppearance = .default
-    ) {
+    init(views: [UIView], theme: ElementsAppearance = .default) {
         self.views = views
-        self.allowLiquidGlassCornerRadius = allowLiquidGlassCornerRadius
         self.theme = theme
         super.init(frame: .zero)
         addAndPinSubview(bottomPinningContainerView)
@@ -179,7 +173,7 @@ class SectionContainerView: UIView {
             return nil
         }()
 
-        let newStack = buildStackView(views: newStackViews, allowLiquidGlassCornerRadius: allowLiquidGlassCornerRadius, theme: theme)
+        let newStack = buildStackView(views: newStackViews, theme: theme)
         newStack.arrangedSubviews.forEach { $0.alpha = 0 }
         bottomPinningContainerView.addPinnedSubview(newStack)
         bottomPinningContainerView.layoutIfNeeded()
@@ -245,7 +239,7 @@ extension SectionContainerView {
         init(views: [UIView], theme: ElementsAppearance = .default) {
             self.views = views
             super.init(frame: .zero)
-            let stackView = buildStackView(views: views, allowLiquidGlassCornerRadius: true, theme: theme)
+            let stackView = buildStackView(views: views, theme: theme)
             stackView.axis = .horizontal
             stackView.drawBorder = false
             stackView.distribution = .fillEqually
@@ -259,11 +253,7 @@ extension SectionContainerView {
 
 /// Builds the primary stack view that contains all others.
 /// ⚠️ Don't modify stackView properties outside of this or it won't carry over when we call `buildStackView` again in `updateUI`
-private func buildStackView(
-    views: [UIView],
-    allowLiquidGlassCornerRadius: Bool,
-    theme: ElementsAppearance = .default
-) -> StackViewWithSeparator {
+private func buildStackView(views: [UIView], theme: ElementsAppearance = .default) -> StackViewWithSeparator {
     let stackView = StackViewWithSeparator(arrangedSubviews: views)
     stackView.axis = .vertical
     stackView.spacing = theme.separatorWidth
@@ -273,7 +263,7 @@ private func buildStackView(
     stackView.customBackgroundColor = theme.colors.componentBackground
     stackView.drawBorder = true
     stackView.hideShadow = true // Shadow is handled by `SectionContainerView`
-    if LiquidGlassDetector.isEnabled, allowLiquidGlassCornerRadius {
+    if LiquidGlassDetector.isEnabled {
         stackView.ios26_applyCapsuleCornerConfiguration()
         stackView.isLayoutMarginsRelativeArrangement = true
         stackView.directionalLayoutMargins = .insets(amount: 4)
@@ -281,7 +271,7 @@ private func buildStackView(
         stackView.borderCornerRadius = theme.cornerRadius
     }
     // Set up corner radius / corner configuration
-    if LiquidGlassDetector.isEnabled, allowLiquidGlassCornerRadius {
+    if LiquidGlassDetector.isEnabled {
         if views.count == 1 {
             stackView.backgroundView.ios26_applyCapsuleCornerConfiguration()
         } else {
