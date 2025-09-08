@@ -82,7 +82,7 @@ final class FinancialConnectionsWebFlowViewController: UIViewController {
             action: #selector(didTapClose)
         )
         item.tintColor = FinancialConnectionsAppearance.Colors.icon
-        item.imageInsets = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 5)
+        item.applyFinancialConnectionsCloseButtonEdgeInsets()
         return item
     }()
 
