@@ -253,7 +253,7 @@ private func buildStackView(views: [UIView], theme: ElementsAppearance = .defaul
     }
     // Prevent subviews (specifically, TextFieldView's `transparentMaskView`) from extending outside the corners:
     stackView.clipsToBounds = true
-    // Note that stackview's subviews are not subviews of the `backgroundView`, so we have to round the stackview's corners too :(
+    // Note that StackViewWithSeparator's subviews are not subviews of the `backgroundView`, so we have to round the stackview's corners too :(
     if LiquidGlassDetector.isEnabled {
         stackView.ios26_applyDefaultCornerConfiguration()
     } else {
