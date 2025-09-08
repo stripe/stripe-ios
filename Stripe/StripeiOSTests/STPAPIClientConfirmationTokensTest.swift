@@ -49,8 +49,16 @@ class STPAPIClientConfirmationTokensTest: STPNetworkStubbingTestCase {
         // Verify the response
         XCTAssertNotNil(confirmationToken)
         XCTAssertFalse(confirmationToken.stripeId.isEmpty)
-        XCTAssertEqual(confirmationToken.object, "confirmation_token")
+        XCTAssertTrue(confirmationToken.stripeId.hasPrefix("ctoken_"))
         XCTAssertNotNil(confirmationToken.allResponseFields)
+        XCTAssertNotNil(confirmationToken.created)
+
+        // Verify payment method preview is populated for new payment method data
+        XCTAssertNotNil(confirmationToken.paymentMethodPreview)
+        XCTAssertEqual(confirmationToken.paymentMethodPreview?.type, .card)
+        XCTAssertNotNil(confirmationToken.paymentMethodPreview?.card)
+        XCTAssertEqual(confirmationToken.paymentMethodPreview?.card?.last4, "4242")
+        XCTAssertEqual(confirmationToken.paymentMethodPreview?.card?.brand, .visa)
     }
 
     func testCreateConfirmationTokenWithExistingPaymentMethod() async throws {
@@ -81,8 +89,10 @@ class STPAPIClientConfirmationTokensTest: STPNetworkStubbingTestCase {
         // Verify the response
         XCTAssertNotNil(confirmationToken)
         XCTAssertFalse(confirmationToken.stripeId.isEmpty)
-        XCTAssertEqual(confirmationToken.object, "confirmation_token")
+        XCTAssertTrue(confirmationToken.stripeId.hasPrefix("ctoken_"))
         XCTAssertNotNil(confirmationToken.allResponseFields)
+        XCTAssertNotNil(confirmationToken.created)
+        XCTAssertEqual(confirmationToken.returnURL, "https://example.com/return")
     }
 
     func testCreateConfirmationTokenWithShippingAndMandateData() async throws {
@@ -130,8 +140,22 @@ class STPAPIClientConfirmationTokensTest: STPNetworkStubbingTestCase {
         // Verify the response
         XCTAssertNotNil(confirmationToken)
         XCTAssertFalse(confirmationToken.stripeId.isEmpty)
-        XCTAssertEqual(confirmationToken.object, "confirmation_token")
+        XCTAssertTrue(confirmationToken.stripeId.hasPrefix("ctoken_"))
         XCTAssertNotNil(confirmationToken.allResponseFields)
+        XCTAssertNotNil(confirmationToken.created)
+        XCTAssertEqual(confirmationToken.returnURL, "https://example.com/return")
+        XCTAssertEqual(confirmationToken.setupFutureUsage, .offSession)
+
+        // Verify shipping details are present
+        XCTAssertNotNil(confirmationToken.shipping)
+        XCTAssertEqual(confirmationToken.shipping?.name, "Test Customer")
+        XCTAssertEqual(confirmationToken.shipping?.address?.line1, "123 Main St")
+        XCTAssertEqual(confirmationToken.shipping?.address?.city, "San Francisco")
+
+        // Verify payment method preview for SEPA
+        XCTAssertNotNil(confirmationToken.paymentMethodPreview)
+        XCTAssertEqual(confirmationToken.paymentMethodPreview?.type, .SEPADebit)
+        XCTAssertNotNil(confirmationToken.paymentMethodPreview?.sepaDebit)
     }
 
     func testCreateConfirmationTokenWithAttachedPaymentMethod() async throws {
@@ -205,8 +229,10 @@ class STPAPIClientConfirmationTokensTest: STPNetworkStubbingTestCase {
         // Verify the response
         XCTAssertNotNil(confirmationToken)
         XCTAssertFalse(confirmationToken.stripeId.isEmpty)
-        XCTAssertEqual(confirmationToken.object, "confirmation_token")
+        XCTAssertTrue(confirmationToken.stripeId.hasPrefix("ctoken_"))
         XCTAssertNotNil(confirmationToken.allResponseFields)
+        XCTAssertNotNil(confirmationToken.created)
+        XCTAssertEqual(confirmationToken.setupFutureUsage, .offSession)
 
         // Clean up: detach the payment method from the customer
         try await apiClient.detachPaymentMethod(
@@ -245,8 +271,11 @@ class STPAPIClientConfirmationTokensTest: STPNetworkStubbingTestCase {
         // Verify the response
         XCTAssertNotNil(confirmationToken)
         XCTAssertFalse(confirmationToken.stripeId.isEmpty)
-        XCTAssertEqual(confirmationToken.object, "confirmation_token")
+        XCTAssertTrue(confirmationToken.stripeId.hasPrefix("ctoken_"))
         XCTAssertNotNil(confirmationToken.allResponseFields)
+        XCTAssertNotNil(confirmationToken.created)
+        XCTAssertEqual(confirmationToken.setupFutureUsage, .offSession)
+        XCTAssertEqual(confirmationToken.returnURL, "https://example.com/return")
 
         // Verify the setAsDefaultPM parameter was encoded correctly
         let encoded = STPFormEncoder.dictionary(forObject: confirmationTokenParams)

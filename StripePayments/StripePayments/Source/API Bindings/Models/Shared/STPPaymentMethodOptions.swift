@@ -8,10 +8,10 @@
 
 import UIKit
 
-@_spi(STP) public class STPPaymentMethodOptions: NSObject, STPAPIResponseDecodable {
+@_spi(ConfirmationTokensPublicPreview) public class STPPaymentMethodOptions: NSObject, STPAPIResponseDecodable {
 
     @_spi(STP) public let usBankAccount: USBankAccount?
-    @_spi(STP) public let card: Card?
+    @_spi(ConfirmationTokensPublicPreview) public let card: Card?
     @_spi(STP) public let allResponseFields: [AnyHashable: Any]
 
     @_spi(STP) public init(
@@ -60,10 +60,10 @@ import UIKit
 // MARK: - card
 
 extension STPPaymentMethodOptions {
-    @_spi(STP) public class Card: NSObject, STPAPIResponseDecodable {
+    @_spi(ConfirmationTokensPublicPreview) public class Card: NSObject, STPAPIResponseDecodable {
 
         @_spi(STP) public let requireCvcRecollection: Bool?
-        @_spi(STP) public let cvcToken: String?
+        @_spi(ConfirmationTokensPublicPreview) public let cvcToken: String?
         @_spi(STP) public let allResponseFields: [AnyHashable: Any]
 
         @_spi(STP) public init(

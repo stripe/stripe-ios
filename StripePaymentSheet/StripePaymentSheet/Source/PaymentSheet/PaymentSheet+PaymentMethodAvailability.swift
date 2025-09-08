@@ -8,7 +8,7 @@
 
 import Foundation
 @_spi(STP) import StripeCore
-@_spi(STP) import StripePayments
+@_spi(STP)  @_spi(ConfirmationTokensPublicPreview) import StripePayments
 @_spi(STP) import StripePaymentsUI
 
 extension PaymentSheet {
