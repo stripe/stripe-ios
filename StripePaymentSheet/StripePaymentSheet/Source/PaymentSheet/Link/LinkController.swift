@@ -497,7 +497,6 @@ import UIKit
     }
 
     /// Logs out the current Link user, if any.
-    /// Throws if an API error occurs.
     @_spi(STP) public func logOut(completion: @escaping (Result<Void, Error>) -> Void) {
         func clearLinkAccountContextAndComplete() {
             LinkAccountContext.shared.account = nil
@@ -513,7 +512,7 @@ import UIKit
         session.logout(
             consumerAccountPublishableKey: publishableKey,
             requestSurface: requestSurface,
-            completion: { [] result in
+            completion: { result in
                 switch result {
                 case .success:
                     clearLinkAccountContextAndComplete()
