@@ -218,9 +218,9 @@ extension PaymentMethodTypeCollectionView {
         }()
 
         // Store liquidGlassRectangle and shadowedRoundedRectangle separately because
-        // instances of PaymentTypeCell can stick around when turning on/off Appearance.liquidGlassDesignEnabled
-        // To repro issue: Launch PS with Appearance.liquidGlassDesignEnabled == true, then launch with
-        //                 Appearance.liquidGlassDesignEnabled == false
+        // instances of PaymentTypeCell can stick around when turning on/off Appearance.isLiquidGlassAllowed
+        // To repro issue: Launch PS with Appearance.isLiquidGlassAllowed == true, then launch with
+        //                 Appearance.isLiquidGlassAllowed == false
         private lazy var _liquidGlassRectangle: SelectableRectangle = {
             #if !os(visionOS)
             if #available(iOS 26.0, *) {

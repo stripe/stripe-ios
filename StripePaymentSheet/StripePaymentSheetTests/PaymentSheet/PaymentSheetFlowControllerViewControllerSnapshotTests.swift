@@ -17,9 +17,9 @@ final class PaymentSheetFlowControllerViewControllerSnapshotTests: STPSnapshotTe
     override func setUp() {
         super.setUp()
         if #available(iOS 26.0, *) {
-            PaymentSheet.Appearance.liquidGlassDesignEnabled = true
+            PaymentSheet.Appearance.isLiquidGlassAllowed = true
         } else {
-            PaymentSheet.Appearance.liquidGlassDesignEnabled = false
+            PaymentSheet.Appearance.isLiquidGlassAllowed = false
         }
     }
     func makeTestLoadResult(savedPaymentMethods: [STPPaymentMethod]) -> PaymentSheetLoader.LoadResult {

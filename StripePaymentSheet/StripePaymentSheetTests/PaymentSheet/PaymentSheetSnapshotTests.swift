@@ -35,9 +35,9 @@ class PaymentSheetSnapshotTests: STPSnapshotTestCase {
 //        recordMode = true
 
         if #available(iOS 26.0, *) {
-            PaymentSheet.Appearance.liquidGlassDesignEnabled = true
+            PaymentSheet.Appearance.isLiquidGlassAllowed = true
         } else {
-            PaymentSheet.Appearance.liquidGlassDesignEnabled = false
+            PaymentSheet.Appearance.isLiquidGlassAllowed = false
         }
 
         configuration = PaymentSheet.Configuration()
