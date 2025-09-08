@@ -111,4 +111,68 @@ final class SavedPaymentOptionsViewControllerSnapshotTests: STPSnapshotTestCase 
             "email": "sam@stripe.com",
         ] as [String: Any],
     ] as [AnyHashable: Any]
+
+    func test_cvc_recollection() {
+        _test_cvc_recollection(darkMode: false)
+    }
+
+    func test_cvc_recollection_dark() {
+        _test_cvc_recollection(darkMode: true)
+    }
+
+    func _test_cvc_recollection(darkMode: Bool) {
+        let paymentMethods = [
+            STPPaymentMethod._testCard(),
+            STPPaymentMethod._testUSBankAccount(),
+        ]
+        let config = SavedPaymentOptionsViewController.Configuration(
+            customerID: "cus_123",
+            showApplePay: false,
+            showLink: false,
+            removeSavedPaymentMethodMessage: nil,
+            merchantDisplayName: "Test Merchant",
+            isCVCRecollectionEnabled: true,
+            isTestMode: false,
+            allowsRemovalOfLastSavedPaymentMethod: false,
+            allowsRemovalOfPaymentMethods: true,
+            allowsSetAsDefaultPM: false,
+            allowsUpdatePaymentMethod: false
+        )
+        let intent = Intent.deferredIntent(intentConfig: .init(mode: .payment(amount: 0, currency: "USD", setupFutureUsage: nil, captureMethod: .automatic), confirmHandler: { _, _, _ in }))
+        let sut = SavedPaymentOptionsViewController(
+            savedPaymentMethods: paymentMethods,
+            configuration: config,
+            paymentSheetConfiguration: PaymentSheet.Configuration(),
+            intent: intent,
+            appearance: .default,
+            elementsSession: .emptyElementsSession,
+            analyticsHelper: ._testValue()
+        )
+        sut.view.backgroundColor = PaymentSheet.Configuration().appearance.colors.background
+        let testWindow = UIWindow()
+        testWindow.isHidden = false
+        if darkMode {
+            testWindow.overrideUserInterfaceStyle = .dark
+        }
+        testWindow.rootViewController = sut
+        testWindow.addSubview(sut.view)
+
+        sut.viewDidLoad()
+        sut.viewWillAppear(false)
+        sut.viewDidAppear(false)
+
+        sut.view.autosizeHeight(width: 1000)
+        NSLayoutConstraint.activate([
+            sut.view.topAnchor.constraint(equalTo: testWindow.topAnchor),
+            sut.view.leftAnchor.constraint(equalTo: testWindow.leftAnchor),
+        ])
+
+        let expectation = XCTestExpectation(description: "Wait for CVC recollection display")
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
+            expectation.fulfill()
+        }
+        wait(for: [expectation], timeout: 1.0)
+
+        STPSnapshotVerifyView(sut.view)
+    }
 }
