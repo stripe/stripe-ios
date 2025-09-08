@@ -67,39 +67,6 @@ class SectionContainerView: UIView {
 
     override func layoutSubviews() {
         super.layoutSubviews()
-        // Set up each subviews border corners
-        // Do this in layoutSubviews to update when views appear or disappear
-        let visibleRows = stackView.arrangedSubviews.filter { !$0.isHidden }
-        // 1. Reset all border corners to respect `appearance.cornerRadius` but be hidden
-        for row in visibleRows {
-            // Pull out any Element views nested inside a MultiElementRowView
-            for view in (row as? MultiElementRowView)?.views ?? [row] {
-                if LiquidGlassDetector.isEnabled {
-                    view.ios26_applyCapsuleCornerConfiguration()
-                } else {
-                    view.layer.cornerRadius = theme.cornerRadius
-                }
-                view.layer.maskedCorners = []
-                view.layer.shadowOpacity = 0.0
-                view.layer.borderWidth = 0
-                view.layer.masksToBounds = true
-            }
-        }
-
-        // 2. Un-hide the top-most view's top corners
-        if let multiElementRowView = visibleRows.first as? MultiElementRowView {
-            multiElementRowView.views.first?.layer.maskedCorners.insert([.layerMinXMinYCorner])
-            multiElementRowView.views.last?.layer.maskedCorners.insert([.layerMaxXMinYCorner])
-        } else {
-            visibleRows.first?.layer.maskedCorners.insert([.layerMinXMinYCorner, .layerMaxXMinYCorner])
-        }
-        // 3. Un-hide the bottom-most view's bottom corners
-        if let multiElementRowView = visibleRows.last as? MultiElementRowView {
-            multiElementRowView.views.first?.layer.maskedCorners.insert([.layerMinXMaxYCorner])
-            multiElementRowView.views.last?.layer.maskedCorners.insert([.layerMaxXMaxYCorner])
-        } else {
-            visibleRows.last?.layer.maskedCorners.insert([.layerMaxXMaxYCorner, .layerMinXMaxYCorner])
-        }
 
         // Improve shadow performance
         layer.shadowPath = CGPath(
@@ -131,6 +98,7 @@ class SectionContainerView: UIView {
     // MARK: - Internal methods
     func updateUI(newViews: [UIView]? = nil) {
         layer.applyShadow(shadow: theme.shadow)
+        // We apply corner radius here so that our shadow uses it too.
         if LiquidGlassDetector.isEnabled {
             ios26_applyDefaultCornerConfiguration()
         } else {
@@ -234,16 +202,30 @@ extension SectionContainerView: EventHandler {
 
 extension SectionContainerView {
     class MultiElementRowView: UIView {
-        let views: [UIView]
-
         init(views: [UIView], theme: ElementsAppearance = .default) {
-            self.views = views
             super.init(frame: .zero)
-            let stackView = buildStackView(views: views, theme: theme)
+
+            // Add dividers between the views
+            func createDivider() -> UIView {
+                let divider = UIView.makeSpacerView(width: theme.separatorWidth)
+                divider.backgroundColor = theme.colors.divider
+                divider.translatesAutoresizingMaskIntoConstraints = false
+                return divider
+            }
+            let viewsWithDividersBetweenEach = views.enumerated().flatMap { index, view in
+                index == views.count - 1 ? [view] : [view, createDivider()]
+            }
+
+            // Make the stackview
+            let stackView = UIStackView(arrangedSubviews: viewsWithDividersBetweenEach)
             stackView.axis = .horizontal
-            stackView.drawBorder = false
-            stackView.distribution = .fillEqually
+            stackView.distribution = .fill
             addAndPinSubview(stackView)
+
+            // Make all views equal width
+            for i in 1..<views.count {
+                views[i].widthAnchor.constraint(equalTo: views[0].widthAnchor).isActive = true
+            }
         }
         required init?(coder: NSCoder) { fatalError("init(coder:) has not been implemented") }
     }
@@ -264,22 +246,18 @@ private func buildStackView(views: [UIView], theme: ElementsAppearance = .defaul
     stackView.drawBorder = true
     stackView.hideShadow = true // Shadow is handled by `SectionContainerView`
     if LiquidGlassDetector.isEnabled {
-        stackView.ios26_applyCapsuleCornerConfiguration()
-        stackView.isLayoutMarginsRelativeArrangement = true
-        stackView.directionalLayoutMargins = .insets(amount: 4)
+        // Since StackViewWithSeparator draws its own borders on its `backgroundView`, we must apply the corner radius to the background view.
+        stackView.backgroundView.ios26_applyDefaultCornerConfiguration()
     } else {
         stackView.borderCornerRadius = theme.cornerRadius
     }
-    // Set up corner radius / corner configuration
+    // Prevent subviews (specifically, TextFieldView's `transparentMaskView`) from extending outside the corners:
+    stackView.clipsToBounds = true
+    // Note that StackViewWithSeparator's subviews are not subviews of the `backgroundView`, so we have to round the stackview's corners too :(
     if LiquidGlassDetector.isEnabled {
-        if views.count == 1 {
-            stackView.backgroundView.ios26_applyCapsuleCornerConfiguration()
-        } else {
-            stackView.backgroundView.ios26_applyDefaultCornerConfiguration()
-        }
+        stackView.ios26_applyDefaultCornerConfiguration()
     } else {
-        stackView.borderCornerRadius = theme.cornerRadius
+        stackView.layer.cornerRadius = theme.cornerRadius
     }
-
     return stackView
 }

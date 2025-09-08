@@ -63,7 +63,11 @@ extension PaymentSheetViewController {
 
         private lazy var payWithLinkButton: PayWithLinkButton = {
             let button = PayWithLinkButton()
-            button.cornerRadius = appearance.cornerRadius
+            if LiquidGlassDetector.isEnabled {
+                button.ios26_applyCapsuleCornerConfiguration()
+            } else {
+                button.cornerRadius = appearance.cornerRadius
+            }
             button.accessibilityIdentifier = "pay_with_link_button"
             button.addTarget(self, action: #selector(handleTapPayWithLink), for: .touchUpInside)
             return button
@@ -153,17 +157,19 @@ extension PaymentSheetViewController {
             addAndPinSubview(stackView)
         }
 
-        private func buildApplePayButton() -> PKPaymentButton {
+        private func buildApplePayButton() -> UIView {
             let buttonStyle: PKPaymentButtonStyle = appearance.colors.background.contrastingColor == .black ? .black : .white
             let button = PKPaymentButton(paymentButtonType: applePayButtonType, paymentButtonStyle: buttonStyle)
+            // The corner configuration API that powers ios26_applyCapsuleCornerConfiguration doesn't work on PKPaymentButton
+            // Instead, we set the cornerRadius directly
+            // TODO(gbirch): align Apple Pay button liquid glass styling with other elements
+            button.cornerRadius = LiquidGlassDetector.isEnabled ? 34 : appearance.cornerRadius
             button.accessibilityIdentifier = "apple_pay_button"
             button.addTarget(self, action: #selector(handleTapApplePay), for: .touchUpInside)
 
             NSLayoutConstraint.activate([
                 button.heightAnchor.constraint(equalToConstant: Constants.applePayButtonHeight)
             ])
-
-            button.cornerRadius = appearance.cornerRadius
 
             return button
         }
