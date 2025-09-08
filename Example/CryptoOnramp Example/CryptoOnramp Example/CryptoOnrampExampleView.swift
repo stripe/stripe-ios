@@ -24,6 +24,7 @@ struct CryptoOnrampExampleView: View {
     @State private var showAuthenticatedView: Bool = false
     @State private var authenticationCustomerId: String?
     @State private var linkAuthIntentId: String?
+    @State private var livemode: Bool = false
 
     @Environment(\.isLoading) private var isLoading
     @FocusState private var isEmailFieldFocused: Bool
@@ -52,6 +53,9 @@ struct CryptoOnrampExampleView: View {
                                 }
                             }
                     }
+
+                    Toggle("Livemode", isOn: $livemode)
+                        .font(.headline)
 
                     OAuthScopeSelector(
                         selectedScopes: $selectedScopes,
@@ -108,10 +112,17 @@ struct CryptoOnrampExampleView: View {
             }
             initializeCoordinator()
         }
+        .onChange(of: livemode) { _ in
+            coordinator = nil
+            authenticationCustomerId = nil
+            linkAuthIntentId = nil
+            errorMessage = nil
+            initializeCoordinator()
+        }
     }
 
     private func initializeCoordinator() {
-        STPAPIClient.shared.setUpPublishableKey()
+        STPAPIClient.shared.setUpPublishableKey(livemode: livemode)
 
         isLoading.wrappedValue = true
         Task {
