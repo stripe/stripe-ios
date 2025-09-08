@@ -19,6 +19,7 @@ import Foundation
 
     case paymentMethodCreation = "stripeios.payment_method_creation"
     case paymentMethodUpdate = "stripeios.payment_method_update"
+    case confirmationTokenCreation = "stripeios.confirmation_token_creation"
     case paymentMethodIntentCreation = "stripeios.payment_intent_confirmation"
     case setupIntentConfirmationAttempt = "stripeios.setup_intent_confirmation"
 
@@ -303,7 +304,8 @@ import Foundation
 
     // MARK: - Captcha
     case passiveCaptchaInit = "elements.captcha.passive.init"
+    case passiveCaptchaExecute = "elements.captcha.passive.execute"
     case passiveCaptchaSuccess = "elements.captcha.passive.success"
     case passiveCaptchaError = "elements.captcha.passive.error"
-    case passiveCaptchaTimeout = "elements.captcha.passive.timeout"
+    case passiveCaptchaAttach = "elements.captcha.passive.attach"
 }

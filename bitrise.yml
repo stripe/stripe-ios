@@ -337,6 +337,11 @@ workflows:
         machine_type_id: g2.mac.large
   framework-tests-ios-26:
     steps:
+    - script@1:
+        inputs:
+        - content: |
+            ruby ci_scripts/generate_ios26_testplan.rb
+        title: Generate iOS 26 test plan
     - xcode-test@4:
         inputs:
         - destination: $DEFAULT_TEST_DEVICE_26_0

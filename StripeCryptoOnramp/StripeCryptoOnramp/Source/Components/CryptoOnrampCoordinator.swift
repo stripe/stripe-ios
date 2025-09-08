@@ -50,6 +50,12 @@ protocol CryptoOnrampCoordinatorProtocol {
         country: String
     ) async throws -> String
 
+    /// Updates the phone number for the current Link user.
+    ///
+    /// - Parameter phoneNumber: The phone number of the user. Phone number must be in E.164 format (e.g., +12125551234).
+    /// Throws if an authenticated Link user is not available, phone number format is invalid, or an API error occurs.
+    func updatePhoneNumber(to phoneNumber: String) async throws
+
     /// Presents Link UI to authenticate an existing Link user.
     /// `hasLinkAccount` must be called before this.
     ///
@@ -120,6 +126,10 @@ protocol CryptoOnrampCoordinatorProtocol {
         authenticationContext: STPAuthenticationContext,
         onrampSessionClientSecretProvider: @escaping (_ onrampSessionId: String) async throws -> String
     ) async throws -> CheckoutResult
+
+    /// Logs out the current Link user, if any.
+    /// Throws if an API error occurs.
+    func logOut() async throws
 }
 
 /// Coordinates headless Link user authentication and identity verification, leaving most of the UI to the client.
@@ -232,6 +242,10 @@ public final class CryptoOnrampCoordinator: NSObject, CryptoOnrampCoordinatorPro
             }
         }
         return try await apiClient.grantPartnerMerchantPermissions(with: linkAccountInfo).id
+    }
+
+    public func updatePhoneNumber(to phoneNumber: String) async throws {
+        try await linkController.updatePhoneNumber(to: phoneNumber)
     }
 
     public func authenticateUser(from viewController: UIViewController) async throws -> AuthenticationResult {
@@ -410,7 +424,7 @@ public final class CryptoOnrampCoordinator: NSObject, CryptoOnrampCoordinatorPro
 
         switch handledIntentResult {
         case .paymentIntent(let finalIntent):
-            if finalIntent.status == .succeeded || finalIntent.status == .requiresCapture {
+            if finalIntent.checkoutResult?.success == true {
                 // After successful next_action handling, attempt checkout again to complete the payment
                 let finalPaymentIntent = try await performCheckoutAndRetrievePaymentIntent(
                     onrampSessionId: onrampSessionId,
@@ -429,6 +443,10 @@ public final class CryptoOnrampCoordinator: NSObject, CryptoOnrampCoordinatorPro
         case .canceled:
             return .canceled
         }
+    }
+
+    public func logOut() async throws {
+        try await linkController.logOut()
     }
 }
 
@@ -592,15 +610,23 @@ private extension CryptoOnrampCoordinator {
 
     /// Maps a PaymentIntent status to a CheckoutResult, or returns nil if more handling is needed.
     func mapIntentToCheckoutResult(_ intent: STPPaymentIntent) throws -> CheckoutResult? {
-        switch intent.status {
-        case .succeeded:
-            return .completed
+        return try intent.checkoutResult?.get()
+    }
+}
+
+private extension STPPaymentIntent {
+    var checkoutResult: Result<CheckoutResult, CheckoutError>? {
+        switch status {
+        case .succeeded, .requiresCapture:
+            return .success(.completed)
+        case .processing:
+            return paymentMethod?.type == .USBankAccount ? .success(.completed) : .failure(.paymentFailed)
         case .requiresPaymentMethod:
-            throw CheckoutError.paymentFailed
+            return .failure(.paymentFailed)
         case .requiresAction:
             return nil
         default:
-            throw CheckoutError.paymentFailed
+            return .failure(.paymentFailed)
         }
     }
 }

@@ -24,6 +24,10 @@ struct CustomerSheetTestPlayground: View {
         _playgroundController = StateObject(wrappedValue: CustomerSheetTestPlaygroundController(settings: settings))
     }
 
+    init() {
+        _playgroundController = StateObject(wrappedValue: CustomerSheetTestPlaygroundController())
+    }
+
     var body: some View {
         VStack {
             ScrollView {
