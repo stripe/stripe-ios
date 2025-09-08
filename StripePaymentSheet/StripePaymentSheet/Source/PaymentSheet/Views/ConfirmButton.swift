@@ -75,12 +75,6 @@ class ConfirmButton: UIView {
         }
     }
 
-    lazy var cornerRadius: CGFloat = appearance.primaryButton.cornerRadius ?? appearance.cornerRadius {
-        didSet {
-            applyCornerRadius()
-        }
-    }
-
     var font: UIFont? {
         get {
             return buyButton.font
@@ -248,8 +242,16 @@ class ConfirmButton: UIView {
     }
 
     private func applyCornerRadius() {
-        buyButton.layer.cornerRadius = cornerRadius
-        applePayButton.cornerRadius = cornerRadius
+        if LiquidGlassDetector.isEnabled {
+            buyButton.ios26_applyCapsuleCornerConfiguration()
+            applePayButton.ios26_applyCapsuleCornerConfiguration()
+        } else if let cornerRadius = appearance.primaryButton.cornerRadius {
+            buyButton.layer.cornerRadius = cornerRadius
+            applePayButton.cornerRadius = cornerRadius
+        } else {
+            buyButton.layer.cornerRadius = appearance.cornerRadius
+            applePayButton.layer.cornerRadius = appearance.cornerRadius
+        }
     }
 
     // MARK: - BuyButton
