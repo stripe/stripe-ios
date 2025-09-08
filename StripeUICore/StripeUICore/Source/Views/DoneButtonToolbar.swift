@@ -29,7 +29,6 @@ import UIKit
 
     public init(delegate: DoneButtonToolbarDelegate?, showCancelButton: Bool = false, theme: ElementsAppearance = .default) {
 
-        // TODO: Change this to do this any time we are running on iOS26 & not opted out of UIDesignRequiresCompatibility
         let needsAdditionalHeightBetweenKeyboard = LiquidGlassDetector.isEnabled
         let height = needsAdditionalHeightBetweenKeyboard ? 52 : 44
 
