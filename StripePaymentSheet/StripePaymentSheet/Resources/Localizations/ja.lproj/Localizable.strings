@@ -126,8 +126,6 @@
 
 "Enter address manually" = "住所を手動で入力";
 
-"Enter the code sent to %@ to use your saved information." = "保存されている情報を使用するには、%@ に送信されたコードを入力してください。";
-
 "Enter the code sent to %@." = "%s に送信されたコードを入力してください。";
 
 "FPX Bank" = "FPX 銀行";

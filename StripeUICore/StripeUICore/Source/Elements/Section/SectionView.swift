@@ -142,9 +142,11 @@ final class SectionView: UIView {
     // For highlighted borders, apply a custom `UIBezierPath` border for smoother corners.
     private func applyHighlightedBorder(with configuration: HighlightBorderConfiguration) {
         containerView.layer.borderWidth = 0
+        containerView.layer.cornerRadius = configuration.cornerRadius
 
         selectedBorderLayer.strokeColor = configuration.color.cgColor
         selectedBorderLayer.lineWidth = configuration.width
+        selectedBorderLayer.cornerRadius = configuration.cornerRadius
 
         if selectedBorderLayer.superlayer != containerView.layer {
             containerView.layer.addSublayer(selectedBorderLayer)
