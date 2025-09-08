@@ -44,7 +44,7 @@ public extension PaymentSheet {
 
         /// The shadow used for inputs and tabs in PaymentSheet
         /// - Note: Set this to `.disabled` to disable shadows
-        public var shadow: Shadow = Shadow()
+        public var shadow: Shadow = LiquidGlassDetector.isEnabled ? .disabled : Shadow()
 
         /// Describes the appearance of the Embedded Mobile Payment Element
         public var embeddedPaymentElement: EmbeddedPaymentElement = EmbeddedPaymentElement()

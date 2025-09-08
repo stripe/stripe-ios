@@ -467,6 +467,81 @@ import UIKit
         )
     }
 
+    /// Updates the phone number for the current Link user.
+    ///
+    /// - Parameter phoneNumber: The phone number of the user. Phone number must be in E.164 format (e.g., +12125551234).
+    /// Throws if an authenticated Link user is not available, phone number format is invalid, or an API error occurs.
+    @_spi(STP) public func updatePhoneNumber(
+        to phoneNumber: String,
+        completion: @escaping (Result<Void, Error>) -> Void
+    ) {
+        guard let linkAccount = LinkAccountContext.shared.account, let consumerSessionClientSecret = linkAccount.currentSession?.clientSecret else {
+            completion(.failure(IntegrationError.noActiveLinkConsumer))
+            return
+        }
+
+        apiClient.updatePhoneNumber(
+            consumerSessionClientSecret: consumerSessionClientSecret,
+            consumerAccountPublishableKey: linkAccount.publishableKey,
+            phoneNumber: phoneNumber,
+            requestSurface: requestSurface
+        ) { [weak self] result in
+            switch result {
+            case .success(let consumerSession):
+                self?.updateLinkAccount(with: consumerSession)
+                completion(.success(()))
+            case .failure(let error):
+                completion(.failure(error))
+            }
+        }
+    }
+
+    /// Logs out the current Link user, if any.
+    @_spi(STP) public func logOut(completion: @escaping (Result<Void, Error>) -> Void) {
+        func clearLinkAccountContextAndComplete() {
+            LinkAccountContext.shared.account = nil
+            completion(.success(()))
+        }
+
+        guard let session = linkAccount?.currentSession, let publishableKey = linkAccount?.publishableKey else {
+            // If no Link account is available, treat this as a success.
+            clearLinkAccountContextAndComplete()
+            return
+        }
+
+        session.logout(
+            consumerAccountPublishableKey: publishableKey,
+            requestSurface: requestSurface,
+            completion: { result in
+                switch result {
+                case .success:
+                    clearLinkAccountContextAndComplete()
+                case .failure(let error):
+                    completion(.failure(error))
+                }
+            }
+        )
+    }
+
+    // MARK: - Private methods
+
+    private func updateLinkAccount(with consumerSession: ConsumerSession) {
+        guard let linkAccount else {
+            return
+        }
+
+        self.linkAccount = PaymentSheetLinkAccount(
+            email: linkAccount.email,
+            session: consumerSession,
+            publishableKey: linkAccount.publishableKey,
+            displayablePaymentDetails: linkAccount.displayablePaymentDetails,
+            apiClient: linkAccount.apiClient,
+            cookieStore: linkAccount.cookieStore,
+            useMobileEndpoints: linkAccount.useMobileEndpoints,
+            requestSurface: linkAccount.requestSurface
+        )
+    }
+
     private func presentVerificationWithConsent(
         from viewController: UIViewController,
         consentViewModel: LinkConsentViewModel?,
@@ -498,8 +573,6 @@ import UIKit
             }
         }
     }
-
-    // MARK: - Private methods
 
     private func createPaymentMethodInPassthroughMode(
         paymentDetails: ConsumerPaymentDetails,
@@ -834,6 +907,38 @@ extension LinkController: LinkFullConsentViewControllerDelegate {
                 switch result {
                 case .success(let paymentMethod):
                     continuation.resume(returning: paymentMethod)
+                case .failure(let error):
+                    continuation.resume(throwing: error)
+                }
+            }
+        }
+    }
+
+    /// Updates the phone number for the current Link user.
+    ///
+    /// - Parameter phoneNumber: The phone number of the user. Phone number must be in E.164 format (e.g., +12125551234).
+    /// Throws if an authenticated Link user is not available, phone number format is invalid, or an API error occurs.
+    func updatePhoneNumber(to phoneNumber: String) async throws {
+        return try await withCheckedThrowingContinuation { continuation in
+            updatePhoneNumber(to: phoneNumber) { result in
+                switch result {
+                case .success:
+                    continuation.resume(returning: ())
+                case .failure(let error):
+                    continuation.resume(throwing: error)
+                }
+            }
+        }
+    }
+
+    /// Logs out the current Link user, if any.
+    /// Throws if an API error occurs.
+    func logOut() async throws {
+        return try await withCheckedThrowingContinuation { continuation in
+            logOut { result in
+                switch result {
+                case .success:
+                    continuation.resume(returning: ())
                 case .failure(let error):
                     continuation.resume(throwing: error)
                 }

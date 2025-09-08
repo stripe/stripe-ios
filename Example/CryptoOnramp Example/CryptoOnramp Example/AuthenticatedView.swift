@@ -249,6 +249,28 @@ struct AuthenticatedView: View {
                 .background(Color.secondary.opacity(0.1))
                 .cornerRadius(8)
 
+                VStack(alignment: .leading, spacing: 12) {
+                    HStack {
+                        Text("Account")
+                            .font(.headline)
+                            .foregroundColor(.secondary)
+
+                        Spacer()
+
+                        Button("Log out") {
+                            logOut()
+                        }
+                        .font(.body)
+                        .foregroundColor(.red)
+                        .disabled(shouldDisableButtons)
+                        .opacity(shouldDisableButtons ? 0.5 : 1)
+                    }
+                }
+                .frame(maxWidth: .infinity)
+                .padding()
+                .background(Color.secondary.opacity(0.1))
+                .cornerRadius(8)
+
                 HiddenNavigationLink(
                     destination: KYCInfoView(coordinator: coordinator),
                     isActive: $showKYCView
@@ -482,6 +504,31 @@ struct AuthenticatedView: View {
                 await MainActor.run {
                     errorMessage = "Checkout failed: \(error.localizedDescription)"
                     isLoading.wrappedValue = false
+                }
+            }
+        }
+    }
+
+    private func logOut() {
+        guard let viewController = UIApplication.shared.findTopNavigationController() else {
+            errorMessage = "Unable to find view controller to navigate from."
+            return
+        }
+
+        isLoading.wrappedValue = true
+        errorMessage = nil
+
+        Task {
+            do {
+                try await coordinator.logOut()
+                await MainActor.run {
+                    isLoading.wrappedValue = false
+                    viewController.popToRootViewController(animated: true)
+                }
+            } catch {
+                await MainActor.run {
+                    isLoading.wrappedValue = false
+                    errorMessage = "Log out failed: \(error.localizedDescription)"
                 }
             }
         }
