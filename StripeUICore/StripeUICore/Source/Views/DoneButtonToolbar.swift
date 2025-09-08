@@ -33,7 +33,7 @@ import UIKit
         let needsAdditionalHeightBetweenKeyboard = LiquidGlassDetector.isEnabled
         let height = needsAdditionalHeightBetweenKeyboard ? 52 : 44
 
-        // Initializing w/ an arbitrary frame stops autolayout from complaining on the first layout pass
+        // Initializing w/ a frame stops autolayout from complaining on the first layout pass. On iOS 26, we set the height in order to give some space between the keyboard and the toolbar buttons.
         super.init(frame: CGRect(x: 0, y: 0, width: 100, height: height))
         self.doneButtonToolbarDelegate = delegate
 
