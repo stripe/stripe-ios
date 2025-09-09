@@ -15,7 +15,11 @@ extension UIButton {
 
     static func makeManualEntryButton(appearance: PaymentSheet.Appearance) -> UIButton {
         let button = UIButton(type: .system)
+        let font = appearance.scaledFont(for: appearance.font.base.regular, style: .subheadline, maximumPointSize: 20)
         if #available(iOS 26.0, *), LiquidGlassDetector.isEnabled {
+            button.ios26_applyCapsuleCornerConfiguration()
+            button.ios26_applyGlassConfiguration()
+            button.frame.size.height = appearance.primaryButton.height
             let textColor = UIColor(dynamicProvider: { traitCollection in
                 if traitCollection.isDarkMode {
                     return appearance.colors.background.contrastingColor
@@ -23,12 +27,9 @@ extension UIButton {
 
                 return appearance.colors.primary
             })
-            button.ios26_applyCapsuleCornerConfiguration()
-            button.ios26_applyGlassConfiguration()
-            button.configuration?.attributedTitle = AttributedString(.Localized.enter_address_manually, attributes: AttributeContainer([.font: appearance.primaryButton.font ?? appearance.scaledFont(for: appearance.font.base.regular, style: .callout, maximumPointSize: 25), .foregroundColor: textColor]))
-            button.frame.size.height = appearance.primaryButton.height
+            button.configuration?.attributedTitle = AttributedString(.Localized.enter_address_manually, attributes: AttributeContainer([.font: font, .foregroundColor: textColor]))
         } else {
-            button.titleLabel?.font = appearance.scaledFont(for: appearance.font.base.regular, style: .subheadline, maximumPointSize: 20)
+            button.titleLabel?.font = font
             button.tintColor = appearance.colors.primary
 
             button.setTitle(.Localized.enter_address_manually, for: .normal)
