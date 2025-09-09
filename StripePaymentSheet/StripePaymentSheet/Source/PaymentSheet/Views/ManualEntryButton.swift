@@ -15,7 +15,6 @@ extension UIButton {
 
     static func makeManualEntryButton(appearance: PaymentSheet.Appearance) -> UIButton {
         let button = UIButton(type: .system)
-        let font = appearance.scaledFont(for: appearance.font.base.regular, style: .subheadline, maximumPointSize: 20)
         if #available(iOS 26.0, *), LiquidGlassDetector.isEnabled {
             let textColor = UIColor(dynamicProvider: { traitCollection in
                 if traitCollection.isDarkMode {
@@ -26,7 +25,7 @@ extension UIButton {
             })
             button.ios26_applyCapsuleCornerConfiguration()
             button.ios26_applyGlassConfiguration()
-            button.configuration?.attributedTitle = AttributedString(.Localized.enter_address_manually, attributes: AttributeContainer([.font: font, .foregroundColor: textColor]))
+            button.configuration?.attributedTitle = AttributedString(.Localized.enter_address_manually, attributes: AttributeContainer([.font: appearance.primaryButton.font ?? appearance.scaledFont(for: appearance.font.base.regular, style: .callout, maximumPointSize: 25), .foregroundColor: textColor]))
             button.frame.size.height = appearance.primaryButton.height
         } else {
             button.titleLabel?.font = appearance.scaledFont(for: appearance.font.base.regular, style: .subheadline, maximumPointSize: 20)
