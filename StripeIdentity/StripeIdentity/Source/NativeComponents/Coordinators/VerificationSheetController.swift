@@ -6,7 +6,7 @@
 //  Copyright © 2021 Stripe, Inc. All rights reserved.
 //
 
-@_spi(STP) @_spi(DEPRECATED) import StripeCore
+@_spi(STP) import StripeCore
 @_spi(STP) import StripeUICore
 import UIKit
 
@@ -464,7 +464,7 @@ final class VerificationSheetController: VerificationSheetControllerProtocol {
     }
 
     func sendCannotVerifyPhoneOtpAndTransition(
-        completion: @escaping () -> Void
+        completion: @escaping() -> Void
     ) {
         apiClient.cannotPhoneVerifyOtp().observe(on: .main) { [weak self] updatedDataResult in
             self?.transitionWithUpdatedDataResult(result: updatedDataResult)

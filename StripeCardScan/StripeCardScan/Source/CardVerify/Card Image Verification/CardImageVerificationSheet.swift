@@ -6,7 +6,7 @@
 //
 
 import Foundation
-@_spi(STP) @_spi(DEPRECATED) import StripeCore
+@_spi(STP) import StripeCore
 import UIKit
 
 /// Typealias for backwards compatibility of new error type name

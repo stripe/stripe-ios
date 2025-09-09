@@ -6,7 +6,7 @@
 //
 
 import Foundation
-@_spi(STP) @_spi(DEPRECATED) import StripeCore
+@_spi(STP) import StripeCore
 @_spi(STP) import StripeCoreTestUtils
 @testable import StripeFinancialConnections
 

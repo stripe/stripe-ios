@@ -8,7 +8,7 @@
 
 import CoreML
 import Foundation
-@_spi(STP) @_spi(DEPRECATED) import StripeCore
+@_spi(STP) import StripeCore
 import Vision
 
 enum IdentityMLModelLoaderError: Error, AnalyticLoggableErrorV2 {

@@ -7,7 +7,7 @@
 //
 
 import Foundation
-@_spi(STP) @_spi(DEPRECATED) import StripeCore
+@_spi(STP) import StripeCore
 import UIKit
 import XCTest
 

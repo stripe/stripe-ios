@@ -5,7 +5,7 @@
 //  Created by Vardges Avetisyan on 6/3/22.
 //
 
-@_spi(STP) @_spi(DEPRECATED) import StripeCore
+@_spi(STP) import StripeCore
 @_spi(STP) import StripeUICore
 import UIKit
 

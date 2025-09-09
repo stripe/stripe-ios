@@ -8,7 +8,7 @@
 
 import CoreVideo
 @_spi(STP) import StripeCameraCore
-@_spi(STP) @_spi(DEPRECATED) import StripeCore
+@_spi(STP) import StripeCore
 import Vision
 
 typealias AnyFaceScanner = AnyImageScanner<FaceScannerOutput>

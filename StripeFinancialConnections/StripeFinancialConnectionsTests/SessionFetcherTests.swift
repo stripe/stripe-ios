@@ -5,7 +5,7 @@
 //  Created by Vardges Avetisyan on 1/20/22.
 //
 
-@_spi(STP) @_spi(DEPRECATED) import StripeCore
+@_spi(STP) import StripeCore
 @_spi(STP) import StripeCoreTestUtils
 @testable import StripeFinancialConnections
 import XCTest
