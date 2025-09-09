@@ -35,4 +35,25 @@ extension UIButton {
 
         return button
     }
+
+    @available(iOS 26.0, *)
+    static func makeManualEntryGlassButton(appearance: PaymentSheet.Appearance, didTap: @escaping () -> Void) -> UIView {
+        stpAssert(LiquidGlassDetector.isEnabled)
+        var manualEntryButtonAppearance = appearance
+        manualEntryButtonAppearance.primaryButton.font = appearance.primaryButton.font?.regular ?? appearance.font.base.regular
+        manualEntryButtonAppearance.primaryButton.textColor = appearance.colors.primary
+        manualEntryButtonAppearance.primaryButton.borderWidth = 0
+        manualEntryButtonAppearance.primaryButton.backgroundColor = UIColor(dynamicProvider: { traitCollection in
+            if traitCollection.isDarkMode {
+                return appearance.colors.componentBackground
+            }
+
+            return appearance.colors.background.darken(by: 0.07)
+        })
+        return ConfirmButton(
+            callToAction: .custom(title: .Localized.enter_address_manually),
+            appearance: manualEntryButtonAppearance,
+            didTap: didTap
+        )
+    }
 }

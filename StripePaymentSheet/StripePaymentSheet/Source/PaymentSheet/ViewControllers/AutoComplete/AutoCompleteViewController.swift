@@ -79,24 +79,15 @@ class AutoCompleteViewController: UIViewController {
         tableView.tableFooterView = UIView()
         return tableView
     }()
-    lazy var manualEntryButton: ConfirmButton = {
-        var manualEntryButtonAppearance = configuration.appearance
-        manualEntryButtonAppearance.primaryButton.textColor = configuration.appearance.colors.primary
-        manualEntryButtonAppearance.primaryButton.backgroundColor = UIColor(dynamicProvider: { traitCollection in
-            if traitCollection.isDarkMode {
-                return manualEntryButtonAppearance.colors.componentBackground
-            }
-
-            return manualEntryButtonAppearance.colors.background.darken(by: 0.07)
-        })
-        let button = ConfirmButton(
-            callToAction: .custom(title: .Localized.enter_address_manually),
-            appearance: manualEntryButtonAppearance
-        ) { [weak self] in
-            self?.manualEntryButtonTapped()
+    lazy var manualEntryButton: UIView = {
+        if #available(iOS 26.0, *),
+           LiquidGlassDetector.isEnabled {
+            return UIButton.makeManualEntryGlassButton(appearance: configuration.appearance, didTap: manualEntryButtonTapped)
+        } else {
+            let button = UIButton.makeManualEntryButton(appearance: configuration.appearance)
+            button.addTarget(self, action: #selector(manualEntryButtonTapped), for: .touchUpInside)
+            return button
         }
-
-        return button
     }()
     lazy var separatorView: UIView = {
        let view = UIView()
@@ -157,11 +148,11 @@ class AutoCompleteViewController: UIViewController {
           manualEntryButton.translatesAutoresizingMaskIntoConstraints = false
           NSLayoutConstraint.activate([
               manualEntryButton.leadingAnchor.constraint(equalTo: buttonContainer.leadingAnchor, constant:
-          configuration.appearance.formInsets.leading),
+                                                            LiquidGlassDetector.isEnabled ? configuration.appearance.formInsets.leading : 0),
               manualEntryButton.trailingAnchor.constraint(equalTo: buttonContainer.trailingAnchor, constant:
-          -configuration.appearance.formInsets.trailing),
+                                                            LiquidGlassDetector.isEnabled ? -configuration.appearance.formInsets.trailing : 0),
               manualEntryButton.topAnchor.constraint(equalTo: buttonContainer.topAnchor),
-              manualEntryButton.bottomAnchor.constraint(equalTo: buttonContainer.bottomAnchor, constant: -8),
+              manualEntryButton.bottomAnchor.constraint(equalTo: buttonContainer.bottomAnchor, constant: LiquidGlassDetector.isEnabled ? -8 : 0),
           ])
 
         let stackView = UIStackView(arrangedSubviews: [formStackView, errorLabel, separatorView, tableView, buttonContainer])
