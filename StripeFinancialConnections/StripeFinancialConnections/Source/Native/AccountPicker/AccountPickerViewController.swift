@@ -7,7 +7,7 @@
 
 import Foundation
 import SafariServices
-@_spi(STP) import StripeCore
+@_spi(STP) @_spi(DEPRECATED) import StripeCore
 @_spi(STP) import StripeUICore
 import UIKit
 

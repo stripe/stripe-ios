@@ -8,7 +8,7 @@
 
 import SafariServices
 @_spi(STP) import StripeCameraCore
-@_spi(STP) import StripeCore
+@_spi(STP) @_spi(DEPRECATED) import StripeCore
 import UIKit
 
 protocol VerificationSheetFlowControllerDelegate: AnyObject {

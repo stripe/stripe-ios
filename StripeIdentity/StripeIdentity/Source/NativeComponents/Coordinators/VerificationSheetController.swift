@@ -6,7 +6,7 @@
 //  Copyright © 2021 Stripe, Inc. All rights reserved.
 //
 
-@_spi(STP) import StripeCore
+@_spi(STP) @_spi(DEPRECATED) import StripeCore
 @_spi(STP) import StripeUICore
 import UIKit
 

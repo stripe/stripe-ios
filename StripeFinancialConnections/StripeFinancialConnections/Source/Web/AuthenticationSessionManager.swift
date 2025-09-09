@@ -6,7 +6,7 @@
 //
 
 import AuthenticationServices
-@_spi(STP) import StripeCore
+@_spi(STP) @_spi(DEPRECATED) import StripeCore
 import UIKit
 
 final class AuthenticationSessionManager: NSObject {

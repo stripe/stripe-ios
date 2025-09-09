@@ -6,7 +6,7 @@
 //
 
 import Foundation
-@_spi(STP) import StripeCore
+@_spi(STP) @_spi(DEPRECATED) import StripeCore
 
 extension FinancialConnectionsAsyncAPIClient {
     /// Wraps an `async` function into returning a `Future`.

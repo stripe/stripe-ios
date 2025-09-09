@@ -6,7 +6,7 @@
 //
 
 import Foundation
-@_spi(STP) import StripeCore
+@_spi(STP) @_spi(DEPRECATED) import StripeCore
 
 protocol ResetFlowDataSource: AnyObject {
     var manifest: FinancialConnectionsSessionManifest { get }

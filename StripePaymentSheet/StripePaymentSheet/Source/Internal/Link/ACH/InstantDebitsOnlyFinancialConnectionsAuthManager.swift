@@ -8,7 +8,7 @@
 import AuthenticationServices
 import UIKit
 
-@_spi(STP) import StripeCore
+@_spi(STP) @_spi(DEPRECATED) import StripeCore
 
 struct Manifest: Decodable {
     let hostedAuthURL: URL

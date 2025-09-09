@@ -6,7 +6,7 @@
 //
 
 import Foundation
-@_spi(STP) import StripeCore
+@_spi(STP) @_spi(DEPRECATED) import StripeCore
 
 extension STPAPIClient {
     /// Request used in the beginning of the scan flow to gather CIV details and update the UI with last4 and issuer

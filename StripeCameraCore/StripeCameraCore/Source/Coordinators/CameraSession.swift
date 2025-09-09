@@ -7,7 +7,7 @@
 //
 
 import AVKit
-@_spi(STP) import StripeCore
+@_spi(STP) @_spi(DEPRECATED) import StripeCore
 
 @_spi(STP) @frozen public enum CameraSessionError: Error {
     /// Can't find capture device to add
