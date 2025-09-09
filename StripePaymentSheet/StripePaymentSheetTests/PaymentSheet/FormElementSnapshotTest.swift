@@ -15,7 +15,9 @@ import StripeCoreTestUtils
 final class FormElementSnapshotTest: STPSnapshotTestCase {
     var appearance = PaymentSheet.Appearance()
     var theme: ElementsAppearance {
-        return appearance.asElementsTheme
+        var _appearance = appearance
+        _appearance.applyLiquidGlassIfPossible()
+        return _appearance.asElementsTheme
     }
 
     func testDefaultTheme() {

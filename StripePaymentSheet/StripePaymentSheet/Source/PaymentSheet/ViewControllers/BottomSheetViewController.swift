@@ -107,10 +107,14 @@ class BottomSheetViewController: UIViewController, BottomSheetPresentable {
     let appearance: PaymentSheet.Appearance
 
     var isUsingGlassNavBar: Bool {
+        #if !os(visionOS)
         guard #available(iOS 26.0, *) else {
             return false
         }
         return LiquidGlassDetector.canRun && appearance.navigationBarStyle == .glass
+        #else
+        return false
+        #endif
     }
 
     private var contentViewController: BottomSheetContentViewController

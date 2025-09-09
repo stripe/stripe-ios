@@ -23,6 +23,9 @@ public extension PaymentSheet.Configuration {
         if isApplePayEnabled {
             configuration.applePay = .init(merchantId: "merchant id", merchantCountryCode: "US")
         }
+        if #available(iOS 26.0, *) {
+            configuration.appearance.applyLiquidGlassIfPossible()
+        }
         return configuration
     }
 }
@@ -40,7 +43,13 @@ public extension EmbeddedPaymentElement.Configuration {
         return configuration
     }
 }
-
+extension PaymentSheet.Appearance {
+    mutating func applyLiquidGlassIfPossible() {
+        if #available(iOS 26.0, *) {
+            self.applyLiquidGlass()
+        }
+    }
+}
 extension STPElementsSession {
     static func _testValue(
         orderedPaymentMethodTypes: [STPPaymentMethodType] = [.card],

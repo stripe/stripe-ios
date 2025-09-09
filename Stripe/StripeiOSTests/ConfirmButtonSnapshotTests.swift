@@ -17,16 +17,20 @@ import UIKit
 
 // @iOS26
 class ConfirmButtonSnapshotTests: STPSnapshotTestCase {
-
+    var appearance: PaymentSheet.Appearance!
+    override func setUp() {
+        super.setUp()
+        self.appearance = .default
+        self.appearance.applyLiquidGlassIfPossible()
+    }
     func testConfirmButton() {
-        let confirmButton = ConfirmButton(style: .stripe, callToAction: .setup, didTap: {})
+        let confirmButton = ConfirmButton(style: .stripe, callToAction: .setup, appearance: appearance, didTap: {})
 
         verify(confirmButton)
     }
 
     // Tests that `primaryButton` appearance is used over standard variables
     func testConfirmButtonBackgroundColor() {
-        var appearance = PaymentSheet.Appearance.default
         var button = PaymentSheet.Appearance.PrimaryButton()
         button.backgroundColor = .red
         appearance.primaryButton = button
@@ -42,9 +46,8 @@ class ConfirmButtonSnapshotTests: STPSnapshotTestCase {
     }
 
     func testConfirmButtonCustomFont() throws {
-        var appearance = PaymentSheet.Appearance.default
         appearance.font.base = try XCTUnwrap(UIFont(name: "AmericanTypewriter", size: 12.0))
-
+        appearance.applyLiquidGlassIfPossible()
         let confirmButton = ConfirmButton(
             style: .stripe,
             callToAction: .custom(title: "Custom Title"),
@@ -56,7 +59,9 @@ class ConfirmButtonSnapshotTests: STPSnapshotTestCase {
     }
 
     func testConfirmButtonCustomFontScales() throws {
-        var appearance = PaymentSheet.Appearance.default
+        if #available(iOS 26.0, *) {
+            appearance.applyLiquidGlassIfPossible()
+        }
         appearance.font.base = try XCTUnwrap(UIFont(name: "AmericanTypewriter", size: 12.0))
         appearance.font.sizeScaleFactor = 0.85
 
@@ -76,7 +81,7 @@ class ConfirmButtonSnapshotTests: STPSnapshotTestCase {
             state: .disabled,
             style: .stripe,
             callToAction: .setup,
-            appearance: .default,
+            appearance: appearance,
             didTap: {}
         )
 
@@ -85,7 +90,6 @@ class ConfirmButtonSnapshotTests: STPSnapshotTestCase {
 
     // Tests that `primaryButton` disabled color matches the primary color when no background color or diabled color set
     func testConfirmButtonDisabledColorWhenSetPrimaryColorAndNoSetBackgroundColorOrDisabledColor() {
-        var appearance = PaymentSheet.Appearance.default
         var button = PaymentSheet.Appearance.PrimaryButton()
         button.disabledTextColor = .green.withAlphaComponent(0.6)
         appearance.primaryButton = button
@@ -104,7 +108,6 @@ class ConfirmButtonSnapshotTests: STPSnapshotTestCase {
 
     // Tests that `primaryButton` disabled color matches the background color when background color is set but disabled color is not
     func testConfirmButtonDisabledColorWhenSetBackgroundColorAndNoSetDisabledColor() {
-        var appearance = PaymentSheet.Appearance.default
         var button = PaymentSheet.Appearance.PrimaryButton()
         button.backgroundColor = .yellow
         button.disabledTextColor = .green.withAlphaComponent(0.6)
@@ -123,7 +126,6 @@ class ConfirmButtonSnapshotTests: STPSnapshotTestCase {
 
     // Tests that `primaryButton` disabled color matches the disabled color when disabled color, background color, and primary color are set
     func testConfirmButtonDisabledColorWhenSetDisabledBackgroundAndPrimaryColors() {
-        var appearance = PaymentSheet.Appearance.default
         var button = PaymentSheet.Appearance.PrimaryButton()
         button.backgroundColor = .red
         button.disabledBackgroundColor = .black
@@ -144,7 +146,6 @@ class ConfirmButtonSnapshotTests: STPSnapshotTestCase {
 
     // Tests that `primaryButton` disabled color is updated properly
     func testConfirmButtonDisabledColor() {
-        var appearance = PaymentSheet.Appearance.default
         var button = PaymentSheet.Appearance.PrimaryButton()
         button.disabledBackgroundColor = .red
         button.disabledTextColor = .green.withAlphaComponent(0.6)
@@ -167,7 +168,7 @@ class ConfirmButtonSnapshotTests: STPSnapshotTestCase {
             state: .succeeded,
             style: .stripe,
             callToAction: .setup,
-            appearance: .default,
+            appearance: appearance,
             didTap: {}
         )
 
@@ -176,7 +177,6 @@ class ConfirmButtonSnapshotTests: STPSnapshotTestCase {
 
     // Tests that `primaryButton` success color is updated properly
     func testConfirmButtonSuccessColor() {
-        var appearance = PaymentSheet.Appearance.default
         var button = PaymentSheet.Appearance.PrimaryButton()
         button.successBackgroundColor = .red
         button.successTextColor = .green
@@ -195,7 +195,6 @@ class ConfirmButtonSnapshotTests: STPSnapshotTestCase {
 
     // Tests that `primaryButton` used in Link has the correct height
     func testConfirmButtonInLinkUI() {
-        var appearance = PaymentSheet.Appearance.default
         // This should not have any effect when rendered in Link
         appearance.primaryButton.height = 30
 
@@ -215,5 +214,13 @@ class ConfirmButtonSnapshotTests: STPSnapshotTestCase {
     ) {
         view.autosizeHeight(width: 300)
         STPSnapshotVerifyView(view, identifier: identifier, file: file, line: line)
+    }
+}
+
+extension PaymentSheet.Appearance {
+    mutating func applyLiquidGlassIfPossible() {
+        if #available(iOS 26.0, *) {
+            self.applyLiquidGlass()
+        }
     }
 }

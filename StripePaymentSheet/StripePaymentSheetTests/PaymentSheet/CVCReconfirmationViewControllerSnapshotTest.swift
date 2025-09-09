@@ -15,7 +15,8 @@ import XCTest
 // @iOS26
 final class CVCReconfirmationViewControllerSnapshotTest: STPSnapshotTestCase {
     func testCVCRecollectionScreen() {
-        let configuration: PaymentSheet.Configuration = ._testValue_MostPermissive(isApplePayEnabled: false)
+        var configuration: PaymentSheet.Configuration = ._testValue_MostPermissive(isApplePayEnabled: false)
+        configuration.appearance.applyLiquidGlassIfPossible()
 
         let sut = CVCReconfirmationViewController(paymentMethod: STPPaymentMethod._testCard(),
                                                   intent: ._testValue(),
