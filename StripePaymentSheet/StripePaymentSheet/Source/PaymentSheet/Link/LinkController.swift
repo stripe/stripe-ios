@@ -496,6 +496,35 @@ import UIKit
         }
     }
 
+    /// Logs out the current Link user, if any.
+    @_spi(STP) public func logOut(completion: @escaping (Result<Void, Error>) -> Void) {
+        func clearLinkAccountContextAndComplete() {
+            LinkAccountContext.shared.account = nil
+            completion(.success(()))
+        }
+
+        guard let session = linkAccount?.currentSession, let publishableKey = linkAccount?.publishableKey else {
+            // If no Link account is available, treat this as a success.
+            clearLinkAccountContextAndComplete()
+            return
+        }
+
+        session.logout(
+            consumerAccountPublishableKey: publishableKey,
+            requestSurface: requestSurface,
+            completion: { result in
+                switch result {
+                case .success:
+                    clearLinkAccountContextAndComplete()
+                case .failure(let error):
+                    completion(.failure(error))
+                }
+            }
+        )
+    }
+
+    // MARK: - Private methods
+
     private func updateLinkAccount(with consumerSession: ConsumerSession) {
         guard let linkAccount else {
             return
@@ -544,8 +573,6 @@ import UIKit
             }
         }
     }
-
-    // MARK: - Private methods
 
     private func createPaymentMethodInPassthroughMode(
         paymentDetails: ConsumerPaymentDetails,
@@ -894,6 +921,21 @@ extension LinkController: LinkFullConsentViewControllerDelegate {
     func updatePhoneNumber(to phoneNumber: String) async throws {
         return try await withCheckedThrowingContinuation { continuation in
             updatePhoneNumber(to: phoneNumber) { result in
+                switch result {
+                case .success:
+                    continuation.resume(returning: ())
+                case .failure(let error):
+                    continuation.resume(throwing: error)
+                }
+            }
+        }
+    }
+
+    /// Logs out the current Link user, if any.
+    /// Throws if an API error occurs.
+    func logOut() async throws {
+        return try await withCheckedThrowingContinuation { continuation in
+            logOut { result in
                 switch result {
                 case .success:
                     continuation.resume(returning: ())

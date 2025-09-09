@@ -126,8 +126,6 @@
 
 "Enter address manually" = "ป้อนที่อยู่ด้วยตนเอง";
 
-"Enter the code sent to %@ to use your saved information." = "ป้อนรหัสยืนยันที่ส่งไปยัง %@ เพื่อใช้ข้อมูลที่บันทึกไว้";
-
 "Enter the code sent to %@." = "ป้อนรหัสที่เราส่งให้ที่ %s";
 
 "FPX Bank" = "FPX Bank";
