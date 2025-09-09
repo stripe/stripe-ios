@@ -41,7 +41,6 @@
 		25F6D9E66DFACFB6F92FB8A5 /* StripePayments.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 14358A02B8BB13A20E0047DB /* StripePayments.framework */; };
 		295583C90F3C4DA59A898E69 /* STPFixtures.m in Sources */ = {isa = PBXBuildFile; fileRef = 89913E318A46692A28C191BF /* STPFixtures.m */; };
 		2A2E28C3C248CBE96D52A192 /* STPPaymentMethodAlipayParams.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41418F4AD32E5182FFFA7445 /* STPPaymentMethodAlipayParams.swift */; };
-		2B4DBC9AA9284BE1805C2A05 /* STPMandateCustomerAcceptanceParams.swift in Sources */ = {isa = PBXBuildFile; fileRef = 30F69252A9AF5E376F43EA20 /* STPMandateCustomerAcceptanceParams.swift */; };
 		2BF8EE1CBF8C363A42B6EDA6 /* STPPaymentMethodCardWalletVisaCheckout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 373B2754D51299A60DE459C7 /* STPPaymentMethodCardWalletVisaCheckout.swift */; };
 		2BFBE84BD5718D4D8D4718D8 /* STPPaymentMethodBacsDebitParams.swift in Sources */ = {isa = PBXBuildFile; fileRef = E06C3BF5EB7272C646558A6A /* STPPaymentMethodBacsDebitParams.swift */; };
 		2E23BD28752B622F86149CA9 /* iOSSnapshotTestCase in Frameworks */ = {isa = PBXBuildFile; platformFilters = (ios, maccatalyst, ); productRef = 0DADFCFCE303263FBB27102B /* iOSSnapshotTestCase */; };
@@ -1867,7 +1866,6 @@
 				E2F60512657160C05151F465 /* STPIntentActionWeChatPayRedirectToApp.swift in Sources */,
 				31B7F5512BD1D4E500BF1015 /* String+Dict.swift in Sources */,
 				31B7F5532BD1D4E500BF1015 /* HCaptchaLog.swift in Sources */,
-				2B4DBC9AA9284BE1805C2A05 /* STPMandateCustomerAcceptanceParams.swift in Sources */,
 				54D34D415DF33EA011588584 /* STPMandateDataParams.swift in Sources */,
 				81AB693615F0AFD4EBBA38EB /* STPMandateOnlineParams.swift in Sources */,
 				904CA4632D5F3FEA188290AC /* STPPaymentMethodOptions.swift in Sources */,
