@@ -149,7 +149,7 @@ class AutoCompleteViewController: UIViewController {
                                                             LiquidGlassDetector.isEnabled ? -configuration.appearance.formInsets.trailing : 0),
             manualEntryButton.topAnchor.constraint(equalTo: buttonContainer.topAnchor),
             manualEntryButton.bottomAnchor.constraint(equalTo: buttonContainer.bottomAnchor, constant: LiquidGlassDetector.isEnabled ? -8 : 0),
-            manualEntryButton.heightAnchor.constraint(equalToConstant: manualEntryButton.frame.size.height)
+            manualEntryButton.heightAnchor.constraint(equalToConstant: manualEntryButton.frame.size.height),
         ])
 
         let stackView = UIStackView(arrangedSubviews: [formStackView, errorLabel, separatorView, tableView])

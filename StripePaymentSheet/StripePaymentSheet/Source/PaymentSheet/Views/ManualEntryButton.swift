@@ -31,19 +31,19 @@ extension UIButton {
         } else {
             button.titleLabel?.font = appearance.scaledFont(for: appearance.font.base.regular, style: .subheadline, maximumPointSize: 20)
             button.tintColor = appearance.colors.primary
-            
+
             button.setTitle(.Localized.enter_address_manually, for: .normal)
             button.titleLabel?.sizeToFit()
-            
+
             if let titleLabelHeight = button.titleLabel?.frame.size.height {
                 button.frame.size.height = titleLabelHeight * 2.25
             }
-            
+
             button.backgroundColor = UIColor(dynamicProvider: { traitCollection in
                 if traitCollection.isDarkMode {
                     return appearance.colors.componentBackground
                 }
-                
+
                 return appearance.colors.background.darken(by: 0.07)
             })
         }
