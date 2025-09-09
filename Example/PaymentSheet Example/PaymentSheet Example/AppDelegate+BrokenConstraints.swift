@@ -41,11 +41,9 @@ extension AppDelegate {
         // Sometimes the broken constraint references something that is unique, in which case we can ignore it easily
         let ignoredBrokenConstraints = [
             "STP_Internal_LinkMoreInfoView", // https://jira.corp.stripe.com/browse/RUN_MOBILESDK-4562
-
-            "_UIRemoteKeyboardPlaceholderView", // Broken constraints in Apple's keyboard; unclear how it's our fault
-            "SystemInputAssistantView", // Same as ^
             "verticalSeparatorWidth' separator|.width == 0.333333", // Apple broken UIAlert constraint - oddly they never log this either; maybe they also have an ignorelist!
             "UISV-spacing' H:[_UIInterfaceActionCustomViewRepresentationView:", // Same as ^
+
         ]
         guard !ignoredBrokenConstraints.contains(where: { constraint.debugDescription.contains($0) }) else {
             return
