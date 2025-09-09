@@ -145,23 +145,27 @@ class AutoCompleteViewController: UIViewController {
         view.backgroundColor = configuration.appearance.colors.background
 
         let buttonContainer = UIView()
-          buttonContainer.addSubview(manualEntryButton)
-          manualEntryButton.translatesAutoresizingMaskIntoConstraints = false
-          NSLayoutConstraint.activate([
-              manualEntryButton.leadingAnchor.constraint(equalTo: buttonContainer.leadingAnchor, constant:
+        buttonContainer.addSubview(manualEntryButton)
+        manualEntryButton.translatesAutoresizingMaskIntoConstraints = false
+        var constraints = [
+            manualEntryButton.leadingAnchor.constraint(equalTo: buttonContainer.leadingAnchor, constant:
                                                             LiquidGlassDetector.isEnabled ? configuration.appearance.formInsets.leading : 0),
-              manualEntryButton.trailingAnchor.constraint(equalTo: buttonContainer.trailingAnchor, constant:
+            manualEntryButton.trailingAnchor.constraint(equalTo: buttonContainer.trailingAnchor, constant:
                                                             LiquidGlassDetector.isEnabled ? -configuration.appearance.formInsets.trailing : 0),
-              manualEntryButton.topAnchor.constraint(equalTo: buttonContainer.topAnchor),
-              manualEntryButton.bottomAnchor.constraint(equalTo: buttonContainer.bottomAnchor, constant: LiquidGlassDetector.isEnabled ? -8 : 0),
-          ])
+            manualEntryButton.topAnchor.constraint(equalTo: buttonContainer.topAnchor),
+            manualEntryButton.bottomAnchor.constraint(equalTo: buttonContainer.bottomAnchor, constant: LiquidGlassDetector.isEnabled ? -8 : 0),
+        ]
+        if !LiquidGlassDetector.isEnabled {
+            let heightConstraint = manualEntryButton.heightAnchor.constraint(equalToConstant: manualEntryButton.frame.size.height)
+            constraints.append(heightConstraint)
+        }
+        NSLayoutConstraint.activate(constraints)
 
         let stackView = UIStackView(arrangedSubviews: [formStackView, errorLabel, separatorView, tableView])
         stackView.spacing = PaymentSheetUI.defaultPadding
         stackView.axis = .vertical
         stackView.setCustomSpacing(24, after: formStackView) // hardcoded from figma value
         stackView.setCustomSpacing(0, after: separatorView)
-        stackView.setCustomSpacing(0, after: tableView)
         stackView.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(stackView)
         view.addSubview(buttonContainer)
