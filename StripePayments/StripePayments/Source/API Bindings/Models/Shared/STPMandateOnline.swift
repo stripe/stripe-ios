@@ -4,7 +4,6 @@
 //
 
 import Foundation
-@_spi(STP) import StripeCore
 
 /// Online acceptance details for a mandate.
 @_spi(ConfirmationTokensPublicPreview) public class STPMandateOnline: NSObject, STPAPIResponseDecodable {

@@ -4,7 +4,6 @@
 //
 
 import Foundation
-@_spi(STP) import StripeCore
 
 /// Preview of payment method details captured by the ConfirmationToken.
 @_spi(ConfirmationTokensPublicPreview) public class STPPaymentMethodPreview: NSObject, STPAPIResponseDecodable {

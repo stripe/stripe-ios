@@ -4,7 +4,6 @@
 //
 
 import Foundation
-@_spi(STP) import StripeCore
 
 /// Customer acceptance information for the mandate of a transaction.
 @_spi(ConfirmationTokensPublicPreview) public class STPMandateCustomerAcceptance: NSObject, STPAPIResponseDecodable {

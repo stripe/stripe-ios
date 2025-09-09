@@ -4,7 +4,6 @@
 //
 
 import Foundation
-@_spi(STP) import StripeCore
 
 /// Mandate data associated with a ConfirmationToken
 @_spi(ConfirmationTokensPublicPreview) public class STPMandateData: NSObject, STPAPIResponseDecodable {

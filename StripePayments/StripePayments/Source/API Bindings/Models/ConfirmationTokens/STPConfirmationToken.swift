@@ -6,7 +6,6 @@
 //
 
 import Foundation
-@_spi(STP) import StripeCore
 
 /// ConfirmationToken objects represent your customer's payment details. They can be used with PaymentIntents and SetupIntents to collect payments.
 /// - seealso: https://stripe.com/docs/api/confirmation_tokens
