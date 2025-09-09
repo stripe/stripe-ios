@@ -43,6 +43,11 @@ struct AuthenticatedView: View {
 
     @Environment(\.isLoading) private var isLoading
 
+    // MARK: - Constants
+
+    private let sourceAmount: Decimal = 10 // Hardcoded for demo
+    private let sourceCurrency = "usd" // Hardcoded for demo
+
     private var shouldDisableButtons: Bool {
         isLoading.wrappedValue
     }
@@ -169,15 +174,66 @@ struct AuthenticatedView: View {
                                         }
                                 } else if let onrampSessionResponse {
                                     let details = onrampSessionResponse.transactionDetails
-                                    Button("Check Out | \(details.sourceAmount) \(details.sourceCurrency.localizedUppercase)") {
-                                        checkout(
-                                            with: onrampSessionResponse,
-                                            paymentToken: cryptoPaymentToken
-                                        )
+
+                                    VStack(spacing: 8) {
+                                        // Fees breakdown
+                                        VStack(alignment: .leading, spacing: 4) {
+                                            HStack {
+                                                Text("Amount:")
+                                                    .font(.footnote)
+                                                    .foregroundColor(.secondary)
+                                                Spacer()
+                                                Text("\(details.sourceAmount) \(details.sourceCurrency.localizedUppercase)")
+                                                    .font(.footnote.monospaced())
+                                                    .foregroundColor(.secondary)
+                                            }
+
+                                            HStack {
+                                                Text("Network Fee:")
+                                                    .font(.footnote)
+                                                    .foregroundColor(.secondary)
+                                                Spacer()
+                                                Text("\(details.fees.networkFeeAmount) \(details.sourceCurrency.localizedUppercase)")
+                                                    .font(.footnote.monospaced())
+                                                    .foregroundColor(.secondary)
+                                            }
+
+                                            HStack {
+                                                Text("Transaction Fee:")
+                                                    .font(.footnote)
+                                                    .foregroundColor(.secondary)
+                                                Spacer()
+                                                Text("\(details.fees.transactionFeeAmount) \(details.sourceCurrency.localizedUppercase)")
+                                                    .font(.footnote.monospaced())
+                                                    .foregroundColor(.secondary)
+                                            }
+
+                                            Divider()
+
+                                            HStack {
+                                                Text("Total:")
+                                                    .font(.footnote)
+                                                    .bold()
+                                                    .foregroundColor(.primary)
+                                                Spacer()
+                                                Text("\(onrampSessionResponse.sourceTotalAmount) \(details.sourceCurrency.localizedUppercase)")
+                                                    .font(.footnote.monospaced())
+                                                    .bold()
+                                                    .foregroundColor(.primary)
+                                            }
+                                        }
+                                        .padding(.vertical, 8)
+
+                                        Button("Check Out | \(onrampSessionResponse.sourceTotalAmount) \(details.sourceCurrency.localizedUppercase)") {
+                                            checkout(
+                                                with: onrampSessionResponse,
+                                                paymentToken: cryptoPaymentToken
+                                            )
+                                        }
+                                        .buttonStyle(PrimaryButtonStyle())
+                                        .disabled(shouldDisableButtons)
+                                        .opacity(shouldDisableButtons ? 0.5 : 1)
                                     }
-                                    .buttonStyle(PrimaryButtonStyle())
-                                    .disabled(shouldDisableButtons)
-                                    .opacity(shouldDisableButtons ? 0.5 : 1)
                                 }
 
                                 HStack(alignment: .firstTextBaseline, spacing: 4) {
@@ -362,7 +418,7 @@ struct AuthenticatedView: View {
 
         let request = StripeAPI.paymentRequest(withMerchantIdentifier: "merchant.com.stripe.umbrella.test", country: "US", currency: "USD")
         request.paymentSummaryItems = [
-            PKPaymentSummaryItem(label: "Example", amount: NSDecimalNumber(string: "1.00"))
+            PKPaymentSummaryItem(label: "$\(String(format: "%.2f", NSDecimalNumber(decimal: sourceAmount).doubleValue)) \(sourceCurrency.uppercased()) + fees", amount: .zero, type: .pending)
         ]
 
         isLoading.wrappedValue = true
@@ -447,8 +503,8 @@ struct AuthenticatedView: View {
 
         let request = CreateOnrampSessionRequest(
             paymentToken: cryptoPaymentToken,
-            sourceAmount: 10, // <--- hardcoded for demo
-            sourceCurrency: "usd", // <--- hardcoded for demo
+            sourceAmount: sourceAmount,
+            sourceCurrency: sourceCurrency,
             destinationCurrency: "usdc", // <--- hardcoded for demo
             destinationNetwork: wallet.network,
             walletAddress: wallet.walletAddress,

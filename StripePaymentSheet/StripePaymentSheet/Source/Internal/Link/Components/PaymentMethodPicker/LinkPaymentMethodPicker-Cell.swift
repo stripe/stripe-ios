@@ -197,6 +197,12 @@ extension LinkPaymentMethodPicker {
                 separator.leadingAnchor.constraint(equalTo: layoutMarginsGuide.leadingAnchor),
                 separator.trailingAnchor.constraint(equalTo: layoutMarginsGuide.trailingAnchor),
             ])
+
+            if LiquidGlassDetector.isEnabled {
+                NSLayoutConstraint.activate([
+                    heightAnchor.constraint(greaterThanOrEqualToConstant: LinkUI.minimumItemHeightForLiquidGlass),
+                ])
+            }
         }
 
         private func update() {

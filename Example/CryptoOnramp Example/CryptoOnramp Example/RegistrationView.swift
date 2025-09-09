@@ -26,6 +26,9 @@ struct RegistrationView: View {
     /// The OAuth scopes selected for authentication.
     let selectedScopes: [OAuthScopes]
 
+    /// Whether the app is running in livemode or testmode.
+    let livemode: Bool
+
     @State private var fullName: String = ""
     @State private var phoneNumber: String = ""
     @State private var country: String = "US"
@@ -185,7 +188,8 @@ struct RegistrationView: View {
         // Authenticate with the demo merchant backend as well.
         let response = try await APIClient.shared.authenticateUser(
             with: email,
-            oauthScopes: selectedScopes
+            oauthScopes: selectedScopes,
+            livemode: livemode
         )
         let laiId = response.data.id
 
@@ -268,7 +272,8 @@ struct RegistrationView: View {
         RegistrationView(
             coordinator: coordinator,
             email: "test@example.com",
-            selectedScopes: OAuthScopes.onrampScope
+            selectedScopes: OAuthScopes.onrampScope,
+            livemode: false
         )
     }
 }

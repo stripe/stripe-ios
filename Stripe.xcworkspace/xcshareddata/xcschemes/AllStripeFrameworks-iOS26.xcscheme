@@ -190,6 +190,20 @@
          </BuildActionEntry>
          <BuildActionEntry
             buildForTesting = "YES"
+            buildForRunning = "YES"
+            buildForProfiling = "YES"
+            buildForArchiving = "YES"
+            buildForAnalyzing = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "0B4292842E1EC57600012FB8"
+               BuildableName = "StripeCryptoOnramp.framework"
+               BlueprintName = "StripeCryptoOnramp"
+               ReferencedContainer = "container:StripeCryptoOnramp/StripeCryptoOnramp.xcodeproj">
+            </BuildableReference>
+         </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "YES"
             buildForRunning = "NO"
             buildForProfiling = "NO"
             buildForArchiving = "NO"

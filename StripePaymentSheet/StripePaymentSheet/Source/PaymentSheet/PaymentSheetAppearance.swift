@@ -44,7 +44,7 @@ public extension PaymentSheet {
 
         /// The shadow used for inputs and tabs in PaymentSheet
         /// - Note: Set this to `.disabled` to disable shadows
-        public var shadow: Shadow = Shadow()
+        public var shadow: Shadow = LiquidGlassDetector.isEnabled ? .disabled : Shadow()
 
         /// Describes the appearance of the Embedded Mobile Payment Element
         public var embeddedPaymentElement: EmbeddedPaymentElement = EmbeddedPaymentElement()
@@ -54,10 +54,9 @@ public extension PaymentSheet {
         @_spi(AppearanceAPIAdditionsPreview)
         public var sheetCornerRadius: CGFloat = LiquidGlassDetector.isEnabled ? 34.0 : 12.0
 
-        /// The insets used for all text fields in PaymentSheet
-        /// - Note: Controls the internal padding within text fields for more manual control over text field spacing
+        /// The insets used for all input fields (e.g. textfields, dropdowns) in PaymentSheet.
         @_spi(AppearanceAPIAdditionsPreview)
-        public var textFieldInsets: NSDirectionalEdgeInsets = NSDirectionalEdgeInsets(top: 4, leading: 11, bottom: 4, trailing: 11)
+        public var textFieldInsets: NSDirectionalEdgeInsets = LiquidGlassDetector.isEnabled ? .insets(top: 8, leading: 15, bottom: 8, trailing: 15) : .insets(top: 4, leading: 11, bottom: 4, trailing: 11)
 
         /// Describes the padding used for all forms
         public var formInsets: NSDirectionalEdgeInsets = PaymentSheetUI.defaultSheetMargins
