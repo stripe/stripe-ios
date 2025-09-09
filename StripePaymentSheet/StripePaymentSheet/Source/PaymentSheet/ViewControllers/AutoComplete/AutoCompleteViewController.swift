@@ -79,15 +79,10 @@ class AutoCompleteViewController: UIViewController {
         tableView.tableFooterView = UIView()
         return tableView
     }()
-    lazy var manualEntryButton: UIView = {
-        if #available(iOS 26.0, *),
-           LiquidGlassDetector.isEnabled {
-            return UIButton.makeManualEntryGlassButton(appearance: configuration.appearance, didTap: manualEntryButtonTapped)
-        } else {
-            let button = UIButton.makeManualEntryButton(appearance: configuration.appearance)
-            button.addTarget(self, action: #selector(manualEntryButtonTapped), for: .touchUpInside)
-            return button
-        }
+    lazy var manualEntryButton: UIButton = {
+        let button = UIButton.makeManualEntryButton(appearance: configuration.appearance)
+        button.addTarget(self, action: #selector(manualEntryButtonTapped), for: .touchUpInside)
+        return button
     }()
     lazy var separatorView: UIView = {
        let view = UIView()
@@ -147,19 +142,15 @@ class AutoCompleteViewController: UIViewController {
         let buttonContainer = UIView()
         buttonContainer.addSubview(manualEntryButton)
         manualEntryButton.translatesAutoresizingMaskIntoConstraints = false
-        var constraints = [
+        NSLayoutConstraint.activate([
             manualEntryButton.leadingAnchor.constraint(equalTo: buttonContainer.leadingAnchor, constant:
                                                             LiquidGlassDetector.isEnabled ? configuration.appearance.formInsets.leading : 0),
             manualEntryButton.trailingAnchor.constraint(equalTo: buttonContainer.trailingAnchor, constant:
                                                             LiquidGlassDetector.isEnabled ? -configuration.appearance.formInsets.trailing : 0),
             manualEntryButton.topAnchor.constraint(equalTo: buttonContainer.topAnchor),
             manualEntryButton.bottomAnchor.constraint(equalTo: buttonContainer.bottomAnchor, constant: LiquidGlassDetector.isEnabled ? -8 : 0),
-        ]
-        if !LiquidGlassDetector.isEnabled {
-            let heightConstraint = manualEntryButton.heightAnchor.constraint(equalToConstant: manualEntryButton.frame.size.height)
-            constraints.append(heightConstraint)
-        }
-        NSLayoutConstraint.activate(constraints)
+            manualEntryButton.heightAnchor.constraint(equalToConstant: manualEntryButton.frame.size.height)
+        ])
 
         let stackView = UIStackView(arrangedSubviews: [formStackView, errorLabel, separatorView, tableView])
         stackView.spacing = PaymentSheetUI.defaultPadding
