@@ -33,6 +33,14 @@ struct CryptoOnrampExampleView: View {
         isLoading.wrappedValue || email.isEmpty || coordinator == nil
     }
 
+    private var isRunningOnSimulator: Bool {
+        #if targetEnvironment(simulator)
+        return true
+        #else
+        return false
+        #endif
+    }
+
     // MARK: - View
 
     var body: some View {
@@ -54,8 +62,22 @@ struct CryptoOnrampExampleView: View {
                             }
                     }
 
-                    Toggle("Livemode", isOn: $livemode)
-                        .font(.headline)
+                    VStack(alignment: .leading, spacing: 4) {
+                        Toggle("Livemode", isOn: $livemode)
+                            .font(.headline)
+                            .disabled(isRunningOnSimulator)
+
+                        if isRunningOnSimulator {
+                            HStack(spacing: 4) {
+                                Image(systemName: "exclamationmark.octagon")
+                                    .font(.caption)
+                                    .foregroundColor(.secondary)
+                                Text("Livemode is not supported in the simulator.")
+                                    .font(.caption)
+                                    .foregroundColor(.secondary)
+                            }
+                        }
+                    }
 
                     OAuthScopeSelector(
                         selectedScopes: $selectedScopes,
@@ -108,6 +130,11 @@ struct CryptoOnrampExampleView: View {
         }
         .navigationViewStyle(.stack)
         .onAppear {
+            // Force livemode to false on simulator
+            if isRunningOnSimulator {
+                livemode = false
+            }
+
             guard coordinator == nil else {
                 return
             }
