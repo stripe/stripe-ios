@@ -165,7 +165,7 @@ class AutoCompleteViewController: UIViewController {
         stackView.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(stackView)
         view.addSubview(buttonContainer)
-        
+
         buttonContainer.translatesAutoresizingMaskIntoConstraints = false
 
         stackViewBottomConstraint = stackView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor)
@@ -178,21 +178,21 @@ class AutoCompleteViewController: UIViewController {
             stackView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
             stackView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
             separatorView.heightAnchor.constraint(equalToConstant: 0.33),
-            
+
             buttonContainer.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
             buttonContainer.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
         ])
-        
+
         // Set up proper content inset for table view after layout
         view.layoutIfNeeded()
         updateTableViewInsets()
     }
-    
+
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         updateTableViewInsets()
     }
-    
+
     private func updateTableViewInsets() {
         // Add bottom content inset to tableview to account for floating button
         let buttonHeight = manualEntryButton.frame.height + (LiquidGlassDetector.isEnabled ? 16 : 8)
