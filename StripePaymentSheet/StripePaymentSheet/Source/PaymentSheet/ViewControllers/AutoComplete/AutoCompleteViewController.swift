@@ -139,6 +139,7 @@ class AutoCompleteViewController: UIViewController {
 
     // MARK: - Overrides
     var stackViewBottomConstraint: NSLayoutConstraint!
+    var buttonBottomConstraint: NSLayoutConstraint!
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = configuration.appearance.colors.background
@@ -155,7 +156,7 @@ class AutoCompleteViewController: UIViewController {
               manualEntryButton.bottomAnchor.constraint(equalTo: buttonContainer.bottomAnchor, constant: LiquidGlassDetector.isEnabled ? -8 : 0),
           ])
 
-        let stackView = UIStackView(arrangedSubviews: [formStackView, errorLabel, separatorView, tableView, buttonContainer])
+        let stackView = UIStackView(arrangedSubviews: [formStackView, errorLabel, separatorView, tableView])
         stackView.spacing = PaymentSheetUI.defaultPadding
         stackView.axis = .vertical
         stackView.setCustomSpacing(24, after: formStackView) // hardcoded from figma value
@@ -163,17 +164,40 @@ class AutoCompleteViewController: UIViewController {
         stackView.setCustomSpacing(0, after: tableView)
         stackView.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(stackView)
+        view.addSubview(buttonContainer)
+        
+        buttonContainer.translatesAutoresizingMaskIntoConstraints = false
 
         stackViewBottomConstraint = stackView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor)
+        buttonBottomConstraint = buttonContainer.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor)
         NSLayoutConstraint.activate([
             stackViewBottomConstraint,
+            buttonBottomConstraint,
 
             stackView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: verticalOffset),
             stackView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
             stackView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
             separatorView.heightAnchor.constraint(equalToConstant: 0.33),
+            
+            buttonContainer.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
+            buttonContainer.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
         ])
-
+        
+        // Set up proper content inset for table view after layout
+        view.layoutIfNeeded()
+        updateTableViewInsets()
+    }
+    
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        updateTableViewInsets()
+    }
+    
+    private func updateTableViewInsets() {
+        // Add bottom content inset to tableview to account for floating button
+        let buttonHeight = manualEntryButton.frame.height + (LiquidGlassDetector.isEnabled ? 16 : 8)
+        tableView.contentInset.bottom = buttonHeight
+        tableView.verticalScrollIndicatorInsets.bottom = buttonHeight
     }
 
     private func registerForKeyboardNotifications() {
@@ -194,8 +218,10 @@ class AutoCompleteViewController: UIViewController {
         let keyboardInViewHeight = view.safeAreaLayoutGuide.layoutFrame.intersection(keyboardViewEndFrame).height
         if notification.name == UIResponder.keyboardWillHideNotification {
             stackViewBottomConstraint.constant = 0
+            buttonBottomConstraint.constant = 0
         } else {
             stackViewBottomConstraint.constant = -keyboardInViewHeight
+            buttonBottomConstraint.constant = -keyboardInViewHeight
         }
 
         // Animate the container above the keyboard
