@@ -28,7 +28,7 @@ import Foundation
     private(set) public var liveMode = false
 
     /// Data used for generating a Mandate.
-    private(set) public var mandateData: STPMandateData?
+    private(set) public var mandateData: STPMandateDataParams?
 
     /// ID of the PaymentIntent this token was used to confirm.
     private(set) public var paymentIntentId: String?
@@ -83,7 +83,7 @@ import Foundation
         }
 
         // Parse nested objects
-        confirmationToken.mandateData = STPMandateData.decodedObject(
+        confirmationToken.mandateData = STPMandateDataParams.decodedObject(
             fromAPIResponse: dict.stp_dictionary(forKey: "mandate_data")
         )
         confirmationToken.paymentMethodOptions = STPPaymentMethodOptions.decodedObject(

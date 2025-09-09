@@ -16,11 +16,24 @@ public class STPMandateDataParams: NSObject {
 
     @objc public var additionalAPIParameters: [AnyHashable: Any] = [:]
 
+    /// :nodoc:
+    @objc private(set) public var allResponseFields: [AnyHashable: Any] = [:]
+
     /// Initializes an STPMandateDataParams from an STPMandateCustomerAcceptanceParams.
     @objc public init(
         customerAcceptance: STPMandateCustomerAcceptanceParams
     ) {
         self.customerAcceptance = customerAcceptance
+        super.init()
+    }
+
+    /// Internal initializer for decoded objects
+    internal init(
+        customerAcceptance: STPMandateCustomerAcceptanceParams,
+        allResponseFields: [AnyHashable: Any]
+    ) {
+        self.customerAcceptance = customerAcceptance
+        self.allResponseFields = allResponseFields
         super.init()
     }
 
@@ -48,5 +61,26 @@ extension STPMandateDataParams: STPFormEncodable {
     @objc
     public class func rootObjectName() -> String? {
         return "mandate_data"
+    }
+}
+
+extension STPMandateDataParams: STPAPIResponseDecodable {
+    @objc
+    @_spi(STP) public static func decodedObject(fromAPIResponse response: [AnyHashable: Any]?) -> Self? {
+        guard let response = response else {
+            return nil
+        }
+        let dict = response.stp_dictionaryByRemovingNulls()
+
+        guard let customerAcceptance = STPMandateCustomerAcceptanceParams.decodedObject(
+            fromAPIResponse: dict.stp_dictionary(forKey: "customer_acceptance")
+        ) else {
+            return nil
+        }
+
+        return STPMandateDataParams(
+            customerAcceptance: customerAcceptance,
+            allResponseFields: response
+        ) as? Self
     }
 }

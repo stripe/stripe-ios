@@ -8,9 +8,9 @@
 import XCTest
 
 class STPConfirmationTokenTest: XCTestCase {
-    
+
     // MARK: - Basic Parsing Tests
-    
+
     func testConfirmationTokenParsing() {
         let json = [
             "id": "ctoken_1NnQUf2eZvKYlo2CIObdtbnb",
@@ -21,11 +21,11 @@ class STPConfirmationTokenTest: XCTestCase {
             "payment_intent": "pi_1234567890",
             "setup_intent": "seti_1234567890",
             "return_url": "https://example.com/return",
-            "setup_future_usage": "off_session"
+            "setup_future_usage": "off_session",
         ] as [String: Any]
-        
+
         let confirmationToken = STPConfirmationToken.decodedObject(fromAPIResponse: json)
-        
+
         XCTAssertNotNil(confirmationToken)
         XCTAssertEqual(confirmationToken?.stripeId, "ctoken_1NnQUf2eZvKYlo2CIObdtbnb")
         XCTAssertTrue(confirmationToken?.liveMode ?? false)
@@ -36,7 +36,7 @@ class STPConfirmationTokenTest: XCTestCase {
         XCTAssertEqual(confirmationToken?.returnURL, "https://example.com/return")
         XCTAssertEqual(confirmationToken?.setupFutureUsage, .offSession)
     }
-    
+
     func testConfirmationTokenWithNullableFields() {
         let json = [
             "id": "ctoken_1NnQUf2eZvKYlo2CIObdtbnb",
@@ -47,11 +47,11 @@ class STPConfirmationTokenTest: XCTestCase {
             "payment_intent": NSNull(),
             "setup_intent": NSNull(),
             "return_url": NSNull(),
-            "setup_future_usage": NSNull()
+            "setup_future_usage": NSNull(),
         ] as [String: Any]
-        
+
         let confirmationToken = STPConfirmationToken.decodedObject(fromAPIResponse: json)
-        
+
         XCTAssertNotNil(confirmationToken)
         XCTAssertEqual(confirmationToken?.stripeId, "ctoken_1NnQUf2eZvKYlo2CIObdtbnb")
         XCTAssertFalse(confirmationToken?.liveMode ?? true)
@@ -61,9 +61,9 @@ class STPConfirmationTokenTest: XCTestCase {
         XCTAssertNil(confirmationToken?.returnURL)
         XCTAssertNil(confirmationToken?.setupFutureUsage)
     }
-    
+
     // MARK: - MandateData Tests
-    
+
     func testConfirmationTokenWithMandateData() {
         let json = [
             "id": "ctoken_1NnQUf2eZvKYlo2CIObdtbnb",
@@ -75,25 +75,25 @@ class STPConfirmationTokenTest: XCTestCase {
                     "type": "online",
                     "online": [
                         "ip_address": "192.168.1.1",
-                        "user_agent": "Mozilla/5.0 (iPhone; CPU iPhone OS 14_6 like Mac OS X)"
-                    ]
-                ]
-            ]
+                        "user_agent": "Mozilla/5.0 (iPhone; CPU iPhone OS 14_6 like Mac OS X)",
+                    ],
+                ],
+            ],
         ] as [String: Any]
-        
+
         let confirmationToken = STPConfirmationToken.decodedObject(fromAPIResponse: json)
-        
+
         XCTAssertNotNil(confirmationToken)
         XCTAssertNotNil(confirmationToken?.mandateData)
         XCTAssertNotNil(confirmationToken?.mandateData?.customerAcceptance)
-        XCTAssertEqual(confirmationToken?.mandateData?.customerAcceptance.type, "online")
-        XCTAssertNotNil(confirmationToken?.mandateData?.customerAcceptance.online)
-        XCTAssertEqual(confirmationToken?.mandateData?.customerAcceptance.online?.ipAddress, "192.168.1.1")
-        XCTAssertEqual(confirmationToken?.mandateData?.customerAcceptance.online?.userAgent, "Mozilla/5.0 (iPhone; CPU iPhone OS 14_6 like Mac OS X)")
+        XCTAssertEqual(confirmationToken?.mandateData?.customerAcceptance.typeString, "online")
+        XCTAssertNotNil(confirmationToken?.mandateData?.customerAcceptance.onlineParams)
+        XCTAssertEqual(confirmationToken?.mandateData?.customerAcceptance.onlineParams?.ipAddress, "192.168.1.1")
+        XCTAssertEqual(confirmationToken?.mandateData?.customerAcceptance.onlineParams?.userAgent, "Mozilla/5.0 (iPhone; CPU iPhone OS 14_6 like Mac OS X)")
     }
-    
+
     // MARK: - PaymentMethodOptions Tests
-    
+
     func testConfirmationTokenWithPaymentMethodOptions() {
         let json = [
             "id": "ctoken_1NnQUf2eZvKYlo2CIObdtbnb",
@@ -103,22 +103,22 @@ class STPConfirmationTokenTest: XCTestCase {
             "payment_method_options": [
                 "card": [
                     "cvc_token": "cvctok_1234567890",
-                    "require_cvc_recollection": true
-                ]
-            ]
+                    "require_cvc_recollection": true,
+                ],
+            ],
         ] as [String: Any]
-        
+
         let confirmationToken = STPConfirmationToken.decodedObject(fromAPIResponse: json)
-        
+
         XCTAssertNotNil(confirmationToken)
         XCTAssertNotNil(confirmationToken?.paymentMethodOptions)
         XCTAssertNotNil(confirmationToken?.paymentMethodOptions?.card)
         XCTAssertEqual(confirmationToken?.paymentMethodOptions?.card?.cvcToken, "cvctok_1234567890")
         XCTAssertTrue(confirmationToken?.paymentMethodOptions?.card?.requireCvcRecollection ?? false)
     }
-    
+
     // MARK: - PaymentMethodPreview Tests
-    
+
     func testConfirmationTokenWithPaymentMethodPreview() {
         let json = [
             "id": "ctoken_1NnQUf2eZvKYlo2CIObdtbnb",
@@ -136,11 +136,11 @@ class STPConfirmationTokenTest: XCTestCase {
                         "line1": "50 Sprague St",
                         "line2": "",
                         "postal_code": "02136",
-                        "state": "MA"
+                        "state": "MA",
                     ],
                     "email": "jennyrosen@stripe.com",
                     "name": "Jenny Rosen",
-                    "phone": NSNull()
+                    "phone": NSNull(),
                 ],
                 "card": [
                     "brand": "visa",
@@ -149,19 +149,19 @@ class STPConfirmationTokenTest: XCTestCase {
                     "exp_year": 2026,
                     "funding": "credit",
                     "last4": "4242",
-                    "display_brand": "visa"
-                ]
-            ]
+                    "display_brand": "visa",
+                ],
+            ],
         ] as [String: Any]
-        
+
         let confirmationToken = STPConfirmationToken.decodedObject(fromAPIResponse: json)
-        
+
         XCTAssertNotNil(confirmationToken)
         XCTAssertNotNil(confirmationToken?.paymentMethodPreview)
         XCTAssertEqual(confirmationToken?.paymentMethodPreview?.type, .card)
         XCTAssertEqual(confirmationToken?.paymentMethodPreview?.allowRedisplay, .always)
         XCTAssertEqual(confirmationToken?.paymentMethodPreview?.customerId, "cus_1234567890")
-        
+
         // Test billing details
         let billingDetails = confirmationToken?.paymentMethodPreview?.billingDetails
         XCTAssertNotNil(billingDetails)
@@ -172,7 +172,7 @@ class STPConfirmationTokenTest: XCTestCase {
         XCTAssertEqual(billingDetails?.address?.line1, "50 Sprague St")
         XCTAssertEqual(billingDetails?.address?.postalCode, "02136")
         XCTAssertEqual(billingDetails?.address?.state, "MA")
-        
+
         // Test card details
         let card = confirmationToken?.paymentMethodPreview?.card
         XCTAssertNotNil(card)
@@ -183,7 +183,7 @@ class STPConfirmationTokenTest: XCTestCase {
         XCTAssertEqual(card?.funding, "credit")
         XCTAssertEqual(card?.last4, "4242")
     }
-    
+
     func testConfirmationTokenWithPaymentMethodPreviewAllowRedisplayVariations() {
         // Test "limited"
         let limitedJson = [
@@ -193,28 +193,28 @@ class STPConfirmationTokenTest: XCTestCase {
             "livemode": false,
             "payment_method_preview": [
                 "type": "card",
-                "allow_redisplay": "limited"
-            ]
+                "allow_redisplay": "limited",
+            ],
         ] as [String: Any]
-        
+
         let limitedToken = STPConfirmationToken.decodedObject(fromAPIResponse: limitedJson)
         XCTAssertEqual(limitedToken?.paymentMethodPreview?.allowRedisplay, .limited)
-        
+
         // Test "unspecified"
         let unspecifiedJson = [
             "id": "ctoken_2",
-            "object": "confirmation_token", 
+            "object": "confirmation_token",
             "created": 1694025025,
             "livemode": false,
             "payment_method_preview": [
                 "type": "card",
-                "allow_redisplay": "unspecified"
-            ]
+                "allow_redisplay": "unspecified",
+            ],
         ] as [String: Any]
-        
+
         let unspecifiedToken = STPConfirmationToken.decodedObject(fromAPIResponse: unspecifiedJson)
         XCTAssertEqual(unspecifiedToken?.paymentMethodPreview?.allowRedisplay, .unspecified)
-        
+
         // Test missing (should default to unspecified)
         let missingJson = [
             "id": "ctoken_3",
@@ -223,37 +223,37 @@ class STPConfirmationTokenTest: XCTestCase {
             "livemode": false,
             "payment_method_preview": [
                 "type": "card"
-            ]
+            ],
         ] as [String: Any]
-        
+
         let missingToken = STPConfirmationToken.decodedObject(fromAPIResponse: missingJson)
         XCTAssertEqual(missingToken?.paymentMethodPreview?.allowRedisplay, .unspecified)
     }
-    
+
     // MARK: - Shipping Tests
-    
+
     func testConfirmationTokenWithShipping() {
         let json = [
             "id": "ctoken_1NnQUf2eZvKYlo2CIObdtbnb",
-            "object": "confirmation_token", 
+            "object": "confirmation_token",
             "created": 1694025025,
             "livemode": false,
             "shipping": [
                 "address": [
                     "city": "Hyde Park",
-                    "country": "US", 
+                    "country": "US",
                     "line1": "50 Sprague St",
                     "line2": "Apt 2",
                     "postal_code": "02136",
-                    "state": "MA"
+                    "state": "MA",
                 ],
                 "name": "Jenny Rosen",
-                "phone": "+15551234567"
-            ]
+                "phone": "+15551234567",
+            ],
         ] as [String: Any]
-        
+
         let confirmationToken = STPConfirmationToken.decodedObject(fromAPIResponse: json)
-        
+
         XCTAssertNotNil(confirmationToken)
         XCTAssertNotNil(confirmationToken?.shipping)
         XCTAssertEqual(confirmationToken?.shipping?.name, "Jenny Rosen")
@@ -265,9 +265,9 @@ class STPConfirmationTokenTest: XCTestCase {
         XCTAssertEqual(confirmationToken?.shipping?.address?.postalCode, "02136")
         XCTAssertEqual(confirmationToken?.shipping?.address?.state, "MA")
     }
-    
+
     // MARK: - Description Tests
-    
+
     func testConfirmationTokenDescription() {
         let json = [
             "id": "ctoken_1NnQUf2eZvKYlo2CIObdtbnb",
@@ -278,13 +278,13 @@ class STPConfirmationTokenTest: XCTestCase {
             "payment_intent": "pi_1234567890",
             "setup_intent": "seti_1234567890",
             "return_url": "https://example.com/return",
-            "setup_future_usage": "off_session"
+            "setup_future_usage": "off_session",
         ] as [String: Any]
-        
+
         let confirmationToken = STPConfirmationToken.decodedObject(fromAPIResponse: json)
-        
+
         let description = confirmationToken?.description ?? ""
-        
+
         XCTAssertTrue(description.contains("ctoken_1NnQUf2eZvKYlo2CIObdtbnb"))
         XCTAssertTrue(description.contains("livemode = YES"))
         XCTAssertTrue(description.contains("paymentIntentId = pi_1234567890"))

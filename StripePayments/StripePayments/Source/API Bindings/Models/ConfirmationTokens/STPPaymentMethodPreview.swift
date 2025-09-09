@@ -7,7 +7,7 @@ import Foundation
 
 /// Preview of payment method details captured by the ConfirmationToken.
 @_spi(ConfirmationTokensPublicPreview) public class STPPaymentMethodPreview: NSObject, STPAPIResponseDecodable {
-    
+
     /// Type of the payment method.
     public let type: STPPaymentMethodType
     /// Billing details for the payment method.
@@ -16,7 +16,7 @@ import Foundation
     public let allowRedisplay: STPPaymentMethodAllowRedisplay
     /// The ID of the Customer to which this PaymentMethod is saved. Nil when the PaymentMethod has not been saved to a Customer.
     public let customerId: String?
-    
+
     // Payment method type-specific properties
     /// If this is a card PaymentMethod, this contains additional details.
     public let card: STPPaymentMethodCard?
@@ -92,10 +92,10 @@ import Foundation
     public let multibanco: STPPaymentMethodMultibanco?
     /// If this is a MobilePay PaymentMethod, this contains additional details.
     public let mobilePay: STPPaymentMethodMobilePay?
-    
+
     /// :nodoc:
     @objc private(set) public var allResponseFields: [AnyHashable: Any] = [:]
-    
+
     internal init(
         type: STPPaymentMethodType,
         billingDetails: STPPaymentMethodBillingDetails?,
@@ -184,27 +184,27 @@ import Foundation
         self.allResponseFields = allResponseFields
         super.init()
     }
-    
+
     @objc
     public static func decodedObject(fromAPIResponse response: [AnyHashable: Any]?) -> Self? {
         guard let response = response else {
             return nil
         }
         let dict = response.stp_dictionaryByRemovingNulls()
-        
+
         guard let typeString = dict.stp_string(forKey: "type") else {
             return nil
         }
-        
+
         let type = STPPaymentMethod.type(from: typeString)
         let allowRedisplay = STPPaymentMethod.allowRedisplay(from: dict.stp_string(forKey: "allow_redisplay") ?? "")
         let customerId = dict.stp_string(forKey: "customer")
-        
+
         // Parse billing_details
         let billingDetails = STPPaymentMethodBillingDetails.decodedObject(
             fromAPIResponse: dict.stp_dictionary(forKey: "billing_details")
         )
-        
+
         // Parse type-specific payment method details using the same pattern as STPPaymentMethod
         let card = STPPaymentMethodCard.decodedObject(fromAPIResponse: dict.stp_dictionary(forKey: "card"))
         let alipay = STPPaymentMethodAlipay.decodedObject(fromAPIResponse: dict.stp_dictionary(forKey: "alipay"))
@@ -243,7 +243,7 @@ import Foundation
         let crypto = STPPaymentMethodCrypto.decodedObject(fromAPIResponse: dict.stp_dictionary(forKey: "crypto"))
         let multibanco = STPPaymentMethodMultibanco.decodedObject(fromAPIResponse: dict.stp_dictionary(forKey: "multibanco"))
         let mobilePay = STPPaymentMethodMobilePay.decodedObject(fromAPIResponse: dict.stp_dictionary(forKey: "mobilepay"))
-        
+
         return STPPaymentMethodPreview(
             type: type,
             billingDetails: billingDetails,
