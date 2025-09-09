@@ -8,12 +8,11 @@
 
 import OHHTTPStubs
 import OHHTTPStubsSwift
+@_spi(DEPRECATED) import StripeCore
 @_spi(STP) import StripeCoreTestUtils
 import XCTest
 
 // swift-format-ignore
-@testable @_spi(STP) import StripeCore
-
 @testable import StripeIdentity
 
 final class IdentityAPIClientTest: APIStubbedTestCase {
