@@ -134,7 +134,6 @@ class AutoCompleteViewController: UIViewController {
 
     // MARK: - Overrides
     var stackViewBottomConstraint: NSLayoutConstraint!
-    var buttonBottomConstraint: NSLayoutConstraint!
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = configuration.appearance.colors.background
@@ -164,10 +163,8 @@ class AutoCompleteViewController: UIViewController {
         buttonContainer.translatesAutoresizingMaskIntoConstraints = false
 
         stackViewBottomConstraint = stackView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor)
-        buttonBottomConstraint = buttonContainer.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor)
         NSLayoutConstraint.activate([
             stackViewBottomConstraint,
-            buttonBottomConstraint,
 
             stackView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: verticalOffset),
             stackView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
@@ -176,6 +173,7 @@ class AutoCompleteViewController: UIViewController {
 
             buttonContainer.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
             buttonContainer.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
+            buttonContainer.bottomAnchor.constraint(equalTo: stackView.bottomAnchor),
         ])
 
         // Set up proper content inset for table view after layout
@@ -213,10 +211,8 @@ class AutoCompleteViewController: UIViewController {
         let keyboardInViewHeight = view.safeAreaLayoutGuide.layoutFrame.intersection(keyboardViewEndFrame).height
         if notification.name == UIResponder.keyboardWillHideNotification {
             stackViewBottomConstraint.constant = 0
-            buttonBottomConstraint.constant = 0
         } else {
             stackViewBottomConstraint.constant = -keyboardInViewHeight
-            buttonBottomConstraint.constant = -keyboardInViewHeight
         }
 
         // Animate the container above the keyboard
