@@ -41,19 +41,50 @@ extension UIButton {
         stpAssert(LiquidGlassDetector.isEnabled)
         var manualEntryButtonAppearance = appearance
         manualEntryButtonAppearance.primaryButton.font = appearance.primaryButton.font?.regular ?? appearance.font.base.regular
-        manualEntryButtonAppearance.primaryButton.textColor = appearance.colors.primary
-        manualEntryButtonAppearance.primaryButton.borderWidth = 0
-        manualEntryButtonAppearance.primaryButton.backgroundColor = UIColor(dynamicProvider: { traitCollection in
+        manualEntryButtonAppearance.primaryButton.textColor = UIColor(dynamicProvider: { traitCollection in
             if traitCollection.isDarkMode {
-                return appearance.colors.componentBackground
+                return appearance.colors.background.contrastingColor
             }
 
-            return appearance.colors.background.darken(by: 0.07)
+            return appearance.colors.primary
         })
-        return ConfirmButton(
+        manualEntryButtonAppearance.primaryButton.borderWidth = 0
+        manualEntryButtonAppearance.primaryButton.backgroundColor = .clear
+        
+        let confirmButton = ConfirmButton(
             callToAction: .custom(title: .Localized.enter_address_manually),
             appearance: manualEntryButtonAppearance,
             didTap: didTap
         )
+        
+        // Apply glass effect using UIVisualEffectView with UIGlassEffect
+        let glassEffect = UIGlassEffect(style: .regular)
+        let glassView = UIVisualEffectView(effect: glassEffect)
+        glassView.translatesAutoresizingMaskIntoConstraints = false
+        
+        // Create container view to hold both the glass effect and button
+        let containerView = UIView()
+        containerView.addSubview(glassView)
+        containerView.addSubview(confirmButton)
+        
+        confirmButton.translatesAutoresizingMaskIntoConstraints = false
+        
+        NSLayoutConstraint.activate([
+            glassView.topAnchor.constraint(equalTo: containerView.topAnchor),
+            glassView.leadingAnchor.constraint(equalTo: containerView.leadingAnchor),
+            glassView.trailingAnchor.constraint(equalTo: containerView.trailingAnchor),
+            glassView.bottomAnchor.constraint(equalTo: containerView.bottomAnchor),
+            
+            confirmButton.topAnchor.constraint(equalTo: containerView.topAnchor),
+            confirmButton.leadingAnchor.constraint(equalTo: containerView.leadingAnchor),
+            confirmButton.trailingAnchor.constraint(equalTo: containerView.trailingAnchor),
+            confirmButton.bottomAnchor.constraint(equalTo: containerView.bottomAnchor)
+        ])
+        
+        // Apply capsule corner radius to both views
+        containerView.ios26_applyCapsuleCornerConfiguration()
+        glassView.ios26_applyCapsuleCornerConfiguration()
+        
+        return containerView
     }
 }
