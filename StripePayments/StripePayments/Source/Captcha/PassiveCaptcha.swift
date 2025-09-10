@@ -131,6 +131,7 @@ private enum CaptchaResult {
 
     @_spi(STP) public func fetchToken() async -> String? {
         guard let siteKey = passiveCaptcha?.siteKey else { return nil }
+        let startTime = Date()
         var isReady: Bool
         if validationTask == nil {
             start()
@@ -138,8 +139,9 @@ private enum CaptchaResult {
         } else {
             isReady = isValidationComplete
         }
-        STPAnalyticsClient.sharedClient.logPassiveCaptchaAttach(siteKey: siteKey, isReady: isReady)
-        return await validationTask?.value
+        let token = await validationTask?.value
+        STPAnalyticsClient.sharedClient.logPassiveCaptchaAttach(siteKey: siteKey, isReady: isReady, duration: Date().timeIntervalSince(startTime) * 1000)
+        return token
     }
 }
 
@@ -168,9 +170,9 @@ extension STPAnalyticsClient {
         )
     }
 
-    func logPassiveCaptchaAttach(siteKey: String, isReady: Bool) {
+    func logPassiveCaptchaAttach(siteKey: String, isReady: Bool, duration: TimeInterval) {
         log(
-            analytic: GenericAnalytic(event: .passiveCaptchaAttach, params: ["site_key": siteKey, "is_ready": isReady])
+            analytic: GenericAnalytic(event: .passiveCaptchaAttach, params: ["site_key": siteKey, "is_ready": isReady, "duration": duration])
         )
     }
 }
