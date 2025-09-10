@@ -559,7 +559,7 @@ class ExampleWalletButtonsModel: ObservableObject {
                                 .init(name: "Silver Potato", amount: 345),
                                 .init(name: "Tax", amount: 200),
                                 .init(name: "Shipping", amount: selectedRate.amount), ],
-                    shippingRates: shippingRates
+                    shippingRates: shippingRates + [.init(id: "newAmount", amount: 100, displayName: "newAmount", deliveryEstimate: nil)]
                 )
 
                 // Return the update to the Shop Pay UI
@@ -589,7 +589,7 @@ class ExampleWalletButtonsModel: ObservableObject {
                                     .init(name: "Silver Potato", amount: 345),
                                     .init(name: "Tax", amount: 200),
                                     .init(name: "Shipping", amount: shippingRates.first?.amount ?? 0), ],
-                        shippingRates: shippingRates
+                        shippingRates: shippingRates + [.init(id: "newAmount", amount: 100, displayName: "newAmount", deliveryEstimate: nil)]
                     )
 
                     completion(update)

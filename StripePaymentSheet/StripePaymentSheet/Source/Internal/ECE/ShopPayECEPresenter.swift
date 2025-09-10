@@ -19,6 +19,7 @@ class ShopPayECEPresenter: NSObject, UIAdaptivePresentationControllerDelegate {
     private weak var presentingViewController: UIViewController?
     private var didReceiveECEClick: Bool = false
     private let analyticsHelper: PaymentSheetAnalyticsHelper
+    private var currentShippingRates: [PaymentSheet.ShopPayConfiguration.ShippingRate]
 
     init(
         flowController: PaymentSheet.FlowController,
@@ -28,6 +29,7 @@ class ShopPayECEPresenter: NSObject, UIAdaptivePresentationControllerDelegate {
         self.flowController = flowController
         self.shopPayConfiguration = configuration
         self.analyticsHelper = analyticsHelper
+        self.currentShippingRates = configuration.shippingRates
         super.init()
     }
 
@@ -120,6 +122,9 @@ extension ShopPayECEPresenter: ExpressCheckoutWebviewDelegate {
             return try await withCheckedThrowingContinuation { continuation in
                 handler(selectedContact) { update in
                     if let update = update {
+                        // Update our current shipping rates
+                        self.currentShippingRates = update.shippingRates
+
                         // Create typed response
                         let response = ECEShippingUpdateResponse(
                             lineItems: update.lineItems.map { ECELineItem(name: $0.name, amount: $0.amount) },
@@ -154,7 +159,7 @@ extension ShopPayECEPresenter: ExpressCheckoutWebviewDelegate {
             // No handler, accept with default values
             let response = ECEShippingUpdateResponse(
                 lineItems: shopPayConfiguration.lineItems.map { ECELineItem(name: $0.name, amount: $0.amount) },
-                shippingRates: shopPayConfiguration.shippingRates.map { rate in
+                shippingRates: currentShippingRates.map { rate in
                     ECEShippingRate(
                         id: rate.id,
                         amount: rate.amount,
@@ -174,7 +179,7 @@ extension ShopPayECEPresenter: ExpressCheckoutWebviewDelegate {
         // Decode the shipping rate
         let selectedRate = try ECEBridgeTypes.decode(ECEShippingRate.self, from: shippingRate)
 
-        guard let matchingRate = shopPayConfiguration.shippingRates.first(where: { $0.id == selectedRate.id }) else {
+        guard let matchingRate = currentShippingRates.first(where: { $0.id == selectedRate.id }) else {
             throw ExpressCheckoutError.invalidShippingRate(rateId: selectedRate.id)
         }
 
@@ -187,6 +192,9 @@ extension ShopPayECEPresenter: ExpressCheckoutWebviewDelegate {
             return await withCheckedContinuation { continuation in
                 handler(rateSelected) { update in
                     if let update = update {
+                        // Update our current shipping rates
+                        self.currentShippingRates = update.shippingRates
+
                         // Create typed response
                         let response = ECEShippingUpdateResponse(
                             lineItems: update.lineItems.map { ECELineItem(name: $0.name, amount: $0.amount) },
@@ -221,7 +229,7 @@ extension ShopPayECEPresenter: ExpressCheckoutWebviewDelegate {
             // No handler, return current configuration
             let response = ECEShippingUpdateResponse(
                 lineItems: shopPayConfiguration.lineItems.map { ECELineItem(name: $0.name, amount: $0.amount) },
-                shippingRates: shopPayConfiguration.shippingRates.map { rate in
+                shippingRates: currentShippingRates.map { rate in
                     ECEShippingRate(
                         id: rate.id,
                         amount: rate.amount,
@@ -242,7 +250,7 @@ extension ShopPayECEPresenter: ExpressCheckoutWebviewDelegate {
         // Build the configuration for Shop Pay
         let clickConfig = ECEClickConfiguration(
             lineItems: shopPayConfiguration.lineItems.map { ECELineItem(name: $0.name, amount: $0.amount) },
-            shippingRates: shopPayConfiguration.shippingAddressRequired ? shopPayConfiguration.shippingRates.map { rate in
+            shippingRates: shopPayConfiguration.shippingAddressRequired ? currentShippingRates.map { rate in
                 ECEShippingRate(
                     id: rate.id,
                     amount: rate.amount,
