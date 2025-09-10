@@ -21,7 +21,7 @@ struct CryptoOnrampExampleView: View {
     @State private var email: String = ""
     @State private var selectedScopes: Set<OAuthScopes> = Set(OAuthScopes.onrampScope)
     @State private var showRegistration: Bool = false
-    @State private var showAuthenticatedView: Bool = false
+    @State private var showOnrampFlowContainerView: Bool = false
     @State private var authenticationCustomerId: String?
     @State private var linkAuthIntentId: String?
     @State private var livemode: Bool = false
@@ -114,11 +114,11 @@ struct CryptoOnrampExampleView: View {
 
                         if let customerId = authenticationCustomerId {
                             HiddenNavigationLink(
-                                destination: AuthenticatedView(
+                                destination: OnrampFlowContainerView(
                                     coordinator: coordinator,
                                     customerId: customerId
                                 ),
-                                isActive: $showAuthenticatedView
+                                isActive: $showOnrampFlowContainerView
                             )
                         }
                     }
@@ -239,7 +239,7 @@ struct CryptoOnrampExampleView: View {
 
                             // Delay so the navigation link animation doesn't get canceled.
                             DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
-                                showAuthenticatedView = true
+                                showOnrampFlowContainerView = true
                             }
                         }
                     case .denied:

@@ -33,7 +33,7 @@ struct RegistrationView: View {
     @State private var phoneNumber: String = ""
     @State private var country: String = "US"
     @State private var errorMessage: String?
-    @State private var showAuthenticatedView: Bool = false
+    @State private var showOnrampFlowContainerView: Bool = false
     @State private var registrationCustomerId: String?
     @State private var isRegistrationComplete: Bool = false
     @State private var showUpdatePhoneNumberSheet: Bool = false
@@ -131,8 +131,8 @@ struct RegistrationView: View {
 
                 if let customerId = registrationCustomerId {
                     HiddenNavigationLink(
-                        destination: AuthenticatedView(coordinator: coordinator, customerId: customerId),
-                        isActive: $showAuthenticatedView
+                        destination: OnrampFlowContainerView(coordinator: coordinator, customerId: customerId),
+                        isActive: $showOnrampFlowContainerView
                     )
                 }
             }
@@ -205,7 +205,7 @@ struct RegistrationView: View {
 
                 // Delay so the navigation link animation doesn't get canceled.
                 DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
-                    showAuthenticatedView = true
+                    showOnrampFlowContainerView = true
                 }
             }
         } else {
