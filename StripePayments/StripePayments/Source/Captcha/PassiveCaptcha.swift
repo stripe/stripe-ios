@@ -49,26 +49,42 @@ private enum CaptchaResult {
         case timeout
     }
 
-    private let passiveCaptcha: PassiveCaptcha?
-    private var validationTask: Task<String?, Never>?
-    private let testTimeout: UInt64?
-    private var isValidationComplete = false
+    /// Test configuration - can be set by tests to override default behavior
+    private var testConfiguration: TestConfiguration?
 
-    public init(passiveCaptcha: PassiveCaptcha?, testTimeout: UInt64? = nil) {
-        self.passiveCaptcha = passiveCaptcha
-        self.testTimeout = testTimeout
+    public struct TestConfiguration {
+        let timeout: UInt64?
+        let delayValidation: Bool
+        
+        public init(timeout: UInt64? = nil, delayValidation: Bool = false) {
+            self.timeout = timeout
+            self.delayValidation = delayValidation
+        }
     }
 
-    @_spi(STP) public func start() {
+    private let passiveCaptcha: PassiveCaptcha?
+    private var validationTask: Task<String?, Never>?
+    private var isValidationComplete = false
+
+    public init(passiveCaptcha: PassiveCaptcha?) {
+        self.passiveCaptcha = passiveCaptcha
+    }
+
+    internal init(passiveCaptcha: PassiveCaptcha?, testConfiguration: TestConfiguration? = nil) {
+        self.passiveCaptcha = passiveCaptcha
+        self.testConfiguration = testConfiguration
+    }
+
+    public func start() {
         guard let passiveCaptcha, validationTask == nil else { return }
         let timeoutNs: UInt64 = {
-            if let testTimeout {
+            if let testTimeout = testConfiguration?.timeout {
                 return testTimeout
             }
             return STPAnalyticsClient.isUnitOrUITest ? 0 : 8_000_000_000
         }()
 
-        validationTask = Task<String?, Never> { [siteKey = passiveCaptcha.siteKey, timeoutNs, weak self] () -> String? in
+        validationTask = Task<String?, Never> { [siteKey = passiveCaptcha.siteKey, testConfiguration, weak self] () -> String? in
             STPAnalyticsClient.sharedClient.logPassiveCaptchaInit(siteKey: siteKey)
             do {
                 let hcaptcha = try HCaptcha(apiKey: passiveCaptcha.siteKey,
@@ -91,6 +107,9 @@ private enum CaptchaResult {
                                     }
                                 }
                             }
+                        }
+                        if testConfiguration?.delayValidation ?? false {
+                            try? await Task.sleep(nanoseconds: timeoutNs)
                         }
                         return result
                     }
@@ -129,7 +148,7 @@ private enum CaptchaResult {
         isValidationComplete = true
     }
 
-    @_spi(STP) public func fetchToken() async -> String? {
+    public func fetchToken() async -> String? {
         guard let siteKey = passiveCaptcha?.siteKey else { return nil }
         let startTime = Date()
         var isReady: Bool
