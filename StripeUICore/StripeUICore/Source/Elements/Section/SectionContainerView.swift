@@ -198,32 +198,60 @@ extension SectionContainerView: EventHandler {
 
 extension SectionContainerView {
     class MultiElementRowView: UIView {
+        private let theme: ElementsAppearance
+        private let views: [UIView]
+
+        private var multiElementStackView: UIStackView?
+
         init(views: [UIView], theme: ElementsAppearance = .default) {
+            self.views = views
+            self.theme = theme
             super.init(frame: .zero)
 
             // Add dividers between the views
-            func createDivider() -> UIView {
-                let divider = UIView.makeSpacerView(width: theme.separatorWidth)
-                divider.backgroundColor = theme.colors.divider
-                divider.translatesAutoresizingMaskIntoConstraints = false
-                return divider
-            }
-            let viewsWithDividersBetweenEach = views.enumerated().flatMap { index, view in
-                index == views.count - 1 ? [view] : [view, createDivider()]
-            }
+            let arrangedSubviews = views.interleaveWithDividers(theme: theme)
 
             // Make the stackview
-            let stackView = UIStackView(arrangedSubviews: viewsWithDividersBetweenEach)
-            stackView.axis = .horizontal
-            stackView.distribution = .fill
-            addAndPinSubview(stackView)
+            multiElementStackView = UIStackView(arrangedSubviews: arrangedSubviews)
+            if let stackView = multiElementStackView {
+                stackView.axis = .horizontal
+                stackView.distribution = .fill
+                addAndPinSubview(stackView)
+            }
 
             // Make all views equal width
             for i in 1..<views.count {
                 views[i].widthAnchor.constraint(equalTo: views[0].widthAnchor).isActive = true
             }
         }
+
         required init?(coder: NSCoder) { fatalError("init(coder:) has not been implemented") }
+
+        public func toggleView(_ view: UIView, shouldShow: Bool, animated: Bool) {
+            guard let stackView = multiElementStackView, let index = views.firstIndex(of: view) else {
+                return
+            }
+
+            views[index].isHidden = !shouldShow
+
+            stackView.arrangedSubviews.forEach {
+                $0.removeFromSuperview()
+            }
+
+            let visibleViews = views.filter { !$0.isHidden }
+            let arrangedSubviews = visibleViews.interleaveWithDividers(theme: theme)
+
+            arrangedSubviews.forEach {
+                stackView.addArrangedSubview($0)
+            }
+
+            // Make all views equal width
+            if visibleViews.count > 1 {
+                for i in 1..<visibleViews.count {
+                    visibleViews[i].widthAnchor.constraint(equalTo: visibleViews[0].widthAnchor).isActive = true
+                }
+            }
+        }
     }
 }
 
@@ -253,4 +281,19 @@ private func buildStackView(views: [UIView], theme: ElementsAppearance = .defaul
     // Note that StackViewWithSeparator's subviews are not subviews of the `backgroundView`, so we have to round the stackview's corners too :(
     stackView.applyCornerRadius(appearance: theme)
     return stackView
+}
+
+private extension Array where Element == UIView {
+    func interleaveWithDividers(theme: ElementsAppearance) -> [UIView] {
+        func createDivider() -> UIView {
+            let divider = UIView.makeSpacerView(width: theme.separatorWidth)
+            divider.backgroundColor = theme.colors.divider
+            divider.translatesAutoresizingMaskIntoConstraints = false
+            return divider
+        }
+
+        return enumerated().flatMap { index, view in
+            index == count - 1 ? [view] : [view, createDivider()]
+        }
+    }
 }

@@ -26,5 +26,13 @@ public extension SectionElement {
                 $0.delegate = self
             }
         }
+
+        public func toggleElement(_ element: Element, shouldShow: Bool, animated: Bool = true) {
+            guard let multiElementRowView = view as? SectionContainerView.MultiElementRowView else {
+                return
+            }
+
+            multiElementRowView.toggleView(element.view, shouldShow: shouldShow, animated: animated)
+        }
     }
 }
