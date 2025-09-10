@@ -20,7 +20,8 @@ struct BaseLinkHoldbackExperiment {
     let linkDisplayed: Bool
     let linkNative: Bool
     let sdkVersion: String
-    let sessionId: String
+    let elementsSessionId: String
+    let mobileSessionId: String
 
     var dimensionsDictionary: [String: Any] {
         [
@@ -34,7 +35,8 @@ struct BaseLinkHoldbackExperiment {
             "link_native": linkNative,
             "recognition_type": "email",
             "mobile_sdk_version": sdkVersion,
-            "elements_session_id": sessionId,
+            "elements_session_id": elementsSessionId,
+            "mobile_session_id": mobileSessionId,
         ]
     }
 
@@ -84,6 +86,7 @@ struct BaseLinkHoldbackExperiment {
         self.hasSPMs = hasCustomer && paymentMethodSaveEnabled && linkNotEnabledOrEnableLinkSPMFlag
 
         self.sdkVersion = StripeAPIConfiguration.STPSDKVersion
-        self.sessionId = elementsSession.sessionID
+        self.elementsSessionId = elementsSession.sessionID
+        self.mobileSessionId = AnalyticsHelper.shared.sessionID ?? "N/a"
     }
 }
