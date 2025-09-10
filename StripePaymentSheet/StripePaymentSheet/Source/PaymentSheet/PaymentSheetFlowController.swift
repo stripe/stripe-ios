@@ -293,9 +293,11 @@ extension PaymentSheet {
             self.analyticsHelper.logInitialized()
             self.viewController = Self.makeViewController(configuration: configuration, loadResult: loadResult, analyticsHelper: analyticsHelper, walletButtonsViewState: self.walletButtonsViewState)
             self.viewController.flowControllerDelegate = self
-            self.passiveCaptchaChallenge = PassiveCaptchaChallenge(passiveCaptcha: loadResult.elementsSession.passiveCaptcha)
-            self.viewController.passiveCaptchaChallenge = self.passiveCaptchaChallenge
-            Task { await self.passiveCaptchaChallenge?.start() }
+            if configuration.enablePassiveCaptcha {
+                self.passiveCaptchaChallenge = PassiveCaptchaChallenge(passiveCaptcha: loadResult.elementsSession.passiveCaptcha)
+                self.viewController.passiveCaptchaChallenge = self.passiveCaptchaChallenge
+                Task { await self.passiveCaptchaChallenge?.start() }
+            }
             updatePaymentOption()
         }
 
