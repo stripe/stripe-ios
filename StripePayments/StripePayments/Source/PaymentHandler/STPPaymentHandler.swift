@@ -256,6 +256,7 @@ public class STPPaymentHandler: NSObject {
             if let paymentIntent = paymentIntent,
                 error == nil
             {
+                print("captcha intent id: \(paymentIntent.stripeId)")
                 strongSelf._handleNextAction(
                     forPayment: paymentIntent,
                     with: authenticationContext,
@@ -550,6 +551,7 @@ public class STPPaymentHandler: NSObject {
                         || (setupIntent.status == .requiresAction
                             && self.isNextActionSuccessState(nextAction: setupIntent.nextAction))
                 {
+                    print("captcha intent id: \(setupIntent.stripeID)")
                     completion(.succeeded, setupIntent, nil)
                 } else {
                     let errorMessage = "STPPaymentHandler status is succeeded, but the SI is not in a success state or there was an error."

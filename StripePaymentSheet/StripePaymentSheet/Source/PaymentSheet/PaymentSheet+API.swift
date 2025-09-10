@@ -159,7 +159,6 @@ extension PaymentSheet {
         analyticsHelper: PaymentSheetAnalyticsHelper,
         completion: @escaping (PaymentSheetResult, STPAnalyticsClient.DeferredIntentConfirmationType?) -> Void
     ) {
-        print("captcha intent id: \(String(describing: intent.stripeId))")
         // Translates a STPPaymentHandler result to a PaymentResult
         let paymentHandlerCompletion: (STPPaymentHandlerActionStatus, NSError?) -> Void = { status, error in
             completion(makePaymentSheetResult(for: status, error: error), nil)
