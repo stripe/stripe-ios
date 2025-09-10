@@ -237,6 +237,11 @@ final class CardSectionElement: ContainerElement {
         cardSectionWithScannerView?.stopAndCloseScanner()
     }
 
+    /// Called when any element outside the CardSectionElement begins editing.
+    func handleExternalElementBeganEditing() {
+        cardSectionWithScannerView?.stopAndCloseScanner()
+    }
+
     // MARK: Card brand choice
     private var cardBrands = Set<STPCardBrand>()
     func fetchAndUpdateCardBrands() {

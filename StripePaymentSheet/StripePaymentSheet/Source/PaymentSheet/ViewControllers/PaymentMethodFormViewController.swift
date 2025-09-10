@@ -26,6 +26,8 @@ class PaymentMethodFormViewController: UIViewController {
 
     /// Reference to the AddressSectionElement in the form, if present
     private var addressSectionElement: AddressSectionElement?
+    /// Reference to the CardSectionElement in the form, if present
+    private var cardSectionElement: CardSectionElement?
 
     var paymentOption: PaymentOption? {
         let params = IntentConfirmParams(type: paymentMethodType)
@@ -133,6 +135,9 @@ class PaymentMethodFormViewController: UIViewController {
 
         // Setup AddressSectionElement autocomplete callback after form creation
         setupAddressSectionAutocompleteCallback()
+        
+        // Setup CardSectionElement reference for scanner control
+        setupCardSectionElement()
     }
 
     override func viewDidLoad() {
@@ -186,6 +191,16 @@ class PaymentMethodFormViewController: UIViewController {
             addressSection.didTapAutocompleteButton = { [weak self] in
                 self?.presentAutocomplete()
             }
+        }
+    }
+
+    /// Sets up the CardSectionElement reference for scanner control
+    private func setupCardSectionElement() {
+        let formElement = (form as? PaymentMethodElementWrapper<FormElement>)?.element ?? form
+        if let cardSection = formElement.getAllUnwrappedSubElements()
+            .compactMap({ $0 as? CardSectionElement }).first {
+            // Store reference to the card section element
+            self.cardSectionElement = cardSection
         }
     }
 
@@ -247,6 +262,10 @@ extension PaymentMethodFormViewController: ElementDelegate {
     }
 
     func didBeginEditing(element: Element) {
+        // Only notify CardSectionElement if the editing didn't originate from it
+        if element !== cardSectionElement {
+            cardSectionElement?.handleExternalElementBeganEditing()
+        }
         delegate?.didUpdate(self)
     }
 }
