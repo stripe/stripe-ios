@@ -55,7 +55,7 @@ private enum CaptchaResult {
     public struct TestConfiguration {
         let timeout: UInt64?
         let delayValidation: Bool
-        
+
         public init(timeout: UInt64? = nil, delayValidation: Bool = false) {
             self.timeout = timeout
             self.delayValidation = delayValidation

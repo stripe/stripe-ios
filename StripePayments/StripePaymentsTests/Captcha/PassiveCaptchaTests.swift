@@ -5,9 +5,9 @@
 //  Created by Joyce Qin on 8/21/25.
 //
 
+@testable@_spi(STP) import StripeCoreTestUtils
 @_spi(STP) @testable import StripePayments
 @_spi(STP) @testable import StripePaymentSheet
-@testable@_spi(STP) import StripeCoreTestUtils
 @testable@_spi(STP) import StripePaymentsTestUtils
 import XCTest
 
@@ -20,7 +20,7 @@ class PassiveCaptchaTests: XCTestCase {
         let hcaptchaToken = await passiveCaptchaChallenge.fetchToken()
         XCTAssertNotNil(hcaptchaToken)
     }
-    
+
     func testPassiveCaptchaTimeout() async {
         let passiveCaptcha = PassiveCaptcha(siteKey: "143aadb6-fb60-4ab6-b128-f7fe53426d4a", rqdata: nil)
         let shortTimeoutNs: UInt64 = 0
@@ -51,7 +51,7 @@ class PassiveCaptchaNetworkTests: STPNetworkStubbingTestCase {
         await passiveCaptchaChallenge.start()
         let expectation = XCTestExpectation(description: "Load")
         let clientSecret = try await STPTestingAPIClient.shared.fetchPaymentIntent(types: ["card"])
-        PaymentSheetLoader.load(mode: .paymentIntentClientSecret(clientSecret), configuration: self.configuration, analyticsHelper: .init(integrationShape: .complete, configuration: configuration), integrationShape: .complete) { result in
+        PaymentSheetLoader.load(mode: .paymentIntentClientSecret(clientSecret), configuration: self.configuration, analyticsHelper: .init(integrationShape: .complete, configuration: configuration), integrationShape: .complete) { _ in
             expectation.fulfill()
         }
         await fulfillment(of: [expectation], timeout: STPTestingNetworkRequestTimeout)
