@@ -375,8 +375,10 @@ public final class EmbeddedPaymentElement {
             self.delegate?.embeddedPaymentElementDidUpdateHeight(embeddedPaymentElement: self)
         }
         self.lastUpdatedPaymentOption = paymentOption
-        self.passiveCaptchaChallenge = PassiveCaptchaChallenge(passiveCaptcha: loadResult.elementsSession.passiveCaptcha)
-        Task { await self.passiveCaptchaChallenge?.start() }
+        if configuration.enablePassiveCaptcha {
+            self.passiveCaptchaChallenge = PassiveCaptchaChallenge(passiveCaptcha: loadResult.elementsSession.passiveCaptcha)
+            Task { await self.passiveCaptchaChallenge?.start() }
+        }
     }
 }
 
