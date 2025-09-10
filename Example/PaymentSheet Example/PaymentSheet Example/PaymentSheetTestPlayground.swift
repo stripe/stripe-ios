@@ -323,6 +323,11 @@ struct PaymentSheetTestPlayground: View {
             if newValue == .on {
                 playgroundController.appearance.applyLiquidGlass()
                 playgroundController.settings.enableLiquidGlassNavigation = .on
+            } else {
+                // We've reset the appearance, so check if navbar style is still on.
+                if playgroundController.settings.enableLiquidGlassNavigation == .on {
+                    playgroundController.appearance.navigationBarStyle = .glass
+                }
             }
             playgroundController.settings.enableLiquidGlass = newValue
         }

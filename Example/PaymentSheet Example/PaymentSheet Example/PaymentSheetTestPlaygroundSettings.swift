@@ -300,14 +300,14 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
         case off
     }
     enum EnableLiquidGlass: String, PickerEnum {
-        static var enumName: String { "Enable LiquidGlass" }
+        static var enumName: String { "LiquidGlass 🥃" }
 
         case on
         case off
     }
 
     enum EnableLiquidGlassNavigation: String, PickerEnum {
-        static var enumName: String { "Enable LiquidGlass Nav" }
+        static var enumName: String { "LiquidGlassNavBar 🧭" }
 
         case on
         case off
