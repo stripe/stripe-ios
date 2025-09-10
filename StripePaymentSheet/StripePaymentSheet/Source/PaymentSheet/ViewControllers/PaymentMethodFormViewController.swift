@@ -245,6 +245,10 @@ extension PaymentMethodFormViewController: ElementDelegate {
             mandateElement.mandateTextView.attributedText = text
         }
     }
+
+    func didBeginEditing(element: Element) {
+        delegate?.didUpdate(self)
+    }
 }
 
 // MARK: - PresentingViewControllerDelegate

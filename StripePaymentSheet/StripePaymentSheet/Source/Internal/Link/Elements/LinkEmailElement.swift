@@ -114,4 +114,8 @@ extension LinkEmailElement: ElementDelegate {
     func continueToNextField(element: Element) {
         delegate?.continueToNextField(element: self)
     }
+
+    func didBeginEditing(element: Element) {
+        delegate?.didBeginEditing(element: self)
+    }
 }

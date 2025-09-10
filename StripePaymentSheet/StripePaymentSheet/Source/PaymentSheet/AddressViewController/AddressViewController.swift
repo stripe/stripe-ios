@@ -501,6 +501,10 @@ extension AddressViewController {
      @_spi(STP) public func continueToNextField(element: Element) {
         // no-op
     }
+
+     @_spi(STP) public func didBeginEditing(element: Element) {
+        // no-op
+    }
 }
 
 // MARK: AutoCompleteViewControllerDelegate

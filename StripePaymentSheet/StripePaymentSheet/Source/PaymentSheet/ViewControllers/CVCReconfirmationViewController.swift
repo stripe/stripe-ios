@@ -157,6 +157,10 @@ extension CVCReconfirmationViewController: ElementDelegate {
     func didUpdate(element: Element) {
         updateUI()
     }
+
+    func didBeginEditing(element: Element) {
+        updateUI()
+    }
 }
 
 extension CVCReconfirmationViewController: BottomSheetContentViewController {

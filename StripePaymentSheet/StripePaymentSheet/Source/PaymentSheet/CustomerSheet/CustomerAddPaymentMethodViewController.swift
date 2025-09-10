@@ -397,6 +397,10 @@ extension CustomerAddPaymentMethodViewController: ElementDelegate {
         delegate?.didUpdate(self)
         animateHeightChange()
     }
+
+    func didBeginEditing(element: Element) {
+        delegate?.didUpdate(self)
+    }
 }
 
 extension CustomerAddPaymentMethodViewController: PaymentMethodTypeCollectionViewDelegate {

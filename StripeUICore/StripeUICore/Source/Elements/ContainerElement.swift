@@ -69,6 +69,10 @@ extension ContainerElement {
         // Failed to become first responder
         delegate?.continueToNextField(element: self)
     }
+
+    public func didBeginEditing(element: Element) {
+        delegate?.didBeginEditing(element: self)
+    }
 }
 
 extension ContainerElement {

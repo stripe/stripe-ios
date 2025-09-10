@@ -405,6 +405,10 @@ extension UpdatePaymentMethodViewController: ElementDelegate {
             break
         }
     }
+
+    func didBeginEditing(element: Element) {
+        latestError = nil // clear error on new input
+    }
 }
 
 extension STPPaymentMethodCard {

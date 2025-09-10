@@ -67,6 +67,12 @@ public extension Element {
      Note for implementors: Be sure to chain this call upwards to your own ElementDelegate.
      */
     func continueToNextField(element: Element)
+
+    /**
+     This method is called whenever the user begins editing  the caller.
+     Note for implementors: Be sure to chain this call upwards to your own ElementDelegate.
+     */
+    func didBeginEditing(element: Element)
 }
 
 /**

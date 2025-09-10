@@ -330,6 +330,10 @@ extension LinkInlineSignupView: ElementDelegate {
         // No-op
     }
 
+    func didBeginEditing(element: Element) {
+        // No-op
+    }
+
 }
 
 extension LinkInlineSignupView: LinkInlineSignupViewModelDelegate {

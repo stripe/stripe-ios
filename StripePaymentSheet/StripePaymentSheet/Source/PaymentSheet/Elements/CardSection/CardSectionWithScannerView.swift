@@ -83,6 +83,10 @@ final class CardSectionWithScannerView: UIView {
         becomeFirstResponder()
     }
 
+    func stopAndCloseScanner() {
+        cardScanningView.stopAndCloseScanner()
+    }
+
     private func hideCardScanner() {
         self.cardScanningView.prepDismissAnimation()
         UIView.animate(withDuration: 0.3, delay: 0, usingSpringWithDamping: 1.0, initialSpringVelocity: 0.3, options: [.curveEaseInOut]) {
@@ -104,13 +108,6 @@ final class CardSectionWithScannerView: UIView {
 
     override var canBecomeFirstResponder: Bool {
         return true
-    }
-
-    // If the keyboard is shown or we move off screen the card scanner should be stopped
-    override func resignFirstResponder() -> Bool {
-        // If we leave the screen or an input field is focused, we close the scanner
-        cardScanningView.stopAndCloseScanner()
-        return super.resignFirstResponder()
     }
 
     override func willMove(toWindow newWindow: UIWindow?) {

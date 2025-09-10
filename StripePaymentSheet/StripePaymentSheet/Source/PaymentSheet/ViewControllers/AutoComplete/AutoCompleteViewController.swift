@@ -216,6 +216,10 @@ extension AutoCompleteViewController: ElementDelegate {
     func continueToNextField(element: Element) {
         // no-op
     }
+
+    func didBeginEditing(element: Element) {
+        // no-op
+    }
 }
 
 // MARK: MKLocalSearchCompleterDelegate

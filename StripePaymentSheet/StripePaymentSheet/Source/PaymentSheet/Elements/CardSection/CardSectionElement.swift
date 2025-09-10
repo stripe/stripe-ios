@@ -26,7 +26,7 @@ final class CardSectionElement: ContainerElement {
     lazy var view: UIView = {
         #if !os(visionOS)
         if #available(iOS 13.0, macCatalyst 14, *), STPCardScanner.cardScanningAvailable {
-            return CardSectionWithScannerView(
+            let cardSectionWithScannerView = CardSectionWithScannerView(
                 cardSectionView: cardSection.view,
                 opensCardScannerAutomatically: opensCardScannerAutomatically,
                 delegate: self,
@@ -34,6 +34,8 @@ final class CardSectionElement: ContainerElement {
                 analyticsHelper: analyticsHelper,
                 linkAppearance: linkAppearance
             )
+            self.cardSectionWithScannerView = cardSectionWithScannerView
+            return cardSectionWithScannerView
         } else {
             return cardSection.view
         }
@@ -41,6 +43,7 @@ final class CardSectionElement: ContainerElement {
             return cardSection.view
         #endif
     }()
+    private var cardSectionWithScannerView: CardSectionWithScannerView?
     let cardSection: SectionElement
     let analyticsHelper: PaymentSheetAnalyticsHelper?
     let cardBrandFilter: CardBrandFilter
@@ -227,6 +230,11 @@ final class CardSectionElement: ContainerElement {
         }
 
         delegate?.didUpdate(element: self)
+    }
+
+    func didBeginEditing(element: Element) {
+        delegate?.didBeginEditing(element: self)
+        cardSectionWithScannerView?.stopAndCloseScanner()
     }
 
     // MARK: Card brand choice

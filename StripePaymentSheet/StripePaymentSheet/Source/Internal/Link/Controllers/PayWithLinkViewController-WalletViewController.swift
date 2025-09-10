@@ -594,6 +594,9 @@ extension PayWithLinkViewController.WalletViewController: ElementDelegate {
     func continueToNextField(element: Element) {
     }
 
+    func didBeginEditing(element: Element) {
+    }
+
 }
 
 // MARK: - PayWithLinkWalletViewModelDelegate
