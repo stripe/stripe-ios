@@ -169,7 +169,8 @@ extension PaymentSheetViewController {
             addAndPinSubview(stackView)
         }
         private func updateStackView() {
-            // Update Apple Pay Button's color
+            // There's no way to change the color (PKPaymentButtonStyle) of the button,
+            // so swap between light and dark versions of Apple Pay button if needed
             let isBlackApplePayButton = appearance.colors.background.contrastingColor == .black
             if isBlackApplePayButton {
                 if let whiteApplePayButtonIndex = stackView.arrangedSubviews.firstIndex(of: applePayButtonWhite) {
