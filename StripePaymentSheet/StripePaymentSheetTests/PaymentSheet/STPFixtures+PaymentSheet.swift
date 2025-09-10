@@ -43,7 +43,8 @@ public extension EmbeddedPaymentElement.Configuration {
         return configuration
     }
 }
-extension PaymentSheet.Appearance {
+
+public extension PaymentSheet.Appearance {
     mutating func applyLiquidGlassIfPossible() {
         #if !os(visionOS)
         if #available(iOS 26.0, *) {
@@ -62,6 +63,7 @@ extension PaymentSheet.Appearance {
         return self
     }
 }
+
 extension STPElementsSession {
     static func _testValue(
         orderedPaymentMethodTypes: [STPPaymentMethodType] = [.card],

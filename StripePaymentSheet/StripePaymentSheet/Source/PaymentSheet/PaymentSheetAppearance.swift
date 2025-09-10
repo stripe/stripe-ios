@@ -84,7 +84,7 @@ public extension PaymentSheet {
             }
         }
 
-        /// Describes the style of navigation bar
+        /// Describes the style of navigation bar style
         @_spi(STP) public var navigationBarStyle: NavigationBarStyle = .plain
 
         // MARK: NavigationBar
@@ -306,6 +306,7 @@ public extension PaymentSheet {
 }
 
 public extension PaymentSheet.Appearance {
+    /// Calling this function sets various properties (e.g. navigationBarStyle, borderWidth) to match iOS26 Liquid Glass
     @available(iOS 26.0, *)
     @_spi(STP) mutating func applyLiquidGlass() {
         borderWidth = 0.0
@@ -316,6 +317,8 @@ public extension PaymentSheet.Appearance {
                                             dark: UIColor(hex: 0x1C1C1E))
         shadow = .disabled
         navigationBarStyle = .glass
+
+        // Enable feature gate while still under development
         LiquidGlassDetector.allowNewDesign = true
     }
 }
