@@ -354,6 +354,7 @@ extension DropdownFieldElement {
 extension DropdownFieldElement: PickerFieldViewDelegate {
     func didBeginEditing(_ pickerFieldView: PickerFieldView) {
         isEditing = true
+        delegate?.didBeginEditing(element: self)
     }
 
     func didFinish(_ pickerFieldView: PickerFieldView, shouldAutoAdvance: Bool) {

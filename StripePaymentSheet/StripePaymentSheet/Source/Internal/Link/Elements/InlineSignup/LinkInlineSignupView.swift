@@ -12,6 +12,7 @@ import UIKit
 
 protocol LinkInlineSignupViewDelegate: AnyObject {
     func inlineSignupViewDidUpdate(_ view: LinkInlineSignupView)
+    func inlineSignupViewDidBeginEditing(_ view: LinkInlineSignupView)
 }
 
 /// For internal SDK use only
@@ -331,7 +332,7 @@ extension LinkInlineSignupView: ElementDelegate {
     }
 
     func didBeginEditing(element: Element) {
-        // No-op
+        delegate?.inlineSignupViewDidBeginEditing(self)
     }
 
 }
