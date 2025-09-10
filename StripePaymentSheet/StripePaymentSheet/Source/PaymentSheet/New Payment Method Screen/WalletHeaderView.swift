@@ -73,6 +73,18 @@ extension PaymentSheetViewController {
             return button
         }()
 
+        private var applePayButton: UIView {
+            return appearance.colors.background.contrastingColor == .black ? applePayButtonBlack : applePayButtonWhite
+        }
+
+        private lazy var applePayButtonBlack: UIView = {
+            return createApplePayButton(pkPaymentButtonStyle: .black)
+        }()
+
+        private lazy var applePayButtonWhite: UIView = {
+            return createApplePayButton(pkPaymentButtonStyle: .white)
+        }()
+
         private lazy var separatorLabel = SeparatorLabel()
 
         private var supportsApplePay: Bool {
@@ -134,12 +146,10 @@ extension PaymentSheetViewController {
         }
 
         private func buildAndPinStackView() {
-            stackView.removeFromSuperview()
-
             var buttons: [UIView] = []
 
             if supportsApplePay {
-                buttons.append(buildApplePayButton())
+                buttons.append(applePayButton)
             }
 
             if supportsPayWithLink {
@@ -156,10 +166,26 @@ extension PaymentSheetViewController {
 
             addAndPinSubview(stackView)
         }
+        private func updateStackView() {
+            // Update Apple Pay Button's color
+            let isBlackApplePayButton = appearance.colors.background.contrastingColor == .black
+            if isBlackApplePayButton {
+                if let whiteApplePayButtonIndex = stackView.arrangedSubviews.firstIndex(of: applePayButtonWhite) {
+                    applePayButtonWhite.removeFromSuperview()
+                    stackView.removeArrangedSubview(applePayButtonWhite)
+                    stackView.insertArrangedSubview(applePayButtonBlack, at: whiteApplePayButtonIndex)
+                }
+            } else {
+                if let blackApplePayButonIndex = stackView.arrangedSubviews.firstIndex(of: applePayButtonBlack) {
+                    applePayButtonBlack.removeFromSuperview()
+                    stackView.removeArrangedSubview(applePayButtonBlack)
+                    stackView.insertArrangedSubview(applePayButtonWhite, at: blackApplePayButonIndex)
+                }
+            }
+        }
 
-        private func buildApplePayButton() -> UIView {
-            let buttonStyle: PKPaymentButtonStyle = appearance.colors.background.contrastingColor == .black ? .black : .white
-            let button = PKPaymentButton(paymentButtonType: applePayButtonType, paymentButtonStyle: buttonStyle)
+        private func createApplePayButton(pkPaymentButtonStyle: PKPaymentButtonStyle) -> UIView {
+            let button = PKPaymentButton(paymentButtonType: applePayButtonType, paymentButtonStyle: pkPaymentButtonStyle)
             // The corner configuration API that powers ios26_applyCapsuleCornerConfiguration doesn't work on PKPaymentButton
             // Instead, we set the cornerRadius directly
             // TODO(gbirch): align Apple Pay button liquid glass styling with other elements
@@ -170,7 +196,6 @@ extension PaymentSheetViewController {
             NSLayoutConstraint.activate([
                 button.heightAnchor.constraint(equalToConstant: Constants.applePayButtonHeight)
             ])
-
             return button
         }
 
@@ -182,9 +207,8 @@ extension PaymentSheetViewController {
         }
 
         override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
-            buildAndPinStackView()
+            updateStackView()
             updateSeparatorLabel()
-
         }
     }
 }
