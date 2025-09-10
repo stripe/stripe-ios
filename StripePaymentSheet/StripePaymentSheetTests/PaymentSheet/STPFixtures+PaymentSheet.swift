@@ -45,14 +45,21 @@ public extension EmbeddedPaymentElement.Configuration {
 }
 extension PaymentSheet.Appearance {
     mutating func applyLiquidGlassIfPossible() {
+        #if !os(visionOS)
         if #available(iOS 26.0, *) {
             self.applyLiquidGlass()
         }
+        #endif
     }
-    static var defaultWithLiquidGlassIfPossible: PaymentSheet.Appearance {
-        var appearance = PaymentSheet.Appearance()
-        appearance.applyLiquidGlassIfPossible()
-        return appearance
+    var liquidGlassIfPossible: PaymentSheet.Appearance {
+        #if !os(visionOS)
+        if #available(iOS 26.0, *) {
+            var copy = self
+            copy.applyLiquidGlassIfPossible()
+            return copy
+        }
+        #endif
+        return self
     }
 }
 extension STPElementsSession {

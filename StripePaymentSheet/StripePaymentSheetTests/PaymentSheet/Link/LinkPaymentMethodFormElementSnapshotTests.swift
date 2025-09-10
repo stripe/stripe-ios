@@ -25,7 +25,7 @@ final class LinkPaymentMethodFormElementSnapshotTests: STPSnapshotTestCase {
         AddressSpecProvider.shared.loadAddressSpecs {
             expectation.fulfill()
         }
-
+        LiquidGlassDetector.allowNewDesign = true
         wait(for: [expectation], timeout: STPTestingNetworkRequestTimeout)
     }
 
