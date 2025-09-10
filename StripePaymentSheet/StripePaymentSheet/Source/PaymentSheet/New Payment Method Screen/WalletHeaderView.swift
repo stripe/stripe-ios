@@ -84,6 +84,7 @@ extension PaymentSheetViewController {
         private lazy var applePayButtonWhite: UIView = {
             return createApplePayButton(pkPaymentButtonStyle: .white)
         }()
+        private var isApplePayLastButton: Bool = false
 
         private lazy var separatorLabel = SeparatorLabel()
 
@@ -162,6 +163,7 @@ extension PaymentSheetViewController {
 
             if let lastButton = buttons.last {
                 stackView.setCustomSpacing(Constants.labelSpacing, after: lastButton)
+                isApplePayLastButton = lastButton == applePayButton
             }
 
             addAndPinSubview(stackView)
@@ -174,12 +176,18 @@ extension PaymentSheetViewController {
                     applePayButtonWhite.removeFromSuperview()
                     stackView.removeArrangedSubview(applePayButtonWhite)
                     stackView.insertArrangedSubview(applePayButtonBlack, at: whiteApplePayButtonIndex)
+                    if isApplePayLastButton {
+                        stackView.setCustomSpacing(Constants.labelSpacing, after: applePayButtonBlack)
+                    }
                 }
             } else {
                 if let blackApplePayButonIndex = stackView.arrangedSubviews.firstIndex(of: applePayButtonBlack) {
                     applePayButtonBlack.removeFromSuperview()
                     stackView.removeArrangedSubview(applePayButtonBlack)
                     stackView.insertArrangedSubview(applePayButtonWhite, at: blackApplePayButonIndex)
+                    if isApplePayLastButton {
+                        stackView.setCustomSpacing(Constants.labelSpacing, after: applePayButtonWhite)
+                    }
                 }
             }
         }
