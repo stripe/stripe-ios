@@ -28,7 +28,6 @@ final class FormElementSnapshotTest: STPSnapshotTestCase {
     func makeExampleFormElement() -> FormElement {
         // Make every element we know about
         let addressSectionElement = AddressSectionElement.makeExample(theme: theme)
-        let dateField = DateFieldElement.makeExample(theme: theme)
         let dropdownField = DropdownFieldElement.makeExample(theme: theme)
         let phoneNumberField = PhoneNumberElement.makeExample(theme: theme)
         let checkboxButton = CheckboxElement.makeExample(theme: theme)
@@ -60,21 +59,6 @@ private extension FormElementSnapshotTest {
         let view = formElement.view
         view.autosizeHeight(width: 320)
         STPSnapshotVerifyView(view, identifier: identifier, file: file, line: line)
-    }
-}
-
-extension DateFieldElement {
-    static func makeExample(theme: ElementsAppearance) -> DateFieldElement {
-        let locale_enUS = Locale(identifier: "en_US")
-        let timeZone_GMT = TimeZone(secondsFromGMT: 0)!
-        return DateFieldElement(
-            label: "Label",
-            defaultDate: nil,
-            maximumDate: nil,
-            locale: locale_enUS,
-            timeZone: timeZone_GMT,
-            theme: theme
-        )
     }
 }
 
