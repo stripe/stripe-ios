@@ -299,14 +299,14 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
         case on
         case off
     }
-    enum EnableLiquidGlass: String, PickerEnum {
+    enum LiquidGlass: String, PickerEnum {
         static var enumName: String { "LiquidGlass 🥃" }
 
         case on
         case off
     }
 
-    enum EnableLiquidGlassNavigation: String, PickerEnum {
+    enum LiquidGlassNavigation: String, PickerEnum {
         static var enumName: String { "LiquidGlassNavBar 🧭" }
 
         case on
@@ -679,8 +679,8 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
     var applePayEnabled: ApplePayEnabled
     var applePayButtonType: ApplePayButtonType
     var allowsDelayedPMs: AllowsDelayedPMs
-    var enableLiquidGlass: EnableLiquidGlass
-    var enableLiquidGlassNavigation: EnableLiquidGlassNavigation
+    var liquidGlass: LiquidGlass
+    var liquidGlassNavigation: LiquidGlassNavigation
     var paymentMethodSave: PaymentMethodSave
     var allowRedisplayOverride: AllowRedisplayOverride
     var paymentMethodRemove: PaymentMethodRemove
@@ -738,8 +738,8 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
             applePayEnabled: .on,
             applePayButtonType: .buy,
             allowsDelayedPMs: .on,
-            enableLiquidGlass: .off,
-            enableLiquidGlassNavigation: .off,
+            liquidGlass: .off,
+            liquidGlassNavigation: .off,
             paymentMethodSave: .enabled,
             allowRedisplayOverride: .notSet,
             paymentMethodRemove: .enabled,

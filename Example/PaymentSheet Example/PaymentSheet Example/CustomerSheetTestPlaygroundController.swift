@@ -315,7 +315,12 @@ extension CustomerSheetTestPlaygroundController {
 extension CustomerSheetTestPlaygroundController {
 
     func serializeSettingsToNSUserDefaults() {
-        let data = try! JSONEncoder().encode(settings)
+        // Never save changes for iOS26 since we have to set allowNewDesign based on a flag that isn't ready during boot time.
+        var settingsWithoutLiquidGlass = settings
+        settingsWithoutLiquidGlass.liquidGlass = .off
+        settingsWithoutLiquidGlass.liquidGlassNavigation = .off
+
+        let data = try! JSONEncoder().encode(settingsWithoutLiquidGlass)
         UserDefaults.standard.set(data, forKey: CustomerSheetTestPlaygroundSettings.nsUserDefaultsKey)
     }
 

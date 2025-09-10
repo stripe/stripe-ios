@@ -10,7 +10,7 @@
 import Contacts
 import Foundation
 import PassKit
-import StripePaymentSheet
+@_spi(STP) import StripePaymentSheet
 @_spi(STP) import StripeUICore
 import SwiftUI
 import UIKit
@@ -77,7 +77,8 @@ struct CustomerSheetTestPlayground: View {
                         SettingView(setting: $playgroundController.settings.defaultBillingAddress)
                         SettingView(setting: $playgroundController.settings.preferredNetworksEnabled)
                         SettingView(setting: $playgroundController.settings.cardBrandAcceptance)
-                        SettingView(setting: enableiOS26ChangesBinding)
+                        SettingView(setting: liquidGlassBinding)
+                        SettingView(setting: liquidGlassNavBinding)
                         SettingView(setting: $playgroundController.settings.autoreload)
                         TextField("headerTextForSelectionScreen", text: headerTextForSelectionScreenBinding)
                         SettingView(setting: $playgroundController.settings.allowsRemovalOfLastSavedPaymentMethod)
@@ -114,16 +115,41 @@ struct CustomerSheetTestPlayground: View {
                 .environmentObject(playgroundController)
         }
     }
-    var enableiOS26ChangesBinding: Binding<CustomerSheetTestPlaygroundSettings.EnableIOS26Changes> {
-        Binding<CustomerSheetTestPlaygroundSettings.EnableIOS26Changes> {
-            return playgroundController.settings.enableIOS26Changes
+
+    var liquidGlassBinding: Binding<CustomerSheetTestPlaygroundSettings.LiquidGlass> {
+        Binding<CustomerSheetTestPlaygroundSettings.LiquidGlass> {
+            return playgroundController.settings.liquidGlass
         } set: { newValue in
-            LiquidGlassDetector.allowNewDesign = newValue == .on
+            guard #available(iOS 26.0, *) else {
+                return
+            }
+            LiquidGlassDetector.allowNewDesign = false
             playgroundController.appearance = PaymentSheet.Appearance()
-            playgroundController.settings.enableIOS26Changes = newValue
+            if newValue == .on {
+                playgroundController.appearance.applyLiquidGlass()
+                playgroundController.settings.liquidGlassNavigation = .on
+            } else {
+                // We've reset the appearance, so check if navbar style is still on.
+                if playgroundController.settings.liquidGlassNavigation == .on {
+                    playgroundController.appearance.navigationBarStyle = .glass
+                }
+            }
+            playgroundController.settings.liquidGlass = newValue
         }
     }
 
+    var liquidGlassNavBinding: Binding<CustomerSheetTestPlaygroundSettings.LiquidGlassNavigation> {
+        Binding<CustomerSheetTestPlaygroundSettings.LiquidGlassNavigation> {
+            return playgroundController.settings.liquidGlassNavigation
+        } set: { newValue in
+            guard #available(iOS 26.0, *) else {
+                return
+            }
+            playgroundController.appearance = PaymentSheet.Appearance()
+            playgroundController.appearance.navigationBarStyle = newValue == .on ? .glass : .plain
+            playgroundController.settings.liquidGlassNavigation = newValue
+        }
+    }
     var customerKeyTypeBinding: Binding<CustomerSheetTestPlaygroundSettings.CustomerKeyType> {
         Binding<CustomerSheetTestPlaygroundSettings.CustomerKeyType> {
             return playgroundController.settings.customerKeyType
