@@ -20,6 +20,7 @@ protocol SheetNavigationBarDelegate: AnyObject {
 @objc(STP_Internal_SheetNavigationBar)
 class SheetNavigationBar: UIView {
     static func height(appearance: PaymentSheet.Appearance) -> CGFloat {
+        #if !os(visionOS)
         if LiquidGlassDetector.canRun,
            #available(iOS 26.0, *),
            appearance.navigationBarStyle == .glass {
@@ -27,6 +28,9 @@ class SheetNavigationBar: UIView {
         } else {
             return 52
         }
+        #else
+        return 52
+        #endif
     }
     weak var delegate: SheetNavigationBarDelegate?
     fileprivate lazy var leftItemsStackView: UIStackView = {
@@ -88,10 +92,14 @@ class SheetNavigationBar: UIView {
         }
     }
     var shouldUseGlassNavBar: Bool {
+        #if !os(visionOS)
         guard #available(iOS 26.0, *) else {
             return false
         }
         return LiquidGlassDetector.canRun && appearance.navigationBarStyle == .glass
+        #else
+        return false
+        #endif
     }
 
     init(isTestMode: Bool, appearance: PaymentSheet.Appearance) {
@@ -236,8 +244,10 @@ extension UIButton {
         titleLabel?.textAlignment = .right
         titleLabel?.font = appearance.scaledFont(for: appearance.font.base.medium, size: 14, maximumPointSize: 22)
         accessibilityIdentifier = "edit_saved_button"
+        #if !os(visionOS)
         if LiquidGlassDetector.isEnabled, #available(iOS 26.0, *), appearance.navigationBarStyle == .glass {
             ios26_applyGlassConfiguration()
         }
+        #endif
     }
 }

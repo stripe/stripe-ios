@@ -131,7 +131,7 @@ extension LinkPaymentMethodFormElementSnapshotTests {
         if requestPhone {
             configuration.billingDetailsCollectionConfiguration.phone = .always
         }
-
+        configuration.appearance.applyLiquidGlassIfPossible()
         return LinkPaymentMethodFormElement(
             paymentMethod: paymentMethod,
             configuration: configuration,

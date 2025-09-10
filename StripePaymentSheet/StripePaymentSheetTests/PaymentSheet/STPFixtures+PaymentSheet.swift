@@ -49,6 +49,11 @@ extension PaymentSheet.Appearance {
             self.applyLiquidGlass()
         }
     }
+    static var defaultWithLiquidGlassIfPossible: PaymentSheet.Appearance {
+        var appearance = PaymentSheet.Appearance()
+        appearance.applyLiquidGlassIfPossible()
+        return appearance
+    }
 }
 extension STPElementsSession {
     static func _testValue(
@@ -434,6 +439,7 @@ extension STPPaymentMethod {
 extension PaymentSheet.Appearance {
     static var _testMSPaintTheme: PaymentSheet.Appearance {
         var appearance = PaymentSheet.Appearance()
+        appearance.applyLiquidGlassIfPossible()
 
         // Customize the font
         var font = PaymentSheet.Appearance.Font()

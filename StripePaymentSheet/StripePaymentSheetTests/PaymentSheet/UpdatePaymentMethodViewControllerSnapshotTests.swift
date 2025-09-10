@@ -213,7 +213,7 @@ final class UpdatePaymentMethodViewControllerSnapshotTests: STPSnapshotTestCase 
     func _test_UpdatePaymentMethodViewController(paymentMethodType: STPPaymentMethodType,
                                                  darkMode: Bool,
                                                  isEmbeddedSingle: Bool = false,
-                                                 appearance: PaymentSheet.Appearance = .default,
+                                                 appearance: PaymentSheet.Appearance = .defaultWithLiquidGlassIfPossible,
                                                  addressCollectionMode: PaymentSheet.BillingDetailsCollectionConfiguration.AddressCollectionMode = .never,
                                                  canRemove: Bool = true,
                                                  canUpdate: Bool = false,
