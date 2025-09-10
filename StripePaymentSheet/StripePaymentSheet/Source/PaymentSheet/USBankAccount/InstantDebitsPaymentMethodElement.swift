@@ -50,7 +50,12 @@ final class InstantDebitsPaymentMethodElement: ContainerElement {
             return nil
         }
 
-        let string = NSMutableAttributedString(attributedString: PaymentSheetFormFactory.makeBankMandateText(sellerName: sellerName))
+        let string = NSMutableAttributedString(
+            attributedString: PaymentSheetFormFactory.makeBankMandateText(
+                merchantName: configuration.merchantDisplayName,
+                sellerName: sellerName
+            )
+        )
         let style = NSMutableParagraphStyle()
         style.alignment = .center
         string.addAttributes(

@@ -125,6 +125,9 @@
 /* Mandate text with link to terms when saving a bank account payment method to a merchant (merchant name replaces %@). */
 "By saving your bank account for %@ you agree to authorize payments pursuant to <terms>these terms</terms>." = "By saving your bank account for %@ you agree to authorize payments pursuant to <terms>these terms</terms>.";
 
+/* Text providing link to terms for bank payments when seller information is provided */
+"By submitting your order to %@ and %@, you agree to save your information with %@ for future purchases, and agree to authorize payments pursuant to <terms>these terms</terms>." = "By submitting your order to %1$@ and %2$@, you agree to save your information with %3$@ for future purchases, and agree to authorize payments pursuant to <terms>these terms</terms>.";
+
 /* Text providing link to terms for bank payments */
 "By submitting your order to %@ you agree to authorize payments pursuant to <terms>these terms</terms>." = "By submitting your order to %@ you agree to authorize payments pursuant to <terms>these terms</terms>.";
 

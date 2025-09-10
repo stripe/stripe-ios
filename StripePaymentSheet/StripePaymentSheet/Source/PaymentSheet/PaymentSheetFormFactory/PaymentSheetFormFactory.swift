@@ -553,13 +553,18 @@ extension PaymentSheetFormFactory {
         }
     }
 
-    static func makeBankMandateText(sellerName: String?) -> NSAttributedString {
+    static func makeBankMandateText(
+        merchantName: String,
+        sellerName: String?
+    ) -> NSAttributedString {
         let links = ["terms": URL(string: "https://link.com/terms/ach-authorization")!]
 
         let string = if let sellerName {
             String(
-                format: String.Localized.bank_continue_mandate_text_with_seller,
-                sellerName
+                format: String.Localized.bank_continue_mandate_and_reuse_text_with_seller,
+                merchantName,
+                sellerName,
+                merchantName
             )
         } else {
             String.Localized.bank_continue_mandate_text
