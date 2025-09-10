@@ -135,7 +135,6 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
     lazy var primaryButton: ConfirmButton = {
         ConfirmButton(
             callToAction: .setup, // Dummy value; real value is set after init
-            applePayButtonType: configuration.applePay?.buttonType ?? .plain,
             appearance: configuration.appearance,
             didTap: { [weak self] in
                 self?.didTapPrimaryButton()
@@ -302,13 +301,7 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
             }
             return selectedPaymentOption == nil ? .disabled : .enabled
         }()
-        let style: ConfirmButton.Style = {
-            // If the button invokes Apple Pay, it must be styled as the Apple Pay button
-            if case .applePay = selectedPaymentOption, !isFlowController {
-                return .applePay
-            }
-            return .stripe
-        }()
+        let style: ConfirmButton.Style = .stripe
         primaryButton.update(
             state: state,
             style: style,

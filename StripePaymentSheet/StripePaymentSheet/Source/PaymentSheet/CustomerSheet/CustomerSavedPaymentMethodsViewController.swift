@@ -129,7 +129,6 @@ class CustomerSavedPaymentMethodsViewController: UIViewController {
     private lazy var actionButton: ConfirmButton = {
         let button = ConfirmButton(
             callToAction: self.defaultCallToAction(),
-            applePayButtonType: .plain,
             appearance: configuration.appearance,
             didTap: { [weak self] in
                 self?.didTapActionButton()
