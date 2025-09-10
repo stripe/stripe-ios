@@ -26,6 +26,8 @@ final class LinkVerificationController {
         allowLogoutInDialog: Bool = false,
         consentViewModel: LinkConsentViewModel? = nil
     ) {
+        LinkUI.applyLiquidGlassIfPossible(configuration: configuration)
+
         self.verificationViewController = LinkVerificationViewController(
             mode: mode,
             linkAccount: linkAccount,
