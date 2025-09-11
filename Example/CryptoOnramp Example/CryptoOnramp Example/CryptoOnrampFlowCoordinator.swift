@@ -34,11 +34,10 @@ final class CryptoOnrampFlowCoordinator: ObservableObject {
 
     private(set) var email: String = ""
     private(set) var selectedScopes: [OAuthScopes] = []
+    private(set) var customerId: String?
     private var isKycVerified = false
     private var isIdDocumentVerified = false
 
-    private(set) var customerId: String?
-    
     /// Creates a new `CryptoOnrampFlowCoordinator`.
     /// - Parameters:
     ///   - onrampCoordinator: The coordinator responsible for interacting with the necessary APIs, from authentication to checkout.
