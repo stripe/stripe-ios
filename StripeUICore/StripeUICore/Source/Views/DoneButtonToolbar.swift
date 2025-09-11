@@ -29,7 +29,7 @@ import UIKit
 
     public init(delegate: DoneButtonToolbarDelegate?, showCancelButton: Bool = false, theme: ElementsAppearance = .default) {
 
-        let needsAdditionalHeightBetweenKeyboard = LiquidGlassDetector.isEnabled
+        let needsAdditionalHeightBetweenKeyboard = LiquidGlassDetector.isEnabledInMerchantApp
         let height = needsAdditionalHeightBetweenKeyboard ? 52 : 44
 
         // Initializing w/ a frame stops autolayout from complaining on the first layout pass. On iOS 26, we set the height in order to give some space between the keyboard and the toolbar buttons.
@@ -75,5 +75,21 @@ import UIKit
     @objc
     private func didTapCancel() {
         doneButtonToolbarDelegate?.didTapCancel(self)
+    }
+
+    public override func hitTest(_ point: CGPoint, with event: UIEvent?) -> UIView? {
+        let hitView = super.hitTest(point, with: event)
+        guard LiquidGlassDetector.isEnabledInMerchantApp else {
+            return hitView
+        }
+
+        // On iOS 26+, the toolbar eats all taps, even when you tap the empty space outside of the toolbar buttons, preventing you from dismissing the keyboard.
+        // Hack: To tell if the touch is inside a button vs. the background, look at the touched view's width. The button is observed to be 38 points wide.
+        let buttonWidthGuess = 50.0
+        if hitView?.frame.size.width ?? 0 > buttonWidthGuess {
+            // Don't return the background view or any other non-button view
+            return nil
+        }
+        return hitView
     }
 }
