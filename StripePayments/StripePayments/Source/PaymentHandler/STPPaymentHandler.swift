@@ -2095,10 +2095,14 @@ public class STPPaymentHandler: NSObject {
 
         func retrieveIntent(action: STPPaymentHandlerActionParams, completion: @escaping STPBooleanSuccessBlock) {
             if let paymentIntentAction = action as? STPPaymentHandlerPaymentIntentActionParams {
+                let timeout: NSNumber? = {
+                    guard let pollingBudget else { return nil }
+                    return NSNumber(value: pollingBudget.maxDuration)
+                }()
                 currentAction.apiClient.retrievePaymentIntent(
                     withClientSecret: paymentIntentAction.paymentIntent.clientSecret,
                     expand: ["payment_method"],
-                    timeout: pollingBudget?.maxDuration
+                    timeout: timeout
                 ) { paymentIntent, retrieveError in
                     if let paymentIntent {
                         paymentIntentAction.paymentIntent = paymentIntent
@@ -2163,6 +2167,10 @@ public class STPPaymentHandler: NSObject {
             currentAction.apiClient.refreshPaymentIntent(withClientSecret: currentAction.paymentIntent.clientSecret,
                                                          completion: completion)
         } else {
+            let timeout: NSNumber? = {
+                guard let timeout else { return nil }
+                return NSNumber(value: timeout)
+            }()
             currentAction.apiClient.retrievePaymentIntent(withClientSecret: currentAction.paymentIntent.clientSecret,
                                                           expand: ["payment_method"],
                                                           timeout: timeout,

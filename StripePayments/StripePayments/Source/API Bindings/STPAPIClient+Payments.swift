@@ -415,10 +415,11 @@ extension STPAPIClient {
     }
 
     // Internal helper to pass timeout
+    @objc
     func retrievePaymentIntent(
         withClientSecret secret: String,
         expand: [String]?,
-        timeout: TimeInterval?,
+        timeout: NSNumber?, // This is an NSNumber rather than TimeInterval so we can override it in tests with @objc
         completion: @escaping STPPaymentIntentCompletionBlock
     ) {
         let endpoint: String = paymentIntentEndpoint(from: secret)
@@ -432,11 +433,16 @@ extension STPAPIClient {
             parameters["expand"] = expand
         }
 
+        let timeoutInterval: TimeInterval? = {
+            guard let timeout else { return nil }
+            return TimeInterval(timeout.doubleValue)
+        }()
+        
         APIRequest<STPPaymentIntent>.getWith(
             self,
             endpoint: endpoint,
             parameters: parameters,
-            timeout: timeout
+            timeout: timeoutInterval
         ) { paymentIntent, _, error in
             // If using a scoped client secret, inject the client secret here
             let paymentIntent = {

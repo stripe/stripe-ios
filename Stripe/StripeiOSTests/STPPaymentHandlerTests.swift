@@ -22,7 +22,6 @@ import XCTest
 
 class STPPaymentHandlerStubbedTests: STPNetworkStubbingTestCase {
     override func setUp() {
-        self.recordingMode = false
         super.setUp()
     }
 
@@ -40,7 +39,7 @@ class STPPaymentHandlerStubbedTests: STPNetworkStubbingTestCase {
                 XCTFail()
             }
         }
-        wait(for: [createPaymentIntentExpectation], timeout: 8)  // STPTestingNetworkRequestTimeout
+        wait(for: [createPaymentIntentExpectation], timeout: 15)  // STPTestingNetworkRequestTimeout
         guard let clientSecret = retrievedClientSecret
         else {
             XCTFail()
@@ -102,7 +101,64 @@ class STPPaymentHandlerStubbedTests: STPNetworkStubbingTestCase {
         }
         // 2*STPTestingNetworkRequestTimeout payment handler needs to make an ares for this
         // test in addition to fetching the payment intent
-        wait(for: [paymentHandlerExpectation], timeout: 2 * 8)
+        wait(for: [paymentHandlerExpectation], timeout: 2 * 15)
+    }
+    
+    func testPollingBehaviorWithFinalCall() {
+        let mockAPIClient = STPAPIClientPollingMock()
+        let paymentHandler = STPPaymentHandler(apiClient: mockAPIClient)
+        let pollingBudget = PollingBudget(duration: 5.0)
+        let expectation = self.expectation(description: "Polling completes")
+
+        var callTimes: [Date] = []
+        let startTime = Date()
+
+        let paymentIntent = STPFixtures.paymentIntent(
+            paymentMethodTypes: ["card"],
+            status: .processing,
+            paymentMethod: ["id": "pm_test", "type": "card"]
+        )
+
+        mockAPIClient.retrievePaymentIntentHandler = { _, _, completion in
+            callTimes.append(Date())
+            let status: STPPaymentIntentStatus = callTimes.count >= 2 ? .succeeded : .processing
+
+            let responseDict = paymentIntent.allResponseFields.merging([
+                "status": STPPaymentIntentStatus.string(from: status)
+            ]) { _, new in new }
+
+            let updatedPI = STPPaymentIntent.decodedObject(fromAPIResponse: responseDict)
+
+            // Simulate 15-second network request time for first request
+            DispatchQueue.main.asyncAfter(deadline: .now() + (callTimes.count == 1 ? 15 : 0.0)) {
+                completion(updatedPI, nil)
+
+                if callTimes.count >= 2 {
+                    expectation.fulfill()
+                }
+            }
+        }
+
+        let currentAction = STPPaymentHandlerPaymentIntentActionParams(
+            apiClient: mockAPIClient,
+            authenticationContext: self,
+            threeDSCustomizationSettings: STPThreeDSCustomizationSettings(),
+            paymentIntent: paymentIntent,
+            returnURL: nil
+        ) { _, _, _ in }
+
+        paymentHandler.currentAction = currentAction
+        paymentHandler._retrieveAndCheckIntentForCurrentAction(currentAction: currentAction, pollingBudget: pollingBudget)
+
+        wait(for: [expectation], timeout: 30.0)
+
+        XCTAssertEqual(callTimes.count, 2, "Expected exactly 2 network calls: initial + final")
+
+        let firstCallDelay = callTimes[0].timeIntervalSince(startTime)
+        let finalCallDelay = callTimes[1].timeIntervalSince(startTime)
+
+        XCTAssertLessThan(firstCallDelay, 1.0, "First call should happen immediately")
+        XCTAssertGreaterThan(finalCallDelay, 16.0, "Final call should happen after 15-second + 1 second interval polling budget expires")
     }
 }
 
@@ -272,70 +328,13 @@ class STPPaymentHandlerTests: APIStubbedTestCase {
         STPPaymentHandler.sharedHandler.apiClient = STPAPIClient.shared
         StripeAPI.maxRetries = oldMaxRetries
     }
-
-    func testPollingBehaviorWithFinalCall() {
-        let mockAPIClient = STPAPIClientPollingMock()
-        let paymentHandler = STPPaymentHandler(apiClient: mockAPIClient)
-        let pollingBudget = PollingBudget(duration: 5.0)
-        let expectation = self.expectation(description: "Polling completes")
-
-        var callTimes: [Date] = []
-        let startTime = Date()
-
-        let paymentIntent = STPFixtures.paymentIntent(
-            paymentMethodTypes: ["card"],
-            status: .processing,
-            paymentMethod: ["id": "pm_test", "type": "card"]
-        )
-
-        mockAPIClient.retrievePaymentIntentHandler = { _, _, completion in
-            callTimes.append(Date())
-            let status: STPPaymentIntentStatus = callTimes.count >= 2 ? .succeeded : .processing
-
-            let responseDict = paymentIntent.allResponseFields.merging([
-                "status": STPPaymentIntentStatus.string(from: status)
-            ]) { _, new in new }
-
-            let updatedPI = STPPaymentIntent.decodedObject(fromAPIResponse: responseDict)
-
-            // Simulate 15-second network request time for first request
-            DispatchQueue.main.asyncAfter(deadline: .now() + (callTimes.count == 1 ? 15 : 0.0)) {
-                completion(updatedPI, nil)
-
-                if callTimes.count >= 2 {
-                    expectation.fulfill()
-                }
-            }
-        }
-
-        let currentAction = STPPaymentHandlerPaymentIntentActionParams(
-            apiClient: mockAPIClient,
-            authenticationContext: self,
-            threeDSCustomizationSettings: STPThreeDSCustomizationSettings(),
-            paymentIntent: paymentIntent,
-            returnURL: nil
-        ) { _, _, _ in }
-
-        paymentHandler.currentAction = currentAction
-        paymentHandler._retrieveAndCheckIntentForCurrentAction(currentAction: currentAction, pollingBudget: pollingBudget)
-
-        wait(for: [expectation], timeout: 30.0)
-
-        XCTAssertEqual(callTimes.count, 2, "Expected exactly 2 network calls: initial + final")
-
-        let firstCallDelay = callTimes[0].timeIntervalSince(startTime)
-        let finalCallDelay = callTimes[1].timeIntervalSince(startTime)
-
-        XCTAssertLessThan(firstCallDelay, 1.0, "First call should happen immediately")
-        XCTAssertGreaterThan(finalCallDelay, 16.0, "Final call should happen after 15-second + 1 second interval polling budget expires")
-    }
 }
 
 // MARK: - Mock Classes
 class STPAPIClientPollingMock: STPAPIClient {
     var retrievePaymentIntentHandler: ((String, [String]?, @escaping STPPaymentIntentCompletionBlock) -> Void)?
 
-    override func retrievePaymentIntent(withClientSecret secret: String, expand: [String]?, completion: @escaping STPPaymentIntentCompletionBlock) {
+    override func retrievePaymentIntent(withClientSecret secret: String, expand: [String]?, timeout: NSNumber?, completion: @escaping STPPaymentIntentCompletionBlock) {
         retrievePaymentIntentHandler?(secret, expand, completion)
     }
 }
