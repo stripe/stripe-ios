@@ -1527,7 +1527,8 @@ public class STPPaymentHandler: NSObject {
                 currentAction,
                 {
                     self.retrieveOrRefreshPaymentIntent(
-                        currentAction: currentAction
+                        currentAction: currentAction,
+                        timeout: pollingBudget?.maxDuration
                     ) { [self] paymentIntent, error in
                         guard let paymentIntent, error == nil else {
                             let error = error ?? self._error(for: .unexpectedErrorCode, loggingSafeErrorMessage: "Missing PaymentIntent.")
@@ -1610,7 +1611,8 @@ public class STPPaymentHandler: NSObject {
             )
         } else if let currentAction = currentAction as? STPPaymentHandlerSetupIntentActionParams {
             retrieveOrRefreshSetupIntent(
-                currentAction: currentAction
+                currentAction: currentAction,
+                timeout: pollingBudget?.maxDuration
             ) { setupIntent, error in
                 guard let setupIntent, error == nil else {
                     let error = error ?? self._error(for: .unexpectedErrorCode, loggingSafeErrorMessage: "Missing SetupIntent.")
@@ -2095,7 +2097,8 @@ public class STPPaymentHandler: NSObject {
             if let paymentIntentAction = action as? STPPaymentHandlerPaymentIntentActionParams {
                 currentAction.apiClient.retrievePaymentIntent(
                     withClientSecret: paymentIntentAction.paymentIntent.clientSecret,
-                    expand: ["payment_method"]
+                    expand: ["payment_method"],
+                    timeout: pollingBudget?.maxDuration
                 ) { paymentIntent, retrieveError in
                     if let paymentIntent {
                         paymentIntentAction.paymentIntent = paymentIntent
@@ -2105,7 +2108,8 @@ public class STPPaymentHandler: NSObject {
             } else if let setupIntentAction = action as? STPPaymentHandlerSetupIntentActionParams {
                 currentAction.apiClient.retrieveSetupIntent(
                     withClientSecret: setupIntentAction.setupIntent.clientSecret,
-                    expand: ["payment_method"]
+                    expand: ["payment_method"],
+                    timeout: pollingBudget?.maxDuration
                 ) { retrievedSetupIntent, retrieveError in
                     if let retrievedSetupIntent {
                         setupIntentAction.setupIntent = retrievedSetupIntent
@@ -2151,6 +2155,7 @@ public class STPPaymentHandler: NSObject {
     }
 
     func retrieveOrRefreshPaymentIntent(currentAction: STPPaymentHandlerPaymentIntentActionParams,
+                                        timeout: TimeInterval?,
                                         completion: @escaping STPPaymentIntentCompletionBlock) {
         let paymentMethodType = currentAction.paymentIntent.paymentMethod?.type ?? .unknown
 
@@ -2160,11 +2165,13 @@ public class STPPaymentHandler: NSObject {
         } else {
             currentAction.apiClient.retrievePaymentIntent(withClientSecret: currentAction.paymentIntent.clientSecret,
                                                           expand: ["payment_method"],
+                                                          timeout: timeout,
                                                           completion: completion)
         }
     }
 
     func retrieveOrRefreshSetupIntent(currentAction: STPPaymentHandlerSetupIntentActionParams,
+                                      timeout: TimeInterval?,
                                       completion: @escaping STPSetupIntentCompletionBlock) {
         let paymentMethodType = currentAction.setupIntent.paymentMethod?.type ?? .unknown
 
@@ -2174,6 +2181,7 @@ public class STPPaymentHandler: NSObject {
         } else {
             currentAction.apiClient.retrieveSetupIntent(withClientSecret: currentAction.setupIntent.clientSecret,
                                                         expand: ["payment_method"],
+                                                        timeout: timeout,
                                                         completion: completion)
         }
     }
