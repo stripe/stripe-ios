@@ -37,7 +37,8 @@ final class PollingBudget {
 
     /// Creates a polling budget appropriate for the given payment method type.
     /// Returns nil if the payment method doesn't require polling.
-    init?(paymentMethodType: STPPaymentMethodType) {
+    init?(startDate: Date, paymentMethodType: STPPaymentMethodType) {
+        self.startDate = startDate
         switch paymentMethodType {
         case .amazonPay, .revolutPay, .swish, .twint, .przelewy24:
             self.maxDuration = 5.0
@@ -50,8 +51,9 @@ final class PollingBudget {
 
     /// Creates a polling budget with the specified duration.
     /// - Parameter duration: The maximum duration for polling in seconds. Must be positive.
-    init(duration: TimeInterval) {
+    init(startDate: Date, duration: TimeInterval) {
         assert(duration > 0, "Duration must be positive")
+        self.startDate = startDate
         self.maxDuration = duration
     }
 
