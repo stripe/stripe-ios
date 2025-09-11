@@ -20,7 +20,7 @@ protocol SheetNavigationBarDelegate: AnyObject {
 @objc(STP_Internal_SheetNavigationBar)
 class SheetNavigationBar: UIView {
     static func height(appearance: PaymentSheet.Appearance) -> CGFloat {
-        return appearance.navigationBarStyle.isGlass ? 72 : 52
+        return appearance.navigationBarStyle.isGlass ? 76 : 52
 
     }
     weak var delegate: SheetNavigationBarDelegate?
