@@ -65,7 +65,7 @@ import UIKit
 // MARK: - Button Liquid Glass helpers
 @_spi(STP) extension UIButton {
     @_spi(STP) public func ios26_applyGlassConfiguration() {
-        assert(LiquidGlassDetector.canRun)
+        assert(LiquidGlassDetector.isEnabledInMerchantApp)
 #if compiler(>=6.2)
         if #available(iOS 26.0, *) {
             configuration = .glass()

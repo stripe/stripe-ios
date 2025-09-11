@@ -310,7 +310,7 @@ public extension PaymentSheet.Appearance {
     /// - Note: This feature is in public preview while we gather feedback and is subject to change. Please use https://github.com/stripe/stripe-ios/issues to file feedback!
     @available(iOS 26.0, *)
     @_spi(STP) mutating func applyLiquidGlass() {
-        assert(LiquidGlassDetector.canRun, "Requirements for applying liquid glass are not available.")
+        assert(LiquidGlassDetector.isEnabledInMerchantApp, "Requirements for applying liquid glass are not available.")
         borderWidth = 0.0
         verticalModeRowPadding = 16.0
         sheetCornerRadius = 34.0
