@@ -415,8 +415,8 @@ extension STPAPIClient {
     }
 
     // Internal helper to pass timeout
-    @objc
-    func retrievePaymentIntent(
+    @objc(retrievePaymentIntentWithClientSecret:expand:timeout:completion:)
+    @_spi(STP) public func retrievePaymentIntent(
         withClientSecret secret: String,
         expand: [String]?,
         timeout: NSNumber?, // This is an NSNumber rather than TimeInterval so we can override it in tests with @objc
