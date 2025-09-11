@@ -106,17 +106,6 @@ class BottomSheetViewController: UIViewController, BottomSheetPresentable {
     let isTestMode: Bool
     let appearance: PaymentSheet.Appearance
 
-    var isUsingGlassNavBar: Bool {
-        #if !os(visionOS)
-        guard #available(iOS 26.0, *) else {
-            return false
-        }
-        return LiquidGlassDetector.canRun && appearance.navigationBarStyle == .glass
-        #else
-        return false
-        #endif
-    }
-
     private var contentViewController: BottomSheetContentViewController
 
     var contentRequiresFullScreen: Bool {
@@ -353,7 +342,7 @@ class BottomSheetViewController: UIViewController, BottomSheetPresentable {
             bottomAnchor,
         ])
 
-        if isUsingGlassNavBar {
+        if appearance.navigationBarStyle.isGlass {
             NSLayoutConstraint.activate([
                 // Allow scroll view to extend under the navigation bar for blur effect
                 scrollView.topAnchor.constraint(equalTo: view.topAnchor),
@@ -366,7 +355,7 @@ class BottomSheetViewController: UIViewController, BottomSheetPresentable {
         #if compiler(>=6.2)
         // Allow content that is scrolled under the navigation bar to be blurred
         if #available(iOS 26.0, *),
-           isUsingGlassNavBar {
+           appearance.navigationBarStyle.isGlass {
             let interaction = UIScrollEdgeElementContainerInteraction()
             interaction.scrollView = scrollView
             interaction.edge = .top
@@ -387,7 +376,7 @@ class BottomSheetViewController: UIViewController, BottomSheetPresentable {
         self.scrollViewHeightConstraint = scrollViewHeightConstraint
 
         // Move the contentContainerView to start below the sheet
-        let topOffset = isUsingGlassNavBar ? navigationBarHeight : 0.0
+        let topOffset = appearance.navigationBarStyle.isGlass ? navigationBarHeight : 0.0
 
         NSLayoutConstraint.activate([
             contentContainerView.leadingAnchor.constraint(equalTo: scrollView.contentLayoutGuide.leadingAnchor),
