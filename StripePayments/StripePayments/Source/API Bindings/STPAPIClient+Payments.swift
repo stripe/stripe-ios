@@ -437,7 +437,7 @@ extension STPAPIClient {
             guard let timeout else { return nil }
             return TimeInterval(timeout.doubleValue)
         }()
-        
+
         APIRequest<STPPaymentIntent>.getWith(
             self,
             endpoint: endpoint,
@@ -685,7 +685,7 @@ extension STPAPIClient {
             guard let timeout else { return nil }
             return TimeInterval(timeout.doubleValue)
         }()
-        
+
         APIRequest<STPSetupIntent>.getWith(
             self,
             endpoint: endpoint,

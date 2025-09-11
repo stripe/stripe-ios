@@ -104,7 +104,7 @@ class STPPaymentHandlerStubbedTests: STPNetworkStubbingTestCase {
         // test in addition to fetching the payment intent
         wait(for: [paymentHandlerExpectation], timeout: 2 * 15)
     }
-    
+
     func testPollingBehaviorWithFinalCall() {
         let mockAPIClient = STPAPIClientPollingMock()
         let paymentHandler = STPPaymentHandler(apiClient: mockAPIClient)
