@@ -42,7 +42,6 @@ struct PaymentSheetTestPlayground: View {
                 .textInputAutocapitalization(.never)
         }
         SettingView(setting: enableIos26Binding)
-        SettingView(setting: $playgroundController.settings.enablePassiveCaptcha)
         Group {
             if playgroundController.settings.merchantCountryCode == .US {
                 SettingView(setting: linkEnabledModeBinding)

@@ -162,13 +162,6 @@ public struct CustomerSheetTestPlaygroundSettings: Codable, Equatable {
         case off
     }
 
-    enum EnablePassiveCaptcha: String, PickerEnum {
-        static var enumName: String { "Enable passive captcha" }
-
-        case on
-        case off
-    }
-
     enum OpensCardScannerAutomatically: String, PickerEnum {
         static let enumName: String = "opensCardScannerAutomatically"
         case on
@@ -183,7 +176,6 @@ public struct CustomerSheetTestPlaygroundSettings: Codable, Equatable {
     var headerTextForSelectionScreen: String?
     var defaultBillingAddress: DefaultBillingAddress
     var enableIOS26Changes: EnableIOS26Changes
-    var enablePassiveCaptcha: EnablePassiveCaptcha
     var autoreload: Autoreload
 
     var attachDefaults: BillingDetailsAttachDefaults
@@ -210,7 +202,6 @@ public struct CustomerSheetTestPlaygroundSettings: Codable, Equatable {
                                                    headerTextForSelectionScreen: nil,
                                                    defaultBillingAddress: .off,
                                                    enableIOS26Changes: .off,
-                                                   enablePassiveCaptcha: .off,
                                                    autoreload: .on,
                                                    attachDefaults: .off,
                                                    collectName: .automatic,

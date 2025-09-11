@@ -14,7 +14,7 @@ import Contacts
 import PassKit
 @_spi(STP) import StripeCore
 @_spi(STP) import StripePayments
-@_spi(CustomerSessionBetaAccess) @_spi(STP) @_spi(PaymentSheetSkipConfirmation) @_spi(ExperimentalAllowsRemovalOfLastSavedPaymentMethodAPI) @_spi(CustomPaymentMethodsBeta) @_spi(PaymentMethodOptionsSetupFutureUsagePreview) @_spi(Captcha) import StripePaymentSheet
+@_spi(CustomerSessionBetaAccess) @_spi(STP) @_spi(PaymentSheetSkipConfirmation) @_spi(ExperimentalAllowsRemovalOfLastSavedPaymentMethodAPI) @_spi(CustomPaymentMethodsBeta) @_spi(PaymentMethodOptionsSetupFutureUsagePreview) import StripePaymentSheet
 import SwiftUI
 import UIKit
 
@@ -211,10 +211,6 @@ class PlaygroundController: ObservableObject {
             configuration.allowsDelayedPaymentMethods = true
         }
 
-        if settings.enablePassiveCaptcha == .on {
-            configuration.enablePassiveCaptcha = true
-        }
-
         if settings.shippingInfo != .off {
             configuration.allowsPaymentMethodsRequiringShippingAddress = true
             configuration.shippingDetails = { [weak self] in
@@ -329,10 +325,6 @@ class PlaygroundController: ObservableObject {
 
         if settings.allowsDelayedPMs == .on {
             configuration.allowsDelayedPaymentMethods = true
-        }
-
-        if settings.enablePassiveCaptcha == .on {
-            configuration.enablePassiveCaptcha = true
         }
 
         if settings.shippingInfo != .off {
