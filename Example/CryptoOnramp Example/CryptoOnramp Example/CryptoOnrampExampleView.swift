@@ -24,12 +24,21 @@ struct CryptoOnrampExampleView: View {
     @State private var showAuthenticatedView: Bool = false
     @State private var authenticationCustomerId: String?
     @State private var linkAuthIntentId: String?
+    @State private var livemode: Bool = false
 
     @Environment(\.isLoading) private var isLoading
     @FocusState private var isEmailFieldFocused: Bool
 
     private var isNextButtonDisabled: Bool {
         isLoading.wrappedValue || email.isEmpty || coordinator == nil
+    }
+
+    private var isRunningOnSimulator: Bool {
+        #if targetEnvironment(simulator)
+        return true
+        #else
+        return false
+        #endif
     }
 
     // MARK: - View
@@ -51,6 +60,23 @@ struct CryptoOnrampExampleView: View {
                                     lookupConsumerAndContinue()
                                 }
                             }
+                    }
+
+                    VStack(alignment: .leading, spacing: 4) {
+                        Toggle("Livemode", isOn: $livemode)
+                            .font(.headline)
+                            .disabled(isRunningOnSimulator)
+
+                        if isRunningOnSimulator {
+                            HStack(spacing: 4) {
+                                Image(systemName: "exclamationmark.octagon")
+                                    .font(.caption)
+                                    .foregroundColor(.secondary)
+                                Text("Livemode is not supported in the simulator.")
+                                    .font(.caption)
+                                    .foregroundColor(.secondary)
+                            }
+                        }
                     }
 
                     OAuthScopeSelector(
@@ -80,7 +106,8 @@ struct CryptoOnrampExampleView: View {
                             destination: RegistrationView(
                                 coordinator: coordinator,
                                 email: email,
-                                selectedScopes: Array(selectedScopes)
+                                selectedScopes: Array(selectedScopes),
+                                livemode: livemode
                             ),
                             isActive: $showRegistration
                         )
@@ -103,15 +130,27 @@ struct CryptoOnrampExampleView: View {
         }
         .navigationViewStyle(.stack)
         .onAppear {
+            // Force livemode to false on simulator
+            if isRunningOnSimulator {
+                livemode = false
+            }
+
             guard coordinator == nil else {
                 return
             }
             initializeCoordinator()
         }
+        .onChange(of: livemode) { _ in
+            coordinator = nil
+            authenticationCustomerId = nil
+            linkAuthIntentId = nil
+            errorMessage = nil
+            initializeCoordinator()
+        }
     }
 
     private func initializeCoordinator() {
-        STPAPIClient.shared.setUpPublishableKey()
+        STPAPIClient.shared.setUpPublishableKey(livemode: livemode)
 
         isLoading.wrappedValue = true
         Task {
@@ -152,7 +191,11 @@ struct CryptoOnrampExampleView: View {
                 let laiId: String?
                 if lookupResult {
                     // Get Link Auth Intent ID from the demo merchant backend.
-                    let response = try await APIClient.shared.authenticateUser(with: email, oauthScopes: Array(selectedScopes))
+                    let response = try await APIClient.shared.authenticateUser(
+                        with: email,
+                        oauthScopes: Array(selectedScopes),
+                        livemode: livemode
+                    )
                     laiId = response.data.id
                     print( "Successfully got Link Auth Intent ID from demo backend. Id: \(laiId!)")
                 } else {

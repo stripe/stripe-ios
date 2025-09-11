@@ -89,7 +89,7 @@ final class LinkVerificationView: UIView {
                 numberOfDigits: 6,
                 enableDigitGrouping: false,
                 font: LinkUI.font(forTextStyle: .title).bold,
-                itemCornerRadius: LinkUI.cornerRadius,
+                itemCornerRadius: LinkUI.oneTimeCodeTextFieldCornerRadius,
                 itemHeight: 56,
                 itemFocusRingThickness: LinkUI.borderWidth,
                 itemFocusBackgroundColor: LinkUI.appearance.colors.background

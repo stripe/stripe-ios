@@ -12,7 +12,16 @@ import UIKit
 
 final class BiometricConsentViewController: IdentityFlowViewController {
 
+    private let contentStackView: UIStackView = {
+        let stackView = UIStackView()
+        stackView.axis = .vertical
+        stackView.alignment = .fill
+        stackView.spacing = 24
+        return stackView
+    }()
+
     private let multilineContent = MultilineIconLabelHTMLView()
+    private let privacyPolicyView = HTMLTextView()
 
     let brandLogo: UIImage
     let consentContent: StripeAPI.VerificationPageStaticContentConsentPage
@@ -110,17 +119,10 @@ final class BiometricConsentViewController: IdentityFlowViewController {
                 titleText: consentContent.title
             ),
             contentViewModel: .init(
-                view: multilineContent,
+                view: contentStackView,
                 inset: .init(top: Style.contentTopPadding, leading: Style.contentHorizontalPadding, bottom: Style.contentBottomPadding, trailing: Style.contentHorizontalPadding)
             ),
             buttons: buttons,
-            buttonTopContentViewModel: .init(
-                text: consentContent.privacyPolicy,
-                style: .html(makeStyle: IdentityFlowView.privacyPolicyLineContentStyle),
-                didOpenURL: { [weak self] url in
-                    self?.openInSafariViewController(url: url)
-                }
-            ),
             scrollViewDelegate: self,
             flowViewDelegate: self
         )
@@ -134,6 +136,10 @@ final class BiometricConsentViewController: IdentityFlowViewController {
         self.brandLogo = brandLogo
         self.consentContent = consentContent
         super.init(sheetController: sheetController, analyticsScreenName: .biometricConsent)
+
+        // Set up the content stack view with both main content and privacy policy
+        setupContentStackView()
+
         // If HTML fails to render, throw error since it's unacceptable to not
         // display consent copy
         try multilineContent.configure(
@@ -146,6 +152,17 @@ final class BiometricConsentViewController: IdentityFlowViewController {
             }
         )
 
+        // Configure privacy policy content to be part of scrollable content
+        try privacyPolicyView.configure(
+            with: .init(
+                text: consentContent.privacyPolicy,
+                style: .html(makeStyle: IdentityFlowView.privacyPolicyLineContentStyle),
+                didOpenURL: { [weak self] url in
+                    self?.openInSafariViewController(url: url)
+                }
+            )
+        )
+
         updateUI()
     }
 
@@ -153,6 +170,25 @@ final class BiometricConsentViewController: IdentityFlowViewController {
         coder: NSCoder
     ) {
         fatalError("init(coder:) has not been implemented")
+    }
+
+    private func setupContentStackView() {
+        contentStackView.addArrangedSubview(multilineContent)
+
+        // Create a container for the privacy policy with centered alignment
+        let privacyPolicyContainer = UIView()
+        privacyPolicyContainer.addSubview(privacyPolicyView)
+        privacyPolicyView.translatesAutoresizingMaskIntoConstraints = false
+
+        NSLayoutConstraint.activate([
+            privacyPolicyView.topAnchor.constraint(equalTo: privacyPolicyContainer.topAnchor),
+            privacyPolicyView.leadingAnchor.constraint(greaterThanOrEqualTo: privacyPolicyContainer.leadingAnchor),
+            privacyPolicyView.trailingAnchor.constraint(lessThanOrEqualTo: privacyPolicyContainer.trailingAnchor),
+            privacyPolicyView.centerXAnchor.constraint(equalTo: privacyPolicyContainer.centerXAnchor),
+            privacyPolicyView.bottomAnchor.constraint(equalTo: privacyPolicyContainer.bottomAnchor),
+        ])
+
+        contentStackView.addArrangedSubview(privacyPolicyContainer)
     }
 }
 

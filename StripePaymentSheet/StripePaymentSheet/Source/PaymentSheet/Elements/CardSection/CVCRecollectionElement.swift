@@ -12,66 +12,56 @@ import UIKit
 
 final class CVCRecollectionElement: ContainerElement {
     var elements: [Element] {
-        return [textFieldElement]
+        return [sectionElement]
     }
 
-    let collectsUserInput: Bool = true
-
     enum Mode {
+        /// Has a title. Doesn't have an information view.
         case inputOnly
+        /// Doesn't have a title. Has an information view.
         case detailedWithInput
     }
     weak var delegate: ElementDelegate?
     var mode: Mode
     lazy var view: UIView = {
-        return cvcRecollectionView
+        let stack = UIStackView(arrangedSubviews: [sectionElement.view])
+        if mode == .inputOnly {
+            stack.insertArrangedSubview(.makeSpacerView(height: 10), at: 0)
+        }
+        stack.axis = .vertical
+        stack.spacing = 4
+        return stack
     }()
-
-    var isViewInitialized: Bool = false
-    lazy var cvcRecollectionView: CVCRecollectionView = {
-        isViewInitialized = true
-        return CVCRecollectionView(
-            defaultValues: defaultValues,
-            paymentMethod: paymentMethod,
-            mode: mode,
-            appearance: appearance,
-            textFieldView: textFieldElement.view
-        )
-    }()
-
-    let defaultValues: DefaultValues
     var paymentMethod: STPPaymentMethod
     let appearance: PaymentSheet.Appearance
 
     lazy var textFieldElement: TextFieldElement = {
-        let textFieldElement = TextFieldElement(configuration: cvcElementConfiguration, theme: appearance.asElementsTheme)
-        textFieldElement.view.layer.maskedCorners = mode == .detailedWithInput
-        ? [.layerMaxXMinYCorner, .layerMaxXMaxYCorner]
-        : [.layerMaxXMinYCorner, .layerMaxXMaxYCorner, .layerMinXMinYCorner, .layerMinXMaxYCorner]
-        textFieldElement.delegate = self
-        return textFieldElement
-    }()
-
-    lazy var cvcElementConfiguration: TextFieldElement.CVCConfiguration = {
-        return TextFieldElement.CVCConfiguration(defaultValue: defaultValues.cvc) { [weak self] in
+        let configuration = TextFieldElement.CVCConfiguration { [weak self] in
             return self?.paymentMethod.card?.brand ?? .unknown
         }
+        return TextFieldElement(configuration: configuration, theme: appearance.asElementsTheme)
     }()
 
-    struct DefaultValues {
-        internal init(cvc: String? = nil) {
-            self.cvc = cvc
+    lazy var sectionElement: SectionElement = {
+        let title = mode == .inputOnly ? String(format: String.Localized.cvc_section_title, String.Localized.cvc) : nil
+        let elements: [Element]
+        switch mode {
+        case .inputOnly:
+            elements = [textFieldElement]
+        case .detailedWithInput:
+            let cardDetails = StaticElement(view: CardDetailView(paymentMethod: paymentMethod, appearance: appearance))
+            elements = [SectionElement.MultiElementRow([cardDetails, textFieldElement], theme: appearance.asElementsTheme)]
         }
-        let cvc: String?
-    }
+        let sectionElement = SectionElement(title: title, elements: elements, selectionBehavior: .default, theme: appearance.asElementsTheme)
+        sectionElement.delegate = self
+        return sectionElement
+    }()
 
     init(
-        defaultValues: DefaultValues = .init(),
         paymentMethod: STPPaymentMethod,
         mode: Mode,
         appearance: PaymentSheet.Appearance
     ) {
-        self.defaultValues = defaultValues
         self.paymentMethod = paymentMethod
         self.appearance = appearance
         self.mode = mode
@@ -89,25 +79,10 @@ final class CVCRecollectionElement: ContainerElement {
     func clearTextFields() {
         textFieldElement.setText("")
     }
-
-    func updateErrorLabel() {
-        if case let .invalid(error, shouldDisplay) = textFieldElement.validationState, shouldDisplay {
-            cvcRecollectionView.errorLabel.text = error.localizedDescription
-            cvcRecollectionView.errorLabel.isHidden = false
-            cvcRecollectionView.errorLabel.textColor = appearance.asElementsTheme.colors.danger
-        } else {
-            cvcRecollectionView.errorLabel.text = nil
-            cvcRecollectionView.errorLabel.isHidden = true
-        }
-    }
 }
 
 extension CVCRecollectionElement: ElementDelegate {
     func didUpdate(element: Element) {
-        if isViewInitialized {
-            updateErrorLabel()
-        }
-
         delegate?.didUpdate(element: self)
     }
     func continueToNextField(element: Element) {
@@ -131,5 +106,46 @@ extension CVCRecollectionElement: PaymentMethodElement {
             return params
         }
         return nil
+    }
+}
+
+// MARK: - CardDetailView - e.g. [VISA] 4242
+final class CardDetailView: UIView {
+    private let appearance: PaymentSheet.Appearance
+    private let paymentMethod: STPPaymentMethod
+    lazy var paymentMethodImage: UIImageView = {
+        let imageView = UIImageView(image: paymentMethod.makeIcon())
+        imageView.contentMode = .scaleAspectFit
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        return imageView
+    }()
+
+    lazy var paymentMethodLabelPrimary: UILabel = {
+        let label = UILabel()
+        label.font = appearance.scaledFont(for: appearance.font.base, style: .body, maximumPointSize: 15)
+        label.textColor = appearance.colors.componentText
+        label.numberOfLines = 0
+        label.text = paymentMethod.paymentSheetLabel
+        return label
+    }()
+
+    lazy var hStackView: UIStackView = {
+        let hStackView = UIStackView(arrangedSubviews: [paymentMethodImage, paymentMethodLabelPrimary])
+        hStackView.axis = .horizontal
+        hStackView.spacing = 5.0
+        hStackView.alignment = .center
+        return hStackView
+    }()
+
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+
+    init(paymentMethod: STPPaymentMethod, appearance: PaymentSheet.Appearance) {
+        self.appearance = appearance
+        self.paymentMethod = paymentMethod
+        super.init(frame: .zero)
+        self.backgroundColor = appearance.colors.componentBackground.translucentMaskColor
+        addAndPinSubview(hStackView, insets: appearance.textFieldInsets)
     }
 }

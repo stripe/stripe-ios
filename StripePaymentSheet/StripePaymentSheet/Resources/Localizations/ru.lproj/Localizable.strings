@@ -126,8 +126,6 @@
 
 "Enter address manually" = "Введите адрес вручную";
 
-"Enter the code sent to %@ to use your saved information." = "Чтобы использовать ранее сохраненные данные, введите код, отправленный на %@.";
-
 "Enter the code sent to %@." = "Введите код, отправленный на %s.";
 
 "FPX Bank" = "Банк FPX";
