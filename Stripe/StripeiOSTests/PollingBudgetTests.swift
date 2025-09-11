@@ -10,146 +10,183 @@ import XCTest
 
 final class PollingBudgetTests: XCTestCase {
 
-    // MARK: - Initialization Tests
+    // MARK: - PollingBudget Initialization Tests
 
-    func testInit_WithSupportedPaymentMethods_CreatesBudgetWithCorrectDuration() {
-        // Test 5-second budget payment methods
-        let fiveSecondMethods: [STPPaymentMethodType] = [.amazonPay, .revolutPay, .swish, .twint, .przelewy24]
-        for method in fiveSecondMethods {
-            let budget = PollingBudget(startDate: Date(), paymentMethodType: method)
-            XCTAssertNotNil(budget, "Should create budget for \(method)")
-            XCTAssertEqual(budget?.maxDuration, 5.0, "Should have 5-second duration for \(method)")
-        }
+    func testPollingBudget_initializationWithCardPaymentMethod() {
+        let budget = PollingBudget(startDate: Date(), paymentMethodType: .card)
 
-        // Test 15-second budget payment method
-        let cardBudget = PollingBudget(startDate: Date(), paymentMethodType: .card)
-        XCTAssertNotNil(cardBudget)
-        XCTAssertEqual(cardBudget?.maxDuration, 15.0, "Card should have 15-second duration")
+        XCTAssertNotNil(budget)
+        XCTAssertTrue(budget!.canPoll)
     }
 
-    func testInit_WithUnsupportedPaymentMethods_ReturnsNil() {
-        let unsupportedMethods: [STPPaymentMethodType] = [.alipay, .payPal, .klarna, .cashApp, .unknown]
-        for method in unsupportedMethods {
-            let budget = PollingBudget(startDate: Date(), paymentMethodType: method)
-            XCTAssertNil(budget, "Should return nil for unsupported method \(method)")
+    func testPollingBudget_initializationWithWalletPaymentMethods() {
+        let walletTypes: [STPPaymentMethodType] = [.amazonPay, .revolutPay, .swish, .twint, .przelewy24]
+
+        for type in walletTypes {
+            let budget = PollingBudget(startDate: Date(), paymentMethodType: type)
+            XCTAssertNotNil(budget, "Should create budget for \(type)")
+            XCTAssertTrue(budget!.canPoll, "Should allow polling initially for \(type)")
         }
     }
 
-    func testInit_WithExplicitDuration_SetsDurationCorrectly() {
-        let budget = PollingBudget(startDate: Date(), duration: 10.0)
-        XCTAssertEqual(budget.maxDuration, 10.0)
+    func testPollingBudget_initializationWithUnsupportedPaymentMethod() {
+        let unsupportedTypes: [STPPaymentMethodType] = [.alipay, .iDEAL, .payPal, .unknown]
+
+        for type in unsupportedTypes {
+            let budget = PollingBudget(startDate: Date(), paymentMethodType: type)
+            XCTAssertNil(budget, "Should return nil for unsupported payment method: \(type)")
+        }
     }
 
-    // MARK: - Budget State Tests
+    func testPollingBudget_initializationWithCustomDuration() {
+        let budget = PollingBudget(startDate: Date(), duration: 3.0)
+        XCTAssertTrue(budget.canPoll)
+    }
 
-    func testHasBudgetRemaining_BeforeStart_ReturnsTrue() {
+    // MARK: - PollingBudget Behavior Tests
+
+    func testPollingBudget_canPollBeforeStarting() {
         let budget = PollingBudget(startDate: Date(), duration: 1.0)
-        XCTAssertTrue(budget.hasBudgetRemaining, "Should have budget remaining before start")
+        XCTAssertTrue(budget.canPoll)
     }
 
-    func testHasBudgetRemaining_AfterStart_WithinBudget_ReturnsTrue() {
-        let budget = PollingBudget(startDate: Date(), duration: 10.0)
-        budget.start()
-        XCTAssertTrue(budget.hasBudgetRemaining, "Should have budget remaining immediately after start")
-    }
-
-    func testHasBudgetRemaining_AfterInvalidate_ReturnsFalse() {
-        let budget = PollingBudget(startDate: Date(), duration: 10.0)
-        budget.start()
-        budget.invalidate()
-        XCTAssertFalse(budget.hasBudgetRemaining, "Should not have budget remaining after invalidate")
-    }
-
-    func testHasPolledFinal_InitiallyFalse_BecomesTrue() {
+    func testPollingBudget_beginPolling() {
         let budget = PollingBudget(startDate: Date(), duration: 1.0)
-        XCTAssertFalse(budget.hasPolledFinal, "hasPolledFinal should initially be false")
 
-        budget.invalidate()
-        XCTAssertTrue(budget.hasPolledFinal, "hasPolledFinal should be true after invalidate")
+        budget.beginPolling()
+        XCTAssertTrue(budget.canPoll)
     }
 
-    // MARK: - Timing Tests
+    func testPollingBudget_multipleBeginPollingCalls() {
+        let budget = PollingBudget(startDate: Date(), duration: 1.0)
 
-    func testStart_SetsStartDate_AllowsMultipleCalls() {
-        let budget = PollingBudget(startDate: Date(), duration: 5.0)
+        budget.beginPolling()
+        Thread.sleep(forTimeInterval: 0.1)
+        budget.beginPolling()
 
-        budget.start()
-        XCTAssertTrue(budget.hasBudgetRemaining, "Should have budget after first start")
-
-        // Multiple calls to start() should not reset the timer
-        budget.start()
-        XCTAssertTrue(budget.hasBudgetRemaining, "Multiple start calls should be safe")
+        XCTAssertTrue(budget.canPoll)
     }
 
-    func testBudgetExpiration_WithVeryShortDuration() {
-        let budget = PollingBudget(startDate: Date(), duration: 0.001) // 1ms
-        budget.start()
+    func testPollingBudget_recordPollAttemptWithinBudget() {
+        let budget = PollingBudget(startDate: Date(), duration: 1.0)
+        budget.beginPolling()
 
-        // Wait a bit to let the budget expire
-        let expectation = self.expectation(description: "Budget should expire")
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.01) {
-            expectation.fulfill()
-        }
+        budget.recordPollAttempt()
+        XCTAssertTrue(budget.canPoll)
+    }
 
-        waitForExpectations(timeout: 0.1)
-        XCTAssertFalse(budget.hasBudgetRemaining, "Budget should be expired after short duration")
+    func testPollingBudget_budgetExhaustion() {
+        let budget = PollingBudget(startDate: Date(), duration: 0.01)
+        budget.beginPolling()
+
+        Thread.sleep(forTimeInterval: 0.02)
+
+        XCTAssertTrue(budget.canPoll, "Should allow one poll even after budget expires")
+
+        budget.recordPollAttempt()
+        XCTAssertFalse(budget.canPoll, "Should not allow polling after recording attempt beyond budget")
+    }
+
+    // MARK: - Critical "One Final Poll" Behavior Tests
+
+    func testPollingBudget_oneFinalPollBehavior() {
+        let budget = PollingBudget(startDate: Date(), duration: 0.01)
+        budget.beginPolling()
+
+        Thread.sleep(forTimeInterval: 0.05)
+
+        XCTAssertTrue(budget.canPoll, "Should allow the final poll even well beyond budget expiration")
+
+        budget.recordPollAttempt()
+        XCTAssertFalse(budget.canPoll, "Should not allow further polling after final poll attempt")
+        XCTAssertFalse(budget.canPoll, "Should remain false on subsequent checks")
+    }
+
+    func testPollingBudget_multiplePollsWithinBudget() {
+        let budget = PollingBudget(startDate: Date(), duration: 0.1)
+        budget.beginPolling()
+
+        XCTAssertTrue(budget.canPoll)
+        budget.recordPollAttempt()
+        XCTAssertTrue(budget.canPoll)
+        budget.recordPollAttempt()
+        XCTAssertTrue(budget.canPoll)
+
+        Thread.sleep(forTimeInterval: 0.12)
+
+        XCTAssertTrue(budget.canPoll, "Should allow final poll after expiration")
+        budget.recordPollAttempt()
+        XCTAssertFalse(budget.canPoll, "Should not allow polling after final attempt")
     }
 
     // MARK: - Integration Tests
 
-    func testTypicalPollingFlow() {
-        // Simulate a typical polling scenario
-        let budget = PollingBudget(startDate: Date(), paymentMethodType: .swish)!
+    func testPollingBudget_withCardPaymentMethodDuration() {
+        let budget = PollingBudget(startDate: Date(), paymentMethodType: .card)!
 
-        // Initial state
-        XCTAssertTrue(budget.hasBudgetRemaining, "Should have budget initially")
-        XCTAssertFalse(budget.hasPolledFinal, "Should not have polled final initially")
+        budget.beginPolling()
+        XCTAssertTrue(budget.canPoll)
 
-        // Start polling
-        budget.start()
-        XCTAssertTrue(budget.hasBudgetRemaining, "Should have budget after start")
-
-        // Simulate polling completion
-        budget.invalidate()
-        XCTAssertFalse(budget.hasBudgetRemaining, "Should not have budget after completion")
-        XCTAssertTrue(budget.hasPolledFinal, "Should have polled final after completion")
+        budget.recordPollAttempt()
+        XCTAssertTrue(budget.canPoll)
     }
 
-    func testPaymentMethodSpecificBudgets() {
-        // Verify different payment methods get appropriate budgets
-        let swishBudget = PollingBudget(startDate: Date(), paymentMethodType: .swish)!
-        let cardBudget = PollingBudget(startDate: Date(), paymentMethodType: .card)!
-        let amazonBudget = PollingBudget(startDate: Date(), paymentMethodType: .amazonPay)!
+    func testPollingBudget_withWalletPaymentMethodDuration() {
+        let budget = PollingBudget(startDate: Date(), paymentMethodType: .amazonPay)!
 
-        XCTAssertEqual(swishBudget.maxDuration, 5.0, "Swish should get 5-second budget")
-        XCTAssertEqual(cardBudget.maxDuration, 15.0, "Card should get 15-second budget")
-        XCTAssertEqual(amazonBudget.maxDuration, 5.0, "Amazon Pay should get 5-second budget")
+        budget.beginPolling()
+        XCTAssertTrue(budget.canPoll)
 
-        // Verify they all start with budget available
-        XCTAssertTrue(swishBudget.hasBudgetRemaining)
-        XCTAssertTrue(cardBudget.hasBudgetRemaining)
-        XCTAssertTrue(amazonBudget.hasBudgetRemaining)
+        budget.recordPollAttempt()
+        XCTAssertTrue(budget.canPoll)
+    }
+
+    func testPollingBudget_behaviorConsistency() {
+        let budget1 = PollingBudget(startDate: Date(), duration: 0.01)
+        let budget2 = PollingBudget(startDate: Date(), duration: 0.01)
+
+        budget1.beginPolling()
+        budget2.beginPolling()
+
+        Thread.sleep(forTimeInterval: 0.02)
+
+        XCTAssertEqual(budget1.canPoll, budget2.canPoll)
+
+        budget1.recordPollAttempt()
+        budget2.recordPollAttempt()
+
+        XCTAssertEqual(budget1.canPoll, budget2.canPoll)
     }
 
     // MARK: - Edge Cases
 
-    func testInvalidate_BeforeStart_WorksCorrectly() {
-        let budget = PollingBudget(startDate: Date(), duration: 5.0)
-        budget.invalidate()
-        XCTAssertFalse(budget.hasBudgetRemaining, "Should respect invalidation even before start")
-        XCTAssertTrue(budget.hasPolledFinal, "hasPolledFinal should be true after invalidate")
+    func testPollingBudget_pastStartDate() {
+        let pastDate = Date(timeIntervalSinceNow: -10)
+        let budget = PollingBudget(startDate: pastDate, duration: 0.01)
+
+        XCTAssertTrue(budget.canPoll)
+
+        budget.recordPollAttempt()
+        XCTAssertFalse(budget.canPoll)
     }
 
-    func testMultipleInvalidate_Safe() {
-        let budget = PollingBudget(startDate: Date(), duration: 5.0)
-        budget.start()
+    func testPollingBudget_noBeginPollingCall() {
+        let budget = PollingBudget(startDate: Date(), duration: 1.0)
 
-        budget.invalidate()
-        XCTAssertTrue(budget.hasPolledFinal)
+        XCTAssertTrue(budget.canPoll)
 
-        // Multiple invalidations should be safe
-        budget.invalidate()
-        XCTAssertTrue(budget.hasPolledFinal)
-        XCTAssertFalse(budget.hasBudgetRemaining)
+        budget.recordPollAttempt()
+        XCTAssertTrue(budget.canPoll)
+    }
+
+    func testPollingBudget_veryShortDuration() {
+        let budget = PollingBudget(startDate: Date(), duration: 0.001)
+        budget.beginPolling()
+
+        Thread.sleep(forTimeInterval: 0.01)
+        XCTAssertTrue(budget.canPoll)
+
+        budget.recordPollAttempt()
+        XCTAssertFalse(budget.canPoll)
     }
 }

@@ -1482,12 +1482,10 @@ public class STPPaymentHandler: NSObject {
     }
 
     func pollIfBudgetAllows(pollingBudget: PollingBudget, block: () -> Void) {
-        pollingBudget.start() // Start the timer if not already started
-        if pollingBudget.hasBudgetRemaining {
+        pollingBudget.beginPolling() // Start the timer if not already started
+        if pollingBudget.canPoll {
+            pollingBudget.recordPollAttempt()
             block()
-        } else if !pollingBudget.hasPolledFinal {
-            pollingBudget.invalidate()
-            block() // do 1 final poll
         }
     }
 
@@ -1529,7 +1527,7 @@ public class STPPaymentHandler: NSObject {
                     let startDate = Date()
                     self.retrieveOrRefreshPaymentIntent(
                         currentAction: currentAction,
-                        timeout: pollingBudget?.maxDuration // Polling budget is nil on the first attempt
+                        timeout: pollingBudget?.duration.value // Polling budget is nil on the first attempt
                     ) { [self] paymentIntent, error in
                         guard let paymentIntent, error == nil else {
                             let error = error ?? self._error(for: .unexpectedErrorCode, loggingSafeErrorMessage: "Missing PaymentIntent.")
@@ -1546,7 +1544,7 @@ public class STPPaymentHandler: NSObject {
                             let paymentMethod = paymentIntent.paymentMethod,
                             !STPPaymentHandler._isProcessingIntentSuccess(for: paymentMethod.type),
                             paymentIntent.status == .processing,
-                            pollingBudget?.hasBudgetRemaining ?? true
+                            pollingBudget?.canPoll ?? true
                         {
                             let processingPollingBudget = pollingBudget ?? PollingBudget(startDate: startDate, duration: 2)
                             self.pollIfBudgetAllows(pollingBudget: processingPollingBudget) {
@@ -1588,7 +1586,7 @@ public class STPPaymentHandler: NSObject {
                                     // If this is a web-based 3DS2 transaction that is still in requires_action, we may just need to refresh the PI a few more times.
                                     // Also retry a few times for app redirects, the redirect flow is fast and sometimes the intent doesn't update quick enough
                                     let shouldRetryForCard = paymentMethodType == .card && paymentIntent.nextAction?.type == .useStripeSDK
-                                    if paymentMethodType != .card || shouldRetryForCard, let pollingBudget = pollingBudget ?? .init(startDate: startDate, paymentMethodType: paymentMethodType), pollingBudget.hasBudgetRemaining {
+                                    if paymentMethodType != .card || shouldRetryForCard, let pollingBudget = pollingBudget ?? .init(startDate: startDate, paymentMethodType: paymentMethodType), pollingBudget.canPoll {
                                         pollIfBudgetAllows(pollingBudget: pollingBudget) {
                                             self._retryAfterDelay {
                                                 self._retrieveAndCheckIntentForCurrentAction(
@@ -1614,7 +1612,7 @@ public class STPPaymentHandler: NSObject {
             let startDate = Date()
             retrieveOrRefreshSetupIntent(
                 currentAction: currentAction,
-                timeout: pollingBudget?.maxDuration // Polling budget is nil on first attempt
+                timeout: pollingBudget?.duration.value // Polling budget is nil on first attempt
             ) { setupIntent, error in
                 guard let setupIntent, error == nil else {
                     let error = error ?? self._error(for: .unexpectedErrorCode, loggingSafeErrorMessage: "Missing SetupIntent.")
@@ -1628,7 +1626,7 @@ public class STPPaymentHandler: NSObject {
                 if let type = setupIntent.paymentMethod?.type,
                    !STPPaymentHandler._isProcessingIntentSuccess(for: type),
                    setupIntent.status == .processing,
-                   pollingBudget?.hasBudgetRemaining ?? true
+                   pollingBudget?.canPoll ?? true
                 {
                     let processingPollingBudget = pollingBudget ?? PollingBudget(startDate: startDate, duration: 5)
                     self.pollIfBudgetAllows(pollingBudget: processingPollingBudget) {
@@ -1659,7 +1657,7 @@ public class STPPaymentHandler: NSObject {
                             // If this is a web-based 3DS2 transaction that is still in requires_action, we may just need to refresh the SI a few more times.
                             // Also retry a few times for Cash App, the redirect flow is fast and sometimes the intent doesn't update quick enough
                             let shouldRetryForCard = paymentMethod.type == .card && setupIntent.nextAction?.type == .useStripeSDK
-                            if paymentMethod.type != .card || shouldRetryForCard, let pollingBudget = pollingBudget ?? .init(startDate: startDate, paymentMethodType: paymentMethod.type), pollingBudget.hasBudgetRemaining {
+                            if paymentMethod.type != .card || shouldRetryForCard, let pollingBudget = pollingBudget ?? .init(startDate: startDate, paymentMethodType: paymentMethod.type), pollingBudget.canPoll {
                                 self.pollIfBudgetAllows(pollingBudget: pollingBudget) {
                                     self._retryAfterDelay {
                                         self._retrieveAndCheckIntentForCurrentAction(
@@ -2099,7 +2097,7 @@ public class STPPaymentHandler: NSObject {
             if let paymentIntentAction = action as? STPPaymentHandlerPaymentIntentActionParams {
                 let timeout: NSNumber? = {
                     guard let pollingBudget else { return nil }
-                    return NSNumber(value: pollingBudget.maxDuration)
+                    return NSNumber(value: pollingBudget.duration.value)
                 }()
                 currentAction.apiClient.retrievePaymentIntent(
                     withClientSecret: paymentIntentAction.paymentIntent.clientSecret,
@@ -2114,7 +2112,7 @@ public class STPPaymentHandler: NSObject {
             } else if let setupIntentAction = action as? STPPaymentHandlerSetupIntentActionParams {
                 let timeout: NSNumber? = {
                     guard let pollingBudget else { return nil }
-                    return NSNumber(value: pollingBudget.maxDuration)
+                    return NSNumber(value: pollingBudget.duration.value)
                 }()
                 currentAction.apiClient.retrieveSetupIntent(
                     withClientSecret: setupIntentAction.setupIntent.clientSecret,
@@ -2147,7 +2145,7 @@ public class STPPaymentHandler: NSObject {
                 // This isn't guaranteed to succeed if the ACS isn't ready yet.
                 // Try it a few more times if it fails with a 400. (RUN_MOBILESDK-126)
                 let challengePollingBudget = pollingBudget ?? PollingBudget(startDate: startDate, duration: 15)
-                if (error as NSError?)?.code == STPErrorCode.invalidRequestError.rawValue && challengePollingBudget.hasBudgetRemaining
+                if (error as NSError?)?.code == STPErrorCode.invalidRequestError.rawValue && challengePollingBudget.canPoll
                 {
                     self.pollIfBudgetAllows(pollingBudget: challengePollingBudget) {
                         self._retryAfterDelay {
