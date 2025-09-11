@@ -36,11 +36,19 @@ import Foundation
 @_spi(STP) public class Future<Value> {
     public typealias Result = Swift.Result<Value, Error>
 
+    private var _result: Result?
     fileprivate var result: Result? {
-        // Observe whenever a result is assigned, and report it:
-        didSet {
+        get {
+            propertyAccessQueue.sync { _result }
+        }
+        set {
+            // Observe whenever a result is assigned, and report it:
             propertyAccessQueue.async { [self] in
-                result.map(report)
+                _result = newValue
+                if let _result {
+                    callbacks.forEach { $0(_result) }
+                    callbacks = []
+                }
             }
         }
     }
@@ -57,21 +65,13 @@ import Foundation
                 callback(r)
             }
         }
-
-        propertyAccessQueue.async { [self] in
-            // If a result has already been set, call the callback directly:
-            if let result {
-                return wrappedCallback(result)
-            }
-
-            callbacks.append(wrappedCallback)
+        
+        if let result {
+            return wrappedCallback(result)
         }
-    }
 
-    private func report(result: Result) {
         propertyAccessQueue.async { [self] in
-            callbacks.forEach { $0(result) }
-            callbacks = []
+            callbacks.append(wrappedCallback)
         }
     }
 
