@@ -10,7 +10,7 @@ import StripeCoreTestUtils
 import XCTest
 
 @testable@_spi(STP) import StripeCore
-@testable@_spi(STP) import StripePayments
+@testable@_spi(STP) @_spi(ConfirmationTokensPublicPreview) import StripePayments
 @testable@_spi(STP) @_spi(CustomerSessionBetaAccess) @_spi(PaymentMethodOptionsSetupFutureUsagePreview) import StripePaymentSheet
 @testable@_spi(STP) import StripePaymentsTestUtils
 @testable@_spi(STP) import StripeUICore
