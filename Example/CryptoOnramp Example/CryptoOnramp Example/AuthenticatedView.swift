@@ -60,7 +60,6 @@ struct AuthenticatedView: View {
                         .font(.headline)
                         .foregroundColor(.secondary)
 
-
                     Button("Attach Wallet Address") {
                         showAttachWalletSheet = true
                     }
@@ -320,7 +319,6 @@ struct AuthenticatedView: View {
             refreshWalletsAndSelectIfNeeded()
         }
     }
-
 
     private func presentPaymentMethodSelector(for type: PaymentMethodType) {
         guard let viewController = UIApplication.shared.findTopNavigationController() else {
