@@ -262,7 +262,7 @@ struct RegistrationView: View {
         RegistrationView(
             coordinator: coordinator,
             email: "test@example.com",
-            selectedScopes: OAuthScopes.onrampScope,
+            selectedScopes: OAuthScopes.requiredScopes,
             livemode: false,
             onCompleted: { _ in }
         )
