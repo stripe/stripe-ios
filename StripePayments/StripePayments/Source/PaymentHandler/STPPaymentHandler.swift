@@ -1545,7 +1545,8 @@ public class STPPaymentHandler: NSObject {
                         if
                             let paymentMethod = paymentIntent.paymentMethod,
                             !STPPaymentHandler._isProcessingIntentSuccess(for: paymentMethod.type),
-                            paymentIntent.status == .processing
+                            paymentIntent.status == .processing,
+                            (pollingBudget?.hasBudgetRemaining ?? true)
                         {
                             let processingPollingBudget = pollingBudget ?? STPPaymentMethodType.PollingBudget(budgetType: .count(5))
                             self.pollIfBudgetAllows(pollingBudget: processingPollingBudget) {
@@ -1624,7 +1625,8 @@ public class STPPaymentHandler: NSObject {
                 currentAction.setupIntent = setupIntent
                 if let type = setupIntent.paymentMethod?.type,
                    !STPPaymentHandler._isProcessingIntentSuccess(for: type),
-                   setupIntent.status == .processing
+                   setupIntent.status == .processing,
+                   (pollingBudget?.hasBudgetRemaining ?? true)
                 {
                     let processingPollingBudget = pollingBudget ?? STPPaymentMethodType.PollingBudget(budgetType: .count(5))
                     self.pollIfBudgetAllows(pollingBudget: processingPollingBudget) {
