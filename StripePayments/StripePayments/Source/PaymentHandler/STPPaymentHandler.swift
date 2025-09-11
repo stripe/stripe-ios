@@ -1587,7 +1587,7 @@ public class STPPaymentHandler: NSObject {
                                     // If this is a web-based 3DS2 transaction that is still in requires_action, we may just need to refresh the PI a few more times.
                                     // Also retry a few times for app redirects, the redirect flow is fast and sometimes the intent doesn't update quick enough
                                     let shouldRetryForCard = paymentMethodType == .card && paymentIntent.nextAction?.type == .useStripeSDK
-                                    if paymentMethodType != .card || shouldRetryForCard, let pollingBudget = pollingBudget ?? .init(paymentMethodType: paymentMethodType) {
+                                    if paymentMethodType != .card || shouldRetryForCard, let pollingBudget = pollingBudget ?? .init(paymentMethodType: paymentMethodType), pollingBudget.hasBudgetRemaining {
                                         pollIfBudgetAllows(pollingBudget: pollingBudget) {
                                             self._retryAfterDelay(delayTime: 1) {
                                                 self._retrieveAndCheckIntentForCurrentAction(
@@ -1655,7 +1655,7 @@ public class STPPaymentHandler: NSObject {
                             // If this is a web-based 3DS2 transaction that is still in requires_action, we may just need to refresh the SI a few more times.
                             // Also retry a few times for Cash App, the redirect flow is fast and sometimes the intent doesn't update quick enough
                             let shouldRetryForCard = paymentMethod.type == .card && setupIntent.nextAction?.type == .useStripeSDK
-                            if paymentMethod.type != .card || shouldRetryForCard, let pollingBudget = pollingBudget ?? .init(paymentMethodType: paymentMethod.type) {
+                            if paymentMethod.type != .card || shouldRetryForCard, let pollingBudget = pollingBudget ?? .init(paymentMethodType: paymentMethod.type), pollingBudget.hasBudgetRemaining {
                                 self.pollIfBudgetAllows(pollingBudget: pollingBudget) {
                                     self._retryAfterDelay(delayTime: 1) {
                                         self._retrieveAndCheckIntentForCurrentAction(
@@ -2131,9 +2131,9 @@ public class STPPaymentHandler: NSObject {
             } else {
                 // This isn't guaranteed to succeed if the ACS isn't ready yet.
                 // Try it a few more times if it fails with a 400. (RUN_MOBILESDK-126)
-                if (error as NSError?)?.code == STPErrorCode.invalidRequestError.rawValue
+                let challengePollingBudget = pollingBudget ?? STPPaymentMethodType.PollingBudget(budgetType: .count(5))
+                if (error as NSError?)?.code == STPErrorCode.invalidRequestError.rawValue && challengePollingBudget.hasBudgetRemaining
                 {
-                    let challengePollingBudget = pollingBudget ?? STPPaymentMethodType.PollingBudget(budgetType: .count(5))
                     self.pollIfBudgetAllows(pollingBudget: challengePollingBudget) {
                         self._retryAfterDelay {
                             self._markChallengeCompleted(
@@ -2143,7 +2143,7 @@ public class STPPaymentHandler: NSObject {
                         }
                     }
                 } else {
-                    // Completing the 3DS2 action failed, try to retrieve the intent anyways:
+                    // Completing the 3DS2 action failed or budget exhausted, try to retrieve the intent anyways:
                     retrieveIntent(action: currentAction, completion: completion)
                 }
             }
