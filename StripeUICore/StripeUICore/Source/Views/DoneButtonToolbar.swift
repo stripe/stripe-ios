@@ -76,4 +76,20 @@ import UIKit
     private func didTapCancel() {
         doneButtonToolbarDelegate?.didTapCancel(self)
     }
+
+    public override func hitTest(_ point: CGPoint, with event: UIEvent?) -> UIView? {
+        let hitView = super.hitTest(point, with: event)
+        guard LiquidGlassDetector.isEnabledInMerchantApp else {
+            return hitView
+        }
+
+        // On iOS 26+, the toolbar eats all taps, even when you tap the empty space outside of the toolbar buttons, preventing you from dismissing the keyboard.
+        // Hack: To tell if the touch is inside a button vs. the background, look at the touched view's width
+        let buttonWidthGuess = 50.0
+        if hitView?.frame.size.width ?? 0 > buttonWidthGuess {
+            // Don't return the background view or any other non-button view
+            return nil
+        }
+        return hitView
+    }
 }
