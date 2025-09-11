@@ -19,18 +19,38 @@ struct IdentityVerificationView: View {
 
     var body: some View {
         ScrollView {
-            VStack(spacing: 20) {
-                Text("Identity Verification")
-                    .font(.headline)
-                    .foregroundColor(.secondary)
-                    .frame(maxWidth: .infinity, alignment: .leading)
+            VStack(alignment: .leading, spacing: 20) {
+                Image(systemName: "checkmark.shield")
+                    .font(.largeTitle)
+                    .padding()
+                    .background {
+                        Color.secondary.opacity(0.2)
+                            .cornerRadius(16)
+                    }
 
-                Button("Verify Identity") {
-                    startIdentityVerification()
+                VStack(spacing: 6) {
+                    Text("Finish identity verification")
+                        .font(.title)
+                        .bold()
+                        .frame(maxWidth: .infinity, alignment: .leading)
+
+                    Text("You’re almost done! To complete identity verification, Link will ask for:")
+                        .font(.subheadline)
+                        .foregroundColor(.secondary)
+                        .frame(maxWidth: .infinity, alignment: .leading)
                 }
-                .buttonStyle(PrimaryButtonStyle())
-                .disabled(isLoading.wrappedValue)
-                .opacity(isLoading.wrappedValue ? 0.5 : 1)
+
+                makeInfoSection(
+                    systemImageName: "person.text.rectangle",
+                    title: "Photo of your ID",
+                    subtitle: "Scan your government-issued ID (driver’s license or passport)."
+                )
+
+                makeInfoSection(
+                    systemImageName: "person.fill.checkmark",
+                    title: "Take a selfie",
+                    subtitle: "This selfie is compared with your ID for verification."
+                )
 
                 if let errorMessage {
                     ErrorMessageView(message: errorMessage)
@@ -38,12 +58,39 @@ struct IdentityVerificationView: View {
             }
             .padding()
         }
+        .safeAreaInset(edge: .bottom, content: {
+            Button("Verify Identity") {
+                startIdentityVerification()
+            }
+            .buttonStyle(PrimaryButtonStyle())
+            .disabled(isLoading.wrappedValue)
+            .opacity(isLoading.wrappedValue ? 0.5 : 1)
+            .padding()
+        })
         .navigationTitle("Identity Verification")
         .navigationBarTitleDisplayMode(.inline)
     }
 
+    @ViewBuilder
+    private func makeInfoSection(systemImageName: String, title: String, subtitle: String) -> some View {
+        HStack(alignment: .firstTextBaseline) {
+            Image(systemName: systemImageName)
+
+            VStack {
+                Text(title)
+                    .font(.headline)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+
+                Text(subtitle)
+                    .font(.subheadline)
+                    .foregroundColor(.secondary)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+            }
+        }
+    }
+
     private func startIdentityVerification() {
-        guard let topNav = UIApplication.shared.findTopNavigationController() else {
+        guard let presentingViewController = UIApplication.shared.findTopNavigationController() else {
             errorMessage = "Unable to find view controller to present from."
             return
         }
@@ -53,7 +100,7 @@ struct IdentityVerificationView: View {
 
         Task {
             do {
-                let result = try await coordinator.verifyIdentity(from: topNav)
+                let result = try await coordinator.verifyIdentity(from: presentingViewController)
                 await MainActor.run {
                     isLoading.wrappedValue = false
                     switch result {
@@ -75,3 +122,8 @@ struct IdentityVerificationView: View {
     }
 }
 
+#Preview {
+    PreviewWrapperView { coordinator in
+        IdentityVerificationView(coordinator: coordinator, onCompleted: {})
+    }
+}
