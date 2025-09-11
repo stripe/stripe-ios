@@ -321,8 +321,8 @@ extension STPPaymentMethodType {
             case count(Int)
         }
 
-        /// The timestamp when polling started
-        let startDate: Date = Date()
+        /// The timestamp when polling started (set when start() is called)
+        private var startDate: Date?
         /// The type of budget being enforced
         let budgetType: BudgetType
         /// Current number of polling attempts made
@@ -337,6 +337,7 @@ extension STPPaymentMethodType {
 
             switch budgetType {
             case .duration(let maxDuration):
+                guard let startDate = startDate else { return true } // Not started yet
                 let elapsed = Date().timeIntervalSince(startDate)
                 return elapsed < maxDuration
             case .count(let maxAttempts):
@@ -367,6 +368,13 @@ extension STPPaymentMethodType {
                 assert(count > 0, "Count must be greater than 0")
             }
             self.budgetType = budgetType
+        }
+
+        /// Starts the polling timer. Should be called when polling begins.
+        func start() {
+            if startDate == nil {
+                startDate = Date()
+            }
         }
 
         /// Increments the attempt count. Should be called before each polling attempt.

@@ -1482,6 +1482,7 @@ public class STPPaymentHandler: NSObject {
     }
 
     func pollIfBudgetAllows(pollingBudget: STPPaymentMethodType.PollingBudget, block: () -> Void) {
+        pollingBudget.start() // Start the timer if not already started
         if pollingBudget.hasBudgetRemaining {
             pollingBudget.incrementAttempt()
             block()
