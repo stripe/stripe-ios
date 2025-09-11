@@ -283,7 +283,7 @@ extension PaymentSheet: PaymentSheetViewControllerDelegate {
         let presentingViewController = paymentSheetViewController.presentingViewController
         let confirm: (@escaping (PaymentSheetResult, StripeCore.STPAnalyticsClient.DeferredIntentConfirmationType?) -> Void) -> Void = { completion in
             Task { @MainActor in
-                let hcaptchaToken = await self.passiveCaptchaChallenge?.fetchToken()
+                let hcaptchaToken = await self.passiveCaptchaChallenge?.fetchToken(for: paymentOption)
                 PaymentSheet.confirm(
                     configuration: self.configuration,
                     authenticationContext: self.bottomSheetViewController,

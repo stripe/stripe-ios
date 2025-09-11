@@ -493,19 +493,16 @@ extension PaymentSheet {
                 self.isPresented = false
             }
 
-            Task { @MainActor in
-                let hcaptchaToken = await self.passiveCaptchaChallenge?.fetchToken()
-                presentingViewController.presentNativeLink(
-                    selectedPaymentDetailsID: selectedPaymentDetailsID,
-                    configuration: configuration,
-                    intent: intent,
-                    elementsSession: elementsSession,
-                    analyticsHelper: analyticsHelper,
-                    verificationDismissed: verificationDismissed,
-                    hcaptchaToken: hcaptchaToken,
-                    callback: completionCallback
-                )
-            }
+            presentingViewController.presentNativeLink(
+                selectedPaymentDetailsID: selectedPaymentDetailsID,
+                configuration: configuration,
+                intent: intent,
+                elementsSession: elementsSession,
+                analyticsHelper: analyticsHelper,
+                verificationDismissed: verificationDismissed,
+                passiveCaptchaChallenge: passiveCaptchaChallenge,
+                callback: completionCallback
+            )
         }
 
         /// Completes the payment or setup.
@@ -563,8 +560,8 @@ extension PaymentSheet {
             }
 
             func confirm() {
-                Task { @MainActor in
-                    let hcaptchaToken = await self.passiveCaptchaChallenge?.fetchToken()
+                Task {
+                    let hcaptchaToken = await self.passiveCaptchaChallenge?.fetchToken(for: paymentOption)
                     PaymentSheet.confirm(
                         configuration: configuration,
                         authenticationContext: authenticationContext,
