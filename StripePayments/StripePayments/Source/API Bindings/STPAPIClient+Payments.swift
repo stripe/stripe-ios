@@ -415,7 +415,7 @@ extension STPAPIClient {
     }
 
     // Internal helper to pass timeout
-    public func retrievePaymentIntent(
+    func retrievePaymentIntent(
         withClientSecret secret: String,
         expand: [String]?,
         timeout: TimeInterval?,
