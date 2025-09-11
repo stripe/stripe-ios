@@ -107,6 +107,15 @@ final class PaymentSheetLoader {
                     )
                     analyticsHelper.logExposure(experiment: linkGlobalHoldbackExperiment)
 
+                    let linkGlobalHoldbackAAExperiment = LinkGlobalHoldbackAA(
+                        arbId: arbId,
+                        session: elementsSession,
+                        configuration: configuration,
+                        linkAccount: linkAccount,
+                        integrationShape: analyticsHelper.integrationShape
+                    )
+                    analyticsHelper.logExposure(experiment: linkGlobalHoldbackAAExperiment)
+
                     let linkAbTestExperiment = LinkABTest(
                         arbId: arbId,
                         session: elementsSession,
