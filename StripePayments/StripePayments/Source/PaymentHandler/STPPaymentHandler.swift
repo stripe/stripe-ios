@@ -106,7 +106,7 @@ public class STPPaymentHandler: NSObject {
         case invalidState
     }
 
-    private var currentAction: STPPaymentHandlerActionParams?
+    internal var currentAction: STPPaymentHandlerActionParams?
     /// YES from when a public method is first called until its associated completion handler is called.
     /// This property guards against simultaneous usage of this class; only one "next action" can be handled at a time.
     private static var inProgress = false
