@@ -17,12 +17,10 @@ import StripePaymentSheet
 /// The main content view of the example CryptoOnramp app.
 struct CryptoOnrampExampleView: View {
     @State private var coordinator: CryptoOnrampCoordinator?
+    @State private var flowCoordinator: CryptoOnrampFlowCoordinator?
     @State private var errorMessage: String?
     @State private var email: String = ""
     @State private var selectedScopes: Set<OAuthScopes> = Set(OAuthScopes.onrampScope)
-    @State private var showRegistration: Bool = false
-    @State private var showOnrampFlowContainerView: Bool = false
-    @State private var authenticationCustomerId: String?
     @State private var linkAuthIntentId: String?
     @State private var livemode: Bool = false
 
@@ -44,7 +42,7 @@ struct CryptoOnrampExampleView: View {
     // MARK: - View
 
     var body: some View {
-        NavigationView {
+        NavigationStack(path: flowCoordinator?.pathBinding ?? .constant([])) {
             ScrollView {
                 VStack(spacing: 20) {
                     FormField("Email") {
@@ -100,35 +98,40 @@ struct CryptoOnrampExampleView: View {
                     if let errorMessage {
                         ErrorMessageView(message: errorMessage)
                     }
-
-                    if let coordinator {
-                        HiddenNavigationLink(
-                            destination: RegistrationView(
-                                coordinator: coordinator,
-                                email: email,
-                                selectedScopes: Array(selectedScopes),
-                                livemode: livemode
-                            ),
-                            isActive: $showRegistration
-                        )
-
-                        if let customerId = authenticationCustomerId {
-                            HiddenNavigationLink(
-                                destination: OnrampFlowContainerView(
-                                    coordinator: coordinator,
-                                    customerId: customerId
-                                ),
-                                isActive: $showOnrampFlowContainerView
-                            )
-                        }
-                    }
                 }
                 .padding()
             }
             .navigationTitle("CryptoOnramp Example")
             .navigationBarTitleDisplayMode(.inline)
+            .navigationDestination(for: FlowRoute.self) { route in
+                if let flowCoordinator {
+                    switch route {
+                    case .registration:
+                        RegistrationView(
+                            coordinator: flowCoordinator.onrampCoordinator,
+                            email: flowCoordinator.email,
+                            selectedScopes: flowCoordinator.selectedScopes,
+                            livemode: livemode
+                        ) { customerId in
+                            flowCoordinator.advanceAfterRegistration(customerId: customerId)
+                        }
+                    case .kycInfo:
+                        KYCInfoView(coordinator: flowCoordinator.onrampCoordinator) {
+                            flowCoordinator.advanceAfterKyc()
+                        }
+                    case .identity:
+                        IdentityVerificationView(coordinator: flowCoordinator.onrampCoordinator) {
+                            flowCoordinator.advanceAfterIdentity()
+                        }
+                    case .authenticated:
+                        AuthenticatedView(
+                            coordinator: flowCoordinator.onrampCoordinator,
+                            customerId: flowCoordinator.customerId ?? ""
+                        )
+                    }
+                }
+            }
         }
-        .navigationViewStyle(.stack)
         .onAppear {
             // Force livemode to false on simulator
             if isRunningOnSimulator {
@@ -142,7 +145,7 @@ struct CryptoOnrampExampleView: View {
         }
         .onChange(of: livemode) { _ in
             coordinator = nil
-            authenticationCustomerId = nil
+            flowCoordinator = nil
             linkAuthIntentId = nil
             errorMessage = nil
             initializeCoordinator()
@@ -171,6 +174,7 @@ struct CryptoOnrampExampleView: View {
 
                 await MainActor.run {
                     self.coordinator = coordinator
+                    self.flowCoordinator = CryptoOnrampFlowCoordinator(onrampCoordinator: coordinator, isLoading: self.isLoading)
                     self.isLoading.wrappedValue = false
                 }
             } catch {
@@ -210,7 +214,7 @@ struct CryptoOnrampExampleView: View {
                     if lookupResult {
                         presentVerification(using: coordinator)
                     } else {
-                        showRegistration = true
+                        flowCoordinator?.startForNewUser(email: email, selectedScopes: Array(selectedScopes))
                     }
                 }
             } catch {
@@ -235,12 +239,7 @@ struct CryptoOnrampExampleView: View {
                     switch result {
                     case .consented(let customerId):
                         await MainActor.run {
-                            authenticationCustomerId = customerId
-
-                            // Delay so the navigation link animation doesn't get canceled.
-                            DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
-                                showOnrampFlowContainerView = true
-                            }
+                            flowCoordinator?.startForExistingUser(customerId: customerId)
                         }
                     case .denied:
                         await MainActor.run {
@@ -330,6 +329,12 @@ struct OAuthScopeSelector: View {
             RoundedRectangle(cornerRadius: 8)
                 .fill(Color.gray.opacity(0.05))
         )
+    }
+}
+
+private extension CryptoOnrampFlowCoordinator {
+    var pathBinding: Binding<[FlowRoute]> {
+        Binding(get: { self.path }, set: { self.path = $0 })
     }
 }
 
