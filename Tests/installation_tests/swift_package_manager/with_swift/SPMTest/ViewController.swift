@@ -9,6 +9,7 @@
 import Stripe
 import StripeApplePay
 import StripeCardScan
+@_spi(STP) import StripeCryptoOnramp
 @_spi(PrivateBetaConnect) import StripeConnect
 import StripeFinancialConnections
 import StripeIdentity
@@ -49,6 +50,10 @@ class ViewController: UIViewController {
         if #available(iOS 15.0, *) {
             let _ = EmbeddedComponentManager {
                 nil
+            }
+            
+            Task {
+                let _ = try? await CryptoOnrampCoordinator.create()
             }
         }
     }
