@@ -109,7 +109,7 @@ final class PaymentSheetFlowControllerViewControllerSnapshotTests: STPSnapshotTe
         var configuration: PaymentSheet.Configuration = PaymentSheet.Configuration()
         configuration.returnURL = "https://foo.com"
         configuration.opensCardScannerAutomatically = true
-        configuration.appearance.applyLiquidGlassIfPossible()
+        configuration.appearance.applyingLiquidGlassIfPossible()
 
         let loadResult = PaymentSheetLoader.LoadResult(
             intent: ._testValue(),

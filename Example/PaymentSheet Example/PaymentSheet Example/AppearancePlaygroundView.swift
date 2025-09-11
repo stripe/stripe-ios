@@ -6,7 +6,8 @@
 //  Copyright © 2022 stripe-ios. All rights reserved.
 //
 
-@_spi(AppearanceAPIAdditionsPreview) import StripePaymentSheet
+@_spi(AppearanceAPIAdditionsPreview)@_spi(STP) import StripePaymentSheet
+@_spi(STP) import StripeUICore
 import SwiftUI
 
 @available(iOS 14.0, *)
@@ -439,6 +440,27 @@ struct AppearancePlaygroundView: View {
                 }
 
                 Button {
+                    appearance = PaymentSheet.Appearance()
+                    if #available(iOS 26.0, *) {
+                        appearance.applyLiquidGlass()
+                    }
+                    doneAction(appearance)
+                } label: {
+                    Text("Reset and apply Liquid Glass 🥃")
+                }
+
+                Button {
+                    appearance = PaymentSheet.Appearance()
+                    if #available(iOS 26.0, *) {
+                        appearance.navigationBarStyle = .glass
+                    }
+                    doneAction(appearance)
+                } label: {
+                    Text("Reset and apply Liquid Glass Nav 🧭")
+                }
+
+                Button {
+                    LiquidGlassDetector.allowNewDesign = false
                     appearance = PaymentSheet.Appearance()
                     doneAction(appearance)
                 } label: {

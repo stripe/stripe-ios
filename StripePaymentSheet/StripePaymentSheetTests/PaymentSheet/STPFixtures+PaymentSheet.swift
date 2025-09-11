@@ -24,7 +24,7 @@ public extension PaymentSheet.Configuration {
             configuration.applePay = .init(merchantId: "merchant id", merchantCountryCode: "US")
         }
         if #available(iOS 26.0, *) {
-            configuration.appearance.applyLiquidGlassIfPossible()
+            configuration.appearance.applyingLiquidGlassIfPossible()
         }
         return configuration
     }
@@ -45,7 +45,7 @@ public extension EmbeddedPaymentElement.Configuration {
 }
 
 public extension PaymentSheet.Appearance {
-    mutating func applyLiquidGlassIfPossible() {
+    mutating func applyingLiquidGlassIfPossible() {
         #if !os(visionOS)
         if #available(iOS 26.0, *) {
             self.applyLiquidGlass()
@@ -56,7 +56,7 @@ public extension PaymentSheet.Appearance {
         #if !os(visionOS)
         if #available(iOS 26.0, *) {
             var copy = self
-            copy.applyLiquidGlassIfPossible()
+            copy.applyingLiquidGlassIfPossible()
             return copy
         }
         #endif
@@ -448,7 +448,7 @@ extension STPPaymentMethod {
 extension PaymentSheet.Appearance {
     static var _testMSPaintTheme: PaymentSheet.Appearance {
         var appearance = PaymentSheet.Appearance()
-        appearance.applyLiquidGlassIfPossible()
+        appearance.applyingLiquidGlassIfPossible()
 
         // Customize the font
         var font = PaymentSheet.Appearance.Font()

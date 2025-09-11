@@ -219,7 +219,7 @@ class ConfirmButtonSnapshotTests: STPSnapshotTestCase {
 }
 
 extension PaymentSheet.Appearance {
-    mutating func applyLiquidGlassIfPossible() {
+    mutating func applyingLiquidGlassIfPossible() {
         #if !os(visionOS)
         if #available(iOS 26.0, *) {
             self.applyLiquidGlass()
@@ -230,7 +230,7 @@ extension PaymentSheet.Appearance {
         #if !os(visionOS)
         if #available(iOS 26.0, *) {
             var copy = self
-            copy.applyLiquidGlassIfPossible()
+            copy.applyingLiquidGlassIfPossible()
             return copy
         }
         #endif

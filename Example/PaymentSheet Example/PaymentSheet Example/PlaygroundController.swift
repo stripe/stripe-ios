@@ -1053,12 +1053,7 @@ extension PlaygroundController: STPAnalyticsClientDelegate {
 
 extension PlaygroundController {
     func serializeSettingsToNSUserDefaults() {
-        // Never save changes for LiquidGLass since we have to set allowNewDesign based on a flag that isn't ready during boot time.
-        var settingsWithoutLiquidGlass = settings
-        settingsWithoutLiquidGlass.liquidGlass = .off
-        settingsWithoutLiquidGlass.liquidGlassNavigation = .off
-
-        let settingsData = try! JSONEncoder().encode(settingsWithoutLiquidGlass)
+        let settingsData = try! JSONEncoder().encode(settings)
         UserDefaults.standard.set(settingsData, forKey: PaymentSheetTestPlaygroundSettings.nsUserDefaultsKey)
 
         if let customerId {
