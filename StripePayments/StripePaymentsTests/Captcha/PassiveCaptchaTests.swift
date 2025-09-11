@@ -5,10 +5,7 @@
 //  Created by Joyce Qin on 8/21/25.
 //
 
-@testable@_spi(STP) import StripeCoreTestUtils
 @_spi(STP) @testable import StripePayments
-@_spi(STP) @testable import StripePaymentSheet
-@testable@_spi(STP) import StripePaymentsTestUtils
 import XCTest
 
 class PassiveCaptchaTests: XCTestCase {
@@ -56,34 +53,5 @@ class PassiveCaptchaTests: XCTestCase {
         let errorAnalytic = STPAnalyticsClient.sharedClient._testLogHistory.first(where: { $0["event"] as? String == "elements.captcha.passive.error" })
         XCTAssertEqual(errorAnalytic?["site_key"] as? String, siteKey)
         XCTAssertEqual(errorAnalytic?["error_code"] as? String, "timeout")
-    }
-}
-
-class PassiveCaptchaNetworkTests: STPNetworkStubbingTestCase {
-    var apiClient: STPAPIClient!
-
-    override func setUp() {
-        super.setUp()
-        self.apiClient = STPAPIClient(publishableKey: STPTestingDefaultPublishableKey)
-    }
-    lazy var configuration: PaymentSheet.Configuration = {
-        var config = PaymentSheet.Configuration()
-        config.apiClient = apiClient
-        config.applePay = .init(merchantId: "foo", merchantCountryCode: "US")
-        return config
-    }()
-
-    func testPassiveCaptchaDoesNotBlockLoad() async throws {
-        let siteKey = "143aadb6-fb60-4ab6-b128-f7fe53426d4a"
-        let passiveCaptcha = PassiveCaptcha(siteKey: siteKey, rqdata: nil)
-        let timeoutNs: UInt64 = 30_000_000_000
-        let passiveCaptchaChallenge = PassiveCaptchaChallenge(passiveCaptcha: passiveCaptcha, testConfiguration: PassiveCaptchaChallenge.TestConfiguration(timeout: timeoutNs, delayValidation: true))
-        await passiveCaptchaChallenge.start()
-        let expectation = XCTestExpectation(description: "Load")
-        let clientSecret = try await STPTestingAPIClient.shared.fetchPaymentIntent(types: ["card"])
-        PaymentSheetLoader.load(mode: .paymentIntentClientSecret(clientSecret), configuration: self.configuration, analyticsHelper: .init(integrationShape: .complete, configuration: configuration), integrationShape: .complete) { _ in
-            expectation.fulfill()
-        }
-        await fulfillment(of: [expectation], timeout: STPTestingNetworkRequestTimeout)
     }
 }

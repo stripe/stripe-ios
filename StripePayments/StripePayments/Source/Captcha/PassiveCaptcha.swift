@@ -66,11 +66,7 @@ private enum CaptchaResult {
     private var validationTask: Task<String?, Never>?
     private var isValidationComplete = false
 
-    public init(passiveCaptcha: PassiveCaptcha?) {
-        self.passiveCaptcha = passiveCaptcha
-    }
-
-    internal init(passiveCaptcha: PassiveCaptcha?, testConfiguration: TestConfiguration? = nil) {
+    public init(passiveCaptcha: PassiveCaptcha?, testConfiguration: TestConfiguration? = nil) {
         self.passiveCaptcha = passiveCaptcha
         self.testConfiguration = testConfiguration
     }

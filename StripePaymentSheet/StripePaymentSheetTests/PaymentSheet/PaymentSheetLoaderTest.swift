@@ -475,4 +475,18 @@ final class PaymentSheetLoaderTest: STPNetworkStubbingTestCase {
             waitForExpectations(timeout: 5)
         }
     }
+
+    func testPassiveCaptchaDoesNotBlockLoad() async throws {
+        let siteKey = "143aadb6-fb60-4ab6-b128-f7fe53426d4a"
+        let passiveCaptcha = PassiveCaptcha(siteKey: siteKey, rqdata: nil)
+        let timeoutNs: UInt64 = 30_000_000_000
+        let passiveCaptchaChallenge = PassiveCaptchaChallenge(passiveCaptcha: passiveCaptcha, testConfiguration: PassiveCaptchaChallenge.TestConfiguration(timeout: timeoutNs, delayValidation: true))
+        await passiveCaptchaChallenge.start()
+        let expectation = XCTestExpectation(description: "Load")
+        let clientSecret = try await STPTestingAPIClient.shared.fetchPaymentIntent(types: ["card"])
+        PaymentSheetLoader.load(mode: .paymentIntentClientSecret(clientSecret), configuration: self.configuration, analyticsHelper: .init(integrationShape: .complete, configuration: configuration), integrationShape: .complete) { _ in
+            expectation.fulfill()
+        }
+        await fulfillment(of: [expectation], timeout: STPTestingNetworkRequestTimeout)
+    }
 }
