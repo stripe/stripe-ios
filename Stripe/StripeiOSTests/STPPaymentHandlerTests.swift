@@ -108,7 +108,7 @@ class STPPaymentHandlerStubbedTests: STPNetworkStubbingTestCase {
     func testPollingBehaviorWithFinalCall() {
         let mockAPIClient = STPAPIClientPollingMock()
         let paymentHandler = STPPaymentHandler(apiClient: mockAPIClient)
-        let pollingBudget = PollingBudget(duration: 5.0)
+        let pollingBudget = PollingBudget(startDate: Date(), duration: 5.0)
         let expectation = self.expectation(description: "Polling completes")
 
         var callTimes: [Date] = []
