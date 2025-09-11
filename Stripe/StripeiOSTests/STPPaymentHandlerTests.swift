@@ -22,6 +22,7 @@ import XCTest
 
 class STPPaymentHandlerStubbedTests: STPNetworkStubbingTestCase {
     override func setUp() {
+        self.recordingMode = false
         super.setUp()
     }
 
