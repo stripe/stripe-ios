@@ -20,7 +20,7 @@ struct AuthenticateUserRequest: Encodable {
 
     init(
         email: String,
-        oauthScopes: [OAuthScopes] = OAuthScopes.onrampScope,
+        oauthScopes: [OAuthScopes] = OAuthScopes.requiredScopes,
         livemode: Bool
     ) {
         self.email = email

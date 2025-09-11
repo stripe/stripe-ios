@@ -8,7 +8,7 @@
 import Foundation
 
 enum OAuthScopes: String, CaseIterable {
-    static let onrampScope: [OAuthScopes] = [OAuthScopes.cryptoRamp]
+    static let requiredScopes: [OAuthScopes] = [.cryptoRamp, .kycStatusRead]
     static let allScopes: [OAuthScopes] = Self.allCases
 
     case cryptoRamp = "crypto:ramp"
