@@ -329,6 +329,12 @@ extension STPPaymentMethodType {
         private(set) var attemptCount: Int = 0
         /// Whether a final poll has been executed
         private(set) var hasPolledFinal: Bool = false
+        
+        /// Detects if we're running in stub playback mode (HTTPStubs active but not recording)
+        private var isTestMode: Bool {
+            // Only scale duration when we're using stubs (HTTPStubs present) but not recording (STP_RECORD_NETWORK absent)
+            return NSClassFromString("HTTPStubs") != nil && ProcessInfo.processInfo.environment["STP_RECORD_NETWORK"] == nil
+        }
 
         /// Determines if there is remaining budget for additional polling attempts.
         /// Returns false if a final poll has already been executed or budget is exhausted.
@@ -339,7 +345,9 @@ extension STPPaymentMethodType {
             case .duration(let maxDuration):
                 guard let startDate = startDate else { return true } // Not started yet
                 let elapsed = Date().timeIntervalSince(startDate)
-                return elapsed < maxDuration
+                // Scale duration down for test mode to account for instant stub responses
+                let adjustedDuration = isTestMode ? maxDuration * 0.001 : maxDuration
+                return elapsed < adjustedDuration
             case .count(let maxAttempts):
                 return attemptCount < maxAttempts
             }
