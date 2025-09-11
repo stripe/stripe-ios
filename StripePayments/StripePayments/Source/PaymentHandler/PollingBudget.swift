@@ -28,7 +28,7 @@ final class PollingBudget {
     var hasBudgetRemaining: Bool {
         guard !hasPolledFinal else { return false }
         guard let startDate = startDate else { return true } // Not started yet
-        
+
         let elapsed = Date().timeIntervalSince(startDate)
         // Scale duration down for test mode to account for instant stub responses
         let adjustedDuration = isTestMode ? maxDuration * 0.001 : maxDuration
