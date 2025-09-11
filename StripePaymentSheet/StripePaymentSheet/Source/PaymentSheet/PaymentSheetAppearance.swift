@@ -307,6 +307,7 @@ public extension PaymentSheet {
 
 public extension PaymentSheet.Appearance {
     /// Calling this function sets various properties (e.g. navigationBarStyle, borderWidth) to match iOS26 Liquid Glass
+    /// - Note: This feature is in public preview while we gather feedback and is subject to change. Please use https://github.com/stripe/stripe-ios/issues to file feedback!
     @available(iOS 26.0, *)
     @_spi(STP) mutating func applyLiquidGlass() {
         assert(LiquidGlassDetector.canRun, "Requirements for applying liquid glass are not available.")
