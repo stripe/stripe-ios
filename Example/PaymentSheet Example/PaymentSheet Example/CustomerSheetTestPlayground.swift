@@ -10,8 +10,7 @@
 import Contacts
 import Foundation
 import PassKit
-@_spi(STP) import StripePaymentSheet
-@_spi(STP) import StripeUICore
+import StripePaymentSheet
 import SwiftUI
 import UIKit
 

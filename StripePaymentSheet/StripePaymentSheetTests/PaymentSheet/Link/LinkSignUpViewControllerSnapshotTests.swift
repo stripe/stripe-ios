@@ -8,7 +8,6 @@
 import Foundation
 import StripeCoreTestUtils
 import StripePaymentsTestUtils
-@_spi(STP) import StripeUICore
 import XCTest
 
 @testable@_spi(STP) import StripePaymentSheet

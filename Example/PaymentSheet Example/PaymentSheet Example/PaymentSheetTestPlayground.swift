@@ -5,8 +5,7 @@
 //  Created by David Estes on 5/31/23.
 //
 
-@_spi(STP) import StripePaymentSheet
-@_spi(STP) import StripeUICore
+import StripePaymentSheet
 import SwiftUI
 
 @available(iOS 15.0, *)
