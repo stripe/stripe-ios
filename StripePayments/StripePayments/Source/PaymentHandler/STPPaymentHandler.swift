@@ -1481,19 +1481,17 @@ public class STPPaymentHandler: NSObject {
         }
     }
 
-    func pollIfBudgetAllows(pollingBudget: STPPaymentMethodType.PollingBudget, block: () -> Void) {
+    func pollIfBudgetAllows(pollingBudget: PollingBudget, block: () -> Void) {
         pollingBudget.start() // Start the timer if not already started
         if pollingBudget.hasBudgetRemaining {
-            pollingBudget.incrementAttempt()
             block()
         } else if !pollingBudget.hasPolledFinal {
-            pollingBudget.markAsDone()
-            pollingBudget.incrementAttempt()
+            pollingBudget.invalidate()
             block() // do 1 final poll
         }
     }
 
-    func _retrieveAndCheckIntentForCurrentAction(currentAction: STPPaymentHandlerActionParams? = nil, pollingBudget: STPPaymentMethodType.PollingBudget? = nil) {
+    func _retrieveAndCheckIntentForCurrentAction(currentAction: STPPaymentHandlerActionParams? = nil, pollingBudget: PollingBudget? = nil) {
         // Alipay requires us to hit an endpoint before retrieving the PI, to ensure the status is up to date.
         let pingMarlinIfNecessary: ((STPPaymentHandlerPaymentIntentActionParams, @escaping STPVoidBlock) -> Void) = {
             currentAction,
@@ -1548,7 +1546,7 @@ public class STPPaymentHandler: NSObject {
                             paymentIntent.status == .processing,
                             pollingBudget?.hasBudgetRemaining ?? true
                         {
-                            let processingPollingBudget = pollingBudget ?? STPPaymentMethodType.PollingBudget(budgetType: .count(5))
+                            let processingPollingBudget = pollingBudget ?? PollingBudget(duration: 5)
                             self.pollIfBudgetAllows(pollingBudget: processingPollingBudget) {
                                 self._retryAfterDelay(delayTime: 3) {
                                     self._retrieveAndCheckIntentForCurrentAction(
@@ -1628,7 +1626,7 @@ public class STPPaymentHandler: NSObject {
                    setupIntent.status == .processing,
                    pollingBudget?.hasBudgetRemaining ?? true
                 {
-                    let processingPollingBudget = pollingBudget ?? STPPaymentMethodType.PollingBudget(budgetType: .count(5))
+                    let processingPollingBudget = pollingBudget ?? PollingBudget(duration: 5)
                     self.pollIfBudgetAllows(pollingBudget: processingPollingBudget) {
                         self._retryAfterDelay(delayTime: 3) {
                             self._retrieveAndCheckIntentForCurrentAction(pollingBudget: processingPollingBudget)
@@ -2073,7 +2071,7 @@ public class STPPaymentHandler: NSObject {
 
     func _markChallengeCompleted(
         withCompletion completion: @escaping STPBooleanSuccessBlock,
-        pollingBudget: STPPaymentMethodType.PollingBudget? = nil
+        pollingBudget: PollingBudget? = nil
     ) {
         guard let currentAction,
               let useStripeSDK = currentAction.nextAction()?.useStripeSDK,
@@ -2133,7 +2131,7 @@ public class STPPaymentHandler: NSObject {
             } else {
                 // This isn't guaranteed to succeed if the ACS isn't ready yet.
                 // Try it a few more times if it fails with a 400. (RUN_MOBILESDK-126)
-                let challengePollingBudget = pollingBudget ?? STPPaymentMethodType.PollingBudget(budgetType: .count(5))
+                let challengePollingBudget = pollingBudget ?? PollingBudget(duration: 15)
                 if (error as NSError?)?.code == STPErrorCode.invalidRequestError.rawValue && challengePollingBudget.hasBudgetRemaining
                 {
                     self.pollIfBudgetAllows(pollingBudget: challengePollingBudget) {
