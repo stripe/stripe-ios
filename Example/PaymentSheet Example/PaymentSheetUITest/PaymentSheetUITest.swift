@@ -678,7 +678,7 @@ class PaymentSheetDeferredUITests: PaymentSheetUITestCase {
         XCTAssertTrue(successText.waitForExistence(timeout: 10.0))
 
         XCTAssertEqual(
-            analyticsLog.suffix(10).map({ $0[string: "event"] }),
+            analyticsLog.suffix(9).map({ $0[string: "event"] }),
             ["mc_form_interacted", "mc_card_number_completed", "mc_form_completed", "mc_confirm_button_tapped", "stripeios.payment_method_creation", "stripeios.paymenthandler.confirm.started", "stripeios.payment_intent_confirmation", "stripeios.paymenthandler.confirm.finished", "mc_complete_payment_newpm_success"]
         )
 
