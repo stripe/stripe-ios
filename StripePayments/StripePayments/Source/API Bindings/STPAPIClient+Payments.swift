@@ -662,10 +662,11 @@ extension STPAPIClient {
     }
 
     // Internal helper to pass timeout to URL request
+    @objc
     func retrieveSetupIntent(
         withClientSecret secret: String,
         expand: [String]?,
-        timeout: TimeInterval?,
+        timeout: NSNumber?, // This is an NSNumber rather than TimeInterval so we can override it in tests with @objc
         completion: @escaping STPSetupIntentCompletionBlock
     ) {
 
@@ -680,11 +681,16 @@ extension STPAPIClient {
             parameters["expand"] = expand
         }
 
+        let timeoutInterval: TimeInterval? = {
+            guard let timeout else { return nil }
+            return TimeInterval(timeout.doubleValue)
+        }()
+        
         APIRequest<STPSetupIntent>.getWith(
             self,
             endpoint: endpoint,
             parameters: parameters,
-            timeout: timeout
+            timeout: timeoutInterval
         ) { setupIntent, _, error in
             completion(setupIntent, error)
         }
