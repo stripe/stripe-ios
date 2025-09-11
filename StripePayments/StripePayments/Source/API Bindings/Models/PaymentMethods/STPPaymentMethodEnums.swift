@@ -310,19 +310,30 @@ extension STPPaymentMethodType: CaseIterable { }
 
 extension STPPaymentMethodType {
 
-    class PollingBudget {
+    /// Manages polling budgets for payment method transactions that require status polling.
+    /// Supports both duration-based and count-based budgets to control polling behavior.
+    final class PollingBudget {
+        /// Defines the type of budget constraint for polling operations.
         enum BudgetType {
+            /// Budget based on elapsed time (in seconds)
             case duration(TimeInterval)
+            /// Budget based on number of attempts
             case count(Int)
         }
 
+        /// The timestamp when polling started
         let startDate: Date = Date()
+        /// The type of budget being enforced
         let budgetType: BudgetType
+        /// Current number of polling attempts made
         private(set) var attemptCount: Int = 0
+        /// Whether a final poll has been executed
         private(set) var hasPolledFinal: Bool = false
 
+        /// Determines if there is remaining budget for additional polling attempts.
+        /// Returns false if a final poll has already been executed or budget is exhausted.
         var hasBudgetRemaining: Bool {
-            if hasPolledFinal { return false }
+            guard !hasPolledFinal else { return false }
 
             switch budgetType {
             case .duration(let maxDuration):
@@ -333,25 +344,37 @@ extension STPPaymentMethodType {
             }
         }
 
+        /// Creates a polling budget appropriate for the given payment method type.
+        /// Returns nil if the payment method doesn't require polling.
         init?(paymentMethodType: STPPaymentMethodType) {
             switch paymentMethodType {
             case .amazonPay, .revolutPay, .swish, .twint, .przelewy24:
-                self.budgetType = .duration(5)
+                self.budgetType = .duration(5.0)
             case .card:
-                self.budgetType = .duration(15)
+                self.budgetType = .duration(15.0)
             default:
                 return nil
             }
         }
 
+        /// Creates a polling budget with the specified budget type.
+        /// - Parameter budgetType: The budget constraint to apply. Duration must be positive, count must be > 0.
         init(budgetType: BudgetType) {
+            switch budgetType {
+            case .duration(let timeInterval):
+                assert(timeInterval > 0, "Duration must be positive")
+            case .count(let count):
+                assert(count > 0, "Count must be greater than 0")
+            }
             self.budgetType = budgetType
         }
 
+        /// Increments the attempt count. Should be called before each polling attempt.
         func incrementAttempt() {
             attemptCount += 1
         }
 
+        /// Marks the polling as complete. No further attempts will be allowed after this.
         func markAsDone() {
             hasPolledFinal = true
         }
