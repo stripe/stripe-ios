@@ -131,7 +131,6 @@ class PaymentSheetViewController: UIViewController, PaymentSheetViewControllerPr
 
         let button = ConfirmButton(
             callToAction: callToAction,
-            applePayButtonType: configuration.applePay?.buttonType ?? .plain,
             appearance: configuration.appearance,
             didTap: { [weak self] in
                 self?.didTapBuyButton()
@@ -343,11 +342,7 @@ class PaymentSheetViewController: UIViewController, PaymentSheetViewControllerPr
         }
         switch mode {
         case .selectingSaved:
-            if case .applePay = savedPaymentOptionsViewController.selectedPaymentOption {
-                buyButtonStyle = .applePay
-            } else {
-                buyButtonStyle = .stripe
-            }
+            buyButtonStyle = .stripe
             buyButtonStatus = buyButtonEnabledForSavedPayments()
             showBuyButton = savedPaymentOptionsViewController.selectedPaymentOption != nil
         case .addingNew:
