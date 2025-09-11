@@ -223,10 +223,8 @@ extension UIButton {
         titleLabel?.textAlignment = .right
         titleLabel?.font = appearance.scaledFont(for: appearance.font.base.medium, size: 14, maximumPointSize: 22)
         accessibilityIdentifier = "edit_saved_button"
-        #if !os(visionOS)
-        if LiquidGlassDetector.isEnabled, #available(iOS 26.0, *), appearance.navigationBarStyle == .glass {
+        if appearance.navigationBarStyle.isGlass {
             ios26_applyGlassConfiguration()
         }
-        #endif
     }
 }

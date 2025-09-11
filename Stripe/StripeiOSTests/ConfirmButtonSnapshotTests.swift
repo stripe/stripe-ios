@@ -227,13 +227,8 @@ extension PaymentSheet.Appearance {
         #endif
     }
     var liquidGlassIfPossible: PaymentSheet.Appearance {
-        #if !os(visionOS)
-        if #available(iOS 26.0, *) {
-            var copy = self
-            copy.applyingLiquidGlassIfPossible()
-            return copy
-        }
-        #endif
-        return self
+        var copy = self
+        copy.applyingLiquidGlassIfPossible()
+        return copy
     }
 }
