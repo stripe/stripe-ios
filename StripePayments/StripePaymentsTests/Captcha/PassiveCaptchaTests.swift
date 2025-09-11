@@ -9,6 +9,11 @@
 import XCTest
 
 class PassiveCaptchaTests: XCTestCase {
+    override func tearDown() {
+        STPAnalyticsClient.sharedClient._testLogHistory = []
+        super.tearDown()
+    }
+
     func testPassiveCaptcha() async {
         // OCS mobile test key from https://dashboard.hcaptcha.com/sites/edit/143aadb6-fb60-4ab6-b128-f7fe53426d4a
         let siteKey = "143aadb6-fb60-4ab6-b128-f7fe53426d4a"
