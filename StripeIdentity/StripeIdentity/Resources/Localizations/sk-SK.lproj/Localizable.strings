@@ -6,8 +6,6 @@
 
 "App Settings" = "Nastavenia aplikácie";
 
-"Back identity card photo successfully uploaded" = "Fotografia zadnej strany preukazu totožnosti bola úspešne nahraná";
-
 "Back of identity card" = "Zadná strana preukazu totožnosti";
 
 "Back of identity document" = "Zadná strana dokladu totožnosti";
@@ -31,10 +29,6 @@
 "Details not visible" = "Podrobnosti nie sú viditeľné";
 
 "Flip your identity card over to the other side" = "Otočte svoj preukaz totožnosti na druhú stranu";
-
-"Front identity card photo successfully uploaded" = "Fotografia prednej strany preukazu totožnosti bola úspešne nahraná";
-
-"Front of identity card" = "Predná strana preukazu totožnosti";
 
 "Front of identity document" = "Predná strana dokladu totožnosti";
 
@@ -84,11 +78,7 @@
 
 "Photo Library" = "Knižnica fotografií";
 
-"Please upload images of the front and back of your identity card" = "Nahrajte fotografie prednej a zadnej strany preukazu totožnosti";
-
 "Position your face in the center of the frame." = "Umiestnite tvár do stredu rámika.";
-
-"Position your identity card in the center of the frame" = "Umiestnite svoj preukaz totožnosti do stredu rámika";
 
 "Retake Photos" = "Znova odfotiť";
 
@@ -101,10 +91,6 @@
 "Select a location to upload the back of your identity document from" = "Vyberte umiestnenie, z ktorého chcete nahrať zadnú stranu dokladu totožnosti";
 
 "Select a location to upload the front of your identity document from" = "Vyberte umiestnenie, z ktorého chcete nahrať prednú stranu dokladu totožnosti";
-
-"Select back identity card photo" = "Vyberte fotografiu zadnej strany preukazu totožnosti";
-
-"Select front identity card photo" = "Vyberte fotografiu prednej strany preukazu totožnosti";
 
 "Selfie" = "Selfie";
 
@@ -131,10 +117,6 @@
 "Upload a Photo" = "Nahrať fotografiu";
 
 "Upload your photo ID" = "Nahrajte doklad totožnosti s fotografiou";
-
-"Uploading back identity card photo" = "Nahrávanie fotografie zo zadnej strany preukazu totožnosti";
-
-"Uploading front identity card photo" = "Nahrávanie fotografie z prednej strany preukazu totožnosti";
 
 "Verify your identity" = "Overiť totožnosť";
 
