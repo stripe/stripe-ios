@@ -432,6 +432,7 @@ final class PaymentSheetAnalyticsHelper {
         additionalParams["link_ui"] = linkUI
         additionalParams["setup_future_usage"] = intent?.setupFutureUsageString
         additionalParams["payment_method_options_setup_future_usage"] = intent?.isPaymentMethodOptionsSetupFutureUsageSet
+        additionalParams["elements_session_config_id"] = elementsSession?.sessionID
 
         if event.shouldLogFcSdkAvailability {
             additionalParams["fc_sdk_availability"] = FinancialConnectionsSDKAvailability.analyticsValue
