@@ -411,7 +411,7 @@ extension STPAPIClient {
         expand: [String]?,
         completion: @escaping STPPaymentIntentCompletionBlock
     ) {
-        retrievePaymentIntent(withClientSecret: secret, expand: expand, completion: completion)
+        retrievePaymentIntent(withClientSecret: secret, expand: expand, timeout: nil, completion: completion)
     }
 
     // Internal helper to pass timeout
@@ -652,7 +652,7 @@ extension STPAPIClient {
         completion: @escaping STPSetupIntentCompletionBlock
     ) {
 
-        retrieveSetupIntent(withClientSecret: secret, expand: expand, completion: completion)
+        retrieveSetupIntent(withClientSecret: secret, expand: expand, timeout: nil, completion: completion)
     }
 
     // Internal helper to pass timeout to URL request
