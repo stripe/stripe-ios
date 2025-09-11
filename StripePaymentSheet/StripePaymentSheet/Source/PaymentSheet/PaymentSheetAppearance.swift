@@ -309,6 +309,7 @@ public extension PaymentSheet.Appearance {
     /// Calling this function sets various properties (e.g. navigationBarStyle, borderWidth) to match iOS26 Liquid Glass
     @available(iOS 26.0, *)
     @_spi(STP) mutating func applyLiquidGlass() {
+        assert(LiquidGlassDetector.canRun, "Requirements for applying liquid glass are not available.")
         borderWidth = 0.0
         verticalModeRowPadding = 16.0
         sheetCornerRadius = 34.0
@@ -453,5 +454,21 @@ public extension PaymentSheet.Appearance {
 extension PaymentSheet.Appearance {
     var topFormInsets: NSDirectionalEdgeInsets {
         return .insets(top: formInsets.top, leading: formInsets.leading, trailing: formInsets.trailing)
+    }
+}
+
+extension PaymentSheet.Appearance.NavigationBarStyle {
+    var isGlass: Bool {
+        #if !os(visionOS)
+        guard #available(iOS 26.0, *) else {
+            return false
+        }
+        return self == .glass
+        #else
+        return false
+        #endif
+    }
+    var isPlain: Bool {
+        return self == .plain
     }
 }

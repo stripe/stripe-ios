@@ -20,17 +20,8 @@ protocol SheetNavigationBarDelegate: AnyObject {
 @objc(STP_Internal_SheetNavigationBar)
 class SheetNavigationBar: UIView {
     static func height(appearance: PaymentSheet.Appearance) -> CGFloat {
-        #if !os(visionOS)
-        if LiquidGlassDetector.canRun,
-           #available(iOS 26.0, *),
-           appearance.navigationBarStyle == .glass {
-            return 76
-        } else {
-            return 52
-        }
-        #else
-        return 52
-        #endif
+        return appearance.navigationBarStyle.isGlass ? 72 : 52
+
     }
     weak var delegate: SheetNavigationBarDelegate?
     fileprivate lazy var leftItemsStackView: UIStackView = {
@@ -91,27 +82,15 @@ class SheetNavigationBar: UIView {
             additionalButton.isEnabled = isUserInteractionEnabled
         }
     }
-    var shouldUseGlassNavBar: Bool {
-        #if !os(visionOS)
-        guard #available(iOS 26.0, *) else {
-            return false
-        }
-        return LiquidGlassDetector.canRun && appearance.navigationBarStyle == .glass
-        #else
-        return false
-        #endif
-    }
 
     init(isTestMode: Bool, appearance: PaymentSheet.Appearance) {
         testModeView.isHidden = !isTestMode
         self.appearance = appearance
         super.init(frame: .zero)
 
-        #if !os(visionOS)
-        if !shouldUseGlassNavBar {
+        if appearance.navigationBarStyle.isPlain {
             backgroundColor = appearance.colors.background.withAlphaComponent(0.9)
         }
-        #endif
 
         [leftItemsStackView, closeButtonRight, additionalButton].forEach {
             $0.translatesAutoresizingMaskIntoConstraints = false
@@ -195,7 +174,7 @@ class SheetNavigationBar: UIView {
     }
 
     func setShadowHidden(_ isHidden: Bool) {
-        if !shouldUseGlassNavBar {
+        if appearance.navigationBarStyle.isPlain {
             layer.shadowPath = CGPath(rect: bounds, transform: nil)
             layer.shadowOpacity = isHidden ? 0 : 0.1
             layer.shadowColor = UIColor.black.cgColor
@@ -210,7 +189,7 @@ class SheetNavigationBar: UIView {
         button.tintColor = appearance.colors.icon
         button.accessibilityLabel = String.Localized.back
         button.accessibilityIdentifier = "UIButton.Back"
-        if shouldUseGlassNavBar {
+        if appearance.navigationBarStyle.isGlass {
             // Setting to 20x20 w/ glass results in a button that is sized to 44x44 with .glass()
             let resizedImage = image.resized(to: CGSize(width: 20, height: 20))
             button.setImage(resizedImage, for: .normal)
@@ -226,7 +205,7 @@ class SheetNavigationBar: UIView {
         button.tintColor = appearance.colors.icon
         button.accessibilityLabel = String.Localized.close
         button.accessibilityIdentifier = "UIButton.Close"
-        if shouldUseGlassNavBar {
+        if appearance.navigationBarStyle.isGlass {
             // Setting to 20x20 w/ glass results in a button that is sized to 44x44 with .glass()
             let resizedImage = image.resized(to: CGSize(width: 20, height: 20))
             button.setImage(resizedImage, for: .normal)
