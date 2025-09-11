@@ -77,8 +77,10 @@ final class CryptoOnrampFlowCoordinator: ObservableObject {
             isIdDocumentVerified = info.isIdDocumentVerified
             advanceToNextStep()
         } catch {
-            // TODO: Surface customer info fetch errors to the user
-            print("Failed to fetch customer info: \(error)")
+            presentAlert(
+                title: "Unable to determine KYC and identity verification statuses",
+                message: "Please ensure you have the required OAuth scopes selected and try again.\n\n\(error.localizedDescription)"
+            )
         }
     }
 
@@ -90,6 +92,13 @@ final class CryptoOnrampFlowCoordinator: ObservableObject {
         } else {
             path.append(.authenticated)
         }
+    }
+
+    func presentAlert(title: String, message: String) {
+        guard let presentingViewController = UIApplication.shared.findTopNavigationController() else { return }
+        let alertController = UIAlertController(title: title, message: message, preferredStyle: .alert)
+        alertController.addAction(UIAlertAction(title: "OK", style: .cancel, handler: nil))
+        presentingViewController.present(alertController, animated: true)
     }
 }
 
