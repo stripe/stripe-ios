@@ -32,7 +32,7 @@ final class PollingBudget {
         let elapsed = Date().timeIntervalSince(startDate)
         // Scale duration down for test mode to account for instant stub responses
         let adjustedDuration = isTestMode ? maxDuration * 0.001 : maxDuration
-        return elapsed < adjustedDuration
+        return elapsed < adjustedDuration || !hasPolledFinal
     }
 
     /// Creates a polling budget appropriate for the given payment method type.

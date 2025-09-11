@@ -1475,7 +1475,7 @@ public class STPPaymentHandler: NSObject {
         return resultingUrl
     }
 
-    func _retryAfterDelay(delayTime: TimeInterval = 3, block: @escaping STPVoidBlock) {
+    func _retryAfterDelay(delayTime: TimeInterval = 1, block: @escaping STPVoidBlock) {
         DispatchQueue.main.asyncAfter(deadline: .now() + delayTime) {
             block()
         }
@@ -1548,9 +1548,9 @@ public class STPPaymentHandler: NSObject {
                             paymentIntent.status == .processing,
                             pollingBudget?.hasBudgetRemaining ?? true
                         {
-                            let processingPollingBudget = pollingBudget ?? PollingBudget(startDate: startDate, duration: 5)
+                            let processingPollingBudget = pollingBudget ?? PollingBudget(startDate: startDate, duration: 2)
                             self.pollIfBudgetAllows(pollingBudget: processingPollingBudget) {
-                                self._retryAfterDelay(delayTime: 3) {
+                                self._retryAfterDelay {
                                     self._retrieveAndCheckIntentForCurrentAction(
                                         pollingBudget: processingPollingBudget
                                     )
@@ -1590,7 +1590,7 @@ public class STPPaymentHandler: NSObject {
                                     let shouldRetryForCard = paymentMethodType == .card && paymentIntent.nextAction?.type == .useStripeSDK
                                     if paymentMethodType != .card || shouldRetryForCard, let pollingBudget = pollingBudget ?? .init(startDate: startDate, paymentMethodType: paymentMethodType), pollingBudget.hasBudgetRemaining {
                                         pollIfBudgetAllows(pollingBudget: pollingBudget) {
-                                            self._retryAfterDelay(delayTime: 1) {
+                                            self._retryAfterDelay {
                                                 self._retrieveAndCheckIntentForCurrentAction(
                                                     pollingBudget: pollingBudget
                                                 )
@@ -1632,7 +1632,7 @@ public class STPPaymentHandler: NSObject {
                 {
                     let processingPollingBudget = pollingBudget ?? PollingBudget(startDate: startDate, duration: 5)
                     self.pollIfBudgetAllows(pollingBudget: processingPollingBudget) {
-                        self._retryAfterDelay(delayTime: 3) {
+                        self._retryAfterDelay {
                             self._retrieveAndCheckIntentForCurrentAction(pollingBudget: processingPollingBudget)
                         }
                     }
@@ -1661,7 +1661,7 @@ public class STPPaymentHandler: NSObject {
                             let shouldRetryForCard = paymentMethod.type == .card && setupIntent.nextAction?.type == .useStripeSDK
                             if paymentMethod.type != .card || shouldRetryForCard, let pollingBudget = pollingBudget ?? .init(startDate: startDate, paymentMethodType: paymentMethod.type), pollingBudget.hasBudgetRemaining {
                                 self.pollIfBudgetAllows(pollingBudget: pollingBudget) {
-                                    self._retryAfterDelay(delayTime: 1) {
+                                    self._retryAfterDelay {
                                         self._retrieveAndCheckIntentForCurrentAction(
                                             pollingBudget: pollingBudget
                                         )
@@ -2135,7 +2135,7 @@ public class STPPaymentHandler: NSObject {
                 )
             }
         }
-        
+
         let startDate = Date()
         currentAction.apiClient.complete3DS2Authentication(
             forSource: threeDSSourceID,
