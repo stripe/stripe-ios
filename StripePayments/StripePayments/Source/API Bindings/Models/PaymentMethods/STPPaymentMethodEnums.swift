@@ -329,7 +329,7 @@ extension STPPaymentMethodType {
         private(set) var attemptCount: Int = 0
         /// Whether a final poll has been executed
         private(set) var hasPolledFinal: Bool = false
-        
+
         /// Detects if we're running in stub playback mode (HTTPStubs active but not recording)
         private var isTestMode: Bool {
             // Only scale duration when we're using stubs (HTTPStubs present) but not recording (STP_RECORD_NETWORK absent)
