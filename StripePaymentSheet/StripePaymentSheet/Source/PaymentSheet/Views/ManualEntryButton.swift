@@ -19,7 +19,6 @@ extension UIButton {
         if #available(iOS 26.0, *), LiquidGlassDetector.isEnabled {
             button.ios26_applyCapsuleCornerConfiguration()
             button.ios26_applyGlassConfiguration()
-            button.frame.size.height = appearance.primaryButton.height
             let textColor = UIColor(dynamicProvider: { traitCollection in
                 if traitCollection.isDarkMode {
                     return appearance.colors.background.contrastingColor
@@ -28,6 +27,7 @@ extension UIButton {
                 return appearance.colors.primary
             })
             button.configuration?.attributedTitle = AttributedString(.Localized.enter_address_manually, attributes: AttributeContainer([.font: font, .foregroundColor: textColor]))
+            button.frame.size.height = appearance.primaryButton.height
         } else {
             button.titleLabel?.font = font
             button.tintColor = appearance.colors.primary

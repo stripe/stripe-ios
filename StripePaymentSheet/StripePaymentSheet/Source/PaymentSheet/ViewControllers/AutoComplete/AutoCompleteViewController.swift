@@ -139,17 +139,8 @@ class AutoCompleteViewController: UIViewController {
         view.backgroundColor = configuration.appearance.colors.background
 
         let buttonContainer = UIView()
-        buttonContainer.addSubview(manualEntryButton)
+        buttonContainer.addAndPinSubview(manualEntryButton, insets: NSDirectionalEdgeInsets(top: 0, leading: LiquidGlassDetector.isEnabled ? configuration.appearance.formInsets.leading : 0, bottom: LiquidGlassDetector.isEnabled ? 8 : 0, trailing: LiquidGlassDetector.isEnabled ? configuration.appearance.formInsets.trailing : 0))
         manualEntryButton.translatesAutoresizingMaskIntoConstraints = false
-        NSLayoutConstraint.activate([
-            manualEntryButton.leadingAnchor.constraint(equalTo: buttonContainer.leadingAnchor, constant:
-                                                            LiquidGlassDetector.isEnabled ? configuration.appearance.formInsets.leading : 0),
-            manualEntryButton.trailingAnchor.constraint(equalTo: buttonContainer.trailingAnchor, constant:
-                                                            LiquidGlassDetector.isEnabled ? -configuration.appearance.formInsets.trailing : 0),
-            manualEntryButton.topAnchor.constraint(equalTo: buttonContainer.topAnchor),
-            manualEntryButton.bottomAnchor.constraint(equalTo: buttonContainer.bottomAnchor, constant: LiquidGlassDetector.isEnabled ? -8 : 0),
-            manualEntryButton.heightAnchor.constraint(equalToConstant: manualEntryButton.frame.size.height),
-        ])
 
         let stackView = UIStackView(arrangedSubviews: [formStackView, errorLabel, separatorView, tableView])
         stackView.spacing = PaymentSheetUI.defaultPadding
@@ -174,6 +165,8 @@ class AutoCompleteViewController: UIViewController {
             buttonContainer.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
             buttonContainer.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
             buttonContainer.bottomAnchor.constraint(equalTo: stackView.bottomAnchor),
+
+            manualEntryButton.heightAnchor.constraint(equalToConstant: manualEntryButton.frame.size.height),
         ])
 
         // Set up proper content inset for table view after layout
