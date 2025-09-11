@@ -10,12 +10,19 @@ import SwiftUI
 @_spi(STP)
 import StripeCryptoOnramp
 
+/// View with instructions for identity verification that serves as a presenter of the identity verification flow.
 struct IdentityVerificationView: View {
+
+    /// The coordinator to use to present identity verification UI.
     let coordinator: CryptoOnrampCoordinator
+
+    /// Closure called when identity verification succeed, allowing parent flows to advance.
     let onCompleted: () -> Void
 
     @Environment(\.isLoading) private var isLoading
     @State private var errorMessage: String?
+
+    // MARK: - View
 
     var body: some View {
         ScrollView {

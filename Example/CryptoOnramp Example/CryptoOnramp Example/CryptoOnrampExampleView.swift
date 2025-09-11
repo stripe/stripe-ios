@@ -103,7 +103,7 @@ struct CryptoOnrampExampleView: View {
             }
             .navigationTitle("CryptoOnramp Example")
             .navigationBarTitleDisplayMode(.inline)
-            .navigationDestination(for: FlowRoute.self) { route in
+            .navigationDestination(for: CryptoOnrampFlowCoordinator.Route.self) { route in
                 if let flowCoordinator {
                     switch route {
                     case .registration:
@@ -333,7 +333,7 @@ struct OAuthScopeSelector: View {
 }
 
 private extension CryptoOnrampFlowCoordinator {
-    var pathBinding: Binding<[FlowRoute]> {
+    var pathBinding: Binding<[Route]> {
         Binding(get: { self.path }, set: { self.path = $0 })
     }
 }

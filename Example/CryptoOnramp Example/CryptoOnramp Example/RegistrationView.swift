@@ -29,8 +29,8 @@ struct RegistrationView: View {
     /// Whether the app is running in livemode or testmode.
     let livemode: Bool
 
-    /// Called when registration + authentication succeed. Provides the crypto customer id.
-    let onCompleted: (String) -> Void
+    /// Called when registration and authentication succeed. Provides the crypto customer id.
+    let onCompleted: (_ customerId: String) -> Void
 
     @State private var fullName: String = ""
     @State private var phoneNumber: String = ""

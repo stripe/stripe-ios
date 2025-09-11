@@ -19,7 +19,7 @@ struct KYCInfoView: View {
     /// The coordinator to use to submit KYC information.
     let coordinator: CryptoOnrampCoordinator
 
-    /// Optional callback invoked when KYC submission succeeds, allowing parent flows to advance.
+    /// Closure called when KYC submission succeeds, allowing parent flows to advance.
     let onCompleted: (() -> Void)
 
     @State private var firstName: String = ""
