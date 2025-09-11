@@ -80,6 +80,10 @@ extension String.Localized {
         STPLocalizedString("By continuing, you agree to authorize payments pursuant to <terms>these terms</terms>.", "Text providing link to terms for ACH payments")
     }
 
+    static var bank_continue_mandate_text_with_seller: String {
+        STPLocalizedString("By submitting your order to %@ you agree to authorize payments pursuant to <terms>these terms</terms>.", "Text providing link to terms for bank payments")
+    }
+
     static var bank_continue_mandate_and_reuse_text_with_seller: String {
         STPLocalizedString(
             "By submitting your order to %@ and %@, you agree to save your information with %@ for future purchases, and agree to authorize payments pursuant to <terms>these terms</terms>.",

@@ -38,6 +38,7 @@ final class InstantDebitsPaymentMethodElement: ContainerElement {
     private let theme: ElementsAppearance
     var presentingViewControllerDelegate: PresentingViewControllerDelegate?
     private let incentive: PaymentMethodIncentive?
+    private let isSettingUp: Bool
     private let sellerName: String?
 
     var delegate: ElementDelegate?
@@ -52,6 +53,7 @@ final class InstantDebitsPaymentMethodElement: ContainerElement {
 
         let string = NSMutableAttributedString(
             attributedString: PaymentSheetFormFactory.makeBankMandateText(
+                isSettingUp: isSettingUp,
                 merchantName: configuration.merchantDisplayName,
                 sellerName: sellerName
             )
@@ -188,6 +190,7 @@ final class InstantDebitsPaymentMethodElement: ContainerElement {
         incentive: PaymentMethodIncentive?,
         isPaymentIntent: Bool,
         sellerName: String?,
+        isSettingUp: Bool,
         appearance: PaymentSheet.Appearance = .default
     ) {
         let theme = appearance.asElementsTheme
@@ -216,6 +219,7 @@ final class InstantDebitsPaymentMethodElement: ContainerElement {
             label.textContainer.lineFragmentPadding = 0
             return StaticElement(view: label)
         }
+        self.isSettingUp = isSettingUp
         self.sellerName = sellerName
 
         let allElements: [Element?] = [

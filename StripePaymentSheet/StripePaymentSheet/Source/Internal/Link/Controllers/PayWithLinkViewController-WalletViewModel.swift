@@ -65,6 +65,8 @@ extension PayWithLinkViewController {
 
         /// The mandate text to show.
         var mandate: NSAttributedString? {
+            let isSettingUp = context.intent.isSetupFutureUsageSet(for: context.elementsSession.linkPassthroughModeEnabled ? .card : .link)
+
             switch selectedPaymentMethod?.details {
             case .card:
                 if context.elementsSession.forceSaveFutureUseBehaviorAndNewMandateText {
@@ -74,15 +76,16 @@ extension PayWithLinkViewController {
                         variant: .updated(shouldSignUpToLink: false),
                         merchantName: context.configuration.merchantDisplayName
                     )
-                }
-                guard context.intent.isSetupFutureUsageSet(for: context.elementsSession.linkPassthroughModeEnabled ? .card : .link) else {
+                } else if isSettingUp {
+                    let string = String(format: .Localized.by_providing_your_card_information_text, context.configuration.merchantDisplayName)
+                    return NSMutableAttributedString(string: string)
+                } else {
                     return nil
                 }
-                let string = String(format: .Localized.by_providing_your_card_information_text, context.configuration.merchantDisplayName)
-                return NSMutableAttributedString(string: string)
             case .bankAccount:
                 // Instant debit mandate should be shown when paying with bank account.
                 return PaymentSheetFormFactory.makeBankMandateText(
+                    isSettingUp: isSettingUp || context.elementsSession.forceSaveFutureUseBehaviorAndNewMandateText,
                     merchantName: context.configuration.merchantDisplayName,
                     sellerName: context.intent.sellerDetails?.businessName
                 )
