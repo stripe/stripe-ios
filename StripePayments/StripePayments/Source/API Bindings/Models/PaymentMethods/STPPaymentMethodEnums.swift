@@ -309,24 +309,51 @@ import Foundation
 extension STPPaymentMethodType: CaseIterable { }
 
 extension STPPaymentMethodType {
-    struct PollingRequirement {
-        /// - Note: This is a bit hacky. STPPaymentHandlet is hardcoded to poll the Intent status 5 times. `timeBetweenPollingAttempts` controls how long it waits between each poll.
-        var timeBetweenPollingAttempts: TimeInterval
-    }
 
-    /// If non-nil, Intents with this PM type do not update immediately after the next action is handled and require us to poll and this property contains the information needed to poll.
-    var pollingRequirement: PollingRequirement? {
-        switch self {
-        // Note: Card only requires polling for 3DS2 web-based transactions
-        case .card, .amazonPay, .revolutPay:
-            return PollingRequirement(timeBetweenPollingAttempts: 3)
-        case .swish, .twint, .przelewy24:
-            // We are intentionally polling for Swish, Twint, and Przelewy24 even though they use the redirect trampoline.
-            // The intent is still in `requires_action` status after redirecting following a successful payment (about 50% of the time for Swish).
-            // This allows time for the intent to transition to its terminal state.
-            return PollingRequirement(timeBetweenPollingAttempts: 1)
-        default:
-            return nil
+    class PollingBudget {
+        enum BudgetType {
+            case duration(TimeInterval)
+            case count(Int)
+        }
+
+        let startDate: Date = Date()
+        let budgetType: BudgetType
+        private(set) var attemptCount: Int = 0
+        private(set) var hasPolledFinal: Bool = false
+
+        var hasBudgetRemaining: Bool {
+            if hasPolledFinal { return false }
+
+            switch budgetType {
+            case .duration(let maxDuration):
+                let elapsed = Date().timeIntervalSince(startDate)
+                return elapsed < maxDuration
+            case .count(let maxAttempts):
+                return attemptCount < maxAttempts
+            }
+        }
+
+        init?(paymentMethodType: STPPaymentMethodType) {
+            switch paymentMethodType {
+            case .amazonPay, .revolutPay, .swish, .twint, .przelewy24:
+                self.budgetType = .duration(5)
+            case .card:
+                self.budgetType = .duration(15)
+            default:
+                return nil
+            }
+        }
+
+        init(budgetType: BudgetType) {
+            self.budgetType = budgetType
+        }
+
+        func incrementAttempt() {
+            attemptCount += 1
+        }
+
+        func markAsDone() {
+            hasPolledFinal = true
         }
     }
 
