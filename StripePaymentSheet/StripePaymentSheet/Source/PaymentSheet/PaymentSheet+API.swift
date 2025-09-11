@@ -317,7 +317,6 @@ extension PaymentSheet {
                     authenticationContext: authenticationContext,
                     paymentHandler: paymentHandler,
                     isFlowController: isFlowController,
-                    radarOptions: radarOptions,
                     completion: completion
                 )
             }
