@@ -205,6 +205,13 @@ extension LinkUI {
 
     static let appearance: PaymentSheet.Appearance = {
         var appearance = PaymentSheet.Appearance.default
+        // TODO: Remove LiquidGlassDetector.allowNewDesign
+        #if !os(visionOS)
+        if LiquidGlassDetector.allowNewDesign,
+           #available(iOS 26.0, *) {
+            appearance.applyLiquidGlass()
+        }
+        #endif
         appearance.cornerRadius = LinkUI.cornerRadius
         appearance.colors.primary = .linkBorderSelected
         appearance.colors.background = .linkSurfacePrimary

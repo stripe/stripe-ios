@@ -6,7 +6,8 @@
 //  Copyright © 2022 stripe-ios. All rights reserved.
 //
 
-@_spi(AppearanceAPIAdditionsPreview) import StripePaymentSheet
+@_spi(AppearanceAPIAdditionsPreview)@_spi(STP) import StripePaymentSheet
+@_spi(STP) import StripeUICore
 import SwiftUI
 
 @available(iOS 14.0, *)
@@ -438,11 +439,34 @@ struct AppearancePlaygroundView: View {
                     AppearancePlaygroundView_EmbeddedPaymentElement(appearance: $appearance)
                 }
 
+                if #available(iOS 26.0, *) {
+                    Section(header: Text("iOS 26 Liquid Glass")) {
+                        Picker("Navigation bar style", selection: $appearance.navigationBarStyle) {
+                            ForEach([PaymentSheet.Appearance.NavigationBarStyle.plain, PaymentSheet.Appearance.NavigationBarStyle.glass], id: \.self) {
+                                Text(String(describing: $0))
+                            }
+                        }
+                        Button {
+                            appearance.applyLiquidGlass()
+                            doneAction(appearance)
+                        } label: {
+                            Text("Apply Liquid Glass🥃")
+                        }
+                        Button {
+                            appearance = PaymentSheet.Appearance()
+                            appearance.applyLiquidGlass()
+                            doneAction(appearance)
+                        } label: {
+                            Text("♼ Reset Appearance, apply Liquid Glass 🥃")
+                        }
+                    }
+                }
                 Button {
+                    LiquidGlassDetector.allowNewDesign = false
                     appearance = PaymentSheet.Appearance()
                     doneAction(appearance)
                 } label: {
-                    Text("Reset Appearance")
+                    Text("♼ Reset Appearance")
                 }
 
             }.navigationTitle("Appearance")
