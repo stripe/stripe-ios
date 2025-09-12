@@ -196,6 +196,7 @@ extension LinkUI {
         return (font.pointSize * lineHeight) - font.pointSize
     }
 
+    static let mandateLineSpacing: CGFloat = lineSpacing(fromRelativeHeight: 1.2, textStyle: .caption)
 }
 
 // MARK: - Appearance
