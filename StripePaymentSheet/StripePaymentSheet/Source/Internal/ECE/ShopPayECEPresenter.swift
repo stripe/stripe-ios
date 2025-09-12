@@ -307,15 +307,10 @@ extension ShopPayECEPresenter: ExpressCheckoutWebviewDelegate {
                                                          metadata: nil)
 
         // Add billing details
-        if let email = billingDetails.email {
-            paymentMethodParams.billingDetails?.email = email
-        }
-        if let phone = billingDetails.phone {
-            paymentMethodParams.billingDetails?.phone = phone
-        }
-        if let name = billingDetails.name {
-            paymentMethodParams.billingDetails?.name = name
-        }
+        paymentMethodParams.billingDetails?.email = billingDetails.email
+        paymentMethodParams.billingDetails?.phone = billingDetails.phone
+        paymentMethodParams.billingDetails?.name = billingDetails.name
+        paymentMethodParams.billingDetails?.address = billingDetails.address?.stpPaymentMethodAddress
 
         // Create payment method
         do {
