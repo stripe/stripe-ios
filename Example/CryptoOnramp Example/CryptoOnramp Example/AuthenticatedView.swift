@@ -24,8 +24,6 @@ struct AuthenticatedView: View {
     let customerId: String
 
     @State private var errorMessage: String?
-    @State private var isIdentityVerificationComplete = false
-    @State private var showKYCView = false
     @State private var showAttachWalletSheet = false
     @State private var isWalletAttached = false
     @State private var selectedPaymentMethod: PaymentMethodDisplayData?
@@ -61,32 +59,6 @@ struct AuthenticatedView: View {
                     Text("Customer Information")
                         .font(.headline)
                         .foregroundColor(.secondary)
-
-                    // Identity and KYC actions within the section
-                    if isIdentityVerificationComplete {
-                        Text("Identity Verification Complete")
-                            .foregroundColor(.green)
-                            .frame(maxWidth: .infinity)
-                            .padding()
-                            .background {
-                                RoundedRectangle(cornerRadius: 8)
-                                    .foregroundColor(.green.opacity(0.1))
-                            }
-                    } else {
-                        Button("Verify Identity") {
-                            verifyIdentity()
-                        }
-                        .buttonStyle(PrimaryButtonStyle())
-                        .disabled(shouldDisableButtons)
-                        .opacity(shouldDisableButtons ? 0.5 : 1)
-                    }
-
-                    Button("Submit KYC Information") {
-                        showKYCView = true
-                    }
-                    .buttonStyle(PrimaryButtonStyle())
-                    .disabled(shouldDisableButtons)
-                    .opacity(shouldDisableButtons ? 0.5 : 1)
 
                     Button("Attach Wallet Address") {
                         showAttachWalletSheet = true
@@ -327,10 +299,6 @@ struct AuthenticatedView: View {
                 .background(Color.secondary.opacity(0.1))
                 .cornerRadius(8)
 
-                HiddenNavigationLink(
-                    destination: KYCInfoView(coordinator: coordinator),
-                    isActive: $showKYCView
-                )
             }
             .padding()
         }
@@ -349,39 +317,6 @@ struct AuthenticatedView: View {
         }
         .onAppear {
             refreshWalletsAndSelectIfNeeded()
-        }
-    }
-
-    private func verifyIdentity() {
-        guard let viewController = UIApplication.shared.findTopNavigationController() else {
-            errorMessage = "Unable to find view controller to present from."
-            return
-        }
-
-        isLoading.wrappedValue = true
-        errorMessage = nil
-
-        Task {
-            do {
-                let result = try await coordinator.verifyIdentity(from: viewController)
-                await MainActor.run {
-                    isLoading.wrappedValue = false
-                    switch result {
-                    case .completed:
-                        isIdentityVerificationComplete = true
-                    case .canceled:
-                        // User canceled verification, no action needed.
-                        break
-                    @unknown default:
-                        break
-                    }
-                }
-            } catch {
-                await MainActor.run {
-                    isLoading.wrappedValue = false
-                    errorMessage = "Identity verification failed: \(error.localizedDescription)"
-                }
-            }
         }
     }
 
