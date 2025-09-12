@@ -227,7 +227,7 @@ extension SectionContainerView {
 
         required init?(coder: NSCoder) { fatalError("init(coder:) has not been implemented") }
 
-        public func toggleView(_ view: UIView, shouldShow: Bool, animated: Bool) {
+        public func toggleView(_ view: UIView, shouldShow: Bool) {
             guard let stackView = multiElementStackView, let index = views.firstIndex(of: view) else {
                 return
             }

@@ -273,8 +273,8 @@ extension PayWithLinkViewController {
 
             UIView.performWithoutAnimation {
                 let multiRowElement = cardDetailsRecollectionSection.elements.first as? SectionElement.MultiElementRow
-                multiRowElement?.toggleElement(expiryDateElement, shouldShow: viewModel.shouldRecollectCardExpiryDate, animated: false)
-                multiRowElement?.toggleElement(cvcElement, shouldShow: viewModel.shouldRecollectCardCVC, animated: false)
+                multiRowElement?.toggleElement(expiryDateElement, shouldShow: viewModel.shouldRecollectCardExpiryDate)
+                multiRowElement?.toggleElement(cvcElement, shouldShow: viewModel.shouldRecollectCardCVC)
                 cardDetailsRecollectionSection.view.layoutIfNeeded()
             }
 
