@@ -27,12 +27,12 @@ public extension SectionElement {
             }
         }
 
-        public func toggleElement(_ element: Element, shouldShow: Bool, animated: Bool = true) {
+        public func toggleElement(_ element: Element, shouldShow: Bool) {
             guard let multiElementRowView = view as? SectionContainerView.MultiElementRowView else {
                 return
             }
 
-            multiElementRowView.toggleView(element.view, shouldShow: shouldShow, animated: animated)
+            multiElementRowView.toggleView(element.view, shouldShow: shouldShow)
         }
     }
 }
