@@ -50,15 +50,15 @@ private enum CaptchaResult {
     }
 
     /// Test configuration - can be set by tests to override default behavior
-    private var testConfiguration: TestConfiguration?
+    static var testConfiguration: TestConfiguration?
 
     public struct TestConfiguration {
-        let timeout: UInt64
-        let delayValidation: Bool
+        var timeout: TimeInterval
+        var delay: TimeInterval
 
-        public init(timeout: UInt64, delayValidation: Bool = false) {
-            self.timeout = timeout
-            self.delayValidation = delayValidation
+        public init(timeout: TimeInterval? = nil, delay: TimeInterval? = nil) {
+            self.timeout = timeout ?? 6
+            self.delay = delay ?? 0
         }
     }
 
@@ -66,15 +66,14 @@ private enum CaptchaResult {
     private var validationTask: Task<String?, Never>?
     private var isValidationComplete = false
 
-    public init(passiveCaptcha: PassiveCaptcha?, testConfiguration: TestConfiguration? = nil) {
+    public init(passiveCaptcha: PassiveCaptcha?) {
         self.passiveCaptcha = passiveCaptcha
-        self.testConfiguration = testConfiguration
     }
 
     public func start() {
         guard let passiveCaptcha, validationTask == nil else { return }
 
-        validationTask = Task<String?, Never> { [siteKey = passiveCaptcha.siteKey, testConfiguration, weak self] () -> String? in
+        validationTask = Task<String?, Never> { [siteKey = passiveCaptcha.siteKey, weak self] () -> String? in
             STPAnalyticsClient.sharedClient.logPassiveCaptchaInit(siteKey: siteKey)
             do {
                 let hcaptcha = try HCaptcha(apiKey: passiveCaptcha.siteKey,
@@ -95,8 +94,8 @@ private enum CaptchaResult {
                         }
                     }
                 }
-                if let testConfiguration, testConfiguration.delayValidation {
-                    try? await Task.sleep(nanoseconds: testConfiguration.timeout)
+                if let testConfiguration = PassiveCaptchaChallenge.testConfiguration {
+                    try? await Task.sleep(nanoseconds: UInt64(testConfiguration.delay) * 1_000_000_000)
                 }
                 // Mark as complete
                 await self?.setValidationComplete()
@@ -123,8 +122,8 @@ private enum CaptchaResult {
     public func fetchToken() async -> String? {
         guard let siteKey = passiveCaptcha?.siteKey else { return nil }
         let timeoutNs: UInt64 = {
-            if let testTimeout = testConfiguration?.timeout {
-                return testTimeout
+            if let testTimeout = PassiveCaptchaChallenge.testConfiguration?.timeout {
+                return UInt64(testTimeout) * 1_000_000_000
             }
             return STPAnalyticsClient.isUnitOrUITest ? 0 : 6_000_000_000
         }()
@@ -147,11 +146,11 @@ private enum CaptchaResult {
                 return nil
             }
             // Wait for first completion and cancel remaining tasks
-            let result = await group.next()
+            let unwrappedToken: String? = await group.next() ?? nil
             group.cancelAll()
-            if let result, result != nil {
+            if let unwrappedToken {
                 STPAnalyticsClient.sharedClient.logPassiveCaptchaAttach(siteKey: siteKey, isReady: isReady, duration: Date().timeIntervalSince(startTime) * 1000)
-                return result
+                return unwrappedToken
             } else {
                 STPAnalyticsClient.sharedClient.logPassiveCaptchaError(error: Error.timeout, siteKey: siteKey, duration: Date().timeIntervalSince(startTime) * 1000)
                 return nil
