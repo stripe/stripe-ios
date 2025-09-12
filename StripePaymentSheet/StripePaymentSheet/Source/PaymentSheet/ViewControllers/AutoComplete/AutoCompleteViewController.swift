@@ -182,7 +182,7 @@ class AutoCompleteViewController: UIViewController {
 
     private func updateTableViewInsets() {
         // Add bottom content inset to tableview to account for floating button
-        let buttonHeight = manualEntryButton.frame.height + (LiquidGlassDetector.isEnabled ? 16 : 8)
+        let buttonHeight = manualEntryButton.frame.height + 16
         tableView.contentInset.bottom = buttonHeight
         tableView.verticalScrollIndicatorInsets.bottom = buttonHeight
     }
