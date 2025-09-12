@@ -12,6 +12,7 @@ import XCTest
 
 @testable@_spi(STP) import StripePaymentSheet
 
+// @iOS26
 final class WalletViewControllerSnapshotTests: STPSnapshotTestCase {
 
     func testDefault() {
