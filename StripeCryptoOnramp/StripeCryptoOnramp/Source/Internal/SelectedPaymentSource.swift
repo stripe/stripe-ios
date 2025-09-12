@@ -20,7 +20,7 @@ enum SelectedPaymentSource {
     var analyticsValue: String {
         switch self {
         case .link:
-            return "link" // Generic for Link since we can't differentiate card vs bank account here
+            return "link"
         case .applePay:
             return "apple_pay"
         }

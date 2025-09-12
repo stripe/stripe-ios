@@ -8,6 +8,7 @@
 import Foundation
 
 enum CryptoOnrampOperation: String {
+    case createSession = "configure"
     case hasLinkAccount = "has_link_account"
     case registerLinkUser = "register_link_user"
     case updatePhoneNumber = "update_phone_number"
@@ -16,6 +17,7 @@ enum CryptoOnrampOperation: String {
     case attachKycInfo = "attach_kyc_info"
     case verifyIdentity = "verify_identity"
     case registerWalletAddress = "register_wallet_address"
+    case collectPaymentMethod = "collect_payment_method"
     case createCryptoPaymentToken = "create_crypto_payment_token"
     case performCheckout = "perform_checkout"
     case logOut = "log_out"
@@ -26,8 +28,8 @@ enum CryptoOnrampAnalyticsEvent {
     case linkAccountLookupCompleted(hasLinkAccount: Bool)
     case linkRegistrationCompleted
     case linkPhoneNumberUpdated
-    case linkVerificationStarted
-    case linkVerificationCompleted
+    case linkUserAuthenticationStarted
+    case linkUserAuthenticationCompleted
     case linkAuthorizationStarted
     case linkAuthorizationCompleted(consented: Bool)
     case identityVerificationStarted
@@ -52,10 +54,10 @@ enum CryptoOnrampAnalyticsEvent {
             return "onramp.link_registration_completed"
         case .linkPhoneNumberUpdated:
             return "onramp.link_phone_number_updated"
-        case .linkVerificationStarted:
-            return "onramp.link_verification_started"
-        case .linkVerificationCompleted:
-            return "onramp.link_verification_completed"
+        case .linkUserAuthenticationStarted:
+            return "onramp.link_user_authentication_started"
+        case .linkUserAuthenticationCompleted:
+            return "onramp.link_user_authentication_completed"
         case .linkAuthorizationStarted:
             return "onramp.link_authorization_started"
         case .linkAuthorizationCompleted:
@@ -81,7 +83,7 @@ enum CryptoOnrampAnalyticsEvent {
         case .userLoggedOut:
             return "onramp.link_logout"
         case .errorOccurred:
-            return "onramp.error_occured"
+            return "onramp.error_occurred"
         }
     }
 
@@ -90,8 +92,8 @@ enum CryptoOnrampAnalyticsEvent {
         case .sessionCreated,
              .linkRegistrationCompleted,
              .linkPhoneNumberUpdated,
-             .linkVerificationStarted,
-             .linkVerificationCompleted,
+             .linkUserAuthenticationStarted,
+             .linkUserAuthenticationCompleted,
              .linkAuthorizationStarted,
              .identityVerificationStarted,
              .identityVerificationCompleted,
@@ -124,7 +126,7 @@ enum CryptoOnrampAnalyticsEvent {
         case let .errorOccurred(operationName, errorMessage):
             return [
                 "operation_name": operationName.rawValue,
-                "error_message": errorMessage
+                "error_message": errorMessage,
             ]
         }
     }
