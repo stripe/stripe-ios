@@ -91,6 +91,10 @@ extension STPAPIClient {
 
         var mutableParameters = parameters
 
+        if useMobileEndpoints {
+            mutableParameters["supported_verification_types"] = SupportedVerificationType.allCases.map(\.rawValue)
+        }
+
         let requestAssertionHandle: StripeAttest.AssertionHandle? = await {
             if useMobileEndpoints {
                 do {
@@ -296,7 +300,6 @@ extension STPAPIClient {
     private func makeConsumerSessionRequest(
         endpoint: String,
         parameters: [String: Any],
-        cookieStore: LinkCookieStore,
         consumerAccountPublishableKey: String?,
         completion: @escaping (Result<ConsumerSession, Error>) -> Void
     ) {
@@ -574,7 +577,6 @@ extension STPAPIClient {
 
     func logout(
         consumerSessionClientSecret: String,
-        cookieStore: LinkCookieStore,
         consumerAccountPublishableKey: String?,
         requestSurface: LinkRequestSurface = .default,
         completion: @escaping (Result<ConsumerSession, Error>) -> Void
@@ -591,7 +593,29 @@ extension STPAPIClient {
         makeConsumerSessionRequest(
             endpoint: endpoint,
             parameters: parameters,
-            cookieStore: cookieStore,
+            consumerAccountPublishableKey: consumerAccountPublishableKey,
+            completion: completion
+        )
+    }
+
+    func refreshSession(
+        consumerSessionClientSecret: String,
+        consumerAccountPublishableKey: String?,
+        requestSurface: LinkRequestSurface = .default,
+        completion: @escaping (Result<ConsumerSession, Error>) -> Void
+    ) {
+        let endpoint: String = "consumers/sessions/refresh"
+
+        let parameters: [String: Any] = [
+            "credentials": [
+                "consumer_session_client_secret": consumerSessionClientSecret,
+            ],
+            "request_surface": requestSurface.rawValue,
+        ]
+
+        makeConsumerSessionRequest(
+            endpoint: endpoint,
+            parameters: parameters,
             consumerAccountPublishableKey: consumerAccountPublishableKey,
             completion: completion
         )
@@ -601,7 +625,6 @@ extension STPAPIClient {
         for consumerSessionClientSecret: String,
         type: ConsumerSession.VerificationSession.SessionType,
         locale: Locale,
-        cookieStore: LinkCookieStore,
         consumerAccountPublishableKey: String?,
         requestSurface: LinkRequestSurface = .default,
         completion: @escaping (Result<ConsumerSession, Error>) -> Void
@@ -628,7 +651,6 @@ extension STPAPIClient {
         makeConsumerSessionRequest(
             endpoint: endpoint,
             parameters: parameters,
-            cookieStore: cookieStore,
             consumerAccountPublishableKey: consumerAccountPublishableKey,
             completion: completion
         )
@@ -637,7 +659,6 @@ extension STPAPIClient {
     func confirmSMSVerification(
         for consumerSessionClientSecret: String,
         with code: String,
-        cookieStore: LinkCookieStore,
         consumerAccountPublishableKey: String?,
         requestSurface: LinkRequestSurface = .default,
         consentGranted: Bool? = nil,
@@ -659,7 +680,6 @@ extension STPAPIClient {
         makeConsumerSessionRequest(
             endpoint: endpoint,
             parameters: parameters,
-            cookieStore: cookieStore,
             consumerAccountPublishableKey: consumerAccountPublishableKey,
             completion: completion
         )

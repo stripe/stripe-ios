@@ -17,6 +17,7 @@ final class LinkVerificationController {
 
     private var selfRetainer: LinkVerificationController?
     private let verificationViewController: LinkVerificationViewController
+    private let linkAccount: PaymentSheetLinkAccount
 
     init(
         mode: LinkVerificationView.Mode = .modal,
@@ -28,6 +29,7 @@ final class LinkVerificationController {
     ) {
         LinkUI.applyLiquidGlassIfPossible(configuration: configuration)
 
+        self.linkAccount = linkAccount
         self.verificationViewController = LinkVerificationViewController(
             mode: mode,
             linkAccount: linkAccount,
@@ -45,7 +47,45 @@ final class LinkVerificationController {
     ) {
         self.selfRetainer = self
         self.completion = completion
-        presentingController.present(verificationViewController, animated: true)
+
+        // Check if mobile fallback webview should be used
+        if let url = mobileFallbackURLIfNeeded() {
+            presentMobileFallbackWebview(from: presentingController, webviewUrl: url)
+        } else {
+            presentingController.present(verificationViewController, animated: true)
+        }
+    }
+
+    private func mobileFallbackURLIfNeeded() -> URL? {
+        guard let mobileFallbackParams = linkAccount.currentSession?.mobileFallbackWebviewParams,
+              let webviewUrl = mobileFallbackParams.webviewOpenUrl,
+              mobileFallbackParams.webviewRequirementType == .required else {
+            return nil
+        }
+        return webviewUrl
+    }
+
+    private func presentMobileFallbackWebview(from presentingController: UIViewController, webviewUrl: URL) {
+        let webviewController = LinkVerificationWebFallbackController(authenticationUrl: webviewUrl)
+        webviewController.present(from: presentingController) { [weak self] result in
+            guard let self = self else { return }
+
+            // If verification completed successfully, refresh the session
+            if case .completed = result {
+                self.linkAccount.refresh { refreshResult in
+                    // Log refresh result but continue with original completion
+                    if case .failure(let error) = refreshResult {
+                        print("Warning: Failed to refresh session after web verification: \(error)")
+                    }
+                    self.completion?(result)
+                    self.selfRetainer = nil
+                }
+            } else {
+                // For non-successful results, proceed directly
+                self.completion?(result)
+                self.selfRetainer = nil
+            }
+        }
     }
 
 }
