@@ -440,19 +440,25 @@ struct AppearancePlaygroundView: View {
                 }
 
                 if #available(iOS 26.0, *) {
-                    Button {
-                        appearance = PaymentSheet.Appearance()
-                        appearance.applyLiquidGlass()
-                        doneAction(appearance)
-                    } label: {
-                        Text("Reset and apply Liquid Glass 🥃")
-                    }
-                    Button {
-                        appearance = PaymentSheet.Appearance()
-                        appearance.navigationBarStyle = .glass
-                        doneAction(appearance)
-                    } label: {
-                        Text("Reset and apply Liquid Glass Nav 🧭")
+                    Section(header: Text("iOS 26 Liquid Glass")) {
+                        Picker("Navigation bar style", selection: $appearance.navigationBarStyle) {
+                            ForEach([PaymentSheet.Appearance.NavigationBarStyle.plain, PaymentSheet.Appearance.NavigationBarStyle.glass], id: \.self) {
+                                Text(String(describing: $0))
+                            }
+                        }
+                        Button {
+                            appearance.applyLiquidGlass()
+                            doneAction(appearance)
+                        } label: {
+                            Text("Apply Liquid Glass🥃")
+                        }
+                        Button {
+                            appearance = PaymentSheet.Appearance()
+                            appearance.applyLiquidGlass()
+                            doneAction(appearance)
+                        } label: {
+                            Text("♼ Reset Appearance, apply Liquid Glass 🥃")
+                        }
                     }
                 }
                 Button {
@@ -460,7 +466,7 @@ struct AppearancePlaygroundView: View {
                     appearance = PaymentSheet.Appearance()
                     doneAction(appearance)
                 } label: {
-                    Text("Reset Appearance")
+                    Text("♼ Reset Appearance")
                 }
 
             }.navigationTitle("Appearance")
