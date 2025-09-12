@@ -19,10 +19,10 @@ final class PollingBudgetTests: XCTestCase {
         XCTAssertTrue(budget!.canPoll)
     }
 
-    func testPollingBudget_initializationWithWalletPaymentMethods() {
-        let walletTypes: [STPPaymentMethodType] = [.amazonPay, .revolutPay, .swish, .twint, .przelewy24]
+    func testPollingBudget_initializationLPMs() {
+        let paymentMethodTypes: [STPPaymentMethodType] = [.amazonPay, .revolutPay, .swish, .twint, .przelewy24]
 
-        for type in walletTypes {
+        for type in paymentMethodTypes {
             let budget = PollingBudget(startDate: Date(), paymentMethodType: type)
             XCTAssertNotNil(budget, "Should create budget for \(type)")
             XCTAssertTrue(budget!.canPoll, "Should allow polling initially for \(type)")
@@ -68,7 +68,7 @@ final class PollingBudgetTests: XCTestCase {
         XCTAssertFalse(budget.canPoll, "Should not allow polling after recording attempt beyond budget")
     }
 
-    // MARK: - Critical "One Final Poll" Behavior Tests
+    // MARK: - "One Final Poll" Behavior Tests
 
     func testPollingBudget_oneFinalPollBehavior() {
         let budget = PollingBudget(startDate: Date(), duration: 0.01)
@@ -97,8 +97,6 @@ final class PollingBudgetTests: XCTestCase {
         budget.recordPollAttempt()
         XCTAssertFalse(budget.canPoll, "Should not allow polling after final attempt")
     }
-
-    // MARK: - Integration Tests
 
     func testPollingBudget_withCardPaymentMethodDuration() {
         let budget = PollingBudget(startDate: Date(), paymentMethodType: .card)!

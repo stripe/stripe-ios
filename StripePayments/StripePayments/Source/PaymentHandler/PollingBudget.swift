@@ -81,4 +81,12 @@ final class PollingBudget {
             canPoll = false
         }
     }
+
+    /// Helper function to determine the polling budget for any given payment method type
+    /// - Parameter paymentMethodType: The payment method type
+    /// - Returns: The polling budget if it exists for this payment method
+    static func networkTimeout(for paymentMethodType: STPPaymentMethodType) -> NSNumber? {
+        guard let pollingBudget = PollingBudget(startDate: Date(), paymentMethodType: paymentMethodType)?.duration.value else { return nil }
+        return NSNumber(value: pollingBudget)
+    }
 }
