@@ -33,4 +33,15 @@ extension PaymentMethodType {
             nil
         }
     }
+
+    var analyticsValue: String {
+        switch self {
+        case .card:
+            return "card"
+        case .bankAccount:
+            return "bank_account"
+        case .applePay:
+            return "apple_pay"
+        }
+    }
 }
