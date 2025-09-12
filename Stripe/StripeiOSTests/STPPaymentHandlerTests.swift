@@ -40,7 +40,7 @@ class STPPaymentHandlerStubbedTests: STPNetworkStubbingTestCase {
                 XCTFail()
             }
         }
-        wait(for: [createPaymentIntentExpectation], timeout: 15)  // STPTestingNetworkRequestTimeout
+        wait(for: [createPaymentIntentExpectation], timeout: 8)  // STPTestingNetworkRequestTimeout
         guard let clientSecret = retrievedClientSecret
         else {
             XCTFail()
@@ -102,7 +102,7 @@ class STPPaymentHandlerStubbedTests: STPNetworkStubbingTestCase {
         }
         // 2*STPTestingNetworkRequestTimeout payment handler needs to make an ares for this
         // test in addition to fetching the payment intent
-        wait(for: [paymentHandlerExpectation], timeout: 2 * 15)
+        wait(for: [paymentHandlerExpectation], timeout: 2 * 8)
     }
 
     func testPollingBehaviorWithFinalCall() {

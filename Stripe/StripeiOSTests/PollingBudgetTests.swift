@@ -50,26 +50,8 @@ final class PollingBudgetTests: XCTestCase {
         XCTAssertTrue(budget.canPoll)
     }
 
-    func testPollingBudget_beginPolling() {
-        let budget = PollingBudget(startDate: Date(), duration: 1.0)
-
-        budget.beginPolling()
-        XCTAssertTrue(budget.canPoll)
-    }
-
-    func testPollingBudget_multipleBeginPollingCalls() {
-        let budget = PollingBudget(startDate: Date(), duration: 1.0)
-
-        budget.beginPolling()
-        Thread.sleep(forTimeInterval: 0.1)
-        budget.beginPolling()
-
-        XCTAssertTrue(budget.canPoll)
-    }
-
     func testPollingBudget_recordPollAttemptWithinBudget() {
         let budget = PollingBudget(startDate: Date(), duration: 1.0)
-        budget.beginPolling()
 
         budget.recordPollAttempt()
         XCTAssertTrue(budget.canPoll)
@@ -77,7 +59,6 @@ final class PollingBudgetTests: XCTestCase {
 
     func testPollingBudget_budgetExhaustion() {
         let budget = PollingBudget(startDate: Date(), duration: 0.01)
-        budget.beginPolling()
 
         Thread.sleep(forTimeInterval: 0.02)
 
@@ -91,7 +72,6 @@ final class PollingBudgetTests: XCTestCase {
 
     func testPollingBudget_oneFinalPollBehavior() {
         let budget = PollingBudget(startDate: Date(), duration: 0.01)
-        budget.beginPolling()
 
         Thread.sleep(forTimeInterval: 0.05)
 
@@ -104,7 +84,6 @@ final class PollingBudgetTests: XCTestCase {
 
     func testPollingBudget_multiplePollsWithinBudget() {
         let budget = PollingBudget(startDate: Date(), duration: 0.1)
-        budget.beginPolling()
 
         XCTAssertTrue(budget.canPoll)
         budget.recordPollAttempt()
@@ -124,7 +103,6 @@ final class PollingBudgetTests: XCTestCase {
     func testPollingBudget_withCardPaymentMethodDuration() {
         let budget = PollingBudget(startDate: Date(), paymentMethodType: .card)!
 
-        budget.beginPolling()
         XCTAssertTrue(budget.canPoll)
 
         budget.recordPollAttempt()
@@ -134,7 +112,6 @@ final class PollingBudgetTests: XCTestCase {
     func testPollingBudget_withWalletPaymentMethodDuration() {
         let budget = PollingBudget(startDate: Date(), paymentMethodType: .amazonPay)!
 
-        budget.beginPolling()
         XCTAssertTrue(budget.canPoll)
 
         budget.recordPollAttempt()
@@ -144,9 +121,6 @@ final class PollingBudgetTests: XCTestCase {
     func testPollingBudget_behaviorConsistency() {
         let budget1 = PollingBudget(startDate: Date(), duration: 0.01)
         let budget2 = PollingBudget(startDate: Date(), duration: 0.01)
-
-        budget1.beginPolling()
-        budget2.beginPolling()
 
         Thread.sleep(forTimeInterval: 0.02)
 
@@ -170,18 +144,8 @@ final class PollingBudgetTests: XCTestCase {
         XCTAssertFalse(budget.canPoll)
     }
 
-    func testPollingBudget_noBeginPollingCall() {
-        let budget = PollingBudget(startDate: Date(), duration: 1.0)
-
-        XCTAssertTrue(budget.canPoll)
-
-        budget.recordPollAttempt()
-        XCTAssertTrue(budget.canPoll)
-    }
-
     func testPollingBudget_veryShortDuration() {
         let budget = PollingBudget(startDate: Date(), duration: 0.001)
-        budget.beginPolling()
 
         Thread.sleep(forTimeInterval: 0.01)
         XCTAssertTrue(budget.canPoll)
