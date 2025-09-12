@@ -12,6 +12,10 @@ import StripeCoreTestUtils
 import XCTest
 
 final class PaymentSheetVerticalViewControllerSnapshotTest: STPSnapshotTestCase {
+    override class func setUp() {
+        // Set a publishable key so that `apiClient.isTestMode` return true
+        STPAPIClient.shared.publishableKey = "pk_test_123"
+    }
     override func setUp() {
         super.setUp()
         let expectation = expectation(description: "Load specs")
