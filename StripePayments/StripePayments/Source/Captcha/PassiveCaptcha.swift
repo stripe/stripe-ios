@@ -146,11 +146,11 @@ private enum CaptchaResult {
                 return nil
             }
             // Wait for first completion and cancel remaining tasks
-            let unwrappedToken: String? = await group.next() ?? nil
+            let result = await group.next()
             group.cancelAll()
-            if let unwrappedToken {
+            if let result, result != nil {
                 STPAnalyticsClient.sharedClient.logPassiveCaptchaAttach(siteKey: siteKey, isReady: isReady, duration: Date().timeIntervalSince(startTime) * 1000)
-                return unwrappedToken
+                return result
             } else {
                 STPAnalyticsClient.sharedClient.logPassiveCaptchaError(error: Error.timeout, siteKey: siteKey, duration: Date().timeIntervalSince(startTime) * 1000)
                 return nil
