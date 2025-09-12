@@ -50,7 +50,6 @@
 		4941EB5D2D5CFB840004806A /* FinancialConnectionsStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4941EB5C2D5CFB840004806A /* FinancialConnectionsStyle.swift */; };
 		49E8CE2A2CD146CE0009DFBB /* KeyedEncodingContainer+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49E8CE292CD146CE0009DFBB /* KeyedEncodingContainer+Extensions.swift */; };
 		49E908B12DDD21F400D5BDBF /* FinancialConnectionsConsumer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49E908B02DDD21F400D5BDBF /* FinancialConnectionsConsumer.swift */; };
-		49ECDA412CA340E100F647F0 /* AsyncTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49ECDA402CA340E100F647F0 /* AsyncTests.swift */; };
 		49EFC64E2D95A6FD007172B9 /* HostedAuthUrlBuilderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49DCEC182D95A6C300989A05 /* HostedAuthUrlBuilderTests.swift */; };
 		49F3828D2CC02D43001CE69A /* BillingAddress.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49F3828C2CC02D43001CE69A /* BillingAddress.swift */; };
 		4B2FAC57E03D8654A177C408 /* Dictionary+Stripe.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7727AEEFD2FC880BADDA1872 /* Dictionary+Stripe.swift */; };
@@ -264,7 +263,6 @@
 		49DCEC182D95A6C300989A05 /* HostedAuthUrlBuilderTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HostedAuthUrlBuilderTests.swift; sourceTree = "<group>"; };
 		49E8CE292CD146CE0009DFBB /* KeyedEncodingContainer+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "KeyedEncodingContainer+Extensions.swift"; sourceTree = "<group>"; };
 		49E908B02DDD21F400D5BDBF /* FinancialConnectionsConsumer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FinancialConnectionsConsumer.swift; sourceTree = "<group>"; };
-		49ECDA402CA340E100F647F0 /* AsyncTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AsyncTests.swift; sourceTree = "<group>"; };
 		49F3828C2CC02D43001CE69A /* BillingAddress.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BillingAddress.swift; sourceTree = "<group>"; };
 		4A8030BF88608CA86E295F18 /* Enums+CustomStringConvertible.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Enums+CustomStringConvertible.swift"; sourceTree = "<group>"; };
 		4C51E3FA5EE3587BB7BBC634 /* STPError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = STPError.swift; sourceTree = "<group>"; };
@@ -455,7 +453,6 @@
 			isa = PBXGroup;
 			children = (
 				7F2E1D80D0342CF09CB05415 /* URLEncoderTest.swift */,
-				49ECDA402CA340E100F647F0 /* AsyncTests.swift */,
 				31C8DFE72E4E98F500A90186 /* STPErrorTests.swift */,
 			);
 			path = Helpers;
@@ -1032,7 +1029,6 @@
 				31C8DFE82E4E98F500A90186 /* STPErrorTests.swift in Sources */,
 				31C5137C2CFE65DB00A429C3 /* StripeAttestTest.swift in Sources */,
 				E6EF91C32CB9DC410082DD1B /* Locale+StripeTests.swift in Sources */,
-				49ECDA412CA340E100F647F0 /* AsyncTests.swift in Sources */,
 				A50CB2ACAC1DCF9539D76F25 /* NSArray+StripeCoreTest.swift in Sources */,
 				F5DB5D52E2668136FF6D70D6 /* NSMutableURLRequest+StripeTest.swift in Sources */,
 				8AD68C8D00A0BCF94E5230DC /* UIImage+StripeCoreTests.swift in Sources */,

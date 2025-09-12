@@ -57,26 +57,4 @@ import Foundation
 
         return promise
     }
-
-    /// Downloads a file from the specified URL and returns a promise that will
-    /// resolve to the data contents of the file.
-    ///
-    /// - Parameters:
-    ///   - remoteURL: The URL to download the file from
-    ///   - fileReadingOptions: Options for reading the file after it's been downloaded locally.
-    public func downloadFile(
-        from remoteURL: URL,
-        fileReadingOptions: Data.ReadingOptions = []
-    ) -> Future<Data> {
-        return downloadFileTemporarily(from: remoteURL).chained { fileURL in
-            let promise = Promise<Data>()
-            promise.fulfill {
-                return try Data(
-                    contentsOf: fileURL,
-                    options: fileReadingOptions
-                )
-            }
-            return promise
-        }
-    }
 }
