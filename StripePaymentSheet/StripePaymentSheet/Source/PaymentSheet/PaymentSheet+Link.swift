@@ -125,3 +125,36 @@ extension PaymentSheet {
         @_spi(STP) public static var enableLinkInlineVerification: Bool = false
     }
 }
+
+// MARK: - Link disabled reasons
+
+extension PaymentSheet {
+
+    enum LinkDisabledReason: String {
+        case notSupportedInElementsSession = "not_supported_in_elements_session"
+        case linkConfiguration = "link_configuration"
+        case cardBrandFiltering = "card_brand_filtering"
+        case billingDetailsCollection = "billing_details_collection"
+    }
+
+    enum LinkSignupDisabledReason: String {
+        case linkNotEnabled = "link_not_enabled"
+        case linkCardNotSupported = "link_card_not_supported"
+        case disabledInElementsSession = "disabled_in_elements_session"
+        case signupOptInFeatureNoEmailProvided = "signup_opt_in_feature_no_email_provided"
+        case attestationIssues = "attestation_issues"
+        case linkUsedBefore = "link_used_before"
+    }
+}
+
+extension Array where Element == PaymentSheet.LinkDisabledReason {
+    var analyticsValue: String {
+        return self.map { $0.rawValue }.joined(separator: ",")
+    }
+}
+
+extension Array where Element == PaymentSheet.LinkSignupDisabledReason {
+    var analyticsValue: String {
+        return self.map { $0.rawValue }.joined(separator: ",")
+    }
+}
