@@ -108,7 +108,12 @@ class PaymentSheetFormFactory {
             }
 
             let isAccountNotRegisteredOrMissing = linkAccount.flatMap({ !$0.isRegistered }) ?? true
-            return isAccountNotRegisteredOrMissing && !UserDefaults.standard.customerHasUsedLink
+
+            // In live mode, we only show signup if the customer hasn't used Link in the merchant app before.
+            // In test mode, we continue to show it to make testing easier.
+            let canShowSignup = !UserDefaults.standard.customerHasUsedLink || configuration.apiClient.isTestmode
+
+            return isAccountNotRegisteredOrMissing && canShowSignup
         }()
         let paymentMethodType: STPPaymentMethodType = {
             if linkAccount != nil, configuration.linkPaymentMethodsOnly, !elementsSession.linkPassthroughModeEnabled {
