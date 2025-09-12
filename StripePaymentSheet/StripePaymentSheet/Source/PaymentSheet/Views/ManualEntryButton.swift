@@ -28,6 +28,8 @@ extension UIButton {
         button.setTitle(.Localized.enter_address_manually, for: .normal)
         button.titleLabel?.sizeToFit()
 
+        button.frame.size.height = appearance.primaryButton.height
+
         button.backgroundColor = UIColor(dynamicProvider: { traitCollection in
             if traitCollection.isDarkMode {
                 return appearance.colors.componentBackground
@@ -35,8 +37,6 @@ extension UIButton {
 
             return appearance.colors.background.darken(by: 0.07)
         })
-
-        button.frame.size.height = appearance.primaryButton.height
 
         if #available(iOS 26.0, *), LiquidGlassDetector.isEnabled {
             button.ios26_applyCapsuleCornerConfiguration()
