@@ -133,6 +133,8 @@ final class PaymentMethodAvailabilityTest: XCTestCase {
     }
 
     func testIsLinkSignupEnabled_enabled_for_linkSignupOptInFeatureEnabled_if_email_provided() {
+        STPAPIClient.shared.publishableKey = "pk_test_123"
+
         // Lookup happened during initialization and an email was provided
         LinkAccountContext.shared.account = ._testValue(email: "john@doe.com", isRegistered: false)
 
@@ -146,6 +148,8 @@ final class PaymentMethodAvailabilityTest: XCTestCase {
     }
 
     func testIsLinkSignupEnabled_disabled_for_linkSignupOptInFeatureEnabled_if_no_email_provided() {
+        STPAPIClient.shared.publishableKey = "pk_test_123"
+
         // Lookup happened during initialization and no email was provided
         LinkAccountContext.shared.account = nil
 
