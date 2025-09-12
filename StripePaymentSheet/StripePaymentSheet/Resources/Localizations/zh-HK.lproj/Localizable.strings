@@ -82,6 +82,8 @@
 
 "By saving your bank account for %@ you agree to authorize payments pursuant to <terms>these terms</terms>." = "儲存您的 %@ 銀行賬戶即表示您同意按照<terms>這些條款</terms>授權付款。";
 
+"By submitting your order to %@ and %@, you agree to save your information with %@ for future purchases, and agree to authorize payments pursuant to <terms>these terms</terms>." = "向 %1$@ 和 %2$@ 提交訂單，即表示您同意使用 %3$@ 儲存您的資訊以供日後購買之用，並同意依據<terms>這些條款</terms>授權支付。";
+
 "By submitting your order to %@ you agree to authorize payments pursuant to <terms>these terms</terms>." = "將訂單提交至 %@ 即表示您同意根據<terms>這些條款</terms>授權付款。";
 
 "CPF/CPNJ" = "CPF/CPNJ";

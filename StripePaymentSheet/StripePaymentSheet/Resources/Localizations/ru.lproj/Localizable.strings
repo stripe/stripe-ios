@@ -82,6 +82,8 @@
 
 "By saving your bank account for %@ you agree to authorize payments pursuant to <terms>these terms</terms>." = "Сохраняя реквизиты своего банковского счета у %@, вы соглашаетесь авторизовать платежи в соответствии с <terms>этими условиями</terms>.";
 
+"By submitting your order to %@ and %@, you agree to save your information with %@ for future purchases, and agree to authorize payments pursuant to <terms>these terms</terms>." = "Отправляя заказ на %1$@ и %2$@, вы соглашаетесь сохранить вашу информацию в %3$@ для будущих покупок, а также соглашаетесь разрешить платежи в соответствии с <terms>этими условиями</terms>.";
+
 "By submitting your order to %@ you agree to authorize payments pursuant to <terms>these terms</terms>." = "Отправляя заказ в %@, вы соглашаетесь разрешить платежи в соответствии с <terms>этими условиями</terms>.";
 
 "CPF/CPNJ" = "CPF/CPNJ";
