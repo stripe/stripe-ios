@@ -139,7 +139,8 @@ class AutoCompleteViewController: UIViewController {
         view.backgroundColor = configuration.appearance.colors.background
 
         let buttonContainer = UIView()
-        buttonContainer.addAndPinSubview(manualEntryButton, insets: NSDirectionalEdgeInsets(top: 0, leading: LiquidGlassDetector.isEnabled ? configuration.appearance.formInsets.leading : 0, bottom: LiquidGlassDetector.isEnabled ? 8 : 0, trailing: LiquidGlassDetector.isEnabled ? configuration.appearance.formInsets.trailing : 0))
+        buttonContainer.addAndPinSubview(manualEntryButton, insets: NSDirectionalEdgeInsets(top: 0, leading: configuration.appearance.formInsets.leading, bottom: 8, trailing: configuration.appearance.formInsets.trailing))
+        buttonContainer.addSubview(manualEntryButton)
         manualEntryButton.translatesAutoresizingMaskIntoConstraints = false
 
         let stackView = UIStackView(arrangedSubviews: [formStackView, errorLabel, separatorView, tableView])
