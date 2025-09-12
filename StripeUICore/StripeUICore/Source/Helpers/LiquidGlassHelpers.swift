@@ -19,24 +19,27 @@ import UIKit
         }
         return false
     }()
+
     @_spi(STP) public static var isEnabled: Bool {
+        return isEnabledInMerchantApp && allowNewDesign
+    }
+
+    /// Whether or not the merchant's app (not MPE) has Liquid Glass enabled
+    @_spi(STP) public static var isEnabledInMerchantApp: Bool {
         // If the app was built with Xcode 26 or later (which includes Swift compiler 6.2)...
-        #if compiler(>=6.2)
+#if compiler(>=6.2)
         // And we're running on iOS 26 or later...
         if #available(iOS 26.0, *) {
             // And the app hasn't opted out of the new design...
             if !(Bundle.main.infoDictionary?["UIDesignRequiresCompatibility"] as? Bool ?? false)
-                // ...and the feature flag is enabled...
-                && allowNewDesign
             {
-                // Then assume we're using the new design!
                 return true
             }
         }
-        #endif
-        // Otherwise, use the old design
+#endif
         return false
     }
+
 }
 
 // MARK: - UIView Liquid Glass helpers
