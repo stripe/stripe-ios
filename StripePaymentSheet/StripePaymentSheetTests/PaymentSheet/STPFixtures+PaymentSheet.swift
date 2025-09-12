@@ -45,16 +45,13 @@ public extension EmbeddedPaymentElement.Configuration {
 }
 
 public extension PaymentSheet.Appearance {
-    mutating func applyingLiquidGlassIfPossible() {
+    func applyingLiquidGlassIfPossible() -> PaymentSheet.Appearance {
+        var copy = self
         #if !os(visionOS)
         if #available(iOS 26.0, *) {
-            self.applyLiquidGlass()
+            copy.applyLiquidGlass()
         }
         #endif
-    }
-    var liquidGlassIfPossible: PaymentSheet.Appearance {
-        var copy = self
-        copy.applyingLiquidGlassIfPossible()
         return copy
     }
 }

@@ -42,7 +42,7 @@ final class VerticalSavedPaymentMethodsViewControllerSnapshotTests: STPSnapshotT
         _test_VerticalSavedPaymentMethodsViewControllerSnapshotTests(darkMode: false, showDefaultPMBadge: true)
     }
 
-    func _test_VerticalSavedPaymentMethodsViewControllerSnapshotTests(darkMode: Bool, appearance: PaymentSheet.Appearance = .default.liquidGlassIfPossible, isEmbedded: Bool = false, showDefaultPMBadge: Bool = false) {
+    func _test_VerticalSavedPaymentMethodsViewControllerSnapshotTests(darkMode: Bool, appearance: PaymentSheet.Appearance = .default.applyingLiquidGlassIfPossible(), isEmbedded: Bool = false, showDefaultPMBadge: Bool = false) {
         var configuration = PaymentSheet.Configuration()
         configuration.appearance = appearance
         var paymentMethods = generatePaymentMethods()
