@@ -530,7 +530,7 @@ extension EmbeddedPaymentElement {
 
         embeddedPaymentMethodsView.isUserInteractionEnabled = false
 
-        let hcaptchaToken = await passiveCaptchaChallenge?.fetchToken()
+        let hcaptchaToken = await passiveCaptchaChallenge?.fetchToken(for: paymentOption)
         let (result, deferredIntentConfirmationType) = await PaymentSheet.confirm(
             configuration: configuration,
             authenticationContext: authContext,

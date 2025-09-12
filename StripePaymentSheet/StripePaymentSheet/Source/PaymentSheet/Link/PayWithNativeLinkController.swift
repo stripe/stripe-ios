@@ -58,7 +58,17 @@ final class PayWithNativeLinkController {
 
     private let linkAppearance: LinkAppearance?
     private let linkConfiguration: LinkConfiguration?
-    private let hcaptchaToken: String?
+    private let passiveCaptchaChallenge: PassiveCaptchaChallenge?
+    private var hcaptchaToken: String? {
+        get async {
+            if let _hcaptchaToken {
+                return _hcaptchaToken
+            }
+            _hcaptchaToken = await passiveCaptchaChallenge?.fetchToken()
+            return _hcaptchaToken
+        }
+    }
+    private var _hcaptchaToken: String?
 
     init(
         mode: Mode,
@@ -70,6 +80,7 @@ final class PayWithNativeLinkController {
         supportedPaymentMethodTypes: [LinkPaymentMethodType] = LinkPaymentMethodType.allCases,
         linkAppearance: LinkAppearance? = nil,
         linkConfiguration: LinkConfiguration? = nil,
+        passiveCaptchaChallenge: PassiveCaptchaChallenge? = nil,
         hcaptchaToken: String? = nil
     ) {
         self.mode = mode
@@ -82,7 +93,8 @@ final class PayWithNativeLinkController {
         self.paymentHandler = .init(apiClient: configuration.apiClient)
         self.linkAppearance = linkAppearance
         self.linkConfiguration = linkConfiguration
-        self.hcaptchaToken = hcaptchaToken
+        self.passiveCaptchaChallenge = passiveCaptchaChallenge
+        self._hcaptchaToken = hcaptchaToken
     }
 
     func presentAsBottomSheet(
@@ -220,22 +232,24 @@ extension PayWithNativeLinkController: PayWithLinkViewControllerDelegate {
         with paymentOption: PaymentOption,
         completion: @escaping (PaymentSheetResult, STPAnalyticsClient.DeferredIntentConfirmationType?) -> Void
     ) {
-        PaymentSheet.confirm(
-            configuration: configuration,
-            authenticationContext: payWithLinkViewController,
-            intent: intent,
-            elementsSession: elementsSession,
-            paymentOption: paymentOption,
-            paymentHandler: paymentHandler,
-            hcaptchaToken: hcaptchaToken,
-            analyticsHelper: analyticsHelper,
-            completion: { result, confirmationType in
-                if self.logPayment {
-                    self.analyticsHelper.logPayment(paymentOption: paymentOption, result: result, deferredIntentConfirmationType: confirmationType)
+        Task {
+            await PaymentSheet.confirm(
+                configuration: configuration,
+                authenticationContext: payWithLinkViewController,
+                intent: intent,
+                elementsSession: elementsSession,
+                paymentOption: paymentOption,
+                paymentHandler: paymentHandler,
+                hcaptchaToken: hcaptchaToken,
+                analyticsHelper: analyticsHelper,
+                completion: { result, confirmationType in
+                    if self.logPayment {
+                        self.analyticsHelper.logPayment(paymentOption: paymentOption, result: result, deferredIntentConfirmationType: confirmationType)
+                    }
+                    completion(result, confirmationType)
                 }
-                completion(result, confirmationType)
-            }
-        )
+            )
+        }
     }
 
     func payWithLinkViewControllerDidCancel(_ payWithLinkViewController: PayWithLinkViewController, shouldReturnToPaymentSheet: Bool) {
@@ -275,19 +289,21 @@ extension PayWithNativeLinkController: PayWithLinkWebControllerDelegate {
         elementsSession: STPElementsSession,
         with paymentOption: PaymentOption
     ) {
-        PaymentSheet.confirm(
-            configuration: configuration,
-            authenticationContext: payWithLinkWebController,
-            intent: intent,
-            elementsSession: elementsSession,
-            paymentOption: paymentOption,
-            paymentHandler: paymentHandler,
-            integrationShape: .complete,
-            hcaptchaToken: hcaptchaToken,
-            analyticsHelper: analyticsHelper
-        ) { result, deferredIntentConfirmationType in
-            self.completion?(.full(result: result, deferredIntentConfirmationType: deferredIntentConfirmationType, didFinish: true))
-            self.selfRetainer = nil
+        Task {
+            await PaymentSheet.confirm(
+                configuration: configuration,
+                authenticationContext: payWithLinkWebController,
+                intent: intent,
+                elementsSession: elementsSession,
+                paymentOption: paymentOption,
+                paymentHandler: paymentHandler,
+                integrationShape: .complete,
+                hcaptchaToken: hcaptchaToken,
+                analyticsHelper: analyticsHelper
+            ) { result, deferredIntentConfirmationType in
+                self.completion?(.full(result: result, deferredIntentConfirmationType: deferredIntentConfirmationType, didFinish: true))
+                self.selfRetainer = nil
+            }
         }
     }
 
