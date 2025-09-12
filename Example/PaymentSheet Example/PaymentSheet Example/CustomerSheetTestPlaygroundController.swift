@@ -5,7 +5,7 @@
 
 import Combine
 @_spi(STP) import StripeCore
-@_spi(STP) @_spi(CustomerSessionBetaAccess) import StripePaymentSheet
+@_spi(STP) @_spi(CustomerSessionBetaAccess) @_spi(Captcha) import StripePaymentSheet
 import SwiftUI
 
 class CustomerSheetTestPlaygroundController: ObservableObject {
@@ -153,6 +153,7 @@ class CustomerSheetTestPlaygroundController: ObservableObject {
             configuration.cardBrandAcceptance = .allowed(brands: [.visa])
         }
         configuration.opensCardScannerAutomatically = settings.opensCardScannerAutomatically == .on
+        configuration.enablePassiveCaptcha = settings.enablePassiveCaptcha == .on
 
         return configuration
     }
