@@ -439,26 +439,22 @@ struct AppearancePlaygroundView: View {
                     AppearancePlaygroundView_EmbeddedPaymentElement(appearance: $appearance)
                 }
 
-                Button {
-                    appearance = PaymentSheet.Appearance()
-                    if #available(iOS 26.0, *) {
+                if #available(iOS 26.0, *) {
+                    Button {
+                        appearance = PaymentSheet.Appearance()
                         appearance.applyLiquidGlass()
+                        doneAction(appearance)
+                    } label: {
+                        Text("Reset and apply Liquid Glass 🥃")
                     }
-                    doneAction(appearance)
-                } label: {
-                    Text("Reset and apply Liquid Glass 🥃")
-                }
-
-                Button {
-                    appearance = PaymentSheet.Appearance()
-                    if #available(iOS 26.0, *) {
+                    Button {
+                        appearance = PaymentSheet.Appearance()
                         appearance.navigationBarStyle = .glass
+                        doneAction(appearance)
+                    } label: {
+                        Text("Reset and apply Liquid Glass Nav 🧭")
                     }
-                    doneAction(appearance)
-                } label: {
-                    Text("Reset and apply Liquid Glass Nav 🧭")
                 }
-
                 Button {
                     LiquidGlassDetector.allowNewDesign = false
                     appearance = PaymentSheet.Appearance()
