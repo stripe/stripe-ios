@@ -411,6 +411,17 @@ extension STPAPIClient {
         expand: [String]?,
         completion: @escaping STPPaymentIntentCompletionBlock
     ) {
+        retrievePaymentIntent(withClientSecret: secret, expand: expand, timeout: nil, completion: completion)
+    }
+
+    // Internal helper to pass timeout
+    @objc(retrievePaymentIntentWithClientSecret:expand:timeout:completion:)
+    @_spi(STP) public func retrievePaymentIntent(
+        withClientSecret secret: String,
+        expand: [String]?,
+        timeout: NSNumber?, // This is an NSNumber rather than TimeInterval so we can override it in tests with @objc
+        completion: @escaping STPPaymentIntentCompletionBlock
+    ) {
         let endpoint: String = paymentIntentEndpoint(from: secret)
         var parameters: [String: Any] = [:]
 
@@ -422,10 +433,16 @@ extension STPAPIClient {
             parameters["expand"] = expand
         }
 
+        let timeoutInterval: TimeInterval? = {
+            guard let timeout else { return nil }
+            return TimeInterval(timeout.doubleValue)
+        }()
+
         APIRequest<STPPaymentIntent>.getWith(
             self,
             endpoint: endpoint,
-            parameters: parameters
+            parameters: parameters,
+            timeout: timeoutInterval
         ) { paymentIntent, _, error in
             // If using a scoped client secret, inject the client secret here
             let paymentIntent = {
@@ -641,6 +658,18 @@ extension STPAPIClient {
         completion: @escaping STPSetupIntentCompletionBlock
     ) {
 
+        retrieveSetupIntent(withClientSecret: secret, expand: expand, timeout: nil, completion: completion)
+    }
+
+    // Internal helper to pass timeout to URL request
+    @objc
+    func retrieveSetupIntent(
+        withClientSecret secret: String,
+        expand: [String]?,
+        timeout: NSNumber?, // This is an NSNumber rather than TimeInterval so we can override it in tests with @objc
+        completion: @escaping STPSetupIntentCompletionBlock
+    ) {
+
         let endpoint = setupIntentEndpoint(from: secret)
         var parameters: [String: Any] = [:]
         if !publishableKeyIsUserKey {
@@ -652,10 +681,16 @@ extension STPAPIClient {
             parameters["expand"] = expand
         }
 
+        let timeoutInterval: TimeInterval? = {
+            guard let timeout else { return nil }
+            return TimeInterval(timeout.doubleValue)
+        }()
+
         APIRequest<STPSetupIntent>.getWith(
             self,
             endpoint: endpoint,
-            parameters: parameters
+            parameters: parameters,
+            timeout: timeoutInterval
         ) { setupIntent, _, error in
             completion(setupIntent, error)
         }

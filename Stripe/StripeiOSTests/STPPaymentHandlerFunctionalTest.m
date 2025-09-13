@@ -50,9 +50,9 @@
         handler(paymentIntent, nil);
     });
 
-    OCMStub([apiClient retrievePaymentIntentWithClientSecret:[OCMArg any] expand:[OCMArg any] completion:[OCMArg any]]).andDo(^(NSInvocation *invocation) {
+    OCMStub([apiClient retrievePaymentIntentWithClientSecret:[OCMArg any] expand:[OCMArg any] timeout:[OCMArg any] completion:[OCMArg any]]).andDo(^(NSInvocation *invocation) {
         void (^handler)(STPPaymentIntent *paymentIntent, __unused NSError * _Nullable error);
-        [invocation getArgument:&handler atIndex:4];
+        [invocation getArgument:&handler atIndex:5];
         handler(paymentIntent, nil);
     });
 
