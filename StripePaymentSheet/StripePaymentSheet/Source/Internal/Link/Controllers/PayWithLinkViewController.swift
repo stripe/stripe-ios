@@ -220,6 +220,8 @@ final class PayWithLinkViewController: BottomSheetViewController {
         linkAppearance: LinkAppearance? = nil,
         linkConfiguration: LinkConfiguration? = nil
     ) {
+        LinkUI.applyLiquidGlassIfPossible(configuration: configuration)
+
         self.init(
             context: Context(
                 intent: intent,
