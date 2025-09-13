@@ -138,7 +138,7 @@ final class PaymentSheetAnalyticsHelper {
         ]
         let linkEnabled: Bool = PaymentSheet.isLinkEnabled(elementsSession: elementsSession, configuration: configuration)
         if linkEnabled {
-            let linkMode: String = elementsSession.linkPassthroughModeEnabled ? "passthrough" : "payment_method_mode"
+            let linkMode = elementsSession.linkSettings?.linkMode?.rawValue
             params["link_mode"] = linkMode
         }
         params["link_display"] = configuration.link.display.rawValue
@@ -153,6 +153,9 @@ final class PaymentSheetAnalyticsHelper {
             guard let loadingStartDate else { return 0 }
             return Date().timeIntervalSince(loadingStartDate)
         }()
+
+        params["link_disabled_reasons"] = PaymentSheet.linkDisabledReasons(elementsSession: elementsSession, configuration: configuration).analyticsValue
+        params["link_signup_disabled_reasons"] = PaymentSheet.linkSignupDisabledReasons(elementsSession: elementsSession, configuration: configuration).analyticsValue
 
         log(
             event: .paymentSheetLoadSucceeded,

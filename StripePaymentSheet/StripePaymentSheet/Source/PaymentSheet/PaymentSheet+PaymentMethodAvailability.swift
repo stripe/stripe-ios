@@ -57,28 +57,70 @@ extension PaymentSheet {
 
     /// Canonical source of truth for whether Link is enabled
     static func isLinkEnabled(elementsSession: STPElementsSession, configuration: PaymentElementConfiguration) -> Bool {
-        guard elementsSession.supportsLink, configuration.link.shouldDisplay else {
-            return false
+        return linkDisabledReasons(elementsSession: elementsSession, configuration: configuration).isEmpty
+    }
+
+    /// Canonical source of truth for reasons why Link is disabled
+    static func linkDisabledReasons(elementsSession: STPElementsSession, configuration: PaymentElementConfiguration) -> [LinkDisabledReason] {
+        var reasons = [LinkDisabledReason]()
+
+        if !elementsSession.supportsLink {
+            reasons.append(.notSupportedInElementsSession)
+        }
+
+        if !configuration.link.shouldDisplay {
+            reasons.append(.linkConfiguration)
         }
 
         // Disable Link web if the merchant is using card brand filtering
-        guard configuration.cardBrandAcceptance == .all || deviceCanUseNativeLink(elementsSession: elementsSession, configuration: configuration) else {
-           return false
+        if configuration.cardBrandAcceptance != .all && !deviceCanUseNativeLink(elementsSession: elementsSession, configuration: configuration) {
+            reasons.append(.cardBrandFiltering)
         }
 
-        guard elementsSession.isCompatible(with: configuration) else {
-            return false
+        if !elementsSession.isCompatibleWithBillingDetailsCollection(in: configuration) {
+            reasons.append(.billingDetailsCollection)
         }
 
-        return true
+        return reasons
     }
 
     static func isLinkSignupEnabled(elementsSession: STPElementsSession, configuration: PaymentElementConfiguration) -> Bool {
-        let enableSignup = isLinkEnabled(elementsSession: elementsSession, configuration: configuration) && !elementsSession.disableLinkSignup
-        // A non-nil account indicates that a consumer lookup has taken place, meaning that we have a customer email
-        // via the billing details or customer session.
-        let enableOptIn = elementsSession.linkSignupOptInFeatureEnabled && LinkAccountContext.shared.account != nil
-        return (enableSignup || enableOptIn) && elementsSession.supportsLinkCard
+        return linkSignupDisabledReasons(elementsSession: elementsSession, configuration: configuration).isEmpty
+    }
+
+    static func linkSignupDisabledReasons(elementsSession: STPElementsSession, configuration: PaymentElementConfiguration) -> [LinkSignupDisabledReason] {
+        var reasons = [LinkSignupDisabledReason]()
+
+        if !isLinkEnabled(elementsSession: elementsSession, configuration: configuration) {
+            reasons.append(.linkNotEnabled)
+        }
+
+        if !elementsSession.supportsLinkCard {
+            reasons.append(.linkCardNotSupported)
+        }
+
+        if elementsSession.disableLinkSignup && !elementsSession.linkSignupOptInFeatureEnabled {
+            reasons.append(.disabledInElementsSession)
+        }
+
+        if elementsSession.linkSignupOptInFeatureEnabled && LinkAccountContext.shared.account == nil {
+            reasons.append(.signupOptInFeatureNoEmailProvided)
+        }
+
+        // If attestation is enabled for this app but the specific device doesn't support attestation,
+        // don't show inline signup: It's unlikely to provide a good experience. We'll only allow the web popup flow.
+        let useAttestationEndpoints = elementsSession.linkSettings?.useAttestationEndpoints ?? false
+        if useAttestationEndpoints && !deviceCanUseNativeLink(elementsSession: elementsSession, configuration: configuration) {
+            reasons.append(.attestationIssues)
+        }
+
+        // In live mode, we only show signup if the customer hasn't used Link in the merchant app before.
+        // In test mode, we continue to show it to make testing easier.
+        if UserDefaults.standard.customerHasUsedLink && !configuration.apiClient.isTestmode {
+            reasons.append(.linkUsedBefore)
+        }
+
+        return reasons
     }
 
     /// An unordered list of paymentMethodTypes that can be used with Link in PaymentSheet
@@ -89,7 +131,7 @@ extension PaymentSheet {
 }
 
 private extension STPElementsSession {
-    func isCompatible(with configuration: PaymentElementConfiguration) -> Bool {
+    func isCompatibleWithBillingDetailsCollection(in configuration: PaymentElementConfiguration) -> Bool {
         // We can't collect billing details if we're in the web flow, so turn Link off for those cases.
         let nativeLink = deviceCanUseNativeLink(elementsSession: self, configuration: configuration)
         return nativeLink || !configuration.requiresBillingDetailCollection()
