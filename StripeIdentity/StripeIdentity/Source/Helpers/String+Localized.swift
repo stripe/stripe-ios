@@ -479,12 +479,6 @@ extension String.Localized {
         )
     }
 
-    static var backOfDriverLicenseOrPassport: String {
-        STPLocalizedString(
-            "Back of driver's license or passport",
-            "Back of driver's license or passport"
-        )
-    }
 
     static var frontOfDriverLicenseOrGovernmentId: String {
         STPLocalizedString(
@@ -507,12 +501,6 @@ extension String.Localized {
         )
     }
 
-    static var backOfPassportOrGovernmentId: String {
-        STPLocalizedString(
-            "Back of passport or government-issued photo ID",
-            "Back of passport or government-issued photo ID"
-        )
-    }
 
     static var frontOfAllIdTypes: String {
         STPLocalizedString(
@@ -521,12 +509,6 @@ extension String.Localized {
         )
     }
 
-    static var backOfAllIdTypes: String {
-        STPLocalizedString(
-            "Back of driver's license, passport, or government-issued photo ID",
-            "Back of driver's license, passport, or government-issued photo ID"
-        )
-    }
 
     // MARK: - Document Type Combinations for scanning instructions
     static var positionDriverLicenseOrPassport: String {

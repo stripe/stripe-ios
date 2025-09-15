@@ -22,17 +22,8 @@
 /* Back of driver's license or government-issued photo ID */
 "Back of driver's license or government-issued photo ID" = "Back of driver's license or government-issued photo ID";
 
-/* Back of driver's license or passport */
-"Back of driver's license or passport" = "Back of driver's license or passport";
-
-/* Back of driver's license, passport, or government-issued photo ID */
-"Back of driver's license, passport, or government-issued photo ID" = "Back of driver's license, passport, or government-issued photo ID";
-
 /* Title of ID document scanning screen when scanning the back of an identity card */
 "Back of identity document" = "Back of identity document";
-
-/* Back of passport or government-issued photo ID */
-"Back of passport or government-issued photo ID" = "Back of passport or government-issued photo ID";
 
 /* Error title displayed to the user when camera permissions have been denied
    Title displayed when requesting camera permissions */
