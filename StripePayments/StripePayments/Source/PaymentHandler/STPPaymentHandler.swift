@@ -1475,18 +1475,15 @@ public class STPPaymentHandler: NSObject {
         return resultingUrl
     }
 
-    /// Schedules delayed execution of a retry block if the polling budget allows.
-    /// Records the poll attempt and executes the block after the specified delay.
+    /// Schedules delayed execution of a retry block and records a poll attempt.
     /// - Parameters:
     ///   - delay: Time interval to wait before execution
     ///   - pollingBudget: Budget tracker for polling attempts
     ///   - block: Block to execute if budget allows
-    func pollAfterDelayIfBudgetAllows(delay: TimeInterval = 1, pollingBudget: PollingBudget, block: @escaping () -> Void) {
+    func pollAfterDelay(delay: TimeInterval = 1, pollingBudget: PollingBudget, block: @escaping () -> Void) {
         DispatchQueue.main.asyncAfter(deadline: .now() + delay) {
-            if pollingBudget.canPoll {
-                pollingBudget.recordPollAttempt()
-                block()
-            }
+            pollingBudget.recordPollAttempt()
+            block()
         }
     }
 
@@ -1552,7 +1549,7 @@ public class STPPaymentHandler: NSObject {
                             pollingBudget?.canPoll ?? true
                         {
                             let processingPollingBudget = pollingBudget ?? PollingBudget(startDate: startDate, duration: 1)
-                            self.pollAfterDelayIfBudgetAllows(pollingBudget: processingPollingBudget) {
+                            self.pollAfterDelay(pollingBudget: processingPollingBudget) {
                                 self._retrieveAndCheckIntentForCurrentAction(
                                     pollingBudget: processingPollingBudget
                                 )
@@ -1590,7 +1587,7 @@ public class STPPaymentHandler: NSObject {
                                     // Also retry a few times for app redirects, the redirect flow is fast and sometimes the intent doesn't update quick enough
                                     let shouldRetryForCard = paymentMethodType == .card && paymentIntent.nextAction?.type == .useStripeSDK
                                     if paymentMethodType != .card || shouldRetryForCard, let pollingBudget = pollingBudget ?? .init(startDate: startDate, paymentMethodType: paymentMethodType), pollingBudget.canPoll {
-                                        pollAfterDelayIfBudgetAllows(pollingBudget: pollingBudget) {
+                                        pollAfterDelay(pollingBudget: pollingBudget) {
                                             self._retrieveAndCheckIntentForCurrentAction(
                                                 pollingBudget: pollingBudget
                                             )
@@ -1629,7 +1626,7 @@ public class STPPaymentHandler: NSObject {
                    pollingBudget?.canPoll ?? true
                 {
                     let processingPollingBudget = pollingBudget ?? PollingBudget(startDate: startDate, duration: 1)
-                    self.pollAfterDelayIfBudgetAllows(pollingBudget: processingPollingBudget) {
+                    self.pollAfterDelay(pollingBudget: processingPollingBudget) {
                         self._retrieveAndCheckIntentForCurrentAction(pollingBudget: processingPollingBudget)
                     }
                 } else {
@@ -1656,7 +1653,7 @@ public class STPPaymentHandler: NSObject {
                             // Also retry a few times for Cash App, the redirect flow is fast and sometimes the intent doesn't update quick enough
                             let shouldRetryForCard = paymentMethod.type == .card && setupIntent.nextAction?.type == .useStripeSDK
                             if paymentMethod.type != .card || shouldRetryForCard, let pollingBudget = pollingBudget ?? .init(startDate: startDate, paymentMethodType: paymentMethod.type), pollingBudget.canPoll {
-                                self.pollAfterDelayIfBudgetAllows(pollingBudget: pollingBudget) {
+                                self.pollAfterDelay(pollingBudget: pollingBudget) {
                                     self._retrieveAndCheckIntentForCurrentAction(
                                         pollingBudget: pollingBudget
                                     )
@@ -2143,7 +2140,7 @@ public class STPPaymentHandler: NSObject {
                 let challengePollingBudget = pollingBudget ?? PollingBudget(startDate: startDate, duration: 15)
                 if (error as NSError?)?.code == STPErrorCode.invalidRequestError.rawValue && challengePollingBudget.canPoll
                 {
-                    self.pollAfterDelayIfBudgetAllows(pollingBudget: challengePollingBudget) {
+                    self.pollAfterDelay(pollingBudget: challengePollingBudget) {
                         self._markChallengeCompleted(
                             withCompletion: completion,
                             pollingBudget: challengePollingBudget
