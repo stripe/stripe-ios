@@ -307,12 +307,17 @@ public extension PaymentSheet {
 }
 
 public extension PaymentSheet.Appearance {
-    /// Calling this function sets various properties (e.g. navigationBarStyle, borderWidth) to match iOS26 Liquid Glass
+    /// Calling this function sets various properties (e.g. navigationBarStyle, borderWidth) to match iOS 26 Liquid Glass.
     /// - Note: This feature is in public preview while we gather feedback and is subject to change. Please use https://github.com/stripe/stripe-ios/issues to file feedback!
     @available(iOS 26.0, *)
     @available(visionOS, unavailable)
     @_spi(STP) mutating func applyLiquidGlass() {
-        assert(LiquidGlassDetector.isEnabledInMerchantApp, "Requirements for this function are using at least Xcode26 and not be opted out using UIDesignRequiresCompatibility.")
+#if compiler(<6.2)
+        assertionFailure("applyLiquidGlass() requires Xcode 26.")
+#endif
+        if let optOutFlag = Bundle.main.infoDictionary?["UIDesignRequiresCompatibility"] as? Bool, optOutFlag {
+            assertionFailure("applyLiquidGlass() requires UIDesignRequiresCompatibility = NO")
+        }
         borderWidth = 0.0
         verticalModeRowPadding = 16.0
         sheetCornerRadius = 34.0
