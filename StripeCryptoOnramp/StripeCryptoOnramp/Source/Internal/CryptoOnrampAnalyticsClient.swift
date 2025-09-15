@@ -12,6 +12,14 @@ final class CryptoOnrampAnalyticsClient {
     private let analyticsClient: AnalyticsClientV2Protocol
     private var additionalParameters: [String: Any] = [:]
 
+    var elementsSessionId: String? {
+        didSet {
+            if let elementsSessionId {
+                additionalParameters["session_id"] = elementsSessionId
+            }
+        }
+    }
+
     init(
         analyticsClient: AnalyticsClientV2Protocol = AnalyticsClientV2(
             clientId: "mobile-onramp-sdk",
@@ -23,7 +31,7 @@ final class CryptoOnrampAnalyticsClient {
         if AnalyticsHelper.shared.sessionID == nil {
             AnalyticsHelper.shared.generateSessionID()
         }
-        additionalParameters["session_id"] = AnalyticsHelper.shared.sessionID ?? "N/a"
+        additionalParameters["analytics_session_id"] = AnalyticsHelper.shared.sessionID ?? "N/a"
     }
 
     func log(_ event: CryptoOnrampAnalyticsEvent) {

@@ -209,6 +209,7 @@ public final class CryptoOnrampCoordinator: NSObject, CryptoOnrampCoordinatorPro
                 analyticsClient: analyticsClient
             )
 
+            analyticsClient.elementsSessionId = await linkController.elementsSessionID
             analyticsClient.log(.sessionCreated)
             return coordinator
         } catch {
