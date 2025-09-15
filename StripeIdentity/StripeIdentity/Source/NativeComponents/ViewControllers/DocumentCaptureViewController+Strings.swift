@@ -31,17 +31,17 @@ extension DocumentCaptureViewController {
         // Handle specific combinations for scanning instructions
         if localizedTypes.count == 2 {
             if localizedTypes.contains(String.Localized.driverLicense) && localizedTypes.contains(String.Localized.passport) {
-                return side == .front ? String.Localized.positionDriverLicenseOrPassport : String.Localized.flipDriverLicenseOrPassport
+                return side == .front ? String.Localized.positionDriverLicenseOrPassport : String(format: String.Localized.flip_to_other_side, String.Localized.driverLicense)
             } else if localizedTypes.contains(String.Localized.driverLicense) && localizedTypes.contains(String.Localized.governmentIssuedId) {
                 return side == .front ? String.Localized.positionDriverLicenseOrGovernmentId : String.Localized.flipDriverLicenseOrGovernmentId
             } else if localizedTypes.contains(String.Localized.passport) && localizedTypes.contains(String.Localized.governmentIssuedId) {
-                return side == .front ? String.Localized.positionPassportOrGovernmentId : String.Localized.flipPassportOrGovernmentId
+                return side == .front ? String.Localized.positionPassportOrGovernmentId : String(format: String.Localized.flip_to_other_side, String.Localized.governmentIssuedId)
             } else {
                 return fallback()
             }
         } else if localizedTypes.count == 3 {
             // Handle all three types for scanning instructions
-            return side == .front ? String.Localized.positionAllIdTypes : String.Localized.flipAllIdTypes
+            return side == .front ? String.Localized.positionAllIdTypes : String.Localized.flipDriverLicenseOrGovernmentId
         } else if localizedTypes.count == 1, let type = localizedTypes.first {
             // Handle single type
             switch side {
