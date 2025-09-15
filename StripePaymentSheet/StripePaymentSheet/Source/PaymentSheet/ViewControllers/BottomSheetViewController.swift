@@ -396,26 +396,28 @@ class BottomSheetViewController: UIViewController, BottomSheetPresentable {
     }
     #if compiler(>=6.2)
     func enableNavigationBarBlurInteraction() {
-        guard #available(iOS 26.0, *),
-              navigationBarContainerView.interactions.first(where: { $0 is UIScrollEdgeElementContainerInteraction }) == nil else {
+        guard let navigationBarBlur,
+            navigationBarBlur.view == nil,
+        // Hack: This line causes PaymentSheetSnapshotTests to fail on iOS 26 - the sheet becomes transparent. I can't figure out a fix, so just remove it out for tests.
+        NSClassFromString("XCTest") == nil else {
             return
         }
-        if let navigationBarBlur {
-            // Hack: This line causes PaymentSheetSnapshotTests to fail on iOS 26 - the sheet becomes transparent. I can't figure out a fix, so just remove it out for tests.
-            if NSClassFromString("XCTest") == nil {
-                navigationBarContainerView.addInteraction(navigationBarBlur)
-            }
-        }
+        navigationBarContainerView.addInteraction(navigationBarBlur)
     }
     func disableNavigationBarBlurInteraction() {
-        guard #available(iOS 26.0, *),
-              let interaction = navigationBarContainerView.interactions.first(where: { $0 is UIScrollEdgeElementContainerInteraction }) else {
+        guard let navigationBarBlur else {
             return
         }
-        navigationBarContainerView.removeInteraction(interaction)
+        navigationBarContainerView.removeInteraction(navigationBarBlur)
+    }
+
+    // Workaround: Remove blur in `preAnimateHeightChange`, prior to swapping out content. Otherwise, the blur effect
+    // animates away over new content that is most likely different. In `postLayoutAnimations`, decide
+    // whether or not new content is scrollable.  If so, add the blur back, otherwise, keep it removed.
+    func preAnimateHeightChange() {
+        self.disableNavigationBarBlurInteraction()
     }
     func postLayoutAnimations(containerView: UIView, toView: UIView) {
-        // Only add blur effect when content size exceeds size of the frame.
         if self.scrollView.contentSize.height > self.scrollView.frame.size.height {
             self.enableNavigationBarBlurInteraction()
         } else {
