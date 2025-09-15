@@ -37,115 +37,115 @@ class STPMandateOnlineParamsTest: XCTestCase {
         ]
         XCTAssertEqual(paramsAsDict as NSDictionary, expected as NSDictionary)
     }
-    
+
     // MARK: - Decoding Tests
-    
+
     func testDecodingValidOnlineParams() {
         let json = [
             "ip_address": "127.0.0.1",
-            "user_agent": "Mozilla/5.0"
+            "user_agent": "Mozilla/5.0",
         ] as [String: Any]
-        
+
         let onlineParams = STPMandateOnlineParams.decodedObject(fromAPIResponse: json)
-        
+
         XCTAssertNotNil(onlineParams)
         XCTAssertEqual(onlineParams?.ipAddress, "127.0.0.1")
         XCTAssertEqual(onlineParams?.userAgent, "Mozilla/5.0")
     }
-    
+
     func testDecodingMissingIPAddress() {
         let json = [
             "user_agent": "Mozilla/5.0"
         ] as [String: Any]
-        
+
         let onlineParams = STPMandateOnlineParams.decodedObject(fromAPIResponse: json)
-        
+
         // Should still create the object with empty string for missing IP address
         XCTAssertNotNil(onlineParams)
         XCTAssertEqual(onlineParams?.ipAddress, "")
         XCTAssertEqual(onlineParams?.userAgent, "Mozilla/5.0")
     }
-    
+
     func testDecodingMissingUserAgent() {
         let json = [
             "ip_address": "127.0.0.1"
         ] as [String: Any]
-        
+
         let onlineParams = STPMandateOnlineParams.decodedObject(fromAPIResponse: json)
-        
+
         // Should still create the object with empty string for missing user agent
         XCTAssertNotNil(onlineParams)
         XCTAssertEqual(onlineParams?.ipAddress, "127.0.0.1")
         XCTAssertEqual(onlineParams?.userAgent, "")
     }
-    
+
     func testDecodingNullIPAddress() {
         let json = [
             "ip_address": NSNull(),
-            "user_agent": "Mozilla/5.0"
+            "user_agent": "Mozilla/5.0",
         ] as [String: Any]
-        
+
         let onlineParams = STPMandateOnlineParams.decodedObject(fromAPIResponse: json)
-        
+
         // Should create the object with empty string for null IP address
         XCTAssertNotNil(onlineParams)
         XCTAssertEqual(onlineParams?.ipAddress, "")
         XCTAssertEqual(onlineParams?.userAgent, "Mozilla/5.0")
     }
-    
+
     func testDecodingNullUserAgent() {
         let json = [
             "ip_address": "127.0.0.1",
-            "user_agent": NSNull()
+            "user_agent": NSNull(),
         ] as [String: Any]
-        
+
         let onlineParams = STPMandateOnlineParams.decodedObject(fromAPIResponse: json)
-        
+
         // Should create the object with empty string for null user agent
         XCTAssertNotNil(onlineParams)
         XCTAssertEqual(onlineParams?.ipAddress, "127.0.0.1")
         XCTAssertEqual(onlineParams?.userAgent, "")
     }
-    
+
     func testDecodingEmptyResponse() {
         let json = [:] as [String: Any]
-        
+
         let onlineParams = STPMandateOnlineParams.decodedObject(fromAPIResponse: json)
-        
+
         // Should create the object with empty strings for all missing fields
         XCTAssertNotNil(onlineParams)
         XCTAssertEqual(onlineParams?.ipAddress, "")
         XCTAssertEqual(onlineParams?.userAgent, "")
     }
-    
+
     func testDecodingNilResponse() {
         let onlineParams = STPMandateOnlineParams.decodedObject(fromAPIResponse: nil)
         XCTAssertNil(onlineParams, "decodedObject should return nil for nil response")
     }
-    
+
     func testDecodingInvalidDataTypes() {
         let json = [
             "ip_address": 12345,  // Wrong type
-            "user_agent": true     // Wrong type
+            "user_agent": true,     // Wrong type
         ] as [String: Any]
-        
+
         let onlineParams = STPMandateOnlineParams.decodedObject(fromAPIResponse: json)
-        
+
         // Should create the object with empty strings for invalid data types
         XCTAssertNotNil(onlineParams)
         XCTAssertEqual(onlineParams?.ipAddress, "")
         XCTAssertEqual(onlineParams?.userAgent, "")
     }
-    
+
     func testAllResponseFieldsPreserved() {
         let json = [
             "ip_address": "127.0.0.1",
             "user_agent": "Mozilla/5.0",
-            "custom_field": "custom_value"
+            "custom_field": "custom_value",
         ] as [String: Any]
-        
+
         let onlineParams = STPMandateOnlineParams.decodedObject(fromAPIResponse: json)
-        
+
         XCTAssertNotNil(onlineParams)
         XCTAssertNotNil(onlineParams?.allResponseFields)
         XCTAssertEqual(onlineParams?.allResponseFields["ip_address"] as? String, "127.0.0.1")

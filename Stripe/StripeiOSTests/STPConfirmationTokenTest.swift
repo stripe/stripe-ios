@@ -10,7 +10,7 @@
 import XCTest
 
 class STPConfirmationTokenTest: XCTestCase {
-    
+
     func testConfirmationTokenParsing() {
         let json = [
             "id": "ctoken_1NnQUf2eZvKYlo2CIObdtbnb",
@@ -62,7 +62,7 @@ class STPConfirmationTokenTest: XCTestCase {
         XCTAssertNil(confirmationToken?.returnURL)
         XCTAssertNil(confirmationToken?.setupFutureUsage)
     }
-    
+
     func testConfirmationTokenWithPaymentMethodPreview() {
         let json = [
             "id": "ctoken_1NnQUf2eZvKYlo2CIObdtbnb",
@@ -73,18 +73,18 @@ class STPConfirmationTokenTest: XCTestCase {
                 "type": "card",
                 "billing_details": [
                     "name": "John Doe",
-                    "email": "john@example.com"
+                    "email": "john@example.com",
                 ],
                 "allow_redisplay": "always",
-                "customer": "cus_1234567890"
-            ]
+                "customer": "cus_1234567890",
+            ],
         ] as [String: Any]
 
         let confirmationToken = STPConfirmationToken.decodedObject(fromAPIResponse: json)
 
         XCTAssertNotNil(confirmationToken)
         XCTAssertEqual(confirmationToken?.stripeId, "ctoken_1NnQUf2eZvKYlo2CIObdtbnb")
-        
+
         let paymentMethodPreview = confirmationToken?.paymentMethodPreview
         XCTAssertNotNil(paymentMethodPreview)
         XCTAssertEqual(paymentMethodPreview?.type, .card)
@@ -93,11 +93,11 @@ class STPConfirmationTokenTest: XCTestCase {
         XCTAssertEqual(paymentMethodPreview?.allowRedisplay, .always)
         XCTAssertEqual(paymentMethodPreview?.customerId, "cus_1234567890")
     }
-    
+
     func testConfirmationTokenWithShippingDetails() {
         let json = [
             "id": "ctoken_1NnQUf2eZvKYlo2CIObdtbnb",
-            "object": "confirmation_token", 
+            "object": "confirmation_token",
             "created": 1694025025,
             "livemode": false,
             "shipping": [
@@ -107,16 +107,16 @@ class STPConfirmationTokenTest: XCTestCase {
                     "city": "San Francisco",
                     "state": "CA",
                     "postal_code": "94111",
-                    "country": "US"
-                ]
-            ]
+                    "country": "US",
+                ],
+            ],
         ] as [String: Any]
 
         let confirmationToken = STPConfirmationToken.decodedObject(fromAPIResponse: json)
 
         XCTAssertNotNil(confirmationToken)
         XCTAssertEqual(confirmationToken?.stripeId, "ctoken_1NnQUf2eZvKYlo2CIObdtbnb")
-        
+
         let shipping = confirmationToken?.shipping
         XCTAssertNotNil(shipping)
         XCTAssertEqual(shipping?.name, "John Doe")
@@ -126,20 +126,20 @@ class STPConfirmationTokenTest: XCTestCase {
         XCTAssertEqual(shipping?.address?.postalCode, "94111")
         XCTAssertEqual(shipping?.address?.country, "US")
     }
-    
+
     // MARK: - Required Field Validation Tests
-    
+
     func testConfirmationTokenRequiresId() {
         let jsonWithoutId = [
             "object": "confirmation_token",
             "created": 1694025025,
             "livemode": false,
         ] as [String: Any]
-        
+
         let confirmationToken = STPConfirmationToken.decodedObject(fromAPIResponse: jsonWithoutId)
         XCTAssertNil(confirmationToken, "decodedObject should return nil when 'id' field is missing")
     }
-    
+
     func testConfirmationTokenRequiresIdNotNull() {
         let jsonWithNullId = [
             "id": NSNull(),
@@ -147,11 +147,11 @@ class STPConfirmationTokenTest: XCTestCase {
             "created": 1694025025,
             "livemode": false,
         ] as [String: Any]
-        
+
         let confirmationToken = STPConfirmationToken.decodedObject(fromAPIResponse: jsonWithNullId)
         XCTAssertNil(confirmationToken, "decodedObject should return nil when 'id' field is null")
     }
-    
+
     func testConfirmationTokenRequiresIdNotEmpty() {
         let jsonWithEmptyId = [
             "id": "",
@@ -159,22 +159,22 @@ class STPConfirmationTokenTest: XCTestCase {
             "created": 1694025025,
             "livemode": false,
         ] as [String: Any]
-        
+
         let confirmationToken = STPConfirmationToken.decodedObject(fromAPIResponse: jsonWithEmptyId)
         XCTAssertNil(confirmationToken, "decodedObject should return nil when 'id' field is empty string")
     }
-    
+
     func testConfirmationTokenRequiresCreated() {
         let jsonWithoutCreated = [
             "id": "ctoken_1NnQUf2eZvKYlo2CIObdtbnb",
             "object": "confirmation_token",
             "livemode": false,
         ] as [String: Any]
-        
+
         let confirmationToken = STPConfirmationToken.decodedObject(fromAPIResponse: jsonWithoutCreated)
         XCTAssertNil(confirmationToken, "decodedObject should return nil when 'created' field is missing")
     }
-    
+
     func testConfirmationTokenRequiresCreatedNotNull() {
         let jsonWithNullCreated = [
             "id": "ctoken_1NnQUf2eZvKYlo2CIObdtbnb",
@@ -182,19 +182,19 @@ class STPConfirmationTokenTest: XCTestCase {
             "created": NSNull(),
             "livemode": false,
         ] as [String: Any]
-        
+
         let confirmationToken = STPConfirmationToken.decodedObject(fromAPIResponse: jsonWithNullCreated)
         XCTAssertNil(confirmationToken, "decodedObject should return nil when 'created' field is null")
     }
-    
+
     // MARK: - New Initializer Tests
-    
+
     func testConfirmationTokenInitializer() {
         let stripeId = "ctoken_1NnQUf2eZvKYlo2CIObdtbnb"
         let createdDate = Date(timeIntervalSince1970: 1694025025)
-        
+
         let confirmationToken = STPConfirmationToken(stripeId: stripeId, created: createdDate)
-        
+
         XCTAssertEqual(confirmationToken.stripeId, stripeId)
         XCTAssertEqual(confirmationToken.created, createdDate)
         XCTAssertFalse(confirmationToken.liveMode)
@@ -204,9 +204,9 @@ class STPConfirmationTokenTest: XCTestCase {
         XCTAssertNil(confirmationToken.returnURL)
         XCTAssertNil(confirmationToken.setupFutureUsage)
     }
-    
+
     // MARK: - Comprehensive Field Tests
-    
+
     func testConfirmationTokenWithMandateData() {
         let json = [
             "id": "ctoken_1NnQUf2eZvKYlo2CIObdtbnb",
@@ -218,24 +218,24 @@ class STPConfirmationTokenTest: XCTestCase {
                     "type": "online",
                     "online": [
                         "ip_address": "127.0.0.1",
-                        "user_agent": "Mozilla/5.0"
-                    ]
-                ]
-            ]
+                        "user_agent": "Mozilla/5.0",
+                    ],
+                ],
+            ],
         ] as [String: Any]
 
         let confirmationToken = STPConfirmationToken.decodedObject(fromAPIResponse: json)
 
         XCTAssertNotNil(confirmationToken)
         XCTAssertEqual(confirmationToken?.stripeId, "ctoken_1NnQUf2eZvKYlo2CIObdtbnb")
-        
+
         let mandateData = confirmationToken?.mandateData
         XCTAssertNotNil(mandateData)
         XCTAssertEqual(mandateData?.customerAcceptance.type, .online)
         XCTAssertEqual(mandateData?.customerAcceptance.onlineParams?.ipAddress, "127.0.0.1")
         XCTAssertEqual(mandateData?.customerAcceptance.onlineParams?.userAgent, "Mozilla/5.0")
     }
-    
+
     func testConfirmationTokenWithAllFields() {
         let json = [
             "id": "ctoken_1NnQUf2eZvKYlo2CIObdtbnb",
@@ -251,10 +251,10 @@ class STPConfirmationTokenTest: XCTestCase {
                 "type": "card",
                 "billing_details": [
                     "name": "John Doe",
-                    "email": "john@example.com"
+                    "email": "john@example.com",
                 ],
                 "allow_redisplay": "always",
-                "customer": "cus_1234567890"
+                "customer": "cus_1234567890",
             ],
             "shipping": [
                 "name": "John Doe",
@@ -265,9 +265,9 @@ class STPConfirmationTokenTest: XCTestCase {
                     "city": "San Francisco",
                     "state": "CA",
                     "postal_code": "94111",
-                    "country": "US"
-                ]
-            ]
+                    "country": "US",
+                ],
+            ],
         ] as [String: Any]
 
         let confirmationToken = STPConfirmationToken.decodedObject(fromAPIResponse: json)
@@ -281,7 +281,7 @@ class STPConfirmationTokenTest: XCTestCase {
         XCTAssertEqual(confirmationToken?.setupIntentId, "seti_1234567890")
         XCTAssertEqual(confirmationToken?.returnURL, "https://example.com/return")
         XCTAssertEqual(confirmationToken?.setupFutureUsage, .offSession)
-        
+
         // Test payment method preview
         let paymentMethodPreview = confirmationToken?.paymentMethodPreview
         XCTAssertNotNil(paymentMethodPreview)
@@ -290,7 +290,7 @@ class STPConfirmationTokenTest: XCTestCase {
         XCTAssertEqual(paymentMethodPreview?.billingDetails?.email, "john@example.com")
         XCTAssertEqual(paymentMethodPreview?.allowRedisplay, .always)
         XCTAssertEqual(paymentMethodPreview?.customerId, "cus_1234567890")
-        
+
         // Test shipping details
         let shipping = confirmationToken?.shipping
         XCTAssertNotNil(shipping)
@@ -303,9 +303,9 @@ class STPConfirmationTokenTest: XCTestCase {
         XCTAssertEqual(shipping?.address?.postalCode, "94111")
         XCTAssertEqual(shipping?.address?.country, "US")
     }
-    
+
     // MARK: - Edge Cases and Error Handling Tests
-    
+
     func testConfirmationTokenWithMalformedMandateData() {
         let json = [
             "id": "ctoken_1NnQUf2eZvKYlo2CIObdtbnb",
@@ -315,15 +315,15 @@ class STPConfirmationTokenTest: XCTestCase {
             "mandate_data": [
                 // Missing customer_acceptance should cause mandate_data to be nil
                 "other_field": "value"
-            ]
+            ],
         ] as [String: Any]
-        
+
         let confirmationToken = STPConfirmationToken.decodedObject(fromAPIResponse: json)
-        
+
         XCTAssertNotNil(confirmationToken)
         XCTAssertNil(confirmationToken?.mandateData, "mandateData should be nil when customer_acceptance is missing")
     }
-    
+
     func testConfirmationTokenAllResponseFieldsPreserved() {
         let json = [
             "id": "ctoken_1NnQUf2eZvKYlo2CIObdtbnb",
@@ -333,24 +333,24 @@ class STPConfirmationTokenTest: XCTestCase {
             "custom_field": "custom_value",
             "nested_custom": [
                 "inner": "value"
-            ]
+            ],
         ] as [String: Any]
-        
+
         let confirmationToken = STPConfirmationToken.decodedObject(fromAPIResponse: json)
-        
+
         XCTAssertNotNil(confirmationToken)
         XCTAssertNotNil(confirmationToken?.allResponseFields)
         XCTAssertEqual(confirmationToken?.allResponseFields["custom_field"] as? String, "custom_value")
         XCTAssertNotNil(confirmationToken?.allResponseFields["nested_custom"])
     }
-    
+
     func testConfirmationTokenEmptyResponse() {
         let emptyJson = [:] as [String: Any]
-        
+
         let confirmationToken = STPConfirmationToken.decodedObject(fromAPIResponse: emptyJson)
         XCTAssertNil(confirmationToken, "decodedObject should return nil for empty response")
     }
-    
+
     func testConfirmationTokenNilResponse() {
         let confirmationToken = STPConfirmationToken.decodedObject(fromAPIResponse: nil)
         XCTAssertNil(confirmationToken, "decodedObject should return nil for nil response")
