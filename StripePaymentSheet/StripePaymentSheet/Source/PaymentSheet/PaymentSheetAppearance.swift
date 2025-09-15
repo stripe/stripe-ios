@@ -30,7 +30,12 @@ public extension PaymentSheet {
 
         /// The corner radius used for buttons, inputs, tabs in PaymentSheet
         /// - Note: The behavior of this property is consistent with the behavior of corner radius on `CALayer`
-        public var cornerRadius: CGFloat = 6.0
+        /// - Note: When `nil`, the behavior depends:
+        ///     - iOS 26+ and `UIDesignRequiresCompatibility = NO`: Various `UICornerConfiguration` values are used to match Liquid Glass design.
+        ///     - Pre-iOS 26: A 6.0 corner radius is applied.
+        ///
+        /// The default value is 6.0
+        public var cornerRadius: CGFloat? = 6.0
 
         /// The border used for inputs and tabs in PaymentSheet
         /// - Note: The thickness of divider lines between input fields also uses `borderWidth` for consistency, with a minimum thickness of 0.5.
@@ -327,9 +332,7 @@ public extension PaymentSheet.Appearance {
         shadow = .disabled
         formInsets = .insets(leading: 16, bottom: 40, trailing: 16)
         navigationBarStyle = .glass
-
-        // Enable feature gate while still under development
-        LiquidGlassDetector.allowNewDesign = true
+        cornerRadius = nil
     }
 }
 
@@ -457,27 +460,5 @@ public extension PaymentSheet.Appearance {
         case filled
         /// Display icons with an outlined appearance
         case outlined
-    }
-}
-
-extension PaymentSheet.Appearance {
-    var topFormInsets: NSDirectionalEdgeInsets {
-        return .insets(top: formInsets.top, leading: formInsets.leading, trailing: formInsets.trailing)
-    }
-}
-
-extension PaymentSheet.Appearance.NavigationBarStyle {
-    var isGlass: Bool {
-        #if !os(visionOS)
-        guard #available(iOS 26.0, *) else {
-            return false
-        }
-        return self == .glass
-        #else
-        return false
-        #endif
-    }
-    var isPlain: Bool {
-        return self == .plain
     }
 }

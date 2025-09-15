@@ -82,7 +82,7 @@ struct AppearancePlaygroundView: View {
         )
 
         let cornerRadiusBinding = Binding(
-            get: { self.appearance.cornerRadius },
+            get: { self.appearance.cornerRadius ?? -1 },
             set: { self.appearance.cornerRadius = $0 }
         )
 
@@ -227,7 +227,7 @@ struct AppearancePlaygroundView: View {
         )
 
         let primaryButtonCornerRadiusBinding = Binding(
-            get: { self.appearance.primaryButton.cornerRadius ?? appearance.cornerRadius },
+            get: { self.appearance.primaryButton.cornerRadius ?? appearance.cornerRadius ?? -1 },
             set: { self.appearance.primaryButton.cornerRadius = $0 }
         )
 
@@ -311,7 +311,7 @@ struct AppearancePlaygroundView: View {
                 }
 
                 Section(header: Text("Miscellaneous")) {
-                    Stepper(String(format: "cornerRadius: %.1f", appearance.cornerRadius), value: cornerRadiusBinding, in: 0...30)
+                    Stepper(String(format: "cornerRadius: %.1f", appearance.cornerRadius ?? -1), value: cornerRadiusBinding, in: -1...30)
                     Stepper(String(format: "sheetCornerRadius: %.1f", appearance.sheetCornerRadius), value: sheetCornerRadiusBinding, in: 0...30)
                     Stepper(String(format: "borderWidth: %.1f", appearance.borderWidth), value: borderWidthBinding, in: 0.0...2.0, step: 0.5)
                     Stepper(String(format: "selectedBorderWidth: %.1f", appearance.selectedBorderWidth ?? appearance.borderWidth * 1.5), value: selectedBorderWidthBinding, in: 0.0...2.0, step: 0.5)
@@ -400,11 +400,11 @@ struct AppearancePlaygroundView: View {
                         ColorPicker("textColor", selection: primaryButtonTextColorBinding)
                         ColorPicker("borderColor", selection: primaryButtonBorderColorBinding)
                         Stepper("borderWidth: \(Int(appearance.primaryButton.borderWidth))", value: primaryButtonCornerBorderWidth, in: 0...30)
-                        Stepper("cornerRadius: \(Int(appearance.primaryButton.cornerRadius ?? appearance.cornerRadius))",
-                                value: primaryButtonCornerRadiusBinding, in: 0...30)
+                        Stepper("cornerRadius: \(Int(appearance.primaryButton.cornerRadius ?? appearance.cornerRadius ?? -1))",
+                                value: primaryButtonCornerRadiusBinding, in: -1...30)
                         Picker("Font", selection: primaryButtonFontBinding) {
                             ForEach(regularFonts, id: \.self) {
-                                Text($0).font(Font(UIFont(name: $0, size: UIFont.labelFontSize)! as CTFont))
+                                Text($0).font(Font(UIFont(name: $0, size: UIFont.labelFontSize)! as CTFont)).tag($0)
                             }
                         }
                         VStack {

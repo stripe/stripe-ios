@@ -9,8 +9,6 @@ import Foundation
 @_spi(STP) import StripeCore
 import UIKit
 
-// Our SDK runs inside a user's app, we can't explicitly opt into or out of the new "Liquid Glass" design.
-// Instead, we'll do our best to detect which design to use, and adjust the default UI spacing and icons accordingly.
 @_spi(STP) public class LiquidGlassDetector {
     /// A feature flag during development of iOS 26 features, only `true` for testing.
     @_spi(STP) public static var allowNewDesign: Bool = {
@@ -42,7 +40,7 @@ import UIKit
 }
 
 // MARK: - UIView Liquid Glass helpers
-@_spi(STP) extension UIView {
+extension UIView {
     @_spi(STP) public func ios26_applyCapsuleCornerConfiguration() {
         stpAssert(LiquidGlassDetector.isEnabled)
 #if compiler(>=6.2)
@@ -60,10 +58,23 @@ import UIKit
         }
 #endif
     }
+
+    /// Convenience method that returns whether or not `cornerConfiguration` was set.
+    /// You'd think this would be nil, but it's not nullable!
+    @_spi(STP) public var didSetCornerConfiguration: Bool {
+        if #available(iOS 26.0, *) {
+            return UIView.plainUIView.cornerConfiguration != cornerConfiguration
+        } else {
+            return false
+        }
+    }
+
+    /// Just exists to avoid creating one every time in `didSetCornerConfiguration`
+    static var plainUIView = UIView()
 }
 
 // MARK: - Button Liquid Glass helpers
-@_spi(STP) extension UIButton {
+extension UIButton {
     @_spi(STP) public func ios26_applyGlassConfiguration() {
         assert(LiquidGlassDetector.isEnabledInMerchantApp)
         // These checks are a convenience because .glass is only available on iOS (not visionOS)
@@ -75,5 +86,32 @@ import UIKit
         }
         #endif
 #endif
+    }
+}
+// MARK: - UIView helpers
+extension UIView {
+    @_spi(STP) public enum CornerStyle {
+        case capsule
+        case uniform
+    }
+
+    /// A convenience method that looks at `appearance.cornerRadius` and applies it or, if `nil`, handles what the default value should be.
+    @_spi(STP) public func applyCornerRadius(appearance: ElementsAppearance, ios26DefaultCornerStyle: CornerStyle = .uniform) {
+        // If corner radius was set, just use that
+        if let cornerRadius = appearance.cornerRadius {
+            layer.cornerRadius = cornerRadius
+            return
+        }
+        // Otherwise, use the default value, which depends if we're iOS 26+ or not
+        if LiquidGlassDetector.isEnabledInMerchantApp {
+            switch ios26DefaultCornerStyle {
+            case .capsule:
+                ios26_applyCapsuleCornerConfiguration()
+            case .uniform:
+                ios26_applyDefaultCornerConfiguration()
+            }
+        } else {
+            layer.cornerRadius = ElementsUI.defaultCornerRadius
+        }
     }
 }

@@ -43,6 +43,7 @@ class LiquidGlassRectangle: UIView, SelectableRectangle {
             roundedRectangle.backgroundColor = appearance.colors.componentBackground.disabledColor
         }
 
+        // TODO(iOS 26): Remove this class.
         if isCapsule {
             roundedRectangle.ios26_applyCapsuleCornerConfiguration()
         } else {
