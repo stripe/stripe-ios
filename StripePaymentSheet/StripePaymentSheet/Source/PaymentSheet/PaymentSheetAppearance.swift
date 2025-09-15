@@ -320,6 +320,7 @@ public extension PaymentSheet.Appearance {
         colors.background = UIColor.dynamic(light: UIColor(hex: 0xF2F2F7),
                                             dark: UIColor(hex: 0x1C1C1E))
         shadow = .disabled
+        formInsets = PaymentSheetUI.liquidGlassSheetMargins
         navigationBarStyle = .glass
 
         // Enable feature gate while still under development
