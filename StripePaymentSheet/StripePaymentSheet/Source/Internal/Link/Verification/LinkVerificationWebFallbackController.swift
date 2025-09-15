@@ -8,28 +8,24 @@
 import AuthenticationServices
 import UIKit
 
-@_spi(STP) import StripeCore
-@_spi(STP) import StripeUICore
-
 final class LinkVerificationWebFallbackController: NSObject {
     private static let callbackURLSchme = "link-popup"
 
     typealias CompletionBlock = (LinkVerificationViewController.VerificationResult) -> Void
 
     private let authenticationUrl: URL
+    private let window: UIWindow?
     private var authenticationSession: ASWebAuthenticationSession?
     private var completion: CompletionBlock?
     private var selfRetainer: LinkVerificationWebFallbackController?
 
-    init(authenticationUrl: URL) {
+    init(authenticationUrl: URL, presentingWindow: UIWindow?) {
         self.authenticationUrl = authenticationUrl
+        self.window = presentingWindow
         super.init()
     }
 
-    func present(
-        from presentingController: UIViewController,
-        completion: @escaping CompletionBlock
-    ) {
+    func present(completion: @escaping CompletionBlock) {
         self.completion = completion
         self.selfRetainer = self
 
@@ -84,9 +80,6 @@ final class LinkVerificationWebFallbackController: NSObject {
 extension LinkVerificationWebFallbackController: ASWebAuthenticationPresentationContextProviding {
 
     func presentationAnchor(for session: ASWebAuthenticationSession) -> ASPresentationAnchor {
-        return UIApplication.shared.connectedScenes
-            .compactMap { $0 as? UIWindowScene }
-            .flatMap { $0.windows }
-            .first { $0.isKeyWindow } ?? UIWindow()
+        return window ?? ASPresentationAnchor()
     }
 }

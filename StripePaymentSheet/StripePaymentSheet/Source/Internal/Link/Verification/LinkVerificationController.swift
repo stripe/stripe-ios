@@ -66,8 +66,11 @@ final class LinkVerificationController {
     }
 
     private func presentMobileFallbackWebview(from presentingController: UIViewController, webviewUrl: URL) {
-        let webviewController = LinkVerificationWebFallbackController(authenticationUrl: webviewUrl)
-        webviewController.present(from: presentingController) { [weak self] result in
+        let webviewController = LinkVerificationWebFallbackController(
+            authenticationUrl: webviewUrl,
+            presentingWindow: presentingController.view.window
+        )
+        webviewController.present { [weak self] result in
             guard let self = self else { return }
 
             // If verification completed successfully, refresh the session
