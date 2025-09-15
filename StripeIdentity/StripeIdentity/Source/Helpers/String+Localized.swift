@@ -518,12 +518,6 @@ extension String.Localized {
         )
     }
 
-    static var flipDriverLicenseOrPassport: String {
-        STPLocalizedString(
-            "Flip your driver's license or passport over to the other side",
-            "Flip your driver's license or passport over to the other side"
-        )
-    }
 
     static var positionDriverLicenseOrGovernmentId: String {
         STPLocalizedString(
@@ -546,12 +540,6 @@ extension String.Localized {
         )
     }
 
-    static var flipPassportOrGovernmentId: String {
-        STPLocalizedString(
-            "Flip your passport or government-issued photo ID over to the other side",
-            "Flip your passport or government-issued photo ID over to the other side"
-        )
-    }
 
     static var positionAllIdTypes: String {
         STPLocalizedString(
@@ -560,10 +548,4 @@ extension String.Localized {
         )
     }
 
-    static var flipAllIdTypes: String {
-        STPLocalizedString(
-            "Flip your driver's license, passport, or government-issued photo ID over to the other side",
-            "Flip your driver's license, passport, or government-issued photo ID over to the other side"
-        )
-    }
 }
