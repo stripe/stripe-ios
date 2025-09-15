@@ -35,18 +35,18 @@ enum DocumentSide: String {
         // Handle specific combinations
         if localizedTypes.count == 2 {
             if localizedTypes.contains(String.Localized.driverLicense) && localizedTypes.contains(String.Localized.passport) {
-                return self == .front ? String.Localized.frontOfDriverLicenseOrPassport : String.Localized.backOfDriverLicenseOrPassport
+                return self == .front ? String.Localized.frontOfDriverLicenseOrPassport : String(format: String.Localized.backOfSpecificDocument, String.Localized.driverLicense)
             } else if localizedTypes.contains(String.Localized.driverLicense) && localizedTypes.contains(String.Localized.governmentIssuedId) {
                 return self == .front ? String.Localized.frontOfDriverLicenseOrGovernmentId : String.Localized.backOfDriverLicenseOrGovernmentId
             } else if localizedTypes.contains(String.Localized.passport) && localizedTypes.contains(String.Localized.governmentIssuedId) {
-                return self == .front ? String.Localized.frontOfPassportOrGovernmentId : String.Localized.backOfPassportOrGovernmentId
+                return self == .front ? String.Localized.frontOfPassportOrGovernmentId : String(format: String.Localized.backOfSpecificDocument, String.Localized.governmentIssuedId)
             } else {
                 // Fallback to generic text
                 return idDocument()
             }
         } else if localizedTypes.count == 3 {
             // Handle all three types
-            return self == .front ? String.Localized.frontOfAllIdTypes : String.Localized.backOfAllIdTypes
+            return self == .front ? String.Localized.frontOfAllIdTypes : String.Localized.backOfDriverLicenseOrGovernmentId
         } else if localizedTypes.count == 1, let type = localizedTypes.first {
             // Handle single type
             switch self {
