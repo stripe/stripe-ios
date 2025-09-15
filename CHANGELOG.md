@@ -1,3 +1,8 @@
+## x.x.x x.x.x
+
+### PaymentSheet
+* [Fixed] Improved the cancellation UX when paying with Amazon Pay and Revolut Pay.
+
 ## 24.23.1 2025-09-08
 
 ### StripeCryptoOnramp
