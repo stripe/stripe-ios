@@ -6,7 +6,6 @@
 //
 
 import Foundation
-@_spi(STP) import StripeCore
 
 /// Preview of payment method details captured by the ConfirmationToken.
 /// - seealso: https://docs.stripe.com/api/confirmation_tokens/object#confirmation_token_object-payment_method_preview
