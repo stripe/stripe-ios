@@ -46,7 +46,7 @@ final class PollingBudget {
     /// Whether polling is currently allowed (within budget)
     private(set) var canPoll: Bool = true
 
-    /// The elapsed time since polling started, or nil if polling hasn't started
+    /// The elapsed time since polling started
     private var elapsedTime: TimeInterval {
         return Date().timeIntervalSince(startDate)
     }
