@@ -29,12 +29,13 @@ struct RegistrationView: View {
     /// Whether the app is running in livemode or testmode.
     let livemode: Bool
 
+    /// Called when registration and authentication succeed. Provides the crypto customer id.
+    let onCompleted: (_ customerId: String) -> Void
+
     @State private var fullName: String = ""
     @State private var phoneNumber: String = ""
     @State private var country: String = "US"
     @State private var errorMessage: String?
-    @State private var showAuthenticatedView: Bool = false
-    @State private var registrationCustomerId: String?
     @State private var isRegistrationComplete: Bool = false
     @State private var showUpdatePhoneNumberSheet: Bool = false
     @State private var updatePhoneNumberInput: String = ""
@@ -46,7 +47,7 @@ struct RegistrationView: View {
     @FocusState private var isCountryFieldFocused: Bool
 
     private var isRegisterButtonDisabled: Bool {
-        isLoading.wrappedValue || phoneNumber.isEmpty || registrationCustomerId != nil
+        isLoading.wrappedValue || phoneNumber.isEmpty
     }
 
     private var isUpdatePhoneNumberButtonDisabled: Bool {
@@ -132,12 +133,6 @@ struct RegistrationView: View {
                     ErrorMessageView(message: errorMessage)
                 }
 
-                if let customerId = registrationCustomerId {
-                    HiddenNavigationLink(
-                        destination: AuthenticatedView(coordinator: coordinator, customerId: customerId),
-                        isActive: $showAuthenticatedView
-                    )
-                }
             }
             .padding()
         }
@@ -204,12 +199,7 @@ struct RegistrationView: View {
         if let customerId = await presentAuthorization(laiId: laiId, using: coordinator) {
             await MainActor.run {
                 isLoading.wrappedValue = false
-                self.registrationCustomerId = customerId
-
-                // Delay so the navigation link animation doesn't get canceled.
-                DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
-                    showAuthenticatedView = true
-                }
+                onCompleted(customerId)
             }
         } else {
             await MainActor.run {
@@ -282,7 +272,8 @@ struct RegistrationView: View {
             coordinator: coordinator,
             email: "test@example.com",
             selectedScopes: OAuthScopes.onrampScope,
-            livemode: false
+            livemode: false,
+            onCompleted: { _ in }
         )
     }
 }
