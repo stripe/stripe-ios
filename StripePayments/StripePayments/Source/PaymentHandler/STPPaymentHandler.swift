@@ -1530,7 +1530,8 @@ public class STPPaymentHandler: NSObject {
                 {
                     let startDate = Date()
                     self.retrieveOrRefreshPaymentIntent(
-                        currentAction: currentAction
+                        currentAction: currentAction,
+                        pollingBudget: pollingBudget
                     ) { [self] paymentIntent, error in
                         guard let paymentIntent, error == nil else {
                             let error = error ?? self._error(for: .unexpectedErrorCode, loggingSafeErrorMessage: "Missing PaymentIntent.")
@@ -1610,7 +1611,8 @@ public class STPPaymentHandler: NSObject {
         } else if let currentAction = currentAction as? STPPaymentHandlerSetupIntentActionParams {
             let startDate = Date()
             retrieveOrRefreshSetupIntent(
-                currentAction: currentAction
+                currentAction: currentAction,
+                pollingBudget: pollingBudget
             ) { setupIntent, error in
                 guard let setupIntent, error == nil else {
                     let error = error ?? self._error(for: .unexpectedErrorCode, loggingSafeErrorMessage: "Missing SetupIntent.")
@@ -2089,14 +2091,10 @@ public class STPPaymentHandler: NSObject {
 
         func retrieveIntent(action: STPPaymentHandlerActionParams, completion: @escaping STPBooleanSuccessBlock) {
             if let paymentIntentAction = action as? STPPaymentHandlerPaymentIntentActionParams {
-                let timeout: NSNumber? = {
-                    guard let pollingBudget else { return nil }
-                    return NSNumber(value: pollingBudget.duration.value)
-                }()
                 currentAction.apiClient.retrievePaymentIntent(
                     withClientSecret: paymentIntentAction.paymentIntent.clientSecret,
                     expand: ["payment_method"],
-                    timeout: timeout
+                    timeout: pollingBudget?.networkTimeout
                 ) { paymentIntent, retrieveError in
                     if let paymentIntent {
                         paymentIntentAction.paymentIntent = paymentIntent
@@ -2104,14 +2102,10 @@ public class STPPaymentHandler: NSObject {
                     completion(paymentIntent != nil, retrieveError)
                 }
             } else if let setupIntentAction = action as? STPPaymentHandlerSetupIntentActionParams {
-                let timeout: NSNumber? = {
-                    guard let pollingBudget else { return nil }
-                    return NSNumber(value: pollingBudget.duration.value)
-                }()
                 currentAction.apiClient.retrieveSetupIntent(
                     withClientSecret: setupIntentAction.setupIntent.clientSecret,
                     expand: ["payment_method"],
-                    timeout: timeout
+                    timeout: pollingBudget?.networkTimeout
                 ) { retrievedSetupIntent, retrieveError in
                     if let retrievedSetupIntent {
                         setupIntentAction.setupIntent = retrievedSetupIntent
@@ -2156,6 +2150,7 @@ public class STPPaymentHandler: NSObject {
     }
 
     func retrieveOrRefreshPaymentIntent(currentAction: STPPaymentHandlerPaymentIntentActionParams,
+                                        pollingBudget: PollingBudget?,
                                         completion: @escaping STPPaymentIntentCompletionBlock) {
         let paymentMethodType = currentAction.paymentIntent.paymentMethod?.type ?? .unknown
 
@@ -2163,15 +2158,15 @@ public class STPPaymentHandler: NSObject {
             currentAction.apiClient.refreshPaymentIntent(withClientSecret: currentAction.paymentIntent.clientSecret,
                                                          completion: completion)
         } else {
-            let networkTimeout = PollingBudget.networkTimeout(for: paymentMethodType)
             currentAction.apiClient.retrievePaymentIntent(withClientSecret: currentAction.paymentIntent.clientSecret,
                                                           expand: ["payment_method"],
-                                                          timeout: networkTimeout,
+                                                          timeout: pollingBudget?.networkTimeout ?? 3, // Default to 3 seconds of network timeout when fetching an intent (first poll)
                                                           completion: completion)
         }
     }
 
     func retrieveOrRefreshSetupIntent(currentAction: STPPaymentHandlerSetupIntentActionParams,
+                                      pollingBudget: PollingBudget?,
                                       completion: @escaping STPSetupIntentCompletionBlock) {
         let paymentMethodType = currentAction.setupIntent.paymentMethod?.type ?? .unknown
 
@@ -2179,10 +2174,9 @@ public class STPPaymentHandler: NSObject {
             currentAction.apiClient.refreshSetupIntent(withClientSecret: currentAction.setupIntent.clientSecret,
                                                        completion: completion)
         } else {
-            let networkTimeout = PollingBudget.networkTimeout(for: paymentMethodType)
             currentAction.apiClient.retrieveSetupIntent(withClientSecret: currentAction.setupIntent.clientSecret,
                                                         expand: ["payment_method"],
-                                                        timeout: networkTimeout,
+                                                        timeout: pollingBudget?.networkTimeout ?? 3, // Default to 3 seconds of network timeout when fetching an intent (first poll)
                                                         completion: completion)
         }
     }

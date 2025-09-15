@@ -42,7 +42,7 @@ final class PollingBudget {
     /// The timestamp when polling started (set when start() is called)
     private var startDate: Date
     /// The polling duration with automatic test environment adjustment
-    let duration: PollingDuration
+    private let duration: PollingDuration
     /// Whether polling is currently allowed (within budget)
     private(set) var canPoll: Bool = true
     /// The timestamp of the last recorded poll attempt
@@ -51,6 +51,18 @@ final class PollingBudget {
     /// The elapsed time since polling started
     private var elapsedTime: TimeInterval {
         return Date().timeIntervalSince(startDate)
+    }
+
+    /// Dynamic network timeout for API requests based on remaining polling budget.
+    ///
+    /// This computed property optimizes network timeouts by adjusting them according to the remaining
+    /// time in the polling budget. It ensures that individual network requests don't exceed the total
+    /// time allocated for polling, while providing a minimum timeout for final polls.
+    /// - Returns: An NSNumber containing the timeout in seconds (remaining budget time or 3 seconds minimum)
+    var networkTimeout: NSNumber {
+        let remainingTime = duration.value - elapsedTime
+        // If we have no remaining time, default to 3 seconds for the final poll network timeout
+        return NSNumber(value: remainingTime > 0 ? remainingTime : 3)
     }
 
     /// Creates a polling budget appropriate for the given payment method type.
@@ -97,13 +109,5 @@ final class PollingBudget {
         let timeSinceLastPoll = Date().timeIntervalSince(lastPollAttempt)
         // If enough time has passed, poll immediately. Otherwise, wait for the remaining time.
         return max(0, targetInterval - timeSinceLastPoll)
-    }
-
-    /// Helper function to determine the polling budget for any given payment method type
-    /// - Parameter paymentMethodType: The payment method type
-    /// - Returns: The polling budget if it exists for this payment method
-    static func networkTimeout(for paymentMethodType: STPPaymentMethodType) -> NSNumber? {
-        guard let pollingBudget = PollingBudget(startDate: Date(), paymentMethodType: paymentMethodType)?.duration.value else { return nil }
-        return NSNumber(value: pollingBudget)
     }
 }
