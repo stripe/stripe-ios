@@ -196,7 +196,7 @@ class PollingViewController: UIViewController {
             stackView.centerYAnchor.constraint(equalTo: view.centerYAnchor),
             stackView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
             stackView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
-            view.heightAnchor.constraint(equalToConstant: height - SheetNavigationBar.height),
+            view.heightAnchor.constraint(equalToConstant: height - SheetNavigationBar.height(appearance: appearance)),
         ])
     }
 

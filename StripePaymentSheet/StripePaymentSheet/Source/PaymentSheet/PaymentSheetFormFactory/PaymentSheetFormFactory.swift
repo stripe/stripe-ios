@@ -108,7 +108,12 @@ class PaymentSheetFormFactory {
             }
 
             let isAccountNotRegisteredOrMissing = linkAccount.flatMap({ !$0.isRegistered }) ?? true
-            return isAccountNotRegisteredOrMissing && !UserDefaults.standard.customerHasUsedLink
+
+            // In live mode, we only show signup if the customer hasn't used Link in the merchant app before.
+            // In test mode, we continue to show it to make testing easier.
+            let canShowSignup = !UserDefaults.standard.customerHasUsedLink || configuration.apiClient.isTestmode
+
+            return isAccountNotRegisteredOrMissing && canShowSignup
         }()
         let paymentMethodType: STPPaymentMethodType = {
             if linkAccount != nil, configuration.linkPaymentMethodsOnly, !elementsSession.linkPassthroughModeEnabled {
@@ -553,10 +558,21 @@ extension PaymentSheetFormFactory {
         }
     }
 
-    static func makeBankMandateText(sellerName: String?) -> NSAttributedString {
+    static func makeBankMandateText(
+        isSettingUp: Bool,
+        merchantName: String,
+        sellerName: String?
+    ) -> NSAttributedString {
         let links = ["terms": URL(string: "https://link.com/terms/ach-authorization")!]
 
-        let string = if let sellerName {
+        let string = if let sellerName, isSettingUp {
+            String(
+                format: String.Localized.bank_continue_mandate_and_reuse_text_with_seller,
+                merchantName,
+                sellerName,
+                merchantName
+            )
+        } else if let sellerName {
             String(
                 format: String.Localized.bank_continue_mandate_text_with_seller,
                 sellerName
@@ -906,6 +922,7 @@ extension PaymentSheetFormFactory {
             incentive: incentive,
             isPaymentIntent: isPaymentIntent,
             sellerName: sellerName,
+            isSettingUp: isSettingUp || forceSaveFutureUseBehavior,
             appearance: configuration.appearance
         )
 

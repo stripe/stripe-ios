@@ -21,7 +21,7 @@ final class SectionElementSnapshotTest: STPSnapshotTestCase {
         ]
         return specProvider
     }()
-    var appearance = PaymentSheet.Appearance()
+    var appearance = PaymentSheet.Appearance().applyingLiquidGlassIfPossible()
     var theme: ElementsAppearance {
         return appearance.asElementsTheme
     }
