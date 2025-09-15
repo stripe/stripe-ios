@@ -21,7 +21,9 @@ import StripeCoreTestUtils
 class AutoCompleteViewControllerSnapshotTests: STPSnapshotTestCase {
 
     private var configuration: AddressViewController.Configuration {
-        return AddressViewController.Configuration()
+        var configuration = AddressViewController.Configuration()
+        configuration.appearance.applyLiquidGlassIfPossible()
+        return configuration
     }
 
     private let addressSpecProvider: AddressSpecProvider = {
