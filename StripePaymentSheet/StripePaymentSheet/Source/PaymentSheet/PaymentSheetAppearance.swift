@@ -56,10 +56,10 @@ public extension PaymentSheet {
 
         /// The insets used for all input fields (e.g. textfields, dropdowns) in PaymentSheet.
         @_spi(AppearanceAPIAdditionsPreview)
-        public var textFieldInsets: NSDirectionalEdgeInsets = .insets(top: 4, leading: 11, bottom: 4, trailing: 11)
+        public var textFieldInsets: NSDirectionalEdgeInsets = NSDirectionalEdgeInsets(top: 4, leading: 11, bottom: 4, trailing: 11)
 
         /// Describes the padding used for all forms
-        public var formInsets: NSDirectionalEdgeInsets = PaymentSheetUI.defaultSheetMargins
+        public var formInsets: NSDirectionalEdgeInsets = NSDirectionalEdgeInsets(top: 0, leading: 20, bottom: 40, trailing: 20)
 
         /// Controls the vertical spacing between distinct sections in the form (e.g., between payment fields and billing address).
         /// - Note: This spacing is applied between different conceptual sections of the form, not between individual input fields within a section.
