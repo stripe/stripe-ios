@@ -37,10 +37,6 @@ enum PaymentSheetUI {
     static let delayBetweenSuccessAndDismissal: TimeInterval = 1.5
     static let minimumHitArea = CGSize(width: 44, height: 44)
 
-    // MARK: - Liquid Glass
-    static let liquidGlassSheetMargins: NSDirectionalEdgeInsets = .insets(
-        leading: 16, bottom: 40, trailing: 16)
-
     static func makeHeaderLabel(title: String? = nil, appearance: PaymentSheet.Appearance) -> UILabel {
         let header = UILabel()
         header.textColor = appearance.colors.text
