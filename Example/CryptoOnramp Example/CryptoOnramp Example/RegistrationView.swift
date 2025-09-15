@@ -50,10 +50,10 @@ struct RegistrationView: View {
     }
 
     private var isUpdatePhoneNumberButtonDisabled: Bool {
-        !isRegistrationComplete
+        isLoading.wrappedValue || !isRegistrationComplete
     }
 
-    private var shouldDisableButtons: Bool {
+    private var isAuthenticateButtonDisabled: Bool {
         isLoading.wrappedValue
     }
 
@@ -101,15 +101,17 @@ struct RegistrationView: View {
 
                 if isRegistrationComplete {
                     Button("Authenticate") {
+                        resetFocusState()
                         Task {
                             try await verify()
                         }
                     }
                     .buttonStyle(PrimaryButtonStyle())
-                    .disabled(shouldDisableButtons)
-                    .opacity(shouldDisableButtons ? 0.5 : 1)
+                    .disabled(isAuthenticateButtonDisabled)
+                    .opacity(isAuthenticateButtonDisabled ? 0.5 : 1)
                 } else {
                     Button("Register") {
+                        resetFocusState()
                         registerUser()
                     }
                     .buttonStyle(PrimaryButtonStyle())
@@ -118,6 +120,7 @@ struct RegistrationView: View {
                 }
 
                 Button("Update Phone Number") {
+                    resetFocusState()
                     updatePhoneNumberInput = phoneNumber
                     showUpdatePhoneNumberSheet = true
                 }
@@ -264,6 +267,12 @@ struct RegistrationView: View {
                 }
             }
         }
+    }
+
+    private func resetFocusState() {
+        isFullNameFieldFocused = false
+        isPhoneNumberFieldFocused = false
+        isCountryFieldFocused = false
     }
 }
 
