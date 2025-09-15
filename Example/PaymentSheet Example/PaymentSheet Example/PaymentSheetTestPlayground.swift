@@ -5,8 +5,7 @@
 //  Created by David Estes on 5/31/23.
 //
 
-@_spi(STP) import StripePaymentSheet
-@_spi(STP) import StripeUICore
+import StripePaymentSheet
 import SwiftUI
 
 @available(iOS 15.0, *)
@@ -41,7 +40,6 @@ struct PaymentSheetTestPlayground: View {
                 .autocorrectionDisabled()
                 .textInputAutocapitalization(.never)
         }
-        SettingView(setting: enableIos26Binding)
         Group {
             if playgroundController.settings.merchantCountryCode == .US {
                 SettingView(setting: linkEnabledModeBinding)
@@ -308,15 +306,6 @@ struct PaymentSheetTestPlayground: View {
                 playgroundController.settings.uiStyle = .paymentSheet
             }
             playgroundController.settings.integrationType = newIntegrationType
-        }
-    }
-    var enableIos26Binding: Binding<PaymentSheetTestPlaygroundSettings.EnableIOS26Changes> {
-        Binding<PaymentSheetTestPlaygroundSettings.EnableIOS26Changes> {
-            return playgroundController.settings.enableIOS26Changes
-        } set: { newValue in
-            LiquidGlassDetector.allowNewDesign = newValue == .on
-            playgroundController.appearance = PaymentSheet.Appearance()
-            playgroundController.settings.enableIOS26Changes = newValue
         }
     }
 }

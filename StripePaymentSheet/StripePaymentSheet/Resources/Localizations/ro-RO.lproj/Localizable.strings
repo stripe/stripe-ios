@@ -82,6 +82,8 @@
 
 "By saving your bank account for %@ you agree to authorize payments pursuant to <terms>these terms</terms>." = "Prin salvarea contului dvs. bancar pentru %@ sunteți de acord să autorizați plățile în conformitate cu <terms>acești termeni</terms>.";
 
+"By submitting your order to %@ and %@, you agree to save your information with %@ for future purchases, and agree to authorize payments pursuant to <terms>these terms</terms>." = "Prin trimiterea comenzii dvs. către %1$@ și %2$@, sunteți de acord să salvați informațiile dvs. în %3$@ pentru achiziții viitoare și sunteți de acord să autorizați plățile în conformitate cu <terms>acești termeni</terms>.";
+
 "By submitting your order to %@ you agree to authorize payments pursuant to <terms>these terms</terms>." = "Prin trimiterea comenzii dvs. către %@, sunteți de acord să autorizați plățile în conformitate cu <terms>acești termeni</terms>.";
 
 "CPF/CPNJ" = "CPF/CPNJ";

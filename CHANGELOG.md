@@ -1,6 +1,6 @@
-## x.x.x x.x.x
-
-### PaymentSheet
+## XX.YY.ZZ 2025-xx-yy
+## PaymentSheet
+* [Fixed] Fixed an issue with the Liquid Glass keyboard toolbar where tapping on the sheet immediately above the keyboard didn't have an effect.
 * [Fixed] Improved the cancellation UX when paying with Amazon Pay and Revolut Pay.
 
 ## 24.23.1 2025-09-08

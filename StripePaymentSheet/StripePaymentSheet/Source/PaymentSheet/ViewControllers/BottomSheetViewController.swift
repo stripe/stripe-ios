@@ -55,7 +55,7 @@ class BottomSheetViewController: UIViewController, BottomSheetPresentable {
     private(set) var contentStack: [BottomSheetContentViewController] = []
 
     var navigationBarHeight: CGFloat {
-        SheetNavigationBar.height
+        SheetNavigationBar.height(appearance: appearance)
     }
 
     /// Content offset of the scroll view as a percentage (0 - 1.0) of the total height.
@@ -342,7 +342,7 @@ class BottomSheetViewController: UIViewController, BottomSheetPresentable {
             bottomAnchor,
         ])
 
-        if LiquidGlassDetector.isEnabled {
+        if appearance.navigationBarStyle.isGlass {
             NSLayoutConstraint.activate([
                 // Allow scroll view to extend under the navigation bar for blur effect
                 scrollView.topAnchor.constraint(equalTo: view.topAnchor),
@@ -355,7 +355,7 @@ class BottomSheetViewController: UIViewController, BottomSheetPresentable {
         #if compiler(>=6.2)
         // Allow content that is scrolled under the navigation bar to be blurred
         if #available(iOS 26.0, *),
-           LiquidGlassDetector.isEnabled {
+           appearance.navigationBarStyle.isGlass {
             let interaction = UIScrollEdgeElementContainerInteraction()
             interaction.scrollView = scrollView
             interaction.edge = .top
@@ -376,7 +376,7 @@ class BottomSheetViewController: UIViewController, BottomSheetPresentable {
         self.scrollViewHeightConstraint = scrollViewHeightConstraint
 
         // Move the contentContainerView to start below the sheet
-        let topOffset = LiquidGlassDetector.isEnabled ? navigationBarHeight : 0.0
+        let topOffset = appearance.navigationBarStyle.isGlass ? navigationBarHeight : 0.0
 
         NSLayoutConstraint.activate([
             contentContainerView.leadingAnchor.constraint(equalTo: scrollView.contentLayoutGuide.leadingAnchor),
