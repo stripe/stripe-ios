@@ -86,7 +86,7 @@ extension CustomerSheet {
         public var opensCardScannerAutomatically: Bool = false
 
         /// If true, an invisible challenge will be performed for human verification
-        @_spi(Captcha) public var enablePassiveCaptcha: Bool = false
+        @_spi(STP) public var enablePassiveCaptcha: Bool = false
 
         public init () {
         }

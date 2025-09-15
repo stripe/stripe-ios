@@ -232,7 +232,7 @@ extension PaymentSheet {
         public var opensCardScannerAutomatically: Bool = false
 
         /// If true, an invisible challenge will be performed for human verification
-        @_spi(Captcha) public var enablePassiveCaptcha: Bool = false
+        @_spi(STP) public var enablePassiveCaptcha: Bool = false
 
         /// Set to `true` if using a wallet buttons view. This changes a few behaviors of PaymentSheet (for example, wallet buttons will never be selected by default).
         @_spi(STP) public var willUseWalletButtonsView = false
