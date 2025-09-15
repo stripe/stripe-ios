@@ -45,6 +45,8 @@ final class PollingBudget {
     let duration: PollingDuration
     /// Whether polling is currently allowed (within budget)
     private(set) var canPoll: Bool = true
+    /// The timestamp of the last recorded poll attempt
+    private var lastPollAttempt: Date?
 
     /// The elapsed time since polling started
     private var elapsedTime: TimeInterval {
@@ -77,9 +79,24 @@ final class PollingBudget {
 
     /// Records a polling attempt and updates the budget status if needed.
     func recordPollAttempt() {
+        lastPollAttempt = Date()
         if elapsedTime > duration.value {
             canPoll = false
         }
+    }
+
+    /// Calculates the recommended delay before the next poll
+    /// - Parameter targetInterval: The desired time interval between poll starts (default: 1.0 second)
+    /// - Returns: The time to wait before the next poll, optimized based on the last poll timing
+    func recommendedDelay(targetInterval: TimeInterval = 1.0) -> TimeInterval {
+        guard let lastPollAttempt = lastPollAttempt else {
+            // First poll - return the full target interval
+            return targetInterval
+        }
+
+        let timeSinceLastPoll = Date().timeIntervalSince(lastPollAttempt)
+        // If enough time has passed, poll immediately. Otherwise, wait for the remaining time.
+        return max(0, targetInterval - timeSinceLastPoll)
     }
 
     /// Helper function to determine the polling budget for any given payment method type

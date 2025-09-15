@@ -1477,11 +1477,12 @@ public class STPPaymentHandler: NSObject {
 
     /// Schedules delayed execution of a retry block and records a poll attempt.
     /// - Parameters:
-    ///   - delay: Time interval to wait before execution
+    ///   - delay: Time interval to wait before execution (used as target interval for optimization)
     ///   - pollingBudget: Budget tracker for polling attempts
     ///   - block: Block to execute if budget allows
     func pollAfterDelay(delay: TimeInterval = 1, pollingBudget: PollingBudget, block: @escaping () -> Void) {
-        DispatchQueue.main.asyncAfter(deadline: .now() + delay) {
+        let optimizedDelay = pollingBudget.recommendedDelay(targetInterval: delay)
+        DispatchQueue.main.asyncAfter(deadline: .now() + optimizedDelay) {
             pollingBudget.recordPollAttempt()
             block()
         }
