@@ -17,7 +17,7 @@ final class CryptoOnrampFlowCoordinator: ObservableObject {
 
     /// Represents the possible steps in the flow.
     enum Route: Hashable {
-        case registration
+        case registration(email: String, oAuthScopes: [OAuthScopes])
         case kycInfo
         case identity
         case wallets(customerId: String)
@@ -33,8 +33,6 @@ final class CryptoOnrampFlowCoordinator: ObservableObject {
     /// The current navigation path, intended to be used with `NavigationStack`.
     @Published var path: [Route] = []
 
-    private(set) var email: String = ""
-    private(set) var selectedScopes: [OAuthScopes] = []
     private(set) var customerId: String?
     private(set) var selectedWallet: CustomerWalletsResponse.Wallet?
     private var isKycVerified = false
@@ -52,6 +50,7 @@ final class CryptoOnrampFlowCoordinator: ObservableObject {
     /// Begins the flow for an existing user.
     /// - Parameter customerId: The user's customer id.
     func startForExistingUser(customerId: String) {
+        resetInternalState()
         self.customerId = customerId
         Task {
             await refreshCustomerInfoAndPushNext()
@@ -63,9 +62,8 @@ final class CryptoOnrampFlowCoordinator: ObservableObject {
     ///   - email: The user’s email.
     ///   - selectedScopes: The OAuth scopes the user selected.
     func startForNewUser(email: String, selectedScopes: [OAuthScopes]) {
-        self.email = email
-        self.selectedScopes = selectedScopes
-        self.path = [.registration]
+        resetInternalState()
+        path = [.registration(email: email, oAuthScopes: selectedScopes)]
     }
 
     /// Advances to the next step of the flow post-registration.
@@ -128,6 +126,13 @@ final class CryptoOnrampFlowCoordinator: ObservableObject {
         let alertController = UIAlertController(title: title, message: message, preferredStyle: .alert)
         alertController.addAction(UIAlertAction(title: "OK", style: .cancel, handler: nil))
         presentingViewController.present(alertController, animated: true)
+    }
+
+    private func resetInternalState() {
+        isKycVerified = false
+        isIdDocumentVerified = false
+        customerId = nil
+        selectedWallet = nil
     }
 }
 

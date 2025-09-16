@@ -106,11 +106,11 @@ struct CryptoOnrampExampleView: View {
             .navigationDestination(for: CryptoOnrampFlowCoordinator.Route.self) { route in
                 if let flowCoordinator {
                     switch route {
-                    case .registration:
+                    case let .registration(email, scopes):
                         RegistrationView(
                             coordinator: flowCoordinator.onrampCoordinator,
-                            email: flowCoordinator.email,
-                            selectedScopes: flowCoordinator.selectedScopes,
+                            email: email,
+                            selectedScopes: scopes,
                             livemode: livemode
                         ) { customerId in
                             flowCoordinator.advanceAfterRegistration(customerId: customerId)
