@@ -24,11 +24,8 @@ final class CryptoOnrampFlowCoordinator: ObservableObject {
         case authenticated(customerId: String, wallet: CustomerWalletsResponse.Wallet)
     }
 
-    /// The coordinator responsible for interacting with the necessary APIs, from authentication to checkout.
-    let onrampCoordinator: CryptoOnrampCoordinator
-
     /// Indicates whether the global loading interface should be shown.
-    let isLoading: Binding<Bool>
+    var isLoading: Binding<Bool>?
 
     /// The current navigation path, intended to be used with `NavigationStack`.
     @Published var path: [Route] = []
@@ -39,12 +36,8 @@ final class CryptoOnrampFlowCoordinator: ObservableObject {
     private var isIdDocumentVerified = false
 
     /// Creates a new `CryptoOnrampFlowCoordinator`.
-    /// - Parameters:
-    ///   - onrampCoordinator: The coordinator responsible for interacting with the necessary APIs, from authentication to checkout.
-    ///   - isLoading: Indicates whether the global loading interface should be shown.
-    init(onrampCoordinator: CryptoOnrampCoordinator, isLoading: Binding<Bool>) {
-        self.onrampCoordinator = onrampCoordinator
-        self.isLoading = isLoading
+    init() {
+
     }
 
     /// Begins the flow for an existing user.
@@ -94,8 +87,8 @@ final class CryptoOnrampFlowCoordinator: ObservableObject {
 
     private func refreshCustomerInfoAndPushNext() async {
         guard let customerId else { return }
-        isLoading.wrappedValue = true
-        defer { isLoading.wrappedValue = false }
+        isLoading?.wrappedValue = true
+        defer { isLoading?.wrappedValue = false }
         do {
             let info = try await APIClient.shared.fetchCustomerInfo(cryptoCustomerToken: customerId)
             isKycVerified = info.isKycVerified
