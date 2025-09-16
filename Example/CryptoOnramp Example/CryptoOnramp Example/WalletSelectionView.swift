@@ -10,24 +10,22 @@ import SwiftUI
 @_spi(STP)
 import StripeCryptoOnramp
 
+typealias Wallet = CustomerWalletsResponse.Wallet
+
 struct WalletSelectionView: View {
     let coordinator: CryptoOnrampCoordinator
     let customerId: String
-    let onSelect: (CustomerWalletsResponse.Wallet) -> Void
+    let onCompleted: (Wallet) -> Void
 
-    @State private var wallets: [CustomerWalletsResponse.Wallet] = []
+    @State private var wallets: [Wallet] = []
     @State private var errorMessage: String?
     @State private var showAttachWalletSheet = false
-    @State private var isWalletAttached = false
+    @State private var selectedWallet: Wallet?
 
     @Environment(\.isLoading) private var isLoading
 
     private var title: LocalizedStringKey {
-        if wallets.isEmpty {
-            "Add a crypto wallet"
-        } else {
-            "Select a wallet"
-        }
+        wallets.isEmpty ?  "Add a crypto wallet" : "Select a wallet"
     }
 
     private var subtitle: LocalizedStringKey {
@@ -38,6 +36,10 @@ struct WalletSelectionView: View {
         }
     }
 
+    private var primaryButtonTitle: LocalizedStringKey {
+        wallets.isEmpty ? "Add Wallet…" : "Next"
+    }
+
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: 20) {
@@ -45,7 +47,7 @@ struct WalletSelectionView: View {
                     .font(.largeTitle)
                     .padding()
                     .background {
-                        Color.secondary.opacity(0.2)
+                        Color(.systemGroupedBackground)
                             .cornerRadius(16)
                     }
 
@@ -65,48 +67,43 @@ struct WalletSelectionView: View {
                     ErrorMessageView(message: errorMessage)
                 }
 
-                ForEach(wallets, id: \.id) { wallet in
-                    Button(action: { onSelect(wallet) }) {
-                        VStack(alignment: .leading, spacing: 4) {
-                            Text(wallet.network.localizedCapitalized)
-                                .font(.body)
-                                .foregroundColor(.primary)
-                            Text(wallet.walletAddress)
-                                .font(.footnote.monospaced())
-                                .foregroundColor(.secondary)
+                if !wallets.isEmpty {
+                    VStack(spacing: 8) {
+                        ForEach(wallets) { wallet in
+                            makeWalletButton(for: wallet)
                         }
-                        .frame(maxWidth: .infinity, alignment: .leading)
-                        .padding()
-                        .background(
-                            RoundedRectangle(cornerRadius: 8).fill(Color.gray.opacity(0.1))
-                        )
                     }
-                    .buttonStyle(.plain)
+
+                    Button("Add another wallet…") {
+                        showAttachWalletSheet = true
+                    }
+                    .disabled(isLoading.wrappedValue)
+                    .opacity(isLoading.wrappedValue ? 0.5 : 1)
                 }
             }
             .frame(maxWidth: .infinity)
+            .padding()
         }
-        .padding()
         .navigationTitle("Wallets")
         .navigationBarTitleDisplayMode(.inline)
         .safeAreaInset(edge: .bottom, content: {
-            Button("Add Wallet…") {
-                showAttachWalletSheet = true
+            Button(primaryButtonTitle) {
+                if wallets.isEmpty {
+                    showAttachWalletSheet = true
+                } else if let selectedWallet {
+                    onCompleted(selectedWallet)
+                }
             }
             .buttonStyle(PrimaryButtonStyle())
             .disabled(isLoading.wrappedValue)
             .opacity(isLoading.wrappedValue ? 0.5 : 1)
             .padding()
         })
-        .navigationTitle("Identity Verification")
-        .navigationBarTitleDisplayMode(.inline)
         .sheet(isPresented: $showAttachWalletSheet) {
             AttachWalletAddressView(
                 coordinator: coordinator,
-                isWalletAttached: $isWalletAttached,
                 onWalletAttached: { address, network in
-                    // Refetch and select the newly added wallet
-                    refreshWallets()
+                    refreshWallets(selectingWalletWithAddress: address, network: network)
                 }
             )
         }
@@ -115,7 +112,42 @@ struct WalletSelectionView: View {
         }
     }
 
-    private func refreshWallets() {
+    @ViewBuilder
+    private func makeWalletButton(for wallet: Wallet) -> some View {
+        Button {
+            selectedWallet = wallet
+        } label: {
+            HStack(alignment: .center) {
+                VStack(alignment: .leading, spacing: 4) {
+                    Text(wallet.network.localizedCapitalized)
+                        .font(.body)
+                        .foregroundColor(.primary)
+
+                    Text(wallet.walletAddress)
+                        .font(.caption2.monospaced())
+                        .foregroundColor(.secondary)
+                }
+
+                Spacer()
+
+                if selectedWallet == wallet {
+                    Image(systemName: "checkmark.circle.fill")
+                        .foregroundStyle(.tint)
+                } else {
+                    Image(systemName: "circle")
+                        .foregroundColor(.secondary)
+                }
+            }
+            .padding()
+            .background(
+                RoundedRectangle(cornerRadius: 8)
+                    .fill(selectedWallet == wallet ? Color.accentColor.opacity(0.12) : Color(.systemGroupedBackground))
+            )
+        }
+        .buttonStyle(.plain)
+    }
+
+    private func refreshWallets(selectingWalletWithAddress address: String? = nil, network: CryptoNetwork? = nil) {
         isLoading.wrappedValue = true
         errorMessage = nil
         Task {
@@ -124,6 +156,16 @@ struct WalletSelectionView: View {
                 await MainActor.run {
                     isLoading.wrappedValue = false
                     wallets = response.data
+
+                    let matchingWallet = wallets.first { wallet in
+                        wallet.walletAddress == address && wallet.network == network?.rawValue
+                    }
+
+                    if let matchingWallet {
+                        selectedWallet = matchingWallet
+                    } else if selectedWallet == nil {
+                        selectedWallet = wallets.first
+                    }
                 }
             } catch {
                 await MainActor.run {
@@ -140,7 +182,7 @@ struct WalletSelectionView: View {
         WalletSelectionView(
             coordinator: coordinator,
             customerId: "cus_example",
-            onSelect: { _ in }
+            onCompleted: { _ in }
         )
     }
 }

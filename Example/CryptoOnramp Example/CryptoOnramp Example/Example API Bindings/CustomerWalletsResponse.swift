@@ -8,7 +8,7 @@
 import Foundation
 
 struct CustomerWalletsResponse: Decodable, Hashable {
-    struct Wallet: Decodable, Hashable {
+    struct Wallet: Decodable, Hashable, Identifiable {
         let id: String
         let object: String
         let livemode: Bool
