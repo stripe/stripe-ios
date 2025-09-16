@@ -224,7 +224,7 @@ class VerticalSavedPaymentMethodsViewController: UIViewController {
         view.addAndPinSubview(stackView, insets: configuration.appearance.formInsets)
 
         // Add a height constraint to the view to ensure a minimum height of 200
-        let minHeightConstraint = view.heightAnchor.constraint(greaterThanOrEqualToConstant: 200 - SheetNavigationBar.height)
+        let minHeightConstraint = view.heightAnchor.constraint(greaterThanOrEqualToConstant: 200 - SheetNavigationBar.height(appearance: configuration.appearance))
         minHeightConstraint.priority = .defaultHigh
         minHeightConstraint.isActive = true
     }

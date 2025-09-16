@@ -16,4 +16,13 @@ enum SelectedPaymentSource {
 
     /// Apple Pay was selected as the payment method.
     case applePay(StripeAPI.PaymentMethod)
+
+    var analyticsValue: String {
+        switch self {
+        case .link:
+            return "link"
+        case .applePay:
+            return "apple_pay"
+        }
+    }
 }

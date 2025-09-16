@@ -1,3 +1,7 @@
+## 24.23.2 2025-09-16
+## PaymentSheet
+* [Fixed] Fixed an issue with the Liquid Glass keyboard toolbar where tapping on the sheet immediately above the keyboard didn't have an effect.
+
 ## 24.23.1 2025-09-08
 
 ### StripeCryptoOnramp
