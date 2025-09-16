@@ -12,9 +12,16 @@ import StripeCryptoOnramp
 
 typealias Wallet = CustomerWalletsResponse.Wallet
 
+/// A view that allows the user to selecting an existing wallet and/or attach new ones.
 struct WalletSelectionView: View {
+
+    /// The coordinator used to attach new wallets.
     let coordinator: CryptoOnrampCoordinator
+
+    /// The id of the customer.
     let customerId: String
+
+    /// Closure called once the user attempts to advance from this view with a wallet selected.
     let onCompleted: (Wallet) -> Void
 
     @State private var wallets: [Wallet] = []
@@ -39,6 +46,8 @@ struct WalletSelectionView: View {
     private var primaryButtonTitle: LocalizedStringKey {
         wallets.isEmpty ? "Add Wallet…" : "Next"
     }
+
+    // MARK: - View
 
     var body: some View {
         ScrollView {
@@ -111,6 +120,8 @@ struct WalletSelectionView: View {
             refreshWallets()
         }
     }
+
+    // MARK: - WalletSelectionView
 
     @ViewBuilder
     private func makeWalletButton(for wallet: Wallet) -> some View {

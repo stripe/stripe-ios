@@ -329,7 +329,6 @@ struct AuthenticatedView: View {
         }
     }
 
-
     private func createCryptoPaymentToken() {
         isLoading.wrappedValue = true
         errorMessage = nil
