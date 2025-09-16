@@ -21,7 +21,7 @@ struct CryptoOnrampExampleView: View {
     @State private var coordinator: CryptoOnrampCoordinator?
     @State private var errorMessage: String?
     @State private var email: String = ""
-    @State private var selectedScopes: Set<OAuthScopes> = Set(OAuthScopes.onrampScope)
+    @State private var selectedScopes: Set<OAuthScopes> = Set(OAuthScopes.requiredScopes)
     @State private var linkAuthIntentId: String?
     @State private var livemode: Bool = false
 
@@ -81,7 +81,7 @@ struct CryptoOnrampExampleView: View {
                     OAuthScopeSelector(
                         selectedScopes: $selectedScopes,
                         onOnrampScopesSelected: {
-                            selectedScopes = Set(OAuthScopes.onrampScope)
+                            selectedScopes = Set(OAuthScopes.requiredScopes)
                         },
                         onAllScopesSelected: {
                             selectedScopes = Set(OAuthScopes.allScopes)
@@ -288,7 +288,7 @@ struct OAuthScopeSelector: View {
                 Spacer()
 
                 HStack(spacing: 8) {
-                    Button("Onramp") {
+                    Button("Required") {
                         onOnrampScopesSelected()
                     }
                     .buttonStyle(.bordered)
