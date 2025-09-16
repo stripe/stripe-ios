@@ -127,7 +127,6 @@ extension STPElementsSession {
         externalPaymentMethodTypes: [String] = [],
         customerSessionData: [String: Any]? = nil,
         cardBrandChoiceData: [String: Any]? = nil,
-        isLinkPassthroughModeEnabled: Bool? = nil,
         linkMode: LinkMode? = nil,
         linkFundingSources: Set<LinkSettings.FundingSource> = [],
         disableLinkSignup: Bool? = nil,
@@ -171,12 +170,9 @@ extension STPElementsSession {
             json["card_brand_choice"] = cardBrandChoiceData
         }
 
-        if let isLinkPassthroughModeEnabled {
-            json[jsonDict: "link_settings"]!["link_passthrough_mode_enabled"] = isLinkPassthroughModeEnabled
-        }
-
         if let linkMode {
             json[jsonDict: "link_settings"]!["link_mode"] = linkMode.rawValue
+            json[jsonDict: "link_settings"]!["link_passthrough_mode_enabled"] = linkMode == .passthrough || linkMode == .linkCardBrand
         }
 
         if let linkUseAttestation {
@@ -213,7 +209,6 @@ extension STPElementsSession {
 
     static func _testValue(
         intent: Intent,
-        isLinkPassthroughModeEnabled: Bool? = nil,
         linkMode: LinkMode? = nil,
         linkFundingSources: Set<LinkSettings.FundingSource> = [],
         defaultPaymentMethod: String? = nil,
@@ -249,7 +244,6 @@ extension STPElementsSession {
         return STPElementsSession._testValue(
             paymentMethodTypes: paymentMethodTypes,
             customerSessionData: customerSessionData,
-            isLinkPassthroughModeEnabled: isLinkPassthroughModeEnabled,
             linkMode: linkMode,
             linkFundingSources: linkFundingSources,
             defaultPaymentMethod: defaultPaymentMethod,

@@ -1833,7 +1833,7 @@ class PaymentSheetFormFactoryTest: XCTestCase {
         func makeForm(intent: Intent) -> PaymentMethodElement {
             return PaymentSheetFormFactory(
                 intent: intent,
-                elementsSession: ._testValue(intent: intent, isLinkPassthroughModeEnabled: false),
+                elementsSession: ._testValue(intent: intent, linkMode: .linkPaymentMethod),
                 configuration: .paymentElement(configuration),
                 paymentMethod: .stripe(.card),
                 linkAccount: PaymentSheetLinkAccount(
@@ -1879,7 +1879,7 @@ class PaymentSheetFormFactoryTest: XCTestCase {
         func makeForm(intent: Intent) -> PaymentMethodElement {
             return PaymentSheetFormFactory(
                 intent: intent,
-                elementsSession: ._testValue(intent: intent, isLinkPassthroughModeEnabled: false),
+                elementsSession: ._testValue(intent: intent, linkMode: .linkPaymentMethod),
                 configuration: .paymentElement(configuration),
                 paymentMethod: .stripe(.card),
                 linkAccount: PaymentSheetLinkAccount(
@@ -1923,7 +1923,7 @@ class PaymentSheetFormFactoryTest: XCTestCase {
         func makeForm(intent: Intent) -> PaymentMethodElement {
             return PaymentSheetFormFactory(
                 intent: intent,
-                elementsSession: ._testValue(intent: intent, isLinkPassthroughModeEnabled: true),
+                elementsSession: ._testValue(intent: intent, linkMode: .passthrough),
                 configuration: .paymentElement(configuration),
                 paymentMethod: .stripe(.card),
                 linkAccount: PaymentSheetLinkAccount(
@@ -1967,7 +1967,7 @@ class PaymentSheetFormFactoryTest: XCTestCase {
         func makeForm(intent: Intent) -> PaymentMethodElement {
             return PaymentSheetFormFactory(
                 intent: intent,
-                elementsSession: ._testValue(intent: intent, isLinkPassthroughModeEnabled: true),
+                elementsSession: ._testValue(intent: intent, linkMode: .passthrough),
                 configuration: .paymentElement(configuration),
                 paymentMethod: .stripe(.card),
                 linkAccount: PaymentSheetLinkAccount(
