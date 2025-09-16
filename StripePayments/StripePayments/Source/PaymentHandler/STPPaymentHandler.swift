@@ -1550,7 +1550,7 @@ public class STPPaymentHandler: NSObject {
                             paymentIntent.status == .processing,
                             pollingBudget?.canPoll ?? true
                         {
-                            let processingPollingBudget = pollingBudget ?? PollingBudget(startDate: startDate, duration: 1)
+                            let processingPollingBudget = pollingBudget ?? PollingBudget(startDate: startDate, duration: 30)
                             self.pollAfterDelay(pollingBudget: processingPollingBudget) {
                                 self._retrieveAndCheckIntentForCurrentAction(
                                     pollingBudget: processingPollingBudget
@@ -1628,7 +1628,7 @@ public class STPPaymentHandler: NSObject {
                    setupIntent.status == .processing,
                    pollingBudget?.canPoll ?? true
                 {
-                    let processingPollingBudget = pollingBudget ?? PollingBudget(startDate: startDate, duration: 1)
+                    let processingPollingBudget = pollingBudget ?? PollingBudget(startDate: startDate, duration: 30)
                     self.pollAfterDelay(pollingBudget: processingPollingBudget) {
                         self._retrieveAndCheckIntentForCurrentAction(pollingBudget: processingPollingBudget)
                     }
