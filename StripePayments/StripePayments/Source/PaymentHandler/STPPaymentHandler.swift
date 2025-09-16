@@ -1527,11 +1527,21 @@ public class STPPaymentHandler: NSObject {
                         timeout: pollingBudget?.networkTimeout
                     ) { [self] paymentIntent, error in
                         guard let paymentIntent, error == nil else {
-                            let error = error ?? self._error(for: .unexpectedErrorCode, loggingSafeErrorMessage: "Missing PaymentIntent.")
-                            currentAction.complete(
-                                with: STPPaymentHandlerActionStatus.failed,
-                                error: error as NSError
-                            )
+                            // If we got an error retrieving the intent, retry if budget allows
+                            if let pollingBudget, pollingBudget.canPoll {
+                                pollingBudget.pollAfter {
+                                    self._retrieveAndCheckIntentForCurrentAction(
+                                        pollingBudget: pollingBudget
+                                    )
+                                }
+                            } else {
+                                let error = error ?? self._error(for: .unexpectedErrorCode, loggingSafeErrorMessage: "Missing PaymentIntent.")
+                                currentAction.complete(
+                                    with: STPPaymentHandlerActionStatus.failed,
+                                    error: error as NSError
+                                )
+                            }
+
                             return
                         }
                         currentAction.paymentIntent = paymentIntent
@@ -1608,11 +1618,20 @@ public class STPPaymentHandler: NSObject {
                 timeout: pollingBudget?.networkTimeout
             ) { setupIntent, error in
                 guard let setupIntent, error == nil else {
-                    let error = error ?? self._error(for: .unexpectedErrorCode, loggingSafeErrorMessage: "Missing SetupIntent.")
-                    currentAction.complete(
-                        with: STPPaymentHandlerActionStatus.failed,
-                        error: error as NSError
-                    )
+                    // If we got an error retrieving the intent, retry if budget allows
+                    if let pollingBudget, pollingBudget.canPoll {
+                        pollingBudget.pollAfter {
+                            self._retrieveAndCheckIntentForCurrentAction(
+                                pollingBudget: pollingBudget
+                            )
+                        }
+                    } else {
+                        let error = error ?? self._error(for: .unexpectedErrorCode, loggingSafeErrorMessage: "Missing SetupIntent.")
+                        currentAction.complete(
+                            with: STPPaymentHandlerActionStatus.failed,
+                            error: error as NSError
+                        )
+                    }
                     return
                 }
                 currentAction.setupIntent = setupIntent
