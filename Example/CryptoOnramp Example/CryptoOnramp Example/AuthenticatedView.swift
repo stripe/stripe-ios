@@ -23,17 +23,13 @@ struct AuthenticatedView: View {
     /// The customer id of the authenticated user.
     let customerId: String
 
+    /// The crypto wallet to fund.
+    let wallet: CustomerWalletsResponse.Wallet
+
     @State private var errorMessage: String?
-    @State private var showAttachWalletSheet = false
-    @State private var isWalletAttached = false
     @State private var selectedPaymentMethod: PaymentMethodDisplayData?
     @State private var cryptoPaymentToken: String?
     @State private var onrampSessionResponse: CreateOnrampSessionResponse?
-
-    @State private var wallets: [CustomerWalletsResponse.Wallet] = []
-    @State private var selectedWalletId: String?
-    @State private var lastAttachedAddress: String?
-    @State private var lastAttachedNetwork: CryptoNetwork?
 
     @State private var authenticationContext = WindowAuthenticationContext()
 
@@ -59,13 +55,7 @@ struct AuthenticatedView: View {
                     Text("Customer Information")
                         .font(.headline)
                         .foregroundColor(.secondary)
-
-                    Button("Attach Wallet Address") {
-                        showAttachWalletSheet = true
-                    }
-                    .buttonStyle(PrimaryButtonStyle())
-                    .disabled(shouldDisableButtons)
-                    .opacity(shouldDisableButtons ? 0.5 : 1)
+                        .frame(maxWidth: .infinity, alignment: .leading)
 
                     HStack(alignment: .firstTextBaseline, spacing: 4) {
                         Text("Customer ID:")
@@ -80,26 +70,6 @@ struct AuthenticatedView: View {
                 .padding()
                 .background(Color.secondary.opacity(0.1))
                 .cornerRadius(8)
-
-                if !wallets.isEmpty {
-                    VStack(alignment: .leading, spacing: 12) {
-                        Text("Selected Wallet")
-                            .font(.headline)
-                            .foregroundColor(.secondary)
-
-                        Picker("Wallet", selection: $selectedWalletId) {
-                            ForEach(wallets, id: \.id) { wallet in
-                                Text("\(wallet.network.localizedCapitalized): \(wallet.walletAddress.prefix(5))…")
-                                    .tag(wallet.id)
-                            }
-                        }
-                        .pickerStyle(.menu)
-                        .frame(maxWidth: .infinity, alignment: .leading)
-                    }
-                    .padding()
-                    .background(Color.secondary.opacity(0.1))
-                    .cornerRadius(8)
-                }
 
                 if let errorMessage {
                     ErrorMessageView(message: errorMessage)
@@ -126,14 +96,12 @@ struct AuthenticatedView: View {
                             .opacity(shouldDisableButtons ? 0.5 : 1)
 
                             if let cryptoPaymentToken {
-                                if let selectedWalletId {
                                     Button("Create Onramp Session") {
-                                        createOnrampSession(withCryptoPaymentToken: cryptoPaymentToken, selectedWalletId: selectedWalletId)
+                                        createOnrampSession(withCryptoPaymentToken: cryptoPaymentToken)
                                     }
                                     .buttonStyle(PrimaryButtonStyle())
                                     .disabled(shouldDisableButtons)
                                     .opacity(shouldDisableButtons ? 0.5 : 1)
-                                }
 
                                 if checkoutSucceeded {
                                     Text("Checkout Succeeded!")
@@ -304,20 +272,6 @@ struct AuthenticatedView: View {
         }
         .navigationTitle("Authenticated")
         .navigationBarTitleDisplayMode(.inline)
-        .sheet(isPresented: $showAttachWalletSheet) {
-            AttachWalletAddressView(
-                coordinator: coordinator,
-                isWalletAttached: $isWalletAttached,
-                onWalletAttached: { address, network in
-                    lastAttachedAddress = address
-                    lastAttachedNetwork = network
-                    refreshWalletsAndSelectIfNeeded()
-                }
-            )
-        }
-        .onAppear {
-            refreshWalletsAndSelectIfNeeded()
-        }
     }
 
     private func presentPaymentMethodSelector(for type: PaymentMethodType) {
@@ -375,37 +329,6 @@ struct AuthenticatedView: View {
         }
     }
 
-    private func refreshWalletsAndSelectIfNeeded() {
-        isLoading.wrappedValue = true
-        errorMessage = nil
-
-        Task {
-            do {
-                let response = try await APIClient.shared.fetchCustomerWallets(cryptoCustomerToken: customerId)
-                await MainActor.run {
-                    isLoading.wrappedValue = false
-                    wallets = response.data
-
-                    if let lastAddress = lastAttachedAddress, let lastNetwork = lastAttachedNetwork {
-                        if let match = wallets.first(where: {
-                            $0.walletAddress == lastAddress && $0.network == lastNetwork.rawValue
-                        }) {
-                            selectedWalletId = match.id
-                        } else {
-                            selectedWalletId = wallets.first?.id
-                        }
-                    } else if selectedWalletId == nil {
-                        selectedWalletId = wallets.first?.id
-                    }
-                }
-            } catch {
-                await MainActor.run {
-                    isLoading.wrappedValue = false
-                    errorMessage = "Failed to fetch wallets: \(error.localizedDescription)"
-                }
-            }
-        }
-    }
 
     private func createCryptoPaymentToken() {
         isLoading.wrappedValue = true
@@ -427,12 +350,7 @@ struct AuthenticatedView: View {
         }
     }
 
-    private func createOnrampSession(withCryptoPaymentToken cryptoPaymentToken: String, selectedWalletId: String) {
-        guard let wallet = wallets.first(where: { $0.id == selectedWalletId }) else {
-            errorMessage = "Unable to find a match for the selected wallet. Please re-select a wallet and try again."
-            return
-        }
-
+    private func createOnrampSession(withCryptoPaymentToken cryptoPaymentToken: String) {
         isLoading.wrappedValue = true
         errorMessage = nil
 
@@ -536,7 +454,14 @@ private class WindowAuthenticationContext: NSObject, STPAuthenticationContext {
     PreviewWrapperView { coordinator in
         AuthenticatedView(
             coordinator: coordinator,
-            customerId: "cus_example123456789"
+            customerId: "cus_example123456789",
+            wallet: CustomerWalletsResponse.Wallet(
+                id: "0",
+                object: "",
+                livemode: false,
+                network: "Ethereum",
+                walletAddress: "0x424242424242424242424242"
+            )
         )
     }
 }

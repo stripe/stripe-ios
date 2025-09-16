@@ -20,7 +20,8 @@ final class CryptoOnrampFlowCoordinator: ObservableObject {
         case registration
         case kycInfo
         case identity
-        case authenticated
+        case wallets(customerId: String)
+        case authenticated(customerId: String, wallet: CustomerWalletsResponse.Wallet)
     }
 
     /// The coordinator responsible for interacting with the necessary APIs, from authentication to checkout.
@@ -35,6 +36,7 @@ final class CryptoOnrampFlowCoordinator: ObservableObject {
     private(set) var email: String = ""
     private(set) var selectedScopes: [OAuthScopes] = []
     private(set) var customerId: String?
+    private(set) var selectedWallet: CustomerWalletsResponse.Wallet?
     private var isKycVerified = false
     private var isIdDocumentVerified = false
 
@@ -87,6 +89,11 @@ final class CryptoOnrampFlowCoordinator: ObservableObject {
         advanceToNextStep()
     }
 
+    func advanceAfterWalletSelection(_ wallet: CustomerWalletsResponse.Wallet) {
+        selectedWallet = wallet
+        advanceToNextStep()
+    }
+
     private func refreshCustomerInfoAndPushNext() async {
         guard let customerId else { return }
         isLoading.wrappedValue = true
@@ -109,8 +116,10 @@ final class CryptoOnrampFlowCoordinator: ObservableObject {
             path.append(.kycInfo)
         } else if !isIdDocumentVerified {
             path.append(.identity)
-        } else {
-            path.append(.authenticated)
+        } else if let selectedWallet, let customerId {
+            path.append(.authenticated(customerId: customerId, wallet: selectedWallet))
+        } else if let customerId {
+            path.append(.wallets(customerId: customerId))
         }
     }
 

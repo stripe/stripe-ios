@@ -123,10 +123,18 @@ struct CryptoOnrampExampleView: View {
                         IdentityVerificationView(coordinator: flowCoordinator.onrampCoordinator) {
                             flowCoordinator.advanceAfterIdentity()
                         }
-                    case .authenticated:
+                    case let .wallets(customerId):
+                        WalletSelectionView(
+                            coordinator: flowCoordinator.onrampCoordinator,
+                            customerId: customerId
+                        ) { wallet in
+                            flowCoordinator.advanceAfterWalletSelection(wallet)
+                        }
+                    case let .authenticated(customerId, wallet):
                         AuthenticatedView(
                             coordinator: flowCoordinator.onrampCoordinator,
-                            customerId: flowCoordinator.customerId ?? ""
+                            customerId: customerId,
+                            wallet: wallet
                         )
                     }
                 }
