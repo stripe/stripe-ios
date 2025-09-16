@@ -107,6 +107,26 @@ class PaymentMethodTypeCollectionView: UICollectionView {
         reloadItems(at: [index])
         selectItem(at: index, animated: false, scrollPosition: [])
     }
+
+    // instance to calculate min width
+    private lazy var sizingInstance: PaymentTypeCell = {
+        let sizingInstance = PaymentTypeCell(frame: .zero)
+        sizingInstance.appearance = appearance
+        return sizingInstance
+    }()
+    // maps payment method type to width to avoid recalculation
+    private var widthCache = [String: CGFloat]()
+
+    func minWidth(for paymentMethodType: PaymentSheet.PaymentMethodType) -> CGFloat {
+        if let cachedWidth = widthCache[paymentMethodType.identifier] {
+            return cachedWidth
+        }
+        sizingInstance.paymentMethodType = paymentMethodType
+        let size = sizingInstance.systemLayoutSizeFitting(UIView.layoutFittingCompressedSize)
+        widthCache[paymentMethodType.identifier] = size.width
+        return size.width
+    }
+
 }
 
 // MARK: - UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout
@@ -169,7 +189,7 @@ extension PaymentMethodTypeCollectionView: UICollectionViewDataSource, UICollect
             let numberOfCellsToShow = paymentMethodTypes.count == 2 ? CGFloat(2) : CGFloat(3.3)
 
             let cellWidth = (collectionView.frame.width - (PaymentSheetUI.defaultPadding + (PaymentMethodTypeCollectionView.minInteritemSpacing * 3.0))) / numberOfCellsToShow
-            return CGSize(width: max(cellWidth, PaymentTypeCell.minWidth(for: paymentMethodTypes[indexPath.item], appearance: appearance)), height: PaymentMethodTypeCollectionView.cellHeight)
+            return CGSize(width: max(cellWidth, minWidth(for: paymentMethodTypes[indexPath.item])), height: PaymentMethodTypeCollectionView.cellHeight)
         }
     }
 }
@@ -233,22 +253,6 @@ extension PaymentMethodTypeCollectionView {
         }()
 
         // MARK: - UICollectionViewCell
-        // static instance to calculate min width
-        private static let sizingInstance = PaymentTypeCell(frame: .zero)
-        // maps payment method type to (appearnceInstance, width) to avoid recalculation
-        private static var widthCache = [String: (PaymentSheet.Appearance, CGFloat)]()
-
-        class func minWidth(for paymentMethodType: PaymentSheet.PaymentMethodType, appearance: PaymentSheet.Appearance) -> CGFloat {
-            if let (cachedAppearance, cachedWidth) = widthCache[paymentMethodType.identifier],
-               cachedAppearance == appearance {
-                return cachedWidth
-            }
-            sizingInstance.paymentMethodType = paymentMethodType
-            sizingInstance.appearance = appearance
-            let size = sizingInstance.systemLayoutSizeFitting(UIView.layoutFittingCompressedSize)
-            widthCache[paymentMethodType.identifier] = (appearance, size.width)
-            return size.width
-        }
 
         override init(frame: CGRect) {
             super.init(frame: frame)

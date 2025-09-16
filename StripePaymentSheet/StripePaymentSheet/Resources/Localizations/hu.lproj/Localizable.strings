@@ -80,6 +80,8 @@
 
 "By saving your bank account for %@ you agree to authorize payments pursuant to <terms>these terms</terms>." = "Azzal, hogy elmenti a bankszámlát a(z) %@ számára, beleegyezik a kifizetések engedélyezésébe ezen <terms>feltételek</terms> szerint.";
 
+"By submitting your order to %@ and %@, you agree to save your information with %@ for future purchases, and agree to authorize payments pursuant to <terms>these terms</terms>." = "Azzal, hogy megrendelését elküldi ide: %1$@ és %2$@, Ön beleegyezik abba, hogy adatait a(z) %3$@ szolgáltatás menti a jövőbeni vásárlásokhoz, illetve beleegyezik abba, hogy engedélyezi a kifizetéseket <terms>a jelen feltételek</terms> szerint.";
+
 "By submitting your order to %@ you agree to authorize payments pursuant to <terms>these terms</terms>." = "A megrendelésének a(z) %@ részére történő elküldésével Ön beleegyezik abba, hogy engedélyezi a fizetéseket a <terms>jelen feltételek</terms> szerint.";
 
 "CPF/CPNJ" = "CPF/CPNJ";
@@ -124,7 +126,7 @@
 
 "Enter address manually" = "Cím megadása kézzel";
 
-"Enter the code sent to %@ to use your saved information." = "A mentett adatai használatához adja meg a(z) %@ telefonszámra küldött kódot.";
+"Enter the code sent to %@." = "Adja meg a(z) %s telefonszámra küldött kódot.";
 
 "FPX Bank" = "FPX Bank";
 

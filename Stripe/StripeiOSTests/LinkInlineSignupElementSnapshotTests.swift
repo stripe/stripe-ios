@@ -14,6 +14,7 @@ import UIKit
 @testable@_spi(STP) import StripePaymentSheet
 @testable@_spi(STP) import StripePaymentsUI
 
+// @iOS26
 class LinkInlineSignupElementSnapshotTests: STPSnapshotTestCase {
 
     // MARK: Normal mode
@@ -204,6 +205,7 @@ extension LinkInlineSignupElementSnapshotTests {
         configuration.merchantDisplayName = "[Merchant]"
         configuration.defaultBillingDetails.name = preFillName
         configuration.defaultBillingDetails.phone = preFillPhone
+        configuration.appearance.applyLiquidGlassIfPossible()
 
         var linkAccount: PaymentSheetLinkAccount?
 

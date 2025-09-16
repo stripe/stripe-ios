@@ -19,8 +19,9 @@ protocol SheetNavigationBarDelegate: AnyObject {
 /// For internal SDK use only
 @objc(STP_Internal_SheetNavigationBar)
 class SheetNavigationBar: UIView {
-    static var height: CGFloat {
-        return LiquidGlassDetector.isEnabled ? 76 : 52
+    static func height(appearance: PaymentSheet.Appearance) -> CGFloat {
+        return appearance.navigationBarStyle.isGlass ? 76 : 52
+
     }
     weak var delegate: SheetNavigationBarDelegate?
     fileprivate lazy var leftItemsStackView: UIStackView = {
@@ -87,11 +88,9 @@ class SheetNavigationBar: UIView {
         self.appearance = appearance
         super.init(frame: .zero)
 
-        #if !os(visionOS)
-        if !LiquidGlassDetector.isEnabled {
+        if appearance.navigationBarStyle.isPlain {
             backgroundColor = appearance.colors.background.withAlphaComponent(0.9)
         }
-        #endif
 
         [leftItemsStackView, closeButtonRight, additionalButton].forEach {
             $0.translatesAutoresizingMaskIntoConstraints = false
@@ -126,7 +125,7 @@ class SheetNavigationBar: UIView {
     }
 
     override var intrinsicContentSize: CGSize {
-        return CGSize(width: UIView.noIntrinsicMetric, height: Self.height)
+        return CGSize(width: UIView.noIntrinsicMetric, height: Self.height(appearance: appearance))
     }
 
     @objc
@@ -175,7 +174,7 @@ class SheetNavigationBar: UIView {
     }
 
     func setShadowHidden(_ isHidden: Bool) {
-        if !LiquidGlassDetector.isEnabled {
+        if appearance.navigationBarStyle.isPlain {
             layer.shadowPath = CGPath(rect: bounds, transform: nil)
             layer.shadowOpacity = isHidden ? 0 : 0.1
             layer.shadowColor = UIColor.black.cgColor
@@ -190,15 +189,12 @@ class SheetNavigationBar: UIView {
         button.tintColor = appearance.colors.icon
         button.accessibilityLabel = String.Localized.back
         button.accessibilityIdentifier = "UIButton.Back"
-        #if compiler(>=6.2)
-        if #available(iOS 26.0, *),
-           LiquidGlassDetector.isEnabled {
+        if appearance.navigationBarStyle.isGlass {
             // Setting to 20x20 w/ glass results in a button that is sized to 44x44 with .glass()
             let resizedImage = image.resized(to: CGSize(width: 20, height: 20))
             button.setImage(resizedImage, for: .normal)
-            button.configuration = .glass()
+            button.ios26_applyGlassConfiguration()
         }
-        #endif
         return button
     }
 
@@ -209,15 +205,12 @@ class SheetNavigationBar: UIView {
         button.tintColor = appearance.colors.icon
         button.accessibilityLabel = String.Localized.close
         button.accessibilityIdentifier = "UIButton.Close"
-        #if compiler(>=6.2)
-        if #available(iOS 26.0, *),
-           LiquidGlassDetector.isEnabled{
+        if appearance.navigationBarStyle.isGlass {
             // Setting to 20x20 w/ glass results in a button that is sized to 44x44 with .glass()
             let resizedImage = image.resized(to: CGSize(width: 20, height: 20))
             button.setImage(resizedImage, for: .normal)
-            button.configuration = .glass()
+            button.ios26_applyGlassConfiguration()
         }
-        #endif
         return button
     }
 }
@@ -230,11 +223,8 @@ extension UIButton {
         titleLabel?.textAlignment = .right
         titleLabel?.font = appearance.scaledFont(for: appearance.font.base.medium, size: 14, maximumPointSize: 22)
         accessibilityIdentifier = "edit_saved_button"
-        #if compiler(>=6.2)
-        if #available(iOS 26.0, *),
-           LiquidGlassDetector.isEnabled {
-            configuration = .glass()
+        if appearance.navigationBarStyle.isGlass {
+            ios26_applyGlassConfiguration()
         }
-        #endif
     }
 }

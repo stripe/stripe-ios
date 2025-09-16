@@ -38,9 +38,11 @@ extension LinkInlineSignupView {
         }
 
         private lazy var checkboxButton: CheckboxButton = {
-            // Make the checkbox in Link use background color as it's background instead of componenetBackground
             var appearanceCopy = appearance
-            appearanceCopy.colors.componentBackground = appearance.colors.background
+            if LiquidGlassDetector.isEnabled {
+                // Make the checkbox in Link use the same background color as its container, which is componentBackground
+                appearanceCopy.colors.background = appearance.colors.componentBackground
+            }
             // Force the border to match the passed in borderColor
             appearanceCopy.colors.componentBorder = borderColor
 
@@ -54,7 +56,7 @@ extension LinkInlineSignupView {
                         to be saved and used in future checkout sessions.
                         """
                     )
-                case .checkboxWithDefaultOptIn:
+                case .checkbox, .checkboxWithDefaultOptIn:
                     return STPLocalizedString(
                         "Save my info for faster checkout with Link",
                         """
@@ -62,7 +64,7 @@ extension LinkInlineSignupView {
                         to be saved and used in future checkout sessions.
                         """
                     )
-                case .checkbox, .textFieldsOnlyEmailFirst, .textFieldsOnlyPhoneFirst:
+                case .textFieldsOnlyEmailFirst, .textFieldsOnlyPhoneFirst:
                     return STPLocalizedString(
                         "Save your info for secure 1-click checkout with Link",
                         """

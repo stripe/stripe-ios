@@ -8,10 +8,13 @@
 
 import UIKit
 
+@_spi(STP) import StripeUICore
+
 extension ConfirmButton {
 
     static func makeLinkButton(
         callToAction: CallToActionType,
+        showProcessingLabel: Bool,
         compact: Bool = false,
         linkAppearance: LinkAppearance? = nil,
         didTapWhenDisabled: @escaping () -> Void = {},
@@ -39,8 +42,13 @@ extension ConfirmButton {
 
         appearance.primaryButton.height = LinkUI.primaryButtonHeight(margins: directionalLayoutMargins)
 
+        if LiquidGlassDetector.isEnabled {
+            appearance.primaryButton.cornerRadius = appearance.primaryButton.height / 2
+        }
+
         let button = ConfirmButton(
             callToAction: callToAction,
+            showProcessingLabel: showProcessingLabel,
             appearance: appearance,
             didTap: didTap,
             didTapWhenDisabled: didTapWhenDisabled

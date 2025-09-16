@@ -105,6 +105,13 @@ final class PayWithLinkViewController: BottomSheetViewController {
             }
         }
 
+        var showProcessingLabel: Bool {
+            // If launched from FlowController for payment method selection (and not confirmation), we don't
+            // want to show the "Processing…" label, as that label implies that the transaction is being
+            // completed, which is not the case.
+            !launchedFromFlowController
+        }
+
         /// Returns the supported payment details types for the current Link account, filtered by the supportedPaymentMethodTypes.
         /// Returns [.card] as fallback if no types are supported after filtering.
         func getSupportedPaymentDetailsTypes(linkAccount: PaymentSheetLinkAccount) -> Set<ConsumerPaymentDetails.DetailsType> {
@@ -190,6 +197,10 @@ final class PayWithLinkViewController: BottomSheetViewController {
         LinkUI.largeCornerRadius
     }
 
+    override var navigationBarHeight: CGFloat {
+        LinkUI.navigationBarHeight
+    }
+
     private var isBailingToWebFlow: Bool = false
 
     convenience init(
@@ -239,7 +250,7 @@ final class PayWithLinkViewController: BottomSheetViewController {
 
         super.init(
             contentViewController: initialVC,
-            appearance: context.configuration.appearance,
+            appearance: LinkUI.appearance,
             isTestMode: false,
             didCancelNative3DS2: {
                 cancellationHandler?()

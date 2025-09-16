@@ -41,7 +41,6 @@ stages:
     - framework-tests-ios-26: {}
     - test-builds-xcode-16: {}
     - test-builds-xcode-26: {}
-    - test-builds-vision: {}
     - install-tests: {}
     - lint-tests: {}
     - size-report: {}
@@ -60,7 +59,6 @@ stages:
     - test-builds-xcode-16-release: {}
     - test-builds-xcode-26: {}
     - test-builds-xcode-26-release: {}
-    - test-builds-vision: {}
     - deploy-docs: {}
     - install-tests: {}
     - lint-tests: {}
@@ -337,6 +335,11 @@ workflows:
         machine_type_id: g2.mac.large
   framework-tests-ios-26:
     steps:
+    - script@1:
+        inputs:
+        - content: |
+            ruby ci_scripts/generate_ios26_testplan.rb
+        title: Generate iOS 26 test plan
     - xcode-test@4:
         inputs:
         - destination: $DEFAULT_TEST_DEVICE_26_0
@@ -431,19 +434,6 @@ workflows:
     meta:
       bitrise.io:
         stack: osx-xcode-26.0.x-edge
-  test-builds-vision:
-    steps:
-    - xcode-build-for-test@2:
-        inputs:
-        - scheme: StripePaymentSheet
-        - destination: generic/platform=visionOS Simulator
-    - deploy-to-bitrise-io@2: {}
-    before_run:
-    - prep_all
-    meta:
-      bitrise.io:
-        stack: osx-xcode-16.0.x
-        machine_type_id: g2.mac.large
   install-tests:
     steps:
     - fastlane@3:

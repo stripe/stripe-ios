@@ -82,6 +82,8 @@
 
 "By saving your bank account for %@ you agree to authorize payments pursuant to <terms>these terms</terms>." = "Als je je bankrekening voor %@ opslaat, ga je ermee akkoord betalingen in overeenstemming met <terms>deze voorwaarden</terms> te autoriseren.";
 
+"By submitting your order to %@ and %@, you agree to save your information with %@ for future purchases, and agree to authorize payments pursuant to <terms>these terms</terms>." = "Door je bestelling bij %1$@ en %2$@ te plaatsen, ga je ermee akkoord dat je gegevens bij %3$@ opgeslagen worden voor toekomstige aankopen en autoriseer je betalingen in overeenstemming met <terms>deze voorwaarden</terms>.";
+
 "By submitting your order to %@ you agree to authorize payments pursuant to <terms>these terms</terms>." = "Door je bestelling te plaatsen bij %@, autoriseer je betalingen in overeenstemming met <terms>deze voorwaarden</terms>.";
 
 "CPF/CPNJ" = "CPF/CPNJ";
@@ -126,7 +128,7 @@
 
 "Enter address manually" = "Adres handmatig invoeren";
 
-"Enter the code sent to %@ to use your saved information." = "Voer de code in die is verzonden naar %@ om je opgeslagen gegevens te gebruiken.";
+"Enter the code sent to %@." = "Voer de code in die is verstuurd naar %s.";
 
 "FPX Bank" = "FPX Bank";
 

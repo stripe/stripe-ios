@@ -82,6 +82,8 @@
 
 "By saving your bank account for %@ you agree to authorize payments pursuant to <terms>these terms</terms>." = "Ao guardar a sua conta bancária para %@, concorda em autorizar pagamentos de acordo com <terms>estas condições</terms>.";
 
+"By submitting your order to %@ and %@, you agree to save your information with %@ for future purchases, and agree to authorize payments pursuant to <terms>these terms</terms>." = "Ao submeter o seu pedido a %1$@ e %2$@, concorda em guardar as suas informações com %3$@ para compras futuras e concorda em autorizar pagamentos de acordo com <terms>estas condições</terms>.";
+
 "By submitting your order to %@ you agree to authorize payments pursuant to <terms>these terms</terms>." = "Ao submeter o seu pedido a %@, concorda em autorizar pagamentos de acordo com <terms>estas condições</terms>.";
 
 "CPF/CPNJ" = "CPF/CPNJ";
@@ -126,7 +128,7 @@
 
 "Enter address manually" = "Introduzir endereço manualmente";
 
-"Enter the code sent to %@ to use your saved information." = "Introduza o código enviado para %@ para utilizar as suas informações guardadas.";
+"Enter the code sent to %@." = "Introduza o código enviado para %s.";
 
 "FPX Bank" = "Banco FPX";
 

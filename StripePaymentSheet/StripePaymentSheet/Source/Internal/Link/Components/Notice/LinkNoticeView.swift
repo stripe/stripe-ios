@@ -82,7 +82,6 @@ final class LinkNoticeView: UIView {
         addAndPinSubview(stackView)
 
         backgroundColor = type.backgroundColor
-        layer.cornerRadius = LinkUI.mediumCornerRadius
     }
 
 }

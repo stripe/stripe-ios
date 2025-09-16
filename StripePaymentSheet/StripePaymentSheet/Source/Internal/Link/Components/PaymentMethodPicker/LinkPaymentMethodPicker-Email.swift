@@ -82,7 +82,7 @@ extension LinkPaymentMethodPicker {
             stackView.axis = .horizontal
             stackView.spacing = Constants.contentSpacing
             stackView.distribution = .fill
-            stackView.alignment = .leading
+            stackView.alignment = .center
             stackView.directionalLayoutMargins = Constants.insets
             stackView.isLayoutMarginsRelativeArrangement = true
 

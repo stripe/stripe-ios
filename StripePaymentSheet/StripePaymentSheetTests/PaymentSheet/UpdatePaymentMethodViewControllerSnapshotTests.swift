@@ -11,6 +11,8 @@ import StripeCoreTestUtils
 @testable@_spi(STP) import StripeUICore
 import XCTest
 
+// ☠️ WARNING: These snapshots are missing selected borders at the corners on iOS 26 - this is a snapshot-test-only-bug and does not repro on simulator/device.
+// @iOS26
 final class UpdatePaymentMethodViewControllerSnapshotTests: STPSnapshotTestCase {
     override func setUp() {
         super.setUp()
@@ -211,7 +213,7 @@ final class UpdatePaymentMethodViewControllerSnapshotTests: STPSnapshotTestCase 
     func _test_UpdatePaymentMethodViewController(paymentMethodType: STPPaymentMethodType,
                                                  darkMode: Bool,
                                                  isEmbeddedSingle: Bool = false,
-                                                 appearance: PaymentSheet.Appearance = .default,
+                                                 appearance: PaymentSheet.Appearance = .default.applyingLiquidGlassIfPossible(),
                                                  addressCollectionMode: PaymentSheet.BillingDetailsCollectionConfiguration.AddressCollectionMode = .never,
                                                  canRemove: Bool = true,
                                                  canUpdate: Bool = false,
