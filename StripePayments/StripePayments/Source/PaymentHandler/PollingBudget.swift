@@ -48,7 +48,7 @@ final class PollingBudget {
     ///
     /// This computed property optimizes network timeouts by adjusting them according to the remaining
     /// time in the polling budget. It ensures that individual network requests don't exceed the total
-    /// time allocated for polling, while providing a minimum timeout for final polls (60 seconds).
+    /// time allocated for polling, while providing a timeout for final polls (60 seconds).
     /// - Returns: An NSNumber containing the timeout in seconds
     var networkTimeout: NSNumber {
         let remainingTime = duration.value - elapsedTime
