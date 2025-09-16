@@ -1475,18 +1475,6 @@ public class STPPaymentHandler: NSObject {
         return resultingUrl
     }
 
-    /// Schedules delayed execution of a retry block and records a poll attempt.
-    /// - Parameters:
-    ///   - delay: Time interval to wait before execution (used as target interval for optimization)
-    ///   - pollingBudget: Budget tracker for polling attempts
-    ///   - block: Block to execute if budget allows
-    func pollAfterDelay(delay: TimeInterval = 1, pollingBudget: PollingBudget, block: @escaping () -> Void) {
-        let optimizedDelay = pollingBudget.recommendedDelay(targetInterval: delay)
-        DispatchQueue.main.asyncAfter(deadline: .now() + optimizedDelay) {
-            pollingBudget.recordPollAttempt()
-            block()
-        }
-    }
 
     /// Retrieves and checks the payment intent status for the current action.
     /// If pollingBudget is nil, this is the first attempt and a new budget is created.
@@ -1551,7 +1539,7 @@ public class STPPaymentHandler: NSObject {
                             pollingBudget?.canPoll ?? true
                         {
                             let processingPollingBudget = pollingBudget ?? PollingBudget(startDate: startDate, duration: 30)
-                            self.pollAfterDelay(pollingBudget: processingPollingBudget) {
+                            processingPollingBudget.pollAfter {
                                 self._retrieveAndCheckIntentForCurrentAction(
                                     pollingBudget: processingPollingBudget
                                 )
@@ -1589,7 +1577,7 @@ public class STPPaymentHandler: NSObject {
                                     // Also retry a few times for app redirects, the redirect flow is fast and sometimes the intent doesn't update quick enough
                                     let shouldRetryForCard = paymentMethodType == .card && paymentIntent.nextAction?.type == .useStripeSDK
                                     if paymentMethodType != .card || shouldRetryForCard, let pollingBudget = pollingBudget ?? .init(startDate: startDate, paymentMethodType: paymentMethodType), pollingBudget.canPoll {
-                                        pollAfterDelay(pollingBudget: pollingBudget) {
+                                        pollingBudget.pollAfter {
                                             self._retrieveAndCheckIntentForCurrentAction(
                                                 pollingBudget: pollingBudget
                                             )
@@ -1629,7 +1617,7 @@ public class STPPaymentHandler: NSObject {
                    pollingBudget?.canPoll ?? true
                 {
                     let processingPollingBudget = pollingBudget ?? PollingBudget(startDate: startDate, duration: 30)
-                    self.pollAfterDelay(pollingBudget: processingPollingBudget) {
+                    processingPollingBudget.pollAfter {
                         self._retrieveAndCheckIntentForCurrentAction(pollingBudget: processingPollingBudget)
                     }
                 } else {
@@ -1656,7 +1644,7 @@ public class STPPaymentHandler: NSObject {
                             // Also retry a few times for Cash App, the redirect flow is fast and sometimes the intent doesn't update quick enough
                             let shouldRetryForCard = paymentMethod.type == .card && setupIntent.nextAction?.type == .useStripeSDK
                             if paymentMethod.type != .card || shouldRetryForCard, let pollingBudget = pollingBudget ?? .init(startDate: startDate, paymentMethodType: paymentMethod.type), pollingBudget.canPoll {
-                                self.pollAfterDelay(pollingBudget: pollingBudget) {
+                                pollingBudget.pollAfter {
                                     self._retrieveAndCheckIntentForCurrentAction(
                                         pollingBudget: pollingBudget
                                     )
@@ -2135,7 +2123,7 @@ public class STPPaymentHandler: NSObject {
                 let challengePollingBudget = pollingBudget ?? PollingBudget(startDate: startDate, duration: 15)
                 if (error as NSError?)?.code == STPErrorCode.invalidRequestError.rawValue && challengePollingBudget.canPoll
                 {
-                    self.pollAfterDelay(pollingBudget: challengePollingBudget) {
+                    challengePollingBudget.pollAfter {
                         self._markChallengeCompleted(
                             withCompletion: completion,
                             pollingBudget: challengePollingBudget

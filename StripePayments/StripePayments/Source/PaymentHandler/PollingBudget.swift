@@ -96,4 +96,14 @@ final class PollingBudget {
         // If enough time has passed, poll immediately. Otherwise, wait for the remaining time.
         return max(0, targetInterval - timeSinceLastPoll)
     }
+
+    /// Executes a block after the recommended delay and automatically records the poll attempt
+    /// - Parameter block: Block to execute after the delay
+    func pollAfter(block: @escaping () -> Void) {
+        let optimizedDelay = recommendedDelay(targetInterval: 1.0)
+        DispatchQueue.main.asyncAfter(deadline: .now() + optimizedDelay) {
+            self.recordPollAttempt()
+            block()
+        }
+    }
 }
