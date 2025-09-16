@@ -52,6 +52,18 @@ class BottomSheetViewController: UIViewController, BottomSheetPresentable {
         return UIStackView()
     }()
 
+    #if compiler(>=6.2)
+    private lazy var navigationBarBlur: UIInteraction? = {
+        guard appearance.navigationBarStyle.isGlass, #available(iOS 26.0, *) else {
+            return nil
+        }
+        let interaction = UIScrollEdgeElementContainerInteraction()
+        interaction.scrollView = scrollView
+        interaction.edge = .top
+        return interaction
+    }()
+    #endif
+
     private(set) var contentStack: [BottomSheetContentViewController] = []
 
     var navigationBarHeight: CGFloat {
@@ -353,17 +365,7 @@ class BottomSheetViewController: UIViewController, BottomSheetPresentable {
             ])
         }
         #if compiler(>=6.2)
-        // Allow content that is scrolled under the navigation bar to be blurred
-        if #available(iOS 26.0, *),
-           appearance.navigationBarStyle.isGlass {
-            let interaction = UIScrollEdgeElementContainerInteraction()
-            interaction.scrollView = scrollView
-            interaction.edge = .top
-            // Hack: This line causes PaymentSheetSnapshotTests to fail on iOS 26 - the sheet becomes transparent. I can't figure out a fix, so just remove it out for tests.
-            if NSClassFromString("XCTest") == nil {
-                navigationBarContainerView.addInteraction(interaction)
-            }
-        }
+        enableNavigationBarBlurInteraction()
         #endif
 
         contentContainerView.translatesAutoresizingMaskIntoConstraints = false
@@ -392,7 +394,37 @@ class BottomSheetViewController: UIViewController, BottomSheetPresentable {
         hideKeyboardGesture.delegate = self
         view.addGestureRecognizer(hideKeyboardGesture)
     }
+    #if compiler(>=6.2)
+    func enableNavigationBarBlurInteraction() {
+        guard let navigationBarBlur,
+            navigationBarBlur.view == nil,
+        // Hack: This line causes PaymentSheetSnapshotTests to fail on iOS 26 - the sheet becomes transparent. I can't figure out a fix, so just remove it out for tests.
+        NSClassFromString("XCTest") == nil else {
+            return
+        }
+        navigationBarContainerView.addInteraction(navigationBarBlur)
+    }
+    func disableNavigationBarBlurInteraction() {
+        guard let navigationBarBlur else {
+            return
+        }
+        navigationBarContainerView.removeInteraction(navigationBarBlur)
+    }
 
+    // Workaround: Remove blur in `preAnimateHeightChange`, prior to swapping out content. Otherwise, the blur effect
+    // animates away over new content that is most likely different. In `postLayoutAnimations`, decide
+    // whether or not new content is scrollable.  If so, add the blur back, otherwise, keep it removed.
+    func preAnimateHeightChange() {
+        self.disableNavigationBarBlurInteraction()
+    }
+    func postLayoutAnimations(containerView: UIView, toView: UIView) {
+        if self.scrollView.contentSize.height > self.scrollView.frame.size.height {
+            self.enableNavigationBarBlurInteraction()
+        } else {
+            self.disableNavigationBarBlurInteraction()
+        }
+    }
+    #endif
     private func registerForKeyboardNotifications() {
         NotificationCenter.default.addObserver(
             self, selector: #selector(keyboardDidHide),

@@ -49,7 +49,7 @@ class STPAPIClientConfirmationTokensTest: STPNetworkStubbingTestCase {
         // Verify the response
         XCTAssertNotNil(confirmationToken)
         XCTAssertFalse(confirmationToken.stripeId.isEmpty)
-        XCTAssertEqual(confirmationToken.object, "confirmation_token")
+        XCTAssertNotNil(confirmationToken.created)
         XCTAssertNotNil(confirmationToken.allResponseFields)
     }
 
@@ -81,7 +81,7 @@ class STPAPIClientConfirmationTokensTest: STPNetworkStubbingTestCase {
         // Verify the response
         XCTAssertNotNil(confirmationToken)
         XCTAssertFalse(confirmationToken.stripeId.isEmpty)
-        XCTAssertEqual(confirmationToken.object, "confirmation_token")
+        XCTAssertNotNil(confirmationToken.created)
         XCTAssertNotNil(confirmationToken.allResponseFields)
     }
 
@@ -130,7 +130,7 @@ class STPAPIClientConfirmationTokensTest: STPNetworkStubbingTestCase {
         // Verify the response
         XCTAssertNotNil(confirmationToken)
         XCTAssertFalse(confirmationToken.stripeId.isEmpty)
-        XCTAssertEqual(confirmationToken.object, "confirmation_token")
+        XCTAssertNotNil(confirmationToken.created)
         XCTAssertNotNil(confirmationToken.allResponseFields)
     }
 
@@ -205,7 +205,7 @@ class STPAPIClientConfirmationTokensTest: STPNetworkStubbingTestCase {
         // Verify the response
         XCTAssertNotNil(confirmationToken)
         XCTAssertFalse(confirmationToken.stripeId.isEmpty)
-        XCTAssertEqual(confirmationToken.object, "confirmation_token")
+        XCTAssertNotNil(confirmationToken.created)
         XCTAssertNotNil(confirmationToken.allResponseFields)
 
         // Clean up: detach the payment method from the customer
@@ -245,7 +245,7 @@ class STPAPIClientConfirmationTokensTest: STPNetworkStubbingTestCase {
         // Verify the response
         XCTAssertNotNil(confirmationToken)
         XCTAssertFalse(confirmationToken.stripeId.isEmpty)
-        XCTAssertEqual(confirmationToken.object, "confirmation_token")
+        XCTAssertNotNil(confirmationToken.created)
         XCTAssertNotNil(confirmationToken.allResponseFields)
 
         // Verify the setAsDefaultPM parameter was encoded correctly

@@ -25,7 +25,10 @@ struct CryptoOnramp_ExampleApp: App {
                         .ignoresSafeArea()
                     ProgressView("Loading…")
                         .padding()
-                        .background(Color(white: 0.9).cornerRadius(8))
+                        .background {
+                            Color(.tertiarySystemBackground)
+                                .cornerRadius(8)
+                        }
                 }
             }
         }

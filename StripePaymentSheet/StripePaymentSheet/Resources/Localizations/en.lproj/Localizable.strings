@@ -25,9 +25,6 @@
 /* Title shown above a form where the customer can enter payment information like credit card details, email, billing address, etc. */
 "Add your payment information" = "Add your payment information";
 
-/* Title for a button that when tapped creates a Link account for the user. */
-"Agree and continue" = "Agree and continue";
-
 /* Text on a screen asking the user to approve a payment */
 "Approve payment" = "Approve payment";
 
