@@ -92,12 +92,7 @@ final class PollingBudget {
     /// - Parameter targetInterval: The desired time interval between poll starts (default: 1.0 second)
     /// - Returns: The time to wait before the next poll, optimized based on the last poll timing
     func recommendedDelay(targetInterval: TimeInterval = 1.0) -> TimeInterval {
-        guard let lastPollAttempt = lastPollAttempt else {
-            // First poll - return the full target interval
-            return targetInterval
-        }
-
-        let timeSinceLastPoll = Date().timeIntervalSince(lastPollAttempt)
+        let timeSinceLastPoll = Date().timeIntervalSince(lastPollAttempt ?? startDate)
         // If enough time has passed, poll immediately. Otherwise, wait for the remaining time.
         return max(0, targetInterval - timeSinceLastPoll)
     }
