@@ -558,7 +558,7 @@ extension PaymentSheet {
             }
 
             func confirm() {
-                Task {
+                Task { @MainActor in
                     let hcaptchaToken = await self.passiveCaptchaChallenge?.fetchToken(for: paymentOption)
                     PaymentSheet.confirm(
                         configuration: configuration,
