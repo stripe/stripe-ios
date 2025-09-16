@@ -568,6 +568,7 @@ extension PaymentSheet {
                         paymentOption: paymentOption,
                         paymentHandler: paymentHandler,
                         integrationShape: .flowController,
+                        passiveCaptchaChallenge: passiveCaptchaChallenge,
                         hcaptchaToken: hcaptchaToken,
                         analyticsHelper: analyticsHelper
                     ) { [analyticsHelper, configuration] result, deferredIntentConfirmationType in

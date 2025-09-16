@@ -81,7 +81,6 @@ final class PayWithNativeLinkController {
         linkAppearance: LinkAppearance? = nil,
         linkConfiguration: LinkConfiguration? = nil,
         passiveCaptchaChallenge: PassiveCaptchaChallenge? = nil,
-        hcaptchaToken: String? = nil
     ) {
         self.mode = mode
         self.intent = intent
@@ -94,7 +93,6 @@ final class PayWithNativeLinkController {
         self.linkAppearance = linkAppearance
         self.linkConfiguration = linkConfiguration
         self.passiveCaptchaChallenge = passiveCaptchaChallenge
-        self._hcaptchaToken = hcaptchaToken
     }
 
     func presentAsBottomSheet(

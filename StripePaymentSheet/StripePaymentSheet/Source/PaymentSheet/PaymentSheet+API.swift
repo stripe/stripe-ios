@@ -42,6 +42,7 @@ extension PaymentSheet {
         paymentHandler: STPPaymentHandler,
         integrationShape: IntegrationShape = .complete,
         paymentMethodID: String? = nil,
+        passiveCaptchaChallenge: PassiveCaptchaChallenge? = nil,
         hcaptchaToken: String? = nil,
         analyticsHelper: PaymentSheetAnalyticsHelper,
         completion: @escaping (PaymentSheetResult, STPAnalyticsClient.DeferredIntentConfirmationType?) -> Void
@@ -61,7 +62,7 @@ extension PaymentSheet {
                                                 confirmAction: {
                 // If confirmed, dismiss the MandateView and complete the transaction:
                 authenticationContext.authenticationPresentingViewController().dismiss(animated: true)
-                confirmAfterHandlingLocalActions(configuration: configuration, authenticationContext: authenticationContext, intent: intent, elementsSession: elementsSession, paymentOption: paymentOption, intentConfirmParamsForDeferredIntent: nil, paymentHandler: paymentHandler, hcaptchaToken: hcaptchaToken, analyticsHelper: analyticsHelper, completion: completion)
+                confirmAfterHandlingLocalActions(configuration: configuration, authenticationContext: authenticationContext, intent: intent, elementsSession: elementsSession, paymentOption: paymentOption, intentConfirmParamsForDeferredIntent: nil, paymentHandler: paymentHandler, passiveCaptchaChallenge: passiveCaptchaChallenge, hcaptchaToken: hcaptchaToken, analyticsHelper: analyticsHelper, completion: completion)
             }, cancelAction: {
                 // Dismiss the MandateView and return to PaymentSheet
                 authenticationContext.authenticationPresentingViewController().dismiss(animated: true)
@@ -90,7 +91,7 @@ extension PaymentSheet {
                 configuration: configuration,
                 onCompletion: { vc, intentConfirmParams in
                     vc.dismiss(animated: true)
-                    confirmAfterHandlingLocalActions(configuration: configuration, authenticationContext: authenticationContext, intent: intent, elementsSession: elementsSession, paymentOption: paymentOption, intentConfirmParamsForDeferredIntent: intentConfirmParams, paymentHandler: paymentHandler, hcaptchaToken: hcaptchaToken, analyticsHelper: analyticsHelper, completion: completion)
+                    confirmAfterHandlingLocalActions(configuration: configuration, authenticationContext: authenticationContext, intent: intent, elementsSession: elementsSession, paymentOption: paymentOption, intentConfirmParamsForDeferredIntent: intentConfirmParams, paymentHandler: paymentHandler, passiveCaptchaChallenge: passiveCaptchaChallenge, hcaptchaToken: hcaptchaToken, analyticsHelper: analyticsHelper, completion: completion)
                 },
                 onCancel: { vc in
                     vc.dismiss(animated: true)
@@ -109,7 +110,7 @@ extension PaymentSheet {
             presentingViewController.presentAsBottomSheet(bottomSheetVC, appearance: configuration.appearance)
         } else {
             // MARK: - No local actions
-            confirmAfterHandlingLocalActions(configuration: configuration, authenticationContext: authenticationContext, intent: intent, elementsSession: elementsSession, paymentOption: paymentOption, intentConfirmParamsForDeferredIntent: nil, paymentHandler: paymentHandler, hcaptchaToken: hcaptchaToken, analyticsHelper: analyticsHelper, completion: completion)
+            confirmAfterHandlingLocalActions(configuration: configuration, authenticationContext: authenticationContext, intent: intent, elementsSession: elementsSession, paymentOption: paymentOption, intentConfirmParamsForDeferredIntent: nil, paymentHandler: paymentHandler, passiveCaptchaChallenge: passiveCaptchaChallenge, hcaptchaToken: hcaptchaToken, analyticsHelper: analyticsHelper, completion: completion)
         }
     }
 
@@ -121,6 +122,7 @@ extension PaymentSheet {
         paymentOption: PaymentOption,
         paymentHandler: STPPaymentHandler,
         integrationShape: IntegrationShape = .complete,
+        passiveCaptchaChallenge: PassiveCaptchaChallenge? = nil,
         hcaptchaToken: String? = nil,
         analyticsHelper: PaymentSheetAnalyticsHelper,
         paymentMethodID: String? = nil
@@ -136,6 +138,7 @@ extension PaymentSheet {
                     paymentHandler: paymentHandler,
                     integrationShape: integrationShape,
                     paymentMethodID: paymentMethodID,
+                    passiveCaptchaChallenge: passiveCaptchaChallenge,
                     hcaptchaToken: hcaptchaToken,
                     analyticsHelper: analyticsHelper
                 ) { result, deferredType in
@@ -155,6 +158,7 @@ extension PaymentSheet {
         paymentHandler: STPPaymentHandler,
         isFlowController: Bool = false,
         paymentMethodID: String? = nil,
+        passiveCaptchaChallenge: PassiveCaptchaChallenge?,
         hcaptchaToken: String?,
         analyticsHelper: PaymentSheetAnalyticsHelper,
         completion: @escaping (PaymentSheetResult, STPAnalyticsClient.DeferredIntentConfirmationType?) -> Void
@@ -533,12 +537,12 @@ extension PaymentSheet {
             case .wallet:
                 let useNativeLink = deviceCanUseNativeLink(elementsSession: elementsSession, configuration: configuration)
                 if useNativeLink {
-                    let linkController = PayWithNativeLinkController(mode: .full, intent: intent, elementsSession: elementsSession, configuration: configuration, logPayment: true, analyticsHelper: analyticsHelper, hcaptchaToken: hcaptchaToken)
+                    let linkController = PayWithNativeLinkController(mode: .full, intent: intent, elementsSession: elementsSession, configuration: configuration, logPayment: true, analyticsHelper: analyticsHelper, passiveCaptchaChallenge: passiveCaptchaChallenge)
                     linkController.presentAsBottomSheet(from: authenticationContext.authenticationPresentingViewController(), shouldOfferApplePay: false, shouldFinishOnClose: false, completion: { result, confirmationType, _ in
                         completion(result, confirmationType)
                     })
                 } else {
-                    let linkController = PayWithLinkController(intent: intent, elementsSession: elementsSession, configuration: configuration, analyticsHelper: analyticsHelper, hcaptchaToken: hcaptchaToken)
+                    let linkController = PayWithLinkController(intent: intent, elementsSession: elementsSession, configuration: configuration, analyticsHelper: analyticsHelper, passiveCaptchaChallenge: passiveCaptchaChallenge)
                     linkController.present(from: authenticationContext.authenticationPresentingViewController(),
                                            completion: completion)
                 }

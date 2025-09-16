@@ -290,6 +290,7 @@ extension PaymentSheet: PaymentSheetViewControllerDelegate {
                     paymentOption: paymentOption,
                     paymentHandler: self.paymentHandler,
                     integrationShape: .complete,
+                    passiveCaptchaChallenge: self.passiveCaptchaChallenge,
                     hcaptchaToken: hcaptchaToken,
                     analyticsHelper: self.analyticsHelper
                 ) { result, deferredIntentConfirmationType in

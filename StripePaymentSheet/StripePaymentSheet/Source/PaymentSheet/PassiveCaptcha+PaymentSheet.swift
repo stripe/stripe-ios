@@ -16,7 +16,7 @@
          // HCaptcha initial load takes several seconds, which disrupts user experience if paying with a saved pm or ApplePay since there isn't anything for the user to input
          // Also, the goal is to prevent card-testing, which doesn't happen with these scenarios
          switch paymentOption {
-         case .applePay, .saved:
+         case .applePay, .saved, .link(option: .wallet):
              return nil
          default:
              return await fetchToken()

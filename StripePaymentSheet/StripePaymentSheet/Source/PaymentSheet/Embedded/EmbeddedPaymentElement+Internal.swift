@@ -539,6 +539,7 @@ extension EmbeddedPaymentElement {
             paymentOption: paymentOption,
             paymentHandler: paymentHandler,
             integrationShape: .embedded,
+            passiveCaptchaChallenge: passiveCaptchaChallenge,
             hcaptchaToken: hcaptchaToken,
             analyticsHelper: analyticsHelper
         )
