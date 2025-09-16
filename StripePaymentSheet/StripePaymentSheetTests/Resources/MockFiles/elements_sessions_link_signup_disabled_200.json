@@ -19,7 +19,8 @@
         "CARD"
     ],
     "link_local_storage_login_enabled": true,
-    "link_mobile_disable_signup": true
+    "link_mobile_disable_signup": true,
+    "link_mode": "PASSTHROUGH"
   },
   "merchant_country": "US",
   "merchant_currency": "usd",

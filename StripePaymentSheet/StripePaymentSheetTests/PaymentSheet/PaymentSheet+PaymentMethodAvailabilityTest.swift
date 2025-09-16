@@ -10,44 +10,21 @@ import XCTest
 
 final class PaymentMethodAvailabilityTest: XCTestCase {
 
-    func testIsLinkEnabled_supportsLinkFalse_linkNotPresent() {
+    func testIsLinkEnabled_linkModeNil() {
         let elementsSession = STPElementsSession._testValue(
             paymentMethodTypes: ["card"],
-            isLinkPassthroughModeEnabled: false
+            linkMode: nil
         )
         let configuration = PaymentSheet.Configuration()
         let isLinkEnabled = PaymentSheet.isLinkEnabled(elementsSession: elementsSession, configuration: configuration)
 
-        XCTAssertFalse(isLinkEnabled, "Link should be disabled when supportsLink is false and link is not in payment method types")
-    }
-
-    func testIsLinkEnabled_supportsLinkTrue_linkPresent() {
-        let elementsSession = STPElementsSession._testValue(
-            paymentMethodTypes: ["card", "link"],
-            isLinkPassthroughModeEnabled: false
-        )
-        let configuration = PaymentSheet.Configuration()
-        let isLinkEnabled = PaymentSheet.isLinkEnabled(elementsSession: elementsSession, configuration: configuration)
-
-        XCTAssertTrue(isLinkEnabled, "Link should be enabled when isLinkPassthroughModeEnabled is false, since Link is present in the payment method types")
-    }
-
-    func testIsLinkEnabled_supportsLinkTrue_linkNotPresent_passthroughEnabled() {
-        let elementsSession = STPElementsSession._testValue(
-            paymentMethodTypes: ["card"],
-            isLinkPassthroughModeEnabled: true
-        )
-        let configuration = PaymentSheet.Configuration()
-        let isLinkEnabled = PaymentSheet.isLinkEnabled(elementsSession: elementsSession, configuration: configuration)
-
-        XCTAssertTrue(isLinkEnabled, "Link should be enabled when supportsLink is true because passthrough mode is enabled")
+        XCTAssertFalse(isLinkEnabled, "Link should be disabled when linkMode is nil")
     }
 
     func testIsLinkEnabled_requiresBillingDetailCollection() {
         let elementsSession = STPElementsSession._testValue(
-            paymentMethodTypes: ["card", "link"],
-            isLinkPassthroughModeEnabled: true
-
+            paymentMethodTypes: ["card"],
+            linkMode: .passthrough
         )
         var configuration = PaymentSheet.Configuration()
         configuration.billingDetailsCollectionConfiguration.name = .always
@@ -58,9 +35,8 @@ final class PaymentMethodAvailabilityTest: XCTestCase {
 
     func testIsLinkEnabled_cardBrandAcceptanceNotAll() {
         let elementsSession = STPElementsSession._testValue(
-            paymentMethodTypes: ["card", "link"],
-            isLinkPassthroughModeEnabled: true
-
+            paymentMethodTypes: ["card"],
+            linkMode: .passthrough
         )
         var configuration = PaymentSheet.Configuration()
         configuration.cardBrandAcceptance = .allowed(brands: [.visa])
@@ -69,11 +45,11 @@ final class PaymentMethodAvailabilityTest: XCTestCase {
         XCTAssertFalse(isLinkEnabled, "Link should be disabled when card brand acceptance is not 'all'")
     }
 
-    func testIsLinkEnabled_allConditionsMet() {
+    func testIsLinkEnabled_linkModePresent() {
         // Given
         let elementsSession = STPElementsSession._testValue(
-            paymentMethodTypes: ["card", "link"],
-            isLinkPassthroughModeEnabled: true
+            paymentMethodTypes: ["card"],
+            linkMode: .passthrough
         )
         let configuration = PaymentSheet.Configuration()
         let isLinkEnabled = PaymentSheet.isLinkEnabled(elementsSession: elementsSession, configuration: configuration)
@@ -81,21 +57,10 @@ final class PaymentMethodAvailabilityTest: XCTestCase {
         XCTAssertTrue(isLinkEnabled, "Link should be enabled when all conditions are met")
     }
 
-    func testIsLinkEnabled_linkNotExplicitlyAllowedButPassthroughEnabled() {
-        let elementsSession = STPElementsSession._testValue(
-            paymentMethodTypes: ["card"],
-            isLinkPassthroughModeEnabled: true
-        )
-        let configuration = PaymentSheet.Configuration()
-        let isLinkEnabled = PaymentSheet.isLinkEnabled(elementsSession: elementsSession, configuration: configuration)
-
-        XCTAssertTrue(isLinkEnabled, "Link should be enabled when passthrough mode is enabled, even if 'link' is not explicitly in payment method types")
-    }
-
     func testIsLinkEnabled_linkDisplayAutomatic_linkPresent() {
         let elementsSession = STPElementsSession._testValue(
             paymentMethodTypes: ["card"],
-            isLinkPassthroughModeEnabled: true
+            linkMode: .passthrough
         )
         var configuration = PaymentSheet.Configuration()
         configuration.link = .init(display: .automatic)
@@ -107,7 +72,7 @@ final class PaymentMethodAvailabilityTest: XCTestCase {
     func testIsLinkEnabled_linkDisplayNever_linkNotPresent() {
         let elementsSession = STPElementsSession._testValue(
             paymentMethodTypes: ["card"],
-            isLinkPassthroughModeEnabled: true
+            linkMode: .passthrough
         )
         var configuration = PaymentSheet.Configuration()
         configuration.link = .init(display: .never)
@@ -181,17 +146,18 @@ extension LinkSettings {
     static func _testValue(
         disableSignup: Bool = false,
         flags: [String: Bool]? = nil,
+        linkMode: LinkMode? = .passthrough,
         linkSupportedPaymentMethodsOnboardingEnabled: [String] = ["CARD"]
     ) -> LinkSettings {
         return .init(
             fundingSources: [.card, .bankAccount],
             popupWebviewOption: nil,
-            passthroughModeEnabled: true,
+            passthroughModeEnabled: linkMode == .passthrough || linkMode == .linkCardBrand,
             disableSignup: disableSignup,
             suppress2FAModal: false,
             disableFlowControllerRUX: true,
             useAttestationEndpoints: true,
-            linkMode: .passthrough,
+            linkMode: linkMode,
             linkFlags: flags,
             linkConsumerIncentive: nil,
             linkDefaultOptIn: nil,

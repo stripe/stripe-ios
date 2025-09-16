@@ -29,7 +29,8 @@
     "link_supported_payment_methods_onboarding_enabled": [
         "CARD",
         "INSTANT_DEBITS",
-    ]
+    ],
+    "link_mode": <linkMode>
   },
   "merchant_country": "US",
   "merchant_currency": "usd",
