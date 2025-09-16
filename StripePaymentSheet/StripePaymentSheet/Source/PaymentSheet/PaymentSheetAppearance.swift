@@ -87,7 +87,7 @@ public extension PaymentSheet {
         /// Describes the style of navigation bar style
         @_spi(STP) public var navigationBarStyle: NavigationBarStyle = .plain
 
-        /// Internal variable to determine if applyLiquidGlass() was called. Strictly intended for analytics purposes.
+        /// Internal variable to determine if applyLiquidGlass() was called. Strictly intended for analytics.
         internal var didCallApplyLiquidGlass: Bool = false
 
         // MARK: NavigationBar
