@@ -166,7 +166,7 @@ class STPPaymentHandlerStubbedTests: STPNetworkStubbingTestCase {
     func testPollingBehaviorWithTimeoutThenSuccess() {
         let mockAPIClient = STPAPIClientPollingMock()
         let paymentHandler = STPPaymentHandler(apiClient: mockAPIClient)
-        let pollingBudget = PollingBudget(startDate: Date(), duration: 10.0)
+        let pollingBudget = PollingBudget(startDate: Date(), duration: 1)
         let expectation = self.expectation(description: "Polling completes after timeout retry")
 
         var callTimes: [Date] = []
@@ -227,7 +227,7 @@ class STPPaymentHandlerStubbedTests: STPNetworkStubbingTestCase {
     func testSetupIntentPollingBehaviorWithTimeoutThenSuccess() {
         let mockAPIClient = STPAPIClientPollingMock()
         let paymentHandler = STPPaymentHandler(apiClient: mockAPIClient)
-        let pollingBudget = PollingBudget(startDate: Date(), duration: 10.0)
+        let pollingBudget = PollingBudget(startDate: Date(), duration: 1.0)
         let expectation = self.expectation(description: "SetupIntent polling completes after timeout retry")
 
         var callTimes: [Date] = []
