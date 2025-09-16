@@ -10,8 +10,7 @@
 
 extension STPElementsSession {
     var supportsLink: Bool {
-        // Either Link is an allowed Payment Method in the elements/sessions response, or passthrough mode (Link as a Card PM) is allowed
-        orderedPaymentMethodTypes.contains(.link) || linkPassthroughModeEnabled
+        linkSettings?.linkMode != nil
     }
 
     var linkPassthroughModeEnabled: Bool {
@@ -23,7 +22,7 @@ extension STPElementsSession {
     }
 
     var supportsLinkCard: Bool {
-        supportsLink && (linkFundingSources?.contains(.card) ?? false) || linkPassthroughModeEnabled
+        supportsLink && (linkFundingSources?.contains(.card) ?? false)
     }
 
     var linkFundingSources: Set<LinkSettings.FundingSource>? {
