@@ -67,7 +67,7 @@ extension STPMandateDataParams: STPFormEncodable {
 extension STPMandateDataParams: STPAPIResponseDecodable {
     @objc
     @_spi(STP) public static func decodedObject(fromAPIResponse response: [AnyHashable: Any]?) -> Self? {
-        guard let response = response else {
+        guard let response else {
             return nil
         }
         let dict = response.stp_dictionaryByRemovingNulls()
