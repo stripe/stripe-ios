@@ -80,6 +80,8 @@
 
 "By saving your bank account for %@ you agree to authorize payments pursuant to <terms>these terms</terms>." = "%@에 대해 귀하의 은행 계좌를 저장하면 <terms>해당 약관</terms>에 따라 결제를 승인하는 데 동의하는 것입니다.";
 
+"By submitting your order to %@ and %@, you agree to save your information with %@ for future purchases, and agree to authorize payments pursuant to <terms>these terms</terms>." = "%1$@ 및 %2$@에 주문을 제출하면 귀하는 향후 구매 시 사용하기 위해 귀하의 정보를 %3$@에 저장하고 <terms>이 약관</terms>에 따라 결제를 승인하는 데 동의하는 것입니다.";
+
 "By submitting your order to %@ you agree to authorize payments pursuant to <terms>these terms</terms>." = "%@에 주문을 제출하면 귀하는 <terms>이 약관</terms>에 따라 결제 승인을 동의하는 것입니다.";
 
 "CPF/CPNJ" = "CPF/CPNJ";

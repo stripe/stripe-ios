@@ -102,6 +102,10 @@ import UIKit
     /// A preview of the currently selected Link payment method.
     @Published @_spi(STP) public private(set) var paymentMethodPreview: PaymentMethodPreview?
 
+    @_spi(STP) public var elementsSessionID: String {
+        elementsSession.sessionID
+    }
+
     /// The merchant logo URL from the elements session, if available.
     @_spi(STP) public var merchantLogoUrl: URL? {
         elementsSession.merchantLogoUrl

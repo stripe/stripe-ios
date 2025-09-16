@@ -32,7 +32,7 @@ final class SavedPaymentOptionsViewControllerSnapshotTests: STPSnapshotTestCase 
         _test_all_saved_pms_and_apple_pay_and_link(darkMode: false, showDefaultPMBadge: true)
     }
 
-    func _test_all_saved_pms_and_apple_pay_and_link(darkMode: Bool, appearance: PaymentSheet.Appearance = .default, showDefaultPMBadge: Bool = false) {
+    func _test_all_saved_pms_and_apple_pay_and_link(darkMode: Bool, appearance: PaymentSheet.Appearance = .default.applyingLiquidGlassIfPossible(), showDefaultPMBadge: Bool = false) {
         let paymentMethods = [
             STPPaymentMethod._testCard(),
             STPPaymentMethod._testUSBankAccount(),
@@ -144,11 +144,11 @@ final class SavedPaymentOptionsViewControllerSnapshotTests: STPSnapshotTestCase 
             configuration: config,
             paymentSheetConfiguration: PaymentSheet.Configuration(),
             intent: intent,
-            appearance: .default,
+            appearance: .default.applyingLiquidGlassIfPossible(),
             elementsSession: .emptyElementsSession,
             analyticsHelper: ._testValue()
         )
-        sut.view.backgroundColor = PaymentSheet.Configuration().appearance.colors.background
+        sut.view.backgroundColor = PaymentSheet.Configuration().appearance.applyingLiquidGlassIfPossible().colors.background
         let testWindow = UIWindow()
         testWindow.isHidden = false
         if darkMode {

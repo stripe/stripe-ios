@@ -82,6 +82,8 @@
 
 "By saving your bank account for %@ you agree to authorize payments pursuant to <terms>these terms</terms>." = "Sa pag-save ng iyong account sa bangko para sa %@ sumasang-ayon ka na pahintulutan ang mga pagbabayad alinsunod sa <terms>mga tuntuning ito</terms>.";
 
+"By submitting your order to %@ and %@, you agree to save your information with %@ for future purchases, and agree to authorize payments pursuant to <terms>these terms</terms>." = "Sa pagsusumite ng iyong order sa %1$@ at %2$@, sumasang-ayon kang i-save ang iyong impormasyon sa %3$@ para sa mga pagbili sa hinaharap, at sumasang-ayon kang pahintulutan ang mga pagbabayad alinsunod sa <terms> mga tuntuning ito</terms>.";
+
 "By submitting your order to %@ you agree to authorize payments pursuant to <terms>these terms</terms>." = "Sa pagsusumite ng iyong order sa %@, sumasang-ayon kang pahintulutan ang mga pagbabayad alinsunod sa <terms> mga tuntuning ito</terms>.";
 
 "CPF/CPNJ" = "CPF/CPNJ";

@@ -101,6 +101,9 @@ extension PayWithLinkViewController {
             configuration.linkPaymentMethodsOnly = true
             configuration.appearance = LinkUI.appearance
 
+            // AddPaymentMethodViewController uses textSecondary for the mandate, but Link uses linkTextTertiary
+            configuration.appearance.colors.textSecondary = .linkTextTertiary
+
             if let primaryColorOverride = context.linkAppearance?.colors?.primary {
                 configuration.appearance.colors.primary = primaryColorOverride
             }
