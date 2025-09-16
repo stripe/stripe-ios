@@ -7,33 +7,12 @@
 
 import Foundation
 
-/// Represents a polling duration with automatic test environment adjustment
-struct PollingDuration {
-    /// Standard duration for card payments (15 seconds)
-    static let card = PollingDuration(15.0)
-    /// Standard duration for LPMs like Amazon Pay, Revolut Pay, Swish (5 seconds)
-    static let lpm = PollingDuration(5.0)
-
-    private let rawValue: TimeInterval
-
-    /// The duration value, automatically adjusted for test environments
-    var value: TimeInterval {
-        return rawValue
-    }
-
-    /// Creates a polling duration with the specified duration
-    init(_ duration: TimeInterval) {
-        assert(duration > 0, "Duration must be positive")
-        self.rawValue = duration
-    }
-}
-
 /// Manages polling budgets for payment method transactions that require status polling.
 final class PollingBudget {
     /// The timestamp when polling started (set when start() is called)
     private var startDate: Date
-    /// The polling duration with automatic test environment adjustment
-    private let duration: PollingDuration
+    /// The polling duration in seconds
+    private let duration: TimeInterval
     /// Whether polling is currently allowed (within budget)
     private(set) var canPoll: Bool = true
     /// The timestamp of the last recorded poll attempt
@@ -51,7 +30,7 @@ final class PollingBudget {
     /// time allocated for polling, while providing a timeout for final polls (60 seconds).
     /// - Returns: An NSNumber containing the timeout in seconds
     var networkTimeout: NSNumber {
-        let remainingTime = duration.value - elapsedTime
+        let remainingTime = duration - elapsedTime
         // If we have no remaining time, default to 60 seconds for the final poll network timeout
         return NSNumber(value: remainingTime > 0 ? remainingTime : 60)
     }
@@ -64,9 +43,9 @@ final class PollingBudget {
         self.startDate = startDate
         switch paymentMethodType {
         case .amazonPay, .revolutPay, .swish, .twint, .przelewy24:
-            self.duration = .lpm
+            self.duration = 5.0
         case .card:
-            self.duration = .card
+            self.duration = 15.0
         default:
             return nil
         }
@@ -76,14 +55,15 @@ final class PollingBudget {
     /// - Parameter startDate: Date of the first poll
     /// - Parameter duration: The maximum duration for polling in seconds. Must be positive.
     init(startDate: Date, duration: TimeInterval) {
+        assert(duration > 0, "Duration must be positive")
         self.startDate = startDate
-        self.duration = PollingDuration(duration)
+        self.duration = duration
     }
 
     /// Records a polling attempt and updates the budget status if needed.
     func recordPollAttempt() {
         lastPollAttempt = Date()
-        if elapsedTime > duration.value {
+        if elapsedTime > duration {
             canPoll = false
         }
     }
