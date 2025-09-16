@@ -173,7 +173,10 @@ struct AppearancePlaygroundView: View {
         )
 
         let regularFontBinding = Binding(
-            get: { self.appearance.font.base == PaymentSheet.Appearance.default.font.base ? "System Default" : self.appearance.font.base.fontDescriptor.postscriptName },
+            get: {
+                let name = self.appearance.font.base.fontDescriptor.postscriptName
+                return name == PaymentSheet.Appearance.default.font.base.fontDescriptor.postscriptName ? "System Default" : name
+            },
             set: {
                 if $0 == "System Default" {
                     self.appearance.font.base = PaymentSheet.Appearance.default.font.base
@@ -186,7 +189,10 @@ struct AppearancePlaygroundView: View {
         // MARK: Custom font bindings
 
         let customHeadlineFontBinding = Binding(
-            get: { self.appearance.font.custom.headline?.fontDescriptor.postscriptName ?? "System Default" },
+            get: {
+                let name = self.appearance.font.base.fontDescriptor.postscriptName
+                return name == PaymentSheet.Appearance.default.font.base.fontDescriptor.postscriptName ? "System Default" : name
+            },
             set: {
                 if $0 == "System Default" {
                     self.appearance.font.custom.headline = nil
@@ -496,7 +502,6 @@ struct AppearancePlaygroundView: View {
                     }
                 }
                 Button {
-                    LiquidGlassDetector.allowNewDesign = false
                     appearance = PaymentSheet.Appearance()
                     doneAction(appearance)
                 } label: {
