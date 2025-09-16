@@ -6,6 +6,7 @@
 //
 
 @_spi(STP) import StripeCore
+@_spi(STP) import StripePaymentsUI
 @_spi(STP) import StripeUICore
 import UIKit
 
@@ -19,8 +20,22 @@ extension PaymentSheetFormFactory {
     func makeMandate(mandateText: NSAttributedString) -> SimpleMandateElement {
         // If there was previous customer input, check if it displayed the mandate for this payment method
         let customerAlreadySawMandate = previousCustomerInput?.didDisplayMandate ?? false
+
+        let updatedMandateText = {
+            guard isLinkUI else {
+                return mandateText
+            }
+
+            let mutableString = NSMutableAttributedString(attributedString: mandateText)
+            let paragraphStyle = NSMutableParagraphStyle()
+            paragraphStyle.alignment = .center
+            paragraphStyle.lineSpacing = LinkUI.mandateLineSpacing
+            mutableString.addAttributes([.paragraphStyle: paragraphStyle], range: mutableString.extent)
+            return mutableString
+        }()
+
         return SimpleMandateElement(
-            mandateText: mandateText,
+            mandateText: updatedMandateText,
             customerAlreadySawMandate: customerAlreadySawMandate,
             textAlignment: isLinkUI ? .center : .natural,
             theme: theme

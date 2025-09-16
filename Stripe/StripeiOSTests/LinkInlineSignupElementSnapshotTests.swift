@@ -205,6 +205,7 @@ extension LinkInlineSignupElementSnapshotTests {
         configuration.merchantDisplayName = "[Merchant]"
         configuration.defaultBillingDetails.name = preFillName
         configuration.defaultBillingDetails.phone = preFillPhone
+        configuration.appearance.applyLiquidGlassIfPossible()
 
         var linkAccount: PaymentSheetLinkAccount?
 

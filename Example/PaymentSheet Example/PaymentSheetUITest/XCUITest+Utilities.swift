@@ -211,7 +211,7 @@ extension XCUIApplication {
         XCTAssertTrue(staticTexts["Enter address manually"].waitForExistence(timeout: 2), "Autocomplete view should appear")
 
         // Proceed with autocomplete flow
-        let autocompleteTextField = textFields.firstMatch
+        let autocompleteTextField = textFields["Address"].firstMatch
         autocompleteTextField.waitForExistenceAndTap()
         typeText(searchTerm)
 

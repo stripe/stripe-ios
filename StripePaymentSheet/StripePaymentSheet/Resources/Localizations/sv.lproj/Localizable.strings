@@ -82,6 +82,8 @@
 
 "By saving your bank account for %@ you agree to authorize payments pursuant to <terms>these terms</terms>." = "Genom att spara ditt bankkonto för %@ samtycker du till att godkänna betalningar i enlighet med <terms>dessa villkor</terms>.";
 
+"By submitting your order to %@ and %@, you agree to save your information with %@ for future purchases, and agree to authorize payments pursuant to <terms>these terms</terms>." = "Genom att skicka din beställning till %1$@ och %2$@ samtycker du till att spara din information hos %3$@ för framtida köp och godkänner auktorisering av betalningar i enlighet med <terms>dessa villkor</terms>.";
+
 "By submitting your order to %@ you agree to authorize payments pursuant to <terms>these terms</terms>." = "Genom att skicka din beställning till %@ samtycker du till att godkänna betalningar i enlighet med <terms>dessa villkor</terms>.";
 
 "CPF/CPNJ" = "CPF/CPNJ";
