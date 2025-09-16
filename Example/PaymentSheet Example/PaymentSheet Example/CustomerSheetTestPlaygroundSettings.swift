@@ -201,7 +201,7 @@ public struct CustomerSheetTestPlaygroundSettings: Codable, Equatable {
                                                    applePay: .on,
                                                    headerTextForSelectionScreen: nil,
                                                    defaultBillingAddress: .off,
-                                                   enablePassiveCaptcha: .off,
+                                                   enablePassiveCaptcha: .on,
                                                    autoreload: .on,
                                                    attachDefaults: .off,
                                                    collectName: .automatic,
