@@ -69,6 +69,7 @@ extension PaymentSheet.Appearance {
         payload["font"] = font != PaymentSheet.Appearance.default.font
         payload["colors"] = colors != PaymentSheet.Appearance.default.colors
         payload["primary_button"] = primaryButton != PaymentSheet.Appearance.default.primaryButton
+        payload["navigation_bar_style"] = navigationBarStyle.analyticsValue
         // Convenience payload item to make querying high level appearance usage easier
         payload["usage"] = payload.values.contains(where: { value in
             if let boolValue = value as? Bool {
@@ -168,5 +169,16 @@ extension Dictionary where Key == STPPaymentMethodType, Value == PaymentSheet.Te
             result[paymentMethodType.identifier] = termsDisplayValue.analyticValue
         }
         return result
+    }
+}
+
+extension PaymentSheet.Appearance.NavigationBarStyle {
+    var analyticsValue: String {
+        switch self {
+        case .plain:
+            return "plain"
+        case .glass:
+            return "glass"
+        }
     }
 }
