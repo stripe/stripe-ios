@@ -82,6 +82,8 @@
 
 "By saving your bank account for %@ you agree to authorize payments pursuant to <terms>these terms</terms>." = "Uložením bankovního účtu pro společnost %@ souhlasíte s autorizací plateb podle <terms>těchto podmínek</terms>.";
 
+"By submitting your order to %@ and %@, you agree to save your information with %@ for future purchases, and agree to authorize payments pursuant to <terms>these terms</terms>." = "Odesláním objednávky do %1$@ a %2$@ souhlasíte s uložením svých údajů u %3$@ pro budoucí nákupy a souhlasíte s autorizací plateb podle podmínek <terms></terms>.";
+
 "By submitting your order to %@ you agree to authorize payments pursuant to <terms>these terms</terms>." = "Odesláním objednávky společnosti %@ souhlasíte s autorizací plateb podle <terms>těchto podmínek</terms>.";
 
 "CPF/CPNJ" = "CPF/CPNJ";
@@ -125,8 +127,6 @@
 "EPS Bank" = "Banka EPS";
 
 "Enter address manually" = "Zadejte adresu ručně";
-
-"Enter the code sent to %@ to use your saved information." = "Chcete-li použít uložené informace, zadejte kód zaslaný na číslo %@.";
 
 "Enter the code sent to %@." = "Zadejte kód zaslaný %s.";
 

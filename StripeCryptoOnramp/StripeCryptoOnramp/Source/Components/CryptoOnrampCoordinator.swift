@@ -50,6 +50,12 @@ protocol CryptoOnrampCoordinatorProtocol {
         country: String
     ) async throws -> String
 
+    /// Updates the phone number for the current Link user.
+    ///
+    /// - Parameter phoneNumber: The phone number of the user. Phone number must be in E.164 format (e.g., +12125551234).
+    /// Throws if an authenticated Link user is not available, phone number format is invalid, or an API error occurs.
+    func updatePhoneNumber(to phoneNumber: String) async throws
+
     /// Presents Link UI to authenticate an existing Link user.
     /// `hasLinkAccount` must be called before this.
     ///
@@ -120,6 +126,10 @@ protocol CryptoOnrampCoordinatorProtocol {
         authenticationContext: STPAuthenticationContext,
         onrampSessionClientSecretProvider: @escaping (_ onrampSessionId: String) async throws -> String
     ) async throws -> CheckoutResult
+
+    /// Logs out the current Link user, if any.
+    /// Throws if an API error occurs.
+    func logOut() async throws
 }
 
 /// Coordinates headless Link user authentication and identity verification, leaving most of the UI to the client.
@@ -145,6 +155,7 @@ public final class CryptoOnrampCoordinator: NSObject, CryptoOnrampCoordinatorPro
     private let linkController: LinkController
     private let apiClient: STPAPIClient
     private let appearance: LinkAppearance
+    private let analyticsClient: CryptoOnrampAnalyticsClient
     private var applePayCompletionContinuation: CheckedContinuation<ApplePayPaymentStatus, Swift.Error>?
     private var selectedPaymentSource: SelectedPaymentSource?
 
@@ -165,32 +176,57 @@ public final class CryptoOnrampCoordinator: NSObject, CryptoOnrampCoordinatorPro
         allowLogout: false
     )
 
-    private init(linkController: LinkController, apiClient: STPAPIClient = .shared, appearance: LinkAppearance) {
+    private init(
+        linkController: LinkController,
+        apiClient: STPAPIClient = .shared,
+        appearance: LinkAppearance,
+        analyticsClient: CryptoOnrampAnalyticsClient
+    ) {
         self.linkController = linkController
         self.apiClient = apiClient
         self.appearance = appearance
+        self.analyticsClient = analyticsClient
     }
 
     // MARK: - CryptoOnrampCoordinatorProtocol
 
     public static func create(apiClient: STPAPIClient = .shared, appearance: LinkAppearance) async throws -> CryptoOnrampCoordinator {
-        let linkController = try await LinkController.create(
-            apiClient: apiClient,
-            mode: .payment,
-            appearance: appearance,
-            linkConfiguration: Self.linkConfiguration,
-            requestSurface: .cryptoOnramp
-        )
+        let analyticsClient = CryptoOnrampAnalyticsClient()
 
-        return CryptoOnrampCoordinator(
-            linkController: linkController,
-            apiClient: apiClient,
-            appearance: appearance
-        )
+        do {
+            let linkController = try await LinkController.create(
+                apiClient: apiClient,
+                mode: .payment,
+                appearance: appearance,
+                linkConfiguration: Self.linkConfiguration,
+                requestSurface: .cryptoOnramp
+            )
+
+            let coordinator = CryptoOnrampCoordinator(
+                linkController: linkController,
+                apiClient: apiClient,
+                appearance: appearance,
+                analyticsClient: analyticsClient
+            )
+
+            analyticsClient.elementsSessionId = await linkController.elementsSessionID
+            analyticsClient.log(.sessionCreated)
+            return coordinator
+        } catch {
+            analyticsClient.log(.errorOccurred(during: .createSession, errorMessage: error.localizedDescription))
+            throw error
+        }
     }
 
     public func hasLinkAccount(with email: String) async throws -> Bool {
-        return try await linkController.lookupConsumer(with: email)
+        do {
+            let hasAccount = try await linkController.lookupConsumer(with: email)
+            analyticsClient.log(.linkAccountLookupCompleted(hasLinkAccount: hasAccount))
+            return hasAccount
+        } catch {
+            analyticsClient.log(.errorOccurred(during: .hasLinkAccount, errorMessage: error.localizedDescription))
+            throw error
+        }
     }
 
     @discardableResult
@@ -204,12 +240,19 @@ public final class CryptoOnrampCoordinator: NSObject, CryptoOnrampCoordinatorPro
         // or a Link account already exists for the provided email.
         if let linkAccount = await linkController.linkAccount {
             if linkAccount.isRegistered {
+                analyticsClient.log(.errorOccurred(during: .registerLinkUser, errorMessage: "Link account already exists"))
                 throw Error.linkAccountAlreadyExists
             }
         } else {
-            let hasExistingAccount = try await hasLinkAccount(with: email)
-            if hasExistingAccount {
-                throw Error.linkAccountAlreadyExists
+            do {
+                let hasExistingAccount = try await hasLinkAccount(with: email)
+                if hasExistingAccount {
+                    analyticsClient.log(.errorOccurred(during: .registerLinkUser, errorMessage: "Link account already exists"))
+                    throw Error.linkAccountAlreadyExists
+                }
+            } catch {
+                analyticsClient.log(.errorOccurred(during: .registerLinkUser, errorMessage: error.localizedDescription))
+                throw error
             }
         }
 
@@ -221,82 +264,138 @@ public final class CryptoOnrampCoordinator: NSObject, CryptoOnrampCoordinatorPro
                 consentAction: .entered_phone_number_email_clicked_signup_crypto_onramp
             )
         } catch {
-            if let stripeError = (error as? StripeError),
-               case let .apiError(stripeAPIError) = stripeError,
-               stripeAPIError.type == .invalidRequestError,
-               let message = stripeAPIError.message,
-               message.hasPrefix("There was an issue parsing the phone number") {
-                throw Error.invalidPhoneFormat
-            } else {
-                throw error
-            }
+            try handlePhoneFormatError(error, during: .registerLinkUser)
         }
-        return try await apiClient.grantPartnerMerchantPermissions(with: linkAccountInfo).id
+        do {
+            let customerId = try await apiClient.grantPartnerMerchantPermissions(with: linkAccountInfo).id
+            analyticsClient.log(.linkRegistrationCompleted)
+            return customerId
+        } catch {
+            analyticsClient.log(.errorOccurred(during: .registerLinkUser, errorMessage: error.localizedDescription))
+            throw error
+        }
+    }
+
+    public func updatePhoneNumber(to phoneNumber: String) async throws {
+        do {
+            try await linkController.updatePhoneNumber(to: phoneNumber)
+            analyticsClient.log(.linkPhoneNumberUpdated)
+        } catch {
+            try handlePhoneFormatError(error, during: .updatePhoneNumber)
+        }
     }
 
     public func authenticateUser(from viewController: UIViewController) async throws -> AuthenticationResult {
-        let verificationResult = try await linkController.presentForVerification(from: viewController)
-        switch verificationResult {
-        case .canceled:
-            return .canceled
-        case .completed:
-            let customerId = try await apiClient.grantPartnerMerchantPermissions(with: linkAccountInfo).id
-            return .completed(customerId: customerId)
+        analyticsClient.log(.linkUserAuthenticationStarted)
+        do {
+            let verificationResult = try await linkController.presentForVerification(from: viewController)
+            switch verificationResult {
+            case .canceled:
+                return .canceled
+            case .completed:
+                do {
+                    let customerId = try await apiClient.grantPartnerMerchantPermissions(with: linkAccountInfo).id
+                    analyticsClient.log(.linkUserAuthenticationCompleted)
+                    return .completed(customerId: customerId)
+                } catch {
+                    analyticsClient.log(.errorOccurred(during: .authenticateUser, errorMessage: error.localizedDescription))
+                    throw error
+                }
+            }
+        } catch {
+            analyticsClient.log(.errorOccurred(during: .authenticateUser, errorMessage: error.localizedDescription))
+            throw error
         }
     }
 
     public func authorize(linkAuthIntentId: String, from viewController: UIViewController) async throws -> AuthorizationResult {
-        let authorizeResult = try await linkController.authorize(linkAuthIntentId: linkAuthIntentId, from: viewController)
-        switch authorizeResult {
-        case .consented:
-            let customerId = try await apiClient.grantPartnerMerchantPermissions(with: linkAccountInfo).id
-            return .consented(customerId: customerId)
-        case .denied: return .denied
-        case .canceled: return .canceled
+        analyticsClient.log(.linkAuthorizationStarted)
+        do {
+            let authorizeResult = try await linkController.authorize(linkAuthIntentId: linkAuthIntentId, from: viewController)
+            switch authorizeResult {
+            case .consented:
+                do {
+                    let customerId = try await apiClient.grantPartnerMerchantPermissions(with: linkAccountInfo).id
+                    analyticsClient.log(.linkAuthorizationCompleted(consented: true))
+                    return .consented(customerId: customerId)
+                } catch {
+                    analyticsClient.log(.errorOccurred(during: .authorize, errorMessage: error.localizedDescription))
+                    throw error
+                }
+            case .denied:
+                analyticsClient.log(.linkAuthorizationCompleted(consented: false))
+                return .denied
+            case .canceled:
+                return .canceled
+            }
+        } catch {
+            analyticsClient.log(.errorOccurred(during: .authorize, errorMessage: error.localizedDescription))
+            throw error
         }
     }
 
     public func attachKYCInfo(info: KycInfo) async throws {
-        try await apiClient.collectKycInfo(info: info, linkAccountInfo: linkAccountInfo)
+        do {
+            try await apiClient.collectKycInfo(info: info, linkAccountInfo: linkAccountInfo)
+            analyticsClient.log(.kycInfoSubmitted)
+        } catch {
+            analyticsClient.log(.errorOccurred(during: .attachKycInfo, errorMessage: error.localizedDescription))
+            throw error
+        }
     }
 
     public func verifyIdentity(from viewController: UIViewController) async throws -> IdentityVerificationResult {
-        let response = try await apiClient.startIdentityVerification(linkAccountInfo: linkAccountInfo)
+        analyticsClient.log(.identityVerificationStarted)
+        do {
+            let response = try await apiClient.startIdentityVerification(linkAccountInfo: linkAccountInfo)
 
-        guard let ephemeralKey = response.ephemeralKey else {
-            throw Error.missingEphemeralKey
-        }
+            guard let ephemeralKey = response.ephemeralKey else {
+                analyticsClient.log(.errorOccurred(during: .verifyIdentity, errorMessage: "Missing ephemeral key"))
+                throw Error.missingEphemeralKey
+            }
 
-        let verificationSheet = IdentityVerificationSheet(
-            verificationSessionId: response.id,
-            ephemeralKeySecret: ephemeralKey,
-            configuration: IdentityVerificationSheet.Configuration(
-                brandLogo: await fetchMerchantImageWithFallback()
+            let verificationSheet = IdentityVerificationSheet(
+                verificationSessionId: response.id,
+                ephemeralKeySecret: ephemeralKey,
+                configuration: IdentityVerificationSheet.Configuration(
+                    brandLogo: await fetchMerchantImageWithFallback()
+                )
             )
-        )
 
-        return try await withCheckedThrowingContinuation { continuation in
-            Task { @MainActor in
-                verificationSheet.present(from: viewController) { result in
-                    switch result {
-                    case .flowCompleted:
-                        continuation.resume(returning: IdentityVerificationResult.completed)
-                    case .flowCanceled:
-                        continuation.resume(returning: IdentityVerificationResult.canceled)
-                    case .flowFailed(let error):
-                        continuation.resume(throwing: error)
+            return try await withCheckedThrowingContinuation { continuation in
+                Task { @MainActor in
+                    verificationSheet.present(from: viewController) { result in
+                        switch result {
+                        case .flowCompleted:
+                            self.analyticsClient.log(.identityVerificationCompleted)
+                            continuation.resume(returning: IdentityVerificationResult.completed)
+                        case .flowCanceled:
+                            continuation.resume(returning: IdentityVerificationResult.canceled)
+                        case .flowFailed(let error):
+                            self.analyticsClient.log(.errorOccurred(during: .verifyIdentity, errorMessage: error.localizedDescription))
+                            continuation.resume(throwing: error)
+                        }
                     }
                 }
             }
+        } catch {
+            analyticsClient.log(.errorOccurred(during: .verifyIdentity, errorMessage: error.localizedDescription))
+            throw error
         }
     }
 
     public func registerWalletAddress(walletAddress: String, network: CryptoNetwork) async throws {
-        try await apiClient.collectWalletAddress(
-            walletAddress: walletAddress,
-            network: network,
-            linkAccountInfo: linkAccountInfo
-        )
+        do {
+            try await apiClient.collectWalletAddress(
+                walletAddress: walletAddress,
+                network: network,
+                linkAccountInfo: linkAccountInfo
+            )
+            analyticsClient.log(.walletRegistered(network: network.rawValue))
+        } catch {
+            analyticsClient.log(.errorOccurred(during: .registerWalletAddress, errorMessage: error.localizedDescription))
+            throw error
+        }
     }
 
     @MainActor
@@ -326,64 +425,79 @@ public final class CryptoOnrampCoordinator: NSObject, CryptoOnrampCoordinatorPro
                 sublabel: result.sublabel
             )
             selectedPaymentSource = .link
+            analyticsClient.log(.collectPaymentMethodCompleted(paymentMethodType: type.analyticsValue))
             return preview
         case .applePay(let paymentRequest):
             // This presents Apple Pay and fills `applePayPaymentMethod` + `paymentMethodPreview` in the delegate.
-            let status = try await presentApplePay(using: paymentRequest, from: viewController)
-            switch status {
-            case .success:
-                guard case let .applePay(paymentMethod) = selectedPaymentSource else {
-                    throw Error.invalidSelectedPaymentSource
-                }
-
-                // Build a reasonable preview for the underlying Apple Pay payment method:
-                let icon = STPImageLibrary.applePayCardImage()
-                let label = String.Localized.apple_pay
-                let sublabel: String? = {
-                    if let card = paymentMethod.card {
-                        return String.Localized.redactedCardDetails(using: card)
-                    } else {
-                        return nil
+            do {
+                let status = try await presentApplePay(using: paymentRequest, from: viewController)
+                switch status {
+                case .success:
+                    guard case let .applePay(paymentMethod) = selectedPaymentSource else {
+                        analyticsClient.log(.errorOccurred(during: .collectPaymentMethod, errorMessage: "No payment method selected"))
+                        throw Error.invalidSelectedPaymentSource
                     }
-                }()
 
-                let paymentMethodPreview = PaymentMethodDisplayData(
-                    icon: icon,
-                    label: label,
-                    sublabel: sublabel
-                )
+                    // Build a reasonable preview for the underlying Apple Pay payment method:
+                    let icon = STPImageLibrary.applePayCardImage()
+                    let label = String.Localized.apple_pay
+                    let sublabel: String? = {
+                        if let card = paymentMethod.card {
+                            return String.Localized.redactedCardDetails(using: card)
+                        } else {
+                            return nil
+                        }
+                    }()
 
-                return paymentMethodPreview
-            case .canceled:
-                selectedPaymentSource = nil
-                return nil
+                    let paymentMethodPreview = PaymentMethodDisplayData(
+                        icon: icon,
+                        label: label,
+                        sublabel: sublabel
+                    )
+
+                    analyticsClient.log(.collectPaymentMethodCompleted(paymentMethodType: type.analyticsValue))
+                    return paymentMethodPreview
+                case .canceled:
+                    selectedPaymentSource = nil
+                    return nil
+                }
+            } catch {
+                analyticsClient.log(.errorOccurred(during: .collectPaymentMethod, errorMessage: error.localizedDescription))
+                throw error
             }
         }
     }
 
     public func createCryptoPaymentToken() async throws -> String {
         guard let selectedPaymentSource else {
+            analyticsClient.log(.errorOccurred(during: .createCryptoPaymentToken, errorMessage: "No payment method selected"))
             throw Error.invalidSelectedPaymentSource
         }
 
-        let paymentMethodId: String = try await {
-            switch selectedPaymentSource {
-            case .link:
-                let platformApiClient = try await getPlatformApiClient()
-                let paymentMethod = try await linkController.createPaymentMethod(
-                    overridePublishableKey: platformApiClient.publishableKey
-                )
-                return paymentMethod.stripeId
-            case .applePay(let paymentMethod):
-                return paymentMethod.id
-            }
-        }()
+        do {
+            let paymentMethodId: String = try await {
+                switch selectedPaymentSource {
+                case .link:
+                    let platformApiClient = try await getPlatformApiClient()
+                    let paymentMethod = try await linkController.createPaymentMethod(
+                        overridePublishableKey: platformApiClient.publishableKey
+                    )
+                    return paymentMethod.stripeId
+                case .applePay(let paymentMethod):
+                    return paymentMethod.id
+                }
+            }()
 
-        let token = try await apiClient.createPaymentToken(
-            for: paymentMethodId,
-            linkAccountInfo: linkAccountInfo
-        )
-        return token.id
+            let token = try await apiClient.createPaymentToken(
+                for: paymentMethodId,
+                linkAccountInfo: linkAccountInfo
+            )
+            analyticsClient.log(.cryptoPaymentTokenCreated(paymentMethodType: selectedPaymentSource.analyticsValue))
+            return token.id
+        } catch {
+            analyticsClient.log(.errorOccurred(during: .createCryptoPaymentToken, errorMessage: error.localizedDescription))
+            throw error
+        }
     }
 
     public func performCheckout(
@@ -391,6 +505,13 @@ public final class CryptoOnrampCoordinator: NSObject, CryptoOnrampCoordinatorPro
         authenticationContext: STPAuthenticationContext,
         onrampSessionClientSecretProvider: @escaping (_ onrampSessionId: String) async throws -> String
     ) async throws -> CheckoutResult {
+        guard let selectedPaymentSource else {
+            throw Error.invalidSelectedPaymentSource
+        }
+        analyticsClient.log(.checkoutStarted(
+            onrampSessionId: onrampSessionId,
+            paymentMethodType: selectedPaymentSource.analyticsValue
+        ))
         // First, attempt to check out and get the PaymentIntent
         let paymentIntent = try await performCheckoutAndRetrievePaymentIntent(
             onrampSessionId: onrampSessionId,
@@ -399,6 +520,13 @@ public final class CryptoOnrampCoordinator: NSObject, CryptoOnrampCoordinatorPro
 
         // Check if the intent is already complete
         if let result = try mapIntentToCheckoutResult(paymentIntent) {
+            if case .completed = result {
+                analyticsClient.log(.checkoutCompleted(
+                    onrampSessionId: onrampSessionId,
+                    paymentMethodType: selectedPaymentSource.analyticsValue,
+                    requiredAction: false
+                ))
+            }
             return result
         }
 
@@ -410,7 +538,7 @@ public final class CryptoOnrampCoordinator: NSObject, CryptoOnrampCoordinatorPro
 
         switch handledIntentResult {
         case .paymentIntent(let finalIntent):
-            if finalIntent.status == .succeeded || finalIntent.status == .requiresCapture {
+            if finalIntent.checkoutResult?.success == true {
                 // After successful next_action handling, attempt checkout again to complete the payment
                 let finalPaymentIntent = try await performCheckoutAndRetrievePaymentIntent(
                     onrampSessionId: onrampSessionId,
@@ -419,15 +547,33 @@ public final class CryptoOnrampCoordinator: NSObject, CryptoOnrampCoordinatorPro
 
                 // Map the final PaymentIntent status to a checkout result
                 if let checkoutResult = try mapIntentToCheckoutResult(finalPaymentIntent) {
+                    if case .completed = checkoutResult {
+                        analyticsClient.log(.checkoutCompleted(
+                            onrampSessionId: onrampSessionId,
+                            paymentMethodType: selectedPaymentSource.analyticsValue,
+                            requiredAction: true
+                        ))
+                    }
                     return checkoutResult
                 } else {
                     throw CheckoutError.paymentFailed
                 }
             } else {
+                analyticsClient.log(.errorOccurred(during: .performCheckout, errorMessage: "Payment failed"))
                 throw CheckoutError.paymentFailed
             }
         case .canceled:
             return .canceled
+        }
+    }
+
+    public func logOut() async throws {
+        do {
+            try await linkController.logOut()
+            analyticsClient.log(.userLoggedOut)
+        } catch {
+            analyticsClient.log(.errorOccurred(during: .logOut, errorMessage: error.localizedDescription))
+            throw error
         }
     }
 }
@@ -592,15 +738,37 @@ private extension CryptoOnrampCoordinator {
 
     /// Maps a PaymentIntent status to a CheckoutResult, or returns nil if more handling is needed.
     func mapIntentToCheckoutResult(_ intent: STPPaymentIntent) throws -> CheckoutResult? {
-        switch intent.status {
-        case .succeeded:
-            return .completed
+        return try intent.checkoutResult?.get()
+    }
+
+    func handlePhoneFormatError(_ error: Swift.Error, during operation: CryptoOnrampOperation) throws {
+        if let stripeError = (error as? StripeError),
+           case let .apiError(stripeAPIError) = stripeError,
+           stripeAPIError.type == .invalidRequestError,
+           let message = stripeAPIError.message,
+           message.hasPrefix("There was an issue parsing the phone number") {
+            analyticsClient.log(.errorOccurred(during: operation, errorMessage: "Invalid phone number format"))
+            throw Error.invalidPhoneFormat
+        } else {
+            analyticsClient.log(.errorOccurred(during: operation, errorMessage: error.localizedDescription))
+            throw error
+        }
+    }
+}
+
+private extension STPPaymentIntent {
+    var checkoutResult: Result<CheckoutResult, CheckoutError>? {
+        switch status {
+        case .succeeded, .requiresCapture:
+            return .success(.completed)
+        case .processing:
+            return paymentMethod?.type == .USBankAccount ? .success(.completed) : .failure(.paymentFailed)
         case .requiresPaymentMethod:
-            throw CheckoutError.paymentFailed
+            return .failure(.paymentFailed)
         case .requiresAction:
             return nil
         default:
-            throw CheckoutError.paymentFailed
+            return .failure(.paymentFailed)
         }
     }
 }

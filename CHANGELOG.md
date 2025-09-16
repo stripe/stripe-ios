@@ -1,3 +1,12 @@
+## XX.YY.ZZ 2025-xx-yy
+## PaymentSheet
+* [Fixed] Fixed an issue with the Liquid Glass keyboard toolbar where tapping on the sheet immediately above the keyboard didn't have an effect.
+
+## 24.23.1 2025-09-08
+
+### StripeCryptoOnramp
+* [Added] Additional APIs and improvements to support the development of the React Native StripeCryptoOnramp SDK.
+
 ## 24.23.0 2025-09-02
 
 ### CustomerSheet

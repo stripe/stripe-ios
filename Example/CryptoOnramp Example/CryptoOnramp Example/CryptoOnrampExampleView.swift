@@ -17,13 +17,12 @@ import StripePaymentSheet
 /// The main content view of the example CryptoOnramp app.
 struct CryptoOnrampExampleView: View {
     @State private var coordinator: CryptoOnrampCoordinator?
+    @State private var flowCoordinator: CryptoOnrampFlowCoordinator?
     @State private var errorMessage: String?
     @State private var email: String = ""
     @State private var selectedScopes: Set<OAuthScopes> = Set(OAuthScopes.onrampScope)
-    @State private var showRegistration: Bool = false
-    @State private var showAuthenticatedView: Bool = false
-    @State private var authenticationCustomerId: String?
     @State private var linkAuthIntentId: String?
+    @State private var livemode: Bool = false
 
     @Environment(\.isLoading) private var isLoading
     @FocusState private var isEmailFieldFocused: Bool
@@ -32,10 +31,18 @@ struct CryptoOnrampExampleView: View {
         isLoading.wrappedValue || email.isEmpty || coordinator == nil
     }
 
+    private var isRunningOnSimulator: Bool {
+        #if targetEnvironment(simulator)
+        return true
+        #else
+        return false
+        #endif
+    }
+
     // MARK: - View
 
     var body: some View {
-        NavigationView {
+        NavigationStack(path: flowCoordinator?.pathBinding ?? .constant([])) {
             ScrollView {
                 VStack(spacing: 20) {
                     FormField("Email") {
@@ -51,6 +58,23 @@ struct CryptoOnrampExampleView: View {
                                     lookupConsumerAndContinue()
                                 }
                             }
+                    }
+
+                    VStack(alignment: .leading, spacing: 4) {
+                        Toggle("Livemode", isOn: $livemode)
+                            .font(.headline)
+                            .disabled(isRunningOnSimulator)
+
+                        if isRunningOnSimulator {
+                            HStack(spacing: 4) {
+                                Image(systemName: "exclamationmark.octagon")
+                                    .font(.caption)
+                                    .foregroundColor(.secondary)
+                                Text("Livemode is not supported in the simulator.")
+                                    .font(.caption)
+                                    .foregroundColor(.secondary)
+                            }
+                        }
                     }
 
                     OAuthScopeSelector(
@@ -74,44 +98,62 @@ struct CryptoOnrampExampleView: View {
                     if let errorMessage {
                         ErrorMessageView(message: errorMessage)
                     }
-
-                    if let coordinator {
-                        HiddenNavigationLink(
-                            destination: RegistrationView(
-                                coordinator: coordinator,
-                                email: email,
-                                selectedScopes: Array(selectedScopes)
-                            ),
-                            isActive: $showRegistration
-                        )
-
-                        if let customerId = authenticationCustomerId {
-                            HiddenNavigationLink(
-                                destination: AuthenticatedView(
-                                    coordinator: coordinator,
-                                    customerId: customerId
-                                ),
-                                isActive: $showAuthenticatedView
-                            )
-                        }
-                    }
                 }
                 .padding()
             }
             .navigationTitle("CryptoOnramp Example")
             .navigationBarTitleDisplayMode(.inline)
+            .navigationDestination(for: CryptoOnrampFlowCoordinator.Route.self) { route in
+                if let flowCoordinator {
+                    switch route {
+                    case .registration:
+                        RegistrationView(
+                            coordinator: flowCoordinator.onrampCoordinator,
+                            email: flowCoordinator.email,
+                            selectedScopes: flowCoordinator.selectedScopes,
+                            livemode: livemode
+                        ) { customerId in
+                            flowCoordinator.advanceAfterRegistration(customerId: customerId)
+                        }
+                    case .kycInfo:
+                        KYCInfoView(coordinator: flowCoordinator.onrampCoordinator) {
+                            flowCoordinator.advanceAfterKyc()
+                        }
+                    case .identity:
+                        IdentityVerificationView(coordinator: flowCoordinator.onrampCoordinator) {
+                            flowCoordinator.advanceAfterIdentity()
+                        }
+                    case .authenticated:
+                        AuthenticatedView(
+                            coordinator: flowCoordinator.onrampCoordinator,
+                            customerId: flowCoordinator.customerId ?? ""
+                        )
+                    }
+                }
+            }
         }
-        .navigationViewStyle(.stack)
         .onAppear {
+            // Force livemode to false on simulator
+            if isRunningOnSimulator {
+                livemode = false
+            }
+
             guard coordinator == nil else {
                 return
             }
             initializeCoordinator()
         }
+        .onChange(of: livemode) { _ in
+            coordinator = nil
+            flowCoordinator = nil
+            linkAuthIntentId = nil
+            errorMessage = nil
+            initializeCoordinator()
+        }
     }
 
     private func initializeCoordinator() {
-        STPAPIClient.shared.setUpPublishableKey()
+        STPAPIClient.shared.setUpPublishableKey(livemode: livemode)
 
         isLoading.wrappedValue = true
         Task {
@@ -132,6 +174,7 @@ struct CryptoOnrampExampleView: View {
 
                 await MainActor.run {
                     self.coordinator = coordinator
+                    self.flowCoordinator = CryptoOnrampFlowCoordinator(onrampCoordinator: coordinator, isLoading: self.isLoading)
                     self.isLoading.wrappedValue = false
                 }
             } catch {
@@ -152,7 +195,11 @@ struct CryptoOnrampExampleView: View {
                 let laiId: String?
                 if lookupResult {
                     // Get Link Auth Intent ID from the demo merchant backend.
-                    let response = try await APIClient.shared.authenticateUser(with: email, oauthScopes: Array(selectedScopes))
+                    let response = try await APIClient.shared.authenticateUser(
+                        with: email,
+                        oauthScopes: Array(selectedScopes),
+                        livemode: livemode
+                    )
                     laiId = response.data.id
                     print( "Successfully got Link Auth Intent ID from demo backend. Id: \(laiId!)")
                 } else {
@@ -167,7 +214,7 @@ struct CryptoOnrampExampleView: View {
                     if lookupResult {
                         presentVerification(using: coordinator)
                     } else {
-                        showRegistration = true
+                        flowCoordinator?.startForNewUser(email: email, selectedScopes: Array(selectedScopes))
                     }
                 }
             } catch {
@@ -192,12 +239,7 @@ struct CryptoOnrampExampleView: View {
                     switch result {
                     case .consented(let customerId):
                         await MainActor.run {
-                            authenticationCustomerId = customerId
-
-                            // Delay so the navigation link animation doesn't get canceled.
-                            DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
-                                showAuthenticatedView = true
-                            }
+                            flowCoordinator?.startForExistingUser(customerId: customerId)
                         }
                     case .denied:
                         await MainActor.run {
@@ -287,6 +329,12 @@ struct OAuthScopeSelector: View {
             RoundedRectangle(cornerRadius: 8)
                 .fill(Color.gray.opacity(0.05))
         )
+    }
+}
+
+private extension CryptoOnrampFlowCoordinator {
+    var pathBinding: Binding<[Route]> {
+        Binding(get: { self.path }, set: { self.path = $0 })
     }
 }
 

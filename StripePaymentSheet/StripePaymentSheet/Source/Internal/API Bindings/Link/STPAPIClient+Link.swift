@@ -546,6 +546,32 @@ extension STPAPIClient {
         )
     }
 
+    func updatePhoneNumber(
+        consumerSessionClientSecret: String,
+        consumerAccountPublishableKey: String?,
+        phoneNumber: String,
+        requestSurface: LinkRequestSurface = .default,
+        completion: @escaping (Result<ConsumerSession, Error>) -> Void
+    ) {
+        let endpoint = "consumers/accounts/update_phone"
+
+        let parameters: [String: Any] = [
+            "credentials": [
+                "consumer_session_client_secret": consumerSessionClientSecret,
+            ],
+            "phone_number": phoneNumber,
+            "request_surface": requestSurface.rawValue,
+        ]
+
+        post(
+            resource: endpoint,
+            parameters: parameters,
+            consumerPublishableKey: consumerAccountPublishableKey
+        ) { (result: Result<UpdatePhoneNumberResponse, Error>) in
+            completion(result.map { $0.consumerSession })
+        }
+    }
+
     func logout(
         consumerSessionClientSecret: String,
         cookieStore: LinkCookieStore,
@@ -723,6 +749,10 @@ private extension STPAPIClient {
     }
 
     struct SessionResponse: Decodable {
+        let consumerSession: ConsumerSession
+    }
+
+    struct UpdatePhoneNumberResponse: Decodable {
         let consumerSession: ConsumerSession
     }
 }

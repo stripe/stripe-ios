@@ -82,6 +82,8 @@
 
 "By saving your bank account for %@ you agree to authorize payments pursuant to <terms>these terms</terms>." = "Bằng việc lưu tài khoản ngân hàng của bạn cho %@ bạn đồng ý cho phép thanh toán tuân theo <terms>các điều khoản này</terms>.";
 
+"By submitting your order to %@ and %@, you agree to save your information with %@ for future purchases, and agree to authorize payments pursuant to <terms>these terms</terms>." = "Bằng cách gửi đơn hàng của bạn đến %1$@ và %2$@, bạn đồng ý lưu thông tin của mình với %3$@ cho các giao dịch mua trong tương lai và đồng ý ủy quyền thanh toán theo <terms>các điều khoản này</terms>.";
+
 "By submitting your order to %@ you agree to authorize payments pursuant to <terms>these terms</terms>." = "Bằng cách gửi đơn hàng của bạn đến %@, bạn đồng ý ủy quyền thanh toán theo <terms>các điều khoản này</terms>.";
 
 "CPF/CPNJ" = "CPF/CPNJ";
@@ -125,8 +127,6 @@
 "EPS Bank" = "Ngân hàng EPS";
 
 "Enter address manually" = "Nhập địa chỉ thủ công";
-
-"Enter the code sent to %@ to use your saved information." = "Nhập mã đã được gửi đến %@để sử dụng thông tin đã lưu của mình.";
 
 "Enter the code sent to %@." = "Nhập mã đã được gửi tới %s.";
 

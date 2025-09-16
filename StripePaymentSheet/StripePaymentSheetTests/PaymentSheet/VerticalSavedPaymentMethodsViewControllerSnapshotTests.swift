@@ -10,6 +10,8 @@ import StripeCoreTestUtils
 @testable import StripePaymentsTestUtils
 import XCTest
 
+// ☠️ WARNING: These snapshots are missing selected borders at the corners on iOS 26 - this is a snapshot-test-only-bug and does not repro on simulator/device.
+// @iOS26
 final class VerticalSavedPaymentMethodsViewControllerSnapshotTests: STPSnapshotTestCase {
 
     func test_VerticalSavedPaymentOptionsViewControllerSnapshotTestsDarkMode() {
@@ -40,7 +42,7 @@ final class VerticalSavedPaymentMethodsViewControllerSnapshotTests: STPSnapshotT
         _test_VerticalSavedPaymentMethodsViewControllerSnapshotTests(darkMode: false, showDefaultPMBadge: true)
     }
 
-    func _test_VerticalSavedPaymentMethodsViewControllerSnapshotTests(darkMode: Bool, appearance: PaymentSheet.Appearance = .default, isEmbedded: Bool = false, showDefaultPMBadge: Bool = false) {
+    func _test_VerticalSavedPaymentMethodsViewControllerSnapshotTests(darkMode: Bool, appearance: PaymentSheet.Appearance = .default.applyingLiquidGlassIfPossible(), isEmbedded: Bool = false, showDefaultPMBadge: Bool = false) {
         var configuration = PaymentSheet.Configuration()
         configuration.appearance = appearance
         var paymentMethods = generatePaymentMethods()

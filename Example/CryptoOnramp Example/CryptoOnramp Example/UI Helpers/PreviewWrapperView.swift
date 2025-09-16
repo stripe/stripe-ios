@@ -33,7 +33,7 @@ struct PreviewWrapperView<Content: View>: View {
             }
         }
         .onAppear {
-            STPAPIClient.shared.setUpPublishableKey()
+            STPAPIClient.shared.setUpPublishableKey(livemode: false)
             Task {
                 let coordinator = try? await CryptoOnrampCoordinator.create(appearance: .init())
 

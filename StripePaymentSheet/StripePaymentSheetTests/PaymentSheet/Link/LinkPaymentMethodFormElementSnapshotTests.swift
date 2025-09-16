@@ -13,18 +13,17 @@ import UIKit
 @testable@_spi(STP) import StripePaymentSheet
 @testable@_spi(STP) import StripeUICore
 
+// @iOS26
 final class LinkPaymentMethodFormElementSnapshotTests: STPSnapshotTestCase {
 
     override func setUp() {
         super.setUp()
-
         // `LinkPaymentMethodFormElement` depends on `AddressSectionElement`, which requires
         // address specs to be loaded in memory.
         let expectation = expectation(description: "Load address specs")
         AddressSpecProvider.shared.loadAddressSpecs {
             expectation.fulfill()
         }
-
         wait(for: [expectation], timeout: STPTestingNetworkRequestTimeout)
     }
 
@@ -130,7 +129,6 @@ extension LinkPaymentMethodFormElementSnapshotTests {
         if requestPhone {
             configuration.billingDetailsCollectionConfiguration.phone = .always
         }
-
         return LinkPaymentMethodFormElement(
             paymentMethod: paymentMethod,
             configuration: configuration,

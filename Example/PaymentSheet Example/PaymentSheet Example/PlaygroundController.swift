@@ -547,6 +547,12 @@ class PlaygroundController: ObservableObject {
 
     private var subscribers: Set<AnyCancellable> = []
 
+    convenience init() {
+        let settings = Self.settingsFromDefaults() ?? .defaultValues()
+        let appearance = Self.appearanceFromDefaults() ?? .default
+        self.init(settings: settings, appearance: appearance)
+    }
+
     init(settings: PaymentSheetTestPlaygroundSettings, appearance: PaymentSheet.Appearance) {
         // Enable experimental payment methods.
         //        PaymentSheet.supportedPaymentMethods += [.link]
@@ -1047,11 +1053,7 @@ extension PlaygroundController: STPAnalyticsClientDelegate {
 
 extension PlaygroundController {
     func serializeSettingsToNSUserDefaults() {
-        // Never save changes for iOS26 since we have to set allowNewDesign based on a flag that isn't ready during boot time.
-        var settingsWithoutiOS26 = settings
-        settingsWithoutiOS26.enableIOS26Changes = .off
-
-        let settingsData = try! JSONEncoder().encode(settingsWithoutiOS26)
+        let settingsData = try! JSONEncoder().encode(settings)
         UserDefaults.standard.set(settingsData, forKey: PaymentSheetTestPlaygroundSettings.nsUserDefaultsKey)
 
         if let customerId {

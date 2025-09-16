@@ -82,6 +82,8 @@
 
 "By saving your bank account for %@ you agree to authorize payments pursuant to <terms>these terms</terms>." = "%@ için banka hesabınızı kaydettiğinizde ödemeleri <terms>bu koşullara</terms> göre yetkilendirmeyi kabul etmiş olursunuz.";
 
+"By submitting your order to %@ and %@, you agree to save your information with %@ for future purchases, and agree to authorize payments pursuant to <terms>these terms</terms>." = "Siparişinizi %1$@ ve %2$@'e göndererek, bilgilerinizi gelecekteki satın alımlar için %3$@ ile kaydetmeyi ve <terms>bu koşullar</terms> uyarınca ödemeleri yetkilendirmeyi kabul etmiş olursunuz.";
+
 "By submitting your order to %@ you agree to authorize payments pursuant to <terms>these terms</terms>." = "Siparişinizi %@’ye göndererek ödemeleri <terms>bu koşullara</terms> uygun olarak yetkilendirmeyi kabul etmiş olursunuz.";
 
 "CPF/CPNJ" = "CPF/CPNJ";
@@ -125,8 +127,6 @@
 "EPS Bank" = "EPS Bank";
 
 "Enter address manually" = "Adresi manuel olarak girin";
-
-"Enter the code sent to %@ to use your saved information." = "Kaydedilmiş bilgilerinizi kullanmak için %@ numaralı telefona gönderilen kodu girin.";
 
 "Enter the code sent to %@." = "%s yoluyla gönderilen kodu girin.";
 

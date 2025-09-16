@@ -195,33 +195,53 @@ final class DocumentCaptureViewController: IdentityFlowViewController {
             )
             return models
         case .cameraError:
-            return [
-                .init(
-                    text: .Localized.upload_a_photo,
-                    didTap: { [weak self] in
-                        self?.transitionToFileUpload()
-                    }
-                ),
-            ]
+            if apiConfig.requireLiveCapture {
+                // Hide the upload button when live capture is required
+                return []
+            } else {
+                return [
+                    .init(
+                        text: .Localized.upload_a_photo,
+                        didTap: { [weak self] in
+                            self?.transitionToFileUpload()
+                        }
+                    ),
+                ]
+            }
         case .timeout(let documentSide):
-            return [
-                .init(
-                    text: .Localized.upload_a_photo,
-                    isPrimary: false,
-                    didTap: { [weak self] in
-                        self?.transitionToFileUpload()
-                    }
-                ),
-                .init(
-                    text: .Localized.try_again_button,
-                    isPrimary: true,
-                    didTap: { [weak self] in
-                        self?.imageScanningSession.startScanning(
-                            expectedClassification: documentSide
-                        )
-                    }
-                ),
-            ]
+            if apiConfig.requireLiveCapture {
+                // Only show "Try Again" when live capture is required
+                return [
+                    .init(
+                        text: .Localized.try_again_button,
+                        isPrimary: true,
+                        didTap: { [weak self] in
+                            self?.imageScanningSession.startScanning(
+                                expectedClassification: documentSide
+                            )
+                        }
+                    ),
+                ]
+            } else {
+                return [
+                    .init(
+                        text: .Localized.upload_a_photo,
+                        isPrimary: false,
+                        didTap: { [weak self] in
+                            self?.transitionToFileUpload()
+                        }
+                    ),
+                    .init(
+                        text: .Localized.try_again_button,
+                        isPrimary: true,
+                        didTap: { [weak self] in
+                            self?.imageScanningSession.startScanning(
+                                expectedClassification: documentSide
+                            )
+                        }
+                    ),
+                ]
+            }
         }
     }
 
