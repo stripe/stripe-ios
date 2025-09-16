@@ -80,7 +80,7 @@ final class PayWithNativeLinkController {
         supportedPaymentMethodTypes: [LinkPaymentMethodType] = LinkPaymentMethodType.allCases,
         linkAppearance: LinkAppearance? = nil,
         linkConfiguration: LinkConfiguration? = nil,
-        passiveCaptchaChallenge: PassiveCaptchaChallenge? = nil,
+        passiveCaptchaChallenge: PassiveCaptchaChallenge? = nil
     ) {
         self.mode = mode
         self.intent = intent
