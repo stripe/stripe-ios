@@ -18,16 +18,7 @@ struct PollingDuration {
 
     /// The duration value, automatically adjusted for test environments
     var value: TimeInterval {
-        // Scale duration down for test mode to account for instant stub responses.
-        // During tests where we record network traffic, if we are hitting stubs we can make more network requests
-        // due to near-instant network responses, so we need to scale down the polling duration to account for this.
-        return isUsingNetworkStubs ? rawValue * 0.4 : rawValue
-    }
-
-    /// Detects if we're running in stub playback mode (HTTPStubs active but not recording)
-    private var isUsingNetworkStubs: Bool {
-        // Only scale duration when we're using stubs (HTTPStubs present and not recording the network STP_RECORD_NETWORK)
-        return NSClassFromString("HTTPStubs") != nil && ProcessInfo.processInfo.environment["STP_RECORD_NETWORK"] == nil
+        return rawValue
     }
 
     /// Creates a polling duration with the specified duration
