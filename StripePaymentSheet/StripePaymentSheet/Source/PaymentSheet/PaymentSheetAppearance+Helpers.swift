@@ -12,7 +12,6 @@ internal extension PaymentSheet.Appearance {
     var topFormInsets: NSDirectionalEdgeInsets {
         return .insets(top: formInsets.top, leading: formInsets.leading, trailing: formInsets.trailing)
     }
-    static let defaultPreIOS26CornerRadius: CGFloat = 6.0
 }
 
 extension PaymentSheet.Appearance.NavigationBarStyle {
