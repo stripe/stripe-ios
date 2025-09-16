@@ -31,7 +31,7 @@ struct IdentityVerificationView: View {
                     .font(.largeTitle)
                     .padding()
                     .background {
-                        Color.secondary.opacity(0.2)
+                        Color(.systemGroupedBackground)
                             .cornerRadius(16)
                     }
 
