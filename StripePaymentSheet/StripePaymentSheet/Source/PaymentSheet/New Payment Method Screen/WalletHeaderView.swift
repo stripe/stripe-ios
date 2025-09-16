@@ -63,7 +63,11 @@ extension PaymentSheetViewController {
 
         private lazy var payWithLinkButton: PayWithLinkButton = {
             let button = PayWithLinkButton()
-            // TODO(iOS 26): This should live inside PayWithLinkButton -- it has a lot of logic for settting corner radius
+            if appearance.cornerRadius == nil, LiquidGlassDetector.isEnabledInMerchantApp {
+                button.ios26_applyCapsuleCornerConfiguration()
+            } else {
+                button.cornerRadius = appearance.cornerRadius ?? 6
+            }
             button.applyCornerRadius(appearance: appearance, ios26DefaultCornerStyle: .capsule)
             button.accessibilityIdentifier = "pay_with_link_button"
             button.addTarget(self, action: #selector(handleTapPayWithLink), for: .touchUpInside)
@@ -115,7 +119,7 @@ extension PaymentSheetViewController {
         }
 
         init(options: WalletOptions,
-             appearance: PaymentSheet.Appearance = PaymentSheet.Appearance.default,
+             appearance: PaymentSheet.Appearance,
              applePayButtonType: PKPaymentButtonType = .plain,
              isPaymentIntent: Bool = true,
              delegate: WalletHeaderViewDelegate?) {
@@ -195,15 +199,12 @@ extension PaymentSheetViewController {
             // The corner configuration API that powers ios26_applyCapsuleCornerConfiguration doesn't work on PKPaymentButton
             // Instead, we set the cornerRadius directly
             // TODO(gbirch): align Apple Pay button liquid glass styling with other elements
-            if let cornerRadius = appearance.cornerRadius {
-                button.cornerRadius = cornerRadius
+            if appearance.cornerRadius == nil, LiquidGlassDetector.isEnabledInMerchantApp {
+                button.cornerRadius = 34
             } else {
-                if #available(iOS 26.0, *) {
-                    layer.cornerRadius = 34
-                } else {
-                    layer.cornerRadius = 6
-                }
+                button.cornerRadius = appearance.cornerRadius ?? 6
             }
+
             button.accessibilityIdentifier = "apple_pay_button"
             button.addTarget(self, action: #selector(handleTapApplePay), for: .touchUpInside)
 
