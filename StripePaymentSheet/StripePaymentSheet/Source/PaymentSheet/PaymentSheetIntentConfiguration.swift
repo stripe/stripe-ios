@@ -138,7 +138,7 @@ public extension PaymentSheet {
                                                            onBehalfOf: String? = nil,
                                                            paymentMethodConfigurationId: String? = nil,
                                                            confirmationTokenConfirmHandler: @escaping ConfirmationTokenConfirmHandler,
-                                                          requireCVCRecollection: Bool = false) {
+                                                           requireCVCRecollection: Bool = false) {
             self.mode = mode
             self.paymentMethodTypes = paymentMethodTypes
             self.onBehalfOf = onBehalfOf
