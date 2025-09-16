@@ -87,6 +87,9 @@ public extension PaymentSheet {
         /// Describes the style of navigation bar style
         @_spi(STP) public var navigationBarStyle: NavigationBarStyle = .plain
 
+        /// Internal variable to keep if applyLiquidGlass() was called. Strictly intended for analytics purposes.
+        internal var didCallApplyLiquidGlass: Bool = false
+
         // MARK: NavigationBar
         /// Describes navigation bar styles
         @_spi(STP) public enum NavigationBarStyle {
@@ -322,7 +325,7 @@ public extension PaymentSheet.Appearance {
         shadow = .disabled
         formInsets = .insets(leading: 16, bottom: 40, trailing: 16)
         navigationBarStyle = .glass
-
+        didCallApplyLiquidGlass = true
         // Enable feature gate while still under development
         LiquidGlassDetector.allowNewDesign = true
     }

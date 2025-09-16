@@ -70,6 +70,8 @@ extension PaymentSheet.Appearance {
         payload["colors"] = colors != PaymentSheet.Appearance.default.colors
         payload["primary_button"] = primaryButton != PaymentSheet.Appearance.default.primaryButton
         payload["navigation_bar_style"] = navigationBarStyle.analyticsValue
+        payload["apply_liquid_glass"] = didCallApplyLiquidGlass
+
         // Convenience payload item to make querying high level appearance usage easier
         payload["usage"] = payload.values.contains(where: { value in
             if let boolValue = value as? Bool {
