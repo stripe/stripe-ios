@@ -62,11 +62,12 @@ extension UIView {
     /// Convenience method that returns whether or not `cornerConfiguration` was set.
     /// You'd think this would be nil, but it's not nullable!
     @_spi(STP) public var didSetCornerConfiguration: Bool {
+#if compiler(>=6.2)
         if #available(iOS 26.0, *) {
             return UIView.plainUIView.cornerConfiguration != cornerConfiguration
-        } else {
-            return false
         }
+#endif
+        return false
     }
 
     /// Just exists to avoid creating one every time in `didSetCornerConfiguration`

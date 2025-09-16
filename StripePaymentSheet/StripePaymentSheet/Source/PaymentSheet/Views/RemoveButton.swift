@@ -28,7 +28,7 @@ class RemoveButton: UIButton {
 
     init(
         title: String = .Localized.remove,
-        appearance: PaymentSheet.Appearance = PaymentSheet.Appearance.default
+        appearance: PaymentSheet.Appearance = .default
     ) {
         self.appearance = appearance
         super.init(frame: .zero)
@@ -45,7 +45,7 @@ class RemoveButton: UIButton {
         titleLabel?.adjustsFontForContentSizeCategory = true
         let strokeWidth = appearance.selectedBorderWidth ?? appearance.borderWidth * 1.5
 
-        applyCornerRadius(appearance: appearance, ios26DefaultCornerStyle: .capsule)
+        applyCornerRadius(appearance: appearance, ios26DefaultCornerStyle: .capsule, shouldUsePrimaryButtonCornerRadius: true)
         layer.borderWidth = strokeWidth
         if didSetCornerConfiguration {
             // If we're using a Liquid Glass corner configuration, the UI breaks if stroke with <= 0, so default to 1.5. Follows pattern from LiquidGlassRectangle
