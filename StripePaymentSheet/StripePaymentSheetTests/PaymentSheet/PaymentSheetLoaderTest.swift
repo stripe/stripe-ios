@@ -481,8 +481,8 @@ final class PaymentSheetLoaderTest: STPNetworkStubbingTestCase {
         let siteKey = "143aadb6-fb60-4ab6-b128-f7fe53426d4a"
         let passiveCaptcha = PassiveCaptcha(siteKey: siteKey, rqdata: nil)
         // even if validation takes a very long time, the payment sheet will load in a normal amount of time
-        PassiveCaptchaChallenge.testConfiguration = PassiveCaptchaChallenge.TestConfiguration(delay: 30)
         let passiveCaptchaChallenge = PassiveCaptchaChallenge(passiveCaptcha: passiveCaptcha)
+        await passiveCaptchaChallenge.setTestConfiguration(PassiveCaptchaChallenge.TestConfiguration(timeout: 6, delay: 30))
         await passiveCaptchaChallenge.start()
         let expectation = XCTestExpectation(description: "Load")
         let clientSecret = try await STPTestingAPIClient.shared.fetchPaymentIntent(types: ["card"])

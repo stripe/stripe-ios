@@ -18,8 +18,8 @@ class PassiveCaptchaTests: XCTestCase {
         // OCS mobile test key from https://dashboard.hcaptcha.com/sites/edit/143aadb6-fb60-4ab6-b128-f7fe53426d4a
         let siteKey = "143aadb6-fb60-4ab6-b128-f7fe53426d4a"
         let passiveCaptcha = PassiveCaptcha(siteKey: siteKey, rqdata: nil)
-        PassiveCaptchaChallenge.testConfiguration = PassiveCaptchaChallenge.TestConfiguration()
         let passiveCaptchaChallenge = PassiveCaptchaChallenge(passiveCaptcha: passiveCaptcha)
+        await passiveCaptchaChallenge.setTestConfiguration(PassiveCaptchaChallenge.TestConfiguration(timeout: 6))
         // calling fetchToken directly before calling start, so the analytic won't say it was ready
         let hcaptchaToken = await passiveCaptchaChallenge.fetchToken()
         XCTAssertNotNil(hcaptchaToken)
@@ -33,11 +33,10 @@ class PassiveCaptchaTests: XCTestCase {
     }
 
     func testPassiveCaptchaIsReadyOnFetchToken() async throws {
-        // OCS mobile test key from https://dashboard.hcaptcha.com/sites/edit/143aadb6-fb60-4ab6-b128-f7fe53426d4a
         let siteKey = "143aadb6-fb60-4ab6-b128-f7fe53426d4a"
         let passiveCaptcha = PassiveCaptcha(siteKey: siteKey, rqdata: nil)
-        PassiveCaptchaChallenge.testConfiguration = PassiveCaptchaChallenge.TestConfiguration()
         let passiveCaptchaChallenge = PassiveCaptchaChallenge(passiveCaptcha: passiveCaptcha)
+        await passiveCaptchaChallenge.setTestConfiguration(PassiveCaptchaChallenge.TestConfiguration(timeout: 6))
         await passiveCaptchaChallenge.start()
         // wait to make sure that the token will be ready by the time we call fetchToken
         try await Task.sleep(nanoseconds: 6_000_000_000)
@@ -56,8 +55,8 @@ class PassiveCaptchaTests: XCTestCase {
         let siteKey = "143aadb6-fb60-4ab6-b128-f7fe53426d4a"
         let passiveCaptcha = PassiveCaptcha(siteKey: siteKey, rqdata: nil)
         // really short timeout to make sure it times out
-        PassiveCaptchaChallenge.testConfiguration = PassiveCaptchaChallenge.TestConfiguration(timeout: 0)
         let passiveCaptchaChallenge = PassiveCaptchaChallenge(passiveCaptcha: passiveCaptcha)
+        await passiveCaptchaChallenge.setTestConfiguration(PassiveCaptchaChallenge.TestConfiguration(timeout: 0))
         let hcaptchaToken = await passiveCaptchaChallenge.fetchToken()
         // should return nil due to timeout
         XCTAssertNil(hcaptchaToken)

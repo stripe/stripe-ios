@@ -50,15 +50,21 @@ private enum CaptchaResult {
     }
 
     /// Test configuration - can be set by tests to override default behavior
-    static var testConfiguration: TestConfiguration?
+    private var testConfiguration: TestConfiguration? = STPAnalyticsClient.isUnitOrUITest ? TestConfiguration() : nil
 
     public struct TestConfiguration {
         var timeout: TimeInterval
         var delay: TimeInterval
 
-        public init(timeout: TimeInterval? = nil, delay: TimeInterval? = nil) {
-            self.timeout = timeout ?? 6
-            self.delay = delay ?? 0
+        public init(timeout: TimeInterval = 0, delay: TimeInterval = 0) {
+            self.timeout = timeout
+            self.delay = delay
+        }
+    }
+
+    func setTestConfiguration(_ testConfiguration: TestConfiguration) {
+        if STPAnalyticsClient.isUnitOrUITest {
+            self.testConfiguration = testConfiguration
         }
     }
 
@@ -94,7 +100,7 @@ private enum CaptchaResult {
                         }
                     }
                 }
-                if let testConfiguration = PassiveCaptchaChallenge.testConfiguration {
+                if let testConfiguration = await self?.testConfiguration {
                     try? await Task.sleep(nanoseconds: UInt64(testConfiguration.delay) * 1_000_000_000)
                 }
                 // Mark as complete
@@ -122,10 +128,10 @@ private enum CaptchaResult {
     public func fetchToken() async -> String? {
         guard let siteKey = passiveCaptcha?.siteKey else { return nil }
         let timeoutNs: UInt64 = {
-            if let testTimeout = PassiveCaptchaChallenge.testConfiguration?.timeout {
-                return UInt64(testTimeout) * 1_000_000_000
+            if let testConfiguration {
+                return UInt64(testConfiguration.timeout) * 1_000_000_000
             }
-            return STPAnalyticsClient.isUnitOrUITest ? 0 : 6_000_000_000
+            return 6_000_000_000 // same as web
         }()
         let startTime = Date()
         var isReady = false
