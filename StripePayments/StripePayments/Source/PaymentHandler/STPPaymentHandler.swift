@@ -2154,7 +2154,7 @@ public class STPPaymentHandler: NSObject {
         } else {
             currentAction.apiClient.retrievePaymentIntent(withClientSecret: currentAction.paymentIntent.clientSecret,
                                                           expand: ["payment_method"],
-                                                          timeout: pollingBudget?.networkTimeout ?? 3, // Default to 3 seconds of network timeout when fetching an intent (first poll)
+                                                          timeout: pollingBudget?.networkTimeout,
                                                           completion: completion)
         }
     }
@@ -2170,7 +2170,7 @@ public class STPPaymentHandler: NSObject {
         } else {
             currentAction.apiClient.retrieveSetupIntent(withClientSecret: currentAction.setupIntent.clientSecret,
                                                         expand: ["payment_method"],
-                                                        timeout: pollingBudget?.networkTimeout ?? 3, // Default to 3 seconds of network timeout when fetching an intent (first poll)
+                                                        timeout: pollingBudget?.networkTimeout,
                                                         completion: completion)
         }
     }
