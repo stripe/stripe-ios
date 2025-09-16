@@ -64,11 +64,8 @@
 /* Flip your driver's license or government-issued photo ID over to the other side */
 "Flip your driver's license or government-issued photo ID over to the other side" = "Flip your driver's license or government-issued photo ID over to the other side";
 
-
-
 /* Instructional text for scanning back of a identity card */
 "Flip your identity card over to the other side" = "Flip your identity card over to the other side";
-
 
 /* Accessibility label when front driver's license, passport, or government issued photo id photo has successfully uploaded */
 "Front %@ photo successfully uploaded" = "Front %@ photo successfully uploaded";
