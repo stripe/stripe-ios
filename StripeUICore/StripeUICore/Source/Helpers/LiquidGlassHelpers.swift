@@ -42,7 +42,6 @@ import UIKit
 // MARK: - UIView Liquid Glass helpers
 extension UIView {
     @_spi(STP) public func ios26_applyCapsuleCornerConfiguration() {
-        stpAssert(LiquidGlassDetector.isEnabled)
 #if compiler(>=6.2)
         if #available(iOS 26.0, *) {
             cornerConfiguration = .capsule()
@@ -51,7 +50,6 @@ extension UIView {
     }
 
     @_spi(STP) public func ios26_applyDefaultCornerConfiguration() {
-        stpAssert(LiquidGlassDetector.isEnabled)
 #if compiler(>=6.2)
         if #available(iOS 26.0, *) {
             cornerConfiguration = .uniformCorners(radius: 26)

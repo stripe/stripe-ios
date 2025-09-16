@@ -551,7 +551,6 @@ class PlaygroundController: ObservableObject {
     convenience init() {
         let settings = Self.settingsFromDefaults() ?? .defaultValues()
         let appearance = Self.appearanceFromDefaults() ?? .default
-        LiquidGlassDetector.allowNewDesign = true
         self.init(settings: settings, appearance: appearance)
     }
 

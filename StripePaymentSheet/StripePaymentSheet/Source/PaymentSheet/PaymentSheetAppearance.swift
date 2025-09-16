@@ -31,7 +31,7 @@ public extension PaymentSheet {
         /// The corner radius used for buttons, inputs, tabs in PaymentSheet
         /// - Note: The behavior of this property is consistent with the behavior of corner radius on `CALayer`
         /// - Note: When `nil`, the behavior depends:
-        ///     - iOS 26+ and `UIDesignRequiresCompatibility = NO`: Various `UICornerConfiguration` values are used to match Liquid Glass design.
+        ///     - iOS 26+ and `UIDesignRequiresCompatibility = NO`: Various `UICornerConfiguration` values are used to match Liquid Glass.
         ///     - Pre-iOS 26: A 6.0 corner radius is applied.
         ///
         /// The default value is 6.0
@@ -333,6 +333,9 @@ public extension PaymentSheet.Appearance {
         formInsets = .insets(leading: 16, bottom: 40, trailing: 16)
         navigationBarStyle = .glass
         cornerRadius = nil
+
+        // Enable feature gate while still under development
+        LiquidGlassDetector.allowNewDesign = true
     }
 }
 

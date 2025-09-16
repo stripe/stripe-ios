@@ -502,6 +502,7 @@ struct AppearancePlaygroundView: View {
                     }
                 }
                 Button {
+                    LiquidGlassDetector.allowNewDesign = false
                     appearance = PaymentSheet.Appearance()
                     doneAction(appearance)
                 } label: {
