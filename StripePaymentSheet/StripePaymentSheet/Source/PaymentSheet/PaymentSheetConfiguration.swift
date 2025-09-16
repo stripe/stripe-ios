@@ -490,6 +490,9 @@ extension PaymentSheet {
         /// The Link display mode.
         public var display: Display = .automatic
 
+        /// The Link funding sources that should be disabled. Defaults to an empty list.
+        @_spi(STP) public var disableFundingSources: [String] = []
+
         /// Whether missing billing details should be collected for existing Link payment methods.
         @_spi(CollectMissingLinkBillingDetailsPreview) public var collectMissingBillingDetailsForExistingPaymentMethods: Bool = true
 
@@ -508,6 +511,10 @@ extension PaymentSheet {
             }
         }
 
+        var canDisplayBankTab: Bool {
+            return shouldDisplay && !disableFundingSources.contains("BANK_ACCOUNT")
+        }
+
         /// Initializes a LinkConfiguration
         public init(
             display: Display = .automatic
@@ -521,6 +528,14 @@ extension PaymentSheet {
         ) {
             self.display = display
             self.collectMissingBillingDetailsForExistingPaymentMethods = collectMissingBillingDetailsForExistingPaymentMethods
+        }
+
+        @_spi(STP) public init(
+            display: Display = .automatic,
+            disableFundingSources: [String] = []
+        ) {
+            self.display = display
+            self.disableFundingSources = disableFundingSources
         }
     }
 
