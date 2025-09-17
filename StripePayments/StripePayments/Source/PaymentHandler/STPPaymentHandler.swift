@@ -1592,7 +1592,7 @@ public class STPPaymentHandler: NSObject {
                                     currentAction.complete(with: .succeeded, error: nil)
                                 } else {
                                     // If this is a web-based 3DS2 transaction that is still in requires_action, we may just need to refresh the PI a few more times.
-                                    // Also retry a few times for app redirects, the redirect flow is fast and sometimes the intent doesn't update quick enough
+                                    // Also retry a few times for certain LPMs that experience latency updating the intent status after returning to the merchant's app
                                     let shouldRetryForCard = paymentMethodType == .card && paymentIntent.nextAction?.type == .useStripeSDK
                                     if paymentMethodType != .card || shouldRetryForCard, let pollingBudget = pollingBudget ?? .init(startDate: startDate, paymentMethodType: paymentMethodType), pollingBudget.canPoll {
                                         pollingBudget.pollAfter {
@@ -1671,7 +1671,7 @@ public class STPPaymentHandler: NSObject {
                             currentAction.complete(with: .succeeded, error: nil)
                         } else {
                             // If this is a web-based 3DS2 transaction that is still in requires_action, we may just need to refresh the SI a few more times.
-                            // Also retry a few times for Cash App, the redirect flow is fast and sometimes the intent doesn't update quick enough
+                            // Also retry a few times for certain LPMs that experience latency updating the intent status after returning to the merchant's app
                             let shouldRetryForCard = paymentMethod.type == .card && setupIntent.nextAction?.type == .useStripeSDK
                             if paymentMethod.type != .card || shouldRetryForCard, let pollingBudget = pollingBudget ?? .init(startDate: startDate, paymentMethodType: paymentMethod.type), pollingBudget.canPoll {
                                 pollingBudget.pollAfter {
