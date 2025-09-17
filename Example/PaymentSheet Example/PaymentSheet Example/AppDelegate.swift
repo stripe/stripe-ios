@@ -32,7 +32,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         }
 #endif
         catchBrokenConstraints()
-
         return true
     }
 

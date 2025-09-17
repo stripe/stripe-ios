@@ -99,11 +99,7 @@ class SectionContainerView: UIView {
     func updateUI(newViews: [UIView]? = nil) {
         layer.applyShadow(shadow: theme.shadow)
         // We apply corner radius here so that our shadow uses it too.
-        if LiquidGlassDetector.isEnabled {
-            ios26_applyDefaultCornerConfiguration()
-        } else {
-            layer.cornerRadius = theme.cornerRadius
-        }
+        applyCornerRadius(appearance: theme)
         if isUserInteractionEnabled || UITraitCollection.current.isDarkMode {
             backgroundColor = theme.colors.componentBackground
         } else {
@@ -245,19 +241,16 @@ private func buildStackView(views: [UIView], theme: ElementsAppearance = .defaul
     stackView.customBackgroundColor = theme.colors.componentBackground
     stackView.drawBorder = true
     stackView.hideShadow = true // Shadow is handled by `SectionContainerView`
-    if LiquidGlassDetector.isEnabled {
-        // Since StackViewWithSeparator draws its own borders on its `backgroundView`, we must apply the corner radius to the background view.
+
+    // Since StackViewWithSeparator draws its own borders on its `backgroundView`, we must apply the corner radius to the background view.
+    if LiquidGlassDetector.isEnabledInMerchantApp, theme.cornerRadius == nil {
         stackView.backgroundView.ios26_applyDefaultCornerConfiguration()
     } else {
-        stackView.borderCornerRadius = theme.cornerRadius
+        stackView.borderCornerRadius = theme.cornerRadius ?? ElementsUI.defaultCornerRadius
     }
     // Prevent subviews (specifically, TextFieldView's `transparentMaskView`) from extending outside the corners:
     stackView.clipsToBounds = true
     // Note that StackViewWithSeparator's subviews are not subviews of the `backgroundView`, so we have to round the stackview's corners too :(
-    if LiquidGlassDetector.isEnabled {
-        stackView.ios26_applyDefaultCornerConfiguration()
-    } else {
-        stackView.layer.cornerRadius = theme.cornerRadius
-    }
+    stackView.applyCornerRadius(appearance: theme)
     return stackView
 }
