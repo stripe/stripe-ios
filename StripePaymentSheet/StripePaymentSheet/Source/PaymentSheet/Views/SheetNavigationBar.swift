@@ -27,7 +27,7 @@ class SheetNavigationBar: UIView {
     fileprivate lazy var leftItemsStackView: UIStackView = {
         let stack = UIStackView(arrangedSubviews: [dummyView, closeButtonLeft, backButton, testModeView])
         stack.spacing = PaymentSheetUI.defaultPadding
-        stack.setCustomSpacing(PaymentSheetUI.navBarPadding, after: dummyView)
+        stack.setCustomSpacing(PaymentSheetUI.navBarPadding(appearance: appearance), after: dummyView)
         stack.alignment = .center
         return stack
     }()
@@ -105,11 +105,11 @@ class SheetNavigationBar: UIView {
             leftItemsStackView.heightAnchor.constraint(equalTo: heightAnchor),
 
             additionalButton.trailingAnchor.constraint(
-                equalTo: trailingAnchor, constant: -PaymentSheetUI.navBarPadding),
+                equalTo: trailingAnchor, constant: -PaymentSheetUI.navBarPadding(appearance: appearance)),
             additionalButton.centerYAnchor.constraint(equalTo: centerYAnchor),
 
             closeButtonRight.trailingAnchor.constraint(
-                equalTo: trailingAnchor, constant: -PaymentSheetUI.navBarPadding),
+                equalTo: trailingAnchor, constant: -PaymentSheetUI.navBarPadding(appearance: appearance)),
             closeButtonRight.centerYAnchor.constraint(equalTo: centerYAnchor),
         ])
 
