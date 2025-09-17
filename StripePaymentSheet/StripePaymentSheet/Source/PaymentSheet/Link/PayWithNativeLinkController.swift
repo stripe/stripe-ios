@@ -59,16 +59,6 @@ final class PayWithNativeLinkController {
     private let linkAppearance: LinkAppearance?
     private let linkConfiguration: LinkConfiguration?
     private let passiveCaptchaChallenge: PassiveCaptchaChallenge?
-    private var hcaptchaToken: String? {
-        get async {
-            if let _hcaptchaToken {
-                return _hcaptchaToken
-            }
-            _hcaptchaToken = await passiveCaptchaChallenge?.fetchToken()
-            return _hcaptchaToken
-        }
-    }
-    private var _hcaptchaToken: String?
 
     init(
         mode: Mode,
@@ -238,7 +228,7 @@ extension PayWithNativeLinkController: PayWithLinkViewControllerDelegate {
                 elementsSession: elementsSession,
                 paymentOption: paymentOption,
                 paymentHandler: paymentHandler,
-                hcaptchaToken: hcaptchaToken,
+                hcaptchaToken: passiveCaptchaChallenge?.fetchToken(),
                 analyticsHelper: analyticsHelper,
                 completion: { result, confirmationType in
                     if self.logPayment {
@@ -296,7 +286,7 @@ extension PayWithNativeLinkController: PayWithLinkWebControllerDelegate {
                 paymentOption: paymentOption,
                 paymentHandler: paymentHandler,
                 integrationShape: .complete,
-                hcaptchaToken: hcaptchaToken,
+                hcaptchaToken: passiveCaptchaChallenge?.fetchToken(),
                 analyticsHelper: analyticsHelper
             ) { result, deferredIntentConfirmationType in
                 self.completion?(.full(result: result, deferredIntentConfirmationType: deferredIntentConfirmationType, didFinish: true))

@@ -27,16 +27,6 @@ final class PayWithLinkController {
     let configuration: PaymentElementConfiguration
     let analyticsHelper: PaymentSheetAnalyticsHelper
     private let passiveCaptchaChallenge: PassiveCaptchaChallenge?
-    private var hcaptchaToken: String? {
-        get async {
-            if let _hcaptchaToken {
-                return _hcaptchaToken
-            }
-            _hcaptchaToken = await passiveCaptchaChallenge?.fetchToken()
-            return _hcaptchaToken
-        }
-    }
-    private var _hcaptchaToken: String?
 
     init(intent: Intent, elementsSession: STPElementsSession, configuration: PaymentElementConfiguration, analyticsHelper: PaymentSheetAnalyticsHelper, passiveCaptchaChallenge: PassiveCaptchaChallenge?) {
         self.intent = intent
@@ -80,7 +70,7 @@ extension PayWithLinkController: PayWithLinkWebControllerDelegate {
                 paymentOption: paymentOption,
                 paymentHandler: paymentHandler,
                 integrationShape: .complete,
-                hcaptchaToken: hcaptchaToken,
+                hcaptchaToken: passiveCaptchaChallenge?.fetchToken(),
                 analyticsHelper: analyticsHelper
             ) { result, deferredIntentConfirmationType in
                 self.completion?(result, deferredIntentConfirmationType)
