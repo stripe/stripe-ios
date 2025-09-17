@@ -69,19 +69,12 @@ final class PollingBudget {
         }
     }
 
-    /// Calculates the recommended delay before the next poll
-    /// - Parameter targetInterval: The desired time interval between poll starts (default: 1.0 second)
-    /// - Returns: The time to wait before the next poll, optimized based on the last poll timing
-    func recommendedDelay(targetInterval: TimeInterval = 1.0) -> TimeInterval {
-        let timeSinceLastPoll = Date().timeIntervalSince(lastPollAttempt ?? startDate)
-        // If enough time has passed, poll immediately. Otherwise, wait for the remaining time.
-        return max(0, targetInterval - timeSinceLastPoll)
-    }
-
     /// Executes a block after the recommended delay and automatically records the poll attempt
     /// - Parameter block: Block to execute after the delay
     func pollAfter(block: @escaping () -> Void) {
-        let optimizedDelay = recommendedDelay(targetInterval: 1.0)
+        let timeSinceLastPoll = Date().timeIntervalSince(lastPollAttempt ?? startDate)
+        // If enough time has passed, poll immediately. Otherwise, wait for the remaining time.
+        let optimizedDelay = max(0, 1.0 - timeSinceLastPoll)
         stpAssert(canPoll, "pollAfter should not be called when polling budget is exhausted")
         DispatchQueue.main.asyncAfter(deadline: .now() + optimizedDelay) {
             self.recordPollAttempt()

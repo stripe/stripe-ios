@@ -154,125 +154,98 @@ final class PollingBudgetTests: XCTestCase {
 
     // MARK: - Timing Optimization Tests
 
-    func testRecommendedDelay_firstPoll() {
+    func testPollAfter_firstPollTiming() {
         let budget = PollingBudget(startDate: Date(), duration: 10.0)
+        let expectation = XCTestExpectation(description: "First poll should execute after 1 second")
 
-        // For the first poll with no previous attempt, should return the target interval
-        let delay = budget.recommendedDelay(targetInterval: 1.5)
-        XCTAssertEqual(delay, 1.5, accuracy: 0.01, "First poll should return target interval")
+        let startTime = Date()
+        budget.pollAfter {
+            let elapsed = Date().timeIntervalSince(startTime)
+            XCTAssertGreaterThan(elapsed, 0.95, "Should wait close to 1 second for first poll")
+            XCTAssertLessThan(elapsed, 1.1, "Should not wait much longer than 1 second")
+            expectation.fulfill()
+        }
 
-        // Test default target interval
-        let defaultDelay = budget.recommendedDelay()
-        XCTAssertEqual(defaultDelay, 1.0, accuracy: 0.01, "Default target interval should be 1.0")
+        wait(for: [expectation], timeout: 2.0)
     }
 
-    func testRecommendedDelay_fastRequest() {
+    func testPollAfter_fastRequestTiming() {
         let budget = PollingBudget(startDate: Date(), duration: 10.0)
+        let expectation = XCTestExpectation(description: "Fast request should respect 1-second intervals")
 
         // Record a poll attempt and wait a short time
         budget.recordPollAttempt()
         Thread.sleep(forTimeInterval: 0.3)
 
-        // Should return remaining time until target interval
-        let delay = budget.recommendedDelay(targetInterval: 1.0)
-        XCTAssertGreaterThan(delay, 0.6, "Should wait for remaining time")
-        XCTAssertLessThan(delay, 0.8, "Should not wait too long")
+        let startTime = Date()
+        budget.pollAfter {
+            let elapsed = Date().timeIntervalSince(startTime)
+            // Should wait remaining time (~0.7 seconds)
+            XCTAssertGreaterThan(elapsed, 0.6, "Should wait for remaining time")
+            XCTAssertLessThan(elapsed, 0.8, "Should not wait too long")
+            expectation.fulfill()
+        }
+
+        wait(for: [expectation], timeout: 2.0)
     }
 
-    func testRecommendedDelay_slowRequest() {
+    func testPollAfter_slowRequestTiming() {
         let budget = PollingBudget(startDate: Date(), duration: 10.0)
+        let expectation = XCTestExpectation(description: "Slow request should poll immediately")
 
         // Record a poll attempt and wait longer than target interval
         budget.recordPollAttempt()
         Thread.sleep(forTimeInterval: 1.1)
 
-        // Should return 0 (immediate polling)
-        let delay = budget.recommendedDelay(targetInterval: 1.0)
-        XCTAssertEqual(delay, 0.0, accuracy: 0.01, "Should poll immediately when last poll was > target interval ago")
+        let startTime = Date()
+        budget.pollAfter {
+            let elapsed = Date().timeIntervalSince(startTime)
+            // Should poll immediately (or very quickly)
+            XCTAssertLessThan(elapsed, 0.1, "Should poll immediately when last poll was > 1 second ago")
+            expectation.fulfill()
+        }
+
+        wait(for: [expectation], timeout: 1.0)
     }
 
-    func testRecommendedDelay_exactTargetInterval() {
+    func testPollAfter_multipleQuickPolls() {
         let budget = PollingBudget(startDate: Date(), duration: 10.0)
+        let expectation = XCTestExpectation(description: "Multiple quick polls should respect timing")
+        expectation.expectedFulfillmentCount = 3
 
-        // Record a poll attempt and wait exactly the target interval
-        budget.recordPollAttempt()
-        Thread.sleep(forTimeInterval: 1.0)
+        var pollTimes: [TimeInterval] = []
+        let overallStart = Date()
 
-        // Should return 0 or very close to 0
-        let delay = budget.recommendedDelay(targetInterval: 1.0)
-        XCTAssertLessThanOrEqual(delay, 0.05, "Should poll immediately or very soon when exactly at target interval")
-    }
+        func performPoll(_ pollNumber: Int) {
+            let pollStart = Date()
+            budget.pollAfter {
+                let elapsed = Date().timeIntervalSince(pollStart)
+                pollTimes.append(Date().timeIntervalSince(overallStart))
 
-    func testRecommendedDelay_customTargetInterval() {
-        let budget = PollingBudget(startDate: Date(), duration: 10.0)
+                if pollNumber < 3 {
+                    // Simulate quick network response
+                    Thread.sleep(forTimeInterval: 0.1)
+                    performPoll(pollNumber + 1)
+                }
 
-        // Test with 2.0 second target interval
-        budget.recordPollAttempt()
-        Thread.sleep(forTimeInterval: 0.5)
+                expectation.fulfill()
+            }
+        }
 
-        let delay = budget.recommendedDelay(targetInterval: 2.0)
-        XCTAssertGreaterThan(delay, 1.4, "Should wait for remaining time with custom interval")
-        XCTAssertLessThan(delay, 1.6, "Should not wait too long with custom interval")
-    }
+        performPoll(1)
+        wait(for: [expectation], timeout: 5.0)
 
-    func testLastPollAttempt_initialState() {
-        let budget = PollingBudget(startDate: Date(), duration: 10.0)
+        // Verify that polls are spaced approximately 1 second apart
+        if pollTimes.count >= 2 {
+            let secondPollGap = pollTimes[1] - pollTimes[0]
+            XCTAssertGreaterThan(secondPollGap, 0.9, "Second poll should wait ~1 second after first")
+            XCTAssertLessThan(secondPollGap, 1.2, "Second poll should not wait much more than 1 second")
+        }
 
-        // Initially, lastPollAttempt should be nil (tested indirectly via recommendedDelay)
-        let delay = budget.recommendedDelay(targetInterval: 2.5)
-        XCTAssertEqual(delay, 2.5, accuracy: 0.01, "Should return full target interval when no previous poll recorded")
-    }
-
-    func testLastPollAttempt_updatesOnRecord() {
-        let budget = PollingBudget(startDate: Date(), duration: 10.0)
-
-        // Record first attempt and wait a bit
-        budget.recordPollAttempt()
-        Thread.sleep(forTimeInterval: 0.3)
-        let firstDelay = budget.recommendedDelay(targetInterval: 1.0)
-
-        // Record second attempt immediately (should reset the timer)
-        budget.recordPollAttempt()
-        let secondDelay = budget.recommendedDelay(targetInterval: 1.0)
-
-        // Second delay should be close to full interval since we just recorded a new attempt
-        XCTAssertGreaterThan(secondDelay, 0.95, "Should wait almost full interval after recording new poll attempt")
-        XCTAssertLessThan(firstDelay, 0.8, "First delay should be less since time had passed")
-        XCTAssertGreaterThan(secondDelay, firstDelay, "Second delay should be greater than first (timer was reset)")
-    }
-
-    func testPollingBudget_timingOptimizationIntegration() {
-        let budget = PollingBudget(startDate: Date(), duration: 10.0)
-
-        // Simulate first poll - should wait full interval
-        let firstDelay = budget.recommendedDelay()
-        XCTAssertEqual(firstDelay, 1.0, accuracy: 0.01, "First poll should wait full interval")
-
-        // Record poll and simulate fast response (0.2s)
-        budget.recordPollAttempt()
-        Thread.sleep(forTimeInterval: 0.2)
-        let fastDelay = budget.recommendedDelay()
-        XCTAssertGreaterThan(fastDelay, 0.7, "Should wait remaining time after fast response")
-        XCTAssertLessThan(fastDelay, 0.9, "Should not wait too long after fast response")
-
-        // Record poll and simulate slow response (1.2s)  
-        budget.recordPollAttempt()
-        Thread.sleep(forTimeInterval: 1.2)
-        let slowDelay = budget.recommendedDelay()
-        XCTAssertLessThanOrEqual(slowDelay, 0.05, "Should poll immediately after slow response")
-    }
-
-    func testPollingBudget_multipleQuickPolls() {
-        let budget = PollingBudget(startDate: Date(), duration: 10.0)
-
-        // Simulate multiple quick polls in succession
-        for i in 0..<3 {
-            budget.recordPollAttempt()
-            Thread.sleep(forTimeInterval: 0.1) // Very fast "network requests"
-
-            let delay = budget.recommendedDelay()
-            XCTAssertGreaterThan(delay, 0.8, "Poll \(i): Should wait most of the interval after quick response")
-            XCTAssertLessThan(delay, 1.0, "Poll \(i): Should wait less than full interval")
+        if pollTimes.count >= 3 {
+            let thirdPollGap = pollTimes[2] - pollTimes[1]
+            XCTAssertGreaterThan(thirdPollGap, 0.9, "Third poll should wait ~1 second after second")
+            XCTAssertLessThan(thirdPollGap, 1.2, "Third poll should not wait much more than 1 second")
         }
     }
 }
