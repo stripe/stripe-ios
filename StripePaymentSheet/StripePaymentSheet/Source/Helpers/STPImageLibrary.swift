@@ -12,7 +12,8 @@ import Foundation
 @_spi(STP) import StripeUICore
 import UIKit
 
-class PaymentSheetImageLibrary {
+@_spi(STP)
+public class PaymentSheetImageLibrary {
 
     /// An icon representing Afterpay.
     @objc
@@ -49,7 +50,8 @@ class PaymentSheetImageLibrary {
         "wellsfargo": [#"Wells Fargo"#],
     ]
 
-    class func bankIconCode(for bankName: String?) -> String {
+    @_spi(STP)
+    public class func bankIconCode(for bankName: String?) -> String {
         guard let bankName = bankName else {
             return "default"
         }
@@ -63,7 +65,8 @@ class PaymentSheetImageLibrary {
         return "default"
     }
 
-    class func bankIcon(for bank: String?, iconStyle: PaymentSheet.Appearance.IconStyle) -> UIImage {
+    @_spi(STP) @_spi(AppearanceAPIAdditionsPreview)
+    public class func bankIcon(for bank: String?, iconStyle: PaymentSheet.Appearance.IconStyle) -> UIImage {
         guard let bank = bank else {
             return STPPaymentMethodType.USBankAccount.makeImage(iconStyle: iconStyle) ?? UIImage()
         }
