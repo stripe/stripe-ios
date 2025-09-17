@@ -280,13 +280,13 @@ struct WalletButtonsFlowControllerView: View {
                 }
             }
         }
-        
+
         // Stress Test Controls
         VStack(spacing: 8) {
             Text("Stress Test Controls")
                 .font(.headline)
                 .padding(.top)
-            
+
             HStack(spacing: 16) {
                 Button(action: {
                     model.startStressTesting()
@@ -299,7 +299,7 @@ struct WalletButtonsFlowControllerView: View {
                         .cornerRadius(8)
                 }
                 .disabled(model.isStressTestingEnabled)
-                
+
                 Button(action: {
                     model.stopStressTesting()
                 }) {
@@ -312,9 +312,9 @@ struct WalletButtonsFlowControllerView: View {
                 }
                 .disabled(!model.isStressTestingEnabled)
             }
-            
+
             if model.isStressTestingEnabled {
-                Text("🔥 Stress test running - updating amount every second")
+                Text("🔥 Stress test running - updating amount every 5 seconds")
                     .font(.caption)
                     .foregroundColor(.orange)
                     .padding(.horizontal)
@@ -342,7 +342,7 @@ class ExampleWalletButtonsModel: ObservableObject {
     @Published var paymentResult: PaymentSheetResult?
     @Published var isProcessing: Bool = false
     @Published var debugLogs: [String] = []
-    
+
     private var stressTestTimer: Timer?
     private var currentAmount: Int = 9999
     @Published var isStressTestingEnabled: Bool = false
@@ -383,7 +383,7 @@ class ExampleWalletButtonsModel: ObservableObject {
             self.debugLogs.removeAll()
         }
     }
-    
+
     // link express button - then saw the error
 
     func preparePaymentSheet() {
@@ -575,39 +575,39 @@ class ExampleWalletButtonsModel: ObservableObject {
         self.paymentSheetFlowController = nil
         stopStressTesting()
     }
-    
+
     func startStressTesting() {
         guard !isStressTestingEnabled else { return }
-        
+
         isStressTestingEnabled = true
-        addDebugLog("Starting stress test - updating flow controller amount every second")
-        
+        addDebugLog("Starting stress test - updating flow controller amount every 5 seconds")
+
         stressTestTimer = Timer.scheduledTimer(withTimeInterval: 5.0, repeats: true) { [weak self] _ in
             self?.performStressTestUpdate()
         }
     }
-    
+
     func stopStressTesting() {
         guard isStressTestingEnabled else { return }
-        
+
         isStressTestingEnabled = false
         stressTestTimer?.invalidate()
         stressTestTimer = nil
         addDebugLog("Stopped stress test")
     }
-    
+
     private func performStressTestUpdate() {
         guard let flowController = paymentSheetFlowController else {
             addDebugLog("No flow controller available for stress test update")
             return
         }
-        
+
         // Generate a random amount between $10.00 and $999.99
         currentAmount = Int.random(in: 1000...99999)
         let dollarAmount = Double(currentAmount) / 100.0
-        
+
         addDebugLog("Stress test update: updating amount to $\(String(format: "%.2f", dollarAmount))")
-        
+
         let newIntentConfiguration = PaymentSheet.IntentConfiguration(
             sharedPaymentTokenSessionWithMode: .payment(
                 amount: currentAmount,
@@ -633,7 +633,7 @@ class ExampleWalletButtonsModel: ObservableObject {
                 }
             }
         )
-        
+
         flowController.update(intentConfiguration: newIntentConfiguration) { [weak self] error in
             DispatchQueue.main.async {
                 if let error = error {
