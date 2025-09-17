@@ -17,7 +17,7 @@ end
 puts "Proposing version: #{@version}".red
 
 # Create a new branch for the release, e.g. bg/release-9.0.0
-@branchname = "releases/#{@version}"
+@branchname = "releases/#{@version}_woojTest"
 
 def create_branch
   run_command("git checkout -b #{@branchname}")
