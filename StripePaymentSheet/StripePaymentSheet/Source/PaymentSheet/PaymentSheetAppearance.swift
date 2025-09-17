@@ -87,6 +87,9 @@ public extension PaymentSheet {
         /// Describes the style of navigation bar style
         @_spi(STP) public var navigationBarStyle: NavigationBarStyle = .plain
 
+        /// Internal variable to determine if applyLiquidGlass() was called. Strictly intended for analytics.
+        internal var didCallApplyLiquidGlass: Bool = false
+
         // MARK: NavigationBar
         /// Describes navigation bar styles
         @_spi(STP) public enum NavigationBarStyle {
@@ -314,7 +317,7 @@ public extension PaymentSheet.Appearance {
     @_spi(STP) mutating func applyLiquidGlass() {
         assert(LiquidGlassDetector.isEnabledInMerchantApp, "Requirements for this function are using at least Xcode26 and not be opted out using UIDesignRequiresCompatibility.")
         borderWidth = 0.0
-        verticalModeRowPadding = 16.0
+        verticalModeRowPadding = 8.0
         sheetCornerRadius = 34.0
         textFieldInsets = .insets(top: 8, leading: 15, bottom: 8, trailing: 15)
         colors.background = UIColor.dynamic(light: UIColor(hex: 0xF2F2F7),
@@ -322,7 +325,7 @@ public extension PaymentSheet.Appearance {
         shadow = .disabled
         formInsets = .insets(leading: 16, bottom: 40, trailing: 16)
         navigationBarStyle = .glass
-
+        didCallApplyLiquidGlass = true
         // Enable feature gate while still under development
         LiquidGlassDetector.allowNewDesign = true
     }

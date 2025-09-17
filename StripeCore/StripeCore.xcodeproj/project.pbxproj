@@ -50,7 +50,6 @@
 		4941EB5D2D5CFB840004806A /* FinancialConnectionsStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4941EB5C2D5CFB840004806A /* FinancialConnectionsStyle.swift */; };
 		49E8CE2A2CD146CE0009DFBB /* KeyedEncodingContainer+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49E8CE292CD146CE0009DFBB /* KeyedEncodingContainer+Extensions.swift */; };
 		49E908B12DDD21F400D5BDBF /* FinancialConnectionsConsumer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49E908B02DDD21F400D5BDBF /* FinancialConnectionsConsumer.swift */; };
-		49ECDA412CA340E100F647F0 /* AsyncTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49ECDA402CA340E100F647F0 /* AsyncTests.swift */; };
 		49EFC64E2D95A6FD007172B9 /* HostedAuthUrlBuilderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49DCEC182D95A6C300989A05 /* HostedAuthUrlBuilderTests.swift */; };
 		49F3828D2CC02D43001CE69A /* BillingAddress.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49F3828C2CC02D43001CE69A /* BillingAddress.swift */; };
 		4B2FAC57E03D8654A177C408 /* Dictionary+Stripe.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7727AEEFD2FC880BADDA1872 /* Dictionary+Stripe.swift */; };
@@ -99,6 +98,7 @@
 		9843D9B7D886C373C7AC71E4 /* NSMutableURLRequest+Stripe.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2BD3D02EBA8A732A9C832925 /* NSMutableURLRequest+Stripe.swift */; };
 		9DCBC08C182ED76A962961E7 /* NSURLComponents+Stripe.swift in Sources */ = {isa = PBXBuildFile; fileRef = D475CD59778FAC1028670AB5 /* NSURLComponents+Stripe.swift */; };
 		9FBA50345D53E82AA974F672 /* STPAPIClient+FileUpload.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4FC2FC535DAF9B340F9EA75 /* STPAPIClient+FileUpload.swift */; };
+		A03F7C3B2E79CB2B006F0FDC /* AsyncTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A03F7C3A2E79CB28006F0FDC /* AsyncTests.swift */; };
 		A3E0F5DF2E3C8A0B00C9E5F7 /* STPClientAttributionMetadata.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3E0F5DE2E3C8A0B00C9E5F7 /* STPClientAttributionMetadata.swift */; };
 		A454F368C505B2D80F0D8B19 /* PluginDetector.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6CDBCD70CB220014972B49A5 /* PluginDetector.swift */; };
 		A4DBBFD379C4E0120BD25C56 /* STPAPIClient+EmptyResponseTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC70CDF482E22A29B11466F7 /* STPAPIClient+EmptyResponseTest.swift */; };
@@ -264,7 +264,6 @@
 		49DCEC182D95A6C300989A05 /* HostedAuthUrlBuilderTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HostedAuthUrlBuilderTests.swift; sourceTree = "<group>"; };
 		49E8CE292CD146CE0009DFBB /* KeyedEncodingContainer+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "KeyedEncodingContainer+Extensions.swift"; sourceTree = "<group>"; };
 		49E908B02DDD21F400D5BDBF /* FinancialConnectionsConsumer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FinancialConnectionsConsumer.swift; sourceTree = "<group>"; };
-		49ECDA402CA340E100F647F0 /* AsyncTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AsyncTests.swift; sourceTree = "<group>"; };
 		49F3828C2CC02D43001CE69A /* BillingAddress.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BillingAddress.swift; sourceTree = "<group>"; };
 		4A8030BF88608CA86E295F18 /* Enums+CustomStringConvertible.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Enums+CustomStringConvertible.swift"; sourceTree = "<group>"; };
 		4C51E3FA5EE3587BB7BBC634 /* STPError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = STPError.swift; sourceTree = "<group>"; };
@@ -319,6 +318,7 @@
 		9C2AA21DAF340432CA98C67C /* STPDeviceUtils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = STPDeviceUtils.swift; sourceTree = "<group>"; };
 		9D4EB9EA1128F9DA9120BB04 /* ru */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ru; path = ru.lproj/Localizable.strings; sourceTree = "<group>"; };
 		9E415507B0152B07796114CC /* NSError+Stripe.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSError+Stripe.swift"; sourceTree = "<group>"; };
+		A03F7C3A2E79CB28006F0FDC /* AsyncTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AsyncTests.swift; sourceTree = "<group>"; };
 		A0FBC76F73C3791701072BBA /* sk-SK */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "sk-SK"; path = "sk-SK.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		A3E0F5DE2E3C8A0B00C9E5F7 /* STPClientAttributionMetadata.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = STPClientAttributionMetadata.swift; sourceTree = "<group>"; };
 		A4336F071B0CE13306C8EB93 /* StripeAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StripeAPI.swift; sourceTree = "<group>"; };
@@ -454,8 +454,8 @@
 		29DB7151F72CD0D44389A6C8 /* Helpers */ = {
 			isa = PBXGroup;
 			children = (
+				A03F7C3A2E79CB28006F0FDC /* AsyncTests.swift */,
 				7F2E1D80D0342CF09CB05415 /* URLEncoderTest.swift */,
-				49ECDA402CA340E100F647F0 /* AsyncTests.swift */,
 				31C8DFE72E4E98F500A90186 /* STPErrorTests.swift */,
 			);
 			path = Helpers;
@@ -1025,6 +1025,7 @@
 				79DA4102C501FC2E53D946B5 /* STPAPIClient+ErrorResponseTest.swift in Sources */,
 				53D46A03B77577EE21F4B166 /* StripeCodableTest.swift in Sources */,
 				3E9FC2CD06E1D5F6B09872E9 /* AnalyticsClientV2Test.swift in Sources */,
+				A03F7C3B2E79CB2B006F0FDC /* AsyncTests.swift in Sources */,
 				84487D8E9B08106C89753536 /* Error_SerializeForLoggingTest.swift in Sources */,
 				49EFC64E2D95A6FD007172B9 /* HostedAuthUrlBuilderTests.swift in Sources */,
 				0A78AD04075C43A4059C344E /* STPAnalyticsClientTest.swift in Sources */,
@@ -1032,7 +1033,6 @@
 				31C8DFE82E4E98F500A90186 /* STPErrorTests.swift in Sources */,
 				31C5137C2CFE65DB00A429C3 /* StripeAttestTest.swift in Sources */,
 				E6EF91C32CB9DC410082DD1B /* Locale+StripeTests.swift in Sources */,
-				49ECDA412CA340E100F647F0 /* AsyncTests.swift in Sources */,
 				A50CB2ACAC1DCF9539D76F25 /* NSArray+StripeCoreTest.swift in Sources */,
 				F5DB5D52E2668136FF6D70D6 /* NSMutableURLRequest+StripeTest.swift in Sources */,
 				8AD68C8D00A0BCF94E5230DC /* UIImage+StripeCoreTests.swift in Sources */,
