@@ -34,7 +34,7 @@ extension PaymentSheet.Appearance.NavigationBarStyle {
 extension UIView {
     /// A convenience method that looks at `appearance.cornerRadius` and applies it or, if `nil`, handles what the default value should be.
     /// - Parameter shouldUsePrimaryButtonCornerRadius: If `true`, `appearance.primaryButton.cornerRadius` (if non-nil) takes precedence over `appearance.cornerRadius`.
-    func applyCornerRadius(appearance: PaymentSheet.Appearance, ios26DefaultCornerStyle: CornerStyle = .uniform, shouldUsePrimaryButtonCornerRadius: Bool = false) {
+    func applyCornerRadiusOrConfiguration(for appearance: PaymentSheet.Appearance, ios26DefaultCornerStyle: CornerStyle = .uniform, shouldUsePrimaryButtonCornerRadius: Bool = false) {
         var appearance = appearance
         if shouldUsePrimaryButtonCornerRadius, let primaryButtonCornerRadius = appearance.primaryButton.cornerRadius {
             // Hack: `ElementsAppearance` doesn't have a primary button corner radius.

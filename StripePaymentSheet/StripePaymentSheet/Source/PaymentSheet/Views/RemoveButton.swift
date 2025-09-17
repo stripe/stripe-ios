@@ -43,7 +43,7 @@ class RemoveButton: UIButton {
         titleLabel?.textAlignment = .center
         titleLabel?.font = font
         titleLabel?.adjustsFontForContentSizeCategory = true
-        applyCornerRadius(appearance: appearance, ios26DefaultCornerStyle: .capsule, shouldUsePrimaryButtonCornerRadius: true)
+        applyCornerRadiusOrConfiguration(for: appearance, ios26DefaultCornerStyle: .capsule, shouldUsePrimaryButtonCornerRadius: true)
         // Workaround:  Use layer.borderWidth because background.strokeWidth isn't compatible with .capsule()
         layer.borderWidth = 1.5
 

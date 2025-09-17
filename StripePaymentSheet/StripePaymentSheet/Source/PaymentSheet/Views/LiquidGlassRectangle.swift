@@ -44,7 +44,7 @@ class LiquidGlassRectangle: UIView, SelectableRectangle {
             roundedRectangle.backgroundColor = appearance.colors.componentBackground.disabledColor
         }
 
-        roundedRectangle.applyCornerRadius(appearance: appearance, ios26DefaultCornerStyle: isCapsule ? .capsule : .uniform)
+        roundedRectangle.applyCornerRadiusOrConfiguration(for: appearance, ios26DefaultCornerStyle: isCapsule ? .capsule : .uniform)
 
         // Border
         if isSelected {

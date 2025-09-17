@@ -98,7 +98,7 @@ class PromoBadgeView: UIView {
         if let cornerRadius {
             labelBackground.layer.cornerRadius = cornerRadius
         } else {
-            labelBackground.applyCornerRadius(appearance: appearance)
+            labelBackground.applyCornerRadiusOrConfiguration(for: appearance)
         }
 
         labelBackground.backgroundColor = backgroundColor

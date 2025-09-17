@@ -41,7 +41,7 @@ extension UIButton {
         if let cornerRadius = appearance.primaryButton.cornerRadius {
             button.layer.cornerRadius = cornerRadius
         } else {
-            button.applyCornerRadius(appearance: appearance, ios26DefaultCornerStyle: .capsule)
+            button.applyCornerRadiusOrConfiguration(for: appearance, ios26DefaultCornerStyle: .capsule)
         }
 
         return button

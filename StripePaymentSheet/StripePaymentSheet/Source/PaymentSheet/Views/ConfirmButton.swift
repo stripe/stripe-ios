@@ -247,8 +247,8 @@ class ConfirmButton: UIView {
             buyButton.layer.cornerRadius = cornerRadius
             applePayButton.cornerRadius = cornerRadius
         } else {
-            buyButton.applyCornerRadius(appearance: appearance, ios26DefaultCornerStyle: .capsule)
-            applePayButton.applyCornerRadius(appearance: appearance, ios26DefaultCornerStyle: .capsule)
+            buyButton.applyCornerRadiusOrConfiguration(for: appearance, ios26DefaultCornerStyle: .capsule)
+            applePayButton.applyCornerRadiusOrConfiguration(for: appearance, ios26DefaultCornerStyle: .capsule)
         }
     }
 
