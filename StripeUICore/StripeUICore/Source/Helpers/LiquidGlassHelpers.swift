@@ -18,6 +18,9 @@ import UIKit
     }()
 
     @_spi(STP) public static var isEnabled: Bool {
+        guard #available(iOS 26.0, *) else {
+            return false
+        }
         return isEnabledInMerchantApp && allowNewDesign
     }
 
