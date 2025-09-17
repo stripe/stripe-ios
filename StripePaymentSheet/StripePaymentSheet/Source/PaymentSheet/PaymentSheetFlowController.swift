@@ -660,7 +660,6 @@ extension PaymentSheet {
                 loadResult: updatedLoadResult,
                 analyticsHelper: analyticsHelper,
                 walletButtonsViewState: self.walletButtonsViewState,
-                previousLinkConfirmOption: self.viewController.linkConfirmOption,
                 previousPaymentOption: self.internalPaymentOption
             )
             self.viewController.flowControllerDelegate = self
@@ -704,7 +703,6 @@ extension PaymentSheet {
             loadResult: PaymentSheetLoader.LoadResult,
             analyticsHelper: PaymentSheetAnalyticsHelper,
             walletButtonsViewState: PaymentSheet.WalletButtonsViewState,
-            previousLinkConfirmOption: LinkConfirmOption? = nil,
             previousPaymentOption: PaymentOption? = nil
         ) -> FlowControllerViewControllerProtocol {
             let controller: FlowControllerViewControllerProtocol
@@ -726,7 +724,6 @@ extension PaymentSheet {
                     previousPaymentOption: previousPaymentOption
                 )
             }
-            controller.linkConfirmOption = previousLinkConfirmOption
             return controller
         }
     }
