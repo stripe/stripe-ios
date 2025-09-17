@@ -75,16 +75,11 @@ final class LinkVerificationController {
 
             // If verification completed successfully, refresh the session
             if case .completed = result {
-                self.linkAccount.refresh { refreshResult in
-                    // Log refresh result but continue with original completion
-                    if case .failure(let error) = refreshResult {
-                        print("Warning: Failed to refresh session after web verification: \(error)")
-                    }
-                    self.completion?(result)
-                    self.selfRetainer = nil
+                self.linkAccount.refresh { [weak self] refreshResult in
+                    self?.completion?(result)
+                    self?.selfRetainer = nil
                 }
             } else {
-                // For non-successful results, proceed directly
                 self.completion?(result)
                 self.selfRetainer = nil
             }
