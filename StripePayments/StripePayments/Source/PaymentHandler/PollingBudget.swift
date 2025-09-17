@@ -6,6 +6,7 @@
 //
 
 import Foundation
+@_spi(STP) import StripeCore
 
 /// Manages polling budgets for payment method transactions that require status polling.
 final class PollingBudget {
@@ -81,6 +82,7 @@ final class PollingBudget {
     /// - Parameter block: Block to execute after the delay
     func pollAfter(block: @escaping () -> Void) {
         let optimizedDelay = recommendedDelay(targetInterval: 1.0)
+        stpAssert(canPoll, "pollAfter should not be called when polling budget is exhausted")
         DispatchQueue.main.asyncAfter(deadline: .now() + optimizedDelay) {
             self.recordPollAttempt()
             block()
