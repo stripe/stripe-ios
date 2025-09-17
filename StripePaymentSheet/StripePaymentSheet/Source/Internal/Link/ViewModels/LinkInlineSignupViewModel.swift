@@ -323,7 +323,7 @@ final class LinkInlineSignupViewModel {
     var containerCornerRadius: CGFloat {
         switch mode {
         case .checkbox:
-            return LiquidGlassDetector.isEnabled ? LinkUI.cornerRadius : configuration.appearance.cornerRadius
+            return configuration.appearance.cornerRadius ?? LinkUI.cornerRadius
         case .checkboxWithDefaultOptIn, .textFieldsOnlyEmailFirst, .textFieldsOnlyPhoneFirst, .signupOptIn:
             // The content is right at the border of the view. Remove the corner radius so that we don't cut off anything.
             return 0
