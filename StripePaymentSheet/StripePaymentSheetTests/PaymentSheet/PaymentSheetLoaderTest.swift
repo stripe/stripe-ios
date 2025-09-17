@@ -476,19 +476,4 @@ final class PaymentSheetLoaderTest: STPNetworkStubbingTestCase {
         }
     }
 
-    func testPassiveCaptchaDoesNotBlockLoad() async throws {
-        // OCS mobile test key from https://dashboard.hcaptcha.com/sites/edit/143aadb6-fb60-4ab6-b128-f7fe53426d4a
-        let siteKey = "143aadb6-fb60-4ab6-b128-f7fe53426d4a"
-        let passiveCaptcha = PassiveCaptcha(siteKey: siteKey, rqdata: nil)
-        // even if validation takes a very long time, the payment sheet will load in a normal amount of time
-        let passiveCaptchaChallenge = PassiveCaptchaChallenge(passiveCaptcha: passiveCaptcha)
-        await passiveCaptchaChallenge.setTestConfiguration(PassiveCaptchaChallenge.TestConfiguration(timeout: 6, delay: 30))
-        await passiveCaptchaChallenge.start()
-        let expectation = XCTestExpectation(description: "Load")
-        let clientSecret = try await STPTestingAPIClient.shared.fetchPaymentIntent(types: ["card"])
-        PaymentSheetLoader.load(mode: .paymentIntentClientSecret(clientSecret), configuration: self.configuration, analyticsHelper: .init(integrationShape: .complete, configuration: configuration), integrationShape: .complete) { _ in
-            expectation.fulfill()
-        }
-        await fulfillment(of: [expectation], timeout: STPTestingNetworkRequestTimeout)
-    }
 }

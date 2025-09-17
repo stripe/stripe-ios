@@ -377,7 +377,7 @@ public final class EmbeddedPaymentElement {
         self.lastUpdatedPaymentOption = paymentOption
         if configuration.enablePassiveCaptcha {
             self.passiveCaptchaChallenge = PassiveCaptchaChallenge(passiveCaptcha: loadResult.elementsSession.passiveCaptcha)
-            Task { await self.passiveCaptchaChallenge?.start() }
+            Task { await self.passiveCaptchaChallenge?.start() } // Intentionally not blocking loading/initialization!
         }
     }
 }

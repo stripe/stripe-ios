@@ -296,7 +296,7 @@ extension PaymentSheet {
             if configuration.enablePassiveCaptcha {
                 self.passiveCaptchaChallenge = PassiveCaptchaChallenge(passiveCaptcha: loadResult.elementsSession.passiveCaptcha)
                 self.viewController.passiveCaptchaChallenge = self.passiveCaptchaChallenge
-                Task { await self.passiveCaptchaChallenge?.start() }
+                Task { await self.passiveCaptchaChallenge?.start() } // Intentionally not blocking loading/initialization!
             }
             updatePaymentOption()
         }

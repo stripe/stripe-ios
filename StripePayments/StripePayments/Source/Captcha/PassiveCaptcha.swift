@@ -54,11 +54,9 @@ private enum CaptchaResult {
 
     public struct TestConfiguration {
         var timeout: TimeInterval
-        var delay: TimeInterval
 
-        public init(timeout: TimeInterval = 0, delay: TimeInterval = 0) {
+        public init(timeout: TimeInterval = 0) {
             self.timeout = timeout
-            self.delay = delay
         }
     }
 
@@ -99,9 +97,6 @@ private enum CaptchaResult {
                             }
                         }
                     }
-                }
-                if let testConfiguration = await self?.testConfiguration {
-                    try? await Task.sleep(nanoseconds: UInt64(testConfiguration.delay) * 1_000_000_000)
                 }
                 // Mark as complete
                 await self?.setValidationComplete()

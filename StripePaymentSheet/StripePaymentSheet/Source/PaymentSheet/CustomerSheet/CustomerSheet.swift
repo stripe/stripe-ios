@@ -170,7 +170,7 @@ public class CustomerSheet {
             case .success((let savedPaymentMethods, let selectedPaymentMethodOption, let elementsSession)):
                 if self.configuration.enablePassiveCaptcha {
                     self.passiveCaptchaChallenge = PassiveCaptchaChallenge(passiveCaptcha: elementsSession.passiveCaptcha)
-                    Task { await self.passiveCaptchaChallenge?.start() }
+                    Task { await self.passiveCaptchaChallenge?.start() } // Intentionally not blocking loading/initialization!
                 }
                 let merchantSupportedPaymentMethodTypes = customerSheetDataSource.merchantSupportedPaymentMethodTypes(elementsSession: elementsSession)
                 let paymentMethodRemove = customerSheetDataSource.paymentMethodRemove(elementsSession: elementsSession)
