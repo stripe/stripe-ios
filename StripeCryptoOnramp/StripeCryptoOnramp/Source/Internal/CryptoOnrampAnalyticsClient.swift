@@ -31,7 +31,7 @@ final class CryptoOnrampAnalyticsClient {
         if AnalyticsHelper.shared.sessionID == nil {
             AnalyticsHelper.shared.generateSessionID()
         }
-        additionalParameters["analytics_session_id"] = AnalyticsHelper.shared.sessionID ?? "N/a"
+        additionalParameters["mobile_session_id"] = AnalyticsHelper.shared.sessionID ?? "N/a"
     }
 
     func log(_ event: CryptoOnrampAnalyticsEvent) {

@@ -182,6 +182,11 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
         super.init(nibName: nil, bundle: nil)
 
         regenerateUI()
+
+        if case let .link(linkConfirmOption) = previousPaymentOption {
+            self.linkConfirmOption = linkConfirmOption
+        }
+
         // Only use the previous customer input for the first form shown
         self.previousPaymentOption = nil
     }
