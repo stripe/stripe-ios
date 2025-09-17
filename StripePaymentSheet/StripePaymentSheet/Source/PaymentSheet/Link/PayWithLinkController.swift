@@ -61,22 +61,20 @@ extension PayWithLinkController: PayWithLinkWebControllerDelegate {
         elementsSession: STPElementsSession,
         with paymentOption: PaymentOption
     ) {
-//        Task {
-            PaymentSheet.confirm(
-                configuration: configuration,
-                authenticationContext: payWithLinkWebController,
-                intent: intent,
-                elementsSession: elementsSession,
-                paymentOption: paymentOption,
-                paymentHandler: paymentHandler,
-                integrationShape: .complete,
-                passiveCaptchaChallenge: passiveCaptchaChallenge,
-                analyticsHelper: analyticsHelper
-            ) { result, deferredIntentConfirmationType in
-                self.completion?(result, deferredIntentConfirmationType)
-                self.selfRetainer = nil
-            }
-//        }
+        PaymentSheet.confirm(
+            configuration: configuration,
+            authenticationContext: payWithLinkWebController,
+            intent: intent,
+            elementsSession: elementsSession,
+            paymentOption: paymentOption,
+            paymentHandler: paymentHandler,
+            integrationShape: .complete,
+            passiveCaptchaChallenge: passiveCaptchaChallenge,
+            analyticsHelper: analyticsHelper
+        ) { result, deferredIntentConfirmationType in
+            self.completion?(result, deferredIntentConfirmationType)
+            self.selfRetainer = nil
+        }
     }
 
     func payWithLinkWebControllerDidCancel() {
