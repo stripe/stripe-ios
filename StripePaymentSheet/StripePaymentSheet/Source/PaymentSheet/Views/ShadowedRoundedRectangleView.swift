@@ -10,8 +10,9 @@
 import UIKit
 
 /// The shadowed rounded rectangle that our cells use to display content
-class ShadowedRoundedRectangle: UIView, SelectableRectangle {
+class ShadowedRoundedRectangle: UIView {
     private let roundedRectangle: UIView
+    private let isCapsule: Bool
     var appearance: PaymentSheet.Appearance {
         didSet {
             update()
@@ -40,7 +41,7 @@ class ShadowedRoundedRectangle: UIView, SelectableRectangle {
         }
 
         // Corner radius
-        roundedRectangle.applyCornerRadiusOrConfiguration(for: appearance)
+        roundedRectangle.applyCornerRadiusOrConfiguration(for: appearance, ios26DefaultCornerStyle: isCapsule ? .capsule : .uniform)
         applyCornerRadiusOrConfiguration(for: appearance)
 
         // Shadow
@@ -63,8 +64,9 @@ class ShadowedRoundedRectangle: UIView, SelectableRectangle {
         }
     }
 
-    required init(appearance: PaymentSheet.Appearance) {
+    required init(appearance: PaymentSheet.Appearance, isCapsule: Bool = false) {
         self.appearance = appearance
+        self.isCapsule = isCapsule
         roundedRectangle = UIView()
         roundedRectangle.layer.masksToBounds = true
         super.init(frame: .zero)

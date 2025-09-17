@@ -7,6 +7,7 @@
 
 import Foundation
 import StripeCoreTestUtils
+@_spi(STP) import StripeUICore
 import UIKit
 
 @testable@_spi(STP) import StripePaymentSheet
@@ -36,14 +37,17 @@ class PaymentMethodTypeCollectionViewCellSnapshotTests: STPSnapshotTestCase {
     }
 
     func verify(
-        _ cell: UICollectionViewCell,
+        _ cell: PaymentMethodTypeCollectionView.PaymentTypeCell,
         identifier: String? = nil,
         file: StaticString = #filePath,
         line: UInt = #line
     ) {
+        let cellHeight = cell.selectableRectangle.didSetCornerConfiguration
+            ? PaymentMethodTypeCollectionView.capsuleCornerCellHeight
+            : PaymentMethodTypeCollectionView.uniformCornerCellHeight
         let view = CellWrapperView(
             cell: cell,
-            size: CGSize(width: 120, height: PaymentMethodTypeCollectionView.cellHeight)
+            size: CGSize(width: 120, height: cellHeight)
         )
         STPSnapshotVerifyView(view, identifier: identifier, file: file, line: line)
     }

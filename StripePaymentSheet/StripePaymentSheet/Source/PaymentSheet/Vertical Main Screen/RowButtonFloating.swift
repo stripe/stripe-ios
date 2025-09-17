@@ -14,17 +14,8 @@ final class RowButtonFloating: RowButton {
     // MARK: - Subviews
 
     /// The view that manages corner radius and shadows and selection border
-    private lazy var selectableRectangle: SelectableRectangle = {
-        #if !os(visionOS)
-        if #available(iOS 26.0, *),
-           LiquidGlassDetector.isEnabled && !isEmbedded {
-            return LiquidGlassRectangle(appearance: appearance, isCapsule: true)
-        } else {
-            return ShadowedRoundedRectangle(appearance: appearance)
-        }
-        #else
-        return ShadowedRoundedRectangle(appearance: appearance)
-        #endif
+    private lazy var selectableRectangle: ShadowedRoundedRectangle = {
+        return ShadowedRoundedRectangle(appearance: appearance, isCapsule: true)
     }()
     /// The vertical top and bottom padding to be used. Floating uses different values for insets based on if it is used in embedded or vertical mode
     private var contentInsets: CGFloat {
@@ -43,7 +34,7 @@ final class RowButtonFloating: RowButton {
         if isEmbedded {
             return appearance.embeddedPaymentElement.row.paymentMethodIconLayoutMargins.leading
         }
-        return LiquidGlassDetector.isEnabled ? 16 : 12
+        return selectableRectangle.didSetCornerConfiguration ? 16 : 12
     }
 
     override func updateSelectedState() {
