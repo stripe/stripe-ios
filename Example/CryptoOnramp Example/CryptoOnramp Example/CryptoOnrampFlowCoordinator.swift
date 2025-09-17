@@ -21,6 +21,7 @@ final class CryptoOnrampFlowCoordinator: ObservableObject {
         case kycInfo
         case identity
         case wallets(customerId: String)
+        case payment(customerId: String, wallet: CustomerWalletsResponse.Wallet)
         case authenticated(customerId: String, wallet: CustomerWalletsResponse.Wallet)
     }
 
@@ -85,6 +86,11 @@ final class CryptoOnrampFlowCoordinator: ObservableObject {
         advanceToNextStep()
     }
 
+    /// Advances after the payment configuration step.
+    func advanceAfterPayment() {
+        advanceToNextStep()
+    }
+
     private func refreshCustomerInfoAndPushNext() async {
         guard let customerId else { return }
         isLoading?.wrappedValue = true
@@ -108,7 +114,13 @@ final class CryptoOnrampFlowCoordinator: ObservableObject {
         } else if !isIdDocumentVerified {
             path.append(.identity)
         } else if let selectedWallet, let customerId {
-            path.append(.authenticated(customerId: customerId, wallet: selectedWallet))
+            // Insert Payment step after wallet selection, before authenticated
+            if case .payment = path.last {
+                // We are already on payment; next is authenticated
+                path.append(.authenticated(customerId: customerId, wallet: selectedWallet))
+            } else {
+                path.append(.payment(customerId: customerId, wallet: selectedWallet))
+            }
         } else if let customerId {
             path.append(.wallets(customerId: customerId))
         }
