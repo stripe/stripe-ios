@@ -320,12 +320,14 @@ public extension PaymentSheet.Appearance {
     @available(iOS 26.0, *)
     @available(visionOS, unavailable)
     @_spi(STP) mutating func applyLiquidGlass() {
-#if compiler(<6.2)
-        assertionFailure("applyLiquidGlass() requires Xcode 26.")
-#endif
-        if let optOutFlag = Bundle.main.infoDictionary?["UIDesignRequiresCompatibility"] as? Bool, optOutFlag {
-            assertionFailure("applyLiquidGlass() requires UIDesignRequiresCompatibility = NO")
-        }
+        guard LiquidGlassDetector.meetsCompilerRequirements else {
+             assertionFailure("applyLiquidGlass() requires Xcode 26.")
+             return
+         }
+         guard !LiquidGlassDetector.hasOptedOut else {
+             assertionFailure("applyLiquidGlass() requires UIDesignRequiresCompatibility = NO")
+             return
+         }
         borderWidth = 0.0
         verticalModeRowPadding = 8.0
         sheetCornerRadius = 34.0
