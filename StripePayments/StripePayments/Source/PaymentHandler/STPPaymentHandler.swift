@@ -1527,7 +1527,10 @@ public class STPPaymentHandler: NSObject {
                         timeout: pollingBudget?.networkTimeout
                     ) { [self] paymentIntent, error in
                         guard let paymentIntent, error == nil else {
-                            // If we got an error retrieving the intent, retry if budget allows
+                            // If we got an error retrieving the intent, retry if budget allows.
+                            // Note: This will only retry if we have a pollingBudget, which means it's a polling call.
+                            // We won't retry if it's the first call (no pollingBudget). Ideally we should retry
+                            // on the first call too, but this is a limitation to address in a future rewrite.
                             if let pollingBudget, pollingBudget.canPoll {
                                 pollingBudget.pollAfter {
                                     self._retrieveAndCheckIntentForCurrentAction(
@@ -1618,7 +1621,10 @@ public class STPPaymentHandler: NSObject {
                 timeout: pollingBudget?.networkTimeout
             ) { setupIntent, error in
                 guard let setupIntent, error == nil else {
-                    // If we got an error retrieving the intent, retry if budget allows
+                    // If we got an error retrieving the intent, retry if budget allows.
+                    // Note: This will only retry if we have a pollingBudget, which means it's a polling call.
+                    // We won't retry if it's the first call (no pollingBudget). Ideally we should retry
+                    // on the first call too, but this is a limitation to address in a future rewrite.
                     if let pollingBudget, pollingBudget.canPoll {
                         pollingBudget.pollAfter {
                             self._retrieveAndCheckIntentForCurrentAction(
