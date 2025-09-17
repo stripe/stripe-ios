@@ -112,14 +112,14 @@ private enum CaptchaResult {
     }
 
     public func fetchToken() async -> String? {
-        guard let validationTask else { return nil }
         let timeoutNs = UInt64(timeout) * 1_000_000_000
         let startTime = Date()
         return await withTaskGroup(of: String?.self) { group in
             let isReady = isValidationComplete
             // Add hcaptcha task
-            group.addTask {
-                return await validationTask.value
+            group.addTask { [weak self] in
+                guard let self else { return nil }
+                return await validationTask?.value
             }
             // Add timeout task
             group.addTask {
@@ -128,7 +128,7 @@ private enum CaptchaResult {
             }
             defer {
                 group.cancelAll()
-                validationTask.cancel()
+                validationTask?.cancel()
             }
             // Wait for first completion
             let token: String? = await group.next().flatMap(\.self)
