@@ -20,6 +20,7 @@ class WalletHeaderViewSnapshotTests: STPSnapshotTestCase {
     func testApplePayButton() {
         let headerView = PaymentSheetViewController.WalletHeaderView(
             options: .applePay,
+            appearance: .default.applyingLiquidGlassIfPossible(),
             delegate: nil
         )
         verify(headerView)
@@ -28,6 +29,7 @@ class WalletHeaderViewSnapshotTests: STPSnapshotTestCase {
     func testApplePayButtonWithCustomCta() {
         let headerView = PaymentSheetViewController.WalletHeaderView(
             options: .applePay,
+            appearance: .default.applyingLiquidGlassIfPossible(),
             applePayButtonType: .buy,
             delegate: nil
         )
@@ -37,6 +39,7 @@ class WalletHeaderViewSnapshotTests: STPSnapshotTestCase {
     func testLinkButton() {
         let headerView = PaymentSheetViewController.WalletHeaderView(
             options: .link,
+            appearance: .default.applyingLiquidGlassIfPossible(),
             delegate: nil
         )
         verify(headerView)
@@ -102,6 +105,7 @@ class WalletHeaderViewSnapshotTests: STPSnapshotTestCase {
     func testAllButtons() {
         let headerView = PaymentSheetViewController.WalletHeaderView(
             options: [.applePay, .link],
+            appearance: .default.applyingLiquidGlassIfPossible(),
             delegate: nil
         )
         verify(headerView)
@@ -113,6 +117,7 @@ class WalletHeaderViewSnapshotTests: STPSnapshotTestCase {
     func testAllButtonsWithCustomApplePayCta() {
         let headerView = PaymentSheetViewController.WalletHeaderView(
             options: [.applePay, .link],
+            appearance: .default.applyingLiquidGlassIfPossible(),
             applePayButtonType: .buy,
             delegate: nil
         )
@@ -123,7 +128,7 @@ class WalletHeaderViewSnapshotTests: STPSnapshotTestCase {
     }
 
     func testCustomFont() throws {
-        var appearance = PaymentSheet.Appearance.default
+        var appearance = PaymentSheet.Appearance.default.applyingLiquidGlassIfPossible()
         appearance.font.base = try XCTUnwrap(UIFont(name: "AmericanTypewriter", size: 12.0))
 
         let headerView = PaymentSheetViewController.WalletHeaderView(
@@ -136,7 +141,7 @@ class WalletHeaderViewSnapshotTests: STPSnapshotTestCase {
     }
 
     func testCustomFontScales() throws {
-        var appearance = PaymentSheet.Appearance.default
+        var appearance = PaymentSheet.Appearance.default.applyingLiquidGlassIfPossible()
         appearance.font.base = try XCTUnwrap(UIFont(name: "AmericanTypewriter", size: 12.0))
         appearance.font.sizeScaleFactor = 1.25
 
@@ -165,6 +170,7 @@ class WalletHeaderViewSnapshotTests: STPSnapshotTestCase {
     func testAllButtonsSetupIntent() {
         let headerView = PaymentSheetViewController.WalletHeaderView(
             options: [.applePay, .link],
+            appearance: .default.applyingLiquidGlassIfPossible(),
             isPaymentIntent: false,
             delegate: nil
         )
