@@ -176,7 +176,7 @@ with the transaction. */
 
 /* Label for a checkbox that when checked allows the payment information
 to be saved and used in future checkout sessions. */
-"Create an account with Link for faster checkout across the web" = "Create an account with Link for faster checkout across the web";
+"Create a Link account for fast checkout across the web" = "Create a Link account for fast checkout across the web";
 
 /* Label shown in the payment type picker describing a card payment */
 "Debit or credit card" = "Debit or credit card";
