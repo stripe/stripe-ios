@@ -475,5 +475,4 @@ final class PaymentSheetLoaderTest: STPNetworkStubbingTestCase {
             waitForExpectations(timeout: 5)
         }
     }
-
 }
