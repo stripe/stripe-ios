@@ -66,7 +66,7 @@ extension PaymentSheetViewController {
             if appearance.cornerRadius == nil, LiquidGlassDetector.isEnabledInMerchantApp {
                 button.ios26_applyCapsuleCornerConfiguration()
             } else {
-                button.cornerRadius = appearance.cornerRadius ?? 6
+                button.cornerRadius = appearance.cornerRadius ?? PaymentSheet.Appearance.defaultCornerRadius
             }
             button.applyCornerRadius(appearance: appearance, ios26DefaultCornerStyle: .capsule)
             button.accessibilityIdentifier = "pay_with_link_button"
@@ -202,7 +202,7 @@ extension PaymentSheetViewController {
             if appearance.cornerRadius == nil, LiquidGlassDetector.isEnabledInMerchantApp {
                 button.cornerRadius = 34
             } else {
-                button.cornerRadius = appearance.cornerRadius ?? 6
+                button.cornerRadius = appearance.cornerRadius ?? PaymentSheet.Appearance.defaultCornerRadius
             }
 
             button.accessibilityIdentifier = "apple_pay_button"

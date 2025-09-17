@@ -49,14 +49,14 @@ typealias ExpressType = PaymentSheet.WalletButtonsVisibility.ExpressType
                         ApplePayButton(
                             height: flowController.configuration.appearance.primaryButton.height,
                             // TODO (iOS 26): Respect cornerRadius = nil
-                            cornerRadius: flowController.configuration.appearance.primaryButton.cornerRadius ?? flowController.configuration.appearance.cornerRadius ?? 6.0,
+                            cornerRadius: flowController.configuration.appearance.primaryButton.cornerRadius ?? flowController.configuration.appearance.cornerRadius ?? PaymentSheet.Appearance.defaultCornerRadius,
                             action: completion
                         )
                     case .link:
                         LinkButton(
                             height: flowController.configuration.appearance.primaryButton.height,
                             // TODO (iOS 26): Respect cornerRadius = nil
-                            cornerRadius: flowController.configuration.appearance.primaryButton.cornerRadius ?? flowController.configuration.appearance.cornerRadius ?? 6.0,
+                            cornerRadius: flowController.configuration.appearance.primaryButton.cornerRadius ?? flowController.configuration.appearance.cornerRadius ?? PaymentSheet.Appearance.defaultCornerRadius,
                             borderColor: flowController.configuration.appearance.colors.componentBorder,
                             action: completion
                         )
@@ -64,7 +64,7 @@ typealias ExpressType = PaymentSheet.WalletButtonsVisibility.ExpressType
                         ShopPayButton(
                             height: flowController.configuration.appearance.primaryButton.height,
                             // TODO (iOS 26): Respect cornerRadius = nil
-                            cornerRadius: flowController.configuration.appearance.primaryButton.cornerRadius ?? flowController.configuration.appearance.cornerRadius ?? 6.0
+                            cornerRadius: flowController.configuration.appearance.primaryButton.cornerRadius ?? flowController.configuration.appearance.cornerRadius ?? PaymentSheet.Appearance.defaultCornerRadius
                         ) {
                             Task {
                                 checkoutTapped(.shopPay)

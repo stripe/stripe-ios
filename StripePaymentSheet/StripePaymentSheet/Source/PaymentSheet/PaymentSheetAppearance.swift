@@ -35,7 +35,7 @@ public extension PaymentSheet {
         ///     - Pre-iOS 26: A 6.0 corner radius is applied.
         ///
         /// The default value is 6.0
-        public var cornerRadius: CGFloat? = 6.0
+        public var cornerRadius: CGFloat? = defaultCornerRadius
 
         /// The border used for inputs and tabs in PaymentSheet
         /// - Note: The thickness of divider lines between input fields also uses `borderWidth` for consistency, with a minimum thickness of 0.5.

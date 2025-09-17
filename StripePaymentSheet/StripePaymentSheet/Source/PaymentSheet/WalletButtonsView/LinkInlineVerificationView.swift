@@ -83,7 +83,7 @@ struct LinkInlineVerificationView: View {
                             enableDigitGrouping: false,
                             font: LinkUI.font(forTextStyle: .title),
                             // TODO(iOS 26): Is this supposed to apply a Liquid Glass style?
-                            itemCornerRadius: viewModel.appearance.cornerRadius ?? 6.0,
+                            itemCornerRadius: viewModel.appearance.cornerRadius ?? PaymentSheet.Appearance.defaultCornerRadius,
                             itemFocusBackgroundColor: viewModel.appearance.colors.background
                         ),
                         controller: viewModel.textFieldController,
