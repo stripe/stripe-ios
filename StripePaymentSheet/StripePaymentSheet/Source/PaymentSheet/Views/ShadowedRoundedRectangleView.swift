@@ -40,8 +40,8 @@ class ShadowedRoundedRectangle: UIView, SelectableRectangle {
         }
 
         // Corner radius
-        roundedRectangle.applyCornerRadiusOrConfiguration(for: appearance)
-        applyCornerRadiusOrConfiguration(for: appearance)
+        roundedRectangle.layer.cornerRadius = appearance.cornerRadius
+        layer.cornerRadius = appearance.cornerRadius
 
         // Shadow
         layer.applyShadow(shadow: appearance.asElementsTheme.shadow)

@@ -16,12 +16,12 @@ import UIKit
 class RemoveButtonSnapshotTests: STPSnapshotTestCase {
 
     func testRemoveButton() {
-        let removeButton = RemoveButton(appearance: .default.applyingLiquidGlassIfPossible())
+        let removeButton = RemoveButton()
         verify(removeButton)
     }
 
     func testRemoveButtonCustomFontScales() throws {
-        var appearance = PaymentSheet.Appearance().applyingLiquidGlassIfPossible()
+        var appearance = PaymentSheet.Appearance()
         appearance.font.base = try XCTUnwrap(UIFont(name: "AmericanTypewriter", size: 12.0))
         appearance.font.sizeScaleFactor = 0.85
 
@@ -30,16 +30,9 @@ class RemoveButtonSnapshotTests: STPSnapshotTestCase {
     }
 
     func testRemoveButtonCustomSheetBackgroundAndDanger() {
-        var appearance = PaymentSheet.Appearance().applyingLiquidGlassIfPossible()
+        var appearance = PaymentSheet.Appearance()
         appearance.colors.danger = .orange
         appearance.colors.background = .gray
-        let removeButton = RemoveButton(appearance: appearance)
-        verify(removeButton)
-    }
-
-    func testRemoveButtonCustomZeroCornerRadius() {
-        var appearance = PaymentSheet.Appearance().applyingLiquidGlassIfPossible()
-        appearance.cornerRadius = 0
         let removeButton = RemoveButton(appearance: appearance)
         verify(removeButton)
     }

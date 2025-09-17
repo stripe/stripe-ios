@@ -264,7 +264,6 @@ final class UpdatePaymentMethodViewControllerSnapshotTests: STPSnapshotTestCase 
                                            isTestMode: false,
                                            configuration: updateConfig)
         let bottomSheet: BottomSheetViewController
-        // TODO(yuki): Delete isEmbeddedSingle - this is not testing anything related to UpdatePaymentMethodViewController. 
         if isEmbeddedSingle {
             bottomSheet = BottomSheetViewController(contentViewController: sut, appearance: appearance, isTestMode: true, didCancelNative3DS2: {})
         } else {

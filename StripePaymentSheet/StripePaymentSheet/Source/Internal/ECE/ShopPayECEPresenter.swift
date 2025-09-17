@@ -53,7 +53,7 @@ class ShopPayECEPresenter: NSObject, UIAdaptivePresentationControllerDelegate {
         let transitionDelegate = FixedHeightTransitionDelegate(heightRatio: 0.85)
         eceVC.transitioningDelegate = transitionDelegate
         eceVC.modalPresentationStyle = .custom
-        eceVC.view.layer.cornerRadius = self.flowController.configuration.appearance.sheetCornerRadius
+        eceVC.view.layer.cornerRadius = self.flowController.configuration.appearance.cornerRadius
         eceVC.view.layer.maskedCorners = [.layerMinXMinYCorner, .layerMaxXMinYCorner]
         eceVC.view.clipsToBounds = true
         viewController.present(eceVC, animated: true)

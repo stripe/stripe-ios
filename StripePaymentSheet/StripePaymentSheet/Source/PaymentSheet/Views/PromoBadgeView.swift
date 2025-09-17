@@ -95,11 +95,7 @@ class PromoBadgeView: UIView {
 
         // In embedded mode with checkmarks, the `appearance` corner radius might not be what the
         // merchant has specified. We use the original corner radius instead.
-        if let cornerRadius {
-            labelBackground.layer.cornerRadius = cornerRadius
-        } else {
-            labelBackground.applyCornerRadiusOrConfiguration(for: appearance)
-        }
+        labelBackground.layer.cornerRadius = cornerRadius ?? appearance.cornerRadius
 
         labelBackground.backgroundColor = backgroundColor
         label.font = appearance.scaledFont(
