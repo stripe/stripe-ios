@@ -317,7 +317,7 @@ public extension PaymentSheet.Appearance {
     @_spi(STP) mutating func applyLiquidGlass() {
         assert(LiquidGlassDetector.isEnabledInMerchantApp, "Requirements for this function are using at least Xcode26 and not be opted out using UIDesignRequiresCompatibility.")
         borderWidth = 0.0
-        verticalModeRowPadding = 16.0
+        verticalModeRowPadding = 8.0
         sheetCornerRadius = 34.0
         textFieldInsets = .insets(top: 8, leading: 15, bottom: 8, trailing: 15)
         colors.background = UIColor.dynamic(light: UIColor(hex: 0xF2F2F7),
