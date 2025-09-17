@@ -38,10 +38,14 @@ extension UIButton {
             return appearance.colors.background.darken(by: 0.07)
         })
 
-        if let cornerRadius = appearance.primaryButton.cornerRadius {
-            button.layer.cornerRadius = cornerRadius
+        if #available(iOS 26.0, *), LiquidGlassDetector.isEnabled {
+            button.ios26_applyCapsuleCornerConfiguration()
         } else {
-            button.applyCornerRadiusOrConfiguration(for: appearance, ios26DefaultCornerStyle: .capsule)
+            if let cornerRadius = appearance.primaryButton.cornerRadius {
+                button.layer.cornerRadius = cornerRadius
+            } else {
+                button.layer.cornerRadius = appearance.cornerRadius
+            }
         }
 
         return button

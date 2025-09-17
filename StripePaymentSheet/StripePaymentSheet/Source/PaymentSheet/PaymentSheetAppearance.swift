@@ -30,12 +30,7 @@ public extension PaymentSheet {
 
         /// The corner radius used for buttons, inputs, tabs in PaymentSheet
         /// - Note: The behavior of this property is consistent with the behavior of corner radius on `CALayer`
-        /// - Note: When `nil`, the behavior depends:
-        ///     - iOS 26+ and `UIDesignRequiresCompatibility = NO`: Various `UICornerConfiguration` values are used to match Liquid Glass.
-        ///     - Pre-iOS 26: A 6.0 corner radius is applied.
-        ///
-        /// The default value is 6.0
-        public var cornerRadius: CGFloat? = defaultCornerRadius
+        public var cornerRadius: CGFloat = 6.0
 
         /// The border used for inputs and tabs in PaymentSheet
         /// - Note: The thickness of divider lines between input fields also uses `borderWidth` for consistency, with a minimum thickness of 0.5.
@@ -61,10 +56,10 @@ public extension PaymentSheet {
 
         /// The insets used for all input fields (e.g. textfields, dropdowns) in PaymentSheet.
         @_spi(AppearanceAPIAdditionsPreview)
-        public var textFieldInsets: NSDirectionalEdgeInsets = NSDirectionalEdgeInsets(top: 4, leading: 11, bottom: 4, trailing: 11)
+        public var textFieldInsets: NSDirectionalEdgeInsets = .insets(top: 4, leading: 11, bottom: 4, trailing: 11)
 
         /// Describes the padding used for all forms
-        public var formInsets: NSDirectionalEdgeInsets = NSDirectionalEdgeInsets(top: 0, leading: 20, bottom: 40, trailing: 20)
+        public var formInsets: NSDirectionalEdgeInsets = PaymentSheetUI.defaultSheetMargins
 
         /// Controls the vertical spacing between distinct sections in the form (e.g., between payment fields and billing address).
         /// - Note: This spacing is applied between different conceptual sections of the form, not between individual input fields within a section.
@@ -315,19 +310,12 @@ public extension PaymentSheet {
 }
 
 public extension PaymentSheet.Appearance {
-    /// Calling this function sets various properties (e.g. navigationBarStyle, borderWidth) to match iOS 26 Liquid Glass.
+    /// Calling this function sets various properties (e.g. navigationBarStyle, borderWidth) to match iOS26 Liquid Glass
     /// - Note: This feature is in public preview while we gather feedback and is subject to change. Please use https://github.com/stripe/stripe-ios/issues to file feedback!
     @available(iOS 26.0, *)
     @available(visionOS, unavailable)
     @_spi(STP) mutating func applyLiquidGlass() {
-        guard LiquidGlassDetector.meetsCompilerRequirements else {
-             assertionFailure("applyLiquidGlass() requires Xcode 26.")
-             return
-         }
-         guard !LiquidGlassDetector.hasOptedOut else {
-             assertionFailure("applyLiquidGlass() requires UIDesignRequiresCompatibility = NO")
-             return
-         }
+        assert(LiquidGlassDetector.isEnabledInMerchantApp, "Requirements for this function are using at least Xcode26 and not be opted out using UIDesignRequiresCompatibility.")
         borderWidth = 0.0
         verticalModeRowPadding = 8.0
         sheetCornerRadius = 34.0
@@ -337,7 +325,6 @@ public extension PaymentSheet.Appearance {
         shadow = .disabled
         formInsets = .insets(leading: 16, bottom: 40, trailing: 16)
         navigationBarStyle = .glass
-        cornerRadius = nil
         didCallApplyLiquidGlass = true
         // Enable feature gate while still under development
         LiquidGlassDetector.allowNewDesign = true
@@ -468,5 +455,27 @@ public extension PaymentSheet.Appearance {
         case filled
         /// Display icons with an outlined appearance
         case outlined
+    }
+}
+
+extension PaymentSheet.Appearance {
+    var topFormInsets: NSDirectionalEdgeInsets {
+        return .insets(top: formInsets.top, leading: formInsets.leading, trailing: formInsets.trailing)
+    }
+}
+
+extension PaymentSheet.Appearance.NavigationBarStyle {
+    var isGlass: Bool {
+        #if !os(visionOS)
+        guard #available(iOS 26.0, *) else {
+            return false
+        }
+        return self == .glass
+        #else
+        return false
+        #endif
+    }
+    var isPlain: Bool {
+        return self == .plain
     }
 }

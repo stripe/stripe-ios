@@ -27,8 +27,7 @@ import UIKit
             stack.customBackgroundColor = viewModel.theme.colors.componentBackground
             stack.separatorColor = viewModel.theme.colors.divider
             stack.borderColor = viewModel.theme.colors.border
-            // TODO(iOS 26): Does this need to respect corner radius = nil?
-            stack.borderCornerRadius = viewModel.theme.cornerRadius ?? 6.0
+            stack.borderCornerRadius = viewModel.theme.cornerRadius
             stack.spacing = viewModel.theme.separatorWidth
             stack.borderWidth = viewModel.theme.borderWidth
             stack.hideShadow = true

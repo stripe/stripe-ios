@@ -242,13 +242,15 @@ class ConfirmButton: UIView {
     }
 
     private func applyCornerRadius() {
-        if let cornerRadius = appearance.primaryButton.cornerRadius {
-            // Use primary button corner radius
+        if LiquidGlassDetector.isEnabled {
+            buyButton.ios26_applyCapsuleCornerConfiguration()
+            applePayButton.ios26_applyCapsuleCornerConfiguration()
+        } else if let cornerRadius = appearance.primaryButton.cornerRadius {
             buyButton.layer.cornerRadius = cornerRadius
             applePayButton.cornerRadius = cornerRadius
         } else {
-            buyButton.applyCornerRadiusOrConfiguration(for: appearance, ios26DefaultCornerStyle: .capsule)
-            applePayButton.applyCornerRadiusOrConfiguration(for: appearance, ios26DefaultCornerStyle: .capsule)
+            buyButton.layer.cornerRadius = appearance.cornerRadius
+            applePayButton.layer.cornerRadius = appearance.cornerRadius
         }
     }
 

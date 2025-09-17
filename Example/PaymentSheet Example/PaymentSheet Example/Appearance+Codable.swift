@@ -72,7 +72,7 @@ extension PaymentSheet.Appearance: Codable {
         let container = try decoder.container(keyedBy: CodingKeys.self)
 
         // Top-level properties
-        self.cornerRadius = try container.decodeIfPresent(CGFloat.self, forKey: .cornerRadius)
+        self.cornerRadius = try container.decode(CGFloat.self, forKey: .cornerRadius)
         self.borderWidth = try container.decode(CGFloat.self, forKey: .borderWidth)
         self.selectedBorderWidth = try container.decodeIfPresent(CGFloat.self, forKey: .selectedBorderWidth)
         self.sheetCornerRadius = try container.decode(CGFloat.self, forKey: .sheetCornerRadius)
