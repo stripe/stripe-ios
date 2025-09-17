@@ -197,6 +197,7 @@ struct ExampleWalletButtonsView: View {
                 if let flowController = model.paymentSheetFlowController, !model.isProcessing {
                     WalletButtonsFlowControllerView(
                         flowController: flowController,
+                        model: model,
                         isConfirmingPayment: $isConfirmingPayment,
                         onCompletion: model.onCompletion
                     )
@@ -221,6 +222,7 @@ struct ExampleWalletButtonsView: View {
             }
             .onDisappear {
                 model.addDebugLog("ExampleWalletButtonsView disappeared")
+                model.stopStressTesting()
                 model.paymentSheetFlowController = nil
                 model.paymentResult = nil
             }
@@ -235,6 +237,7 @@ struct ExampleWalletButtonsView: View {
 @available(iOS 16.0, *)
 struct WalletButtonsFlowControllerView: View {
     @ObservedObject var flowController: PaymentSheet.FlowController
+    @ObservedObject var model: ExampleWalletButtonsModel
     @Binding var isConfirmingPayment: Bool
     let onCompletion: (PaymentSheetResult) -> Void
 
@@ -277,6 +280,47 @@ struct WalletButtonsFlowControllerView: View {
                 }
             }
         }
+
+        // Stress Test Controls
+        VStack(spacing: 8) {
+            Text("Stress Test Controls")
+                .font(.headline)
+                .padding(.top)
+
+            HStack(spacing: 16) {
+                Button(action: {
+                    model.startStressTesting()
+                }) {
+                    Text("Start Stress Test")
+                        .foregroundColor(.white)
+                        .padding(.horizontal, 16)
+                        .padding(.vertical, 8)
+                        .background(model.isStressTestingEnabled ? Color.gray : Color.green)
+                        .cornerRadius(8)
+                }
+                .disabled(model.isStressTestingEnabled)
+
+                Button(action: {
+                    model.stopStressTesting()
+                }) {
+                    Text("Stop Stress Test")
+                        .foregroundColor(.white)
+                        .padding(.horizontal, 16)
+                        .padding(.vertical, 8)
+                        .background(model.isStressTestingEnabled ? Color.red : Color.gray)
+                        .cornerRadius(8)
+                }
+                .disabled(!model.isStressTestingEnabled)
+            }
+
+            if model.isStressTestingEnabled {
+                Text("🔥 Stress test running - updating amount every 5 seconds")
+                    .font(.caption)
+                    .foregroundColor(.orange)
+                    .padding(.horizontal)
+            }
+        }
+        .padding(.horizontal)
     }
 }
 
@@ -298,6 +342,10 @@ class ExampleWalletButtonsModel: ObservableObject {
     @Published var paymentResult: PaymentSheetResult?
     @Published var isProcessing: Bool = false
     @Published var debugLogs: [String] = []
+
+    private var stressTestTimer: Timer?
+    private var currentAmount: Int = 9999
+    @Published var isStressTestingEnabled: Bool = false
 
     init(
         email: String,
@@ -335,6 +383,8 @@ class ExampleWalletButtonsModel: ObservableObject {
             self.debugLogs.removeAll()
         }
     }
+
+    // link express button - then saw the error
 
     func preparePaymentSheet() {
         self.addDebugLog("Preparing payment sheet...")
@@ -523,6 +573,76 @@ class ExampleWalletButtonsModel: ObservableObject {
     func cleanupDemo() {
         // A PaymentIntent can't be reused after a successful payment. Prepare a new one for the demo.
         self.paymentSheetFlowController = nil
+        stopStressTesting()
+    }
+
+    func startStressTesting() {
+        guard !isStressTestingEnabled else { return }
+
+        isStressTestingEnabled = true
+        addDebugLog("Starting stress test - updating flow controller amount every 5 seconds")
+
+        stressTestTimer = Timer.scheduledTimer(withTimeInterval: 5.0, repeats: true) { [weak self] _ in
+            self?.performStressTestUpdate()
+        }
+    }
+
+    func stopStressTesting() {
+        guard isStressTestingEnabled else { return }
+
+        isStressTestingEnabled = false
+        stressTestTimer?.invalidate()
+        stressTestTimer = nil
+        addDebugLog("Stopped stress test")
+    }
+
+    private func performStressTestUpdate() {
+        guard let flowController = paymentSheetFlowController else {
+            addDebugLog("No flow controller available for stress test update")
+            return
+        }
+
+        // Generate a random amount between $10.00 and $999.99
+        currentAmount = Int.random(in: 1000...99999)
+        let dollarAmount = Double(currentAmount) / 100.0
+
+        addDebugLog("Stress test update: updating amount to $\(String(format: "%.2f", dollarAmount))")
+
+        let newIntentConfiguration = PaymentSheet.IntentConfiguration(
+            sharedPaymentTokenSessionWithMode: .payment(
+                amount: currentAmount,
+                currency: "USD",
+                setupFutureUsage: nil,
+                captureMethod: .automatic,
+                paymentMethodOptions: nil
+            ),
+            sellerDetails: .init(
+                networkId: "stripe",
+                externalId: "acct_1HvTI7Lu5o3P18Zp",
+                businessName: "Till's Pills"
+            ),
+            paymentMethodTypes: ["card", "shop_pay"],
+            preparePaymentMethodHandler: { [weak self] paymentMethod, address in
+                self?.isProcessing = true
+                self?.addDebugLog("PaymentMethod prepared during stress test: \(paymentMethod.stripeId)")
+                self?.addDebugLog("Address: \(address)")
+                // For stress testing, we won't actually create payment intents
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                    self?.isProcessing = false
+                    self?.addDebugLog("Stress test payment preparation completed")
+                }
+            }
+        )
+
+        flowController.update(intentConfiguration: newIntentConfiguration) { [weak self] error in
+            DispatchQueue.main.async {
+                if let error = error {
+                    self?.addDebugLog("Stress test update failed: \(error.localizedDescription)")
+                } else {
+                    self?.addDebugLog("Stress test update successful: $\(String(format: "%.2f", dollarAmount))")
+                }
+            }
+        }
     }
 
     var shopPayConfiguration: PaymentSheet.ShopPayConfiguration {

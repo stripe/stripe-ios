@@ -276,6 +276,9 @@ extension PaymentSheet {
             }
         }
 
+        // Stores a pending update request when PaymentSheet is presented
+        private var pendingUpdateContext: (intentConfiguration: IntentConfiguration, completion: (Error?) -> Void)?
+
         private var isPresented = false
         private(set) var didPresentAndContinue: Bool = false
         private var passiveCaptchaChallenge: PassiveCaptchaChallenge?
@@ -594,10 +597,22 @@ extension PaymentSheet {
         /// This ensures the appropriate payment methods are displayed, etc.
         /// - Parameter intentConfiguration: An updated IntentConfiguration
         /// - Parameter completion: Called when the update completes with an optional error. Your implementation should get the customer's updated payment option by using the `paymentOption` property and update your UI. If an error occurred, retry.
-        /// - Note: Don't call `confirm` or `present` until the update succeeds. Don’t call this method while PaymentSheet is being presented. 
+        /// - Note: Don't call `confirm` or `present` until the update succeeds. When PaymentSheet is presented, update calls are coalesced and executed after dismissal.
         public func update(intentConfiguration: IntentConfiguration, completion: @escaping (Error?) -> Void) {
             assert(Thread.isMainThread, "PaymentSheet.FlowController.update must be called from the main thread.")
-            assert(!isPresented, "PaymentSheet.FlowController.update must be when PaymentSheet is not presented.")
+
+            // If PaymentSheet is currently presented, queue the update for after dismissal
+            if isPresented {
+                // If there's already a pending update, call its completion with a cancellation error
+                if let previousPendingUpdate = pendingUpdateContext {
+                    let error = PaymentSheetError.flowControllerConfirmFailed(message: "Update call was superseded by a newer update call.")
+                    previousPendingUpdate.completion(error)
+                }
+
+                // Store the new pending update
+                pendingUpdateContext = (intentConfiguration: intentConfiguration, completion: completion)
+                return
+            }
 
             let updateID = UUID()
             latestUpdateContext = UpdateContext(id: updateID)
@@ -779,7 +794,23 @@ extension PaymentSheet.FlowController: FlowControllerViewControllerDelegate {
             self.presentPaymentOptionsCompletionWithResult?(didCancel)
             self.updatePaymentOption()
             self.isPresented = false
+
+            // Process any pending update after the sheet is fully dismissed
+            self.processPendingUpdateIfNeeded()
         }
+    }
+
+    /// Processes a pending update if one exists
+    private func processPendingUpdateIfNeeded() {
+        guard let pendingUpdate = pendingUpdateContext else {
+            return
+        }
+
+        // Clear the pending update first to prevent recursion
+        pendingUpdateContext = nil
+
+        // Execute the pending update
+        update(intentConfiguration: pendingUpdate.intentConfiguration, completion: pendingUpdate.completion)
     }
 }
 
