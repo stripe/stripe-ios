@@ -405,13 +405,11 @@ extension ConsumerSession {
 
     func refreshSession(
         with apiClient: STPAPIClient = STPAPIClient.shared,
-        consumerAccountPublishableKey: String?,
         requestSurface: LinkRequestSurface = .default,
         completion: @escaping (Result<ConsumerSession, Error>) -> Void
     ) {
         apiClient.refreshSession(
             consumerSessionClientSecret: clientSecret,
-            consumerAccountPublishableKey: consumerAccountPublishableKey,
             requestSurface: requestSurface,
             completion: completion
         )

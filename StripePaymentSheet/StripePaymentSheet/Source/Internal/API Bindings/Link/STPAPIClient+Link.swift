@@ -600,7 +600,6 @@ extension STPAPIClient {
 
     func refreshSession(
         consumerSessionClientSecret: String,
-        consumerAccountPublishableKey: String?,
         requestSurface: LinkRequestSurface = .default,
         completion: @escaping (Result<ConsumerSession, Error>) -> Void
     ) {
@@ -611,12 +610,13 @@ extension STPAPIClient {
                 "consumer_session_client_secret": consumerSessionClientSecret,
             ],
             "request_surface": requestSurface.rawValue,
+            "supported_verification_types": SupportedVerificationType.allCases.map(\.rawValue),
         ]
 
         makeConsumerSessionRequest(
             endpoint: endpoint,
             parameters: parameters,
-            consumerAccountPublishableKey: consumerAccountPublishableKey,
+            consumerAccountPublishableKey: nil,
             completion: completion
         )
     }

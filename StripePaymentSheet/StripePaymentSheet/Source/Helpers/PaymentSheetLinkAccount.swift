@@ -122,6 +122,11 @@ struct LinkPMDisplayDetails {
         currentSession?.isVerifiedForSignup ?? false
     }
 
+    // Webview fallback URLs have a lifespan of one attempt.
+    // If a user opens one and dismisses it, it can't be used again,
+    // So we'll fetch a new one in that case.
+    var visitedFallbackURLs: [URL] = []
+
     private(set) var currentSession: ConsumerSession?
     let displayablePaymentDetails: ConsumerSession.DisplayablePaymentDetails?
 
@@ -514,7 +519,6 @@ struct LinkPMDisplayDetails {
 
         session.refreshSession(
             with: apiClient,
-            consumerAccountPublishableKey: publishableKey,
             requestSurface: requestSurface
         ) { [weak self] result in
             if case .success(let refreshedSession) = result {

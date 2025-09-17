@@ -48,15 +48,48 @@ final class LinkVerificationController {
         self.selfRetainer = self
         self.completion = completion
 
-        // Check if mobile fallback webview should be used
-        if let url = mobileFallbackURLIfNeeded() {
-            presentMobileFallbackWebview(from: presentingController, webviewUrl: url)
-        } else {
-            presentingController.present(verificationViewController, animated: true)
+        // Determine the verification flow (potentially with refresh)
+        determineMobileFallbackURL { [weak self] url in
+            guard let self = self else { return }
+
+            DispatchQueue.main.async {
+                if let url = url {
+                    self.presentMobileFallbackWebview(from: presentingController, webviewUrl: url)
+                } else {
+                    presentingController.present(self.verificationViewController, animated: true)
+                }
+            }
         }
     }
 
-    private func mobileFallbackURLIfNeeded() -> URL? {
+    private func determineMobileFallbackURL(completion: @escaping (URL?) -> Void) {
+        guard let mobileFallbackParams = linkAccount.currentSession?.mobileFallbackWebviewParams,
+              let webviewUrl = mobileFallbackParams.webviewOpenUrl,
+              mobileFallbackParams.webviewRequirementType == .required else {
+            completion(nil)
+            return
+        }
+
+        // Check if this URL was already visited
+        if linkAccount.visitedFallbackURLs.contains(webviewUrl) {
+            // Refresh to get a new URL
+            linkAccount.refresh { [weak self] _ in
+                guard let self = self else {
+                    completion(nil)
+                    return
+                }
+
+                // After refresh, get the new URL
+                let newURL = Self.mobileFallbackURL(from: self.linkAccount)
+                completion(newURL)
+            }
+        } else {
+            // URL is fresh, use it directly
+            completion(webviewUrl)
+        }
+    }
+
+    private static func mobileFallbackURL(from linkAccount: PaymentSheetLinkAccount) -> URL? {
         guard let mobileFallbackParams = linkAccount.currentSession?.mobileFallbackWebviewParams,
               let webviewUrl = mobileFallbackParams.webviewOpenUrl,
               mobileFallbackParams.webviewRequirementType == .required else {
@@ -66,6 +99,9 @@ final class LinkVerificationController {
     }
 
     private func presentMobileFallbackWebview(from presentingController: UIViewController, webviewUrl: URL) {
+        // Mark this URL as visited
+        linkAccount.visitedFallbackURLs.append(webviewUrl)
+
         let webviewController = LinkVerificationWebFallbackController(
             authenticationUrl: webviewUrl,
             presentingWindow: presentingController.view.window
@@ -75,7 +111,7 @@ final class LinkVerificationController {
 
             // If verification completed successfully, refresh the session
             if case .completed = result {
-                self.linkAccount.refresh { [weak self] refreshResult in
+                self.linkAccount.refresh { [weak self] _ in
                     self?.completion?(result)
                     self?.selfRetainer = nil
                 }
