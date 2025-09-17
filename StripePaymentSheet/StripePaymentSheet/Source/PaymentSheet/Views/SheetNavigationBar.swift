@@ -181,36 +181,67 @@ class SheetNavigationBar: UIView {
             layer.shadowOffset = CGSize(width: 0, height: 2)
         }
     }
-
     func createBackButton() -> UIButton {
+        return appearance.navigationBarStyle.isGlass ? createGlassBackButton() : createPlainBackButton()
+    }
+    func createPlainBackButton() -> UIButton {
         let button = SheetNavigationButton(type: .custom)
         let image = Image.icon_chevron_left_standalone.makeImage(template: true)
         button.setImage(image, for: .normal)
         button.tintColor = appearance.colors.icon
         button.accessibilityLabel = String.Localized.back
         button.accessibilityIdentifier = "UIButton.Back"
-        if appearance.navigationBarStyle.isGlass {
-            // Setting to 20x20 w/ glass results in a button that is sized to 44x44 with .glass()
-            let resizedImage = image.resized(to: CGSize(width: 20, height: 20))
-            button.setImage(resizedImage, for: .normal)
-            button.ios26_applyGlassConfiguration()
-        }
+        return button
+    }
+    func createGlassBackButton() -> UIButton {
+        let button = UIButton(type: .system)
+        button.frame = CGRect(x: 0, y: 0, width: 44, height: 44)
+        button.widthAnchor.constraint(equalToConstant: 44).isActive = true
+        button.heightAnchor.constraint(equalToConstant: 44).isActive = true
+
+        let config = UIImage.SymbolConfiguration(pointSize: 20, weight: .regular)
+        let image = UIImage(systemName: "chevron.left", withConfiguration: config)
+
+        button.setImage(image, for: .normal)
+        button.tintColor = appearance.colors.icon
+
+        button.accessibilityLabel = String.Localized.back
+        button.accessibilityIdentifier = "UIButton.Back"
+        button.ios26_applyGlassConfiguration()
+
         return button
     }
 
     func createCloseButton() -> UIButton {
+        return appearance.navigationBarStyle.isGlass ? createGlassCloseButton() : createPlainCloseButton()
+    }
+    func createPlainCloseButton() -> UIButton {
         let button = SheetNavigationButton(type: .custom)
         let image = Image.icon_x_standalone.makeImage(template: true)
         button.setImage(image, for: .normal)
         button.tintColor = appearance.colors.icon
+
         button.accessibilityLabel = String.Localized.close
         button.accessibilityIdentifier = "UIButton.Close"
-        if appearance.navigationBarStyle.isGlass {
-            // Setting to 20x20 w/ glass results in a button that is sized to 44x44 with .glass()
-            let resizedImage = image.resized(to: CGSize(width: 20, height: 20))
-            button.setImage(resizedImage, for: .normal)
-            button.ios26_applyGlassConfiguration()
-        }
+
+        return button
+    }
+    func createGlassCloseButton() -> UIButton {
+        let button = UIButton(type: .system)
+        button.frame = CGRect(x: 0, y: 0, width: 44, height: 44)
+        button.widthAnchor.constraint(equalToConstant: 44).isActive = true
+        button.heightAnchor.constraint(equalToConstant: 44).isActive = true
+
+        let config = UIImage.SymbolConfiguration(pointSize: 20, weight: .regular)
+        let image = UIImage(systemName: "xmark", withConfiguration: config)
+
+        button.setImage(image, for: .normal)
+        button.tintColor = appearance.colors.icon
+
+        button.accessibilityLabel = String.Localized.close
+        button.accessibilityIdentifier = "UIButton.Close"
+        button.ios26_applyGlassConfiguration()
+
         return button
     }
 }
