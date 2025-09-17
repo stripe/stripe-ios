@@ -16,11 +16,14 @@ import UIKit
 class PaymentMethodTypeCollectionViewCellSnapshotTests: STPSnapshotTestCase {
 
     func test_withPromoBadge() {
-        let cell = PaymentMethodTypeCollectionView.PaymentTypeCell()
+        let appearance: PaymentSheet.Appearance = .default.applyingLiquidGlassIfPossible()
+        let height = appearance.cornerRadius == nil ? PaymentMethodTypeCollectionView.capsuleCornerCellHeight : PaymentMethodTypeCollectionView.uniformCornerCellHeight
+
+        let cell = PaymentMethodTypeCollectionView.PaymentTypeCell(frame: CGRect(x: 0, y: 0, width: 120, height: height))
         cell.paymentMethodType = .instantDebits
         cell.promoBadgeText = "$5"
-        cell.appearance = .default.applyingLiquidGlassIfPossible()
-        verify(cell)
+        cell.appearance = appearance
+        verify(cell, height: height)
     }
 
     func test_withPromoBadge_customAppearance() {
@@ -29,25 +32,25 @@ class PaymentMethodTypeCollectionViewCellSnapshotTests: STPSnapshotTestCase {
         appearance.primaryButton.successTextColor = .black
         appearance.primaryButton.successBackgroundColor = .red
 
-        let cell = PaymentMethodTypeCollectionView.PaymentTypeCell()
+        let height = appearance.cornerRadius == nil ? PaymentMethodTypeCollectionView.capsuleCornerCellHeight : PaymentMethodTypeCollectionView.uniformCornerCellHeight
+
+        let cell = PaymentMethodTypeCollectionView.PaymentTypeCell(frame: CGRect(x: 0, y: 0, width: 120, height: height))
         cell.paymentMethodType = .instantDebits
         cell.appearance = appearance
         cell.promoBadgeText = "$5"
-        verify(cell)
+        verify(cell, height: height)
     }
 
     func verify(
-        _ cell: PaymentMethodTypeCollectionView.PaymentTypeCell,
+        _ cell: UICollectionViewCell,
+        height: CGFloat,
         identifier: String? = nil,
         file: StaticString = #filePath,
         line: UInt = #line
     ) {
-        let cellHeight = cell.selectableRectangle.didSetCornerConfiguration
-            ? PaymentMethodTypeCollectionView.capsuleCornerCellHeight
-            : PaymentMethodTypeCollectionView.uniformCornerCellHeight
         let view = CellWrapperView(
             cell: cell,
-            size: CGSize(width: 120, height: cellHeight)
+            size: CGSize(width: 120, height: height)
         )
         STPSnapshotVerifyView(view, identifier: identifier, file: file, line: line)
     }

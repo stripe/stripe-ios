@@ -45,22 +45,22 @@ class ShadowedRoundedRectangle: UIView {
         applyCornerRadiusOrConfiguration(for: appearance)
 
         // Shadow
-        roundedRectangle.layer.applyShadow(shadow: appearance.asElementsTheme.shadow)
-        roundedRectangle.layer.shadowPath = UIBezierPath(rect: bounds).cgPath
+        layer.applyShadow(shadow: appearance.asElementsTheme.shadow)
+        layer.shadowPath = UIBezierPath(rect: bounds).cgPath
 
         // Border
         if isSelected {
             let selectedBorderWidth = appearance.selectedBorderWidth ?? appearance.borderWidth
             if selectedBorderWidth > 0 {
-                roundedRectangle.layer.borderWidth = selectedBorderWidth * 1.5
+                layer.borderWidth = selectedBorderWidth * 1.5
             } else {
                 // Without a border, the customer can't tell this is selected and it looks bad
-                roundedRectangle.layer.borderWidth = 1.5
+                layer.borderWidth = 1.5
             }
-            roundedRectangle.layer.borderColor = appearance.colors.selectedComponentBorder?.cgColor ?? appearance.colors.primary.cgColor
+            layer.borderColor = appearance.colors.selectedComponentBorder?.cgColor ?? appearance.colors.primary.cgColor
         } else {
-            roundedRectangle.layer.borderWidth = appearance.borderWidth
-            roundedRectangle.layer.borderColor = appearance.colors.componentBorder.cgColor
+            layer.borderWidth = appearance.borderWidth
+            layer.borderColor = appearance.colors.componentBorder.cgColor
         }
     }
 
