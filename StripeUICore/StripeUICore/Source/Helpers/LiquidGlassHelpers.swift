@@ -6,7 +6,6 @@
 //
 
 import Foundation
-@_spi(STP) import StripeCore
 import UIKit
 
 @_spi(STP) public class LiquidGlassDetector {
@@ -67,8 +66,11 @@ extension UIView {
         return false
     }
 
+    // Compiler flag here is just to satisfy dead code checker, on Xcode 25 it's unused
+#if compiler(>=6.2)
     /// Just exists to avoid creating one every time in `didSetCornerConfiguration`
     static var plainUIView = UIView()
+#endif
 }
 
 // MARK: - Button Liquid Glass helpers
