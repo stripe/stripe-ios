@@ -597,7 +597,7 @@ extension PaymentSheet {
         /// - Note: Don't call `confirm` or `present` until the update succeeds. Don’t call this method while PaymentSheet is being presented. 
         public func update(intentConfiguration: IntentConfiguration, completion: @escaping (Error?) -> Void) {
             assert(Thread.isMainThread, "PaymentSheet.FlowController.update must be called from the main thread.")
-            assert(!isPresented, "PaymentSheet.FlowController.update must be when PaymentSheet is not presented.")
+//            assert(!isPresented, "PaymentSheet.FlowController.update must be when PaymentSheet is not presented.")
 
             let updateID = UUID()
             latestUpdateContext = UpdateContext(id: updateID)
