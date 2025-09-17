@@ -91,7 +91,7 @@ import UIKit
         borderWidth > 0 ? borderWidth : 0.5
     }
     public var borderWidth = ElementsUI.fieldBorderWidth
-    public var cornerRadius: CGFloat? = ElementsUI.defaultCornerRadius
+    public var cornerRadius = ElementsUI.defaultCornerRadius
     public var shadow: Shadow? = Shadow()
     public var textFieldInsets = ElementsUI.contentViewInsets
     public var iconStyle: IconStyle = .filled

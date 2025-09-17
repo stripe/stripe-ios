@@ -285,10 +285,18 @@ extension PaymentMethodTypeCollectionView {
                 promoBadge.trailingAnchor.constraint(equalTo: selectableRectangle.trailingAnchor, constant: -12),
             ])
 
+            contentView.layer.cornerRadius = appearance.cornerRadius
             clipsToBounds = false
             layer.masksToBounds = false
 
             update()
+        }
+
+        override func layoutSubviews() {
+            super.layoutSubviews()
+            contentView.layer.shadowPath =
+                UIBezierPath(roundedRect: bounds, cornerRadius: contentView.layer.cornerRadius)
+                .cgPath
         }
 
         required init?(coder: NSCoder) {
@@ -327,6 +335,7 @@ extension PaymentMethodTypeCollectionView {
         // MARK: - Private Methods
         var paymentMethodTypeOfCurrentImage: PaymentSheet.PaymentMethodType = .stripe(.unknown)
         private func update() {
+            contentView.layer.cornerRadius = appearance.cornerRadius
             selectableRectangle.appearance = appearance
             label.text = paymentMethodType.displayName
 
