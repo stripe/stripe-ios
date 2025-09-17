@@ -220,38 +220,13 @@ extension SectionContainerView {
             }
 
             // Make all views equal width
-            for i in 1..<views.count {
-                views[i].widthAnchor.constraint(equalTo: views[0].widthAnchor).isActive = true
-            }
-        }
-
-        required init?(coder: NSCoder) { fatalError("init(coder:) has not been implemented") }
-
-        public func toggleView(_ view: UIView, shouldShow: Bool) {
-            guard let stackView = multiElementStackView, let index = views.firstIndex(of: view) else {
-                return
-            }
-
-            views[index].isHidden = !shouldShow
-
-            stackView.arrangedSubviews.forEach {
-                $0.removeFromSuperview()
-            }
-
-            let visibleViews = views.filter { !$0.isHidden }
-            let arrangedSubviews = visibleViews.interleaveWithDividers(theme: theme)
-
-            arrangedSubviews.forEach {
-                stackView.addArrangedSubview($0)
-            }
-
-            // Make all views equal width
-            if visibleViews.count > 1 {
-                for i in 1..<visibleViews.count {
-                    visibleViews[i].widthAnchor.constraint(equalTo: visibleViews[0].widthAnchor).isActive = true
+            if views.count > 1 {
+                for i in 1..<views.count {
+                    views[i].widthAnchor.constraint(equalTo: views[0].widthAnchor).isActive = true
                 }
             }
         }
+        required init?(coder: NSCoder) { fatalError("init(coder:) has not been implemented") }
     }
 }
 
