@@ -153,9 +153,8 @@ public class PaymentSheet {
         ) { result in
             switch result {
             case .success(let loadResult):
-                if self.configuration.enablePassiveCaptcha {
-                    self.passiveCaptchaChallenge = PassiveCaptchaChallenge(passiveCaptcha: loadResult.elementsSession.passiveCaptcha)
-                    Task { await self.passiveCaptchaChallenge?.start() } // Intentionally not blocking loading/initialization!
+                if self.configuration.enablePassiveCaptcha, let passiveCaptcha = loadResult.elementsSession.passiveCaptcha {
+                    self.passiveCaptchaChallenge = PassiveCaptchaChallenge(passiveCaptcha: passiveCaptcha)
                 }
                 let presentPaymentSheet: () -> Void = {
                     // Set the PaymentSheetViewController as the content of our bottom sheet
