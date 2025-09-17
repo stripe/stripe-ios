@@ -20,6 +20,8 @@ protocol ExpressCheckoutWebviewDelegate: AnyObject {
 
 protocol ECEViewControllerDelegate: AnyObject {
     func didCancel()
+    func didCompleteInitialization()
+    func didReceiveECEReady()
 }
 
 // Custom errors for Express Checkout operations
@@ -199,7 +201,7 @@ class ECEViewController: UIViewController {
         contentController.addUserScript(script)
 
         // TODO: It's 500x500 for now for debugging, but set this to 1x1 before release
-        webView = WKWebView(frame: CGRect(x: 0, y: 0, width: 1, height: 1), configuration: configuration)
+        webView = WKWebView(frame: CGRect(x: 0, y: 0, width: 500, height: 500), configuration: configuration)
         webView.navigationDelegate = self
         webView.uiDelegate = self
         #if DEBUG
@@ -208,7 +210,7 @@ class ECEViewController: UIViewController {
         }
         #endif
         webView.isHidden = false // Should not be hidden, so that we actually render it
-        webView.alpha = 0.01 // TODO: Attempt to set to 0.00 if we can get away with it without Safari optimizing it out
+        webView.alpha = 1.00 // TODO: Attempt to set to 0.00 if we can get away with it without Safari optimizing it out
 
         webView.customUserAgent = Self.FakeSafariUserAgent
     }
@@ -223,6 +225,10 @@ class ECEViewController: UIViewController {
         popupWebView = nil
         webView?.removeFromSuperview()
         webView = nil
+    }
+
+    func executeJavaScript(_ javascript: String, completion: ((Any?, Error?) -> Void)? = nil) {
+        webView?.evaluateJavaScript(javascript, completionHandler: completion)
     }
 
     /// Validates that the message comes from the expected Stripe origin
@@ -245,7 +251,19 @@ extension ECEViewController: WKScriptMessageHandler {
 
         switch message.name {
         case "ready":
-            log("✅ Bridge Ready")
+            if let messageDict = messageBody as? [String: Any],
+               let messageType = messageDict["type"] as? String {
+                if messageType == "eceReady" {
+                    log("✅ ECE Ready")
+                    DispatchQueue.main.async {
+                        self.delegate?.didReceiveECEReady()
+                    }
+                } else if messageType == "bridgeReady" {
+                    log("✅ Bridge Ready")
+                }
+            } else {
+                log("✅ Bridge Ready")
+            }
 
         case "error":
             log("❌ Bridge Error:")
@@ -413,6 +431,10 @@ extension ECEViewController: WKNavigationDelegate {
                     // Bail with error
                 } else {
                     log("Successfully called initializeApp()")
+                    // Notify delegate that initialization is complete
+                    DispatchQueue.main.async {
+                        self.delegate?.didCompleteInitialization()
+                    }
                 }
             }
         }

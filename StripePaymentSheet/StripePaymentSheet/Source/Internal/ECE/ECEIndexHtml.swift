@@ -45,6 +45,9 @@ struct ECEIndexHTML {
       }
     `);
 
+    // Global ECE, accessible when triggering the click event
+    var expressCheckoutElement;
+
     function initializeStripeElements() {
         var options = {
           mode: "payment",
@@ -58,7 +61,7 @@ struct ECEIndexHTML {
 
       console.log("Initializing stripe elements with options", options);
 
-      let stripe, elements, expressCheckoutElement;
+      let stripe, elements;
 
       try {
         stripe = window.Stripe(getStripePublishableKey(), {});
@@ -105,9 +108,11 @@ struct ECEIndexHTML {
           expressCheckoutDiv.style.visibility = "initial";
         }
 
-        setTimeout(() => {
-            expressCheckoutElement._sendNativeSdkClick({paymentMethodType: 'shop_pay'})
-        }, 0)
+        // Signal to native that ECE is ready for _sendNativeSdkClick
+        window.webkit.messageHandlers.ready.postMessage({
+            type: 'eceReady',
+            availablePaymentMethods: availablePaymentMethods
+        });
       });
 
       expressCheckoutElement.on("click", async function (event) {
@@ -264,6 +269,24 @@ struct ECEIndexHTML {
         throw error;
       }
     }
+
+    // Function to trigger Shop Pay click - called from Swift
+    function triggerShopPayClick() {
+      try {
+        if (typeof expressCheckoutElement !== 'undefined' && expressCheckoutElement._sendNativeSdkClick) {
+          console.log("Triggering Shop Pay click via _sendNativeSdkClick");
+          expressCheckoutElement._sendNativeSdkClick({paymentMethodType: 'shop_pay'});
+          return true;
+        } else {
+          console.error("expressCheckoutElement or _sendNativeSdkClick not available");
+          return false;
+        }
+      } catch (error) {
+        console.error("Error triggering Shop Pay click:", error);
+        return false;
+      }
+    }
+    
     console.log("Waiting for bridge to call initializeApp()");
     </script>
   </body>

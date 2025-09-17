@@ -15,6 +15,7 @@ typealias ExpressType = PaymentSheet.WalletButtonsVisibility.ExpressType
     let flowController: PaymentSheet.FlowController
     let confirmHandler: (PaymentSheetResult) -> Void
     @State var orderedWallets: [ExpressType]
+    @State private var shopPayPresenter: ShopPayECEPresenter?
 
     @_spi(STP) public init(flowController: PaymentSheet.FlowController,
                            confirmHandler: @escaping (PaymentSheetResult) -> Void) {
@@ -75,9 +76,21 @@ typealias ExpressType = PaymentSheet.WalletButtonsVisibility.ExpressType
             .onAppear {
                 let allowedWallets = Set(orderedWallets)
                 flowController.walletButtonsViewState = .visible(allowedWallets: allowedWallets.map(\.rawValue))
+
+                // Prewarm Shop Pay if it's available
+                if orderedWallets.contains(.shopPay), let shopPayConfig = flowController.configuration.shopPay {
+                    let presenter = ShopPayECEPresenter(
+                        flowController: flowController,
+                        configuration: shopPayConfig,
+                        analyticsHelper: flowController.analyticsHelper
+                    )
+                    presenter.prewarm()
+                    shopPayPresenter = presenter
+                }
             }
             .onDisappear {
                 flowController.walletButtonsViewState = .hidden
+                shopPayPresenter = nil
             }
         }
     }
@@ -165,14 +178,20 @@ typealias ExpressType = PaymentSheet.WalletButtonsVisibility.ExpressType
                 return
             }
 
-            // Present Shop Pay via ECE WebView
-            let shopPayPresenter = ShopPayECEPresenter(
-                flowController: flowController,
-                configuration: shopPayConfig,
-                analyticsHelper: flowController.analyticsHelper
-            )
-            shopPayPresenter.present(from: WindowAuthenticationContext().authenticationPresentingViewController(),
-                                     confirmHandler: confirmHandler)
+            // Use prewarmed presenter if available, otherwise create new one
+            let presenter: ShopPayECEPresenter
+            if let prewarmedPresenter = shopPayPresenter {
+                presenter = prewarmedPresenter
+            } else {
+                presenter = ShopPayECEPresenter(
+                    flowController: flowController,
+                    configuration: shopPayConfig,
+                    analyticsHelper: flowController.analyticsHelper
+                )
+            }
+
+            presenter.present(from: WindowAuthenticationContext().authenticationPresentingViewController(),
+                              confirmHandler: confirmHandler)
         }
     }
 

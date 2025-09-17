@@ -20,6 +20,9 @@ class ShopPayECEPresenter: NSObject, UIAdaptivePresentationControllerDelegate {
     private var didReceiveECEClick: Bool = false
     private let analyticsHelper: PaymentSheetAnalyticsHelper
     private var currentShippingRates: [PaymentSheet.ShopPayConfiguration.ShippingRate]
+    private var isPrewarmed: Bool = false
+    private var eceReady: Bool = false
+    private var pendingPresentCompletion: (() -> Void)?
 
     init(
         flowController: PaymentSheet.FlowController,
@@ -33,14 +36,18 @@ class ShopPayECEPresenter: NSObject, UIAdaptivePresentationControllerDelegate {
         super.init()
     }
 
-    func present(from viewController: UIViewController,
-                 confirmHandler: @escaping (PaymentSheetResult) -> Void) {
+    func prewarm() {
         guard case .customerSession(let customerSessionClientSecret) = flowController.configuration.customer?.customerAccessProvider else {
             stpAssertionFailure("Integration Error: CustomerSessions is required")
             return
         }
-        self.presentingViewController = viewController
-        analyticsHelper.logShopPayWebviewLoadAttempt()
+
+        guard !isPrewarmed else {
+            return
+        }
+
+        isPrewarmed = true
+        eceReady = false
 
         let eceVC = ECEViewController(apiClient: flowController.configuration.apiClient,
                                       shopId: shopPayConfiguration.shopId,
@@ -50,18 +57,55 @@ class ShopPayECEPresenter: NSObject, UIAdaptivePresentationControllerDelegate {
         eceVC.expressCheckoutWebviewDelegate = self
         self.eceViewController = eceVC
 
+        // Load the webview but don't present it yet
+        eceVC.loadViewIfNeeded()
+    }
+
+    func present(from viewController: UIViewController,
+                 confirmHandler: @escaping (PaymentSheetResult) -> Void) {
+        guard case .customerSession(let customerSessionClientSecret) = flowController.configuration.customer?.customerAccessProvider else {
+            stpAssertionFailure("Integration Error: CustomerSessions is required")
+            return
+        }
+        self.presentingViewController = viewController
+        analyticsHelper.logShopPayWebviewLoadAttempt()
+
+        let eceVC: ECEViewController
+        if isPrewarmed, let prewarmedVC = self.eceViewController {
+            eceVC = prewarmedVC
+        } else {
+            eceVC = ECEViewController(apiClient: flowController.configuration.apiClient,
+                                      shopId: shopPayConfiguration.shopId,
+                                      customerSessionClientSecret: customerSessionClientSecret,
+                                      delegate: self)
+            eceVC.expressCheckoutWebviewDelegate = self
+            self.eceViewController = eceVC
+        }
+
         let transitionDelegate = FixedHeightTransitionDelegate(heightRatio: 0.85)
         eceVC.transitioningDelegate = transitionDelegate
         eceVC.modalPresentationStyle = .custom
         eceVC.view.layer.cornerRadius = self.flowController.configuration.appearance.cornerRadius
         eceVC.view.layer.maskedCorners = [.layerMinXMinYCorner, .layerMaxXMinYCorner]
         eceVC.view.clipsToBounds = true
-        viewController.present(eceVC, animated: true)
-        eceVC.presentationController?.delegate = self
+
         // retain self while presented
         self.confirmHandler = { result in
             confirmHandler(result)
             self.confirmHandler = nil
+        }
+
+        // Present the view controller
+        viewController.present(eceVC, animated: true)
+        eceVC.presentationController?.delegate = self
+
+        // Wait for ECE to be ready, then send the native SDK click
+        if eceReady {
+            triggerShopPayClick()
+        } else {
+            pendingPresentCompletion = { [weak self] in
+                self?.triggerShopPayClick()
+            }
         }
     }
 
@@ -80,6 +124,19 @@ class ShopPayECEPresenter: NSObject, UIAdaptivePresentationControllerDelegate {
             completion?()
         }
     }
+
+    private func triggerShopPayClick() {
+        guard let eceViewController = eceViewController else { return }
+
+        // Call the JavaScript triggerShopPayClick function
+        eceViewController.executeJavaScript("triggerShopPayClick()") { result, error in
+            if let error = error {
+                print("Failed to trigger Shop Pay click: \(error)")
+            } else if let success = result as? Bool, !success {
+                print("Shop Pay click trigger returned false - ECE may not be ready")
+            }
+        }
+    }
 }
 
 @available(iOS 16.0, *)
@@ -88,6 +145,16 @@ extension ShopPayECEPresenter: ECEViewControllerDelegate {
         analyticsHelper.logShopPayWebviewCancelled(didReceiveECEClick: didReceiveECEClick)
         self.confirmHandler?(.canceled)
         dismissECE()
+    }
+
+    func didCompleteInitialization() {
+        // Keep this for backwards compatibility if needed
+    }
+
+    func didReceiveECEReady() {
+        eceReady = true
+        pendingPresentCompletion?()
+        pendingPresentCompletion = nil
     }
 }
 
