@@ -8,17 +8,87 @@
 import SwiftUI
 
 struct PaymentView: View {
+    private enum NumberPadKey: String, Identifiable {
+        case zero
+        case one
+        case two
+        case three
+        case four
+        case five
+        case six
+        case seven
+        case eight
+        case nine
+        case decimalSeparator
+        case delete
+
+        // MARK: - Identifiable
+
+        var id: String {
+            rawValue
+        }
+    }
+
     let onContinue: () -> Void
 
     @Environment(\.isLoading) private var isLoading
 
+    @State private var amountText: String = "0"
+
+    private var displayAmount: String {
+        amountText.isEmpty ? "0" : amountText
+    }
+
+    private static let keys: [NumberPadKey] = [
+        .one,
+        .two,
+        .three,
+        .four,
+        .five,
+        .six,
+        .seven,
+        .eight,
+        .nine,
+        .decimalSeparator,
+        .zero,
+        .delete
+    ]
+
+
+
+
     var body: some View {
         ScrollView {
-            VStack {
-                
+            VStack(spacing: 24) {
+                Text("$" + displayAmount)
+                    .font(.system(size: 44, weight: .bold))
+                    .monospacedDigit()
+                    .frame(maxWidth: .infinity, alignment: .center)
+                    .padding(.top, 16)
+
+                let columns: [GridItem] = Array(repeating: GridItem(.flexible(), spacing: 12), count: 3)
+
+                LazyVGrid(columns: columns, spacing: 12) {
+                    ForEach(Self.keys, id: \.self) { key in
+                        HStack {
+                            Button(action: { handleKey(key) }) {
+                                ZStack {
+                                    RoundedRectangle(cornerRadius: 10)
+                                        .fill(Color.gray.opacity(0.12))
+                                    labelRepresentation(for: key)
+                                        .font(.system(size: 24, weight: .semibold))
+                                        .foregroundColor(.primary)
+                                }
+                                .frame(height: 56)
+                            }
+                            .buttonStyle(.plain)
+                        }
+                    }
+                }
             }
+            .padding(.horizontal)
             .frame(maxWidth: .infinity)
-            .padding()
+            .padding(.bottom, 8)
         }
         .navigationTitle("Payment")
         .navigationBarTitleDisplayMode(.inline)
@@ -31,6 +101,80 @@ struct PaymentView: View {
             .opacity(isLoading.wrappedValue ? 0.5 : 1)
             .padding()
         }
+    }
+
+    @ViewBuilder
+    private func labelRepresentation(for key: NumberPadKey) -> some View {
+        switch key {
+        case .zero: Text("0")
+        case .one: Text("1")
+        case .two: Text("2")
+        case .three: Text("3")
+        case .four: Text("4")
+        case .five: Text("5")
+        case .six: Text("6")
+        case .seven: Text("7")
+        case .eight: Text("8")
+        case .nine: Text("9")
+        case .decimalSeparator: Text(".")
+        case .delete: Image(systemName: "delete.left")
+        }
+    }
+
+    // MARK: - Input Handling
+
+    private func handleKey(_ key: NumberPadKey) {
+        switch key {
+        case .decimalSeparator: insertDecimalSeparator()
+        case .delete: deleteLast()
+        case .zero: insertDigit(0)
+        case .one: insertDigit(1)
+        case .two: insertDigit(2)
+        case .three: insertDigit(3)
+        case .four: insertDigit(4)
+        case .five: insertDigit(5)
+        case .six: insertDigit(6)
+        case .seven: insertDigit(7)
+        case .eight: insertDigit(8)
+        case .nine: insertDigit(9)
+        }
+    }
+
+    private func insertDigit(_ d: Int) {
+        // If currently "0" and we have no decimal yet, replace leading zero with non-zero digit.
+        if amountText == "0" && d != 0 && !amountText.contains(".") {
+            amountText = "\(d)"
+            return
+        }
+
+        // Limit to two fractional digits if decimal is present.
+        if let decimalSeparator = amountText.firstIndex(of: ".") {
+            let fractionalDigitCount = amountText[amountText.index(after: decimalSeparator)...].count
+            if fractionalDigitCount >= 2 { return }
+        }
+
+        // Avoid multiple leading zeros without a decimal.
+        if !amountText.contains(".") && amountText == "0" && d == 0 {
+            return
+        }
+
+        amountText.append("\(d)")
+    }
+
+    private func insertDecimalSeparator() {
+        if amountText.isEmpty {
+            amountText = "0."
+            return
+        }
+        if !amountText.contains(".") {
+            amountText.append(".")
+        }
+    }
+
+    private func deleteLast() {
+        guard !amountText.isEmpty else { return }
+        amountText.removeLast()
+        if amountText.isEmpty { amountText = "0" }
     }
 }
 
