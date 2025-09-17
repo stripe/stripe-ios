@@ -61,8 +61,8 @@ extension PayWithLinkController: PayWithLinkWebControllerDelegate {
         elementsSession: STPElementsSession,
         with paymentOption: PaymentOption
     ) {
-        Task {
-            await PaymentSheet.confirm(
+//        Task {
+            PaymentSheet.confirm(
                 configuration: configuration,
                 authenticationContext: payWithLinkWebController,
                 intent: intent,
@@ -70,13 +70,13 @@ extension PayWithLinkController: PayWithLinkWebControllerDelegate {
                 paymentOption: paymentOption,
                 paymentHandler: paymentHandler,
                 integrationShape: .complete,
-                hcaptchaToken: passiveCaptchaChallenge?.fetchToken(),
+                passiveCaptchaChallenge: passiveCaptchaChallenge,
                 analyticsHelper: analyticsHelper
             ) { result, deferredIntentConfirmationType in
                 self.completion?(result, deferredIntentConfirmationType)
                 self.selfRetainer = nil
             }
-        }
+//        }
     }
 
     func payWithLinkWebControllerDidCancel() {

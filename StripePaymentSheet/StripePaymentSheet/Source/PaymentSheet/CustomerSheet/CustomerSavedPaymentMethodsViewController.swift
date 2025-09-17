@@ -606,7 +606,7 @@ class CustomerSavedPaymentMethodsViewController: UIViewController {
         updateUI(animated: false)
         if case .new(let confirmParams) = paymentOption  {
             Task {
-                let hcaptchaToken = await self.passiveCaptchaChallenge?.fetchToken(for: paymentOption)
+                let hcaptchaToken = await self.passiveCaptchaChallenge?.fetchToken()
                 confirmParams.paymentMethodParams.radarOptions = STPRadarOptions(hcaptchaToken: hcaptchaToken)
                 configuration.apiClient.createPaymentMethod(with: confirmParams.paymentMethodParams) { paymentMethod, error in
                     if let error = error {

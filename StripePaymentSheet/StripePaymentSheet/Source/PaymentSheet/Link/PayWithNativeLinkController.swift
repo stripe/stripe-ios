@@ -220,24 +220,22 @@ extension PayWithNativeLinkController: PayWithLinkViewControllerDelegate {
         with paymentOption: PaymentOption,
         completion: @escaping (PaymentSheetResult, STPAnalyticsClient.DeferredIntentConfirmationType?) -> Void
     ) {
-        Task {
-            await PaymentSheet.confirm(
-                configuration: configuration,
-                authenticationContext: payWithLinkViewController,
-                intent: intent,
-                elementsSession: elementsSession,
-                paymentOption: paymentOption,
-                paymentHandler: paymentHandler,
-                hcaptchaToken: passiveCaptchaChallenge?.fetchToken(),
-                analyticsHelper: analyticsHelper,
-                completion: { result, confirmationType in
-                    if self.logPayment {
-                        self.analyticsHelper.logPayment(paymentOption: paymentOption, result: result, deferredIntentConfirmationType: confirmationType)
-                    }
-                    completion(result, confirmationType)
+        PaymentSheet.confirm(
+            configuration: configuration,
+            authenticationContext: payWithLinkViewController,
+            intent: intent,
+            elementsSession: elementsSession,
+            paymentOption: paymentOption,
+            paymentHandler: paymentHandler,
+            passiveCaptchaChallenge: passiveCaptchaChallenge,
+            analyticsHelper: analyticsHelper,
+            completion: { result, confirmationType in
+                if self.logPayment {
+                    self.analyticsHelper.logPayment(paymentOption: paymentOption, result: result, deferredIntentConfirmationType: confirmationType)
                 }
-            )
-        }
+                completion(result, confirmationType)
+            }
+        )
     }
 
     func payWithLinkViewControllerDidCancel(_ payWithLinkViewController: PayWithLinkViewController, shouldReturnToPaymentSheet: Bool) {
@@ -277,21 +275,19 @@ extension PayWithNativeLinkController: PayWithLinkWebControllerDelegate {
         elementsSession: STPElementsSession,
         with paymentOption: PaymentOption
     ) {
-        Task {
-            await PaymentSheet.confirm(
-                configuration: configuration,
-                authenticationContext: payWithLinkWebController,
-                intent: intent,
-                elementsSession: elementsSession,
-                paymentOption: paymentOption,
-                paymentHandler: paymentHandler,
-                integrationShape: .complete,
-                hcaptchaToken: passiveCaptchaChallenge?.fetchToken(),
-                analyticsHelper: analyticsHelper
-            ) { result, deferredIntentConfirmationType in
-                self.completion?(.full(result: result, deferredIntentConfirmationType: deferredIntentConfirmationType, didFinish: true))
-                self.selfRetainer = nil
-            }
+        PaymentSheet.confirm(
+            configuration: configuration,
+            authenticationContext: payWithLinkWebController,
+            intent: intent,
+            elementsSession: elementsSession,
+            paymentOption: paymentOption,
+            paymentHandler: paymentHandler,
+            integrationShape: .complete,
+            passiveCaptchaChallenge: passiveCaptchaChallenge,
+            analyticsHelper: analyticsHelper
+        ) { result, deferredIntentConfirmationType in
+            self.completion?(.full(result: result, deferredIntentConfirmationType: deferredIntentConfirmationType, didFinish: true))
+            self.selfRetainer = nil
         }
     }
 
