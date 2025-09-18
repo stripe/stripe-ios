@@ -10,7 +10,7 @@ import Foundation
 
 /// Manages polling budgets for payment method transactions that require status polling.
 final class PollingBudget {
-    /// The timestamp when polling started (set when start() is called)
+    /// The timestamp when polling started
     private var startDate: Date
     /// The polling duration in seconds
     private let duration: TimeInterval
