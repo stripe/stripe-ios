@@ -79,26 +79,6 @@ final class UpdatePaymentMethodViewControllerSnapshotTests: STPSnapshotTestCase 
         _test_UpdatePaymentMethodViewController(paymentMethodType: .card, darkMode: false, appearance: ._testMSPaintTheme, canUpdate: true, isCBCEligible: true)
     }
 
-    func test_EmbeddedSingleCard_UpdatePaymentMethodViewControllerDarkMode() {
-        _test_UpdatePaymentMethodViewController(paymentMethodType: .card, darkMode: true, isEmbeddedSingle: true, isCBCEligible: true)
-    }
-
-    // Due to limitations of snapshot tests, the snapshot recorded applies a border radius to all corners in SectionContainerView
-    // More info: https://github.com/pointfreeco/swift-snapshot-testing/issues/358
-    func test_EmbeddedSingleCard_UpdatePaymentMethodViewControllerLightMode() {
-        _test_UpdatePaymentMethodViewController(paymentMethodType: .card, darkMode: false, isEmbeddedSingle: true, isCBCEligible: true)
-    }
-
-    // Due to limitations of snapshot tests, the snapshot recorded applies a border radius to all corners in SectionContainerView
-    // More info: https://github.com/pointfreeco/swift-snapshot-testing/issues/358
-    func test_EmbeddedSingleCard_UpdatePaymentMethodViewControllerCanUpdateLightMode() {
-        _test_UpdatePaymentMethodViewController(paymentMethodType: .card, darkMode: false, isEmbeddedSingle: true, canUpdate: true, isCBCEligible: true)
-    }
-
-    func test_EmbeddedSingleCard_UpdatePaymentMethodViewControllerAppearance() {
-        _test_UpdatePaymentMethodViewController(paymentMethodType: .card, darkMode: false, isEmbeddedSingle: true, appearance: ._testMSPaintTheme, isCBCEligible: true)
-    }
-
     // Due to limitations of snapshot tests, the snapshot recorded applies a border radius to all corners in SectionContainerView
     // More info: https://github.com/pointfreeco/swift-snapshot-testing/issues/358
     func test_UpdatePaymentMethodViewControllerExpiredCard() {
@@ -155,18 +135,6 @@ final class UpdatePaymentMethodViewControllerSnapshotTests: STPSnapshotTestCase 
         _test_UpdatePaymentMethodViewController(paymentMethodType: .USBankAccount, darkMode: false, canSetAsDefaultPM: true, isDefault: true)
     }
 
-    func test_EmbeddedSingleUSBankAccount_UpdatePaymentMethodViewControllerDarkMode() {
-        _test_UpdatePaymentMethodViewController(paymentMethodType: .USBankAccount, darkMode: true, isEmbeddedSingle: true)
-    }
-
-    func test_EmbeddedSingleUSBankAccount_UpdatePaymentMethodViewControllerLightMode() {
-        _test_UpdatePaymentMethodViewController(paymentMethodType: .USBankAccount, darkMode: false, isEmbeddedSingle: true)
-    }
-
-    func test_EmbeddedSingleUSBankAccount_UpdatePaymentMethodViewControllerAppearance() {
-        _test_UpdatePaymentMethodViewController(paymentMethodType: .USBankAccount, darkMode: false, isEmbeddedSingle: true, appearance: ._testMSPaintTheme)
-    }
-
     func test_UpdatePaymentMethodViewControllerSEPADebitDarkMode() {
         _test_UpdatePaymentMethodViewController(paymentMethodType: .SEPADebit, darkMode: true)
     }
@@ -181,18 +149,6 @@ final class UpdatePaymentMethodViewControllerSnapshotTests: STPSnapshotTestCase 
 
     func test_UpdatePaymentMethodViewControllerSetAsDefaultSEPADebit() {
         _test_UpdatePaymentMethodViewController(paymentMethodType: .SEPADebit, darkMode: false, canSetAsDefaultPM: true)
-    }
-
-    func test_EmbeddedSingleSEPADebit_UpdatePaymentMethodViewControllerDarkMode() {
-        _test_UpdatePaymentMethodViewController(paymentMethodType: .SEPADebit, darkMode: true, isEmbeddedSingle: true)
-    }
-
-    func test_EmbeddedSingleSEPADebit_UpdatePaymentMethodViewControllerLightMode() {
-        _test_UpdatePaymentMethodViewController(paymentMethodType: .SEPADebit, darkMode: false, isEmbeddedSingle: true)
-    }
-
-    func test_EmbeddedSingleSEPADebit_UpdatePaymentMethodViewControllerAppearance() {
-        _test_UpdatePaymentMethodViewController(paymentMethodType: .SEPADebit, darkMode: false, isEmbeddedSingle: true, appearance: ._testMSPaintTheme)
     }
 
     // Due to limitations of snapshot tests, the snapshot recorded applies a border radius to all corners in SectionContainerView
@@ -212,7 +168,6 @@ final class UpdatePaymentMethodViewControllerSnapshotTests: STPSnapshotTestCase 
 
     func _test_UpdatePaymentMethodViewController(paymentMethodType: STPPaymentMethodType,
                                                  darkMode: Bool,
-                                                 isEmbeddedSingle: Bool = false,
                                                  appearance: PaymentSheet.Appearance = .default.applyingLiquidGlassIfPossible(),
                                                  addressCollectionMode: PaymentSheet.BillingDetailsCollectionConfiguration.AddressCollectionMode = .never,
                                                  canRemove: Bool = true,
@@ -260,18 +215,13 @@ final class UpdatePaymentMethodViewControllerSnapshotTests: STPSnapshotTestCase 
                                                                            isDefault: isDefault
         )
         let sut = UpdatePaymentMethodViewController(
-                                           removeSavedPaymentMethodMessage: "Test removal string",
-                                           isTestMode: false,
-                                           configuration: updateConfig)
-        let bottomSheet: BottomSheetViewController
-        // TODO(yuki): Delete isEmbeddedSingle - this is not testing anything related to UpdatePaymentMethodViewController. 
-        if isEmbeddedSingle {
-            bottomSheet = BottomSheetViewController(contentViewController: sut, appearance: appearance, isTestMode: true, didCancelNative3DS2: {})
-        } else {
-            let stubViewController = StubBottomSheetContentViewController()
-            bottomSheet = BottomSheetViewController(contentViewController: stubViewController, appearance: appearance, isTestMode: true, didCancelNative3DS2: {})
-            bottomSheet.pushContentViewController(sut)
-        }
+            removeSavedPaymentMethodMessage: "Test removal string",
+            isTestMode: false,
+            configuration: updateConfig
+        )
+        let stubViewController = StubBottomSheetContentViewController()
+        let bottomSheet = BottomSheetViewController(contentViewController: stubViewController, appearance: appearance, isTestMode: true, didCancelNative3DS2: {})
+        bottomSheet.pushContentViewController(sut)
         bottomSheet.view.autosizeHeight(width: 375)
 
         let testWindow = UIWindow(frame: CGRect(x: 0, y: 0, width: 375, height: bottomSheet.view.frame.size.height + sut.view.frame.size.height))
