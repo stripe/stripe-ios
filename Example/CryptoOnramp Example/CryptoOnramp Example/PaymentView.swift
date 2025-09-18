@@ -65,7 +65,7 @@ struct PaymentView: View {
     ]
 
     var body: some View {
-        VStack {
+        VStack(spacing: 0) {
             Spacer()
 
             Text("$" + (amountText.isEmpty ? "0" : amountText))
@@ -75,22 +75,20 @@ struct PaymentView: View {
 
             Spacer()
 
-            let columns: [GridItem] = Array(repeating: GridItem(.flexible(), spacing: 12), count: 3)
-            
-            LazyVGrid(columns: columns, spacing: 12) {
-                ForEach(Self.keys, id: \.self) { key in
-                    Button(action: { handleKey(key) }) {
-                        labelRepresentation(for: key)
-                            .font(.system(size: 24, weight: .semibold))
-                            .foregroundColor(.primary)
-                            .frame(height: 56)
-                    }
-                    .buttonStyle(.plain)
-                }
+            makePaymentMethodButton()
+                .padding(.bottom, 16)
+
+            HStack(spacing: 12) {
+                makePresetAmountButton(50)
+                makePresetAmountButton(100)
+                makePresetAmountButton(250)
             }
-            .padding(.horizontal)
-            .padding(.bottom, 16)
+            .padding(.bottom, 8)
+
+            makeKeypad()
+                .padding(.bottom, 16)
         }
+        .padding(.horizontal)
         .navigationTitle("Payment")
         .navigationBarTitleDisplayMode(.inline)
         .safeAreaInset(edge: .bottom) {
@@ -119,6 +117,65 @@ struct PaymentView: View {
         case .nine: Text("9")
         case .decimalSeparator: Text(Self.decimalSeparator)
         case .delete: Image(systemName: "delete.left")
+        }
+    }
+
+    @ViewBuilder
+    private func makeKeypad() -> some View {
+        let columns: [GridItem] = Array(repeating: GridItem(.flexible(), spacing: 12), count: 3)
+
+        LazyVGrid(columns: columns, spacing: 12) {
+            ForEach(Self.keys, id: \.self) { key in
+                Button {
+                    handleKey(key)
+                } label: {
+                    labelRepresentation(for: key)
+                        .font(.system(size: 24, weight: .semibold))
+                        .foregroundColor(.primary)
+                        .frame(height: 56)
+                }
+                .buttonStyle(.plain)
+            }
+        }
+    }
+
+    @ViewBuilder
+    private func makePresetAmountButton(_ dollarAmount: Int) -> some View {
+        Button {
+            amountText = "\(dollarAmount)"
+        } label: {
+            ZStack {
+                RoundedRectangle(cornerRadius: 10)
+                    .fill(Color(.secondarySystemBackground))
+
+                Text("$\(dollarAmount)")
+                    .font(.system(size: 18, weight: .semibold))
+                    .foregroundColor(.primary)
+            }
+            .frame(height: 44)
+            .frame(maxWidth: .infinity)
+        }
+        .buttonStyle(.plain)
+    }
+
+    @ViewBuilder
+    private func makePaymentMethodButton() -> some View {
+        HStack {
+            Button {
+
+            } label: {
+                HStack(spacing: 6) {
+                    Text("Select a payment method")
+                        .bold()
+
+                    Image(systemName: "chevron.down")
+                        .font(.system(size: 14, weight: .semibold))
+                        .foregroundStyle(.secondary)
+                }
+            }
+            .buttonStyle(.plain)
+
+            Spacer()
         }
     }
 
