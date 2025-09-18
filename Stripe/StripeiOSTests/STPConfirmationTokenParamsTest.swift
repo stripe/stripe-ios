@@ -84,10 +84,14 @@ class STPConfirmationTokenParamsTest: XCTestCase {
         let mandateData = STPMandateDataParams.makeWithInferredValues()
         params.mandateData = mandateData
 
+        let paymentMethodOptions = STPConfirmPaymentMethodOptions()
+        params.paymentMethodOptions = paymentMethodOptions
+
         let description = params.description
         XCTAssertTrue(description.contains("pm_test_123"))
         XCTAssertTrue(description.contains("https://example.com"))
         XCTAssertTrue(description.contains("STPMandateDataParams"))
+        XCTAssertTrue(description.contains("STPConfirmPaymentMethodOptions"))
     }
 
     // MARK: - STPFormEncodable Tests
@@ -206,6 +210,19 @@ class STPConfirmationTokenParamsTest: XCTestCase {
         XCTAssertNil(params.setAsDefaultPM)
     }
 
+    func testPaymentMethodOptionsProperty() {
+        let params = STPConfirmationTokenParams()
+
+        XCTAssertNil(params.paymentMethodOptions)
+
+        let paymentMethodOptions = STPConfirmPaymentMethodOptions()
+        params.paymentMethodOptions = paymentMethodOptions
+        XCTAssertEqual(params.paymentMethodOptions, paymentMethodOptions)
+
+        params.paymentMethodOptions = nil
+        XCTAssertNil(params.paymentMethodOptions)
+    }
+
     // MARK: - Additional API Parameters Tests
 
     func testAdditionalAPIParameters() {
@@ -266,6 +283,26 @@ class STPConfirmationTokenParamsTest: XCTestCase {
         XCTAssertNil(encoded["mandate_data"])
     }
 
+    func testFormEncodingWithPaymentMethodOptions() {
+        let params = STPConfirmationTokenParams()
+        let paymentMethodOptions = STPConfirmPaymentMethodOptions()
+
+        // Add card options to make the encoding more meaningful
+        let cardOptions = STPConfirmCardOptions()
+        paymentMethodOptions.cardOptions = cardOptions
+        params.paymentMethodOptions = paymentMethodOptions
+
+        let encoded = STPFormEncoder.dictionary(forObject: params)
+        XCTAssertNotNil(encoded["payment_method_options"])
+    }
+
+    func testFormEncodingWithoutPaymentMethodOptions() {
+        let params = STPConfirmationTokenParams()
+
+        let encoded = STPFormEncoder.dictionary(forObject: params)
+        XCTAssertNil(encoded["payment_method_options"])
+    }
+
     func testCompleteFormEncoding() {
         let params = STPConfirmationTokenParams()
         params.paymentMethod = "pm_test_123"
@@ -275,17 +312,24 @@ class STPConfirmationTokenParamsTest: XCTestCase {
         let mandateData = STPMandateDataParams.makeWithInferredValues()
         params.mandateData = mandateData
 
+        let paymentMethodOptions = STPConfirmPaymentMethodOptions()
+        let cardOptions = STPConfirmCardOptions()
+        paymentMethodOptions.cardOptions = cardOptions
+        params.paymentMethodOptions = paymentMethodOptions
+
         let encoded = STPFormEncoder.dictionary(forObject: params)
 
         XCTAssertEqual(encoded["payment_method"] as? String, "pm_test_123")
         XCTAssertEqual(encoded["return_url"] as? String, "https://example.com/return")
         XCTAssertEqual(encoded["setup_future_usage"] as? String, "on_session")
         XCTAssertNotNil(encoded["mandate_data"])
+        XCTAssertNotNil(encoded["payment_method_options"])
 
         // Test with setAsDefaultPM
         params.setAsDefaultPM = NSNumber(value: true)
         let encodedWithDefault = STPFormEncoder.dictionary(forObject: params)
         XCTAssertEqual(encodedWithDefault["set_as_default_payment_method"] as? NSNumber, NSNumber(value: true))
+        XCTAssertNotNil(encodedWithDefault["payment_method_options"])
     }
 
     // MARK: - Real-World Usage Pattern Tests

@@ -19,7 +19,7 @@ import Foundation
     @objc public var paymentMethodData: STPPaymentMethodParams?
 
     /// Payment-method-specific configuration for this ConfirmationToken.
-    @objc public var paymentMethodOptions: STPPaymentMethodOptions?
+    @objc public var paymentMethodOptions: STPConfirmPaymentMethodOptions?
 
     /// Return URL to redirect the customer back to your application after completion of 3D Secure authentication.
     @objc public var returnURL: String?
