@@ -53,7 +53,6 @@
         super.init()
     }
 
-    
     // MARK: - Encodable
     enum CodingKeys: String, CodingKey {
         case clientSessionId = "client_session_id"
