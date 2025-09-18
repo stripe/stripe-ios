@@ -63,6 +63,12 @@ class ECEViewController: UIViewController {
 
     private var webView: WKWebView!
     private var popupWebView: WKWebView?
+    
+    // Loading spinner and timer management
+    private var loadingSpinner: UIActivityIndicatorView?
+    private var spinnerTimer: Timer?
+    private var timeoutTimer: Timer?
+    private var errorLabel: UILabel?
 
     // Delegate for Express Checkout Element events
     weak var expressCheckoutWebviewDelegate: ExpressCheckoutWebviewDelegate?
@@ -80,22 +86,14 @@ class ECEViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        // Add a loading spinner
-        let spinner = UIActivityIndicatorView(style: .large)
-        spinner.color = .systemGray
-        spinner.translatesAutoresizingMaskIntoConstraints = false
-        spinner.startAnimating()
-
-        view.addSubview(spinner)
-        NSLayoutConstraint.activate([
-            spinner.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            spinner.centerYAnchor.constraint(equalTo: view.centerYAnchor),
-        ])
-
         setupWebView()
 
         // Add the tiny 1x1 webview as a hidden subview
         view.addSubview(webView)
+        
+        // Setup delayed loading UI (spinner after 2s, timeout after 10s)
+        setupLoadingUI()
+        
         loadECE()
     }
 
@@ -221,6 +219,7 @@ class ECEViewController: UIViewController {
     }
 
     func unloadWebview() {
+        clearLoadingUI()
         popupWebView?.removeFromSuperview()
         popupWebView = nil
         webView?.removeFromSuperview()
@@ -229,6 +228,70 @@ class ECEViewController: UIViewController {
 
     func executeJavaScript(_ javascript: String, completion: ((Any?, Error?) -> Void)? = nil) {
         webView?.evaluateJavaScript(javascript, completionHandler: completion)
+    }
+    
+    private func setupLoadingUI() {
+        // Start the 2-second timer for showing spinner
+        spinnerTimer = Timer.scheduledTimer(withTimeInterval: 2.0, repeats: false) { [weak self] _ in
+            self?.showLoadingSpinner()
+        }
+        
+        // Start the 10-second timeout timer
+        timeoutTimer = Timer.scheduledTimer(withTimeInterval: 10.0, repeats: false) { [weak self] _ in
+            self?.showTimeoutError()
+        }
+    }
+    
+    private func showLoadingSpinner() {
+        guard loadingSpinner == nil else { return }
+        
+        let spinner = UIActivityIndicatorView(style: .large)
+        spinner.color = .systemGray
+        spinner.translatesAutoresizingMaskIntoConstraints = false
+        spinner.startAnimating()
+        
+        view.addSubview(spinner)
+        NSLayoutConstraint.activate([
+            spinner.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            spinner.centerYAnchor.constraint(equalTo: view.centerYAnchor),
+        ])
+        
+        loadingSpinner = spinner
+    }
+    
+    private func showTimeoutError() {
+        clearLoadingUI()
+        
+        let errorLabel = UILabel()
+        errorLabel.text = "There was a problem loading Shop Pay. Please try again later."
+        errorLabel.textColor = .systemRed
+        errorLabel.textAlignment = .center
+        errorLabel.numberOfLines = 0
+        errorLabel.translatesAutoresizingMaskIntoConstraints = false
+        
+        view.addSubview(errorLabel)
+        NSLayoutConstraint.activate([
+            errorLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            errorLabel.centerYAnchor.constraint(equalTo: view.centerYAnchor),
+            errorLabel.leadingAnchor.constraint(greaterThanOrEqualTo: view.leadingAnchor, constant: 20),
+            errorLabel.trailingAnchor.constraint(lessThanOrEqualTo: view.trailingAnchor, constant: -20)
+        ])
+        
+        self.errorLabel = errorLabel
+    }
+    
+    private func clearLoadingUI() {
+        spinnerTimer?.invalidate()
+        spinnerTimer = nil
+        
+        timeoutTimer?.invalidate()
+        timeoutTimer = nil
+        
+        loadingSpinner?.removeFromSuperview()
+        loadingSpinner = nil
+        
+        errorLabel?.removeFromSuperview()
+        errorLabel = nil
     }
 
     /// Validates that the message comes from the expected Stripe origin
@@ -256,6 +319,7 @@ extension ECEViewController: WKScriptMessageHandler {
                 if messageType == "eceReady" {
                     log("✅ ECE Ready")
                     DispatchQueue.main.async {
+                        self.clearLoadingUI()
                         self.delegate?.didReceiveECEReady()
                     }
                 } else if messageType == "bridgeReady" {
